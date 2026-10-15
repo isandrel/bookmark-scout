@@ -131,7 +131,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Comprobar enlaces rotos y el Extractor de metadatos solicitan las propias páginas guardadas en marcadores para ver si cargan y cuáles son sus títulos. Actualizar iconos de sitios solicita una página guardada en marcadores de cada sitio web y después un archivo de icono del propio dominio de ese sitio web, para que los marcadores puedan mostrar el icono del sitio. El navegador te pide permiso la primera vez que ejecutas una de estas herramientas. Las solicitudes van directamente a cada sitio web, sin cookies, y los resultados se quedan en la extensión. No se usa ningún servicio de iconos de terceros. Como en cualquier visita, el sitio web puede ver tu dirección IP y que se solicitó la página o el icono."
+                        "text": "Comprobar enlaces rotos y el Extractor de metadatos solicitan las propias páginas guardadas en marcadores para ver si cargan y cuáles son sus títulos. Actualizar iconos de sitios solicita una página guardada en marcadores de cada sitio web y después un archivo de icono del propio dominio de ese sitio web, para que los marcadores puedan mostrar el icono del sitio. Cuando ejecutas una de estas herramientas, el navegador te pide permiso para los sitios web de los marcadores de esa ejecución, o para todos los sitios web si son más de 20, salvo que ya los hayas permitido. Las solicitudes van directamente a cada sitio web, sin cookies, y los resultados se quedan en la extensión. No se usa ningún servicio de iconos de terceros. Como en cualquier visita, el sitio web puede ver tu dirección IP y que se solicitó la página o el icono."
                     },
                     {
                         "type": "h3",
@@ -172,10 +172,10 @@
                         "items": [
                             "Acceso a tus pestañas (<code>tabs</code>), cuando guardas la página actual o pides sugerencias de carpeta desde el panel lateral. La ventana emergente de la barra de herramientas no lo necesita.",
                             "El menú contextual (<code>contextMenus</code>, Chrome y Edge), cuando activas Menú contextual en Configuración.",
-                            "La caché de iconos del navegador (<code>favicon</code>, Chrome y Edge), cuando activas Usar la caché de iconos del navegador en Configuración.",
-                            "Acceso a todos los sitios web, la primera vez que ejecutas Comprobar enlaces rotos, Extractor de metadatos o Actualizar iconos de sitios, o cuando activas Leer el contenido de la página.",
+                            "La caché de iconos del navegador (<code>favicon</code>, Chrome y Edge), cuando haces clic en Mostrar iconos del navegador en Actualizar iconos de sitios o activas Usar la caché de iconos del navegador en Configuración.",
+                            "Acceso a los sitios web de los marcadores que comprueba una ejecución, cuando ejecutas Comprobar enlaces rotos, Extractor de metadatos o Actualizar iconos de sitios (acceso a todos los sitios web cuando una ejecución abarca más de 20 sitios), y acceso a todos los sitios web cuando activas Leer el contenido de la página.",
                             "Acceso al sitio de un proveedor, cuando haces clic en Verificar servicio o Actualizar modelos en la configuración de IA.",
-                            "En Firefox, tu consentimiento para compartir datos con tu proveedor de IA, cuando activas la IA o haces clic en Verificar servicio.",
+                            "En Firefox, tu consentimiento para compartir datos con tu proveedor de IA, según lo que envía cada función: cuando activas la IA (tu clave de API, tus marcadores y el título y la URL de la página actual), activas Leer el contenido de la página (el texto de las páginas) o haces clic en Verificar servicio (tu clave de API).",
                             "Comunicarse con el programa bookmark-scout-mcp de tu equipo (<code>nativeMessaging</code>), cuando activas Permitir agentes de IA locales; en Firefox, junto con tu consentimiento para compartir con él datos de marcadores."
                         ]
                     },

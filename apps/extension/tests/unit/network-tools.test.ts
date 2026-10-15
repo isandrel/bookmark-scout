@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { BookmarkTreeNode } from '@/types';
 import {
   fetchBookmarkMetadata,
   fetchHtmlPage,
   isConfirmedDeadLink,
   scanDeadLinks,
 } from '@/services/bookmark-network-tools';
+import type { BookmarkTreeNode } from '@/types';
 
 const deadLinkOptions = {
   requestTimeoutMs: 1000,
@@ -145,7 +145,9 @@ describe('dead-link scanning', () => {
       ),
       deadLinkOptions,
     );
-    expect(items.map((item) => [item.statusCode, item.category, isConfirmedDeadLink(item)])).toEqual([
+    expect(
+      items.map((item) => [item.statusCode, item.category, isConfirmedDeadLink(item)]),
+    ).toEqual([
       [404, 'notFound', true],
       [410, 'notFound', true],
       [401, 'auth', false],
@@ -206,12 +208,34 @@ describe('dead-link scanning', () => {
     expect(item).toMatchObject({ status: 'error', errorKind: 'redirect' });
     expect(item.statusCode).toBeUndefined();
   });
+
+  it('does not confirm a blocked redirect as dead when only the bookmarks own sites are allowed', async () => {
+    fetchMock.mockImplementation(async (_url: string, init: RequestInit) => {
+      if (init.redirect === 'manual') {
+        return { type: 'opaqueredirect', status: 0, body: null } as unknown as Response;
+      }
+      // A redirect to a site without access fails like a refused connection.
+      throw new TypeError('Failed to fetch');
+    });
+    const [item] = (
+      await scanDeadLinks(tree({ a: 'https://e2e.invalid/moved-away' }), {
+        ...deadLinkOptions,
+        allSitesAccess: false,
+      })
+    ).items;
+    expect(item).toMatchObject({ errorKind: 'redirect', category: 'redirectElsewhere' });
+    expect(isConfirmedDeadLink(item)).toBe(false);
+  });
 });
 
 /** A body that emits `chunks`, then either ends or stalls until the request is aborted. */
 function streamedResponse(
   chunks: string[],
-  { contentType = 'text/html', stall = false, signal }: {
+  {
+    contentType = 'text/html',
+    stall = false,
+    signal,
+  }: {
     contentType?: string;
     stall?: boolean;
     signal?: AbortSignal | null;
@@ -283,8 +307,9 @@ describe('metadata fetching', () => {
       contentType: 'application/pdf',
     });
     fetchMock.mockResolvedValue(pdf.response);
-    const [item] = (await fetchBookmarkMetadata(tree({ a: 'https://e2e.invalid/file.pdf' }), options))
-      .items;
+    const [item] = (
+      await fetchBookmarkMetadata(tree({ a: 'https://e2e.invalid/file.pdf' }), options)
+    ).items;
     expect(item).toMatchObject({ status: 'notHtml', statusCode: 200, changed: false });
     expect(pdf.state.cancelled).toBe(true);
   });
@@ -377,11 +402,14 @@ describe('fetchHtmlPage', () => {
         })
       ).html;
 
-    expect(await decode(bytes([0x93, 0xfa, 0x96, 0x7b, 0x8c, 0xea]), 'text/html; charset=Shift_JIS')).toBe(
-      '日本語',
-    );
     expect(
-      await decode(bytes('<meta charset="shift_jis"><title>', [0x93, 0xfa], '</title>'), 'text/html'),
+      await decode(bytes([0x93, 0xfa, 0x96, 0x7b, 0x8c, 0xea]), 'text/html; charset=Shift_JIS'),
+    ).toBe('日本語');
+    expect(
+      await decode(
+        bytes('<meta charset="shift_jis"><title>', [0x93, 0xfa], '</title>'),
+        'text/html',
+      ),
     ).toContain('<title>日</title>');
     expect(await decode(bytes('é'), 'text/html')).toBe('é');
   });

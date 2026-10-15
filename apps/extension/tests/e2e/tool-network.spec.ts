@@ -298,3 +298,40 @@ test('network tools explain and request website access, and scan nothing when it
   await expect(page.getByRole('dialog', { name: 'Metadata Fetcher' })).toHaveCount(0);
   expect(site.requests).toEqual([]);
 });
+
+test('a run over more sites than the limit asks for all websites, and says why', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // One more site than config/network/site-access.toml allows in one narrow request.
+  const sites = Array.from({ length: 21 }, (_, index) => ({
+    title: `Site ${index}`,
+    url: `https://many-sites-${index}.invalid/`,
+  }));
+  const folder = await seedFolder(extensionWorker, 'E2E Many Sites', sites);
+  await page.addInitScript(() => {
+    const calls: unknown[] = [];
+    (window as unknown as { permissionRequests: unknown[] }).permissionRequests = calls;
+    Object.defineProperty(chrome.permissions, 'request', {
+      configurable: true,
+      value: (request: unknown) => {
+        calls.push(request);
+        return Promise.resolve(false);
+      },
+    });
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
+  const prompt = page.getByRole('dialog', { name: 'Allow access to websites?' });
+  await expect(prompt).toContainText(
+    'This run covers more than 20 sites, so your browser will ask for access to all websites.',
+  );
+  await prompt.getByRole('button', { name: 'Allow access' }).click();
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { permissionRequests: unknown[] }).permissionRequests,
+    ),
+  ).toEqual([{ origins: ['http://*/*', 'https://*/*'] }]);
+});

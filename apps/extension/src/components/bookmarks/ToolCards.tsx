@@ -84,7 +84,7 @@ export function ToolCard({
         scopeCapability={scopeCapability}
       />
 
-      {controls ? <div className="flex items-center gap-2">{controls}</div> : null}
+      {controls ? <div className="flex flex-wrap items-center gap-2">{controls}</div> : null}
 
       <div className="flex items-center gap-2">
         {showScopeSelector ? (

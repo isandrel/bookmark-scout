@@ -67,6 +67,55 @@ export function requestPermission(
   }
 }
 
+/**
+ * `feature`'s request with its website access narrowed to `origins` (`lib/site-access.ts`), or
+ * null when that leaves nothing to ask for.
+ */
+function siteAccessRequest(
+  feature: PermissionFeature,
+  origins: readonly string[],
+): Browser.permissions.Permissions | null {
+  const { origins: _declared, ...rest } =
+    getPermissionRequest(feature, CURRENT_PERMISSION_BROWSER) ?? {};
+  const request = { ...rest, ...(origins.length > 0 ? { origins: [...origins] } : {}) };
+  return Object.keys(request).length > 0 ? (request as Browser.permissions.Permissions) : null;
+}
+
+/** Like `hasPermission`, for a run that needs only `origins` (a subset of the feature's own). */
+export async function hasSiteAccess(
+  feature: PermissionFeature,
+  origins: readonly string[],
+): Promise<boolean> {
+  if (!isPermissionFeatureSupported(feature, CURRENT_PERMISSION_BROWSER)) return false;
+  const request = siteAccessRequest(feature, origins);
+  if (!request) return true;
+  try {
+    return await browser.permissions.contains(request);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Like `requestPermission`, asking only for `origins` instead of all the websites the feature
+ * declares, so the browser's prompt names those sites. Call it synchronously from a click.
+ */
+export function requestSiteAccess(
+  feature: PermissionFeature,
+  origins: readonly string[],
+): Promise<boolean> {
+  if (!isPermissionFeatureSupported(feature, CURRENT_PERMISSION_BROWSER)) {
+    return Promise.resolve(false);
+  }
+  const request = siteAccessRequest(feature, origins);
+  if (!request) return Promise.resolve(true);
+  try {
+    return browser.permissions.request(request).catch(() => false);
+  } catch {
+    return Promise.resolve(false);
+  }
+}
+
 /** Calls `listener` after any grant or revoke, from any page or the browser's own settings. */
 export function watchPermissions(listener: () => void): () => void {
   const events = browser.permissions;

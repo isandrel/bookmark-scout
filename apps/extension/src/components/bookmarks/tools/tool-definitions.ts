@@ -483,7 +483,12 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     actionKey: () => 'action_scan',
     needsHostAccess: true,
     // Repairs are reviewed and applied in DeadLinkRepairDialog.
-    scan: ({ nodes, options }) => scanDeadLinks(nodes, options.deadLinks),
+    scan: async ({ nodes, options }) =>
+      scanDeadLinks(nodes, {
+        ...options.deadLinks,
+        // Granted only the bookmarks' own sites, a redirect elsewhere is not a confirmed loop.
+        allSitesAccess: await hasPermission('webAccess'),
+      }),
   },
   metadataFetcher: {
     id: 'metadataFetcher',

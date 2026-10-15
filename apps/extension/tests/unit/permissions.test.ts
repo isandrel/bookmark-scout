@@ -10,15 +10,26 @@ import {
 } from '@/lib/permission-catalog';
 import { getSettingPermission } from '@/lib/settings-schema';
 import {
+  getSiteAccessOrigins,
+  getUrlSite,
+  getUrlSites,
+  SITE_ACCESS_MAX_SITES,
+} from '@/lib/site-access';
+import {
   assertPermission,
   hasPermission,
+  hasSiteAccess,
   PermissionRequiredError,
   requestPermission,
+  requestSiteAccess,
   watchPermissions,
 } from '@/services/permissions';
 import { installFakePermissions } from '../fake-permissions';
 
-const AI_DATA = ['authenticationInfo', 'bookmarksInfo', 'browsingActivity', 'websiteContent'];
+/** Turning on AI: the API key, bookmarks, and the current page's title and URL. */
+const AI_DATA = ['authenticationInfo', 'bookmarksInfo', 'browsingActivity'];
+/** Every category any feature may ask for, as the Firefox manifest declares them. */
+const ALL_DATA = ['authenticationInfo', 'bookmarksInfo', 'browsingActivity', 'websiteContent'];
 
 describe('permission catalog', () => {
   it('asks each browser only for the parts that are optional there', () => {
@@ -36,13 +47,14 @@ describe('permission catalog', () => {
     expect(getPermissionRequest('browserIcons', 'chrome')).toEqual({ permissions: ['favicon'] });
   });
 
-  it('asks for Firefox data collection consent only in Firefox', () => {
+  it('asks for Firefox data collection consent only in Firefox, per feature', () => {
     expect(getPermissionRequest('ai', 'chrome')).toBeNull();
     expect(getPermissionRequest('ai', 'firefox')).toEqual({ data_collection: AI_DATA });
     expect(getPermissionRequest('pageReading', 'chrome')).toEqual({ origins: [...WEB_ORIGINS] });
+    // Page text only: the rest is asked for when AI is turned on.
     expect(getPermissionRequest('pageReading', 'firefox')).toEqual({
       origins: [...WEB_ORIGINS],
-      data_collection: AI_DATA,
+      data_collection: ['websiteContent'],
     });
     const provider = ['https://api.example.test/*'];
     expect(getPermissionRequest('aiProviderCheck', 'chrome', provider)).toEqual({
@@ -53,13 +65,14 @@ describe('permission catalog', () => {
       data_collection: ['authenticationInfo'],
     });
     expect(getPermissionRequest('aiProviderCheck', 'chrome')).toBeNull();
-    // Local AI agents: native messaging everywhere, plus what agents read in Firefox.
+    // Local AI agents: native messaging everywhere, plus what agents read in Firefox (page text
+    // comes with Read page content's own consent).
     expect(getPermissionRequest('agentBridge', 'chrome')).toEqual({
       permissions: ['nativeMessaging'],
     });
     expect(getPermissionRequest('agentBridge', 'firefox')).toEqual({
       permissions: ['nativeMessaging'],
-      data_collection: ['bookmarksInfo', 'browsingActivity', 'websiteContent'],
+      data_collection: ['bookmarksInfo', 'browsingActivity'],
     });
   });
 
@@ -80,7 +93,7 @@ describe('permission catalog', () => {
     });
     expect(getFirefoxDataCollectionPermissions()).toEqual({
       required: ['none'],
-      optional: AI_DATA,
+      optional: ALL_DATA,
     });
   });
 
@@ -91,6 +104,57 @@ describe('permission catalog', () => {
     expect(getSettingPermission('aiReadPageContent')).toBe('pageReading');
     expect(getSettingPermission('agentBridgeEnabled')).toBe('agentBridge');
     expect(getSettingPermission('showFavicons')).toBeUndefined();
+  });
+});
+
+describe('website access for a run', () => {
+  it('groups web URLs by site, with subdomains and both schemes', () => {
+    expect(
+      getUrlSites([
+        'https://www.example.com/a',
+        'http://example.com/b',
+        'https://docs.example.com/c',
+        'https://news.bbc.co.uk/',
+        'http://192.168.1.10:8080/router',
+        'http://localhost:3000/',
+        'javascript:void(0)',
+        'file:///tmp/x.html',
+        'not a url',
+      ]),
+    ).toEqual(['example.com', 'bbc.co.uk', '192.168.1.10', 'localhost']);
+    expect(getUrlSite('chrome://settings')).toBeNull();
+  });
+
+  it('asks for each site with its subdomains, and for all websites above the limit', () => {
+    expect(getSiteAccessOrigins(['example.com', '192.168.1.10', 'localhost'])).toEqual([
+      'http://*.example.com/*',
+      'https://*.example.com/*',
+      'http://192.168.1.10/*',
+      'https://192.168.1.10/*',
+      'http://localhost/*',
+      'https://localhost/*',
+    ]);
+    expect(getSiteAccessOrigins([])).toEqual([]);
+    const sites = Array.from({ length: SITE_ACCESS_MAX_SITES }, (_, index) => `s${index}.com`);
+    expect(getSiteAccessOrigins(sites)).toHaveLength(SITE_ACCESS_MAX_SITES * 2);
+    expect(getSiteAccessOrigins([...sites, 'one-more.com'])).toBeNull();
+  });
+
+  it("requests only the run's sites, and needs nothing for a run without web links", async () => {
+    fakeBrowser.reset();
+    installFakePermissions();
+    const origins = getSiteAccessOrigins(['example.com']) ?? [];
+    await expect(hasSiteAccess('webAccess', origins)).resolves.toBe(false);
+    await expect(requestSiteAccess('webAccess', origins)).resolves.toBe(true);
+    expect(fakeBrowser.permissions.request).toHaveBeenCalledWith({ origins });
+    await expect(hasSiteAccess('webAccess', origins)).resolves.toBe(true);
+    // All websites are still not granted.
+    await expect(hasPermission('webAccess')).resolves.toBe(false);
+
+    vi.mocked(fakeBrowser.permissions.request).mockClear();
+    await expect(hasSiteAccess('webAccess', [])).resolves.toBe(true);
+    await expect(requestSiteAccess('webAccess', [])).resolves.toBe(true);
+    expect(fakeBrowser.permissions.request).not.toHaveBeenCalled();
   });
 });
 

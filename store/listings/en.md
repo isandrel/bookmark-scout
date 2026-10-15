@@ -50,7 +50,7 @@ AI bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 7,105 characters (2026-10-12); the Chrome Web Store allows 16,000. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 8,150 characters (2026-10-14); the Chrome Web Store allows 16,000. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser.
@@ -94,7 +94,13 @@ MAINTENANCE TOOLS
 • Import from HTML or JSON with a preview, duplicate handling, and Undo
 • Export to HTML, JSON, Markdown, or CSV, with an optional privacy review that can redact sensitive values
 
-The Dead Link Checker, Metadata Fetcher, Refresh Site Icons, and the Read page content AI setting ask for optional website access the first time you use them; once it is allowed, Ask AI can also check whether bookmarked links still work. It is never granted at install, requests are sent without cookies, and declining it simply turns that feature off.
+WHAT YOUR BROWSER WILL ASK, AND WHY
+At install, the browser asks for one thing: "Read and change your bookmarks", so Bookmark Scout can save, search, and organize them. Anything else is asked for only when you use the feature that needs it, after a short explanation. If you say no, only that feature stays off.
+• "Read the icons of the websites you visit": when you click Show browser icons on Refresh Site Icons, or turn on Use the browser's icon cache, to show the icons your browser already saved next to your bookmarks
+• "Read and change your data on all example.com sites" (or "on a number of websites"): when you run the Dead Link Checker, Metadata Fetcher, or Refresh Site Icons, for only the sites in that run. A run over more than 20 sites, and the Read page content AI setting, ask for "Read and change all your data on all websites". Requests are sent without cookies. Once all websites are allowed, Ask AI can also check whether bookmarked links still work
+• "Read your browsing history": only to save the current page or get folder suggestions from the side panel. The toolbar button and the quick save shortcut need no permission, and Bookmark Scout reads only the open tab's title and address
+• "Communicate with cooperating native applications": only when you turn on Local AI agents
+The right-click menu is optional too, but has no warning, so the browser adds it without asking.
 
 SETTINGS AND BACKUP
 • Export at the bottom of Settings saves a backup: the settings you changed, custom prompts, AI services (never their API keys), saved searches, and the manager's columns. Import restores it
@@ -131,7 +137,7 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 3,803 characters (2026-10-12). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../README.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
+AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 4,797 characters (2026-10-14). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../README.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser.
@@ -169,6 +175,13 @@ OPT-IN AI FOLDER SUGGESTIONS (OFF BY DEFAULT)
 Turn on AI in Settings and choose a cloud AI provider, any OpenAI-compatible endpoint, or a model server on your own computer, with your own API key where the provider requires one. Bookmark Scout then suggests folders for the current page, in the popup or with the AI quick save shortcut, and can create a new folder path after you review it.
 
 When you ask for suggestions, the current page's title and URL and your folder names are sent directly from your browser to the provider you chose, under that provider's terms, and, only if you turn on Read page content, the page's text. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Provider usage may cost money.
+
+WHAT FIREFOX WILL ASK, AND WHY
+At install, Firefox asks for one thing: "Read and modify bookmarks". Anything else is asked for only when you use the feature that needs it, after a short explanation. If you say no, only that feature stays off.
+• "Access browser tabs": only to save the current page or get folder suggestions from the sidebar. The toolbar button and the quick save shortcut need no permission
+• Turning on AI: Firefox asks to share "authentication information, bookmarks, browsing activity" (your API key, your bookmarks and folders, and the current page's title and URL). Its prompt says the developer wants to collect them; here that means the AI provider you chose, which receives them straight from your browser. Nothing reaches Bookmark Scout
+• Read page content: "Access your data for all websites", and sharing "website content" with your AI provider
+• Verify Service: access to your AI provider's address, and sharing "authentication information" (your API key) with it
 
 PRIVACY
 • No account, no analytics, no tracking, no ads

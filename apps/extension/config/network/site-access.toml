@@ -1,0 +1,8 @@
+# Website access for the network tools (Check Dead Links, Metadata Fetcher, Refresh Site Icons).
+# Read by src/lib/site-access.ts.
+
+# A run asks the browser for access to just the sites it will request (each registrable domain,
+# with its subdomains), so the prompt names them instead of "all websites". Above this many sites
+# the run asks for all websites instead: the browser's prompt then only says "a number of
+# websites", and a long list of sites is no easier to judge than one line.
+max_sites_per_request = 20

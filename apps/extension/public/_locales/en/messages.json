@@ -3935,18 +3935,6 @@
         "message": "The right-click menu stays off. To allow it, turn on Right-Click Menu again.",
         "description": "Toast text when the right-click menu permission is declined"
     },
-    "permission_currentTabTitle": {
-        "message": "Allow access to the current tab?",
-        "description": "Title of the dialog that explains the tab permission before the browser asks for it"
-    },
-    "permission_currentTabDesc": {
-        "message": "To save the page you are on, or to suggest a folder for it, Bookmark Scout reads the title and URL of the active tab. The toolbar popup can do that without asking; the side panel stays open while you switch tabs, so it needs this permission.",
-        "description": "Why saving the current page from the side panel needs the tab permission"
-    },
-    "permission_currentTabDetail": {
-        "message": "Your browser's prompt names it access to your tabs or browsing history. Bookmark Scout reads only the active tab's title and URL, only when you ask, and stores nothing else.",
-        "description": "What the tab permission is used for, shown in the explanation dialog"
-    },
     "permission_currentTabDenied": {
         "message": "Nothing was saved. Open the toolbar popup on the page instead, or allow tab access when asked.",
         "description": "Toast text when the tab permission is declined or missing"
@@ -4002,6 +3990,102 @@
     "permission_aiProviderCheckDenied": {
         "message": "Nothing was sent. Your browser asks before the extension shares your API key with the provider.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
+    },
+    "perm_currentTabTitle": {
+        "message": "Save the page you're on",
+        "description": "Title of the dialog shown before the side panel asks for tab access"
+    },
+    "perm_currentTabDesc": {
+        "message": "The side panel stays open while you switch tabs, so without tab access it can't see which page you're on. These ways need no extra permission:",
+        "description": "Why the side panel cannot read the current page; a list of ways that need no permission follows"
+    },
+    "perm_currentTabUsePopup": {
+        "message": "Click the Bookmark Scout button in the toolbar while you're on the page.",
+        "description": "List item: save the current page from the toolbar popup, which needs no permission"
+    },
+    "perm_currentTabUseShortcut": {
+        "message": "Press $keys$ on the page to save it with quick save.",
+        "description": "List item: save the current page with the quick save shortcut; $keys$ is the assigned shortcut",
+        "placeholders": {
+            "keys": {
+                "content": "$1",
+                "example": "Alt+Shift+S"
+            }
+        }
+    },
+    "perm_currentTabDetail": {
+        "message": "To save or get folder suggestions from the side panel anyway, allow tab access. Your browser calls it “Read your browsing history” (Firefox: “Access browser tabs”). Bookmark Scout reads only the open tab's title and address, and only when you ask.",
+        "description": "Last paragraph of the tab access dialog, before the Allow button; quotes the browser prompt"
+    },
+    "perm_browserIconsTitle": {
+        "message": "Show the icons your browser already has?",
+        "description": "Title of the dialog shown before asking for the browser's icon cache permission"
+    },
+    "perm_browserIconsDesc": {
+        "message": "Your browser keeps the icons of the sites you visit. Bookmark Scout can show them next to your bookmarks. Nothing is downloaded, and nothing leaves your device.",
+        "description": "What showing the browser's own site icons does"
+    },
+    "perm_browserIconsDetail": {
+        "message": "Your browser will ask to “Read the icons of the websites you visit”. For sites it has no icon for, Refresh Site Icons can download them, but that needs access to those websites.",
+        "description": "Quotes the browser's prompt for the favicon permission and names the alternative"
+    },
+    "perm_browserIconsOffer": {
+        "message": "Quickest: show the icons your browser already saved.",
+        "description": "Line on the Refresh Site Icons card offering the browser's own icons first"
+    },
+    "perm_browserIconsUse": {
+        "message": "Show browser icons",
+        "description": "Button that turns on the browser's icon cache, asking for permission first"
+    },
+    "perm_aiFirefoxNote": {
+        "message": "Firefox's prompt says the developer wants to collect this data. Here that means the AI company you chose: the data goes straight from your browser to that company, never to Bookmark Scout.",
+        "description": "Firefox only: explains that the 'developer' in Firefox's data collection prompt is the AI company the user chose"
+    },
+    "perm_agentBridgeFirefoxNote": {
+        "message": "Firefox's prompt says the developer wants to collect this data. Here that means the AI agents on this computer, through the bookmark-scout-mcp program. Bookmark Scout never receives it.",
+        "description": "Firefox only: explains that the 'developer' in Firefox's data collection prompt is the local AI agents"
+    },
+    "perm_siteAccessSome": {
+        "message": "Your browser will ask for access to these $count$ sites only: $sites$.",
+        "description": "Website access dialog: the run asks only for these sites; $count$ is the number, $sites$ a list of names",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            },
+            "sites": {
+                "content": "$2",
+                "example": "example.com, wikipedia.org, and github.com"
+            }
+        }
+    },
+    "perm_siteAccessSome_one": {
+        "message": "Your browser will ask for access to this site only: $sites$.",
+        "description": "Website access dialog: the run asks only for one site; $sites$ is its name",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "sites": {
+                "content": "$2",
+                "example": "example.com"
+            }
+        }
+    },
+    "perm_siteAccessAll": {
+        "message": "This run covers more than $count$ sites, so your browser will ask for access to all websites. Run it on a smaller folder to ask for fewer.",
+        "description": "Website access dialog: the run covers too many sites and asks for all websites; $count$ is the limit",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "20"
+            }
+        }
+    },
+    "perm_deadLinkRedirectElsewhere": {
+        "message": "Redirects to another site, which this check had no access to; open it to confirm",
+        "description": "Dead link detail: a redirect to a site the scan had no access to, so not confirmed dead"
     },
     "tools_hostAccessDenied": {
         "message": "Website access not granted",

@@ -57,6 +57,33 @@ describe('manifest config', () => {
   });
 
   it.each(['chrome', 'edge', 'firefox'] as const)(
+    'installs the %s build with the bookmarks warning only',
+    (browser) => {
+      // Permissions no browser warns about at install (checked with Chromium's
+      // getPermissionWarningsByManifest and Firefox's permission strings). Anything with a warning
+      // is optional and asked for when a feature needs it; tests/e2e/install-warnings.spec.ts
+      // asks Chromium itself.
+      const warningFree = [
+        'storage',
+        'activeTab',
+        'sidePanel',
+        'scripting',
+        'offscreen',
+        'contextMenus',
+      ];
+      const manifest = createManifest({ browser }) as Browser.runtime.Manifest & {
+        host_permissions?: string[];
+      };
+      const warned = (manifest.permissions ?? []).filter(
+        (permission) => !warningFree.includes(String(permission)),
+      );
+      expect(warned).toEqual(['bookmarks']);
+      expect(manifest.host_permissions ?? []).toEqual([]);
+      expect(manifest.content_scripts ?? []).toEqual([]);
+    },
+  );
+
+  it.each(['chrome', 'edge', 'firefox'] as const)(
     'suggests no key the %s build would leave unassigned or never receive',
     (browser) => {
       const manifest = createManifest({ browser });

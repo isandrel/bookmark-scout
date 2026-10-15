@@ -1,13 +1,13 @@
 # Simplified Chinese Listing Copy (简体中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-14, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 50 |
 | Firefox Add-ons summary | 92 |
-| Full description, Chrome and Edge | 2,874 |
-| Full description, Firefox | 1,562 |
+| Full description, Chrome and Edge | 3,306 |
+| Full description, Firefox | 1,928 |
 | What's new in 0.3.3 | 382 |
 
 ## Name
@@ -92,7 +92,13 @@ Bookmark Scout 将浏览器的书签页面替换为一个用法与浏览器自�
 • 从 HTML 或 JSON 导入，支持预览、重复项处理和撤消
 • 导出为 HTML、JSON、Markdown 或 CSV，可选的隐私检查能对敏感值做脱敏处理
 
-失效链接检查、元数据获取、刷新网站图标以及 AI 设置中的“读取网页内容”会在首次使用时请求可选的网站访问权限；授予后，“询问 AI”还可以检查已加入书签的链接是否仍然有效。安装时绝不会授予此权限，请求不会附带 Cookie，拒绝后只是关闭相应功能。
+浏览器会询问什么，以及原因
+安装时，浏览器只请求一项权限：“读取和更改您的书签”，以便 Bookmark Scout 保存、搜索和整理书签。其他权限只会在使用需要它的功能时才请求，并且会先显示简短说明。如果拒绝，只有该功能会保持关闭。
+• “读取您访问过的网站对应的图标”：在“刷新网站图标”中点击“显示浏览器图标”，或开启“使用浏览器的图标缓存”时请求，用于在书签旁显示浏览器已保存的图标
+• “读取和更改您在 所有example.com网站 上的数据”（或“读取和更改您在一些网站上的数据”）：运行失效链接检查、元数据获取或刷新网站图标时请求，且只针对该次运行涉及的网站。涉及超过 20 个网站的运行，以及 AI 设置中的“读取网页内容”，会请求“读取和更改您在所有网站上的所有数据”。请求不会附带 Cookie。允许访问所有网站后，“询问 AI”还可以检查已加入书签的链接是否仍然有效
+• “读取您的浏览记录”：仅用于在侧边栏中保存当前网页或获取文件夹建议。工具栏按钮和快速保存快捷键不需要任何权限，Bookmark Scout 只会读取当前打开的标签页的标题和网址
+• “与协作的本机应用通信”：仅在开启“本地 AI 智能体”时请求
+右键菜单同样是可选的，但它没有警告提示，因此浏览器会直接添加，不会询问。
 
 设置与备份
 • 设置页底部的“导出”会保存一份备份：更改过的设置、自定义提示词、AI 服务（绝不包含其 API 密钥）、已保存的搜索以及管理器的列。用“导入”即可恢复
@@ -165,6 +171,13 @@ Bookmark Scout 可以通过工具栏或一个键盘快捷键，在几秒钟内�
 在设置中开启 AI，然后选择云端 AI 服务商、任何兼容 OpenAI 的端点，或在自己电脑上运行的模型服务器；服务商需要 API 密钥时，使用自己的密钥。之后，Bookmark Scout 会在弹出窗口中或通过 AI 快速保存快捷键为当前网页建议文件夹，并可在确认后创建新的文件夹路径。
 
 请求建议时，当前网页的标题和网址以及文件夹名称会从浏览器直接发送给所选的服务商，并受该服务商条款的约束；仅在开启“读取网页内容”时，还会发送网页的文本。不会向 Bookmark Scout 发送任何内容。API 密钥保存在此浏览器的本地扩展程序存储中，不会同步。使用服务商可能会产生费用。
+
+Firefox 会询问什么，以及原因
+安装时，Firefox 只请求一项权限：读取和修改书签。其他权限只会在使用需要它的功能时才请求，并且会先显示简短说明。如果拒绝，只有该功能会保持关闭。
+• 访问浏览器标签页：仅用于在侧栏中保存当前网页或获取文件夹建议。工具栏按钮和快速保存快捷键不需要任何权限
+• 开启 AI：Firefox 会请求共享身份验证信息、书签和浏览活动（API 密钥、书签和文件夹，以及当前网页的标题和网址）。其提示称开发者希望收集这些数据；在这里，开发者指的是所选的 AI 服务商，它直接从浏览器接收这些数据。不会有任何数据到达 Bookmark Scout
+• 读取网页内容：访问所有网站上的数据，并与 AI 服务商共享网站内容
+• 验证服务：访问 AI 服务商的地址，并与其共享身份验证信息（API 密钥）
 
 隐私
 • 无需账号，没有分析、跟踪或广告

@@ -1,13 +1,13 @@
 # Traditional Chinese (Taiwan) Listing Copy (繁體中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters, as measured on the date each section gives (2026-10-12 unless it says otherwise).
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters, measured on 2026-10-12, the two full descriptions on 2026-10-14.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 54 |
 | Firefox Add-ons summary | 101 |
-| Full description, Chrome and Edge | 2,998 |
-| Full description, Firefox | 1,615 |
+| Full description, Chrome and Edge | 3,419 |
+| Full description, Firefox | 2,001 |
 | What's new in 0.3.3 | 381 |
 
 ## Name
@@ -92,7 +92,13 @@ Bookmark Scout 會以自己的管理員取代瀏覽器的「書籤」頁面，�
 • 從 HTML 或 JSON 匯入，提供預覽、重複項目處理方式和復原功能
 • 匯出為 HTML、JSON、Markdown 或 CSV，並可選擇先進行隱私確認，遮蔽敏感值
 
-失效連結檢查工具、中繼資料擷取工具、重新整理網站圖示，以及 AI 設定中的「讀取網頁內容」，會在第一次使用時要求選用的網站存取權；授予後，「詢問 AI」也能檢查加入書籤的連結是否仍然有效。安裝時絕不會授予這項權限，要求不會附帶 Cookie，而且拒絕授權只會讓該功能維持關閉。
+瀏覽器會要求哪些權限，以及原因
+安裝時，瀏覽器只會要求一項權限：「讀取及變更你的書籤」，讓 Bookmark Scout 能儲存、搜尋和整理書籤。其他權限只會在使用需要該權限的功能時，先顯示簡短說明後才要求。如果拒絕，只有該功能會維持關閉。
+• 「讀取你所瀏覽網站的圖示」：在「重新整理網站圖示」中點選「顯示瀏覽器圖示」，或開啟「使用瀏覽器的圖示快取」時，用來在書籤旁顯示瀏覽器已儲存的圖示
+• 「讀取以及變更你在所有 example.com 網站的資料」(或「讀取及變更你在多個網站上的資料」)：執行失效連結檢查工具、中繼資料擷取工具或重新整理網站圖示時，只針對該次執行涵蓋的網站。執行範圍超過 20 個網站時，以及 AI 設定中的「讀取網頁內容」，會要求「讀取及變更你在所有網站上的所有資料」。要求不會附帶 Cookie。允許存取所有網站後，「詢問 AI」也能檢查加入書籤的連結是否仍然有效
+• 「讀取你的瀏覽記錄」：只用於從側邊面板儲存目前網頁或取得資料夾建議。工具列按鈕和快速儲存快捷鍵不需要任何權限，而且 Bookmark Scout 只會讀取目前開啟分頁的標題和網址
+• 「與合作原生應用程式建立連線」：只在開啟本機 AI 代理時要求
+右鍵選單也是選用功能，但沒有警告訊息，因此瀏覽器會直接加入，不會詢問。
 
 設定與備份
 • 「設定」底部的「匯出」會儲存備份：變更過的設定、自訂提示詞、AI 服務 (一律不含 API 金鑰)、已儲存的搜尋，以及管理員的欄位設定。使用「匯入」即可還原
@@ -165,6 +171,13 @@ Bookmark Scout 能從工具列或用一組鍵盤快捷鍵，在幾秒內將每�
 在「設定」中開啟 AI，然後選擇雲端 AI 供應商、任何與 OpenAI 相容的端點，或在自己電腦上執行的模型伺服器；如果供應商需要 API 金鑰，請使用自己的金鑰。接著，Bookmark Scout 會在彈出式視窗中或透過 AI 快速儲存快捷鍵，為目前網頁建議資料夾，並可在確認後建立新的資料夾路徑。
 
 要求建議時，目前網頁的標題和網址以及資料夾名稱，會直接從瀏覽器傳送到所選的供應商，並受該供應商的條款規範；只有在開啟「讀取網頁內容」時，才會一併傳送網頁的文字。不會傳送任何資料給 Bookmark Scout。API 金鑰儲存在這個瀏覽器的本機擴充功能儲存空間中，不會同步。使用供應商的服務可能需要付費。
+
+Firefox 會要求哪些權限，以及原因
+安裝時，Firefox 只會要求一項權限：讀取及修改書籤。其他權限只會在使用需要該權限的功能時，先顯示簡短說明後才要求。如果拒絕，只有該功能會維持關閉。
+• 存取瀏覽器分頁：只用於從側邊欄儲存目前網頁或取得資料夾建議。工具列按鈕和快速儲存快捷鍵不需要任何權限
+• 開啟 AI：Firefox 會要求同意分享驗證資訊、書籤和瀏覽活動 (API 金鑰、書籤和資料夾，以及目前網頁的標題和網址)。它的提示會說開發者想要收集這些資料；在這裡，開發者指的是所選的 AI 供應商，資料會直接從瀏覽器傳送給它。不會有任何資料傳送到 Bookmark Scout
+• 「讀取網頁內容」：要求存取所有網站上的資料，並同意將網站內容分享給 AI 供應商
+• 「驗證服務」：要求存取 AI 供應商的網址，並同意將驗證資訊 (API 金鑰) 分享給它
 
 隱私權
 • 不需要帳戶，沒有分析、追蹤或廣告

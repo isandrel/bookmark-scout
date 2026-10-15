@@ -26,8 +26,8 @@ type ToolEntryProps = {
   tool: ToolDefinition;
   environment: ToolEnvironment;
   currentFolderName?: string;
-  /** Starts network work once website access is granted. */
-  runWithAccess: (start: () => Promise<void>) => void;
+  /** Starts network work once access to `sites` (or all websites) is granted. */
+  runWithAccess: (start: () => Promise<void>, sites: string[]) => void;
 };
 
 /** One tool's card and review, driven by its table entry. */
@@ -51,8 +51,12 @@ function ToolEntry({ tool, environment, currentFolderName, runWithAccess }: Tool
         description={t(tool.descriptionKey)}
         buttonLabel={t(tool.actionKey(settings))}
         onClick={(scope) => {
-          if (tool.needsHostAccess) runWithAccess(() => run(scope));
-          else void run(scope);
+          if (tool.needsHostAccess) {
+            // Access only to the sites this run requests: the same nodes the scan reads.
+            const nodes = getScopedNodes(environment.folders, environment.currentFolderId, scope);
+            const urls = flattenBookmarks(nodes).flatMap(({ node }) => node.url ?? []);
+            runWithAccess(() => run(scope), getUrlSites(urls));
+          } else void run(scope);
         }}
         disabled={aiOff}
         notice={aiOff ? t('ai_featuresDisabledNotice') : undefined}
@@ -125,7 +129,7 @@ export const ToolsSidebar = memo(function ToolsSidebar({
                       tool={tool}
                       environment={environment}
                       currentFolderName={currentFolderName}
-                      runWithAccess={(start) => void hostAccess.run(start)}
+                      runWithAccess={(start, sites) => void hostAccess.run(start, sites)}
                     />
                   ))}
                 </ToolSection>
