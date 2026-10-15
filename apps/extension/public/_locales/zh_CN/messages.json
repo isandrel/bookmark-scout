@@ -6384,7 +6384,7 @@
         "description": "Metadata Fetcher result: the title of the bookmarked page, shown for information when it will not replace the bookmark's own title. $1 is the page title."
     },
     "qaManager_titleKept": {
-        "message": "保留原标题：设置中的“$1”已关闭",
+        "message": "保留标题：“$1”已关闭",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
     },
     "qaManager_redirectUnfollowed": {
@@ -6396,11 +6396,11 @@
         "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     },
     "qaManager_repairDeleted": {
-        "message": "$1：扫描后已被删除，无需修复",
+        "message": "$1：扫描后已被删除",
         "description": "Dead-link repair issue: the bookmark was deleted after the scan, so there was nothing to repair. $1 is the bookmark title."
     },
     "qaManager_reorgDeleted": {
-        "message": "$1：预览后已被删除，无需移动",
+        "message": "$1：预览后已被删除",
         "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
     },
     "qaManager_allFolders": {

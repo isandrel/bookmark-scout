@@ -433,7 +433,7 @@ test('metadata fetcher previews mocked page metadata without changing bookmarks'
   const results = page.getByRole('dialog', { name: 'Metadata Fetcher' });
   // Overwrite Titles is off, so the page title is shown for information only, with no Apply.
   await expect(results).toContainText('Page title: Suggested Fixture Title');
-  await expect(results).toContainText('Keeps its title: "Overwrite Titles" is off in Settings');
+  await expect(results).toContainText('Title kept: "Overwrite Titles" is off');
   await expect(results.getByText('Suggested title:', { exact: false })).toHaveCount(0);
   await expect(results.getByRole('checkbox')).toHaveCount(0);
   await expect(results).toContainText('Fixture summary');

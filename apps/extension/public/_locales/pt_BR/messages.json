@@ -6590,7 +6590,7 @@
         "description": "Metadata Fetcher result: the title of the bookmarked page, shown for information when it will not replace the bookmark's own title. $1 is the page title."
     },
     "qaManager_titleKept": {
-        "message": "Mantém o título: \"$1\" está desativado nas Configurações",
+        "message": "Título mantido: \"$1\" está desativado",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
     },
     "qaManager_redirectUnfollowed": {
@@ -6602,11 +6602,11 @@
         "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     },
     "qaManager_repairDeleted": {
-        "message": "$1: excluído depois da verificação; nada a reparar",
+        "message": "$1: excluído depois da verificação",
         "description": "Dead-link repair issue: the bookmark was deleted after the scan, so there was nothing to repair. $1 is the bookmark title."
     },
     "qaManager_reorgDeleted": {
-        "message": "$1: excluído depois da prévia; nada a mover",
+        "message": "$1: excluído depois da prévia",
         "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
     },
     "qaManager_allFolders": {
