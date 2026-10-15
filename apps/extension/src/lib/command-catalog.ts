@@ -1,6 +1,7 @@
 /**
- * The keyboard commands the extension registers with the browser (`manifest.commands`), with the
- * keys it suggests. Users rebind them in the browser (chrome://extensions/shortcuts,
+ * The keyboard commands the extension registers with the browser (`manifest.commands`). The keys
+ * each one suggests are in `config/ui/shortcuts.toml` (`[commands]`), with the browser's own keys
+ * (`[browser]`). Users rebind them in the browser (chrome://extensions/shortcuts,
  * edge://extensions/shortcuts, or Firefox's Manage Extension Shortcuts); Options shows the
  * current keys from `commands.getAll()`.
  *
@@ -17,9 +18,10 @@
  * browser shortcut unassigned (`CommandService::CanAutoAssign`); the `chrome_ui_overrides`
  * exception for the bookmark key was removed in Chrome 83. A key the user sets on the browser's
  * shortcut page is not checked that way, and extension keys run before the browser's own, so
- * there the user can give Ctrl+D to quick save (`BOOKMARK_SHORTCUT_TAKEOVER`). Firefox runs its
- * own shortcuts first: `commands.update` accepts Ctrl+D, but the key still bookmarks the page and
- * never reaches the extension (`BROWSER_KEPT_SHORTCUTS`).
+ * there the user can give the bookmark key to quick save (`BOOKMARK_SHORTCUT_TAKEOVER` in
+ * `keyboard-shortcuts.ts`). Firefox runs its own shortcuts first: `commands.update` accepts the
+ * bookmark keys, but they still bookmark the page and never reach the extension
+ * (`BROWSER_KEPT_SHORTCUTS`).
  */
 
 import type { PermissionBrowser } from './permission-catalog';
@@ -29,61 +31,60 @@ export type QuickSaveMode = 'local' | 'ai';
 export const EXTENSION_COMMANDS = {
   'quick-save': {
     mode: 'local',
-    suggestedKey: 'Alt+Shift+S',
     descriptionKey: 'command_quickSave',
   },
   'ai-quick-save': {
     mode: 'ai',
-    suggestedKey: 'Alt+Shift+D',
     descriptionKey: 'command_aiQuickSave',
   },
-} as const satisfies Record<
-  string,
-  { mode: QuickSaveMode; suggestedKey: string; descriptionKey: string }
->;
+} as const satisfies Record<string, { mode: QuickSaveMode; descriptionKey: string }>;
 
 export type ExtensionCommand = keyof typeof EXTENSION_COMMANDS;
 
+/** The browser's keys (`[browser]` in shortcuts.toml) the extension acts on. */
+export type BrowserKeyName = 'bookmarkPage' | 'bookmarkAllTabs';
+
 /**
- * The browser's own "bookmark this page" keys (`Ctrl` is Command on macOS), which the user can give
+ * The browser's own "bookmark this page" key (`Ctrl` is Command on macOS), which the user can give
  * to `command` on the shortcut page of the listed browsers; Options and the popup offer it there.
  */
-export const BOOKMARK_SHORTCUT_TAKEOVER = {
-  shortcut: 'Ctrl+D',
+export const BOOKMARK_SHORTCUT_TAKEOVER_RULE = {
+  key: 'bookmarkPage',
   command: 'quick-save',
   browsers: ['chrome', 'edge'],
 } as const satisfies {
-  shortcut: string;
+  key: BrowserKeyName;
   command: ExtensionCommand;
   browsers: readonly PermissionBrowser[];
 };
 
 /**
- * Keys a browser handles before any extension sees them, although it lets an extension assign
- * them, so the Options recorder refuses them. Firefox: bookmark this page and bookmark all tabs.
+ * Browser keys a browser handles before any extension sees them, although it lets an extension
+ * assign them, so the Options recorder refuses them. Firefox: bookmark this page and bookmark all
+ * tabs.
  */
-export const BROWSER_KEPT_SHORTCUTS: Readonly<
-  Partial<Record<PermissionBrowser, readonly string[]>>
+export const BROWSER_KEPT_KEY_NAMES: Readonly<
+  Partial<Record<PermissionBrowser, readonly BrowserKeyName[]>>
 > = {
-  firefox: ['Ctrl+D', 'Ctrl+Shift+D'],
+  firefox: ['bookmarkPage', 'bookmarkAllTabs'],
 };
 
 export function isExtensionCommand(name: string): name is ExtensionCommand {
   return Object.hasOwn(EXTENSION_COMMANDS, name);
 }
 
-/** The manifest's `commands`, with localized descriptions. */
-export function getManifestCommands(): Record<
-  string,
-  { suggested_key: { default: string }; description: string }
-> {
+/** The manifest's `commands`, with the suggested keys from config and localized descriptions. */
+export function getManifestCommands(
+  suggestedKeys: Readonly<Record<string, string>>,
+): Record<string, { suggested_key: { default: string }; description: string }> {
   return Object.fromEntries(
-    Object.entries(EXTENSION_COMMANDS).map(([name, command]) => [
-      name,
-      {
-        suggested_key: { default: command.suggestedKey },
-        description: `__MSG_${command.descriptionKey}__`,
-      },
-    ]),
+    Object.entries(EXTENSION_COMMANDS).map(([name, command]) => {
+      const key = suggestedKeys[name];
+      if (!key) throw new Error(`config/ui/shortcuts.toml [commands] has no keys for "${name}"`);
+      return [
+        name,
+        { suggested_key: { default: key }, description: `__MSG_${command.descriptionKey}__` },
+      ];
+    }),
   );
 }

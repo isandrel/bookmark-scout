@@ -37,12 +37,11 @@ export const POPUP_SEARCH_INPUT_BINDINGS = {
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
 /**
- * Opens the recent searches from the empty search box (the combobox pattern's Alt+ArrowDown), so
- * a plain ArrowDown always reaches the tree. Once open, ArrowUp and ArrowDown move through them.
+ * Opens the recent searches from the empty search box (`recent_searches` in
+ * config/ui/shortcuts.toml), so a plain ArrowDown always reaches the tree. Once open, ArrowUp and
+ * ArrowDown move through them.
  */
-export const POPUP_SEARCH_HISTORY_BINDINGS = {
-  open: [{ key: 'ArrowDown', alt: true }],
-} as const satisfies Record<string, readonly ShortcutBinding[]>;
+export const POPUP_SEARCH_HISTORY_BINDINGS = SHORTCUT_BINDINGS.popupSearchHistory;
 
 /**
  * What the popup's shortcuts tooltip lists, in order. Keys always come from the bindings above

@@ -21,6 +21,8 @@ export {
 	type ScreenshotPair,
 	SOCIAL_SCREENSHOT,
 } from "./screenshots";
+export { readShortcutConfig, SHORTCUT_CONFIG_FILE } from "./shortcut-file";
+export * from "./shortcuts";
 export {
 	type ContactRole,
 	createSite,

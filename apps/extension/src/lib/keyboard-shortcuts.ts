@@ -1,5 +1,6 @@
 /**
- * Key matching and guards shared by the popup and manager keyboard shortcuts.
+ * Key matching and guards shared by the popup and manager keyboard shortcuts, and the bindings
+ * from config/ui/shortcuts.toml, the one place every shortcut is defined.
  *
  * Popup and side panel shortcuts never use Ctrl or Cmd, so browser-reserved combinations
  * (Ctrl/Cmd+L, T, W, N, R, D, and so on) always reach the browser. The manager page, which
@@ -7,8 +8,18 @@
  * that manager (select all, undo, redo, open in new tabs), marked `mod` in the config. Shortcuts
  * are ignored while the user types, while an IME composition is in progress, and while a dialog
  * or menu owns the keyboard.
+ *
+ * How keys are printed (key caps, Apple symbols, `aria-keyshortcuts`) lives in
+ * `@bookmark-scout/config/shortcuts`, which the docs, website, and README use too.
  */
 
+import {
+  bindingKeyCaps,
+  type ConfiguredBinding,
+  ariaKeyShortcuts as configAriaKeyShortcuts,
+  bindingsForPlatform as configBindingsForPlatform,
+  type KeyBinding,
+} from '@bookmark-scout/config/shortcuts';
 import { z } from 'zod';
 
 /** The parts of a keyboard event the guards read, so they can be tested without a DOM. */
@@ -26,18 +37,8 @@ export type ShortcutKeyEvent = {
   target?: EventTarget | null;
 };
 
-export type ShortcutBinding = {
-  /** `KeyboardEvent.key`, for example `'/'`, `'?'`, `'j'`, `'ArrowUp'`, or `'Backspace'`. */
-  key: string;
-  alt?: boolean;
-  /** Required Shift state. Ignored for punctuation, whose Shift state depends on the layout. */
-  shift?: boolean;
-  /** Ctrl, or Cmd on Apple platforms. Manager only. */
-  mod?: boolean;
-};
-
-/** Which platforms a configured binding applies to: Apple's (`mac`) or the others. */
-type BindingPlatform = 'mac' | 'other';
+/** One key combination: `KeyboardEvent.key` plus Alt, Shift, and Ctrl (Cmd on a Mac). */
+export type ShortcutBinding = KeyBinding;
 
 const bindingFields = {
   key: z.string().min(1),
@@ -58,9 +59,22 @@ const managerBindingsSchema = z
   )
   .min(1);
 
+/** Keys in the browser's command format (`Alt+Shift+S`); `isValidCommandShortcut` checks them. */
+const commandKeysSchema = z.string().refine(isValidCommandShortcut, {
+  message: "must be keys in the browser's command format, such as Alt+Shift+S",
+});
+
 const shortcutsConfig = readConfig(
   'ui/shortcuts',
   z.strictObject({
+    commands: z.strictObject({
+      'quick-save': commandKeysSchema,
+      'ai-quick-save': commandKeysSchema,
+    }),
+    // Browser keys the extension acts on; the others in the file are for the docs.
+    browser: z
+      .object({ bookmark_page: commandKeysSchema, bookmark_all_tabs: commandKeysSchema })
+      .catchall(z.unknown()),
     manager: z.strictObject({
       focus_filter: managerBindingsSchema,
       show_help: managerBindingsSchema,
@@ -77,8 +91,11 @@ const shortcutsConfig = readConfig(
       open_in_new_window: managerBindingsSchema,
       undo: managerBindingsSchema,
       redo: managerBindingsSchema,
+      copy: managerBindingsSchema,
+      cut: managerBindingsSchema,
+      paste: managerBindingsSchema,
     }),
-    popup: z.strictObject({ focus_search: bindingsSchema }),
+    popup: z.strictObject({ focus_search: bindingsSchema, recent_searches: bindingsSchema }),
   }),
 );
 
@@ -93,13 +110,10 @@ export function isApplePlatform(): boolean {
 
 /** The configured bindings that apply on this platform, without the platform field. */
 export function bindingsForPlatform(
-  bindings: readonly (ShortcutBinding & { platform?: BindingPlatform })[],
+  bindings: readonly ConfiguredBinding[],
   apple: boolean = isApplePlatform(),
 ): ShortcutBinding[] {
-  const platform: BindingPlatform = apple ? 'mac' : 'other';
-  return bindings
-    .filter((binding) => !binding.platform || binding.platform === platform)
-    .map(({ platform: _platform, ...binding }) => binding);
+  return configBindingsForPlatform(bindings, apple);
 }
 
 const managerConfig = shortcutsConfig.manager;
@@ -123,10 +137,53 @@ export const SHORTCUT_BINDINGS = {
     undo: bindingsForPlatform(managerConfig.undo),
     redo: bindingsForPlatform(managerConfig.redo),
   },
+  /**
+   * The browser's copy, cut, and paste keys. The manager acts on clipboard events, not on these
+   * keys; they are listed so the shortcuts help names them.
+   */
+  managerClipboard: {
+    copy: bindingsForPlatform(managerConfig.copy),
+    cut: bindingsForPlatform(managerConfig.cut),
+    paste: bindingsForPlatform(managerConfig.paste),
+  },
   popup: {
     focusSearch: shortcutsConfig.popup.focus_search,
   },
+  /** Opens the recent searches from the empty search box; once open, the arrows move in them. */
+  popupSearchHistory: {
+    open: shortcutsConfig.popup.recent_searches,
+  },
 } as const satisfies Record<string, Record<string, readonly ShortcutBinding[]>>;
+
+/**
+ * The keys each browser command suggests (`manifest.commands`), by command name, in the browser's
+ * command format. The manifest build reads the same file through `readShortcutConfig`.
+ */
+export const COMMAND_SUGGESTED_KEYS: Readonly<Record<ExtensionCommand, string>> =
+  shortcutsConfig.commands;
+
+/** The browser's own keys the extension acts on, in the browser's command format. */
+export const BROWSER_KEYS: Readonly<Record<BrowserKeyName, string>> = {
+  bookmarkPage: shortcutsConfig.browser.bookmark_page,
+  bookmarkAllTabs: shortcutsConfig.browser.bookmark_all_tabs,
+};
+
+/** The browser's bookmark key and the command the user can give it to, where they can. */
+export const BOOKMARK_SHORTCUT_TAKEOVER = {
+  shortcut: BROWSER_KEYS[BOOKMARK_SHORTCUT_TAKEOVER_RULE.key],
+  command: BOOKMARK_SHORTCUT_TAKEOVER_RULE.command,
+  browsers: BOOKMARK_SHORTCUT_TAKEOVER_RULE.browsers,
+} as const;
+
+/** Keys each browser keeps for itself although an extension may assign them. */
+export const BROWSER_KEPT_SHORTCUTS: Readonly<
+  Partial<Record<PermissionBrowser, readonly string[]>>
+> = Object.fromEntries(
+  Object.entries(BROWSER_KEPT_KEY_NAMES).map(([browser, names]) => [
+    browser,
+    names.map((name) => BROWSER_KEYS[name]),
+  ]),
+);
 
 /**
  * Keys of the standard ARIA tree pattern, shared by the popup's tree and the manager's folder
@@ -143,58 +200,17 @@ export const TREE_KEY_BINDINGS = {
   toggle: [{ key: ' ' }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
-/** Key caps as printed on keyboards, for keys whose `KeyboardEvent.key` name is not. */
-const KEY_CAP_LABELS: Readonly<Record<string, string>> = {
-  ArrowUp: '↑',
-  ArrowDown: '↓',
-  ArrowLeft: '←',
-  ArrowRight: '→',
-  Enter: '↵',
-  Escape: 'Esc',
-  Control: 'Ctrl',
-  ' ': 'Space',
-};
-
-/** Apple keyboards print symbols on these keys, and macOS menus name them the same way. */
-const APPLE_KEY_CAP_LABELS: Readonly<Record<string, string>> = {
-  ...KEY_CAP_LABELS,
-  Alt: '⌥',
-  Shift: '⇧',
-  Meta: '⌘',
-  Backspace: '⌫',
-  Delete: '⌦',
-};
-
-/**
- * Modifier names, which `aria-keyshortcuts` and printed key caps share, in the order each
- * platform prints them: Ctrl, Alt, Shift elsewhere; ⌥⇧⌘ on Apple platforms.
- */
-function bindingModifiers(binding: ShortcutBinding, apple = isApplePlatform()): string[] {
-  const alt = binding.alt ? ['Alt'] : [];
-  const shift = binding.shift ? ['Shift'] : [];
-  if (!binding.mod) return [...alt, ...shift];
-  return apple ? [...alt, ...shift, 'Meta'] : ['Control', ...alt, ...shift];
-}
-
-/** The key as printed: a letter typed with Ctrl or Cmd shows in capitals, as on the keycap. */
-function bindingKeyName(binding: ShortcutBinding): string {
-  return binding.mod && binding.key.length === 1 ? binding.key.toUpperCase() : binding.key;
-}
-
 /**
  * The keys to press for `binding`, modifiers first, as the keyboard prints them: `['Alt', '↑']`,
  * or `['⌥', '↑']` on Apple platforms. Not translated.
  */
 export function shortcutKeyCaps(binding: ShortcutBinding): string[] {
-  const labels = isApplePlatform() ? APPLE_KEY_CAP_LABELS : KEY_CAP_LABELS;
-  return [...bindingModifiers(binding), bindingKeyName(binding)].map((key) => labels[key] ?? key);
+  return bindingKeyCaps(binding, isApplePlatform());
 }
 
 /** An `aria-keyshortcuts` value for the bindings, e.g. `Alt+ArrowUp Backspace`. */
 export function ariaKeyShortcuts(bindings: readonly ShortcutBinding[]): string {
-  return bindings
-    .map((binding) => [...bindingModifiers(binding), bindingKeyName(binding)].join('+'))
-    .join(' ');
+  return configAriaKeyShortcuts(bindings, isApplePlatform());
 }
 
 export type ShortcutGuardOptions = {

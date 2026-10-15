@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { Browser } from 'wxt/browser';
-import { BOOKMARK_SHORTCUT_TAKEOVER, BROWSER_KEPT_SHORTCUTS } from '@/lib/command-catalog';
+import {
+  BOOKMARK_SHORTCUT_TAKEOVER,
+  BROWSER_KEPT_SHORTCUTS,
+  COMMAND_SUGGESTED_KEYS,
+} from '@/lib/keyboard-shortcuts';
 import { adaptManifestV2, createManifest, FIREFOX_ADDON_ID } from '../../manifest.config';
 
 describe('manifest config', () => {
@@ -90,7 +94,7 @@ describe('manifest config', () => {
       const suggested = Object.values(manifest.commands ?? {}).map(
         (command) => command.suggested_key?.default,
       );
-      expect(suggested).toEqual(['Alt+Shift+S', 'Alt+Shift+D']);
+      expect(suggested).toEqual(Object.values(COMMAND_SUGGESTED_KEYS));
       // Chrome and Edge never auto-assign their bookmark keys, and Firefox keeps them for itself.
       const bookmarkKeys = [
         BOOKMARK_SHORTCUT_TAKEOVER.shortcut,

@@ -40,7 +40,7 @@ export function ShortcutRecorder({
   const [held, setHeld] = useState<string[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState('');
-  const isDefault = shortcut === EXTENSION_COMMANDS[name].suggestedKey;
+  const isDefault = shortcut === COMMAND_SUGGESTED_KEYS[name];
 
   // An explanation is about the keys as they were when it was given. Once any command's keys
   // change (another row recorded new ones), it may no longer be true, so it goes.
@@ -149,10 +149,7 @@ export function ShortcutRecorder({
         visible={!isDefault}
         label={t('settings_resetFieldToDefault', label)}
         onReset={() =>
-          void announceSaved(
-            () => resetCommandShortcut(name),
-            EXTENSION_COMMANDS[name].suggestedKey,
-          )
+          void announceSaved(() => resetCommandShortcut(name), COMMAND_SUGGESTED_KEYS[name])
         }
       />
       <span className="sr-only" aria-live="polite">
