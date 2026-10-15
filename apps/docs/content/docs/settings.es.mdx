@@ -10,7 +10,7 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 - **Buscar en la configuración...**, en la parte superior, encuentra un ajuste en cualquier pestaña e indica cuántos coinciden.
 - Cada pestaña se divide en secciones con título. El interruptor de cada herramienta está junto a su título; mientras está desactivado, el resto de sus ajustes se pliega. Los ajustes técnicos, como los tiempos de espera y la longitud de los nombres de archivo, están en **Configuración avanzada**, que permanece cerrada hasta que la abres o una búsqueda encuentra algo dentro.
 - Un ajuste cambiado se marca como **Modificado**, con un botón para restablecer su valor predeterminado. **Restablecer todo** restablece todos los ajustes.
-- **Exportar** guarda en un archivo de copia de seguridad los ajustes que cambiaste, los prompts personalizados, los servicios de IA (nombre, proveedor, modelo, **URL base** y campos propios del proveedor; nunca las claves de API ni los **Encabezados adicionales (JSON)**), las búsquedas guardadas y las columnas y el orden de la tabla del administrador. **Importar** restaura una copia, reemplazando cada parte que contiene el archivo, o combina un archivo de ajustes simple con tu configuración; después de restaurar una copia, vuelve a introducir las claves de API y los encabezados adicionales en [IA](#ai) para los servicios marcados con **Falta configurar**. Ninguno de los dos toca tus marcadores.
+- **Hacer copia de los ajustes** guarda en un archivo de copia de seguridad los ajustes que cambiaste, los prompts personalizados, los servicios de IA (nombre, proveedor, modelo, **URL base** y campos propios del proveedor; nunca las claves de API ni los **Encabezados adicionales (JSON)**), las búsquedas guardadas y las columnas y el orden de la tabla del administrador. **Restaurar ajustes** restaura una copia, reemplazando cada parte que contiene el archivo, o combina un archivo de ajustes simple con tu configuración; después de restaurar una copia, vuelve a introducir las claves de API y los encabezados adicionales en [IA](#ai) para los servicios marcados con **Falta configurar**. Ninguno de los dos toca tus marcadores. **Exportar marcadores**, junto a ellos, abre el administrador de marcadores en su herramienta de exportación; consulta [Importar y exportar](/guides/import-export).
 - Los ajustes que cambias se guardan en el almacenamiento sincronizado del navegador, así que te siguen a otros dispositivos cuando la sincronización del navegador está activada. Algunos ajustes propios de cada dispositivo se quedan en él: la carpeta elegida para el guardado rápido, **Límite de almacenamiento de iconos**, el registro de actividad de IA y la búsqueda web de Preguntar a la IA. Los servicios de IA, con sus claves de API, la **URL base** y los **Encabezados adicionales (JSON)**, también se quedan en este dispositivo. Consulta [Privacidad](/privacy).
 
 ## Guardar y buscar [#search]
@@ -53,11 +53,11 @@ Consulta [Guardar y organizar](/guides/save-and-organize).
 
 Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu navegador, con **Cambiar atajos**. En Firefox también puedes escribir ahí mismo teclas nuevas y restablecer las predeterminadas. En Chrome y Edge también explica cómo asignar `Ctrl+D` al guardado rápido. Consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save) y [Usar Ctrl+D para el guardado rápido](/guides/save-and-organize#ctrl-d).
 
-### Menú contextual [#context-menu]
+### Menú del clic derecho [#context-menu]
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Menú contextual** | Desactivado | Muestra **Guardar marcador en...** cuando haces clic con el botón derecho en un enlace. En Chrome y Edge, al activarlo se añade el permiso opcional del menú contextual, sin preguntar |
+| **Menú del clic derecho** | Desactivado | Muestra **Guardar marcador en...** cuando haces clic con el botón derecho en un enlace. En Chrome y Edge, al activarlo se añade el permiso opcional del menú del clic derecho, sin preguntar |
 | **Origen del nombre del marcador** | Texto del enlace | Pone a un marcador guardado desde el menú contextual el nombre del texto del enlace, del título de la página o de la URL del enlace |
 
 ## Aspecto [#appearance]
@@ -113,7 +113,7 @@ Elige qué comandos muestran los menús contextuales y ⋯ del administrador, y 
 
 ## IA [#ai]
 
-La IA está desactivada de forma predeterminada. Estos ajustes solo importan después de activar **Funciones de IA**.
+La IA está desactivada de forma predeterminada. Estos ajustes solo importan después de activar **Funciones de IA**; hasta entonces, los ajustes de IA de esta pestaña y de la pestaña **Herramientas de IA** aparecen atenuados bajo una nota que lo indica. Aun así, puedes cambiarlos.
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
@@ -175,7 +175,7 @@ El Etiquetado automático y el Generador de resúmenes siempre trabajan con la c
 
 Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe un nombre y pulsa Enter, o elige una sugerencia. **Códigos de estado correctos** es una lista de casillas con los códigos habituales, y puedes añadir otros. Para que la configuración quepa en la sincronización del navegador, cada lista admite hasta 20 entradas, y cada nombre de parámetro hasta 32 caracteres (letras, números y signos de URL). Las listas predeterminadas están en [Limpiar duplicados y URLs con seguimiento](/guides/clean-up#strip-tracking-parameters). Consulta también [Encontrar y reparar enlaces rotos](/guides/dead-links).
 
-## Metadatos y contenido [#metadata--content]
+## Títulos e iconos de páginas [#metadata--content]
 
 ### Extractor de metadatos [#metadata-fetcher]
 
@@ -203,7 +203,7 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | --- | --- | --- |
 | **Activar el Escáner de privacidad** | Activado | Muestra **Escáner de privacidad** en la barra lateral de herramientas. Siempre analiza todos los marcadores |
 | **Analizar títulos** | Desactivado | Comprueba los títulos además de las URLs |
-| **Analizar parámetros de consulta** y **Analizar fragmentos** | Activado | Comprueba esas partes de cada URL |
+| **Analizar parámetros de consulta** y **Analizar fragmentos** | Activado | Comprueba esas partes de cada URL. Un fragmento sin parámetros (`#section`, `#inbox`) solo se marca cuando contiene una clave o un token |
 | **Parámetros sensibles** | `token`, `access_token`, `refresh_token`, `auth`, `authorization`, `api_key`, `apikey`, `key`, `secret`, `password`, `pwd`, `code`, `session` | Nombres de parámetros que se marcan |
 | **Detectar correos electrónicos** y **Detectar UUIDs** | Activado | Marca las direcciones de correo electrónico y los valores con forma de UUID |
 

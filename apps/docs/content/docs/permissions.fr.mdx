@@ -23,7 +23,7 @@ Lorsque vous installez Bookmark Scout, le navigateur affiche une seule ligne. To
 | Firefox uniquement : la même demande, pour les informations d'authentification | Vous cliquez sur **Vérifier le service** ou **Actualiser les modèles** | Votre clé API est envoyée à votre fournisseur d'IA |
 | Firefox uniquement : la même demande, pour les favoris et l'activité de navigation | Vous activez **Autoriser les agents d'IA locaux** | Ce que les agents d'IA de votre ordinateur peuvent consulter |
 
-Le menu contextuel (**Menu contextuel**) est lui aussi facultatif dans Chrome et Edge, mais il ne déclenche aucun avertissement : le navigateur l'ajoute donc sans rien demander.
+Le menu du clic droit (**Menu du clic droit**) est lui aussi facultatif dans Chrome et Edge, mais il ne déclenche aucun avertissement : le navigateur l'ajoute donc sans rien demander.
 
 ## Accordées à l'installation [#granted-at-install]
 
@@ -35,7 +35,7 @@ Le menu contextuel (**Menu contextuel**) est lui aussi facultatif dans Chrome et
 | `scripting` | Tous | Après un raccourci d'enregistrement rapide, afficher la notification dans cet onglet uniquement. Il ne lit rien de la page |
 | `sidePanel` | Chrome, Edge | Fournir la vue du panneau latéral. Firefox déclare cette même page comme barre latérale |
 | `offscreen` | Chrome, Edge | Exécuter la requête de l'enregistrement rapide avec l'IA dans une page d'extension masquée, que le navigateur ferme lorsqu'elle se termine. La page d'arrière-plan de Firefox s'en charge elle-même |
-| `contextMenus` | Firefox | Firefox ne permet pas aux extensions de la demander ultérieurement. Le menu n'apparaît toutefois qu'après l'activation du **Menu contextuel** |
+| `contextMenus` | Firefox | Firefox ne permet pas aux extensions de la demander ultérieurement. Le menu n'apparaît toutefois qu'après l'activation du **Menu du clic droit** |
 
 Dans Chrome et Edge, l'extension remplace également la page Favoris du navigateur par le gestionnaire Bookmark Scout. Il s'agit d'un remplacement de page, et non d'une autorisation. Firefox ne le permet pas : le gestionnaire s'y ouvre donc depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up ; consultez [Compatibilité des navigateurs](/browser-support).
 
@@ -44,7 +44,7 @@ Dans Chrome et Edge, l'extension remplace également la page Favoris du navigate
 | Autorisation | Navigateurs | Demandée lorsque |
 | --- | --- | --- |
 | `tabs` | Tous | Vous enregistrez la page actuelle, ou demandez des suggestions de dossiers, depuis le panneau latéral. Une courte explication s'affiche d'abord et propose la fenêtre pop-up de la barre d'outils et le raccourci d'enregistrement rapide, qui n'en ont jamais besoin |
-| `contextMenus` | Chrome, Edge | Vous activez le **Menu contextuel** dans les [Paramètres](/settings#data). Il est désactivé par défaut, et Chrome accorde cette autorisation sans demande de confirmation |
+| `contextMenus` | Chrome, Edge | Vous activez le **Menu du clic droit** dans les [Paramètres](/settings#data). Il est désactivé par défaut, et Chrome accorde cette autorisation sans demande de confirmation |
 | `favicon` | Chrome, Edge | Vous cliquez sur **Afficher les icônes du navigateur** dans **Actualiser les icônes de site**, ou activez **Utiliser le cache d'icônes du navigateur** dans les [Paramètres](/settings#appearance), pour afficher les icônes que le navigateur a déjà enregistrées. Une courte explication s'affiche d'abord |
 | Consentement au partage de données | Firefox | Chaque fonctionnalité ne demande que ce qu'elle envoie : les **Fonctionnalités d'IA** pour votre clé API, vos favoris, ainsi que le titre et l'URL de la page actuelle ; **Lire le contenu des pages** pour le texte des pages ; **Vérifier le service** pour votre clé API. Une courte explication indique d'abord que les données vont à votre fournisseur d'IA, et non à Bookmark Scout |
 | `nativeMessaging` | Tous | Vous activez **Autoriser les agents d'IA locaux** dans les [Paramètres](/settings#agent-bridge), pour que l'extension puisse communiquer avec le programme bookmark-scout-mcp de votre ordinateur. Une courte explication s'affiche d'abord ; dans Firefox, la même demande porte aussi sur le partage des données de favoris avec lui |

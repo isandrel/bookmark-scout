@@ -1,11 +1,17 @@
 ---
 title: Browserunterstützung
-description: Was in Chrome, Microsoft Edge und Firefox funktioniert, was in jedem Browser getestet wird und warum Safari nicht unterstützt wird.
+description: Was in Chrome, Microsoft Edge und Firefox funktioniert, wo Sie die Erweiterung für jeden Browser bekommen und warum Safari nicht unterstützt wird.
 ---
 
-Chrome ist die primäre Zielplattform. Edge basiert auf Chromium und bietet dieselben Funktionen, außer wo unten anders angegeben. Firefox verwendet einen Manifest-V2-Build mit kleinerem Funktionsumfang.
+Bookmark Scout funktioniert am besten in Chrome, wo es im Chrome Web Store erhältlich ist. Edge bietet dieselben Funktionen, außer wo unten anders angegeben. Firefox bietet etwas weniger, weil es Erweiterungen bei Lesezeichen weniger erlaubt. Alle drei laufen auf einem Computer; Smartphones und Tablets werden nicht unterstützt.
 
-## Funktionsübersicht [#feature-matrix]
+## Wo Sie es bekommen [#where-to-get-it]
+
+<StoreAvailability />
+
+Wo ein Store Bookmark Scout noch nicht führt, können Sie es [von Hand installieren](/installation#install-from-a-github-release). Das Material für die Store-Einträge wird im <RepoLink tree="store">`store/`-Ordner</RepoLink> des Repositorys vorbereitet, und jeder Store prüft eine Erweiterung, bevor er sie aufnimmt.
+
+## Was wo funktioniert [#feature-matrix]
 
 Diese Tabelle beruht auf den Manifesten der für jeden Browser erstellten Erweiterung und den Browserprüfungen in ihrem Code.
 
@@ -18,26 +24,14 @@ Diese Tabelle beruht auf den Manifesten der für jeden Browser erstellten Erweit
 | Gespeicherte Suchen, Wartungstools, Import und Export, Statistik, KI-Tools im Manager | Ja | Ja | Ja, im Manager. Automatisierte Tests decken Import und Export sowie die Berichte ab; die übrigen Tools werden manuell geprüft. |
 | Einstellungsseite | Ja | Ja | Ja |
 | „KI fragen“ und die anderen KI-Tools | Ja | Ja | Ja, nachdem Sie der Datenweitergabe an Ihren KI-Anbieter zugestimmt haben |
-| Lokale KI-Agenten über `bookmark-scout-mcp` | Ja | Ja | Ja; `bookmark-scout-mcp install` meldet es auch bei Firefox an. Nicht durch automatisierte Tests abgedeckt |
+| Lokale KI-Agenten über `bookmark-scout-mcp` (für Entwickler) | Ja | Ja | Ja; `bookmark-scout-mcp install` meldet es auch bei Firefox an. Nicht durch automatisierte Tests abgedeckt |
 | Im Inkognitofenster aus dem Manager öffnen | Ja | Ja, als InPrivate-Fenster | Ja, als privates Fenster, wenn die Erweiterung in privaten Fenstern erlaubt ist |
-| Rechtsklickmenü zum Speichern von Links | Ja, nachdem Sie **Kontextmenü** aktiviert haben (fragt nach einer Berechtigung) | Ebenso | Ja, nachdem Sie **Kontextmenü** aktiviert haben |
+| Rechtsklickmenü zum Speichern von Links | Ja, nachdem Sie **Rechtsklickmenü** aktiviert haben (fragt nach einer Berechtigung) | Ebenso | Ja, nachdem Sie **Rechtsklickmenü** aktiviert haben |
 | Website-Symbole neben Lesezeichen | Mit **Website-Symbole aktualisieren** gespeicherte Symbole sowie Symbole aus dem Symbol-Cache des Browsers, sobald Sie **Symbol-Cache des Browsers verwenden** aktivieren | Ebenso | Nur mit **Website-Symbole aktualisieren** gespeicherte Symbole; das Tool läuft im Manager. Firefox bietet Erweiterungen keine Favicon-API, daher zeigen andere Lesezeichen ein allgemeines Symbol. |
 | Optionaler Zugriff auf Websites für die Linkprüfung, das Abrufen von Titeln und das Aktualisieren von Website-Symbolen | Wird angefragt, wenn Sie das Tool ausführen | Ebenso | Ebenso |
 
-## Was getestet wird [#what-is-tested]
-
-- **Chrome (Chromium)**: Unit-Tests und End-to-End-Tests für Pop-up, Seitenleiste, Manager, Einstellungen, Wartungstools, Berichte, Import und Export, Tastenkombinationen, Schnellspeichern, gespeicherte Suchen, Speichern über das Kontextmenü, Drag-and-drop, Netzwerktools, KI-Tools mit simulierten Anbietern und Abläufe über mehrere davon hinweg. Brückentests führen das Programm `bookmark-scout-mcp` mit der Erweiterung in Chromium unter Linux und macOS aus.
-- **Edge**: Dieselbe End-to-End-Suite läuft mit dem Edge-Build.
-- **Firefox**: Eine Smoke-Test-Suite deckt die Suche und das Erstellen von Ordnern im Pop-up ab, die in einem Tab geladene Seite der Seitenleiste, das Öffnen des Managers aus dem Pop-up und der Seitenleiste, die Manager-Seite mit ihrer Adresse, `Delete` und Rückgängig, Tasten im Ordnerbaum, Rechtsklickmenü und Drag-and-drop (über skriptgesteuerte Drag-Ereignisse), den Hinweis zum Tastenkürzel für das Schnellspeichern und die Tastenaufnahme, die Einwilligung zur KI-Datenweitergabe, das Speichern einer Einstellung, einen JSON-Export mit anschließendem Import, die Statistik- und Datenschutzberichte sowie gespeicherte Website-Symbole im Pop-up. Das Speichern über das Rechtsklickmenü auf einer Seite, die übrigen Tastenkombinationen, Drag-and-drop im Pop-up, die Benachrichtigung beim Schnellspeichern selbst, lokale KI-Agenten sowie Netzwerk- und KI-Tools (einschließlich **Website-Symbole aktualisieren** selbst) sind nicht abgedeckt.
-
-Die Edge-Suite und die Firefox-Smoke-Tests sind wie die Chromium-Suite erforderliche CI-Prüfungen. Echte KI-Anbieter und Live-Websites werden manuell geprüft, nicht durch automatisierte Tests.
+Wie viel in jedem Browser durch automatisierte Tests abgedeckt ist, steht unter [Projektstatus](/status#what-is-tested-in-each-browser).
 
 ## Safari [#safari]
 
 Safari wird nicht unterstützt. Safari Web Extensions implementieren die `bookmarks`-API nicht, von der jeder Teil von Bookmark Scout abhängt.
-
-## Verfügbarkeit in Stores [#store-availability]
-
-<StoreAvailability />
-
-Das Material für die Store-Einträge wird im <RepoLink tree="store">`store/`-Ordner</RepoLink> des Repositorys vorbereitet, und jede Einreichung muss vom Maintainer freigegeben werden. Wo ein Store keinen Eintrag hat, [installieren Sie die Erweiterung aus einem GitHub-Release](/installation).

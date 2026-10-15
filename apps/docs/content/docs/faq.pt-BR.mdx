@@ -7,11 +7,11 @@ description: Respostas para dúvidas comuns sobre o Bookmark Scout e soluções 
 
 ### O Bookmark Scout é gratuito? [#is-bookmark-scout-free]
 
-Sim. Ele é gratuito e de código aberto sob a licença <License />, sem anúncios e sem plano pago. Se você ativar a IA, seu provedor de IA pode cobrar pelo uso da API.
+Sim. Ele é gratuito e de código aberto sob a licença <License />, sem anúncios, sem conta e sem plano pago. Os recursos opcionais de IA são a única coisa que pode custar dinheiro: eles usam a sua própria conta em uma empresa de IA, que pode cobrar por cada uso.
 
 ### Preciso usar IA? [#do-i-need-to-use-ai]
 
-Não. A pesquisa, o salvamento, a organização, a limpeza e a importação e exportação funcionam sem ela. A IA fica desativada até você ativá-la nas [Configurações](/settings#ai).
+Não. A IA é opcional. O salvamento, a pesquisa, a organização, a limpeza e a importação e exportação funcionam sem ela, e ela fica desativada até você ativá-la nas [Configurações](/settings#ai). Para usá-la, você precisa de uma conta em uma empresa de IA, como OpenAI, Anthropic ou Google, e de uma chave dessa conta (uma chave de API) que permite ao Bookmark Scout usá-la. A maioria dessas empresas cobra por cada uso, normalmente um valor pequeno; um programa de IA que roda no seu próprio computador, como o Ollama, não custa nada, mas precisa de um computador razoavelmente potente. Os títulos e endereços dos favoritos com que uma ferramenta de IA trabalha são enviados para a empresa que você escolheu. Consulte [Configurar as ferramentas de IA](/guides/ai-tools).
 
 ### Ele envia meus favoritos para algum lugar? [#does-it-send-my-bookmarks-anywhere]
 
@@ -25,11 +25,19 @@ Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebra
 
 <StoreAvailability />
 
-Cada loja analisa uma extensão antes de listá-la. Se a loja do seu navegador ainda não a lista, [instale-a a partir de uma versão do GitHub](/installation).
+Cada loja analisa uma extensão antes de listá-la. Se a loja do seu navegador ainda não a lista, você pode [instalá-la manualmente](/installation#install-from-a-github-release) (avançado).
 
 ### Ele funciona no Firefox? [#does-it-work-in-firefox]
 
-Sim. O Firefox não permite que as extensões substituam a página de favoritos, então abra o gerenciador do Bookmark Scout, com as ferramentas de limpeza, a importação e exportação e as pesquisas salvas, em **Abrir gerenciador de favoritos** no pop-up. O cache de ícones do navegador não está disponível no Firefox, e lá menos recursos são cobertos por testes automatizados. Consulte [Compatibilidade com navegadores](/browser-support).
+Ainda não pelo Firefox Add-ons: a versão para o Firefox chega em breve. Até lá, ela pode ser [instalada manualmente](/installation#firefox) como uma extensão temporária, que o Firefox remove quando é reiniciado. Depois de instalada, ela funciona com algumas diferenças: o Firefox não permite que as extensões substituam a página de favoritos, então abra o gerenciador do Bookmark Scout, com as ferramentas de limpeza, a importação e exportação e as pesquisas salvas, em **Abrir gerenciador de favoritos** no pop-up, e o cache de ícones do navegador não está disponível. Consulte [Compatibilidade com navegadores](/browser-support).
+
+### Ele funciona no Microsoft Edge? [#does-it-work-in-microsoft-edge]
+
+Ainda não pelos Complementos do Microsoft Edge: a versão para o Edge chega em breve. Até lá, ela pode ser [instalada manualmente](/installation#edge) e, depois disso, funciona de forma bem parecida com o Chrome. Consulte [Compatibilidade com navegadores](/browser-support).
+
+### Ele funciona no meu celular? [#does-it-work-on-my-phone]
+
+Não. O Bookmark Scout é uma extensão para navegadores de computador. Os navegadores de celulares e tablets não o executam.
 
 ### Por que não o Safari? [#why-not-safari]
 
@@ -51,7 +59,7 @@ Verifique se **Mostrar ícones dos sites** está ativado nas [Configurações](/
 
 ### Minha chave de API não foi salva [#my-api-key-was-not-saved]
 
-Uma chave que não parece ser do provedor escolhido é rejeitada e não é salva, e uma mensagem avisa isso. Verifique se o **Provedor de IA** corresponde à chave que você colou. Consulte [Configurar as ferramentas de IA](/guides/ai-tools#turn-on-ai).
+Uma chave que não parece ser da empresa de IA escolhida (o provedor do serviço) é rejeitada e não é salva, e uma mensagem avisa isso. Verifique se o provedor do serviço é a empresa que forneceu a chave. Consulte [Configurar as ferramentas de IA](/guides/ai-tools#turn-on-ai).
 
 ### A verificação de links quebrados diz que um site que funciona precisa de verificação manual [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 
@@ -71,7 +79,7 @@ Os resultados param no **Máximo de resultados da pesquisa** (20 por padrão). R
 
 ### Minhas tags, resumos ou pesquisas salvas não aparecem em outro computador [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
 
-Eles ficam armazenados somente no dispositivo em que você os criou e não são sincronizados. Para levá-los a outro computador, exporte seus favoritos em JSON, que leva as tags e os resumos para os favoritos criados pela importação, e salve um backup com **Exportar** no fim das [Configurações](/settings), que inclui as pesquisas salvas. Já as configurações são sincronizadas, pela sua conta do navegador, quando a sincronização do navegador está ativada.
+Eles ficam armazenados somente no dispositivo em que você os criou e não são sincronizados. Para levá-los a outro computador, exporte seus favoritos em JSON, que leva as tags e os resumos para os favoritos criados pela importação, e salve um backup com **Fazer backup das configurações** no fim das [Configurações](/settings), que inclui as pesquisas salvas. Já as configurações são sincronizadas, pela sua conta do navegador, quando a sincronização do navegador está ativada.
 
 ### Excluí algo por engano [#i-deleted-something-by-mistake]
 
@@ -83,7 +91,7 @@ Se outra extensão já usa `Alt+Shift+S` ou `Alt+Shift+D`, o navegador deixa o a
 
 ### Minhas configurações sumiram depois de uma atualização [#my-settings-are-gone-after-an-update]
 
-Uma atualização passou os dados salvos do Bookmark Scout para um novo formato e removeu os dados antigos em vez de convertê-los. Depois dela, as configurações voltam aos valores padrão, os serviços de IA e as chaves de API deles precisam ser adicionados de novo, e os prompts personalizados, as pesquisas salvas, as pesquisas e pastas recentes, as tags e os resumos e os ícones de sites salvos se perdem. Os seus favoritos em si não são afetados. Se você salvou suas configurações com **Exportar** no fim das [Configurações](/settings) antes de atualizar, use **Importar** com esse arquivo.
+As atualizações normalmente mantêm suas configurações. Uma atualização, para a versão 0.3.3, passou os dados salvos do Bookmark Scout para um novo formato e removeu os dados antigos em vez de convertê-los. Depois dela, as configurações voltam aos valores padrão, os serviços de IA e as chaves de API deles precisam ser adicionados de novo, e os prompts personalizados, as pesquisas salvas, as pesquisas e pastas recentes, as tags e os resumos e os ícones de sites salvos se perdem. Os seus favoritos em si não são afetados. Se você salvou suas configurações com **Fazer backup das configurações** (na época chamado **Exportar**) no fim das [Configurações](/settings) antes de atualizar, abra esse arquivo com **Restaurar configurações**.
 
 ## Obter ajuda [#get-help]
 

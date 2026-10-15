@@ -23,7 +23,7 @@ Quando você instala o Bookmark Scout, o navegador mostra uma linha. Todo o rest
 | Somente no Firefox: o mesmo pedido, com informações de autenticação | Você clica em **Verificar serviço** ou **Atualizar modelos** | Sua chave de API vai para o seu provedor de IA |
 | Somente no Firefox: o mesmo pedido, com favoritos e atividade de navegação | Você ativa **Permitir agentes de IA locais** | O que os agentes de IA do seu computador podem consultar |
 
-O menu de clique com o botão direito (**Menu de contexto**) também é opcional no Chrome e no Edge, mas não tem aviso, então o navegador o adiciona sem perguntar.
+O menu de clique com o botão direito (**Menu do botão direito**) também é opcional no Chrome e no Edge, mas não tem aviso, então o navegador o adiciona sem perguntar.
 
 ## Concedidas na instalação [#granted-at-install]
 
@@ -35,7 +35,7 @@ O menu de clique com o botão direito (**Menu de contexto**) também é opcional
 | `scripting` | Todos | Depois de um atalho de salvamento rápido, mostrar a notificação somente nessa guia. Ele não lê nada da página |
 | `sidePanel` | Chrome, Edge | Oferecer a visualização no painel lateral. O Firefox declara a mesma página como uma barra lateral |
 | `offscreen` | Chrome, Edge | Executar a solicitação do salvamento rápido com IA em uma página oculta da extensão, que o navegador fecha quando ela termina. A página de segundo plano do Firefox faz isso sozinha |
-| `contextMenus` | Firefox | O Firefox não permite que as extensões peçam essa permissão depois. Mesmo assim, o menu só aparece depois que você ativa o **Menu de contexto** |
+| `contextMenus` | Firefox | O Firefox não permite que as extensões peçam essa permissão depois. Mesmo assim, o menu só aparece depois que você ativa o **Menu do botão direito** |
 
 No Chrome e no Edge, a extensão também substitui a página de favoritos do navegador pelo gerenciador do Bookmark Scout. Isso é uma substituição de página, não uma permissão. O Firefox não permite essa substituição, então nele o gerenciador é aberto por **Abrir gerenciador de favoritos** no pop-up; consulte [Compatibilidade com navegadores](/browser-support).
 
@@ -44,7 +44,7 @@ No Chrome e no Edge, a extensão também substitui a página de favoritos do nav
 | Permissão | Navegadores | Pedida quando |
 | --- | --- | --- |
 | `tabs` | Todos | Você salva a página atual, ou pede sugestões de pasta, pelo painel lateral. Antes aparece uma breve explicação, que oferece o pop-up da barra de ferramentas e o atalho de salvamento rápido; eles nunca precisam dela |
-| `contextMenus` | Chrome, Edge | Você ativa o **Menu de contexto** nas [Configurações](/settings#data). Ele vem desativado por padrão, e o Chrome concede essa permissão sem nenhum aviso |
+| `contextMenus` | Chrome, Edge | Você ativa o **Menu do botão direito** nas [Configurações](/settings#data). Ele vem desativado por padrão, e o Chrome concede essa permissão sem nenhum aviso |
 | `favicon` | Chrome, Edge | Você clica em **Mostrar ícones do navegador** em **Atualizar ícones dos sites**, ou ativa **Usar o cache de ícones do navegador** nas [Configurações](/settings#appearance), para mostrar os ícones que o navegador já salvou. Antes aparece uma breve explicação |
 | Consentimento para compartilhar dados | Firefox | Cada recurso pede somente o que envia: **Recursos de IA**, para sua chave de API, os favoritos e o título e o URL da página atual; **Ler conteúdo da página**, para o texto das páginas; **Verificar serviço**, para sua chave de API. Antes, uma breve explicação diz que os dados vão para o seu provedor de IA, não para o Bookmark Scout |
 | `nativeMessaging` | Todos | Você ativa **Permitir agentes de IA locais** nas [Configurações](/settings#agent-bridge), para que a extensão possa se comunicar com o programa bookmark-scout-mcp no seu computador. Antes aparece uma breve explicação; no Firefox, o mesmo pedido inclui compartilhar dados de favoritos com ele |

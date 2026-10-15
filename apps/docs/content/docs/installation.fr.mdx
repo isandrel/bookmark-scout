@@ -1,19 +1,56 @@
 ---
 title: Installation
-description: Installez Bookmark Scout dans Chrome depuis le Chrome Web Store, ou dans Chrome, Microsoft Edge ou Firefox à partir d'une version publiée sur GitHub.
+description: Ajoutez Bookmark Scout à Chrome depuis le Chrome Web Store. Les versions Firefox et Edge arrivent bientôt dans leurs boutiques.
 ---
 
-Bookmark Scout est gratuit et open source.
+Bookmark Scout est gratuit, sans compte et sans publicité. Il fonctionne dans un navigateur sur un ordinateur, pas sur les téléphones ni les tablettes.
 
-## Installer depuis la boutique de votre navigateur [#install-from-your-browsers-store]
+## L'ajouter à Chrome [#add-it-to-chrome]
 
-<StoreAvailability />
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
 
-Ouvrez la fiche et ajoutez Bookmark Scout à votre navigateur depuis celle-ci. Une copie installée depuis une boutique se met à jour d'elle-même.
+Sur la fiche, cliquez sur **Ajouter à Chrome**, puis sur **Ajouter l'extension**. Chrome ne demande qu'une seule chose : lire et modifier vos favoris. Les autres fonctionnalités ne demandent davantage qu'à leur première utilisation, en expliquant pourquoi ; consultez [Autorisations](/permissions).
+</Step>
+<Step>
+Épinglez l'icône : cliquez sur le bouton **Extensions** en forme de pièce de puzzle, à droite de la barre d'outils, puis sur l'épingle à côté de Bookmark Scout.
+</Step>
+<Step>
+Enregistrez votre première page : consultez [Votre premier enregistrement](/first-save).
+</Step>
+</Steps>
 
-## Installer à partir d'une version GitHub [#install-from-a-github-release]
+Juste après l'ajout, une page intitulée **Bookmark Scout est prêt** s'ouvre dans un nouvel onglet avec les mêmes premières étapes : épingler l'icône, enregistrer une page, et les touches de votre raccourci d'enregistrement rapide (ou **Le définir** si une autre extension les utilise déjà). Elle ne s'ouvre qu'une fois, lors de la première installation de Bookmark Scout, jamais après une mise à jour. Sur cette page, **Lire le guide** ouvre [Enregistrer et organiser](/guides/save-and-organize), et **Ouvrir les paramètres** ouvre les [Paramètres](/settings).
 
-Si la boutique de votre navigateur ne propose pas encore Bookmark Scout, installez-le à partir d'une <RepoLink path="/releases">version GitHub</RepoLink>, qui propose un téléchargement par navigateur :
+Une copie installée depuis la boutique se met à jour d'elle-même.
+
+## Firefox et Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+Tant qu'une boutique ne le propose pas, vous pouvez installer Bookmark Scout manuellement depuis GitHub, comme décrit [ci-dessous](#install-from-a-github-release). Cela demande quelques étapes de plus, et dans Firefox, il faut les refaire après chaque redémarrage.
+
+## Après l'installation [#after-installing]
+
+- Cliquez sur l'icône de Bookmark Scout sur n'importe quelle page pour l'enregistrer ou pour rechercher dans vos favoris. Commencez par [Votre premier enregistrement](/first-save).
+- Appuyez sur `Alt+Shift+S` (`⌥⇧S` sur Mac) sur n'importe quelle page pour l'enregistrer sans rien ouvrir. Consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save).
+- Dans Chrome, Bookmark Scout remplace la page Favoris du navigateur par son propre gestionnaire de favoris. Ouvrez-le comme d'habitude, par exemple avec `Ctrl+Shift+O` (`Cmd+Option+B` sur Mac), ou avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up. Sa barre latérale **Outils** regroupe les outils de nettoyage.
+- Les paramètres s'ouvrent dans un onglet : effectuez un clic droit sur l'icône de la barre d'outils et choisissez **Options**. Consultez [Paramètres](/settings).
+
+## Mise à jour [#updating]
+
+Une copie installée depuis une boutique se met à jour d'elle-même, et les mises à jour conservent vos paramètres. Une mise à jour passée, vers la version 0.3.3, a fait exception : elle a réinitialisé une fois les données enregistrées par Bookmark Scout lui-même, mais jamais vos favoris ; consultez [la FAQ](/faq#my-settings-are-gone-after-an-update).
+
+Pour conserver à tout moment une copie de vos paramètres, prompts personnalisés, services d'IA et recherches enregistrées, utilisez **Sauvegarder les paramètres** en bas des [Paramètres](/settings).
+
+## Avancé : installer manuellement depuis GitHub [#install-from-a-github-release]
+
+N'utilisez cette méthode que si la boutique de votre navigateur ne propose pas encore Bookmark Scout, ou pour tester une version. Une copie installée ainsi ne se met pas à jour d'elle-même : pour la mettre à jour, téléchargez la nouvelle version et répétez les étapes.
+
+Chaque <RepoLink path="/releases">version GitHub</RepoLink> propose un téléchargement par navigateur :
 
 | Navigateur | Fichier |
 | --- | --- |
@@ -26,8 +63,6 @@ Téléchargez-le depuis <ReleaseLink />, puis suivez les étapes correspondant �
 <Tabs items={["Chrome", "Edge", "Firefox"]}>
 <Tab value="Chrome" id="chrome">
 
-<StoreListing browser="chrome" />
-
 <Steps>
 <Step>
 Téléchargez `bookmark-scout-<version>-chrome.crx` ou `bookmark-scout-<version>-chrome.zip`. Si vous utilisez le fichier ZIP, extrayez-le dans un dossier que vous conserverez, car Chrome charge l'extension depuis ce dossier.
@@ -39,14 +74,12 @@ Ouvrez `chrome://extensions/` et activez le **Mode développeur** (en haut à dr
 Faites glisser le fichier CRX sur la page, ou cliquez sur **Charger l'extension non empaquetée** et sélectionnez le dossier extrait.
 </Step>
 <Step>
-Épinglez Bookmark Scout à la barre d'outils depuis le menu Extensions (l'icône en forme de pièce de puzzle) pour ouvrir la fenêtre pop-up en un clic.
+Épinglez Bookmark Scout à la barre d'outils depuis le menu Extensions (l'icône en forme de pièce de puzzle).
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Edge" id="edge">
-
-<StoreListing browser="edge" />
 
 <Steps>
 <Step>
@@ -58,12 +91,13 @@ Ouvrez `edge://extensions/` et activez le **Mode développeur**.
 <Step>
 Cliquez sur **Charger l'extension décompressée** et sélectionnez le dossier extrait.
 </Step>
+<Step>
+Affichez Bookmark Scout dans la barre d'outils depuis le menu Extensions (l'icône en forme de pièce de puzzle), avec l'icône en forme d'œil à côté de son nom.
+</Step>
 </Steps>
 
 </Tab>
 <Tab value="Firefox" id="firefox">
-
-<StoreListing browser="firefox" />
 
 <Steps>
 <Step>
@@ -78,23 +112,11 @@ Cliquez sur **Charger un module complémentaire temporaire** et sélectionnez le
 </Steps>
 
 <Callout type="warn" title="Limites de Firefox">
-Firefox supprime les modules complémentaires temporaires à chaque redémarrage : vous devez donc recharger l'extension après chaque redémarrage. Firefox ne permet pas non plus de remplacer sa page de favoris : ouvrez donc le gestionnaire de favoris (avec les outils, les recherches enregistrées, l'importation et l'exportation) depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up. Consultez [Compatibilité des navigateurs](/browser-support).
+Firefox supprime les modules complémentaires temporaires à chaque redémarrage : vous devez donc recharger l'extension après chaque redémarrage. La page **Bookmark Scout est prêt** ne s'ouvre pas pour un module complémentaire temporaire. Firefox ne permet pas non plus de remplacer sa page de favoris : ouvrez donc le gestionnaire de favoris (avec les outils, les recherches enregistrées, l'importation et l'exportation) depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up. Consultez [Compatibilité des navigateurs](/browser-support).
 </Callout>
 
 </Tab>
 </Tabs>
-
-## Après l'installation [#after-installing]
-
-- Cliquez sur l'icône de Bookmark Scout pour ouvrir la fenêtre pop-up et rechercher dans vos favoris. Commencez par [Recherche et recherches enregistrées](/guides/search).
-- Dans Chrome, ouvrez la page Favoris du navigateur (par exemple avec `Ctrl+Shift+O`, ou `Cmd+Option+B` sous macOS) pour accéder au gestionnaire Bookmark Scout et à sa barre latérale Outils.
-- Les paramètres s'ouvrent dans un onglet depuis l'entrée **Options** de l'extension, par exemple en effectuant un clic droit sur l'icône de la barre d'outils dans Chrome. Consultez [Paramètres](/settings).
-
-## Mise à jour [#updating]
-
-Une copie installée depuis une boutique se met à jour d'elle-même. Sinon, téléchargez la nouvelle version depuis <ReleaseLink /> et répétez les étapes correspondant à votre navigateur.
-
-Avant une mise à jour, vous pouvez sauvegarder vos paramètres, prompts personnalisés, services d'IA et recherches enregistrées avec **Exporter** en bas des [Paramètres](/settings) ; une mise à jour précise les réinitialise, consultez [la FAQ](/faq#my-settings-are-gone-after-an-update).
 
 ## Compiler à partir des sources [#building-from-source]
 

@@ -1,31 +1,38 @@
 ---
 title: Introduction
-description: Bookmark Scout est une extension pour Chrome, Edge et Firefox qui enregistre chaque page dans le bon dossier lorsque vous saisissez une partie de son nom, puis recherche, organise et nettoie vos favoris, directement dans votre navigateur.
+description: Bookmark Scout enregistre chaque page dans le bon dossier de favoris lorsque vous saisissez une partie du nom du dossier ou appuyez sur une seule touche, puis vous aide à retrouver, ranger et nettoyer vos favoris, directement dans votre navigateur.
 ---
+
+Bookmark Scout est une extension de navigateur gratuite qui range chaque page que vous enregistrez dans le bon dossier de favoris. Cliquez sur son icône, saisissez quelques lettres du nom d'un dossier, et la page y est enregistrée. Elle fonctionne aujourd'hui dans Chrome.
 
 <StartHere />
 
 ## Ce que vous pouvez en faire [#what-you-can-do-with-it]
 
-- **Enregistrer dans le bon dossier** : saisissez une partie du nom d'un dossier dans la fenêtre pop-up ou le panneau latéral, même un dossier profondément imbriqué ou un chemin comme `work/react`, puis appuyez sur `↓` et `Enter`, ou cliquez sur le dossier, pour y enregistrer la page actuelle. Si l'IA est activée, vous pouvez aussi demander une suggestion de dossier. Consultez [Enregistrer et organiser](/guides/save-and-organize).
-- **Enregistrer sans rien ouvrir** : appuyez sur `Alt+Shift+S` sur n'importe quelle page pour l'enregistrer dans le dossier qui lui correspond le mieux. Une petite notification dans la page indique où elle a été enregistrée, avec **Annuler** et d'autres dossiers vers lesquels la déplacer. Consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save).
-- **Rechercher** : recherchez dans tous vos favoris par titre ou par URL depuis la fenêtre pop-up de la barre d'outils ou le panneau latéral, et conservez des recherches nommées dans le gestionnaire de favoris. Consultez [Recherche et recherches enregistrées](/guides/search).
-- **Organiser** : enregistrez des liens depuis le menu contextuel, et utilisez un gestionnaire de favoris qui fonctionne comme celui de Chrome, avec sélection, menus contextuels, couper, copier et coller, glisser-déposer, et annulation et rétablissement avec `Ctrl+Z` et `Ctrl+Y`. Consultez [Enregistrer et organiser](/guides/save-and-organize).
-- **Nettoyer** : supprimez les favoris en double, retirez les paramètres de suivi, et trouvez et réparez les liens morts. Consultez [Nettoyer les doublons et les URL de suivi](/guides/clean-up) et [Trouver et réparer les liens morts](/guides/dead-links).
-- **Déplacer votre collection** : exportez au format HTML, JSON, Markdown ou CSV, et importez des fichiers HTML ou JSON après un aperçu. Consultez [Importation et exportation](/guides/import-export).
-- **Utiliser l'IA, seulement si vous le souhaitez** : les outils d'IA sont désactivés par défaut. Lorsque vous les activez, vous choisissez le fournisseur et utilisez votre propre clé. **Demander à l'IA** répond à vos questions sur vos favoris, et ne les modifie qu'après que vous avez approuvé son plan. Consultez [Configurer les outils d'IA](/guides/ai-tools).
-- **Travailler avec des agents d'IA locaux** : laissez des agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, consulter vos favoris, et approuvez dans le navigateur chaque modification qu'ils demandent. Désactivé par défaut. Consultez [Utiliser avec des agents d'IA locaux](/guides/local-agents).
+- **Enregistrer dans le bon dossier** : saisissez une partie du nom d'un dossier, même d'un dossier rangé loin à l'intérieur d'autres, et choisissez-le dans la liste pour y enregistrer la page que vous consultez. Consultez [Votre premier enregistrement](/first-save).
+- **Enregistrer avec une seule touche** : appuyez sur `Alt+Shift+S` (`⌥⇧S` sur Mac) sur n'importe quelle page pour l'enregistrer dans le dossier qui lui correspond le mieux. Un petit message dans la page indique où elle a été enregistrée, avec **Annuler** et d'autres dossiers vers lesquels la déplacer. Consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save).
+- **Retrouver** : recherchez dans tous vos favoris grâce à un mot de leur titre ou de leur adresse, depuis le bouton de la barre d'outils ou le panneau latéral. Consultez [Recherche et recherches enregistrées](/guides/search).
+- **Organiser** : une page de favoris qui fonctionne comme celle de Chrome, avec le glisser-déposer, les menus du clic droit, couper, copier et coller, et l'annulation avec `Ctrl+Z` (`Cmd+Z` sur Mac). Consultez [Enregistrer et organiser](/guides/save-and-organize).
+- **Nettoyer** : supprimez les favoris en double, simplifiez les adresses remplies de codes de suivi, et trouvez les liens qui ne fonctionnent plus. Consultez [Nettoyer les doublons et les URL de suivi](/guides/clean-up) et [Trouver et réparer les liens morts](/guides/dead-links).
+- **Déplacer vos favoris** : exportez-les dans un fichier, ou importez-les depuis un autre navigateur après un aperçu. Consultez [Importation et exportation](/guides/import-export).
+- **Utiliser l'IA, seulement si vous le souhaitez** : l'IA reste désactivée tant que vous ne l'activez pas, et elle nécessite un compte auprès d'une entreprise d'IA, qui peut facturer son utilisation. Elle peut suggérer un dossier ou répondre à vos questions sur vos favoris, et ne modifie rien sans votre accord. Consultez [Configurer les outils d'IA](/guides/ai-tools).
 
-<Screenshot name="manager" />
+<Screenshot name="popup" />
 
 ## Où vont vos données [#where-your-data-goes]
 
-Bookmark Scout n'a ni compte ni serveur propre. Vos favoris restent dans votre navigateur. Les données ne quittent le navigateur que lorsque vous utilisez une fonctionnalité qui a besoin du réseau, comme la vérification des liens morts ou un outil d'IA que vous avez activé, et elles vont alors directement au site Web ou au fournisseur que vous avez choisi. Les agents d'IA locaux, lorsque vous les autorisez, reçoivent ce qu'ils consultent par l'intermédiaire d'un programme installé sur votre ordinateur. Lisez le [résumé de la confidentialité](/privacy).
+Bookmark Scout n'a ni compte ni serveur propre. Vos favoris restent dans votre navigateur. Les données ne quittent le navigateur que lorsque vous utilisez une fonctionnalité qui a besoin d'Internet, comme la vérification des liens morts ou un outil d'IA que vous avez activé, et elles vont alors directement au site Web ou à l'entreprise d'IA que vous avez choisi. Lisez le [résumé de la confidentialité](/privacy).
+
+Bookmark Scout est créé par un développeur indépendant : pas d'entreprise, pas de publicité, pas de compte, et le code est open source.
 
 ## Navigateurs [#browsers]
 
-Chrome est la cible principale. Edge repose lui aussi sur Chromium et exécute la même suite de tests de bout en bout. Dans Firefox, qui ne permet pas de remplacer sa page de favoris, le gestionnaire s'ouvre depuis un bouton de la fenêtre pop-up, et quelques fonctionnalités du navigateur diffèrent. Consultez [Compatibilité des navigateurs](/browser-support) pour en savoir plus.
+<StoreAvailability />
+
+Les versions Firefox et Edge sont en route vers leurs boutiques ; d'ici là, elles peuvent être installées manuellement. Bookmark Scout fonctionne dans un navigateur sur un ordinateur, pas sur les téléphones ni les tablettes. Consultez [Installation](/installation) et [Compatibilité des navigateurs](/browser-support).
 
 ## Obtenir de l'aide [#get-help]
 
 Consultez d'abord la page [FAQ et dépannage](/faq). Pour toute autre question, écrivez à <Contact role="support" /> ou ouvrez un ticket sur <RepoLink path="/issues">GitHub</RepoLink>.
+
+Pour les développeurs : connectez des applications d'IA de votre ordinateur, comme des assistants de programmation, avec [Utiliser avec des agents d'IA locaux](/guides/local-agents), ou aidez à développer Bookmark Scout avec [Contribuer et développer](/contributing). La couverture des tests et la liste complète des fonctionnalités se trouvent dans [État du projet](/status).

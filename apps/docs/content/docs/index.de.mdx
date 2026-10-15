@@ -1,31 +1,38 @@
 ---
 title: Einführung
-description: Bookmark Scout ist eine Browsererweiterung für Chrome, Edge und Firefox, die jede Seite im richtigen Ordner speichert, wenn Sie einen Teil des Ordnernamens eingeben, und Ihre Lesezeichen anschließend direkt im Browser durchsucht, ordnet und bereinigt.
+description: Bookmark Scout speichert jede Seite im richtigen Lesezeichenordner, wenn Sie einen Teil des Ordnernamens eingeben oder eine einzige Taste drücken, und hilft Ihnen danach, Ihre Lesezeichen zu finden, zu ordnen und zu bereinigen, alles direkt im Browser.
 ---
+
+Bookmark Scout ist eine kostenlose Browsererweiterung, die jede Seite, die Sie speichern, im richtigen Lesezeichenordner ablegt. Klicken Sie auf das Symbol, geben Sie ein paar Buchstaben eines Ordnernamens ein, und die Seite landet dort. Bookmark Scout funktioniert bereits heute in Chrome.
 
 <StartHere />
 
 ## Was Sie damit tun können [#what-you-can-do-with-it]
 
-- **Im richtigen Ordner speichern**: Geben Sie im Pop-up oder in der Seitenleiste einen Teil eines Ordnernamens ein, auch eines Ordners tief im Baum, oder einen Pfad wie `work/react`, und drücken Sie dann `↓` und `Enter` oder klicken Sie auf den Ordner, um die aktuelle Seite dort zu speichern. Wenn KI aktiviert ist, können Sie sich auch einen Ordner vorschlagen lassen. Siehe [Speichern und ordnen](/guides/save-and-organize).
-- **Speichern, ohne etwas zu öffnen**: Drücken Sie auf einer beliebigen Seite `Alt+Shift+S`, um sie im am besten passenden Ordner zu speichern. Eine kleine Benachrichtigung auf der Seite zeigt, wo sie gelandet ist, mit **Rückgängig** und weiteren Ordnern, in die Sie sie verschieben können. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save).
-- **Finden**: Durchsuchen Sie alle Lesezeichen nach Titel oder URL über das Pop-up in der Symbolleiste oder die Seitenleiste, und speichern Sie benannte Suchen im Lesezeichen-Manager. Siehe [Suche und gespeicherte Suchen](/guides/search).
-- **Ordnen**: Speichern Sie Links über das Rechtsklickmenü, und verwenden Sie einen Lesezeichen-Manager, der wie der von Chrome funktioniert, mit Auswahl, Rechtsklickmenüs, Ausschneiden, Kopieren und Einfügen, Drag-and-drop sowie Rückgängigmachen und Wiederholen mit `Ctrl+Z` und `Ctrl+Y`. Siehe [Speichern und ordnen](/guides/save-and-organize).
-- **Bereinigen**: Löschen Sie doppelte Lesezeichen, entfernen Sie Tracking-Parameter, und finden und reparieren Sie defekte Links. Siehe [Duplikate und Tracking-URLs bereinigen](/guides/clean-up) und [Defekte Links finden und reparieren](/guides/dead-links).
-- **Sammlung mitnehmen**: Exportieren Sie nach HTML, JSON, Markdown oder CSV, und importieren Sie HTML oder JSON nach einer Vorschau. Siehe [Import und Export](/guides/import-export).
-- **KI nutzen, nur wenn Sie möchten**: KI-Tools sind standardmäßig deaktiviert. Wenn Sie sie aktivieren, wählen Sie den Anbieter und verwenden Ihren eigenen Schlüssel. **KI fragen** beantwortet Fragen zu Ihren Lesezeichen und ändert sie erst, nachdem Sie seinem Plan zugestimmt haben. Siehe [KI-Tools einrichten](/guides/ai-tools).
-- **Mit lokalen KI-Agenten arbeiten**: Lassen Sie KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, Ihre Lesezeichen nachschlagen, und bestätigen Sie jede Änderung, die sie anfordern, im Browser. Standardmäßig deaktiviert. Siehe [Mit lokalen KI-Agenten verwenden](/guides/local-agents).
+- **Im richtigen Ordner speichern**: Geben Sie einen Teil eines Ordnernamens ein, auch eines Ordners, der tief in anderen Ordnern liegt, und wählen Sie ihn aus der Liste, um die aktuelle Seite zu speichern. Siehe [Ihr erstes Lesezeichen](/first-save).
+- **Mit einer Taste speichern**: Drücken Sie auf einer beliebigen Seite `Alt+Shift+S` (`⌥⇧S` auf einem Mac), um sie im am besten passenden Ordner zu speichern. Eine kleine Nachricht auf der Seite zeigt, wo sie gelandet ist, mit **Rückgängig** und weiteren Ordnern, in die Sie sie verschieben können. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save).
+- **Finden**: Durchsuchen Sie alle Lesezeichen nach einem Wort in ihrem Titel oder ihrer Adresse, über die Schaltfläche in der Symbolleiste oder die Seitenleiste. Siehe [Suche und gespeicherte Suchen](/guides/search).
+- **Ordnen**: eine Lesezeichenseite, die wie die von Chrome funktioniert, mit Drag-and-drop, Rechtsklickmenüs, Ausschneiden, Kopieren und Einfügen sowie Rückgängigmachen mit `Ctrl+Z` (`Cmd+Z` auf einem Mac). Siehe [Speichern und ordnen](/guides/save-and-organize).
+- **Bereinigen**: Entfernen Sie doppelte Lesezeichen, räumen Sie Adressen voller Tracking-Codes auf, und finden Sie Links, die nicht mehr funktionieren. Siehe [Duplikate und Tracking-URLs bereinigen](/guides/clean-up) und [Defekte Links finden und reparieren](/guides/dead-links).
+- **Lesezeichen mitnehmen**: Exportieren Sie sie in eine Datei, oder übernehmen Sie sie nach einer Vorschau aus einem anderen Browser. Siehe [Import und Export](/guides/import-export).
+- **KI nutzen, nur wenn Sie möchten**: KI bleibt aus, bis Sie sie einschalten, und sie braucht ein Konto bei einem KI-Unternehmen, das für die Nutzung Geld verlangen kann. Sie kann einen Ordner vorschlagen oder Fragen zu Ihren Lesezeichen beantworten und ändert nichts ohne Ihre Zustimmung. Siehe [KI-Tools einrichten](/guides/ai-tools).
 
-<Screenshot name="manager" />
+<Screenshot name="popup" />
 
 ## Wohin Ihre Daten gehen [#where-your-data-goes]
 
-Bookmark Scout hat kein Konto und keinen eigenen Server. Ihre Lesezeichen bleiben in Ihrem Browser. Daten verlassen den Browser nur, wenn Sie eine Funktion verwenden, die das Netzwerk benötigt, etwa die Prüfung auf defekte Links oder ein KI-Tool, das Sie aktiviert haben. Sie gehen dann direkt an die Website oder den Anbieter, den Sie gewählt haben. Lokale KI-Agenten erhalten, wenn Sie sie zulassen, das, was sie nachschlagen, über ein Programm auf Ihrem Computer. Lesen Sie die [Datenschutz-Zusammenfassung](/privacy).
+Bookmark Scout hat kein Konto und keinen eigenen Server. Ihre Lesezeichen bleiben in Ihrem Browser. Daten verlassen den Browser nur, wenn Sie eine Funktion verwenden, die das Internet braucht, etwa die Prüfung auf defekte Links oder ein KI-Tool, das Sie eingeschaltet haben. Sie gehen dann direkt an die Website oder das KI-Unternehmen, das Sie gewählt haben. Lesen Sie die [Datenschutz-Zusammenfassung](/privacy).
+
+Bookmark Scout stammt von einem unabhängigen Entwickler: kein Unternehmen, keine Werbung, kein Konto, und der Code ist Open Source.
 
 ## Browser [#browsers]
 
-Chrome ist die primäre Zielplattform. Edge basiert ebenfalls auf Chromium und durchläuft dieselbe End-to-End-Testsuite. In Firefox, das seine Lesezeichenseite nicht ersetzen kann, öffnet sich der Manager über eine Schaltfläche im Pop-up, und einige Browserfunktionen unterscheiden sich. Details finden Sie unter [Browserunterstützung](/browser-support).
+<StoreAvailability />
+
+Die Versionen für Firefox und Edge sind auf dem Weg in ihre Stores; bis dahin können Sie sie von Hand installieren. Bookmark Scout funktioniert in einem Browser auf einem Computer, nicht auf Smartphones oder Tablets. Siehe [Installieren](/installation) und [Browserunterstützung](/browser-support).
 
 ## Hilfe erhalten [#get-help]
 
 Sehen Sie zuerst auf der Seite [FAQ und Fehlerbehebung](/faq) nach. Für alles andere schreiben Sie eine E-Mail an <Contact role="support" /> oder eröffnen Sie ein Issue auf <RepoLink path="/issues">GitHub</RepoLink>.
+
+Für Entwickler: Verbinden Sie KI-Apps auf Ihrem Computer, etwa Programmierassistenten, über [Mit lokalen KI-Agenten verwenden](/guides/local-agents), oder helfen Sie über [Mitwirken und Entwicklung](/contributing) mit, Bookmark Scout weiterzuentwickeln. Testabdeckung und die vollständige Funktionsliste finden Sie unter [Projektstatus](/status).

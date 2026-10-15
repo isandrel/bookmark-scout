@@ -7,11 +7,11 @@ description: Réponses aux questions fréquentes sur Bookmark Scout, et solution
 
 ### Bookmark Scout est-il gratuit ? [#is-bookmark-scout-free]
 
-Oui. Il est gratuit et open source, sous licence <License />, sans publicité ni offre payante. Si vous activez l'IA, votre fournisseur d'IA peut facturer l'utilisation de son API.
+Oui. Il est gratuit et open source, sous licence <License />, sans publicité, sans compte et sans offre payante. Les fonctionnalités d'IA facultatives sont la seule chose qui peut coûter de l'argent : elles utilisent votre propre compte auprès d'une entreprise d'IA, qui peut facturer chaque utilisation.
 
 ### Dois-je utiliser l'IA ? [#do-i-need-to-use-ai]
 
-Non. La recherche, l'enregistrement, l'organisation, le nettoyage, l'importation et l'exportation fonctionnent tous sans IA. L'IA reste désactivée tant que vous ne l'activez pas dans les [Paramètres](/settings#ai).
+Non. L'IA est facultative. L'enregistrement, la recherche, l'organisation, le nettoyage, l'importation et l'exportation fonctionnent tous sans elle, et elle reste désactivée tant que vous ne l'activez pas dans les [Paramètres](/settings#ai). Pour l'utiliser, il vous faut un compte auprès d'une entreprise d'IA, comme OpenAI, Anthropic ou Google, et une clé liée à ce compte (une clé API) qui permet à Bookmark Scout de l'utiliser. La plupart de ces entreprises facturent chaque utilisation, généralement un petit montant ; un programme d'IA qui fonctionne sur votre propre ordinateur, comme Ollama, ne coûte rien mais demande un ordinateur assez puissant. Les titres et les adresses des favoris sur lesquels travaille un outil d'IA sont envoyés à l'entreprise que vous avez choisie. Consultez [Configurer les outils d'IA](/guides/ai-tools).
 
 ### Mes favoris sont-ils envoyés quelque part ? [#does-it-send-my-bookmarks-anywhere]
 
@@ -25,11 +25,19 @@ Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens m
 
 <StoreAvailability />
 
-Chaque boutique examine une extension avant de la proposer. Si la boutique de votre navigateur ne la propose pas encore, [installez-la à partir d'une version GitHub](/installation).
+Chaque boutique examine une extension avant de la proposer. Si la boutique de votre navigateur ne la propose pas encore, vous pouvez [l'installer manuellement](/installation#install-from-a-github-release) (avancé).
 
 ### Fonctionne-t-il dans Firefox ? [#does-it-work-in-firefox]
 
-Oui. Firefox ne permet pas aux extensions de remplacer sa page de favoris : ouvrez donc le gestionnaire Bookmark Scout, avec ses outils de nettoyage, l'importation et l'exportation, et les recherches enregistrées, depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up. Le cache d'icônes du navigateur n'est pas disponible dans Firefox, et moins de fonctionnalités y sont couvertes par des tests automatisés. Consultez [Compatibilité des navigateurs](/browser-support).
+Pas encore depuis Firefox Add-ons : la version Firefox arrive bientôt. D'ici là, vous pouvez [l'installer manuellement](/installation#firefox) comme module complémentaire temporaire, que Firefox supprime à chaque redémarrage. Une fois installé, il fonctionne avec quelques différences : Firefox ne permet pas aux extensions de remplacer sa page de favoris, ouvrez donc le gestionnaire Bookmark Scout, avec ses outils de nettoyage, l'importation et l'exportation, et les recherches enregistrées, depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up, et le cache d'icônes du navigateur n'est pas disponible. Consultez [Compatibilité des navigateurs](/browser-support).
+
+### Fonctionne-t-il dans Microsoft Edge ? [#does-it-work-in-microsoft-edge]
+
+Pas encore depuis Microsoft Edge Add-ons : la version Edge arrive bientôt. D'ici là, vous pouvez [l'installer manuellement](/installation#edge), et il fonctionne alors à peu près comme dans Chrome. Consultez [Compatibilité des navigateurs](/browser-support).
+
+### Fonctionne-t-il sur mon téléphone ? [#does-it-work-on-my-phone]
+
+Non. Bookmark Scout est une extension pour les navigateurs d'ordinateur. Les navigateurs des téléphones et des tablettes ne la font pas fonctionner.
 
 ### Pourquoi pas Safari ? [#why-not-safari]
 
@@ -51,7 +59,7 @@ Vérifiez que l'option **Afficher les icônes de site** est activée dans les [P
 
 ### Ma clé API n'a pas été enregistrée [#my-api-key-was-not-saved]
 
-Une clé qui ne ressemble pas à une clé du fournisseur choisi est refusée et n'est pas enregistrée, et un message l'indique. Vérifiez que le **Fournisseur d'IA** correspond à la clé que vous avez collée. Consultez [Configurer les outils d'IA](/guides/ai-tools#turn-on-ai).
+Une clé qui ne ressemble pas à une clé de l'entreprise d'IA choisie (le fournisseur du service) est refusée et n'est pas enregistrée, et un message l'indique. Vérifiez que le fournisseur du service est bien l'entreprise qui vous a donné la clé. Consultez [Configurer les outils d'IA](/guides/ai-tools#turn-on-ai).
 
 ### La vérification des liens morts indique qu'un site qui fonctionne doit être vérifié manuellement [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 
@@ -71,7 +79,7 @@ Les résultats s'arrêtent au **Nombre maximal de résultats** (20 par défaut).
 
 ### Mes étiquettes, résumés ou recherches enregistrées sont absents sur un autre ordinateur [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
 
-Ils sont stockés uniquement sur l'appareil où vous les avez créés, et ne sont pas synchronisés. Pour les transférer, exportez vos favoris en JSON, ce qui transmet les étiquettes et les résumés aux favoris créés par l'importation, et enregistrez une sauvegarde avec **Exporter** en bas des [Paramètres](/settings), qui inclut les recherches enregistrées. Les paramètres, eux, sont synchronisés via votre compte de navigateur lorsque la synchronisation du navigateur est activée.
+Ils sont stockés uniquement sur l'appareil où vous les avez créés, et ne sont pas synchronisés. Pour les transférer, exportez vos favoris en JSON, ce qui transmet les étiquettes et les résumés aux favoris créés par l'importation, et enregistrez une sauvegarde avec **Sauvegarder les paramètres** en bas des [Paramètres](/settings), qui inclut les recherches enregistrées. Les paramètres, eux, sont synchronisés via votre compte de navigateur lorsque la synchronisation du navigateur est activée.
 
 ### J'ai supprimé quelque chose par erreur [#i-deleted-something-by-mistake]
 
@@ -83,7 +91,7 @@ Si une autre extension utilise déjà `Alt+Shift+S` ou `Alt+Shift+D`, le navigat
 
 ### Mes paramètres ont disparu après une mise à jour [#my-settings-are-gone-after-an-update]
 
-Une mise à jour a déplacé les données enregistrées de Bookmark Scout vers un nouveau format et a supprimé les anciennes données au lieu de les convertir. Après cette mise à jour, les paramètres reviennent à leurs valeurs par défaut, les services d'IA et leurs clés API doivent être ajoutés de nouveau, et les prompts personnalisés, les recherches enregistrées, les recherches et dossiers récents, les étiquettes et résumés, ainsi que les icônes de site enregistrées ont disparu. Vos favoris eux-mêmes ne sont pas touchés. Si vous avez sauvegardé vos paramètres avec **Exporter** en bas des [Paramètres](/settings) avant la mise à jour, utilisez **Importer** avec ce fichier.
+Les mises à jour conservent normalement vos paramètres. Une mise à jour, vers la version 0.3.3, a déplacé les données enregistrées de Bookmark Scout vers un nouveau format et a supprimé les anciennes données au lieu de les convertir. Après cette mise à jour, les paramètres reviennent à leurs valeurs par défaut, les services d'IA et leurs clés API doivent être ajoutés de nouveau, et les prompts personnalisés, les recherches enregistrées, les recherches et dossiers récents, les étiquettes et résumés, ainsi que les icônes de site enregistrées ont disparu. Vos favoris eux-mêmes ne sont pas touchés. Si vous avez sauvegardé vos paramètres avec **Sauvegarder les paramètres** (alors appelé **Exporter**) en bas des [Paramètres](/settings) avant la mise à jour, ouvrez ce fichier avec **Restaurer les paramètres**.
 
 ## Obtenir de l'aide [#get-help]
 

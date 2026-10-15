@@ -1,9 +1,10 @@
 {
   "title": "Documentation de Bookmark Scout",
-  "description": "Installez et utilisez Bookmark Scout, une extension de navigateur qui recherche, organise et nettoie vos favoris, directement dans votre navigateur.",
+  "description": "Enregistrez chaque page dans le bon dossier de favoris avec Bookmark Scout, une extension de navigateur qui vous aide aussi à retrouver, ranger et nettoyer vos favoris, directement dans votre navigateur.",
   "pages": [
     "---Premiers pas---",
     "index",
+    "first-save",
     "installation",
     "browser-support",
     "---Guides---",
@@ -16,7 +17,8 @@
     "privacy",
     "faq",
     "status",
-    "---Contribuer---",
+    "---Pour les développeurs---",
+    "guides/local-agents",
     "contributing"
   ]
 }

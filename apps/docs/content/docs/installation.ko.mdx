@@ -1,19 +1,56 @@
 ---
 title: 설치
-description: Chrome 웹 스토어에서 Chrome에, 또는 GitHub 릴리스에서 Chrome, Microsoft Edge, Firefox에 Bookmark Scout를 설치합니다.
+description: Chrome 웹 스토어에서 Chrome에 Bookmark Scout를 추가합니다. Firefox 버전과 Edge 버전은 각 스토어에 곧 등록될 예정입니다.
 ---
 
-Bookmark Scout는 무료 오픈 소스입니다.
+Bookmark Scout는 무료이며 계정도 광고도 없습니다. 컴퓨터의 브라우저에서 동작하며, 휴대전화나 태블릿에서는 사용할 수 없습니다.
 
-## 브라우저 스토어에서 설치 [#install-from-your-browsers-store]
+## Chrome에 추가 [#add-it-to-chrome]
 
-<StoreAvailability />
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
 
-등록 페이지를 열고 그곳에서 Bookmark Scout를 브라우저에 추가하세요. 스토어에서 설치한 경우 자동으로 업데이트됩니다.
+등록 페이지에서 **Chrome에 추가**를 클릭한 다음 **확장 프로그램 추가**를 클릭하세요. Chrome이 요청하는 권한은 북마크를 읽고 변경하는 것 하나뿐입니다. 다른 기능은 처음 사용할 때만 추가 권한을 요청하고 그 이유를 알려 줍니다. [권한](/permissions)을 참고하세요.
+</Step>
+<Step>
+아이콘을 고정하세요. 툴바 오른쪽에 있는 퍼즐 조각 모양의 **확장 프로그램** 버튼을 클릭한 다음, Bookmark Scout 옆의 고정 핀을 클릭합니다.
+</Step>
+<Step>
+첫 페이지를 저장해 보세요. [첫 저장](/first-save)을 참고하세요.
+</Step>
+</Steps>
 
-## GitHub 릴리스에서 설치 [#install-from-a-github-release]
+추가하자마자 **Bookmark Scout를 사용할 준비가 되었습니다**라는 제목의 페이지가 새 탭에서 열리고, 아이콘 고정, 페이지 저장, 빠른 저장 단축키의 키(다른 확장 프로그램이 이미 그 키를 사용 중이면 **설정하기**)처럼 같은 첫 단계를 안내합니다. 이 페이지는 Bookmark Scout를 처음 설치할 때 한 번만 열리며, 업데이트 후에는 열리지 않습니다. 이 페이지의 **가이드 읽기**를 누르면 [저장과 정리](/guides/save-and-organize)가, **설정 열기**를 누르면 [설정](/settings)이 열립니다.
 
-브라우저 스토어에 아직 Bookmark Scout가 등록되지 않았다면 <RepoLink path="/releases">GitHub 릴리스</RepoLink>에서 설치하세요. 릴리스에는 브라우저별 다운로드 파일이 하나씩 있습니다.
+스토어에서 설치한 경우 자동으로 업데이트됩니다.
+
+## Firefox와 Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+스토어에 등록되기 전까지는 [아래](#install-from-a-github-release)에 설명한 대로 GitHub에서 Bookmark Scout를 직접 설치할 수 있습니다. 단계가 조금 더 많고, Firefox에서는 브라우저를 다시 시작할 때마다 이 단계를 반복해야 합니다.
+
+## 설치한 뒤에는 [#after-installing]
+
+- 어느 페이지에서나 Bookmark Scout 아이콘을 클릭하면 그 페이지를 저장하거나 북마크를 검색할 수 있습니다. [첫 저장](/first-save)부터 시작하세요.
+- 어느 페이지에서나 `Alt+Shift+S`(Mac에서는 `⌥⇧S`)를 누르면 아무것도 열지 않고 그 페이지를 저장합니다. [키보드 단축키로 저장](/guides/save-and-organize#quick-save)을 참고하세요.
+- Chrome에서는 Bookmark Scout가 브라우저의 북마크 페이지를 자체 북마크 관리자로 바꿉니다. 예전처럼 `Ctrl+Shift+O`(Mac에서는 `Cmd+Option+B`)로 열거나, 팝업의 **북마크 관리자 열기**로 여세요. 관리자의 **도구** 사이드바에 정돈 도구가 모여 있습니다.
+- 설정은 탭으로 열립니다. 툴바 아이콘을 마우스 오른쪽 버튼으로 클릭하고 **옵션**을 선택하세요. [설정](/settings)을 참고하세요.
+
+## 업데이트 [#updating]
+
+스토어에서 설치한 경우 자동으로 업데이트되며, 업데이트해도 설정은 그대로 유지됩니다. 단, 지난 업데이트 중 하나인 버전 0.3.3은 예외였습니다. 이 업데이트는 Bookmark Scout가 저장한 자체 데이터를 한 번 초기화했지만, 북마크는 전혀 건드리지 않았습니다. [FAQ](/faq#my-settings-are-gone-after-an-update)를 참고하세요.
+
+설정, 사용자 지정 프롬프트, AI 서비스, 저장된 검색의 사본은 언제든 [설정](/settings) 맨 아래의 **설정 백업**으로 저장해 둘 수 있습니다.
+
+## 고급: GitHub에서 직접 설치 [#install-from-a-github-release]
+
+브라우저 스토어에 아직 Bookmark Scout가 등록되지 않았거나 릴리스를 테스트할 때만 이 방법을 사용하세요. 이렇게 설치한 사본은 자동으로 업데이트되지 않습니다. 업데이트하려면 새 릴리스를 내려받아 같은 단계를 반복하세요.
+
+각 <RepoLink path="/releases">GitHub 릴리스</RepoLink>에는 브라우저별 다운로드 파일이 하나씩 있습니다.
 
 | 브라우저 | 파일 |
 | --- | --- |
@@ -26,8 +63,6 @@ Bookmark Scout는 무료 오픈 소스입니다.
 <Tabs items={["Chrome", "Edge", "Firefox"]}>
 <Tab value="Chrome" id="chrome">
 
-<StoreListing browser="chrome" />
-
 <Steps>
 <Step>
 `bookmark-scout-<version>-chrome.crx` 또는 `bookmark-scout-<version>-chrome.zip`을 내려받습니다. ZIP을 사용하는 경우 계속 보관할 폴더에 압축을 푸세요. Chrome은 이 폴더에서 확장 프로그램을 로드합니다.
@@ -39,14 +74,12 @@ Bookmark Scout는 무료 오픈 소스입니다.
 CRX 파일을 페이지로 끌어다 놓거나, **압축해제된 확장 프로그램을 로드합니다**를 클릭하고 압축을 푼 폴더를 선택합니다.
 </Step>
 <Step>
-퍼즐 조각 모양의 확장 프로그램 메뉴에서 Bookmark Scout를 툴바에 고정하면 한 번의 클릭으로 팝업을 열 수 있습니다.
+퍼즐 조각 모양의 확장 프로그램 메뉴에서 Bookmark Scout를 툴바에 고정합니다.
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Edge" id="edge">
-
-<StoreListing browser="edge" />
 
 <Steps>
 <Step>
@@ -58,12 +91,13 @@ CRX 파일을 페이지로 끌어다 놓거나, **압축해제된 확장 프로�
 <Step>
 **압축 풀린 확장 로드**(Load unpacked)를 클릭하고 압축을 푼 폴더를 선택합니다.
 </Step>
+<Step>
+퍼즐 조각 모양의 확장 메뉴에서 Bookmark Scout를 툴바에 표시합니다(옆에 있는 눈 모양 아이콘).
+</Step>
 </Steps>
 
 </Tab>
 <Tab value="Firefox" id="firefox">
-
-<StoreListing browser="firefox" />
 
 <Steps>
 <Step>
@@ -78,23 +112,11 @@ CRX 파일을 페이지로 끌어다 놓거나, **압축해제된 확장 프로�
 </Steps>
 
 <Callout type="warn" title="Firefox의 제한 사항">
-Firefox는 다시 시작할 때 임시 부가 기능을 제거하므로, 다시 시작할 때마다 새로 로드해야 합니다. 또한 Firefox는 북마크 페이지를 대체할 수 없으므로, 북마크 관리자(도구, 저장된 검색, 가져오기와 내보내기 포함)는 팝업의 **북마크 관리자 열기**로 엽니다. [브라우저 지원](/browser-support)을 참고하세요.
+Firefox는 다시 시작할 때 임시 부가 기능을 제거하므로, 다시 시작할 때마다 새로 로드해야 합니다. 임시 부가 기능에서는 **Bookmark Scout를 사용할 준비가 되었습니다** 페이지가 열리지 않습니다. 또한 Firefox는 북마크 페이지를 대체할 수 없으므로, 북마크 관리자(도구, 저장된 검색, 가져오기와 내보내기 포함)는 팝업의 **북마크 관리자 열기**로 엽니다. [브라우저 지원](/browser-support)을 참고하세요.
 </Callout>
 
 </Tab>
 </Tabs>
-
-## 설치한 뒤에는 [#after-installing]
-
-- Bookmark Scout 아이콘을 클릭해 팝업을 열고 북마크를 검색하세요. [검색과 저장된 검색](/guides/search)부터 시작하면 좋습니다.
-- Chrome에서는 브라우저의 북마크 페이지를 열면(예: `Ctrl+Shift+O`, macOS에서는 `Cmd+Option+B`) Bookmark Scout 관리자와 **도구** 사이드바가 열립니다.
-- 설정은 확장 프로그램의 **옵션** 항목에서 탭으로 열립니다. 예를 들어 Chrome에서는 툴바 아이콘을 마우스 오른쪽 버튼으로 클릭합니다. [설정](/settings)을 참고하세요.
-
-## 업데이트 [#updating]
-
-스토어에서 설치한 경우 자동으로 업데이트됩니다. 그렇지 않다면 <ReleaseLink />에서 새 릴리스를 내려받아 사용하는 브라우저의 단계를 다시 따르세요.
-
-업데이트하기 전에 [설정](/settings) 맨 아래의 **내보내기**로 설정, 사용자 지정 프롬프트, AI 서비스, 저장된 검색을 저장해 둘 수 있습니다. 업데이트 중 하나는 이 항목들을 초기화합니다. [FAQ](/faq#my-settings-are-gone-after-an-update)를 참고하세요.
 
 ## 소스에서 빌드 [#building-from-source]
 
