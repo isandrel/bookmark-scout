@@ -6552,5 +6552,13 @@
     "qaManager_alreadyUndoneDesc": {
         "message": "Este cambio ya se deshizo desde el historial de deshacer, así que no cambió nada más.",
         "description": "Toast detail when a tool's Undo is pressed after the same change was already undone from the undo history"
+    },
+    "qaManager_metadataPageTitle": {
+        "message": "Título de la página: $1",
+        "description": "Metadata Fetcher result: the title of the bookmarked page, shown for information when it will not replace the bookmark's own title. $1 is the page title."
+    },
+    "qaManager_metadataTitleKept": {
+        "message": "Conserva su título: «$1» está desactivado en Ajustes",
+        "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
     }
 }

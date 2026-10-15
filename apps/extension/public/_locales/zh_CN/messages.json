@@ -6346,5 +6346,13 @@
     "qaManager_alreadyUndoneDesc": {
         "message": "此更改已通过撤消历史撤消，因此没有其他变化。",
         "description": "Toast detail when a tool's Undo is pressed after the same change was already undone from the undo history"
+    },
+    "qaManager_metadataPageTitle": {
+        "message": "网页标题：$1",
+        "description": "Metadata Fetcher result: the title of the bookmarked page, shown for information when it will not replace the bookmark's own title. $1 is the page title."
+    },
+    "qaManager_metadataTitleKept": {
+        "message": "保留原标题：设置中的“$1”已关闭",
+        "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
     }
 }

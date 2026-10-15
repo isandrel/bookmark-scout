@@ -59,8 +59,16 @@ function describeMetadata(item: MetadataFetchResultItem): string {
     case 'notHtml':
       return t('tools_metadataNotHtml');
     default:
-      return item.changed ? t('tools_metadataAvailable') : t('tools_metadataNoChange');
+      if (item.changed) return t('tools_metadataAvailable');
+      return hasOtherPageTitle(item)
+        ? t('qaManager_metadataTitleKept', t('settings_metadataFetcherOverwriteTitles'))
+        : t('tools_metadataNoChange');
   }
+}
+
+/** A page title that differs from the bookmark's but is not offered (Overwrite Titles is off). */
+function hasOtherPageTitle(item: MetadataFetchResultItem): boolean {
+  return !item.changed && Boolean(item.suggestedTitle) && item.suggestedTitle !== item.title;
 }
 
 function describePrivacyFinding(finding: PrivacyFinding): string {
@@ -453,8 +461,13 @@ export function MetadataResultsView({
               <ResultLine>
                 <UrlLink href={item.url} />
               </ResultLine>
-              {item.status === 'ok' && item.suggestedTitle ? (
+              {item.status === 'ok' && canApply ? (
                 <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
+              ) : null}
+              {item.status === 'ok' && hasOtherPageTitle(item) ? (
+                <div className="text-sm text-muted-foreground">
+                  {t('qaManager_metadataPageTitle', item.suggestedTitle)}
+                </div>
               ) : null}
               {item.status === 'ok' && item.description ? (
                 <div className="text-xs text-muted-foreground">{item.description}</div>
