@@ -21,7 +21,14 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
   // Options' Export bookmarks button lands here (`openBookmarkExport`).
   useEffect(() => {
     if (window.location.hash !== `#${MANAGER_EXPORT_HASH}`) return;
-    document.getElementById(MANAGER_EXPORT_HASH)?.scrollIntoView({ block: 'center' });
+    const card = document.getElementById(MANAGER_EXPORT_HASH);
+    card?.scrollIntoView({ block: 'center' });
+    // Keyboard and screen reader users land on the card too: its heading takes the focus, out of
+    // the tab order, so the next Tab reaches the card's first control.
+    const heading = card?.querySelector<HTMLElement>('h4');
+    if (!heading) return;
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
   }, []);
 
   const handleExport = async (scope: BookmarkToolScope) => {
