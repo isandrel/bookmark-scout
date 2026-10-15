@@ -1,7 +1,8 @@
 # The bookmark manager table. Read by src/components/ui/table/table-config.ts.
 
 # Rows per page offered under the table; the saved view must use one of them. The table renders
-# every row of a page, so a larger default costs time on open (tests/perf, manager.open)
+# every row of a page, so a larger default costs time per search keystroke: 50 instead of 10 took
+# manager.filter.keystroke from 136 to 280 ms (tests/perf, 4x CPU throttle; budget 400)
 page_sizes = [10, 20, 30, 40, 50, 100]
 default_page_size = 50
 
