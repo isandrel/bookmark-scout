@@ -7,11 +7,23 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 
 ## Utiliser la page des paramètres [#using-the-settings-page]
 
+- La page s'ouvre sur **L'essentiel**, les quelques paramètres que la plupart des gens modifient. Tous les autres onglets sont listés sous **Avancé**, et chaque paramètre de **L'essentiel** se trouve aussi dans son propre onglet : le modifier à l'un ou l'autre endroit change le même paramètre.
 - **Rechercher dans les paramètres…**, en haut de la page, trouve un paramètre dans n'importe quel onglet et indique le nombre de correspondances.
 - Chaque onglet est divisé en sections avec un titre. L'interrupteur de chaque outil se trouve à côté de son titre ; tant qu'il est désactivé, le reste de ses paramètres est replié. Les paramètres techniques, comme les délais d'attente et la longueur des noms de fichier, se trouvent dans **Paramètres avancés**, qui reste fermé jusqu'à ce que vous l'ouvriez ou qu'une recherche y trouve quelque chose.
 - Un paramètre modifié est signalé par **Modifié**, avec un bouton pour rétablir sa valeur par défaut. **Tout réinitialiser** rétablit tous les paramètres.
 - **Sauvegarder les paramètres** enregistre un fichier de sauvegarde avec les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (nom, fournisseur, modèle, **URL de base** et champs propres au fournisseur, jamais les clés API ni les **En-têtes supplémentaires (JSON)**), les recherches enregistrées, ainsi que les colonnes et le tri du tableau du gestionnaire. **Restaurer les paramètres** restaure une sauvegarde en remplaçant chaque partie que contient le fichier, ou fusionne un simple fichier de paramètres avec vos paramètres actuels ; après la restauration d'une sauvegarde, saisissez à nouveau les clés API et les en-têtes supplémentaires dans [IA](#ai) pour les services marqués **À configurer**. Aucun des deux ne touche à vos favoris. **Exporter les favoris**, à côté d'eux, ouvre le gestionnaire de favoris sur son outil d'exportation ; consultez [Importation et exportation](/guides/import-export).
 - Les paramètres que vous modifiez sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. Quelques paramètres propres à un appareil y restent : le dossier choisi pour l'enregistrement rapide, la **Limite de stockage des icônes**, l'enregistrement de l'activité IA et la recherche web de Demander à l'IA. Les services d'IA, avec leurs clés API, l'**URL de base** et les **En-têtes supplémentaires (JSON)**, restent aussi sur cet appareil. Consultez [Confidentialité](/privacy).
+
+## L'essentiel [#essentials]
+
+| Paramètre | Aussi dans | Effet |
+| --- | --- | --- |
+| **Dossier d'enregistrement rapide** et **Dossier de destination** | [Enregistrement et recherche](#quick-save) | Où le raccourci d'enregistrement rapide enregistre la page actuelle |
+| **Menu du clic droit** | [Enregistrement et recherche](#context-menu) | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien |
+| **Thème** et **Langue** | [Apparence](#language-theme-and-icons) | L'apparence de Bookmark Scout et la langue qu'il utilise |
+| **Confirmer avant de supprimer** | [Comportement](#deleting) | Demande confirmation avant de supprimer |
+
+En dessous, **L'IA est facultative** indique que Bookmark Scout fonctionne sans IA ; **Configurer l'IA** ouvre l'onglet [IA](#ai).
 
 ## Enregistrement et recherche [#search]
 
@@ -92,7 +104,7 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Ordre de tri** | Date d'ajout | **Date d'ajout**, **Alphabétique** ou **Dossiers en premier**. Change uniquement l'affichage des favoris dans Bookmark Scout, jamais l'ordre enregistré par le navigateur |
+| **Ordre de tri** | Ordre du navigateur | **Ordre du navigateur** (comme dans la barre de favoris), **Date d'ajout** (les plus récents d'abord), **Alphabétique** ou **Dossiers en premier**. C'est aussi l'ordre du tableau du gestionnaire tant que vous ne le triez pas par une colonne. Change uniquement l'affichage des favoris dans Bookmark Scout, jamais l'ordre enregistré par le navigateur |
 | **Regrouper par dossiers** | Activé | Dans la fenêtre pop-up et le panneau latéral, liste les sous-dossiers avant les favoris à chaque niveau |
 
 ### Liens [#links]
@@ -113,7 +125,7 @@ Choisissez les commandes affichées par les menus contextuels et ⋯ du gestionn
 
 ## IA [#ai]
 
-L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'activation des **Fonctionnalités d'IA** ; d'ici là, les paramètres d'IA de cet onglet et de l'onglet **Outils d'IA** sont grisés, sous une note qui l'indique. Vous pouvez quand même les modifier.
+L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'activation des **Fonctionnalités d'IA** ; d'ici là, les paramètres d'IA de cet onglet et de l'onglet **Outils d'IA** sont grisés, sous une note qui l'indique. Vous pouvez quand même les modifier. Tant que le service par défaut n'est pas configuré, un encadré **L'IA est facultative** en haut explique ce que fait l'IA, ce dont elle a besoin, ce qu'elle peut coûter et ce qui est envoyé, avec un lien vers [Configurer les outils d'IA](/guides/ai-tools).
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
@@ -138,12 +150,6 @@ En dessous, le panneau du fournisseur contient **Clé API**, **URL de base**, **
 ### Ce que Demander à l'IA peut faire [#ask-ai-actions]
 
 Tout ce que Demander à l'IA peut consulter et modifier figure ici, et tout est activé par défaut. Si vous désactivez une action, elle ne lui est plus proposée du tout. L'application d'un plan de modifications vous demande toujours d'abord votre accord, quoi que vous choisissiez ici.
-
-### Agents d'IA locaux [#agent-bridge]
-
-**Autoriser les agents d'IA locaux** (désactivé par défaut, pour cet appareil uniquement) permet aux agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, de consulter vos favoris via le programme bookmark-scout-mcp, que vous installez et enregistrez avec `bookmark-scout-mcp install`. L'activer demande à votre navigateur d'autoriser l'extension à communiquer avec ce programme. **Autoriser les modifications** (désactivé par défaut) leur permet aussi d'enregistrer des pages et de proposer des déplacements, renommages, suppressions et nouveaux dossiers ; chaque modification ouvre une fenêtre Bookmark Scout où vous l'acceptez ou la refusez, et vous pouvez l'annuler dans le gestionnaire de favoris. Le panneau sous l'interrupteur indique si le programme est en cours d'exécution.
-
-**Masquer les valeurs privées** (activé par défaut) remplace les paramètres d'URL sensibles, les jetons et les adresses e-mail dans les titres et URL que reçoivent les agents, d'après la liste de l'Analyseur de confidentialité. **Ce que les agents locaux peuvent faire** liste chaque consultation, toutes activées par défaut ; celle que vous désactivez ne leur est plus proposée du tout.
 
 ## Outils d'IA [#ai-tools]
 
@@ -173,6 +179,8 @@ L'étiquetage automatique et le générateur de résumés portent toujours sur l
 | **Nettoyeur d'URL** | **Supprimer les fragments** désactivé ; **Trier les paramètres de requête** et **Dédoublonner les paramètres de requête** activés ; listes **Paramètres à conserver** et **Paramètres à supprimer** |
 | **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8 s ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
 
+Les outils commencent sur **Tous les favoris**, pour qu'une analyse lancée depuis le dossier sur lequel s'ouvre le gestionnaire n'oublie pas les autres. Modifiez la **Portée par défaut** d'un outil pour qu'il commence plutôt sur le dossier ouvert. **Réorganisation des dossiers par IA** commence sur le dossier ouvert, car un plan pour tous les favoris les envoie tous à votre fournisseur d'IA. Au niveau supérieur du gestionnaire, où aucun dossier n'est ouvert, chaque outil commence sur **Tous les favoris**.
+
 Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Pour que les paramètres tiennent dans la synchronisation du navigateur, chaque liste compte au plus 20 entrées, et un nom de paramètre au plus 32 caractères (lettres, chiffres et ponctuation d'URL). Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
 
 ## Titres et icônes des pages [#metadata--content]
@@ -192,7 +200,7 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Activer l'outil Actualiser les icônes de site** | Activé | Affiche **Actualiser les icônes de site** dans la barre latérale Outils |
-| **Portée par défaut** | Dossier actuel | Portée initiale de l'actualisation des icônes de site |
+| **Portée par défaut** | Tous les favoris | Portée initiale de l'actualisation des icônes de site |
 | **Taille d'icône préférée** | 32 px | Lorsqu'une page propose plusieurs icônes, télécharge celle dont la taille est la plus proche de cette valeur |
 | **Taille maximale du fichier d'icône** | 64 Ko | Les fichiers d'icône plus volumineux ne sont ni téléchargés ni enregistrés |
 | **Limite de stockage des icônes** | 4 Mo | Taille totale des icônes enregistrées sur cet appareil ; les plus anciennes sont supprimées en premier |
@@ -227,3 +235,11 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | **Inclure les dates** et **Inclure les URL** | Activé | Les inclut dans les exportations |
 
 Consultez [Importation et exportation](/guides/import-export).
+
+## Pour les développeurs [#developers]
+
+### Agents d'IA locaux [#agent-bridge]
+
+**Autoriser les agents d'IA locaux** (désactivé par défaut, pour cet appareil uniquement) permet aux agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, de consulter vos favoris via le programme bookmark-scout-mcp, que vous installez et enregistrez avec `bookmark-scout-mcp install`. Les **Fonctionnalités d'IA** n'ont pas besoin d'être activées. L'activer demande à votre navigateur d'autoriser l'extension à communiquer avec ce programme. **Autoriser les modifications** (désactivé par défaut) leur permet aussi d'enregistrer des pages et de proposer des déplacements, renommages, suppressions et nouveaux dossiers ; chaque modification ouvre une fenêtre Bookmark Scout où vous l'acceptez ou la refusez, et vous pouvez l'annuler dans le gestionnaire de favoris. Le panneau sous l'interrupteur indique si le programme est en cours d'exécution.
+
+**Masquer les valeurs privées** (activé par défaut) remplace les paramètres d'URL sensibles, les jetons et les adresses e-mail dans les titres et URL que reçoivent les agents, d'après la liste de l'Analyseur de confidentialité. **Ce que les agents locaux peuvent faire** liste chaque consultation, toutes activées par défaut ; celle que vous désactivez ne leur est plus proposée du tout.

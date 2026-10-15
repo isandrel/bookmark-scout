@@ -160,7 +160,7 @@ test('Ctrl/Cmd+A selects every row the filters show, on every page', async ({
   await expect(page.getByTestId('bulk-actions')).toHaveCount(0);
 
   // With a search, only the matches are selected.
-  await page.getByRole('textbox', { name: 'Filter titles...' }).fill('All ');
+  await page.getByRole('textbox', { name: 'Search titles and addresses' }).fill('All ');
   await page.getByRole('checkbox', { name: 'Current folder only' }).check();
   await page
     .locator('tbody tr')
@@ -169,7 +169,7 @@ test('Ctrl/Cmd+A selects every row the filters show, on every page', async ({
   await page.keyboard.press('ControlOrMeta+a');
   await expect(page.getByTestId('bulk-actions')).toContainText('23 selected');
   // In the title filter, Ctrl/Cmd+A selects its text instead.
-  await page.getByRole('textbox', { name: 'Filter titles...' }).focus();
+  await page.getByRole('textbox', { name: 'Search titles and addresses' }).focus();
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('bulk-actions')).toContainText('23 selected');
 });
@@ -223,6 +223,9 @@ test('Delete removes the selection, and Ctrl/Cmd+Z and redo work after a reload'
   await expect
     .poll(() => childTitles(extensionWorker, seeded.folderId))
     .toEqual(['Gone 02', 'Gone 03']);
+  // The bookmarks change before the delete has stored its history entry; a reload in between
+  // would drop the entry, so wait for it.
+  await expect.poll(() => historyDepths(page)).toEqual({ undo: 1, redo: 0 });
 
   // The history outlives the page: reload, then undo.
   await page.reload();

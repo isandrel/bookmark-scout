@@ -2,7 +2,7 @@
 
 [statistics]
 enabled = true
-default_scope = "folder"
+default_scope = "all"
 include_domains = true
 include_folders = true
 include_duplicates = true

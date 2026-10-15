@@ -17,18 +17,19 @@ import {
   Sparkles,
   Tags,
 } from 'lucide-react';
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
-export type ToolSectionId = 'ai' | 'maintenance' | 'metadata' | 'security' | 'analytics';
+/** Each sidebar section's title; their order is `sections` in config/ui/tools-sidebar.toml. */
+const TOOL_SECTION_TITLES = {
+  maintenance: 'tools_category_maintenance',
+  metadata: 'tools_category_metadata',
+  security: 'tools_category_security',
+  analytics: 'tools_category_analytics',
+  ai: 'tools_category_ai',
+} as const;
 
-/** Sidebar sections in display order; the data section (export and import) follows them. */
-export const TOOL_SECTIONS: ReadonlyArray<{ id: ToolSectionId; titleKey: string }> = [
-  { id: 'ai', titleKey: 'tools_category_ai' },
-  { id: 'maintenance', titleKey: 'tools_category_maintenance' },
-  { id: 'metadata', titleKey: 'tools_category_metadata' },
-  { id: 'security', titleKey: 'tools_category_security' },
-  { id: 'analytics', titleKey: 'tools_category_analytics' },
-];
+export type ToolSectionId = keyof typeof TOOL_SECTION_TITLES;
 
 /** One line under an outcome, keyed by the item it is about (a bookmark id). */
 export type ToolOutcomeNote = { id: string; text: string };
@@ -573,14 +574,60 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
   },
 };
 
-/** The scope the tool's card starts on. */
-export function getToolDefaultScope(settings: Settings, tool: ToolDefinition): BookmarkToolScope {
-  return settings[tool.scopeSetting];
+/** Lists every id of `ids` exactly once, in any order. */
+const listsEachOnce = (ids: readonly string[]) => (list: readonly string[]) =>
+  list.length === ids.length &&
+  new Set(list).size === list.length &&
+  ids.every((id) => list.includes(id));
+
+const sidebarConfig = readConfig(
+  'ui/tools-sidebar',
+  z.strictObject({
+    sections: z
+      .array(z.string())
+      .refine(listsEachOnce(Object.keys(TOOL_SECTION_TITLES)), 'must list every section once'),
+    tools: z
+      .array(z.string())
+      .refine(listsEachOnce(Object.keys(TOOL_DEFINITIONS)), 'must list every tool once'),
+    top_level_scope: z.enum(['folder', 'all']),
+    export_scope: z.enum(['folder', 'all']),
+  }),
+);
+
+/** The scope the export card starts on in a folder (`export_scope`). */
+export const EXPORT_DEFAULT_SCOPE: BookmarkToolScope = sidebarConfig.export_scope;
+
+/** Sidebar sections in display order; the data section (export and import) follows them. */
+export const TOOL_SECTIONS: ReadonlyArray<{ id: ToolSectionId; titleKey: string }> = (
+  sidebarConfig.sections as ToolSectionId[]
+).map((id) => ({ id, titleKey: TOOL_SECTION_TITLES[id] }));
+
+/** Every tool in display order (config/ui/tools-sidebar.toml). */
+const TOOL_ORDER = (sidebarConfig.tools as ToolId[]).map(
+  (id) => TOOL_DEFINITIONS[id] as ToolDefinition,
+);
+
+/**
+ * The scope a card starts on: at the manager's top level, where no folder is open, the configured
+ * `top_level_scope` ("All bookmarks"); in a folder, the tool's own default (`configured`).
+ */
+export function getToolStartScope(
+  configured: BookmarkToolScope,
+  currentFolderId: string | null,
+): BookmarkToolScope {
+  return currentFolderId ? configured : sidebarConfig.top_level_scope;
 }
 
-/** The enabled tools in a section, in table order. */
+/** The scope the tool's card starts on, from its Default Scope setting and the open folder. */
+export function getToolDefaultScope(
+  settings: Settings,
+  tool: ToolDefinition,
+  currentFolderId: string | null,
+): BookmarkToolScope {
+  return getToolStartScope(settings[tool.scopeSetting], currentFolderId);
+}
+
+/** The enabled tools in a section, in the configured order. */
 export function getSectionTools(settings: Settings, section: ToolSectionId): ToolDefinition[] {
-  return (Object.values(TOOL_DEFINITIONS) as ToolDefinition[]).filter(
-    (tool) => tool.section === section && settings[tool.enabledSetting],
-  );
+  return TOOL_ORDER.filter((tool) => tool.section === section && settings[tool.enabledSetting]);
 }

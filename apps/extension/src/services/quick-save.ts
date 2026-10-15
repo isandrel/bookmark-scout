@@ -32,7 +32,6 @@ const quickSaveConfig = readConfig(
 export const QUICK_SAVE_POPUP_MAX_AGE_MS = quickSaveConfig.popup_result_max_age_ms;
 
 const QUICK_SAVE_TOAST_SCRIPT = '/quick-save-toast.js';
-const OPTIONS_AI_PATH = '/options.html?category=ai';
 
 const recommendationSchema = z.strictObject({
   type: z.enum(['existing', 'new']),
@@ -809,7 +808,7 @@ export async function handleQuickSaveAction(
       await quickSaveRecordValue.update((current) => (current?.id === record.id ? null : current));
       return { view: null };
     case 'openAISettings':
-      await browser.tabs.create({ url: browser.runtime.getURL(OPTIONS_AI_PATH), active: true });
+      await openAISettings();
       await quickSaveRecordValue.update((current) => (current?.id === record.id ? null : current));
       return { view: null };
     case 'undo':

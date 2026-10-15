@@ -1,0 +1,29 @@
+# The manager's Tools sidebar. Read by src/components/bookmarks/tools/tool-definitions.ts.
+
+# Sections in display order: cleaning up first, AI last. Every section once. The Data section
+# (export and import) follows them.
+sections = ["maintenance", "metadata", "security", "analytics", "ai"]
+
+# Tools in display order inside their section. Every tool in TOOL_DEFINITIONS once.
+tools = [
+  "duplicates",
+  "deadLinks",
+  "urlCleaner",
+  "metadataFetcher",
+  "siteIcons",
+  "privacyScanner",
+  "statistics",
+  "reorganization",
+  "autoTagging",
+  "summarizer",
+  "aiContextPacker",
+]
+
+# Scope a tool that can run on a folder or on all bookmarks starts on while the manager shows its
+# top level (no folder open): "all" or "folder". With a folder open, the tool's Default Scope
+# setting applies.
+top_level_scope = "all"
+
+# Scope the export card starts on, which has no setting of its own: "all", so an export from the
+# manager's landing folder (the bookmarks bar) holds every bookmark, or "folder".
+export_scope = "all"

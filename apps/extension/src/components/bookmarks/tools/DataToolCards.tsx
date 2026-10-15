@@ -3,9 +3,6 @@ import { Download, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { BookmarkTreeNode } from '@/types';
 
-/** The scope the export card starts on. */
-export const EXPORT_DEFAULT_SCOPE: BookmarkToolScope = 'folder';
-
 /** Scope part of an export file name when no folder name applies. */
 const EXPORT_SCOPE_FILE_NAMES: Record<BookmarkToolScope, string> = { folder: 'folder', all: 'all' };
 
@@ -100,7 +97,7 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
       disabled={folders.length === 0}
       isLoading={isExporting}
       scopeCapability="both"
-      defaultScope={EXPORT_DEFAULT_SCOPE}
+      defaultScope={getToolStartScope(EXPORT_DEFAULT_SCOPE, currentFolderId)}
       currentFolderName={currentFolderName}
       controls={
         <Select

@@ -20,9 +20,33 @@ const SORTABLE_COLUMN_IDS = new Set(
 );
 const ALLOWED_COLUMN_IDS = new Set<string>(BOOKMARK_TABLE_COLUMN_IDS);
 
+/**
+ * Columns the View menu shows and hides (data columns the user may hide); `default_columns` may
+ * name only these (unit tested).
+ */
+export const HIDEABLE_COLUMN_IDS: readonly string[] = SAVED_COLUMNS.filter(
+  (column) => column.accessor && column.enableHiding !== false,
+).map((column) => column.id);
+
+/**
+ * A new view's column order: columns that cannot be hidden (the checkbox, the row menu) keep their
+ * registry place, and the other places take the configured default columns first, then the rest
+ * in registry order.
+ */
+const DEFAULT_COLUMN_ORDER: readonly string[] = (() => {
+  const hideableInOrder = [
+    ...DEFAULT_MANAGER_COLUMN_IDS,
+    ...HIDEABLE_COLUMN_IDS.filter((id) => !DEFAULT_MANAGER_COLUMN_IDS.includes(id)),
+  ];
+  let next = 0;
+  return BOOKMARK_TABLE_COLUMN_IDS.map((id) =>
+    HIDEABLE_COLUMN_IDS.includes(id) ? (hideableInOrder[next++] ?? id) : id,
+  );
+})();
+
 const columnsSchema = z.object({
   columnVisibility: z.record(z.string(), z.boolean()).default({}),
-  columnOrder: z.array(z.string()).default([...BOOKMARK_TABLE_COLUMN_IDS]),
+  columnOrder: z.array(z.string()).default([...DEFAULT_COLUMN_ORDER]),
   sorting: z.array(z.object({ id: z.string(), desc: z.boolean() })).default([]),
   browserOrder: z.boolean().default(false),
 });
@@ -54,12 +78,12 @@ export type BookmarkTableView = BookmarkTableColumns & BookmarkTableLayout;
 
 const DEFAULT_COLUMNS: BookmarkTableColumns = {
   columnVisibility: Object.fromEntries(
-    SAVED_COLUMNS.filter((column) => column.defaultVisible === false).map((column) => [
-      column.id,
+    HIDEABLE_COLUMN_IDS.filter((id) => !DEFAULT_MANAGER_COLUMN_IDS.includes(id)).map((id) => [
+      id,
       false,
     ]),
   ),
-  columnOrder: [...BOOKMARK_TABLE_COLUMN_IDS],
+  columnOrder: [...DEFAULT_COLUMN_ORDER],
   sorting: [],
   browserOrder: false,
 };

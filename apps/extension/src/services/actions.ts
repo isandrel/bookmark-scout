@@ -54,7 +54,7 @@ function offeredTo(id: ActionId, kind: ActionClient['kind']): boolean {
   return Boolean(agent && (!agent.only || agent.only === kind));
 }
 
-/** The actions the user can turn on or off for this kind of agent (Options > AI). */
+/** The actions the user can turn on or off for this kind of agent (Options > AI for Ask AI, Options > For developers for local agents). */
 export function agentActionChoices(kind: ActionClient['kind']): ActionId[] {
   return ACTION_IDS.filter((id) => offeredTo(id, kind));
 }

@@ -13,7 +13,7 @@ max_groups            = { default = 500, min = 1, max = 5000, step = 10 }
 
 [url_cleaner]
 enabled = true
-default_scope = "folder"
+default_scope = "all"
 remove_hash = false
 sort_query_params = true
 dedupe_query_params = true
@@ -38,7 +38,7 @@ remove_params = { max_items = 20, max_length = 32, default = [
 
 [dead_links]
 enabled            = true
-default_scope      = "folder"
+default_scope      = "all"
 request_timeout_ms = { default = 8000, min = 1000, max = 60000, step = 500 }
 concurrency        = { default = 4, min = 1, max = 20, step = 1 }
 retry_count        = { default = 1, min = 0, max = 10, step = 1 }

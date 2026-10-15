@@ -5,6 +5,7 @@ provider_kind = "native"
 requires_api_key = true
 api_key_placeholder = "sk-..."
 base_url = "https://api.deepseek.com/v1"
+key_url = "https://platform.deepseek.com/api_keys"
 logo = "deepseek"
 
 [[models]]

@@ -8,13 +8,17 @@ interface DataTablePaginationProps<TData extends RowData> {
 export function DataTablePagination<TData extends RowData>({
   table,
 }: DataTablePaginationProps<TData>) {
+  const selectedCount = table.getFilteredSelectedRowModel().rows.length;
+  const itemCount = table.getFilteredRowModel().rows.length;
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 px-2">
-      <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">
-        {t('table_rowsSelected', [
-          String(table.getFilteredSelectedRowModel().rows.length),
-          String(table.getFilteredRowModel().rows.length),
-        ])}
+      <div
+        className="flex-1 whitespace-nowrap text-sm text-muted-foreground"
+        data-testid="table-item-count"
+      >
+        {selectedCount > 0
+          ? t('managerDefaults_selectedOf', [String(selectedCount), String(itemCount)])
+          : tPlural('managerDefaults_itemCount', itemCount)}
       </div>
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 lg:gap-x-8">
         {/* gap, not space-x: Base UI's Select adds a hidden input after the trigger, and space-x

@@ -41,13 +41,17 @@ export type SettingsFieldMeta = {
 
 /** Options content that is not synced settings, drawn by its own component. */
 export type SettingsPanelId =
+  /** AI: what AI does, needs, costs, and sends, until a service is set up. */
+  | 'aiIntro'
   | 'aiServices'
   | 'aiActivity'
   | 'promptLibrary'
   | 'shortcuts'
   | 'managerMenus'
   | 'askAiActions'
-  | 'agentBridge';
+  | 'agentBridge'
+  /** Essentials: a pointer to the AI tab, which is optional and set up there. */
+  | 'essentialsAi';
 
 /** A titled group of settings inside a category: the Options page's second level. */
 export type SettingsSectionMeta = {
@@ -210,8 +214,18 @@ function assertEverySettingsKeyRead(node: Record<string, unknown>, prefix = ''):
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;
 
-export const sortOrderSchema = z.enum(['date', 'alphabetical', 'folders']);
+export const sortOrderSchema = z.enum(['browser', 'date', 'alphabetical', 'folders']);
 export type SortOrder = z.infer<typeof sortOrderSchema>;
+
+/** Name of each sort order, in Options and where the manager says which order its table is in. */
+export function getSortOrderLabel(order: SortOrder): string {
+  return {
+    browser: t('table_browserOrder'),
+    date: t('settings_sortDate'),
+    alphabetical: t('settings_sortAlphabetical'),
+    folders: t('settings_sortFolders'),
+  }[order];
+}
 
 export const linkOpenTargetSchema = z.enum(['new_tab', 'background_tab', 'current_tab']);
 export type LinkOpenTarget = z.infer<typeof linkOpenTargetSchema>;
@@ -400,9 +414,7 @@ function actionIdListField(path: string, stem: string): FieldDefinition<z.ZodTyp
   const config = configValue(path, listSettingSchema);
   const maxLength = config.max_length;
   if (maxLength === undefined) throw new Error(`settings.${path} needs max_length`);
-  const schema = z
-    .array(z.string().max(maxLength).regex(ACTION_ID_PATTERN))
-    .max(config.max_items);
+  const schema = z.array(z.string().max(maxLength).regex(ACTION_ID_PATTERN)).max(config.max_items);
   return {
     section: sectionOf(path),
     schema: schema.default(schema.parse(config.default)),
@@ -589,12 +601,7 @@ const fields = {
     'behavior.tree.sort_order',
     'sortOrder',
     sortOrderSchema,
-    (value) =>
-      ({
-        date: t('settings_sortDate'),
-        alphabetical: t('settings_sortAlphabetical'),
-        folders: t('settings_sortFolders'),
-      })[value],
+    getSortOrderLabel,
   ),
   groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
   linkOpenTarget: enumField(
@@ -630,11 +637,14 @@ const fields = {
   aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
   askAiDisabledActions: actionIdListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
-  agentBridgeEnabled: switchField('ai.agent_bridge.enabled', 'agentBridgeEnabled'),
-  agentBridgeWrites: switchField('ai.agent_bridge.writes', 'agentBridgeWrites'),
-  agentBridgeRedactUrls: switchField('ai.agent_bridge.redact_urls', 'agentBridgeRedactUrls'),
+  agentBridgeEnabled: switchField('developers.agent_bridge.enabled', 'agentBridgeEnabled'),
+  agentBridgeWrites: switchField('developers.agent_bridge.writes', 'agentBridgeWrites'),
+  agentBridgeRedactUrls: switchField(
+    'developers.agent_bridge.redact_urls',
+    'agentBridgeRedactUrls',
+  ),
   agentBridgeDisabledActions: actionIdListField(
-    'ai.agent_bridge.disabled_actions',
+    'developers.agent_bridge.disabled_actions',
     'agentBridgeDisabledActions',
   ),
   managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
@@ -1150,8 +1160,9 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       { id: 'managerMenus', fields: [], panel: 'managerMenus' },
     ]),
     ai: category('settings_ai', 'settings_aiDesc', [
-      // The switch comes first, then the services it turns on (provider and model live there,
-      // not in synced settings), then what the services are used for.
+      // What AI is and costs comes first, then the switch, then the services it turns on (provider
+      // and model live there, not in synced settings), then what the services are used for.
+      { id: 'intro', fields: [], panel: 'aiIntro' },
       { id: 'enable', fields: ['aiEnabled'], panel: 'aiServices' },
       {
         id: 'suggestions',
@@ -1166,14 +1177,6 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         requires: 'aiEnabled',
       },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
-      // Local agents bring their own model, so this works with AI off.
-      {
-        id: 'agentBridge',
-        labelKey: 'settings_agentBridge',
-        toggle: 'agentBridgeEnabled',
-        fields: ['agentBridgeWrites', 'agentBridgeRedactUrls'],
-        panel: 'agentBridge',
-      },
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),
     aiTools: category('settings_aiTools', 'settings_aiToolsDesc', [
@@ -1347,6 +1350,17 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         ],
       },
     ]),
+    // Local agents need a program installed from a terminal and bring their own model, so they
+    // sit apart from AI (and work with AI off).
+    developers: category('essentials_developers', 'essentials_developersDesc', [
+      {
+        id: 'agentBridge',
+        labelKey: 'settings_agentBridge',
+        toggle: 'agentBridgeEnabled',
+        fields: ['agentBridgeWrites', 'agentBridgeRedactUrls'],
+        panel: 'agentBridge',
+      },
+    ]),
   };
 }
 
@@ -1386,19 +1400,53 @@ export function isSettingShown(key: keyof Settings): boolean {
   return isSettingSupported(key) && (meta.type !== 'select' || (meta.options?.length ?? 0) > 1);
 }
 
+/** The category without the settings this browser does not show. */
+function withShownSettings(category: SettingsCategoryMeta): SettingsCategoryMeta {
+  return {
+    ...category,
+    sections: category.sections.map((section) => ({
+      ...section,
+      fields: section.fields.filter(isSettingShown),
+      ...(section.advanced ? { advanced: section.advanced.filter(isSettingShown) } : {}),
+    })),
+    fields: category.fields.filter(isSettingShown),
+  };
+}
+
+/**
+ * Every setting's own tab, in display order; on the page they follow Essentials under an
+ * "Advanced" heading. Search reads these, so it finds each setting once, in its own tab.
+ */
 export function getSettingsCategories(): Record<string, SettingsCategoryMeta> {
   return Object.fromEntries(
-    Object.entries(buildCategories()).map(([id, category]) => [
-      id,
-      {
-        ...category,
-        sections: category.sections.map((section) => ({
-          ...section,
-          fields: section.fields.filter(isSettingShown),
-          ...(section.advanced ? { advanced: section.advanced.filter(isSettingShown) } : {}),
-        })),
-        fields: category.fields.filter(isSettingShown),
-      },
+    Object.entries(buildCategories()).map(([id, category]) => [id, withShownSettings(category)]),
+  );
+}
+
+/** Options' first tab: the few settings most people change (`config/ui/essentials.toml`). */
+export const ESSENTIALS_CATEGORY = 'essentials';
+
+const essentialsConfig = readConfig(
+  'ui/essentials',
+  z.strictObject({
+    settings: z
+      .array(z.string().refine((key) => key in defaultSettings, 'not a settings key'))
+      .min(1)
+      .refine((keys) => new Set(keys).size === keys.length, 'a setting is listed twice'),
+  }),
+);
+
+/** The settings Essentials shows, as configured; each also stays in its own tab. */
+export const ESSENTIAL_SETTINGS = essentialsConfig.settings as readonly (keyof Settings)[];
+
+/**
+ * Essentials: the configured settings as one section (the same rows, keys, and stored values as
+ * in their own tabs), then a pointer to AI, which is optional and set up in its own tab.
+ */
+export function getEssentialsCategory(): SettingsCategoryMeta {
+  return withShownSettings(
+    category('essentials_title', 'essentials_description', [
+      { id: 'essentials', fields: ESSENTIAL_SETTINGS, panel: 'essentialsAi' },
     ]),
   );
 }

@@ -229,7 +229,7 @@ test.describe('manager keyboard shortcuts', () => {
       { title: 'Filter Link', url: 'https://e2e.invalid/filter' },
     ]);
     await page.goto(managerUrl(extensionId, seeded.folderId));
-    const filter = page.getByRole('textbox', { name: 'Filter titles...' });
+    const filter = page.getByRole('textbox', { name: 'Search titles and addresses' });
     await expect(filter).toBeVisible();
 
     await page.keyboard.press('/');
@@ -259,7 +259,7 @@ test.describe('manager keyboard shortcuts', () => {
     await page.keyboard.press('Shift+?');
     const dialog = page.getByRole('dialog', { name: 'Keyboard shortcuts' });
     await expect(dialog).toBeVisible();
-    await expect(dialog).toContainText('Focus the title filter');
+    await expect(dialog).toContainText('Focus the search box');
     await expect(dialog).toContainText('Go to the parent folder');
     await expect(dialog).toContainText('Move to the next or previous row');
 
@@ -267,7 +267,7 @@ test.describe('manager keyboard shortcuts', () => {
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Alt+ArrowUp');
     // The modal hides the page from the accessibility tree, so find the filter by attribute.
-    await expect(page.locator('input[aria-label="Filter titles..."]')).not.toBeFocused();
+    await expect(page.locator('input[aria-label="Search titles and addresses"]')).not.toBeFocused();
     await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
 
     await page.keyboard.press('Escape');

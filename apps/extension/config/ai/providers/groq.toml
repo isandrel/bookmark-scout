@@ -6,6 +6,7 @@ requires_api_key = true
 api_key_pattern = "^gsk_"
 api_key_placeholder = "gsk_..."
 base_url = "https://api.groq.com/openai/v1"
+key_url = "https://console.groq.com/keys"
 logo = "groq"
 
 [[models]]

@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { error, Key } from 'selenium-webdriver';
+import { error, Key, until } from 'selenium-webdriver';
 import { STORAGE_ITEMS, storageAreaKey } from '../../src/lib/storage/registry';
 import { By, expect, type FirefoxExtension, test } from './fixtures';
 
@@ -83,6 +83,24 @@ async function clickToolButton(extension: FirefoxExtension, tool: string, button
   await element.click();
 }
 
+/** Picks `scope` (a folder name or All Bookmarks) in a tool card's scope menu, its last select. */
+async function chooseToolScope(extension: FirefoxExtension, tool: string, scope: string) {
+  const xpath =
+    `//*[@data-testid="tools-sidebar"]//h4[normalize-space()="${tool}"]` +
+    `/ancestor::div[.//button][1]//button[@role="combobox"]`;
+  const selects = await extension.driver.findElements(By.xpath(xpath));
+  const select = selects.at(-1);
+  if (!select) throw new Error(`${tool} has no scope menu`);
+  await extension.driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', select);
+  await select.click();
+  const option = await extension.driver.wait(
+    until.elementLocated(By.xpath(`//*[@role="option"][normalize-space()="${scope}"]`)),
+    5000,
+  );
+  await extension.driver.wait(until.elementIsVisible(option), 5000);
+  await option.click();
+}
+
 const visibleRows = (extension: FirefoxExtension) => extension.countVisible('tbody tr');
 
 test('popup search finds a bookmark and hides non-matching ones', async ({ extension }) => {
@@ -154,8 +172,10 @@ test('popup and side panel open the bookmark manager in a new tab', async ({ ext
     }, 10_000);
     const origin = await driver.getWindowHandle();
     await driver.switchTo().window(opened as string);
+    // A manager opened without a folder shows the bookmarks toolbar and names it in the address.
     await driver.wait(
-      async () => (await driver.getCurrentUrl()) === extension.url('bookmarks.html'),
+      async () =>
+        (await driver.getCurrentUrl()) === `${extension.url('bookmarks.html')}?id=toolbar_____`,
       10_000,
     );
     await extension.find('button[title="Show tools"]');
@@ -213,7 +233,9 @@ test('bookmark manager loads a folder, filters titles, and opens subfolders', as
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(3);
 
-  await (await extension.find('input[placeholder="Filter titles..."]')).sendKeys('alpha');
+  await (await extension.find('input[placeholder="Search titles and addresses"]')).sendKeys(
+    'alpha',
+  );
   await expect.poll(() => visibleRows(extension)).toBe(1);
   await extension.findByText('tbody tr', 'Alpha Item');
 
@@ -237,7 +259,9 @@ test('bookmark manager keeps the search in the address and links to its own page
 
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(2);
-  await (await extension.find('input[placeholder="Filter titles..."]')).sendKeys('Delta');
+  await (await extension.find('input[placeholder="Search titles and addresses"]')).sendKeys(
+    'Delta',
+  );
   await expect
     .poll(async () => new URL(await driver.getCurrentUrl()).searchParams.get('q'))
     .toBe('Delta');
@@ -356,7 +380,7 @@ test('manager drag and drop reorders rows and turns dropped links into bookmarks
   ]);
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(3);
-  await (await extension.findByText('button', 'Browser order')).click();
+  // The default Sort Order is the browser's, so rows reorder without turning anything on.
   const titles = async (id: string) => (await childrenOf(extension, id)).map((item) => item.title);
 
   // The browser's drag events, with one DataTransfer from dragstart to drop as a real drag has.
@@ -496,7 +520,8 @@ test('a quick save command without keys shows the popup notice, and Options reco
     'Quick save shortcut not set',
   );
 
-  await extension.open('options.html');
+  // The shortcut recorders are on Saving & Search, not on Essentials, where Options opens.
+  await extension.open('options.html?category=search');
   const recorder = '[data-command="ai-quick-save"] [data-slot="shortcut-recorder"]';
   await clickCentered(extension, recorder);
   await extension.driver
@@ -554,7 +579,7 @@ test('options saves a setting to sync storage and keeps it after reload', async 
   await setSettings(extension, { language: 'en', showFavicons: true });
 
   await extension.open('options.html');
-  // Saving & Search opens first; wait for the tabs, then switch to Appearance.
+  // Essentials opens first; wait for the tabs, then switch to Appearance.
   await extension.find('[role="tab"]');
   await extension.driver
     .findElement(By.xpath('//button[@role="tab" and normalize-space()="Appearance"]'))
@@ -602,7 +627,7 @@ test('AI waits for data collection consent, and there is no browser icon cache s
   await setSettings(extension, { language: 'en', aiEnabled: true });
   await extension.open('options.html');
   // Firefox has no icon cache for extensions, so that setting is absent from Appearance.
-  // Saving & Search opens first; wait for the tabs, then switch to Appearance.
+  // Essentials opens first; wait for the tabs, then switch to Appearance.
   await extension.find('[role="tab"]');
   await extension.driver
     .findElement(By.xpath('//button[@role="tab" and normalize-space()="Appearance"]'))
@@ -644,6 +669,8 @@ test('a tool run asks Firefox for its bookmarks’ site only, inside the declare
     { title: 'Site Page', url: 'https://www.e2e.invalid/one' },
     { title: 'Same Site Page', url: 'http://e2e.invalid/two' },
   ]);
+  // Tools start on all bookmarks by default; this run covers the folder's sites only.
+  await setSettings(extension, { deadLinksDefaultScope: 'folder' });
   await openTools(extension, folder.folderId);
   await clickToolButton(extension, 'Check Dead Links', 'Scan');
   const dialog = await extension.findByText('[role="dialog"]', 'Allow access to websites?');
@@ -670,6 +697,8 @@ test('JSON export downloads the folder and importing it restores a deleted bookm
   await setSettings(extension, { dataDefaultExportFormat: 'json' });
 
   await openTools(extension, folder.folderId);
+  // The export starts on all bookmarks; this one exports the open folder.
+  await chooseToolScope(extension, 'Export Bookmarks', 'E2E Firefox Data');
   await clickToolButton(extension, 'Export Bookmarks', 'Export');
 
   let exportedName = '';

@@ -189,6 +189,8 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   sortOrder: tested(POPUP, [
     e2e('bookmark-workflows.spec.ts', 'updates popup ordering from synced settings and creates a folder'),
     e2e('sorting.spec.ts', 'applies an Options UI sorting change to an open bookmarks table'),
+    e2e('popup-tree.spec.ts', 'lists each folder in the browser order by default, as the bookmarks bar does'),
+    e2e('manager-defaults.spec.ts', 'names another Sort Order beside the Browser order button'),
   ]),
   groupByFolders: tested(POPUP, [
     e2e('popup-tree.spec.ts', 'groupByFolders lists folders before links under date and alphabetical order'),

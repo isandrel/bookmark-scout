@@ -7,11 +7,23 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 
 ## Usar la página de configuración [#using-the-settings-page]
 
+- La página se abre en **Lo esencial**, con los pocos ajustes que la mayoría de la gente cambia. Todas las demás pestañas aparecen en **Avanzado**, y cada ajuste de **Lo esencial** también está en su propia pestaña: cambiarlo en cualquiera de los dos sitios cambia el mismo ajuste.
 - **Buscar en la configuración...**, en la parte superior, encuentra un ajuste en cualquier pestaña e indica cuántos coinciden.
 - Cada pestaña se divide en secciones con título. El interruptor de cada herramienta está junto a su título; mientras está desactivado, el resto de sus ajustes se pliega. Los ajustes técnicos, como los tiempos de espera y la longitud de los nombres de archivo, están en **Configuración avanzada**, que permanece cerrada hasta que la abres o una búsqueda encuentra algo dentro.
 - Un ajuste cambiado se marca como **Modificado**, con un botón para restablecer su valor predeterminado. **Restablecer todo** restablece todos los ajustes.
 - **Hacer copia de los ajustes** guarda en un archivo de copia de seguridad los ajustes que cambiaste, los prompts personalizados, los servicios de IA (nombre, proveedor, modelo, **URL base** y campos propios del proveedor; nunca las claves de API ni los **Encabezados adicionales (JSON)**), las búsquedas guardadas y las columnas y el orden de la tabla del administrador. **Restaurar ajustes** restaura una copia, reemplazando cada parte que contiene el archivo, o combina un archivo de ajustes simple con tu configuración; después de restaurar una copia, vuelve a introducir las claves de API y los encabezados adicionales en [IA](#ai) para los servicios marcados con **Falta configurar**. Ninguno de los dos toca tus marcadores. **Exportar marcadores**, junto a ellos, abre el administrador de marcadores en su herramienta de exportación; consulta [Importar y exportar](/guides/import-export).
 - Los ajustes que cambias se guardan en el almacenamiento sincronizado del navegador, así que te siguen a otros dispositivos cuando la sincronización del navegador está activada. Algunos ajustes propios de cada dispositivo se quedan en él: la carpeta elegida para el guardado rápido, **Límite de almacenamiento de iconos**, el registro de actividad de IA y la búsqueda web de Preguntar a la IA. Los servicios de IA, con sus claves de API, la **URL base** y los **Encabezados adicionales (JSON)**, también se quedan en este dispositivo. Consulta [Privacidad](/privacy).
+
+## Lo esencial [#essentials]
+
+| Ajuste | También en | Qué hace |
+| --- | --- | --- |
+| **Carpeta de guardado rápido** y **Carpeta de destino** | [Guardar y buscar](#quick-save) | Dónde guarda la página actual el atajo de guardado rápido |
+| **Menú del clic derecho** | [Guardar y buscar](#context-menu) | Muestra **Guardar marcador en...** cuando haces clic con el botón derecho en un enlace |
+| **Tema** e **Idioma** | [Aspecto](#language-theme-and-icons) | Cómo se ve Bookmark Scout y qué idioma usa |
+| **Confirmar antes de eliminar** | [Comportamiento](#deleting) | Pregunta antes de eliminar |
+
+Debajo, **La IA es opcional** explica que Bookmark Scout funciona sin IA; **Configurar la IA** abre la pestaña [IA](#ai).
 
 ## Guardar y buscar [#search]
 
@@ -92,7 +104,7 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Orden** | Fecha de creación | **Fecha de creación**, **Alfabético** o **Carpetas primero**. Solo cambia cómo muestra Bookmark Scout los marcadores, nunca el orden que guarda el navegador |
+| **Orden** | Orden del navegador | **Orden del navegador** (como en la barra de marcadores), **Fecha de creación** (los más recientes primero), **Alfabético** o **Carpetas primero**. También es el orden de la tabla del administrador hasta que la ordenes por una columna. Solo cambia cómo muestra Bookmark Scout los marcadores, nunca el orden que guarda el navegador |
 | **Agrupar por carpetas** | Activado | En la ventana emergente y en el panel lateral, muestra las subcarpetas antes que los marcadores en cada nivel |
 
 ### Enlaces [#links]
@@ -113,7 +125,7 @@ Elige qué comandos muestran los menús contextuales y ⋯ del administrador, y 
 
 ## IA [#ai]
 
-La IA está desactivada de forma predeterminada. Estos ajustes solo importan después de activar **Funciones de IA**; hasta entonces, los ajustes de IA de esta pestaña y de la pestaña **Herramientas de IA** aparecen atenuados bajo una nota que lo indica. Aun así, puedes cambiarlos.
+La IA está desactivada de forma predeterminada. Estos ajustes solo importan después de activar **Funciones de IA**; hasta entonces, los ajustes de IA de esta pestaña y de la pestaña **Herramientas de IA** aparecen atenuados bajo una nota que lo indica. Aun así, puedes cambiarlos. Mientras el servicio predeterminado no esté configurado, un cuadro **La IA es opcional** en la parte superior explica qué hace la IA, qué necesita, cuánto puede costar y qué se envía, con un enlace a [Configurar las herramientas de IA](/guides/ai-tools).
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
@@ -138,12 +150,6 @@ Debajo de estos, el panel del proveedor contiene **Clave de API**, **URL base**,
 ### Qué puede hacer Preguntar a la IA [#ask-ai-actions]
 
 Aquí aparece todo lo que Preguntar a la IA puede consultar y cambiar, y todo está activado de forma predeterminada. Si desactivas algo, no se le ofrece en absoluto. Aplicar un plan de cambios siempre te pide permiso primero, elijas lo que elijas aquí.
-
-### Agentes de IA locales [#agent-bridge]
-
-**Permitir agentes de IA locales** (desactivado de forma predeterminada, solo en este dispositivo) deja que los agentes de IA de tu equipo, como Claude Code, Codex o Cursor, consulten tus marcadores a través del programa bookmark-scout-mcp, que instalas y registras con `bookmark-scout-mcp install`. Al activarlo, tu navegador pide permiso para que la extensión se comunique con ese programa. **Permitir cambios** (desactivado de forma predeterminada) les deja además guardar páginas y proponer movimientos, cambios de nombre, eliminaciones y carpetas nuevas; cada cambio abre una ventana de Bookmark Scout donde lo apruebas o lo rechazas, y puedes deshacerlo en el administrador de marcadores. El panel bajo el interruptor muestra si el programa está en ejecución.
-
-**Ocultar valores privados** (activado de forma predeterminada) reemplaza los parámetros de URL sensibles, los tokens y las direcciones de correo en los títulos y URL que reciben los agentes, según la lista del Escáner de privacidad. **Qué pueden hacer los agentes locales** muestra cada consulta, todas activadas de forma predeterminada; la que desactives no se les ofrece en absoluto.
 
 ## Herramientas de IA [#ai-tools]
 
@@ -173,6 +179,8 @@ El Etiquetado automático y el Generador de resúmenes siempre trabajan con la c
 | **Limpiador de URLs** | **Quitar fragmentos** desactivado; **Ordenar parámetros de consulta** y **Quitar parámetros de consulta repetidos** activados; listas **Parámetros que se conservan** y **Parámetros que se quitan** |
 | **Comprobar enlaces rotos** | **Tiempo de espera de la solicitud** 8 s; **Solicitudes simultáneas** 4; **Número de reintentos** 1; **Seguir redirecciones** activado; **Códigos de estado correctos** 200, 201, 202, 204, 301, 302, 307, 308 |
 
+Las herramientas empiezan en **Todos los marcadores**, para que un análisis desde la carpeta en la que se abre el administrador no se salte las demás. Cambia el **Ámbito predeterminado** de una herramienta para que empiece en la carpeta abierta. **Reorganización de carpetas con IA** empieza en la carpeta abierta, porque un plan para todos los marcadores los envía todos a tu proveedor de IA. En el nivel superior del administrador, donde no hay ninguna carpeta abierta, todas las herramientas empiezan en **Todos los marcadores**.
+
 Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe un nombre y pulsa Enter, o elige una sugerencia. **Códigos de estado correctos** es una lista de casillas con los códigos habituales, y puedes añadir otros. Para que la configuración quepa en la sincronización del navegador, cada lista admite hasta 20 entradas, y cada nombre de parámetro hasta 32 caracteres (letras, números y signos de URL). Las listas predeterminadas están en [Limpiar duplicados y URLs con seguimiento](/guides/clean-up#strip-tracking-parameters). Consulta también [Encontrar y reparar enlaces rotos](/guides/dead-links).
 
 ## Títulos e iconos de páginas [#metadata--content]
@@ -192,7 +200,7 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Activar Actualizar iconos de sitios** | Activado | Muestra **Actualizar iconos de sitios** en la barra lateral de herramientas |
-| **Ámbito predeterminado** | Carpeta actual | Ámbito con el que empieza la actualización de iconos de sitios |
+| **Ámbito predeterminado** | Todos los marcadores | Ámbito con el que empieza la actualización de iconos de sitios |
 | **Tamaño de icono preferido** | 32px | Cuando una página indica varios iconos, descarga el más cercano a este tamaño |
 | **Tamaño máximo del archivo de icono** | 64 KB | Los archivos de icono más grandes no se descargan ni se guardan |
 | **Límite de almacenamiento de iconos** | 4 MB | Tamaño total de los iconos guardados en este dispositivo; los más antiguos se quitan primero |
@@ -227,3 +235,11 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | **Incluir fechas** e **Incluir URLs** | Activado | Los incluye en las exportaciones |
 
 Consulta [Importar y exportar](/guides/import-export).
+
+## Para desarrolladores [#developers]
+
+### Agentes de IA locales [#agent-bridge]
+
+**Permitir agentes de IA locales** (desactivado de forma predeterminada, solo en este dispositivo) deja que los agentes de IA de tu equipo, como Claude Code, Codex o Cursor, consulten tus marcadores a través del programa bookmark-scout-mcp, que instalas y registras con `bookmark-scout-mcp install`. No necesita las **Funciones de IA**. Al activarlo, tu navegador pide permiso para que la extensión se comunique con ese programa. **Permitir cambios** (desactivado de forma predeterminada) les deja además guardar páginas y proponer movimientos, cambios de nombre, eliminaciones y carpetas nuevas; cada cambio abre una ventana de Bookmark Scout donde lo apruebas o lo rechazas, y puedes deshacerlo en el administrador de marcadores. El panel bajo el interruptor muestra si el programa está en ejecución.
+
+**Ocultar valores privados** (activado de forma predeterminada) reemplaza los parámetros de URL sensibles, los tokens y las direcciones de correo en los títulos y URL que reciben los agentes, según la lista del Escáner de privacidad. **Qué pueden hacer los agentes locales** muestra cada consulta, todas activadas de forma predeterminada; la que desactives no se les ofrece en absoluto.

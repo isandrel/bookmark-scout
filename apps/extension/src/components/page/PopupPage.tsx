@@ -79,6 +79,9 @@ function PopupPage() {
   const { value: searchDebounceMs } = useSetting('searchDebounceMs');
   // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed.
   const aiEnabled = useEffectiveSetting('aiEnabled');
+  // AI buttons only once a default service is set up; until then, one line says how to finish.
+  const aiSetup = useAISetup();
+  const aiReady = aiSetup === 'ready';
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
   const aiReadPageContent = useEffectiveSetting('aiReadPageContent');
   // In memory only: reopening the popup starts on the bookmarks, with no chat history.
@@ -195,7 +198,7 @@ function PopupPage() {
       !autoTriggerExecutedRef.current &&
       !aiAutoTriggerLoading &&
       !isLoading &&
-      aiEnabled &&
+      aiReady &&
       aiAutoTriggerOnOpen &&
       folders.length > 0
     ) {
@@ -203,7 +206,7 @@ function PopupPage() {
       // Without access to the current tab there is nothing to suggest for; it never asks unprompted.
       handleAIRecommend().catch(() => undefined);
     }
-  }, [aiAutoTriggerLoading, isLoading, aiEnabled, aiAutoTriggerOnOpen, folders.length, handleAIRecommend]);
+  }, [aiAutoTriggerLoading, isLoading, aiReady, aiAutoTriggerOnOpen, folders.length, handleAIRecommend]);
 
   // Toast wrapper for operations
   const withToast = useCallback(
@@ -568,7 +571,7 @@ function PopupPage() {
     );
   }
 
-  if (askAIOpen && aiEnabled) {
+  if (askAIOpen && aiReady) {
     return (
       <div className="flex h-full w-full min-h-0 flex-col overflow-hidden">
         <AskAIPanel
@@ -592,7 +595,7 @@ function PopupPage() {
           allExpanded={allResultsExpanded}
           onToggleExpandAll={() => setSearchExpansion(allResultsExpanded ? 'collapse' : 'expand')}
           inputRef={inputRef}
-          isAIEnabled={aiEnabled}
+          isAIEnabled={aiReady}
           isAILoading={aiLoading}
           onAIRecommend={recommendForCurrentPage}
           onAskAI={() => setAskAIOpen(true)}
@@ -722,7 +725,7 @@ function PopupPage() {
             </div>
           )}
         </div>
-        <QuickSaveShortcutNotice />
+        {aiSetup === 'needsSetup' ? <AISetupNotice /> : <QuickSaveShortcutNotice />}
         {draggingId && !canReorder ? (
           // In place of the key hints, below the tree, so no row moves or hides under the drag.
           <p

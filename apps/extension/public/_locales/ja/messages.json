@@ -6133,7 +6133,7 @@
     },
     "settings_agentBridge": {
         "message": "ローカル AI エージェント",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "ローカル AI エージェントを許可",
@@ -6161,19 +6161,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "ローカルエージェントにできること",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "エージェントにしてほしくない操作をオフにすると、その操作はエージェントに一切提示されません。変更には「変更を許可」も必要で、変更ごとにあなたの承認を待ちます。",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "ブリッジプログラム",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "このコンピューターに bookmark-scout-mcp プログラムをインストールし、「$1」を一度実行します。ブラウザーに登録され、Claude Code、Codex、Cursor に追加する方法が表示されます。",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "実行されていません。上のスイッチをオンにし、ブラウザーから求められたらアクセスを許可してください。",
@@ -6300,5 +6300,125 @@
     "welcome_readGuide": {
         "message": "ガイドを読む",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "基本設定",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "よく変更する設定です。その他の設定は「詳細設定」にあります。",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "詳細設定",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "AI は任意です",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "Bookmark Scout は AI なしで使えます。AI にフォルダーを提案させたり質問に答えさせたりするには、「AI」で設定してください。",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "AI を設定",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "開発者向け",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "Claude Code など、パソコンで動かす AI エージェントにブックマークを使わせます",
+        "description": "Options > For developers: line under the tab title"
+    },
+    "managerDefaults_search": {
+        "message": "タイトルとアドレスを検索",
+        "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
+    },
+    "managerDefaults_moreFilters": {
+        "message": "その他の絞り込み",
+        "description": "Bookmark manager: button that shows the less common filters (web address, folder)"
+    },
+    "managerDefaults_moreFiltersInUse": {
+        "message": "非表示にするには、これらの絞り込みを解除してください",
+        "description": "Bookmark manager: tooltip of the More filters button while one of those filters is in use"
+    },
+    "managerDefaults_folderFilter": {
+        "message": "フォルダ",
+        "description": "Bookmark manager: title of the filter that shows items of chosen folders"
+    },
+    "managerDefaults_browserOrderActive": {
+        "message": "項目はブラウザと同じ順序で並んでいます",
+        "description": "Bookmark manager: tooltip of the Browser order button while the table already shows the browser order and the Sort Order setting is Browser order"
+    },
+    "managerDefaults_orderStatus": {
+        "message": "並び順: $1",
+        "description": "Bookmark manager: text beside the Browser order button naming the order the table shows instead; $1 is the order, such as \"Date Added\" or \"Title, sorted ascending\""
+    },
+    "managerDefaults_selectedOf": {
+        "message": "$2 件中 $1 件を選択",
+        "description": "Bookmark manager footer while items are selected; $1 selected items, $2 items shown"
+    },
+    "managerDefaults_itemCount": {
+        "message": "$1 件",
+        "description": "Bookmark manager footer when nothing is selected: how many items the table shows; $1 is the count"
+    },
+    "managerDefaults_itemCount_one": {
+        "message": "$1 件",
+        "description": "Bookmark manager footer when nothing is selected and the table shows one item (singular); $1 is the count"
+    },
+    "managerDefaults_focusSearch": {
+        "message": "検索ボックスにフォーカス",
+        "description": "Keyboard shortcut description in the bookmark manager: the key focuses the search box"
+    },
+    "aiOnboard_title": {
+        "message": "AI は任意です",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout は AI なしで使えます。使うには、下の「AI機能」をオンにしてから、サービスを追加してください。",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "AI は、ページを保存するときにフォルダーを提案したり、タグや短い要約を付けたり、ブックマークについての質問に答えたり（AI に質問）できます。",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "OpenAI や Google などの AI 企業のアカウントと、そこで発行する API キー（Bookmark Scout があなたのアカウントを使うためのコード）が必要です。または、Ollama などの無料モデルを自分のパソコンで動かせば、キーは不要です。",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "AI 企業は、AI を使うたびに少額を請求することがあります。自分のパソコンで動かすモデルは無料です。",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "送信されるもの：各リクエストに必要なタイトル、Web アドレス、フォルダー名、現在のページのタイトルとアドレス、「AI に質問」へのメッセージ。ページの本文は「ページの内容を読む」がオンのときだけです。データは選んだ AI 企業に直接送られ、Bookmark Scout が受け取ることはありません。",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "AI ガイドを読む",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "$1 で API キーを取得",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "入力すると、ほかの $1 件のプロバイダーを検索できます",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "入力すると、ほかの $1 件のプロバイダーを検索できます",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "AI はオンですが、まだ設定されていません",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "AI の設定を完了",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

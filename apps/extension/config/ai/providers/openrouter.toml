@@ -6,6 +6,7 @@ requires_api_key = true
 api_key_pattern = "^sk-or-"
 api_key_placeholder = "sk-or-..."
 base_url = "https://openrouter.ai/api/v1"
+key_url = "https://openrouter.ai/settings/keys"
 logo = "openrouter"
 
 [[models]]

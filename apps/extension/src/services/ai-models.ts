@@ -32,6 +32,8 @@ export type AIProviderConfig = {
   extra_fields?: AIProviderExtraField[];
   /** Provider documentation, shown next to the provider picker. */
   doc_url?: string;
+  /** Where a signed-in user creates an API key, shown as "Get a key" by the key field. */
+  key_url?: string;
   /** `catalog` providers come from config/provider-catalog.json (models.dev), not the TOML. */
   source?: 'featured' | 'catalog';
   /** Picker group for TOML providers; catalog providers are always `catalog`. */
@@ -173,6 +175,11 @@ export function isCatalogProvider(provider: AIProvider): boolean {
 
 export function getProviderDocUrl(provider: AIProvider): string | undefined {
   return getProviderConfig(provider)?.doc_url;
+}
+
+/** The provider's page for creating an API key ("Get a key"), where its file names one. */
+export function getProviderKeyUrl(provider: AIProvider): string | undefined {
+  return getProviderConfig(provider)?.key_url;
 }
 
 let logoIds: Set<string> | undefined;

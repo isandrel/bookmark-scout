@@ -1,0 +1,5 @@
+# The "AI is optional" box at the top of Options > AI, shown until the default AI service is set
+# up. Read by src/components/options/AIIntroPanel.tsx.
+
+# Docs page its "Read the AI guide" link opens, on the docs site from config/web.toml.
+guide_path = "/guides/ai-tools"

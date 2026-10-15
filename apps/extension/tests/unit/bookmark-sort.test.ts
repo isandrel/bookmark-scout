@@ -55,6 +55,31 @@ describe('sortBookmarkItems', () => {
     expect(result.map((item) => item.title)).toEqual(['Folder B', 'Folder D', 'Link A', 'Link C']);
   });
 
+  it('keeps the browser order, mixing folders and links as the bookmarks bar does', () => {
+    const items: SortableFixture[] = [
+      { title: 'Zulu link', dateAdded: 100, folder: false, index: 0 },
+      { title: 'Alpha folder', dateAdded: 300, folder: true, index: 1 },
+      { title: 'Mike link', dateAdded: 200, folder: false, index: 2 },
+    ];
+
+    const result = sortBookmarkItems(items, 'browser', fixtureAccessors);
+
+    expect(result.map((item) => item.title)).toEqual(['Zulu link', 'Alpha folder', 'Mike link']);
+  });
+
+  it('keeps a walk of several folders in tree order instead of interleaving their indexes', () => {
+    // Search results across folders: each folder's items stay together.
+    const items: SortableFixture[] = [
+      { title: 'Bar 0', folder: false, index: 0 },
+      { title: 'Bar 1', folder: false, index: 1 },
+      { title: 'Other 0', folder: false, index: 0 },
+    ];
+
+    const result = sortBookmarkItems(items, 'browser', fixtureAccessors);
+
+    expect(result.map((item) => item.title)).toEqual(['Bar 0', 'Bar 1', 'Other 0']);
+  });
+
   it('returns a new array without mutating its input', () => {
     const items: SortableFixture[] = [
       { title: 'Zulu', folder: false, index: 0 },

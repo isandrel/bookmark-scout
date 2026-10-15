@@ -801,19 +801,19 @@ test('a short choice is one-click segments that save on click and arrow keys, an
 }) => {
   await setSettings(extensionWorker, { language: 'en' });
   await openOptions(page, extensionId);
-  await page.getByRole('tab', { name: 'Behavior' }).click();
-  const sort = page.getByRole('radiogroup', { name: 'Sort Order' });
-  await expect(sort.getByRole('radio')).toHaveText(['Date Added', 'Alphabetical', 'Folders First']);
+  await page.getByRole('tab', { name: 'Appearance' }).click();
+  const theme = page.getByRole('radiogroup', { name: 'Theme' });
+  await expect(theme.getByRole('radio')).toHaveText(['System', 'Light', 'Dark']);
 
-  await sort.getByRole('radio', { name: 'Alphabetical' }).click();
-  await expect
-    .poll(async () => (await readSettings(extensionWorker)).sortOrder)
-    .toBe('alphabetical');
+  await theme.getByRole('radio', { name: 'Light' }).click();
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('light');
   await page.keyboard.press('ArrowRight');
-  await expect(sort.getByRole('radio', { name: 'Folders First' })).toBeChecked();
-  await expect.poll(async () => (await readSettings(extensionWorker)).sortOrder).toBe('folders');
+  await expect(theme.getByRole('radio', { name: 'Dark' })).toBeChecked();
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('dark');
 
   // More than three options, or labels too long to sit side by side, keep the dropdown.
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  await expect(page.getByRole('combobox', { name: 'Sort Order' })).toBeVisible();
   await page.getByRole('tab', { name: 'Maintenance' }).click();
   await expect(page.getByRole('combobox', { name: 'Match Strategy' })).toBeVisible();
 });

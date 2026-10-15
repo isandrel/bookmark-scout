@@ -55,6 +55,7 @@ function toDeletionTarget(bookmark: Bookmark): BookmarkDeletionTarget {
 export default function BookmarksPage() {
   const {
     currentFolder,
+    rootId,
     data,
     allData,
     isLoading,
@@ -214,6 +215,11 @@ export default function BookmarksPage() {
   const sortedAllData = useMemo(
     () => sortBookmarkItems(allData, sortOrder, sortAccessors),
     [allData, sortOrder, sortAccessors],
+  );
+  // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the label.
+  const dataOrder = useMemo(
+    () => ({ browserOrder: sortOrder === 'browser', label: getSortOrderLabel(sortOrder) }),
+    [sortOrder, language],
   );
   // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the labels.
   const facetOptions = useMemo(() => {
@@ -378,7 +384,8 @@ export default function BookmarksPage() {
                 className="shrink-0"
                 title={t('bookmarks_copyFolderLink')}
                 aria-label={t('bookmarks_copyFolderLink')}
-                onClick={() => void copyManagerFolderLink(currentFolder)}
+                // The top level by the root's id: an address without one opens the bookmarks bar.
+                onClick={() => void copyManagerFolderLink(currentFolder ?? rootId ?? null)}
               >
                 <Link2 className="h-4 w-4" />
               </Button>
@@ -451,6 +458,7 @@ export default function BookmarksPage() {
               columns={columns}
               data={sortedData}
               browserOrderData={browserOrderData}
+              dataOrder={dataOrder}
               allData={sortedAllData}
               getRowId={getBookmarkRowId}
               canSelectRow={isModifiableBookmark}

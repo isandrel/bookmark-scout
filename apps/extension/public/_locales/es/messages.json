@@ -6141,7 +6141,7 @@
     },
     "settings_agentBridge": {
         "message": "Agentes de IA locales",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "Permitir agentes de IA locales",
@@ -6169,19 +6169,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "Qué pueden hacer los agentes locales",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "Desactiva lo que no quieras que hagan los agentes; entonces no se les ofrece en absoluto. Los cambios necesitan además Permitir cambios, y cada uno espera tu aprobación.",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "Programa puente",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "Instala el programa bookmark-scout-mcp en este equipo y ejecuta «$1» una vez. Se registra en tus navegadores y muestra cómo añadirlo a Claude Code, Codex o Cursor.",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "No se está ejecutando. Activa el interruptor de arriba y permite el acceso cuando el navegador lo pida.",
@@ -6308,5 +6308,125 @@
     "welcome_readGuide": {
         "message": "Leer la guía",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "Lo esencial",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "Los ajustes que más se cambian. Todo lo demás está en Avanzado.",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "Avanzado",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "La IA es opcional",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "Bookmark Scout funciona sin IA. Para que la IA sugiera carpetas y responda preguntas, configúrala en IA.",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "Configurar la IA",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "Para desarrolladores",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "Permite que los agentes de IA de tu equipo, como Claude Code, usen tus marcadores",
+        "description": "Options > For developers: line under the tab title"
+    },
+    "managerDefaults_search": {
+        "message": "Buscar títulos y direcciones",
+        "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
+    },
+    "managerDefaults_moreFilters": {
+        "message": "Más filtros",
+        "description": "Bookmark manager: button that shows the less common filters (web address, folder)"
+    },
+    "managerDefaults_moreFiltersInUse": {
+        "message": "Borra estos filtros para ocultarlos",
+        "description": "Bookmark manager: tooltip of the More filters button while one of those filters is in use"
+    },
+    "managerDefaults_folderFilter": {
+        "message": "Carpeta",
+        "description": "Bookmark manager: title of the filter that shows items of chosen folders"
+    },
+    "managerDefaults_browserOrderActive": {
+        "message": "Los elementos están en el mismo orden que en tu navegador",
+        "description": "Bookmark manager: tooltip of the Browser order button while the table already shows the browser order and the Sort Order setting is Browser order"
+    },
+    "managerDefaults_orderStatus": {
+        "message": "Orden: $1",
+        "description": "Bookmark manager: text beside the Browser order button naming the order the table shows instead; $1 is the order, such as \"Date Added\" or \"Title, sorted ascending\""
+    },
+    "managerDefaults_selectedOf": {
+        "message": "$1 de $2 seleccionados",
+        "description": "Bookmark manager footer while items are selected; $1 selected items, $2 items shown"
+    },
+    "managerDefaults_itemCount": {
+        "message": "$1 elementos",
+        "description": "Bookmark manager footer when nothing is selected: how many items the table shows; $1 is the count"
+    },
+    "managerDefaults_itemCount_one": {
+        "message": "$1 elemento",
+        "description": "Bookmark manager footer when nothing is selected and the table shows one item (singular); $1 is the count"
+    },
+    "managerDefaults_focusSearch": {
+        "message": "Ir al cuadro de búsqueda",
+        "description": "Keyboard shortcut description in the bookmark manager: the key focuses the search box"
+    },
+    "aiOnboard_title": {
+        "message": "La IA es opcional",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout funciona sin IA. Para usarla, activa Funciones de IA más abajo y luego añade un servicio.",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "La IA puede sugerir una carpeta al guardar una página, añadir etiquetas y resúmenes breves y responder preguntas sobre tus marcadores (Preguntar a la IA).",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "Necesita una cuenta en una empresa de IA, como OpenAI o Google, y una clave de API de esa empresa: un código que permite a Bookmark Scout usar tu cuenta. O usa un modelo gratuito en tu propio equipo, como Ollama, sin clave.",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "La empresa de IA puede cobrar una pequeña cantidad cada vez que se usa la IA. Un modelo en tu propio equipo es gratis.",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "Qué se envía: los títulos, direcciones web y nombres de carpeta que necesita cada solicitud, el título y la dirección de la página actual, y tus mensajes a Preguntar a la IA. El texto de la página, solo con Leer el contenido de la página activado. Va directo a la empresa que elegiste; Bookmark Scout nunca lo recibe.",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "Leer la guía de IA",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "Obtener una clave de API de $1",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "Escribe para buscar entre $1 proveedores más",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "Escribe para buscar $1 proveedor más",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "La IA está activada, pero aún no está configurada",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "Terminar de configurar la IA",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

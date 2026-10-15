@@ -30,6 +30,30 @@ export async function buildAISettingsFromService(
   return settings;
 }
 
+/** Options on its AI tab, where AI is turned on and services are set up. */
+const OPTIONS_AI_PATH = '/options.html?category=ai';
+
+/** Opens Options on the AI tab in a new tab ("Open AI settings", "Finish AI setup"). */
+export async function openAISettings(): Promise<void> {
+  await browser.tabs.create({ url: browser.runtime.getURL(OPTIONS_AI_PATH), active: true });
+}
+
+/**
+ * Whether AI tools can call the default service as set up: one is chosen, and it has an API key
+ * unless its provider needs none (a local server). The same conditions `getActiveAISettings`
+ * checks before any call, so AI buttons are offered only when a click would not stop at setup.
+ */
+export function isAISetUp(
+  state: AIServicesState,
+  credentials: Readonly<Record<string, StoredAIProviderConfig>>,
+): boolean {
+  const service = state.services.find((candidate) => candidate.id === state.defaultServiceId);
+  if (!service) return false;
+  return (
+    !providerRequiresApiKey(service.provider) || Boolean(credentials[service.id]?.apiKey?.trim())
+  );
+}
+
 /** Settings of the default AI service, which every AI tool uses. */
 export async function getActiveAISettings(enabled: boolean): Promise<AISettings> {
   const service = await getDefaultAIService();

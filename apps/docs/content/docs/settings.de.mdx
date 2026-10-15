@@ -7,11 +7,23 @@ description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab 
 
 ## Die Einstellungsseite verwenden [#using-the-settings-page]
 
+- Die Seite öffnet sich auf **Das Wichtigste**, mit den wenigen Einstellungen, die die meisten Menschen ändern. Alle anderen Tabs stehen unter **Erweitert**, und jede Einstellung aus **Das Wichtigste** steht dort auch in ihrem eigenen Tab: Ändern Sie sie an einer der beiden Stellen, ändert sich dieselbe Einstellung.
 - **Einstellungen durchsuchen...** oben auf der Seite findet eine Einstellung in jedem Tab und zeigt an, wie viele Treffer es gibt.
 - Jeder Tab ist in Abschnitte mit Überschriften gegliedert. Der Ein-/Aus-Schalter eines Tools steht neben seiner Überschrift; solange er aus ist, sind die übrigen Einstellungen eingeklappt. Technische Einstellungen wie Zeitlimits und Dateinamenlängen stehen unter **Erweiterte Einstellungen**, die geschlossen bleiben, bis Sie sie öffnen oder eine Suche darin etwas findet.
 - Eine geänderte Einstellung ist als **Geändert** markiert und hat eine Schaltfläche, um sie auf den Standardwert zurückzusetzen. **Alle zurücksetzen** setzt alle Einstellungen zurück.
 - **Einstellungen sichern** speichert eine Sicherungsdatei mit den Einstellungen, die Sie geändert haben, eigenen Prompts, KI-Diensten (Name, Anbieter, Modell, **Basis-URL** und anbieterspezifische Felder, nie API-Schlüssel oder **Zusätzliche Header (JSON)**), gespeicherten Suchen sowie den Spalten und der Sortierung der Manager-Tabelle. **Einstellungen wiederherstellen** stellt eine Sicherung wieder her und ersetzt dabei jeden Teil, den die Datei enthält, oder führt eine einfache Einstellungsdatei mit Ihren Einstellungen zusammen; tragen Sie nach dem Wiederherstellen einer Sicherung API-Schlüssel und zusätzliche Header unter [KI](#ai) für die Dienste erneut ein, die mit **Einrichtung nötig** markiert sind. Beides lässt Ihre Lesezeichen unberührt. **Lesezeichen exportieren** daneben öffnet den Lesezeichen-Manager mit seinem Export-Tool; siehe [Import und Export](/guides/import-export).
 - Einstellungen, die Sie ändern, werden im Synchronisierungsspeicher des Browsers abgelegt und folgen Ihnen daher auf andere Geräte, wenn die Browsersynchronisierung aktiviert ist. Einige Einstellungen, die zu einem Gerät gehören, bleiben dort: der für das Schnellspeichern gewählte Ordner, **Speicherbegrenzung für Symbole**, die Aufzeichnung der KI-Aktivität und die Websuche von „KI fragen“. Auch KI-Dienste mit ihren API-Schlüsseln, **Basis-URL** und **Zusätzliche Header (JSON)** bleiben auf diesem Gerät. Siehe [Datenschutz](/privacy).
+
+## Das Wichtigste [#essentials]
+
+| Einstellung | Auch unter | Wirkung |
+| --- | --- | --- |
+| **Ordner für Schnellspeichern** und **Zielordner** | [Speichern & Suche](#quick-save) | Wo das Tastenkürzel zum Schnellspeichern die aktuelle Seite speichert |
+| **Rechtsklickmenü** | [Speichern & Suche](#context-menu) | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen |
+| **Design** und **Sprache** | [Darstellung](#language-theme-and-icons) | Wie Bookmark Scout aussieht und welche Sprache es verwendet |
+| **Vor dem Löschen bestätigen** | [Verhalten](#deleting) | Vor dem Löschen nachfragen |
+
+Darunter sagt **KI ist optional**, dass Bookmark Scout auch ohne KI funktioniert; **KI einrichten** öffnet den Tab [KI](#ai).
 
 ## Speichern & Suche [#search]
 
@@ -92,7 +104,7 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Sortierung** | Hinzufügedatum | **Hinzufügedatum**, **Alphabetisch** oder **Ordner zuerst**. Ändert nur, wie Bookmark Scout Lesezeichen anzeigt, nie die im Browser gespeicherte Reihenfolge |
+| **Sortierung** | Browser-Reihenfolge | **Browser-Reihenfolge** (wie in der Lesezeichenleiste), **Hinzufügedatum** (neueste zuerst), **Alphabetisch** oder **Ordner zuerst**. Gilt auch für die Tabelle im Manager, bis Sie sie nach einer Spalte sortieren. Ändert nur, wie Bookmark Scout Lesezeichen anzeigt, nie die im Browser gespeicherte Reihenfolge |
 | **Nach Ordnern gruppieren** | An | Im Pop-up und in der Seitenleiste auf jeder Ebene Unterordner vor Lesezeichen auflisten |
 
 ### Links [#links]
@@ -113,7 +125,7 @@ Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs der Verwaltung zeige
 
 ## KI [#ai]
 
-KI ist standardmäßig deaktiviert. Diese Einstellungen wirken erst, nachdem Sie **KI-Funktionen** aktiviert haben; bis dahin sind die KI-Einstellungen hier und im Tab **KI-Tools** ausgegraut, mit einem Hinweis darauf. Sie können sie trotzdem ändern.
+KI ist standardmäßig deaktiviert. Diese Einstellungen wirken erst, nachdem Sie **KI-Funktionen** aktiviert haben; bis dahin sind die KI-Einstellungen hier und im Tab **KI-Tools** ausgegraut, mit einem Hinweis darauf. Sie können sie trotzdem ändern. Solange der Standarddienst nicht eingerichtet ist, erklärt oben ein Kasten **KI ist optional**, was KI tut, was sie braucht, was sie kosten kann und was gesendet wird, mit einem Link zu [KI-Tools einrichten](/guides/ai-tools).
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
@@ -138,12 +150,6 @@ Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigen
 ### Was „KI fragen“ tun darf [#ask-ai-actions]
 
 Hier steht alles, was „KI fragen“ nachschlagen und ändern kann; standardmäßig ist alles aktiviert. Schalten Sie etwas aus, wird es der KI gar nicht angeboten. Vor dem Übernehmen eines Änderungsplans werden Sie immer gefragt, egal was Sie hier wählen.
-
-### Lokale KI-Agenten [#agent-bridge]
-
-**Lokale KI-Agenten zulassen** (standardmäßig aus, nur für dieses Gerät) lässt KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, Ihre Lesezeichen über das Programm bookmark-scout-mcp nachschlagen, das Sie installieren und mit `bookmark-scout-mcp install` anmelden. Beim Einschalten fragt Ihr Browser, ob die Erweiterung mit diesem Programm sprechen darf. **Änderungen erlauben** (standardmäßig aus) lässt sie außerdem Seiten speichern und Verschiebungen, Umbenennungen, Löschungen und neue Ordner vorschlagen; jede Änderung öffnet ein Bookmark-Scout-Fenster, in dem Sie zustimmen oder ablehnen, und Sie können sie in der Lesezeichenverwaltung rückgängig machen. Das Feld unter dem Schalter zeigt, ob das Programm läuft.
-
-**Private Werte ausblenden** (standardmäßig an) ersetzt sensible URL-Parameter, Tokens und E-Mail-Adressen in den Titeln und URLs, die Agenten erhalten, anhand der Liste der Datenschutzprüfung. **Was lokale Agenten tun dürfen** listet jede Abfrage auf, standardmäßig alle aktiviert; was Sie ausschalten, wird Agenten gar nicht angeboten.
 
 ## KI-Tools [#ai-tools]
 
@@ -173,6 +179,8 @@ Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Or
 | **URL-Bereinigung** | **Fragmente entfernen** aus; **Abfrageparameter sortieren** und **Doppelte Abfrageparameter entfernen** an; Listen **Beizubehaltende Parameter** und **Zu entfernende Parameter** |
 | **Defekte Links prüfen** | **Zeitlimit für Anfragen** 8 s; **Parallele Anfragen** 4; **Wiederholungen** 1; **Weiterleitungen folgen** an; **Erfolgs-Statuscodes** 200, 201, 202, 204, 301, 302, 307, 308 |
 
+Die Tools beginnen mit **Alle Lesezeichen**, damit eine Prüfung aus dem Ordner, mit dem sich die Lesezeichenverwaltung öffnet, die anderen nicht übersieht. Ändern Sie den **Standardbereich** eines Tools, wenn es stattdessen mit dem geöffneten Ordner beginnen soll. **KI-Ordnerneuordnung** beginnt mit dem geöffneten Ordner, weil ein Plan für alle Lesezeichen sie alle an Ihren KI-Anbieter sendet. Auf der obersten Ebene der Verwaltung, wo kein Ordner geöffnet ist, beginnt jedes Tool mit **Alle Lesezeichen**.
+
 Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben und Enter drücken oder einen Vorschlag wählen. **Erfolgs-Statuscodes** ist eine Checkliste gängiger Codes, und Sie können weitere hinzufügen. Damit die Einstellungen in die Browsersynchronisierung passen, fasst jede Liste bis zu 20 Einträge und ein Parametername bis zu 32 Zeichen (Buchstaben, Ziffern und URL-Satzzeichen). Die Standardlisten stehen unter [Duplikate und Tracking-URLs bereinigen](/guides/clean-up#strip-tracking-parameters). Siehe auch [Defekte Links finden und reparieren](/guides/dead-links).
 
 ## Seitentitel und Symbole [#metadata--content]
@@ -192,7 +200,7 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **„Website-Symbole aktualisieren“ aktivieren** | An | **Website-Symbole aktualisieren** in der Tools-Leiste anzeigen |
-| **Standardbereich** | Aktueller Ordner | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
+| **Standardbereich** | Alle Lesezeichen | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
 | **Bevorzugte Symbolgröße** | 32px | Wenn eine Seite mehrere Symbole angibt, wird das dieser Größe am nächsten liegende heruntergeladen |
 | **Max. Dateigröße pro Symbol** | 64 KB | Größere Symboldateien werden weder heruntergeladen noch gespeichert |
 | **Speicherbegrenzung für Symbole** | 4 MB | Gesamtgröße der gespeicherten Symbole auf diesem Gerät; die ältesten werden zuerst entfernt |
@@ -227,3 +235,11 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | **Datum einschließen** und **URLs einschließen** | An | In Exporte aufnehmen |
 
 Siehe [Import und Export](/guides/import-export).
+
+## Für Entwickler [#developers]
+
+### Lokale KI-Agenten [#agent-bridge]
+
+**Lokale KI-Agenten zulassen** (standardmäßig aus, nur für dieses Gerät) lässt KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, Ihre Lesezeichen über das Programm bookmark-scout-mcp nachschlagen, das Sie installieren und mit `bookmark-scout-mcp install` anmelden. Dafür müssen die **KI-Funktionen** nicht aktiviert sein. Beim Einschalten fragt Ihr Browser, ob die Erweiterung mit diesem Programm sprechen darf. **Änderungen erlauben** (standardmäßig aus) lässt sie außerdem Seiten speichern und Verschiebungen, Umbenennungen, Löschungen und neue Ordner vorschlagen; jede Änderung öffnet ein Bookmark-Scout-Fenster, in dem Sie zustimmen oder ablehnen, und Sie können sie in der Lesezeichenverwaltung rückgängig machen. Das Feld unter dem Schalter zeigt, ob das Programm läuft.
+
+**Private Werte ausblenden** (standardmäßig an) ersetzt sensible URL-Parameter, Tokens und E-Mail-Adressen in den Titeln und URLs, die Agenten erhalten, anhand der Liste der Datenschutzprüfung. **Was lokale Agenten tun dürfen** listet jede Abfrage auf, standardmäßig alle aktiviert; was Sie ausschalten, wird Agenten gar nicht angeboten.
