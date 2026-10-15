@@ -62,6 +62,10 @@ Agents should assume Chrome is the default runtime path, but should not make Chr
 - `public/_locales/`: extension locale files, one folder per language (the list is `[locales] extension` in `config/project.toml`)
 - `config/`: app config, one TOML file per domain (setting defaults with their bounds in `config/settings/`, one file per Options tab), loaded once by `src/lib/app-config.ts`, whose header explains how to add a file
 
+Extension TOML modules are parsed by `build/toml-config.ts` through `?bookmark-scout-config`; parser-free `src/lib/config/runtime.ts` retains namespace checks, strict schemas, single ownership, and deep freeze. Bun scripts keep the raw `src/lib/config/loader.ts` API. A new data plugin must be registered in both `wxt.config.ts` and `vitest.config.ts`: WXT's Vitest integration does not inherit user Vite plugins.
+
+Build-only helpers and budgets live in `build/`, outside the runtime config glob. Extension lint and `tsconfig.build.json` check them and the packaging checker separately from browser source; retain the required ambient type declarations when a helper imports application schemas. Production locale compaction and verified logo deduplication operate on copied output only; translation/catalog/SVG source files remain maintainable.
+
 Do not edit generated output or build artifacts under:
 
 - `.wxt/`

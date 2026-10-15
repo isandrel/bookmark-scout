@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { Key } from 'selenium-webdriver';
+import { error, Key } from 'selenium-webdriver';
 import { STORAGE_ITEMS, storageAreaKey } from '../../src/lib/storage/registry';
 import { By, expect, type FirefoxExtension, test } from './fixtures';
 
@@ -404,23 +404,67 @@ test('extension pages share Web Locks, which serialize storage writes', async ({
 
 /**
  * Clicks `css` after scrolling it to the middle, clear of the sticky footer. Options sections
- * above can still be growing as they load, so it scrolls again until the click lands.
+ * above can still be growing as they load. Visibility alone does not wait for smooth scrolling:
+ * wait for a hit-tested target with stable bounds before asking WebDriver to click it.
  */
 async function clickCentered(extension: FirefoxExtension, css: string) {
+  let scrollRequested = false;
+  let previousBounds: number[] | undefined;
+  let stableSamples = 0;
+  const resetScroll = () => {
+    scrollRequested = false;
+    previousBounds = undefined;
+    stableSamples = 0;
+  };
   await expect
     .poll(async () => {
-      const element = await extension.find(css);
-      await extension.driver.executeScript(
-        'arguments[0].scrollIntoView({ block: "center" })',
-        element,
-      );
-      return element.click().then(
-        () => true,
-        (error: Error) => {
-          if (error.name === 'ElementClickInterceptedError') return false;
-          throw error;
-        },
-      );
+      try {
+        const element = await extension.find(css);
+        if (!scrollRequested) {
+          await extension.driver.executeScript(
+            'arguments[0].scrollIntoView({ block: "center" })',
+            element,
+          );
+          scrollRequested = true;
+          return false;
+        }
+        const { bounds, ready } = await extension.driver.executeScript<{
+          bounds: number[];
+          ready: boolean;
+        }>(
+          `const element = arguments[0], rect = element.getBoundingClientRect();
+           const x = rect.left + rect.width / 2, y = rect.top + rect.height / 2;
+           return {
+             bounds: [rect.left, rect.top, rect.width, rect.height],
+             ready: rect.width > 0 && rect.height > 0 && rect.left >= 0 && rect.top >= 0
+               && rect.right <= innerWidth && rect.bottom <= innerHeight
+               && element.contains(document.elementFromPoint(x, y)),
+           };`,
+          element,
+        );
+        const stable = previousBounds?.every((value, index) => value === bounds[index]);
+        stableSamples = stable ? stableSamples + 1 : 0;
+        previousBounds = bounds;
+        if (stableSamples < 2) return false;
+        if (!ready) {
+          // A completed scroll can still leave the control covered after a section grows.
+          resetScroll();
+          return false;
+        }
+        await element.click();
+        return true;
+      } catch (interactionError) {
+        if (
+          interactionError instanceof error.ElementClickInterceptedError ||
+          interactionError instanceof error.ElementNotInteractableError ||
+          interactionError instanceof error.StaleElementReferenceError
+        ) {
+          // Layout or a re-render changed between the geometry sample and the native click.
+          resetScroll();
+          return false;
+        }
+        throw interactionError;
+      }
     })
     .toBe(true);
 }

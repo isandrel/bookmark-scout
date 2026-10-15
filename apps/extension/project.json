@@ -169,13 +169,13 @@
             }
         },
         "lint": {
-            "command": "biome lint ./src ./tests ./manifest.config.ts ./vitest.config.ts ./playwright.config.ts",
+            "command": "biome lint ./src ./tests ./build ./scripts/check-distribution-size.ts ./manifest.config.ts ./vitest.config.ts ./playwright.config.ts",
             "options": {
                 "cwd": "apps/extension"
             }
         },
         "typecheck": {
-            "command": "wxt prepare && tsc -p .",
+            "command": "wxt prepare && tsc -p . && tsc -p tsconfig.build.json",
             "options": {
                 "cwd": "apps/extension"
             }
