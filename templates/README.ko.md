@@ -5,340 +5,99 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/{{DEFAULT_BRANCH}}/apps/extension/public/icon-128.png" alt="{{SITE_NAME}} 로고" width="80" height="80">
+  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/{{DEFAULT_BRANCH}}/apps/extension/public/icon-128.png" alt="{{SITE_NAME}} 로고" width="96" height="96">
 </p>
 
-<h1 align="center">🔖 {{SITE_NAME}}</h1>
+<h1 align="center">{{SITE_NAME}}</h1>
+
+<h3 align="center">모든 페이지를 알맞은 북마크 폴더에, 몇 초 만에.</h3>
 
 <p align="center">
-  <strong>{{SITE_DESCRIPTION}}</strong>
-</p>
-
-<p align="center">
-  <a href="{{LICENSE_FILE_URL}}"><img src="https://img.shields.io/badge/license-{{LICENSE_BADGE}}-blue?style=flat-square" alt="라이선스"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/stargazers"><img src="https://img.shields.io/github/stars/{{GITHUB_REPO}}?style=flat-square" alt="스타"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/releases"><img src="https://img.shields.io/github/v/release/{{GITHUB_REPO}}?style=flat-square" alt="릴리스"></a>
-  <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="웹사이트"></a>
+  폴더 이름을 몇 글자 입력하거나 단축키 하나만 누르면, 페이지가 알맞은 폴더에 저장됩니다.<br>
+  무료이며, 계정도 광고도 없습니다. 개발자에게는 아무것도 전송되지 않습니다.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-{{VERSION:react}}-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-{{VERSION:apps/extension:typescript}}-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/WXT-{{VERSION:wxt}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Vite-{{VERSION:vite}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-{{VERSION:tailwindcss}}-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-{{VERSION:zustand}}-764ABC?style=flat-square" alt="Zustand">
-  <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square" alt="shadcn/ui">
-  <img src="https://img.shields.io/badge/Nx-{{VERSION:nx}}-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
-  <img src="https://img.shields.io/badge/Bun-{{VERSION:bun}}-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
-  <img src="https://img.shields.io/badge/Biome-{{VERSION:@biomejs/biome}}-60A5FA?style=flat-square" alt="Biome">
+{{STORE_BADGES:@BROWSER에 추가}}
 </p>
 
 <p align="center">
-{{STORE_BADGES:설치}}
-{{BROWSER_BADGES:지원}}
-  <img src="https://img.shields.io/badge/Safari-미지원-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
+  <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/웹사이트-방문-{{BRAND_COLOR}}?style=flat-square" alt="웹사이트"></a>
+  <a href="{{DOCS_URL}}/ko"><img src="https://img.shields.io/badge/가이드-읽기-{{BRAND_COLOR}}?style=flat-square" alt="가이드"></a>
+  <a href="{{LICENSE_FILE_URL}}"><img src="https://img.shields.io/badge/오픈%20소스-{{LICENSE_BADGE}}-blue?style=flat-square" alt="오픈 소스 라이선스"></a>
 </p>
 
----
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="{{SCREENSHOT:popup:dark}}">
+    <img src="{{SCREENSHOT:popup:light}}" alt="Bookmark Scout 팝업. &quot;pas&quot;를 입력하면 Recipes / Italian 안의 Pasta 폴더가 찾아지고, Enter를 누르면 그곳에 페이지가 저장됨. 옆에는 파스타 레시피 페이지에 대한 선택형 AI 추천." width="800">
+  </picture>
+</p>
 
-## 📚 문서
+## ✨ 할 수 있는 일
 
-상세 문서는 **[{{DOCS_URL}}]({{DOCS_URL}})** 를 참조하세요:
+- 📁 **이름을 입력해 알맞은 폴더에 저장.** 몇 글자 입력하고 Enter를 누르세요. 다른 폴더 깊숙이 들어 있는 폴더도 찾아 주며, 오타가 조금 있어도 괜찮습니다.
+- ⚡ **단축키 하나로 저장.** 어느 페이지에서나 **Alt+Shift+S**를 누르세요. 저장된 곳을 알려 주는 작은 메시지에서 **실행 취소**하거나 다른 폴더로 옮길 수 있습니다.
+- 🔎 **저장한 북마크를 바로 찾기.** 툴바, 사이드 패널, 또는 전체 화면 북마크 관리자에서 입력하는 즉시 모든 북마크를 검색합니다.
+- 🧹 **몇 년 치 북마크를 깔끔하게.** 중복을 지우고, 더 이상 열리지 않는 링크를 찾고, 웹 주소에서 추적용 코드를 없앱니다. 모든 변경은 적용하기 전에 확인할 수 있고, 실행 취소도 됩니다.
+- ✨ **AI 추천은 선택 사항.** 내 AI 계정이나 내 컴퓨터에서 돌아가는 무료 AI 모델로 AI가 폴더를 골라 주게 할 수 있습니다. AI는 직접 켜기 전까지 꺼져 있습니다.
+- 🔒 **개인정보를 생각한 설계.** 계정, 광고, 추적이 없고, 개발자에게는 아무것도 전송되지 않습니다. 저장과 검색은 인터넷 연결 없이도 됩니다.
 
-- **시작하기** — 설치 및 설정 가이드
-- **기능** — 상세 기능 문서
-- **기여하기** — 프로젝트 기여 방법
-
----
-
-## 🌐 웹사이트
-
-랜딩 페이지와 다운로드 링크는 **[{{SITE_URL}}]({{SITE_URL}})** 를 방문하세요.
-
----
-
-## 🌐 브라우저 지원
-
-|                                                  브라우저                                                   |  지원 수준  | 비고                         |
-| :---------------------------------------------------------------------------------------------------------: | :---------: | ---------------------------- |
-| ![Chrome](https://img.shields.io/badge/Chrome-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white) | ⭐⭐⭐ 주요 | Manifest V3, 모든 기능       |
-|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   |  ⭐⭐ 보조  | Manifest V2, 사이드 패널은 Firefox 사이드바에 표시 |
-|  ![Edge](https://img.shields.io/badge/Edge-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)   |  ⭐⭐ 보조  | Chromium 기반, 완전 호환     |
-|    ![Safari](https://img.shields.io/badge/Safari-999999?style=for-the-badge&logo=safari&logoColor=white)    |  ❌ 미지원  | `bookmarks` API 미구현       |
-
-> **Safari는 왜 미지원인가요?** Safari Web Extensions는 이 확장의 핵심 기능에 필수적인 `browser.bookmarks` API를 지원하지 않습니다.
-
----
-
-## ✨ 기능
-
-### ✅ 구현됨
-
-- [x] 📥 **이름으로 폴더에 저장** — 폴더 이름의 일부를 입력하면 하위 폴더나 `work/react` 같은 경로도 찾으며, ↓와 Enter를 눌러 현재 페이지를 그 폴더에 저장. 오타가 조금 있어도 일치하고 최근 사용한 폴더가 먼저 표시됨
-- [x] 🤖 **AI 폴더 추천** — OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, models.dev 카탈로그의 약 200개 프로바이더 또는 커스텀 OpenAI 호환 프로바이더로 구동되는 스마트 폴더 제안. 새 폴더 제안은 검토 대화상자에서 확인하며, 확정하면 없는 폴더를 만들고 페이지를 저장
-- [x] ⚡ **빠른 저장 단축키** — 어느 페이지에서나 Alt+Shift+S를 누르면 가장 잘 맞는 폴더(폴더 이름과 그 안의 북마크로 이 기기에서 판단), 마지막으로 사용한 폴더, 또는 지정한 폴더에 저장하고, Alt+Shift+D를 누르면 AI가 제안한 폴더에 저장. 저장 위치를 알려 주는 작은 알림에서 실행 취소하거나 다른 폴더로 옮길 수 있으며, 확장 프로그램 창을 열 필요가 없음
-- [x] 🔍 **즉시 검색** — 디바운스 검색과 폴더 필터링으로 빠르게 검색
-- [x] 📂 **드래그 앤 드롭** — 직관적인 드래그 앤 드롭으로 정리
-- [x] ⚡ **빠른 추가** — 원클릭으로 원하는 폴더에 저장
-- [x] 📱 **사이드 패널** — Chrome 사이드 패널에서 접근
-- [x] 🗂️ **전체 북마크 관리자** — Chrome 북마크 페이지를 대체하며 같은 방식으로 동작: 클릭, Ctrl/Cmd+클릭, Shift+클릭으로 행 선택, 우클릭 메뉴(수정, 잘라내기, 복사, 붙여넣기, 모두 탭·새 창·시크릿 창에서 열기, 폴더 링크 복사), 행·폴더·다른 페이지 링크의 드래그 앤 드롭, 이름순 정렬, 북마크나 폴더 추가, `?id=`와 `?q=` 링크(Chrome의 폴더 링크 포함), Chrome과 같은 키로 조작하는 ARIA 폴더 트리(계정과 기기 구역 구분), 좁은 창에서 서랍형 사이드바. 메뉴에 표시할 명령은 설정에서 선택
-- [x] ⚙️ **옵션 페이지** — 10개 카테고리(저장 및 검색, 외관, 동작, AI, AI 도구, 유지보수, 메타데이터 및 콘텐츠, 보안, 분석, 가져오기 및 내보내기)와 설정 검색, 목록·선택 편집기, 접힌 고급 설정
-- [x] 🌙 **다크 모드** — 라이트, 다크, 시스템 테마 설정 지원
-- [x] 🎯 **모두 펼치기/접기** — 중첩 폴더 빠르게 조작
-- [x] 📁 **폴더 생성** — 팝업에서 직접 생성
-- [x] ⌨️ **키보드 단축키** — 팝업에서 `/` 검색, 화살표 키로 폴더 이동·열기/닫기, Enter로 현재 페이지 저장(Ctrl/Cmd 단축키는 사용하지 않음). 관리자에서는 Chrome과 같은 키: Ctrl/Cmd+A, C, X, V, Z, Y, Enter로 열기, F2로 수정, Delete, `?` 단축키 목록, `s` 저장된 검색 열기
-- [x] 🔖 **저장된 검색** — 관리자의 필터, 정렬, 폴더 범위를 이름 있는 스마트 보기로 저장하고 열기, 이름 바꾸기, 삭제 가능. 조건만 저장되므로(이 기기에만, 동기화 안 함) 결과는 항상 현재 북마크를 반영. 삭제된 폴더는 알림과 함께 건너뜀
-- [x] 🗑️ **삭제와 실행 취소** — 팝업이나 관리자에서 삭제. 확인 대화상자(기본값은 켜짐, 설정에서 끌 수 있음)와 10초 동안의 실행 취소 지원. 관리자는 브라우저를 닫을 때까지 최근 100개 변경의 실행 취소·다시 실행 기록(Ctrl/Cmd+Z, Ctrl/Cmd+Y)을 유지하며, 팝업, 'AI에게 묻기', 로컬 AI 에이전트의 변경도 포함
-- [x] 🔗 **중복 클리너** — 설정 가능한 매칭으로 중복 북마크를 찾아 추가 항목 삭제
-- [x] 🧹 **URL 클리너** — 추적 파라미터 제거, 쿼리 문자열 정규화, URL 변경 미리보기, 실행 취소 지원
-- [x] 💀 **죽은 링크 검사** — 선택한 북마크에서 접근할 수 없는 링크를 스캔하고, 복구(삭제, 리디렉션 대상, 보관된 사본, URL 편집)를 검토한 뒤 적용, 실행 취소 가능
-- [x] 🧾 **메타데이터 가져오기** — 페이지 제목과 설명을 가져와 선택한 제목만 적용. 설명은 검토용으로만 표시되며 저장되지 않음
-- [x] 🖼️ **사이트 아이콘 새로 고침** — 북마크한 각 사이트의 아이콘을 (제3자 아이콘 서비스 없이) 내려받고 결과를 검토한 뒤 이 기기에 저장. 브라우저에 캐시가 없는 사이트와 Firefox에서도 실제 아이콘 표시
-- [x] 🛡️ **개인정보 스캐너** — 민감한 쿼리 파라미터, 프래그먼트, 이메일, UUID 감지
-- [x] 📊 **북마크 통계** — 도메인, 폴더, 프로토콜, 중복, 깊이 요약
-- [x] 📤 **가져오기/내보내기** — HTML, JSON, Markdown, CSV로 내보내고 HTML 또는 JSON 가져오기. JSON 내보내기에는 각 북마크의 태그와 요약이 포함됨. 가져오기 전에 미리보기에서 대상 폴더, 개수, 중복을 확인하고 중복 건너뛰기 또는 모두 가져오기를 선택할 수 있으며 실행 취소도 지원. 민감한 값이 포함된 내보내기와 AI 컨텍스트 내보내기는 개인정보 검토를 열어 원본, 가린 사본, 취소 중에서 선택
-- [x] 🧠 **AI 도구** — LLM 컨텍스트 내보내기(켜면 저장된 태그와 요약 포함), 태그 제안, 요약, 폴더 재구성 계획(항상 적용 전에 미리보기), 모두 실행 취소 지원
-- [x] 💬 **AI에게 묻기** — 팝업과 사이드 패널의 채팅. 북마크를 (단어, 폴더, 태그, 사이트, 추가 날짜로) 검색하고, 중복을 찾고, 링크를 확인하고, 폴더를 제안. 요청하면 페이지를 저장하고 이동, 이름 변경, 삭제, 새 폴더를 계획으로 제시하지만 승인하기 전에는 아무것도 바꾸지 않음. 답변 아래에 다음 작업 버튼이 표시될 수 있음. 허용할 작업은 설정에서 선택
-- [x] 🔌 **로컬 AI 에이전트(MCP)** — Claude Code, Codex, Cursor 등 컴퓨터의 MCP 클라이언트가 `bookmark-scout-mcp` 프로그램(`packages/mcp-bridge`)을 통해 북마크를 검색하고 정리할 수 있습니다. 확장 프로그램과는 네이티브 메시징으로 연결되며 네트워크 포트를 열지 않습니다. 기본값은 꺼짐이며, 변경에는 변경 허용이 필요하고 각 변경은 브라우저에서 승인해야 합니다. [로컬 AI 에이전트와 함께 사용]({{DOCS_URL}}/guides/local-agents) 참고
-- [x] 🖱️ **컨텍스트 메뉴 저장** — 설정에서 컨텍스트 메뉴를 켜면 우클릭 메뉴에서 최근 폴더 또는 기본 폴더로 링크 저장
-- [x] 🌍 **i18n** — 영어, 중국어 간체, 중국어 번체, 일본어, 한국어, 스페인어, 독일어, 프랑스어, 브라질 포르투갈어 지원
-- [x] 🔄 **북마크 동기화** — 브라우저 내장 동기화로 기기 간 동기화
-- [x] ⚙️ **설정 동기화와 백업** — 변경한 설정만 `chrome.storage.sync`로 동기화하고, 기기별 값과 AI 서비스는 해당 기기에 보관. 백업 파일로 설정, 사용자 지정 프롬프트, AI 서비스(API 키 제외), 저장된 검색을 저장·복원
-
-> **🤖 AI 기능 안내**
->
-> AI 추천과 AI 도구는 **기본적으로 비활성화**되어 있으며 수동으로 활성화해야 합니다:
->
-> 1. **설정 → AI** 탭으로 이동
-> 2. AI 기능을 활성화하고 선호하는 프로바이더 선택 (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI 또는 커스텀 OpenAI 호환 엔드포인트)
-> 3. 선택한 프로바이더가 요구하는 경우 자신의 API 키 입력
->
-> ⚠️ **참고:** AI 기능은 북마크 제목, URL, 폴더 경로, 선택한 북마크 컨텍스트를 설정된 프로바이더로 전송할 수 있습니다. 프로바이더에 따라 API 비용이 발생할 수 있습니다. 결과는 실험적이므로 파괴적인 정리 변경을 적용하기 전에 검토하세요.
-
-### 🟡 부분 지원
-
-- [x] 🏷️ **태그와 요약** — 북마크 상세 정보에서 태그와 요약을 저장, 편집, 삭제하거나 검토한 AI 제안을 저장. 이 브라우저의 로컬 확장 저장소에만 저장되며 동기화되지 않고 팝업 검색 대상도 아님. JSON 내보내기와 가져오기에서는 유지되고, 'AI에게 묻기'가 조회할 수 있으며, 켜면 AI 컨텍스트 내보내기에도 포함
-- [x] 🎛️ **AI 도구 한도** — 태그 수와 스타일, 요약 길이, 재구성 폴더 한도는 프로바이더에 지시로 전송되며, 결과가 이를 따르는지는 검사하지 않음
-- [x] 🦊 **Firefox와 Edge** — CI는 Edge에서 전체 브라우저 테스트를, Firefox에서 17개 스모크 테스트(팝업, 사이드 패널 페이지, 관리자 주소·실행 취소·폴더 트리 키·메뉴·드래그 앤 드롭, 빠른 저장 단축키 설정, 설정, 가져오기/내보내기, 보고서)를 실행하며 둘 다 필수 검사임. Firefox에서는 브라우저 아이콘 캐시를 쓸 수 없어(파비콘 API 없음) '사이트 아이콘 새로 고침'으로 저장한 아이콘이나 일반 아이콘을 표시하며, 북마크 페이지를 대체할 수 없어 관리자는 팝업의 '북마크 관리자 열기' 버튼으로 열 수 있음
-
-### 🚧 현재 집중 영역
-
-- [ ] 🧪 **브라우저 테스트** — Firefox 스모크 테스트를 전체 테스트에 가깝게 확대(컨텍스트 메뉴, 드래그 앤 드롭, 네트워크 및 AI 도구)
-- [ ] 🛒 **스토어 배포** — Chrome 웹 스토어에 등록됨. 9개 언어의 등록 문구, 권한 설명, 개인정보 공개 항목, 개인정보 처리방침, 스크린샷, Firefox 부가 기능과 Edge 추가 기능용 제출 체크리스트를 [`store/`](../store/)에 준비함. 이 제출은 수동이며 승인 대기 중. Firefox 버전에는 영구 부가 기능 ID와 데이터 수집 선언을 설정함
-
----
-
-## 🛠️ 기술 스택
-
-### 프레임워크 & 언어
-
-|                                                       기술                                                        | 버전 | 설명                   |
-| :---------------------------------------------------------------------------------------------------------------: | :--: | ---------------------- |
-|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         | {{VERSION:react}} | UI 라이브러리          |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) | {{VERSION:apps/extension:typescript}}  | 타입 안전한 JavaScript |
-|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |  {{VERSION:next}}  | 웹사이트 프레임워크    |
-
-### 빌드 & 도구
-
-|                                              기술                                               | 버전 | 설명              |
-| :---------------------------------------------------------------------------------------------: | :--: | ----------------- |
-|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  | {{VERSION:wxt}} | 확장 프레임워크   |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |  {{VERSION:vite}}   | 빌드 도구         |
-|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |  {{VERSION:nx}}  | 모노레포 관리     |
-|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   | {{VERSION:bun}}  | JavaScript 런타임 |
-|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             | {{VERSION:@biomejs/biome}}  | 린팅 & 포맷팅     |
-
-### UI & 스타일링
-
-|                                                         기술                                                         | 버전  | 설명                   |
-| :------------------------------------------------------------------------------------------------------------------: | :---: | ---------------------- |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |  {{VERSION:tailwindcss}}  | 유틸리티 우선 CSS      |
-|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |  —  | Base UI 기반 컴포넌트    |
-|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |  {{VERSION:@base-ui/react}}  | 헤드리스 UI 프리미티브 |
-|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |  {{VERSION:lucide-react}}  | 아이콘 라이브러리      |
-
-### 상태 & 데이터
-
-|                                                          기술                                                          | 버전 | 설명            |
-| :--------------------------------------------------------------------------------------------------------------------: | :--: | --------------- |
-|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       | {{VERSION:zustand}}  | 상태 관리       |
-|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                | {{VERSION:@tanstack/react-table}} | 헤드리스 테이블 |
-| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) | {{VERSION:@atlaskit/pragmatic-drag-and-drop}}  | 드래그 앤 드롭  |
-
-### 배포 & 인프라
-
-|                                                       기술                                                        | 버전 | 설명           |
-| :---------------------------------------------------------------------------------------------------------------: | :--: | -------------- |
-|       ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)       |  -   | CI/CD & 호스팅 |
-| ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white) |  -   | CDN & DNS      |
-
----
+🌍 지원 언어: {{LANGUAGE_NAMES}}
 
 ## 📦 설치
 
-### 브라우저 스토어에서
+{{STORE_LINKS:@STORE에 곧 출시됩니다. 그전까지는 [직접 설치](@DOCS/ko/installation#@ID)할 수 있습니다(고급).}}
 
-브라우저 스토어에서 설치하면 자동으로 최신 상태가 유지됩니다:
+설치했다면 첫 페이지를 저장해 보세요.
 
-{{STORE_LINKS:GitHub 릴리스}}
+1. **고정하기.** 브라우저 툴바의 퍼즐 조각 아이콘을 클릭한 다음, Bookmark Scout 옆의 핀을 클릭합니다.
+2. **보관하고 싶은 페이지를 열고** Bookmark Scout 아이콘을 클릭합니다.
+3. **폴더 이름을 몇 글자 입력하고** ↓로 고른 다음 Enter를 누릅니다. 끝입니다.
 
-아직 스토어에 등록되지 않은 브라우저에서는 아래 GitHub 릴리스의 빌드를 설치하세요. 브라우저별 단계는 [설치 가이드]({{DOCS_URL}}/ko/installation)에 있습니다.
+다음부터는 그 페이지에서 **Alt+Shift+S**만 누르면 됩니다. 자세한 내용은 [저장과 정리 가이드]({{DOCS_URL}}/ko/guides/save-and-organize)를 참고하세요.
 
-### GitHub 릴리스에서
+## 🔒 개인정보
 
-[GitHub 릴리스](https://github.com/{{GITHUB_REPO}}/releases)에서 최신 버전 다운로드:
-
-```bash
-# GitHub CLI로 릴리스 에셋 다운로드
-gh release download --repo {{GITHUB_REPO}} --pattern "bookmark-scout-*-chrome.zip"
-
-# Chrome ZIP 파일 압축 해제
-unzip bookmark-scout-*-chrome.zip -d bookmark-scout
-```
-
-릴리스 에셋은 브라우저별로 게시됩니다:
-
-- `bookmark-scout-*-chrome.crx` — Chrome 개발자 모드 사이드로드용
-- `bookmark-scout-*-chrome.zip` — Chrome 압축해제 설치 또는 Web Store 패키징용
-- `bookmark-scout-*-firefox.zip` — Firefox 임시 애드온 설치용
-- `bookmark-scout-*-edge.zip` — Edge 압축해제 설치용
-
-### 소스에서 빌드(개발자용)
-
-Bookmark Scout 개발에 참여하려면 직접 빌드하세요. 전체 설정은 [CONTRIBUTING.md](../CONTRIBUTING.md)를 참고하세요.
-
-```bash
-# 저장소 클론
-gh repo clone {{GITHUB_REPO}}
-cd bookmark-scout
-
-# 의존성 설치
-bun install
-
-# 확장 빌드
-bun run build
-```
-
-### 압축 해제된 빌드를 Chrome에 로드
-
-1. `chrome://extensions/` 열기
-2. **개발자 모드** 활성화 (오른쪽 상단)
-3. **압축해제된 확장 프로그램을 로드합니다** 클릭
-4. 압축 해제한 릴리스 폴더를 선택하거나, 소스에서 빌드한 경우 `apps/extension/dist/chrome-mv3` 선택
-
----
-
-## 🚀 개발
-
-```bash
-# 확장 개발 서버 시작
-bun run dev
-
-# 웹사이트 개발 서버 시작
-bun run dev:website
-
-# 전체 빌드
-bun run build:all
-
-# 린트
-bun run lint
-
-# 확장 단위 테스트와 Chromium 엔드투엔드 테스트
-bun run test
-```
-
----
-
-## 📁 프로젝트 구조
-
-```
-bookmark-scout/
-├── apps/
-│   ├── extension/          # 브라우저 확장 (WXT)
-│   │   ├── src/
-│   │   │   ├── components/ # React 컴포넌트
-│   │   │   ├── entrypoints/ # popup, sidepanel, options, bookmarks
-│   │   │   ├── hooks/      # 커스텀 React Hooks
-│   │   │   ├── stores/     # Zustand 스토어
-│   │   │   └── services/   # 북마크 API 서비스
-│   │   └── wxt.config.ts
-│   ├── website/            # Next.js 마케팅 사이트
-│   │   └── app/
-│   └── docs/               # Fumadocs 문서 사이트
-│       └── content/docs/
-├── packages/
-│   ├── config/             # 공유 설정
-│   └── mcp-bridge/         # bookmark-scout-mcp: MCP 서버와 네이티브 메시징 호스트
-├── config/
-│   ├── project.toml        # 모든 앱이 공유하는 프로젝트 정보
-│   └── web.toml            # 웹사이트와 문서 호스팅
-└── templates/              # README 템플릿
-```
-
----
+Bookmark Scout에는 계정도 서버도 없으므로, 북마크나 설정을 비롯한 어떤 것도 개발자에게 전달되지 않습니다. 북마크는 브라우저 안에서 읽고 변경됩니다. 데이터는 그것이 필요한 기능을 사용할 때만 브라우저 밖으로 나갑니다. 예를 들어 AI(내가 고른 AI 회사로 전송)나 끊긴 링크 확인(북마크한 웹사이트에 접속)이 그렇습니다. 자세한 내용은 [개인정보 처리방침]({{SITE_PAGE:ko:/privacy}})을 참고하세요.
 
 ## 🔐 권한
 
-설치할 때는 동작에 꼭 필요한 권한만 요청합니다. 나머지는 모두 선택 사항이며, 해당 기능을 켜거나 실행할 때 요청합니다.
+브라우저가 묻는 내용:
 
-| 권한           | 요청 시점                    | 목적                         |
-| -------------- | ---------------------------- | ---------------------------- |
-| `bookmarks`    | 설치 시                      | 북마크 읽기 및 쓰기          |
-| `storage`      | 설치 시                      | 사용자 설정 저장             |
-| `activeTab`    | 설치 시                      | 툴바 버튼을 누르거나 빠른 저장 단축키를 누를 때 현재 탭 읽기 |
-| `sidePanel`    | 설치 시(Chrome, Edge)        | 사이드 패널 활성화           |
-| `scripting`    | 설치 시                      | 단축키를 누른 탭에 빠른 저장 알림 표시 |
-| `offscreen`    | 설치 시(Chrome, Edge)        | AI 빠른 저장 요청을 숨겨진 확장 프로그램 페이지에서 실행 |
-| `tabs`         | 사이드 패널에서 현재 페이지를 저장할 때 | 활성 탭의 제목과 URL 읽기 |
-| `contextMenus` | 컨텍스트 메뉴를 켤 때(Firefox는 설치 시) | 우클릭 메뉴에서 링크 저장 |
-| `favicon`      | 사이트 아이콘 새로 고침의 '브라우저 아이콘 표시'를 클릭하거나 '브라우저 아이콘 캐시 사용'을 켤 때(Chrome, Edge) | 브라우저 캐시의 아이콘 표시 |
-| 웹사이트 접근  | 깨진 링크 확인, 메타데이터 가져오기, 사이트 아이콘 새로 고침 실행 시(그 실행의 사이트만, 20개 사이트를 넘으면 모든 웹사이트) 또는 '페이지 내용 읽기'를 켤 때(모든 웹사이트) | 북마크한 페이지를 쿠키 없이 가져오기 |
-| `nativeMessaging` | 로컬 AI 에이전트 허용을 켤 때 | 컴퓨터의 `bookmark-scout-mcp` 프로그램과 통신 |
+- **설치할 때:** "북마크 읽기 및 변경". Bookmark Scout를 쓰기 시작하는 데 필요한 것은 이것뿐입니다.
+- **더 많은 권한이 필요한 기능을 쓸 때만**, Bookmark Scout의 짧은 설명 뒤에 묻습니다. 예를 들어 끊긴 링크 확인은 해당 웹사이트에 접근할 권한을, 사이드 패널에서 저장하기는 열려 있는 탭을 확인할 권한을 요청합니다. 거절해도 그 기능만 꺼집니다.
 
-Firefox에서는 각 AI 기능이 AI 제공업체에 보내는 데이터에 대해서만 공유 동의를 먼저 요청합니다.
+[모든 권한과 필요한 이유]({{DOCS_URL}}/ko/permissions)를 확인하세요.
 
----
+## ❓ 자주 묻는 질문
 
-## 🤝 기여하기
+**정말 무료인가요?**<br>
+네. 광고도 유료 요금제도 없고, 코드는 누구나 읽을 수 있게 공개되어 있습니다. AI 회사 계정으로 AI를 켜면 그 회사가 사용료를 청구할 수 있습니다.
 
-기여를 환영합니다! 가이드라인은 [CONTRIBUTING.md](../CONTRIBUTING.md)를 참조하세요.
+**AI가 꼭 필요한가요?**<br>
+아니요. 저장, 검색, 정리는 모두 AI 없이 동작합니다.
 
-```bash
-# 저장소 포크 및 클론
-gh repo fork {{GITHUB_REPO}} --clone
+**Firefox, Edge, Safari에서 쓸 수 있나요?**<br>
+Firefox와 Edge에서는 쓸 수 있습니다([설치](#-설치) 참고). Safari는 확장 프로그램이 북마크를 다룰 수 없어서 지원하지 않습니다.
 
-# 기능 브랜치 생성
-git checkout -b feature/amazing-feature
+더 많은 답은 [FAQ]({{DOCS_URL}}/ko/faq)에 있습니다.
 
-# 변경사항 커밋
-git commit -m 'feat: 멋진 기능 추가'
+## 💬 도움말과 링크
 
-# 푸시 및 PR 생성
-git push origin feature/amazing-feature
-gh pr create --title "feat: 멋진 기능 추가"
-```
+- 🌐 웹사이트: [{{SITE_URL}}]({{SITE_URL}})
+- 📖 가이드: [{{DOCS_URL}}/ko]({{DOCS_URL}}/ko)
+- ✉️ 이메일: [{{CONTACT:support}}](mailto:{{CONTACT:support}})
+- 🐞 문제를 발견했거나 아이디어가 있다면 [GitHub에서 알려 주세요]({{NEW_ISSUE_URL}})
 
----
+Bookmark Scout는 회사가 아닌 개인 개발자 [@{{AUTHOR_NAME}}]({{AUTHOR_URL}})가 만듭니다. 광고도 계정도 없으며, 오픈 소스입니다.
 
-## 📄 라이선스
+## 🛠️ 개발자와 AI 에이전트를 위한 안내
 
-이 프로젝트는 **GNU Affero General Public License v3.0** 하에 라이선스됩니다 - 자세한 내용은 [LICENSE](../LICENSE) 파일을 참조하세요.
-
----
-
-## ⭐ 스타 히스토리
-
-<a href="https://star-history.com/#{{GITHUB_REPO}}&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date" />
-   <img alt="스타 히스토리 차트" src="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date" />
- </picture>
-</a>
+소스에서 빌드하기, 기술 스택, 개발 현황, 테스트는 [DEVELOPMENT.md](../DEVELOPMENT.md)(영어)에 있습니다. 기여하고 싶다면 [CONTRIBUTING.md](../CONTRIBUTING.md)를 읽어 주세요. Claude Code 같은 내 컴퓨터의 AI 코딩 에이전트가 승인을 거쳐 북마크를 검색하고 정리하게 할 수도 있습니다. [로컬 AI 에이전트와 함께 사용하기]({{DOCS_URL}}/ko/guides/local-agents)를 참고하세요.
 
 ---
 
 <p align="center">
-  <a href="{{AUTHOR_URL}}">{{AUTHOR_NAME}}</a> 이 ❤️ 를 담아 제작
+  <a href="../LICENSE">{{LICENSE_SPDX}} 라이선스</a>의 무료 오픈 소스입니다.
 </p>

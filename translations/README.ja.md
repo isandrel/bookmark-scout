@@ -5,344 +5,101 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/extension/public/icon-128.png" alt="Bookmark Scout Logo" width="80" height="80">
+  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/extension/public/icon-128.png" alt="Bookmark Scout のロゴ" width="96" height="96">
 </p>
 
-<h1 align="center">🔖 Bookmark Scout</h1>
+<h1 align="center">Bookmark Scout</h1>
+
+<h3 align="center">どのページも、数秒で正しいブックマークフォルダーへ。</h3>
 
 <p align="center">
-  <strong>A browser extension that saves pages to the right bookmark folder: type part of a folder's name or let opt-in AI suggest one. Plus search and cleanup tools.</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/isandrel/bookmark-scout/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square" alt="ライセンス"></a>
-  <a href="https://github.com/isandrel/bookmark-scout/stargazers"><img src="https://img.shields.io/github/stars/isandrel/bookmark-scout?style=flat-square" alt="スター"></a>
-  <a href="https://github.com/isandrel/bookmark-scout/releases"><img src="https://img.shields.io/github/v/release/isandrel/bookmark-scout?style=flat-square" alt="リリース"></a>
-  <a href="https://bookmark-scout.com"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="ウェブサイト"></a>
+  フォルダー名を数文字入力するか、ショートカットを 1 つ押すだけで、ページが本来のフォルダーに保存されます。<br>
+  無料で、アカウントも広告もありません。開発者には何も送られません。
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-7-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/WXT-0.21-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square" alt="Zustand">
-  <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square" alt="shadcn/ui">
-  <img src="https://img.shields.io/badge/Nx-23-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
-  <img src="https://img.shields.io/badge/Bun-1-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
-  <img src="https://img.shields.io/badge/Biome-2-60A5FA?style=flat-square" alt="Biome">
+  <a href="https://chromewebstore.google.com/detail/bookmark-scout/pmjiopaebkmoenkoodpoldfbnfncnedk"><img src="https://img.shields.io/badge/Chrome%20に追加-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome に追加 (Chrome Web Store)" height="40"></a>
 </p>
 
 <p align="center">
-  <a href="https://chromewebstore.google.com/detail/bookmark-scout/pmjiopaebkmoenkoodpoldfbnfncnedk"><img src="https://img.shields.io/badge/Chrome%20Web%20Store-インストール-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome Web Store"></a>
-  <img src="https://img.shields.io/badge/Chrome-対応-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
-  <img src="https://img.shields.io/badge/Firefox-対応-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
-  <img src="https://img.shields.io/badge/Edge-対応-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
-  <img src="https://img.shields.io/badge/Safari-非対応-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
+  <a href="https://bookmark-scout.com"><img src="https://img.shields.io/badge/ウェブサイト-見る-0b7a80?style=flat-square" alt="ウェブサイト"></a>
+  <a href="https://docs.bookmark-scout.com/ja"><img src="https://img.shields.io/badge/ガイド-読む-0b7a80?style=flat-square" alt="ガイド"></a>
+  <a href="https://github.com/isandrel/bookmark-scout/blob/main/LICENSE"><img src="https://img.shields.io/badge/オープンソース-AGPL--3.0-blue?style=flat-square" alt="オープンソースのライセンス"></a>
 </p>
 
----
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/05-popup-dark.png">
+    <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="Bookmark Scout のポップアップ。「pas」と入力すると Recipes / Italian の中の Pasta フォルダーが見つかり、Enter でそこにページを保存できる。横には、パスタのレシピページに対する任意の AI の提案。" width="800">
+  </picture>
+</p>
 
-## 📚 ドキュメント
+## ✨ できること
 
-詳細なドキュメントは **[https://docs.bookmark-scout.com](https://docs.bookmark-scout.com)** をご覧ください：
+- 📁 **名前を入力して正しいフォルダーに保存。** 数文字入力して Enter を押すだけ。ほかのフォルダーの奥深くにあるフォルダーも見つかり、少しの入力ミスがあっても一致します。
+- ⚡ **ショートカット 1 つで保存。** どのページでも **Alt+Shift+S** を押します。保存先を示す小さなメッセージから、**元に戻す** ことも、ほかのフォルダーへ移すこともできます。
+- 🔎 **保存したものをすぐ見つける。** ツールバー、サイドパネル、または全画面のブックマークマネージャーから、入力と同時にすべてのブックマークを検索できます。
+- 🧹 **何年分ものブックマークを片付ける。** 重複を削除し、開けなくなったリンクを見つけ、ウェブアドレスからトラッキング用のコードを取り除きます。変更はすべて実行前に確認でき、元に戻せます。
+- ✨ **AI の提案は任意。** 自分の AI アカウント、または自分のパソコンで動く無料の AI モデルを使って、AI にフォルダーを選ばせることもできます。AI は自分でオンにするまでオフのままです。
+- 🔒 **プライバシーを重視した設計。** アカウント、広告、トラッキングはなく、開発者には何も届きません。保存と検索はオフラインでも使えます。
 
-- **はじめに** — インストールとセットアップガイド
-- **機能** — 詳細な機能ドキュメント
-- **コントリビュート** — プロジェクトへの貢献方法
-
----
-
-## 🌐 ウェブサイト
-
-ランディングページとダウンロードリンクは **[https://bookmark-scout.com](https://bookmark-scout.com)** をご覧ください。
-
----
-
-## 🌐 ブラウザサポート
-
-|                                                  ブラウザ                                                   | サポートレベル | 備考                          |
-| :---------------------------------------------------------------------------------------------------------: | :------------: | ----------------------------- |
-| ![Chrome](https://img.shields.io/badge/Chrome-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white) |  ⭐⭐⭐ 主要   | Manifest V3、全機能対応       |
-|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   |   ⭐⭐ 副次    | Manifest V2、サイドパネルは Firefox のサイドバーに表示 |
-|  ![Edge](https://img.shields.io/badge/Edge-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)   |   ⭐⭐ 副次    | Chromiumベース、完全互換      |
-|    ![Safari](https://img.shields.io/badge/Safari-999999?style=for-the-badge&logo=safari&logoColor=white)    |   ❌ 非対応    | `bookmarks` API未実装         |
-
-> **なぜSafariは非対応？** Safari Web Extensionsはこの拡張機能に不可欠な`browser.bookmarks` APIをサポートしていません。
-
----
-
-## ✨ 機能
-
-### ✅ 実装済み
-
-- [x] 📥 **フォルダ名で保存** — フォルダ名の一部を入力し（ネストしたフォルダや `work/react` のようなパスも可）、↓ と Enter を押すと現在のページをそこに保存。多少の入力ミスがあっても一致し、最近使ったフォルダが先頭に表示
-- [x] 🤖 **AIフォルダ推薦** — OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、xAI、Azure OpenAI、OpenRouter、Ollama、CLIProxyAPI、models.dev カタログの約200のプロバイダー、またはカスタムOpenAI互換プロバイダーによるスマートなフォルダ提案。新しいフォルダの提案は確認ダイアログで確認し、確定すると不足しているフォルダを作成してページを保存
-- [x] ⚡ **クイック保存ショートカット** — どのページでも Alt+Shift+S を押すと、最適なフォルダ（フォルダ名と中のブックマークからこの端末上で判定）、最後に使ったフォルダ、または指定したフォルダに保存。Alt+Shift+D なら AI の提案先に保存。保存先を示す小さな通知から元に戻したり、別のフォルダに移動したりでき、拡張機能のウィンドウを開く必要はありません
-- [x] 🔍 **インスタント検索** — デバウンス検索とフォルダフィルタリングで素早く検索
-- [x] 📂 **ドラッグ＆ドロップ** — 直感的なドラッグ＆ドロップで整理
-- [x] ⚡ **クイック追加** — ワンクリックで任意のフォルダに保存
-- [x] 📱 **サイドパネル** — Chromeのサイドパネルからアクセス
-- [x] 🗂️ **フルブックマークマネージャー** — Chrome のブックマークページを置き換え、同じように操作できます。クリック、Ctrl/Cmd+クリック、Shift+クリックでの行選択、右クリックメニュー（編集、切り取り、コピー、貼り付け、すべてをタブ・新しいウィンドウ・シークレット ウィンドウで開く、フォルダのリンクをコピー）、行・フォルダ・他のページのリンクのドラッグ＆ドロップ、名前順の並べ替え、ブックマークやフォルダの追加、`?id=` と `?q=` のリンク（Chrome 自身のフォルダリンクを含む）、Chrome と同じキーで操作できる ARIA フォルダツリー（アカウントとデバイスの区分つき）、狭いウィンドウでのドロワー表示。メニューに表示するコマンドは設定で選べます
-- [x] ⚙️ **オプションページ** — 10 のカテゴリ（保存と検索、外観、動作、AI、AIツール、メンテナンス、メタデータと内容、セキュリティ、分析、インポートとエクスポート）に、設定の検索、リストと選択肢のエディタ、折りたたまれた詳細設定
-- [x] 🌙 **ダークモード** — ライト、ダーク、システムテーマ設定に対応
-- [x] 🎯 **すべて展開/折りたたみ** — ネストフォルダを素早く操作
-- [x] 📁 **フォルダ作成** — ポップアップから直接作成
-- [x] ⌨️ **キーボードショートカット** — ポップアップでは `/` で検索、矢印キーでフォルダを移動・開閉、Enter で現在のページを保存し、Ctrl/Cmd のショートカットは使いません。マネージャーでは Chrome と同じキー: Ctrl/Cmd+A、C、X、V、Z、Y、Enter で開く、F2 で編集、Delete、`?` で一覧表示、`s` で保存した検索を開く
-- [x] 🔖 **保存済み検索** — マネージャーのフィルター、並べ替え、フォルダの範囲を名前付きのスマートビューとして保存し、開く・名前変更・削除が可能。保存されるのは条件だけ（このデバイスのみ、同期なし）なので、結果は常に現在のブックマークを反映。削除されたフォルダは通知付きでスキップ
-- [x] 🗑️ **削除と元に戻す** — ポップアップまたはマネージャーから削除。確認ダイアログ（既定で有効、設定でオフにできます）と10秒間の元に戻す操作に対応。マネージャーはブラウザを閉じるまで直近100件の変更の履歴を保持し（Ctrl/Cmd+Z、Ctrl/Cmd+Y）、ポップアップ、「AI に質問」、ローカル AI エージェントからの変更も元に戻せます
-- [x] 🔗 **重複クリーナー** — 設定可能な照合条件で重複ブックマークを検出して削除
-- [x] 🧹 **URLクリーナー** — トラッキングパラメータの削除、クエリ文字列の正規化、変更プレビュー。元に戻すことも可能
-- [x] 💀 **デッドリンクチェッカー** — 選択したブックマークの到達不能リンクをスキャンし、修復 (削除、リダイレクト先、アーカイブ版、URL 編集) を確認してから適用、元に戻すことも可能
-- [x] 🧾 **メタデータ取得** — ページのタイトルと説明を取得し、選択したタイトルだけを適用。説明は確認用に表示されるだけで保存されません
-- [x] 🖼️ **サイトアイコンを更新** — ブックマークした各サイトのアイコンを（第三者のアイコンサービスを使わずに）ダウンロードし、結果を確認してこのデバイスに保存。ブラウザにキャッシュがないサイトや Firefox でも実際のアイコンを表示
-- [x] 🛡️ **プライバシースキャナー** — センシティブなクエリパラメータ、フラグメント、メール、UUIDを検出
-- [x] 📊 **ブックマーク統計** — ドメイン、フォルダ、プロトコル、重複、階層深度を集計
-- [x] 📤 **インポート/エクスポート** — HTML、JSON、Markdown、CSVでエクスポートし、HTMLまたはJSONをインポート。JSON エクスポートには各ブックマークのタグと要約が含まれます。インポート前にプレビューで保存先フォルダ、件数、重複を確認でき、重複をスキップするかすべてインポートするかを選べ、元に戻すこともできます。機密値を含むエクスポートとAIコンテキスト出力ではプライバシー確認が開き、元のファイル、伏せ字にしたコピー、またはキャンセルを選べます
-- [x] 🧠 **AIツール** — LLM向けコンテキスト出力（有効にすると保存済みのタグと要約を含む）、タグ提案、要約、フォルダ再編成計画（必ず適用前にプレビュー）。いずれも元に戻せます
-- [x] 💬 **Ask AI** — ポップアップとサイドパネルのチャット。ブックマークを（語句、フォルダ、タグ、サイト、追加日で）検索し、重複を見つけ、リンクを確認し、フォルダを提案します。頼めばページを保存し、移動・名前変更・削除・新しいフォルダを計画として提示しますが、承認するまで何も変更しません。回答の下には次の操作のボタンが表示されることがあります。できることは設定で選べます
-- [x] 🔌 **ローカル AI エージェント（MCP）** — Claude Code、Codex、Cursor などコンピューター上の MCP クライアントが、`bookmark-scout-mcp` プログラム（`packages/mcp-bridge`）を通じてブックマークを検索・整理できます。拡張機能とはネイティブメッセージングでつながり、ネットワークポートは開きません。既定でオフ。変更には「変更を許可」が必要で、変更ごとにブラウザーで承認します。[ローカル AI エージェントで使う](https://docs.bookmark-scout.com/guides/local-agents)を参照
-- [x] 🖱️ **コンテキストメニュー保存** — 設定でコンテキストメニューをオンにすると、右クリックメニューから最近使ったフォルダまたは標準フォルダにリンクを保存
-- [x] 🌍 **i18n** — 英語、簡体字中国語、繁体字中国語、日本語、韓国語、スペイン語、ドイツ語、フランス語、ブラジルポルトガル語に対応
-- [x] 🔄 **ブックマーク同期** — ブラウザ内蔵同期でクロスデバイス同期
-- [x] ⚙️ **設定の同期とバックアップ** — 変更した設定だけを `chrome.storage.sync` で同期し、デバイス固有の値と AI サービスはそのデバイスに保持。バックアップファイルで設定、カスタムプロンプト、AI サービス（API キーは含まない）、保存した検索を保存・復元
-
-> **🤖 AI機能に関する注意事項**
->
-> AIによる推薦とAIツールは**デフォルトで無効**であり、手動での有効化が必要です：
->
-> 1. **設定 → AI** タブに移動
-> 2. AI機能を有効にし、使用するプロバイダーを選択（OpenAI、Anthropic、Google、Groq、Mistral、DeepSeek、xAI、Azure OpenAI、OpenRouter、Ollama、CLIProxyAPI、またはカスタムOpenAI互換エンドポイント）
-> 3. 選択したプロバイダーで必要な場合は、自分のAPIキーを入力
->
-> ⚠️ **注意:** AI機能では、ブックマークのタイトル、URL、フォルダパス、選択したブックマークコンテキストが設定済みプロバイダーに送信される場合があります。プロバイダーによってはAPI使用料が発生する可能性があります。結果は実験的であり、破壊的な整理変更を適用する前に確認してください。
-
-### 🟡 一部対応
-
-- [x] 🏷️ **タグと要約** — ブックマーク詳細でタグと要約を保存・編集・削除したり、確認済みのAI提案を保存したりできます。このブラウザのローカル拡張機能ストレージにのみ保存され、同期されず、ポップアップの検索対象にもなりません。JSON のエクスポートとインポートでは引き継がれ、「AI に質問」から参照でき、有効にすると AI コンテキスト出力にも含まれます
-- [x] 🎛️ **AIツールの上限** — タグ数とスタイル、要約の長さ、再編成時のフォルダ上限はプロバイダーへの指示として送信され、出力がそれに従っているかは検証されません
-- [x] 🦊 **FirefoxとEdge** — CIはEdgeでブラウザテスト全体を、Firefoxで17件のスモークテスト（ポップアップ、サイドパネルのページ、マネージャーのアドレス・元に戻す・フォルダツリーのキー・メニュー・ドラッグ＆ドロップ、クイック保存ショートカットの設定、設定、インポート/エクスポート、レポート）を実行し、どちらも必須チェックです。Firefoxではブラウザのアイコンキャッシュを使えないため（ファビコンAPIがないため）、「サイトアイコンを更新」で保存したアイコンか汎用アイコンを表示します。また、ブックマークページを置き換えられないため、マネージャーはポップアップの「ブックマークマネージャーを開く」から開きます
-
-### 🚧 現在の注力領域
-
-- [ ] 🧪 **ブラウザテスト** — Firefoxのスモークテストを全体のテストに近づける（コンテキストメニュー、ドラッグ＆ドロップ、ネットワークとAIツール）
-- [ ] 🛒 **ストア配布** — Chrome ウェブストアで公開中。9 言語の掲載文、権限の説明、プライバシー開示、プライバシーポリシー、スクリーンショット、Firefox Add-ons と Edge アドオン向けの提出チェックリストを [`store/`](../store/) に用意済み。これらの提出は手動で承認待ち。Firefox 版には恒久的なアドオン ID とデータ収集の宣言を設定済み
-
----
-
-## 🛠️ 技術スタック
-
-### フレームワーク＆言語
-
-|                                                   テクノロジー                                                    | バージョン | 説明                       |
-| :---------------------------------------------------------------------------------------------------------------: | :--------: | -------------------------- |
-|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |    19    | UIライブラリ               |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |    7     | 型安全なJavaScript         |
-|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |     16     | ウェブサイトフレームワーク |
-
-### ビルド＆ツール
-
-|                                          テクノロジー                                           | バージョン | 説明                       |
-| :---------------------------------------------------------------------------------------------: | :--------: | -------------------------- |
-|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |    0.21    | 拡張機能フレームワーク     |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |     8      | ビルドツール               |
-|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |     23     | モノレポ管理               |
-|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |    1     | JavaScriptランタイム       |
-|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |    2     | リンティング＆フォーマット |
-
-### UI＆スタイリング
-
-|                                                     テクノロジー                                                     | バージョン | 説明                        |
-| :------------------------------------------------------------------------------------------------------------------: | :--------: | --------------------------- |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |    4     | ユーティリティファーストCSS |
-|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |    —     | Base UIベースコンポーネント   |
-|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |    1     | ヘッドレスUIプリミティブ    |
-|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |    1     | アイコンライブラリ          |
-
-### 状態＆データ
-
-|                                                      テクノロジー                                                      | バージョン | 説明               |
-| :--------------------------------------------------------------------------------------------------------------------: | :--------: | ------------------ |
-|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |    5     | 状態管理           |
-|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |    9    | ヘッドレステーブル |
-| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |    4     | ドラッグ＆ドロップ |
-
-### デプロイ＆インフラ
-
-|                                                   テクノロジー                                                    | バージョン | 説明                |
-| :---------------------------------------------------------------------------------------------------------------: | :--------: | ------------------- |
-|       ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)       |     -      | CI/CD＆ホスティング |
-| ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white) |     -      | CDN＆DNS            |
-
----
+🌍 対応言語: English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil)
 
 ## 📦 インストール
 
-### ブラウザのストアから
-
-ブラウザのストアからインストールすると、自動で最新の状態に保たれます：
-
 - **Chrome**: [Chrome Web Store](https://chromewebstore.google.com/detail/bookmark-scout/pmjiopaebkmoenkoodpoldfbnfncnedk)
-- **Firefox**: [GitHub リリース](https://github.com/isandrel/bookmark-scout/releases/latest)
-- **Edge**: [GitHub リリース](https://github.com/isandrel/bookmark-scout/releases/latest)
+- **Firefox**: Firefox Add-ons での公開準備中です。それまでは [手動でインストール](https://docs.bookmark-scout.com/ja/installation#firefox) できます（上級者向け）。
+- **Edge**: Microsoft Edge Add-ons での公開準備中です。それまでは [手動でインストール](https://docs.bookmark-scout.com/ja/installation#edge) できます（上級者向け）。
 
-ストアにまだ掲載されていないブラウザでは、下記の GitHub リリースのビルドをインストールしてください。ブラウザごとの手順は[インストールガイド](https://docs.bookmark-scout.com/ja/installation)にあります。
+インストールしたら、最初のページを保存してみましょう。
 
-### GitHubリリースから
+1. **ピン留めする。** ブラウザのツールバーにあるパズルのピースのアイコンをクリックし、Bookmark Scout の横のピンをクリックします。
+2. **残しておきたいページを開き**、Bookmark Scout のアイコンをクリックします。
+3. **フォルダー名を数文字入力し**、↓ で選んで Enter を押します。これで完了です。
 
-[GitHubリリース](https://github.com/isandrel/bookmark-scout/releases)から最新版をダウンロード：
+次からは、そのページで **Alt+Shift+S** を押すだけです。詳しくは [保存と整理のガイド](https://docs.bookmark-scout.com/ja/guides/save-and-organize) をご覧ください。
 
-```bash
-# GitHub CLIでリリースアセットをダウンロード
-gh release download --repo isandrel/bookmark-scout --pattern "bookmark-scout-*-chrome.zip"
+## 🔒 プライバシー
 
-# Chrome ZIPファイルを展開
-unzip bookmark-scout-*-chrome.zip -d bookmark-scout
-```
-
-リリースアセットはブラウザごとに公開されます：
-
-- `bookmark-scout-*-chrome.crx` — Chromeのデベロッパーモードでのサイドロード用
-- `bookmark-scout-*-chrome.zip` — Chromeの未パッケージ拡張機能またはWeb Storeパッケージ用
-- `bookmark-scout-*-firefox.zip` — Firefoxの一時的なアドオン読み込み用
-- `bookmark-scout-*-edge.zip` — Edgeの未パッケージ拡張機能用
-
-### ソースからビルド（開発者向け）
-
-Bookmark Scout の開発に参加する場合は、自分でビルドします。詳しいセットアップは [CONTRIBUTING.md](../CONTRIBUTING.md) を参照してください。
-
-```bash
-# リポジトリをクローン
-gh repo clone isandrel/bookmark-scout
-cd bookmark-scout
-
-# 依存関係をインストール
-bun install
-
-# 拡張機能をビルド
-bun run build
-```
-
-### パッケージ化されていないビルドを Chrome に読み込む
-
-1. `chrome://extensions/` を開く
-2. **デベロッパーモード**を有効化（右上）
-3. **パッケージ化されていない拡張機能を読み込む**をクリック
-4. 展開したリリースフォルダ、またはソースからビルドした場合は`apps/extension/dist/chrome-mv3`を選択
-
----
-
-## 🚀 開発
-
-```bash
-# 拡張機能の開発サーバーを起動
-bun run dev
-
-# ウェブサイトの開発サーバーを起動
-bun run dev:website
-
-# すべてをビルド
-bun run build:all
-
-# リント
-bun run lint
-
-# 拡張機能のユニットテストと Chromium のエンドツーエンドテスト
-bun run test
-```
-
----
-
-## 📁 プロジェクト構造
-
-```
-bookmark-scout/
-├── apps/
-│   ├── extension/          # ブラウザ拡張機能 (WXT)
-│   │   ├── src/
-│   │   │   ├── components/ # Reactコンポーネント
-│   │   │   ├── entrypoints/ # popup, sidepanel, options, bookmarks
-│   │   │   ├── hooks/      # カスタムReact Hooks
-│   │   │   ├── stores/     # Zustandストア
-│   │   │   └── services/   # ブックマークAPIサービス
-│   │   └── wxt.config.ts
-│   ├── website/            # Next.jsマーケティングサイト
-│   │   └── app/
-│   └── docs/               # Fumadocsドキュメントサイト
-│       └── content/docs/
-├── packages/
-│   ├── config/             # 共有設定
-│   └── mcp-bridge/         # bookmark-scout-mcp：MCP サーバーとネイティブメッセージングホスト
-├── config/
-│   ├── project.toml        # 全アプリ共通のプロジェクト情報
-│   └── web.toml            # ウェブサイトとドキュメントのホスティング
-└── templates/              # READMEテンプレート
-```
-
----
+Bookmark Scout にはアカウントもサーバーもないため、ブックマークや設定などが開発者に届くことはありません。ブックマークの読み取りと変更はブラウザの中で行われます。データがブラウザの外に出るのは、それを必要とする機能を使ったときだけです。たとえば AI（自分で選んだ AI 企業に送られます）や、リンク切れの確認（ブックマークしたウェブサイトにアクセスします）です。詳しくは [プライバシーポリシー](https://bookmark-scout.com/ja/privacy/) をご覧ください。
 
 ## 🔐 権限
 
-インストール時に求めるのは、動作に欠かせない権限だけです。それ以外はすべて任意で、必要な機能をオンにしたときや実行したときに求めます。
+ブラウザが確認する内容:
 
-| 権限           | 求めるとき                         | 目的                               |
-| -------------- | ---------------------------------- | ---------------------------------- |
-| `bookmarks`    | インストール時                     | ブックマークの読み取りと書き込み   |
-| `storage`      | インストール時                     | ユーザー設定を保存                 |
-| `activeTab`    | インストール時                     | ツールバーボタンをクリックしたとき、またはクイック保存のショートカットを押したときに現在のタブを読み取る |
-| `sidePanel`    | インストール時（Chrome、Edge）     | サイドパネルを有効化               |
-| `scripting`    | インストール時                     | ショートカットを押したタブにクイック保存の通知を表示 |
-| `offscreen`    | インストール時（Chrome、Edge）     | AI クイック保存のリクエストを非表示の拡張機能ページで実行 |
-| `tabs`         | サイドパネルから表示中のページを保存するとき | アクティブなタブのタイトルと URL を読み取る |
-| `contextMenus` | コンテキストメニューをオンにしたとき（Firefox はインストール時） | 右クリックメニューからリンクを保存 |
-| `favicon`      | サイトアイコンを更新の「ブラウザのアイコンを表示」をクリックしたとき、または「ブラウザのアイコンキャッシュを使う」をオンにしたとき（Chrome、Edge） | ブラウザのキャッシュにあるアイコンを表示 |
-| ウェブサイトへのアクセス | リンク切れチェック、メタデータ取得、サイトアイコンの更新の実行時（その実行のサイトだけ。20 サイトを超えるとすべてのウェブサイト）、または「ページの内容を読み取る」をオンにしたとき（すべてのウェブサイト） | ブックマークしたページを Cookie なしで取得 |
-| `nativeMessaging` | 「ローカル AI エージェントを許可」をオンにしたとき | コンピューター上の `bookmark-scout-mcp` プログラムと通信 |
+- **インストール時:** 「ブックマークの読み取りと変更」。Bookmark Scout を使い始めるのに必要なのはこれだけです。
+- **それ以上が必要な機能を使うときだけ**、Bookmark Scout の短い説明のあとで確認されます。たとえば、リンク切れの確認ではそのウェブサイトへのアクセスを、サイドパネルからの保存では開いているタブの確認を求めます。許可しなくても、止まるのはその機能だけです。
 
-Firefox では、AI の各機能が、AI プロバイダーに送るデータだけについて、共有への同意を先に求めます。
+[すべての権限とその理由](https://docs.bookmark-scout.com/ja/permissions) をご覧ください。
 
----
+## ❓ よくある質問
 
-## 🤝 コントリビューション
+**本当に無料ですか？**<br>
+はい。広告も有料プランもなく、コードは誰でも読めるように公開されています。AI 企業のアカウントで AI をオンにした場合は、その企業から利用料を請求されることがあります。
 
-コントリビューションを歓迎します！ガイドラインは[CONTRIBUTING.md](../CONTRIBUTING.md)をご覧ください。
+**AI は必要ですか？**<br>
+いいえ。保存、検索、片付けはすべて AI なしで使えます。
 
-```bash
-# リポジトリをフォークしてクローン
-gh repo fork isandrel/bookmark-scout --clone
+**Firefox、Edge、Safari で使えますか？**<br>
+Firefox と Edge は使えます（[インストール](#-インストール) をご覧ください）。Safari は、拡張機能からブックマークを扱えないため使えません。
 
-# フィーチャーブランチを作成
-git checkout -b feature/amazing-feature
+ほかの質問への答えは [FAQ](https://docs.bookmark-scout.com/ja/faq) にあります。
 
-# 変更をコミット
-git commit -m 'feat: 素晴らしい機能を追加'
+## 💬 ヘルプとリンク
 
-# プッシュしてPRを作成
-git push origin feature/amazing-feature
-gh pr create --title "feat: 素晴らしい機能を追加"
-```
+- 🌐 ウェブサイト: [https://bookmark-scout.com](https://bookmark-scout.com)
+- 📖 ガイド: [https://docs.bookmark-scout.com/ja](https://docs.bookmark-scout.com/ja)
+- ✉️ メール: [support@bookmark-scout.com](mailto:support@bookmark-scout.com)
+- 🐞 問題を見つけた、またはアイデアがある場合は [GitHub でお知らせください](https://github.com/isandrel/bookmark-scout/issues/new/choose)
 
----
+Bookmark Scout は企業ではなく、個人の開発者 [@isandrel](https://github.com/isandrel) が作っています。広告もアカウントもなく、オープンソースです。
 
-## 📄 ライセンス
+## 🛠️ 開発者と AI エージェントの方へ
 
-このプロジェクトは**GNU Affero General Public License v3.0**の下でライセンスされています - 詳細は[LICENSE](../LICENSE)ファイルをご覧ください。
-
----
-
-## ⭐ スター履歴
-
-<a href="https://star-history.com/#isandrel/bookmark-scout&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=isandrel/bookmark-scout&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=isandrel/bookmark-scout&type=Date" />
-   <img alt="スター履歴チャート" src="https://api.star-history.com/svg?repos=isandrel/bookmark-scout&type=Date" />
- </picture>
-</a>
+ソースからのビルド、技術スタック、開発状況、テストは [DEVELOPMENT.md](../DEVELOPMENT.md)（英語）にあります。協力していただける場合は [CONTRIBUTING.md](../CONTRIBUTING.md) をお読みください。Claude Code など、パソコン上の AI コーディングエージェントに、承認したうえでブックマークの検索と整理を任せることもできます。[ローカル AI エージェントで使う](https://docs.bookmark-scout.com/ja/guides/local-agents) をご覧ください。
 
 ---
 
 <p align="center">
-  <a href="https://github.com/isandrel">isandrel</a> が ❤️ を込めて作成
+  <a href="../LICENSE">AGPL-3.0 ライセンス</a>の無料オープンソースです。
 </p>

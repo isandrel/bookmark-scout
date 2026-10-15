@@ -3,12 +3,14 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
 	badgeText,
-	browserBadges,
+	contactAddress,
 	installedVersion,
 	parseVersionArgument,
-	readmeValues,
 	releaseLine,
 	render,
+	repositoryContext,
+	screenshotUrl,
+	sitePage,
 	storeBadges,
 	storeLinks,
 } from "./generate-readme";
@@ -20,12 +22,21 @@ const context = {
 	browserBadges: (label: string) => `<badges ${label}>`,
 	storeBadges: (label: string) => `<stores ${label}>`,
 	storeLinks: (label: string) => `<links ${label}>`,
+	sitePage: (argument: string) => `<page ${argument}>`,
+	contact: (role: string) => `<contact ${role}>`,
+	screenshot: (argument: string) => `<shot ${argument}>`,
 };
 
 describe("render", () => {
 	test("fills values, versions, and browser badges", () => {
 		expect(render("{{SITE_NAME}} {{VERSION:react}} {{VERSION:wxt}} {{BROWSER_BADGES:Supported}} {{STORE_BADGES:Install}}", context)).toBe(
 			"Example 19 0.21 <badges Supported> <stores Install>",
+		);
+	});
+
+	test("passes page, contact, and screenshot arguments through", () => {
+		expect(render("{{SITE_PAGE:en:/privacy}} {{CONTACT:support}} {{SCREENSHOT:popup:dark}}", context)).toBe(
+			"<page en:/privacy> <contact support> <shot popup:dark>",
 		);
 	});
 
@@ -61,22 +72,34 @@ test("a workspace-qualified version is the one that workspace's package.json ins
 	expect(() => installedVersion("typescript", root, "apps/nope")).toThrow('Unknown workspace "apps/nope"');
 });
 
-test("storeBadges links only live store listings", () => {
-	const badges = storeBadges("Install");
+test("storeBadges links only live store listings, with the browser name filled in", () => {
+	const badges = storeBadges("Add to @BROWSER");
 	for (const store of site.stores) {
 		expect(badges.includes(`href="${store.url}"`)).toBe(store.live);
+		if (store.live) expect(badges).toContain(`alt="Add to ${site.browsers.name(store.browser)} (${store.name})"`);
 	}
 	expect(storeBadges("Install", { ...site, stores: [] })).toBe("");
 });
 
-test("storeLinks lists every browser, with its live store or the latest release", () => {
-	const lines = storeLinks("Releases").split("\n");
+test("storeLinks lists every browser, with its live store or the pending text", () => {
+	const lines = storeLinks("soon to @STORE, see @DOCS/installation#@ID").split("\n");
 	expect(lines).toHaveLength(site.browsers.supported.length);
 	site.browsers.supported.forEach((browser, index) => {
 		const store = site.store(browser);
 		expect(lines[index]).toStartWith(`- **${site.browsers.name(browser)}**: `);
-		expect(lines[index]).toEndWith(store.live ? `[${store.name}](${store.url})` : `[Releases](${site.repo.releasesLatest})`);
+		expect(lines[index]).toEndWith(
+			store.live ? `[${store.name}](${store.url})` : `soon to ${store.name}, see ${site.docs.origin}/installation#${browser}`,
+		);
 	});
+});
+
+test("sitePage, contactAddress, and screenshotUrl read the site model and reject unknown values", () => {
+	expect(sitePage("en:/privacy")).toBe(site.url.page("en", "/privacy"));
+	expect(() => sitePage("xx:/privacy")).toThrow();
+	expect(contactAddress("support")).toBe(site.contact.address("support"));
+	expect(() => contactAddress("sales")).toThrow('Unknown contact role "sales"');
+	expect(screenshotUrl("popup:light")).toEndWith("/apps/website/public/screenshots/01-popup-light.png");
+	expect(() => screenshotUrl("popup:sepia")).toThrow("Unknown screenshot");
 });
 
 test("badgeText escapes shields.io separators", () => {
@@ -86,13 +109,7 @@ test("badgeText escapes shields.io separators", () => {
 
 test("every template renders with the repository config and installed packages", () => {
 	const templatesDir = join(import.meta.dir, "..", "templates");
-	const real = {
-		values: readmeValues(),
-		version: (name: string, workspace?: string) => installedVersion(name, undefined, workspace),
-		browserBadges: (label: string) => browserBadges(label),
-		storeBadges: (label: string) => storeBadges(label),
-		storeLinks: (label: string) => storeLinks(label),
-	};
+	const real = repositoryContext();
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
 		const output = render(readFileSync(join(templatesDir, file), "utf8"), real, file);
 		expect(output).not.toContain("{{");

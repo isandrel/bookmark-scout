@@ -5,352 +5,99 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/{{DEFAULT_BRANCH}}/apps/extension/public/icon-128.png" alt="{{SITE_NAME}} Logo" width="80" height="80">
+  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/{{DEFAULT_BRANCH}}/apps/extension/public/icon-128.png" alt="{{SITE_NAME}} logo" width="96" height="96">
 </p>
 
-<h1 align="center">🔖 {{SITE_NAME}}</h1>
+<h1 align="center">{{SITE_NAME}}</h1>
+
+<h3 align="center">Save every page to the right bookmark folder, in seconds.</h3>
 
 <p align="center">
-  <strong>{{SITE_DESCRIPTION}}</strong>
-</p>
-
-<p align="center">
-  <a href="{{LICENSE_FILE_URL}}"><img src="https://img.shields.io/badge/license-{{LICENSE_BADGE}}-blue?style=flat-square" alt="License"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/stargazers"><img src="https://img.shields.io/github/stars/{{GITHUB_REPO}}?style=flat-square" alt="Stars"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/issues"><img src="https://img.shields.io/github/issues/{{GITHUB_REPO}}?style=flat-square" alt="Issues"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/pulls"><img src="https://img.shields.io/github/issues-pr/{{GITHUB_REPO}}?style=flat-square" alt="PRs"></a>
-  <a href="https://github.com/sponsors/{{AUTHOR_NAME}}"><img src="https://img.shields.io/badge/sponsor-❤-ea4aaa?style=flat-square" alt="Sponsor"></a>
-  <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3">
+  Type a few letters of a folder's name, or press one shortcut, and the page goes where it belongs.<br>
+  Free, with no account and no ads. Nothing is sent to the developer.
 </p>
 
 <p align="center">
-  <a href="https://github.com/{{GITHUB_REPO}}/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{GITHUB_REPO}}/ci.yml?style=flat-square&label=ci" alt="CI"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/actions/workflows/release-extension.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{GITHUB_REPO}}/release-extension.yml?style=flat-square&label=release" alt="Release CI"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/releases"><img src="https://img.shields.io/github/v/release/{{GITHUB_REPO}}?style=flat-square" alt="Release"></a>
-  <img src="https://img.shields.io/github/last-commit/{{GITHUB_REPO}}?style=flat-square" alt="Last Commit">
-  <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="Website"></a>
-  <a href="{{DOCS_URL}}"><img src="https://img.shields.io/badge/docs-live-blue?style=flat-square" alt="Documentation"></a>
+{{STORE_BADGES:Add to @BROWSER}}
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-{{VERSION:react}}-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-{{VERSION:apps/extension:typescript}}-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/WXT-{{VERSION:wxt}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Vite-{{VERSION:vite}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-{{VERSION:tailwindcss}}-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-{{VERSION:zustand}}-764ABC?style=flat-square" alt="Zustand">
-  <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square" alt="shadcn/ui">
-  <img src="https://img.shields.io/badge/Nx-{{VERSION:nx}}-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
-  <img src="https://img.shields.io/badge/Bun-{{VERSION:bun}}-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
-  <img src="https://img.shields.io/badge/Biome-{{VERSION:@biomejs/biome}}-60A5FA?style=flat-square" alt="Biome">
+  <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/website-visit-{{BRAND_COLOR}}?style=flat-square" alt="Website"></a>
+  <a href="{{DOCS_URL}}"><img src="https://img.shields.io/badge/guides-read-{{BRAND_COLOR}}?style=flat-square" alt="Guides"></a>
+  <a href="{{LICENSE_FILE_URL}}"><img src="https://img.shields.io/badge/open%20source-{{LICENSE_BADGE}}-blue?style=flat-square" alt="Open source license"></a>
 </p>
 
 <p align="center">
-{{STORE_BADGES:Install}}
-{{BROWSER_BADGES:Supported}}
-  <img src="https://img.shields.io/badge/Safari-Not%20Supported-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="{{SCREENSHOT:popup:dark}}">
+    <img src="{{SCREENSHOT:popup:light}}" alt="The Bookmark Scout popup: typing &quot;pas&quot; finds the Pasta folder inside Recipes / Italian, ready to save the page there with Enter. Beside it, optional AI suggestions for a pasta recipe page." width="800">
+  </picture>
 </p>
 
----
+## ✨ What it does
 
-## 📚 Documentation
+- 📁 **Save to the right folder by typing its name.** Type a few letters, even of a folder tucked deep inside others, and press Enter. Small typos still match.
+- ⚡ **Save with one shortcut.** Press **Alt+Shift+S** on any page. A small message shows where the page went, with **Undo** and other folders to move it to.
+- 🔎 **Find anything you saved.** Search every bookmark as you type, from the toolbar, the side panel, or a full-page bookmark manager.
+- 🧹 **Tidy up years of bookmarks.** Remove duplicates, find links that no longer work, and strip tracking codes from web addresses. You see every change before it happens, and can undo it.
+- ✨ **Optional AI suggestions.** Let AI pick the folder for you, using your own AI account or a free AI model on your own computer. AI stays off until you turn it on.
+- 🔒 **Private by design.** No account, no ads, no tracking, and nothing goes to the developer. Saving and searching even work offline.
 
-Visit **[{{DOCS_URL}}]({{DOCS_URL}})** for comprehensive documentation:
+🌍 Available in {{LANGUAGE_NAMES}}.
 
-- **Getting Started** — Installation and setup guides
-- **Features** — Detailed feature documentation
-- **Contributing** — How to contribute to the project
+## 📦 Install
 
----
+{{STORE_LINKS:coming soon to @STORE. Until then, you can [install it by hand](@DOCS/installation#@ID) (advanced).}}
 
-## 🌐 Website
+Then save your first page:
 
-Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
+1. **Pin it.** Click the puzzle-piece icon in your browser's toolbar, then the pin next to Bookmark Scout.
+2. **Open a page you want to keep** and click the Bookmark Scout icon.
+3. **Type a few letters of a folder's name**, press ↓ to pick it, then Enter. That's it.
 
----
+Next time, just press **Alt+Shift+S** on the page. The [saving and organizing guide]({{DOCS_URL}}/guides/save-and-organize) shows more.
 
-## 🌐 Browser Support
+## 🔒 Your privacy
 
-|                                                   Browser                                                   | Support Level  | Notes                              |
-| :---------------------------------------------------------------------------------------------------------: | :------------: | ---------------------------------- |
-| ![Chrome](https://img.shields.io/badge/Chrome-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white) | ⭐⭐⭐ Primary | Manifest V3, all features          |
-|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   | ⭐⭐ Secondary | Manifest V2, side panel in the Firefox sidebar |
-|  ![Edge](https://img.shields.io/badge/Edge-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)   | ⭐⭐ Secondary | Chromium-based, full compatibility |
-|    ![Safari](https://img.shields.io/badge/Safari-999999?style=for-the-badge&logo=safari&logoColor=white)    |    ❌ None     | `bookmarks` API not implemented    |
-
-> **Why Safari?** Safari Web Extensions do not support the `browser.bookmarks` API, which is essential for this extension's core functionality.
-
----
-
-## ✨ Features
-
-### ✅ Implemented
-
-- [x] 📥 **Save to a Folder by Name** — Type part of a folder's name, even a nested folder or a path such as `work/react`, then press ↓ and Enter to save the current page there; small typos still match and recently used folders come first
-- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, about 200 more from the models.dev catalog, or custom OpenAI-compatible providers. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
-- [x] ⚡ **Quick Save Shortcuts** — Press Alt+Shift+S on any page to save it to the best matching folder (ranked on your device from folder names and the bookmarks in them), the last used folder, or a folder you choose, or Alt+Shift+D to save it where AI suggests. A small notification shows where it went, with Undo and other folders to move it to; no extension window needs to be open
-- [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
-- [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
-- [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
-- [x] 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
-- [x] 🗂️ **Full Bookmarks Manager** — Replaces Chrome's bookmarks page and works like it: select rows with click, Ctrl/Cmd+click, and Shift+click, right-click menus (edit, cut, copy, paste, open all in tabs, a new window, or an incognito window, copy a folder link), drag and drop of rows, folders, and links from other pages, sort by name, add a bookmark or folder, `?id=` and `?q=` links (including Chrome's own folder links), an ARIA folder tree with Chrome's keys and separate account and device sections, and drawers in narrow windows. Choose which commands the menus show in Settings
-- [x] ↕️ **Configurable Sorting** — Sort bookmark views by date added, natural alphabetical order, or folders first
-- [x] ⚙️ **Options Page** — Ten categories (Saving & Search, Appearance, Behavior, AI, AI Tools, Maintenance, Metadata & Content, Security, Analytics, Import & Export) with a settings search, list and segment editors, and folded Advanced settings
-- [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
-- [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
-- [x] 📁 **Create Folders** — Create new folders directly from the popup
-- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page, without taking any Ctrl/Cmd shortcut; in the manager, Chrome's keys: Ctrl/Cmd+A, C, X, V, Z, and Y, Enter to open, F2 to edit, Delete, `?` to list shortcuts, and `s` for saved searches
-- [x] 🔖 **Saved Searches** — Save the manager's filters, sort, and folder scope as named smart views, then open, rename, or delete them. Only the query is stored (on this device, not synced), so results always reflect your current bookmarks; deleted folders are skipped with a notice
-- [x] 🗑️ **Delete and Undo** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo. The manager keeps an undo and redo history of the last 100 changes (Ctrl/Cmd+Z, Ctrl/Cmd+Y) for the browser session, including changes made from the popup, Ask AI, and local AI agents
-- [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
-- [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes, with undo
-- [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links, then review and apply repairs (delete, redirect target, archived copy, or edited URL) with undo
-- [x] 🧾 **Metadata Fetcher** — Fetch page titles and descriptions, then apply only the titles you select; descriptions are shown for review and are not saved
-- [x] 🖼️ **Refresh Site Icons** — Download each bookmarked site's own icon (never from a third-party icon service), review the results, and keep them on this device so bookmarks show real icons even when the browser has none cached, and in Firefox
-- [x] 🛡️ **Privacy Scanner** — Detect sensitive query parameters, fragments, emails, and UUIDs in bookmarks
-- [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
-- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. JSON exports keep each bookmark's tags and summary. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
-- [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are always previewed before they apply, each with undo
-- [x] 💬 **Ask AI** — A chat in the popup and side panel that searches your bookmarks (by words, folder, tag, site, or date), finds duplicates, checks links, and suggests folders. When you ask, it saves pages and proposes moves, renames, deletions, and new folders as a plan that changes nothing until you approve it; answers can end with buttons for the next step. Choose what it may do in Settings
-- [x] 🔌 **Local AI Agents (MCP)** — Let Claude Code, Codex, Cursor, and other MCP clients on your computer search and organize your bookmarks through the `bookmark-scout-mcp` program (`packages/mcp-bridge`), which reaches the extension through native messaging and never opens a network port. Off by default; changes need **Allow changes**, and each one waits for your approval in the browser. See [Use with local AI agents]({{DOCS_URL}}/guides/local-agents)
-- [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders, after turning on Context Menu in Settings
-- [x] 🌍 **i18n** — English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese in the extension, website, and docs
-- [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
-- [x] ⚙️ **Settings Sync and Backup** — Only the settings you change sync with `chrome.storage.sync`; device-specific values and AI services stay on the device. A backup file saves and restores settings, custom prompts, AI services (never API keys), and saved searches
-
-> **🤖 AI Features Disclaimer**
->
-> AI-powered recommendations and AI tools are **disabled by default** and require manual opt-in:
->
-> 1. Go to **Settings → AI** tab
-> 2. Enable AI features and select your preferred provider (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, or a custom OpenAI-compatible endpoint)
-> 3. Enter your own API key when your selected provider requires one
->
-> ⚠️ **Note:** AI features may send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. API usage may incur costs depending on your provider. Results are experimental and should be reviewed before applying destructive organization changes.
-
-### 🟡 Partial
-
-- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage and are not synced or searchable in the popup; JSON bookmark exports and imports carry them, Ask AI can look them up, and AI context exports include them when enabled
-- [x] 🎛️ **AI tool limits** — Tag count and style, summary length, and reorganization folder limits are sent to the provider as instructions; the provider's output is not checked against them
-- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a 17-test smoke suite in Firefox (popup, side panel page, manager address, undo, folder tree keys, menus, and drag and drop, quick save shortcut setup, settings, import/export, and reports); both are required checks. In Firefox, the browser's icon cache is unavailable (no favicon API), so bookmarks show icons saved with Refresh Site Icons or a generic icon, and the manager opens from the popup's Open bookmark manager button, because Firefox cannot replace the bookmarks page
-
-### 🚧 Current Focus
-
-- [ ] 🧪 **Browser Coverage** — Grow the Firefox smoke suite toward the full suite (context menus, drag and drop, network and AI tools)
-- [ ] 🛒 **Store Distribution** — The Chrome Web Store listing is live. Listing copy in nine languages, permission justifications, privacy disclosures, the privacy policy, screenshots, and submission checklists for Firefox Add-ons and Edge Add-ons are in [`store/`](store/); those submissions are manual and await approval. The Firefox package has its permanent add-on ID and data collection declaration
-
----
-
-## 🛠️ Tech Stack
-
-### Framework & Language
-
-|                                                    Technology                                                     | Version | Description          |
-| :---------------------------------------------------------------------------------------------------------------: | :-----: | -------------------- |
-|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |  {{VERSION:react}}   | UI library           |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |   {{VERSION:apps/extension:typescript}}   | Type-safe JavaScript |
-|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |   {{VERSION:next}}    | Website framework    |
-
-### Build & Tooling
-
-|                                           Technology                                            | Version | Description          |
-| :---------------------------------------------------------------------------------------------: | :-----: | -------------------- |
-|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |  {{VERSION:wxt}}   | Extension framework  |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |    {{VERSION:vite}}    | Build tool           |
-|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |   {{VERSION:nx}}    | Monorepo management  |
-|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |   {{VERSION:bun}}   | JavaScript runtime   |
-|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |   {{VERSION:@biomejs/biome}}   | Linting & formatting |
-
-### UI & Styling
-
-|                                                      Technology                                                      | Version | Description            |
-| :------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |   {{VERSION:tailwindcss}}   | Utility-first CSS      |
-|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |   —   | Base UI-based components |
-|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |   {{VERSION:@base-ui/react}}   | Headless UI primitives |
-|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |   {{VERSION:lucide-react}}   | Icon library           |
-
-### State & Data
-
-|                                                       Technology                                                       | Version | Description            |
-| :--------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
-|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |   {{VERSION:zustand}}   | State management       |
-|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |  {{VERSION:@tanstack/react-table}}   | Headless table library |
-| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |   {{VERSION:@atlaskit/pragmatic-drag-and-drop}}   | Drag & drop            |
-
-### Deploy & Infrastructure
-
-|                                                    Technology                                                     | Version | Description     |
-| :---------------------------------------------------------------------------------------------------------------: | :-----: | --------------- |
-|       ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)       |    -    | CI/CD & hosting |
-| ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white) |    -    | CDN & DNS       |
-
----
-
-## 📦 Installation
-
-### From your browser's store
-
-Install Bookmark Scout from your browser's store, which keeps it up to date:
-
-{{STORE_LINKS:GitHub Releases}}
-
-Where a browser's store does not list it yet, install the build from GitHub Releases, below. Step-by-step instructions for each browser are in the [installation guide]({{DOCS_URL}}/installation).
-
-### From GitHub Releases
-
-Download the latest release from [GitHub Releases](https://github.com/{{GITHUB_REPO}}/releases):
-
-```bash
-# Download release assets using GitHub CLI
-gh release download --repo {{GITHUB_REPO}} --pattern "bookmark-scout-*-chrome.zip"
-
-# Extract the Chrome zip file
-unzip bookmark-scout-*-chrome.zip -d bookmark-scout
-```
-
-Release assets are published per browser:
-
-- `bookmark-scout-*-chrome.crx` for Chrome sideloading in developer mode
-- `bookmark-scout-*-chrome.zip` for Chrome unpacked installation or Web Store packaging
-- `bookmark-scout-*-firefox.zip` for Firefox temporary add-on installation
-- `bookmark-scout-*-edge.zip` for Edge unpacked installation
-
-### Build from source (for developers)
-
-To work on Bookmark Scout, build it yourself; [CONTRIBUTING.md](CONTRIBUTING.md) has the full setup.
-
-```bash
-# Clone the repository
-gh repo clone {{GITHUB_REPO}}
-cd bookmark-scout
-
-# Install dependencies
-bun install
-
-# Build the extension
-bun run build
-```
-
-### Load an unpacked build in Chrome
-
-1. Open `chrome://extensions/`
-2. Enable **Developer mode** (top right)
-3. Click **Load unpacked**
-4. Select the extracted release folder, or `apps/extension/dist/chrome-mv3` when building from source
-
----
-
-## 🚀 Development
-
-```bash
-# Start extension dev server
-bun run dev
-
-# Start website dev server
-bun run dev:website
-
-# Build all
-bun run build:all
-
-# Lint
-bun run lint
-
-# Extension unit and Chromium end-to-end tests
-bun run test
-```
-
----
-
-## 📁 Project Structure
-
-```
-bookmark-scout/
-├── apps/
-│   ├── extension/          # Browser extension (WXT)
-│   │   ├── src/
-│   │   │   ├── components/ # React components
-│   │   │   ├── entrypoints/ # popup, sidepanel, options, bookmarks
-│   │   │   ├── hooks/      # Custom React hooks
-│   │   │   ├── stores/     # Zustand stores
-│   │   │   └── services/   # Bookmark API services
-│   │   └── wxt.config.ts
-│   ├── website/            # Next.js marketing site
-│   │   └── app/
-│   └── docs/               # Fumadocs documentation site
-│       └── content/docs/
-├── packages/
-│   ├── config/             # Shared configuration
-│   └── mcp-bridge/         # bookmark-scout-mcp: MCP server and native messaging host
-├── config/
-│   ├── project.toml        # Project identity shared by every app
-│   └── web.toml            # Website and docs hosting
-└── templates/              # README templates
-```
-
----
+Bookmark Scout has no account and no server, so the developer never receives your bookmarks, settings, or anything else. Your bookmarks are read and changed inside your browser. Data leaves it only when you use a feature that needs to, for example AI (it goes to the AI company you chose) or the broken-link check (it visits the bookmarked websites). Read the [privacy policy]({{SITE_PAGE:en:/privacy}}) for the details.
 
 ## 🔐 Permissions
 
-Bookmark Scout asks at install only for what it cannot work without. Everything else is optional and asked for when you turn on or run the feature that needs it.
+What your browser will ask:
 
-| Permission     | When                                  | Purpose                              |
-| -------------- | ------------------------------------- | ------------------------------------ |
-| `bookmarks`    | Install                               | Read and write bookmarks             |
-| `storage`      | Install                               | Save user preferences                |
-| `activeTab`    | Install                               | Read the current tab when you click the toolbar button or press a quick save shortcut |
-| `sidePanel`    | Install (Chrome, Edge)                | Enable the side panel                |
-| `scripting`    | Install                               | Show the quick save notification in the tab where you pressed the shortcut |
-| `offscreen`    | Install (Chrome, Edge)                | Run AI quick save's request in a hidden extension page |
-| `tabs`         | Saving the current page from the side panel | Read the active tab's title and URL |
-| `contextMenus` | Turning on Context Menu (install in Firefox) | Save links from the right-click menu |
-| `favicon`      | Clicking Show browser icons on Refresh Site Icons, or turning on Use the browser's icon cache (Chrome, Edge) | Display icons from the browser's cache |
-| Website access | Running Check Dead Links, Metadata Fetcher, or Refresh Site Icons (only the sites in that run, or all websites above 20 sites), or turning on Read page content (all websites) | Request bookmarked pages without cookies |
-| `nativeMessaging` | Turning on Allow local AI agents | Talk to the `bookmark-scout-mcp` program on your computer |
+- **When you install:** *"Read and change your bookmarks."* That is the only thing Bookmark Scout needs to start.
+- **Only when you use a feature that needs more**, after a short explanation from Bookmark Scout. For example, checking for broken links asks to visit those websites, and saving from the side panel asks to see which tab is open. If you say no, only that feature stays off.
 
-Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only. In Firefox, each AI feature first asks for your consent to share only the data it sends to your AI provider.
+See [every permission and why it is needed]({{DOCS_URL}}/permissions).
 
----
+## ❓ Questions
 
-## 🤝 Contributing
+**Is it really free?**<br>
+Yes. No ads, no paid plan, and the code is open for anyone to read. If you turn on AI with an AI company's account, that company may charge you for its use.
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+**Do I need AI?**<br>
+No. Saving, searching, and cleanup all work without it.
 
-```bash
-# Fork and clone the repository
-gh repo fork {{GITHUB_REPO}} --clone
+**Does it work in Firefox, Edge, or Safari?**<br>
+Firefox and Edge: yes (see [Install](#-install)). Safari: no, because Safari does not let extensions work with bookmarks.
 
-# Create your feature branch
-git checkout -b feature/amazing-feature
+More answers are in the [FAQ]({{DOCS_URL}}/faq).
 
-# Make your changes and commit
-git commit -m 'feat: add amazing feature'
+## 💬 Help and links
 
-# Push and create a pull request
-git push origin feature/amazing-feature
-gh pr create --title "feat: add amazing feature"
-```
+- 🌐 Website: [{{SITE_URL}}]({{SITE_URL}})
+- 📖 Guides: [{{DOCS_URL}}]({{DOCS_URL}})
+- ✉️ Email: [{{CONTACT:support}}](mailto:{{CONTACT:support}})
+- 🐞 Found a problem or have an idea? [Tell us on GitHub]({{NEW_ISSUE_URL}})
 
----
+Bookmark Scout is made by an independent developer, [@{{AUTHOR_NAME}}]({{AUTHOR_URL}}), not a company: no ads, no account, and open source.
 
-## 📄 License
+## 🛠️ For developers and AI agents
 
-This project is licensed under the **GNU Affero General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## ⭐ Star History
-
-<a href="https://star-history.com/#{{GITHUB_REPO}}&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date" />
- </picture>
-</a>
+Building from source, the tech stack, project status, and tests are in [DEVELOPMENT.md](DEVELOPMENT.md). To help out, read [CONTRIBUTING.md](CONTRIBUTING.md). AI coding agents on your computer, such as Claude Code, can search and organize your bookmarks with your approval: see [Use with local AI agents]({{DOCS_URL}}/guides/local-agents).
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="{{AUTHOR_URL}}">{{AUTHOR_NAME}}</a>
+  Free and open source under the <a href="LICENSE">{{LICENSE_SPDX}} license</a>.
 </p>

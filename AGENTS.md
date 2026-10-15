@@ -67,7 +67,8 @@ Key root files and directories:
 - `packages/config`: shared configuration package used by multiple apps
 - `packages/mcp-bridge`: `bookmark-scout-mcp`, the local MCP server and native messaging host that let local AI agents use the extension's bookmark actions (settings in its `config/bridge.toml`; the message shapes the extension shares are `src/protocol.ts`)
 - `scripts/generate-readme.ts`: repository utility script
-- `README.md`: public project overview and setup
+- `README.md`: the user-facing overview: what Bookmark Scout does, install, privacy, and help (plain language, no developer detail)
+- `DEVELOPMENT.md`: developer overview: feature status, tech stack, release builds, project structure, and pointers to CONTRIBUTING.md and the MCP bridge
 - `CONTRIBUTING.md`: contribution workflow and coding expectations
 - `CHANGELOG.md`: release-facing change history
 - `SECURITY.md`: security reporting guidance
@@ -342,7 +343,7 @@ Update documentation when the change affects:
 
 Relevant locations include:
 
-- `README.md` and `translations/README.{ja,ko}.md`, which are generated locally: edit `templates/README*.md` (or `config/`), and the pre-commit hook runs `bun run generate:readme` and stages the output. Templates use placeholders for config values (`{{SITE_URL}}`), library versions (`{{VERSION:react}}`, the installed major version or `0.minor`; `{{VERSION:apps/extension:typescript}}` reads one workspace's install, for packages whose major differs by workspace, so the TypeScript badge shows the extension's), and the supported-browser badges (`{{BROWSER_BADGES:<label>}}`); an unknown placeholder fails the run. Run it by hand if hooks are skipped; the Lint job fails when the READMEs and templates differ. No workflow regenerates them.
+- `README.md`, `translations/README.{ja,ko}.md`, and `DEVELOPMENT.md` (English only), which are generated locally: edit `templates/README*.md` or `templates/DEVELOPMENT.md` (or `config/`), and the pre-commit hook runs `bun run generate:readme` and stages the output. Every `templates/*.md` is rendered (`README.<locale>.md` to `translations/`, anything else to the root). The README is for non-technical users: plain words, no developer terms, and developer detail goes in `DEVELOPMENT.md` or `CONTRIBUTING.md`. Templates use placeholders for config values (`{{SITE_URL}}`), library versions (`{{VERSION:react}}`, the installed major version or `0.minor`; `{{VERSION:apps/extension:typescript}}` reads one workspace's install, for packages whose major differs by workspace, so the TypeScript badge shows the extension's), store buttons and install lines that follow the live listings in `config/project.toml` (`{{STORE_BADGES:<label>}}`, `{{STORE_LINKS:<pending text>}}`), website pages (`{{SITE_PAGE:<locale>:<route>}}`), contact addresses (`{{CONTACT:<role>}}`), screenshots (`{{SCREENSHOT:<name>:<theme>}}`), and the supported-browser badges (`{{BROWSER_BADGES:<label>}}`); the full list is at the top of `scripts/generate-readme.ts`, and an unknown placeholder fails the run. Run it by hand if hooks are skipped; the Lint job runs `bun run generate:readme --check`, which fails when an output is missing or differs from its template. No workflow regenerates them. Keep the `## 🔐 Permissions` heading in the English README: the website privacy policy and `store/privacy-policy.md` link to its `#-permissions` anchor.
 - `CONTRIBUTING.md`
 - `apps/docs/content/docs/`
 - website content under `apps/website/app/`

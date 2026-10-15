@@ -1,12 +1,14 @@
 #!/usr/bin/env bun
 /// <reference types="bun" />
 /**
- * Generates README.md and translations/README.<locale>.md from templates/.
+ * Generates README.md, translations/README.<locale>.md, and the other root Markdown files
+ * (DEVELOPMENT.md) from templates/.
  *
  * Values come from the workspace config through `@bookmark-scout/config`, and library
- * versions from the installed packages, so the READMEs never hold a hand-typed copy.
+ * versions from the installed packages, so the generated files never hold a hand-typed copy.
  *
- *   bun run generate:readme
+ *   bun run generate:readme           write every output
+ *   bun run generate:readme --check   write nothing; fail if an output is missing or stale
  *
  * Placeholders:
  *   {{NAME}}                 a value from `readmeValues()`
@@ -14,16 +16,23 @@
  *   {{VERSION:<workspace>:<package>}} the same, as installed for that workspace's package.json;
  *                            use it when workspaces pin different majors (TypeScript)
  *   {{BROWSER_BADGES:<label>}} one shields.io badge per supported browser, labelled <label>
- *   {{STORE_BADGES:<label>}} one linked badge per live store listing, labelled <label>;
+ *   {{STORE_BADGES:<label>}} one large linked button per live store listing, reading <label>;
  *                            empty while no listing is live
- *   {{STORE_LINKS:<label>}}  one Markdown list item per supported browser: its store listing
- *                            when live, otherwise the latest GitHub release, labelled <label>
+ *   {{STORE_LINKS:<pending>}} one Markdown list item per supported browser: its store listing
+ *                            when live, otherwise the <pending> text
+ *   {{SITE_PAGE:<locale>:<route>}} a website page, such as {{SITE_PAGE:en:/privacy}}
+ *   {{CONTACT:<role>}}       a contact address from config/project.toml, such as support
+ *   {{SCREENSHOT:<name>:<theme>}} raw GitHub URL of a product screenshot (light or dark)
+ *
+ * STORE_BADGES and STORE_LINKS text may use per-browser tokens: @BROWSER (browser name),
+ * @STORE (store name), @ID (browser id, also its tab anchor on the docs install page), and
+ * @DOCS (docs origin).
  *
  * A placeholder that cannot be filled fails the run.
  */
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { type Site, site } from "@bookmark-scout/config";
+import { type ContactRole, SCREENSHOTS, type Site, type StoreListing, site } from "@bookmark-scout/config";
 
 const rootDir = resolve(import.meta.dir, "..");
 const templatesDir = join(rootDir, "templates");
@@ -100,7 +109,43 @@ export function readmeValues(model: Site = site): Record<string, string> {
 		LICENSE_SPDX: model.license.spdx,
 		LICENSE_BADGE: badgeText(model.license.spdx),
 		LICENSE_FILE_URL: model.license.fileUrl,
+		BRAND_COLOR: model.theme.accent.replace(/^#/, ""),
+		LANGUAGE_NAMES: model.locales.supported.map((locale) => model.locales.name(locale)).join(" · "),
+		NEW_ISSUE_URL: model.repo.newIssue,
 	};
+}
+
+/** Fills the per-browser tokens of STORE_BADGES and STORE_LINKS text. */
+export function fillStoreTokens(text: string, store: StoreListing, model: Site = site): string {
+	return text
+		.replaceAll("@BROWSER", model.browsers.name(store.browser))
+		.replaceAll("@STORE", store.name)
+		.replaceAll("@ID", store.browser)
+		.replaceAll("@DOCS", model.docs.origin);
+}
+
+/** `{{SITE_PAGE:<locale>:<route>}}`: the website page, validated by the site model. */
+export function sitePage(argument: string, model: Site = site): string {
+	const separator = argument.indexOf(":");
+	if (separator === -1) throw new Error(`SITE_PAGE needs <locale>:<route>, got "${argument}"`);
+	return model.url.page(argument.slice(0, separator), argument.slice(separator + 1));
+}
+
+/** `{{CONTACT:<role>}}`: a contact address; an unknown role fails. */
+export function contactAddress(role: string, model: Site = site): string {
+	const known = model.contact.roles.find((entry) => entry === role);
+	if (!known) throw new Error(`Unknown contact role "${role}"; expected one of ${model.contact.roles.join(", ")}`);
+	return model.contact.address(known);
+}
+
+/** `{{SCREENSHOT:<name>:<theme>}}`: the screenshot as GitHub serves it from the website's copy. */
+export function screenshotUrl(argument: string, model: Site = site): string {
+	const [name = "", theme = ""] = argument.split(":");
+	const file = (SCREENSHOTS as Record<string, Record<string, string> | undefined>)[name]?.[theme];
+	if (!file) {
+		throw new Error(`Unknown screenshot "${argument}"; expected <${Object.keys(SCREENSHOTS).join("|")}>:<light|dark>`);
+	}
+	return model.repo.raw(`apps/website/public${file}`);
 }
 
 export function browserBadges(label: string, model: Site = site): string {
@@ -120,19 +165,18 @@ export function storeBadges(label: string, model: Site = site): string {
 		.map((store) => {
 			const style = BROWSER_BADGE_STYLES[store.browser];
 			if (!style) throw new Error(`No README badge style for browser "${store.browser}"; add it to BROWSER_BADGE_STYLES`);
-			return `  <a href="${store.url}"><img src="https://img.shields.io/badge/${badgeText(store.name)}-${badgeText(label)}-${style.color}?style=flat-square&logo=${style.logo}&logoColor=white" alt="${store.name}"></a>`;
+			const text = fillStoreTokens(label, store, model);
+			return `  <a href="${store.url}"><img src="https://img.shields.io/badge/${badgeText(text)}-${style.color}?style=for-the-badge&logo=${style.logo}&logoColor=white" alt="${text} (${store.name})" height="40"></a>`;
 		})
 		.join("\n");
 }
 
-/** Where each supported browser installs from: its live store listing, or the latest release. */
-export function storeLinks(releaseLabel: string, model: Site = site): string {
+/** Where each supported browser installs from: its live store listing, or the `pending` text. */
+export function storeLinks(pending: string, model: Site = site): string {
 	return model.browsers.supported
 		.map((browser) => {
 			const store = model.store(browser);
-			const target = store.live
-				? `[${store.name}](${store.url})`
-				: `[${releaseLabel}](${model.repo.releasesLatest})`;
+			const target = store.live ? `[${store.name}](${store.url})` : fillStoreTokens(pending, store, model);
 			return `- **${model.browsers.name(browser)}**: ${target}`;
 		})
 		.join("\n");
@@ -144,6 +188,9 @@ type RenderContext = {
 	browserBadges: (label: string) => string;
 	storeBadges: (label: string) => string;
 	storeLinks: (label: string) => string;
+	sitePage: (argument: string) => string;
+	contact: (role: string) => string;
+	screenshot: (argument: string) => string;
 };
 
 /** Fills every placeholder in `template`; throws listing any it cannot fill. */
@@ -157,6 +204,9 @@ export function render(template: string, context: RenderContext, label = "templa
 		if (name === "BROWSER_BADGES" && argument) return context.browserBadges(argument);
 		if (name === "STORE_BADGES" && argument) return context.storeBadges(argument);
 		if (name === "STORE_LINKS" && argument) return context.storeLinks(argument);
+		if (name === "SITE_PAGE" && argument) return context.sitePage(argument);
+		if (name === "CONTACT" && argument) return context.contact(argument);
+		if (name === "SCREENSHOT" && argument) return context.screenshot(argument);
 		const value = argument === undefined ? context.values[name] : undefined;
 		if (value === undefined) {
 			unknown.add(match);
@@ -174,18 +224,37 @@ export function outputPathFor(file: string): string {
 	return join(rootDir, file);
 }
 
-if (import.meta.main) {
-	const context: RenderContext = {
+/** Fills placeholders from the repository config and the installed packages. */
+export function repositoryContext(root = rootDir): RenderContext {
+	return {
 		values: readmeValues(),
-		version: (name, workspace) => installedVersion(name, rootDir, workspace),
+		version: (name, workspace) => installedVersion(name, root, workspace),
 		browserBadges: (label) => browserBadges(label),
 		storeBadges: (label) => storeBadges(label),
 		storeLinks: (label) => storeLinks(label),
+		sitePage: (argument) => sitePage(argument),
+		contact: (role) => contactAddress(role),
+		screenshot: (argument) => screenshotUrl(argument),
 	};
+}
+
+if (import.meta.main) {
+	const check = process.argv.includes("--check");
+	const context = repositoryContext();
+	const stale: string[] = [];
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
 		const output = render(readFileSync(join(templatesDir, file), "utf8"), context, `templates/${file}`);
 		const target = outputPathFor(file);
+		const relative = target.slice(rootDir.length + 1);
+		if (check) {
+			if (!existsSync(target) || readFileSync(target, "utf8") !== output) stale.push(relative);
+			continue;
+		}
 		writeFileSync(target, output, "utf8");
-		console.log(`templates/${file} -> ${target.slice(rootDir.length + 1)}`);
+		console.log(`templates/${file} -> ${relative}`);
+	}
+	if (stale.length > 0) {
+		console.error(`Out of date: ${stale.join(", ")}. Run 'bun run generate:readme' and commit the result.`);
+		process.exit(1);
 	}
 }
