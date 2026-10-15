@@ -39,7 +39,10 @@ export const API_PERMISSIONS = {
 
 export type ApiPermission = keyof typeof API_PERMISSIONS;
 
-/** Website access: bookmarks can point to any site, so a narrower pattern is not possible. */
+/**
+ * Website access as declared: bookmarks can point to any site. A run over known bookmarks asks
+ * for just their sites, a subset of these (`lib/site-access.ts`).
+ */
 export const WEB_ORIGINS = ['http://*/*', 'https://*/*'] as const;
 
 /**
@@ -53,16 +56,22 @@ export type DataCollectionCategory =
   | 'websiteContent';
 
 /**
- * What the AI features send to the provider the user chose: the API key (authenticationInfo),
- * bookmark titles, URLs, and folder paths (bookmarksInfo), the current page's URL
- * (browsingActivity), and its title or text (websiteContent).
+ * What turning on AI lets the AI features send to the provider the user chose: the API key
+ * (authenticationInfo), bookmark titles, URLs, and folder paths (bookmarksInfo), and the current
+ * page's title and URL, as the browser's history would hold them (browsingActivity). Page text
+ * (websiteContent) is asked for only when the user turns on Read page content.
  */
 const AI_DATA_COLLECTION: readonly DataCollectionCategory[] = [
   'authenticationInfo',
   'bookmarksInfo',
   'browsingActivity',
-  'websiteContent',
 ];
+
+/**
+ * Said before Firefox's data collection prompt, which names "the extension developer" as the one
+ * collecting: here that is the AI provider the user chose.
+ */
+const AI_DATA_COLLECTION_NOTE_KEY = 'perm_aiFirefoxNote';
 
 export type PermissionFeatureDefinition = {
   /** API permissions the feature needs; only the optional ones are requested. */
@@ -74,8 +83,15 @@ export type PermissionFeatureDefinition = {
   /**
    * Shown before the browser's own prompt, where that prompt alone does not say why ("Read your
    * browsing history"). Without it the request runs straight from the click.
+   * `dataCollectionNoteKey` is added where the browser also asks for data collection consent
+   * (Firefox), to say who really receives the data.
    */
-  explanation?: { titleKey: string; descriptionKey: string; detailKey: string };
+  explanation?: {
+    titleKey: string;
+    descriptionKey: string;
+    detailKey: string;
+    dataCollectionNoteKey?: string;
+  };
   /** Toast shown when the user declines; the feature stays off and nothing retries. */
   denied: { titleKey: string; descriptionKey: string };
 };
@@ -87,19 +103,31 @@ export const PERMISSION_FEATURES = {
     permissions: ['contextMenus'],
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_contextMenuDenied' },
   },
-  /** Reading the current page where the browser gives no activeTab (the side panel). */
+  /**
+   * Reading the current page where the browser gives no activeTab (the side panel). The dialog
+   * first offers the ways that need no permission (the toolbar popup, the quick save shortcut).
+   */
   currentTab: {
     permissions: ['tabs'],
     explanation: {
-      titleKey: 'permission_currentTabTitle',
-      descriptionKey: 'permission_currentTabDesc',
-      detailKey: 'permission_currentTabDetail',
+      titleKey: 'perm_currentTabTitle',
+      descriptionKey: 'perm_currentTabDesc',
+      detailKey: 'perm_currentTabDetail',
     },
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_currentTabDenied' },
   },
-  /** Icons from the browser's own cache: turning on Use the browser's icon cache. */
+  /**
+   * Icons from the browser's own cache: turning on Use the browser's icon cache, or Show browser
+   * icons on Refresh Site Icons. Its prompt ("Read the icons of the websites you visit") is far
+   * milder than the website access Refresh Site Icons needs, so it is offered first.
+   */
   browserIcons: {
     permissions: ['favicon'],
+    explanation: {
+      titleKey: 'perm_browserIconsTitle',
+      descriptionKey: 'perm_browserIconsDesc',
+      detailKey: 'perm_browserIconsDetail',
+    },
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_browserIconsDenied' },
   },
   /** Check Dead Links, Metadata Fetcher, and Refresh Site Icons request bookmarked pages. */
@@ -112,14 +140,19 @@ export const PERMISSION_FEATURES = {
     },
     denied: { titleKey: 'tools_hostAccessDenied', descriptionKey: 'tools_hostAccessDeniedDesc' },
   },
-  /** Read page content: downloads pages and sends their text to the AI provider. */
+  /**
+   * Read page content: downloads pages and sends their text to the AI provider. It reads pages
+   * the user did not pick one by one (Auto-Tagging runs, Ask AI, AI quick save), so it asks for
+   * all websites; the other AI data is covered by `ai`.
+   */
   pageReading: {
     origins: WEB_ORIGINS,
-    dataCollection: AI_DATA_COLLECTION,
+    dataCollection: ['websiteContent'],
     explanation: {
       titleKey: 'permission_pageReadingTitle',
       descriptionKey: 'permission_pageReadingDesc',
       detailKey: 'permission_pageReadingDetail',
+      dataCollectionNoteKey: AI_DATA_COLLECTION_NOTE_KEY,
     },
     denied: { titleKey: 'tools_hostAccessDenied', descriptionKey: 'settings_hostAccessDeniedDesc' },
   },
@@ -132,21 +165,24 @@ export const PERMISSION_FEATURES = {
       titleKey: 'permission_aiTitle',
       descriptionKey: 'permission_aiDesc',
       detailKey: 'permission_aiDetail',
+      dataCollectionNoteKey: AI_DATA_COLLECTION_NOTE_KEY,
     },
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_aiDenied' },
   },
   /**
    * Access for local AI agents: the bridge program the user installed (`packages/mcp-bridge`)
-   * passes bookmark titles, URLs, and folder paths, the current page's URL, and page text (when
-   * Read page content is on) to the AI agents the user runs on this computer.
+   * passes bookmark titles, URLs, and folder paths, and the current page's title and URL to the
+   * AI agents the user runs on this computer; page text only while Read page content is on and
+   * allowed (`pageReading`, which asks for website content itself).
    */
   agentBridge: {
     permissions: ['nativeMessaging'],
-    dataCollection: ['bookmarksInfo', 'browsingActivity', 'websiteContent'],
+    dataCollection: ['bookmarksInfo', 'browsingActivity'],
     explanation: {
       titleKey: 'permission_agentBridgeTitle',
       descriptionKey: 'permission_agentBridgeDesc',
       detailKey: 'permission_agentBridgeDetail',
+      dataCollectionNoteKey: 'perm_agentBridgeFirefoxNote',
     },
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_agentBridgeDenied' },
   },

@@ -1,13 +1,13 @@
 # Brazilian Portuguese Listing Copy (Português (Brasil))
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters and were measured on 2026-10-12.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters and were measured on 2026-10-12, the two full descriptions on 2026-10-14.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 131 |
 | Firefox Add-ons summary | 250 |
-| Full description, Chrome and Edge | 8,475 |
-| Full description, Firefox | 4,491 |
+| Full description, Chrome and Edge | 9,654 |
+| Full description, Firefox | 5,624 |
 | What's new in 0.3.3 | 1,125 |
 
 ## Name
@@ -92,7 +92,13 @@ FERRAMENTAS DE MANUTENÇÃO
 • Importação de HTML ou JSON com prévia, tratamento de duplicatas e opção de desfazer
 • Exportação para HTML, JSON, Markdown ou CSV, com revisão de privacidade opcional que pode ocultar valores confidenciais
 
-O Verificador de links quebrados, o Buscador de metadados, Atualizar ícones dos sites e a configuração de IA Ler conteúdo da página pedem acesso opcional aos sites na primeira vez que você os usa; depois que esse acesso é permitido, o Perguntar à IA também pode verificar se os links dos favoritos ainda funcionam. Esse acesso nunca é concedido na instalação, as solicitações são enviadas sem cookies e, se você recusar, o recurso simplesmente fica desativado.
+O QUE O NAVEGADOR VAI PEDIR E POR QUÊ
+Na instalação, o navegador pede uma coisa: "Ler e alterar seus favoritos", para que o Bookmark Scout possa salvá-los, pesquisá-los e organizá-los. Todo o resto é pedido somente quando você usa o recurso que precisa disso, depois de uma breve explicação. Se você disser não, somente esse recurso continua desativado.
+• "Ler os ícones dos websites que você visitar": quando você clica em Mostrar ícones do navegador em Atualizar ícones dos sites, ou ativa Usar o cache de ícones do navegador, para mostrar ao lado dos seus favoritos os ícones que o navegador já salvou
+• "Ler e alterar seus dados em todos os sites de example.com" (ou "em vários websites"): quando você executa o Verificador de links quebrados, o Buscador de metadados ou Atualizar ícones dos sites, somente para os sites dessa execução. Uma execução com mais de 20 sites, e a configuração de IA Ler conteúdo da página, pedem "Ler e mudar seus dados em qualquer site". As solicitações são enviadas sem cookies. Depois que todos os sites são permitidos, o Perguntar à IA também pode verificar se os links dos favoritos ainda funcionam
+• "Ler seu histórico de navegação": somente para salvar a página atual ou receber sugestões de pasta pelo painel lateral. O botão da barra de ferramentas e o atalho de salvamento rápido não precisam de permissão, e o Bookmark Scout lê somente o título e o endereço da guia aberta
+• "Comunicar-se com aplicativos nativos de colaboração": somente quando você ativa Agentes de IA locais
+O menu de clique com o botão direito também é opcional, mas não tem aviso, então o navegador o adiciona sem perguntar.
 
 CONFIGURAÇÕES E BACKUP
 • Exportar, no final das Configurações, salva um backup: as configurações que você alterou, prompts personalizados, serviços de IA (nunca as chaves de API deles), pesquisas salvas e as colunas do gerenciador. Importar restaura esse backup
@@ -165,6 +171,13 @@ SUGESTÕES DE PASTA COM IA OPCIONAIS (DESATIVADAS POR PADRÃO)
 Ative a IA nas Configurações e escolha um provedor de IA na nuvem, qualquer endpoint compatível com OpenAI ou um servidor de modelos no seu próprio computador, com sua própria chave de API quando o provedor exigir uma. O Bookmark Scout então sugere pastas para a página atual, no pop-up ou com o atalho de salvamento rápido com IA, e pode criar um novo caminho de pastas depois que você revisá-lo.
 
 Quando você pede sugestões, o título e o URL da página atual e os nomes das suas pastas são enviados diretamente do seu navegador ao provedor escolhido, de acordo com os termos desse provedor, e, somente se você ativar Ler conteúdo da página, também o texto da página. Nada é enviado ao Bookmark Scout. Sua chave de API fica no armazenamento local de extensões deste navegador e não é sincronizada. O uso do provedor pode ser cobrado.
+
+O QUE O FIREFOX VAI PEDIR E POR QUÊ
+Na instalação, o Firefox pede uma coisa: ler e modificar os favoritos. Todo o resto é pedido somente quando você usa o recurso que precisa disso, depois de uma breve explicação. Se você disser não, somente esse recurso continua desativado.
+• Acesso às guias do navegador: somente para salvar a página atual ou receber sugestões de pasta pelo painel lateral. O botão da barra de ferramentas e o atalho de salvamento rápido não precisam de permissão
+• Ativar a IA: o Firefox pede para compartilhar informações de autenticação, favoritos e atividade de navegação (sua chave de API, seus favoritos e pastas, e o título e o URL da página atual). O pedido dele diz que o desenvolvedor quer coletá-los; aqui, isso significa o provedor de IA que você escolheu, que os recebe diretamente do seu navegador. Nada chega ao Bookmark Scout
+• Ler conteúdo da página: acesso aos seus dados de todos os sites e compartilhamento do conteúdo dos sites com seu provedor de IA
+• Verificar serviço: acesso ao endereço do seu provedor de IA e compartilhamento das informações de autenticação (sua chave de API) com ele
 
 PRIVACIDADE
 • Sem conta, sem análises de uso, sem rastreamento, sem anúncios

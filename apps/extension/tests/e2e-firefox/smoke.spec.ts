@@ -625,15 +625,40 @@ test('AI waits for data collection consent, and there is no browser icon cache s
   // wording ("the developer says the extension wants to collect") reads as if we receive it.
   await aiSwitch.click();
   const dialog = await extension.find('[role="dialog"]');
-  expect(await dialog.getText()).toContain(
-    'Bookmark Scout has no server and never receives this data.',
-  );
+  const explanation = await dialog.getText();
+  expect(explanation).toContain('Bookmark Scout has no server and never receives this data.');
+  // Firefox's prompt names "the developer"; the dialog says that means the user's AI company.
+  expect(explanation).toContain('Here that means the AI company you chose');
   await dialog.findElement(By.xpath('.//button[normalize-space()="Not now"]')).click();
   await extension.driver.wait(
     async () => (await extension.driver.findElements(By.css('[role="dialog"]'))).length === 0,
     5000,
   );
   expect(await aiSwitch.getAttribute('aria-checked')).toBe('false');
+});
+
+test('a tool run asks Firefox for its bookmarks’ site only, inside the declared website access', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Site Access', [
+    { title: 'Site Page', url: 'https://www.e2e.invalid/one' },
+    { title: 'Same Site Page', url: 'http://e2e.invalid/two' },
+  ]);
+  await openTools(extension, folder.folderId);
+  await clickToolButton(extension, 'Check Dead Links', 'Scan');
+  const dialog = await extension.findByText('[role="dialog"]', 'Allow access to websites?');
+  expect(await dialog.getText()).toContain(
+    'Your browser will ask for access to this site only: e2e.invalid.',
+  );
+  // The click is real user input. Optional permission prompts are off in this profile
+  // (fixtures.ts), so Firefox grants what it accepts, and rejects origins outside the manifest.
+  await dialog.findElement(By.xpath('.//button[normalize-space()="Allow access"]')).click();
+  const origins = () =>
+    extension.call(async (browser) => (await browser.permissions.getAll()).origins ?? [], null);
+  await expect
+    .poll(origins)
+    .toEqual(expect.arrayContaining(['http://*.e2e.invalid/*', 'https://*.e2e.invalid/*']));
+  expect(await origins()).not.toContain('https://*/*');
 });
 
 test('JSON export downloads the folder and importing it restores a deleted bookmark', async ({

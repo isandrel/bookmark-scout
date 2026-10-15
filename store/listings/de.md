@@ -1,13 +1,13 @@
 # German Listing Copy (Deutsch)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-14, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 130 |
 | Firefox Add-ons summary | 249 |
-| Full description, Chrome and Edge | 8,832 |
-| Full description, Firefox | 4,783 |
+| Full description, Chrome and Edge | 10,140 |
+| Full description, Firefox | 5,980 |
 | What's new in 0.3.3 | 1,240 |
 
 ## Name
@@ -92,7 +92,13 @@ WARTUNGSTOOLS
 • Import aus HTML oder JSON mit Vorschau, Umgang mit Duplikaten und Rückgängig
 • Export als HTML, JSON, Markdown oder CSV, mit optionaler Datenschutzprüfung, die sensible Werte schwärzen kann
 
-Linkprüfung, Metadatenabruf, „Website-Symbole aktualisieren“ und die KI-Einstellung „Seiteninhalt lesen“ fragen bei der ersten Verwendung nach optionalem Zugriff auf Websites; sobald er erlaubt ist, kann „KI fragen“ auch prüfen, ob Links in Ihren Lesezeichen noch funktionieren. Dieser Zugriff wird nie bei der Installation erteilt, Anfragen werden ohne Cookies gesendet, und wenn Sie ablehnen, bleibt die jeweilige Funktion einfach deaktiviert.
+WAS IHR BROWSER FRAGT UND WARUM
+Bei der Installation fragt der Browser nur nach einem: „Deine Lesezeichen lesen und ändern“, damit Bookmark Scout sie speichern, durchsuchen und organisieren kann. Alles andere wird erst angefragt, wenn Sie die Funktion verwenden, die es benötigt, nach einer kurzen Erklärung. Wenn Sie ablehnen, bleibt nur diese Funktion deaktiviert.
+• „Die Symbole der von dir besuchten Websites lesen“: wenn Sie bei „Website-Symbole aktualisieren“ auf „Browser-Symbole anzeigen“ klicken oder „Symbol-Cache des Browsers verwenden“ aktivieren, um die Symbole, die Ihr Browser bereits gespeichert hat, neben Ihren Lesezeichen anzuzeigen
+• „Eigene Daten auf alle example.com-Websites lesen und ändern“ (oder „Eigene Daten auf verschiedenen Websites lesen und ändern“): wenn Sie die Linkprüfung, den Metadatenabruf oder „Website-Symbole aktualisieren“ ausführen, nur für die Websites in diesem Durchlauf. Ein Durchlauf über mehr als 20 Websites und die KI-Einstellung „Seiteninhalt lesen“ fragen nach „Alle deine Daten auf allen Websites lesen und ändern“. Anfragen werden ohne Cookies gesendet. Sobald alle Websites erlaubt sind, kann „KI fragen“ auch prüfen, ob Links in Ihren Lesezeichen noch funktionieren
+• „Browserverlauf lesen“: nur, um die aktuelle Seite aus der Seitenleiste zu speichern oder dort Ordnervorschläge zu erhalten. Die Schaltfläche in der Symbolleiste und das Tastenkürzel zum Schnellspeichern benötigen keine Berechtigung, und Bookmark Scout liest nur Titel und Adresse des geöffneten Tabs
+• „Mit zusammenarbeitenden nativen Anwendungen kommunizieren“: nur wenn Sie „Lokale KI-Agenten“ aktivieren
+Das Rechtsklickmenü ist ebenfalls optional, löst aber keine Warnung aus, daher fügt der Browser es ohne Nachfrage hinzu.
 
 EINSTELLUNGEN UND SICHERUNG
 • „Exportieren“ unten in den Einstellungen speichert eine Sicherung: die von Ihnen geänderten Einstellungen, eigene Prompts, KI-Dienste (nie deren API-Schlüssel), gespeicherte Suchen und die Spalten des Managers. „Importieren“ stellt sie wieder her
@@ -165,6 +171,13 @@ OPTIONALE KI-ORDNERVORSCHLÄGE (STANDARDMÄSSIG DEAKTIVIERT)
 Aktivieren Sie KI in den Einstellungen und wählen Sie einen Cloud-KI-Anbieter, einen beliebigen OpenAI-kompatiblen Endpunkt oder einen Modellserver auf Ihrem eigenen Computer, mit Ihrem eigenen API-Schlüssel, wenn der Anbieter einen verlangt. Bookmark Scout schlägt dann Ordner für die aktuelle Seite vor, im Pop-up oder mit dem Tastenkürzel für KI-Schnellspeichern, und kann nach Ihrer Prüfung einen neuen Ordnerpfad erstellen.
 
 Wenn Sie Vorschläge anfordern, werden Titel und URL der aktuellen Seite, Ihre Ordnernamen und, nur wenn Sie „Seiteninhalt lesen“ aktivieren, der Text der Seite direkt von Ihrem Browser an den von Ihnen gewählten Anbieter gesendet und unterliegen dessen Bedingungen. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung des Anbieters kann kostenpflichtig sein.
+
+WAS FIREFOX FRAGT UND WARUM
+Bei der Installation fragt Firefox nur nach einem: der Berechtigung, Lesezeichen zu lesen und zu ändern. Alles andere wird erst angefragt, wenn Sie die Funktion verwenden, die es benötigt, nach einer kurzen Erklärung. Wenn Sie ablehnen, bleibt nur diese Funktion deaktiviert.
+• Zugriff auf Browsertabs: nur, um die aktuelle Seite aus der Sidebar zu speichern oder dort Ordnervorschläge zu erhalten. Die Schaltfläche in der Symbolleiste und das Tastenkürzel zum Schnellspeichern benötigen keine Berechtigung
+• KI aktivieren: Firefox fragt, ob Authentifizierungsinformationen, Lesezeichen und Browseraktivität geteilt werden dürfen (Ihr API-Schlüssel, Ihre Lesezeichen und Ordner sowie Titel und URL der aktuellen Seite). Laut der Abfrage möchte der Entwickler sie erfassen; gemeint ist hier der von Ihnen gewählte KI-Anbieter, der sie direkt von Ihrem Browser erhält. An Bookmark Scout gelangt nichts
+• „Seiteninhalt lesen“: Zugriff auf Ihre Daten für alle Websites und Weitergabe von Website-Inhalten an Ihren KI-Anbieter
+• „Dienst überprüfen“: Zugriff auf die Adresse Ihres KI-Anbieters und Weitergabe von Authentifizierungsinformationen (Ihrem API-Schlüssel) an ihn
 
 DATENSCHUTZ
 • Kein Konto, keine Analyse, kein Tracking, keine Werbung

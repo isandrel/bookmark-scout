@@ -304,11 +304,11 @@ Bookmark Scout asks at install only for what it cannot work without. Everything 
 | `offscreen`    | Install (Chrome, Edge)                | Run AI quick save's request in a hidden extension page |
 | `tabs`         | Saving the current page from the side panel | Read the active tab's title and URL |
 | `contextMenus` | Turning on Context Menu (install in Firefox) | Save links from the right-click menu |
-| `favicon`      | Turning on Use the browser's icon cache (Chrome, Edge) | Display icons from the browser's cache |
-| Website access | Running Check Dead Links, Metadata Fetcher, or Refresh Site Icons, or turning on Read page content | Request bookmarked pages without cookies |
+| `favicon`      | Clicking Show browser icons on Refresh Site Icons, or turning on Use the browser's icon cache (Chrome, Edge) | Display icons from the browser's cache |
+| Website access | Running Check Dead Links, Metadata Fetcher, or Refresh Site Icons (only the sites in that run, or all websites above 20 sites), or turning on Read page content (all websites) | Request bookmarked pages without cookies |
 | `nativeMessaging` | Turning on Allow local AI agents | Talk to the `bookmark-scout-mcp` program on your computer |
 
-Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only. In Firefox, turning on AI first asks for your consent to share the data your AI provider needs.
+Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only. In Firefox, each AI feature first asks for your consent to share only the data it sends to your AI provider.
 
 ---
 

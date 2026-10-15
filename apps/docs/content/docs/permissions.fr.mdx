@@ -5,6 +5,26 @@ description: Chaque autorisation de navigateur demandée par Bookmark Scout, la 
 
 Voici les autorisations de l'extension compilée pour chaque navigateur. Bookmark Scout ne déclare aucun script de contenu et ne lit jamais les pages que vous consultez ; après un raccourci d'enregistrement rapide, il se contente d'afficher sa propre notification dans cet onglet. À l'installation, il ne demande que ce dont il ne peut pas se passer ; tout le reste est demandé lorsque vous activez ou lancez la fonctionnalité qui en a besoin.
 
+## Ce que votre navigateur va demander, et pourquoi [#what-your-browser-will-ask-and-why]
+
+Lorsque vous installez Bookmark Scout, le navigateur affiche une seule ligne. Tout le reste n'est demandé que lorsque vous utilisez la fonctionnalité qui en a besoin, après une courte explication dans Bookmark Scout. Si vous refusez, seule cette fonctionnalité reste désactivée. Le tableau cite le libellé de Chrome en français et décrit celui de Firefox.
+
+| Le navigateur indique (Chrome et Edge / Firefox) | Quand | Raison |
+| --- | --- | --- |
+| « Accéder à vos favoris et les modifier » / lire et modifier les favoris | À l'installation | Enregistrer vos favoris, y faire des recherches et les ranger |
+| « Accéder aux icônes des sites Web que vous consultez » (Chrome et Edge uniquement) | Vous cliquez sur **Afficher les icônes du navigateur** dans **Actualiser les icônes de site**, ou activez **Utiliser le cache d'icônes du navigateur** | Afficher à côté de vos favoris les icônes que votre navigateur a déjà enregistrées. Rien n'est téléchargé |
+| « Consulter votre historique de navigation » / accéder aux onglets du navigateur | Vous enregistrez la page actuelle, ou demandez des suggestions de dossiers, depuis le panneau latéral | Savoir sur quelle page vous êtes. Le bouton de la barre d'outils et le raccourci d'enregistrement rapide ne nécessitent aucune autorisation : l'explication les propose donc en premier |
+| « Lire et modifier vos données sur tous les sites example.com », ou « sur certains sites Web » / accéder à vos données pour les sites du domaine example.com | Vous lancez **Vérifier les liens morts**, **Récupération des métadonnées** ou **Actualiser les icônes de site** | Demander les pages enregistrées en favoris concernées par cette exécution, sur leurs seuls sites |
+| « Lire et modifier toutes vos données sur tous les sites Web » / accéder à vos données pour tous les sites Web | Un outil est lancé sur plus de 20 sites, ou vous activez **Lire le contenu des pages** | Demander des pages sur n'importe quel site |
+| « Lire et modifier vos données sur api.example.com » / accéder à vos données pour api.example.com | Vous cliquez sur **Vérifier le service** ou **Actualiser les modèles** | Joindre l'adresse de votre fournisseur d'IA |
+| « Communiquer avec les applications natives associées » / échanger des messages avec des programmes autres que Firefox | Vous activez **Autoriser les agents d'IA locaux** | Communiquer avec le programme bookmark-scout-mcp de votre ordinateur |
+| Firefox uniquement : le développeur indique que l'extension souhaite collecter des informations d'authentification, des favoris et l'activité de navigation | Vous activez les **Fonctionnalités d'IA** | Votre clé API, vos favoris et noms de dossiers, ainsi que le titre et l'URL de la page actuelle, sont envoyés à votre fournisseur d'IA. Le développeur mentionné dans cette demande est le fournisseur d'IA que vous avez choisi ; Bookmark Scout ne reçoit rien |
+| Firefox uniquement : la même demande, pour le contenu des sites Web | Vous activez **Lire le contenu des pages** | Le texte des pages est envoyé à votre fournisseur d'IA |
+| Firefox uniquement : la même demande, pour les informations d'authentification | Vous cliquez sur **Vérifier le service** ou **Actualiser les modèles** | Votre clé API est envoyée à votre fournisseur d'IA |
+| Firefox uniquement : la même demande, pour les favoris et l'activité de navigation | Vous activez **Autoriser les agents d'IA locaux** | Ce que les agents d'IA de votre ordinateur peuvent consulter |
+
+Le menu contextuel (**Menu contextuel**) est lui aussi facultatif dans Chrome et Edge, mais il ne déclenche aucun avertissement : le navigateur l'ajoute donc sans rien demander.
+
 ## Accordées à l'installation [#granted-at-install]
 
 | Autorisation | Navigateurs | Raison |
@@ -23,10 +43,10 @@ Dans Chrome et Edge, l'extension remplace également la page Favoris du navigate
 
 | Autorisation | Navigateurs | Demandée lorsque |
 | --- | --- | --- |
-| `tabs` | Tous | Vous enregistrez la page actuelle, ou demandez des suggestions de dossiers, depuis le panneau latéral. Une courte explication s'affiche d'abord. La fenêtre pop-up de la barre d'outils n'en a jamais besoin |
+| `tabs` | Tous | Vous enregistrez la page actuelle, ou demandez des suggestions de dossiers, depuis le panneau latéral. Une courte explication s'affiche d'abord et propose la fenêtre pop-up de la barre d'outils et le raccourci d'enregistrement rapide, qui n'en ont jamais besoin |
 | `contextMenus` | Chrome, Edge | Vous activez le **Menu contextuel** dans les [Paramètres](/settings#data). Il est désactivé par défaut, et Chrome accorde cette autorisation sans demande de confirmation |
-| `favicon` | Chrome, Edge | Vous activez **Utiliser le cache d'icônes du navigateur** dans les [Paramètres](/settings#appearance), pour afficher les icônes que le navigateur a déjà enregistrées |
-| Consentement au partage de données | Firefox | Vous activez les **Fonctionnalités d'IA** ou **Lire le contenu des pages**, ou cliquez sur **Vérifier le service**. Firefox vous demande votre accord avant que l'extension n'envoie quoi que ce soit à votre fournisseur d'IA |
+| `favicon` | Chrome, Edge | Vous cliquez sur **Afficher les icônes du navigateur** dans **Actualiser les icônes de site**, ou activez **Utiliser le cache d'icônes du navigateur** dans les [Paramètres](/settings#appearance), pour afficher les icônes que le navigateur a déjà enregistrées. Une courte explication s'affiche d'abord |
+| Consentement au partage de données | Firefox | Chaque fonctionnalité ne demande que ce qu'elle envoie : les **Fonctionnalités d'IA** pour votre clé API, vos favoris, ainsi que le titre et l'URL de la page actuelle ; **Lire le contenu des pages** pour le texte des pages ; **Vérifier le service** pour votre clé API. Une courte explication indique d'abord que les données vont à votre fournisseur d'IA, et non à Bookmark Scout |
 | `nativeMessaging` | Tous | Vous activez **Autoriser les agents d'IA locaux** dans les [Paramètres](/settings#agent-bridge), pour que l'extension puisse communiquer avec le programme bookmark-scout-mcp de votre ordinateur. Une courte explication s'affiche d'abord ; dans Firefox, la même demande porte aussi sur le partage des données de favoris avec lui |
 
 Si vous refusez, la fonctionnalité reste désactivée et rien n'est envoyé. Si vous retirez ultérieurement une autorisation dans les paramètres des extensions du navigateur, la fonctionnalité est désactivée ; la réactiver entraîne une nouvelle demande.
@@ -35,8 +55,8 @@ Si vous refusez, la fonctionnalité reste désactivée et rien n'est envoyé. Si
 
 L'extension déclare aussi un accès à `http://*/*` et à `https://*/*`, mais aucune partie de cet accès n'est accordée à l'installation. Le navigateur vous le demande au moment où vous en avez besoin :
 
-- **Vérifier les liens morts**, **Récupération des métadonnées** et **Actualiser les icônes de site** demandent l'accès aux sites Web la première fois que vous les lancez, car les favoris peuvent pointer vers n'importe quel site. Les requêtes sont envoyées sans cookies, et seul l'en-tête de la page est lu pour obtenir les titres et les liens des icônes. Si vous refusez, rien n'est analysé. Consultez [Trouver et réparer les liens morts](/guides/dead-links) et [Actualiser les icônes de site](/guides/clean-up#refresh-site-icons).
-- **Lire le contenu des pages**, dans les paramètres d'IA, demande l'accès aux sites Web lors de son activation, pour que les outils d'IA puissent télécharger les pages, sans cookies, et envoyer leur texte principal à votre fournisseur d'IA. Les pages de votre réseau local ne sont jamais lues. Consultez [Lire le contenu des pages](/guides/ai-tools#read-page-content).
+- **Vérifier les liens morts**, **Récupération des métadonnées** et **Actualiser les icônes de site** demandent, lorsque vous les lancez, l'accès aux seuls sites des favoris concernés par cette exécution, chacun avec ses sous-domaines. Une exécution portant sur plus de 20 sites demande à la place l'accès à tous les sites Web. Les sites que vous avez déjà autorisés ne sont pas demandés à nouveau. Les requêtes sont envoyées sans cookies, et seul l'en-tête de la page est lu pour obtenir les titres et les liens des icônes. Si vous refusez, rien n'est analysé. Un lien qui redirige vers un site extérieur à l'exécution ne peut pas être suivi : **Vérifier les liens morts** le marque donc **À vérifier manuellement** au lieu de mort. Consultez [Trouver et réparer les liens morts](/guides/dead-links) et [Actualiser les icônes de site](/guides/clean-up#refresh-site-icons).
+- **Lire le contenu des pages**, dans les paramètres d'IA, demande l'accès à tous les sites Web lors de son activation, pour que les outils d'IA puissent télécharger les pages, sans cookies, et envoyer leur texte principal à votre fournisseur d'IA. Les pages de votre réseau local ne sont jamais lues. Consultez [Lire le contenu des pages](/guides/ai-tools#read-page-content).
 - **Vérifier le service** et **Actualiser les modèles**, dans les paramètres d'IA, demandent l'accès à l'adresse de ce seul fournisseur. Consultez [Configurer les outils d'IA](/guides/ai-tools).
 
 Pour retirer cet accès, ouvrez la page de l'extension dans le navigateur (par exemple `chrome://extensions/`, puis **Détails** sous Bookmark Scout, ou **Permissions** dans `about:addons` de Firefox) et modifiez l'accès aux sites ou les autorisations.

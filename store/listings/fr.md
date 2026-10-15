@@ -1,13 +1,13 @@
 # French Listing Copy (Français)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-14, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 132 |
 | Firefox Add-ons summary | 242 |
-| Full description, Chrome and Edge | 9,517 |
-| Full description, Firefox | 5,084 |
+| Full description, Chrome and Edge | 10,920 |
+| Full description, Firefox | 6,410 |
 | What's new in 0.3.3 | 1,324 |
 
 ## Name
@@ -92,7 +92,13 @@ OUTILS DE MAINTENANCE
 • Importation depuis un fichier HTML ou JSON, avec aperçu, gestion des doublons et annulation possible
 • Exportation au format HTML, JSON, Markdown ou CSV, avec une vérification de confidentialité facultative qui peut masquer les valeurs sensibles
 
-Le vérificateur de liens morts, la récupération des métadonnées, l'outil Actualiser les icônes de site et le paramètre d'IA Lire le contenu des pages demandent un accès facultatif aux sites Web lors de leur première utilisation ; une fois cet accès autorisé, Demander à l'IA peut aussi vérifier si les liens de vos favoris fonctionnent toujours. Cet accès n'est jamais accordé à l'installation, les requêtes sont envoyées sans cookies, et si vous le refusez, la fonctionnalité concernée reste simplement désactivée.
+CE QUE VOTRE NAVIGATEUR VA DEMANDER, ET POURQUOI
+À l'installation, le navigateur ne demande qu'une chose : « Accéder à vos favoris et les modifier », pour que Bookmark Scout puisse les enregistrer, y faire des recherches et les ranger. Tout le reste n'est demandé que lorsque vous utilisez la fonctionnalité qui en a besoin, après une courte explication. Si vous refusez, seule cette fonctionnalité reste désactivée.
+• « Accéder aux icônes des sites Web que vous consultez » : lorsque vous cliquez sur Afficher les icônes du navigateur dans Actualiser les icônes de site, ou activez Utiliser le cache d'icônes du navigateur, pour afficher à côté de vos favoris les icônes que votre navigateur a déjà enregistrées
+• « Lire et modifier vos données sur tous les sites example.com » (ou « sur certains sites Web ») : lorsque vous lancez le vérificateur de liens morts, la récupération des métadonnées ou l'outil Actualiser les icônes de site, uniquement pour les sites concernés par cette exécution. Une exécution portant sur plus de 20 sites, ainsi que le paramètre d'IA Lire le contenu des pages, demandent « Lire et modifier toutes vos données sur tous les sites Web ». Les requêtes sont envoyées sans cookies. Une fois tous les sites Web autorisés, Demander à l'IA peut aussi vérifier si les liens de vos favoris fonctionnent toujours
+• « Consulter votre historique de navigation » : uniquement pour enregistrer la page actuelle ou obtenir des suggestions de dossiers depuis le panneau latéral. Le bouton de la barre d'outils et le raccourci d'enregistrement rapide ne nécessitent aucune autorisation, et Bookmark Scout ne lit que le titre et l'adresse de l'onglet ouvert
+• « Communiquer avec les applications natives associées » : uniquement lorsque vous activez Agents d'IA locaux
+Le menu contextuel est lui aussi facultatif, mais il ne déclenche aucun avertissement : le navigateur l'ajoute donc sans rien demander.
 
 PARAMÈTRES ET SAUVEGARDE
 • Exporter, en bas des paramètres, enregistre une sauvegarde : les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (jamais leurs clés API), les recherches enregistrées et les colonnes du gestionnaire. Importer la restaure
@@ -165,6 +171,13 @@ SUGGESTIONS DE DOSSIERS PAR IA FACULTATIVES (DÉSACTIVÉES PAR DÉFAUT)
 Activez l'IA dans les paramètres et choisissez un fournisseur d'IA dans le cloud, n'importe quel point de terminaison compatible OpenAI ou un serveur de modèles sur votre propre ordinateur, avec votre propre clé API lorsque le fournisseur en exige une. Bookmark Scout suggère alors des dossiers pour la page actuelle, dans la fenêtre pop-up ou avec le raccourci d'enregistrement rapide avec l'IA, et peut créer un nouveau chemin de dossiers après votre vérification.
 
 Lorsque vous demandez des suggestions, le titre et l'URL de la page actuelle, les noms de vos dossiers et, uniquement si vous activez Lire le contenu des pages, le texte de la page sont envoyés directement de votre navigateur au fournisseur que vous avez choisi, selon les conditions de ce fournisseur. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation du fournisseur peut être payante.
+
+CE QUE FIREFOX VA DEMANDER, ET POURQUOI
+À l'installation, Firefox ne demande qu'une chose : l'autorisation de lire et de modifier vos favoris. Tout le reste n'est demandé que lorsque vous utilisez la fonctionnalité qui en a besoin, après une courte explication. Si vous refusez, seule cette fonctionnalité reste désactivée.
+• L'accès aux onglets du navigateur : uniquement pour enregistrer la page actuelle ou obtenir des suggestions de dossiers depuis la barre latérale. Le bouton de la barre d'outils et le raccourci d'enregistrement rapide ne nécessitent aucune autorisation
+• Activation de l'IA : Firefox demande l'autorisation de partager des informations d'authentification, vos favoris et votre activité de navigation (votre clé API, vos favoris et dossiers, ainsi que le titre et l'URL de la page actuelle). Sa demande indique que le développeur souhaite collecter ces données ; ici, il s'agit du fournisseur d'IA que vous avez choisi, qui les reçoit directement depuis votre navigateur. Rien ne parvient à Bookmark Scout
+• Lire le contenu des pages : l'accès à vos données pour tous les sites Web, et le partage du contenu des sites Web avec votre fournisseur d'IA
+• Vérifier le service : l'accès à l'adresse de votre fournisseur d'IA, et le partage des informations d'authentification (votre clé API) avec celui-ci
 
 CONFIDENTIALITÉ
 • Aucun compte, aucune mesure d'audience, aucun suivi, aucune publicité

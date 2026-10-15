@@ -131,7 +131,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Vérifier les liens morts et Récupération des métadonnées interrogent les pages enregistrées en favoris elles-mêmes pour savoir si elles se chargent et quels sont leurs titres. Actualiser les icônes de site interroge une page enregistrée en favori pour chaque site Web, puis demande un fichier d'icône au domaine de ce site, afin que les favoris puissent afficher l'icône du site. Le navigateur vous demande votre autorisation la première fois que vous lancez l'un de ces outils. Les requêtes sont envoyées directement à chaque site Web, sans cookies, et les résultats restent dans l'extension. Aucun service d'icônes tiers n'est utilisé. Comme pour toute visite, le site Web peut voir votre adresse IP et le fait que la page ou l'icône a été demandée."
+                        "text": "Vérifier les liens morts et Récupération des métadonnées interrogent les pages enregistrées en favoris elles-mêmes pour savoir si elles se chargent et quels sont leurs titres. Actualiser les icônes de site interroge une page enregistrée en favori pour chaque site Web, puis demande un fichier d'icône au domaine de ce site, afin que les favoris puissent afficher l'icône du site. Lorsque vous lancez l'un de ces outils, le navigateur vous demande votre autorisation pour les sites Web des favoris concernés, ou pour tous les sites Web s'il y en a plus de 20, sauf si vous les avez déjà autorisés. Les requêtes sont envoyées directement à chaque site Web, sans cookies, et les résultats restent dans l'extension. Aucun service d'icônes tiers n'est utilisé. Comme pour toute visite, le site Web peut voir votre adresse IP et le fait que la page ou l'icône a été demandée."
                     },
                     {
                         "type": "h3",
@@ -172,10 +172,10 @@
                         "items": [
                             "L'accès à vos onglets (<code>tabs</code>), lorsque vous enregistrez la page actuelle ou demandez des suggestions de dossiers depuis le panneau latéral. La fenêtre pop-up de la barre d'outils n'en a pas besoin.",
                             "Le menu contextuel (<code>contextMenus</code>, Chrome et Edge), lorsque vous activez Menu contextuel dans les paramètres.",
-                            "Le cache d'icônes du navigateur (<code>favicon</code>, Chrome et Edge), lorsque vous activez Utiliser le cache d'icônes du navigateur dans les paramètres.",
-                            "L'accès à tous les sites Web, lorsque vous lancez pour la première fois Vérifier les liens morts, Récupération des métadonnées ou Actualiser les icônes de site, ou que vous activez Lire le contenu des pages.",
+                            "Le cache d'icônes du navigateur (<code>favicon</code>, Chrome et Edge), lorsque vous cliquez sur Afficher les icônes du navigateur dans Actualiser les icônes de site ou activez Utiliser le cache d'icônes du navigateur dans les paramètres.",
+                            "L'accès aux sites Web des favoris qu'une exécution vérifie, lorsque vous lancez Vérifier les liens morts, Récupération des métadonnées ou Actualiser les icônes de site (l'accès à tous les sites Web lorsqu'une exécution porte sur plus de 20 sites), et l'accès à tous les sites Web lorsque vous activez Lire le contenu des pages.",
                             "L'accès au site d'un fournisseur, lorsque vous cliquez sur Vérifier le service ou Actualiser les modèles dans les paramètres d'IA.",
-                            "Dans Firefox, votre consentement au partage de données avec votre fournisseur d'IA, lorsque vous activez l'IA ou cliquez sur Vérifier le service.",
+                            "Dans Firefox, votre consentement au partage de données avec votre fournisseur d'IA, pour ce qu'envoie chaque fonctionnalité : lorsque vous activez l'IA (votre clé API, vos favoris, ainsi que le titre et l'URL de la page actuelle), activez Lire le contenu des pages (le texte des pages) ou cliquez sur Vérifier le service (votre clé API).",
                             "Communiquer avec le programme bookmark-scout-mcp de votre ordinateur (<code>nativeMessaging</code>), quand vous activez Autoriser les agents d'IA locaux ; dans Firefox, avec votre consentement à lui transmettre des données de favoris."
                         ]
                     },

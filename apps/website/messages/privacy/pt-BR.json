@@ -131,7 +131,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Verificar links quebrados e o Buscador de metadados solicitam as próprias páginas salvas nos favoritos para ver se elas carregam e quais são seus títulos. Atualizar ícones dos sites solicita uma página salva nos favoritos de cada site e, depois, um arquivo de ícone do próprio domínio desse site, para que os favoritos possam mostrar o ícone do site. O navegador pede sua permissão na primeira vez que você executa uma dessas ferramentas. As solicitações vão diretamente para cada site, sem cookies, e os resultados ficam na extensão. Nenhum serviço de ícones de terceiros é usado. Como em qualquer visita, o site pode ver seu endereço IP e que a página ou o ícone foi solicitado."
+                        "text": "Verificar links quebrados e o Buscador de metadados solicitam as próprias páginas salvas nos favoritos para ver se elas carregam e quais são seus títulos. Atualizar ícones dos sites solicita uma página salva nos favoritos de cada site e, depois, um arquivo de ícone do próprio domínio desse site, para que os favoritos possam mostrar o ícone do site. Quando você executa uma dessas ferramentas, o navegador pede sua permissão para os sites dos favoritos dessa execução, ou para todos os sites se forem mais de 20, a menos que você já os tenha permitido. As solicitações vão diretamente para cada site, sem cookies, e os resultados ficam na extensão. Nenhum serviço de ícones de terceiros é usado. Como em qualquer visita, o site pode ver seu endereço IP e que a página ou o ícone foi solicitado."
                     },
                     {
                         "type": "h3",
@@ -172,10 +172,10 @@
                         "items": [
                             "Acesso às suas guias (<code>tabs</code>), quando você salva a página atual ou pede sugestões de pasta pelo painel lateral. O pop-up da barra de ferramentas não precisa desse acesso.",
                             "O menu de clique com o botão direito (<code>contextMenus</code>, Chrome e Edge), quando você ativa Menu de contexto nas Configurações.",
-                            "O cache de ícones do navegador (<code>favicon</code>, Chrome e Edge), quando você ativa Usar o cache de ícones do navegador nas Configurações.",
-                            "Acesso a todos os sites, quando você executa pela primeira vez Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites, ou ativa Ler conteúdo da página.",
+                            "O cache de ícones do navegador (<code>favicon</code>, Chrome e Edge), quando você clica em Mostrar ícones do navegador em Atualizar ícones dos sites ou ativa Usar o cache de ícones do navegador nas Configurações.",
+                            "Acesso aos sites dos favoritos que uma execução verifica, quando você executa Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites (acesso a todos os sites quando uma execução abrange mais de 20 sites), e acesso a todos os sites quando você ativa Ler conteúdo da página.",
                             "Acesso ao site de um provedor, quando você clica em Verificar serviço ou Atualizar modelos nas configurações de IA.",
-                            "No Firefox, seu consentimento para compartilhar dados com seu provedor de IA, quando você ativa a IA ou clica em Verificar serviço.",
+                            "No Firefox, seu consentimento para compartilhar dados com seu provedor de IA, para o que cada recurso envia: quando você ativa a IA (sua chave de API, os favoritos e o título e o URL da página atual), ativa Ler conteúdo da página (o texto da página) ou clica em Verificar serviço (sua chave de API).",
                             "Comunicar-se com o programa bookmark-scout-mcp no seu computador (<code>nativeMessaging</code>), quando você ativa Permitir agentes de IA locais; no Firefox, junto com seu consentimento para compartilhar dados de favoritos com ele."
                         ]
                     },

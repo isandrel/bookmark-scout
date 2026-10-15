@@ -5,6 +5,26 @@ description: Jede Browserberechtigung, die Bookmark Scout anfordert, wozu sie be
 
 Dies sind die Berechtigungen der für jeden Browser erstellten Erweiterung. Bookmark Scout deklariert keine Content-Skripte und liest nie die Seiten, die Sie besuchen; nach einem Tastenkürzel zum Schnellspeichern zeigt die Erweiterung in diesem Tab nur ihre eigene Benachrichtigung an. Bei der Installation fragt sie nur nach dem, ohne das sie nicht funktioniert; alles andere wird erst angefragt, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt.
 
+## Was Ihr Browser fragt und warum [#what-your-browser-will-ask-and-why]
+
+Bei der Installation zeigt der Browser eine Zeile an. Alles andere wird erst angefragt, wenn Sie die Funktion verwenden, die es benötigt, nach einer kurzen Erklärung in Bookmark Scout. Wenn Sie ablehnen, bleibt nur diese Funktion deaktiviert. Die Tabelle zitiert den deutschen Wortlaut von Chrome und beschreibt den von Firefox.
+
+| Der Browser sagt (Chrome und Edge / Firefox) | Wann | Warum |
+| --- | --- | --- |
+| „Deine Lesezeichen lesen und ändern“ / Firefox: Lesezeichen lesen und ändern | Bei der Installation | Ihre Lesezeichen speichern, durchsuchen und organisieren |
+| „Die Symbole der von dir besuchten Websites lesen“ (nur Chrome und Edge) | Sie klicken bei **Website-Symbole aktualisieren** auf **Browser-Symbole anzeigen** oder aktivieren **Symbol-Cache des Browsers verwenden** | Die Symbole, die Ihr Browser bereits gespeichert hat, neben Ihren Lesezeichen anzeigen. Es wird nichts heruntergeladen |
+| „Browserverlauf lesen“ / Firefox: Zugriff auf Browsertabs | Sie speichern die aktuelle Seite aus der Seitenleiste oder fordern dort Ordnervorschläge an | Sehen, auf welcher Seite Sie sind. Die Schaltfläche in der Symbolleiste und das Tastenkürzel zum Schnellspeichern benötigen keine Berechtigung, daher schlägt die Erklärung sie zuerst vor |
+| „Eigene Daten auf alle example.com-Websites lesen und ändern“ oder „Eigene Daten auf verschiedenen Websites lesen und ändern“ / Firefox: Zugriff auf Ihre Daten für Websites der Domain example.com | Sie führen **Defekte Links prüfen**, **Metadatenabruf** oder **Website-Symbole aktualisieren** aus | Die gespeicherten Seiten dieses Durchlaufs anfragen, nur auf deren Websites |
+| „Alle deine Daten auf allen Websites lesen und ändern“ / Firefox: Zugriff auf Ihre Daten für alle Websites | Ein Durchlauf eines Tools umfasst mehr als 20 Websites, oder Sie aktivieren **Seiteninhalt lesen** | Seiten auf jeder beliebigen Website anfragen |
+| „Eigene Daten auf api.example.com lesen und ändern“ / Firefox: Zugriff auf Ihre Daten für api.example.com | Sie klicken auf **Dienst überprüfen** oder **Modelle aktualisieren** | Die Adresse Ihres KI-Anbieters erreichen |
+| „Mit zusammenarbeitenden nativen Anwendungen kommunizieren“ / Firefox: Nachrichten mit anderen Programmen als Firefox austauschen | Sie aktivieren **Lokale KI-Agenten zulassen** | Mit dem Programm bookmark-scout-mcp auf Ihrem Computer sprechen |
+| Nur Firefox: Der Entwickler gibt an, dass die Erweiterung Authentifizierungsinformationen, Lesezeichen und Browseraktivität erfassen möchte | Sie aktivieren **KI-Funktionen** | Ihr API-Schlüssel, Ihre Lesezeichen und Ordnernamen sowie Titel und URL der aktuellen Seite gehen an Ihren KI-Anbieter. Mit dem Entwickler ist in dieser Abfrage der von Ihnen gewählte KI-Anbieter gemeint; Bookmark Scout erhält nichts |
+| Nur Firefox: dieselbe Abfrage mit Website-Inhalten | Sie aktivieren **Seiteninhalt lesen** | Seitentext geht an Ihren KI-Anbieter |
+| Nur Firefox: dieselbe Abfrage mit Authentifizierungsinformationen | Sie klicken auf **Dienst überprüfen** oder **Modelle aktualisieren** | Ihr API-Schlüssel geht an Ihren KI-Anbieter |
+| Nur Firefox: dieselbe Abfrage mit Lesezeichen und Browseraktivität | Sie aktivieren **Lokale KI-Agenten zulassen** | Was die KI-Agenten auf Ihrem Computer nachschlagen können |
+
+Das Rechtsklickmenü (**Kontextmenü**) ist in Chrome und Edge ebenfalls optional, löst aber keine Warnung aus, daher fügt der Browser es ohne Nachfrage hinzu.
+
 ## Bei der Installation gewährt [#granted-at-install]
 
 | Berechtigung | Browser | Zweck |
@@ -23,10 +43,10 @@ In Chrome und Edge ersetzt die Erweiterung außerdem die Lesezeichenseite des Br
 
 | Berechtigung | Browser | Angefragt, wenn |
 | --- | --- | --- |
-| `tabs` | Alle | Sie die aktuelle Seite aus der Seitenleiste speichern oder dort Ordnervorschläge anfordern. Zuvor erscheint eine kurze Erklärung. Das Pop-up in der Symbolleiste benötigt diese Berechtigung nie |
+| `tabs` | Alle | Sie die aktuelle Seite aus der Seitenleiste speichern oder dort Ordnervorschläge anfordern. Zuvor erscheint eine kurze Erklärung, die das Pop-up in der Symbolleiste und das Tastenkürzel zum Schnellspeichern anbietet, die diese Berechtigung nie benötigen |
 | `contextMenus` | Chrome, Edge | Sie **Kontextmenü** in den [Einstellungen](/settings#data) aktivieren. Die Option ist standardmäßig deaktiviert, und Chrome gewährt die Berechtigung ohne Nachfrage |
-| `favicon` | Chrome, Edge | Sie **Symbol-Cache des Browsers verwenden** in den [Einstellungen](/settings#appearance) aktivieren, um Symbole anzuzeigen, die der Browser bereits gespeichert hat |
-| Einwilligung zur Datenweitergabe | Firefox | Sie **KI-Funktionen** oder **Seiteninhalt lesen** aktivieren oder auf **Dienst überprüfen** klicken. Firefox fragt nach, bevor die Erweiterung etwas an Ihren KI-Anbieter sendet |
+| `favicon` | Chrome, Edge | Sie bei **Website-Symbole aktualisieren** auf **Browser-Symbole anzeigen** klicken oder **Symbol-Cache des Browsers verwenden** in den [Einstellungen](/settings#appearance) aktivieren, um Symbole anzuzeigen, die der Browser bereits gespeichert hat. Zuvor erscheint eine kurze Erklärung |
+| Einwilligung zur Datenweitergabe | Firefox | Jede Funktion fragt nur nach dem, was sie sendet: **KI-Funktionen** nach Ihrem API-Schlüssel, Ihren Lesezeichen sowie Titel und URL der aktuellen Seite; **Seiteninhalt lesen** nach dem Seitentext; **Dienst überprüfen** nach Ihrem API-Schlüssel. Eine kurze Erklärung sagt zuvor, dass die Daten an Ihren KI-Anbieter gehen, nicht an Bookmark Scout |
 | `nativeMessaging` | Alle | Sie aktivieren **Lokale KI-Agenten zulassen** in den [Einstellungen](/settings#agent-bridge), damit die Erweiterung mit dem Programm bookmark-scout-mcp auf Ihrem Computer sprechen kann. Zuerst erscheint eine kurze Erklärung; in Firefox fragt dieselbe Abfrage, ob Lesezeichendaten mit ihm geteilt werden dürfen |
 
 Wenn Sie ablehnen, bleibt die Funktion deaktiviert, und es wird nichts gesendet. Wenn Sie eine Berechtigung später in den Erweiterungseinstellungen des Browsers widerrufen, wird die Funktion deaktiviert; beim erneuten Aktivieren wird wieder nachgefragt.
@@ -35,8 +55,8 @@ Wenn Sie ablehnen, bleibt die Funktion deaktiviert, und es wird nichts gesendet.
 
 Die Erweiterung deklariert außerdem Zugriff auf `http://*/*` und `https://*/*`, aber nichts davon wird bei der Installation gewährt. Der Browser fragt Sie in dem Moment, in dem der Zugriff benötigt wird:
 
-- **Defekte Links prüfen**, **Metadatenabruf** und **Website-Symbole aktualisieren** fragen beim ersten Ausführen nach Zugriff auf Websites, da Lesezeichen auf jede beliebige Website verweisen können. Anfragen werden ohne Cookies gesendet, und für Titel und Symbol-Links wird nur der Seitenkopf gelesen. Wenn Sie ablehnen, wird nichts geprüft. Siehe [Defekte Links finden und reparieren](/guides/dead-links) und [Website-Symbole aktualisieren](/guides/clean-up#refresh-site-icons).
-- **Seiteninhalt lesen** in den KI-Einstellungen fragt beim Aktivieren nach Zugriff auf Websites, damit KI-Tools Seiten ohne Cookies herunterladen und ihren Haupttext an Ihren KI-Anbieter senden können. Seiten in Ihrem lokalen Netzwerk werden nie gelesen. Siehe [Seiteninhalt lesen](/guides/ai-tools#read-page-content).
+- **Defekte Links prüfen**, **Metadatenabruf** und **Website-Symbole aktualisieren** fragen beim Ausführen nur nach Zugriff auf die Websites der Lesezeichen in diesem Durchlauf, jeweils mit ihren Subdomains. Ein Durchlauf über mehr als 20 Websites fragt stattdessen nach allen Websites. Nach Websites, die Sie bereits erlaubt haben, wird nicht erneut gefragt. Anfragen werden ohne Cookies gesendet, und für Titel und Symbol-Links wird nur der Seitenkopf gelesen. Wenn Sie ablehnen, wird nichts geprüft. Ein Link, der auf eine Website außerhalb des Durchlaufs weiterleitet, kann nicht verfolgt werden, daher markiert **Defekte Links prüfen** ihn mit **Manuell prüfen** statt als defekt. Siehe [Defekte Links finden und reparieren](/guides/dead-links) und [Website-Symbole aktualisieren](/guides/clean-up#refresh-site-icons).
+- **Seiteninhalt lesen** in den KI-Einstellungen fragt beim Aktivieren nach Zugriff auf alle Websites, damit KI-Tools Seiten ohne Cookies herunterladen und ihren Haupttext an Ihren KI-Anbieter senden können. Seiten in Ihrem lokalen Netzwerk werden nie gelesen. Siehe [Seiteninhalt lesen](/guides/ai-tools#read-page-content).
 - **Dienst überprüfen** und **Modelle aktualisieren** in den KI-Einstellungen fragen nur nach Zugriff auf die Adresse dieses einen Anbieters. Siehe [KI-Tools einrichten](/guides/ai-tools).
 
 Um den Zugriff zu widerrufen, öffnen Sie die Seite der Erweiterung im Browser (zum Beispiel `chrome://extensions/`, dann **Details** bei Bookmark Scout, oder **Berechtigungen** in `about:addons` von Firefox) und ändern Sie dort den Websitezugriff oder die Berechtigungen.

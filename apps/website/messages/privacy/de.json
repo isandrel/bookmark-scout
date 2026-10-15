@@ -131,7 +131,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "„Defekte Links prüfen“ und der Metadatenabruf rufen die gespeicherten Seiten selbst ab, um zu prüfen, ob sie laden und welche Titel sie haben. „Website-Symbole aktualisieren“ ruft pro Website eine gespeicherte Seite ab und dann eine Symboldatei von der Domain dieser Website, damit Lesezeichen das Symbol der Website anzeigen können. Der Browser bittet Sie um Erlaubnis, wenn Sie eines dieser Tools zum ersten Mal ausführen. Anfragen gehen direkt an die jeweilige Website, ohne Cookies, und die Ergebnisse bleiben in der Erweiterung. Es wird kein Symboldienst eines Drittanbieters verwendet. Wie bei jedem Besuch kann die Website Ihre IP-Adresse sehen und dass die Seite oder das Symbol abgerufen wurde."
+                        "text": "„Defekte Links prüfen“ und der Metadatenabruf rufen die gespeicherten Seiten selbst ab, um zu prüfen, ob sie laden und welche Titel sie haben. „Website-Symbole aktualisieren“ ruft pro Website eine gespeicherte Seite ab und dann eine Symboldatei von der Domain dieser Website, damit Lesezeichen das Symbol der Website anzeigen können. Wenn Sie eines dieser Tools ausführen, bittet der Browser Sie um Erlaubnis für die Websites der Lesezeichen dieses Laufs, oder für alle Websites, wenn es mehr als 20 sind, sofern Sie sie nicht schon erlaubt haben. Anfragen gehen direkt an die jeweilige Website, ohne Cookies, und die Ergebnisse bleiben in der Erweiterung. Es wird kein Symboldienst eines Drittanbieters verwendet. Wie bei jedem Besuch kann die Website Ihre IP-Adresse sehen und dass die Seite oder das Symbol abgerufen wurde."
                     },
                     {
                         "type": "h3",
@@ -172,10 +172,10 @@
                         "items": [
                             "Zugriff auf Ihre Tabs (<code>tabs</code>), wenn Sie die aktuelle Seite speichern oder Ordnervorschläge aus der Seitenleiste anfordern. Das Pop-up in der Symbolleiste benötigt ihn nicht.",
                             "Das Rechtsklickmenü (<code>contextMenus</code>, Chrome und Edge), wenn Sie „Kontextmenü“ in den Einstellungen aktivieren.",
-                            "Der Symbol-Cache des Browsers (<code>favicon</code>, Chrome und Edge), wenn Sie „Symbol-Cache des Browsers verwenden“ in den Einstellungen aktivieren.",
-                            "Zugriff auf alle Websites, wenn Sie zum ersten Mal „Defekte Links prüfen“, den Metadatenabruf oder „Website-Symbole aktualisieren“ ausführen oder „Seiteninhalt lesen“ aktivieren.",
+                            "Der Symbol-Cache des Browsers (<code>favicon</code>, Chrome und Edge), wenn Sie bei „Website-Symbole aktualisieren“ auf „Browser-Symbole anzeigen“ klicken oder „Symbol-Cache des Browsers verwenden“ in den Einstellungen aktivieren.",
+                            "Zugriff auf die Websites der Lesezeichen, die ein Durchlauf prüft, wenn Sie „Defekte Links prüfen“, den Metadatenabruf oder „Website-Symbole aktualisieren“ ausführen (Zugriff auf alle Websites, wenn ein Durchlauf mehr als 20 Websites umfasst), und Zugriff auf alle Websites, wenn Sie „Seiteninhalt lesen“ aktivieren.",
                             "Zugriff auf die Website eines Anbieters, wenn Sie in den KI-Einstellungen auf „Dienst überprüfen“ oder „Modelle aktualisieren“ klicken.",
-                            "In Firefox Ihre Einwilligung, Daten an Ihren KI-Anbieter weiterzugeben, wenn Sie KI aktivieren oder auf „Dienst überprüfen“ klicken.",
+                            "In Firefox Ihre Einwilligung, Daten an Ihren KI-Anbieter weiterzugeben, jeweils für das, was die Funktion sendet: wenn Sie KI aktivieren (Ihren API-Schlüssel, Ihre Lesezeichen sowie Titel und URL der aktuellen Seite), „Seiteninhalt lesen“ aktivieren (den Seitentext) oder auf „Dienst überprüfen“ klicken (Ihren API-Schlüssel).",
                             "Die Kommunikation mit dem Programm bookmark-scout-mcp auf Ihrem Computer (<code>nativeMessaging</code>), wenn Sie „Lokale KI-Agenten zulassen“ aktivieren; in Firefox zusammen mit Ihrer Zustimmung, Lesezeichendaten mit ihm zu teilen."
                         ]
                     },
