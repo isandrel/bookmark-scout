@@ -1,19 +1,56 @@
 ---
 title: Installieren
-description: Installieren Sie Bookmark Scout in Chrome aus dem Chrome Web Store oder in Chrome, Microsoft Edge oder Firefox aus einem GitHub-Release.
+description: Fügen Sie Bookmark Scout aus dem Chrome Web Store zu Chrome hinzu. Versionen für Firefox und Edge kommen bald in ihre Stores.
 ---
 
-Bookmark Scout ist kostenlos und Open Source.
+Bookmark Scout ist kostenlos, ohne Konto und ohne Werbung. Es läuft in einem Browser auf einem Computer, nicht auf Smartphones oder Tablets.
 
-## Aus dem Store Ihres Browsers installieren [#install-from-your-browsers-store]
+## Zu Chrome hinzufügen [#add-it-to-chrome]
 
-<StoreAvailability />
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
 
-Öffnen Sie den Eintrag und fügen Sie Bookmark Scout von dort zu Ihrem Browser hinzu. Eine aus einem Store installierte Kopie aktualisiert sich selbst.
+Klicken Sie im Store-Eintrag auf **Zu Chrome hinzufügen** und dann auf **Erweiterung hinzufügen**. Chrome fragt nur nach einer Sache: Ihre Lesezeichen lesen und ändern zu dürfen. Andere Funktionen fragen erst bei der ersten Verwendung nach mehr und erklären, warum; siehe [Berechtigungen](/permissions).
+</Step>
+<Step>
+Heften Sie das Symbol an: Klicken Sie rechts in der Symbolleiste auf die Schaltfläche **Erweiterungen** mit dem Puzzleteil und dann auf die Stecknadel neben Bookmark Scout.
+</Step>
+<Step>
+Speichern Sie Ihre erste Seite: siehe [Ihr erstes Lesezeichen](/first-save).
+</Step>
+</Steps>
 
-## Aus einem GitHub-Release installieren [#install-from-a-github-release]
+Direkt nach dem Hinzufügen öffnet sich in einem neuen Tab eine Seite mit dem Titel **Bookmark Scout ist bereit**, mit denselben ersten Schritten: das Symbol anheften, eine Seite speichern, und die Tasten Ihres Tastenkürzels zum Schnellspeichern (oder **Einrichten**, wenn eine andere Erweiterung sie bereits verwendet). Sie öffnet sich nur einmal, wenn Sie Bookmark Scout zum ersten Mal installieren, nie nach einem Update. **Anleitung lesen** darauf öffnet [Speichern und ordnen](/guides/save-and-organize), und **Einstellungen öffnen** öffnet die [Einstellungen](/settings).
 
-Wenn der Store Ihres Browsers Bookmark Scout noch nicht führt, installieren Sie die Erweiterung aus einem <RepoLink path="/releases">GitHub-Release</RepoLink>, das einen Download pro Browser enthält:
+Eine Kopie aus dem Store aktualisiert sich selbst.
+
+## Firefox und Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+Bis ein Store Bookmark Scout führt, können Sie die Erweiterung von Hand aus GitHub installieren, wie [unten](#install-from-a-github-release) beschrieben. Das erfordert ein paar Schritte mehr, und in Firefox wiederholen Sie sie nach jedem Neustart.
+
+## Nach der Installation [#after-installing]
+
+- Klicken Sie auf einer beliebigen Seite auf das Bookmark-Scout-Symbol, um sie zu speichern oder Ihre Lesezeichen zu durchsuchen. Beginnen Sie mit [Ihr erstes Lesezeichen](/first-save).
+- Drücken Sie auf einer beliebigen Seite `Alt+Shift+S` (`⌥⇧S` auf einem Mac), um sie zu speichern, ohne etwas zu öffnen. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save).
+- In Chrome ersetzt Bookmark Scout die Lesezeichenseite des Browsers durch seinen eigenen Lesezeichen-Manager. Öffnen Sie ihn wie bisher, zum Beispiel mit `Ctrl+Shift+O` (`Cmd+Option+B` auf einem Mac), oder mit **Lesezeichen-Manager öffnen** im Pop-up. Seine Seitenleiste **Tools** enthält die Werkzeuge zum Bereinigen.
+- Die Einstellungen öffnen sich in einem Tab: Klicken Sie mit der rechten Maustaste auf das Symbol in der Symbolleiste und wählen Sie **Optionen**. Siehe [Einstellungen](/settings).
+
+## Aktualisieren [#updating]
+
+Eine aus einem Store installierte Kopie aktualisiert sich selbst, und Updates behalten Ihre Einstellungen. Ein früheres Update, auf Version 0.3.3, war eine Ausnahme: Es hat die eigenen gespeicherten Daten von Bookmark Scout einmal zurückgesetzt, Ihre Lesezeichen aber nie; siehe [die FAQ](/faq#my-settings-are-gone-after-an-update).
+
+Um jederzeit eine Kopie Ihrer Einstellungen, eigenen Prompts, KI-Dienste und gespeicherten Suchen zu behalten, verwenden Sie **Einstellungen sichern** unten in den [Einstellungen](/settings).
+
+## Fortgeschritten: von Hand aus GitHub installieren [#install-from-a-github-release]
+
+Verwenden Sie diesen Weg nur, wenn der Store Ihres Browsers Bookmark Scout noch nicht führt, oder um ein Release zu testen. Eine so installierte Kopie aktualisiert sich nicht selbst: Laden Sie für ein Update das neuere Release herunter und wiederholen Sie die Schritte.
+
+Jedes <RepoLink path="/releases">GitHub-Release</RepoLink> enthält einen Download pro Browser:
 
 | Browser | Datei |
 | --- | --- |
@@ -26,8 +63,6 @@ Laden Sie die Datei aus <ReleaseLink /> herunter und folgen Sie dann den Schritt
 <Tabs items={["Chrome", "Edge", "Firefox"]}>
 <Tab value="Chrome" id="chrome">
 
-<StoreListing browser="chrome" />
-
 <Steps>
 <Step>
 Laden Sie `bookmark-scout-<version>-chrome.crx` oder `bookmark-scout-<version>-chrome.zip` herunter. Wenn Sie die ZIP-Datei verwenden, entpacken Sie sie in einen Ordner, den Sie behalten, denn Chrome lädt die Erweiterung aus diesem Ordner.
@@ -39,14 +74,12 @@ Laden Sie `bookmark-scout-<version>-chrome.crx` oder `bookmark-scout-<version>-c
 Ziehen Sie die CRX-Datei auf die Seite, oder klicken Sie auf **Entpackte Erweiterung laden** und wählen Sie den entpackten Ordner aus.
 </Step>
 <Step>
-Heften Sie Bookmark Scout über das Puzzleteil-Menü „Erweiterungen“ an die Symbolleiste an, damit das Pop-up nur einen Klick entfernt ist.
+Heften Sie Bookmark Scout über das Puzzleteil-Menü **Erweiterungen** an die Symbolleiste an.
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Edge" id="edge">
-
-<StoreListing browser="edge" />
 
 <Steps>
 <Step>
@@ -58,12 +91,13 @@ Laden Sie `bookmark-scout-<version>-edge.zip` herunter und entpacken Sie die Dat
 <Step>
 Klicken Sie auf **Entpackte Erweiterung laden** und wählen Sie den entpackten Ordner aus.
 </Step>
+<Step>
+Zeigen Sie Bookmark Scout über das Puzzleteil-Menü **Erweiterungen** in der Symbolleiste an (das Augensymbol daneben).
+</Step>
 </Steps>
 
 </Tab>
 <Tab value="Firefox" id="firefox">
-
-<StoreListing browser="firefox" />
 
 <Steps>
 <Step>
@@ -78,23 +112,11 @@ Klicken Sie auf **Temporäres Add-on laden…** und wählen Sie die entpackte Da
 </Steps>
 
 <Callout type="warn" title="Einschränkungen in Firefox">
-Firefox entfernt temporäre Add-ons beim Neustart, daher müssen Sie die Erweiterung nach jedem Neustart erneut laden. Außerdem kann Firefox seine Lesezeichenseite nicht ersetzen. Öffnen Sie den Lesezeichen-Manager (mit Tools, gespeicherten Suchen sowie Import und Export) daher über **Lesezeichen-Manager öffnen** im Pop-up. Siehe [Browserunterstützung](/browser-support).
+Firefox entfernt temporäre Add-ons beim Neustart, daher laden Sie die Erweiterung nach jedem Neustart erneut. Die Seite **Bookmark Scout ist bereit** öffnet sich bei einem temporären Add-on nicht. Außerdem kann Firefox seine Lesezeichenseite nicht ersetzen. Öffnen Sie den Lesezeichen-Manager (mit Tools, gespeicherten Suchen sowie Import und Export) daher über **Lesezeichen-Manager öffnen** im Pop-up. Siehe [Browserunterstützung](/browser-support).
 </Callout>
 
 </Tab>
 </Tabs>
-
-## Nach der Installation [#after-installing]
-
-- Klicken Sie auf das Bookmark-Scout-Symbol, um das Pop-up zu öffnen und Ihre Lesezeichen zu durchsuchen. Beginnen Sie mit [Suche und gespeicherte Suchen](/guides/search).
-- Öffnen Sie in Chrome die Lesezeichenseite des Browsers (zum Beispiel mit `Ctrl+Shift+O` oder unter macOS mit `Cmd+Option+B`), um zum Bookmark-Scout-Manager und seiner Tools-Leiste zu gelangen.
-- Die Einstellungen öffnen sich in einem Tab über den Eintrag **Optionen** der Erweiterung, in Chrome zum Beispiel per Rechtsklick auf das Symbol in der Symbolleiste. Siehe [Einstellungen](/settings).
-
-## Aktualisieren [#updating]
-
-Eine aus einem Store installierte Kopie aktualisiert sich selbst. Andernfalls laden Sie die neuere Version aus <ReleaseLink /> herunter und wiederholen die Schritte für Ihren Browser.
-
-Vor einem Update können Sie Ihre Einstellungen, eigenen Prompts, KI-Dienste und gespeicherten Suchen mit **Exportieren** unten in den [Einstellungen](/settings) sichern; ein bestimmtes Update setzt sie zurück, siehe [die FAQ](/faq#my-settings-are-gone-after-an-update).
 
 ## Aus dem Quellcode erstellen [#building-from-source]
 

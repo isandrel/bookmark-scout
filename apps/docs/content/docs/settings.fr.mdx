@@ -10,7 +10,7 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 - **Rechercher dans les paramètres…**, en haut de la page, trouve un paramètre dans n'importe quel onglet et indique le nombre de correspondances.
 - Chaque onglet est divisé en sections avec un titre. L'interrupteur de chaque outil se trouve à côté de son titre ; tant qu'il est désactivé, le reste de ses paramètres est replié. Les paramètres techniques, comme les délais d'attente et la longueur des noms de fichier, se trouvent dans **Paramètres avancés**, qui reste fermé jusqu'à ce que vous l'ouvriez ou qu'une recherche y trouve quelque chose.
 - Un paramètre modifié est signalé par **Modifié**, avec un bouton pour rétablir sa valeur par défaut. **Tout réinitialiser** rétablit tous les paramètres.
-- **Exporter** enregistre un fichier de sauvegarde avec les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (nom, fournisseur, modèle, **URL de base** et champs propres au fournisseur, jamais les clés API ni les **En-têtes supplémentaires (JSON)**), les recherches enregistrées, ainsi que les colonnes et le tri du tableau du gestionnaire. **Importer** restaure une sauvegarde en remplaçant chaque partie que contient le fichier, ou fusionne un simple fichier de paramètres avec vos paramètres actuels ; après la restauration d'une sauvegarde, saisissez à nouveau les clés API et les en-têtes supplémentaires dans [IA](#ai) pour les services marqués **À configurer**. Aucun des deux ne touche à vos favoris.
+- **Sauvegarder les paramètres** enregistre un fichier de sauvegarde avec les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (nom, fournisseur, modèle, **URL de base** et champs propres au fournisseur, jamais les clés API ni les **En-têtes supplémentaires (JSON)**), les recherches enregistrées, ainsi que les colonnes et le tri du tableau du gestionnaire. **Restaurer les paramètres** restaure une sauvegarde en remplaçant chaque partie que contient le fichier, ou fusionne un simple fichier de paramètres avec vos paramètres actuels ; après la restauration d'une sauvegarde, saisissez à nouveau les clés API et les en-têtes supplémentaires dans [IA](#ai) pour les services marqués **À configurer**. Aucun des deux ne touche à vos favoris. **Exporter les favoris**, à côté d'eux, ouvre le gestionnaire de favoris sur son outil d'exportation ; consultez [Importation et exportation](/guides/import-export).
 - Les paramètres que vous modifiez sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. Quelques paramètres propres à un appareil y restent : le dossier choisi pour l'enregistrement rapide, la **Limite de stockage des icônes**, l'enregistrement de l'activité IA et la recherche web de Demander à l'IA. Les services d'IA, avec leurs clés API, l'**URL de base** et les **En-têtes supplémentaires (JSON)**, restent aussi sur cet appareil. Consultez [Confidentialité](/privacy).
 
 ## Enregistrement et recherche [#search]
@@ -53,11 +53,11 @@ Consultez [Enregistrer et organiser](/guides/save-and-organize).
 
 En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque raccourci dans votre navigateur, avec **Modifier les raccourcis**. Dans Firefox, vous pouvez aussi saisir directement de nouvelles touches à cet endroit et rétablir celles par défaut. Dans Chrome et Edge, cette section explique aussi comment attribuer `Ctrl+D` à l'enregistrement rapide. Consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save) et [Utiliser Ctrl+D pour l'enregistrement rapide](/guides/save-and-organize#ctrl-d).
 
-### Menu contextuel [#context-menu]
+### Menu du clic droit [#context-menu]
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Menu contextuel** | Désactivé | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien. Dans Chrome et Edge, l'activation ajoute l'autorisation facultative du menu contextuel, sans demande de confirmation |
+| **Menu du clic droit** | Désactivé | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien. Dans Chrome et Edge, l'activation ajoute l'autorisation facultative du menu contextuel, sans demande de confirmation |
 | **Source du nom du favori** | Texte du lien | Nomme un favori enregistré par clic droit d'après le texte du lien, le titre de la page ou l'URL du lien |
 
 ## Apparence [#appearance]
@@ -113,7 +113,7 @@ Choisissez les commandes affichées par les menus contextuels et ⋯ du gestionn
 
 ## IA [#ai]
 
-L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'activation des **Fonctionnalités d'IA**.
+L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'activation des **Fonctionnalités d'IA** ; d'ici là, les paramètres d'IA de cet onglet et de l'onglet **Outils d'IA** sont grisés, sous une note qui l'indique. Vous pouvez quand même les modifier.
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
@@ -175,7 +175,7 @@ L'étiquetage automatique et le générateur de résumés portent toujours sur l
 
 Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Pour que les paramètres tiennent dans la synchronisation du navigateur, chaque liste compte au plus 20 entrées, et un nom de paramètre au plus 32 caractères (lettres, chiffres et ponctuation d'URL). Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
 
-## Métadonnées et contenu [#metadata--content]
+## Titres et icônes des pages [#metadata--content]
 
 ### Récupération des métadonnées [#metadata-fetcher]
 
@@ -203,7 +203,7 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | --- | --- | --- |
 | **Activer l'analyseur de confidentialité** | Activé | Affiche **Analyseur de confidentialité** dans la barre latérale Outils. Il analyse toujours tous les favoris |
 | **Analyser les titres** | Désactivé | Vérifie les titres en plus des URL |
-| **Analyser les paramètres de requête** et **Analyser les fragments** | Activé | Vérifie ces parties de chaque URL |
+| **Analyser les paramètres de requête** et **Analyser les fragments** | Activé | Vérifie ces parties de chaque URL. Un fragment sans paramètres (`#section`, `#inbox`) n'est signalé que s'il contient une clé ou un jeton |
 | **Paramètres sensibles** | `token`, `access_token`, `refresh_token`, `auth`, `authorization`, `api_key`, `apikey`, `key`, `secret`, `password`, `pwd`, `code`, `session` | Noms de paramètres à signaler |
 | **Détecter les adresses e-mail** et **Détecter les UUID** | Activé | Signale les adresses e-mail et les valeurs qui ressemblent à des UUID |
 

@@ -23,14 +23,18 @@ const en = {
     listed: (product: string, store: string) =>
       `Install ${product} from its ${store} listing.`,
     notListed: (product: string, store: string) =>
-      `${product} has no ${store} listing yet. Install it from a GitHub release:`,
+      `${product} is coming soon to ${store}.`,
     noneListed: (product: string) => `No browser store lists ${product} yet.`,
     listedOn: (product: string) => `${product} is listed on:`,
   },
 
   home: {
+    /** The primary button while no store lists the extension; it opens the install page. */
     install: (product: string) => `Install ${product}`,
-    download: "Download the latest release",
+    /** The primary button, to the first live store listing, by browser name. */
+    addTo: (browser: string) => `Add to ${browser}, free`,
+    /** A link to the install page beside the store button. */
+    otherBrowsers: "Other browsers",
     /** Example queries offered as one-click filters in the page finder. */
     suggestions: ["duplicates", "dead links", "import", "shortcuts", "API key"],
     /** How many sidebar sections, from the top, the page finder lists before anything is typed. */

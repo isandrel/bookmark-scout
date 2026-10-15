@@ -7,22 +7,30 @@ description: Guarda la página actual o un enlace en una carpeta, crea carpetas,
 
 <Steps>
 <Step>
-Abre la ventana emergente o el panel lateral en la página que quieres conservar.
+Abre la página que quieres conservar y haz clic en el icono de Bookmark Scout en la barra de herramientas, o abre el panel lateral.
 </Step>
 <Step>
-Coloca el puntero sobre la carpeta que quieras y haz clic en **Añadir la página actual**. Con el teclado, ve a la carpeta y pulsa `Enter`.
+Escribe parte del nombre de una carpeta en el cuadro de búsqueda. **Guardar en carpeta** muestra sobre los resultados las carpetas que coinciden, primero la que mejor encaja, y las carpetas en las que están.
+</Step>
+<Step>
+Pulsa `↓` y después `Enter`, o haz clic en la carpeta. La página se guarda ahí.
 </Step>
 </Steps>
 
-Para encontrar una carpeta por su nombre, escribe parte de él en el cuadro de búsqueda. **Guardar en carpeta** muestra sobre los resultados las carpetas que coinciden y dónde están. Pulsa `↓` y después `Enter`, o haz clic en una, para guardar ahí la página. Varias palabras también coinciden con las carpetas que la contienen (`react hooks`), y una palabra de 4 letras o más puede tener un error. Desactiva la lista o cambia cuántas carpetas muestra con **Carpetas coincidentes**, **Máximo de carpetas coincidentes** y **Permitir errores de escritura** en [Configuración](/settings).
+La línea bajo el cuadro de búsqueda, **Página para guardar**, indica qué página se añade al guardar. Varias palabras también coinciden con las carpetas que rodean a una carpeta (`recipes pasta`), y una palabra de 4 letras o más puede tener un error.
 
 <Screenshot name="popup" />
 
-El panel **Recientes** muestra las carpetas usadas recientemente; haz clic en una para guardar allí la página actual. Desactívalo, o cambia cuántas carpetas muestra, con **Carpetas recientes** y **Máximo de carpetas recientes** en [Configuración](/settings).
+Otras formas de elegir la carpeta:
+
+- **Recientes**: el panel **Recientes** muestra las carpetas en las que guardaste últimamente; haz clic en una para guardar allí la página.
+- **Explorar**: coloca el puntero sobre una carpeta del árbol y haz clic en **Añadir la página actual**, o llega a ella con las flechas y pulsa `Enter`.
 
 Una página que ya está en la carpeta no se guarda dos veces; el mensaje indica que ya está allí.
 
-La ventana emergente de la barra de herramientas lee la página en la que hiciste clic sin preguntar. El panel lateral sigue abierto mientras cambias de pestaña, así que la primera vez que guardas desde él, Bookmark Scout te lo explica y luego pide acceso a tus pestañas. Si lo rechazas, no se guarda nada.
+La ventana emergente de la barra de herramientas lee la página en la que hiciste clic sin preguntar. El panel lateral sigue abierto mientras cambias de pestaña, así que la primera vez que guardas desde él, Bookmark Scout te lo explica y luego pide acceso a tus pestañas. Si lo rechazas, no se guarda nada; el icono de la barra de herramientas y el atajo de guardado rápido que se explica más abajo siguen funcionando sin ese acceso.
+
+Para cambiar estas listas, usa la [Configuración](/settings): **Carpetas coincidentes**, **Máximo de carpetas coincidentes** y **Permitir errores de escritura** para **Guardar en carpeta**, y **Carpetas recientes** y **Máximo de carpetas recientes** para el panel **Recientes**.
 
 ## Guardar con un atajo de teclado [#quick-save]
 
@@ -55,12 +63,12 @@ Si otra extensión ya usa una tecla, el navegador deja el atajo sin asignar y la
 
 `Ctrl+D` (`⌘D` en un Mac) abre el propio diálogo de marcadores del navegador, y ningún navegador permite que una extensión la use como tecla predeterminada, así que el guardado rápido empieza con `Alt+Shift+S`.
 
-- **Chrome y Edge** te permiten asignarla tú mismo al guardado rápido. En **Atajos de teclado** de la configuración, **Usar Ctrl+D para el guardado rápido** abre la página de atajos del navegador: busca Bookmark Scout, haz clic en el lápiz junto a **Guardado rápido de la página actual** y pulsa `Ctrl+D`. A partir de entonces, `Ctrl+D` hace un guardado rápido en lugar de abrir el diálogo de marcadores (o de favoritos). Para recuperar el diálogo, borra ese atajo en la misma página. Hasta que lo hagas, la ventana emergente y el panel lateral lo ofrecen en una línea, **Usar Ctrl+D para el guardado rápido**; **Configurarlo** abre estos pasos en la configuración, y **Descartar** oculta la línea en ese dispositivo.
+- **Chrome y Edge** te permiten asignarla tú mismo al guardado rápido. En **Atajos de teclado** de la configuración, **Usar Ctrl+D para el guardado rápido** abre la página de atajos del navegador: busca Bookmark Scout, haz clic en el lápiz junto a **Guardado rápido de la página actual** y pulsa `Ctrl+D`. A partir de entonces, `Ctrl+D` hace un guardado rápido en lugar de abrir el diálogo de marcadores (o de favoritos). Para recuperar el diálogo, borra ese atajo en la misma página. Hasta que lo hagas, la ventana emergente y el panel lateral indican las teclas que tiene ahora el guardado rápido, **Guardado rápido: pulsa Alt+Shift+S en cualquier página**, con **Usar Ctrl+D en su lugar**, que abre estos pasos en la configuración; **Descartar** oculta la línea en ese dispositivo. En Firefox, la línea solo indica las teclas.
 - **Firefox** siempre gestiona él mismo `Ctrl+D` (añadir esta página a marcadores) y `Ctrl+Shift+D` (añadir todas las pestañas a marcadores), aunque una extensión los asigne, así que los campos de atajo rechazan ambos.
 
-## Guardar un enlace con el menú contextual [#save-a-link-with-the-right-click-menu]
+## Guardar un enlace con el menú del clic derecho [#save-a-link-with-the-right-click-menu]
 
-Primero activa **Menú contextual** en [Configuración](/settings#data); está desactivado de forma predeterminada. Después, haz clic con el botón derecho en cualquier enlace de una página, elige **Guardar marcador en...** y selecciona una de tus carpetas recientes o la Barra de marcadores. **Origen del nombre del marcador**, en la configuración, decide si el marcador recibe el nombre del texto del enlace, del título de la página o de la URL del enlace. Desactiva el menú con **Menú contextual** (ambos están en la pestaña **Datos**).
+Primero activa **Menú del clic derecho** en [Configuración](/settings#data); está desactivado de forma predeterminada. Después, haz clic con el botón derecho en cualquier enlace de una página, elige **Guardar marcador en...** y selecciona una de tus carpetas recientes o la Barra de marcadores. **Origen del nombre del marcador**, en la configuración, decide si el marcador recibe el nombre del texto del enlace, del título de la página o de la URL del enlace. Desactiva el menú con **Menú del clic derecho** (ambos están en la pestaña **Datos**).
 
 ## Crear carpetas [#create-folders]
 

@@ -3,7 +3,12 @@ title: Configurar las herramientas de IA
 description: Activa las funciones opcionales de IA, elige un proveedor y un modelo, añade tu clave de API y conoce exactamente qué datos de los marcadores envía cada herramienta de IA.
 ---
 
-Las funciones de IA están **desactivadas de forma predeterminada**, y Bookmark Scout funciona por completo sin ellas. Cuando las activas, las solicitudes van directamente de tu navegador al proveedor que elijas, con tu propia clave de API. Bookmark Scout no tiene ningún servicio de IA propio.
+Las funciones de IA son **opcionales y están desactivadas de forma predeterminada**, y Bookmark Scout funciona por completo sin ellas. Bookmark Scout no tiene ningún servicio de IA propio. Para usar la IA, necesitas:
+
+- **Una cuenta en una empresa de IA**, como OpenAI, Anthropic o Google. La configuración llama a esta empresa el **proveedor**. La mayoría de los proveedores cobran por cada uso, normalmente poco; consulta sus precios antes de empezar. Un programa de IA que funciona en tu propio equipo, como Ollama, no cuesta nada, pero necesita un equipo bastante potente.
+- **Una clave de API**: un código secreto de la página de tu cuenta en esa empresa que permite a Bookmark Scout usar tu cuenta. Mantenla en privado, como una contraseña.
+
+También eliges un **modelo**: la versión de IA que ofrece la empresa, por ejemplo una más rápida o una más inteligente. Cuando la IA está activada, las solicitudes van directamente de tu navegador al proveedor que elegiste, con tu clave.
 
 <Callout type="warn" title="Antes de activar la IA">
 Las herramientas de IA envían títulos de marcadores, URLs y nombres o rutas de carpetas al proveedor que configures. El proveedor trata esos datos según sus propias condiciones, y el uso de su API puede costar dinero. Revisa cada sugerencia antes de aplicarla.
@@ -96,11 +101,11 @@ Guarda varios prompts por herramienta, hasta 10 en total, y cambia de uno a otro
 | Herramienta | Dónde | Qué envía al proveedor |
 | --- | --- | --- |
 | Recomendaciones de carpetas | Ventana emergente, el botón del destello junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | El título y la URL de la página actual, y los nombres de tus carpetas de marcadores. Con **Leer el contenido de la página** activado, también el texto principal de la página |
-| **Etiquetado automático** | Administrador, Herramientas, **Inteligencia artificial** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
-| **Generador de resúmenes** | Administrador, Herramientas, **Inteligencia artificial** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
-| **Reorganización de carpetas con IA** | Administrador, Herramientas, **Inteligencia artificial** | Títulos, URLs y rutas de carpeta de los marcadores del ámbito que elijas |
+| **Etiquetado automático** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
+| **Generador de resúmenes** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
+| **Reorganización de carpetas con IA** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores del ámbito que elijas |
 | **Preguntar a la IA** | Ventana emergente y panel lateral, el botón de chat junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | Tus mensajes y la conversación hasta el momento, y lo que consulta: los marcadores que coinciden (con su carpeta, fecha en que se añadieron, etiquetas y resumen), los nombres de las carpetas, el título y la URL de la página actual, si los enlaces guardados que comprueba siguen funcionando y, con **Leer el contenido de la página** activado, el texto de las páginas que lee |
-| **Empaquetador de contexto para IA** | Administrador, Herramientas, **Inteligencia artificial** | Nada. Guarda un archivo en tu equipo y funciona con la IA desactivada. |
+| **Empaquetador de contexto para IA** | Administrador, Herramientas, **IA** | Nada. Guarda un archivo en tu equipo y funciona con la IA desactivada. |
 
 Activa **Recomendar al abrir** para pedir recomendaciones de carpetas cada vez que se abre la ventana emergente. Déjalo desactivado para enviar una solicitud solo cuando hagas clic en el botón.
 
@@ -124,7 +129,7 @@ Haz clic en el botón de chat que está junto al cuadro de búsqueda en la venta
 - La conversación solo se conserva mientras el chat está abierto. **Nuevo chat** la borra, y al cerrar la ventana emergente termina.
 - Las instrucciones que sigue son el prompt **Preguntar a la IA** de la biblioteca de prompts, así que puedes verlas o reemplazarlas como cualquier otro prompt.
 - **Qué puede hacer Preguntar a la IA**, en **Opciones** y luego **IA**, muestra todo lo que puede consultar y cambiar. Si desactivas algo, no se le ofrece en absoluto a Preguntar a la IA. Aplicar un plan de cambios siempre te pide permiso primero.
-- Los agentes de IA de tu equipo, como Claude Code, pueden usar las mismas consultas y cambios; consulta [Usar con agentes de IA locales](/guides/local-agents).
+- Para desarrolladores: los agentes de IA de tu equipo, como Claude Code, pueden usar las mismas consultas y cambios; consulta [Usar con agentes de IA locales](/guides/local-agents).
 
 ## Ver lo que se envió [#see-what-was-sent]
 

@@ -1,31 +1,38 @@
 ---
 title: Introdução
-description: O Bookmark Scout é uma extensão de navegador para Chrome, Edge e Firefox que salva cada página na pasta certa quando você digita parte do nome da pasta e, depois, pesquisa, organiza e limpa seus favoritos, dentro do próprio navegador.
+description: O Bookmark Scout salva cada página na pasta de favoritos certa quando você digita parte do nome da pasta ou pressiona uma tecla e, depois, ajuda você a encontrar, organizar e limpar seus favoritos, tudo dentro do navegador.
 ---
+
+O Bookmark Scout é uma extensão de navegador gratuita que coloca cada página que você salva na pasta de favoritos certa. Clique no ícone dele, digite algumas letras do nome de uma pasta, e a página vai para lá. Hoje ele funciona no Chrome.
 
 <StartHere />
 
 ## O que você pode fazer com ele [#what-you-can-do-with-it]
 
-- **Salvar na pasta certa**: digite parte do nome de uma pasta no pop-up ou no painel lateral, mesmo de uma pasta bem no fundo da árvore ou um caminho como `work/react`, e pressione `↓` e `Enter`, ou clique na pasta, para salvar a página atual nela. Com a IA ativada, você também pode pedir uma sugestão de pasta. Consulte [Salvar e organizar](/guides/save-and-organize).
-- **Salvar sem abrir nada**: pressione `Alt+Shift+S` em qualquer página para salvá-la na pasta que melhor corresponde a ela. Uma pequena notificação na página mostra onde ela foi salva, com **Desfazer** e outras pastas para onde movê-la. Consulte [Salvar com um atalho de teclado](/guides/save-and-organize#quick-save).
-- **Encontrar**: pesquise todos os favoritos pelo título ou pelo URL no pop-up da barra de ferramentas ou no painel lateral, e guarde pesquisas com nome no gerenciador de favoritos. Consulte [Pesquisa e pesquisas salvas](/guides/search).
-- **Organizar**: salve links pelo menu de clique com o botão direito e use um gerenciador de favoritos que funciona como o do Chrome, com seleção, menus de clique com o botão direito, recortar, copiar e colar, arrastar e soltar, e desfazer e refazer com `Ctrl+Z` e `Ctrl+Y`. Consulte [Salvar e organizar](/guides/save-and-organize).
-- **Limpar**: remova favoritos duplicados, retire parâmetros de rastreamento e encontre e corrija links quebrados. Consulte [Limpar duplicatas e URLs de rastreamento](/guides/clean-up) e [Encontrar e corrigir links quebrados](/guides/dead-links).
-- **Levar sua coleção para outro lugar**: exporte para HTML, JSON, Markdown ou CSV, e importe HTML ou JSON depois de ver uma prévia. Consulte [Importar e exportar](/guides/import-export).
-- **Usar IA, só se você quiser**: as ferramentas de IA vêm desativadas por padrão. Quando você as ativa, escolhe o provedor e usa sua própria chave. **Perguntar à IA** responde a perguntas sobre seus favoritos e só os altera depois que você aprova o plano. Consulte [Configurar as ferramentas de IA](/guides/ai-tools).
-- **Trabalhar com agentes de IA locais**: permita que agentes de IA do seu computador, como Claude Code, Codex ou Cursor, consultem seus favoritos, e aprove no navegador cada alteração que eles pedirem. Desativado por padrão. Consulte [Usar com agentes de IA locais](/guides/local-agents).
+- **Salvar na pasta certa**: digite parte do nome de uma pasta, mesmo de uma pasta que está dentro de outras, e escolha-a na lista para salvar a página em que você está. Consulte [Seu primeiro salvamento](/first-save).
+- **Salvar com uma tecla**: pressione `Alt+Shift+S` (`⌥⇧S` em um Mac) em qualquer página para salvá-la na pasta que melhor combina com ela. Uma pequena mensagem na página mostra para onde ela foi, com **Desfazer** e outras pastas para onde movê-la. Consulte [Salvar com um atalho de teclado](/guides/save-and-organize#quick-save).
+- **Encontrar**: pesquise todos os favoritos por uma palavra do título ou do endereço, pelo botão da barra de ferramentas ou pelo painel lateral. Consulte [Pesquisa e pesquisas salvas](/guides/search).
+- **Organizar**: uma página de favoritos que funciona como a do Chrome, com arrastar e soltar, menus de clique com o botão direito, recortar, copiar e colar, e desfazer com `Ctrl+Z` (`Cmd+Z` em um Mac). Consulte [Salvar e organizar](/guides/save-and-organize).
+- **Limpar**: remova favoritos duplicados, arrume endereços cheios de códigos de rastreamento e encontre links que não funcionam mais. Consulte [Limpar duplicatas e URLs de rastreamento](/guides/clean-up) e [Encontrar e corrigir links quebrados](/guides/dead-links).
+- **Levar seus favoritos para outro lugar**: exporte-os para um arquivo ou traga-os de outro navegador depois de ver uma prévia. Consulte [Importar e exportar](/guides/import-export).
+- **Usar IA, só se você quiser**: a IA fica desativada até você ativá-la, e ela precisa de uma conta em uma empresa de IA, que pode cobrar pelo uso. Ela pode sugerir uma pasta ou responder a perguntas sobre seus favoritos, e não altera nada sem a sua aprovação. Consulte [Configurar as ferramentas de IA](/guides/ai-tools).
 
-<Screenshot name="manager" />
+<Screenshot name="popup" />
 
 ## Para onde vão seus dados [#where-your-data-goes]
 
-O Bookmark Scout não tem conta nem servidor próprio. Seus favoritos ficam no seu navegador. Os dados só saem do navegador quando você usa um recurso que precisa da rede, como a verificação de links quebrados ou uma ferramenta de IA que você ativou, e nesse caso vão diretamente para o site ou o provedor que você escolheu. Os agentes de IA locais, quando você permite, recebem o que consultam por meio de um programa no seu computador. Leia o [resumo de privacidade](/privacy).
+O Bookmark Scout não tem conta nem servidor próprio. Seus favoritos ficam no seu navegador. Os dados só saem do navegador quando você usa um recurso que precisa da internet, como a verificação de links quebrados ou uma ferramenta de IA que você ativou, e nesse caso vão diretamente para o site ou a empresa de IA que você escolheu. Leia o [resumo de privacidade](/privacy).
+
+O Bookmark Scout é feito por um desenvolvedor independente: sem empresa, sem anúncios, sem conta, e o código é aberto.
 
 ## Navegadores [#browsers]
 
-O Chrome é o navegador principal. O Edge também é baseado no Chromium e passa pelo mesmo conjunto de testes de ponta a ponta. No Firefox, que não permite substituir a página de favoritos, o gerenciador é aberto por um botão no pop-up, e alguns recursos do navegador funcionam de outro jeito. Consulte [Compatibilidade com navegadores](/browser-support) para ver os detalhes.
+<StoreAvailability />
+
+As versões para Firefox e Edge estão a caminho das lojas desses navegadores; até lá, elas podem ser instaladas manualmente. O Bookmark Scout funciona em um navegador de computador, não em celulares nem tablets. Consulte [Instalação](/installation) e [Compatibilidade com navegadores](/browser-support).
 
 ## Obter ajuda [#get-help]
 
 Consulte primeiro a página [Perguntas frequentes e solução de problemas](/faq). Para qualquer outro assunto, envie um e-mail para <Contact role="support" /> ou abra uma issue no <RepoLink path="/issues">GitHub</RepoLink>.
+
+Para desenvolvedores: conecte apps de IA do seu computador, como assistentes de programação, com [Usar com agentes de IA locais](/guides/local-agents), ou ajude a criar o Bookmark Scout com [Contribuição e desenvolvimento](/contributing). A cobertura de testes e a lista completa de recursos estão em [Status do projeto](/status).

@@ -7,11 +7,11 @@ description: Respuestas a las preguntas habituales sobre Bookmark Scout y soluci
 
 ### ¿Bookmark Scout es gratuito? [#is-bookmark-scout-free]
 
-Sí. Es gratuito y de código abierto con licencia <License />, sin anuncios ni plan de pago. Si activas la IA, es posible que tu proveedor de IA cobre por el uso de su API.
+Sí. Es gratuito y de código abierto con licencia <License />, sin anuncios, sin cuenta y sin plan de pago. Las funciones de IA opcionales son lo único que puede costar dinero: usan tu propia cuenta en una empresa de IA, que puede cobrar por cada uso.
 
 ### ¿Tengo que usar la IA? [#do-i-need-to-use-ai]
 
-No. La búsqueda, el guardado, la organización, la limpieza y la importación y exportación funcionan sin ella. La IA sigue desactivada hasta que la activas en [Configuración](/settings#ai).
+No. La IA es opcional. El guardado, la búsqueda, la organización, la limpieza y la importación y exportación funcionan sin ella, y sigue desactivada hasta que la activas en [Configuración](/settings#ai). Para usarla, necesitas una cuenta en una empresa de IA, como OpenAI, Anthropic o Google, y una clave de esa cuenta (una clave de API) que permite a Bookmark Scout usarla. La mayoría de estas empresas cobran por cada uso, normalmente poco; un programa de IA que funciona en tu propio equipo, como Ollama, no cuesta nada, pero necesita un equipo bastante potente. Los títulos y las direcciones de los marcadores con los que trabaja una herramienta de IA se envían a la empresa que elegiste. Consulta [Configurar las herramientas de IA](/guides/ai-tools).
 
 ### ¿Envía mis marcadores a algún sitio? [#does-it-send-my-bookmarks-anywhere]
 
@@ -25,11 +25,19 @@ No. La limpieza de duplicados, la limpieza de URLs, las reparaciones de enlaces 
 
 <StoreAvailability />
 
-Cada tienda revisa una extensión antes de publicarla. Si la tienda de tu navegador todavía no la ofrece, [instálala desde una versión publicada en GitHub](/installation).
+Cada tienda revisa una extensión antes de publicarla. Si la tienda de tu navegador todavía no la ofrece, puedes [instalarla a mano](/installation#install-from-a-github-release) (avanzado).
 
 ### ¿Funciona en Firefox? [#does-it-work-in-firefox]
 
-Sí. Firefox no permite que las extensiones reemplacen su página de marcadores, así que abre el administrador de Bookmark Scout, con sus herramientas de limpieza, la importación y exportación y las búsquedas guardadas, desde **Abrir el administrador de marcadores** en la ventana emergente. La caché de iconos del navegador no está disponible en Firefox, y allí las pruebas automatizadas cubren menos funciones. Consulta [Compatibilidad con navegadores](/browser-support).
+Todavía no desde Complementos de Firefox: la versión para Firefox llegará pronto. Hasta entonces, se puede [instalar a mano](/installation#firefox) como complemento temporal, que Firefox quita cuando se reinicia. Una vez instalada, funciona con algunas diferencias: Firefox no permite que las extensiones reemplacen su página de marcadores, así que abre el administrador de Bookmark Scout, con sus herramientas de limpieza, la importación y exportación y las búsquedas guardadas, desde **Abrir el administrador de marcadores** en la ventana emergente, y la caché de iconos del navegador no está disponible. Consulta [Compatibilidad con navegadores](/browser-support).
+
+### ¿Funciona en Microsoft Edge? [#does-it-work-in-microsoft-edge]
+
+Todavía no desde Complementos de Microsoft Edge: la versión para Edge llegará pronto. Hasta entonces, se puede [instalar a mano](/installation#edge), y entonces funciona casi igual que en Chrome. Consulta [Compatibilidad con navegadores](/browser-support).
+
+### ¿Funciona en mi teléfono? [#does-it-work-on-my-phone]
+
+No. Bookmark Scout es una extensión para navegadores de un equipo. Los navegadores de teléfonos y tabletas no la ejecutan.
 
 ### ¿Por qué no Safari? [#why-not-safari]
 
@@ -51,7 +59,7 @@ Comprueba que **Mostrar iconos de sitios** esté activado en [Configuración](/s
 
 ### Mi clave de API no se guardó [#my-api-key-was-not-saved]
 
-Una clave que no parece una clave del proveedor elegido se rechaza y no se guarda, y un mensaje lo indica. Comprueba que el **Proveedor de IA** corresponda a la clave que pegaste. Consulta [Configurar las herramientas de IA](/guides/ai-tools#turn-on-ai).
+Una clave que no parece una clave de la empresa de IA elegida (el proveedor del servicio) se rechaza y no se guarda, y un mensaje lo indica. Comprueba que el proveedor del servicio sea la empresa que te dio la clave. Consulta [Configurar las herramientas de IA](/guides/ai-tools#turn-on-ai).
 
 ### La comprobación de enlaces rotos dice que un sitio que funciona necesita una comprobación manual [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 
@@ -71,7 +79,7 @@ Los resultados se detienen en **Máximo de resultados de búsqueda** (20 de form
 
 ### Mis etiquetas, resúmenes o búsquedas guardadas no aparecen en otro equipo [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
 
-Solo se guardan en el dispositivo donde los creaste y no se sincronizan. Para llevarlos a otro equipo, exporta tus marcadores en JSON, que pasa las etiquetas y los resúmenes a los marcadores que crea su importación, y guarda una copia de seguridad con **Exportar** al final de [Configuración](/settings), que incluye las búsquedas guardadas. La configuración sí se sincroniza, a través de tu cuenta del navegador, cuando la sincronización del navegador está activada.
+Solo se guardan en el dispositivo donde los creaste y no se sincronizan. Para llevarlos a otro equipo, exporta tus marcadores en JSON, que pasa las etiquetas y los resúmenes a los marcadores que crea su importación, y guarda una copia de seguridad con **Hacer copia de los ajustes** al final de [Configuración](/settings), que incluye las búsquedas guardadas. La configuración sí se sincroniza, a través de tu cuenta del navegador, cuando la sincronización del navegador está activada.
 
 ### Eliminé algo por error [#i-deleted-something-by-mistake]
 
@@ -83,7 +91,7 @@ Si otra extensión ya usa `Alt+Shift+S` o `Alt+Shift+D`, el navegador deja el at
 
 ### Mi configuración desapareció después de una actualización [#my-settings-are-gone-after-an-update]
 
-Una actualización pasó los datos guardados de Bookmark Scout a un formato nuevo y eliminó los datos antiguos en lugar de convertirlos. Después de ella, la configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y sus claves de API, y se pierden los prompts personalizados, las búsquedas guardadas, las búsquedas y carpetas recientes, las etiquetas y los resúmenes, y los iconos de sitios guardados. Tus marcadores no se tocan. Si guardaste tu configuración con **Exportar** al final de [Configuración](/settings) antes de actualizar, usa **Importar** con ese archivo.
+Normalmente, las actualizaciones conservan tu configuración. Una actualización, a la versión 0.3.3, pasó los datos guardados de Bookmark Scout a un formato nuevo y eliminó los datos antiguos en lugar de convertirlos. Después de ella, la configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y sus claves de API, y se pierden los prompts personalizados, las búsquedas guardadas, las búsquedas y carpetas recientes, las etiquetas y los resúmenes, y los iconos de sitios guardados. Tus marcadores no se tocan. Si guardaste tu configuración con **Hacer copia de los ajustes** (antes llamado **Exportar**) al final de [Configuración](/settings) antes de actualizar, abre ese archivo con **Restaurar ajustes**.
 
 ## Obtener ayuda [#get-help]
 

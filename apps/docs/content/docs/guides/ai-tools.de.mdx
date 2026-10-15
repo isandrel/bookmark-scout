@@ -3,7 +3,12 @@ title: KI-Tools einrichten
 description: Aktivieren Sie die optionalen KI-Funktionen, wählen Sie Anbieter und Modell, hinterlegen Sie Ihren API-Schlüssel, und erfahren Sie genau, welche Lesezeichendaten jedes KI-Tool sendet.
 ---
 
-KI-Funktionen sind **standardmäßig deaktiviert**, und Bookmark Scout funktioniert ohne sie vollständig. Wenn Sie sie aktivieren, gehen Anfragen direkt von Ihrem Browser an den von Ihnen gewählten Anbieter, mit Ihrem eigenen API-Schlüssel. Bookmark Scout hat keinen eigenen KI-Dienst.
+KI-Funktionen sind **optional und standardmäßig deaktiviert**, und Bookmark Scout funktioniert ohne sie vollständig. Bookmark Scout hat keinen eigenen KI-Dienst. Um KI zu nutzen, brauchen Sie:
+
+- **Ein Konto bei einem KI-Unternehmen**, etwa OpenAI, Anthropic oder Google. In den Einstellungen heißt dieses Unternehmen **Anbieter**. Die meisten Anbieter berechnen jede Nutzung, meist einen kleinen Betrag; prüfen Sie die Preise, bevor Sie beginnen. Ein KI-Programm, das auf Ihrem eigenen Computer läuft, etwa Ollama, kostet nichts, braucht aber einen recht leistungsstarken Computer.
+- **Einen API-Schlüssel**: einen geheimen Code von der Kontoseite bei diesem Unternehmen, mit dem Bookmark Scout Ihr Konto verwenden darf. Halten Sie ihn geheim, wie ein Passwort.
+
+Außerdem wählen Sie ein **Modell**: die KI-Version, die das Unternehmen anbietet, etwa eine schnellere oder eine klügere. Wenn KI eingeschaltet ist, gehen Anfragen direkt von Ihrem Browser an den von Ihnen gewählten Anbieter, mit Ihrem Schlüssel.
 
 <Callout type="warn" title="Bevor Sie KI aktivieren">
 KI-Tools senden Lesezeichentitel, URLs und Ordnernamen oder -pfade an den von Ihnen eingerichteten Anbieter. Der Anbieter verarbeitet diese Daten nach seinen eigenen Bedingungen, und die Nutzung der API kann Kosten verursachen. Prüfen Sie jeden Vorschlag, bevor Sie ihn übernehmen.
@@ -124,7 +129,7 @@ Klicken Sie auf die Chat-Schaltfläche neben dem Suchfeld im Pop-up oder in der 
 - Das Gespräch bleibt nur erhalten, solange der Chat geöffnet ist. **Neuer Chat** löscht es, und das Schließen des Pop-ups beendet es.
 - Die Anweisungen, denen der Chat folgt, sind der Prompt **KI fragen** in der Prompt-Bibliothek. Sie können sie also wie jeden anderen Prompt ansehen oder ersetzen.
 - **Was „KI fragen“ tun darf** unter **Optionen**, dann **KI**, listet jede Abfrage und Änderung auf, die der Chat vornehmen kann. Schalten Sie eine aus, wird sie „KI fragen“ gar nicht angeboten. Vor dem Übernehmen eines Änderungsplans werden Sie immer zuerst gefragt.
-- KI-Agenten auf Ihrem Computer, etwa Claude Code, können dieselben Abfragen und Änderungen verwenden; siehe [Mit lokalen KI-Agenten verwenden](/guides/local-agents).
+- Für Entwickler: KI-Agenten auf Ihrem Computer, etwa Claude Code, können dieselben Abfragen und Änderungen verwenden; siehe [Mit lokalen KI-Agenten verwenden](/guides/local-agents).
 
 ## Sehen, was gesendet wurde [#see-what-was-sent]
 

@@ -10,7 +10,7 @@ export const ko: DocsCopy = {
     listed: (product: string, store: string) =>
       `${store} 등록 페이지에서 ${product}를 설치하세요.`,
     notListed: (product: string, store: string) =>
-      `${product}는 아직 ${store}에 등록되지 않았습니다. GitHub 릴리스에서 설치하세요:`,
+      `${product}는 곧 ${store}에 출시됩니다.`,
     noneListed: (product: string) =>
       `${product}는 아직 어느 브라우저 스토어에도 등록되지 않았습니다.`,
     listedOn: (product: string) =>
@@ -19,7 +19,8 @@ export const ko: DocsCopy = {
 
   home: {
     install: (product: string) => `${product} 설치`,
-    download: "최신 릴리스 다운로드",
+    addTo: (browser: string) => `${browser}에 추가 (무료)`,
+    otherBrowsers: "다른 브라우저",
     /** Example queries offered as one-click filters in the page finder. */
     suggestions: ["중복", "깨진 링크", "가져오기", "단축키", "API 키"],
     /** How many sidebar sections, from the top, the page finder lists before anything is typed. */

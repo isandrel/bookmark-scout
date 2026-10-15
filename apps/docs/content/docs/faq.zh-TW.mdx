@@ -7,11 +7,11 @@ description: Bookmark Scout 常見問題的解答，以及最常遇到的問題�
 
 ### Bookmark Scout 是免費的嗎？ [#is-bookmark-scout-free]
 
-是。Bookmark Scout 依 <License /> 授權免費提供且開放原始碼，沒有廣告，也沒有付費方案。如果你開啟 AI，AI 供應商可能會收取 API 使用費用。
+是。Bookmark Scout 依 <License /> 授權免費提供且開放原始碼，沒有廣告、不需要帳戶，也沒有付費方案。唯一可能需要花錢的是選用的 AI 功能：這些功能使用你自己在 AI 公司的帳戶，對方可能會依每次使用收費。
 
 ### 一定要使用 AI 嗎？ [#do-i-need-to-use-ai]
 
-不需要。搜尋、儲存、整理、清理以及匯入和匯出，都不需要 AI 就能使用。在你於「[設定](/settings#ai)」中開啟 AI 之前，AI 一律為關閉。
+不需要。AI 是選用的。儲存、搜尋、整理、清理以及匯入和匯出，都不需要 AI 就能使用，而且在你於「[設定](/settings#ai)」中開啟之前，AI 一律為關閉。如要使用 AI，你需要一個 AI 公司 (例如 OpenAI、Anthropic 或 Google) 的帳戶，以及該帳戶提供的一組金鑰 (API 金鑰)，讓 Bookmark Scout 可以使用這個帳戶。這些公司大多會依每次使用收費，通常金額不高；在你自己電腦上執行的 AI 程式 (例如 Ollama) 不用花錢，但需要效能相當好的電腦。AI 工具處理的書籤標題和網址會傳送給你選擇的公司。請參閱「[設定 AI 工具](/guides/ai-tools)」。
 
 ### 書籤會被傳送到其他地方嗎？ [#does-it-send-my-bookmarks-anywhere]
 
@@ -25,11 +25,19 @@ description: Bookmark Scout 常見問題的解答，以及最常遇到的問題�
 
 <StoreAvailability />
 
-各商店都會先審查擴充功能，再將其上架。如果你所用瀏覽器的商店尚未上架，請[從 GitHub 版本發布安裝](/installation)。
+各商店都會先審查擴充功能，再將其上架。如果你所用瀏覽器的商店尚未上架，你可以[手動安裝](/installation#install-from-a-github-release) (進階)。
 
 ### 可以在 Firefox 中使用嗎？ [#does-it-work-in-firefox]
 
-可以。Firefox 不允許擴充功能取代其書籤頁面，因此請從彈出式視窗中的「**開啟書籤管理員**」開啟 Bookmark Scout 書籤管理員 (包含清理工具、匯入和匯出功能，以及已儲存的搜尋)。Firefox 無法使用瀏覽器的圖示快取，自動化測試涵蓋的功能也比較少。請參閱「[瀏覽器支援](/browser-support)」。
+目前還無法從 Firefox 附加元件商店取得：Firefox 版本即將推出。在那之前，可以將它[手動安裝](/installation#firefox)為暫用附加元件，但 Firefox 重新啟動時會將其移除。安裝後，它可以正常使用，只是有幾點不同：Firefox 不允許擴充功能取代其書籤頁面，因此請從彈出式視窗中的「**開啟書籤管理員**」開啟 Bookmark Scout 書籤管理員 (包含清理工具、匯入和匯出功能，以及已儲存的搜尋)，而且無法使用瀏覽器的圖示快取。請參閱「[瀏覽器支援](/browser-support)」。
+
+### 可以在 Microsoft Edge 中使用嗎？ [#does-it-work-in-microsoft-edge]
+
+目前還無法從 Microsoft Edge 附加元件商店取得：Edge 版本即將推出。在那之前，可以[手動安裝](/installation#edge)，安裝後的使用方式與 Chrome 大致相同。請參閱「[瀏覽器支援](/browser-support)」。
+
+### 可以在手機上使用嗎？ [#does-it-work-on-my-phone]
+
+不行。Bookmark Scout 是適用於電腦瀏覽器的擴充功能。手機和平板電腦的瀏覽器無法執行它。
 
 ### 為什麼不支援 Safari？ [#why-not-safari]
 
@@ -51,7 +59,7 @@ Firefox 重新啟動時會移除暫用附加元件。請依照「[安裝](/insta
 
 ### API 金鑰沒有儲存 [#my-api-key-was-not-saved]
 
-如果金鑰看起來不像所選供應商的金鑰，就會遭到拒絕且不會儲存，並顯示訊息說明。請確認「**AI 供應商**」與你貼上的金鑰相符。請參閱「[設定 AI 工具](/guides/ai-tools#turn-on-ai)」。
+如果金鑰看起來不像所選 AI 公司 (服務的供應商) 的金鑰，就會遭到拒絕且不會儲存，並顯示訊息說明。請確認服務的供應商就是提供你這組金鑰的公司。請參閱「[設定 AI 工具](/guides/ai-tools#turn-on-ai)」。
 
 ### 失效連結檢查顯示正常運作的網站需要手動檢查 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 
@@ -71,7 +79,7 @@ Firefox 重新啟動時會移除暫用附加元件。請依照「[安裝](/insta
 
 ### 在另一部電腦上找不到標籤、摘要或已儲存的搜尋 [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
 
-這些資料只會儲存在建立它們的裝置上，不會同步。如要轉移，請將書籤匯出為 JSON（匯入時，標籤和摘要會隨新建立的書籤一起還原），並使用「[設定](/settings)」底部的「**匯出**」儲存備份（其中包含已儲存的搜尋）。設定則會在開啟瀏覽器同步功能時，透過瀏覽器帳戶同步。
+這些資料只會儲存在建立它們的裝置上，不會同步。如要轉移，請將書籤匯出為 JSON（匯入時，標籤和摘要會隨新建立的書籤一起還原），並使用「[設定](/settings)」底部的「**備份設定**」儲存備份（其中包含已儲存的搜尋）。設定則會在開啟瀏覽器同步功能時，透過瀏覽器帳戶同步。
 
 ### 不小心刪除了項目 [#i-deleted-something-by-mistake]
 
@@ -83,7 +91,7 @@ Firefox 重新啟動時會移除暫用附加元件。請依照「[安裝](/insta
 
 ### 更新後設定不見了 [#my-settings-are-gone-after-an-update]
 
-有一次更新將 Bookmark Scout 儲存的資料改為新格式，並移除了舊資料，而不是加以轉換。在該次更新之後，設定會回到預設值，AI 服務及其 API 金鑰需要重新加入，自訂提示詞、已儲存的搜尋、最近的搜尋和資料夾、標籤和摘要，以及已儲存的網站圖示都會消失。書籤本身不受影響。如果你在更新前已使用「[設定](/settings)」底部的「**匯出**」儲存設定，請用「**匯入**」匯入該檔案。
+更新通常會保留你的設定。有一次更新 (更新至 0.3.3 版) 將 Bookmark Scout 儲存的資料改為新格式，並移除了舊資料，而不是加以轉換。在該次更新之後，設定會回到預設值，AI 服務及其 API 金鑰需要重新加入，自訂提示詞、已儲存的搜尋、最近的搜尋和資料夾、標籤和摘要，以及已儲存的網站圖示都會消失。書籤本身不受影響。如果你在更新前已使用「[設定](/settings)」底部的「**備份設定**」(當時稱為「**匯出**」) 儲存設定，請用「**還原設定**」開啟該檔案。
 
 ## 取得協助 [#get-help]
 
