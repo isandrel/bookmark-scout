@@ -108,7 +108,7 @@ export function QuickSaveShortcutNotice() {
       data-notice={notice.id}
       // Below 400px of height (the popup goes down to 300), the tree needs every row it can get.
       className={cn(
-        'flex min-h-7 shrink-0 items-center gap-1.5 border-t py-0.5 pl-3 pr-1 text-xs text-muted-foreground',
+        'flex min-h-7 shrink-0 items-center gap-1.5 border-t pl-3 pr-1 text-xs text-muted-foreground',
         notice.optional && '[@media(max-height:399px)]:hidden',
       )}
     >

@@ -112,7 +112,8 @@ for (const language of ['ja', 'de'] as const) {
     }) => {
       await setSettings(extensionWorker, { language, popupWidth: width });
       await page.setViewportSize({ width, height: 600 });
-      await openPopup(page, extensionId);
+      // openPopup finds the search box by its English name.
+      await page.goto(`chrome-extension://${extensionId}/popup.html`);
       await expect(notice(page)).toHaveAttribute('data-notice', 'quick-save-bookmark-key');
       const keys = notice(page).locator('[data-slot="notice-keys"]');
       await expect(keys).toContainText(quickSaveKeys);
