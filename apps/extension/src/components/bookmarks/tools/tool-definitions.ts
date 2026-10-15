@@ -178,8 +178,24 @@ function isComplete(counts: ChangeCounts): boolean {
   return counts.skipped === 0 && counts.failed === 0;
 }
 
+/** The note under a partial reorganization for a move left out, by why. */
+const REORGANIZE_ISSUE_KEYS = {
+  deleted: 'qaManager_reorgDeleted',
+  changed: 'ai_reorgIssueChanged',
+  failed: 'ai_reorgIssueFailed',
+} as const satisfies Record<BookmarkChangeIssue['reason'], string>;
+
+/**
+ * What a tool's Undo reports when the change was undone already with Ctrl+Z, which shares its
+ * undo history entry.
+ */
+export function alreadyUndoneOutcome(): ToolOutcome {
+  return { title: t('qaManager_alreadyUndone') };
+}
+
 /** What reverting a batch of reviewed changes reports. */
-function reportUndone({ restored, failed }: BookmarkChangesUndoResult): ToolOutcome {
+function reportUndone({ restored, failed, alreadyUndone }: BookmarkChangesUndoResult): ToolOutcome {
+  if (alreadyUndone) return alreadyUndoneOutcome();
   return {
     title: failed ? t('toast_changesUndonePartial') : t('toast_changesUndone'),
     description: t('toast_changesUndoneDesc', [String(restored), String(failed)]),
@@ -371,15 +387,14 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         keepOpen: !complete,
         notes: result.issues.map((issue) => ({
           id: issue.id,
-          text: t(issue.reason === 'changed' ? 'ai_reorgIssueChanged' : 'ai_reorgIssueFailed', [
-            getBookmarkDisplayTitle(issue.title),
-          ]),
+          text: t(REORGANIZE_ISSUE_KEYS[issue.reason], [getBookmarkDisplayTitle(issue.title)]),
         })),
         undoExpiresAt: result.expiresAt,
         undo:
           applied > 0
             ? async () => {
                 const undone = await result.undo();
+                if (undone.alreadyUndone) return alreadyUndoneOutcome();
                 return {
                   title: undone.failed
                     ? t('toast_reorganizeUndoPartial')
@@ -434,7 +449,8 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         undo:
           removal.removed > 0
             ? async () => {
-                const { restored, failed } = await removal.undo();
+                const { restored, failed, alreadyUndone } = await removal.undo();
+                if (alreadyUndone) return alreadyUndoneOutcome();
                 return {
                   title: failed ? t('toast_errorRestoringDeletion') : t('toast_deleteRestored'),
                   description: [
@@ -463,7 +479,9 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     changesBookmarks: true,
     scan: ({ nodes, options }) => previewCleanUrls(nodes, options.urlCleaner),
     async apply(result) {
-      const changes = await applyBookmarkChanges(getUrlCleanerChanges(result.previews));
+      const changes = await applyBookmarkChanges(getUrlCleanerChanges(result.previews), {
+        tool: 'tools_cleanUrls',
+      });
       return reportChanges(
         changes,
         {
@@ -508,7 +526,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     scan: ({ nodes, options }) => fetchBookmarkMetadata(nodes, options.metadataFetcher),
     async apply(_result, selected) {
       const titleChanges = getMetadataTitleChanges(selected);
-      const changes = await applyBookmarkChanges(titleChanges);
+      const changes = await applyBookmarkChanges(titleChanges, { tool: 'tools_metadataFetcher' });
       return reportChanges(
         // Picked items without a suggestion have nothing to apply.
         { ...changes, skipped: changes.skipped + selected.length - titleChanges.length },

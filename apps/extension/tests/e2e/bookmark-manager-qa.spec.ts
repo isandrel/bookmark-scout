@@ -398,6 +398,73 @@ test('moves are explained until browser order is on, and keep the current page',
   await expect(anyMove).toHaveAttribute('title', 'Clear column sorting to move items');
 });
 
+test('the folder filter keeps the last folder of a long path readable, with the full path as its tooltip', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const deep = 'A folder name long enough to fill the whole option on its own';
+  const seeded = await seedFolder(extensionWorker, 'E2E Long Paths', [
+    {
+      title: deep,
+      children: [
+        { title: 'Leaf One', children: [] },
+        { title: 'Leaf Two', children: [] },
+      ],
+    },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await toolbar(page).getByRole('button', { name: 'More filters' }).click();
+  await toolbar(page).getByRole('button', { name: 'Folder', exact: true }).click();
+
+  for (const leaf of ['Leaf One', 'Leaf Two']) {
+    const option = page.getByRole('option').filter({ hasText: new RegExp(`/ ${leaf}$`) });
+    const name = option.locator('[data-slot="path-label-name"]');
+    await expect(name).toHaveText(leaf);
+    // The leaf shows whole; the parents before it are what shrink to an ellipsis.
+    expect(await name.evaluate((node) => node.scrollWidth <= node.clientWidth)).toBe(true);
+    const parents = option.locator('[data-slot="path-label-parents"]');
+    expect(await parents.evaluate((node) => node.scrollWidth > node.clientWidth)).toBe(true);
+    await expect(option.locator('[title]').first()).toHaveAttribute(
+      'title',
+      new RegExp(`E2E Long Paths / ${deep} / ${leaf}$`),
+    );
+  }
+});
+
+test('a search across folders names each match’s folder and says the results span all folders', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Cross Search', [
+    { title: 'Work', children: [{ title: 'Same Page', url: 'https://e2e.invalid/same' }] },
+    { title: 'Home', children: [{ title: 'Same Page', url: 'https://e2e.invalid/same' }] },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.ids.Work));
+  await expect(breadcrumbCurrent(page)).toHaveText('Work');
+  await expect(page.locator('[data-slot="row-folder-path"]')).toHaveCount(0);
+
+  await page.getByPlaceholder('Search titles and addresses').fill('Same Page');
+  const matches = row(page, 'Same Page');
+  await expect(matches).toHaveCount(2);
+  await expect(breadcrumbCurrent(page)).toHaveText('Results from all folders');
+  const paths = matches.locator('[data-slot="row-folder-path"]');
+  await expect(paths).toHaveCount(2);
+  expect((await paths.allTextContents()).map((path) => path.split(' / ').slice(-2)).sort()).toEqual(
+    [
+      ['E2E Cross Search', 'Home'],
+      ['E2E Cross Search', 'Work'],
+    ],
+  );
+
+  // Limited to the folder shown, the breadcrumb is the folder again and rows need no path.
+  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await expect(matches).toHaveCount(1);
+  await expect(breadcrumbCurrent(page)).toHaveText('Work');
+  await expect(paths).toHaveCount(0);
+});
+
 test('parent and domain facets list folders by path and group by registrable domain', async ({
   extensionId,
   extensionWorker,

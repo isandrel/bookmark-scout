@@ -24,6 +24,13 @@ const CHOICE_LABEL_KEYS = {
   edit: 'tools_deadLinkRepairChoice_edit',
 } as const satisfies Record<DeadLinkRepairChoice, string>;
 
+/** The line a partial apply lists for a repair left out, by why. */
+const ISSUE_KEYS = {
+  deleted: 'qaManager_repairDeleted',
+  changed: 'tools_deadLinkRepairIssueChanged',
+  failed: 'tools_deadLinkRepairIssueFailed',
+} as const satisfies Record<DeadLinkRepairIssue['reason'], string>;
+
 /** Confirmed dead links first, then links that need a manual check, then redirects. */
 function reviewRank(item: DeadLinkResultItem): number {
   if (isConfirmedDeadLink(item)) return 0;
@@ -102,19 +109,15 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
       complete,
       details: applied.issues.map((issue) => ({
         key: issue.id,
-        text: t(
-          issue.reason === 'changed'
-            ? 'tools_deadLinkRepairIssueChanged'
-            : 'tools_deadLinkRepairIssueFailed',
-          getBookmarkDisplayTitle(issue.title),
-        ),
+        text: t(ISSUE_KEYS[issue.reason], getBookmarkDisplayTitle(issue.title)),
       })),
       undoExpiresAt: applied.expiresAt,
       undo:
         applied.deleted + applied.replaced > 0
           ? async () => {
-              const { restored, failed } = await applied.undo();
+              const { restored, failed, alreadyUndone } = await applied.undo();
               await onChanged();
+              if (alreadyUndone) return alreadyUndoneOutcome();
               return {
                 title: failed
                   ? t('tools_deadLinkRepairUndoPartial')

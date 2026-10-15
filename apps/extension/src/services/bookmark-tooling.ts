@@ -456,7 +456,7 @@ export async function removeDuplicateExtras(
     }
   }
 
-  const result = await applyBookmarkChanges(changes);
+  const result = await applyBookmarkChanges(changes, { tool: 'tools_findDuplicates' });
   return {
     removed: result.applied,
     skipped: skippedExtras + result.skipped,

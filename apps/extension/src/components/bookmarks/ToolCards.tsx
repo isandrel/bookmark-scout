@@ -133,11 +133,14 @@ export function ToolCardHeader({
     <div className="flex items-start gap-2">
       <div className="flex-shrink-0 rounded-md bg-muted p-1.5">{icon}</div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <h4 className="truncate text-sm font-medium">{title}</h4>
+        {/* Titles and descriptions wrap: long words in German or French are cut off otherwise. */}
+        <div className="flex items-start gap-2">
+          <h4 className="min-w-0 text-sm font-medium [overflow-wrap:anywhere]">{title}</h4>
           <ScopeBadge scopeCapability={scopeCapability} />
         </div>
-        <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{description}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground [overflow-wrap:anywhere]">
+          {description}
+        </p>
         {notice ? <p className="mt-1 text-xs font-medium text-warning">{notice}</p> : null}
       </div>
     </div>
@@ -163,7 +166,7 @@ export function ScopeBadge({ scopeCapability }: { scopeCapability: ToolScopeCapa
     <span
       role="img"
       aria-label={t(labelKey)}
-      className="inline-flex items-center gap-1 rounded-sm bg-muted px-1.5 py-0.5 text-xs text-muted-foreground"
+      className="inline-flex shrink-0 items-center gap-1 rounded-sm bg-muted px-1.5 py-0.5 text-xs text-muted-foreground"
     >
       {scopes.map((scope, index) => {
         const Icon = SCOPE_ICONS[scope];

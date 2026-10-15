@@ -4087,10 +4087,6 @@
             }
         }
     },
-    "perm_deadLinkRedirectElsewhere": {
-        "message": "Redirige a otro sitio al que esta comprobación no tenía acceso; ábrelo para confirmarlo",
-        "description": "Dead link detail: a redirect to a site the scan had no access to, so not confirmed dead"
-    },
     "tools_hostAccessDenied": {
         "message": "No se concedió el acceso a sitios web",
         "description": "Toast title when website access is declined"
@@ -6576,5 +6572,45 @@
     "qaPopup_secondCopyNote": {
         "message": "Es otra copia: la página también está en \"$1\".",
         "description": "Added to the toast after saving the current page from the popup or side panel when the page was already bookmarked in another folder; $1 is that other folder's name"
+    },
+    "qaManager_editMany": {
+        "message": "Editar $1 elementos",
+        "description": "Undo history label for editing several items at once, such as a Tools sidebar batch. $1 is how many."
+    },
+    "qaManager_byTool": {
+        "message": "$1 ($2)",
+        "description": "Undo history label for a change a Tools sidebar tool made. $1 is what it did (such as 'Delete 3 items'), $2 is the tool's name."
+    },
+    "qaManager_alreadyUndone": {
+        "message": "Ya se deshizo",
+        "description": "Toast title when a tool's Undo is pressed after the same change was already undone from the undo history"
+    },
+    "qaManager_pageTitle": {
+        "message": "Título de la página: $1",
+        "description": "Metadata Fetcher result: the title of the bookmarked page, shown for information when it will not replace the bookmark's own title. $1 is the page title."
+    },
+    "qaManager_titleKept": {
+        "message": "Título conservado: «$1» está desactivado",
+        "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
+    },
+    "qaManager_redirectUnfollowed": {
+        "message": "Redirige a un lugar que esta comprobación no pudo seguir; ábrelo para confirmarlo",
+        "description": "Dead link detail: the link redirects, but with access to only the bookmark's own site the check cannot see where to (another site, or a loop on the same one), so it is not confirmed dead"
+    },
+    "qaManager_redirectSameSite": {
+        "message": "Redirige a $1, en el mismo sitio",
+        "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
+    },
+    "qaManager_repairDeleted": {
+        "message": "$1: se eliminó después del análisis",
+        "description": "Dead-link repair issue: the bookmark was deleted after the scan, so there was nothing to repair. $1 is the bookmark title."
+    },
+    "qaManager_reorgDeleted": {
+        "message": "$1: se eliminó después de la vista previa",
+        "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
+    },
+    "qaManager_allFolders": {
+        "message": "Resultados de todas las carpetas",
+        "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
     }
 }

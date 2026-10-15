@@ -307,6 +307,13 @@ describe('bookmark history labels', () => {
     expect(describeBookmarkHistoryLabel({ action: 'delete', title: 'News' })).toBe('Delete "News"');
     expect(describeBookmarkHistoryLabel({ action: 'move', count: 3 })).toBe('Move 3 items');
     expect(describeBookmarkHistoryLabel({ action: 'sort', title: 'Work' })).toBe('Sort "Work"');
+    expect(describeBookmarkHistoryLabel({ action: 'edit', count: 4 })).toBe('Edit 4 items');
+  });
+
+  it('names the Tools sidebar tool that made a change', () => {
+    expect(
+      describeBookmarkHistoryLabel({ action: 'delete', count: 2, tool: 'tools_findDuplicates' }),
+    ).toBe('Delete 2 items (Duplicate Cleaner)');
   });
 
   it('lists what undoing an entry restores, item by item, in the order undo runs', async () => {

@@ -215,7 +215,9 @@ function SiteIconCacheControls() {
   return (
     <>
       <BrowserIconsOffer />
-      <span className="flex-1 text-xs text-muted-foreground">
+      {/* Its own width first, so a long count line moves the button to the next line instead of
+          wrapping itself into a narrow column. */}
+      <span className="min-w-0 flex-auto text-xs text-muted-foreground">
         {tPlural('tools_siteIconsCached', siteIconCache.count, [
           formatKilobytes(siteIconCache.bytes),
         ])}
@@ -223,7 +225,7 @@ function SiteIconCacheControls() {
       <Button
         variant="ghost"
         size="sm"
-        className="h-8 text-xs"
+        className="ml-auto h-8 text-xs"
         onClick={clear}
         disabled={siteIconCache.count === 0 || clearing}
       >

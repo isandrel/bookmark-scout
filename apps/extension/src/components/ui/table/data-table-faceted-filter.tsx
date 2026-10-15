@@ -49,9 +49,9 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
                       <Badge
                         variant="secondary"
                         key={option.value}
-                        className="rounded-sm px-1 font-normal"
+                        className="max-w-48 rounded-sm px-1 font-normal"
                       >
-                        {option.label}
+                        <PathLabel path={option.label} />
                       </Badge>
                     ))
                 )}
@@ -94,9 +94,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
                       {option.icon && (
                         <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <span className="min-w-0 truncate" title={option.label}>
-                        {option.label}
-                      </span>
+                      <PathLabel path={option.label} />
                       {counts?.get(option.value) ? (
                         <span className="ml-auto pl-2 font-mono text-xs">
                           {counts.get(option.value)}

@@ -60,6 +60,11 @@ export type BookmarkHistoryLabel = {
   title?: string;
   /** How many items the change was about; one when absent. */
   count?: number;
+  /**
+   * The message key of the title of the Tools sidebar tool that made the change
+   * (`tools_findDuplicates`), named next to what it did.
+   */
+  tool?: string;
 };
 
 export type BookmarkHistoryOperation =
@@ -133,6 +138,7 @@ const labelSchema = z.object({
   action: z.enum(['add', 'edit', 'move', 'delete', 'sort', 'change']),
   title: z.string().optional(),
   count: z.number().int().positive().optional(),
+  tool: z.string().optional(),
 });
 const entrySchema: z.ZodType<StoredBookmarkHistoryEntry> = z.union([
   z.object({ id: z.string(), label: labelSchema, operations: z.array(operationSchema).min(1) }),
@@ -371,6 +377,7 @@ function completeLabel(
     action: label.action,
     ...(title !== undefined ? { title } : {}),
     ...(count !== undefined ? { count } : {}),
+    ...(label.tool !== undefined ? { tool: label.tool } : {}),
   };
 }
 
@@ -407,10 +414,11 @@ async function addBookmarkHistoryEntry(
  * Runs `write` with a writer that records what it changes, and adds it to the history as one
  * entry (clearing what could be redone). Changes made before `write` threw are recorded too,
  * then the error is passed on. Resolves to what `write` returned and the recorded change, which
- * is null when nothing changed.
+ * is null when nothing changed. `label` can be a function, read once `write` finished, for a
+ * label that depends on what was written.
  */
 export async function recordBookmarkWrites<T>(
-  label: BookmarkHistoryLabel,
+  label: BookmarkHistoryLabel | (() => BookmarkHistoryLabel),
   write: (writer: BookmarkWriter) => Promise<T>,
 ): Promise<{ result: T; recorded: RecordedBookmarkChange | null }> {
   const operations: BookmarkHistoryOperation[] = [];
@@ -422,7 +430,7 @@ export async function recordBookmarkWrites<T>(
     if (operations.length > 0) {
       const entry: BookmarkHistoryEntry = {
         id: newEntryId(),
-        label: completeLabel(label, operations),
+        label: completeLabel(typeof label === 'function' ? label() : label, operations),
         operations,
       };
       // The bookmarks changed either way; a history that cannot be stored only loses undo.
@@ -652,16 +660,22 @@ export async function describeBookmarkChangeUndo(entry: BookmarkHistoryEntry): P
 /** Message for one item (its title), and for several (their count) where that can happen. */
 const LABEL_KEYS: Record<BookmarkHistoryAction, { one: MessageKey; many?: MessageKey }> = {
   add: { one: 'history_add', many: 'history_addMany' },
-  edit: { one: 'history_edit' },
+  edit: { one: 'history_edit', many: 'qaManager_editMany' },
   move: { one: 'history_move', many: 'history_moveMany' },
   delete: { one: 'history_delete', many: 'history_deleteMany' },
   sort: { one: 'history_sort' },
   change: { one: 'history_change', many: 'history_changeMany' },
 };
 
-/** What an entry did, in the current language: `Delete "News"`, `Move 3 items`. */
+/**
+ * What an entry did, in the current language: `Delete "News"`, `Move 3 items`, and the tool that
+ * did it when one did: `Delete 3 items (Duplicate Cleaner)`.
+ */
 export function describeBookmarkHistoryLabel(label: BookmarkHistoryLabel): string {
   const { one, many } = LABEL_KEYS[label.action];
-  if (many && label.count !== undefined && label.count > 1) return tPlural(many, label.count);
-  return t(one, getBookmarkDisplayTitle(label.title));
+  const what =
+    many && label.count !== undefined && label.count > 1
+      ? tPlural(many, label.count)
+      : t(one, getBookmarkDisplayTitle(label.title));
+  return label.tool ? t('qaManager_byTool', [what, t(label.tool)]) : what;
 }

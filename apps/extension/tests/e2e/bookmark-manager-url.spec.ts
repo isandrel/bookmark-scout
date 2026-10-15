@@ -121,12 +121,14 @@ test('q wins over id, which keeps the folder for Current folder only', async ({
     { title: 'Shared Name Outer', url: 'https://example.com/o' },
   ]);
   await page.goto(managerUrl(extensionId, `?id=${seeded.ids.Inner}&q=Shared`));
-  await expect(breadcrumbCurrent(page)).toHaveText('Inner');
+  // The search spans every folder, so the breadcrumb says so instead of naming the folder.
+  await expect(breadcrumbCurrent(page)).toHaveText('Results from all folders');
   await expect(row(page, 'Shared Name Inner')).toBeVisible();
   await expect(row(page, 'Shared Name Outer')).toBeVisible();
   await page.getByRole('checkbox', { name: 'Current folder only' }).check();
   await expect(row(page, 'Shared Name Outer')).toHaveCount(0);
   await expect(row(page, 'Shared Name Inner')).toBeVisible();
+  await expect(breadcrumbCurrent(page)).toHaveText('Inner');
 });
 
 test("Chrome's folder UUID links open the matching folder", async ({

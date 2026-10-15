@@ -423,5 +423,8 @@ export async function applyReorganizationPlan(
         to: { parentId: op.toFolderId, createPath: op.newFolderTitles },
       }),
     );
-  return { status: 'applied', ...(await applyBookmarkChanges(changes)) };
+  return {
+    status: 'applied',
+    ...(await applyBookmarkChanges(changes, { tool: 'tools_aiReorganize' })),
+  };
 }

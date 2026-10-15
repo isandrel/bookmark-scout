@@ -20,14 +20,21 @@ export function DeadLinkCategoryBadge({ item }: { item: DeadLinkResultItem }) {
   );
 }
 
+/** Whether both URLs are on the same site (`getUrlSite`: the registrable domain). */
+function isSameSite(url: string, otherUrl: string): boolean {
+  const site = getUrlSite(url);
+  return site !== null && site === getUrlSite(otherUrl);
+}
+
 export function describeDeadLink(item: DeadLinkResultItem): string {
   switch (item.status) {
     case 'ok':
       return t('tools_deadLinkReachable');
     case 'redirect':
-      return item.redirectUrl
-        ? t('tools_deadLinkRedirectsTo', item.redirectUrl)
-        : t('tools_deadLinkRedirected');
+      if (!item.redirectUrl) return t('tools_deadLinkRedirected');
+      return isSameSite(item.url, item.redirectUrl)
+        ? t('qaManager_redirectSameSite', item.redirectUrl)
+        : t('tools_deadLinkRedirectsTo', item.redirectUrl);
     case 'timeout':
       return t('tools_deadLinkTimedOut');
     case 'invalid':
@@ -40,7 +47,9 @@ export function describeDeadLink(item: DeadLinkResultItem): string {
         const labelKey = item.category ? HTTP_FAILURE_LABEL_KEYS[item.category] : undefined;
         return labelKey ? t('tools_deadLinkHttpDetail', [status, t(labelKey)]) : status;
       }
-      if (item.category === 'redirectElsewhere') return t('perm_deadLinkRedirectElsewhere');
+      // Granted only this bookmark's site, the scan cannot see where the redirect goes: another
+      // site, or a loop on the same one.
+      if (item.category === 'redirectElsewhere') return t('qaManager_redirectUnfollowed');
       return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
     }
   }
@@ -59,8 +68,16 @@ function describeMetadata(item: MetadataFetchResultItem): string {
     case 'notHtml':
       return t('tools_metadataNotHtml');
     default:
-      return item.changed ? t('tools_metadataAvailable') : t('tools_metadataNoChange');
+      if (item.changed) return t('tools_metadataAvailable');
+      return hasOtherPageTitle(item)
+        ? t('qaManager_titleKept', t('settings_metadataFetcherOverwriteTitles'))
+        : t('tools_metadataNoChange');
   }
+}
+
+/** A page title that differs from the bookmark's but is not offered (Overwrite Titles is off). */
+function hasOtherPageTitle(item: MetadataFetchResultItem): boolean {
+  return !item.changed && Boolean(item.suggestedTitle) && item.suggestedTitle !== item.title;
 }
 
 function describePrivacyFinding(finding: PrivacyFinding): string {
@@ -453,8 +470,13 @@ export function MetadataResultsView({
               <ResultLine>
                 <UrlLink href={item.url} />
               </ResultLine>
-              {item.status === 'ok' && item.suggestedTitle ? (
+              {item.status === 'ok' && canApply ? (
                 <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
+              ) : null}
+              {item.status === 'ok' && hasOtherPageTitle(item) ? (
+                <div className="text-sm text-muted-foreground">
+                  {t('qaManager_pageTitle', item.suggestedTitle)}
+                </div>
               ) : null}
               {item.status === 'ok' && item.description ? (
                 <div className="text-xs text-muted-foreground">{item.description}</div>

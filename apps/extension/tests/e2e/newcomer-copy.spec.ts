@@ -76,4 +76,8 @@ test('Export Bookmarks in Options opens the manager on the export card', async (
   );
   await expect(manager.getByTestId('tools-sidebar')).toBeVisible();
   await expect(manager.locator('#export-bookmarks')).toBeInViewport();
+  // Keyboard and screen reader users land on the card too: its heading has the focus.
+  await expect(
+    manager.locator('#export-bookmarks').getByRole('heading', { name: 'Export Bookmarks' }),
+  ).toBeFocused();
 });
