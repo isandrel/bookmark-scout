@@ -11,7 +11,7 @@ bookmark-scout-mcp install          # register with your browsers (add --dry-run
 claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
 ```
 
-Then turn on **Allow local AI agents** in Bookmark Scout's Options, under AI. `install` also prints the Codex and Cursor configuration.
+Then turn on **Allow local AI agents** in Bookmark Scout's Options, under For developers. `install` also prints the Codex and Cursor configuration.
 
 | Command | What it does |
 | --- | --- |

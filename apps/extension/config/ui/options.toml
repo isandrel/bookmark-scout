@@ -6,8 +6,10 @@ autosave_delay_ms = 400
 # Settings named in the toast after an import; the rest are counted as "and N more".
 import_change_preview_limit = 5
 
-# Category shown when the page opens; a key of the settings categories in lib/settings-schema.ts.
-default_category = "search"
+# Category shown when the page opens: "essentials" (the few settings most people change,
+# config/ui/essentials.toml) or a key of the settings categories in lib/settings-schema.ts.
+# `options.html?category=<key>` opens another one.
+default_category = "essentials"
 
 # File name of a backup (Export): settings, prompts, AI services with their endpoints but without
 # their API keys and extra headers, and saved searches.

@@ -7,6 +7,7 @@
 import {
   BarChart3,
   BookMarked,
+  Code,
   Download,
   FolderKanban,
   HardDriveDownload,
@@ -18,6 +19,7 @@ import {
   Settings2,
   ShieldAlert,
   Sparkles,
+  Star,
   Sun,
   TriangleAlert,
   Upload,
@@ -27,14 +29,17 @@ import type React from 'react';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
+/** Essentials or a settings category: the tabs on the left. */
+function isSettingsTab(key: string): boolean {
+  return key === ESSENTIALS_CATEGORY || key in getSettingsCategories();
+}
+
 const optionsConfig = readConfig(
   'ui/options',
   z.strictObject({
     autosave_delay_ms: z.number().int().nonnegative(),
     import_change_preview_limit: z.number().int().positive(),
-    default_category: z
-      .string()
-      .refine((key) => key in getSettingsCategories(), 'not a settings category'),
+    default_category: z.string().refine((key) => isSettingsTab(key), 'not a settings category'),
     backup_filename: z.string().min(1),
     restore_notice_duration_ms: z.number().int().positive(),
   }),
@@ -56,13 +61,12 @@ function describeServicesNeedingSetup(services: readonly ServiceNeedingSetup[]):
 /** `options.html?category=ai` opens on that category, as quick save's "Open AI settings" does. */
 function initialCategory(): string {
   const requested = new URLSearchParams(window.location.search).get('category');
-  return requested && requested in getSettingsCategories()
-    ? requested
-    : optionsConfig.default_category;
+  return requested && isSettingsTab(requested) ? requested : optionsConfig.default_category;
 }
 
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {
+  essentials: <Star className="h-4 w-4" />,
   appearance: <Palette className="h-4 w-4" />,
   search: <Search className="h-4 w-4" />,
   behavior: <Settings2 className="h-4 w-4" />,
@@ -73,6 +77,7 @@ const tabIcons: Record<string, React.ReactNode> = {
   security: <ShieldAlert className="h-4 w-4" />,
   analytics: <BarChart3 className="h-4 w-4" />,
   data: <HardDriveDownload className="h-4 w-4" />,
+  developers: <Code className="h-4 w-4" />,
 };
 
 type SettingValue = Settings[keyof Settings];
@@ -102,6 +107,12 @@ const OptionsPage: React.FC = () => {
   valuesRef.current = values;
 
   const categories = getSettingsCategories();
+  // Every tab: Essentials, then each setting's own category. Search reads only `categories`.
+  const tabs: Record<string, SettingsCategoryMeta> = {
+    [ESSENTIALS_CATEGORY]: getEssentialsCategory(),
+    ...categories,
+  };
+  const firstAdvancedTab = Object.keys(categories)[0];
   const fieldErrors = { ...saveErrors, ...inputErrors };
   const errorCount = Object.keys(fieldErrors).length;
 
@@ -403,6 +414,22 @@ const OptionsPage: React.FC = () => {
         return matchesOnly ? null : <AskAIActionsPanel />;
       case 'agentBridge':
         return matchesOnly ? null : <AgentBridgePanel />;
+      case 'essentialsAi':
+        return matchesOnly ? null : (
+          <OptionsPanel
+            id="essentials-ai"
+            data-testid="essentials-ai"
+            title={t('essentials_aiTitle')}
+            description={t('essentials_aiDescription')}
+            actionsLayout="wrap"
+            actions={
+              <Button type="button" variant="outline" size="sm" onClick={() => setActiveTab('ai')}>
+                <Sparkles className="mr-2 h-4 w-4 text-ai" />
+                {t('essentials_aiOpen')}
+              </Button>
+            }
+          />
+        );
       default:
         return null;
     }
@@ -413,7 +440,7 @@ const OptionsPage: React.FC = () => {
    * matching settings and the sections that hold them.
    */
   const renderSections = (categoryKey: string, matches?: ReadonlySet<keyof Settings>) => {
-    const visible = new Set(categories[categoryKey].fields);
+    const visible = new Set(tabs[categoryKey].fields);
     const pick = (list: readonly (keyof Settings)[]) =>
       matches ? list.filter((fieldKey) => matches.has(fieldKey)) : list;
     const meta = getSettingsFieldMeta();
@@ -421,7 +448,7 @@ const OptionsPage: React.FC = () => {
     const explained = new Set<SectionRequirement>();
     return (
       <div className="space-y-8">
-        {categories[categoryKey].sections.map((section) => {
+        {tabs[categoryKey].sections.map((section) => {
           const fields = pick(section.fields);
           const advanced = pick(section.advanced ?? []);
           const panel = renderPanel(section.panel, Boolean(matches));
@@ -499,7 +526,7 @@ const OptionsPage: React.FC = () => {
   };
 
   const renderCategoryHeader = (categoryKey: string) => {
-    const category = categories[categoryKey];
+    const category = tabs[categoryKey];
     if (categoryKey === 'ai') {
       return (
         <div className="mb-6 rounded-lg border bg-card p-4">
@@ -587,24 +614,34 @@ const OptionsPage: React.FC = () => {
               />
             </div>
             <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-transparent p-0 sm:flex-col sm:items-stretch">
-              {Object.entries(categories).map(([key, category]) => {
+              {Object.entries(tabs).map(([key, category]) => {
                 const matches = searchResults?.[key]?.length;
                 const count =
                   matches === undefined ? undefined : matches + (key === 'ai' ? aiPanelMatches : 0);
                 return (
-                  <TabsTrigger
-                    key={key}
-                    value={key}
-                    className="h-8 justify-start gap-2 rounded-md px-2.5 py-0 font-normal text-muted-foreground hover:bg-muted hover:text-foreground data-active:bg-accent data-active:font-medium data-active:text-accent-foreground data-active:shadow-none [&_svg]:size-4"
-                  >
-                    {tabIcons[key]}
-                    <span className="flex-1 truncate text-left">{category.label}</span>
-                    {count !== undefined && (
-                      <span className="rounded-full bg-muted px-1.5 font-mono text-xs tabular-nums text-muted-foreground">
-                        {count}
-                      </span>
+                  <Fragment key={key}>
+                    {/* The tabs after Essentials hold every setting in its own place. */}
+                    {key === firstAdvancedTab && (
+                      <p
+                        data-testid="settings-advanced-heading"
+                        className="basis-full px-2.5 pt-3 pb-1 text-xs font-medium text-muted-foreground"
+                      >
+                        {t('essentials_advancedHeading')}
+                      </p>
                     )}
-                  </TabsTrigger>
+                    <TabsTrigger
+                      value={key}
+                      className="h-8 justify-start gap-2 rounded-md px-2.5 py-0 font-normal text-muted-foreground hover:bg-muted hover:text-foreground data-active:bg-accent data-active:font-medium data-active:text-accent-foreground data-active:shadow-none [&_svg]:size-4"
+                    >
+                      {tabIcons[key]}
+                      <span className="flex-1 truncate text-left">{category.label}</span>
+                      {count !== undefined && (
+                        <span className="rounded-full bg-muted px-1.5 font-mono text-xs tabular-nums text-muted-foreground">
+                          {count}
+                        </span>
+                      )}
+                    </TabsTrigger>
+                  </Fragment>
                 );
               })}
             </TabsList>
@@ -635,7 +672,7 @@ const OptionsPage: React.FC = () => {
                 )}
               </section>
             ) : (
-              Object.keys(categories).map((categoryKey) => (
+              Object.keys(tabs).map((categoryKey) => (
                 <TabsContent key={categoryKey} value={categoryKey} className="mt-0">
                   {renderCategoryHeader(categoryKey)}
                   {renderSections(categoryKey)}

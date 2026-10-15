@@ -7,11 +7,23 @@ Open the settings page from the extension's **Options** entry, for example by ri
 
 ## Using the settings page
 
+- The page opens on **Essentials**, the few settings most people change. Every other tab is listed under **Advanced**, and each setting on **Essentials** is also in its own tab there: changing it in either place changes the same setting.
 - **Search settings...** at the top finds a setting in any tab and says how many match.
 - Each tab is split into titled sections. A tool's on/off switch sits next to its heading; while it is off, the rest of its settings are folded away. Technical settings, such as timeouts and file name lengths, are under **Advanced settings**, which stays closed until you open it or a search finds something in it.
 - A changed setting is marked **Modified**, with a button to reset it to its default. **Reset All** resets every setting.
 - **Back up settings** saves a backup file with the settings you changed, custom prompts, AI services (name, provider, model, **Base URL**, and provider-specific fields; never API keys or **Extra Headers JSON**), saved searches, and the manager table's columns and sort. **Restore settings** restores a backup, replacing each part the file holds, or merges a plain settings file onto your settings; after restoring a backup, enter API keys and extra headers again under [AI](#ai) for the services marked **Needs setup**. Neither touches your bookmarks. **Export Bookmarks** next to them opens the bookmarks manager on its export tool; see [Import and export](/guides/import-export).
 - Settings you change are stored in the browser's sync storage, so they follow you to other devices when browser sync is on. A few that belong to one device stay on it: the folder chosen for quick save, **Icon Storage Limit**, AI activity recording, and Ask AI's web search. AI services, with their API keys, **Base URL**, and **Extra Headers JSON**, also stay on this device. See [Privacy](/privacy).
+
+## Essentials [#essentials]
+
+| Setting | Also on | What it does |
+| --- | --- | --- |
+| **Quick Save Folder** and **Folder to Save To** | [Saving & Search](#quick-save) | Where the quick save shortcut saves the current page |
+| **Right-Click Menu** | [Saving & Search](#context-menu) | Show **Save bookmark to...** when you right-click a link |
+| **Theme** and **Language** | [Appearance](#language-theme-and-icons) | How Bookmark Scout looks and which language it uses |
+| **Confirm Before Delete** | [Behavior](#deleting) | Ask before deleting |
+
+Below them, **AI is optional** says that Bookmark Scout works without AI; **Set up AI** opens the [AI](#ai) tab.
 
 ## Saving & Search [#search]
 
@@ -139,12 +151,6 @@ Below these, the provider panel holds **API Key**, **Base URL**, **Custom Model*
 
 Every lookup and change Ask AI can make is listed here, and all are on by default. Turn one off and Ask AI is not offered it at all. Applying a plan of changes always asks you first, whatever you choose here.
 
-### Local AI agents [#agent-bridge]
-
-**Allow local AI agents** (off by default, for this device only) lets AI agents on your computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the bookmark-scout-mcp program, which you install and register with `bookmark-scout-mcp install`. Turning it on asks your browser to let the extension talk to that program. **Allow changes** (off by default) also lets them save pages and propose moves, renames, deletions, and new folders; each change opens a Bookmark Scout window where you approve or decline it, and you can undo it in the bookmark manager. The panel below the switch shows whether the program is running.
-
-**Hide private values** (on by default) replaces sensitive URL parameters, tokens, and email addresses in the titles and URLs agents receive, using the Privacy Scanner's list. **What local agents may do** lists every lookup, all on by default; one you turn off is not offered to agents at all.
-
 ## AI Tools [#ai-tools]
 
 Each tool has an **Enable** switch (on by default). Turning one off hides it from the manager's **Tools** sidebar.
@@ -172,6 +178,8 @@ Auto-Tagging and Content Summarizer always work on the current folder.
 | **Duplicate Cleaner** | **Match Strategy** Normalized URL; **Normalize www**, **Ignore Protocol**, and **Ignore Trailing Slash** on; **Keep Rule** Oldest; **Max Groups** 500. Always scans all bookmarks |
 | **URL Cleaner** | **Remove Fragments** off; **Sort Query Parameters** and **Deduplicate Query Parameters** on; **Preserve Parameters** and **Remove Parameters** lists |
 | **Check Dead Links** | **Request Timeout** 8 s; **Concurrency** 4; **Retry Count** 1; **Follow Redirects** on; **Success Status Codes** 200, 201, 202, 204, 301, 302, 307, 308 |
+
+A tool's **Default Scope** applies while a folder is open in the bookmarks manager. At the manager's top level, where no folder is open, tools start on **All Bookmarks**.
 
 Lists such as **Remove Parameters** are edited as chips: type a name and press Enter, or pick a suggestion. **Success Status Codes** is a checklist of common codes, and you can add others. Each list holds up to 20 entries, and a parameter name up to 32 characters (letters, digits, and URL punctuation), so settings fit in browser sync. The default lists are on [Clean up duplicates and tracking URLs](/guides/clean-up#strip-tracking-parameters). See also [Find and repair dead links](/guides/dead-links).
 
@@ -227,3 +235,11 @@ Lists such as **Remove Parameters** are edited as chips: type a name and press E
 | **Include Dates** and **Include URLs** | On | Include them in exports |
 
 See [Import and export](/guides/import-export).
+
+## For developers [#developers]
+
+### Local AI agents [#agent-bridge]
+
+**Allow local AI agents** (off by default, for this device only) lets AI agents on your computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the bookmark-scout-mcp program, which you install and register with `bookmark-scout-mcp install`. It does not need **AI Features**. Turning it on asks your browser to let the extension talk to that program. **Allow changes** (off by default) also lets them save pages and propose moves, renames, deletions, and new folders; each change opens a Bookmark Scout window where you approve or decline it, and you can undo it in the bookmark manager. The panel below the switch shows whether the program is running.
+
+**Hide private values** (on by default) replaces sensitive URL parameters, tokens, and email addresses in the titles and URLs agents receive, using the Privacy Scanner's list. **What local agents may do** lists every lookup, all on by default; one you turn off is not offered to agents at all.

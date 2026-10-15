@@ -61,7 +61,7 @@ function ToolEntry({ tool, environment, currentFolderName, runWithAccess }: Tool
         disabled={aiOff}
         notice={aiOff ? t('ai_featuresDisabledNotice') : undefined}
         scopeCapability={getToolScopeCapability(tool.id)}
-        defaultScope={getToolDefaultScope(settings, tool)}
+        defaultScope={getToolDefaultScope(settings, tool, environment.currentFolderId)}
         currentFolderName={currentFolderName}
         isLoading={state.phase === 'scanning'}
         controls={Controls ? <Controls /> : undefined}
