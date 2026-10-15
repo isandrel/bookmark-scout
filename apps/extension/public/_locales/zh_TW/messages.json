@@ -8,12 +8,24 @@
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
-        "message": "搜尋書籤...",
-        "description": "Search input placeholder"
+        "message": "輸入資料夾名稱來儲存此頁面…",
+        "description": "Popup and side panel search box placeholder: typing a folder name lists folders to save the current page in; the box also searches bookmarks"
     },
     "search_placeholderShort": {
-        "message": "搜尋",
-        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+        "message": "資料夾名稱…",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one (popup_searchPlaceholder)"
+    },
+    "newcomer_searchLabel": {
+        "message": "搜尋書籤，或輸入資料夾名稱來儲存此頁面",
+        "description": "Accessible name of the popup and side panel search box, read by screen readers"
+    },
+    "newcomer_pageToSave": {
+        "message": "要儲存的頁面：$1",
+        "description": "Line under the popup and side panel search box naming the page a folder click saves; $1 is the page title"
+    },
+    "newcomer_searchOptions": {
+        "message": "更多搜尋選項",
+        "description": "Button in the popup search box that opens a menu with Match Case, Match Whole Word, and pattern search"
     },
     "shortcuts_popupHint": {
         "message": "快速鍵：$1",
@@ -580,7 +592,7 @@
         "description": "Behavior category label"
     },
     "settings_behaviorDesc": {
-        "message": "控制擴充功能的行為",
+        "message": "書籤樹狀結構、連結和刪除的運作方式",
         "description": "Behavior category description"
     },
     "settings_savingSearch": {
@@ -864,7 +876,7 @@
         "description": "AI category label"
     },
     "settings_aiDesc": {
-        "message": "由 AI 推薦資料夾",
+        "message": "選用：由你選擇的 AI 服務推薦資料夾，並回答書籤相關問題",
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
@@ -1074,7 +1086,7 @@
         "description": "Dead link checker tool title"
     },
     "tools_checkDeadLinksDesc": {
-        "message": "掃描書籤中無效或無法連線的網址",
+        "message": "找出頁面已無法開啟的書籤",
         "description": "Dead link checker description"
     },
     "tools_aiReorganize": {
@@ -1090,7 +1102,7 @@
         "description": "Statistics tool title"
     },
     "tools_statisticsDesc": {
-        "message": "查看書籤收藏的統計資料",
+        "message": "查看你有多少書籤、資料夾和網站",
         "description": "Statistics tool description"
     },
     "action_scan": {
@@ -1574,7 +1586,7 @@
         "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
     },
     "tools_category_ai": {
-        "message": "AI 與智慧功能",
+        "message": "AI",
         "description": "AI tools category"
     },
     "tools_category_maintenance": {
@@ -1582,7 +1594,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "中繼資料與內容",
+        "message": "頁面標題與圖示",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -1598,7 +1610,7 @@
         "description": "Title for AI Export tool"
     },
     "tools_exportAIDesc": {
-        "message": "以適合 AI 讀取的格式 (XML/Markdown) 匯出書籤",
+        "message": "將書籤儲存為可交給 AI 聊天機器人的檔案",
         "description": "Description for AI Export tool"
     },
     "tools_autoTagging": {
@@ -1606,7 +1618,7 @@
         "description": "Title for Auto-Tagging tool"
     },
     "tools_autoTaggingDesc": {
-        "message": "自動為書籤建議標籤",
+        "message": "讓 AI 為書籤推薦標籤",
         "description": "Description for Auto-Tagging tool"
     },
     "tools_summarizer": {
@@ -1614,7 +1626,7 @@
         "description": "Title for Summarizer tool"
     },
     "tools_summarizerDesc": {
-        "message": "為書籤內容產生簡短摘要",
+        "message": "讓 AI 為書籤頁面撰寫簡短摘要",
         "description": "Description for Summarizer tool"
     },
     "tools_findDuplicates": {
@@ -1630,7 +1642,7 @@
         "description": "Title for URL Cleaner tool"
     },
     "tools_cleanUrlsDesc": {
-        "message": "移除網址中的追蹤參數",
+        "message": "移除書籤連結中的追蹤代碼",
         "description": "Description for URL Cleaner tool"
     },
     "tools_metadataFetcher": {
@@ -1646,7 +1658,7 @@
         "description": "Title for Privacy Scanner tool"
     },
     "tools_privacyScannerDesc": {
-        "message": "偵測網址中的敏感資料",
+        "message": "找出包含密碼、金鑰或電子郵件地址的連結",
         "description": "Description for Privacy Scanner tool"
     },
     "tools_category_data": {
@@ -1978,8 +1990,8 @@
         "description": "Toggle whole word matching"
     },
     "search_useRegex": {
-        "message": "使用規則運算式",
-        "description": "Toggle regex search mode"
+        "message": "進階模式搜尋（規則運算式）",
+        "description": "Search option: treat the search as a regular expression"
     },
     "search_recentSearches": {
         "message": "最近的搜尋",
@@ -2018,7 +2030,7 @@
         "description": "AI tools settings tab label"
     },
     "settings_aiToolsDesc": {
-        "message": "設定 AI 輔助的書籤工具",
+        "message": "書籤管理員中 AI 工具的設定",
         "description": "AI tools settings tab description"
     },
     "settings_maintenance": {
@@ -2026,15 +2038,15 @@
         "description": "Maintenance settings tab label"
     },
     "settings_maintenanceDesc": {
-        "message": "設定清理和修復工具",
+        "message": "清理和修復書籤的工具設定",
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "中繼資料與內容",
+        "message": "頁面標題與圖示",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "設定中繼資料補充工具",
+        "message": "修正頁面標題和網站圖示的工具設定",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -2042,7 +2054,7 @@
         "description": "Security settings tab label"
     },
     "settings_securityDesc": {
-        "message": "設定安全性和隱私工具",
+        "message": "尋找書籤連結中隱私資料的工具設定",
         "description": "Security settings tab description"
     },
     "settings_analytics": {
@@ -2050,7 +2062,7 @@
         "description": "Analytics settings tab label"
     },
     "settings_analyticsDesc": {
-        "message": "設定書籤分析和報告",
+        "message": "書籤統計的設定",
         "description": "Analytics settings tab description"
     },
     "settings_aiMaxCategories": {
@@ -2924,10 +2936,6 @@
                 "example": "token"
             }
         }
-    },
-    "tools_privacyFragment": {
-        "message": "網址包含片段",
-        "description": "Privacy finding"
     },
     "tools_privacyEmail": {
         "message": "偵測到電子郵件地址",
@@ -5746,6 +5754,26 @@
     "popup_shortcutSetUp": {
         "message": "前往設定",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "newcomer_quickSaveTip": {
+        "message": "快速儲存：在任何頁面按 $1",
+        "description": "Popup and side panel line naming the quick save shortcut that works now; $1 is the keys (such as Alt+Shift+S, or ⌥⇧S on macOS)"
+    },
+    "newcomer_useBookmarkKeyInstead": {
+        "message": "改用 $1",
+        "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "newcomer_aiOffNotice": {
+        "message": "AI 已關閉：開啟「AI 功能」之前，這裡的內容都不會執行。",
+        "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
+    },
+    "newcomer_backUpSettings": {
+        "message": "備份設定",
+        "description": "Options footer button that saves a backup file of the settings, custom prompts, AI services, and saved searches (not bookmarks)"
+    },
+    "newcomer_restoreSettings": {
+        "message": "還原設定",
+        "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
     "actionName_searchBookmarks": {
         "message": "搜尋書籤",

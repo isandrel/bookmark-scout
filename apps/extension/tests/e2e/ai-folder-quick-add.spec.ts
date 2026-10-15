@@ -368,7 +368,7 @@ for (const { width, height, count } of [
     await expect(hints).toBeInViewport({ ratio: 1 });
 
     // The search box placeholder is shown whole, never cut off mid-word.
-    const search = popup.getByRole('combobox', { name: 'Search bookmarks...' });
+    const search = popup.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
     await expect
       .poll(() =>
         search.evaluate((input: HTMLInputElement) => {

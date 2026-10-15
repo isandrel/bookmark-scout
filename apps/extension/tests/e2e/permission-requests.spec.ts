@@ -36,7 +36,7 @@ async function menuRootRegistered(worker: Worker): Promise<boolean> {
 async function openDataSettings(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.getByRole('tab', { name: 'Saving & Search', exact: true }).click();
-  return page.getByRole('switch', { name: 'Context Menu' });
+  return page.getByRole('switch', { name: 'Right-Click Menu' });
 }
 
 /** Simulates the user declining every permission prompt on this page. */
@@ -90,9 +90,12 @@ test('declining a permission leaves Context Menu off and says so', async ({
   const toast = toastRegion(page);
   await expect(toast.getByText('× Permission not granted', { exact: true })).toBeVisible();
   await expect(
-    toast.getByText('The right-click menu stays off. Turn on Context Menu again to allow it.', {
-      exact: true,
-    }),
+    toast.getByText(
+      'The right-click menu stays off. To allow it, turn on Right-Click Menu again.',
+      {
+        exact: true,
+      },
+    ),
   ).toBeVisible();
   await expect(toggle).toHaveAttribute('aria-checked', 'false');
   expect((await storedSettings(extensionWorker)).contextMenuEnabled).not.toBe(true);
@@ -109,14 +112,18 @@ async function sidePanelBehindArticle(context: BrowserContext, page: Page, exten
     }),
   );
   await page.goto(`chrome-extension://${extensionId}/sidepanel.html`);
-  await expect(page.getByRole('combobox', { name: 'Search bookmarks...' })).toBeVisible();
+  await expect(
+    page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
+  ).toBeVisible();
   const article = await context.newPage();
   await article.goto(ARTICLE_URL);
   await article.bringToFront();
 }
 
 async function addCurrentPageTo(page: Page, folderTitle: string) {
-  await page.getByRole('combobox', { name: 'Search bookmarks...' }).fill(folderTitle);
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill(folderTitle);
   const row = page.locator('.folder-item').filter({ hasText: folderTitle }).first();
   await row.hover();
   await row.getByTitle('Add current page').click();

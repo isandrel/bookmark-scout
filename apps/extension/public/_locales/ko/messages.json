@@ -8,12 +8,24 @@
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
-        "message": "북마크 검색...",
-        "description": "Search input placeholder"
+        "message": "폴더 이름을 입력해 이 페이지 저장…",
+        "description": "Popup and side panel search box placeholder: typing a folder name lists folders to save the current page in; the box also searches bookmarks"
     },
     "search_placeholderShort": {
-        "message": "검색",
-        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+        "message": "폴더 이름…",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one (popup_searchPlaceholder)"
+    },
+    "newcomer_searchLabel": {
+        "message": "북마크를 검색하거나 폴더 이름을 입력해 이 페이지 저장",
+        "description": "Accessible name of the popup and side panel search box, read by screen readers"
+    },
+    "newcomer_pageToSave": {
+        "message": "저장할 페이지: $1",
+        "description": "Line under the popup and side panel search box naming the page a folder click saves; $1 is the page title"
+    },
+    "newcomer_searchOptions": {
+        "message": "검색 옵션 더 보기",
+        "description": "Button in the popup search box that opens a menu with Match Case, Match Whole Word, and pattern search"
     },
     "shortcuts_popupHint": {
         "message": "단축키: $1",
@@ -580,7 +592,7 @@
         "description": "Behavior category label"
     },
     "settings_behaviorDesc": {
-        "message": "확장 프로그램 동작 제어",
+        "message": "북마크 트리, 링크, 삭제가 동작하는 방식입니다",
         "description": "Behavior category description"
     },
     "settings_savingSearch": {
@@ -864,7 +876,7 @@
         "description": "AI category label"
     },
     "settings_aiDesc": {
-        "message": "AI 기반 폴더 추천",
+        "message": "선택 사항: 선택한 AI 서비스가 폴더를 추천하고 북마크에 관한 질문에 답합니다",
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
@@ -1074,7 +1086,7 @@
         "description": "Dead link checker tool title"
     },
     "tools_checkDeadLinksDesc": {
-        "message": "접근할 수 없는 URL을 검색합니다",
+        "message": "페이지가 더 이상 열리지 않는 북마크를 찾습니다",
         "description": "Dead link checker description"
     },
     "tools_aiReorganize": {
@@ -1090,7 +1102,7 @@
         "description": "Statistics tool title"
     },
     "tools_statisticsDesc": {
-        "message": "북마크 컬렉션에 대한 통계를 확인합니다",
+        "message": "북마크, 폴더, 사이트가 몇 개인지 확인합니다",
         "description": "Statistics tool description"
     },
     "action_scan": {
@@ -1574,7 +1586,7 @@
         "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
     },
     "tools_category_ai": {
-        "message": "AI 및 인텔리전스",
+        "message": "AI",
         "description": "AI tools category"
     },
     "tools_category_maintenance": {
@@ -1582,7 +1594,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "메타데이터 및 콘텐츠",
+        "message": "페이지 제목 및 아이콘",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -1598,7 +1610,7 @@
         "description": "Title for AI Export tool"
     },
     "tools_exportAIDesc": {
-        "message": "북마크를 AI 친화적인 형식(XML/Markdown)으로 내보냅니다",
+        "message": "AI 챗봇에 줄 수 있는 파일로 북마크를 저장합니다",
         "description": "Description for AI Export tool"
     },
     "tools_autoTagging": {
@@ -1606,7 +1618,7 @@
         "description": "Title for Auto-Tagging tool"
     },
     "tools_autoTaggingDesc": {
-        "message": "북마크에 어울리는 태그를 자동으로 제안합니다",
+        "message": "AI가 북마크 태그를 추천하게 합니다",
         "description": "Description for Auto-Tagging tool"
     },
     "tools_summarizer": {
@@ -1614,7 +1626,7 @@
         "description": "Title for Summarizer tool"
     },
     "tools_summarizerDesc": {
-        "message": "북마크한 콘텐츠의 간단한 요약을 생성합니다",
+        "message": "AI가 북마크한 페이지의 짧은 요약을 쓰게 합니다",
         "description": "Description for Summarizer tool"
     },
     "tools_findDuplicates": {
@@ -1630,7 +1642,7 @@
         "description": "Title for URL Cleaner tool"
     },
     "tools_cleanUrlsDesc": {
-        "message": "URL에서 추적 매개변수를 제거합니다",
+        "message": "북마크 링크에서 추적 코드를 제거합니다",
         "description": "Description for URL Cleaner tool"
     },
     "tools_metadataFetcher": {
@@ -1646,7 +1658,7 @@
         "description": "Title for Privacy Scanner tool"
     },
     "tools_privacyScannerDesc": {
-        "message": "URL에 포함된 민감한 데이터를 감지합니다",
+        "message": "비밀번호, 키, 이메일 주소가 들어 있는 링크를 찾습니다",
         "description": "Description for Privacy Scanner tool"
     },
     "tools_category_data": {
@@ -1942,7 +1954,7 @@
         "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
-        "message": "컨텍스트 메뉴",
+        "message": "마우스 오른쪽 버튼 메뉴",
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
@@ -1978,8 +1990,8 @@
         "description": "Toggle whole word matching"
     },
     "search_useRegex": {
-        "message": "정규식 사용",
-        "description": "Toggle regex search mode"
+        "message": "고급 패턴 검색(정규식)",
+        "description": "Search option: treat the search as a regular expression"
     },
     "search_recentSearches": {
         "message": "최근 검색",
@@ -2018,7 +2030,7 @@
         "description": "AI tools settings tab label"
     },
     "settings_aiToolsDesc": {
-        "message": "AI 기반 북마크 도구를 설정합니다",
+        "message": "북마크 관리자의 AI 도구 설정입니다",
         "description": "AI tools settings tab description"
     },
     "settings_maintenance": {
@@ -2026,15 +2038,15 @@
         "description": "Maintenance settings tab label"
     },
     "settings_maintenanceDesc": {
-        "message": "정리 및 복구 도구를 설정합니다",
+        "message": "북마크를 정리하고 복구하는 도구의 설정입니다",
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "메타데이터 및 콘텐츠",
+        "message": "페이지 제목 및 아이콘",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "메타데이터 보강 도구를 설정합니다",
+        "message": "페이지 제목과 사이트 아이콘을 고치는 도구의 설정입니다",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -2042,7 +2054,7 @@
         "description": "Security settings tab label"
     },
     "settings_securityDesc": {
-        "message": "보안 및 개인정보 도구를 설정합니다",
+        "message": "북마크 링크에서 개인 정보를 찾는 도구의 설정입니다",
         "description": "Security settings tab description"
     },
     "settings_analytics": {
@@ -2050,7 +2062,7 @@
         "description": "Analytics settings tab label"
     },
     "settings_analyticsDesc": {
-        "message": "통계 및 리포트 기능을 설정합니다",
+        "message": "북마크 통계 설정입니다",
         "description": "Analytics settings tab description"
     },
     "settings_aiMaxCategories": {
@@ -2924,10 +2936,6 @@
                 "example": "token"
             }
         }
-    },
-    "tools_privacyFragment": {
-        "message": "URL에 프래그먼트가 있습니다",
-        "description": "Privacy finding"
     },
     "tools_privacyEmail": {
         "message": "이메일 주소가 감지되었습니다",
@@ -3916,7 +3924,7 @@
         "description": "Toast title when the user declines a browser permission a feature asked for"
     },
     "permission_contextMenuDenied": {
-        "message": "마우스 오른쪽 버튼 메뉴는 꺼진 상태로 유지됩니다. 허용하려면 컨텍스트 메뉴를 다시 켜세요.",
+        "message": "마우스 오른쪽 버튼 메뉴는 꺼진 상태로 유지됩니다. 허용하려면 마우스 오른쪽 버튼 메뉴를 다시 켜세요.",
         "description": "Toast text when the right-click menu permission is declined"
     },
     "permission_currentTabTitle": {
@@ -5930,6 +5938,26 @@
     "popup_shortcutSetUp": {
         "message": "설정하기",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "newcomer_quickSaveTip": {
+        "message": "빠른 저장: 아무 페이지에서나 $1 누르기",
+        "description": "Popup and side panel line naming the quick save shortcut that works now; $1 is the keys (such as Alt+Shift+S, or ⌥⇧S on macOS)"
+    },
+    "newcomer_useBookmarkKeyInstead": {
+        "message": "대신 $1 사용",
+        "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "newcomer_aiOffNotice": {
+        "message": "AI가 꺼져 있습니다. AI 기능을 켜기 전에는 여기 있는 기능이 실행되지 않습니다.",
+        "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
+    },
+    "newcomer_backUpSettings": {
+        "message": "설정 백업",
+        "description": "Options footer button that saves a backup file of the settings, custom prompts, AI services, and saved searches (not bookmarks)"
+    },
+    "newcomer_restoreSettings": {
+        "message": "설정 복원",
+        "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
     "actionName_searchBookmarks": {
         "message": "북마크 검색",

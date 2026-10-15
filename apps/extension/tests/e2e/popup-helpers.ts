@@ -67,10 +67,26 @@ export async function popupTreeParentId(page: Page, nodeId: string): Promise<str
   }, nodeId);
 }
 
+/**
+ * Turns a search option (Match Case, Match Whole Word, pattern search) on or off from the search
+ * box's options menu, then closes the menu, which returns focus to the search box.
+ */
+export async function toggleSearchOption(page: Page, name: string | RegExp) {
+  await page.getByTestId('search-options').click();
+  const item = page.getByRole('menuitemcheckbox', { name });
+  const before = await item.getAttribute('aria-checked');
+  await item.click();
+  await expect(item).toHaveAttribute('aria-checked', before === 'true' ? 'false' : 'true');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('menu')).toHaveCount(0);
+}
+
 export async function openPopup(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   // By its label: a header full of buttons (AI on) shortens the placeholder.
-  await expect(page.getByRole('combobox', { name: 'Search bookmarks...' })).toBeVisible();
+  await expect(
+    page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
+  ).toBeVisible();
 }
 
 /**

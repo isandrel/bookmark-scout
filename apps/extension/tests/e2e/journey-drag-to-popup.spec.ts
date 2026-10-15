@@ -67,7 +67,9 @@ test('a bookmark dragged onto a tree folder in the manager moves in an open popu
   await expect(bookmarkRow(page, 'Staying Article')).toBeVisible();
 
   // Its search finds the bookmark, under the shelf.
-  await page.getByRole('combobox', { name: 'Search bookmarks...' }).fill('Wandering');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Wandering');
   await expect(page.locator('mark').filter({ hasText: 'Wandering' })).toBeVisible();
   await expect(page.locator('.bookmark-item')).toHaveCount(1);
   expect(await popupTreeParentId(page, articleId)).toBe(shelfId);

@@ -297,7 +297,7 @@ test('clearing saved site icons restores browser icons in the manager and popup'
 
   const popup = await context.newPage();
   await openPopup(popup, extensionId);
-  await popup.getByPlaceholder('Search bookmarks...').fill('Saved Icon Link');
+  await popup.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }).fill('Saved Icon Link');
   const popupIcon = bookmarkRow(popup, 'Saved Icon Link').locator('[data-icon-source]');
   await expect(popupIcon).toHaveAttribute('data-icon-source', 'saved');
   await expect(popupIcon).toHaveAttribute('src', PNG_DATA_URL);

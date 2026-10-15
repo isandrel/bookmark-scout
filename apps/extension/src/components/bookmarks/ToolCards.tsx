@@ -2,6 +2,8 @@ import { Folder, Globe, type LucideIcon } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
 
 type ToolCardProps = {
+  /** Element id, for links that open the page on this card. */
+  id?: string;
   icon: React.ReactNode;
   title: string;
   description: string;
@@ -27,6 +29,7 @@ function resolveScope(
 }
 
 export function ToolCard({
+  id,
   icon,
   title,
   description,
@@ -72,7 +75,7 @@ export function ToolCard({
   };
 
   return (
-    <div className="space-y-2 p-3">
+    <div id={id} className="scroll-m-3 space-y-2 p-3">
       <ToolCardHeader
         icon={icon}
         title={title}

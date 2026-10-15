@@ -8,8 +8,8 @@
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
-        "message": "ブックマークを検索...",
-        "description": "Search input placeholder"
+        "message": "フォルダー名を入力してこのページを保存…",
+        "description": "Popup and side panel search box placeholder: typing a folder name lists folders to save the current page in; the box also searches bookmarks"
     },
     "shortcuts_popupHint": {
         "message": "ショートカット: $1",
@@ -576,7 +576,7 @@
         "description": "Behavior category label"
     },
     "settings_behaviorDesc": {
-        "message": "拡張機能の動作を制御",
+        "message": "ブックマークツリー、リンク、削除の動作です",
         "description": "Behavior category description"
     },
     "settings_savingSearch": {
@@ -860,7 +860,7 @@
         "description": "AI category label"
     },
     "settings_aiDesc": {
-        "message": "AIによるフォルダ推薦",
+        "message": "任意: 選んだ AI サービスがフォルダーを提案し、ブックマークについての質問に答えます",
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
@@ -1050,7 +1050,7 @@
         "description": "Dead link checker tool title"
     },
     "tools_checkDeadLinksDesc": {
-        "message": "アクセスできないURLを検出します",
+        "message": "ページが開かなくなったブックマークを見つけます",
         "description": "Dead link checker description"
     },
     "tools_aiReorganize": {
@@ -1066,7 +1066,7 @@
         "description": "Statistics tool title"
     },
     "tools_statisticsDesc": {
-        "message": "ブックマークの統計情報を表示します",
+        "message": "ブックマーク、フォルダー、サイトの数を確認します",
         "description": "Statistics tool description"
     },
     "action_scan": {
@@ -1550,7 +1550,7 @@
         "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
     },
     "tools_category_ai": {
-        "message": "AI・インテリジェンス",
+        "message": "AI",
         "description": "AI tools category"
     },
     "tools_category_maintenance": {
@@ -1558,7 +1558,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "メタデータ・コンテンツ",
+        "message": "ページのタイトルとアイコン",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -1574,7 +1574,7 @@
         "description": "Title for AI Export tool"
     },
     "tools_exportAIDesc": {
-        "message": "ブックマークをAI向けの形式（XML/Markdown）で書き出します",
+        "message": "AI チャットボットに渡せるファイルとしてブックマークを保存します",
         "description": "Description for AI Export tool"
     },
     "tools_autoTagging": {
@@ -1582,7 +1582,7 @@
         "description": "Title for Auto-Tagging tool"
     },
     "tools_autoTaggingDesc": {
-        "message": "ブックマークのタグを自動で提案します",
+        "message": "AI にブックマークのタグを提案させます",
         "description": "Description for Auto-Tagging tool"
     },
     "tools_summarizer": {
@@ -1590,7 +1590,7 @@
         "description": "Title for Summarizer tool"
     },
     "tools_summarizerDesc": {
-        "message": "ブックマークしたコンテンツの短い要約を生成します",
+        "message": "AI にブックマークしたページの短い要約を書かせます",
         "description": "Description for Summarizer tool"
     },
     "tools_findDuplicates": {
@@ -1606,7 +1606,7 @@
         "description": "Title for URL Cleaner tool"
     },
     "tools_cleanUrlsDesc": {
-        "message": "URLからトラッキングパラメータを削除します",
+        "message": "ブックマークのリンクからトラッキング用のコードを取り除きます",
         "description": "Description for URL Cleaner tool"
     },
     "tools_metadataFetcher": {
@@ -1622,7 +1622,7 @@
         "description": "Title for Privacy Scanner tool"
     },
     "tools_privacyScannerDesc": {
-        "message": "URL内の機密データを検出します",
+        "message": "パスワード、キー、メールアドレスを含むリンクを見つけます",
         "description": "Description for Privacy Scanner tool"
     },
     "tools_category_data": {
@@ -1918,7 +1918,7 @@
         "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
-        "message": "コンテキストメニュー",
+        "message": "右クリックメニュー",
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
@@ -1954,8 +1954,8 @@
         "description": "Toggle whole word matching"
     },
     "search_useRegex": {
-        "message": "正規表現を使用",
-        "description": "Toggle regex search mode"
+        "message": "高度なパターン検索（正規表現）",
+        "description": "Search option: treat the search as a regular expression"
     },
     "search_recentSearches": {
         "message": "最近の検索",
@@ -1994,7 +1994,7 @@
         "description": "AI tools settings tab label"
     },
     "settings_aiToolsDesc": {
-        "message": "AIを使ったブックマークツールを設定します",
+        "message": "ブックマークマネージャーの AI ツールの設定です",
         "description": "AI tools settings tab description"
     },
     "settings_maintenance": {
@@ -2002,15 +2002,15 @@
         "description": "Maintenance settings tab label"
     },
     "settings_maintenanceDesc": {
-        "message": "クリーンアップと修復ツールを設定します",
+        "message": "ブックマークを整理・修復するツールの設定です",
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "メタデータと内容",
+        "message": "ページのタイトルとアイコン",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "メタデータ補完ツールを設定します",
+        "message": "ページのタイトルとサイトのアイコンを直すツールの設定です",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -2018,7 +2018,7 @@
         "description": "Security settings tab label"
     },
     "settings_securityDesc": {
-        "message": "セキュリティとプライバシーツールを設定します",
+        "message": "ブックマークのリンクに含まれる個人情報を見つけるツールの設定です",
         "description": "Security settings tab description"
     },
     "settings_analytics": {
@@ -2026,7 +2026,7 @@
         "description": "Analytics settings tab label"
     },
     "settings_analyticsDesc": {
-        "message": "統計とレポート機能を設定します",
+        "message": "ブックマーク統計の設定です",
         "description": "Analytics settings tab description"
     },
     "settings_aiMaxCategories": {
@@ -2900,10 +2900,6 @@
                 "example": "token"
             }
         }
-    },
-    "tools_privacyFragment": {
-        "message": "URLにフラグメントが含まれています",
-        "description": "Privacy finding"
     },
     "tools_privacyEmail": {
         "message": "メールアドレスが見つかりました",
@@ -3892,7 +3888,7 @@
         "description": "Toast title when the user declines a browser permission a feature asked for"
     },
     "permission_contextMenuDenied": {
-        "message": "右クリックメニューはオフのままです。許可するには、もう一度コンテキストメニューをオンにしてください。",
+        "message": "右クリックメニューはオフのままです。許可するには、もう一度「右クリックメニュー」をオンにしてください。",
         "description": "Toast text when the right-click menu permission is declined"
     },
     "permission_currentTabTitle": {
@@ -5700,8 +5696,20 @@
         "description": "Name of the options page, used in its tab title"
     },
     "search_placeholderShort": {
-        "message": "検索",
-        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+        "message": "フォルダー名…",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one (popup_searchPlaceholder)"
+    },
+    "newcomer_searchLabel": {
+        "message": "ブックマークを検索、またはフォルダー名を入力してこのページを保存",
+        "description": "Accessible name of the popup and side panel search box, read by screen readers"
+    },
+    "newcomer_pageToSave": {
+        "message": "保存するページ: $1",
+        "description": "Line under the popup and side panel search box naming the page a folder click saves; $1 is the page title"
+    },
+    "newcomer_searchOptions": {
+        "message": "その他の検索オプション",
+        "description": "Button in the popup search box that opens a menu with Match Case, Match Whole Word, and pattern search"
     },
     "ai_errorNoObject": {
         "message": "AI の応答が想定した形式ではありませんでした。もう一度試すか、別のモデルを選んでください。",
@@ -5930,6 +5938,26 @@
     "popup_shortcutSetUp": {
         "message": "設定する",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "newcomer_quickSaveTip": {
+        "message": "クイック保存: どのページでも $1 を押す",
+        "description": "Popup and side panel line naming the quick save shortcut that works now; $1 is the keys (such as Alt+Shift+S, or ⌥⇧S on macOS)"
+    },
+    "newcomer_useBookmarkKeyInstead": {
+        "message": "代わりに $1 を使う",
+        "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "newcomer_aiOffNotice": {
+        "message": "AI はオフです。AI機能をオンにするまで、ここにあるものは動作しません。",
+        "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
+    },
+    "newcomer_backUpSettings": {
+        "message": "設定をバックアップ",
+        "description": "Options footer button that saves a backup file of the settings, custom prompts, AI services, and saved searches (not bookmarks)"
+    },
+    "newcomer_restoreSettings": {
+        "message": "設定を復元",
+        "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
     "actionName_searchBookmarks": {
         "message": "ブックマークを検索",

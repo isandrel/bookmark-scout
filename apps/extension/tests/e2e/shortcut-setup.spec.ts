@@ -31,6 +31,8 @@ const missingNotice = (page: Page) => page.locator('[data-notice="quick-save-sho
 
 /** The browser's bookmark keys as Chrome and the extension show them on this platform. */
 const bookmarkKeys = process.platform === 'darwin' ? '⌘D' : 'Ctrl+D';
+/** Quick save's suggested keys as the extension shows them on this platform. */
+const quickSaveKeys = process.platform === 'darwin' ? '⌥⇧S' : 'Alt+Shift+S';
 
 /** Makes `commands.getAll` on this page report quick save on the browser's bookmark keys. */
 async function giveQuickSaveBookmarkKeys(page: Page) {
@@ -62,7 +64,7 @@ test('the browser assigns the suggested keys, not its own bookmark keys', async 
   );
 });
 
-test('with every command bound, the popup offers the bookmark keys for quick save', async ({
+test('with every command bound, the popup names the working keys and offers the bookmark keys', async ({
   context,
   extensionBrowser,
   extensionId,
@@ -71,13 +73,16 @@ test('with every command bound, the popup offers the bookmark keys for quick sav
   await openPopup(page, extensionId);
   await expect(notice(page)).toBeVisible();
   await expect(notice(page)).toHaveAttribute('data-notice', 'quick-save-bookmark-key');
-  await expect(notice(page)).toContainText(`Use ${bookmarkKeys} for quick save`);
+  // The shortcut that works now comes first; the bookmark keys need setting up, so they follow.
+  await expect(notice(page)).toContainText(`Quick save: press ${quickSaveKeys} on any page`);
   await expect(missingNotice(page)).toHaveCount(0);
 
-  // The steps need more room than the line, so Set it up opens them in Options.
+  // The steps need more room than the line, so the link opens them in Options.
   const [options] = await Promise.all([
     context.waitForEvent('page'),
-    notice(page).getByRole('button', { name: 'Set it up', exact: true }).click(),
+    notice(page)
+      .getByRole('button', { name: `Use ${bookmarkKeys} instead`, exact: true })
+      .click(),
   ]);
   await expect(options).toHaveURL(
     `chrome-extension://${extensionId}/options.html?category=search#quick-save-shortcuts`,

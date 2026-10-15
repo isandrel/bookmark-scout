@@ -15,7 +15,7 @@ const ZONE_OFFSET: Record<DropZone, number> = { before: 0.12, into: 0.5, after: 
 
 async function openTree(page: Page, extensionId: string, surface: Surface) {
   await page.goto(`chrome-extension://${extensionId}/${surface}.html`);
-  await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })).toBeVisible();
 }
 
 /**
@@ -24,7 +24,7 @@ async function openTree(page: Page, extensionId: string, surface: Surface) {
  * the wrong place when the tree re-rendered mid-drag under load.
  */
 async function searchTree(page: Page, query: string) {
-  await page.getByPlaceholder('Search bookmarks...').fill(query);
+  await page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }).fill(query);
   await expect(page.locator('mark').first()).toBeVisible();
 }
 

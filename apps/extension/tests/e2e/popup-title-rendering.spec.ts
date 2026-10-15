@@ -30,7 +30,9 @@ async function seed(worker: Worker) {
 
 async function openPopup(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
+  await expect(
+    page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
+  ).toBeVisible();
 }
 
 test('bookmark and folder titles containing markup render as literal text', async ({
@@ -70,7 +72,7 @@ test('bookmark and folder titles containing markup render as literal text', asyn
   await expect(page.getByText('Tom & Jerry <b>not bold</b>', { exact: true })).toBeVisible();
 
   // Highlighting wraps matches in <mark> without re-interpreting the rest of the title.
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('style');
   const match = page.locator('.bookmark-item').filter({ hasText: 'onerror' });
   await expect(match).toBeVisible();

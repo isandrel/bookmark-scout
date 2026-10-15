@@ -47,7 +47,9 @@ function folderTrigger(page: Page, title: string) {
 
 async function openPopup(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
+  await expect(
+    page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
+  ).toBeVisible();
 }
 
 async function visibleOrder(page: Page, titles: string[]) {
@@ -144,7 +146,7 @@ test('clearing search restores the expansion state from before the search', asyn
   await folderTrigger(page, 'E2E Expanded Folder').click();
   await expect(page.getByText('Keep Visible Link', { exact: true })).toBeVisible();
 
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('Needle Result');
   await expect(page.getByText('Needle Result', { exact: true })).toBeVisible();
   await expect(page.getByText('Keep Visible Link', { exact: true })).toHaveCount(0);
@@ -200,7 +202,7 @@ test('expandFoldersOnSearch opens matching folders and ancestors only when enabl
   ]);
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('Deep Needle');
   await expect(page.getByText('Deep Needle', { exact: true })).toBeVisible();
 
@@ -209,7 +211,9 @@ test('expandFoldersOnSearch opens matching folders and ancestors only when enabl
 
   await setSettings(extensionWorker, { expandFoldersOnSearch: false });
   await page.reload();
-  await page.getByPlaceholder('Search bookmarks...').fill('Deep Needle');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Deep Needle');
   await expect(topLevelFolders(page).first()).toBeVisible();
   await expect(page.getByText('Deep Needle', { exact: true })).toHaveCount(0);
 });
@@ -230,7 +234,9 @@ test('maxSearchResults limits visible matches and explains the limit', async ({
   await setSettings(extensionWorker, { maxSearchResults: 10 });
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Limit Item');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Limit Item');
   await expect(page.locator('.bookmark-item')).toHaveCount(10);
   await expect(page.getByRole('status').filter({ hasText: 'first 10 of 12' })).toBeVisible();
 
@@ -250,7 +256,7 @@ test('search history records, reuses, clears, and respects the setting', async (
   const storedHistory = () => readStored<string[]>(extensionWorker, STORAGE_ITEMS.searchHistory);
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('History Target');
   await search.press('Enter');
   await expect.poll(storedHistory).toEqual(['History Target']);

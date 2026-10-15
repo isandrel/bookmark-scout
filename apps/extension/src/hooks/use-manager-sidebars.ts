@@ -7,7 +7,7 @@
  *   taking its room (`overlay`), are closed when the page loads, and close again once used.
  */
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { z } from 'zod';
 
 const layout = readConfig(
@@ -51,14 +51,22 @@ export function useManagerSidebars(): {
   const [foldersOpen, setFoldersOpen] = useState(
     () => layout.folders_open && !matches(OVERLAY_QUERY),
   );
-  const [toolsOpen, setToolsOpen] = useState(() => layout.tools_open && !matches(OVERLAY_QUERY));
+  // Options' Export bookmarks button opens the page on the Tools sidebar's export card.
+  const [toolsOpen, setToolsOpen] = useState(
+    () =>
+      window.location.hash === `#${MANAGER_EXPORT_HASH}` ||
+      (layout.tools_open && !matches(OVERLAY_QUERY)),
+  );
 
   // Shrinking the window: drawers start closed, and both sidebars together leave the folders.
+  // The page already starts with them closed in a narrow window, unless a link asked for one.
+  const wasOverlay = useRef(overlay);
   useEffect(() => {
-    if (overlay) {
+    if (overlay && !wasOverlay.current) {
       setFoldersOpen(false);
       setToolsOpen(false);
     }
+    wasOverlay.current = overlay;
   }, [overlay]);
   useEffect(() => {
     if (!foldersOpen || !toolsOpen) return;

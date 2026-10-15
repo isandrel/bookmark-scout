@@ -6,6 +6,7 @@ import {
   otherBookmarksTitle,
   seedFolder,
   setSettings,
+  toggleSearchOption,
 } from './popup-helpers';
 import { readSettings, readStored, STORAGE_ITEMS, writeStored } from './storage';
 
@@ -21,7 +22,9 @@ test('expand all during a search keeps the filter and the result limit', async (
   ]);
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Needle Link');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Needle Link');
   await expect(bookmarkRow(page, 'Needle Link')).toBeVisible();
   await expect(page.locator('.bookmark-item')).toHaveCount(1);
 
@@ -49,7 +52,7 @@ test('permanent folder names and empty-title regexes do not return the whole tre
   ]);
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('bar');
   await expect(bookmarkRow(page, 'Bar Chart Tools')).toBeVisible();
   await expect(page.getByText('Plain Entry', { exact: true })).toHaveCount(0);
@@ -77,7 +80,7 @@ test('whole-word search matches CJK and symbol-edged terms, and invalid regex wa
   ]);
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await page.getByRole('button', { name: 'Match whole word' }).click();
 
   await search.fill('ブックマーク');
@@ -116,7 +119,7 @@ test('search box is focused on open and the result limit notice stays visible', 
 
   await page.setViewportSize({ width: 400, height: 600 });
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await expect(search).toBeFocused();
   await expect(page.getByTestId('search-history')).toHaveCount(0);
 
@@ -142,11 +145,11 @@ test('search history ignores abandoned queries and supports the keyboard', async
   const storedHistory = () => readStored<string[]>(extensionWorker, STORAGE_ITEMS.searchHistory);
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
 
   await search.fill('Abandoned One');
-  await page.getByRole('button', { name: 'Match case' }).click();
-  await page.getByRole('button', { name: 'Match case' }).click();
+  await toggleSearchOption(page, 'Match case');
+  await toggleSearchOption(page, 'Match case');
   await page.getByRole('button', { name: 'Clear search' }).click();
   await expect(search).toHaveValue('');
   expect(await storedHistory()).toBeUndefined();
@@ -182,7 +185,7 @@ test('ArrowDown enters the tree even with search history, which Alt+ArrowDown op
   await writeStored(extensionWorker, STORAGE_ITEMS.searchHistory, ['Older Query', 'Newer Query']);
 
   await openPopup(page, extensionId);
-  const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   const history = page.getByTestId('search-history');
   await expect(search).toBeFocused();
 

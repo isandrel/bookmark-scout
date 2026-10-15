@@ -117,7 +117,7 @@ test('a backup made after changes in Options and the manager restores them, with
 
   // Export from Options.
   const downloadPromise = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export' }).click();
+  await page.getByRole('button', { name: 'Back up settings' }).click();
   const download = await downloadPromise;
   await expect(toastRegion(page).getByText('✓ Backup exported', { exact: true })).toBeVisible();
   const raw = await readFile(await download.path(), 'utf8');
@@ -136,7 +136,7 @@ test('a backup made after changes in Options and the manager restores them, with
   expect(await readSettings(extensionWorker)).toEqual({ language: 'en' });
   expect(await readStored(extensionWorker, STORAGE_ITEMS.aiServices)).toBeUndefined();
 
-  await page.getByLabel('Import', { exact: true }).setInputFiles({
+  await page.getByLabel('Restore settings', { exact: true }).setInputFiles({
     name: 'bookmark-scout-backup.json',
     mimeType: 'application/json',
     buffer: Buffer.from(raw),

@@ -34,7 +34,7 @@ test.describe('popup keyboard shortcuts', () => {
     page,
   }) => {
     await openPopup(page, extensionId);
-    const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+    const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
     await expect(search).toHaveAttribute('aria-keyshortcuts', '/');
     await expect(search).toHaveAttribute('title', /\/ search/);
 
@@ -70,7 +70,7 @@ test.describe('popup keyboard shortcuts', () => {
     ]);
 
     await openPopup(page, extensionId);
-    const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+    const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
     const bar = folderTrigger(page, seeded.barId);
     const keysFolder = folderTrigger(page, seeded.folderId);
     const alpha = page.getByRole('treeitem', { name: 'Key Alpha' });
@@ -193,7 +193,9 @@ test.describe('popup keyboard shortcuts', () => {
       page,
     }) => {
       await page.goto(`chrome-extension://${extensionId}/${surface}.html`);
-      await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
+      await expect(
+        page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
+      ).toBeVisible();
       // Registered after the page's own listeners, so it sees whether any of them claimed the key.
       await page.evaluate(() => {
         const seen: boolean[] = [];
@@ -285,10 +287,9 @@ test.describe('manager keyboard shortcuts', () => {
       });
     });
     await openPopup(page, extensionId);
-    await expect(page.getByRole('combobox', { name: 'Search bookmarks...' })).toHaveAttribute(
-      'title',
-      /⌥\+↓ show recent searches/,
-    );
+    await expect(
+      page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
+    ).toHaveAttribute('title', /⌥\+↓ show recent searches/);
 
     await page.goto(managerUrl(extensionId));
     await page.keyboard.press('Shift+?');
@@ -298,7 +299,9 @@ test.describe('manager keyboard shortcuts', () => {
       const keyCap = dialog.locator('kbd', { hasText: key }).first();
       await expect(keyCap.locator('[data-slot="kbd-icon"]'), key).toBeVisible();
     }
-    await expect(dialog.locator('kbd', { hasText: 'j' }).locator('[data-slot="kbd-icon"]')).toHaveCount(0);
+    await expect(
+      dialog.locator('kbd', { hasText: 'j' }).locator('[data-slot="kbd-icon"]'),
+    ).toHaveCount(0);
   });
 
   test('Backspace and Alt+ArrowUp go to the parent folder, then to the root', async ({

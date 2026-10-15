@@ -5,7 +5,7 @@
 import type { Page } from '@playwright/test';
 import { readConfigToml } from '../config-files';
 import { expect, test, toastRegion } from './fixtures';
-import { bookmarkRow, folderRow, openPopup, seedFolder } from './popup-helpers';
+import { bookmarkRow, folderRow, openPopup, seedFolder, toggleSearchOption } from './popup-helpers';
 import { replaceSettings, STORAGE_ITEMS, seedAIServices, writeStored } from './storage';
 
 // The harness opens the popup as a tab, which gets no activeTab, so saving the current page
@@ -120,10 +120,8 @@ for (const language of ['en', 'ja', 'zh_CN'] as const) {
     await expect(bookmarkRow(page, 'Narrow result')).toBeVisible();
     await expectSearchRowFits(page);
     // Every control stays usable: the last one in the row still works.
-    await page.getByRole('button', { name: /Match Case|大文字|区分大小写/ }).click();
-    await expect(
-      page.getByRole('button', { name: /Match Case|大文字|区分大小写/ }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    await toggleSearchOption(page, /Match Case|大文字|区分大小写/);
+    await expect(page.getByTestId('search-options')).toBeInViewport({ ratio: 1 });
   });
 }
 
@@ -181,7 +179,9 @@ test('folder matches keep their order after a save while the pointer is over the
     { title: 'Holdmatch Beta', children: [] },
   ]);
   await openPopup(page, extensionId);
-  await page.getByRole('combobox', { name: 'Search bookmarks...' }).fill('holdmatch');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('holdmatch');
   const rows = page.getByTestId('folder-matches').locator('[data-slot="folder-match"]');
   const order = () =>
     rows.evaluateAll((items) => items.map((item) => item.getAttribute('data-folder-trigger')));
@@ -205,7 +205,7 @@ test('folder matches keep their order after a save while the pointer is over the
 
   // Once the pointer and focus leave the list, the new ranking shows.
   await page.mouse.move(5, 5);
-  await page.getByRole('combobox', { name: 'Search bookmarks...' }).focus();
+  await page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }).focus();
   await expect.poll(order).toEqual([seeded.ids['Holdmatch Beta'], seeded.ids['Holdmatch Alpha']]);
 });
 
@@ -221,7 +221,9 @@ test('tree rows show the whole title, and bookmarks their address, on hover', as
   await seedFolder(extensionWorker, longFolder, [{ title: longTitle, url }]);
   await page.setViewportSize({ width: popup.width.min, height: 500 });
   await openPopup(page, extensionId);
-  await page.getByRole('combobox', { name: 'Search bookmarks...' }).fill('keeps going');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('keeps going');
 
   const link = bookmarkRow(page, longTitle).locator('a');
   await expect(link).toBeVisible();

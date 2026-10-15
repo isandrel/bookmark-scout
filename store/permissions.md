@@ -35,7 +35,7 @@ Why the rest stay required: `bookmarks` is the product; `storage` holds settings
 
 | Browser | Before (0.2.0 as released) | After |
 | --- | --- | --- |
-| Chrome and Edge | "Read and change your bookmarks", "Read your browsing history" (`tabs`, which also covers `favicon`) | "Read and change your bookmarks" |
+| Chrome and Edge | "Read and change your bookmarks", "Read your browsing history" (`tabs`) | "Read and change your bookmarks"; the optional `favicon` has its own warning, "Read the icons of the websites you visit", shown only when it is requested |
 | Firefox | "Read and modify bookmarks", "Access browser tabs" | "Read and modify bookmarks"; data collection: "doesn't require data collection" |
 
 ### When each optional permission is requested

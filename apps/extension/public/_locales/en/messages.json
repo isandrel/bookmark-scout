@@ -8,12 +8,24 @@
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
-        "message": "Search bookmarks...",
-        "description": "Search input placeholder"
+        "message": "Type a folder name to save this page…",
+        "description": "Popup and side panel search box placeholder: typing a folder name lists folders to save the current page in; the box also searches bookmarks"
     },
     "search_placeholderShort": {
-        "message": "Search",
-        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+        "message": "Folder name…",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one (popup_searchPlaceholder)"
+    },
+    "newcomer_searchLabel": {
+        "message": "Search bookmarks, or type a folder name to save this page",
+        "description": "Accessible name of the popup and side panel search box, read by screen readers"
+    },
+    "newcomer_pageToSave": {
+        "message": "Page to save: $1",
+        "description": "Line under the popup and side panel search box naming the page a folder click saves; $1 is the page title"
+    },
+    "newcomer_searchOptions": {
+        "message": "More search options",
+        "description": "Button in the popup search box that opens a menu with Match Case, Match Whole Word, and pattern search"
     },
     "shortcuts_popupHint": {
         "message": "Shortcuts: $1",
@@ -588,7 +600,7 @@
         "description": "Behavior category label"
     },
     "settings_behaviorDesc": {
-        "message": "Control extension behavior",
+        "message": "How the bookmark tree, links, and deleting work",
         "description": "Behavior category description"
     },
     "settings_savingSearch": {
@@ -872,7 +884,7 @@
         "description": "AI category label"
     },
     "settings_aiDesc": {
-        "message": "AI-powered folder recommendations",
+        "message": "Optional: an AI service you choose suggests folders and answers questions about your bookmarks",
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
@@ -1082,7 +1094,7 @@
         "description": "Dead link checker tool title"
     },
     "tools_checkDeadLinksDesc": {
-        "message": "Scan bookmarks for broken or unreachable URLs",
+        "message": "Find bookmarks whose pages no longer open",
         "description": "Dead link checker description"
     },
     "tools_aiReorganize": {
@@ -1098,7 +1110,7 @@
         "description": "Statistics tool title"
     },
     "tools_statisticsDesc": {
-        "message": "View stats about your bookmarks collection",
+        "message": "See how many bookmarks, folders, and sites you have",
         "description": "Statistics tool description"
     },
     "action_scan": {
@@ -1582,7 +1594,7 @@
         "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
     },
     "tools_category_ai": {
-        "message": "AI & Intelligence",
+        "message": "AI",
         "description": "AI tools category"
     },
     "tools_category_maintenance": {
@@ -1590,7 +1602,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Metadata & Content",
+        "message": "Page Titles & Icons",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -1606,7 +1618,7 @@
         "description": "Title for AI Export tool"
     },
     "tools_exportAIDesc": {
-        "message": "Export bookmarks in AI-friendly format (XML/Markdown)",
+        "message": "Save bookmarks as a file you can give to an AI chatbot",
         "description": "Description for AI Export tool"
     },
     "tools_autoTagging": {
@@ -1614,7 +1626,7 @@
         "description": "Title for Auto-Tagging tool"
     },
     "tools_autoTaggingDesc": {
-        "message": "Automatically suggest tags for bookmarks",
+        "message": "Let AI suggest tags for bookmarks",
         "description": "Description for Auto-Tagging tool"
     },
     "tools_summarizer": {
@@ -1622,7 +1634,7 @@
         "description": "Title for Summarizer tool"
     },
     "tools_summarizerDesc": {
-        "message": "Generate brief summaries for bookmarked content",
+        "message": "Let AI write short summaries of bookmarked pages",
         "description": "Description for Summarizer tool"
     },
     "tools_findDuplicates": {
@@ -1638,7 +1650,7 @@
         "description": "Title for URL Cleaner tool"
     },
     "tools_cleanUrlsDesc": {
-        "message": "Remove tracking parameters from URLs",
+        "message": "Remove tracking codes from bookmark links",
         "description": "Description for URL Cleaner tool"
     },
     "tools_metadataFetcher": {
@@ -1654,7 +1666,7 @@
         "description": "Title for Privacy Scanner tool"
     },
     "tools_privacyScannerDesc": {
-        "message": "Detect sensitive data in URLs",
+        "message": "Find links that contain passwords, keys, or email addresses",
         "description": "Description for Privacy Scanner tool"
     },
     "tools_category_data": {
@@ -1950,7 +1962,7 @@
         "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
-        "message": "Context Menu",
+        "message": "Right-Click Menu",
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
@@ -1986,8 +1998,8 @@
         "description": "Toggle whole word matching"
     },
     "search_useRegex": {
-        "message": "Use Regular Expression",
-        "description": "Toggle regex search mode"
+        "message": "Advanced pattern search (regex)",
+        "description": "Search option: treat the search as a regular expression"
     },
     "search_recentSearches": {
         "message": "Recent searches",
@@ -2026,7 +2038,7 @@
         "description": "AI tools settings tab label"
     },
     "settings_aiToolsDesc": {
-        "message": "Configure AI-powered bookmark tooling",
+        "message": "Settings for the AI tools in the bookmark manager",
         "description": "AI tools settings tab description"
     },
     "settings_maintenance": {
@@ -2034,15 +2046,15 @@
         "description": "Maintenance settings tab label"
     },
     "settings_maintenanceDesc": {
-        "message": "Configure cleanup and repair tools",
+        "message": "Settings for the tools that clean up and repair bookmarks",
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Metadata & Content",
+        "message": "Page Titles & Icons",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Configure metadata enrichment tools",
+        "message": "Settings for the tools that fix page titles and site icons",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -2050,7 +2062,7 @@
         "description": "Security settings tab label"
     },
     "settings_securityDesc": {
-        "message": "Configure security and privacy tools",
+        "message": "Settings for the tool that finds private data in bookmark links",
         "description": "Security settings tab description"
     },
     "settings_analytics": {
@@ -2058,7 +2070,7 @@
         "description": "Analytics settings tab label"
     },
     "settings_analyticsDesc": {
-        "message": "Configure bookmark analysis and reporting",
+        "message": "Settings for bookmark statistics",
         "description": "Analytics settings tab description"
     },
     "settings_aiMaxCategories": {
@@ -2932,10 +2944,6 @@
                 "example": "token"
             }
         }
-    },
-    "tools_privacyFragment": {
-        "message": "URL contains a fragment",
-        "description": "Privacy finding"
     },
     "tools_privacyEmail": {
         "message": "Email address detected",
@@ -3924,7 +3932,7 @@
         "description": "Toast title when the user declines a browser permission a feature asked for"
     },
     "permission_contextMenuDenied": {
-        "message": "The right-click menu stays off. Turn on Context Menu again to allow it.",
+        "message": "The right-click menu stays off. To allow it, turn on Right-Click Menu again.",
         "description": "Toast text when the right-click menu permission is declined"
     },
     "permission_currentTabTitle": {
@@ -5938,6 +5946,26 @@
     "popup_shortcutSetUp": {
         "message": "Set it up",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "newcomer_quickSaveTip": {
+        "message": "Quick save: press $1 on any page",
+        "description": "Popup and side panel line naming the quick save shortcut that works now; $1 is the keys (such as Alt+Shift+S, or ⌥⇧S on macOS)"
+    },
+    "newcomer_useBookmarkKeyInstead": {
+        "message": "Use $1 instead",
+        "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "newcomer_aiOffNotice": {
+        "message": "AI is off — nothing here runs until you turn on AI Features.",
+        "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
+    },
+    "newcomer_backUpSettings": {
+        "message": "Back up settings",
+        "description": "Options footer button that saves a backup file of the settings, custom prompts, AI services, and saved searches (not bookmarks)"
+    },
+    "newcomer_restoreSettings": {
+        "message": "Restore settings",
+        "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
     "actionName_searchBookmarks": {
         "message": "Search bookmarks",

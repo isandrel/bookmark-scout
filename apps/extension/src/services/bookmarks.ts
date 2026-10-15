@@ -848,6 +848,14 @@ export async function openBookmarkManager(): Promise<void> {
   await browser.tabs.create({ url: browser.runtime.getURL(BOOKMARK_MANAGER_PATH), active: true });
 }
 
+/** Opens the manager with the Tools sidebar on its Export Bookmarks card (`MANAGER_EXPORT_HASH`). */
+export async function openBookmarkExport(): Promise<void> {
+  await browser.tabs.create({
+    url: browser.runtime.getURL(`${BOOKMARK_MANAGER_PATH}#${MANAGER_EXPORT_HASH}`),
+    active: true,
+  });
+}
+
 /**
  * Gets the current active tab information. Its URL is readable through the toolbar popup's
  * activeTab or the optional `tabs` permission; without either it throws
