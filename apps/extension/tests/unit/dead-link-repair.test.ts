@@ -113,7 +113,7 @@ describe('applying dead-link repairs', () => {
     ]);
     expect(outcome).toMatchObject({ deleted: 0, replaced: 1, skipped: 2, failed: 1 });
     expect(outcome.issues).toEqual([
-      { id: 'gone', title: 'Title gone', reason: 'changed' },
+      { id: 'gone', title: 'Title gone', reason: 'deleted' },
       { id: 'edited', title: 'Title edited', reason: 'changed' },
       { id: 'broken', title: 'Title broken', reason: 'failed' },
     ]);

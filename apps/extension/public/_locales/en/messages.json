@@ -6568,5 +6568,13 @@
     "qaManager_deadLinkRedirectsSameSite": {
         "message": "Redirects to $1 on the same site",
         "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
+    },
+    "qaManager_deadLinkRepairIssueDeleted": {
+        "message": "$1: deleted after the scan; nothing to repair",
+        "description": "Dead-link repair issue: the bookmark was deleted after the scan, so there was nothing to repair. $1 is the bookmark title."
+    },
+    "qaManager_reorgIssueDeleted": {
+        "message": "$1: deleted after the preview; nothing to move",
+        "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
     }
 }

@@ -559,8 +559,11 @@ export type BookmarkChange = {
 export type BookmarkChangeIssue = {
   id: string;
   title: string;
-  /** `changed`: deleted or edited since the review, so it was skipped. */
-  reason: 'changed' | 'failed';
+  /**
+   * `deleted`: gone since the review; `changed`: edited or moved since the review. Either way it
+   * was skipped. `failed`: the browser rejected the change.
+   */
+  reason: 'deleted' | 'changed' | 'failed';
 };
 
 export type BookmarkChangesUndoResult = {
@@ -678,7 +681,11 @@ export async function applyBookmarkChanges(
     async (writer) => {
       for (const change of changes) {
         const live = await getLiveBookmark(change.id);
-        if (!live || !matchesFields(live, change.expect) || (change.check && !change.check(live))) {
+        if (!live) {
+          issues.push({ id: change.id, title: change.title, reason: 'deleted' });
+          continue;
+        }
+        if (!matchesFields(live, change.expect) || (change.check && !change.check(live))) {
           issues.push({ id: change.id, title: change.title, reason: 'changed' });
           continue;
         }

@@ -52,7 +52,7 @@ describe('applyBookmarkChanges', () => {
     expect(result).toMatchObject({ applied: 2, skipped: 2, failed: 0 });
     expect(result.issues).toEqual([
       { id: 'b', title: 'B', reason: 'changed' },
-      { id: 'gone', title: 'GONE', reason: 'changed' },
+      { id: 'gone', title: 'GONE', reason: 'deleted' },
     ]);
     expect(bookmarks.get('a')?.url).toBe('https://e2e.invalid/a2');
     expect(bookmarks.get('b')?.url).toBe('https://e2e.invalid/b');

@@ -178,6 +178,13 @@ function isComplete(counts: ChangeCounts): boolean {
   return counts.skipped === 0 && counts.failed === 0;
 }
 
+/** The note under a partial reorganization for a move left out, by why. */
+const REORGANIZE_ISSUE_KEYS = {
+  deleted: 'qaManager_reorgIssueDeleted',
+  changed: 'ai_reorgIssueChanged',
+  failed: 'ai_reorgIssueFailed',
+} as const satisfies Record<BookmarkChangeIssue['reason'], string>;
+
 /**
  * What a tool's Undo reports when the change was undone already with Ctrl+Z, which shares its
  * undo history entry.
@@ -380,9 +387,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         keepOpen: !complete,
         notes: result.issues.map((issue) => ({
           id: issue.id,
-          text: t(issue.reason === 'changed' ? 'ai_reorgIssueChanged' : 'ai_reorgIssueFailed', [
-            getBookmarkDisplayTitle(issue.title),
-          ]),
+          text: t(REORGANIZE_ISSUE_KEYS[issue.reason], [getBookmarkDisplayTitle(issue.title)]),
         })),
         undoExpiresAt: result.expiresAt,
         undo:

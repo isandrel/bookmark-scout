@@ -265,7 +265,7 @@ test('repairs skip bookmarks changed after the scan and report them', async ({
     'Deleted: 1. URLs replaced: 0. Skipped because they changed after the scan: 2. Failed: 0.',
   );
   await expect(outcome).toContainText('Missing: changed after the scan; left untouched');
-  await expect(outcome).toContainText('Moved: changed after the scan; left untouched');
+  await expect(outcome).toContainText('Moved: deleted after the scan; nothing to repair');
   await expect
     .poll(async () =>
       (await childrenOf(extensionWorker, folder.folderId)).map((item) => [item.title, item.url]),
