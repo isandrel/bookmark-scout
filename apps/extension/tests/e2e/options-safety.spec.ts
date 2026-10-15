@@ -3,9 +3,10 @@ import { expect, test, toastRegion } from './fixtures';
 import { settingRow } from './options-helpers';
 import { readSettings, readStored, STORAGE_ITEMS, setSettings } from './storage';
 
+/** Opens Options on Saving & Search, which holds the number fields these checks edit. */
 async function openOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await expect(page.getByRole('tab', { name: 'Saving & Search', exact: true })).toBeVisible();
+  await page.getByRole('tab', { name: 'Saving & Search', exact: true }).click();
 }
 
 test('the empty notification area takes no clicks, so the bottom edge of a footer button works', async ({

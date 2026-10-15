@@ -167,6 +167,40 @@ test('unsupported and malformed saved scopes fall back without resetting other t
   await expect(toolCard(page, 'URL Cleaner')).toHaveCount(0);
 });
 
+test('tools sidebar lists cleanup tools first and starts on all bookmarks at the top level', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E Tool Scope');
+  await setSettings(extensionWorker, {
+    language: 'en',
+    aiContextPackerEnabled: true,
+    duplicatesEnabled: true,
+    deadLinksEnabled: true,
+    deadLinksDefaultScope: 'folder',
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html`);
+  await page.getByTitle('Show tools').click();
+  const sidebar = page.getByTestId('tools-sidebar');
+  const headings = await sidebar.getByRole('heading', { level: 3 }).allTextContents();
+  expect(headings[0]).toBe('Maintenance');
+  expect(headings.indexOf('AI')).toBeGreaterThan(headings.indexOf('Analytics'));
+  const cards = await sidebar.getByRole('heading', { level: 4 }).allTextContents();
+  expect(cards[0]).toBe('Duplicate Cleaner');
+
+  // No folder open: the tool starts on all bookmarks, whatever its Default Scope says.
+  const deadLinks = toolCard(page, 'Check Dead Links');
+  await expect(deadLinks.getByRole('combobox')).toHaveText('All Bookmarks');
+  // In a folder, the Default Scope setting applies again.
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
+  await page.getByTitle('Show tools').click();
+  await expect(toolCard(page, 'Check Dead Links').getByRole('combobox')).toHaveText(
+    'E2E Tool Scope',
+  );
+});
+
 test('tools sidebar headings, cards, scopes, and dialogs follow the selected language', async ({
   extensionId,
   extensionWorker,

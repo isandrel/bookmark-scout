@@ -1,5 +1,5 @@
 /**
- * Options > AI > Local AI agents, below its switch: whether the bridge program is running
+ * Options > For developers > Local AI agents, below its switch: whether the bridge program is running
  * (`agentBridgeStatusValue`, kept by the background), how to install it, and which actions local
  * agents may use.
  */

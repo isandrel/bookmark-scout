@@ -6133,7 +6133,7 @@
     },
     "settings_agentBridge": {
         "message": "ローカル AI エージェント",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "ローカル AI エージェントを許可",
@@ -6161,19 +6161,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "ローカルエージェントにできること",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "エージェントにしてほしくない操作をオフにすると、その操作はエージェントに一切提示されません。変更には「変更を許可」も必要で、変更ごとにあなたの承認を待ちます。",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "ブリッジプログラム",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "このコンピューターに bookmark-scout-mcp プログラムをインストールし、「$1」を一度実行します。ブラウザーに登録され、Claude Code、Codex、Cursor に追加する方法が表示されます。",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "実行されていません。上のスイッチをオンにし、ブラウザーから求められたらアクセスを許可してください。",
@@ -6300,5 +6300,37 @@
     "welcome_readGuide": {
         "message": "ガイドを読む",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "基本設定",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "よく変更する設定です。その他の設定は「詳細設定」にあります。",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "詳細設定",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "AI は任意です",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "Bookmark Scout は AI なしで使えます。AI にフォルダーを提案させたり質問に答えさせたりするには、「AI」で設定してください。",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "AI を設定",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "開発者向け",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "Claude Code など、パソコンで動かす AI エージェントにブックマークを使わせます",
+        "description": "Options > For developers: line under the tab title"
     }
 }

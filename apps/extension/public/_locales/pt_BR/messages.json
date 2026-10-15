@@ -6141,7 +6141,7 @@
     },
     "settings_agentBridge": {
         "message": "Agentes de IA locais",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "Permitir agentes de IA locais",
@@ -6169,19 +6169,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "O que os agentes locais podem fazer",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "Desative o que você não quer que os agentes façam; isso nem é oferecido a eles. Alterações também precisam de Permitir alterações, e cada uma aguarda sua aprovação.",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "Programa ponte",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "Instale o programa bookmark-scout-mcp neste computador e execute “$1” uma vez. Ele se registra nos seus navegadores e mostra como adicioná-lo ao Claude Code, Codex ou Cursor.",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "Não está em execução. Ative a chave acima e permita o acesso quando o navegador pedir.",
@@ -6308,5 +6308,37 @@
     "welcome_readGuide": {
         "message": "Ler o guia",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "Essenciais",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "As configurações que a maioria das pessoas muda. O resto fica em Avançado.",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "Avançado",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "A IA é opcional",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "O Bookmark Scout funciona sem IA. Para a IA sugerir pastas e responder perguntas, configure-a em IA.",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "Configurar a IA",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "Para desenvolvedores",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "Deixe agentes de IA no seu computador, como o Claude Code, usarem seus favoritos",
+        "description": "Options > For developers: line under the tab title"
     }
 }

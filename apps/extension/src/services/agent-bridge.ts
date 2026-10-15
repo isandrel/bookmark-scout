@@ -1,5 +1,5 @@
 /**
- * Access for local AI agents (Options > AI): the background's end of the bookmark-scout-mcp bridge
+ * Access for local AI agents (Options > For developers): the background's end of the bookmark-scout-mcp bridge
  * (`packages/mcp-bridge`). While the setting is on and native messaging is allowed, it starts the
  * bridge program through native messaging, tells it which actions agents may use (the registry's
  * entries as JSON Schema), and answers their calls through `runAction`, like Ask AI's tools.
