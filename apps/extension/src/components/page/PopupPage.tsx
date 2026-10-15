@@ -617,7 +617,7 @@ function PopupPage() {
           describedBy={firstMatch ? saveToHintId : undefined}
         />
 
-        <CurrentPageLine />
+        <CurrentPageLine folders={folders} />
 
         {/* A quick save made on a page that could not show its notification. */}
         <QuickSaveResultPanel />

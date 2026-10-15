@@ -224,6 +224,14 @@ export const useBookmarkStore = create<BookmarkState>()(
               };
             }
 
+            // Saving it into another folder is allowed, and the toast says it makes another copy.
+            const elsewhere = tab.url
+              ? (await findBookmarksByUrl(tab.url)).find((node) => node.parentId !== folderId)
+              : undefined;
+            const otherFolderTitle = elsewhere?.parentId
+              ? await quoteToastItemTitle((await getBookmark(elsewhere.parentId)).title)
+              : undefined;
+
             // Recorded like every other change, so the manager's undo can take it back.
             const title = tab.title || t('popup_untitled');
             const { result: created } = await recordBookmarkWrites(
@@ -233,9 +241,12 @@ export const useBookmarkStore = create<BookmarkState>()(
             // Shown right away; its event arrives later and finds it already there.
             await treeSync.applyChanges([{ type: 'created', node: created }]);
 
+            const added = t('toast_bookmarkAddedDesc', [truncatedTitle, folderTitle]);
             return {
               success: true,
-              message: t('toast_bookmarkAddedDesc', [truncatedTitle, folderTitle]),
+              message: otherFolderTitle
+                ? `${added} ${t('qaPopup_secondCopyNote', otherFolderTitle)}`
+                : added,
             };
           } catch (error) {
             bookmarkLogger.error({ error }, 'Failed to add bookmark');

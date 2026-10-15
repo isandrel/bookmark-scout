@@ -6540,5 +6540,13 @@
     "qaPopup_hintSaveTo": {
         "message": "In $1 speichern",
         "description": "Popup and side panel footer while typing in the search box with folders matched: Enter saves the current page into the first matching folder; $1 is that folder's name"
+    },
+    "qaPopup_alreadySavedIn": {
+        "message": "Bereits gespeichert in $1",
+        "description": "Line under 'Page to save' in the popup and side panel when the current page is already bookmarked; $1 is the folder path, or a list of paths when it is saved in several folders"
+    },
+    "qaPopup_secondCopyNote": {
+        "message": "Das ist eine weitere Kopie: Die Seite ist auch in „$1“.",
+        "description": "Added to the toast after saving the current page from the popup or side panel when the page was already bookmarked in another folder; $1 is that other folder's name"
     }
 }

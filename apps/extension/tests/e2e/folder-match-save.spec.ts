@@ -195,3 +195,33 @@ test('the side panel saves to the first folder match on Enter too', async ({
   await search.press('Enter');
   await expect.poll(() => childCount(extensionWorker, deep)).toBe(1);
 });
+
+test('a page saved elsewhere says where, and a save into another folder says it is another copy', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { barTitle } = await seedLibrary(extensionWorker);
+  const { deep, reading } = await hooksFolders(extensionWorker);
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+  const savedIn = page.getByTestId('current-page-saved-in');
+  await expect(page.getByTestId('current-page-line')).toBeVisible();
+  await expect(savedIn).toHaveCount(0);
+
+  await search.fill('hooks');
+  await search.press('Enter');
+  await expect.poll(() => childCount(extensionWorker, reading)).toBe(1);
+  await expect(savedIn).toHaveText(`Already saved in ${barTitle} / ${ROOT} / Reading / Hooks`);
+  await expect(toastRegion(page).getByText(/another copy/)).toHaveCount(0);
+
+  // Saving it in another folder is allowed, and says so.
+  await search.fill('react hooks');
+  await search.press('Enter');
+  await expect.poll(() => childCount(extensionWorker, deep)).toBe(1);
+  await expect(
+    toastRegion(page).getByText('This is another copy: the page is also in "Hooks".'),
+  ).toBeVisible();
+  await expect(savedIn).toContainText('Reading / Hooks');
+  await expect(savedIn).toContainText('Frontend / React / Hooks');
+});
