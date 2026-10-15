@@ -5020,7 +5020,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "제공자를 원하는 만큼 저장할 수 있습니다. 모든 AI 도구는 기본 서비스를 사용합니다.",
+        "message": "제공자를 원하는 만큼 저장할 수 있습니다. AI 도구는 기본 서비스를 사용합니다. 내장 AI는 폴더 추천만 하므로, 내장 AI가 기본인 동안 다른 도구는 켜져 있는 다른 서비스 중 첫 번째를 사용합니다.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {

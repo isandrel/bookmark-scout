@@ -5028,7 +5028,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "Enregistrez autant de fournisseurs que vous le souhaitez. Tous les outils d'IA utilisent le service par défaut.",
+        "message": "Enregistrez autant de fournisseurs que vous le souhaitez. Les outils d'IA utilisent le service par défaut. L'IA intégrée ne fait que suggérer des dossiers : tant qu'elle est le service par défaut, les autres outils utilisent le premier autre service activé.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {

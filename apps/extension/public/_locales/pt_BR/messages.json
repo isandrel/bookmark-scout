@@ -5028,7 +5028,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "Salve quantos provedores quiser. Todas as ferramentas de IA usam o serviço padrão.",
+        "message": "Salve quantos provedores quiser. As ferramentas de IA usam o serviço padrão. A IA integrada só sugere pastas; enquanto ela for o padrão, as outras ferramentas usam o primeiro outro serviço ativado.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {
