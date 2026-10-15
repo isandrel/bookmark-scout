@@ -192,7 +192,8 @@ const SUGGESTION_KEYS = [
 export function AskAIChat({ onClose }: AskAIPanelProps) {
   const { state } = useAIServices();
   const { value: readPageContent } = useSetting('aiReadPageContent');
-  const service = state.services.find((candidate) => candidate.id === state.defaultServiceId);
+  // The service Ask AI uses: the default one, unless that is the built-in model, which runs no tools.
+  const service = pickAIService(state, 'askAI');
   const provider = service?.provider;
   const canSearchWeb = provider ? supportsWebSearch(provider) : false;
   const { value: webSearch, setValue: setWebSearch } = useSetting('askAiWebSearch');
