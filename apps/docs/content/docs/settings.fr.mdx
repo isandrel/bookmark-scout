@@ -125,7 +125,7 @@ Choisissez les commandes affichées par les menus contextuels et ⋯ du gestionn
 
 ## IA [#ai]
 
-L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'activation des **Fonctionnalités d'IA** ; d'ici là, les paramètres d'IA de cet onglet et de l'onglet **Outils d'IA** sont grisés, sous une note qui l'indique. Vous pouvez quand même les modifier.
+L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'activation des **Fonctionnalités d'IA** ; d'ici là, les paramètres d'IA de cet onglet et de l'onglet **Outils d'IA** sont grisés, sous une note qui l'indique. Vous pouvez quand même les modifier. Tant que le service par défaut n'est pas configuré, un encadré **L'IA est facultative** en haut explique ce que fait l'IA, ce dont elle a besoin, ce qu'elle peut coûter et ce qui est envoyé, avec un lien vers [Configurer les outils d'IA](/guides/ai-tools).
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
@@ -179,7 +179,7 @@ L'étiquetage automatique et le générateur de résumés portent toujours sur l
 | **Nettoyeur d'URL** | **Supprimer les fragments** désactivé ; **Trier les paramètres de requête** et **Dédoublonner les paramètres de requête** activés ; listes **Paramètres à conserver** et **Paramètres à supprimer** |
 | **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8 s ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-La **Portée par défaut** d'un outil s'applique lorsqu'un dossier est ouvert dans le gestionnaire de favoris. Au niveau supérieur du gestionnaire, où aucun dossier n'est ouvert, les outils commencent sur **Tous les favoris**.
+Les outils commencent sur **Tous les favoris**, pour qu'une analyse lancée depuis le dossier sur lequel s'ouvre le gestionnaire n'oublie pas les autres. Modifiez la **Portée par défaut** d'un outil pour qu'il commence plutôt sur le dossier ouvert. **Réorganisation des dossiers par IA** commence sur le dossier ouvert, car un plan pour tous les favoris les envoie tous à votre fournisseur d'IA. Au niveau supérieur du gestionnaire, où aucun dossier n'est ouvert, chaque outil commence sur **Tous les favoris**.
 
 Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Pour que les paramètres tiennent dans la synchronisation du navigateur, chaque liste compte au plus 20 entrées, et un nom de paramètre au plus 32 caractères (lettres, chiffres et ponctuation d'URL). Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
 
@@ -200,7 +200,7 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Activer l'outil Actualiser les icônes de site** | Activé | Affiche **Actualiser les icônes de site** dans la barre latérale Outils |
-| **Portée par défaut** | Dossier actuel | Portée initiale de l'actualisation des icônes de site |
+| **Portée par défaut** | Tous les favoris | Portée initiale de l'actualisation des icônes de site |
 | **Taille d'icône préférée** | 32 px | Lorsqu'une page propose plusieurs icônes, télécharge celle dont la taille est la plus proche de cette valeur |
 | **Taille maximale du fichier d'icône** | 64 Ko | Les fichiers d'icône plus volumineux ne sont ni téléchargés ni enregistrés |
 | **Limite de stockage des icônes** | 4 Mo | Taille totale des icônes enregistrées sur cet appareil ; les plus anciennes sont supprimées en premier |

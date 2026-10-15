@@ -8,18 +8,19 @@ import { useRef, useState } from 'react';
 
 type ProviderOption = SearchableSelectOption;
 
+const PROVIDER_GROUP_LABELS: Record<AIProviderGroup, MessageKey> = {
+  featured: 'settings_aiProviderGroupFeatured',
+  local: 'settings_aiProviderGroupLocal',
+  custom: 'settings_aiProviderGroupCustom',
+  catalog: 'settings_aiProviderGroupCatalog',
+};
+
 /** Every provider as a picker option, grouped like the provider catalog. */
 function providerOptions(): ProviderOption[] {
-  const groupLabels: Record<AIProviderGroup, MessageKey> = {
-    featured: 'settings_aiProviderGroupFeatured',
-    local: 'settings_aiProviderGroupLocal',
-    custom: 'settings_aiProviderGroupCustom',
-    catalog: 'settings_aiProviderGroupCatalog',
-  };
   return getAvailableProviders().map((provider) => ({
     value: provider.id,
     label: getLocalizedProviderName(provider.id),
-    group: t(groupLabels[getProviderGroup(provider.id)]),
+    group: t(PROVIDER_GROUP_LABELS[getProviderGroup(provider.id)]),
     iconUrl: getProviderLogoUrl(provider.id),
   }));
 }
@@ -52,6 +53,7 @@ function AddServiceDialog({
   const [provider, setProvider] = useState<string>(DEFAULT_SERVICE_PROVIDER);
   const [name, setName] = useState('');
   const options = providerOptions();
+  const catalogGroup = t(PROVIDER_GROUP_LABELS.catalog);
 
   const add = async () => {
     const service = await addAIService(provider, name);
@@ -72,6 +74,7 @@ function AddServiceDialog({
             <Label id="ai-service-add-provider" className="text-sm font-medium">
               {t('options_aiServiceProvider')}
             </Label>
+            {/* Well-known providers first; the long catalog shows once the user searches. */}
             <SearchableSelect
               aria-labelledby="ai-service-add-provider"
               value={provider}
@@ -79,6 +82,11 @@ function AddServiceDialog({
               onValueChange={setProvider}
               searchPlaceholder={t('select_searchPlaceholder')}
               emptyText={t('select_noMatches')}
+              searchOnlyGroups={[catalogGroup]}
+              searchOnlyHint={tPlural(
+                'aiOnboard_moreProvidersHint',
+                options.filter((option) => option.group === catalogGroup).length,
+              )}
             />
           </div>
           <Field id="ai-service-add-name" label={t('options_aiServiceName')}>

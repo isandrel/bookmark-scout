@@ -5,6 +5,7 @@ provider_kind = "native"
 requires_api_key = true
 api_key_placeholder = "AI..."
 base_url = "https://generativelanguage.googleapis.com/v1beta"
+key_url = "https://aistudio.google.com/app/apikey"
 model_list = "google"
 logo = "google"
 

@@ -1,9 +1,10 @@
 # Defaults for Options > AI Tools, one table per tool section. `default_scope` is "folder" or
-# "all"; a tool that always runs on one scope has none.
+# "all"; a tool that always runs on one scope has none. Tools start on all bookmarks, so a run
+# from the manager's landing folder (the bookmarks bar) does not miss Other Bookmarks.
 
 [context_packer]
 enabled = true
-default_scope = "folder"
+default_scope = "all"
 output_format = "markdown"
 include_folder_path = true
 include_dates = true
@@ -31,6 +32,8 @@ merge_mode = "replace"
 
 [reorganization]
 enabled = true
+# The one exception: a plan for every bookmark sends them all to the AI provider, which costs
+# money and makes a long review, so it starts on the open folder.
 default_scope = "folder"
 min_confidence = { default = 0.55, min = 0, max = 1, step = 0.05 }
 batch_size = { default = 100, min = 1, max = 1000, step = 10 }

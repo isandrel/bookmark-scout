@@ -1,7 +1,14 @@
 import { readFile } from 'node:fs/promises';
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
+import {
+  childrenOf,
+  chooseExportFolder,
+  openTools,
+  seedFolder,
+  setSettings,
+  toolCard,
+} from './tool-helpers';
 
 const SECRET_URL = 'https://e2e.invalid/callback?token=e2e-secret-123&page=2';
 const EMAIL_URL = 'https://e2e.invalid/invite?user=alice%40example.com#access_token=e2e-frag-456';
@@ -30,7 +37,10 @@ test('bookmark export lists sensitive fields and downloads the original on reque
   page,
 }) => {
   const folder = await seedSensitiveFolder(extensionWorker);
-  await setSettings(extensionWorker, { dataDefaultExportFormat: 'html', exportIncludeDates: false });
+  await setSettings(extensionWorker, {
+    dataDefaultExportFormat: 'html',
+    exportIncludeDates: false,
+  });
 
   await openTools(page, extensionId, folder.folderId);
   await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
@@ -45,7 +55,9 @@ test('bookmark export lists sensitive fields and downloads the original on reque
   ).toBeVisible();
   await expect(dialog.getByText(SECRET_URL, { exact: true })).toBeVisible();
   await expect(dialog.getByText('Sensitive query parameter: token', { exact: true })).toBeVisible();
-  await expect(dialog.getByText('Email-like value in parameter: user', { exact: true })).toBeVisible();
+  await expect(
+    dialog.getByText('Email-like value in parameter: user', { exact: true }),
+  ).toBeVisible();
   await expect(
     dialog.getByText('Sensitive value in URL fragment: access_token', { exact: true }),
   ).toBeVisible();
@@ -69,9 +81,13 @@ test('bookmark export downloads a redacted file without changing stored bookmark
   page,
 }) => {
   const folder = await seedSensitiveFolder(extensionWorker);
-  await setSettings(extensionWorker, { dataDefaultExportFormat: 'json', exportIncludeDates: false });
+  await setSettings(extensionWorker, {
+    dataDefaultExportFormat: 'json',
+    exportIncludeDates: false,
+  });
 
   await openTools(page, extensionId, folder.folderId);
+  await chooseExportFolder(page, 'E2E Private Export');
   await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
   const dialog = reviewDialog(page);
   await expect(dialog).toBeVisible();

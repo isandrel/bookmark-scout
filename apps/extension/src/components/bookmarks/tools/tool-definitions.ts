@@ -590,8 +590,12 @@ const sidebarConfig = readConfig(
       .array(z.string())
       .refine(listsEachOnce(Object.keys(TOOL_DEFINITIONS)), 'must list every tool once'),
     top_level_scope: z.enum(['folder', 'all']),
+    export_scope: z.enum(['folder', 'all']),
   }),
 );
+
+/** The scope the export card starts on in a folder (`export_scope`). */
+export const EXPORT_DEFAULT_SCOPE: BookmarkToolScope = sidebarConfig.export_scope;
 
 /** Sidebar sections in display order; the data section (export and import) follows them. */
 export const TOOL_SECTIONS: ReadonlyArray<{ id: ToolSectionId; titleKey: string }> = (

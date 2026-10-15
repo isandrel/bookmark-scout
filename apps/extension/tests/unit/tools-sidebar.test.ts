@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  EXPORT_DEFAULT_SCOPE,
   getSectionTools,
   getToolDefaultScope,
   getToolStartScope,
@@ -7,6 +8,7 @@ import {
   TOOL_SECTIONS,
 } from '@/components/bookmarks/tools/tool-definitions';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
+import { getToolScopeCapability } from '@/services/tool-options';
 import { readConfigToml } from '../config-files';
 
 const config = readConfigToml('ui/tools-sidebar.toml') as {
@@ -48,5 +50,16 @@ describe('Tools sidebar scope', () => {
     const allFirst = { ...settings, deadLinksDefaultScope: 'all' } as Settings;
     expect(getToolDefaultScope(allFirst, deadLinks, '1')).toBe('all');
     expect(getToolStartScope('folder', null)).toBe('all');
+  });
+
+  it('starts every tool that can choose on all bookmarks by default, except AI reorganization', () => {
+    const tools = Object.values(TOOL_DEFINITIONS).filter(
+      (tool) => getToolScopeCapability(tool.id) === 'both',
+    );
+    const folderFirst = tools
+      .filter((tool) => getToolDefaultScope(defaultSettings, tool, '1') === 'folder')
+      .map((tool) => tool.id);
+    expect(folderFirst).toEqual(['reorganization']);
+    expect(EXPORT_DEFAULT_SCOPE).toBe('all');
   });
 });

@@ -6380,5 +6380,53 @@
     "managerDefaults_focusSearch": {
         "message": "Aller au champ de recherche",
         "description": "Keyboard shortcut description in the bookmark manager: the key focuses the search box"
+    },
+    "aiOnboard_title": {
+        "message": "L'IA est facultative",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout fonctionne sans IA. Pour l'utiliser, activez Fonctionnalités d'IA ci-dessous, puis ajoutez un service.",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "L'IA peut suggérer un dossier quand vous enregistrez une page, ajouter des tags et de courts résumés, et répondre à vos questions sur vos favoris (Demander à l'IA).",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "Il faut un compte chez un fournisseur d'IA, comme OpenAI ou Google, et une clé API de ce fournisseur : un code qui permet à Bookmark Scout d'utiliser votre compte. Vous pouvez aussi utiliser un modèle gratuit sur votre ordinateur, comme Ollama, sans clé.",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "Le fournisseur d'IA peut facturer une petite somme à chaque utilisation. Un modèle sur votre ordinateur est gratuit.",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "Ce qui est envoyé : les titres, adresses web et noms de dossiers nécessaires à chaque demande, le titre et l'adresse de la page actuelle, et vos messages à Demander à l'IA. Le texte des pages, seulement si Lire le contenu des pages est activé. Tout va directement au fournisseur choisi ; Bookmark Scout ne reçoit rien.",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "Lire le guide de l'IA",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "Obtenir une clé API auprès de $1",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "Tapez pour chercher parmi $1 autres fournisseurs",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "Tapez pour chercher $1 autre fournisseur",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "L'IA est activée, mais pas encore configurée",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "Terminer la configuration",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

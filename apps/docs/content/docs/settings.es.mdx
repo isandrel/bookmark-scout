@@ -125,7 +125,7 @@ Elige qué comandos muestran los menús contextuales y ⋯ del administrador, y 
 
 ## IA [#ai]
 
-La IA está desactivada de forma predeterminada. Estos ajustes solo importan después de activar **Funciones de IA**; hasta entonces, los ajustes de IA de esta pestaña y de la pestaña **Herramientas de IA** aparecen atenuados bajo una nota que lo indica. Aun así, puedes cambiarlos.
+La IA está desactivada de forma predeterminada. Estos ajustes solo importan después de activar **Funciones de IA**; hasta entonces, los ajustes de IA de esta pestaña y de la pestaña **Herramientas de IA** aparecen atenuados bajo una nota que lo indica. Aun así, puedes cambiarlos. Mientras el servicio predeterminado no esté configurado, un cuadro **La IA es opcional** en la parte superior explica qué hace la IA, qué necesita, cuánto puede costar y qué se envía, con un enlace a [Configurar las herramientas de IA](/guides/ai-tools).
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
@@ -179,7 +179,7 @@ El Etiquetado automático y el Generador de resúmenes siempre trabajan con la c
 | **Limpiador de URLs** | **Quitar fragmentos** desactivado; **Ordenar parámetros de consulta** y **Quitar parámetros de consulta repetidos** activados; listas **Parámetros que se conservan** y **Parámetros que se quitan** |
 | **Comprobar enlaces rotos** | **Tiempo de espera de la solicitud** 8 s; **Solicitudes simultáneas** 4; **Número de reintentos** 1; **Seguir redirecciones** activado; **Códigos de estado correctos** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-El **Ámbito predeterminado** de una herramienta se aplica cuando hay una carpeta abierta en el administrador de marcadores. En el nivel superior del administrador, donde no hay ninguna carpeta abierta, las herramientas empiezan en **Todos los marcadores**.
+Las herramientas empiezan en **Todos los marcadores**, para que un análisis desde la carpeta en la que se abre el administrador no se salte las demás. Cambia el **Ámbito predeterminado** de una herramienta para que empiece en la carpeta abierta. **Reorganización de carpetas con IA** empieza en la carpeta abierta, porque un plan para todos los marcadores los envía todos a tu proveedor de IA. En el nivel superior del administrador, donde no hay ninguna carpeta abierta, todas las herramientas empiezan en **Todos los marcadores**.
 
 Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe un nombre y pulsa Enter, o elige una sugerencia. **Códigos de estado correctos** es una lista de casillas con los códigos habituales, y puedes añadir otros. Para que la configuración quepa en la sincronización del navegador, cada lista admite hasta 20 entradas, y cada nombre de parámetro hasta 32 caracteres (letras, números y signos de URL). Las listas predeterminadas están en [Limpiar duplicados y URLs con seguimiento](/guides/clean-up#strip-tracking-parameters). Consulta también [Encontrar y reparar enlaces rotos](/guides/dead-links).
 
@@ -200,7 +200,7 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Activar Actualizar iconos de sitios** | Activado | Muestra **Actualizar iconos de sitios** en la barra lateral de herramientas |
-| **Ámbito predeterminado** | Carpeta actual | Ámbito con el que empieza la actualización de iconos de sitios |
+| **Ámbito predeterminado** | Todos los marcadores | Ámbito con el que empieza la actualización de iconos de sitios |
 | **Tamaño de icono preferido** | 32px | Cuando una página indica varios iconos, descarga el más cercano a este tamaño |
 | **Tamaño máximo del archivo de icono** | 64 KB | Los archivos de icono más grandes no se descargan ni se guardan |
 | **Límite de almacenamiento de iconos** | 4 MB | Tamaño total de los iconos guardados en este dispositivo; los más antiguos se quitan primero |

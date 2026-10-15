@@ -23,3 +23,7 @@ tools = [
 # top level (no folder open): "all" or "folder". With a folder open, the tool's Default Scope
 # setting applies.
 top_level_scope = "all"
+
+# Scope the export card starts on, which has no setting of its own: "all", so an export from the
+# manager's landing folder (the bookmarks bar) holds every bookmark, or "folder".
+export_scope = "all"

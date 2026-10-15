@@ -103,6 +103,8 @@ test('AI context pack exports the selected folder with AI disabled', async ({
   ]);
   await setSettings(extensionWorker, {
     aiEnabled: false,
+    // It starts on all bookmarks by default; this checks the folder export.
+    aiContextPackerDefaultScope: 'folder',
     aiContextPackerOutputFormat: 'markdown',
     aiContextPackerIncludeFolderPath: true,
     aiContextPackerIncludeDates: false,

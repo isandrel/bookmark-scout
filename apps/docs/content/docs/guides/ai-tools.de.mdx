@@ -18,16 +18,16 @@ KI-Tools senden Lesezeichentitel, URLs und Ordnernamen oder -pfade an den von Ih
 
 <Steps>
 <Step>
-Öffnen Sie die Einstellungen von Bookmark Scout (in Chrome per Rechtsklick auf das Symbol in der Symbolleiste und Auswahl von **Optionen**) und wechseln Sie zum Tab **KI**.
+Öffnen Sie die Einstellungen von Bookmark Scout (in Chrome per Rechtsklick auf das Symbol in der Symbolleiste und Auswahl von **Optionen**) und wechseln Sie zum Tab **KI**. Solange noch kein Dienst eingerichtet ist, fasst oben ein Kasten, **KI ist optional**, zusammen, was KI tut, was sie braucht, was sie kosten kann und was gesendet wird.
 </Step>
 <Step>
 Aktivieren Sie **KI-Funktionen**.
 </Step>
 <Step>
-Klicken Sie unter **KI-Dienste** auf **Dienst hinzufügen** und wählen Sie einen Anbieter. Die Auswahl hat ein Suchfeld und gruppiert Anbieter unter **Empfohlen**, **Lokale Server**, **Benutzerdefiniert** und **Weitere Anbieter (models.dev)**. Wählen Sie dann ein **KI-Modell**.
+Klicken Sie unter **KI-Dienste** auf **Dienst hinzufügen** und wählen Sie einen Anbieter. Die Auswahl zeigt bekannte Anbieter unter **Empfohlen**, danach **Lokale Server** und **Benutzerdefiniert**; tippen Sie in ihr Suchfeld, um etwa 200 weitere unter **Weitere Anbieter (models.dev)** zu finden. Wählen Sie dann ein **KI-Modell**.
 </Step>
 <Step>
-Geben Sie Ihren **API-Schlüssel** ein, falls der Anbieter einen benötigt. Er wird gespeichert, wenn Sie das Feld verlassen, und nur auf diesem Gerät abgelegt. Ein Schlüssel, der nicht dem Format des Anbieters entspricht, wird abgelehnt und nicht gespeichert.
+Geben Sie Ihren **API-Schlüssel** ein, falls der Anbieter einen benötigt. Bei den empfohlenen Anbietern öffnet **API-Schlüssel bei (Anbieter) holen** die Seite, auf der Sie nach der Anmeldung einen Schlüssel erstellen. Der Schlüssel wird gespeichert, wenn Sie das Feld verlassen, und nur auf diesem Gerät abgelegt. Ein Schlüssel, der nicht dem Format des Anbieters entspricht, wird abgelehnt und nicht gespeichert.
 </Step>
 <Step>
 Optional: Klicken Sie auf **Modelle aktualisieren**, um die aktuelle Modellliste des Anbieters zu laden, oder auf **Dienst überprüfen**, um zu prüfen, ob der Anbieter erreichbar ist, den Schlüssel akzeptiert und das gewählte Modell anbietet. Beide lesen die Modellliste des Anbieters, was nichts kostet; die Überprüfung sendet nur bei Anbietern ohne Liste, etwa Azure OpenAI, einen kurzen Test-Prompt. Der Browser fragt beim ersten Mal nach Zugriff auf die Adresse dieses einen Anbieters. Eine aktualisierte Liste bleibt für die Modellauswahl erhalten, bis Sie erneut aktualisieren.
@@ -35,6 +35,8 @@ Optional: Klicken Sie auf **Modelle aktualisieren**, um die aktuelle Modellliste
 </Steps>
 
 <Screenshot name="options-ai" />
+
+Die KI-Schaltflächen im Pop-up und in der Seitenleiste erscheinen, sobald **KI-Funktionen** aktiviert sind und der Standarddienst eingerichtet ist (mit Schlüssel, falls der Anbieter einen benötigt). Bis dahin zeigt das Pop-up **KI ist aktiviert, aber noch nicht eingerichtet** mit **KI fertig einrichten**, das diesen Tab öffnet, und die KI-Tools in der Lesezeichenverwaltung bleiben deaktiviert.
 
 Einstellungen werden automatisch gespeichert. KI-Dienste mit ihren API-Schlüsseln, **Basis-URL** und **Zusätzliche Header (JSON)** bleiben im lokalen Speicher dieses Browsers und werden nie synchronisiert. Andere KI-Einstellungen, etwa ob KI aktiviert ist, werden über Ihr Browserkonto synchronisiert, wo der Browser dies unterstützt.
 

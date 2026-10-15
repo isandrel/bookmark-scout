@@ -6380,5 +6380,53 @@
     "managerDefaults_focusSearch": {
         "message": "Ir para a caixa de pesquisa",
         "description": "Keyboard shortcut description in the bookmark manager: the key focuses the search box"
+    },
+    "aiOnboard_title": {
+        "message": "A IA é opcional",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "O Bookmark Scout funciona sem IA. Para usá-la, ative Recursos de IA abaixo e depois adicione um serviço.",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "A IA pode sugerir uma pasta ao salvar uma página, adicionar tags e resumos curtos e responder perguntas sobre seus favoritos (Perguntar à IA).",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "É preciso ter uma conta em uma empresa de IA, como OpenAI ou Google, e uma chave de API dela: um código que permite ao Bookmark Scout usar sua conta. Ou use um modelo gratuito no seu próprio computador, como o Ollama, sem chave.",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "A empresa de IA pode cobrar um valor pequeno a cada uso. Um modelo no seu próprio computador é gratuito.",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "O que é enviado: os títulos, endereços web e nomes de pastas que cada pedido precisa, o título e o endereço da página atual e suas mensagens para Perguntar à IA. O texto da página, só com Ler conteúdo da página ativado. Tudo vai direto para a empresa que você escolheu; o Bookmark Scout nunca recebe nada.",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "Ler o guia de IA",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "Obter uma chave de API de $1",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "Digite para buscar entre mais $1 provedores",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "Digite para buscar mais $1 provedor",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "A IA está ativada, mas ainda não foi configurada",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "Concluir a configuração da IA",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

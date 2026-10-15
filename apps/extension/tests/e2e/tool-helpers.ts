@@ -53,6 +53,12 @@ export function toolCard(page: Page, title: string): Locator {
     .locator('..');
 }
 
+/** Sets the export card to the open folder; it starts on all bookmarks (`export_scope`). */
+export async function chooseExportFolder(page: Page, folderTitle: string) {
+  await toolCard(page, 'Export Bookmarks').getByRole('combobox').last().click();
+  await page.getByRole('option', { name: folderTitle, exact: true }).click();
+}
+
 export async function openTools(page: Page, extensionId: string, folderId: string) {
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();

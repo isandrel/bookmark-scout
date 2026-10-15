@@ -6380,5 +6380,53 @@
     "managerDefaults_focusSearch": {
         "message": "Suchfeld auswählen",
         "description": "Keyboard shortcut description in the bookmark manager: the key focuses the search box"
+    },
+    "aiOnboard_title": {
+        "message": "KI ist optional",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout funktioniert ohne KI. Um sie zu nutzen, aktivieren Sie unten KI-Funktionen und fügen dann einen Dienst hinzu.",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "KI kann beim Speichern einer Seite einen Ordner vorschlagen, Tags und kurze Zusammenfassungen hinzufügen und Fragen zu Ihren Lesezeichen beantworten (KI fragen).",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "Dafür brauchen Sie ein Konto bei einem KI-Anbieter, etwa OpenAI oder Google, und einen API-Schlüssel von dort: einen Code, mit dem Bookmark Scout Ihr Konto nutzen kann. Oder Sie nutzen ein kostenloses Modell auf Ihrem eigenen Computer, etwa Ollama, ohne Schlüssel.",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "Der KI-Anbieter kann für jede Nutzung einen kleinen Betrag berechnen. Ein Modell auf Ihrem eigenen Computer ist kostenlos.",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "Was gesendet wird: die Titel, Webadressen und Ordnernamen, die eine Anfrage braucht, Titel und Adresse der aktuellen Seite und Ihre Nachrichten an KI fragen. Seitentext nur, wenn Seiteninhalt lesen aktiviert ist. Alles geht direkt an den gewählten Anbieter; Bookmark Scout erhält nichts davon.",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "KI-Anleitung lesen",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "API-Schlüssel bei $1 holen",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "Tippen, um $1 weitere Anbieter zu durchsuchen",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "Tippen, um $1 weiteren Anbieter zu durchsuchen",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "KI ist aktiviert, aber noch nicht eingerichtet",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "KI fertig einrichten",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

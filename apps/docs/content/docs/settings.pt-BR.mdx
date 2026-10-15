@@ -125,7 +125,7 @@ Escolha quais comandos os menus de clique direito e ⋯ do gerenciador mostram e
 
 ## IA [#ai]
 
-A IA vem desativada por padrão. Estas configurações só fazem diferença depois que você ativa **Recursos de IA**; até lá, as configurações de IA desta guia e da guia **Ferramentas de IA** ficam acinzentadas, abaixo de um aviso que explica isso. Mesmo assim, você pode alterá-las.
+A IA vem desativada por padrão. Estas configurações só fazem diferença depois que você ativa **Recursos de IA**; até lá, as configurações de IA desta guia e da guia **Ferramentas de IA** ficam acinzentadas, abaixo de um aviso que explica isso. Mesmo assim, você pode alterá-las. Enquanto o serviço padrão não estiver configurado, uma caixa **A IA é opcional** no topo explica o que a IA faz, do que ela precisa, quanto pode custar e o que é enviado, com um link para [Configurar as ferramentas de IA](/guides/ai-tools).
 
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
@@ -179,7 +179,7 @@ Tags automáticas e Gerador de resumos sempre trabalham na pasta atual.
 | **Limpador de URLs** | **Remover fragmentos** desativado; **Ordenar parâmetros de consulta** e **Remover parâmetros de consulta duplicados** ativados; listas de **Parâmetros preservados** e **Parâmetros removidos** |
 | **Verificar links quebrados** | **Tempo limite da solicitação** 8 s; **Simultaneidade** 4; **Número de tentativas** 1; **Seguir redirecionamentos** ativado; **Códigos de status de sucesso** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-O **Escopo padrão** de uma ferramenta vale enquanto há uma pasta aberta no gerenciador de favoritos. No nível superior do gerenciador, onde nenhuma pasta está aberta, as ferramentas começam em **Todos os favoritos**.
+As ferramentas começam em **Todos os favoritos**, para que uma verificação a partir da pasta em que o gerenciador abre não deixe as outras de fora. Altere o **Escopo padrão** de uma ferramenta para que ela comece na pasta aberta. **Reorganização de pastas com IA** começa na pasta aberta, porque um plano para todos os favoritos envia todos eles ao seu provedor de IA. No nível superior do gerenciador, onde nenhuma pasta está aberta, todas as ferramentas começam em **Todos os favoritos**.
 
 Listas como **Parâmetros removidos** são editadas como etiquetas: digite um nome e pressione Enter, ou escolha uma sugestão. **Códigos de status de sucesso** é uma lista de caixas de seleção com os códigos comuns, e você pode adicionar outros. Para que as configurações caibam na sincronização do navegador, cada lista aceita até 20 itens, e cada nome de parâmetro até 32 caracteres (letras, números e pontuação de URL). As listas padrão estão em [Limpar duplicatas e URLs de rastreamento](/guides/clean-up#strip-tracking-parameters). Consulte também [Encontrar e corrigir links quebrados](/guides/dead-links).
 
@@ -200,7 +200,7 @@ Listas como **Parâmetros removidos** são editadas como etiquetas: digite um no
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Ativar Atualizar ícones dos sites** | Ativado | Mostra **Atualizar ícones dos sites** na barra lateral Ferramentas |
-| **Escopo padrão** | Pasta atual | Escopo com que a atualização dos ícones dos sites começa |
+| **Escopo padrão** | Todos os favoritos | Escopo com que a atualização dos ícones dos sites começa |
 | **Tamanho preferido do ícone** | 32 px | Quando uma página lista vários ícones, baixa o de tamanho mais próximo deste |
 | **Tamanho máximo do arquivo de ícone** | 64 KB | Arquivos de ícone maiores não são baixados nem salvos |
 | **Limite de armazenamento de ícones** | 4 MB | Tamanho total dos ícones salvos neste dispositivo; os mais antigos são removidos primeiro |

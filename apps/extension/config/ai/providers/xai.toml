@@ -6,6 +6,7 @@ requires_api_key = true
 api_key_pattern = "^xai-"
 api_key_placeholder = "xai-..."
 base_url = "https://api.x.ai/v1"
+key_url = "https://console.x.ai/"
 logo = "xai"
 
 [[models]]

@@ -134,8 +134,9 @@ test('unsupported and malformed saved scopes fall back without resetting other t
   });
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
+  // A malformed saved scope falls back to the default, all bookmarks.
   await expect(toolCard(page, 'Bookmark Statistics').getByRole('combobox')).toContainText(
-    'E2E Scope Fallback',
+    'All Bookmarks',
   );
   await expect(toolCard(page, 'URL Cleaner')).toHaveCount(0);
 
@@ -162,7 +163,7 @@ test('unsupported and malformed saved scopes fall back without resetting other t
 
   await setSettings(extensionWorker, { statisticsDefaultScope: 'unsupported' });
   await expect(toolCard(page, 'Bookmark Statistics').getByRole('combobox')).toContainText(
-    'E2E Scope Fallback',
+    'All Bookmarks',
   );
   await expect(toolCard(page, 'URL Cleaner')).toHaveCount(0);
 });
@@ -202,6 +203,12 @@ test('tools sidebar lists cleanup tools first and starts on all bookmarks at the
   await page.getByTitle('Show tools').click();
   await expect(toolCard(page, 'Check Dead Links').getByRole('combobox')).toHaveText(
     'E2E Tool Scope',
+  );
+  // By default, tools and the export start on all bookmarks even in a folder, so a run from the
+  // landing folder (the bookmarks bar) does not miss the others.
+  await expect(toolCard(page, 'URL Cleaner').getByRole('combobox')).toHaveText('All Bookmarks');
+  await expect(toolCard(page, 'Export Bookmarks').getByRole('combobox').last()).toHaveText(
+    'All Bookmarks',
   );
 });
 
