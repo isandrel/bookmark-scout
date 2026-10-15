@@ -6528,5 +6528,9 @@
     "builtinAi_errorNoPick": {
         "message": "内蔵 AI はフォルダを選びませんでした。",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
+    },
+    "qaPopup_hintSaveTo": {
+        "message": "$1 に保存",
+        "description": "Popup and side panel footer while typing in the search box with folders matched: Enter saves the current page into the first matching folder; $1 is that folder's name"
     }
 }
