@@ -75,7 +75,7 @@ test('search delay setting controls when the popup filters results', async ({
   await setSettings(extensionWorker, { searchDebounceMs: 1000, expandFoldersOnSearch: true });
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   const target = bookmarkRow(page, 'Debounce Target');
   await search.fill('Debounce Target');
   await page.waitForTimeout(500);
@@ -85,7 +85,9 @@ test('search delay setting controls when the popup filters results', async ({
 
   await setSettings(extensionWorker, { searchDebounceMs: 50 });
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Debounce Target');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Debounce Target');
   // Well inside the previous 1000 ms delay.
   await expect(target).toBeVisible({ timeout: 700 });
 });

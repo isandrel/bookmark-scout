@@ -849,6 +849,20 @@ export async function openBookmarkManager(): Promise<void> {
 }
 
 /**
+ * Hash that opens the manager's Tools sidebar on its Export Bookmarks card, the target of the
+ * Options footer's Export Bookmarks button.
+ */
+export const MANAGER_EXPORT_HASH = 'export-bookmarks';
+
+/** Opens the manager with the Tools sidebar on its Export Bookmarks card (`MANAGER_EXPORT_HASH`). */
+export async function openBookmarkExport(): Promise<void> {
+  await browser.tabs.create({
+    url: browser.runtime.getURL(`${BOOKMARK_MANAGER_PATH}#${MANAGER_EXPORT_HASH}`),
+    active: true,
+  });
+}
+
+/**
  * Gets the current active tab information. Its URL is readable through the toolbar popup's
  * activeTab or the optional `tabs` permission; without either it throws
  * `PermissionRequiredError('currentTab')`, so nothing is saved with an empty URL.

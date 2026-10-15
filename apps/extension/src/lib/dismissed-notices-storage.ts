@@ -6,7 +6,10 @@
 export const DISMISSIBLE_NOTICES = [
   /** The popup and side panel line saying a quick save command has no shortcut. */
   'quick-save-shortcut',
-  /** The same line in Chrome and Edge offering the browser's bookmark keys for quick save. */
+  /**
+   * The same line naming the quick save keys that work now and, in Chrome and Edge, offering the
+   * browser's bookmark keys instead (the id dates from when it was only that offer).
+   */
   'quick-save-bookmark-key',
 ] as const;
 

@@ -220,7 +220,7 @@ test('partial import merges onto current settings and reports what changed', asy
   await setSettings(extensionWorker, { language: 'en', defaultNewFolderName: 'Inbox' });
   await openOptions(page, extensionId);
 
-  await page.getByLabel('Import', { exact: true }).setInputFiles({
+  await page.getByLabel('Restore settings', { exact: true }).setInputFiles({
     name: 'partial.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ theme: 'dark' })),
@@ -230,7 +230,7 @@ test('partial import merges onto current settings and reports what changed', asy
     .poll(() => readSettings(extensionWorker))
     .toMatchObject({ theme: 'dark', defaultNewFolderName: 'Inbox' });
 
-  await page.getByLabel('Import', { exact: true }).setInputFiles({
+  await page.getByLabel('Restore settings', { exact: true }).setInputFiles({
     name: 'bad.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ theme: 'neon' })),

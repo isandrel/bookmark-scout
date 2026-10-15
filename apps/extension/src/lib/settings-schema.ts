@@ -67,7 +67,23 @@ export type SettingsSectionMeta = {
   advanced?: readonly (keyof Settings)[];
   /** A panel drawn after the section's fields (it brings its own heading). */
   panel?: SettingsPanelId;
+  /**
+   * An on/off setting the whole section depends on, such as AI Features for the AI tools. While
+   * it is off, the section is shown greyed out under a notice, but stays editable, so it can be
+   * set up before the feature is turned on. Its own values are never changed.
+   */
+  requires?: SectionRequirement;
 };
+
+/**
+ * Switches whole sections can depend on (`SettingsSectionMeta.requires`), each with the notice
+ * shown above the first greyed-out section while it is off.
+ */
+export const SECTION_REQUIREMENT_NOTICES = {
+  aiEnabled: 'newcomer_aiOffNotice',
+} as const satisfies Partial<Record<keyof Settings, string>>;
+
+export type SectionRequirement = keyof typeof SECTION_REQUIREMENT_NOTICES;
 
 /** Every field of a section, in display order: the heading switch, the fields, then the fold. */
 export function getSectionFields(section: SettingsSectionMeta): (keyof Settings)[] {
@@ -1140,14 +1156,16 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'suggestions',
         labelKey: 'settings_sectionSuggestions',
+        requires: 'aiEnabled',
         fields: ['aiAutoTriggerOnOpen', 'aiMaxRecommendations'],
       },
       {
         id: 'pageReading',
         labelKey: 'settings_aiReadPageContent',
         fields: ['aiReadPageContent'],
+        requires: 'aiEnabled',
       },
-      { id: 'askAiActions', fields: [], panel: 'askAiActions' },
+      { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
       // Local agents bring their own model, so this works with AI off.
       {
         id: 'agentBridge',
@@ -1159,7 +1177,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),
     aiTools: category('settings_aiTools', 'settings_aiToolsDesc', [
-      { id: 'prompts', fields: [], panel: 'promptLibrary' },
+      { id: 'prompts', fields: [], panel: 'promptLibrary', requires: 'aiEnabled' },
       {
         id: 'contextPacker',
         labelKey: 'tools_exportAI',
@@ -1182,6 +1200,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'autoTagging',
         labelKey: 'tools_autoTagging',
         toggle: 'autoTaggingEnabled',
+        requires: 'aiEnabled',
         fields: [
           'autoTaggingDefaultScope',
           'autoTaggingMinTags',
@@ -1195,6 +1214,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'summarizer',
         labelKey: 'tools_summarizer',
         toggle: 'summarizerEnabled',
+        requires: 'aiEnabled',
         fields: [
           'summarizerDefaultScope',
           'summarizerSummaryLength',
@@ -1206,6 +1226,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'reorganization',
         labelKey: 'tools_aiReorganize',
         toggle: 'reorganizationEnabled',
+        requires: 'aiEnabled',
         fields: ['reorganizationDefaultScope'],
         advanced: [
           'reorganizationMinConfidence',

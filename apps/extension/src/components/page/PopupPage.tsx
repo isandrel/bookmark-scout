@@ -604,6 +604,8 @@ function PopupPage() {
           onClearHistory={searchHistory.clear}
         />
 
+        <CurrentPageLine />
+
         {/* A quick save made on a page that could not show its notification. */}
         <QuickSaveResultPanel />
 

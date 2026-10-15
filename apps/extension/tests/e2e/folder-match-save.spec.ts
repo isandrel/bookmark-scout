@@ -53,7 +53,7 @@ test('typing words from a folder path lists the folder, and ArrowDown then Enter
   const { deep } = await hooksFolders(extensionWorker);
   await openPopup(page, extensionId);
 
-  const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('react hooks');
   await expect(matches(page)).toHaveCount(1);
   await expect(matches(page).first()).toContainText('Hooks');
@@ -76,7 +76,7 @@ test('folder matches put exact names first, forgive one typo, and rank recent fo
   await seedLibrary(extensionWorker);
   const { deep } = await hooksFolders(extensionWorker);
   await openPopup(page, extensionId);
-  const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
 
   await search.fill('rect');
   await expect(matches(page)).toHaveCount(1);
@@ -100,7 +100,7 @@ test('folder match settings hide the list, limit its length, and turn off typo m
   page,
 }) => {
   await seedLibrary(extensionWorker);
-  const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
 
   await setSettings(extensionWorker, { folderMatchesMax: 1 });
   await openPopup(page, extensionId);

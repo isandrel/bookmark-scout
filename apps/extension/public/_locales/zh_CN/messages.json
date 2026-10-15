@@ -8,12 +8,24 @@
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
-        "message": "搜索书签…",
-        "description": "Search input placeholder"
+        "message": "输入文件夹名称来保存此页面…",
+        "description": "Popup and side panel search box placeholder: typing a folder name lists folders to save the current page in; the box also searches bookmarks"
     },
     "search_placeholderShort": {
-        "message": "搜索",
-        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+        "message": "文件夹名称…",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one (popup_searchPlaceholder)"
+    },
+    "newcomer_searchLabel": {
+        "message": "搜索书签，或输入文件夹名称来保存此页面",
+        "description": "Accessible name of the popup and side panel search box, read by screen readers"
+    },
+    "newcomer_pageToSave": {
+        "message": "要保存的页面：$1",
+        "description": "Line under the popup and side panel search box naming the page a folder click saves; $1 is the page title"
+    },
+    "newcomer_searchOptions": {
+        "message": "更多搜索选项",
+        "description": "Button in the popup search box that opens a menu with Match Case, Match Whole Word, and pattern search"
     },
     "shortcuts_popupHint": {
         "message": "快捷键：$1",
@@ -580,7 +592,7 @@
         "description": "Behavior category label"
     },
     "settings_behaviorDesc": {
-        "message": "控制扩展程序的行为",
+        "message": "书签树、链接和删除的行为方式",
         "description": "Behavior category description"
     },
     "settings_savingSearch": {
@@ -864,7 +876,7 @@
         "description": "AI category label"
     },
     "settings_aiDesc": {
-        "message": "由 AI 推荐文件夹",
+        "message": "可选：由你选择的 AI 服务推荐文件夹，并回答有关书签的问题",
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
@@ -1074,7 +1086,7 @@
         "description": "Dead link checker tool title"
     },
     "tools_checkDeadLinksDesc": {
-        "message": "扫描书签中已损坏或无法访问的网址",
+        "message": "找出页面已无法打开的书签",
         "description": "Dead link checker description"
     },
     "tools_aiReorganize": {
@@ -1090,7 +1102,7 @@
         "description": "Statistics tool title"
     },
     "tools_statisticsDesc": {
-        "message": "查看书签收藏的统计信息",
+        "message": "查看你有多少书签、文件夹和网站",
         "description": "Statistics tool description"
     },
     "action_scan": {
@@ -1574,7 +1586,7 @@
         "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
     },
     "tools_category_ai": {
-        "message": "AI 与智能",
+        "message": "AI",
         "description": "AI tools category"
     },
     "tools_category_maintenance": {
@@ -1582,7 +1594,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "元数据与内容",
+        "message": "页面标题与图标",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -1598,7 +1610,7 @@
         "description": "Title for AI Export tool"
     },
     "tools_exportAIDesc": {
-        "message": "以便于 AI 使用的格式（XML/Markdown）导出书签",
+        "message": "将书签保存为可交给 AI 聊天机器人的文件",
         "description": "Description for AI Export tool"
     },
     "tools_autoTagging": {
@@ -1606,7 +1618,7 @@
         "description": "Title for Auto-Tagging tool"
     },
     "tools_autoTaggingDesc": {
-        "message": "自动为书签建议标签",
+        "message": "让 AI 为书签推荐标签",
         "description": "Description for Auto-Tagging tool"
     },
     "tools_summarizer": {
@@ -1614,7 +1626,7 @@
         "description": "Title for Summarizer tool"
     },
     "tools_summarizerDesc": {
-        "message": "为书签内容生成简短摘要",
+        "message": "让 AI 为书签页面撰写简短摘要",
         "description": "Description for Summarizer tool"
     },
     "tools_findDuplicates": {
@@ -1630,7 +1642,7 @@
         "description": "Title for URL Cleaner tool"
     },
     "tools_cleanUrlsDesc": {
-        "message": "移除网址中的跟踪参数",
+        "message": "移除书签链接中的跟踪代码",
         "description": "Description for URL Cleaner tool"
     },
     "tools_metadataFetcher": {
@@ -1646,7 +1658,7 @@
         "description": "Title for Privacy Scanner tool"
     },
     "tools_privacyScannerDesc": {
-        "message": "检测网址中的敏感数据",
+        "message": "找出包含密码、密钥或电子邮件地址的链接",
         "description": "Description for Privacy Scanner tool"
     },
     "tools_category_data": {
@@ -1978,8 +1990,8 @@
         "description": "Toggle whole word matching"
     },
     "search_useRegex": {
-        "message": "使用正则表达式",
-        "description": "Toggle regex search mode"
+        "message": "高级模式搜索（正则表达式）",
+        "description": "Search option: treat the search as a regular expression"
     },
     "search_recentSearches": {
         "message": "最近的搜索",
@@ -2018,7 +2030,7 @@
         "description": "AI tools settings tab label"
     },
     "settings_aiToolsDesc": {
-        "message": "配置由 AI 驱动的书签工具",
+        "message": "书签管理器中 AI 工具的设置",
         "description": "AI tools settings tab description"
     },
     "settings_maintenance": {
@@ -2026,15 +2038,15 @@
         "description": "Maintenance settings tab label"
     },
     "settings_maintenanceDesc": {
-        "message": "配置清理和修复工具",
+        "message": "清理和修复书签的工具设置",
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "元数据与内容",
+        "message": "页面标题与图标",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "配置元数据补全工具",
+        "message": "修正页面标题和网站图标的工具设置",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -2042,7 +2054,7 @@
         "description": "Security settings tab label"
     },
     "settings_securityDesc": {
-        "message": "配置安全和隐私工具",
+        "message": "查找书签链接中隐私数据的工具设置",
         "description": "Security settings tab description"
     },
     "settings_analytics": {
@@ -2050,7 +2062,7 @@
         "description": "Analytics settings tab label"
     },
     "settings_analyticsDesc": {
-        "message": "配置书签分析和报告",
+        "message": "书签统计的设置",
         "description": "Analytics settings tab description"
     },
     "settings_aiMaxCategories": {
@@ -2924,10 +2936,6 @@
                 "example": "token"
             }
         }
-    },
-    "tools_privacyFragment": {
-        "message": "网址包含片段",
-        "description": "Privacy finding"
     },
     "tools_privacyEmail": {
         "message": "检测到电子邮件地址",
@@ -5816,6 +5824,26 @@
     "popup_shortcutSetUp": {
         "message": "去设置",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "newcomer_quickSaveTip": {
+        "message": "快速保存：在任意页面按 $1",
+        "description": "Popup and side panel line naming the quick save shortcut that works now; $1 is the keys (such as Alt+Shift+S, or ⌥⇧S on macOS)"
+    },
+    "newcomer_useBookmarkKeyInstead": {
+        "message": "改用 $1",
+        "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "newcomer_aiOffNotice": {
+        "message": "AI 已关闭：开启“AI 功能”之前，这里的内容都不会运行。",
+        "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
+    },
+    "newcomer_backUpSettings": {
+        "message": "备份设置",
+        "description": "Options footer button that saves a backup file of the settings, custom prompts, AI services, and saved searches (not bookmarks)"
+    },
+    "newcomer_restoreSettings": {
+        "message": "恢复设置",
+        "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
     "actionName_searchBookmarks": {
         "message": "搜索书签",

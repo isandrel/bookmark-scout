@@ -137,7 +137,6 @@ export type PrivacyFinding =
   | { kind: 'sensitiveFragmentParam'; param: string }
   | { kind: 'credentials'; withPassword: boolean }
   | { kind: 'tokenPattern' }
-  | { kind: 'fragment' }
   | { kind: 'email' }
   | { kind: 'uuid' };
 
@@ -496,7 +495,6 @@ const FINDING_SEVERITY: Record<PrivacyFinding['kind'], PrivacySeverity> = {
   tokenPattern: 'high',
   credentials: 'high',
   email: 'medium',
-  fragment: 'low',
   uuid: 'low',
 };
 
@@ -574,9 +572,10 @@ export function scanBookmarkPrivacy(
           }
           if (containsTokenValue(value)) add({ kind: 'tokenPattern' });
         });
-      } else if (!/^#!?\//.test(parsed.hash)) {
-        // A plain in-page anchor is a weak signal; SPA routes (`#/path`) are not flagged.
-        add({ kind: 'fragment' });
+      } else if (containsTokenValue(decodeUrlComponent(parsed.hash.slice(1)))) {
+        // Anchors and app routes (`#section`, `#inbox`, `#/settings`) are ordinary; only a
+        // fragment holding a known key or token format is flagged.
+        add({ kind: 'tokenPattern' });
       }
     }
 

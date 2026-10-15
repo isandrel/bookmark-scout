@@ -56,7 +56,9 @@ test('popup stacks undo toasts compactly and keeps the oldest undoable', async (
   );
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Stack');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Stack');
   for (const title of TITLES) {
     const row = bookmarkRow(page, title);
     await row.hover();

@@ -8,12 +8,24 @@
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
-        "message": "Rechercher dans les favoris…",
-        "description": "Search input placeholder"
+        "message": "Saisissez un dossier pour enregistrer cette page…",
+        "description": "Popup and side panel search box placeholder: typing a folder name lists folders to save the current page in; the box also searches bookmarks"
     },
     "search_placeholderShort": {
-        "message": "Rechercher",
-        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+        "message": "Nom du dossier…",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one (popup_searchPlaceholder)"
+    },
+    "newcomer_searchLabel": {
+        "message": "Rechercher dans les favoris, ou saisir un nom de dossier pour enregistrer cette page",
+        "description": "Accessible name of the popup and side panel search box, read by screen readers"
+    },
+    "newcomer_pageToSave": {
+        "message": "Page à enregistrer : $1",
+        "description": "Line under the popup and side panel search box naming the page a folder click saves; $1 is the page title"
+    },
+    "newcomer_searchOptions": {
+        "message": "Plus d’options de recherche",
+        "description": "Button in the popup search box that opens a menu with Match Case, Match Whole Word, and pattern search"
     },
     "shortcuts_popupHint": {
         "message": "Raccourcis : $1",
@@ -588,7 +600,7 @@
         "description": "Behavior category label"
     },
     "settings_behaviorDesc": {
-        "message": "Contrôlez le comportement de l'extension",
+        "message": "Fonctionnement de l’arborescence des favoris, des liens et de la suppression",
         "description": "Behavior category description"
     },
     "settings_savingSearch": {
@@ -872,7 +884,7 @@
         "description": "AI category label"
     },
     "settings_aiDesc": {
-        "message": "Recommandations de dossiers par IA",
+        "message": "Facultatif : un service d’IA de votre choix suggère des dossiers et répond à vos questions sur vos favoris",
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
@@ -1082,7 +1094,7 @@
         "description": "Dead link checker tool title"
     },
     "tools_checkDeadLinksDesc": {
-        "message": "Rechercher les URL cassées ou inaccessibles dans vos favoris",
+        "message": "Trouver les favoris dont les pages ne s’ouvrent plus",
         "description": "Dead link checker description"
     },
     "tools_aiReorganize": {
@@ -1098,7 +1110,7 @@
         "description": "Statistics tool title"
     },
     "tools_statisticsDesc": {
-        "message": "Afficher des statistiques sur votre collection de favoris",
+        "message": "Voir combien de favoris, de dossiers et de sites vous avez",
         "description": "Statistics tool description"
     },
     "action_scan": {
@@ -1582,7 +1594,7 @@
         "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
     },
     "tools_category_ai": {
-        "message": "Intelligence artificielle",
+        "message": "IA",
         "description": "AI tools category"
     },
     "tools_category_maintenance": {
@@ -1590,7 +1602,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Métadonnées et contenu",
+        "message": "Titres et icônes des pages",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -1606,7 +1618,7 @@
         "description": "Title for AI Export tool"
     },
     "tools_exportAIDesc": {
-        "message": "Exporter les favoris dans un format adapté à l'IA (XML/Markdown)",
+        "message": "Enregistrer des favoris dans un fichier à donner à un chatbot d’IA",
         "description": "Description for AI Export tool"
     },
     "tools_autoTagging": {
@@ -1614,7 +1626,7 @@
         "description": "Title for Auto-Tagging tool"
     },
     "tools_autoTaggingDesc": {
-        "message": "Suggérer automatiquement des étiquettes pour les favoris",
+        "message": "Laisser l’IA suggérer des étiquettes pour les favoris",
         "description": "Description for Auto-Tagging tool"
     },
     "tools_summarizer": {
@@ -1622,7 +1634,7 @@
         "description": "Title for Summarizer tool"
     },
     "tools_summarizerDesc": {
-        "message": "Générer de courts résumés du contenu des favoris",
+        "message": "Laisser l’IA rédiger de courts résumés des pages enregistrées",
         "description": "Description for Summarizer tool"
     },
     "tools_findDuplicates": {
@@ -1638,7 +1650,7 @@
         "description": "Title for URL Cleaner tool"
     },
     "tools_cleanUrlsDesc": {
-        "message": "Supprimer les paramètres de suivi des URL",
+        "message": "Supprimer les codes de suivi des liens des favoris",
         "description": "Description for URL Cleaner tool"
     },
     "tools_metadataFetcher": {
@@ -1654,7 +1666,7 @@
         "description": "Title for Privacy Scanner tool"
     },
     "tools_privacyScannerDesc": {
-        "message": "Détecter les données sensibles dans les URL",
+        "message": "Trouver les liens qui contiennent des mots de passe, des clés ou des adresses e-mail",
         "description": "Description for Privacy Scanner tool"
     },
     "tools_category_data": {
@@ -1950,7 +1962,7 @@
         "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
-        "message": "Menu contextuel",
+        "message": "Menu du clic droit",
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
@@ -1986,8 +1998,8 @@
         "description": "Toggle whole word matching"
     },
     "search_useRegex": {
-        "message": "Utiliser une expression régulière",
-        "description": "Toggle regex search mode"
+        "message": "Recherche avancée par motif (regex)",
+        "description": "Search option: treat the search as a regular expression"
     },
     "search_recentSearches": {
         "message": "Recherches récentes",
@@ -2026,7 +2038,7 @@
         "description": "AI tools settings tab label"
     },
     "settings_aiToolsDesc": {
-        "message": "Configurez les outils de favoris basés sur l'IA",
+        "message": "Réglages des outils d’IA du gestionnaire de favoris",
         "description": "AI tools settings tab description"
     },
     "settings_maintenance": {
@@ -2034,15 +2046,15 @@
         "description": "Maintenance settings tab label"
     },
     "settings_maintenanceDesc": {
-        "message": "Configurez les outils de nettoyage et de réparation",
+        "message": "Réglages des outils qui nettoient et réparent les favoris",
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Métadonnées et contenu",
+        "message": "Titres et icônes des pages",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Configurez les outils d'enrichissement des métadonnées",
+        "message": "Réglages des outils qui corrigent les titres des pages et les icônes des sites",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -2050,7 +2062,7 @@
         "description": "Security settings tab label"
     },
     "settings_securityDesc": {
-        "message": "Configurez les outils de sécurité et de confidentialité",
+        "message": "Réglages de l’outil qui repère les données privées dans les liens des favoris",
         "description": "Security settings tab description"
     },
     "settings_analytics": {
@@ -2058,7 +2070,7 @@
         "description": "Analytics settings tab label"
     },
     "settings_analyticsDesc": {
-        "message": "Configurez l'analyse des favoris et les rapports",
+        "message": "Réglages des statistiques des favoris",
         "description": "Analytics settings tab description"
     },
     "settings_aiMaxCategories": {
@@ -2932,10 +2944,6 @@
                 "example": "token"
             }
         }
-    },
-    "tools_privacyFragment": {
-        "message": "L'URL contient un fragment",
-        "description": "Privacy finding"
     },
     "tools_privacyEmail": {
         "message": "Adresse e-mail détectée",
@@ -3924,7 +3932,7 @@
         "description": "Toast title when the user declines a browser permission a feature asked for"
     },
     "permission_contextMenuDenied": {
-        "message": "Le menu contextuel reste désactivé. Réactivez « Menu contextuel » pour l'autoriser.",
+        "message": "Le menu du clic droit reste désactivé. Réactivez « Menu du clic droit » pour l'autoriser.",
         "description": "Toast text when the right-click menu permission is declined"
     },
     "permission_currentTabDenied": {
@@ -6022,6 +6030,26 @@
     "popup_shortcutSetUp": {
         "message": "Le définir",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "newcomer_quickSaveTip": {
+        "message": "Enregistrement rapide : appuyez sur $1 sur n’importe quelle page",
+        "description": "Popup and side panel line naming the quick save shortcut that works now; $1 is the keys (such as Alt+Shift+S, or ⌥⇧S on macOS)"
+    },
+    "newcomer_useBookmarkKeyInstead": {
+        "message": "Utiliser $1 à la place",
+        "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "newcomer_aiOffNotice": {
+        "message": "L’IA est désactivée : rien de tout cela ne s’exécute tant que vous n’activez pas les fonctionnalités d’IA.",
+        "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
+    },
+    "newcomer_backUpSettings": {
+        "message": "Sauvegarder les paramètres",
+        "description": "Options footer button that saves a backup file of the settings, custom prompts, AI services, and saved searches (not bookmarks)"
+    },
+    "newcomer_restoreSettings": {
+        "message": "Restaurer les paramètres",
+        "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
     "actionName_searchBookmarks": {
         "message": "Rechercher des favoris",

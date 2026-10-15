@@ -35,7 +35,7 @@ test('Export saves a backup without API keys, and Import restores it', async ({
 
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   const downloadPromise = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export' }).click();
+  await page.getByRole('button', { name: 'Back up settings' }).click();
   const download = await downloadPromise;
   await expect(toastRegion(page).getByText('✓ Backup exported', { exact: true })).toBeVisible();
   expect(download.suggestedFilename()).toBe('bookmark-scout-backup.json');
@@ -51,7 +51,7 @@ test('Export saves a backup without API keys, and Import restores it', async ({
   await writeStored(extensionWorker, STORAGE_ITEMS.settings, { language: 'en' });
   await removeStored(extensionWorker, STORAGE_ITEMS.deviceSettings);
 
-  await page.getByLabel('Import', { exact: true }).setInputFiles({
+  await page.getByLabel('Restore settings', { exact: true }).setInputFiles({
     name: 'bookmark-scout-backup.json',
     mimeType: 'application/json',
     buffer: Buffer.from(raw),
@@ -91,7 +91,7 @@ test('a restored backup keeps AI endpoints, lists the secrets to enter again, an
 
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   const downloadPromise = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export' }).click();
+  await page.getByRole('button', { name: 'Back up settings' }).click();
   const raw = await readFile(await (await downloadPromise).path(), 'utf8');
   expect(raw).not.toContain('e2e-header-secret');
   expect(JSON.parse(raw).aiEndpoints).toEqual({
@@ -104,7 +104,7 @@ test('a restored backup keeps AI endpoints, lists the secrets to enter again, an
   });
   await writeStored(extensionWorker, STORAGE_ITEMS.settings, { language: 'en' });
   await page.reload();
-  await page.getByLabel('Import', { exact: true }).setInputFiles({
+  await page.getByLabel('Restore settings', { exact: true }).setInputFiles({
     name: 'bookmark-scout-backup.json',
     mimeType: 'application/json',
     buffer: Buffer.from(raw),

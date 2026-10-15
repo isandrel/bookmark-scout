@@ -33,7 +33,7 @@ test('dropping beside a bookmark in another folder moves it there', async ({
   ]);
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('a');
+  await page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }).fill('a');
   const source = bookmarkRow(page, 'Example tracked').locator('a');
   const target = bookmarkRow(page, 'Pasta').locator('a');
   await expect(source).toBeVisible();
@@ -59,7 +59,9 @@ test('under date sort a drag says it only moves into folders, and a reorder drop
   ]);
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Reorder');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Reorder');
   const source = bookmarkRow(page, 'Reorder First').locator('a');
   const sibling = bookmarkRow(page, 'Reorder Second').locator('a');
   await expect(source).toBeVisible();
@@ -107,7 +109,9 @@ test('dropping a folder into its own subfolder explains why it failed', async ({
   ]);
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('E2E Child Drop');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('E2E Child Drop');
   const parent = folderRow(page, 'E2E Parent Drag').locator('[data-slot="drag-handle"]');
   const child = folderRow(page, 'E2E Child Drop').locator('[data-slot="drag-handle"]');
   await parent.dragTo(child);
@@ -173,7 +177,9 @@ test('an undo toast paused by hover closes when the undo window expires', async 
   await setSettings(extensionWorker, { confirmBeforeDelete: false });
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Late Undo Target');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Late Undo Target');
   const row = bookmarkRow(page, 'Late Undo Target');
   await row.hover();
   await row.getByTitle('Delete bookmark').click();
@@ -258,7 +264,7 @@ test('popup applies favicon, new folder name, and popup size settings', async ({
   });
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('Favicon Link');
   const favicon = bookmarkRow(page, 'Favicon Link').locator('img');
   await expect(favicon).toHaveAttribute('width', '32');
@@ -343,7 +349,7 @@ test('popup controls, row actions, and toasts use the selected language', async 
   await setSettings(extensionWorker, { language: 'ja', confirmBeforeDelete: false });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  const search = page.getByPlaceholder('ブックマークを検索...');
+  const search = page.getByRole('combobox', { name: 'ブックマークを検索' });
   await expect(search).toBeVisible();
   await search.fill('Locale');
   await expect(page.getByRole('button', { name: '検索をクリア' })).toBeVisible();

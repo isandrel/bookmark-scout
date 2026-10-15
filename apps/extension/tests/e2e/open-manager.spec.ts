@@ -16,7 +16,7 @@ test('the 300px popup with AI on fits every header button and never cuts off the
   ).toBeVisible();
 
   const fit = await page
-    .getByRole('combobox', { name: 'Search bookmarks...' })
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
     .evaluate((input) => {
       const field = input as HTMLInputElement;
       const style = getComputedStyle(field);

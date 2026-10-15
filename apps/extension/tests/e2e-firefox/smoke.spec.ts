@@ -92,7 +92,7 @@ test('popup search finds a bookmark and hides non-matching ones', async ({ exten
   ]);
 
   await extension.open('popup.html');
-  const search = await extension.find('input[placeholder="Search bookmarks..."]');
+  const search = await extension.find('input.search-input');
   await search.sendKeys('Popup Match');
 
   await extension.findByText('.bookmark-item', 'Popup Match');
@@ -133,7 +133,7 @@ test('side panel page renders the bookmark tree and searches', async ({ extensio
   ]);
 
   await extension.open('sidepanel.html');
-  const search = await extension.find('input[placeholder="Search bookmarks..."]');
+  const search = await extension.find('input.search-input');
   await search.sendKeys('Sidebar Match');
   await extension.findByText('.bookmark-item', 'Sidebar Match');
 });
@@ -187,7 +187,7 @@ test('popup shows saved site icons and a generic icon instead of a broken browse
   );
 
   await extension.open('popup.html');
-  await (await extension.find('input[placeholder="Search bookmarks..."]')).sendKeys('Icon ');
+  await (await extension.find('input.search-input')).sendKeys('Icon ');
   // Saved icons load from storage after the first render, so re-read the row until they apply.
   const iconOf = async (title: string) => {
     const row = await extension.findByText('.bookmark-item', title);

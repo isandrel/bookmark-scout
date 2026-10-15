@@ -9,10 +9,12 @@ import {
   ChevronUp,
   History,
   LibraryBig,
+  type LucideIcon,
   MessageCircle,
   Moon,
   Regex,
   Search,
+  SlidersHorizontal,
   Sparkles,
   Sun,
   WholeWord,
@@ -25,6 +27,17 @@ const searchRowConfig = readConfig(
   'ui/popup-search',
   z.strictObject({ min_text_width_px: z.number().int().min(16).max(400) }),
 );
+
+/** The search options in the search box's options menu, in menu order. */
+const SEARCH_OPTION_ITEMS: readonly {
+  option: keyof SearchOptions;
+  label: MessageKey;
+  Icon: LucideIcon;
+}[] = [
+  { option: 'matchCase', label: 'search_matchCase', Icon: CaseSensitive },
+  { option: 'wholeWord', label: 'search_matchWholeWord', Icon: WholeWord },
+  { option: 'useRegex', label: 'search_useRegex', Icon: Regex },
+];
 
 /** Space between the typed text and the buttons inside the search box, in CSS pixels. */
 const CONTROLS_GAP_PX = 4;
@@ -280,6 +293,7 @@ export function BookmarkSearch({
     next === inputRef?.current ||
     (next instanceof Node && Boolean(historyRef.current?.contains(next)));
 
+  const searchOptionsOn = SEARCH_OPTION_ITEMS.some(({ option }) => searchOptions[option]);
   const optionButtonClass = (active: boolean) =>
     `rounded-sm p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
       active
@@ -308,7 +322,7 @@ export function BookmarkSearch({
             ref={inputRef}
             type="text"
             placeholder={placeholder}
-            aria-label={t('popup_searchPlaceholder')}
+            aria-label={t('newcomer_searchLabel')}
             aria-keyshortcuts={ariaKeyShortcuts(SHORTCUT_BINDINGS.popup.focusSearch)}
             title={popupShortcutsHint()}
             role="combobox"
@@ -409,39 +423,30 @@ export function BookmarkSearch({
               </Kbd>
             )}
             <div ref={optionsRef} className="flex items-center gap-0.5">
-              <button
-                type="button"
-                onMouseDown={keepInputFocus}
-                onClick={() => onSearchOptionsChange({ matchCase: !searchOptions.matchCase })}
-                className={optionButtonClass(searchOptions.matchCase)}
-                title={t('search_matchCase')}
-                aria-label={t('search_matchCase')}
-                aria-pressed={searchOptions.matchCase}
-              >
-                <CaseSensitive className="h-3.5 w-3.5" />
-              </button>
-              <button
-                type="button"
-                onMouseDown={keepInputFocus}
-                onClick={() => onSearchOptionsChange({ wholeWord: !searchOptions.wholeWord })}
-                className={optionButtonClass(searchOptions.wholeWord)}
-                title={t('search_matchWholeWord')}
-                aria-label={t('search_matchWholeWord')}
-                aria-pressed={searchOptions.wholeWord}
-              >
-                <WholeWord className="h-3.5 w-3.5" />
-              </button>
-              <button
-                type="button"
-                onMouseDown={keepInputFocus}
-                onClick={() => onSearchOptionsChange({ useRegex: !searchOptions.useRegex })}
-                className={optionButtonClass(searchOptions.useRegex)}
-                title={t('search_useRegex')}
-                aria-label={t('search_useRegex')}
-                aria-pressed={searchOptions.useRegex}
-              >
-                <Regex className="h-3.5 w-3.5" />
-              </button>
+              {/* Most people never need these, so they wait behind one button. */}
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  data-testid="search-options"
+                  className={optionButtonClass(searchOptionsOn)}
+                  title={t('newcomer_searchOptions')}
+                  aria-label={t('newcomer_searchOptions')}
+                >
+                  <SlidersHorizontal aria-hidden="true" className="h-3.5 w-3.5" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" finalFocus={inputRef}>
+                  {SEARCH_OPTION_ITEMS.map(({ option, label, Icon }) => (
+                    <DropdownMenuCheckboxItem
+                      key={option}
+                      checked={searchOptions[option]}
+                      onCheckedChange={(checked) => onSearchOptionsChange({ [option]: checked })}
+                      className="gap-2"
+                    >
+                      <Icon aria-hidden="true" className="size-4 text-muted-foreground" />
+                      {t(label)}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
               {query && (
                 <button
                   type="button"
