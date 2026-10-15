@@ -1,4 +1,10 @@
-import { AISDKError, APICallError, NoObjectGeneratedError, RetryError } from 'ai';
+import {
+  AISDKError,
+  APICallError,
+  NoObjectGeneratedError,
+  NoOutputGeneratedError,
+  RetryError,
+} from 'ai';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
@@ -34,6 +40,8 @@ describe('describeAIError', () => {
     expect(describeAIError(error)).toBe(
       "The AI's answer was not in the expected format. Try again, or choose another model.",
     );
+    // generateText with an object output throws this when the model wrote no answer at all.
+    expect(describeAIError(new NoOutputGeneratedError())).toBe(describeAIError(error));
   });
 
   it.each([

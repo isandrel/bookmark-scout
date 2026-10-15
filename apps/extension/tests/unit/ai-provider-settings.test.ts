@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { setLanguage } from '@/hooks/use-i18n';
 import { z } from 'zod';
+import { setLanguage } from '@/hooks/use-i18n';
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { generateAIObject } from '@/services/ai-client';
 import { createAIModel } from '@/services/ai-client.lazy';
@@ -22,14 +22,14 @@ const settingsFor = (provider: string, model: string, enabled: boolean) =>
 const mocks = vi.hoisted(() => ({
   createOpenAI: vi.fn(() => vi.fn((model: string) => ({ model }))),
   createAnthropic: vi.fn(() => vi.fn((model: string) => ({ model }))),
-  generateObject: vi.fn(),
+  generateText: vi.fn(),
 }));
 
 vi.mock('@ai-sdk/openai', () => ({ createOpenAI: mocks.createOpenAI }));
 vi.mock('@ai-sdk/anthropic', () => ({ createAnthropic: mocks.createAnthropic }));
 vi.mock('ai', async (importOriginal) => ({
   ...(await importOriginal<typeof import('ai')>()),
-  generateObject: mocks.generateObject,
+  generateText: mocks.generateText,
 }));
 
 beforeEach(() => {
@@ -145,16 +145,24 @@ describe('[mocked provider contract] AI client calls', () => {
     await saveStoredAIProviderConfig('openai', { apiKey: 'sk-synthetic' });
     const settings = await settingsFor('openai', 'gpt-4o-mini', true);
     const schema = z.object({ ok: z.boolean() });
-    mocks.generateObject.mockResolvedValue({ object: { ok: true }, usage: {} });
+    mocks.generateText.mockResolvedValue({ output: { ok: true }, usage: {} });
 
     await expect(
       generateAIObject({ settings, source: 'autoTagging', schema, system: 'S', prompt: 'P' }),
     ).resolves.toEqual({ object: { ok: true } });
-    expect(mocks.generateObject).toHaveBeenCalledWith({
-      schema,
-      system: 'S',
+    // generateText with an object output, not the deprecated generateObject.
+    expect(mocks.generateText).toHaveBeenCalledWith({
+      instructions: 'S',
       prompt: 'P',
+      output: expect.objectContaining({ name: 'object' }),
       model: { model: 'gpt-4o-mini' },
+    });
+    const [[{ output }]] = mocks.generateText.mock.calls as [
+      [{ output: { responseFormat: PromiseLike<unknown> } }],
+    ];
+    await expect(output.responseFormat).resolves.toMatchObject({
+      type: 'json',
+      schema: { properties: { ok: { type: 'boolean' } } },
     });
   });
 
@@ -171,6 +179,6 @@ describe('[mocked provider contract] AI client calls', () => {
       }),
     ).rejects.toThrow('AI features are disabled');
     expect(mocks.createOpenAI).not.toHaveBeenCalled();
-    expect(mocks.generateObject).not.toHaveBeenCalled();
+    expect(mocks.generateText).not.toHaveBeenCalled();
   });
 });

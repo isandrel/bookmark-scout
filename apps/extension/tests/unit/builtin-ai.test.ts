@@ -3,7 +3,7 @@
  * adapter, the model's state and download, which service each AI feature uses, and folder
  * suggestions from a shortlist with the word match as the fallback.
  */
-import { generateObject } from 'ai';
+import { generateText, type LanguageModel, Output } from 'ai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { z } from 'zod';
@@ -183,13 +183,33 @@ describe('built-in model state and download', () => {
   });
 });
 
+/** A structured call made the way `requestAIObject` makes it: generateText with an object output. */
+async function structuredCall<T>({
+  schema,
+  system,
+  ...options
+}: {
+  model: LanguageModel;
+  schema: z.ZodType<T>;
+  system?: string;
+  prompt: string;
+  maxRetries?: number;
+}): Promise<{ object: T }> {
+  const { output } = await generateText({
+    ...options,
+    instructions: system,
+    output: Output.object({ schema }),
+  });
+  return { object: output };
+}
+
 describe('[mocked provider contract] built-in model adapter', () => {
   const schema = z.object({ folders: z.array(z.enum(['12', '34'])).max(2) });
 
-  it('runs generateObject with the schema as a response constraint and one session per call', async () => {
+  it('runs a structured call with the schema as a response constraint and one session per call', async () => {
     const fake = installFakeLanguageModel({ answer: '{"folders":["34","12"]}' });
     const calls: unknown[] = [];
-    const { object } = await generateObject({
+    const { object } = await structuredCall({
       model: createBuiltinModel({ modelId: 'gemini-nano', onCall: (call) => calls.push(call) }),
       schema,
       system: 'Pick folders.',
@@ -229,7 +249,7 @@ describe('[mocked provider contract] built-in model adapter', () => {
       const fake = installFakeLanguageModel({ availability });
       const calls: { error?: string }[] = [];
       await expect(
-        generateObject({
+        structuredCall({
           model: createBuiltinModel({ modelId: 'gemini-nano', onCall: (call) => calls.push(call) }),
           schema,
           prompt: 'Page title: Bun docs',
@@ -244,7 +264,7 @@ describe('[mocked provider contract] built-in model adapter', () => {
   it('destroys the session when the prompt fails', async () => {
     const fake = installFakeLanguageModel({ answer: new Error('model crashed') });
     await expect(
-      generateObject({
+      structuredCall({
         model: createBuiltinModel({ modelId: 'gemini-nano' }),
         schema,
         prompt: 'Page title: Bun docs',
@@ -261,7 +281,7 @@ describe('[mocked provider contract] built-in model adapter', () => {
       { enabled: true, provider: 'chrome_builtin', model: 'gemini-nano', apiKey: '' },
       'folderRecommendation',
     );
-    await generateObject({ model, schema, system: 'Pick folders.', prompt: 'Page title: Bun' });
+    await structuredCall({ model, schema, system: 'Pick folders.', prompt: 'Page title: Bun' });
     await vi.waitFor(async () => expect(await aiActivityValue.get()).toHaveLength(1));
     const [entry] = await aiActivityValue.get();
     expect(entry).toMatchObject({
@@ -338,7 +358,7 @@ describe('warm built-in sessions for AI quick save', () => {
     const model = createBuiltinModel({ modelId: 'gemini-nano', openSession: warm.open });
     const schema = z.object({ folders: z.array(z.string()) });
     for (const prompt of ['Page title: A', 'Page title: B']) {
-      await generateObject({ model, schema, system: 'Pick folders.', prompt });
+      await structuredCall({ model, schema, system: 'Pick folders.', prompt });
     }
     expect(fake.creates).toHaveLength(1);
     expect(fake.clones).toBe(2);

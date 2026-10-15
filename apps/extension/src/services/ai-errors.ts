@@ -55,7 +55,13 @@ export function describeAIError(error: unknown): string {
       : last;
   }
   if (isAPICallError(error)) return describeAPICallError(error);
-  if (isSDKError(error, 'AI_NoObjectGeneratedError')) return t('ai_errorNoObject');
+  // An answer that does not fit the schema, or (from generateText) no answer at all.
+  if (
+    isSDKError(error, 'AI_NoObjectGeneratedError') ||
+    isSDKError(error, 'AI_NoOutputGeneratedError')
+  ) {
+    return t('ai_errorNoObject');
+  }
   if (isSDKError(error)) return t('ai_errorRequestFailed');
   // Errors the extension throws itself (settings checks, AIConnectionError) are localized already.
   return getErrorMessage(error);

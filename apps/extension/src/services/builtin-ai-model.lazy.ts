@@ -1,8 +1,8 @@
 /**
  * Chrome's built-in model (the Prompt API's `LanguageModel`) as an AI SDK language model, so
- * `generateObject` and every other AI SDK call work with it like with a hosted provider. One
- * session per call, destroyed afterwards: a new one, or a copy of a warm session (`openSession`,
- * AI quick save's host page). A structured call's JSON schema goes to the model as
+ * structured calls (`generateText` with an object output) and every other AI SDK call work with
+ * it like with a hosted provider. One session per call, destroyed afterwards: a new one, or a
+ * copy of a warm session (`openSession`, AI quick save's host page). A structured call's JSON schema goes to the model as
  * `responseConstraint`, which Chrome enforces while the model writes; the prompt itself must
  * describe the format, since `omitResponseConstraintInput` keeps the schema out of the small
  * context. Sampling options are left at Chrome's defaults (temperature and topK are deprecated,
