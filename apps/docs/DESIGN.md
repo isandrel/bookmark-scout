@@ -57,9 +57,15 @@ typography:
   code:
     fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace"
     fontSize: 14px
+  key-cap:
+    fontFamily: "Instrument Sans, system-ui, Segoe UI Symbol, sans-serif"
+    fontSize: 0.85em
+    fontWeight: 500
+    lineHeight: inherit
 
 rounded:
   sm: 2px
+  key-cap: 4px
   md: 8px
   lg: 12px
   xl: 16px
@@ -80,6 +86,7 @@ components:
   tabs: "Fumadocs Tabs for per-browser instructions"
   callout: "Fumadocs Callout for Firefox limits and data warnings"
   config-links: "Contact, ReleaseLink, SiteLink, RepoLink, StoreListing, StoreAvailability, License, PrivacyEffectiveDate"
+  shortcut: "Shortcut: one kbd key cap per way to press it (key-cap type, surface fill, 1px line border with a 1px inset bottom line, rounded.key-cap, no wrapping); only the reader's platform once known"
   language-switch: "Fumadocs LanguageSelect in the sidebar footer, each language by its own name from config"
   untranslated-notice: "Fumadocs Callout under the page actions on a page shown in English because it has no translation"
 ---
@@ -134,7 +141,7 @@ The brand tokens are declared as `--bs-*` variables in `:root` and `.dark`, then
 
 ## Shapes
 
-- Buttons and panels: `rounded.lg`; the task finder: `rounded.xl`; chips: `rounded.pill`; `<mark>`: `rounded.sm`.
+- Buttons and panels: `rounded.lg`; the task finder: `rounded.xl`; chips: `rounded.pill`; `<mark>`: `rounded.sm`; key caps: `rounded.key-cap`.
 - The ribbon is a clip-path rectangle with a V-notch at the bottom, used once, on the task finder.
 
 ## Components
@@ -150,6 +157,8 @@ The brand tokens are declared as `--bs-*` variables in `:root` and `.dark`, then
 **Fumadocs MDX components**: `Steps` for real sequences (install, scans, imports), `Tabs` for per-browser instructions, `Callout` for Firefox limits and data warnings, tables for settings and results. `Accordion` is registered but unused, because FAQ answers are headings so they show in the table of contents and in search.
 
 **Config components**: `Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, and `PrivacyEffectiveDate` render values from `@bookmark-scout/config` (`src/components/mdx/links.tsx`). The ones that write text or website links follow the page's language. `src/lib/mdx-text.ts` turns the same tags, plus Tabs, Steps, and Callout, into plain Markdown for `llms.txt`, `llms-full.txt`, and the per-page Markdown copies.
+
+**`shortcut`** (`<Shortcut id="commands.quick-save" />`, `src/components/mdx/shortcut.tsx`): the keys from `apps/extension/config/ui/shortcuts.toml` as `<kbd class="bs-kbd">` key caps, one per way to press the shortcut (`Alt+Shift+S`, not one cap per key), so a cap reads like a word in the line. Caps use the body face at 0.85em, not the code face: it is narrower, and `system-ui` comes before the CJK fallbacks so `⌘⌥⇧` are not full width. They keep the line height (baseline, inherited line height, 0.05em by 0.35em padding), never wrap inside, and turn off CJK autospacing (`text-autospace: no-autospace`) so the copy around them decides the spaces. The exported HTML shows both platforms, `Alt+Shift+S (⌥⇧S on a Mac)`, with the Mac note from `shortcut.mac` in `src/lib/copy.ts` (CJK languages write it compactly, `（Mac：⌥⇧S）`, with no spaces inside the full-width brackets). After hydration `PlatformAttribute` sets `<html data-platform="mac">` (macOS, iPadOS, iOS) or `"other"`, and CSS shows only that platform's caps; the cap's tooltip (`title`) keeps both. Only text is hidden, so the line does not move beyond the swap. The LLM text keeps both platforms (`shortcutMarkdown` in `src/lib/shortcuts.ts`). Navigation keys that MDX writes as inline code (`Esc`, `↓`) keep the code style.
 
 **`language-switch`**: Fumadocs' `LanguageSelect` in the sidebar footer, listing each language in `[locales] supported` by its own name (`[locales.names]`). Choosing one opens the same page in that language.
 
