@@ -31,20 +31,21 @@ Conviene saber:
 
 ## Filtrar en el administrador de marcadores [#filter-in-the-bookmarks-manager]
 
-La tabla del administrador tiene filtros más precisos. En Chrome, abre la página de marcadores del navegador para llegar a ella.
+La tabla del administrador tiene filtros más precisos. En Chrome, abre la página de marcadores del navegador para llegar a ella; se abre en tu barra de marcadores.
 
-- **Filtrar títulos...** y **Filtrar URLs...** buscan texto en esas columnas. Pulsa <Shortcut id="manager.focus_filter" /> para ir al filtro de títulos.
-- **Tipo**, **ID superior**, **Dominio** y **Fecha de creación** acotan aún más las filas.
+- **Buscar títulos y direcciones** busca texto en el título o en la dirección web de un marcador. Pulsa <Shortcut id="manager.focus_filter" /> para ir directamente a ese cuadro.
+- **Tipo**, **Dominio** y **Fecha de creación** acotan aún más las filas. **Más filtros** añade **Filtrar URLs...**, que busca solo en la dirección web, y **Carpeta**, que deja solo los elementos de las carpetas que elijas.
 - **Solo la carpeta actual** limita los filtros a la carpeta en la que estás. Cuando está desactivado, los filtros buscan en todos los marcadores.
-- Ordena por cualquier columna desde su encabezado.
+- Ordena por cualquier columna desde su encabezado. Mientras la tabla no esté en el orden del navegador, el texto junto a **Orden del navegador** indica el orden actual; haz clic en **Orden del navegador** para volver.
+- La tabla muestra **Título**, **URL** y **Fecha de creación**, con 50 filas por página. Activa **Tipo**, **Ruta de la carpeta** y las demás columnas en **Ver**, y elige cuántas filas por página quieres debajo de la tabla.
 - En una búsqueda en varias carpetas, el menú de una fila ofrece **Mostrar en la carpeta**: borra los filtros y abre la carpeta que contiene el elemento, con el elemento seleccionado.
 
 ## Enlazar a una carpeta o a una búsqueda [#link-to-a-folder-or-a-search]
 
 La dirección del administrador sigue lo que estás viendo, así que **Atrás** y **Adelante** del navegador recorren las carpetas y las búsquedas, y puedes guardar una vista en marcadores o compartirla.
 
-- `?id=` indica la carpeta abierta, como en el administrador propio de Chrome: `chrome://bookmarks/?id=12` abre la carpeta 12 en Chrome, y `edge://favorites/?id=12` en Edge. Los enlaces de Chrome 154 a 156, que identificaban la Barra de marcadores, Otros marcadores y Marcadores del móvil con un ID largo, también abren esas carpetas.
-- `?q=` es el filtro de títulos: `chrome://bookmarks/?q=react` abre el administrador buscando "react" en los títulos. Mientras escribes en **Filtrar títulos...**, la dirección se actualiza, y una racha de escritura cuenta como un solo paso de **Atrás**. La búsqueda tiene prioridad sobre la carpeta; la carpeta sigue aplicándose cuando **Solo la carpeta actual** está marcado.
+- `?id=` indica la carpeta abierta, como en el administrador propio de Chrome: `chrome://bookmarks/?id=12` abre la carpeta 12 en Chrome, y `edge://favorites/?id=12` en Edge. Los enlaces de Chrome 154 a 156, que identificaban la Barra de marcadores, Otros marcadores y Marcadores del móvil con un ID largo, también abren esas carpetas. Sin `?id=`, el administrador se abre en la barra de marcadores; **Marcadores**, al principio de la ruta de la carpeta, muestra el nivel superior.
+- `?q=` es la búsqueda: `chrome://bookmarks/?q=react` abre el administrador buscando "react" en los títulos y las direcciones. Mientras escribes en **Buscar títulos y direcciones**, la dirección se actualiza, y una racha de escritura cuenta como un solo paso de **Atrás**. La búsqueda tiene prioridad sobre la carpeta; la carpeta sigue aplicándose cuando **Solo la carpeta actual** está marcado.
 - **Copiar enlace a esta carpeta**, junto a la ruta de la carpeta en el encabezado y en el menú de una fila de carpeta, copia esa dirección. En Firefox copia la dirección de la propia página del administrador. Chrome y Edge siguen mostrando la dirección con la que abriste el administrador, aunque te muevas entre carpetas.
 - El título de la pestaña indica la carpeta o, mientras buscas, la búsqueda.
 
