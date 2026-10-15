@@ -246,7 +246,7 @@
     },
     "install": {
       "title": "添加到你的浏览器",
-      "lede": "Bookmark Scout 免费使用，无需注册账号。",
+      "lede": "免费使用，无需注册账号。",
       "desktopOnly": "Bookmark Scout 适用于电脑上的浏览器，不支持手机或平板电脑。",
       "add": "免费添加至 {browser}",
       "permissions": "{browser} 在安装时只请求一项权限：“读取和更改您的书签”。其他功能只会在你首次使用时才请求。<docs>它请求哪些权限，以及原因</docs>",

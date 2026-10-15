@@ -246,7 +246,7 @@
     },
     "install": {
       "title": "Zu Ihrem Browser hinzufügen",
-      "lede": "Bookmark Scout ist kostenlos, und Sie müssen kein Konto anlegen.",
+      "lede": "Die Erweiterung ist kostenlos, und Sie müssen kein Konto anlegen.",
       "desktopOnly": "Bookmark Scout funktioniert in einem Browser auf dem Computer, nicht auf Smartphones oder Tablets.",
       "add": "Zu {browser} hinzufügen – kostenlos",
       "permissions": "{browser} fragt bei der Installation nur nach einer Sache: „Deine Lesezeichen lesen und ändern“. Andere Funktionen fragen erst, wenn Sie sie zum ersten Mal verwenden. <docs>Was abgefragt wird und warum</docs>",

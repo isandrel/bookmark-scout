@@ -246,7 +246,7 @@
     },
     "install": {
       "title": "加到瀏覽器",
-      "lede": "Bookmark Scout 完全免費，也不必建立帳戶。",
+      "lede": "完全免費，也不必建立帳戶。",
       "desktopOnly": "可在電腦上的瀏覽器中使用，不支援手機或平板電腦。",
       "add": "免費加到 {browser}",
       "permissions": "安裝時，{browser} 只會要求一項權限：「讀取及變更你的書籤」。其他功能只會在你第一次使用時才要求。<docs>要求哪些權限及原因</docs>",

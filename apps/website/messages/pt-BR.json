@@ -246,7 +246,7 @@
     },
     "install": {
       "title": "Adicione ao seu navegador",
-      "lede": "O Bookmark Scout é gratuito, e você não precisa criar uma conta.",
+      "lede": "É gratuito, e você não precisa criar uma conta.",
       "desktopOnly": "O Bookmark Scout funciona em um navegador no computador, não em celulares nem tablets.",
       "add": "Adicionar ao {browser} — grátis",
       "permissions": "O {browser} pede só uma coisa na instalação: “Ler e alterar seus favoritos”. Os outros recursos só pedem permissão quando você os usa pela primeira vez. <docs>O que ele pede e por quê</docs>",

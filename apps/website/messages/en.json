@@ -246,7 +246,7 @@
     },
     "install": {
       "title": "Add it to your browser",
-      "lede": "Bookmark Scout is free, with no account to create.",
+      "lede": "It's free, and there is no account to create.",
       "desktopOnly": "Bookmark Scout works in a browser on a computer, not on phones or tablets.",
       "add": "Add to {browser} — free",
       "permissions": "{browser} asks for just one thing at install: “Read and change your bookmarks.” Other features ask only when you first use them. <docs>What it asks and why</docs>",

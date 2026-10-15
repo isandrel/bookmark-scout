@@ -246,7 +246,7 @@
     },
     "install": {
       "title": "Ajoutez-la à votre navigateur",
-      "lede": "Bookmark Scout est gratuit, sans compte à créer.",
+      "lede": "Elle est gratuite, sans compte à créer.",
       "desktopOnly": "Bookmark Scout fonctionne dans un navigateur sur ordinateur, pas sur téléphone ni sur tablette.",
       "add": "Ajouter à {browser} — gratuit",
       "permissions": "{browser} ne demande qu'une chose à l'installation : « Accéder à vos favoris et les modifier ». Les autres fonctionnalités ne demandent une autorisation qu'à leur première utilisation. <docs>Ce qui est demandé, et pourquoi</docs>",

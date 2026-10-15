@@ -246,7 +246,7 @@
     },
     "install": {
       "title": "Añádela a tu navegador",
-      "lede": "Bookmark Scout es gratuita y no tienes que crear ninguna cuenta.",
+      "lede": "Es gratuita y no tienes que crear ninguna cuenta.",
       "desktopOnly": "Bookmark Scout funciona en el navegador de un ordenador, no en teléfonos ni tabletas.",
       "add": "Añadir a {browser} — gratis",
       "permissions": "{browser} solo pide una cosa al instalarla: «Leer y modificar tus marcadores». Las demás funciones solo piden permiso la primera vez que las usas. <docs>Qué pide y por qué</docs>",
