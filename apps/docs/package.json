@@ -37,6 +37,11 @@
   "nx": {
     "targets": {
       "build": {
+        "inputs": [
+          "production",
+          "^production",
+          "{workspaceRoot}/apps/extension/config/ui/shortcuts.toml"
+        ],
         "outputs": [
           "{projectRoot}/out",
           "{projectRoot}/.source"

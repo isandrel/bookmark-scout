@@ -68,7 +68,7 @@ Keys come from `apps/extension/config/ui/shortcuts.toml`, never from the page te
   - `reuseExistingServer: !process.env.CI` means a local server already on the test port can serve an old build. Stop it before trusting a local run.
 - **Bun scripts** that need Bun types get `/// <reference types="bun" />` at the top of that file only, so Bun globals do not leak into the Next app.
 - **Docs Nx targets** come from `apps/docs/package.json` scripts plus its `"nx"` field (for example `verify` depends on `build`); there is no `project.json`.
-- **Deploy path filters:** `deploy-website.yml` and `deploy-docs.yml` trigger on their app plus `config/**` and `packages/config/**` (the website also on `apps/extension/config/**`, for its AI provider list). A new shared input the sites read must be added to those filters and to the `sites` scope in `.github/ci-scopes.toml`.
+- **Deploy path filters:** `deploy-website.yml` and `deploy-docs.yml` trigger on their app plus `config/**` and `packages/config/**` (the website also on `apps/extension/config/**`, for its AI provider list and shortcuts; the docs on `apps/extension/config/ui/shortcuts.toml`). A new shared input the sites read must be added to those filters, to the `sites` scope in `.github/ci-scopes.toml`, and to the build target's Nx `inputs` (the docs' are in the `"nx"` field of `apps/docs/package.json`), or a cached build stays stale.
 
 ## Hosting (Cloudflare Pages)
 

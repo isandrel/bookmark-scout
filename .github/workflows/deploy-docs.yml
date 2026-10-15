@@ -7,6 +7,8 @@ on:
       - "apps/docs/**"
       - "config/**"
       - "packages/config/**"
+      # The docs print keyboard shortcuts from the extension's config.
+      - "apps/extension/config/ui/shortcuts.toml"
       - "bun.lock"
       - "package.json"
       - ".github/actions/setup-workspace/**"
