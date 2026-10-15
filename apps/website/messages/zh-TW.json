@@ -54,6 +54,12 @@
     "languages": "語言",
     "home": "Bookmark Scout 首頁"
   },
+  "languageSuggestion": {
+    "label": "語言建議",
+    "text": "此頁面也提供繁體中文版。",
+    "action": "查看繁體中文版",
+    "dismiss": "關閉"
+  },
   "footer": {
     "tagline": "直接在瀏覽器中將網頁儲存到正確的資料夾，之後也能找到並整理。",
     "product": "產品",

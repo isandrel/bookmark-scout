@@ -54,6 +54,12 @@
     "languages": "Sprache",
     "home": "Bookmark Scout – Startseite"
   },
+  "languageSuggestion": {
+    "label": "Sprachvorschlag",
+    "text": "Diese Seite gibt es auch auf Deutsch.",
+    "action": "Auf Deutsch lesen",
+    "dismiss": "Schließen"
+  },
   "footer": {
     "tagline": "Seiten im richtigen Ordner speichern und sie dann finden und aufräumen, direkt im Browser.",
     "product": "Produkt",

@@ -99,7 +99,7 @@ This is the public-facing marketing site.
 Important subareas:
 
 - `app/`: Next.js App Router routes, metadata, sitemap, and layouts
-- `app/[locale]/`: localized pages and layouts
+- `app/(default)/` and `app/[locale]/`: the default language at unprefixed URLs and every other language under `/<tag>/`, both rendering the shared page components
 - `components/`: website-specific UI
 - `messages/`: locale message files
 - `i18n/`: locale routing and request setup

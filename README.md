@@ -61,7 +61,7 @@ Next time, just press **Alt+Shift+S** (**⌥⇧S** on a Mac) on the page. The [s
 
 ## 🔒 Your privacy
 
-Bookmark Scout has no account and no server, so the developer never receives your bookmarks, settings, or anything else. Your bookmarks are read and changed inside your browser. Data leaves it only when you use a feature that needs to, for example AI (it goes to the AI company you chose) or the broken-link check (it visits the bookmarked websites). Read the [privacy policy](https://bookmark-scout.com/en/privacy/) for the details.
+Bookmark Scout has no account and no server, so the developer never receives your bookmarks, settings, or anything else. Your bookmarks are read and changed inside your browser. Data leaves it only when you use a feature that needs to, for example AI (it goes to the AI company you chose) or the broken-link check (it visits the bookmarked websites). Read the [privacy policy](https://bookmark-scout.com/privacy/) for the details.
 
 ## 🔐 Permissions
 

@@ -1,9 +1,12 @@
 import { docs } from "fumadocs-mdx:collections/server";
 import { site } from "@bookmark-scout/config";
+import {
+  localizedSegments,
+  splitLocale,
+} from "@bookmark-scout/config/locale-path";
 import { type InferPageType, llms, loader } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { DEFAULT_LOCALE, i18n, LOCALE_ROUTING, LOCALES } from "@/lib/i18n";
-import { localizedSegments, splitLocale } from "@/lib/locale-path";
 import { absolutizeLinks, resolveMdxForText } from "@/lib/mdx-text";
 
 // See https://fumadocs.dev/docs/headless/source-api for more info

@@ -54,6 +54,12 @@
     "languages": "言語",
     "home": "Bookmark Scout ホーム"
   },
+  "languageSuggestion": {
+    "label": "言語の提案",
+    "text": "このページは日本語でもご覧いただけます。",
+    "action": "日本語で読む",
+    "dismiss": "閉じる"
+  },
   "footer": {
     "tagline": "ページを正しいフォルダーに保存して、あとから探して整える。すべてブラウザの中で。",
     "product": "製品",

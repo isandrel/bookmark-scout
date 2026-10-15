@@ -42,8 +42,8 @@ The full Chromium E2E suite runs against the Edge build as the required `Edge E2
 ## 4. Properties
 
 - [ ] Category: decided by the maintainer (suggested: Productivity).
-- [ ] Privacy policy required: yes. URL: `https://bookmark-scout.com/en/privacy/` (text: [`../privacy-policy.md`](../privacy-policy.md)). Confirm the page is live after the website deploys from `main`.
-- [ ] Website `https://bookmark-scout.com`; support contact `https://bookmark-scout.com/en/support/` and `support@bookmark-scout.com` (confirm the alias reaches a monitored inbox).
+- [ ] Privacy policy required: yes. URL: `https://bookmark-scout.com/privacy/` (text: [`../privacy-policy.md`](../privacy-policy.md)). Confirm the page is live after the website deploys from `main`.
+- [ ] Website `https://bookmark-scout.com`; support contact `https://bookmark-scout.com/support/` and `support@bookmark-scout.com` (confirm the alias reaches a monitored inbox).
 - [ ] Mature content: no.
 
 ## 5. Availability

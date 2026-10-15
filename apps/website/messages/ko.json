@@ -54,6 +54,12 @@
     "languages": "언어",
     "home": "Bookmark Scout 홈"
   },
+  "languageSuggestion": {
+    "label": "언어 제안",
+    "text": "이 페이지는 한국어로도 볼 수 있습니다.",
+    "action": "한국어로 보기",
+    "dismiss": "닫기"
+  },
   "footer": {
     "tagline": "브라우저 안에서 페이지를 알맞은 폴더에 저장하고, 찾고, 정돈하세요.",
     "product": "제품",

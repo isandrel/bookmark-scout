@@ -1,13 +1,17 @@
 "use client";
 
+import { rememberLanguageChoice } from "@/lib/language-preference";
+import { type LocaleRouting, pathInLocale } from "@bookmark-scout/config/locale-path";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export type LanguageLink = { locale: string; name: string };
 
 /**
- * Links to the same page in each locale. Plain links work without JavaScript and on any width.
- * Locales and their names come from config through the server header, as props.
+ * Links to the same page in each locale: the default language unprefixed (`/privacy/`), the
+ * others under their tag (`/ja/privacy/`). Plain links work without JavaScript and on any width.
+ * Locales and their names come from config through the server header, as props. Picking one is
+ * remembered, so the language suggestion banner stops offering another.
  *
  * `menu` (the desktop header) folds the list into a <details> dropdown labeled with the current
  * language, because every language name in a row no longer fits; `list` (inside the mobile menu)
@@ -16,17 +20,17 @@ export type LanguageLink = { locale: string; name: string };
 export function LanguageSwitcher({
     currentLocale,
     languages,
+    routing,
     label,
     variant = "list",
 }: {
     currentLocale: string;
     languages: readonly LanguageLink[];
+    routing: LocaleRouting;
     label: string;
     variant?: "menu" | "list";
 }) {
     const pathname = usePathname();
-    // Pathname is "/<locale>/rest"; keep "rest" when switching.
-    const rest = pathname.split("/").slice(2).join("/");
     const current = languages.find(({ locale }) => locale === currentLocale);
 
     const links = (className: string, itemClass: (isCurrent: boolean) => string) => (
@@ -36,8 +40,9 @@ export function LanguageSwitcher({
                 return (
                     <li key={locale}>
                         <Link
-                            href={`/${locale}/${rest}`}
+                            href={pathInLocale(pathname, locale, routing, { trailingSlash: true })}
                             hrefLang={locale}
+                            onClick={() => rememberLanguageChoice(locale)}
                             lang={locale}
                             aria-current={isCurrent ? "true" : undefined}
                             className={itemClass(isCurrent)}

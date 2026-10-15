@@ -8,11 +8,13 @@
  * @example
  * import { site } from "@bookmark-scout/config";
  * site.url.page("ja", "/privacy"); // https://bookmark-scout.com/ja/privacy/
+ * site.url.page("en", "/privacy"); // https://bookmark-scout.com/privacy/ (default language)
  * site.repo.file("SECURITY.md");   // https://github.com/<owner>/<repo>/blob/main/SECURITY.md
  */
 import { createSite } from "./site";
 import { readWorkspaceConfig } from "./workspace";
 
+export * from "./locale-path";
 export { ConfigError } from "./schema";
 export {
 	SCREENSHOT_SIZE,

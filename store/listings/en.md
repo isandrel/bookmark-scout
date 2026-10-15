@@ -218,7 +218,7 @@ See [`../permissions.md`](../permissions.md#chrome-web-store-single-purpose).
 | --- | --- | --- |
 | Website | https://bookmark-scout.com | Live |
 | Documentation | https://docs.bookmark-scout.com | Live |
-| Support URL | https://bookmark-scout.com/en/support/ | Live once the website deploys from `main`. Links to the docs, FAQ, GitHub issues, and the support, privacy, and security addresses. |
+| Support URL | https://bookmark-scout.com/support/ | Live once the website deploys from `main`. Links to the docs, FAQ, GitHub issues, and the support, privacy, and security addresses. |
 | Support email | support@bookmark-scout.com | The maintainer must confirm the alias forwards to a monitored inbox. `security@bookmark-scout.com` is for vulnerability reports only. |
-| Privacy policy URL | https://bookmark-scout.com/en/privacy/ | Live once the website deploys from `main`. Translations at `/<locale>/privacy/` for every website language. Text: `../privacy-policy.md` |
+| Privacy policy URL | https://bookmark-scout.com/privacy/ | Live once the website deploys from `main`. Translations at `/<locale>/privacy/` for every other website language; the old `/en/privacy/` redirects here. Text: `../privacy-policy.md` |
 | License (AMO) | GNU Affero General Public License v3.0 | Matches `LICENSE` |

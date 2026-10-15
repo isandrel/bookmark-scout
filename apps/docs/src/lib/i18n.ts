@@ -1,8 +1,8 @@
 import { site } from "@bookmark-scout/config";
+import type { LocaleRouting } from "@bookmark-scout/config/locale-path";
 import { defineI18n } from "fumadocs-core/i18n";
 import type { I18nProviderProps } from "fumadocs-ui/contexts/i18n";
 import { getCopy } from "@/lib/copy";
-import type { LocaleRouting } from "@/lib/locale-path";
 
 /**
  * The docs languages come from `[locales]` in config/project.toml. English (the default) keeps

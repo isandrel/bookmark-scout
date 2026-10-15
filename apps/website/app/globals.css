@@ -116,6 +116,14 @@ mark {
   }
 }
 
+/* The language suggestion bar rises into place; only under motion-safe. */
+@keyframes suggestion-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

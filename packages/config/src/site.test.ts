@@ -108,18 +108,31 @@ const site = createSite(parseProjectConfig(PROJECT), parseWebConfig(WEB));
 
 describe("site.url", () => {
 	test("builds localized paths and absolute page URLs with a trailing slash", () => {
-		expect(site.url.path("en")).toBe("/en/");
+		expect(site.url.path("ja")).toBe("/ja/");
 		expect(site.url.path("ja", "/privacy")).toBe("/ja/privacy/");
-		expect(site.url.path("en", "", "features")).toBe("/en/#features");
+		expect(site.url.path("ja", "", "features")).toBe("/ja/#features");
 		expect(site.url.page("ja", "/support")).toBe("https://example.com/ja/support/");
-		expect(site.url.page("en")).toBe("https://example.com/en/");
+	});
+
+	test("serves the default language without a prefix", () => {
+		expect(site.url.path("en")).toBe("/");
+		expect(site.url.path("en", "/privacy")).toBe("/privacy/");
+		expect(site.url.path("en", "", "features")).toBe("/#features");
+		expect(site.url.path("en", "/privacy", "contact")).toBe("/privacy/#contact");
+		expect(site.url.page("en")).toBe("https://example.com/");
+		expect(site.url.page("en")).toBe(site.url.home);
 	});
 
 	test("lists one alternate per locale plus x-default", () => {
 		expect(site.url.alternates("/privacy")).toEqual({
-			en: "https://example.com/en/privacy/",
+			en: "https://example.com/privacy/",
 			ja: "https://example.com/ja/privacy/",
-			"x-default": "https://example.com/en/privacy/",
+			"x-default": "https://example.com/privacy/",
+		});
+		expect(site.url.alternates()).toEqual({
+			en: "https://example.com/",
+			ja: "https://example.com/ja/",
+			"x-default": "https://example.com/",
 		});
 	});
 
