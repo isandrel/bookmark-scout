@@ -179,7 +179,7 @@ test('[mocked provider contract] provider-backed AI previews stop at opt-in with
 
   await setSettings(extensionWorker, { language: 'ja' });
   await expect(
-    page.getByText('このツールを使うには、オプションでAI機能を有効にしてください。'),
+    page.getByText('このツールを使うには、設定 > AI で AI 機能を有効にしてください。'),
   ).toHaveCount(3);
   expect(providerRequests).toBe(0);
 });
