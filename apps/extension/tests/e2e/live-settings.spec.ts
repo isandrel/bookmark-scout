@@ -68,7 +68,7 @@ test('a page opened in a selected language shows it from the first paint', async
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   await expect(page.getByRole('combobox', { name: 'ブックマークを検索' })).toBeVisible();
   expect(await page.evaluate(() => (window as { firstLabel?: string }).firstLabel)).toBe(
-    'ブックマークを検索、またはフォルダー名を入力してこのページを保存',
+    'ブックマークを検索、またはフォルダ名を入力してこのページを保存',
   );
   await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
   await expect(page).toHaveTitle('ブックマークスカウト');

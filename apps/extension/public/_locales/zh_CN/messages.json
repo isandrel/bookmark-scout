@@ -6358,5 +6358,17 @@
     "builtinAi_errorNoPick": {
         "message": "内置 AI 没有选择任何文件夹。",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
+    },
+    "qaPopup_hintSaveTo": {
+        "message": "保存到 $1",
+        "description": "Popup and side panel footer while typing in the search box with folders matched: Enter saves the current page into the first matching folder; $1 is that folder's name"
+    },
+    "qaPopup_alreadySavedIn": {
+        "message": "已保存在 $1",
+        "description": "Line under 'Page to save' in the popup and side panel when the current page is already bookmarked; $1 is the folder path, or a list of paths when it is saved in several folders"
+    },
+    "qaPopup_secondCopyNote": {
+        "message": "这是另一份副本：此页面也在“$1”中。",
+        "description": "Added to the toast after saving the current page from the popup or side panel when the page was already bookmarked in another folder; $1 is that other folder's name"
     }
 }

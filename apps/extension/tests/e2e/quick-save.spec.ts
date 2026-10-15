@@ -304,6 +304,13 @@ test.describe('quick save where the page cannot show it', () => {
     await panel.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect.poll(() => bookmarksWithUrl(extensionWorker, page.url())).toEqual([]);
     await expect(panel).toContainText('Bookmark removed');
+
+    // Undone, it has nothing left to offer: a popup opened later leaves it out.
+    const later = await context.newPage();
+    await openPopup(later, extensionId);
+    await expect(later.getByTestId('popup-hint-bar')).toBeVisible();
+    await expect(later.getByTestId('quick-save-result')).toHaveCount(0);
+
     await panel.getByRole('button', { name: 'Dismiss', exact: true }).click();
     await expect(panel).toHaveCount(0);
   });

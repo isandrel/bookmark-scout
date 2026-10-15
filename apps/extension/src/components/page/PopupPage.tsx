@@ -3,7 +3,7 @@
  * folder suggestions for the current page. Tree state lives in the bookmark store.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { BookmarkIcon, CircleAlert, SearchX } from 'lucide-react';
 import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 import '@/styles/popup.scss';
@@ -293,6 +293,7 @@ function PopupPage() {
     treeRef,
     onClearQuery: clearQuery,
     onApplyQuery: applyQuery,
+    onSaveToFolder: saveCurrentPage,
   });
   const setFolderExpanded = useCallback(
     (folderId: string, expanded: boolean) =>
@@ -550,6 +551,12 @@ function PopupPage() {
       searchOptions.useRegex,
     ],
   );
+  // Enter in the search box saves into the first folder match; the hint bar names it.
+  const firstMatch = isLoading ? undefined : folderMatches[0]?.folder;
+  const firstMatchTitle = firstMatch
+    ? truncateText(getBookmarkDisplayTitle(firstMatch.title), truncateLength)
+    : undefined;
+  const saveToHintId = useId();
   const displayFolders = useMemo(
     () => (isSearchLimited ? limitSearchResults(sortedFolders, maxSearchResults) : sortedFolders),
     [isSearchLimited, maxSearchResults, sortedFolders],
@@ -607,9 +614,10 @@ function PopupPage() {
           searchHistory={searchHistory.history}
           onCommitQuery={searchHistory.record}
           onClearHistory={searchHistory.clear}
+          describedBy={firstMatch ? saveToHintId : undefined}
         />
 
-        <CurrentPageLine />
+        <CurrentPageLine folders={folders} />
 
         {/* A quick save made on a page that could not show its notification. */}
         <QuickSaveResultPanel />
@@ -645,6 +653,7 @@ function PopupPage() {
             pendingFolderIds={addingToFolderIds}
             onSave={saveCurrentPage}
             onKeyDown={handleTreeKeyDown}
+            searchInputRef={inputRef}
           />
         )}
 
@@ -738,7 +747,14 @@ function PopupPage() {
             {t('popup_dragSortedHint', t('settings_sortFolders'))}
           </p>
         ) : (
-          !isLoading && (displayFolders.length > 0 || folderMatches.length > 0) && <PopupHintBar />
+          !isLoading &&
+          (displayFolders.length > 0 || folderMatches.length > 0) && (
+            <PopupHintBar
+              searchInputRef={inputRef}
+              firstMatchTitle={firstMatchTitle}
+              saveToHintId={saveToHintId}
+            />
+          )
         )}
       </div>
       <BookmarkDeleteDialog

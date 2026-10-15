@@ -18,9 +18,9 @@ async function saveFromPopupByFolderName(page: Page, query: string, folderTitle:
   await search.fill(query);
   const match = page.getByTestId('folder-matches').locator('[data-slot="folder-match"]').first();
   await expect(match).toContainText(folderTitle);
-  await search.press('ArrowDown');
-  await expect(match).toBeFocused();
-  await page.keyboard.press('Enter');
+  // What the welcome page promises: Enter saves into the first match, highlighted meanwhile.
+  await expect(match).toHaveAttribute('data-active', 'true');
+  await search.press('Enter');
   await expect(toastRegion(page).getByText(/Bookmark Added$/)).toBeVisible();
   return page.url();
 }

@@ -2,9 +2,13 @@
 # the user's quick save settings (config/settings/search.toml); how folders are ranked is
 # config/bookmarks/folder-ranking.toml. Read by src/services/quick-save.ts.
 
-# How many other folders the notification offers to move the bookmark to. With AI, the other
-# suggestions, up to the user's Maximum recommendations setting.
+# How many other folders the notification offers to move the bookmark to: without AI, the next
+# best matching folders (ranked like the pick); with AI, the other suggestions, up to the user's
+# Maximum recommendations setting.
 alternatives = 3
+# How many of those may be recently used folders, offered only when fewer folders match the
+# page. They say nothing about the page, so they come after every match.
+recent_alternatives = 1
 # Milliseconds before the notification closes on its own. Hovering or focusing it pauses the
 # countdown. "Saving…" stays until the save finishes.
 auto_dismiss_ms = 8000

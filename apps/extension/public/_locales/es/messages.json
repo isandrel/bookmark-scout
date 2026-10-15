@@ -6564,5 +6564,17 @@
     "builtinAi_errorNoPick": {
         "message": "La IA integrada no eligió ninguna carpeta.",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
+    },
+    "qaPopup_hintSaveTo": {
+        "message": "Guardar en $1",
+        "description": "Popup and side panel footer while typing in the search box with folders matched: Enter saves the current page into the first matching folder; $1 is that folder's name"
+    },
+    "qaPopup_alreadySavedIn": {
+        "message": "Ya está guardada en $1",
+        "description": "Line under 'Page to save' in the popup and side panel when the current page is already bookmarked; $1 is the folder path, or a list of paths when it is saved in several folders"
+    },
+    "qaPopup_secondCopyNote": {
+        "message": "Es otra copia: la página también está en \"$1\".",
+        "description": "Added to the toast after saving the current page from the popup or side panel when the page was already bookmarked in another folder; $1 is that other folder's name"
     }
 }
