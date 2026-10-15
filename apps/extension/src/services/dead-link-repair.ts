@@ -33,9 +33,9 @@ export type DeadLinkRepairOutcome = {
   failed: number;
   issues: DeadLinkRepairIssue[];
   /**
-   * Reverts the batch once: puts replaced URLs back, then restores deleted bookmarks (within the
-   * deletion undo window). A URL edited again since the repair is left alone and counted as
-   * failed, so undo never overwrites a newer change.
+   * Reverts the batch once, through its undo history entry (Ctrl+Z undoes the same entry): puts
+   * replaced URLs back and restores deleted bookmarks. A URL edited again since the repair is
+   * left alone and counted as failed, so undo never overwrites a newer change.
    */
   undo: () => Promise<BookmarkChangesUndoResult>;
   /** After this time (epoch milliseconds) undo is no longer offered. */
@@ -99,7 +99,9 @@ export async function applyDeadLinkRepairs(
   items: DeadLinkRepairItem[],
 ): Promise<DeadLinkRepairOutcome> {
   const actionable = items.filter(isActionableRepair);
-  const result = await applyBookmarkChanges(actionable.map(toBookmarkChange));
+  const result = await applyBookmarkChanges(actionable.map(toBookmarkChange), {
+    tool: 'tools_checkDeadLinks',
+  });
   const notApplied = new Set(result.issues.map((issue) => issue.id));
   const applied = actionable.filter((item) => !notApplied.has(item.id));
   const deleted = applied.filter((item) => item.choice === 'delete').length;

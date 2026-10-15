@@ -6330,5 +6330,21 @@
     "builtinAi_errorNoPick": {
         "message": "內建 AI 沒有選擇任何資料夾。",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
+    },
+    "qaManager_historyEditMany": {
+        "message": "編輯 $1 個項目",
+        "description": "Undo history label for editing several items at once, such as a Tools sidebar batch. $1 is how many."
+    },
+    "qaManager_historyByTool": {
+        "message": "$1（$2）",
+        "description": "Undo history label for a change a Tools sidebar tool made. $1 is what it did (such as 'Delete 3 items'), $2 is the tool's name."
+    },
+    "qaManager_alreadyUndone": {
+        "message": "已復原",
+        "description": "Toast title when a tool's Undo is pressed after the same change was already undone from the undo history"
+    },
+    "qaManager_alreadyUndoneDesc": {
+        "message": "這項變更已透過復原記錄復原，因此沒有其他變動。",
+        "description": "Toast detail when a tool's Undo is pressed after the same change was already undone from the undo history"
     }
 }

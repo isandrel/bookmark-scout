@@ -113,8 +113,9 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
       undo:
         applied.deleted + applied.replaced > 0
           ? async () => {
-              const { restored, failed } = await applied.undo();
+              const { restored, failed, alreadyUndone } = await applied.undo();
               await onChanged();
+              if (alreadyUndone) return alreadyUndoneOutcome();
               return {
                 title: failed
                   ? t('tools_deadLinkRepairUndoPartial')

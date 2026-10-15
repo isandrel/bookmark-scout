@@ -93,9 +93,7 @@ function toRecoverableNode(
     ...(metadata ? { metadata } : {}),
     ...(node.children
       ? {
-          children: node.children.map((child) =>
-            toRecoverableNode(child, metadataById, keepIds),
-          ),
+          children: node.children.map((child) => toRecoverableNode(child, metadataById, keepIds)),
         }
       : {}),
   };
@@ -150,10 +148,12 @@ export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
  * then Firefox's toolbar GUID, then the first permanent folder, where older Chrome versions
  * without `folderType` keep the bar.
  */
-export function findBookmarksBarFolder<T extends Pick<BookmarkTreeNode, 'id' | 'parentId'> & {
-  folderType?: string;
-  children?: T[];
-}>(tree: readonly T[]): T | undefined {
+export function findBookmarksBarFolder<
+  T extends Pick<BookmarkTreeNode, 'id' | 'parentId'> & {
+    folderType?: string;
+    children?: T[];
+  },
+>(tree: readonly T[]): T | undefined {
   const permanent = tree.filter(isBookmarkTreeRoot).flatMap((root) => root.children ?? []);
   return (
     permanent.find((folder) => folder.folderType === BOOKMARKS_BAR_FOLDER_TYPE) ??
@@ -281,7 +281,10 @@ export async function moveBookmarkWithinFolder(
   item: { id: string; parentId?: string },
   direction: FolderMoveDirection,
   /** Makes the move; a history writer's `move` records it for undo. */
-  move: (id: string, destination: { parentId: string; index: number }) => Promise<unknown> = moveBookmark,
+  move: (
+    id: string,
+    destination: { parentId: string; index: number },
+  ) => Promise<unknown> = moveBookmark,
 ): Promise<void> {
   const { id, parentId } = item;
   if (!parentId) return;
@@ -548,7 +551,7 @@ export type BookmarkChange = {
   | { kind: 'move'; to: BookmarkMoveTarget }
   | {
       kind: 'remove';
-      /** Keep a snapshot so undo can recreate it; on by default. */
+      /** Record it in the undo history so undo can recreate it; on by default. */
       undoable?: boolean;
     }
 );
@@ -560,106 +563,56 @@ export type BookmarkChangeIssue = {
   reason: 'changed' | 'failed';
 };
 
-export type BookmarkChangesUndoResult = { restored: number; failed: number };
+export type BookmarkChangesUndoResult = {
+  restored: number;
+  failed: number;
+  /** Nothing was reverted because the change was undone already, with Ctrl+Z. */
+  alreadyUndone?: boolean;
+};
 
 export type BookmarkChangesResult = {
   applied: number;
-  /** Changes left out because the bookmark changed since the review. */
+  /** Changes left out because the bookmark was deleted or changed since the review. */
   skipped: number;
   /** Changes the browser rejected. */
   failed: number;
   /** One entry per skipped or failed change, in the order given. */
   issues: BookmarkChangeIssue[];
-  /** Snapshots of the removed bookmarks, in removal order; `undo` restores them. */
-  deletions: BookmarkDeletionSnapshot[];
   /** Folders created for moves (see `BookmarkMoveTarget.createPath`). */
   foldersCreated: number;
-  /** After this time (epoch milliseconds) removed bookmarks can no longer be restored. */
+  /** The undo history entry for what was applied; null when nothing undoable changed. */
+  recorded: RecordedBookmarkChange | null;
+  /** After this time (epoch milliseconds) `undo` is no longer offered; Ctrl+Z still works. */
   expiresAt: number;
   /**
-   * Reverts what was applied, once: updates first (newest first), each only while the bookmark
-   * still has the written values; then moves (newest first), each only while the bookmark is
-   * still in the folder it was moved to; then created folders that are still empty; then
-   * removals (newest first, so captured sibling positions stay valid). A later call returns the
-   * first call's result.
+   * Undoes the history entry, once: newest change first, each only while the bookmark still is
+   * as the change left it, and created folders only while they are still empty. A later call
+   * returns the first call's result; after Ctrl+Z undid the entry, it reverts nothing and says so.
    */
   undo(): Promise<BookmarkChangesUndoResult>;
 };
 
-type AppliedUpdate = { id: string; previous: BookmarkFields; written: BookmarkFields };
-
-type AppliedMove = { id: string; from: { parentId: string; index?: number }; to: string };
+/** What the applied changes did, for their undo history entry. */
+function changesLabel(
+  applied: readonly BookmarkChange[],
+  tool: string | undefined,
+): BookmarkHistoryLabel {
+  const kinds = new Set(applied.map((change) => change.kind));
+  const [kind] = kinds;
+  const action: BookmarkHistoryAction =
+    kinds.size !== 1 ? 'change' : kind === 'update' ? 'edit' : kind === 'move' ? 'move' : 'delete';
+  return {
+    action,
+    count: Math.max(1, applied.length),
+    ...(applied.length === 1 ? { title: applied[0].title } : {}),
+    ...(tool ? { tool } : {}),
+  };
+}
 
 function matchesFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkExpectation = {}) {
   return (Object.keys(fields) as (keyof BookmarkExpectation)[]).every(
     (field) => fields[field] === undefined || node[field] === fields[field],
   );
-}
-
-function pickFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields) {
-  return Object.fromEntries(
-    (Object.keys(fields) as (keyof BookmarkFields)[]).map((field) => [field, node[field]]),
-  ) as BookmarkFields;
-}
-
-/** Restores deletion snapshots newest first; one failure does not stop the others. */
-export async function restoreBookmarkDeletions(
-  snapshots: readonly BookmarkDeletionSnapshot[],
-): Promise<BookmarkChangesUndoResult> {
-  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
-  for (const snapshot of [...snapshots].reverse()) {
-    try {
-      await restoreBookmarkDeletion(snapshot);
-      result.restored += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  return result;
-}
-
-async function revertUpdates(updates: readonly AppliedUpdate[]): Promise<BookmarkChangesUndoResult> {
-  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
-  for (const update of [...updates].reverse()) {
-    const live = await getLiveBookmark(update.id);
-    // A bookmark edited again since is left alone, so undo never overwrites a newer change.
-    if (!live || !matchesFields(live, update.written)) {
-      result.failed += 1;
-      continue;
-    }
-    try {
-      await updateBookmark(update.id, update.previous);
-      result.restored += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  return result;
-}
-
-async function revertMoves(moves: readonly AppliedMove[]): Promise<BookmarkChangesUndoResult> {
-  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
-  for (const move of [...moves].reverse()) {
-    const live = await getLiveBookmark(move.id);
-    // A bookmark moved again since is left where the user put it.
-    if (live?.parentId !== move.to) {
-      result.failed += 1;
-      continue;
-    }
-    try {
-      const siblings = await getBookmarkChildren(move.from.parentId);
-      await moveBookmark(move.id, {
-        parentId: move.from.parentId,
-        ...(typeof move.from.index === 'number'
-          ? { index: Math.min(move.from.index, siblings.length) }
-          : {}),
-      });
-      result.restored += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  return result;
 }
 
 /**
@@ -675,10 +628,14 @@ export async function removeEmptyFolders(ids: readonly string[]): Promise<void> 
 }
 
 /**
- * Finds or creates each folder of a move target and returns the innermost one. Folders created
- * on the way are added to `created`.
+ * Finds or creates each folder of a move target and returns the innermost one. Folders are
+ * created through `writer`, so undo removes them again, and counted in `created`.
  */
-async function resolveMoveTarget(target: BookmarkMoveTarget, created: string[]): Promise<string> {
+async function resolveMoveTarget(
+  target: BookmarkMoveTarget,
+  writer: BookmarkWriter,
+  created: { count: number },
+): Promise<string> {
   let parentId = target.parentId;
   for (const title of target.createPath ?? []) {
     const siblings = await getBookmarkChildren(parentId);
@@ -687,95 +644,93 @@ async function resolveMoveTarget(target: BookmarkMoveTarget, created: string[]):
       parentId = existing.id;
       continue;
     }
-    const folder = await createBookmark({ parentId, title });
-    created.push(folder.id);
+    const folder = await writer.create({ parentId, title });
+    created.count += 1;
     parentId = folder.id;
   }
   return parentId;
 }
 
+export type ApplyBookmarkChangesOptions = {
+  /** The title message key of the Tools sidebar tool applying them, for the undo history. */
+  tool?: string;
+  now?: number;
+};
+
 /**
  * Writes reviewed changes one by one, in order, re-checking each against the live bookmark
- * first. Every change is attempted; a skipped or failed one never stops the rest.
+ * first. Every change is attempted; a skipped or failed one never stops the rest. What was
+ * applied is one undo history entry (`recordBookmarkWrites`), so Ctrl+Z in the manager and the
+ * returned `undo` revert it together, and only once.
  */
 export async function applyBookmarkChanges(
   changes: readonly BookmarkChange[],
-  now: number = Date.now(),
+  { tool, now = Date.now() }: ApplyBookmarkChangesOptions = {},
 ): Promise<BookmarkChangesResult> {
   const issues: BookmarkChangeIssue[] = [];
-  const deletions: BookmarkDeletionSnapshot[] = [];
-  const updates: AppliedUpdate[] = [];
-  const moves: AppliedMove[] = [];
-  const createdFolders: string[] = [];
+  const applied: BookmarkChange[] = [];
+  const foldersCreated = { count: 0 };
   // Moves that share a target find or create its folders once.
   const moveTargets = new Map<string, Promise<string>>();
-  let applied = 0;
 
-  for (const change of changes) {
-    const live = await getLiveBookmark(change.id);
-    if (!live || !matchesFields(live, change.expect) || (change.check && !change.check(live))) {
-      issues.push({ id: change.id, title: change.title, reason: 'changed' });
-      continue;
-    }
-    try {
-      if (change.kind === 'update') {
-        const previous = pickFields(live, change.set);
-        await updateBookmark(change.id, change.set);
-        updates.push({ id: change.id, previous, written: change.set });
-      } else if (change.kind === 'move') {
-        if (!live.parentId) throw new Error(t('error_bookmarkNoParent'));
-        const key = JSON.stringify([change.to.parentId, ...(change.to.createPath ?? [])]);
-        let target = moveTargets.get(key);
-        if (!target) {
-          target = resolveMoveTarget(change.to, createdFolders);
-          moveTargets.set(key, target);
+  const { recorded } = await recordBookmarkWrites(
+    () => changesLabel(applied, tool),
+    async (writer) => {
+      for (const change of changes) {
+        const live = await getLiveBookmark(change.id);
+        if (!live || !matchesFields(live, change.expect) || (change.check && !change.check(live))) {
+          issues.push({ id: change.id, title: change.title, reason: 'changed' });
+          continue;
         }
-        const parentId = await target;
-        await moveBookmark(change.id, { parentId });
-        moves.push({
-          id: change.id,
-          from: { parentId: live.parentId, index: live.index },
-          to: parentId,
-        });
-      } else if (change.undoable === false) {
-        await deleteBookmark(change.id);
-      } else {
-        const snapshot = await captureBookmarkDeletion(change.id, now);
-        await deleteBookmark(change.id);
-        deletions.push(snapshot);
+        try {
+          if (change.kind === 'update') {
+            await writer.update(change.id, change.set);
+          } else if (change.kind === 'move') {
+            if (!live.parentId) throw new Error(t('error_bookmarkNoParent'));
+            const key = JSON.stringify([change.to.parentId, ...(change.to.createPath ?? [])]);
+            let target = moveTargets.get(key);
+            if (!target) {
+              target = resolveMoveTarget(change.to, writer, foldersCreated);
+              moveTargets.set(key, target);
+            }
+            await writer.move(change.id, { parentId: await target });
+          } else if (change.undoable === false) {
+            await deleteBookmark(change.id);
+          } else {
+            await writer.remove(change.id);
+          }
+          applied.push(change);
+        } catch {
+          issues.push({ id: change.id, title: change.title, reason: 'failed' });
+        }
       }
-      applied += 1;
-    } catch {
-      issues.push({ id: change.id, title: change.title, reason: 'failed' });
-    }
-  }
+    },
+  );
 
   let undone: Promise<BookmarkChangesUndoResult> | undefined;
   const undo = () => {
     undone ??= (async () => {
-      const reverted = await revertUpdates(updates);
-      const movedBack = await revertMoves(moves);
-      await removeEmptyFolders(createdFolders);
-      const restored = await restoreBookmarkDeletions(deletions);
-      return {
-        restored: reverted.restored + movedBack.restored + restored.restored,
-        failed: reverted.failed + movedBack.failed + restored.failed,
-      };
+      if (!recorded) return { restored: 0, failed: 0 };
+      const outcome = await undoRecordedBookmarkChange(recorded);
+      if (!outcome) return { restored: 0, failed: 0, alreadyUndone: true };
+      // Created folders are history operations too; count only the changes the user reviewed.
+      const reviewed = applied.filter(
+        (change) => change.kind !== 'remove' || change.undoable !== false,
+      ).length;
+      const restored = Math.min(outcome.applied, reviewed);
+      return { restored, failed: reviewed - restored };
     })();
     return undone;
   };
 
   return {
-    applied,
-    skipped: issues.filter((issue) => issue.reason === 'changed').length,
+    applied: applied.length,
+    skipped: issues.filter((issue) => issue.reason !== 'failed').length,
     failed: issues.filter((issue) => issue.reason === 'failed').length,
     issues,
-    deletions,
-    foldersCreated: createdFolders.length,
-    expiresAt: Math.min(
-      now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
-      ...deletions.map((deletion) => deletion.expiresAt),
-    ),
+    foldersCreated: foldersCreated.count,
+    recorded,
+    expiresAt: now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
     undo,
   };
 }

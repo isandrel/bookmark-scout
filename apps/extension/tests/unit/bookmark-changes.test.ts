@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
+  getUndoableBookmarkChange,
+  redoBookmarkChange,
+  undoBookmarkChange,
+} from '@/services/bookmark-history';
+import {
   applyBookmarkChanges,
   BOOKMARK_DELETION_UNDO_WINDOW_MS,
   type BookmarkChange,
@@ -52,7 +57,7 @@ describe('applyBookmarkChanges', () => {
     expect(bookmarks.get('a')?.url).toBe('https://e2e.invalid/a2');
     expect(bookmarks.get('b')?.url).toBe('https://e2e.invalid/b');
     expect(bookmarks.get('c')).toBeUndefined();
-    expect(result.deletions).toHaveLength(1);
+    expect(result.recorded?.entry.operations.map((op) => op.kind)).toEqual(['update', 'remove']);
   });
 
   it('skips a change whose live check fails', async () => {
@@ -78,7 +83,7 @@ describe('applyBookmarkChanges', () => {
     ]);
   });
 
-  it('undoes updates, then removals newest first, back into their places', async () => {
+  it('undoes newest first, putting removals back into their places', async () => {
     const result = await applyBookmarkChanges([
       remove('a'),
       update('b', {}, { title: 'Renamed B' }),
@@ -96,9 +101,63 @@ describe('applyBookmarkChanges', () => {
       'https://e2e.invalid/b',
       'https://e2e.invalid/c',
     ]);
-    // The update is reverted before the removals are restored, newest removal first.
-    expect(bookmarks.writes.slice(-3)).toEqual(['update b', 'create 1000', 'create 1001']);
+    // Newest change first: the last removal, the update, then the first removal.
+    expect(bookmarks.writes.slice(-3)).toEqual(['create 1000', 'update b', 'create 1001']);
     expect(bookmarks.get('1000')?.url).toBe('https://e2e.invalid/c');
+  });
+
+  it('records one undo history entry named after the tool, shared with Ctrl+Z', async () => {
+    const result = await applyBookmarkChanges([remove('a'), remove('b')], {
+      tool: 'tools_findDuplicates',
+    });
+    const entry = result.recorded?.entry;
+    expect(entry?.label).toMatchObject({
+      action: 'delete',
+      count: 2,
+      tool: 'tools_findDuplicates',
+    });
+
+    // Ctrl+Z undoes the tool's change, so the toast's Undo has nothing left to do.
+    await expect(undoBookmarkChange()).resolves.toMatchObject({ applied: 2, skipped: 0 });
+    expect(bookmarks.childIds('f')).toHaveLength(3);
+    await expect(result.undo()).resolves.toEqual({ restored: 0, failed: 0, alreadyUndone: true });
+    expect(bookmarks.childIds('f')).toHaveLength(3);
+
+    // And Ctrl+Y redoes it.
+    await expect(redoBookmarkChange()).resolves.toMatchObject({ applied: 2 });
+    expect(bookmarks.childIds('f').map((id) => bookmarks.get(id)?.title)).toEqual(['C']);
+  });
+
+  it("takes the entry out of the history when the toast's Undo reverts it", async () => {
+    const result = await applyBookmarkChanges([update('a', {}, { title: 'Cleaned' })], {
+      tool: 'tools_cleanUrls',
+    });
+    expect(result.recorded?.entry.label).toEqual({
+      action: 'edit',
+      count: 1,
+      title: 'A',
+      tool: 'tools_cleanUrls',
+    });
+
+    await expect(result.undo()).resolves.toEqual({ restored: 1, failed: 0 });
+    expect(bookmarks.get('a')?.title).toBe('A');
+    const entryId = result.recorded?.entry.id ?? '';
+    await expect(getUndoableBookmarkChange(entryId)).resolves.toBeUndefined();
+    await expect(undoBookmarkChange()).resolves.toBeNull();
+    await expect(redoBookmarkChange()).resolves.toMatchObject({ applied: 1 });
+    expect(bookmarks.get('a')?.title).toBe('Cleaned');
+  });
+
+  it('undoes moves into created folders and removes the folders again', async () => {
+    const result = await applyBookmarkChanges([
+      { kind: 'move', id: 'a', title: 'A', to: { parentId: 'f', createPath: ['New'] } },
+      { kind: 'move', id: 'b', title: 'B', to: { parentId: 'f', createPath: ['New'] } },
+    ]);
+    expect(result).toMatchObject({ applied: 2, foldersCreated: 1 });
+    expect(result.recorded?.entry.label).toMatchObject({ action: 'move', count: 2 });
+
+    await expect(result.undo()).resolves.toEqual({ restored: 2, failed: 0 });
+    expect(bookmarks.childIds('f')).toEqual(['a', 'b', 'c']);
   });
 
   it('leaves an update edited again since alone and runs undo only once', async () => {
@@ -113,18 +172,18 @@ describe('applyBookmarkChanges', () => {
     expect(bookmarks.get('a')?.title).toBe('User title');
   });
 
-  it('removes without a snapshot when the change is not undoable', async () => {
+  it('removes without recording when the change is not undoable', async () => {
     const result = await applyBookmarkChanges([{ ...remove('a'), undoable: false }]);
-    expect(result).toMatchObject({ applied: 1, deletions: [] });
+    expect(result).toMatchObject({ applied: 1, recorded: null });
+    await expect(undoBookmarkChange()).resolves.toBeNull();
     await expect(result.undo()).resolves.toEqual({ restored: 0, failed: 0 });
     expect(bookmarks.get('a')).toBeUndefined();
   });
 
-  it('reports when the undo window for removals ends', async () => {
+  it('reports when its undo stops being offered', async () => {
     const now = 1_000;
-    const result = await applyBookmarkChanges([remove('a')], now);
+    const result = await applyBookmarkChanges([remove('a')], { now });
     expect(result.expiresAt).toBe(now + BOOKMARK_DELETION_UNDO_WINDOW_MS);
-    expect(result.deletions[0].expiresAt).toBe(result.expiresAt);
   });
 });
 

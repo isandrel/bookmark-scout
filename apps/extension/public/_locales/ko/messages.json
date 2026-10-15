@@ -6528,5 +6528,21 @@
     "builtinAi_errorNoPick": {
         "message": "내장 AI가 폴더를 고르지 않았습니다.",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
+    },
+    "qaManager_historyEditMany": {
+        "message": "항목 $1개 편집",
+        "description": "Undo history label for editing several items at once, such as a Tools sidebar batch. $1 is how many."
+    },
+    "qaManager_historyByTool": {
+        "message": "$1($2)",
+        "description": "Undo history label for a change a Tools sidebar tool made. $1 is what it did (such as 'Delete 3 items'), $2 is the tool's name."
+    },
+    "qaManager_alreadyUndone": {
+        "message": "이미 실행 취소됨",
+        "description": "Toast title when a tool's Undo is pressed after the same change was already undone from the undo history"
+    },
+    "qaManager_alreadyUndoneDesc": {
+        "message": "이 변경 사항은 실행 취소 기록에서 이미 취소되었으므로 더 바뀐 것은 없습니다.",
+        "description": "Toast detail when a tool's Undo is pressed after the same change was already undone from the undo history"
     }
 }
