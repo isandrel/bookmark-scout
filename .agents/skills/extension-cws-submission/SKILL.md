@@ -20,7 +20,7 @@ The maintainer approves each outward step: saving drafts, submitting, removing i
 | Screenshots, in order | `store/screenshots/01-popup-light`, `02-manager-light`, `03-tools-duplicates-light`, `04-options-ai-light`, `06-manager-dark` |
 | Small promo tile | `store/screenshots/promo-small-440x280.png` |
 | Marquee tile | `store/assets/marquee-1400x560.png` |
-| Homepage, support, privacy URLs | `site.url` values in `config/` (`/en/support/`, `/en/privacy/`) |
+| Homepage, support, privacy URLs | `site.url` values in `config/` (`/support/`, `/privacy/`; the old `/en/...` URLs redirect) |
 | Single purpose, permission justifications, remote code | `store/permissions.md` |
 | Data usage | `store/privacy-disclosures.md`, which records the maintainer's choice and why |
 | Test instructions (500 characters) | Write fresh: no login, popup and manager entry points, AI off by default, what leaves the device, source link |

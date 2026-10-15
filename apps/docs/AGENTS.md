@@ -34,7 +34,7 @@ The docs app is both content-driven and code-driven. Many changes are simple MDX
 - `src/app/api/search/[locale]/`: one static search index per language
 - `src/components/mdx/`: MDX components that read config (`Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, `PrivacyEffectiveDate`, `Shortcut`) and `Screenshot`
 - `src/components/home/`: the docs home's task finder
-- `src/lib/`: source loading and translation fallback (`source.ts`), languages (`i18n.ts`, and the client-safe URL helpers in `locale-path.ts`), search indexes (`search.ts`), link helpers (`links.ts`), site constants (`site.ts`), UI copy outside MDX per language (`copy.ts`), the page index (`doc-index.ts`), screenshots with alt text from `copy.ts` over the shared manifest in `@bookmark-scout/config` (`screenshots.ts`), and the MDX-to-Markdown conversion for LLM text (`mdx-text.ts`)
+- `src/lib/`: source loading and translation fallback (`source.ts`), languages (`i18n.ts`; the client-safe URL helpers are `@bookmark-scout/config/locale-path`, shared with the website), search indexes (`search.ts`), link helpers (`links.ts`), site constants (`site.ts`), UI copy outside MDX per language (`copy.ts`), the page index (`doc-index.ts`), screenshots with alt text from `copy.ts` over the shared manifest in `@bookmark-scout/config` (`screenshots.ts`), and the MDX-to-Markdown conversion for LLM text (`mdx-text.ts`)
 - `src/mdx-components.tsx`: component mapping for MDX; register new MDX components here, and in `localizedMdxComponents` too when the component takes a `locale`
 - `source.config.ts`: MDX and collection configuration
 - `scripts/verify-build.ts`: checks the static export in `out/`

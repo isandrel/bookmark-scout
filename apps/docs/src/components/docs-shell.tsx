@@ -1,12 +1,15 @@
 "use client";
 
+import {
+  type LocaleRouting,
+  localeOfPath,
+} from "@bookmark-scout/config/locale-path";
 import type * as PageTree from "fumadocs-core/page-tree";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import type { LinkItemType } from "fumadocs-ui/layouts/shared";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { usePathname } from "next/navigation";
 import type { ComponentProps, ReactNode } from "react";
-import { type LocaleRouting, localeOfPath } from "@/lib/locale-path";
 
 /** Everything in the shell that differs by language. */
 export type LanguageShell = {

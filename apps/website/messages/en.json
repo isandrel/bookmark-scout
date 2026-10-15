@@ -54,6 +54,12 @@
     "languages": "Language",
     "home": "Bookmark Scout home"
   },
+  "languageSuggestion": {
+    "label": "Language suggestion",
+    "text": "This page is also available in English.",
+    "action": "Read in English",
+    "dismiss": "Close"
+  },
   "footer": {
     "tagline": "Save pages to the right folder, then find and tidy them, right in your browser.",
     "product": "Product",

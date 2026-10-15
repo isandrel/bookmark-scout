@@ -54,6 +54,12 @@
     "languages": "语言",
     "home": "Bookmark Scout 首页"
   },
+  "languageSuggestion": {
+    "label": "语言建议",
+    "text": "此页面也提供简体中文版。",
+    "action": "查看简体中文版",
+    "dismiss": "关闭"
+  },
   "footer": {
     "tagline": "把网页保存到合适的文件夹，再查找和整理它们，一切都在浏览器中完成。",
     "product": "产品",

@@ -59,9 +59,9 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 - [ ] Category: Bookmarks.
 - [ ] Platform: Firefox desktop only. Do not enable Firefox for Android; it does not provide the `bookmarks` API the extension needs.
 - [ ] Screenshots: `01-popup-light.png`, `04-options-ai-light.png`, `05-popup-dark.png`, `08-options-ai-dark.png`. Not the manager or Tools screenshots.
-- [ ] Homepage `https://bookmark-scout.com`, support site `https://bookmark-scout.com/en/support/`, support email `support@bookmark-scout.com` (confirm the alias reaches a monitored inbox).
+- [ ] Homepage `https://bookmark-scout.com`, support site `https://bookmark-scout.com/support/`, support email `support@bookmark-scout.com` (confirm the alias reaches a monitored inbox).
 - [ ] License: GNU Affero General Public License v3.0.
-- [ ] Privacy policy: `https://bookmark-scout.com/en/privacy/`; AMO also accepts the policy text, which is in [`../privacy-policy.md`](../privacy-policy.md). Confirm the page is live after the website deploys from `main`.
+- [ ] Privacy policy: `https://bookmark-scout.com/privacy/`; AMO also accepts the policy text, which is in [`../privacy-policy.md`](../privacy-policy.md). Confirm the page is live after the website deploys from `main`.
 - [ ] "Requires payment, non-free services or software": unchecked (see [`../privacy-disclosures.md`](../privacy-disclosures.md)).
 
 ## 4. Notes to reviewer

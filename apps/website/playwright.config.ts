@@ -21,7 +21,7 @@ export default defineConfig({
     ],
     webServer: {
         command: `bun scripts/serve-out.ts ${port}`,
-        url: `http://localhost:${port}/en/`,
+        url: `http://localhost:${port}/`,
         reuseExistingServer: !process.env.CI,
     },
 });

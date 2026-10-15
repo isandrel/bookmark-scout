@@ -42,8 +42,13 @@ function readOut(relativePath: string): string | undefined {
     return existsSync(file) ? readFileSync(file, "utf8") : undefined;
 }
 
+/** The default language has no prefix (`/privacy/`); the others do (`/ja/privacy/`). */
+function pagePath(locale: string, route: string): string {
+    return locale === DEFAULT_LOCALE ? `${route}/` : `/${locale}${route}/`;
+}
+
 function pageUrl(locale: string, route: string): string {
-    return `${SITE_URL}/${locale}${route}/`;
+    return `${SITE_URL}${pagePath(locale, route)}`;
 }
 
 function attr(html: string, pattern: RegExp): string[] {
@@ -51,8 +56,8 @@ function attr(html: string, pattern: RegExp): string[] {
 }
 
 function checkPage(locale: string, route: string) {
-    const label = `/${locale}${route}/`;
-    const html = readOut(join(locale, route, "index.html"));
+    const label = pagePath(locale, route);
+    const html = readOut(join(label, "index.html"));
     if (!html) {
         fail(`${label}: page missing from out/`);
         return;
@@ -64,6 +69,7 @@ function checkPage(locale: string, route: string) {
     if (lang !== locale) fail(`${label}: <html lang="${lang}"> should be "${locale}"`);
 
     if (html.includes("__next_error__")) fail(`${label}: rendered as a Next.js error page`);
+    if (html.includes('http-equiv="refresh"')) fail(`${label}: redirects with a meta refresh instead of rendering`);
     if (html.includes("MISSING_MESSAGE")) fail(`${label}: contains MISSING_MESSAGE`);
 
     const title = /<title>([^<]*)<\/title>/.exec(html)?.[1]?.trim();
@@ -124,17 +130,44 @@ function checkSitemap() {
     }
 }
 
-/** The website's old /<locale>/docs/* pages forward to the docs site. */
-function checkLegacyDocsRedirects() {
+/** The default language is served only without a prefix; `/en/...` exists only as redirects. */
+function checkNoDefaultPrefix() {
+    if (existsSync(join(outDir, DEFAULT_LOCALE))) fail(`/${DEFAULT_LOCALE}/: exported, but it should only redirect`);
+    for (const locale of LOCALES) {
+        if (existsSync(join(outDir, locale, "docs"))) fail(`/${locale}/docs/: exported, but it should only redirect`);
+    }
+}
+
+/**
+ * Cloudflare Pages `_redirects`: old `/en/...` URLs and the old website docs pages move
+ * permanently, and nothing redirects the home page.
+ */
+function checkRedirects() {
+    const text = readOut("_redirects");
+    if (!text) {
+        fail("_redirects missing from out/");
+        return;
+    }
+    const rules = new Map(
+        text
+            .split("\n")
+            .map((line) => line.trim().split(/\s+/))
+            .filter(([from]) => from && !from.startsWith("#"))
+            .map(([from = "", to = "", status = ""]) => [from, `${to} ${status}`]),
+    );
+    const expect = (from: string, to: string) => {
+        if (rules.get(from) !== `${to} 301`) fail(`_redirects: ${from} should be a 301 to ${to}, not ${rules.get(from)}`);
+    };
+    expect(`/${DEFAULT_LOCALE}`, "/");
+    expect(`/${DEFAULT_LOCALE}/*`, "/:splat");
     for (const locale of LOCALES) {
         for (const [path, target] of Object.entries(LEGACY_DOCS_REDIRECTS)) {
-            const label = `/${locale}/docs/${path ? `${path}/` : ""}`;
-            const html = readOut(join(locale, "docs", path, "index.html"));
-            const expected = `${DOCS_URL}${target}`;
-            if (!html) fail(`${label}: page missing from out/`);
-            else if (!html.includes(`content="0; url=${expected}"`)) fail(`${label}: should refresh to ${expected}`);
+            const from = `/${locale}/docs${path ? `/${path}` : ""}`;
+            expect(from, `${DOCS_URL}${target}`);
+            expect(`${from}/`, `${DOCS_URL}${target}`);
         }
     }
+    if (rules.has("/")) fail("_redirects: the home page must not redirect");
 }
 
 function checkManifest() {
@@ -170,13 +203,7 @@ function checkOptimizedImages() {
 
 /** Cloudflare Pages reads these from the output root. */
 function checkHostingFiles() {
-    if (!readOut("_redirects")?.includes(`/${DEFAULT_LOCALE}/`)) fail("_redirects: missing redirect to the default locale");
     if (!readOut("_headers")?.includes("X-Content-Type-Options")) fail("_headers: missing security headers");
-}
-
-function checkRootRedirect() {
-    const html = readOut("index.html");
-    if (!html?.includes('http-equiv="refresh"')) fail("index.html: missing meta refresh to the default locale");
 }
 
 function checkSecurityTxt() {
@@ -247,9 +274,9 @@ for (const locale of LOCALES) {
     for (const route of INDEXABLE_ROUTES) checkPage(locale, route);
 }
 checkSitemap();
-checkLegacyDocsRedirects();
+checkNoDefaultPrefix();
+checkRedirects();
 checkManifest();
-checkRootRedirect();
 checkHostingFiles();
 checkOptimizedImages();
 checkSecurityTxt();
@@ -266,5 +293,5 @@ if (failures.length) {
     process.exit(1);
 }
 console.log(
-    `Website build verified: ${LOCALES.length} locales x ${INDEXABLE_ROUTES.length} routes, sitemap, security.txt, message parity.`,
+    `Website build verified: ${LOCALES.length} locales x ${INDEXABLE_ROUTES.length} routes, sitemap, redirects, security.txt, message parity.`,
 );

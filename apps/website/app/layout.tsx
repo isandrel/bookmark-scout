@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { PUBLIC_PATHS, site } from "@bookmark-scout/config";
 
-// `<html>` and `<body>` are rendered by `app/[locale]/layout.tsx` so each locale
-// gets the correct `lang` attribute. This layout only holds metadata shared by every route.
+// `<html>` and `<body>` are rendered by `components/site/SiteLayout.tsx` (through
+// `app/(default)/layout.tsx` and `app/[locale]/layout.tsx`) so each language gets the correct
+// `lang` attribute. This layout only holds metadata shared by every route.
 // The web manifest comes from `app/manifest.ts`, which Next.js links automatically.
 export const metadata: Metadata = {
     metadataBase: new URL(site.url.origin),

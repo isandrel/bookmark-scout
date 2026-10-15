@@ -56,7 +56,7 @@ export async function SiteHeader({ locale }: { locale: string }) {
                 </nav>
 
                 <div className="hidden lg:block">
-                    <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} label={t("languages")} variant="menu" />
+                    <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} routing={site.locales.routing} label={t("languages")} variant="menu" />
                 </div>
 
                 <details className="group relative lg:hidden">
@@ -68,7 +68,7 @@ export async function SiteHeader({ locale }: { locale: string }) {
                     </summary>
                     <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-line bg-surface p-4 shadow-xl shadow-ink/10">
                         {linkList("mb-4 flex flex-col gap-3 border-b border-line pb-4")}
-                        <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} label={t("languages")} />
+                        <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} routing={site.locales.routing} label={t("languages")} />
                     </div>
                 </details>
             </div>

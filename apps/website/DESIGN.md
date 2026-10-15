@@ -166,7 +166,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 
 ## Elevation and depth
 
-- Depth comes from `surface` on `paper` plus a 1px `line` border. Shadows are rare and soft (header menu popover only).
+- Depth comes from `surface` on `paper` plus a 1px `line` border. Shadows are rare and soft (header menu popover and the floating language suggestion only).
 - The contour-line texture appears behind the hero save instrument only, drawn in `line` color and faded with a mask.
 
 ## Shapes
@@ -178,6 +178,8 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 ## Components
 
 **`site-header`**: 64px sticky bar, translucent `paper` with backdrop blur and a bottom `line` rule. Logo and wordmark at left, links (Features, Privacy, Install, Docs, GitHub) and language links from `lg`; below `lg` a `<details>` menu holds both. Includes a skip link to `#main`.
+
+**`language-suggestion`** (`components/site/LanguageSuggestion.tsx`): a `surface` bar with a 1px `line` border, `rounded.lg`, and the popover's soft shadow, fixed to the bottom (full width inside the 16px gutters on mobile, bottom-right from `sm`), so it shifts no content. Shown after load only when the browser's first matching language is another supported one, and written in that language (`lang` set on the bar): one sentence, a small primary pill to the same page in that language, and a labelled close button (Escape closes it too). It rises in only under `motion-safe`. Language names are written in their own language; no flags.
 
 **`button-primary`**: pill, `teal` background, `teal-ink` text, 12px by 24px padding, optional leading icon. One per viewport. Links to the store listing when configured, otherwise to the latest GitHub release.
 

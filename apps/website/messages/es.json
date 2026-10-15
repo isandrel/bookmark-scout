@@ -54,6 +54,12 @@
     "languages": "Idioma",
     "home": "Inicio de Bookmark Scout"
   },
+  "languageSuggestion": {
+    "label": "Sugerencia de idioma",
+    "text": "Esta página también está disponible en español.",
+    "action": "Leer en español",
+    "dismiss": "Cerrar"
+  },
   "footer": {
     "tagline": "Guarda páginas en la carpeta correcta y luego encuéntralas y ordénalas, directamente en tu navegador.",
     "product": "Producto",

@@ -28,16 +28,18 @@ The website currently uses localized routes and shared site metadata. Preserve t
 
 - `DESIGN.md`: the site's design system (tokens, type, components, do's and don'ts). Read it before UI work.
 - `app/`: route tree, layouts, static handlers, metadata, sitemap, and robots
-- `app/[locale]/`: locale-aware pages: home, `privacy/`, `support/`, and `docs/[[...slug]]`, meta-refresh redirects to the docs site from the `LEGACY_DOCS_REDIRECTS` table in `lib/content/docs-redirects.ts`
+- `app/(default)/`: the default language (English) at unprefixed URLs: home, `privacy/`, `support/`
+- `app/[locale]/`: the same pages for every other language under `/<tag>/` (`generateStaticParams` skips the default language, `dynamicParams = false`)
 - `app/manifest.ts`: the web manifest, built from config
-- `components/site/`: header, footer, language links, redirect helper
-- `components/home/`, `components/privacy/`, `components/support/`, `components/longform/`: page components
+- `components/pages/`: the body and metadata of each page, which both route trees render; keep the route files thin wrappers so the trees cannot drift
+- `components/site/`: the shared layout (`SiteLayout.tsx`, the only one that renders `<html>`), header, footer, language links, and the language suggestion banner
+- `components/home/`, `components/privacy/`, `components/support/`, `components/longform/`: page sections
 - `lib/content/`: typed content data (demo library, tour, install steps, FAQ, AI providers, page sections, `routes.ts` with the indexable routes)
-- `lib/`: `download.ts` (store link or release fallback), `page-metadata.ts`, `images.ts` (responsive image widths, formats, quality, and byte budget), `extension-providers.ts` (reads the AI provider list from `apps/extension/config` at build time for `lib/content/ai-providers.ts`)
+- `lib/`: `language-preference.ts` (browser-language matching and the one remembered-choice storage key for the banner), `redirects.ts` (the `_redirects` format that `serve-out.ts` applies in tests), `download.ts` (store link or release fallback), `page-metadata.ts`, `images.ts` (responsive image widths, formats, quality, and byte budget), `extension-providers.ts` (reads the AI provider list from `apps/extension/config` at build time for `lib/content/ai-providers.ts`)
 - `scripts/optimize-images.ts`: generates AVIF and WebP variants of `public/screenshots/*.png` before dev and build (`bun run images` to run alone, `--force` to rebuild all)
 - `messages/<locale>.json`: shared and home copy; `messages/privacy/` and `messages/support/`: long-form page copy, merged in `i18n/request.ts`
 - `i18n/`: locale routing and request behavior
-- `public/`: icons, store screenshots, and `_headers`. `scripts/generate-public-files.ts` writes `_redirects` and `.well-known/security.txt` from config before dev and build (both git-ignored)
+- `public/`: icons, store screenshots, and `_headers`. `scripts/generate-public-files.ts` writes `_redirects` (301s from the old `/en/...` URLs and the old `/<locale>/docs/...` pages, from the `LEGACY_DOCS_REDIRECTS` table in `lib/content/docs-redirects.ts`) and `.well-known/security.txt` from config before dev and build (both git-ignored)
 - `scripts/verify-build.ts`, `scripts/serve-out.ts`, `tests/e2e/`, `playwright.config.ts`: build checks and browser tests
 
 Do not edit generated output under:
@@ -80,7 +82,8 @@ Build verification is particularly important when the change touches:
 ### Preserve App Router conventions
 
 - keep route behavior inside the existing `app/` structure
-- preserve the locale-aware route model under `app/[locale]/`
+- preserve the two-tree locale model: `app/(default)/` for the default language without a prefix, `app/[locale]/` for the others. A static export has no middleware, so next-intl's `localePrefix: 'as-needed'` is not used. A new page is one component in `components/pages/` plus a thin route file in each tree, and a row in `lib/content/routes.ts`
+- never redirect by browser language; `/` is English for everyone, including crawlers. The client-only `LanguageSuggestion` banner offers the visitor's language instead, and stops after a choice (dismiss, its link, or the header switcher)
 - avoid introducing alternate routing patterns unless the task truly requires it
 
 ### Localization
@@ -97,7 +100,7 @@ Rules:
 
 ### Shared config and content data
 
-Values come from `config/project.toml` and `config/web.toml` through the `site` model in `@bookmark-scout/config`: page URLs (`site.url.path(locale, route, anchor)` for links, `site.url.page(...)` and `site.url.alternates(route)` for metadata), repository URLs (`site.repo.url`, `site.repo.file`, `site.repo.releasesLatest`, `site.repo.newIssue`), `site.docs.url(path)`, `site.contact.mailto(role)`, `site.store(browser)` (store listings; not live until a URL is set), `site.license`, `site.locales`, and `site.legal.privacyEffectiveDate`. The package reads files with `node:fs`, so client components get these values as props.
+Values come from `config/project.toml` and `config/web.toml` through the `site` model in `@bookmark-scout/config`: page URLs (`site.url.path(locale, route, anchor)` for links, `site.url.page(...)` and `site.url.alternates(route)` for metadata; the default language has no prefix, so `site.url.path("en", "/privacy")` is `/privacy/`), client-side path switching (`pathInLocale` from `@bookmark-scout/config/locale-path`, with `site.locales.routing` passed as a prop), repository URLs (`site.repo.url`, `site.repo.file`, `site.repo.releasesLatest`, `site.repo.newIssue`), `site.docs.url(path)`, `site.contact.mailto(role)`, `site.store(browser)` (store listings; not live until a URL is set), `site.license`, `site.locales`, and `site.legal.privacyEffectiveDate`. The package reads files with `node:fs`, so client components get these values as props.
 
 - never hardcode URLs, email addresses, dates, or store links in components
 - SEO keywords (`metadata.keywords`) and the structured-data feature list (`structuredData.features`) are copy, so they live in messages per locale; browser theme colors come from `[website.theme]` in `config/web.toml` (a test checks they match `app/globals.css`); shared paths and the title template come from `PUBLIC_PATHS` and `titleTemplate`
@@ -108,7 +111,7 @@ Values come from `config/project.toml` and `config/web.toml` through the `site` 
 
 ### Store-required pages
 
-The Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings link to the home page, `/{locale}/privacy/`, and `/{locale}/support/`. Keep these pages live and accurate. When the privacy text changes, update `messages/privacy/*.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` together. Renew security.txt by moving `[security_txt] expires` in `config/web.toml` before that date; `website:verify` warns `warn_days` ahead.
+The Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings link to the home page, `/privacy/`, and `/support/` (other languages under `/<tag>/`; the old `/en/...` URLs redirect). Keep these pages live and accurate. When the privacy text changes, update `messages/privacy/*.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` together. Renew security.txt by moving `[security_txt] expires` in `config/web.toml` before that date; `website:verify` warns `warn_days` ahead.
 
 ### Metadata and SEO
 

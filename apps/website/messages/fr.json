@@ -54,6 +54,12 @@
     "languages": "Langue",
     "home": "Accueil de Bookmark Scout"
   },
+  "languageSuggestion": {
+    "label": "Suggestion de langue",
+    "text": "Cette page est aussi disponible en français.",
+    "action": "Lire en français",
+    "dismiss": "Fermer"
+  },
   "footer": {
     "tagline": "Enregistrez vos pages dans le bon dossier, puis retrouvez-les et rangez-les, directement dans votre navigateur.",
     "product": "Produit",

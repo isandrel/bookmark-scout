@@ -4,6 +4,7 @@
  * `site.repo.file("SECURITY.md")` instead of concatenating strings, so a URL shape is defined
  * in exactly one place.
  */
+import { type LocaleRouting, localizedSegments } from "./locale-path";
 import type { ProjectConfig, WebConfig } from "./workspace";
 
 /** Root-relative paths both sites serve from `public/`. */
@@ -58,17 +59,24 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 	const branch = project.repository.default_branch;
 	const repoSlug = new URL(repoBase).pathname.replace(/^\/+/, "");
 
+	const routing: LocaleRouting = { defaultLocale: locales.default, locales: locales.supported };
+
 	const assertLocale = (locale: string) => {
 		if (!locales.supported.includes(locale)) {
 			throw new Error(`Unknown locale "${locale}"; supported: ${locales.supported.join(", ")}`);
 		}
 	};
 
-	/** Root-relative path of a localized page. Trailing slash, as the static export serves it. */
+	/**
+	 * Root-relative path of a localized page: no prefix for the default language (`/privacy/`),
+	 * `/<tag>/` for the others (`/ja/privacy/`). Trailing slash, as the static export serves it.
+	 */
 	const path = (locale: string, route = "", anchor?: string) => {
 		assertLocale(locale);
 		assertRoute(route);
-		return `/${locale}${route}/${anchor ? `#${anchor}` : ""}`;
+		const segments = localizedSegments(locale, route.split("/").filter(Boolean), routing);
+		const base = segments.length === 0 ? "/" : `/${segments.join("/")}/`;
+		return `${base}${anchor ? `#${anchor}` : ""}`;
 	};
 
 	const page = (locale: string, route = "", anchor?: string) => `${origin}${path(locale, route, anchor)}`;
@@ -118,11 +126,11 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 		url: {
 			/** Website origin without a trailing slash, such as https://bookmark-scout.com. */
 			origin,
-			/** The website root, which redirects to the default locale. */
+			/** The website root: the home page in the default language. */
 			home: `${origin}/`,
 			path,
 			page,
-			/** hreflang alternates for a route: one URL per locale plus `x-default`. */
+			/** hreflang alternates for a route: one URL per locale plus `x-default`, the default language's URL. */
 			alternates: (route = ""): Record<string, string> => ({
 				...Object.fromEntries(locales.supported.map((locale) => [locale, page(locale, route)])),
 				"x-default": page(locales.default, route),
@@ -151,6 +159,8 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 			default: locales.default,
 			supported: locales.supported,
 			isSupported: (locale: string) => locales.supported.includes(locale),
+			/** The language list for the client-safe URL helpers in `@bookmark-scout/config/locale-path`. */
+			routing,
 			/** The language's own name, such as 日本語. */
 			name: (locale: string) => {
 				assertLocale(locale);
