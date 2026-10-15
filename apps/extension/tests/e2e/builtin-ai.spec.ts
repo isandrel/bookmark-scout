@@ -260,6 +260,11 @@ test('[mocked provider contract] the popup suggests the folder the built-in mode
       source: 'folderRecommendation',
       requestBody: expect.stringContaining('Rust async guide'),
     });
+  // Options names the on-device call in its status badge, where a request shows its HTTP status.
+  const options = await context.newPage();
+  await openAITab(options, extensionId);
+  const entry = options.getByTestId('ai-activity').getByTestId('ai-activity-entry').first();
+  await expect(entry.getByTestId('ai-activity-status')).toHaveText('On device');
 });
 
 test('the popup never downloads the model: it says to download it in Settings', async ({

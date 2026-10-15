@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import enMessages from '../../public/_locales/en/messages.json';
+import { setLanguage, t } from '@/hooks/use-i18n';
 import {
   aiActivityValue,
   MAX_AI_ACTIVITY_BODY_CHARS,
@@ -14,7 +14,14 @@ import {
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { MAX_PROMPT_BYTES } from '@/lib/prompt-library-storage';
 import { saveSettings } from '@/lib/settings-storage';
-import { AI_ACTIVITY_SOURCES, createLoggingFetch } from '@/services/ai-activity';
+import {
+  AI_ACTIVITY_ACTION_METHOD,
+  AI_ACTIVITY_ON_DEVICE_METHOD,
+  AI_ACTIVITY_SOURCES,
+  aiActivityStatusLabel,
+  createLoggingFetch,
+} from '@/services/ai-activity';
+import enMessages from '../../public/_locales/en/messages.json';
 import { readConfigToml } from '../config-files';
 import { STORAGE_ITEMS, seedStored } from './storage-helpers';
 
@@ -203,5 +210,25 @@ describe('createLoggingFetch', () => {
     await expect(fetch('https://api.example.invalid/v1/models')).rejects.toThrow('Failed to fetch');
     await vi.waitFor(async () => expect(await aiActivityValue.get()).toHaveLength(1));
     expect((await aiActivityValue.get())[0]?.error).toBe('TypeError: Failed to fetch');
+  });
+});
+
+describe('aiActivityStatusLabel', () => {
+  it('names calls without an HTTP status instead of showing an empty badge', () => {
+    setLanguage('en');
+    expect(aiActivityStatusLabel({ method: 'POST', status: 200 })).toBe('200');
+    expect(aiActivityStatusLabel({ method: 'POST', error: 'TypeError: Failed' })).toBe('Failed');
+    expect(aiActivityStatusLabel({ method: AI_ACTIVITY_ON_DEVICE_METHOD })).toBe('On device');
+    expect(
+      aiActivityStatusLabel({ method: AI_ACTIVITY_ON_DEVICE_METHOD, error: 'model crashed' }),
+    ).toBe('Failed');
+    expect(aiActivityStatusLabel({ method: AI_ACTIVITY_ACTION_METHOD })).toBe('Action');
+    expect(aiActivityStatusLabel({ method: 'GET' })).toBeUndefined();
+    setLanguage('ko');
+    expect(aiActivityStatusLabel({ method: AI_ACTIVITY_ON_DEVICE_METHOD })).toBe(
+      t('qaOptions_activityOnDevice'),
+    );
+    expect(t('qaOptions_activityOnDevice')).not.toBe('On device');
+    setLanguage('en');
   });
 });

@@ -5227,6 +5227,14 @@
         "message": "失敗",
         "description": "Options: status badge of an AI request that got no response"
     },
+    "qaOptions_activityOnDevice": {
+        "message": "端末上",
+        "description": "Options > AI activity: status badge of a call to the built-in AI model on this computer, which has no HTTP status because nothing goes over the network. Keep it very short"
+    },
+    "qaOptions_activityAction": {
+        "message": "操作",
+        "description": "Options > AI activity: status badge of a bookmark action an AI agent ran (such as saving a bookmark), which has no HTTP status. Keep it very short"
+    },
     "aiActivity_requestHeaders": {
         "message": "リクエストヘッダー",
         "description": "Options: label of the recorded request headers"
