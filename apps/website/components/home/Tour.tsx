@@ -12,13 +12,15 @@ const DEVELOPER_DOCS_PATH = "/guides/local-agents";
 
 function BrowserFrame({ screenshot, alt, eager }: { screenshot: TourTab["screenshot"]; alt: string; eager: boolean }) {
     return (
-        <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-[0_24px_48px_-28px_rgb(15_33_53/0.35)]">
+        // self-start: in the two-column grid the frame keeps the screenshot's 16:10 height instead of
+        // stretching to the text column and showing an empty band under the image.
+        <div className="self-start overflow-hidden rounded-xl border border-line bg-surface shadow-[0_24px_48px_-28px_rgb(15_33_53/0.35)]">
             <div aria-hidden="true" className="flex h-8 items-center gap-1.5 border-b border-line bg-sunken px-3">
                 <span className="size-2.5 rounded-full bg-line" />
                 <span className="size-2.5 rounded-full bg-line" />
                 <span className="size-2.5 rounded-full bg-line" />
             </div>
-            <picture>
+            <picture className="block">
                 {IMAGE_FORMATS.map((format) => (
                     <source
                         key={`dark-${format}`}

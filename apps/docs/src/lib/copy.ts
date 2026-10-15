@@ -69,12 +69,16 @@ const en = {
   screenshots: {
     popup:
       'Two popups: "pas" typed in the search box with the Pasta folder (Recipes / Italian) selected under Save to folder, and AI suggestions for the current page: the existing Recipes/Italian/Pasta folder and a new Recipes/Quick Dinners folder',
+    "quick-save":
+      "A recipe page with the quick save notification in its top corner: saved to Pasta, with Undo and other folders under Move to",
     manager:
-      "The bookmarks manager with the folder tree, the title and URL filters, and the bookmark table",
+      "The bookmarks manager on the Bookmarks Bar: the folder tree with Recipes, School, Travel, Family, and Shopping, one search box, and the bookmark table",
     duplicates:
       "The Duplicate Cleaner review over the manager, with the bookmark to keep in each group marked Keep",
+    settings:
+      "The Essentials tab in Settings: Quick Save Folder, Folder to Save To, Right-Click Menu (off), Theme, and Language",
     "options-ai":
-      "The AI tab in Settings with AI Features turned off, the default",
+      "The AI tab in Settings: the AI is optional box says what AI needs and may cost, and AI Features is off, the default",
   },
 
   /**

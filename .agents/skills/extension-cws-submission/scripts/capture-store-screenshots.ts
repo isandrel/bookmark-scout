@@ -1,6 +1,7 @@
 // Store screenshot capture, run as a step of the extension-exploratory-qa runner against a granted
-// build (see prepare-granted-build.ts). Seeds synthetic bookmarks, saves real site icons with
-// Refresh Site Icons, then captures every store frame in light and dark into the runner's shots/.
+// build (see prepare-granted-build.ts). Seeds everyday bookmarks on real public sites, saves their
+// real icons with Refresh Site Icons, then captures every store frame in light and dark into the
+// runner's shots/. Frames carry no added text, so they suit every language.
 import type { Page } from '@playwright/test';
 import type { Ctx } from '../../extension-exploratory-qa/scripts/explore-run';
 import {
@@ -18,54 +19,76 @@ const PAGE = { width: 1280, height: 800 };
 const POPUP = { width: 400, height: 600 };
 const SETTLE_MS = 1200;
 
+// The page being saved: a public placeholder address, answered locally (no request leaves the
+// machine) with a plain recipe page, so no real site's content appears in the frames.
+const SAMPLE_PAGE = {
+  title: 'Lemon ricotta pasta',
+  url: 'https://www.example.com/recipes/lemon-ricotta-pasta',
+};
+
 const seed = async () => {
   const mk = (parentId: string, title: string, url?: string) =>
     chrome.bookmarks.create({ parentId, title, url });
   const bar = '1';
-  await mk(bar, 'Inbox');
   const recipes = await mk(bar, 'Recipes');
-  await mk(recipes.id, 'Weeknight Pasta', 'https://www.example.com/recipes/weeknight-pasta');
-  await mk(recipes.id, 'Weeknight Pasta (copy)', 'https://www.example.com/recipes/weeknight-pasta');
-  await mk(recipes.id, 'Sourdough Starter Guide', 'https://www.example.org/baking/sourdough');
-  // Nested folders, so the popup's folder matches show a folder deep in the tree.
   const italian = await mk(recipes.id, 'Italian');
   const pasta = await mk(italian.id, 'Pasta');
-  await mk(pasta.id, 'Cacio e Pepe', 'https://www.example.com/recipes/cacio-e-pepe');
+  await mk(pasta.id, 'Cacio e pepe', 'https://www.seriouseats.com/');
+  await mk(pasta.id, 'Pasta recipes', 'https://www.bbcgoodfood.com/');
   const baking = await mk(recipes.id, 'Baking');
-  await mk(baking.id, 'Pastry');
+  await mk(baking.id, 'Sourdough for beginners', 'https://www.kingarthurbaking.com/');
+  await mk(recipes.id, 'Weeknight dinners', 'https://www.allrecipes.com/');
+  await mk(recipes.id, 'Weeknight dinners', 'https://www.allrecipes.com/');
+  const school = await mk(bar, 'School');
+  const math = await mk(school.id, 'Math');
+  await mk(math.id, 'Algebra practice', 'https://www.khanacademy.org/');
+  await mk(math.id, 'Algebra practice', 'https://www.khanacademy.org/');
+  const science = await mk(school.id, 'Science');
+  await mk(science.id, 'The solar system', 'https://science.nasa.gov/');
+  await mk(school.id, 'Spanish lessons', 'https://www.duolingo.com/');
+  await mk(school.id, 'Flashcards', 'https://quizlet.com/');
   const travel = await mk(bar, 'Travel');
   const japan = await mk(travel.id, 'Japan');
   const kyoto = await mk(japan.id, 'Kyoto');
-  await mk(kyoto.id, 'Kyoto Itinerary', 'https://www.example.com/travel/kyoto');
-  await mk(travel.id, 'Packing List', 'https://www.example.org/travel/packing');
-  await mk(travel.id, 'Wikivoyage', 'https://en.wikivoyage.org/');
-  const research = await mk(bar, 'Research');
-  await mk(research.id, 'Wikipedia', 'https://en.wikipedia.org/');
-  await mk(research.id, 'arXiv', 'https://arxiv.org/');
-  await mk(research.id, 'Our World in Data', 'https://ourworldindata.org/');
-  await mk(research.id, 'Internet Archive', 'https://archive.org/');
-  const dev = await mk(bar, 'Dev Docs');
-  const tailwind = await mk(dev.id, 'Tailwind CSS');
-  await mk(tailwind.id, 'Tailwind CSS Docs', 'https://tailwindcss.com/docs');
-  await mk(tailwind.id, 'Tailwind Play', 'https://play.tailwindcss.com/');
-  await mk(dev.id, 'Chrome Extensions Docs', 'https://developer.chrome.com/docs/extensions');
-  await mk(dev.id, 'MDN Web Docs', 'https://developer.mozilla.org/en-US/');
-  await mk(dev.id, 'React Reference', 'https://react.dev/reference/react');
-  await mk(dev.id, 'WXT Guide', 'https://wxt.dev/guide/');
-  await mk(dev.id, 'MDN Web Docs', 'https://developer.mozilla.org/en-US/');
-  await mk(dev.id, 'TypeScript Handbook', 'https://www.typescriptlang.org/docs/handbook/intro.html');
-  await mk(bar, 'Hacker News', 'https://news.ycombinator.com/');
-  await mk(bar, 'GitHub', 'https://github.com/');
+  await mk(kyoto.id, 'Kyoto guide', 'https://www.japan-guide.com/');
+  await mk(travel.id, 'Travel guides', 'https://en.wikivoyage.org/');
+  await mk(travel.id, 'Train and bus routes', 'https://www.rome2rio.com/');
+  const family = await mk(bar, 'Family');
+  await mk(family.id, 'Birthday party ideas', 'https://www.parents.com/');
+  await mk(family.id, 'School holidays', 'https://www.timeanddate.com/');
+  await mk(family.id, 'Kids science activities', 'https://kids.nationalgeographic.com/');
+  const shopping = await mk(bar, 'Shopping');
+  await mk(shopping.id, 'Kitchen shelves', 'https://www.ikea.com/');
+  await mk(shopping.id, 'Handmade gifts', 'https://www.etsy.com/');
+  await mk(shopping.id, 'Camping gear', 'https://www.rei.com/');
+  // A few everyday pages straight on the bar, as most people keep them.
+  await mk(bar, 'Library catalog', 'https://www.worldcat.org/');
+  await mk(bar, 'Maps', 'https://www.openstreetmap.org/');
+  await mk(bar, 'Photo album', 'https://www.flickr.com/');
+  await mk('2', 'Museum visit', 'https://www.metmuseum.org/');
 };
 
-// Pages open as tabs, so the popup's "current tab" would be itself; report a sample page instead.
-const stubActiveTab = () => {
+// Pages open as tabs, so the popup's "current tab" would be itself; report the sample page instead.
+const stubActiveTab = (sample: { title: string; url: string }) => {
   const original = chrome.tabs.query.bind(chrome.tabs);
   // @ts-expect-error capture-only override
   chrome.tabs.query = async (query: chrome.tabs.QueryInfo) =>
     query?.active
-      ? [{ id: 999, index: 0, windowId: 1, active: true, highlighted: true, pinned: false, incognito: false, title: 'Weeknight carbonara in 20 minutes', url: 'https://www.example.com/recipes/weeknight-carbonara' }]
+      ? [{ id: 999, index: 0, windowId: 1, active: true, highlighted: true, pinned: false, incognito: false, ...sample }]
       : original(query);
+};
+
+const samplePageHtml = (scheme: 'light' | 'dark') => {
+  const dark = scheme === 'dark';
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${SAMPLE_PAGE.title}</title><style>
+body{margin:0;font:18px/1.6 Georgia,serif;background:${dark ? '#1c1b19' : '#fbf8f3'};color:${dark ? '#ece6dc' : '#2b2622'}}
+header{height:64px;border-bottom:1px solid ${dark ? '#37332e' : '#e8e0d4'}}
+main{max-width:760px;margin:48px auto;padding:0 24px}
+h1{font-size:44px;line-height:1.15;margin:0 0 24px}
+.hero{height:300px;border-radius:12px;background:linear-gradient(135deg,#f2d27a,#e8a948 45%,#c9733a)}
+.lines div{height:14px;border-radius:7px;margin:18px 0;background:${dark ? '#37332e' : '#e8e0d4'}}
+</style></head><body><header></header><main><h1>${SAMPLE_PAGE.title}</h1><div class="hero"></div>
+<div class="lines"><div style="width:92%"></div><div style="width:86%"></div><div style="width:60%"></div></div></main></body></html>`;
 };
 
 // Folder suggestions from a stubbed AI provider; no request leaves the machine.
@@ -89,6 +112,7 @@ const disableStubAI = async (sw: StorageTarget) => {
   });
   await removeStored(sw, STORAGE_ITEMS.aiServices);
   await removeStored(sw, STORAGE_ITEMS.aiCredentials);
+  await removeStored(sw, STORAGE_ITEMS.quickSave);
 };
 
 const runTool = async (page: Page, name: string) => {
@@ -97,11 +121,26 @@ const runTool = async (page: Page, name: string) => {
   await title.locator('xpath=ancestor::*[.//button][1]').getByRole('button').last().click();
 };
 
+/** Fires the background's real quick save command for `page`, as pressing the shortcut does. */
+const quickSave = async (sw: StorageTarget & { evaluate: Ctx['sw']['evaluate'] }, page: Page) => {
+  await page.bringToFront();
+  await sw.evaluate(
+    async ({ url, title }) => {
+      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      const event = chrome.commands.onCommand as unknown as { dispatch(command: string, tab: unknown): void };
+      event.dispatch('quick-save', { ...tab, url, title });
+    },
+    { url: page.url(), title: await page.title() },
+  );
+};
+
 export default async ({ context, id, sw, shot, log }: Ctx) => {
   await sw.evaluate(seed);
   // A store frame shows the product, not the one-time offer to give quick save Ctrl+D.
   await writeStored(sw, STORAGE_ITEMS.dismissedNotices, ['quick-save-bookmark-key']);
   const url = (file: string) => `chrome-extension://${id}/${file}`;
+  // The welcome page opens on install; it is not part of any frame.
+  for (const page of context.pages()) if (page.url().includes('welcome')) await page.close();
 
   const icons = await context.newPage();
   await icons.setViewportSize(PAGE);
@@ -110,19 +149,44 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
   await runTool(icons, 'Refresh Site Icons');
   const dialog = icons.getByRole('dialog');
   const save = dialog.getByRole('button', { name: /^Save \d+ icons?/ });
-  await save.waitFor({ timeout: 90_000 });
+  await save.waitFor({ timeout: 120_000 });
   log(`[icons] ${await save.innerText()}`);
   await save.click();
+  // Saving finishes after the click; wait until the icons are stored before closing the page.
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const stored = await sw.evaluate(async (key) => Boolean((await chrome.storage.local.get(key))[key]), 'site-icons.cache');
+    if (stored) break;
+    await icons.waitForTimeout(500);
+  }
   await icons.close();
 
   for (const scheme of SCHEMES) {
+    await context.route(`${SAMPLE_PAGE.url}*`, (route) =>
+      route.fulfill({ contentType: 'text/html; charset=utf-8', body: samplePageHtml(scheme) }),
+    );
+
+    // Quick save from a page: the in-page notification says where it went.
+    const article = await context.newPage();
+    await article.setViewportSize(PAGE);
+    await article.emulateMedia({ colorScheme: scheme });
+    await article.goto(SAMPLE_PAGE.url);
+    await quickSave(sw as never, article);
+    await article.waitForTimeout(SETTLE_MS * 2);
+    await article.mouse.move(PAGE.width / 2, PAGE.height - 10);
+    await shot(article, `quick-save-${scheme}`);
+    // Undo, so the page is not already saved in the popup frames.
+    const saved = await sw.evaluate(async (pageUrl) => chrome.bookmarks.search({ url: pageUrl }), SAMPLE_PAGE.url);
+    for (const bookmark of saved) await sw.evaluate(async (bookmarkId) => chrome.bookmarks.remove(bookmarkId), bookmark.id);
+    await removeStored(sw, STORAGE_ITEMS.quickSave);
+    await removeStored(sw, STORAGE_ITEMS.recentFolders);
+    await article.close();
+    await context.unroute(`${SAMPLE_PAGE.url}*`);
+
     const page = await context.newPage();
     await page.setViewportSize(PAGE);
     await page.emulateMedia({ colorScheme: scheme });
     await page.goto(url('bookmarks.html'));
-    await page.waitForTimeout(SETTLE_MS);
-    await page.getByRole('button', { name: 'Dev Docs', exact: true }).first().click();
-    await page.waitForTimeout(SETTLE_MS);
+    await page.waitForTimeout(SETTLE_MS * 3);
     await page.mouse.move(PAGE.width / 2, PAGE.height - 10);
     await shot(page, `manager-${scheme}`);
 
@@ -134,6 +198,8 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
 
     await page.goto(url('options.html'));
     await page.waitForTimeout(SETTLE_MS);
+    await page.mouse.move(0, 0);
+    await shot(page, `settings-${scheme}`);
     await page.getByRole('tab', { name: 'AI', exact: true }).first().click();
     await page.waitForTimeout(SETTLE_MS);
     await page.mouse.move(0, 0);
@@ -145,19 +211,20 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
       const popup = await context.newPage();
       await popup.setViewportSize(POPUP);
       await popup.emulateMedia({ colorScheme: scheme });
-      await popup.addInitScript(stubActiveTab);
+      await popup.addInitScript(stubActiveTab, SAMPLE_PAGE);
       await popup.goto(url('popup.html'));
       await popup.waitForTimeout(SETTLE_MS);
       return popup;
     };
     const match = await openPopup();
-    const search = match.getByPlaceholder(/Search bookmarks/);
+    const search = match.getByRole('combobox').first();
     await search.pressSequentially('pas', { delay: 80 });
     await match.waitForTimeout(SETTLE_MS);
     await search.press('ArrowDown');
     await match.waitForTimeout(SETTLE_MS / 2);
     await shot(match, `popup-match-${scheme}`);
     await match.close();
+    await removeStored(sw, STORAGE_ITEMS.searchHistory);
 
     await enableStubAI(sw, AI_BASE_URL);
     await context.route(`${AI_BASE_URL}/**`, (route) =>

@@ -36,7 +36,7 @@ The full Chromium E2E suite runs against the Edge build as the required `Edge E2
 - [ ] Search terms: from the same files.
 - [ ] Short description: from the package (`extDescription`).
 - [ ] Store logo: 300x300 PNG. **Not prepared**; create it from `store/assets/icon-original.png` when needed.
-- [ ] Screenshots (1280x800): all eight from [`../screenshots/`](../screenshots/), or without the manager and Tools images if the override does not apply.
+- [ ] Screenshots (1280x800): all twelve from [`../screenshots/`](../screenshots/), or without the manager and Tools images if the override does not apply.
 - [ ] Small promo tile 440x280 (optional): `promo-small-440x280.png`. Large promo tile 1400x560: not prepared.
 
 ## 4. Properties

@@ -58,12 +58,16 @@ export const de: DocsCopy = {
   screenshots: {
     popup:
       "Zwei Pop-ups: „pas“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Pasta (Recipes / Italian) ausgewählt, und KI-Vorschläge für die aktuelle Seite: der vorhandene Ordner Recipes/Italian/Pasta und ein neuer Ordner Recipes/Quick Dinners",
+    "quick-save":
+      "Eine Rezeptseite mit der Schnellspeichern-Meldung in der oberen Ecke: in Pasta gespeichert, mit „Rückgängig“ und weiteren Ordnern unter „Verschieben nach“",
     manager:
-      "Der Lesezeichen-Manager mit Ordnerbaum, den Filtern für Titel und URL und der Lesezeichentabelle",
+      "Der Lesezeichen-Manager in der Lesezeichenleiste: der Ordnerbaum mit Recipes, School, Travel, Family und Shopping, ein Suchfeld und die Lesezeichentabelle",
     duplicates:
       "Die Prüfung der Duplikatbereinigung über dem Manager, wobei das zu behaltende Lesezeichen jeder Gruppe mit „Behalten“ markiert ist",
+    settings:
+      "Der Tab „Das Wichtigste“ in den Einstellungen: Ordner für Schnellspeichern, Zielordner, Rechtsklickmenü (aus), Design und Sprache",
     "options-ai":
-      "Der Tab „KI“ in den Einstellungen mit deaktivierten KI-Funktionen, dem Standard",
+      "Der Tab „KI“ in den Einstellungen: Der Kasten „KI ist optional“ erklärt, was KI braucht und was sie kosten kann, und die KI-Funktionen sind aus, der Standard",
   },
 
   /**

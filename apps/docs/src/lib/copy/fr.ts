@@ -58,12 +58,16 @@ export const fr: DocsCopy = {
   screenshots: {
     popup:
       "Deux fenêtres pop-up : « pas » saisi dans le champ de recherche avec le dossier Pasta (Recipes / Italian) sélectionné sous Enregistrer dans un dossier, et des suggestions de l’IA pour la page actuelle : le dossier existant Recipes/Italian/Pasta et un nouveau dossier Recipes/Quick Dinners",
+    "quick-save":
+      "Une page de recette avec la notification d'enregistrement rapide dans le coin supérieur : enregistrée dans Pasta, avec Annuler et d'autres dossiers sous Déplacer vers",
     manager:
-      "Le gestionnaire de favoris avec l'arborescence des dossiers, les filtres de titre et d'URL, et le tableau des favoris",
+      "Le gestionnaire de favoris sur la barre de favoris : l'arborescence avec Recipes, School, Travel, Family et Shopping, un seul champ de recherche et le tableau des favoris",
     duplicates:
       "La vérification du nettoyeur de doublons au-dessus du gestionnaire, avec le favori à conserver marqué Conserver dans chaque groupe",
+    settings:
+      "L'onglet L'essentiel des paramètres : Dossier d'enregistrement rapide, Dossier de destination, Menu du clic droit (désactivé), Thème et Langue",
     "options-ai":
-      "L'onglet IA des paramètres avec les fonctionnalités d'IA désactivées, comme par défaut",
+      "L'onglet IA des paramètres : l'encadré L'IA est facultative explique ce qu'il faut pour l'IA et ce qu'elle peut coûter, et les Fonctionnalités d'IA sont désactivées, par défaut",
   },
 
   /**

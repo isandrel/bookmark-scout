@@ -58,12 +58,16 @@ export const ptBR: DocsCopy = {
   screenshots: {
     popup:
       'Dois pop-ups: "pas" digitado na caixa de pesquisa com a pasta Pasta (Recipes / Italian) selecionada em Salvar na pasta, e sugestões da IA para a página atual: a pasta existente Recipes/Italian/Pasta e uma nova pasta Recipes/Quick Dinners',
+    "quick-save":
+      "Uma página de receita com a notificação de salvamento rápido no canto superior: salvo em Pasta, com Desfazer e outras pastas em Mover para",
     manager:
-      "O gerenciador de favoritos com a árvore de pastas, os filtros de título e de URL e a tabela de favoritos",
+      "O gerenciador de favoritos na barra de favoritos: a árvore de pastas com Recipes, School, Travel, Family e Shopping, uma única caixa de pesquisa e a tabela de favoritos",
     duplicates:
       "A revisão do Limpador de duplicatas sobre o gerenciador, com o favorito a manter em cada grupo marcado como Manter",
+    settings:
+      "A guia Essenciais das configurações: Pasta de salvamento rápido, Pasta de destino, Menu do botão direito (desativado), Tema e Idioma",
     "options-ai":
-      "A guia IA nas Configurações com Recursos de IA desativado, o padrão",
+      "A guia IA das configurações: o quadro A IA é opcional explica do que a IA precisa e quanto pode custar, e Recursos de IA está desativado, o padrão",
   },
 
   /**

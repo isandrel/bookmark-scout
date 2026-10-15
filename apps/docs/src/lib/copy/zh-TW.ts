@@ -51,10 +51,16 @@ export const zhTW: DocsCopy = {
   screenshots: {
     popup:
       "兩個彈出式視窗：在搜尋框中輸入「pas」，在「儲存到資料夾」下選取 Pasta 資料夾（Recipes / Italian）；以及針對目前網頁的 AI 建議：現有的 Recipes/Italian/Pasta 資料夾和新的 Recipes/Quick Dinners 資料夾",
-    manager: "書籤管理員，包含資料夾樹狀結構、標題和網址篩選器，以及書籤表格",
+    "quick-save":
+      "食譜網頁上方角落的快速儲存通知：已儲存到 Pasta，並提供「復原」和「移動到」底下的其他資料夾",
+    manager:
+      "開啟書籤列的書籤管理員：包含 Recipes、School、Travel、Family 和 Shopping 的資料夾樹狀結構、一個搜尋框和書籤表格",
     duplicates:
       "書籤管理員上方的重複書籤清理工具確認畫面，每個群組中要保留的書籤標示為「保留」",
-    "options-ai": "設定中的「AI」分頁，「AI 功能」為關閉 (預設值)",
+    settings:
+      "設定中的「常用設定」分頁：快速儲存資料夾、儲存到的資料夾、右鍵選單 (關閉)、主題和語言",
+    "options-ai":
+      "設定中的「AI」分頁：「AI 是選用功能」方塊說明使用 AI 需要什麼及可能的費用，「AI 功能」為關閉 (預設值)",
   },
 
   /**

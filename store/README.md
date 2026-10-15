@@ -84,17 +84,15 @@ All curated screenshots are 1280x800 24-bit RGB PNGs without alpha, so one set w
 
 | File | Shows |
 | --- | --- |
-| `01-popup-light.png` | The two ways to pick a folder, light theme: "pas" typed with the nested Pasta folder selected under Save to folder, and AI folder suggestions for the page (two popups composed on a 1280x800 frame with a caption) |
-| `02-manager-light.png` | Bookmarks manager in a folder, light theme |
-| `03-tools-duplicates-light.png` | Tools sidebar with a Duplicate Cleaner review, light theme |
-| `04-options-ai-light.png` | Options, AI tab with AI off (the default), light theme |
-| `05-popup-dark.png` | The same pair, dark theme |
-| `06-manager-dark.png` | Bookmarks manager, dark theme |
-| `07-tools-duplicates-dark.png` | Duplicate Cleaner review, dark theme |
-| `08-options-ai-dark.png` | Options, AI tab, dark theme |
+| `01-popup-{light,dark}.png` | The two ways to pick a folder, side by side with no added text: "pas" typed with the nested Pasta folder selected under Save to folder and the **Page to save** line, and AI folder suggestions for the page |
+| `02-quick-save-{light,dark}.png` | A recipe page after quick save: the in-page notification says Saved to Pasta, with Undo and Move to |
+| `03-manager-{light,dark}.png` | Bookmarks manager on the Bookmarks Bar with the new defaults (one search box, no Type, Folder Path, or Parent ID columns) |
+| `04-tools-duplicates-{light,dark}.png` | Tools sidebar with a Duplicate Cleaner review |
+| `05-settings-{light,dark}.png` | Settings, Essentials tab |
+| `06-options-ai-{light,dark}.png` | Settings, AI tab with the "AI is optional" box and AI off (the default) |
 | `promo-small-440x280.png` | Small promo tile (Chrome, Edge) |
 
-Suggested order for the Chrome Web Store (5 maximum): 01, 02, 03, 04, 06. Firefox: 01, 04, 05, 08 (the popup and options, which the Firefox description covers). Edge: all eight, after the Edge manager check in the Edge checklist.
+Suggested order for the Chrome Web Store (5 maximum): `01-popup-light.png`, `02-quick-save-light.png`, `03-manager-light.png`, `04-tools-duplicates-light.png`, `05-settings-light.png`. Firefox: 01, 02, 05, and 06 (the popup, quick save, and settings, which the Firefox description covers). Edge: all twelve, after the Edge manager check in the Edge checklist.
 
 ### How they were made
 
@@ -102,12 +100,14 @@ To recapture, run the scripts in `.agents/skills/extension-cws-submission/` (see
 
 
 - Chrome build of this commit, loaded into a disposable headless Chromium profile with the `extension-exploratory-qa` runner (`.agents/skills/extension-exploratory-qa/`). No real profile and no personal data.
-- Synthetic bookmarks only: public documentation sites, `example.com` and `example.org` placeholder URLs, and two deliberate duplicates for the Duplicate Cleaner.
+- Synthetic everyday bookmarks only (Recipes, School, Travel, Family, Shopping, and a few pages on the bar) on real public sites, so their real icons show, with two deliberate duplicates for the Duplicate Cleaner. No developer bookmarks.
 - Theme left at the default `system`; light and dark come from the emulated OS color scheme, so Options shows no "Modified" badges.
-- The runner opens the popup as a tab, so its "current tab" would be the popup itself. The capture script stubbed `tabs.query` for the active tab to return a sample `example.com` recipe page instead. No other behavior was changed.
-- Site icons are real: before capturing, the script ran **Refresh Site Icons** over all bookmarks and saved the results, in a copy of the build whose manifest grants the optional website access (as the E2E `grantWebHostAccess` fixture does, because the permission prompt cannot be answered headlessly). Icons came only from the bookmarked sites. Sites without a usable same-site icon (`developer.chrome.com`, `example.com`, `example.org`) keep the generic globe, as they would for a user.
+- The page being saved is `https://www.example.com/recipes/lemon-ricotta-pasta`, answered locally by a Playwright route with a plain recipe page (no real site's content). Quick save is fired through the background's real command listener, as the E2E tests do. The runner opens the popup as a tab, so its "current tab" would be the popup itself; the capture script stubs `tabs.query` for the active tab to return the same page. No other behavior was changed.
+- Site icons are real: before capturing, the script ran **Refresh Site Icons** over all bookmarks and saved the results, in a copy of the build whose manifest grants the optional website access (as the E2E `grantWebHostAccess` fixture does, because the permission prompt cannot be answered headlessly). Icons came only from the bookmarked sites. A site without a usable same-site icon keeps the generic globe, as it would for a user; the bookmarks were chosen so every site has one (the sample page on `example.com` is not bookmarked).
 - Recaptured on 2026-10-02 from `main` after the Refresh Site Icons tool landed (#501). All eight were recaptured on 2026-10-08 for the redesigned UI: the popup pair (`01`, `05`) is composed from two 400×500 popup captures on the brand paper color with the Bricolage Grotesque heading, and the other six are plain 1280×800 page captures. The store icon (`store/assets/store-icon-128.png`, artwork 96 px tall on a 128 px canvas), the small promo tile, and the marquee tile (`store/assets/marquee-1400x560.png`) were made from `store/ai-asset-prompts.md`: AI-generated backgrounds and a cleaned logo master (`store/assets/logo-master-2048.png`), with the real logo and title composited afterwards. They are used for the store listing only; the packaged toolbar icons are unchanged.
 - Recaptured on 2026-10-10 for the save-first listing: the popup pair (`01`, `05`) now shows the two ways to pick a folder: typing `pas` with ↓ selecting Recipes / Italian / Pasta, and AI folder suggestions for the page (an existing folder and a new one). The suggestions come from a stubbed provider (`ai.example.invalid`, answered by a Playwright route, so no request leaves the machine); AI is turned off again before the next capture, so the Options screenshots still show the default. The other six were recaptured unchanged.
 - Raw captures stay in `~/.cache/bookmark-scout-qa/store-icons/` (not committed). Curated files were re-encoded with ImageMagick (reduced palette, saved as 24-bit RGB without alpha) to keep each file around 75 to 130 KB.
 
-Screenshots show the English UI. Localized screenshots for `ja` and `ko` were not produced; the stores accept the English set for every locale.
+- Recaptured on 2026-10-15 for newcomers, after the Essentials settings, manager defaults, and AI onboarding landed (#675, #676, #677): everyday bookmarks, a new quick save frame (`02`) and Essentials frame (`05`), the manager on the Bookmarks Bar, the AI tab's "AI is optional" box, and no headline baked into the popup pair. Files are numbered by frame, with `-light` and `-dark` versions of each (twelve in all).
+
+Screenshots show the English UI. Localized screenshots were not produced; the stores accept the English set for every locale, and no frame carries added English text.

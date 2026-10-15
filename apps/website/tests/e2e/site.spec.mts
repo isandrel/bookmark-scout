@@ -254,6 +254,22 @@ test.describe("language suggestion for a Japanese browser", () => {
     });
 });
 
+test("tour frames end with their 16:10 screenshot, with no empty band below it", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    const tabs = page.locator("#features [role=tab]");
+    for (let index = 0; index < (await tabs.count()); index++) {
+        await tabs.nth(index).click();
+        const image = page.locator("#features [role=tabpanel]:visible picture img");
+        await image.scrollIntoViewIfNeeded();
+        const frame = image.locator("xpath=ancestor::div[contains(@class, 'overflow-hidden')][1]");
+        const [imageBox, frameBox] = [await image.boundingBox(), await frame.boundingBox()];
+        if (!imageBox || !frameBox) throw new Error("tour frame not laid out");
+        expect(imageBox.height / imageBox.width).toBeCloseTo(10 / 16, 2);
+        expect(frameBox.y + frameBox.height - (imageBox.y + imageBox.height)).toBeLessThanOrEqual(2);
+    }
+});
+
 test("install buttons go straight to the live store listing, with manual steps folded away", async ({ page }) => {
     const live = site.stores.find((store) => store.live);
     test.skip(!live, "no store listing is live");

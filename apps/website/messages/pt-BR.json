@@ -149,7 +149,7 @@
         "tab": "Encontrar e organizar",
         "heading": "Encontre e organize o que você salvou",
         "caption": "O gerenciador substitui a página de favoritos do Chrome e funciona como ela, com uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
-        "alt": "O gerenciador do Bookmark Scout mostrando a pasta Docs de desenvolvimento como tabela, com as colunas tipo, caminho da pasta, URL, título e data de adição, ao lado de uma árvore de pastas",
+        "alt": "O gerenciador do Bookmark Scout na barra de favoritos, com a árvore de pastas (Recipes, School, Travel, Family, Shopping), uma única caixa de pesquisa e a tabela de favoritos",
         "points": [
           "Pesquise em todos os seus favoritos enquanto digita",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
@@ -178,7 +178,7 @@
         "tab": "IA (opcional)",
         "heading": "IA opcional, da empresa que você escolher",
         "caption": "A IA fica desativada até você ativá-la. Ela precisa de uma conta em uma empresa de IA, que pode cobrar um pouco a cada uso, ou de um programa de IA gratuito no seu próprio computador.",
-        "alt": "A guia IA da página de configurações do Bookmark Scout com os recursos de IA desativados e os seletores de provedor e modelo",
+        "alt": "A guia IA das configurações: o quadro A IA é opcional explica do que a IA precisa e quanto pode custar, e Recursos de IA está desativado, o padrão",
         "points": [
           "Receba sugestões de pasta para a página em que você está, ou salve na primeira delas com {{SHORTCUT:commands.ai-quick-save}}",
           "Pergunte à IA sobre seus favoritos: ela os pesquisa, verifica links e propõe movimentações, renomeações e novas pastas como um plano que não altera nada até você aprová-lo",

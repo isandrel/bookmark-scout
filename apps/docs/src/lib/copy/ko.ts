@@ -52,10 +52,16 @@ export const ko: DocsCopy = {
   screenshots: {
     popup:
       '두 개의 팝업: 검색창에 "pas"를 입력해 폴더에 저장에서 Pasta 폴더(Recipes / Italian)를 선택한 화면과, 현재 페이지에 대한 AI 추천(기존 Recipes/Italian/Pasta 폴더와 새 Recipes/Quick Dinners 폴더)',
-    manager: "폴더 트리, 제목 및 URL 필터, 북마크 표가 표시된 북마크 관리자",
+    "quick-save":
+      "레시피 페이지 위쪽 모서리에 표시된 빠른 저장 알림: Pasta에 저장되었고, 실행 취소와 이동할 다른 폴더가 있음",
+    manager:
+      "북마크바를 연 북마크 관리자: Recipes, School, Travel, Family, Shopping 폴더 트리, 검색창 하나, 북마크 표",
     duplicates:
       "관리자 위에 표시된 중복 정리 검토 화면. 각 그룹에서 남길 북마크에 유지 표시가 붙어 있음",
-    "options-ai": "설정의 AI 탭. AI 기능이 기본값대로 꺼져 있음",
+    settings:
+      "설정의 기본 설정 탭: 빠른 저장 폴더, 저장할 폴더, 마우스 오른쪽 버튼 메뉴(꺼짐), 테마, 언어",
+    "options-ai":
+      "설정의 AI 탭: 'AI는 선택 사항입니다' 상자가 AI에 필요한 것과 들 수 있는 비용을 설명하고, AI 기능은 기본값대로 꺼져 있음",
   },
 
   /**

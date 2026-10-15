@@ -149,7 +149,7 @@
         "tab": "Find & organize",
         "heading": "Find and organize what you saved",
         "caption": "The manager replaces Chrome's Bookmarks page and works like it, with a folder tree, breadcrumbs, and a sortable table.",
-        "alt": "The Bookmark Scout manager showing the Dev Docs folder as a table with type, folder path, URL, title, and date added columns next to a folder tree",
+        "alt": "The Bookmark Scout manager on the Bookmarks Bar, with the folder tree (Recipes, School, Travel, Family, Shopping), one search box, and the bookmark table",
         "points": [
           "Search all your bookmarks as you type",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
@@ -178,7 +178,7 @@
         "tab": "AI (optional)",
         "heading": "Optional AI, from the company you choose",
         "caption": "AI is off until you turn it on. It needs an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer.",
-        "alt": "The AI tab of the Bookmark Scout settings page with AI features turned off, and provider and model selectors",
+        "alt": "The AI tab in Settings: the AI is optional box says what AI needs and may cost, and AI Features is off, the default",
         "points": [
           "Get folder suggestions for the page you are on, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}",
           "Ask AI about your bookmarks: it searches them, checks links, and proposes moves, renames, and new folders as a plan that changes nothing until you approve it",

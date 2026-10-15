@@ -58,7 +58,7 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 - [ ] Summary (250 characters maximum) and description: "Firefox Add-ons" sections of [`en.md`](../listings/en.md), [`ja.md`](../listings/ja.md), [`ko.md`](../listings/ko.md). AMO stores a separate listing per locale.
 - [ ] Category: Bookmarks.
 - [ ] Platform: Firefox desktop only. Do not enable Firefox for Android; it does not provide the `bookmarks` API the extension needs.
-- [ ] Screenshots: `01-popup-light.png`, `04-options-ai-light.png`, `05-popup-dark.png`, `08-options-ai-dark.png`. Not the manager or Tools screenshots.
+- [ ] Screenshots: `01-popup-light.png`, `02-quick-save-light.png`, `05-settings-light.png`, `06-options-ai-light.png`, and the dark versions if wanted. Not the manager or Tools screenshots.
 - [ ] Homepage `https://bookmark-scout.com`, support site `https://bookmark-scout.com/support/`, support email `support@bookmark-scout.com` (confirm the alias reaches a monitored inbox).
 - [ ] License: GNU Affero General Public License v3.0.
 - [ ] Privacy policy: `https://bookmark-scout.com/privacy/`; AMO also accepts the policy text, which is in [`../privacy-policy.md`](../privacy-policy.md). Confirm the page is live after the website deploys from `main`.

@@ -8,13 +8,12 @@
 export const SCREENSHOT_SIZE = { width: 1280, height: 800 } as const;
 
 export const SCREENSHOTS = {
-	popup: { light: "/screenshots/01-popup-light.png", dark: "/screenshots/05-popup-dark.png" },
-	manager: { light: "/screenshots/02-manager-light.png", dark: "/screenshots/06-manager-dark.png" },
-	duplicates: {
-		light: "/screenshots/03-tools-duplicates-light.png",
-		dark: "/screenshots/07-tools-duplicates-dark.png",
-	},
-	"options-ai": { light: "/screenshots/04-options-ai-light.png", dark: "/screenshots/08-options-ai-dark.png" },
+	popup: { light: "/screenshots/01-popup-light.png", dark: "/screenshots/01-popup-dark.png" },
+	"quick-save": { light: "/screenshots/02-quick-save-light.png", dark: "/screenshots/02-quick-save-dark.png" },
+	manager: { light: "/screenshots/03-manager-light.png", dark: "/screenshots/03-manager-dark.png" },
+	duplicates: { light: "/screenshots/04-tools-duplicates-light.png", dark: "/screenshots/04-tools-duplicates-dark.png" },
+	settings: { light: "/screenshots/05-settings-light.png", dark: "/screenshots/05-settings-dark.png" },
+	"options-ai": { light: "/screenshots/06-options-ai-light.png", dark: "/screenshots/06-options-ai-dark.png" },
 } as const;
 
 export type ScreenshotName = keyof typeof SCREENSHOTS;
