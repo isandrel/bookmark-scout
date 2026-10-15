@@ -17,6 +17,7 @@ const quickSaveConfig = readConfig(
   'ui/quick-save',
   z.strictObject({
     alternatives: z.number().int().min(0).max(8),
+    recent_alternatives: z.number().int().min(0).max(8),
     auto_dismiss_ms: z.number().int().min(1000).max(120_000),
     visible_tolerance_px: z.number().min(0).max(64),
     badge_clear_ms: z.number().int().min(500).max(60_000),
@@ -424,14 +425,12 @@ async function saveLocally(
   const folders = indexWritableFolders(tree);
   const existing = await findExisting(page.url, folders);
   const recentFolderIds = (await getRecentFolders()).map((folder) => folder.id);
-  const ranked =
-    settings.quickSaveFolderStrategy === 'best_match'
-      ? // Any match can be offered; only a strong one is chosen (FOLDER_RANKING_MIN_SCORE).
-        rankFolders(getRankingIndex(tree), page, {
-          limit: quickSaveConfig.alternatives + 1,
-          minScore: Number.MIN_VALUE,
-        })
-      : [];
+  // Every strategy offers the folders that match the page; only best match chooses one, and only
+  // a strong one (FOLDER_RANKING_MIN_SCORE).
+  const ranked = rankFolders(getRankingIndex(tree), page, {
+    limit: quickSaveConfig.alternatives + 1,
+    minScore: Number.MIN_VALUE,
+  });
   const target = chooseQuickSaveTarget(tree, {
     strategy: settings.quickSaveFolderStrategy,
     fixedFolderId: settings.quickSaveFixedFolder,
@@ -439,6 +438,7 @@ async function saveLocally(
     ranked,
     minScore: FOLDER_RANKING_MIN_SCORE,
     alternatives: quickSaveConfig.alternatives,
+    recentAlternatives: quickSaveConfig.recent_alternatives,
     ...(existing?.node.parentId ? { excludeIds: new Set([existing.node.parentId]) } : {}),
   });
 

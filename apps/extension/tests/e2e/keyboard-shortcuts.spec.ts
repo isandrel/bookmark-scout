@@ -143,6 +143,36 @@ test.describe('popup keyboard shortcuts', () => {
     await expect(folder).toHaveAttribute('aria-expanded', 'true');
   });
 
+  test('Enter in the search box saves to the first folder match, once while held', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const seeded = await seedFolder(extensionWorker, 'E2E Enter Search', [
+      { title: 'Held Key Target', children: [] },
+    ]);
+    const target = seeded.ids['Held Key Target'];
+    const saved = () =>
+      extensionWorker.evaluate(
+        async (id) => (await chrome.bookmarks.getChildren(id)).length,
+        target,
+      );
+
+    await openPopup(page, extensionId);
+    const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+    await search.fill('held key target');
+    await expect(page.getByTestId('popup-hint-bar')).toContainText('Save to Held Key Target');
+    // A held key repeats keydown; only the first press saves.
+    await page.keyboard.down('Enter');
+    await page.keyboard.down('Enter');
+    await page.keyboard.down('Enter');
+    await page.keyboard.up('Enter');
+    await expect(toastRegion(page).getByText(/Bookmark Added$/)).toBeVisible();
+    expect(await saved()).toBe(1);
+    await expect(toastRegion(page).getByText('Already saved', { exact: true })).toHaveCount(0);
+    await expect(search).toBeFocused();
+  });
+
   test('shortcuts stay out of the new-folder input and open dialogs', async ({
     extensionId,
     extensionWorker,

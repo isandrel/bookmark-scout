@@ -184,6 +184,8 @@ interface BookmarkSearchProps {
   /** Called when the user settles on a query (Enter or leaving the search box). */
   onCommitQuery?: (query: string) => void;
   onClearHistory?: () => void;
+  /** Id of the text saying what Enter does now, such as saving into the first folder match. */
+  describedBy?: string;
 }
 
 export function BookmarkSearch({
@@ -202,6 +204,7 @@ export function BookmarkSearch({
   searchHistory = [],
   onCommitQuery,
   onClearHistory,
+  describedBy,
 }: BookmarkSearchProps) {
   const { resolvedTheme, setTheme } = useTheme();
   const rowRef = useRef<HTMLDivElement>(null);
@@ -255,6 +258,8 @@ export function BookmarkSearch({
   // A plain ArrowDown is left to the page, which moves into the tree; the history list takes the
   // arrow keys only while it is open.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // An IME's Enter confirms the word being composed; it does not settle the search.
+    if (isComposingEvent(e.nativeEvent)) return;
     if (!showHistory) {
       const opensHistory =
         !query &&
@@ -335,6 +340,7 @@ export function BookmarkSearch({
                 : undefined
             }
             aria-invalid={isInvalidRegex || undefined}
+            aria-describedby={describedBy}
             value={query}
             onChange={(e) => {
               onQueryChange(e.target.value);

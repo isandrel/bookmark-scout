@@ -27,13 +27,18 @@ export type QuickSaveTargetInput = {
   /** Recently used folder ids, most recent first. */
   recentFolderIds: readonly string[];
   /**
-   * Folders ranked for the page, best first (best match only). Any of them can be an
-   * alternative; only one scoring `minScore` or more is chosen.
+   * Folders ranked for the page, best first. Any of them can be an alternative, whatever the
+   * strategy; only one scoring `minScore` or more is chosen, and only by best match.
    */
   ranked: readonly { id: string; score: number }[];
   minScore: number;
   /** How many alternatives to offer. */
   alternatives: number;
+  /**
+   * How many of them may be recent folders, filling in when fewer ranked folders match the page.
+   * Recent folders say nothing about the page, so they come last and are few.
+   */
+  recentAlternatives: number;
   /** Folders the target and alternatives may not be, such as the one already holding the page. */
   excludeIds?: ReadonlySet<string>;
 };
@@ -59,8 +64,8 @@ export function indexWritableFolders(
 /**
  * The folder for a quick save, and the alternatives. Best match takes the top-ranked folder,
  * last used the most recent folder, and fixed the chosen folder; when that gives nothing, the
- * last used folder, then the bookmarks bar. Alternatives are the next ranked folders, then
- * recent folders.
+ * last used folder, then the bookmarks bar. Alternatives are the next ranked folders, then at
+ * most `recentAlternatives` recent folders when the matches run out.
  */
 export function chooseQuickSaveTarget(
   tree: readonly BookmarkTreeNode[],
@@ -103,10 +108,16 @@ export function chooseQuickSaveTarget(
 
   const target = chosen;
   const alternatives: QuickSaveFolder[] = [];
-  for (const folder of [...ranked, ...recent]) {
-    if (alternatives.length >= input.alternatives) break;
-    if (folder.id === target.id || alternatives.some((added) => added.id === folder.id)) continue;
-    alternatives.push(folder);
-  }
+  const offer = (folders: readonly QuickSaveFolder[], limit: number) => {
+    let added = 0;
+    for (const folder of folders) {
+      if (alternatives.length >= input.alternatives || added >= limit) return;
+      if (folder.id === target.id || alternatives.some((other) => other.id === folder.id)) continue;
+      alternatives.push(folder);
+      added += 1;
+    }
+  };
+  offer(ranked, input.alternatives);
+  offer(recent, input.recentAlternatives);
   return { folder: target, ...(fallback ? { fallback } : {}), alternatives };
 }
