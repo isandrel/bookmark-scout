@@ -49,7 +49,7 @@ beforeEach(async () => {
 });
 
 describe('chooseQuickSaveTarget', () => {
-  it('each strategy picks its own folder and offers ranked, then recent, alternatives', async () => {
+  it('each strategy picks its own folder and offers ranked, then a few recent, alternatives', async () => {
     const tree = await fetchBookmarkTree();
     const input = {
       fixedFolderId: 'reading',
@@ -60,12 +60,14 @@ describe('chooseQuickSaveTarget', () => {
       ],
       minScore: 2,
       alternatives: 3,
+      recentAlternatives: 1,
     };
     const pick = (strategy: Settings['quickSaveFolderStrategy']) => {
       const target = chooseQuickSaveTarget(tree, { ...input, strategy });
       return [target?.folder.id, target?.fallback, target?.alternatives.map((folder) => folder.id)];
     };
-    expect(pick('best_match')).toEqual(['react', undefined, ['dev', 'cooking', 'reading']]);
+    // Matches first; a recent folder only fills in, and only `recentAlternatives` of them.
+    expect(pick('best_match')).toEqual(['react', undefined, ['dev', 'cooking']]);
     expect(pick('last_used')).toEqual(['cooking', undefined, ['react', 'dev', 'reading']]);
     expect(pick('fixed')).toEqual(['reading', undefined, ['react', 'dev', 'cooking']]);
     expect(chooseQuickSaveTarget(tree, { ...input, strategy: 'best_match' })?.folder.path).toEqual([
@@ -77,7 +79,13 @@ describe('chooseQuickSaveTarget', () => {
 
   it('falls back to the last used folder, then the bookmarks bar, when nothing matches', async () => {
     const tree = await fetchBookmarkTree();
-    const base = { fixedFolderId: '', ranked: [], minScore: 2, alternatives: 2 };
+    const base = {
+      fixedFolderId: '',
+      ranked: [],
+      minScore: 2,
+      alternatives: 2,
+      recentAlternatives: 2,
+    };
     expect(
       chooseQuickSaveTarget(tree, {
         ...base,
@@ -116,6 +124,7 @@ describe('chooseQuickSaveTarget', () => {
       ranked: [],
       minScore: 2,
       alternatives: 2,
+      recentAlternatives: 1,
     });
     expect(target).toMatchObject({ folder: { id: 'reading' }, fallback: 'fixedMissing' });
     const view = buildQuickSaveView(
@@ -155,6 +164,7 @@ describe('chooseQuickSaveTarget', () => {
       ],
       minScore: 2,
       alternatives: 3,
+      recentAlternatives: 1,
       excludeIds: new Set(['react']),
     });
     expect(target?.folder.id).toBe('dev');
@@ -199,11 +209,22 @@ describe('runQuickSave', () => {
     expect(buildQuickSaveView(record, settings()).title).toBe('Already in Cooking');
   });
 
+  it('offers recent folders unrelated to the page only to fill in, and few of them', async () => {
+    await addRecentFolder('reading', 'Reading');
+    await addRecentFolder('cooking', 'Cooking');
+    const record = await runQuickSave('quick-save', tab('https://react.dev/learn', 'React'));
+    expect(record.folderId).toBe('react');
+    // Nothing else matches the page: one recent folder (config/ui/quick-save.toml), not all.
+    expect(record.alternatives.map((alternative) => alternative.folderId)).toEqual(['cooking']);
+  });
+
   it('uses the last used folder and the chosen folder when the setting says so', async () => {
     await addRecentFolder('reading', 'Reading');
     await saveSettings({ quickSaveFolderStrategy: 'last_used' });
     const lastUsed = await runQuickSave('quick-save', tab('https://react.dev/a', 'React A'));
     expect(lastUsed.folderId).toBe('reading');
+    // The other folders offered are the ones matching the page, whatever the strategy.
+    expect(lastUsed.alternatives[0]?.folderId).toBe('react');
 
     await saveSettings({ quickSaveFolderStrategy: 'fixed', quickSaveFixedFolder: 'cooking' });
     const fixed = await runQuickSave('quick-save', tab('https://react.dev/b', 'React B'));
