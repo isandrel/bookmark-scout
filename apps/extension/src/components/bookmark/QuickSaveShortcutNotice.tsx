@@ -3,6 +3,8 @@ import { Keyboard, X } from 'lucide-react';
 type ShortcutNotice = {
   id: DismissibleNotice;
   message: string;
+  /** The keys inside `message`, which stay visible when the line is too narrow for all of it. */
+  keys?: string;
   /** The link after the message, if any. */
   action?: { label: string; open: () => Promise<void> };
   /** An offer rather than a problem: it gives way to the tree in a very short popup. */
@@ -26,6 +28,7 @@ function pickNotice(
 ): ShortcutNotice | null {
   const takeover = getBookmarkShortcutTakeover();
   const tipKeys = shortcuts[TIP_COMMAND];
+  const tipKeysText = formatCommandShortcut(tipKeys, { apple });
   const hasBookmarkKeys =
     takeover !== null &&
     isSameCommandShortcut(shortcuts[takeover.command], takeover.shortcut, { apple });
@@ -38,7 +41,8 @@ function pickNotice(
     tipKeys !== '' &&
       !hasBookmarkKeys && {
         id: 'quick-save-bookmark-key',
-        message: t('newcomer_quickSaveTip', formatCommandShortcut(tipKeys, { apple })),
+        message: t('newcomer_quickSaveTip', tipKeysText),
+        keys: tipKeysText,
         // The steps need more room than this line; Options explains them beside the button.
         action: takeover
           ? {
@@ -56,6 +60,32 @@ function pickNotice(
     notices.find(
       (notice): notice is ShortcutNotice => notice !== false && !dismissed.includes(notice.id),
     ) ?? null
+  );
+}
+
+/**
+ * The notice's text on one line. When it does not fit, the words before the keys are cut short,
+ * never the keys, which are the point of the tip in every language.
+ */
+function NoticeMessage({ message, keys }: { message: string; keys?: string }) {
+  const at = keys ? message.indexOf(keys) : -1;
+  if (!keys || at < 0) {
+    return (
+      <span className="min-w-0 truncate" title={message}>
+        {message}
+      </span>
+    );
+  }
+  const before = message.slice(0, at);
+  const lead = before.trimEnd();
+  return (
+    <span className="flex min-w-0 max-w-full overflow-hidden" title={message}>
+      <span className="min-w-0 truncate">{lead}</span>
+      <span className="shrink-0 whitespace-pre" data-slot="notice-keys">
+        {before.slice(lead.length)}
+        {message.slice(at)}
+      </span>
+    </span>
   );
 }
 
@@ -78,17 +108,15 @@ export function QuickSaveShortcutNotice() {
       data-notice={notice.id}
       // Below 400px of height (the popup goes down to 300), the tree needs every row it can get.
       className={cn(
-        'flex h-7 shrink-0 items-center gap-1.5 border-t pl-3 pr-1 text-xs text-muted-foreground',
+        'flex min-h-7 shrink-0 items-center gap-1.5 border-t py-0.5 pl-3 pr-1 text-xs text-muted-foreground',
         notice.optional && '[@media(max-height:399px)]:hidden',
       )}
     >
       <Keyboard aria-hidden="true" className="size-3.5 shrink-0" />
-      <span className="min-w-0 truncate" title={notice.message}>
-        {notice.message}
-      </span>
-      {notice.action && (
-        <>
-          <span aria-hidden="true">·</span>
+      {/* The link moves to a second line before the message is cut short. */}
+      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2">
+        <NoticeMessage message={notice.message} keys={notice.keys} />
+        {notice.action && (
           <button
             type="button"
             className="shrink-0 rounded-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -96,8 +124,8 @@ export function QuickSaveShortcutNotice() {
           >
             {notice.action.label}
           </button>
-        </>
-      )}
+        )}
+      </div>
       <Button
         type="button"
         variant="ghost"

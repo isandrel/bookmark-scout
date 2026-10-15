@@ -105,7 +105,7 @@ components:
   row-actions: "icon buttons overlaid at the row end, shown on hover and focus-within, on the row's own fill"
   keycap: "20px high, sunken fill, 1px line, rounded.sm, keycap type"
   hint-bar: "popup footer, 28px, meta type, keycaps plus verbs for the shortcuts that exist"
-  footer-notice: "28px line above the hint bar, 1px top line, meta type in ink-soft, 14px icon, one teal text action, 24px ghost dismiss"
+  footer-notice: "28px line above the hint bar (two lines when the teal action does not fit beside the text), 1px top line, meta type in ink-soft, 14px icon, one teal text action, 24px ghost dismiss; text cut short before the keys it names, never the keys"
   shortcut-recorder: "32px mono input, centered keys, teal border while recording, inline danger-text error under it, fixed reset slot"
   chip: "24px, rounded.pill, 1px line, meta type; selected chip uses teal-wash and teal text"
   button: "primary teal fill with teal-ink text; secondary surface with 1px line; ghost no fill; destructive danger fill; heights 28, 32, 36"
