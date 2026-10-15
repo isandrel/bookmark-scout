@@ -527,6 +527,23 @@ test('settings search finds AI service fields, including ones under More setting
     await expect(page.getByRole('textbox', { name, exact: true })).toBeVisible();
     await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
   }
+  await expect(page.getByTestId('ai-services-search-hint')).toHaveCount(0);
+});
+
+test('settings search says where AI service fields are when no service shows them', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  await page.getByRole('searchbox', { name: 'Search settings...' }).fill('api key');
+  // The count matches what is shown: no API Key field, but a line saying where it is.
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+  await expect(page.getByLabel('API Key', { exact: true })).toHaveCount(0);
+  await expect(page.getByTestId('ai-services-search-hint')).toHaveText(
+    'Inside each AI service: API Key. Add a service, or open one that uses a key, to find these settings.',
+  );
 });
 
 test('number steppers step, accept typing, and leave an unlimited field empty for "No limit"', async ({

@@ -44,6 +44,7 @@ function BuiltinAISuggestion() {
   const provider = BUILTIN_AI_PROVIDER;
   const added = state.services.some((service) => isBuiltinProvider(service.provider));
   if (!provider || isLoading || added || !canOfferBuiltinAI(status)) return null;
+  const languageNote = builtinAILanguageNote();
   return (
     <div
       data-testid="builtin-ai-suggestion"
@@ -53,6 +54,11 @@ function BuiltinAISuggestion() {
       <div className="min-w-0 flex-1 space-y-1">
         <p className="font-medium">{t('builtinAi_suggestTitle')}</p>
         <p className="text-muted-foreground">{t('builtinAi_suggestDesc')}</p>
+        {languageNote && (
+          <p data-testid="builtin-ai-language-note" className="text-muted-foreground">
+            {languageNote}
+          </p>
+        )}
       </div>
       <Button type="button" size="sm" onClick={() => void addBuiltinService(provider)}>
         {t('builtinAi_suggestAction')}

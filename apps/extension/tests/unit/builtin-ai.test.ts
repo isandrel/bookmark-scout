@@ -7,6 +7,7 @@ import { generateText, type LanguageModel, Output } from 'ai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { z } from 'zod';
+import { builtinAILanguageNote } from '@/components/options/BuiltinAIModelStatus';
 import { setLanguage, t } from '@/hooks/use-i18n';
 import { aiActivityValue } from '@/lib/ai-activity-storage';
 import { aiProviderFilesSchema } from '@/lib/config/ai-provider-schema';
@@ -16,12 +17,14 @@ import { createAIModel } from '@/services/ai-client.lazy';
 import {
   BUILTIN_AI_PROVIDER,
   getAvailableProviders,
+  getModelDisplayName,
   isBuiltinProvider,
   providerSupportsFeature,
 } from '@/services/ai-models';
 import { isAISetUp, pickAIService } from '@/services/ai-settings';
 import {
   builtinAIConfig,
+  builtinAIReadsLanguage,
   canOfferBuiltinAI,
   createWarmBuiltinSessions,
   downloadBuiltinAIModel,
@@ -67,6 +70,29 @@ describe('built-in AI provider file', () => {
     }
     // A provider file without `features` serves every feature.
     expect(providerSupportsFeature('openai', 'askAI')).toBe(true);
+    // Its model is shown by name, as the file lists it; an unlisted id stays as it is.
+    expect(getModelDisplayName(provider, 'gemini-nano')).toBe('Gemini Nano');
+    expect(getModelDisplayName(provider, 'other-model')).toBe('other-model');
+  });
+
+  it('knows the languages the model reads from the config, by base language', () => {
+    for (const code of builtinAIConfig.model_languages) {
+      expect(builtinAIReadsLanguage(code), code).toBe(true);
+    }
+    expect(builtinAIReadsLanguage('ja-JP')).toBe(true);
+    for (const code of ['ko', 'zh_CN', 'zh-TW', 'pt_BR']) {
+      expect(builtinAIReadsLanguage(code), code).toBe(false);
+    }
+  });
+
+  it('notes the word-match fallback only in a language the model does not read', () => {
+    setLanguage('en');
+    expect(builtinAILanguageNote()).toBeUndefined();
+    setLanguage('ko');
+    expect(builtinAILanguageNote()).toContain('한국어');
+    setLanguage('pt_BR');
+    expect(builtinAILanguageNote()).toContain('português');
+    setLanguage('en');
   });
 
   it('rejects a built-in provider file that asks for a key, endpoint, or model list', () => {

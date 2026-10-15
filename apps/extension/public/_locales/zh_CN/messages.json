@@ -4889,6 +4889,10 @@
         "message": "还没有 AI 服务。添加一个即可使用 AI 工具。",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "位于每个 AI 服务内：$1。添加服务，或打开使用密钥的服务即可看到这些设置。",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
         "message": "尚未设置 AI 服务。请在“设置 > AI”中添加。",
         "description": "Error when an AI tool runs without any enabled service"
@@ -6303,6 +6307,10 @@
         "message": "下载期间可以继续使用 Chrome。",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "即使关闭此页面，Chrome 也会在后台继续下载。",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "这台电脑上还没有该模型",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6327,9 +6335,17 @@
         "message": "它只推荐文件夹。$1 会在你添加其他 AI 服务后使用那个服务。",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "它只推荐文件夹。$1 会使用你的其他 AI 服务。",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "最适合 $1。其他语言的推荐可能改用简单的词语匹配。",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "内置 AI 只能理解这些语言：$1。$2网页的文件夹推荐可能改用简单的词语匹配。",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "任何数据都不会离开你的电脑：页面标题、网址和文件夹名称都留在电脑上。",

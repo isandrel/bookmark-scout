@@ -5095,6 +5095,10 @@
         "message": "No AI services yet. Add one to use the AI tools.",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "Inside each AI service: $1. Add a service, or open one that uses a key, to find these settings.",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
         "message": "No AI service is set up. Add one in Settings > AI.",
         "description": "Error when an AI tool runs without any enabled service"
@@ -6509,6 +6513,10 @@
         "message": "You can keep using Chrome while it downloads.",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "Chrome keeps downloading it in the background, even after you close this page.",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "The model is not on this computer yet",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6533,9 +6541,17 @@
         "message": "It only suggests folders. $1 use another AI service when you add one.",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "It only suggests folders. $1 use one of your other AI services.",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "Works best with $1. With other languages, suggestions may come from plain word matching instead.",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "Built-in AI understands only these languages: $1. Pages in $2 may get folder suggestions from plain word matching instead.",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "Nothing leaves your computer: page titles, addresses, and folder names stay on it.",

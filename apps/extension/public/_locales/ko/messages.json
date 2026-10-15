@@ -5087,6 +5087,10 @@
         "message": "아직 AI 서비스가 없습니다. AI 도구를 사용하려면 추가하세요.",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "각 AI 서비스 안에 있습니다: $1. 서비스를 추가하거나 키를 쓰는 서비스를 열면 볼 수 있습니다.",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
         "message": "설정된 AI 서비스가 없습니다. 설정 > AI에서 추가하세요.",
         "description": "Error when an AI tool runs without any enabled service"
@@ -6501,6 +6505,10 @@
         "message": "다운로드하는 동안에도 Chrome을 계속 사용할 수 있습니다.",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "이 페이지를 닫아도 Chrome이 백그라운드에서 계속 다운로드합니다.",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "모델이 아직 이 컴퓨터에 없습니다",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6525,9 +6533,17 @@
         "message": "폴더 추천만 합니다. $1에는 다른 AI 서비스를 추가하면 그 서비스가 사용됩니다.",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "폴더 추천만 합니다. $1에는 다른 AI 서비스가 사용됩니다.",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "$1에서 가장 잘 작동합니다. 다른 언어에서는 단순한 단어 일치로 추천될 수 있습니다.",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "내장 AI가 이해하는 언어는 $1뿐입니다. $2 페이지는 단순한 단어 일치로 폴더가 추천될 수 있습니다.",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "어떤 데이터도 컴퓨터 밖으로 나가지 않습니다. 페이지 제목, 주소, 폴더 이름은 이 컴퓨터에 남습니다.",

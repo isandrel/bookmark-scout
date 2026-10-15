@@ -5095,6 +5095,10 @@
         "message": "Aucun service d'IA pour le moment. Ajoutez-en un pour utiliser les outils d'IA.",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "Dans chaque service d'IA : $1. Ajoutez un service, ou ouvrez-en un qui utilise une clé, pour voir ces paramètres.",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
         "message": "Aucun service d'IA n'est configuré. Ajoutez-en un dans Paramètres > IA.",
         "description": "Error when an AI tool runs without any enabled service"
@@ -6509,6 +6513,10 @@
         "message": "Vous pouvez continuer à utiliser Chrome pendant le téléchargement.",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "Chrome continue le téléchargement en arrière-plan, même si vous fermez cette page.",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "Le modèle n'est pas encore sur cet ordinateur",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6533,9 +6541,17 @@
         "message": "Elle ne fait que suggérer des dossiers. $1 utilisent un autre service d'IA lorsque vous en ajoutez un.",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "Elle ne fait que suggérer des dossiers. $1 utilisent l'un de vos autres services d'IA.",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "Fonctionne mieux avec $1. Pour les autres langues, les suggestions peuvent venir d'une simple correspondance de mots.",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "L'IA intégrée ne comprend que ces langues : $1. Pour les pages en $2, les suggestions de dossiers peuvent venir d'une simple correspondance de mots.",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "Rien ne quitte votre ordinateur : les titres de pages, les adresses et les noms de dossiers y restent.",

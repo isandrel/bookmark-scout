@@ -5051,6 +5051,10 @@
         "message": "AI サービスがまだありません。AI ツールを使うには追加してください。",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "各 AI サービスの中にあります: $1。サービスを追加するか、キーを使うサービスを開くと表示されます。",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
         "message": "AI サービスが設定されていません。設定 > AI で追加してください。",
         "description": "Error when an AI tool runs without any enabled service"
@@ -6501,6 +6505,10 @@
         "message": "ダウンロード中も Chrome はそのまま使えます。",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "このページを閉じても、Chrome はバックグラウンドでダウンロードを続けます。",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "モデルはまだこのパソコンにありません",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6525,9 +6533,17 @@
         "message": "フォルダの提案だけを行います。$1 には、別の AI サービスを追加するとそちらが使われます。",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "フォルダの提案だけを行います。$1 には、ほかの AI サービスが使われます。",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "$1 で最もよく動きます。ほかの言語では、単純な単語の一致による提案になることがあります。",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "内蔵 AI が理解できる言語は $1 だけです。$2 のページでは、単純な単語の一致によるフォルダの提案になることがあります。",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "データはパソコンの外に出ません。ページのタイトル、アドレス、フォルダ名はこのパソコンに残ります。",

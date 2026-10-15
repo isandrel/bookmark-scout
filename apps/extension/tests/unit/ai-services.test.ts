@@ -33,7 +33,15 @@ beforeEach(async () => {
 describe('AI services search text', () => {
   it('matches editor fields and marks the ones under More settings', () => {
     expect(matchAIServicesSearch('api key')).toEqual([
-      expect.objectContaining({ advanced: false }),
+      expect.objectContaining({
+        advanced: false,
+        editor: true,
+        text: ['API Key', expect.any(String)],
+      }),
+    ]);
+    // The panel's own title is always shown; editor fields only inside an open service.
+    expect(matchAIServicesSearch('ai services')).toEqual([
+      expect.objectContaining({ editor: false }),
     ]);
     expect(matchAIServicesSearch('base url')).toEqual([
       expect.objectContaining({ advanced: true }),

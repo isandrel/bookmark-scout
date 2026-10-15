@@ -4889,6 +4889,10 @@
         "message": "尚無 AI 服務。請新增一個服務以使用 AI 工具。",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "位於每個 AI 服務內：$1。新增服務，或開啟使用金鑰的服務即可看到這些設定。",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
         "message": "尚未設定 AI 服務。請在「設定 > AI」中新增。",
         "description": "Error when an AI tool runs without any enabled service"
@@ -6303,6 +6307,10 @@
         "message": "下載期間可以繼續使用 Chrome。",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "即使關閉此頁面，Chrome 也會在背景繼續下載。",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "這台電腦上還沒有該模型",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6327,9 +6335,17 @@
         "message": "它只推薦資料夾。$1 會在你新增其他 AI 服務後使用該服務。",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "它只推薦資料夾。$1 會使用你的其他 AI 服務。",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "最適合 $1。其他語言的推薦可能改用簡單的字詞比對。",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "內建 AI 只能理解這些語言：$1。$2網頁的資料夾推薦可能改用簡單的字詞比對。",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "任何資料都不會離開你的電腦：頁面標題、網址和資料夾名稱都留在電腦上。",

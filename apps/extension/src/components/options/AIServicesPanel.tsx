@@ -126,7 +126,14 @@ function AddServiceDialog({
   );
 }
 
-export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boolean }) {
+export function AIServicesPanel({
+  showAdvanced = false,
+  searchMatches = [],
+}: {
+  showAdvanced?: boolean;
+  /** In a settings search, the panel fields it matched. */
+  searchMatches?: readonly AIServicesSearchField[];
+}) {
   const { state, isLoading } = useAIServices();
   // Services a restored backup could not fully set up: their API key or headers are missing.
   const { value: credentials } = useStoredValue(aiProviderConfigValue);
@@ -140,6 +147,13 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
 
   // The default service's editor starts open, so a single setup reads like before.
   const openId = expandedId ?? state.defaultServiceId ?? null;
+  // A search that matched editor fields (API Key, Model) while no hosted service's editor is open
+  // shows where they are instead of a count with nothing under it.
+  const openService = state.services.find((service) => service.id === openId);
+  const hiddenMatches =
+    openService && !isBuiltinProvider(openService.provider)
+      ? []
+      : searchMatches.filter((field) => field.editor);
 
   /** After a delete, the menu that opened the dialog is gone; focus the next row instead. */
   const focusAfterDialog = () => {
@@ -173,8 +187,22 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
           {t('options_aiServiceEmpty')}
         </p>
       )}
+      {!isLoading && hiddenMatches.length > 0 && (
+        <p data-testid="ai-services-search-hint" className="text-sm text-muted-foreground">
+          {t(
+            'qaOptions_searchInService',
+            formatList(hiddenMatches.flatMap((field) => field.text.slice(0, 1))),
+          )}
+        </p>
+      )}
 
-      <ul ref={listRef} className="divide-y overflow-hidden rounded-md border">
+      <ul
+        ref={listRef}
+        className={cn(
+          'divide-y overflow-hidden rounded-md border',
+          state.services.length === 0 && 'hidden',
+        )}
+      >
         {state.services.map((service) => {
           const isDefault = service.id === state.defaultServiceId;
           const isOpen = service.id === openId;
@@ -210,7 +238,9 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
                     </span>
                     <span className="block truncate text-xs text-muted-foreground">
                       {getLocalizedProviderName(service.provider)}
-                      {service.model ? ` ${t('format_separator')} ${service.model}` : ''}
+                      {service.model
+                        ? ` ${t('format_separator')} ${getModelDisplayName(service.provider, service.model)}`
+                        : ''}
                     </span>
                   </span>
                   <ChevronDown

@@ -142,6 +142,11 @@ export function getModelsForProvider(provider: AIProvider): AIModel[] {
   return getProviderConfig(provider)?.models ?? [];
 }
 
+/** A model's name from its provider file ("Gemini Nano"), or its id when the file lists none. */
+export function getModelDisplayName(provider: AIProvider, modelId: string): string {
+  return getModelsForProvider(provider).find((model) => model.id === modelId)?.name ?? modelId;
+}
+
 export function getDefaultModel(provider: AIProvider): string {
   const providerConfig = getProviderConfig(provider);
   if (providerConfig?.default_model) {
