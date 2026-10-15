@@ -49,7 +49,7 @@ beforeEach(async () => {
 });
 
 describe('chooseQuickSaveTarget', () => {
-  it('each strategy picks its own folder and offers ranked, then a few recent, alternatives', async () => {
+  it('each strategy picks its own folder and offers ranked, then recent, alternatives', async () => {
     const tree = await fetchBookmarkTree();
     const input = {
       fixedFolderId: 'reading',
