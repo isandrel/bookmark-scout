@@ -29,11 +29,14 @@ export type NetworkErrorKind = 'network' | 'timeout' | 'redirect';
  * Why a link failed. Only `notFound`, `unreachable`, and `redirectLoop` confirm a dead link; the
  * others often work in a browser (sign-in walls, rate limits, bot protection, servers that reject
  * automated checks, temporary outages) and need a manual check before anything is removed.
+ * `redirectElsewhere`: a redirect that could not be followed while the scan had access only to
+ * the bookmarks' own sites, so it may lead to another site rather than loop.
  */
 export type DeadLinkCategory =
   | 'notFound'
   | 'unreachable'
   | 'redirectLoop'
+  | 'redirectElsewhere'
   | 'auth'
   | 'rateLimited'
   | 'methodRejected'
@@ -158,6 +161,11 @@ export type DeadLinkOptions = {
   retryCount: number;
   followRedirects: boolean;
   successStatuses: number[];
+  /**
+   * False when the scan may request only the bookmarks' own sites (`lib/site-access.ts`): a
+   * redirect to another site is then blocked, and cannot be told from a redirect loop.
+   */
+  allSitesAccess?: boolean;
 };
 
 export type MetadataOptions = {
@@ -309,7 +317,10 @@ export async function scanDeadLinks(
     }
 
     const errorKind = await classifyFailure(lastError, url, options.requestTimeoutMs);
-    const category = TRANSPORT_FAILURE_CATEGORIES[errorKind];
+    const category =
+      errorKind === 'redirect' && options.allSitesAccess === false
+        ? 'redirectElsewhere'
+        : TRANSPORT_FAILURE_CATEGORIES[errorKind];
     return {
       ...base,
       status: errorKind === 'timeout' ? 'timeout' : 'error',

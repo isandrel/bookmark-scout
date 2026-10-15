@@ -249,20 +249,26 @@ test.describe('with website access granted', () => {
   });
 });
 
-test('site icon refresh asks for website access and requests nothing when it is declined', async ({
+test('site icon refresh asks for access to the bookmarked site only, and requests nothing when it is declined', async ({
   extensionId,
   extensionWorker,
   page,
 }) => {
   const folder = await seedFolder(extensionWorker, 'E2E Site Icons Declined', [
     { title: 'Declined Page', url: 'https://icons-declined.e2e.invalid/' },
+    { title: 'Declined Other Page', url: 'http://www.icons-declined.e2e.invalid/other' },
   ]);
   const requests = await mockSites(page, {});
-  // The real browser prompt cannot be answered headlessly; simulate the user declining it.
+  // The real browser prompt cannot be answered headlessly; record and decline the request.
   await page.addInitScript(() => {
+    const calls: unknown[] = [];
+    (window as unknown as { permissionRequests: unknown[] }).permissionRequests = calls;
     Object.defineProperty(chrome.permissions, 'request', {
       configurable: true,
-      value: () => Promise.resolve(false),
+      value: (request: unknown) => {
+        calls.push(request);
+        return Promise.resolve(false);
+      },
     });
   });
 
@@ -272,7 +278,16 @@ test('site icon refresh asks for website access and requests nothing when it is 
     .click();
   const prompt = page.getByRole('dialog', { name: 'Allow access to websites?' });
   await expect(prompt).toContainText('site icon refreshes request each bookmarked page');
+  await expect(prompt).toContainText(
+    'Your browser will ask for access to this site only: e2e.invalid.',
+  );
   await prompt.getByRole('button', { name: 'Allow access' }).click();
+  // Both bookmarks are one site: its subdomains over http and https, not all websites.
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { permissionRequests: unknown[] }).permissionRequests,
+    ),
+  ).toEqual([{ origins: ['http://*.e2e.invalid/*', 'https://*.e2e.invalid/*'] }]);
   await expect(
     toastRegion(page).getByText('× Website access not granted', { exact: true }),
   ).toBeVisible();

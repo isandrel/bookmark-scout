@@ -117,23 +117,41 @@ export function notifyPermissionDenied(feature: PermissionFeature): void {
   toast.error({ title: t(denied.titleKey), description: t(denied.descriptionKey) });
 }
 
+/** Whether `feature` explains itself in `PermissionDialog` before the browser's prompt. */
+function hasExplanation(feature: PermissionFeature): boolean {
+  return Boolean((PERMISSION_FEATURES[feature] as PermissionFeatureDefinition).explanation);
+}
+
+/** Work waiting on the explanation dialog, and the sites it needs (null: all websites). */
+type PendingRun = {
+  start: () => Promise<unknown>;
+  sites?: { names: string[]; origins: string[] | null };
+};
+
 /**
  * Runs work that needs `feature`: at once when granted, otherwise after asking. A feature with an
  * explanation opens `PermissionDialog` first and requests from its Allow button; others request
  * straight from the click. A declined request shows a toast and leaves the work undone, and
  * nothing asks again until the user does.
+ *
+ * Website access can be narrowed per run: `run(start, sites)` with the sites the run will
+ * request (`getUrlSites`) asks for just those, or for all websites when there are more than
+ * `SITE_ACCESS_MAX_SITES` (`lib/site-access.ts`). Only for features with an explanation, since
+ * checking what is granted takes an await and the dialog's Allow is then the click.
  */
 export function usePermissionGate(
   feature: PermissionFeature,
   { tryFirst = false }: GateOptions = {},
 ) {
   const { granted, recheck } = usePermission(feature);
-  const [pending, setPending] = useState<(() => Promise<unknown>) | null>(null);
+  const [pending, setPending] = useState<PendingRun | null>(null);
 
   const requestThenRun = useCallback(
-    async (start: () => Promise<unknown>) => {
+    async ({ start, sites }: PendingRun) => {
       // First, inside the click, so Firefox treats the request as user input.
-      const request = requestPermission(feature);
+      const request = sites?.origins
+        ? requestSiteAccess(feature, sites.origins)
+        : requestPermission(feature);
       const allowed = await request;
       await recheck();
       if (!allowed) {
@@ -146,33 +164,45 @@ export function usePermissionGate(
   );
 
   const ask = useCallback(
-    (start: () => Promise<unknown>) => {
-      if ((PERMISSION_FEATURES[feature] as PermissionFeatureDefinition).explanation) {
-        setPending(() => start);
+    (run: PendingRun) => {
+      if (hasExplanation(feature)) {
+        setPending(run);
       } else {
-        void requestThenRun(start);
+        void requestThenRun(run);
       }
     },
     [feature, requestThenRun],
   );
 
-  /** Runs `start` now, or asks first; resolves `start`'s result, or undefined when it asked. */
+  /**
+   * Runs `start` now, or asks first; resolves `start`'s result, or undefined when it asked.
+   * `sites` narrows website access to the sites the run will request.
+   */
   const run = useCallback(
-    async <T,>(start: () => Promise<T>): Promise<T | undefined> => {
+    async <T,>(start: () => Promise<T>, sites?: readonly string[]): Promise<T | undefined> => {
       if (granted) return start();
+      // Clicked before the first check finished: with an explanation to show, the dialog's Allow
+      // is the click the request runs in, so checking first loses nothing.
+      if (granted === null && hasExplanation(feature) && (await recheck())) return start();
+      if (sites) {
+        const origins = getSiteAccessOrigins(sites);
+        if (origins && (await hasSiteAccess(feature, origins))) return start();
+        ask({ start, sites: { names: [...sites], origins } });
+        return undefined;
+      }
       if (!tryFirst) {
-        ask(start);
+        ask({ start });
         return undefined;
       }
       try {
         return await start();
       } catch (error) {
         if (!(error instanceof PermissionRequiredError) || error.feature !== feature) throw error;
-        ask(start);
+        ask({ start });
         return undefined;
       }
     },
-    [ask, feature, granted, tryFirst],
+    [ask, feature, granted, recheck, tryFirst],
   );
 
   return {
@@ -181,12 +211,13 @@ export function usePermissionGate(
     dialogProps: {
       feature,
       open: pending !== null,
+      sites: pending?.sites ? (pending.sites.origins ? pending.sites.names : 'all') : undefined,
       onAllow: () => {
-        const start = pending;
+        const waiting = pending;
         setPending(null);
-        if (start) void requestThenRun(start);
+        if (waiting) void requestThenRun(waiting);
       },
       onCancel: () => setPending(null),
-    },
+    } satisfies PermissionDialogProps,
   };
 }

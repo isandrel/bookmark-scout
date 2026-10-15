@@ -1,7 +1,8 @@
 import type { Page } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { bookmarkRow, openPopup, seedFolder, setSettings } from './popup-helpers';
 import { readSettings } from './storage';
+import { openTools, toolCard } from './tool-helpers';
 
 /**
  * The browser's icon cache at `_favicon/` is used only once the user turns on Use the browser's
@@ -57,6 +58,25 @@ test.describe('with the favicon permission granted', () => {
       .toBeGreaterThan(0);
   });
 
+  test('Show browser icons on Refresh Site Icons turns the icon cache on in one click', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const folder = await seedFolder(extensionWorker, 'E2E Favicon Offer', [
+      { title: 'Icon Source', url: 'https://e2e.invalid/icon-source' },
+    ]);
+    await openTools(page, extensionId, folder.folderId);
+    const offer = toolCard(page, 'Refresh Site Icons').getByTestId('browser-icons-offer');
+    await offer.getByRole('button', { name: 'Show browser icons' }).click();
+    // Already allowed here, so no explanation and no prompt.
+    await expect
+      .poll(async () => (await readSettings(extensionWorker)).browserIconCache)
+      .toBe(true);
+    await expect(offer).toHaveCount(0);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+  });
+
   // With the permission granted, so only the missing web_accessible_resources entry blocks it.
   test('web pages cannot load icons through the extension', async ({
     context,
@@ -86,4 +106,52 @@ test('the setting alone does not use the icon cache without the permission', asy
   const row = await showIconSource(page, extensionId);
   await expect(row).toBeVisible();
   await expect(row.locator('img[src*="/_favicon/"]')).toHaveCount(0);
+});
+
+test('Refresh Site Icons offers the browser icons first, explains the mild prompt, and stays off when declined', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Favicon Offer Declined', [
+    { title: 'Icon Source', url: 'https://e2e.invalid/icon-source' },
+  ]);
+  // Record and decline requests: the real prompt cannot be answered headlessly.
+  await page.addInitScript(() => {
+    const calls: unknown[] = [];
+    (window as unknown as { permissionRequests: unknown[] }).permissionRequests = calls;
+    Object.defineProperty(chrome.permissions, 'request', {
+      configurable: true,
+      value: (request: unknown) => {
+        calls.push(request);
+        return Promise.resolve(false);
+      },
+    });
+  });
+  const requests = () =>
+    page.evaluate(
+      () => (window as unknown as { permissionRequests: unknown[] }).permissionRequests,
+    );
+
+  await openTools(page, extensionId, folder.folderId);
+  const card = toolCard(page, 'Refresh Site Icons');
+  const show = card.getByRole('button', { name: 'Show browser icons' });
+  const dialog = page.getByRole('dialog', { name: 'Show the icons your browser already has?' });
+
+  await show.click();
+  await expect(dialog).toContainText('“Read the icons of the websites you visit”');
+  await expect(dialog).toContainText('nothing leaves your device');
+  await dialog.getByRole('button', { name: 'Not now' }).click();
+  await expect(dialog).toHaveCount(0);
+  expect(await requests()).toEqual([]);
+
+  await show.click();
+  await dialog.getByRole('button', { name: 'Allow access' }).click();
+  await expect.poll(requests).toEqual([{ permissions: ['favicon'] }]);
+  await expect(
+    toastRegion(page).getByText('× Permission not granted', { exact: true }),
+  ).toBeVisible();
+  expect((await readSettings(extensionWorker)).browserIconCache).not.toBe(true);
+  // Refresh Site Icons stays available as the other way.
+  await expect(card.getByRole('button', { name: 'Refresh', exact: true })).toBeEnabled();
 });

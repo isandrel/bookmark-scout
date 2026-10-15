@@ -40,6 +40,7 @@ export function describeDeadLink(item: DeadLinkResultItem): string {
         const labelKey = item.category ? HTTP_FAILURE_LABEL_KEYS[item.category] : undefined;
         return labelKey ? t('tools_deadLinkHttpDetail', [status, t(labelKey)]) : status;
       }
+      if (item.category === 'redirectElsewhere') return t('perm_deadLinkRedirectElsewhere');
       return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
     }
   }
@@ -452,8 +453,8 @@ export function MetadataResultsView({
               }
             >
               <ResultLine>
-            <UrlLink href={item.url} />
-          </ResultLine>
+                <UrlLink href={item.url} />
+              </ResultLine>
               {item.status === 'ok' && item.suggestedTitle ? (
                 <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
               ) : null}

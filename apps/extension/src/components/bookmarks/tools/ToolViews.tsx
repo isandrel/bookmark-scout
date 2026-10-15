@@ -164,6 +164,36 @@ export const TOOL_REVIEWS: {
   ),
 };
 
+/**
+ * The quick way to real icons, offered above Refresh Site Icons while the browser's icon cache is
+ * not in use (Chrome and Edge): the icons the browser already saved, behind the mild "Read the
+ * icons of the websites you visit" prompt instead of access to every bookmarked website.
+ */
+function BrowserIconsOffer() {
+  const inUse = useEffectiveSetting('browserIconCache');
+  const { setValue } = useSetting('browserIconCache');
+  const gate = usePermissionGate('browserIcons');
+  if (inUse || !isPermissionFeatureSupported('browserIcons', CURRENT_PERMISSION_BROWSER)) {
+    return null;
+  }
+  return (
+    <div
+      className="flex w-full items-center gap-2 rounded-md bg-muted/60 p-2"
+      data-testid="browser-icons-offer"
+    >
+      <p className="min-w-0 flex-1 text-xs text-muted-foreground">{t('perm_browserIconsOffer')}</p>
+      <Button
+        size="sm"
+        className="h-8 shrink-0 text-xs"
+        onClick={() => void gate.run(() => setValue(true))}
+      >
+        {t('perm_browserIconsUse')}
+      </Button>
+      <PermissionDialog {...gate.dialogProps} />
+    </div>
+  );
+}
+
 /** The saved site icon count and size, and a button that clears them. */
 function SiteIconCacheControls() {
   const siteIconCache = useSiteIconCacheSummary();
@@ -184,6 +214,7 @@ function SiteIconCacheControls() {
   };
   return (
     <>
+      <BrowserIconsOffer />
       <span className="flex-1 text-xs text-muted-foreground">
         {tPlural('tools_siteIconsCached', siteIconCache.count, [
           formatKilobytes(siteIconCache.bytes),

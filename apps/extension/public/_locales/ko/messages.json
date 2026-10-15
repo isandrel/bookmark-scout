@@ -3919,18 +3919,6 @@
         "message": "마우스 오른쪽 버튼 메뉴는 꺼진 상태로 유지됩니다. 허용하려면 컨텍스트 메뉴를 다시 켜세요.",
         "description": "Toast text when the right-click menu permission is declined"
     },
-    "permission_currentTabTitle": {
-        "message": "현재 탭에 대한 접근을 허용할까요?",
-        "description": "Title of the dialog that explains the tab permission before the browser asks for it"
-    },
-    "permission_currentTabDesc": {
-        "message": "보고 있는 페이지를 저장하거나 그 페이지에 맞는 폴더를 추천하려면 Bookmark Scout가 활성 탭의 제목과 URL을 읽어야 합니다. 툴바 팝업은 묻지 않고 이 작업을 할 수 있지만, 사이드 패널은 탭을 전환해도 열려 있으므로 이 권한이 필요합니다.",
-        "description": "Why saving the current page from the side panel needs the tab permission"
-    },
-    "permission_currentTabDetail": {
-        "message": "브라우저 확인 창에는 탭 또는 방문 기록에 대한 접근으로 표시됩니다. Bookmark Scout는 요청할 때만 활성 탭의 제목과 URL을 읽으며, 그 밖의 정보는 저장하지 않습니다.",
-        "description": "What the tab permission is used for, shown in the explanation dialog"
-    },
     "permission_currentTabDenied": {
         "message": "저장되지 않았습니다. 대신 해당 페이지에서 툴바 팝업을 열거나, 요청이 표시되면 탭 접근을 허용하세요.",
         "description": "Toast text when the tab permission is declined or missing"
@@ -3986,6 +3974,102 @@
     "permission_aiProviderCheckDenied": {
         "message": "아무것도 전송되지 않았습니다. 확장 프로그램이 API 키를 제공자와 공유하기 전에 브라우저가 확인합니다.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
+    },
+    "perm_currentTabTitle": {
+        "message": "보고 있는 페이지 저장",
+        "description": "Title of the dialog shown before the side panel asks for tab access"
+    },
+    "perm_currentTabDesc": {
+        "message": "사이드 패널은 탭을 바꿔도 열려 있기 때문에, 탭 접근 권한이 없으면 지금 어느 페이지를 보고 있는지 알 수 없습니다. 다음 방법은 추가 권한이 필요 없습니다.",
+        "description": "Why the side panel cannot read the current page; a list of ways that need no permission follows"
+    },
+    "perm_currentTabUsePopup": {
+        "message": "페이지를 연 상태에서 도구 모음의 Bookmark Scout 버튼을 클릭합니다.",
+        "description": "List item: save the current page from the toolbar popup, which needs no permission"
+    },
+    "perm_currentTabUseShortcut": {
+        "message": "페이지에서 $keys$ 키를 눌러 빠르게 저장합니다.",
+        "description": "List item: save the current page with the quick save shortcut; $keys$ is the assigned shortcut",
+        "placeholders": {
+            "keys": {
+                "content": "$1",
+                "example": "Alt+Shift+S"
+            }
+        }
+    },
+    "perm_currentTabDetail": {
+        "message": "그래도 사이드 패널에서 저장하거나 폴더 추천을 받으려면 탭 접근을 허용하세요. 브라우저에는 방문 기록 읽기(Firefox에서는 브라우저 탭 접근)로 표시됩니다. Bookmark Scout는 요청할 때만 열려 있는 탭의 제목과 주소를 읽습니다.",
+        "description": "Last paragraph of the tab access dialog, before the Allow button; quotes the browser prompt"
+    },
+    "perm_browserIconsTitle": {
+        "message": "브라우저에 이미 있는 아이콘을 표시할까요?",
+        "description": "Title of the dialog shown before asking for the browser's icon cache permission"
+    },
+    "perm_browserIconsDesc": {
+        "message": "브라우저는 방문한 사이트의 아이콘을 저장해 둡니다. Bookmark Scout는 이 아이콘을 북마크 옆에 표시할 수 있습니다. 아무것도 다운로드하지 않으며, 데이터가 기기 밖으로 나가지 않습니다.",
+        "description": "What showing the browser's own site icons does"
+    },
+    "perm_browserIconsDetail": {
+        "message": "브라우저가 방문한 웹사이트의 아이콘을 읽도록 허용할지 묻습니다. 저장된 아이콘이 없는 사이트는 '사이트 아이콘 새로 고침'으로 다운로드할 수 있지만, 그러려면 해당 웹사이트에 대한 접근 권한이 필요합니다.",
+        "description": "Quotes the browser's prompt for the favicon permission and names the alternative"
+    },
+    "perm_browserIconsOffer": {
+        "message": "가장 빠른 방법: 브라우저가 이미 저장한 아이콘을 표시합니다. 사이트 아이콘 읽기 권한만 요청합니다.",
+        "description": "Line on the Refresh Site Icons card offering the browser's own icons first"
+    },
+    "perm_browserIconsUse": {
+        "message": "브라우저 아이콘 표시",
+        "description": "Button that turns on the browser's icon cache, asking for permission first"
+    },
+    "perm_aiFirefoxNote": {
+        "message": "Firefox 확인 창에는 개발자가 이 데이터를 수집하려 한다고 표시됩니다. 여기서 개발자는 사용자가 선택한 AI 회사를 뜻합니다. 데이터는 브라우저에서 해당 회사로 바로 전송되며, Bookmark Scout로는 절대 전송되지 않습니다.",
+        "description": "Firefox only: explains that the 'developer' in Firefox's data collection prompt is the AI company the user chose"
+    },
+    "perm_agentBridgeFirefoxNote": {
+        "message": "Firefox 확인 창에는 개발자가 이 데이터를 수집하려 한다고 표시됩니다. 여기서 개발자는 bookmark-scout-mcp 프로그램을 통해 데이터를 받는 이 컴퓨터의 AI 에이전트를 뜻합니다. Bookmark Scout는 이 데이터를 받지 않습니다.",
+        "description": "Firefox only: explains that the 'developer' in Firefox's data collection prompt is the local AI agents"
+    },
+    "perm_siteAccessSome": {
+        "message": "브라우저는 다음 $count$개 사이트에 대한 접근만 요청합니다: $sites$",
+        "description": "Website access dialog: the run asks only for these sites; $count$ is the number, $sites$ a list of names",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            },
+            "sites": {
+                "content": "$2",
+                "example": "example.com, wikipedia.org, and github.com"
+            }
+        }
+    },
+    "perm_siteAccessSome_one": {
+        "message": "브라우저는 다음 사이트에 대한 접근만 요청합니다: $sites$",
+        "description": "Website access dialog: the run asks only for one site; $sites$ is its name",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "sites": {
+                "content": "$2",
+                "example": "example.com"
+            }
+        }
+    },
+    "perm_siteAccessAll": {
+        "message": "이번 실행은 $count$개가 넘는 사이트를 대상으로 하므로 브라우저가 모든 웹사이트에 대한 접근을 요청합니다. 더 작은 폴더에서 실행하면 요청하는 사이트가 줄어듭니다.",
+        "description": "Website access dialog: the run covers too many sites and asks for all websites; $count$ is the limit",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "20"
+            }
+        }
+    },
+    "perm_deadLinkRedirectElsewhere": {
+        "message": "이 검사에서 접근할 수 없는 다른 사이트로 리디렉션됩니다. 직접 열어 확인하세요",
+        "description": "Dead link detail: a redirect to a site the scan had no access to, so not confirmed dead"
     },
     "tools_hostAccessDenied": {
         "message": "웹사이트 접근이 허용되지 않았습니다",

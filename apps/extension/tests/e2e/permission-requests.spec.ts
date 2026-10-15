@@ -129,7 +129,7 @@ async function folderUrls(worker: Worker, folderId: string): Promise<string[]> {
   );
 }
 
-test('the side panel explains and asks for tab access, and saves nothing when declined', async ({
+test('the side panel offers the ways that need no permission, then asks for tab access, and saves nothing when declined', async ({
   context,
   extensionId,
   extensionWorker,
@@ -138,10 +138,20 @@ test('the side panel explains and asks for tab access, and saves nothing when de
   const folder = await seedFolder(extensionWorker, 'E2E Tab Access Declined', []);
   await declinePermissionPrompts(page);
   await sidePanelBehindArticle(context, page, extensionId);
+  // The quick save keys the browser actually assigned, as the dialog shows them.
+  const quickSaveKeys = await extensionWorker.evaluate(
+    async () =>
+      (await chrome.commands.getAll()).find((command) => command.name === 'quick-save')?.shortcut,
+  );
+  expect(quickSaveKeys).toBeTruthy();
 
   await addCurrentPageTo(page, 'E2E Tab Access Declined');
-  const prompt = page.getByRole('dialog', { name: 'Allow access to the current tab?' });
-  await expect(prompt).toContainText('the side panel stays open while you switch tabs');
+  const prompt = page.getByRole('dialog', { name: "Save the page you're on" });
+  await expect(prompt).toContainText('The side panel stays open while you switch tabs');
+  const alternatives = prompt.getByTestId('permission-alternatives');
+  await expect(alternatives).toContainText('Click the Bookmark Scout button in the toolbar');
+  await expect(alternatives).toContainText(`Press ${quickSaveKeys} on the page`);
+  await expect(prompt).toContainText('“Read your browsing history”');
   await prompt.getByRole('button', { name: 'Not now' }).click();
   await expect(prompt).toHaveCount(0);
 
@@ -167,9 +177,7 @@ test.describe('with tab access granted', () => {
 
     await addCurrentPageTo(page, 'E2E Tab Access Granted');
     await expect.poll(() => folderUrls(extensionWorker, folder.folderId)).toEqual([ARTICLE_URL]);
-    await expect(
-      page.getByRole('dialog', { name: 'Allow access to the current tab?' }),
-    ).toHaveCount(0);
+    await expect(page.getByRole('dialog', { name: "Save the page you're on" })).toHaveCount(0);
   });
 });
 
