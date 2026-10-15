@@ -8,8 +8,9 @@ default_model = "gemini-nano"
 provider_kind = "chrome_builtin"
 requires_api_key = false
 model_list = "none"
-# Short tasks only: Ask AI, Auto-Tagging, Summarizer, and reorganization use another service.
-features = ["folderRecommendation"]
+# Short tasks only: folder suggestions and AI quick save. Ask AI, Auto-Tagging, Summarizer, and
+# reorganization use another service.
+features = ["folderRecommendation", "quickSave"]
 
 [[models]]
 id = "gemini-nano"

@@ -1,7 +1,8 @@
 /**
  * Chrome's built-in model (the Prompt API's `LanguageModel`) as an AI SDK language model, so
  * `generateObject` and every other AI SDK call work with it like with a hosted provider. One
- * session per call, destroyed afterwards. A structured call's JSON schema goes to the model as
+ * session per call, destroyed afterwards: a new one, or a copy of a warm session (`openSession`,
+ * AI quick save's host page). A structured call's JSON schema goes to the model as
  * `responseConstraint`, which Chrome enforces while the model writes; the prompt itself must
  * describe the format, since `omitResponseConstraintInput` keeps the schema out of the small
  * context. Sampling options are left at Chrome's defaults (temperature and topK are deprecated,
@@ -22,19 +23,16 @@ import type {
   SharedV4Warning,
 } from '@ai-sdk/provider';
 
-/** One finished call, for the AI activity log. */
-export type BuiltinModelCall = {
-  /** The system prompt and the conversation as the model read them. */
-  input: string;
-  output?: string;
-  error?: string;
-  durationMs: number;
-};
-
 export type BuiltinModelOptions = {
   modelId: string;
   /** Called after every call, successful or not; it must not throw. */
   onCall?: (call: BuiltinModelCall) => void;
+  /**
+   * Opens the session for a call that starts from the system prompt alone, such as a copy of a
+   * warm session in AI quick save's host page; other calls, and every call without it, create a
+   * fresh session.
+   */
+  openSession?: BuiltinSessionOpener;
 };
 
 /** The adapter's provider name in AI SDK errors and results. */
@@ -45,6 +43,8 @@ type InitialPrompts = NonNullable<LanguageModelCreateOptions['initialPrompts']>;
 
 type SessionInput = {
   initialPrompts: InitialPrompts;
+  /** The system prompt, when it is the only message before the user's. */
+  systemOnly?: string;
   input: string;
   promptOptions: LanguageModelPromptOptions;
   /** The whole prompt as text, for the activity log. */
@@ -90,24 +90,13 @@ function toSessionInput(
     : turns;
   return {
     initialPrompts,
+    ...(systemText && turns.length === 0 ? { systemOnly: systemText } : {}),
     input: last.content,
     promptOptions,
     transcript: [...initialPrompts, last]
       .map((message) => `${message.role}: ${String(message.content)}`)
       .join('\n\n'),
   };
-}
-
-/** A session for one call; fails without downloading when the model is not ready. */
-async function openSession(
-  initialPrompts: InitialPrompts,
-  signal: AbortSignal | undefined,
-): Promise<LanguageModel> {
-  const options = builtinAISessionOptions();
-  if ((await LanguageModel.availability(options)) !== 'available') {
-    throw new Error(t('builtinAi_errorNotReady'));
-  }
-  return LanguageModel.create({ ...options, initialPrompts, signal });
 }
 
 /** Chrome counts only the session's whole context, prompts and answer together. */
@@ -125,7 +114,16 @@ const describeError = (error: unknown) =>
   error instanceof Error ? `${error.name}: ${error.message}` : String(error);
 
 /** The built-in model as an AI SDK language model (specification v4). */
-export function createBuiltinModel({ modelId, onCall }: BuiltinModelOptions): LanguageModelV4 {
+export function createBuiltinModel({
+  modelId,
+  onCall,
+  openSession,
+}: BuiltinModelOptions): LanguageModelV4 {
+  // Both fail without downloading anything when the model is not ready.
+  const sessionFor = (request: SessionInput, signal: AbortSignal | undefined) =>
+    openSession && request.systemOnly !== undefined
+      ? openSession(request.systemOnly, signal)
+      : createBuiltinSession(request.initialPrompts, signal);
   const report = (call: BuiltinModelCall) => {
     try {
       onCall?.(call);
@@ -147,7 +145,7 @@ export function createBuiltinModel({ modelId, onCall }: BuiltinModelOptions): La
       const elapsed = () => Math.round(performance.now() - started);
       let session: LanguageModel | undefined;
       try {
-        session = await openSession(request.initialPrompts, options.abortSignal);
+        session = await sessionFor(request, options.abortSignal);
         const text = await session.prompt(request.input, request.promptOptions);
         report({ input: request.transcript, output: text, durationMs: elapsed() });
         return {
@@ -168,7 +166,7 @@ export function createBuiltinModel({ modelId, onCall }: BuiltinModelOptions): La
       const warnings: SharedV4Warning[] = [];
       const started = performance.now();
       const request = toSessionInput(options, warnings);
-      const session = await openSession(request.initialPrompts, options.abortSignal);
+      const session = await sessionFor(request, options.abortSignal);
       const reader = session.promptStreaming(request.input, request.promptOptions).getReader();
       let output = '';
       const finish = (error?: unknown) => {

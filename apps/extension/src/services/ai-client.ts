@@ -56,6 +56,18 @@ type AIModelRequest = {
    * the logging fetch, as quick save's AI host page does through the background.
    */
   transport?: typeof fetch;
+  /** For the browser's built-in model; see `BuiltinOnDeviceOptions`. */
+  onDevice?: BuiltinOnDeviceOptions;
+};
+
+/**
+ * How a call to the browser's built-in model runs where storage is out of reach (quick save's AI
+ * host page): its sessions (a copy of a warm one) and where its activity log entry goes (to the
+ * background, which records it). Without them, each call gets a fresh session and records itself.
+ */
+export type BuiltinOnDeviceOptions = {
+  openSession?: BuiltinSessionOpener;
+  log?: (call: BuiltinModelCall) => void;
 };
 
 export type AIObjectRequest<T> = AIModelRequest & {

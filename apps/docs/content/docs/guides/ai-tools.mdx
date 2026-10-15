@@ -57,10 +57,11 @@ Turn on **AI Features** if it is off: adding the service does not turn AI on.
 </Steps>
 
 - Chrome needs 22 GB of free disk space, and a graphics card with more than 4 GB of memory, or 16 GB of memory and 4 processor cores. On a computer that cannot run the model, or where your organization turned it off, the service says so. Firefox has no built-in AI.
-- It only suggests folders, in the popup and side panel. Ask AI, Auto-Tagging, Content Summarizer, AI Folder Reorganization, and the AI quick save shortcut use another service when you add one.
+- It only suggests folders: in the popup and side panel, and for the AI quick save shortcut. Ask AI, Auto-Tagging, Content Summarizer, and AI Folder Reorganization use another service when you add one.
 - It reads the page's title and address, the names of the folders that best match it (a short list picked on your device), and with **Read page content** on, the start of the page's text. It answers only with folders from that list.
 - It works best with English, Japanese, Spanish, German, and French. When the model fails or takes too long, the suggestions come from a plain word match on your device instead.
-- The popup never starts the download: until the model is ready, it shows **Download the built-in AI model in Settings** instead of the AI buttons.
+- The popup and the AI quick save shortcut never start the download: until the model is ready, the popup shows **Download the built-in AI model in Settings** instead of the AI buttons, and quick save uses the best match below.
+- AI quick save keeps the model ready for 5 minutes after a save, so the next one is quicker. When the model is not ready, fails, or takes too long, the page is saved to the folder that best matches it, as the **Best match** setting does.
 - With **Record requests** on, each call appears in **AI activity** as `ON-DEVICE`.
 
 ## Use more than one service

@@ -15,10 +15,52 @@ const hostSettingsSchema = z.looseObject({
   apiKey: z.string(),
 });
 
-/** The schema for each answer shape the background may ask for (`AI_HOST_SCHEMA_NAMES`). */
+type HostGenerateRequest = Extract<
+  QuickSaveHostRequest,
+  { type: typeof QUICK_SAVE_MESSAGE.hostGenerate }
+>;
+
+/**
+ * The schema for each answer shape the background may ask for (`AI_HOST_SCHEMA_NAMES`), built
+ * from the request; undefined when the request lacks what the shape needs.
+ */
 const AI_HOST_SCHEMAS = {
-  folderRecommendations: folderRecommendationsSchema,
-} satisfies { [Name in AIHostSchemaName]: z.ZodType<AIHostSchemaOutputs[Name]> };
+  folderRecommendations: () => folderRecommendationsSchema,
+  folderIds: ({ choices, maxChoices }) =>
+    choices && maxChoices ? builtinFolderAnswerSchema(choices, maxChoices) : undefined,
+} satisfies {
+  [Name in AIHostSchemaName]: (
+    request: HostGenerateRequest,
+  ) => z.ZodType<AIHostSchemaOutputs[Name]> | undefined;
+};
+
+let warmSessions: ReturnType<typeof createWarmBuiltinSessions> | undefined;
+
+/**
+ * Sessions and logging for the browser's built-in model in this page: a warm session copied for
+ * each call (closed after `[quick_save] idle_timeout_ms` without one, when the page asks the
+ * background to close it), and each call's activity log entry sent to the background.
+ */
+function onDeviceOptions(token: string): BuiltinOnDeviceOptions {
+  warmSessions ??= createWarmBuiltinSessions({
+    idleMs: builtinAIConfig.quick_save.idle_timeout_ms,
+    onIdle: () => {
+      const message: QuickSaveHostIdleMessage = { type: QUICK_SAVE_MESSAGE.hostIdle };
+      void browser.runtime.sendMessage(message).catch(() => undefined);
+    },
+  });
+  return {
+    openSession: warmSessions.open,
+    log: (call) => {
+      const message: QuickSaveHostActivityMessage = {
+        type: QUICK_SAVE_MESSAGE.hostActivity,
+        token,
+        ...call,
+      };
+      void browser.runtime.sendMessage(message).catch(() => undefined);
+    },
+  };
+}
 
 const NULL_BODY_STATUSES: ReadonlySet<number> = new Set([101, 204, 205, 304]);
 
@@ -74,17 +116,28 @@ export async function handleAIHostRequest(
     await whenLanguageReady();
   }
   const settings = hostSettingsSchema.safeParse(request.settings);
-  if (!settings.success || !isActivitySource(request.source)) {
+  const schema = (
+    AI_HOST_SCHEMAS[request.schema] as (request: HostGenerateRequest) => z.ZodType | undefined
+  )(request);
+  if (!settings.success || !schema || !isActivitySource(request.source)) {
     return { ok: false, error: t('error_unknown') };
   }
+  const builtin = isBuiltinProvider(settings.data.provider);
   try {
     const { object } = await generateAIObject({
       settings: settings.data as AISettings,
       source: request.source,
-      schema: AI_HOST_SCHEMAS[request.schema],
+      schema,
       system: request.system,
       prompt: request.prompt,
       transport: createAIHostTransport(request.token),
+      ...(builtin
+        ? {
+            onDevice: onDeviceOptions(request.token),
+            // The background cannot pass its time limit along; the small model gets the same.
+            abortSignal: AbortSignal.timeout(builtinAIConfig.folders.timeout_ms),
+          }
+        : {}),
     });
     return { ok: true, object };
   } catch (error) {

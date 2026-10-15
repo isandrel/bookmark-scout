@@ -5,7 +5,9 @@
  * orders the best of them, answering with their ids. Instructions are English, the declared
  * language, whatever the page's language. When the model fails or takes longer than
  * `[folders] timeout_ms`, the word match's own picks are the suggestions, so the click still has
- * an answer. Hosted services get the full folder list instead (`recommendFolders`).
+ * an answer (`recommendFoldersOnDevice`); AI quick save falls back to its best match instead
+ * (`askBuiltinModelForFolders` throws). Hosted services get the full folder list instead
+ * (`recommendFolders`).
  *
  * The call itself is passed in (`generate`), so the popup can use the AI client and quick save the
  * AI host page. Nothing here loads the AI SDK.
@@ -21,10 +23,24 @@ export type BuiltinFolderAnswer = { folders: string[] };
 
 export type BuiltinFolderRequest = {
   schema: z.ZodType<BuiltinFolderAnswer>;
+  /** The shortlist's ids and the most to pick, which `schema` allows; for a host page to rebuild it. */
+  choices: string[];
+  maxChoices: number;
   system: string;
   prompt: string;
   abortSignal: AbortSignal;
 };
+
+/**
+ * The answer's schema: up to `maxChoices` ids, each one of `choices`. Sent to the model as a
+ * response constraint, so it can only name folders from the shortlist.
+ */
+export function builtinFolderAnswerSchema(
+  choices: readonly string[],
+  maxChoices: number,
+): z.ZodType<BuiltinFolderAnswer> {
+  return z.object({ folders: z.array(z.enum(choices as [string, ...string[]])).max(maxChoices) });
+}
 
 type PageForFolders = { title: string; url: string; pageText?: string };
 
@@ -75,9 +91,9 @@ export function buildBuiltinFolderRequest(
   const ids = candidates.map((folder) => folder.id);
   const excerpt = page.pageText?.slice(0, folderConfig.page_excerpt_chars).trim();
   return {
-    schema: z.object({
-      folders: z.array(z.enum(ids as [string, ...string[]])).max(count),
-    }),
+    schema: builtinFolderAnswerSchema(ids, count),
+    choices: ids,
+    maxChoices: count,
     system: interpolatePrompt(folderConfig.system, { count }),
     prompt: interpolatePrompt(folderConfig.prompt, {
       title: page.title,
@@ -120,33 +136,44 @@ export function toBuiltinRecommendations(
  * the model fails, is slow, or picks nothing usable.
  */
 export async function recommendFoldersOnDevice(
-  generate: (request: BuiltinFolderRequest) => Promise<BuiltinFolderAnswer>,
+  generate: BuiltinFolderGenerate,
+  page: PageForFolders,
+  folders: readonly BookmarkTreeNode[],
+  count: number,
+): Promise<FolderRecommendation[]> {
+  try {
+    return await askBuiltinModelForFolders(generate, page, folders, count);
+  } catch {
+    // The activity log has the model's error; the click still gets the local answer.
+    return toBuiltinRecommendations(
+      rankFolders(folderIndex(folders), page, { limit: count }),
+      t('builtinAi_reasonWordMatch'),
+    );
+  }
+}
+
+export type BuiltinFolderGenerate = (request: BuiltinFolderRequest) => Promise<BuiltinFolderAnswer>;
+
+/**
+ * Up to `count` folder suggestions the built-in model picked from the shortlist, best first.
+ * Throws when the model fails, is slow, or picks nothing usable; callers choose the fallback (the
+ * word match's suggestions in the popup, the Quick save setting's best match for AI quick save).
+ */
+export async function askBuiltinModelForFolders(
+  generate: BuiltinFolderGenerate,
   page: PageForFolders,
   folders: readonly BookmarkTreeNode[],
   count: number,
 ): Promise<FolderRecommendation[]> {
   const index = folderIndex(folders);
   if (index.documents.length === 0) return noFoldersRecommendation();
-  const wordMatch = () =>
-    toBuiltinRecommendations(
-      rankFolders(index, page, { limit: count }),
-      t('builtinAi_reasonWordMatch'),
-    );
-
   const candidates = shortlistFolders(index, page, folderConfig.candidates);
-  let answer: BuiltinFolderAnswer;
-  try {
-    answer = await generate({
-      ...buildBuiltinFolderRequest(page, candidates, count),
-      abortSignal: AbortSignal.timeout(folderConfig.timeout_ms),
-    });
-  } catch {
-    // The activity log has the model's error; the click still gets the local answer.
-    return wordMatch();
-  }
+  const answer = await generate({
+    ...buildBuiltinFolderRequest(page, candidates, count),
+    abortSignal: AbortSignal.timeout(folderConfig.timeout_ms),
+  });
   const byId = new Map(candidates.map((folder) => [folder.id, folder]));
   const picked = [...new Set(answer.folders)].flatMap((id) => byId.get(id) ?? []).slice(0, count);
-  return picked.length > 0
-    ? toBuiltinRecommendations(picked, t('builtinAi_reasonModel'))
-    : wordMatch();
+  if (picked.length === 0) throw new Error(t('builtinAi_errorNoPick'));
+  return toBuiltinRecommendations(picked, t('builtinAi_reasonModel'));
 }

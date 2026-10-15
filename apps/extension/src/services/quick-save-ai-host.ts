@@ -22,6 +22,8 @@ type ActiveCall = { provider?: string; model?: string; source: AIActivitySource 
 const activeCalls = new Map<string, ActiveCall>();
 let firefoxFrame: HTMLIFrameElement | undefined;
 let hostReady: Promise<void> | undefined;
+/** The page holds a warm built-in session, so it stays open until it reports itself idle. */
+let warmHost = false;
 
 function hostUrl(): string {
   return browser.runtime.getURL(AI_HOST_PATH);
@@ -57,6 +59,7 @@ async function openHost(): Promise<void> {
 
 async function closeHost(): Promise<void> {
   hostReady = undefined;
+  warmHost = false;
   if (browser.offscreen) {
     await browser.offscreen.closeDocument().catch(() => undefined);
     return;
@@ -77,25 +80,39 @@ async function askHost(request: QuickSaveHostRequest): Promise<QuickSaveHostResp
 /** What each schema the AI host page knows (`AIHostSchemaName`) answers with. */
 export type AIHostSchemaOutputs = {
   folderRecommendations: FolderRecommendationsObject;
+  folderIds: BuiltinFolderAnswer;
+};
+
+type AIHostGenerateRequest<Name extends AIHostSchemaName> = {
+  schema: Name;
+  /** For `folderIds`: the ids the answer may hold, and how many at most. */
+  choices?: string[];
+  maxChoices?: number;
+  system: string;
+  prompt: string;
 };
 
 export type AIHostSession = {
   readPage: (url: string) => Promise<{ title?: string; text: string } | null>;
-  generate: <Name extends AIHostSchemaName>(request: {
-    schema: Name;
-    system: string;
-    prompt: string;
-  }) => Promise<AIHostSchemaOutputs[Name]>;
+  generate: <Name extends AIHostSchemaName>(
+    request: AIHostGenerateRequest<Name>,
+  ) => Promise<AIHostSchemaOutputs[Name]>;
 };
 
 /**
  * Runs `work` with the AI host page open, then closes it once no other call needs it. Every
  * provider request it makes is logged under `source`. Errors from the provider come back already
- * described in `locale`. Without `settings` the session can only read pages.
+ * described in `locale`. Without `settings` the session can only read pages. With `keepOpen` (the
+ * browser's built-in model, whose warm session lives in the page) the page stays open after the
+ * call; it asks to be closed once that session is idle (`closeIdleAIHost`).
  */
 export async function withAIHost<T>(
   settings: AISettings | null,
-  { locale, source }: { locale: SupportedLocale; source: AIActivitySource },
+  {
+    locale,
+    source,
+    keepOpen = false,
+  }: { locale: SupportedLocale; source: AIActivitySource; keepOpen?: boolean },
   work: (session: AIHostSession) => Promise<T>,
 ): Promise<T> {
   const token = crypto.randomUUID();
@@ -118,13 +135,11 @@ export async function withAIHost<T>(
       },
       generate: async <Name extends AIHostSchemaName>({
         schema,
+        choices,
+        maxChoices,
         system,
         prompt,
-      }: {
-        schema: Name;
-        system: string;
-        prompt: string;
-      }) => {
+      }: AIHostGenerateRequest<Name>) => {
         if (!settings) throw new Error('No AI service was given for this session.');
         const response = await askHost({
           type: QUICK_SAVE_MESSAGE.hostGenerate,
@@ -133,6 +148,8 @@ export async function withAIHost<T>(
           source,
           locale,
           schema,
+          ...(choices ? { choices } : {}),
+          ...(maxChoices ? { maxChoices } : {}),
           system,
           prompt,
         });
@@ -142,8 +159,48 @@ export async function withAIHost<T>(
     });
   } finally {
     activeCalls.delete(token);
-    if (activeCalls.size === 0) await closeHost();
+    if (keepOpen) warmHost = true;
+    else if (activeCalls.size === 0 && !warmHost) await closeHost();
   }
+}
+
+/**
+ * Closes the AI host page when its warm built-in session went idle (the page's own message), unless
+ * a call is running in it. Ignores messages from anywhere else.
+ */
+export async function closeIdleAIHost(
+  message: unknown,
+  sender: Browser.runtime.MessageSender,
+): Promise<void> {
+  if (!isPlainObject(message) || message.type !== QUICK_SAVE_MESSAGE.hostIdle) return;
+  if (!isFromAIHost(sender)) return;
+  warmHost = false;
+  if (activeCalls.size === 0) await closeHost();
+}
+
+/**
+ * Records one call to the browser's built-in model the AI host page made (it cannot reach storage)
+ * in the AI activity log, under the service and source of the AI call in progress. Ignores a
+ * message that is not from the host or names no call in progress.
+ */
+export async function recordAIHostActivity(
+  message: unknown,
+  sender: Browser.runtime.MessageSender,
+): Promise<void> {
+  const parsed = quickSaveHostActivitySchema.safeParse(message);
+  if (!parsed.success || !isFromAIHost(sender)) return;
+  const call = activeCalls.get(parsed.data.token);
+  if (!call?.provider || !call.model) return;
+  const { input, output, error, durationMs } = parsed.data;
+  await recordOnDeviceActivity({
+    source: call.source,
+    provider: call.provider,
+    model: call.model,
+    input,
+    ...(output !== undefined ? { output } : {}),
+    ...(error !== undefined ? { error } : {}),
+    durationMs,
+  });
 }
 
 function isFromAIHost(sender: Browser.runtime.MessageSender): boolean {

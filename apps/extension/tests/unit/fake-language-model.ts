@@ -20,13 +20,19 @@ export type FakeLanguageModel = {
   creates: LanguageModelCreateOptions[];
   prompts: { input: LanguageModelPrompt; options?: LanguageModelPromptOptions }[];
   destroyed: number;
+  /** Sessions made with `clone()`. */
+  clones: number;
 };
 
 export function installFakeLanguageModel(
   options: FakeLanguageModelOptions = {},
 ): FakeLanguageModel {
-  const fake: FakeLanguageModel = { options, creates: [], prompts: [], destroyed: 0 };
-  const session = () => ({
+  const fake: FakeLanguageModel = { options, creates: [], prompts: [], destroyed: 0, clones: 0 };
+  const session = (): Record<string, unknown> => ({
+    async clone() {
+      fake.clones += 1;
+      return session();
+    },
     contextUsage: 120,
     contextWindow: 9216,
     async prompt(input: LanguageModelPrompt, promptOptions?: LanguageModelPromptOptions) {

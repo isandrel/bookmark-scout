@@ -515,6 +515,47 @@ async function getQuickSaveAISettings(
   }
 }
 
+/**
+ * Folder suggestions from the browser's built-in model, which runs in the AI host page with a
+ * warm session kept there between quick saves. Null when the model is not ready (it never starts a
+ * download), fails, or is slow, so the caller falls back to the local word match.
+ */
+async function recommendWithBuiltinAI(
+  aiSettings: AISettings,
+  page: QuickSavePage,
+  tree: BookmarkTreeNode[],
+  settings: Settings,
+  readPage: boolean,
+): Promise<FolderRecommendation[] | null> {
+  // Where the worker can ask (Chrome), a model known not to be ready skips opening the host page;
+  // without the API here, the host page checks for itself.
+  const status = await getBuiltinAIStatus({ refresh: true });
+  if (status !== 'available' && status !== 'unsupported') return null;
+  try {
+    return await withAIHost(
+      aiSettings,
+      {
+        locale: resolveAppLocale(settings.language),
+        source: 'folderRecommendation',
+        keepOpen: true,
+      },
+      async (host) => {
+        const text = readPage ? await host.readPage(page.url) : null;
+        return askBuiltinModelForFolders(
+          ({ choices, maxChoices, system, prompt }) =>
+            host.generate({ schema: 'folderIds', choices, maxChoices, system, prompt }),
+          { ...page, ...(text ? { pageText: text.text } : {}) },
+          tree,
+          settings.aiMaxRecommendations,
+        );
+      },
+    );
+  } catch {
+    // The AI activity log has the model's error.
+    return null;
+  }
+}
+
 async function saveWithAI(
   base: QuickSaveRecord,
   page: QuickSavePage,
@@ -536,14 +577,23 @@ async function saveWithAI(
   const readPage = settings.aiReadPageContent && (await hasPermission('pageReading'));
 
   let recommendations: FolderRecommendation[];
-  try {
-    recommendations = await withAIHost(
-      ai.settings,
-      { locale: resolveAppLocale(settings.language), source: 'folderRecommendation' },
-      (host) => recommendFoldersVia(host, page, tree, settings.aiMaxRecommendations, readPage),
-    );
-  } catch (error) {
-    return { ...saving, status: 'failed', failure: 'aiFailed', error: getErrorMessage(error) };
+  if (isBuiltinProvider(ai.settings.provider)) {
+    const onDevice = await recommendWithBuiltinAI(ai.settings, page, tree, settings, readPage);
+    // Not ready, failed, or too slow: the page still gets saved, by the local word match.
+    if (!onDevice) {
+      return saveLocally(saving, page, { ...settings, quickSaveFolderStrategy: 'best_match' });
+    }
+    recommendations = onDevice;
+  } else {
+    try {
+      recommendations = await withAIHost(
+        ai.settings,
+        { locale: resolveAppLocale(settings.language), source: 'folderRecommendation' },
+        (host) => recommendFoldersVia(host, page, tree, settings.aiMaxRecommendations, readPage),
+      );
+    } catch (error) {
+      return { ...saving, status: 'failed', failure: 'aiFailed', error: getErrorMessage(error) };
+    }
   }
   const choices = recommendations
     .map((recommendation) => toAlternative(recommendation, tree))
@@ -864,6 +914,14 @@ export function registerQuickSave(): void {
         sendResponse(response ?? { ok: false, error: 'Refused' }),
       );
       return true;
+    }
+    if (message.type === QUICK_SAVE_MESSAGE.hostActivity) {
+      void recordAIHostActivity(message, sender);
+      return undefined;
+    }
+    if (message.type === QUICK_SAVE_MESSAGE.hostIdle) {
+      void closeIdleAIHost(message, sender);
+      return undefined;
     }
     return undefined;
   });

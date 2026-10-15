@@ -6524,5 +6524,9 @@
     "builtinAi_featureQuickSave": {
         "message": "AI クイック保存",
         "description": "Name of the AI quick save feature (the keyboard shortcut that saves the page to the folder AI picks), in a list of AI features"
+    },
+    "builtinAi_errorNoPick": {
+        "message": "内蔵 AI はフォルダを選びませんでした。",
+        "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
     }
 }

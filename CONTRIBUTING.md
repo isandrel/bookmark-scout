@@ -229,6 +229,7 @@ The **Built-in AI** service runs Chrome's own model (Gemini Nano, the Prompt API
 
 3. In **Options** > **AI**, click **Use built-in AI**, then **Download the model**. `chrome://on-device-internals` shows the model's state and download, and lets you send it a prompt directly.
 4. Turn on **AI Features** and **Record requests**, open the popup on a page, and click the folder suggestion button. **AI activity** shows the prompt as `ON-DEVICE`.
+5. Press the AI quick save shortcut on a page twice. Both saves appear in **AI activity**; the second is quicker, because the AI host page (an offscreen document, listed in `chrome://extensions` under the extension's views) keeps the instructions loaded for `[quick_save] idle_timeout_ms` in `apps/extension/config/ai/built-in.toml`.
 
 ### TypeScript
 
