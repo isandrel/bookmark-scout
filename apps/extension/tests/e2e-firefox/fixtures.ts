@@ -99,7 +99,10 @@ export const test = base.extend<FirefoxFixtures, FirefoxWorkerFixtures>({
       .setPreference('browser.download.dir', downloadDirectory)
       .setPreference('browser.download.useDownloadDir', true)
       .setPreference('browser.download.always_ask_before_handling_new_types', false)
-      .setPreference('browser.download.manager.showWhenStarting', false);
+      .setPreference('browser.download.manager.showWhenStarting', false)
+      // Optional permissions requested from a real click are granted without the doorhanger,
+      // which headless tests cannot answer; a request outside the manifest still fails.
+      .setPreference('extensions.webextOptionalPermissionPrompts', false);
     if (process.env.FIREFOX_BIN) options.setBinary(process.env.FIREFOX_BIN);
 
     const service = new firefox.ServiceBuilder().addArguments('--allow-system-access');

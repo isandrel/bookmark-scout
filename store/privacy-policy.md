@@ -68,7 +68,7 @@ If you turn on Allow local AI agents in the AI settings (off by default, set sep
 
 ### Dead link checks, title fetching, and site icons
 
-Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. Refresh Site Icons requests one bookmarked page for each website and then an icon file from that website's own domain, so bookmarks can show the site's icon. The browser asks for your permission the first time you run one of these tools. Requests go directly to each website, without cookies, and the results stay in the extension. No third-party icon service is used. As with any visit, the website can see your IP address and that the page or icon was requested.
+Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. Refresh Site Icons requests one bookmarked page for each website and then an icon file from that website's own domain, so bookmarks can show the site's icon. When you run one of these tools, the browser asks for your permission for the websites of the bookmarks in that run, or for all websites when there are more than 20, unless you allowed them before. Requests go directly to each website, without cookies, and the results stay in the extension. No third-party icon service is used. As with any visit, the website can see your IP address and that the page or icon was requested.
 
 ### Exports and backups
 
