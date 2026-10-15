@@ -79,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Guarda cada página en la carpeta correcta, en segundos.",
-      "description": "Escribe parte del nombre de una carpeta, o pulsa Alt+Shift+S en cualquier página, y la página se guarda en la carpeta que le corresponde. La IA opcional también puede sugerir la carpeta. Bookmark Scout también busca y ordena los marcadores que ya tienes, en Chrome, Edge y Firefox, sin cuenta y sin servidor propio.",
+      "description": "Escribe parte del nombre de una carpeta, o pulsa {{SHORTCUT:commands.quick-save}} en cualquier página, y la página se guarda en la carpeta que le corresponde. La IA opcional también puede sugerir la carpeta. Bookmark Scout también busca y ordena los marcadores que ya tienes, en Chrome, Edge y Firefox, sin cuenta y sin servidor propio.",
       "download": "Descargar desde GitHub",
       "install": "Instalar Bookmark Scout",
       "docs": "Leer la documentación",
@@ -137,10 +137,10 @@
         "points": [
           "Escribe parte del nombre de una carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado",
           "Escribe una ruta como work/react y encuentra la carpeta aunque cometas un pequeño error de escritura",
-          "Pulsa Alt+Shift+S en cualquier página para guardarla en la carpeta que mejor le corresponde; una pequeña notificación en la página ofrece Deshacer y otras carpetas",
+          "Pulsa {{SHORTCUT:commands.quick-save}} en cualquier página para guardarla en la carpeta que mejor le corresponde; una pequeña notificación en la página ofrece Deshacer y otras carpetas",
           "Una página que ya está en esa carpeta no se guarda dos veces, y las carpetas en las que guardaste hace poco aparecen primero",
           "Guarda enlaces en carpetas recientes desde el menú contextual",
-          "Con la IA activada, obtén sugerencias de carpeta para la página, o guarda en la primera con Alt+Shift+D"
+          "Con la IA activada, obtén sugerencias de carpeta para la página, o guarda en la primera con {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },
       "organize": {
@@ -153,7 +153,7 @@
           "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",
           "Guarda una búsqueda como vista inteligente que siempre muestra resultados actualizados",
           "Selecciona filas con Shift y Ctrl, haz clic con el botón derecho para cortar, copiar, pegar y abrir todo, y arrastra filas, carpetas y enlaces adonde correspondan",
-          "Deshaz y rehaz los cambios con Ctrl+Z y Ctrl+Y, incluso después de recargar",
+          "Deshaz y rehaz los cambios con {{SHORTCUT:manager.undo}} y {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} y {{SHORTCUT_MAC:manager.redo}} en Mac), incluso después de recargar",
           "Importa HTML o JSON tras una vista previa, y exporta a HTML, JSON, Markdown o CSV",
           "Enlaza a una carpeta o a una búsqueda, y muévete por todo con el teclado"
         ]
@@ -299,7 +299,7 @@
         },
         "changes": {
           "q": "¿Cambiará mis marcadores sin preguntar?",
-          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Preguntar a la IA y los agentes de IA locales muestran sus cambios como un plan y esperan tu aprobación. Al eliminar se pide confirmación de forma predeterminada, y el administrador de marcadores puede deshacer los cambios con Ctrl+Z."
+          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Preguntar a la IA y los agentes de IA locales muestran sus cambios como un plan y esperan tu aprobación. Al eliminar se pide confirmación de forma predeterminada, y el administrador de marcadores puede deshacer los cambios con {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} en Mac)."
         },
         "firefox": {
           "q": "¿Funciona en Firefox?",

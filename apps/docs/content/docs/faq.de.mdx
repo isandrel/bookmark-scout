@@ -19,7 +19,7 @@ Nicht an den Entwickler: Es gibt keinen Bookmark-Scout-Server. Daten verlassen I
 
 ### Ändert die Erweiterung meine Lesezeichen ohne Nachfrage? [#will-it-change-my-bookmarks-without-asking]
 
-Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Prüfung an, bevor etwas geschrieben wird. **KI fragen** und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Beim Löschen wird standardmäßig um Bestätigung gebeten, Löschvorgänge, Bereinigungen und Importe lassen sich über ihre Benachrichtigung rückgängig machen, und der Lesezeichen-Manager macht seine Änderungen mit `Ctrl+Z` rückgängig.
+Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Prüfung an, bevor etwas geschrieben wird. **KI fragen** und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Beim Löschen wird standardmäßig um Bestätigung gebeten, Löschvorgänge, Bereinigungen und Importe lassen sich über ihre Benachrichtigung rückgängig machen, und der Lesezeichen-Manager macht seine Änderungen mit <Shortcut id="manager.undo" /> rückgängig.
 
 ### In welchen Browser-Stores ist die Erweiterung verfügbar? [#which-browser-stores-list-it]
 
@@ -47,7 +47,7 @@ Safari Web Extensions implementieren die `bookmarks`-API nicht, auf der Bookmark
 
 ### Wo ist der Lesezeichen-Manager? [#where-is-the-bookmarks-manager]
 
-Öffnen Sie in Chrome die Lesezeichenseite des Browsers, zum Beispiel mit `Ctrl+Shift+O` (unter macOS `Cmd+Option+B`). Bookmark Scout ersetzt sie durch seinen Manager. Wenn die **Tools**-Leiste ausgeblendet ist, klicken Sie in der Kopfzeile des Managers auf **Tools einblenden**.
+Öffnen Sie in Chrome die Lesezeichenseite des Browsers, zum Beispiel mit <Shortcut id="browser.open_bookmarks_manager" />. Bookmark Scout ersetzt sie durch seinen Manager. Wenn die **Tools**-Leiste ausgeblendet ist, klicken Sie in der Kopfzeile des Managers auf **Tools einblenden**.
 
 ### Bookmark Scout ist aus Firefox verschwunden [#bookmark-scout-disappeared-from-firefox]
 
@@ -83,11 +83,11 @@ Sie werden nur auf dem Gerät gespeichert, auf dem Sie sie angelegt haben, und n
 
 ### Ich habe versehentlich etwas gelöscht [#i-deleted-something-by-mistake]
 
-Klicken Sie innerhalb von 10 Sekunden in der Benachrichtigung auf **Rückgängig**. Damit werden das Element, alles darin und seine gespeicherten Tags und Zusammenfassungen wiederhergestellt; ein wiederhergestelltes Element erhält ein neues Hinzufügedatum. Im Lesezeichen-Manager macht `Ctrl+Z` (`Cmd+Z` auf einem Mac) außerdem ein Löschen rückgängig, das dort, durch „KI fragen“ oder durch einen lokalen KI-Agenten erfolgt ist, bis der Browser geschlossen wird. Siehe [Im Manager auswählen, rückgängig machen und wiederholen](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+Klicken Sie innerhalb von 10 Sekunden in der Benachrichtigung auf **Rückgängig**. Damit werden das Element, alles darin und seine gespeicherten Tags und Zusammenfassungen wiederhergestellt; ein wiederhergestelltes Element erhält ein neues Hinzufügedatum. Im Lesezeichen-Manager macht <Shortcut id="manager.undo" /> außerdem ein Löschen rückgängig, das dort, durch „KI fragen“ oder durch einen lokalen KI-Agenten erfolgt ist, bis der Browser geschlossen wird. Siehe [Im Manager auswählen, rückgängig machen und wiederholen](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
 
 ### Das Tastenkürzel zum Schnellspeichern bewirkt nichts [#the-quick-save-shortcut-does-nothing]
 
-Wenn eine andere Erweiterung `Alt+Shift+S` oder `Alt+Shift+D` bereits verwendet, lässt der Browser das Tastenkürzel von Bookmark Scout ohne Tasten, und das Pop-up zeigt **Kein Kürzel zum Schnellspeichern festgelegt**. Klicken Sie auf **Einrichten**, oder öffnen Sie **Tastenkürzel** unter **Speichern & Suche** in den [Einstellungen](/settings#quick-save), und wählen Sie andere Tasten. Auf Seiten, auf denen Erweiterungen nichts anzeigen können, etwa den eigenen Seiten des Browsers, zeigt das Symbol in der Symbolleiste das Ergebnis statt einer Benachrichtigung. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save).
+Wenn eine andere Erweiterung <Shortcut id="commands.quick-save" /> oder <Shortcut id="commands.ai-quick-save" /> bereits verwendet, lässt der Browser das Tastenkürzel von Bookmark Scout ohne Tasten, und das Pop-up zeigt **Kein Kürzel zum Schnellspeichern festgelegt**. Klicken Sie auf **Einrichten**, oder öffnen Sie **Tastenkürzel** unter **Speichern & Suche** in den [Einstellungen](/settings#quick-save), und wählen Sie andere Tasten. Auf Seiten, auf denen Erweiterungen nichts anzeigen können, etwa den eigenen Seiten des Browsers, zeigt das Symbol in der Symbolleiste das Ergebnis statt einer Benachrichtigung. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save).
 
 ### Meine Einstellungen sind nach einem Update verschwunden [#my-settings-are-gone-after-an-update]
 

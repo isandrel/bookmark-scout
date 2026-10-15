@@ -79,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Jede Seite in Sekunden im richtigen Ordner speichern.",
-      "description": "Geben Sie einen Teil eines Ordnernamens ein oder drücken Sie auf einer beliebigen Seite Alt+Shift+S, und die Seite wird in dem Ordner gespeichert, in den sie gehört. Optionale KI kann den Ordner ebenfalls vorschlagen. Bookmark Scout durchsucht außerdem Ihre vorhandenen Lesezeichen und räumt sie auf, in Chrome, Edge und Firefox, ohne Konto und ohne eigenen Server.",
+      "description": "Geben Sie einen Teil eines Ordnernamens ein oder drücken Sie auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}}, und die Seite wird in dem Ordner gespeichert, in den sie gehört. Optionale KI kann den Ordner ebenfalls vorschlagen. Bookmark Scout durchsucht außerdem Ihre vorhandenen Lesezeichen und räumt sie auf, in Chrome, Edge und Firefox, ohne Konto und ohne eigenen Server.",
       "download": "Von GitHub herunterladen",
       "install": "Bookmark Scout installieren",
       "docs": "Dokumentation lesen",
@@ -137,10 +137,10 @@
         "points": [
           "Einen Teil eines Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen",
           "Einen Pfad wie work/react eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
-          "Auf einer beliebigen Seite Alt+Shift+S drücken, um sie im am besten passenden Ordner zu speichern; eine kleine Benachrichtigung auf der Seite bietet Rückgängig und weitere Ordner an",
+          "Auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}} drücken, um sie im am besten passenden Ordner zu speichern; eine kleine Benachrichtigung auf der Seite bietet Rückgängig und weitere Ordner an",
           "Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert, und Ordner, in denen Sie zuletzt gespeichert haben, stehen oben",
           "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern",
-          "Mit aktivierter KI Ordnervorschläge für die Seite erhalten oder mit Alt+Shift+D im ersten Vorschlag speichern"
+          "Mit aktivierter KI Ordnervorschläge für die Seite erhalten oder mit {{SHORTCUT:commands.ai-quick-save}} im ersten Vorschlag speichern"
         ]
       },
       "organize": {
@@ -153,7 +153,7 @@
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche als intelligente Ansicht speichern, die immer aktuelle Ergebnisse zeigt",
           "Zeilen mit Shift und Ctrl auswählen, per Rechtsklick ausschneiden, kopieren, einfügen und alle öffnen, und Zeilen, Ordner und Links dorthin ziehen, wo sie hingehören",
-          "Änderungen mit Ctrl+Z und Ctrl+Y rückgängig machen und wiederholen, auch nach einem Neuladen",
+          "Änderungen mit {{SHORTCUT:manager.undo}} und {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} und {{SHORTCUT_MAC:manager.redo}} auf dem Mac) rückgängig machen und wiederholen, auch nach einem Neuladen",
           "HTML oder JSON nach einer Vorschau importieren und als HTML, JSON, Markdown oder CSV exportieren",
           "Auf einen Ordner oder eine Suche verlinken und sich mit der Tastatur durch alles bewegen"
         ]
@@ -299,7 +299,7 @@
         },
         "changes": {
           "q": "Ändert die Erweiterung meine Lesezeichen ohne Nachfrage?",
-          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. „KI fragen“ und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Vor dem Löschen wird standardmäßig nachgefragt, und der Lesezeichen-Manager kann Änderungen mit Ctrl+Z rückgängig machen."
+          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. „KI fragen“ und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Vor dem Löschen wird standardmäßig nachgefragt, und der Lesezeichen-Manager kann Änderungen mit {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} auf dem Mac) rückgängig machen."
         },
         "firefox": {
           "q": "Funktioniert sie in Firefox?",

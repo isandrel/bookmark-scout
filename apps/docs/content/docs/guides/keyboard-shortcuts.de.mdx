@@ -3,16 +3,16 @@ title: Tastenkombinationen
 description: Suchen, durch Ordner navigieren, die aktuelle Seite speichern und die Tabelle des Managers ohne Maus bedienen.
 ---
 
-Tastenkombinationen im Pop-up und in der Seitenleiste verwenden nie `Ctrl` oder `Cmd`, sodass Browser-Tastenkombinationen wie `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` und `D` weiter funktionieren. Der Lesezeichen-Manager ersetzt den des Browsers und übernimmt daher auch dessen `Ctrl`-Tastenkombinationen (`Cmd` auf einem Mac): alles auswählen, kopieren, ausschneiden, einfügen, rückgängig machen, wiederholen und in neuen Tabs öffnen. Tastenkombinationen pausieren, während Sie in ein Textfeld tippen (`Esc` im Suchfeld ist die Ausnahme), während eine Eingabemethode Text zusammensetzt und während ein Dialog oder Menü geöffnet ist.
+Tastenkombinationen im Pop-up und in der Seitenleiste verwenden nie `Ctrl` oder `Cmd`, sodass die eigenen Tastenkombinationen des Browsers mit diesen Tasten, etwa zum Öffnen eines neuen Tabs oder der Adressleiste, weiter funktionieren. Der Lesezeichen-Manager ersetzt den des Browsers und übernimmt daher auch dessen `Ctrl`-Tastenkombinationen (`Cmd` auf einem Mac): alles auswählen, kopieren, ausschneiden, einfügen, rückgängig machen, wiederholen und in neuen Tabs öffnen. Tastenkombinationen pausieren, während Sie in ein Textfeld tippen (`Esc` im Suchfeld ist die Ausnahme), während eine Eingabemethode Text zusammensetzt und während ein Dialog oder Menü geöffnet ist.
 
 ## Auf jeder Seite [#on-any-page]
 
-Diese funktionieren, ohne dass ein Fenster von Bookmark Scout geöffnet ist. Sie gehören Ihrem Browser, daher können Sie sie in dessen Tastenkürzel-Einstellungen ändern oder entfernen; siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save). In Chrome und Edge können Sie dem Schnellspeichern auch die Lesezeichentaste des Browsers zuweisen, `Ctrl+D` (`⌘D` auf einem Mac); siehe [Ctrl+D zum Schnellspeichern verwenden](/guides/save-and-organize#ctrl-d).
+Diese funktionieren, ohne dass ein Fenster von Bookmark Scout geöffnet ist. Sie gehören Ihrem Browser, daher können Sie sie in dessen Tastenkürzel-Einstellungen ändern oder entfernen; siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save). In Chrome und Edge können Sie dem Schnellspeichern auch die Lesezeichentaste des Browsers zuweisen, <Shortcut id="browser.bookmark_page" />; siehe [Die Lesezeichentaste zum Schnellspeichern verwenden](/guides/save-and-organize#ctrl-d).
 
 | Taste | Aktion |
 | --- | --- |
-| `Alt+Shift+S` (`⌥⇧S` auf einem Mac) | Die aktuelle Seite schnell in dem Ordner aus **Ordner für Schnellspeichern** speichern |
-| `Alt+Shift+D` (`⌥⇧D` auf einem Mac) | Die aktuelle Seite schnell in dem Ordner speichern, den die KI vorschlägt |
+| <Shortcut id="commands.quick-save" /> | Die aktuelle Seite schnell in dem Ordner aus **Ordner für Schnellspeichern** speichern |
+| <Shortcut id="commands.ai-quick-save" /> | Die aktuelle Seite schnell in dem Ordner speichern, den die KI vorschlägt |
 
 In der anschließenden Benachrichtigung erreicht `Tab` **Rückgängig** und die anderen Ordner, und `Esc` schließt sie.
 
@@ -22,10 +22,10 @@ Bewegen Sie den Mauszeiger auf das Suchfeld, um eine Kurzübersicht zu sehen.
 
 | Taste | Aktion |
 | --- | --- |
-| `/` | Suchfeld fokussieren |
+| <Shortcut id="popup.focus_search" /> | Suchfeld fokussieren |
 | `Esc` im Suchfeld | Suche löschen; erneut drücken, um das Feld zu verlassen |
 | `↓` im Suchfeld | Zum ersten Ordner wechseln |
-| `Alt+↓` im leeren Suchfeld | Letzte Suchen anzeigen; mit `↓` / `↑` eine auswählen, mit `Enter` danach suchen, mit `Tab` zu **Löschen** gelangen |
+| <Shortcut id="popup.recent_searches" /> im leeren Suchfeld | Letzte Suchen anzeigen; mit `↓` / `↑` eine auswählen, mit `Enter` danach suchen, mit `Tab` zu **Löschen** gelangen |
 | `↓` / `↑`, `Home` / `End` | Zwischen sichtbaren Ordnern und Lesezeichen wechseln (`↑` in der ersten Zeile kehrt zur Suche zurück) |
 | `→` / `←` | Ordner öffnen oder schließen; bei einem geöffneten Ordner wechselt `→` zum ersten Element und `←` zum übergeordneten Ordner |
 | `Enter` auf einem Ordner | Aktuelle Seite in diesem Ordner speichern (eine dort bereits gespeicherte Seite wird nicht doppelt angelegt) |
@@ -34,30 +34,30 @@ Bewegen Sie den Mauszeiger auf das Suchfeld, um eine Kurzübersicht zu sehen.
 
 ## Lesezeichen-Manager [#bookmarks-manager]
 
-Drücken Sie `?` oder klicken Sie auf die Tastatur-Schaltfläche in der Kopfzeile, um diese Liste im Manager anzuzeigen. Die Tasten folgen dem Lesezeichen-Manager von Chrome; wo ein Mac abweicht, steht seine Taste an zweiter Stelle.
+Drücken Sie <Shortcut id="manager.show_help" /> oder klicken Sie auf die Tastatur-Schaltfläche in der Kopfzeile, um diese Liste im Manager anzuzeigen. Die Tasten folgen dem Lesezeichen-Manager von Chrome.
 
 | Taste | Aktion |
 | --- | --- |
-| `/` | Titelfilter fokussieren |
-| `Backspace` oder `Alt+↑` | Zum übergeordneten Ordner wechseln |
-| `↓` / `↑`, `Home` / `End` | Zwischen Zeilen wechseln und die Zeile auswählen; mit `Shift` die Auswahl erweitern; mit `Ctrl` (`Cmd`) wechseln, ohne auszuwählen |
-| `j` / `k` | Zur nächsten oder vorherigen Zeile wechseln |
+| <Shortcut id="manager.focus_filter" /> | Titelfilter fokussieren |
+| <Shortcut id="manager.parent_folder" /> | Zum übergeordneten Ordner wechseln |
+| `↓` / `↑`, `Home` / `End` | Zwischen Zeilen wechseln und die Zeile auswählen; mit `Shift` die Auswahl erweitern; mit `Ctrl` (`Cmd` auf einem Mac) wechseln, ohne auszuwählen |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | Zur nächsten oder vorherigen Zeile wechseln |
 | `Space` | Die fokussierte Zeile auswählen oder die Auswahl aufheben |
-| `Ctrl+A` / `Cmd+A` | Jede Zeile auswählen, die die Filter zeigen, auf jeder Seite |
-| `Esc` | Auswahl aufheben oder einen Dialog oder ein Menü schließen |
-| `Enter` / `Cmd+O` | Den ausgewählten Ordner oder die ausgewählten Lesezeichen in Tabs öffnen |
-| `Ctrl+Enter` / `Cmd+Enter` | Die Auswahl in neuen Hintergrund-Tabs öffnen |
-| `Shift+Enter` | Die Auswahl in einem neuen Fenster öffnen |
-| `F2` / `Enter` | Das ausgewählte Lesezeichen bearbeiten oder den Ordner umbenennen |
-| `Delete` / `Delete` oder `Cmd+Backspace` | Die Auswahl löschen |
-| `Ctrl+Z` / `Cmd+Z` | Die letzte Änderung rückgängig machen |
-| `Ctrl+Y` oder `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Wiederholen |
-| `Ctrl+C` / `Cmd+C` | Die Auswahl kopieren; ihre URLs kommen in die Zwischenablage |
-| `Ctrl+X` / `Cmd+X` | Die Auswahl ausschneiden, um sie mit Einfügen zu verschieben |
-| `Ctrl+V` / `Cmd+V` | Nach der Auswahl oder am Ende des Ordners einfügen; in einer anderen App kopierte URLs werden zu Lesezeichen |
-| `s` | Gespeicherte Suchen öffnen |
-| `?` | Tastenkombinationen anzeigen |
-| Menütaste oder `Shift+F10` | Das Rechtsklickmenü für die fokussierte Zeile oder den fokussierten Ordner öffnen |
+| <Shortcut id="manager.select_all" /> | Jede Zeile auswählen, die die Filter zeigen, auf jeder Seite |
+| <Shortcut id="manager.clear_selection" /> | Auswahl aufheben oder einen Dialog oder ein Menü schließen |
+| <Shortcut id="manager.open" /> | Den ausgewählten Ordner oder die ausgewählten Lesezeichen in Tabs öffnen |
+| <Shortcut id="manager.open_in_new_tabs" /> | Die Auswahl in neuen Hintergrund-Tabs öffnen |
+| <Shortcut id="manager.open_in_new_window" /> | Die Auswahl in einem neuen Fenster öffnen |
+| <Shortcut id="manager.rename" /> | Das ausgewählte Lesezeichen bearbeiten oder den Ordner umbenennen |
+| <Shortcut id="manager.delete" /> | Die Auswahl löschen |
+| <Shortcut id="manager.undo" /> | Die letzte Änderung rückgängig machen |
+| <Shortcut id="manager.redo" /> | Wiederholen |
+| <Shortcut id="manager.copy" /> | Die Auswahl kopieren; ihre URLs kommen in die Zwischenablage |
+| <Shortcut id="manager.cut" /> | Die Auswahl ausschneiden, um sie mit Einfügen zu verschieben |
+| <Shortcut id="manager.paste" /> | Nach der Auswahl oder am Ende des Ordners einfügen; in einer anderen App kopierte URLs werden zu Lesezeichen |
+| <Shortcut id="manager.open_saved_searches" /> | Gespeicherte Suchen öffnen |
+| <Shortcut id="manager.show_help" /> | Tastenkombinationen anzeigen |
+| Menütaste oder <Shortcut id="browser.context_menu" /> | Das Rechtsklickmenü für die fokussierte Zeile oder den fokussierten Ordner öffnen |
 
 Im Ordnerbaum links, der ebenfalls ein einziger `Tab`-Stopp ist:
 
@@ -65,11 +65,11 @@ Im Ordnerbaum links, der ebenfalls ein einziger `Tab`-Stopp ist:
 | --- | --- |
 | `↓` / `↑`, `Home` / `End` | Zwischen den angezeigten Ordnern wechseln |
 | `→` / `←` | Ordner öffnen oder schließen; bei einem geöffneten Ordner wechselt `→` zum ersten Unterordner, bei einem geschlossenen wechselt `←` zum übergeordneten Ordner |
-| `Enter` oder `Space` / `Cmd+O` oder `Space` | Den Ordner in der Tabelle anzeigen |
-| `F2` / `Enter` | Den Ordner umbenennen |
-| `Delete` / `Delete` oder `Cmd+Backspace` | Den Ordner löschen |
-| `Ctrl+C`, `Ctrl+X` / `Cmd+C`, `Cmd+X` | Den Ordner kopieren oder ausschneiden |
-| `Ctrl+V` / `Cmd+V` | In den Ordner einfügen |
+| <Shortcut id="manager.open" /> oder `Space` | Den Ordner in der Tabelle anzeigen |
+| <Shortcut id="manager.rename" /> | Den Ordner umbenennen |
+| <Shortcut id="manager.delete" /> | Den Ordner löschen |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | Den Ordner kopieren oder ausschneiden |
+| <Shortcut id="manager.paste" /> | In den Ordner einfügen |
 
 Die Tabelle ist ein einziger Stopp, wenn Sie `Tab` drücken; die Pfeiltasten wechseln zwischen ihren Zeilen. Wenn mehr als 15 Tabs auf einmal geöffnet werden sollen, wird zuerst nachgefragt; ein Ordner öffnet die Lesezeichen, die direkt darin liegen. Fokussieren Sie in der Tabelle den Rand einer Spaltenüberschrift und drücken Sie `←` oder `→`, um die Breite dieser Spalte zu ändern.
 

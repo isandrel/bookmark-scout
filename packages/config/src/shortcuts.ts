@@ -280,8 +280,36 @@ export function isSameOnEveryPlatform(text: ShortcutText): boolean {
 }
 
 /**
+ * One way to press a shortcut as text, for a placeholder argument `<id>` or `<id>#<n>` (the n-th
+ * way, from 1; the first by default): `commands.quick-save` gives `Alt+Shift+S`, or `⌥⇧S` on a Mac.
+ */
+export function shortcutPlaceholderText(config: ShortcutConfig, argument: string, platform: ShortcutPlatform): string {
+	const [id = "", position = "1"] = argument.split("#");
+	const ways = shortcutText(config, id)[platform];
+	const index = Number(position) - 1;
+	const keys = ways[index];
+	if (!Number.isInteger(index) || keys === undefined) {
+		throw new Error(`Shortcut "${id}" has no way ${position} on ${platform}; it has ${ways.length}`);
+	}
+	return keys;
+}
+
+/**
+ * `{{SHORTCUT:<id>}}` and `{{SHORTCUT_MAC:<id>}}` (optionally `<id>#<n>`) in website messages and
+ * README templates: the shortcut's keys elsewhere and on a Mac.
+ */
+export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(_MAC)?:([A-Za-z0-9_.#-]+)\}\}/g;
+
+/** Replaces every shortcut placeholder in `text`; throws for an unknown shortcut. */
+export function fillShortcutPlaceholders(text: string, config: ShortcutConfig): string {
+	return text.replace(SHORTCUT_PLACEHOLDER, (_match, mac: string | undefined, argument: string) =>
+		shortcutPlaceholderText(config, argument, mac ? "mac" : "other"),
+	);
+}
+
+/**
  * Text that looks like a typed key combination (`Alt+Shift+S`, `⌘⇧Z`, `Ctrl+Y`), for checks that
  * no document spells a shortcut out by hand. Mouse combinations (`Ctrl+click`) do not match.
  */
 export const SHORTCUT_LITERAL =
-	/(?:\b(?:Ctrl|Control|Alt|Shift|Cmd|Command|Option|Opt)\+(?!click|drag|scroll)[^\s,.;:)`'"*]+|[⌘⌥⇧⌃]+(?:[A-Za-z0-9]\b|[↑↓←→⌫⌦↩↵]|F\d{1,2}))/g;
+	/(?:\b(?:(?:Ctrl|Control|Alt|Shift|Cmd|Command|Option|Opt)\+)+(?:F\d{1,2}(?![0-9])|Enter|Backspace|Delete|Space|Tab|Esc|Escape|Home|End|PageUp|PageDown|[↑↓←→]|[A-Za-z0-9](?![A-Za-z0-9]))|[⌘⌥⇧⌃]+(?:F\d{1,2}|[↑↓←→⌫⌦↩↵]|[A-Za-z0-9](?![A-Za-z0-9])))/g;

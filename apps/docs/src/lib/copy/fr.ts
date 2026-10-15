@@ -43,6 +43,11 @@ export const fr: DocsCopy = {
       `Aucune page ne correspond à « ${query} ». Essayez avec moins de mots, ou utilisez Rechercher en haut de la page pour chercher dans le contenu de toutes les pages.`,
   },
 
+  shortcut: {
+    or: " ou ",
+    mac: " ({keys} sur Mac)",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated:

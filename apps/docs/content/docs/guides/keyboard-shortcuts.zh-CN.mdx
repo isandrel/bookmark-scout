@@ -3,16 +3,16 @@ title: 键盘快捷键
 description: 无需鼠标即可搜索、在文件夹间移动、保存当前网页以及操作书签管理器中的表格。
 ---
 
-弹出窗口和侧边栏中的快捷键从不使用 `Ctrl` 或 `Cmd`，因此 `Ctrl/Cmd+L`、`T`、`W`、`N`、`R` 和 `D` 等浏览器快捷键仍可正常使用。书签管理器取代了浏览器自带的书签管理器，因此也沿用了它的 `Ctrl` 快捷键（在 Mac 上为 `Cmd`）：全选、复制、剪切、粘贴、撤消、重做和在新标签页中打开。在文本框中输入文字时（搜索框中的 `Esc` 除外）、输入法正在组字时，以及对话框或菜单打开时，这些快捷键会暂停。
+弹出窗口和侧边栏中的快捷键从不使用 `Ctrl` 或 `Cmd`，因此浏览器自带的使用这些按键的快捷键（例如打开新标签页或地址栏）仍可正常使用。书签管理器取代了浏览器自带的书签管理器，因此也沿用了它的 `Ctrl` 快捷键（在 Mac 上为 `Cmd`）：全选、复制、剪切、粘贴、撤消、重做和在新标签页中打开。在文本框中输入文字时（搜索框中的 `Esc` 除外）、输入法正在组字时，以及对话框或菜单打开时，这些快捷键会暂停。
 
 ## 在任意网页上 [#on-any-page]
 
-这些快捷键无需打开任何 Bookmark Scout 窗口即可使用。它们由浏览器管理，因此可以在浏览器的快捷键设置中更改或移除；请参阅[用键盘快捷键保存](/guides/save-and-organize#quick-save)。在 Chrome 和 Edge 中，还可以将浏览器的书签按键 `Ctrl+D`（在 Mac 上为 `⌘D`）分配给快速保存；请参阅[用 Ctrl+D 快速保存](/guides/save-and-organize#ctrl-d)。
+这些快捷键无需打开任何 Bookmark Scout 窗口即可使用。它们由浏览器管理，因此可以在浏览器的快捷键设置中更改或移除；请参阅[用键盘快捷键保存](/guides/save-and-organize#quick-save)。在 Chrome 和 Edge 中，还可以将浏览器的书签按键 <Shortcut id="browser.bookmark_page" /> 分配给快速保存；请参阅[用书签键快速保存](/guides/save-and-organize#ctrl-d)。
 
 | 按键 | 操作 |
 | --- | --- |
-| `Alt+Shift+S`（在 Mac 上为 `⌥⇧S`） | 将当前网页快速保存到**快速保存文件夹**所定的文件夹 |
-| `Alt+Shift+D`（在 Mac 上为 `⌥⇧D`） | 将当前网页快速保存到 AI 建议的文件夹 |
+| <Shortcut id="commands.quick-save" /> | 将当前网页快速保存到**快速保存文件夹**所定的文件夹 |
+| <Shortcut id="commands.ai-quick-save" /> | 将当前网页快速保存到 AI 建议的文件夹 |
 
 在随后出现的通知中，按 `Tab` 可移到**撤消**和其他文件夹，按 `Esc` 可关闭通知。
 
@@ -22,10 +22,10 @@ description: 无需鼠标即可搜索、在文件夹间移动、保存当前网�
 
 | 按键 | 操作 |
 | --- | --- |
-| `/` | 将焦点移到搜索框 |
+| <Shortcut id="popup.focus_search" /> | 将焦点移到搜索框 |
 | 在搜索框中按 `Esc` | 清空搜索；再按一次离开搜索框 |
 | 在搜索框中按 `↓` | 移到第一个文件夹 |
-| 在空白搜索框中按 `Alt+↓` | 显示最近的搜索；用 `↓` / `↑` 选择，按 `Enter` 进行搜索，按 `Tab` 移到**清除** |
+| 在空白搜索框中按 <Shortcut id="popup.recent_searches" /> | 显示最近的搜索；用 `↓` / `↑` 选择，按 `Enter` 进行搜索，按 `Tab` 移到**清除** |
 | `↓` / `↑`、`Home` / `End` | 在可见的文件夹和书签之间移动（在第一行按 `↑` 会返回搜索框） |
 | `→` / `←` | 展开或折叠文件夹；在已展开的文件夹上，按 `→` 移到其第一项，按 `←` 移到上级文件夹 |
 | 在文件夹上按 `Enter` | 将当前网页保存到该文件夹（已保存在该文件夹中的网页不会重复保存） |
@@ -34,30 +34,30 @@ description: 无需鼠标即可搜索、在文件夹间移动、保存当前网�
 
 ## 书签管理器 [#bookmarks-manager]
 
-在书签管理器中按 `?`，或点击顶部的键盘按钮，即可查看此列表。按键与 Chrome 书签管理器一致；Mac 上按键不同时，Mac 的按键列在斜杠后面。
+在书签管理器中按 <Shortcut id="manager.show_help" />，或点击顶部的键盘按钮，即可查看此列表。按键与 Chrome 书签管理器一致。
 
 | 按键 | 操作 |
 | --- | --- |
-| `/` | 将焦点移到标题筛选器 |
-| `Backspace` 或 `Alt+↑` | 转到上级文件夹 |
-| `↓` / `↑`、`Home` / `End` | 在行之间移动并选中该行；按住 `Shift` 可扩展选择；按住 `Ctrl`（`Cmd`）则只移动、不选择 |
-| `j` / `k` | 移到下一行或上一行 |
+| <Shortcut id="manager.focus_filter" /> | 将焦点移到标题筛选器 |
+| <Shortcut id="manager.parent_folder" /> | 转到上级文件夹 |
+| `↓` / `↑`、`Home` / `End` | 在行之间移动并选中该行；按住 `Shift` 可扩展选择；按住 `Ctrl`（在 Mac 上为 `Cmd`）则只移动、不选择 |
+| <Shortcut id="manager.next_row" />、<Shortcut id="manager.previous_row" /> | 移到下一行或上一行 |
 | `Space` | 选中或取消选中当前聚焦的行 |
-| `Ctrl+A` / `Cmd+A` | 选中筛选器显示的所有行（包括所有分页） |
-| `Esc` | 清除选择，或关闭对话框或菜单 |
-| `Enter` / `Cmd+O` | 打开选中的文件夹，或在标签页中打开选中的书签 |
-| `Ctrl+Enter` / `Cmd+Enter` | 在新的后台标签页中打开所选内容 |
-| `Shift+Enter` | 在新窗口中打开所选内容 |
-| `F2` / `Enter` | 修改选中的书签，或重命名文件夹 |
-| `Delete` / `Delete` 或 `Cmd+Backspace` | 删除所选内容 |
-| `Ctrl+Z` / `Cmd+Z` | 撤消上一项更改 |
-| `Ctrl+Y` 或 `Ctrl+Shift+Z` / `Cmd+Shift+Z` | 重做 |
-| `Ctrl+C` / `Cmd+C` | 复制所选内容；其网址会放到剪贴板上 |
-| `Ctrl+X` / `Cmd+X` | 剪切所选内容，以便通过粘贴移动它 |
-| `Ctrl+V` / `Cmd+V` | 粘贴到所选内容之后，或粘贴到文件夹末尾；在其他应用中复制的网址会变成书签 |
-| `s` | 打开已保存的搜索 |
-| `?` | 显示键盘快捷键 |
-| 菜单键或 `Shift+F10` | 为当前聚焦的行或文件夹打开右键菜单 |
+| <Shortcut id="manager.select_all" /> | 选中筛选器显示的所有行（包括所有分页） |
+| <Shortcut id="manager.clear_selection" /> | 清除选择，或关闭对话框或菜单 |
+| <Shortcut id="manager.open" /> | 打开选中的文件夹，或在标签页中打开选中的书签 |
+| <Shortcut id="manager.open_in_new_tabs" /> | 在新的后台标签页中打开所选内容 |
+| <Shortcut id="manager.open_in_new_window" /> | 在新窗口中打开所选内容 |
+| <Shortcut id="manager.rename" /> | 修改选中的书签，或重命名文件夹 |
+| <Shortcut id="manager.delete" /> | 删除所选内容 |
+| <Shortcut id="manager.undo" /> | 撤消上一项更改 |
+| <Shortcut id="manager.redo" /> | 重做 |
+| <Shortcut id="manager.copy" /> | 复制所选内容；其网址会放到剪贴板上 |
+| <Shortcut id="manager.cut" /> | 剪切所选内容，以便通过粘贴移动它 |
+| <Shortcut id="manager.paste" /> | 粘贴到所选内容之后，或粘贴到文件夹末尾；在其他应用中复制的网址会变成书签 |
+| <Shortcut id="manager.open_saved_searches" /> | 打开已保存的搜索 |
+| <Shortcut id="manager.show_help" /> | 显示键盘快捷键 |
+| 菜单键或 <Shortcut id="browser.context_menu" /> | 为当前聚焦的行或文件夹打开右键菜单 |
 
 左侧的文件夹树也是一个 `Tab` 停靠点，其中可使用：
 
@@ -65,11 +65,11 @@ description: 无需鼠标即可搜索、在文件夹间移动、保存当前网�
 | --- | --- |
 | `↓` / `↑`、`Home` / `End` | 在显示的文件夹之间移动 |
 | `→` / `←` | 展开或折叠文件夹；在已展开的文件夹上，按 `→` 移到其第一个子文件夹，在已折叠的文件夹上，按 `←` 移到上级文件夹 |
-| `Enter` 或 `Space` / `Cmd+O` 或 `Space` | 在表格中显示该文件夹 |
-| `F2` / `Enter` | 重命名该文件夹 |
-| `Delete` / `Delete` 或 `Cmd+Backspace` | 删除该文件夹 |
-| `Ctrl+C`、`Ctrl+X` / `Cmd+C`、`Cmd+X` | 复制或剪切该文件夹 |
-| `Ctrl+V` / `Cmd+V` | 粘贴到该文件夹中 |
+| <Shortcut id="manager.open" />，或 `Space` | 在表格中显示该文件夹 |
+| <Shortcut id="manager.rename" /> | 重命名该文件夹 |
+| <Shortcut id="manager.delete" /> | 删除该文件夹 |
+| <Shortcut id="manager.copy" />、<Shortcut id="manager.cut" /> | 复制或剪切该文件夹 |
+| <Shortcut id="manager.paste" /> | 粘贴到该文件夹中 |
 
 按 `Tab` 时，表格是一个停靠点；方向键可在其行之间移动。一次打开超过 15 个标签页时会先询问；打开文件夹会打开其中直接包含的书签。在表格中，将焦点移到列标题的边缘，然后按 `←` 或 `→` 即可调整该列的宽度。
 

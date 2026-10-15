@@ -3,16 +3,16 @@ title: Combinaciones de teclas
 description: Busca, recorre las carpetas, guarda la página actual y maneja la tabla del administrador sin el ratón.
 ---
 
-Las combinaciones de teclas de la ventana emergente y el panel lateral nunca usan `Ctrl` ni `Cmd`, así que los atajos del navegador como `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` y `D` siguen funcionando. El administrador de marcadores reemplaza al del navegador, así que también adopta las combinaciones con `Ctrl` de ese administrador (`Cmd` en un Mac): seleccionar todo, copiar, cortar, pegar, deshacer, rehacer y abrir en pestañas nuevas. Las combinaciones de teclas se pausan mientras escribes en un campo de texto (`Esc` en el cuadro de búsqueda es la excepción), mientras un editor de métodos de entrada está componiendo texto y mientras hay un diálogo o un menú abierto.
+Las combinaciones de teclas de la ventana emergente y el panel lateral nunca usan `Ctrl` ni `Cmd`, así que los atajos propios del navegador con esas teclas, como abrir una pestaña nueva o la barra de direcciones, siguen funcionando. El administrador de marcadores reemplaza al del navegador, así que también adopta las combinaciones con `Ctrl` de ese administrador (`Cmd` en un Mac): seleccionar todo, copiar, cortar, pegar, deshacer, rehacer y abrir en pestañas nuevas. Las combinaciones de teclas se pausan mientras escribes en un campo de texto (`Esc` en el cuadro de búsqueda es la excepción), mientras un editor de métodos de entrada está componiendo texto y mientras hay un diálogo o un menú abierto.
 
 ## En cualquier página [#on-any-page]
 
-Funcionan sin ninguna ventana de Bookmark Scout abierta. Pertenecen al navegador, así que puedes cambiarlas o quitarlas en su configuración de atajos; consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save). En Chrome y Edge también puedes asignar al guardado rápido la tecla de marcadores del navegador, `Ctrl+D` (`⌘D` en un Mac); consulta [Usar Ctrl+D para el guardado rápido](/guides/save-and-organize#ctrl-d).
+Funcionan sin ninguna ventana de Bookmark Scout abierta. Pertenecen al navegador, así que puedes cambiarlas o quitarlas en su configuración de atajos; consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save). En Chrome y Edge también puedes asignar al guardado rápido la tecla de marcadores del navegador, <Shortcut id="browser.bookmark_page" />; consulta [Usar la tecla de marcadores para el guardado rápido](/guides/save-and-organize#ctrl-d).
 
 | Tecla | Acción |
 | --- | --- |
-| `Alt+Shift+S` (`⌥⇧S` en un Mac) | Guardado rápido de la página actual en la carpeta que indica **Carpeta de guardado rápido** |
-| `Alt+Shift+D` (`⌥⇧D` en un Mac) | Guardado rápido de la página actual en la carpeta que sugiere la IA |
+| <Shortcut id="commands.quick-save" /> | Guardado rápido de la página actual en la carpeta que indica **Carpeta de guardado rápido** |
+| <Shortcut id="commands.ai-quick-save" /> | Guardado rápido de la página actual en la carpeta que sugiere la IA |
 
 En la notificación que aparece después, `Tab` llega a **Deshacer** y a las demás carpetas, y `Esc` la cierra.
 
@@ -22,10 +22,10 @@ Coloca el puntero sobre el cuadro de búsqueda para ver un recordatorio.
 
 | Tecla | Acción |
 | --- | --- |
-| `/` | Ir al cuadro de búsqueda |
+| <Shortcut id="popup.focus_search" /> | Ir al cuadro de búsqueda |
 | `Esc` en el cuadro de búsqueda | Borrar la búsqueda; púlsala otra vez para salir del cuadro |
 | `↓` en el cuadro de búsqueda | Ir a la primera carpeta |
-| `Alt+↓` en el cuadro de búsqueda vacío | Mostrar las búsquedas recientes; `↓` / `↑` eligen una, `Enter` la busca y `Tab` llega a **Borrar** |
+| <Shortcut id="popup.recent_searches" /> en el cuadro de búsqueda vacío | Mostrar las búsquedas recientes; `↓` / `↑` eligen una, `Enter` la busca y `Tab` llega a **Borrar** |
 | `↓` / `↑`, `Home` / `End` | Moverse entre las carpetas y los marcadores visibles (`↑` en la primera fila vuelve a la búsqueda) |
 | `→` / `←` | Abrir o cerrar una carpeta; en una carpeta abierta, `→` va a su primer elemento y `←` va a la carpeta superior |
 | `Enter` en una carpeta | Guardar la página actual en esa carpeta (una página que ya está guardada allí no se duplica) |
@@ -34,30 +34,30 @@ Coloca el puntero sobre el cuadro de búsqueda para ver un recordatorio.
 
 ## Administrador de marcadores [#bookmarks-manager]
 
-Pulsa `?`, o haz clic en el botón del teclado del encabezado, para ver esta lista en el administrador. Las teclas siguen las del administrador de marcadores de Chrome; cuando en un Mac son distintas, la tecla del Mac va en segundo lugar.
+Pulsa <Shortcut id="manager.show_help" />, o haz clic en el botón del teclado del encabezado, para ver esta lista en el administrador. Las teclas siguen las del administrador de marcadores de Chrome.
 
 | Tecla | Acción |
 | --- | --- |
-| `/` | Ir al filtro de títulos |
-| `Backspace` o `Alt+↑` | Ir a la carpeta superior |
-| `↓` / `↑`, `Home` / `End` | Moverse entre las filas y seleccionar la fila; con `Shift`, ampliar la selección; con `Ctrl` (`Cmd`), moverse sin seleccionar |
-| `j` / `k` | Ir a la fila siguiente o anterior |
+| <Shortcut id="manager.focus_filter" /> | Ir al filtro de títulos |
+| <Shortcut id="manager.parent_folder" /> | Ir a la carpeta superior |
+| `↓` / `↑`, `Home` / `End` | Moverse entre las filas y seleccionar la fila; con `Shift`, ampliar la selección; con `Ctrl` (`Cmd` en un Mac), moverse sin seleccionar |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | Ir a la fila siguiente o anterior |
 | `Space` | Seleccionar o deseleccionar la fila enfocada |
-| `Ctrl+A` / `Cmd+A` | Seleccionar todas las filas que muestran los filtros, en todas las páginas |
-| `Esc` | Borrar la selección, o cerrar un diálogo o un menú |
-| `Enter` / `Cmd+O` | Abrir la carpeta seleccionada, o los marcadores seleccionados en pestañas |
-| `Ctrl+Enter` / `Cmd+Enter` | Abrir la selección en pestañas nuevas en segundo plano |
-| `Shift+Enter` | Abrir la selección en una ventana nueva |
-| `F2` / `Enter` | Editar el marcador seleccionado o cambiar el nombre de la carpeta |
-| `Delete` / `Delete` o `Cmd+Backspace` | Eliminar la selección |
-| `Ctrl+Z` / `Cmd+Z` | Deshacer el último cambio |
-| `Ctrl+Y` o `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Rehacer |
-| `Ctrl+C` / `Cmd+C` | Copiar la selección; sus URLs van al portapapeles |
-| `Ctrl+X` / `Cmd+X` | Cortar la selección, para moverla al pegar |
-| `Ctrl+V` / `Cmd+V` | Pegar después de la selección, o al final de la carpeta; las URLs copiadas en otra aplicación se convierten en marcadores |
-| `s` | Abrir las búsquedas guardadas |
-| `?` | Mostrar las combinaciones de teclas |
-| Tecla de menú o `Shift+F10` | Abrir el menú contextual de la fila o carpeta enfocada |
+| <Shortcut id="manager.select_all" /> | Seleccionar todas las filas que muestran los filtros, en todas las páginas |
+| <Shortcut id="manager.clear_selection" /> | Borrar la selección, o cerrar un diálogo o un menú |
+| <Shortcut id="manager.open" /> | Abrir la carpeta seleccionada, o los marcadores seleccionados en pestañas |
+| <Shortcut id="manager.open_in_new_tabs" /> | Abrir la selección en pestañas nuevas en segundo plano |
+| <Shortcut id="manager.open_in_new_window" /> | Abrir la selección en una ventana nueva |
+| <Shortcut id="manager.rename" /> | Editar el marcador seleccionado o cambiar el nombre de la carpeta |
+| <Shortcut id="manager.delete" /> | Eliminar la selección |
+| <Shortcut id="manager.undo" /> | Deshacer el último cambio |
+| <Shortcut id="manager.redo" /> | Rehacer |
+| <Shortcut id="manager.copy" /> | Copiar la selección; sus URLs van al portapapeles |
+| <Shortcut id="manager.cut" /> | Cortar la selección, para moverla al pegar |
+| <Shortcut id="manager.paste" /> | Pegar después de la selección, o al final de la carpeta; las URLs copiadas en otra aplicación se convierten en marcadores |
+| <Shortcut id="manager.open_saved_searches" /> | Abrir las búsquedas guardadas |
+| <Shortcut id="manager.show_help" /> | Mostrar las combinaciones de teclas |
+| Tecla de menú o <Shortcut id="browser.context_menu" /> | Abrir el menú contextual de la fila o carpeta enfocada |
 
 En el árbol de carpetas de la izquierda, que también es una sola parada de `Tab`:
 
@@ -65,11 +65,11 @@ En el árbol de carpetas de la izquierda, que también es una sola parada de `Ta
 | --- | --- |
 | `↓` / `↑`, `Home` / `End` | Moverse entre las carpetas visibles |
 | `→` / `←` | Abrir o cerrar una carpeta; en una carpeta abierta, `→` va a su primera subcarpeta, y en una cerrada, `←` va a la carpeta superior |
-| `Enter` o `Space` / `Cmd+O` o `Space` | Mostrar la carpeta en la tabla |
-| `F2` / `Enter` | Cambiar el nombre de la carpeta |
-| `Delete` / `Delete` o `Cmd+Backspace` | Eliminar la carpeta |
-| `Ctrl+C`, `Ctrl+X` / `Cmd+C`, `Cmd+X` | Copiar o cortar la carpeta |
-| `Ctrl+V` / `Cmd+V` | Pegar dentro de la carpeta |
+| <Shortcut id="manager.open" />, o `Space` | Mostrar la carpeta en la tabla |
+| <Shortcut id="manager.rename" /> | Cambiar el nombre de la carpeta |
+| <Shortcut id="manager.delete" /> | Eliminar la carpeta |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | Copiar o cortar la carpeta |
+| <Shortcut id="manager.paste" /> | Pegar dentro de la carpeta |
 
 La tabla es una sola parada cuando pulsas `Tab`; las teclas de flecha se mueven entre sus filas. Abrir más de 15 pestañas a la vez pide confirmación primero; una carpeta abre los marcadores que están directamente dentro de ella. En la tabla, enfoca el borde del encabezado de una columna y pulsa `←` o `→` para cambiar el ancho de esa columna.
 

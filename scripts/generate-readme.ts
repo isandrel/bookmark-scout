@@ -23,6 +23,9 @@
  *   {{SITE_PAGE:<locale>:<route>}} a website page, such as {{SITE_PAGE:en:/privacy}}
  *   {{CONTACT:<role>}}       a contact address from config/project.toml, such as support
  *   {{SCREENSHOT:<name>:<theme>}} raw GitHub URL of a product screenshot (light or dark)
+ *   {{SHORTCUT:<id>}}        a shortcut's keys from apps/extension/config/ui/shortcuts.toml, such as
+ *                            {{SHORTCUT:commands.quick-save}} (Alt+Shift+S); <id>#2 is its second way
+ *   {{SHORTCUT_MAC:<id>}}    the same keys on a Mac (⌥⇧S)
  *
  * STORE_BADGES and STORE_LINKS text may use per-browser tokens: @BROWSER (browser name),
  * @STORE (store name), @ID (browser id, also its tab anchor on the docs install page), and
@@ -32,7 +35,16 @@
  */
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { type ContactRole, SCREENSHOTS, type Site, type StoreListing, site } from "@bookmark-scout/config";
+import {
+	type ContactRole,
+	readShortcutConfig,
+	SCREENSHOTS,
+	type ShortcutPlatform,
+	type Site,
+	type StoreListing,
+	shortcutPlaceholderText,
+	site,
+} from "@bookmark-scout/config";
 
 const rootDir = resolve(import.meta.dir, "..");
 const templatesDir = join(rootDir, "templates");
@@ -191,6 +203,7 @@ type RenderContext = {
 	sitePage: (argument: string) => string;
 	contact: (role: string) => string;
 	screenshot: (argument: string) => string;
+	shortcut: (argument: string, platform: ShortcutPlatform) => string;
 };
 
 /** Fills every placeholder in `template`; throws listing any it cannot fill. */
@@ -207,6 +220,8 @@ export function render(template: string, context: RenderContext, label = "templa
 		if (name === "SITE_PAGE" && argument) return context.sitePage(argument);
 		if (name === "CONTACT" && argument) return context.contact(argument);
 		if (name === "SCREENSHOT" && argument) return context.screenshot(argument);
+		if (name === "SHORTCUT" && argument) return context.shortcut(argument, "other");
+		if (name === "SHORTCUT_MAC" && argument) return context.shortcut(argument, "mac");
 		const value = argument === undefined ? context.values[name] : undefined;
 		if (value === undefined) {
 			unknown.add(match);
@@ -226,6 +241,7 @@ export function outputPathFor(file: string): string {
 
 /** Fills placeholders from the repository config and the installed packages. */
 export function repositoryContext(root = rootDir): RenderContext {
+	const shortcuts = readShortcutConfig(root);
 	return {
 		values: readmeValues(),
 		version: (name, workspace) => installedVersion(name, root, workspace),
@@ -235,6 +251,7 @@ export function repositoryContext(root = rootDir): RenderContext {
 		sitePage: (argument) => sitePage(argument),
 		contact: (role) => contactAddress(role),
 		screenshot: (argument) => screenshotUrl(argument),
+		shortcut: (argument, platform) => shortcutPlaceholderText(shortcuts, argument, platform),
 	};
 }
 

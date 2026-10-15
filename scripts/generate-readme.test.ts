@@ -25,6 +25,7 @@ const context = {
 	sitePage: (argument: string) => `<page ${argument}>`,
 	contact: (role: string) => `<contact ${role}>`,
 	screenshot: (argument: string) => `<shot ${argument}>`,
+	shortcut: (argument: string, platform: string) => `<keys ${argument} ${platform}>`,
 };
 
 describe("render", () => {
@@ -38,6 +39,18 @@ describe("render", () => {
 		expect(render("{{SITE_PAGE:en:/privacy}} {{CONTACT:support}} {{SCREENSHOT:popup:dark}}", context)).toBe(
 			"<page en:/privacy> <contact support> <shot popup:dark>",
 		);
+	});
+
+	test("passes shortcut ids and the platform through", () => {
+		expect(render("{{SHORTCUT:commands.quick-save}} {{SHORTCUT_MAC:manager.redo#2}}", context)).toBe(
+			"<keys commands.quick-save other> <keys manager.redo#2 mac>",
+		);
+	});
+
+	test("prints the configured shortcut keys", () => {
+		const real = repositoryContext();
+		expect(real.shortcut("commands.quick-save", "other")).toMatch(/^[A-Za-z]+\+/);
+		expect(() => real.shortcut("commands.nope", "other")).toThrow(/Unknown shortcut/);
 	});
 
 	test("passes a workspace-qualified version to the version lookup", () => {

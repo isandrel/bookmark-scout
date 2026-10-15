@@ -13,7 +13,7 @@ Une liste de référence de ce qui est disponible aujourd'hui. Pour des instruct
 | Panneau latéral | La même vue dans le panneau latéral du navigateur (la barre latérale dans Firefox), qui reste ouvert pendant votre navigation |
 | Gestionnaire de favoris | Remplace la page Favoris du navigateur dans Chrome et Edge : arborescence des dossiers, fil d'Ariane, tableau des favoris et barre latérale **Outils**. Dans une fenêtre étroite, l'arborescence des dossiers et **Outils** s'ouvrent par-dessus le tableau ; un chemin de dossiers profond replie ses dossiers intermédiaires dans un menu **…** |
 | Paramètres | La page d'options de l'extension, avec dix onglets. Consultez [Paramètres](/settings) |
-| N'importe quelle page | `Alt+Shift+S` et `Alt+Shift+D` enregistrent rapidement la page sur laquelle vous êtes, avec une notification dans la page |
+| N'importe quelle page | <Shortcut id="commands.quick-save" /> et <Shortcut id="commands.ai-quick-save" /> enregistrent rapidement la page sur laquelle vous êtes, avec une notification dans la page |
 | Menu du clic droit | **Enregistrer le favori dans…** sur n'importe quel lien, une fois le **Menu du clic droit** activé |
 
 ## Rechercher [#find]
@@ -29,7 +29,7 @@ Guide : [Recherche et recherches enregistrées](/guides/search).
 
 - Enregistrement de la page actuelle dans n'importe quel dossier, jamais deux fois dans le même dossier, avec un panneau **Récents** qui liste les dossiers que vous avez utilisés.
 - Saisie d'une partie du nom d'un dossier, ou d'un chemin comme `work/react`, et enregistrement dans l'un des dossiers correspondants affichés au-dessus des résultats.
-- Enregistrement rapide avec `Alt+Shift+S` sur n'importe quelle page, dans le dossier qui correspond le mieux à la page (classement effectué sur votre appareil), dans le dernier dossier utilisé ou dans un dossier que vous choisissez ; `Alt+Shift+D` enregistre dans la première suggestion de l'IA. Une notification dans la page propose **Annuler** et d'autres dossiers sous **Déplacer vers**. Dans Chrome et Edge, vous pouvez attribuer `Ctrl+D` à l'enregistrement rapide.
+- Enregistrement rapide avec <Shortcut id="commands.quick-save" /> sur n'importe quelle page, dans le dossier qui correspond le mieux à la page (classement effectué sur votre appareil), dans le dernier dossier utilisé ou dans un dossier que vous choisissez ; <Shortcut id="commands.ai-quick-save" /> enregistre dans la première suggestion de l'IA. Une notification dans la page propose **Annuler** et d'autres dossiers sous **Déplacer vers**. Dans Chrome et Edge, vous pouvez attribuer <Shortcut id="browser.bookmark_page" /> à l'enregistrement rapide.
 - Enregistrement de liens depuis le menu contextuel dans un dossier récent ou dans la Barre de favoris.
 - Création de dossiers, glisser-déposer de favoris et de dossiers, et déplacement de plusieurs éléments à la fois dans le gestionnaire.
 - Tri par date d'ajout, par ordre alphabétique naturel ou avec les dossiers en premier, sans modifier l'ordre enregistré par le navigateur.
@@ -67,7 +67,7 @@ Guide : [Importation et exportation](/guides/import-export).
 
 Désactivés par défaut. Utilisez votre propre clé pour OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou environ 200 autres fournisseurs du catalogue models.dev, ou utilisez Ollama, CLIProxyAPI ou tout point de terminaison compatible OpenAI.
 
-- Recommandations de dossiers dans la fenêtre pop-up, y compris un nouveau chemin de dossiers que vous vérifiez, et le raccourci d'enregistrement rapide `Alt+Shift+D`.
+- Recommandations de dossiers dans la fenêtre pop-up, y compris un nouveau chemin de dossiers que vous vérifiez, et le raccourci d'enregistrement rapide <Shortcut id="commands.ai-quick-save" />.
 - **Demander à l'IA** dans la fenêtre pop-up et le panneau latéral : répond aux questions en cherchant dans vos favoris, dossiers, étiquettes et résumés, en trouvant les doublons et en vérifiant les liens ; enregistre des pages et propose des déplacements, renommages, suppressions et nouveaux dossiers sous forme de plan qui ne modifie rien avant votre accord, chaque modification pouvant être annulée ; et termine ses réponses par des boutons proposant la suite. **Ce que Demander à l'IA peut faire**, dans les Paramètres, désactive n'importe quelle consultation ou modification.
 - **Étiquetage automatique** et **Générateur de résumés** pour le dossier actuel, avec enregistrement uniquement après votre vérification, et annulation possible.
 - **Réorganisation des dossiers par IA**, avec un aperçu avant tout déplacement, et annulation possible.
@@ -84,10 +84,10 @@ Guide : [Utiliser avec des agents d'IA locaux](/guides/local-agents).
 ## Clavier et langues [#keyboard-and-language]
 
 - Raccourcis d'enregistrement rapide sur n'importe quelle page, que vous pouvez modifier dans les paramètres de raccourcis du navigateur, ou, dans Firefox, directement dans les Paramètres de Bookmark Scout.
-- Raccourcis dans la fenêtre pop-up et le panneau latéral qui n'utilisent jamais `Ctrl` ni `Cmd`, et dans le gestionnaire les touches du gestionnaire de favoris de Chrome (tout sélectionner, annuler, rétablir, ouvrir dans des onglets), avec une boîte de dialogue d'aide `?`. Consultez [Raccourcis clavier](/guides/keyboard-shortcuts).
-- Sélection dans le gestionnaire comme dans Chrome : clic, `Ctrl`+clic, `Shift`+clic et `Ctrl+A` ; les touches fléchées parcourent le tableau et l'arborescence des dossiers, que les lecteurs d'écran annoncent comme une arborescence.
-- Annulation et rétablissement des modifications, déplacements et suppressions du gestionnaire avec `Ctrl+Z` et `Ctrl+Y`, pendant toute la session du navigateur.
+- Raccourcis dans la fenêtre pop-up et le panneau latéral qui n'utilisent jamais `Ctrl` ni `Cmd`, et dans le gestionnaire les touches du gestionnaire de favoris de Chrome (tout sélectionner, annuler, rétablir, ouvrir dans des onglets), avec une boîte de dialogue d'aide <Shortcut id="manager.show_help" />. Consultez [Raccourcis clavier](/guides/keyboard-shortcuts).
+- Sélection dans le gestionnaire comme dans Chrome : clic, `Ctrl`+clic, `Shift`+clic et <Shortcut id="manager.select_all" /> ; les touches fléchées parcourent le tableau et l'arborescence des dossiers, que les lecteurs d'écran annoncent comme une arborescence.
+- Annulation et rétablissement des modifications, déplacements et suppressions du gestionnaire avec <Shortcut id="manager.undo" /> et <Shortcut id="manager.redo" />, pendant toute la session du navigateur.
 - Menus contextuels sur les lignes et les dossiers du gestionnaire : couper, copier et coller, tout ouvrir dans des onglets, une nouvelle fenêtre ou une fenêtre de navigation privée, renommer et supprimer ; ainsi que **Trier par nom** et **Ajouter un favori** ou **Ajouter un dossier**. **Menus du gestionnaire de favoris**, dans les Paramètres, détermine les commandes qu'ils affichent, et dans quel ordre.
-- Glisser-déposer dans le gestionnaire comme dans Chrome : sur les dossiers du tableau ou de l'arborescence, entre les lignes dans l'ordre du navigateur, et des liens depuis d'autres pages ; `Ctrl/Cmd+C`, `X` et `V` copient, déplacent et collent.
+- Glisser-déposer dans le gestionnaire comme dans Chrome : sur les dossiers du tableau ou de l'arborescence, entre les lignes dans l'ordre du navigateur, et des liens depuis d'autres pages ; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> et <Shortcut id="manager.paste" /> copient, déplacent et collent.
 - Thème système, clair ou sombre.
 - Anglais, chinois simplifié, chinois traditionnel, japonais, coréen, espagnol, allemand, français et portugais du Brésil.

@@ -48,6 +48,10 @@ Use headless Playwright, not the built-in browser pane: the pane scaled 1280px s
 
 Check Fumadocs built-ins before writing a feature by hand, in the current Fumadocs docs and in the installed `node_modules/fumadocs-*` source (the site can be ahead of the pinned version): `llms()` from `fumadocs-core/source` (llms.txt, full text, per-page Markdown), page actions such as `MarkdownCopyButton` and `ViewOptionsPopover`, and the Steps, Tabs, Callout, Cards, and Accordion MDX components.
 
+## Keyboard shortcuts
+
+Keys come from `apps/extension/config/ui/shortcuts.toml`, never from the page text. In docs MDX write `<Shortcut id="manager.undo" />` (it prints the keys and, where a Mac differs, a localized Mac note from `shortcut` in `src/lib/copy.ts`); in website messages and README templates write `{{SHORTCUT:<id>}}` or `{{SHORTCUT_MAC:<id>}}` (`<id>#2` for a second way), filled at build time (`apps/website/i18n/request.ts`, `scripts/generate-readme.ts`). Store listings are pasted by hand: keep their keys equal to the config. Standard navigation keys (`↓`, `Enter`, `Space`, `Tab`, `Esc`) stay as code. `bun test scripts/shortcut-mentions.test.ts` catches hand-typed keys, unknown ids, and a configured shortcut missing from `guides/keyboard-shortcuts*.mdx`. A new shortcut needs a row there in every language.
+
 ## Known traps
 
 - **next-intl static export:**
@@ -64,7 +68,7 @@ Check Fumadocs built-ins before writing a feature by hand, in the current Fumado
   - `reuseExistingServer: !process.env.CI` means a local server already on the test port can serve an old build. Stop it before trusting a local run.
 - **Bun scripts** that need Bun types get `/// <reference types="bun" />` at the top of that file only, so Bun globals do not leak into the Next app.
 - **Docs Nx targets** come from `apps/docs/package.json` scripts plus its `"nx"` field (for example `verify` depends on `build`); there is no `project.json`.
-- **Deploy path filters:** `deploy-website.yml` and `deploy-docs.yml` trigger on their app plus `config/**` and `packages/config/**` (the website also on `apps/extension/config/**`, for its AI provider list). A new shared input the sites read must be added to those filters and to the `sites` scope in `.github/ci-scopes.toml`.
+- **Deploy path filters:** `deploy-website.yml` and `deploy-docs.yml` trigger on their app plus `config/**` and `packages/config/**` (the website also on `apps/extension/config/**`, for its AI provider list and shortcuts; the docs on `apps/extension/config/ui/shortcuts.toml`). A new shared input the sites read must be added to those filters, to the `sites` scope in `.github/ci-scopes.toml`, and to the build target's Nx `inputs` (the docs' are in the `"nx"` field of `apps/docs/package.json`), or a cached build stays stale.
 
 ## Hosting (Cloudflare Pages)
 

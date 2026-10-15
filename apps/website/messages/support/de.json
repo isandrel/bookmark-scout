@@ -47,7 +47,7 @@
                     "quickSave": {
                         "q": "Das Tastenkürzel zum Schnellspeichern bewirkt nichts",
                         "a": [
-                            "Wenn eine andere Erweiterung Alt+Shift+S oder Alt+Shift+D bereits verwendet, lässt der Browser das Tastenkürzel von Bookmark Scout ohne Tasten, und das Pop-up zeigt „Kein Kürzel zum Schnellspeichern festgelegt“. Klicken Sie auf „Einrichten“, oder öffnen Sie die Einstellungen, dann „Speichern & Suche“, dann „Tastenkürzel“, und wählen Sie andere Tasten.",
+                            "Wenn eine andere Erweiterung {{SHORTCUT:commands.quick-save}} oder {{SHORTCUT:commands.ai-quick-save}} bereits verwendet, lässt der Browser das Tastenkürzel von Bookmark Scout ohne Tasten, und das Pop-up zeigt „Kein Kürzel zum Schnellspeichern festgelegt“. Klicken Sie auf „Einrichten“, oder öffnen Sie die Einstellungen, dann „Speichern & Suche“, dann „Tastenkürzel“, und wählen Sie andere Tasten.",
                             "Auf manchen Seiten, etwa den eigenen Seiten des Browsers und dem Erweiterungs-Store, dürfen Erweiterungen nichts anzeigen. Dort zeigt das Symbol in der Symbolleiste, ob die Seite gespeichert wurde, und das Pop-up bietet „Rückgängig“ an."
                         ]
                     },

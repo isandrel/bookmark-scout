@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { readShortcutConfig } from "./shortcut-file";
 import {
 	bindingKeyCaps,
+	fillShortcutPlaceholders,
 	formatBinding,
 	formatCommandShortcut,
 	isSameOnEveryPlatform,
@@ -93,6 +94,23 @@ describe("formatting", () => {
 		expect(formatCommandShortcut("Alt+Shift+S", { apple: false })).toBe("Alt+Shift+S");
 		expect(formatCommandShortcut("Alt+Shift+S", { apple: true })).toBe("⌥⇧S");
 		expect(formatCommandShortcut("⌥⇧S", { apple: true })).toBe("⌥⇧S");
+	});
+});
+
+describe("fillShortcutPlaceholders", () => {
+	it("fills keys for each platform and the n-th way", () => {
+		expect(fillShortcutPlaceholders("{{SHORTCUT:commands.quick-save}} / {{SHORTCUT_MAC:commands.quick-save}}", config)).toBe(
+			"Alt+Shift+S / ⌥⇧S",
+		);
+		expect(fillShortcutPlaceholders("{{SHORTCUT:manager.redo#2}}", config)).toBe("Ctrl+Shift+Z");
+		expect(() => fillShortcutPlaceholders("{{SHORTCUT:manager.redo#3}}", config)).toThrow(/no way 3/);
+	});
+
+	it("stays fast on text full of unfinished placeholders", () => {
+		const text = "{{SHORTCUT:".repeat(20_000);
+		const start = performance.now();
+		expect(fillShortcutPlaceholders(text, config)).toBe(text);
+		expect(performance.now() - start).toBeLessThan(500);
 	});
 });
 

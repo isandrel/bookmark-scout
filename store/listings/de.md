@@ -76,7 +76,7 @@ LESEZEICHEN-MANAGER
 Bookmark Scout ersetzt die Lesezeichenseite des Browsers durch einen Manager, der wie der browsereigene funktioniert, ergänzt um Pfadnavigation, eine sortier- und filterbare Tabelle, anpassbare Spaltenbreiten und gespeicherte Suchen (intelligente Ansichten, die nur Ihre Filter speichern und immer aktuelle Ergebnisse zeigen).
 • Rechtsklickmenüs für Lesezeichen, Ordner und leere Flächen: Bearbeiten, Umbenennen, Ausschneiden, Kopieren, Einfügen, Öffnen in neuen Tabs oder Fenstern, Anzeigen im Ordner und Löschen
 • Lesezeichen per Drag-and-drop in Ordner verschieben oder neu anordnen; Links, die aus anderen Seiten hineingezogen werden, werden zu Lesezeichen
-• Mehrere Zeilen mit Ctrl+Klick und Shift+Klick auswählen und die Tastenkombinationen des browsereigenen Managers verwenden (Cmd auf einem Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z zum Rückgängigmachen und Ctrl+Y zum Wiederholen
+• Mehrere Zeilen mit Ctrl+Klick und Shift+Klick auswählen und die Tastenkombinationen des browsereigenen Managers verwenden (Cmd auf einem Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z zum Rückgängigmachen und Ctrl+Shift+Z zum Wiederholen
 • Rückgängigmachen und Wiederholen umfassen Bearbeitungen, Verschiebungen, Sortierungen und Löschungen, auch Änderungen durch „KI fragen“
 • Die Adresse enthält die Suche und den Ordner, sodass ein Link den Manager direkt mit einer Suche (?q=react) oder in einem Ordner öffnen kann, und „Zurück“ und „Vorwärts“ stellen beides wieder her
 • Festlegen, welche Befehle die Rechtsklick- und ⋯-Menüs zeigen und in welcher Reihenfolge (Einstellungen > Verhalten)
@@ -161,7 +161,7 @@ LESEZEICHEN-MANAGER
 „Lesezeichen-Manager öffnen“ im Pop-up der Symbolleiste oder in der Sidebar öffnet einen vollständigen Manager in einem neuen Tab, mit Ordnerbaum und sortier- und filterbarer Tabelle.
 • Rechtsklickmenüs für Lesezeichen, Ordner und leere Flächen: Bearbeiten, Umbenennen, Ausschneiden, Kopieren, Einfügen, Öffnen, Anzeigen im Ordner und Löschen
 • Lesezeichen per Drag-and-drop in Ordner verschieben oder neu anordnen; Links, die aus anderen Seiten hineingezogen werden, werden zu Lesezeichen
-• Mehrere Zeilen mit Ctrl+Klick und Shift+Klick auswählen (Cmd auf einem Mac), mit den üblichen Tasten kopieren, ausschneiden und einfügen und Ihre Änderungen mit Ctrl+Z und Ctrl+Y rückgängig machen und wiederholen
+• Mehrere Zeilen mit Ctrl+Klick und Shift+Klick auswählen (Cmd auf einem Mac), mit den üblichen Tasten kopieren, ausschneiden und einfügen und Ihre Änderungen mit Ctrl+Z und Ctrl+Shift+Z rückgängig machen und wiederholen
 
 EINSTELLUNGEN UND SICHERUNG
 • „Exportieren“ unten in den Einstellungen speichert eine Sicherung: die von Ihnen geänderten Einstellungen, eigene Prompts, KI-Dienste (nie deren API-Schlüssel) und gespeicherte Suchen. „Importieren“ stellt sie wieder her

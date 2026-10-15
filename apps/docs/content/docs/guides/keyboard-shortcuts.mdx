@@ -3,16 +3,16 @@ title: Keyboard shortcuts
 description: Search, move through folders, save the current page, and work the manager's table without the mouse.
 ---
 
-Shortcuts in the popup and side panel never use `Ctrl` or `Cmd`, so browser shortcuts such as `Ctrl/Cmd+L`, `T`, `W`, `N`, `R`, and `D` keep working. The bookmarks manager replaces the browser's own, so it also takes that manager's `Ctrl` shortcuts (`Cmd` on a Mac): select all, copy, cut, paste, undo, redo, and open in new tabs. Shortcuts pause while you type in a text field (`Esc` in the search box is the exception), while an input method is composing text, and while a dialog or menu is open.
+Shortcuts in the popup and side panel never use `Ctrl` or `Cmd`, so the browser's own shortcuts with those keys, such as opening a new tab or the address bar, keep working. The bookmarks manager replaces the browser's own, so it also takes that manager's `Ctrl` shortcuts (`Cmd` on a Mac): select all, copy, cut, paste, undo, redo, and open in new tabs. Shortcuts pause while you type in a text field (`Esc` in the search box is the exception), while an input method is composing text, and while a dialog or menu is open.
 
 ## On any page
 
-These work with no Bookmark Scout window open. Your browser owns them, so you can change or remove them in its shortcut settings; see [Save with a keyboard shortcut](/guides/save-and-organize#quick-save). In Chrome and Edge you can also give quick save the browser's bookmark key, `Ctrl+D` (`⌘D` on a Mac); see [Use Ctrl+D for quick save](/guides/save-and-organize#ctrl-d).
+These work with no Bookmark Scout window open. Your browser owns them, so you can change or remove them in its shortcut settings; see [Save with a keyboard shortcut](/guides/save-and-organize#quick-save). In Chrome and Edge you can also give quick save the browser's bookmark key, <Shortcut id="browser.bookmark_page" />; see [Use the bookmark key for quick save](/guides/save-and-organize#ctrl-d).
 
 | Key | Action |
 | --- | --- |
-| `Alt+Shift+S` (`⌥⇧S` on a Mac) | Quick save the current page to the folder from **Quick Save Folder** |
-| `Alt+Shift+D` (`⌥⇧D` on a Mac) | Quick save the current page to the folder AI suggests |
+| <Shortcut id="commands.quick-save" /> | Quick save the current page to the folder from **Quick Save Folder** |
+| <Shortcut id="commands.ai-quick-save" /> | Quick save the current page to the folder AI suggests |
 
 In the notification that follows, `Tab` reaches **Undo** and the other folders, and `Esc` closes it.
 
@@ -22,10 +22,10 @@ Hover the search box for a reminder.
 
 | Key | Action |
 | --- | --- |
-| `/` | Focus the search box |
+| <Shortcut id="popup.focus_search" /> | Focus the search box |
 | `Esc` in the search box | Clear the search; press again to leave the box |
 | `↓` in the search box | Move to the first folder |
-| `Alt+↓` in the empty search box | Show recent searches; `↓` / `↑` pick one, `Enter` searches it, `Tab` reaches **Clear** |
+| <Shortcut id="popup.recent_searches" /> in the empty search box | Show recent searches; `↓` / `↑` pick one, `Enter` searches it, `Tab` reaches **Clear** |
 | `↓` / `↑`, `Home` / `End` | Move between visible folders and bookmarks (`↑` on the first row returns to search) |
 | `→` / `←` | Open or close a folder; on an open folder `→` moves to its first item, and `←` moves to the parent folder |
 | `Enter` on a folder | Save the current page into that folder (a page already saved there is not duplicated) |
@@ -34,30 +34,30 @@ Hover the search box for a reminder.
 
 ## Bookmarks manager
 
-Press `?`, or click the keyboard button in the header, to see this list in the manager. The keys follow Chrome's bookmark manager; where a Mac differs, its key is second.
+Press <Shortcut id="manager.show_help" />, or click the keyboard button in the header, to see this list in the manager. The keys follow Chrome's bookmark manager.
 
 | Key | Action |
 | --- | --- |
-| `/` | Focus the title filter |
-| `Backspace` or `Alt+↑` | Go to the parent folder |
-| `↓` / `↑`, `Home` / `End` | Move between rows and select the row; with `Shift`, extend the selection; with `Ctrl` (`Cmd`), move without selecting |
-| `j` / `k` | Move to the next or previous row |
+| <Shortcut id="manager.focus_filter" /> | Focus the title filter |
+| <Shortcut id="manager.parent_folder" /> | Go to the parent folder |
+| `↓` / `↑`, `Home` / `End` | Move between rows and select the row; with `Shift`, extend the selection; with `Ctrl` (`Cmd` on a Mac), move without selecting |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | Move to the next or previous row |
 | `Space` | Select or unselect the focused row |
-| `Ctrl+A` / `Cmd+A` | Select every row the filters show, on every page |
-| `Esc` | Clear the selection, or close a dialog or menu |
-| `Enter` / `Cmd+O` | Open the selected folder, or the selected bookmarks in tabs |
-| `Ctrl+Enter` / `Cmd+Enter` | Open the selection in new background tabs |
-| `Shift+Enter` | Open the selection in a new window |
-| `F2` / `Enter` | Edit the selected bookmark, or rename the folder |
-| `Delete` / `Delete` or `Cmd+Backspace` | Delete the selection |
-| `Ctrl+Z` / `Cmd+Z` | Undo the last change |
-| `Ctrl+Y` or `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Redo |
-| `Ctrl+C` / `Cmd+C` | Copy the selection; its URLs go on the clipboard |
-| `Ctrl+X` / `Cmd+X` | Cut the selection, to move it with paste |
-| `Ctrl+V` / `Cmd+V` | Paste after the selection, or at the end of the folder; URLs copied in another app become bookmarks |
-| `s` | Open saved searches |
-| `?` | Show the keyboard shortcuts |
-| Menu key or `Shift+F10` | Open the right-click menu for the focused row or folder |
+| <Shortcut id="manager.select_all" /> | Select every row the filters show, on every page |
+| <Shortcut id="manager.clear_selection" /> | Clear the selection, or close a dialog or menu |
+| <Shortcut id="manager.open" /> | Open the selected folder, or the selected bookmarks in tabs |
+| <Shortcut id="manager.open_in_new_tabs" /> | Open the selection in new background tabs |
+| <Shortcut id="manager.open_in_new_window" /> | Open the selection in a new window |
+| <Shortcut id="manager.rename" /> | Edit the selected bookmark, or rename the folder |
+| <Shortcut id="manager.delete" /> | Delete the selection |
+| <Shortcut id="manager.undo" /> | Undo the last change |
+| <Shortcut id="manager.redo" /> | Redo |
+| <Shortcut id="manager.copy" /> | Copy the selection; its URLs go on the clipboard |
+| <Shortcut id="manager.cut" /> | Cut the selection, to move it with paste |
+| <Shortcut id="manager.paste" /> | Paste after the selection, or at the end of the folder; URLs copied in another app become bookmarks |
+| <Shortcut id="manager.open_saved_searches" /> | Open saved searches |
+| <Shortcut id="manager.show_help" /> | Show the keyboard shortcuts |
+| Menu key or <Shortcut id="browser.context_menu" /> | Open the right-click menu for the focused row or folder |
 
 In the folder tree on the left, which is also one `Tab` stop:
 
@@ -65,11 +65,11 @@ In the folder tree on the left, which is also one `Tab` stop:
 | --- | --- |
 | `↓` / `↑`, `Home` / `End` | Move between the folders shown |
 | `→` / `←` | Open or close a folder; on an open folder `→` moves to its first subfolder, and on a closed one `←` moves to the parent folder |
-| `Enter` or `Space` / `Cmd+O` or `Space` | Show the folder in the table |
-| `F2` / `Enter` | Rename the folder |
-| `Delete` / `Delete` or `Cmd+Backspace` | Delete the folder |
-| `Ctrl+C`, `Ctrl+X` / `Cmd+C`, `Cmd+X` | Copy or cut the folder |
-| `Ctrl+V` / `Cmd+V` | Paste into the folder |
+| <Shortcut id="manager.open" />, or `Space` | Show the folder in the table |
+| <Shortcut id="manager.rename" /> | Rename the folder |
+| <Shortcut id="manager.delete" /> | Delete the folder |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | Copy or cut the folder |
+| <Shortcut id="manager.paste" /> | Paste into the folder |
 
 The table is one stop when you press `Tab`; the arrow keys move between its rows. Opening more than 15 tabs at once asks first; a folder opens the bookmarks directly inside it. In the table, focus the edge of a column header and press `←` or `→` to resize that column.
 

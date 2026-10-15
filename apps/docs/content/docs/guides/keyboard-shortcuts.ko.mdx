@@ -3,16 +3,16 @@ title: 키보드 단축키
 description: 마우스 없이 검색하고, 폴더 사이를 이동하고, 현재 페이지를 저장하고, 관리자의 표를 다룹니다.
 ---
 
-팝업과 사이드 패널의 단축키는 `Ctrl`이나 `Cmd`를 사용하지 않으므로 `Ctrl/Cmd+L`, `T`, `W`, `N`, `R`, `D` 같은 브라우저 단축키는 그대로 동작합니다. 북마크 관리자는 브라우저 자체의 관리자를 대체하므로, 그 관리자의 `Ctrl` 단축키(Mac에서는 `Cmd`)도 사용합니다: 모두 선택, 복사, 잘라내기, 붙여넣기, 실행 취소, 다시 실행, 새 탭에서 열기. 텍스트 필드에 입력하는 동안(검색창의 `Esc`는 예외), 입력기로 글자를 조합하는 동안, 대화상자나 메뉴가 열려 있는 동안에는 단축키가 일시 중지됩니다.
+팝업과 사이드 패널의 단축키는 `Ctrl`이나 `Cmd`를 사용하지 않으므로, 새 탭이나 주소창 열기처럼 이 키를 쓰는 브라우저 자체의 단축키는 그대로 동작합니다. 북마크 관리자는 브라우저 자체의 관리자를 대체하므로, 그 관리자의 `Ctrl` 단축키(Mac에서는 `Cmd`)도 사용합니다: 모두 선택, 복사, 잘라내기, 붙여넣기, 실행 취소, 다시 실행, 새 탭에서 열기. 텍스트 필드에 입력하는 동안(검색창의 `Esc`는 예외), 입력기로 글자를 조합하는 동안, 대화상자나 메뉴가 열려 있는 동안에는 단축키가 일시 중지됩니다.
 
 ## 모든 페이지 [#on-any-page]
 
-Bookmark Scout 창을 하나도 열지 않아도 동작합니다. 이 단축키는 브라우저가 관리하므로 브라우저의 단축키 설정에서 바꾸거나 없앨 수 있습니다. [키보드 단축키로 저장](/guides/save-and-organize#quick-save)을 참고하세요. Chrome과 Edge에서는 빠른 저장에 브라우저의 북마크 키인 `Ctrl+D`(Mac에서는 `⌘D`)를 지정할 수도 있습니다. [빠른 저장에 Ctrl+D 사용](/guides/save-and-organize#ctrl-d)을 참고하세요.
+Bookmark Scout 창을 하나도 열지 않아도 동작합니다. 이 단축키는 브라우저가 관리하므로 브라우저의 단축키 설정에서 바꾸거나 없앨 수 있습니다. [키보드 단축키로 저장](/guides/save-and-organize#quick-save)을 참고하세요. Chrome과 Edge에서는 빠른 저장에 브라우저의 북마크 키인 <Shortcut id="browser.bookmark_page" />를 지정할 수도 있습니다. [빠른 저장에 북마크 키 사용](/guides/save-and-organize#ctrl-d)을 참고하세요.
 
 | 키 | 동작 |
 | --- | --- |
-| `Alt+Shift+S`(Mac에서는 `⌥⇧S`) | 현재 페이지를 **빠른 저장 폴더**에서 정한 폴더에 빠른 저장 |
-| `Alt+Shift+D`(Mac에서는 `⌥⇧D`) | 현재 페이지를 AI가 추천하는 폴더에 빠른 저장 |
+| <Shortcut id="commands.quick-save" /> | 현재 페이지를 **빠른 저장 폴더**에서 정한 폴더에 빠른 저장 |
+| <Shortcut id="commands.ai-quick-save" /> | 현재 페이지를 AI가 추천하는 폴더에 빠른 저장 |
 
 이어서 표시되는 알림에서 `Tab`을 누르면 **실행 취소**와 다른 폴더로 이동하고, `Esc`를 누르면 알림이 닫힙니다.
 
@@ -22,10 +22,10 @@ Bookmark Scout 창을 하나도 열지 않아도 동작합니다. 이 단축키�
 
 | 키 | 동작 |
 | --- | --- |
-| `/` | 검색창으로 포커스 이동 |
+| <Shortcut id="popup.focus_search" /> | 검색창으로 포커스 이동 |
 | 검색창에서 `Esc` | 검색어 지우기. 한 번 더 누르면 검색창에서 나감 |
 | 검색창에서 `↓` | 첫 번째 폴더로 이동 |
-| 빈 검색창에서 `Alt+↓` | 최근 검색 표시. `↓` / `↑`로 고르고, `Enter`로 검색하며, `Tab`으로 **지우기**로 이동 |
+| 빈 검색창에서 <Shortcut id="popup.recent_searches" /> | 최근 검색 표시. `↓` / `↑`로 고르고, `Enter`로 검색하며, `Tab`으로 **지우기**로 이동 |
 | `↓` / `↑`, `Home` / `End` | 표시된 폴더와 북마크 사이를 이동(첫 번째 행에서 `↑`를 누르면 검색창으로 돌아감) |
 | `→` / `←` | 폴더 열기 또는 닫기. 열린 폴더에서 `→`는 첫 번째 항목으로, `←`는 상위 폴더로 이동 |
 | 폴더에서 `Enter` | 현재 페이지를 그 폴더에 저장(이미 저장된 페이지는 중복 저장하지 않음) |
@@ -34,30 +34,30 @@ Bookmark Scout 창을 하나도 열지 않아도 동작합니다. 이 단축키�
 
 ## 북마크 관리자 [#bookmarks-manager]
 
-관리자에서 `?`를 누르거나 머리글의 키보드 버튼을 클릭하면 이 목록이 표시됩니다. 키는 Chrome 북마크 관리자를 따르며, Mac에서 다른 키는 두 번째에 적었습니다.
+관리자에서 <Shortcut id="manager.show_help" />를 누르거나 머리글의 키보드 버튼을 클릭하면 이 목록이 표시됩니다. 키는 Chrome 북마크 관리자를 따릅니다.
 
 | 키 | 동작 |
 | --- | --- |
-| `/` | 제목 필터로 포커스 이동 |
-| `Backspace` 또는 `Alt+↑` | 상위 폴더로 이동 |
-| `↓` / `↑`, `Home` / `End` | 행 사이를 이동하며 행을 선택. `Shift`를 함께 누르면 선택을 확장하고, `Ctrl`(`Cmd`)을 함께 누르면 선택하지 않고 이동 |
-| `j` / `k` | 다음 또는 이전 행으로 이동 |
+| <Shortcut id="manager.focus_filter" /> | 제목 필터로 포커스 이동 |
+| <Shortcut id="manager.parent_folder" /> | 상위 폴더로 이동 |
+| `↓` / `↑`, `Home` / `End` | 행 사이를 이동하며 행을 선택. `Shift`를 함께 누르면 선택을 확장하고, `Ctrl`(Mac에서는 `Cmd`)을 함께 누르면 선택하지 않고 이동 |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | 다음 또는 이전 행으로 이동 |
 | `Space` | 포커스가 있는 행을 선택하거나 선택 해제 |
-| `Ctrl+A` / `Cmd+A` | 필터에 표시되는 모든 행을 모든 페이지에 걸쳐 선택 |
-| `Esc` | 선택 해제, 또는 대화상자나 메뉴 닫기 |
-| `Enter` / `Cmd+O` | 선택한 폴더를 열거나, 선택한 북마크를 탭에서 열기 |
-| `Ctrl+Enter` / `Cmd+Enter` | 선택한 항목을 새 백그라운드 탭에서 열기 |
-| `Shift+Enter` | 선택한 항목을 새 창에서 열기 |
-| `F2` / `Enter` | 선택한 북마크를 편집하거나 폴더 이름 바꾸기 |
-| `Delete` / `Delete` 또는 `Cmd+Backspace` | 선택한 항목 삭제 |
-| `Ctrl+Z` / `Cmd+Z` | 마지막 변경 실행 취소 |
-| `Ctrl+Y` 또는 `Ctrl+Shift+Z` / `Cmd+Shift+Z` | 다시 실행 |
-| `Ctrl+C` / `Cmd+C` | 선택한 항목 복사. URL이 클립보드에 들어감 |
-| `Ctrl+X` / `Cmd+X` | 붙여넣기로 옮기기 위해 선택한 항목 잘라내기 |
-| `Ctrl+V` / `Cmd+V` | 선택한 항목 뒤나 폴더 끝에 붙여넣기. 다른 앱에서 복사한 URL은 북마크가 됨 |
-| `s` | 저장된 검색 열기 |
-| `?` | 키보드 단축키 표시 |
-| 메뉴 키 또는 `Shift+F10` | 포커스가 있는 행이나 폴더의 마우스 오른쪽 버튼 메뉴 열기 |
+| <Shortcut id="manager.select_all" /> | 필터에 표시되는 모든 행을 모든 페이지에 걸쳐 선택 |
+| <Shortcut id="manager.clear_selection" /> | 선택 해제, 또는 대화상자나 메뉴 닫기 |
+| <Shortcut id="manager.open" /> | 선택한 폴더를 열거나, 선택한 북마크를 탭에서 열기 |
+| <Shortcut id="manager.open_in_new_tabs" /> | 선택한 항목을 새 백그라운드 탭에서 열기 |
+| <Shortcut id="manager.open_in_new_window" /> | 선택한 항목을 새 창에서 열기 |
+| <Shortcut id="manager.rename" /> | 선택한 북마크를 편집하거나 폴더 이름 바꾸기 |
+| <Shortcut id="manager.delete" /> | 선택한 항목 삭제 |
+| <Shortcut id="manager.undo" /> | 마지막 변경 실행 취소 |
+| <Shortcut id="manager.redo" /> | 다시 실행 |
+| <Shortcut id="manager.copy" /> | 선택한 항목 복사. URL이 클립보드에 들어감 |
+| <Shortcut id="manager.cut" /> | 붙여넣기로 옮기기 위해 선택한 항목 잘라내기 |
+| <Shortcut id="manager.paste" /> | 선택한 항목 뒤나 폴더 끝에 붙여넣기. 다른 앱에서 복사한 URL은 북마크가 됨 |
+| <Shortcut id="manager.open_saved_searches" /> | 저장된 검색 열기 |
+| <Shortcut id="manager.show_help" /> | 키보드 단축키 표시 |
+| 메뉴 키 또는 <Shortcut id="browser.context_menu" /> | 포커스가 있는 행이나 폴더의 마우스 오른쪽 버튼 메뉴 열기 |
 
 왼쪽의 폴더 트리(이것도 `Tab` 한 번으로 이동하는 하나의 영역)에서는 다음과 같습니다.
 
@@ -65,11 +65,11 @@ Bookmark Scout 창을 하나도 열지 않아도 동작합니다. 이 단축키�
 | --- | --- |
 | `↓` / `↑`, `Home` / `End` | 표시된 폴더 사이를 이동 |
 | `→` / `←` | 폴더 열기 또는 닫기. 열린 폴더에서 `→`는 첫 번째 하위 폴더로, 닫힌 폴더에서 `←`는 상위 폴더로 이동 |
-| `Enter` 또는 `Space` / `Cmd+O` 또는 `Space` | 폴더를 표에 표시 |
-| `F2` / `Enter` | 폴더 이름 바꾸기 |
-| `Delete` / `Delete` 또는 `Cmd+Backspace` | 폴더 삭제 |
-| `Ctrl+C`, `Ctrl+X` / `Cmd+C`, `Cmd+X` | 폴더 복사 또는 잘라내기 |
-| `Ctrl+V` / `Cmd+V` | 폴더 안에 붙여넣기 |
+| <Shortcut id="manager.open" /> 또는 `Space` | 폴더를 표에 표시 |
+| <Shortcut id="manager.rename" /> | 폴더 이름 바꾸기 |
+| <Shortcut id="manager.delete" /> | 폴더 삭제 |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | 폴더 복사 또는 잘라내기 |
+| <Shortcut id="manager.paste" /> | 폴더 안에 붙여넣기 |
 
 `Tab`을 누를 때 표는 하나의 영역으로 취급되며, 화살표 키로 행 사이를 이동합니다. 탭을 한 번에 15개 넘게 열면 먼저 묻습니다. 폴더를 열면 그 폴더 바로 안에 있는 북마크가 열립니다. 표에서 열 머리글의 가장자리에 포커스를 두고 `←` 또는 `→`를 누르면 해당 열의 너비가 조절됩니다.
 

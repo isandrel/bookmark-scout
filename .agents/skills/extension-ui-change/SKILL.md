@@ -39,6 +39,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 - **Legacy stylesheets.** Delete old rules that fight the new tokens (for example `popup.scss` hover and lift rules) but keep their class names on the elements: E2E specs use them as hooks.
 - **Formatting:** `biome check --write` across the app reformatted about 60 unrelated files. Format only the files you touched. Biome rejects `aria-label` on a plain `div`; give it a role or use a semantic element.
 - **Type check:** `bunx nx run extension:typecheck` (runs `wxt prepare` first). `main` is clean and CI runs it, so any error is yours.
+- **Shortcuts live in config.** A new or changed key goes in `config/ui/shortcuts.toml` (manifest command keys in `[commands]`, the browser's own keys in `[browser]`), read through `SHORTCUT_BINDINGS` and printed with `shortcutKeyCaps`, whose rules (`@bookmark-scout/config/shortcuts`) the docs, website, and README share. Only the standard ARIA tree, grid, and combobox keys stay in code. Then add the row to `apps/docs/content/docs/guides/keyboard-shortcuts*.mdx` in every language; `scripts/shortcut-mentions.test.ts` fails until you do. Never type keys in docs, website, README, or store text; the `website-docs-delivery` skill has the placeholders.
 - **Hover transforms break geometry tests.** Rows that scale on hover changed a measurement by 0.07px and failed `popup-guards` on `main`. Move the pointer away (`page.mouse.move(0, 0)`) and let transitions settle before measuring; do not loosen tolerances.
 
 ## Settings UX the user expects

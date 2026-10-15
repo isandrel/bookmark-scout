@@ -3,16 +3,16 @@ title: Atalhos de teclado
 description: Pesquise, navegue entre as pastas, salve a página atual e use a tabela do gerenciador sem o mouse.
 ---
 
-Os atalhos do pop-up e do painel lateral nunca usam `Ctrl` nem `Cmd`, então os atalhos do navegador, como `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` e `D`, continuam funcionando. O gerenciador de favoritos substitui o do próprio navegador, então também assume os atalhos com `Ctrl` desse gerenciador (`Cmd` no Mac): selecionar tudo, copiar, recortar, colar, desfazer, refazer e abrir em novas guias. Os atalhos ficam pausados enquanto você digita em um campo de texto (`Esc` na caixa de pesquisa é a exceção), enquanto um método de entrada está compondo texto e enquanto uma caixa de diálogo ou um menu está aberto.
+Os atalhos do pop-up e do painel lateral nunca usam `Ctrl` nem `Cmd`, então os atalhos do próprio navegador com essas teclas, como abrir uma nova guia ou ir para a barra de endereço, continuam funcionando. O gerenciador de favoritos substitui o do próprio navegador, então também assume os atalhos com `Ctrl` desse gerenciador (`Cmd` no Mac): selecionar tudo, copiar, recortar, colar, desfazer, refazer e abrir em novas guias. Os atalhos ficam pausados enquanto você digita em um campo de texto (`Esc` na caixa de pesquisa é a exceção), enquanto um método de entrada está compondo texto e enquanto uma caixa de diálogo ou um menu está aberto.
 
 ## Em qualquer página [#on-any-page]
 
-Estes atalhos funcionam sem nenhuma janela do Bookmark Scout aberta. Eles pertencem ao navegador, então você pode alterá-los ou removê-los nas configurações de atalhos dele; consulte [Salvar com um atalho de teclado](/guides/save-and-organize#quick-save). No Chrome e no Edge, você também pode atribuir ao salvamento rápido a tecla de favoritos do navegador, `Ctrl+D` (`⌘D` no Mac); consulte [Usar Ctrl+D para salvar rapidamente](/guides/save-and-organize#ctrl-d).
+Estes atalhos funcionam sem nenhuma janela do Bookmark Scout aberta. Eles pertencem ao navegador, então você pode alterá-los ou removê-los nas configurações de atalhos dele; consulte [Salvar com um atalho de teclado](/guides/save-and-organize#quick-save). No Chrome e no Edge, você também pode atribuir ao salvamento rápido a tecla de favoritos do navegador, <Shortcut id="browser.bookmark_page" />; consulte [Usar a tecla de favoritos para salvar rapidamente](/guides/save-and-organize#ctrl-d).
 
 | Tecla | Ação |
 | --- | --- |
-| `Alt+Shift+S` (`⌥⇧S` no Mac) | Salvar rapidamente a página atual na pasta definida em **Pasta de salvamento rápido** |
-| `Alt+Shift+D` (`⌥⇧D` no Mac) | Salvar rapidamente a página atual na pasta sugerida pela IA |
+| <Shortcut id="commands.quick-save" /> | Salvar rapidamente a página atual na pasta definida em **Pasta de salvamento rápido** |
+| <Shortcut id="commands.ai-quick-save" /> | Salvar rapidamente a página atual na pasta sugerida pela IA |
 
 Na notificação que aparece em seguida, `Tab` chega a **Desfazer** e às outras pastas, e `Esc` a fecha.
 
@@ -22,10 +22,10 @@ Passe o cursor sobre a caixa de pesquisa para ver um lembrete.
 
 | Tecla | Ação |
 | --- | --- |
-| `/` | Ir para a caixa de pesquisa |
+| <Shortcut id="popup.focus_search" /> | Ir para a caixa de pesquisa |
 | `Esc` na caixa de pesquisa | Limpar a pesquisa; pressione de novo para sair da caixa |
 | `↓` na caixa de pesquisa | Ir para a primeira pasta |
-| `Alt+↓` na caixa de pesquisa vazia | Mostrar as pesquisas recentes; `↓` / `↑` escolhem uma, `Enter` pesquisa a escolhida, `Tab` chega a **Limpar** |
+| <Shortcut id="popup.recent_searches" /> na caixa de pesquisa vazia | Mostrar as pesquisas recentes; `↓` / `↑` escolhem uma, `Enter` pesquisa a escolhida, `Tab` chega a **Limpar** |
 | `↓` / `↑`, `Home` / `End` | Navegar entre as pastas e os favoritos visíveis (`↑` na primeira linha volta para a pesquisa) |
 | `→` / `←` | Abrir ou fechar uma pasta; em uma pasta aberta, `→` vai para o primeiro item dela, e `←` vai para a pasta superior |
 | `Enter` em uma pasta | Salvar a página atual nessa pasta (uma página já salva lá não é duplicada) |
@@ -34,30 +34,30 @@ Passe o cursor sobre a caixa de pesquisa para ver um lembrete.
 
 ## Gerenciador de favoritos [#bookmarks-manager]
 
-Pressione `?`, ou clique no botão de teclado no cabeçalho, para ver esta lista no gerenciador. As teclas seguem o gerenciador de favoritos do Chrome; quando o Mac é diferente, a tecla dele vem em segundo lugar.
+Pressione <Shortcut id="manager.show_help" />, ou clique no botão de teclado no cabeçalho, para ver esta lista no gerenciador. As teclas seguem o gerenciador de favoritos do Chrome.
 
 | Tecla | Ação |
 | --- | --- |
-| `/` | Ir para o filtro de títulos |
-| `Backspace` ou `Alt+↑` | Ir para a pasta superior |
-| `↓` / `↑`, `Home` / `End` | Navegar entre as linhas e selecionar a linha; com `Shift`, estender a seleção; com `Ctrl` (`Cmd`), mover sem selecionar |
-| `j` / `k` | Ir para a linha seguinte ou anterior |
+| <Shortcut id="manager.focus_filter" /> | Ir para o filtro de títulos |
+| <Shortcut id="manager.parent_folder" /> | Ir para a pasta superior |
+| `↓` / `↑`, `Home` / `End` | Navegar entre as linhas e selecionar a linha; com `Shift`, estender a seleção; com `Ctrl` (`Cmd` no Mac), mover sem selecionar |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | Ir para a linha seguinte ou anterior |
 | `Space` | Selecionar ou desmarcar a linha em foco |
-| `Ctrl+A` / `Cmd+A` | Selecionar todas as linhas que os filtros mostram, em todas as páginas |
-| `Esc` | Limpar a seleção, ou fechar uma caixa de diálogo ou um menu |
-| `Enter` / `Cmd+O` | Abrir a pasta selecionada, ou os favoritos selecionados em guias |
-| `Ctrl+Enter` / `Cmd+Enter` | Abrir a seleção em novas guias em segundo plano |
-| `Shift+Enter` | Abrir a seleção em uma nova janela |
-| `F2` / `Enter` | Editar o favorito selecionado ou renomear a pasta |
-| `Delete` / `Delete` ou `Cmd+Backspace` | Excluir a seleção |
-| `Ctrl+Z` / `Cmd+Z` | Desfazer a última alteração |
-| `Ctrl+Y` ou `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Refazer |
-| `Ctrl+C` / `Cmd+C` | Copiar a seleção; os URLs dela vão para a área de transferência |
-| `Ctrl+X` / `Cmd+X` | Recortar a seleção, para movê-la ao colar |
-| `Ctrl+V` / `Cmd+V` | Colar depois da seleção ou no final da pasta; URLs copiados em outro aplicativo viram favoritos |
-| `s` | Abrir as pesquisas salvas |
-| `?` | Mostrar os atalhos de teclado |
-| Tecla de menu ou `Shift+F10` | Abrir o menu de clique com o botão direito da linha ou da pasta em foco |
+| <Shortcut id="manager.select_all" /> | Selecionar todas as linhas que os filtros mostram, em todas as páginas |
+| <Shortcut id="manager.clear_selection" /> | Limpar a seleção, ou fechar uma caixa de diálogo ou um menu |
+| <Shortcut id="manager.open" /> | Abrir a pasta selecionada, ou os favoritos selecionados em guias |
+| <Shortcut id="manager.open_in_new_tabs" /> | Abrir a seleção em novas guias em segundo plano |
+| <Shortcut id="manager.open_in_new_window" /> | Abrir a seleção em uma nova janela |
+| <Shortcut id="manager.rename" /> | Editar o favorito selecionado ou renomear a pasta |
+| <Shortcut id="manager.delete" /> | Excluir a seleção |
+| <Shortcut id="manager.undo" /> | Desfazer a última alteração |
+| <Shortcut id="manager.redo" /> | Refazer |
+| <Shortcut id="manager.copy" /> | Copiar a seleção; os URLs dela vão para a área de transferência |
+| <Shortcut id="manager.cut" /> | Recortar a seleção, para movê-la ao colar |
+| <Shortcut id="manager.paste" /> | Colar depois da seleção ou no final da pasta; URLs copiados em outro aplicativo viram favoritos |
+| <Shortcut id="manager.open_saved_searches" /> | Abrir as pesquisas salvas |
+| <Shortcut id="manager.show_help" /> | Mostrar os atalhos de teclado |
+| Tecla de menu ou <Shortcut id="browser.context_menu" /> | Abrir o menu de clique com o botão direito da linha ou da pasta em foco |
 
 Na árvore de pastas à esquerda, que também é uma única parada de `Tab`:
 
@@ -65,11 +65,11 @@ Na árvore de pastas à esquerda, que também é uma única parada de `Tab`:
 | --- | --- |
 | `↓` / `↑`, `Home` / `End` | Navegar entre as pastas mostradas |
 | `→` / `←` | Abrir ou fechar uma pasta; em uma pasta aberta, `→` vai para a primeira subpasta dela e, em uma pasta fechada, `←` vai para a pasta superior |
-| `Enter` ou `Space` / `Cmd+O` ou `Space` | Mostrar a pasta na tabela |
-| `F2` / `Enter` | Renomear a pasta |
-| `Delete` / `Delete` ou `Cmd+Backspace` | Excluir a pasta |
-| `Ctrl+C`, `Ctrl+X` / `Cmd+C`, `Cmd+X` | Copiar ou recortar a pasta |
-| `Ctrl+V` / `Cmd+V` | Colar dentro da pasta |
+| <Shortcut id="manager.open" />, ou `Space` | Mostrar a pasta na tabela |
+| <Shortcut id="manager.rename" /> | Renomear a pasta |
+| <Shortcut id="manager.delete" /> | Excluir a pasta |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | Copiar ou recortar a pasta |
+| <Shortcut id="manager.paste" /> | Colar dentro da pasta |
 
 A tabela é uma única parada quando você pressiona `Tab`; as teclas de seta navegam entre as linhas dela. Abrir mais de 15 guias de uma vez pede confirmação antes; uma pasta abre os favoritos que estão diretamente dentro dela. Na tabela, coloque o foco na borda do cabeçalho de uma coluna e pressione `←` ou `→` para redimensionar essa coluna.
 
