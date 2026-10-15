@@ -12,6 +12,10 @@
         ".": {
             "types": "./src/index.ts",
             "import": "./src/index.ts"
+        },
+        "./shortcuts": {
+            "types": "./src/shortcuts.ts",
+            "import": "./src/shortcuts.ts"
         }
     },
     "dependencies": {

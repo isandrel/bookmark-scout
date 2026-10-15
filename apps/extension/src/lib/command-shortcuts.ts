@@ -138,58 +138,12 @@ export function isValidCommandShortcut(shortcut: string): boolean {
   return isMain(main) && (second === undefined || second === 'Shift' || isMain(second));
 }
 
-/** Apple keyboards print symbols for modifiers, as macOS menus do. */
-const APPLE_MODIFIER_CAPS: Readonly<Record<string, string>> = {
-  Command: '⌘',
-  MacCtrl: '⌃',
-  Ctrl: '⌘',
-  Alt: '⌥',
-  Shift: '⇧',
-};
-const OTHER_MODIFIER_CAPS: Readonly<Record<string, string>> = { MacCtrl: 'Ctrl' };
-const KEY_CAPS: Readonly<Record<string, string>> = {
-  Up: '↑',
-  Down: '↓',
-  Left: '←',
-  Right: '→',
-  Comma: ',',
-  Period: '.',
-};
-
-/** A shortcut as text, the way the browser shows it: `Alt+Shift+S`, or `⌥⇧S` on Apple platforms. */
-export function formatCommandShortcut(shortcut: string, options: { apple: boolean }): string {
-  return commandShortcutKeyCaps(shortcut, options).join(options.apple ? '' : '+');
-}
-
 /**
- * Whether two shortcuts press the same keys, whichever way each is written: Chrome on macOS
- * reports `⌘D` for the manifest's `Ctrl+D`, and Firefox's `Ctrl` is Command on Apple platforms.
+ * Turning a stored or reported shortcut into key caps or text, and comparing two of them: shared
+ * with the docs, website, and README, which print the configured keys the same way.
  */
-export function isSameCommandShortcut(
-  first: string,
-  second: string,
-  options: { apple: boolean },
-): boolean {
-  const caps = (shortcut: string) => commandShortcutKeyCaps(shortcut, options).join('\u0000');
-  return first !== '' && second !== '' && caps(first) === caps(second);
-}
-
-/**
- * The key caps of a shortcut as the browser reports it: Firefox and Chrome on Windows and Linux
- * write `Alt+Shift+S`, and Chrome on macOS writes glyphs such as `⌥⇧S`. On Apple platforms
- * Firefox's `Ctrl` means Command.
- */
-export function commandShortcutKeyCaps(shortcut: string, { apple }: { apple: boolean }): string[] {
-  if (!shortcut) return [];
-  if (!shortcut.includes('+')) {
-    // Chrome on macOS: modifier glyphs, then the key ("⌥⇧S", "⌘F5"); or a lone key ("F5").
-    const glyphs = /^[⌘⌃⌥⇧]*/.exec(shortcut)?.[0] ?? '';
-    const key = shortcut.slice(glyphs.length);
-    return [...glyphs, ...(key ? [KEY_CAPS[key] ?? key] : [])];
-  }
-  const parts = shortcut.split('+');
-  const modifierCaps = apple ? APPLE_MODIFIER_CAPS : OTHER_MODIFIER_CAPS;
-  return parts.map((part, index) =>
-    index < parts.length - 1 ? (modifierCaps[part] ?? part) : (KEY_CAPS[part] ?? part),
-  );
-}
+export {
+  commandShortcutKeyCaps,
+  formatCommandShortcut,
+  isSameCommandShortcut,
+} from '@bookmark-scout/config/shortcuts';

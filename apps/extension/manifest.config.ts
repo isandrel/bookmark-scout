@@ -1,4 +1,4 @@
-import { site } from '@bookmark-scout/config';
+import { readShortcutConfig, site } from '@bookmark-scout/config';
 import type { ConfigEnv, FirefoxDataCollectionPermissions, UserManifest } from 'wxt';
 import type { Browser } from 'wxt/browser';
 import { getManifestCommands } from './src/lib/command-catalog';
@@ -64,8 +64,8 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
         48: 'icon-48.png',
       },
     },
-    // Quick save shortcuts; src/lib/command-catalog.ts explains the suggested keys.
-    commands: getManifestCommands(),
+    // Quick save shortcuts, with the keys config/ui/shortcuts.toml suggests.
+    commands: getManifestCommands(readShortcutConfig().commands),
     permissions: permissions as UserManifest['permissions'],
     optional_permissions: optional as UserManifest['optional_permissions'],
     // Requested at click time only, never at install: website access for the network tools and

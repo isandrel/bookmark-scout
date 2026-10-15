@@ -1,13 +1,46 @@
-# Keyboard shortcuts. Each action lists one or more bindings: `key` is the KeyboardEvent.key value
-# ("/", "j", "ArrowUp", "Backspace"), with optional `alt` and `shift`. Shortcuts pause while
-# typing, during IME composition, and while a dialog or menu is open. The manager's shortcuts help
-# lists these same bindings.
+# Keyboard shortcuts: every key Bookmark Scout uses or names is defined here, once. The extension
+# reads this file in src/lib/keyboard-shortcuts.ts, and the manifest build, docs, website, and
+# README generator read it through `readShortcutConfig` in @bookmark-scout/config, whose
+# packages/config/src/shortcuts.ts also formats keys for every surface. Never type a shortcut by
+# hand in the docs, website, store listings, or README.
+#
+# In [manager] and [popup], each action lists one or more bindings: `key` is the
+# KeyboardEvent.key value ("/", "j", "ArrowUp", "Backspace"), with optional `alt` and `shift`.
+# Shortcuts pause while typing, during IME composition, and while a dialog or menu is open. The
+# manager's shortcuts help and the popup's shortcuts tooltip list these same bindings.
 #
 # The popup and side panel never use Ctrl or Cmd, so browser shortcuts keep working there. The
 # bookmark manager replaces the browser's own manager, so it also takes that manager's Ctrl
 # shortcuts: `mod = true` is Ctrl, or Cmd on a Mac. A manager binding can apply to one platform
 # only, `platform = "mac"` or `"other"`, as Chrome's manager does (F2 renames elsewhere, Enter on a
 # Mac).
+#
+# Not listed: the keys of the standard ARIA patterns, which every tree, table, list, and combobox
+# answers the same way and which are not configurable (arrow keys, Home, End, Enter, Space, Tab,
+# and Escape; TREE_KEY_BINDINGS in src/lib/keyboard-shortcuts.ts).
+
+# The extension's browser commands (`manifest.commands`), by command name, with the keys the
+# manifest suggests, in the browser's command format (MDN `commands`: up to two of Ctrl, Alt,
+# Command, MacCtrl, and Shift, then one key; `Ctrl` is Command on a Mac). The browser keeps the keys
+# the user picks; Options shows them from `commands.getAll()`. src/lib/command-catalog.ts lists
+# the same commands. Suggested keys avoid every built-in shortcut of Chrome, Edge, and Firefox.
+[commands]
+quick-save = "Alt+Shift+S"
+ai-quick-save = "Alt+Shift+D"
+
+# The browser's own keys that the extension acts on or the docs name, in the same format. A value
+# can differ per platform: { other = "...", mac = "..." }.
+[browser]
+# Bookmark this page. No browser lets an extension take it as a default; in Chrome and Edge the
+# user can give it to quick save on the browser's shortcut page.
+bookmark_page = "Ctrl+D"
+# Bookmark all tabs. Firefox keeps this key and bookmark_page for itself, even when an extension
+# sets them, so the Firefox shortcut recorder refuses both.
+bookmark_all_tabs = "Ctrl+Shift+D"
+# The browser's bookmarks page, which Bookmark Scout replaces in Chrome
+open_bookmarks_manager = { other = "Ctrl+Shift+O", mac = "Alt+Command+B" }
+# Opens the right-click menu of the focused row or folder, like the menu key
+context_menu = "Shift+F10"
 
 # Bookmark manager page.
 [manager]
@@ -32,8 +65,15 @@ redo = [
   { key = "y", mod = true, platform = "other" },
   { key = "z", mod = true, shift = true },
 ]
+# The browser's copy, cut, and paste keys: the manager acts on its clipboard events, so these
+# are what the shortcuts help and the docs show, not keys the manager listens for
+copy = [{ key = "c", mod = true }]
+cut = [{ key = "x", mod = true }]
+paste = [{ key = "v", mod = true }]
 
-# Popup and side panel. Arrow keys, Home, End, Enter, and Escape in the search box and the tree
-# follow the standard tree and combobox keyboard patterns and are not listed here.
+# Popup and side panel.
 [popup]
 focus_search = [{ key = "/" }]
+# Show recent searches from the empty search box (the combobox pattern's Alt+ArrowDown), so a
+# plain ArrowDown always reaches the tree
+recent_searches = [{ key = "ArrowDown", alt = true }]
