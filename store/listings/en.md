@@ -137,7 +137,7 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 4,797 characters (2026-10-14). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../README.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
+AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 4,797 characters (2026-10-14). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser.

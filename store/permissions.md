@@ -9,7 +9,7 @@ NX_DAEMON=false bunx nx run extension:build:edge
 # then read apps/extension/dist/{chrome-mv3,firefox-mv2,edge-mv3}/manifest.json
 ```
 
-Rebuild and compare before each submission. If a permission is added or removed, update this file, `README.md` (Permissions), and the privacy documents.
+Rebuild and compare before each submission. If a permission is added or removed, update this file, the docs `permissions.mdx`, and the privacy documents; update the README's Permissions summary (`templates/README*.md`) only if what the browser asks at install changes.
 
 ## Built manifests at version 0.3.0
 

@@ -80,11 +80,12 @@ jobs:
       - name: Test the workspace config, scripts, and MCP bridge
         run: bun test packages scripts apps/website/lib
 
+      # README.md, translations/, and DEVELOPMENT.md come from templates/, config/, and the
+      # installed package versions; --check fails on a missing or stale output.
       - name: Check generated READMEs match templates
         run: |
-          bun run generate:readme
-          git diff --exit-code -- README.md translations/ || {
-            echo "::error::README files differ from their inputs (templates/, config/, installed package versions). Run 'bun run generate:readme' and commit the result."
+          bun run generate:readme --check || {
+            echo "::error::Generated Markdown differs from its inputs (templates/, config/, installed package versions). Run 'bun run generate:readme' and commit the result."
             exit 1
           }
 
