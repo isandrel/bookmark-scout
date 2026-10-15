@@ -35,6 +35,11 @@ export const zhCN: DocsCopy = {
       `没有与“${query}”匹配的页面。请尝试减少关键词，或使用页面顶部的“搜索”在所有页面的内容中搜索。`,
   },
 
+  shortcut: {
+    or: " 或 ",
+    mac: "（Mac 上为 {keys}）",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated: "此页面尚未翻译，因此以英文显示。",

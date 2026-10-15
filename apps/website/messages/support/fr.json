@@ -47,7 +47,7 @@
                     "quickSave": {
                         "q": "Le raccourci d'enregistrement rapide ne fait rien",
                         "a": [
-                            "Si une autre extension utilise déjà Alt+Shift+S ou Alt+Shift+D, le navigateur laisse le raccourci de Bookmark Scout sans touches, et la fenêtre pop-up affiche Raccourci d’enregistrement rapide non défini. Cliquez sur Le définir, ou ouvrez Paramètres, puis Enregistrement et recherche, puis Raccourcis clavier, et choisissez d'autres touches.",
+                            "Si une autre extension utilise déjà {{SHORTCUT:commands.quick-save}} ou {{SHORTCUT:commands.ai-quick-save}}, le navigateur laisse le raccourci de Bookmark Scout sans touches, et la fenêtre pop-up affiche Raccourci d’enregistrement rapide non défini. Cliquez sur Le définir, ou ouvrez Paramètres, puis Enregistrement et recherche, puis Raccourcis clavier, et choisissez d'autres touches.",
                             "Certaines pages, comme les pages propres au navigateur et la boutique d'extensions, ne permettent pas aux extensions d'y afficher quoi que ce soit. Sur ces pages, l'icône de la barre d'outils indique si la page a été enregistrée, et la fenêtre pop-up propose Annuler."
                         ]
                     },

@@ -79,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Save every page to the right folder, in seconds.",
-      "description": "Type part of a folder's name, or press Alt+Shift+S on any page, and the page is saved to the folder it belongs in. Opt-in AI can suggest the folder too. Bookmark Scout also searches and tidies the bookmarks you already have, in Chrome, Edge, and Firefox, with no account and no server of its own.",
+      "description": "Type part of a folder's name, or press {{SHORTCUT:commands.quick-save}} on any page, and the page is saved to the folder it belongs in. Opt-in AI can suggest the folder too. Bookmark Scout also searches and tidies the bookmarks you already have, in Chrome, Edge, and Firefox, with no account and no server of its own.",
       "download": "Download from GitHub",
       "install": "Install Bookmark Scout",
       "docs": "Read the docs",
@@ -137,10 +137,10 @@
         "points": [
           "Type part of a folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard",
           "Type a path such as work/react, and still find the folder with a small typo",
-          "Press Alt+Shift+S on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
+          "Press {{SHORTCUT:commands.quick-save}} on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
           "A page already in that folder is not saved twice, and folders you saved to recently come first",
           "Save links from the right-click menu into recent folders",
-          "With AI turned on, get folder suggestions for the page, or save to the first one with Alt+Shift+D"
+          "With AI turned on, get folder suggestions for the page, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },
       "organize": {
@@ -153,7 +153,7 @@
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search as a smart view that always shows current results",
           "Select rows with Shift and Ctrl, right-click for cut, copy, paste, and open all, and drag rows, folders, and links where they belong",
-          "Undo and redo changes with Ctrl+Z and Ctrl+Y, even after a reload",
+          "Undo and redo changes with {{SHORTCUT:manager.undo}} and {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} and {{SHORTCUT_MAC:manager.redo}} on a Mac), even after a reload",
           "Import HTML or JSON after a preview, and export HTML, JSON, Markdown, or CSV",
           "Link to a folder or a search, and move through it all with the keyboard"
         ]
@@ -299,7 +299,7 @@
         },
         "changes": {
           "q": "Will it change my bookmarks without asking?",
-          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. Ask AI and local AI agents show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with Ctrl+Z."
+          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. Ask AI and local AI agents show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} on a Mac)."
         },
         "firefox": {
           "q": "Does it work in Firefox?",

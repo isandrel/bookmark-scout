@@ -76,7 +76,7 @@ GESTIONNAIRE DE FAVORIS
 Bookmark Scout remplace la page Favoris du navigateur par un gestionnaire qui fonctionne comme celui du navigateur, avec en plus un fil d'Ariane, un tableau triable et filtrable, des colonnes redimensionnables et des recherches enregistrées (des vues intelligentes qui ne stockent que vos filtres et affichent toujours des résultats à jour).
 • Menus contextuels sur les favoris, les dossiers et les zones vides : modifier, renommer, couper, copier, coller, ouvrir dans de nouveaux onglets ou de nouvelles fenêtres, afficher dans le dossier et supprimer
 • Glisser-déposer pour déplacer des favoris dans des dossiers ou les réorganiser ; les liens déposés depuis d'autres pages deviennent des favoris
-• Sélectionnez plusieurs lignes avec Ctrl+clic et Shift+clic, et utilisez les raccourcis clavier du gestionnaire de favoris du navigateur (Cmd sur Mac) : Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z pour annuler et Ctrl+Y pour rétablir
+• Sélectionnez plusieurs lignes avec Ctrl+clic et Shift+clic, et utilisez les raccourcis clavier du gestionnaire de favoris du navigateur (Cmd sur Mac) : Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z pour annuler et Ctrl+Shift+Z pour rétablir
 • Annuler et rétablir s'appliquent aux modifications, aux déplacements, aux tris et aux suppressions, y compris ceux effectués par Demander à l'IA
 • L'adresse conserve la recherche et le dossier : un lien peut ainsi ouvrir le gestionnaire avec une recherche déjà lancée (?q=react) ou dans un dossier, et les boutons Précédent et Suivant restaurent les deux
 • Choisissez les commandes affichées dans le menu contextuel et le menu ⋯, ainsi que leur ordre (Paramètres > Comportement)
@@ -161,7 +161,7 @@ GESTIONNAIRE DE FAVORIS
 Ouvrir le gestionnaire de favoris, dans la fenêtre pop-up de la barre d'outils ou dans la barre latérale, ouvre un gestionnaire complet dans un nouvel onglet, avec une arborescence de dossiers et un tableau triable et filtrable.
 • Menus contextuels sur les favoris, les dossiers et les zones vides : modifier, renommer, couper, copier, coller, ouvrir, afficher dans le dossier et supprimer
 • Glisser-déposer pour déplacer des favoris dans des dossiers ou les réorganiser ; les liens déposés depuis d'autres pages deviennent des favoris
-• Sélectionnez plusieurs lignes avec Ctrl+clic et Shift+clic (Cmd sur Mac), copiez, coupez et collez avec les touches habituelles, et annulez ou rétablissez vos modifications avec Ctrl+Z et Ctrl+Y
+• Sélectionnez plusieurs lignes avec Ctrl+clic et Shift+clic (Cmd sur Mac), copiez, coupez et collez avec les touches habituelles, et annulez ou rétablissez vos modifications avec Ctrl+Z et Ctrl+Shift+Z
 
 PARAMÈTRES ET SAUVEGARDE
 • Exporter, en bas des paramètres, enregistre une sauvegarde : les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (jamais leurs clés API) et les recherches enregistrées. Importer la restaure

@@ -50,7 +50,7 @@ AI bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 8,150 characters (2026-10-14); the Chrome Web Store allows 16,000. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 8,156 characters (2026-10-14); the Chrome Web Store allows 16,000. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser.
@@ -78,7 +78,7 @@ BOOKMARKS MANAGER
 Bookmark Scout replaces the browser's Bookmarks page with a manager that works like the browser's own, plus breadcrumbs, a sortable and filterable table, resizable columns, and saved searches (smart views that store only your filters and always show current results).
 • Right-click menus on bookmarks, folders, and empty space: edit, rename, cut, copy, paste, open in new tabs or windows, show in folder, and delete
 • Drag and drop to move bookmarks into folders or reorder them; links dropped from other pages become bookmarks
-• Select several rows with Ctrl+click and Shift+click, and use the keyboard shortcuts of the browser's own manager (Cmd on a Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z to undo, and Ctrl+Y to redo
+• Select several rows with Ctrl+click and Shift+click, and use the keyboard shortcuts of the browser's own manager (Cmd on a Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z to undo, and Ctrl+Shift+Z to redo
 • Undo and redo cover edits, moves, sorting, and deletions, including changes made by Ask AI
 • The address keeps the search and the folder, so a link can open the manager already searching (?q=react) or in a folder, and Back and Forward restore both
 • Choose which commands the right-click and ⋯ menus show, and in what order (Settings > Behavior)
@@ -137,7 +137,7 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 4,797 characters (2026-10-14). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
+AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 4,803 characters (2026-10-14). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser.
@@ -165,7 +165,7 @@ BOOKMARKS MANAGER
 Open bookmark manager in the toolbar popup or the sidebar opens a full manager in a new tab, with a folder tree and a sortable, filterable table.
 • Right-click menus on bookmarks, folders, and empty space: edit, rename, cut, copy, paste, open, show in folder, and delete
 • Drag and drop to move bookmarks into folders or reorder them; links dropped from other pages become bookmarks
-• Select several rows with Ctrl+click and Shift+click (Cmd on a Mac), copy, cut, and paste with the usual keys, and undo and redo your changes with Ctrl+Z and Ctrl+Y
+• Select several rows with Ctrl+click and Shift+click (Cmd on a Mac), copy, cut, and paste with the usual keys, and undo and redo your changes with Ctrl+Z and Ctrl+Shift+Z
 
 SETTINGS AND BACKUP
 • Export at the bottom of Settings saves a backup: the settings you changed, custom prompts, AI services (never their API keys), and saved searches. Import restores it

@@ -47,7 +47,7 @@
                     "quickSave": {
                         "q": "The quick save shortcut does nothing",
                         "a": [
-                            "If another extension already uses Alt+Shift+S or Alt+Shift+D, the browser leaves Bookmark Scout's shortcut without keys, and the popup shows Quick save shortcut not set. Click Set it up, or open Settings, then Saving & Search, then Keyboard shortcuts, and choose other keys.",
+                            "If another extension already uses {{SHORTCUT:commands.quick-save}} or {{SHORTCUT:commands.ai-quick-save}}, the browser leaves Bookmark Scout's shortcut without keys, and the popup shows Quick save shortcut not set. Click Set it up, or open Settings, then Saving & Search, then Keyboard shortcuts, and choose other keys.",
                             "Some pages, such as the browser's own pages and the extension store, do not let extensions show anything on them. There the toolbar icon shows whether the page was saved, and the popup offers Undo."
                         ]
                     },

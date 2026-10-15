@@ -15,6 +15,7 @@ import {
   storeListing,
 } from "@/lib/links";
 import { getScreenshot } from "@/lib/screenshots";
+import { shortcutMarkdown } from "@/lib/shortcuts";
 
 const DOCS_URL = site.docs.origin;
 
@@ -78,6 +79,7 @@ const replacementsFor = (
       ].join("\n");
     },
   ],
+  [/<Shortcut\s+id="([^"]+)"\s*\/>/g, (id) => shortcutMarkdown(id, locale)],
   [/<License\s*\/>/g, () => `[${license.name}](${license.url})`],
   [/<PrivacyEffectiveDate\s*\/>/g, () => privacyEffectiveDate(locale).text],
   [/<StartHere\s*\/>\n?/g, () => ""],

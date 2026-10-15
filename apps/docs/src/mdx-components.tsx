@@ -16,6 +16,7 @@ import {
   StoreListing,
 } from "@/components/mdx/links";
 import { Screenshot } from "@/components/mdx/screenshot";
+import { Shortcut } from "@/components/mdx/shortcut";
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
@@ -32,6 +33,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ReleaseLink,
     RepoLink,
     Screenshot,
+    Shortcut,
     SiteLink,
     StartHere,
     StoreAvailability,
@@ -59,6 +61,7 @@ export function localizedMdxComponents(locale: string): MDXComponents {
     PrivacyEffectiveDate: withLocale(PrivacyEffectiveDate, locale),
     ReleaseLink: withLocale(ReleaseLink, locale),
     Screenshot: withLocale(Screenshot, locale),
+    Shortcut: withLocale(Shortcut, locale),
     SiteLink: withLocale(SiteLink, locale),
     StartHere: withLocale(StartHere, locale),
     StoreAvailability: withLocale(StoreAvailability, locale),

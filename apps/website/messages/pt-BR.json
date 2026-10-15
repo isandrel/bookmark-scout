@@ -79,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Salve cada página na pasta certa, em segundos.",
-      "description": "Digite parte do nome de uma pasta, ou pressione Alt+Shift+S em qualquer página, e a página é salva na pasta a que pertence. A IA opcional também pode sugerir a pasta. O Bookmark Scout também pesquisa e arruma os favoritos que você já tem, no Chrome, no Edge e no Firefox, sem conta e sem servidor próprio.",
+      "description": "Digite parte do nome de uma pasta, ou pressione {{SHORTCUT:commands.quick-save}} em qualquer página, e a página é salva na pasta a que pertence. A IA opcional também pode sugerir a pasta. O Bookmark Scout também pesquisa e arruma os favoritos que você já tem, no Chrome, no Edge e no Firefox, sem conta e sem servidor próprio.",
       "download": "Baixar do GitHub",
       "install": "Instalar o Bookmark Scout",
       "docs": "Ler a documentação",
@@ -137,10 +137,10 @@
         "points": [
           "Digite parte do nome de uma pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página atual nela sem tirar as mãos do teclado",
           "Digite um caminho como work/react e encontre a pasta mesmo com um pequeno erro de digitação",
-          "Pressione Alt+Shift+S em qualquer página para salvá-la na pasta que melhor corresponde a ela; uma pequena notificação na página oferece Desfazer e outras pastas",
+          "Pressione {{SHORTCUT:commands.quick-save}} em qualquer página para salvá-la na pasta que melhor corresponde a ela; uma pequena notificação na página oferece Desfazer e outras pastas",
           "Uma página que já está nessa pasta não é salva duas vezes, e as pastas em que você salvou recentemente aparecem primeiro",
           "Salve links em pastas recentes pelo menu de clique com o botão direito",
-          "Com a IA ativada, receba sugestões de pasta para a página ou salve na primeira delas com Alt+Shift+D"
+          "Com a IA ativada, receba sugestões de pasta para a página ou salve na primeira delas com {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },
       "organize": {
@@ -153,7 +153,7 @@
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
           "Salve uma pesquisa como visualização inteligente que sempre mostra resultados atualizados",
           "Selecione linhas com Shift e Ctrl, clique com o botão direito para recortar, copiar, colar e abrir todos, e arraste linhas, pastas e links para onde eles devem ficar",
-          "Desfaça e refaça alterações com Ctrl+Z e Ctrl+Y, mesmo depois de recarregar a página",
+          "Desfaça e refaça alterações com {{SHORTCUT:manager.undo}} e {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} e {{SHORTCUT_MAC:manager.redo}} no Mac), mesmo depois de recarregar a página",
           "Importe HTML ou JSON depois de uma prévia e exporte para HTML, JSON, Markdown ou CSV",
           "Crie um link para uma pasta ou uma pesquisa e navegue por tudo com o teclado"
         ]
@@ -299,7 +299,7 @@
         },
         "changes": {
           "q": "Ele altera meus favoritos sem perguntar?",
-          "a": "Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de gravar qualquer coisa. Perguntar à IA e os agentes de IA locais mostram as alterações como um plano e aguardam sua aprovação. Por padrão, a exclusão pede confirmação, e o gerenciador de favoritos pode desfazer alterações com Ctrl+Z."
+          "a": "Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de gravar qualquer coisa. Perguntar à IA e os agentes de IA locais mostram as alterações como um plano e aguardam sua aprovação. Por padrão, a exclusão pede confirmação, e o gerenciador de favoritos pode desfazer alterações com {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} no Mac)."
         },
         "firefox": {
           "q": "Funciona no Firefox?",

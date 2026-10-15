@@ -45,6 +45,11 @@ export const ja: DocsCopy = {
       `「${query}」に一致するページはありません。語句を減らすか、ページ上部の「検索」を使ってすべてのページの本文を検索してください。`,
   },
 
+  shortcut: {
+    or: " または ",
+    mac: "（Mac では {keys}）",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated:

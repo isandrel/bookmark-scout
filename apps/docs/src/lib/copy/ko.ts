@@ -38,6 +38,11 @@ export const ko: DocsCopy = {
       `“${query}”에 일치하는 페이지가 없습니다. 단어 수를 줄이거나, 페이지 맨 위의 검색을 사용해 모든 페이지의 내용을 검색하세요.`,
   },
 
+  shortcut: {
+    or: " 또는 ",
+    mac: "(Mac에서는 {keys})",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated: "이 페이지는 아직 번역되지 않아 영어로 표시됩니다.",

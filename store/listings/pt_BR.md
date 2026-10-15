@@ -76,7 +76,7 @@ GERENCIADOR DE FAVORITOS
 O Bookmark Scout substitui a página de favoritos do navegador por um gerenciador que funciona como o do próprio navegador e ainda tem trilha de navegação, tabela com classificação e filtros, colunas redimensionáveis e pesquisas salvas (visualizações inteligentes que guardam só os filtros e sempre mostram resultados atualizados).
 • Menus de clique com o botão direito em favoritos, pastas e espaços vazios: editar, renomear, recortar, copiar, colar, abrir em novas guias ou janelas, mostrar na pasta e excluir
 • Arraste e solte para mover favoritos para pastas ou reordená-los; links arrastados de outras páginas viram favoritos
-• Selecione várias linhas com Ctrl+clique e Shift+clique e use os atalhos de teclado do próprio gerenciador do navegador (Cmd no Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z para desfazer e Ctrl+Y para refazer
+• Selecione várias linhas com Ctrl+clique e Shift+clique e use os atalhos de teclado do próprio gerenciador do navegador (Cmd no Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z para desfazer e Ctrl+Shift+Z para refazer
 • Desfazer e refazer valem para edições, movimentações, classificações e exclusões, incluindo as alterações feitas pelo Perguntar à IA
 • O endereço guarda a pesquisa e a pasta, então um link pode abrir o gerenciador já pesquisando (?q=react) ou em uma pasta, e Voltar e Avançar restauram as duas
 • Escolha quais comandos os menus de clique com o botão direito e ⋯ mostram, e em que ordem (Configurações > Comportamento)
@@ -161,7 +161,7 @@ GERENCIADOR DE FAVORITOS
 Abrir gerenciador de favoritos, no pop-up da barra de ferramentas ou no painel lateral, abre um gerenciador completo em uma nova aba, com árvore de pastas e tabela com classificação e filtros.
 • Menus de clique com o botão direito em favoritos, pastas e espaços vazios: editar, renomear, recortar, copiar, colar, abrir, mostrar na pasta e excluir
 • Arraste e solte para mover favoritos para pastas ou reordená-los; links arrastados de outras páginas viram favoritos
-• Selecione várias linhas com Ctrl+clique e Shift+clique (Cmd no Mac), copie, recorte e cole com as teclas de sempre, e desfaça e refaça suas alterações com Ctrl+Z e Ctrl+Y
+• Selecione várias linhas com Ctrl+clique e Shift+clique (Cmd no Mac), copie, recorte e cole com as teclas de sempre, e desfaça e refaça suas alterações com Ctrl+Z e Ctrl+Shift+Z
 
 CONFIGURAÇÕES E BACKUP
 • Exportar, no final das Configurações, salva um backup: as configurações que você alterou, prompts personalizados, serviços de IA (nunca as chaves de API deles) e pesquisas salvas. Importar restaura esse backup

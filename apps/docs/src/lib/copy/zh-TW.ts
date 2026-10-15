@@ -37,6 +37,11 @@ export const zhTW: DocsCopy = {
       `沒有符合「${query}」的頁面。請減少輸入的字數，或使用頁面頂端的「搜尋」在所有頁面的內容中搜尋。`,
   },
 
+  shortcut: {
+    or: " 或 ",
+    mac: "（Mac 上為 {keys}）",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated: "這個頁面尚未翻譯，因此以英文顯示。",

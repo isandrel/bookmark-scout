@@ -48,6 +48,10 @@ Use headless Playwright, not the built-in browser pane: the pane scaled 1280px s
 
 Check Fumadocs built-ins before writing a feature by hand, in the current Fumadocs docs and in the installed `node_modules/fumadocs-*` source (the site can be ahead of the pinned version): `llms()` from `fumadocs-core/source` (llms.txt, full text, per-page Markdown), page actions such as `MarkdownCopyButton` and `ViewOptionsPopover`, and the Steps, Tabs, Callout, Cards, and Accordion MDX components.
 
+## Keyboard shortcuts
+
+Keys come from `apps/extension/config/ui/shortcuts.toml`, never from the page text. In docs MDX write `<Shortcut id="manager.undo" />` (it prints the keys and, where a Mac differs, a localized Mac note from `shortcut` in `src/lib/copy.ts`); in website messages and README templates write `{{SHORTCUT:<id>}}` or `{{SHORTCUT_MAC:<id>}}` (`<id>#2` for a second way), filled at build time (`apps/website/i18n/request.ts`, `scripts/generate-readme.ts`). Store listings are pasted by hand: keep their keys equal to the config. Standard navigation keys (`↓`, `Enter`, `Space`, `Tab`, `Esc`) stay as code. `bun test scripts/shortcut-mentions.test.ts` catches hand-typed keys, unknown ids, and a configured shortcut missing from `guides/keyboard-shortcuts*.mdx`. A new shortcut needs a row there in every language.
+
 ## Known traps
 
 - **next-intl static export:**

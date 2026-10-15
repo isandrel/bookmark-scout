@@ -89,9 +89,9 @@
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
-- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page, without taking any Ctrl/Cmd shortcut; in the manager, Chrome's keys: Ctrl/Cmd+A, C, X, V, Z, and Y, Enter to open, F2 to edit, Delete, `?` to list shortcuts, and `s` for saved searches
+- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page, without taking any Ctrl/Cmd shortcut; in the manager, Chrome's keys: Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Ctrl+Z, and Ctrl+Y (Cmd on a Mac, where redo is ⇧⌘Z), Enter to open, F2 to edit, Delete, `?` to list shortcuts, and `s` for saved searches
 - [x] 🔖 **Saved Searches** — Save the manager's filters, sort, and folder scope as named smart views, then open, rename, or delete them. Only the query is stored (on this device, not synced), so results always reflect your current bookmarks; deleted folders are skipped with a notice
-- [x] 🗑️ **Delete and Undo** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo. The manager keeps an undo and redo history of the last 100 changes (Ctrl/Cmd+Z, Ctrl/Cmd+Y) for the browser session, including changes made from the popup, Ask AI, and local AI agents
+- [x] 🗑️ **Delete and Undo** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo. The manager keeps an undo and redo history of the last 100 changes (Ctrl+Z and Ctrl+Y; ⌘Z and ⇧⌘Z on a Mac) for the browser session, including changes made from the popup, Ask AI, and local AI agents
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes, with undo
 - [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links, then review and apply repairs (delete, redirect target, archived copy, or edited URL) with undo

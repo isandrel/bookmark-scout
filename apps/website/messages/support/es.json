@@ -47,7 +47,7 @@
                     "quickSave": {
                         "q": "El atajo de guardado rápido no hace nada",
                         "a": [
-                            "Si otra extensión ya usa Alt+Shift+S o Alt+Shift+D, el navegador deja el atajo de Bookmark Scout sin teclas, y la ventana emergente muestra Atajo de guardado rápido sin asignar. Haz clic en Configurarlo, o abre Configuración, luego Guardar y buscar y luego Atajos de teclado, y elige otras teclas.",
+                            "Si otra extensión ya usa {{SHORTCUT:commands.quick-save}} o {{SHORTCUT:commands.ai-quick-save}}, el navegador deja el atajo de Bookmark Scout sin teclas, y la ventana emergente muestra Atajo de guardado rápido sin asignar. Haz clic en Configurarlo, o abre Configuración, luego Guardar y buscar y luego Atajos de teclado, y elige otras teclas.",
                             "Algunas páginas, como las páginas propias del navegador y la tienda de extensiones, no permiten que las extensiones muestren nada en ellas. En esas páginas, el icono de la barra de herramientas indica si la página se guardó, y la ventana emergente ofrece Deshacer."
                         ]
                     },

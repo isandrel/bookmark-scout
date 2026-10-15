@@ -13,7 +13,7 @@ A reference list of what ships now. For step-by-step instructions, follow the gu
 | Side panel | The same view in the browser's side panel (the sidebar in Firefox), which stays open while you browse |
 | Bookmarks manager | Replaces the browser's bookmarks page in Chrome and Edge: folder tree, breadcrumbs, a bookmark table, and the **Tools** sidebar. In a narrow window the folder tree and **Tools** open over the table; a deep folder path folds its middle folders into a **…** menu |
 | Settings | The extension's options page, with ten tabs. See [Settings](/settings) |
-| Any page | `Alt+Shift+S` and `Alt+Shift+D` quick save the page you are on, with a notification in the page |
+| Any page | <Shortcut id="commands.quick-save" /> and <Shortcut id="commands.ai-quick-save" /> quick save the page you are on, with a notification in the page |
 | Right-click menu | **Save bookmark to...** on any link, once you turn on **Right-Click Menu** |
 
 ## Find
@@ -29,7 +29,7 @@ Guide: [Search and saved searches](/guides/search).
 
 - Save the current page into any folder, never twice into the same folder, with a **Recent** panel of folders you used.
 - Type part of a folder's name, or a path such as `work/react`, and save to one of the matching folders listed above the results.
-- Quick save with `Alt+Shift+S` on any page, to the folder that matches the page best (ranked on your device), the last used folder, or a folder you choose; `Alt+Shift+D` saves to the first AI suggestion. A notification in the page offers **Undo** and other folders under **Move to**. In Chrome and Edge you can give quick save `Ctrl+D`.
+- Quick save with <Shortcut id="commands.quick-save" /> on any page, to the folder that matches the page best (ranked on your device), the last used folder, or a folder you choose; <Shortcut id="commands.ai-quick-save" /> saves to the first AI suggestion. A notification in the page offers **Undo** and other folders under **Move to**. In Chrome and Edge you can give quick save <Shortcut id="browser.bookmark_page" />.
 - Save links from the right-click menu into a recent folder or the Bookmarks Bar.
 - Create folders, drag and drop bookmarks and folders, and move several at once in the manager.
 - Sort by date added, natural alphabetical order, or folders first, without changing the browser's stored order.
@@ -67,7 +67,7 @@ Guide: [Import and export](/guides/import-export).
 
 Off by default. Bring your own key for OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter, or about 200 more providers from the models.dev catalog, or use Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint.
 
-- Folder recommendations in the popup, including a reviewed new folder path, and the `Alt+Shift+D` quick save shortcut.
+- Folder recommendations in the popup, including a reviewed new folder path, and the <Shortcut id="commands.ai-quick-save" /> quick save shortcut.
 - **Ask AI** in the popup and side panel: answers questions by searching your bookmarks, folders, tags, and summaries, finding duplicates, and checking links; saves pages and proposes moves, renames, deletions, and new folders as a plan that changes nothing until you approve it, each change undoable; and ends answers with buttons for what to do next. **What Ask AI may do** in Settings turns off any lookup or change.
 - **Auto-Tagging** and **Content Summarizer** for the current folder, saved only after you review them, with undo.
 - **AI Folder Reorganization**, previewed before anything moves, with undo.
@@ -84,10 +84,10 @@ Guide: [Use with local AI agents](/guides/local-agents).
 ## Keyboard and language
 
 - Quick save shortcuts on any page, which you can change in the browser's shortcut settings, or in Firefox right in Bookmark Scout's Settings.
-- Shortcuts in the popup and side panel that never use `Ctrl` or `Cmd`, and in the manager the keys of Chrome's bookmark manager (select all, undo, redo, open in tabs), with a `?` help dialog there. See [Keyboard shortcuts](/guides/keyboard-shortcuts).
-- Selection in the manager like Chrome's: click, `Ctrl`+click, `Shift`+click, and `Ctrl+A`; the arrow keys move through the table and the folder tree, which screen readers hear as a tree.
-- Undo and redo of the manager's edits, moves, and deletions with `Ctrl+Z` and `Ctrl+Y`, for the whole browser session.
+- Shortcuts in the popup and side panel that never use `Ctrl` or `Cmd`, and in the manager the keys of Chrome's bookmark manager (select all, undo, redo, open in tabs), with a <Shortcut id="manager.show_help" /> help dialog there. See [Keyboard shortcuts](/guides/keyboard-shortcuts).
+- Selection in the manager like Chrome's: click, `Ctrl`+click, `Shift`+click, and <Shortcut id="manager.select_all" />; the arrow keys move through the table and the folder tree, which screen readers hear as a tree.
+- Undo and redo of the manager's edits, moves, and deletions with <Shortcut id="manager.undo" /> and <Shortcut id="manager.redo" />, for the whole browser session.
 - Right-click menus on the manager's rows and folders: cut, copy, and paste, open all in tabs, a new window, or an incognito window, rename, and delete; plus **Sort by name** and **Add new bookmark** or **folder**. **Bookmark manager menus** in Settings chooses which commands they show, and in what order.
-- Drag and drop in the manager like Chrome's: onto folders in the table or tree, between rows in browser order, and links in from other pages; `Ctrl/Cmd+C`, `X`, and `V` copy, move, and paste.
+- Drag and drop in the manager like Chrome's: onto folders in the table or tree, between rows in browser order, and links in from other pages; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" />, and <Shortcut id="manager.paste" /> copy, move, and paste.
 - System, light, or dark theme.
 - English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese.

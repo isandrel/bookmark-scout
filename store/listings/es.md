@@ -76,7 +76,7 @@ ADMINISTRADOR DE MARCADORES
 Bookmark Scout sustituye la página Marcadores del navegador por un administrador que funciona como el del propio navegador y añade ruta de navegación, una tabla que se puede ordenar y filtrar, columnas de ancho ajustable y búsquedas guardadas (vistas inteligentes que solo guardan tus filtros y siempre muestran resultados actualizados).
 • Menús contextuales en marcadores, carpetas y espacios vacíos: editar, cambiar nombre, cortar, copiar, pegar, abrir en pestañas o ventanas nuevas, mostrar en la carpeta y eliminar
 • Arrastra y suelta para mover marcadores a carpetas o cambiar su orden; los enlaces que sueltas desde otras páginas se convierten en marcadores
-• Selecciona varias filas con Ctrl+clic y Mayús+clic, y usa las combinaciones de teclas del propio administrador del navegador (Cmd en Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z para deshacer y Ctrl+Y para rehacer
+• Selecciona varias filas con Ctrl+clic y Mayús+clic, y usa las combinaciones de teclas del propio administrador del navegador (Cmd en Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z para deshacer y Ctrl+Shift+Z para rehacer
 • Deshacer y rehacer abarcan ediciones, movimientos, ordenaciones y eliminaciones, incluidos los cambios que hace Preguntar a la IA
 • La dirección conserva la búsqueda y la carpeta, así que un enlace puede abrir el administrador ya buscando (?q=react) o en una carpeta, y Atrás y Adelante restauran ambas
 • Elige qué comandos muestran los menús contextuales y ⋯, y en qué orden (Configuración > Comportamiento)
@@ -161,7 +161,7 @@ ADMINISTRADOR DE MARCADORES
 Abrir el administrador de marcadores, en la ventana emergente de la barra de herramientas o en la barra lateral, abre un administrador completo en una pestaña nueva, con árbol de carpetas y una tabla que se puede ordenar y filtrar.
 • Menús contextuales en marcadores, carpetas y espacios vacíos: editar, cambiar nombre, cortar, copiar, pegar, abrir, mostrar en la carpeta y eliminar
 • Arrastra y suelta para mover marcadores a carpetas o cambiar su orden; los enlaces que sueltas desde otras páginas se convierten en marcadores
-• Selecciona varias filas con Ctrl+clic y Mayús+clic (Cmd en Mac), copia, corta y pega con las teclas habituales, y deshaz y rehaz tus cambios con Ctrl+Z y Ctrl+Y
+• Selecciona varias filas con Ctrl+clic y Mayús+clic (Cmd en Mac), copia, corta y pega con las teclas habituales, y deshaz y rehaz tus cambios con Ctrl+Z y Ctrl+Shift+Z
 
 CONFIGURACIÓN Y COPIA DE SEGURIDAD
 • Exportar, al final de Configuración, guarda una copia de seguridad: la configuración que cambiaste, los prompts personalizados, los servicios de IA (nunca sus claves de API) y las búsquedas guardadas. Importar la restaura

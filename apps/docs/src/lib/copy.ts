@@ -52,6 +52,13 @@ const en = {
       `No page matches “${query}”. Try fewer words, or use Search at the top of the page to search inside every page.`,
   },
 
+  /** How `<Shortcut>` joins keys: between two ways to press it, and the note for a Mac's keys. */
+  shortcut: {
+    or: " or ",
+    /** `{keys}` is replaced with the Mac keys. */
+    mac: " ({keys} on a Mac)",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated:

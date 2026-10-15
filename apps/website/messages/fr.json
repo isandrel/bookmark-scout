@@ -79,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Enregistrez chaque page dans le bon dossier, en quelques secondes.",
-      "description": "Saisissez une partie du nom d'un dossier, ou appuyez sur Alt+Shift+S sur n'importe quelle page, et la page est enregistrée dans le dossier qui lui correspond. L'IA facultative peut aussi suggérer le dossier. Bookmark Scout recherche et range aussi les favoris que vous avez déjà, dans Chrome, Edge et Firefox, sans compte et sans serveur propre.",
+      "description": "Saisissez une partie du nom d'un dossier, ou appuyez sur {{SHORTCUT:commands.quick-save}} sur n'importe quelle page, et la page est enregistrée dans le dossier qui lui correspond. L'IA facultative peut aussi suggérer le dossier. Bookmark Scout recherche et range aussi les favoris que vous avez déjà, dans Chrome, Edge et Firefox, sans compte et sans serveur propre.",
       "download": "Télécharger depuis GitHub",
       "install": "Installer Bookmark Scout",
       "docs": "Lire la documentation",
@@ -137,10 +137,10 @@
         "points": [
           "Saisissez une partie du nom d'un dossier, même profondément imbriqué dans l'arborescence, et enregistrez-y la page actuelle sans quitter le clavier",
           "Saisissez un chemin comme work/react, et trouvez le dossier même avec une petite faute de frappe",
-          "Appuyez sur Alt+Shift+S sur n'importe quelle page pour l'enregistrer dans le dossier qui lui correspond le mieux ; une petite notification dans la page propose Annuler et d'autres dossiers",
+          "Appuyez sur {{SHORTCUT:commands.quick-save}} sur n'importe quelle page pour l'enregistrer dans le dossier qui lui correspond le mieux ; une petite notification dans la page propose Annuler et d'autres dossiers",
           "Une page déjà présente dans ce dossier n'est pas enregistrée deux fois, et les dossiers dans lesquels vous avez enregistré récemment apparaissent en premier",
           "Enregistrez des liens dans les dossiers récents depuis le menu contextuel",
-          "Avec l'IA activée, obtenez des suggestions de dossiers pour la page, ou enregistrez dans la première avec Alt+Shift+D"
+          "Avec l'IA activée, obtenez des suggestions de dossiers pour la page, ou enregistrez dans la première avec {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },
       "organize": {
@@ -153,7 +153,7 @@
           "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",
           "Enregistrez une recherche sous forme de vue intelligente qui affiche toujours des résultats à jour",
           "Sélectionnez des lignes avec Shift et Ctrl, effectuez un clic droit pour couper, copier, coller et tout ouvrir, et faites glisser lignes, dossiers et liens là où ils doivent aller",
-          "Annulez et rétablissez les modifications avec Ctrl+Z et Ctrl+Y, même après un rechargement",
+          "Annulez et rétablissez les modifications avec {{SHORTCUT:manager.undo}} et {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} et {{SHORTCUT_MAC:manager.redo}} sur Mac), même après un rechargement",
           "Importez des fichiers HTML ou JSON après un aperçu, et exportez au format HTML, JSON, Markdown ou CSV",
           "Créez un lien vers un dossier ou une recherche, et parcourez le tout au clavier"
         ]
@@ -299,7 +299,7 @@
         },
         "changes": {
           "q": "Va-t-il modifier mes favoris sans me demander ?",
-          "a": "Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens morts, les titres récupérés, la réorganisation par IA et les importations affichent tous une vérification avant toute écriture. Demander à l'IA et les agents d'IA locaux présentent leurs modifications sous forme de plan et attendent votre accord. Par défaut, une confirmation est demandée avant chaque suppression, et le gestionnaire de favoris peut annuler les modifications avec Ctrl+Z."
+          "a": "Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens morts, les titres récupérés, la réorganisation par IA et les importations affichent tous une vérification avant toute écriture. Demander à l'IA et les agents d'IA locaux présentent leurs modifications sous forme de plan et attendent votre accord. Par défaut, une confirmation est demandée avant chaque suppression, et le gestionnaire de favoris peut annuler les modifications avec {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} sur Mac)."
         },
         "firefox": {
           "q": "Fonctionne-t-il dans Firefox ?",

@@ -43,6 +43,11 @@ export const ptBR: DocsCopy = {
       `Nenhuma página corresponde a “${query}”. Tente menos palavras ou use Pesquisar, no topo da página, para pesquisar dentro de todas as páginas.`,
   },
 
+  shortcut: {
+    or: " ou ",
+    mac: " ({keys} no Mac)",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated:

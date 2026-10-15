@@ -47,7 +47,7 @@
                     "quickSave": {
                         "q": "O atalho de salvamento rápido não faz nada",
                         "a": [
-                            "Se outra extensão já usa Alt+Shift+S ou Alt+Shift+D, o navegador deixa o atalho do Bookmark Scout sem teclas, e o pop-up mostra Atalho de salvamento rápido não definido. Clique em Configurar ou abra Configurações, depois Salvar e pesquisar e depois Atalhos de teclado, e escolha outras teclas.",
+                            "Se outra extensão já usa {{SHORTCUT:commands.quick-save}} ou {{SHORTCUT:commands.ai-quick-save}}, o navegador deixa o atalho do Bookmark Scout sem teclas, e o pop-up mostra Atalho de salvamento rápido não definido. Clique em Configurar ou abra Configurações, depois Salvar e pesquisar e depois Atalhos de teclado, e escolha outras teclas.",
                             "Algumas páginas, como as páginas do próprio navegador e a loja de extensões, não permitem que as extensões mostrem nada nelas. Nesses casos, o ícone da barra de ferramentas mostra se a página foi salva, e o pop-up oferece Desfazer."
                         ]
                     },
