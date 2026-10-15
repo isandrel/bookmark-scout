@@ -148,24 +148,29 @@ export function BuiltinAIModelStatus() {
       );
     }
     if (downloading) {
-      const percent = progress ?? 0;
+      // Progress is known only for a download this page started; one started elsewhere (another
+      // tab, or Chrome itself) shows its state alone until it finishes.
       return (
         <StatusBox tone="info" title={t('builtinAi_statusDownloading')}>
-          <div
-            role="progressbar"
-            aria-label={t('builtinAi_statusDownloading')}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(percent * 100)}
-            data-testid="builtin-ai-progress"
-            className="h-1.5 w-full overflow-hidden rounded-full bg-background"
-          >
-            <div
-              className="h-full rounded-full bg-primary transition-[width]"
-              style={{ width: `${percent * 100}%` }}
-            />
-          </div>
-          <p className="font-mono text-xs tabular-nums">{formatPercent(percent)}</p>
+          {progress !== null && (
+            <>
+              <div
+                role="progressbar"
+                aria-label={t('builtinAi_statusDownloading')}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(progress * 100)}
+                data-testid="builtin-ai-progress"
+                className="h-1.5 w-full overflow-hidden rounded-full bg-background"
+              >
+                <div
+                  className="h-full rounded-full bg-primary transition-[width]"
+                  style={{ width: `${progress * 100}%` }}
+                />
+              </div>
+              <p className="font-mono text-xs tabular-nums">{formatPercent(progress)}</p>
+            </>
+          )}
           <p>{t('builtinAi_downloadKeepOpen')}</p>
         </StatusBox>
       );
