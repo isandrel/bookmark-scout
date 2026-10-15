@@ -1,6 +1,6 @@
 # Permission Justifications
 
-Derived on 2026-10-10 from the built manifests, which `apps/extension/manifest.config.ts` generates per browser (checked by `tests/unit/manifest-config.test.ts`):
+Derived on 2026-10-10 from the built manifests, which `apps/extension/manifest.config.ts` generates per browser (checked by `tests/unit/manifest-config.test.ts`, and by `tests/e2e/install-warnings.spec.ts`, which asks Chromium for the install-time and prompt warnings of the built manifest and fails if installing shows more than the bookmarks warning):
 
 ```bash
 NX_DAEMON=false bunx nx run extension:build:chrome
@@ -42,14 +42,15 @@ Why the rest stay required: `bookmarks` is the product; `storage` holds settings
 
 | Permission or consent | Browsers | Requested when | If declined | If revoked later |
 | --- | --- | --- | --- | --- |
-| `tabs` | All | The user saves the current page, or asks for AI folder suggestions, from a page without `activeTab` (the side panel). A dialog explains it first. The toolbar popup never asks: clicking the toolbar button grants `activeTab`. | Nothing is saved; a toast says how to allow it later | The side panel asks again next time |
+| `tabs` | All | The user saves the current page, or asks for AI folder suggestions, from a page without `activeTab` (the side panel). A dialog explains it first and offers the ways that need no permission: the toolbar popup (clicking the toolbar button grants `activeTab`) and the quick save shortcut, with the keys the browser assigned. | Nothing is saved; a toast says how to allow it later | The side panel asks again next time |
 | `contextMenus` | Chrome, Edge | The user turns on **Context Menu** in Settings (off by default). No prompt: Chrome grants permissions without a warning silently. | The switch stays off; a toast explains | The menu is removed and the switch shows off |
-| `favicon` | Chrome, Edge | The user turns on **Use the browser's icon cache** in Settings (off by default) | The switch stays off; bookmarks keep saved or generic icons | Icons fall back to saved or generic ones |
-| `http://*/*`, `https://*/*` | All | The user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons (a dialog explains it first), or turns on Read page content | Nothing is scanned, or the setting stays off | Tools ask again; page reading stops |
+| `favicon` | Chrome, Edge | The user clicks **Show browser icons** on the Refresh Site Icons card, which offers it first as the milder way to real icons, or turns on **Use the browser's icon cache** in Settings (off by default). A dialog explains it first. | The switch stays off; bookmarks keep saved or generic icons | Icons fall back to saved or generic ones |
+| Sites of one tool run (`http://*.<site>/*`, `https://*.<site>/*` per site), or `http://*/*`, `https://*/*` | All | The user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons: the request names only the sites of the bookmarks in that run (each registrable domain with its subdomains), or all websites when the run covers more than `max_sites_per_request` sites (20, `apps/extension/config/network/site-access.toml`). A dialog explains it first and lists the sites. Turning on Read page content asks for all websites. | Nothing is scanned, or the setting stays off | Tools ask again; page reading stops |
 | One provider origin | All | The user clicks Verify Service or Refresh Models | The check still runs if the provider allows CORS | Not applicable |
-| Data collection: AI categories | Firefox | The user turns on **Enable AI** or Read page content | AI stays off | AI calls stop; the switch shows off |
+| Data collection: `authenticationInfo`, `bookmarksInfo`, `browsingActivity` | Firefox | The user turns on **Enable AI**. A dialog explains first that "the developer" in Firefox's prompt is the AI provider the user chose | AI stays off | AI calls stop; the switch shows off |
+| Data collection: `websiteContent` (with all websites) | Firefox | The user turns on Read page content | The setting stays off | Page reading stops |
 | Data collection: `authenticationInfo` | Firefox | The user clicks Verify Service or Refresh Models (same prompt as the provider origin) | Nothing is sent | Not applicable |
-| `nativeMessaging` (and in Firefox, data collection: `bookmarksInfo`, `browsingActivity`, `websiteContent`) | All | The user turns on **Allow local AI agents** in Settings > AI (off by default). A dialog explains it first. | The switch stays off; a toast explains | The bridge program is stopped and the switch shows off |
+| `nativeMessaging` (and in Firefox, data collection: `bookmarksInfo`, `browsingActivity`) | All | The user turns on **Allow local AI agents** in Settings > AI (off by default). A dialog explains it first. | The switch stays off; a toast explains | The bridge program is stopped and the switch shows off |
 
 A feature works only while its setting is on and its permission is granted. Revoking a permission turns the feature off at once (`permissions.onRemoved`), and Options shows the switch as off, but the synced setting is not rewritten, so a revoke on one device does not switch the feature off on another where it is still granted. Code: `src/services/permissions.ts`, `src/hooks/use-permission.tsx`, and `PermissionDialog`.
 
@@ -100,7 +101,7 @@ Code: `src/services/quick-save-ai-host.ts`, `src/services/quick-save-ai-runner.t
 ### `tabs` (optional)
 
 ```text
-Optional, never granted at install. The side panel stays open while the user switches tabs and gets no activeTab, so when the user saves the current page or asks for a folder suggestion from the side panel, the extension first explains why and then asks for this permission. It reads only the active tab's title and URL, only at that moment, and stores nothing else. If the user declines, nothing is saved.
+Optional, never granted at install. The side panel stays open while the user switches tabs and gets no activeTab, so when the user saves the current page or asks for a folder suggestion from the side panel, the extension first explains why, points to the toolbar popup and the quick save shortcut, which need no permission, and asks for this permission only if the user still chooses the side panel. It reads only the active tab's title and URL, only at that moment, and stores nothing else. If the user declines, nothing is saved.
 ```
 
 Code: `currentTab` in `src/lib/permission-catalog.ts`, `usePermissionGate` in `src/hooks/use-permission.tsx`, `PopupPage.tsx`.
@@ -108,7 +109,7 @@ Code: `currentTab` in `src/lib/permission-catalog.ts`, `usePermissionGate` in `s
 ### `favicon` (optional, Chrome and Edge)
 
 ```text
-Optional, never granted at install. When the user turns on "Use the browser's icon cache" in Settings, bookmarks show the site icons the browser has already cached, read through the chrome-extension://<id>/_favicon/ URL. No network request is made for these icons. Without it, bookmarks show icons the user saved with Refresh Site Icons, or a generic icon.
+Optional, never granted at install. When the user clicks "Show browser icons" on the Refresh Site Icons card or turns on "Use the browser's icon cache" in Settings, the extension first explains it and then asks for this permission; bookmarks then show the site icons the browser has already cached, read through the chrome-extension://<id>/_favicon/ URL. No network request is made for these icons. Without it, bookmarks show icons the user saved with Refresh Site Icons, or a generic icon.
 ```
 
 Code: `getFaviconUrl` and `getSiteIconUrl` in `src/services/bookmarks.ts`, `useSiteIconUrl` in `src/hooks/use-site-icon.ts`. The extension's own pages load these icons without any `web_accessible_resources` entry, so web pages cannot load icons through the extension (`tests/e2e/favicon-access.spec.ts`). Firefox has no such permission, so the Firefox manifest leaves it out, the setting is hidden there, and bookmarks show icons saved by Refresh Site Icons or a generic icon (covered by the Firefox smoke suite).
@@ -148,10 +149,10 @@ Code: `agentBridge` in `src/lib/permission-catalog.ts`, `src/services/agent-brid
 ### Optional host access: `http://*/*`, `https://*/*`
 
 ```text
-Not granted at install. Requested at click time in three cases. (1) When the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons, the browser asks for access to websites so the extension can request the bookmarked pages (and, for Refresh Site Icons, an icon file on each bookmarked site) directly; once granted, Ask AI can also check bookmarked links the same way; bookmarks can point to any site, so a narrower pattern is not possible. Requests are sent without cookies, and only the page head is read for titles and icon links. If the user declines, nothing is scanned. (2) When the user clicks Verify Service or Refresh Models for an AI provider, the browser asks for access to that one provider origin only. (3) When the user turns on Read page content in the AI settings, the browser asks for access to websites so folder recommendations, Auto-Tagging, and Content Summarizer can download the pages, without cookies, and send their readable text to the AI provider the user configured. Pages on the local network are never read. If the user declines, the setting stays off.
+Not granted at install. Requested at click time in three cases. (1) When the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons, the extension asks for access to only the sites of the bookmarks in that run (each site with its subdomains, so its own redirects and icon files stay inside), so it can request the bookmarked pages (and, for Refresh Site Icons, an icon file on each bookmarked site) directly; a run over more than 20 sites asks for all websites, because bookmarks can point to any site. Once all websites are granted, Ask AI can also check bookmarked links the same way. Requests are sent without cookies, and only the page head is read for titles and icon links. If the user declines, nothing is scanned. (2) When the user clicks Verify Service or Refresh Models for an AI provider, the browser asks for access to that one provider origin only. (3) When the user turns on Read page content in the AI settings, the browser asks for access to all websites so folder recommendations, Auto-Tagging, and Content Summarizer can download the pages, without cookies, and send their readable text to the AI provider the user configured. Pages on the local network are never read. If the user declines, the setting stays off.
 ```
 
-Code: `webAccess` and `pageReading` in `src/lib/permission-catalog.ts`, `requestProviderHostAccess` in `src/services/ai-settings.ts`, `requestWithTimeout` in `src/services/bookmark-network-tools.ts` (`credentials: 'omit'`), `readPageText` in `src/services/page-reader.ts`.
+Code: `webAccess` and `pageReading` in `src/lib/permission-catalog.ts`, the per-run sites in `src/lib/site-access.ts`, `requestProviderHostAccess` in `src/services/ai-settings.ts`, `requestWithTimeout` in `src/services/bookmark-network-tools.ts` (`credentials: 'omit'`), `readPageText` in `src/services/page-reader.ts`.
 
 ### Bookmarks page override (Chrome and Edge)
 

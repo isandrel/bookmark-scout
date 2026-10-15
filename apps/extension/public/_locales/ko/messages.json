@@ -4014,7 +4014,7 @@
         "description": "Quotes the browser's prompt for the favicon permission and names the alternative"
     },
     "perm_browserIconsOffer": {
-        "message": "가장 빠른 방법: 브라우저가 이미 저장한 아이콘을 표시합니다. 사이트 아이콘 읽기 권한만 요청합니다.",
+        "message": "가장 빠른 방법: 브라우저가 이미 저장한 아이콘을 표시합니다.",
         "description": "Line on the Refresh Site Icons card offering the browser's own icons first"
     },
     "perm_browserIconsUse": {

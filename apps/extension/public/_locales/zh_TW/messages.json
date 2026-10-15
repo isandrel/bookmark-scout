@@ -3922,7 +3922,7 @@
         "description": "Quotes the browser's prompt for the favicon permission and names the alternative"
     },
     "perm_browserIconsOffer": {
-        "message": "最快的方式：顯示瀏覽器已儲存的圖示。只會要求讀取網站圖示。",
+        "message": "最快的方式：顯示瀏覽器已儲存的圖示。",
         "description": "Line on the Refresh Site Icons card offering the browser's own icons first"
     },
     "perm_browserIconsUse": {

@@ -4022,7 +4022,7 @@
         "description": "Quotes the browser's prompt for the favicon permission and names the alternative"
     },
     "perm_browserIconsOffer": {
-        "message": "Quickest: show the icons your browser already saved. It asks only to read site icons.",
+        "message": "Quickest: show the icons your browser already saved.",
         "description": "Line on the Refresh Site Icons card offering the browser's own icons first"
     },
     "perm_browserIconsUse": {

@@ -178,13 +178,13 @@ function BrowserIconsOffer() {
   }
   return (
     <div
-      className="flex w-full items-center gap-2 rounded-md bg-muted/60 p-2"
+      className="flex w-full flex-col items-start gap-2 rounded-md bg-muted/60 p-2"
       data-testid="browser-icons-offer"
     >
-      <p className="min-w-0 flex-1 text-xs text-muted-foreground">{t('perm_browserIconsOffer')}</p>
+      <p className="text-xs text-muted-foreground">{t('perm_browserIconsOffer')}</p>
       <Button
         size="sm"
-        className="h-8 shrink-0 text-xs"
+        className="h-8 text-xs"
         onClick={() => void gate.run(() => setValue(true))}
       >
         {t('perm_browserIconsUse')}

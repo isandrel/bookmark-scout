@@ -88,10 +88,10 @@ At install, Bookmark Scout asks only for `bookmarks`, `storage`, `activeTab`, an
 
 - Access to your tabs (`tabs`), when you save the current page or ask for folder suggestions from the side panel. The toolbar popup does not need it.
 - The right-click menu (`contextMenus`, Chrome and Edge), when you turn on Context Menu in Settings.
-- The browser's icon cache (`favicon`, Chrome and Edge), when you turn on Use the browser's icon cache in Settings.
-- Access to all websites, when you first run Check Dead Links, Metadata Fetcher, or Refresh Site Icons, or turn on Read page content.
+- The browser's icon cache (`favicon`, Chrome and Edge), when you click Show browser icons on Refresh Site Icons or turn on Use the browser's icon cache in Settings.
+- Access to the websites of the bookmarks a run checks, when you run Check Dead Links, Metadata Fetcher, or Refresh Site Icons (access to all websites when a run covers more than 20 sites), and access to all websites when you turn on Read page content.
 - Access to one provider's site, when you click Verify Service or Refresh Models in the AI settings.
-- In Firefox, your consent to share data with your AI provider, when you turn on AI or click Verify Service.
+- In Firefox, your consent to share data with your AI provider, for what each feature sends: when you turn on AI (your API key, bookmarks, and the current page's title and URL), turn on Read page content (page text), or click Verify Service (your API key).
 - Communicating with the bookmark-scout-mcp program on your computer (`nativeMessaging`), when you turn on Allow local AI agents; in Firefox, together with your consent to share bookmark data with it.
 
 If you decline, the feature stays off. You can withdraw a permission in the browser's extension settings at any time, and the feature that needs it turns off.

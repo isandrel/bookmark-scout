@@ -39,9 +39,10 @@ async function readWarnings(worker: Worker) {
       optionalHosts: optional_host_permissions,
       allWebsites: await withPermissions([], optional_host_permissions),
       oneSite: await withPermissions([], ['http://*.example.com/*', 'https://*.example.com/*']),
+      // Distinct names: Chrome merges sites that differ only in their top-level domain.
       fourSites: await withPermissions(
         [],
-        ['example.com', 'example.org', 'example.net', 'example.edu'].map(
+        ['example.com', 'wikipedia.org', 'github.com', 'bbc.co.uk'].map(
           (site) => `https://*.${site}/*`,
         ),
       ),
