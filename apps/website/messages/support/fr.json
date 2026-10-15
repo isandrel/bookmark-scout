@@ -5,7 +5,7 @@
             "description": "Obtenir de l'aide pour Bookmark Scout : réponses aux problèmes courants, comment signaler un bug et à quelles adresses écrire pour l'assistance, la confidentialité et la sécurité."
         },
         "title": "Assistance",
-        "intro": "La plupart des réponses se trouvent dans la documentation et la FAQ. Si quelque chose ne fonctionne pas, signalez-le sur GitHub. Pour tout ce que vous préférez ne pas publier, écrivez-nous.",
+        "intro": "La plupart des réponses se trouvent dans la documentation et la FAQ. Pour tout le reste, écrivez-nous. Si quelque chose ne fonctionne pas, vous pouvez aussi le signaler publiquement sur GitHub.",
         "sections": {
             "start-here": {
                 "title": "Pour commencer",
@@ -26,7 +26,7 @@
                     "firefoxRestart": {
                         "q": "Bookmark Scout disparaît lorsque je redémarre Firefox",
                         "a": [
-                            "Tant que la fiche Firefox Add-ons n'est pas en ligne, Bookmark Scout fonctionne dans Firefox comme module temporaire, et Firefox supprime les modules temporaires à chaque redémarrage.",
+                            "La version pour Firefox arrive bientôt sur Firefox Add-ons. En attendant, Bookmark Scout installé manuellement fonctionne dans Firefox comme module temporaire, et Firefox supprime les modules temporaires à chaque redémarrage.",
                             "Rechargez-le après un redémarrage : ouvrez <code>about:debugging#/runtime/this-firefox</code>, cliquez sur Charger un module complémentaire temporaire et sélectionnez le fichier <code>manifest.json</code> dans le dossier décompressé."
                         ]
                     },
@@ -55,7 +55,7 @@
                         "q": "Mes paramètres ont disparu après une mise à jour",
                         "a": [
                             "Une mise à jour a déplacé les données enregistrées de Bookmark Scout vers un nouveau format et a supprimé les anciennes données au lieu de les convertir. Les paramètres sont revenus à leurs valeurs par défaut, les services d'IA et les clés API doivent être ajoutés de nouveau, et les prompts personnalisés, les recherches enregistrées, les étiquettes, les résumés et les icônes de site enregistrées ont disparu. Vos favoris ne sont pas touchés.",
-                            "Si vous avez sauvegardé vos paramètres avec Exporter en bas des Paramètres avant la mise à jour, utilisez Importer au même endroit pour les restaurer."
+                            "Si vous avez sauvegardé vos paramètres avec Sauvegarder les paramètres en bas des Paramètres avant la mise à jour, utilisez Restaurer les paramètres au même endroit pour les récupérer."
                         ]
                     },
                     "websiteAccess": {
@@ -68,7 +68,7 @@
                     "aiSetup": {
                         "q": "Les fonctionnalités d'IA sont absentes ou ne répondent pas",
                         "a": [
-                            "Les fonctionnalités d'IA sont désactivées par défaut. Activez-les dans les paramètres, section IA, choisissez un fournisseur et saisissez votre clé API. Un serveur Ollama local ne nécessite pas de clé.",
+                            "L'IA est facultative et désactivée par défaut. Pour l'utiliser, activez-la dans les paramètres, section IA, choisissez votre entreprise d'IA et collez-y la clé de votre compte ; le guide de l'IA, dans la documentation, indique où la trouver. Un programme d'IA gratuit sur votre propre ordinateur, comme Ollama, ne nécessite pas de clé.",
                             "Cliquez sur Vérifier le service pour tester la connexion. La première fois, le navigateur demande l'accès au site de ce fournisseur ; autorisez-le pour que l'extension puisse joindre le fournisseur."
                         ]
                     }
@@ -76,7 +76,8 @@
             },
             "report-a-bug": {
                 "title": "Signaler un bug",
-                "body": "Les signalements de bugs se font sur GitHub Issues, où chacun peut suivre la correction. Recherchez d'abord parmi les tickets existants, au cas où quelqu'un l'aurait déjà signalé.",
+                "body": "Envoyez les détails par e-mail à {supportEmail}. Si vous avez un compte GitHub, vous pouvez à la place ouvrir un ticket public, où chacun peut suivre la correction ; recherchez d'abord parmi les tickets existants, au cas où quelqu'un l'aurait déjà signalé.",
+                "emailButton": "Écrire à l'assistance",
                 "button": "Ouvrir un ticket sur GitHub",
                 "includeTitle": "Un signalement utile comprend",
                 "include": {
@@ -86,7 +87,7 @@
                     "result": "Ce que vous attendiez et ce qui s'est passé à la place, y compris tout message d'erreur.",
                     "screenshot": "Une capture d'écran si elle est utile, en masquant les favoris privés."
                 },
-                "privacyNote": "Les tickets sont publics. Ne collez jamais de clé API, et omettez les titres ou URL de favoris que vous ne voulez pas montrer."
+                "privacyNote": "Les tickets GitHub sont publics. Ne collez jamais de clé API, et omettez les titres ou URL de favoris que vous ne voulez pas montrer."
             },
             "email": {
                 "title": "E-mail",

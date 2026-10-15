@@ -15,7 +15,7 @@
                 "body": "L'extension fonctionne au sein de votre navigateur. Il n'y a aucun compte à créer et aucun serveur Bookmark Scout ne reçoit vos données."
             },
             "noTelemetry": {
-                "title": "Aucune télémétrie",
+                "title": "Nous ne suivons pas ce que vous faites",
                 "body": "L'extension ne comporte ni mesure d'audience, ni rapports de plantage, ni publicité."
             },
             "aiOptIn": {
@@ -25,6 +25,10 @@
             "developer": {
                 "title": "Le développeur ne reçoit rien",
                 "body": "Vos favoris, vos paramètres et vos clés API ne parviennent jamais au développeur."
+            },
+            "permissions": {
+                "title": "Le navigateur ne demande qu'une chose",
+                "body": "À l'installation, Chrome et Edge demandent seulement à « Accéder à vos favoris et les modifier » (Firefox : « Lire et modifier les favoris »). Les autres fonctionnalités ne demandent une autorisation qu'à leur première utilisation. <permissions>Ce que chacune demande, et pourquoi</permissions>"
             }
         },
         "tocLabel": "Sur cette page",
@@ -165,18 +169,19 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "À l'installation, Bookmark Scout demande uniquement <code>bookmarks</code>, <code>storage</code>, <code>activeTab</code> et <code>scripting</code> (qui affiche la notification d'enregistrement rapide dans l'onglet où vous avez appuyé sur le raccourci), ainsi que <code>sidePanel</code> et <code>offscreen</code> (qui exécute la requête de l'enregistrement rapide avec l'IA dans une page cachée de l'extension) dans Chrome et Edge, et <code>contextMenus</code> dans Firefox, qui ne permet pas aux extensions de la demander plus tard. Tout le reste est facultatif et n'est demandé que lorsque vous activez ou lancez la fonctionnalité qui en a besoin :"
+                        "text": "Lorsque vous installez Bookmark Scout, le navigateur ne demande qu'une chose : « Accéder à vos favoris et les modifier » dans Chrome et Edge, ou « Lire et modifier les favoris » dans Firefox (<code>bookmarks</code>). Les autres autorisations accordées à l'installation n'affichent aucune demande : <code>storage</code> pour les paramètres, <code>activeTab</code> pour lire le titre et l'URL de l'onglet où vous cliquez sur le bouton de la barre d'outils ou appuyez sur un raccourci, <code>scripting</code> pour afficher la notification d'enregistrement rapide dans cet onglet, <code>sidePanel</code> et <code>offscreen</code> (qui exécute la requête de l'enregistrement rapide avec l'IA dans une page cachée de l'extension) dans Chrome et Edge, et <code>contextMenus</code> dans Firefox, qui ne permet pas aux extensions de la demander plus tard. Tout le reste est facultatif. Bookmark Scout l'explique d'abord, et le navigateur ne le demande que lorsque vous activez ou lancez la fonctionnalité qui en a besoin :"
                     },
                     {
                         "type": "ul",
                         "items": [
-                            "L'accès à vos onglets (<code>tabs</code>), lorsque vous enregistrez la page actuelle ou demandez des suggestions de dossiers depuis le panneau latéral. La fenêtre pop-up de la barre d'outils n'en a pas besoin.",
-                            "Le menu contextuel (<code>contextMenus</code>, Chrome et Edge), lorsque vous activez Menu contextuel dans les paramètres.",
-                            "Le cache d'icônes du navigateur (<code>favicon</code>, Chrome et Edge), lorsque vous cliquez sur Afficher les icônes du navigateur dans Actualiser les icônes de site ou activez Utiliser le cache d'icônes du navigateur dans les paramètres.",
-                            "L'accès aux sites Web des favoris qu'une exécution vérifie, lorsque vous lancez Vérifier les liens morts, Récupération des métadonnées ou Actualiser les icônes de site (l'accès à tous les sites Web lorsqu'une exécution porte sur plus de 20 sites), et l'accès à tous les sites Web lorsque vous activez Lire le contenu des pages.",
-                            "L'accès au site d'un fournisseur, lorsque vous cliquez sur Vérifier le service ou Actualiser les modèles dans les paramètres d'IA.",
-                            "Dans Firefox, votre consentement au partage de données avec votre fournisseur d'IA, pour ce qu'envoie chaque fonctionnalité : lorsque vous activez l'IA (votre clé API, vos favoris, ainsi que le titre et l'URL de la page actuelle), activez Lire le contenu des pages (le texte des pages) ou cliquez sur Vérifier le service (votre clé API).",
-                            "Communiquer avec le programme bookmark-scout-mcp de votre ordinateur (<code>nativeMessaging</code>), quand vous activez Autoriser les agents d'IA locaux ; dans Firefox, avec votre consentement à lui transmettre des données de favoris."
+                            "« Accéder aux icônes des sites Web que vous consultez » (Chrome et Edge, <code>favicon</code>) : lorsque vous cliquez sur Afficher les icônes du navigateur dans Actualiser les icônes de site, ou activez Utiliser le cache d'icônes du navigateur dans les paramètres.",
+                            "« Consulter votre historique de navigation » (Firefox : « Accéder aux onglets du navigateur », <code>tabs</code>) : lorsque vous enregistrez la page actuelle ou demandez des suggestions de dossiers depuis le panneau latéral. La fenêtre pop-up de la barre d'outils et le raccourci d'enregistrement rapide n'en ont pas besoin.",
+                            "« Lire et modifier vos données sur tous les sites example.com », ou « sur certains sites Web » (Firefox : « Accéder à vos données pour les sites du domaine example.com ») : lorsque vous lancez Vérifier les liens morts, Récupération des métadonnées ou Actualiser les icônes de site, pour les sites Web des favoris concernés par cette exécution.",
+                            "« Lire et modifier toutes vos données sur tous les sites Web » (Firefox : « Accéder à vos données pour tous les sites Web ») : lorsqu'une exécution de ces outils porte sur plus de 20 sites, ou lorsque vous activez Lire le contenu des pages.",
+                            "« Lire et modifier vos données sur api.example.com », avec l'adresse de votre fournisseur d'IA à la place de api.example.com (Firefox : « Accéder à vos données pour api.example.com ») : lorsque vous cliquez sur Vérifier le service ou Actualiser les modèles dans les paramètres d'IA.",
+                            "« Communiquer avec les applications natives associées » (Firefox : « Échanger des messages avec des programmes autres que Firefox », <code>nativeMessaging</code>) : lorsque vous activez Autoriser les agents d'IA locaux, pour communiquer avec le programme bookmark-scout-mcp de votre ordinateur.",
+                            "Dans Firefox uniquement, une demande indiquant que le développeur souhaite collecter des données, pour ce que partage chaque fonctionnalité : lorsque vous activez l'IA (votre clé API, vos favoris, ainsi que le titre et l'URL de la page actuelle), activez Lire le contenu des pages (le texte des pages) ou cliquez sur Vérifier le service (votre clé API), le tout étant envoyé à votre fournisseur d'IA ; et lorsque vous activez Autoriser les agents d'IA locaux, pour les données de favoris que reçoit le programme de votre ordinateur. Ici, « le développeur » désigne votre fournisseur d'IA ou le programme de votre ordinateur ; Bookmark Scout ne reçoit rien.",
+                            "Le menu du clic droit (Chrome et Edge, <code>contextMenus</code>), lorsque vous activez Menu du clic droit dans les paramètres. Le navigateur l'ajoute sans afficher de demande."
                         ]
                     },
                     {
@@ -185,7 +190,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Chaque autorisation est expliquée dans la <permissions>liste des autorisations du README</permissions>."
+                        "text": "La <permissions>page des autorisations de la documentation</permissions> liste chaque autorisation et la raison pour laquelle Bookmark Scout en a besoin."
                     }
                 ]
             },

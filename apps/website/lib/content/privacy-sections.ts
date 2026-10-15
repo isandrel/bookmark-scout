@@ -20,15 +20,16 @@ export const PRIVACY_SECTIONS = [
 export type PrivacySectionId = (typeof PRIVACY_SECTIONS)[number];
 
 /** "At a glance" facts. Copy lives under `privacyPage.glance.<id>` (`title`, `body`). */
-export const PRIVACY_GLANCE = ["noServer", "noTelemetry", "aiOptIn", "developer"] as const;
+export const PRIVACY_GLANCE = ["noServer", "noTelemetry", "aiOptIn", "developer", "permissions"] as const;
+
+/** Docs page that lists each permission, the browser's own prompt, and why. */
+export const PERMISSIONS_DOCS_PATH = "/permissions";
 
 /**
- * Link targets for the tags used in the policy copy (`<permissions>…</permissions>` and so on).
- * Third-party pages are the sources the website section was checked against.
+ * Link targets for the tags used in the policy copy (`<securityPolicy>…</securityPolicy>` and so
+ * on). Third-party pages are the sources the website section was checked against.
  */
 export const PRIVACY_LINKS = {
-    /** The README's permissions table. */
-    permissions: site.repo.url("#-permissions"),
     securityPolicy: site.repo.file("SECURITY.md"),
     source: site.repo.url(),
     license: site.license.fileUrl,
@@ -36,6 +37,12 @@ export const PRIVACY_LINKS = {
     umamiDocs: site.analytics.metricsUrl,
     cloudflare: site.hosting.privacyUrl,
 } as const;
+
+/** The policy's links in one language: the docs permissions page is localized. */
+export const privacyLinks = (locale: string) => ({
+    ...PRIVACY_LINKS,
+    permissions: site.docs.page(locale, PERMISSIONS_DOCS_PATH),
+});
 
 /** Email addresses passed to the policy copy as `{privacyEmail}` and `{securityEmail}`. */
 export const PRIVACY_EMAILS = {

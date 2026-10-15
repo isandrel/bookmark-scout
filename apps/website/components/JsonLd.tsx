@@ -1,3 +1,4 @@
+import { primaryDownload } from "@/lib/download";
 import { site, SOCIAL_SCREENSHOT } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 
@@ -24,7 +25,7 @@ export async function JsonLd({ locale }: { locale: string }) {
             url: site.author.url,
         },
         url: site.url.origin,
-        downloadUrl: site.repo.releasesLatest,
+        downloadUrl: primaryDownload().href,
         screenshot: site.url.asset(SOCIAL_SCREENSHOT.url),
         license: site.license.url,
         isAccessibleForFree: true,

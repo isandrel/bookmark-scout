@@ -5,7 +5,7 @@
             "description": "Get help with Bookmark Scout: answers to common problems, how to report a bug, and where to email about support, privacy, and security."
         },
         "title": "Support",
-        "intro": "Most answers are in the docs and the FAQ. If something is broken, report it on GitHub. For anything you would rather not post in public, email us.",
+        "intro": "Most answers are in the docs and the FAQ. For anything else, email us. If something is broken, you can also report it in public on GitHub.",
         "sections": {
             "start-here": {
                 "title": "Start here",
@@ -26,7 +26,7 @@
                     "firefoxRestart": {
                         "q": "Bookmark Scout disappears when I restart Firefox",
                         "a": [
-                            "Until the Firefox Add-ons listing is live, Bookmark Scout runs in Firefox as a temporary add-on, and Firefox removes temporary add-ons when it restarts.",
+                            "The Firefox version is coming soon to Firefox Add-ons. Until then, Bookmark Scout installed by hand runs in Firefox as a temporary add-on, and Firefox removes temporary add-ons when it restarts.",
                             "Load it again after a restart: open <code>about:debugging#/runtime/this-firefox</code>, click Load Temporary Add-on, and select the <code>manifest.json</code> file in the extracted folder."
                         ]
                     },
@@ -55,7 +55,7 @@
                         "q": "My settings are gone after an update",
                         "a": [
                             "One update moved Bookmark Scout's saved data to a new format and removed the old data instead of converting it. Settings are back to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, tags, summaries, and saved site icons are gone. Your bookmarks are not touched.",
-                            "If you saved your settings with Export at the bottom of Settings before updating, use Import there to restore them."
+                            "If you saved your settings with Back up settings at the bottom of Settings before updating, use Restore settings there to bring them back."
                         ]
                     },
                     "websiteAccess": {
@@ -68,7 +68,7 @@
                     "aiSetup": {
                         "q": "AI features are missing or do not respond",
                         "a": [
-                            "AI features are off by default. Turn them on in Settings, under AI, choose a provider, and enter your API key. A local Ollama server needs no key.",
+                            "AI is optional and off by default. To use it, turn it on in Settings under AI, choose your AI company, and paste the key from your account there; the AI guide in the docs shows where to find it. A free AI program on your own computer, such as Ollama, needs no key.",
                             "Click Verify Service to test the connection. The first time, the browser asks for access to that provider's site; allow it so the extension can reach the provider."
                         ]
                     }
@@ -76,7 +76,8 @@
             },
             "report-a-bug": {
                 "title": "Report a bug",
-                "body": "Bug reports go to GitHub Issues, where anyone can follow the fix. Search the existing issues first, in case someone has already reported it.",
+                "body": "Email the details to {supportEmail}. If you have a GitHub account, you can instead open a public issue, where anyone can follow the fix; search the existing issues first, in case someone has already reported it.",
+                "emailButton": "Email support",
                 "button": "Open an issue on GitHub",
                 "includeTitle": "A useful report includes",
                 "include": {
@@ -86,7 +87,7 @@
                     "result": "What you expected and what happened instead, including any error message.",
                     "screenshot": "A screenshot if it helps, with private bookmarks hidden."
                 },
-                "privacyNote": "Issues are public. Never paste an API key, and leave out bookmark titles or URLs you do not want others to see."
+                "privacyNote": "GitHub issues are public. Never paste an API key, and leave out bookmark titles or URLs you do not want others to see."
             },
             "email": {
                 "title": "Email",

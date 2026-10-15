@@ -5,7 +5,7 @@
             "description": "Obtén ayuda con Bookmark Scout: respuestas a problemas habituales, cómo informar de un error y a qué dirección escribir sobre soporte, privacidad y seguridad."
         },
         "title": "Soporte",
-        "intro": "La mayoría de las respuestas están en la documentación y en las preguntas frecuentes. Si algo no funciona, infórmalo en GitHub. Para lo que prefieras no publicar, escríbenos un correo electrónico.",
+        "intro": "La mayoría de las respuestas están en la documentación y en las preguntas frecuentes. Para todo lo demás, escríbenos un correo electrónico. Si algo no funciona, también puedes informarlo públicamente en GitHub.",
         "sections": {
             "start-here": {
                 "title": "Empieza aquí",
@@ -26,7 +26,7 @@
                     "firefoxRestart": {
                         "q": "Bookmark Scout desaparece al reiniciar Firefox",
                         "a": [
-                            "Hasta que se publique la ficha en Complementos de Firefox, Bookmark Scout funciona en Firefox como complemento temporal, y Firefox quita los complementos temporales al reiniciarse.",
+                            "La versión para Firefox llegará pronto a Complementos de Firefox. Mientras tanto, Bookmark Scout instalado a mano funciona en Firefox como complemento temporal, y Firefox quita los complementos temporales al reiniciarse.",
                             "Vuelve a cargarlo después de reiniciar: abre <code>about:debugging#/runtime/this-firefox</code>, haz clic en Cargar complemento temporal y selecciona el archivo <code>manifest.json</code> de la carpeta descomprimida."
                         ]
                     },
@@ -55,7 +55,7 @@
                         "q": "Mi configuración desapareció después de una actualización",
                         "a": [
                             "Una actualización pasó los datos guardados de Bookmark Scout a un formato nuevo y eliminó los datos antiguos en lugar de convertirlos. La configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y las claves de API, y se pierden los prompts personalizados, las búsquedas guardadas, las etiquetas, los resúmenes y los iconos de sitios guardados. Tus marcadores no se tocan.",
-                            "Si guardaste tu configuración con Exportar al final de Configuración antes de actualizar, usa Importar en el mismo lugar para restaurarla."
+                            "Si guardaste tu configuración con Hacer copia de los ajustes al final de Configuración antes de actualizar, usa Restaurar ajustes en el mismo lugar para recuperarla."
                         ]
                     },
                     "websiteAccess": {
@@ -68,7 +68,7 @@
                     "aiSetup": {
                         "q": "Las funciones de IA no aparecen o no responden",
                         "a": [
-                            "Las funciones de IA están desactivadas de forma predeterminada. Actívalas en Configuración, en IA, elige un proveedor y escribe tu clave de API. Un servidor local de Ollama no necesita clave.",
+                            "La IA es opcional y está desactivada de forma predeterminada. Para usarla, actívala en Configuración, en IA, elige tu empresa de IA y pega ahí la clave de tu cuenta; la guía de IA de la documentación muestra dónde encontrarla. Un programa de IA gratuito en tu propio equipo, como Ollama, no necesita clave.",
                             "Haz clic en Verificar servicio para probar la conexión. La primera vez, el navegador pide acceso al sitio de ese proveedor; permítelo para que la extensión pueda comunicarse con el proveedor."
                         ]
                     }
@@ -76,7 +76,8 @@
             },
             "report-a-bug": {
                 "title": "Informar de un error",
-                "body": "Los informes de errores se envían a GitHub Issues, donde cualquiera puede seguir la corrección. Busca primero entre los issues existentes, por si alguien ya lo ha informado.",
+                "body": "Envía los detalles por correo electrónico a {supportEmail}. Si tienes una cuenta de GitHub, también puedes abrir un issue público, donde cualquiera puede seguir la corrección; busca primero entre los issues existentes, por si alguien ya lo ha informado.",
+                "emailButton": "Escribir a soporte",
                 "button": "Abrir un issue en GitHub",
                 "includeTitle": "Un informe útil incluye",
                 "include": {
@@ -86,7 +87,7 @@
                     "result": "Lo que esperabas y lo que pasó en su lugar, incluido cualquier mensaje de error.",
                     "screenshot": "Una captura de pantalla si ayuda, con los marcadores privados ocultos."
                 },
-                "privacyNote": "Los issues son públicos. Nunca pegues una clave de API y omite los títulos o las URLs de marcadores que no quieras que vean otras personas."
+                "privacyNote": "Los issues de GitHub son públicos. Nunca pegues una clave de API y omite los títulos o las URLs de marcadores que no quieras que vean otras personas."
             },
             "email": {
                 "title": "Correo electrónico",

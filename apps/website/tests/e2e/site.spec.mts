@@ -254,6 +254,19 @@ test.describe("language suggestion for a Japanese browser", () => {
     });
 });
 
+test("install buttons go straight to the live store listing, with manual steps folded away", async ({ page }) => {
+    const live = site.stores.find((store) => store.live);
+    test.skip(!live, "no store listing is live");
+    await page.goto("/");
+    await expect(page.locator(`section[aria-labelledby="hero-title"] a[href="${live?.url}"]`)).toBeVisible();
+    // One button per live listing; browsers without one are "coming soon", never sent elsewhere.
+    await expect(page.locator(`#install a[href="${live?.url}"]`)).toHaveCount(1);
+    const manual = page.locator("#install-by-hand");
+    expect(await manual.getAttribute("open")).toBeNull();
+    await manual.locator("summary").click();
+    await expect(manual.getByRole("tablist")).toBeVisible();
+});
+
 test("tour screenshots load as AVIF or WebP at a fitting width", async ({ page }) => {
     await page.goto("/");
     const image = page.locator("#features picture img").first();

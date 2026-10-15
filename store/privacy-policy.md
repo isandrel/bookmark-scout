@@ -10,9 +10,10 @@ This policy is also available in other languages. If a translation differs from 
 ## At a glance
 
 - **No account, no server.** The extension runs inside your browser. There is nothing to sign up for and no Bookmark Scout server that receives your data.
-- **No telemetry.** The extension has no analytics, no crash reporting, and no ads.
+- **We don't track what you do.** The extension has no analytics, no crash reporting, and no ads.
 - **AI is off until you turn it on.** When you use an AI feature, the request goes from your browser directly to the provider you chose.
 - **The developer receives nothing.** Your bookmarks, settings, and API keys never reach the developer.
+- **The browser asks for one thing.** At install, Chrome and Edge ask only to “Read and change your bookmarks” (Firefox: “Read and modify bookmarks”). Other features ask only when you first use them. [What each one asks and why](https://docs.bookmark-scout.com/permissions).
 
 ## Summary
 
@@ -84,19 +85,20 @@ Nothing. The extension does not send data to the developer, and there is no tele
 
 ## Permissions
 
-At install, Bookmark Scout asks only for `bookmarks`, `storage`, `activeTab`, and `scripting` (which shows the quick save notification in the tab where you pressed the shortcut), plus `sidePanel` and `offscreen` (which runs AI quick save's request in a hidden extension page) in Chrome and Edge, and `contextMenus` in Firefox, which does not let extensions ask for it later. Everything else is optional and requested only when you turn on or run the feature that needs it:
+When you install Bookmark Scout, the browser asks for one thing: “Read and change your bookmarks” in Chrome and Edge, or “Read and modify bookmarks” in Firefox (`bookmarks`). The other permissions granted at install show no prompt: `storage` for settings, `activeTab` to read the title and URL of the tab where you click the toolbar button or press a shortcut, `scripting` to show the quick save notification in that tab, `sidePanel` and `offscreen` (which runs AI quick save's request in a hidden extension page) in Chrome and Edge, and `contextMenus` in Firefox, which does not let extensions ask for it later. Everything else is optional. Bookmark Scout explains it first, and the browser asks only when you turn on or run the feature that needs it:
 
-- Access to your tabs (`tabs`), when you save the current page or ask for folder suggestions from the side panel. The toolbar popup does not need it.
-- The right-click menu (`contextMenus`, Chrome and Edge), when you turn on Context Menu in Settings.
-- The browser's icon cache (`favicon`, Chrome and Edge), when you click Show browser icons on Refresh Site Icons or turn on Use the browser's icon cache in Settings.
-- Access to the websites of the bookmarks a run checks, when you run Check Dead Links, Metadata Fetcher, or Refresh Site Icons (access to all websites when a run covers more than 20 sites), and access to all websites when you turn on Read page content.
-- Access to one provider's site, when you click Verify Service or Refresh Models in the AI settings.
-- In Firefox, your consent to share data with your AI provider, for what each feature sends: when you turn on AI (your API key, bookmarks, and the current page's title and URL), turn on Read page content (page text), or click Verify Service (your API key).
-- Communicating with the bookmark-scout-mcp program on your computer (`nativeMessaging`), when you turn on Allow local AI agents; in Firefox, together with your consent to share bookmark data with it.
+- “Read the icons of the websites you visit” (Chrome and Edge, `favicon`): when you click Show browser icons on Refresh Site Icons, or turn on Use the browser's icon cache in Settings.
+- “Read your browsing history” (Firefox: “Access browser tabs”, `tabs`): when you save the current page or ask for folder suggestions from the side panel. The toolbar popup and the quick save shortcut do not need it.
+- “Read and change your data on all example.com sites”, or “on a number of websites” (Firefox: “Access your data for sites in the example.com domain”): when you run Check Dead Links, Metadata Fetcher, or Refresh Site Icons, for the websites of the bookmarks in that run.
+- “Read and change all your data on all websites” (Firefox: “Access your data for all websites”): when a run of those tools covers more than 20 sites, or when you turn on Read page content.
+- “Read and change your data on api.example.com”, with your AI provider's address in place of api.example.com (Firefox: “Access your data for api.example.com”): when you click Verify Service or Refresh Models in the AI settings.
+- “Communicate with cooperating native applications” (Firefox: “Exchange messages with programs other than Firefox”, `nativeMessaging`): when you turn on Allow local AI agents, to talk to the bookmark-scout-mcp program on your computer.
+- In Firefox only, a prompt that says the developer wants to collect data, for what each feature shares: when you turn on AI (your API key, bookmarks, and the current page's title and URL), turn on Read page content (page text), or click Verify Service (your API key), all sent to your AI provider; and when you turn on Allow local AI agents, for the bookmark data the program on your computer receives. Here “the developer” means your AI provider or the program on your computer; Bookmark Scout receives nothing.
+- The right-click menu (Chrome and Edge, `contextMenus`), when you turn on Right-Click Menu in Settings. The browser adds it without a prompt.
 
 If you decline, the feature stays off. You can withdraw a permission in the browser's extension settings at any time, and the feature that needs it turns off.
 
-Each permission is explained in the [permission list in the README](https://github.com/isandrel/bookmark-scout#-permissions).
+The [permissions page in the docs](https://docs.bookmark-scout.com/permissions) lists each permission and why Bookmark Scout needs it.
 
 ## This website and the docs site
 

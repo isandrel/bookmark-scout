@@ -148,6 +148,16 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 			description: web.docs.description,
 			/** A docs page; without a path, the docs home. */
 			url: (subpath = "") => joinUrl(web.docs.url, subpath),
+			/**
+			 * A docs page in one language, such as `/ja/permissions` for Japanese (no prefix for the
+			 * default language). A `#anchor` stays at the end.
+			 */
+			page: (locale: string, subpath = "") => {
+				assertLocale(locale);
+				const [route = "", ...anchor] = subpath.split("#");
+				const segments = localizedSegments(locale, route.split("/").filter(Boolean), routing);
+				return joinUrl(joinUrl(web.docs.url, segments.join("/")), anchor.length ? `#${anchor.join("#")}` : "");
+			},
 			sitemap: {
 				changeFrequency: web.docs.sitemap.change_frequency,
 				homePriority: web.docs.sitemap.home_priority,

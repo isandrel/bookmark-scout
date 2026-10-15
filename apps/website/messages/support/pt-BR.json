@@ -5,7 +5,7 @@
             "description": "Ajuda com o Bookmark Scout: respostas para problemas comuns, como relatar um bug e para onde enviar e-mails sobre suporte, privacidade e segurança."
         },
         "title": "Suporte",
-        "intro": "A maioria das respostas está na documentação e nas perguntas frequentes. Se algo não funcionar, relate no GitHub. Para assuntos que você prefere não publicar, envie um e-mail.",
+        "intro": "A maioria das respostas está na documentação e nas perguntas frequentes. Para qualquer outra coisa, envie um e-mail. Se algo não funcionar, você também pode relatar publicamente no GitHub.",
         "sections": {
             "start-here": {
                 "title": "Comece aqui",
@@ -26,7 +26,7 @@
                     "firefoxRestart": {
                         "q": "O Bookmark Scout desaparece quando reinicio o Firefox",
                         "a": [
-                            "Até a página no Firefox Add-ons ser publicada, o Bookmark Scout funciona no Firefox como extensão temporária, e o Firefox remove as extensões temporárias ao reiniciar.",
+                            "A versão para Firefox chega em breve ao Firefox Add-ons. Até lá, o Bookmark Scout instalado manualmente funciona no Firefox como extensão temporária, e o Firefox remove as extensões temporárias ao reiniciar.",
                             "Carregue-o novamente depois de reiniciar: abra <code>about:debugging#/runtime/this-firefox</code>, clique em Carregar extensão temporária e selecione o arquivo <code>manifest.json</code> na pasta extraída."
                         ]
                     },
@@ -55,7 +55,7 @@
                         "q": "Minhas configurações sumiram depois de uma atualização",
                         "a": [
                             "Uma atualização passou os dados salvos do Bookmark Scout para um novo formato e removeu os dados antigos em vez de convertê-los. As configurações voltaram aos valores padrão, os serviços de IA e as chaves de API precisam ser adicionados de novo, e os prompts personalizados, as pesquisas salvas, as tags, os resumos e os ícones de sites salvos se perderam. Os seus favoritos não são afetados.",
-                            "Se você salvou suas configurações com Exportar no fim das Configurações antes de atualizar, use Importar ali para restaurá-las."
+                            "Se você salvou suas configurações com Fazer backup das configurações no fim das Configurações antes de atualizar, use Restaurar configurações ali para recuperá-las."
                         ]
                     },
                     "websiteAccess": {
@@ -68,7 +68,7 @@
                     "aiSetup": {
                         "q": "Os recursos de IA não aparecem ou não respondem",
                         "a": [
-                            "Os recursos de IA vêm desativados por padrão. Ative-os nas Configurações, em IA, escolha um provedor e digite sua chave de API. Um servidor Ollama local não precisa de chave.",
+                            "A IA é opcional e vem desativada por padrão. Para usá-la, ative-a nas Configurações, em IA, escolha sua empresa de IA e cole ali a chave da sua conta; o guia de IA na documentação mostra onde encontrá-la. Um programa de IA gratuito no seu próprio computador, como o Ollama, não precisa de chave.",
                             "Clique em Verificar serviço para testar a conexão. Na primeira vez, o navegador pede acesso ao site desse provedor; permita para que a extensão consiga se conectar ao provedor."
                         ]
                     }
@@ -76,7 +76,8 @@
             },
             "report-a-bug": {
                 "title": "Relatar um bug",
-                "body": "Os relatos de bugs vão para o GitHub Issues, onde qualquer pessoa pode acompanhar a correção. Pesquise primeiro nas issues existentes, caso alguém já tenha relatado o problema.",
+                "body": "Envie os detalhes por e-mail para {supportEmail}. Se você tiver uma conta no GitHub, pode abrir uma issue pública, onde qualquer pessoa pode acompanhar a correção; pesquise primeiro nas issues existentes, caso alguém já tenha relatado o problema.",
+                "emailButton": "Enviar e-mail ao suporte",
                 "button": "Abrir uma issue no GitHub",
                 "includeTitle": "Um bom relato inclui",
                 "include": {
@@ -86,7 +87,7 @@
                     "result": "O que você esperava e o que aconteceu, incluindo qualquer mensagem de erro.",
                     "screenshot": "Uma captura de tela, se ajudar, com os favoritos particulares ocultos."
                 },
-                "privacyNote": "As issues são públicas. Nunca cole uma chave de API e omita títulos ou URLs de favoritos que você não quer que outras pessoas vejam."
+                "privacyNote": "As issues do GitHub são públicas. Nunca cole uma chave de API e omita títulos ou URLs de favoritos que você não quer que outras pessoas vejam."
             },
             "email": {
                 "title": "E-mail",
