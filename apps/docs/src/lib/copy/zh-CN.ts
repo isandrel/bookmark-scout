@@ -49,10 +49,16 @@ export const zhCN: DocsCopy = {
   screenshots: {
     popup:
       "两个弹出窗口：在搜索框中输入“pas”，在“保存到文件夹”下选中 Pasta 文件夹（Recipes / Italian）；以及针对当前网页的 AI 建议：现有的 Recipes/Italian/Pasta 文件夹和新的 Recipes/Quick Dinners 文件夹",
-    manager: "书签管理器，包含文件夹树、标题和网址筛选器以及书签表格",
+    "quick-save":
+      "食谱网页顶部角落的快速保存通知：已保存到 Pasta，并提供撤消和“移动到”下的其他文件夹",
+    manager:
+      "打开书签栏的书签管理器：包含 Recipes、School、Travel、Family 和 Shopping 的文件夹树、一个搜索框和书签表格",
     duplicates:
       "显示在书签管理器上方的重复书签清理审阅界面，每组中要保留的书签标有“保留”",
-    "options-ai": "设置中的 AI 标签页，AI 功能处于关闭状态（默认）",
+    settings:
+      "设置中的“常用设置”标签页：快速保存文件夹、保存到的文件夹、右键菜单（关闭）、主题和语言",
+    "options-ai":
+      "设置中的 AI 标签页：“AI 是可选的”说明了使用 AI 需要什么、可能产生的费用，AI 功能处于关闭状态（默认）",
   },
 
   /** Labels of Fumadocs' own UI (search, table of contents, page footer, switchers). */

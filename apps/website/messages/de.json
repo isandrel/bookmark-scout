@@ -153,7 +153,7 @@
         "tab": "Finden und ordnen",
         "heading": "Gespeichertes finden und ordnen",
         "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome und funktioniert wie sie, mit einem Ordnerbaum, einer Pfadnavigation und einer sortierbaren Tabelle.",
-        "alt": "Der Bookmark-Scout-Manager zeigt den Ordner Dev Docs als Tabelle mit den Spalten Typ, Ordnerpfad, URL, Titel und Hinzugefügt am neben einem Ordnerbaum",
+        "alt": "Der Bookmark-Scout-Manager in der Lesezeichenleiste mit dem Ordnerbaum (Recipes, School, Travel, Family, Shopping), einem Suchfeld und der Lesezeichentabelle",
         "points": [
           "Alle Lesezeichen schon beim Tippen durchsuchen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
@@ -182,7 +182,7 @@
         "tab": "KI (optional)",
         "heading": "KI mit Ihrem eigenen Anbieter nutzen, oder gar nicht",
         "caption": "KI bleibt deaktiviert, bis Sie sie in den Einstellungen aktivieren, einen Anbieter wählen und, falls nötig, Ihren eigenen API-Schlüssel hinzufügen.",
-        "alt": "Der Tab KI der Bookmark-Scout-Einstellungen mit deaktivierten KI-Funktionen sowie Auswahlfeldern für Anbieter und Modell",
+        "alt": "Der Tab „KI“ in den Einstellungen: Der Kasten „KI ist optional“ erklärt, was KI braucht und was sie kosten kann, und die KI-Funktionen sind aus, der Standard",
         "points": [
           "„KI fragen“ zu Ihren Lesezeichen: durchsucht sie, prüft Links und schlägt Verschiebungen, Umbenennungen und neue Ordner als Plan vor, der nichts ändert, bis Sie zustimmen",
           "KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, Lesezeichen über einen MCP-Server nachschlagen lassen und jeder Änderung, die sie anfordern, im Browser zustimmen",

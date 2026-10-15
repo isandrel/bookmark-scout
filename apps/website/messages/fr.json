@@ -153,7 +153,7 @@
         "tab": "Rechercher et organiser",
         "heading": "Retrouvez et organisez ce que vous avez enregistré",
         "caption": "Le gestionnaire remplace la page Favoris de Chrome et fonctionne comme elle, avec une arborescence de dossiers, un fil d'Ariane et un tableau triable.",
-        "alt": "Le gestionnaire Bookmark Scout affichant le dossier Dev Docs sous forme de tableau, avec les colonnes type, chemin du dossier, URL, titre et date d'ajout, à côté d'une arborescence de dossiers",
+        "alt": "Le gestionnaire de Bookmark Scout sur la barre de favoris, avec l'arborescence (Recipes, School, Travel, Family, Shopping), un seul champ de recherche et le tableau des favoris",
         "points": [
           "Recherchez dans tous vos favoris pendant la saisie, avec les options Respecter la casse, Mot entier et Expression régulière",
           "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",
@@ -182,7 +182,7 @@
         "tab": "IA (facultative)",
         "heading": "Utilisez l'IA avec votre propre fournisseur, ou pas du tout",
         "caption": "L'IA reste désactivée tant que vous ne l'activez pas dans les paramètres, ne choisissez pas un fournisseur et n'ajoutez pas votre propre clé API lorsque le fournisseur en exige une.",
-        "alt": "L'onglet IA de la page des paramètres de Bookmark Scout, avec les fonctionnalités d'IA désactivées et les sélecteurs de fournisseur et de modèle",
+        "alt": "L'onglet IA des paramètres : l'encadré L'IA est facultative explique ce qu'il faut pour l'IA et ce qu'elle peut coûter, et les Fonctionnalités d'IA sont désactivées, par défaut",
         "points": [
           "Demandez à l'IA ce que vous voulez savoir sur vos favoris : elle les recherche, vérifie les liens et propose des déplacements, renommages et nouveaux dossiers sous forme de plan qui ne modifie rien avant votre accord",
           "Laissez des agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, consulter vos favoris via un serveur MCP, et approuvez dans le navigateur chaque modification qu'ils demandent",

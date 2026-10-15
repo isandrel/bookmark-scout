@@ -29,7 +29,7 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/05-popup-dark.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-dark.png">
     <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="Bookmark Scout のポップアップ。「pas」と入力すると Recipes / Italian の中の Pasta フォルダーが見つかり、Enter でそこにページを保存できる。横には、パスタのレシピページに対する任意の AI の提案。" width="800">
   </picture>
 </p>

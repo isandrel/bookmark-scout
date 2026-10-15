@@ -58,12 +58,16 @@ export const es: DocsCopy = {
   screenshots: {
     popup:
       'Dos ventanas emergentes: "pas" escrito en el cuadro de búsqueda con la carpeta Pasta (Recipes / Italian) seleccionada en Guardar en carpeta, y sugerencias de IA para la página actual: la carpeta existente Recipes/Italian/Pasta y una carpeta nueva Recipes/Quick Dinners',
+    "quick-save":
+      "Una página de receta con el aviso de guardado rápido en la esquina superior: guardada en Pasta, con Deshacer y otras carpetas en Mover a",
     manager:
-      "El administrador de marcadores con el árbol de carpetas, los filtros de título y URL, y la tabla de marcadores",
+      "El gestor de marcadores en la barra de marcadores: el árbol de carpetas con Recipes, School, Travel, Family y Shopping, un único cuadro de búsqueda y la tabla de marcadores",
     duplicates:
       "La revisión del Limpiador de duplicados sobre el administrador, con el marcador que se conserva en cada grupo marcado como Conservar",
+    settings:
+      "La pestaña Lo esencial de la configuración: Carpeta de guardado rápido, Carpeta de destino, Menú del clic derecho (desactivado), Tema e Idioma",
     "options-ai":
-      "La pestaña IA de la configuración con Funciones de IA desactivado, el valor predeterminado",
+      "La pestaña IA de la configuración: el recuadro La IA es opcional explica qué necesita la IA y cuánto puede costar, y Funciones de IA está desactivado, como viene por defecto",
   },
 
   /**

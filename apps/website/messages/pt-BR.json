@@ -153,7 +153,7 @@
         "tab": "Encontrar e organizar",
         "heading": "Encontre e organize o que você salvou",
         "caption": "O gerenciador substitui a página de favoritos do Chrome e funciona como ela, com uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
-        "alt": "O gerenciador do Bookmark Scout mostrando a pasta Docs de desenvolvimento como tabela, com as colunas tipo, caminho da pasta, URL, título e data de adição, ao lado de uma árvore de pastas",
+        "alt": "O gerenciador do Bookmark Scout na barra de favoritos, com a árvore de pastas (Recipes, School, Travel, Family, Shopping), uma única caixa de pesquisa e a tabela de favoritos",
         "points": [
           "Pesquise em todos os favoritos enquanto digita, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
@@ -182,7 +182,7 @@
         "tab": "IA (opcional)",
         "heading": "Use IA com seu próprio provedor, ou não use",
         "caption": "A IA fica desativada até você ativá-la nas Configurações, escolher um provedor e adicionar sua própria chave de API quando o provedor exigir uma.",
-        "alt": "A guia IA da página de configurações do Bookmark Scout com os recursos de IA desativados e os seletores de provedor e modelo",
+        "alt": "A guia IA das configurações: o quadro A IA é opcional explica do que a IA precisa e quanto pode custar, e Recursos de IA está desativado, o padrão",
         "points": [
           "Pergunte à IA sobre seus favoritos: ela os pesquisa, verifica links e propõe movimentações, renomeações e novas pastas como um plano que não altera nada até você aprová-lo",
           "Permita que agentes de IA do seu computador, como Claude Code, Codex ou Cursor, consultem os favoritos por meio de um servidor MCP, e aprove no navegador cada alteração que eles pedirem",

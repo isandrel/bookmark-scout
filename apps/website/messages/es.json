@@ -153,7 +153,7 @@
         "tab": "Buscar y organizar",
         "heading": "Encuentra y organiza lo que guardaste",
         "caption": "El administrador sustituye la página Marcadores de Chrome y funciona como ella, con un árbol de carpetas, una ruta de navegación y una tabla que se puede ordenar.",
-        "alt": "El administrador de Bookmark Scout con la carpeta Documentación técnica en forma de tabla, con columnas de tipo, ruta de la carpeta, URL, título y fecha de creación, junto a un árbol de carpetas",
+        "alt": "El gestor de Bookmark Scout en la barra de marcadores, con el árbol de carpetas (Recipes, School, Travel, Family, Shopping), un único cuadro de búsqueda y la tabla de marcadores",
         "points": [
           "Busca en todos los marcadores mientras escribes, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares",
           "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",
@@ -182,7 +182,7 @@
         "tab": "IA (opcional)",
         "heading": "Usa la IA con tu propio proveedor, o no la uses",
         "caption": "La IA está desactivada hasta que la activas en Configuración, eliges un proveedor y añades tu propia clave de API si el proveedor la necesita.",
-        "alt": "La pestaña IA de la configuración de Bookmark Scout con las funciones de IA desactivadas y los selectores de proveedor y modelo",
+        "alt": "La pestaña IA de la configuración: el recuadro La IA es opcional explica qué necesita la IA y cuánto puede costar, y Funciones de IA está desactivado, como viene por defecto",
         "points": [
           "Pregunta a la IA por tus marcadores: los busca, comprueba enlaces y propone movimientos, cambios de nombre y carpetas nuevas como un plan que no cambia nada hasta que lo apruebas",
           "Deja que los agentes de IA de tu equipo, como Claude Code, Codex o Cursor, consulten los marcadores a través de un servidor MCP, y aprueba en el navegador cada cambio que pidan",

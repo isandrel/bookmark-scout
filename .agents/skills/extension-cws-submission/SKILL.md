@@ -17,7 +17,7 @@ The maintainer approves each outward step: saving drafts, submitting, removing i
 | Title and summary | `extName` and `extDescription` in `apps/extension/public/_locales/*/messages.json` (package only) |
 | Category | Tools |
 | Store icon | `store/assets/store-icon-128.png` (padded; not the packaged `icon-128.png`) |
-| Screenshots, in order | `store/screenshots/01-popup-light`, `02-manager-light`, `03-tools-duplicates-light`, `04-options-ai-light`, `06-manager-dark` |
+| Screenshots, in order | `store/screenshots/01-popup-light`, `02-quick-save-light`, `03-manager-light`, `04-tools-duplicates-light`, `05-settings-light` |
 | Small promo tile | `store/screenshots/promo-small-440x280.png` |
 | Marquee tile | `store/assets/marquee-1400x560.png` |
 | Homepage, support, privacy URLs | `site.url` values in `config/` (`/support/`, `/privacy/`; the old `/en/...` URLs redirect) |
@@ -50,10 +50,10 @@ S=.agents/skills/extension-cws-submission/scripts
 bun $S/prepare-granted-build.ts apps/extension/dist/chrome-mv3 $Q/store-ext
 rm -rf $Q/store-shots
 EXT=$Q/store-ext QA_DIR=$Q RUN=store-shots bun .agents/skills/extension-exploratory-qa/scripts/explore-run.ts $S/capture-store-screenshots.ts
-bun $S/compose-store-screenshots.ts $Q/store-shots/shots $Q/store-ext $Q/store-shots/final
+bun $S/compose-store-screenshots.ts $Q/store-shots/shots $Q/store-shots/final
 ```
 
-The capture seeds synthetic bookmarks, saves real site icons with Refresh Site Icons (the granted build skips the permission prompts), stubs the popup's active tab to a public page, and captures light and dark. The compose step frames the popup pair and writes eight 1280×800 RGB PNGs with no alpha. Each frame must show something the others do not: the maintainer rejected a second popup frame that only added a Recent entry, which became stubbed AI folder suggestions instead (with AI turned off again before the Options captures, PR #606). New dismissible notices must be dismissed in the capture script, or they appear in every popup frame. Look at every image, then copy `final/*.png` to `store/screenshots/`, `apps/website/public/screenshots/`, and `apps/docs/public/screenshots/`. Update "How they were made" in `store/README.md`, run `nx run website:verify` and the docs verify, and open a PR.
+The capture seeds everyday bookmarks on real public sites (recipes, school, travel, family, shopping; no developer bookmarks), saves their real icons with Refresh Site Icons (the granted build skips the permission prompts; wait until the icons are stored before closing the page), answers a placeholder recipe page locally for quick save and stubs the popup's active tab to it, and captures light and dark. The compose step sets the popup pair side by side and writes twelve 1280×800 RGB PNGs with no alpha. Frames carry no added text (no headline baked in), so one set suits every language; captions belong in each page's copy. A new capture name goes in `SCREENSHOTS` (`packages/config/src/screenshots.ts`) with alt text in `apps/docs/src/lib/copy*.ts` and the website messages for every language. Each frame must show something the others do not: the maintainer rejected a second popup frame that only added a Recent entry, which became stubbed AI folder suggestions instead (with AI turned off again before the Options captures, PR #606). New dismissible notices must be dismissed in the capture script, or they appear in every popup frame. Look at every image, then copy `final/*.png` to `store/screenshots/`, `apps/website/public/screenshots/`, and `apps/docs/public/screenshots/`. Update "How they were made" in `store/README.md`, run `nx run website:verify` and the docs verify, and open a PR.
 
 Promo art (icon, tiles, logo master) is not captured. Its prompts, inputs, and output paths are in `store/ai-asset-prompts.md`. Never use AI-generated UI as screenshots.
 

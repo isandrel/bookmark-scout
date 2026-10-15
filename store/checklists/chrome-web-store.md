@@ -37,7 +37,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 - [ ] Category: decided by the maintainer (suggested: Productivity → Tools).
 - [ ] Language: English as default; Japanese and Korean listed.
 - [ ] Store icon: 128x128, from the package (`icon-128.png`).
-- [ ] Screenshots (up to 5, 1280x800): `01-popup-light.png`, `02-manager-light.png`, `03-tools-duplicates-light.png`, `04-options-ai-light.png`, `06-manager-dark.png` from [`../screenshots/`](../screenshots/).
+- [ ] Screenshots (up to 5, 1280x800): `01-popup-light.png`, `02-quick-save-light.png`, `03-manager-light.png`, `04-tools-duplicates-light.png`, `05-settings-light.png` from [`../screenshots/`](../screenshots/).
 - [ ] Small promo tile 440x280: `promo-small-440x280.png`.
 - [ ] Homepage URL `https://bookmark-scout.com` and support URL `https://bookmark-scout.com/support/`. Official URL (verified site): decided by the maintainer.
 
