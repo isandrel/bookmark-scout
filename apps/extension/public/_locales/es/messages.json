@@ -5028,7 +5028,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "Guarda todos los proveedores que quieras. Todas las herramientas de IA usan el servicio predeterminado.",
+        "message": "Guarda todos los proveedores que quieras. Las herramientas de IA usan el servicio predeterminado. La IA integrada solo sugiere carpetas, así que mientras sea la predeterminada, las demás herramientas usan el primer otro servicio activado.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {

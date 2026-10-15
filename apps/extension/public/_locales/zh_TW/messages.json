@@ -4822,7 +4822,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "可以儲存任意數量的供應商。所有 AI 工具都會使用預設服務。",
+        "message": "可以儲存任意數量的供應商。AI 工具會使用預設服務。內建 AI 只負責建議資料夾，所以它是預設服務時，其他工具會使用第一個已開啟的其他服務。",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {

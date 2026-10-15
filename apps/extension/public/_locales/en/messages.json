@@ -5028,7 +5028,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "Save as many providers as you like. Every AI tool uses the default service.",
+        "message": "Save as many providers as you like. AI tools use the default service. Built-in AI only suggests folders, so while it is the default, the other tools use the first other service that is turned on.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {
