@@ -1,9 +1,10 @@
 /**
  * Column registry for the bookmark manager table. Each entry is the single place a column is
- * described: its label, how it reads, renders, filters, and sorts a row, its width, whether it is
- * shown by default, and below which table width it gives way. The saved table view, column
- * sizing, narrow-width hiding, and the View menu all read this list, so adding a column is one
- * new entry here and needs no change to the table component.
+ * described: its label, how it reads, renders, filters, and sorts a row, its width, and below
+ * which table width it gives way. Which columns a new view shows, and in what order, is
+ * `default_columns` in config/ui/manager-table.toml. The saved table view, column sizing,
+ * narrow-width hiding, and the View menu all read this list, so adding a column is one new entry
+ * here and needs no change to the table component.
  */
 
 import type {
@@ -84,8 +85,6 @@ export type BookmarkColumn = {
   /** Whether the View menu can hide it (default true). */
   enableHiding?: boolean;
   size?: BookmarkColumnSize;
-  /** Shown until the user hides it (default true). */
-  defaultVisible?: boolean;
   /** Hidden while the table is narrower than this many pixels; the saved choice is kept. */
   hideBelowWidth?: number;
   /** Backs a filter only: never displayed, listed in the View menu, or saved in the table view. */
@@ -99,9 +98,16 @@ function formatTimestamp(value: unknown): string {
   return typeof value === 'number' ? formatDateTime(value) : '';
 }
 
+/** Whether any of `texts` contains the filter `value`, ignoring case; an empty filter matches. */
+function includesQuery(value: unknown, ...texts: (string | undefined)[]) {
+  const query = String(value ?? '')
+    .trim()
+    .toLowerCase();
+  return !query || texts.some((text) => text?.toLowerCase().includes(query));
+}
+
 function textFilter(row: { getValue: (id: string) => unknown }, id: string, value: unknown) {
-  const query = String(value ?? '').trim().toLowerCase();
-  return !query || String(row.getValue(id) ?? '').toLowerCase().includes(query);
+  return includesQuery(value, String(row.getValue(id) ?? ''));
 }
 
 const facetFilter: FilterFn<BookmarkTableFeatures, Bookmark> = (row, id, value) =>
@@ -158,7 +164,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     accessor: (row) => row.id,
     header: 'sortable',
     ...getManagerColumnLayout('id'),
-    defaultVisible: false,
   },
   {
     id: 'parentId',
@@ -175,7 +180,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       ) : null,
     filterFn: facetFilter,
     ...getManagerColumnLayout('parentId'),
-    defaultVisible: false,
   },
   {
     id: 'folderPath',
@@ -257,7 +261,8 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         </div>
       );
     },
-    filterFn: textFilter,
+    // The search box: it matches the title or the address, as the browser's own manager does.
+    filterFn: (row, _id, value) => includesQuery(value, row.original.title, row.original.url),
     // Title fills the room the other columns leave until the user sizes it (FILL_COLUMN_ID);
     // `size` is the narrowest it fills to, and `minSize` keeps a resized Title readable.
     ...getManagerColumnLayout('title'),
@@ -278,7 +283,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     header: 'label',
     cell: ({ getValue }) => formatTimestamp(getValue()),
     ...getManagerColumnLayout('dateGroupModified'),
-    defaultVisible: false,
   },
   {
     id: 'unmodifiable',
@@ -286,7 +290,6 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     accessor: (row) => row.unmodifiable,
     header: 'label',
     ...getManagerColumnLayout('unmodifiable'),
-    defaultVisible: false,
   },
   {
     id: 'actions',

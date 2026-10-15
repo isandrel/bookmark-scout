@@ -55,6 +55,11 @@ interface DataTableProps<TData extends RowData> {
   data: TData[];
   /** Current folder in the browser's own order, shown when "Browser order" is on. */
   browserOrderData: TData[];
+  /**
+   * The order `data` is in (the Sort Order setting): whether it is the browser's own order, and
+   * its name. Without it, `data` is taken to be in another order.
+   */
+  dataOrder?: { browserOrder: boolean; label: string };
   /** Every bookmark; filters search all of them unless "Current folder only" is checked. */
   allData: TData[];
   getRowId: (row: TData) => string;
@@ -162,6 +167,7 @@ export function DataTable<TData extends RowData>({
   columns,
   data,
   browserOrderData,
+  dataOrder,
   allData,
   getRowId,
   canSelectRow,
@@ -426,7 +432,26 @@ export function DataTable<TData extends RowData>({
   const displayedData = showsAllBookmarks ? allData : folderData;
   const filterScope = applyToCurrentFolder ? folderData : allData;
 
-  const moveDisabledReason = !browserOrder
+  // The folder is in the browser's order with the toggle on, or when that is the setting's order.
+  const folderInBrowserOrder = browserOrder || dataOrder?.browserOrder === true;
+  const [columnSort] = sorting;
+  const order: DataTableOrderState = {
+    browserOrder: folderInBrowserOrder && !columnSort,
+    browserOrderIsDefault: dataOrder?.browserOrder === true,
+    description: columnSort
+      ? t(
+          'managerDefaults_orderStatus',
+          t(
+            columnSort.desc ? 'table_sortedDesc' : 'table_sortedAsc',
+            getBookmarkColumnLabel(columnSort.id),
+          ),
+        )
+      : !folderInBrowserOrder && dataOrder
+        ? t('managerDefaults_orderStatus', dataOrder.label)
+        : null,
+  };
+
+  const moveDisabledReason = !folderInBrowserOrder
     ? t('table_moveNeedsBrowserOrder')
     : sorting.length > 0
       ? t('table_moveNeedsNoColumnSort')
@@ -843,7 +868,7 @@ export function DataTable<TData extends RowData>({
         onResetView={resetView}
         facetOptions={facetOptions}
         facetScope={filterScope}
-        browserOrder={browserOrder}
+        order={order}
         onBrowserOrderChange={handleBrowserOrderChange}
         spaceHiddenColumnIds={spaceHiddenColumnIds}
         columnVisibilityPreference={columnVisibility}

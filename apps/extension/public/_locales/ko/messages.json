@@ -6333,6 +6333,46 @@
         "message": "Claude Code처럼 내 컴퓨터에서 실행하는 AI 에이전트가 북마크를 사용하게 합니다",
         "description": "Options > For developers: line under the tab title"
     },
+    "managerDefaults_search": {
+        "message": "제목과 주소 검색",
+        "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
+    },
+    "managerDefaults_moreFilters": {
+        "message": "필터 더 보기",
+        "description": "Bookmark manager: button that shows the less common filters (web address, folder)"
+    },
+    "managerDefaults_moreFiltersInUse": {
+        "message": "숨기려면 이 필터를 지우세요",
+        "description": "Bookmark manager: tooltip of the More filters button while one of those filters is in use"
+    },
+    "managerDefaults_folderFilter": {
+        "message": "폴더",
+        "description": "Bookmark manager: title of the filter that shows items of chosen folders"
+    },
+    "managerDefaults_browserOrderActive": {
+        "message": "항목이 브라우저와 같은 순서로 표시됩니다",
+        "description": "Bookmark manager: tooltip of the Browser order button while the table already shows the browser order and the Sort Order setting is Browser order"
+    },
+    "managerDefaults_orderStatus": {
+        "message": "정렬: $1",
+        "description": "Bookmark manager: text beside the Browser order button naming the order the table shows instead; $1 is the order, such as \"Date Added\" or \"Title, sorted ascending\""
+    },
+    "managerDefaults_selectedOf": {
+        "message": "$2개 중 $1개 선택됨",
+        "description": "Bookmark manager footer while items are selected; $1 selected items, $2 items shown"
+    },
+    "managerDefaults_itemCount": {
+        "message": "$1개 항목",
+        "description": "Bookmark manager footer when nothing is selected: how many items the table shows; $1 is the count"
+    },
+    "managerDefaults_itemCount_one": {
+        "message": "$1개 항목",
+        "description": "Bookmark manager footer when nothing is selected and the table shows one item (singular); $1 is the count"
+    },
+    "managerDefaults_focusSearch": {
+        "message": "검색창으로 이동",
+        "description": "Keyboard shortcut description in the bookmark manager: the key focuses the search box"
+    },
     "aiOnboard_title": {
         "message": "AI는 선택 사항입니다",
         "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"

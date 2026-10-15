@@ -16,7 +16,7 @@ const ROOT_PARENT_ID = 'root';
 export const TREE_DROP_END_INDEX = Number.MAX_SAFE_INTEGER;
 
 /** Sort orders that show each folder's items in the browser's order, so a reorder shows. */
-const BROWSER_ORDER_SORTS: ReadonlySet<SortOrder> = new Set(['folders']);
+const BROWSER_ORDER_SORTS: ReadonlySet<SortOrder> = new Set(['browser', 'folders']);
 
 /** Whether the tree, sorted by `order`, shows the browser's order, so rows can be reordered. */
 export function treeShowsBrowserOrder(order: SortOrder): boolean {

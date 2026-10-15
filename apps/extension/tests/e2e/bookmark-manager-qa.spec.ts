@@ -1,5 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { addressFilter, setTablePageSize, showTableColumns } from './manager-helpers';
 import { OPEN_KEY } from './manager-keys';
 import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
@@ -151,7 +152,9 @@ test('manager, folder tree, and breadcrumb follow external bookmark changes', as
   );
   await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
   await expect(breadcrumbCurrent(page)).toHaveText('E2E Live Renamed');
-  await expect(tree(page).getByRole('treeitem', { name: 'Live Child', exact: true })).toHaveCount(0);
+  await expect(tree(page).getByRole('treeitem', { name: 'Live Child', exact: true })).toHaveCount(
+    0,
+  );
 });
 
 test('external folder renames and moves update the paths of everything inside', async ({
@@ -171,6 +174,7 @@ test('external folder renames and moves update the paths of everything inside', 
     },
     { title: 'Path Target', children: [] },
   ]);
+  await showTableColumns(extensionWorker, ['folderPath']);
   await page.goto(managerUrl(extensionId, seeded.ids['Path Sub']));
   await expect(row(page, 'Path Inner')).toContainText('E2E Paths / Path Sub');
 
@@ -189,7 +193,7 @@ test('external folder renames and moves update the paths of everything inside', 
   await expect(row(page, 'Path Inner')).toHaveCount(0);
 
   // A filter searches every bookmark: the moved folder's contents carry their new path.
-  await page.getByPlaceholder('Filter titles...').fill('Path Deep Link');
+  await page.getByPlaceholder('Search titles and addresses').fill('Path Deep Link');
   await expect(row(page, 'Path Deep Link')).toContainText('E2E Paths / Path Target / Path Inner');
 });
 
@@ -212,7 +216,9 @@ test('in-page rename and delete refresh the folder tree', async ({
   await expect(dialog).toContainText('Change the name of this folder.');
   await dialog.getByLabel('Name').fill('  Development  ');
   await dialog.getByRole('button', { name: 'Save' }).click();
-  await expect(tree(page).getByRole('treeitem', { name: 'Development', exact: true })).toBeVisible();
+  await expect(
+    tree(page).getByRole('treeitem', { name: 'Development', exact: true }),
+  ).toBeVisible();
   await expect(tree(page).getByRole('treeitem', { name: 'Dev', exact: true })).toHaveCount(0);
   await expect
     .poll(() =>
@@ -363,6 +369,7 @@ test('moves are explained until browser order is on, and keep the current page',
     url: `https://example.com/paged/${index + 1}`,
   }));
   const seeded = await seedFolder(extensionWorker, 'E2E Paged Moves', items);
+  await setTablePageSize(extensionWorker, 10);
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(10);
 
@@ -406,7 +413,10 @@ test('parent and domain facets list folders by path and group by registrable dom
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
 
-  await toolbar(page).getByRole('button', { name: 'Parent ID' }).click();
+  // The folder filter waits behind "More filters".
+  await expect(toolbar(page).getByRole('button', { name: 'Folder', exact: true })).toHaveCount(0);
+  await toolbar(page).getByRole('button', { name: 'More filters' }).click();
+  await toolbar(page).getByRole('button', { name: 'Folder', exact: true }).click();
   const parentOptions = page.getByRole('option');
   await expect(parentOptions.filter({ hasText: /E2E Facets \/ Same \(#\d+\)$/ })).toHaveCount(2);
   await expect(parentOptions.filter({ hasText: 'BBC News' })).toHaveCount(0);
@@ -424,7 +434,7 @@ test('parent and domain facets list folders by path and group by registrable dom
   await expect(row(page, 'Tricky Query')).toHaveCount(0);
 
   // The URL text filter narrows further without replacing the domain chip.
-  await page.getByPlaceholder('Filter URLs...').fill('sport');
+  await (await addressFilter(page)).fill('sport');
   await expect(page.locator('tbody tr')).toHaveCount(1);
   await expect(row(page, 'BBC Sport')).toBeVisible();
   await expect(toolbar(page).getByRole('button', { name: 'Domain' })).toContainText('bbc.co.uk');
@@ -560,7 +570,7 @@ test('edits trim titles and reject script URLs; untitled items and trimmed filte
     )
     .toBe('GitHub Spaced');
 
-  await page.getByPlaceholder('Filter titles...').fill('  github  ');
+  await page.getByPlaceholder('Search titles and addresses').fill('  github  ');
   await expect(page.locator('tbody tr')).toHaveCount(1);
   await expect(row(page, 'GitHub Spaced')).toBeVisible();
 });

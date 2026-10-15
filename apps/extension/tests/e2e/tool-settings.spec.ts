@@ -181,7 +181,11 @@ test('tools sidebar lists cleanup tools first and starts on all bookmarks at the
     deadLinksDefaultScope: 'folder',
   });
 
-  await page.goto(`chrome-extension://${extensionId}/bookmarks.html`);
+  // The top level, by the root's id: a plain open shows the bookmarks bar.
+  const rootId = await extensionWorker.evaluate(
+    async () => (await chrome.bookmarks.getTree())[0].id,
+  );
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${rootId}`);
   await page.getByTitle('Show tools').click();
   const sidebar = page.getByTestId('tools-sidebar');
   const headings = await sidebar.getByRole('heading', { level: 3 }).allTextContents();

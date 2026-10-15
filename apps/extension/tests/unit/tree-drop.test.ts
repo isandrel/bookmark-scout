@@ -4,9 +4,9 @@ import {
   getTreeDropZone,
   resolveTreeDrop,
   TREE_DROP_END_INDEX,
-  treeShowsBrowserOrder,
   type TreeDragSource,
   type TreeDropTarget,
+  treeShowsBrowserOrder,
 } from '@/components/bookmark/tree-drop';
 import type { BookmarkTreeNode } from '@/types';
 import { readConfigToml } from '../config-files';
@@ -153,6 +153,7 @@ describe('resolveTreeDrop', () => {
 
 describe('drops in a tree sorted by date or name', () => {
   it('reorders only in the browser order sort', () => {
+    expect(treeShowsBrowserOrder('browser')).toBe(true);
     expect(treeShowsBrowserOrder('folders')).toBe(true);
     expect(treeShowsBrowserOrder('date')).toBe(false);
     expect(treeShowsBrowserOrder('alphabetical')).toBe(false);

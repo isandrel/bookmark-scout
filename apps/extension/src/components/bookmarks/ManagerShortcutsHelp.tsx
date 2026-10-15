@@ -15,7 +15,7 @@ const { manager } = SHORTCUT_BINDINGS;
 
 /** One row per action; a row lists each binding that triggers it. */
 const SHORTCUT_ROWS: readonly { bindings: readonly ShortcutBinding[]; label: MessageKey }[] = [
-  { bindings: manager.focusFilter, label: 'shortcuts_focusFilter' },
+  { bindings: manager.focusFilter, label: 'managerDefaults_focusSearch' },
   { bindings: manager.parentFolder, label: 'shortcuts_parentFolder' },
   // The table's rows follow the grid keyboard pattern; these keys are not configurable.
   {

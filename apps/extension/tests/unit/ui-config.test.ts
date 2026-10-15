@@ -2,18 +2,21 @@ import { describe, expect, it } from 'vitest';
 import { BOOKMARK_COLUMNS } from '@/components/ui/table/columns';
 import {
   CONFIGURED_COLUMN_IDS,
+  DEFAULT_MANAGER_COLUMN_IDS,
   DEFAULT_MANAGER_PAGE_SIZE,
   getManagerColumnLayout,
   MANAGER_PAGE_SIZES,
   managerPageSizeSchema,
 } from '@/components/ui/table/table-config';
 import { DEFAULT_BOOKMARK_TABLE_VIEW } from '@/lib/bookmark-table-view-storage';
+import { defaultSettings } from '@/lib/settings-schema';
 import { readConfigToml } from '../config-files';
 
 describe('manager table config', () => {
   const toml = readConfigToml('ui/manager-table.toml') as {
     page_sizes: number[];
     default_page_size: number;
+    default_columns: string[];
   };
 
   it('offers the page sizes from the config, including the default', () => {
@@ -26,6 +29,21 @@ describe('manager table config', () => {
 
   it('keeps the saved view default in step with the config', () => {
     expect(DEFAULT_BOOKMARK_TABLE_VIEW.pageSize).toBe(DEFAULT_MANAGER_PAGE_SIZE);
+    expect(DEFAULT_MANAGER_COLUMN_IDS).toEqual(toml.default_columns);
+    const shown = DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder.filter(
+      (id) =>
+        DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility[id] !== false &&
+        DEFAULT_MANAGER_COLUMN_IDS.includes(id),
+    );
+    expect(shown).toEqual(toml.default_columns);
+  });
+
+  it('opens a new view with a page of 50 rows, so most folders fit on one page', () => {
+    expect(DEFAULT_MANAGER_PAGE_SIZE).toBe(50);
+  });
+
+  it('lists the popup tree and the manager table in the browser order by default', () => {
+    expect(defaultSettings.sortOrder).toBe('browser');
   });
 
   it('has a width for exactly the displayed columns of the registry', () => {

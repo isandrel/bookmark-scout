@@ -90,6 +90,22 @@ export async function openPopup(page: Page, extensionId: string) {
 }
 
 /**
+ * The bookmarks bar ("Favorites bar" in Edge), by the browser's `folderType`, else the first
+ * permanent folder, as the extension finds it.
+ */
+export async function bookmarksBar(worker: Worker): Promise<{ id: string; title: string }> {
+  return worker.evaluate(async () => {
+    const [root] = await chrome.bookmarks.getTree();
+    const folders = (root.children ?? []) as (chrome.bookmarks.BookmarkTreeNode & {
+      folderType?: string;
+    })[];
+    const bar = folders.find((folder) => folder.folderType === 'bookmarks-bar') ?? folders[0];
+    if (!bar) throw new Error('Bookmarks bar not found');
+    return { id: bar.id, title: bar.title };
+  });
+}
+
+/**
  * Title of the second permanent folder: "Other bookmarks" in Chromium, "Other favorites" in Edge.
  * Read from the browser so assertions do not depend on one browser's folder names.
  */

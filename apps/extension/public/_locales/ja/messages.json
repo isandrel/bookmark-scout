@@ -6333,6 +6333,46 @@
         "message": "Claude Code など、パソコンで動かす AI エージェントにブックマークを使わせます",
         "description": "Options > For developers: line under the tab title"
     },
+    "managerDefaults_search": {
+        "message": "タイトルとアドレスを検索",
+        "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
+    },
+    "managerDefaults_moreFilters": {
+        "message": "その他の絞り込み",
+        "description": "Bookmark manager: button that shows the less common filters (web address, folder)"
+    },
+    "managerDefaults_moreFiltersInUse": {
+        "message": "非表示にするには、これらの絞り込みを解除してください",
+        "description": "Bookmark manager: tooltip of the More filters button while one of those filters is in use"
+    },
+    "managerDefaults_folderFilter": {
+        "message": "フォルダ",
+        "description": "Bookmark manager: title of the filter that shows items of chosen folders"
+    },
+    "managerDefaults_browserOrderActive": {
+        "message": "項目はブラウザと同じ順序で並んでいます",
+        "description": "Bookmark manager: tooltip of the Browser order button while the table already shows the browser order and the Sort Order setting is Browser order"
+    },
+    "managerDefaults_orderStatus": {
+        "message": "並び順: $1",
+        "description": "Bookmark manager: text beside the Browser order button naming the order the table shows instead; $1 is the order, such as \"Date Added\" or \"Title, sorted ascending\""
+    },
+    "managerDefaults_selectedOf": {
+        "message": "$2 件中 $1 件を選択",
+        "description": "Bookmark manager footer while items are selected; $1 selected items, $2 items shown"
+    },
+    "managerDefaults_itemCount": {
+        "message": "$1 件",
+        "description": "Bookmark manager footer when nothing is selected: how many items the table shows; $1 is the count"
+    },
+    "managerDefaults_itemCount_one": {
+        "message": "$1 件",
+        "description": "Bookmark manager footer when nothing is selected and the table shows one item (singular); $1 is the count"
+    },
+    "managerDefaults_focusSearch": {
+        "message": "検索ボックスにフォーカス",
+        "description": "Keyboard shortcut description in the bookmark manager: the key focuses the search box"
+    },
     "aiOnboard_title": {
         "message": "AI は任意です",
         "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"

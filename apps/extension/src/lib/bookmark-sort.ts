@@ -53,7 +53,11 @@ function compareBrowserOrder<T>(
 }
 
 const sortComparators = {
-  date: <T>(left: SortableItem<T>, right: SortableItem<T>, accessors: BookmarkSortAccessors<T>) => {
+  // The order the items come in: a folder's children in the browser's order, or a walk of the
+  // whole tree (search results across folders) in the order the browser shows it.
+  browser: <T>(left: SortableItem<T>, right: SortableItem<T>) =>
+    left.originalPosition - right.originalPosition,
+  date:<T>(left: SortableItem<T>, right: SortableItem<T>, accessors: BookmarkSortAccessors<T>) => {
     const leftDate = accessors.getDateAdded(left.item);
     const rightDate = accessors.getDateAdded(right.item);
 
