@@ -4,10 +4,13 @@
  * that moved on to another page meanwhile). It names the page, since the popup is not on it, and
  * has the same content and actions as the in-page notification, sent to the background the same
  * way.
+ *
+ * An undone quick save ("Bookmark removed") stays only in the popup where Undo was pressed, as its
+ * confirmation; a popup opened later has nothing left to offer for it and leaves it out.
  */
 
 import { CircleAlert, CircleCheck, Folder, Info, LoaderCircle, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const STATUS_ICONS = {
   saved: CircleCheck,
@@ -24,7 +27,14 @@ export function QuickSaveResultPanel() {
   // Opening the popup decides whether the result is recent enough to show.
   const [openedAt] = useState(() => Date.now());
   const [busy, setBusy] = useState(false);
+  // The quick save this popup showed before it was undone.
+  const [shownId, setShownId] = useState<string | null>(null);
+  const liveId = record && record.status !== 'removed' ? record.id : null;
+  useEffect(() => {
+    if (liveId) setShownId(liveId);
+  }, [liveId]);
   if (!record || !isQuickSaveForPopup(record, openedAt)) return null;
+  if (record.status === 'removed' && shownId !== record.id) return null;
 
   const view = buildQuickSaveView(record, settings);
   const Icon = STATUS_ICONS[view.status];
