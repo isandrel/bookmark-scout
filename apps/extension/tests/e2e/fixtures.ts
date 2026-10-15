@@ -10,6 +10,7 @@ import {
   type Page,
   type Worker,
 } from '@playwright/test';
+import { readConfigToml } from '../config-files';
 import { profileDir, removeTempDir, workerTempDir } from './temp-dirs';
 
 /** Chromium-family browsers: Playwright's bundled Chromium, or the installed Microsoft Edge. */
@@ -30,6 +31,11 @@ type ExtensionFixtures = {
    * because headless tests cannot answer the browser's permission prompt.
    */
   grantPermissions: readonly string[];
+  /**
+   * Leaves open the welcome page the extension opens on install (`config/ui/welcome.toml`).
+   * Every other test starts with it closed, so it is never among the pages a test opens.
+   */
+  keepWelcomePage: boolean;
   context: BrowserContext;
   extensionId: string;
   extensionWorker: Worker;
@@ -46,6 +52,34 @@ type WorkerFixtures = ExtensionProjectOptions & {
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const distDirectory = path.resolve(currentDirectory, '../../dist');
 
+/** The welcome page the extension opens on install, when its config says so. */
+const WELCOME_PAGE = '/welcome.html';
+const welcomeOpensOnInstall = readConfigToml('ui/welcome.toml').open_on_install === true;
+/** How long to wait for the welcome page after launch before giving up on it, in ms. */
+const WELCOME_WAIT_MS = 10_000;
+const WELCOME_POLL_MS = 25;
+
+/** Waits for the welcome page the install opened, then closes it. */
+async function closeWelcomePage(context: BrowserContext): Promise<void> {
+  const isWelcome = (page: Page) => page.url().endsWith(WELCOME_PAGE);
+  const deadline = Date.now() + WELCOME_WAIT_MS;
+  while (!context.pages().some(isWelcome)) {
+    if (Date.now() > deadline) throw new Error(`The extension did not open ${WELCOME_PAGE}`);
+    await new Promise((resolve) => setTimeout(resolve, WELCOME_POLL_MS));
+  }
+  // Closing it while it still loads left the next extension page without its messages (raw
+  // message keys) in about one test in eight, so it is closed only once it has rendered.
+  await Promise.all(
+    context
+      .pages()
+      .filter(isWelcome)
+      .map(async (page) => {
+        await page.locator('h1').waitFor();
+        await page.close();
+      }),
+  );
+}
+
 export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
   extensionBrowser: ['chromium', { option: true, scope: 'worker' }],
   extensionBuild: ['chrome-mv3', { option: true, scope: 'worker' }],
@@ -61,6 +95,7 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
   ],
   grantWebHostAccess: [false, { option: true }],
   grantPermissions: [[], { option: true }],
+  keepWelcomePage: [false, { option: true }],
   grantedBuild: [
     async ({ extensionPath }, use, workerInfo) => {
       // One copy per worker and permission set, removed when the worker ends.
@@ -94,7 +129,14 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
     { scope: 'worker' },
   ],
   context: async (
-    { extensionBrowser, extensionPath, grantWebHostAccess, grantPermissions, grantedBuild },
+    {
+      extensionBrowser,
+      extensionPath,
+      grantWebHostAccess,
+      grantPermissions,
+      grantedBuild,
+      keepWelcomePage,
+    },
     use,
     testInfo,
   ) => {
@@ -120,6 +162,7 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
       });
 
     try {
+      if (welcomeOpensOnInstall && !keepWelcomePage) await closeWelcomePage(context);
       await use(context);
     } finally {
       await context.close();

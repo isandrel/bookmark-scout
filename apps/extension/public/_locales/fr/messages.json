@@ -6256,5 +6256,57 @@
                 "example": "Folders First"
             }
         }
+    },
+    "welcome_pageTitle": {
+        "message": "Bienvenue",
+        "description": "Browser tab title of the welcome page opened once after install"
+    },
+    "welcome_heading": {
+        "message": "Bookmark Scout est prêt",
+        "description": "Main heading of the welcome page"
+    },
+    "welcome_intro": {
+        "message": "Enregistrez des pages dans le bon dossier en quelques touches. Voici comment commencer.",
+        "description": "Line under the welcome page heading"
+    },
+    "welcome_pinTitle": {
+        "message": "Épinglez Bookmark Scout à la barre d’outils",
+        "description": "Welcome page step shown while the extension is not pinned to the toolbar"
+    },
+    "welcome_pinBody": {
+        "message": "Cliquez sur le bouton Extensions (la pièce de puzzle) à côté de la barre d’adresse, puis sur l’épingle à côté de Bookmark Scout. Son icône reste ensuite à portée de clic.",
+        "description": "How to pin the extension: the browser's Extensions button is a puzzle piece in Chrome and Edge, and Firefox has an Extensions button too"
+    },
+    "welcome_saveTitle": {
+        "message": "Enregistrez une page",
+        "description": "Welcome page step about saving the current page from the popup"
+    },
+    "welcome_saveBody": {
+        "message": "Sur n’importe quelle page, cliquez sur l’icône de Bookmark Scout et tapez une partie d’un nom de dossier. Appuyez sur Entrée, ou cliquez sur le dossier, pour y enregistrer la page.",
+        "description": "How to save a page: open the toolbar popup and type part of a folder name"
+    },
+    "welcome_shortcutTitle": {
+        "message": "Votre raccourci d’enregistrement rapide",
+        "description": "Welcome page step about the quick save keyboard shortcut"
+    },
+    "welcome_shortcutBody": {
+        "message": "Appuyez sur ces touches sur n’importe quelle page pour l’enregistrer dans le dossier qui lui convient le mieux, sans rien ouvrir :",
+        "description": "Text before the quick save keys on the welcome page"
+    },
+    "welcome_shortcutNotSet": {
+        "message": "L’enregistrement rapide n’a pas encore de raccourci, car une autre extension utilise déjà les touches habituelles. Choisissez vos propres touches :",
+        "description": "Welcome page text when the browser left quick save without keys (another extension took them)"
+    },
+    "welcome_managerNote": {
+        "message": "La page Favoris de votre navigateur ouvre désormais Bookmark Scout.",
+        "description": "Welcome page line in Chrome and Edge: the extension replaces the browser's own Bookmarks page"
+    },
+    "welcome_openSettings": {
+        "message": "Ouvrir les paramètres",
+        "description": "Welcome page button that opens the extension's settings"
+    },
+    "welcome_readGuide": {
+        "message": "Lire le guide",
+        "description": "Welcome page link to the online documentation"
     }
 }

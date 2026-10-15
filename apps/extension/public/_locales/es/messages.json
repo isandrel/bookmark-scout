@@ -6256,5 +6256,57 @@
                 "example": "Folders First"
             }
         }
+    },
+    "welcome_pageTitle": {
+        "message": "Bienvenida",
+        "description": "Browser tab title of the welcome page opened once after install"
+    },
+    "welcome_heading": {
+        "message": "Bookmark Scout está listo",
+        "description": "Main heading of the welcome page"
+    },
+    "welcome_intro": {
+        "message": "Guarda páginas en la carpeta correcta con unas pocas teclas. Así se empieza.",
+        "description": "Line under the welcome page heading"
+    },
+    "welcome_pinTitle": {
+        "message": "Fija Bookmark Scout en la barra de herramientas",
+        "description": "Welcome page step shown while the extension is not pinned to the toolbar"
+    },
+    "welcome_pinBody": {
+        "message": "Haz clic en el botón Extensiones (la pieza de puzle) junto a la barra de direcciones y luego en el alfiler junto a Bookmark Scout. Su icono quedará a un clic.",
+        "description": "How to pin the extension: the browser's Extensions button is a puzzle piece in Chrome and Edge, and Firefox has an Extensions button too"
+    },
+    "welcome_saveTitle": {
+        "message": "Guarda una página",
+        "description": "Welcome page step about saving the current page from the popup"
+    },
+    "welcome_saveBody": {
+        "message": "En cualquier página, haz clic en el icono de Bookmark Scout y escribe parte del nombre de una carpeta. Pulsa Intro, o haz clic en la carpeta, para guardar la página ahí.",
+        "description": "How to save a page: open the toolbar popup and type part of a folder name"
+    },
+    "welcome_shortcutTitle": {
+        "message": "Tu atajo de guardado rápido",
+        "description": "Welcome page step about the quick save keyboard shortcut"
+    },
+    "welcome_shortcutBody": {
+        "message": "Pulsa estas teclas en cualquier página para guardarla en la carpeta que mejor encaja, sin abrir nada:",
+        "description": "Text before the quick save keys on the welcome page"
+    },
+    "welcome_shortcutNotSet": {
+        "message": "El guardado rápido aún no tiene atajo porque otra extensión ya usa las teclas habituales. Elige tus propias teclas:",
+        "description": "Welcome page text when the browser left quick save without keys (another extension took them)"
+    },
+    "welcome_managerNote": {
+        "message": "La página de marcadores de tu navegador ahora abre Bookmark Scout.",
+        "description": "Welcome page line in Chrome and Edge: the extension replaces the browser's own Bookmarks page"
+    },
+    "welcome_openSettings": {
+        "message": "Abrir la configuración",
+        "description": "Welcome page button that opens the extension's settings"
+    },
+    "welcome_readGuide": {
+        "message": "Leer la guía",
+        "description": "Welcome page link to the online documentation"
     }
 }
