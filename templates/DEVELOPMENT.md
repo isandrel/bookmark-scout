@@ -75,7 +75,7 @@
 ### ✅ Implemented
 
 - [x] 📥 **Save to a Folder by Name** — Type part of a folder's name, even a nested folder or a path such as `work/react`, then press ↓ and Enter to save the current page there; small typos still match and recently used folders come first
-- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, about 200 more from the models.dev catalog, or custom OpenAI-compatible providers. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
+- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, about 200 more from the models.dev catalog, or custom OpenAI-compatible providers. In Chrome, also free on the computer with Chrome's built-in AI (Gemini Nano through the Prompt API), which picks from a shortlist the local word match makes and falls back to it. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
 - [x] ⚡ **Quick Save Shortcuts** — Press {{SHORTCUT:commands.quick-save}} on any page to save it to the best matching folder (ranked on your device from folder names and the bookmarks in them), the last used folder, or a folder you choose, or {{SHORTCUT:commands.ai-quick-save}} to save it where AI suggests. A small notification shows where it went, with Undo and other folders to move it to; no extension window needs to be open
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
@@ -111,7 +111,7 @@
 > AI-powered recommendations and AI tools are **disabled by default** and require manual opt-in:
 >
 > 1. Go to **Settings → AI** tab
-> 2. Enable AI features and select your preferred provider (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, or a custom OpenAI-compatible endpoint)
+> 2. Enable AI features and select your preferred provider (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, or a custom OpenAI-compatible endpoint), or, in Chrome, the free built-in AI for folder suggestions
 > 3. Enter your own API key when your selected provider requires one
 >
 > ⚠️ **Note:** AI features may send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. API usage may incur costs depending on your provider. Results are experimental and should be reviewed before applying destructive organization changes.

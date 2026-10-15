@@ -217,7 +217,8 @@ When working in AI-related files, check whether the logic already belongs in:
 - `src/services/ai-client.lazy.ts`: provider factories and model wiring (`createAIModel` is async; each provider package loads only when that provider is used)
 - `src/services/ai-models.ts`: featured providers and catalog lookup
 - `src/services/ai-model-list.ts`: model lists, Verify, and error classification
-- `src/services/ai-settings.ts`: named services and `getActiveAISettings` (the default service; there is no provider or model setting)
+- `src/services/ai-settings.ts`: named services and `getActiveAISettings(enabled, feature)` (there is no provider or model setting): each AI feature in `AI_FEATURES` uses the default service when its provider file's `features` allow it, else the first enabled service that does (`pickAIService`), and `isAISetUp` checks the same
+- `src/services/builtin-ai.ts` (state, download, and `config/ai/built-in.toml`), `builtin-ai-model.lazy.ts` (the AI SDK adapter over Chrome's `LanguageModel`), and `builtin-ai-folders.ts` (folder suggestions from a BM25 shortlist, with the word match as the fallback): Chrome's built-in AI, a keyless `chrome_builtin` provider that never sends a request, never starts a download except from the Options button, and logs each call with `recordOnDeviceActivity`
 - `src/services/ai-activity.ts`: the logging fetch every provider call goes through
 - `src/services/ai-agent.ts` (facade) with `ai-agent.lazy.ts` (the agent loop, whose tools are the registry actions AI may call): Ask AI; the chat UI is `components/ai/AskAIPanel.lazy.tsx` behind the small `AskAIPanel.tsx`
 - `src/services/ai-bookmark-tools.ts`: Auto-Tagging, Summarizer, and the AI context pack, and saving their reviewed results with undo

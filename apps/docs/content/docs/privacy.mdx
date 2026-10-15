@@ -9,7 +9,7 @@ This is a summary. The full <SiteLink to="privacy">privacy policy</SiteLink> on 
 
 - **No account and no server.** Bookmark Scout runs inside your browser. The developer receives nothing from the extension.
 - **No telemetry.** No analytics, crash reporting, or ads in the extension.
-- **AI is off until you turn it on**, and then requests go straight from your browser to the provider you chose. In Firefox, turning it on also asks for your consent to share that data.
+- **AI is off until you turn it on**, and then requests go straight from your browser to the provider you chose. In Firefox, turning it on also asks for your consent to share that data. With Chrome's built-in AI, folder suggestions stay on your computer.
 - **Local AI agents only if you allow them.** With **Allow local AI agents** on (off by default), AI agents on your computer, such as Claude Code, can look up your bookmarks through the bookmark-scout-mcp program; they change them only with **Allow changes** on, each change after your approval.
 - **Permissions when you need them.** At install the extension asks only for what it cannot work without; tab access, the right-click menu, the browser's icon cache, and website access are asked for when you first use the feature. See [Permissions](/permissions).
 
@@ -58,7 +58,7 @@ Only when you use one of these, and only to the place named:
 | Refresh Site Icons | Each bookmarked website | A request for one bookmarked page per site and for an icon file on that site's domain, without cookies, after you allow website access. No third-party icon service is used |
 | Local AI agents, only with **Allow local AI agents** on (off by default) | The bookmark-scout-mcp program on your computer, and the AI agents you run there | What an agent asks for: matching bookmarks (with their folders, dates added, tags, and summaries), folder names, the current page's title and URL, whether bookmarked links still work (after you allow website access), and with **Read page content** on, a page's text. Private values in titles and URLs are hidden unless you turn that off. Agents may send what they read to their own AI provider. Each lookup is in AI activity while **Record requests** is on |
 
-A provider running on your own computer, such as Ollama, keeps AI requests on your machine. Bookmark exports, **AI Context Packer** files, and the settings backup are saved as files on your computer and uploaded nowhere. A JSON bookmark export also holds each bookmark's tags and summary; for bookmark and AI context exports, a privacy review can redact sensitive values first. The exact data each AI tool sends is listed in [Set up AI tools](/guides/ai-tools#what-each-tool-sends), and each permission is explained in [Permissions](/permissions).
+A provider running on your own computer, such as Ollama, keeps AI requests on your machine. So does Chrome's built-in AI: it runs folder suggestions on Chrome's own model on your computer, with no API key, and Chrome downloads that model from Google once, when you ask it to, without any of your data. Bookmark exports, **AI Context Packer** files, and the settings backup are saved as files on your computer and uploaded nowhere. A JSON bookmark export also holds each bookmark's tags and summary; for bookmark and AI context exports, a privacy review can redact sensitive values first. The exact data each AI tool sends is listed in [Set up AI tools](/guides/ai-tools#what-each-tool-sends), and each permission is explained in [Permissions](/permissions).
 
 ## This docs site
 

@@ -40,11 +40,35 @@ Die KI-Schaltflächen im Pop-up und in der Seitenleiste erscheinen, sobald **KI-
 
 Einstellungen werden automatisch gespeichert. KI-Dienste mit ihren API-Schlüsseln, **Basis-URL** und **Zusätzliche Header (JSON)** bleiben im lokalen Speicher dieses Browsers und werden nie synchronisiert. Andere KI-Einstellungen, etwa ob KI aktiviert ist, werden über Ihr Browserkonto synchronisiert, wo der Browser dies unterstützt.
 
+## Kostenlose KI auf diesem Computer [#free-ai-on-this-computer]
+
+In Chrome kann Bookmark Scout die **integrierte KI von Chrome** nutzen, ein kleines Modell (Gemini Nano), das auf Ihrem Computer läuft: ohne Konto, ohne API-Schlüssel, ohne Kosten, und nichts verlässt Ihren Computer. Sie schlägt nur Ordner vor.
+
+<Steps>
+<Step>
+Klicken Sie im Tab **KI** unter **Kostenlos auf diesem Computer**, oben im Kasten **KI ist optional**, auf **Integrierte KI verwenden**. **Integrierte KI (auf diesem Computer)** steht auch unter **Dienst hinzufügen** an erster Stelle. Beides erscheint nur, wo Chrome das Modell ausführen kann.
+</Step>
+<Step>
+Klicken Sie auf **Modell herunterladen**. Chrome lädt es einmal herunter: etwa 4 GB auf einem Computer mit Grafikkarte, 2,7 GB ohne. Sobald der Dienst **Bereit** meldet, ist das Modell auf diesem Computer.
+</Step>
+<Step>
+Aktivieren Sie **KI-Funktionen**, falls sie aus sind: Das Hinzufügen des Dienstes schaltet KI nicht ein.
+</Step>
+</Steps>
+
+- Chrome benötigt 22 GB freien Speicherplatz und eine Grafikkarte mit mehr als 4 GB Speicher oder 16 GB Arbeitsspeicher und 4 Prozessorkerne. Auf einem Computer, der das Modell nicht ausführen kann, oder wenn Ihre Organisation es deaktiviert hat, zeigt der Dienst das an. Firefox hat keine integrierte KI.
+- Sie schlägt nur Ordner vor, im Pop-up und in der Seitenleiste. KI fragen, Automatische Tags, Inhaltszusammenfassung, KI-Ordnerneuordnung und das Tastenkürzel für KI-Schnellspeichern nutzen einen anderen Dienst, sobald Sie einen hinzufügen.
+- Sie liest Titel und Adresse der Seite, die Namen der am besten passenden Ordner (eine kurze Liste, die auf Ihrem Gerät ausgewählt wird) und mit aktiviertem **Seiteninhalt lesen** den Anfang des Seitentextes. Sie antwortet nur mit Ordnern aus dieser Liste.
+- Sie funktioniert am besten mit Englisch, Japanisch, Spanisch, Deutsch und Französisch. Wenn das Modell scheitert oder zu lange braucht, kommen die Vorschläge stattdessen aus einem einfachen Wortabgleich auf Ihrem Gerät.
+- Das Pop-up startet den Download nie: Bis das Modell bereit ist, zeigt es statt der KI-Schaltflächen **Laden Sie das Modell der integrierten KI in den Einstellungen herunter**.
+- Mit aktiviertem **Anfragen aufzeichnen** erscheint jeder Aufruf unter **KI-Aktivität** als `ON-DEVICE`.
+
 ## Mehr als einen Dienst verwenden [#use-more-than-one-service]
 
 Speichern Sie beliebig viele Dienste, auch mehrere desselben Anbieters, zum Beispiel einen Proxy für die Arbeit und einen für zu Hause, jeweils mit eigenem Schlüssel, eigener Adresse und eigenem Modell.
 
 - Alle KI-Tools verwenden den **Standard**-Dienst. Wählen Sie **Als Standard festlegen** im Menü eines Dienstes, oder wählen Sie, wenn mehr als ein Dienst aktiviert ist, über den Pfeil neben der Funkel-Schaltfläche im Pop-up einen aus.
+- **Integrierte KI** schlägt nur Ordner vor: Solange sie der Standard ist, nutzen die anderen KI-Tools den ersten anderen aktivierten Dienst.
 - Deaktivieren Sie einen Dienst mit seinem Schalter, um ihn im Pop-up auszublenden, ohne ihn zu löschen.
 - **Duplizieren** kopiert einen Dienst einschließlich Schlüssel. **Löschen** entfernt ihn samt Schlüssel von diesem Gerät.
 - **Basis-URL**, **Zusätzliche Header (JSON)** und anbieterspezifische Felder wie die Organisation bei OpenAI befinden sich unter **Weitere Einstellungen**.
@@ -53,6 +77,7 @@ Speichern Sie beliebig viele Dienste, auch mehrere desselben Anbieters, zum Beis
 
 | Anbieter | API-Schlüssel | Hinweise |
 | --- | --- | --- |
+| Integrierte KI (auf diesem Computer) | Keiner | Nur Chrome, für Ordnervorschläge; siehe [Kostenlose KI auf diesem Computer](#free-ai-on-this-computer) |
 | OpenAI | Erforderlich | Optional **Organisations-ID** und **Projekt-ID** |
 | Anthropic | Erforderlich | |
 | Google | Erforderlich | |
@@ -102,7 +127,7 @@ Behalten Sie mehrere Prompts pro Tool, insgesamt bis zu 10, und wechseln Sie üb
 
 | Tool | Ort | An den Anbieter gesendet |
 | --- | --- | --- |
-| Ordnervorschläge | Pop-up, die Funkel-Schaltfläche neben dem Suchfeld (nur sichtbar, wenn KI aktiviert ist) | Titel und URL der aktuellen Seite sowie die Namen Ihrer Lesezeichenordner. Mit aktiviertem **Seiteninhalt lesen** auch der Haupttext der Seite |
+| Ordnervorschläge | Pop-up, die Funkel-Schaltfläche neben dem Suchfeld (nur sichtbar, wenn KI aktiviert ist) | Titel und URL der aktuellen Seite sowie die Namen Ihrer Lesezeichenordner. Mit aktiviertem **Seiteninhalt lesen** auch der Haupttext der Seite. Mit der integrierten KI verlässt nichts Ihren Computer |
 | **Automatische Tags** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im aktuellen Ordner, und mit aktiviertem **Seiteninhalt lesen** der Haupttext jeder Seite |
 | **Inhaltszusammenfassung** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im aktuellen Ordner, und mit aktiviertem **Seiteninhalt lesen** der Haupttext jeder Seite |
 | **KI-Ordnerneuordnung** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im gewählten Bereich |

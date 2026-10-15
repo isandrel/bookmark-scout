@@ -40,11 +40,35 @@ Les boutons d'IA de la fenêtre pop-up et du panneau latéral apparaissent une f
 
 Les paramètres sont enregistrés automatiquement. Les services d'IA, avec leurs clés API, leur **URL de base** et leurs **En-têtes supplémentaires (JSON)**, restent dans le stockage local de ce navigateur et ne sont jamais synchronisés. Les autres paramètres d'IA, comme l'activation de l'IA, sont synchronisés via votre compte de navigateur lorsque le navigateur le permet.
 
+## IA gratuite sur cet ordinateur [#free-ai-on-this-computer]
+
+Dans Chrome, Bookmark Scout peut utiliser l'**IA intégrée de Chrome**, un petit modèle (Gemini Nano) qui s'exécute sur votre ordinateur : ni compte, ni clé API, ni frais, et rien ne quitte votre ordinateur. Elle ne fait que suggérer des dossiers.
+
+<Steps>
+<Step>
+Dans l'onglet **IA**, cliquez sur **Utiliser l'IA intégrée**, sous **Gratuit sur cet ordinateur**, en haut de l'encadré **L'IA est facultative**. **IA intégrée (sur cet ordinateur)** est aussi en tête de **Ajouter un service**. Les deux n'apparaissent que là où Chrome peut exécuter le modèle.
+</Step>
+<Step>
+Cliquez sur **Télécharger le modèle**. Chrome le télécharge une seule fois : environ 4 Go sur un ordinateur avec carte graphique, 2,7 Go sans. Quand le service indique **Prêt**, le modèle est sur cet ordinateur.
+</Step>
+<Step>
+Activez **Fonctionnalités d'IA** si elles sont désactivées : ajouter le service n'active pas l'IA.
+</Step>
+</Steps>
+
+- Chrome a besoin de 22 Go d'espace disque libre et d'une carte graphique avec plus de 4 Go de mémoire, ou de 16 Go de mémoire et de 4 cœurs de processeur. Sur un ordinateur qui ne peut pas exécuter le modèle, ou si votre organisation l'a désactivé, le service l'indique. Firefox n'a pas d'IA intégrée.
+- Elle ne suggère que des dossiers, dans la fenêtre pop-up et le panneau latéral. Demander à l'IA, Étiquetage automatique, Générateur de résumés, Réorganisation des dossiers par IA et le raccourci d'enregistrement rapide avec l'IA utilisent un autre service lorsque vous en ajoutez un.
+- Elle lit le titre et l'adresse de la page, les noms des dossiers qui lui correspondent le mieux (une courte liste choisie sur votre appareil) et, avec **Lire le contenu des pages** activé, le début du texte de la page. Elle ne répond qu'avec des dossiers de cette liste.
+- Elle fonctionne mieux en anglais, japonais, espagnol, allemand et français. Si le modèle échoue ou met trop de temps, les suggestions viennent d'une simple correspondance de mots sur votre appareil.
+- La fenêtre pop-up ne lance jamais le téléchargement : tant que le modèle n'est pas prêt, elle affiche **Téléchargez le modèle de l'IA intégrée dans les paramètres** à la place des boutons d'IA.
+- Avec **Enregistrer les requêtes** activé, chaque appel apparaît dans **Activité de l'IA** comme `ON-DEVICE`.
+
 ## Utiliser plusieurs services [#use-more-than-one-service]
 
 Enregistrez autant de services que vous le souhaitez, y compris plusieurs pour le même fournisseur : par exemple un proxy professionnel et un proxy personnel, chacun avec sa propre clé, sa propre adresse et son propre modèle.
 
 - Tous les outils d'IA utilisent le service **Par défaut**. Choisissez **Définir par défaut** dans le menu d'un service ou, lorsque plusieurs services sont activés, choisissez-en un avec la flèche située à côté du bouton en forme d'étincelles dans la fenêtre pop-up.
+- **IA intégrée** ne fait que suggérer des dossiers : tant qu'elle est le service par défaut, les autres outils d'IA utilisent le premier autre service activé.
 - Désactivez un service avec son interrupteur pour le masquer dans la fenêtre pop-up sans le supprimer.
 - **Dupliquer** copie un service, clé comprise. **Supprimer** le retire de cet appareil, avec sa clé.
 - L'**URL de base**, les **En-têtes supplémentaires (JSON)** et les champs propres à chaque fournisseur, comme l'organisation OpenAI, se trouvent sous **Plus de paramètres**.
@@ -53,6 +77,7 @@ Enregistrez autant de services que vous le souhaitez, y compris plusieurs pour l
 
 | Fournisseur | Clé API | Remarques |
 | --- | --- | --- |
+| IA intégrée (sur cet ordinateur) | Aucune | Chrome uniquement, pour les suggestions de dossiers ; voir [IA gratuite sur cet ordinateur](#free-ai-on-this-computer) |
 | OpenAI | Obligatoire | **ID d'organisation** et **ID de projet** facultatifs |
 | Anthropic | Obligatoire | |
 | Google | Obligatoire | |
@@ -102,7 +127,7 @@ Conservez plusieurs prompts par outil, jusqu'à 10 au total, et passez de l'un �
 
 | Outil | Emplacement | Données envoyées au fournisseur |
 | --- | --- | --- |
-| Recommandations de dossiers | Fenêtre pop-up, bouton en forme d'étincelles à côté du champ de recherche (affiché uniquement lorsque l'IA est activée) | Le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers de favoris. Si **Lire le contenu des pages** est activé, également le texte principal de la page |
+| Recommandations de dossiers | Fenêtre pop-up, bouton en forme d'étincelles à côté du champ de recherche (affiché uniquement lorsque l'IA est activée) | Le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers de favoris. Si **Lire le contenu des pages** est activé, également le texte principal de la page. Avec l'IA intégrée, rien ne quitte votre ordinateur |
 | **Étiquetage automatique** | Gestionnaire, Outils, **IA** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
 | **Générateur de résumés** | Gestionnaire, Outils, **IA** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
 | **Réorganisation des dossiers par IA** | Gestionnaire, Outils, **IA** | Les titres, les URL et les chemins de dossier des favoris de la portée que vous choisissez |

@@ -210,6 +210,26 @@ bunx nx run extension:test:live
 
 CI runs the bridge tests when the extension or `packages/mcp-bridge` changes, the performance suite daily, and the live AI suite only on demand.
 
+### Chrome's built-in AI
+
+The **Built-in AI** service runs Chrome's own model (Gemini Nano, the Prompt API's `LanguageModel`) on your computer. Unit and E2E tests use a fake `LanguageModel` (`tests/unit/fake-language-model.ts`, `tests/e2e/builtin-ai.spec.ts`); the real model is checked by hand:
+
+1. Use Chrome 138 or later on a computer that meets [Chrome's hardware requirements](https://developer.chrome.com/docs/ai/get-started#hardware). To try it on a weaker one, set `chrome://flags/#optimization-guide-on-device-model` to **Enabled BypassPerfRequirement** and restart Chrome.
+2. The browser that `bun run dev` opens reports the model as unavailable. Either start it with the switch below, or turn the runner off and load `apps/extension/dist/chrome-mv3-dev` in your own Chrome profile from `chrome://extensions`. Keep this per-developer file out of Git: `apps/extension/web-ext.config.ts` is ignored.
+
+   ```ts
+   // apps/extension/web-ext.config.ts
+   import { defineWebExtConfig } from 'wxt';
+
+   export default defineWebExtConfig({
+     chromiumArgs: ['--disable-features=DisableLoadExtensionCommandLineSwitch'],
+     // Or use your own profile instead: disabled: true,
+   });
+   ```
+
+3. In **Options** > **AI**, click **Use built-in AI**, then **Download the model**. `chrome://on-device-internals` shows the model's state and download, and lets you send it a prompt directly.
+4. Turn on **AI Features** and **Record requests**, open the popup on a page, and click the folder suggestion button. **AI activity** shows the prompt as `ON-DEVICE`.
+
 ### TypeScript
 
 - Use TypeScript for all new code
