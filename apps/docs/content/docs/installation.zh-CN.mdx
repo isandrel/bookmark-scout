@@ -1,19 +1,56 @@
 ---
 title: 安装
-description: 从 Chrome 应用商店在 Chrome 中安装 Bookmark Scout，或从 GitHub 版本发布在 Chrome、Microsoft Edge 或 Firefox 中安装。
+description: 从 Chrome 应用商店将 Bookmark Scout 添加到 Chrome。Firefox 和 Edge 版本即将在各自的商店上架。
 ---
 
-Bookmark Scout 免费且开源。
+Bookmark Scout 免费使用，无需账号，也没有广告。它在电脑上的浏览器中运行，不支持手机或平板电脑。
 
-## 从浏览器的应用商店安装 [#install-from-your-browsers-store]
+## 添加到 Chrome [#add-it-to-chrome]
 
-<StoreAvailability />
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
 
-打开商店页面，从那里将 Bookmark Scout 添加到浏览器。从应用商店安装的副本会自动更新。
+在商店页面上点击**添加至 Chrome**，然后点击**添加扩展程序**。Chrome 只会请求一项权限：读取和更改你的书签。其他功能只会在你首次使用时才请求更多权限，并说明原因；请参阅[权限](/permissions)。
+</Step>
+<Step>
+固定图标：点击工具栏右侧拼图形状的**扩展程序**按钮，然后点击 Bookmark Scout 旁边的图钉。
+</Step>
+<Step>
+保存第一个网页：请参阅[第一次保存](/first-save)。
+</Step>
+</Steps>
 
-## 从 GitHub 版本发布安装 [#install-from-a-github-release]
+添加后，会立即在新标签页中打开一个标题为 **Bookmark Scout 已就绪**的页面，其中列出同样的入门步骤：固定图标、保存网页，以及你的快速保存快捷键所用的按键（如果其他扩展程序已经占用了这些按键，则显示**去设置**）。它只会在你首次安装 Bookmark Scout 时打开一次，更新后不会再打开。点击其中的**阅读指南**会打开[保存和整理](/guides/save-and-organize)，点击**打开设置**会打开[设置](/settings)。
 
-如果你所用浏览器的应用商店尚未上架 Bookmark Scout，请从 <RepoLink path="/releases">GitHub 版本发布</RepoLink>安装，每个版本发布都为每种浏览器提供一个下载文件：
+从商店安装的副本会自动更新。
+
+## Firefox 和 Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+在商店上架之前，你可以按照[下文](#install-from-a-github-release)的说明，从 GitHub 手动安装 Bookmark Scout。这需要多几个步骤，而且在 Firefox 中每次重启后都要重复这些步骤。
+
+## 安装之后 [#after-installing]
+
+- 在任意网页上点击 Bookmark Scout 图标，即可保存该网页或搜索你的书签。建议从[第一次保存](/first-save)开始。
+- 在任意网页上按 `Alt+Shift+S`（在 Mac 上按 `⌥⇧S`），无需打开任何界面即可保存该网页。请参阅[用键盘快捷键保存](/guides/save-and-organize#quick-save)。
+- 在 Chrome 中，Bookmark Scout 会用自己的书签管理器替换浏览器的书签页面。像以前一样打开它即可，例如按 `Ctrl+Shift+O`（在 Mac 上按 `Cmd+Option+B`），或者点击弹出窗口中的**打开书签管理器**。它的**工具**侧栏中包含各种清理工具。
+- 设置会在标签页中打开：右键点击工具栏图标，然后选择**选项**。请参阅[设置](/settings)。
+
+## 更新 [#updating]
+
+从商店安装的副本会自动更新，并且更新会保留你的设置。过去有一次更新（升级到 0.3.3 版）是例外：它重置了一次 Bookmark Scout 自己保存的数据，但从未改动你的书签；请参阅[常见问题](/faq#my-settings-are-gone-after-an-update)。
+
+如需随时保留一份设置、自定义提示词、AI 服务和已保存的搜索的副本，请使用[设置](/settings)底部的**备份设置**。
+
+## 进阶：从 GitHub 手动安装 [#install-from-a-github-release]
+
+只有当你所用浏览器的商店尚未上架 Bookmark Scout，或者你想测试某个版本时，才需要使用这种方式。以这种方式安装的副本不会自动更新：如需更新，请下载较新的版本并重复这些步骤。
+
+每个 <RepoLink path="/releases">GitHub 版本发布</RepoLink>都为每种浏览器提供一个下载文件：
 
 | 浏览器 | 文件 |
 | --- | --- |
@@ -26,8 +63,6 @@ Bookmark Scout 免费且开源。
 <Tabs items={["Chrome", "Edge", "Firefox"]}>
 <Tab value="Chrome" id="chrome">
 
-<StoreListing browser="chrome" />
-
 <Steps>
 <Step>
 下载 `bookmark-scout-<version>-chrome.crx` 或 `bookmark-scout-<version>-chrome.zip`。如果使用 ZIP 文件，请将其解压到一个会长期保留的文件夹中，因为 Chrome 会从该文件夹加载扩展程序。
@@ -39,14 +74,12 @@ Bookmark Scout 免费且开源。
 将 CRX 文件拖到该页面上，或者点击**加载已解压的扩展程序**并选择解压后的文件夹。
 </Step>
 <Step>
-通过拼图形状的“扩展程序”菜单将 Bookmark Scout 固定到工具栏，这样点击一下即可打开弹出窗口。
+通过拼图形状的“扩展程序”菜单将 Bookmark Scout 固定到工具栏。
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Edge" id="edge">
-
-<StoreListing browser="edge" />
 
 <Steps>
 <Step>
@@ -58,12 +91,13 @@ Bookmark Scout 免费且开源。
 <Step>
 点击**加载解压缩的扩展**并选择解压后的文件夹。
 </Step>
+<Step>
+通过拼图形状的“扩展”菜单在工具栏中显示 Bookmark Scout（点击它旁边的眼睛图标）。
+</Step>
 </Steps>
 
 </Tab>
 <Tab value="Firefox" id="firefox">
-
-<StoreListing browser="firefox" />
 
 <Steps>
 <Step>
@@ -78,23 +112,11 @@ Bookmark Scout 免费且开源。
 </Steps>
 
 <Callout type="warn" title="Firefox 的限制">
-Firefox 重启时会移除临时附加组件，因此每次重启后都需要重新载入。Firefox 也无法替换其书签页面，因此请通过弹出窗口中的**打开书签管理器**来打开书签管理器（其中包含工具、已保存的搜索以及导入和导出功能）。请参阅[浏览器支持](/browser-support)。
+Firefox 重启时会移除临时附加组件，因此每次重启后都需要重新载入。以临时附加组件方式安装时，不会打开 **Bookmark Scout 已就绪**页面。Firefox 也无法替换其书签页面，因此请通过弹出窗口中的**打开书签管理器**来打开书签管理器（其中包含工具、已保存的搜索以及导入和导出功能）。请参阅[浏览器支持](/browser-support)。
 </Callout>
 
 </Tab>
 </Tabs>
-
-## 安装之后 [#after-installing]
-
-- 点击 Bookmark Scout 图标即可打开弹出窗口并搜索书签。建议从[搜索和已保存的搜索](/guides/search)开始。
-- 在 Chrome 中，打开浏览器的书签页面（例如按 `Ctrl+Shift+O`，在 macOS 上按 `Cmd+Option+B`），即可进入 Bookmark Scout 书签管理器及其工具侧栏。
-- 设置会通过扩展程序的**选项**入口在标签页中打开，例如在 Chrome 中右键点击工具栏图标。请参阅[设置](/settings)。
-
-## 更新 [#updating]
-
-从应用商店安装的副本会自动更新。否则，请从 <ReleaseLink /> 下载较新的版本，然后重复你所用浏览器的安装步骤。
-
-更新前，可以用[设置](/settings)底部的**导出**保存设置、自定义提示词、AI 服务和已保存的搜索；某次更新会重置这些内容，请参阅[常见问题](/faq#my-settings-are-gone-after-an-update)。
 
 ## 从源代码构建 [#building-from-source]
 

@@ -10,7 +10,7 @@ export const ptBR: DocsCopy = {
     listed: (product: string, store: string) =>
       `Instale o ${product} pela página dele na loja ${store}.`,
     notListed: (product: string, store: string) =>
-      `O ${product} ainda não está na loja ${store}. Instale-o a partir de uma versão do GitHub:`,
+      `O ${product} chega em breve à loja ${store}.`,
     noneListed: (product: string) =>
       `O ${product} ainda não está em nenhuma loja de navegador.`,
     listedOn: (product: string) => `O ${product} está disponível em:`,
@@ -18,7 +18,8 @@ export const ptBR: DocsCopy = {
 
   home: {
     install: (product: string) => `Instalar o ${product}`,
-    download: "Baixar a versão mais recente",
+    addTo: (browser: string) => `Adicionar ao ${browser}, grátis`,
+    otherBrowsers: "Outros navegadores",
     /** Example queries offered as one-click filters in the page finder. */
     suggestions: [
       "duplicatas",

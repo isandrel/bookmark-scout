@@ -1,11 +1,17 @@
 ---
 title: Compatibilidad con navegadores
-description: Qué funciona en Chrome, Microsoft Edge y Firefox, qué se prueba en cada uno y por qué Safari no es compatible.
+description: Qué funciona en Chrome, Microsoft Edge y Firefox, dónde conseguirlo para cada uno y por qué Safari no es compatible.
 ---
 
-Chrome es el navegador principal. Edge está basado en Chromium y tiene las mismas funciones, salvo donde se indica a continuación. Firefox usa una compilación Manifest V2 con un conjunto de funciones más reducido.
+Bookmark Scout funciona mejor en Chrome, donde está disponible en Chrome Web Store. Edge tiene las mismas funciones, salvo donde se indica a continuación. Firefox tiene un conjunto algo más reducido, porque deja que las extensiones hagan menos con los marcadores. Los tres funcionan en un equipo; los teléfonos y las tabletas no son compatibles.
 
-## Tabla de funciones [#feature-matrix]
+## Dónde conseguirlo [#where-to-get-it]
+
+<StoreAvailability />
+
+Si una tienda todavía no ofrece Bookmark Scout, puedes [instalarlo a mano](/installation#install-from-a-github-release). El material de las fichas se prepara en la <RepoLink tree="store">carpeta `store/`</RepoLink> del repositorio, y cada tienda revisa una extensión antes de publicarla.
+
+## Qué funciona en cada navegador [#feature-matrix]
 
 Esta tabla se basa en los manifiestos de la extensión compilada para cada navegador y en las comprobaciones de navegador de su código.
 
@@ -18,26 +24,14 @@ Esta tabla se basa en los manifiestos de la extensión compilada para cada naveg
 | Búsquedas guardadas, herramientas de mantenimiento, importación y exportación, estadísticas y herramientas de IA del administrador | Sí | Sí | Sí, en el administrador. Las pruebas automatizadas cubren la importación, la exportación y los informes; las demás herramientas se comprueban a mano. |
 | Página de configuración | Sí | Sí | Sí |
 | Preguntar a la IA y las demás herramientas de IA | Sí | Sí | Sí, después de que aceptes compartir datos con tu proveedor de IA |
-| Agentes de IA locales a través de `bookmark-scout-mcp` | Sí | Sí | Sí; `bookmark-scout-mcp install` también lo registra en Firefox. No lo cubren las pruebas automatizadas |
+| Agentes de IA locales a través de `bookmark-scout-mcp` (para desarrolladores) | Sí | Sí | Sí; `bookmark-scout-mcp install` también lo registra en Firefox. No lo cubren las pruebas automatizadas |
 | Abrir en una ventana de incógnito desde el administrador | Sí | Sí, como ventana InPrivate | Sí, como ventana privada, cuando la extensión tiene permiso en ventanas privadas |
-| Menú contextual para guardar enlaces | Sí, después de activar **Menú contextual** (pide permiso) | Igual | Sí, después de activar **Menú contextual** |
+| Menú del clic derecho para guardar enlaces | Sí, después de activar **Menú del clic derecho** (pide permiso) | Igual | Sí, después de activar **Menú del clic derecho** |
 | Iconos de sitios junto a los marcadores | Iconos guardados con **Actualizar iconos de sitios**, y de la caché de iconos del navegador cuando activas **Usar la caché de iconos del navegador** | Igual | Solo los iconos guardados con **Actualizar iconos de sitios**, que se ejecuta en el administrador. Firefox no ofrece a las extensiones una API de favicons, así que los demás marcadores muestran un icono genérico. |
 | Acceso opcional a sitios web para comprobar enlaces rotos, obtener títulos y actualizar iconos de sitios | Se solicita al ejecutar la herramienta | Igual | Igual |
 
-## Qué se prueba [#what-is-tested]
-
-- **Chrome (Chromium)**: pruebas unitarias y pruebas de extremo a extremo de la ventana emergente, el panel lateral, el administrador, la configuración, las herramientas de mantenimiento, los informes, la importación y exportación, las combinaciones de teclas, el guardado rápido, las búsquedas guardadas, el guardado desde el menú contextual, el arrastrar y soltar, las herramientas de red, las herramientas de IA con proveedores simulados y recorridos que combinan varias de ellas. Las pruebas del puente ejecutan el programa `bookmark-scout-mcp` con la extensión en Chromium en Linux y macOS.
-- **Edge**: el mismo conjunto de pruebas de extremo a extremo se ejecuta con la compilación para Edge.
-- **Firefox**: un conjunto de pruebas básicas cubre la búsqueda y la creación de carpetas en la ventana emergente, la página del panel lateral cargada en una pestaña, la apertura del administrador desde la ventana emergente y el panel lateral, la página del administrador con su dirección, `Delete` y deshacer, las teclas del árbol de carpetas, el menú contextual y el arrastrar y soltar (con eventos de arrastre simulados por script), el aviso del atajo de guardado rápido y el grabador de teclas, el consentimiento para compartir datos con la IA, el guardado de la configuración, una exportación e importación de ida y vuelta en JSON, los informes de estadísticas y de privacidad, y los iconos de sitios guardados en la ventana emergente. No se cubren el guardado desde el menú contextual de una página, las demás combinaciones de teclas, el arrastrar y soltar en la ventana emergente, la propia notificación del guardado rápido, los agentes de IA locales ni las herramientas de red y de IA (incluida la propia **Actualizar iconos de sitios**).
-
-El conjunto de pruebas de Edge y el de pruebas básicas de Firefox son comprobaciones de CI obligatorias, igual que el de Chromium. Los proveedores de IA reales y los sitios web en vivo se comprueban a mano, no con pruebas automatizadas.
+Cuánto de cada navegador cubren las pruebas automatizadas se explica en [Estado del proyecto](/status#what-is-tested-in-each-browser).
 
 ## Safari [#safari]
 
 Safari no es compatible. Las Safari Web Extensions no implementan la API `bookmarks`, de la que depende cada parte de Bookmark Scout.
-
-## Disponibilidad en tiendas [#store-availability]
-
-<StoreAvailability />
-
-El material de las fichas se prepara en la <RepoLink tree="store">carpeta `store/`</RepoLink> del repositorio, y cada envío necesita la aprobación del mantenedor. Si una tienda no tiene ficha, [instala desde una versión publicada en GitHub](/installation).

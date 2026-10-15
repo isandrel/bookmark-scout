@@ -3,7 +3,12 @@ title: Configurer les outils d'IA
 description: Activez les fonctionnalités d'IA facultatives, choisissez un fournisseur et un modèle, ajoutez votre clé API, et sachez exactement quelles données de favoris chaque outil d'IA envoie.
 ---
 
-Les fonctionnalités d'IA sont **désactivées par défaut**, et Bookmark Scout fonctionne pleinement sans elles. Lorsque vous les activez, les requêtes vont directement de votre navigateur au fournisseur que vous choisissez, avec votre propre clé API. Bookmark Scout n'a aucun service d'IA propre.
+Les fonctionnalités d'IA sont **facultatives et désactivées par défaut**, et Bookmark Scout fonctionne pleinement sans elles. Bookmark Scout n'a aucun service d'IA propre. Pour utiliser l'IA, il vous faut :
+
+- **Un compte auprès d'une entreprise d'IA**, comme OpenAI, Anthropic ou Google. Les paramètres appellent cette entreprise le **fournisseur**. La plupart des fournisseurs facturent chaque utilisation, généralement un petit montant ; consultez leurs tarifs avant de commencer. Un programme d'IA qui fonctionne sur votre propre ordinateur, comme Ollama, ne coûte rien mais demande un ordinateur assez puissant.
+- **Une clé API** : un code secret, obtenu sur la page de votre compte chez cette entreprise, qui permet à Bookmark Scout d'utiliser votre compte. Gardez-la privée, comme un mot de passe.
+
+Vous choisissez aussi un **modèle** : la version d'IA que propose l'entreprise, par exemple une plus rapide ou une plus performante. Lorsque l'IA est activée, les requêtes vont directement de votre navigateur au fournisseur que vous avez choisi, avec votre clé.
 
 <Callout type="warn" title="Avant d'activer l'IA">
 Les outils d'IA envoient les titres des favoris, leurs URL et les noms ou chemins de dossier au fournisseur que vous configurez. Le fournisseur traite ces données selon ses propres conditions, et l'utilisation de son API peut être payante. Vérifiez chaque suggestion avant de l'appliquer.
@@ -96,11 +101,11 @@ Conservez plusieurs prompts par outil, jusqu'à 10 au total, et passez de l'un �
 | Outil | Emplacement | Données envoyées au fournisseur |
 | --- | --- | --- |
 | Recommandations de dossiers | Fenêtre pop-up, bouton en forme d'étincelles à côté du champ de recherche (affiché uniquement lorsque l'IA est activée) | Le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers de favoris. Si **Lire le contenu des pages** est activé, également le texte principal de la page |
-| **Étiquetage automatique** | Gestionnaire, Outils, **Intelligence artificielle** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
-| **Générateur de résumés** | Gestionnaire, Outils, **Intelligence artificielle** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
-| **Réorganisation des dossiers par IA** | Gestionnaire, Outils, **Intelligence artificielle** | Les titres, les URL et les chemins de dossier des favoris de la portée que vous choisissez |
+| **Étiquetage automatique** | Gestionnaire, Outils, **IA** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
+| **Générateur de résumés** | Gestionnaire, Outils, **IA** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
+| **Réorganisation des dossiers par IA** | Gestionnaire, Outils, **IA** | Les titres, les URL et les chemins de dossier des favoris de la portée que vous choisissez |
 | **Demander à l'IA** | Fenêtre pop-up et panneau latéral, bouton de discussion à côté du champ de recherche (affiché uniquement lorsque l'IA est activée) | Vos messages et la conversation jusqu'à présent, ainsi que ce que l'IA consulte : les favoris correspondants (avec leur dossier, leur date d'ajout, leurs étiquettes et leur résumé), les noms des dossiers, le titre et l'URL de la page actuelle, si les liens enregistrés qu'elle vérifie fonctionnent encore et, si **Lire le contenu des pages** est activé, le texte des pages qu'elle lit |
-| **Préparateur de contexte IA** | Gestionnaire, Outils, **Intelligence artificielle** | Rien. Il enregistre un fichier sur votre ordinateur et fonctionne même lorsque l'IA est désactivée. |
+| **Préparateur de contexte IA** | Gestionnaire, Outils, **IA** | Rien. Il enregistre un fichier sur votre ordinateur et fonctionne même lorsque l'IA est désactivée. |
 
 Activez **Recommander à l'ouverture** pour demander des recommandations de dossiers à chaque ouverture de la fenêtre pop-up. Laissez cette option désactivée pour n'envoyer une requête que lorsque vous cliquez sur le bouton.
 
@@ -124,7 +129,7 @@ Cliquez sur le bouton de discussion à côté du champ de recherche, dans la fen
 - La conversation n'est conservée que tant que la discussion est ouverte. **Nouvelle discussion** l'efface, et la fermeture de la fenêtre pop-up y met fin.
 - Les instructions qu'elle suit sont celles du prompt **Demander à l'IA** de la bibliothèque de prompts : vous pouvez donc les afficher ou les remplacer comme n'importe quel autre prompt.
 - **Ce que Demander à l'IA peut faire**, dans **Options**, puis **IA**, liste chaque consultation et chaque modification qu'elle peut effectuer. Si vous en désactivez une, elle n'est plus du tout proposée à Demander à l'IA. L'application d'un plan de modifications vous demande toujours d'abord votre accord.
-- Les agents d'IA de votre ordinateur, comme Claude Code, peuvent utiliser les mêmes consultations et modifications ; consultez [Utiliser avec des agents d'IA locaux](/guides/local-agents).
+- Pour les développeurs : les agents d'IA de votre ordinateur, comme Claude Code, peuvent utiliser les mêmes consultations et modifications ; consultez [Utiliser avec des agents d'IA locaux](/guides/local-agents).
 
 ## Voir ce qui a été envoyé [#see-what-was-sent]
 

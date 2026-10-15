@@ -10,7 +10,7 @@ export const zhTW: DocsCopy = {
     listed: (product: string, store: string) =>
       `從 ${store} 上的商店資訊頁面安裝 ${product}。`,
     notListed: (product: string, store: string) =>
-      `${product} 尚未在 ${store} 上架。請從 GitHub 版本發布安裝：`,
+      `${product} 即將在 ${store} 上架。`,
     noneListed: (product: string) =>
       `${product} 目前尚未在任何瀏覽器商店上架。`,
     listedOn: (product: string) => `${product} 已在下列商店上架：`,
@@ -18,7 +18,8 @@ export const zhTW: DocsCopy = {
 
   home: {
     install: (product: string) => `安裝 ${product}`,
-    download: "下載最新版本",
+    addTo: (browser: string) => `加到 ${browser}（免費）`,
+    otherBrowsers: "其他瀏覽器",
     /** Example queries offered as one-click filters in the page finder. */
     suggestions: ["重複書籤", "失效連結", "匯入", "快速鍵", "API 金鑰"],
     /** How many sidebar sections, from the top, the page finder lists before anything is typed. */

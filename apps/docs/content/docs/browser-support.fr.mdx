@@ -1,11 +1,17 @@
 ---
 title: Compatibilité des navigateurs
-description: Ce qui fonctionne dans Chrome, Microsoft Edge et Firefox, ce qui est testé dans chacun, et pourquoi Safari n'est pas pris en charge.
+description: Ce qui fonctionne dans Chrome, Microsoft Edge et Firefox, où l'obtenir pour chacun, et pourquoi Safari n'est pas pris en charge.
 ---
 
-Chrome est la cible principale. Edge repose sur Chromium et offre les mêmes fonctionnalités, sauf indication contraire ci-dessous. Firefox utilise une version Manifest V2 dotée de moins de fonctionnalités.
+Bookmark Scout fonctionne au mieux dans Chrome, où il est disponible sur le Chrome Web Store. Edge offre les mêmes fonctionnalités, sauf indication contraire ci-dessous. Firefox en offre un peu moins, car il laisse les extensions faire moins de choses avec les favoris. Tous les trois fonctionnent sur un ordinateur ; les téléphones et les tablettes ne sont pas pris en charge.
 
-## Tableau des fonctionnalités [#feature-matrix]
+## Où l'obtenir [#where-to-get-it]
+
+<StoreAvailability />
+
+Lorsqu'une boutique ne propose pas encore Bookmark Scout, vous pouvez [l'installer manuellement](/installation#install-from-a-github-release). Les éléments des fiches sont préparés dans le <RepoLink tree="store">dossier `store/`</RepoLink> du dépôt, et chaque boutique examine une extension avant de la proposer.
+
+## Ce qui fonctionne où [#feature-matrix]
 
 Ce tableau est établi à partir des manifestes de l'extension compilée pour chaque navigateur et des vérifications propres à chaque navigateur dans son code.
 
@@ -18,26 +24,14 @@ Ce tableau est établi à partir des manifestes de l'extension compilée pour ch
 | Recherches enregistrées, outils de maintenance, importation et exportation, statistiques, outils d'IA du gestionnaire | Oui | Oui | Oui, dans le gestionnaire. Des tests automatisés couvrent l'importation, l'exportation et les rapports ; les autres outils sont vérifiés manuellement. |
 | Page des paramètres | Oui | Oui | Oui |
 | Demander à l'IA et les autres outils d'IA | Oui | Oui | Oui, après avoir accepté de partager des données avec votre fournisseur d'IA |
-| Agents d'IA locaux via `bookmark-scout-mcp` | Oui | Oui | Oui ; `bookmark-scout-mcp install` l'enregistre aussi auprès de Firefox. Non couvert par les tests automatisés |
+| Agents d'IA locaux via `bookmark-scout-mcp` (pour les développeurs) | Oui | Oui | Oui ; `bookmark-scout-mcp install` l'enregistre aussi auprès de Firefox. Non couvert par les tests automatisés |
 | Ouverture dans une fenêtre de navigation privée depuis le gestionnaire | Oui | Oui, dans une fenêtre InPrivate | Oui, dans une fenêtre de navigation privée, lorsque l'extension est autorisée dans les fenêtres privées |
-| Menu contextuel pour enregistrer des liens | Oui, après activation du **Menu contextuel** (une autorisation est demandée) | Idem | Oui, après activation du **Menu contextuel** |
+| Menu du clic droit pour enregistrer des liens | Oui, après activation du **Menu du clic droit** (une autorisation est demandée) | Idem | Oui, après activation du **Menu du clic droit** |
 | Icônes de site à côté des favoris | Icônes enregistrées avec **Actualiser les icônes de site**, et icônes du cache du navigateur une fois l'option **Utiliser le cache d'icônes du navigateur** activée | Idem | Uniquement les icônes enregistrées avec **Actualiser les icônes de site**, qui s'exécute dans le gestionnaire. Firefox n'offre aucune API d'icônes de site aux extensions : les autres favoris affichent donc une icône générique. |
 | Accès facultatif aux sites Web pour la vérification des liens morts, la récupération des titres et l'actualisation des icônes de site | Demandé lorsque vous lancez l'outil | Idem | Idem |
 
-## Ce qui est testé [#what-is-tested]
-
-- **Chrome (Chromium)** : tests unitaires et tests de bout en bout pour la fenêtre pop-up, le panneau latéral, le gestionnaire, les paramètres, les outils de maintenance, les rapports, l'importation et l'exportation, les raccourcis clavier, l'enregistrement rapide, les recherches enregistrées, l'enregistrement depuis le menu contextuel, le glisser-déposer, les outils réseau, les outils d'IA avec des fournisseurs simulés, et des parcours qui en combinent plusieurs. Des tests du pont exécutent le programme `bookmark-scout-mcp` avec l'extension dans Chromium sous Linux et macOS.
-- **Edge** : la même suite de bout en bout s'exécute sur la version Edge.
-- **Firefox** : une suite de tests de fumée couvre la recherche et la création de dossiers dans la fenêtre pop-up, la page du panneau latéral chargée dans un onglet, l'ouverture du gestionnaire depuis la fenêtre pop-up et le panneau latéral, la page du gestionnaire avec son adresse, `Delete` et l'annulation, les touches de l'arborescence des dossiers, le menu contextuel et le glisser-déposer (à partir d'événements de glissement simulés par script), l'avertissement et l'enregistreur de touches du raccourci d'enregistrement rapide, le consentement au partage de données avec l'IA, l'enregistrement d'un paramètre, un aller-retour d'exportation et d'importation JSON, les rapports de statistiques et de confidentialité, ainsi que les icônes de site enregistrées dans la fenêtre pop-up. L'enregistrement depuis le menu contextuel d'une page, les autres raccourcis clavier, le glisser-déposer dans la fenêtre pop-up, la notification d'enregistrement rapide elle-même, les agents d'IA locaux, ainsi que les outils réseau et d'IA (y compris **Actualiser les icônes de site** lui-même) ne sont pas couverts.
-
-La suite Edge et la suite de tests de fumée Firefox sont des vérifications CI obligatoires, comme la suite Chromium. Les vrais fournisseurs d'IA et les sites Web réels sont vérifiés manuellement, et non par des tests automatisés.
+La part de chaque navigateur couverte par des tests automatisés est indiquée dans [État du projet](/status#what-is-tested-in-each-browser).
 
 ## Safari [#safari]
 
 Safari n'est pas pris en charge. Les extensions Web Safari n'implémentent pas l'API `bookmarks`, dont dépend chaque partie de Bookmark Scout.
-
-## Disponibilité dans les boutiques [#store-availability]
-
-<StoreAvailability />
-
-Les éléments des fiches sont préparés dans le <RepoLink tree="store">dossier `store/`</RepoLink> du dépôt, et chaque soumission nécessite l'approbation du mainteneur. Lorsqu'une boutique ne propose pas de fiche, [installez l'extension à partir d'une version GitHub](/installation).

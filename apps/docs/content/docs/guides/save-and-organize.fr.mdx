@@ -7,22 +7,30 @@ description: Enregistrez la page actuelle ou un lien dans un dossier, créez des
 
 <Steps>
 <Step>
-Ouvrez la fenêtre pop-up ou le panneau latéral sur la page que vous souhaitez conserver.
+Ouvrez la page que vous souhaitez conserver et cliquez sur l'icône de Bookmark Scout dans la barre d'outils, ou ouvrez le panneau latéral.
 </Step>
 <Step>
-Survolez le dossier de votre choix et cliquez sur **Ajouter la page actuelle**. Au clavier, accédez au dossier et appuyez sur `Enter`.
+Saisissez une partie du nom d'un dossier dans le champ de recherche. **Enregistrer dans un dossier** affiche au-dessus des résultats les dossiers correspondants, le meilleur en premier, avec les dossiers dans lesquels ils se trouvent.
+</Step>
+<Step>
+Appuyez sur `↓` puis sur `Enter`, ou cliquez sur le dossier. La page y est enregistrée.
 </Step>
 </Steps>
 
-Pour trouver un dossier par son nom, saisissez-en une partie dans le champ de recherche. **Enregistrer dans un dossier** affiche au-dessus des résultats les dossiers correspondants et leur emplacement. Appuyez sur `↓` puis sur `Enter`, ou cliquez sur l'un d'eux, pour y enregistrer la page. Plusieurs mots correspondent aussi aux dossiers parents (`react hooks`), et un mot de 4 lettres ou plus peut comporter une faute de frappe. Désactivez la liste ou changez le nombre de dossiers affichés avec **Dossiers correspondants**, **Nombre maximal de dossiers correspondants** et **Tolérer les fautes de frappe** dans les [Paramètres](/settings).
+La ligne sous le champ de recherche, **Page à enregistrer**, indique la page qui sera ajoutée. Plusieurs mots correspondent aussi aux dossiers qui entourent un dossier (`recipes pasta`), et un mot de 4 lettres ou plus peut comporter une faute de frappe.
 
 <Screenshot name="popup" />
 
-Le panneau **Récents** liste les dossiers récemment utilisés ; cliquez sur l'un d'eux pour y enregistrer la page actuelle. Désactivez-le, ou modifiez le nombre de dossiers qu'il affiche, avec **Dossiers récents** et **Nombre maximal de dossiers récents** dans les [Paramètres](/settings).
+Autres façons de choisir le dossier :
+
+- **Récents** : le panneau **Récents** liste les dossiers dans lesquels vous avez enregistré dernièrement ; cliquez sur l'un d'eux pour y enregistrer la page.
+- **Parcourir** : survolez un dossier de l'arborescence et cliquez sur **Ajouter la page actuelle**, ou accédez-y avec les touches fléchées et appuyez sur `Enter`.
 
 Une page qui se trouve déjà dans le dossier n'est pas enregistrée deux fois ; la notification indique qu'elle y figure déjà.
 
-La fenêtre pop-up de la barre d'outils lit la page sur laquelle vous l'avez ouverte sans rien demander. Le panneau latéral, lui, reste ouvert lorsque vous changez d'onglet : la première fois que vous enregistrez depuis ce panneau, Bookmark Scout vous donne une explication, puis demande l'accès à vos onglets. Si vous refusez, rien n'est enregistré.
+La fenêtre pop-up de la barre d'outils lit la page sur laquelle vous l'avez ouverte sans rien demander. Le panneau latéral, lui, reste ouvert lorsque vous changez d'onglet : la première fois que vous enregistrez depuis ce panneau, Bookmark Scout vous donne une explication, puis demande l'accès à vos onglets. Si vous refusez, rien n'est enregistré ; l'icône de la barre d'outils et le raccourci d'enregistrement rapide ci-dessous fonctionnent quand même sans cet accès.
+
+Pour modifier ces listes, utilisez les [Paramètres](/settings) : **Dossiers correspondants**, **Nombre maximal de dossiers correspondants** et **Tolérer les fautes de frappe** pour **Enregistrer dans un dossier**, et **Dossiers récents** et **Nombre maximal de dossiers récents** pour le panneau **Récents**.
 
 ## Enregistrer avec un raccourci clavier [#quick-save]
 
@@ -55,12 +63,12 @@ Si une autre extension utilise déjà une combinaison de touches, le navigateur 
 
 `Ctrl+D` (`⌘D` sur Mac) ouvre la boîte de dialogue de favoris du navigateur, et aucun navigateur ne permet à une extension d'en faire une touche par défaut : l'enregistrement rapide utilise donc d'abord `Alt+Shift+S`.
 
-- **Chrome et Edge** vous permettent de l'attribuer vous-même à l'enregistrement rapide. Sous **Raccourcis clavier** dans les paramètres, **Utiliser Ctrl+D pour l’enregistrement rapide** ouvre la page des raccourcis du navigateur : recherchez Bookmark Scout, cliquez sur le crayon à côté de **Enregistrement rapide de la page actuelle**, puis appuyez sur `Ctrl+D`. Dès lors, `Ctrl+D` effectue un enregistrement rapide au lieu d'ouvrir la boîte de dialogue de favoris. Pour retrouver la boîte de dialogue, effacez ce raccourci sur la même page. Tant que vous ne l'avez pas fait, la fenêtre pop-up et le panneau latéral le proposent sur une ligne, **Utiliser Ctrl+D pour l’enregistrement rapide** ; **Le définir** ouvre ces étapes dans les paramètres, et **Ignorer** masque la ligne sur cet appareil.
+- **Chrome et Edge** vous permettent de l'attribuer vous-même à l'enregistrement rapide. Sous **Raccourcis clavier** dans les paramètres, **Utiliser Ctrl+D pour l’enregistrement rapide** ouvre la page des raccourcis du navigateur : recherchez Bookmark Scout, cliquez sur le crayon à côté de **Enregistrement rapide de la page actuelle**, puis appuyez sur `Ctrl+D`. Dès lors, `Ctrl+D` effectue un enregistrement rapide au lieu d'ouvrir la boîte de dialogue de favoris. Pour retrouver la boîte de dialogue, effacez ce raccourci sur la même page. Tant que vous ne l'avez pas fait, la fenêtre pop-up et le panneau latéral indiquent les touches actuelles de l'enregistrement rapide, **Enregistrement rapide : appuyez sur Alt+Shift+S sur n’importe quelle page**, avec **Utiliser Ctrl+D à la place**, qui ouvre ces étapes dans les paramètres ; **Ignorer** masque la ligne sur cet appareil. Dans Firefox, la ligne indique seulement les touches.
 - **Firefox** gère toujours lui-même `Ctrl+D` (marquer cette page) et `Ctrl+Shift+D` (marquer tous les onglets), même lorsqu'une extension les définit : les champs de raccourci refusent donc ces deux combinaisons.
 
-## Enregistrer un lien avec le menu contextuel [#save-a-link-with-the-right-click-menu]
+## Enregistrer un lien avec le menu du clic droit [#save-a-link-with-the-right-click-menu]
 
-Activez d'abord le **Menu contextuel** dans les [Paramètres](/settings#data) ; il est désactivé par défaut. Effectuez ensuite un clic droit sur n'importe quel lien d'une page, choisissez **Enregistrer le favori dans…**, puis l'un de vos dossiers récents ou la Barre de favoris. Le paramètre **Source du nom du favori** détermine si le favori est nommé d'après le texte du lien, le titre de la page ou l'URL du lien. Désactivez le menu avec **Menu contextuel** (ces deux paramètres se trouvent dans l'onglet **Données**).
+Activez d'abord le **Menu du clic droit** dans les [Paramètres](/settings#data) ; il est désactivé par défaut. Effectuez ensuite un clic droit sur n'importe quel lien d'une page, choisissez **Enregistrer le favori dans…**, puis l'un de vos dossiers récents ou la Barre de favoris. Le paramètre **Source du nom du favori** détermine si le favori est nommé d'après le texte du lien, le titre de la page ou l'URL du lien. Désactivez le menu avec **Menu du clic droit** (ces deux paramètres se trouvent dans l'onglet **Données**).
 
 ## Créer des dossiers [#create-folders]
 

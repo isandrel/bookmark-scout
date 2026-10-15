@@ -1,19 +1,56 @@
 ---
 title: Install
-description: Install Bookmark Scout in Chrome from the Chrome Web Store, or in Chrome, Microsoft Edge, or Firefox from a GitHub release.
+description: Add Bookmark Scout to Chrome from the Chrome Web Store. Firefox and Edge versions are coming soon to their stores.
 ---
 
-Bookmark Scout is free and open source.
+Bookmark Scout is free, with no account and no ads. It runs in a browser on a computer, not on phones or tablets.
 
-## Install from your browser's store
+## Add it to Chrome
 
-<StoreAvailability />
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
 
-Open the listing and add Bookmark Scout to your browser from there. A copy installed from a store updates on its own.
+On the listing, click **Add to Chrome**, then **Add extension**. Chrome asks for one thing only: to read and change your bookmarks. Other features ask for more only when you first use them, and say why; see [Permissions](/permissions).
+</Step>
+<Step>
+Pin the icon: click the puzzle-piece **Extensions** button at the right of the toolbar, then the pin next to Bookmark Scout.
+</Step>
+<Step>
+Save your first page: see [Your first save](/first-save).
+</Step>
+</Steps>
 
-## Install from a GitHub release
+Right after you add it, a page titled **Bookmark Scout is ready** opens in a new tab with the same first steps: pin the icon, save a page, and the keys of your quick save shortcut (or **Set it up** when another extension already uses them). It opens only once, when you first install Bookmark Scout, never after an update. **Read the guide** on it opens [Save and organize](/guides/save-and-organize), and **Open settings** opens [Settings](/settings).
 
-Where your browser's store does not list Bookmark Scout yet, install it from a <RepoLink path="/releases">GitHub release</RepoLink>, which has one download per browser:
+A copy from the store updates on its own.
+
+## Firefox and Edge
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+Until a store lists it, you can install Bookmark Scout by hand from GitHub, as described [below](#install-from-a-github-release). That takes a few more steps, and in Firefox you repeat them after every restart.
+
+## After installing
+
+- Click the Bookmark Scout icon on any page to save it or to search your bookmarks. Start with [Your first save](/first-save).
+- Press `Alt+Shift+S` (`⌥⇧S` on a Mac) on any page to save it without opening anything. See [Save with a keyboard shortcut](/guides/save-and-organize#quick-save).
+- In Chrome, Bookmark Scout replaces the browser's bookmarks page with its own bookmarks manager. Open it as before, for example with `Ctrl+Shift+O` (`Cmd+Option+B` on a Mac), or with **Open bookmark manager** in the popup. Its **Tools** sidebar holds the cleanup tools.
+- Settings open in a tab: right-click the toolbar icon and choose **Options**. See [Settings](/settings).
+
+## Updating
+
+A copy installed from a store updates on its own, and updates keep your settings. One past update, to version 0.3.3, was an exception: it reset Bookmark Scout's own saved data once, though never your bookmarks; see [the FAQ](/faq#my-settings-are-gone-after-an-update).
+
+To keep a copy of your settings, custom prompts, AI services, and saved searches at any time, use **Back up settings** at the bottom of [Settings](/settings).
+
+## Advanced: install by hand from GitHub [#install-from-a-github-release]
+
+Use this only if your browser's store does not list Bookmark Scout yet, or to test a release. A copy installed this way does not update on its own: to update, download the newer release and repeat the steps.
+
+Each <RepoLink path="/releases">GitHub release</RepoLink> has one download per browser:
 
 | Browser | File |
 | --- | --- |
@@ -26,8 +63,6 @@ Download it from <ReleaseLink />, then follow the steps for your browser.
 <Tabs items={["Chrome", "Edge", "Firefox"]}>
 <Tab value="Chrome" id="chrome">
 
-<StoreListing browser="chrome" />
-
 <Steps>
 <Step>
 Download `bookmark-scout-<version>-chrome.crx` or `bookmark-scout-<version>-chrome.zip`. If you use the ZIP, extract it to a folder you will keep, because Chrome loads the extension from that folder.
@@ -39,14 +74,12 @@ Open `chrome://extensions/` and turn on **Developer mode** (top right).
 Drag the CRX file onto the page, or click **Load unpacked** and select the extracted folder.
 </Step>
 <Step>
-Pin Bookmark Scout to the toolbar from the puzzle-piece Extensions menu so the popup is one click away.
+Pin Bookmark Scout to the toolbar from the puzzle-piece Extensions menu.
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Edge" id="edge">
-
-<StoreListing browser="edge" />
 
 <Steps>
 <Step>
@@ -58,12 +91,13 @@ Open `edge://extensions/` and turn on **Developer mode**.
 <Step>
 Click **Load unpacked** and select the extracted folder.
 </Step>
+<Step>
+Show Bookmark Scout in the toolbar from the puzzle-piece Extensions menu (the eye icon next to it).
+</Step>
 </Steps>
 
 </Tab>
 <Tab value="Firefox" id="firefox">
-
-<StoreListing browser="firefox" />
 
 <Steps>
 <Step>
@@ -78,23 +112,11 @@ Click **Load Temporary Add-on** and select the extracted `manifest.json` file.
 </Steps>
 
 <Callout type="warn" title="Firefox limits">
-Firefox removes temporary add-ons when it restarts, so you load it again after each restart. Firefox also cannot replace its bookmarks page, so open the bookmarks manager (with Tools, saved searches, and import and export) from **Open bookmark manager** in the popup. See [Browser support](/browser-support).
+Firefox removes temporary add-ons when it restarts, so you load it again after each restart. The **Bookmark Scout is ready** page does not open for a temporary add-on. Firefox also cannot replace its bookmarks page, so open the bookmarks manager (with Tools, saved searches, and import and export) from **Open bookmark manager** in the popup. See [Browser support](/browser-support).
 </Callout>
 
 </Tab>
 </Tabs>
-
-## After installing
-
-- Click the Bookmark Scout icon to open the popup and search your bookmarks. Start with [Search and saved searches](/guides/search).
-- In Chrome, open the browser's bookmarks page (for example with `Ctrl+Shift+O`, or `Cmd+Option+B` on macOS) to reach the Bookmark Scout manager and its Tools sidebar.
-- Settings open in a tab from the extension's **Options** entry, for example by right-clicking the toolbar icon in Chrome. See [Settings](/settings).
-
-## Updating
-
-A copy installed from a store updates on its own. Otherwise, download the newer release from <ReleaseLink /> and repeat the steps for your browser.
-
-Before an update, you can save your settings, custom prompts, AI services, and saved searches with **Back up settings** at the bottom of [Settings](/settings); one update resets them, see [the FAQ](/faq#my-settings-are-gone-after-an-update).
 
 ## Building from source
 

@@ -1,11 +1,17 @@
 ---
 title: 瀏覽器支援
-description: Chrome、Microsoft Edge 和 Firefox 各支援哪些功能、各自經過哪些測試，以及不支援 Safari 的原因。
+description: Chrome、Microsoft Edge 和 Firefox 各支援哪些功能、各自從哪裡取得，以及不支援 Safari 的原因。
 ---
 
-Chrome 是主要支援的瀏覽器。Edge 以 Chromium 為基礎，功能與 Chrome 相同，下方註明的部分除外。Firefox 使用 Manifest V2 建置版本，功能較少。
+Bookmark Scout 在 Chrome 中效果最好，可以從 Chrome 線上應用程式商店取得。Edge 的功能與 Chrome 相同，下方註明的部分除外。Firefox 的功能稍微少一些，因為它允許擴充功能對書籤做的事比較少。這三種瀏覽器都在電腦上執行；不支援手機和平板電腦。
 
-## 功能對照表 [#feature-matrix]
+## 從哪裡取得 [#where-to-get-it]
+
+<StoreAvailability />
+
+如果某個商店尚未上架 Bookmark Scout，你可以[手動安裝](/installation#install-from-a-github-release)。商店資訊頁面的資料準備在存放區的 <RepoLink tree="store">`store/` 資料夾</RepoLink>中，每個商店都會先審查擴充功能，再將它上架。
+
+## 各瀏覽器支援的功能 [#feature-matrix]
 
 這個表格依據各瀏覽器建置完成的擴充功能資訊清單 (manifest)，以及程式碼中的瀏覽器檢查整理而成。
 
@@ -18,26 +24,14 @@ Chrome 是主要支援的瀏覽器。Edge 以 Chromium 為基礎，功能與 Chr
 | 已儲存的搜尋、維護工具、匯入和匯出、統計資料、書籤管理員中的 AI 工具 | 支援 | 支援 | 支援，在書籤管理員中使用。自動化測試涵蓋匯入、匯出和報告；其他工具則以人工檢查。 |
 | 設定頁面 | 支援 | 支援 | 支援 |
 | 「詢問 AI」和其他 AI 工具 | 支援 | 支援 | 支援，需先同意與你的 AI 供應商分享資料 |
-| 透過 `bookmark-scout-mcp` 使用本機 AI 代理 | 支援 | 支援 | 支援；`bookmark-scout-mcp install` 也會在 Firefox 中註冊它。自動化測試未涵蓋 |
+| 透過 `bookmark-scout-mcp` 使用本機 AI 代理 (適用於開發人員) | 支援 | 支援 | 支援；`bookmark-scout-mcp install` 也會在 Firefox 中註冊它。自動化測試未涵蓋 |
 | 從書籤管理員以無痕式視窗開啟 | 支援 | 支援，以 InPrivate 視窗開啟 | 支援，以隱私視窗開啟，前提是擴充功能已獲准在隱私視窗中執行 |
 | 用來儲存連結的右鍵選單 | 支援，需開啟「**右鍵選單**」(會要求權限) | 同 Chrome | 支援，需開啟「**右鍵選單**」 |
 | 書籤旁的網站圖示 | 使用「**重新整理網站圖示**」儲存的圖示，以及開啟「**使用瀏覽器的圖示快取**」後取自瀏覽器圖示快取的圖示 | 同 Chrome | 僅限使用「**重新整理網站圖示**」儲存的圖示，這項工具要在書籤管理員中執行。Firefox 沒有提供擴充功能使用的網站圖示 API，因此其他書籤會顯示通用圖示。 |
 | 用於檢查失效連結、擷取標題和重新整理網站圖示的選用網站存取權 | 執行工具時要求 | 同 Chrome | 同 Chrome |
 
-## 測試範圍 [#what-is-tested]
-
-- **Chrome (Chromium)**：單元測試和端對端測試，涵蓋彈出式視窗、側邊面板、書籤管理員、設定、維護工具、報告、匯入和匯出、鍵盤快速鍵、快速儲存、已儲存的搜尋、從右鍵選單儲存、拖放、網路工具、以模擬供應商測試的 AI 工具，以及橫跨其中多項功能的使用者流程。橋接測試會在 Linux 和 macOS 上的 Chromium 中，搭配擴充功能執行 `bookmark-scout-mcp` 程式。
-- **Edge**：對 Edge 建置版本執行相同的端對端測試套件。
-- **Firefox**：冒煙測試套件涵蓋彈出式視窗的搜尋和建立資料夾、在分頁中載入的側邊面板頁面、從彈出式視窗和側邊面板開啟書籤管理員、書籤管理員頁面及其網址、`Delete` 和復原、資料夾樹狀結構按鍵、右鍵選單和拖放 (使用模擬的拖曳事件)、快速儲存快捷鍵提示和按鍵錄製器、AI 資料分享同意、儲存設定、JSON 匯出再匯入的完整流程、統計資料和隱私報告，以及彈出式視窗中已儲存的網站圖示。從網頁上的右鍵選單儲存、其他鍵盤快速鍵、彈出式視窗中的拖放、快速儲存通知本身、本機 AI 代理，以及網路和 AI 工具 (包括「**重新整理網站圖示**」本身) 都不在測試範圍內。
-
-Edge 測試套件和 Firefox 冒煙測試套件與 Chromium 測試套件一樣，都是 CI 的必要檢查項目。實際的 AI 供應商和線上網站則以人工檢查，而非自動化測試。
+各瀏覽器有多少部分由自動化測試涵蓋，請參閱「[專案狀態](/status#what-is-tested-in-each-browser)」。
 
 ## Safari [#safari]
 
 不支援 Safari。Safari 網頁擴充功能並未實作 `bookmarks` API，而 Bookmark Scout 的所有部分都依賴這個 API。
-
-## 商店上架情況 [#store-availability]
-
-<StoreAvailability />
-
-商店資訊頁面的資料準備在存放區的 <RepoLink tree="store">`store/` 資料夾</RepoLink>中，每次提交都需要維護者核准。如果某個商店尚未上架，請[從 GitHub 版本發布安裝](/installation)。

@@ -1,31 +1,38 @@
 ---
 title: Introduction
-description: Bookmark Scout is a browser extension for Chrome, Edge, and Firefox that saves each page to the right folder when you type part of the folder's name, then searches, organizes, and cleans up your bookmarks, inside your browser.
+description: Bookmark Scout saves each page to the right bookmark folder when you type part of the folder's name or press one key, then helps you find, tidy, and clean up your bookmarks, all inside your browser.
 ---
+
+Bookmark Scout is a free browser extension that puts each page you save in the right bookmark folder. Click its icon, type a few letters of a folder's name, and the page goes there. It works in Chrome today.
 
 <StartHere />
 
 ## What you can do with it
 
-- **Save to the right folder**: type part of a folder's name in the popup or side panel, even a folder deep in the tree or a path such as `work/react`, then press `↓` and `Enter`, or click the folder, to save the current page there. With AI turned on, you can also ask for a folder suggestion. See [Save and organize](/guides/save-and-organize).
-- **Save without opening anything**: press `Alt+Shift+S` on any page to save it to the folder that matches it best. A small notification in the page says where it went, with **Undo** and other folders to move it to. See [Save with a keyboard shortcut](/guides/save-and-organize#quick-save).
-- **Find**: search every bookmark by title or URL from the toolbar popup or the side panel, and keep named searches in the bookmarks manager. See [Search and saved searches](/guides/search).
-- **Organize**: save links from the right-click menu, and use a bookmarks manager that works like Chrome's, with selection, right-click menus, cut, copy, and paste, drag and drop, and undo and redo with `Ctrl+Z` and `Ctrl+Y`. See [Save and organize](/guides/save-and-organize).
-- **Clean up**: remove duplicate bookmarks, strip tracking parameters, and find and repair dead links. See [Clean up duplicates and tracking URLs](/guides/clean-up) and [Find and repair dead links](/guides/dead-links).
-- **Move your library**: export to HTML, JSON, Markdown, or CSV, and import HTML or JSON after a preview. See [Import and export](/guides/import-export).
-- **Use AI, only if you want to**: AI tools are off by default. When you turn them on, you pick the provider and bring your own key. **Ask AI** answers questions about your bookmarks, and changes them only after you approve its plan. See [Set up AI tools](/guides/ai-tools).
-- **Work with local AI agents**: let AI agents on your computer, such as Claude Code, Codex, or Cursor, look up your bookmarks, and approve each change they ask for in the browser. Off by default. See [Use with local AI agents](/guides/local-agents).
+- **Save to the right folder**: type part of a folder's name, even a folder deep inside others, and pick it from the list to save the page you are on. See [Your first save](/first-save).
+- **Save with one key**: press `Alt+Shift+S` (`⌥⇧S` on a Mac) on any page to save it to the folder that fits it best. A small message in the page says where it went, with **Undo** and other folders to move it to. See [Save with a keyboard shortcut](/guides/save-and-organize#quick-save).
+- **Find**: search every bookmark by a word in its title or address, from the toolbar button or the side panel. See [Search and saved searches](/guides/search).
+- **Organize**: a bookmarks page that works like Chrome's, with drag and drop, right-click menus, cut, copy, and paste, and undo with `Ctrl+Z` (`Cmd+Z` on a Mac). See [Save and organize](/guides/save-and-organize).
+- **Clean up**: remove duplicate bookmarks, tidy addresses full of tracking codes, and find links that no longer work. See [Clean up duplicates and tracking URLs](/guides/clean-up) and [Find and repair dead links](/guides/dead-links).
+- **Move your bookmarks**: export them to a file, or bring them in from another browser after a preview. See [Import and export](/guides/import-export).
+- **Use AI, only if you want to**: AI is off until you turn it on, and it needs an account with an AI company, which may charge for use. It can suggest a folder or answer questions about your bookmarks, and changes nothing without your approval. See [Set up AI tools](/guides/ai-tools).
 
-<Screenshot name="manager" />
+<Screenshot name="popup" />
 
 ## Where your data goes
 
-Bookmark Scout has no account and no server of its own. Your bookmarks stay in your browser. Data leaves the browser only when you use a feature that needs the network, such as checking dead links or an AI tool you turned on, and then it goes directly to the website or provider you chose. Local AI agents, when you allow them, get what they look up through a program on your computer. Read the [privacy summary](/privacy).
+Bookmark Scout has no account and no server of its own. Your bookmarks stay in your browser. Data leaves the browser only when you use a feature that needs the internet, such as checking for dead links or an AI tool you turned on, and then it goes straight to the website or AI company you chose. Read the [privacy summary](/privacy).
+
+Bookmark Scout is made by an independent developer: no company, no ads, no account, and the code is open source.
 
 ## Browsers
 
-Chrome is the primary target. Edge is also Chromium-based and runs the same end-to-end test suite. In Firefox, which cannot replace its bookmarks page, the manager opens from a button in the popup, and a few browser features differ. See [Browser support](/browser-support) for the details.
+<StoreAvailability />
+
+Firefox and Edge versions are on their way to their stores; until then, they can be installed by hand. Bookmark Scout works in a browser on a computer, not on phones or tablets. See [Install](/installation) and [Browser support](/browser-support).
 
 ## Get help
 
 Check the [FAQ and troubleshooting](/faq) page first. For anything else, email <Contact role="support" /> or open an issue on <RepoLink path="/issues">GitHub</RepoLink>.
+
+For developers: connect AI apps on your computer, such as coding assistants, with [Use with local AI agents](/guides/local-agents), or help build Bookmark Scout with [Contributing and development](/contributing). Test coverage and the full feature list are in [Project status](/status).

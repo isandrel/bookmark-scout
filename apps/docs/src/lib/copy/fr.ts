@@ -10,7 +10,7 @@ export const fr: DocsCopy = {
     listed: (product: string, store: string) =>
       `Installez ${product} depuis sa fiche sur ${store}.`,
     notListed: (product: string, store: string) =>
-      `${product} n'a pas encore de fiche sur ${store}. Installez-le à partir d'une version GitHub :`,
+      `${product} arrive bientôt sur ${store}.`,
     noneListed: (product: string) =>
       `Aucune boutique de navigateur ne propose encore ${product}.`,
     listedOn: (product: string) => `${product} est disponible sur :`,
@@ -18,7 +18,8 @@ export const fr: DocsCopy = {
 
   home: {
     install: (product: string) => `Installer ${product}`,
-    download: "Télécharger la dernière version",
+    addTo: (browser: string) => `Ajouter à ${browser}, gratuit`,
+    otherBrowsers: "Autres navigateurs",
     /** Example queries offered as one-click filters in the page finder. */
     suggestions: [
       "doublons",

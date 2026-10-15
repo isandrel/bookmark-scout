@@ -3,7 +3,12 @@ title: Set up AI tools
 description: Turn on the optional AI features, choose a provider and model, add your API key, and know exactly what bookmark data each AI tool sends.
 ---
 
-AI features are **off by default**, and Bookmark Scout works fully without them. When you turn them on, requests go directly from your browser to the provider you choose, with your own API key. Bookmark Scout has no AI service of its own.
+AI features are **optional and off by default**, and Bookmark Scout works fully without them. Bookmark Scout has no AI service of its own. To use AI, you need:
+
+- **An account with an AI company**, such as OpenAI, Anthropic, or Google. Settings call this company the **provider**. Most providers charge for each use, usually a small amount; check their prices before you start. An AI program that runs on your own computer, such as Ollama, costs nothing but needs a fairly powerful computer.
+- **An API key**: a secret code from your account page at that company that lets Bookmark Scout use your account. Keep it private, like a password.
+
+You also pick a **model**: the AI version the company offers, such as a faster or a smarter one. When AI is on, requests go directly from your browser to the provider you chose, with your key.
 
 <Callout type="warn" title="Before you turn AI on">
 AI tools send bookmark titles, URLs, and folder names or paths to the provider you configure. The provider handles that data under its own terms, and API use may cost money. Review every suggestion before you apply it.
@@ -124,7 +129,7 @@ Click the chat button next to the search box in the popup or side panel to ask a
 - The conversation is kept only while the chat is open. **New chat** clears it, and closing the popup ends it.
 - The instructions it follows are the **Ask AI** prompt in the prompt library, so you can view or replace them like any other prompt.
 - **What Ask AI may do**, in **Options**, then **AI**, lists every lookup and change it can make. Turn one off and Ask AI is not offered it at all. Applying a plan of changes always asks you first.
-- AI agents on your computer, such as Claude Code, can use the same lookups and changes; see [Use with local AI agents](/guides/local-agents).
+- For developers: AI agents on your computer, such as Claude Code, can use the same lookups and changes; see [Use with local AI agents](/guides/local-agents).
 
 ## See what was sent
 

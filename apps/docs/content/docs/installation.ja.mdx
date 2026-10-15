@@ -1,19 +1,56 @@
 ---
 title: インストール
-description: Chrome ウェブストアから Chrome に、または GitHub のリリースから Chrome、Microsoft Edge、Firefox に Bookmark Scout をインストールします。
+description: Chrome ウェブストアから Bookmark Scout を Chrome に追加します。Firefox 版と Edge 版は、まもなくそれぞれのストアに登場します。
 ---
 
-Bookmark Scout は無料のオープンソースです。
+Bookmark Scout は無料で、アカウントも広告もありません。コンピューターのブラウザで動き、スマートフォンやタブレットでは使えません。
 
-## ブラウザのストアからインストールする [#install-from-your-browsers-store]
+## Chrome に追加する [#add-it-to-chrome]
 
-<StoreAvailability />
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
 
-掲載ページを開き、そこから Bookmark Scout をブラウザに追加します。ストアからインストールしたものは自動で更新されます。
+掲載ページで **Chrome に追加** をクリックし、続けて **拡張機能を追加** をクリックします。Chrome が求める許可は 1 つだけで、ブックマークの読み取りと変更です。ほかの機能は、はじめて使うときに理由を示したうえで、必要な許可を求めます。[権限](/permissions)をご覧ください。
+</Step>
+<Step>
+アイコンを固定します。ツールバー右側にある、パズルピースの形の **拡張機能** ボタンをクリックし、Bookmark Scout の横にあるピンをクリックします。
+</Step>
+<Step>
+最初のページを保存します。[はじめての保存](/first-save)をご覧ください。
+</Step>
+</Steps>
 
-## GitHub リリースからインストールする [#install-from-a-github-release]
+追加した直後に、新しいタブで **Bookmark Scout の準備ができました** というページが開き、同じ最初の手順が表示されます。アイコンの固定、ページの保存、そしてクイック保存のショートカットのキーです（ほかの拡張機能がすでにそのキーを使っている場合は **設定する**）。このページが開くのは、Bookmark Scout を初めてインストールしたときの 1 回だけで、アップデート後には開きません。ページの **ガイドを読む** で[保存と整理](/guides/save-and-organize)が、**設定を開く** で[設定](/settings)が開きます。
 
-お使いのブラウザのストアにまだ Bookmark Scout が掲載されていない場合は、<RepoLink path="/releases">GitHub リリース</RepoLink>からインストールします。各リリースには、ブラウザごとにダウンロードファイルが 1 つずつあります。
+ストアからインストールしたものは自動で更新されます。
+
+## Firefox と Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+ストアに掲載されるまでは、[下記](#install-from-a-github-release)の手順で GitHub から手動で Bookmark Scout をインストールできます。手順が少し多く、Firefox では再起動のたびにやり直す必要があります。
+
+## インストールした後 [#after-installing]
+
+- どのページでも Bookmark Scout のアイコンをクリックすると、そのページを保存したり、ブックマークを検索したりできます。まずは[はじめての保存](/first-save)から始めましょう。
+- どのページでも `Alt+Shift+S`（Mac では `⌥⇧S`）を押すと、何も開かずにそのページを保存できます。[キーボードショートカットで保存する](/guides/save-and-organize#quick-save)をご覧ください。
+- Chrome では、Bookmark Scout がブラウザのブックマークページを独自のブックマークマネージャーに置き換えます。これまでと同じように、たとえば `Ctrl+Shift+O`（Mac では `Cmd+Option+B`）で開くか、ポップアップの **ブックマークマネージャーを開く** から開きます。**ツール** サイドバーにクリーンアップ用のツールがあります。
+- 設定はタブで開きます。ツールバーのアイコンを右クリックし、**オプション** を選んでください。[設定](/settings)をご覧ください。
+
+## アップデート [#updating]
+
+ストアからインストールしたものは自動で更新され、更新しても設定はそのまま残ります。例外は過去のバージョン 0.3.3 へのアップデートで、このときだけ Bookmark Scout 自身の保存データが一度リセットされました（ブックマークには一切影響していません）。[よくある質問](/faq#my-settings-are-gone-after-an-update)をご覧ください。
+
+設定、カスタムプロンプト、AI サービス、保存した検索のコピーはいつでも残しておけます。[設定](/settings)の下部にある **設定をバックアップ** を使ってください。
+
+## 上級者向け: GitHub から手動でインストールする [#install-from-a-github-release]
+
+お使いのブラウザのストアにまだ Bookmark Scout が掲載されていない場合や、リリースを試したい場合にだけ使ってください。この方法でインストールしたものは自動では更新されません。更新するには、新しいリリースをダウンロードして同じ手順を繰り返します。
+
+各 <RepoLink path="/releases">GitHub リリース</RepoLink>には、ブラウザごとにダウンロードファイルが 1 つずつあります。
 
 | ブラウザ | ファイル |
 | --- | --- |
@@ -26,8 +63,6 @@ Bookmark Scout は無料のオープンソースです。
 <Tabs items={["Chrome", "Edge", "Firefox"]}>
 <Tab value="Chrome" id="chrome">
 
-<StoreListing browser="chrome" />
-
 <Steps>
 <Step>
 `bookmark-scout-<version>-chrome.crx` または `bookmark-scout-<version>-chrome.zip` をダウンロードします。ZIP を使う場合は、残しておくフォルダに展開してください。Chrome はそのフォルダから拡張機能を読み込みます。
@@ -39,14 +74,12 @@ Bookmark Scout は無料のオープンソースです。
 CRX ファイルをページにドラッグするか、**パッケージ化されていない拡張機能を読み込む** をクリックして、展開したフォルダを選択します。
 </Step>
 <Step>
-パズルピースの形の拡張機能メニューから Bookmark Scout をツールバーに固定すると、ワンクリックでポップアップを開けます。
+パズルピースの形の拡張機能メニューから、Bookmark Scout をツールバーに固定します。
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Edge" id="edge">
-
-<StoreListing browser="edge" />
 
 <Steps>
 <Step>
@@ -58,12 +91,13 @@ CRX ファイルをページにドラッグするか、**パッケージ化さ�
 <Step>
 **展開して読み込み** をクリックし、展開したフォルダを選択します。
 </Step>
+<Step>
+パズルピースの形の拡張機能メニューから、Bookmark Scout をツールバーに表示します（横にある目のアイコン）。
+</Step>
 </Steps>
 
 </Tab>
 <Tab value="Firefox" id="firefox">
-
-<StoreListing browser="firefox" />
 
 <Steps>
 <Step>
@@ -78,23 +112,11 @@ CRX ファイルをページにドラッグするか、**パッケージ化さ�
 </Steps>
 
 <Callout type="warn" title="Firefox の制限">
-Firefox は再起動すると一時的なアドオンを削除するため、再起動のたびに読み込み直す必要があります。また、Firefox はブックマークページを置き換えられないため、ブックマークマネージャー（ツール、保存した検索、インポートとエクスポートを含む）はポップアップの **ブックマークマネージャーを開く** から開きます。[ブラウザ対応](/browser-support)をご覧ください。
+Firefox は再起動すると一時的なアドオンを削除するため、再起動のたびに読み込み直す必要があります。一時的なアドオンでは、**Bookmark Scout の準備ができました** のページは開きません。また、Firefox はブックマークページを置き換えられないため、ブックマークマネージャー（ツール、保存した検索、インポートとエクスポートを含む）はポップアップの **ブックマークマネージャーを開く** から開きます。[ブラウザ対応](/browser-support)をご覧ください。
 </Callout>
 
 </Tab>
 </Tabs>
-
-## インストールした後 [#after-installing]
-
-- Bookmark Scout のアイコンをクリックするとポップアップが開き、ブックマークを検索できます。まずは[検索と保存した検索](/guides/search)から始めましょう。
-- Chrome では、ブラウザのブックマークページを開くと（たとえば `Ctrl+Shift+O`、macOS では `Cmd+Option+B`）、Bookmark Scout のマネージャーとツール サイドバーが表示されます。
-- 設定は、拡張機能の **オプション** 項目からタブで開きます。Chrome では、たとえばツールバーのアイコンを右クリックして開けます。[設定](/settings)をご覧ください。
-
-## アップデート [#updating]
-
-ストアからインストールしたものは自動で更新されます。それ以外の場合は、<ReleaseLink />から新しいリリースをダウンロードし、使っているブラウザの手順をもう一度行ってください。
-
-アップデートの前に、[設定](/settings)の下部にある **エクスポート** で、設定、カスタムプロンプト、AI サービス、保存した検索を保存しておけます。過去のあるアップデートでこれらがリセットされました。[よくある質問](/faq#my-settings-are-gone-after-an-update)をご覧ください。
 
 ## ソースからビルドする [#building-from-source]
 

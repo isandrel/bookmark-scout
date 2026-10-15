@@ -23,7 +23,7 @@ Bei der Installation zeigt der Browser eine Zeile an. Alles andere wird erst ang
 | Nur Firefox: dieselbe Abfrage mit Authentifizierungsinformationen | Sie klicken auf **Dienst überprüfen** oder **Modelle aktualisieren** | Ihr API-Schlüssel geht an Ihren KI-Anbieter |
 | Nur Firefox: dieselbe Abfrage mit Lesezeichen und Browseraktivität | Sie aktivieren **Lokale KI-Agenten zulassen** | Was die KI-Agenten auf Ihrem Computer nachschlagen können |
 
-Das Rechtsklickmenü (**Kontextmenü**) ist in Chrome und Edge ebenfalls optional, löst aber keine Warnung aus, daher fügt der Browser es ohne Nachfrage hinzu.
+Das Rechtsklickmenü (die Einstellung **Rechtsklickmenü**) ist in Chrome und Edge ebenfalls optional, löst aber keine Warnung aus, daher fügt der Browser es ohne Nachfrage hinzu.
 
 ## Bei der Installation gewährt [#granted-at-install]
 
@@ -35,7 +35,7 @@ Das Rechtsklickmenü (**Kontextmenü**) ist in Chrome und Edge ebenfalls optiona
 | `scripting` | Alle | Nach einem Tastenkürzel zum Schnellspeichern die Benachrichtigung nur in diesem Tab anzeigen. Sie liest nichts aus der Seite |
 | `sidePanel` | Chrome, Edge | Die Seitenleistenansicht bereitstellen. Firefox deklariert dieselbe Seite stattdessen als Sidebar |
 | `offscreen` | Chrome, Edge | Die Anfrage des KI-Schnellspeicherns in einer verborgenen Erweiterungsseite ausführen, die der Browser schließt, wenn sie beendet ist. In Firefox übernimmt das die Hintergrundseite selbst |
-| `contextMenus` | Firefox | Firefox erlaubt Erweiterungen nicht, diese Berechtigung später anzufordern. Das Menü erscheint trotzdem erst, nachdem Sie **Kontextmenü** aktiviert haben |
+| `contextMenus` | Firefox | Firefox erlaubt Erweiterungen nicht, diese Berechtigung später anzufordern. Das Menü erscheint trotzdem erst, nachdem Sie **Rechtsklickmenü** aktiviert haben |
 
 In Chrome und Edge ersetzt die Erweiterung außerdem die Lesezeichenseite des Browsers durch den Bookmark-Scout-Manager. Das ist eine Seitenersetzung, keine Berechtigung. Firefox erlaubt dies nicht, daher öffnet sich der Manager dort über **Lesezeichen-Manager öffnen** im Pop-up; siehe [Browserunterstützung](/browser-support).
 
@@ -44,7 +44,7 @@ In Chrome und Edge ersetzt die Erweiterung außerdem die Lesezeichenseite des Br
 | Berechtigung | Browser | Angefragt, wenn |
 | --- | --- | --- |
 | `tabs` | Alle | Sie die aktuelle Seite aus der Seitenleiste speichern oder dort Ordnervorschläge anfordern. Zuvor erscheint eine kurze Erklärung, die das Pop-up in der Symbolleiste und das Tastenkürzel zum Schnellspeichern anbietet, die diese Berechtigung nie benötigen |
-| `contextMenus` | Chrome, Edge | Sie **Kontextmenü** in den [Einstellungen](/settings#data) aktivieren. Die Option ist standardmäßig deaktiviert, und Chrome gewährt die Berechtigung ohne Nachfrage |
+| `contextMenus` | Chrome, Edge | Sie **Rechtsklickmenü** in den [Einstellungen](/settings#data) aktivieren. Die Option ist standardmäßig deaktiviert, und Chrome gewährt die Berechtigung ohne Nachfrage |
 | `favicon` | Chrome, Edge | Sie bei **Website-Symbole aktualisieren** auf **Browser-Symbole anzeigen** klicken oder **Symbol-Cache des Browsers verwenden** in den [Einstellungen](/settings#appearance) aktivieren, um Symbole anzuzeigen, die der Browser bereits gespeichert hat. Zuvor erscheint eine kurze Erklärung |
 | Einwilligung zur Datenweitergabe | Firefox | Jede Funktion fragt nur nach dem, was sie sendet: **KI-Funktionen** nach Ihrem API-Schlüssel, Ihren Lesezeichen sowie Titel und URL der aktuellen Seite; **Seiteninhalt lesen** nach dem Seitentext; **Dienst überprüfen** nach Ihrem API-Schlüssel. Eine kurze Erklärung sagt zuvor, dass die Daten an Ihren KI-Anbieter gehen, nicht an Bookmark Scout |
 | `nativeMessaging` | Alle | Sie aktivieren **Lokale KI-Agenten zulassen** in den [Einstellungen](/settings#agent-bridge), damit die Erweiterung mit dem Programm bookmark-scout-mcp auf Ihrem Computer sprechen kann. Zuerst erscheint eine kurze Erklärung; in Firefox fragt dieselbe Abfrage, ob Lesezeichendaten mit ihm geteilt werden dürfen |
