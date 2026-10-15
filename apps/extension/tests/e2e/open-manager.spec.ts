@@ -1,5 +1,5 @@
 import { expect, test } from './fixtures';
-import { openPopup, seedFolder, setSettings } from './popup-helpers';
+import { bookmarksBar, openPopup, seedFolder, setSettings } from './popup-helpers';
 
 test('the 300px popup with AI on fits every header button and never cuts off the placeholder', async ({
   extensionId,
@@ -64,7 +64,11 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       page.getByRole('button', { name: 'Open bookmark manager', exact: true }).click(),
     ]);
 
-    await expect(manager).toHaveURL(`chrome-extension://${extensionId}/bookmarks.html`);
+    // Opened without a folder, the manager shows the bookmarks bar and names it in the address.
+    const bar = await bookmarksBar(extensionWorker);
+    await expect(manager).toHaveURL(
+      `chrome-extension://${extensionId}/bookmarks.html?id=${bar.id}`,
+    );
     await expect(manager.getByRole('button', { name: 'Show tools' })).toBeVisible();
     await expect(manager.getByText('E2E Manager Entry').first()).toBeVisible();
   });

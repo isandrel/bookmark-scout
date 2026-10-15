@@ -57,6 +57,7 @@ test('under date sort a drag says it only moves into folders, and a reorder drop
     { title: 'Reorder Second', url: 'https://e2e.invalid/second' },
     { title: 'Reorder Into', children: [] },
   ]);
+  await setSettings(extensionWorker, { sortOrder: 'date' });
 
   await openPopup(page, extensionId);
   await page

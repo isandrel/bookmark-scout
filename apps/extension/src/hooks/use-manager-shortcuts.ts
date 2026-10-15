@@ -24,8 +24,7 @@ export function getTableRowFocusTarget(row: HTMLElement): HTMLElement | null {
 }
 
 function focusTitleFilter(): boolean {
-  const label = CSS.escape(t('table_filterTitles'));
-  const input = document.querySelector<HTMLInputElement>(`input[aria-label="${label}"]`);
+  const input = document.querySelector<HTMLInputElement>(`input[${MANAGER_SEARCH_ATTRIBUTE}]`);
   if (!input) return false;
   input.focus();
   input.select();

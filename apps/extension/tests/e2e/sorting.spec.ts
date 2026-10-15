@@ -141,12 +141,9 @@ test('applies an Options UI sorting change to an open bookmarks table', async ({
   await optionsPage.goto(`chrome-extension://${extensionId}/options.html`);
   await optionsPage.getByRole('tab', { name: 'Behavior' }).click();
 
-  const sortSetting = optionsPage
-    .getByText('Sort Order', { exact: true })
-    .locator('..')
-    .locator('..')
-    .locator('..');
-  await sortSetting.getByRole('radio', { name: 'Alphabetical' }).click();
+  // Four orders do not fit side by side, so Sort Order is a dropdown.
+  await optionsPage.getByRole('combobox', { name: 'Sort Order' }).click();
+  await optionsPage.getByRole('option', { name: 'Alphabetical' }).click();
 
   await expect
     .poll(async () => (await readSettings(extensionWorker)).sortOrder)
@@ -170,10 +167,7 @@ test('saves, restores, and resets the bookmark table view without reordering boo
   await page.goto(bookmarksUrl);
   await page.getByRole('button', { name: 'Customize table view' }).click();
   await page.getByRole('menuitemcheckbox', { name: 'url' }).click();
-  // Visible columns skip hidden ones: Title passes Folder Path and Type, then stops first.
-  for (let index = 0; index < 2; index += 1) {
-    await page.getByRole('button', { name: 'Move title left' }).click();
-  }
+  // Title is the first column of a new view.
   await expect(page.getByRole('button', { name: 'Move title left' })).toBeDisabled();
 
   await page.keyboard.press('Escape');
@@ -226,7 +220,7 @@ test('saves, restores, and resets the bookmark table view without reordering boo
 
   await page.reload();
   await expect(page.getByRole('columnheader', { name: 'URL' })).toBeVisible();
-  await expect(pageSizeControl).toHaveText('10');
+  await expect(pageSizeControl).toHaveText('50');
   await page.getByRole('button', { name: 'Customize table view' }).click();
   await expect(page.getByRole('menuitemcheckbox', { name: 'url' })).toBeChecked();
 });

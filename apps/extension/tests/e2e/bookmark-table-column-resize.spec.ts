@@ -1,5 +1,6 @@
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { showTableColumns } from './manager-helpers';
 import { readStored, STORAGE_ITEMS } from './storage';
 import { seedFolder } from './tool-helpers';
 
@@ -157,8 +158,8 @@ test('resize handles work from the keyboard and long text truncates within the c
   await expect(page.getByRole('menu')).toHaveCount(0);
   expect(await savedSorting(extensionWorker)).toEqual([]);
 
-  // The checkbox and row-menu columns stay fixed.
-  await expect(page.getByRole('separator')).toHaveCount(5);
+  // Title, URL, and Date Added resize; the checkbox and row-menu columns stay fixed.
+  await expect(page.getByRole('separator')).toHaveCount(3);
 });
 
 test('narrow tables still hide Folder Path and URL so Title stays visible', async ({
@@ -166,9 +167,11 @@ test('narrow tables still hide Folder Path and URL so Title stays visible', asyn
   extensionWorker,
   page,
 }) => {
+  await showTableColumns(extensionWorker, ['folderPath']);
   const seeded = await seedTable(extensionWorker, 'E2E Resize Narrow');
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(3);
+  await expect(header(page, 'Folder Path')).toHaveCount(1);
   await dragHandle(page, resizeHandle(page, 'URL'), 80);
   await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({ url: 280 });
 

@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { addressFilter, showTableColumns } from './manager-helpers';
 import { readSettings, setSettings } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -484,13 +485,13 @@ test('navigates folders and filters bookmarks by title and URL', async ({
   const rows = page.locator('tbody tr');
   await expect(rows).toHaveCount(3);
 
-  await page.getByPlaceholder('Filter titles...').fill('alpha');
+  await page.getByPlaceholder('Search titles and addresses').fill('alpha');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Alpha Item');
   await page.getByRole('button', { name: 'Reset' }).click();
   await expect(rows).toHaveCount(3);
 
-  await page.getByPlaceholder('Filter URLs...').fill('example.com/beta');
+  await (await addressFilter(page)).fill('example.com/beta');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Beta Item');
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -521,12 +522,14 @@ test('manager filters globally across nested folders or only the selected folder
     { title: 'Shared Target Remote', url: 'https://example.com/remote-target' },
   ]);
 
+  // Folder Path names where each match is; a new view hides it until turned on under View.
+  await showTableColumns(extensionWorker, ['folderPath']);
   await page.goto(bookmarkPageUrl(extensionId, local.folderId));
   const rows = page.locator('tbody tr');
   await expect(rows).toHaveCount(2);
   await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
 
-  await page.getByPlaceholder('Filter titles...').fill('Shared Target');
+  await page.getByPlaceholder('Search titles and addresses').fill('Shared Target');
   await expect(rows).toHaveCount(3);
   await expect(
     rows
@@ -551,7 +554,7 @@ test('manager filters globally across nested folders or only the selected folder
   await expect(rows).toHaveCount(2);
   await expect(rows.filter({ hasText: 'Inner Scope' })).toHaveCount(1);
 
-  await page.getByPlaceholder('Filter URLs...').fill('remote-target');
+  await (await addressFilter(page)).fill('remote-target');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Shared Target Remote');
   await page.getByRole('checkbox', { name: 'Current folder only' }).check();
@@ -581,12 +584,12 @@ test('keeps full titles and URLs available past the former truncation limits', a
   await expect(rows.nth(1).getByTitle(zuluTitle, { exact: true })).toBeVisible();
   await expect(rows.nth(1).getByTitle(longUrl, { exact: true })).toBeVisible();
 
-  await page.getByPlaceholder('Filter titles...').fill('Zulu');
+  await page.getByPlaceholder('Search titles and addresses').fill('Zulu');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText(zuluTitle);
   await page.getByRole('button', { name: 'Reset' }).click();
 
-  await page.getByPlaceholder('Filter URLs...').fill('tail-marker');
+  await (await addressFilter(page)).fill('tail-marker');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText(zuluTitle);
   const persistedOrder = await extensionWorker.evaluate(async (id) => {

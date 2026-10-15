@@ -154,8 +154,10 @@ test('popup and side panel open the bookmark manager in a new tab', async ({ ext
     }, 10_000);
     const origin = await driver.getWindowHandle();
     await driver.switchTo().window(opened as string);
+    // A manager opened without a folder shows the bookmarks toolbar and names it in the address.
     await driver.wait(
-      async () => (await driver.getCurrentUrl()) === extension.url('bookmarks.html'),
+      async () =>
+        (await driver.getCurrentUrl()) === `${extension.url('bookmarks.html')}?id=toolbar_____`,
       10_000,
     );
     await extension.find('button[title="Show tools"]');
@@ -213,7 +215,9 @@ test('bookmark manager loads a folder, filters titles, and opens subfolders', as
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(3);
 
-  await (await extension.find('input[placeholder="Filter titles..."]')).sendKeys('alpha');
+  await (await extension.find('input[placeholder="Search titles and addresses"]')).sendKeys(
+    'alpha',
+  );
   await expect.poll(() => visibleRows(extension)).toBe(1);
   await extension.findByText('tbody tr', 'Alpha Item');
 
@@ -237,7 +241,9 @@ test('bookmark manager keeps the search in the address and links to its own page
 
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(2);
-  await (await extension.find('input[placeholder="Filter titles..."]')).sendKeys('Delta');
+  await (await extension.find('input[placeholder="Search titles and addresses"]')).sendKeys(
+    'Delta',
+  );
   await expect
     .poll(async () => new URL(await driver.getCurrentUrl()).searchParams.get('q'))
     .toBe('Delta');
@@ -356,7 +362,7 @@ test('manager drag and drop reorders rows and turns dropped links into bookmarks
   ]);
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(3);
-  await (await extension.findByText('button', 'Browser order')).click();
+  // The default Sort Order is the browser's, so rows reorder without turning anything on.
   const titles = async (id: string) => (await childrenOf(extension, id)).map((item) => item.title);
 
   // The browser's drag events, with one DataTransfer from dragstart to drop as a real drag has.

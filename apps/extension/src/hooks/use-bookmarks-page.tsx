@@ -113,6 +113,17 @@ function readLocation(): ManagerLocation {
 }
 
 /**
+ * Whether the page was opened without a folder (`bookmarks.html`, `chrome://bookmarks`), so it
+ * shows the bookmarks bar, as the browser's own manager does. A history entry this page wrote
+ * keeps its folder: the top level ("Bookmarks" in the path) reloads as the top level.
+ */
+function opensOnBookmarksBar(): boolean {
+  const state: unknown = window.history.state;
+  const writtenByPage = typeof state === 'object' && state !== null && 'folderId' in state;
+  return readLocation().folderId === null && !writtenByPage;
+}
+
+/**
  * Writes the address for `next` to history: a new entry, the current one replaced, or (`sync`)
  * the current one corrected only when it differs.
  */
@@ -162,6 +173,7 @@ export function useBookmarkNavigation() {
   );
 
   const currentFolderRef = useRef(currentFolder);
+  const [opensOnBar] = useState(opensOnBookmarksBar);
   const itemsRef = useRef<Bookmark[]>([]);
   const rootIdRef = useRef<string | undefined>(undefined);
   const hasLoadedRef = useRef(false);
@@ -228,10 +240,15 @@ export function useBookmarkNavigation() {
       rootIdRef.current = tree[0]?.id;
       setAllData(bookmarks);
       setRootId(tree[0]?.id);
+      // The first load of a page opened without a folder shows the bookmarks bar; the address
+      // then names it, so Back and reload keep it.
+      if (!hasLoadedRef.current && opensOnBar && currentFolderRef.current === null) {
+        currentFolderRef.current = findBookmarksBarFolder(tree)?.id ?? null;
+      }
       showFolder(currentFolderRef.current, 'none');
       hasLoadedRef.current = true;
     },
-    [buildRows, showFolder],
+    [buildRows, opensOnBar, showFolder],
   );
   const setTreeRef = useRef(setTree);
   setTreeRef.current = setTree;
@@ -321,6 +338,8 @@ export function useBookmarkNavigation() {
 
   return {
     currentFolder,
+    /** The browser's root folder: `?id=` with it opens the top level. */
+    rootId,
     data,
     allData,
     isLoading,

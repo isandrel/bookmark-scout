@@ -125,11 +125,15 @@ test('account and device bookmarks sit under two headings, the device ones close
   const bar = tree(page).locator('[role="treeitem"][data-folder-id="1"]');
   await expect(bar).toHaveAttribute('aria-level', '2');
 
+  // Opened without a folder, the page shows the account's bookmarks bar.
+  await expect(page).toHaveURL(/\?id=1$/);
+  const opened = page.url();
+
   // A heading opens and closes; it is not a folder to show.
   await device.click();
   await expect(device).toHaveAttribute('aria-expanded', 'true');
   await expect(item(page, 'Device Bar')).toBeVisible();
-  await expect(page).not.toHaveURL(/id=/);
+  await expect(page).toHaveURL(opened);
   await device.focus();
   await page.keyboard.press('ArrowLeft');
   await expect(item(page, 'Device Bar')).toHaveCount(0);

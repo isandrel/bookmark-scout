@@ -72,14 +72,14 @@ test('folder navigation clears the selection, including Back and Forward', async
   await selectBox(page, 'Nav A').check();
   await selectBox(page, 'Nav B').check();
   await expect(bulk).toContainText('2 selected');
-  await expect(page.getByText('2 of 3 row(s) selected.', { exact: true })).toBeVisible();
+  await expect(page.getByText('2 of 3 selected', { exact: true })).toBeVisible();
 
   // Opening a subfolder starts with nothing selected.
   await row(page, 'Nav Sub').dblclick();
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Nav Sub']}$`));
   await expect(row(page, 'Nav Inside')).toBeVisible();
   await expect(bulk).toHaveCount(0);
-  await expect(page.getByText('0 of 1 row(s) selected.', { exact: true })).toBeVisible();
+  await expect(page.getByText('1 item', { exact: true })).toBeVisible();
 
   // Back does not bring the earlier selection back, and Forward does not keep a new one.
   await selectBox(page, 'Nav Inside').check();
@@ -89,7 +89,7 @@ test('folder navigation clears the selection, including Back and Forward', async
   await expect(selectBox(page, 'Nav A')).not.toBeChecked();
   await expect(selectBox(page, 'Nav B')).not.toBeChecked();
   await expect(bulk).toHaveCount(0);
-  await expect(page.getByText('0 of 3 row(s) selected.', { exact: true })).toBeVisible();
+  await expect(page.getByText('3 items', { exact: true })).toBeVisible();
 
   await selectBox(page, 'Nav B').check();
   await page.goForward();
@@ -145,7 +145,7 @@ test('a refresh keeps selected rows that remain and drops deleted or moved rows'
   await expect(selectBox(page, 'New E')).not.toBeChecked();
   await expect(bulk).toContainText('2 selected');
   await expect(page.getByTestId('bulk-hidden-selection')).toHaveCount(0);
-  await expect(page.getByText('2 of 4 row(s) selected.', { exact: true })).toBeVisible();
+  await expect(page.getByText('2 of 4 selected', { exact: true })).toBeVisible();
 
   // Bulk actions touch exactly the rows still selected; the moved bookmark is left alone.
   await bulk.getByRole('button', { name: 'Delete' }).click();

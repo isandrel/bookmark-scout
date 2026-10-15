@@ -157,6 +157,24 @@ test('clearing search restores the expansion state from before the search', asyn
   await expect(page.locator('.bookmark-item').filter({ hasText: 'Needle Result' })).toHaveCount(0);
 });
 
+test('lists each folder in the browser order by default, as the bookmarks bar does', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Default Order', [
+    { title: 'Zulu Link', url: 'https://e2e.invalid/zulu' },
+    { title: 'Alpha Link', url: 'https://e2e.invalid/alpha' },
+  ]);
+  const titles = ['Zulu Link', 'Alpha Link'];
+
+  await openPopup(page, extensionId);
+  await folderTrigger(page, seeded.barTitle).click();
+  await folderTrigger(page, 'E2E Default Order').click();
+  // Alpha Link is newer and first by name, so only the browser order puts Zulu Link first.
+  await expect.poll(() => visibleOrder(page, titles)).toEqual(['Zulu Link', 'Alpha Link']);
+});
+
 test('groupByFolders lists folders before links under date and alphabetical order', async ({
   extensionId,
   extensionWorker,
