@@ -14,7 +14,7 @@ test.use({ grantPermissions: ['tabs'], viewport: { width: 1400, height: 900 } })
 
 /** Saves the page the popup runs in to the folder matching `query`, and returns its address. */
 async function saveFromPopupByFolderName(page: Page, query: string, folderTitle: string) {
-  const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill(query);
   const match = page.getByTestId('folder-matches').locator('[data-slot="folder-match"]').first();
   await expect(match).toContainText(folderTitle);

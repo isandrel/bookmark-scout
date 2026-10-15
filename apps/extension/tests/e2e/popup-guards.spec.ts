@@ -8,6 +8,7 @@ import {
   otherBookmarksTitle,
   seedFolder,
   setSettings,
+  toggleSearchOption,
 } from './popup-helpers';
 import { STORAGE_ITEMS, writeStored } from './storage';
 
@@ -192,7 +193,9 @@ test.describe('reorder toasts', () => {
     ]);
 
     await openPopup(page, extensionId);
-    await page.getByPlaceholder('Search bookmarks...').fill('Noop');
+    await page
+      .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+      .fill('Noop');
     // Just above B is exactly where A already is.
     await dropOnEdge(
       bookmarkRow(page, 'Noop A').locator('a'),
@@ -218,7 +221,9 @@ test.describe('reorder toasts', () => {
     ]);
 
     await openPopup(page, extensionId);
-    await page.getByPlaceholder('Search bookmarks...').fill('Pos ');
+    await page
+      .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+      .fill('Pos ');
     await dropOnEdge(
       bookmarkRow(page, 'Pos A').locator('a'),
       bookmarkRow(page, 'Pos C').locator('a'),
@@ -248,7 +253,9 @@ test('Expand all and Collapse all work during a search that auto-expands folders
   await setSettings(extensionWorker, { expandFoldersOnSearch: true });
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Collapse Needle');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Collapse Needle');
   await expect(bookmarkRow(page, 'Collapse Needle')).toBeVisible();
 
   await page.getByRole('button', { name: 'Collapse all', exact: true }).click();
@@ -301,8 +308,8 @@ test('regex search treats Unicode escapes the same with or without Whole Word', 
   ]);
 
   await openPopup(page, extensionId);
-  const search = page.getByPlaceholder('Search bookmarks...');
-  await page.getByRole('button', { name: 'Use Regular Expression' }).click();
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+  await toggleSearchOption(page, 'Advanced pattern search (regex)');
   await search.fill('^\\p{Lu}mile');
   await expect(bookmarkRow(page, 'Émile Notes')).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);
@@ -433,7 +440,9 @@ test('the delete confirmation closes when its bookmark is deleted elsewhere', as
   await setSettings(extensionWorker, { confirmBeforeDelete: true });
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Gone Elsewhere');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Gone Elsewhere');
   const row = bookmarkRow(page, 'Gone Elsewhere');
   await row.hover();
   await row.getByRole('button', { name: 'Delete bookmark' }).click();
@@ -492,7 +501,9 @@ test('large site icons in neighbouring bookmark rows do not touch', async ({
   await setSettings(extensionWorker, { faviconSize: 32 });
 
   await openPopup(page, extensionId);
-  await page.getByPlaceholder('Search bookmarks...').fill('Icon Gap');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Icon Gap');
   const icons = page.locator('.bookmark-item .bookmark-favicon');
   await expect(icons).toHaveCount(3);
   const boxes = await icons.evaluateAll((elements) =>

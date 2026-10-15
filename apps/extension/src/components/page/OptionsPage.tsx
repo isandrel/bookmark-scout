@@ -6,9 +6,11 @@
 
 import {
   BarChart3,
+  BookMarked,
   Download,
   FolderKanban,
   HardDriveDownload,
+  Info,
   Moon,
   Palette,
   RotateCcw,
@@ -22,7 +24,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import type React from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
 const optionsConfig = readConfig(
@@ -415,6 +417,8 @@ const OptionsPage: React.FC = () => {
     const pick = (list: readonly (keyof Settings)[]) =>
       matches ? list.filter((fieldKey) => matches.has(fieldKey)) : list;
     const meta = getSettingsFieldMeta();
+    // Each switch that is off explains itself once, above the first section that needs it.
+    const explained = new Set<SectionRequirement>();
     return (
       <div className="space-y-8">
         {categories[categoryKey].sections.map((section) => {
@@ -428,46 +432,66 @@ const OptionsPage: React.FC = () => {
           const folded =
             !matches && section.toggle !== undefined && shownValues[section.toggle] !== true;
           const headingId = `settings-section-${categoryKey}-${section.id}`;
+          const unmet =
+            section.requires !== undefined && shownValues[section.requires] !== true
+              ? section.requires
+              : undefined;
+          const requirementNotice =
+            unmet !== undefined && !explained.has(unmet) ? (
+              <p
+                role="note"
+                data-testid="settings-requirement-notice"
+                className="flex items-start gap-2 rounded-md border bg-muted px-3 py-2 text-sm text-foreground"
+              >
+                <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                {t(SECTION_REQUIREMENT_NOTICES[unmet])}
+              </p>
+            ) : null;
+          if (unmet !== undefined) explained.add(unmet);
           return (
-            <section
-              key={section.id}
-              data-settings-section={section.id}
-              aria-labelledby={section.label ? headingId : undefined}
-              className="space-y-3"
-            >
-              {section.label ? (
-                <div className="flex items-center justify-between gap-3">
-                  <h3 id={headingId} className="text-base font-semibold text-foreground">
-                    {section.label}
-                  </h3>
-                  {section.toggle && renderSectionToggle(section.toggle, headingId)}
-                </div>
-              ) : null}
-              {folded ? (
-                <p className="text-sm text-muted-foreground">{t('settings_sectionOff')}</p>
-              ) : (
-                <>
-                  {renderSettingsFields(fields, visible)}
-                  {advanced.length > 0 && (
-                    <SettingsAdvancedFold
-                      labels={advanced.map((fieldKey) => meta[fieldKey].label)}
-                      forceOpen={
-                        Boolean(matches) ||
-                        advanced.some(
-                          (fieldKey) =>
-                            Boolean(fieldErrors[fieldKey]) ||
-                            JSON.stringify(shownValues[fieldKey]) !==
-                              JSON.stringify(defaultSettings[fieldKey]),
-                        )
-                      }
-                    >
-                      {renderSettingsFields(advanced, visible)}
-                    </SettingsAdvancedFold>
-                  )}
-                  {panel}
-                </>
-              )}
-            </section>
+            <Fragment key={section.id}>
+              {requirementNotice}
+              <section
+                data-settings-section={section.id}
+                data-requirement-off={unmet}
+                aria-labelledby={section.label ? headingId : undefined}
+                // Greyed out but still editable and readable: nothing here runs until it is on.
+                className={cn('space-y-3', unmet !== undefined && 'opacity-70 grayscale')}
+              >
+                {section.label ? (
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 id={headingId} className="text-base font-semibold text-foreground">
+                      {section.label}
+                    </h3>
+                    {section.toggle && renderSectionToggle(section.toggle, headingId)}
+                  </div>
+                ) : null}
+                {folded ? (
+                  <p className="text-sm text-muted-foreground">{t('settings_sectionOff')}</p>
+                ) : (
+                  <>
+                    {renderSettingsFields(fields, visible)}
+                    {advanced.length > 0 && (
+                      <SettingsAdvancedFold
+                        labels={advanced.map((fieldKey) => meta[fieldKey].label)}
+                        forceOpen={
+                          Boolean(matches) ||
+                          advanced.some(
+                            (fieldKey) =>
+                              Boolean(fieldErrors[fieldKey]) ||
+                              JSON.stringify(shownValues[fieldKey]) !==
+                                JSON.stringify(defaultSettings[fieldKey]),
+                          )
+                        }
+                      >
+                        {renderSettingsFields(advanced, visible)}
+                      </SettingsAdvancedFold>
+                    )}
+                    {panel}
+                  </>
+                )}
+              </section>
+            </Fragment>
           );
         })}
       </div>
@@ -627,9 +651,10 @@ const OptionsPage: React.FC = () => {
         {/* Action Buttons */}
         <div className="mx-auto flex max-w-5xl flex-wrap justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex flex-wrap gap-2">
+            {/* These hold settings, not bookmarks; bookmarks are exported in the manager. */}
             <Button type="button" variant="outline" size="sm" onClick={handleExport}>
               <Download className="mr-2 h-4 w-4" />
-              {t('action_export')}
+              {t('newcomer_backUpSettings')}
             </Button>
             <Button
               type="button"
@@ -638,16 +663,34 @@ const OptionsPage: React.FC = () => {
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="mr-2 h-4 w-4" />
-              {t('action_import')}
+              {t('newcomer_restoreSettings')}
             </Button>
             <input
               ref={fileInputRef}
               type="file"
               accept={`.${jsonFormat.extension}`}
               className="hidden"
-              aria-label={t('action_import')}
+              aria-label={t('newcomer_restoreSettings')}
               onChange={handleImport}
             />
+            {shownValues.dataShowExport && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  openBookmarkExport().catch((error) => {
+                    toast.error({
+                      title: t('popup_openManagerFailed'),
+                      description: getErrorMessage(error),
+                    });
+                  });
+                }}
+              >
+                <BookMarked className="mr-2 h-4 w-4" />
+                {t('tools_export')}
+              </Button>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
             <Button

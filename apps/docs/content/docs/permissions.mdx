@@ -23,7 +23,7 @@ When you install Bookmark Scout, the browser shows one line. Everything else is 
 | Firefox only: the same prompt with "authentication information" | You click **Verify Service** or **Refresh Models** | Your API key goes to your AI provider |
 | Firefox only: the same prompt with "bookmarks, browsing activity" | You turn on **Allow local AI agents** | What the AI agents on your computer can look up |
 
-The right-click menu (**Context Menu**) is optional in Chrome and Edge too, but has no warning, so the browser adds it without asking.
+The right-click menu (**Right-Click Menu**) is optional in Chrome and Edge too, but has no warning, so the browser adds it without asking.
 
 ## Granted at install
 
@@ -35,7 +35,7 @@ The right-click menu (**Context Menu**) is optional in Chrome and Edge too, but 
 | `scripting` | All | After a quick save shortcut, show the notification in that tab only. It reads nothing from the page |
 | `sidePanel` | Chrome, Edge | Provide the side panel view. Firefox declares the same page as a sidebar instead |
 | `offscreen` | Chrome, Edge | Run AI quick save's request in a hidden extension page, which the browser closes when it ends. Firefox's background page does this itself |
-| `contextMenus` | Firefox | Firefox does not let extensions ask for it later. The menu still appears only after you turn on **Context Menu** |
+| `contextMenus` | Firefox | Firefox does not let extensions ask for it later. The menu still appears only after you turn on **Right-Click Menu** |
 
 In Chrome and Edge the extension also replaces the browser's bookmarks page with the Bookmark Scout manager. That is a page override, not a permission. Firefox does not allow it, so there the manager opens from **Open bookmark manager** in the popup; see [Browser support](/browser-support).
 
@@ -44,7 +44,7 @@ In Chrome and Edge the extension also replaces the browser's bookmarks page with
 | Permission | Browsers | Asked for when |
 | --- | --- | --- |
 | `tabs` | All | You save the current page, or ask for folder suggestions, from the side panel. A short explanation comes first and offers the toolbar popup and the quick save shortcut, which never need it |
-| `contextMenus` | Chrome, Edge | You turn on **Context Menu** in [Settings](/settings#data). It is off by default, and Chrome grants it without a prompt |
+| `contextMenus` | Chrome, Edge | You turn on **Right-Click Menu** in [Settings](/settings#data). It is off by default, and Chrome grants it without a prompt |
 | `favicon` | Chrome, Edge | You click **Show browser icons** on **Refresh Site Icons**, or turn on **Use the browser's icon cache** in [Settings](/settings#appearance), to show icons the browser has already saved. A short explanation comes first |
 | Data sharing consent | Firefox | Each feature asks only for what it sends: **AI Features** for your API key, bookmarks, and the current page's title and URL; **Read page content** for page text; **Verify Service** for your API key. A short explanation first says the data goes to your AI provider, not to Bookmark Scout |
 | `nativeMessaging` | All | You turn on **Allow local AI agents** in [Settings](/settings#agent-bridge), so the extension can talk to the bookmark-scout-mcp program on your computer. A short explanation comes first; in Firefox the same prompt asks to share bookmark data with it |

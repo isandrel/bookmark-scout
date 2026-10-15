@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { toggleSearchOption } from './popup-helpers';
 import { STORAGE_ITEMS, seedAIServices, setSettings, updateStored } from './storage';
 
 // Dead-link and metadata scans need the optional web host access; route mocks stand in for sites.
@@ -69,20 +70,20 @@ test('popup search honors case, whole-word, and regex controls', async ({
   ]);
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('Alpha');
   await expect(page.getByText('Alpha Link', { exact: true })).toBeVisible();
   await expect(page.getByText('Alphabet Soup', { exact: true })).toBeVisible();
   await expect(page.getByText('alpha lower', { exact: true })).toBeVisible();
 
-  await page.getByTitle('Match Case').click();
+  await toggleSearchOption(page, 'Match Case');
   await expect(page.getByText('alpha lower', { exact: true })).toHaveCount(0);
-  await page.getByTitle('Match Whole Word').click();
+  await toggleSearchOption(page, 'Match Whole Word');
   await expect(page.getByText('Alpha Link', { exact: true })).toBeVisible();
   await expect(page.getByText('Alphabet Soup', { exact: true })).toHaveCount(0);
 
-  await page.getByTitle('Match Whole Word').click();
-  await page.getByTitle('Use Regular Expression').click();
+  await toggleSearchOption(page, 'Match Whole Word');
+  await toggleSearchOption(page, 'Advanced pattern search (regex)');
   await search.fill('^Alpha\\sLink$');
   await expect(page.getByText('Alpha Link', { exact: true })).toBeVisible();
   await expect(page.getByText('Alphabet Soup', { exact: true })).toHaveCount(0);

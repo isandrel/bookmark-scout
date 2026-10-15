@@ -8,12 +8,24 @@
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
-        "message": "Buscar marcadores...",
-        "description": "Search input placeholder"
+        "message": "Escribe una carpeta para guardar esta página…",
+        "description": "Popup and side panel search box placeholder: typing a folder name lists folders to save the current page in; the box also searches bookmarks"
     },
     "search_placeholderShort": {
-        "message": "Buscar",
-        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+        "message": "Nombre de carpeta…",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one (popup_searchPlaceholder)"
+    },
+    "newcomer_searchLabel": {
+        "message": "Busca marcadores o escribe el nombre de una carpeta para guardar esta página",
+        "description": "Accessible name of the popup and side panel search box, read by screen readers"
+    },
+    "newcomer_pageToSave": {
+        "message": "Página para guardar: $1",
+        "description": "Line under the popup and side panel search box naming the page a folder click saves; $1 is the page title"
+    },
+    "newcomer_searchOptions": {
+        "message": "Más opciones de búsqueda",
+        "description": "Button in the popup search box that opens a menu with Match Case, Match Whole Word, and pattern search"
     },
     "shortcuts_popupHint": {
         "message": "Combinaciones de teclas: $1",
@@ -588,7 +600,7 @@
         "description": "Behavior category label"
     },
     "settings_behaviorDesc": {
-        "message": "Controla el comportamiento de la extensión",
+        "message": "Cómo funcionan el árbol de marcadores, los enlaces y la eliminación",
         "description": "Behavior category description"
     },
     "settings_savingSearch": {
@@ -872,7 +884,7 @@
         "description": "AI category label"
     },
     "settings_aiDesc": {
-        "message": "Recomendaciones de carpetas con IA",
+        "message": "Opcional: un servicio de IA que elijas sugiere carpetas y responde preguntas sobre tus marcadores",
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
@@ -1082,7 +1094,7 @@
         "description": "Dead link checker tool title"
     },
     "tools_checkDeadLinksDesc": {
-        "message": "Busca en los marcadores URLs rotas o inaccesibles",
+        "message": "Encuentra marcadores cuyas páginas ya no se abren",
         "description": "Dead link checker description"
     },
     "tools_aiReorganize": {
@@ -1098,7 +1110,7 @@
         "description": "Statistics tool title"
     },
     "tools_statisticsDesc": {
-        "message": "Consulta estadísticas sobre tu colección de marcadores",
+        "message": "Mira cuántos marcadores, carpetas y sitios tienes",
         "description": "Statistics tool description"
     },
     "action_scan": {
@@ -1582,7 +1594,7 @@
         "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
     },
     "tools_category_ai": {
-        "message": "Inteligencia artificial",
+        "message": "IA",
         "description": "AI tools category"
     },
     "tools_category_maintenance": {
@@ -1590,7 +1602,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Metadatos y contenido",
+        "message": "Títulos e iconos de páginas",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -1606,7 +1618,7 @@
         "description": "Title for AI Export tool"
     },
     "tools_exportAIDesc": {
-        "message": "Exporta marcadores en un formato adecuado para IA (XML/Markdown)",
+        "message": "Guarda marcadores en un archivo que puedes darle a un chatbot de IA",
         "description": "Description for AI Export tool"
     },
     "tools_autoTagging": {
@@ -1614,7 +1626,7 @@
         "description": "Title for Auto-Tagging tool"
     },
     "tools_autoTaggingDesc": {
-        "message": "Sugiere etiquetas para los marcadores automáticamente",
+        "message": "Deja que la IA sugiera etiquetas para los marcadores",
         "description": "Description for Auto-Tagging tool"
     },
     "tools_summarizer": {
@@ -1622,7 +1634,7 @@
         "description": "Title for Summarizer tool"
     },
     "tools_summarizerDesc": {
-        "message": "Genera resúmenes breves del contenido de los marcadores",
+        "message": "Deja que la IA escriba resúmenes breves de las páginas guardadas",
         "description": "Description for Summarizer tool"
     },
     "tools_findDuplicates": {
@@ -1638,7 +1650,7 @@
         "description": "Title for URL Cleaner tool"
     },
     "tools_cleanUrlsDesc": {
-        "message": "Quita los parámetros de seguimiento de las URLs",
+        "message": "Quita los códigos de seguimiento de los enlaces de marcadores",
         "description": "Description for URL Cleaner tool"
     },
     "tools_metadataFetcher": {
@@ -1654,7 +1666,7 @@
         "description": "Title for Privacy Scanner tool"
     },
     "tools_privacyScannerDesc": {
-        "message": "Detecta datos sensibles en las URLs",
+        "message": "Encuentra enlaces que contienen contraseñas, claves o direcciones de correo",
         "description": "Description for Privacy Scanner tool"
     },
     "tools_category_data": {
@@ -1950,7 +1962,7 @@
         "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
-        "message": "Menú contextual",
+        "message": "Menú del clic derecho",
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
@@ -1986,8 +1998,8 @@
         "description": "Toggle whole word matching"
     },
     "search_useRegex": {
-        "message": "Usar expresión regular",
-        "description": "Toggle regex search mode"
+        "message": "Búsqueda avanzada por patrón (regex)",
+        "description": "Search option: treat the search as a regular expression"
     },
     "search_recentSearches": {
         "message": "Búsquedas recientes",
@@ -2026,7 +2038,7 @@
         "description": "AI tools settings tab label"
     },
     "settings_aiToolsDesc": {
-        "message": "Configura las herramientas de marcadores con IA",
+        "message": "Ajustes de las herramientas de IA del administrador de marcadores",
         "description": "AI tools settings tab description"
     },
     "settings_maintenance": {
@@ -2034,15 +2046,15 @@
         "description": "Maintenance settings tab label"
     },
     "settings_maintenanceDesc": {
-        "message": "Configura las herramientas de limpieza y reparación",
+        "message": "Ajustes de las herramientas que limpian y reparan marcadores",
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Metadatos y contenido",
+        "message": "Títulos e iconos de páginas",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Configura las herramientas para completar metadatos",
+        "message": "Ajustes de las herramientas que corrigen títulos de páginas e iconos de sitios",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -2050,7 +2062,7 @@
         "description": "Security settings tab label"
     },
     "settings_securityDesc": {
-        "message": "Configura las herramientas de seguridad y privacidad",
+        "message": "Ajustes de la herramienta que encuentra datos privados en los enlaces de marcadores",
         "description": "Security settings tab description"
     },
     "settings_analytics": {
@@ -2058,7 +2070,7 @@
         "description": "Analytics settings tab label"
     },
     "settings_analyticsDesc": {
-        "message": "Configura el análisis y los informes de marcadores",
+        "message": "Ajustes de las estadísticas de marcadores",
         "description": "Analytics settings tab description"
     },
     "settings_aiMaxCategories": {
@@ -2932,10 +2944,6 @@
                 "example": "token"
             }
         }
-    },
-    "tools_privacyFragment": {
-        "message": "La URL contiene un fragmento",
-        "description": "Privacy finding"
     },
     "tools_privacyEmail": {
         "message": "Se detectó una dirección de correo electrónico",
@@ -3924,7 +3932,7 @@
         "description": "Toast title when the user declines a browser permission a feature asked for"
     },
     "permission_contextMenuDenied": {
-        "message": "El menú contextual sigue desactivado. Vuelve a activar Menú contextual para permitirlo.",
+        "message": "El menú del clic derecho sigue desactivado. Vuelve a activar Menú del clic derecho para permitirlo.",
         "description": "Toast text when the right-click menu permission is declined"
     },
     "permission_currentTabDenied": {
@@ -6022,6 +6030,26 @@
     "popup_shortcutSetUp": {
         "message": "Configurarlo",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "newcomer_quickSaveTip": {
+        "message": "Guardado rápido: pulsa $1 en cualquier página",
+        "description": "Popup and side panel line naming the quick save shortcut that works now; $1 is the keys (such as Alt+Shift+S, or ⌥⇧S on macOS)"
+    },
+    "newcomer_useBookmarkKeyInstead": {
+        "message": "Usar $1 en su lugar",
+        "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "newcomer_aiOffNotice": {
+        "message": "La IA está desactivada: nada de esto se ejecuta hasta que actives Funciones de IA.",
+        "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
+    },
+    "newcomer_backUpSettings": {
+        "message": "Hacer copia de los ajustes",
+        "description": "Options footer button that saves a backup file of the settings, custom prompts, AI services, and saved searches (not bookmarks)"
+    },
+    "newcomer_restoreSettings": {
+        "message": "Restaurar ajustes",
+        "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
     "actionName_searchBookmarks": {
         "message": "Buscar marcadores",

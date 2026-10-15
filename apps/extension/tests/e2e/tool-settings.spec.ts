@@ -188,24 +188,18 @@ test('tools sidebar headings, cards, scopes, and dialogs follow the selected lan
 
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
-  for (const heading of ['AI & Intelligence', 'Maintenance', 'Security', 'Analytics', 'Data']) {
+  for (const heading of ['AI', 'Maintenance', 'Security', 'Analytics', 'Data']) {
     await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
   }
   await expect(page.getByText(/tools_category_/i)).toHaveCount(0);
 
   await setSettings(extensionWorker, { language: 'ja' });
-  for (const heading of [
-    'AI・インテリジェンス',
-    'メンテナンス',
-    'セキュリティ',
-    '分析',
-    'データ',
-  ]) {
+  for (const heading of ['AI', 'メンテナンス', 'セキュリティ', '分析', 'データ']) {
     await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
   }
   const contextCard = toolCard(page, 'AIコンテキストパッカー');
   await expect(contextCard).toContainText(
-    'ブックマークをAI向けの形式（XML/Markdown）で書き出します',
+    'AI チャットボットに渡せるファイルとしてブックマークを保存します',
   );
   await contextCard.getByRole('combobox').click();
   await expect(page.getByRole('option', { name: 'E2E Tool Locale' })).toBeVisible();

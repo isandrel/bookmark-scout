@@ -40,8 +40,8 @@ describe('privacy scanner settings', () => {
     expect(kinds(query, {})).toEqual(['sensitiveParam']);
     expect(kinds(query, { scanQueryParams: false })).toEqual([]);
 
-    const fragment = folder([link('f', 'https://e2e.invalid/page#section')]);
-    expect(kinds(fragment, {})).toEqual(['fragment']);
+    const fragment = folder([link('f', 'https://e2e.invalid/page#token=1')]);
+    expect(kinds(fragment, {})).toEqual(['sensitiveFragmentParam']);
     expect(kinds(fragment, { scanFragments: false })).toEqual([]);
   });
 

@@ -3,16 +3,21 @@ import { Keyboard, X } from 'lucide-react';
 type ShortcutNotice = {
   id: DismissibleNotice;
   message: string;
-  open: () => Promise<void>;
+  /** The link after the message, if any. */
+  action?: { label: string; open: () => Promise<void> };
   /** An offer rather than a problem: it gives way to the tree in a very short popup. */
   optional?: boolean;
 };
 
+/** The command whose keys the tip names: the one that saves without AI, which always works. */
+const TIP_COMMAND: ExtensionCommand = 'quick-save';
+
 /**
  * The notice to show, in order of importance: a quick save command has no keys (Chrome does that
- * when another extension already took the suggested ones), then, in Chrome and Edge, the offer to
- * give quick save the browser's bookmark keys, which only the user can do. Notices the user
- * dismissed are skipped.
+ * when another extension already took the suggested ones), then a tip naming the quick save keys
+ * that work now. In Chrome and Edge the tip also offers the browser's bookmark keys, which only
+ * the user can set up; once quick save has them, the user knows the shortcut and there is no
+ * tip. Notices the user dismissed are skipped.
  */
 function pickNotice(
   shortcuts: CommandShortcuts,
@@ -20,21 +25,30 @@ function pickNotice(
   apple: boolean,
 ): ShortcutNotice | null {
   const takeover = getBookmarkShortcutTakeover();
+  const tipKeys = shortcuts[TIP_COMMAND];
+  const hasBookmarkKeys =
+    takeover !== null &&
+    isSameCommandShortcut(shortcuts[takeover.command], takeover.shortcut, { apple });
   const notices: (ShortcutNotice | false)[] = [
     Object.values(shortcuts).some((keys) => keys === '') && {
       id: 'quick-save-shortcut',
       message: t('popup_shortcutNotSet'),
-      open: openCommandShortcutSetup,
+      action: { label: t('popup_shortcutSetUp'), open: openCommandShortcutSetup },
     },
-    takeover !== null &&
-      !isSameCommandShortcut(shortcuts[takeover.command], takeover.shortcut, { apple }) && {
+    tipKeys !== '' &&
+      !hasBookmarkKeys && {
         id: 'quick-save-bookmark-key',
-        message: t(
-          'settings_shortcutUseBookmarkKey',
-          formatCommandShortcut(takeover.shortcut, { apple }),
-        ),
+        message: t('newcomer_quickSaveTip', formatCommandShortcut(tipKeys, { apple })),
         // The steps need more room than this line; Options explains them beside the button.
-        open: openCommandShortcutsInOptions,
+        action: takeover
+          ? {
+              label: t(
+                'newcomer_useBookmarkKeyInstead',
+                formatCommandShortcut(takeover.shortcut, { apple }),
+              ),
+              open: openCommandShortcutsInOptions,
+            }
+          : undefined,
         optional: true,
       },
   ];
@@ -47,8 +61,8 @@ function pickNotice(
 
 /**
  * One line above the popup and side panel footer about the quick save shortcuts (`pickNotice`).
- * **Set it up** goes where the keys can be set; each notice's dismissal is remembered on this
- * device. Shown only once the keys and the dismissals are both read, so it never flashes.
+ * Its link goes where the keys can be set; each notice's dismissal is remembered on this device.
+ * Shown only once the keys and the dismissals are both read, so it never flashes.
  */
 export function QuickSaveShortcutNotice() {
   const { shortcuts } = useCommandShortcuts();
@@ -72,14 +86,18 @@ export function QuickSaveShortcutNotice() {
       <span className="min-w-0 truncate" title={notice.message}>
         {notice.message}
       </span>
-      <span aria-hidden="true">·</span>
-      <button
-        type="button"
-        className="shrink-0 rounded-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        onClick={() => void notice.open()}
-      >
-        {t('popup_shortcutSetUp')}
-      </button>
+      {notice.action && (
+        <>
+          <span aria-hidden="true">·</span>
+          <button
+            type="button"
+            className="shrink-0 rounded-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={() => void notice.action?.open()}
+          >
+            {notice.action.label}
+          </button>
+        </>
+      )}
       <Button
         type="button"
         variant="ghost"

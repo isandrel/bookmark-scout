@@ -73,8 +73,6 @@ function describePrivacyFinding(finding: PrivacyFinding): string {
       return finding.withPassword ? t('tools_privacyCredentials') : t('tools_privacyUsername');
     case 'tokenPattern':
       return t('tools_privacyTokenPattern');
-    case 'fragment':
-      return t('tools_privacyFragment');
     case 'email':
       return t('tools_privacyEmail');
     case 'uuid':

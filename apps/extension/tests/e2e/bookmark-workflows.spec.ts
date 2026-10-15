@@ -65,7 +65,7 @@ test('opens the popup and finds a bookmark through search', async ({
   ]);
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await expect(search).toBeVisible();
   await search.fill('Popup Match');
   await expect(page.getByText('Popup Match', { exact: true })).toBeVisible();
@@ -82,7 +82,7 @@ test('side panel search and dark mode persist across reload', async ({
   ]);
 
   await page.goto(`chrome-extension://${extensionId}/sidepanel.html`);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await expect(search).toBeVisible();
   await search.fill('Side Panel Match');
   await expect(page.getByText('Side Panel Match', { exact: true })).toBeVisible();
@@ -107,11 +107,11 @@ test('popup uses selected Japanese and Korean language settings', async ({
     setSettings(extensionWorker, { language, confirmBeforeDelete: true });
 
   const openDeleteDialog = async (
-    placeholder: string,
+    searchLabel: string,
     dialogTitle: string,
     cancelLabel: string,
   ) => {
-    await page.getByPlaceholder(placeholder).fill('Locale Delete');
+    await page.getByRole('combobox', { name: searchLabel }).fill('Locale Delete');
     const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Locale Delete' });
     await expect(bookmarkRow).toBeVisible();
     await bookmarkRow.hover();
@@ -124,13 +124,13 @@ test('popup uses selected Japanese and Korean language settings', async ({
 
   await setLanguage('ja');
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  await expect(page.getByPlaceholder('ブックマークを検索...')).toBeVisible();
-  await openDeleteDialog('ブックマークを検索...', 'ブックマークを削除', 'キャンセル');
+  await expect(page.getByRole('combobox', { name: 'ブックマークを検索' })).toBeVisible();
+  await openDeleteDialog('ブックマークを検索', 'ブックマークを削除', 'キャンセル');
 
   await setLanguage('ko');
   await page.reload();
-  await expect(page.getByPlaceholder('북마크 검색...')).toBeVisible();
-  await openDeleteDialog('북마크 검색...', '북마크 삭제', '취소');
+  await expect(page.getByRole('combobox', { name: '북마크를 검색' })).toBeVisible();
+  await openDeleteDialog('북마크를 검색', '북마크 삭제', '취소');
   await expect
     .poll(() =>
       extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Locale Delete']),
@@ -203,7 +203,7 @@ test('confirms bookmark and folder deletion, and cancels without changing the tr
   await setSettings(extensionWorker, { confirmBeforeDelete: true });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('Delete Me');
   const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Delete Me' });
   await expect(bookmarkRow).toBeVisible();
@@ -290,7 +290,7 @@ test('deletes bookmarks and folders immediately when confirmation is disabled', 
   await setSettings(extensionWorker, { confirmBeforeDelete: false });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('Immediate Bookmark');
   const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Immediate Bookmark' });
   await expect(bookmarkRow).toBeVisible();
@@ -341,7 +341,7 @@ test('undo restores a deleted bookmark and its nested folder tree at the origina
   await setSettings(extensionWorker, { confirmBeforeDelete: true });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('Recover Bookmark');
   const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Recover Bookmark' });
   await bookmarkRow.hover();
@@ -419,7 +419,7 @@ test('each repeated deletion keeps its own undo and missing parents fail safely'
   await setSettings(extensionWorker, { confirmBeforeDelete: false });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  const search = page.getByPlaceholder('Search bookmarks...');
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   const notifications = toastRegion(page);
   const undoFor = (title: string) =>
     notifications

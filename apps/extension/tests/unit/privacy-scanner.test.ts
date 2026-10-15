@@ -59,15 +59,22 @@ describe('privacy scanner', () => {
     expect(scan('https://example.com/?doc=sk-telecom-annual-report-2024')).toBeNull();
     expect(scan(`https://example.com/keys/${FAKE_OPENAI}`)).toBeNull();
     expect(scan(`https://example.com/cb#key=${FAKE_OPENAI}`)?.kinds).toEqual(['tokenPattern']);
+    // A fragment without parameters counts only when it holds a known token format.
+    expect(scan(`https://example.com/cb#${FAKE_GITHUB}`)).toEqual({
+      severity: 'high',
+      kinds: ['tokenPattern'],
+    });
+    expect(scan('https://example.com/ir#sk-telecom-annual-report-2024')).toBeNull();
     expect(containsTokenValue('sk-hynix-2024-quarterly-results-q3')).toBe(false);
     expect(containsTokenValue(`Bearer ${FAKE_OPENAI}`)).toBe(true);
   });
 
-  it('uses low severity for weak signals and ignores SPA routes and asset names', () => {
-    expect(scan('https://example.com/docs#section')).toEqual({
-      severity: 'low',
-      kinds: ['fragment'],
-    });
+  it('ignores plain anchors, app routes, and asset names, and keeps UUIDs low', () => {
+    expect(scan('https://example.com/docs#section')).toBeNull();
+    expect(scan('https://mail.google.com/mail/u/0/#inbox')).toBeNull();
+    expect(
+      scan('https://mail.google.com/mail/u/0/#inbox/FMfcgzQXJWDqRJXkqnmlWHZWZgvdBvQx'),
+    ).toBeNull();
     expect(scan('https://example.com/#/settings/profile')).toBeNull();
     expect(scan('https://example.com/img/logo@2x.png')).toBeNull();
     expect(scan('https://example.com/u/123e4567-e89b-12d3-a456-426614174000')).toEqual({

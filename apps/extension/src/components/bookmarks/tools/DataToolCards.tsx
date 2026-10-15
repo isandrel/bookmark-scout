@@ -21,6 +21,11 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
   useEffect(() => {
     setExportFormat(settings.dataDefaultExportFormat);
   }, [settings.dataDefaultExportFormat]);
+  // Options' Export bookmarks button lands here (`openBookmarkExport`).
+  useEffect(() => {
+    if (window.location.hash !== `#${MANAGER_EXPORT_HASH}`) return;
+    document.getElementById(MANAGER_EXPORT_HASH)?.scrollIntoView({ block: 'center' });
+  }, []);
 
   const handleExport = async (scope: BookmarkToolScope) => {
     const scopeNodes = getScopedNodes(folders, currentFolderId, scope);
@@ -86,6 +91,7 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
 
   return (
     <ToolCard
+      id={MANAGER_EXPORT_HASH}
       icon={<Download className={TOOL_ICON_CLASS} />}
       title={t('tools_export')}
       description={t('tools_exportDesc')}

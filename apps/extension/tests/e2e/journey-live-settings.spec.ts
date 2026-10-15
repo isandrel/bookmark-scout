@@ -55,7 +55,7 @@ test('settings changed in Options apply to an open manager, an open popup, and q
   await expect(manager.getByRole('menu')).toHaveCount(0);
 
   await openPopup(page, extensionId);
-  const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
   await search.fill('inbox');
   await expect(folderMatches(page)).toHaveCount(1);
   await search.fill('');

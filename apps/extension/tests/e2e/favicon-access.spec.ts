@@ -22,7 +22,9 @@ function loadedWidth(src: string): Promise<number> {
 
 async function showIconSource(page: Page, extensionId: string) {
   await openPopup(page, extensionId);
-  await page.getByRole('combobox', { name: 'Search bookmarks...' }).fill('Icon Source');
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('Icon Source');
   return bookmarkRow(page, 'Icon Source');
 }
 

@@ -15,7 +15,9 @@ const ZONE_OFFSET: Record<DropZone, number> = { before: 0.12, into: 0.5, after: 
 
 async function openTree(page: Page, extensionId: string, surface: Surface) {
   await page.goto(`chrome-extension://${extensionId}/${surface}.html`);
-  await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
+  await expect(
+    page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
+  ).toBeVisible();
 }
 
 /**
@@ -24,7 +26,7 @@ async function openTree(page: Page, extensionId: string, surface: Surface) {
  * the wrong place when the tree re-rendered mid-drag under load.
  */
 async function searchTree(page: Page, query: string) {
-  await page.getByPlaceholder('Search bookmarks...').fill(query);
+  await page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }).fill(query);
   await expect(page.locator('mark').first()).toBeVisible();
 }
 
@@ -82,6 +84,12 @@ async function indexOf(worker: Worker, id: string) {
 
 for (const surface of ['popup', 'sidepanel'] as const) {
   test.describe(`${surface} tree drag and drop`, () => {
+    // The rows dragged here must fit the 500px popup; the Save to folder list a search shows
+    // above the tree would push the last of them out of view.
+    test.beforeEach(async ({ extensionWorker }) => {
+      await setSettings(extensionWorker, { folderMatchesEnabled: false });
+    });
+
     test('dragging a bookmark onto a folder moves it to the end of that folder', async ({
       extensionId,
       extensionWorker,

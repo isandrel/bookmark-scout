@@ -35,7 +35,7 @@ Why the rest stay required: `bookmarks` is the product; `storage` holds settings
 
 | Browser | Before (0.2.0 as released) | After |
 | --- | --- | --- |
-| Chrome and Edge | "Read and change your bookmarks", "Read your browsing history" (`tabs`, which also covers `favicon`) | "Read and change your bookmarks" |
+| Chrome and Edge | "Read and change your bookmarks", "Read your browsing history" (`tabs`) | "Read and change your bookmarks"; the optional `favicon` has its own warning, "Read the icons of the websites you visit", shown only when it is requested |
 | Firefox | "Read and modify bookmarks", "Access browser tabs" | "Read and modify bookmarks"; data collection: "doesn't require data collection" |
 
 ### When each optional permission is requested
@@ -43,7 +43,7 @@ Why the rest stay required: `bookmarks` is the product; `storage` holds settings
 | Permission or consent | Browsers | Requested when | If declined | If revoked later |
 | --- | --- | --- | --- | --- |
 | `tabs` | All | The user saves the current page, or asks for AI folder suggestions, from a page without `activeTab` (the side panel). A dialog explains it first and offers the ways that need no permission: the toolbar popup (clicking the toolbar button grants `activeTab`) and the quick save shortcut, with the keys the browser assigned. | Nothing is saved; a toast says how to allow it later | The side panel asks again next time |
-| `contextMenus` | Chrome, Edge | The user turns on **Context Menu** in Settings (off by default). No prompt: Chrome grants permissions without a warning silently. | The switch stays off; a toast explains | The menu is removed and the switch shows off |
+| `contextMenus` | Chrome, Edge | The user turns on **Right-Click Menu** in Settings (off by default). No prompt: Chrome grants permissions without a warning silently. | The switch stays off; a toast explains | The menu is removed and the switch shows off |
 | `favicon` | Chrome, Edge | The user clicks **Show browser icons** on the Refresh Site Icons card, which offers it first as the milder way to real icons, or turns on **Use the browser's icon cache** in Settings (off by default). A dialog explains it first. | The switch stays off; bookmarks keep saved or generic icons | Icons fall back to saved or generic ones |
 | Sites of one tool run (`http://*.<site>/*`, `https://*.<site>/*` per site), or `http://*/*`, `https://*/*` | All | The user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons: the request names only the sites of the bookmarks in that run (each registrable domain with its subdomains), or all websites when the run covers more than `max_sites_per_request` sites (20, `apps/extension/config/network/site-access.toml`). A dialog explains it first and lists the sites. Turning on Read page content asks for all websites. | Nothing is scanned, or the setting stays off | Tools ask again; page reading stops |
 | One provider origin | All | The user clicks Verify Service or Refresh Models | The check still runs if the provider allows CORS | Not applicable |
