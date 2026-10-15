@@ -71,10 +71,6 @@
         "message": "Les raccourcis sont suspendus pendant la saisie dans un champ ou lorsqu'une boîte de dialogue ou un menu est ouvert.",
         "description": "Keyboard shortcuts dialog description"
     },
-    "shortcuts_focusFilter": {
-        "message": "Accéder au filtre par titre",
-        "description": "Keyboard shortcut description: / focuses the title filter"
-    },
     "shortcuts_parentFolder": {
         "message": "Aller au dossier parent",
         "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
@@ -487,10 +483,6 @@
         "message": "Aucun paramètre ne correspond à votre recherche.",
         "description": "Empty settings search result"
     },
-    "toast_preferencesUpdated": {
-        "message": "Vos préférences ont été mises à jour.",
-        "description": "Toast description for settings save success"
-    },
     "toast_errorSavingSettings": {
         "message": "Erreur lors de l'enregistrement des paramètres",
         "description": "Toast title for settings save error"
@@ -535,10 +527,6 @@
         "message": "Paramètres importés",
         "description": "Toast title for settings import success"
     },
-    "toast_settingsImportedDescription": {
-        "message": "Vos paramètres ont été restaurés à partir du fichier.",
-        "description": "Toast description for settings import success"
-    },
     "toast_importFailed": {
         "message": "Échec de l'importation",
         "description": "Toast title for settings import error"
@@ -582,10 +570,6 @@
     "action_saving": {
         "message": "Enregistrement…",
         "description": "Saving state button label"
-    },
-    "action_saveChanges": {
-        "message": "Enregistrer les modifications",
-        "description": "Save changes button label"
     },
     "settings_appearance": {
         "message": "Apparence",
@@ -953,10 +937,6 @@
         "message": "Enregistrer la page actuelle dans $1",
         "description": "Accessible name of a folder match row; $1 is the folder path"
     },
-    "state_noRecentFolders": {
-        "message": "Aucun dossier récent",
-        "description": "Empty state for recent folders"
-    },
     "settings_recentFoldersEnabled": {
         "message": "Dossiers récents",
         "description": "Recent folders enabled setting label"
@@ -972,14 +952,6 @@
     "toast_pleaseOpenWebpage": {
         "message": "Ouvrez d'abord une page Web",
         "description": "Toast description when tab info unavailable"
-    },
-    "toast_apiKeyRequired": {
-        "message": "Clé API requise",
-        "description": "Toast title when API key missing"
-    },
-    "toast_apiKeyRequiredDesc": {
-        "message": "Définissez votre clé API dans Paramètres → IA",
-        "description": "Toast description when API key missing"
     },
     "ai_recommendationFailed": {
         "message": "Échec de la recommandation IA",
@@ -1069,18 +1041,6 @@
         "message": "Nouveau favori",
         "description": "Default name for new bookmark"
     },
-    "toast_bookmarkAddedToFolder": {
-        "message": "« $1 » ajouté à « $2 »",
-        "description": "Toast description for bookmark added"
-    },
-    "toast_folderAddedIn": {
-        "message": "Nouveau dossier « $1 » ajouté dans « $2 »",
-        "description": "Toast description for folder created"
-    },
-    "toast_itemRemoved": {
-        "message": "« $1 » a été supprimé",
-        "description": "Toast description for item deleted"
-    },
     "popup_untitled": {
         "message": "Sans titre",
         "description": "Default name for untitled items"
@@ -1149,10 +1109,6 @@
         "message": "Réinitialiser l'affichage",
         "description": "Reset bookmark table view button label"
     },
-    "table_filterTitles": {
-        "message": "Filtrer les titres…",
-        "description": "Bookmark table title filter placeholder"
-    },
     "table_filterUrls": {
         "message": "Filtrer les URL…",
         "description": "Bookmark table URL filter placeholder"
@@ -1172,10 +1128,6 @@
     "table_noResults": {
         "message": "Aucun résultat.",
         "description": "Empty bookmark table message"
-    },
-    "table_rowsSelected": {
-        "message": "$1 ligne(s) sélectionnée(s) sur $2.",
-        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
     },
     "table_rowsPerPage": {
         "message": "Lignes par page",
@@ -1697,10 +1649,6 @@
         "message": "Format",
         "description": "Placeholder for the export format selector"
     },
-    "tools_exporting": {
-        "message": "Exportation…",
-        "description": "Export button label while exporting"
-    },
     "tools_importing": {
         "message": "Importation…",
         "description": "Import button label while importing"
@@ -1743,16 +1691,6 @@
         "message": "Importation terminée",
         "description": "Toast title for successful bookmark import"
     },
-    "toast_importSuccessDesc": {
-        "message": "$count$ éléments importés",
-        "description": "Toast description for successful bookmark import",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "12"
-            }
-        }
-    },
     "toast_reorganizeSuccess": {
         "message": "Réorganisation terminée",
         "description": "Toast title after applying an AI reorganization"
@@ -1792,10 +1730,6 @@
     "toast_changesUndoneDesc": {
         "message": "Rétablis : $1. Impossible de rétablir : $2.",
         "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
-    },
-    "error_importFailed": {
-        "message": "Échec de l'importation : $1",
-        "description": "Error message for failed bookmark import"
     },
     "error_unsupportedFileFormat": {
         "message": "Format de fichier non pris en charge",
@@ -1952,18 +1886,6 @@
     "contextMenu_bookmarksBar": {
         "message": "Barre de favoris",
         "description": "Bookmarks bar folder name"
-    },
-    "toast_linkSaved": {
-        "message": "Lien enregistré",
-        "description": "Toast title when link saved via context menu"
-    },
-    "toast_linkSavedDesc": {
-        "message": "« $1 » ajouté à « $2 »",
-        "description": "Toast description for link saved"
-    },
-    "toast_linkSaveFailed": {
-        "message": "Échec de l'enregistrement du lien",
-        "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
         "message": "Menu du clic droit",
@@ -3153,10 +3075,6 @@
         "message": "Clé API non configurée. Ajoutez-la dans Paramètres > IA.",
         "description": "AI API key missing error"
     },
-    "contextMenu_untitled": {
-        "message": "Sans titre",
-        "description": "Fallback bookmark title from context menu"
-    },
     "contextMenu_recentFolders": {
         "message": "Dossiers récents",
         "description": "Context menu recent folders submenu"
@@ -4125,41 +4043,9 @@
         "message": "Aucun favori ni dossier n'a été trouvé dans ce fichier. Rien n'a été importé.",
         "description": "Import error when a file contains no bookmarks or folders"
     },
-    "toast_importResultDesc": {
-        "message": "Favoris importés : $bookmarks$. Dossiers importés : $folders$.",
-        "description": "Import success counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            }
-        }
-    },
     "toast_importPartial": {
         "message": "Certains éléments n'ont pas été importés",
         "description": "Import partial result title"
-    },
-    "toast_importPartialDesc": {
-        "message": "Favoris importés : $bookmarks$. Dossiers importés : $folders$. Non importés : $failed$.",
-        "description": "Import partial result counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            },
-            "failed": {
-                "content": "$3",
-                "example": "1"
-            }
-        }
     },
     "tools_privacySensitiveFragmentParam": {
         "message": "Valeur sensible dans le fragment d'URL : $param$",
