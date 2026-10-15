@@ -1,9 +1,11 @@
 /**
  * The built-in model's state in its service editor (Options > AI): ready, not on this computer yet
- * (with **Download the model**, its size, and what Chrome needs), downloading (with progress), not
- * supported on this computer, turned off by the organization, or missing from this browser. Below
- * it, what the service does and does not do, which languages it reads best, and that nothing
- * leaves the computer. The download starts only from the button's click (`downloadBuiltinAIModel`).
+ * (with **Download the model**, its size, and what Chrome needs), downloading (with progress, or
+ * a bar without a value for a download this page did not start), not supported on this computer,
+ * turned off by the organization, or missing from this browser. Below it, what the service does
+ * and does not do (and which service does the rest), which languages it reads best (or that it does
+ * not read the extension's language), and that nothing leaves the computer. The download starts
+ * only from the button's click (`downloadBuiltinAIModel`).
  */
 
 import { CircleAlert, CircleCheck, Download, Info, LoaderCircle } from 'lucide-react';
@@ -49,15 +51,30 @@ function formatGigabytes(value: number): string {
   }
 }
 
-/** The languages the model reads best, named in the extension's language. */
-function modelLanguageList(): string {
+/** Names languages (`ja`) in the extension's language ("Japanese"), or by code without `Intl`. */
+function languageNamer(): (code: string) => string {
   let names: Intl.DisplayNames | undefined;
   try {
     names = new Intl.DisplayNames(getFormattingLocale(), { type: 'language' });
   } catch {
     names = undefined;
   }
-  return formatList(builtinAIConfig.model_languages.map((code) => names?.of(code) ?? code));
+  return (code) => names?.of(code) ?? code;
+}
+
+/** The languages the model reads best, named in the extension's language. */
+function modelLanguageList(): string {
+  return formatList(builtinAIConfig.model_languages.map(languageNamer()));
+}
+
+/**
+ * When the extension's own language is not one the model reads (`model_languages`), a note that
+ * pages in it may get word-match suggestions; undefined for a language it reads.
+ */
+export function builtinAILanguageNote(): string | undefined {
+  const language = getResolvedLanguage().split('_')[0] ?? '';
+  if (builtinAIReadsLanguage(language)) return undefined;
+  return t('qaOptions_builtinLanguageNote', [modelLanguageList(), languageNamer()(language)]);
 }
 
 function requirementsText(): string {
@@ -103,6 +120,12 @@ function StatusBox({
 
 export function BuiltinAIModelStatus() {
   const status = useBuiltinAIStatus(true, { poll: true });
+  const { state } = useAIServices();
+  // The features it leaves out go to another enabled service, when there is one.
+  const hasOtherService = state.services.some(
+    (service) => service.enabled && !isBuiltinProvider(service.provider),
+  );
+  const languageNote = builtinAILanguageNote();
   // Progress of a download this page started, from 0 to 1.
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -149,10 +172,22 @@ export function BuiltinAIModelStatus() {
     }
     if (downloading) {
       // Progress is known only for a download this page started; one started elsewhere (another
-      // tab, or Chrome itself) shows its state alone until it finishes.
+      // tab, an earlier visit, or Chrome itself) shows a bar without a value until it finishes.
       return (
         <StatusBox tone="info" title={t('builtinAi_statusDownloading')}>
-          {progress !== null && (
+          {progress === null ? (
+            <>
+              <div
+                role="progressbar"
+                aria-label={t('builtinAi_statusDownloading')}
+                data-testid="builtin-ai-progress"
+                className="h-1.5 w-full overflow-hidden rounded-full bg-background"
+              >
+                <div className="h-full w-full animate-pulse rounded-full bg-primary/60" />
+              </div>
+              <p>{t('qaOptions_builtinDownloadBackground')}</p>
+            </>
+          ) : (
             <>
               <div
                 role="progressbar"
@@ -206,9 +241,16 @@ export function BuiltinAIModelStatus() {
       )}
       <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
         {otherFeatures.length > 0 && (
-          <li>{t('builtinAi_scope', formatList(otherFeatures.map((key) => t(key))))}</li>
+          <li data-testid="builtin-ai-scope">
+            {t(
+              hasOtherService ? 'qaOptions_builtinScopeOther' : 'builtinAi_scope',
+              formatList(otherFeatures.map((key) => t(key))),
+            )}
+          </li>
         )}
-        <li>{t('builtinAi_languages', modelLanguageList())}</li>
+        <li data-testid="builtin-ai-languages">
+          {languageNote ?? t('builtinAi_languages', modelLanguageList())}
+        </li>
         <li>{t('builtinAi_privacy')}</li>
       </ul>
     </div>

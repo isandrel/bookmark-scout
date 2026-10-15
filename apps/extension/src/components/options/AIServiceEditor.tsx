@@ -46,20 +46,32 @@ const EXTRA_FIELD_COPY: Record<
   apiVersion: { label: 'options_apiVersion', description: 'options_apiVersionDescription' },
 };
 
-/** A field of the AI services panel and the text settings search matches it by. */
-export type AIServicesSearchField = { advanced: boolean; text: string[] };
+/**
+ * A field of the AI services panel and the text settings search matches it by, label first.
+ * `editor` fields are inside a hosted service's editor, so they show only while one is open.
+ */
+export type AIServicesSearchField = { advanced: boolean; editor: boolean; text: string[] };
 
 /** Fields of the AI services panel; advanced ones sit under More settings. */
 export function getAIServicesSearchFields(): AIServicesSearchField[] {
+  const field = (advanced: boolean, ...keys: MessageKey[]): AIServicesSearchField => ({
+    advanced,
+    editor: true,
+    text: keys.map((key) => t(key)),
+  });
   return [
-    { advanced: false, text: [t('options_aiServices'), t('options_aiServicesDescription')] },
-    { advanced: false, text: [t('options_apiKey'), t('options_apiKeyDescription')] },
-    { advanced: false, text: [t('settings_aiModel')] },
-    { advanced: false, text: [t('options_customModel'), t('options_customModelDescription')] },
-    { advanced: true, text: [t('options_baseUrl'), t('options_baseUrlDescription')] },
-    { advanced: true, text: [t('options_extraHeaders'), t('options_extraHeadersDescription')] },
+    {
+      advanced: false,
+      editor: false,
+      text: [t('options_aiServices'), t('options_aiServicesDescription')],
+    },
+    field(false, 'options_apiKey', 'options_apiKeyDescription'),
+    field(false, 'settings_aiModel'),
+    field(false, 'options_customModel', 'options_customModelDescription'),
+    field(true, 'options_baseUrl', 'options_baseUrlDescription'),
+    field(true, 'options_extraHeaders', 'options_extraHeadersDescription'),
     // Provider-specific fields match by label only; their descriptions mention other fields.
-    ...Object.values(EXTRA_FIELD_COPY).map((copy) => ({ advanced: true, text: [t(copy.label)] })),
+    ...Object.values(EXTRA_FIELD_COPY).map((copy) => field(true, copy.label)),
   ];
 }
 

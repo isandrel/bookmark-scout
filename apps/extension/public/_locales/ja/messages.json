@@ -795,6 +795,10 @@
         "message": "フォルダ優先",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "ブラウザの順序",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "フォルダでグループ化",
         "description": "Group by folders setting label"
@@ -3102,7 +3106,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "APIキーが設定されていません。オプション → AI で設定してください。",
+        "message": "APIキーが設定されていません。設定 > AI で追加してください。",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4234,7 +4238,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "このツールを使うには、オプションでAI機能を有効にしてください。",
+        "message": "このツールを使うには、設定 > AI で AI 機能を有効にしてください。",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5047,8 +5051,12 @@
         "message": "AI サービスがまだありません。AI ツールを使うには追加してください。",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "各 AI サービスの中にあります: $1。追加するか、キーのあるサービスを開くと表示されます。",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
-        "message": "AI サービスが設定されていません。オプションで追加してください。",
+        "message": "AI サービスが設定されていません。設定 > AI で追加してください。",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5227,6 +5235,14 @@
         "message": "失敗",
         "description": "Options: status badge of an AI request that got no response"
     },
+    "qaOptions_activityOnDevice": {
+        "message": "端末上",
+        "description": "Options > AI activity: status badge of a call to the built-in AI model on this computer, which has no HTTP status because nothing goes over the network. Keep it very short"
+    },
+    "qaOptions_activityAction": {
+        "message": "操作",
+        "description": "Options > AI activity: status badge of a bookmark action an AI agent ran (such as saving a bookmark), which has no HTTP status. Keep it very short"
+    },
     "aiActivity_requestHeaders": {
         "message": "リクエストヘッダー",
         "description": "Options: label of the recorded request headers"
@@ -5256,11 +5272,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Options > AI でこの AI サービスの API キーを追加してください。",
+        "message": "設定 > AI でこの AI サービスの API キーを追加してください。",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Options > AI でこの AI サービスのモデルを選択してください。",
+        "message": "設定 > AI でこの AI サービスのモデルを選択してください。",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5460,7 +5476,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "Ask AI にページを読ませるには、オプションの AI で「ページの内容を読む」をオンにしてください。",
+        "message": "Ask AI にページを読ませるには、設定 > AI で「ページの内容を読む」をオンにしてください。",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5776,7 +5792,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "オプション",
+        "message": "設定",
         "description": "Name of the options page, used in its tab title"
     },
     "search_placeholderShort": {
@@ -5808,7 +5824,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "AI へのリクエストに失敗しました。もう一度試すか、オプションでサービスを確認してください。",
+        "message": "AI へのリクエストに失敗しました。もう一度試すか、設定 > AI でサービスを確認してください。",
         "description": "AI error with no more specific explanation"
     },
     "ai_newFolderPathNew": {
@@ -6489,6 +6505,10 @@
         "message": "ダウンロード中も Chrome はそのまま使えます。",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "このページを閉じても、ダウンロードは続きます。",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "モデルはまだこのパソコンにありません",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6513,9 +6533,17 @@
         "message": "フォルダの提案だけを行います。$1 には、別の AI サービスを追加するとそちらが使われます。",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "フォルダの提案だけを行います。$1 にはほかの AI サービスを使います。",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "$1 で最もよく動きます。ほかの言語では、単純な単語の一致による提案になることがあります。",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "内蔵 AI が読めるのは $1 だけです。$2 のページは単純な単語の一致で提案されることがあります。",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "データはパソコンの外に出ません。ページのタイトル、アドレス、フォルダ名はこのパソコンに残ります。",

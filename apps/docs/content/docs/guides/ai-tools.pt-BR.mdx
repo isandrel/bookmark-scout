@@ -49,7 +49,7 @@ No Chrome, o Bookmark Scout pode usar a **IA integrada do Chrome**, um modelo pe
 Na aba **IA**, clique em **Usar a IA integrada**, em **Grátis neste computador**, no topo da caixa **A IA é opcional**. **IA integrada (neste computador)** também aparece primeiro em **Adicionar serviço**. Os dois só aparecem onde o Chrome consegue executar o modelo.
 </Step>
 <Step>
-Clique em **Baixar o modelo**. O Chrome o baixa uma única vez: cerca de 4 GB em um computador com placa de vídeo, 2,7 GB sem. Quando o serviço mostrar **Pronta**, o modelo está neste computador.
+Clique em **Baixar o modelo**. O Chrome o baixa uma única vez: cerca de 4 GB em um computador com placa de vídeo, 2,7 GB sem. Quando o serviço mostrar **Pronta**, o modelo está neste computador. Se você fechar as configurações durante o download, o Chrome continua baixando em segundo plano.
 </Step>
 <Step>
 Ative **Recursos de IA**, se estiverem desativados: adicionar o serviço não ativa a IA.
@@ -57,12 +57,12 @@ Ative **Recursos de IA**, se estiverem desativados: adicionar o serviço não at
 </Steps>
 
 - O Chrome precisa de 22 GB de espaço livre em disco e de uma placa de vídeo com mais de 4 GB de memória, ou de 16 GB de memória e 4 núcleos de processador. Em um computador que não consegue executar o modelo, ou se sua organização o desativou, o serviço avisa. O Firefox não tem IA integrada.
-- Ela só sugere pastas: no pop-up e no painel lateral, e para o atalho de salvamento rápido com IA. Perguntar à IA, Tags automáticas, Gerador de resumos e Reorganização de pastas com IA usam outro serviço quando você adiciona um.
+- Ela só sugere pastas: no pop-up e no painel lateral, e para o atalho de salvamento rápido com IA. Perguntar à IA, Tags automáticas, Gerador de resumos e Reorganização de pastas com IA usam seu outro serviço ativado, ou um que você adicionar.
 - Ela lê o título e o endereço da página, os nomes das pastas que mais combinam com ela (uma lista curta escolhida no seu dispositivo) e, com **Ler conteúdo da página** ativado, o início do texto da página. Ela só responde com pastas dessa lista.
 - Funciona melhor com inglês, japonês, espanhol, alemão e francês. Quando o modelo falha ou demora demais, as sugestões vêm de uma simples correspondência de palavras no seu dispositivo.
 - Nem o pop-up nem o atalho de salvamento rápido com IA iniciam o download: até o modelo ficar pronto, o pop-up mostra **Baixe o modelo da IA integrada nas Configurações** no lugar dos botões de IA, e o salvamento rápido usa a melhor correspondência descrita abaixo.
 - O salvamento rápido com IA mantém o modelo pronto por 5 minutos depois de salvar, para que o próximo seja mais rápido. Quando o modelo não está pronto, falha ou demora demais, a página é salva na pasta que mais combina com ela, como faz a opção **Melhor correspondência**.
-- Com **Registrar solicitações** ativado, cada chamada aparece em **Atividade da IA** como `ON-DEVICE`.
+- Com **Registrar solicitações** ativado, cada chamada aparece em **Atividade da IA** marcada como **No dispositivo**.
 
 ## Usar mais de um serviço [#use-more-than-one-service]
 
@@ -71,7 +71,7 @@ Salve quantos serviços quiser, até vários do mesmo provedor: por exemplo, um 
 - Todas as ferramentas de IA usam o serviço **Padrão**. Escolha **Definir como padrão** no menu de um serviço ou, quando mais de um serviço estiver ativado, escolha um pela seta ao lado do botão de brilho no pop-up.
 - **IA integrada** só sugere pastas: enquanto ela for o padrão, as outras ferramentas de IA usam o primeiro outro serviço ativado.
 - Desative um serviço com a chave dele para ocultá-lo do pop-up sem excluí-lo.
-- **Duplicar** copia um serviço, incluindo a chave. **Excluir** remove o serviço e a chave dele deste dispositivo.
+- **Duplicar** copia um serviço, incluindo a chave. **Excluir** remove o serviço e a chave dele deste dispositivo. A IA integrada só pode ser adicionada uma vez, por isso não tem **Duplicar**.
 - **URL base**, **Cabeçalhos extras (JSON)** e os campos específicos de cada provedor, como a organização da OpenAI, ficam em **Mais configurações**.
 
 ## Provedores [#providers]

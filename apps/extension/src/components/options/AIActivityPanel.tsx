@@ -22,6 +22,7 @@ function statusTone(entry: AIActivityEntry): string {
 }
 
 function ActivityRow({ entry }: { entry: AIActivityEntry }) {
+  const statusLabel = aiActivityStatusLabel(entry);
   const url = (() => {
     try {
       const parsed = new URL(entry.url);
@@ -54,19 +55,20 @@ function ActivityRow({ entry }: { entry: AIActivityEntry }) {
             aria-hidden="true"
             className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open/entry:rotate-90"
           />
-          <span
-            className={cn(
-              'shrink-0 rounded-sm px-1.5 py-0.5 font-mono text-xs tabular-nums',
-              statusTone(entry),
-            )}
-          >
-            {entry.error ? t('aiActivity_failed') : entry.status}
-          </span>
+          {statusLabel !== undefined && (
+            <span
+              data-testid="ai-activity-status"
+              className={cn(
+                'shrink-0 rounded-sm px-1.5 py-0.5 font-mono text-xs tabular-nums',
+                statusTone(entry),
+              )}
+            >
+              {statusLabel}
+            </span>
+          )}
           <span className="min-w-0 flex-1 truncate">
             <span className="font-medium">{t(AI_ACTIVITY_SOURCES[entry.source])}</span>
-            {entry.client && (
-              <span className="text-muted-foreground">{` (${entry.client})`}</span>
-            )}
+            {entry.client && <span className="text-muted-foreground">{` (${entry.client})`}</span>}
             <span className="text-muted-foreground">
               {` ${t('format_separator')} `}
               {entry.method} {url}

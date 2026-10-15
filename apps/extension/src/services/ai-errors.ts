@@ -18,7 +18,14 @@ function isSDKError(error: unknown, name?: string): error is Error {
   return typeof error === 'object' && error !== null && Reflect.get(error, marker) === true;
 }
 
-const isRetryError = (error: unknown): error is RetryError => isSDKError(error, 'AI_RetryError');
+/**
+ * SDK errors for an answer that does not fit the schema, or (from generateText) no answer at all.
+ * Named without their `AI_` prefix: `tests/e2e/startup-code.spec.ts` finds AI SDK code in a chunk
+ * by the full name, and this module loads at start.
+ */
+const NO_ANSWER_ERRORS = ['NoObjectGeneratedError', 'NoOutputGeneratedError'] as const;
+
+const isRetryError =(error: unknown): error is RetryError => isSDKError(error, 'AI_RetryError');
 const isAPICallError = (error: unknown): error is APICallError =>
   isSDKError(error, 'AI_APICallError');
 
@@ -55,7 +62,9 @@ export function describeAIError(error: unknown): string {
       : last;
   }
   if (isAPICallError(error)) return describeAPICallError(error);
-  if (isSDKError(error, 'AI_NoObjectGeneratedError')) return t('ai_errorNoObject');
+  if (NO_ANSWER_ERRORS.some((name) => isSDKError(error, `AI_${name}`))) {
+    return t('ai_errorNoObject');
+  }
   if (isSDKError(error)) return t('ai_errorRequestFailed');
   // Errors the extension throws itself (settings checks, AIConnectionError) are localized already.
   return getErrorMessage(error);

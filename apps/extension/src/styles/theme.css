@@ -236,10 +236,17 @@ html {
     sans-serif;
 }
 
+/*
+ * Korean separates words with spaces, so lines break between words (keep-all), never inside one;
+ * a word longer than its line (a URL, a long name) still breaks rather than overflowing. Both
+ * inherit, so a component that sets its own wrapping (`break-all` for URLs) keeps it.
+ */
 :root:lang(ko) {
   --font-sans:
     'Instrument Sans Variable', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', system-ui,
     sans-serif;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 :root:lang(zh-CN) {

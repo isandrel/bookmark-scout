@@ -220,7 +220,7 @@ export type SortOrder = z.infer<typeof sortOrderSchema>;
 /** Name of each sort order, in Options and where the manager says which order its table is in. */
 export function getSortOrderLabel(order: SortOrder): string {
   return {
-    browser: t('table_browserOrder'),
+    browser: t('qaOptions_sortBrowser'),
     date: t('settings_sortDate'),
     alphabetical: t('settings_sortAlphabetical'),
     folders: t('settings_sortFolders'),

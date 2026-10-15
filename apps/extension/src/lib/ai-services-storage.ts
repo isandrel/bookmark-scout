@@ -90,10 +90,29 @@ function newServiceId(provider: AIProvider, taken: Set<string>): string {
   }
 }
 
+/**
+ * Whether only one service of this provider may exist: the browser's built-in model is one model
+ * on this computer with nothing to configure, so a second service would be the same thing again.
+ */
+export function isSingleServiceProvider(provider: AIProvider): boolean {
+  return isBuiltinProvider(provider);
+}
+
+/**
+ * Adds a service of `provider`, the first one becoming the default. For a provider that allows
+ * only one service (`isSingleServiceProvider`), an existing one is returned unchanged instead.
+ */
 export async function addAIService(provider: AIProvider, name?: string): Promise<AIService> {
   const configs = await aiProviderConfigValue.get();
   let created: AIService | undefined;
   await updateServices((state) => {
+    const existing = isSingleServiceProvider(provider)
+      ? state.services.find((service) => service.provider === provider)
+      : undefined;
+    if (existing) {
+      created = existing;
+      return state;
+    }
     const taken = new Set([
       ...state.services.map((service) => service.id),
       ...Object.keys(configs),
@@ -135,11 +154,14 @@ export async function setDefaultAIService(id: string): Promise<void> {
   }));
 }
 
-/** Copies a service and its credentials under a new id, named "<name> (copy)". */
+/**
+ * Copies a service and its credentials under a new id, named "<name> (copy)". A service whose
+ * provider allows only one is not copied.
+ */
 export async function duplicateAIService(id: string): Promise<AIService | undefined> {
   const state = await getAIServicesState();
   const source = state.services.find((service) => service.id === id);
-  if (!source) return undefined;
+  if (!source || isSingleServiceProvider(source.provider)) return undefined;
   const copy = await addAIService(source.provider, t('format_copyName', source.name));
   await updateAIService(copy.id, { model: source.model, enabled: source.enabled });
   const config = await getStoredAIProviderConfig(source.id);

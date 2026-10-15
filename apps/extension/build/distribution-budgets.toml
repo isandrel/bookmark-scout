@@ -5,18 +5,23 @@
 # Ceilings allow about 3% above measurements, rounded up to 1,000 B. Lower them alongside
 # improvements; raising a limit requires measured artifacts and a dated reason in the PR.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
+# raw_bytes raised on 2026-10-15 from 5,160,000 for the Options/AI QA fixes (#684: on-device and
+# action activity badges, Settings > AI copy, built-in AI notes in nine languages) on top of the
+# popup first-run fixes (#686): measured Chrome / Edge / Firefox 5,164,351 / 5,164,313 / 5,164,578 B
+# on 78ba7960 merged with #684, rounded up with about 1,400 B to spare. ZIP limits unchanged
+# (measured 1,620,202 / 1,620,111 / 1,620,368 B).
 
 [targets.chrome]
 zip_bytes = 1_621_000
-raw_bytes = 5_160_000
+raw_bytes = 5_166_000
 
 [targets.edge]
 zip_bytes = 1_621_000
-raw_bytes = 5_160_000
+raw_bytes = 5_166_000
 
 [targets.firefox]
 zip_bytes = 1_621_000
-raw_bytes = 5_160_000
+raw_bytes = 5_166_000
 
 [categories]
 # locales and other raised on 2026-10-15 for the welcome page (welcome.html and its strings in nine

@@ -81,6 +81,8 @@ test('Options offers Free on this computer first, and downloads the model from a
   const intro = page.getByTestId('ai-intro');
   const suggestion = intro.getByTestId('builtin-ai-suggestion');
   await expect(suggestion).toContainText('Free on this computer');
+  // English is a language the model reads, so there is no note about word matching.
+  await expect(suggestion.getByTestId('builtin-ai-language-note')).toHaveCount(0);
   // It comes before the four points about hosted AI.
   const suggestionBox = await suggestion.boundingBox();
   const pointBox = await intro.locator('[data-point="what"]').boundingBox();
@@ -160,8 +162,82 @@ test('Add service lists the built-in model first where it can run', async ({
   await page.getByRole('button', { name: 'Add service' }).click();
   const dialog = page.getByRole('dialog', { name: 'Add an AI service' });
   await dialog.getByRole('combobox', { name: 'Provider' }).click();
-  const first = page.locator('[data-slot="searchable-select-popup"]').getByRole('option').first();
+  const popup = page.locator('[data-slot="searchable-select-popup"]');
+  const first = popup.getByRole('option').first();
   await expect(first).toHaveText('Built-in AI (on this computer)');
+  await first.click();
+  await dialog.getByRole('button', { name: 'Add service' }).click();
+  await expect(dialog).toHaveCount(0);
+  const services = page.getByTestId('ai-service');
+  await expect(services).toHaveCount(1);
+
+  // There is only one model on this computer: Add service no longer lists it, and it has no copy.
+  await page.getByRole('button', { name: 'Add service' }).click();
+  await dialog.getByRole('combobox', { name: 'Provider' }).click();
+  await expect(popup.getByRole('option', { name: 'OpenAI', exact: true })).toBeVisible();
+  await expect(popup.getByRole('option', { name: 'Built-in AI (on this computer)' })).toHaveCount(
+    0,
+  );
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await services
+    .first()
+    .getByRole('button', { name: /^Actions for / })
+    .click();
+  await expect(page.getByRole('menuitem', { name: 'Set as default' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Duplicate' })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(services).toHaveCount(1);
+});
+
+test('Options names the model, shows a download started elsewhere, and says which service does the rest', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await fakeLanguageModel(context, { availability: 'downloading' });
+  await setSettings(extensionWorker, { language: 'en' });
+  const builtin = { provider: BUILTIN, name: 'Built-in AI', model: 'gemini-nano' };
+  await seedAIServices(extensionWorker, [builtin]);
+  await openAITab(page, extensionId);
+
+  // The model's name, not its id.
+  const service = page.getByTestId('ai-service').first();
+  await expect(service).toContainText('Gemini Nano');
+  await expect(service).not.toContainText('gemini-nano');
+
+  // A download this page did not start has no known progress, but it is still shown.
+  const status = page.getByTestId('builtin-ai-status');
+  await expect(status).toHaveAttribute('data-status', 'downloading');
+  const progress = page.getByTestId('builtin-ai-progress');
+  await expect(progress).toBeVisible();
+  await expect(progress).not.toHaveAttribute('aria-valuenow');
+  await expect(status).toContainText('Chrome keeps downloading in the background');
+
+  const scope = page.getByTestId('builtin-ai-scope');
+  await expect(scope).toContainText('use another AI service when you add one');
+  await seedAIServices(extensionWorker, [builtin, { provider: 'deepseek', name: 'DeepSeek' }]);
+  await expect(scope).toContainText('use your other AI services');
+  await expect(scope).not.toContainText('when you add one');
+});
+
+test('in a language the model does not read, Options says pages in it may get word matches', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await fakeLanguageModel(context, { availability: 'downloadable' });
+  await setSettings(extensionWorker, { language: 'ko' });
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=ai`);
+  const suggestion = page.getByTestId('builtin-ai-suggestion');
+  await expect(suggestion.getByTestId('builtin-ai-language-note')).toContainText('한국어');
+  await suggestion.getByRole('button').click();
+  await expect(page.getByTestId('builtin-ai-languages')).toContainText('한국어');
+  // Korean breaks lines between words, not inside them.
+  expect(await page.evaluate(() => getComputedStyle(document.body).wordBreak)).toBe('keep-all');
 });
 
 async function openPopupOnPage(context: BrowserContext, worker: Worker, extensionId: string) {
@@ -235,6 +311,11 @@ test('[mocked provider contract] the popup suggests the folder the built-in mode
       source: 'folderRecommendation',
       requestBody: expect.stringContaining('Rust async guide'),
     });
+  // Options names the on-device call in its status badge, where a request shows its HTTP status.
+  const options = await context.newPage();
+  await openAITab(options, extensionId);
+  const entry = options.getByTestId('ai-activity').getByTestId('ai-activity-entry').first();
+  await expect(entry.getByTestId('ai-activity-status')).toHaveText('On device');
 });
 
 test('the popup never downloads the model: it says to download it in Settings', async ({

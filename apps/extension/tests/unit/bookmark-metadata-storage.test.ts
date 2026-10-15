@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { setLanguage } from '@/hooks/use-i18n';
 import {
   getStoredBookmarkMetadata,
   mergeStoredBookmarkMetadata,
@@ -11,12 +12,14 @@ import {
 import { suggestBookmarkTags, summarizeBookmarksWithAI } from '@/services/ai-bookmark-tools';
 import type { AISettings } from '@/services/ai-client';
 import type { BookmarkTreeNode } from '@/types';
-import { setLanguage } from '@/hooks/use-i18n';
 import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
-const mocks = vi.hoisted(() => ({ generateObject: vi.fn() }));
+const mocks = vi.hoisted(() => ({ generateText: vi.fn() }));
 
-vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
+vi.mock('ai', () => ({
+  generateText: mocks.generateText,
+  Output: { object: (spec: unknown) => spec },
+}));
 
 async function readRawMetadata() {
   return readStoredData(STORAGE_ITEMS.bookmarkMetadata);
@@ -25,7 +28,7 @@ async function readRawMetadata() {
 describe('bookmark metadata storage', () => {
   beforeEach(() => {
     fakeBrowser.reset();
-    mocks.generateObject.mockReset();
+    mocks.generateText.mockReset();
   });
 
   it('saves, edits, reads, and removes metadata under the AI context export key', async () => {
@@ -151,7 +154,7 @@ describe('AI-generated metadata with a deterministic provider stub', () => {
 
   beforeEach(() => {
     fakeBrowser.reset();
-    mocks.generateObject.mockReset();
+    mocks.generateText.mockReset();
   });
 
   it('does not call the provider when AI is disabled', async () => {
@@ -178,21 +181,21 @@ describe('AI-generated metadata with a deterministic provider stub', () => {
         },
       ),
     ).rejects.toThrow('AI features are disabled');
-    expect(mocks.generateObject).not.toHaveBeenCalled();
+    expect(mocks.generateText).not.toHaveBeenCalled();
   });
 
   it('persists reviewed stubbed suggestions using merge settings', async () => {
     await saveBookmarkMetadata('b1', { tags: ['manual'], summary: 'Manual note' });
-    mocks.generateObject
+    mocks.generateText
       .mockResolvedValueOnce({
-        object: {
+        output: {
           items: [
             { bookmarkId: 'b1', title: 'Docs', tags: ['Manual', 'reference'], reason: 'stub' },
           ],
         },
       })
       .mockResolvedValueOnce({
-        object: { items: [{ bookmarkId: 'b1', title: 'Docs', summary: 'Stub summary' }] },
+        output: { items: [{ bookmarkId: 'b1', title: 'Docs', summary: 'Stub summary' }] },
       });
 
     const tags = await suggestBookmarkTags(nodes, enabledSettings, {
@@ -214,7 +217,7 @@ describe('AI-generated metadata with a deterministic provider stub', () => {
       { tagMode: 'replace', summaryMode: 'append', dedupeTags: true },
     );
 
-    expect(mocks.generateObject).toHaveBeenCalledTimes(2);
+    expect(mocks.generateText).toHaveBeenCalledTimes(2);
     expect(await getStoredBookmarkMetadata(['b1'])).toEqual({
       b1: { tags: ['manual', 'reference'], summary: 'Manual note\n\nStub summary' },
     });

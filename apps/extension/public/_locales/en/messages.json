@@ -819,6 +819,10 @@
         "message": "Folders First",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "Browser Order",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "Group by Folders",
         "description": "Group by folders setting label"
@@ -994,7 +998,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "The AI request failed. Try again, or check the service in Options.",
+        "message": "The AI request failed. Try again, or check the service in Settings > AI.",
         "description": "AI error with no more specific explanation"
     },
     "error_unknown": {
@@ -3146,7 +3150,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "API key not configured. Add it in Options → AI.",
+        "message": "API key not configured. Add it in Settings > AI.",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4278,7 +4282,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "Turn on AI features in Options to use this tool.",
+        "message": "Turn on AI features in Settings > AI to use this tool.",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5091,8 +5095,12 @@
         "message": "No AI services yet. Add one to use the AI tools.",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "In each AI service: $1. Add one, or open one with a key, to see it.",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
-        "message": "No AI service is set up. Add one in Options.",
+        "message": "No AI service is set up. Add one in Settings > AI.",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5271,6 +5279,14 @@
         "message": "Failed",
         "description": "Options: status badge of an AI request that got no response"
     },
+    "qaOptions_activityOnDevice": {
+        "message": "On device",
+        "description": "Options > AI activity: status badge of a call to the built-in AI model on this computer, which has no HTTP status because nothing goes over the network. Keep it very short"
+    },
+    "qaOptions_activityAction": {
+        "message": "Action",
+        "description": "Options > AI activity: status badge of a bookmark action an AI agent ran (such as saving a bookmark), which has no HTTP status. Keep it very short"
+    },
     "aiActivity_requestHeaders": {
         "message": "Request headers",
         "description": "Options: label of the recorded request headers"
@@ -5300,11 +5316,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Add an API key for this AI service in Options > AI.",
+        "message": "Add an API key for this AI service in Settings > AI.",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Choose a model for this AI service in Options > AI.",
+        "message": "Choose a model for this AI service in Settings > AI.",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5504,7 +5520,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "To let Ask AI read pages, turn on Read page content in Options, AI.",
+        "message": "To let Ask AI read pages, turn on Read page content in Settings > AI.",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5820,7 +5836,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "Options",
+        "message": "Settings",
         "description": "Name of the options page, used in its tab title"
     },
     "command_quickSave": {
@@ -6497,6 +6513,10 @@
         "message": "You can keep using Chrome while it downloads.",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "Chrome keeps downloading in the background, even if you close this page.",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "The model is not on this computer yet",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6521,9 +6541,17 @@
         "message": "It only suggests folders. $1 use another AI service when you add one.",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "It only suggests folders. $1 use your other AI services.",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "Works best with $1. With other languages, suggestions may come from plain word matching instead.",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "Built-in AI reads only $1. Pages in $2 may get suggestions from plain word matching.",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "Nothing leaves your computer: page titles, addresses, and folder names stay on it.",
