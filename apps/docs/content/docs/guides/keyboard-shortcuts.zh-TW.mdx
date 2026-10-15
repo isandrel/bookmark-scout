@@ -3,16 +3,16 @@ title: 鍵盤快速鍵
 description: 不使用滑鼠即可搜尋、在資料夾之間移動、儲存目前網頁，以及操作書籤管理員的表格。
 ---
 
-彈出式視窗和側邊面板中的快速鍵一律不使用 `Ctrl` 或 `Cmd`，因此 `Ctrl/Cmd+L`、`T`、`W`、`N`、`R` 和 `D` 等瀏覽器快速鍵仍可正常使用。書籤管理員會取代瀏覽器本身的書籤管理員，因此也沿用其 `Ctrl` 快速鍵 (在 Mac 上為 `Cmd`)：全選、複製、剪下、貼上、復原、重做，以及在新分頁中開啟。在文字欄位中輸入時 (搜尋框中的 `Esc` 除外)、輸入法正在組字時，以及對話方塊或選單開啟時，這些快速鍵會暫停作用。
+彈出式視窗和側邊面板中的快速鍵一律不使用 `Ctrl` 或 `Cmd`，因此瀏覽器本身使用這些按鍵的快速鍵 (例如開啟新分頁或移至網址列) 仍可正常使用。書籤管理員會取代瀏覽器本身的書籤管理員，因此也沿用其 `Ctrl` 快速鍵 (在 Mac 上為 `Cmd`)：全選、複製、剪下、貼上、復原、重做，以及在新分頁中開啟。在文字欄位中輸入時 (搜尋框中的 `Esc` 除外)、輸入法正在組字時，以及對話方塊或選單開啟時，這些快速鍵會暫停作用。
 
 ## 任何網頁 [#on-any-page]
 
-這些快捷鍵不需要開啟任何 Bookmark Scout 視窗就能使用。它們由瀏覽器管理，因此你可以在瀏覽器的快捷鍵設定中變更或移除；請參閱「[用鍵盤快捷鍵儲存](/guides/save-and-organize#quick-save)」。在 Chrome 和 Edge 中，你也可以將瀏覽器的書籤按鍵 `Ctrl+D` (在 Mac 上為 `⌘D`) 指派給快速儲存；請參閱「[用 Ctrl+D 快速儲存](/guides/save-and-organize#ctrl-d)」。
+這些快捷鍵不需要開啟任何 Bookmark Scout 視窗就能使用。它們由瀏覽器管理，因此你可以在瀏覽器的快捷鍵設定中變更或移除；請參閱「[用鍵盤快捷鍵儲存](/guides/save-and-organize#quick-save)」。在 Chrome 和 Edge 中，你也可以將瀏覽器的書籤按鍵 <Shortcut id="browser.bookmark_page" /> 指派給快速儲存；請參閱「[用書籤鍵快速儲存](/guides/save-and-organize#ctrl-d)」。
 
 | 按鍵 | 動作 |
 | --- | --- |
-| `Alt+Shift+S` (在 Mac 上為 `⌥⇧S`) | 將目前網頁快速儲存到「**快速儲存資料夾**」所決定的資料夾 |
-| `Alt+Shift+D` (在 Mac 上為 `⌥⇧D`) | 將目前網頁快速儲存到 AI 建議的資料夾 |
+| <Shortcut id="commands.quick-save" /> | 將目前網頁快速儲存到「**快速儲存資料夾**」所決定的資料夾 |
+| <Shortcut id="commands.ai-quick-save" /> | 將目前網頁快速儲存到 AI 建議的資料夾 |
 
 在隨後出現的通知中，按 `Tab` 可移至「**復原**」和其他資料夾，按 `Esc` 則會關閉通知。
 
@@ -22,10 +22,10 @@ description: 不使用滑鼠即可搜尋、在資料夾之間移動、儲存目�
 
 | 按鍵 | 動作 |
 | --- | --- |
-| `/` | 將焦點移至搜尋框 |
+| <Shortcut id="popup.focus_search" /> | 將焦點移至搜尋框 |
 | 在搜尋框中按 `Esc` | 清除搜尋；再按一次即可離開搜尋框 |
 | 在搜尋框中按 `↓` | 移至第一個資料夾 |
-| 在空白的搜尋框中按 `Alt+↓` | 顯示最近的搜尋；以 `↓` / `↑` 選擇、按 `Enter` 搜尋，按 `Tab` 可移至「**清除**」 |
+| 在空白的搜尋框中按 <Shortcut id="popup.recent_searches" /> | 顯示最近的搜尋；以 `↓` / `↑` 選擇、按 `Enter` 搜尋，按 `Tab` 可移至「**清除**」 |
 | `↓` / `↑`、`Home` / `End` | 在顯示的資料夾和書籤之間移動 (在第一列按 `↑` 會回到搜尋框) |
 | `→` / `←` | 展開或收合資料夾；在已展開的資料夾上按 `→` 會移至其第一個項目，按 `←` 則會移至上層資料夾 |
 | 在資料夾上按 `Enter` | 將目前網頁儲存至該資料夾 (已儲存在該處的網頁不會重複儲存) |
@@ -34,30 +34,30 @@ description: 不使用滑鼠即可搜尋、在資料夾之間移動、儲存目�
 
 ## 書籤管理員 [#bookmarks-manager]
 
-在書籤管理員中按下 `?`，或按一下標頭中的鍵盤按鈕，即可查看這份清單。按鍵與 Chrome 的書籤管理員相同；Mac 上不同的按鍵列在第二個。
+在書籤管理員中按下 <Shortcut id="manager.show_help" />，或按一下標頭中的鍵盤按鈕，即可查看這份清單。按鍵與 Chrome 的書籤管理員相同。
 
 | 按鍵 | 動作 |
 | --- | --- |
-| `/` | 將焦點移至標題篩選器 |
-| `Backspace` 或 `Alt+↑` | 前往上層資料夾 |
-| `↓` / `↑`、`Home` / `End` | 在列之間移動並選取該列；按住 `Shift` 可擴大選取範圍；按住 `Ctrl` (`Cmd`) 則只移動而不選取 |
-| `j` / `k` | 移至下一列或上一列 |
+| <Shortcut id="manager.focus_filter" /> | 將焦點移至標題篩選器 |
+| <Shortcut id="manager.parent_folder" /> | 前往上層資料夾 |
+| `↓` / `↑`、`Home` / `End` | 在列之間移動並選取該列；按住 `Shift` 可擴大選取範圍；按住 `Ctrl` (在 Mac 上為 `Cmd`) 則只移動而不選取 |
+| <Shortcut id="manager.next_row" />、<Shortcut id="manager.previous_row" /> | 移至下一列或上一列 |
 | `Space` | 選取或取消選取焦點所在的列 |
-| `Ctrl+A` / `Cmd+A` | 選取篩選器顯示的所有列 (包括所有頁面) |
-| `Esc` | 清除選取，或關閉對話方塊或選單 |
-| `Enter` / `Cmd+O` | 開啟選取的資料夾，或在分頁中開啟選取的書籤 |
-| `Ctrl+Enter` / `Cmd+Enter` | 在新的背景分頁中開啟選取的項目 |
-| `Shift+Enter` | 在新視窗中開啟選取的項目 |
-| `F2` / `Enter` | 編輯選取的書籤，或重新命名資料夾 |
-| `Delete` / `Delete` 或 `Cmd+Backspace` | 刪除選取的項目 |
-| `Ctrl+Z` / `Cmd+Z` | 復原上一個變更 |
-| `Ctrl+Y` 或 `Ctrl+Shift+Z` / `Cmd+Shift+Z` | 重做 |
-| `Ctrl+C` / `Cmd+C` | 複製選取的項目；其網址會放到剪貼簿 |
-| `Ctrl+X` / `Cmd+X` | 剪下選取的項目，以便用貼上來移動 |
-| `Ctrl+V` / `Cmd+V` | 貼在選取的項目後面，或貼到資料夾的最後面；在其他應用程式中複製的網址會變成書籤 |
-| `s` | 開啟已儲存的搜尋 |
-| `?` | 顯示鍵盤快速鍵 |
-| 選單鍵或 `Shift+F10` | 為焦點所在的列或資料夾開啟右鍵選單 |
+| <Shortcut id="manager.select_all" /> | 選取篩選器顯示的所有列 (包括所有頁面) |
+| <Shortcut id="manager.clear_selection" /> | 清除選取，或關閉對話方塊或選單 |
+| <Shortcut id="manager.open" /> | 開啟選取的資料夾，或在分頁中開啟選取的書籤 |
+| <Shortcut id="manager.open_in_new_tabs" /> | 在新的背景分頁中開啟選取的項目 |
+| <Shortcut id="manager.open_in_new_window" /> | 在新視窗中開啟選取的項目 |
+| <Shortcut id="manager.rename" /> | 編輯選取的書籤，或重新命名資料夾 |
+| <Shortcut id="manager.delete" /> | 刪除選取的項目 |
+| <Shortcut id="manager.undo" /> | 復原上一個變更 |
+| <Shortcut id="manager.redo" /> | 重做 |
+| <Shortcut id="manager.copy" /> | 複製選取的項目；其網址會放到剪貼簿 |
+| <Shortcut id="manager.cut" /> | 剪下選取的項目，以便用貼上來移動 |
+| <Shortcut id="manager.paste" /> | 貼在選取的項目後面，或貼到資料夾的最後面；在其他應用程式中複製的網址會變成書籤 |
+| <Shortcut id="manager.open_saved_searches" /> | 開啟已儲存的搜尋 |
+| <Shortcut id="manager.show_help" /> | 顯示鍵盤快速鍵 |
+| 選單鍵或 <Shortcut id="browser.context_menu" /> | 為焦點所在的列或資料夾開啟右鍵選單 |
 
 在左側的資料夾樹狀結構中 (它同樣是一個 `Tab` 停駐點)：
 
@@ -65,11 +65,11 @@ description: 不使用滑鼠即可搜尋、在資料夾之間移動、儲存目�
 | --- | --- |
 | `↓` / `↑`、`Home` / `End` | 在顯示的資料夾之間移動 |
 | `→` / `←` | 展開或收合資料夾；在已展開的資料夾上按 `→` 會移至其第一個子資料夾，在已收合的資料夾上按 `←` 則會移至上層資料夾 |
-| `Enter` 或 `Space` / `Cmd+O` 或 `Space` | 在表格中顯示該資料夾 |
-| `F2` / `Enter` | 重新命名資料夾 |
-| `Delete` / `Delete` 或 `Cmd+Backspace` | 刪除資料夾 |
-| `Ctrl+C`、`Ctrl+X` / `Cmd+C`、`Cmd+X` | 複製或剪下資料夾 |
-| `Ctrl+V` / `Cmd+V` | 貼到資料夾中 |
+| <Shortcut id="manager.open" /> 或 `Space` | 在表格中顯示該資料夾 |
+| <Shortcut id="manager.rename" /> | 重新命名資料夾 |
+| <Shortcut id="manager.delete" /> | 刪除資料夾 |
+| <Shortcut id="manager.copy" />、<Shortcut id="manager.cut" /> | 複製或剪下資料夾 |
+| <Shortcut id="manager.paste" /> | 貼到資料夾中 |
 
 按 `Tab` 時，表格是一個停駐點；方向鍵可在其中的列之間移動。一次開啟超過 15 個分頁時會先詢問；開啟資料夾時，會開啟其中直接包含的書籤。在表格中，將焦點移至欄標頭的邊緣，然後按下 `←` 或 `→` 即可調整該欄的寬度。
 

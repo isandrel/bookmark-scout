@@ -3,16 +3,16 @@ title: Raccourcis clavier
 description: Recherchez, parcourez les dossiers, enregistrez la page actuelle et utilisez le tableau du gestionnaire sans souris.
 ---
 
-Les raccourcis de la fenêtre pop-up et du panneau latéral n'utilisent jamais `Ctrl` ni `Cmd` : les raccourcis du navigateur tels que `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` et `D` continuent donc de fonctionner. Le gestionnaire de favoris remplace celui du navigateur : il reprend donc aussi les raccourcis `Ctrl` de ce gestionnaire (`Cmd` sur Mac) pour tout sélectionner, copier, couper, coller, annuler, rétablir et ouvrir dans de nouveaux onglets. Les raccourcis sont suspendus pendant que vous saisissez du texte dans un champ (à l'exception de `Esc` dans le champ de recherche), pendant qu'un éditeur de méthode de saisie compose du texte, et lorsqu'une boîte de dialogue ou un menu est ouvert.
+Les raccourcis de la fenêtre pop-up et du panneau latéral n'utilisent jamais `Ctrl` ni `Cmd` : les raccourcis du navigateur qui utilisent ces touches, comme ceux qui ouvrent un nouvel onglet ou la barre d'adresse, continuent donc de fonctionner. Le gestionnaire de favoris remplace celui du navigateur : il reprend donc aussi les raccourcis `Ctrl` de ce gestionnaire (`Cmd` sur Mac) pour tout sélectionner, copier, couper, coller, annuler, rétablir et ouvrir dans de nouveaux onglets. Les raccourcis sont suspendus pendant que vous saisissez du texte dans un champ (à l'exception de `Esc` dans le champ de recherche), pendant qu'un éditeur de méthode de saisie compose du texte, et lorsqu'une boîte de dialogue ou un menu est ouvert.
 
 ## Sur n'importe quelle page [#on-any-page]
 
-Ces raccourcis fonctionnent sans qu'aucune fenêtre Bookmark Scout soit ouverte. Ils appartiennent à votre navigateur : vous pouvez donc les modifier ou les supprimer dans ses paramètres de raccourcis ; consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save). Dans Chrome et Edge, vous pouvez aussi attribuer à l'enregistrement rapide la touche de favori du navigateur, `Ctrl+D` (`⌘D` sur Mac) ; consultez [Utiliser Ctrl+D pour l'enregistrement rapide](/guides/save-and-organize#ctrl-d).
+Ces raccourcis fonctionnent sans qu'aucune fenêtre Bookmark Scout soit ouverte. Ils appartiennent à votre navigateur : vous pouvez donc les modifier ou les supprimer dans ses paramètres de raccourcis ; consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save). Dans Chrome et Edge, vous pouvez aussi attribuer à l'enregistrement rapide la touche de favori du navigateur, <Shortcut id="browser.bookmark_page" /> ; consultez [Utiliser la touche des favoris pour l'enregistrement rapide](/guides/save-and-organize#ctrl-d).
 
 | Touche | Action |
 | --- | --- |
-| `Alt+Shift+S` (`⌥⇧S` sur Mac) | Enregistrer rapidement la page actuelle dans le dossier défini par **Dossier d'enregistrement rapide** |
-| `Alt+Shift+D` (`⌥⇧D` sur Mac) | Enregistrer rapidement la page actuelle dans le dossier suggéré par l'IA |
+| <Shortcut id="commands.quick-save" /> | Enregistrer rapidement la page actuelle dans le dossier défini par **Dossier d'enregistrement rapide** |
+| <Shortcut id="commands.ai-quick-save" /> | Enregistrer rapidement la page actuelle dans le dossier suggéré par l'IA |
 
 Dans la notification qui s'affiche ensuite, `Tab` atteint **Annuler** et les autres dossiers, et `Esc` la ferme.
 
@@ -22,10 +22,10 @@ Survolez le champ de recherche pour afficher un aide-mémoire.
 
 | Touche | Action |
 | --- | --- |
-| `/` | Placer le curseur dans le champ de recherche |
+| <Shortcut id="popup.focus_search" /> | Placer le curseur dans le champ de recherche |
 | `Esc` dans le champ de recherche | Effacer la recherche ; appuyez à nouveau pour quitter le champ |
 | `↓` dans le champ de recherche | Accéder au premier dossier |
-| `Alt+↓` dans le champ de recherche vide | Afficher les recherches récentes ; `↓` / `↑` en sélectionnent une, `Enter` la relance, `Tab` atteint **Effacer** |
+| <Shortcut id="popup.recent_searches" /> dans le champ de recherche vide | Afficher les recherches récentes ; `↓` / `↑` en sélectionnent une, `Enter` la relance, `Tab` atteint **Effacer** |
 | `↓` / `↑`, `Home` / `End` | Se déplacer entre les dossiers et favoris visibles (`↑` sur la première ligne ramène à la recherche) |
 | `→` / `←` | Ouvrir ou fermer un dossier ; sur un dossier ouvert, `→` accède à son premier élément, et `←` accède au dossier parent |
 | `Enter` sur un dossier | Enregistrer la page actuelle dans ce dossier (une page qui y est déjà enregistrée n'est pas dupliquée) |
@@ -34,30 +34,30 @@ Survolez le champ de recherche pour afficher un aide-mémoire.
 
 ## Gestionnaire de favoris [#bookmarks-manager]
 
-Appuyez sur `?`, ou cliquez sur le bouton en forme de clavier dans l'en-tête, pour afficher cette liste dans le gestionnaire. Les touches suivent celles du gestionnaire de favoris de Chrome ; lorsqu'une touche diffère sur Mac, elle est indiquée en second.
+Appuyez sur <Shortcut id="manager.show_help" />, ou cliquez sur le bouton en forme de clavier dans l'en-tête, pour afficher cette liste dans le gestionnaire. Les touches suivent celles du gestionnaire de favoris de Chrome.
 
 | Touche | Action |
 | --- | --- |
-| `/` | Placer le curseur dans le filtre des titres |
-| `Backspace` ou `Alt+↑` | Accéder au dossier parent |
-| `↓` / `↑`, `Home` / `End` | Se déplacer entre les lignes et sélectionner la ligne ; avec `Shift`, étendre la sélection ; avec `Ctrl` (`Cmd`), se déplacer sans sélectionner |
-| `j` / `k` | Passer à la ligne suivante ou précédente |
+| <Shortcut id="manager.focus_filter" /> | Placer le curseur dans le filtre des titres |
+| <Shortcut id="manager.parent_folder" /> | Accéder au dossier parent |
+| `↓` / `↑`, `Home` / `End` | Se déplacer entre les lignes et sélectionner la ligne ; avec `Shift`, étendre la sélection ; avec `Ctrl` (`Cmd` sur Mac), se déplacer sans sélectionner |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | Passer à la ligne suivante ou précédente |
 | `Space` | Sélectionner ou désélectionner la ligne active |
-| `Ctrl+A` / `Cmd+A` | Sélectionner toutes les lignes affichées par les filtres, sur toutes les pages |
-| `Esc` | Effacer la sélection, ou fermer une boîte de dialogue ou un menu |
-| `Enter` / `Cmd+O` | Ouvrir le dossier sélectionné, ou les favoris sélectionnés dans des onglets |
-| `Ctrl+Enter` / `Cmd+Enter` | Ouvrir la sélection dans de nouveaux onglets en arrière-plan |
-| `Shift+Enter` | Ouvrir la sélection dans une nouvelle fenêtre |
-| `F2` / `Enter` | Modifier le favori sélectionné, ou renommer le dossier |
-| `Delete` / `Delete` ou `Cmd+Backspace` | Supprimer la sélection |
-| `Ctrl+Z` / `Cmd+Z` | Annuler la dernière modification |
-| `Ctrl+Y` ou `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Rétablir |
-| `Ctrl+C` / `Cmd+C` | Copier la sélection ; ses URL sont placées dans le presse-papiers |
-| `Ctrl+X` / `Cmd+X` | Couper la sélection, pour la déplacer en la collant |
-| `Ctrl+V` / `Cmd+V` | Coller après la sélection, ou à la fin du dossier ; les URL copiées dans une autre application deviennent des favoris |
-| `s` | Ouvrir les recherches enregistrées |
-| `?` | Afficher les raccourcis clavier |
-| Touche Menu ou `Shift+F10` | Ouvrir le menu contextuel de la ligne ou du dossier actif |
+| <Shortcut id="manager.select_all" /> | Sélectionner toutes les lignes affichées par les filtres, sur toutes les pages |
+| <Shortcut id="manager.clear_selection" /> | Effacer la sélection, ou fermer une boîte de dialogue ou un menu |
+| <Shortcut id="manager.open" /> | Ouvrir le dossier sélectionné, ou les favoris sélectionnés dans des onglets |
+| <Shortcut id="manager.open_in_new_tabs" /> | Ouvrir la sélection dans de nouveaux onglets en arrière-plan |
+| <Shortcut id="manager.open_in_new_window" /> | Ouvrir la sélection dans une nouvelle fenêtre |
+| <Shortcut id="manager.rename" /> | Modifier le favori sélectionné, ou renommer le dossier |
+| <Shortcut id="manager.delete" /> | Supprimer la sélection |
+| <Shortcut id="manager.undo" /> | Annuler la dernière modification |
+| <Shortcut id="manager.redo" /> | Rétablir |
+| <Shortcut id="manager.copy" /> | Copier la sélection ; ses URL sont placées dans le presse-papiers |
+| <Shortcut id="manager.cut" /> | Couper la sélection, pour la déplacer en la collant |
+| <Shortcut id="manager.paste" /> | Coller après la sélection, ou à la fin du dossier ; les URL copiées dans une autre application deviennent des favoris |
+| <Shortcut id="manager.open_saved_searches" /> | Ouvrir les recherches enregistrées |
+| <Shortcut id="manager.show_help" /> | Afficher les raccourcis clavier |
+| Touche Menu ou <Shortcut id="browser.context_menu" /> | Ouvrir le menu contextuel de la ligne ou du dossier actif |
 
 Dans l'arborescence des dossiers, à gauche, qui constitue elle aussi un seul arrêt de `Tab` :
 
@@ -65,11 +65,11 @@ Dans l'arborescence des dossiers, à gauche, qui constitue elle aussi un seul ar
 | --- | --- |
 | `↓` / `↑`, `Home` / `End` | Se déplacer entre les dossiers affichés |
 | `→` / `←` | Ouvrir ou fermer un dossier ; sur un dossier ouvert, `→` accède à son premier sous-dossier, et sur un dossier fermé, `←` accède au dossier parent |
-| `Enter` ou `Space` / `Cmd+O` ou `Space` | Afficher le dossier dans le tableau |
-| `F2` / `Enter` | Renommer le dossier |
-| `Delete` / `Delete` ou `Cmd+Backspace` | Supprimer le dossier |
-| `Ctrl+C`, `Ctrl+X` / `Cmd+C`, `Cmd+X` | Copier ou couper le dossier |
-| `Ctrl+V` / `Cmd+V` | Coller dans le dossier |
+| <Shortcut id="manager.open" />, ou `Space` | Afficher le dossier dans le tableau |
+| <Shortcut id="manager.rename" /> | Renommer le dossier |
+| <Shortcut id="manager.delete" /> | Supprimer le dossier |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | Copier ou couper le dossier |
+| <Shortcut id="manager.paste" /> | Coller dans le dossier |
 
 Le tableau constitue un seul arrêt lorsque vous appuyez sur `Tab` ; les touches fléchées parcourent ses lignes. Ouvrir plus de 15 onglets à la fois demande d'abord une confirmation ; un dossier ouvre les favoris qui se trouvent directement à l'intérieur. Dans le tableau, placez le curseur sur le bord d'un en-tête de colonne et appuyez sur `←` ou `→` pour redimensionner cette colonne.
 

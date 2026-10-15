@@ -13,7 +13,7 @@ Eine Referenzliste dessen, was jetzt verfügbar ist. Schritt-für-Schritt-Anleit
 | Seitenleiste | Dieselbe Ansicht in der Seitenleiste des Browsers (in Firefox in der Sidebar), die beim Surfen geöffnet bleibt |
 | Lesezeichen-Manager | Ersetzt in Chrome und Edge die Lesezeichenseite des Browsers: Ordnerbaum, Pfadnavigation, eine Lesezeichentabelle und die **Tools**-Leiste. In einem schmalen Fenster öffnen sich der Ordnerbaum und **Tools** über der Tabelle; bei einem tiefen Ordnerpfad werden die mittleren Ordner in ein Menü **…** eingeklappt |
 | Einstellungen | Die Optionsseite der Erweiterung mit zehn Tabs. Siehe [Einstellungen](/settings) |
-| Jede Seite | `Alt+Shift+S` und `Alt+Shift+D` speichern die aktuelle Seite schnell, mit einer Benachrichtigung auf der Seite |
+| Jede Seite | <Shortcut id="commands.quick-save" /> und <Shortcut id="commands.ai-quick-save" /> speichern die aktuelle Seite schnell, mit einer Benachrichtigung auf der Seite |
 | Rechtsklickmenü | **Lesezeichen speichern in...** bei jedem Link, sobald Sie **Rechtsklickmenü** aktivieren |
 
 ## Finden [#find]
@@ -29,7 +29,7 @@ Anleitung: [Suche und gespeicherte Suchen](/guides/search).
 
 - Die aktuelle Seite in einem beliebigen Ordner speichern, nie zweimal im selben Ordner, mit einem Bereich **Zuletzt verwendet**, der die zuletzt genutzten Ordner zeigt.
 - Einen Teil eines Ordnernamens oder einen Pfad wie `work/react` eingeben und in einem der passenden Ordner speichern, die über den Ergebnissen aufgelistet sind.
-- Mit `Alt+Shift+S` auf jeder Seite schnell speichern, und zwar im Ordner, der am besten zur Seite passt (auf Ihrem Gerät ermittelt), im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl; `Alt+Shift+D` speichert im ersten KI-Vorschlag. Eine Benachrichtigung auf der Seite bietet **Rückgängig** und unter **Verschieben nach** weitere Ordner an. In Chrome und Edge können Sie dem Schnellspeichern `Ctrl+D` zuweisen.
+- Mit <Shortcut id="commands.quick-save" /> auf jeder Seite schnell speichern, und zwar im Ordner, der am besten zur Seite passt (auf Ihrem Gerät ermittelt), im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl; <Shortcut id="commands.ai-quick-save" /> speichert im ersten KI-Vorschlag. Eine Benachrichtigung auf der Seite bietet **Rückgängig** und unter **Verschieben nach** weitere Ordner an. In Chrome und Edge können Sie dem Schnellspeichern <Shortcut id="browser.bookmark_page" /> zuweisen.
 - Links über das Rechtsklickmenü in einem zuletzt verwendeten Ordner oder in der Lesezeichenleiste speichern.
 - Ordner erstellen, Lesezeichen und Ordner per Drag-and-drop verschieben und im Manager mehrere auf einmal verschieben.
 - Nach Hinzufügedatum, natürlicher alphabetischer Reihenfolge oder mit Ordnern zuerst sortieren, ohne die im Browser gespeicherte Reihenfolge zu ändern.
@@ -67,7 +67,7 @@ Anleitung: [Import und Export](/guides/import-export).
 
 Standardmäßig deaktiviert. Verwenden Sie Ihren eigenen Schlüssel für OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter oder rund 200 weitere Anbieter aus dem models.dev-Katalog, oder nutzen Sie Ollama, CLIProxyAPI oder einen beliebigen OpenAI-kompatiblen Endpunkt.
 
-- Ordnervorschläge im Pop-up, einschließlich eines geprüften neuen Ordnerpfads, und das Tastenkürzel `Alt+Shift+D` zum Schnellspeichern.
+- Ordnervorschläge im Pop-up, einschließlich eines geprüften neuen Ordnerpfads, und das Tastenkürzel <Shortcut id="commands.ai-quick-save" /> zum Schnellspeichern.
 - **KI fragen** im Pop-up und in der Seitenleiste: beantwortet Fragen, indem es Ihre Lesezeichen, Ordner, Tags und Zusammenfassungen durchsucht, Duplikate findet und Links prüft; speichert Seiten und schlägt Verschiebungen, Umbenennungen, Löschungen und neue Ordner als Plan vor, der nichts ändert, bis Sie zustimmen, wobei sich jede Änderung rückgängig machen lässt; und beendet Antworten mit Schaltflächen für die nächsten Schritte. **Was „KI fragen“ tun darf** in den Einstellungen schaltet jede Abfrage oder Änderung einzeln ab.
 - **Automatische Tags** und **Inhaltszusammenfassung** für den aktuellen Ordner, erst nach Ihrer Prüfung gespeichert, mit Rückgängig.
 - **KI-Ordnerneuordnung**, mit Vorschau, bevor etwas verschoben wird, mit Rückgängig.
@@ -84,10 +84,10 @@ Anleitung: [Mit lokalen KI-Agenten verwenden](/guides/local-agents).
 ## Tastatur und Sprache [#keyboard-and-language]
 
 - Tastenkürzel zum Schnellspeichern auf jeder Seite, die Sie in den Tastenkürzel-Einstellungen des Browsers ändern können, in Firefox direkt in den Einstellungen von Bookmark Scout.
-- Tastenkombinationen im Pop-up und in der Seitenleiste, die nie `Ctrl` oder `Cmd` verwenden, und im Manager die Tasten des Chrome-Lesezeichen-Managers (alles auswählen, rückgängig machen, wiederholen, in Tabs öffnen), dort mit einem Hilfedialog unter `?`. Siehe [Tastenkombinationen](/guides/keyboard-shortcuts).
-- Auswahl im Manager wie in Chrome: Klick, `Ctrl`+Klick, `Shift`+Klick und `Ctrl+A`; die Pfeiltasten bewegen sich durch die Tabelle und den Ordnerbaum, den Screenreader als Baum vorlesen.
-- Rückgängigmachen und Wiederholen von Bearbeitungen, Verschiebungen und Löschungen im Manager mit `Ctrl+Z` und `Ctrl+Y`, für die gesamte Browsersitzung.
+- Tastenkombinationen im Pop-up und in der Seitenleiste, die nie `Ctrl` oder `Cmd` verwenden, und im Manager die Tasten des Chrome-Lesezeichen-Managers (alles auswählen, rückgängig machen, wiederholen, in Tabs öffnen), dort mit einem Hilfedialog unter <Shortcut id="manager.show_help" />. Siehe [Tastenkombinationen](/guides/keyboard-shortcuts).
+- Auswahl im Manager wie in Chrome: Klick, `Ctrl`+Klick, `Shift`+Klick und <Shortcut id="manager.select_all" />; die Pfeiltasten bewegen sich durch die Tabelle und den Ordnerbaum, den Screenreader als Baum vorlesen.
+- Rückgängigmachen und Wiederholen von Bearbeitungen, Verschiebungen und Löschungen im Manager mit <Shortcut id="manager.undo" /> und <Shortcut id="manager.redo" />, für die gesamte Browsersitzung.
 - Rechtsklickmenüs für die Zeilen und Ordner des Managers: Ausschneiden, Kopieren und Einfügen, alle in Tabs, einem neuen Fenster oder einem Inkognitofenster öffnen, Umbenennen und Löschen; dazu **Nach Name sortieren** sowie **Neues Lesezeichen hinzufügen** oder **Neuen Ordner hinzufügen**. **Menüs der Lesezeichenverwaltung** in den Einstellungen legt fest, welche Befehle sie zeigen und in welcher Reihenfolge.
-- Drag-and-drop im Manager wie in Chrome: auf Ordner in der Tabelle oder im Baum, zwischen Zeilen in der Browserreihenfolge und Links aus anderen Seiten hinein; `Ctrl/Cmd+C`, `X` und `V` kopieren, verschieben und fügen ein.
+- Drag-and-drop im Manager wie in Chrome: auf Ordner in der Tabelle oder im Baum, zwischen Zeilen in der Browserreihenfolge und Links aus anderen Seiten hinein; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> und <Shortcut id="manager.paste" /> kopieren, verschieben und fügen ein.
 - Design System, Hell oder Dunkel.
 - Englisch, vereinfachtes Chinesisch, traditionelles Chinesisch, Japanisch, Koreanisch, Spanisch, Deutsch, Französisch und brasilianisches Portugiesisch.
