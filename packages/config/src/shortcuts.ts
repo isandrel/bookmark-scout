@@ -298,7 +298,7 @@ export function shortcutPlaceholderText(config: ShortcutConfig, argument: string
  * `{{SHORTCUT:<id>}}` and `{{SHORTCUT_MAC:<id>}}` (optionally `<id>#<n>`) in website messages and
  * README templates: the shortcut's keys elsewhere and on a Mac.
  */
-export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(_MAC)?:([^}]+)\}\}/g;
+export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(_MAC)?:([A-Za-z0-9_.#-]+)\}\}/g;
 
 /** Replaces every shortcut placeholder in `text`; throws for an unknown shortcut. */
 export function fillShortcutPlaceholders(text: string, config: ShortcutConfig): string {

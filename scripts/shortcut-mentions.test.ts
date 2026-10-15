@@ -66,7 +66,10 @@ describe("every shortcut named exists in the config", () => {
 
 	test("{{SHORTCUT:<id>}} in website messages and README templates", () => {
 		for (const file of [...websiteMessages, ...templates]) {
-			for (const [, , argument] of readFileSync(file, "utf8").matchAll(SHORTCUT_PLACEHOLDER)) {
+			const text = readFileSync(file, "utf8");
+			// A misspelled placeholder would stay in the page as text.
+			expect(text.split("{{SHORTCUT").length - 1, relative(root, file)).toBe([...text.matchAll(SHORTCUT_PLACEHOLDER)].length);
+			for (const [, , argument] of text.matchAll(SHORTCUT_PLACEHOLDER)) {
 				const id = (argument ?? "").split("#")[0] ?? "";
 				expect(() => shortcutText(config, id), relative(root, file)).not.toThrow();
 			}
