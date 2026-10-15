@@ -6050,5 +6050,57 @@
                 "example": "Folders First"
             }
         }
+    },
+    "welcome_pageTitle": {
+        "message": "歡迎",
+        "description": "Browser tab title of the welcome page opened once after install"
+    },
+    "welcome_heading": {
+        "message": "Bookmark Scout 已準備就緒",
+        "description": "Main heading of the welcome page"
+    },
+    "welcome_intro": {
+        "message": "只要按幾個鍵，就能把頁面儲存到合適的資料夾。依照以下步驟開始。",
+        "description": "Line under the welcome page heading"
+    },
+    "welcome_pinTitle": {
+        "message": "將 Bookmark Scout 釘選到工具列",
+        "description": "Welcome page step shown while the extension is not pinned to the toolbar"
+    },
+    "welcome_pinBody": {
+        "message": "按一下網址列旁的「擴充功能」按鈕（拼圖圖示），再按一下 Bookmark Scout 旁的圖釘。之後只要按一下就能開啟。",
+        "description": "How to pin the extension: the browser's Extensions button is a puzzle piece in Chrome and Edge, and Firefox has an Extensions button too"
+    },
+    "welcome_saveTitle": {
+        "message": "儲存頁面",
+        "description": "Welcome page step about saving the current page from the popup"
+    },
+    "welcome_saveBody": {
+        "message": "在任何頁面按一下 Bookmark Scout 圖示，輸入資料夾名稱的一部分。按 Enter 或按一下該資料夾，就能把頁面儲存到那裡。",
+        "description": "How to save a page: open the toolbar popup and type part of a folder name"
+    },
+    "welcome_shortcutTitle": {
+        "message": "你的快速儲存快捷鍵",
+        "description": "Welcome page step about the quick save keyboard shortcut"
+    },
+    "welcome_shortcutBody": {
+        "message": "在任何頁面按下這些鍵，不必開啟任何介面，就能把頁面儲存到最合適的資料夾：",
+        "description": "Text before the quick save keys on the welcome page"
+    },
+    "welcome_shortcutNotSet": {
+        "message": "由於其他擴充功能已使用預設按鍵，快速儲存還沒有快捷鍵。請自行選擇按鍵：",
+        "description": "Welcome page text when the browser left quick save without keys (another extension took them)"
+    },
+    "welcome_managerNote": {
+        "message": "現在開啟瀏覽器的書籤頁面，會顯示 Bookmark Scout。",
+        "description": "Welcome page line in Chrome and Edge: the extension replaces the browser's own Bookmarks page"
+    },
+    "welcome_openSettings": {
+        "message": "開啟設定",
+        "description": "Welcome page button that opens the extension's settings"
+    },
+    "welcome_readGuide": {
+        "message": "閱讀指南",
+        "description": "Welcome page link to the online documentation"
     }
 }

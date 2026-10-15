@@ -6,6 +6,7 @@ import { adaptManifestV2, createManifest } from './manifest.config';
 import { tomlConfig } from './build/toml-config';
 import { compactDistributionLocales } from './build/distribution-assets';
 import { createProviderLogoAssets } from './build/provider-logo-assets';
+import { siteDefines } from './build/site-defines';
 
 const providerLogos = createProviderLogoAssets(path.resolve(__dirname, './public'));
 
@@ -85,6 +86,7 @@ export default defineConfig({
 
     vite: () => ({
         plugins: [tomlConfig(), providerLogos.plugin, react()],
+        define: siteDefines,
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, './src'),
