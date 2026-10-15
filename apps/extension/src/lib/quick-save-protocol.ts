@@ -13,6 +13,10 @@ export const QUICK_SAVE_MESSAGE = {
   hostReadPage: 'quick-save/ai-host-read-page',
   /** The AI host page asks the background to send one provider request for it. */
   hostFetch: 'quick-save/ai-host-fetch',
+  /** The AI host page reports a call to the built-in model for the AI activity log. */
+  hostActivity: 'quick-save/ai-host-activity',
+  /** The AI host page's warm built-in session went idle, so the page can close. */
+  hostIdle: 'quick-save/ai-host-idle',
 } as const;
 
 /**
@@ -106,9 +110,30 @@ export type QuickSaveHostFetchResponse =
  * each (`AI_HOST_SCHEMAS` in `quick-save-ai-runner.ts`). A new structured AI call from the
  * background is a new name here and a schema there.
  */
-export const AI_HOST_SCHEMA_NAMES = ['folderRecommendations'] as const;
+export const AI_HOST_SCHEMA_NAMES = [
+  'folderRecommendations',
+  // Ids picked from `choices` (the browser's built-in model choosing among shortlisted folders).
+  'folderIds',
+] as const;
 
 export type AIHostSchemaName = (typeof AI_HOST_SCHEMA_NAMES)[number];
+
+/**
+ * One call to the browser's built-in model in the AI host page, which the background records in
+ * the AI activity log (the page cannot reach storage, and no fetch passes through the background).
+ */
+export type QuickSaveHostActivityMessage = {
+  type: typeof QUICK_SAVE_MESSAGE.hostActivity;
+  /** The token of the AI call in progress; entries outside one are refused. */
+  token: string;
+  input: string;
+  output?: string;
+  error?: string;
+  durationMs: number;
+};
+
+/** The AI host page's warm built-in session went idle; the background may close the page. */
+export type QuickSaveHostIdleMessage = { type: typeof QUICK_SAVE_MESSAGE.hostIdle };
 
 /** A message for the AI host page: one structured AI call, or reading one page's text. */
 export type QuickSaveHostRequest =
@@ -121,6 +146,9 @@ export type QuickSaveHostRequest =
       /** The locale error messages are written in; the host page cannot read the settings. */
       locale: string;
       schema: AIHostSchemaName;
+      /** For `folderIds`: the ids the answer may hold, and how many at most. */
+      choices?: string[];
+      maxChoices?: number;
       system: string;
       prompt: string;
     }

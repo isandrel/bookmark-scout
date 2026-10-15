@@ -16,6 +16,8 @@ export async function createAIModel(
   source: AIActivitySource = 'ai',
   /** Sends the requests instead of the logging fetch; see `AIModelRequest.transport`. */
   transport?: typeof globalThis.fetch,
+  /** Sessions and logging for the browser's built-in model; see `AIModelRequest.onDevice`. */
+  onDevice?: BuiltinOnDeviceOptions,
 ): Promise<LanguageModel> {
   validateAISettings(settings);
 
@@ -32,13 +34,16 @@ export async function createAIModel(
       const { createBuiltinModel } = await import('./builtin-ai-model.lazy');
       return createBuiltinModel({
         modelId,
-        onCall: (call) =>
-          void recordOnDeviceActivity({
-            ...call,
-            source,
-            provider: settings.provider,
-            model: modelId,
-          }),
+        openSession: onDevice?.openSession,
+        onCall:
+          onDevice?.log ??
+          ((call) =>
+            void recordOnDeviceActivity({
+              ...call,
+              source,
+              provider: settings.provider,
+              model: modelId,
+            })),
       });
     }
     case 'ollama': {
@@ -87,20 +92,20 @@ export async function createAIModel(
  * surviving auto-import name as a missed import.
  */
 export async function requestAIObject<T>(request: AIObjectRequest<T>): Promise<{ object: T }> {
-  const { settings, source, transport, ...options } = request;
+  const { settings, source, transport, onDevice, ...options } = request;
   const { object } = await generateObject({
     ...options,
-    model: await createAIModel(settings, source, transport),
+    model: await createAIModel(settings, source, transport, onDevice),
   });
   return { object };
 }
 
 /** `generateText` on the model for `request.settings`, for Verify Service's one-word prompt. */
 export async function requestAIText(request: AITextRequest): Promise<{ text: string }> {
-  const { settings, source, transport, ...prompt } = request;
+  const { settings, source, transport, onDevice, ...prompt } = request;
   const { text } = await generateText({
     ...prompt,
-    model: await createAIModel(settings, source, transport),
+    model: await createAIModel(settings, source, transport, onDevice),
   });
   return { text };
 }

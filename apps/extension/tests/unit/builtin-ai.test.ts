@@ -23,6 +23,7 @@ import { isAISetUp, pickAIService } from '@/services/ai-settings';
 import {
   builtinAIConfig,
   canOfferBuiltinAI,
+  createWarmBuiltinSessions,
   downloadBuiltinAIModel,
   getBuiltinAIStatus,
   getBuiltinAIUnavailableReason,
@@ -272,6 +273,78 @@ describe('[mocked provider contract] built-in model adapter', () => {
       responseBody: '{"folders":["12"]}',
     });
     expect(entry?.requestBody).toContain('Page title: Bun');
+  });
+});
+
+describe('warm built-in sessions for AI quick save', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('loads the instructions once and starts each call from a copy', async () => {
+    const fake = installFakeLanguageModel();
+    const warm = createWarmBuiltinSessions({ idleMs: 60_000, onIdle: vi.fn() });
+    await warm.open('Pick folders.', undefined);
+    await warm.open('Pick folders.', undefined);
+    expect(fake.creates).toHaveLength(1);
+    expect(fake.creates[0]?.initialPrompts).toEqual([{ role: 'system', content: 'Pick folders.' }]);
+    expect(fake.clones).toBe(2);
+
+    // Other instructions replace the base session.
+    await warm.open('Pick three folders.', undefined);
+    expect(fake.creates).toHaveLength(2);
+    await vi.waitFor(() => expect(fake.destroyed).toBe(1));
+    warm.dispose();
+  });
+
+  it('destroys the base session after the idle time and says so', async () => {
+    vi.useFakeTimers();
+    const fake = installFakeLanguageModel();
+    const onIdle = vi.fn();
+    const warm = createWarmBuiltinSessions({ idleMs: 1000, onIdle });
+    await warm.open('Pick folders.', undefined);
+    await vi.advanceTimersByTimeAsync(999);
+    expect(onIdle).not.toHaveBeenCalled();
+    // A call restarts the idle time.
+    await warm.open('Pick folders.', undefined);
+    await vi.advanceTimersByTimeAsync(999);
+    expect(onIdle).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(onIdle).toHaveBeenCalledOnce();
+    expect(fake.destroyed).toBe(1);
+    // The next call loads the instructions again.
+    await warm.open('Pick folders.', undefined);
+    expect(fake.creates).toHaveLength(2);
+    warm.dispose();
+  });
+
+  it('never creates a session, or starts a download, before the model is ready', async () => {
+    const fake = installFakeLanguageModel({ availability: 'downloadable' });
+    const warm = createWarmBuiltinSessions({ idleMs: 60_000, onIdle: vi.fn() });
+    await expect(warm.open('Pick folders.', undefined)).rejects.toThrow(
+      t('builtinAi_errorNotReady'),
+    );
+    expect(fake.creates).toEqual([]);
+    // Once ready, the next call works.
+    fake.options.availability = 'available';
+    await warm.open('Pick folders.', undefined);
+    expect(fake.clones).toBe(1);
+    warm.dispose();
+  });
+
+  it('the adapter uses the warm session only for calls that start from the instructions', async () => {
+    const fake = installFakeLanguageModel({ answer: '{"folders":["12"]}' });
+    const warm = createWarmBuiltinSessions({ idleMs: 60_000, onIdle: vi.fn() });
+    const model = createBuiltinModel({ modelId: 'gemini-nano', openSession: warm.open });
+    const schema = z.object({ folders: z.array(z.string()) });
+    for (const prompt of ['Page title: A', 'Page title: B']) {
+      await generateObject({ model, schema, system: 'Pick folders.', prompt });
+    }
+    expect(fake.creates).toHaveLength(1);
+    expect(fake.clones).toBe(2);
+    // Each copy is destroyed after its call; the base stays for the next one.
+    expect(fake.destroyed).toBe(2);
+    warm.dispose();
   });
 });
 

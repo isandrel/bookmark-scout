@@ -8,6 +8,18 @@ import { z } from 'zod';
 
 const messageId = z.string().min(1).max(100);
 
+/** The most ids a `folderIds` answer may choose from: the shortlist's largest allowed size. */
+const MAX_HOST_CHOICES = 100;
+
+export const quickSaveHostActivitySchema = z.strictObject({
+  type: z.literal(QUICK_SAVE_MESSAGE.hostActivity),
+  token: messageId,
+  input: z.string(),
+  output: z.string().optional(),
+  error: z.string().optional(),
+  durationMs: z.number().min(0),
+}) satisfies z.ZodType<QuickSaveHostActivityMessage>;
+
 export const quickSaveActionSchema = z.union([
   z.strictObject({
     type: z.literal(QUICK_SAVE_MESSAGE.action),
@@ -39,6 +51,8 @@ export const quickSaveHostRequestSchema = z.discriminatedUnion('type', [
     source: z.string().min(1).max(50),
     locale: z.string().min(2).max(10),
     schema: z.enum(AI_HOST_SCHEMA_NAMES),
+    choices: z.array(messageId).min(1).max(MAX_HOST_CHOICES).optional(),
+    maxChoices: z.number().int().min(1).max(MAX_HOST_CHOICES).optional(),
     system: z.string(),
     prompt: z.string(),
   }),

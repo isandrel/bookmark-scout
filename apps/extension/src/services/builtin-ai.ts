@@ -28,6 +28,9 @@ export const builtinAIConfig = readConfig(
       prompt: z.string().min(1),
       text_line: z.string().min(1),
     }),
+    quick_save: z.strictObject({
+      idle_timeout_ms: z.number().int().positive(),
+    }),
     requirements: z.strictObject({
       download_gb_gpu: z.number().positive(),
       download_gb_cpu: z.number().positive(),
@@ -48,6 +51,94 @@ export type BuiltinAIStatus = 'unsupported' | Availability;
 
 /** Why the model is `unavailable`, for Options. */
 export type BuiltinAIUnavailableReason = 'policy' | 'device';
+
+/** One finished call to the model, for the AI activity log. */
+export type BuiltinModelCall = {
+  /** The system prompt and the conversation as the model read them. */
+  input: string;
+  output?: string;
+  error?: string;
+  durationMs: number;
+};
+
+/**
+ * Opens the session for one call that starts from `system` alone, such as a copy of a warm session
+ * (`createWarmBuiltinSessions`); without one, each call creates its own.
+ */
+export type BuiltinSessionOpener = (
+  system: string,
+  signal: AbortSignal | undefined,
+) => Promise<LanguageModel>;
+
+/** Thrown before any session is created when the model is not downloaded and ready. */
+async function assertBuiltinModelReady(options: LanguageModelCreateCoreOptions): Promise<void> {
+  if ((await LanguageModel.availability(options)) !== 'available') {
+    throw new Error(t('builtinAi_errorNotReady'));
+  }
+}
+
+/**
+ * A new session for one call; fails without downloading anything when the model is not ready, so
+ * no caller but the Options download button ever starts the multi-gigabyte download.
+ */
+export async function createBuiltinSession(
+  initialPrompts: NonNullable<LanguageModelCreateOptions['initialPrompts']>,
+  signal: AbortSignal | undefined,
+): Promise<LanguageModel> {
+  const options = builtinAISessionOptions();
+  await assertBuiltinModelReady(options);
+  return LanguageModel.create({ ...options, initialPrompts, signal });
+}
+
+/**
+ * Warm sessions for AI quick save's host page: one base session with the instructions already
+ * read, copied (`clone()`) for each call, so a save skips loading the model and the instructions.
+ * A different system prompt replaces the base. After `idleMs` without a call the base is
+ * destroyed and `onIdle` runs (the host page then asks to be closed).
+ */
+export function createWarmBuiltinSessions({
+  idleMs,
+  onIdle,
+}: {
+  idleMs: number;
+  onIdle: () => void;
+}): { open: BuiltinSessionOpener; dispose: () => void } {
+  let warm: { system: string; base: Promise<LanguageModel> } | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  const dropBase = () => {
+    const old = warm;
+    warm = undefined;
+    void old?.base.then((session) => session.destroy()).catch(() => undefined);
+  };
+  const dispose = () => {
+    clearTimeout(timer);
+    timer = undefined;
+    dropBase();
+  };
+
+  const open: BuiltinSessionOpener = async (system, signal) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      dispose();
+      onIdle();
+    }, idleMs);
+    // The model may have been removed since the base was made: check before every copy.
+    await assertBuiltinModelReady(builtinAISessionOptions());
+    if (warm?.system !== system) {
+      dropBase();
+      const base = createBuiltinSession([{ role: 'system', content: system }], undefined);
+      warm = { system, base };
+      // A failed base is dropped, so the next call tries again.
+      base.catch(() => {
+        if (warm?.base === base) warm = undefined;
+      });
+    }
+    return (await warm.base).clone({ signal });
+  };
+
+  return { open, dispose };
+}
 
 /**
  * The options every session is checked and created with: text in the configured languages.

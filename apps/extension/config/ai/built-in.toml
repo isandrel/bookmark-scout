@@ -43,6 +43,11 @@ Folders (id: path):
 {{folders}}"""
 text_line = "Page text: {{text}}"
 
+[quick_save]
+# AI quick save keeps a session with the instructions loaded in its AI host page and starts each
+# save from a copy of it. Without a quick save for this long, the session and the page close (ms)
+idle_timeout_ms = 300000
+
 # What Chrome needs to run the model, shown in Options
 # (https://developer.chrome.com/docs/ai/get-started#hardware)
 [requirements]

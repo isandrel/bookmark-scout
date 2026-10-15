@@ -6532,5 +6532,9 @@
     "builtinAi_featureQuickSave": {
         "message": "Enregistrement rapide avec l'IA",
         "description": "Name of the AI quick save feature (the keyboard shortcut that saves the page to the folder AI picks), in a list of AI features"
+    },
+    "builtinAi_errorNoPick": {
+        "message": "L'IA intégrée n'a choisi aucun dossier.",
+        "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
     }
 }
