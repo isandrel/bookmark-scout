@@ -5935,7 +5935,7 @@
     },
     "settings_agentBridge": {
         "message": "本地 AI 智能体",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "允许本地 AI 智能体",
@@ -5963,19 +5963,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "本地智能体可以执行的操作",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "关闭你不希望智能体执行的操作，它将完全不会提供给智能体。更改还需要开启“允许更改”，并且每次都要等你批准。",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "桥接程序",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "在这台电脑上安装 bookmark-scout-mcp 程序，并运行一次“$1”。它会在你的浏览器中注册自己，并显示如何将它添加到 Claude Code、Codex 或 Cursor。",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "未运行。请打开上方的开关，并在浏览器询问时允许访问。",
@@ -6102,6 +6102,38 @@
     "welcome_readGuide": {
         "message": "阅读指南",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "常用设置",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "大多数人会更改的设置。其他设置都在“高级设置”下。",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "高级设置",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "AI 是可选的",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "Bookmark Scout 不用 AI 也能使用。若要让 AI 推荐文件夹并回答问题，请在“AI”中设置。",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "设置 AI",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "开发者选项",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "让你电脑上运行的 AI 智能体（如 Claude Code）使用你的书签",
+        "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
         "message": "搜索标题和网址",

@@ -1,0 +1,14 @@
+# Options > Essentials, the tab Options opens on: the few settings most people change, in display
+# order. Read by src/lib/settings-schema.ts.
+#
+# Each entry is a settings key (src/lib/settings-schema.ts). The setting stays in its own tab under
+# Advanced too, with the same stored value; Essentials only shows it a second time. Settings search
+# lists every setting once, in its own tab.
+settings = [
+  "quickSaveFolderStrategy",
+  "quickSaveFixedFolder",
+  "contextMenuEnabled",
+  "theme",
+  "language",
+  "confirmBeforeDelete",
+]

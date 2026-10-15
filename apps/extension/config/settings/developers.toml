@@ -1,0 +1,17 @@
+# Defaults for Options > For developers, one table per section. Nothing here runs until the user
+# turns it on.
+
+[agent_bridge]
+# Let AI agents on this computer (Claude Code, Codex, Cursor) look up bookmarks through the
+# bookmark-scout-mcp bridge the user installs. Needs native messaging, asked for when turned on.
+# Device settings: the bridge is installed on one computer.
+enabled = false
+# Let agents also save pages, propose changes, and undo them. Each change waits for the user's
+# approval in a Bookmark Scout window, whatever this says.
+writes = false
+# Hide private values (sensitive query parameters, tokens, email addresses) in the titles and URLs
+# agents receive, by the Privacy Scanner's rules.
+redact_urls = true
+# Actions local agents may not use, as action ids; empty lets them use all they are offered.
+# Edited in Options > For developers.
+disabled_actions = { default = [], max_items = 16, max_length = 20 }

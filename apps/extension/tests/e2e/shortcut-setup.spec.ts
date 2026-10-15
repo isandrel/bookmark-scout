@@ -282,7 +282,7 @@ test('Options points Chrome and Edge users to their extension on the browser sho
   page,
 }) => {
   await leaveAIQuickSaveUnset(page);
-  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=search`);
   const shortcuts = page.getByTestId('quick-save-shortcuts');
   await expect(shortcuts.getByTestId('shortcuts-page-hint')).toHaveText(
     'Find Bookmark Scout on that page.',

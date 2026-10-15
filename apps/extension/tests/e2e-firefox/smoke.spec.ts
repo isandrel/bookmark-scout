@@ -502,7 +502,8 @@ test('a quick save command without keys shows the popup notice, and Options reco
     'Quick save shortcut not set',
   );
 
-  await extension.open('options.html');
+  // The shortcut recorders are on Saving & Search, not on Essentials, where Options opens.
+  await extension.open('options.html?category=search');
   const recorder = '[data-command="ai-quick-save"] [data-slot="shortcut-recorder"]';
   await clickCentered(extension, recorder);
   await extension.driver
@@ -560,7 +561,7 @@ test('options saves a setting to sync storage and keeps it after reload', async 
   await setSettings(extension, { language: 'en', showFavicons: true });
 
   await extension.open('options.html');
-  // Saving & Search opens first; wait for the tabs, then switch to Appearance.
+  // Essentials opens first; wait for the tabs, then switch to Appearance.
   await extension.find('[role="tab"]');
   await extension.driver
     .findElement(By.xpath('//button[@role="tab" and normalize-space()="Appearance"]'))
@@ -608,7 +609,7 @@ test('AI waits for data collection consent, and there is no browser icon cache s
   await setSettings(extension, { language: 'en', aiEnabled: true });
   await extension.open('options.html');
   // Firefox has no icon cache for extensions, so that setting is absent from Appearance.
-  // Saving & Search opens first; wait for the tabs, then switch to Appearance.
+  // Essentials opens first; wait for the tabs, then switch to Appearance.
   await extension.find('[role="tab"]');
   await extension.driver
     .findElement(By.xpath('//button[@role="tab" and normalize-space()="Appearance"]'))

@@ -6141,7 +6141,7 @@
     },
     "settings_agentBridge": {
         "message": "Agentes de IA locales",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "Permitir agentes de IA locales",
@@ -6169,19 +6169,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "Qué pueden hacer los agentes locales",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "Desactiva lo que no quieras que hagan los agentes; entonces no se les ofrece en absoluto. Los cambios necesitan además Permitir cambios, y cada uno espera tu aprobación.",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "Programa puente",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "Instala el programa bookmark-scout-mcp en este equipo y ejecuta «$1» una vez. Se registra en tus navegadores y muestra cómo añadirlo a Claude Code, Codex o Cursor.",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "No se está ejecutando. Activa el interruptor de arriba y permite el acceso cuando el navegador lo pida.",
@@ -6308,6 +6308,38 @@
     "welcome_readGuide": {
         "message": "Leer la guía",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "Lo esencial",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "Los ajustes que más se cambian. Todo lo demás está en Avanzado.",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "Avanzado",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "La IA es opcional",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "Bookmark Scout funciona sin IA. Para que la IA sugiera carpetas y responda preguntas, configúrala en IA.",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "Configurar la IA",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "Para desarrolladores",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "Permite que los agentes de IA de tu equipo, como Claude Code, usen tus marcadores",
+        "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
         "message": "Buscar títulos y direcciones",

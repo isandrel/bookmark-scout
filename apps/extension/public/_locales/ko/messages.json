@@ -6133,7 +6133,7 @@
     },
     "settings_agentBridge": {
         "message": "로컬 AI 에이전트",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "로컬 AI 에이전트 허용",
@@ -6161,19 +6161,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "로컬 에이전트가 할 수 있는 일",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "에이전트가 하지 않기를 원하는 작업을 끄면 에이전트에 아예 제공되지 않습니다. 변경에는 변경 허용도 필요하며, 각 변경은 승인을 기다립니다.",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "브리지 프로그램",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "이 컴퓨터에 bookmark-scout-mcp 프로그램을 설치하고 “$1”을 한 번 실행하세요. 브라우저에 등록되고 Claude Code, Codex, Cursor에 추가하는 방법이 표시됩니다.",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "실행 중이 아닙니다. 위의 스위치를 켜고 브라우저가 물으면 접근을 허용하세요.",
@@ -6300,6 +6300,38 @@
     "welcome_readGuide": {
         "message": "가이드 읽기",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "기본 설정",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "가장 많이 바꾸는 설정입니다. 나머지는 모두 고급 설정에 있습니다.",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "고급 설정",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "AI는 선택 사항입니다",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "Bookmark Scout는 AI 없이도 작동합니다. AI가 폴더를 추천하고 질문에 답하게 하려면 AI에서 설정하세요.",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "AI 설정하기",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "개발자용",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "Claude Code처럼 내 컴퓨터에서 실행하는 AI 에이전트가 북마크를 사용하게 합니다",
+        "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
         "message": "제목과 주소 검색",

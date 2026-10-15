@@ -35,7 +35,7 @@ export default defineBackground(() => {
   // Quick save shortcuts; listeners must be added synchronously so a key press can wake the worker.
   registerQuickSave();
 
-  // Access for local AI agents, while the user has it on (Options > AI).
+  // Access for local AI agents, while the user has it on (Options > For developers).
   registerAgentApprovals();
   registerAgentBridge();
 

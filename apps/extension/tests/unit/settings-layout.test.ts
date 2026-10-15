@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   defaultSettings,
+  ESSENTIAL_SETTINGS,
+  ESSENTIALS_CATEGORY,
+  getEssentialsCategory,
   getSectionFields,
   getSettingsCategories,
   getSettingsFieldGroups,
@@ -8,6 +11,9 @@ import {
   isSettingShown,
   settingsSchema,
 } from '@/lib/settings-schema';
+import { readConfigToml } from '../config-files';
+
+type SettingKey = keyof typeof defaultSettings;
 
 // Device settings changed where they apply: the AI activity panel's recording switch and Ask AI's
 // web search button.
@@ -69,12 +75,53 @@ describe('Options layout', () => {
       const shown = group.fields.filter((key) => placed.includes(key));
       const owners = lists.filter((list) => shown.some((key) => list.includes(key)));
       expect(owners, group.id).toHaveLength(1);
-      expect(shown.every((key) => owners[0].includes(key)), group.id).toBe(true);
+      expect(
+        shown.every((key) => owners[0].includes(key)),
+        group.id,
+      ).toBe(true);
       if (group.kind === 'switch') expect(meta[group.fields[0]].type).toBe('switch');
       if (group.kind === 'pair') {
         expect(group.fields.map((key) => meta[key].type)).toEqual(['number', 'number']);
       }
     }
+  });
+});
+
+describe('Essentials', () => {
+  const essentials = getEssentialsCategory();
+  const configured = (readConfigToml('ui/essentials.toml') as { settings: string[] }).settings;
+
+  it('lists exactly the configured settings, in their configured order', () => {
+    expect(ESSENTIAL_SETTINGS).toEqual(configured);
+    expect(essentials.fields).toEqual(
+      configured.filter((key) => isSettingShown(key as SettingKey)),
+    );
+    expect(essentials.sections.flatMap((section) => section.panel ?? [])).toEqual(['essentialsAi']);
+  });
+
+  it('shows each one a second time: it still has its own tab, and search finds it once', () => {
+    const homes = Object.entries(getSettingsCategories());
+    for (const key of ESSENTIAL_SETTINGS) {
+      const owners = homes.filter(([, category]) => category.fields.includes(key));
+      expect(
+        owners.map(([id]) => id),
+        key,
+      ).toHaveLength(1);
+    }
+    expect(Object.keys(getSettingsCategories())).not.toContain(ESSENTIALS_CATEGORY);
+  });
+
+  it('keeps the essentials a short list', () => {
+    expect(ESSENTIAL_SETTINGS.length).toBeLessThanOrEqual(8);
+  });
+});
+
+describe('For developers', () => {
+  it('holds local AI agents, apart from the AI tab', () => {
+    const categories = getSettingsCategories();
+    expect(categories.developers.fields).toContain('agentBridgeEnabled');
+    expect(categories.ai.fields).not.toContain('agentBridgeEnabled');
+    expect(categories.ai.sections.map((section) => section.panel)).not.toContain('agentBridge');
   });
 });
 

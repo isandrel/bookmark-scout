@@ -6141,7 +6141,7 @@
     },
     "settings_agentBridge": {
         "message": "Agents d'IA locaux",
-        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+        "description": "Options > For developers: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
     },
     "settings_agentBridgeEnabled": {
         "message": "Autoriser les agents d'IA locaux",
@@ -6169,19 +6169,19 @@
     },
     "settings_agentBridgeDisabledActions": {
         "message": "Ce que les agents locaux peuvent faire",
-        "description": "Options > AI: panel title for choosing what local AI agents may do"
+        "description": "Options > For developers: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
         "message": "Désactivez ce que vous ne voulez pas que les agents fassent ; cela ne leur est alors plus proposé du tout. Les modifications demandent aussi Autoriser les modifications, et chacune attend votre accord.",
-        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+        "description": "Options > For developers: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
         "message": "Programme passerelle",
-        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+        "description": "Options > For developers > Local AI agents: panel title for the bridge program's status and setup"
     },
     "agentBridge_setup": {
         "message": "Installez le programme bookmark-scout-mcp sur cet ordinateur et exécutez « $1 » une fois. Il s'enregistre auprès de vos navigateurs et indique comment l'ajouter à Claude Code, Codex ou Cursor.",
-        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+        "description": "Options > For developers > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
     },
     "agentBridge_statusOff": {
         "message": "Inactif. Activez l'interrupteur ci-dessus et autorisez l'accès quand votre navigateur le demande.",
@@ -6308,6 +6308,38 @@
     "welcome_readGuide": {
         "message": "Lire le guide",
         "description": "Welcome page link to the online documentation"
+    },
+    "essentials_title": {
+        "message": "L'essentiel",
+        "description": "Options: the first tab, holding the few settings most people change"
+    },
+    "essentials_description": {
+        "message": "Les réglages que l'on modifie le plus souvent. Tout le reste se trouve sous Avancé.",
+        "description": "Options > Essentials: line under the tab title. 'Advanced' must match essentials_advancedHeading"
+    },
+    "essentials_advancedHeading": {
+        "message": "Avancé",
+        "description": "Options: small heading in the tab list above every tab after Essentials"
+    },
+    "essentials_aiTitle": {
+        "message": "L'IA est facultative",
+        "description": "Options > Essentials: title of the box pointing to the AI tab"
+    },
+    "essentials_aiDescription": {
+        "message": "Bookmark Scout fonctionne sans IA. Pour que l'IA suggère des dossiers et réponde à vos questions, configurez-la dans IA.",
+        "description": "Options > Essentials: text of the box pointing to the AI tab"
+    },
+    "essentials_aiOpen": {
+        "message": "Configurer l'IA",
+        "description": "Options > Essentials: button that opens the AI tab"
+    },
+    "essentials_developers": {
+        "message": "Pour les développeurs",
+        "description": "Options: tab for features meant for developers (access for local AI agents)"
+    },
+    "essentials_developersDesc": {
+        "message": "Laissez les agents d'IA de votre ordinateur, comme Claude Code, utiliser vos favoris",
+        "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
         "message": "Rechercher titres et adresses",

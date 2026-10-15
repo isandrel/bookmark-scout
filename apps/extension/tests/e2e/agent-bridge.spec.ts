@@ -75,7 +75,10 @@ test('Options turns on access for local AI agents, which look up bookmarks throu
   await setSettings(extensionWorker, { language: 'en' });
 
   await page.goto(`chrome-extension://${extensionId}/options.html`);
+  // Local agents are for developers, apart from the AI tab.
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  await expect(page.getByRole('switch', { name: 'Allow local AI agents' })).toHaveCount(0);
+  await page.getByRole('tab', { name: 'For developers', exact: true }).click();
   const toggle = page.getByRole('switch', { name: 'Allow local AI agents' });
   await expect(toggle).not.toBeChecked();
   await toggle.click();
@@ -90,7 +93,9 @@ test('Options turns on access for local AI agents, which look up bookmarks throu
     .toEqual(['com.bookmark_scout.bridge']);
   // The hello is posted just after the port connects; on a slower runner (Edge CI) it may not be
   // there yet when the connection is first seen.
-  await expect.poll(async () => (await bridgeState(extensionWorker)).posted.length).toBeGreaterThan(0);
+  await expect
+    .poll(async () => (await bridgeState(extensionWorker)).posted.length)
+    .toBeGreaterThan(0);
   const [hello] = (await bridgeState(extensionWorker)).posted;
   // The build's browser: the Edge build reports itself as edge.
   const extensionBrowserId = extensionBrowser === 'msedge' ? 'edge' : 'chrome';
