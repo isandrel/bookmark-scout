@@ -223,6 +223,9 @@ test('Delete removes the selection, and Ctrl/Cmd+Z and redo work after a reload'
   await expect
     .poll(() => childTitles(extensionWorker, seeded.folderId))
     .toEqual(['Gone 02', 'Gone 03']);
+  // The bookmarks change before the delete has stored its history entry; a reload in between
+  // would drop the entry, so wait for it.
+  await expect.poll(() => historyDepths(page)).toEqual({ undo: 1, redo: 0 });
 
   // The history outlives the page: reload, then undo.
   await page.reload();
