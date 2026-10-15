@@ -179,7 +179,7 @@ Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Or
 | **URL-Bereinigung** | **Fragmente entfernen** aus; **Abfrageparameter sortieren** und **Doppelte Abfrageparameter entfernen** an; Listen **Beizubehaltende Parameter** und **Zu entfernende Parameter** |
 | **Defekte Links prüfen** | **Zeitlimit für Anfragen** 8 s; **Parallele Anfragen** 4; **Wiederholungen** 1; **Weiterleitungen folgen** an; **Erfolgs-Statuscodes** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Der **Standardbereich** eines Tools gilt, solange in der Lesezeichenverwaltung ein Ordner geöffnet ist. Auf der obersten Ebene der Verwaltung, wo kein Ordner geöffnet ist, beginnen die Tools mit **Alle Lesezeichen**.
+Die Tools beginnen mit **Alle Lesezeichen**, damit eine Prüfung aus dem Ordner, mit dem sich die Lesezeichenverwaltung öffnet, die anderen nicht übersieht. Ändern Sie den **Standardbereich** eines Tools, wenn es stattdessen mit dem geöffneten Ordner beginnen soll. **KI-Ordnerneuordnung** beginnt mit dem geöffneten Ordner, weil ein Plan für alle Lesezeichen sie alle an Ihren KI-Anbieter sendet. Auf der obersten Ebene der Verwaltung, wo kein Ordner geöffnet ist, beginnt jedes Tool mit **Alle Lesezeichen**.
 
 Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben und Enter drücken oder einen Vorschlag wählen. **Erfolgs-Statuscodes** ist eine Checkliste gängiger Codes, und Sie können weitere hinzufügen. Damit die Einstellungen in die Browsersynchronisierung passen, fasst jede Liste bis zu 20 Einträge und ein Parametername bis zu 32 Zeichen (Buchstaben, Ziffern und URL-Satzzeichen). Die Standardlisten stehen unter [Duplikate und Tracking-URLs bereinigen](/guides/clean-up#strip-tracking-parameters). Siehe auch [Defekte Links finden und reparieren](/guides/dead-links).
 
@@ -200,7 +200,7 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **„Website-Symbole aktualisieren“ aktivieren** | An | **Website-Symbole aktualisieren** in der Tools-Leiste anzeigen |
-| **Standardbereich** | Aktueller Ordner | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
+| **Standardbereich** | Alle Lesezeichen | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
 | **Bevorzugte Symbolgröße** | 32px | Wenn eine Seite mehrere Symbole angibt, wird das dieser Größe am nächsten liegende heruntergeladen |
 | **Max. Dateigröße pro Symbol** | 64 KB | Größere Symboldateien werden weder heruntergeladen noch gespeichert |
 | **Speicherbegrenzung für Symbole** | 4 MB | Gesamtgröße der gespeicherten Symbole auf diesem Gerät; die ältesten werden zuerst entfernt |

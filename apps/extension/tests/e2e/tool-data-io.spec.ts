@@ -1,7 +1,14 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, toastRegion } from './fixtures';
 import { readStored, STORAGE_ITEMS, writeStored } from './storage';
-import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
+import {
+  childrenOf,
+  chooseExportFolder,
+  openTools,
+  seedFolder,
+  setSettings,
+  toolCard,
+} from './tool-helpers';
 
 function localDate() {
   const now = new Date();
@@ -31,6 +38,7 @@ test('export uses the selected folder and saved preferences, and neutralizes CSV
   await openTools(page, extensionId, folder.folderId);
   const exportCard = toolCard(page, 'Export Bookmarks');
   await expect(exportCard.getByRole('combobox', { name: 'Format' })).toContainText('CSV');
+  await chooseExportFolder(page, 'Tracking');
   const downloadPromise = page.waitForEvent('download');
   await exportCard.getByRole('button', { name: 'Export' }).click();
   const download = await downloadPromise;
@@ -87,6 +95,7 @@ test('a CSV export keeps non-ASCII folder names in the filename and escapes / in
   });
 
   await openTools(page, extensionId, folder.folderId);
+  await chooseExportFolder(page, '日本語 メモ');
   const downloadPromise = page.waitForEvent('download');
   await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
   const download = await downloadPromise;
@@ -117,6 +126,7 @@ test('a Markdown export without URLs escapes titles that look like Markdown synt
   });
 
   await openTools(page, extensionId, folder.folderId);
+  await chooseExportFolder(page, 'E2E Markdown');
   const downloadPromise = page.waitForEvent('download');
   await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
   const markdown = await readFile(await (await downloadPromise).path(), 'utf8');
@@ -195,6 +205,7 @@ test("a JSON export carries each bookmark's own tags and summary, and importing 
   await setSettings(extensionWorker, { dataDefaultExportFormat: 'json' });
 
   await openTools(page, extensionId, folder.folderId);
+  await chooseExportFolder(page, 'E2E Tagged');
   const downloadPromise = page.waitForEvent('download');
   await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
   const raw = await readFile(await (await downloadPromise).path(), 'utf8');

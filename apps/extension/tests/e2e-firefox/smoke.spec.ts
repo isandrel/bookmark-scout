@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { error, Key } from 'selenium-webdriver';
+import { error, Key, until } from 'selenium-webdriver';
 import { STORAGE_ITEMS, storageAreaKey } from '../../src/lib/storage/registry';
 import { By, expect, type FirefoxExtension, test } from './fixtures';
 
@@ -81,6 +81,24 @@ async function clickToolButton(extension: FirefoxExtension, tool: string, button
   const element = await extension.driver.findElement(By.xpath(xpath));
   await extension.driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', element);
   await element.click();
+}
+
+/** Picks `scope` (a folder name or All Bookmarks) in a tool card's scope menu, its last select. */
+async function chooseToolScope(extension: FirefoxExtension, tool: string, scope: string) {
+  const xpath =
+    `//*[@data-testid="tools-sidebar"]//h4[normalize-space()="${tool}"]` +
+    `/ancestor::div[.//button][1]//button[@role="combobox"]`;
+  const selects = await extension.driver.findElements(By.xpath(xpath));
+  const select = selects.at(-1);
+  if (!select) throw new Error(`${tool} has no scope menu`);
+  await extension.driver.executeScript('arguments[0].scrollIntoView({ block: "center" })', select);
+  await select.click();
+  const option = await extension.driver.wait(
+    until.elementLocated(By.xpath(`//*[@role="option"][normalize-space()="${scope}"]`)),
+    5000,
+  );
+  await extension.driver.wait(until.elementIsVisible(option), 5000);
+  await option.click();
 }
 
 const visibleRows = (extension: FirefoxExtension) => extension.countVisible('tbody tr');
@@ -651,6 +669,8 @@ test('a tool run asks Firefox for its bookmarks’ site only, inside the declare
     { title: 'Site Page', url: 'https://www.e2e.invalid/one' },
     { title: 'Same Site Page', url: 'http://e2e.invalid/two' },
   ]);
+  // Tools start on all bookmarks by default; this run covers the folder's sites only.
+  await setSettings(extension, { deadLinksDefaultScope: 'folder' });
   await openTools(extension, folder.folderId);
   await clickToolButton(extension, 'Check Dead Links', 'Scan');
   const dialog = await extension.findByText('[role="dialog"]', 'Allow access to websites?');
@@ -677,6 +697,8 @@ test('JSON export downloads the folder and importing it restores a deleted bookm
   await setSettings(extension, { dataDefaultExportFormat: 'json' });
 
   await openTools(extension, folder.folderId);
+  // The export starts on all bookmarks; this one exports the open folder.
+  await chooseToolScope(extension, 'Export Bookmarks', 'E2E Firefox Data');
   await clickToolButton(extension, 'Export Bookmarks', 'Export');
 
   let exportedName = '';
