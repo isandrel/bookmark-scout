@@ -7,11 +7,11 @@ description: Antworten auf häufige Fragen zu Bookmark Scout und Lösungen für 
 
 ### Ist Bookmark Scout kostenlos? [#is-bookmark-scout-free]
 
-Ja. Es ist kostenlos und Open Source unter der Lizenz <License />, ohne Werbung und ohne kostenpflichtiges Abo. Wenn Sie KI aktivieren, kann Ihr KI-Anbieter Gebühren für die API-Nutzung erheben.
+Ja. Es ist kostenlos und Open Source unter der Lizenz <License />, ohne Werbung, ohne Konto und ohne kostenpflichtiges Abo. Die optionalen KI-Funktionen sind das Einzige, was Geld kosten kann: Sie verwenden Ihr eigenes Konto bei einem KI-Unternehmen, das für jede Nutzung Gebühren verlangen kann.
 
 ### Muss ich KI verwenden? [#do-i-need-to-use-ai]
 
-Nein. Suchen, Speichern, Ordnen, Bereinigen sowie Import und Export funktionieren ohne KI. KI bleibt deaktiviert, bis Sie sie in den [Einstellungen](/settings#ai) aktivieren.
+Nein. KI ist optional. Speichern, Suchen, Ordnen, Bereinigen sowie Import und Export funktionieren alle ohne KI, und sie bleibt aus, bis Sie sie in den [Einstellungen](/settings#ai) einschalten. Um sie zu nutzen, brauchen Sie ein Konto bei einem KI-Unternehmen wie OpenAI, Anthropic oder Google und einen Schlüssel aus diesem Konto (einen API-Schlüssel), mit dem Bookmark Scout das Konto verwenden darf. Die meisten dieser Unternehmen berechnen jede Nutzung, meist einen kleinen Betrag; ein KI-Programm, das auf Ihrem eigenen Computer läuft, etwa Ollama, kostet nichts, braucht aber einen recht leistungsstarken Computer. Die Titel und Adressen der Lesezeichen, mit denen ein KI-Tool arbeitet, werden an das Unternehmen gesendet, das Sie gewählt haben. Siehe [KI-Tools einrichten](/guides/ai-tools).
 
 ### Sendet die Erweiterung meine Lesezeichen irgendwohin? [#does-it-send-my-bookmarks-anywhere]
 
@@ -25,11 +25,19 @@ Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufe
 
 <StoreAvailability />
 
-Jeder Store prüft eine Erweiterung, bevor er sie anbietet. Wenn der Store Ihres Browsers sie noch nicht anbietet, [installieren Sie sie aus einem GitHub-Release](/installation).
+Jeder Store prüft eine Erweiterung, bevor er sie anbietet. Wenn der Store Ihres Browsers sie noch nicht anbietet, können Sie sie [von Hand installieren](/installation#install-from-a-github-release) (für Fortgeschrittene).
 
 ### Funktioniert die Erweiterung in Firefox? [#does-it-work-in-firefox]
 
-Ja. Firefox erlaubt Erweiterungen nicht, seine Lesezeichenseite zu ersetzen. Öffnen Sie den Bookmark-Scout-Manager mit seinen Bereinigungstools, Import und Export und gespeicherten Suchen daher über **Lesezeichen-Manager öffnen** im Pop-up. Der Symbol-Cache des Browsers ist in Firefox nicht verfügbar, und dort sind weniger Funktionen durch automatisierte Tests abgedeckt. Siehe [Browserunterstützung](/browser-support).
+Noch nicht über Firefox Add-ons: Die Firefox-Version kommt bald. Bis dahin können Sie sie [von Hand installieren](/installation#firefox), als temporäres Add-on, das Firefox beim Neustart entfernt. Einmal installiert, funktioniert sie mit ein paar Unterschieden: Firefox erlaubt Erweiterungen nicht, seine Lesezeichenseite zu ersetzen. Öffnen Sie den Bookmark-Scout-Manager mit seinen Bereinigungstools, Import und Export und gespeicherten Suchen daher über **Lesezeichen-Manager öffnen** im Pop-up, und der Symbol-Cache des Browsers ist nicht verfügbar. Siehe [Browserunterstützung](/browser-support).
+
+### Funktioniert die Erweiterung in Microsoft Edge? [#does-it-work-in-microsoft-edge]
+
+Noch nicht über Microsoft Edge Add-ons: Die Edge-Version kommt bald. Bis dahin können Sie sie [von Hand installieren](/installation#edge), und sie funktioniert dann weitgehend wie in Chrome. Siehe [Browserunterstützung](/browser-support).
+
+### Funktioniert die Erweiterung auf meinem Smartphone? [#does-it-work-on-my-phone]
+
+Nein. Bookmark Scout ist eine Erweiterung für Browser auf einem Computer. Browser auf Smartphones und Tablets führen sie nicht aus.
 
 ### Warum nicht Safari? [#why-not-safari]
 
@@ -51,7 +59,7 @@ Prüfen Sie, ob **Website-Symbole anzeigen** in den [Einstellungen](/settings#ap
 
 ### Mein API-Schlüssel wurde nicht gespeichert [#my-api-key-was-not-saved]
 
-Ein Schlüssel, der nicht wie ein Schlüssel des gewählten Anbieters aussieht, wird abgelehnt und nicht gespeichert, und eine Meldung weist darauf hin. Prüfen Sie, ob **KI-Anbieter** zu dem eingefügten Schlüssel passt. Siehe [KI-Tools einrichten](/guides/ai-tools#turn-on-ai).
+Ein Schlüssel, der nicht wie ein Schlüssel des gewählten KI-Unternehmens (des Anbieters des Dienstes) aussieht, wird abgelehnt und nicht gespeichert, und eine Meldung weist darauf hin. Prüfen Sie, ob der Anbieter des Dienstes das Unternehmen ist, von dem Sie den Schlüssel haben. Siehe [KI-Tools einrichten](/guides/ai-tools#turn-on-ai).
 
 ### Die Linkprüfung meldet, dass eine funktionierende Website manuell geprüft werden muss [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 
@@ -71,7 +79,7 @@ Die Ergebnisse enden bei **Max. Suchergebnisse** (standardmäßig 20). Verfeiner
 
 ### Meine Tags, Zusammenfassungen oder gespeicherten Suchen fehlen auf einem anderen Computer [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
 
-Sie werden nur auf dem Gerät gespeichert, auf dem Sie sie angelegt haben, und nicht synchronisiert. Um sie zu übertragen, exportieren Sie Ihre Lesezeichen als JSON, was Tags und Zusammenfassungen an die Lesezeichen weitergibt, die der Import anlegt, und speichern Sie mit **Exportieren** unten in den [Einstellungen](/settings) eine Sicherung, die gespeicherte Suchen enthält. Einstellungen werden dagegen über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiviert ist.
+Sie werden nur auf dem Gerät gespeichert, auf dem Sie sie angelegt haben, und nicht synchronisiert. Um sie zu übertragen, exportieren Sie Ihre Lesezeichen als JSON, was Tags und Zusammenfassungen an die Lesezeichen weitergibt, die der Import anlegt, und speichern Sie mit **Einstellungen sichern** unten in den [Einstellungen](/settings) eine Sicherung, die gespeicherte Suchen enthält. Einstellungen werden dagegen über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiviert ist.
 
 ### Ich habe versehentlich etwas gelöscht [#i-deleted-something-by-mistake]
 
@@ -83,7 +91,7 @@ Wenn eine andere Erweiterung `Alt+Shift+S` oder `Alt+Shift+D` bereits verwendet,
 
 ### Meine Einstellungen sind nach einem Update verschwunden [#my-settings-are-gone-after-an-update]
 
-Ein Update hat die gespeicherten Daten von Bookmark Scout in ein neues Format überführt und die alten Daten entfernt, statt sie umzuwandeln. Danach sind die Einstellungen wieder auf ihren Standardwerten, KI-Dienste und ihre API-Schlüssel müssen erneut hinzugefügt werden, und eigene Prompts, gespeicherte Suchen, letzte Suchen und Ordner, Tags und Zusammenfassungen sowie gespeicherte Website-Symbole sind verloren. Ihre Lesezeichen selbst bleiben unberührt. Wenn Sie Ihre Einstellungen vor dem Update mit **Exportieren** unten in den [Einstellungen](/settings) gesichert haben, verwenden Sie für diese Datei **Importieren**.
+Updates behalten Ihre Einstellungen normalerweise. Ein Update, auf Version 0.3.3, hat die gespeicherten Daten von Bookmark Scout in ein neues Format überführt und die alten Daten entfernt, statt sie umzuwandeln. Danach sind die Einstellungen wieder auf ihren Standardwerten, KI-Dienste und ihre API-Schlüssel müssen erneut hinzugefügt werden, und eigene Prompts, gespeicherte Suchen, letzte Suchen und Ordner, Tags und Zusammenfassungen sowie gespeicherte Website-Symbole sind verloren. Ihre Lesezeichen selbst bleiben unberührt. Wenn Sie Ihre Einstellungen vor dem Update mit **Einstellungen sichern** (damals **Exportieren** genannt) unten in den [Einstellungen](/settings) gesichert haben, öffnen Sie diese Datei mit **Einstellungen wiederherstellen**.
 
 ## Hilfe erhalten [#get-help]
 

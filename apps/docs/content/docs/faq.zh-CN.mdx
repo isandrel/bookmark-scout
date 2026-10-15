@@ -7,11 +7,11 @@ description: 关于 Bookmark Scout 的常见问题解答，以及最常遇到的
 
 ### Bookmark Scout 免费吗？ [#is-bookmark-scout-free]
 
-是的。它基于 <License /> 许可证免费开源，没有广告，也没有付费套餐。如果你开启 AI，你的 AI 服务商可能会对 API 使用收费。
+是的。它基于 <License /> 许可证免费开源，没有广告，无需账号，也没有付费套餐。唯一可能花钱的是可选的 AI 功能：它们使用你自己在某家 AI 公司的账号，该公司可能会按每次使用收费。
 
 ### 我必须使用 AI 吗？ [#do-i-need-to-use-ai]
 
-不必。搜索、保存、整理、清理以及导入和导出都无需 AI 即可使用。在你于[设置](/settings#ai)中开启之前，AI 始终处于关闭状态。
+不必。AI 是可选的。保存、搜索、整理、清理以及导入和导出都无需 AI 即可使用，而且在你于[设置](/settings#ai)中开启之前，AI 始终处于关闭状态。如果要使用 AI，你需要一个 AI 公司（例如 OpenAI、Anthropic 或 Google）的账号，以及该账号提供的一个密钥（API 密钥），让 Bookmark Scout 可以使用这个账号。这些公司大多按每次使用收费，金额通常很小；在你自己电脑上运行的 AI 程序（例如 Ollama）不花钱，但需要性能相当强的电脑。AI 工具处理的书签标题和地址会发送给你选择的公司。请参阅[设置 AI 工具](/guides/ai-tools)。
 
 ### 它会把我的书签发送到任何地方吗？ [#does-it-send-my-bookmarks-anywhere]
 
@@ -25,11 +25,19 @@ description: 关于 Bookmark Scout 的常见问题解答，以及最常遇到的
 
 <StoreAvailability />
 
-每个商店都会先审核扩展程序，再将其上架。如果你所用浏览器的商店还没有上架，请[从 GitHub 版本发布安装](/installation)。
+每个商店都会先审核扩展程序，再将其上架。如果你所用浏览器的商店还没有上架，你可以[手动安装](/installation#install-from-a-github-release)（进阶操作）。
 
 ### 它能在 Firefox 中使用吗？ [#does-it-work-in-firefox]
 
-可以。Firefox 不允许扩展程序替换其书签页面，因此请通过弹出窗口中的**打开书签管理器**打开 Bookmark Scout 书签管理器，其中包含清理工具、导入和导出以及已保存的搜索。Firefox 中无法使用浏览器的图标缓存，并且自动化测试覆盖的功能也较少。请参阅[浏览器支持](/browser-support)。
+目前还不能从 Firefox 附加组件商店获取：Firefox 版本即将推出。在此之前，可以将它作为临时附加组件[手动安装](/installation#firefox)，但 Firefox 重启时会将其移除。安装后，它可以正常使用，只有几处不同：Firefox 不允许扩展程序替换其书签页面，因此请通过弹出窗口中的**打开书签管理器**打开 Bookmark Scout 书签管理器（其中包含清理工具、导入和导出以及已保存的搜索）；此外也无法使用浏览器的图标缓存。请参阅[浏览器支持](/browser-support)。
+
+### 它能在 Microsoft Edge 中使用吗？ [#does-it-work-in-microsoft-edge]
+
+目前还不能从 Microsoft Edge 加载项商店获取：Edge 版本即将推出。在此之前，可以[手动安装](/installation#edge)，安装后的使用方式与 Chrome 基本相同。请参阅[浏览器支持](/browser-support)。
+
+### 它能在我的手机上使用吗？ [#does-it-work-on-my-phone]
+
+不能。Bookmark Scout 是用于电脑浏览器的扩展程序。手机和平板电脑上的浏览器无法运行它。
 
 ### 为什么不支持 Safari？ [#why-not-safari]
 
@@ -51,7 +59,7 @@ Firefox 重启时会移除临时附加组件。请按照[安装](/installation)�
 
 ### 我的 API 密钥没有保存 [#my-api-key-was-not-saved]
 
-如果密钥看起来不像所选服务商的密钥，它会被拒绝且不会保存，同时会显示一条提示消息。请检查 **AI 服务商**是否与你粘贴的密钥相符。请参阅[设置 AI 工具](/guides/ai-tools#turn-on-ai)。
+如果密钥看起来不像所选 AI 公司（即该服务的服务商）的密钥，它会被拒绝且不会保存，同时会显示一条提示消息。请检查该服务的服务商是否就是给你密钥的那家公司。请参阅[设置 AI 工具](/guides/ai-tools#turn-on-ai)。
 
 ### 失效链接检查提示某个正常的网站需要手动检查 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 
@@ -71,7 +79,7 @@ Chrome 会在网页的开发者控制台中为每个失败的请求记录一行�
 
 ### 我的标签、摘要或已保存的搜索在另一台电脑上不见了 [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
 
-它们只保存在你创建它们的设备上，不会同步。如需迁移，请将书签导出为 JSON（导入时，标签和摘要会随新建的书签一起恢复），并用[设置](/settings)底部的**导出**保存备份（其中包含已保存的搜索）。开启浏览器同步后，设置会通过你的浏览器账号同步。
+它们只保存在你创建它们的设备上，不会同步。如需迁移，请将书签导出为 JSON（导入时，标签和摘要会随新建的书签一起恢复），并用[设置](/settings)底部的**备份设置**保存备份（其中包含已保存的搜索）。开启浏览器同步后，设置会通过你的浏览器账号同步。
 
 ### 我误删了内容 [#i-deleted-something-by-mistake]
 
@@ -83,7 +91,7 @@ Chrome 会在网页的开发者控制台中为每个失败的请求记录一行�
 
 ### 更新后我的设置不见了 [#my-settings-are-gone-after-an-update]
 
-某次更新将 Bookmark Scout 保存的数据迁移到了新格式，旧数据被删除而没有转换。此后，设置会恢复为默认值，AI 服务及其 API 密钥需要重新添加，自定义提示词、已保存的搜索、最近的搜索和文件夹、标签和摘要以及已保存的网站图标都已丢失。书签本身不受影响。如果更新前用[设置](/settings)底部的**导出**保存过设置，请**导入**该文件。
+更新通常会保留你的设置。有一次更新（升级到 0.3.3 版）将 Bookmark Scout 保存的数据迁移到了新格式，旧数据被删除而没有转换。此后，设置会恢复为默认值，AI 服务及其 API 密钥需要重新添加，自定义提示词、已保存的搜索、最近的搜索和文件夹、标签和摘要以及已保存的网站图标都已丢失。书签本身不受影响。如果更新前用[设置](/settings)底部的**备份设置**（当时名为**导出**）保存过设置，请用**恢复设置**打开该文件。
 
 ## 获取帮助 [#get-help]
 

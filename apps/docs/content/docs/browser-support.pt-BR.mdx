@@ -1,11 +1,17 @@
 ---
 title: Compatibilidade com navegadores
-description: O que funciona no Chrome, no Microsoft Edge e no Firefox, o que é testado em cada um e por que o Safari não é compatível.
+description: O que funciona no Chrome, no Microsoft Edge e no Firefox, onde obter a extensão para cada um e por que o Safari não é compatível.
 ---
 
-O Chrome é o navegador principal. O Edge é baseado no Chromium e tem os mesmos recursos, exceto nos casos indicados abaixo. O Firefox usa uma versão Manifest V2 com um conjunto menor de recursos.
+O Bookmark Scout funciona melhor no Chrome, onde está disponível na Chrome Web Store. O Edge tem os mesmos recursos, exceto nos casos indicados abaixo. O Firefox tem um conjunto um pouco menor, porque permite que as extensões façam menos coisas com os favoritos. Os três funcionam em um computador; celulares e tablets não são compatíveis.
 
-## Tabela de recursos [#feature-matrix]
+## Onde obter [#where-to-get-it]
+
+<StoreAvailability />
+
+Onde uma loja ainda não oferece o Bookmark Scout, você pode [instalá-lo manualmente](/installation#install-from-a-github-release). O material das páginas das lojas é preparado na <RepoLink tree="store">pasta `store/`</RepoLink> do repositório, e cada loja analisa uma extensão antes de publicá-la.
+
+## O que funciona onde [#feature-matrix]
 
 Esta tabela vem dos manifestos da extensão compilada para cada navegador e das verificações de navegador no código dela.
 
@@ -18,26 +24,14 @@ Esta tabela vem dos manifestos da extensão compilada para cada navegador e das 
 | Pesquisas salvas, ferramentas de manutenção, importação e exportação, estatísticas, ferramentas de IA do gerenciador | Sim | Sim | Sim, no gerenciador. Testes automatizados cobrem a importação e a exportação e os relatórios; as outras ferramentas são verificadas manualmente. |
 | Página de configurações | Sim | Sim | Sim |
 | Perguntar à IA e as outras ferramentas de IA | Sim | Sim | Sim, depois que você concorda em compartilhar dados com seu provedor de IA |
-| Agentes de IA locais pelo `bookmark-scout-mcp` | Sim | Sim | Sim; `bookmark-scout-mcp install` também o registra no Firefox. Não coberto por testes automatizados |
+| Agentes de IA locais pelo `bookmark-scout-mcp` (para desenvolvedores) | Sim | Sim | Sim; `bookmark-scout-mcp install` também o registra no Firefox. Não coberto por testes automatizados |
 | Abrir em janela anônima pelo gerenciador | Sim | Sim, como janela InPrivate | Sim, como janela privativa, quando a extensão tem permissão para ser executada em janelas privativas |
-| Menu de clique com o botão direito para salvar links | Sim, depois que você ativa o **Menu de contexto** (pede permissão) | Igual | Sim, depois que você ativa o **Menu de contexto** |
+| Menu de clique com o botão direito para salvar links | Sim, depois que você ativa o **Menu do botão direito** (pede permissão) | Igual | Sim, depois que você ativa o **Menu do botão direito** |
 | Ícones dos sites ao lado dos favoritos | Ícones salvos com **Atualizar ícones dos sites** e, depois que você ativa **Usar o cache de ícones do navegador**, ícones do cache do navegador | Igual | Somente ícones salvos com **Atualizar ícones dos sites**, que é executado no gerenciador. O Firefox não oferece às extensões uma API de ícones dos sites, então os outros favoritos mostram um ícone genérico. |
 | Acesso opcional a sites para a verificação de links quebrados, a busca de títulos e a atualização dos ícones dos sites | Solicitado quando você executa a ferramenta | Igual | Igual |
 
-## O que é testado [#what-is-tested]
-
-- **Chrome (Chromium)**: testes de unidade e testes de ponta a ponta para o pop-up, o painel lateral, o gerenciador, as configurações, as ferramentas de manutenção, os relatórios, a importação e a exportação, os atalhos de teclado, o salvamento rápido, as pesquisas salvas, o salvamento pelo menu de contexto, o arrastar e soltar, as ferramentas de rede, as ferramentas de IA com provedores simulados e jornadas que passam por vários deles. Os testes da ponte executam o programa `bookmark-scout-mcp` com a extensão no Chromium no Linux e no macOS.
-- **Edge**: o mesmo conjunto de testes de ponta a ponta é executado na versão para o Edge.
-- **Firefox**: um conjunto de testes básicos (smoke tests) cobre a pesquisa e a criação de pastas no pop-up, a página do painel lateral carregada em uma guia, a abertura do gerenciador pelo pop-up e pelo painel lateral, a página do gerenciador com o endereço, `Delete` e desfazer, as teclas da árvore de pastas, o menu de clique com o botão direito e o arrastar e soltar (com eventos de arrastar por script), o aviso do atalho de salvamento rápido e o gravador de teclas, o consentimento de compartilhamento de dados com a IA, o salvamento de uma configuração, uma exportação e importação de JSON de ida e volta, os relatórios de estatísticas e de privacidade e os ícones dos sites salvos no pop-up. O salvamento pelo menu de clique com o botão direito em uma página, os outros atalhos de teclado, o arrastar e soltar no pop-up, a própria notificação do salvamento rápido, os agentes de IA locais e as ferramentas de rede e de IA (incluindo o próprio **Atualizar ícones dos sites**) não são cobertos.
-
-O conjunto do Edge e o conjunto de testes básicos do Firefox são verificações obrigatórias da CI, assim como o conjunto do Chromium. Os provedores de IA reais e os sites ativos são verificados manualmente, não por testes automatizados.
+Quanto de cada navegador é coberto por testes automatizados está em [Status do projeto](/status#what-is-tested-in-each-browser).
 
 ## Safari [#safari]
 
 O Safari não é compatível. As Safari Web Extensions não implementam a API `bookmarks`, da qual todas as partes do Bookmark Scout dependem.
-
-## Disponibilidade nas lojas [#store-availability]
-
-<StoreAvailability />
-
-O material das páginas das lojas é preparado na <RepoLink tree="store">pasta `store/`</RepoLink> do repositório, e cada envio precisa da aprovação do mantenedor. Onde uma loja não tem a extensão listada, [instale-a a partir de uma versão do GitHub](/installation).

@@ -1,19 +1,56 @@
 ---
 title: Instalar
-description: Instala Bookmark Scout en Chrome desde Chrome Web Store, o en Chrome, Microsoft Edge o Firefox desde una versión publicada en GitHub.
+description: Añade Bookmark Scout a Chrome desde Chrome Web Store. Las versiones para Firefox y Edge llegarán pronto a sus tiendas.
 ---
 
-Bookmark Scout es gratuito y de código abierto.
+Bookmark Scout es gratuito, sin cuenta y sin anuncios. Funciona en un navegador de un equipo, no en teléfonos ni tabletas.
 
-## Instalar desde la tienda de tu navegador [#install-from-your-browsers-store]
+## Añádelo a Chrome [#add-it-to-chrome]
 
-<StoreAvailability />
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
 
-Abre la ficha y añade Bookmark Scout a tu navegador desde allí. Una copia instalada desde una tienda se actualiza sola.
+En la ficha, haz clic en **Añadir a Chrome** y luego en **Añadir extensión**. Chrome solo pide una cosa: leer y cambiar tus marcadores. Otras funciones piden más solo cuando las usas por primera vez, y explican por qué; consulta [Permisos](/permissions).
+</Step>
+<Step>
+Fija el icono: haz clic en el botón **Extensiones**, el de la pieza de rompecabezas a la derecha de la barra de herramientas, y luego en la chincheta junto a Bookmark Scout.
+</Step>
+<Step>
+Guarda tu primera página: consulta [Tu primer guardado](/first-save).
+</Step>
+</Steps>
 
-## Instalar desde una versión publicada en GitHub [#install-from-a-github-release]
+Justo después de añadirlo, se abre en una pestaña nueva una página titulada **Bookmark Scout está listo** con los mismos primeros pasos: fijar el icono, guardar una página y las teclas de tu atajo de guardado rápido (o **Configurarlo** cuando otra extensión ya las usa). Solo se abre una vez, cuando instalas Bookmark Scout por primera vez, nunca después de una actualización. **Leer la guía**, en esa página, abre [Guardar y organizar](/guides/save-and-organize), y **Abrir la configuración** abre la [Configuración](/settings).
 
-Si la tienda de tu navegador todavía no ofrece Bookmark Scout, instálalo desde una <RepoLink path="/releases">versión publicada en GitHub</RepoLink>, que tiene una descarga por navegador:
+Una copia de la tienda se actualiza sola.
+
+## Firefox y Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+Hasta que una tienda lo ofrezca, puedes instalar Bookmark Scout a mano desde GitHub, como se explica [más abajo](#install-from-a-github-release). Lleva unos pasos más, y en Firefox tienes que repetirlos después de cada reinicio.
+
+## Después de instalar [#after-installing]
+
+- Haz clic en el icono de Bookmark Scout en cualquier página para guardarla o para buscar en tus marcadores. Empieza por [Tu primer guardado](/first-save).
+- Pulsa `Alt+Shift+S` (`⌥⇧S` en un Mac) en cualquier página para guardarla sin abrir nada. Consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save).
+- En Chrome, Bookmark Scout reemplaza la página de marcadores del navegador por su propio administrador de marcadores. Ábrelo como siempre, por ejemplo con `Ctrl+Shift+O` (`Cmd+Option+B` en un Mac), o con **Abrir el administrador de marcadores** en la ventana emergente. Su barra lateral **Herramientas** reúne las herramientas de limpieza.
+- La configuración se abre en una pestaña: haz clic con el botón derecho en el icono de la barra de herramientas y elige **Opciones**. Consulta [Configuración](/settings).
+
+## Actualizar [#updating]
+
+Una copia instalada desde una tienda se actualiza sola, y las actualizaciones conservan tu configuración. Una actualización anterior, a la versión 0.3.3, fue una excepción: restableció una vez los datos guardados del propio Bookmark Scout, aunque nunca tus marcadores; consulta [las preguntas frecuentes](/faq#my-settings-are-gone-after-an-update).
+
+Para guardar en cualquier momento una copia de tu configuración, tus prompts personalizados, tus servicios de IA y tus búsquedas guardadas, usa **Hacer copia de los ajustes** al final de la [Configuración](/settings).
+
+## Avanzado: instalar a mano desde GitHub [#install-from-a-github-release]
+
+Usa esto solo si la tienda de tu navegador todavía no ofrece Bookmark Scout, o para probar una versión. Una copia instalada así no se actualiza sola: para actualizarla, descarga la versión nueva y repite los pasos.
+
+Cada <RepoLink path="/releases">versión publicada en GitHub</RepoLink> tiene una descarga por navegador:
 
 | Navegador | Archivo |
 | --- | --- |
@@ -21,12 +58,10 @@ Si la tienda de tu navegador todavía no ofrece Bookmark Scout, instálalo desde
 | Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
 | Firefox | `bookmark-scout-<version>-firefox.zip` |
 
-Descarga el archivo desde <ReleaseLink /> y sigue los pasos para tu navegador.
+Descárgala desde <ReleaseLink /> y sigue los pasos para tu navegador.
 
 <Tabs items={["Chrome", "Edge", "Firefox"]}>
 <Tab value="Chrome" id="chrome">
-
-<StoreListing browser="chrome" />
 
 <Steps>
 <Step>
@@ -39,14 +74,12 @@ Abre `chrome://extensions/` y activa el **Modo de desarrollador** (arriba a la d
 Arrastra el archivo CRX a la página, o haz clic en **Cargar descomprimida** y selecciona la carpeta extraída.
 </Step>
 <Step>
-Fija Bookmark Scout en la barra de herramientas desde el menú Extensiones (el icono de la pieza de rompecabezas) para tener la ventana emergente a un clic.
+Fija Bookmark Scout en la barra de herramientas desde el menú Extensiones de la pieza de rompecabezas.
 </Step>
 </Steps>
 
 </Tab>
 <Tab value="Edge" id="edge">
-
-<StoreListing browser="edge" />
 
 <Steps>
 <Step>
@@ -58,12 +91,13 @@ Abre `edge://extensions/` y activa el **Modo de desarrollador**.
 <Step>
 Haz clic en **Cargar desempaquetada** y selecciona la carpeta extraída.
 </Step>
+<Step>
+Muestra Bookmark Scout en la barra de herramientas desde el menú Extensiones de la pieza de rompecabezas (el icono del ojo junto a él).
+</Step>
 </Steps>
 
 </Tab>
 <Tab value="Firefox" id="firefox">
-
-<StoreListing browser="firefox" />
 
 <Steps>
 <Step>
@@ -78,23 +112,11 @@ Haz clic en **Cargar complemento temporal** y selecciona el archivo `manifest.js
 </Steps>
 
 <Callout type="warn" title="Limitaciones de Firefox">
-Firefox quita los complementos temporales cuando se reinicia, así que tienes que volver a cargarlo después de cada reinicio. Firefox tampoco permite reemplazar su página de marcadores, así que abre el administrador de marcadores (con Herramientas, búsquedas guardadas, importación y exportación) desde **Abrir el administrador de marcadores** en la ventana emergente. Consulta [Compatibilidad con navegadores](/browser-support).
+Firefox quita los complementos temporales cuando se reinicia, así que tienes que volver a cargarlo después de cada reinicio. La página **Bookmark Scout está listo** no se abre con un complemento temporal. Firefox tampoco permite reemplazar su página de marcadores, así que abre el administrador de marcadores (con Herramientas, búsquedas guardadas, importación y exportación) desde **Abrir el administrador de marcadores** en la ventana emergente. Consulta [Compatibilidad con navegadores](/browser-support).
 </Callout>
 
 </Tab>
 </Tabs>
-
-## Después de instalar [#after-installing]
-
-- Haz clic en el icono de Bookmark Scout para abrir la ventana emergente y buscar en tus marcadores. Empieza por [Búsqueda y búsquedas guardadas](/guides/search).
-- En Chrome, abre la página de marcadores del navegador (por ejemplo, con `Ctrl+Shift+O`, o `Cmd+Option+B` en macOS) para llegar al administrador de Bookmark Scout y a su barra lateral de herramientas.
-- La configuración se abre en una pestaña desde la entrada **Opciones** de la extensión, por ejemplo haciendo clic con el botón derecho en el icono de la barra de herramientas en Chrome. Consulta [Configuración](/settings).
-
-## Actualizar [#updating]
-
-Una copia instalada desde una tienda se actualiza sola. Si no, descarga la versión nueva desde <ReleaseLink /> y repite los pasos para tu navegador.
-
-Antes de actualizar, puedes guardar tu configuración, tus prompts personalizados, tus servicios de IA y tus búsquedas guardadas con **Exportar** al final de la [Configuración](/settings); una actualización los restablece, consulta [las preguntas frecuentes](/faq#my-settings-are-gone-after-an-update).
 
 ## Compilar desde el código fuente [#building-from-source]
 

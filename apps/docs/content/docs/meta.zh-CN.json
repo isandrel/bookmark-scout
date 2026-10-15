@@ -1,9 +1,10 @@
 {
   "title": "Bookmark Scout 文档",
-  "description": "安装和使用 Bookmark Scout。这是一款浏览器扩展程序，可在浏览器中搜索、整理和清理你的书签。",
+  "description": "用 Bookmark Scout 把每个网页保存到合适的书签文件夹。这是一款浏览器扩展程序，还能在浏览器中查找、整理和清理你的书签。",
   "pages": [
     "---入门---",
     "index",
+    "first-save",
     "installation",
     "browser-support",
     "---指南---",
@@ -16,7 +17,8 @@
     "privacy",
     "faq",
     "status",
-    "---参与贡献---",
+    "---面向开发者---",
+    "guides/local-agents",
     "contributing"
   ]
 }

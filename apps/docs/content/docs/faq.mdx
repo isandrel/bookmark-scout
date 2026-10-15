@@ -7,11 +7,11 @@ description: Answers to common questions about Bookmark Scout, and fixes for the
 
 ### Is Bookmark Scout free?
 
-Yes. It is free and open source under the <License /> license, with no ads and no paid plan. If you turn on AI, your AI provider may charge for API use.
+Yes. It is free and open source under the <License /> license, with no ads, no account, and no paid plan. The optional AI features are the one thing that can cost money: they use your own account with an AI company, which may charge for each use.
 
 ### Do I need to use AI?
 
-No. Search, saving, organizing, cleanup, and import and export all work without it. AI stays off until you turn it on in [Settings](/settings#ai).
+No. AI is optional. Saving, search, organizing, cleanup, and import and export all work without it, and it stays off until you turn it on in [Settings](/settings#ai). To use it, you need an account with an AI company, such as OpenAI, Anthropic, or Google, and a key from that account (an API key) that lets Bookmark Scout use it. Most of these companies charge for each use, usually a small amount; an AI program that runs on your own computer, such as Ollama, costs nothing but needs a fairly powerful computer. The bookmark titles and addresses an AI tool works on are sent to the company you chose. See [Set up AI tools](/guides/ai-tools).
 
 ### Does it send my bookmarks anywhere?
 
@@ -25,11 +25,19 @@ No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorga
 
 <StoreAvailability />
 
-Each store reviews an extension before listing it. If your browser's store does not list it yet, [install it from a GitHub release](/installation).
+Each store reviews an extension before listing it. If your browser's store does not list it yet, you can [install it by hand](/installation#install-from-a-github-release) (advanced).
 
 ### Does it work in Firefox?
 
-Yes. Firefox does not let extensions replace its bookmarks page, so open the Bookmark Scout manager, with its cleanup tools, import and export, and saved searches, from **Open bookmark manager** in the popup. The browser's icon cache is not available in Firefox, and fewer features are covered by automated tests there. See [Browser support](/browser-support).
+Not from Firefox Add-ons yet: the Firefox version is coming soon. Until then, it can be [installed by hand](/installation#firefox) as a temporary add-on, which Firefox removes when it restarts. Once installed, it works with a few differences: Firefox does not let extensions replace its bookmarks page, so open the Bookmark Scout manager, with its cleanup tools, import and export, and saved searches, from **Open bookmark manager** in the popup, and the browser's icon cache is not available. See [Browser support](/browser-support).
+
+### Does it work in Microsoft Edge?
+
+Not from Microsoft Edge Add-ons yet: the Edge version is coming soon. Until then, it can be [installed by hand](/installation#edge), and it then works much as in Chrome. See [Browser support](/browser-support).
+
+### Does it work on my phone?
+
+No. Bookmark Scout is an extension for browsers on a computer. Phone and tablet browsers do not run it.
 
 ### Why not Safari?
 
@@ -51,7 +59,7 @@ Check that **Show Favicons** is on in [Settings](/settings#appearance). Chrome a
 
 ### My API key was not saved
 
-A key that does not look like a key for the chosen provider is rejected and not saved, and a message says so. Check that **AI Provider** matches the key you pasted. See [Set up AI tools](/guides/ai-tools#turn-on-ai).
+A key that does not look like a key for the chosen AI company (the service's provider) is rejected and not saved, and a message says so. Check that the service's provider is the company that gave you the key. See [Set up AI tools](/guides/ai-tools#turn-on-ai).
 
 ### The dead link check says a working site needs a manual check
 
@@ -83,7 +91,7 @@ If another extension already uses `Alt+Shift+S` or `Alt+Shift+D`, the browser le
 
 ### My settings are gone after an update
 
-One update moved Bookmark Scout's saved data to a new format and removed the old data instead of converting it. After it, settings are back to their defaults, AI services and their API keys need to be added again, and custom prompts, saved searches, recent searches and folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. If you saved your settings with **Back up settings** (then called **Export**) at the bottom of [Settings](/settings) before updating, open that file with **Restore settings**.
+Updates normally keep your settings. One update, to version 0.3.3, moved Bookmark Scout's saved data to a new format and removed the old data instead of converting it. After it, settings are back to their defaults, AI services and their API keys need to be added again, and custom prompts, saved searches, recent searches and folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. If you saved your settings with **Back up settings** (then called **Export**) at the bottom of [Settings](/settings) before updating, open that file with **Restore settings**.
 
 ## Get help
 

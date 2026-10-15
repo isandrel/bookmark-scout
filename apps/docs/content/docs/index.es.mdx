@@ -1,31 +1,38 @@
 ---
 title: Introducción
-description: Bookmark Scout es una extensión para Chrome, Edge y Firefox que guarda cada página en la carpeta correcta cuando escribes parte del nombre de la carpeta, y luego busca, organiza y limpia tus marcadores, dentro de tu navegador.
+description: Bookmark Scout guarda cada página en la carpeta de marcadores correcta cuando escribes parte del nombre de la carpeta o pulsas una tecla, y luego te ayuda a encontrar, ordenar y limpiar tus marcadores, todo dentro de tu navegador.
 ---
+
+Bookmark Scout es una extensión gratuita para el navegador que pone cada página que guardas en la carpeta de marcadores correcta. Haz clic en su icono, escribe unas letras del nombre de una carpeta y la página se guarda ahí. Hoy funciona en Chrome.
 
 <StartHere />
 
 ## Lo que puedes hacer con ella [#what-you-can-do-with-it]
 
-- **Guardar en la carpeta correcta**: escribe parte del nombre de una carpeta en la ventana emergente o en el panel lateral, incluso una carpeta muy dentro del árbol o una ruta como `work/react`, y luego pulsa `↓` y `Enter`, o haz clic en la carpeta, para guardar ahí la página actual. Con la IA activada, también puedes pedir una sugerencia de carpeta. Consulta [Guardar y organizar](/guides/save-and-organize).
-- **Guardar sin abrir nada**: pulsa `Alt+Shift+S` en cualquier página para guardarla en la carpeta que mejor le corresponde. Una pequeña notificación en la página indica dónde se guardó, con **Deshacer** y otras carpetas a las que moverla. Consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save).
-- **Buscar**: busca cualquier marcador por título o URL desde la ventana emergente de la barra de herramientas o desde el panel lateral, y guarda búsquedas con nombre en el administrador de marcadores. Consulta [Búsqueda y búsquedas guardadas](/guides/search).
-- **Organizar**: guarda enlaces desde el menú contextual y usa un administrador de marcadores que funciona como el de Chrome, con selección, menús contextuales, cortar, copiar y pegar, arrastrar y soltar, y deshacer y rehacer con `Ctrl+Z` y `Ctrl+Y`. Consulta [Guardar y organizar](/guides/save-and-organize).
-- **Limpiar**: quita los marcadores duplicados, elimina los parámetros de seguimiento y encuentra y repara los enlaces rotos. Consulta [Limpiar duplicados y URLs con seguimiento](/guides/clean-up) y [Encontrar y reparar enlaces rotos](/guides/dead-links).
-- **Llevar tu biblioteca a otro sitio**: exporta a HTML, JSON, Markdown o CSV, e importa HTML o JSON después de una vista previa. Consulta [Importar y exportar](/guides/import-export).
-- **Usar la IA, solo si quieres**: las herramientas de IA están desactivadas de forma predeterminada. Cuando las activas, eliges el proveedor y usas tu propia clave. **Preguntar a la IA** responde preguntas sobre tus marcadores y solo los cambia después de que apruebes su plan. Consulta [Configurar las herramientas de IA](/guides/ai-tools).
-- **Trabajar con agentes de IA locales**: deja que los agentes de IA de tu equipo, como Claude Code, Codex o Cursor, consulten tus marcadores, y aprueba en el navegador cada cambio que pidan. Desactivado de forma predeterminada. Consulta [Usar con agentes de IA locales](/guides/local-agents).
+- **Guardar en la carpeta correcta**: escribe parte del nombre de una carpeta, incluso de una carpeta metida dentro de otras, y elígela en la lista para guardar la página en la que estás. Consulta [Tu primer guardado](/first-save).
+- **Guardar con una tecla**: pulsa `Alt+Shift+S` (`⌥⇧S` en un Mac) en cualquier página para guardarla en la carpeta que mejor le encaja. Un pequeño mensaje en la página dice dónde se guardó, con **Deshacer** y otras carpetas a las que moverla. Consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save).
+- **Buscar**: busca cualquier marcador por una palabra de su título o de su dirección, desde el botón de la barra de herramientas o desde el panel lateral. Consulta [Búsqueda y búsquedas guardadas](/guides/search).
+- **Organizar**: una página de marcadores que funciona como la de Chrome, con arrastrar y soltar, menús del clic derecho, cortar, copiar y pegar, y deshacer con `Ctrl+Z` (`Cmd+Z` en un Mac). Consulta [Guardar y organizar](/guides/save-and-organize).
+- **Limpiar**: quita los marcadores duplicados, ordena las direcciones llenas de códigos de seguimiento y encuentra los enlaces que ya no funcionan. Consulta [Limpiar duplicados y URLs con seguimiento](/guides/clean-up) y [Encontrar y reparar enlaces rotos](/guides/dead-links).
+- **Llevar tus marcadores a otro sitio**: expórtalos a un archivo, o tráelos desde otro navegador después de ver una vista previa. Consulta [Importar y exportar](/guides/import-export).
+- **Usar la IA, solo si quieres**: la IA está desactivada hasta que la activas, y necesita una cuenta en una empresa de IA, que puede cobrar por su uso. Puede sugerir una carpeta o responder preguntas sobre tus marcadores, y no cambia nada sin tu aprobación. Consulta [Configurar las herramientas de IA](/guides/ai-tools).
 
-<Screenshot name="manager" />
+<Screenshot name="popup" />
 
 ## Adónde van tus datos [#where-your-data-goes]
 
-Bookmark Scout no tiene cuenta ni servidor propio. Tus marcadores se quedan en tu navegador. Los datos solo salen del navegador cuando usas una función que necesita la red, como comprobar enlaces rotos o una herramienta de IA que activaste, y en ese caso van directamente al sitio web o al proveedor que elegiste. Los agentes de IA locales, cuando los permites, reciben lo que consultan a través de un programa de tu equipo. Lee el [resumen de privacidad](/privacy).
+Bookmark Scout no tiene cuenta ni servidor propio. Tus marcadores se quedan en tu navegador. Los datos solo salen del navegador cuando usas una función que necesita internet, como comprobar enlaces rotos o una herramienta de IA que activaste, y en ese caso van directamente al sitio web o a la empresa de IA que elegiste. Lee el [resumen de privacidad](/privacy).
+
+Bookmark Scout lo hace un desarrollador independiente: sin empresa, sin anuncios, sin cuenta, y el código es abierto.
 
 ## Navegadores [#browsers]
 
-Chrome es el navegador principal. Edge también está basado en Chromium y pasa el mismo conjunto de pruebas de extremo a extremo. En Firefox, que no permite reemplazar su página de marcadores, el administrador se abre desde un botón de la ventana emergente, y algunas funciones del navegador son distintas. Consulta [Compatibilidad con navegadores](/browser-support) para ver los detalles.
+<StoreAvailability />
+
+Las versiones para Firefox y Edge van de camino a sus tiendas; hasta entonces, se pueden instalar a mano. Bookmark Scout funciona en un navegador de un equipo, no en teléfonos ni tabletas. Consulta [Instalar](/installation) y [Compatibilidad con navegadores](/browser-support).
 
 ## Obtener ayuda [#get-help]
 
 Consulta primero la página de [Preguntas frecuentes y solución de problemas](/faq). Para cualquier otra cosa, escribe a <Contact role="support" /> o abre un issue en <RepoLink path="/issues">GitHub</RepoLink>.
+
+Para desarrolladores: conecta aplicaciones de IA de tu equipo, como asistentes de programación, con [Usar con agentes de IA locales](/guides/local-agents), o ayuda a crear Bookmark Scout con [Contribuir y desarrollo](/contributing). La cobertura de pruebas y la lista completa de funciones están en [Estado del proyecto](/status).

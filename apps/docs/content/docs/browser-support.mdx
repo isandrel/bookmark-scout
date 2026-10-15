@@ -1,11 +1,17 @@
 ---
 title: Browser support
-description: What works in Chrome, Microsoft Edge, and Firefox, what is tested in each, and why Safari is not supported.
+description: What works in Chrome, Microsoft Edge, and Firefox, where to get it for each, and why Safari is not supported.
 ---
 
-Chrome is the primary target. Edge is Chromium-based and has the same features, except where noted below. Firefox uses a Manifest V2 build with a smaller feature set.
+Bookmark Scout works best in Chrome, where it is available from the Chrome Web Store. Edge has the same features, except where noted below. Firefox has a slightly smaller set, because it lets extensions do less with bookmarks. All three run on a computer; phones and tablets are not supported.
 
-## Feature matrix
+## Where to get it
+
+<StoreAvailability />
+
+Where a store does not list Bookmark Scout yet, you can [install it by hand](/installation#install-from-a-github-release). Listing material is prepared in the repository's <RepoLink tree="store">`store/` folder</RepoLink>, and each store reviews an extension before listing it.
+
+## What works where [#feature-matrix]
 
 This table comes from the manifests of the built extension for each browser and the browser checks in its code.
 
@@ -18,26 +24,14 @@ This table comes from the manifests of the built extension for each browser and 
 | Saved searches, maintenance tools, import and export, statistics, manager AI tools | Yes | Yes | Yes, in the manager. Automated tests cover import and export and the reports; the other tools are checked by hand. |
 | Settings page | Yes | Yes | Yes |
 | Ask AI and the other AI tools | Yes | Yes | Yes, after you agree to share data with your AI provider |
-| Local AI agents through `bookmark-scout-mcp` | Yes | Yes | Yes; `bookmark-scout-mcp install` registers it with Firefox too. Not covered by automated tests |
+| Local AI agents through `bookmark-scout-mcp` (for developers) | Yes | Yes | Yes; `bookmark-scout-mcp install` registers it with Firefox too. Not covered by automated tests |
 | Open in incognito window from the manager | Yes | Yes, as an InPrivate window | Yes, as a private window, when the extension is allowed in private windows |
 | Right-click menu to save links | Yes, after you turn on **Right-Click Menu** (asks for permission) | Same | Yes, after you turn on **Right-Click Menu** |
 | Site icons next to bookmarks | Icons saved with **Refresh Site Icons**, and from the browser's icon cache once you turn on **Use the browser's icon cache** | Same | Only icons saved with **Refresh Site Icons**, which runs in the manager. Firefox has no favicon API for extensions, so other bookmarks show a generic icon. |
 | Optional website access for dead-link checks, title fetching, and site icon refreshes | Requested when you run the tool | Same | Same |
 
-## What is tested
-
-- **Chrome (Chromium)**: unit tests and end-to-end tests for the popup, side panel, manager, settings, maintenance tools, reports, import and export, keyboard shortcuts, quick save, saved searches, context-menu saves, drag and drop, network tools, AI tools against mocked providers, and journeys across several of them. Bridge tests run the `bookmark-scout-mcp` program with the extension in Chromium on Linux and macOS.
-- **Edge**: the same end-to-end suite runs against the Edge build.
-- **Firefox**: a smoke suite covers popup search and folder creation, the side panel page loaded in a tab, opening the manager from the popup and side panel, the manager page with its address, `Delete` and undo, folder tree keys, right-click menu, and drag and drop (from scripted drag events), the quick save shortcut notice and key recorder, the AI data sharing consent, a settings save, a JSON export and import round trip, the statistics and privacy reports, and saved site icons in the popup. Saving from the right-click menu on a page, the other keyboard shortcuts, drag and drop in the popup, the quick save notification itself, local AI agents, and network and AI tools (including **Refresh Site Icons** itself) are not covered.
-
-The Edge suite and the Firefox smoke suite are required CI checks, like the Chromium suite. Real AI providers and live websites are checked by hand, not by automated tests.
+How much of each browser is covered by automated tests is in [Project status](/status#what-is-tested-in-each-browser).
 
 ## Safari
 
 Safari is not supported. Safari Web Extensions do not implement the `bookmarks` API, which every part of Bookmark Scout depends on.
-
-## Store availability
-
-<StoreAvailability />
-
-Listing material is prepared in the repository's <RepoLink tree="store">`store/` folder</RepoLink>, and each submission needs the maintainer's approval. Where a store has no listing, [install from a GitHub release](/installation).

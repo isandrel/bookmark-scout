@@ -10,7 +10,7 @@ description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab 
 - **Einstellungen durchsuchen...** oben auf der Seite findet eine Einstellung in jedem Tab und zeigt an, wie viele Treffer es gibt.
 - Jeder Tab ist in Abschnitte mit Überschriften gegliedert. Der Ein-/Aus-Schalter eines Tools steht neben seiner Überschrift; solange er aus ist, sind die übrigen Einstellungen eingeklappt. Technische Einstellungen wie Zeitlimits und Dateinamenlängen stehen unter **Erweiterte Einstellungen**, die geschlossen bleiben, bis Sie sie öffnen oder eine Suche darin etwas findet.
 - Eine geänderte Einstellung ist als **Geändert** markiert und hat eine Schaltfläche, um sie auf den Standardwert zurückzusetzen. **Alle zurücksetzen** setzt alle Einstellungen zurück.
-- **Exportieren** speichert eine Sicherungsdatei mit den Einstellungen, die Sie geändert haben, eigenen Prompts, KI-Diensten (Name, Anbieter, Modell, **Basis-URL** und anbieterspezifische Felder, nie API-Schlüssel oder **Zusätzliche Header (JSON)**), gespeicherten Suchen sowie den Spalten und der Sortierung der Manager-Tabelle. **Importieren** stellt eine Sicherung wieder her und ersetzt dabei jeden Teil, den die Datei enthält, oder führt eine einfache Einstellungsdatei mit Ihren Einstellungen zusammen; tragen Sie nach dem Wiederherstellen einer Sicherung API-Schlüssel und zusätzliche Header unter [KI](#ai) für die Dienste erneut ein, die mit **Einrichtung nötig** markiert sind. Beides lässt Ihre Lesezeichen unberührt.
+- **Einstellungen sichern** speichert eine Sicherungsdatei mit den Einstellungen, die Sie geändert haben, eigenen Prompts, KI-Diensten (Name, Anbieter, Modell, **Basis-URL** und anbieterspezifische Felder, nie API-Schlüssel oder **Zusätzliche Header (JSON)**), gespeicherten Suchen sowie den Spalten und der Sortierung der Manager-Tabelle. **Einstellungen wiederherstellen** stellt eine Sicherung wieder her und ersetzt dabei jeden Teil, den die Datei enthält, oder führt eine einfache Einstellungsdatei mit Ihren Einstellungen zusammen; tragen Sie nach dem Wiederherstellen einer Sicherung API-Schlüssel und zusätzliche Header unter [KI](#ai) für die Dienste erneut ein, die mit **Einrichtung nötig** markiert sind. Beides lässt Ihre Lesezeichen unberührt. **Lesezeichen exportieren** daneben öffnet den Lesezeichen-Manager mit seinem Export-Tool; siehe [Import und Export](/guides/import-export).
 - Einstellungen, die Sie ändern, werden im Synchronisierungsspeicher des Browsers abgelegt und folgen Ihnen daher auf andere Geräte, wenn die Browsersynchronisierung aktiviert ist. Einige Einstellungen, die zu einem Gerät gehören, bleiben dort: der für das Schnellspeichern gewählte Ordner, **Speicherbegrenzung für Symbole**, die Aufzeichnung der KI-Aktivität und die Websuche von „KI fragen“. Auch KI-Dienste mit ihren API-Schlüsseln, **Basis-URL** und **Zusätzliche Header (JSON)** bleiben auf diesem Gerät. Siehe [Datenschutz](/privacy).
 
 ## Speichern & Suche [#search]
@@ -53,11 +53,11 @@ Siehe [Speichern und ordnen](/guides/save-and-organize).
 
 Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Browser hat, mit **Kürzel ändern**. In Firefox können Sie dort auch direkt neue Tasten eingeben und sie auf den Standard zurücksetzen. In Chrome und Edge wird dort außerdem erklärt, wie Sie dem Schnellspeichern `Ctrl+D` zuweisen. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save) und [Ctrl+D zum Schnellspeichern verwenden](/guides/save-and-organize#ctrl-d).
 
-### Kontextmenü [#context-menu]
+### Rechtsklickmenü [#context-menu]
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Kontextmenü** | Aus | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen. In Chrome und Edge fügt das Aktivieren die optionale Berechtigung für das Rechtsklickmenü ohne Nachfrage hinzu |
+| **Rechtsklickmenü** | Aus | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen. In Chrome und Edge fügt das Aktivieren die optionale Berechtigung für das Rechtsklickmenü ohne Nachfrage hinzu |
 | **Quelle für Lesezeichennamen** | Linktext | Ein per Rechtsklick gespeichertes Lesezeichen nach dem Linktext, dem Seitentitel oder der Link-URL benennen |
 
 ## Darstellung [#appearance]
@@ -113,7 +113,7 @@ Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs der Verwaltung zeige
 
 ## KI [#ai]
 
-KI ist standardmäßig deaktiviert. Diese Einstellungen wirken erst, nachdem Sie **KI-Funktionen** aktiviert haben.
+KI ist standardmäßig deaktiviert. Diese Einstellungen wirken erst, nachdem Sie **KI-Funktionen** aktiviert haben; bis dahin sind die KI-Einstellungen hier und im Tab **KI-Tools** ausgegraut, mit einem Hinweis darauf. Sie können sie trotzdem ändern.
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
@@ -175,7 +175,7 @@ Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Or
 
 Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben und Enter drücken oder einen Vorschlag wählen. **Erfolgs-Statuscodes** ist eine Checkliste gängiger Codes, und Sie können weitere hinzufügen. Damit die Einstellungen in die Browsersynchronisierung passen, fasst jede Liste bis zu 20 Einträge und ein Parametername bis zu 32 Zeichen (Buchstaben, Ziffern und URL-Satzzeichen). Die Standardlisten stehen unter [Duplikate und Tracking-URLs bereinigen](/guides/clean-up#strip-tracking-parameters). Siehe auch [Defekte Links finden und reparieren](/guides/dead-links).
 
-## Metadaten und Inhalte [#metadata--content]
+## Seitentitel und Symbole [#metadata--content]
 
 ### Metadatenabruf [#metadata-fetcher]
 
@@ -203,7 +203,7 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | --- | --- | --- |
 | **Datenschutzprüfung aktivieren** | An | **Datenschutzprüfung** in der Tools-Leiste anzeigen. Sie prüft immer alle Lesezeichen |
 | **Titel prüfen** | Aus | Neben URLs auch Titel prüfen |
-| **Abfrageparameter prüfen** und **Fragmente prüfen** | An | Diese Teile jeder URL prüfen |
+| **Abfrageparameter prüfen** und **Fragmente prüfen** | An | Diese Teile jeder URL prüfen. Ein Fragment ohne Parameter (`#section`, `#inbox`) wird nur markiert, wenn es einen Schlüssel oder ein Token enthält |
 | **Sensible Parameter** | `token`, `access_token`, `refresh_token`, `auth`, `authorization`, `api_key`, `apikey`, `key`, `secret`, `password`, `pwd`, `code`, `session` | Zu markierende Parameternamen |
 | **E-Mail-Adressen erkennen** und **UUIDs erkennen** | An | E-Mail-Adressen und UUID-ähnliche Werte markieren |
 
