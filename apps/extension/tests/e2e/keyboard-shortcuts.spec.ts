@@ -130,6 +130,8 @@ test.describe('popup keyboard shortcuts', () => {
 
     await expect.poll(children).toHaveLength(2);
     expect(await children()).toContain(`chrome-extension://${extensionId}/popup.html`);
+    // The save has finished once it says so; an Enter while it is still running is ignored.
+    await expect(toastRegion(page).getByText(/Bookmark Added$/)).toBeVisible();
     await expect(folder).toHaveAttribute('aria-expanded', 'false');
     await expect(folder).toBeFocused();
 

@@ -60,7 +60,7 @@ test('permanent folder names and empty-title regexes do not return the whole tre
   await search.fill('other');
   await expect(page.getByText('No bookmarks found')).toBeVisible();
 
-  await page.getByRole('button', { name: 'Use regular expression' }).click();
+  await toggleSearchOption(page, 'Advanced pattern search');
   await search.fill('^$');
   await expect(page.getByText('No bookmarks found')).toBeVisible();
   await expect(page.getByText('Plain Entry', { exact: true })).toHaveCount(0);
@@ -81,7 +81,7 @@ test('whole-word search matches CJK and symbol-edged terms, and invalid regex wa
 
   await openPopup(page, extensionId);
   const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
-  await page.getByRole('button', { name: 'Match whole word' }).click();
+  await toggleSearchOption(page, 'Match whole word');
 
   await search.fill('ブックマーク');
   await expect(bookmarkRow(page, '日本語のブックマーク').locator('mark')).toHaveText(
@@ -94,8 +94,8 @@ test('whole-word search matches CJK and symbol-edged terms, and invalid regex wa
   await search.fill('Java');
   await expect(page.getByText('No bookmarks found')).toBeVisible();
 
-  await page.getByRole('button', { name: 'Match whole word' }).click();
-  await page.getByRole('button', { name: 'Use regular expression' }).click();
+  await toggleSearchOption(page, 'Match whole word');
+  await toggleSearchOption(page, 'Advanced pattern search');
   await search.fill('[x');
   await expect(page.getByRole('alert')).toContainText('Invalid regular expression');
   await search.fill('[x]');
@@ -150,7 +150,7 @@ test('search history ignores abandoned queries and supports the keyboard', async
   await search.fill('Abandoned One');
   await toggleSearchOption(page, 'Match case');
   await toggleSearchOption(page, 'Match case');
-  await page.getByRole('button', { name: 'Clear search' }).click();
+  await page.getByRole('button', { name: 'Clear search' }).first().click();
   await expect(search).toHaveValue('');
   expect(await storedHistory()).toBeUndefined();
 
