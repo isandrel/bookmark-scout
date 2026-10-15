@@ -17,11 +17,14 @@ const PROVIDER_GROUP_LABELS: Record<AIProviderGroup, MessageKey> = {
 
 /**
  * Every provider as a picker option, grouped like the provider catalog. The built-in model is
- * listed (first) only where this computer can run it.
+ * listed (first) only where this computer can run it, and a provider that allows one service
+ * only while it has none.
  */
-function providerOptions(offerBuiltin: boolean): ProviderOption[] {
+function providerOptions(offerBuiltin: boolean, services: readonly AIService[]): ProviderOption[] {
+  const added = new Set(services.map((service) => service.provider));
   return getAvailableProviders()
     .filter((provider) => offerBuiltin || !isBuiltinProvider(provider.id))
+    .filter((provider) => !(isSingleServiceProvider(provider.id) && added.has(provider.id)))
     .map((provider) => ({
       value: provider.id,
       label: getLocalizedProviderName(provider.id),
@@ -50,20 +53,24 @@ function ServiceLogo({ provider }: { provider: AIProvider }) {
 
 function AddServiceDialog({
   open,
+  services,
   onOpenChange,
   onAdded,
 }: {
   open: boolean;
+  services: readonly AIService[];
   onOpenChange: (open: boolean) => void;
   onAdded: (service: AIService) => void;
 }) {
   const [provider, setProvider] = useState<string>(DEFAULT_SERVICE_PROVIDER);
   const [name, setName] = useState('');
-  const options = providerOptions(canOfferBuiltinAI(useBuiltinAIStatus(open)));
+  const options = providerOptions(canOfferBuiltinAI(useBuiltinAIStatus(open)), services);
   const catalogGroup = t(PROVIDER_GROUP_LABELS.catalog);
 
   const add = async () => {
     const service = await addAIService(provider, name);
+    // The next add starts from the default: the provider just added may no longer be listed.
+    setProvider(DEFAULT_SERVICE_PROVIDER);
     setName('');
     onOpenChange(false);
     onAdded(service);
@@ -239,16 +246,18 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
                       <Star className="h-4 w-4" />
                       {t('options_aiServiceSetDefault')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() =>
-                        void duplicateAIService(service.id).then((copy) => {
-                          if (copy) setExpandedId(copy.id);
-                        })
-                      }
-                    >
-                      <Copy className="h-4 w-4" />
-                      {t('options_aiServiceDuplicate')}
-                    </DropdownMenuItem>
+                    {!isSingleServiceProvider(service.provider) && (
+                      <DropdownMenuItem
+                        onClick={() =>
+                          void duplicateAIService(service.id).then((copy) => {
+                            if (copy) setExpandedId(copy.id);
+                          })
+                        }
+                      >
+                        <Copy className="h-4 w-4" />
+                        {t('options_aiServiceDuplicate')}
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                       className="text-destructive-text"
                       onClick={() => setDeleting(service)}
@@ -275,6 +284,7 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
 
       <AddServiceDialog
         open={adding}
+        services={state.services}
         onOpenChange={setAdding}
         onAdded={(s) => setExpandedId(s.id)}
       />

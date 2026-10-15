@@ -160,8 +160,33 @@ test('Add service lists the built-in model first where it can run', async ({
   await page.getByRole('button', { name: 'Add service' }).click();
   const dialog = page.getByRole('dialog', { name: 'Add an AI service' });
   await dialog.getByRole('combobox', { name: 'Provider' }).click();
-  const first = page.locator('[data-slot="searchable-select-popup"]').getByRole('option').first();
+  const popup = page.locator('[data-slot="searchable-select-popup"]');
+  const first = popup.getByRole('option').first();
   await expect(first).toHaveText('Built-in AI (on this computer)');
+  await first.click();
+  await dialog.getByRole('button', { name: 'Add service' }).click();
+  await expect(dialog).toHaveCount(0);
+  const services = page.getByTestId('ai-service');
+  await expect(services).toHaveCount(1);
+
+  // There is only one model on this computer: Add service no longer lists it, and it has no copy.
+  await page.getByRole('button', { name: 'Add service' }).click();
+  await dialog.getByRole('combobox', { name: 'Provider' }).click();
+  await expect(popup.getByRole('option', { name: 'OpenAI', exact: true })).toBeVisible();
+  await expect(popup.getByRole('option', { name: 'Built-in AI (on this computer)' })).toHaveCount(
+    0,
+  );
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await services
+    .first()
+    .getByRole('button', { name: /^Actions for / })
+    .click();
+  await expect(page.getByRole('menuitem', { name: 'Set as default' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Duplicate' })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(services).toHaveCount(1);
 });
 
 async function openPopupOnPage(context: BrowserContext, worker: Worker, extensionId: string) {

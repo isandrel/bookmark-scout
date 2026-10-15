@@ -28,7 +28,10 @@ const POINTS: readonly { id: string; icon: LucideIcon; key: MessageKey }[] = [
   { id: 'data', icon: Send, key: 'aiOnboard_data' },
 ];
 
-/** Adds a built-in service and makes it the default, so its editor opens with the download. */
+/**
+ * Makes the built-in service the default, so its editor opens with the download. There is only
+ * ever one: when it already exists (another tab added it, or a second click), that one is chosen.
+ */
 async function addBuiltinService(provider: AIProvider) {
   const service = await addAIService(provider);
   await setDefaultAIService(service.id);

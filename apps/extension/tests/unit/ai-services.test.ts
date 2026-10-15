@@ -101,6 +101,23 @@ describe('named AI services', () => {
     expect(state.defaultServiceId).toBeDefined();
   });
 
+  it('keeps one built-in AI service: adding or copying it again returns the existing one', async () => {
+    const hosted = await addAIService('openai');
+    const builtin = await addAIService('chrome_builtin');
+    // Two quick adds (a double click, or two tabs) still leave one.
+    const [again, third] = await Promise.all([
+      addAIService('chrome_builtin', 'Another name'),
+      addAIService('chrome_builtin'),
+    ]);
+    expect(again.id).toBe(builtin.id);
+    expect(third.id).toBe(builtin.id);
+    expect(await duplicateAIService(builtin.id)).toBeUndefined();
+    const state = await getAIServicesState();
+    expect(state.services.map((service) => service.provider)).toEqual(['openai', 'chrome_builtin']);
+    expect(state.services.find((service) => service.id === builtin.id)?.name).toBe(builtin.name);
+    expect(state.defaultServiceId).toBe(hosted.id);
+  });
+
   it('falls back to the next enabled service when the default is turned off', async () => {
     const first = await addAIService('openai');
     const second = await addAIService('groq');
