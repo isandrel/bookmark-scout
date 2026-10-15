@@ -6332,5 +6332,53 @@
     "essentials_developersDesc": {
         "message": "Claude Code처럼 내 컴퓨터에서 실행하는 AI 에이전트가 북마크를 사용하게 합니다",
         "description": "Options > For developers: line under the tab title"
+    },
+    "aiOnboard_title": {
+        "message": "AI는 선택 사항입니다",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout는 AI 없이도 작동합니다. 사용하려면 아래에서 AI 기능을 켠 다음 서비스를 추가하세요.",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "AI는 페이지를 저장할 때 폴더를 추천하고, 태그와 짧은 요약을 추가하고, 북마크에 대한 질문에 답할 수 있습니다(AI에게 묻기).",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "OpenAI나 Google 같은 AI 회사의 계정과 그곳에서 받은 API 키(Bookmark Scout가 내 계정을 사용할 수 있게 하는 코드)가 필요합니다. 또는 Ollama 같은 무료 모델을 내 컴퓨터에서 실행하면 키가 필요 없습니다.",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "AI 회사는 AI를 사용할 때마다 소액을 청구할 수 있습니다. 내 컴퓨터에서 실행하는 모델은 무료입니다.",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "보내는 내용: 요청에 필요한 제목, 웹 주소, 폴더 이름, 현재 페이지의 제목과 주소, AI에게 묻기 메시지입니다. 페이지 본문은 페이지 내용 읽기가 켜져 있을 때만 보냅니다. 선택한 회사로 바로 전송되며 Bookmark Scout는 받지 않습니다.",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "AI 가이드 읽기",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "$1에서 API 키 받기",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "입력하면 다른 제공업체 $1곳을 검색할 수 있습니다",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "입력하면 다른 제공업체 $1곳을 검색할 수 있습니다",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "AI가 켜져 있지만 아직 설정되지 않았습니다",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "AI 설정 마치기",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

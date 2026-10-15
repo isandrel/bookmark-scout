@@ -25,6 +25,12 @@ type SearchableSelectProps = {
   searchPlaceholder: string;
   emptyText: string;
   className?: string;
+  /**
+   * Groups too long to scan, listed only once the user types a search (the selected option stays
+   * listed). While they are hidden, `searchOnlyHint` says how to find them.
+   */
+  searchOnlyGroups?: readonly string[];
+  searchOnlyHint?: string;
 } & Pick<
   React.ComponentProps<'button'>,
   'id' | 'aria-labelledby' | 'aria-describedby' | 'aria-invalid'
@@ -51,15 +57,32 @@ export function SearchableSelect({
   searchPlaceholder,
   emptyText,
   className,
+  searchOnlyGroups,
+  searchOnlyHint,
   ...triggerProps
 }: SearchableSelectProps) {
+  const [query, setQuery] = React.useState('');
   const groups = React.useMemo(() => groupOptions(options), [options]);
   const selected = options.find((option) => option.value === value) ?? null;
   const hasIcons = options.some((option) => option.iconUrl);
+  const hidingGroups = Boolean(searchOnlyGroups?.length) && query.trim() === '';
+  const shownGroups = React.useMemo(
+    () =>
+      hidingGroups
+        ? groups.flatMap((group) => {
+            if (!searchOnlyGroups?.includes(group.value)) return [group];
+            const kept = group.items.filter((option) => option.value === value);
+            return kept.length ? [{ ...group, items: kept }] : [];
+          })
+        : groups,
+    [groups, hidingGroups, searchOnlyGroups, value],
+  );
 
   return (
     <Combobox.Root
-      items={groups}
+      items={shownGroups}
+      inputValue={query}
+      onInputValueChange={setQuery}
       value={selected}
       onValueChange={(next: SearchableSelectOption | null) => {
         if (next) onValueChange(next.value);
@@ -128,6 +151,14 @@ export function SearchableSelect({
                 </Combobox.Group>
               )}
             </Combobox.List>
+            {hidingGroups && searchOnlyHint ? (
+              <p
+                data-slot="searchable-select-hint"
+                className="border-t px-3 py-2 text-xs text-muted-foreground"
+              >
+                {searchOnlyHint}
+              </p>
+            ) : null}
           </Combobox.Popup>
         </Combobox.Positioner>
       </Combobox.Portal>

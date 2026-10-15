@@ -93,6 +93,7 @@ function matchesQuery(fieldKey: keyof Settings, query: string): boolean {
 const OptionsPage: React.FC = () => {
   const { settings, isLoading, resetToDefaults } = useSettings();
   const { resolvedTheme, setTheme } = useTheme();
+  const aiServiceSetUp = useAIServiceSetUp();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeTab, setActiveTab] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
@@ -397,6 +398,9 @@ const OptionsPage: React.FC = () => {
   /** The panel a section draws after its fields; in a search, only when it matched. */
   const renderPanel = (panel: SettingsPanelId | undefined, matchesOnly: boolean) => {
     switch (panel) {
+      case 'aiIntro':
+        // Until the default service is set up; after that it would only push the settings down.
+        return matchesOnly || aiServiceSetUp !== false ? null : <AIIntroPanel />;
       case 'aiServices':
         if (!matchesOnly) return <AIServicesPanel />;
         return aiPanelMatches > 0 ? (

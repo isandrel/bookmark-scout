@@ -52,6 +52,11 @@ export const aiProviderFileSchema = z.strictObject({
     .regex(/^\S*\.\.\.$/, 'must be a key format ending in "...", such as "sk-..."')
     .optional(),
   base_url: z.url().optional(),
+  /**
+   * The provider's page where a signed-in user creates an API key, shown as "Get a key" next to
+   * the key field. Only for providers that need a key; https only.
+   */
+  key_url: z.url({ protocol: /^https$/ }).optional(),
   supports_custom_model: z.boolean().optional(),
   /** `openai` when omitted. */
   model_list: z.enum(MODEL_LIST_STYLES).optional(),
@@ -68,6 +73,13 @@ export const aiProviderFilesSchema = z
   .superRefine((providers, ctx) => {
     const seen = new Map<number, string>();
     for (const [id, provider] of Object.entries(providers)) {
+      if (provider.key_url && !provider.requires_api_key) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [id, 'key_url'],
+          message: 'only providers that need an API key have a key page',
+        });
+      }
       const other = seen.get(provider.order);
       if (other !== undefined) {
         ctx.addIssue({ code: 'custom', path: [id, 'order'], message: `same order as ${other}` });

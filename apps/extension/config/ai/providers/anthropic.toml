@@ -6,6 +6,7 @@ requires_api_key = true
 api_key_pattern = "^sk-ant-"
 api_key_placeholder = "sk-ant-..."
 base_url = "https://api.anthropic.com/v1"
+key_url = "https://platform.claude.com/settings/keys"
 model_list = "anthropic"
 logo = "anthropic"
 

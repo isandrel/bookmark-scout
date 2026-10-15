@@ -6134,5 +6134,53 @@
     "essentials_developersDesc": {
         "message": "讓你電腦上執行的 AI 代理（例如 Claude Code）使用你的書籤",
         "description": "Options > For developers: line under the tab title"
+    },
+    "aiOnboard_title": {
+        "message": "AI 是選用功能",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout 不用 AI 也能使用。如要使用，請開啟下方的「AI 功能」，然後新增服務。",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "AI 可以在你儲存網頁時推薦資料夾，加上標籤和簡短摘要，並回答關於書籤的問題（詢問 AI）。",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "需要一個 AI 公司（例如 OpenAI 或 Google）的帳號，以及從那裡取得的 API 金鑰：一段讓 Bookmark Scout 使用你帳號的代碼。也可以在自己的電腦上執行免費模型（例如 Ollama），不需要金鑰。",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "AI 公司可能會依每次使用收取少量費用。在自己電腦上執行的模型是免費的。",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "傳送的內容：請求所需的標題、網址和資料夾名稱，目前網頁的標題和網址，以及你傳給「詢問 AI」的訊息。只有開啟「讀取網頁內容」時才會傳送網頁內文。資料直接傳給你選擇的公司，Bookmark Scout 不會收到。",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "閱讀 AI 指南",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "從 $1 取得 API 金鑰",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "輸入文字可搜尋另外 $1 個供應商",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "輸入文字可搜尋另外 $1 個供應商",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "AI 已開啟，但尚未設定",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "完成 AI 設定",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

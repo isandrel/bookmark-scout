@@ -134,6 +134,7 @@ export function AIServiceEditor({
   const extraFields = getProviderExtraFields(provider);
   const hasModelList = getProviderModelListStyle(provider) !== 'none';
   const docUrl = getProviderDocUrl(provider);
+  const keyUrl = getProviderKeyUrl(provider);
   const idPrefix = `ai-service-${service.id}`;
 
   const [name, setName] = useState(service.name);
@@ -299,7 +300,8 @@ export function AIServiceEditor({
   /** Keeps a fetched list for the model picker, here and after reloads. */
   const rememberModels = async (settings: AISettings, models: DetectedAIModel[]) => {
     const endpoint = getProviderEndpoint(provider, settings.baseUrl, settings.providerOptions);
-    if (endpoint) await saveCachedModelList(service.id, { endpoint, models, fetchedAt: Date.now() });
+    if (endpoint)
+      await saveCachedModelList(service.id, { endpoint, models, fetchedAt: Date.now() });
     const ids = models.map((model) => model.id);
     setDetectedModels(ids);
     if (!ids.includes(service.model)) setModel(ids[0]);
@@ -457,6 +459,17 @@ export function AIServiceEditor({
             </div>
           )}
         </Field>
+        {/* Where the key comes from, for providers whose file names the page. */}
+        {keyUrl && (
+          <UrlLink
+            href={keyUrl}
+            data-testid="ai-provider-key-link"
+            className="-mt-2 inline-flex items-center gap-1 justify-self-start text-sm text-primary sm:col-start-2"
+          >
+            {t('aiOnboard_getKey', providerName)}
+            <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+          </UrlLink>
+        )}
       </div>
 
       <div className="space-y-1.5">

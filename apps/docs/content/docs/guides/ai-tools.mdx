@@ -18,16 +18,16 @@ AI tools send bookmark titles, URLs, and folder names or paths to the provider y
 
 <Steps>
 <Step>
-Open Bookmark Scout's settings (in Chrome, right-click the toolbar icon and choose **Options**) and go to the **AI** tab.
+Open Bookmark Scout's settings (in Chrome, right-click the toolbar icon and choose **Options**) and go to the **AI** tab. Until a service is set up, a box at the top, **AI is optional**, sums up what AI does, what it needs, what it may cost, and what is sent.
 </Step>
 <Step>
 Turn on **AI Features**.
 </Step>
 <Step>
-Under **AI services**, click **Add service** and pick a provider. The picker has a search box, and groups providers under **Featured**, **Local servers**, **Custom**, and **More providers (models.dev)**. Then choose an **AI Model**.
+Under **AI services**, click **Add service** and pick a provider. The picker lists well-known providers under **Featured**, then **Local servers** and **Custom**; type in its search box to find about 200 more under **More providers (models.dev)**. Then choose an **AI Model**.
 </Step>
 <Step>
-Enter your **API Key** if the provider needs one. It is saved when you leave the field, and stored only on this device. A key that does not match the provider's format is rejected and not saved.
+Enter your **API Key** if the provider needs one. For the featured providers, **Get an API key from** the provider opens the page where you create one after signing in. The key is saved when you leave the field, and stored only on this device. A key that does not match the provider's format is rejected and not saved.
 </Step>
 <Step>
 Optional: click **Refresh Models** to load the provider's current model list, or **Verify Service** to check that the provider is reachable, accepts the key, and offers the chosen model. Both read the provider's model list, which costs nothing; Verify only sends a short test prompt to providers without a list, such as Azure OpenAI. The browser asks for access to that one provider's address the first time. A refreshed list is kept for the model picker until you refresh again.
@@ -35,6 +35,8 @@ Optional: click **Refresh Models** to load the provider's current model list, or
 </Steps>
 
 <Screenshot name="options-ai" />
+
+The AI buttons in the popup and side panel appear once AI Features is on and the default service is set up (with its key, if the provider needs one). Until then, the popup shows **AI is on but not set up yet** with **Finish AI setup**, which opens this tab, and the AI tools in the bookmarks manager stay disabled.
 
 Settings save automatically. AI services, with their API keys, **Base URL**, and **Extra Headers JSON**, stay in this browser's local storage and are never synced. Other AI settings, such as whether AI is on, sync through your browser account where the browser supports it.
 

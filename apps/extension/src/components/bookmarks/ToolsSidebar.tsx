@@ -34,9 +34,12 @@ type ToolEntryProps = {
 function ToolEntry({ tool, environment, currentFolderName, runWithAccess }: ToolEntryProps) {
   const { state, run, apply, undo, close } = useToolRun(tool, environment);
   const { settings } = environment;
-  // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed.
-  const aiEnabled = useEffectiveSetting('aiEnabled');
-  const aiOff = Boolean(tool.requiresAI) && !aiEnabled;
+  // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed; on but
+  // without a usable default service, it says to finish the setup instead of failing on click.
+  const aiSetup = useAISetup();
+  const aiBlocked = Boolean(tool.requiresAI) && aiSetup !== 'ready';
+  const aiNotice =
+    aiSetup === 'needsSetup' ? t('aiOnboard_setupNotice') : t('ai_featuresDisabledNotice');
   const Review = TOOL_REVIEWS[tool.id] as
     | ((props: ToolReviewProps<ToolId>) => React.ReactNode)
     | undefined;
@@ -58,8 +61,8 @@ function ToolEntry({ tool, environment, currentFolderName, runWithAccess }: Tool
             runWithAccess(() => run(scope), getUrlSites(urls));
           } else void run(scope);
         }}
-        disabled={aiOff}
-        notice={aiOff ? t('ai_featuresDisabledNotice') : undefined}
+        disabled={aiBlocked}
+        notice={aiBlocked && aiSetup !== 'loading' ? aiNotice : undefined}
         scopeCapability={getToolScopeCapability(tool.id)}
         defaultScope={getToolDefaultScope(settings, tool, environment.currentFolderId)}
         currentFolderName={currentFolderName}

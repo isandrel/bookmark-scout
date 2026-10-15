@@ -18,16 +18,16 @@ Les outils d'IA envoient les titres des favoris, leurs URL et les noms ou chemin
 
 <Steps>
 <Step>
-Ouvrez les paramètres de Bookmark Scout (dans Chrome, effectuez un clic droit sur l'icône de la barre d'outils et choisissez **Options**), puis accédez à l'onglet **IA**.
+Ouvrez les paramètres de Bookmark Scout (dans Chrome, effectuez un clic droit sur l'icône de la barre d'outils et choisissez **Options**), puis accédez à l'onglet **IA**. Tant qu'aucun service n'est configuré, un encadré en haut, **L'IA est facultative**, résume ce que fait l'IA, ce dont elle a besoin, ce qu'elle peut coûter et ce qui est envoyé.
 </Step>
 <Step>
 Activez les **Fonctionnalités d'IA**.
 </Step>
 <Step>
-Sous **Services d'IA**, cliquez sur **Ajouter un service** et choisissez un fournisseur. Le sélecteur comporte un champ de recherche et regroupe les fournisseurs sous **À la une**, **Serveurs locaux**, **Personnalisé** et **Autres fournisseurs (models.dev)**. Choisissez ensuite un **Modèle d'IA**.
+Sous **Services d'IA**, cliquez sur **Ajouter un service** et choisissez un fournisseur. Le sélecteur affiche les fournisseurs connus sous **À la une**, puis **Serveurs locaux** et **Personnalisé**. Tapez dans son champ de recherche pour en trouver environ 200 autres sous **Autres fournisseurs (models.dev)**. Choisissez ensuite un **Modèle d'IA**.
 </Step>
 <Step>
-Saisissez votre **Clé API** si le fournisseur en exige une. Elle est enregistrée lorsque vous quittez le champ, et stockée uniquement sur cet appareil. Une clé qui ne correspond pas au format du fournisseur est refusée et n'est pas enregistrée.
+Saisissez votre **Clé API** si le fournisseur en exige une. Pour les fournisseurs à la une, le lien **Obtenir une clé API auprès de**, suivi du nom du fournisseur, ouvre la page où vous en créez une après vous être connecté. La clé est enregistrée lorsque vous quittez le champ, et stockée uniquement sur cet appareil. Une clé qui ne correspond pas au format du fournisseur est refusée et n'est pas enregistrée.
 </Step>
 <Step>
 Facultatif : cliquez sur **Actualiser les modèles** pour charger la liste actuelle des modèles du fournisseur, ou sur **Vérifier le service** pour vérifier que le fournisseur est joignable, accepte la clé et propose le modèle choisi. Ces deux actions lisent la liste des modèles du fournisseur, ce qui ne coûte rien ; la vérification n'envoie un court prompt de test qu'aux fournisseurs sans liste, comme Azure OpenAI. La première fois, le navigateur demande l'accès à l'adresse de ce seul fournisseur. Une liste actualisée est conservée pour le sélecteur de modèle jusqu'à la prochaine actualisation.
@@ -35,6 +35,8 @@ Facultatif : cliquez sur **Actualiser les modèles** pour charger la liste actu
 </Steps>
 
 <Screenshot name="options-ai" />
+
+Les boutons d'IA de la fenêtre pop-up et du panneau latéral apparaissent une fois les **Fonctionnalités d'IA** activées et le service par défaut configuré (avec sa clé, si le fournisseur en exige une). D'ici là, la fenêtre pop-up affiche **L'IA est activée, mais pas encore configurée** avec **Terminer la configuration**, qui ouvre cet onglet, et les outils d'IA du gestionnaire de favoris restent désactivés.
 
 Les paramètres sont enregistrés automatiquement. Les services d'IA, avec leurs clés API, leur **URL de base** et leurs **En-têtes supplémentaires (JSON)**, restent dans le stockage local de ce navigateur et ne sont jamais synchronisés. Les autres paramètres d'IA, comme l'activation de l'IA, sont synchronisés via votre compte de navigateur lorsque le navigateur le permet.
 

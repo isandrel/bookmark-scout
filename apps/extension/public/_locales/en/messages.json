@@ -6340,5 +6340,53 @@
     "essentials_developersDesc": {
         "message": "Let AI agents you run on your computer, such as Claude Code, use your bookmarks",
         "description": "Options > For developers: line under the tab title"
+    },
+    "aiOnboard_title": {
+        "message": "AI is optional",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout works without AI. To use it, turn on AI Features below, then add a service.",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "AI can suggest a folder when you save a page, add tags and short summaries, and answer questions about your bookmarks (Ask AI).",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "It needs an account with an AI company, such as OpenAI or Google, and an API key from it: a code that lets Bookmark Scout use your account. Or run a free model on your own computer, such as Ollama, with no key.",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "The AI company may charge a small amount each time AI is used. A model on your own computer is free.",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "What is sent: the titles, web addresses, and folder names a request needs, the current page's title and address, and your Ask AI messages. Page text only with Read page content on. It goes straight to the company you chose; Bookmark Scout never receives it.",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "Read the AI guide",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "Get an API key from $1",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "Type to search $1 more providers",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "Type to search $1 more provider",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "AI is on but not set up yet",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "Finish AI setup",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }

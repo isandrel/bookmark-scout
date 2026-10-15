@@ -41,6 +41,8 @@ export type SettingsFieldMeta = {
 
 /** Options content that is not synced settings, drawn by its own component. */
 export type SettingsPanelId =
+  /** AI: what AI does, needs, costs, and sends, until a service is set up. */
+  | 'aiIntro'
   | 'aiServices'
   | 'aiActivity'
   | 'promptLibrary'
@@ -1153,8 +1155,9 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       { id: 'managerMenus', fields: [], panel: 'managerMenus' },
     ]),
     ai: category('settings_ai', 'settings_aiDesc', [
-      // The switch comes first, then the services it turns on (provider and model live there,
-      // not in synced settings), then what the services are used for.
+      // What AI is and costs comes first, then the switch, then the services it turns on (provider
+      // and model live there, not in synced settings), then what the services are used for.
+      { id: 'intro', fields: [], panel: 'aiIntro' },
       { id: 'enable', fields: ['aiEnabled'], panel: 'aiServices' },
       {
         id: 'suggestions',

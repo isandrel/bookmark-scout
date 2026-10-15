@@ -8,7 +8,7 @@ import {
   setSettings,
   toggleSearchOption,
 } from './popup-helpers';
-import { readSettings, readStored, STORAGE_ITEMS, writeStored } from './storage';
+import { readSettings, readStored, STORAGE_ITEMS, seedAIServices, writeStored } from './storage';
 
 test('expand all during a search keeps the filter and the result limit', async ({
   extensionId,
@@ -224,6 +224,8 @@ test('theme toggle follows the system theme and AI button hides when AI is off',
   await expect(page.locator('html')).not.toHaveClass(/dark/);
   await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('light');
 
+  // The AI buttons show once a service is set up; a local server needs no key.
+  await seedAIServices(extensionWorker, [{ provider: 'ollama' }]);
   await setSettings(extensionWorker, { aiEnabled: true });
   await expect(page.getByRole('button', { name: 'AI folder recommendation' })).toBeVisible();
   await expect(folderRow(page, await otherBookmarksTitle(extensionWorker))).toBeVisible();

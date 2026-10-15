@@ -18,16 +18,16 @@ Las herramientas de IA envían títulos de marcadores, URLs y nombres o rutas de
 
 <Steps>
 <Step>
-Abre la configuración de Bookmark Scout (en Chrome, haz clic con el botón derecho en el icono de la barra de herramientas y elige **Opciones**) y ve a la pestaña **IA**.
+Abre la configuración de Bookmark Scout (en Chrome, haz clic con el botón derecho en el icono de la barra de herramientas y elige **Opciones**) y ve a la pestaña **IA**. Mientras no haya ningún servicio configurado, un cuadro en la parte superior, **La IA es opcional**, resume qué hace la IA, qué necesita, cuánto puede costar y qué se envía.
 </Step>
 <Step>
 Activa **Funciones de IA**.
 </Step>
 <Step>
-En **Servicios de IA**, haz clic en **Añadir servicio** y elige un proveedor. El selector tiene un cuadro de búsqueda y agrupa los proveedores en **Destacados**, **Servidores locales**, **Personalizados** y **Más proveedores (models.dev)**. Después, elige un **Modelo de IA**.
+En **Servicios de IA**, haz clic en **Añadir servicio** y elige un proveedor. El selector muestra los proveedores más conocidos en **Destacados**, y después **Servidores locales** y **Personalizados**; escribe en su cuadro de búsqueda para encontrar unos 200 más en **Más proveedores (models.dev)**. Después, elige un **Modelo de IA**.
 </Step>
 <Step>
-Escribe tu **Clave de API** si el proveedor la necesita. Se guarda cuando sales del campo y solo se almacena en este dispositivo. Una clave que no coincide con el formato del proveedor se rechaza y no se guarda.
+Escribe tu **Clave de API** si el proveedor la necesita. En los proveedores destacados, el enlace **Obtener una clave de API de**, seguido del nombre del proveedor, abre la página donde puedes crear una después de iniciar sesión. La clave se guarda cuando sales del campo y solo se almacena en este dispositivo. Una clave que no coincide con el formato del proveedor se rechaza y no se guarda.
 </Step>
 <Step>
 Opcional: haz clic en **Actualizar modelos** para cargar la lista de modelos actual del proveedor, o en **Verificar servicio** para comprobar que el proveedor está accesible, acepta la clave y ofrece el modelo elegido. Ambos leen la lista de modelos del proveedor, lo que no cuesta nada; Verificar solo envía un breve prompt de prueba a los proveedores que no tienen lista, como Azure OpenAI. La primera vez, el navegador pide acceso a la dirección de ese proveedor, y solo a esa. Una lista actualizada se conserva para el selector de modelos hasta que vuelvas a actualizarla.
@@ -35,6 +35,8 @@ Opcional: haz clic en **Actualizar modelos** para cargar la lista de modelos act
 </Steps>
 
 <Screenshot name="options-ai" />
+
+Los botones de IA de la ventana emergente y del panel lateral aparecen cuando **Funciones de IA** está activado y el servicio predeterminado está configurado (con su clave, si el proveedor la necesita). Hasta entonces, la ventana emergente muestra **La IA está activada, pero aún no está configurada** con **Terminar de configurar la IA**, que abre esta pestaña, y las herramientas de IA del administrador de marcadores siguen desactivadas.
 
 La configuración se guarda automáticamente. Los servicios de IA, con sus claves de API, su **URL base** y sus **Encabezados adicionales (JSON)**, se quedan en el almacenamiento local de este navegador y nunca se sincronizan. Los demás ajustes de IA, como si la IA está activada, se sincronizan a través de tu cuenta del navegador cuando el navegador lo admite.
 

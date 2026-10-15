@@ -1,5 +1,6 @@
 import { expect, test } from './fixtures';
 import { openPopup, seedFolder, setSettings } from './popup-helpers';
+import { seedAIServices } from './storage';
 
 test('the 300px popup with AI on fits every header button and never cuts off the placeholder', async ({
   extensionId,
@@ -7,6 +8,8 @@ test('the 300px popup with AI on fits every header button and never cuts off the
   page,
 }) => {
   await setSettings(extensionWorker, { popupWidth: 300, aiEnabled: true });
+  // The AI buttons show once a service is set up; a local server needs no key.
+  await seedAIServices(extensionWorker, [{ provider: 'ollama' }]);
   await openPopup(page, extensionId);
   await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).width)).toBe('300px');
   const manager = page.getByRole('button', { name: 'Open bookmark manager', exact: true });

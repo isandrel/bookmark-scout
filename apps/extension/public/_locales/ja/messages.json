@@ -6332,5 +6332,53 @@
     "essentials_developersDesc": {
         "message": "Claude Code など、パソコンで動かす AI エージェントにブックマークを使わせます",
         "description": "Options > For developers: line under the tab title"
+    },
+    "aiOnboard_title": {
+        "message": "AI は任意です",
+        "description": "Options > AI: title of the box above the AI Features switch, shown until an AI service is set up"
+    },
+    "aiOnboard_steps": {
+        "message": "Bookmark Scout は AI なしで使えます。使うには、下の「AI機能」をオンにしてから、サービスを追加してください。",
+        "description": "Options > AI intro box: first line. 'AI Features' and 'add a service' name the switch and button below"
+    },
+    "aiOnboard_what": {
+        "message": "AI は、ページを保存するときにフォルダーを提案したり、タグや短い要約を付けたり、ブックマークについての質問に答えたり（AI に質問）できます。",
+        "description": "Options > AI intro box: what AI does in the extension"
+    },
+    "aiOnboard_account": {
+        "message": "OpenAI や Google などの AI 企業のアカウントと、そこで発行する API キー（Bookmark Scout があなたのアカウントを使うためのコード）が必要です。または、Ollama などの無料モデルを自分のパソコンで動かせば、キーは不要です。",
+        "description": "Options > AI intro box: what AI needs. 'API key' explained for non-technical readers; Ollama is a brand name"
+    },
+    "aiOnboard_cost": {
+        "message": "AI 企業は、AI を使うたびに少額を請求することがあります。自分のパソコンで動かすモデルは無料です。",
+        "description": "Options > AI intro box: what AI may cost"
+    },
+    "aiOnboard_data": {
+        "message": "送信されるもの：各リクエストに必要なタイトル、Web アドレス、フォルダー名、現在のページのタイトルとアドレス、「AI に質問」へのメッセージ。ページの本文は「ページの内容を読む」がオンのときだけです。データは選んだ AI 企業に直接送られ、Bookmark Scout が受け取ることはありません。",
+        "description": "Options > AI intro box: what is sent and to whom; must match settings_aiEnabledDesc and the privacy policy. 'Read page content' names the setting"
+    },
+    "aiOnboard_guide": {
+        "message": "AI ガイドを読む",
+        "description": "Options > AI intro box: link to the AI guide in the docs"
+    },
+    "aiOnboard_getKey": {
+        "message": "$1 で API キーを取得",
+        "description": "Options > AI service editor: link under the API key field to the provider's page for creating a key. $1 is the provider name"
+    },
+    "aiOnboard_moreProvidersHint": {
+        "message": "入力すると、ほかの $1 件のプロバイダーを検索できます",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden. $1 is how many providers a search can find"
+    },
+    "aiOnboard_moreProvidersHint_one": {
+        "message": "入力すると、ほかの $1 件のプロバイダーを検索できます",
+        "description": "Add an AI service dialog: line under the provider list while the long catalog is hidden (singular). $1 is 1"
+    },
+    "aiOnboard_setupNotice": {
+        "message": "AI はオンですが、まだ設定されていません",
+        "description": "Popup, side panel, and Tools sidebar: AI Features is on, but no AI service with its key is set up yet"
+    },
+    "aiOnboard_finishSetup": {
+        "message": "AI の設定を完了",
+        "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
     }
 }
