@@ -29,7 +29,7 @@ The docs app is both content-driven and code-driven. Many changes are simple MDX
 - `content/docs/meta.json`: page order and the sidebar sections (Get started, Guides, Reference, About, Contribute) as `---Name---` separators
 - `content/docs/guides/`: task guides, ordered by their own `meta.json`
 - `src/app/`: routes (`layout.tsx`, `[[...slug]]/page.tsx`, `sitemap.ts`, `robots.ts`, `og/`)
-- `src/components/docs-shell.tsx`: the document shell (`<html lang>`, providers, `DocsLayout`) in the language of the current URL
+- `src/components/docs-shell.tsx`: the document shell (`<html lang>`, providers, `DocsLayout`) in the language of the current URL, plus `platform-attribute.tsx`, which marks `<html data-platform>` so `<Shortcut>` shows the reader's keys
 - `src/app/llms.txt/`, `src/app/llms-full.txt/`, `src/app/llms.mdx/`: the LLM index, the full text, and one static Markdown copy per page (used by the page actions)
 - `src/app/api/search/[locale]/`: one static search index per language
 - `src/components/mdx/`: MDX components that read config (`Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, `PrivacyEffectiveDate`, `Shortcut`) and `Screenshot`

@@ -5,6 +5,7 @@ import {
 	fillShortcutPlaceholders,
 	formatBinding,
 	formatCommandShortcut,
+	isApplePlatform,
 	isSameOnEveryPlatform,
 	parseShortcutConfig,
 	SHORTCUT_LITERAL,
@@ -126,5 +127,16 @@ describe("SHORTCUT_LITERAL", () => {
 
 	it("leaves mouse combinations and plain key names alone", () => {
 		expect(literals("Ctrl+click and Shift+click to select; hold Ctrl or Shift")).toEqual([]);
+	});
+});
+
+describe("isApplePlatform", () => {
+	it("is true on macOS, iPadOS, and iOS only", () => {
+		expect(isApplePlatform({ userAgentData: { platform: "macOS" } })).toBe(true);
+		expect(isApplePlatform({ platform: "MacIntel" })).toBe(true);
+		expect(isApplePlatform({ platform: "iPhone" })).toBe(true);
+		expect(isApplePlatform({ userAgentData: { platform: "Windows" }, platform: "Win32" })).toBe(false);
+		expect(isApplePlatform({ platform: "Linux x86_64" })).toBe(false);
+		expect(isApplePlatform({})).toBe(false);
 	});
 });
