@@ -18,6 +18,7 @@ import {
   type ConfiguredBinding,
   ariaKeyShortcuts as configAriaKeyShortcuts,
   bindingsForPlatform as configBindingsForPlatform,
+  isApplePlatform as configIsApplePlatform,
   type KeyBinding,
 } from '@bookmark-scout/config/shortcuts';
 import { z } from 'zod';
@@ -101,11 +102,7 @@ const shortcutsConfig = readConfig(
 
 /** macOS, iPadOS, and iOS, where key caps use Apple's symbols and Cmd stands in for Ctrl. */
 export function isApplePlatform(): boolean {
-  const nav = globalThis.navigator as
-    | (Navigator & { userAgentData?: { platform?: string } })
-    | undefined;
-  const platform = nav?.userAgentData?.platform || nav?.platform || '';
-  return /mac|iphone|ipad|ipod/i.test(platform);
+  return configIsApplePlatform();
 }
 
 /** The configured bindings that apply on this platform, without the platform field. */
