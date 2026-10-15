@@ -118,6 +118,17 @@ export function parseShortcutConfig(raw: unknown, file = "shortcuts.toml"): Shor
 // ---------------------------------------------------------------------------------------------
 // Key caps: the keys to press, one string per key, as the keyboard prints them
 
+/**
+ * macOS, iPadOS, and iOS, where key caps use Apple's symbols and Cmd stands in for Ctrl. Reads
+ * the browser's navigator by default; returns false where there is none (a build or a test).
+ */
+export function isApplePlatform(
+	nav: { platform?: string; userAgentData?: { platform?: string } } | undefined = globalThis.navigator,
+): boolean {
+	const platform = nav?.userAgentData?.platform || nav?.platform || "";
+	return /mac|iphone|ipad|ipod/i.test(platform);
+}
+
 /** The configured bindings that apply on one platform, without the platform field. */
 export function bindingsForPlatform(bindings: readonly ConfiguredBinding[], apple: boolean): KeyBinding[] {
 	const platform: ShortcutPlatform = apple ? "mac" : "other";

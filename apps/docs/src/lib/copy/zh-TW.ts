@@ -39,7 +39,7 @@ export const zhTW: DocsCopy = {
 
   shortcut: {
     or: " 或 ",
-    mac: "（Mac 上為 {keys}）",
+    mac: "（Mac：{keys}）",
   },
 
   page: {

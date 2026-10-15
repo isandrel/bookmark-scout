@@ -10,6 +10,7 @@ import type { LinkItemType } from "fumadocs-ui/layouts/shared";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { usePathname } from "next/navigation";
 import type { ComponentProps, ReactNode } from "react";
+import { PlatformAttribute } from "@/components/platform-attribute";
 
 /** Everything in the shell that differs by language. */
 export type LanguageShell = {
@@ -52,6 +53,7 @@ export function DocsShell({
   return (
     <html lang={locale} className={className} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col font-sans">
+        <PlatformAttribute />
         <RootProvider
           search={{ options: { type: "static", api: shell.searchApi } }}
           i18n={shell.i18n}
