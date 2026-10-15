@@ -32,7 +32,7 @@ privacy_url = "https://www.cloudflare.com/privacypolicy/"
 [docs]
 name        = "Bookmark Scout Docs"
 url         = "https://docs.bookmark-scout.com"
-description = "Install and use Bookmark Scout, a browser extension that searches, organizes, and cleans up your bookmarks inside your browser."
+description = "Save each page to the right bookmark folder with Bookmark Scout, a browser extension that also finds, tidies, and cleans up your bookmarks inside your browser."
 
 # Crawl hints for the docs sitemap.
 [docs.sitemap]

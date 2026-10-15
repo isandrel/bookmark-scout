@@ -9,14 +9,15 @@ export const zhCN: DocsCopy = {
   store: {
     listed: (product: string, store: string) => `从 ${store} 安装 ${product}。`,
     notListed: (product: string, store: string) =>
-      `${product} 尚未在 ${store} 上架。请从 GitHub 版本发布安装：`,
+      `${product} 即将登陆 ${store}。`,
     noneListed: (product: string) => `${product} 尚未在任何浏览器商店上架。`,
     listedOn: (product: string) => `${product} 已在以下商店上架：`,
   },
 
   home: {
     install: (product: string) => `安装 ${product}`,
-    download: "下载最新版本",
+    addTo: (browser: string) => `添加到 ${browser}（免费）`,
+    otherBrowsers: "其他浏览器",
     /** Example queries offered as one-click filters in the page finder. */
     suggestions: ["重复书签", "失效链接", "导入", "快捷键", "API 密钥"],
     /** How many sidebar sections, from the top, the page finder lists before anything is typed. */

@@ -10,7 +10,7 @@ export const ja: DocsCopy = {
     listed: (product: string, store: string) =>
       `${store} の掲載ページから ${product} をインストールできます。`,
     notListed: (product: string, store: string) =>
-      `${product} はまだ ${store} に掲載されていません。GitHub のリリースからインストールしてください：`,
+      `${product} は ${store} で近日公開予定です。`,
     noneListed: (product: string) =>
       `${product} はまだどのブラウザのストアにも掲載されていません。`,
     listedOn: (product: string) =>
@@ -19,7 +19,8 @@ export const ja: DocsCopy = {
 
   home: {
     install: (product: string) => `${product} をインストール`,
-    download: "最新リリースをダウンロード",
+    addTo: (browser: string) => `${browser} に追加（無料）`,
+    otherBrowsers: "その他のブラウザ",
     /** Example queries offered as one-click filters in the page finder. */
     suggestions: [
       "重複",

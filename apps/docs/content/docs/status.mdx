@@ -40,6 +40,16 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - Performance measurements of latency and scrolling on a large library (`nx run extension:test:perf`), run daily and on demand, and a live AI suite against a real provider (`nx run extension:test:live`), run on demand
 - A settings-to-behavior matrix (`apps/extension/tests/settings-matrix.ts`) that maps every setting to the code that reads it and a test that changes it
 
+## What is tested in each browser
+
+Chrome is the primary target. Edge is Chromium-based and runs the same end-to-end suite; Firefox uses a Manifest V2 build.
+
+- **Chrome (Chromium)**: unit tests and end-to-end tests for the popup, side panel, manager, settings, maintenance tools, reports, import and export, keyboard shortcuts, quick save, saved searches, context-menu saves, drag and drop, network tools, AI tools against mocked providers, and journeys across several of them. Bridge tests run the `bookmark-scout-mcp` program with the extension in Chromium on Linux and macOS.
+- **Edge**: the same end-to-end suite runs against the Edge build.
+- **Firefox**: a smoke suite covers popup search and folder creation, the side panel page loaded in a tab, opening the manager from the popup and side panel, the manager page with its address, `Delete` and undo, folder tree keys, right-click menu, and drag and drop (from scripted drag events), the quick save shortcut notice and key recorder, the AI data sharing consent, a settings save, a JSON export and import round trip, the statistics and privacy reports, and saved site icons in the popup. Saving from the right-click menu on a page, the other keyboard shortcuts, drag and drop in the popup, the quick save notification itself, local AI agents, and network and AI tools (including **Refresh Site Icons** itself) are not covered.
+
+The Edge suite and the Firefox smoke suite are required CI checks, like the Chromium suite. Real AI providers and live websites are checked by hand, not by automated tests.
+
 ## Partial
 
 - Bookmark tags and summaries: editable in Bookmark Details and saved from reviewed AI suggestions, but stored only in local extension storage. They are not synced or searchable; JSON bookmark exports include them, and importing such a file restores them on the bookmarks it creates.
