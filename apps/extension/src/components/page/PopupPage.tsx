@@ -79,9 +79,11 @@ function PopupPage() {
   const { value: searchDebounceMs } = useSetting('searchDebounceMs');
   // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed.
   const aiEnabled = useEffectiveSetting('aiEnabled');
-  // AI buttons only once a default service is set up; until then, one line says how to finish.
-  const aiSetup = useAISetup();
+  // AI buttons only once their service is set up; until then, one line says how to finish. Folder
+  // suggestions may use the built-in model while Ask AI needs another service.
+  const aiSetup = useAISetup('folderRecommendation');
   const aiReady = aiSetup === 'ready';
+  const askAIReady = useAISetup('askAI') === 'ready';
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
   const aiReadPageContent = useEffectiveSetting('aiReadPageContent');
   // In memory only: reopening the popup starts on the bookmarks, with no chat history.
@@ -169,8 +171,8 @@ function PopupPage() {
 
       setCurrentTabInfo({ title: tab.title, url: tab.url });
 
-      // The default AI service; before services are saved, the synced provider and model.
-      const settings = await getActiveAISettings(aiEnabled);
+      // The service for folder suggestions: the default one, or the built-in model's fallback.
+      const settings = await getActiveAISettings(aiEnabled, 'folderRecommendation');
 
       const recommendations = await recommendFolders(
         { title: tab.title, url: tab.url },
@@ -571,7 +573,7 @@ function PopupPage() {
     );
   }
 
-  if (askAIOpen && aiReady) {
+  if (askAIOpen && askAIReady) {
     return (
       <div className="flex h-full w-full min-h-0 flex-col overflow-hidden">
         <AskAIPanel
@@ -595,10 +597,10 @@ function PopupPage() {
           allExpanded={allResultsExpanded}
           onToggleExpandAll={() => setSearchExpansion(allResultsExpanded ? 'collapse' : 'expand')}
           inputRef={inputRef}
-          isAIEnabled={aiReady}
+          isAIEnabled={aiReady || askAIReady}
           isAILoading={aiLoading}
-          onAIRecommend={recommendForCurrentPage}
-          onAskAI={() => setAskAIOpen(true)}
+          onAIRecommend={aiReady ? recommendForCurrentPage : undefined}
+          onAskAI={askAIReady ? () => setAskAIOpen(true) : undefined}
           onOpenManager={handleOpenManager}
           searchOptions={searchOptions}
           onSearchOptionsChange={setSearchOptions}

@@ -6420,5 +6420,109 @@
     "aiOnboard_finishSetup": {
         "message": "AI の設定を完了",
         "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
+    },
+    "builtinAi_providerName": {
+        "message": "内蔵 AI（このパソコン上）",
+        "description": "AI provider name: Chrome's built-in model (Gemini Nano), which runs on the user's own computer. Shown in the Add service list and as a new service's name"
+    },
+    "builtinAi_errorNoPrompt": {
+        "message": "内蔵 AI に回答する内容が渡されませんでした。",
+        "description": "Error when the built-in AI model was called without a question (a programming error, rarely seen)"
+    },
+    "builtinAi_errorNotReady": {
+        "message": "内蔵 AI のモデルはまだ使えません。設定 > AI でダウンロードしてください。",
+        "description": "Error when the built-in AI model is not downloaded or not ready; the popup never starts the download itself"
+    },
+    "builtinAi_reasonModel": {
+        "message": "このパソコンの内蔵 AI が選びました",
+        "description": "Tooltip of a folder suggestion that the built-in AI model on the user's computer chose"
+    },
+    "builtinAi_reasonWordMatch": {
+        "message": "このページと共通する単語があります（内蔵 AI から回答がありませんでした）",
+        "description": "Tooltip of a folder suggestion that came from plain word matching because the built-in AI model did not answer (error or too slow)"
+    },
+    "builtinAi_needsOtherService": {
+        "message": "内蔵 AI はフォルダの提案だけを行います。このツールには、設定 > AI でキーのある AI サービスを追加してください。",
+        "description": "Tools sidebar: notice on an AI tool card when the only AI service is the built-in AI, which does not run tools"
+    },
+    "builtinAi_downloadInSettings": {
+        "message": "内蔵 AI のモデルを設定でダウンロードしてください",
+        "description": "Popup and side panel footer line while the built-in AI is chosen but its model is not downloaded yet; followed by a link that opens Settings > AI"
+    },
+    "builtinAi_suggestTitle": {
+        "message": "このパソコンで無料",
+        "description": "Options > AI intro box: heading of the first suggestion, Chrome's built-in AI, which is free and runs on this computer"
+    },
+    "builtinAi_suggestDesc": {
+        "message": "Chrome の内蔵 AI が、アカウントもキーも費用も不要でフォルダを提案します。データはパソコンの外に出ません。モデルは Chrome が一度だけダウンロードします。",
+        "description": "Options > AI intro box: text of the built-in AI suggestion"
+    },
+    "builtinAi_suggestAction": {
+        "message": "内蔵 AI を使う",
+        "description": "Options > AI intro box: button that adds the built-in AI as the default AI service (AI Features stays off until the user turns it on)"
+    },
+    "builtinAi_statusChecking": {
+        "message": "このパソコンで動かせるか確認しています…",
+        "description": "Options > AI built-in AI service: shown while checking whether this computer can run the model"
+    },
+    "builtinAi_statusReady": {
+        "message": "準備完了です。フォルダの提案はこのパソコン上で行われます。",
+        "description": "Options > AI built-in AI service: the model is downloaded and ready"
+    },
+    "builtinAi_statusNoApi": {
+        "message": "このブラウザには内蔵 AI がありません。パソコン版の Chrome で使えます。",
+        "description": "Options > AI built-in AI service: this browser has no built-in AI (for example Firefox)"
+    },
+    "builtinAi_statusPolicy": {
+        "message": "組織の設定により Chrome の内蔵 AI はオフになっています。",
+        "description": "Options > AI built-in AI service: an enterprise policy turned off Chrome's built-in AI on this computer"
+    },
+    "builtinAi_statusUnsupported": {
+        "message": "このパソコンでは Chrome の内蔵 AI を動かせません。",
+        "description": "Options > AI built-in AI service: this computer cannot run the model (hardware, disk space, or operating system); followed by the requirements"
+    },
+    "builtinAi_statusDownloading": {
+        "message": "モデルをダウンロードしています",
+        "description": "Options > AI built-in AI service: the model is downloading; also the progress bar's label"
+    },
+    "builtinAi_downloadKeepOpen": {
+        "message": "ダウンロード中も Chrome はそのまま使えます。",
+        "description": "Options > AI built-in AI service: note under the download progress"
+    },
+    "builtinAi_statusDownloadable": {
+        "message": "モデルはまだこのパソコンにありません",
+        "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
+    },
+    "builtinAi_downloadSize": {
+        "message": "Chrome が一度だけダウンロードします。グラフィックカードのあるパソコンで約 $1、ない場合は約 $2 です。",
+        "description": "Options > AI built-in AI service: download size. $1 is the size with a graphics card (such as 4 GB), $2 the size without one (such as 2.7 GB)"
+    },
+    "builtinAi_requirements": {
+        "message": "空きディスク容量 $1 と、メモリが $2 を超えるグラフィックカード、またはメモリ $3 とプロセッサ $4 コアが必要です。",
+        "description": "Options > AI built-in AI service: what Chrome needs to run the model. $1 free disk space, $2 graphics memory, $3 main memory (RAM), $4 number of processor cores"
+    },
+    "builtinAi_download": {
+        "message": "モデルをダウンロード",
+        "description": "Options > AI built-in AI service: button that starts Chrome's one-time model download"
+    },
+    "builtinAi_downloadFailed": {
+        "message": "ダウンロードが完了しませんでした: $1",
+        "description": "Options > AI built-in AI service: the model download failed. $1 is the browser's reason"
+    },
+    "builtinAi_scope": {
+        "message": "フォルダの提案だけを行います。$1 には、別の AI サービスを追加するとそちらが使われます。",
+        "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
+    "builtinAi_languages": {
+        "message": "$1 で最もよく動きます。ほかの言語では、単純な単語の一致による提案になることがあります。",
+        "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "builtinAi_privacy": {
+        "message": "データはパソコンの外に出ません。ページのタイトル、アドレス、フォルダ名はこのパソコンに残ります。",
+        "description": "Options > AI built-in AI service: privacy note"
+    },
+    "builtinAi_featureQuickSave": {
+        "message": "AI クイック保存",
+        "description": "Name of the AI quick save feature (the keyboard shortcut that saves the page to the folder AI picks), in a list of AI features"
     }
 }

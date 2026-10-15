@@ -12,6 +12,22 @@ export const AI_PROVIDER_KINDS = [
   'openai_compatible',
   'anthropic_compatible',
   'ollama',
+  // The browser's own model on this computer (Chrome's Prompt API): no key, no network request.
+  'chrome_builtin',
+] as const;
+
+/**
+ * The AI features that pick a service, each by the service's `features`. Every feature uses the
+ * default service when its provider offers that feature, else the first enabled service whose
+ * provider does (`pickAIService` in services/ai-settings.ts).
+ */
+export const AI_FEATURES = [
+  'folderRecommendation',
+  'quickSave',
+  'askAI',
+  'autoTagging',
+  'summarizer',
+  'reorganization',
 ] as const;
 
 /** Shape of a provider's model-list endpoint. */
@@ -65,6 +81,11 @@ export const aiProviderFileSchema = z.strictObject({
   group: z.enum(AI_PROVIDER_FILE_GROUPS).optional(),
   /** models.dev logo id in public/provider-logos/, downloaded by `bun run catalog:sync`. */
   logo: z.string().min(1).optional(),
+  /**
+   * The AI features this provider may serve; every feature when omitted. A small model on this
+   * computer is limited to the short tasks it does well.
+   */
+  features: z.array(z.enum(AI_FEATURES)).min(1).optional(),
   models: z.array(aiModelSchema).default([]),
 });
 
@@ -78,6 +99,16 @@ export const aiProviderFilesSchema = z
           code: 'custom',
           path: [id, 'key_url'],
           message: 'only providers that need an API key have a key page',
+        });
+      }
+      if (
+        provider.provider_kind === 'chrome_builtin' &&
+        (provider.requires_api_key || provider.base_url || provider.model_list !== 'none')
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [id, 'provider_kind'],
+          message: 'the built-in model has no key, Base URL, or model list',
         });
       }
       const other = seen.get(provider.order);

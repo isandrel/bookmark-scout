@@ -6222,5 +6222,109 @@
     "aiOnboard_finishSetup": {
         "message": "完成 AI 设置",
         "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
+    },
+    "builtinAi_providerName": {
+        "message": "内置 AI（在这台电脑上）",
+        "description": "AI provider name: Chrome's built-in model (Gemini Nano), which runs on the user's own computer. Shown in the Add service list and as a new service's name"
+    },
+    "builtinAi_errorNoPrompt": {
+        "message": "内置 AI 没有收到需要回答的内容。",
+        "description": "Error when the built-in AI model was called without a question (a programming error, rarely seen)"
+    },
+    "builtinAi_errorNotReady": {
+        "message": "内置 AI 模型尚未就绪。请在“设置 > AI”中下载。",
+        "description": "Error when the built-in AI model is not downloaded or not ready; the popup never starts the download itself"
+    },
+    "builtinAi_reasonModel": {
+        "message": "由这台电脑上的内置 AI 选择",
+        "description": "Tooltip of a folder suggestion that the built-in AI model on the user's computer chose"
+    },
+    "builtinAi_reasonWordMatch": {
+        "message": "与此页面有相同的词（内置 AI 未作答）",
+        "description": "Tooltip of a folder suggestion that came from plain word matching because the built-in AI model did not answer (error or too slow)"
+    },
+    "builtinAi_needsOtherService": {
+        "message": "内置 AI 只能推荐文件夹。要使用此工具，请在“设置 > AI”中添加一个带密钥的 AI 服务。",
+        "description": "Tools sidebar: notice on an AI tool card when the only AI service is the built-in AI, which does not run tools"
+    },
+    "builtinAi_downloadInSettings": {
+        "message": "请在设置中下载内置 AI 模型",
+        "description": "Popup and side panel footer line while the built-in AI is chosen but its model is not downloaded yet; followed by a link that opens Settings > AI"
+    },
+    "builtinAi_suggestTitle": {
+        "message": "在这台电脑上免费使用",
+        "description": "Options > AI intro box: heading of the first suggestion, Chrome's built-in AI, which is free and runs on this computer"
+    },
+    "builtinAi_suggestDesc": {
+        "message": "Chrome 内置 AI 无需账号、密钥或费用即可推荐文件夹，任何数据都不会离开你的电脑。Chrome 只需下载一次模型。",
+        "description": "Options > AI intro box: text of the built-in AI suggestion"
+    },
+    "builtinAi_suggestAction": {
+        "message": "使用内置 AI",
+        "description": "Options > AI intro box: button that adds the built-in AI as the default AI service (AI Features stays off until the user turns it on)"
+    },
+    "builtinAi_statusChecking": {
+        "message": "正在检查这台电脑能否运行…",
+        "description": "Options > AI built-in AI service: shown while checking whether this computer can run the model"
+    },
+    "builtinAi_statusReady": {
+        "message": "已就绪。文件夹推荐在这台电脑上运行。",
+        "description": "Options > AI built-in AI service: the model is downloaded and ready"
+    },
+    "builtinAi_statusNoApi": {
+        "message": "此浏览器没有内置 AI。它可在电脑上的 Chrome 中使用。",
+        "description": "Options > AI built-in AI service: this browser has no built-in AI (for example Firefox)"
+    },
+    "builtinAi_statusPolicy": {
+        "message": "你的组织已关闭 Chrome 内置 AI。",
+        "description": "Options > AI built-in AI service: an enterprise policy turned off Chrome's built-in AI on this computer"
+    },
+    "builtinAi_statusUnsupported": {
+        "message": "这台电脑无法运行 Chrome 内置 AI。",
+        "description": "Options > AI built-in AI service: this computer cannot run the model (hardware, disk space, or operating system); followed by the requirements"
+    },
+    "builtinAi_statusDownloading": {
+        "message": "正在下载模型",
+        "description": "Options > AI built-in AI service: the model is downloading; also the progress bar's label"
+    },
+    "builtinAi_downloadKeepOpen": {
+        "message": "下载期间可以继续使用 Chrome。",
+        "description": "Options > AI built-in AI service: note under the download progress"
+    },
+    "builtinAi_statusDownloadable": {
+        "message": "这台电脑上还没有该模型",
+        "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
+    },
+    "builtinAi_downloadSize": {
+        "message": "Chrome 只需下载一次：有显卡的电脑约 $1，没有显卡约 $2。",
+        "description": "Options > AI built-in AI service: download size. $1 is the size with a graphics card (such as 4 GB), $2 the size without one (such as 2.7 GB)"
+    },
+    "builtinAi_requirements": {
+        "message": "需要 $1 可用磁盘空间，以及显存大于 $2 的显卡，或 $3 内存和 $4 个处理器核心。",
+        "description": "Options > AI built-in AI service: what Chrome needs to run the model. $1 free disk space, $2 graphics memory, $3 main memory (RAM), $4 number of processor cores"
+    },
+    "builtinAi_download": {
+        "message": "下载模型",
+        "description": "Options > AI built-in AI service: button that starts Chrome's one-time model download"
+    },
+    "builtinAi_downloadFailed": {
+        "message": "下载未完成：$1",
+        "description": "Options > AI built-in AI service: the model download failed. $1 is the browser's reason"
+    },
+    "builtinAi_scope": {
+        "message": "它只推荐文件夹。$1 会在你添加其他 AI 服务后使用那个服务。",
+        "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
+    "builtinAi_languages": {
+        "message": "最适合 $1。其他语言的推荐可能改用简单的词语匹配。",
+        "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "builtinAi_privacy": {
+        "message": "任何数据都不会离开你的电脑：页面标题、网址和文件夹名称都留在电脑上。",
+        "description": "Options > AI built-in AI service: privacy note"
+    },
+    "builtinAi_featureQuickSave": {
+        "message": "AI 快速保存",
+        "description": "Name of the AI quick save feature (the keyboard shortcut that saves the page to the folder AI picks), in a list of AI features"
     }
 }

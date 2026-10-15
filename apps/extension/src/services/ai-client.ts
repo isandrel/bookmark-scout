@@ -62,6 +62,8 @@ export type AIObjectRequest<T> = AIModelRequest & {
   schema: z.ZodType<T>;
   system: string;
   prompt: string;
+  /** Stops the call, such as after a time limit. */
+  abortSignal?: AbortSignal;
 };
 
 export type AITextRequest = AIModelRequest & {

@@ -1,12 +1,18 @@
 import { Sparkles } from 'lucide-react';
 
 /**
- * One line above the popup and side panel footer while AI Features is on but the default service
- * is not set up (`useAISetup`), in place of the AI buttons, which would only fail. Its link opens
- * the AI settings. It takes the place of the quick save notices, so the footer shows one line.
+ * One line above the popup and side panel footer while AI Features is on but the folder
+ * suggestions' service is not set up (`useAISetup`), in place of the AI buttons, which would only
+ * fail. With the built-in model not downloaded yet, it says to download it in Settings: the popup
+ * never starts that download. Its link opens the AI settings. It takes the place of the quick save
+ * notices, so the footer shows one line.
  */
 export function AISetupNotice() {
-  const message = t('aiOnboard_setupNotice');
+  const { builtinStatus } = useAIFeatureService('folderRecommendation');
+  const message =
+    builtinStatus === 'downloadable' || builtinStatus === 'downloading'
+      ? t('builtinAi_downloadInSettings')
+      : t('aiOnboard_setupNotice');
   return (
     <section
       aria-label={message}

@@ -3,7 +3,7 @@
  * endpoint, edit it in place, test it, set the default, duplicate, or delete it.
  */
 
-import { ChevronDown, Copy, MoreHorizontal, Plus, Star, Trash2 } from 'lucide-react';
+import { ChevronDown, Copy, Laptop, MoreHorizontal, Plus, Star, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 type ProviderOption = SearchableSelectOption;
@@ -15,14 +15,19 @@ const PROVIDER_GROUP_LABELS: Record<AIProviderGroup, MessageKey> = {
   catalog: 'settings_aiProviderGroupCatalog',
 };
 
-/** Every provider as a picker option, grouped like the provider catalog. */
-function providerOptions(): ProviderOption[] {
-  return getAvailableProviders().map((provider) => ({
-    value: provider.id,
-    label: getLocalizedProviderName(provider.id),
-    group: t(PROVIDER_GROUP_LABELS[getProviderGroup(provider.id)]),
-    iconUrl: getProviderLogoUrl(provider.id),
-  }));
+/**
+ * Every provider as a picker option, grouped like the provider catalog. The built-in model is
+ * listed (first) only where this computer can run it.
+ */
+function providerOptions(offerBuiltin: boolean): ProviderOption[] {
+  return getAvailableProviders()
+    .filter((provider) => offerBuiltin || !isBuiltinProvider(provider.id))
+    .map((provider) => ({
+      value: provider.id,
+      label: getLocalizedProviderName(provider.id),
+      group: t(PROVIDER_GROUP_LABELS[getProviderGroup(provider.id)]),
+      iconUrl: getProviderLogoUrl(provider.id),
+    }));
 }
 
 function ServiceLogo({ provider }: { provider: AIProvider }) {
@@ -34,6 +39,8 @@ function ServiceLogo({ provider }: { provider: AIProvider }) {
     >
       {url ? (
         <MaskIcon url={url} className="size-4" />
+      ) : isBuiltinProvider(provider) ? (
+        <Laptop className="size-4" />
       ) : (
         <span className="text-xs font-semibold uppercase">{provider.slice(0, 2)}</span>
       )}
@@ -52,7 +59,7 @@ function AddServiceDialog({
 }) {
   const [provider, setProvider] = useState<string>(DEFAULT_SERVICE_PROVIDER);
   const [name, setName] = useState('');
-  const options = providerOptions();
+  const options = providerOptions(canOfferBuiltinAI(useBuiltinAIStatus(open)));
   const catalogGroup = t(PROVIDER_GROUP_LABELS.catalog);
 
   const add = async () => {
@@ -254,7 +261,11 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
               </div>
               {isOpen && (
                 <div id={editorId} className="border-t bg-background/40 px-4 py-4">
-                  <AIServiceEditor service={service} showAdvanced={showAdvanced} />
+                  {isBuiltinProvider(service.provider) ? (
+                    <BuiltinAIServiceEditor service={service} />
+                  ) : (
+                    <AIServiceEditor service={service} showAdvanced={showAdvanced} />
+                  )}
                 </div>
               )}
             </li>

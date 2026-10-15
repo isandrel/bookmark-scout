@@ -1,0 +1,17 @@
+# Chrome's built-in AI: the Prompt API with Gemini Nano, a small model that runs on this computer.
+# No key and no network request; Chrome downloads the model once (src/services/builtin-ai.ts).
+# Offered only where the browser has the API (not Firefox) and can run the model. Its tunables are
+# in config/ai/built-in.toml. Shown first in the Add service list on capable Chrome.
+name = "Built-in AI"
+order = 1
+default_model = "gemini-nano"
+provider_kind = "chrome_builtin"
+requires_api_key = false
+model_list = "none"
+# Short tasks only: Ask AI, Auto-Tagging, Summarizer, and reorganization use another service.
+features = ["folderRecommendation"]
+
+[[models]]
+id = "gemini-nano"
+name = "Gemini Nano"
+description = "On this computer"

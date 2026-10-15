@@ -120,6 +120,54 @@ function ConnectionStatus({ status }: { status: ConnectionStatusValue | null }) 
   );
 }
 
+/** The service's name, saved when the field loses focus; an empty name keeps the old one. */
+function AIServiceNameField({ service }: { service: AIService }) {
+  const [name, setName] = useState(service.name);
+  useEffect(() => setName(service.name), [service.name]);
+
+  const saveName = () => {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setName(service.name);
+      return;
+    }
+    if (trimmed !== service.name) void updateAIService(service.id, { name: trimmed });
+  };
+
+  return (
+    <Field
+      id={`ai-service-${service.id}-name`}
+      label={t('options_aiServiceName')}
+      description={t('options_aiServiceNameDescription')}
+    >
+      {(control) => (
+        <Input
+          {...control}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          onBlur={saveName}
+          autoComplete="off"
+        />
+      )}
+    </Field>
+  );
+}
+
+/**
+ * Editor for the browser's built-in model: no key, model, or endpoint, only its name and the
+ * model's state with the download (`BuiltinAIModelStatus`).
+ */
+export function BuiltinAIServiceEditor({ service }: { service: AIService }) {
+  return (
+    <div className="space-y-4" data-testid="ai-service-editor">
+      <div className="sm:w-1/2">
+        <AIServiceNameField service={service} />
+      </div>
+      <BuiltinAIModelStatus />
+    </div>
+  );
+}
+
 export function AIServiceEditor({
   service,
   showAdvanced = false,
@@ -137,7 +185,6 @@ export function AIServiceEditor({
   const keyUrl = getProviderKeyUrl(provider);
   const idPrefix = `ai-service-${service.id}`;
 
-  const [name, setName] = useState(service.name);
   const [fields, setFields] = useState<StoredFields>({ apiKey: '', baseUrl: '', extraHeaders: '' });
   const [options, setOptions] = useState<Partial<Record<AIProviderExtraField, string>>>({});
   const [customModel, setCustomModel] = useState('');
@@ -163,8 +210,6 @@ export function AIServiceEditor({
   fieldsRef.current = fields;
   const optionsRef = useRef(options);
   optionsRef.current = options;
-
-  useEffect(() => setName(service.name), [service.name]);
 
   // Reload only for another service; extraFields derives from provider.
   // biome-ignore lint/correctness/useExhaustiveDependencies: extraFields follows provider
@@ -224,15 +269,6 @@ export function AIServiceEditor({
 
   const setModel = (model: string) => {
     if (model !== service.model) void updateAIService(service.id, { model });
-  };
-
-  const saveName = () => {
-    const trimmed = name.trim();
-    if (!trimmed) {
-      setName(service.name);
-      return;
-    }
-    if (trimmed !== service.name) void updateAIService(service.id, { name: trimmed });
   };
 
   const validateApiKey = (key: string): string | undefined => {
@@ -399,21 +435,7 @@ export function AIServiceEditor({
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field
-          id={`${idPrefix}-name`}
-          label={t('options_aiServiceName')}
-          description={t('options_aiServiceNameDescription')}
-        >
-          {(control) => (
-            <Input
-              {...control}
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              onBlur={saveName}
-              autoComplete="off"
-            />
-          )}
-        </Field>
+        <AIServiceNameField service={service} />
         <Field
           id={`${idPrefix}-apiKey`}
           label={t('options_apiKey')}

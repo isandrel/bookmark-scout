@@ -45,7 +45,10 @@ export type AIActivityContext = {
 async function requestBodyText(input: RequestInfo | URL, init?: RequestInit) {
   if (typeof init?.body === 'string') return init.body;
   if (init?.body === undefined && input instanceof Request) {
-    return input.clone().text().catch(() => undefined);
+    return input
+      .clone()
+      .text()
+      .catch(() => undefined);
   }
   // Provider SDKs send JSON text; other bodies (streams, form data) are not recorded.
   return undefined;
@@ -123,6 +126,48 @@ export function createLoggingFetch(context: AIActivityContext): typeof fetch {
   };
 }
 
+/** The method a call to the browser's built-in model is logged with, in place of an HTTP method. */
+export const AI_ACTIVITY_ON_DEVICE_METHOD = 'ON-DEVICE';
+
+/**
+ * Logs one call to the browser's built-in model (Chrome's built-in AI) while recording is on: it
+ * makes no network request, so the logging fetch never sees it. Nothing leaves the device, so no
+ * consent applies; the entry shows what the model read and answered. Never breaks the call.
+ */
+export async function recordOnDeviceActivity(entry: {
+  source: AIActivitySource;
+  provider: string;
+  model: string;
+  /** The prompt as the model read it. */
+  input: string;
+  output?: string;
+  error?: string;
+  durationMs: number;
+}): Promise<void> {
+  try {
+    if (!(await getSettings()).aiActivityRecording) return;
+    const request = truncateBody(entry.input);
+    const response = truncateBody(entry.output);
+    await recordAIActivity({
+      at: Date.now(),
+      source: entry.source,
+      provider: entry.provider,
+      model: entry.model,
+      method: AI_ACTIVITY_ON_DEVICE_METHOD,
+      url: `on-device:${entry.model}`,
+      durationMs: entry.durationMs,
+      requestHeaders: {},
+      requestBody: request.body,
+      requestBodyOmitted: request.omitted,
+      responseBody: response.body,
+      responseBodyOmitted: response.omitted,
+      ...(entry.error ? { error: entry.error } : {}),
+    });
+  } catch {
+    // Logging never breaks the call.
+  }
+}
+
 /** The method an agent action is logged with, in place of an HTTP method. */
 export const AI_ACTIVITY_ACTION_METHOD = 'ACTION';
 
@@ -157,10 +202,11 @@ export async function recordActionActivity(entry: {
       requestBodyOmitted: request.omitted,
       responseBody: response.body,
       responseBodyOmitted: response.omitted,
-      ...(failed ? { error: String((entry.result as { error: { message?: unknown } }).error.message) } : {}),
+      ...(failed
+        ? { error: String((entry.result as { error: { message?: unknown } }).error.message) }
+        : {}),
     });
   } catch {
     // Logging never breaks the action.
   }
 }
-

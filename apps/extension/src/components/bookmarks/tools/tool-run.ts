@@ -30,8 +30,8 @@ export type ToolRunDeps = {
   freshNodes(scope: BookmarkToolScope): Promise<BookmarkTreeNode[]>;
   /** Reloads the page's tree after bookmarks changed. */
   refresh(): Promise<void>;
-  /** The default AI service, read only after the AI-enabled check passed. */
-  aiSettings(): Promise<AISettings>;
+  /** The AI service `feature` uses, read only after the AI-enabled check passed. */
+  aiSettings(feature: AIFeature): Promise<AISettings>;
   saveFile(
     request: ToolFileRequest & { onError(error: unknown): void },
     write: (nodes: BookmarkTreeNode[]) => void,
@@ -140,7 +140,7 @@ export function createToolRun<Result, Selection>(
 
   /** A failed scan as the user reads it: an AI tool's scan is an AI request. */
   const describeScanError = (error: unknown) =>
-    tool.requiresAI ? describeAIError(error) : getErrorMessage(error, tool.scanFailureKey);
+    tool.aiFeature ? describeAIError(error) : getErrorMessage(error, tool.scanFailureKey);
 
   const context = (nodes: BookmarkTreeNode[]): ToolContext => {
     const settings = deps.settings();
@@ -151,8 +151,8 @@ export function createToolRun<Result, Selection>(
       nodes,
       // The enabled check comes first so a disabled AI never surfaces provider or key errors.
       aiSettings: async () => {
-        if (!settings.aiEnabled) throw new Error(t('ai_featuresDisabled'));
-        return deps.aiSettings();
+        if (!settings.aiEnabled || !tool.aiFeature) throw new Error(t('ai_featuresDisabled'));
+        return deps.aiSettings(tool.aiFeature);
       },
       saveFile: (request, write) =>
         deps.saveFile(

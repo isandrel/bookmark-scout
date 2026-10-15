@@ -6428,5 +6428,109 @@
     "aiOnboard_finishSetup": {
         "message": "Terminar de configurar la IA",
         "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
+    },
+    "builtinAi_providerName": {
+        "message": "IA integrada (en este equipo)",
+        "description": "AI provider name: Chrome's built-in model (Gemini Nano), which runs on the user's own computer. Shown in the Add service list and as a new service's name"
+    },
+    "builtinAi_errorNoPrompt": {
+        "message": "La IA integrada no recibió nada que responder.",
+        "description": "Error when the built-in AI model was called without a question (a programming error, rarely seen)"
+    },
+    "builtinAi_errorNotReady": {
+        "message": "El modelo de la IA integrada no está listo. Descárgalo en Configuración > IA.",
+        "description": "Error when the built-in AI model is not downloaded or not ready; the popup never starts the download itself"
+    },
+    "builtinAi_reasonModel": {
+        "message": "Elegida por la IA integrada en este equipo",
+        "description": "Tooltip of a folder suggestion that the built-in AI model on the user's computer chose"
+    },
+    "builtinAi_reasonWordMatch": {
+        "message": "Comparte palabras con esta página (la IA integrada no respondió)",
+        "description": "Tooltip of a folder suggestion that came from plain word matching because the built-in AI model did not answer (error or too slow)"
+    },
+    "builtinAi_needsOtherService": {
+        "message": "La IA integrada solo sugiere carpetas. Para esta herramienta, añade un servicio de IA con clave en Configuración > IA.",
+        "description": "Tools sidebar: notice on an AI tool card when the only AI service is the built-in AI, which does not run tools"
+    },
+    "builtinAi_downloadInSettings": {
+        "message": "Descarga el modelo de la IA integrada en Configuración",
+        "description": "Popup and side panel footer line while the built-in AI is chosen but its model is not downloaded yet; followed by a link that opens Settings > AI"
+    },
+    "builtinAi_suggestTitle": {
+        "message": "Gratis en este equipo",
+        "description": "Options > AI intro box: heading of the first suggestion, Chrome's built-in AI, which is free and runs on this computer"
+    },
+    "builtinAi_suggestDesc": {
+        "message": "La IA integrada de Chrome sugiere carpetas sin cuenta, clave ni coste, y nada sale de tu equipo. Chrome descarga su modelo una sola vez.",
+        "description": "Options > AI intro box: text of the built-in AI suggestion"
+    },
+    "builtinAi_suggestAction": {
+        "message": "Usar la IA integrada",
+        "description": "Options > AI intro box: button that adds the built-in AI as the default AI service (AI Features stays off until the user turns it on)"
+    },
+    "builtinAi_statusChecking": {
+        "message": "Comprobando si este equipo puede usarla…",
+        "description": "Options > AI built-in AI service: shown while checking whether this computer can run the model"
+    },
+    "builtinAi_statusReady": {
+        "message": "Lista. Las sugerencias de carpetas se generan en este equipo.",
+        "description": "Options > AI built-in AI service: the model is downloaded and ready"
+    },
+    "builtinAi_statusNoApi": {
+        "message": "Este navegador no tiene IA integrada. Funciona en Chrome en un ordenador.",
+        "description": "Options > AI built-in AI service: this browser has no built-in AI (for example Firefox)"
+    },
+    "builtinAi_statusPolicy": {
+        "message": "Tu organización desactivó la IA integrada de Chrome.",
+        "description": "Options > AI built-in AI service: an enterprise policy turned off Chrome's built-in AI on this computer"
+    },
+    "builtinAi_statusUnsupported": {
+        "message": "Este equipo no puede usar la IA integrada de Chrome.",
+        "description": "Options > AI built-in AI service: this computer cannot run the model (hardware, disk space, or operating system); followed by the requirements"
+    },
+    "builtinAi_statusDownloading": {
+        "message": "Descargando el modelo",
+        "description": "Options > AI built-in AI service: the model is downloading; also the progress bar's label"
+    },
+    "builtinAi_downloadKeepOpen": {
+        "message": "Puedes seguir usando Chrome mientras se descarga.",
+        "description": "Options > AI built-in AI service: note under the download progress"
+    },
+    "builtinAi_statusDownloadable": {
+        "message": "El modelo aún no está en este equipo",
+        "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
+    },
+    "builtinAi_downloadSize": {
+        "message": "Chrome lo descarga una sola vez: unos $1 en un equipo con tarjeta gráfica y $2 sin ella.",
+        "description": "Options > AI built-in AI service: download size. $1 is the size with a graphics card (such as 4 GB), $2 the size without one (such as 2.7 GB)"
+    },
+    "builtinAi_requirements": {
+        "message": "Necesita $1 de espacio libre en disco y una tarjeta gráfica con más de $2 de memoria, o $3 de memoria y $4 núcleos de procesador.",
+        "description": "Options > AI built-in AI service: what Chrome needs to run the model. $1 free disk space, $2 graphics memory, $3 main memory (RAM), $4 number of processor cores"
+    },
+    "builtinAi_download": {
+        "message": "Descargar el modelo",
+        "description": "Options > AI built-in AI service: button that starts Chrome's one-time model download"
+    },
+    "builtinAi_downloadFailed": {
+        "message": "La descarga no terminó: $1",
+        "description": "Options > AI built-in AI service: the model download failed. $1 is the browser's reason"
+    },
+    "builtinAi_scope": {
+        "message": "Solo sugiere carpetas. $1 usan otro servicio de IA cuando añades uno.",
+        "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
+    "builtinAi_languages": {
+        "message": "Funciona mejor con $1. Con otros idiomas, las sugerencias pueden venir de una simple coincidencia de palabras.",
+        "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "builtinAi_privacy": {
+        "message": "Nada sale de tu equipo: los títulos de página, las direcciones y los nombres de carpeta se quedan en él.",
+        "description": "Options > AI built-in AI service: privacy note"
+    },
+    "builtinAi_featureQuickSave": {
+        "message": "Guardado rápido con IA",
+        "description": "Name of the AI quick save feature (the keyboard shortcut that saves the page to the folder AI picks), in a list of AI features"
     }
 }
