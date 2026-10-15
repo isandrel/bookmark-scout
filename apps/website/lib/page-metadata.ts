@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 /**
  * Metadata for a localized inner page: title (filled into the layout's title template),
  * description, canonical URL, hreflang alternates with `x-default`, Open Graph, and Twitter.
+ * The home page's keywords are not repeated on inner pages.
  * Open Graph and Twitter objects replace the layout's rather than merging, so the social
  * image is repeated here.
  */
@@ -24,6 +25,7 @@ export function localizedPageMetadata({
     return {
         title,
         description,
+        keywords: null,
         alternates: {
             canonical: url,
             languages: site.url.alternates(path),

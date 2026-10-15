@@ -31,7 +31,8 @@ export function Tabs({ label, items }: { label: string; items: TabItem[] }) {
             <div
                 role="tablist"
                 aria-label={label}
-                className="inline-flex max-w-full flex-wrap gap-1 rounded-2xl border border-line bg-surface p-1"
+                // Narrow screens get an even grid (2x2, or one row of 3) instead of a ragged wrap.
+                className={`grid ${items.length % 2 === 0 ? "grid-cols-2" : "grid-cols-3"} gap-1 rounded-2xl border border-line bg-surface p-1 sm:inline-flex sm:max-w-full sm:flex-wrap`}
             >
                 {items.map((item, index) => (
                     <button
@@ -52,7 +53,7 @@ export function Tabs({ label, items }: { label: string; items: TabItem[] }) {
                             event.preventDefault();
                             select(next(index, items.length));
                         }}
-                        className="rounded-xl px-4 py-2 text-[0.95rem] font-medium text-ink-soft transition-colors hover:text-ink aria-selected:bg-ink aria-selected:text-paper"
+                        className="rounded-xl px-3 py-2 text-center text-[0.95rem] font-medium sm:px-4 text-ink-soft transition-colors hover:text-ink aria-selected:bg-ink aria-selected:text-paper"
                     >
                         {item.label}
                     </button>

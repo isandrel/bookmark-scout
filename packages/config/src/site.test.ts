@@ -170,6 +170,14 @@ describe("site.docs, contact, stores, locales", () => {
 		expect(site.docs.url("contributing")).toBe("https://docs.example.com/contributing");
 	});
 
+	test("docs pages per language", () => {
+		expect(site.docs.page("en")).toBe("https://docs.example.com");
+		expect(site.docs.page("ja")).toBe("https://docs.example.com/ja");
+		expect(site.docs.page("en", "/permissions")).toBe("https://docs.example.com/permissions");
+		expect(site.docs.page("ja", "/guides/ai-tools#setup")).toBe("https://docs.example.com/ja/guides/ai-tools#setup");
+		expect(() => site.docs.page("fr", "/faq")).toThrow(/Unknown locale/);
+	});
+
 	test("contact addresses", () => {
 		expect(site.contact.address("support")).toBe("support@example.com");
 		expect(site.contact.mailto("security")).toBe("mailto:security@example.com");

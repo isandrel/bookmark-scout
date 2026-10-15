@@ -16,8 +16,7 @@
       "bookmark cleanup",
       "duplicate bookmarks",
       "dead links",
-      "AI bookmark tools",
-      "MCP server for bookmarks"
+      "AI bookmark tools"
     ]
   },
   "structuredData": {
@@ -39,7 +38,6 @@
       "Bookmark import and export",
       "Privacy review with optional redaction before exports",
       "Opt-in AI chat that changes bookmarks only after you approve",
-      "Local AI agents through an MCP server, with approvals",
       "Multi-language support"
     ]
   },
@@ -79,17 +77,15 @@
     "contactAddress": "{role}: {address}",
     "privacyPolicy": "Privacy policy",
     "securityTxt": "security.txt",
-    "madeBy": "Made by {author}. Free and open source.",
+    "madeBy": "Made by {author}, an independent developer: no company, no ads, no account. Free and open source.",
     "helpCenter": "Help center"
   },
   "home": {
     "hero": {
       "title": "Save every page to the right folder, in seconds.",
-      "description": "Type part of a folder's name, or press {{SHORTCUT:commands.quick-save}} on any page, and the page is saved to the folder it belongs in. Opt-in AI can suggest the folder too. Bookmark Scout also searches and tidies the bookmarks you already have, in Chrome, Edge, and Firefox, with no account and no server of its own.",
+      "description": "Type part of a folder's name, or press {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} on a Mac) on any page, and the page is saved to the folder it belongs in. If you like, AI can suggest the folder too. Bookmark Scout also finds and tidies the bookmarks you already have, right in your browser. No account, no ads, and we don't track what you do.",
       "download": "Download from GitHub",
-      "install": "Install Bookmark Scout",
       "docs": "Read the docs",
-      "license": "Free and open source under {license}.",
       "demoNote": "This demo uses a made-up folder tree and keeps nothing. The extension shows your own folders, inside your browser."
     },
     "demo": {
@@ -132,7 +128,7 @@
     },
     "tour": {
       "title": "What you can do with it",
-      "lede": "Real screenshots from the Chrome build. They follow your system's light or dark setting.",
+      "lede": "Real screenshots from the Chrome version. They follow your system's light or dark setting.",
       "tabsLabel": "Jobs Bookmark Scout does",
       "firefoxNote": "Firefox cannot replace its bookmarks page, so in Firefox the manager, with its cleanup tools, saved searches, and import and export, opens from a button in the toolbar popup.",
       "save": {
@@ -142,10 +138,10 @@
         "alt": "Two popups: \"pas\" typed in the search box with the Pasta folder (Recipes / Italian) selected under Save to folder, and AI suggestions for the current page: the existing Recipes/Italian/Pasta folder and a new Recipes/Quick Dinners folder",
         "points": [
           "Type part of a folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard",
-          "Type a path such as work/react, and still find the folder with a small typo",
-          "Press {{SHORTCUT:commands.quick-save}} on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
+          "Type a path such as recipes/pasta, and still find the folder with a small typo",
+          "Press {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} on a Mac) on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
           "A page already in that folder is not saved twice, and folders you saved to recently come first",
-          "Save links from the right-click menu into recent folders",
+          "Save links from the right-click menu into recent folders, once you turn the menu on in Settings (it is off at first)",
           "With AI turned on, get folder suggestions for the page, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },
@@ -155,12 +151,12 @@
         "caption": "The manager replaces Chrome's Bookmarks page and works like it, with a folder tree, breadcrumbs, and a sortable table.",
         "alt": "The Bookmark Scout manager showing the Dev Docs folder as a table with type, folder path, URL, title, and date added columns next to a folder tree",
         "points": [
-          "Search every bookmark as you type, with match case, whole word, and regular expression options",
+          "Search all your bookmarks as you type",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
-          "Save a search as a smart view that always shows current results",
-          "Select rows with Shift and Ctrl, right-click for cut, copy, paste, and open all, and drag rows, folders, and links where they belong",
+          "Save a search, and it always shows the current results",
+          "Select rows with Shift and Ctrl, right-click for cut, copy, paste, and open all, and drag bookmarks and folders where they belong",
           "Undo and redo changes with {{SHORTCUT:manager.undo}} and {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} and {{SHORTCUT_MAC:manager.redo}} on a Mac), even after a reload",
-          "Import HTML or JSON after a preview, and export HTML, JSON, Markdown, or CSV",
+          "Import bookmarks from a file after a preview, and export them as HTML, JSON, Markdown, or CSV",
           "Link to a folder or a search, and move through it all with the keyboard"
         ]
       },
@@ -171,7 +167,7 @@
         "alt": "The Duplicate Cleaner dialog listing two groups of duplicate bookmarks, each with the copy to keep marked, above a Remove duplicates button",
         "points": [
           "Review duplicate groups, then remove the extra copies",
-          "Strip tracking parameters from URLs after a preview",
+          "Remove tracking codes from web addresses after a preview",
           "Find dead links and repair them: delete, use the redirect, point to an archived copy, or edit the URL",
           "Fetch page titles and apply only the ones you pick",
           "Download each site's own icon, so bookmarks show it even in Firefox",
@@ -179,19 +175,19 @@
         ]
       },
       "ai": {
-        "tab": "AI (opt-in)",
-        "heading": "Use AI with your own provider, or not at all",
-        "caption": "AI is off until you turn it on in Settings, choose a provider, and add your own API key where the provider needs one.",
+        "tab": "AI (optional)",
+        "heading": "Optional AI, from the company you choose",
+        "caption": "AI is off until you turn it on. It needs an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer.",
         "alt": "The AI tab of the Bookmark Scout settings page with AI features turned off, and provider and model selectors",
         "points": [
+          "Get folder suggestions for the page you are on, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}",
           "Ask AI about your bookmarks: it searches them, checks links, and proposes moves, renames, and new folders as a plan that changes nothing until you approve it",
-          "Let AI agents on your computer, such as Claude Code, Codex, or Cursor, look up bookmarks through an MCP server, and approve each change they ask for in the browser",
           "Tag suggestions and short summaries that you review before saving",
-          "Folder reorganization plans, previewed before anything moves, with undo",
-          "Export selected bookmarks as Markdown or XML context for an AI chat; this works without AI and sends nothing"
+          "Folder reorganization plans, previewed before anything moves, with undo"
         ],
-        "providersTitle": "Supported providers",
-        "customProvider": "Any OpenAI-compatible endpoint"
+        "providersTitle": "Works with",
+        "moreProviders": "and more",
+        "developers": "<link>For developers</link>: AI agents on your computer, such as Claude Code, can use your bookmarks too."
       }
     },
     "privacy": {
@@ -208,20 +204,20 @@
           "detail": "Synced by your browser account if sync is on"
         },
         "keys": {
-          "name": "API keys, tags, saved searches",
+          "name": "Tags, saved searches, and your AI key",
           "detail": "Kept on this device only"
         },
         "ai": {
-          "name": "AI provider you choose",
-          "detail": "Only when AI is on. Ollama keeps it on your computer."
+          "name": "The AI company you choose",
+          "detail": "Only when AI is on. A free AI program on your computer keeps it there."
         },
         "websites": {
           "name": "Websites you check",
-          "detail": "Dead link checks, title fetching, and site icons, after you allow access"
+          "detail": "Only when you check links or fetch titles and site icons, after you allow it"
         },
         "agents": {
-          "name": "Local AI agents",
-          "detail": "Only when you allow them, through a program on your computer"
+          "name": "AI programs on your computer",
+          "detail": "Only if you connect one and allow it (for developers)"
         },
         "server": {
           "name": "Bookmark Scout server",
@@ -235,30 +231,32 @@
           "body": "There is nothing to sign up for, and Bookmark Scout has no server of its own. Your bookmarks are read and changed inside your browser."
         },
         "noTelemetry": {
-          "title": "No telemetry",
+          "title": "We don't track what you do",
           "body": "The extension sends nothing to the developer: no analytics, no ads, no tracking."
         },
         "aiOptIn": {
           "title": "AI is off until you turn it on",
-          "body": "Requests then go straight from your browser to the provider you chose. With Ollama on your own computer, they stay there. Local AI agents get nothing until you allow them, and their changes wait for your approval."
+          "body": "Then requests go straight from your browser to the AI company you chose, or stay on your computer with a free local AI program. AI programs on your computer get nothing until you allow them, and their changes wait for your approval."
         },
         "exports": {
           "title": "Exports get a privacy review",
-          "body": "Before a file downloads, a review flags tokens, email addresses, and other sensitive values, and can redact them in the copy you save."
+          "body": "Before a file downloads, a review flags private details, such as email addresses and login codes in links, and can hide them in the copy you save."
         }
       }
     },
     "install": {
-      "title": "Install it in a few steps",
-      "lede": "Pick your browser. Each release on GitHub has a build for Chrome, Edge, and Firefox.",
+      "title": "Add it to your browser",
+      "lede": "It's free, and there is no account to create.",
+      "desktopOnly": "Bookmark Scout works in a browser on a computer, not on phones or tablets.",
+      "add": "Add to {browser} — free",
+      "permissions": "{browser} asks for just one thing at install: “Read and change your bookmarks.” Other features ask only when you first use them. <docs>What it asks and why</docs>",
+      "comingSoon": "<b>{browser}</b>: coming soon to {store}.",
+      "advanced": "Advanced: install by hand",
+      "advancedLede": "Use this only to try Bookmark Scout in a browser whose store does not list it yet. You download it from GitHub, and a copy installed this way does not update on its own.",
       "tabsLabel": "Browser",
       "download": "Download from GitHub",
-      "storeComing": "The {store} listing is being prepared. Until it is live, install the build from GitHub Releases.",
-      "manual": "Or install the build from GitHub Releases yourself:",
       "chrome": {
-        "tab": "Chrome",
         "storeName": "Chrome Web Store",
-        "storeButton": "Add to Chrome",
         "steps": {
           "download": "Download <code>bookmark-scout-*-chrome.zip</code> from the latest release and extract it.",
           "open": "Open <code>chrome://extensions</code> and turn on <b>Developer mode</b> in the top right.",
@@ -267,9 +265,7 @@
         "crx": "The release also has a signed <code>.crx</code> file that you can drag onto the extensions page instead."
       },
       "edge": {
-        "tab": "Edge",
         "storeName": "Edge Add-ons",
-        "storeButton": "Get it for Edge",
         "steps": {
           "download": "Download <code>bookmark-scout-*-edge.zip</code> from the latest release and extract it.",
           "open": "Open <code>edge://extensions</code> and turn on <b>Developer mode</b>.",
@@ -277,9 +273,7 @@
         }
       },
       "firefox": {
-        "tab": "Firefox",
         "storeName": "Firefox Add-ons",
-        "storeButton": "Add to Firefox",
         "steps": {
           "download": "Download <code>bookmark-scout-*-firefox.zip</code> from the latest release and extract it.",
           "open": "Open <code>about:debugging#/runtime/this-firefox</code>.",
@@ -293,23 +287,23 @@
       "items": {
         "data": {
           "q": "Does Bookmark Scout send my bookmarks anywhere?",
-          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the provider you chose, the dead link checker, title fetcher, and site icon refresh request the bookmarked sites after you allow website access, and local AI agents you allow get what they look up through a program on your computer. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
+          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the AI company you chose; checking links and fetching titles and site icons contact the bookmarked websites, after you allow it; and AI programs on your own computer that you connect (a feature for developers) get what they look up. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
         },
         "needAi": {
           "q": "Do I need to use AI?",
-          "a": "No. Search, organizing, cleanup, and import and export all work without it. AI stays off until you turn it on in Settings."
+          "a": "No. AI is optional. Saving, search, organizing, and cleanup all work without it, and AI stays off until you turn it on in Settings. To use AI, you need an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer."
         },
         "providers": {
-          "q": "Which AI providers can I use?",
-          "a": "You can use {providers}. You add your own API key where the provider needs one, and the provider may charge for usage."
+          "q": "Which AI companies can I use?",
+          "a": "Bookmark Scout works with {providers}. Most AI companies need an account and a key from it, and charge a small amount for each use; Bookmark Scout itself charges nothing. Ollama runs AI on your own computer for free, if your computer is fast enough. The <aiGuide>AI guide</aiGuide> shows how to set it up."
         },
         "changes": {
           "q": "Will it change my bookmarks without asking?",
-          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. Ask AI and local AI agents show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} on a Mac)."
+          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. AI features show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} on a Mac)."
         },
-        "firefox": {
-          "q": "Does it work in Firefox?",
-          "a": "Yes. Firefox cannot replace its bookmarks page, so the manager, with its cleanup tools, import and export, and saved searches, opens from a button in the toolbar popup. Until the Firefox Add-ons listing is ready, Firefox loads it as a temporary add-on, which is removed when Firefox restarts."
+        "otherBrowsers": {
+          "q": "Does it work in Firefox and Edge?",
+          "a": "Versions for Firefox and Edge are coming soon to their add-on stores. Until then, you can <install>install it by hand</install> from GitHub; Firefox removes a copy installed that way when it restarts. Firefox also cannot replace its bookmarks page, so there the manager opens from a button in the toolbar popup."
         },
         "stores": {
           "q": "Why is it not in the browser stores yet?",
@@ -317,13 +311,18 @@
         },
         "free": {
           "q": "Is it free?",
-          "a": "Yes. Bookmark Scout is free and open source under {license}, with no ads and no paid plan. If you turn on AI, your provider may charge for API usage."
+          "a": "Yes. Bookmark Scout is free and open source under {license}, with no ads and no paid plan. If you turn on AI, the AI company you use may charge for it."
+        },
+        "who": {
+          "q": "Who makes Bookmark Scout?",
+          "a": "An independent developer, not a company. There are no ads, no account, and nothing to buy, and anyone can read the source code on <source>GitHub</source>."
         },
         "help": {
           "q": "How do I get help?",
-          "a": "Start with the <support>support page</support> or the <docs>documentation</docs>. You can also report a problem on <github>GitHub</github> or email <email>{supportEmail}</email>."
+          "a": "Start with the <support>support page</support> or the <docs>documentation</docs>. For help, email <email>{supportEmail}</email>. You can also report a problem in public on <github>GitHub</github>."
         }
-      }
+      },
+      "moreProviders": "many others"
     }
   }
 }

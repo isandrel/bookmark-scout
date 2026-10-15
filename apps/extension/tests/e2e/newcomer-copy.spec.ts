@@ -68,8 +68,11 @@ test('Export Bookmarks in Options opens the manager on the export card', async (
     context.waitForEvent('page'),
     page.getByRole('button', { name: 'Export Bookmarks' }).click(),
   ]);
+  // The manager may add the folder it shows (`?id=<bookmarks bar>`) once it loads.
   await expect(manager).toHaveURL(
-    `chrome-extension://${extensionId}/bookmarks.html#export-bookmarks`,
+    new RegExp(
+      `^chrome-extension://${extensionId}/bookmarks\\.html(\\?id=[^#]*)?#export-bookmarks$`,
+    ),
   );
   await expect(manager.getByTestId('tools-sidebar')).toBeVisible();
   await expect(manager.locator('#export-bookmarks')).toBeInViewport();

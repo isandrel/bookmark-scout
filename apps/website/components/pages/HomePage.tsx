@@ -12,9 +12,9 @@ export function HomePage({ locale }: { locale: string }) {
     return (
         <>
             <Hero locale={locale} />
-            <Tour />
+            <Tour locale={locale} />
             <PrivacyBoundary locale={locale} />
-            <Install />
+            <Install locale={locale} />
             <Faq locale={locale} />
         </>
     );

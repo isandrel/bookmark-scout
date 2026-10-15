@@ -5,7 +5,7 @@
             "description": "Hilfe zu Bookmark Scout: Lösungen für häufige Probleme, wie Sie einen Fehler melden und an welche E-Mail-Adressen Sie sich bei Fragen zu Support, Datenschutz und Sicherheit wenden."
         },
         "title": "Support",
-        "intro": "Die meisten Antworten finden Sie in der Dokumentation und in den häufigen Fragen. Wenn etwas nicht funktioniert, melden Sie es auf GitHub. Für alles, was Sie nicht öffentlich posten möchten, schreiben Sie uns eine E-Mail.",
+        "intro": "Die meisten Antworten finden Sie in der Dokumentation und in den häufigen Fragen. Für alles andere schreiben Sie uns eine E-Mail. Wenn etwas nicht funktioniert, können Sie es auch öffentlich auf GitHub melden.",
         "sections": {
             "start-here": {
                 "title": "Erste Schritte",
@@ -26,7 +26,7 @@
                     "firefoxRestart": {
                         "q": "Bookmark Scout verschwindet, wenn ich Firefox neu starte",
                         "a": [
-                            "Bis der Eintrag bei Firefox Add-ons online ist, läuft Bookmark Scout in Firefox als temporäres Add-on, und Firefox entfernt temporäre Add-ons beim Neustart.",
+                            "Die Firefox-Version erscheint demnächst bei Firefox Add-ons. Bis dahin läuft eine manuell installierte Kopie von Bookmark Scout in Firefox als temporäres Add-on, und Firefox entfernt temporäre Add-ons beim Neustart.",
                             "Laden Sie es nach einem Neustart erneut: Öffnen Sie <code>about:debugging#/runtime/this-firefox</code>, klicken Sie auf „Temporäres Add-on laden…“ und wählen Sie die Datei <code>manifest.json</code> im entpackten Ordner aus."
                         ]
                     },
@@ -55,7 +55,7 @@
                         "q": "Meine Einstellungen sind nach einem Update verschwunden",
                         "a": [
                             "Ein Update hat die gespeicherten Daten von Bookmark Scout in ein neues Format überführt und die alten Daten entfernt, statt sie umzuwandeln. Die Einstellungen sind wieder auf ihren Standardwerten, KI-Dienste und API-Schlüssel müssen erneut hinzugefügt werden, und eigene Prompts, gespeicherte Suchen, Tags, Zusammenfassungen und gespeicherte Website-Symbole sind verloren. Ihre Lesezeichen bleiben unberührt.",
-                            "Wenn Sie Ihre Einstellungen vor dem Update mit „Exportieren“ unten in den Einstellungen gesichert haben, stellen Sie sie dort mit „Importieren“ wieder her."
+                            "Wenn Sie Ihre Einstellungen vor dem Update mit „Einstellungen sichern“ unten in den Einstellungen gesichert haben, holen Sie sie dort mit „Einstellungen wiederherstellen“ zurück."
                         ]
                     },
                     "websiteAccess": {
@@ -68,7 +68,7 @@
                     "aiSetup": {
                         "q": "KI-Funktionen fehlen oder reagieren nicht",
                         "a": [
-                            "KI-Funktionen sind standardmäßig deaktiviert. Aktivieren Sie sie in den Einstellungen unter „KI“, wählen Sie einen Anbieter und geben Sie Ihren API-Schlüssel ein. Ein lokaler Ollama-Server benötigt keinen Schlüssel.",
+                            "KI ist optional und standardmäßig deaktiviert. Um sie zu nutzen, aktivieren Sie sie in den Einstellungen unter „KI“, wählen Ihr KI-Unternehmen und fügen dort den Schlüssel aus Ihrem Konto ein; die KI-Anleitung in der Dokumentation zeigt, wo Sie ihn finden. Ein kostenloses KI-Programm auf Ihrem eigenen Computer, etwa Ollama, benötigt keinen Schlüssel.",
                             "Klicken Sie auf „Dienst überprüfen“, um die Verbindung zu testen. Beim ersten Mal fragt der Browser nach Zugriff auf die Website dieses Anbieters; erlauben Sie ihn, damit die Erweiterung den Anbieter erreichen kann."
                         ]
                     }
@@ -76,7 +76,8 @@
             },
             "report-a-bug": {
                 "title": "Fehler melden",
-                "body": "Fehlerberichte gehören in die GitHub Issues, wo jeder die Behebung verfolgen kann. Durchsuchen Sie zuerst die vorhandenen Issues, falls jemand das Problem schon gemeldet hat.",
+                "body": "Schicken Sie die Details per E-Mail an {supportEmail}. Wenn Sie ein GitHub-Konto haben, können Sie stattdessen ein öffentliches Issue öffnen, in dem jeder die Behebung verfolgen kann; durchsuchen Sie zuerst die vorhandenen Issues, falls jemand das Problem schon gemeldet hat.",
+                "emailButton": "E-Mail an den Support",
                 "button": "Issue auf GitHub öffnen",
                 "includeTitle": "Ein hilfreicher Bericht enthält",
                 "include": {
@@ -86,7 +87,7 @@
                     "result": "Was Sie erwartet haben und was stattdessen passiert ist, einschließlich etwaiger Fehlermeldungen.",
                     "screenshot": "Einen Screenshot, falls hilfreich, mit ausgeblendeten privaten Lesezeichen."
                 },
-                "privacyNote": "Issues sind öffentlich. Fügen Sie niemals einen API-Schlüssel ein, und lassen Sie Lesezeichentitel oder URLs weg, die andere nicht sehen sollen."
+                "privacyNote": "GitHub Issues sind öffentlich. Fügen Sie niemals einen API-Schlüssel ein, und lassen Sie Lesezeichentitel oder URLs weg, die andere nicht sehen sollen."
             },
             "email": {
                 "title": "E-Mail",

@@ -1,15 +1,20 @@
+import { primaryDownload } from "@/lib/download";
 import { site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import { ContourLines } from "./ContourLines";
 import { DownloadButton, secondaryButtonClass } from "./DownloadButton";
+import { PermissionsNote } from "./PermissionsNote";
 import { SaveDemo } from "./SaveDemo";
 
 export async function Hero({ locale }: { locale: string }) {
     const t = await getTranslations("home.hero");
-    // With a live store listing, send visitors to the per-browser install tabs instead.
-    const primary = site.anyStoreLive
-        ? { href: site.url.path(locale, "", "install"), label: t("install") }
-        : { href: site.repo.releasesLatest, label: t("download") };
+    const tInstall = await getTranslations("home.install");
+    // Straight to the first live store listing; the GitHub release only while no store lists it.
+    const target = primaryDownload();
+    const primary =
+        target.source === "store"
+            ? { href: target.href, label: tInstall("add", { browser: site.browsers.name(target.browser) }), icon: "add" as const }
+            : { href: target.href, label: t("download"), icon: "download" as const };
 
     return (
         <section aria-labelledby="hero-title" className="overflow-hidden">
@@ -25,12 +30,15 @@ export async function Hero({ locale }: { locale: string }) {
                         {t("description")}
                     </p>
                     <div className="mt-8 flex flex-wrap gap-3">
-                        <DownloadButton href={primary.href} label={primary.label} />
-                        <a href={site.docs.url()} className={secondaryButtonClass}>
+                        <DownloadButton href={primary.href} label={primary.label} icon={primary.icon} />
+                        <a href={site.docs.page(locale)} className={secondaryButtonClass}>
                             {t("docs")}
                         </a>
                     </div>
-                    <p className="mt-4 text-sm text-ink-soft">{t("license", { license: site.license.spdx })}</p>
+                    {target.source === "store" && (
+                        <PermissionsNote locale={locale} browser={target.browser} className="mt-4" />
+                    )}
+                    <p className="mt-2 text-sm leading-relaxed text-ink-soft sm:hidden">{tInstall("desktopOnly")}</p>
                 </div>
 
                 <div className="relative mt-12 sm:mt-14">
