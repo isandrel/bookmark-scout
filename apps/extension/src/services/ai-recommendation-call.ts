@@ -25,6 +25,16 @@ export async function recommendFolders(
   if (folderList.length === 0) return noFoldersRecommendation();
 
   const [page] = await addPageText([bookmark], readPage);
+  if (isBuiltinProvider(settings.provider)) {
+    // A shortlist the small model can read, with the local word match when it cannot answer.
+    return recommendFoldersOnDevice(
+      async (request) =>
+        (await generateAIObject({ settings, source: 'folderRecommendation', ...request })).object,
+      page,
+      folders,
+      maxRecommendations,
+    );
+  }
   const { system, prompt } = await buildFolderRecommendationRequest(
     page,
     folderList.map((f) => f.path),

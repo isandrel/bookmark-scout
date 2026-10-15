@@ -39,24 +39,46 @@ export async function openAISettings(): Promise<void> {
 }
 
 /**
- * Whether AI tools can call the default service as set up: one is chosen, and it has an API key
- * unless its provider needs none (a local server). The same conditions `getActiveAISettings`
- * checks before any call, so AI buttons are offered only when a click would not stop at setup.
+ * The service an AI feature uses: the default service when its provider offers the feature, else
+ * the first enabled service whose provider does. So with the built-in model as the default, folder
+ * suggestions use it while Ask AI keeps using a hosted service. Without a feature, the default.
+ */
+export function pickAIService(state: AIServicesState, feature?: AIFeature): AIService | undefined {
+  const defaultService = state.services.find((service) => service.id === state.defaultServiceId);
+  if (!feature || !defaultService) return defaultService;
+  if (providerSupportsFeature(defaultService.provider, feature)) return defaultService;
+  return state.services.find(
+    (service) => service.enabled && providerSupportsFeature(service.provider, feature),
+  );
+}
+
+/**
+ * Whether AI tools can call the service `feature` uses as set up: there is one, and it has an API
+ * key unless its provider needs none (a local server), and the built-in model is downloaded and
+ * ready (`builtinStatus`, read asynchronously by the caller; anything else counts as not set up).
+ * The same conditions `getActiveAISettings` checks before any call, so AI buttons are offered only
+ * when a click would not stop at setup.
  */
 export function isAISetUp(
   state: AIServicesState,
   credentials: Readonly<Record<string, StoredAIProviderConfig>>,
+  feature?: AIFeature,
+  builtinStatus?: BuiltinAIStatus,
 ): boolean {
-  const service = state.services.find((candidate) => candidate.id === state.defaultServiceId);
+  const service = pickAIService(state, feature);
   if (!service) return false;
+  if (isBuiltinProvider(service.provider)) return builtinStatus === 'available';
   return (
     !providerRequiresApiKey(service.provider) || Boolean(credentials[service.id]?.apiKey?.trim())
   );
 }
 
-/** Settings of the default AI service, which every AI tool uses. */
-export async function getActiveAISettings(enabled: boolean): Promise<AISettings> {
-  const service = await getDefaultAIService();
+/** Settings of the service `feature` uses (`pickAIService`). */
+export async function getActiveAISettings(
+  enabled: boolean,
+  feature: AIFeature,
+): Promise<AISettings> {
+  const service = pickAIService(await getAIServicesState(), feature);
   if (!service) throw new Error(t('error_aiNoService'));
   return buildAISettingsFromService(service, enabled);
 }

@@ -3,10 +3,14 @@
  * AI company and its key, or a free model on this computer), what it may cost, and what is sent.
  * Options shows it until the default AI service is set up (`useAIServiceSetUp`). The same facts as the
  * AI Features description and the privacy policy, in plainer words.
+ *
+ * Where Chrome can run its built-in model, the box starts with that free choice ("Free on this
+ * computer"), until a built-in service exists. Adding it does not turn AI on: AI Features stays
+ * the switch below.
  */
 
 import type { LucideIcon } from 'lucide-react';
-import { BookOpen, Coins, ExternalLink, KeyRound, Send, Sparkles } from 'lucide-react';
+import { BookOpen, Coins, ExternalLink, KeyRound, Laptop, Send, Sparkles } from 'lucide-react';
 import { z } from 'zod';
 
 const onboardingConfig = readConfig(
@@ -24,6 +28,36 @@ const POINTS: readonly { id: string; icon: LucideIcon; key: MessageKey }[] = [
   { id: 'data', icon: Send, key: 'aiOnboard_data' },
 ];
 
+/** Adds a built-in service and makes it the default, so its editor opens with the download. */
+async function addBuiltinService(provider: AIProvider) {
+  const service = await addAIService(provider);
+  await setDefaultAIService(service.id);
+}
+
+/** "Free on this computer": the built-in model, offered first where this computer can run it. */
+function BuiltinAISuggestion() {
+  const { state, isLoading } = useAIServices();
+  const status = useBuiltinAIStatus(BUILTIN_AI_PROVIDER !== undefined);
+  const provider = BUILTIN_AI_PROVIDER;
+  const added = state.services.some((service) => isBuiltinProvider(service.provider));
+  if (!provider || isLoading || added || !canOfferBuiltinAI(status)) return null;
+  return (
+    <div
+      data-testid="builtin-ai-suggestion"
+      className="flex flex-wrap items-start gap-3 rounded-md border border-primary/30 bg-accent px-3 py-3 text-sm"
+    >
+      <Laptop aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-ai" />
+      <div className="min-w-0 flex-1 space-y-1">
+        <p className="font-medium">{t('builtinAi_suggestTitle')}</p>
+        <p className="text-muted-foreground">{t('builtinAi_suggestDesc')}</p>
+      </div>
+      <Button type="button" size="sm" onClick={() => void addBuiltinService(provider)}>
+        {t('builtinAi_suggestAction')}
+      </Button>
+    </div>
+  );
+}
+
 export function AIIntroPanel() {
   return (
     <OptionsPanel
@@ -32,6 +66,7 @@ export function AIIntroPanel() {
       title={t('aiOnboard_title')}
       description={t('aiOnboard_steps')}
     >
+      <BuiltinAISuggestion />
       <ul className="space-y-2 text-sm">
         {POINTS.map(({ id, icon: Icon, key }) => (
           <li key={id} data-point={id} className="flex items-start gap-2">

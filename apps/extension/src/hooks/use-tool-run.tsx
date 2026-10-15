@@ -56,7 +56,7 @@ export function useToolRun<Result, Selection>(
       freshNodes: async (scope) =>
         getScopedNodes(await fetchBookmarkTree(), environmentRef.current.currentFolderId, scope),
       refresh: () => environmentRef.current.refresh(),
-      aiSettings: () => getActiveAISettings(true),
+      aiSettings: (feature) => getActiveAISettings(true, feature),
       saveFile: (request, write) => environmentRef.current.saveFile(request, write),
       notify: showToolOutcome,
     }),

@@ -1455,6 +1455,7 @@ const localizedProviderNameKeys: Partial<Record<AIProvider, string>> = {
   ollama: 'settings_aiProviderOllama',
   custom: 'settings_aiProviderCustom',
   custom_anthropic: 'settings_aiProviderCustomAnthropic',
+  chrome_builtin: 'builtinAi_providerName',
 };
 
 /** Brand names stay as configured; generic provider names are translated. */

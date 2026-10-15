@@ -54,13 +54,13 @@ describe('API key format message', () => {
 describe('named AI services', () => {
   it('starts with no services and no default, and stores nothing until one is added', async () => {
     expect(await getAIServicesState()).toEqual({ services: [], defaultServiceId: undefined });
-    await expect(getActiveAISettings(true)).rejects.toThrow();
+    await expect(getActiveAISettings(true, 'askAI')).rejects.toThrow();
     expect(await readStoredRaw(STORAGE_ITEMS.aiServices)).toBeUndefined();
 
     const first = await addAIService('anthropic');
     await saveStoredAIProviderConfig(first.id, { apiKey: 'sk-ant-synthetic' });
     expect((await getAIServicesState()).defaultServiceId).toBe(first.id);
-    await expect(getActiveAISettings(true)).resolves.toMatchObject({
+    await expect(getActiveAISettings(true, 'askAI')).resolves.toMatchObject({
       provider: 'anthropic',
       apiKey: 'sk-ant-synthetic',
     });
@@ -75,7 +75,7 @@ describe('named AI services', () => {
     await updateAIService(second.id, { model: 'home-model' });
     await setDefaultAIService(second.id);
 
-    await expect(getActiveAISettings(true)).resolves.toMatchObject({
+    await expect(getActiveAISettings(true, 'askAI')).resolves.toMatchObject({
       apiKey: 'second',
       baseUrl: 'https://b.test/v1',
       model: 'home-model',

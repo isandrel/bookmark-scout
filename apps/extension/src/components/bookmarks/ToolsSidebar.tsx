@@ -36,10 +36,20 @@ function ToolEntry({ tool, environment, currentFolderName, runWithAccess }: Tool
   const { settings } = environment;
   // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed; on but
   // without a usable default service, it says to finish the setup instead of failing on click.
-  const aiSetup = useAISetup();
-  const aiBlocked = Boolean(tool.requiresAI) && aiSetup !== 'ready';
+  const aiSetup = useAISetup(tool.aiFeature);
+  const aiBlocked = Boolean(tool.aiFeature) && aiSetup !== 'ready';
+  // With only the built-in model, which does not run tools, say what is missing.
+  const { service: defaultService } = useAIFeatureService();
+  const needsOtherService =
+    defaultService !== undefined &&
+    tool.aiFeature !== undefined &&
+    !providerSupportsFeature(defaultService.provider, tool.aiFeature);
   const aiNotice =
-    aiSetup === 'needsSetup' ? t('aiOnboard_setupNotice') : t('ai_featuresDisabledNotice');
+    aiSetup !== 'needsSetup'
+      ? t('ai_featuresDisabledNotice')
+      : needsOtherService
+        ? t('builtinAi_needsOtherService')
+        : t('aiOnboard_setupNotice');
   const Review = TOOL_REVIEWS[tool.id] as
     | ((props: ToolReviewProps<ToolId>) => React.ReactNode)
     | undefined;

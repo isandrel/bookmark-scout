@@ -20,7 +20,7 @@
             },
             "aiOptIn": {
                 "title": "A IA fica desativada até você ativá-la",
-                "body": "Quando você usa um recurso de IA, a solicitação vai do seu navegador diretamente para o provedor que você escolheu."
+                "body": "Quando você usa um recurso de IA, a solicitação vai do seu navegador diretamente para o provedor que você escolheu. Com a IA integrada do Chrome, ela fica no seu computador."
             },
             "developer": {
                 "title": "O desenvolvedor não recebe nada",
@@ -80,7 +80,7 @@
                             "<strong>A tabela do gerenciador de favoritos</strong>: quais colunas aparecem, a ordem delas e a ordenação são sincronizadas como as configurações. A largura das colunas e o tamanho da página ficam neste dispositivo.",
                             "<strong>Os serviços de IA</strong> (nome, provedor e modelo de cada serviço) e suas <strong>configurações de conexão</strong> (chave de API, URL base, cabeçalhos extras e campos específicos do provedor) ficam no armazenamento local somente deste dispositivo. Eles não são sincronizados. Um arquivo de backup guarda a URL base e os campos específicos do provedor de cada serviço, mas nunca sua chave de API nem seus cabeçalhos extras. Quando o navegador oferece suporte (Chrome 140 e posteriores), o armazenamento local também fica fechado para qualquer script que a extensão coloque em uma página da web.",
                             "<strong>As listas de modelos</strong> obtidas dos seus serviços de IA (nomes e IDs dos modelos) ficam no armazenamento local deste dispositivo por 7 dias.",
-                            "<strong>A atividade de IA</strong>, somente se você ativar Registrar solicitações em Atividade da IA, nas configurações de IA (desativado por padrão e definido separadamente em cada dispositivo): as últimas solicitações de IA, com o que foi enviado ao seu provedor e o que voltou. Elas contêm títulos, URLs e caminhos de pasta dos favoritos e, com Ler conteúdo da página ativado, o texto das páginas. Chaves de API, cabeçalhos de autenticação, seus cabeçalhos extras e chaves em endereços da web são removidos antes de qualquer armazenamento. Esse histórico fica no armazenamento local deste dispositivo, nunca é sincronizado e é excluído quando você desativa o registro. Ele também lista cada consulta feita por um agente de IA local, com o nome que o agente informou.",
+                            "<strong>A atividade de IA</strong>, somente se você ativar Registrar solicitações em Atividade da IA, nas configurações de IA (desativado por padrão e definido separadamente em cada dispositivo): as últimas solicitações de IA, com o que foi enviado ao seu provedor (ou à IA integrada do Chrome) e o que voltou. Elas contêm títulos, URLs e caminhos de pasta dos favoritos e, com Ler conteúdo da página ativado, o texto das páginas. Chaves de API, cabeçalhos de autenticação, seus cabeçalhos extras e chaves em endereços da web são removidos antes de qualquer armazenamento. Esse histórico fica no armazenamento local deste dispositivo, nunca é sincronizado e é excluído quando você desativa o registro. Ele também lista cada consulta feita por um agente de IA local, com o nome que o agente informou.",
                             "<strong>Tags, resumos, pesquisas salvas, pastas recentes e pesquisas recentes</strong> ficam no armazenamento local somente deste dispositivo. Você pode desativar as pesquisas recentes nas Configurações.",
                             "<strong>Os ícones dos sites</strong> que você salva com Atualizar ícones dos sites ficam no armazenamento local somente deste dispositivo, até um limite de tamanho que você pode alterar nas Configurações. Você pode excluí-los a qualquer momento com Limpar ícones salvos.",
                             "<strong>Seu último salvamento rápido</strong> (o título e o URL da página e onde ela foi salva) fica no armazenamento da sessão até o navegador ser fechado, para Desfazer e Mover para.",
@@ -120,6 +120,10 @@
                     {
                         "type": "p",
                         "text": "Sua chave de API é enviada a esse provedor para autenticar a solicitação. O provedor trata os dados de acordo com os próprios termos e política de privacidade, que você aceita diretamente com ele. O Bookmark Scout não envia esses dados para nenhum outro lugar. Se você configurar a extensão para usar um modelo executado no seu próprio computador (por exemplo, o Ollama), os dados ficam na sua máquina."
+                    },
+                    {
+                        "type": "p",
+                        "text": "<strong>IA integrada do Chrome</strong> (somente Chrome): se você adicionar a IA integrada como serviço de IA, as sugestões de pastas são geradas pelo próprio modelo do Chrome no seu computador, em vez de um provedor. O título e a URL da página atual, os nomes das pastas que mais combinam com ela e, com Ler conteúdo da página ativado, um pequeno trecho do seu texto vão apenas para esse modelo e nunca saem do seu computador. Nenhuma chave de API é usada. O Chrome baixa o modelo do Google uma única vez, quando você clica em Baixar o modelo nas configurações de IA; o download não contém nenhum dado seu. Os outros recursos de IA continuam usando um provedor que você configurou."
                     },
                     {
                         "type": "h3",

@@ -6420,5 +6420,109 @@
     "aiOnboard_finishSetup": {
         "message": "AI 설정 마치기",
         "description": "Popup and side panel: link that opens Options > AI to add a service or its key"
+    },
+    "builtinAi_providerName": {
+        "message": "내장 AI(이 컴퓨터에서 실행)",
+        "description": "AI provider name: Chrome's built-in model (Gemini Nano), which runs on the user's own computer. Shown in the Add service list and as a new service's name"
+    },
+    "builtinAi_errorNoPrompt": {
+        "message": "내장 AI가 답할 내용을 받지 못했습니다.",
+        "description": "Error when the built-in AI model was called without a question (a programming error, rarely seen)"
+    },
+    "builtinAi_errorNotReady": {
+        "message": "내장 AI 모델이 아직 준비되지 않았습니다. 설정 > AI에서 다운로드하세요.",
+        "description": "Error when the built-in AI model is not downloaded or not ready; the popup never starts the download itself"
+    },
+    "builtinAi_reasonModel": {
+        "message": "이 컴퓨터의 내장 AI가 골랐습니다",
+        "description": "Tooltip of a folder suggestion that the built-in AI model on the user's computer chose"
+    },
+    "builtinAi_reasonWordMatch": {
+        "message": "이 페이지와 겹치는 단어가 있습니다(내장 AI가 답하지 않았습니다)",
+        "description": "Tooltip of a folder suggestion that came from plain word matching because the built-in AI model did not answer (error or too slow)"
+    },
+    "builtinAi_needsOtherService": {
+        "message": "내장 AI는 폴더 추천만 합니다. 이 도구를 쓰려면 설정 > AI에서 키가 있는 AI 서비스를 추가하세요.",
+        "description": "Tools sidebar: notice on an AI tool card when the only AI service is the built-in AI, which does not run tools"
+    },
+    "builtinAi_downloadInSettings": {
+        "message": "설정에서 내장 AI 모델을 다운로드하세요",
+        "description": "Popup and side panel footer line while the built-in AI is chosen but its model is not downloaded yet; followed by a link that opens Settings > AI"
+    },
+    "builtinAi_suggestTitle": {
+        "message": "이 컴퓨터에서 무료",
+        "description": "Options > AI intro box: heading of the first suggestion, Chrome's built-in AI, which is free and runs on this computer"
+    },
+    "builtinAi_suggestDesc": {
+        "message": "Chrome의 내장 AI가 계정, 키, 비용 없이 폴더를 추천하며, 어떤 데이터도 컴퓨터 밖으로 나가지 않습니다. 모델은 Chrome이 한 번만 다운로드합니다.",
+        "description": "Options > AI intro box: text of the built-in AI suggestion"
+    },
+    "builtinAi_suggestAction": {
+        "message": "내장 AI 사용",
+        "description": "Options > AI intro box: button that adds the built-in AI as the default AI service (AI Features stays off until the user turns it on)"
+    },
+    "builtinAi_statusChecking": {
+        "message": "이 컴퓨터에서 실행할 수 있는지 확인하는 중…",
+        "description": "Options > AI built-in AI service: shown while checking whether this computer can run the model"
+    },
+    "builtinAi_statusReady": {
+        "message": "준비되었습니다. 폴더 추천이 이 컴퓨터에서 실행됩니다.",
+        "description": "Options > AI built-in AI service: the model is downloaded and ready"
+    },
+    "builtinAi_statusNoApi": {
+        "message": "이 브라우저에는 내장 AI가 없습니다. 컴퓨터의 Chrome에서 사용할 수 있습니다.",
+        "description": "Options > AI built-in AI service: this browser has no built-in AI (for example Firefox)"
+    },
+    "builtinAi_statusPolicy": {
+        "message": "조직에서 Chrome의 내장 AI를 사용하지 않도록 설정했습니다.",
+        "description": "Options > AI built-in AI service: an enterprise policy turned off Chrome's built-in AI on this computer"
+    },
+    "builtinAi_statusUnsupported": {
+        "message": "이 컴퓨터에서는 Chrome의 내장 AI를 실행할 수 없습니다.",
+        "description": "Options > AI built-in AI service: this computer cannot run the model (hardware, disk space, or operating system); followed by the requirements"
+    },
+    "builtinAi_statusDownloading": {
+        "message": "모델 다운로드 중",
+        "description": "Options > AI built-in AI service: the model is downloading; also the progress bar's label"
+    },
+    "builtinAi_downloadKeepOpen": {
+        "message": "다운로드하는 동안에도 Chrome을 계속 사용할 수 있습니다.",
+        "description": "Options > AI built-in AI service: note under the download progress"
+    },
+    "builtinAi_statusDownloadable": {
+        "message": "모델이 아직 이 컴퓨터에 없습니다",
+        "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
+    },
+    "builtinAi_downloadSize": {
+        "message": "Chrome이 한 번만 다운로드합니다. 그래픽 카드가 있는 컴퓨터에서는 약 $1, 없으면 약 $2입니다.",
+        "description": "Options > AI built-in AI service: download size. $1 is the size with a graphics card (such as 4 GB), $2 the size without one (such as 2.7 GB)"
+    },
+    "builtinAi_requirements": {
+        "message": "디스크 여유 공간 $1과, 메모리가 $2보다 큰 그래픽 카드 또는 메모리 $3과 프로세서 코어 $4개가 필요합니다.",
+        "description": "Options > AI built-in AI service: what Chrome needs to run the model. $1 free disk space, $2 graphics memory, $3 main memory (RAM), $4 number of processor cores"
+    },
+    "builtinAi_download": {
+        "message": "모델 다운로드",
+        "description": "Options > AI built-in AI service: button that starts Chrome's one-time model download"
+    },
+    "builtinAi_downloadFailed": {
+        "message": "다운로드를 마치지 못했습니다: $1",
+        "description": "Options > AI built-in AI service: the model download failed. $1 is the browser's reason"
+    },
+    "builtinAi_scope": {
+        "message": "폴더 추천만 합니다. $1에는 다른 AI 서비스를 추가하면 그 서비스가 사용됩니다.",
+        "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
+    "builtinAi_languages": {
+        "message": "$1에서 가장 잘 작동합니다. 다른 언어에서는 단순한 단어 일치로 추천될 수 있습니다.",
+        "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "builtinAi_privacy": {
+        "message": "어떤 데이터도 컴퓨터 밖으로 나가지 않습니다. 페이지 제목, 주소, 폴더 이름은 이 컴퓨터에 남습니다.",
+        "description": "Options > AI built-in AI service: privacy note"
+    },
+    "builtinAi_featureQuickSave": {
+        "message": "AI 빠른 저장",
+        "description": "Name of the AI quick save feature (the keyboard shortcut that saves the page to the folder AI picks), in a list of AI features"
     }
 }

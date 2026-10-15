@@ -32,6 +32,8 @@ apps/*/.next
 # WXT
 .wxt
 .output
+# Each developer's own browser setup for `bun run dev` (CONTRIBUTING.md, Chrome's built-in AI)
+apps/extension/web-ext.config.ts
 
 # Extension signing (keep locally, add to GitHub Secrets)
 dist.pem

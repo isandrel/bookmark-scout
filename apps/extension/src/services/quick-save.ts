@@ -509,7 +509,7 @@ async function getQuickSaveAISettings(
   try {
     // The host page checks the rest (validateAISettings) before the request; importing the AI
     // client here would bundle model listing and page reading into the background.
-    return { ok: true, settings: await getActiveAISettings(true) };
+    return { ok: true, settings: await getActiveAISettings(true, 'quickSave') };
   } catch (error) {
     return { ok: false, error: getErrorMessage(error) };
   }

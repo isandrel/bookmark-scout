@@ -69,7 +69,7 @@ export type ToolContext = {
   scope: BookmarkToolScope;
   /** Bookmarks in the run's scope. */
   nodes: BookmarkTreeNode[];
-  /** The default AI service; fails first when AI features are off. */
+  /** The AI service of the tool's `aiFeature`; fails first when AI features are off. */
   aiSettings(): Promise<AISettings>;
   /** Saves a file once the privacy review allows it; `write` gets the nodes to write. */
   saveFile(request: ToolFileRequest, write: (nodes: BookmarkTreeNode[]) => void): void;
@@ -96,8 +96,11 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
   actionKey(settings: Settings): string;
   /** Network tools ask for optional website access before the first scan. */
   needsHostAccess?: boolean;
-  /** Disabled, with a notice, while AI features are off. */
-  requiresAI?: boolean;
+  /**
+   * The AI feature the tool is (`AI_FEATURES`), which picks its AI service. Disabled, with a
+   * notice, while AI features are off or that service is not set up.
+   */
+  aiFeature?: AIFeature;
   /** Applying changes bookmarks, so the page reloads its tree after apply and undo. */
   changesBookmarks?: boolean;
   /** The review opens when the scan starts and shows scan errors (reorganization). */
@@ -296,7 +299,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     titleKey: 'tools_autoTagging',
     descriptionKey: 'tools_autoTaggingDesc',
     actionKey: () => 'action_analyze',
-    requiresAI: true,
+    aiFeature: 'autoTagging',
     applyFailureTitleKey: 'bookmarks_metadataSaveFailed',
     async scan({ nodes, options, aiSettings }) {
       return suggestBookmarkTags(nodes, await aiSettings(), options.autoTagging);
@@ -319,7 +322,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     titleKey: 'tools_summarizer',
     descriptionKey: 'tools_summarizerDesc',
     actionKey: () => 'action_analyze',
-    requiresAI: true,
+    aiFeature: 'summarizer',
     applyFailureTitleKey: 'bookmarks_metadataSaveFailed',
     async scan({ nodes, options, aiSettings }) {
       return summarizeBookmarksWithAI(nodes, await aiSettings(), options.summarizer);
@@ -343,7 +346,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     descriptionKey: 'tools_aiReorganizeDesc',
     // An AI plan is always reviewed before it moves anything.
     actionKey: () => 'action_analyze',
-    requiresAI: true,
+    aiFeature: 'reorganization',
     changesBookmarks: true,
     reviewWhileScanning: true,
     scanFailureKey: 'ai_reorgAnalyzeFailed',

@@ -40,11 +40,35 @@ Los botones de IA de la ventana emergente y del panel lateral aparecen cuando **
 
 La configuración se guarda automáticamente. Los servicios de IA, con sus claves de API, su **URL base** y sus **Encabezados adicionales (JSON)**, se quedan en el almacenamiento local de este navegador y nunca se sincronizan. Los demás ajustes de IA, como si la IA está activada, se sincronizan a través de tu cuenta del navegador cuando el navegador lo admite.
 
+## IA gratuita en este equipo [#free-ai-on-this-computer]
+
+En Chrome, Bookmark Scout puede usar la **IA integrada de Chrome**, un modelo pequeño (Gemini Nano) que se ejecuta en tu equipo: sin cuenta, sin clave de API, sin coste, y nada sale de tu equipo. Solo sugiere carpetas.
+
+<Steps>
+<Step>
+En la pestaña **IA**, haz clic en **Usar la IA integrada**, bajo **Gratis en este equipo**, al principio del recuadro **La IA es opcional**. **IA integrada (en este equipo)** también aparece primero en **Añadir servicio**. Ambos aparecen solo donde Chrome puede ejecutar el modelo.
+</Step>
+<Step>
+Haz clic en **Descargar el modelo**. Chrome lo descarga una sola vez: unos 4 GB en un equipo con tarjeta gráfica y 2,7 GB sin ella. Cuando el servicio indica **Lista**, el modelo está en este equipo.
+</Step>
+<Step>
+Activa **Funciones de IA** si están desactivadas: añadir el servicio no activa la IA.
+</Step>
+</Steps>
+
+- Chrome necesita 22 GB de espacio libre en disco y una tarjeta gráfica con más de 4 GB de memoria, o 16 GB de memoria y 4 núcleos de procesador. En un equipo que no puede ejecutar el modelo, o si tu organización lo desactivó, el servicio lo indica. Firefox no tiene IA integrada.
+- Solo sugiere carpetas, en la ventana emergente y en el panel lateral. Preguntar a la IA, Etiquetado automático, Generador de resúmenes, Reorganización de carpetas con IA y el atajo de guardado rápido con IA usan otro servicio cuando añades uno.
+- Lee el título y la dirección de la página, los nombres de las carpetas que mejor encajan con ella (una lista corta elegida en tu dispositivo) y, con **Leer el contenido de la página** activado, el comienzo de su texto. Solo responde con carpetas de esa lista.
+- Funciona mejor con inglés, japonés, español, alemán y francés. Cuando el modelo falla o tarda demasiado, las sugerencias vienen de una simple coincidencia de palabras en tu dispositivo.
+- La ventana emergente nunca inicia la descarga: hasta que el modelo esté listo, muestra **Descarga el modelo de la IA integrada en Configuración** en lugar de los botones de IA.
+- Con **Registrar solicitudes** activado, cada llamada aparece en **Actividad de IA** como `ON-DEVICE`.
+
 ## Usar más de un servicio [#use-more-than-one-service]
 
 Guarda tantos servicios como quieras, incluso varios del mismo proveedor: por ejemplo, un proxy del trabajo y otro de casa, cada uno con su propia clave, dirección y modelo.
 
 - Todas las herramientas de IA usan el servicio **Predeterminado**. Elige **Establecer como predeterminado** en el menú de un servicio o, cuando hay más de un servicio activado, elige uno con la flecha que está junto al botón del destello en la ventana emergente.
+- **IA integrada** solo sugiere carpetas: mientras sea la predeterminada, las demás herramientas de IA usan el primer otro servicio activado.
 - Desactiva un servicio con su interruptor para ocultarlo de la ventana emergente sin eliminarlo.
 - **Duplicar** copia un servicio, clave incluida. **Eliminar** lo quita de este dispositivo junto con su clave.
 - La **URL base**, los **Encabezados adicionales (JSON)** y los campos propios de cada proveedor, como la organización de OpenAI, están en **Más ajustes**.
@@ -53,6 +77,7 @@ Guarda tantos servicios como quieras, incluso varios del mismo proveedor: por ej
 
 | Proveedor | Clave de API | Notas |
 | --- | --- | --- |
+| IA integrada (en este equipo) | Ninguna | Solo Chrome, para sugerencias de carpetas; consulta [IA gratuita en este equipo](#free-ai-on-this-computer) |
 | OpenAI | Obligatoria | **ID de organización** e **ID de proyecto** opcionales |
 | Anthropic | Obligatoria | |
 | Google | Obligatoria | |
@@ -102,7 +127,7 @@ Guarda varios prompts por herramienta, hasta 10 en total, y cambia de uno a otro
 
 | Herramienta | Dónde | Qué envía al proveedor |
 | --- | --- | --- |
-| Recomendaciones de carpetas | Ventana emergente, el botón del destello junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | El título y la URL de la página actual, y los nombres de tus carpetas de marcadores. Con **Leer el contenido de la página** activado, también el texto principal de la página |
+| Recomendaciones de carpetas | Ventana emergente, el botón del destello junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | El título y la URL de la página actual, y los nombres de tus carpetas de marcadores. Con **Leer el contenido de la página** activado, también el texto principal de la página. Con la IA integrada, nada sale de tu equipo |
 | **Etiquetado automático** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
 | **Generador de resúmenes** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
 | **Reorganización de carpetas con IA** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores del ámbito que elijas |

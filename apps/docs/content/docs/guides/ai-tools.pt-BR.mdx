@@ -40,11 +40,35 @@ Os botões de IA do pop-up e do painel lateral aparecem quando **Recursos de IA*
 
 As configurações são salvas automaticamente. Os serviços de IA, com as chaves de API, o **URL base** e os **Cabeçalhos extras (JSON)**, ficam no armazenamento local deste navegador e nunca são sincronizados. As outras configurações de IA, como a que indica se a IA está ativada, são sincronizadas pela sua conta do navegador quando o navegador oferece esse recurso.
 
+## IA grátis neste computador [#free-ai-on-this-computer]
+
+No Chrome, o Bookmark Scout pode usar a **IA integrada do Chrome**, um modelo pequeno (Gemini Nano) que roda no seu computador: sem conta, sem chave de API, sem custo, e nada sai do seu computador. Ela só sugere pastas.
+
+<Steps>
+<Step>
+Na aba **IA**, clique em **Usar a IA integrada**, em **Grátis neste computador**, no topo da caixa **A IA é opcional**. **IA integrada (neste computador)** também aparece primeiro em **Adicionar serviço**. Os dois só aparecem onde o Chrome consegue executar o modelo.
+</Step>
+<Step>
+Clique em **Baixar o modelo**. O Chrome o baixa uma única vez: cerca de 4 GB em um computador com placa de vídeo, 2,7 GB sem. Quando o serviço mostrar **Pronta**, o modelo está neste computador.
+</Step>
+<Step>
+Ative **Recursos de IA**, se estiverem desativados: adicionar o serviço não ativa a IA.
+</Step>
+</Steps>
+
+- O Chrome precisa de 22 GB de espaço livre em disco e de uma placa de vídeo com mais de 4 GB de memória, ou de 16 GB de memória e 4 núcleos de processador. Em um computador que não consegue executar o modelo, ou se sua organização o desativou, o serviço avisa. O Firefox não tem IA integrada.
+- Ela só sugere pastas, no pop-up e no painel lateral. Perguntar à IA, Tags automáticas, Gerador de resumos, Reorganização de pastas com IA e o atalho de salvamento rápido com IA usam outro serviço quando você adiciona um.
+- Ela lê o título e o endereço da página, os nomes das pastas que mais combinam com ela (uma lista curta escolhida no seu dispositivo) e, com **Ler conteúdo da página** ativado, o início do texto da página. Ela só responde com pastas dessa lista.
+- Funciona melhor com inglês, japonês, espanhol, alemão e francês. Quando o modelo falha ou demora demais, as sugestões vêm de uma simples correspondência de palavras no seu dispositivo.
+- O pop-up nunca inicia o download: até o modelo ficar pronto, ele mostra **Baixe o modelo da IA integrada nas Configurações** no lugar dos botões de IA.
+- Com **Registrar solicitações** ativado, cada chamada aparece em **Atividade da IA** como `ON-DEVICE`.
+
 ## Usar mais de um serviço [#use-more-than-one-service]
 
 Salve quantos serviços quiser, até vários do mesmo provedor: por exemplo, um proxy do trabalho e um proxy de casa, cada um com a própria chave, endereço e modelo.
 
 - Todas as ferramentas de IA usam o serviço **Padrão**. Escolha **Definir como padrão** no menu de um serviço ou, quando mais de um serviço estiver ativado, escolha um pela seta ao lado do botão de brilho no pop-up.
+- **IA integrada** só sugere pastas: enquanto ela for o padrão, as outras ferramentas de IA usam o primeiro outro serviço ativado.
 - Desative um serviço com a chave dele para ocultá-lo do pop-up sem excluí-lo.
 - **Duplicar** copia um serviço, incluindo a chave. **Excluir** remove o serviço e a chave dele deste dispositivo.
 - **URL base**, **Cabeçalhos extras (JSON)** e os campos específicos de cada provedor, como a organização da OpenAI, ficam em **Mais configurações**.
@@ -53,6 +77,7 @@ Salve quantos serviços quiser, até vários do mesmo provedor: por exemplo, um 
 
 | Provedor | Chave de API | Observações |
 | --- | --- | --- |
+| IA integrada (neste computador) | Nenhuma | Só no Chrome, para sugestões de pastas; veja [IA grátis neste computador](#free-ai-on-this-computer) |
 | OpenAI | Obrigatória | **ID da organização** e **ID do projeto** opcionais |
 | Anthropic | Obrigatória | |
 | Google | Obrigatória | |
@@ -102,7 +127,7 @@ Guarde vários prompts por ferramenta, até 10 no total, e alterne entre eles pe
 
 | Ferramenta | Onde | Envia ao provedor |
 | --- | --- | --- |
-| Recomendações de pasta | Pop-up, o botão de brilho ao lado da caixa de pesquisa (só aparece com a IA ativada) | O título e o URL da página atual e os nomes das suas pastas de favoritos. Com **Ler conteúdo da página** ativado, também o texto principal da página |
+| Recomendações de pasta | Pop-up, o botão de brilho ao lado da caixa de pesquisa (só aparece com a IA ativada) | O título e o URL da página atual e os nomes das suas pastas de favoritos. Com **Ler conteúdo da página** ativado, também o texto principal da página. Com a IA integrada, nada sai do seu computador |
 | **Tags automáticas** | Gerenciador, Ferramentas, **IA** | Títulos, URLs e caminhos de pasta dos favoritos da pasta atual e, com **Ler conteúdo da página** ativado, o texto principal de cada página |
 | **Gerador de resumos** | Gerenciador, Ferramentas, **IA** | Títulos, URLs e caminhos de pasta dos favoritos da pasta atual e, com **Ler conteúdo da página** ativado, o texto principal de cada página |
 | **Reorganização de pastas com IA** | Gerenciador, Ferramentas, **IA** | Títulos, URLs e caminhos de pasta dos favoritos no escopo que você escolher |

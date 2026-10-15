@@ -1,5 +1,6 @@
 import providerLogoAliases from 'virtual:provider-logo-aliases';
 import {
+  type AI_FEATURES,
   type AI_PROVIDER_EXTRA_FIELDS,
   type AI_PROVIDER_KINDS,
   AI_PROVIDERS_CONFIG_PATH,
@@ -40,7 +41,12 @@ export type AIProviderConfig = {
   group?: 'featured' | 'local' | 'custom';
   /** models.dev logo id for a provider file; catalog providers use their own id. */
   logo?: string;
+  /** The AI features this provider may serve; every feature when omitted. */
+  features?: readonly AIFeature[];
 };
+
+/** An AI feature that picks its own service (`AI_FEATURES`). */
+export type AIFeature = (typeof AI_FEATURES)[number];
 
 /** Provider picker groups, in display order. */
 export type AIProviderGroup = 'featured' | 'local' | 'custom' | 'catalog';
@@ -147,6 +153,22 @@ export function getDefaultModel(provider: AIProvider): string {
 
 export function getProviderKind(provider: AIProvider): AIProviderKind {
   return getProviderConfig(provider)?.provider_kind ?? 'native';
+}
+
+/** Whether the provider is the browser's own model on this computer (Chrome's built-in AI). */
+export function isBuiltinProvider(provider: AIProvider): boolean {
+  return getProviderKind(provider) === 'chrome_builtin';
+}
+
+/** The provider file of the browser's built-in model, which the AI onboarding offers first. */
+export const BUILTIN_AI_PROVIDER: AIProvider | undefined = providerFiles.find(
+  ([, provider]) => provider.provider_kind === 'chrome_builtin',
+)?.[0];
+
+/** Whether a service of this provider may serve `feature` (its file's `features`). */
+export function providerSupportsFeature(provider: AIProvider, feature: AIFeature): boolean {
+  const features = getProviderConfig(provider)?.features;
+  return !features || features.includes(feature);
 }
 
 export function getProviderBaseUrl(provider: AIProvider): string | undefined {

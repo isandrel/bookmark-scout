@@ -11,7 +11,7 @@ This policy is also available in other languages. If a translation differs from 
 
 - **No account, no server.** The extension runs inside your browser. There is nothing to sign up for and no Bookmark Scout server that receives your data.
 - **We don't track what you do.** The extension has no analytics, no crash reporting, and no ads.
-- **AI is off until you turn it on.** When you use an AI feature, the request goes from your browser directly to the provider you chose.
+- **AI is off until you turn it on.** When you use an AI feature, the request goes from your browser directly to the provider you chose. With Chrome's built-in AI, it stays on your computer.
 - **The developer receives nothing.** Your bookmarks, settings, and API keys never reach the developer.
 - **The browser asks for one thing.** At install, Chrome and Edge ask only to “Read and change your bookmarks” (Firefox: “Read and modify bookmarks”). Other features ask only when you first use them. [What each one asks and why](https://docs.bookmark-scout.com/permissions).
 
@@ -40,7 +40,7 @@ Everything is kept in your browser's extension storage:
 - **The bookmark manager's table**: which columns are shown, their order, and the sort sync like settings. Column widths and page size stay on this device.
 - **AI services** (each service's name, provider, and model) and their **connection settings** (API key, base URL, extra headers, and any provider-specific fields) are kept in local storage on this device only. They are not synced. A backup file holds each service's base URL and provider-specific fields, but never its API key or extra headers. Where the browser supports it (Chrome 140 and later), local storage is also closed to any script the extension places in a web page.
 - **Model lists** fetched from your AI services (model names and ids) are kept in local storage on this device for 7 days.
-- **AI activity**, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. They also list each lookup a local AI agent made, with the name the agent gave. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.
+- **AI activity**, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider (or to Chrome's built-in AI) and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. They also list each lookup a local AI agent made, with the name the agent gave. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.
 - **Tags, summaries, saved searches, recent folders, and recent searches** are kept in local storage on this device only. You can turn off recent searches in Settings.
 - **Site icons** you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.
 - **Your last quick save** (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.
@@ -62,6 +62,8 @@ AI features run only after you turn them on in Settings and choose a provider. W
 If you also turn on Auto-recommend on Open (off by default), folder suggestions run each time you open the popup or side panel.
 
 Your API key is sent to that provider to authenticate the request. The provider handles the data under its own terms and privacy policy, which you accept with them directly. Bookmark Scout does not send this data anywhere else. If you point the extension at a model running on your own computer (for example Ollama), the data stays on your machine.
+
+**Chrome's built-in AI** (Chrome only): if you add Built-in AI as an AI service, folder suggestions run on Chrome's own model on your computer instead of a provider. The current page's title and URL, the names of the folders that best match it, and, with Read page content on, a short excerpt of its text go only to that model and never leave your computer. No API key is used. Chrome downloads the model from Google once, when you click Download the model in the AI settings; the download carries none of your data. The other AI features keep using a provider you set up.
 
 ### Local AI agents (off by default)
 

@@ -21,10 +21,12 @@ raw_bytes = 5_160_000
 [categories]
 # locales and other raised on 2026-10-15 for the welcome page (welcome.html and its strings in nine
 # languages) and the newcomer and permission copy: measured 1,095,791 and 25,837 (Firefox) B, plus
-# about 3%.
+# about 3%. locales raised again on 2026-10-15 for Chrome's built-in AI (its Options states,
+# download, onboarding, and popup strings in nine languages): measured 1,147,064 B (1,122,267 on
+# a787d2d5), plus about 3%.
 javascript = 3_507_000
 css = 81_000
 fonts = 143_000
-locales = 1_129_000
+locales = 1_182_000
 images = 320_000
 other = 27_000

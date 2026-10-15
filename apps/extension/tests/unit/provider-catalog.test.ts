@@ -55,7 +55,8 @@ const catalogIds = Object.keys(
 describe('bundled models.dev provider catalog', () => {
   it('lists featured providers first, then catalog providers', () => {
     const ids = getAvailableProviders().map((provider) => provider.id);
-    expect(ids.slice(0, 3)).toEqual(['openai', 'anthropic', 'google']);
+    // The browser's built-in model comes first; Options lists it only where it can run.
+    expect(ids.slice(0, 4)).toEqual(['chrome_builtin', 'openai', 'anthropic', 'google']);
     expect(ids).toContain('togetherai');
     expect(ids.indexOf('togetherai')).toBeGreaterThan(ids.indexOf('custom'));
     expect(new Set(ids).size).toBe(ids.length);

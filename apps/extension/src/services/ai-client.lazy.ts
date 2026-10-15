@@ -27,6 +27,20 @@ export async function createAIModel(
   switch (kind) {
     case 'native':
       return createNativeModel(settings, modelId, fetch);
+    case 'chrome_builtin': {
+      // On this computer: no request for the logging fetch to see, so each call is logged here.
+      const { createBuiltinModel } = await import('./builtin-ai-model.lazy');
+      return createBuiltinModel({
+        modelId,
+        onCall: (call) =>
+          void recordOnDeviceActivity({
+            ...call,
+            source,
+            provider: settings.provider,
+            model: modelId,
+          }),
+      });
+    }
     case 'ollama': {
       const { createOllama } = await import('ollama-ai-provider-v2');
       const ollama = createOllama({
