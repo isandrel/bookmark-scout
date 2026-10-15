@@ -1,9 +1,13 @@
 import { getTranslations } from "next-intl/server";
-import { AI_PROVIDERS } from "@/lib/content/ai-providers";
+import { FEATURED_AI_PROVIDERS } from "@/lib/content/ai-providers";
 import { SCREENSHOT_SIZES, TOUR_TABS, type TourTab } from "@/lib/content/tour";
-import { SCREENSHOT_SIZE } from "@bookmark-scout/config";
+import { SCREENSHOT_SIZE, site } from "@bookmark-scout/config";
 import { IMAGE_FORMATS, srcSet } from "@/lib/images";
+import { inlineLinkClass } from "./rich";
 import { Tabs, type TabItem } from "./Tabs";
+
+/** Docs guide for developers: AI agents on the user's computer (MCP). */
+const DEVELOPER_DOCS_PATH = "/guides/local-agents";
 
 
 function BrowserFrame({ screenshot, alt, eager }: { screenshot: TourTab["screenshot"]; alt: string; eager: boolean }) {
@@ -49,7 +53,7 @@ function BrowserFrame({ screenshot, alt, eager }: { screenshot: TourTab["screens
     );
 }
 
-export async function Tour() {
+export async function Tour({ locale }: { locale: string }) {
     const t = await getTranslations("home.tour");
 
     const items: TabItem[] = TOUR_TABS.map((tab, index) => ({
@@ -73,11 +77,20 @@ export async function Tour() {
                         <div className="mt-6 border-t border-line pt-5">
                             <h4 className="text-sm font-semibold">{t("ai.providersTitle")}</h4>
                             <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-soft">
-                                {AI_PROVIDERS.map((provider) => (
+                                {FEATURED_AI_PROVIDERS.map((provider) => (
                                     <li key={provider}>{provider}</li>
                                 ))}
-                                <li>{t("ai.customProvider")}</li>
+                                <li>{t("ai.moreProviders")}</li>
                             </ul>
+                            <p className="mt-4 text-sm leading-relaxed text-ink-soft">
+                                {t.rich("ai.developers", {
+                                    link: (chunks: React.ReactNode) => (
+                                        <a href={site.docs.page(locale, DEVELOPER_DOCS_PATH)} className={inlineLinkClass}>
+                                            {chunks}
+                                        </a>
+                                    ),
+                                })}
+                            </p>
                         </div>
                     )}
                 </div>

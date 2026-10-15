@@ -187,11 +187,13 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 
 **`save-instrument`** (`components/home/SaveDemo.tsx`): the signature component. A `surface` panel with the ribbon tucked into its top-left corner, the page being saved (title, URL in `url` type), a folder-name combobox whose query renders in `search-query` type, suggestion chips, and a listbox of matching folders (name with a `<mark>` highlight, parents in `ink-soft`, a Save here pill on the selected row). ↑ ↓ and Enter work as in the extension's popup, and an `aria-live` line confirms the save or says the page is already there. Matching follows the extension's rules (`lib/folder-match.ts`). Auto-types one folder name on load; with reduced motion it shows the final state immediately. The large input draws focus with its teal underline instead of the site-wide outline.
 
-**`tabs`**: ARIA tablist with a roving tabindex and arrow, Home, and End keys. Used for the product tour (Save, Find & organize, Clean up, AI) and the install steps (Chrome, Edge, Firefox).
+**`tabs`**: ARIA tablist with a roving tabindex and arrow, Home, and End keys. Used for the product tour (Save, Find & organize, Clean up, AI) and the install-by-hand steps (Chrome, Edge, Firefox). Below `sm` the tabs form an even grid (two columns for four tabs, one row of three) instead of wrapping raggedly.
 
 **`screenshot-frame`**: browser-style frame around 1280x800 store screenshots. `<picture>` swaps in the dark screenshot under `prefers-color-scheme: dark`. Only the first tour image loads eagerly.
 
-**`data-boundary`**: diagram of the browser as a boundary holding bookmarks, settings, and API keys, with dashed opt-in paths to "the AI provider you choose", "websites you check", and "local AI agents", and a crossed-out vendor server with no path. Below `sm` the paths sit two per row under the browser box, and the server box fills the empty cell of an odd row.
+**`data-boundary`**: diagram of the browser as a boundary holding bookmarks, settings, and the AI key, with dashed opt-in paths to "the AI company you choose", "websites you check", and "AI programs on your computer", in plain words (no product names or developer terms), and a crossed-out vendor server with no path. Below `sm` the paths sit two per row under the browser box, and the server box fills the empty cell of an odd row.
+
+**`install`**: a primary "Add to <browser>, free" button per live store listing (the hero's primary button goes to the first one directly), one plain sentence on what the browser asks at install linking the docs permissions page, "coming soon" lines for browsers without a listing (never a link to another browser's store), and the GitHub steps folded into an "Advanced: install by hand" `<details>`, open only while no store lists the extension.
 
 **`install-steps`**: numbered steps, the only place numbered markers appear, because installation is a real sequence.
 

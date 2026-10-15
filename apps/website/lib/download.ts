@@ -1,9 +1,14 @@
+import { LIVE_STORE_BROWSERS } from "@/lib/content/install";
 import { site } from "@bookmark-scout/config";
 
-export type DownloadTarget = { href: string; source: "store" | "release" };
+export type DownloadTarget =
+    | { source: "store"; href: string; browser: string }
+    | { source: "release"; href: string };
 
-/** Store listing for the browser when it is live, otherwise the latest GitHub release. */
-export function downloadTarget(browser: string): DownloadTarget {
-    const store = site.store(browser);
-    return store.live ? { href: store.url, source: "store" } : { href: site.repo.releasesLatest, source: "release" };
+/** The main install link: the first live store listing in install order, else the latest GitHub release. */
+export function primaryDownload(): DownloadTarget {
+    const first = LIVE_STORE_BROWSERS[0];
+    return first
+        ? { source: "store", href: site.store(first.id).url, browser: first.id }
+        : { source: "release", href: site.repo.releasesLatest };
 }

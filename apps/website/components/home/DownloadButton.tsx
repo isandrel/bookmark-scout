@@ -4,12 +4,26 @@ export const primaryButtonClass =
 export const secondaryButtonClass =
     "inline-flex items-center justify-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-semibold text-ink transition-colors hover:border-ink";
 
-export function DownloadButton({ href, label }: { href: string; label: string }) {
+/** Icon paths: a download arrow for files, a plus for adding from a store. */
+const ICONS = {
+    download: "M10 3v9m0 0l-3.5-3.5M10 12l3.5-3.5M4 15.5h12",
+    add: "M10 4v12M4 10h12",
+} as const;
+
+export function DownloadButton({
+    href,
+    label,
+    icon = "download",
+}: {
+    href: string;
+    label: string;
+    icon?: keyof typeof ICONS;
+}) {
     return (
         <a href={href} className={primaryButtonClass}>
             <svg aria-hidden="true" viewBox="0 0 20 20" className="size-5">
                 <path
-                    d="M10 3v9m0 0l-3.5-3.5M10 12l3.5-3.5M4 15.5h12"
+                    d={ICONS[icon]}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.8"

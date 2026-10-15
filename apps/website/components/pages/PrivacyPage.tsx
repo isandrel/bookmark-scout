@@ -3,7 +3,7 @@ import { ProseBlocks, type ProseBlock } from "@/components/longform/ProseBlocks"
 import { localeTextClass, proseTags } from "@/components/longform/rich-text";
 import { PrivacyGlance } from "@/components/privacy/PrivacyGlance";
 import { PrivacyToc } from "@/components/privacy/PrivacyToc";
-import { PRIVACY_EMAILS, PRIVACY_LINKS, PRIVACY_SECTIONS } from "@/lib/content/privacy-sections";
+import { PRIVACY_EMAILS, PRIVACY_SECTIONS, privacyLinks } from "@/lib/content/privacy-sections";
 import { localizedPageMetadata } from "@/lib/page-metadata";
 import { site } from "@bookmark-scout/config";
 import type { Metadata } from "next";
@@ -30,7 +30,7 @@ export async function PrivacyPage({ locale }: { locale: string }) {
         effectiveDate,
     );
     const tags = proseTags({
-        links: PRIVACY_LINKS,
+        links: privacyLinks(locale),
         emails: PRIVACY_EMAILS,
         values: { licenseName: site.license.spdx },
     });

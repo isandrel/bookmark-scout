@@ -15,7 +15,7 @@
                 "body": "扩展程序在你的浏览器中运行。无需注册任何账号，也没有接收你数据的 Bookmark Scout 服务器。"
             },
             "noTelemetry": {
-                "title": "没有遥测",
+                "title": "我们不会跟踪你的操作",
                 "body": "扩展程序没有分析功能、没有崩溃报告，也没有广告。"
             },
             "aiOptIn": {
@@ -25,6 +25,10 @@
             "developer": {
                 "title": "开发者不会收到任何内容",
                 "body": "你的书签、设置和 API 密钥绝不会传送给开发者。"
+            },
+            "permissions": {
+                "title": "浏览器只请求一项权限",
+                "body": "安装时，Chrome 和 Edge 只请求“读取和更改您的书签”（Firefox：请求读取和修改书签）。其他功能只会在你首次使用时才请求。<permissions>每项权限请求什么，以及原因</permissions>"
             }
         },
         "tocLabel": "本页内容",
@@ -165,18 +169,19 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "安装时，Bookmark Scout 只请求 <code>bookmarks</code>、<code>storage</code>、<code>activeTab</code> 和 <code>scripting</code>（在你按下快捷键的标签页中显示快速保存通知）权限，在 Chrome 和 Edge 中另加 <code>sidePanel</code> 和 <code>offscreen</code>（在隐藏的扩展页面中运行 AI 快速保存的请求），在 Firefox 中另加 <code>contextMenus</code>（Firefox 不允许扩展程序在之后再请求该权限）。其他所有权限都是可选的，只有在你开启或运行需要它们的功能时才会请求："
+                        "text": "安装 Bookmark Scout 时，浏览器只请求一项权限：在 Chrome 和 Edge 中为“读取和更改您的书签”，在 Firefox 中为请求读取和修改书签（<code>bookmarks</code>）。安装时授予的其他权限不会显示提示：<code>storage</code> 用于保存设置；<code>activeTab</code> 用于在你点击工具栏按钮或按下快捷键时读取该标签页的标题和网址；<code>scripting</code> 用于在该标签页中显示快速保存通知；在 Chrome 和 Edge 中另有 <code>sidePanel</code> 和 <code>offscreen</code>（在隐藏的扩展页面中运行 AI 快速保存的请求）；在 Firefox 中另有 <code>contextMenus</code>（Firefox 不允许扩展程序在之后再请求该权限）。其他所有权限都是可选的。Bookmark Scout 会先作出说明，浏览器只会在你开启或运行需要它们的功能时才请求："
                     },
                     {
                         "type": "ul",
                         "items": [
-                            "访问你的标签页（<code>tabs</code>）：当你从侧边栏保存当前网页或请求文件夹建议时。工具栏弹出窗口不需要此权限。",
-                            "右键菜单（<code>contextMenus</code>，Chrome 和 Edge）：当你在设置中开启“右键菜单”时。",
-                            "浏览器的图标缓存（<code>favicon</code>，Chrome 和 Edge）：当你在“刷新网站图标”中点击“显示浏览器图标”，或在设置中开启“使用浏览器的图标缓存”时。",
-                            "访问某次运行所检查书签的网站：当你运行“检查失效链接”“元数据获取”或“刷新网站图标”时（某次运行涉及超过 20 个网站时，会请求访问所有网站）；以及访问所有网站：当你开启“读取网页内容”时。",
-                            "访问某个服务商的网站：当你在 AI 设置中点击“验证服务”或“刷新模型”时。",
-                            "在 Firefox 中，你同意与 AI 服务商共享数据，范围以每项功能所发送的内容为限：当你开启 AI（你的 API 密钥、书签以及当前网页的标题和网址）、开启“读取网页内容”（网页文本）或点击“验证服务”（你的 API 密钥）时。",
-                            "与你电脑上的 bookmark-scout-mcp 程序通信（<code>nativeMessaging</code>）：在你开启“允许本地 AI 智能体”时；在 Firefox 中，会同时请你同意与该程序共享书签数据。"
+                            "“读取您访问过的网站对应的图标”（Chrome 和 Edge，<code>favicon</code>）：当你在“刷新网站图标”中点击“显示浏览器图标”，或在设置中开启“使用浏览器的图标缓存”时。",
+                            "“读取您的浏览记录”（Firefox：请求访问浏览器标签页，<code>tabs</code>）：当你从侧边栏保存当前网页或请求文件夹建议时。工具栏弹出窗口和快速保存快捷键不需要此权限。",
+                            "“读取和更改您在 所有example.com网站 上的数据”或“读取和更改您在一些网站上的数据”（Firefox：请求访问 example.com 网域中网站上的数据）：当你运行“检查失效链接”“元数据获取”或“刷新网站图标”时，针对该次运行中书签所在的网站。",
+                            "“读取和更改您在所有网站上的所有数据”（Firefox：请求访问所有网站上的数据）：当上述工具的某次运行涉及超过 20 个网站，或你开启“读取网页内容”时。",
+                            "“读取和更改您在 api.example.com 上的数据”，其中 api.example.com 替换为你的 AI 服务商的地址（Firefox：请求访问 api.example.com 上的数据）：当你在 AI 设置中点击“验证服务”或“刷新模型”时。",
+                            "“与协作的本机应用通信”（Firefox：请求与 Firefox 以外的程序交换消息，<code>nativeMessaging</code>）：当你开启“允许本地 AI 智能体”时，用于与你电脑上的 bookmark-scout-mcp 程序通信。",
+                            "仅限 Firefox：一项表示开发者希望收集数据的提示，涉及每项功能所共享的内容：当你开启 AI（你的 API 密钥、书签以及当前网页的标题和网址）、开启“读取网页内容”（网页文本）或点击“验证服务”（你的 API 密钥）时，这些数据都会发送给你的 AI 服务商；以及当你开启“允许本地 AI 智能体”时，涉及你电脑上的程序所接收的书签数据。此处的“开发者”指你的 AI 服务商或你电脑上的程序；Bookmark Scout 不会收到任何内容。",
+                            "右键菜单（Chrome 和 Edge，<code>contextMenus</code>）：当你在设置中开启“右键菜单”时。浏览器会直接添加它，不显示提示。"
                         ]
                     },
                     {
@@ -185,7 +190,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "每项权限的说明请参阅 <permissions>README 中的权限列表</permissions>。"
+                        "text": "<permissions>文档中的权限页面</permissions>列出了每项权限以及 Bookmark Scout 需要它的原因。"
                     }
                 ]
             },

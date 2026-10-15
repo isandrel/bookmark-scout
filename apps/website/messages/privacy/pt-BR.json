@@ -15,7 +15,7 @@
                 "body": "A extensão funciona dentro do seu navegador. Não há cadastro nem servidor do Bookmark Scout que receba seus dados."
             },
             "noTelemetry": {
-                "title": "Sem telemetria",
+                "title": "Não rastreamos o que você faz",
                 "body": "A extensão não tem análises de uso, relatórios de falhas nem anúncios."
             },
             "aiOptIn": {
@@ -25,6 +25,10 @@
             "developer": {
                 "title": "O desenvolvedor não recebe nada",
                 "body": "Seus favoritos, configurações e chaves de API nunca chegam ao desenvolvedor."
+            },
+            "permissions": {
+                "title": "O navegador pede só uma coisa",
+                "body": "Na instalação, o Chrome e o Edge pedem somente para “Ler e alterar seus favoritos” (Firefox: “Ler e modificar os favoritos”). Os outros recursos só pedem permissão quando você os usa pela primeira vez. <permissions>O que cada um pede e por quê</permissions>"
             }
         },
         "tocLabel": "Nesta página",
@@ -165,18 +169,19 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "Na instalação, o Bookmark Scout pede somente <code>bookmarks</code>, <code>storage</code>, <code>activeTab</code> e <code>scripting</code> (que mostra a notificação de salvamento rápido na guia em que você pressionou o atalho), além de <code>sidePanel</code> e <code>offscreen</code> (que executa a solicitação do salvamento rápido com IA em uma página oculta da extensão) no Chrome e no Edge, e <code>contextMenus</code> no Firefox, que não permite que extensões solicitem essa permissão depois. Todo o resto é opcional e só é solicitado quando você ativa ou executa o recurso que depende disso:"
+                        "text": "Quando você instala o Bookmark Scout, o navegador pede uma coisa: “Ler e alterar seus favoritos” no Chrome e no Edge, ou “Ler e modificar os favoritos” no Firefox (<code>bookmarks</code>). As outras permissões concedidas na instalação não mostram nenhum aviso: <code>storage</code> para as configurações, <code>activeTab</code> para ler o título e o URL da guia em que você clica no botão da barra de ferramentas ou pressiona um atalho, <code>scripting</code> para mostrar a notificação de salvamento rápido nessa guia, <code>sidePanel</code> e <code>offscreen</code> (que executa a solicitação do salvamento rápido com IA em uma página oculta da extensão) no Chrome e no Edge, e <code>contextMenus</code> no Firefox, que não permite que extensões solicitem essa permissão depois. Todo o resto é opcional. O Bookmark Scout explica antes, e o navegador só pede quando você ativa ou executa o recurso que depende disso:"
                     },
                     {
                         "type": "ul",
                         "items": [
-                            "Acesso às suas guias (<code>tabs</code>), quando você salva a página atual ou pede sugestões de pasta pelo painel lateral. O pop-up da barra de ferramentas não precisa desse acesso.",
-                            "O menu de clique com o botão direito (<code>contextMenus</code>, Chrome e Edge), quando você ativa Menu de contexto nas Configurações.",
-                            "O cache de ícones do navegador (<code>favicon</code>, Chrome e Edge), quando você clica em Mostrar ícones do navegador em Atualizar ícones dos sites ou ativa Usar o cache de ícones do navegador nas Configurações.",
-                            "Acesso aos sites dos favoritos que uma execução verifica, quando você executa Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites (acesso a todos os sites quando uma execução abrange mais de 20 sites), e acesso a todos os sites quando você ativa Ler conteúdo da página.",
-                            "Acesso ao site de um provedor, quando você clica em Verificar serviço ou Atualizar modelos nas configurações de IA.",
-                            "No Firefox, seu consentimento para compartilhar dados com seu provedor de IA, para o que cada recurso envia: quando você ativa a IA (sua chave de API, os favoritos e o título e o URL da página atual), ativa Ler conteúdo da página (o texto da página) ou clica em Verificar serviço (sua chave de API).",
-                            "Comunicar-se com o programa bookmark-scout-mcp no seu computador (<code>nativeMessaging</code>), quando você ativa Permitir agentes de IA locais; no Firefox, junto com seu consentimento para compartilhar dados de favoritos com ele."
+                            "“Ler os ícones dos websites que você visitar” (Chrome e Edge, <code>favicon</code>): quando você clica em Mostrar ícones do navegador em Atualizar ícones dos sites, ou ativa Usar o cache de ícones do navegador nas Configurações.",
+                            "“Ler seu histórico de navegação” (Firefox: “Acessar as guias do navegador”, <code>tabs</code>): quando você salva a página atual ou pede sugestões de pasta pelo painel lateral. O pop-up da barra de ferramentas e o atalho de salvamento rápido não precisam dela.",
+                            "“Ler e alterar seus dados em todos os sites de example.com”, ou “em vários websites” (Firefox: “Acessar seus dados dos sites do domínio example.com”): quando você executa Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites, para os sites dos favoritos dessa execução.",
+                            "“Ler e mudar seus dados em qualquer site” (Firefox: “Acessar seus dados de todos os sites”): quando uma execução dessas ferramentas abrange mais de 20 sites, ou quando você ativa Ler conteúdo da página.",
+                            "“Ler e alterar seus dados em api.example.com”, com o endereço do seu provedor de IA no lugar de api.example.com (Firefox: “Acessar seus dados de api.example.com”): quando você clica em Verificar serviço ou Atualizar modelos nas configurações de IA.",
+                            "“Comunicar-se com aplicativos nativos de colaboração” (Firefox: “Trocar mensagens com programas além do Firefox”, <code>nativeMessaging</code>): quando você ativa Permitir agentes de IA locais, para se comunicar com o programa bookmark-scout-mcp no seu computador.",
+                            "Somente no Firefox, um aviso dizendo que o desenvolvedor quer coletar dados, para o que cada recurso compartilha: quando você ativa a IA (sua chave de API, os favoritos e o título e o URL da página atual), ativa Ler conteúdo da página (o texto da página) ou clica em Verificar serviço (sua chave de API), tudo enviado ao seu provedor de IA; e quando você ativa Permitir agentes de IA locais, para os dados de favoritos que o programa no seu computador recebe. Aqui, “o desenvolvedor” significa seu provedor de IA ou o programa no seu computador; o Bookmark Scout não recebe nada.",
+                            "O menu de clique com o botão direito (Chrome e Edge, <code>contextMenus</code>), quando você ativa Menu do botão direito nas Configurações. O navegador o adiciona sem mostrar aviso."
                         ]
                     },
                     {
@@ -185,7 +190,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Cada permissão é explicada na <permissions>lista de permissões no README</permissions>."
+                        "text": "A <permissions>página de permissões na documentação</permissions> lista cada permissão e por que o Bookmark Scout precisa dela."
                     }
                 ]
             },

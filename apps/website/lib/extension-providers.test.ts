@@ -3,7 +3,7 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { AI_PROVIDERS } from "./content/ai-providers";
+import { FEATURED_AI_PROVIDERS } from "./content/ai-providers";
 import { readExtensionProviders } from "./extension-providers";
 
 const dirs: string[] = [];
@@ -39,8 +39,6 @@ test("fails instead of listing no providers", () => {
     expect(() => readExtensionProviders(tempDir())).toThrow(/No AI providers found/);
 });
 
-test("the website lists the extension's providers, without custom endpoints or qualifiers", () => {
-    expect(AI_PROVIDERS).toContain("OpenAI");
-    expect(AI_PROVIDERS).toContain("Ollama");
-    expect(AI_PROVIDERS.some((name) => /Custom Provider|\(/.test(name))).toBe(false);
+test("the website names a few well-known providers from the extension's list, without qualifiers", () => {
+    expect(FEATURED_AI_PROVIDERS).toEqual(["OpenAI", "Anthropic", "Google", "Mistral AI", "Ollama"]);
 });

@@ -16,8 +16,7 @@
       "书签清理",
       "重复书签",
       "失效链接",
-      "AI 书签工具",
-      "书签 MCP 服务器"
+      "AI 书签工具"
     ]
   },
   "structuredData": {
@@ -39,7 +38,6 @@
       "书签导入和导出",
       "导出前进行隐私检查，可选择脱敏",
       "可选的 AI 对话，仅在批准后才更改书签",
-      "通过 MCP 服务器连接本地 AI 智能体，更改需批准",
       "多语言支持"
     ]
   },
@@ -79,17 +77,15 @@
     "contactAddress": "{role}：{address}",
     "privacyPolicy": "隐私政策",
     "securityTxt": "security.txt",
-    "madeBy": "由 {author} 制作。免费且开源。",
+    "madeBy": "由独立开发者 {author} 制作：没有公司、没有广告、无需账号。免费且开源。",
     "helpCenter": "帮助中心"
   },
   "home": {
     "hero": {
       "title": "几秒钟内，把每个网页保存到合适的文件夹。",
-      "description": "输入文件夹名称的一部分，或在任意网页上按 {{SHORTCUT:commands.quick-save}}，网页就会保存到它所属的文件夹。也可以让可选的 AI 建议文件夹。Bookmark Scout 还能搜索和整理你已有的书签，适用于 Chrome、Edge 和 Firefox，无需账号，也没有自己的服务器。",
+      "description": "输入文件夹名称的一部分，或在任意网页上按 {{SHORTCUT:commands.quick-save}}（Mac 上为 {{SHORTCUT_MAC:commands.quick-save}}），网页就会保存到它所属的文件夹。如果你愿意，还可以让 AI 建议文件夹。Bookmark Scout 还能直接在浏览器中查找和整理你已有的书签。无需账号，没有广告，我们也不会跟踪你的操作。",
       "download": "从 GitHub 下载",
-      "install": "安装 Bookmark Scout",
       "docs": "阅读文档",
-      "license": "基于 {license} 免费开源。",
       "demoNote": "此演示使用虚构的文件夹结构，不会保存任何内容。扩展程序会在你的浏览器中显示你自己的文件夹。"
     },
     "demo": {
@@ -142,10 +138,10 @@
         "alt": "两个弹出窗口：在搜索框中输入“pas”，在“保存到文件夹”下选中 Pasta 文件夹（Recipes / Italian）；以及针对当前网页的 AI 建议：现有的 Recipes/Italian/Pasta 文件夹和新的 Recipes/Quick Dinners 文件夹",
         "points": [
           "输入文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，无需离开键盘就能将当前网页保存到那里",
-          "输入 work/react 这样的路径，有小的拼写错误也能找到文件夹",
-          "在任意网页上按 {{SHORTCUT:commands.quick-save}}，即可将其保存到最匹配的文件夹；页面中的小通知提供“撤消”和其他文件夹",
+          "输入 食谱/意面 这样的路径，有小的拼写错误也能找到文件夹",
+          "在任意网页上按 {{SHORTCUT:commands.quick-save}}（Mac 上为 {{SHORTCUT_MAC:commands.quick-save}}），即可将其保存到最匹配的文件夹；页面中的小通知提供“撤消”和其他文件夹",
           "已在该文件夹中的网页不会重复保存，最近保存过的文件夹排在前面",
-          "通过右键菜单将链接保存到最近使用的文件夹",
+          "在设置中开启右键菜单后（默认关闭），即可通过右键菜单将链接保存到最近使用的文件夹",
           "开启 AI 后，可为当前网页获取文件夹建议，或按 {{SHORTCUT:commands.ai-quick-save}} 保存到第一个建议的文件夹"
         ]
       },
@@ -155,12 +151,12 @@
         "caption": "书签管理器取代 Chrome 的书签页面，用法也与之一致，提供文件夹树、路径导航和可排序的表格。",
         "alt": "打开书签栏的 Bookmark Scout 管理器，包含文件夹树（Recipes、School、Travel、Family、Shopping）、一个搜索框和书签表格",
         "points": [
-          "输入时即可搜索所有书签，支持区分大小写、全字匹配和正则表达式",
+          "输入时即可搜索你的所有书签",
           "可在浏览器侧边栏（Firefox 中为侧栏）中保持打开同样的文件夹树和搜索",
-          "将搜索保存为智能视图，始终显示最新结果",
-          "用 Shift 和 Ctrl 选择多行，右键可剪切、复制、粘贴和全部打开，还能把行、文件夹和链接拖到合适的位置",
+          "保存搜索后，它会始终显示最新结果",
+          "用 Shift 和 Ctrl 选择多行，右键可剪切、复制、粘贴和全部打开，还能把书签和文件夹拖到合适的位置",
           "用 {{SHORTCUT:manager.undo}} 和 {{SHORTCUT:manager.redo}}（Mac 上为 {{SHORTCUT_MAC:manager.undo}} 和 {{SHORTCUT_MAC:manager.redo}}）撤消和重做更改，重新加载后依然有效",
-          "预览后导入 HTML 或 JSON，并可导出为 HTML、JSON、Markdown 或 CSV",
+          "预览后从文件导入书签，并可导出为 HTML、JSON、Markdown 或 CSV",
           "可链接到某个文件夹或搜索，并全程用键盘操作"
         ]
       },
@@ -171,7 +167,7 @@
         "alt": "重复书签清理对话框列出两组重复书签，每组都标出了要保留的副本，下方是“移除重复项”按钮",
         "points": [
           "检查重复组，然后移除多余的副本",
-          "预览后去除网址中的跟踪参数",
+          "预览后移除网址中的跟踪代码",
           "找出失效链接并修复：删除、使用重定向地址、指向存档副本或修改网址",
           "获取网页标题，只应用你选中的标题",
           "下载每个网站自己的图标，即使在 Firefox 中书签也能显示",
@@ -180,18 +176,18 @@
       },
       "ai": {
         "tab": "AI（可选）",
-        "heading": "用你自己的服务商使用 AI，或完全不用",
-        "caption": "在你于设置中开启 AI、选择服务商，并在服务商需要时添加自己的 API 密钥之前，AI 始终处于关闭状态。",
+        "heading": "可选的 AI，由你选择用哪家公司",
+        "caption": "在你开启之前，AI 始终处于关闭状态。使用 AI 需要一个 AI 公司的账号（每次使用可能会收取少量费用），或一个在你自己电脑上运行的免费 AI 程序。",
         "alt": "设置中的 AI 标签页：“AI 是可选的”说明了使用 AI 需要什么、可能产生的费用，AI 功能处于关闭状态（默认）",
         "points": [
+          "为当前网页获取文件夹建议，或按 {{SHORTCUT:commands.ai-quick-save}} 保存到第一个建议的文件夹",
           "就书签向 AI 提问：它会搜索书签、检查链接，并以方案的形式提议移动、重命名和新建文件夹，在你批准之前不做任何更改",
-          "让这台电脑上的 AI 智能体（如 Claude Code、Codex 或 Cursor）通过 MCP 服务器查找书签，并在浏览器中逐一批准它们请求的每项更改",
           "标签建议和简短摘要，保存前由你审核",
-          "文件夹重组方案，在移动任何内容之前先预览，并可撤消",
-          "将所选书签导出为 Markdown 或 XML 上下文，供 AI 对话使用；无需 AI，也不发送任何内容"
+          "文件夹重组方案，在移动任何内容之前先预览，并可撤消"
         ],
-        "providersTitle": "支持的服务商",
-        "customProvider": "任何兼容 OpenAI 的端点"
+        "providersTitle": "可搭配使用",
+        "moreProviders": "以及更多",
+        "developers": "<link>面向开发者</link>：你电脑上的 AI 智能体（如 Claude Code）也可以使用你的书签。"
       }
     },
     "privacy": {
@@ -208,20 +204,20 @@
           "detail": "开启同步时，通过你的浏览器账号同步"
         },
         "keys": {
-          "name": "API 密钥、标签、已保存的搜索",
+          "name": "标签、已保存的搜索和你的 AI 密钥",
           "detail": "仅保存在此设备上"
         },
         "ai": {
-          "name": "你选择的 AI 服务商",
-          "detail": "仅在开启 AI 时。使用 Ollama 时数据留在你的电脑上。"
+          "name": "你选择的 AI 公司",
+          "detail": "仅在开启 AI 时。使用你电脑上的免费 AI 程序时，数据会留在你的电脑上。"
         },
         "websites": {
           "name": "你检查的网站",
-          "detail": "失效链接检查、标题获取和网站图标，需在你允许访问后进行"
+          "detail": "仅在你检查链接或获取标题和网站图标时，且需你先允许"
         },
         "agents": {
-          "name": "本地 AI 智能体",
-          "detail": "仅在你允许时，通过你电脑上的一个程序"
+          "name": "你电脑上的 AI 程序",
+          "detail": "仅在你连接并允许时（面向开发者）"
         },
         "server": {
           "name": "Bookmark Scout 服务器",
@@ -235,30 +231,32 @@
           "body": "无需注册任何账号，Bookmark Scout 也没有自己的服务器。你的书签在浏览器中读取和修改。"
         },
         "noTelemetry": {
-          "title": "没有遥测",
+          "title": "我们不会跟踪你的操作",
           "body": "扩展程序不会向开发者发送任何内容：没有分析、没有广告、没有跟踪。"
         },
         "aiOptIn": {
           "title": "在你开启前 AI 始终关闭",
-          "body": "开启后，请求会从你的浏览器直接发送给你选择的服务商。如果在自己的电脑上使用 Ollama，请求不会离开你的电脑。本地 AI 智能体在获得你的允许之前得不到任何数据，它们的更改也要等你批准。"
+          "body": "开启后，请求会从你的浏览器直接发送给你选择的 AI 公司；如果使用你电脑上的免费本地 AI 程序，请求则留在你的电脑上。你电脑上的 AI 程序在获得你的允许之前得不到任何数据，它们的更改也要等你批准。"
         },
         "exports": {
           "title": "导出前进行隐私检查",
-          "body": "文件下载前，检查会标出令牌、电子邮件地址和其他敏感值，并可在你保存的副本中对其做脱敏处理。"
+          "body": "文件下载前，检查会标出私密信息（例如电子邮件地址和链接中的登录代码），并可在你保存的副本中将其隐藏。"
         }
       }
     },
     "install": {
-      "title": "几步即可安装",
-      "lede": "选择你的浏览器。GitHub 上的每个版本都提供适用于 Chrome、Edge 和 Firefox 的构建包。",
+      "title": "添加到你的浏览器",
+      "lede": "免费使用，无需注册账号。",
+      "desktopOnly": "Bookmark Scout 适用于电脑上的浏览器，不支持手机或平板电脑。",
+      "add": "免费添加至 {browser}",
+      "permissions": "{browser} 在安装时只请求一项权限：“读取和更改您的书签”。其他功能只会在你首次使用时才请求。<docs>它请求哪些权限，以及原因</docs>",
+      "comingSoon": "<b>{browser}</b>：即将上架 {store}。",
+      "advanced": "高级：手动安装",
+      "advancedLede": "仅当你想在应用商店尚未上架 Bookmark Scout 的浏览器中试用它时，才使用此方法。你需要从 GitHub 下载，以这种方式安装的副本不会自动更新。",
       "tabsLabel": "浏览器",
       "download": "从 GitHub 下载",
-      "storeComing": "{store} 上架信息正在准备中。在正式上架之前，请从 GitHub Releases 安装构建包。",
-      "manual": "或者自行从 GitHub Releases 安装构建包：",
       "chrome": {
-        "tab": "Chrome",
         "storeName": "Chrome 应用商店",
-        "storeButton": "添加至 Chrome",
         "steps": {
           "download": "从最新版本下载 <code>bookmark-scout-*-chrome.zip</code> 并解压。",
           "open": "打开 <code>chrome://extensions</code>，并开启右上角的<b>开发者模式</b>。",
@@ -267,9 +265,7 @@
         "crx": "该版本还提供已签名的 <code>.crx</code> 文件，你也可以将它拖到扩展程序页面上进行安装。"
       },
       "edge": {
-        "tab": "Edge",
         "storeName": "Edge 加载项",
-        "storeButton": "获取 Edge 版",
         "steps": {
           "download": "从最新版本下载 <code>bookmark-scout-*-edge.zip</code> 并解压。",
           "open": "打开 <code>edge://extensions</code>，并开启<b>开发人员模式</b>。",
@@ -277,9 +273,7 @@
         }
       },
       "firefox": {
-        "tab": "Firefox",
         "storeName": "Firefox 附加组件",
-        "storeButton": "添加到 Firefox",
         "steps": {
           "download": "从最新版本下载 <code>bookmark-scout-*-firefox.zip</code> 并解压。",
           "open": "打开 <code>about:debugging#/runtime/this-firefox</code>。",
@@ -293,23 +287,23 @@
       "items": {
         "data": {
           "q": "Bookmark Scout 会把我的书签发送到别处吗？",
-          "a": "不会。你的书签在浏览器中读取和修改，扩展程序不会向开发者发送任何内容。只有在你使用可选功能时，数据才会离开你的浏览器：AI 请求会发送给你选择的服务商；在你允许网站访问后，失效链接检查、标题获取和网站图标刷新会请求已加入书签的网站；你允许的本地 AI 智能体会通过你电脑上的一个程序获得它们查找的内容。如果开启了浏览器同步，设置会通过你的浏览器账号同步。详情请参阅<privacy>隐私政策</privacy>。"
+          "a": "不会。你的书签在浏览器中读取和修改，扩展程序不会向开发者发送任何内容。只有在你使用可选功能时，数据才会离开你的浏览器：AI 请求会发送给你选择的 AI 公司；检查链接以及获取标题和网站图标时，会在你允许后访问已加入书签的网站；你连接的、在自己电脑上运行的 AI 程序（面向开发者的功能）会获得它们查找的内容。如果开启了浏览器同步，设置会通过你的浏览器账号同步。详情请参阅<privacy>隐私政策</privacy>。"
         },
         "needAi": {
           "q": "必须使用 AI 吗？",
-          "a": "不必。搜索、整理、清理以及导入和导出都无需 AI 即可使用。在你于设置中开启之前，AI 始终处于关闭状态。"
+          "a": "不必。AI 是可选的。保存、搜索、整理和清理都无需 AI 即可使用，在你于设置中开启之前，AI 始终处于关闭状态。要使用 AI，你需要一个 AI 公司的账号（每次使用可能会收取少量费用），或一个在你自己电脑上运行的免费 AI 程序。"
         },
         "providers": {
-          "q": "可以使用哪些 AI 服务商？",
-          "a": "你可以使用 {providers}。服务商需要 API 密钥时，由你添加自己的密钥；服务商可能会收取使用费用。"
+          "q": "可以使用哪些 AI 公司？",
+          "a": "Bookmark Scout 可搭配 {providers} 使用。大多数 AI 公司需要你注册账号并获取密钥，每次使用会收取少量费用；Bookmark Scout 本身不收取任何费用。如果你的电脑性能足够，Ollama 可以在你自己的电脑上免费运行 AI。<aiGuide>AI 指南</aiGuide>介绍了如何设置。"
         },
         "changes": {
           "q": "它会不经询问就更改我的书签吗？",
-          "a": "不会。重复书签清理、网址清理、失效链接修复、获取的标题、AI 重组和导入，都会在写入任何内容之前先显示供你审核的内容。“询问 AI”和本地 AI 智能体会以方案的形式展示更改，并等待你批准。删除默认需要确认，书签管理器还可以用 {{SHORTCUT:manager.undo}}（Mac 上为 {{SHORTCUT_MAC:manager.undo}}）撤消更改。"
+          "a": "不会。重复书签清理、网址清理、失效链接修复、获取的标题、AI 重组和导入，都会在写入任何内容之前先显示供你审核的内容。AI 功能会以方案的形式展示更改，并等待你批准。删除默认需要确认，书签管理器还可以用 {{SHORTCUT:manager.undo}}（Mac 上为 {{SHORTCUT_MAC:manager.undo}}）撤消更改。"
         },
-        "firefox": {
-          "q": "它能在 Firefox 中使用吗？",
-          "a": "可以。Firefox 无法替换其书签页面，因此书签管理器（包括清理工具、导入和导出以及已保存的搜索）需从工具栏弹出窗口中的按钮打开。在 Firefox 附加组件上架之前，Firefox 会将其作为临时附加组件载入，Firefox 重启时会将其移除。"
+        "otherBrowsers": {
+          "q": "它能在 Firefox 和 Edge 中使用吗？",
+          "a": "Firefox 版和 Edge 版即将在各自的附加组件商店上架。在此之前，你可以从 GitHub <install>手动安装</install>；以这种方式安装的副本会在 Firefox 重启时被移除。此外，Firefox 无法替换其书签页面，因此在 Firefox 中，书签管理器需从工具栏弹出窗口中的按钮打开。"
         },
         "stores": {
           "q": "为什么还没有在浏览器应用商店上架？",
@@ -317,13 +311,18 @@
         },
         "free": {
           "q": "它是免费的吗？",
-          "a": "是的。Bookmark Scout 基于 {license} 免费开源，没有广告，也没有付费方案。如果你开启 AI，服务商可能会收取 API 使用费用。"
+          "a": "是的。Bookmark Scout 基于 {license} 免费开源，没有广告，也没有付费方案。如果你开启 AI，你使用的 AI 公司可能会收取费用。"
+        },
+        "who": {
+          "q": "Bookmark Scout 是谁开发的？",
+          "a": "一位独立开发者，而不是一家公司。没有广告，无需账号，也没有任何需要购买的东西，任何人都可以在 <source>GitHub</source> 上阅读源代码。"
         },
         "help": {
           "q": "如何获取帮助？",
-          "a": "请先查看<support>支持页面</support>或<docs>文档</docs>。你也可以在 <github>GitHub</github> 上报告问题，或发送电子邮件至 <email>{supportEmail}</email>。"
+          "a": "请先查看<support>支持页面</support>或<docs>文档</docs>。如需帮助，请发送电子邮件至 <email>{supportEmail}</email>。你也可以在 <github>GitHub</github> 上公开报告问题。"
         }
-      }
+      },
+      "moreProviders": "其他许多 AI 公司"
     }
   }
 }

@@ -1,4 +1,4 @@
-import { AI_PROVIDERS } from "@/lib/content/ai-providers";
+import { FEATURED_AI_PROVIDERS } from "@/lib/content/ai-providers";
 import { FAQ_ITEMS } from "@/lib/content/faq";
 import { site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
@@ -7,13 +7,10 @@ import { inlineLinkClass, richTags } from "./rich";
 
 export async function Faq({ locale }: { locale: string }) {
     const t = await getTranslations("home.faq");
-    const tTour = await getTranslations("home.tour");
-    const providers = new Intl.ListFormat(locale, { type: "disjunction" }).format([
-        ...AI_PROVIDERS,
-        tTour("ai.customProvider"),
+    const providers = new Intl.ListFormat(locale, { type: "conjunction" }).format([
+        ...FEATURED_AI_PROVIDERS,
+        t("moreProviders"),
     ]);
-    // The "why not in the stores" answer only applies while no listing is live.
-    const items = FAQ_ITEMS.filter((id) => id !== "stores" || !site.anyStoreLive);
 
     const tags = {
         ...richTags,
@@ -28,7 +25,22 @@ export async function Faq({ locale }: { locale: string }) {
             </Link>
         ),
         docs: (chunks: React.ReactNode) => (
-            <a href={site.docs.url()} className={inlineLinkClass}>
+            <a href={site.docs.page(locale)} className={inlineLinkClass}>
+                {chunks}
+            </a>
+        ),
+        aiGuide: (chunks: React.ReactNode) => (
+            <a href={site.docs.page(locale, "/guides/ai-tools")} className={inlineLinkClass}>
+                {chunks}
+            </a>
+        ),
+        install: (chunks: React.ReactNode) => (
+            <a href="#install-by-hand" className={inlineLinkClass}>
+                {chunks}
+            </a>
+        ),
+        source: (chunks: React.ReactNode) => (
+            <a href={site.repo.url()} className={inlineLinkClass}>
                 {chunks}
             </a>
         ),
@@ -51,7 +63,7 @@ export async function Faq({ locale }: { locale: string }) {
                     {t("title")}
                 </h2>
                 <div className="mt-10 max-w-[70ch] divide-y divide-line border-y border-line">
-                    {items.map((id) => (
+                    {FAQ_ITEMS.map((id) => (
                         <details key={id} className="group">
                             <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-5 text-lg font-semibold [&::-webkit-details-marker]:hidden">
                                 {t(`items.${id}.q`)}
