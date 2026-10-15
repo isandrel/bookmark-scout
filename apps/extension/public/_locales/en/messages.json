@@ -819,6 +819,10 @@
         "message": "Folders First",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "Browser Order",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "Group by Folders",
         "description": "Group by folders setting label"
@@ -994,7 +998,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "The AI request failed. Try again, or check the service in Options.",
+        "message": "The AI request failed. Try again, or check the service in Settings > AI.",
         "description": "AI error with no more specific explanation"
     },
     "error_unknown": {
@@ -3146,7 +3150,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "API key not configured. Add it in Options → AI.",
+        "message": "API key not configured. Add it in Settings > AI.",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4278,7 +4282,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "Turn on AI features in Options to use this tool.",
+        "message": "Turn on AI features in Settings > AI to use this tool.",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5092,7 +5096,7 @@
         "description": "Empty state of the AI services list"
     },
     "error_aiNoService": {
-        "message": "No AI service is set up. Add one in Options.",
+        "message": "No AI service is set up. Add one in Settings > AI.",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5308,11 +5312,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Add an API key for this AI service in Options > AI.",
+        "message": "Add an API key for this AI service in Settings > AI.",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Choose a model for this AI service in Options > AI.",
+        "message": "Choose a model for this AI service in Settings > AI.",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5512,7 +5516,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "To let Ask AI read pages, turn on Read page content in Options, AI.",
+        "message": "To let Ask AI read pages, turn on Read page content in Settings > AI.",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5828,7 +5832,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "Options",
+        "message": "Settings",
         "description": "Name of the options page, used in its tab title"
     },
     "command_quickSave": {

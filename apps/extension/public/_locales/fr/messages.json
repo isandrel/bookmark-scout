@@ -819,6 +819,10 @@
         "message": "Dossiers en premier",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "Ordre du navigateur",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "Regrouper par dossiers",
         "description": "Group by folders setting label"
@@ -994,7 +998,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "La requête IA a échoué. Réessayez ou vérifiez le service dans les options.",
+        "message": "La requête IA a échoué. Réessayez ou vérifiez le service dans Paramètres > IA.",
         "description": "AI error with no more specific explanation"
     },
     "error_unknown": {
@@ -3146,7 +3150,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "Clé API non configurée. Ajoutez-la dans Options → IA.",
+        "message": "Clé API non configurée. Ajoutez-la dans Paramètres > IA.",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4278,7 +4282,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "Activez les fonctionnalités d'IA dans les options pour utiliser cet outil.",
+        "message": "Activez les fonctionnalités d'IA dans Paramètres > IA pour utiliser cet outil.",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5092,7 +5096,7 @@
         "description": "Empty state of the AI services list"
     },
     "error_aiNoService": {
-        "message": "Aucun service d'IA n'est configuré. Ajoutez-en un dans les options.",
+        "message": "Aucun service d'IA n'est configuré. Ajoutez-en un dans Paramètres > IA.",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5308,11 +5312,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Ajoutez une clé API pour ce service d'IA dans Options > IA.",
+        "message": "Ajoutez une clé API pour ce service d'IA dans Paramètres > IA.",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Choisissez un modèle pour ce service d'IA dans Options > IA.",
+        "message": "Choisissez un modèle pour ce service d'IA dans Paramètres > IA.",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5512,7 +5516,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "Pour permettre à Demander à l'IA de lire les pages, activez Lire le contenu des pages dans Options, IA.",
+        "message": "Pour permettre à Demander à l'IA de lire les pages, activez Lire le contenu des pages dans Paramètres > IA.",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5828,7 +5832,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "Options",
+        "message": "Paramètres",
         "description": "Name of the options page, used in its tab title"
     },
     "command_quickSave": {

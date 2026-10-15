@@ -168,7 +168,7 @@ test('[mocked provider contract] provider-backed AI previews stop at opt-in with
   ] as const) {
     const card = toolCard(page, title);
     await expect(card.getByRole('button', { name: action })).toBeDisabled();
-    await expect(card).toContainText('Turn on AI features in Options to use this tool.');
+    await expect(card).toContainText('Turn on AI features in Settings > AI to use this tool.');
   }
   await expect(page.getByText(/API key/i)).toHaveCount(0);
   await expect(page.getByRole('dialog', { name: 'Auto-Tagging' })).toHaveCount(0);

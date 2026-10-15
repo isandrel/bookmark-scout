@@ -98,7 +98,7 @@ describe('describeAIErrorWithDetail', () => {
 
   it('never shows raw SDK text for other SDK errors', () => {
     expect(describeAIErrorWithDetail(new AISDKError({ name: 'AI_Test', message: 'raw' }))).toBe(
-      'The AI request failed. Try again, or check the service in Options.',
+      'The AI request failed. Try again, or check the service in Settings > AI.',
     );
   });
 });

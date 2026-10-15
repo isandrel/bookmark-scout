@@ -819,6 +819,10 @@
         "message": "Ordner zuerst",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "Browser-Reihenfolge",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "Nach Ordnern gruppieren",
         "description": "Group by folders setting label"
@@ -994,7 +998,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "Die KI-Anfrage ist fehlgeschlagen. Versuchen Sie es noch einmal oder prüfen Sie den Dienst in den Optionen.",
+        "message": "Die KI-Anfrage ist fehlgeschlagen. Versuchen Sie es noch einmal oder prüfen Sie den Dienst unter Einstellungen > KI.",
         "description": "AI error with no more specific explanation"
     },
     "error_unknown": {
@@ -3146,7 +3150,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "Kein API-Schlüssel festgelegt. Fügen Sie ihn unter Optionen → KI hinzu.",
+        "message": "Kein API-Schlüssel festgelegt. Fügen Sie ihn unter Einstellungen > KI hinzu.",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4278,7 +4282,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "Aktivieren Sie die KI-Funktionen in den Optionen, um dieses Tool zu verwenden.",
+        "message": "Aktivieren Sie die KI-Funktionen unter Einstellungen > KI, um dieses Tool zu verwenden.",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5092,7 +5096,7 @@
         "description": "Empty state of the AI services list"
     },
     "error_aiNoService": {
-        "message": "Kein KI-Dienst eingerichtet. Fügen Sie einen in den Optionen hinzu.",
+        "message": "Kein KI-Dienst eingerichtet. Fügen Sie einen unter Einstellungen > KI hinzu.",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5308,11 +5312,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Fügen Sie unter Optionen > KI einen API-Schlüssel für diesen KI-Dienst hinzu.",
+        "message": "Fügen Sie unter Einstellungen > KI einen API-Schlüssel für diesen KI-Dienst hinzu.",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Wählen Sie unter Optionen > KI ein Modell für diesen KI-Dienst.",
+        "message": "Wählen Sie unter Einstellungen > KI ein Modell für diesen KI-Dienst.",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5512,7 +5516,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "Damit „KI fragen“ Seiten lesen kann, aktivieren Sie „Seiteninhalt lesen“ unter Optionen > KI.",
+        "message": "Damit „KI fragen“ Seiten lesen kann, aktivieren Sie „Seiteninhalt lesen“ unter Einstellungen > KI.",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5828,7 +5832,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "Optionen",
+        "message": "Einstellungen",
         "description": "Name of the options page, used in its tab title"
     },
     "command_quickSave": {

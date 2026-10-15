@@ -795,6 +795,10 @@
         "message": "フォルダ優先",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "ブラウザの順序",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "フォルダでグループ化",
         "description": "Group by folders setting label"
@@ -3102,7 +3106,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "APIキーが設定されていません。オプション → AI で設定してください。",
+        "message": "APIキーが設定されていません。設定 > AI で追加してください。",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4234,7 +4238,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "このツールを使うには、オプションでAI機能を有効にしてください。",
+        "message": "このツールを使うには、設定 > AI で AI 機能を有効にしてください。",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5048,7 +5052,7 @@
         "description": "Empty state of the AI services list"
     },
     "error_aiNoService": {
-        "message": "AI サービスが設定されていません。オプションで追加してください。",
+        "message": "AI サービスが設定されていません。設定 > AI で追加してください。",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5264,11 +5268,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Options > AI でこの AI サービスの API キーを追加してください。",
+        "message": "設定 > AI でこの AI サービスの API キーを追加してください。",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Options > AI でこの AI サービスのモデルを選択してください。",
+        "message": "設定 > AI でこの AI サービスのモデルを選択してください。",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5468,7 +5472,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "Ask AI にページを読ませるには、オプションの AI で「ページの内容を読む」をオンにしてください。",
+        "message": "Ask AI にページを読ませるには、設定 > AI で「ページの内容を読む」をオンにしてください。",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5784,7 +5788,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "オプション",
+        "message": "設定",
         "description": "Name of the options page, used in its tab title"
     },
     "search_placeholderShort": {
@@ -5816,7 +5820,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "AI へのリクエストに失敗しました。もう一度試すか、オプションでサービスを確認してください。",
+        "message": "AI へのリクエストに失敗しました。もう一度試すか、設定 > AI でサービスを確認してください。",
         "description": "AI error with no more specific explanation"
     },
     "ai_newFolderPathNew": {

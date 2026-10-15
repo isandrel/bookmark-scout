@@ -811,6 +811,10 @@
         "message": "資料夾優先",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "瀏覽器順序",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "依資料夾分組",
         "description": "Group by folders setting label"
@@ -986,7 +990,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "AI 要求失敗。請再試一次，或在「選項」中檢查服務設定。",
+        "message": "AI 要求失敗。請再試一次，或在「設定 > AI」中檢查服務設定。",
         "description": "AI error with no more specific explanation"
     },
     "error_unknown": {
@@ -3138,7 +3142,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "尚未設定 API 金鑰。請在「選項」→「AI」中新增。",
+        "message": "尚未設定 API 金鑰。請在「設定 > AI」中新增。",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4140,7 +4144,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "請在「選項」中開啟 AI 功能以使用這項工具。",
+        "message": "請在「設定 > AI」中開啟 AI 功能以使用這項工具。",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "bookmarks_bulkHiddenSelection": {
@@ -4886,7 +4890,7 @@
         "description": "Empty state of the AI services list"
     },
     "error_aiNoService": {
-        "message": "尚未設定 AI 服務。請在「選項」中新增。",
+        "message": "尚未設定 AI 服務。請在「設定 > AI」中新增。",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5102,11 +5106,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "請在「選項」>「AI」中為這個 AI 服務新增 API 金鑰。",
+        "message": "請在「設定 > AI」中為這個 AI 服務新增 API 金鑰。",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "請在「選項」>「AI」中為這個 AI 服務選擇模型。",
+        "message": "請在「設定 > AI」中為這個 AI 服務選擇模型。",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5306,7 +5310,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "如要讓「詢問 AI」讀取網頁，請在「選項」>「AI」中開啟「讀取網頁內容」。",
+        "message": "如要讓「詢問 AI」讀取網頁，請在「設定 > AI」中開啟「讀取網頁內容」。",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5622,7 +5626,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "選項",
+        "message": "設定",
         "description": "Name of the options page, used in its tab title"
     },
     "command_quickSave": {

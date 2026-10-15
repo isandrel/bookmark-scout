@@ -811,6 +811,10 @@
         "message": "폴더 우선",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "브라우저 순서",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "폴더별 그룹화",
         "description": "Group by folders setting label"
@@ -986,7 +990,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "AI 요청에 실패했습니다. 다시 시도하거나 옵션에서 서비스를 확인하세요.",
+        "message": "AI 요청에 실패했습니다. 다시 시도하거나 설정 > AI에서 서비스를 확인하세요.",
         "description": "AI error with no more specific explanation"
     },
     "error_unknown": {
@@ -3138,7 +3142,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "API 키가 설정되지 않았습니다. 옵션 → AI에서 추가하세요.",
+        "message": "API 키가 설정되지 않았습니다. 설정 > AI에서 추가하세요.",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4270,7 +4274,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "이 도구를 사용하려면 옵션에서 AI 기능을 켜세요.",
+        "message": "이 도구를 사용하려면 설정 > AI에서 AI 기능을 켜세요.",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5084,7 +5088,7 @@
         "description": "Empty state of the AI services list"
     },
     "error_aiNoService": {
-        "message": "설정된 AI 서비스가 없습니다. 옵션에서 추가하세요.",
+        "message": "설정된 AI 서비스가 없습니다. 설정 > AI에서 추가하세요.",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5300,11 +5304,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Options > AI에서 이 AI 서비스의 API 키를 추가하세요.",
+        "message": "설정 > AI에서 이 AI 서비스의 API 키를 추가하세요.",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Options > AI에서 이 AI 서비스의 모델을 선택하세요.",
+        "message": "설정 > AI에서 이 AI 서비스의 모델을 선택하세요.",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5504,7 +5508,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "Ask AI가 페이지를 읽게 하려면 옵션의 AI에서 페이지 내용 읽기를 켜세요.",
+        "message": "Ask AI가 페이지를 읽게 하려면 설정 > AI에서 페이지 내용 읽기를 켜세요.",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5820,7 +5824,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "옵션",
+        "message": "설정",
         "description": "Name of the options page, used in its tab title"
     },
     "command_quickSave": {
@@ -6506,7 +6510,7 @@
         "description": "Options > AI built-in AI service: download size. $1 is the size with a graphics card (such as 4 GB), $2 the size without one (such as 2.7 GB)"
     },
     "builtinAi_requirements": {
-        "message": "디스크 여유 공간 $1과, 메모리가 $2보다 큰 그래픽 카드 또는 메모리 $3과 프로세서 코어 $4개가 필요합니다.",
+        "message": "디스크 여유 공간 $1와, 메모리가 $2보다 큰 그래픽 카드 또는 메모리 $3와 프로세서 코어 $4개가 필요합니다.",
         "description": "Options > AI built-in AI service: what Chrome needs to run the model. $1 free disk space, $2 graphics memory, $3 main memory (RAM), $4 number of processor cores"
     },
     "builtinAi_download": {
