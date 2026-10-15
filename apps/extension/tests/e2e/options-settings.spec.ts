@@ -542,7 +542,7 @@ test('settings search says where AI service fields are when no service shows the
   await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
   await expect(page.getByLabel('API Key', { exact: true })).toHaveCount(0);
   await expect(page.getByTestId('ai-services-search-hint')).toHaveText(
-    'Inside each AI service: API Key. Add a service, or open one that uses a key, to find these settings.',
+    'In each AI service: API Key. Add one, or open one with a key, to see it.',
   );
 });
 

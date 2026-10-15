@@ -4890,7 +4890,7 @@
         "description": "Empty state of the AI services list"
     },
     "qaOptions_searchInService": {
-        "message": "位于每个 AI 服务内：$1。添加服务，或打开使用密钥的服务即可看到这些设置。",
+        "message": "位于每个 AI 服务内：$1。添加服务或打开带密钥的服务即可看到。",
         "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
     },
     "error_aiNoService": {
@@ -6344,7 +6344,7 @@
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
     },
     "qaOptions_builtinLanguageNote": {
-        "message": "内置 AI 只能理解这些语言：$1。$2网页的文件夹推荐可能改用简单的词语匹配。",
+        "message": "内置 AI 只能读懂$1。$2网页的推荐可能改用简单的词语匹配。",
         "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {

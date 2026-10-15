@@ -5096,7 +5096,7 @@
         "description": "Empty state of the AI services list"
     },
     "qaOptions_searchInService": {
-        "message": "Dentro de cada serviço de IA: $1. Adicione um serviço, ou abra um que use uma chave, para ver essas configurações.",
+        "message": "Em cada serviço de IA: $1. Adicione um ou abra um com chave para ver.",
         "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
     },
     "error_aiNoService": {
@@ -6550,7 +6550,7 @@
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
     },
     "qaOptions_builtinLanguageNote": {
-        "message": "A IA integrada só entende estes idiomas: $1. Para páginas em $2, as sugestões de pastas podem vir de uma simples correspondência de palavras.",
+        "message": "A IA integrada só lê estes idiomas: $1. Para páginas em $2, as sugestões podem vir de uma simples correspondência de palavras.",
         "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {

@@ -5088,7 +5088,7 @@
         "description": "Empty state of the AI services list"
     },
     "qaOptions_searchInService": {
-        "message": "각 AI 서비스 안에 있습니다: $1. 서비스를 추가하거나 키를 쓰는 서비스를 열면 볼 수 있습니다.",
+        "message": "각 AI 서비스 안에 있습니다: $1. 서비스를 추가하거나 키가 있는 서비스를 열면 보입니다.",
         "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
     },
     "error_aiNoService": {
@@ -6542,7 +6542,7 @@
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
     },
     "qaOptions_builtinLanguageNote": {
-        "message": "내장 AI가 이해하는 언어는 $1뿐입니다. $2 페이지는 단순한 단어 일치로 폴더가 추천될 수 있습니다.",
+        "message": "내장 AI가 읽는 언어는 $1뿐입니다. $2 페이지는 단순한 단어 일치로 추천될 수 있습니다.",
         "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
