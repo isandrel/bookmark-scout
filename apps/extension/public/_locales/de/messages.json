@@ -6256,5 +6256,57 @@
                 "example": "Folders First"
             }
         }
+    },
+    "welcome_pageTitle": {
+        "message": "Willkommen",
+        "description": "Browser tab title of the welcome page opened once after install"
+    },
+    "welcome_heading": {
+        "message": "Bookmark Scout ist bereit",
+        "description": "Main heading of the welcome page"
+    },
+    "welcome_intro": {
+        "message": "Speichern Sie Seiten mit wenigen Tastendrücken im richtigen Ordner. So legen Sie los.",
+        "description": "Line under the welcome page heading"
+    },
+    "welcome_pinTitle": {
+        "message": "Bookmark Scout an die Symbolleiste anheften",
+        "description": "Welcome page step shown while the extension is not pinned to the toolbar"
+    },
+    "welcome_pinBody": {
+        "message": "Klicken Sie neben der Adressleiste auf die Schaltfläche „Erweiterungen“ (das Puzzleteil) und dann auf die Stecknadel neben Bookmark Scout. Das Symbol bleibt dann nur einen Klick entfernt.",
+        "description": "How to pin the extension: the browser's Extensions button is a puzzle piece in Chrome and Edge, and Firefox has an Extensions button too"
+    },
+    "welcome_saveTitle": {
+        "message": "Eine Seite speichern",
+        "description": "Welcome page step about saving the current page from the popup"
+    },
+    "welcome_saveBody": {
+        "message": "Klicken Sie auf einer beliebigen Seite auf das Bookmark-Scout-Symbol und tippen Sie einen Teil eines Ordnernamens. Drücken Sie die Eingabetaste oder klicken Sie auf den Ordner, um die Seite dort zu speichern.",
+        "description": "How to save a page: open the toolbar popup and type part of a folder name"
+    },
+    "welcome_shortcutTitle": {
+        "message": "Ihr Kürzel zum Schnellspeichern",
+        "description": "Welcome page step about the quick save keyboard shortcut"
+    },
+    "welcome_shortcutBody": {
+        "message": "Drücken Sie diese Tasten auf einer beliebigen Seite, um sie ohne weitere Schritte im passendsten Ordner zu speichern:",
+        "description": "Text before the quick save keys on the welcome page"
+    },
+    "welcome_shortcutNotSet": {
+        "message": "Schnellspeichern hat noch kein Kürzel, weil eine andere Erweiterung die üblichen Tasten schon verwendet. Wählen Sie eigene Tasten:",
+        "description": "Welcome page text when the browser left quick save without keys (another extension took them)"
+    },
+    "welcome_managerNote": {
+        "message": "Die Lesezeichen-Seite Ihres Browsers öffnet jetzt Bookmark Scout.",
+        "description": "Welcome page line in Chrome and Edge: the extension replaces the browser's own Bookmarks page"
+    },
+    "welcome_openSettings": {
+        "message": "Einstellungen öffnen",
+        "description": "Welcome page button that opens the extension's settings"
+    },
+    "welcome_readGuide": {
+        "message": "Anleitung lesen",
+        "description": "Welcome page link to the online documentation"
     }
 }

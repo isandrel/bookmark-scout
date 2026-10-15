@@ -27,6 +27,7 @@ describe('extension pages', () => {
       'options',
       'popup',
       'sidepanel',
+      'welcome',
     ]);
   });
 

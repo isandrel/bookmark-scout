@@ -6248,5 +6248,57 @@
                 "example": "Folders First"
             }
         }
+    },
+    "welcome_pageTitle": {
+        "message": "환영합니다",
+        "description": "Browser tab title of the welcome page opened once after install"
+    },
+    "welcome_heading": {
+        "message": "Bookmark Scout를 사용할 준비가 되었습니다",
+        "description": "Main heading of the welcome page"
+    },
+    "welcome_intro": {
+        "message": "몇 번의 키 입력으로 페이지를 알맞은 폴더에 저장하세요. 시작하는 방법은 다음과 같습니다.",
+        "description": "Line under the welcome page heading"
+    },
+    "welcome_pinTitle": {
+        "message": "Bookmark Scout를 도구 모음에 고정하기",
+        "description": "Welcome page step shown while the extension is not pinned to the toolbar"
+    },
+    "welcome_pinBody": {
+        "message": "주소 표시줄 옆의 확장 프로그램 버튼(퍼즐 조각)을 클릭한 다음 Bookmark Scout 옆의 핀을 클릭하세요. 그러면 아이콘을 한 번의 클릭으로 사용할 수 있습니다.",
+        "description": "How to pin the extension: the browser's Extensions button is a puzzle piece in Chrome and Edge, and Firefox has an Extensions button too"
+    },
+    "welcome_saveTitle": {
+        "message": "페이지 저장하기",
+        "description": "Welcome page step about saving the current page from the popup"
+    },
+    "welcome_saveBody": {
+        "message": "아무 페이지에서나 Bookmark Scout 아이콘을 클릭하고 폴더 이름의 일부를 입력하세요. Enter 키를 누르거나 폴더를 클릭하면 그곳에 페이지가 저장됩니다.",
+        "description": "How to save a page: open the toolbar popup and type part of a folder name"
+    },
+    "welcome_shortcutTitle": {
+        "message": "빠른 저장 단축키",
+        "description": "Welcome page step about the quick save keyboard shortcut"
+    },
+    "welcome_shortcutBody": {
+        "message": "아무 페이지에서나 이 키를 누르면 아무것도 열지 않고 가장 알맞은 폴더에 저장됩니다:",
+        "description": "Text before the quick save keys on the welcome page"
+    },
+    "welcome_shortcutNotSet": {
+        "message": "다른 확장 프로그램이 기본 키를 이미 사용하고 있어 빠른 저장에 아직 단축키가 없습니다. 직접 키를 선택하세요:",
+        "description": "Welcome page text when the browser left quick save without keys (another extension took them)"
+    },
+    "welcome_managerNote": {
+        "message": "이제 브라우저의 북마크 페이지를 열면 Bookmark Scout가 열립니다.",
+        "description": "Welcome page line in Chrome and Edge: the extension replaces the browser's own Bookmarks page"
+    },
+    "welcome_openSettings": {
+        "message": "설정 열기",
+        "description": "Welcome page button that opens the extension's settings"
+    },
+    "welcome_readGuide": {
+        "message": "가이드 읽기",
+        "description": "Welcome page link to the online documentation"
     }
 }

@@ -8,6 +8,8 @@
 export default defineBackground(() => {
   // Data from older releases is not migrated: keys this release does not register are removed.
   registerStorageCleanup();
+  // A first install (never an update) opens the welcome page.
+  registerWelcomePage();
   void restrictLocalStorageAccess();
   // Saves settings a closing Options page hands over.
   registerSettingsSaveListener();

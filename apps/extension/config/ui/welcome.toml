@@ -1,0 +1,14 @@
+# The welcome page (welcome.html) opened once, right after Bookmark Scout is installed. Read by
+# src/services/welcome-page.ts and by the end-to-end fixture (tests/e2e/fixtures.ts), which closes
+# the page before each test. It never opens on an update or a browser update.
+
+# Open the welcome page in a new tab when the extension is first installed.
+open_on_install = true
+
+# Also open it for a Firefox temporary add-on (about:debugging), which Firefox installs again on
+# every start, so the page would come back each time.
+open_on_temporary_install = false
+
+# Docs page the welcome page's "Read the guide" link opens, relative to the docs site in
+# config/web.toml.
+guide_path = "/guides/save-and-organize"

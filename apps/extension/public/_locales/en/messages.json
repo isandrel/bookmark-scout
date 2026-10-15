@@ -6256,5 +6256,57 @@
                 "example": "Folders First"
             }
         }
+    },
+    "welcome_pageTitle": {
+        "message": "Welcome",
+        "description": "Browser tab title of the welcome page opened once after install"
+    },
+    "welcome_heading": {
+        "message": "Bookmark Scout is ready",
+        "description": "Main heading of the welcome page"
+    },
+    "welcome_intro": {
+        "message": "Save pages into the right folder in a few keystrokes. Here is how to start.",
+        "description": "Line under the welcome page heading"
+    },
+    "welcome_pinTitle": {
+        "message": "Pin Bookmark Scout to the toolbar",
+        "description": "Welcome page step shown while the extension is not pinned to the toolbar"
+    },
+    "welcome_pinBody": {
+        "message": "Click the Extensions button (the puzzle piece) next to the address bar, then the pin next to Bookmark Scout. Its icon then stays one click away.",
+        "description": "How to pin the extension: the browser's Extensions button is a puzzle piece in Chrome and Edge, and Firefox has an Extensions button too"
+    },
+    "welcome_saveTitle": {
+        "message": "Save a page",
+        "description": "Welcome page step about saving the current page from the popup"
+    },
+    "welcome_saveBody": {
+        "message": "On any page, click the Bookmark Scout icon and type part of a folder name. Press Enter, or click the folder, to save the page there.",
+        "description": "How to save a page: open the toolbar popup and type part of a folder name"
+    },
+    "welcome_shortcutTitle": {
+        "message": "Your quick save shortcut",
+        "description": "Welcome page step about the quick save keyboard shortcut"
+    },
+    "welcome_shortcutBody": {
+        "message": "Press these keys on any page to save it to the folder that fits it best, without opening anything:",
+        "description": "Text before the quick save keys on the welcome page"
+    },
+    "welcome_shortcutNotSet": {
+        "message": "Quick save has no shortcut yet, because another extension already uses the usual keys. Choose your own keys:",
+        "description": "Welcome page text when the browser left quick save without keys (another extension took them)"
+    },
+    "welcome_managerNote": {
+        "message": "Your browser's Bookmarks page now opens Bookmark Scout.",
+        "description": "Welcome page line in Chrome and Edge: the extension replaces the browser's own Bookmarks page"
+    },
+    "welcome_openSettings": {
+        "message": "Open settings",
+        "description": "Welcome page button that opens the extension's settings"
+    },
+    "welcome_readGuide": {
+        "message": "Read the guide",
+        "description": "Welcome page link to the online documentation"
     }
 }
