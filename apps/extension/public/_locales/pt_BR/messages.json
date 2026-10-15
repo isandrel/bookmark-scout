@@ -6576,5 +6576,9 @@
     "qaManager_reorgIssueDeleted": {
         "message": "$1: excluído depois da prévia; nada a mover",
         "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
+    },
+    "qaManager_breadcrumbAllFolders": {
+        "message": "Resultados de todas as pastas",
+        "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
     }
 }

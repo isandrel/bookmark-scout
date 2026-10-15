@@ -6568,5 +6568,9 @@
     "qaManager_reorgIssueDeleted": {
         "message": "$1: プレビュー後に削除されたため、移動するものはありません",
         "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
+    },
+    "qaManager_breadcrumbAllFolders": {
+        "message": "すべてのフォルダの結果",
+        "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
     }
 }

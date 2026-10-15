@@ -103,7 +103,12 @@ interface DataTableProps<TData extends RowData> {
    * the page that holds it, selects it, and focuses it. A new object repeats the request.
    */
   revealRow?: DataTableRevealRequest | null;
+  /** Told whether the table lists matches from every folder instead of the folder shown. */
+  onShowsAllBookmarksChange?: (showsAll: boolean) => void;
 }
+
+/** Columns that already show a row's folder. */
+const FOLDER_COLUMN_IDS = ['folderPath', 'parentId'];
 
 /**
  * What the page's keyboard shortcuts ask of the table. The rows are a grid with one focused row
@@ -187,6 +192,7 @@ export function DataTable<TData extends RowData>({
   searchQuery,
   onSearchQueryChange,
   revealRow,
+  onShowsAllBookmarksChange,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>(DEFAULT_BOOKMARK_TABLE_VIEW.sorting);
   // Filters other than the title search, which the page keeps (`searchQuery`).
@@ -475,6 +481,12 @@ export function DataTable<TData extends RowData>({
     () => columnOrder.filter((id) => effectiveColumnVisibility[id] !== false),
     [columnOrder, effectiveColumnVisibility],
   );
+  // Matches from every folder name their folder under the title, unless a folder column does.
+  const showRowFolders =
+    showsAllBookmarks && !FOLDER_COLUMN_IDS.some((id) => visibleColumnIds.includes(id));
+  React.useEffect(() => {
+    onShowsAllBookmarksChange?.(showsAllBookmarks);
+  }, [onShowsAllBookmarksChange, showsAllBookmarks]);
   const renderedColumnSizing = React.useMemo(
     () => getRenderedColumnSizing(columnSizing, visibleColumnIds, tableWidth),
     [columnSizing, tableWidth, visibleColumnIds],
@@ -887,6 +899,7 @@ export function DataTable<TData extends RowData>({
           className="rounded-md border bg-card outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
+            <RowFolderPathContext.Provider value={showRowFolders}>
             {/* Fixed layout applies the column sizes as given; the table only grows past the frame
               (and scrolls) when the columns need more room than it has. */}
             <Table
@@ -992,6 +1005,7 @@ export function DataTable<TData extends RowData>({
                 )}
               </TableBody>
             </Table>
+            </RowFolderPathContext.Provider>
           </MoveDisabledReasonContext.Provider>
         </div>,
       )}

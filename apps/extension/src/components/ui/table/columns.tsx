@@ -249,15 +249,18 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       return (
         <div className="flex items-center gap-2 min-w-0">
           {icon}
-          {title ? (
-            <span className="min-w-0 truncate" title={title}>
-              {title}
-            </span>
-          ) : (
-            <span className="min-w-0 truncate italic text-muted-foreground">
-              {t('popup_untitled')}
-            </span>
-          )}
+          <div className="flex min-w-0 flex-col">
+            {title ? (
+              <span className="min-w-0 truncate" title={title}>
+                {title}
+              </span>
+            ) : (
+              <span className="min-w-0 truncate italic text-muted-foreground">
+                {t('popup_untitled')}
+              </span>
+            )}
+            <RowFolderPath path={row.original.folderPath} />
+          </div>
         </div>
       );
     },

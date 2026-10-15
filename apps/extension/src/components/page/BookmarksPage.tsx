@@ -70,6 +70,8 @@ export default function BookmarksPage() {
     refresh,
   } = useBookmarkNavigation();
   const [revealRow, setRevealRow] = useState<DataTableRevealRequest | null>(null);
+  // Whether the table lists matches from every folder; the breadcrumb then says so.
+  const [showsAllFolders, setShowsAllFolders] = useState(false);
   const tableRef = useRef<DataTableHandle<Bookmark>>(null);
   const sidebars = useManagerSidebars();
   const leftSidebarCollapsed = !sidebars.folders.open;
@@ -377,6 +379,7 @@ export default function BookmarksPage() {
                 items={allData}
                 currentFolderId={currentFolder}
                 onNavigate={navigateToFolder}
+                allFolders={showsAllFolders}
               />
               <Button
                 variant="ghost"
@@ -471,6 +474,7 @@ export default function BookmarksPage() {
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
               revealRow={revealRow}
+              onShowsAllBookmarksChange={setShowsAllFolders}
               handleRef={tableRef}
               getRowProps={dragDrop.rowProps}
               renderFrame={(frame) => (

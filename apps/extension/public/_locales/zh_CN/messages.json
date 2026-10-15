@@ -6370,5 +6370,9 @@
     "qaManager_reorgIssueDeleted": {
         "message": "$1：预览后已被删除，无需移动",
         "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
+    },
+    "qaManager_breadcrumbAllFolders": {
+        "message": "所有文件夹中的结果",
+        "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
     }
 }

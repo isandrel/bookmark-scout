@@ -20,6 +20,11 @@ type BreadcrumbNavProps = {
   items: Bookmark[];
   currentFolderId: string | null;
   onNavigate: (folderId: string | null) => void;
+  /**
+   * The table lists matches from every folder (a search or filter not limited to the folder
+   * shown): the path gives way to a label saying so.
+   */
+  allFolders?: boolean;
 };
 
 const SEGMENT_BUTTON_CLASS =
@@ -35,7 +40,12 @@ function Segment({ className, children }: { className?: string; children: ReactN
   );
 }
 
-export function BreadcrumbNav({ items, currentFolderId, onNavigate }: BreadcrumbNavProps) {
+export function BreadcrumbNav({
+  items,
+  currentFolderId,
+  onNavigate,
+  allFolders = false,
+}: BreadcrumbNavProps) {
   // Derived from the refreshed list so renames and moves show up immediately.
   const path = useMemo(
     () => getManagerFolderAncestors(items, currentFolderId),
@@ -95,8 +105,19 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
         <span className="hidden sm:inline">{t('bookmarks_root')}</span>
       </button>
 
-      {head.map(renderFolder)}
-      {hidden.length > 0 && (
+      {allFolders ? (
+        <Segment className="min-w-0">
+          <span
+            className="min-w-0 truncate px-2 py-1 font-medium text-foreground"
+            aria-current="page"
+            data-testid="breadcrumb-all-folders"
+          >
+            {t('qaManager_breadcrumbAllFolders')}
+          </span>
+        </Segment>
+      ) : null}
+      {allFolders ? null : head.map(renderFolder)}
+      {!allFolders && hidden.length > 0 && (
         <Segment className="shrink-0">
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -122,7 +143,7 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
           </DropdownMenu>
         </Segment>
       )}
-      {tail.map(renderFolder)}
+      {allFolders ? null : tail.map(renderFolder)}
     </nav>
   );
 }
