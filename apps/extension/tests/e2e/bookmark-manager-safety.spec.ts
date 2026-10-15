@@ -1,5 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { setTablePageSize, showTableColumns } from './manager-helpers';
 import { STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -447,6 +448,7 @@ test('type labels stay on one line in Japanese at 1400 wide', async ({
   page,
 }) => {
   await updateSettings(extensionWorker, { language: 'ja' });
+  await showTableColumns(extensionWorker, ['type']);
   const seeded = await seedFolder(extensionWorker, 'E2E Ja Type', [
     { title: 'Ja Folder', children: [] },
     { title: 'Ja Link', url: 'https://example.com/ja' },
@@ -504,6 +506,7 @@ test('Back returns to the table page that was open', async ({
   extensionWorker,
   page,
 }) => {
+  await setTablePageSize(extensionWorker, 10);
   const seeded = await seedFolder(extensionWorker, 'E2E Back Page', [
     {
       title: 'Back Sub Folder',
@@ -549,6 +552,7 @@ test('Title stays visible with the Tools sidebar open at 1400 wide', async ({
   extensionWorker,
   page,
 }) => {
+  await showTableColumns(extensionWorker, ['folderPath']);
   const seeded = await seedFolder(extensionWorker, 'E2E Tools Title', [
     {
       title: 'Tools Title Row With A Fairly Long Name',

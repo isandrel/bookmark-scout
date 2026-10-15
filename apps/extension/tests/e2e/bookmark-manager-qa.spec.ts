@@ -1,6 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-import { addressFilter } from './manager-helpers';
+import { addressFilter, setTablePageSize, showTableColumns } from './manager-helpers';
 import { OPEN_KEY } from './manager-keys';
 import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
@@ -174,6 +174,7 @@ test('external folder renames and moves update the paths of everything inside', 
     },
     { title: 'Path Target', children: [] },
   ]);
+  await showTableColumns(extensionWorker, ['folderPath']);
   await page.goto(managerUrl(extensionId, seeded.ids['Path Sub']));
   await expect(row(page, 'Path Inner')).toContainText('E2E Paths / Path Sub');
 
@@ -368,6 +369,7 @@ test('moves are explained until browser order is on, and keep the current page',
     url: `https://example.com/paged/${index + 1}`,
   }));
   const seeded = await seedFolder(extensionWorker, 'E2E Paged Moves', items);
+  await setTablePageSize(extensionWorker, 10);
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(10);
 

@@ -3,11 +3,27 @@
  */
 import type { Locator, Page } from '@playwright/test';
 import { expect } from './fixtures';
+import { STORAGE_ITEMS, type StorageTarget, writeStored } from './storage';
 
 /** The manager's address, showing `folderId` when given. */
 export function managerUrl(extensionId: string, folderId?: string) {
   const base = `chrome-extension://${extensionId}/bookmarks.html`;
   return folderId ? `${base}?id=${folderId}` : base;
+}
+
+/**
+ * Shows these table columns as a user who turned them on under View would; a new view shows only
+ * Title, URL, and Date Added. Call before the manager opens.
+ */
+export async function showTableColumns(target: StorageTarget, columnIds: readonly string[]) {
+  await writeStored(target, STORAGE_ITEMS.tableView, {
+    columnVisibility: Object.fromEntries(columnIds.map((id) => [id, true])),
+  });
+}
+
+/** Sets this device's rows per page (the default is 50). Call before the manager opens. */
+export async function setTablePageSize(target: StorageTarget, pageSize: number) {
+  await writeStored(target, STORAGE_ITEMS.tableLayout, { pageSize });
 }
 
 /** The manager's search box, which matches titles and addresses. */

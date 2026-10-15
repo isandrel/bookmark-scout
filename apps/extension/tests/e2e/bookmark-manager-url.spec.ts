@@ -5,6 +5,7 @@
  */
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { setTablePageSize } from './manager-helpers';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -189,6 +190,7 @@ test('Show in folder opens the folder of a search result with the row selected',
   page,
 }) => {
   // Enough rows that the result sits on the folder's second page (10 rows per page).
+  await setTablePageSize(extensionWorker, 10);
   const filler = Array.from({ length: 14 }, (_, index) => ({
     title: `Filler ${String(index).padStart(2, '0')}`,
     url: `https://example.com/f${index}`,

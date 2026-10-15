@@ -33,7 +33,7 @@ test('a language change re-renders open pages without a reload', async ({
     'typed before the switch',
   );
   await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
-  await expect(manager.getByPlaceholder('タイトルで絞り込み...')).toBeVisible();
+  await expect(manager.getByPlaceholder('タイトルとアドレスを検索')).toBeVisible();
   await expect(manager.getByTestId('folder-sidebar').getByRole('heading')).toHaveText(
     'ブックマーク',
   );

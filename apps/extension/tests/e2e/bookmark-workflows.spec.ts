@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-import { addressFilter } from './manager-helpers';
+import { addressFilter, showTableColumns } from './manager-helpers';
 import { readSettings, setSettings } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -522,6 +522,8 @@ test('manager filters globally across nested folders or only the selected folder
     { title: 'Shared Target Remote', url: 'https://example.com/remote-target' },
   ]);
 
+  // Folder Path names where each match is; a new view hides it until turned on under View.
+  await showTableColumns(extensionWorker, ['folderPath']);
   await page.goto(bookmarkPageUrl(extensionId, local.folderId));
   const rows = page.locator('tbody tr');
   await expect(rows).toHaveCount(2);

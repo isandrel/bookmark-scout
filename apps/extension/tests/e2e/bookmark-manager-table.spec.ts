@@ -190,8 +190,16 @@ test('current-folder help tooltip shows its full text', async ({ extensionId, pa
   expect(clipped).toBe(false);
 });
 
-test('permanent root folders cannot be edited or deleted', async ({ extensionId, page }) => {
-  await page.goto(managerUrl(extensionId));
+test('permanent root folders cannot be edited or deleted', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // The top level: the root's id (a plain open shows the bookmarks bar).
+  const rootId = await extensionWorker.evaluate(
+    async () => (await chrome.bookmarks.getTree())[0].id,
+  );
+  await page.goto(managerUrl(extensionId, rootId));
   const rows = page.locator('tbody tr');
   await expect(rows.first()).toBeVisible();
   const rowCount = await rows.count();
@@ -214,7 +222,8 @@ test('manager table uses Japanese labels', async ({ extensionId, extensionWorker
   ]);
   await page.goto(managerUrl(extensionId, folder.folderId));
 
-  await expect(page.getByPlaceholder('タイトルで絞り込み...')).toBeVisible();
+  await expect(page.getByPlaceholder('タイトルとアドレスを検索')).toBeVisible();
+  await page.getByRole('button', { name: 'その他の絞り込み' }).click();
   await expect(page.getByPlaceholder('URLで絞り込み...')).toBeVisible();
   await expect(page.getByRole('checkbox', { name: '現在のフォルダのみ' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'タイトル' })).toBeVisible();
@@ -290,7 +299,7 @@ test('rows-per-page select keeps the gap the other pagination groups use', async
   const trigger = label.locator('..').getByRole('combobox');
   const pageOf = page.getByText('Page 1 of 1', { exact: true });
   const firstPage = page.getByRole('button', { name: 'Go to first page' });
-  await expect(trigger).toHaveText('10');
+  await expect(trigger).toHaveText('50');
 
   const box = async (locator: Locator) => {
     const value = await locator.boundingBox();
