@@ -29,9 +29,6 @@ apps/*/.next
 *.sln
 *.sw?
 
-# Repomix
-repomix-output.*
-
 # WXT
 .wxt
 .output
