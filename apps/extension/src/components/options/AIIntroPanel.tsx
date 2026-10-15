@@ -28,7 +28,10 @@ const POINTS: readonly { id: string; icon: LucideIcon; key: MessageKey }[] = [
   { id: 'data', icon: Send, key: 'aiOnboard_data' },
 ];
 
-/** Adds a built-in service and makes it the default, so its editor opens with the download. */
+/**
+ * Makes the built-in service the default, so its editor opens with the download. There is only
+ * ever one: when it already exists (another tab added it, or a second click), that one is chosen.
+ */
 async function addBuiltinService(provider: AIProvider) {
   const service = await addAIService(provider);
   await setDefaultAIService(service.id);
@@ -41,6 +44,7 @@ function BuiltinAISuggestion() {
   const provider = BUILTIN_AI_PROVIDER;
   const added = state.services.some((service) => isBuiltinProvider(service.provider));
   if (!provider || isLoading || added || !canOfferBuiltinAI(status)) return null;
+  const languageNote = builtinAILanguageNote();
   return (
     <div
       data-testid="builtin-ai-suggestion"
@@ -50,6 +54,11 @@ function BuiltinAISuggestion() {
       <div className="min-w-0 flex-1 space-y-1">
         <p className="font-medium">{t('builtinAi_suggestTitle')}</p>
         <p className="text-muted-foreground">{t('builtinAi_suggestDesc')}</p>
+        {languageNote && (
+          <p data-testid="builtin-ai-language-note" className="text-muted-foreground">
+            {languageNote}
+          </p>
+        )}
       </div>
       <Button type="button" size="sm" onClick={() => void addBuiltinService(provider)}>
         {t('builtinAi_suggestAction')}

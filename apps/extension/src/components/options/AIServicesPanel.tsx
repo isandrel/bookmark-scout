@@ -17,11 +17,14 @@ const PROVIDER_GROUP_LABELS: Record<AIProviderGroup, MessageKey> = {
 
 /**
  * Every provider as a picker option, grouped like the provider catalog. The built-in model is
- * listed (first) only where this computer can run it.
+ * listed (first) only where this computer can run it, and a provider that allows one service
+ * only while it has none.
  */
-function providerOptions(offerBuiltin: boolean): ProviderOption[] {
+function providerOptions(offerBuiltin: boolean, services: readonly AIService[]): ProviderOption[] {
+  const added = new Set(services.map((service) => service.provider));
   return getAvailableProviders()
     .filter((provider) => offerBuiltin || !isBuiltinProvider(provider.id))
+    .filter((provider) => !(isSingleServiceProvider(provider.id) && added.has(provider.id)))
     .map((provider) => ({
       value: provider.id,
       label: getLocalizedProviderName(provider.id),
@@ -50,20 +53,24 @@ function ServiceLogo({ provider }: { provider: AIProvider }) {
 
 function AddServiceDialog({
   open,
+  services,
   onOpenChange,
   onAdded,
 }: {
   open: boolean;
+  services: readonly AIService[];
   onOpenChange: (open: boolean) => void;
   onAdded: (service: AIService) => void;
 }) {
   const [provider, setProvider] = useState<string>(DEFAULT_SERVICE_PROVIDER);
   const [name, setName] = useState('');
-  const options = providerOptions(canOfferBuiltinAI(useBuiltinAIStatus(open)));
+  const options = providerOptions(canOfferBuiltinAI(useBuiltinAIStatus(open)), services);
   const catalogGroup = t(PROVIDER_GROUP_LABELS.catalog);
 
   const add = async () => {
     const service = await addAIService(provider, name);
+    // The next add starts from the default: the provider just added may no longer be listed.
+    setProvider(DEFAULT_SERVICE_PROVIDER);
     setName('');
     onOpenChange(false);
     onAdded(service);
@@ -119,7 +126,14 @@ function AddServiceDialog({
   );
 }
 
-export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boolean }) {
+export function AIServicesPanel({
+  showAdvanced = false,
+  searchMatches = [],
+}: {
+  showAdvanced?: boolean;
+  /** In a settings search, the panel fields it matched. */
+  searchMatches?: readonly AIServicesSearchField[];
+}) {
   const { state, isLoading } = useAIServices();
   // Services a restored backup could not fully set up: their API key or headers are missing.
   const { value: credentials } = useStoredValue(aiProviderConfigValue);
@@ -133,6 +147,13 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
 
   // The default service's editor starts open, so a single setup reads like before.
   const openId = expandedId ?? state.defaultServiceId ?? null;
+  // A search that matched editor fields (API Key, Model) while no hosted service's editor is open
+  // shows where they are instead of a count with nothing under it.
+  const openService = state.services.find((service) => service.id === openId);
+  const hiddenMatches =
+    openService && !isBuiltinProvider(openService.provider)
+      ? []
+      : searchMatches.filter((field) => field.editor);
 
   /** After a delete, the menu that opened the dialog is gone; focus the next row instead. */
   const focusAfterDialog = () => {
@@ -166,8 +187,22 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
           {t('options_aiServiceEmpty')}
         </p>
       )}
+      {!isLoading && hiddenMatches.length > 0 && (
+        <p data-testid="ai-services-search-hint" className="text-sm text-muted-foreground">
+          {t(
+            'qaOptions_searchInService',
+            formatList(hiddenMatches.flatMap((field) => field.text.slice(0, 1))),
+          )}
+        </p>
+      )}
 
-      <ul ref={listRef} className="divide-y overflow-hidden rounded-md border">
+      <ul
+        ref={listRef}
+        className={cn(
+          'divide-y overflow-hidden rounded-md border',
+          state.services.length === 0 && 'hidden',
+        )}
+      >
         {state.services.map((service) => {
           const isDefault = service.id === state.defaultServiceId;
           const isOpen = service.id === openId;
@@ -203,7 +238,9 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
                     </span>
                     <span className="block truncate text-xs text-muted-foreground">
                       {getLocalizedProviderName(service.provider)}
-                      {service.model ? ` ${t('format_separator')} ${service.model}` : ''}
+                      {service.model
+                        ? ` ${t('format_separator')} ${getModelDisplayName(service.provider, service.model)}`
+                        : ''}
                     </span>
                   </span>
                   <ChevronDown
@@ -239,16 +276,18 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
                       <Star className="h-4 w-4" />
                       {t('options_aiServiceSetDefault')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() =>
-                        void duplicateAIService(service.id).then((copy) => {
-                          if (copy) setExpandedId(copy.id);
-                        })
-                      }
-                    >
-                      <Copy className="h-4 w-4" />
-                      {t('options_aiServiceDuplicate')}
-                    </DropdownMenuItem>
+                    {!isSingleServiceProvider(service.provider) && (
+                      <DropdownMenuItem
+                        onClick={() =>
+                          void duplicateAIService(service.id).then((copy) => {
+                            if (copy) setExpandedId(copy.id);
+                          })
+                        }
+                      >
+                        <Copy className="h-4 w-4" />
+                        {t('options_aiServiceDuplicate')}
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                       className="text-destructive-text"
                       onClick={() => setDeleting(service)}
@@ -275,6 +314,7 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
 
       <AddServiceDialog
         open={adding}
+        services={state.services}
         onOpenChange={setAdding}
         onAdded={(s) => setExpandedId(s.id)}
       />

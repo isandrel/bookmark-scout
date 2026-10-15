@@ -10,10 +10,10 @@
 
 <h1 align="center">Bookmark Scout</h1>
 
-<h3 align="center">どのページも、数秒で正しいブックマークフォルダーへ。</h3>
+<h3 align="center">どのページも、数秒で正しいブックマークフォルダへ。</h3>
 
 <p align="center">
-  フォルダー名を数文字入力するか、ショートカットを 1 つ押すだけで、ページが本来のフォルダーに保存されます。<br>
+  フォルダ名を数文字入力するか、ショートカットを 1 つ押すだけで、ページが本来のフォルダに保存されます。<br>
   無料で、アカウントも広告もありません。開発者には何も送られません。
 </p>
 
@@ -30,17 +30,17 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-dark.png">
-    <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="Bookmark Scout のポップアップ。「pas」と入力すると Recipes / Italian の中の Pasta フォルダーが見つかり、Enter でそこにページを保存できる。横には、パスタのレシピページに対する任意の AI の提案。" width="800">
+    <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="Bookmark Scout のポップアップ。「pas」と入力すると Recipes / Italian の中の Pasta フォルダが見つかり、Enter でそこにページを保存できる。横には、パスタのレシピページに対する任意の AI の提案。" width="800">
   </picture>
 </p>
 
 ## ✨ できること
 
-- 📁 **名前を入力して正しいフォルダーに保存。** 数文字入力して Enter を押すだけ。ほかのフォルダーの奥深くにあるフォルダーも見つかり、少しの入力ミスがあっても一致します。
-- ⚡ **ショートカット 1 つで保存。** どのページでも **Alt+Shift+S**（Mac では **⌥⇧S**）を押します。保存先を示す小さなメッセージから、**元に戻す** ことも、ほかのフォルダーへ移すこともできます。
+- 📁 **名前を入力して正しいフォルダに保存。** 数文字入力して Enter を押すだけ。ほかのフォルダの奥深くにあるフォルダも見つかり、少しの入力ミスがあっても一致します。
+- ⚡ **ショートカット 1 つで保存。** どのページでも **Alt+Shift+S**（Mac では **⌥⇧S**）を押します。保存先を示す小さなメッセージから、**元に戻す** ことも、ほかのフォルダへ移すこともできます。
 - 🔎 **保存したものをすぐ見つける。** ツールバー、サイドパネル、または全画面のブックマークマネージャーから、入力と同時にすべてのブックマークを検索できます。
 - 🧹 **何年分ものブックマークを片付ける。** 重複を削除し、開けなくなったリンクを見つけ、ウェブアドレスからトラッキング用のコードを取り除きます。変更はすべて実行前に確認でき、元に戻せます。
-- ✨ **AI の提案は任意。** 自分の AI アカウント、または自分のパソコンで動く無料の AI モデルを使って、AI にフォルダーを選ばせることもできます。AI は自分でオンにするまでオフのままです。
+- ✨ **AI の提案は任意。** 自分の AI アカウント、または自分のパソコンで動く無料の AI モデルを使って、AI にフォルダを選ばせることもできます。AI は自分でオンにするまでオフのままです。
 - 🔒 **プライバシーを重視した設計。** アカウント、広告、トラッキングはなく、開発者には何も届きません。保存と検索はオフラインでも使えます。
 
 🌍 対応言語: English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil)
@@ -55,7 +55,7 @@
 
 1. **ピン留めする。** ブラウザのツールバーにあるパズルのピースのアイコンをクリックし、Bookmark Scout の横のピンをクリックします。
 2. **残しておきたいページを開き**、Bookmark Scout のアイコンをクリックします。
-3. **フォルダー名を数文字入力し**、↓ で選んで Enter を押します。これで完了です。
+3. **フォルダ名を数文字入力し**、↓ で選んで Enter を押します。これで完了です。
 
 次からは、そのページで **Alt+Shift+S**（Mac では **⌥⇧S**）を押すだけです。詳しくは [保存と整理のガイド](https://docs.bookmark-scout.com/ja/guides/save-and-organize) をご覧ください。
 

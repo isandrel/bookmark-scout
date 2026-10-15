@@ -5,7 +5,7 @@
  * every `*.lazy.ts` file it is left out of auto-imports; import it only with `import()`.
  */
 
-import { generateObject, generateText, type LanguageModel } from 'ai';
+import { generateText, type LanguageModel, Output } from 'ai';
 
 /**
  * A language model for the settings. `source` names what makes the calls (a tool name) in the
@@ -87,17 +87,22 @@ export async function createAIModel(
 }
 
 /**
- * `generateObject` on the model for `request.settings`, behind `generateAIObject` in ai-client.ts.
+ * A structured answer from the model for `request.settings`, behind `generateAIObject` in
+ * ai-client.ts: `generateText` with an object output (AI SDK 7 deprecates `generateObject`). The
+ * schema still reaches the model as the JSON response format (the built-in model's
+ * `responseConstraint`), and an answer that does not fit it throws `NoObjectGeneratedError`.
  * Named apart from it: a chunk keeps its exports' names, and the auto-import scan reads a
  * surviving auto-import name as a missed import.
  */
 export async function requestAIObject<T>(request: AIObjectRequest<T>): Promise<{ object: T }> {
-  const { settings, source, transport, onDevice, ...options } = request;
-  const { object } = await generateObject({
+  const { settings, source, transport, onDevice, schema, system, ...options } = request;
+  const { output } = await generateText({
     ...options,
+    instructions: system,
+    output: Output.object({ schema }),
     model: await createAIModel(settings, source, transport, onDevice),
   });
-  return { object };
+  return { object: output };
 }
 
 /** `generateText` on the model for `request.settings`, for Verify Service's one-word prompt. */

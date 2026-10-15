@@ -25,6 +25,7 @@ Read the "AI and provider guidance" section of `apps/extension/AGENTS.md` first.
 
 - **OpenAI-compatible servers:** use `@ai-sdk/openai-compatible` `chatModel` with `supportsStructuredOutputs: true`. Without the flag, structured-output calls to compatible servers failed with "No object generated".
 - **Ollama:** use `ollama-ai-provider-v2`; the older package does not work with `ai` v7.
+- **Structured answers:** `ai` v7 deprecates `generateObject` (a console warning, `AISDK_DEP_GENERATE_OBJECT`); `requestAIObject` calls `generateText` with `output: Output.object({ schema })` and `instructions`. The schema still goes out as the JSON response format (the built-in model's `responseConstraint`); a wrong answer throws `NoObjectGeneratedError` and no answer `NoOutputGeneratedError`, both shown as `ai_errorNoObject`. Never spell `AI_NoOutputGeneratedError` or `AI_TypeValidationError` in always-loaded code such as `ai-errors.ts`: `startup-code.spec.ts` treats those strings as AI SDK code in a startup chunk (`ai-errors.ts` builds the names from a list instead). Tests that mock `ai` mock `generateText` (and `Output` when they replace the whole module).
 - **Anthropic from the browser** needs the `anthropic-dangerous-direct-browser-access: true` header.
 - **A 403 from a local server** usually means its origin check rejected the extension: Ollama needs `OLLAMA_ORIGINS`, LM Studio needs CORS enabled. Say so in the error, not just "403".
 - **Write local server URLs as `localhost`**, never `127.0.0.1`, in presets, docs, and copy.

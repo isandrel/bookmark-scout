@@ -5,6 +5,8 @@
  *   it clears the query, then leaves the box.
  * - ArrowDown in the search box moves into the tree; ArrowUp on the first row moves back.
  *   Alt+ArrowDown opens the recent searches instead.
+ * - Enter in the search box saves the current page into the first Save to folder row, the
+ *   combobox's default option, when folders match; otherwise the search box keeps it.
  * - In the tree, ArrowUp/ArrowDown/Home/End move between visible folders and bookmarks,
  *   ArrowRight opens a folder (or enters it), ArrowLeft closes it (or goes to its parent), and
  *   Enter on a folder saves the current page into it (or opens or closes a folder that cannot
@@ -19,6 +21,7 @@ import {
   type RefObject,
   useCallback,
   useEffect,
+  useState,
 } from 'react';
 import { flushSync } from 'react-dom';
 
@@ -28,12 +31,18 @@ export const POPUP_TREE_ROW_ATTRIBUTE = 'data-popup-tree-row';
 export const POPUP_TREE_FOLDER_ATTRIBUTE = 'data-folder-trigger';
 /** Present on folder rows that can hold bookmarks, where Enter saves the current page. */
 export const POPUP_TREE_CAN_SAVE_ATTRIBUTE = 'data-can-save';
+/** On the Save to folder row that Enter in the search box saves into: the first one shown. */
+export const POPUP_ENTER_TARGET_ATTRIBUTE = 'data-enter-target';
 const TREE_ROW_SELECTOR = `[${POPUP_TREE_ROW_ATTRIBUTE}]`;
 
-/** Keys the search box handles itself: Escape clears or leaves it, ArrowDown enters the tree. */
+/**
+ * Keys the search box handles itself: Escape clears or leaves it, ArrowDown enters the tree, and
+ * Enter saves into the first folder match.
+ */
 export const POPUP_SEARCH_INPUT_BINDINGS = {
   escape: [{ key: 'Escape' }],
   enterTree: [{ key: 'ArrowDown' }],
+  saveToFirstMatch: TREE_KEY_BINDINGS.activate,
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
 /**
@@ -106,14 +115,41 @@ type PopupShortcutOptions = {
    * would otherwise focus a row of the previous results, which the new results then remove.
    */
   onApplyQuery?: () => void;
+  /** Saves the current page into a folder; Enter in the search box calls it for the first match. */
+  onSaveToFolder?: (folderId: string) => void;
 };
 
-/** Page-wide shortcuts: `/` to search, and Escape and ArrowDown inside the search box. */
+/**
+ * Enter in the search box: applies the typed query, then saves into the row marked
+ * `POPUP_ENTER_TARGET_ATTRIBUTE` if one is shown. Without one, the key keeps its search box
+ * meaning (recent searches).
+ */
+function saveToFirstMatch(
+  event: KeyboardEvent,
+  onApplyQuery: (() => void) | undefined,
+  onSaveToFolder: ((folderId: string) => void) | undefined,
+): void {
+  if (!onSaveToFolder) return;
+  // The matches follow the search after a delay; Enter right after typing uses the typed text.
+  if (onApplyQuery) flushSync(onApplyQuery);
+  const row = document.querySelector<HTMLElement>(`[${POPUP_ENTER_TARGET_ATTRIBUTE}]`);
+  const folderId = row?.getAttribute(POPUP_TREE_FOLDER_ATTRIBUTE);
+  if (!row || !folderId) return;
+  event.preventDefault();
+  // A held Enter repeats keydown, and a row still saving says so; one press saves once.
+  if (!event.repeat && row.getAttribute('aria-disabled') !== 'true') onSaveToFolder(folderId);
+}
+
+/**
+ * Page-wide shortcuts: `/` to search, and Escape, ArrowDown, and Enter inside the search box.
+ * `findShortcut` skips keys an IME is composing with, so confirming a word never saves.
+ */
 export function usePopupShortcuts({
   searchInputRef,
   treeRef,
   onClearQuery,
   onApplyQuery,
+  onSaveToFolder,
 }: PopupShortcutOptions) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -133,6 +169,8 @@ export function usePopupShortcuts({
         } else if (action === 'enterTree') {
           if (onApplyQuery) flushSync(onApplyQuery);
           if (focusFirstRow(treeRef.current)) event.preventDefault();
+        } else if (action === 'saveToFirstMatch') {
+          saveToFirstMatch(event, onApplyQuery, onSaveToFolder);
         }
         return;
       }
@@ -146,7 +184,39 @@ export function usePopupShortcuts({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [searchInputRef, treeRef, onClearQuery, onApplyQuery]);
+  }, [searchInputRef, treeRef, onClearQuery, onApplyQuery, onSaveToFolder]);
+}
+
+/** Where the keyboard is, for what Enter does: the search box, a folder row that saves, or other. */
+export type PopupEnterFocus = 'search' | 'saveRow' | null;
+
+/** Follows focus to say what Enter does now (`PopupEnterFocus`). */
+export function usePopupEnterFocus(
+  searchInputRef: RefObject<HTMLInputElement | null>,
+): PopupEnterFocus {
+  const [focus, setFocus] = useState<PopupEnterFocus>(null);
+  useEffect(() => {
+    const read = (target: EventTarget | null): PopupEnterFocus => {
+      if (target && target === searchInputRef.current) return 'search';
+      return target instanceof HTMLElement && target.hasAttribute(POPUP_TREE_CAN_SAVE_ATTRIBUTE)
+        ? 'saveRow'
+        : null;
+    };
+    // The search box takes focus when the page opens, before this runs.
+    setFocus(read(document.activeElement));
+    const onFocusIn = (event: FocusEvent) => setFocus(read(event.target));
+    // Focus leaving the page, or moving to nothing, ends both.
+    const onFocusOut = (event: FocusEvent) => {
+      if (!event.relatedTarget) setFocus(null);
+    };
+    document.addEventListener('focusin', onFocusIn);
+    document.addEventListener('focusout', onFocusOut);
+    return () => {
+      document.removeEventListener('focusin', onFocusIn);
+      document.removeEventListener('focusout', onFocusOut);
+    };
+  }, [searchInputRef]);
+  return focus;
 }
 
 type PopupTreeKeyOptions = {

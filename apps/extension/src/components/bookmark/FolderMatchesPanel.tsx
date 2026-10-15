@@ -1,5 +1,12 @@
-import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { BookmarkPlus, Folder, LoaderCircle } from 'lucide-react';
+import {
+  type KeyboardEvent,
+  type RefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 type FolderMatchesPanelProps = {
   matches: readonly FolderMatch[];
@@ -12,6 +19,8 @@ type FolderMatchesPanelProps = {
   onSave: (folderId: string) => void;
   /** The tree's key handler, so arrow keys and Enter work the same here as in the tree. */
   onKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
+  /** The search box, whose Enter saves into the first row; that row is highlighted meanwhile. */
+  searchInputRef: RefObject<HTMLInputElement | null>;
 };
 
 /**
@@ -36,7 +45,8 @@ function useHeldMatchOrder(
 /**
  * "Save to folder": the folders matching the search, best first, above the bookmark results.
  * Each row is a tree row for the keyboard, so ArrowDown from the search box lands on the best
- * match and Enter saves the current page there.
+ * match and Enter saves the current page there. The first row is the combobox's default option:
+ * Enter in the search box saves there, and it is highlighted while the search box has focus.
  */
 export function FolderMatchesPanel({
   matches: rankedMatches,
@@ -46,7 +56,9 @@ export function FolderMatchesPanel({
   pendingFolderIds,
   onSave,
   onKeyDown,
+  searchInputRef,
 }: FolderMatchesPanelProps) {
+  const highlightFirst = usePopupEnterFocus(searchInputRef) === 'search';
   const [pointerInside, setPointerInside] = useState(false);
   const [focusInside, setFocusInside] = useState(false);
   // Typing moves attention to the search box: a pointer resting on the list holds it again only
@@ -77,7 +89,7 @@ export function FolderMatchesPanel({
         {t('popup_folderMatchesTitle')}
       </h2>
       <ul onKeyDown={onKeyDown} className="min-h-0 overflow-y-auto">
-        {matches.map(({ folder, parents, titleRanges }) => {
+        {matches.map(({ folder, parents, titleRanges }, index) => {
           const title = getBookmarkDisplayTitle(folder.title);
           const shownParents = parents[0] === barTitle ? parents.slice(1) : parents;
           const path = shownParents
@@ -96,7 +108,9 @@ export function FolderMatchesPanel({
                   [POPUP_TREE_ROW_ATTRIBUTE]: 'folder',
                   [POPUP_TREE_FOLDER_ATTRIBUTE]: folder.id,
                   [POPUP_TREE_CAN_SAVE_ATTRIBUTE]: true,
+                  ...(index === 0 ? { [POPUP_ENTER_TARGET_ATTRIBUTE]: true } : {}),
                 }}
+                data-active={(index === 0 && highlightFirst) || undefined}
                 aria-label={t('popup_saveToFolder', fullPath)}
                 title={fullPath}
                 // aria-disabled, not disabled, so a row being saved keeps keyboard focus.
@@ -104,7 +118,7 @@ export function FolderMatchesPanel({
                 onClick={() => {
                   if (!isPending) onSave(folder.id);
                 }}
-                className="group flex h-8 w-full items-center gap-2 rounded-md px-2 text-left transition-colors duration-150 hover:bg-muted focus-visible:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring aria-disabled:opacity-60"
+                className="group flex h-8 w-full items-center gap-2 rounded-md px-2 text-left transition-colors duration-150 hover:bg-muted focus-visible:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring aria-disabled:opacity-60 data-active:bg-accent"
               >
                 <Folder aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
                 {/* One line, like a tree row: the name, then where it is, which truncates first. */}
@@ -123,7 +137,7 @@ export function FolderMatchesPanel({
                 ) : (
                   <BookmarkPlus
                     aria-hidden="true"
-                    className="size-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+                    className="size-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-data-active:opacity-100"
                   />
                 )}
               </button>

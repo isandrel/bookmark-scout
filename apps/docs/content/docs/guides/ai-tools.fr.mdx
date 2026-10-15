@@ -49,7 +49,7 @@ Dans Chrome, Bookmark Scout peut utiliser l'**IA intégrée de Chrome**, un peti
 Dans l'onglet **IA**, cliquez sur **Utiliser l'IA intégrée**, sous **Gratuit sur cet ordinateur**, en haut de l'encadré **L'IA est facultative**. **IA intégrée (sur cet ordinateur)** est aussi en tête de **Ajouter un service**. Les deux n'apparaissent que là où Chrome peut exécuter le modèle.
 </Step>
 <Step>
-Cliquez sur **Télécharger le modèle**. Chrome le télécharge une seule fois : environ 4 Go sur un ordinateur avec carte graphique, 2,7 Go sans. Quand le service indique **Prêt**, le modèle est sur cet ordinateur.
+Cliquez sur **Télécharger le modèle**. Chrome le télécharge une seule fois : environ 4 Go sur un ordinateur avec carte graphique, 2,7 Go sans. Quand le service indique **Prêt**, le modèle est sur cet ordinateur. Si vous fermez les paramètres pendant le téléchargement, Chrome continue en arrière-plan.
 </Step>
 <Step>
 Activez **Fonctionnalités d'IA** si elles sont désactivées : ajouter le service n'active pas l'IA.
@@ -57,12 +57,12 @@ Activez **Fonctionnalités d'IA** si elles sont désactivées : ajouter le servi
 </Steps>
 
 - Chrome a besoin de 22 Go d'espace disque libre et d'une carte graphique avec plus de 4 Go de mémoire, ou de 16 Go de mémoire et de 4 cœurs de processeur. Sur un ordinateur qui ne peut pas exécuter le modèle, ou si votre organisation l'a désactivé, le service l'indique. Firefox n'a pas d'IA intégrée.
-- Elle ne suggère que des dossiers : dans la fenêtre pop-up et le panneau latéral, et pour le raccourci d'enregistrement rapide avec l'IA. Demander à l'IA, Étiquetage automatique, Générateur de résumés et Réorganisation des dossiers par IA utilisent un autre service lorsque vous en ajoutez un.
+- Elle ne suggère que des dossiers : dans la fenêtre pop-up et le panneau latéral, et pour le raccourci d'enregistrement rapide avec l'IA. Demander à l'IA, Étiquetage automatique, Générateur de résumés et Réorganisation des dossiers par IA utilisent votre autre service activé, ou celui que vous ajoutez.
 - Elle lit le titre et l'adresse de la page, les noms des dossiers qui lui correspondent le mieux (une courte liste choisie sur votre appareil) et, avec **Lire le contenu des pages** activé, le début du texte de la page. Elle ne répond qu'avec des dossiers de cette liste.
 - Elle fonctionne mieux en anglais, japonais, espagnol, allemand et français. Si le modèle échoue ou met trop de temps, les suggestions viennent d'une simple correspondance de mots sur votre appareil.
 - Ni la fenêtre pop-up ni le raccourci d'enregistrement rapide avec l'IA ne lancent le téléchargement : tant que le modèle n'est pas prêt, la fenêtre pop-up affiche **Téléchargez le modèle de l'IA intégrée dans les paramètres** à la place des boutons d'IA, et l'enregistrement rapide utilise la meilleure correspondance décrite ci-dessous.
 - L'enregistrement rapide avec l'IA garde le modèle prêt pendant 5 minutes après un enregistrement, pour que le suivant soit plus rapide. Si le modèle n'est pas prêt, échoue ou met trop de temps, la page est enregistrée dans le dossier qui lui correspond le mieux, comme le fait le réglage **Meilleure correspondance**.
-- Avec **Enregistrer les requêtes** activé, chaque appel apparaît dans **Activité de l'IA** comme `ON-DEVICE`.
+- Avec **Enregistrer les requêtes** activé, chaque appel apparaît dans **Activité de l'IA** avec la mention **Sur l'appareil**.
 
 ## Utiliser plusieurs services [#use-more-than-one-service]
 
@@ -71,7 +71,7 @@ Enregistrez autant de services que vous le souhaitez, y compris plusieurs pour l
 - Tous les outils d'IA utilisent le service **Par défaut**. Choisissez **Définir par défaut** dans le menu d'un service ou, lorsque plusieurs services sont activés, choisissez-en un avec la flèche située à côté du bouton en forme d'étincelles dans la fenêtre pop-up.
 - **IA intégrée** ne fait que suggérer des dossiers : tant qu'elle est le service par défaut, les autres outils d'IA utilisent le premier autre service activé.
 - Désactivez un service avec son interrupteur pour le masquer dans la fenêtre pop-up sans le supprimer.
-- **Dupliquer** copie un service, clé comprise. **Supprimer** le retire de cet appareil, avec sa clé.
+- **Dupliquer** copie un service, clé comprise. **Supprimer** le retire de cet appareil, avec sa clé. L'IA intégrée ne peut être ajoutée qu'une fois : elle n'a donc pas de **Dupliquer**.
 - L'**URL de base**, les **En-têtes supplémentaires (JSON)** et les champs propres à chaque fournisseur, comme l'organisation OpenAI, se trouvent sous **Plus de paramètres**.
 
 ## Fournisseurs [#providers]

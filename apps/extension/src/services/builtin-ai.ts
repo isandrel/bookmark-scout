@@ -156,6 +156,15 @@ export function hasBuiltinAI(): boolean {
   return 'LanguageModel' in globalThis;
 }
 
+/**
+ * Whether the model understands a language (a tag such as `ko` or `pt-BR`, matched by its base
+ * language) by `model_languages`; pages in any other language may fall back to the word match.
+ */
+export function builtinAIReadsLanguage(language: string): boolean {
+  const base = language.split(/[-_]/)[0]?.toLowerCase() ?? '';
+  return builtinAIConfig.model_languages.some((code) => code === base);
+}
+
 /** Whether the provider is worth offering: the API exists and the computer can run the model. */
 export function canOfferBuiltinAI(status: BuiltinAIStatus | undefined): boolean {
   return status === 'downloadable' || status === 'downloading' || status === 'available';

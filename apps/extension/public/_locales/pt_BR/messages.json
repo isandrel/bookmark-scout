@@ -819,6 +819,10 @@
         "message": "Pastas primeiro",
         "description": "Folders first sort option"
     },
+    "qaOptions_sortBrowser": {
+        "message": "Ordem do navegador",
+        "description": "Sort Order option (Settings > Behavior): the tree keeps the browser's own bookmark order. Use the same capitalization as the other Sort Order options (Date Added, Alphabetical, Folders First)"
+    },
     "settings_groupByFolders": {
         "message": "Agrupar por pastas",
         "description": "Group by folders setting label"
@@ -994,7 +998,7 @@
         "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
-        "message": "A solicitação à IA falhou. Tente novamente ou verifique o serviço em Opções.",
+        "message": "A solicitação à IA falhou. Tente novamente ou verifique o serviço em Configurações > IA.",
         "description": "AI error with no more specific explanation"
     },
     "error_unknown": {
@@ -3146,7 +3150,7 @@
         "description": "Invalid AI provider base URL error"
     },
     "error_aiKeyNotConfigured": {
-        "message": "Chave de API não configurada. Adicione-a em Opções → IA.",
+        "message": "Chave de API não configurada. Adicione-a em Configurações > IA.",
         "description": "AI API key missing error"
     },
     "contextMenu_untitled": {
@@ -4274,7 +4278,7 @@
         "description": "Error when an AI tool runs while AI features are off"
     },
     "ai_featuresDisabledNotice": {
-        "message": "Ative os recursos de IA em Opções para usar esta ferramenta.",
+        "message": "Ative os recursos de IA em Configurações > IA para usar esta ferramenta.",
         "description": "Notice on AI tool cards while AI features are off"
     },
     "toast_aiContextPackedDesc_one": {
@@ -5087,8 +5091,12 @@
         "message": "Nenhum serviço de IA ainda. Adicione um para usar as ferramentas de IA.",
         "description": "Empty state of the AI services list"
     },
+    "qaOptions_searchInService": {
+        "message": "Em cada serviço de IA: $1. Adicione um ou abra um com chave para ver.",
+        "description": "Settings search: hint in the AI services panel when the search matched settings that are inside each AI service's editor, but no service with those settings is open. $1 is a list of setting names (API Key, Model, ...)"
+    },
     "error_aiNoService": {
-        "message": "Nenhum serviço de IA configurado. Adicione um em Opções.",
+        "message": "Nenhum serviço de IA configurado. Adicione um em Configurações > IA.",
         "description": "Error when an AI tool runs without any enabled service"
     },
     "popup_aiServiceSwitch": {
@@ -5267,6 +5275,14 @@
         "message": "Falhou",
         "description": "Options: status badge of an AI request that got no response"
     },
+    "qaOptions_activityOnDevice": {
+        "message": "No dispositivo",
+        "description": "Options > AI activity: status badge of a call to the built-in AI model on this computer, which has no HTTP status because nothing goes over the network. Keep it very short"
+    },
+    "qaOptions_activityAction": {
+        "message": "Ação",
+        "description": "Options > AI activity: status badge of a bookmark action an AI agent ran (such as saving a bookmark), which has no HTTP status. Keep it very short"
+    },
     "aiActivity_requestHeaders": {
         "message": "Cabeçalhos da solicitação",
         "description": "Options: label of the recorded request headers"
@@ -5296,11 +5312,11 @@
         "description": "Options: AI activity source for fetching a provider model list"
     },
     "error_aiApiKeyRequired": {
-        "message": "Adicione uma chave de API para este serviço de IA em Opções > IA.",
+        "message": "Adicione uma chave de API para este serviço de IA em Configurações > IA.",
         "description": "Error when an AI call needs an API key and none is saved"
     },
     "error_aiModelRequired": {
-        "message": "Escolha um modelo para este serviço de IA em Opções > IA.",
+        "message": "Escolha um modelo para este serviço de IA em Configurações > IA.",
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
@@ -5500,7 +5516,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
-        "message": "Para permitir que o Perguntar à IA leia páginas, ative Ler conteúdo da página em Opções, IA.",
+        "message": "Para permitir que o Perguntar à IA leia páginas, ative Ler conteúdo da página em Configurações > IA.",
         "description": "Ask AI: hint when page reading is off"
     },
     "askAI_thinking": {
@@ -5816,7 +5832,7 @@
         "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
-        "message": "Opções",
+        "message": "Configurações",
         "description": "Name of the options page, used in its tab title"
     },
     "command_quickSave": {
@@ -6493,6 +6509,10 @@
         "message": "Você pode continuar usando o Chrome durante o download.",
         "description": "Options > AI built-in AI service: note under the download progress"
     },
+    "qaOptions_builtinDownloadBackground": {
+        "message": "O download continua mesmo se você fechar esta página.",
+        "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
+    },
     "builtinAi_statusDownloadable": {
         "message": "O modelo ainda não está neste computador",
         "description": "Options > AI built-in AI service: the model can be downloaded but is not on this computer yet; followed by the size, requirements, and a Download button"
@@ -6517,9 +6537,17 @@
         "message": "Ela só sugere pastas. $1 usam outro serviço de IA quando você adiciona um.",
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
+    "qaOptions_builtinScopeOther": {
+        "message": "Ela só sugere pastas. $1 usam seus outros serviços de IA.",
+        "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
+    },
     "builtinAi_languages": {
         "message": "Funciona melhor com $1. Em outros idiomas, as sugestões podem vir de uma simples correspondência de palavras.",
         "description": "Options > AI built-in AI service: language note. $1 is a list of language names (English, Japanese, ...)"
+    },
+    "qaOptions_builtinLanguageNote": {
+        "message": "A IA integrada só lê estes idiomas: $1. Para páginas em $2, as sugestões podem vir de uma simples correspondência de palavras.",
+        "description": "Settings > AI: note about Chrome's built-in AI, shown only when the extension's language is one the model does not understand. $1 is a list of language names (English, Japanese, ...), $2 the name of the extension's language (such as Korean)"
     },
     "builtinAi_privacy": {
         "message": "Nada sai do seu computador: títulos de páginas, endereços e nomes de pastas ficam nele.",
@@ -6532,6 +6560,18 @@
     "builtinAi_errorNoPick": {
         "message": "A IA integrada não escolheu nenhuma pasta.",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
+    },
+    "qaPopup_hintSaveTo": {
+        "message": "Salvar em $1",
+        "description": "Popup and side panel footer while typing in the search box with folders matched: Enter saves the current page into the first matching folder; $1 is that folder's name"
+    },
+    "qaPopup_alreadySavedIn": {
+        "message": "Já salva em $1",
+        "description": "Line under 'Page to save' in the popup and side panel when the current page is already bookmarked; $1 is the folder path, or a list of paths when it is saved in several folders"
+    },
+    "qaPopup_secondCopyNote": {
+        "message": "Esta é mais uma cópia: a página também está em “$1”.",
+        "description": "Added to the toast after saving the current page from the popup or side panel when the page was already bookmarked in another folder; $1 is that other folder's name"
     },
     "qaManager_editMany": {
         "message": "Editar $1 itens",

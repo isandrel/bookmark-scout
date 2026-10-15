@@ -404,7 +404,10 @@ const OptionsPage: React.FC = () => {
       case 'aiServices':
         if (!matchesOnly) return <AIServicesPanel />;
         return aiPanelMatches > 0 ? (
-          <AIServicesPanel showAdvanced={aiPanelFieldMatches.some((field) => field.advanced)} />
+          <AIServicesPanel
+            showAdvanced={aiPanelFieldMatches.some((field) => field.advanced)}
+            searchMatches={aiPanelFieldMatches}
+          />
         ) : null;
       case 'aiActivity':
         return matchesOnly ? null : <AIActivityPanel />;

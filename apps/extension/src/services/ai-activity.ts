@@ -210,3 +210,22 @@ export async function recordActionActivity(entry: {
     // Logging never breaks the action.
   }
 }
+
+/** What an entry without an HTTP status shows in its status badge, by the method it logged. */
+const AI_ACTIVITY_METHOD_LABELS: Readonly<Record<string, MessageKey>> = {
+  [AI_ACTIVITY_ON_DEVICE_METHOD]: 'qaOptions_activityOnDevice',
+  [AI_ACTIVITY_ACTION_METHOD]: 'qaOptions_activityAction',
+};
+
+/**
+ * The status badge of an activity entry: "Failed", the HTTP status, or for a call without one
+ * (the built-in model, a bookmark action) what kind of call it was; undefined shows no badge.
+ */
+export function aiActivityStatusLabel(
+  entry: Pick<AIActivityEntry, 'error' | 'status' | 'method'>,
+): string | undefined {
+  if (entry.error) return t('aiActivity_failed');
+  if (entry.status !== undefined) return String(entry.status);
+  const key = AI_ACTIVITY_METHOD_LABELS[entry.method];
+  return key ? t(key) : undefined;
+}

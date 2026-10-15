@@ -49,7 +49,7 @@ In Chrome kann Bookmark Scout die **integrierte KI von Chrome** nutzen, ein klei
 Klicken Sie im Tab **KI** unter **Kostenlos auf diesem Computer**, oben im Kasten **KI ist optional**, auf **Integrierte KI verwenden**. **Integrierte KI (auf diesem Computer)** steht auch unter **Dienst hinzufügen** an erster Stelle. Beides erscheint nur, wo Chrome das Modell ausführen kann.
 </Step>
 <Step>
-Klicken Sie auf **Modell herunterladen**. Chrome lädt es einmal herunter: etwa 4 GB auf einem Computer mit Grafikkarte, 2,7 GB ohne. Sobald der Dienst **Bereit** meldet, ist das Modell auf diesem Computer.
+Klicken Sie auf **Modell herunterladen**. Chrome lädt es einmal herunter: etwa 4 GB auf einem Computer mit Grafikkarte, 2,7 GB ohne. Sobald der Dienst **Bereit** meldet, ist das Modell auf diesem Computer. Wenn Sie die Einstellungen während des Downloads schließen, lädt Chrome im Hintergrund weiter.
 </Step>
 <Step>
 Aktivieren Sie **KI-Funktionen**, falls sie aus sind: Das Hinzufügen des Dienstes schaltet KI nicht ein.
@@ -57,12 +57,12 @@ Aktivieren Sie **KI-Funktionen**, falls sie aus sind: Das Hinzufügen des Dienst
 </Steps>
 
 - Chrome benötigt 22 GB freien Speicherplatz und eine Grafikkarte mit mehr als 4 GB Speicher oder 16 GB Arbeitsspeicher und 4 Prozessorkerne. Auf einem Computer, der das Modell nicht ausführen kann, oder wenn Ihre Organisation es deaktiviert hat, zeigt der Dienst das an. Firefox hat keine integrierte KI.
-- Sie schlägt nur Ordner vor: im Pop-up, in der Seitenleiste und für das Tastenkürzel für KI-Schnellspeichern. KI fragen, Automatische Tags, Inhaltszusammenfassung und KI-Ordnerneuordnung nutzen einen anderen Dienst, sobald Sie einen hinzufügen.
+- Sie schlägt nur Ordner vor: im Pop-up, in der Seitenleiste und für das Tastenkürzel für KI-Schnellspeichern. KI fragen, Automatische Tags, Inhaltszusammenfassung und KI-Ordnerneuordnung nutzen Ihren anderen aktivierten Dienst oder einen, den Sie hinzufügen.
 - Sie liest Titel und Adresse der Seite, die Namen der am besten passenden Ordner (eine kurze Liste, die auf Ihrem Gerät ausgewählt wird) und mit aktiviertem **Seiteninhalt lesen** den Anfang des Seitentextes. Sie antwortet nur mit Ordnern aus dieser Liste.
 - Sie funktioniert am besten mit Englisch, Japanisch, Spanisch, Deutsch und Französisch. Wenn das Modell scheitert oder zu lange braucht, kommen die Vorschläge stattdessen aus einem einfachen Wortabgleich auf Ihrem Gerät.
 - Das Pop-up und das Tastenkürzel für KI-Schnellspeichern starten den Download nie: Bis das Modell bereit ist, zeigt das Pop-up statt der KI-Schaltflächen **Laden Sie das Modell der integrierten KI in den Einstellungen herunter**, und das Schnellspeichern nutzt die unten beschriebene beste Übereinstimmung.
 - KI-Schnellspeichern hält das Modell nach einem Speichern 5 Minuten lang bereit, damit das nächste schneller geht. Ist das Modell nicht bereit, scheitert es oder braucht es zu lange, wird die Seite im am besten passenden Ordner gespeichert, wie es die Einstellung **Beste Übereinstimmung** tut.
-- Mit aktiviertem **Anfragen aufzeichnen** erscheint jeder Aufruf unter **KI-Aktivität** als `ON-DEVICE`.
+- Mit aktiviertem **Anfragen aufzeichnen** erscheint jeder Aufruf unter **KI-Aktivität** mit der Markierung **Auf dem Gerät**.
 
 ## Mehr als einen Dienst verwenden [#use-more-than-one-service]
 
@@ -71,7 +71,7 @@ Speichern Sie beliebig viele Dienste, auch mehrere desselben Anbieters, zum Beis
 - Alle KI-Tools verwenden den **Standard**-Dienst. Wählen Sie **Als Standard festlegen** im Menü eines Dienstes, oder wählen Sie, wenn mehr als ein Dienst aktiviert ist, über den Pfeil neben der Funkel-Schaltfläche im Pop-up einen aus.
 - **Integrierte KI** schlägt nur Ordner vor: Solange sie der Standard ist, nutzen die anderen KI-Tools den ersten anderen aktivierten Dienst.
 - Deaktivieren Sie einen Dienst mit seinem Schalter, um ihn im Pop-up auszublenden, ohne ihn zu löschen.
-- **Duplizieren** kopiert einen Dienst einschließlich Schlüssel. **Löschen** entfernt ihn samt Schlüssel von diesem Gerät.
+- **Duplizieren** kopiert einen Dienst einschließlich Schlüssel. **Löschen** entfernt ihn samt Schlüssel von diesem Gerät. Die integrierte KI lässt sich nur einmal hinzufügen und hat daher kein **Duplizieren**.
 - **Basis-URL**, **Zusätzliche Header (JSON)** und anbieterspezifische Felder wie die Organisation bei OpenAI befinden sich unter **Weitere Einstellungen**.
 
 ## Anbieter [#providers]

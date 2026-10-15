@@ -1,7 +1,8 @@
 import type { Page } from '@playwright/test';
+import { readConfigToml } from '../config-files';
 import { type ExtensionBrowser, expect, test } from './fixtures';
 import { openPopup } from './popup-helpers';
-import { readStored, STORAGE_ITEMS } from './storage';
+import { readStored, STORAGE_ITEMS, setSettings } from './storage';
 
 /**
  * Setting up the quick save shortcuts in Chrome and Edge. A test cannot clear a browser shortcut,
@@ -97,6 +98,45 @@ test('with every command bound, the popup names the working keys and offers the 
   ]);
   await expect(shortcutsPage).toHaveURL(shortcutPageUrl(extensionBrowser));
 });
+
+const { popup } = readConfigToml('settings/appearance.toml') as {
+  popup: { width: { min: number } };
+};
+
+for (const language of ['ja', 'de'] as const) {
+  for (const width of [popup.width.min, 400]) {
+    test(`[${language}, ${width}px] the quick save tip always shows its keys whole`, async ({
+      extensionId,
+      extensionWorker,
+      page,
+    }) => {
+      await setSettings(extensionWorker, { language, popupWidth: width });
+      await page.setViewportSize({ width, height: 600 });
+      // openPopup finds the search box by its English name.
+      await page.goto(`chrome-extension://${extensionId}/popup.html`);
+      await expect(notice(page)).toHaveAttribute('data-notice', 'quick-save-bookmark-key');
+      const keys = notice(page).locator('[data-slot="notice-keys"]');
+      await expect(keys).toContainText(quickSaveKeys);
+      const link = notice(page).getByRole('button').first();
+      await expect(link).toContainText(bookmarkKeys);
+      // The words before the keys may be cut short; the keys and the link never are.
+      const boxes = await notice(page).evaluate((element) => {
+        const box = (target: Element | null) => target?.getBoundingClientRect().toJSON();
+        const keysSpan = element.querySelector('[data-slot="notice-keys"]');
+        return {
+          notice: box(element),
+          message: box(keysSpan?.parentElement ?? null),
+          keys: box(keysSpan),
+          link: box(element.querySelector('button')),
+        };
+      });
+      expect(boxes.keys.right).toBeLessThanOrEqual(boxes.message.right + 0.5);
+      expect(boxes.keys.right).toBeLessThanOrEqual(boxes.notice.right);
+      expect(boxes.link.right).toBeLessThanOrEqual(boxes.notice.right);
+      expect(boxes.link.left).toBeGreaterThanOrEqual(boxes.notice.left);
+    });
+  }
+}
 
 test('the bookmark key offer gives way in a short popup, and a missing key does not', async ({
   extensionId,
