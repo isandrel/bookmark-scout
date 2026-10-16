@@ -71,10 +71,6 @@
         "message": "在输入框中输入内容，或有对话框、菜单打开时，快捷键会暂停。",
         "description": "Keyboard shortcuts dialog description"
     },
-    "shortcuts_focusFilter": {
-        "message": "聚焦到标题筛选框",
-        "description": "Keyboard shortcut description: / focuses the title filter"
-    },
     "shortcuts_parentFolder": {
         "message": "转到上级文件夹",
         "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
@@ -479,10 +475,6 @@
         "message": "没有与搜索内容匹配的设置。",
         "description": "Empty settings search result"
     },
-    "toast_preferencesUpdated": {
-        "message": "偏好设置已更新。",
-        "description": "Toast description for settings save success"
-    },
     "toast_errorSavingSettings": {
         "message": "保存设置时出错",
         "description": "Toast title for settings save error"
@@ -527,10 +519,6 @@
         "message": "已导入设置",
         "description": "Toast title for settings import success"
     },
-    "toast_settingsImportedDescription": {
-        "message": "已从文件恢复设置。",
-        "description": "Toast description for settings import success"
-    },
     "toast_importFailed": {
         "message": "导入失败",
         "description": "Toast title for settings import error"
@@ -574,10 +562,6 @@
     "action_saving": {
         "message": "正在保存…",
         "description": "Saving state button label"
-    },
-    "action_saveChanges": {
-        "message": "保存更改",
-        "description": "Save changes button label"
     },
     "settings_appearance": {
         "message": "外观",
@@ -945,10 +929,6 @@
         "message": "将当前网页保存到 $1",
         "description": "Accessible name of a folder match row; $1 is the folder path"
     },
-    "state_noRecentFolders": {
-        "message": "没有最近使用的文件夹",
-        "description": "Empty state for recent folders"
-    },
     "settings_recentFoldersEnabled": {
         "message": "最近文件夹",
         "description": "Recent folders enabled setting label"
@@ -964,14 +944,6 @@
     "toast_pleaseOpenWebpage": {
         "message": "请先打开一个网页",
         "description": "Toast description when tab info unavailable"
-    },
-    "toast_apiKeyRequired": {
-        "message": "需要 API 密钥",
-        "description": "Toast title when API key missing"
-    },
-    "toast_apiKeyRequiredDesc": {
-        "message": "请在“设置 → AI”中设置 API 密钥",
-        "description": "Toast description when API key missing"
     },
     "ai_recommendationFailed": {
         "message": "AI 推荐失败",
@@ -1061,18 +1033,6 @@
         "message": "新书签",
         "description": "Default name for new bookmark"
     },
-    "toast_bookmarkAddedToFolder": {
-        "message": "已将“$1”添加到“$2”",
-        "description": "Toast description for bookmark added"
-    },
-    "toast_folderAddedIn": {
-        "message": "已在“$2”中新建文件夹“$1”",
-        "description": "Toast description for folder created"
-    },
-    "toast_itemRemoved": {
-        "message": "已移除“$1”",
-        "description": "Toast description for item deleted"
-    },
     "popup_untitled": {
         "message": "无标题",
         "description": "Default name for untitled items"
@@ -1141,10 +1101,6 @@
         "message": "重置视图",
         "description": "Reset bookmark table view button label"
     },
-    "table_filterTitles": {
-        "message": "筛选标题…",
-        "description": "Bookmark table title filter placeholder"
-    },
     "table_filterUrls": {
         "message": "筛选网址…",
         "description": "Bookmark table URL filter placeholder"
@@ -1164,10 +1120,6 @@
     "table_noResults": {
         "message": "没有结果。",
         "description": "Empty bookmark table message"
-    },
-    "table_rowsSelected": {
-        "message": "已选择 $1 行，共 $2 行。",
-        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
     },
     "table_rowsPerPage": {
         "message": "每页行数",
@@ -1689,10 +1641,6 @@
         "message": "格式",
         "description": "Placeholder for the export format selector"
     },
-    "tools_exporting": {
-        "message": "正在导出…",
-        "description": "Export button label while exporting"
-    },
     "tools_importing": {
         "message": "正在导入…",
         "description": "Import button label while importing"
@@ -1735,16 +1683,6 @@
         "message": "导入完成",
         "description": "Toast title for successful bookmark import"
     },
-    "toast_importSuccessDesc": {
-        "message": "已成功导入 $count$ 项",
-        "description": "Toast description for successful bookmark import",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "12"
-            }
-        }
-    },
     "toast_reorganizeSuccess": {
         "message": "重组完成",
         "description": "Toast title after applying an AI reorganization"
@@ -1784,10 +1722,6 @@
     "toast_changesUndoneDesc": {
         "message": "已恢复：$1。无法恢复：$2。",
         "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
-    },
-    "error_importFailed": {
-        "message": "导入失败：$1",
-        "description": "Error message for failed bookmark import"
     },
     "error_unsupportedFileFormat": {
         "message": "不支持的文件格式",
@@ -1944,18 +1878,6 @@
     "contextMenu_bookmarksBar": {
         "message": "书签栏",
         "description": "Bookmarks bar folder name"
-    },
-    "toast_linkSaved": {
-        "message": "已保存链接",
-        "description": "Toast title when link saved via context menu"
-    },
-    "toast_linkSavedDesc": {
-        "message": "已将“$1”添加到“$2”",
-        "description": "Toast description for link saved"
-    },
-    "toast_linkSaveFailed": {
-        "message": "无法保存链接",
-        "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
         "message": "右键菜单",
@@ -3145,10 +3067,6 @@
         "message": "尚未配置 API 密钥。请在“设置 > AI”中添加。",
         "description": "AI API key missing error"
     },
-    "contextMenu_untitled": {
-        "message": "无标题",
-        "description": "Fallback bookmark title from context menu"
-    },
     "contextMenu_recentFolders": {
         "message": "最近文件夹",
         "description": "Context menu recent folders submenu"
@@ -3997,41 +3915,9 @@
         "message": "此文件中未找到书签或文件夹。未导入任何内容。",
         "description": "Import error when a file contains no bookmarks or folders"
     },
-    "toast_importResultDesc": {
-        "message": "已导入书签：$bookmarks$。已导入文件夹：$folders$。",
-        "description": "Import success counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            }
-        }
-    },
     "toast_importPartial": {
         "message": "部分项目未导入",
         "description": "Import partial result title"
-    },
-    "toast_importPartialDesc": {
-        "message": "已导入书签：$bookmarks$。已导入文件夹：$folders$。未导入：$failed$。",
-        "description": "Import partial result counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            },
-            "failed": {
-                "content": "$3",
-                "example": "1"
-            }
-        }
     },
     "tools_privacySensitiveFragmentParam": {
         "message": "网址片段中的敏感值：$param$",

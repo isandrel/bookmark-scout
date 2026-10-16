@@ -34,6 +34,27 @@ function sourceFiles(dir: string): string[] {
   });
 }
 
+function configFiles(dir: string): string[] {
+  return readdirSync(dir).flatMap((name) => {
+    const full = path.join(dir, name);
+    if (statSync(full).isDirectory()) return configFiles(full);
+    return /\.(toml|json)$/.test(name) ? [full] : [];
+  });
+}
+
+/**
+ * Keys the code builds from a prefix and a value instead of naming them: `settings_<stem>` and
+ * `settings_<stem>Desc` (`fieldLabels` and setting groups in `settings-schema.ts`), and one message
+ * per status or severity in the Tools results. Such a key counts as used while its suffix appears
+ * as a quoted string in the source; add a prefix here when code builds keys a new way.
+ */
+const DYNAMIC_KEY_PREFIXES = [
+  'settings_',
+  'tools_deadLinkStatus_',
+  'tools_siteIconStatus_',
+  'tools_privacySeverity_',
+] as const;
+
 const byLocale = Object.fromEntries(locales.map((locale) => [locale, readLocale(locale)]));
 const translated = locales.filter((locale) => locale !== FALLBACK_LOCALE);
 
@@ -118,6 +139,34 @@ describe('extension locale messages', () => {
         .map((key) => `${path.relative(appRoot, file)}: ${key}`);
     });
     expect(missing).toEqual([]);
+  });
+
+  it('every en key is used by the extension (every locale ships each key)', () => {
+    const text = [
+      ...sourceFiles(path.join(appRoot, 'src')),
+      ...configFiles(path.join(appRoot, 'config')),
+      ...readdirSync(appRoot)
+        .filter((name) => name.endsWith('.ts'))
+        .map((name) => path.join(appRoot, name)),
+    ]
+      .map((file) => readFileSync(file, 'utf8'))
+      .join('\n');
+    // One pass over the source: every identifier-like word (and each `__MSG_<key>__` in the
+    // manifest), and every word written as a quoted string.
+    const words = new Set(text.match(/[A-Za-z0-9_]+/g));
+    for (const [, key] of text.matchAll(/__MSG_([A-Za-z0-9_]+?)__/g)) words.add(key);
+    const quotedWords = new Set(
+      [...text.matchAll(/(?=(['"])([A-Za-z0-9_]+)\1)/g)].map((match) => match[2]),
+    );
+    const used = (key: string): boolean => {
+      const base = key.replace(/_(zero|one|two|few|many)$/, '');
+      if (words.has(base)) return true;
+      const prefix = DYNAMIC_KEY_PREFIXES.find((candidate) => base.startsWith(candidate));
+      if (prefix === undefined) return false;
+      if (prefix === 'settings_' && base.endsWith('Desc') && used(base.slice(0, -4))) return true;
+      return quotedWords.has(base.slice(prefix.length));
+    };
+    expect(Object.keys(byLocale.en.messages).filter((key) => !used(key))).toEqual([]);
   });
 });
 

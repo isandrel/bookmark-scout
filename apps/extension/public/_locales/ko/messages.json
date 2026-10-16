@@ -71,10 +71,6 @@
         "message": "입력란에 입력하는 동안이나 대화상자 또는 메뉴가 열려 있는 동안에는 단축키가 동작하지 않습니다.",
         "description": "Keyboard shortcuts dialog description"
     },
-    "shortcuts_focusFilter": {
-        "message": "제목 필터에 포커스",
-        "description": "Keyboard shortcut description: / focuses the title filter"
-    },
     "shortcuts_parentFolder": {
         "message": "상위 폴더로 이동",
         "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
@@ -479,10 +475,6 @@
         "message": "검색과 일치하는 설정이 없습니다",
         "description": "Empty settings search result"
     },
-    "toast_preferencesUpdated": {
-        "message": "환경 설정이 업데이트되었습니다",
-        "description": "Toast description for settings save success"
-    },
     "toast_errorSavingSettings": {
         "message": "설정 저장 오류",
         "description": "Toast title for settings save error"
@@ -527,10 +519,6 @@
         "message": "설정을 가져왔습니다",
         "description": "Toast title for settings import success"
     },
-    "toast_settingsImportedDescription": {
-        "message": "파일에서 설정을 복원했습니다",
-        "description": "Toast description for settings import success"
-    },
     "toast_importFailed": {
         "message": "가져오기 실패",
         "description": "Toast title for settings import error"
@@ -574,10 +562,6 @@
     "action_saving": {
         "message": "저장 중...",
         "description": "Saving state button label"
-    },
-    "action_saveChanges": {
-        "message": "변경 사항 저장",
-        "description": "Save changes button label"
     },
     "settings_appearance": {
         "message": "외관",
@@ -945,10 +929,6 @@
         "message": "현재 페이지를 $1에 저장",
         "description": "Accessible name of a folder match row; $1 is the folder path"
     },
-    "state_noRecentFolders": {
-        "message": "최근 폴더 없음",
-        "description": "Empty state for recent folders"
-    },
     "settings_recentFoldersEnabled": {
         "message": "최근 폴더",
         "description": "Recent folders enabled setting label"
@@ -964,14 +944,6 @@
     "toast_pleaseOpenWebpage": {
         "message": "먼저 웹페이지를 열어주세요",
         "description": "Toast description when tab info unavailable"
-    },
-    "toast_apiKeyRequired": {
-        "message": "API 키 필요",
-        "description": "Toast title when API key missing"
-    },
-    "toast_apiKeyRequiredDesc": {
-        "message": "설정 → AI에서 API 키를 설정해주세요",
-        "description": "Toast description when API key missing"
     },
     "ai_recommendationFailed": {
         "message": "AI 추천 실패",
@@ -1061,18 +1033,6 @@
         "message": "새 북마크",
         "description": "Default name for new bookmark"
     },
-    "toast_bookmarkAddedToFolder": {
-        "message": "\"$1\"을(를) \"$2\"에 추가했습니다",
-        "description": "Toast description for bookmark added"
-    },
-    "toast_folderAddedIn": {
-        "message": "새 폴더 \"$1\"을(를) \"$2\"에 추가했습니다",
-        "description": "Toast description for folder created"
-    },
-    "toast_itemRemoved": {
-        "message": "\"$1\"이(가) 삭제되었습니다",
-        "description": "Toast description for item deleted"
-    },
     "popup_untitled": {
         "message": "제목 없음",
         "description": "Default name for untitled items"
@@ -1141,10 +1101,6 @@
         "message": "보기 초기화",
         "description": "Reset bookmark table view button label"
     },
-    "table_filterTitles": {
-        "message": "제목 필터...",
-        "description": "Bookmark table title filter placeholder"
-    },
     "table_filterUrls": {
         "message": "URL 필터...",
         "description": "Bookmark table URL filter placeholder"
@@ -1164,10 +1120,6 @@
     "table_noResults": {
         "message": "결과가 없습니다.",
         "description": "Empty bookmark table message"
-    },
-    "table_rowsSelected": {
-        "message": "$2개 행 중 $1개 선택됨",
-        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
     },
     "table_rowsPerPage": {
         "message": "페이지당 행 수",
@@ -1689,10 +1641,6 @@
         "message": "형식",
         "description": "Placeholder for the export format selector"
     },
-    "tools_exporting": {
-        "message": "내보내는 중...",
-        "description": "Export button label while exporting"
-    },
     "tools_importing": {
         "message": "가져오는 중...",
         "description": "Import button label while importing"
@@ -1735,16 +1683,6 @@
         "message": "가져오기 완료",
         "description": "Toast title for successful bookmark import"
     },
-    "toast_importSuccessDesc": {
-        "message": "$count$개의 항목을 가져왔습니다",
-        "description": "Toast description for successful bookmark import",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "12"
-            }
-        }
-    },
     "toast_reorganizeSuccess": {
         "message": "재구성 완료",
         "description": "Toast title after applying an AI reorganization"
@@ -1784,10 +1722,6 @@
     "toast_changesUndoneDesc": {
         "message": "되돌림: $1개. 되돌리지 못함: $2개.",
         "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
-    },
-    "error_importFailed": {
-        "message": "가져오기 실패: $1",
-        "description": "Error message for failed bookmark import"
     },
     "error_unsupportedFileFormat": {
         "message": "지원하지 않는 파일 형식입니다",
@@ -1944,18 +1878,6 @@
     "contextMenu_bookmarksBar": {
         "message": "북마크바",
         "description": "Bookmarks bar folder name"
-    },
-    "toast_linkSaved": {
-        "message": "링크를 저장했습니다",
-        "description": "Toast title when link saved via context menu"
-    },
-    "toast_linkSavedDesc": {
-        "message": "\"$1\" 항목을 \"$2\"에 추가했습니다",
-        "description": "Toast description for link saved"
-    },
-    "toast_linkSaveFailed": {
-        "message": "링크를 저장하지 못했습니다",
-        "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
         "message": "마우스 오른쪽 버튼 메뉴",
@@ -3145,10 +3067,6 @@
         "message": "API 키가 설정되지 않았습니다. 설정 > AI에서 추가하세요.",
         "description": "AI API key missing error"
     },
-    "contextMenu_untitled": {
-        "message": "제목 없음",
-        "description": "Fallback bookmark title from context menu"
-    },
     "contextMenu_recentFolders": {
         "message": "최근 폴더",
         "description": "Context menu recent folders submenu"
@@ -4117,41 +4035,9 @@
         "message": "이 파일에서 북마크나 폴더를 찾을 수 없습니다. 아무것도 가져오지 않았습니다.",
         "description": "Import error when a file contains no bookmarks or folders"
     },
-    "toast_importResultDesc": {
-        "message": "가져온 북마크: $bookmarks$개. 폴더: $folders$개.",
-        "description": "Import success counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            }
-        }
-    },
     "toast_importPartial": {
         "message": "일부 항목을 가져오지 못했습니다",
         "description": "Import partial result title"
-    },
-    "toast_importPartialDesc": {
-        "message": "가져온 북마크: $bookmarks$개. 폴더: $folders$개. 가져오지 못한 항목: $failed$개.",
-        "description": "Import partial result counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            },
-            "failed": {
-                "content": "$3",
-                "example": "1"
-            }
-        }
     },
     "tools_privacySensitiveFragmentParam": {
         "message": "URL 프래그먼트의 민감한 값: $param$",

@@ -71,10 +71,6 @@
         "message": "在欄位中輸入文字，或對話方塊、選單開啟時，快速鍵會暫停作用。",
         "description": "Keyboard shortcuts dialog description"
     },
-    "shortcuts_focusFilter": {
-        "message": "將焦點移至標題篩選器",
-        "description": "Keyboard shortcut description: / focuses the title filter"
-    },
     "shortcuts_parentFolder": {
         "message": "前往上層資料夾",
         "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
@@ -479,10 +475,6 @@
         "message": "沒有符合搜尋條件的設定。",
         "description": "Empty settings search result"
     },
-    "toast_preferencesUpdated": {
-        "message": "偏好設定已更新。",
-        "description": "Toast description for settings save success"
-    },
     "toast_errorSavingSettings": {
         "message": "儲存設定時發生錯誤",
         "description": "Toast title for settings save error"
@@ -527,10 +519,6 @@
         "message": "已匯入設定",
         "description": "Toast title for settings import success"
     },
-    "toast_settingsImportedDescription": {
-        "message": "已從檔案還原設定。",
-        "description": "Toast description for settings import success"
-    },
     "toast_importFailed": {
         "message": "匯入失敗",
         "description": "Toast title for settings import error"
@@ -574,10 +562,6 @@
     "action_saving": {
         "message": "正在儲存...",
         "description": "Saving state button label"
-    },
-    "action_saveChanges": {
-        "message": "儲存變更",
-        "description": "Save changes button label"
     },
     "settings_appearance": {
         "message": "外觀",
@@ -945,10 +929,6 @@
         "message": "將目前網頁儲存到 $1",
         "description": "Accessible name of a folder match row; $1 is the folder path"
     },
-    "state_noRecentFolders": {
-        "message": "沒有最近使用的資料夾",
-        "description": "Empty state for recent folders"
-    },
     "settings_recentFoldersEnabled": {
         "message": "最近使用的資料夾",
         "description": "Recent folders enabled setting label"
@@ -964,14 +944,6 @@
     "toast_pleaseOpenWebpage": {
         "message": "請先開啟網頁",
         "description": "Toast description when tab info unavailable"
-    },
-    "toast_apiKeyRequired": {
-        "message": "需要 API 金鑰",
-        "description": "Toast title when API key missing"
-    },
-    "toast_apiKeyRequiredDesc": {
-        "message": "請在「設定」→「AI」中設定 API 金鑰",
-        "description": "Toast description when API key missing"
     },
     "ai_recommendationFailed": {
         "message": "AI 推薦失敗",
@@ -1061,18 +1033,6 @@
         "message": "新書籤",
         "description": "Default name for new bookmark"
     },
-    "toast_bookmarkAddedToFolder": {
-        "message": "已將「$1」新增至「$2」",
-        "description": "Toast description for bookmark added"
-    },
-    "toast_folderAddedIn": {
-        "message": "已在「$2」中新增資料夾「$1」",
-        "description": "Toast description for folder created"
-    },
-    "toast_itemRemoved": {
-        "message": "已移除「$1」",
-        "description": "Toast description for item deleted"
-    },
     "popup_untitled": {
         "message": "未命名",
         "description": "Default name for untitled items"
@@ -1141,10 +1101,6 @@
         "message": "重設檢視",
         "description": "Reset bookmark table view button label"
     },
-    "table_filterTitles": {
-        "message": "篩選標題...",
-        "description": "Bookmark table title filter placeholder"
-    },
     "table_filterUrls": {
         "message": "篩選網址...",
         "description": "Bookmark table URL filter placeholder"
@@ -1164,10 +1120,6 @@
     "table_noResults": {
         "message": "沒有結果。",
         "description": "Empty bookmark table message"
-    },
-    "table_rowsSelected": {
-        "message": "已選取 $1 列 (共 $2 列)。",
-        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
     },
     "table_rowsPerPage": {
         "message": "每頁列數",
@@ -1689,10 +1641,6 @@
         "message": "格式",
         "description": "Placeholder for the export format selector"
     },
-    "tools_exporting": {
-        "message": "正在匯出...",
-        "description": "Export button label while exporting"
-    },
     "tools_importing": {
         "message": "正在匯入...",
         "description": "Import button label while importing"
@@ -1735,16 +1683,6 @@
         "message": "匯入完成",
         "description": "Toast title for successful bookmark import"
     },
-    "toast_importSuccessDesc": {
-        "message": "已成功匯入 $count$ 個項目",
-        "description": "Toast description for successful bookmark import",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "12"
-            }
-        }
-    },
     "toast_reorganizeSuccess": {
         "message": "重組完成",
         "description": "Toast title after applying an AI reorganization"
@@ -1784,10 +1722,6 @@
     "toast_changesUndoneDesc": {
         "message": "已還原：$1。無法還原：$2。",
         "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
-    },
-    "error_importFailed": {
-        "message": "匯入失敗：$1",
-        "description": "Error message for failed bookmark import"
     },
     "error_unsupportedFileFormat": {
         "message": "不支援的檔案格式",
@@ -1944,18 +1878,6 @@
     "contextMenu_bookmarksBar": {
         "message": "書籤列",
         "description": "Bookmarks bar folder name"
-    },
-    "toast_linkSaved": {
-        "message": "已儲存連結",
-        "description": "Toast title when link saved via context menu"
-    },
-    "toast_linkSavedDesc": {
-        "message": "已將「$1」新增至「$2」",
-        "description": "Toast description for link saved"
-    },
-    "toast_linkSaveFailed": {
-        "message": "無法儲存連結",
-        "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
         "message": "右鍵選單",
@@ -3145,10 +3067,6 @@
         "message": "尚未設定 API 金鑰。請在「設定 > AI」中新增。",
         "description": "AI API key missing error"
     },
-    "contextMenu_untitled": {
-        "message": "未命名",
-        "description": "Fallback bookmark title from context menu"
-    },
     "contextMenu_recentFolders": {
         "message": "最近使用的資料夾",
         "description": "Context menu recent folders submenu"
@@ -3997,41 +3915,9 @@
         "message": "這個檔案中找不到書籤或資料夾，未匯入任何內容。",
         "description": "Import error when a file contains no bookmarks or folders"
     },
-    "toast_importResultDesc": {
-        "message": "已匯入書籤：$bookmarks$。已匯入資料夾：$folders$。",
-        "description": "Import success counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            }
-        }
-    },
     "toast_importPartial": {
         "message": "部分項目未匯入",
         "description": "Import partial result title"
-    },
-    "toast_importPartialDesc": {
-        "message": "已匯入書籤：$bookmarks$。已匯入資料夾：$folders$。未匯入：$failed$。",
-        "description": "Import partial result counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            },
-            "failed": {
-                "content": "$3",
-                "example": "1"
-            }
-        }
     },
     "tools_privacySensitiveFragmentParam": {
         "message": "網址片段中的敏感值：$param$",

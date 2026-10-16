@@ -1,18 +1,28 @@
+import { Combobox } from '@base-ui/react/combobox';
 import type { Column, RowData } from '@tanstack/react-table';
-import { Check, PlusCircle } from 'lucide-react';
+import { Check, PlusCircle, Search } from 'lucide-react';
 import type * as React from 'react';
+import { Fragment } from 'react';
+
+type FacetOption = {
+  label: string;
+  value: string;
+  icon?: React.ComponentType<{ className?: string }>;
+};
 
 interface DataTableFacetedFilterProps<TData extends RowData, TValue> {
   column?: Column<BookmarkTableFeatures, TData, TValue>;
   title?: string;
-  options: {
-    label: string;
-    value: string;
-    icon?: React.ComponentType<{ className?: string }>;
-  }[];
+  options: FacetOption[];
   /** Item counts per option value, computed over the rows the filter applies to. */
   counts?: ReadonlyMap<string, number>;
 }
+
+/** The last option while something is selected: choosing it clears the filter. */
+const CLEAR_VALUE = '\u0000clear';
+
+const ITEM_CLASS =
+  'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0';
 
 export function DataTableFacetedFilter<TData extends RowData, TValue>({
   column,
@@ -22,6 +32,11 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const filterValue = column?.getFilterValue();
   const selectedValues = new Set<string>(Array.isArray(filterValue) ? filterValue : []);
+  const selectedOptions = options.filter((option) => selectedValues.has(option.value));
+  const items =
+    selectedValues.size > 0
+      ? [...options, { label: t('table_filterClear'), value: CLEAR_VALUE }]
+      : options;
 
   return (
     <div className="grid gap-2">
@@ -43,82 +58,87 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
                     {t('table_filterSelectedCount', String(selectedValues.size))}
                   </Badge>
                 ) : (
-                  options
-                    .filter((option) => selectedValues.has(option.value))
-                    .map((option) => (
-                      <Badge
-                        variant="secondary"
-                        key={option.value}
-                        className="max-w-48 rounded-sm px-1 font-normal"
-                      >
-                        <PathLabel path={option.label} />
-                      </Badge>
-                    ))
+                  selectedOptions.map((option) => (
+                    <Badge
+                      variant="secondary"
+                      key={option.value}
+                      className="max-w-48 rounded-sm px-1 font-normal"
+                    >
+                      <PathLabel path={option.label} />
+                    </Badge>
+                  ))
                 )}
               </div>
             </>
           )}
         </PopoverTrigger>
         <PopoverContent className="w-[280px] p-0" align="start">
-          <Command>
-            <CommandInput placeholder={title} />
-            <CommandList>
-              <CommandEmpty>{t('table_filterNoOptions')}</CommandEmpty>
-              <CommandGroup>
-                {options.map((option) => {
-                  const isSelected = selectedValues.has(option.value);
-                  return (
-                    <CommandItem
-                      key={option.value}
-                      value={`${option.label} ${option.value}`}
-                      onSelect={() => {
-                        if (isSelected) {
-                          selectedValues.delete(option.value);
-                        } else {
-                          selectedValues.add(option.value);
-                        }
-                        const filterValues = Array.from(selectedValues);
-                        column?.setFilterValue(filterValues.length ? filterValues : undefined);
-                      }}
+          {/* Inline: the list lives in this popover, which owns opening, closing, and Escape. */}
+          <Combobox.Root
+            inline
+            open
+            multiple
+            items={items}
+            value={selectedOptions}
+            onValueChange={(next: FacetOption[]) => {
+              const values = next.some((option) => option.value === CLEAR_VALUE)
+                ? []
+                : next.map((option) => option.value);
+              column?.setFilterValue(values.length ? values : undefined);
+            }}
+            itemToStringLabel={(option: FacetOption) => option.label}
+            itemToStringValue={(option: FacetOption) => option.value}
+            isItemEqualToValue={(item: FacetOption, current: FacetOption) =>
+              item.value === current.value
+            }
+          >
+            <div className="flex items-center border-b px-3">
+              <Search aria-hidden="true" className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+              <Combobox.Input
+                placeholder={title}
+                aria-label={title}
+                className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </div>
+            <Combobox.Empty className="py-6 text-center text-sm empty:hidden">
+              {t('table_filterNoOptions')}
+            </Combobox.Empty>
+            <Combobox.List className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1 text-foreground empty:hidden">
+              {(option: FacetOption) =>
+                option.value === CLEAR_VALUE ? (
+                  <Fragment key={option.value}>
+                    <Combobox.Separator className="-mx-1 my-1 h-px bg-border" />
+                    <Combobox.Item
+                      value={option}
+                      className={cn(ITEM_CLASS, 'justify-center text-center')}
                     >
-                      <div
-                        className={cn(
-                          'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
-                          isSelected
-                            ? 'bg-primary text-primary-foreground'
-                            : 'opacity-50 [&_svg]:invisible',
-                        )}
-                      >
-                        <Check />
-                      </div>
-                      {option.icon && (
-                        <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                      {option.label}
+                    </Combobox.Item>
+                  </Fragment>
+                ) : (
+                  <Combobox.Item key={option.value} value={option} className={ITEM_CLASS}>
+                    <div
+                      className={cn(
+                        'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                        selectedValues.has(option.value)
+                          ? 'bg-primary text-primary-foreground'
+                          : 'opacity-50 [&_svg]:invisible',
                       )}
-                      <PathLabel path={option.label} />
-                      {counts?.get(option.value) ? (
-                        <span className="ml-auto pl-2 font-mono text-xs">
-                          {counts.get(option.value)}
-                        </span>
-                      ) : null}
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-              {selectedValues.size > 0 && (
-                <>
-                  <CommandSeparator />
-                  <CommandGroup>
-                    <CommandItem
-                      onSelect={() => column?.setFilterValue(undefined)}
-                      className="justify-center text-center"
                     >
-                      {t('table_filterClear')}
-                    </CommandItem>
-                  </CommandGroup>
-                </>
-              )}
-            </CommandList>
-          </Command>
+                      <Check />
+                    </div>
+                    {option.icon && <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
+                    <PathLabel path={option.label} />
+                    {counts?.get(option.value) ? (
+                      <span className="ml-auto pl-2 font-mono text-xs">
+                        {counts.get(option.value)}
+                      </span>
+                    ) : null}
+                  </Combobox.Item>
+                )
+              }
+            </Combobox.List>
+          </Combobox.Root>
         </PopoverContent>
       </Popover>
     </div>

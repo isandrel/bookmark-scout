@@ -55,10 +55,6 @@
         "message": "入力欄で入力している間や、ダイアログやメニューが開いている間はショートカットは無効です。",
         "description": "Keyboard shortcuts dialog description"
     },
-    "shortcuts_focusFilter": {
-        "message": "タイトルフィルターにフォーカス",
-        "description": "Keyboard shortcut description: / focuses the title filter"
-    },
     "shortcuts_parentFolder": {
         "message": "親フォルダに移動",
         "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
@@ -463,10 +459,6 @@
         "message": "検索に一致する設定がありません",
         "description": "Empty settings search result"
     },
-    "toast_preferencesUpdated": {
-        "message": "設定が更新されました",
-        "description": "Toast description for settings save success"
-    },
     "toast_errorSavingSettings": {
         "message": "設定の保存に失敗しました",
         "description": "Toast title for settings save error"
@@ -511,10 +503,6 @@
         "message": "設定をインポートしました",
         "description": "Toast title for settings import success"
     },
-    "toast_settingsImportedDescription": {
-        "message": "ファイルから設定を復元しました",
-        "description": "Toast description for settings import success"
-    },
     "toast_importFailed": {
         "message": "インポートに失敗しました",
         "description": "Toast title for settings import error"
@@ -558,10 +546,6 @@
     "action_saving": {
         "message": "保存中...",
         "description": "Saving state button label"
-    },
-    "action_saveChanges": {
-        "message": "変更を保存",
-        "description": "Save changes button label"
     },
     "settings_appearance": {
         "message": "外観",
@@ -929,10 +913,6 @@
         "message": "現在のページを $1 に保存",
         "description": "Accessible name of a folder match row; $1 is the folder path"
     },
-    "state_noRecentFolders": {
-        "message": "最近のフォルダはありません",
-        "description": "Empty state for recent folders"
-    },
     "settings_recentFoldersEnabled": {
         "message": "最近のフォルダ",
         "description": "Recent folders enabled setting label"
@@ -948,14 +928,6 @@
     "toast_pleaseOpenWebpage": {
         "message": "まずウェブページを開いてください",
         "description": "Toast description when tab info unavailable"
-    },
-    "toast_apiKeyRequired": {
-        "message": "APIキーが必要です",
-        "description": "Toast title when API key missing"
-    },
-    "toast_apiKeyRequiredDesc": {
-        "message": "設定 → AIでAPIキーを設定してください",
-        "description": "Toast description when API key missing"
     },
     "ai_recommendationFailed": {
         "message": "AI推薦に失敗しました",
@@ -1025,18 +997,6 @@
         "message": "新規ブックマーク",
         "description": "Default name for new bookmark"
     },
-    "toast_bookmarkAddedToFolder": {
-        "message": "\"$1\" を \"$2\" に追加しました",
-        "description": "Toast description for bookmark added"
-    },
-    "toast_folderAddedIn": {
-        "message": "新規フォルダ \"$1\" を \"$2\" に追加しました",
-        "description": "Toast description for folder created"
-    },
-    "toast_itemRemoved": {
-        "message": "\"$1\" を削除しました",
-        "description": "Toast description for item deleted"
-    },
     "popup_untitled": {
         "message": "無題",
         "description": "Default name for untitled items"
@@ -1105,10 +1065,6 @@
         "message": "表示をリセット",
         "description": "Reset bookmark table view button label"
     },
-    "table_filterTitles": {
-        "message": "タイトルで絞り込み...",
-        "description": "Bookmark table title filter placeholder"
-    },
     "table_filterUrls": {
         "message": "URLで絞り込み...",
         "description": "Bookmark table URL filter placeholder"
@@ -1128,10 +1084,6 @@
     "table_noResults": {
         "message": "結果がありません。",
         "description": "Empty bookmark table message"
-    },
-    "table_rowsSelected": {
-        "message": "$2行中$1行を選択中",
-        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
     },
     "table_rowsPerPage": {
         "message": "1ページの行数",
@@ -1653,10 +1605,6 @@
         "message": "形式",
         "description": "Placeholder for the export format selector"
     },
-    "tools_exporting": {
-        "message": "書き出し中...",
-        "description": "Export button label while exporting"
-    },
     "tools_importing": {
         "message": "読み込み中...",
         "description": "Import button label while importing"
@@ -1699,16 +1647,6 @@
         "message": "読み込み完了",
         "description": "Toast title for successful bookmark import"
     },
-    "toast_importSuccessDesc": {
-        "message": "$count$ 件の項目を読み込みました",
-        "description": "Toast description for successful bookmark import",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "12"
-            }
-        }
-    },
     "toast_reorganizeSuccess": {
         "message": "再整理が完了しました",
         "description": "Toast title after applying an AI reorganization"
@@ -1748,10 +1686,6 @@
     "toast_changesUndoneDesc": {
         "message": "元に戻した変更: $1 件。元に戻せなかった変更: $2 件。",
         "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
-    },
-    "error_importFailed": {
-        "message": "読み込みに失敗しました: $1",
-        "description": "Error message for failed bookmark import"
     },
     "error_unsupportedFileFormat": {
         "message": "サポートされていないファイル形式です",
@@ -1908,18 +1842,6 @@
     "contextMenu_bookmarksBar": {
         "message": "ブックマークバー",
         "description": "Bookmarks bar folder name"
-    },
-    "toast_linkSaved": {
-        "message": "リンクを保存しました",
-        "description": "Toast title when link saved via context menu"
-    },
-    "toast_linkSavedDesc": {
-        "message": "「$1」を「$2」に追加しました",
-        "description": "Toast description for link saved"
-    },
-    "toast_linkSaveFailed": {
-        "message": "リンクを保存できませんでした",
-        "description": "Toast title when link save fails"
     },
     "settings_contextMenuEnabled": {
         "message": "右クリックメニュー",
@@ -3109,10 +3031,6 @@
         "message": "APIキーが設定されていません。設定 > AI で追加してください。",
         "description": "AI API key missing error"
     },
-    "contextMenu_untitled": {
-        "message": "無題",
-        "description": "Fallback bookmark title from context menu"
-    },
     "contextMenu_recentFolders": {
         "message": "最近のフォルダ",
         "description": "Context menu recent folders submenu"
@@ -4081,41 +3999,9 @@
         "message": "このファイルにはブックマークやフォルダが見つかりませんでした。何もインポートされていません。",
         "description": "Import error when a file contains no bookmarks or folders"
     },
-    "toast_importResultDesc": {
-        "message": "インポートしたブックマーク: $bookmarks$ 件。フォルダ: $folders$ 件。",
-        "description": "Import success counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            }
-        }
-    },
     "toast_importPartial": {
         "message": "一部の項目はインポートされませんでした",
         "description": "Import partial result title"
-    },
-    "toast_importPartialDesc": {
-        "message": "インポートしたブックマーク: $bookmarks$ 件。フォルダ: $folders$ 件。インポートできなかった項目: $failed$ 件。",
-        "description": "Import partial result counts",
-        "placeholders": {
-            "bookmarks": {
-                "content": "$1",
-                "example": "1"
-            },
-            "folders": {
-                "content": "$2",
-                "example": "1"
-            },
-            "failed": {
-                "content": "$3",
-                "example": "1"
-            }
-        }
     },
     "tools_privacySensitiveFragmentParam": {
         "message": "URLフラグメント内の機密値: $param$",
