@@ -8,7 +8,9 @@
 # (273 on 2026-10-10: folder ranking, quick save, and the AI quick save request path), then from
 # 305 for access for local AI agents (352 on 2026-10-11): the action registry and JSON Schema
 # conversion answer the bridge's calls in the service worker, which cannot load code later.
-"background.js" = 395
+# Lowered from 395 on 2026-10-15 after replacing pino with a small console logger (338 before,
+# 324 after).
+"background.js" = 365
 "popup.html" = 950
 "sidepanel.html" = 950
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
