@@ -76,7 +76,6 @@
         "ai": "^7.0.127",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
-        "cmdk": "1.1.1",
         "date-fns": "^4.4.0",
         "lucide-react": "^1.55.0",
         "next-themes": "^0.4.6",
