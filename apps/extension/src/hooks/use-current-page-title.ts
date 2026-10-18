@@ -3,6 +3,27 @@ import { useEffect, useState } from 'react';
 /** The page the popup or side panel would save. */
 export type CurrentPage = { title: string; url: string };
 
+/** The page last read on this page, so a component mounted after a read starts with it. */
+let lastPage: CurrentPage | null = null;
+
+/** The active tab's page, or null when it is unknown or unreadable. */
+async function readCurrentPage(): Promise<CurrentPage | null> {
+  const [tab] = (await browser.tabs?.query({ active: true, currentWindow: true })) ?? [];
+  lastPage = tab?.url && tab.title ? { title: tab.title, url: tab.url } : null;
+  return lastPage;
+}
+
+/**
+ * Reads the current page before a page's first render (`mountExtensionPage`'s `preload`), so the
+ * lines naming it show on the first frame instead of pushing the tree down a moment later.
+ */
+export function preloadCurrentPage(): Promise<void> {
+  return readCurrentPage().then(
+    () => undefined,
+    () => undefined,
+  );
+}
+
 /**
  * The page the popup or side panel would save, or null while it is unknown. It never
  * asks for a permission: the toolbar popup can read the active tab through activeTab, while the
@@ -10,16 +31,14 @@ export type CurrentPage = { title: string; url: string };
  * active tab in the side panel, which stays open while the user browses.
  */
 export function useCurrentPage(): CurrentPage | null {
-  const [page, setPage] = useState<CurrentPage | null>(null);
+  const [page, setPage] = useState<CurrentPage | null>(() => lastPage);
 
   useEffect(() => {
     let active = true;
     const read = () => {
-      browser.tabs
-        ?.query({ active: true, currentWindow: true })
-        .then(([tab]) => {
+      readCurrentPage()
+        .then((next) => {
           if (!active) return;
-          const next = tab?.url && tab.title ? { title: tab.title, url: tab.url } : null;
           setPage((current) =>
             current?.title === next?.title && current?.url === next?.url ? current : next,
           );

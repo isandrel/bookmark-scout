@@ -35,5 +35,6 @@ export function useBuiltinAIStatus(
     return () => clearInterval(timer);
   }, [enabled, poll, status]);
 
-  return enabled ? status : undefined;
+  // A state read before this component mounted (the popup reads it before its first render).
+  return enabled ? (status ?? peekBuiltinAIStatus()) : undefined;
 }
