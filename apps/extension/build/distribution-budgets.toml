@@ -7,19 +7,24 @@
 # outgrown, to about 15 KB (ZIP) and 40 KB (uncompressed) above the largest measurement. Lower
 # them alongside improvements; raising a limit requires measured artifacts and a dated reason in
 # the PR. CI measures a few hundred bytes below local builds.
+# Raised on 2026-10-18 (uncompressed 5,118,000 to 5,135,000, locales 1,170,000 to 1,183,000) for
+# the AI output language setting, whose copy in 9 languages adds 4.2 KB to the locales, on top of
+# main's growth since the last measurement: local builds of feat/ai-output-language merged with
+# 3dc4b31a measured 5,124,823 / 5,124,785 / 5,125,050 B uncompressed (Chrome / Edge / Firefox) and
+# 1,173,409 B of locales; the new limits are about 10 KB above that.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_608_000
-raw_bytes = 5_118_000
+raw_bytes = 5_135_000
 
 [targets.edge]
 zip_bytes = 1_608_000
-raw_bytes = 5_118_000
+raw_bytes = 5_135_000
 
 [targets.firefox]
 zip_bytes = 1_608_000
-raw_bytes = 5_118_000
+raw_bytes = 5_135_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -28,6 +33,6 @@ raw_bytes = 5_118_000
 javascript = 3_446_000
 css = 81_000
 fonts = 143_000
-locales = 1_170_000
+locales = 1_183_000
 images = 320_000
 other = 27_000

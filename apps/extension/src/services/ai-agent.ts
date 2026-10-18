@@ -42,7 +42,7 @@ export async function createAskAIToolContext(settings: Settings): Promise<Action
 export async function createAskAIAgent() {
   const appSettings = await getSettings();
   const settings = await getActiveAISettings(appSettings.aiEnabled, 'askAI');
-  const { system } = await buildPrompt('ask_ai', {});
+  const { system } = await buildPrompt('ask_ai', appSettings);
   const { buildAskAIAgent } = await import('./ai-agent.lazy');
 
   return buildAskAIAgent({

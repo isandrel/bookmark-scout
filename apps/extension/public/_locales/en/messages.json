@@ -5217,6 +5217,22 @@
         "message": "Folder recommendations, Auto-Tagging, and Content Summarizer also send the readable text of each page, not only its title and URL, for better results. Pages are downloaded without your cookies, local network pages are never read, and turning this on asks for website access.",
         "description": "Settings: description of Read page content"
     },
+    "settings_aiOutputLanguage": {
+        "message": "AI output language",
+        "description": "Settings: AI output language (the language AI writes tags, summaries, and folder names in)"
+    },
+    "settings_aiOutputLanguageDesc": {
+        "message": "The language AI writes tags, summaries, and new folder names in. Ask AI answers in the language you write in.",
+        "description": "Settings: description of AI output language"
+    },
+    "settings_aiOutputLanguageAuto": {
+        "message": "Same as the extension",
+        "description": "AI output language option: the extension's own language"
+    },
+    "settings_aiOutputLanguagePage": {
+        "message": "Same as each page",
+        "description": "AI output language option: the language of each page or bookmark title"
+    },
     "settings_aiActivityRecording": {
         "message": "Record AI Requests",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5627,6 +5643,10 @@
     },
     "prompt_varToday": {
         "message": "Today's date, as YYYY-MM-DD",
+        "description": "Prompt variable description"
+    },
+    "prompt_varLanguage": {
+        "message": "The language to write in, from AI output language",
         "description": "Prompt variable description"
     },
     "error_bookmarksApiUnavailable": {
