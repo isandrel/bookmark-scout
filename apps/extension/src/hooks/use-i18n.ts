@@ -38,16 +38,7 @@ const localeNames = Object.fromEntries(
  * in `config/project.toml` `[locales] extension`; tests/unit/locale-messages.test.ts fails until
  * both do.
  */
-export type SupportedLocale =
-  | 'de'
-  | 'en'
-  | 'es'
-  | 'fr'
-  | 'ja'
-  | 'ko'
-  | 'pt_BR'
-  | 'zh_CN'
-  | 'zh_TW';
+export type SupportedLocale = 'de' | 'en' | 'es' | 'fr' | 'ja' | 'ko' | 'pt_BR' | 'zh_CN' | 'zh_TW';
 
 /** Bundled locales (one per `_locales/` folder) in the order the Language setting lists them. */
 export const SUPPORTED_LOCALES = Object.keys(localeNames) as SupportedLocale[];
@@ -208,9 +199,7 @@ function getUILanguage(): string | undefined {
  */
 function getBrowserLocale(): SupportedLocale | undefined {
   const uiLanguage = getUILanguage();
-  return uiLanguage === undefined
-    ? undefined
-    : (matchBundledLocale(uiLanguage) ?? FALLBACK_LOCALE);
+  return uiLanguage === undefined ? undefined : (matchBundledLocale(uiLanguage) ?? FALLBACK_LOCALE);
 }
 
 /**
@@ -323,6 +312,20 @@ export function formatPercent(ratio: number): string {
     return new Intl.NumberFormat(getFormattingLocale(), options).format(ratio);
   } catch {
     return new Intl.NumberFormat(undefined, options).format(ratio);
+  }
+}
+
+/** A size in gigabytes in the extension's language, e.g. "2.7 GB". */
+export function formatGigabytes(value: number): string {
+  const options: Intl.NumberFormatOptions = {
+    style: 'unit',
+    unit: 'gigabyte',
+    maximumFractionDigits: 1,
+  };
+  try {
+    return new Intl.NumberFormat(getFormattingLocale(), options).format(value);
+  } catch {
+    return new Intl.NumberFormat(undefined, options).format(value);
   }
 }
 
@@ -441,6 +444,7 @@ export function getPluralCategory(count: number): Intl.LDMLPluralRule {
 export function tPlural(key: MessageKey, count: number, extra: string[] = []): string {
   const substitutions = [String(count), ...extra];
   const category = getPluralCategory(count);
-  const form = category === 'other' ? undefined : lookupMessage(`${key}_${category}`, substitutions);
+  const form =
+    category === 'other' ? undefined : lookupMessage(`${key}_${category}`, substitutions);
   return form ?? t(key, substitutions);
 }
