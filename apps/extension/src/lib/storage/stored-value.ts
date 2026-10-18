@@ -406,6 +406,23 @@ function liveValueOf<T>(value: ReadableStoredValue<T>): LiveValue<T> {
 }
 
 /**
+ * Starts the page's live copy of `storedValue` and keeps it for the rest of the page's life,
+ * resolving once it is read. Components rendered afterwards get the value on their first render
+ * instead of `empty`, so a page that reads before its first render opens in its final layout.
+ */
+export function preloadStoredValue<T>(storedValue: ReadableStoredValue<T>): Promise<void> {
+  const live = liveValueOf(storedValue);
+  return new Promise((resolve) => {
+    const check = () => {
+      if (!live.getSnapshot().isLoading) resolve();
+    };
+    // Never unsubscribed: dropping the last listener would make the next reader wait again.
+    live.subscribe(check);
+    check();
+  });
+}
+
+/**
  * The page's live copy of a stored value as an external store: `useStoredValue`
  * (`hooks/use-stored-value.ts`) reads it with `useSyncExternalStore`.
  */

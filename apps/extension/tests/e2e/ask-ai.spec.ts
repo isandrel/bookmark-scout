@@ -261,12 +261,11 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
   await seedAskService(extensionWorker);
   const { bookmarkId, folderId, inboxId } = await seedInboxAndRust(extensionWorker);
   const requests: ChatRequest[] = [];
+  // Like real models, it offers the buttons before writing the answer, on every turn.
   await context.route(`${BASE_URL}/**`, async (route) => {
     const request = JSON.parse(route.request().postData() ?? '{}') as ChatRequest;
     requests.push(request);
-    const last = request.messages.at(-1);
-    const userTurns = request.messages.filter((message) => message.role === 'user').length;
-    if (last?.role === 'user' && userTurns === 1) {
+    if (request.messages.at(-1)?.role === 'user') {
       await streamChunks(
         route,
         [
@@ -275,7 +274,7 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
             tool_calls: [
               {
                 index: 0,
-                id: 'call_suggest',
+                id: `call_suggest_${requests.length}`,
                 type: 'function',
                 function: {
                   name: 'suggestActions',
@@ -302,13 +301,12 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
       );
       return;
     }
-    const asked = typeof last?.content === 'string' ? last.content : JSON.stringify(last?.content);
-    const reply =
-      last?.role === 'tool'
-        ? 'Here are some next steps.'
-        : asked.includes('Reading')
-          ? 'A Reading folder it is.'
-          : 'Borrowing lends a value.';
+    const asked = JSON.stringify(request.messages.findLast((m) => m.role === 'user')?.content);
+    const reply = asked.includes('Make a Reading folder')
+      ? 'A Reading folder it is.'
+      : asked.includes('Explain borrowing')
+        ? 'Borrowing lends a value.'
+        : 'Here are some next steps.';
     await streamChunks(route, [{ role: 'assistant', content: reply }], 'stop');
   });
 
@@ -321,14 +319,16 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
   await expect(chat.getByText('Here are some next steps.')).toBeVisible();
 
   const buttons = chat.getByRole('list', { name: 'Suggestions' });
-  // Save, open, and show are labeled by the extension, never by the model.
+  // Actions first, labeled by the extension, never by the model; then the questions and options.
   await expect(buttons.getByRole('button')).toHaveText([
-    'More on ownership?',
-    'A Reading folder',
     /^Save to .+\/Rustrust\.e2e\.invalid · “Borrowing”$/,
     'Open “Ownership guide”',
     'Show “Ownership guide” in the manager',
+    'More on ownership?',
+    'A Reading folder',
   ]);
+  // The call is not a step of the answer.
+  await expect(chat.getByTestId('ask-ai-tool')).toHaveCount(0);
 
   // Save: the click is the approval; the page lands in the folder, with Undo in the toast.
   await buttons.getByRole('button', { name: /^Save to / }).click();
@@ -356,18 +356,113 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
   await manager.waitForURL(/bookmarks\.html\?id=/);
   expect(new URL(manager.url()).searchParams.get('id')).toBe(inboxId);
 
-  // An option sends its text as the next message, once.
+  // An option sends its text as the next message; the next answer brings fresh buttons, and
+  // only the latest answer has any.
   await buttons.getByRole('button', { name: 'A Reading folder' }).click();
+  await expect(box).toBeFocused();
   await expect(chat.getByText('A Reading folder it is.')).toBeVisible();
-  await expect(buttons.getByRole('button', { name: 'A Reading folder' })).toBeDisabled();
+  await expect(buttons).toHaveCount(1);
+  await expect(buttons.getByRole('button', { name: /^Save to / })).toBeEnabled();
 
-  // Ask: sends the question as the next message, once.
+  // Ask: sends the question as the next message.
   await buttons.getByRole('button', { name: 'More on ownership?' }).click();
   await expect(chat.getByText('Borrowing lends a value.')).toBeVisible();
   await expect(
     chat.locator('[data-role="user"]').filter({ hasText: 'Explain borrowing' }),
   ).toBeVisible();
-  await expect(buttons.getByRole('button', { name: 'More on ownership?' })).toBeDisabled();
+  await expect(buttons).toHaveCount(1);
+});
+
+test('[mocked provider contract] suggestion buttons dock after the latest answer, above the message box', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
+  let turn = 0;
+  // Each turn: buttons first, as real models often do, then the answer text.
+  await context.route(`${BASE_URL}/**`, async (route) => {
+    const request = JSON.parse(route.request().postData() ?? '{}') as ChatRequest;
+    if (request.messages.at(-1)?.role === 'user') {
+      turn += 1;
+      const question = turn === 1 ? 'First question?' : 'Second question?';
+      await streamChunks(
+        route,
+        [
+          {
+            role: 'assistant',
+            tool_calls: [
+              {
+                index: 0,
+                id: `call_suggest_${turn}`,
+                type: 'function',
+                function: {
+                  name: 'suggestActions',
+                  arguments: JSON.stringify({
+                    suggestions: [
+                      { kind: 'ask', label: question, text: question },
+                      { kind: 'option', label: `Option ${turn}`, text: `Option ${turn}` },
+                    ],
+                  }),
+                },
+              },
+            ],
+          },
+        ],
+        'tool_calls',
+      );
+      return;
+    }
+    const reply = turn === 1 ? 'First answer.' : 'Second answer.';
+    await streamChunks(route, [{ role: 'assistant', content: reply }], 'stop');
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const chat = page.getByTestId('ask-ai');
+  const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Hello');
+  await box.press('Enter');
+  const answer = chat.getByText('First answer.');
+  await expect(answer).toBeVisible();
+
+  // After the answer, outside the conversation, right above the message box.
+  const dock = chat.getByTestId('ask-ai-suggestion-dock');
+  const list = dock.getByRole('list', { name: 'Suggestions' });
+  await expect(list.getByRole('button')).toHaveText(['First question?', 'Option 1']);
+  await expect(chat.getByTestId('ask-ai-message').getByRole('list')).toHaveCount(0);
+  const [answerBox, dockBox, inputBox] = await Promise.all(
+    [answer, dock, box].map(async (locator) => {
+      const rect = await locator.boundingBox();
+      if (!rect) throw new Error('not laid out');
+      return rect;
+    }),
+  );
+  expect(answerBox.y + answerBox.height).toBeLessThanOrEqual(dockBox.y);
+  expect(dockBox.y + dockBox.height).toBeLessThanOrEqual(inputBox.y);
+
+  // Keyboard: the buttons come right before the message box.
+  await box.focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(list.getByRole('button', { name: 'Option 1' })).toBeFocused();
+
+  // Typing hides them; an empty box brings them back.
+  await box.fill('My own question');
+  await expect(dock).toBeHidden();
+  await box.fill('');
+  await expect(dock).toBeVisible();
+
+  // The next answer replaces them: only the latest answer has buttons.
+  await list.getByRole('button', { name: 'First question?' }).click();
+  await expect(chat.getByText('Second answer.')).toBeVisible();
+  await expect(chat.getByRole('list', { name: 'Suggestions' })).toHaveCount(1);
+  await expect(list.getByRole('button')).toHaveText(['Second question?', 'Option 2']);
 });
 
 test('[mocked provider contract] Ask AI is not offered the actions turned off in Options', async ({

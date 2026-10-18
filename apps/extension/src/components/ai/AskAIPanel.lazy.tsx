@@ -68,16 +68,10 @@ type ApprovalResponder = (response: { id: string; approved: boolean }) => void;
 function MessageView({
   message,
   respond,
-  busy,
-  send,
 }: {
   message: UIMessage;
   /** Answers a tool call that waits for the user's approval. */
   respond: ApprovalResponder;
-  /** The chat is answering; suggestion buttons wait. */
-  busy: boolean;
-  /** Sends a suggested question or option as the user's next message. */
-  send: (text: string) => void;
 }) {
   if (message.role === 'user') {
     const text = message.parts
@@ -118,16 +112,9 @@ function MessageView({
           );
         }
         if (isToolUIPart(part)) {
-          if (getToolName(part) === SUGGEST_ACTIONS_ID && part.state === 'output-available') {
-            return (
-              <ChatSuggestions
-                key={key}
-                suggestions={readChatSuggestions(part.output)}
-                busy={busy}
-                send={send}
-              />
-            );
-          }
+          // Not a step: the buttons are docked above the message box once the answer is done,
+          // and a call the model has to repeat (a button left out, a failed try) is not news.
+          if (getToolName(part) === SUGGEST_ACTIONS_ID) return null;
           if (part.state === 'approval-requested' && !part.approval.isAutomatic) {
             const { id } = part.approval;
             return (
@@ -217,6 +204,8 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const busy = status === 'submitted' || status === 'streaming';
+  // Only a finished answer offers buttons, so they never sit above text still being written.
+  const docked = status === 'ready' ? latestChatSuggestions(messages) : undefined;
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -235,6 +224,12 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
     clearError();
     void sendMessage({ text: trimmed });
     setDraft('');
+  };
+
+  // A chip that was clicked goes away with the dock; keep keyboard users in the message box.
+  const sendSuggestion = (text: string) => {
+    send(text);
+    inputRef.current?.focus();
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -292,7 +287,7 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
 
       <div
         ref={listRef}
-        className="min-h-0 flex-1 space-y-4 overflow-y-auto px-3 py-3"
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto border-b px-3 py-3"
         aria-live="polite"
       >
         {messages.length === 0 ? (
@@ -316,8 +311,6 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
               key={message.id}
               message={message}
               respond={(response) => void addToolApprovalResponse(response)}
-              busy={busy}
-              send={send}
             />
           ))
         )}
@@ -343,8 +336,18 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
         )}
       </div>
 
+      {docked && (
+        <ChatSuggestions
+          // A new answer starts with fresh buttons: none used, no save waiting.
+          key={docked.messageId}
+          suggestions={docked.suggestions}
+          send={sendSuggestion}
+          typing={draft !== ''}
+        />
+      )}
+
       <form
-        className="shrink-0 border-t p-2"
+        className="shrink-0 p-2"
         onSubmit={(event) => {
           event.preventDefault();
           send(draft);

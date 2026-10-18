@@ -354,6 +354,39 @@ describe('[eval] Ask AI with the agent tools', () => {
     expect(suggestions[0]).not.toHaveProperty('approval');
   });
 
+  it('keeps the good buttons when a model guesses the fields of others, without a failed call', async () => {
+    const { views } = await runScriptedAgent(
+      'Where should https://new.example/guide go?',
+      [
+        // The first call a live model made when the per-kind fields did not reach it.
+        () => ({
+          calls: [
+            {
+              tool: 'suggestActions',
+              input: {
+                suggestions: [
+                  { kind: 'save', label: 'Save', folderPath: 'Bookmarks Bar/Docs' },
+                  { kind: 'save', url: 'https://new.example/guide', folder: 'Bookmarks Bar/Docs' },
+                  { kind: 'ask', label: 'What else is in Docs?' },
+                ],
+              },
+            },
+          ],
+        }),
+        () => ({ text: 'Docs fits.' }),
+      ],
+      context(),
+    );
+    // A tool error would reach the model as an error output instead of this result.
+    expect(views[1].last('suggestActions')).toEqual({
+      suggestions: [
+        expect.objectContaining({ kind: 'save', folderRef: 'f:docs' }),
+        { kind: 'ask', label: 'What else is in Docs?', text: 'What else is in Docs?' },
+      ],
+      dropped: ['Left out a "save" button without folder.'],
+    });
+  });
+
   it('plans, applies, and undoes a bookmark the model listed twice once', async () => {
     const { approvals, views } = await runScriptedAgent(
       'Move my Rust and API pages to Other Bookmarks/Docs',

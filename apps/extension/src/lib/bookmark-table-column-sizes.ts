@@ -24,8 +24,10 @@ function getResizableLimits(columnId: string): ColumnSizeLimits | undefined {
   return size && 'minSize' in size ? { ...size, maxSize: MAX_COLUMN_WIDTH } : undefined;
 }
 
-/** The column that absorbs spare width while it has no saved size. */
-export const FILL_COLUMN_ID = 'title';
+/** A resizable column's share of the spare width (`fillWeight` in the registry), or 0. */
+function getFillWeight(columnId: string): number {
+  return getResizableLimits(columnId) ? (findBookmarkColumn(columnId)?.fillWeight ?? 0) : 0;
+}
 
 /** Pixels one ArrowLeft/ArrowRight press on a resize handle changes a column by. */
 export const COLUMN_RESIZE_KEYBOARD_STEP = columnLimits.column_resize_step;
@@ -79,33 +81,64 @@ function getColumnWidth(columnId: string, sizing: BookmarkColumnSizing): number 
 }
 
 /**
- * Widths the table renders with. Until the user sizes Title, it takes whatever the visible
- * columns leave of `tableWidth`, but never less than its default size.
+ * Splits `room` between fill columns by their weights. A column whose share would be below its
+ * default size gets that size and the rest is shared again by the others; rounding leftovers go
+ * to the first column, so the widths add up to the room exactly.
+ */
+function shareFillRoom(room: number, columnIds: readonly string[]): BookmarkColumnSizing {
+  const widths: BookmarkColumnSizing = {};
+  const fillDefault = (id: string) => getResizableLimits(id)?.size ?? 0;
+  const totalWeight = (ids: readonly string[]) =>
+    ids.reduce((total, id) => total + getFillWeight(id), 0);
+  let open = [...columnIds];
+  let left = room;
+  while (open.length > 0) {
+    const weight = totalWeight(open);
+    const atDefault = open.filter((id) => (left * getFillWeight(id)) / weight < fillDefault(id));
+    if (atDefault.length === 0) break;
+    for (const id of atDefault) {
+      widths[id] = fillDefault(id);
+      left -= widths[id];
+    }
+    open = open.filter((id) => !atDefault.includes(id));
+  }
+  const weight = totalWeight(open);
+  let given = 0;
+  for (const id of open) {
+    widths[id] = Math.floor((left * getFillWeight(id)) / weight);
+    given += widths[id];
+  }
+  if (open[0] !== undefined) widths[open[0]] += left - given;
+  for (const id of columnIds) widths[id] = clampBookmarkColumnSize(id, widths[id] ?? 0) ?? 0;
+  return widths;
+}
+
+/**
+ * Widths the table renders with. Until the user sizes them, the fill columns (Title and URL)
+ * share whatever the other visible columns leave of `tableWidth` by their weights, but never
+ * go below their default sizes.
  */
 export function getRenderedColumnSizing(
   sizing: BookmarkColumnSizing,
   visibleColumnIds: readonly string[],
   tableWidth: number | undefined,
 ): BookmarkColumnSizing {
-  if (sizing[FILL_COLUMN_ID] !== undefined || !visibleColumnIds.includes(FILL_COLUMN_ID)) {
-    return sizing;
-  }
-  const fillDefault = getResizableLimits(FILL_COLUMN_ID)?.size ?? 0;
+  const filling = visibleColumnIds.filter(
+    (id) => sizing[id] === undefined && getFillWeight(id) > 0,
+  );
+  if (filling.length === 0) return sizing;
   const othersWidth = visibleColumnIds
-    .filter((id) => id !== FILL_COLUMN_ID)
+    .filter((id) => !filling.includes(id))
     .reduce((total, id) => total + getColumnWidth(id, sizing), 0);
   // Round down so sub-pixel frame widths never add a horizontal scrollbar.
   const room = tableWidth === undefined ? 0 : Math.floor(tableWidth) - othersWidth;
-  return {
-    ...sizing,
-    [FILL_COLUMN_ID]: clampBookmarkColumnSize(FILL_COLUMN_ID, Math.max(fillDefault, room)) ?? 0,
-  };
+  return { ...sizing, ...shareFillRoom(room, filling) };
 }
 
 /**
  * Turns a size update applied to the rendered widths back into saved widths. Widths are clamped,
- * a width equal to the column default is not saved, and Title keeps filling unless its width
- * actually changed (a click on its handle without dragging must not pin it).
+ * a width equal to the column default is not saved, and a fill column keeps filling unless its
+ * width actually changed (a click on its handle without dragging must not pin it).
  */
 export function toSavedColumnSizing(
   next: BookmarkColumnSizing,
@@ -116,7 +149,7 @@ export function toSavedColumnSizing(
   for (const [id, width] of Object.entries(next)) {
     const clamped = clampBookmarkColumnSize(id, width);
     if (clamped === undefined) continue;
-    if (id === FILL_COLUMN_ID) {
+    if (getFillWeight(id) > 0) {
       if (saved[id] === undefined && clamped === rendered[id]) continue;
     } else if (clamped === getResizableLimits(id)?.size) {
       continue;

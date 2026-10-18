@@ -42,32 +42,52 @@ describe('bookmark table column sizes', () => {
     expect(parseBookmarkColumnSizing([300])).toEqual({});
   });
 
-  it('lets Title fill the spare width until it is sized, never below its default', () => {
-    // Fixed and default widths: 40 + 120 + 180 + 200 + 190 + 68 = 798.
-    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, 1100.6)).toEqual({ title: 302 });
-    expect(getRenderedColumnSizing({ url: 300 }, DEFAULT_VISIBLE, 1100)).toEqual({
-      url: 300,
-      title: 202,
+  it('lets Title and URL share the spare width 3:2 until sized, never below their defaults', () => {
+    // The other columns: 40 + 120 + 180 + 184 + 140 = 664.
+    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, 1504.6)).toEqual({ url: 336, title: 504 });
+    // Rounding leftovers go to the first fill column, so the table is filled exactly.
+    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, 1505)).toEqual({ url: 337, title: 504 });
+    // A share below a column's default gives it the default; the other takes the rest.
+    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, 1100)).toEqual({ url: 200, title: 236 });
+    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, 700)).toEqual({ url: 200, title: 160 });
+    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, undefined)).toEqual({
+      url: 200,
+      title: 160,
     });
-    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, 700)).toEqual({ title: 160 });
-    expect(getRenderedColumnSizing({}, DEFAULT_VISIBLE, undefined)).toEqual({ title: 160 });
-    expect(getRenderedColumnSizing({ title: 250 }, DEFAULT_VISIBLE, 1400)).toEqual({ title: 250 });
+    // A sized fill column keeps its width and the other one takes the rest.
+    expect(getRenderedColumnSizing({ url: 300 }, DEFAULT_VISIBLE, 1400)).toEqual({
+      url: 300,
+      title: 436,
+    });
+    expect(getRenderedColumnSizing({ title: 250 }, DEFAULT_VISIBLE, 1400)).toEqual({
+      title: 250,
+      url: 486,
+    });
     const withoutTitle = DEFAULT_VISIBLE.filter((id) => id !== 'title');
-    expect(getRenderedColumnSizing({}, withoutTitle, 1400)).toEqual({});
+    expect(getRenderedColumnSizing({}, withoutTitle, 1400)).toEqual({ url: 736 });
+    const sized = { title: 250, url: 300 };
+    expect(getRenderedColumnSizing(sized, DEFAULT_VISIBLE, 1400)).toBe(sized);
+    // Never past the widest a column may be; the table's filler cell takes the rest.
+    expect(getRenderedColumnSizing({}, ['select', 'title', 'url', 'actions'], 4000)).toEqual({
+      title: 1200,
+      url: 1200,
+    });
   });
 
   it('saves only widths the user changed', () => {
-    const rendered = { title: 302 };
+    const rendered = { title: 302, url: 200 };
     // Dragging URL keeps Title filling.
     expect(toSavedColumnSizing({ title: 302, url: 320 }, rendered, {})).toEqual({ url: 320 });
-    // A click on Title's handle commits its current width without pinning it.
-    expect(toSavedColumnSizing({ title: 302 }, rendered, {})).toEqual({});
+    // A click on a fill column's handle commits its current width without pinning it.
+    expect(toSavedColumnSizing({ title: 302, url: 200 }, rendered, {})).toEqual({});
     // Resizing Title pins it, clamped to its minimum.
     expect(toSavedColumnSizing({ title: 40 }, rendered, {})).toEqual({ title: 120 });
     // A saved Title that matches the rendered width stays saved.
     expect(toSavedColumnSizing({ title: 302 }, rendered, { title: 302 })).toEqual({ title: 302 });
     // Returning a column to its default width forgets it.
-    expect(toSavedColumnSizing({ url: 200, type: 90 }, {}, { url: 320 })).toEqual({ type: 90 });
+    expect(toSavedColumnSizing({ folderPath: 180, type: 90 }, {}, { folderPath: 320 })).toEqual({
+      type: 90,
+    });
     // Fixed and unknown columns are never saved.
     expect(toSavedColumnSizing({ select: 80, obsolete: 100 }, {}, {})).toEqual({});
   });

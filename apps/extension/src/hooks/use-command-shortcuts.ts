@@ -1,5 +1,26 @@
 import { useCallback, useEffect, useState } from 'react';
 
+/** The last keys this page read, so a component mounted after a read starts with them. */
+let lastShortcuts: CommandShortcuts | null = null;
+
+function readCommandShortcuts(): Promise<CommandShortcuts> {
+  return getCommandShortcuts().then((shortcuts) => {
+    lastShortcuts = shortcuts;
+    return shortcuts;
+  });
+}
+
+/**
+ * Reads the command keys before a page's first render (`mountExtensionPage`'s `preload`), so a
+ * notice that names them shows on the first frame instead of appearing a moment later.
+ */
+export function preloadCommandShortcuts(): Promise<void> {
+  return readCommandShortcuts().then(
+    () => undefined,
+    () => undefined,
+  );
+}
+
 /**
  * The keys bound to each extension command, read when the page opens and again whenever it comes
  * back into view or focus (the user may have just changed them on the browser's shortcut page),
@@ -10,10 +31,10 @@ export function useCommandShortcuts(): {
   shortcuts: CommandShortcuts | null;
   reload: () => void;
 } {
-  const [shortcuts, setShortcuts] = useState<CommandShortcuts | null>(null);
+  const [shortcuts, setShortcuts] = useState<CommandShortcuts | null>(() => lastShortcuts);
 
   const reload = useCallback(() => {
-    getCommandShortcuts()
+    readCommandShortcuts()
       .then(setShortcuts)
       .catch(() => {});
   }, []);

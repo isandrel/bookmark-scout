@@ -2,7 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { z } from 'zod';
 import type { StorageItem } from '@/lib/storage/registry';
-import { defineStoredValue, NewerStoredValueError } from '@/lib/storage/stored-value';
+import {
+  defineStoredValue,
+  getStoredValueStore,
+  NewerStoredValueError,
+  preloadStoredValue,
+} from '@/lib/storage/stored-value';
 import { setLanguage } from '@/hooks/use-i18n';
 import { readStoredRaw, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
@@ -316,6 +321,24 @@ describe('observe', () => {
     expect(reads).toHaveBeenCalledTimes(1);
     expect(watchers.mock.calls.length).toBeLessThanOrEqual(1);
     for (const stop of stops) stop();
+  });
+});
+
+describe('preloadStoredValue', () => {
+  it('resolves once read and keeps the value for the first render of later readers', async () => {
+    await storeRaw({ count: 5 });
+    // Its own copy, so the subscription it keeps does not touch the other tests' counter.
+    const preloaded = defineCounter();
+    const live = getStoredValueStore(preloaded);
+    expect(live.getSnapshot().isLoading).toBe(true);
+
+    await preloadStoredValue(preloaded);
+
+    // What `useStoredValue` reads on a component's first render, with no read of its own.
+    expect(live.getSnapshot()).toEqual({ value: { count: 5, items: [] }, isLoading: false });
+    const stop = live.subscribe(() => undefined);
+    stop();
+    expect(live.getSnapshot().isLoading).toBe(false);
   });
 });
 
