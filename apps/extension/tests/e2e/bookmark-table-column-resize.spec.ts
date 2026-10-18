@@ -78,7 +78,12 @@ test('dragging a header handle resizes the column without sorting, and the width
   const titleHeader = header(page, 'Title');
   const urlHandle = resizeHandle(page, 'URL');
   await expect(urlHandle).toBeVisible();
-  await expect(urlHandle).toHaveAttribute('aria-valuenow', '200');
+  // URL shares the spare width with Title until it is sized, so it starts past its default.
+  const urlStart = Number(await urlHandle.getAttribute('aria-valuenow'));
+  expect(urlStart).toBeGreaterThan(200);
+  expect(Number(await resizeHandle(page, 'Title').getAttribute('aria-valuenow'))).toBeGreaterThan(
+    urlStart,
+  );
 
   const urlBefore = await width(urlHeader);
   const titleBefore = await width(titleHeader);
@@ -88,7 +93,7 @@ test('dragging a header handle resizes the column without sorting, and the width
   await dragHandle(page, urlHandle, 120);
 
   await expect.poll(() => width(urlHeader)).toBeCloseTo(urlBefore + 120, 0);
-  await expect(urlHandle).toHaveAttribute('aria-valuenow', '320');
+  await expect(urlHandle).toHaveAttribute('aria-valuenow', String(urlStart + 120));
   // Title gives up the room while it fills the table, so the table does not overflow.
   expect(await width(titleHeader)).toBeCloseTo(titleBefore - 120, 0);
   expect(await width(page.locator('table'))).toBeCloseTo(tableBefore, 0);
@@ -98,18 +103,18 @@ test('dragging a header handle resizes the column without sorting, and the width
   await expect(urlHeader.getByRole('button', { name: 'URL', exact: true })).toBeVisible();
   expect(await rowTitles(page)).toEqual(orderBefore);
 
-  await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({ url: 320 });
+  await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({ url: urlStart + 120 });
   expect(await savedSorting(extensionWorker)).toEqual([]);
 
   await page.reload();
   await expect(page.locator('tbody tr')).toHaveCount(3);
-  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', '320');
+  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', String(urlStart + 120));
   await expect.poll(() => width(header(page, 'URL'))).toBeCloseTo(urlBefore + 120, 0);
 
-  // Double-click restores the default width and forgets the saved one.
+  // Double-click goes back to sharing the spare width and forgets the saved one.
   await resizeHandle(page, 'URL').dblclick();
   await expect.poll(() => width(header(page, 'URL'))).toBeCloseTo(urlBefore, 0);
-  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', '200');
+  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', String(urlStart));
   await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({});
   expect(await rowTitles(page)).toEqual(orderBefore);
 });
@@ -172,8 +177,9 @@ test('narrow tables still hide Folder Path and URL so Title stays visible', asyn
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(3);
   await expect(header(page, 'Folder Path')).toHaveCount(1);
+  const urlStart = Number(await resizeHandle(page, 'URL').getAttribute('aria-valuenow'));
   await dragHandle(page, resizeHandle(page, 'URL'), 80);
-  await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({ url: 280 });
+  await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({ url: urlStart + 80 });
 
   await page.getByTitle('Show tools').click();
   await expect(page.getByTestId('tools-sidebar')).not.toHaveAttribute('inert', '');
@@ -208,13 +214,17 @@ test('narrow tables still hide Folder Path and URL so Title stays visible', asyn
   // Closing the sidebar brings the columns back with the saved URL width.
   await page.getByTitle('Hide tools').click();
   await expect(header(page, 'URL')).toHaveCount(1);
-  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', '280');
-  await expect.poll(() => width(header(page, 'URL'))).toBeCloseTo(280, 0);
+  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', String(urlStart + 80));
+  await expect.poll(() => width(header(page, 'URL'))).toBeCloseTo(urlStart + 80, 0);
 
-  // Reset view forgets the widths too.
+  // Reset view forgets the widths too: Folder Path goes back to the View menu, and URL shares
+  // the room it leaves with Title again (wider than it started next to Folder Path).
   await page.getByRole('button', { name: 'Customize table view' }).click();
   await page.getByRole('button', { name: 'Reset view' }).click();
   await page.keyboard.press('Escape');
-  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', '200');
+  await expect(header(page, 'Folder Path')).toHaveCount(0);
   await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({});
+  const urlReset = Number(await resizeHandle(page, 'URL').getAttribute('aria-valuenow'));
+  expect(urlReset).toBeGreaterThan(urlStart);
+  expect(urlReset).not.toBe(urlStart + 80);
 });

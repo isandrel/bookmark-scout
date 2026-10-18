@@ -1,11 +1,17 @@
 /**
- * The suggestion buttons under an Ask AI answer (`suggestActions`, `services/chat-actions.ts`).
+ * The suggestion buttons of the latest Ask AI answer (`suggestActions`,
+ * `services/chat-actions.ts`), docked between the conversation and the message box once the
+ * answer is complete (`AskAIPanel.lazy.tsx` mounts it per answer, with `latestChatSuggestions`).
+ * Actions (save, open, show) come first as buttons; next questions and options follow as chips,
+ * next to the box they fill. The dock hides while the user types and comes back when the box is
+ * empty again.
+ *
  * A question or option is sent as the user's next message; a save runs the `saveBookmark` action
  * with its undo, the click being the user's approval, unless the suggestion asks for one
  * (`approval`, once the chat has read unreviewed text): then the click shows Ask AI's approval
  * card naming the page and folder, and the page is saved only once it is approved. Open and show
  * open a tab. A save button names the page by title and site, with the full URL in its tooltip.
- * Model text is shown as plain text. Buttons wait while the chat answers and each works once.
+ * Model text is shown as plain text. Each button works once.
  * Loaded with the chat, so it is left out of auto-imports like every `*.lazy.tsx` file.
  */
 import {
@@ -16,18 +22,27 @@ import {
   type LucideIcon,
   MessageCircleQuestion,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { z } from 'zod';
 import { ActionApprovalRequest } from './ActionApproval.lazy';
+
+const dockConfig = readConfig(
+  'ui/ask-ai-suggestions',
+  z.strictObject({ max_height_fraction: z.number().gt(0).max(1) }),
+);
 
 type SaveSuggestion = Extract<ChatSuggestion, { kind: 'save' }>;
 
 type ChatSuggestionsProps = {
   suggestions: ChatSuggestion[];
-  /** The chat is answering; buttons wait. */
-  busy: boolean;
   /** Sends `text` as the user's next message. */
   send: (text: string) => void;
+  /** The user is writing a message of their own; the dock steps aside unless a save waits. */
+  typing: boolean;
 };
+
+/** Kinds sent as the user's next message, drawn as chips; the rest act and are buttons. */
+const MESSAGE_KINDS: ReadonlySet<ChatSuggestion['kind']> = new Set(['ask', 'option']);
 
 const ICONS: Record<ChatSuggestion['kind'], LucideIcon> = {
   ask: MessageCircleQuestion,
@@ -130,19 +145,23 @@ async function runSuggestion(suggestion: ChatSuggestion, send: (text: string) =>
   }
 }
 
-/** A stable ref callback, so the card scrolls into view once, when it opens. */
-function bringIntoView(node: HTMLElement | null) {
-  node?.scrollIntoView({ block: 'nearest' });
-}
-
 function reportFailure(error: unknown) {
   toast.error({ title: t('error_generic'), description: getErrorMessage(error) });
 }
 
-export function ChatSuggestions({ suggestions, busy, send }: ChatSuggestionsProps) {
+export function ChatSuggestions({ suggestions, send, typing }: ChatSuggestionsProps) {
   const [used, setUsed] = useState<ReadonlySet<number>>(new Set());
   // The save waiting for the user to confirm it, by its index.
   const [confirming, setConfirming] = useState<number | null>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
+
+  // Shows the approval card when it opens. The dock scrolls itself; scrollIntoView would also
+  // scroll the popup.
+  useEffect(() => {
+    const dock = dockRef.current;
+    if (dock && confirming !== null) dock.scrollTop = dock.scrollHeight;
+  }, [confirming]);
+
   if (suggestions.length === 0) return null;
   const pending = confirming === null ? undefined : suggestions[confirming];
 
@@ -154,17 +173,33 @@ export function ChatSuggestions({ suggestions, busy, send }: ChatSuggestionsProp
       return next;
     });
 
+  // Actions first, then the chips that fill the message box, nearest to it; each keeps the
+  // model's order within its group.
+  const indexed = suggestions.map((suggestion, index) => ({ suggestion, index }));
+  const ordered = [
+    ...indexed.filter(({ suggestion }) => !MESSAGE_KINDS.has(suggestion.kind)),
+    ...indexed.filter(({ suggestion }) => MESSAGE_KINDS.has(suggestion.kind)),
+  ];
+
   return (
-    <div className="space-y-2">
+    <div
+      ref={dockRef}
+      data-testid="ask-ai-suggestion-dock"
+      // A save waiting for approval stays on screen while the user types.
+      hidden={typing && confirming === null}
+      className="shrink-0 space-y-2 overflow-y-auto px-2 pt-2"
+      style={{ maxHeight: `${dockConfig.max_height_fraction * 100}%` }}
+    >
       <ul
         aria-label={t('askAI_suggestions')}
         data-testid="ask-ai-suggestions"
         className="flex flex-wrap gap-1.5"
       >
-        {suggestions.map((suggestion, index) => {
+        {ordered.map(({ suggestion, index }) => {
           const Icon = ICONS[suggestion.kind];
           const text = buttonText(suggestion);
           const save = suggestion.kind === 'save' ? suggestion : undefined;
+          const chip = MESSAGE_KINDS.has(suggestion.kind);
           return (
             <li key={`${suggestion.kind}:${text}:${save?.url ?? ''}`} className="max-w-full">
               <Button
@@ -173,8 +208,12 @@ export function ChatSuggestions({ suggestions, busy, send }: ChatSuggestionsProp
                 variant="outline"
                 data-kind={suggestion.kind}
                 title={save?.url}
-                disabled={busy || used.has(index) || confirming !== null}
-                className="h-auto max-w-full whitespace-normal py-1 text-left [overflow-wrap:anywhere]"
+                disabled={used.has(index) || confirming !== null}
+                className={
+                  chip
+                    ? 'h-auto min-h-6 max-w-full gap-1.5 whitespace-normal rounded-full px-2.5 py-0.5 text-left text-xs font-normal [overflow-wrap:anywhere]'
+                    : 'h-auto max-w-full whitespace-normal py-1 text-left [overflow-wrap:anywhere]'
+                }
                 onClick={() => {
                   markUsed(index, true);
                   if (save?.approval) {
@@ -184,7 +223,10 @@ export function ChatSuggestions({ suggestions, busy, send }: ChatSuggestionsProp
                   void runSuggestion(suggestion, send).catch(reportFailure);
                 }}
               >
-                <Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                <Icon
+                  aria-hidden="true"
+                  className={chip ? 'size-3 shrink-0' : 'size-3.5 shrink-0'}
+                />
                 {save ? (
                   <span className="flex min-w-0 flex-col">
                     <span>{text}</span>
@@ -204,28 +246,25 @@ export function ChatSuggestions({ suggestions, busy, send }: ChatSuggestionsProp
         })}
       </ul>
       {pending?.kind === 'save' && confirming !== null && (
-        // Brought into view when it opens; the chat list scrolls only as messages grow.
-        <div ref={bringIntoView}>
-          <ActionApprovalRequest
-            toolName="saveBookmark"
-            input={{
-              url: pending.url,
-              title: pending.title,
-              folder: pending.folderPath,
-              ...(pending.newFolder ? { newFolder: pending.newFolder } : {}),
-            }}
-            reason={pending.approval}
-            onRespond={(approved) => {
-              const index = confirming;
-              setConfirming(null);
-              if (!approved) {
-                markUsed(index, false);
-                return;
-              }
-              void saveSuggested(pending).catch(reportFailure);
-            }}
-          />
-        </div>
+        <ActionApprovalRequest
+          toolName="saveBookmark"
+          input={{
+            url: pending.url,
+            title: pending.title,
+            folder: pending.folderPath,
+            ...(pending.newFolder ? { newFolder: pending.newFolder } : {}),
+          }}
+          reason={pending.approval}
+          onRespond={(approved) => {
+            const index = confirming;
+            setConfirming(null);
+            if (!approved) {
+              markUsed(index, false);
+              return;
+            }
+            void saveSuggested(pending).catch(reportFailure);
+          }}
+        />
       )}
     </div>
   );

@@ -133,10 +133,11 @@ function PopupPage() {
     setExpandFoldersOnSearch(expandFoldersOnSearch);
   }, [expandFoldersOnSearch, setExpandFoldersOnSearch]);
 
-  // Fetch folders on mount
+  // The tree, unless the read before the first render (`preloadPopupPage`) already has it.
+  const loadFolders = useBookmarkStore((state) => state.loadFolders);
   useEffect(() => {
-    fetchFolders();
-  }, [fetchFolders]);
+    void loadFolders();
+  }, [loadFolders]);
 
   // Follow changes made elsewhere (manager page, browser UI, sync) without losing expansion.
   useBookmarkEvents(applyBookmarkEvents);
@@ -664,7 +665,11 @@ function PopupPage() {
           </p>
         )}
 
-        <div ref={treeScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div
+          ref={treeScrollRef}
+          data-slot="popup-tree-scroll"
+          className="flex-1 overflow-y-auto overflow-x-hidden"
+        >
           {isLoading ? (
             <div className="space-y-1 p-2">
               <Skeleton className="h-8 w-full" />
@@ -747,8 +752,9 @@ function PopupPage() {
             {t('popup_dragSortedHint', t('settings_sortFolders'))}
           </p>
         ) : (
-          !isLoading &&
-          (displayFolders.length > 0 || folderMatches.length > 0) && (
+          // Also under the loading skeleton, so it does not appear with the tree when the tree
+          // takes longer than the read before the first render.
+          (isLoading || displayFolders.length > 0 || folderMatches.length > 0) && (
             <PopupHintBar
               searchInputRef={inputRef}
               firstMatchTitle={firstMatchTitle}
