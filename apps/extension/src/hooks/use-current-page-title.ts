@@ -17,11 +17,8 @@ async function readCurrentPage(): Promise<CurrentPage | null> {
  * Reads the current page before a page's first render (`mountExtensionPage`'s `preload`), so the
  * lines naming it show on the first frame instead of pushing the tree down a moment later.
  */
-export function preloadCurrentPage(): Promise<void> {
-  return readCurrentPage().then(
-    () => undefined,
-    () => undefined,
-  );
+export function preloadCurrentPage(): Promise<CurrentPage | null> {
+  return readCurrentPage().catch(() => null);
 }
 
 /**

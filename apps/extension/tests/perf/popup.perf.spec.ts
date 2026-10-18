@@ -63,7 +63,8 @@ test('popup: open, search, save to a folder by name', async ({
 
     // Each step needs the page the previous one left; a step that times out ends the run.
     const steps = async () => {
-      const search = page.getByPlaceholder(/Search bookmarks/);
+      // By its label: the placeholder asks for a folder name and shortens in a narrow box.
+      const search = page.getByRole('combobox', { name: /^Search bookmarks/ });
       await search.click();
       const typed = await measureInteraction(
         page,

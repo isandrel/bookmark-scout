@@ -82,11 +82,6 @@ interface BookmarkState {
 
   // Actions
   fetchFolders: () => Promise<void>;
-  /**
-   * The page's first read of the tree, started once: by the popup before its first render, or on
-   * mount when that did not run. Later calls share it instead of showing the skeleton again.
-   */
-  loadFolders: () => Promise<void>;
   /** Reload the tree without the loading skeleton, keeping expansion and search state. */
   refreshFolders: () => Promise<void>;
   /** Patch the tree with bookmark events (`useBookmarkEvents`), or reload it when that fails. */
@@ -142,8 +137,6 @@ const treeSync: BookmarkTreeSync = createBookmarkTreeSync({
   },
 });
 
-let firstLoad: Promise<void> | undefined;
-
 export const useBookmarkStore = create<BookmarkState>()(
   devtools(
     (set, get) => ({
@@ -167,11 +160,6 @@ export const useBookmarkStore = create<BookmarkState>()(
       fetchFolders: () => {
         set({ isLoading: true, error: null });
         return treeSync.reload();
-      },
-
-      loadFolders: () => {
-        firstLoad ??= get().fetchFolders();
-        return firstLoad;
       },
 
       refreshFolders: () => treeSync.reload(),
