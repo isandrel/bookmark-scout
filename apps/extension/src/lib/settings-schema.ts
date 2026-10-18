@@ -233,6 +233,16 @@ export type LinkOpenTarget = z.infer<typeof linkOpenTargetSchema>;
 export const languageSchema = z.enum([AUTO_LANGUAGE, ...SUPPORTED_LOCALES]);
 export type Language = z.infer<typeof languageSchema>;
 
+/** AI output language for "write in the language of each page or bookmark title". */
+export const PAGE_LANGUAGE = 'page';
+
+/**
+ * The language AI writes in: the extension's language (`auto`), each page's (`page`), or a
+ * bundled language. Stored as the id; `{{language}}` in prompt-config.ts names it for the model.
+ */
+export const aiOutputLanguageSchema = z.enum([AUTO_LANGUAGE, PAGE_LANGUAGE, ...SUPPORTED_LOCALES]);
+export type AIOutputLanguage = z.infer<typeof aiOutputLanguageSchema>;
+
 export const faviconSizeSchema = z.literal([16, 24, 32]);
 export type FaviconSize = z.infer<typeof faviconSizeSchema>;
 
@@ -634,6 +644,17 @@ const fields = {
   aiMaxRecommendations: numberField('ai.suggestions.max_recommendations', 'aiMaxRecommendations'),
   aiAutoTriggerOnOpen: switchField('ai.suggestions.auto_trigger_on_open', 'aiAutoTrigger'),
   aiReadPageContent: switchField('ai.page_reading.read_page_content', 'aiReadPageContent'),
+  aiOutputLanguage: enumField(
+    'ai.output_language.language',
+    'aiOutputLanguage',
+    aiOutputLanguageSchema,
+    (value) =>
+      value === AUTO_LANGUAGE
+        ? t('settings_aiOutputLanguageAuto')
+        : value === PAGE_LANGUAGE
+          ? t('settings_aiOutputLanguagePage')
+          : getLanguageName(value),
+  ),
   aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
   askAiDisabledActions: actionIdListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
@@ -1174,6 +1195,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'pageReading',
         labelKey: 'settings_aiReadPageContent',
         fields: ['aiReadPageContent'],
+        requires: 'aiEnabled',
+      },
+      {
+        id: 'outputLanguage',
+        labelKey: 'settings_aiOutputLanguage',
+        fields: ['aiOutputLanguage'],
         requires: 'aiEnabled',
       },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },

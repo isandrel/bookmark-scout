@@ -21,6 +21,7 @@ naming the missing ones, and the run passes. It is not a pull request check.
 | AI quick save | The shortcut saves the page, the notification names the folder, Undo removes it |
 | Ask AI | An answer from bookmark tools, a suggested next question when offered, a move only after the user approves the plan, and undo through the chat |
 | Tools | Auto-Tagging and Summarizer store reviewed tags and summaries; AI reorganization previews, applies, and undoes |
+| AI output language | With AI output language set to Japanese, Auto-Tagging stores Japanese tags for English pages |
 
 Each test ends with privacy checks: the API key is found only in the AI credentials item, never in
 synced storage, the AI activity log, other local items, or session storage (compared inside the
