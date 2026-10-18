@@ -3,7 +3,7 @@
  * `--popup-width`/`--popup-height` variables; the side panel always fills its pane.
  */
 
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 /** CSS variables popup.html sizes itself with; its inline defaults are unit-tested. */
 export const POPUP_SIZE_CSS_VARS = { width: '--popup-width', height: '--popup-height' } as const;
@@ -27,7 +27,8 @@ export function usePopupSize(): void {
   const { settings, isLoading } = useSettings();
   const { popupWidth, popupHeight } = settings;
 
-  useEffect(() => {
+  // Before paint: with settings read before the first render, the first frame has the right size.
+  useLayoutEffect(() => {
     if (isLoading) return;
     const { width, height } = clampPopupSize(popupWidth, popupHeight);
     const root = document.documentElement.style;
