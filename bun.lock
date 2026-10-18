@@ -45,7 +45,7 @@
     },
     "apps/extension": {
       "name": "@bookmark-scout/extension",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "dependencies": {
         "@ai-sdk/anthropic": "^4.0.78",
         "@ai-sdk/azure": "^4.0.99",
