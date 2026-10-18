@@ -6444,7 +6444,7 @@
         "description": "Settings > AI, Check this computer (built-in AI): heading of the fold and the checklist that compares this computer with what Chrome's built-in AI needs"
     },
     "builtinAiCheck_suggestUnavailable": {
-        "message": "Chrome에 따르면 이 컴퓨터에서는 아직 내장 AI를 실행할 수 없습니다. 필요한 조건과 해결 방법을 확인하세요.",
+        "message": "Chrome에 따르면 이 컴퓨터에서는 아직 내장 AI를 실행할 수 없습니다.",
         "description": "Settings > AI intro box: text of the \"Free on this computer\" box when Chrome has the built-in AI but says this computer cannot run it; followed by the \"Check this computer\" fold"
     },
     "builtinAiCheck_statePass": {
@@ -6466,22 +6466,6 @@
     "builtinAiCheck_model": {
         "message": "내장 모델",
         "description": "Settings > AI, Check this computer (built-in AI): row label: the state of Chrome's built-in model"
-    },
-    "builtinAiCheck_modelReady": {
-        "message": "다운로드됨, 사용 가능",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: downloaded and ready"
-    },
-    "builtinAiCheck_modelDownloadable": {
-        "message": "이 컴퓨터에서 실행 가능, 아직 다운로드되지 않음",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome says this computer can run it, but it is not downloaded yet"
-    },
-    "builtinAiCheck_modelDownloading": {
-        "message": "다운로드 중",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: the model is downloading"
-    },
-    "builtinAiCheck_modelUnavailable": {
-        "message": "Chrome에 따르면 이 컴퓨터에서 실행할 수 없음",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome reports the model as unavailable on this computer"
     },
     "builtinAiCheck_browser": {
         "message": "Chrome 버전",
@@ -6507,13 +6491,9 @@
         "message": "그래픽 메모리",
         "description": "Settings > AI, Check this computer (built-in AI): row label: memory of the graphics card (VRAM)"
     },
-    "builtinAiCheck_notReported": {
-        "message": "브라우저가 알려 주지 않음",
-        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser did not report this value"
-    },
     "builtinAiCheck_notVisible": {
         "message": "브라우저에서 확인할 수 없음",
-        "description": "Settings > AI, Check this computer (built-in AI): row value for free disk space and graphics memory, which web pages and extensions cannot read"
+        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser does not report the value (free disk space and graphics memory never are)"
     },
     "builtinAiCheck_memoryAtLeast": {
         "message": "$1 이상",
@@ -6522,10 +6502,6 @@
     "builtinAiCheck_memoryAbout": {
         "message": "약 $1",
         "description": "Settings > AI, Check this computer (built-in AI): memory row value, rounded by the browser. $1 is an amount, such as 4 GB"
-    },
-    "builtinAiCheck_memoryCapNeed": {
-        "message": "Chrome은 최대 $1까지만 알려 줍니다. 그래픽 카드가 없으면 $2가 필요합니다.",
-        "description": "Settings > AI, Check this computer (built-in AI): memory row note when Chrome reports its highest value. $1 is that highest value (such as 8 GB), $2 the memory needed without a graphics card (such as 16 GB)"
     },
     "builtinAiCheck_memoryNeed": {
         "message": "그래픽 카드가 없으면 $1가 필요합니다.",
@@ -6568,24 +6544,16 @@
         "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's page showing the on-device model's state in a new tab"
     },
     "builtinAiCheck_internalsNote": {
-        "message": "Chrome에서 내부 디버깅 페이지가 꺼져 있다고 하면, 켜는 방법이 그 화면에 표시됩니다.",
+        "message": "Chrome에서 먼저 내부 디버깅 페이지를 켜라고 할 수 있습니다.",
         "description": "Settings > AI, Check this computer (built-in AI): under the button that opens chrome://on-device-internals: Chrome keeps that page behind its \"internal debugging pages\" switch, and shows how to turn it on"
     },
     "builtinAiCheck_openFailed": {
-        "message": "Chrome에서 열리지 않았습니다. 주소를 복사해 새 탭에 붙여 넣으세요.",
+        "message": "Chrome에서 열리지 않았습니다. 주소를 새 탭에 붙여 넣으세요.",
         "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome did not open its page; the address is shown next to the button with a Copy button"
     },
     "builtinAiCheck_copyAddress": {
         "message": "$1 복사",
         "description": "Settings > AI, Check this computer (built-in AI): label and tooltip of the icon button that copies one of Chrome's addresses. $1 is the address (such as chrome://on-device-internals)"
-    },
-    "builtinAiCheck_copied": {
-        "message": "주소를 복사했습니다",
-        "description": "Settings > AI, Check this computer (built-in AI): shown after the address was copied"
-    },
-    "builtinAiCheck_copyFailed": {
-        "message": "주소를 복사하지 못했습니다",
-        "description": "Settings > AI, Check this computer (built-in AI): shown when copying the address failed"
     },
     "builtinAiCheck_checkAgain": {
         "message": "다시 확인",
@@ -6594,10 +6562,6 @@
     "builtinAiCheck_stillUnavailable": {
         "message": "Chrome은 여전히 이 컴퓨터에서 실행할 수 없다고 합니다.",
         "description": "Settings > AI, Check this computer (built-in AI): shown after Check again when Chrome still reports the model as unavailable"
-    },
-    "builtinAiCheck_needsChrome": {
-        "message": "Chrome $1 이상이 필요합니다. 현재 버전은 $2입니다.",
-        "description": "Settings > AI built-in AI service: under \"This browser has no built-in AI\" when the Chrome version is too old. $1 is the oldest version that works (such as 138), $2 this browser and its version (such as Google Chrome 137.0.7151.68)"
     },
     "qaPopup_hintSaveTo": {
         "message": "$1에 저장",

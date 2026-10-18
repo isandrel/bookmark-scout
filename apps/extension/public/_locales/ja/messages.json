@@ -6444,7 +6444,7 @@
         "description": "Settings > AI, Check this computer (built-in AI): heading of the fold and the checklist that compares this computer with what Chrome's built-in AI needs"
     },
     "builtinAiCheck_suggestUnavailable": {
-        "message": "Chrome によると、このパソコンではまだ内蔵 AI を動かせません。必要なものと対処法を確認できます。",
+        "message": "Chrome によると、このパソコンではまだ内蔵 AI を動かせません。",
         "description": "Settings > AI intro box: text of the \"Free on this computer\" box when Chrome has the built-in AI but says this computer cannot run it; followed by the \"Check this computer\" fold"
     },
     "builtinAiCheck_statePass": {
@@ -6466,22 +6466,6 @@
     "builtinAiCheck_model": {
         "message": "内蔵モデル",
         "description": "Settings > AI, Check this computer (built-in AI): row label: the state of Chrome's built-in model"
-    },
-    "builtinAiCheck_modelReady": {
-        "message": "ダウンロード済みで使用できます",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: downloaded and ready"
-    },
-    "builtinAiCheck_modelDownloadable": {
-        "message": "このパソコンで動かせます(未ダウンロード)",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome says this computer can run it, but it is not downloaded yet"
-    },
-    "builtinAiCheck_modelDownloading": {
-        "message": "ダウンロード中",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: the model is downloading"
-    },
-    "builtinAiCheck_modelUnavailable": {
-        "message": "Chrome によると、このパソコンでは動かせません",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome reports the model as unavailable on this computer"
     },
     "builtinAiCheck_browser": {
         "message": "Chrome のバージョン",
@@ -6507,13 +6491,9 @@
         "message": "グラフィックメモリ",
         "description": "Settings > AI, Check this computer (built-in AI): row label: memory of the graphics card (VRAM)"
     },
-    "builtinAiCheck_notReported": {
-        "message": "ブラウザから取得できません",
-        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser did not report this value"
-    },
     "builtinAiCheck_notVisible": {
         "message": "ブラウザからは確認できません",
-        "description": "Settings > AI, Check this computer (built-in AI): row value for free disk space and graphics memory, which web pages and extensions cannot read"
+        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser does not report the value (free disk space and graphics memory never are)"
     },
     "builtinAiCheck_memoryAtLeast": {
         "message": "$1 以上",
@@ -6522,10 +6502,6 @@
     "builtinAiCheck_memoryAbout": {
         "message": "約 $1",
         "description": "Settings > AI, Check this computer (built-in AI): memory row value, rounded by the browser. $1 is an amount, such as 4 GB"
-    },
-    "builtinAiCheck_memoryCapNeed": {
-        "message": "Chrome が報告するのは最大 $1 までです。グラフィックカードがない場合は $2 必要です。",
-        "description": "Settings > AI, Check this computer (built-in AI): memory row note when Chrome reports its highest value. $1 is that highest value (such as 8 GB), $2 the memory needed without a graphics card (such as 16 GB)"
     },
     "builtinAiCheck_memoryNeed": {
         "message": "グラフィックカードがない場合は $1 必要です。",
@@ -6568,24 +6544,16 @@
         "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's page showing the on-device model's state in a new tab"
     },
     "builtinAiCheck_internalsNote": {
-        "message": "Chrome が内部デバッグページはオフだと表示した場合は、その画面に有効にする方法が表示されます。",
+        "message": "先に Chrome の内部デバッグページを有効にするよう求められる場合があります。",
         "description": "Settings > AI, Check this computer (built-in AI): under the button that opens chrome://on-device-internals: Chrome keeps that page behind its \"internal debugging pages\" switch, and shows how to turn it on"
     },
     "builtinAiCheck_openFailed": {
-        "message": "Chrome で開けませんでした。アドレスをコピーして新しいタブに貼り付けてください。",
+        "message": "Chrome で開けませんでした。アドレスを新しいタブに貼り付けてください。",
         "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome did not open its page; the address is shown next to the button with a Copy button"
     },
     "builtinAiCheck_copyAddress": {
         "message": "$1 をコピー",
         "description": "Settings > AI, Check this computer (built-in AI): label and tooltip of the icon button that copies one of Chrome's addresses. $1 is the address (such as chrome://on-device-internals)"
-    },
-    "builtinAiCheck_copied": {
-        "message": "アドレスをコピーしました",
-        "description": "Settings > AI, Check this computer (built-in AI): shown after the address was copied"
-    },
-    "builtinAiCheck_copyFailed": {
-        "message": "アドレスをコピーできませんでした",
-        "description": "Settings > AI, Check this computer (built-in AI): shown when copying the address failed"
     },
     "builtinAiCheck_checkAgain": {
         "message": "もう一度確認",
@@ -6594,10 +6562,6 @@
     "builtinAiCheck_stillUnavailable": {
         "message": "Chrome は引き続き、このパソコンでは動かせないと報告しています。",
         "description": "Settings > AI, Check this computer (built-in AI): shown after Check again when Chrome still reports the model as unavailable"
-    },
-    "builtinAiCheck_needsChrome": {
-        "message": "Chrome $1 以降が必要です。現在は $2 です。",
-        "description": "Settings > AI built-in AI service: under \"This browser has no built-in AI\" when the Chrome version is too old. $1 is the oldest version that works (such as 138), $2 this browser and its version (such as Google Chrome 137.0.7151.68)"
     },
     "qaPopup_hintSaveTo": {
         "message": "$1 に保存",

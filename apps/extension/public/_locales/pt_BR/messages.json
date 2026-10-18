@@ -6452,7 +6452,7 @@
         "description": "Settings > AI, Check this computer (built-in AI): heading of the fold and the checklist that compares this computer with what Chrome's built-in AI needs"
     },
     "builtinAiCheck_suggestUnavailable": {
-        "message": "O Chrome diz que este computador ainda não consegue executar a IA integrada. Veja do que ela precisa e o que pode ajudar.",
+        "message": "O Chrome diz que este computador ainda não consegue executar a IA integrada.",
         "description": "Settings > AI intro box: text of the \"Free on this computer\" box when Chrome has the built-in AI but says this computer cannot run it; followed by the \"Check this computer\" fold"
     },
     "builtinAiCheck_statePass": {
@@ -6474,22 +6474,6 @@
     "builtinAiCheck_model": {
         "message": "Modelo integrado",
         "description": "Settings > AI, Check this computer (built-in AI): row label: the state of Chrome's built-in model"
-    },
-    "builtinAiCheck_modelReady": {
-        "message": "Baixado e pronto",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: downloaded and ready"
-    },
-    "builtinAiCheck_modelDownloadable": {
-        "message": "Este computador consegue executá-lo; ainda não foi baixado",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome says this computer can run it, but it is not downloaded yet"
-    },
-    "builtinAiCheck_modelDownloading": {
-        "message": "Baixando",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: the model is downloading"
-    },
-    "builtinAiCheck_modelUnavailable": {
-        "message": "O Chrome diz que este computador não consegue executá-lo",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome reports the model as unavailable on this computer"
     },
     "builtinAiCheck_browser": {
         "message": "Versão do Chrome",
@@ -6515,13 +6499,9 @@
         "message": "Memória de vídeo",
         "description": "Settings > AI, Check this computer (built-in AI): row label: memory of the graphics card (VRAM)"
     },
-    "builtinAiCheck_notReported": {
-        "message": "Não informado pelo navegador",
-        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser did not report this value"
-    },
     "builtinAiCheck_notVisible": {
-        "message": "Os navegadores não conseguem ver isso",
-        "description": "Settings > AI, Check this computer (built-in AI): row value for free disk space and graphics memory, which web pages and extensions cannot read"
+        "message": "O navegador não consegue saber",
+        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser does not report the value (free disk space and graphics memory never are)"
     },
     "builtinAiCheck_memoryAtLeast": {
         "message": "$1 ou mais",
@@ -6530,10 +6510,6 @@
     "builtinAiCheck_memoryAbout": {
         "message": "Cerca de $1",
         "description": "Settings > AI, Check this computer (built-in AI): memory row value, rounded by the browser. $1 is an amount, such as 4 GB"
-    },
-    "builtinAiCheck_memoryCapNeed": {
-        "message": "O Chrome informa no máximo $1. Sem placa de vídeo, ela precisa de $2.",
-        "description": "Settings > AI, Check this computer (built-in AI): memory row note when Chrome reports its highest value. $1 is that highest value (such as 8 GB), $2 the memory needed without a graphics card (such as 16 GB)"
     },
     "builtinAiCheck_memoryNeed": {
         "message": "Sem placa de vídeo, ela precisa de $1.",
@@ -6576,24 +6552,16 @@
         "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's page showing the on-device model's state in a new tab"
     },
     "builtinAiCheck_internalsNote": {
-        "message": "Se o Chrome disser que as páginas internas de depuração estão desativadas, ele mostra como ativá-las.",
+        "message": "O Chrome pode pedir antes que você ative as páginas internas de depuração.",
         "description": "Settings > AI, Check this computer (built-in AI): under the button that opens chrome://on-device-internals: Chrome keeps that page behind its \"internal debugging pages\" switch, and shows how to turn it on"
     },
     "builtinAiCheck_openFailed": {
-        "message": "O Chrome não abriu a página. Copie o endereço e cole-o em uma nova guia.",
+        "message": "O Chrome não abriu a página. Copie o endereço para uma nova guia.",
         "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome did not open its page; the address is shown next to the button with a Copy button"
     },
     "builtinAiCheck_copyAddress": {
         "message": "Copiar $1",
         "description": "Settings > AI, Check this computer (built-in AI): label and tooltip of the icon button that copies one of Chrome's addresses. $1 is the address (such as chrome://on-device-internals)"
-    },
-    "builtinAiCheck_copied": {
-        "message": "Endereço copiado",
-        "description": "Settings > AI, Check this computer (built-in AI): shown after the address was copied"
-    },
-    "builtinAiCheck_copyFailed": {
-        "message": "Não foi possível copiar o endereço",
-        "description": "Settings > AI, Check this computer (built-in AI): shown when copying the address failed"
     },
     "builtinAiCheck_checkAgain": {
         "message": "Verificar de novo",
@@ -6602,10 +6570,6 @@
     "builtinAiCheck_stillUnavailable": {
         "message": "O Chrome ainda diz que este computador não consegue executá-lo.",
         "description": "Settings > AI, Check this computer (built-in AI): shown after Check again when Chrome still reports the model as unavailable"
-    },
-    "builtinAiCheck_needsChrome": {
-        "message": "Ela precisa do Chrome $1 ou mais recente. Este é o $2.",
-        "description": "Settings > AI built-in AI service: under \"This browser has no built-in AI\" when the Chrome version is too old. $1 is the oldest version that works (such as 138), $2 this browser and its version (such as Google Chrome 137.0.7151.68)"
     },
     "qaPopup_hintSaveTo": {
         "message": "Salvar em $1",

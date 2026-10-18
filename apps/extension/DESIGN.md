@@ -111,6 +111,7 @@ components:
   button: "primary teal fill with teal-ink text; secondary surface with 1px line; ghost no fill; destructive danger fill; heights 28, 32, 36"
   badge: "20px, rounded.sm, meta type; neutral sunken, or a semantic wash with its text color"
   notice: "1px semantic line on its wash, icon plus text, rounded.lg; never a gradient"
+  checklist: "rows in one 1px-line rounded.md box with dividers; 16px pass, fail, warning, or unknown icon with a screen-reader label, label column in ink-soft, value, requirement in meta type when not passed"
   empty-state: "lucide icon in ink-soft, one sentence, one action button; no emoji"
   skeleton: "sunken bars at row height; pulse disabled under reduced motion"
   dialog: "surface, 1px line, rounded.xl, title in section-title, footer actions right-aligned"
@@ -209,6 +210,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 **`badge`**: counts and states in a table or result. Neutral badges are `sunken`; semantic badges use their wash with their text color.
 
 **`notice`**: warnings and errors inside dialogs and tool results: an icon, one or two sentences, and an optional action, on the semantic wash with a 1px semantic line.
+
+**`checklist`** (`BuiltinAIDeviceCheck`, "Check this computer" for the built-in AI): a fold like **More settings**, then rows in one bordered `rounded.md` box with 1px dividers, each a 16px state icon (pass `CircleCheck` in `success`, fail `CircleX` in `destructive-text`, warning `CircleAlert` in `warning`, unknown `CircleHelp` in `ink-soft`) with a screen-reader label naming the state, the label in `ink-soft` in a fixed column (stacked above the value under 640px), the value, and the requirement in meta type under any row that does not pass. Advice and its outline buttons follow below the box, never inside it.
 
 **`empty-state`**: a 24px lucide icon in `ink-soft`, one sentence that says what is empty, and one action that fixes it ("Clear search", "Add bookmark"). No emoji.
 

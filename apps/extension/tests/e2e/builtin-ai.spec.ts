@@ -230,7 +230,9 @@ test('Check this computer fills in what the browser can tell, folded while the m
   const rows = check.getByRole('list', { name: 'Check this computer' }).getByRole('listitem');
   await expect(rows).toHaveCount(7);
   await expect(checkRow(page, 'model')).toHaveAttribute('data-state', 'pass');
-  await expect(checkRow(page, 'model')).toContainText('Downloaded and ready');
+  await expect(checkRow(page, 'model')).toContainText(
+    'Ready. Folder suggestions run on this computer.',
+  );
   await expect(checkRow(page, 'browser')).toHaveAttribute('data-state', 'pass');
   await expect(checkRow(page, 'browser')).toContainText('Google Chrome 141.0.7390.54');
   await expect(checkRow(page, 'os')).toHaveAttribute('data-state', 'pass');
@@ -240,10 +242,10 @@ test('Check this computer fills in what the browser can tell, folded while the m
   const memory = checkRow(page, 'memory');
   await expect(memory).toHaveAttribute('data-state', 'unknown');
   await expect(memory).toContainText('8 GB or more');
-  await expect(memory).toContainText('Chrome reports at most 8 GB');
+  await expect(memory).toContainText('Without a graphics card, it needs 16 GB.');
   // No page can see free disk space or graphics memory: the requirement only.
   await expect(checkRow(page, 'disk')).toHaveAttribute('data-state', 'unknown');
-  await expect(checkRow(page, 'disk')).toContainText('Browsers cannot see this');
+  await expect(checkRow(page, 'disk')).toContainText('The browser cannot tell');
   await expect(checkRow(page, 'disk')).toContainText('Needs 22 GB free');
   await expect(checkRow(page, 'gpu')).toContainText('Needs more than 4 GB');
   // Every icon has a screen-reader label.
@@ -270,7 +272,7 @@ test('Check this computer keeps the download, and warns on few cores without fai
   const status = page.getByTestId('builtin-ai-status');
   await expect(status.getByRole('button', { name: 'Download the model' })).toBeVisible();
   await page.getByRole('button', { name: 'Check this computer' }).click();
-  await expect(checkRow(page, 'model')).toContainText('not downloaded yet');
+  await expect(checkRow(page, 'model')).toContainText('The model is not on this computer yet');
   await expect(checkRow(page, 'cores')).toHaveAttribute('data-state', 'warn');
   await expect(checkRow(page, 'cores')).toContainText('Without a graphics card, it needs 4 cores.');
   await expect(checkRow(page, 'memory')).toHaveAttribute('data-state', 'warn');
@@ -393,9 +395,7 @@ test('without the API, Options keeps its message and names an old Chrome as the 
   const status = page.getByTestId('builtin-ai-status');
   await expect(status).toHaveAttribute('data-status', 'unsupported');
   await expect(status).toContainText('This browser has no built-in AI.');
-  await expect(page.getByTestId('builtin-ai-outdated')).toHaveText(
-    'It needs Chrome 138 or later. This is Google Chrome 137.0.7151.68.',
-  );
+  await expect(page.getByTestId('builtin-ai-outdated')).toHaveText('Needs Chrome 138 or later.');
   await expect(page.getByTestId('builtin-ai-check')).toHaveCount(0);
   await expect(page.getByTestId('builtin-ai-suggestion')).toHaveCount(0);
 });

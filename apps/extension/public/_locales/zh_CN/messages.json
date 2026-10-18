@@ -6246,7 +6246,7 @@
         "description": "Settings > AI, Check this computer (built-in AI): heading of the fold and the checklist that compares this computer with what Chrome's built-in AI needs"
     },
     "builtinAiCheck_suggestUnavailable": {
-        "message": "Chrome 表示这台电脑暂时无法运行其内置 AI。看看它需要什么，以及可以怎么解决。",
+        "message": "Chrome 表示这台电脑暂时无法运行其内置 AI。",
         "description": "Settings > AI intro box: text of the \"Free on this computer\" box when Chrome has the built-in AI but says this computer cannot run it; followed by the \"Check this computer\" fold"
     },
     "builtinAiCheck_statePass": {
@@ -6268,22 +6268,6 @@
     "builtinAiCheck_model": {
         "message": "内置模型",
         "description": "Settings > AI, Check this computer (built-in AI): row label: the state of Chrome's built-in model"
-    },
-    "builtinAiCheck_modelReady": {
-        "message": "已下载，可以使用",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: downloaded and ready"
-    },
-    "builtinAiCheck_modelDownloadable": {
-        "message": "这台电脑可以运行，尚未下载",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome says this computer can run it, but it is not downloaded yet"
-    },
-    "builtinAiCheck_modelDownloading": {
-        "message": "正在下载",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: the model is downloading"
-    },
-    "builtinAiCheck_modelUnavailable": {
-        "message": "Chrome 表示这台电脑无法运行",
-        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome reports the model as unavailable on this computer"
     },
     "builtinAiCheck_browser": {
         "message": "Chrome 版本",
@@ -6309,13 +6293,9 @@
         "message": "显存",
         "description": "Settings > AI, Check this computer (built-in AI): row label: memory of the graphics card (VRAM)"
     },
-    "builtinAiCheck_notReported": {
-        "message": "浏览器未提供",
-        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser did not report this value"
-    },
     "builtinAiCheck_notVisible": {
-        "message": "浏览器无法读取",
-        "description": "Settings > AI, Check this computer (built-in AI): row value for free disk space and graphics memory, which web pages and extensions cannot read"
+        "message": "浏览器无法获知",
+        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser does not report the value (free disk space and graphics memory never are)"
     },
     "builtinAiCheck_memoryAtLeast": {
         "message": "$1 或更多",
@@ -6324,10 +6304,6 @@
     "builtinAiCheck_memoryAbout": {
         "message": "约 $1",
         "description": "Settings > AI, Check this computer (built-in AI): memory row value, rounded by the browser. $1 is an amount, such as 4 GB"
-    },
-    "builtinAiCheck_memoryCapNeed": {
-        "message": "Chrome 最多只报告 $1。没有显卡时需要 $2。",
-        "description": "Settings > AI, Check this computer (built-in AI): memory row note when Chrome reports its highest value. $1 is that highest value (such as 8 GB), $2 the memory needed without a graphics card (such as 16 GB)"
     },
     "builtinAiCheck_memoryNeed": {
         "message": "没有显卡时需要 $1。",
@@ -6370,24 +6346,16 @@
         "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's page showing the on-device model's state in a new tab"
     },
     "builtinAiCheck_internalsNote": {
-        "message": "如果 Chrome 提示内部调试页面已停用，页面上会说明如何启用。",
+        "message": "Chrome 可能会先要求你启用内部调试页面。",
         "description": "Settings > AI, Check this computer (built-in AI): under the button that opens chrome://on-device-internals: Chrome keeps that page behind its \"internal debugging pages\" switch, and shows how to turn it on"
     },
     "builtinAiCheck_openFailed": {
-        "message": "Chrome 未能打开。请复制地址，粘贴到新标签页中。",
+        "message": "Chrome 未能打开。请将地址粘贴到新标签页。",
         "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome did not open its page; the address is shown next to the button with a Copy button"
     },
     "builtinAiCheck_copyAddress": {
         "message": "复制 $1",
         "description": "Settings > AI, Check this computer (built-in AI): label and tooltip of the icon button that copies one of Chrome's addresses. $1 is the address (such as chrome://on-device-internals)"
-    },
-    "builtinAiCheck_copied": {
-        "message": "地址已复制",
-        "description": "Settings > AI, Check this computer (built-in AI): shown after the address was copied"
-    },
-    "builtinAiCheck_copyFailed": {
-        "message": "无法复制地址",
-        "description": "Settings > AI, Check this computer (built-in AI): shown when copying the address failed"
     },
     "builtinAiCheck_checkAgain": {
         "message": "重新检查",
@@ -6396,10 +6364,6 @@
     "builtinAiCheck_stillUnavailable": {
         "message": "Chrome 仍然表示这台电脑无法运行。",
         "description": "Settings > AI, Check this computer (built-in AI): shown after Check again when Chrome still reports the model as unavailable"
-    },
-    "builtinAiCheck_needsChrome": {
-        "message": "需要 Chrome $1 或更高版本。当前为 $2。",
-        "description": "Settings > AI built-in AI service: under \"This browser has no built-in AI\" when the Chrome version is too old. $1 is the oldest version that works (such as 138), $2 this browser and its version (such as Google Chrome 137.0.7151.68)"
     },
     "qaPopup_hintSaveTo": {
         "message": "保存到 $1",

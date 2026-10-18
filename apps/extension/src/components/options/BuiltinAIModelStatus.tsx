@@ -150,10 +150,7 @@ export function BuiltinAIModelStatus() {
         <StatusBox tone="warning" title={t('builtinAi_statusNoApi')}>
           {outdatedChrome && (
             <p data-testid="builtin-ai-outdated">
-              {t('builtinAiCheck_needsChrome', [
-                String(builtinAIConfig.requirements.chrome_version),
-                outdatedChrome,
-              ])}
+              {t('builtinAiCheck_browserNeed', String(builtinAIConfig.requirements.chrome_version))}
             </p>
           )}
         </StatusBox>

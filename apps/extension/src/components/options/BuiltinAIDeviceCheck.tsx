@@ -45,14 +45,15 @@ const CHECK_LABELS: Record<BuiltinAICheckId | 'model', MessageKey> = {
   gpu: 'builtinAiCheck_gpu',
 };
 
+/** The model's row, in the same words as the state above the checklist. */
 const MODEL_ROWS: Record<
   Exclude<BuiltinAIStatus, 'unsupported'>,
   { state: BuiltinAICheckState; text: MessageKey }
 > = {
-  available: { state: 'pass', text: 'builtinAiCheck_modelReady' },
-  downloadable: { state: 'pass', text: 'builtinAiCheck_modelDownloadable' },
-  downloading: { state: 'pass', text: 'builtinAiCheck_modelDownloading' },
-  unavailable: { state: 'fail', text: 'builtinAiCheck_modelUnavailable' },
+  available: { state: 'pass', text: 'builtinAi_statusReady' },
+  downloadable: { state: 'pass', text: 'builtinAi_statusDownloadable' },
+  downloading: { state: 'pass', text: 'builtinAi_statusDownloading' },
+  unavailable: { state: 'fail', text: 'builtinAi_statusUnsupported' },
 };
 
 type Row = {
@@ -65,8 +66,7 @@ type Row = {
 /** A checked requirement in words: the measured value, and the requirement when it is not met. */
 function describeCheck({ id, state, measured }: BuiltinAICheck): Row {
   const needs = builtinAIConfig.requirements;
-  const notReported = t('builtinAiCheck_notReported');
-  const memoryNeed = (amount: string) => t('builtinAiCheck_memoryNeed', amount);
+  const notReported = t('builtinAiCheck_notVisible');
   switch (id) {
     case 'browser':
       return {
@@ -84,17 +84,14 @@ function describeCheck({ id, state, measured }: BuiltinAICheck): Row {
       };
     case 'memory': {
       const amount = measured === undefined ? undefined : formatGigabytes(Number(measured));
-      const ram = formatGigabytes(needs.ram_gb);
-      if (amount === undefined) return { id, state, value: notReported, note: memoryNeed(ram) };
-      if (state === 'unknown') {
-        return {
-          id,
-          state,
-          value: t('builtinAiCheck_memoryAtLeast', amount),
-          note: t('builtinAiCheck_memoryCapNeed', [amount, ram]),
-        };
-      }
-      return { id, state, value: t('builtinAiCheck_memoryAbout', amount), note: memoryNeed(ram) };
+      const note = t('builtinAiCheck_memoryNeed', formatGigabytes(needs.ram_gb));
+      if (amount === undefined) return { id, state, value: notReported, note };
+      // Unknown with a value: Chrome reported its cap, so the real amount may be more.
+      const value = t(
+        state === 'unknown' ? 'builtinAiCheck_memoryAtLeast' : 'builtinAiCheck_memoryAbout',
+        amount,
+      );
+      return { id, state, value, note };
     }
     case 'cores':
       return {
@@ -164,9 +161,9 @@ function BrowserPageLink({
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      setMessage(t('builtinAiCheck_copied'));
+      setMessage(t('bookmarks_detailsCopied'));
     } catch {
-      setMessage(t('builtinAiCheck_copyFailed'));
+      setMessage(t('bookmarks_detailsCopyFailed'));
     }
   };
   return (
@@ -176,19 +173,23 @@ function BrowserPageLink({
           <ExternalLink aria-hidden="true" className="size-3.5" />
           {t(label)}
         </Button>
-        <code className="min-w-0 font-mono text-xs text-muted-foreground [overflow-wrap:anywhere]">
-          {url}
-        </code>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-xs"
-          aria-label={t('builtinAiCheck_copyAddress', url)}
-          title={t('builtinAiCheck_copyAddress', url)}
-          onClick={() => void copy()}
-        >
-          <Copy aria-hidden="true" className="size-3.5" />
-        </Button>
+        {/* The address and its Copy button wrap together. */}
+        <span className="inline-flex min-w-0 items-center gap-1">
+          <code className="min-w-0 font-mono text-xs text-muted-foreground [overflow-wrap:anywhere]">
+            {url}
+          </code>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            className="shrink-0"
+            aria-label={t('builtinAiCheck_copyAddress', url)}
+            title={t('builtinAiCheck_copyAddress', url)}
+            onClick={() => void copy()}
+          >
+            <Copy aria-hidden="true" className="size-3.5" />
+          </Button>
+        </span>
       </div>
       {note && <p className="text-xs text-muted-foreground">{note}</p>}
       <p aria-live="polite" className="text-xs text-muted-foreground empty:hidden">
