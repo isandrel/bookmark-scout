@@ -80,3 +80,16 @@ test('a link to another Options tab still opens that tab', async ({
   );
   await expect(page.getByRole('switch', { name: 'Allow local AI agents' })).toBeVisible();
 });
+
+// With always-visible scrollbars (a macOS setting, and Windows), a long tab has a scrollbar that a
+// short one lacks, which moved the centered page sideways when switching tabs. Headless Chromium
+// draws overlay scrollbars and cannot show the shift, so check that the page keeps the room.
+test('the page keeps room for the scrollbar, so switching tabs does not shift it sideways', async ({
+  extensionId,
+  page,
+}) => {
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=developers`);
+  expect(
+    await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarGutter),
+  ).toBe('stable');
+});
