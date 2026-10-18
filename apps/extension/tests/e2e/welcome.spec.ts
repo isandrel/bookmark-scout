@@ -1,7 +1,8 @@
 /**
  * The welcome page opened after install (`welcome.html`). Every other test starts with it closed
- * (the `context` fixture); here it stays open. Not opening on an update is unit-tested
- * (`tests/unit/welcome-page.test.ts`), since a test profile cannot update the extension.
+ * (the `context` fixture); here it stays open. A test profile cannot update the extension, so not
+ * opening on an update is checked by dispatching the update event (`storage-registry.spec.ts`)
+ * and unit-tested (`tests/unit/welcome-page.test.ts`).
  */
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
