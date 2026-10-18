@@ -1,0 +1,6 @@
+# Ask AI's suggestion buttons, docked above the message box. Read by
+# src/components/ai/ChatSuggestions.lazy.tsx.
+
+# Largest share of the chat's height the buttons may take, from 0 to 1. More buttons, or the
+# approval card a save opens, scroll inside the dock, so the answer stays readable.
+max_height_fraction = 0.4

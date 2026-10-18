@@ -1,3 +1,3 @@
 import '@/styles/theme.css';
 
-mountExtensionPage(<PopupPage />);
+mountExtensionPage(<PopupPage />, { preload: preloadPopupPage });
