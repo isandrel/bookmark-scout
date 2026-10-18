@@ -284,3 +284,36 @@ export function readChatSuggestions(output: unknown): ChatSuggestion[] {
   const parsed = z.object({ suggestions: z.array(suggestionOutput) }).safeParse(output);
   return parsed.success ? parsed.data.suggestions : [];
 }
+
+/** The parts of a chat message this file reads, as the AI SDK's `useChat` gives them. */
+type ChatMessageLike = {
+  id: string;
+  role: string;
+  parts: readonly { type: string; state?: string; toolName?: string; output?: unknown }[];
+};
+
+/** A tool part's tool name: `tool-<name>` for a typed tool, `toolName` for a dynamic one. */
+function toolNameOf(part: ChatMessageLike['parts'][number]): string | undefined {
+  if (part.type === 'dynamic-tool') return part.toolName;
+  return part.type.startsWith('tool-') ? part.type.slice('tool-'.length) : undefined;
+}
+
+/**
+ * The buttons the chat offers now: those of the latest answer only, from its last
+ * `suggestActions` call that gave any. None once the user has written again, or while that
+ * answer waits for an approval. Earlier answers' buttons are gone, as they may no longer fit.
+ */
+export function latestChatSuggestions(
+  messages: readonly ChatMessageLike[],
+): { messageId: string; suggestions: ChatSuggestion[] } | undefined {
+  const last = messages.at(-1);
+  if (last?.role !== 'assistant') return undefined;
+  if (last.parts.some((part) => part.state === 'approval-requested')) return undefined;
+  for (let index = last.parts.length - 1; index >= 0; index--) {
+    const part = last.parts[index];
+    if (toolNameOf(part) !== SUGGEST_ACTIONS_ID || part.state !== 'output-available') continue;
+    const suggestions = readChatSuggestions(part.output);
+    if (suggestions.length > 0) return { messageId: last.id, suggestions };
+  }
+  return undefined;
+}

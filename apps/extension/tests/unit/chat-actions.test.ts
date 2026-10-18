@@ -9,7 +9,11 @@ import { saveSettings } from '@/lib/settings-storage';
 import type { ActionContext } from '@/services/action-kit';
 import { actionApproval, getAction, runAction } from '@/services/actions';
 import { readConversation } from '@/services/ai-agent.lazy';
-import { readChatSuggestions, webUrlsInMessage } from '@/services/chat-actions';
+import {
+  latestChatSuggestions,
+  readChatSuggestions,
+  webUrlsInMessage,
+} from '@/services/chat-actions';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
 let bookmarks: FakeBookmarks;
@@ -272,5 +276,58 @@ describe('suggestActions save provenance', () => {
           'not ftp://d.example/ or javascript:alert(1)',
       ),
     ).toEqual(['https://a.example/x', 'https://b.example/y', 'https://c.example/?q=1']);
+  });
+});
+
+describe('latestChatSuggestions', () => {
+  const ask = (label: string) => ({ kind: 'ask', label, text: label });
+  const suggestPart = (labels: string[], state = 'output-available') => ({
+    type: 'tool-suggestActions',
+    state,
+    output: { suggestions: labels.map(ask), dropped: [] },
+  });
+  const text = (value: string) => ({ type: 'text', text: value });
+  const user = (id: string) => ({ id, role: 'user', parts: [text('Hi')] });
+  const labels = (messages: Parameters<typeof latestChatSuggestions>[0]) =>
+    latestChatSuggestions(messages)?.suggestions.map((suggestion) =>
+      'label' in suggestion ? suggestion.label : suggestion.kind,
+    );
+
+  it("offers the latest answer's buttons from its last call that gave any", () => {
+    const answer = {
+      id: 'a2',
+      role: 'assistant',
+      parts: [
+        { type: 'tool-suggestActions', state: 'output-error' },
+        suggestPart(['First']),
+        suggestPart([]),
+        text('The answer, written after the buttons.'),
+      ],
+    };
+    expect(latestChatSuggestions([user('u1'), answer])).toEqual({
+      messageId: 'a2',
+      suggestions: [ask('First')],
+    });
+    // A dynamic tool part names its tool in `toolName`.
+    const dynamic = {
+      ...suggestPart(['Dynamic']),
+      type: 'dynamic-tool',
+      toolName: 'suggestActions',
+    };
+    expect(labels([{ id: 'a', role: 'assistant', parts: [dynamic] }])).toEqual(['Dynamic']);
+  });
+
+  it('offers nothing for earlier answers, a new question, a pending approval, or other tools', () => {
+    const earlier = { id: 'a1', role: 'assistant', parts: [suggestPart(['Old'])] };
+    expect(labels([earlier, user('u2')])).toBeUndefined();
+    const plain = { id: 'a2', role: 'assistant', parts: [text('No buttons')] };
+    expect(labels([earlier, user('u2'), plain])).toBeUndefined();
+    const waiting = { type: 'tool-saveBookmark', state: 'approval-requested' };
+    expect(
+      labels([{ id: 'a3', role: 'assistant', parts: [suggestPart(['Wait']), waiting] }]),
+    ).toBeUndefined();
+    const other = { ...suggestPart(['X']), type: 'tool-searchBookmarks' };
+    expect(labels([{ id: 'a4', role: 'assistant', parts: [other] }])).toBeUndefined();
+    expect(labels([])).toBeUndefined();
   });
 });
