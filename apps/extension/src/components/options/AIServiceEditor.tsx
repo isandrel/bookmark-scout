@@ -109,16 +109,32 @@ const CONNECTION_STATUS_STYLES = {
   },
 } as const;
 
-/** The result of Refresh Models or Verify Service, shown next to the buttons that produced it. */
-function ConnectionStatus({ status }: { status: ConnectionStatusValue | null }) {
+/**
+ * The result of Refresh Models or Verify Service, shown next to the buttons that produced it.
+ * While a new check runs, the last result stays in place, dimmed, so the form below does not
+ * jump up and back down.
+ */
+function ConnectionStatus({
+  status,
+  checking,
+}: {
+  status: ConnectionStatusValue | null;
+  checking: boolean;
+}) {
   return (
-    <div role="status" aria-live="polite" data-testid="ai-service-status">
+    <div
+      role="status"
+      aria-live="polite"
+      aria-busy={checking}
+      data-testid="ai-service-status"
+      data-stale={checking && status ? '' : undefined}
+    >
       {status &&
         (() => {
           const { icon: Icon, className } = CONNECTION_STATUS_STYLES[status.tone];
           return (
             <div
-              className={`flex items-start gap-2 rounded-md border px-3 py-2 text-sm ${className}`}
+              className={`flex items-start gap-2 rounded-md border px-3 py-2 text-sm transition-opacity ${className} ${checking ? 'opacity-50' : ''}`}
             >
               <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
               <div className="min-w-0 [overflow-wrap:anywhere]">
@@ -129,6 +145,19 @@ function ConnectionStatus({ status }: { status: ConnectionStatusValue | null }) 
           );
         })()}
     </div>
+  );
+}
+
+/**
+ * A button label that switches to its busy text without changing the button's width: both texts
+ * share one grid cell and only the current one is visible, so the buttons beside it stay put.
+ */
+function SteadyLabel({ busy, idle, busyText }: { busy: boolean; idle: string; busyText: string }) {
+  return (
+    <span className="inline-grid">
+      <span className={`col-start-1 row-start-1 ${busy ? 'invisible' : ''}`}>{idle}</span>
+      <span className={`col-start-1 row-start-1 ${busy ? '' : 'invisible'}`}>{busyText}</span>
+    </span>
   );
 }
 
@@ -356,7 +385,6 @@ export function AIServiceEditor({
   };
 
   const verifyConnection = async () => {
-    setStatus(null);
     setIsVerifying(true);
     try {
       const settings = await prepareRequest();
@@ -405,7 +433,6 @@ export function AIServiceEditor({
   };
 
   const refreshModels = async () => {
-    setStatus(null);
     setIsDetecting(true);
     try {
       const settings = await prepareRequest();
@@ -522,16 +549,24 @@ export function AIServiceEditor({
           />
           {hasModelList && (
             <Button type="button" variant="outline" onClick={refreshModels} disabled={isDetecting}>
-              <RefreshCw className="h-4 w-4" />
-              {isDetecting ? t('options_refreshingModels') : t('options_refreshModels')}
+              <RefreshCw className={`h-4 w-4 ${isDetecting ? 'motion-safe:animate-spin' : ''}`} />
+              <SteadyLabel
+                busy={isDetecting}
+                idle={t('options_refreshModels')}
+                busyText={t('options_refreshingModels')}
+              />
             </Button>
           )}
           <Button type="button" variant="outline" onClick={verifyConnection} disabled={isVerifying}>
             <Wifi className="h-4 w-4" />
-            {isVerifying ? t('options_verifyingService') : t('options_verifyService')}
+            <SteadyLabel
+              busy={isVerifying}
+              idle={t('options_verifyService')}
+              busyText={t('options_verifyingService')}
+            />
           </Button>
         </div>
-        <ConnectionStatus status={status} />
+        <ConnectionStatus status={status} checking={isDetecting || isVerifying} />
         {providerSupportsCustomModel(provider) && (
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Label htmlFor={`${idPrefix}-customModel`} className="text-xs text-muted-foreground">

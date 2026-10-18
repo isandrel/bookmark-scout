@@ -158,3 +158,49 @@ test('[mocked provider contract] the provider picker searches the catalog and li
   await expect(service.getByRole('combobox', { name: 'AI Model' })).toHaveText('together/model-a');
   expect(authorization).toBe('Bearer synthetic-key');
 });
+
+test('a second check keeps the last result and the buttons in place while it runs', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedCustomService(extensionWorker, 'listed-model-a');
+  let release: () => void = () => {};
+  let hold = false;
+  await context.route(`${BASE_URL}/**`, async (route) => {
+    if (hold) await new Promise<void>((resolve) => (release = resolve));
+    await route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({ data: [{ id: 'listed-model-a' }] }),
+    });
+  });
+
+  await openAIOptions(page, extensionId);
+  const refresh = page.getByRole('button', { name: 'Refresh Models' });
+  const verify = page.getByRole('button', { name: 'Verify Service' });
+  const status = page.getByTestId('ai-service-status');
+  await refresh.click();
+  await expect(status.getByText('1 models found from Custom Provider.')).toBeVisible();
+  const before = { refresh: await refresh.boundingBox(), verify: await verify.boundingBox() };
+  const statusBefore = await status.boundingBox();
+
+  // While the next check waits on the provider, nothing moves: the last result stays (dimmed)
+  // and the busy label takes no more or less room than the idle one.
+  hold = true;
+  await refresh.click();
+  await expect(page.getByRole('button', { name: 'Refreshing...' })).toBeDisabled();
+  await expect(status).toHaveAttribute('data-stale', '');
+  expect(await status.boundingBox()).toEqual(statusBefore);
+  expect(await page.getByRole('button', { name: 'Refreshing...' }).boundingBox()).toEqual(
+    before.refresh,
+  );
+  expect(await verify.boundingBox()).toEqual(before.verify);
+
+  release();
+  await expect(status).not.toHaveAttribute('data-stale', '');
+  await expect(refresh).toBeEnabled();
+});
