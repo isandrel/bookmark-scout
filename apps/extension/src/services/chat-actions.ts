@@ -7,8 +7,9 @@
  * `saveBookmark` action, with its undo, without another approval unless `approval` says so.
  *
  * Folders are named by ref or path and resolved against the real tree; a suggestion whose folder
- * or bookmark does not exist is left out and counted in `dropped`, so a button never points
- * somewhere else than it says. Button text from the model is plain text, cut to a configured
+ * or bookmark does not exist, that lacks what its kind needs, or that is past the limit is left
+ * out and counted in `dropped`, so a button never points somewhere else than it says and one bad
+ * button never fails the rest. Button text from the model is plain text, cut to a configured
  * length (`config/ai/agent.toml`), and save, open, and show buttons are labeled by the extension.
  *
  * A save may only name a page the conversation already knows: the current page, a URL a tool
@@ -60,34 +61,63 @@ function isKnownPage(
   return conversation?.knownUrls.has(key) ?? false;
 }
 
-const label = z.string().trim().min(1).describe("Short button text in the user's language");
-const text = z.string().trim().min(1).describe('The message sent when the user clicks it');
+/**
+ * One button, as one flat object whose fields depend on `kind`; which fields a kind needs is
+ * checked per button in `resolveSuggestion`. A union with one object per kind (JSON Schema
+ * `oneOf`) did not survive every route: through CLIProxyAPI to Gemini the model never saw the
+ * fields, guessed them (`folderPath`, `type`, an ask without `text`), and each guess failed the
+ * whole call, so the chat showed failed steps until a later try matched. A flat object reaches
+ * every provider, and a button missing what its kind needs is left out on its own, with the
+ * reason in `dropped`, instead of failing the others.
+ */
+const suggestionInput = z.object({
+  kind: z
+    .enum(['ask', 'option', 'save', 'open', 'show'])
+    .describe(
+      'ask: a next question the user may ask. option: one of several ideas or choices, whose ' +
+        'text is sent to act on or ask about it. save: save a page to a folder. open: open a ' +
+        'bookmark. show: show a bookmark or folder in the bookmark manager.',
+    ),
+  label: z
+    .string()
+    .trim()
+    .optional()
+    .describe("ask, option: short button text in the user's language"),
+  text: z
+    .string()
+    .trim()
+    .optional()
+    .describe('ask, option: the message sent when the user clicks it'),
+  folder: z
+    .string()
+    .trim()
+    .optional()
+    .describe('save (required): an existing folder, its ref (f:<id>) or full path'),
+  url: z
+    .string()
+    .trim()
+    .optional()
+    .describe(
+      'save: the page to save, the current page when left out: a URL the user typed or a tool ' +
+        'result gave, never one only seen in page text',
+    ),
+  title: z.string().trim().optional().describe('save: the page title'),
+  newFolder: z.string().trim().optional().describe('save: a new folder to create inside `folder`'),
+  ref: z
+    .string()
+    .trim()
+    .optional()
+    .describe('open (required): a bookmark, b:<id>. show (required): b:<id> or f:<id>'),
+});
 
-const suggestionInput = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('ask'), label, text }).describe('A next question the user may ask'),
-  z
-    .object({ kind: z.literal('option'), label, text })
-    .describe('One of several ideas or choices; clicking sends `text` to act on or ask about it'),
-  z
-    .object({
-      kind: z.literal('save'),
-      url: z
-        .string()
-        .optional()
-        .describe(
-          'The page to save, the current page when left out: a URL the user typed or a tool ' +
-            'result gave, never one only seen in page text',
-        ),
-      title: z.string().trim().optional(),
-      folder: z.string().min(1).describe('An existing folder: its ref (f:<id>) or full path'),
-      newFolder: z.string().trim().min(1).optional().describe('A new folder to create inside it'),
-    })
-    .describe('Save a page to a folder'),
-  z.object({ kind: z.literal('open'), ref: z.string() }).describe('Open a bookmark (b:<id>)'),
-  z
-    .object({ kind: z.literal('show'), ref: z.string() })
-    .describe('Show a bookmark or folder (b:<id> or f:<id>) in the bookmark manager'),
-]);
+/** The fields a kind needs, for the reason a button without them is left out. */
+const REQUIRED_FIELDS = {
+  ask: 'label or text',
+  option: 'label or text',
+  save: 'folder',
+  open: 'ref',
+  show: 'ref',
+} as const satisfies Record<z.infer<typeof suggestionInput>['kind'], string>;
 
 const suggestionOutput = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('ask'), label: z.string(), text: z.string() }),
@@ -123,15 +153,18 @@ async function resolveSuggestion(
   context: ActionContext,
 ): Promise<ChatSuggestion | string> {
   const { suggestion_label_chars: labelChars, suggestion_text_chars: textChars } = ASK_AI_CONFIG;
+  const missing = `Left out a "${suggestion.kind}" button without ${REQUIRED_FIELDS[suggestion.kind]}.`;
   switch (suggestion.kind) {
     case 'ask':
-    case 'option':
-      return {
-        kind: suggestion.kind,
-        label: cut(suggestion.label, labelChars),
-        text: cut(suggestion.text, textChars),
-      };
+    case 'option': {
+      // A question's button may say the question itself, so either one stands in for the other.
+      const label = suggestion.label || suggestion.text;
+      const text = suggestion.text || suggestion.label;
+      if (!label || !text) return missing;
+      return { kind: suggestion.kind, label: cut(label, labelChars), text: cut(text, textChars) };
+    }
     case 'save': {
+      if (!suggestion.folder) return missing;
       const current = await context.activeTab();
       const page = suggestion.url
         ? {
@@ -166,6 +199,7 @@ async function resolveSuggestion(
       };
     }
     case 'open': {
+      if (!suggestion.ref) return missing;
       const ref = parseActionRef(suggestion.ref);
       const bookmark = ref?.kind === 'bookmark' ? library.bookmarkById.get(ref.id) : undefined;
       if (!bookmark?.node.url || !isWebUrl(bookmark.node.url)) {
@@ -179,6 +213,7 @@ async function resolveSuggestion(
       };
     }
     case 'show': {
+      if (!suggestion.ref) return missing;
       const ref = parseActionRef(suggestion.ref);
       const folder = ref?.kind === 'folder' ? library.folderById.get(ref.id) : undefined;
       const bookmark = ref?.kind === 'bookmark' ? library.bookmarkById.get(ref.id) : undefined;
@@ -211,7 +246,10 @@ const suggestActions = defineAction({
       'the user writes in.',
   },
   input: z.object({
-    suggestions: z.array(suggestionInput).min(1).max(ASK_AI_CONFIG.max_suggestions),
+    // No hard maximum: buttons past it are left out and named in `dropped`, not a failed call.
+    suggestions: z
+      .array(suggestionInput)
+      .describe(`At most ${ASK_AI_CONFIG.max_suggestions} buttons, best first`),
   }),
   output: z.object({
     suggestions: z.array(suggestionOutput),
@@ -222,11 +260,16 @@ const suggestActions = defineAction({
     const library = await loadActionLibrary();
     const suggestions: ChatSuggestion[] = [];
     const dropped: string[] = [];
-    for (const suggestion of input.suggestions) {
-      const resolved = await resolveSuggestion(suggestion, library, context);
+    const { max_suggestions: max } = ASK_AI_CONFIG;
+    // The limit counts working buttons, so a button left out does not take a place.
+    let next = 0;
+    for (; next < input.suggestions.length && suggestions.length < max; next++) {
+      const resolved = await resolveSuggestion(input.suggestions[next], library, context);
       if (typeof resolved === 'string') dropped.push(resolved);
       else suggestions.push(resolved);
     }
+    const over = input.suggestions.length - next;
+    if (over > 0) dropped.push(`Left out ${over} buttons past the limit of ${max}.`);
     return { suggestions, dropped };
   },
 });
@@ -240,4 +283,37 @@ export const SUGGEST_ACTIONS_ID = 'suggestActions';
 export function readChatSuggestions(output: unknown): ChatSuggestion[] {
   const parsed = z.object({ suggestions: z.array(suggestionOutput) }).safeParse(output);
   return parsed.success ? parsed.data.suggestions : [];
+}
+
+/** The parts of a chat message this file reads, as the AI SDK's `useChat` gives them. */
+type ChatMessageLike = {
+  id: string;
+  role: string;
+  parts: readonly { type: string; state?: string; toolName?: string; output?: unknown }[];
+};
+
+/** A tool part's tool name: `tool-<name>` for a typed tool, `toolName` for a dynamic one. */
+function toolNameOf(part: ChatMessageLike['parts'][number]): string | undefined {
+  if (part.type === 'dynamic-tool') return part.toolName;
+  return part.type.startsWith('tool-') ? part.type.slice('tool-'.length) : undefined;
+}
+
+/**
+ * The buttons the chat offers now: those of the latest answer only, from its last
+ * `suggestActions` call that gave any. None once the user has written again, or while that
+ * answer waits for an approval. Earlier answers' buttons are gone, as they may no longer fit.
+ */
+export function latestChatSuggestions(
+  messages: readonly ChatMessageLike[],
+): { messageId: string; suggestions: ChatSuggestion[] } | undefined {
+  const last = messages.at(-1);
+  if (last?.role !== 'assistant') return undefined;
+  if (last.parts.some((part) => part.state === 'approval-requested')) return undefined;
+  for (let index = last.parts.length - 1; index >= 0; index--) {
+    const part = last.parts[index];
+    if (toolNameOf(part) !== SUGGEST_ACTIONS_ID || part.state !== 'output-available') continue;
+    const suggestions = readChatSuggestions(part.output);
+    if (suggestions.length > 0) return { messageId: last.id, suggestions };
+  }
+  return undefined;
 }

@@ -9,7 +9,12 @@ const pixels = z.number().int().positive();
 const columnLayoutSchema = z.union([
   z.strictObject({ fixed: pixels, hide_below_width: pixels.optional() }),
   z
-    .strictObject({ size: pixels, min_size: pixels, hide_below_width: pixels.optional() })
+    .strictObject({
+      size: pixels,
+      min_size: pixels,
+      fill: z.number().positive().optional(),
+      hide_below_width: pixels.optional(),
+    })
     .refine((layout) => layout.min_size <= layout.size, 'min_size must not exceed size'),
 ]);
 
@@ -65,6 +70,7 @@ export const CONFIGURED_COLUMN_IDS: readonly string[] = Object.keys(managerTable
 /** A column's width and narrow-table behavior, for its registry entry in `columns.tsx`. */
 export function getManagerColumnLayout(columnId: string): {
   size: BookmarkColumnSize;
+  fillWeight?: number;
   hideBelowWidth?: number;
 } {
   const layout = managerTableConfig.columns[columnId];
@@ -72,7 +78,10 @@ export function getManagerColumnLayout(columnId: string): {
     throw new Error(`config/ui/manager-table.toml has no width for column "${columnId}"`);
   const size: BookmarkColumnSize =
     'fixed' in layout ? { fixed: layout.fixed } : { size: layout.size, minSize: layout.min_size };
-  return layout.hide_below_width === undefined
-    ? { size }
-    : { size, hideBelowWidth: layout.hide_below_width };
+  const fillWeight = 'fill' in layout ? layout.fill : undefined;
+  return {
+    size,
+    ...(fillWeight === undefined ? {} : { fillWeight }),
+    ...(layout.hide_below_width === undefined ? {} : { hideBelowWidth: layout.hide_below_width }),
+  };
 }

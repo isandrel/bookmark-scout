@@ -182,12 +182,22 @@ async function readStatus(): Promise<BuiltinAIStatus> {
   }
 }
 
+/** The state last read on this page, for a first render that cannot wait for a promise. */
+let known: BuiltinAIStatus | undefined;
+
 function publish(next: Promise<BuiltinAIStatus>): Promise<BuiltinAIStatus> {
   current = next;
   void next.then((status) => {
-    if (current === next) for (const listener of listeners) listener(status);
+    if (current !== next) return;
+    known = status;
+    for (const listener of listeners) listener(status);
   });
   return next;
+}
+
+/** The model's state as last read on this page, `undefined` before the first read finishes. */
+export function peekBuiltinAIStatus(): BuiltinAIStatus | undefined {
+  return known;
 }
 
 /**
