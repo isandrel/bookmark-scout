@@ -1,12 +1,13 @@
 import type { ModelMessage } from 'ai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { z } from 'zod';
 import { setLanguage } from '@/hooks/use-i18n';
 import { ASK_AI_CONFIG } from '@/lib/ask-ai-config';
 import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import type { ActionContext } from '@/services/action-kit';
-import { actionApproval, runAction } from '@/services/actions';
+import { actionApproval, getAction, runAction } from '@/services/actions';
 import { readConversation } from '@/services/ai-agent.lazy';
 import { readChatSuggestions, webUrlsInMessage } from '@/services/chat-actions';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
@@ -124,9 +125,52 @@ describe('suggestActions', () => {
       label: 'Q',
       text: 'Q',
     }));
-    expect(await suggest(tooMany)).toMatchObject({ error: { code: 'invalid_input' } });
+    // Buttons past the limit are left out and named, not a failed call.
+    const capped = await suggest(tooMany);
+    expect(capped.suggestions).toHaveLength(ASK_AI_CONFIG.max_suggestions);
+    expect(capped.dropped).toEqual([
+      `Left out 1 buttons past the limit of ${ASK_AI_CONFIG.max_suggestions}.`,
+    ]);
     expect(readChatSuggestions({ suggestions: [{ kind: 'save' }] })).toEqual([]);
     expect(readChatSuggestions('nonsense')).toEqual([]);
+  });
+
+  it('leaves out a button missing what its kind needs and keeps the rest', async () => {
+    // What a live model sent when the per-kind fields did not reach it (CLIProxyAPI to Gemini).
+    const result = await suggest([
+      { kind: 'save', label: 'Save', folderPath: 'Bookmarks Bar/Work' },
+      { kind: 'open' },
+      { kind: 'show', ref: '' },
+      { kind: 'ask' },
+      { kind: 'ask', label: 'What are the main sections?' },
+      { kind: 'option', text: 'Make a Reading folder' },
+      { kind: 'save', folder: 'Work' },
+    ]);
+    expect(result.dropped).toEqual([
+      'Left out a "save" button without folder.',
+      'Left out a "open" button without ref.',
+      'Left out a "show" button without ref.',
+      'Left out a "ask" button without label or text.',
+    ]);
+    expect(result.suggestions).toEqual([
+      { kind: 'ask', label: 'What are the main sections?', text: 'What are the main sections?' },
+      { kind: 'option', label: 'Make a Reading folder', text: 'Make a Reading folder' },
+      expect.objectContaining({ kind: 'save', folderRef: 'f:work' }),
+    ]);
+    // A kind the action does not know still fails the call, which says which kinds there are.
+    expect(await suggest([{ kind: 'question', label: 'Q' }])).toMatchObject({
+      error: { code: 'invalid_input' },
+    });
+  });
+
+  it('offers the model one flat object per button, with no union for a route to drop', () => {
+    const schema = JSON.stringify(
+      z.toJSONSchema(getAction('suggestActions').input as z.ZodType, { io: 'input' }),
+    );
+    expect(schema).not.toMatch(/"(oneOf|anyOf|allOf)"/);
+    for (const field of ['kind', 'label', 'text', 'folder', 'url', 'title', 'newFolder', 'ref']) {
+      expect(schema).toContain(`"${field}"`);
+    }
   });
 });
 
