@@ -5011,6 +5011,22 @@
         "message": "資料夾推薦、自動加上標籤和內容摘要工具除了傳送標題和網址，也會傳送每個網頁的可讀文字，以獲得更好的結果。下載網頁時不會附帶 Cookie，絕不會讀取區域網路中的網頁，而且開啟此選項時會要求網站存取權。",
         "description": "Settings: description of Read page content"
     },
+    "settings_aiOutputLanguage": {
+        "message": "AI 輸出語言",
+        "description": "Settings: AI output language (the language AI writes tags, summaries, and folder names in)"
+    },
+    "settings_aiOutputLanguageDesc": {
+        "message": "AI 撰寫標籤、摘要和新資料夾名稱所用的語言。詢問 AI 會以你提問的語言回答。",
+        "description": "Settings: description of AI output language"
+    },
+    "settings_aiOutputLanguageAuto": {
+        "message": "與擴充功能相同",
+        "description": "AI output language option: the extension's own language"
+    },
+    "settings_aiOutputLanguagePage": {
+        "message": "與各網頁相同",
+        "description": "AI output language option: the language of each page or bookmark title"
+    },
     "settings_aiActivityRecording": {
         "message": "記錄 AI 請求",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5421,6 +5437,10 @@
     },
     "prompt_varToday": {
         "message": "今天的日期，格式為 YYYY-MM-DD",
+        "description": "Prompt variable description"
+    },
+    "prompt_varLanguage": {
+        "message": "輸出所用語言，來自「AI 輸出語言」設定",
         "description": "Prompt variable description"
     },
     "error_bookmarksApiUnavailable": {
