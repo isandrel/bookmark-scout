@@ -101,7 +101,9 @@ test('[mocked provider contract] auto-tagging asks for the AI output language: t
     const body = route.request().postDataJSON() as { messages: { role: string; content: string }[] };
     systems.push(body.messages.find((message) => message.role === 'system')?.content ?? '');
     const content = JSON.stringify({
-      items: [{ bookmarkId: ids['Language Fixture'], title: 'Language Fixture', tags: ['e2e'] }],
+      items: [
+        { bookmarkId: ids['Language Fixture'], title: 'Language Fixture', tags: ['e2e'], reason: 'r' },
+      ],
     });
     await route.fulfill({
       status: 200,
@@ -129,7 +131,7 @@ test('[mocked provider contract] auto-tagging asks for the AI output language: t
   await analyze();
   expect(systems).toHaveLength(1);
   expect(systems[0]).toContain(
-    'Write all free text (summaries, reasons, new tag and folder names) in Japanese (日本語).',
+    'Write all free text, including tags, summaries, reasons, and new folder names, in Japanese (日本語).',
   );
 
   await setSettings(extensionWorker, { aiOutputLanguage: 'page' });

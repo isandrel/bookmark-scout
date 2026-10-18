@@ -47,7 +47,7 @@ Return exactly {{maxRecommendations}} folder recommendations ranked by confidenc
 Each recommendation should have a clear, brief reason."""
 # The output language, after every editable prompt (custom ones too) and on its own line, where
 # models follow it best (Language Confusion Benchmark, arXiv 2406.20052)
-output_language = "Write all free text (summaries, reasons, new tag and folder names) in {{language}}. Keep existing tags, folder names, proper nouns, and URLs exactly as written."
+output_language = "Write all free text, including tags, summaries, reasons, and new folder names, in {{language}}. Keep existing tags and folder names, proper nouns, and URLs exactly as written."
 # Ask AI follows the user, and the output language only when the user's language is unclear
 ask_ai_language = "Answer in the language the user writes in, unless they ask for another language. When that is unclear, answer in {{language}}."
 # Ask AI tool results include bookmark titles, page text, and web search results

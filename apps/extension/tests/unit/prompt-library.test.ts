@@ -43,7 +43,7 @@ beforeEach(() => {
 
 const ONE_ITEM_RULE = 'Return exactly one item per bookmark and preserve bookmarkId/title exactly.';
 const OUTPUT_RULE = (language: string) =>
-  `Write all free text (summaries, reasons, new tag and folder names) in ${language}. Keep existing tags, folder names, proper nouns, and URLs exactly as written.`;
+  `Write all free text, including tags, summaries, reasons, and new folder names, in ${language}. Keep existing tags and folder names, proper nouns, and URLs exactly as written.`;
 const tagging = {
   autoTaggingMinTags: 2,
   autoTaggingMaxTags: 3,

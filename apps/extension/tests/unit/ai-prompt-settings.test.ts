@@ -63,7 +63,7 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
     const systems = mocks.generateAIObject.mock.calls.map(([request]) => request.system);
     expect(systems).toHaveLength(3);
     for (const system of systems) {
-      expect(system).toContain('new tag and folder names) in German (Deutsch).');
+      expect(system).toContain('and new folder names, in German (Deutsch).');
     }
   });
 
