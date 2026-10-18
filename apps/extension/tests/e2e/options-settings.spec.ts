@@ -834,3 +834,34 @@ test('a short choice is one-click segments that save on click and arrow keys, an
   await page.getByRole('tab', { name: 'Maintenance' }).click();
   await expect(page.getByRole('combobox', { name: 'Match Strategy' })).toBeVisible();
 });
+
+test('switching the theme changes the page once, without flashing back', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', theme: 'light' });
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/);
+  // Every class change on <html>, in order, from here on.
+  await page.evaluate(() => {
+    const seen: boolean[] = [];
+    (window as unknown as { themeSeen: boolean[] }).themeSeen = seen;
+    new MutationObserver(() => {
+      const dark = document.documentElement.classList.contains('dark');
+      if (seen.at(-1) !== dark) seen.push(dark);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  });
+  const seen = () =>
+    page.evaluate(() => (window as unknown as { themeSeen: boolean[] }).themeSeen);
+
+  await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('dark');
+  await expect(page.locator('html')).toHaveClass(/\bdark\b/);
+  await page.getByRole('button', { name: 'Switch to light theme' }).click();
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('light');
+  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/);
+  // Each click applies the new theme once; before the fix the old setting came back for a frame
+  // and the page flashed.
+  expect(await seen()).toEqual([true, false]);
+});
