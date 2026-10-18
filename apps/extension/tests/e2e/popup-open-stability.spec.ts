@@ -1,7 +1,8 @@
 /**
  * The popup and side panel open in their final layout: with AI on, a recent folder, the current
  * page already saved elsewhere, and the shortcut notice, nothing on the first frame moves or
- * changes afterwards. Every frame of the first second is recorded from inside the page.
+ * changes afterwards, and nothing appears later except the tree's rows in place of the loading
+ * skeleton. Every frame of the first second is recorded from inside the page.
  */
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
@@ -81,7 +82,16 @@ async function readFrames(page: Page): Promise<{ frames: Frame[]; shiftScore: nu
   );
 }
 
-/** Each part that moved, appeared, or went away after the first frame, at its first change. */
+/**
+ * Parts that may arrive after the first frame because they fill a space already laid out: the
+ * tree's rows replace the loading skeleton inside the tree's scroll area, which must not move.
+ */
+const FILLS_IN_PLACE = new Set(['firstRow']);
+
+/**
+ * Each part that moved, appeared, or went away after the first frame, at its first change. A
+ * part that fills in place is checked from the frame it first shows on.
+ */
 function changesAfterFirstFrame(frames: readonly Frame[]): string[] {
   const [first, ...rest] = frames;
   if (!first) return ['no frame showed the search box'];
@@ -89,6 +99,7 @@ function changesAfterFirstFrame(frames: readonly Frame[]): string[] {
   const note = (key: string, message: string) => {
     if (!changes.has(key)) changes.set(key, message);
   };
+  const baseline = { ...first.rects };
   for (const frame of rest) {
     const at = Math.round(frame.time - first.time);
     if (frame.placeholder !== first.placeholder) {
@@ -97,11 +108,12 @@ function changesAfterFirstFrame(frames: readonly Frame[]): string[] {
         `placeholder "${first.placeholder}" -> "${frame.placeholder}" (+${at} ms)`,
       );
     }
-    const keys = new Set([...Object.keys(first.rects), ...Object.keys(frame.rects)]);
+    const keys = new Set([...Object.keys(baseline), ...Object.keys(frame.rects)]);
     for (const key of keys) {
-      const before = first.rects[key];
+      const before = baseline[key];
       const after = frame.rects[key];
-      if (!before) note(key, `${key} appeared (+${at} ms)`);
+      if (!before && after && FILLS_IN_PLACE.has(key)) baseline[key] = after;
+      else if (!before) note(key, `${key} appeared (+${at} ms)`);
       else if (!after) note(key, `${key} went away (+${at} ms)`);
       else if (before.some((value, index) => Math.abs(value - after[index]) > 1)) {
         note(key, `${key} moved ${before.join(',')} -> ${after.join(',')} (+${at} ms)`);
@@ -114,6 +126,7 @@ function changesAfterFirstFrame(frames: readonly Frame[]): string[] {
 for (const surface of ['popup', 'sidepanel'] as const) {
   for (const language of ['en', 'zh_CN'] as const) {
     test(`[${surface}, ${language}] opens in its final layout with AI, a recent folder, and a saved page`, async ({
+      context,
       extensionId,
       extensionWorker,
       page,
@@ -154,6 +167,13 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       }, SAVED_URL);
       await page.addInitScript(recordFrames, RECORD_MS);
       await page.setViewportSize({ width: 400, height: 600 });
+      // A second open, like most a user makes: the first one after install also waits for the
+      // just-started service worker and the seeding's bookmark events, which can outlast
+      // `preload_wait_ms`, and the page then fills in late by design.
+      const warmUp = await context.newPage();
+      await warmUp.goto(`chrome-extension://${extensionId}/${surface}.html`);
+      await expect(warmUp.locator('.folder-item').first()).toBeVisible();
+      await warmUp.close();
 
       await page.goto(`chrome-extension://${extensionId}/${surface}.html`);
       const { frames, shiftScore } = await readFrames(page);
@@ -168,7 +188,15 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       // The final layout has everything the scenario sets up, so the test checks the right page.
       const last = frames.at(-1)?.rects ?? {};
       expect(Object.keys(last)).toEqual(
-        expect.arrayContaining(['firstRow', 'pageLine', 'savedIn', 'recent', 'notice', 'hints']),
+        expect.arrayContaining([
+          'treeScroll',
+          'firstRow',
+          'pageLine',
+          'savedIn',
+          'recent',
+          'notice',
+          'hints',
+        ]),
       );
       expect(Object.keys(last).filter((key) => key.startsWith('button:'))).toHaveLength(5);
       expect(changes).toEqual([]);

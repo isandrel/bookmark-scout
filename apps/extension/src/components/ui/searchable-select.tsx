@@ -8,12 +8,20 @@ export type SearchableSelectOption = {
   group?: string;
   /** A one-color image drawn as a mask in the current text color, such as a provider logo. */
   iconUrl?: string;
+  /** Drawn instead when there is no `iconUrl`, such as a generic icon for the option's kind. */
+  icon?: React.ReactNode;
 };
 
 /** The option's icon, or an empty slot of the same size so labels line up. */
-function OptionIcon({ url }: { url?: string }) {
-  if (!url) return <span aria-hidden="true" className="size-4 shrink-0" />;
-  return <MaskIcon url={url} data-slot="option-icon" className="size-4 shrink-0" />;
+function OptionIcon({ option }: { option?: SearchableSelectOption }) {
+  if (option?.iconUrl) {
+    return <MaskIcon url={option.iconUrl} data-slot="option-icon" className="size-4 shrink-0" />;
+  }
+  return (
+    <span aria-hidden="true" className="flex size-4 shrink-0 items-center justify-center">
+      {option?.icon}
+    </span>
+  );
 }
 
 type OptionGroup = { value: string; items: SearchableSelectOption[] };
@@ -64,7 +72,7 @@ export function SearchableSelect({
   const [query, setQuery] = React.useState('');
   const groups = React.useMemo(() => groupOptions(options), [options]);
   const selected = options.find((option) => option.value === value) ?? null;
-  const hasIcons = options.some((option) => option.iconUrl);
+  const hasIcons = options.some((option) => option.iconUrl || option.icon);
   const hidingGroups = Boolean(searchOnlyGroups?.length) && query.trim() === '';
   const shownGroups = React.useMemo(
     () =>
@@ -101,7 +109,7 @@ export function SearchableSelect({
         )}
       >
         <span className="flex min-w-0 items-center gap-2">
-          {hasIcons && <OptionIcon url={selected?.iconUrl} />}
+          {hasIcons && <OptionIcon option={selected ?? undefined} />}
           <span className="truncate">
             <Combobox.Value />
           </span>
@@ -143,7 +151,7 @@ export function SearchableSelect({
                         <Combobox.ItemIndicator className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                           <Check className="h-4 w-4" />
                         </Combobox.ItemIndicator>
-                        {hasIcons && <OptionIcon url={option.iconUrl} />}
+                        {hasIcons && <OptionIcon option={option} />}
                         <span className="truncate">{option.label}</span>
                       </Combobox.Item>
                     )}

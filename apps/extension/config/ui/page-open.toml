@@ -1,8 +1,9 @@
 # Opening an extension page (src/lib/mount-extension-page.tsx).
 
 # The longest a page waits, from the start of its script, for what it reads before its first
-# render (the popup and side panel: AI setup, recent folders, the current page, the shortcut keys,
-# and the tree), so it opens in its final layout instead of rows and buttons appearing a moment
-# later and moving what is under the pointer. These reads usually take a few milliseconds; past
-# this cap the page renders anyway and fills in what is still missing.
+# render (the popup and side panel: AI setup, recent folders, the current page and where it is
+# saved, and the shortcut keys; not the tree, which fills its skeleton in place), so it opens in
+# its final layout instead of rows and buttons appearing a moment later and moving what is under
+# the pointer. These reads usually take 10 to 60 ms; past this cap the page renders anyway and
+# fills in what is still missing.
 preload_wait_ms = 150

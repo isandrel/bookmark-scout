@@ -3,7 +3,7 @@
  * endpoint, edit it in place, test it, set the default, duplicate, or delete it.
  */
 
-import { ChevronDown, Copy, Laptop, MoreHorizontal, Plus, Star, Trash2 } from 'lucide-react';
+import { ChevronDown, Copy, MoreHorizontal, Plus, Star, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 type ProviderOption = SearchableSelectOption;
@@ -30,23 +30,17 @@ function providerOptions(offerBuiltin: boolean, services: readonly AIService[]):
       label: getLocalizedProviderName(provider.id),
       group: t(PROVIDER_GROUP_LABELS[getProviderGroup(provider.id)]),
       iconUrl: getProviderLogoUrl(provider.id),
+      icon: <ProviderIcon provider={provider.id} className="size-4" />,
     }));
 }
 
 function ServiceLogo({ provider }: { provider: AIProvider }) {
-  const url = getProviderLogoUrl(provider);
   return (
     <span
       aria-hidden="true"
       className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-foreground"
     >
-      {url ? (
-        <MaskIcon url={url} className="size-4" />
-      ) : isBuiltinProvider(provider) ? (
-        <Laptop className="size-4" />
-      ) : (
-        <span className="text-xs font-semibold uppercase">{provider.slice(0, 2)}</span>
-      )}
+      <ProviderIcon provider={provider} className="size-4" />
     </span>
   );
 }

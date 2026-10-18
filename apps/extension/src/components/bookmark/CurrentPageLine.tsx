@@ -16,6 +16,26 @@ function findSavedFolderPaths(tree: readonly BookmarkTreeNode[], url: string): s
   return paths;
 }
 
+/** Where the current page is saved, read before the first render, for while the tree loads. */
+let savedBeforeTree: { url: string; paths: string[][] } | undefined;
+
+/**
+ * Reads the current page and where it is saved before the popup's first render
+ * (`preloadPopupPage`), so both lines are on the first frame. The tree is still loading then,
+ * so the folders come from the bookmarks of the page's URL and their parents.
+ */
+export async function preloadCurrentPageLine(): Promise<void> {
+  const page = await preloadCurrentPage();
+  if (!page) return;
+  try {
+    const saved = (await findBookmarksByUrl(page.url)).filter((node) => node.url === page.url);
+    const paths = await Promise.all(saved.map((node) => getBookmarkFolderPath(node.parentId)));
+    savedBeforeTree = { url: page.url, paths };
+  } catch {
+    // The tree, once loaded, still shows where the page is saved.
+  }
+}
+
 const lineClassName =
   'flex h-6 shrink-0 items-center gap-1.5 border-b px-3 text-xs text-muted-foreground [@media(max-height:399px)]:hidden';
 
@@ -29,7 +49,12 @@ const lineClassName =
 export function CurrentPageLine({ folders }: { folders: readonly BookmarkTreeNode[] }) {
   const page = useCurrentPage();
   const url = page?.url;
-  const savedIn = useMemo(() => (url ? findSavedFolderPaths(folders, url) : []), [folders, url]);
+  const savedIn = useMemo(() => {
+    if (!url) return [];
+    // The tree is empty until it loads; until then, what was read before the first render.
+    if (folders.length === 0 && savedBeforeTree?.url === url) return savedBeforeTree.paths;
+    return findSavedFolderPaths(folders, url);
+  }, [folders, url]);
   if (!page) return null;
   const text = t('newcomer_pageToSave', page.title);
   const savedText =

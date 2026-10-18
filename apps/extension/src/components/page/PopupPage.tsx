@@ -133,11 +133,10 @@ function PopupPage() {
     setExpandFoldersOnSearch(expandFoldersOnSearch);
   }, [expandFoldersOnSearch, setExpandFoldersOnSearch]);
 
-  // The tree, unless the read before the first render (`preloadPopupPage`) already has it.
-  const loadFolders = useBookmarkStore((state) => state.loadFolders);
+  // Fetch folders on mount
   useEffect(() => {
-    void loadFolders();
-  }, [loadFolders]);
+    fetchFolders();
+  }, [fetchFolders]);
 
   // Follow changes made elsewhere (manager page, browser UI, sync) without losing expansion.
   useBookmarkEvents(applyBookmarkEvents);
@@ -711,7 +710,8 @@ function PopupPage() {
               )}
             </div>
           ) : (
-            <div>
+            // Its own element, not the skeleton's restyled: the rows' first frame lands in place.
+            <div key="tree">
               <PopupTreeProvider
                 folders={folders}
                 favicon={favicon}
