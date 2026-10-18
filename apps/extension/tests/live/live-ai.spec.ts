@@ -347,3 +347,26 @@ test('[live provider] Auto-Tagging, Summarizer, and AI reorganization review, ap
 
   await expectKeyKeptPrivate(extensionWorker, ai, ['autoTagging', 'summarizer', 'reorganization']);
 });
+
+test('[live provider] Auto-Tagging writes tags in the AI output language', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const library = await seedLibrary(extensionWorker, site);
+  // English pages and an English extension, with tags asked for in Japanese.
+  await configureLiveAI(extensionWorker, ai, { autoTaggingEnabled: true, aiOutputLanguage: 'ja' });
+  const unsorted = library.folders.Unsorted;
+  const ids = (await childrenOf(extensionWorker, unsorted)).map((item) => item.id);
+  await openTools(page, extensionId, unsorted);
+
+  await toolCard(page, 'Auto-Tagging').getByRole('button', { name: 'Analyze' }).click();
+  const tagging = page.getByRole('dialog', { name: 'Auto-Tagging' });
+  await tagging.getByRole('button', { name: 'Save Suggested Tags' }).click({ timeout: AI_TIMEOUT });
+  const japanese = /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u;
+  const inJapanese = (entry: { tags?: string[] }) =>
+    (entry.tags ?? []).some((tag) => japanese.test(tag));
+  await expect.poll(() => withMetadata(extensionWorker, ids, inJapanese)).toBeGreaterThan(0);
+
+  await expectKeyKeptPrivate(extensionWorker, ai, ['autoTagging']);
+});
