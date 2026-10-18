@@ -217,10 +217,14 @@ test('narrow tables still hide Folder Path and URL so Title stays visible', asyn
   await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', String(urlStart + 80));
   await expect.poll(() => width(header(page, 'URL'))).toBeCloseTo(urlStart + 80, 0);
 
-  // Reset view forgets the widths too.
+  // Reset view forgets the widths too: Folder Path goes back to the View menu, and URL shares
+  // the room it leaves with Title again (wider than it started next to Folder Path).
   await page.getByRole('button', { name: 'Customize table view' }).click();
   await page.getByRole('button', { name: 'Reset view' }).click();
   await page.keyboard.press('Escape');
-  await expect(resizeHandle(page, 'URL')).toHaveAttribute('aria-valuenow', String(urlStart));
+  await expect(header(page, 'Folder Path')).toHaveCount(0);
   await expect.poll(() => savedColumnSizing(extensionWorker)).toEqual({});
+  const urlReset = Number(await resizeHandle(page, 'URL').getAttribute('aria-valuenow'));
+  expect(urlReset).toBeGreaterThan(urlStart);
+  expect(urlReset).not.toBe(urlStart + 80);
 });
