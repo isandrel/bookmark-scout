@@ -54,18 +54,10 @@ All answers are in [`../privacy-disclosures.md`](../privacy-disclosures.md) and 
 
 ## 5. Reviewer notes ("Test instructions")
 
-No test account or login is needed. Paste:
+No test account or login is needed. The dashboard field (Additional instructions) takes at most 500 characters, so this is the short form; the permission details are in [`../permissions.md`](../permissions.md). In the dashboard since 2026-10-18:
 
 ```text
-No account or login is required. Install (a welcome page opens once), then click the toolbar icon to open the popup, or open chrome://bookmarks for the bookmarks manager (the Tools button at the top right opens the maintenance and AI tools). Alt+Shift+S saves the current page without opening the popup (quick save); Alt+Shift+D does the same with the AI suggestion.
-
-AI features are off by default. With no API key, they can be reviewed with Chrome's built-in AI (Settings > AI > Free on this computer > Use built-in AI, on computers Chrome supports; the model runs on the device and nothing is sent anywhere) or a local Ollama server. Other providers need the reviewer's own API key. All other features work without AI.
-
-At install the extension asks only for bookmarks, storage, activeTab, sidePanel, scripting, and offscreen (no warnings except bookmarks). scripting injects the quick save confirmation into the one tab where the shortcut was pressed; offscreen runs AI quick save in a hidden extension page. Everything else is optional and requested when the user turns on or runs the feature that needs it: tabs when saving the current page from the side panel (the toolbar popup uses activeTab), contextMenus when the user turns on Right-Click Menu in Settings (off by default), favicon when the user clicks Show browser icons on Refresh Site Icons or turns on "Use the browser's icon cache", and website access when the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons (only the sites of the bookmarks in that run; all websites above 20 sites), turns on Read page content, or clicks Verify Service for an AI provider (that origin only).
-
-nativeMessaging is optional and requested only when the user turns on "Allow local AI agents" (Settings > For developers, off by default). It lets AI agents the user runs on the same computer (such as Claude Code) look up bookmarks through the open-source bookmark-scout-mcp program the user installs separately (packages/mcp-bridge in the repository). That program talks to agents only over a per-user socket, never a network port; nothing is sent to the developer. Agents can change bookmarks only if the user also turns on "Allow changes", and every change opens an extension window where the user approves or declines it. Without the program installed, the setting shows "not installed" and nothing else happens.
-
-Source code: https://github.com/isandrel/bookmark-scout (AGPL-3.0).
+No login needed. Popup: toolbar icon. Manager: chrome://bookmarks (Tools, top right). Alt+Shift+S quick-saves the current page. AI is off by default; test it free with Chrome's built-in AI (Settings > AI, where Chrome supports it), a local Ollama server, or your own key. The developer collects no data. With AI on, bookmark titles and URLs go from the browser straight to the provider the user chose. Optional permissions are asked only when needed. Source: github.com/isandrel/bookmark-scout
 ```
 
 ## 6. Account and distribution
