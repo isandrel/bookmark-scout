@@ -33,6 +33,20 @@ test.describe('right after install', () => {
     );
     await expect(page.locator('[data-welcome-step="save"]')).toContainText('Save a page');
     await expect(page.getByTestId('welcome-shortcut').locator('kbd')).toHaveText(quickSaveCaps);
+    // Chrome never lets an extension take the browser's bookmark keys by default, so the step
+    // offers them, opening the steps in Options.
+    const bookmarkKeys = page.getByTestId('welcome-bookmark-keys');
+    await expect(bookmarkKeys).toHaveText(
+      `Use ${process.platform === 'darwin' ? '⌘D' : 'Ctrl+D'} instead`,
+    );
+    const [shortcutSetup] = await Promise.all([
+      context.waitForEvent('page'),
+      bookmarkKeys.click(),
+    ]);
+    await expect(shortcutSetup).toHaveURL(
+      new RegExp(`^chrome-extension://${extensionId}/options\\.html.*#`),
+    );
+    await shortcutSetup.close();
     await expect(page.getByTestId('welcome-manager-note')).toHaveText(
       "Your browser's Bookmarks page now opens Bookmark Scout.",
     );

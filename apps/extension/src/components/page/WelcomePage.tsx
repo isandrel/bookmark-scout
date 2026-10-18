@@ -36,14 +36,36 @@ function QuickSaveKeys() {
       </span>
     );
   }
+  const apple = isApplePlatform();
+  // Chrome and Edge never let an extension take the browser's bookmark keys by default; only the
+  // user can, so the step offers them the way the popup's quick save tip does.
+  const takeover = getBookmarkShortcutTakeover();
+  const offerBookmarkKeys =
+    takeover !== null &&
+    !isSameCommandShortcut(shortcuts?.[takeover.command] ?? '', takeover.shortcut, { apple });
   return (
     <span className="flex flex-wrap items-center gap-2">
       <span>{t('welcome_shortcutBody')}</span>
       <span data-testid="welcome-shortcut" className="flex items-center gap-1">
-        {commandShortcutKeyCaps(keys, { apple: isApplePlatform() }).map((key) => (
+        {commandShortcutKeyCaps(keys, { apple }).map((key) => (
           <Kbd key={key}>{key}</Kbd>
         ))}
       </span>
+      {offerBookmarkKeys && (
+        <Button
+          type="button"
+          variant="link"
+          size="sm"
+          className="h-auto p-0"
+          data-testid="welcome-bookmark-keys"
+          onClick={() => void openCommandShortcutsInOptions()}
+        >
+          {t(
+            'newcomer_useBookmarkKeyInstead',
+            formatCommandShortcut(takeover.shortcut, { apple }),
+          )}
+        </Button>
+      )}
     </span>
   );
 }
