@@ -204,6 +204,15 @@ test('every default column fits at 1400 wide and move buttons never cover the da
   expect(layout.overflow).toBeLessThanOrEqual(0);
   expect(layout.dateAddedRight).toBeLessThanOrEqual(layout.actionsLeft + 1);
   expect(layout.actionsWidth).toBeLessThan(160);
+  // Rows are 32px like the folder tree's beside them, long titles included (they were 65px
+  // with shadcn's default cell padding), under a 40px header row. A collapsed table border
+  // counts the 1px line between rows in the row's box, so a row measures 32 or 33px.
+  const heights = (selector: string) =>
+    page
+      .locator(selector)
+      .evaluateAll((rows) => rows.map((tr) => Math.round(tr.getBoundingClientRect().height)));
+  for (const height of await heights('tbody tr')) expect([32, 33]).toContain(height);
+  for (const height of await heights('thead tr')) expect([40, 41]).toContain(height);
 
   // Hover reveals the move buttons in the actions column's own room, beside the date.
   // The default Sort Order is the browser's, so the table already offers moves.

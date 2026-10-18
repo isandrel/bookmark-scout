@@ -1,6 +1,15 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { readSettings, setSettings } from './storage';
+import { managerUrl } from './manager-helpers';
+import { seedFolder } from './popup-helpers';
+import {
+  readSettings,
+  readStored,
+  STORAGE_ITEMS,
+  seedAIServices,
+  setSettings,
+  writeStoredItems,
+} from './storage';
 
 async function openBehaviorOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
@@ -79,4 +88,73 @@ test('two Options tabs saving different settings at once both keep their change'
     confirmBeforeDelete: false,
     groupByFolders: false,
   });
+});
+
+// Chrome cannot update an unpacked extension in a test, so the update's `onInstalled` event is
+// dispatched in the service worker, reaching the listeners the background registered at start.
+test('an update from 0.3.3 removes only older keys, keeps what 0.3.3 stored, and opens no welcome page', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // What a 0.3.3 profile holds (more of it in tests/unit/upgrade-from-0.3.3.test.ts), and data
+  // from a release before it under a key this release does not list.
+  const folder = await seedFolder(extensionWorker, 'E2E Update', [
+    { title: 'Beta', url: 'https://e2e.invalid/beta' },
+    { title: 'Alpha', url: 'https://e2e.invalid/alpha' },
+  ]);
+  await writeStoredItems(extensionWorker, [
+    [STORAGE_ITEMS.settings, { language: 'en', sortOrder: 'date' }],
+    [
+      STORAGE_ITEMS.tableView,
+      {
+        columnVisibility: { id: false },
+        columnOrder: ['select', 'title', 'url', 'dateAdded'],
+        sorting: [{ id: 'title', desc: false }],
+        browserOrder: false,
+      },
+    ],
+  ]);
+  await seedAIServices(extensionWorker, [
+    { provider: 'openai', name: 'Work', credentials: { apiKey: 'sk-synthetic' } },
+  ]);
+  const legacyKey = 'bookmark-scout-settings';
+  const keysIn = (area: 'local' | 'sync') =>
+    extensionWorker.evaluate(
+      async (name) => Object.keys(await chrome.storage[name].get(null)).sort(),
+      area,
+    );
+  await extensionWorker.evaluate(
+    (key) => chrome.storage.sync.set({ [key]: { theme: 'dark' } }),
+    legacyKey,
+  );
+  const kept = {
+    local: await keysIn('local'),
+    sync: (await keysIn('sync')).filter((key) => key !== legacyKey),
+  };
+  expect(kept.sync).toHaveLength(2);
+
+  await extensionWorker.evaluate(() => {
+    const installed = chrome.runtime.onInstalled as unknown as {
+      dispatch(details: object): void;
+    };
+    installed.dispatch({ reason: 'update', previousVersion: '0.3.3' });
+  });
+
+  await expect.poll(() => keysIn('sync')).toEqual(kept.sync);
+  expect(await keysIn('local')).toEqual(kept.local);
+  expect(await readSettings(extensionWorker)).toEqual({ language: 'en', sortOrder: 'date' });
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.aiCredentials)).toEqual({
+    openai: { apiKey: 'sk-synthetic' },
+  });
+
+  // The manager shows the view 0.3.3 saved.
+  await page.goto(managerUrl(extensionId, folder.folderId));
+  await expect(page.getByTestId('table-order-status')).toHaveText('Order: Title, sorted ascending');
+  await expect(page.locator('tbody tr').first()).toContainText('Alpha');
+  // The welcome page is for a first install only.
+  expect(context.pages().map((open) => new URL(open.url()).pathname)).not.toContain(
+    '/welcome.html',
+  );
 });
