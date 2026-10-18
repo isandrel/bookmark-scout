@@ -2235,6 +2235,14 @@
         "message": "Supprimer les étiquettes en double, sans tenir compte de la casse, lors de l'enregistrement des suggestions vérifiées",
         "description": "Auto-tagging dedupe tag description"
     },
+    "settings_autoTaggingSendExistingTags": {
+        "message": "Envoyer les étiquettes existantes",
+        "description": "Settings: Auto-Tagging sends the names of tags already in use"
+    },
+    "settings_autoTaggingSendExistingTagsDesc": {
+        "message": "Envoie aussi les noms de vos étiquettes les plus utilisées, pour que l'IA les réutilise",
+        "description": "Settings: description of Send Existing Tags"
+    },
     "settings_summarizerEnabled": {
         "message": "Activer le générateur de résumés",
         "description": "Summarizer enabled label"
@@ -5233,6 +5241,22 @@
         "message": "Comme chaque page",
         "description": "AI output language option: the language of each page or bookmark title"
     },
+    "aboutMe_title": {
+        "message": "À propos de moi",
+        "description": "Options > AI: About me, a few words about the user that AI prompts include"
+    },
+    "aboutMe_description": {
+        "message": "Quelques mots sur vous, comme « J'enseigne la biologie », pour adapter les résultats de l'IA. Ils sont envoyés à votre fournisseur d'IA à chaque requête ; laissez vide pour ne rien envoyer.",
+        "description": "Options > AI: description of About me; says it is sent to the AI provider"
+    },
+    "aboutMe_length": {
+        "message": "$1 sur $2 caractères",
+        "description": "Options > AI > About me: characters used of the limit; $1 used, $2 the limit"
+    },
+    "aboutMe_errorSaveFailed": {
+        "message": "Impossible d'enregistrer « À propos de moi ». Réessayez.",
+        "description": "Options > AI > About me: saving to sync storage failed"
+    },
     "settings_aiActivityRecording": {
         "message": "Enregistrer les requêtes IA",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5648,6 +5672,42 @@
     "prompt_varLanguage": {
         "message": "La langue de sortie, du réglage Langue de sortie de l'IA",
         "description": "Prompt variable description"
+    },
+    "prompt_varExistingTags": {
+        "message": "Vos étiquettes les plus utilisées, dans un bloc (vide si aucune n'est envoyée)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varAboutMe": {
+        "message": "Votre texte « À propos de moi », dans un bloc (vide s'il n'y a rien)",
+        "description": "Prompt variable description"
+    },
+    "prompt_placeholders": {
+        "message": "Espaces réservés",
+        "description": "Prompt editor: label of the placeholder list that opens after typing {{"
+    },
+    "prompt_valueNow": {
+        "message": "Actuellement : $1",
+        "description": "Prompt editor: a placeholder's current value; $1 is the value"
+    },
+    "prompt_valueEmpty": {
+        "message": "Vide pour l'instant, donc omis",
+        "description": "Prompt editor: a placeholder is empty now, so the prompt leaves it out"
+    },
+    "prompt_unknownVariableSuggestion": {
+        "message": "Non rempli par cet outil : $1. Vouliez-vous dire $2 ?",
+        "description": "Prompt editor: a placeholder the tool does not fill in, and the one it was probably meant to be; $1 unknown, $2 suggestion"
+    },
+    "prompt_resetToDefault": {
+        "message": "Rétablir le prompt intégré",
+        "description": "Prompt editor: replace the text with the tool's built-in prompt"
+    },
+    "prompt_previewAdded": {
+        "message": "Ajouté après votre prompt",
+        "description": "Prompt preview: heading of the fixed rules the app adds after the prompt"
+    },
+    "prompt_editorHint": {
+        "message": "Tapez {{ pour les espaces réservés ; \\{{ écrit des accolades.",
+        "description": "Prompt editor: how to insert a placeholder and how to write literal braces"
     },
     "error_bookmarksApiUnavailable": {
         "message": "L'API des favoris du navigateur n'est pas disponible.",

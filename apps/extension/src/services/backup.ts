@@ -109,6 +109,7 @@ const BACKUP_ITEMS: Partial<
   prompt: customPromptItems,
   aiServices: aiServicesValue,
   savedSearches: savedSearchesValue,
+  aboutMe: aboutMeValue,
 } as Partial<Record<StorageItemId, StoredValue<unknown> | StoredCollection<unknown>>>;
 
 /** The registry ids a backup holds: every item with `backup: 'include'`. */

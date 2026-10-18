@@ -102,7 +102,7 @@ Le menu du clic droit est lui aussi facultatif, mais il ne déclenche aucun aver
 CONFIDENTIALITÉ
 • Aucun compte, aucune mesure d'audience, aucun suivi, aucune publicité
 • Vos favoris restent dans votre navigateur ; les étiquettes, les résumés et les recherches enregistrées restent sur cet appareil
-• Les paramètres que vous modifiez et vos prompts personnalisés sont synchronisés via votre compte de navigateur lorsque celui-ci le permet
+• Les paramètres que vous modifiez, vos prompts personnalisés et « À propos de moi » sont synchronisés via votre compte de navigateur lorsque celui-ci le permet
 
 IA FACULTATIVE (DÉSACTIVÉE PAR DÉFAUT)
 L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'utiliser, il vous faut un compte auprès d'une entreprise d'IA, qui peut facturer une petite somme à chaque utilisation, ou un programme d'IA gratuit sur votre propre ordinateur. Bookmark Scout n'a pas de service d'IA propre : activez l'IA dans les paramètres et ajoutez le service que vous avez choisi.
@@ -115,10 +115,10 @@ L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'util
 • Choisissez ce que Demander à l'IA peut consulter ou modifier (Paramètres > IA)
 • Lire le contenu des pages (désactivé par défaut) : envoie le texte lisible de chaque page, et pas seulement son titre et son adresse, pour de meilleures suggestions
 
-Lorsque vous utilisez une fonctionnalité d'IA, les données dont elle a besoin sont envoyées directement de votre navigateur au service d'IA que vous avez choisi, selon les conditions de ce service : titres de favoris, adresses, noms de dossiers, dates d'ajout des favoris, ainsi que les étiquettes et résumés enregistrés ; le titre et l'adresse de la page actuelle ; vos messages Demander à l'IA ; le fait que les liens vérifiés par Demander à l'IA fonctionnent encore ou non ; et, uniquement si Lire le contenu des pages est activé, le texte des pages concernées. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation d'un service d'IA peut être payante.
+Lorsque vous utilisez une fonctionnalité d'IA, les données dont elle a besoin sont envoyées directement de votre navigateur au service d'IA que vous avez choisi, selon les conditions de ce service : titres de favoris, adresses, noms de dossiers, dates d'ajout des favoris, ainsi que les étiquettes et résumés enregistrés ; le titre et l'adresse de la page actuelle ; vos messages Demander à l'IA ; le texte « À propos de moi » que vous écrivez, le cas échéant ; le fait que les liens vérifiés par Demander à l'IA fonctionnent encore ou non ; et, uniquement si Lire le contenu des pages est activé, le texte des pages concernées. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation d'un service d'IA peut être payante.
 
 PARAMÈTRES ET SAUVEGARDE
-• Sauvegarder les paramètres, en bas des paramètres, enregistre un fichier contenant les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (jamais leurs clés), les recherches enregistrées et les colonnes du gestionnaire. Restaurer les paramètres les rétablit
+• Sauvegarder les paramètres, en bas des paramètres, enregistre un fichier contenant les paramètres que vous avez modifiés, les prompts personnalisés, « À propos de moi », les services d'IA (jamais leurs clés), les recherches enregistrées et les colonnes du gestionnaire. Restaurer les paramètres les rétablit
 • Seuls les paramètres que vous modifiez sont enregistrés : les valeurs par défaut améliorées des versions suivantes s'appliquent donc toujours à vous
 
 POUR LES DÉVELOPPEURS
@@ -177,7 +177,7 @@ CE QUE FIREFOX VA DEMANDER, ET POURQUOI
 CONFIDENTIALITÉ
 • Aucun compte, aucune mesure d'audience, aucun suivi, aucune publicité
 • Vos favoris restent dans votre navigateur
-• Les paramètres que vous modifiez et vos prompts personnalisés sont synchronisés via Firefox Sync lorsque cette fonction est activée
+• Les paramètres que vous modifiez, vos prompts personnalisés et « À propos de moi » sont synchronisés via Firefox Sync lorsque cette fonction est activée
 
 SUGGESTIONS DE DOSSIERS PAR IA FACULTATIVES (DÉSACTIVÉES PAR DÉFAUT)
 L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'utiliser, il vous faut un compte auprès d'une entreprise d'IA, qui peut facturer une petite somme à chaque utilisation, ou un programme d'IA gratuit sur votre propre ordinateur. Activez l'IA dans les paramètres et ajoutez le service que vous avez choisi. Bookmark Scout suggère alors des dossiers pour la page actuelle, dans la fenêtre pop-up ou avec le raccourci d'enregistrement rapide avec l'IA, et peut créer un nouveau dossier après votre vérification.
@@ -185,7 +185,7 @@ L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'util
 Lorsque vous demandez des suggestions, le titre et l'adresse de la page actuelle, les noms de vos dossiers et, uniquement si vous activez Lire le contenu des pages, le texte de la page sont envoyés directement de votre navigateur au service d'IA que vous avez choisi, selon les conditions de ce service. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation d'un service d'IA peut être payante.
 
 PARAMÈTRES ET SAUVEGARDE
-• Sauvegarder les paramètres, en bas des paramètres, enregistre un fichier contenant les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (jamais leurs clés) et les recherches enregistrées. Restaurer les paramètres les rétablit
+• Sauvegarder les paramètres, en bas des paramètres, enregistre un fichier contenant les paramètres que vous avez modifiés, les prompts personnalisés, « À propos de moi », les services d'IA (jamais leurs clés) et les recherches enregistrées. Restaurer les paramètres les rétablit
 • Seuls les paramètres que vous modifiez sont enregistrés : les valeurs par défaut améliorées des versions suivantes s'appliquent donc toujours à vous
 
 POUR LES DÉVELOPPEURS

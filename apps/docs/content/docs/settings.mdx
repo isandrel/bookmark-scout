@@ -155,6 +155,10 @@ Below these, the provider panel holds **API Key**, **Base URL**, **Custom Model*
 | --- | --- | --- |
 | **AI output language** | Same as the extension | The language AI writes tags, summaries, and new folder names in: the extension's own language, one you choose, or **Same as each page**, the language of each page or bookmark title. Ask AI answers in the language you write in and uses this one only when that is unclear |
 
+### About me [#about-me]
+
+**About me** (empty by default) is a few words about you, such as "I'm a teacher; I save lesson material", up to 1,000 characters. While it has text, the built-in prompts of every AI feature send it to your AI provider, so results fit you better; a custom prompt sends it only if it uses `{{aboutMe}}`. It syncs through your browser account and is saved when you leave the field.
+
 ### What Ask AI may do [#ask-ai-actions]
 
 Every lookup and change Ask AI can make is listed here, and all are on by default. Turn one off and Ask AI is not offered it at all. Applying a plan of changes always asks you first, whatever you choose here.
@@ -166,7 +170,7 @@ Each tool has an **Enable** switch (on by default). Turning one off hides it fro
 | Tool | Settings and defaults |
 | --- | --- |
 | **AI Context Packer** | **Output Format** Markdown; **Include Folder Paths**, **Include Dates**, **Include Saved Tags**, and **Include Saved Summaries** on; **Max Items** 200; **Max Depth** 8; **Excerpt Length** 240 |
-| **Auto-Tagging** | **Minimum Tags** 2; **Maximum Tags** 5; **Tag Style** kebab-case; **Merge Mode** Append; **Remove Duplicate Tags** on |
+| **Auto-Tagging** | **Minimum Tags** 2; **Maximum Tags** 5; **Tag Style** kebab-case; **Merge Mode** Append; **Remove Duplicate Tags** on; **Send Existing Tags** on |
 | **Content Summarizer** | **Summary Length** 160; **Include Domain Hint** on; **Merge Mode** Replace |
 | **AI Folder Reorganization** | **Minimum Confidence** 55% (moves below it are dropped); **Batch Size** 100 bookmarks per request |
 

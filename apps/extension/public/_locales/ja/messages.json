@@ -2191,6 +2191,14 @@
         "message": "確認した提案を保存するとき、大文字と小文字だけが異なる重複タグを除外します",
         "description": "Auto-tagging dedupe tag description"
     },
+    "settings_autoTaggingSendExistingTags": {
+        "message": "既存のタグを送信",
+        "description": "Settings: Auto-Tagging sends the names of tags already in use"
+    },
+    "settings_autoTaggingSendExistingTagsDesc": {
+        "message": "よく使うタグ名も送信し、似たタグではなく既存のタグを使わせます",
+        "description": "Settings: description of Send Existing Tags"
+    },
     "settings_summarizerEnabled": {
         "message": "コンテンツ要約を有効化",
         "description": "Summarizer enabled label"
@@ -5189,6 +5197,22 @@
         "message": "各ページと同じ",
         "description": "AI output language option: the language of each page or bookmark title"
     },
+    "aboutMe_title": {
+        "message": "自己紹介",
+        "description": "Options > AI: About me, a few words about the user that AI prompts include"
+    },
+    "aboutMe_description": {
+        "message": "「生物を教えています」のような短い自己紹介で AI の結果をあなたに合わせます。AI へのリクエストごとに AI プロバイダーに送信されます。空にすると何も送信しません。",
+        "description": "Options > AI: description of About me; says it is sent to the AI provider"
+    },
+    "aboutMe_length": {
+        "message": "$1 / $2 文字",
+        "description": "Options > AI > About me: characters used of the limit; $1 used, $2 the limit"
+    },
+    "aboutMe_errorSaveFailed": {
+        "message": "自己紹介を保存できませんでした。もう一度お試しください。",
+        "description": "Options > AI > About me: saving to sync storage failed"
+    },
     "settings_aiActivityRecording": {
         "message": "AI リクエストを記録",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5604,6 +5628,42 @@
     "prompt_varLanguage": {
         "message": "出力する言語（AI の出力言語の設定）",
         "description": "Prompt variable description"
+    },
+    "prompt_varExistingTags": {
+        "message": "よく使うタグの一覧（送信しないときは空）",
+        "description": "Prompt variable description"
+    },
+    "prompt_varAboutMe": {
+        "message": "自己紹介の内容（未入力なら空）",
+        "description": "Prompt variable description"
+    },
+    "prompt_placeholders": {
+        "message": "プレースホルダー",
+        "description": "Prompt editor: label of the placeholder list that opens after typing {{"
+    },
+    "prompt_valueNow": {
+        "message": "現在: $1",
+        "description": "Prompt editor: a placeholder's current value; $1 is the value"
+    },
+    "prompt_valueEmpty": {
+        "message": "現在は空のため省略されます",
+        "description": "Prompt editor: a placeholder is empty now, so the prompt leaves it out"
+    },
+    "prompt_unknownVariableSuggestion": {
+        "message": "このツールでは置き換えられません: $1。$2 のことですか?",
+        "description": "Prompt editor: a placeholder the tool does not fill in, and the one it was probably meant to be; $1 unknown, $2 suggestion"
+    },
+    "prompt_resetToDefault": {
+        "message": "組み込みのプロンプトに戻す",
+        "description": "Prompt editor: replace the text with the tool's built-in prompt"
+    },
+    "prompt_previewAdded": {
+        "message": "プロンプトの後に追加される内容",
+        "description": "Prompt preview: heading of the fixed rules the app adds after the prompt"
+    },
+    "prompt_editorHint": {
+        "message": "{{ でプレースホルダーを挿入。\\{{ で波かっこをそのまま書けます。",
+        "description": "Prompt editor: how to insert a placeholder and how to write literal braces"
     },
     "error_bookmarksApiUnavailable": {
         "message": "ブラウザーのブックマーク API を利用できません。",

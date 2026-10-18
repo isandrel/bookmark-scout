@@ -40,6 +40,7 @@ const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool
     minTags: settings.autoTaggingMinTags,
     maxTags: settings.autoTaggingMaxTags,
     tagStyle: settings.autoTaggingTagStyle,
+    sendExistingTags: settings.autoTaggingSendExistingTags,
     readPages: settings.aiReadPageContent,
   }),
   summarizer: (settings) => ({

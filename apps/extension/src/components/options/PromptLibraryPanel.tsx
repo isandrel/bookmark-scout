@@ -9,6 +9,25 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const DEFAULT_VALUE = 'default';
 
+/** A prompt as it would be sent: its text, then the rules the app adds after it, read-only. */
+function PromptPreview({ parts }: { parts: PromptParts }) {
+  return (
+    <div className="mt-2 max-h-64 space-y-2 overflow-auto font-mono text-xs">
+      <pre data-testid="prompt-preview" className="whitespace-pre-wrap">
+        {parts.prompt}
+      </pre>
+      {parts.rules.length > 0 && (
+        <div className="border-t pt-2 text-muted-foreground">
+          <p className="font-sans font-medium">{t('prompt_previewAdded')}</p>
+          <pre data-testid="prompt-preview-rules" className="whitespace-pre-wrap">
+            {parts.rules.join('\n\n')}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+}
+
 type EditorState = {
   task: PromptTaskId;
   /** Undefined for a prompt that is not saved yet. */
@@ -40,13 +59,23 @@ function PromptEditorDialog({
   }, [editor]);
 
   const task = editor ? PROMPT_TASKS[editor.task] : undefined;
+  const data = usePromptData(editor?.task);
   // Measured as sync storage stores the prompt, so the counter and the limit check agree with it.
   const bytes = editor ? customPromptBytes({ id: editor.id, task: editor.task, name, system }) : 0;
-  const unknown = editor ? findUnknownPromptVariables(editor.task, system) : [];
+  // A warning only: a prompt may mention braces on purpose, and the model reads them as written.
+  const unknown = editor
+    ? findUnknownPromptVariables(editor.task, system).map((variable) => ({
+        variable,
+        suggestion: suggestPromptVariable(editor.task, variable),
+      }))
+    : [];
+  const values = useMemo(
+    () => (editor ? getPromptVariables(editor.task, settings, data) : {}),
+    [editor, settings, data],
+  );
   const preview = useMemo(
-    () =>
-      editor ? interpolatePrompt(system, getPromptVariables(editor.task, settings)) : '',
-    [editor, system, settings],
+    () => (editor ? composePrompt(editor.task, system, settings, { data }) : undefined),
+    [editor, system, settings, data],
   );
 
   const insertVariable = (variable: string) => {
@@ -132,38 +161,60 @@ function PromptEditorDialog({
                     ))}
                   </div>
                 )}
-                <textarea
+                <PromptTextArea
                   {...control}
-                  ref={textRef}
+                  textRef={textRef}
                   value={system}
-                  onChange={(event) => setSystem(event.target.value)}
+                  onValueChange={setSystem}
+                  variables={task?.variables ?? []}
+                  values={values}
                   rows={14}
                   spellCheck={false}
-                  aria-describedby="prompt-text-size"
+                  aria-describedby="prompt-text-hint prompt-text-size"
                   className="w-full resize-y rounded-md border border-input bg-card px-3 py-2 font-mono text-xs leading-relaxed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
-                <div className="flex flex-wrap justify-between gap-2 text-xs text-muted-foreground">
+                <p id="prompt-text-hint" className="text-xs text-muted-foreground">
+                  {t('prompt_editorHint')}
+                </p>
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
                   <span
                     id="prompt-text-size"
                     className={bytes > MAX_PROMPT_BYTES ? 'text-destructive-text' : ''}
                   >
                     {t('prompt_size', [formatKilobytes(bytes), formatKilobytes(MAX_PROMPT_BYTES)])}
                   </span>
-                  {unknown.length > 0 && (
-                    <span className="text-warning">
-                      {t('prompt_unknownVariables', unknown.map((v) => `{{${v}}}`).join(', '))}
-                    </span>
+                  {task && system !== task.system && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSystem(task.system)}
+                    >
+                      {t('prompt_resetToDefault')}
+                    </Button>
                   )}
                 </div>
+                {unknown.length > 0 && (
+                  <ul data-testid="prompt-unknown" className="space-y-0.5 text-xs text-warning">
+                    {unknown.map(({ variable, suggestion }) => (
+                      <li key={variable}>
+                        {suggestion
+                          ? t('prompt_unknownVariableSuggestion', [
+                              `{{${variable}}}`,
+                              `{{${suggestion}}}`,
+                            ])
+                          : t('prompt_unknownVariables', `{{${variable}}}`)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </>
             )}
           </Field>
           <details className="rounded-md border bg-muted/40 px-3 py-2">
             <summary className="cursor-pointer text-sm font-medium">{t('prompt_preview')}</summary>
             <p className="mt-1 text-xs text-muted-foreground">{t('prompt_previewDescription')}</p>
-            <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap font-mono text-xs">
-              {preview}
-            </pre>
+            {preview && <PromptPreview parts={preview} />}
           </details>
           {error && (
             <p role="alert" className="text-sm text-destructive-text">
@@ -196,6 +247,7 @@ function BuiltInPromptDialog({
 }) {
   const { settings } = useSettings();
   const task = taskId ? PROMPT_TASKS[taskId] : undefined;
+  const data = usePromptData(taskId ?? undefined);
   return (
     <Dialog open={taskId !== null} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
@@ -222,9 +274,7 @@ function BuiltInPromptDialog({
                 <p className="mt-1 text-xs text-muted-foreground">
                   {t('prompt_previewDescription')}
                 </p>
-                <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap font-mono text-xs">
-                  {interpolatePrompt(task.system, getPromptVariables(taskId, settings))}
-                </pre>
+                <PromptPreview parts={composePrompt(taskId, task.system, settings, { data })} />
               </details>
             )}
           </div>

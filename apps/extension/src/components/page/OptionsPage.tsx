@@ -413,6 +413,8 @@ const OptionsPage: React.FC = () => {
         return matchesOnly ? null : <AIActivityPanel />;
       case 'promptLibrary':
         return matchesOnly ? null : <PromptLibraryPanel />;
+      case 'aboutMe':
+        return matchesOnly ? null : <AboutMePanel />;
       case 'shortcuts':
         return matchesOnly ? null : <ShortcutsPanel />;
       case 'managerMenus':

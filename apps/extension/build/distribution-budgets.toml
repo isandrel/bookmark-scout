@@ -12,19 +12,25 @@
 # main's growth since the last measurement: local builds of feat/ai-output-language merged with
 # 3dc4b31a measured 5,124,823 / 5,124,785 / 5,125,050 B uncompressed (Chrome / Edge / Firefox) and
 # 1,173,409 B of locales; the new limits are about 10 KB above that.
+# Raised again on 2026-10-18 (ZIP 1,608,000 to 1,618,000, uncompressed 5,135,000 to 5,159,000,
+# locales 1,183,000 to 1,195,000) for the prompt placeholders: About me, Send Existing Tags, and the
+# prompt editor's placeholder list, whose copy in 9 languages adds 12 KB to the locales. Local
+# builds of feat/ai-prompt-placeholders on e5f11db0 measured ZIP 1,612,939 / 1,612,953 / 1,613,031,
+# uncompressed 5,148,937 / 5,148,899 / 5,149,164 B (Chrome / Edge / Firefox), and 1,185,334 B of
+# locales; the new limits are about 5 KB (ZIP) and 10 KB above that.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_608_000
-raw_bytes = 5_135_000
+zip_bytes = 1_618_000
+raw_bytes = 5_159_000
 
 [targets.edge]
-zip_bytes = 1_608_000
-raw_bytes = 5_135_000
+zip_bytes = 1_618_000
+raw_bytes = 5_159_000
 
 [targets.firefox]
-zip_bytes = 1_608_000
-raw_bytes = 5_135_000
+zip_bytes = 1_618_000
+raw_bytes = 5_159_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -33,6 +39,6 @@ raw_bytes = 5_135_000
 javascript = 3_446_000
 css = 81_000
 fonts = 143_000
-locales = 1_183_000
+locales = 1_195_000
 images = 320_000
 other = 27_000

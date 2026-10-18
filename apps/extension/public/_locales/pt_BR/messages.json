@@ -2235,6 +2235,14 @@
         "message": "Descartar tags duplicadas, sem diferenciar maiúsculas e minúsculas, ao salvar as sugestões revisadas",
         "description": "Auto-tagging dedupe tag description"
     },
+    "settings_autoTaggingSendExistingTags": {
+        "message": "Enviar tags existentes",
+        "description": "Settings: Auto-Tagging sends the names of tags already in use"
+    },
+    "settings_autoTaggingSendExistingTagsDesc": {
+        "message": "Envia também os nomes das tags que você mais usa, para a IA reutilizá-las",
+        "description": "Settings: description of Send Existing Tags"
+    },
     "settings_summarizerEnabled": {
         "message": "Ativar Gerador de resumos",
         "description": "Summarizer enabled label"
@@ -5233,6 +5241,22 @@
         "message": "Igual a cada página",
         "description": "AI output language option: the language of each page or bookmark title"
     },
+    "aboutMe_title": {
+        "message": "Sobre mim",
+        "description": "Options > AI: About me, a few words about the user that AI prompts include"
+    },
+    "aboutMe_description": {
+        "message": "Algumas palavras sobre você, como “Ensino biologia”, para adaptar os resultados da IA. Vão para o seu provedor de IA a cada solicitação; deixe vazio para não enviar nada.",
+        "description": "Options > AI: description of About me; says it is sent to the AI provider"
+    },
+    "aboutMe_length": {
+        "message": "$1 de $2 caracteres",
+        "description": "Options > AI > About me: characters used of the limit; $1 used, $2 the limit"
+    },
+    "aboutMe_errorSaveFailed": {
+        "message": "Não foi possível salvar Sobre mim. Tente de novo.",
+        "description": "Options > AI > About me: saving to sync storage failed"
+    },
     "settings_aiActivityRecording": {
         "message": "Registrar solicitações de IA",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5648,6 +5672,42 @@
     "prompt_varLanguage": {
         "message": "O idioma de saída, da configuração Idioma de saída da IA",
         "description": "Prompt variable description"
+    },
+    "prompt_varExistingTags": {
+        "message": "As tags que você mais usa, em um bloco (vazio quando nenhuma é enviada)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varAboutMe": {
+        "message": "Seu texto de Sobre mim, em um bloco (vazio quando em branco)",
+        "description": "Prompt variable description"
+    },
+    "prompt_placeholders": {
+        "message": "Marcadores",
+        "description": "Prompt editor: label of the placeholder list that opens after typing {{"
+    },
+    "prompt_valueNow": {
+        "message": "Agora: $1",
+        "description": "Prompt editor: a placeholder's current value; $1 is the value"
+    },
+    "prompt_valueEmpty": {
+        "message": "Vazio agora, então é omitido",
+        "description": "Prompt editor: a placeholder is empty now, so the prompt leaves it out"
+    },
+    "prompt_unknownVariableSuggestion": {
+        "message": "Não preenchido por esta ferramenta: $1. Você quis dizer $2?",
+        "description": "Prompt editor: a placeholder the tool does not fill in, and the one it was probably meant to be; $1 unknown, $2 suggestion"
+    },
+    "prompt_resetToDefault": {
+        "message": "Restaurar o prompt integrado",
+        "description": "Prompt editor: replace the text with the tool's built-in prompt"
+    },
+    "prompt_previewAdded": {
+        "message": "Adicionado depois do seu prompt",
+        "description": "Prompt preview: heading of the fixed rules the app adds after the prompt"
+    },
+    "prompt_editorHint": {
+        "message": "Digite {{ para marcadores; \\{{ escreve chaves literais.",
+        "description": "Prompt editor: how to insert a placeholder and how to write literal braces"
     },
     "error_bookmarksApiUnavailable": {
         "message": "A API de favoritos do navegador não está disponível.",

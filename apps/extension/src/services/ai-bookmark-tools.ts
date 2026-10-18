@@ -24,6 +24,8 @@ export type AutoTaggingOptions = {
   minTags: number;
   maxTags: number;
   tagStyle: 'kebab-case' | 'snake_case' | 'lowercase';
+  /** Send the names of tags already in use ({{existingTags}}); off when left out. */
+  sendExistingTags?: boolean;
   /** Send each page's readable text too; needs website access. */
   readPages?: boolean;
 };
@@ -89,6 +91,8 @@ async function generateForBookmarks<
   source: AIActivitySource;
   task: Task;
   promptSettings: PromptSettings<Task>;
+  /** Data the prompt's placeholders read, when the tool already has it. */
+  data?: PromptData;
   readPages: boolean;
   schema: z.ZodType<{ items: Item[] }>;
   toResult: (input: Input, item: Item) => Result;
@@ -99,6 +103,7 @@ async function generateForBookmarks<
 
   const items = await addPageText(request.inputs, request.readPages);
   const { system } = await buildPrompt(request.task, request.promptSettings, {
+    data: request.data,
     hasPageText: items.some((item) => item.pageText),
   });
 
@@ -191,6 +196,8 @@ export async function suggestBookmarkTags(
   options: AutoTaggingOptions,
 ): Promise<AutoTaggingResultItem[]> {
   validateAISettings(settings);
+  // Read whether or not the names are sent: suggestions are matched to their spellings either way.
+  const vocabulary = getTagVocabulary(await bookmarkMetadataValue.get());
 
   return generateForBookmarks({
     inputs: flattenBookmarks(nodes).map((bookmark) => ({
@@ -206,14 +213,16 @@ export async function suggestBookmarkTags(
       autoTaggingMinTags: options.minTags,
       autoTaggingMaxTags: options.maxTags,
       autoTaggingTagStyle: options.tagStyle,
+      autoTaggingSendExistingTags: Boolean(options.sendExistingTags),
     },
+    data: { existingTags: vocabulary },
     readPages: Boolean(options.readPages),
     schema: autoTaggingSchema,
     toResult: (input, item) => ({
       bookmarkId: input.bookmarkId,
       title: input.title,
       url: input.url,
-      tags: item.tags,
+      tags: matchTagSpellings(item.tags, vocabulary),
       reason: item.reason,
     }),
   });

@@ -2227,6 +2227,14 @@
         "message": "保存审核过的建议时，去除重复的标签（不区分大小写）",
         "description": "Auto-tagging dedupe tag description"
     },
+    "settings_autoTaggingSendExistingTags": {
+        "message": "发送现有标签",
+        "description": "Settings: Auto-Tagging sends the names of tags already in use"
+    },
+    "settings_autoTaggingSendExistingTagsDesc": {
+        "message": "同时发送最常用的标签名称，让 AI 复用而非新建相近标签",
+        "description": "Settings: description of Send Existing Tags"
+    },
     "settings_summarizerEnabled": {
         "message": "启用内容摘要",
         "description": "Summarizer enabled label"
@@ -5027,6 +5035,22 @@
         "message": "与各网页相同",
         "description": "AI output language option: the language of each page or bookmark title"
     },
+    "aboutMe_title": {
+        "message": "关于我",
+        "description": "Options > AI: About me, a few words about the user that AI prompts include"
+    },
+    "aboutMe_description": {
+        "message": "用几句话介绍自己（如“我教生物”），让 AI 结果更贴合你。每次 AI 请求都会发送给你的 AI 服务商；留空则不发送。",
+        "description": "Options > AI: description of About me; says it is sent to the AI provider"
+    },
+    "aboutMe_length": {
+        "message": "$1/$2 个字符",
+        "description": "Options > AI > About me: characters used of the limit; $1 used, $2 the limit"
+    },
+    "aboutMe_errorSaveFailed": {
+        "message": "无法保存“关于我”。请重试。",
+        "description": "Options > AI > About me: saving to sync storage failed"
+    },
     "settings_aiActivityRecording": {
         "message": "记录 AI 请求",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5442,6 +5466,42 @@
     "prompt_varLanguage": {
         "message": "输出所用语言，来自“AI 输出语言”设置",
         "description": "Prompt variable description"
+    },
+    "prompt_varExistingTags": {
+        "message": "你最常用的标签列表（不发送时为空）",
+        "description": "Prompt variable description"
+    },
+    "prompt_varAboutMe": {
+        "message": "“关于我”的内容（未填写时为空）",
+        "description": "Prompt variable description"
+    },
+    "prompt_placeholders": {
+        "message": "占位符",
+        "description": "Prompt editor: label of the placeholder list that opens after typing {{"
+    },
+    "prompt_valueNow": {
+        "message": "当前：$1",
+        "description": "Prompt editor: a placeholder's current value; $1 is the value"
+    },
+    "prompt_valueEmpty": {
+        "message": "当前为空，因此会被省略",
+        "description": "Prompt editor: a placeholder is empty now, so the prompt leaves it out"
+    },
+    "prompt_unknownVariableSuggestion": {
+        "message": "此工具不会填入：$1。你是不是想用 $2？",
+        "description": "Prompt editor: a placeholder the tool does not fill in, and the one it was probably meant to be; $1 unknown, $2 suggestion"
+    },
+    "prompt_resetToDefault": {
+        "message": "恢复为内置提示词",
+        "description": "Prompt editor: replace the text with the tool's built-in prompt"
+    },
+    "prompt_previewAdded": {
+        "message": "附加在你的提示词之后",
+        "description": "Prompt preview: heading of the fixed rules the app adds after the prompt"
+    },
+    "prompt_editorHint": {
+        "message": "输入 {{ 插入占位符；\\{{ 表示花括号本身。",
+        "description": "Prompt editor: how to insert a placeholder and how to write literal braces"
     },
     "error_bookmarksApiUnavailable": {
         "message": "浏览器的书签 API 不可用。",

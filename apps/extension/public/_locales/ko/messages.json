@@ -2227,6 +2227,14 @@
         "message": "검토한 제안을 저장할 때 대소문자만 다른 중복 태그를 제외합니다",
         "description": "Auto-tagging dedupe tag description"
     },
+    "settings_autoTaggingSendExistingTags": {
+        "message": "기존 태그 보내기",
+        "description": "Settings: Auto-Tagging sends the names of tags already in use"
+    },
+    "settings_autoTaggingSendExistingTagsDesc": {
+        "message": "자주 쓰는 태그 이름도 보내 비슷한 태그 대신 기존 태그를 쓰게 합니다",
+        "description": "Settings: description of Send Existing Tags"
+    },
     "settings_summarizerEnabled": {
         "message": "콘텐츠 요약 사용",
         "description": "Summarizer enabled label"
@@ -5225,6 +5233,22 @@
         "message": "각 페이지와 같음",
         "description": "AI output language option: the language of each page or bookmark title"
     },
+    "aboutMe_title": {
+        "message": "내 소개",
+        "description": "Options > AI: About me, a few words about the user that AI prompts include"
+    },
+    "aboutMe_description": {
+        "message": "“생물을 가르칩니다”처럼 짧은 소개로 AI 결과를 맞춥니다. AI 요청마다 AI 제공업체로 전송되며, 비워 두면 아무것도 보내지 않습니다.",
+        "description": "Options > AI: description of About me; says it is sent to the AI provider"
+    },
+    "aboutMe_length": {
+        "message": "$1/$2자",
+        "description": "Options > AI > About me: characters used of the limit; $1 used, $2 the limit"
+    },
+    "aboutMe_errorSaveFailed": {
+        "message": "내 소개를 저장하지 못했습니다. 다시 시도하세요.",
+        "description": "Options > AI > About me: saving to sync storage failed"
+    },
     "settings_aiActivityRecording": {
         "message": "AI 요청 기록",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5640,6 +5664,42 @@
     "prompt_varLanguage": {
         "message": "작성할 언어(AI 출력 언어 설정)",
         "description": "Prompt variable description"
+    },
+    "prompt_varExistingTags": {
+        "message": "자주 쓰는 태그 목록(보내지 않을 때는 비어 있음)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varAboutMe": {
+        "message": "내 소개 내용(비어 있으면 빈 값)",
+        "description": "Prompt variable description"
+    },
+    "prompt_placeholders": {
+        "message": "자리 표시자",
+        "description": "Prompt editor: label of the placeholder list that opens after typing {{"
+    },
+    "prompt_valueNow": {
+        "message": "현재: $1",
+        "description": "Prompt editor: a placeholder's current value; $1 is the value"
+    },
+    "prompt_valueEmpty": {
+        "message": "현재 비어 있어 생략됩니다",
+        "description": "Prompt editor: a placeholder is empty now, so the prompt leaves it out"
+    },
+    "prompt_unknownVariableSuggestion": {
+        "message": "이 도구에서 채우지 않음: $1. $2을(를) 뜻하셨나요?",
+        "description": "Prompt editor: a placeholder the tool does not fill in, and the one it was probably meant to be; $1 unknown, $2 suggestion"
+    },
+    "prompt_resetToDefault": {
+        "message": "기본 제공 프롬프트로 되돌리기",
+        "description": "Prompt editor: replace the text with the tool's built-in prompt"
+    },
+    "prompt_previewAdded": {
+        "message": "프롬프트 뒤에 추가되는 내용",
+        "description": "Prompt preview: heading of the fixed rules the app adds after the prompt"
+    },
+    "prompt_editorHint": {
+        "message": "{{로 자리 표시자 삽입, \\{{로 중괄호 그대로 입력.",
+        "description": "Prompt editor: how to insert a placeholder and how to write literal braces"
     },
     "error_bookmarksApiUnavailable": {
         "message": "브라우저의 북마크 API를 사용할 수 없습니다.",

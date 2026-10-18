@@ -27,6 +27,7 @@ describe('tool options', () => {
       minTags: 1,
       maxTags: 7,
       tagStyle: defaultSettings.autoTaggingTagStyle,
+      sendExistingTags: defaultSettings.autoTaggingSendExistingTags,
       readPages: true,
     });
     expect(options.summarizer.readPages).toBe(true);

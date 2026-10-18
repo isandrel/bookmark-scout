@@ -2235,6 +2235,14 @@
         "message": "Drop case-insensitive duplicate tags when saving reviewed suggestions",
         "description": "Auto-tagging dedupe tag description"
     },
+    "settings_autoTaggingSendExistingTags": {
+        "message": "Send Existing Tags",
+        "description": "Settings: Auto-Tagging sends the names of tags already in use"
+    },
+    "settings_autoTaggingSendExistingTagsDesc": {
+        "message": "Also send your most used tag names, so the AI reuses them instead of near-duplicates",
+        "description": "Settings: description of Send Existing Tags"
+    },
     "settings_summarizerEnabled": {
         "message": "Enable Content Summarizer",
         "description": "Summarizer enabled label"
@@ -5233,6 +5241,22 @@
         "message": "Same as each page",
         "description": "AI output language option: the language of each page or bookmark title"
     },
+    "aboutMe_title": {
+        "message": "About me",
+        "description": "Options > AI: About me, a few words about the user that AI prompts include"
+    },
+    "aboutMe_description": {
+        "message": "A few words about you, such as “I teach biology”, to tailor AI results. They go to your AI provider with each AI request; leave this empty to send nothing.",
+        "description": "Options > AI: description of About me; says it is sent to the AI provider"
+    },
+    "aboutMe_length": {
+        "message": "$1 of $2 characters",
+        "description": "Options > AI > About me: characters used of the limit; $1 used, $2 the limit"
+    },
+    "aboutMe_errorSaveFailed": {
+        "message": "About me could not be saved. Try again.",
+        "description": "Options > AI > About me: saving to sync storage failed"
+    },
     "settings_aiActivityRecording": {
         "message": "Record AI Requests",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5648,6 +5672,42 @@
     "prompt_varLanguage": {
         "message": "The language to write in, from AI output language",
         "description": "Prompt variable description"
+    },
+    "prompt_varExistingTags": {
+        "message": "Your most used tags, in a block (empty when none are sent)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varAboutMe": {
+        "message": "Your About me text, in a block (empty when blank)",
+        "description": "Prompt variable description"
+    },
+    "prompt_placeholders": {
+        "message": "Placeholders",
+        "description": "Prompt editor: label of the placeholder list that opens after typing {{"
+    },
+    "prompt_valueNow": {
+        "message": "Now: $1",
+        "description": "Prompt editor: a placeholder's current value; $1 is the value"
+    },
+    "prompt_valueEmpty": {
+        "message": "Empty now, so it is left out",
+        "description": "Prompt editor: a placeholder is empty now, so the prompt leaves it out"
+    },
+    "prompt_unknownVariableSuggestion": {
+        "message": "Not filled in by this tool: $1. Did you mean $2?",
+        "description": "Prompt editor: a placeholder the tool does not fill in, and the one it was probably meant to be; $1 unknown, $2 suggestion"
+    },
+    "prompt_resetToDefault": {
+        "message": "Reset to built-in prompt",
+        "description": "Prompt editor: replace the text with the tool's built-in prompt"
+    },
+    "prompt_previewAdded": {
+        "message": "Added after your prompt",
+        "description": "Prompt preview: heading of the fixed rules the app adds after the prompt"
+    },
+    "prompt_editorHint": {
+        "message": "Type {{ for placeholders; \\{{ writes literal braces.",
+        "description": "Prompt editor: how to insert a placeholder and how to write literal braces"
     },
     "error_bookmarksApiUnavailable": {
         "message": "The browser's bookmarks API is not available.",

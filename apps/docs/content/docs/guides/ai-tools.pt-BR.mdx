@@ -119,7 +119,7 @@ A verificação e a atualização indicam a causa provável: uma chave rejeitada
 Cada ferramenta de IA começa com um prompt integrado. Para mudar o comportamento de uma ferramenta, vá para **Opções**, depois **Ferramentas de IA** e depois **Prompts**:
 
 1. Para ler primeiro o prompt integrado de uma ferramenta, clique no ícone de olho ao lado dele. Clique em **Personalizar**, ali ou no visualizador, e o editor se abre com o prompt integrado como ponto de partida.
-2. Edite o texto. Clique em uma variável como `{{maxTags}}` para inseri-la; a ferramenta a preenche com base nas suas configurações. **Prévia com as configurações atuais** mostra o resultado.
+2. Edite o texto. Clique em uma variável como `{{maxTags}}` para inseri-la; a ferramenta a preenche com base nas suas configurações. **Prévia com as configurações atuais** mostra o resultado. Ou digite `{{` e escolha um na lista, que mostra o que é cada marcador e o valor atual dele. `{{today}}`, `{{language}}` e `{{aboutMe}}` funcionam em todas as ferramentas, e `{{existingTags}}` nas Tags automáticas; um marcador sem nada para preencher, como `{{aboutMe}}` com Sobre mim vazio, é omitido junto com a linha. Escreva `\{{` para chaves literais. Um marcador que a ferramenta não preenche é sinalizado, com uma sugestão quando parece erro de digitação, e **Restaurar o prompt integrado** recomeça.
 3. Clique em **Salvar prompt**. O novo prompt passa a ser o prompt da ferramenta.
 
 Guarde vários prompts por ferramenta, até 10 no total, e alterne entre eles pelo menu da ferramenta; **Padrão (integrado)** volta ao original. Seus prompts são sincronizados entre os seus dispositivos pela sua conta do navegador, então cada um precisa ter menos de 7 KB. O Bookmark Scout adiciona as próprias regras de formato de saída depois do seu prompt, para que os resultados continuem carregando mesmo que o seu prompt peça outra coisa. Ele também adiciona uma linha pedindo o idioma escolhido em **Idioma de saída da IA** (**Opções**, depois **IA**); no seu próprio prompt, `{{language}}` é esse idioma.
@@ -129,11 +129,13 @@ Guarde vários prompts por ferramenta, até 10 no total, e alterne entre eles pe
 | Ferramenta | Onde | Envia ao provedor |
 | --- | --- | --- |
 | Recomendações de pasta | Pop-up, o botão de brilho ao lado da caixa de pesquisa (só aparece com a IA ativada) | O título e o URL da página atual e os nomes das suas pastas de favoritos. Com **Ler conteúdo da página** ativado, também o texto principal da página. Com a IA integrada, nada sai do seu computador |
-| **Tags automáticas** | Gerenciador, Ferramentas, **IA** | Títulos, URLs e caminhos de pasta dos favoritos da pasta atual e, com **Ler conteúdo da página** ativado, o texto principal de cada página |
+| **Tags automáticas** | Gerenciador, Ferramentas, **IA** | Títulos, URLs e caminhos de pasta dos favoritos da pasta atual e, com **Ler conteúdo da página** ativado, o texto principal de cada página; com **Enviar tags existentes** ativado (o padrão), também os nomes das tags que você mais usa |
 | **Gerador de resumos** | Gerenciador, Ferramentas, **IA** | Títulos, URLs e caminhos de pasta dos favoritos da pasta atual e, com **Ler conteúdo da página** ativado, o texto principal de cada página |
 | **Reorganização de pastas com IA** | Gerenciador, Ferramentas, **IA** | Títulos, URLs e caminhos de pasta dos favoritos no escopo que você escolher |
 | **Perguntar à IA** | Pop-up e painel lateral, o botão de conversa ao lado da caixa de pesquisa (só aparece com a IA ativada) | Suas mensagens e a conversa até o momento, além do que ele consulta: favoritos correspondentes (com pasta, data em que foram adicionados, tags e resumo), nomes de pastas, o título e o URL da página atual, se os links salvos que ela verifica ainda funcionam e, com **Ler conteúdo da página** ativado, o texto das páginas que ele lê |
 | **Empacotador de contexto para IA** | Gerenciador, Ferramentas, **IA** | Nada. Ele salva um arquivo no seu computador e funciona com a IA desativada. |
+
+Cada recurso de IA que usa um provedor também envia seu texto de **Sobre mim** (configurações de IA) enquanto tiver conteúdo; ele é vazio por padrão.
 
 Ative **Recomendar ao abrir** para pedir recomendações de pasta sempre que o pop-up for aberto. Deixe essa opção desativada para enviar uma solicitação somente quando você clicar no botão.
 
