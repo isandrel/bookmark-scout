@@ -29,17 +29,23 @@ facet_badges_max = 2
 # Column widths in pixels, by column id (src/components/ui/table/columns.tsx). `size` is the
 # starting width and `min_size` the narrowest a user can resize it to; a `fixed` column never
 # resizes. `hide_below_width` hides the column while the table is narrower than that, in pixels.
+# `fill` columns share the room the other columns leave, in proportion to their `fill`, until the
+# user sizes them; their `size` is then the narrowest they fill to, not a fixed width.
 [columns]
 select = { fixed = 40 }
 type = { size = 120, min_size = 70 }
 id = { size = 100, min_size = 60 }
 parentId = { size = 180, min_size = 80 }
 folderPath = { size = 180, min_size = 80, hide_below_width = 960 }
-url = { size = 200, min_size = 80, hide_below_width = 880 }
-# Title fills the room the other columns leave until the user sizes it; `size` is the narrowest
-# it fills to
-title = { size = 160, min_size = 120 }
-dateAdded = { size = 190, min_size = 100 }
-dateGroupModified = { size = 190, min_size = 100 }
+# Title and URL share the spare width, Title a bit more (3:2), so neither one takes the whole
+# table on a wide window while the dates stay compact at the end
+url = { size = 200, min_size = 80, fill = 2, hide_below_width = 880 }
+title = { size = 160, min_size = 120, fill = 3 }
+# Fits a date and time ("12/28/2026, 12:23:31 PM", or a little longer in other languages) beside
+# the cell padding
+dateAdded = { size = 184, min_size = 100 }
+dateGroupModified = { size = 184, min_size = 100 }
 unmodifiable = { size = 130, min_size = 80 }
-actions = { fixed = 68 }
+# The four move buttons (24px each) and the row menu, side by side with the cell padding, so the
+# buttons shown on hover have their own room and never cover the columns before them
+actions = { fixed = 140 }

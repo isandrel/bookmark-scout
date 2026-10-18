@@ -38,16 +38,15 @@ export function MoveBookmarkButtons({ onMove, position }: MoveBookmarkButtonsPro
     // biome-ignore lint/a11y/useKeyWithClickEvents: only swallows clicks; the buttons are the controls.
     // biome-ignore lint/a11y/noStaticElementInteractions: see above.
     <div
-      className="flex items-center space-x-1"
+      className="flex items-center gap-0.5"
       title={disabledReason ?? undefined}
       onClick={(event) => event.stopPropagation()}
     >
       {moveButtons.map(({ direction, icon: Icon, labelKey }) => (
         <Button
           key={direction}
-          variant="outline"
-          size="icon"
-          className="h-8 w-8 p-0"
+          variant="ghost"
+          size="icon-xs"
           disabled={
             disabledReason !== null ||
             (position !== undefined &&
