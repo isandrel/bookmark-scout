@@ -38,13 +38,13 @@ cd $wt || exit 1
 export NX_DAEMON=false PW_WORKERS=${PW_WORKERS:-2} NO_COLOR=1
 case $mode in
   full)
-    bunx nx run extension:test:e2e --skip-nx-cache 2>&1 | tee $log ;;
+    bunx nx run extension:test:e2e --skip-nx-cache 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   specs)
     bunx nx run extension:build:chrome > /dev/null || exit 1
     cd apps/extension
-    bunx playwright test --config playwright.config.ts --project=chromium --reporter=line "$@" 2>&1 | tee $log ;;
+    bunx playwright test --config playwright.config.ts --project=chromium --reporter=line "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   firefox)
-    SE_OFFLINE=true bunx nx run extension:test:e2e:firefox --skip-nx-cache -- "$@" 2>&1 | tee $log ;;
+    SE_OFFLINE=true bunx nx run extension:test:e2e:firefox --skip-nx-cache -- "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   built)
     # The caller has built the extension (and native host for bridge) and installed Chromium.
     # Avoid reinstalling host packages on managed runners without root access.
@@ -55,9 +55,10 @@ case $mode in
     fi
     shift
     cd apps/extension
-    bunx playwright test --config playwright.config.ts --project=$project --reporter=line "$@" 2>&1 | tee $log ;;
+    bunx playwright test --config playwright.config.ts --project=$project --reporter=line "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   *)
     echo "unknown mode: $mode" >&2
     exit 64 ;;
 esac
-exit ${pipestatus[1]}
+# The case statement resets pipestatus, so each branch saves its test run's status.
+exit $rc
