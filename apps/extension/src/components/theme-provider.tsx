@@ -6,7 +6,7 @@
 
 import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from 'next-themes';
 import type { ThemeProviderProps } from 'next-themes';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /**
  * Applies the synced setting and keeps next-themes' localStorage cache out of cross-page sync.
@@ -16,9 +16,15 @@ import { useCallback, useEffect } from 'react';
 function SettingsThemeSync({ storageKey }: { storageKey: string }) {
   const { setTheme } = useNextTheme();
   const { value: theme, isLoading } = useSetting('theme');
+  // next-themes makes a new setTheme on every theme change. Applying on that alone would put back
+  // the setting's previous value for a frame after a click (the click applies at once and the
+  // setting is saved a moment later), so the page flashed. Apply only when the setting changes.
+  const applied = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!isLoading) setTheme(theme);
+    if (isLoading || applied.current === theme) return;
+    applied.current = theme;
+    setTheme(theme);
   }, [isLoading, setTheme, theme]);
 
   useEffect(() => {
