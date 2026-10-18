@@ -214,7 +214,7 @@ CI runs the bridge tests when the extension or `packages/mcp-bridge` changes, th
 
 The **Built-in AI** service runs Chrome's own model (Gemini Nano, the Prompt API's `LanguageModel`) on your computer. Unit and E2E tests use a fake `LanguageModel` (`tests/unit/fake-language-model.ts`, `tests/e2e/builtin-ai.spec.ts`); the real model is checked by hand:
 
-1. Use Chrome 138 or later on a computer that meets [Chrome's hardware requirements](https://developer.chrome.com/docs/ai/get-started#hardware). To try it on a weaker one, set `chrome://flags/#optimization-guide-on-device-model` to **Enabled BypassPerfRequirement** and restart Chrome.
+1. Use Chrome 138 or later on a computer that meets [Chrome's hardware requirements](https://developer.chrome.com/docs/ai/get-started#hardware). **Check this computer**, under the service in Settings > AI, compares this computer with them. To try it on a weaker one, set `chrome://flags/#optimization-guide-on-device-model` to **Enabled BypassPerfRequirement** and restart Chrome.
 2. The browser that `bun run dev` opens reports the model as unavailable. Either start it with the switch below, or turn the runner off and load `apps/extension/dist/chrome-mv3-dev` in your own Chrome profile from `chrome://extensions`. Keep this per-developer file out of Git: `apps/extension/web-ext.config.ts` is ignored.
 
    ```ts
@@ -227,7 +227,7 @@ The **Built-in AI** service runs Chrome's own model (Gemini Nano, the Prompt API
    });
    ```
 
-3. In **Options** > **AI**, click **Use built-in AI**, then **Download the model**. `chrome://on-device-internals` shows the model's state and download, and lets you send it a prompt directly.
+3. In **Settings** > **AI**, click **Use built-in AI**, then **Download the model**. `chrome://on-device-internals` shows the model's state and download, and lets you send it a prompt directly; Chrome opens it only after you turn on its internal debugging pages at `chrome://chrome-urls`.
 4. Turn on **AI Features** and **Record requests**, open the popup on a page, and click the folder suggestion button. **AI activity** shows the prompt as `ON-DEVICE`.
 5. Press the AI quick save shortcut on a page twice. Both saves appear in **AI activity**; the second is quicker, because the AI host page (an offscreen document, listed in `chrome://extensions` under the extension's views) keeps the instructions loaded for `[quick_save] idle_timeout_ms` in `apps/extension/config/ai/built-in.toml`.
 

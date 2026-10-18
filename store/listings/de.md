@@ -1,13 +1,13 @@
 # German Listing Copy (Deutsch)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-15, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 130 |
 | Firefox Add-ons summary | 249 |
-| Full description, Chrome and Edge | 10,713 |
-| Full description, Firefox | 6,493 |
+| Full description, Chrome and Edge | 11,130 |
+| Full description, Firefox | 6,519 |
 | What's new in 0.3.3 | 1,240 |
 
 ## Name
@@ -107,6 +107,7 @@ DATENSCHUTZ
 OPTIONALE KI (STANDARDMÄSSIG DEAKTIVIERT)
 KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu nutzen, brauchen Sie ein Konto bei einem KI-Unternehmen, das für jede Nutzung einen kleinen Betrag berechnen kann, oder ein kostenloses KI-Programm auf Ihrem eigenen Computer. Bookmark Scout hat keinen eigenen KI-Dienst: Aktivieren Sie KI in den Einstellungen und fügen Sie den Dienst Ihrer Wahl hinzu.
 • Ordnervorschläge für die aktuelle Seite, einschließlich eines neuen Ordners, den Sie zuerst prüfen
+• In Chrome kostenlose Ordnervorschläge durch die integrierte KI des Browsers, die auf Ihrem Computer läuft, ohne Konto oder Schlüssel, sofern der Computer sie ausführen kann
 • Tag-Vorschläge und kurze Zusammenfassungen, die Sie vor dem Speichern prüfen
 • Pläne zur Neuordnung von Ordnern, immer mit Vorschau, bevor etwas geändert wird
 • KI fragen: Chat über Ihre Lesezeichen. Die KI kann sie nach Wörtern, Ordner, Tag, Website oder Hinzufügedatum durchsuchen, Duplikate finden, Ordner vorschlagen und sich die aktuelle Seite ansehen
@@ -114,6 +115,7 @@ KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu n
 • Antworten können mit Schaltflächen enden: eine Anschlussfrage, Optionen zur Auswahl, Speichern der Seite in einem vorgeschlagenen Ordner oder Öffnen eines Lesezeichens. Es passiert nichts, bis Sie klicken
 • Festlegen, was „KI fragen“ nachschlagen oder ändern darf (Einstellungen > KI)
 • Seiteninhalt lesen (standardmäßig deaktiviert): für bessere Vorschläge den lesbaren Text jeder Seite senden, nicht nur Titel und Adresse
+• Tags, Zusammenfassungen und neue Ordnernamen kommen in Ihrer Sprache, in einer von Ihnen gewählten Sprache oder in der Sprache der jeweiligen Seite (Einstellungen > KI)
 
 Wenn Sie eine KI-Funktion verwenden, werden die benötigten Daten direkt von Ihrem Browser an den von Ihnen gewählten KI-Dienst gesendet und unterliegen dessen Bedingungen: Lesezeichentitel, Adressen, Ordnernamen, das Datum, an dem Lesezeichen hinzugefügt wurden, sowie gespeicherte Tags und Zusammenfassungen; Titel und Adresse der aktuellen Seite; Ihre Nachrichten an „KI fragen“; Ihr Text unter „Über mich“, falls vorhanden; ob die Links, die „KI fragen“ prüft, noch funktionieren; und nur bei aktiviertem „Seiteninhalt lesen“ der Text der betroffenen Seiten. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung eines KI-Dienstes kann kostenpflichtig sein.
 

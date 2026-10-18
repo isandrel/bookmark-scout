@@ -12,7 +12,7 @@ A reference list of what ships now. For step-by-step instructions, follow the gu
 | Popup | The toolbar button: search, the folder tree, saving, and AI folder recommendations |
 | Side panel | The same view in the browser's side panel (the sidebar in Firefox), which stays open while you browse |
 | Bookmarks manager | Replaces the browser's bookmarks page in Chrome and Edge: folder tree, breadcrumbs, a bookmark table, and the **Tools** sidebar. In a narrow window the folder tree and **Tools** open over the table; a deep folder path folds its middle folders into a **…** menu |
-| Settings | The extension's options page, with ten tabs. See [Settings](/settings) |
+| Settings | The extension's settings page: **Essentials** first, then eleven more tabs under **Advanced**. See [Settings](/settings) |
 | Any page | <Shortcut id="commands.quick-save" /> and <Shortcut id="commands.ai-quick-save" /> quick save the page you are on, with a notification in the page |
 | Right-click menu | **Save bookmark to...** on any link, once you turn on **Right-Click Menu** |
 
@@ -32,7 +32,7 @@ Guide: [Search and saved searches](/guides/search).
 - Quick save with <Shortcut id="commands.quick-save" /> on any page, to the folder that matches the page best (ranked on your device), the last used folder, or a folder you choose; <Shortcut id="commands.ai-quick-save" /> saves to the first AI suggestion. A notification in the page offers **Undo** and other folders under **Move to**. In Chrome and Edge you can give quick save <Shortcut id="browser.bookmark_page" />.
 - Save links from the right-click menu into a recent folder or the Bookmarks Bar.
 - Create folders, drag and drop bookmarks and folders, and move several at once in the manager.
-- Sort by date added, natural alphabetical order, or folders first, without changing the browser's stored order.
+- Show bookmarks in the browser's own order (the default), by date added, in natural alphabetical order, or folders first, without changing the browser's stored order.
 - Edit names and URLs, and add tags and a summary in **Bookmark Details**.
 - Delete with an optional confirmation and a 10-second undo that restores everything inside a folder.
 - In the manager, resize table columns by dragging or with the arrow keys; **Reset view** restores the layout.
@@ -65,13 +65,14 @@ Guide: [Import and export](/guides/import-export).
 
 ## AI tools (optional)
 
-Off by default. Bring your own key for OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter, or about 200 more providers from the models.dev catalog, or use Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint.
+Off by default. Bring your own key for OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter, or about 200 more providers from the models.dev catalog, or use Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint. In Chrome, **Built-in AI** suggests folders for free with Chrome's own model, on your computer and without a key.
 
 - Folder recommendations in the popup, including a reviewed new folder path, and the <Shortcut id="commands.ai-quick-save" /> quick save shortcut.
 - **Ask AI** in the popup and side panel: answers questions by searching your bookmarks, folders, tags, and summaries, finding duplicates, and checking links; saves pages and proposes moves, renames, deletions, and new folders as a plan that changes nothing until you approve it, each change undoable; and ends answers with buttons for what to do next. **What Ask AI may do** in Settings turns off any lookup or change.
 - **Auto-Tagging** and **Content Summarizer** for the current folder, saved only after you review them, with undo.
 - **AI Folder Reorganization**, previewed before anything moves, with undo.
 - **AI Context Packer**, which exports bookmarks as Markdown or XML for an AI chat and works with AI turned off.
+- **AI output language** chooses the language of tags, summaries, and new folder names; **About me** tells every AI feature a little about you; and the prompt library lets you rewrite each tool's prompt, with a list of placeholders such as `{{today}}` and `{{existingTags}}`.
 
 Tags and summaries stay on this device. They are not synced or searchable in the popup, but Ask AI can look them up and JSON bookmark exports include them. Guide: [Set up AI tools](/guides/ai-tools).
 

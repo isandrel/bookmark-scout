@@ -12,7 +12,7 @@ Eine Referenzliste dessen, was jetzt verfügbar ist. Schritt-für-Schritt-Anleit
 | Pop-up | Die Schaltfläche in der Symbolleiste: Suche, Ordnerbaum, Speichern und KI-Ordnervorschläge |
 | Seitenleiste | Dieselbe Ansicht in der Seitenleiste des Browsers (in Firefox in der Sidebar), die beim Surfen geöffnet bleibt |
 | Lesezeichen-Manager | Ersetzt in Chrome und Edge die Lesezeichenseite des Browsers: Ordnerbaum, Pfadnavigation, eine Lesezeichentabelle und die **Tools**-Leiste. In einem schmalen Fenster öffnen sich der Ordnerbaum und **Tools** über der Tabelle; bei einem tiefen Ordnerpfad werden die mittleren Ordner in ein Menü **…** eingeklappt |
-| Einstellungen | Die Optionsseite der Erweiterung mit zehn Tabs. Siehe [Einstellungen](/settings) |
+| Einstellungen | Die Einstellungsseite der Erweiterung: zuerst **Das Wichtigste**, dann elf weitere Tabs unter **Erweitert**. Siehe [Einstellungen](/settings) |
 | Jede Seite | <Shortcut id="commands.quick-save" /> und <Shortcut id="commands.ai-quick-save" /> speichern die aktuelle Seite schnell, mit einer Benachrichtigung auf der Seite |
 | Rechtsklickmenü | **Lesezeichen speichern in...** bei jedem Link, sobald Sie **Rechtsklickmenü** aktivieren |
 
@@ -32,7 +32,7 @@ Anleitung: [Suche und gespeicherte Suchen](/guides/search).
 - Mit <Shortcut id="commands.quick-save" /> auf jeder Seite schnell speichern, und zwar im Ordner, der am besten zur Seite passt (auf Ihrem Gerät ermittelt), im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl; <Shortcut id="commands.ai-quick-save" /> speichert im ersten KI-Vorschlag. Eine Benachrichtigung auf der Seite bietet **Rückgängig** und unter **Verschieben nach** weitere Ordner an. In Chrome und Edge können Sie dem Schnellspeichern <Shortcut id="browser.bookmark_page" /> zuweisen.
 - Links über das Rechtsklickmenü in einem zuletzt verwendeten Ordner oder in der Lesezeichenleiste speichern.
 - Ordner erstellen, Lesezeichen und Ordner per Drag-and-drop verschieben und im Manager mehrere auf einmal verschieben.
-- Nach Hinzufügedatum, natürlicher alphabetischer Reihenfolge oder mit Ordnern zuerst sortieren, ohne die im Browser gespeicherte Reihenfolge zu ändern.
+- Lesezeichen in der eigenen Reihenfolge des Browsers (Standard), nach Hinzufügedatum, in natürlicher alphabetischer Reihenfolge oder mit Ordnern zuerst anzeigen, ohne die im Browser gespeicherte Reihenfolge zu ändern.
 - Namen und URLs bearbeiten sowie in **Lesezeichendetails** Tags und eine Zusammenfassung hinzufügen.
 - Löschen mit optionaler Bestätigung und 10 Sekunden Zeit zum Rückgängigmachen, wobei alles innerhalb eines Ordners wiederhergestellt wird.
 - Im Manager die Breite von Tabellenspalten durch Ziehen oder mit den Pfeiltasten ändern; **Ansicht zurücksetzen** stellt das Layout wieder her.
@@ -65,13 +65,14 @@ Anleitung: [Import und Export](/guides/import-export).
 
 ## KI-Tools (optional) [#ai-tools-optional]
 
-Standardmäßig deaktiviert. Verwenden Sie Ihren eigenen Schlüssel für OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter oder rund 200 weitere Anbieter aus dem models.dev-Katalog, oder nutzen Sie Ollama, CLIProxyAPI oder einen beliebigen OpenAI-kompatiblen Endpunkt.
+Standardmäßig deaktiviert. Verwenden Sie Ihren eigenen Schlüssel für OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter oder rund 200 weitere Anbieter aus dem models.dev-Katalog, oder nutzen Sie Ollama, CLIProxyAPI oder einen beliebigen OpenAI-kompatiblen Endpunkt. In Chrome schlägt **Integrierte KI** kostenlos Ordner vor, mit dem eigenen Modell von Chrome, auf Ihrem Computer und ohne Schlüssel.
 
 - Ordnervorschläge im Pop-up, einschließlich eines geprüften neuen Ordnerpfads, und das Tastenkürzel <Shortcut id="commands.ai-quick-save" /> zum Schnellspeichern.
 - **KI fragen** im Pop-up und in der Seitenleiste: beantwortet Fragen, indem es Ihre Lesezeichen, Ordner, Tags und Zusammenfassungen durchsucht, Duplikate findet und Links prüft; speichert Seiten und schlägt Verschiebungen, Umbenennungen, Löschungen und neue Ordner als Plan vor, der nichts ändert, bis Sie zustimmen, wobei sich jede Änderung rückgängig machen lässt; und beendet Antworten mit Schaltflächen für die nächsten Schritte. **Was „KI fragen“ tun darf** in den Einstellungen schaltet jede Abfrage oder Änderung einzeln ab.
 - **Automatische Tags** und **Inhaltszusammenfassung** für den aktuellen Ordner, erst nach Ihrer Prüfung gespeichert, mit Rückgängig.
 - **KI-Ordnerneuordnung**, mit Vorschau, bevor etwas verschoben wird, mit Rückgängig.
 - **KI-Kontextpaket**, das Lesezeichen als Markdown oder XML für einen KI-Chat exportiert und auch bei deaktivierter KI funktioniert.
+- **Ausgabesprache der KI** legt die Sprache von Tags, Zusammenfassungen und neuen Ordnernamen fest; **Über mich** erzählt jeder KI-Funktion ein wenig über Sie; und in der Prompt-Bibliothek können Sie den Prompt jedes Tools neu schreiben, mit einer Liste von Platzhaltern wie `{{today}}` und `{{existingTags}}`.
 
 Tags und Zusammenfassungen bleiben auf diesem Gerät. Sie werden nicht synchronisiert und sind im Pop-up nicht durchsuchbar, aber „KI fragen“ kann sie nachschlagen, und JSON-Exporte von Lesezeichen enthalten sie. Anleitung: [KI-Tools einrichten](/guides/ai-tools).
 

@@ -154,7 +154,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Export in Settings saves a backup file (<code>bookmark-scout-backup.json</code>) with the settings you changed, your custom prompts, your About me text, your AI services (name, provider, model, base URL, and any provider-specific fields), your saved searches, and the bookmark table's columns and sort. It never contains API keys or extra headers; after a restore, you enter them again in the AI settings. The file is not encrypted. Import in Settings restores it."
+                        "text": "Back up settings, at the bottom of Settings, saves a backup file (<code>bookmark-scout-backup.json</code>) with the settings you changed, your custom prompts, your About me text, your AI services (name, provider, model, base URL, and any provider-specific fields), your saved searches, and the bookmark table's columns and sort. It never contains API keys or extra headers; after a restore, you enter them again in the AI settings. The file is not encrypted. Restore settings, next to it, restores it."
                     },
                     {
                         "type": "p",

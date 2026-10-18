@@ -1,6 +1,6 @@
 # Brazilian Portuguese Listing Copy (Português (Brasil))
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters and were measured on 2026-10-12, the two full descriptions on 2026-10-15.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters and were measured on 2026-10-12, the Firefox full description on 2026-10-15 and the Chrome Web Store and Edge Add-ons full description on 2026-10-18.
 
 | Block | Characters |
 | --- | --- |
@@ -48,7 +48,7 @@ favoritos com IA
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-The same Edge condition as in `en.md` applies.
+Plain text, 10,548 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 O Bookmark Scout salva cada página na pasta certa em segundos, pela barra de ferramentas ou com um atalho de teclado, e depois ajuda você a encontrar e arrumar seus favoritos sem sair do navegador. Gratuito, sem conta e sem anúncios.
@@ -107,6 +107,7 @@ PRIVACIDADE
 IA OPCIONAL (DESATIVADA POR PADRÃO)
 A IA é opcional, e tudo o que está acima funciona sem ela. Para usá-la, você precisa de uma conta em uma empresa de IA, que pode cobrar um pouco a cada uso, ou de um programa de IA gratuito no seu próprio computador. O Bookmark Scout não tem serviço de IA próprio: ative a IA nas Configurações e adicione o serviço que você escolheu.
 • Sugestões de pasta para a página atual, incluindo uma nova pasta que você revisa antes
+• No Chrome, sugestões de pasta gratuitas da IA integrada do Chrome, que roda no seu computador sem conta nem chave, se o computador for capaz de executá-la
 • Sugestões de tags e resumos curtos que você revisa antes de salvar
 • Planos de reorganização de pastas, sempre com prévia antes de qualquer alteração
 • Perguntar à IA: converse sobre seus favoritos. Ele pode pesquisá-los por palavras, pasta, tag, site ou data de adição, encontrar duplicatas, sugerir pastas e consultar a página atual
@@ -114,6 +115,7 @@ A IA é opcional, e tudo o que está acima funciona sem ela. Para usá-la, você
 • As respostas podem terminar com botões: uma pergunta de acompanhamento, opções para escolher, salvar a página em uma pasta sugerida ou abrir um favorito. Nada acontece até você clicar
 • Escolha o que o Perguntar à IA pode consultar ou alterar (Configurações > IA)
 • Ler conteúdo da página (desativado por padrão): envia o texto legível de cada página, não só o título e o endereço, para sugestões melhores
+• Tags, resumos e nomes de novas pastas vêm no seu idioma, em um que você escolher ou no idioma de cada página (Configurações > IA)
 
 Quando você usa um recurso de IA, os dados de que ele precisa são enviados diretamente do seu navegador ao serviço de IA escolhido, de acordo com os termos desse serviço: títulos, endereços e nomes de pastas dos favoritos, as datas em que os favoritos foram adicionados, além das tags e resumos salvos; o título e o endereço da página atual; suas mensagens do Perguntar à IA; o texto de Sobre mim que você escrever, se houver; se os links que o Perguntar à IA verifica ainda funcionam; e, somente com Ler conteúdo da página ativado, o texto das páginas envolvidas. Nada é enviado ao Bookmark Scout. Sua chave de API fica no armazenamento local de extensões deste navegador e não é sincronizada. O uso de um serviço de IA pode ser cobrado.
 

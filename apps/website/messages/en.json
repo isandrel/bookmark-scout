@@ -177,7 +177,7 @@
       "ai": {
         "tab": "AI (optional)",
         "heading": "Optional AI, from the company you choose",
-        "caption": "AI is off until you turn it on. It needs an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer.",
+        "caption": "AI is off until you turn it on. It needs an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer. In Chrome, its built-in AI suggests folders for free.",
         "alt": "The AI tab in Settings: the AI is optional box says what AI needs and may cost, and AI Features is off, the default",
         "points": [
           "Get folder suggestions for the page you are on, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}",
@@ -295,7 +295,7 @@
         },
         "providers": {
           "q": "Which AI companies can I use?",
-          "a": "Bookmark Scout works with {providers}. Most AI companies need an account and a key from it, and charge a small amount for each use; Bookmark Scout itself charges nothing. Ollama runs AI on your own computer for free, if your computer is fast enough. The <aiGuide>AI guide</aiGuide> shows how to set it up."
+          "a": "Bookmark Scout works with {providers}. Most AI companies need an account and a key from it, and charge a small amount for each use; Bookmark Scout itself charges nothing. Ollama runs AI on your own computer for free, if your computer is fast enough, and so does Chrome's built-in AI, which suggests folders. The <aiGuide>AI guide</aiGuide> shows how to set it up."
         },
         "changes": {
           "q": "Will it change my bookmarks without asking?",

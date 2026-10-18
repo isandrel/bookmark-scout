@@ -154,7 +154,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Exporter, dans les paramètres, enregistre un fichier de sauvegarde (<code>bookmark-scout-backup.json</code>) contenant les paramètres que vous avez modifiés, vos prompts personnalisés, votre texte « À propos de moi », vos services d'IA (nom, fournisseur, modèle, URL de base et champs propres au fournisseur), vos recherches enregistrées, ainsi que les colonnes et le tri du tableau des favoris. Il ne contient jamais de clé API ni d'en-têtes supplémentaires ; après une restauration, vous les saisissez à nouveau dans les paramètres d'IA. Le fichier n'est pas chiffré. Importer, dans les paramètres, le restaure."
+                        "text": "Sauvegarder les paramètres, en bas des paramètres, enregistre un fichier de sauvegarde (<code>bookmark-scout-backup.json</code>) contenant les paramètres que vous avez modifiés, vos prompts personnalisés, votre texte « À propos de moi », vos services d'IA (nom, fournisseur, modèle, URL de base et champs propres au fournisseur), vos recherches enregistrées, ainsi que les colonnes et le tri du tableau des favoris. Il ne contient jamais de clé API ni d'en-têtes supplémentaires ; après une restauration, vous les saisissez à nouveau dans les paramètres d'IA. Le fichier n'est pas chiffré. Restaurer les paramètres, juste à côté, le restaure."
                     },
                     {
                         "type": "p",

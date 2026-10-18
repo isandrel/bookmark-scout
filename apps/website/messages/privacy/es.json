@@ -154,7 +154,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Exportar, en Configuración, guarda un archivo de copia de seguridad (<code>bookmark-scout-backup.json</code>) con los ajustes que cambiaste, tus prompts personalizados, tu texto de Sobre mí, tus servicios de IA (nombre, proveedor, modelo, URL base y cualquier campo propio del proveedor), tus búsquedas guardadas y las columnas y la ordenación de la tabla de marcadores. Nunca contiene claves de API ni encabezados adicionales; después de restaurarlo, los vuelves a introducir en la configuración de IA. El archivo no está cifrado. Importar, en Configuración, lo restaura."
+                        "text": "Hacer copia de los ajustes, al final de Configuración, guarda un archivo de copia de seguridad (<code>bookmark-scout-backup.json</code>) con los ajustes que cambiaste, tus prompts personalizados, tu texto de Sobre mí, tus servicios de IA (nombre, proveedor, modelo, URL base y cualquier campo propio del proveedor), tus búsquedas guardadas y las columnas y la ordenación de la tabla de marcadores. Nunca contiene claves de API ni encabezados adicionales; después de restaurarlo, los vuelves a introducir en la configuración de IA. El archivo no está cifrado. Restaurar ajustes, a su lado, lo restaura."
                     },
                     {
                         "type": "p",

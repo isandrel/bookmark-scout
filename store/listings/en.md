@@ -50,7 +50,7 @@ AI bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 8,611 characters (2026-10-15); the Chrome Web Store allows 16,000. It is written for people who are not developers: the benefit first, plain words, and technical details (search options, OpenAI-compatible endpoints, local AI agents, the license) in For developers near the end. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 8,949 characters (2026-10-18); the Chrome Web Store allows 16,000. It is written for people who are not developers: the benefit first, plain words, and technical details (search options, OpenAI-compatible endpoints, local AI agents, the license) in For developers near the end. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and tidy your bookmarks without leaving the browser. Free, with no account and no ads.
@@ -109,6 +109,7 @@ PRIVACY
 OPTIONAL AI (OFF BY DEFAULT)
 AI is optional, and everything above works without it. To use it, you need an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer. Bookmark Scout has no AI service of its own: turn on AI in Settings and add the service you chose.
 • Folder suggestions for the current page, including a new folder that you review first
+• In Chrome, free folder suggestions from Chrome's built-in AI, which runs on your computer with no account or key, where the computer can run it
 • Tag suggestions and short summaries that you review before saving
 • Folder reorganization plans, always previewed before anything changes
 • Ask AI: chat about your bookmarks. It can search them by words, folder, tag, site, or date added, find duplicates, suggest folders, and look at the current page
@@ -116,6 +117,7 @@ AI is optional, and everything above works without it. To use it, you need an ac
 • Answers can end with buttons: a follow-up question, options to pick from, saving the page to a suggested folder, or opening a bookmark. Nothing happens until you click
 • Choose what Ask AI may look up or change (Settings > AI)
 • Read page content (off by default): send each page's readable text, not only its title and address, for better suggestions
+• Tags, summaries, and new folder names come back in your language, in one you pick, or in each page's own language (Settings > AI)
 
 When you use an AI feature, the data it needs is sent directly from your browser to the AI service you chose, under that service's terms: bookmark titles, addresses, folder names, the dates bookmarks were added, and saved tags and summaries; the current page's title and address; your Ask AI messages; the About me text you write, if any; whether the links Ask AI checks still work; and, only with Read page content on, the text of the pages involved. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Using an AI service may cost money.
 
@@ -141,7 +143,7 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 5,220 characters (2026-10-15). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
+AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 5,243 characters (2026-10-18). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser. Free, with no account and no ads.

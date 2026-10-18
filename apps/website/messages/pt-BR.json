@@ -177,7 +177,7 @@
       "ai": {
         "tab": "IA (opcional)",
         "heading": "IA opcional, da empresa que você escolher",
-        "caption": "A IA fica desativada até você ativá-la. Ela precisa de uma conta em uma empresa de IA, que pode cobrar um pouco a cada uso, ou de um programa de IA gratuito no seu próprio computador.",
+        "caption": "A IA fica desativada até você ativá-la. Ela precisa de uma conta em uma empresa de IA, que pode cobrar um pouco a cada uso, ou de um programa de IA gratuito no seu próprio computador. No Chrome, a IA integrada do navegador sugere pastas de graça.",
         "alt": "A guia IA das configurações: o quadro A IA é opcional explica do que a IA precisa e quanto pode custar, e Recursos de IA está desativado, o padrão",
         "points": [
           "Receba sugestões de pasta para a página em que você está, ou salve na primeira delas com {{SHORTCUT:commands.ai-quick-save}}",
@@ -295,7 +295,7 @@
         },
         "providers": {
           "q": "Quais empresas de IA posso usar?",
-          "a": "O Bookmark Scout funciona com {providers}. A maioria das empresas de IA exige uma conta e uma chave fornecida por ela, e cobra um pequeno valor a cada uso; o Bookmark Scout em si não cobra nada. O Ollama executa a IA no seu próprio computador, de graça, se o computador for rápido o suficiente. O <aiGuide>guia de IA</aiGuide> mostra como configurar."
+          "a": "O Bookmark Scout funciona com {providers}. A maioria das empresas de IA exige uma conta e uma chave fornecida por ela, e cobra um pequeno valor a cada uso; o Bookmark Scout em si não cobra nada. O Ollama executa a IA no seu próprio computador, de graça, se o computador for rápido o suficiente, assim como a IA integrada do Chrome, que sugere pastas. O <aiGuide>guia de IA</aiGuide> mostra como configurar."
         },
         "changes": {
           "q": "Ele altera meus favoritos sem perguntar?",

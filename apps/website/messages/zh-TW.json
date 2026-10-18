@@ -177,7 +177,7 @@
       "ai": {
         "tab": "AI (選用)",
         "heading": "選用的 AI，來自你選擇的 AI 公司",
-        "caption": "在你開啟之前，AI 都會維持關閉。使用 AI 需要 AI 公司的帳戶 (每次使用可能會收取少許費用)，或在自己電腦上執行的免費 AI 程式。",
+        "caption": "在你開啟之前，AI 都會維持關閉。使用 AI 需要 AI 公司的帳戶 (每次使用可能會收取少許費用)，或在自己電腦上執行的免費 AI 程式。在 Chrome 中，其內建 AI 可以免費推薦資料夾。",
         "alt": "設定中的「AI」分頁：「AI 是選用功能」方塊說明使用 AI 需要什麼及可能的費用，「AI 功能」為關閉 (預設值)",
         "points": [
           "為目前所在的網頁取得資料夾建議，或按 {{SHORTCUT:commands.ai-quick-save}} 儲存到第一個建議",
@@ -295,7 +295,7 @@
         },
         "providers": {
           "q": "可以使用哪些 AI 公司？",
-          "a": "Bookmark Scout 適用於 {providers}。大多數 AI 公司都需要帳戶和由其提供的金鑰，並會依每次使用收取少許費用；Bookmark Scout 本身不收取任何費用。只要電腦速度夠快，Ollama 就能在你自己的電腦上免費執行 AI。設定方式請參閱 <aiGuide>AI 指南</aiGuide>。"
+          "a": "Bookmark Scout 適用於 {providers}。大多數 AI 公司都需要帳戶和由其提供的金鑰，並會依每次使用收取少許費用；Bookmark Scout 本身不收取任何費用。只要電腦速度夠快，Ollama 就能在你自己的電腦上免費執行 AI，可推薦資料夾的 Chrome 內建 AI 也是如此。設定方式請參閱 <aiGuide>AI 指南</aiGuide>。"
         },
         "changes": {
           "q": "它會未經詢問就變更我的書籤嗎？",

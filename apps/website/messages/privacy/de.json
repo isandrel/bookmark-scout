@@ -154,7 +154,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "„Exportieren“ in den Einstellungen speichert eine Sicherungsdatei (<code>bookmark-scout-backup.json</code>) mit den Einstellungen, die Sie geändert haben, Ihren eigenen Prompts, Ihrem Text unter „Über mich“, Ihren KI-Diensten (Name, Anbieter, Modell, Basis-URL und anbieterspezifische Felder), Ihren gespeicherten Suchen sowie den Spalten und der Sortierung der Lesezeichentabelle. Sie enthält nie API-Schlüssel oder zusätzliche Header; nach einer Wiederherstellung geben Sie diese in den KI-Einstellungen erneut ein. Die Datei ist nicht verschlüsselt. „Importieren“ in den Einstellungen stellt sie wieder her."
+                        "text": "„Einstellungen sichern“ ganz unten in den Einstellungen speichert eine Sicherungsdatei (<code>bookmark-scout-backup.json</code>) mit den Einstellungen, die Sie geändert haben, Ihren eigenen Prompts, Ihrem Text unter „Über mich“, Ihren KI-Diensten (Name, Anbieter, Modell, Basis-URL und anbieterspezifische Felder), Ihren gespeicherten Suchen sowie den Spalten und der Sortierung der Lesezeichentabelle. Sie enthält nie API-Schlüssel oder zusätzliche Header; nach einer Wiederherstellung geben Sie diese in den KI-Einstellungen erneut ein. Die Datei ist nicht verschlüsselt. „Einstellungen wiederherstellen“ direkt daneben stellt sie wieder her."
                     },
                     {
                         "type": "p",

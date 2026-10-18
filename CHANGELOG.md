@@ -1,5 +1,57 @@
 # bookmark-scout
 
+## Unreleased
+
+### Features
+
+- Free AI on this computer in Chrome: **Built-in AI** uses Chrome's own model (Gemini Nano), which runs on your computer with no account, no API key, and no cost, and sends nothing anywhere. It suggests folders in the popup and side panel and picks the folder for the AI quick save shortcut. Settings > AI offers it under **Free on this computer** (**Use built-in AI**) where Chrome can run it, and its service shows the model's state with **Download the model**. The popup and quick save never start the download; until the model is ready, quick save uses the best match. The other AI tools keep using your other AI service. It can be added only once.
+- **Check this computer** under Built-in AI shows your Chrome version, operating system, memory, and processor cores against what the model needs, and names what a browser cannot see (free disk space and graphics memory). When Chrome says the model cannot run but nothing rules the computer out, it explains the Chrome flag to change and opens it, with **Check again**.
+- **AI output language** (Settings > AI): tags, summaries, reasons, and new folder names come back in the extension's language by default, in a language you pick, or, with **Same as each page**, in each page's own language as before. Ask AI answers in the language you write in.
+- **About me** (Settings > AI): a few words about you, up to 1,000 characters, that every built-in AI prompt includes so results fit you better. It is empty by default, syncs through your browser account, and is part of the settings backup.
+- Auto-Tagging reuses your tags: it sends the names of your most used tags (up to 200) so the AI picks the ones you already have, and saves a suggested tag in the spelling you already use. Turn this off with **Send Existing Tags** (AI Tools > Auto-Tagging).
+- The prompt editor lists placeholders: type `{{` to pick one, with what it is and its value now. New placeholders `{{today}}`, `{{language}}`, and `{{aboutMe}}` work in every tool, and `{{existingTags}}` in Auto-Tagging. A placeholder the tool does not fill in is flagged, with a suggestion for a likely typo; the preview shows the rules Bookmark Scout adds after your prompt; **Reset to built-in prompt** starts over; and `\{{` writes literal braces.
+- A welcome page, **Bookmark Scout is ready**, opens once after a new install (never after an update) with three steps: pin the icon, save a page by typing a folder name, and the keys your quick save shortcut got, or **Set it up** when another extension took them. In Chrome and Edge it also offers to use the browser's bookmark key (Ctrl+D, ⌘D on a Mac) for quick save.
+- Settings open on a new **Essentials** tab with the few settings most people change (quick save folder, right-click menu, theme, language, confirm before delete) and a note that AI is optional. The other tabs are listed under **Advanced**. Local AI agents moved to a new last tab, **For developers**, with the same settings.
+- AI setup for newcomers: an **AI is optional** box at the top of Settings > AI says what AI does, what it needs, what it may cost, and what is sent; featured AI services have a **Get an API key** link; and the Add service list shows the well-known providers first, with about 200 more once you search. The popup's AI buttons appear only once AI is set up; until then, a line says **AI is on but not set up yet** with **Finish AI setup**, and the AI tools in the manager stay disabled.
+- Pressing Enter in the popup or side panel search box now saves the current page to the first folder listed under **Save to folder**, which is highlighted; ↓ picks another. A line under the search box names the page to save, and another says **Already saved in** when the page is already bookmarked.
+- The bookmark manager starts simpler: it opens on the Bookmarks Bar, shows the Title, URL, and Date Added columns, 50 rows per page (100 is offered), and one search box that matches titles and addresses, with the URL and folder filters under **More filters**. While a search lists bookmarks from every folder, each shows its folder. Everything else is still under **View**. Saved table views keep their own columns.
+- New sort order **Browser Order**, the order you see on the bookmarks bar, is the default in the popup, side panel, and manager. **Date Added**, **Alphabetical**, and **Folders First** are still in Settings > Behavior. These new defaults (sort order, manager columns, rows per page) also reach you after the update if you never changed them; anything you changed stays as it is.
+- Tools in the manager start on **All Bookmarks** (AI Folder Reorganization still starts on the open folder), and the Tools sidebar lists cleanup tools first and AI tools last.
+- Ask AI's suggestion buttons now sit right above the message box, only for the latest answer once it is complete, and step aside while you type. They no longer fail with some AI services.
+- Every AI service has an icon in Settings, with a generic one for programs on your computer and custom endpoints.
+- Changes made by Duplicate Cleaner, URL Cleaner, dead link repairs, Metadata Fetcher, and AI Folder Reorganization are each one step in the manager's undo history, so Ctrl+Z (⌘Z on a Mac) undoes them too.
+- Plainer words: **Context Menu** is now **Right-Click Menu**, **Metadata & Content** is **Page Titles & Icons**, the settings page is called **Settings** everywhere, and the buttons at the bottom of Settings are **Back up settings** and **Restore settings** (they never held bookmarks), next to a new **Export Bookmarks**. Match case, whole word, and pattern search moved into one **More search options** menu.
+- While AI Features is off, the AI settings are greyed out under a note saying nothing there runs until you turn AI on. They can still be changed.
+
+### Permissions and privacy
+
+- Two new things can be sent to your AI provider: the names of your most used tags, for Auto-Tagging (on by default; **Send Existing Tags** turns it off), and your **About me** text, with every AI request while it has text (empty by default). The privacy policy (effective 2026-10-18), docs, and store disclosures say so in every language.
+- Chrome's built-in AI keeps everything on your computer; the privacy policy says so.
+- Milder permission prompts: **Show browser icons** on Refresh Site Icons asks only to read the icons of the websites you visit, instead of access to all websites. Check Dead Links, Metadata Fetcher, and Refresh Site Icons ask for only the sites of the bookmarks in that run (all websites above 20 sites). A redirect to a site outside that permission is listed under **Check manually**. Before asking to read your browsing history, the side panel shows the ways to save that need no permission.
+- In Firefox, turning on AI asks to share less: page text is asked for only when you turn on **Read page content**.
+- The Privacy Scanner no longer flags plain page anchors such as Gmail's `#inbox`, only ones that hold a key or token.
+
+### Fixes
+
+- The popup and side panel open in their final layout, without parts jumping in after the first frame.
+- Switching between light and dark no longer flashes back to the old theme for a moment.
+- Switching tabs in Settings no longer shifts the page sideways, and **Refresh Models** and **Verify Service** keep their result and buttons in place while a check runs.
+- Bookmark manager rows are 32px high like the folder tree, Title and URL share the table's width, and the move buttons no longer cover the Date Added column.
+- Typing in the manager's Type, Domain, and Folder filters matches any part of a name, ignoring case and accents.
+- Clearer tool results: Metadata Fetcher says when a bookmark keeps its title, dead link results describe redirects they could not follow, repairs name bookmarks deleted after the scan, long folder paths shorten in the middle, and tool cards wrap in German and French.
+- Quick save offers the next best matching folders under **Move to**, and an undone quick save no longer shows in later popups.
+- AI activity marks on-device calls **On device** and local agents' actions **Action**; AI service rows show the model's name; Korean text breaks between words; and Japanese uses one spelling for "folder".
+
+### Performance
+
+- The extension download is smaller than 0.3.3's despite the new features: language files are packed tighter, and two libraries were replaced with smaller code.
+
+### Website and documentation
+
+- The website shows English at its plain addresses (`/`, `/privacy/`, `/support/`) and suggests your language in a bar at the bottom instead of redirecting; old `/en/...` addresses redirect.
+- The website, docs, README, and store listings lead with the Chrome Web Store install and plain words for people new to extensions, with new screenshots. The docs have a new **Your first save** page.
+- Every keyboard shortcut in the docs, website, and README is now taken from the extension's own settings, and the docs show the keys for your computer.
+
 ## 0.3.3
 
 ### Features

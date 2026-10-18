@@ -1,6 +1,6 @@
 # Spanish Listing Copy (Español)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-15, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox full description on 2026-10-15, the Chrome Web Store and Edge Add-ons full description on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
@@ -48,7 +48,7 @@ marcadores con IA
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-The same Edge condition as in `en.md` applies.
+Plain text, 11,000 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout guarda cada página en la carpeta correcta en segundos, desde la barra de herramientas o con una sola combinación de teclas, y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador. Gratis, sin cuenta y sin anuncios.
@@ -107,6 +107,7 @@ PRIVACIDAD
 IA OPCIONAL (DESACTIVADA DE FORMA PREDETERMINADA)
 La IA es opcional, y todo lo anterior funciona sin ella. Para usarla, necesitas una cuenta con una empresa de IA, que puede cobrar un poco cada vez que la usas, o un programa de IA gratuito en tu propio equipo. Bookmark Scout no tiene un servicio de IA propio: activa la IA en Configuración y añade el servicio que elegiste.
 • Sugerencias de carpeta para la página actual, incluida una carpeta nueva que revisas primero
+• En Chrome, sugerencias de carpeta gratuitas de la IA integrada de Chrome, que funciona en tu equipo sin cuenta ni clave, si el equipo puede ejecutarla
 • Sugerencias de etiquetas y resúmenes breves que revisas antes de guardar
 • Planes de reorganización de carpetas, siempre con vista previa antes de cambiar nada
 • Preguntar a la IA: chatea sobre tus marcadores. Puede buscarlos por palabras, carpeta, etiqueta, sitio o fecha en que se añadieron, encontrar duplicados, sugerir carpetas y consultar la página actual
@@ -114,6 +115,7 @@ La IA es opcional, y todo lo anterior funciona sin ella. Para usarla, necesitas 
 • Las respuestas pueden terminar con botones: una pregunta de seguimiento, opciones para elegir, guardar la página en una carpeta sugerida o abrir un marcador. No pasa nada hasta que haces clic
 • Elige qué puede consultar o cambiar Preguntar a la IA (Configuración > IA)
 • Leer el contenido de la página (desactivado de forma predeterminada): envía el texto legible de cada página, no solo su título y su dirección, para obtener mejores sugerencias
+• Las etiquetas, los resúmenes y los nombres de carpetas nuevas llegan en tu idioma, en el que elijas o en el idioma de cada página (Configuración > IA)
 
 Cuando usas una función de IA, los datos que necesita se envían directamente desde tu navegador al servicio de IA que elegiste, según las condiciones de ese servicio: títulos de marcadores, direcciones, nombres de carpetas, las fechas en que se añadieron los marcadores, y etiquetas y resúmenes guardados; el título y la dirección de la página actual; tus mensajes de Preguntar a la IA; el texto de Sobre mí que escribas, si lo hay; si los enlaces que comprueba Preguntar a la IA siguen funcionando; y, solo con Leer el contenido de la página activado, el texto de las páginas implicadas. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. Usar un servicio de IA puede costar dinero.
 

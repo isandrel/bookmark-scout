@@ -10,6 +10,8 @@ AI features are **optional and off by default**, and Bookmark Scout works fully 
 
 You also pick a **model**: the AI version the company offers, such as a faster or a smarter one. When AI is on, requests go directly from your browser to the provider you chose, with your key.
 
+For folder suggestions only, Chrome can do without an account or a key: see [Free AI on this computer](#free-ai-on-this-computer).
+
 <Callout type="warn" title="Before you turn AI on">
 AI tools send bookmark titles, URLs, and folder names or paths to the provider you configure. The provider handles that data under its own terms, and API use may cost money. Review every suggestion before you apply it.
 </Callout>
@@ -116,13 +118,13 @@ Verify and Refresh name the likely cause: a rejected key (401, or 400 from Googl
 
 ## Write your own prompts
 
-Each AI tool starts with a built-in prompt. To change how a tool behaves, go to **Options**, then **AI Tools**, then **Prompts**:
+Each AI tool starts with a built-in prompt. To change how a tool behaves, go to **Settings**, then **AI Tools**, then **Prompts**:
 
 1. To read a tool's built-in prompt first, click the eye icon next to it. Click **Customize**, here or in the viewer, and the editor opens with the built-in prompt to start from.
 2. Edit the text. Click a variable such as `{{maxTags}}` to insert it; the tool fills it in from your settings. **Preview with current settings** shows the result. Or type `{{` and pick one from the list, which shows what each placeholder is and its value now. `{{today}}`, `{{language}}`, and `{{aboutMe}}` work in every tool, and `{{existingTags}}` in Auto-Tagging; a placeholder with nothing to fill in, such as `{{aboutMe}}` while About me is empty, is left out with its line. Write `\{{` for literal braces. A placeholder the tool does not fill in is flagged, with a suggestion when it looks like a typo, and **Reset to built-in prompt** starts over.
 3. Click **Save prompt**. The new prompt becomes the tool's prompt.
 
-Keep several prompts per tool, up to 10 in all, and switch between them with the tool's menu; **Default (built in)** goes back to the original. Your prompts sync across your devices through your browser account, so each one must stay under 7 KB. Bookmark Scout adds its own output format rules after your prompt, so results still load even if your prompt asks for something else. It also adds a line asking for the language set in **AI output language** (**Options**, then **AI**); in your own prompt, `{{language}}` names that language.
+Keep several prompts per tool, up to 10 in all, and switch between them with the tool's menu; **Default (built in)** goes back to the original. Your prompts sync across your devices through your browser account, so each one must stay under 7 KB. Bookmark Scout adds its own output format rules after your prompt, so results still load even if your prompt asks for something else. It also adds a line asking for the language set in **AI output language** (**Settings**, then **AI**); in your own prompt, `{{language}}` names that language.
 
 ## What each tool sends
 
@@ -141,7 +143,7 @@ Turn on **Auto-recommend on Open** to request folder recommendations every time 
 
 ## Read page content
 
-Titles and URLs do not always say what a page is about. Turn on **Read page content** in **Options**, then **AI**, and folder recommendations, **Auto-Tagging**, and **Content Summarizer** also send the main text of each page. Turning it on asks for access to websites; if you decline, it stays off.
+Titles and URLs do not always say what a page is about. Turn on **Read page content** in **Settings**, then **AI**, and folder recommendations, **Auto-Tagging**, and **Content Summarizer** also send the main text of each page. Turning it on asks for access to websites; if you decline, it stays off.
 
 - Bookmark Scout downloads each page itself, without your cookies, so you get the logged-out version of a site. It keeps the article text without menus, scripts, images, or link addresses.
 - Each page sends up to about 3,000 characters, and one tool run reads up to 40 pages. Later bookmarks in a large folder are sent with their title and URL only, as are pages that do not load.
@@ -158,12 +160,12 @@ Click the chat button next to the search box in the popup or side panel to ask a
 - OpenAI, Anthropic, Google Gemini, and xAI can also search the web. Turn it on with the globe button next to the message box; it stays off until you do, and the provider runs the search itself.
 - The conversation is kept only while the chat is open. **New chat** clears it, and closing the popup ends it.
 - The instructions it follows are the **Ask AI** prompt in the prompt library, so you can view or replace them like any other prompt.
-- **What Ask AI may do**, in **Options**, then **AI**, lists every lookup and change it can make. Turn one off and Ask AI is not offered it at all. Applying a plan of changes always asks you first.
+- **What Ask AI may do**, in **Settings**, then **AI**, lists every lookup and change it can make. Turn one off and Ask AI is not offered it at all. Applying a plan of changes always asks you first.
 - For developers: AI agents on your computer, such as Claude Code, can use the same lookups and changes; see [Use with local AI agents](/guides/local-agents).
 
 ## See what was sent
 
-To check exactly what a tool sent and what the provider answered, go to **Options**, then **AI**, and turn on **Record requests** under **AI activity**. Each AI call then shows its source, address, status, and time; open one to see the request headers and the request and response bodies, or copy it as JSON for a bug report.
+To check exactly what a tool sent and what the provider answered, go to **Settings**, then **AI**, and turn on **Record requests** under **AI activity**. Each AI call then shows its source, address, status, and time; open one to see the request headers and the request and response bodies, or copy it as JSON for a bug report.
 
 Recording is off by default. The log stays on this device and keeps only the most recent calls. API keys, headers whose names suggest a credential (such as ones containing `key`, `token`, `secret`, `auth`, or `cookie`), and every header you set in **Extra Headers JSON** are replaced with `[redacted]` before anything is stored, but bookmark titles and URLs in the requests are kept, so turn recording off when you are done: that also deletes the log.
 

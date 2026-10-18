@@ -3,8 +3,10 @@
 # command guard refuses an inline `until` loop, and a foreground wait hits the tool timeout.
 #
 # usage: zsh .agents/skills/parallel-agent-delivery/scripts/wait-pr.sh <pr-number> [max-minutes]
-# exit:  0 merged, 2 closed without merging, 3 BEHIND or DIRTY (update or merge origin/main),
+# exit:  0 merged, 2 closed without merging, 3 DIRTY (merge origin/main and resolve),
 #        4 a check failed (failing checks are printed), 5 still open after max-minutes.
+# A BEHIND PR is waited on, not updated: the coordinator updates only the PR next in line
+# (repo-maintenance merge-queue.sh), and an agent never runs update-branch on its own PR.
 # Run it from inside the repository checkout; gh takes the repository from the git remote.
 pr=$1
 max_minutes=${2:-360}
@@ -14,7 +16,7 @@ while (( $(date +%s) < deadline )); do
   case $s in
     MERGED*) echo "PR $pr merged"; exit 0 ;;
     CLOSED*) echo "PR $pr closed without merging"; exit 2 ;;
-    *BEHIND*|*DIRTY*) echo "PR $pr is $s"; exit 3 ;;
+    *DIRTY*) echo "PR $pr is $s"; exit 3 ;;
   esac
   failing=$(gh pr checks "$pr" 2>/dev/null | grep -E $'\tfail\t')
   if [[ -n $failing ]]; then
