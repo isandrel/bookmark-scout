@@ -6,7 +6,8 @@
  *
  * Where Chrome can run its built-in model, the box starts with that free choice ("Free on this
  * computer"), until a built-in service exists. Adding it does not turn AI on: AI Features stays
- * the switch below.
+ * the switch below. Where Chrome has the model but says this computer cannot run it (and no policy
+ * turned it off), the box says so instead, with "Check this computer" folded under it.
  */
 
 import type { LucideIcon } from 'lucide-react';
@@ -41,9 +42,30 @@ async function addBuiltinService(provider: AIProvider) {
 function BuiltinAISuggestion() {
   const { state, isLoading } = useAIServices();
   const status = useBuiltinAIStatus(BUILTIN_AI_PROVIDER !== undefined);
+  const reason = useBuiltinAIUnavailableReason(canCheckBuiltinAIDevice() ? status : undefined);
   const provider = BUILTIN_AI_PROVIDER;
   const added = state.services.some((service) => isBuiltinProvider(service.provider));
-  if (!provider || isLoading || added || !canOfferBuiltinAI(status)) return null;
+  if (!provider || isLoading || added) return null;
+  // Chrome says no, but not because of a policy: say what the computer has and what may help.
+  if (status === 'unavailable' && reason === 'device') {
+    return (
+      <div
+        data-testid="builtin-ai-suggestion"
+        data-status="unavailable"
+        className="flex items-start gap-3 rounded-md border px-3 py-3 text-sm"
+      >
+        <Laptop aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-ai" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="space-y-1">
+            <p className="font-medium">{t('builtinAi_suggestTitle')}</p>
+            <p className="text-muted-foreground">{t('builtinAiCheck_suggestUnavailable')}</p>
+          </div>
+          <BuiltinAIDeviceCheck status="unavailable" />
+        </div>
+      </div>
+    );
+  }
+  if (!canOfferBuiltinAI(status)) return null;
   const languageNote = builtinAILanguageNote();
   return (
     <div

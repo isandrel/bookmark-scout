@@ -60,3 +60,28 @@ free_disk_gb = 22
 gpu_vram_gb = 4
 ram_gb = 16
 cpu_cores = 4
+# Oldest Chrome with the Prompt API for extensions (major version)
+chrome_version = 138
+# Oldest macOS (major version)
+macos_version = 13
+# Oldest Windows, as the major number of the browser's platformVersion client hint: 1 to 10 are
+# Windows 10 releases, 13 and up Windows 11
+windows_platform_version = 1
+
+# "Check this computer" in the service editor (and the Free on this computer box when Chrome says
+# the model cannot run): what the browser can tell about the requirements above, and Chrome's own
+# switch and page for the model. Read by src/services/builtin-ai-device.ts.
+[check]
+# Builds that show the check: the version, switch, and page are Chrome's own (Edge names its
+# switch differently)
+browsers = ["chrome"]
+# Brands in the browser's client hints whose version is Chrome's, first match wins
+brands = ["Google Chrome", "Chromium"]
+# Chrome reports navigator.deviceMemory rounded down and never above this, so a value this high
+# means "this much or more" (GB)
+reported_memory_cap_gb = 8
+# Chrome's switch that skips its hardware check, the choice to set it to (the flags page is
+# English only), and the page that shows the model's state
+flag_url = "chrome://flags/#optimization-guide-on-device-model"
+flag_choice = "Enabled BypassPerfRequirement"
+internals_url = "chrome://on-device-internals"
