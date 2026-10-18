@@ -78,6 +78,18 @@ export function useEffectiveSetting<K extends keyof Settings>(key: K): Settings[
 
 const SETTING_FEATURES = [...new Set(Object.values(SETTING_PERMISSIONS))];
 
+/**
+ * Checks the permissions settings depend on before a page's first render (`mountExtensionPage`'s
+ * `preload`), so a permission-gated switch such as AI Features takes effect on the first frame.
+ */
+export async function preloadSettingPermissions(): Promise<void> {
+  await Promise.all(
+    SETTING_FEATURES.filter((feature) => !grants.has(feature)).map((feature) =>
+      refreshGrant(feature).catch(() => false),
+    ),
+  );
+}
+
 /** `values` with every permission-gated switch shown as it takes effect (`useEffectiveSetting`). */
 export function useEffectiveSettings(values: Settings): Settings {
   // One string snapshot, so the store can be read for every feature at once.
