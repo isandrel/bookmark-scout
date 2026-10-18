@@ -6447,6 +6447,166 @@
         "message": "A IA integrada não escolheu nenhuma pasta.",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
     },
+    "builtinAiCheck_title": {
+        "message": "Verificar este computador",
+        "description": "Settings > AI, Check this computer (built-in AI): heading of the fold and the checklist that compares this computer with what Chrome's built-in AI needs"
+    },
+    "builtinAiCheck_suggestUnavailable": {
+        "message": "O Chrome diz que este computador ainda não consegue executar a IA integrada. Veja do que ela precisa e o que pode ajudar.",
+        "description": "Settings > AI intro box: text of the \"Free on this computer\" box when Chrome has the built-in AI but says this computer cannot run it; followed by the \"Check this computer\" fold"
+    },
+    "builtinAiCheck_statePass": {
+        "message": "Atende ao requisito",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's green check icon"
+    },
+    "builtinAiCheck_stateFail": {
+        "message": "Não atende ao requisito",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's red cross icon"
+    },
+    "builtinAiCheck_stateWarn": {
+        "message": "Pode não ser suficiente",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's warning icon: measured, and maybe not enough"
+    },
+    "builtinAiCheck_stateUnknown": {
+        "message": "Não é possível verificar aqui",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's question mark icon: the browser cannot tell"
+    },
+    "builtinAiCheck_model": {
+        "message": "Modelo integrado",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: the state of Chrome's built-in model"
+    },
+    "builtinAiCheck_modelReady": {
+        "message": "Baixado e pronto",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: downloaded and ready"
+    },
+    "builtinAiCheck_modelDownloadable": {
+        "message": "Este computador consegue executá-lo; ainda não foi baixado",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome says this computer can run it, but it is not downloaded yet"
+    },
+    "builtinAiCheck_modelDownloading": {
+        "message": "Baixando",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: the model is downloading"
+    },
+    "builtinAiCheck_modelUnavailable": {
+        "message": "O Chrome diz que este computador não consegue executá-lo",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome reports the model as unavailable on this computer"
+    },
+    "builtinAiCheck_browser": {
+        "message": "Versão do Chrome",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: the Chrome version, as the browser reports it"
+    },
+    "builtinAiCheck_os": {
+        "message": "Sistema operacional",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: the operating system and its version"
+    },
+    "builtinAiCheck_memory": {
+        "message": "Memória",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: main memory (RAM)"
+    },
+    "builtinAiCheck_cores": {
+        "message": "Núcleos do processador",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: number of processor cores"
+    },
+    "builtinAiCheck_disk": {
+        "message": "Espaço livre em disco",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: free disk space"
+    },
+    "builtinAiCheck_gpu": {
+        "message": "Memória de vídeo",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: memory of the graphics card (VRAM)"
+    },
+    "builtinAiCheck_notReported": {
+        "message": "Não informado pelo navegador",
+        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser did not report this value"
+    },
+    "builtinAiCheck_notVisible": {
+        "message": "Os navegadores não conseguem ver isso",
+        "description": "Settings > AI, Check this computer (built-in AI): row value for free disk space and graphics memory, which web pages and extensions cannot read"
+    },
+    "builtinAiCheck_memoryAtLeast": {
+        "message": "$1 ou mais",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row value when Chrome reports its highest value, so the real amount may be more. $1 is that amount, such as 8 GB"
+    },
+    "builtinAiCheck_memoryAbout": {
+        "message": "Cerca de $1",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row value, rounded by the browser. $1 is an amount, such as 4 GB"
+    },
+    "builtinAiCheck_memoryCapNeed": {
+        "message": "O Chrome informa no máximo $1. Sem placa de vídeo, ela precisa de $2.",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row note when Chrome reports its highest value. $1 is that highest value (such as 8 GB), $2 the memory needed without a graphics card (such as 16 GB)"
+    },
+    "builtinAiCheck_memoryNeed": {
+        "message": "Sem placa de vídeo, ela precisa de $1.",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row note. $1 is the memory needed without a graphics card (such as 16 GB)"
+    },
+    "builtinAiCheck_coresNeed": {
+        "message": "Sem placa de vídeo, ela precisa de $1 núcleos.",
+        "description": "Settings > AI, Check this computer (built-in AI): processor cores row note. $1 is the number of cores needed without a graphics card (such as 4)"
+    },
+    "builtinAiCheck_browserNeed": {
+        "message": "Precisa do Chrome $1 ou mais recente.",
+        "description": "Settings > AI, Check this computer (built-in AI): Chrome version row note. $1 is the oldest Chrome version that works (such as 138)"
+    },
+    "builtinAiCheck_osNeed": {
+        "message": "Precisa do macOS $1 ou mais recente, Windows 10 ou 11, Linux ou um Chromebook Plus.",
+        "description": "Settings > AI, Check this computer (built-in AI): operating system row note. $1 is the oldest macOS version that works (such as 13). Keep the product names"
+    },
+    "builtinAiCheck_diskNeed": {
+        "message": "Precisa de $1 livres na unidade onde fica seu perfil do Chrome.",
+        "description": "Settings > AI, Check this computer (built-in AI): free disk space row note. $1 is the space needed (such as 22 GB)"
+    },
+    "builtinAiCheck_gpuNeed": {
+        "message": "Precisa de mais de $1, a menos que a memória e os núcleos acima sejam suficientes.",
+        "description": "Settings > AI, Check this computer (built-in AI): graphics memory row note. $1 is the graphics memory needed (such as 4 GB)"
+    },
+    "builtinAiCheck_unavailableHint": {
+        "message": "Nada acima exclui este computador. A verificação de hardware do Chrome pode ser rígida demais, ou o recurso pode estar desativado.",
+        "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome says the model cannot run but no row rules this computer out"
+    },
+    "builtinAiCheck_flagStep": {
+        "message": "Nas flags do Chrome, defina a flag destacada como $1 e reinicie o Chrome.",
+        "description": "Settings > AI, Check this computer (built-in AI): one-line instruction for Chrome's flags page. $1 is the choice to pick, in English as the flags page shows it (\"Enabled BypassPerfRequirement\")"
+    },
+    "builtinAiCheck_openFlags": {
+        "message": "Abrir as flags do Chrome",
+        "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's flags page at the on-device model flag in a new tab"
+    },
+    "builtinAiCheck_openInternals": {
+        "message": "Ver o estado do modelo no Chrome",
+        "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's page showing the on-device model's state in a new tab"
+    },
+    "builtinAiCheck_internalsNote": {
+        "message": "Se o Chrome disser que as páginas internas de depuração estão desativadas, ele mostra como ativá-las.",
+        "description": "Settings > AI, Check this computer (built-in AI): under the button that opens chrome://on-device-internals: Chrome keeps that page behind its \"internal debugging pages\" switch, and shows how to turn it on"
+    },
+    "builtinAiCheck_openFailed": {
+        "message": "O Chrome não abriu a página. Copie o endereço e cole-o em uma nova guia.",
+        "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome did not open its page; the address is shown next to the button with a Copy button"
+    },
+    "builtinAiCheck_copyAddress": {
+        "message": "Copiar $1",
+        "description": "Settings > AI, Check this computer (built-in AI): label and tooltip of the icon button that copies one of Chrome's addresses. $1 is the address (such as chrome://on-device-internals)"
+    },
+    "builtinAiCheck_copied": {
+        "message": "Endereço copiado",
+        "description": "Settings > AI, Check this computer (built-in AI): shown after the address was copied"
+    },
+    "builtinAiCheck_copyFailed": {
+        "message": "Não foi possível copiar o endereço",
+        "description": "Settings > AI, Check this computer (built-in AI): shown when copying the address failed"
+    },
+    "builtinAiCheck_checkAgain": {
+        "message": "Verificar de novo",
+        "description": "Settings > AI, Check this computer (built-in AI): button that asks Chrome again whether the model can run, after the user changed a flag or restarted Chrome"
+    },
+    "builtinAiCheck_stillUnavailable": {
+        "message": "O Chrome ainda diz que este computador não consegue executá-lo.",
+        "description": "Settings > AI, Check this computer (built-in AI): shown after Check again when Chrome still reports the model as unavailable"
+    },
+    "builtinAiCheck_needsChrome": {
+        "message": "Ela precisa do Chrome $1 ou mais recente. Este é o $2.",
+        "description": "Settings > AI built-in AI service: under \"This browser has no built-in AI\" when the Chrome version is too old. $1 is the oldest version that works (such as 138), $2 this browser and its version (such as Google Chrome 137.0.7151.68)"
+    },
     "qaPopup_hintSaveTo": {
         "message": "Salvar em $1",
         "description": "Popup and side panel footer while typing in the search box with folders matched: Enter saves the current page into the first matching folder; $1 is that folder's name"

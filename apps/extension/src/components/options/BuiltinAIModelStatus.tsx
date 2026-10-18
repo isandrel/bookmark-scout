@@ -2,14 +2,16 @@
  * The built-in model's state in its service editor (Options > AI): ready, not on this computer yet
  * (with **Download the model**, its size, and what Chrome needs), downloading (with progress, or
  * a bar without a value for a download this page did not start), not supported on this computer,
- * turned off by the organization, or missing from this browser. Below it, what the service does
+ * turned off by the organization, or missing from this browser (and that it needs a newer Chrome
+ * when that is why). Under it, in Chrome, "Check this computer" (`BuiltinAIDeviceCheck`), open
+ * while Chrome says the model cannot run here and folded otherwise. Below that, what the service does
  * and does not do (and which service does the rest), which languages it reads best (or that it does
  * not read the extension's language), and that nothing leaves the computer. The download starts
  * only from the button's click (`downloadBuiltinAIModel`).
  */
 
 import { CircleAlert, CircleCheck, Download, Info, LoaderCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AI_FEATURES } from '@/lib/config/ai-provider-schema';
 
 const STATUS_TONES = {
@@ -36,20 +38,6 @@ const otherFeatures = BUILTIN_AI_PROVIDER
       (feature) => AI_FEATURE_NAMES[feature],
     )
   : [];
-
-/** A size in gigabytes in the extension's language, such as "2.7 GB". */
-function formatGigabytes(value: number): string {
-  const options: Intl.NumberFormatOptions = {
-    style: 'unit',
-    unit: 'gigabyte',
-    maximumFractionDigits: 1,
-  };
-  try {
-    return new Intl.NumberFormat(getFormattingLocale(), options).format(value);
-  } catch {
-    return new Intl.NumberFormat(undefined, options).format(value);
-  }
-}
 
 /** Names languages (`ja`) in the extension's language ("Japanese"), or by code without `Intl`. */
 function languageNamer(): (code: string) => string {
@@ -129,18 +117,7 @@ export function BuiltinAIModelStatus() {
   // Progress of a download this page started, from 0 to 1.
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [reason, setReason] = useState<BuiltinAIUnavailableReason>();
-
-  useEffect(() => {
-    if (status !== 'unavailable') return;
-    let active = true;
-    void getBuiltinAIUnavailableReason().then((next) => {
-      if (active) setReason(next);
-    });
-    return () => {
-      active = false;
-    };
-  }, [status]);
+  const reason = useBuiltinAIUnavailableReason(status);
 
   const download = () => {
     setError(null);
@@ -152,6 +129,16 @@ export function BuiltinAIModelStatus() {
   };
 
   const downloading = progress !== null || status === 'downloading';
+  const canCheck = canCheckBuiltinAIDevice();
+  // Without the API, the Chrome version may be why: read it only then.
+  const { device } = useBuiltinAIDevice(canCheck && status === 'unsupported');
+  const outdatedChrome = device && builtinAIOutdatedChrome(device);
+  // The checklist, wherever the API exists and no policy turned the model off.
+  const checkStatus = (() => {
+    if (!canCheck || status === undefined || status === 'unsupported') return undefined;
+    if (status === 'unavailable') return reason === 'device' ? status : undefined;
+    return downloading ? 'downloading' : status;
+  })();
 
   const body = (() => {
     if (status === undefined) return null;
@@ -159,14 +146,26 @@ export function BuiltinAIModelStatus() {
       return <StatusBox tone="success" title={t('builtinAi_statusReady')} />;
     }
     if (status === 'unsupported') {
-      return <StatusBox tone="warning" title={t('builtinAi_statusNoApi')} />;
+      return (
+        <StatusBox tone="warning" title={t('builtinAi_statusNoApi')}>
+          {outdatedChrome && (
+            <p data-testid="builtin-ai-outdated">
+              {t('builtinAiCheck_needsChrome', [
+                String(builtinAIConfig.requirements.chrome_version),
+                outdatedChrome,
+              ])}
+            </p>
+          )}
+        </StatusBox>
+      );
     }
     if (status === 'unavailable') {
       return reason === 'policy' ? (
         <StatusBox tone="warning" title={t('builtinAi_statusPolicy')} />
       ) : (
         <StatusBox tone="warning" title={t('builtinAi_statusUnsupported')}>
-          <p>{requirementsText()}</p>
+          {/* Where the checklist shows, it states each requirement beside what was measured. */}
+          {!canCheck && <p>{requirementsText()}</p>}
         </StatusBox>
       );
     }
@@ -238,6 +237,9 @@ export function BuiltinAIModelStatus() {
         <p role="alert" className="text-sm text-destructive-text">
           {t('builtinAi_downloadFailed', error)}
         </p>
+      )}
+      {checkStatus && (
+        <BuiltinAIDeviceCheck status={checkStatus} defaultOpen={checkStatus === 'unavailable'} />
       )}
       <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
         {otherFeatures.length > 0 && (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * The built-in model's state (`getBuiltinAIStatus`, read once per page and shared), `undefined`
@@ -36,4 +36,55 @@ export function useBuiltinAIStatus(
   }, [enabled, poll, status]);
 
   return enabled ? status : undefined;
+}
+
+/**
+ * Why the model is unavailable (`getBuiltinAIUnavailableReason`), read only while `status` is
+ * `unavailable`, so no download can start; `undefined` until read and in every other state.
+ */
+export function useBuiltinAIUnavailableReason(
+  status: BuiltinAIStatus | undefined,
+): BuiltinAIUnavailableReason | undefined {
+  const [reason, setReason] = useState<BuiltinAIUnavailableReason>();
+
+  useEffect(() => {
+    if (status !== 'unavailable') return;
+    let active = true;
+    void getBuiltinAIUnavailableReason().then((next) => {
+      if (active) setReason(next);
+    });
+    return () => {
+      active = false;
+    };
+  }, [status]);
+
+  return status === 'unavailable' ? reason : undefined;
+}
+
+/**
+ * What the browser tells about this computer for the built-in model (`readBuiltinAIDevice`),
+ * `undefined` until read; nothing is read while `enabled` is false. `reread` reads it again.
+ */
+export function useBuiltinAIDevice(enabled = true): {
+  device: BuiltinAIDevice | undefined;
+  reread: () => Promise<void>;
+} {
+  const [device, setDevice] = useState<BuiltinAIDevice>();
+
+  const reread = useCallback(async () => {
+    setDevice(await readBuiltinAIDevice());
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let active = true;
+    void readBuiltinAIDevice().then((next) => {
+      if (active) setDevice(next);
+    });
+    return () => {
+      active = false;
+    };
+  }, [enabled]);
+
+  return { device: enabled ? device : undefined, reread };
 }

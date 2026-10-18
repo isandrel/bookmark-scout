@@ -1,10 +1,11 @@
 /**
  * Chrome's built-in AI with a fake Prompt API (`LanguageModel`, installed into every page by an
  * init script): the "Free on this computer" suggestion and the model download in Options, the
- * states Options shows, and folder suggestions in the popup from the model's pick, with the
+ * states Options shows, "Check this computer" (with a fake `navigator` for the version, platform,
+ * cores, and memory), and folder suggestions in the popup from the model's pick, with the
  * download hint while the model is missing. Real model behavior is checked by hand.
  */
-import type { BrowserContext, Page, Worker } from '@playwright/test';
+import type { BrowserContext, Locator, Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { seedFolder } from './popup-helpers';
 import { readStored, STORAGE_ITEMS, seedAIServices, setSettings } from './storage';
@@ -148,6 +149,255 @@ test('Options says when this computer cannot run it, or a policy turned it off',
   await seedAIServices(extensionWorker, [{ provider: BUILTIN, name: 'Built-in AI' }]);
   const status = page.getByTestId('builtin-ai-status');
   await expect(status).toContainText("Your organization turned off Chrome's built-in AI.");
+  // Nothing on this computer can change a policy: no checklist and no flag advice.
+  await expect(page.getByTestId('builtin-ai-check')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Open Chrome flags' })).toHaveCount(0);
+});
+
+type FakeDevice = {
+  /** Chrome's full version, as `fullVersionList` reports it. */
+  chrome: string;
+  platform: string;
+  platformVersion: string;
+  cores: number;
+  memory: number;
+};
+
+const DEVICE: FakeDevice = {
+  chrome: '141.0.7390.54',
+  platform: 'macOS',
+  platformVersion: '15.6.1',
+  cores: 10,
+  memory: 8,
+};
+
+/** Makes every page of the context report this computer through `navigator`. */
+async function fakeDevice(context: BrowserContext, device: Partial<FakeDevice> = {}) {
+  await context.addInitScript(
+    (fake: FakeDevice) => {
+      const brands = [
+        { brand: 'Not)A;Brand', version: '8.0.0.0' },
+        { brand: 'Chromium', version: fake.chrome },
+        { brand: 'Google Chrome', version: fake.chrome },
+      ];
+      const data = {
+        brands: brands.map(({ brand, version }) => ({ brand, version: version.split('.')[0] })),
+        mobile: false,
+        platform: fake.platform,
+        getHighEntropyValues: async () => ({
+          fullVersionList: brands,
+          platform: fake.platform,
+          platformVersion: fake.platformVersion,
+        }),
+      };
+      Object.defineProperty(Navigator.prototype, 'userAgentData', { get: () => data });
+      Object.defineProperty(Navigator.prototype, 'hardwareConcurrency', { get: () => fake.cores });
+      Object.defineProperty(Navigator.prototype, 'deviceMemory', { get: () => fake.memory });
+    },
+    { ...DEVICE, ...device },
+  );
+}
+
+/** The checklist row for one requirement: its state and its text. */
+function checkRow(scope: Page | Locator, id: string) {
+  return scope.getByTestId('builtin-ai-check').locator(`[data-check="${id}"]`);
+}
+
+test('Check this computer fills in what the browser can tell, folded while the model can run', async ({
+  context,
+  extensionBrowser,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await fakeLanguageModel(context, { availability: 'available' });
+  await fakeDevice(context);
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: BUILTIN, name: 'Built-in AI' }]);
+  await openAITab(page, extensionId);
+  const status = page.getByTestId('builtin-ai-status');
+  await expect(status).toContainText('Ready. Folder suggestions run on this computer.');
+  const check = page.getByTestId('builtin-ai-check');
+  // Chrome only: Edge names its switch differently ([check] browsers in config/ai/built-in.toml).
+  if (extensionBrowser === 'msedge') {
+    await expect(check).toHaveCount(0);
+    return;
+  }
+
+  const fold = check.getByRole('button', { name: 'Check this computer' });
+  await expect(fold).toHaveAttribute('aria-expanded', 'false');
+  await fold.click();
+  const rows = check.getByRole('list', { name: 'Check this computer' }).getByRole('listitem');
+  await expect(rows).toHaveCount(7);
+  await expect(checkRow(page, 'model')).toHaveAttribute('data-state', 'pass');
+  await expect(checkRow(page, 'model')).toContainText('Downloaded and ready');
+  await expect(checkRow(page, 'browser')).toHaveAttribute('data-state', 'pass');
+  await expect(checkRow(page, 'browser')).toContainText('Google Chrome 141.0.7390.54');
+  await expect(checkRow(page, 'os')).toHaveAttribute('data-state', 'pass');
+  await expect(checkRow(page, 'os')).toContainText('macOS 15.6.1');
+  await expect(checkRow(page, 'cores')).toHaveAttribute('data-state', 'pass');
+  // Chrome caps deviceMemory at 8 GB: "8 GB or more" is neither a pass nor a fail.
+  const memory = checkRow(page, 'memory');
+  await expect(memory).toHaveAttribute('data-state', 'unknown');
+  await expect(memory).toContainText('8 GB or more');
+  await expect(memory).toContainText('Chrome reports at most 8 GB');
+  // No page can see free disk space or graphics memory: the requirement only.
+  await expect(checkRow(page, 'disk')).toHaveAttribute('data-state', 'unknown');
+  await expect(checkRow(page, 'disk')).toContainText('Browsers cannot see this');
+  await expect(checkRow(page, 'disk')).toContainText('Needs 22 GB free');
+  await expect(checkRow(page, 'gpu')).toContainText('Needs more than 4 GB');
+  // Every icon has a screen-reader label.
+  await expect(checkRow(page, 'browser')).toContainText('Meets the requirement');
+  await expect(memory).toContainText('Cannot be checked here');
+  // Flag advice is only for a model Chrome says cannot run.
+  await expect(check.getByTestId('builtin-ai-check-guidance')).toHaveCount(0);
+});
+
+test('Check this computer keeps the download, and warns on few cores without failing', async ({
+  context,
+  extensionBrowser,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  test.skip(extensionBrowser === 'msedge', 'The check is Chrome only');
+  await fakeLanguageModel(context, { availability: 'downloadable' });
+  await fakeDevice(context, { cores: 2, memory: 4 });
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: BUILTIN, name: 'Built-in AI' }]);
+  await openAITab(page, extensionId);
+
+  const status = page.getByTestId('builtin-ai-status');
+  await expect(status.getByRole('button', { name: 'Download the model' })).toBeVisible();
+  await page.getByRole('button', { name: 'Check this computer' }).click();
+  await expect(checkRow(page, 'model')).toContainText('not downloaded yet');
+  await expect(checkRow(page, 'cores')).toHaveAttribute('data-state', 'warn');
+  await expect(checkRow(page, 'cores')).toContainText('Without a graphics card, it needs 4 cores.');
+  await expect(checkRow(page, 'memory')).toHaveAttribute('data-state', 'warn');
+  await expect(checkRow(page, 'memory')).toContainText('About 4 GB');
+  await expect(checkRow(page, 'memory')).toContainText('Without a graphics card, it needs 16 GB.');
+});
+
+test('when Chrome says the computer cannot run it, Options shows the checks, the flag, and Check again', async ({
+  context,
+  extensionBrowser,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  test.skip(extensionBrowser === 'msedge', 'The check is Chrome only');
+  await fakeLanguageModel(context, { availability: 'unavailable' });
+  await fakeDevice(context);
+  await setSettings(extensionWorker, { language: 'en' });
+  await openAITab(page, extensionId);
+
+  // Before any service exists, the Free on this computer box says so, with the check folded.
+  const suggestion = page.getByTestId('builtin-ai-suggestion');
+  await expect(suggestion).toHaveAttribute('data-status', 'unavailable');
+  await expect(suggestion).toContainText('cannot run its built-in AI yet');
+  await expect(suggestion.getByRole('button', { name: 'Use built-in AI' })).toHaveCount(0);
+  await suggestion.getByRole('button', { name: 'Check this computer' }).click();
+  await expect(suggestion.getByTestId('builtin-ai-check-guidance')).toContainText(
+    'Enabled BypassPerfRequirement',
+  );
+
+  // A service restored from elsewhere opens the check at once.
+  await seedAIServices(extensionWorker, [{ provider: BUILTIN, name: 'Built-in AI' }]);
+  const status = page.getByTestId('builtin-ai-status');
+  await expect(status).toContainText("This computer cannot run Chrome's built-in AI.");
+  const check = status.getByTestId('builtin-ai-check');
+  await expect(check.getByRole('button', { name: 'Check this computer' })).toHaveAttribute(
+    'aria-expanded',
+    'true',
+  );
+  await expect(checkRow(status, 'model')).toHaveAttribute('data-state', 'fail');
+  const guidance = check.getByTestId('builtin-ai-check-guidance');
+  await expect(guidance).toContainText('Nothing above rules this computer out.');
+  await expect(guidance).toContainText(
+    'In Chrome flags, set the highlighted flag to Enabled BypassPerfRequirement, then restart Chrome.',
+  );
+  await expect(guidance).toContainText('chrome://flags/#optimization-guide-on-device-model');
+  await expect(guidance).toContainText('chrome://on-device-internals');
+
+  // Chrome lets the extension open its own pages in a tab.
+  const [flags] = await Promise.all([
+    context.waitForEvent('page'),
+    guidance.getByRole('button', { name: 'Open Chrome flags' }).click(),
+  ]);
+  await expect(flags).toHaveURL('chrome://flags/#optimization-guide-on-device-model');
+  await flags.close();
+  const [internals] = await Promise.all([
+    context.waitForEvent('page'),
+    guidance.getByRole('button', { name: "See the model's state in Chrome" }).click(),
+  ]);
+  // With Chrome's internal debugging pages off (the default), Chrome shows how to turn them on.
+  await expect(internals).toHaveURL(
+    /^chrome:\/\/(on-device-internals\/?|debug-webuis-disabled\/\?host=chrome:\/\/on-device-internals\/?)$/,
+  );
+  await expect(guidance).toContainText('internal debugging pages');
+  await internals.close();
+  await expect(guidance).not.toContainText('Chrome did not open it');
+
+  const checkAgain = guidance.getByRole('button', { name: 'Check again' });
+  await checkAgain.click();
+  await expect(guidance).toContainText('Chrome still says this computer cannot run it.');
+  // After the flag and a restart, Chrome offers the download.
+  await page.evaluate(() => {
+    const fake = (globalThis as { __fakeLanguageModel?: { availability: string } })
+      .__fakeLanguageModel;
+    if (fake) fake.availability = 'downloadable';
+  });
+  await checkAgain.click();
+  await expect(status).toHaveAttribute('data-status', 'downloadable');
+  await expect(status.getByRole('button', { name: 'Download the model' })).toBeVisible();
+  await expect(check.getByTestId('builtin-ai-check-guidance')).toHaveCount(0);
+});
+
+test('Check this computer gives no flag advice when the computer is ruled out', async ({
+  context,
+  extensionBrowser,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  test.skip(extensionBrowser === 'msedge', 'The check is Chrome only');
+  await fakeLanguageModel(context, { availability: 'unavailable' });
+  await fakeDevice(context, { platformVersion: '12.7.6' });
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: BUILTIN, name: 'Built-in AI' }]);
+  await openAITab(page, extensionId);
+
+  await expect(checkRow(page, 'os')).toHaveAttribute('data-state', 'fail');
+  await expect(checkRow(page, 'os')).toContainText('Needs macOS 13 or later');
+  const guidance = page.getByTestId('builtin-ai-check-guidance');
+  await expect(guidance.getByRole('button', { name: 'Check again' })).toBeVisible();
+  await expect(guidance.getByRole('button', { name: 'Open Chrome flags' })).toHaveCount(0);
+});
+
+test('without the API, Options keeps its message and names an old Chrome as the reason', async ({
+  context,
+  extensionBrowser,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  test.skip(extensionBrowser === 'msedge', 'The check is Chrome only');
+  await context.addInitScript(() => {
+    Reflect.deleteProperty(globalThis, 'LanguageModel');
+  });
+  await fakeDevice(context, { chrome: '137.0.7151.68' });
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: BUILTIN, name: 'Built-in AI' }]);
+  await openAITab(page, extensionId);
+
+  const status = page.getByTestId('builtin-ai-status');
+  await expect(status).toHaveAttribute('data-status', 'unsupported');
+  await expect(status).toContainText('This browser has no built-in AI.');
+  await expect(page.getByTestId('builtin-ai-outdated')).toHaveText(
+    'It needs Chrome 138 or later. This is Google Chrome 137.0.7151.68.',
+  );
+  await expect(page.getByTestId('builtin-ai-check')).toHaveCount(0);
+  await expect(page.getByTestId('builtin-ai-suggestion')).toHaveCount(0);
 });
 
 test('Add service lists the built-in model first where it can run', async ({

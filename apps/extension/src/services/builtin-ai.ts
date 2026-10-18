@@ -38,6 +38,17 @@ export const builtinAIConfig = readConfig(
       gpu_vram_gb: z.number().positive(),
       ram_gb: z.number().positive(),
       cpu_cores: z.number().int().positive(),
+      chrome_version: z.number().int().positive(),
+      macos_version: z.number().int().positive(),
+      windows_platform_version: z.number().int().positive(),
+    }),
+    check: z.strictObject({
+      browsers: z.array(z.enum(['chrome', 'edge', 'firefox'])),
+      brands: z.array(z.string().min(1)).min(1),
+      reported_memory_cap_gb: z.number().positive(),
+      flag_url: z.string().regex(/^chrome:\/\/flags\/#[\w-]+$/),
+      flag_choice: z.string().min(1),
+      internals_url: z.string().regex(/^chrome:\/\/[\w-]+\/?$/),
     }),
   }),
 );

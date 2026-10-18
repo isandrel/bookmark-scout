@@ -6241,6 +6241,166 @@
         "message": "內建 AI 沒有選擇任何資料夾。",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
     },
+    "builtinAiCheck_title": {
+        "message": "檢查這台電腦",
+        "description": "Settings > AI, Check this computer (built-in AI): heading of the fold and the checklist that compares this computer with what Chrome's built-in AI needs"
+    },
+    "builtinAiCheck_suggestUnavailable": {
+        "message": "Chrome 表示這台電腦暫時無法執行其內建 AI。看看它需要什麼，以及可以怎麼解決。",
+        "description": "Settings > AI intro box: text of the \"Free on this computer\" box when Chrome has the built-in AI but says this computer cannot run it; followed by the \"Check this computer\" fold"
+    },
+    "builtinAiCheck_statePass": {
+        "message": "符合需求",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's green check icon"
+    },
+    "builtinAiCheck_stateFail": {
+        "message": "不符合需求",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's red cross icon"
+    },
+    "builtinAiCheck_stateWarn": {
+        "message": "可能不夠",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's warning icon: measured, and maybe not enough"
+    },
+    "builtinAiCheck_stateUnknown": {
+        "message": "無法在此檢查",
+        "description": "Settings > AI, Check this computer (built-in AI): screen-reader label of a row's question mark icon: the browser cannot tell"
+    },
+    "builtinAiCheck_model": {
+        "message": "內建模型",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: the state of Chrome's built-in model"
+    },
+    "builtinAiCheck_modelReady": {
+        "message": "已下載，可以使用",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: downloaded and ready"
+    },
+    "builtinAiCheck_modelDownloadable": {
+        "message": "這台電腦可以執行，尚未下載",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome says this computer can run it, but it is not downloaded yet"
+    },
+    "builtinAiCheck_modelDownloading": {
+        "message": "正在下載",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: the model is downloading"
+    },
+    "builtinAiCheck_modelUnavailable": {
+        "message": "Chrome 表示這台電腦無法執行",
+        "description": "Settings > AI, Check this computer (built-in AI): model row: Chrome reports the model as unavailable on this computer"
+    },
+    "builtinAiCheck_browser": {
+        "message": "Chrome 版本",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: the Chrome version, as the browser reports it"
+    },
+    "builtinAiCheck_os": {
+        "message": "作業系統",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: the operating system and its version"
+    },
+    "builtinAiCheck_memory": {
+        "message": "記憶體",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: main memory (RAM)"
+    },
+    "builtinAiCheck_cores": {
+        "message": "處理器核心",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: number of processor cores"
+    },
+    "builtinAiCheck_disk": {
+        "message": "可用磁碟空間",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: free disk space"
+    },
+    "builtinAiCheck_gpu": {
+        "message": "顯示記憶體",
+        "description": "Settings > AI, Check this computer (built-in AI): row label: memory of the graphics card (VRAM)"
+    },
+    "builtinAiCheck_notReported": {
+        "message": "瀏覽器未提供",
+        "description": "Settings > AI, Check this computer (built-in AI): row value when the browser did not report this value"
+    },
+    "builtinAiCheck_notVisible": {
+        "message": "瀏覽器無法讀取",
+        "description": "Settings > AI, Check this computer (built-in AI): row value for free disk space and graphics memory, which web pages and extensions cannot read"
+    },
+    "builtinAiCheck_memoryAtLeast": {
+        "message": "$1 或更多",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row value when Chrome reports its highest value, so the real amount may be more. $1 is that amount, such as 8 GB"
+    },
+    "builtinAiCheck_memoryAbout": {
+        "message": "約 $1",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row value, rounded by the browser. $1 is an amount, such as 4 GB"
+    },
+    "builtinAiCheck_memoryCapNeed": {
+        "message": "Chrome 最多只回報 $1。沒有顯示卡時需要 $2。",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row note when Chrome reports its highest value. $1 is that highest value (such as 8 GB), $2 the memory needed without a graphics card (such as 16 GB)"
+    },
+    "builtinAiCheck_memoryNeed": {
+        "message": "沒有顯示卡時需要 $1。",
+        "description": "Settings > AI, Check this computer (built-in AI): memory row note. $1 is the memory needed without a graphics card (such as 16 GB)"
+    },
+    "builtinAiCheck_coresNeed": {
+        "message": "沒有顯示卡時需要 $1 個核心。",
+        "description": "Settings > AI, Check this computer (built-in AI): processor cores row note. $1 is the number of cores needed without a graphics card (such as 4)"
+    },
+    "builtinAiCheck_browserNeed": {
+        "message": "需要 Chrome $1 或更新版本。",
+        "description": "Settings > AI, Check this computer (built-in AI): Chrome version row note. $1 is the oldest Chrome version that works (such as 138)"
+    },
+    "builtinAiCheck_osNeed": {
+        "message": "需要 macOS $1 或更新版本、Windows 10 或 11、Linux，或 Chromebook Plus。",
+        "description": "Settings > AI, Check this computer (built-in AI): operating system row note. $1 is the oldest macOS version that works (such as 13). Keep the product names"
+    },
+    "builtinAiCheck_diskNeed": {
+        "message": "Chrome 設定檔所在的磁碟需要 $1 可用空間。",
+        "description": "Settings > AI, Check this computer (built-in AI): free disk space row note. $1 is the space needed (such as 22 GB)"
+    },
+    "builtinAiCheck_gpuNeed": {
+        "message": "需要大於 $1，除非上面的記憶體和核心數已經足夠。",
+        "description": "Settings > AI, Check this computer (built-in AI): graphics memory row note. $1 is the graphics memory needed (such as 4 GB)"
+    },
+    "builtinAiCheck_unavailableHint": {
+        "message": "以上沒有任何一項排除這台電腦。可能是 Chrome 的硬體檢查過於嚴格，或者該功能已關閉。",
+        "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome says the model cannot run but no row rules this computer out"
+    },
+    "builtinAiCheck_flagStep": {
+        "message": "在 Chrome flags 頁面中，將醒目顯示的選項設為 $1，然後重新啟動 Chrome。",
+        "description": "Settings > AI, Check this computer (built-in AI): one-line instruction for Chrome's flags page. $1 is the choice to pick, in English as the flags page shows it (\"Enabled BypassPerfRequirement\")"
+    },
+    "builtinAiCheck_openFlags": {
+        "message": "開啟 Chrome flags",
+        "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's flags page at the on-device model flag in a new tab"
+    },
+    "builtinAiCheck_openInternals": {
+        "message": "在 Chrome 中查看模型狀態",
+        "description": "Settings > AI, Check this computer (built-in AI): button that opens Chrome's page showing the on-device model's state in a new tab"
+    },
+    "builtinAiCheck_internalsNote": {
+        "message": "如果 Chrome 提示內部偵錯頁面已停用，頁面上會說明如何啟用。",
+        "description": "Settings > AI, Check this computer (built-in AI): under the button that opens chrome://on-device-internals: Chrome keeps that page behind its \"internal debugging pages\" switch, and shows how to turn it on"
+    },
+    "builtinAiCheck_openFailed": {
+        "message": "Chrome 未能開啟。請複製網址，貼到新分頁中。",
+        "description": "Settings > AI, Check this computer (built-in AI): shown when Chrome did not open its page; the address is shown next to the button with a Copy button"
+    },
+    "builtinAiCheck_copyAddress": {
+        "message": "複製 $1",
+        "description": "Settings > AI, Check this computer (built-in AI): label and tooltip of the icon button that copies one of Chrome's addresses. $1 is the address (such as chrome://on-device-internals)"
+    },
+    "builtinAiCheck_copied": {
+        "message": "網址已複製",
+        "description": "Settings > AI, Check this computer (built-in AI): shown after the address was copied"
+    },
+    "builtinAiCheck_copyFailed": {
+        "message": "無法複製網址",
+        "description": "Settings > AI, Check this computer (built-in AI): shown when copying the address failed"
+    },
+    "builtinAiCheck_checkAgain": {
+        "message": "重新檢查",
+        "description": "Settings > AI, Check this computer (built-in AI): button that asks Chrome again whether the model can run, after the user changed a flag or restarted Chrome"
+    },
+    "builtinAiCheck_stillUnavailable": {
+        "message": "Chrome 仍然表示這台電腦無法執行。",
+        "description": "Settings > AI, Check this computer (built-in AI): shown after Check again when Chrome still reports the model as unavailable"
+    },
+    "builtinAiCheck_needsChrome": {
+        "message": "需要 Chrome $1 或更新版本。目前為 $2。",
+        "description": "Settings > AI built-in AI service: under \"This browser has no built-in AI\" when the Chrome version is too old. $1 is the oldest version that works (such as 138), $2 this browser and its version (such as Google Chrome 137.0.7151.68)"
+    },
     "qaPopup_hintSaveTo": {
         "message": "儲存到 $1",
         "description": "Popup and side panel footer while typing in the search box with folders matched: Enter saves the current page into the first matching folder; $1 is that folder's name"
