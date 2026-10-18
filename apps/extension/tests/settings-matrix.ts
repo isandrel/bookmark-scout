@@ -285,6 +285,11 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e('ai-page-reading.spec.ts', 'Read page content turns on once website access is granted'),
     unit('page-reader.test.ts', 'leaves items unchanged when page reading is off or website access is missing'),
   ], 'Also read by Auto-Tagging and Content Summarizer in services/tool-options.ts.'),
+  aiOutputLanguage: tested('services/prompt-config.ts', [
+    unit('prompt-library.test.ts', 'names the chosen language whatever the extension language is'),
+    unit('prompt-library.test.ts', 'asks for each page language in page mode, with the extension language as the fallback'),
+    e2e('prompt-library.spec.ts', '[mocked provider contract] auto-tagging asks for the AI output language: the extension language, then each page'),
+  ], 'Prompt-level; provider compliance is checked only by the live AI suite.'),
   aiMaxCategories: tested('services/ai-reorganization.ts', [reorgLimits, unlimitedPromptVariables],
     'Prompt-level limit; provider compliance is not verified. Unlimited (-1) is left out of the rules and request, and its {{variable}} reads as a phrase.'),
   aiMinItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits],

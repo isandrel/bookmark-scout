@@ -5217,6 +5217,22 @@
         "message": "Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung senden für bessere Ergebnisse auch den lesbaren Text jeder Seite, nicht nur Titel und URL. Seiten werden ohne Ihre Cookies heruntergeladen, Seiten im lokalen Netzwerk werden nie gelesen, und beim Aktivieren wird um Zugriff auf Websites gebeten.",
         "description": "Settings: description of Read page content"
     },
+    "settings_aiOutputLanguage": {
+        "message": "Ausgabesprache der KI",
+        "description": "Settings: AI output language (the language AI writes tags, summaries, and folder names in)"
+    },
+    "settings_aiOutputLanguageDesc": {
+        "message": "Die Sprache, in der die KI Tags, Zusammenfassungen und neue Ordnernamen schreibt. KI fragen antwortet in der Sprache, in der Sie schreiben.",
+        "description": "Settings: description of AI output language"
+    },
+    "settings_aiOutputLanguageAuto": {
+        "message": "Wie die Erweiterung",
+        "description": "AI output language option: the extension's own language"
+    },
+    "settings_aiOutputLanguagePage": {
+        "message": "Wie die jeweilige Seite",
+        "description": "AI output language option: the language of each page or bookmark title"
+    },
     "settings_aiActivityRecording": {
         "message": "KI-Anfragen aufzeichnen",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5627,6 +5643,10 @@
     },
     "prompt_varToday": {
         "message": "Heutiges Datum im Format JJJJ-MM-TT",
+        "description": "Prompt variable description"
+    },
+    "prompt_varLanguage": {
+        "message": "Die Sprache der Ausgabe, aus „Ausgabesprache der KI“",
         "description": "Prompt variable description"
     },
     "error_bookmarksApiUnavailable": {

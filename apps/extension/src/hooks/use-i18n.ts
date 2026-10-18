@@ -289,7 +289,16 @@ export function getLanguageRevision(): number {
  * language when it is one of the bundled locales, otherwise English.
  */
 export function getResolvedLanguage(): SupportedLocale {
-  if (currentLanguage !== AUTO_LANGUAGE) return currentLanguage;
+  return resolveLanguagePreference(currentLanguage);
+}
+
+/**
+ * The bundled language a Language setting value stands for: itself, or for 'auto' the browser UI
+ * language when it is one of the bundled locales, otherwise English. Unlike `getResolvedLanguage`
+ * it does not wait for the selected language's messages to load.
+ */
+export function resolveLanguagePreference(language: LanguagePreference): SupportedLocale {
+  if (language !== AUTO_LANGUAGE) return language;
   // Non-extension environments (tests) fall back to the default locale.
   return getBrowserLocale() ?? FALLBACK_LOCALE;
 }

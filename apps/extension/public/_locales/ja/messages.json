@@ -5173,6 +5173,22 @@
         "message": "フォルダの提案、自動タグ付け、コンテンツ要約で、タイトルと URL に加えて各ページの本文も送信し、結果の精度を高めます。ページは Cookie なしでダウンロードされ、ローカルネットワーク上のページは読み込まれません。オンにするとウェブサイトへのアクセス許可を求めます。",
         "description": "Settings: description of Read page content"
     },
+    "settings_aiOutputLanguage": {
+        "message": "AI の出力言語",
+        "description": "Settings: AI output language (the language AI writes tags, summaries, and folder names in)"
+    },
+    "settings_aiOutputLanguageDesc": {
+        "message": "AI がタグ、要約、新しいフォルダ名を書く言語です。AI に質問は、あなたが書いた言語で答えます。",
+        "description": "Settings: description of AI output language"
+    },
+    "settings_aiOutputLanguageAuto": {
+        "message": "拡張機能と同じ",
+        "description": "AI output language option: the extension's own language"
+    },
+    "settings_aiOutputLanguagePage": {
+        "message": "各ページと同じ",
+        "description": "AI output language option: the language of each page or bookmark title"
+    },
     "settings_aiActivityRecording": {
         "message": "AI リクエストを記録",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5583,6 +5599,10 @@
     },
     "prompt_varToday": {
         "message": "今日の日付（YYYY-MM-DD 形式）",
+        "description": "Prompt variable description"
+    },
+    "prompt_varLanguage": {
+        "message": "出力する言語（AI の出力言語の設定）",
         "description": "Prompt variable description"
     },
     "error_bookmarksApiUnavailable": {

@@ -1,6 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { formatKilobytes, setLanguage } from '@/hooks/use-i18n';
+import {
+  SUPPORTED_LOCALES,
+  formatKilobytes,
+  getLanguageName,
+  setLanguage,
+} from '@/hooks/use-i18n';
 import {
   MAX_PROMPT_BYTES,
   MAX_PROMPTS,
@@ -15,7 +22,8 @@ import {
   syncItemBytes,
   validateCustomPrompt,
 } from '@/lib/prompt-library-storage';
-import { defaultSettings } from '@/lib/settings-schema';
+import { type Settings, defaultSettings } from '@/lib/settings-schema';
+import { saveSettings } from '@/lib/settings-storage';
 import { storageAreaKey } from '@/lib/storage/registry';
 import {
   PROMPT_TASK_IDS,
@@ -23,7 +31,9 @@ import {
   buildPrompt,
   findUnknownPromptVariables,
   getPromptVariables,
+  interpolatePrompt,
 } from '@/services/prompt-config';
+import { appRoot, readConfigToml } from '../config-files';
 import { STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 beforeEach(() => {
@@ -32,6 +42,8 @@ beforeEach(() => {
 });
 
 const ONE_ITEM_RULE = 'Return exactly one item per bookmark and preserve bookmarkId/title exactly.';
+const OUTPUT_RULE = (language: string) =>
+  `Write all free text (summaries, reasons, new tag and folder names) in ${language}. Keep existing tags, folder names, proper nouns, and URLs exactly as written.`;
 const tagging = {
   autoTaggingMinTags: 2,
   autoTaggingMaxTags: 3,
@@ -86,13 +98,121 @@ describe('prompt variables', () => {
 
   it('adds the task rules always and the page-text rule only for page text', async () => {
     const plain = (await buildPrompt('auto_tagging', tagging)).system;
-    expect(plain.endsWith(`\n\n${ONE_ITEM_RULE}`)).toBe(true);
+    expect(plain.endsWith(`\n\n${ONE_ITEM_RULE}\n\n${OUTPUT_RULE('English')}`)).toBe(true);
     expect(plain).not.toContain('pageText');
     const withPages = (await buildPrompt('auto_tagging', tagging, { hasPageText: true })).system;
-    expect(withPages).toContain(`${ONE_ITEM_RULE}\n\nSome items include pageText`);
+    expect(withPages).toContain(`${OUTPUT_RULE('English')}\n\nSome items include pageText`);
     expect(
       (await buildPrompt('folder_recommendation', { aiMaxRecommendations: 7 })).system,
     ).toContain('Return exactly 7 folder recommendations');
+  });
+});
+
+describe('{{language}} placeholder', () => {
+  const languageOf = (settings: Pick<Settings, 'aiOutputLanguage' | 'language'>) =>
+    getPromptVariables('auto_tagging', { ...defaultSettings, ...settings }).language;
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('is offered to every task, after its own placeholders', () => {
+    for (const taskId of PROMPT_TASK_IDS) {
+      expect(PROMPT_TASKS[taskId].variables.at(-1), taskId).toEqual({
+        name: 'language',
+        descriptionKey: 'prompt_varLanguage',
+      });
+    }
+  });
+
+  it('names the extension language for auto, in English and in its own name', () => {
+    expect(languageOf({ aiOutputLanguage: 'auto', language: 'ja' })).toBe('Japanese (日本語)');
+    expect(languageOf({ aiOutputLanguage: 'auto', language: 'pt_BR' })).toBe(
+      'Brazilian Portuguese (Português (Brasil))',
+    );
+    expect(languageOf({ aiOutputLanguage: 'auto', language: 'en' })).toBe('English');
+    // Language on Browser setting follows the browser, as the extension's own text does.
+    vi.spyOn(fakeBrowser.i18n, 'getUILanguage').mockReturnValue('zh-HK');
+    expect(languageOf({ aiOutputLanguage: 'auto', language: 'auto' })).toBe(
+      'Traditional Chinese (繁體中文)',
+    );
+  });
+
+  it('names the chosen language whatever the extension language is', () => {
+    const english = (readConfigToml('ai/prompts.toml') as { languages: Record<string, string> })
+      .languages;
+    expect(Object.keys(english).sort()).toEqual([...SUPPORTED_LOCALES].sort());
+    for (const locale of SUPPORTED_LOCALES) {
+      const name = languageOf({ aiOutputLanguage: locale, language: 'de' });
+      expect(name.startsWith(english[locale]), locale).toBe(true);
+      expect(name, locale).toContain(getLanguageName(locale));
+    }
+    expect(languageOf({ aiOutputLanguage: 'zh_CN', language: 'en' })).toBe(
+      'Simplified Chinese (简体中文)',
+    );
+  });
+
+  it('asks for each page language in page mode, with the extension language as the fallback', () => {
+    expect(languageOf({ aiOutputLanguage: 'page', language: 'ko' })).toBe(
+      'the same language as each page or bookmark title (if unclear, Korean (한국어))',
+    );
+  });
+
+  it('adds the output language rule to every tool prompt, custom ones too, from stored settings', async () => {
+    await saveSettings({ language: 'ja' });
+    const { aiOutputLanguage: _, language: __, ...taskSettings } = defaultSettings;
+    for (const taskId of PROMPT_TASK_IDS.filter((id) => id !== 'ask_ai')) {
+      const { system } = await buildPrompt(taskId, taskSettings);
+      expect(system, taskId).toContain(`\n\n${OUTPUT_RULE('Japanese (日本語)')}`);
+    }
+    const saved = await saveCustomPrompt({
+      task: 'auto_tagging',
+      name: 'Language',
+      system: 'Tags in {{language}}.',
+    });
+    await setActivePrompt('auto_tagging', saved.id);
+    expect((await buildPrompt('auto_tagging', tagging)).system).toBe(
+      `Tags in Japanese (日本語).\n\n${ONE_ITEM_RULE}\n\n${OUTPUT_RULE('Japanese (日本語)')}`,
+    );
+    // Settings a caller passes win over the stored ones.
+    expect(
+      (await buildPrompt('auto_tagging', { ...tagging, aiOutputLanguage: 'page' })).system,
+    ).toContain('Tags in the same language as each page or bookmark title (if unclear, Japanese');
+  });
+
+  it('lets Ask AI follow the user, with the output language only as the fallback', async () => {
+    const { system } = await buildPrompt('ask_ai', {
+      aiOutputLanguage: 'fr',
+      language: 'en',
+    });
+    expect(system).toContain(
+      'Answer in the language the user writes in, unless they ask for another language. When that is unclear, answer in French (Français).',
+    );
+    expect(system).not.toContain('Write all free text');
+  });
+});
+
+describe('prompt placeholders', () => {
+  it('registers every placeholder the built-in prompts use', () => {
+    for (const taskId of PROMPT_TASK_IDS) {
+      expect(findUnknownPromptVariables(taskId, PROMPT_TASKS[taskId].system), taskId).toEqual([]);
+    }
+  });
+
+  it('describes every placeholder in every language', () => {
+    const keys = new Set(
+      PROMPT_TASK_IDS.flatMap((id) => PROMPT_TASKS[id].variables.map((v) => v.descriptionKey)),
+    );
+    for (const locale of SUPPORTED_LOCALES) {
+      const messages = JSON.parse(
+        readFileSync(path.join(appRoot, 'public/_locales', locale, 'messages.json'), 'utf8'),
+      ) as Record<string, { message: string }>;
+      for (const key of keys) expect(messages[key]?.message, `${locale} ${key}`).toBeTruthy();
+    }
+  });
+
+  it('fills placeholders in one pass, never inside a value it filled in', () => {
+    expect(interpolatePrompt('{{a}} {{b}}', { a: '{{b}}', b: 'x' })).toBe('{{b}} x');
   });
 });
 
@@ -113,7 +233,7 @@ describe('prompt library', () => {
     expect((await buildPrompt('auto_tagging', tagging)).system).toContain('Suggest 2-3 tags');
     await setActivePrompt('auto_tagging', saved.id);
     expect((await buildPrompt('auto_tagging', tagging)).system).toBe(
-      `Use 3 one-word tags at most.\n\n${ONE_ITEM_RULE}`,
+      `Use 3 one-word tags at most.\n\n${ONE_ITEM_RULE}\n\n${OUTPUT_RULE('English')}`,
     );
     await setActivePrompt('auto_tagging', undefined);
     expect((await buildPrompt('auto_tagging', tagging)).system).toContain(

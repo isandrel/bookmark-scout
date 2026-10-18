@@ -5217,6 +5217,22 @@
         "message": "Les recommandations de dossiers, l'étiquetage automatique et le générateur de résumés envoient aussi le texte lisible de chaque page, et pas seulement son titre et son URL, pour de meilleurs résultats. Les pages sont téléchargées sans vos cookies, les pages du réseau local ne sont jamais lues, et l'activation de cette option demande l'accès aux sites Web.",
         "description": "Settings: description of Read page content"
     },
+    "settings_aiOutputLanguage": {
+        "message": "Langue de sortie de l'IA",
+        "description": "Settings: AI output language (the language AI writes tags, summaries, and folder names in)"
+    },
+    "settings_aiOutputLanguageDesc": {
+        "message": "La langue dans laquelle l'IA écrit les étiquettes, les résumés et les noms des nouveaux dossiers. Demander à l'IA répond dans la langue que vous utilisez.",
+        "description": "Settings: description of AI output language"
+    },
+    "settings_aiOutputLanguageAuto": {
+        "message": "Comme l'extension",
+        "description": "AI output language option: the extension's own language"
+    },
+    "settings_aiOutputLanguagePage": {
+        "message": "Comme chaque page",
+        "description": "AI output language option: the language of each page or bookmark title"
+    },
     "settings_aiActivityRecording": {
         "message": "Enregistrer les requêtes IA",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5627,6 +5643,10 @@
     },
     "prompt_varToday": {
         "message": "Date du jour, au format AAAA-MM-JJ",
+        "description": "Prompt variable description"
+    },
+    "prompt_varLanguage": {
+        "message": "La langue de sortie, du réglage Langue de sortie de l'IA",
         "description": "Prompt variable description"
     },
     "error_bookmarksApiUnavailable": {

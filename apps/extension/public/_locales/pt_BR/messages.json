@@ -5217,6 +5217,22 @@
         "message": "As recomendações de pasta, Tags automáticas e Gerador de resumos também enviam o texto legível de cada página, não só o título e o URL, para obter resultados melhores. As páginas são baixadas sem seus cookies, páginas da rede local nunca são lidas, e ao ativar será pedido acesso aos sites.",
         "description": "Settings: description of Read page content"
     },
+    "settings_aiOutputLanguage": {
+        "message": "Idioma de saída da IA",
+        "description": "Settings: AI output language (the language AI writes tags, summaries, and folder names in)"
+    },
+    "settings_aiOutputLanguageDesc": {
+        "message": "O idioma em que a IA escreve tags, resumos e nomes de novas pastas. Perguntar à IA responde no idioma em que você escreve.",
+        "description": "Settings: description of AI output language"
+    },
+    "settings_aiOutputLanguageAuto": {
+        "message": "Igual à extensão",
+        "description": "AI output language option: the extension's own language"
+    },
+    "settings_aiOutputLanguagePage": {
+        "message": "Igual a cada página",
+        "description": "AI output language option: the language of each page or bookmark title"
+    },
     "settings_aiActivityRecording": {
         "message": "Registrar solicitações de IA",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5627,6 +5643,10 @@
     },
     "prompt_varToday": {
         "message": "Data de hoje, no formato AAAA-MM-DD",
+        "description": "Prompt variable description"
+    },
+    "prompt_varLanguage": {
+        "message": "O idioma de saída, da configuração Idioma de saída da IA",
         "description": "Prompt variable description"
     },
     "error_bookmarksApiUnavailable": {

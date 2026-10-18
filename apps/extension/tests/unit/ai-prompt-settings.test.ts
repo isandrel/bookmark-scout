@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { BookmarkTreeNode } from '@/types';
 import type { AISettings } from '@/services/ai-client';
+import { saveSettings } from '@/lib/settings-storage';
 
 const mocks = vi.hoisted(() => ({
   generateAIObject: vi.fn(),
@@ -47,6 +48,23 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
     expect(second).toContain('Suggest 4-8 tags per bookmark');
     expect(second).toContain('Write every tag in kebab-case style');
     expect(first).not.toContain('{{');
+  });
+
+  it('asks every tool prompt for the saved AI output language', async () => {
+    await saveSettings({ aiOutputLanguage: 'de' });
+    try {
+      await suggestBookmarkTags(nodes, settings, { minTags: 1, maxTags: 3, tagStyle: 'snake_case' });
+      await summarizeBookmarksWithAI(nodes, settings, { summaryLength: 60, includeDomainHint: false });
+      mocks.generateAIObject.mockResolvedValue({ object: { recommendations: [] } });
+      await recommendFolders({ title: 'Paper', url: 'https://paper.example/one' }, nodes, settings);
+    } finally {
+      await saveSettings({ aiOutputLanguage: 'auto' });
+    }
+    const systems = mocks.generateAIObject.mock.calls.map(([request]) => request.system);
+    expect(systems).toHaveLength(3);
+    for (const system of systems) {
+      expect(system).toContain('new tag and folder names) in German (Deutsch).');
+    }
   });
 
   it('puts the saved summary length into the summarizer prompt', async () => {
