@@ -102,7 +102,7 @@ Das Rechtsklickmenü ist ebenfalls optional, löst aber keine Warnung aus, daher
 DATENSCHUTZ
 • Kein Konto, keine Analyse, kein Tracking, keine Werbung
 • Ihre Lesezeichen bleiben in Ihrem Browser; Tags, Zusammenfassungen und gespeicherte Suchen bleiben auf diesem Gerät
-• Die von Ihnen geänderten Einstellungen und Ihre eigenen Prompts werden über Ihr Browserkonto synchronisiert, sofern der Browser dies unterstützt
+• Die von Ihnen geänderten Einstellungen, Ihre eigenen Prompts und „Über mich“ werden über Ihr Browserkonto synchronisiert, sofern der Browser dies unterstützt
 
 OPTIONALE KI (STANDARDMÄSSIG DEAKTIVIERT)
 KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu nutzen, brauchen Sie ein Konto bei einem KI-Unternehmen, das für jede Nutzung einen kleinen Betrag berechnen kann, oder ein kostenloses KI-Programm auf Ihrem eigenen Computer. Bookmark Scout hat keinen eigenen KI-Dienst: Aktivieren Sie KI in den Einstellungen und fügen Sie den Dienst Ihrer Wahl hinzu.
@@ -115,10 +115,10 @@ KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu n
 • Festlegen, was „KI fragen“ nachschlagen oder ändern darf (Einstellungen > KI)
 • Seiteninhalt lesen (standardmäßig deaktiviert): für bessere Vorschläge den lesbaren Text jeder Seite senden, nicht nur Titel und Adresse
 
-Wenn Sie eine KI-Funktion verwenden, werden die benötigten Daten direkt von Ihrem Browser an den von Ihnen gewählten KI-Dienst gesendet und unterliegen dessen Bedingungen: Lesezeichentitel, Adressen, Ordnernamen, das Datum, an dem Lesezeichen hinzugefügt wurden, sowie gespeicherte Tags und Zusammenfassungen; Titel und Adresse der aktuellen Seite; Ihre Nachrichten an „KI fragen“; ob die Links, die „KI fragen“ prüft, noch funktionieren; und nur bei aktiviertem „Seiteninhalt lesen“ der Text der betroffenen Seiten. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung eines KI-Dienstes kann kostenpflichtig sein.
+Wenn Sie eine KI-Funktion verwenden, werden die benötigten Daten direkt von Ihrem Browser an den von Ihnen gewählten KI-Dienst gesendet und unterliegen dessen Bedingungen: Lesezeichentitel, Adressen, Ordnernamen, das Datum, an dem Lesezeichen hinzugefügt wurden, sowie gespeicherte Tags und Zusammenfassungen; Titel und Adresse der aktuellen Seite; Ihre Nachrichten an „KI fragen“; Ihr Text unter „Über mich“, falls vorhanden; ob die Links, die „KI fragen“ prüft, noch funktionieren; und nur bei aktiviertem „Seiteninhalt lesen“ der Text der betroffenen Seiten. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung eines KI-Dienstes kann kostenpflichtig sein.
 
 EINSTELLUNGEN UND SICHERUNG
-• „Einstellungen sichern“ unten in den Einstellungen speichert eine Datei mit den von Ihnen geänderten Einstellungen, eigenen Prompts, KI-Diensten (nie deren Schlüssel), gespeicherten Suchen und den Spalten des Managers. „Einstellungen wiederherstellen“ holt sie zurück
+• „Einstellungen sichern“ unten in den Einstellungen speichert eine Datei mit den von Ihnen geänderten Einstellungen, eigenen Prompts, „Über mich“, KI-Diensten (nie deren Schlüssel), gespeicherten Suchen und den Spalten des Managers. „Einstellungen wiederherstellen“ holt sie zurück
 • Nur die Einstellungen, die Sie ändern, werden gespeichert, sodass verbesserte Standardwerte späterer Versionen Sie weiterhin erreichen
 
 FÜR ENTWICKLER
@@ -177,7 +177,7 @@ Bei der Installation fragt Firefox nur nach einem: der Berechtigung, Lesezeichen
 DATENSCHUTZ
 • Kein Konto, keine Analyse, kein Tracking, keine Werbung
 • Ihre Lesezeichen bleiben in Ihrem Browser
-• Die von Ihnen geänderten Einstellungen und Ihre eigenen Prompts werden über Firefox Sync synchronisiert, sofern aktiviert
+• Die von Ihnen geänderten Einstellungen, Ihre eigenen Prompts und „Über mich“ werden über Firefox Sync synchronisiert, sofern aktiviert
 
 OPTIONALE KI-ORDNERVORSCHLÄGE (STANDARDMÄSSIG DEAKTIVIERT)
 KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu nutzen, brauchen Sie ein Konto bei einem KI-Unternehmen, das für jede Nutzung einen kleinen Betrag berechnen kann, oder ein kostenloses KI-Programm auf Ihrem eigenen Computer. Aktivieren Sie KI in den Einstellungen und fügen Sie den Dienst Ihrer Wahl hinzu. Bookmark Scout schlägt dann Ordner für die aktuelle Seite vor, im Pop-up oder mit dem Tastenkürzel für KI-Schnellspeichern, und kann nach Ihrer Prüfung einen neuen Ordner erstellen.
@@ -185,7 +185,7 @@ KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu n
 Wenn Sie Vorschläge anfordern, werden Titel und Adresse der aktuellen Seite, Ihre Ordnernamen und, nur wenn Sie „Seiteninhalt lesen“ aktivieren, der Text der Seite direkt von Ihrem Browser an den von Ihnen gewählten KI-Dienst gesendet und unterliegen dessen Bedingungen. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung eines KI-Dienstes kann kostenpflichtig sein.
 
 EINSTELLUNGEN UND SICHERUNG
-• „Einstellungen sichern“ unten in den Einstellungen speichert eine Datei mit den von Ihnen geänderten Einstellungen, eigenen Prompts, KI-Diensten (nie deren Schlüssel) und gespeicherten Suchen. „Einstellungen wiederherstellen“ holt sie zurück
+• „Einstellungen sichern“ unten in den Einstellungen speichert eine Datei mit den von Ihnen geänderten Einstellungen, eigenen Prompts, „Über mich“, KI-Diensten (nie deren Schlüssel) und gespeicherten Suchen. „Einstellungen wiederherstellen“ holt sie zurück
 • Nur die Einstellungen, die Sie ändern, werden gespeichert, sodass verbesserte Standardwerte späterer Versionen Sie weiterhin erreichen
 
 FÜR ENTWICKLER

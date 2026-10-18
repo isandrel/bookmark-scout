@@ -102,7 +102,7 @@ O menu de clique com o botão direito também é opcional, mas não tem aviso, e
 PRIVACIDADE
 • Sem conta, sem análises de uso, sem rastreamento, sem anúncios
 • Seus favoritos ficam no seu navegador; tags, resumos e pesquisas salvas ficam neste dispositivo
-• As configurações que você altera e seus prompts personalizados são sincronizados pela conta do navegador, quando o navegador permite
+• As configurações que você altera, seus prompts personalizados e Sobre mim são sincronizados pela conta do navegador, quando o navegador permite
 
 IA OPCIONAL (DESATIVADA POR PADRÃO)
 A IA é opcional, e tudo o que está acima funciona sem ela. Para usá-la, você precisa de uma conta em uma empresa de IA, que pode cobrar um pouco a cada uso, ou de um programa de IA gratuito no seu próprio computador. O Bookmark Scout não tem serviço de IA próprio: ative a IA nas Configurações e adicione o serviço que você escolheu.
@@ -115,10 +115,10 @@ A IA é opcional, e tudo o que está acima funciona sem ela. Para usá-la, você
 • Escolha o que o Perguntar à IA pode consultar ou alterar (Configurações > IA)
 • Ler conteúdo da página (desativado por padrão): envia o texto legível de cada página, não só o título e o endereço, para sugestões melhores
 
-Quando você usa um recurso de IA, os dados de que ele precisa são enviados diretamente do seu navegador ao serviço de IA escolhido, de acordo com os termos desse serviço: títulos, endereços e nomes de pastas dos favoritos, as datas em que os favoritos foram adicionados, além das tags e resumos salvos; o título e o endereço da página atual; suas mensagens do Perguntar à IA; se os links que o Perguntar à IA verifica ainda funcionam; e, somente com Ler conteúdo da página ativado, o texto das páginas envolvidas. Nada é enviado ao Bookmark Scout. Sua chave de API fica no armazenamento local de extensões deste navegador e não é sincronizada. O uso de um serviço de IA pode ser cobrado.
+Quando você usa um recurso de IA, os dados de que ele precisa são enviados diretamente do seu navegador ao serviço de IA escolhido, de acordo com os termos desse serviço: títulos, endereços e nomes de pastas dos favoritos, as datas em que os favoritos foram adicionados, além das tags e resumos salvos; o título e o endereço da página atual; suas mensagens do Perguntar à IA; o texto de Sobre mim que você escrever, se houver; se os links que o Perguntar à IA verifica ainda funcionam; e, somente com Ler conteúdo da página ativado, o texto das páginas envolvidas. Nada é enviado ao Bookmark Scout. Sua chave de API fica no armazenamento local de extensões deste navegador e não é sincronizada. O uso de um serviço de IA pode ser cobrado.
 
 CONFIGURAÇÕES E BACKUP
-• Fazer backup das configurações, no final das Configurações, salva um arquivo com as configurações que você alterou, prompts personalizados, serviços de IA (nunca as chaves deles), pesquisas salvas e as colunas do gerenciador. Restaurar configurações traz tudo de volta
+• Fazer backup das configurações, no final das Configurações, salva um arquivo com as configurações que você alterou, prompts personalizados, Sobre mim, serviços de IA (nunca as chaves deles), pesquisas salvas e as colunas do gerenciador. Restaurar configurações traz tudo de volta
 • Só as configurações que você altera são salvas, então os padrões aprimorados das próximas versões continuam chegando até você
 
 PARA DESENVOLVEDORES
@@ -177,7 +177,7 @@ Na instalação, o Firefox pede uma coisa: ler e modificar os favoritos. Todo o 
 PRIVACIDADE
 • Sem conta, sem análises de uso, sem rastreamento, sem anúncios
 • Seus favoritos ficam no seu navegador
-• As configurações que você altera e seus prompts personalizados são sincronizados pelo Firefox Sync, quando ativado
+• As configurações que você altera, seus prompts personalizados e Sobre mim são sincronizados pelo Firefox Sync, quando ativado
 
 SUGESTÕES DE PASTA COM IA OPCIONAIS (DESATIVADAS POR PADRÃO)
 A IA é opcional, e tudo o que está acima funciona sem ela. Para usá-la, você precisa de uma conta em uma empresa de IA, que pode cobrar um pouco a cada uso, ou de um programa de IA gratuito no seu próprio computador. Ative a IA nas Configurações e adicione o serviço que você escolheu. O Bookmark Scout então sugere pastas para a página atual, no pop-up ou com o atalho de salvamento rápido com IA, e pode criar uma nova pasta depois que você revisá-la.
@@ -185,7 +185,7 @@ A IA é opcional, e tudo o que está acima funciona sem ela. Para usá-la, você
 Quando você pede sugestões, o título e o endereço da página atual e os nomes das suas pastas são enviados diretamente do seu navegador ao serviço de IA escolhido, de acordo com os termos desse serviço, e, somente se você ativar Ler conteúdo da página, também o texto da página. Nada é enviado ao Bookmark Scout. Sua chave de API fica no armazenamento local de extensões deste navegador e não é sincronizada. O uso de um serviço de IA pode ser cobrado.
 
 CONFIGURAÇÕES E BACKUP
-• Fazer backup das configurações, no final das Configurações, salva um arquivo com as configurações que você alterou, prompts personalizados, serviços de IA (nunca as chaves deles) e pesquisas salvas. Restaurar configurações traz tudo de volta
+• Fazer backup das configurações, no final das Configurações, salva um arquivo com as configurações que você alterou, prompts personalizados, Sobre mim, serviços de IA (nunca as chaves deles) e pesquisas salvas. Restaurar configurações traz tudo de volta
 • Só as configurações que você altera são salvas, então os padrões aprimorados das próximas versões continuam chegando até você
 
 PARA DESENVOLVEDORES

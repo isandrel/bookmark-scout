@@ -50,9 +50,6 @@ export type PromptTask = {
  */
 export type PromptVariables = Record<string, string | number | string[] | undefined>;
 
-/** `{{name}}` placeholders in prompts and rules. */
-const PROMPT_VARIABLE_PATTERN = /\{\{(\w+)\}\}/g;
-
 // ============================================================================
 // Texts: config/ai/prompts.toml
 // ============================================================================
@@ -81,6 +78,15 @@ const prompts = readConfig(
           z.ZodString
         >,
       ),
+      existing_tags: z.strictObject({
+        max_tags: z.number().int().positive(),
+        max_chars: z.number().int().positive(),
+      }),
+      editor: z.strictObject({ suggest_max_edits: z.number().int().nonnegative() }),
+      blocks: z.strictObject({
+        existing_tags: z.string().includes('{{tags}}'),
+        about_me: z.string().includes('{{text}}'),
+      }),
       rules: z.record(z.string(), z.string().min(1)),
       tasks: z.strictObject(
         Object.fromEntries(
@@ -142,22 +148,63 @@ function outputLanguageName(settings: Pick<Settings, 'aiOutputLanguage' | 'langu
     : uiLanguage;
 }
 
+/** `text` inside a block template, with the block's closing tag taken out so it cannot end it. */
+function fillBlock(template: string, name: 'tags' | 'text', text: string): string {
+  const closing = template.match(/<\/\w+>/g)?.at(-1);
+  const safe = closing ? text.split(closing).join('') : text;
+  return interpolatePrompt(template, { [name]: safe });
+}
+
+/**
+ * What {{existingTags}} reads: the tags in use, most used first, up to the configured count and
+ * length, in their block; nothing when there are none or sending them is off.
+ */
+function existingTagsBlock(
+  settings: Pick<Settings, 'autoTaggingSendExistingTags'>,
+  vocabulary: readonly string[] = [],
+): string {
+  if (!settings.autoTaggingSendExistingTags) return '';
+  const { max_tags: maxTags, max_chars: maxChars } = prompts.existing_tags;
+  const tags: string[] = [];
+  let length = 0;
+  for (const tag of vocabulary.slice(0, maxTags)) {
+    const line = tag.replace(/\s+/g, ' ').trim();
+    if (!line) continue;
+    if (length + line.length + 1 > maxChars) break;
+    tags.push(line);
+    length += line.length + 1;
+  }
+  return tags.length > 0 ? fillBlock(prompts.blocks.existing_tags, 'tags', tags.join('\n')) : '';
+}
+
+/** What {{aboutMe}} reads: the user's "About me" in its block, or nothing while it is empty. */
+function aboutMeBlock(text = ''): string {
+  return text.trim() ? fillBlock(prompts.blocks.about_me, 'text', text.trim()) : '';
+}
+
 type PromptValue = string | number;
 
-type PromptPlaceholder<Tasks, Keys extends keyof Settings> = {
+type PromptPlaceholder<Tasks, Keys extends keyof Settings, Data> = {
   /** The tasks whose prompts it fills, or 'all'. */
   tasks: Tasks;
   /** i18n key explaining the value, shown in the prompt editor. */
   descriptionKey: MessageKey;
   /** The settings it reads; they type what buildPrompt and previews must pass. */
   settings: readonly Keys[];
-  resolve: (settings: Pick<Settings, Keys>) => PromptValue;
+  /**
+   * Data it reads from storage rather than settings, such as the user's tags. buildPrompt loads it
+   * only when the prompt uses the placeholder; previews load it with `loadPromptData`.
+   */
+  load?: () => Promise<Data>;
+  /** The value; `data` is undefined until loaded. An empty string leaves the placeholder out. */
+  resolve: (settings: Pick<Settings, Keys>, data: Data | undefined) => PromptValue;
 };
 
 function placeholder<
   const Tasks extends readonly PromptTaskId[] | 'all',
   Keys extends keyof Settings = never,
->(spec: PromptPlaceholder<Tasks, Keys>): PromptPlaceholder<Tasks, Keys> {
+  Data = never,
+>(spec: PromptPlaceholder<Tasks, Keys, Data>): PromptPlaceholder<Tasks, Keys, Data> {
   return spec;
 }
 
@@ -208,6 +255,13 @@ const PROMPT_PLACEHOLDERS = {
     settings: ['autoTaggingTagStyle'],
     resolve: (settings) => settings.autoTaggingTagStyle,
   }),
+  existingTags: placeholder({
+    tasks: ['auto_tagging'],
+    descriptionKey: 'prompt_varExistingTags',
+    settings: ['autoTaggingSendExistingTags'],
+    load: async () => getTagVocabulary(await bookmarkMetadataValue.get()),
+    resolve: existingTagsBlock,
+  }),
   summaryLength: placeholder({
     tasks: ['summarization'],
     descriptionKey: 'prompt_varSummaryLength',
@@ -221,7 +275,7 @@ const PROMPT_PLACEHOLDERS = {
     resolve: (settings) => (settings.summarizerIncludeDomainHint ? 'true' : 'false'),
   }),
   today: placeholder({
-    tasks: ['ask_ai'],
+    tasks: 'all',
     descriptionKey: 'prompt_varToday',
     settings: [],
     resolve: () => formatToday(),
@@ -231,6 +285,13 @@ const PROMPT_PLACEHOLDERS = {
     descriptionKey: 'prompt_varLanguage',
     settings: ['aiOutputLanguage', 'language'],
     resolve: outputLanguageName,
+  }),
+  aboutMe: placeholder({
+    tasks: 'all',
+    descriptionKey: 'prompt_varAboutMe',
+    settings: [],
+    load: () => aboutMeValue.get(),
+    resolve: (_settings, text) => aboutMeBlock(text),
   }),
 };
 
@@ -261,7 +322,14 @@ export type SharedPromptSettings = Pick<Settings, SettingsOf<SharedPlaceholder>>
 type AnyPlaceholder = {
   tasks: readonly PromptTaskId[] | 'all';
   descriptionKey: MessageKey;
-  resolve: (settings: Settings) => PromptValue;
+  load?: () => Promise<unknown>;
+  // Method syntax, so each entry's resolver keeps its own data type.
+  resolve(settings: Settings, data: unknown): PromptValue;
+};
+
+/** Data loaded from storage for the placeholders that read it, by placeholder name. */
+export type PromptData = {
+  [N in PlaceholderName]?: Awaited<ReturnType<NonNullable<Placeholders[N]['load']>>>;
 };
 
 const PLACEHOLDER_ENTRIES: [string, AnyPlaceholder][] = Object.entries(PROMPT_PLACEHOLDERS);
@@ -300,18 +368,40 @@ const SETTING_RULES: {
   },
 };
 
-/** The values a task fills into its {{placeholders}}. */
+/** The values a task fills into its {{placeholders}}; ones that read storage need `data`. */
 export function getPromptVariables<T extends PromptTaskId>(
   taskId: T,
   settings: PromptSettings<T> & SharedPromptSettings,
+  data: PromptData = {},
 ): PromptVariables {
   return Object.fromEntries(
     PLACEHOLDER_ENTRIES.filter(([, entry]) => appliesTo(entry, taskId)).map(([name, entry]) => [
       name,
       // Each resolver reads only the settings it declares, which the parameter type requires.
-      entry.resolve(settings as Settings),
+      entry.resolve(settings as Settings, data[name as PlaceholderName]),
     ]),
   );
+}
+
+/**
+ * Loads what the task's placeholders read from storage (the user's tags, "About me"): all of it,
+ * or with `usedIn`, only for the placeholders that text uses, and none that `have` already holds
+ * (returned with it). A failed read leaves its placeholder empty rather than failing the prompt.
+ */
+export async function loadPromptData(
+  taskId: PromptTaskId,
+  usedIn?: string,
+  have: PromptData = {},
+): Promise<PromptData> {
+  const used = usedIn === undefined ? undefined : new Set(promptPlaceholderNames(usedIn));
+  const entries = PLACEHOLDER_ENTRIES.filter(
+    ([name, entry]) =>
+      entry.load && appliesTo(entry, taskId) && (!used || used.has(name)) && !(name in have),
+  );
+  const loaded = await Promise.all(
+    entries.map(async ([name, entry]) => [name, await entry.load?.().catch(() => undefined)]),
+  );
+  return { ...Object.fromEntries(loaded), ...have };
 }
 
 /** Today's date in ISO form, which every model reads the same way. */
@@ -359,57 +449,139 @@ export const PROMPT_TASK_IDS: PromptTaskId[] = [...PROMPT_TASK_ID_LIST];
 // Prompt Utilities
 // ============================================================================
 
+/** `{{name}}`, or `\{{`, which writes literal braces. */
+const PLACEHOLDER_OR_ESCAPE = /\\\{\{|\{\{(\w+)\}\}/g;
+
+/** A line that holds one placeholder and nothing else. */
+const PLACEHOLDER_LINE = /^[ \t]*\{\{(\w+)\}\}[ \t]*$/;
+
+/** The placeholder names `text` uses, in order, without `\{{` escapes. */
+export function promptPlaceholderNames(text: string): string[] {
+  return [...text.matchAll(PLACEHOLDER_OR_ESCAPE)].flatMap((match) =>
+    match[1] ? [match[1]] : [],
+  );
+}
+
 /**
- * Interpolate variables into a prompt template.
- * Replaces {{variableName}} with actual values.
+ * Fills `{{name}}` placeholders in one pass: a value that itself contains `{{...}}` (page text,
+ * "About me") is never expanded again. `\{{` writes `{{`, unknown names stay as written, and a
+ * placeholder alone on its line that fills in nothing takes its line, and a blank line before it,
+ * with it.
  */
 export function interpolatePrompt(template: string, variables: PromptVariables): string {
-  return template.replace(PROMPT_VARIABLE_PATTERN, (_, key) => {
-    const value = variables[key];
-    if (value === undefined) {
-      return `{{${key}}}`; // Keep unresolved placeholders
+  const lines: string[] = [];
+  for (const line of template.split('\n')) {
+    const alone = line.match(PLACEHOLDER_LINE);
+    if (alone && variables[alone[1]] === '') {
+      if (lines.at(-1)?.trim() === '') lines.pop();
+      continue;
     }
-    if (Array.isArray(value)) {
-      return value.join(', ');
-    }
-    return String(value);
-  });
+    lines.push(
+      line.replace(PLACEHOLDER_OR_ESCAPE, (match, key: string | undefined) => {
+        if (key === undefined) return '{{';
+        const value = variables[key];
+        if (value === undefined) return match;
+        return Array.isArray(value) ? value.join(', ') : String(value);
+      }),
+    );
+  }
+  return lines.join('\n');
 }
 
 /** {{variables}} in `text` that the task does not fill in, so they would reach the model as is. */
 export function findUnknownPromptVariables(taskId: PromptTaskId, text: string): string[] {
   const known = new Set(PROMPT_TASKS[taskId].variables.map((variable) => variable.name));
-  const used = [...text.matchAll(PROMPT_VARIABLE_PATTERN)].map((match) => match[1]);
-  return [...new Set(used.filter((name) => !known.has(name)))];
+  return [...new Set(promptPlaceholderNames(text).filter((name) => !known.has(name)))];
+}
+
+/** Edits that turn `a` into `b` (Levenshtein distance). */
+function editDistance(a: string, b: string): number {
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i += 1) {
+    const current = [i];
+    for (let j = 1; j <= b.length; j += 1) {
+      const substitution = previous[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1);
+      current[j] = Math.min(previous[j] + 1, current[j - 1] + 1, substitution);
+    }
+    previous = current;
+  }
+  return previous[b.length];
+}
+
+/** The task's placeholder an unknown name was most likely meant to be ("maxtag" for maxTags). */
+export function suggestPromptVariable(taskId: PromptTaskId, name: string): string | undefined {
+  const lower = name.toLowerCase();
+  let best: { name: string; distance: number } | undefined;
+  for (const variable of PROMPT_TASKS[taskId].variables) {
+    const distance = editDistance(lower, variable.name.toLowerCase());
+    if (distance <= prompts.editor.suggest_max_edits && (!best || distance < best.distance)) {
+      best = { name: variable.name, distance };
+    }
+  }
+  return best?.name;
 }
 
 export type BuildPromptOptions = {
   /** Items carry text read from web pages, which the model must treat as data. */
   hasPageText?: boolean;
+  /** Data for placeholders that read storage, when the caller already has it; the rest is read. */
+  data?: PromptData;
 };
+
+/** The texts of the rules a task adds after its prompt, before placeholders are filled in. */
+function promptRuleTexts<T extends PromptTaskId>(
+  taskId: T,
+  settings: PromptSettings<T>,
+  options: BuildPromptOptions,
+): string[] {
+  const settingRules = SETTING_RULES[taskId] as
+    | ((settings: PromptSettings<T>) => string[])
+    | undefined;
+  return [
+    ...prompts.tasks[taskId].rules,
+    ...(settingRules?.(settings) ?? []),
+    ...(options.hasPageText ? ['page_text'] : []),
+  ].map((name) => prompts.rules[name]);
+}
+
+/** A prompt as sent: the editable text, then the rules the app adds after it, all filled in. */
+export type PromptParts = { prompt: string; rules: string[] };
+
+/**
+ * Fills in a prompt text and the task's rules, for previews (which show the rules as fixed) and
+ * runs alike. Parts left empty by empty placeholders are dropped.
+ */
+export function composePrompt<T extends PromptTaskId>(
+  taskId: T,
+  text: string,
+  settings: PromptSettings<T> & SharedPromptSettings,
+  options: BuildPromptOptions = {},
+): PromptParts {
+  const variables = getPromptVariables(taskId, settings, options.data);
+  return {
+    prompt: interpolatePrompt(text, variables).trim(),
+    rules: promptRuleTexts(taskId, settings, options)
+      .map((rule) => interpolatePrompt(rule, variables).trim())
+      .filter(Boolean),
+  };
+}
 
 /**
  * The full system prompt a task sends: the active custom prompt from the prompt library (or the
  * built-in default), then the task's fixed rules and, for page text, the page-text rule, all
  * with the task's placeholders filled in from `settings`. Settings every task shares (the output
- * language) are read from storage unless `settings` has them.
+ * language) are read from storage unless `settings` has them, and so is the data placeholders
+ * read (tags, "About me"), for the placeholders the prompt uses that `options.data` lacks.
  */
 export async function buildPrompt<T extends PromptTaskId>(
   taskId: T,
   settings: PromptSettings<T> & Partial<SharedPromptSettings>,
   options: BuildPromptOptions = {},
 ): Promise<{ system: string }> {
-  const prompt = (await getActivePromptText(taskId)) ?? PROMPT_TASKS[taskId].system;
-  const settingRules = SETTING_RULES[taskId] as
-    | ((settings: PromptSettings<T>) => string[])
-    | undefined;
-  const rules = [
-    ...prompts.tasks[taskId].rules,
-    ...(settingRules?.(settings) ?? []),
-    ...(options.hasPageText ? ['page_text'] : []),
-  ].map((name) => prompts.rules[name]);
-  const variables = getPromptVariables(taskId, { ...(await getSettings()), ...settings });
-  return {
-    system: [prompt, ...rules].map((text) => interpolatePrompt(text, variables)).join('\n\n'),
-  };
+  const text = (await getActivePromptText(taskId)) ?? PROMPT_TASKS[taskId].system;
+  const runSettings = { ...(await getSettings()), ...settings };
+  const used = [text, ...promptRuleTexts(taskId, runSettings, options)].join('\n');
+  const data = await loadPromptData(taskId, used, options.data);
+  const { prompt, rules } = composePrompt(taskId, text, runSettings, { ...options, data });
+  return { system: [prompt, ...rules].filter(Boolean).join('\n\n') };
 }

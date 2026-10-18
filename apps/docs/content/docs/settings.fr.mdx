@@ -155,6 +155,10 @@ En dessous, le panneau du fournisseur contient **Clé API**, **URL de base**, **
 | --- | --- | --- |
 | **Langue de sortie de l'IA** | Comme l'extension | La langue dans laquelle l'IA écrit les étiquettes, les résumés et les noms des nouveaux dossiers : celle de l'extension, une langue de votre choix ou **Comme chaque page**, la langue de chaque page ou titre de favori. Demander à l'IA répond dans la langue que vous utilisez et n'utilise celle-ci que si elle n'est pas claire |
 
+### À propos de moi [#about-me]
+
+**À propos de moi** (vide par défaut) contient quelques mots sur vous, par exemple « Je suis enseignant ; j'enregistre des supports de cours », jusqu'à 1 000 caractères. Tant qu'il contient du texte, les prompts intégrés de chaque fonction d'IA l'envoient à votre fournisseur d'IA pour adapter les résultats ; un prompt personnalisé ne l'envoie que s'il utilise `{{aboutMe}}`. Il est synchronisé via votre compte de navigateur et enregistré quand vous quittez le champ.
+
 ### Ce que Demander à l'IA peut faire [#ask-ai-actions]
 
 Tout ce que Demander à l'IA peut consulter et modifier figure ici, et tout est activé par défaut. Si vous désactivez une action, elle ne lui est plus proposée du tout. L'application d'un plan de modifications vous demande toujours d'abord votre accord, quoi que vous choisissiez ici.
@@ -166,7 +170,7 @@ Chaque outil dispose d'un interrupteur **Activer** (activé par défaut). Le dé
 | Outil | Paramètres et valeurs par défaut |
 | --- | --- |
 | **Préparateur de contexte IA** | **Format de sortie** Markdown ; **Inclure les chemins de dossier**, **Inclure les dates**, **Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés** activés ; **Nombre maximal d'éléments** 200 ; **Profondeur maximale** 8 ; **Longueur des extraits** 240 |
-| **Étiquetage automatique** | **Nombre minimal d'étiquettes** 2 ; **Nombre maximal d'étiquettes** 5 ; **Style des étiquettes** kebab-case ; **Mode de fusion** Ajouter ; **Supprimer les étiquettes en double** activé |
+| **Étiquetage automatique** | **Nombre minimal d'étiquettes** 2 ; **Nombre maximal d'étiquettes** 5 ; **Style des étiquettes** kebab-case ; **Mode de fusion** Ajouter ; **Supprimer les étiquettes en double** activé ; **Envoyer les étiquettes existantes** activé |
 | **Générateur de résumés** | **Longueur du résumé** 160 ; **Inclure le domaine** activé ; **Mode de fusion** Remplacer |
 | **Réorganisation des dossiers par IA** | **Confiance minimale** 55 % (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** 100 favoris par requête |
 

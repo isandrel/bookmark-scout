@@ -119,7 +119,7 @@ Lokale Server müssen Anfragen der Erweiterung annehmen:
 Jedes KI-Tool beginnt mit einem integrierten Prompt. Um das Verhalten eines Tools zu ändern, öffnen Sie **Optionen**, dann **KI-Tools**, dann **Prompts**:
 
 1. Um zuerst den integrierten Prompt eines Tools zu lesen, klicken Sie auf das Augensymbol daneben. Klicken Sie hier oder in der Ansicht auf **Anpassen**, und der Editor öffnet sich mit dem integrierten Prompt als Ausgangspunkt.
-2. Bearbeiten Sie den Text. Klicken Sie auf eine Variable wie `{{maxTags}}`, um sie einzufügen; das Tool füllt sie mit Ihren Einstellungen. **Vorschau mit aktuellen Einstellungen** zeigt das Ergebnis.
+2. Bearbeiten Sie den Text. Klicken Sie auf eine Variable wie `{{maxTags}}`, um sie einzufügen; das Tool füllt sie mit Ihren Einstellungen. **Vorschau mit aktuellen Einstellungen** zeigt das Ergebnis. Oder geben Sie `{{` ein und wählen Sie aus der Liste, die zeigt, was jeder Platzhalter bedeutet und welchen Wert er gerade hat. `{{today}}`, `{{language}}` und `{{aboutMe}}` funktionieren in jedem Tool, `{{existingTags}}` in Automatische Tags; ein Platzhalter ohne Inhalt, etwa `{{aboutMe}}` bei leerem „Über mich“, wird samt seiner Zeile weggelassen. Schreiben Sie `\{{` für geschweifte Klammern. Ein Platzhalter, den das Tool nicht ausfüllt, wird markiert, bei einem vermutlichen Tippfehler mit einem Vorschlag, und **Integrierten Prompt wiederherstellen** fängt neu an.
 3. Klicken Sie auf **Prompt speichern**. Der neue Prompt wird zum Prompt des Tools.
 
 Behalten Sie mehrere Prompts pro Tool, insgesamt bis zu 10, und wechseln Sie über das Menü des Tools zwischen ihnen; **Standard (integriert)** kehrt zum Original zurück. Ihre Prompts werden über Ihr Browserkonto auf Ihren Geräten synchronisiert, daher muss jeder unter 7 KB bleiben. Bookmark Scout fügt nach Ihrem Prompt eigene Regeln für das Ausgabeformat hinzu, sodass Ergebnisse auch dann geladen werden, wenn Ihr Prompt etwas anderes verlangt. Außerdem fügt es eine Zeile hinzu, die die unter **Ausgabesprache der KI** (**Optionen**, dann **KI**) gewählte Sprache verlangt; in Ihrem eigenen Prompt steht `{{language}}` für diese Sprache.
@@ -129,11 +129,13 @@ Behalten Sie mehrere Prompts pro Tool, insgesamt bis zu 10, und wechseln Sie üb
 | Tool | Ort | An den Anbieter gesendet |
 | --- | --- | --- |
 | Ordnervorschläge | Pop-up, die Funkel-Schaltfläche neben dem Suchfeld (nur sichtbar, wenn KI aktiviert ist) | Titel und URL der aktuellen Seite sowie die Namen Ihrer Lesezeichenordner. Mit aktiviertem **Seiteninhalt lesen** auch der Haupttext der Seite. Mit der integrierten KI verlässt nichts Ihren Computer |
-| **Automatische Tags** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im aktuellen Ordner, und mit aktiviertem **Seiteninhalt lesen** der Haupttext jeder Seite |
+| **Automatische Tags** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im aktuellen Ordner, und mit aktiviertem **Seiteninhalt lesen** der Haupttext jeder Seite; mit aktiviertem **Vorhandene Tags senden** (Standard) außerdem die Namen Ihrer meistverwendeten Tags |
 | **Inhaltszusammenfassung** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im aktuellen Ordner, und mit aktiviertem **Seiteninhalt lesen** der Haupttext jeder Seite |
 | **KI-Ordnerneuordnung** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im gewählten Bereich |
 | **KI fragen** | Pop-up und Seitenleiste, die Chat-Schaltfläche neben dem Suchfeld (nur sichtbar, wenn KI aktiviert ist) | Ihre Nachrichten und der bisherige Gesprächsverlauf sowie das, was die KI nachschlägt: passende Lesezeichen (mit Ordner, Datum des Hinzufügens, Tags und Zusammenfassung), Ordnernamen, Titel und URL der aktuellen Seite, ob von ihr geprüfte gespeicherte Links noch funktionieren und mit aktiviertem **Seiteninhalt lesen** der Text der Seiten, die sie liest |
 | **KI-Kontextpaket** | Manager, Tools, **KI** | Nichts. Es speichert eine Datei auf Ihrem Computer und funktioniert auch bei deaktivierter KI. |
+
+Jede KI-Funktion, die einen Anbieter nutzt, sendet außerdem Ihren Text unter **Über mich** (KI-Einstellungen), solange er nicht leer ist; standardmäßig ist er leer.
 
 Aktivieren Sie **Beim Öffnen automatisch vorschlagen**, um bei jedem Öffnen des Pop-ups Ordnervorschläge anzufordern. Lassen Sie die Option deaktiviert, um nur dann eine Anfrage zu senden, wenn Sie auf die Schaltfläche klicken.
 

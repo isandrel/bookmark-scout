@@ -119,7 +119,7 @@ Verificar y Actualizar indican la causa probable: una clave rechazada (401, o 40
 Cada herramienta de IA empieza con un prompt integrado. Para cambiar cómo se comporta una herramienta, ve a **Opciones**, luego a **Herramientas de IA** y luego a **Prompts**:
 
 1. Para leer antes el prompt integrado de una herramienta, haz clic en el icono del ojo que está a su lado. Haz clic en **Personalizar**, aquí o en el visor, y se abre el editor con el prompt integrado como punto de partida.
-2. Edita el texto. Haz clic en una variable como `{{maxTags}}` para insertarla; la herramienta la rellena con tu configuración. **Vista previa con la configuración actual** muestra el resultado.
+2. Edita el texto. Haz clic en una variable como `{{maxTags}}` para insertarla; la herramienta la rellena con tu configuración. **Vista previa con la configuración actual** muestra el resultado. También puedes escribir `{{` y elegir uno de la lista, que muestra qué es cada marcador y su valor actual. `{{today}}`, `{{language}}` y `{{aboutMe}}` funcionan en todas las herramientas, y `{{existingTags}}` en el Etiquetado automático; un marcador sin nada que rellenar, como `{{aboutMe}}` con Sobre mí vacío, se omite junto con su línea. Escribe `\{{` para llaves literales. Un marcador que la herramienta no rellena se señala, con una sugerencia cuando parece una errata, y **Restablecer el prompt integrado** vuelve a empezar.
 3. Haz clic en **Guardar prompt**. El nuevo prompt pasa a ser el prompt de la herramienta.
 
 Guarda varios prompts por herramienta, hasta 10 en total, y cambia de uno a otro con el menú de la herramienta; **Predeterminado (integrado)** vuelve al original. Tus prompts se sincronizan entre tus dispositivos a través de tu cuenta del navegador, así que cada uno debe ocupar menos de 7 KB. Bookmark Scout añade sus propias reglas de formato de salida después de tu prompt, así que los resultados se cargan aunque tu prompt pida otra cosa. También añade una línea que pide el idioma elegido en **Idioma de salida de la IA** (**Opciones**, luego **IA**); en tu propio prompt, `{{language}}` es ese idioma.
@@ -129,11 +129,13 @@ Guarda varios prompts por herramienta, hasta 10 en total, y cambia de uno a otro
 | Herramienta | Dónde | Qué envía al proveedor |
 | --- | --- | --- |
 | Recomendaciones de carpetas | Ventana emergente, el botón del destello junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | El título y la URL de la página actual, y los nombres de tus carpetas de marcadores. Con **Leer el contenido de la página** activado, también el texto principal de la página. Con la IA integrada, nada sale de tu equipo |
-| **Etiquetado automático** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
+| **Etiquetado automático** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página; con **Enviar etiquetas existentes** activado (el valor predeterminado), también los nombres de tus etiquetas más usadas |
 | **Generador de resúmenes** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
 | **Reorganización de carpetas con IA** | Administrador, Herramientas, **IA** | Títulos, URLs y rutas de carpeta de los marcadores del ámbito que elijas |
 | **Preguntar a la IA** | Ventana emergente y panel lateral, el botón de chat junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | Tus mensajes y la conversación hasta el momento, y lo que consulta: los marcadores que coinciden (con su carpeta, fecha en que se añadieron, etiquetas y resumen), los nombres de las carpetas, el título y la URL de la página actual, si los enlaces guardados que comprueba siguen funcionando y, con **Leer el contenido de la página** activado, el texto de las páginas que lee |
 | **Empaquetador de contexto para IA** | Administrador, Herramientas, **IA** | Nada. Guarda un archivo en tu equipo y funciona con la IA desactivada. |
+
+Cada función de IA que usa un proveedor también envía tu texto de **Sobre mí** (configuración de IA) mientras tenga contenido; está vacío de forma predeterminada.
 
 Activa **Recomendar al abrir** para pedir recomendaciones de carpetas cada vez que se abre la ventana emergente. Déjalo desactivado para enviar una solicitud solo cuando hagas clic en el botón.
 

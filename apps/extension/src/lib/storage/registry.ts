@@ -55,6 +55,11 @@ export const STORAGE_ITEMS = {
   tableLayout: { area: 'local', name: 'manager.table-layout', v: 1, backup: 'exclude' },
   /** Synced: which custom prompts exist and which one each task uses. */
   promptIndex: { area: 'sync', name: 'prompts.index', v: 1, backup: 'include' },
+  /**
+   * Synced: "About me" for AI prompts, which the user writes once for every device. Its own item:
+   * at its length limit it does not fit in the settings item's share of the 8,192-byte quota.
+   */
+  aboutMe: { area: 'sync', name: 'ai.about-me', v: 1, backup: 'include' },
   /** Synced: one item per custom prompt, so each stays under the 8,192-byte item quota. */
   prompt: { area: 'sync', name: 'prompts.prompt', v: 1, backup: 'include', collection: true },
   /** Local: names folder ids, which differ on every device. */

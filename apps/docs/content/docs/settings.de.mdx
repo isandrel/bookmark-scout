@@ -155,6 +155,10 @@ Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigen
 | --- | --- | --- |
 | **Ausgabesprache der KI** | Wie die Erweiterung | Die Sprache, in der die KI Tags, Zusammenfassungen und neue Ordnernamen schreibt: die der Erweiterung, eine von Ihnen gewählte oder **Wie die jeweilige Seite**, die Sprache jeder Seite oder jedes Lesezeichentitels. KI fragen antwortet in der Sprache, in der Sie schreiben, und nutzt diese nur, wenn das unklar ist |
 
+### Über mich [#about-me]
+
+**Über mich** (standardmäßig leer) sind ein paar Worte über Sie, etwa „Ich bin Lehrerin und speichere Unterrichtsmaterial“, bis zu 1.000 Zeichen. Solange dort Text steht, senden die integrierten Prompts jeder KI-Funktion ihn an Ihren KI-Anbieter, damit die Ergebnisse besser passen; ein eigener Prompt sendet ihn nur, wenn er `{{aboutMe}}` verwendet. Der Text wird über Ihr Browserkonto synchronisiert und gespeichert, wenn Sie das Feld verlassen.
+
 ### Was „KI fragen“ tun darf [#ask-ai-actions]
 
 Hier steht alles, was „KI fragen“ nachschlagen und ändern kann; standardmäßig ist alles aktiviert. Schalten Sie etwas aus, wird es der KI gar nicht angeboten. Vor dem Übernehmen eines Änderungsplans werden Sie immer gefragt, egal was Sie hier wählen.
@@ -166,7 +170,7 @@ Jedes Tool hat einen Schalter zum Aktivieren (standardmäßig an), etwa **Automa
 | Tool | Einstellungen und Standardwerte |
 | --- | --- |
 | **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** 200; **Max. Tiefe** 8; **Auszugslänge** 240 |
-| **Automatische Tags** | **Min. Tags** 2; **Max. Tags** 5; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an |
+| **Automatische Tags** | **Min. Tags** 2; **Max. Tags** 5; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an; **Vorhandene Tags senden** an |
 | **Inhaltszusammenfassung** | **Länge der Zusammenfassung** 160; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
 | **KI-Ordnerneuordnung** | **Mindestkonfidenz** 55 % (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
 

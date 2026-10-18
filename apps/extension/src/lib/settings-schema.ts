@@ -46,6 +46,8 @@ export type SettingsPanelId =
   | 'aiServices'
   | 'aiActivity'
   | 'promptLibrary'
+  /** AI: "About me", its own synced item (src/lib/about-me-storage.ts), too long for settings. */
+  | 'aboutMe'
   | 'shortcuts'
   | 'managerMenus'
   | 'askAiActions'
@@ -785,6 +787,10 @@ const fields = {
     mergeModeLabel,
   ),
   autoTaggingDedupeTags: switchField('ai_tools.auto_tagging.dedupe_tags', 'autoTaggingDedupeTags'),
+  autoTaggingSendExistingTags: switchField(
+    'ai_tools.auto_tagging.send_existing_tags',
+    'autoTaggingSendExistingTags',
+  ),
 
   summarizerEnabled: switchField('ai_tools.summarizer.enabled', 'summarizerEnabled'),
   summarizerDefaultScope: scopeField(
@@ -1203,6 +1209,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: ['aiOutputLanguage'],
         requires: 'aiEnabled',
       },
+      { id: 'aboutMe', fields: [], panel: 'aboutMe', requires: 'aiEnabled' },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),
@@ -1238,6 +1245,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'autoTaggingTagStyle',
           'autoTaggingMergeMode',
           'autoTaggingDedupeTags',
+          'autoTaggingSendExistingTags',
         ],
       },
       {

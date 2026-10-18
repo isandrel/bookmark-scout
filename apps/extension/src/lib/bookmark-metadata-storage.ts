@@ -28,6 +28,47 @@ export function parseBookmarkTags(text: string): string[] {
   ];
 }
 
+/** What two spellings of one tag share: Unicode-normalized (NFKC), trimmed, and lowercased. */
+export function tagKey(tag: string): string {
+  return tag.normalize('NFKC').trim().toLowerCase();
+}
+
+/**
+ * Every tag in use, most used first (then in alphabetical order), each in the spelling most
+ * bookmarks use, so "React" and "react" count as one tag.
+ */
+export function getTagVocabulary(metadata: StoredBookmarkMetadataById): string[] {
+  const tags = new Map<string, { count: number; spellings: Map<string, number> }>();
+  for (const entry of Object.values(metadata)) {
+    const seen = new Set<string>();
+    for (const spelling of entry.tags ?? []) {
+      const key = tagKey(spelling);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      const tag = tags.get(key) ?? { count: 0, spellings: new Map() };
+      tag.count += 1;
+      tag.spellings.set(spelling.trim(), (tag.spellings.get(spelling.trim()) ?? 0) + 1);
+      tags.set(key, tag);
+    }
+  }
+  return [...tags.values()]
+    .map(({ count, spellings }) => ({
+      count,
+      spelling: [...spellings].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0][0],
+    }))
+    .sort((a, b) => b.count - a.count || a.spelling.localeCompare(b.spelling))
+    .map(({ spelling }) => spelling);
+}
+
+/**
+ * `tags` with each one that matches a tag in `vocabulary` apart from case, width, or spacing
+ * written as the vocabulary spells it, so a suggestion never adds a near-duplicate of a tag in use.
+ */
+export function matchTagSpellings(tags: readonly string[], vocabulary: readonly string[]): string[] {
+  const spellings = new Map(vocabulary.map((tag) => [tagKey(tag), tag]));
+  return tags.map((tag) => spellings.get(tagKey(tag)) ?? tag);
+}
+
 export type BookmarkMetadataMergeOptions = {
   tagMode: 'append' | 'replace';
   summaryMode: 'append' | 'replace';

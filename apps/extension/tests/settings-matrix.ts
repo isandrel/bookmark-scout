@@ -363,6 +363,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   autoTaggingDedupeTags: tested(TOOL_TABLE, [
     unit('bookmark-metadata-storage.test.ts', 'appends tags without dedupe and replaces tags when requested'),
   ]),
+  autoTaggingSendExistingTags: tested(TOOL_OPTIONS, [
+    unit('prompt-library.test.ts', 'sends the most used tags only while Send Existing Tags is on, within the configured caps'),
+    e2e('prompt-library.spec.ts', '[mocked provider contract] auto-tagging sends existing tags and About me only when there is something to send'),
+  ], 'Read by services/prompt-config.ts ({{existingTags}}).'),
 
   // Summarizer
   summarizerEnabled: tested(TOOL_TABLE, [toolFlags]),

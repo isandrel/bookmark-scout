@@ -20,6 +20,9 @@ enabled = true
 min_tags = { default = 2, min = 1, max = 20, step = 1 }
 max_tags = { default = 5, min = 1, max = 20, step = 1 }
 tag_style = "kebab-case"
+# Send the names of tags already in use ({{existingTags}}, most used first, capped in
+# config/ai/prompts.toml), so the model reuses them instead of inventing near-duplicates
+send_existing_tags = true
 merge_mode = "append"
 dedupe_tags = true
 

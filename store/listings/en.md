@@ -104,7 +104,7 @@ The right-click menu is optional too, but has no warning, so the browser adds it
 PRIVACY
 • No account, no analytics, no tracking, no ads
 • Your bookmarks stay in your browser; tags, summaries, and saved searches stay on this device
-• The settings you change and your custom prompts sync through your browser account where the browser supports it
+• The settings you change and your custom prompts and About me sync through your browser account where the browser supports it
 
 OPTIONAL AI (OFF BY DEFAULT)
 AI is optional, and everything above works without it. To use it, you need an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer. Bookmark Scout has no AI service of its own: turn on AI in Settings and add the service you chose.
@@ -117,10 +117,10 @@ AI is optional, and everything above works without it. To use it, you need an ac
 • Choose what Ask AI may look up or change (Settings > AI)
 • Read page content (off by default): send each page's readable text, not only its title and address, for better suggestions
 
-When you use an AI feature, the data it needs is sent directly from your browser to the AI service you chose, under that service's terms: bookmark titles, addresses, folder names, the dates bookmarks were added, and saved tags and summaries; the current page's title and address; your Ask AI messages; whether the links Ask AI checks still work; and, only with Read page content on, the text of the pages involved. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Using an AI service may cost money.
+When you use an AI feature, the data it needs is sent directly from your browser to the AI service you chose, under that service's terms: bookmark titles, addresses, folder names, the dates bookmarks were added, and saved tags and summaries; the current page's title and address; your Ask AI messages; the About me text you write, if any; whether the links Ask AI checks still work; and, only with Read page content on, the text of the pages involved. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Using an AI service may cost money.
 
 SETTINGS AND BACKUP
-• Back up settings, at the bottom of Settings, saves a file with the settings you changed, custom prompts, AI services (never their keys), saved searches, and the manager's columns. Restore settings brings them back
+• Back up settings, at the bottom of Settings, saves a file with the settings you changed, custom prompts, About me, AI services (never their keys), saved searches, and the manager's columns. Restore settings brings them back
 • Only the settings you change are saved, so improved defaults in later versions still reach you
 
 FOR DEVELOPERS
@@ -181,7 +181,7 @@ At install, Firefox asks for one thing: "Read and modify bookmarks". Anything el
 PRIVACY
 • No account, no analytics, no tracking, no ads
 • Your bookmarks stay in your browser
-• The settings you change and your custom prompts sync through Firefox Sync where enabled
+• The settings you change and your custom prompts and About me sync through Firefox Sync where enabled
 
 OPTIONAL AI FOLDER SUGGESTIONS (OFF BY DEFAULT)
 AI is optional, and everything above works without it. To use it, you need an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer. Turn on AI in Settings and add the service you chose. Bookmark Scout then suggests folders for the current page, in the popup or with the AI quick save shortcut, and can create a new folder after you review it.
@@ -189,7 +189,7 @@ AI is optional, and everything above works without it. To use it, you need an ac
 When you ask for suggestions, the current page's title and address and your folder names are sent directly from your browser to the AI service you chose, under that service's terms, and, only if you turn on Read page content, the page's text. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Using an AI service may cost money.
 
 SETTINGS AND BACKUP
-• Back up settings, at the bottom of Settings, saves a file with the settings you changed, custom prompts, AI services (never their keys), and saved searches. Restore settings brings them back
+• Back up settings, at the bottom of Settings, saves a file with the settings you changed, custom prompts, About me, AI services (never their keys), and saved searches. Restore settings brings them back
 • Only the settings you change are saved, so improved defaults in later versions still reach you
 
 FOR DEVELOPERS

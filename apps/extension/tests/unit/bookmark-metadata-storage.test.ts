@@ -3,6 +3,8 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import {
   getStoredBookmarkMetadata,
+  getTagVocabulary,
+  matchTagSpellings,
   mergeStoredBookmarkMetadata,
   parseBookmarkTags,
   reconcileStoredBookmarkMetadata,
@@ -59,6 +61,25 @@ describe('bookmark metadata storage', () => {
       '三',
     ]);
     expect(parseBookmarkTags('  ')).toEqual([]);
+  });
+
+  it('lists tags in use, most used first, in the spelling most bookmarks use', () => {
+    expect(
+      getTagVocabulary({
+        1: { tags: ['React', 'ｊｓ'] },
+        2: { tags: ['react', 'CSS'] },
+        3: { tags: ['react', 'js', 'js', 'api'] },
+        4: { tags: ['react', 'js'] },
+      }),
+    ).toEqual(['react', 'js', 'api', 'CSS']);
+  });
+
+  it('writes suggested tags in the spelling already in use', () => {
+    expect(matchTagSpellings(['REACT', 'Ｊｓ ', 'new-tag'], ['react', 'js'])).toEqual([
+      'react',
+      'js',
+      'new-tag',
+    ]);
   });
 
   it('drops a record that is saved empty', async () => {

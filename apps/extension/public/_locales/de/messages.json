@@ -2235,6 +2235,14 @@
         "message": "Beim Speichern geprüfter Vorschläge doppelte Tags unabhängig von Groß-/Kleinschreibung verwerfen",
         "description": "Auto-tagging dedupe tag description"
     },
+    "settings_autoTaggingSendExistingTags": {
+        "message": "Vorhandene Tags senden",
+        "description": "Settings: Auto-Tagging sends the names of tags already in use"
+    },
+    "settings_autoTaggingSendExistingTagsDesc": {
+        "message": "Auch die Namen Ihrer meistverwendeten Tags senden, damit die KI sie wiederverwendet",
+        "description": "Settings: description of Send Existing Tags"
+    },
     "settings_summarizerEnabled": {
         "message": "Inhaltszusammenfassung aktivieren",
         "description": "Summarizer enabled label"
@@ -5233,6 +5241,22 @@
         "message": "Wie die jeweilige Seite",
         "description": "AI output language option: the language of each page or bookmark title"
     },
+    "aboutMe_title": {
+        "message": "Über mich",
+        "description": "Options > AI: About me, a few words about the user that AI prompts include"
+    },
+    "aboutMe_description": {
+        "message": "Ein paar Worte über Sie, etwa „Ich unterrichte Biologie“, damit KI-Ergebnisse besser passen. Sie gehen mit jeder KI-Anfrage an Ihren KI-Anbieter; leer wird nichts gesendet.",
+        "description": "Options > AI: description of About me; says it is sent to the AI provider"
+    },
+    "aboutMe_length": {
+        "message": "$1 von $2 Zeichen",
+        "description": "Options > AI > About me: characters used of the limit; $1 used, $2 the limit"
+    },
+    "aboutMe_errorSaveFailed": {
+        "message": "„Über mich“ konnte nicht gespeichert werden. Versuchen Sie es erneut.",
+        "description": "Options > AI > About me: saving to sync storage failed"
+    },
     "settings_aiActivityRecording": {
         "message": "KI-Anfragen aufzeichnen",
         "description": "Setting name: record AI requests in the AI activity log on this device"
@@ -5648,6 +5672,42 @@
     "prompt_varLanguage": {
         "message": "Die Sprache der Ausgabe, aus „Ausgabesprache der KI“",
         "description": "Prompt variable description"
+    },
+    "prompt_varExistingTags": {
+        "message": "Ihre meistverwendeten Tags als Block (leer, wenn keine gesendet werden)",
+        "description": "Prompt variable description"
+    },
+    "prompt_varAboutMe": {
+        "message": "Ihr Text unter „Über mich“ als Block (leer, wenn nichts eingetragen ist)",
+        "description": "Prompt variable description"
+    },
+    "prompt_placeholders": {
+        "message": "Platzhalter",
+        "description": "Prompt editor: label of the placeholder list that opens after typing {{"
+    },
+    "prompt_valueNow": {
+        "message": "Aktuell: $1",
+        "description": "Prompt editor: a placeholder's current value; $1 is the value"
+    },
+    "prompt_valueEmpty": {
+        "message": "Derzeit leer, daher weggelassen",
+        "description": "Prompt editor: a placeholder is empty now, so the prompt leaves it out"
+    },
+    "prompt_unknownVariableSuggestion": {
+        "message": "Wird von diesem Tool nicht ausgefüllt: $1. Meinten Sie $2?",
+        "description": "Prompt editor: a placeholder the tool does not fill in, and the one it was probably meant to be; $1 unknown, $2 suggestion"
+    },
+    "prompt_resetToDefault": {
+        "message": "Integrierten Prompt wiederherstellen",
+        "description": "Prompt editor: replace the text with the tool's built-in prompt"
+    },
+    "prompt_previewAdded": {
+        "message": "Wird nach Ihrem Prompt angefügt",
+        "description": "Prompt preview: heading of the fixed rules the app adds after the prompt"
+    },
+    "prompt_editorHint": {
+        "message": "{{ fügt Platzhalter ein; \\{{ schreibt geschweifte Klammern.",
+        "description": "Prompt editor: how to insert a placeholder and how to write literal braces"
     },
     "error_bookmarksApiUnavailable": {
         "message": "Die Lesezeichen-API des Browsers ist nicht verfügbar.",

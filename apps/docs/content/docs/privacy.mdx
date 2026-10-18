@@ -30,6 +30,7 @@ It does not read the content of the pages you visit. After a quick save shortcut
 | Device settings: the folder chosen for quick save, the icon storage limit, AI activity recording, and Ask AI's web search | Local storage on this device | No |
 | Local AI agent settings (on or off, hiding private values, the lookups turned off) and a random id for this browser profile | Local storage on this device | No |
 | Custom prompts (**Prompts** under **AI Tools**): each prompt's name, task, and text, and which prompt each task uses; up to 10 | Browser sync storage | Same as settings |
+| About me (**AI** settings): what you wrote about yourself; up to 1,000 characters | Browser sync storage | Same as settings, and sent to your AI provider with AI requests while it has text |
 | Bookmark table in the manager: shown columns, their order, and the sort | Browser sync storage | Same as settings |
 | Bookmark table column widths and page size | Local storage on this device | No |
 | AI services: each service's name, provider, and model | Local storage on this device | No |
@@ -43,7 +44,7 @@ It does not read the content of the pages you visit. After a quick save shortcut
 
 Scan results from the Tools sidebar are kept only while their dialog is open. Uninstalling the extension removes what it stored; your bookmarks stay in the browser.
 
-**Back up settings** at the bottom of Settings saves a backup file with the settings you changed, your custom prompts, AI services (name, provider, model, Base URL, and provider-specific fields), saved searches, and the table's columns and sort. It never holds API keys or extra headers, and it is not encrypted. See [Settings](/settings).
+**Back up settings** at the bottom of Settings saves a backup file with the settings you changed, your custom prompts, About me, AI services (name, provider, model, Base URL, and provider-specific fields), saved searches, and the table's columns and sort. It never holds API keys or extra headers, and it is not encrypted. See [Settings](/settings).
 
 ## When data leaves your browser
 
@@ -52,11 +53,13 @@ Only when you use one of these, and only to the place named:
 | Feature | Goes to | What is sent |
 | --- | --- | --- |
 | AI folder recommendations, including the AI quick save shortcut | The AI provider you configured | The current page's title and URL, and your folder names. With **Read page content** on, also the page's main text |
-| Auto-Tagging, Content Summarizer, AI Folder Reorganization | The AI provider you configured | Titles, URLs, and folder paths of the bookmarks in scope. With **Read page content** on, Auto-Tagging and Content Summarizer also send each page's main text; AI Folder Reorganization never does |
+| Auto-Tagging, Content Summarizer, AI Folder Reorganization | The AI provider you configured | Titles, URLs, and folder paths of the bookmarks in scope. With **Read page content** on, Auto-Tagging and Content Summarizer also send each page's main text; AI Folder Reorganization never does. Auto-Tagging also sends the names of your most used tags unless **Send Existing Tags** is off |
 | Ask AI | The AI provider you configured | Your messages and the conversation so far, and what the AI looks up to answer: matching bookmarks (with their folders, dates added, tags, and summaries), folder names, the current page's title and URL, whether bookmarked links it checks still work, and with **Read page content** on, the text of pages it reads. With its web search on, the provider also searches the web. The conversation is not saved |
 | Check Dead Links, Metadata Fetcher, Ask AI link checks | Each bookmarked website | A request for the page, without cookies, after you allow website access |
 | Refresh Site Icons | Each bookmarked website | A request for one bookmarked page per site and for an icon file on that site's domain, without cookies, after you allow website access. No third-party icon service is used |
 | Local AI agents, only with **Allow local AI agents** on (off by default) | The bookmark-scout-mcp program on your computer, and the AI agents you run there | What an agent asks for: matching bookmarks (with their folders, dates added, tags, and summaries), folder names, the current page's title and URL, whether bookmarked links still work (after you allow website access), and with **Read page content** on, a page's text. Private values in titles and URLs are hidden unless you turn that off. Agents may send what they read to their own AI provider. Each lookup is in AI activity while **Record requests** is on |
+
+Every AI feature that uses a provider also sends your **About me** text (**AI** settings) while it has any; it is empty by default.
 
 A provider running on your own computer, such as Ollama, keeps AI requests on your machine. So does Chrome's built-in AI: it runs folder suggestions on Chrome's own model on your computer, with no API key, and Chrome downloads that model from Google once, when you ask it to, without any of your data. Bookmark exports, **AI Context Packer** files, and the settings backup are saved as files on your computer and uploaded nowhere. A JSON bookmark export also holds each bookmark's tags and summary; for bookmark and AI context exports, a privacy review can redact sensitive values first. The exact data each AI tool sends is listed in [Set up AI tools](/guides/ai-tools#what-each-tool-sends), and each permission is explained in [Permissions](/permissions).
 

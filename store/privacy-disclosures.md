@@ -1,6 +1,6 @@
 # Privacy Disclosures
 
-What the extension does with data in the source after version `0.3.2` (the next release), checked against the source on 2026-10-15, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/privacy/>.
+What the extension does with data in the source after version `0.3.2` (the next release), checked against the source on 2026-10-18, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/privacy/>.
 
 ## Facts checked in the code
 
@@ -18,6 +18,8 @@ What the extension does with data in the source after version `0.3.2` (the next 
 - Every stored key is listed in `src/lib/storage/registry.ts`, with its area and what the backup file does with it; the key names below come from there. Settings are stored as overrides: only the settings the user changed from their default are kept (`src/lib/settings-storage.ts`). Most go to `storage.sync`; the device settings in `DEVICE_SETTING_KEYS` (the quick save folder, the site icon storage limit, AI activity recording, Ask AI web search, and access for local AI agents) stay in `storage.local`. AI services and their credentials are no longer settings and never sync.
 - AI provider credentials (API key, Base URL, extra headers, provider-specific fields) are stored with `local:` storage items only (`src/lib/ai-provider-storage.ts`, registry `backup: 'secret'`): they are not synced. The backup file holds only each service's Base URL and provider-specific fields (`aiEndpoints`, `src/services/backup.ts`), never the API key or the extra headers, which can carry a key (`AI_SECRET_FIELDS`). Where the browser supports it (Chrome 140 and later), `storage.local` is also closed to content scripts (`src/lib/storage/cleanup.ts`).
 - Custom prompts (Settings > AI Tools > Prompts) are in `storage.sync`, one item per prompt plus an index, at most `max_prompts` of them (`apps/extension/config/ai/prompt-library.toml`, `src/lib/prompt-library-storage.ts`). A prompt's text is sent to the AI provider as the instructions of the task that uses it.
+- **About me** (Settings > AI; empty by default) is its own `storage.sync` item (`ai.about-me`, `src/lib/about-me-storage.ts`), at most `max_length` characters (`apps/extension/config/ai/about-me.toml`). While it has text, the built-in prompt of every AI feature that calls a provider (folder suggestions, Auto-Tagging, Content Summarizer, AI Folder Reorganization, Ask AI) includes it in an `<about_user>` block, so it goes to the AI provider with each of their requests; a custom prompt sends it only when it uses `{{aboutMe}}` (`src/services/prompt-config.ts`). Chrome's built-in AI prompts never include it.
+- **Existing tags**: Auto-Tagging also sends the names of the tags already saved on any bookmark (`bookmarks.metadata`), most used first, at most `[existing_tags] max_tags` names and `max_chars` characters (`apps/extension/config/ai/prompts.toml`), so the model reuses them. The **Send Existing Tags** setting (on by default) turns this off; a custom prompt sends them only when it uses `{{existingTags}}`.
 - The AI activity log (Settings > AI > AI activity) records nothing until the user turns on recording, a device setting that is off by default. It then keeps the last AI requests, with their request and response bodies (for Chrome's built-in AI, the prompt the model read and its answer), in `storage.local` on this device; the count and body length are set in `apps/extension/config/ai/activity.toml`. Credential headers, the user's extra headers, and API keys in URLs are redacted before an entry is stored, and headers whose names look like credentials are redacted again when it is read (`src/lib/ai-activity-storage.ts`). Turning recording off deletes the log (`src/hooks/use-ai-activity.ts`).
 
 ## Data inventory
@@ -34,13 +36,14 @@ What the extension does with data in the source after version `0.3.2` (the next 
 | Changes local AI agents asked for, waiting for approval (`agent-bridge.approvals`): the action, its input (such as a page's title and URL and a folder), and the name the agent gave; each waits at most 5 minutes (`apps/extension/config/ai/agent-approvals.toml`) | `storage.session`, cleared when the browser closes | No | No |
 | Local AI agent bridge status (`agent-bridge.status`): whether the program is running, and the browser's reason when it is not | `storage.session`, cleared when the browser closes | No | No |
 | Custom prompts (`prompts.index`, `prompts.prompt/<id>`): each prompt's name, task, and text, and which prompt each task uses; at most 10 | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on. A prompt's text is sent to the AI provider as the instructions of the task that uses it | Yes |
+| About me (`ai.about-me`): what the user wrote about themselves for AI prompts; at most 1,000 characters | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on. Sent to the AI provider with each AI request whose prompt includes it (every built-in prompt does) | Yes |
 | AI services (`ai.services`): each service's name, provider, and model | `storage.local` | No | Yes |
 | Bookmark table view (`manager.table-view`): visible columns, their order, and the sort | `storage.sync` | Same as settings. Contains no bookmark content. | Yes |
 | Bookmark table layout (`manager.table-layout`): column widths and page size | `storage.local` | No | No |
 | AI provider settings (`ai.credentials`): API key, Base URL, extra headers, and provider-specific fields, per AI service | `storage.local`, never synced | The key and headers are sent only to the configured provider, as request authentication | Base URL and provider-specific fields: yes, as `aiEndpoints`. API key and extra headers: never |
 | Model lists fetched from each AI service (`ai.model-cache`): model ids and names, offered for 7 days | `storage.local` | No | No |
 | AI activity log (`ai.activity-log`), only while the user has AI activity recording on (off by default, per device): the last AI requests with their request and response bodies, which hold bookmark titles, URLs, folder paths, and with Read page content, page text, and the bookmark changes Ask AI made and every lookup a local AI agent made (the action, its input, its result, and the name the agent gave); credentials redacted before storing; deleted when recording is turned off | `storage.local` | No; never synced. The user can copy an entry to the clipboard | No |
-| Tags and summaries (`bookmarks.metadata`) | `storage.local` | Sent to the AI provider by Ask AI for the bookmarks it looks up. Written into JSON bookmark exports (on each bookmark's own entry) and into AI context exports when the user turns that on | No |
+| Tags and summaries (`bookmarks.metadata`) | `storage.local` | Sent to the AI provider by Ask AI for the bookmarks it looks up. The names of the most used tags, without the bookmarks they belong to, are sent by Auto-Tagging while Send Existing Tags is on (the default). Written into JSON bookmark exports (on each bookmark's own entry) and into AI context exports when the user turns that on | No |
 | Saved searches (`search.saved`) | `storage.local` | No | Yes |
 | Recent folders (`folders.recent`, for the popup, the right-click menu, and quick save) | `storage.local` | No | No |
 | Last quick save (`quick-save.last`): the page title and URL, where it was saved, and the folders offered, for Undo and Move | `storage.session`, cleared when the browser closes | No | No |
@@ -58,7 +61,7 @@ Only when AI is turned on and the user starts the feature (or turned on Auto-rec
 | Feature | Sent to the chosen provider |
 | --- | --- |
 | Folder suggestions (popup, side panel, AI quick save shortcut) | Current page title and URL, and the names and paths of all bookmark folders. With Read page content on, also the page's own title and main text. With Chrome's built-in AI (popup, side panel, and AI quick save): nothing leaves the device; the page title and URL, a shortlist of folder paths, and with Read page content a short text excerpt go to Chrome's model on the computer |
-| Auto-Tagging | ID, title, URL, and folder path of each bookmark in the current folder. With Read page content on, also each page's own title and main text |
+| Auto-Tagging | ID, title, URL, and folder path of each bookmark in the current folder. With Send Existing Tags on (the default), also the names of up to 200 of the user's most used tags. With Read page content on, also each page's own title and main text |
 | Content Summarizer | ID, title, URL, folder path, and optionally the domain of each bookmark in the current folder. With Read page content on, also each page's own title and main text |
 | AI Folder Reorganization | Titles, URLs, and folder paths of the bookmarks in the chosen scope |
 | Verify Service | A fixed test prompt, no bookmark data |
@@ -67,13 +70,15 @@ Only when AI is turned on and the user starts the feature (or turned on Auto-rec
 | AI Context Packer | Nothing. It downloads a file; it never contacts a provider. |
 | Access for local AI agents | Nothing to the chosen provider. The lookups listed under "Facts checked in the code" go to the `bookmark-scout-mcp` program on this computer, which passes them to the AI agent that asked; that agent may send them to its own provider. Works with AI off. |
 
+Every feature above that calls a provider also sends the user's **About me** text while it has any (empty by default), and the output language as a language name (from the AI output language setting).
+
 Ollama and custom endpoints can point to a server on the user's own machine, in which case nothing leaves the device. Chrome's built-in AI always runs on the user's computer.
 
 ## Files the user saves
 
 The extension uploads none of these files; each is downloaded to wherever the user saves it, and what happens to it then is up to the user.
 
-- **Backup file** (Settings > Export, `bookmark-scout-backup.json`, named in `apps/extension/config/ui/options.toml`): every registry item marked `backup: 'include'` (the "In the backup file" column above), as stored: the changed settings (synced and device ones, including the quick save folder id), custom prompts, AI services (name, provider, and model), saved searches, and the table view (columns and sort). Of `ai.credentials`, it holds only each AI service's Base URL and provider-specific fields (such as an Azure resource name or API version, or an OpenAI organization or project), in an `aiEndpoints` section keyed by service id, with the names of the secret fields it left out. It never holds the API key or the extra headers, which can carry a key (`AI_SECRET_FIELDS` in `src/lib/ai-provider-storage.ts`, `src/services/backup.ts`); after a restore, a service missing either is marked **Needs setup** in Settings > AI, and the restore notice lists what was not restored for which service. It is plain JSON, not encrypted. Settings > Import restores it, replacing each item the file holds.
+- **Backup file** (Settings > Export, `bookmark-scout-backup.json`, named in `apps/extension/config/ui/options.toml`): every registry item marked `backup: 'include'` (the "In the backup file" column above), as stored: the changed settings (synced and device ones, including the quick save folder id), custom prompts, About me, AI services (name, provider, and model), saved searches, and the table view (columns and sort). Of `ai.credentials`, it holds only each AI service's Base URL and provider-specific fields (such as an Azure resource name or API version, or an OpenAI organization or project), in an `aiEndpoints` section keyed by service id, with the names of the secret fields it left out. It never holds the API key or the extra headers, which can carry a key (`AI_SECRET_FIELDS` in `src/lib/ai-provider-storage.ts`, `src/services/backup.ts`); after a restore, a service missing either is marked **Needs setup** in Settings > AI, and the restore notice lists what was not restored for which service. It is plain JSON, not encrypted. Settings > Import restores it, replacing each item the file holds.
 - **Bookmark exports** (HTML, JSON, Markdown, CSV), with an optional privacy review that can redact sensitive values first. A JSON export also holds each exported bookmark's tags and summary, on that bookmark's own entry (`tags` and `summary`), and importing it gives each bookmark it creates its own tags and summary (`src/services/bookmark-export.ts`, `src/services/bookmark-import.ts`).
 - **AI context exports** (AI Context Packer): bookmarks, and tags and summaries when the user turns that on, in a file for an AI chat. Nothing is sent to a provider.
 
@@ -87,7 +92,7 @@ Submitted for 0.3.0 (2026-10-08): the maintainer left every category unchecked, 
 
 | Category | Suggested answer | Reason |
 | --- | --- | --- |
-| Personally identifiable information | No | Not collected |
+| Personally identifiable information | No | Not collected. About me is free text the user chooses to write for their own AI provider (empty by default), sent only to that provider; the maintainer may still prefer to check this |
 | Health information | No | Not collected |
 | Financial and payment information | No | Not collected |
 | Authentication information | Yes | The user's own AI provider API key is stored locally and sent to that provider |
@@ -124,7 +129,7 @@ So the install prompt says the extension does not require data collection, and F
 
 | Feature | Categories | Asked for when | Sent where |
 | --- | --- | --- | --- |
-| AI features: folder suggestions, Ask AI, Auto-Tagging, Content Summarizer, AI Folder Reorganization | `authenticationInfo` (the user's API key), `bookmarksInfo` (bookmark titles, URLs, folder paths), `browsingActivity` (the current page's title and URL, as the browser's history holds them) | The user turns on **Enable AI** | The AI provider the user configured |
+| AI features: folder suggestions, Ask AI, Auto-Tagging, Content Summarizer, AI Folder Reorganization | `authenticationInfo` (the user's API key), `bookmarksInfo` (bookmark titles, URLs, folder paths, and the names of the user's tags), `browsingActivity` (the current page's title and URL, as the browser's history holds them) | The user turns on **Enable AI** | The AI provider the user configured |
 | Read page content | `websiteContent` (the text of the pages read), with access to all websites | The user turns on **Read page content** | The same provider |
 | Verify Service, Refresh Models | `authenticationInfo` | The button click, in the same prompt as access to that provider's site | The same provider |
 | Access for local AI agents | `bookmarksInfo`, `browsingActivity` (the current page's title and URL); page text only with Read page content, under its own `websiteContent` consent | The user turns on **Allow local AI agents**, in the same prompt as `nativeMessaging` | The `bookmark-scout-mcp` program on the user's computer and the AI agents the user runs there |

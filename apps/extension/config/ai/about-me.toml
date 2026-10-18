@@ -1,0 +1,8 @@
+# "About me" (Options > AI): a few words about the user that AI prompts include as {{aboutMe}}.
+# Read by src/lib/about-me-storage.ts.
+
+# Longest text, in characters. It is its own synced item: even with every character stored at
+# 6 bytes (Chrome escapes `<`), it stays within the 8,192-byte sync item quota
+# (tests/unit/about-me.test.ts). Chat assistants allow about 1,500 characters for the same purpose;
+# that would not fit the quota at its worst.
+max_length = 1000

@@ -155,6 +155,10 @@ Debajo de estos, el panel del proveedor contiene **Clave de API**, **URL base**,
 | --- | --- | --- |
 | **Idioma de salida de la IA** | Igual que la extensión | El idioma en el que la IA escribe etiquetas, resúmenes y nombres de carpetas nuevas: el de la extensión, uno que elijas o **Igual que cada página**, el idioma de cada página o título de marcador. Preguntar a la IA responde en el idioma en que escribes y usa este solo cuando no está claro |
 
+### Sobre mí [#about-me]
+
+**Sobre mí** (vacío de forma predeterminada) son unas palabras sobre ti, como «Soy docente; guardo material para clases», de hasta 1.000 caracteres. Mientras tenga texto, los prompts integrados de cada función de IA lo envían a tu proveedor de IA para adaptar los resultados; un prompt personalizado solo lo envía si usa `{{aboutMe}}`. Se sincroniza con tu cuenta del navegador y se guarda al salir del campo.
+
 ### Qué puede hacer Preguntar a la IA [#ask-ai-actions]
 
 Aquí aparece todo lo que Preguntar a la IA puede consultar y cambiar, y todo está activado de forma predeterminada. Si desactivas algo, no se le ofrece en absoluto. Aplicar un plan de cambios siempre te pide permiso primero, elijas lo que elijas aquí.
@@ -166,7 +170,7 @@ Cada herramienta tiene un interruptor **Activar** (activado de forma predetermin
 | Herramienta | Ajustes y valores predeterminados |
 | --- | --- |
 | **Empaquetador de contexto para IA** | **Formato de salida** Markdown; **Incluir rutas de carpeta**, **Incluir fechas**, **Incluir etiquetas guardadas** e **Incluir resúmenes guardados** activados; **Máximo de elementos** 200; **Profundidad máxima** 8; **Longitud del extracto** 240 |
-| **Etiquetado automático** | **Mínimo de etiquetas** 2; **Máximo de etiquetas** 5; **Estilo de etiquetas** kebab-case; **Modo de combinación** Añadir; **Quitar etiquetas duplicadas** activado |
+| **Etiquetado automático** | **Mínimo de etiquetas** 2; **Máximo de etiquetas** 5; **Estilo de etiquetas** kebab-case; **Modo de combinación** Añadir; **Quitar etiquetas duplicadas** activado; **Enviar etiquetas existentes** activado |
 | **Generador de resúmenes** | **Longitud del resumen** 160; **Incluir el dominio como pista** activado; **Modo de combinación** Reemplazar |
 | **Reorganización de carpetas con IA** | **Confianza mínima** 55 % (los movimientos por debajo se descartan); **Tamaño del lote** 100 marcadores por solicitud |
 
