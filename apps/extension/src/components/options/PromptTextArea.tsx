@@ -5,7 +5,14 @@
  * `aria-controls`, `aria-activedescendant`), so focus stays in the text: Base UI's Autocomplete and
  * Combobox fill one value per input and cannot insert a token in the middle of a text.
  */
-import { type Ref, type TextareaHTMLAttributes, useId, useState } from 'react';
+import {
+  type Ref,
+  type TextareaHTMLAttributes,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 /** `{{` and the name typed so far, right before the caret; `\{{` is literal braces. */
 const TYPED_PLACEHOLDER = /(?<!\\)\{\{(\w*)$/;
@@ -47,6 +54,17 @@ export function PromptTextArea({
   const [active, setActive] = useState(0);
   // Escape hides the list until the text or caret moves on.
   const [dismissedAt, setDismissedAt] = useState<number>();
+  // Where the caret goes once an inserted placeholder is in the text. Placed in the same commit as
+  // the new value, before the next key arrives: a caret placed on a later frame moved keys typed
+  // right after the insertion back into the middle of the text.
+  const caretAfterInsert = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    const position = caretAfterInsert.current;
+    if (position === null) return;
+    caretAfterInsert.current = null;
+    textRef.current?.focus();
+    textRef.current?.setSelectionRange(position, position);
+  });
 
   const typed = value.slice(0, caret).match(TYPED_PLACEHOLDER);
   const query = typed?.[1].toLowerCase() ?? '';
@@ -70,10 +88,7 @@ export function PromptTextArea({
     const position = start + token.length;
     setCaret(position);
     setActive(0);
-    requestAnimationFrame(() => {
-      textRef.current?.focus();
-      textRef.current?.setSelectionRange(position, position);
-    });
+    caretAfterInsert.current = position;
   };
 
   const optionId = (index: number) => `${listId}-option-${index}`;

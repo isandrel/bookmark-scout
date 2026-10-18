@@ -101,11 +101,18 @@ test('[mocked provider contract] auto-tagging asks for the AI output language: t
   ]);
   const systems: string[] = [];
   await context.route('https://language.e2e.invalid/v1/**', async (route) => {
-    const body = route.request().postDataJSON() as { messages: { role: string; content: string }[] };
+    const body = route.request().postDataJSON() as {
+      messages: { role: string; content: string }[];
+    };
     systems.push(body.messages.find((message) => message.role === 'system')?.content ?? '');
     const content = JSON.stringify({
       items: [
-        { bookmarkId: ids['Language Fixture'], title: 'Language Fixture', tags: ['e2e'], reason: 'r' },
+        {
+          bookmarkId: ids['Language Fixture'],
+          title: 'Language Fixture',
+          tags: ['e2e'],
+          reason: 'r',
+        },
       ],
     });
     await route.fulfill({
@@ -149,7 +156,9 @@ test('[mocked provider contract] auto-tagging asks for the AI output language: t
 async function mockTagging(context: BrowserContext, baseUrl: string, bookmarkId: string) {
   const systems: string[] = [];
   await context.route(`${baseUrl}/**`, async (route) => {
-    const body = route.request().postDataJSON() as { messages: { role: string; content: string }[] };
+    const body = route.request().postDataJSON() as {
+      messages: { role: string; content: string }[];
+    };
     systems.push(body.messages.find((message) => message.role === 'system')?.content ?? '');
     const content = JSON.stringify({
       items: [{ bookmarkId, title: 'Fixture', tags: ['e2e'], reason: 'r' }],
@@ -255,11 +264,36 @@ test('the prompt editor completes placeholders after {{, flags unknown ones, and
   await expect(text).toHaveAttribute('aria-activedescendant', /option-1$/);
   await text.press('ArrowUp');
   await text.pressSequentially('lang');
+  // A key typed right after an insertion stays where it was typed, even when the next frame comes
+  // after it, as on a busy machine: the caret was once put back on the next frame, which sent the
+  // keys typed after that into the middle of the text ("{{language}}{{ ").
+  type Frames = { pending: number; next: typeof requestAnimationFrame };
+  await page.evaluate(() => {
+    const frames: Frames = { pending: 0, next: window.requestAnimationFrame.bind(window) };
+    Object.assign(window, { e2eFrames: frames });
+    window.requestAnimationFrame = (callback) => {
+      frames.pending += 1;
+      return window.setTimeout(() => {
+        frames.next((time) => {
+          frames.pending -= 1;
+          callback(time);
+        });
+      }, 300);
+    };
+  });
+  const framesPending = () =>
+    page.evaluate(() => (window as unknown as { e2eFrames: Frames }).e2eFrames.pending);
   await text.press('Tab');
-  await expect(text).toHaveValue('Use {{maxTags}} {{language}}');
+  await text.pressSequentially(' ');
+  await expect.poll(framesPending).toBe(0);
+  await text.pressSequentially('{{');
+  await expect(text).toHaveValue('Use {{maxTags}} {{language}} {{');
+  await page.evaluate(() => {
+    const { next } = (window as unknown as { e2eFrames: Frames }).e2eFrames;
+    window.requestAnimationFrame = next;
+  });
 
   // Escape closes the list, not the dialog.
-  await text.pressSequentially(' {{');
   await expect(list).toBeVisible();
   await text.press('Escape');
   await expect(list).toHaveCount(0);
