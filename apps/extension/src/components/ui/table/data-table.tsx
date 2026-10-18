@@ -23,7 +23,7 @@ const STICKY_COLUMN_ID = 'actions';
 // being translucent; the variants mirror TableRow hover/selected and folder rows (`is-folder`).
 // Tailwind only sees literal class names, so the mixes are spelled out.
 const stickyColumnClass = cn(
-  'sticky right-0 z-10 border-l bg-card',
+  'sticky right-0 z-10 border-l bg-card px-1',
   'group-hover:bg-[color-mix(in_srgb,var(--color-muted)_50%,var(--color-background))]',
   'group-[.is-folder]:bg-[color-mix(in_srgb,var(--color-muted)_50%,var(--color-background))]',
   'group-[.is-folder]:group-hover:bg-[color-mix(in_srgb,var(--color-muted)_70%,var(--color-background))]',
@@ -491,8 +491,8 @@ export function DataTable<TData extends RowData>({
     () => getRenderedColumnSizing(columnSizing, visibleColumnIds, tableWidth),
     [columnSizing, tableWidth, visibleColumnIds],
   );
-  // Size updates arrive relative to the rendered widths (Title may be filling spare room); only
-  // widths the user actually set are kept.
+  // Size updates arrive relative to the rendered widths (Title and URL may be filling spare
+  // room); only widths the user actually set are kept.
   const renderedColumnSizingRef = React.useRef(renderedColumnSizing);
   renderedColumnSizingRef.current = renderedColumnSizing;
   const handleColumnSizingChange = React.useCallback((updater: Updater<ColumnSizingState>) => {
@@ -924,7 +924,7 @@ export function DataTable<TData extends RowData>({
                           className={cn(
                             header.column.getCanResize() && 'relative truncate',
                             header.column.id === STICKY_COLUMN_ID &&
-                              'sticky right-0 z-10 border-l bg-card',
+                              'sticky right-0 z-10 border-l bg-card px-1',
                           )}
                         >
                           {header.isPlaceholder

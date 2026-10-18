@@ -85,6 +85,11 @@ export type BookmarkColumn = {
   /** Whether the View menu can hide it (default true). */
   enableHiding?: boolean;
   size?: BookmarkColumnSize;
+  /**
+   * The column's share of the width the other columns leave, while the user has not sized it;
+   * its `size` is then the narrowest it fills to. Columns without one keep their width.
+   */
+  fillWeight?: number;
   /** Hidden while the table is narrower than this many pixels; the saved choice is kept. */
   hideBelowWidth?: number;
   /** Backs a filter only: never displayed, listed in the View menu, or saved in the table view. */
@@ -266,8 +271,9 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     },
     // The search box: it matches the title or the address, as the browser's own manager does.
     filterFn: (row, _id, value) => includesQuery(value, row.original.title, row.original.url),
-    // Title fills the room the other columns leave until the user sizes it (FILL_COLUMN_ID);
-    // `size` is the narrowest it fills to, and `minSize` keeps a resized Title readable.
+    // Title shares the room the other columns leave with URL until the user sizes it
+    // (`fillWeight`); `size` is the narrowest it fills to, and `minSize` keeps a resized Title
+    // readable.
     ...getManagerColumnLayout('title'),
   },
   {
@@ -302,11 +308,11 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       // table data is the folder's children and the index says where the item sits among them.
       const position = { index: bookmark.index ?? 0, siblingCount: table.options.data.length };
       return (
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end gap-1">
           {isModifiableBookmark(bookmark) && (
-            // Shown on hover or focus as an overlay left of the menu, so the pinned column only
-            // reserves room for the menu button and never pushes other columns out of view.
-            <div className="pointer-events-none absolute right-full top-1/2 mr-1 -translate-y-1/2 rounded-md border bg-background p-1 opacity-0 shadow-sm transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
+            // Shown on hover or focus in the column's own room before the menu (its width in
+            // config/ui/manager-table.toml), so they never cover the row's other columns.
+            <div className="pointer-events-none opacity-0 transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
               <MoveBookmarkButtons
                 position={position}
                 onMove={async (direction) => {
