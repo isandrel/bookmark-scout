@@ -1,6 +1,6 @@
 # Korean Listing Copy (한국어)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-15, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox full description on 2026-10-15, the Chrome Web Store and Edge full description on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
@@ -48,7 +48,7 @@ AI 북마크
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-The same Edge condition as in `en.md` applies.
+Plain text, 5,062 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout(북마크 스카우트)는 툴바에서 또는 키보드 단축키 하나로 모든 페이지를 몇 초 만에 알맞은 폴더에 저장하고, 브라우저를 떠나지 않고 북마크를 찾고 정돈할 수 있게 도와주는 확장 프로그램입니다. 무료이며, 계정도 광고도 없습니다.
@@ -107,6 +107,7 @@ Bookmark Scout는 브라우저의 북마크 페이지를 브라우저 자체 관
 선택형 AI(기본값 꺼짐)
 AI는 선택 사항이며, 위의 모든 기능은 AI 없이 동작합니다. AI를 쓰려면 AI 회사의 계정이 필요하며 사용할 때마다 약간의 요금이 들 수 있습니다. 내 컴퓨터에서 실행하는 무료 AI 프로그램을 쓸 수도 있습니다. Bookmark Scout에는 자체 AI 서비스가 없으므로, 설정에서 AI를 켜고 선택한 서비스를 추가하세요.
 • 현재 페이지에 맞는 폴더 추천(새 폴더도 먼저 검토한 뒤 생성)
+• Chrome에서는 Chrome 내장 AI의 무료 폴더 추천: 내 컴퓨터에서 실행되며 계정이나 키가 필요 없습니다(컴퓨터가 실행할 수 있는 경우)
 • 저장하기 전에 검토하는 태그 추천과 짧은 요약
 • 폴더 재구성 계획(변경하기 전에 항상 미리 보기)
 • AI에게 묻기: 북마크에 대해 채팅합니다. 단어, 폴더, 태그, 사이트, 추가한 날짜로 북마크를 검색하고, 중복을 찾고, 폴더를 추천하고, 현재 페이지를 살펴볼 수 있습니다
@@ -114,6 +115,7 @@ AI는 선택 사항이며, 위의 모든 기능은 AI 없이 동작합니다. AI
 • 답변 끝에 버튼이 표시될 수 있습니다: 후속 질문, 고를 수 있는 선택지, 추천 폴더에 페이지 저장, 북마크 열기. 클릭하기 전에는 아무 일도 일어나지 않습니다
 • 'AI에게 묻기'가 조회하거나 변경할 수 있는 항목 선택(설정 > AI)
 • 페이지 내용 읽기(기본값 꺼짐): 제목과 주소뿐 아니라 각 페이지의 본문도 보내 더 나은 제안을 받습니다
+• 태그, 요약, 새 폴더 이름을 내 언어, 직접 고른 언어, 또는 각 페이지의 언어로 받습니다(설정 > AI)
 
 AI 기능을 사용하면 해당 기능에 필요한 데이터가 브라우저에서 사용자가 선택한 AI 서비스로 직접 전송되며, 해당 서비스의 약관에 따라 처리됩니다. 전송되는 데이터는 북마크 제목, 주소, 폴더 이름, 북마크를 추가한 날짜, 저장된 태그와 요약, 현재 페이지의 제목과 주소, 'AI에게 묻기' 메시지, 작성한 내 소개(있는 경우), 'AI에게 묻기'가 확인한 링크의 작동 여부이며, '페이지 내용 읽기'를 켠 경우에만 관련 페이지의 본문도 포함됩니다. Bookmark Scout로는 아무것도 전송되지 않습니다. API 키는 이 브라우저의 로컬 확장 프로그램 저장소에 보관되며 동기화되지 않습니다. AI 서비스 사용에는 요금이 발생할 수 있습니다.
 

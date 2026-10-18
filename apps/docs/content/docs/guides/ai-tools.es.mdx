@@ -10,6 +10,8 @@ Las funciones de IA son **opcionales y están desactivadas de forma predetermina
 
 También eliges un **modelo**: la versión de IA que ofrece la empresa, por ejemplo una más rápida o una más inteligente. Cuando la IA está activada, las solicitudes van directamente de tu navegador al proveedor que elegiste, con tu clave.
 
+Solo para sugerir carpetas, Chrome puede funcionar sin cuenta ni clave: consulta [IA gratuita en este equipo](#free-ai-on-this-computer).
+
 <Callout type="warn" title="Antes de activar la IA">
 Las herramientas de IA envían títulos de marcadores, URLs y nombres o rutas de carpetas al proveedor que configures. El proveedor trata esos datos según sus propias condiciones, y el uso de su API puede costar dinero. Revisa cada sugerencia antes de aplicarla.
 </Callout>
@@ -116,13 +118,13 @@ Verificar y Actualizar indican la causa probable: una clave rechazada (401, o 40
 
 ## Escribir tus propios prompts [#write-your-own-prompts]
 
-Cada herramienta de IA empieza con un prompt integrado. Para cambiar cómo se comporta una herramienta, ve a **Opciones**, luego a **Herramientas de IA** y luego a **Prompts**:
+Cada herramienta de IA empieza con un prompt integrado. Para cambiar cómo se comporta una herramienta, ve a **Configuración**, luego a **Herramientas de IA** y luego a **Prompts**:
 
 1. Para leer antes el prompt integrado de una herramienta, haz clic en el icono del ojo que está a su lado. Haz clic en **Personalizar**, aquí o en el visor, y se abre el editor con el prompt integrado como punto de partida.
 2. Edita el texto. Haz clic en una variable como `{{maxTags}}` para insertarla; la herramienta la rellena con tu configuración. **Vista previa con la configuración actual** muestra el resultado. También puedes escribir `{{` y elegir uno de la lista, que muestra qué es cada marcador y su valor actual. `{{today}}`, `{{language}}` y `{{aboutMe}}` funcionan en todas las herramientas, y `{{existingTags}}` en el Etiquetado automático; un marcador sin nada que rellenar, como `{{aboutMe}}` con Sobre mí vacío, se omite junto con su línea. Escribe `\{{` para llaves literales. Un marcador que la herramienta no rellena se señala, con una sugerencia cuando parece una errata, y **Restablecer el prompt integrado** vuelve a empezar.
 3. Haz clic en **Guardar prompt**. El nuevo prompt pasa a ser el prompt de la herramienta.
 
-Guarda varios prompts por herramienta, hasta 10 en total, y cambia de uno a otro con el menú de la herramienta; **Predeterminado (integrado)** vuelve al original. Tus prompts se sincronizan entre tus dispositivos a través de tu cuenta del navegador, así que cada uno debe ocupar menos de 7 KB. Bookmark Scout añade sus propias reglas de formato de salida después de tu prompt, así que los resultados se cargan aunque tu prompt pida otra cosa. También añade una línea que pide el idioma elegido en **Idioma de salida de la IA** (**Opciones**, luego **IA**); en tu propio prompt, `{{language}}` es ese idioma.
+Guarda varios prompts por herramienta, hasta 10 en total, y cambia de uno a otro con el menú de la herramienta; **Predeterminado (integrado)** vuelve al original. Tus prompts se sincronizan entre tus dispositivos a través de tu cuenta del navegador, así que cada uno debe ocupar menos de 7 KB. Bookmark Scout añade sus propias reglas de formato de salida después de tu prompt, así que los resultados se cargan aunque tu prompt pida otra cosa. También añade una línea que pide el idioma elegido en **Idioma de salida de la IA** (**Configuración**, luego **IA**); en tu propio prompt, `{{language}}` es ese idioma.
 
 ## Qué envía cada herramienta [#what-each-tool-sends]
 
@@ -141,7 +143,7 @@ Activa **Recomendar al abrir** para pedir recomendaciones de carpetas cada vez q
 
 ## Leer el contenido de la página [#read-page-content]
 
-Los títulos y las URLs no siempre dicen de qué trata una página. Activa **Leer el contenido de la página** en **Opciones**, luego en **IA**, y las recomendaciones de carpetas, el **Etiquetado automático** y el **Generador de resúmenes** también envían el texto principal de cada página. Al activarlo, se pide acceso a los sitios web; si lo rechazas, sigue desactivado.
+Los títulos y las URLs no siempre dicen de qué trata una página. Activa **Leer el contenido de la página** en **Configuración**, luego en **IA**, y las recomendaciones de carpetas, el **Etiquetado automático** y el **Generador de resúmenes** también envían el texto principal de cada página. Al activarlo, se pide acceso a los sitios web; si lo rechazas, sigue desactivado.
 
 - Bookmark Scout descarga cada página por su cuenta, sin tus cookies, así que obtienes la versión del sitio sin sesión iniciada. Conserva el texto del artículo sin menús, scripts, imágenes ni direcciones de enlaces.
 - Cada página envía hasta unos 3000 caracteres, y una ejecución de una herramienta lee hasta 40 páginas. Los marcadores posteriores de una carpeta grande se envían solo con su título y su URL, igual que las páginas que no cargan.
@@ -158,12 +160,12 @@ Haz clic en el botón de chat que está junto al cuadro de búsqueda en la venta
 - OpenAI, Anthropic, Google Gemini y xAI también pueden buscar en la web. Actívalo con el botón del globo que está junto al cuadro de mensaje; sigue desactivado hasta que lo actives, y es el propio proveedor quien hace la búsqueda.
 - La conversación solo se conserva mientras el chat está abierto. **Nuevo chat** la borra, y al cerrar la ventana emergente termina.
 - Las instrucciones que sigue son el prompt **Preguntar a la IA** de la biblioteca de prompts, así que puedes verlas o reemplazarlas como cualquier otro prompt.
-- **Qué puede hacer Preguntar a la IA**, en **Opciones** y luego **IA**, muestra todo lo que puede consultar y cambiar. Si desactivas algo, no se le ofrece en absoluto a Preguntar a la IA. Aplicar un plan de cambios siempre te pide permiso primero.
+- **Qué puede hacer Preguntar a la IA**, en **Configuración** y luego **IA**, muestra todo lo que puede consultar y cambiar. Si desactivas algo, no se le ofrece en absoluto a Preguntar a la IA. Aplicar un plan de cambios siempre te pide permiso primero.
 - Para desarrolladores: los agentes de IA de tu equipo, como Claude Code, pueden usar las mismas consultas y cambios; consulta [Usar con agentes de IA locales](/guides/local-agents).
 
 ## Ver lo que se envió [#see-what-was-sent]
 
-Para comprobar exactamente qué envió una herramienta y qué respondió el proveedor, ve a **Opciones**, luego a **IA**, y activa **Registrar solicitudes** en **Actividad de IA**. A partir de entonces, cada llamada de IA muestra su origen, dirección, estado y hora; abre una para ver los encabezados de la solicitud y los cuerpos de la solicitud y la respuesta, o cópiala como JSON para un informe de error.
+Para comprobar exactamente qué envió una herramienta y qué respondió el proveedor, ve a **Configuración**, luego a **IA**, y activa **Registrar solicitudes** en **Actividad de IA**. A partir de entonces, cada llamada de IA muestra su origen, dirección, estado y hora; abre una para ver los encabezados de la solicitud y los cuerpos de la solicitud y la respuesta, o cópiala como JSON para un informe de error.
 
 El registro está desactivado de forma predeterminada. Se queda en este dispositivo y solo conserva las llamadas más recientes. Las claves de API, los encabezados cuyo nombre sugiere una credencial (como los que contienen `key`, `token`, `secret`, `auth` o `cookie`) y todos los encabezados que definas en **Encabezados adicionales (JSON)** se reemplazan por `[redacted]` antes de guardar nada, pero los títulos y las URLs de los marcadores incluidos en las solicitudes se conservan, así que desactiva el registro cuando termines: eso también elimina el registro guardado.
 

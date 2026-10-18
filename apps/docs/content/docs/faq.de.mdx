@@ -7,11 +7,11 @@ description: Antworten auf häufige Fragen zu Bookmark Scout und Lösungen für 
 
 ### Ist Bookmark Scout kostenlos? [#is-bookmark-scout-free]
 
-Ja. Es ist kostenlos und Open Source unter der Lizenz <License />, ohne Werbung, ohne Konto und ohne kostenpflichtiges Abo. Die optionalen KI-Funktionen sind das Einzige, was Geld kosten kann: Sie verwenden Ihr eigenes Konto bei einem KI-Unternehmen, das für jede Nutzung Gebühren verlangen kann.
+Ja. Es ist kostenlos und Open Source unter der Lizenz <License />, ohne Werbung, ohne Konto und ohne kostenpflichtiges Abo. Die optionalen KI-Funktionen sind das Einzige, was Geld kosten kann: Sie verwenden Ihr eigenes Konto bei einem KI-Unternehmen, das für jede Nutzung Gebühren verlangen kann. Die integrierte KI von Chrome, die auf Ihrem Computer Ordner vorschlägt, ist kostenlos.
 
 ### Muss ich KI verwenden? [#do-i-need-to-use-ai]
 
-Nein. KI ist optional. Speichern, Suchen, Ordnen, Bereinigen sowie Import und Export funktionieren alle ohne KI, und sie bleibt aus, bis Sie sie in den [Einstellungen](/settings#ai) einschalten. Um sie zu nutzen, brauchen Sie ein Konto bei einem KI-Unternehmen wie OpenAI, Anthropic oder Google und einen Schlüssel aus diesem Konto (einen API-Schlüssel), mit dem Bookmark Scout das Konto verwenden darf. Die meisten dieser Unternehmen berechnen jede Nutzung, meist einen kleinen Betrag; ein KI-Programm, das auf Ihrem eigenen Computer läuft, etwa Ollama, kostet nichts, braucht aber einen recht leistungsstarken Computer. Die Titel und Adressen der Lesezeichen, mit denen ein KI-Tool arbeitet, werden an das Unternehmen gesendet, das Sie gewählt haben. Siehe [KI-Tools einrichten](/guides/ai-tools).
+Nein. KI ist optional. Speichern, Suchen, Ordnen, Bereinigen sowie Import und Export funktionieren alle ohne KI, und sie bleibt aus, bis Sie sie in den [Einstellungen](/settings#ai) einschalten. Um sie zu nutzen, brauchen Sie ein Konto bei einem KI-Unternehmen wie OpenAI, Anthropic oder Google und einen Schlüssel aus diesem Konto (einen API-Schlüssel), mit dem Bookmark Scout das Konto verwenden darf. Die meisten dieser Unternehmen berechnen jede Nutzung, meist einen kleinen Betrag; ein KI-Programm, das auf Ihrem eigenen Computer läuft, etwa Ollama, kostet nichts, braucht aber einen recht leistungsstarken Computer. In Chrome kann die integrierte KI des Browsers kostenlos Ordner vorschlagen, ohne Konto oder Schlüssel, auf Computern, die sie ausführen können. Die Titel und Adressen der Lesezeichen, mit denen ein KI-Tool arbeitet, werden an das Unternehmen gesendet, das Sie gewählt haben. Siehe [KI-Tools einrichten](/guides/ai-tools).
 
 ### Sendet die Erweiterung meine Lesezeichen irgendwohin? [#does-it-send-my-bookmarks-anywhere]
 
@@ -60,6 +60,10 @@ Prüfen Sie, ob **Website-Symbole anzeigen** in den [Einstellungen](/settings#ap
 ### Mein API-Schlüssel wurde nicht gespeichert [#my-api-key-was-not-saved]
 
 Ein Schlüssel, der nicht wie ein Schlüssel des gewählten KI-Unternehmens (des Anbieters des Dienstes) aussieht, wird abgelehnt und nicht gespeichert, und eine Meldung weist darauf hin. Prüfen Sie, ob der Anbieter des Dienstes das Unternehmen ist, von dem Sie den Schlüssel haben. Siehe [KI-Tools einrichten](/guides/ai-tools#turn-on-ai).
+
+### KI schreibt Tags oder Zusammenfassungen in der falschen Sprache [#ai-writes-tags-or-summaries-in-the-wrong-language]
+
+Die KI schreibt Tags, Zusammenfassungen und neue Ordnernamen in der Sprache, die unter **Ausgabesprache der KI** in den [Einstellungen](/settings#ai-output-language) eingestellt ist: standardmäßig in der Sprache, die Bookmark Scout selbst verwendet. Wählen Sie dort eine andere Sprache oder **Wie die jeweilige Seite**, um der Sprache jeder Seite zu folgen. „KI fragen“ antwortet in der Sprache, in der Sie schreiben.
 
 ### Die Linkprüfung meldet, dass eine funktionierende Website manuell geprüft werden muss [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 

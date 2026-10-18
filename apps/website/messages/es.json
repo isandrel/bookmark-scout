@@ -177,7 +177,7 @@
       "ai": {
         "tab": "IA (opcional)",
         "heading": "IA opcional, de la empresa que elijas",
-        "caption": "La IA está desactivada hasta que la activas. Necesita una cuenta con una empresa de IA, que puede cobrar un poco cada vez que la usas, o un programa de IA gratuito en tu propio equipo.",
+        "caption": "La IA está desactivada hasta que la activas. Necesita una cuenta con una empresa de IA, que puede cobrar un poco cada vez que la usas, o un programa de IA gratuito en tu propio equipo. En Chrome, su IA integrada sugiere carpetas gratis.",
         "alt": "La pestaña IA de la configuración: el recuadro La IA es opcional explica qué necesita la IA y cuánto puede costar, y Funciones de IA está desactivado, como viene por defecto",
         "points": [
           "Obtén sugerencias de carpeta para la página en la que estás, o guarda en la primera con {{SHORTCUT:commands.ai-quick-save}}",
@@ -295,7 +295,7 @@
         },
         "providers": {
           "q": "¿Qué empresas de IA puedo usar?",
-          "a": "Bookmark Scout funciona con {providers}. La mayoría de las empresas de IA piden una cuenta y una clave de esa cuenta, y cobran una pequeña cantidad por cada uso; Bookmark Scout no cobra nada. Ollama ejecuta la IA gratis en tu propio equipo, si tu equipo es lo bastante rápido. La <aiGuide>guía de IA</aiGuide> explica cómo configurarla."
+          "a": "Bookmark Scout funciona con {providers}. La mayoría de las empresas de IA piden una cuenta y una clave de esa cuenta, y cobran una pequeña cantidad por cada uso; Bookmark Scout no cobra nada. Ollama ejecuta la IA gratis en tu propio equipo, si tu equipo es lo bastante rápido, y también lo hace la IA integrada de Chrome, que sugiere carpetas. La <aiGuide>guía de IA</aiGuide> explica cómo configurarla."
         },
         "changes": {
           "q": "¿Cambiará mis marcadores sin preguntar?",

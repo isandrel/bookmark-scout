@@ -80,7 +80,7 @@ Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to
 
 Bookmark exports and AI context exports are saved as files on your computer. A JSON bookmark export also holds the tags and summary of each bookmark in it. Before saving, the extension can show a privacy review that lets you redact sensitive values.
 
-Export in Settings saves a backup file (`bookmark-scout-backup.json`) with the settings you changed, your custom prompts, your About me text, your AI services (name, provider, model, base URL, and any provider-specific fields), your saved searches, and the bookmark table's columns and sort. It never contains API keys or extra headers; after a restore, you enter them again in the AI settings. The file is not encrypted. Import in Settings restores it.
+Back up settings, at the bottom of Settings, saves a backup file (`bookmark-scout-backup.json`) with the settings you changed, your custom prompts, your About me text, your AI services (name, provider, model, base URL, and any provider-specific fields), your saved searches, and the bookmark table's columns and sort. It never contains API keys or extra headers; after a restore, you enter them again in the AI settings. The file is not encrypted. Restore settings, next to it, restores it.
 
 The extension uploads none of these files. They go only where you save them.
 

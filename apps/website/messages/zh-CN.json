@@ -177,7 +177,7 @@
       "ai": {
         "tab": "AI（可选）",
         "heading": "可选的 AI，由你选择用哪家公司",
-        "caption": "在你开启之前，AI 始终处于关闭状态。使用 AI 需要一个 AI 公司的账号（每次使用可能会收取少量费用），或一个在你自己电脑上运行的免费 AI 程序。",
+        "caption": "在你开启之前，AI 始终处于关闭状态。使用 AI 需要一个 AI 公司的账号（每次使用可能会收取少量费用），或一个在你自己电脑上运行的免费 AI 程序。在 Chrome 中，其内置 AI 可以免费推荐文件夹。",
         "alt": "设置中的 AI 标签页：“AI 是可选的”说明了使用 AI 需要什么、可能产生的费用，AI 功能处于关闭状态（默认）",
         "points": [
           "为当前网页获取文件夹建议，或按 {{SHORTCUT:commands.ai-quick-save}} 保存到第一个建议的文件夹",
@@ -295,7 +295,7 @@
         },
         "providers": {
           "q": "可以使用哪些 AI 公司？",
-          "a": "Bookmark Scout 可搭配 {providers} 使用。大多数 AI 公司需要你注册账号并获取密钥，每次使用会收取少量费用；Bookmark Scout 本身不收取任何费用。如果你的电脑性能足够，Ollama 可以在你自己的电脑上免费运行 AI。<aiGuide>AI 指南</aiGuide>介绍了如何设置。"
+          "a": "Bookmark Scout 可搭配 {providers} 使用。大多数 AI 公司需要你注册账号并获取密钥，每次使用会收取少量费用；Bookmark Scout 本身不收取任何费用。如果你的电脑性能足够，Ollama 可以在你自己的电脑上免费运行 AI，Chrome 的内置 AI 也一样，它可以推荐文件夹。<aiGuide>AI 指南</aiGuide>介绍了如何设置。"
         },
         "changes": {
           "q": "它会不经询问就更改我的书签吗？",

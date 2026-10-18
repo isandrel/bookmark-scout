@@ -177,7 +177,7 @@
       "ai": {
         "tab": "IA (facultative)",
         "heading": "Une IA facultative, de l'entreprise de votre choix",
-        "caption": "L'IA reste désactivée tant que vous ne l'activez pas. Elle nécessite un compte auprès d'une entreprise d'IA, qui peut facturer une petite somme à chaque utilisation, ou un programme d'IA gratuit sur votre propre ordinateur.",
+        "caption": "L'IA reste désactivée tant que vous ne l'activez pas. Elle nécessite un compte auprès d'une entreprise d'IA, qui peut facturer une petite somme à chaque utilisation, ou un programme d'IA gratuit sur votre propre ordinateur. Dans Chrome, l'IA intégrée du navigateur suggère gratuitement des dossiers.",
         "alt": "L'onglet IA des paramètres : l'encadré L'IA est facultative explique ce qu'il faut pour l'IA et ce qu'elle peut coûter, et les Fonctionnalités d'IA sont désactivées, par défaut",
         "points": [
           "Obtenez des suggestions de dossiers pour la page que vous consultez, ou enregistrez dans la première avec {{SHORTCUT:commands.ai-quick-save}}",
@@ -295,7 +295,7 @@
         },
         "providers": {
           "q": "Quelles entreprises d'IA puis-je utiliser ?",
-          "a": "Bookmark Scout fonctionne avec {providers}. La plupart des entreprises d'IA demandent un compte et une clé obtenue auprès d'elles, et facturent une petite somme à chaque utilisation ; Bookmark Scout lui-même ne facture rien. Ollama fait fonctionner l'IA gratuitement sur votre propre ordinateur, si celui-ci est assez puissant. Le <aiGuide>guide de l'IA</aiGuide> explique comment la configurer."
+          "a": "Bookmark Scout fonctionne avec {providers}. La plupart des entreprises d'IA demandent un compte et une clé obtenue auprès d'elles, et facturent une petite somme à chaque utilisation ; Bookmark Scout lui-même ne facture rien. Ollama fait fonctionner l'IA gratuitement sur votre propre ordinateur, si celui-ci est assez puissant, tout comme l'IA intégrée de Chrome, qui suggère des dossiers. Le <aiGuide>guide de l'IA</aiGuide> explique comment la configurer."
         },
         "changes": {
           "q": "Va-t-il modifier mes favoris sans me demander ?",

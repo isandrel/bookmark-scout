@@ -7,11 +7,11 @@ description: Réponses aux questions fréquentes sur Bookmark Scout, et solution
 
 ### Bookmark Scout est-il gratuit ? [#is-bookmark-scout-free]
 
-Oui. Il est gratuit et open source, sous licence <License />, sans publicité, sans compte et sans offre payante. Les fonctionnalités d'IA facultatives sont la seule chose qui peut coûter de l'argent : elles utilisent votre propre compte auprès d'une entreprise d'IA, qui peut facturer chaque utilisation.
+Oui. Il est gratuit et open source, sous licence <License />, sans publicité, sans compte et sans offre payante. Les fonctionnalités d'IA facultatives sont la seule chose qui peut coûter de l'argent : elles utilisent votre propre compte auprès d'une entreprise d'IA, qui peut facturer chaque utilisation. L'IA intégrée de Chrome, qui suggère des dossiers sur votre ordinateur, est gratuite.
 
 ### Dois-je utiliser l'IA ? [#do-i-need-to-use-ai]
 
-Non. L'IA est facultative. L'enregistrement, la recherche, l'organisation, le nettoyage, l'importation et l'exportation fonctionnent tous sans elle, et elle reste désactivée tant que vous ne l'activez pas dans les [Paramètres](/settings#ai). Pour l'utiliser, il vous faut un compte auprès d'une entreprise d'IA, comme OpenAI, Anthropic ou Google, et une clé liée à ce compte (une clé API) qui permet à Bookmark Scout de l'utiliser. La plupart de ces entreprises facturent chaque utilisation, généralement un petit montant ; un programme d'IA qui fonctionne sur votre propre ordinateur, comme Ollama, ne coûte rien mais demande un ordinateur assez puissant. Les titres et les adresses des favoris sur lesquels travaille un outil d'IA sont envoyés à l'entreprise que vous avez choisie. Consultez [Configurer les outils d'IA](/guides/ai-tools).
+Non. L'IA est facultative. L'enregistrement, la recherche, l'organisation, le nettoyage, l'importation et l'exportation fonctionnent tous sans elle, et elle reste désactivée tant que vous ne l'activez pas dans les [Paramètres](/settings#ai). Pour l'utiliser, il vous faut un compte auprès d'une entreprise d'IA, comme OpenAI, Anthropic ou Google, et une clé liée à ce compte (une clé API) qui permet à Bookmark Scout de l'utiliser. La plupart de ces entreprises facturent chaque utilisation, généralement un petit montant ; un programme d'IA qui fonctionne sur votre propre ordinateur, comme Ollama, ne coûte rien mais demande un ordinateur assez puissant. Dans Chrome, l'IA intégrée du navigateur peut suggérer des dossiers gratuitement, sans compte ni clé, sur les ordinateurs capables de l'exécuter. Les titres et les adresses des favoris sur lesquels travaille un outil d'IA sont envoyés à l'entreprise que vous avez choisie. Consultez [Configurer les outils d'IA](/guides/ai-tools).
 
 ### Mes favoris sont-ils envoyés quelque part ? [#does-it-send-my-bookmarks-anywhere]
 
@@ -60,6 +60,10 @@ Vérifiez que l'option **Afficher les icônes de site** est activée dans les [P
 ### Ma clé API n'a pas été enregistrée [#my-api-key-was-not-saved]
 
 Une clé qui ne ressemble pas à une clé de l'entreprise d'IA choisie (le fournisseur du service) est refusée et n'est pas enregistrée, et un message l'indique. Vérifiez que le fournisseur du service est bien l'entreprise qui vous a donné la clé. Consultez [Configurer les outils d'IA](/guides/ai-tools#turn-on-ai).
+
+### L'IA écrit les étiquettes ou les résumés dans la mauvaise langue [#ai-writes-tags-or-summaries-in-the-wrong-language]
+
+L'IA écrit les étiquettes, les résumés et les noms des nouveaux dossiers dans la langue définie par **Langue de sortie de l'IA** dans les [Paramètres](/settings#ai-output-language) : par défaut, la langue qu'utilise Bookmark Scout lui-même. Choisissez-y une autre langue, ou **Comme chaque page** pour suivre la langue de chaque page. Demander à l'IA répond dans la langue dans laquelle vous écrivez.
 
 ### La vérification des liens morts indique qu'un site qui fonctionne doit être vérifié manuellement [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 

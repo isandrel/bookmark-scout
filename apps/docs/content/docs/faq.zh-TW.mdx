@@ -7,11 +7,11 @@ description: Bookmark Scout 常見問題的解答，以及最常遇到的問題�
 
 ### Bookmark Scout 是免費的嗎？ [#is-bookmark-scout-free]
 
-是。Bookmark Scout 依 <License /> 授權免費提供且開放原始碼，沒有廣告、不需要帳戶，也沒有付費方案。唯一可能需要花錢的是選用的 AI 功能：這些功能使用你自己在 AI 公司的帳戶，對方可能會依每次使用收費。
+是。Bookmark Scout 依 <License /> 授權免費提供且開放原始碼，沒有廣告、不需要帳戶，也沒有付費方案。唯一可能需要花錢的是選用的 AI 功能：這些功能使用你自己在 AI 公司的帳戶，對方可能會依每次使用收費。Chrome 的內建 AI 會在你的電腦上推薦資料夾，而且免費。
 
 ### 一定要使用 AI 嗎？ [#do-i-need-to-use-ai]
 
-不需要。AI 是選用的。儲存、搜尋、整理、清理以及匯入和匯出，都不需要 AI 就能使用，而且在你於「[設定](/settings#ai)」中開啟之前，AI 一律為關閉。如要使用 AI，你需要一個 AI 公司 (例如 OpenAI、Anthropic 或 Google) 的帳戶，以及該帳戶提供的一組金鑰 (API 金鑰)，讓 Bookmark Scout 可以使用這個帳戶。這些公司大多會依每次使用收費，通常金額不高；在你自己電腦上執行的 AI 程式 (例如 Ollama) 不用花錢，但需要效能相當好的電腦。AI 工具處理的書籤標題和網址會傳送給你選擇的公司。請參閱「[設定 AI 工具](/guides/ai-tools)」。
+不需要。AI 是選用的。儲存、搜尋、整理、清理以及匯入和匯出，都不需要 AI 就能使用，而且在你於「[設定](/settings#ai)」中開啟之前，AI 一律為關閉。如要使用 AI，你需要一個 AI 公司 (例如 OpenAI、Anthropic 或 Google) 的帳戶，以及該帳戶提供的一組金鑰 (API 金鑰)，讓 Bookmark Scout 可以使用這個帳戶。這些公司大多會依每次使用收費，通常金額不高；在你自己電腦上執行的 AI 程式 (例如 Ollama) 不用花錢，但需要效能相當好的電腦。在 Chrome 中，只要電腦能夠執行，Chrome 的內建 AI 就能免費推薦資料夾，不需要帳戶或金鑰。AI 工具處理的書籤標題和網址會傳送給你選擇的公司。請參閱「[設定 AI 工具](/guides/ai-tools)」。
 
 ### 書籤會被傳送到其他地方嗎？ [#does-it-send-my-bookmarks-anywhere]
 
@@ -60,6 +60,10 @@ Firefox 重新啟動時會移除暫用附加元件。請依照「[安裝](/insta
 ### API 金鑰沒有儲存 [#my-api-key-was-not-saved]
 
 如果金鑰看起來不像所選 AI 公司 (服務的供應商) 的金鑰，就會遭到拒絕且不會儲存，並顯示訊息說明。請確認服務的供應商就是提供你這組金鑰的公司。請參閱「[設定 AI 工具](/guides/ai-tools#turn-on-ai)」。
+
+### AI 以錯誤的語言撰寫標籤或摘要 [#ai-writes-tags-or-summaries-in-the-wrong-language]
+
+AI 會以「[設定](/settings#ai-output-language)」中「**AI 輸出語言**」所設定的語言撰寫標籤、摘要和新資料夾名稱：預設為 Bookmark Scout 本身使用的語言。你可以在那裡選擇其他語言，或選擇「**與各網頁相同**」，以配合每個網頁的語言。「詢問 AI」會以你輸入的語言回答。
 
 ### 失效連結檢查顯示正常運作的網站需要手動檢查 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 

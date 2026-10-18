@@ -133,7 +133,7 @@ Required by the `side_panel` manifest key, and kept required because it has no w
 ### `contextMenus` (optional in Chrome and Edge)
 
 ```text
-Optional in Chrome and Edge, never granted at install. When the user turns on Context Menu in Settings (off by default), the extension asks for this permission and adds a right-click menu on links so the user can save a link into a recent folder or the Bookmarks Bar. Turning the setting off removes the menu.
+Optional in Chrome and Edge, never granted at install. When the user turns on Right-Click Menu in Settings (off by default), the extension asks for this permission and adds a right-click menu on links so the user can save a link into a recent folder or the Bookmarks Bar. Turning the setting off removes the menu.
 ```
 
 Code: `src/services/context-menu.ts`. The menu is registered for `link` contexts only. Firefox does not allow `contextMenus` as an optional permission, so it is declared at install there (no prompt), and the menu still appears only after the user turns the setting on.
