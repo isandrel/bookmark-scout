@@ -58,7 +58,13 @@ describe('manager table config', () => {
       const layout = getManagerColumnLayout(column.id);
       expect(column.size).toEqual(layout.size);
       expect(column.hideBelowWidth).toBe(layout.hideBelowWidth);
+      expect(column.fillWeight).toBe(layout.fillWeight);
     }
+    // Title and URL share the spare width, Title a bit more; the dates keep a compact width.
+    expect(getManagerColumnLayout('title').fillWeight).toBeGreaterThan(
+      getManagerColumnLayout('url').fillWeight ?? Number.POSITIVE_INFINITY,
+    );
+    expect(getManagerColumnLayout('dateAdded').fillWeight).toBeUndefined();
     expect(() => getManagerColumnLayout('no-such-column')).toThrow(/no width/);
   });
 });

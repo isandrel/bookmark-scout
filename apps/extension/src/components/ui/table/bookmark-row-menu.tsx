@@ -14,7 +14,7 @@ export function BookmarkRowMenu({ bookmark, host }: BookmarkRowMenuProps) {
         render={
           <Button
             variant="ghost"
-            className="h-8 w-8 p-0"
+            size="icon-xs"
             aria-label={t('table_openMenu')}
             onClick={(event) => event.stopPropagation()}
           />

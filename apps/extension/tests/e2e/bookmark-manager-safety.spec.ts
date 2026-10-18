@@ -173,7 +173,7 @@ test('bookmarklets can be renamed while new script and HTML data URLs are reject
     .toEqual({ title: 'Plain Link', url: 'data:text/plain,hello' });
 });
 
-test('every default column fits at 1400 wide and move buttons do not reserve width', async ({
+test('every default column fits at 1400 wide and move buttons never cover the date', async ({
   extensionId,
   extensionWorker,
   page,
@@ -203,9 +203,9 @@ test('every default column fits at 1400 wide and move buttons do not reserve wid
   });
   expect(layout.overflow).toBeLessThanOrEqual(0);
   expect(layout.dateAddedRight).toBeLessThanOrEqual(layout.actionsLeft + 1);
-  expect(layout.actionsWidth).toBeLessThan(80);
+  expect(layout.actionsWidth).toBeLessThan(160);
 
-  // Hover still reveals the move buttons as an overlay.
+  // Hover reveals the move buttons in the actions column's own room, beside the date.
   // The default Sort Order is the browser's, so the table already offers moves.
   await expect(page.getByRole('button', { name: 'Browser order' })).toHaveAttribute(
     'aria-pressed',
@@ -213,7 +213,10 @@ test('every default column fits at 1400 wide and move buttons do not reserve wid
   );
   const shortRow = row(page, 'Short');
   await shortRow.hover();
-  await expect(shortRow.getByRole('button', { name: 'Move up' })).toBeVisible();
+  const moveTop = shortRow.getByRole('button', { name: 'Move to top' });
+  await expect(moveTop).toBeVisible();
+  const moveTopLeft = (await moveTop.boundingBox())?.x ?? Number.NEGATIVE_INFINITY;
+  expect(moveTopLeft).toBeGreaterThanOrEqual(layout.dateAddedRight);
 });
 
 test('move buttons are disabled at the ends of the folder', async ({
