@@ -1,6 +1,6 @@
 # bookmark-scout
 
-## Unreleased
+## 0.3.4
 
 ### Features
 
@@ -41,6 +41,7 @@
 - Clearer tool results: Metadata Fetcher says when a bookmark keeps its title, dead link results describe redirects they could not follow, repairs name bookmarks deleted after the scan, long folder paths shorten in the middle, and tool cards wrap in German and French.
 - Quick save offers the next best matching folders under **Move to**, and an undone quick save no longer shows in later popups.
 - AI activity marks on-device calls **On device** and local agents' actions **Action**; AI service rows show the model's name; Korean text breaks between words; and Japanese uses one spelling for "folder".
+- In the prompt editor, a key typed right after picking a placeholder now lands after it.
 
 ### Performance
 

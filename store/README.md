@@ -109,5 +109,6 @@ To recapture, run the scripts in `.agents/skills/extension-cws-submission/` (see
 - Raw captures stay in `~/.cache/bookmark-scout-qa/store-icons/` (not committed). Curated files were re-encoded with ImageMagick (reduced palette, saved as 24-bit RGB without alpha) to keep each file around 75 to 130 KB.
 
 - Recaptured on 2026-10-15 for newcomers, after the Essentials settings, manager defaults, and AI onboarding landed (#675, #676, #677): everyday bookmarks, a new quick save frame (`02`) and Essentials frame (`05`), the manager on the Bookmarks Bar, the AI tab's "AI is optional" box, and no headline baked into the popup pair. Files are numbered by frame, with `-light` and `-dark` versions of each (twelve in all).
+- Recaptured on 2026-10-18 for 0.3.4, after the manager rows and columns (#691), provider icons (#694), and built-in AI (#696) landed. Headless Chromium cannot run Chrome's built-in model, so for the AI frame (`06`) the capture script installs a stand-in `LanguageModel` that reports the model as downloadable, which is what a computer that can run it shows ("Free on this computer" with **Use built-in AI**). Nothing is downloaded or run.
 
 Screenshots show the English UI. Localized screenshots were not produced; the stores accept the English set for every locale, and no frame carries added English text.

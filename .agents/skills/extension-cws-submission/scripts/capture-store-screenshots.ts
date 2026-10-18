@@ -196,6 +196,17 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
     await page.waitForTimeout(SETTLE_MS);
     await shot(page, `duplicates-${scheme}`);
 
+    // Headless Chromium cannot run the built-in model, and Settings > AI would say so; show what a
+    // computer that can run it sees (the model offered for download) instead.
+    await page.addInitScript(() => {
+      const fake = {
+        availability: async () => 'downloadable',
+        create: async () => {
+          throw new DOMException('Not available in the store capture', 'NotSupportedError');
+        },
+      };
+      Object.defineProperty(globalThis, 'LanguageModel', { value: fake, configurable: true });
+    });
     await page.goto(url('options.html'));
     await page.waitForTimeout(SETTLE_MS);
     await page.mouse.move(0, 0);
