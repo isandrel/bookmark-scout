@@ -1,13 +1,13 @@
 # Simplified Chinese Listing Copy (简体中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-15, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the full descriptions on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 50 |
 | Firefox Add-ons summary | 92 |
-| Full description, Chrome and Edge | 3,497 |
-| Full description, Firefox | 2,102 |
+| Full description, Chrome and Edge | 3,636 |
+| Full description, Firefox | 2,114 |
 | What's new in 0.3.3 | 382 |
 
 ## Name
@@ -107,6 +107,7 @@ Bookmark Scout 将浏览器的书签页面替换为一个用法与浏览器自�
 可选的 AI（默认关闭）
 AI 是可选的，以上所有功能无需 AI 即可使用。要使用 AI，你需要一个 AI 公司的账号（每次使用可能会收取少量费用），或一个在你自己电脑上运行的免费 AI 程序。Bookmark Scout 没有自己的 AI 服务：在设置中开启 AI，然后添加你选择的服务即可。
 • 为当前网页建议文件夹，包括先经你确认的新文件夹
+• 在 Chrome 中，由 Chrome 内置 AI 免费推荐文件夹：它在你的电脑上运行，无需账号或密钥（需电脑能够运行）
 • 标签建议和简短摘要，保存前先行审核
 • 文件夹重组方案，在做出任何更改前总会先预览
 • 询问 AI：就书签进行对话。它可以按字词、文件夹、标签、网站或添加日期搜索书签，查找重复项、建议文件夹，以及查看当前网页
@@ -114,6 +115,7 @@ AI 是可选的，以上所有功能无需 AI 即可使用。要使用 AI，你�
 • 回答末尾可以带有按钮：后续问题、可供选择的选项、将网页保存到建议的文件夹，或打开某个书签。点击之前不会执行任何操作
 • 选择“询问 AI”可以查找或更改哪些内容（“设置 > AI”）
 • 读取网页内容（默认关闭）：除标题和网址外，还发送每个网页的可读文本，以获得更好的建议
+• 标签、摘要和新文件夹名称会使用你的语言、你选择的语言或每个网页自己的语言（“设置 > AI”）
 
 使用 AI 功能时，所需的数据会从浏览器直接发送给所选的 AI 服务，并受该服务条款的约束：书签标题、网址、文件夹名称、书签的添加日期以及已保存的标签和摘要；当前网页的标题和网址；在“询问 AI”中发送的消息；你填写的“关于我”（如有）；“询问 AI”所检查的链接是否仍然有效；以及仅在开启“读取网页内容”时，相关网页的文本。不会向 Bookmark Scout 发送任何内容。API 密钥保存在此浏览器的本地扩展程序存储中，不会同步。使用 AI 服务可能会产生费用。
 

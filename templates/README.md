@@ -40,7 +40,7 @@
 - ⚡ **Save with one shortcut.** Press **{{SHORTCUT:commands.quick-save}}** (**{{SHORTCUT_MAC:commands.quick-save}}** on a Mac) on any page. A small message shows where the page went, with **Undo** and other folders to move it to.
 - 🔎 **Find anything you saved.** Search every bookmark as you type, from the toolbar, the side panel, or a full-page bookmark manager.
 - 🧹 **Tidy up years of bookmarks.** Remove duplicates, find links that no longer work, and strip tracking codes from web addresses. You see every change before it happens, and can undo it.
-- ✨ **Optional AI suggestions.** Let AI pick the folder for you, using your own AI account or a free AI model on your own computer. AI stays off until you turn it on.
+- ✨ **Optional AI suggestions.** Let AI pick the folder for you, using your own AI account or a free AI model on your own computer, such as the one built into Chrome. AI stays off until you turn it on.
 - 🔒 **Private by design.** No account, no ads, no tracking, and nothing goes to the developer. Saving and searching even work offline.
 
 🌍 Available in {{LANGUAGE_NAMES}}.
@@ -53,7 +53,7 @@ Then save your first page:
 
 1. **Pin it.** Click the puzzle-piece icon in your browser's toolbar, then the pin next to Bookmark Scout.
 2. **Open a page you want to keep** and click the Bookmark Scout icon.
-3. **Type a few letters of a folder's name**, press ↓ to pick it, then Enter. That's it.
+3. **Type a few letters of a folder's name** and press Enter: the page is saved to the first folder listed. To pick another one, press ↓ first. That's it.
 
 Next time, just press **{{SHORTCUT:commands.quick-save}}** (**{{SHORTCUT_MAC:commands.quick-save}}** on a Mac) on the page. The [saving and organizing guide]({{DOCS_URL}}/guides/save-and-organize) shows more.
 

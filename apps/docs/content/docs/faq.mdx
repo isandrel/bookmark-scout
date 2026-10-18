@@ -7,11 +7,11 @@ description: Answers to common questions about Bookmark Scout, and fixes for the
 
 ### Is Bookmark Scout free?
 
-Yes. It is free and open source under the <License /> license, with no ads, no account, and no paid plan. The optional AI features are the one thing that can cost money: they use your own account with an AI company, which may charge for each use.
+Yes. It is free and open source under the <License /> license, with no ads, no account, and no paid plan. The optional AI features are the one thing that can cost money: they use your own account with an AI company, which may charge for each use. Chrome's built-in AI, which suggests folders on your computer, is free.
 
 ### Do I need to use AI?
 
-No. AI is optional. Saving, search, organizing, cleanup, and import and export all work without it, and it stays off until you turn it on in [Settings](/settings#ai). To use it, you need an account with an AI company, such as OpenAI, Anthropic, or Google, and a key from that account (an API key) that lets Bookmark Scout use it. Most of these companies charge for each use, usually a small amount; an AI program that runs on your own computer, such as Ollama, costs nothing but needs a fairly powerful computer. The bookmark titles and addresses an AI tool works on are sent to the company you chose. See [Set up AI tools](/guides/ai-tools).
+No. AI is optional. Saving, search, organizing, cleanup, and import and export all work without it, and it stays off until you turn it on in [Settings](/settings#ai). To use it, you need an account with an AI company, such as OpenAI, Anthropic, or Google, and a key from that account (an API key) that lets Bookmark Scout use it. Most of these companies charge for each use, usually a small amount; an AI program that runs on your own computer, such as Ollama, costs nothing but needs a fairly powerful computer. In Chrome, its built-in AI can suggest folders for free, with no account or key, on computers that can run it. The bookmark titles and addresses an AI tool works on are sent to the company you chose. See [Set up AI tools](/guides/ai-tools).
 
 ### Does it send my bookmarks anywhere?
 
@@ -60,6 +60,10 @@ Check that **Show Favicons** is on in [Settings](/settings#appearance). Chrome a
 ### My API key was not saved
 
 A key that does not look like a key for the chosen AI company (the service's provider) is rejected and not saved, and a message says so. Check that the service's provider is the company that gave you the key. See [Set up AI tools](/guides/ai-tools#turn-on-ai).
+
+### AI writes tags or summaries in the wrong language
+
+AI writes tags, summaries, and new folder names in the language set in **AI output language** in [Settings](/settings#ai-output-language): by default, the language Bookmark Scout itself uses. Choose another language there, or **Same as each page** to follow the language of each page. Ask AI answers in the language you write in.
 
 ### The dead link check says a working site needs a manual check
 

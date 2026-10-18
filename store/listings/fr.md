@@ -1,13 +1,13 @@
 # French Listing Copy (Français)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-15, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 132 |
 | Firefox Add-ons summary | 242 |
-| Full description, Chrome and Edge | 11,486 |
-| Full description, Firefox | 6,906 |
+| Full description, Chrome and Edge | 11,944 |
+| Full description, Firefox | 6,948 |
 | What's new in 0.3.3 | 1,324 |
 
 ## Name
@@ -107,6 +107,7 @@ CONFIDENTIALITÉ
 IA FACULTATIVE (DÉSACTIVÉE PAR DÉFAUT)
 L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'utiliser, il vous faut un compte auprès d'une entreprise d'IA, qui peut facturer une petite somme à chaque utilisation, ou un programme d'IA gratuit sur votre propre ordinateur. Bookmark Scout n'a pas de service d'IA propre : activez l'IA dans les paramètres et ajoutez le service que vous avez choisi.
 • Suggestions de dossiers pour la page actuelle, y compris un nouveau dossier que vous vérifiez d'abord
+• Dans Chrome, des suggestions de dossiers gratuites grâce à l'IA intégrée de Chrome, qui fonctionne sur votre ordinateur sans compte ni clé, si l'ordinateur peut l'exécuter
 • Suggestions d'étiquettes et courts résumés, que vous vérifiez avant de les enregistrer
 • Plans de réorganisation des dossiers, toujours prévisualisés avant toute modification
 • Demander à l'IA : discutez de vos favoris. Elle peut les rechercher par mots, dossier, étiquette, site ou date d'ajout, trouver les doublons, suggérer des dossiers et consulter la page actuelle
@@ -114,6 +115,7 @@ L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'util
 • Les réponses peuvent se terminer par des boutons : une question de suivi, des options parmi lesquelles choisir, l'enregistrement de la page dans un dossier suggéré ou l'ouverture d'un favori. Rien ne se passe tant que vous n'avez pas cliqué
 • Choisissez ce que Demander à l'IA peut consulter ou modifier (Paramètres > IA)
 • Lire le contenu des pages (désactivé par défaut) : envoie le texte lisible de chaque page, et pas seulement son titre et son adresse, pour de meilleures suggestions
+• Les étiquettes, les résumés et les noms des nouveaux dossiers sont rédigés dans votre langue, dans celle que vous choisissez ou dans la langue de chaque page (Paramètres > IA)
 
 Lorsque vous utilisez une fonctionnalité d'IA, les données dont elle a besoin sont envoyées directement de votre navigateur au service d'IA que vous avez choisi, selon les conditions de ce service : titres de favoris, adresses, noms de dossiers, dates d'ajout des favoris, ainsi que les étiquettes et résumés enregistrés ; le titre et l'adresse de la page actuelle ; vos messages Demander à l'IA ; le texte « À propos de moi » que vous écrivez, le cas échéant ; le fait que les liens vérifiés par Demander à l'IA fonctionnent encore ou non ; et, uniquement si Lire le contenu des pages est activé, le texte des pages concernées. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation d'un service d'IA peut être payante.
 

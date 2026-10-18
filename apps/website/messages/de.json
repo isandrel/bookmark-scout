@@ -177,7 +177,7 @@
       "ai": {
         "tab": "KI (optional)",
         "heading": "Optionale KI, von einem Unternehmen Ihrer Wahl",
-        "caption": "KI bleibt aus, bis Sie sie aktivieren. Sie brauchen dafür ein Konto bei einem KI-Unternehmen, das für jede Nutzung einen kleinen Betrag berechnen kann, oder ein kostenloses KI-Programm auf Ihrem eigenen Computer.",
+        "caption": "KI bleibt aus, bis Sie sie aktivieren. Sie brauchen dafür ein Konto bei einem KI-Unternehmen, das für jede Nutzung einen kleinen Betrag berechnen kann, oder ein kostenloses KI-Programm auf Ihrem eigenen Computer. In Chrome schlägt die integrierte KI des Browsers kostenlos Ordner vor.",
         "alt": "Der Tab „KI“ in den Einstellungen: Der Kasten „KI ist optional“ erklärt, was KI braucht und was sie kosten kann, und die KI-Funktionen sind aus, der Standard",
         "points": [
           "Ordnervorschläge für die aktuelle Seite erhalten oder mit {{SHORTCUT:commands.ai-quick-save}} im ersten Vorschlag speichern",
@@ -295,7 +295,7 @@
         },
         "providers": {
           "q": "Welche KI-Unternehmen kann ich nutzen?",
-          "a": "Bookmark Scout funktioniert mit {providers}. Die meisten KI-Unternehmen verlangen ein Konto und einen Schlüssel von dort und berechnen für jede Nutzung einen kleinen Betrag; Bookmark Scout selbst kostet nichts. Ollama führt KI kostenlos auf Ihrem eigenen Computer aus, wenn er schnell genug ist. Die <aiGuide>KI-Anleitung</aiGuide> zeigt, wie Sie es einrichten."
+          "a": "Bookmark Scout funktioniert mit {providers}. Die meisten KI-Unternehmen verlangen ein Konto und einen Schlüssel von dort und berechnen für jede Nutzung einen kleinen Betrag; Bookmark Scout selbst kostet nichts. Ollama führt KI kostenlos auf Ihrem eigenen Computer aus, wenn er schnell genug ist, und ebenso die integrierte KI von Chrome, die Ordner vorschlägt. Die <aiGuide>KI-Anleitung</aiGuide> zeigt, wie Sie es einrichten."
         },
         "changes": {
           "q": "Ändert die Erweiterung meine Lesezeichen ohne Nachfrage?",

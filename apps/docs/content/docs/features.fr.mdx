@@ -12,7 +12,7 @@ Une liste de référence de ce qui est disponible aujourd'hui. Pour des instruct
 | Fenêtre pop-up | Le bouton de la barre d'outils : recherche, arborescence des dossiers, enregistrement et recommandations de dossiers par IA |
 | Panneau latéral | La même vue dans le panneau latéral du navigateur (la barre latérale dans Firefox), qui reste ouvert pendant votre navigation |
 | Gestionnaire de favoris | Remplace la page Favoris du navigateur dans Chrome et Edge : arborescence des dossiers, fil d'Ariane, tableau des favoris et barre latérale **Outils**. Dans une fenêtre étroite, l'arborescence des dossiers et **Outils** s'ouvrent par-dessus le tableau ; un chemin de dossiers profond replie ses dossiers intermédiaires dans un menu **…** |
-| Paramètres | La page d'options de l'extension, avec dix onglets. Consultez [Paramètres](/settings) |
+| Paramètres | La page des paramètres de l'extension : **L'essentiel** d'abord, puis onze autres onglets sous **Avancé**. Consultez [Paramètres](/settings) |
 | N'importe quelle page | <Shortcut id="commands.quick-save" /> et <Shortcut id="commands.ai-quick-save" /> enregistrent rapidement la page sur laquelle vous êtes, avec une notification dans la page |
 | Menu du clic droit | **Enregistrer le favori dans…** sur n'importe quel lien, une fois le **Menu du clic droit** activé |
 
@@ -32,7 +32,7 @@ Guide : [Recherche et recherches enregistrées](/guides/search).
 - Enregistrement rapide avec <Shortcut id="commands.quick-save" /> sur n'importe quelle page, dans le dossier qui correspond le mieux à la page (classement effectué sur votre appareil), dans le dernier dossier utilisé ou dans un dossier que vous choisissez ; <Shortcut id="commands.ai-quick-save" /> enregistre dans la première suggestion de l'IA. Une notification dans la page propose **Annuler** et d'autres dossiers sous **Déplacer vers**. Dans Chrome et Edge, vous pouvez attribuer <Shortcut id="browser.bookmark_page" /> à l'enregistrement rapide.
 - Enregistrement de liens depuis le menu contextuel dans un dossier récent ou dans la Barre de favoris.
 - Création de dossiers, glisser-déposer de favoris et de dossiers, et déplacement de plusieurs éléments à la fois dans le gestionnaire.
-- Tri par date d'ajout, par ordre alphabétique naturel ou avec les dossiers en premier, sans modifier l'ordre enregistré par le navigateur.
+- Affichage des favoris dans l'ordre propre au navigateur (par défaut), par date d'ajout, par ordre alphabétique naturel ou avec les dossiers en premier, sans modifier l'ordre enregistré par le navigateur.
 - Modification des noms et des URL, et ajout d'étiquettes et d'un résumé dans **Détails du favori**.
 - Suppression avec confirmation facultative et annulation possible pendant 10 secondes, qui restaure tout le contenu d'un dossier.
 - Dans le gestionnaire, redimensionnement des colonnes du tableau par glissement ou avec les touches fléchées ; **Réinitialiser l'affichage** restaure la disposition.
@@ -65,13 +65,14 @@ Guide : [Importation et exportation](/guides/import-export).
 
 ## Outils d'IA (facultatifs) [#ai-tools-optional]
 
-Désactivés par défaut. Utilisez votre propre clé pour OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou environ 200 autres fournisseurs du catalogue models.dev, ou utilisez Ollama, CLIProxyAPI ou tout point de terminaison compatible OpenAI.
+Désactivés par défaut. Utilisez votre propre clé pour OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou environ 200 autres fournisseurs du catalogue models.dev, ou utilisez Ollama, CLIProxyAPI ou tout point de terminaison compatible OpenAI. Dans Chrome, l'**IA intégrée** suggère gratuitement des dossiers avec le modèle propre à Chrome, sur votre ordinateur et sans clé.
 
 - Recommandations de dossiers dans la fenêtre pop-up, y compris un nouveau chemin de dossiers que vous vérifiez, et le raccourci d'enregistrement rapide <Shortcut id="commands.ai-quick-save" />.
 - **Demander à l'IA** dans la fenêtre pop-up et le panneau latéral : répond aux questions en cherchant dans vos favoris, dossiers, étiquettes et résumés, en trouvant les doublons et en vérifiant les liens ; enregistre des pages et propose des déplacements, renommages, suppressions et nouveaux dossiers sous forme de plan qui ne modifie rien avant votre accord, chaque modification pouvant être annulée ; et termine ses réponses par des boutons proposant la suite. **Ce que Demander à l'IA peut faire**, dans les Paramètres, désactive n'importe quelle consultation ou modification.
 - **Étiquetage automatique** et **Générateur de résumés** pour le dossier actuel, avec enregistrement uniquement après votre vérification, et annulation possible.
 - **Réorganisation des dossiers par IA**, avec un aperçu avant tout déplacement, et annulation possible.
 - **Préparateur de contexte IA**, qui exporte des favoris au format Markdown ou XML pour une discussion avec une IA, et fonctionne même lorsque l'IA est désactivée.
+- **Langue de sortie de l'IA** choisit la langue des étiquettes, des résumés et des noms des nouveaux dossiers ; **À propos de moi** donne à chaque fonctionnalité d'IA quelques informations sur vous ; et la bibliothèque de prompts vous permet de réécrire le prompt de chaque outil, avec une liste d'espaces réservés comme `{{today}}` et `{{existingTags}}`.
 
 Les étiquettes et les résumés restent sur cet appareil. Ils ne sont ni synchronisés, ni consultables par la recherche de la fenêtre pop-up, mais Demander à l'IA peut les consulter et les exportations de favoris en JSON les incluent. Guide : [Configurer les outils d'IA](/guides/ai-tools).
 

@@ -12,7 +12,7 @@ Una lista de referencia de lo que incluye la versión actual. Para instrucciones
 | Ventana emergente | El botón de la barra de herramientas: búsqueda, árbol de carpetas, guardado y recomendaciones de carpetas con IA |
 | Panel lateral | La misma vista en el panel lateral del navegador (la barra lateral en Firefox), que sigue abierto mientras navegas |
 | Administrador de marcadores | Reemplaza la página de marcadores del navegador en Chrome y Edge: árbol de carpetas, ruta de navegación, una tabla de marcadores y la barra lateral **Herramientas**. En una ventana estrecha, el árbol de carpetas y **Herramientas** se abren sobre la tabla; una ruta de carpetas profunda agrupa sus carpetas intermedias en un menú **…** |
-| Configuración | La página de opciones de la extensión, con diez pestañas. Consulta [Configuración](/settings) |
+| Configuración | La página de configuración de la extensión: primero **Lo esencial** y después once pestañas más en **Avanzado**. Consulta [Configuración](/settings) |
 | Cualquier página | <Shortcut id="commands.quick-save" /> y <Shortcut id="commands.ai-quick-save" /> hacen un guardado rápido de la página en la que estás, con una notificación en la página |
 | Menú del clic derecho | **Guardar marcador en...** en cualquier enlace, cuando activas **Menú del clic derecho** |
 
@@ -32,7 +32,7 @@ Guía: [Búsqueda y búsquedas guardadas](/guides/search).
 - Guardado rápido con <Shortcut id="commands.quick-save" /> en cualquier página, en la carpeta que mejor corresponde a la página (clasificada en tu dispositivo), en la última carpeta usada o en una carpeta que elijas; <Shortcut id="commands.ai-quick-save" /> guarda en la primera sugerencia de la IA. Una notificación en la página ofrece **Deshacer** y otras carpetas en **Mover a**. En Chrome y Edge puedes asignar <Shortcut id="browser.bookmark_page" /> al guardado rápido.
 - Guarda enlaces desde el menú contextual en una carpeta reciente o en la Barra de marcadores.
 - Crea carpetas, arrastra y suelta marcadores y carpetas, y mueve varios a la vez en el administrador.
-- Ordena por fecha de creación, por orden alfabético natural o con las carpetas primero, sin cambiar el orden que guarda el navegador.
+- Muestra los marcadores en el orden propio del navegador (el predeterminado), por fecha de creación, por orden alfabético natural o con las carpetas primero, sin cambiar el orden que guarda el navegador.
 - Edita nombres y URLs, y añade etiquetas y un resumen en **Detalles del marcador**.
 - Elimina con una confirmación opcional y la posibilidad de deshacer durante 10 segundos, que restaura todo lo que había dentro de una carpeta.
 - En el administrador, cambia el ancho de las columnas de la tabla arrastrando o con las teclas de flecha; **Restablecer vista** recupera el diseño original.
@@ -65,13 +65,14 @@ Guía: [Importar y exportar](/guides/import-export).
 
 ## Herramientas de IA (opcionales) [#ai-tools-optional]
 
-Desactivadas de forma predeterminada. Usa tu propia clave para OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter o unos 200 proveedores más del catálogo de models.dev, o usa Ollama, CLIProxyAPI o cualquier punto de conexión compatible con OpenAI.
+Desactivadas de forma predeterminada. Usa tu propia clave para OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter o unos 200 proveedores más del catálogo de models.dev, o usa Ollama, CLIProxyAPI o cualquier punto de conexión compatible con OpenAI. En Chrome, **IA integrada** sugiere carpetas gratis con el propio modelo de Chrome, en tu equipo y sin clave.
 
 - Recomendaciones de carpetas en la ventana emergente, incluida una ruta de carpeta nueva que revisas antes, y el atajo de guardado rápido <Shortcut id="commands.ai-quick-save" />.
 - **Preguntar a la IA** en la ventana emergente y en el panel lateral: responde preguntas buscando en tus marcadores, carpetas, etiquetas y resúmenes, encontrando duplicados y comprobando enlaces; guarda páginas y propone movimientos, cambios de nombre, eliminaciones y carpetas nuevas como un plan que no cambia nada hasta que lo apruebas, y cada cambio se puede deshacer; y termina las respuestas con botones para lo que puedes hacer a continuación. **Qué puede hacer Preguntar a la IA** en la configuración desactiva cualquier consulta o cambio.
 - **Etiquetado automático** y **Generador de resúmenes** para la carpeta actual, que solo se guardan después de que los revisas, con opción de deshacer.
 - **Reorganización de carpetas con IA**, con vista previa antes de que se mueva nada, con opción de deshacer.
 - **Empaquetador de contexto para IA**, que exporta marcadores como Markdown o XML para un chat de IA y funciona con la IA desactivada.
+- **Idioma de salida de la IA** elige el idioma de las etiquetas, los resúmenes y los nombres de carpetas nuevas; **Sobre mí** cuenta un poco sobre ti a todas las funciones de IA; y la biblioteca de prompts te permite reescribir el prompt de cada herramienta, con una lista de marcadores de posición como `{{today}}` y `{{existingTags}}`.
 
 Las etiquetas y los resúmenes se quedan en este dispositivo. No se sincronizan ni se pueden buscar en la ventana emergente, pero Preguntar a la IA puede consultarlos y las exportaciones de marcadores en JSON los incluyen. Guía: [Configurar las herramientas de IA](/guides/ai-tools).
 

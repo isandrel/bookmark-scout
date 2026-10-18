@@ -16,7 +16,7 @@ The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs,
 1. List state: `gh pr list --state open --json number,title,headRefName,mergeStateStatus,autoMergeRequest`.
 2. Enable auto-merge on each PR you are allowed to merge: `gh pr merge <n> --auto --squash`. Leave PRs that an agent is still working on to that agent; `update-branch` adds a remote merge commit that rejects the agent's next push.
 3. Fix each failing PR first (Dependabot lockfile below; other failures: read `gh run view <id> --log-failed`).
-4. Run `scripts/merge-queue.sh` with `run_in_background` (the harness blocks foreground `sleep`; to wait on a condition, use an `until` loop or Monitor). It updates one BEHIND PR every 3 minutes until no open PRs remain, so CI is not wasted on branches that will be BEHIND again.
+4. Run `scripts/merge-queue.sh` with `run_in_background` (the harness blocks foreground `sleep`; to wait on a condition, use an `until` loop or Monitor). It updates one BEHIND PR, the one next in line, waits until that PR merges (checking every 3 minutes), and only then updates the next, until no open PRs remain. A merge queue is not available on a user-owned repository, so this is the queue: never run `gh pr update-branch` on every BEHIND PR after a merge. Each update reruns the whole CI, and all but one of those branches are BEHIND again after the next merge, so the runs grow quadratically with the number of waiting PRs. Agents do not update their own PRs either, unless the PR has a real conflict or a CI failure to fix.
 5. After the queue drains, confirm the latest `CI` run on `main` is green, not only the PR checks.
 
 Watch for:

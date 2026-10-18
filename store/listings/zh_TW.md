@@ -1,13 +1,13 @@
 # Traditional Chinese (Taiwan) Listing Copy (繁體中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters, measured on 2026-10-12, the two full descriptions on 2026-10-15.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters, measured on 2026-10-12, the full descriptions on 2026-10-18.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 54 |
 | Firefox Add-ons summary | 101 |
-| Full description, Chrome and Edge | 3,611 |
-| Full description, Firefox | 2,182 |
+| Full description, Chrome and Edge | 3,752 |
+| Full description, Firefox | 2,194 |
 | What's new in 0.3.3 | 381 |
 
 ## Name
@@ -107,6 +107,7 @@ Bookmark Scout 會以自己的管理員取代瀏覽器的「書籤」頁面，�
 選用的 AI (預設關閉)
 AI 是選用功能，以上所有功能不需要 AI 都能使用。如要使用 AI，需要 AI 公司的帳戶 (每次使用可能會收取少許費用)，或在自己電腦上執行的免費 AI 程式。Bookmark Scout 本身沒有 AI 服務：請在「設定」中開啟 AI，然後加入你選擇的服務。
 • 為目前網頁建議資料夾，包括確認後才會建立的新資料夾
+• 在 Chrome 中，由 Chrome 內建 AI 免費推薦資料夾：它在你的電腦上執行，不需要帳戶或金鑰 (需電腦能夠執行)
 • 建議標籤和簡短摘要，確認後才儲存
 • 資料夾重組計畫，一律在做任何變更前先預覽
 • 詢問 AI：針對書籤進行對話。AI 可以依字詞、資料夾、標籤、網站或新增日期搜尋書籤、找出重複項目、建議資料夾，以及查看目前網頁
@@ -114,6 +115,7 @@ AI 是選用功能，以上所有功能不需要 AI 都能使用。如要使用 
 • 回答結尾可以附上按鈕：後續問題、可選擇的選項、將網頁儲存到建議的資料夾，或開啟書籤。點選之前不會執行任何動作
 • 可選擇「詢問 AI」能查詢或變更的內容 (「設定」>「AI」)
 • 讀取網頁內容 (預設關閉)：除了標題和網址，也傳送每個網頁的可讀文字，以獲得更好的建議
+• 標籤、摘要和新資料夾名稱會使用你的語言、你選擇的語言或各網頁本身的語言 (「設定」>「AI」)
 
 使用 AI 功能時，所需的資料會直接從瀏覽器傳送到所選的 AI 服務，並受該服務的條款規範：書籤標題、網址、資料夾名稱、書籤的新增日期，以及已儲存的標籤和摘要；目前網頁的標題和網址；傳給「詢問 AI」的訊息；你填寫的「關於我」(如有)；「詢問 AI」檢查的連結是否仍然有效；以及只有在開啟「讀取網頁內容」時，相關網頁的文字。不會傳送任何資料給 Bookmark Scout。API 金鑰儲存在這個瀏覽器的本機擴充功能儲存空間中，不會同步。使用 AI 服務可能需要付費。
 

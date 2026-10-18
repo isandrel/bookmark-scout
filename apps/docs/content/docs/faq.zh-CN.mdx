@@ -7,11 +7,11 @@ description: 关于 Bookmark Scout 的常见问题解答，以及最常遇到的
 
 ### Bookmark Scout 免费吗？ [#is-bookmark-scout-free]
 
-是的。它基于 <License /> 许可证免费开源，没有广告，无需账号，也没有付费套餐。唯一可能花钱的是可选的 AI 功能：它们使用你自己在某家 AI 公司的账号，该公司可能会按每次使用收费。
+是的。它基于 <License /> 许可证免费开源，没有广告，无需账号，也没有付费套餐。唯一可能花钱的是可选的 AI 功能：它们使用你自己在某家 AI 公司的账号，该公司可能会按每次使用收费。Chrome 的内置 AI 会在你的电脑上推荐文件夹，它是免费的。
 
 ### 我必须使用 AI 吗？ [#do-i-need-to-use-ai]
 
-不必。AI 是可选的。保存、搜索、整理、清理以及导入和导出都无需 AI 即可使用，而且在你于[设置](/settings#ai)中开启之前，AI 始终处于关闭状态。如果要使用 AI，你需要一个 AI 公司（例如 OpenAI、Anthropic 或 Google）的账号，以及该账号提供的一个密钥（API 密钥），让 Bookmark Scout 可以使用这个账号。这些公司大多按每次使用收费，金额通常很小；在你自己电脑上运行的 AI 程序（例如 Ollama）不花钱，但需要性能相当强的电脑。AI 工具处理的书签标题和地址会发送给你选择的公司。请参阅[设置 AI 工具](/guides/ai-tools)。
+不必。AI 是可选的。保存、搜索、整理、清理以及导入和导出都无需 AI 即可使用，而且在你于[设置](/settings#ai)中开启之前，AI 始终处于关闭状态。如果要使用 AI，你需要一个 AI 公司（例如 OpenAI、Anthropic 或 Google）的账号，以及该账号提供的一个密钥（API 密钥），让 Bookmark Scout 可以使用这个账号。这些公司大多按每次使用收费，金额通常很小；在你自己电脑上运行的 AI 程序（例如 Ollama）不花钱，但需要性能相当强的电脑。在 Chrome 中，只要电脑能够运行，Chrome 的内置 AI 就能免费推荐文件夹，无需账号或密钥。AI 工具处理的书签标题和地址会发送给你选择的公司。请参阅[设置 AI 工具](/guides/ai-tools)。
 
 ### 它会把我的书签发送到任何地方吗？ [#does-it-send-my-bookmarks-anywhere]
 
@@ -60,6 +60,10 @@ Firefox 重启时会移除临时附加组件。请按照[安装](/installation)�
 ### 我的 API 密钥没有保存 [#my-api-key-was-not-saved]
 
 如果密钥看起来不像所选 AI 公司（即该服务的服务商）的密钥，它会被拒绝且不会保存，同时会显示一条提示消息。请检查该服务的服务商是否就是给你密钥的那家公司。请参阅[设置 AI 工具](/guides/ai-tools#turn-on-ai)。
+
+### AI 用错误的语言编写标签或摘要 [#ai-writes-tags-or-summaries-in-the-wrong-language]
+
+AI 会用[设置](/settings#ai-output-language)中**AI 输出语言**所设的语言编写标签、摘要和新文件夹名称：默认是 Bookmark Scout 本身使用的语言。你可以在那里选择其他语言，或选择**与各网页相同**，让它跟随每个网页的语言。询问 AI 会用你提问所用的语言回答。
 
 ### 失效链接检查提示某个正常的网站需要手动检查 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 

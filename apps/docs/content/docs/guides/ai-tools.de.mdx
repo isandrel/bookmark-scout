@@ -10,6 +10,8 @@ KI-Funktionen sind **optional und standardmäßig deaktiviert**, und Bookmark Sc
 
 Außerdem wählen Sie ein **Modell**: die KI-Version, die das Unternehmen anbietet, etwa eine schnellere oder eine klügere. Wenn KI eingeschaltet ist, gehen Anfragen direkt von Ihrem Browser an den von Ihnen gewählten Anbieter, mit Ihrem Schlüssel.
 
+Nur für Ordnervorschläge kommt Chrome ohne Konto und ohne Schlüssel aus: siehe [Kostenlose KI auf diesem Computer](#free-ai-on-this-computer).
+
 <Callout type="warn" title="Bevor Sie KI aktivieren">
 KI-Tools senden Lesezeichentitel, URLs und Ordnernamen oder -pfade an den von Ihnen eingerichteten Anbieter. Der Anbieter verarbeitet diese Daten nach seinen eigenen Bedingungen, und die Nutzung der API kann Kosten verursachen. Prüfen Sie jeden Vorschlag, bevor Sie ihn übernehmen.
 </Callout>
@@ -116,13 +118,13 @@ Lokale Server müssen Anfragen der Erweiterung annehmen:
 
 ## Eigene Prompts schreiben [#write-your-own-prompts]
 
-Jedes KI-Tool beginnt mit einem integrierten Prompt. Um das Verhalten eines Tools zu ändern, öffnen Sie **Optionen**, dann **KI-Tools**, dann **Prompts**:
+Jedes KI-Tool beginnt mit einem integrierten Prompt. Um das Verhalten eines Tools zu ändern, öffnen Sie **Einstellungen**, dann **KI-Tools**, dann **Prompts**:
 
 1. Um zuerst den integrierten Prompt eines Tools zu lesen, klicken Sie auf das Augensymbol daneben. Klicken Sie hier oder in der Ansicht auf **Anpassen**, und der Editor öffnet sich mit dem integrierten Prompt als Ausgangspunkt.
 2. Bearbeiten Sie den Text. Klicken Sie auf eine Variable wie `{{maxTags}}`, um sie einzufügen; das Tool füllt sie mit Ihren Einstellungen. **Vorschau mit aktuellen Einstellungen** zeigt das Ergebnis. Oder geben Sie `{{` ein und wählen Sie aus der Liste, die zeigt, was jeder Platzhalter bedeutet und welchen Wert er gerade hat. `{{today}}`, `{{language}}` und `{{aboutMe}}` funktionieren in jedem Tool, `{{existingTags}}` in Automatische Tags; ein Platzhalter ohne Inhalt, etwa `{{aboutMe}}` bei leerem „Über mich“, wird samt seiner Zeile weggelassen. Schreiben Sie `\{{` für geschweifte Klammern. Ein Platzhalter, den das Tool nicht ausfüllt, wird markiert, bei einem vermutlichen Tippfehler mit einem Vorschlag, und **Integrierten Prompt wiederherstellen** fängt neu an.
 3. Klicken Sie auf **Prompt speichern**. Der neue Prompt wird zum Prompt des Tools.
 
-Behalten Sie mehrere Prompts pro Tool, insgesamt bis zu 10, und wechseln Sie über das Menü des Tools zwischen ihnen; **Standard (integriert)** kehrt zum Original zurück. Ihre Prompts werden über Ihr Browserkonto auf Ihren Geräten synchronisiert, daher muss jeder unter 7 KB bleiben. Bookmark Scout fügt nach Ihrem Prompt eigene Regeln für das Ausgabeformat hinzu, sodass Ergebnisse auch dann geladen werden, wenn Ihr Prompt etwas anderes verlangt. Außerdem fügt es eine Zeile hinzu, die die unter **Ausgabesprache der KI** (**Optionen**, dann **KI**) gewählte Sprache verlangt; in Ihrem eigenen Prompt steht `{{language}}` für diese Sprache.
+Behalten Sie mehrere Prompts pro Tool, insgesamt bis zu 10, und wechseln Sie über das Menü des Tools zwischen ihnen; **Standard (integriert)** kehrt zum Original zurück. Ihre Prompts werden über Ihr Browserkonto auf Ihren Geräten synchronisiert, daher muss jeder unter 7 KB bleiben. Bookmark Scout fügt nach Ihrem Prompt eigene Regeln für das Ausgabeformat hinzu, sodass Ergebnisse auch dann geladen werden, wenn Ihr Prompt etwas anderes verlangt. Außerdem fügt es eine Zeile hinzu, die die unter **Ausgabesprache der KI** (**Einstellungen**, dann **KI**) gewählte Sprache verlangt; in Ihrem eigenen Prompt steht `{{language}}` für diese Sprache.
 
 ## Was jedes Tool sendet [#what-each-tool-sends]
 
@@ -141,7 +143,7 @@ Aktivieren Sie **Beim Öffnen automatisch vorschlagen**, um bei jedem Öffnen de
 
 ## Seiteninhalt lesen [#read-page-content]
 
-Titel und URLs verraten nicht immer, worum es auf einer Seite geht. Aktivieren Sie **Seiteninhalt lesen** unter **Optionen**, dann **KI**, und Ordnervorschläge, **Automatische Tags** und **Inhaltszusammenfassung** senden zusätzlich den Haupttext jeder Seite. Beim Aktivieren wird um Zugriff auf Websites gebeten; wenn Sie ablehnen, bleibt die Option deaktiviert.
+Titel und URLs verraten nicht immer, worum es auf einer Seite geht. Aktivieren Sie **Seiteninhalt lesen** unter **Einstellungen**, dann **KI**, und Ordnervorschläge, **Automatische Tags** und **Inhaltszusammenfassung** senden zusätzlich den Haupttext jeder Seite. Beim Aktivieren wird um Zugriff auf Websites gebeten; wenn Sie ablehnen, bleibt die Option deaktiviert.
 
 - Bookmark Scout lädt jede Seite selbst herunter, ohne Ihre Cookies, Sie erhalten also die abgemeldete Version einer Website. Es behält den Artikeltext ohne Menüs, Skripte, Bilder oder Linkadressen.
 - Pro Seite werden bis zu etwa 3.000 Zeichen gesendet, und ein Durchlauf eines Tools liest bis zu 40 Seiten. Weitere Lesezeichen in einem großen Ordner werden nur mit Titel und URL gesendet, ebenso Seiten, die nicht laden.
@@ -158,12 +160,12 @@ Klicken Sie auf die Chat-Schaltfläche neben dem Suchfeld im Pop-up oder in der 
 - OpenAI, Anthropic, Google Gemini und xAI können zusätzlich im Web suchen. Aktivieren Sie dies mit der Weltkugel-Schaltfläche neben dem Nachrichtenfeld; bis dahin bleibt es deaktiviert, und die Suche führt der Anbieter selbst aus.
 - Das Gespräch bleibt nur erhalten, solange der Chat geöffnet ist. **Neuer Chat** löscht es, und das Schließen des Pop-ups beendet es.
 - Die Anweisungen, denen der Chat folgt, sind der Prompt **KI fragen** in der Prompt-Bibliothek. Sie können sie also wie jeden anderen Prompt ansehen oder ersetzen.
-- **Was „KI fragen“ tun darf** unter **Optionen**, dann **KI**, listet jede Abfrage und Änderung auf, die der Chat vornehmen kann. Schalten Sie eine aus, wird sie „KI fragen“ gar nicht angeboten. Vor dem Übernehmen eines Änderungsplans werden Sie immer zuerst gefragt.
+- **Was „KI fragen“ tun darf** unter **Einstellungen**, dann **KI**, listet jede Abfrage und Änderung auf, die der Chat vornehmen kann. Schalten Sie eine aus, wird sie „KI fragen“ gar nicht angeboten. Vor dem Übernehmen eines Änderungsplans werden Sie immer zuerst gefragt.
 - Für Entwickler: KI-Agenten auf Ihrem Computer, etwa Claude Code, können dieselben Abfragen und Änderungen verwenden; siehe [Mit lokalen KI-Agenten verwenden](/guides/local-agents).
 
 ## Sehen, was gesendet wurde [#see-what-was-sent]
 
-Um genau zu prüfen, was ein Tool gesendet und was der Anbieter geantwortet hat, öffnen Sie **Optionen**, dann **KI**, und aktivieren Sie **Anfragen aufzeichnen** unter **KI-Aktivität**. Jeder KI-Aufruf zeigt dann seine Quelle, Adresse, seinen Status und seine Dauer; öffnen Sie einen Aufruf, um die Anfrage-Header sowie den Anfrage- und Antworttext zu sehen, oder kopieren Sie ihn als JSON für einen Fehlerbericht.
+Um genau zu prüfen, was ein Tool gesendet und was der Anbieter geantwortet hat, öffnen Sie **Einstellungen**, dann **KI**, und aktivieren Sie **Anfragen aufzeichnen** unter **KI-Aktivität**. Jeder KI-Aufruf zeigt dann seine Quelle, Adresse, seinen Status und seine Dauer; öffnen Sie einen Aufruf, um die Anfrage-Header sowie den Anfrage- und Antworttext zu sehen, oder kopieren Sie ihn als JSON für einen Fehlerbericht.
 
 Die Aufzeichnung ist standardmäßig deaktiviert. Das Protokoll bleibt auf diesem Gerät und enthält nur die letzten Aufrufe. API-Schlüssel, Header, deren Namen auf Zugangsdaten hindeuten (etwa solche, die `key`, `token`, `secret`, `auth` oder `cookie` enthalten), und jeder Header, den Sie unter **Zusätzliche Header (JSON)** festlegen, werden vor dem Speichern durch `[redacted]` ersetzt. Lesezeichentitel und URLs in den Anfragen bleiben jedoch erhalten. Deaktivieren Sie die Aufzeichnung daher, wenn Sie fertig sind: Dadurch wird auch das Protokoll gelöscht.
 

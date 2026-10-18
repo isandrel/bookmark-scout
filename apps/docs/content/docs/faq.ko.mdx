@@ -7,11 +7,11 @@ description: Bookmark Scout에 관해 자주 묻는 질문에 답하고, 가장 
 
 ### Bookmark Scout는 무료인가요? [#is-bookmark-scout-free]
 
-네. <License /> 라이선스의 무료 오픈 소스이며, 광고도 계정도 유료 요금제도 없습니다. 비용이 들 수 있는 것은 선택 사항인 AI 기능뿐입니다. AI 기능은 AI 회사에 있는 내 계정을 사용하며, 그 회사가 사용할 때마다 요금을 청구할 수 있습니다.
+네. <License /> 라이선스의 무료 오픈 소스이며, 광고도 계정도 유료 요금제도 없습니다. 비용이 들 수 있는 것은 선택 사항인 AI 기능뿐입니다. AI 기능은 AI 회사에 있는 내 계정을 사용하며, 그 회사가 사용할 때마다 요금을 청구할 수 있습니다. 내 컴퓨터에서 폴더를 추천하는 Chrome의 내장 AI는 무료입니다.
 
 ### AI를 꼭 사용해야 하나요? [#do-i-need-to-use-ai]
 
-아니요. AI는 선택 사항입니다. 저장, 검색, 정리, 정돈, 가져오기와 내보내기는 모두 AI 없이 동작하며, AI는 [설정](/settings#ai)에서 켜기 전까지 꺼져 있습니다. AI를 사용하려면 OpenAI, Anthropic, Google 같은 AI 회사의 계정과, Bookmark Scout가 그 계정을 사용할 수 있게 해 주는 계정의 키(API 키)가 필요합니다. 이런 회사는 대부분 사용할 때마다 보통 적은 금액을 청구합니다. Ollama처럼 내 컴퓨터에서 실행하는 AI 프로그램은 무료지만 꽤 성능이 좋은 컴퓨터가 필요합니다. AI 도구가 다루는 북마크 제목과 주소는 내가 고른 회사로 전송됩니다. [AI 도구 설정](/guides/ai-tools)을 참고하세요.
+아니요. AI는 선택 사항입니다. 저장, 검색, 정리, 정돈, 가져오기와 내보내기는 모두 AI 없이 동작하며, AI는 [설정](/settings#ai)에서 켜기 전까지 꺼져 있습니다. AI를 사용하려면 OpenAI, Anthropic, Google 같은 AI 회사의 계정과, Bookmark Scout가 그 계정을 사용할 수 있게 해 주는 계정의 키(API 키)가 필요합니다. 이런 회사는 대부분 사용할 때마다 보통 적은 금액을 청구합니다. Ollama처럼 내 컴퓨터에서 실행하는 AI 프로그램은 무료지만 꽤 성능이 좋은 컴퓨터가 필요합니다. Chrome에서는 내장 AI를 실행할 수 있는 컴퓨터라면 계정이나 키 없이 무료로 폴더를 추천받을 수 있습니다. AI 도구가 다루는 북마크 제목과 주소는 내가 고른 회사로 전송됩니다. [AI 도구 설정](/guides/ai-tools)을 참고하세요.
 
 ### 내 북마크를 어딘가로 보내나요? [#does-it-send-my-bookmarks-anywhere]
 
@@ -60,6 +60,10 @@ Firefox는 다시 시작할 때 임시 부가 기능을 제거합니다. [설치
 ### API 키가 저장되지 않았습니다 [#my-api-key-was-not-saved]
 
 선택한 AI 회사(서비스의 제공업체)의 키 형식과 맞지 않는 키는 거부되어 저장되지 않으며, 이를 알리는 메시지가 표시됩니다. 서비스의 제공업체가 키를 발급한 회사와 같은지 확인하세요. [AI 도구 설정](/guides/ai-tools#turn-on-ai)을 참고하세요.
+
+### AI가 태그나 요약을 다른 언어로 씁니다 [#ai-writes-tags-or-summaries-in-the-wrong-language]
+
+AI는 태그, 요약, 새 폴더 이름을 [설정](/settings#ai-output-language)의 **AI 출력 언어**에서 정한 언어로 씁니다. 기본값은 Bookmark Scout 자체의 표시 언어입니다. 그곳에서 다른 언어를 고르거나, **각 페이지와 같음**을 골라 각 페이지의 언어를 따르게 하세요. AI에게 묻기는 내가 쓴 언어로 답합니다.
 
 ### 정상 동작하는 사이트인데 깨진 링크 확인에서 직접 확인이 필요하다고 나옵니다 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
 

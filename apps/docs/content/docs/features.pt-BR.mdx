@@ -12,7 +12,7 @@ Uma lista de referência do que já está disponível. Para instruções passo a
 | Pop-up | O botão da barra de ferramentas: pesquisa, árvore de pastas, salvamento e recomendações de pasta com IA |
 | Painel lateral | A mesma visualização no painel lateral do navegador (a barra lateral, no Firefox), que continua aberto enquanto você navega |
 | Gerenciador de favoritos | Substitui a página de favoritos do navegador no Chrome e no Edge: árvore de pastas, trilha de navegação, tabela de favoritos e a barra lateral **Ferramentas**. Em uma janela estreita, a árvore de pastas e as **Ferramentas** se abrem sobre a tabela; um caminho de pasta longo recolhe as pastas do meio em um menu **…** |
-| Configurações | A página de opções da extensão, com dez guias. Consulte [Configurações](/settings) |
+| Configurações | A página de configurações da extensão: primeiro **Essenciais** e depois mais onze guias em **Avançado**. Consulte [Configurações](/settings) |
 | Qualquer página | <Shortcut id="commands.quick-save" /> e <Shortcut id="commands.ai-quick-save" /> salvam rapidamente a página em que você está, com uma notificação na página |
 | Menu de clique com o botão direito | **Salvar favorito em...** em qualquer link, depois que você ativa o **Menu do botão direito** |
 
@@ -32,7 +32,7 @@ Guia: [Pesquisa e pesquisas salvas](/guides/search).
 - Salvamento rápido com <Shortcut id="commands.quick-save" /> em qualquer página, na pasta que melhor corresponde à página (calculada no seu dispositivo), na última pasta usada ou em uma pasta que você escolher; <Shortcut id="commands.ai-quick-save" /> salva na primeira sugestão da IA. Uma notificação na página oferece **Desfazer** e outras pastas em **Mover para**. No Chrome e no Edge, você pode atribuir <Shortcut id="browser.bookmark_page" /> ao salvamento rápido.
 - Salve links pelo menu de clique com o botão direito em uma pasta recente ou na Barra de favoritos.
 - Crie pastas, arraste e solte favoritos e pastas e mova vários itens de uma vez no gerenciador.
-- Classifique por data de adição, ordem alfabética natural ou pastas primeiro, sem alterar a ordem armazenada no navegador.
+- Mostre os favoritos na ordem do próprio navegador (o padrão), por data de adição, em ordem alfabética natural ou com pastas primeiro, sem alterar a ordem armazenada no navegador.
 - Edite nomes e URLs e adicione tags e um resumo em **Detalhes do favorito**.
 - Exclua com uma confirmação opcional e 10 segundos para desfazer, o que restaura tudo o que havia dentro de uma pasta.
 - No gerenciador, redimensione as colunas da tabela arrastando ou com as teclas de seta; **Redefinir visualização** restaura o layout.
@@ -65,13 +65,14 @@ Guia: [Importar e exportar](/guides/import-export).
 
 ## Ferramentas de IA (opcionais) [#ai-tools-optional]
 
-Desativadas por padrão. Use sua própria chave da OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou de cerca de 200 outros provedores do catálogo models.dev, ou use o Ollama, o CLIProxyAPI ou qualquer endpoint compatível com a OpenAI.
+Desativadas por padrão. Use sua própria chave da OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou de cerca de 200 outros provedores do catálogo models.dev, ou use o Ollama, o CLIProxyAPI ou qualquer endpoint compatível com a OpenAI. No Chrome, a **IA integrada** sugere pastas de graça com o próprio modelo do Chrome, no seu computador e sem chave.
 
 - Recomendações de pasta no pop-up, incluindo um caminho de nova pasta que você revisa, e o atalho de salvamento rápido <Shortcut id="commands.ai-quick-save" />.
 - **Perguntar à IA** no pop-up e no painel lateral: responde a perguntas pesquisando seus favoritos, pastas, tags e resumos, encontrando duplicatas e verificando links; salva páginas e propõe movimentações, renomeações, exclusões e novas pastas como um plano que não altera nada até você aprová-lo, com cada alteração podendo ser desfeita; e termina as respostas com botões para o que fazer em seguida. **O que Perguntar à IA pode fazer** nas Configurações desativa qualquer consulta ou alteração.
 - **Tags automáticas** e **Gerador de resumos** para a pasta atual, salvos somente depois que você os revisa, com opção de desfazer.
 - **Reorganização de pastas com IA**, com prévia antes de qualquer item ser movido, com opção de desfazer.
 - **Empacotador de contexto para IA**, que exporta favoritos como Markdown ou XML para uma conversa com IA e funciona com a IA desativada.
+- **Idioma de saída da IA** escolhe o idioma das tags, dos resumos e dos nomes de novas pastas; **Sobre mim** conta um pouco sobre você a todos os recursos de IA; e a biblioteca de prompts permite reescrever o prompt de cada ferramenta, com uma lista de marcadores como `{{today}}` e `{{existingTags}}`.
 
 As tags e os resumos ficam neste dispositivo. Eles não são sincronizados nem podem ser pesquisados no pop-up, mas Perguntar à IA pode consultá-los e as exportações de favoritos em JSON os incluem. Guia: [Configurar as ferramentas de IA](/guides/ai-tools).
 

@@ -1,6 +1,6 @@
 # Japanese Listing Copy (日本語)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-15, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox full description on 2026-10-15, the Chrome Web Store and Edge full description on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
@@ -48,7 +48,7 @@ AI ブックマーク
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-The same Edge condition as in `en.md` applies.
+Plain text, 4,897 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout（ブックマークスカウト）は、ツールバーから、またはキーボードショートカット 1 つで、どのページも数秒で正しいフォルダに保存し、ブラウザを離れずにブックマークを探して整理できる拡張機能です。無料で、アカウントも広告もありません。
@@ -107,6 +107,7 @@ Bookmark Scout（ブックマークスカウト）は、ツールバーから、
 AI（任意、既定でオフ）
 AI は任意で、ここまでの機能はすべて AI なしで使えます。AI を使うには、AI 会社のアカウント（使うたびに少額の料金がかかる場合があります）か、自分のコンピューターで動く無料の AI プログラムが必要です。Bookmark Scout には独自の AI サービスはありません。設定で AI をオンにし、選んだサービスを追加してください。
 • 表示中のページに合うフォルダの提案（新しいフォルダも先に確認してから作成）
+• Chrome では、Chrome の内蔵 AI による無料のフォルダの提案。パソコン上で動き、アカウントもキーも不要です（そのパソコンで動かせる場合）
 • 保存前に確認できるタグ候補と短い要約
 • フォルダ再編成プラン（必ず適用前にプレビュー）
 • AI に質問：ブックマークについてチャットできます。キーワード、フォルダ、タグ、サイト、追加日でブックマークを検索し、重複を見つけ、フォルダを提案し、表示中のページを参照できます
@@ -114,6 +115,7 @@ AI は任意で、ここまでの機能はすべて AI なしで使えます。A
 • 回答の最後にボタンが表示されることがあります：追加の質問、選択肢、提案されたフォルダへのページの保存、ブックマークを開く。クリックするまで何も実行されません
 • 「AI に質問」で調べられることと変更できることを選択（設定 > AI）
 • ページの内容を読む（既定でオフ）：タイトルとアドレスに加えて各ページの本文も送信し、提案の精度を高めます
+• タグ、要約、新しいフォルダ名を、あなたの言語、選んだ言語、または各ページの言語で返します（設定 > AI）
 
 AI 機能を使うと、その機能に必要なデータがブラウザから選択した AI サービスへ直接送信され、そのサービスの規約に従って扱われます。送信されるのは、ブックマークのタイトル、アドレス、フォルダ名、ブックマークの追加日、保存したタグと要約、表示中のページのタイトルとアドレス、「AI に質問」のメッセージ、自己紹介に書いた内容（ある場合）、「AI に質問」が確認したリンクがまだ有効かどうか、そして「ページの内容を読む」をオンにした場合のみ対象ページの本文です。Bookmark Scout には何も送信されません。API キーはこのブラウザのローカル拡張機能ストレージに保存され、同期されません。AI サービスの利用には料金がかかる場合があります。
 

@@ -10,6 +10,8 @@ Les fonctionnalités d'IA sont **facultatives et désactivées par défaut**, et
 
 Vous choisissez aussi un **modèle** : la version d'IA que propose l'entreprise, par exemple une plus rapide ou une plus performante. Lorsque l'IA est activée, les requêtes vont directement de votre navigateur au fournisseur que vous avez choisi, avec votre clé.
 
+Pour les suggestions de dossiers uniquement, Chrome peut se passer de compte et de clé : consultez [IA gratuite sur cet ordinateur](#free-ai-on-this-computer).
+
 <Callout type="warn" title="Avant d'activer l'IA">
 Les outils d'IA envoient les titres des favoris, leurs URL et les noms ou chemins de dossier au fournisseur que vous configurez. Le fournisseur traite ces données selon ses propres conditions, et l'utilisation de son API peut être payante. Vérifiez chaque suggestion avant de l'appliquer.
 </Callout>
@@ -116,13 +118,13 @@ La vérification et l'actualisation indiquent la cause probable : une clé refu
 
 ## Rédiger vos propres prompts [#write-your-own-prompts]
 
-Chaque outil d'IA utilise au départ un prompt intégré. Pour modifier le comportement d'un outil, accédez à **Options**, puis **Outils d'IA**, puis **Prompts** :
+Chaque outil d'IA utilise au départ un prompt intégré. Pour modifier le comportement d'un outil, accédez à **Paramètres**, puis **Outils d'IA**, puis **Prompts** :
 
 1. Pour lire d'abord le prompt intégré d'un outil, cliquez sur l'icône en forme d'œil à côté de celui-ci. Cliquez sur **Personnaliser**, ici ou dans la visionneuse : l'éditeur s'ouvre avec le prompt intégré comme point de départ.
 2. Modifiez le texte. Cliquez sur une variable telle que `{{maxTags}}` pour l'insérer ; l'outil la remplit à partir de vos paramètres. **Aperçu avec les paramètres actuels** affiche le résultat. Vous pouvez aussi taper `{{` et en choisir un dans la liste, qui indique ce que représente chaque espace réservé et sa valeur actuelle. `{{today}}`, `{{language}}` et `{{aboutMe}}` fonctionnent dans tous les outils, et `{{existingTags}}` dans l'étiquetage automatique ; un espace réservé sans contenu, comme `{{aboutMe}}` quand À propos de moi est vide, est omis avec sa ligne. Écrivez `\{{` pour des accolades littérales. Un espace réservé que l'outil ne remplit pas est signalé, avec une suggestion s'il ressemble à une faute de frappe, et **Rétablir le prompt intégré** permet de repartir de zéro.
 3. Cliquez sur **Enregistrer le prompt**. Le nouveau prompt devient celui de l'outil.
 
-Conservez plusieurs prompts par outil, jusqu'à 10 au total, et passez de l'un à l'autre avec le menu de l'outil ; **Par défaut (intégré)** rétablit le prompt d'origine. Vos prompts sont synchronisés entre vos appareils via votre compte de navigateur : chacun doit donc rester sous 7 Ko. Bookmark Scout ajoute ses propres règles de format de sortie après votre prompt, de sorte que les résultats se chargent correctement même si votre prompt demande autre chose. Il ajoute aussi une ligne qui demande la langue choisie dans **Langue de sortie de l'IA** (**Options**, puis **IA**) ; dans votre propre prompt, `{{language}}` désigne cette langue.
+Conservez plusieurs prompts par outil, jusqu'à 10 au total, et passez de l'un à l'autre avec le menu de l'outil ; **Par défaut (intégré)** rétablit le prompt d'origine. Vos prompts sont synchronisés entre vos appareils via votre compte de navigateur : chacun doit donc rester sous 7 Ko. Bookmark Scout ajoute ses propres règles de format de sortie après votre prompt, de sorte que les résultats se chargent correctement même si votre prompt demande autre chose. Il ajoute aussi une ligne qui demande la langue choisie dans **Langue de sortie de l'IA** (**Paramètres**, puis **IA**) ; dans votre propre prompt, `{{language}}` désigne cette langue.
 
 ## Ce que chaque outil envoie [#what-each-tool-sends]
 
@@ -141,7 +143,7 @@ Activez **Recommander à l'ouverture** pour demander des recommandations de doss
 
 ## Lire le contenu des pages [#read-page-content]
 
-Les titres et les URL ne suffisent pas toujours à savoir de quoi parle une page. Activez **Lire le contenu des pages** dans **Options**, puis **IA** : les recommandations de dossiers, l'**Étiquetage automatique** et le **Générateur de résumés** envoient alors aussi le texte principal de chaque page. L'activation de cette option demande l'accès aux sites Web ; si vous refusez, elle reste désactivée.
+Les titres et les URL ne suffisent pas toujours à savoir de quoi parle une page. Activez **Lire le contenu des pages** dans **Paramètres**, puis **IA** : les recommandations de dossiers, l'**Étiquetage automatique** et le **Générateur de résumés** envoient alors aussi le texte principal de chaque page. L'activation de cette option demande l'accès aux sites Web ; si vous refusez, elle reste désactivée.
 
 - Bookmark Scout télécharge chaque page lui-même, sans vos cookies : vous obtenez donc la version d'un site accessible sans connexion. Il conserve le texte de l'article, sans les menus, les scripts, les images ni les adresses des liens.
 - Chaque page envoie jusqu'à environ 3 000 caractères, et une exécution d'outil lit jusqu'à 40 pages. Les favoris suivants d'un dossier volumineux sont envoyés avec leur titre et leur URL uniquement, de même que les pages qui ne se chargent pas.
@@ -158,12 +160,12 @@ Cliquez sur le bouton de discussion à côté du champ de recherche, dans la fen
 - OpenAI, Anthropic, Google Gemini et xAI peuvent aussi effectuer des recherches sur le Web. Activez cette option avec le bouton en forme de globe à côté du champ de message ; elle reste désactivée tant que vous ne l'activez pas, et c'est le fournisseur qui effectue la recherche lui-même.
 - La conversation n'est conservée que tant que la discussion est ouverte. **Nouvelle discussion** l'efface, et la fermeture de la fenêtre pop-up y met fin.
 - Les instructions qu'elle suit sont celles du prompt **Demander à l'IA** de la bibliothèque de prompts : vous pouvez donc les afficher ou les remplacer comme n'importe quel autre prompt.
-- **Ce que Demander à l'IA peut faire**, dans **Options**, puis **IA**, liste chaque consultation et chaque modification qu'elle peut effectuer. Si vous en désactivez une, elle n'est plus du tout proposée à Demander à l'IA. L'application d'un plan de modifications vous demande toujours d'abord votre accord.
+- **Ce que Demander à l'IA peut faire**, dans **Paramètres**, puis **IA**, liste chaque consultation et chaque modification qu'elle peut effectuer. Si vous en désactivez une, elle n'est plus du tout proposée à Demander à l'IA. L'application d'un plan de modifications vous demande toujours d'abord votre accord.
 - Pour les développeurs : les agents d'IA de votre ordinateur, comme Claude Code, peuvent utiliser les mêmes consultations et modifications ; consultez [Utiliser avec des agents d'IA locaux](/guides/local-agents).
 
 ## Voir ce qui a été envoyé [#see-what-was-sent]
 
-Pour vérifier exactement ce qu'un outil a envoyé et ce que le fournisseur a répondu, accédez à **Options**, puis **IA**, et activez **Enregistrer les requêtes** sous **Activité de l'IA**. Chaque appel à l'IA affiche alors sa source, son adresse, son statut et sa durée ; ouvrez-en un pour voir les en-têtes de la requête ainsi que le corps de la requête et de la réponse, ou copiez-le au format JSON pour un rapport de bug.
+Pour vérifier exactement ce qu'un outil a envoyé et ce que le fournisseur a répondu, accédez à **Paramètres**, puis **IA**, et activez **Enregistrer les requêtes** sous **Activité de l'IA**. Chaque appel à l'IA affiche alors sa source, son adresse, son statut et sa durée ; ouvrez-en un pour voir les en-têtes de la requête ainsi que le corps de la requête et de la réponse, ou copiez-le au format JSON pour un rapport de bug.
 
 L'enregistrement est désactivé par défaut. Le journal reste sur cet appareil et ne conserve que les appels les plus récents. Les clés API, les en-têtes dont le nom évoque un identifiant de connexion (par exemple ceux qui contiennent `key`, `token`, `secret`, `auth` ou `cookie`) et tous les en-têtes que vous définissez dans **En-têtes supplémentaires (JSON)** sont remplacés par `[redacted]` avant tout stockage, mais les titres et les URL des favoris présents dans les requêtes sont conservés : désactivez donc l'enregistrement lorsque vous avez terminé, ce qui supprime aussi le journal.
 
