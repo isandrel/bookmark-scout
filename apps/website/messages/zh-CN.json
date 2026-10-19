@@ -95,16 +95,8 @@
     "demo": {
       "label": "试一试：把这个网页保存到文件夹",
       "pageLabel": "当前网页",
-      "pageTitle": "20 分钟做好的培根蛋面",
       "placeholder": "输入文件夹名称的一部分",
       "try": "试试",
-      "chips": [
-        "食",
-        "旅行/日本",
-        "react",
-        "css"
-      ],
-      "autoQuery": "意",
       "clear": "清除",
       "startHint": "输入文件夹名称中的几个字。匹配的文件夹会显示在这里，包括嵌套很深的文件夹。",
       "matches": "保存到文件夹",
@@ -113,22 +105,8 @@
       "saved": "已保存到 {folder}。",
       "alreadySaved": "已在 {folder} 中，没有重复保存。",
       "emptyTitle": "没有与“{query}”匹配的文件夹。",
-      "emptyHint": "试试输入文件夹名称的一部分，或像 旅行/日本 这样的路径。",
-      "keys": "↑ ↓ 选择，Enter 保存",
-      "folders": {
-        "devDocs": "开发文档",
-        "css": "CSS",
-        "react": "React",
-        "research": "研究",
-        "recipes": "食谱",
-        "pasta": "意面",
-        "baking": "烘焙",
-        "travel": "旅行",
-        "japan": "日本",
-        "kyoto": "京都",
-        "reading": "阅读",
-        "inbox": "待整理"
-      }
+      "emptyHint": "试试输入文件夹名称的一部分，或像 ai/llms 这样的路径。",
+      "keys": "↑ ↓ 选择，Enter 保存"
     },
     "tour": {
       "title": "它能做什么",
@@ -139,10 +117,10 @@
         "tab": "保存",
         "heading": "保存到合适的文件夹",
         "caption": "工具栏弹出窗口：输入文件夹名称的一部分，或在文件夹树中选择一个文件夹，一键保存网页。",
-        "alt": "两个弹出窗口：在搜索框中输入“pas”，在“保存到文件夹”下选中 Pasta 文件夹（Recipes / Italian）；以及针对当前网页的 AI 建议：现有的 Recipes/Italian/Pasta 文件夹和新的 Recipes/Quick Dinners 文件夹",
+        "alt": "两个弹出窗口：在搜索框中输入“fin”，在“保存到文件夹”下选中 Fine-tuning 文件夹（AI / LLMs）；以及针对另一个网页的 AI 建议：新的 AI/LLMs/Inference 文件夹和现有的 AI/LLMs 文件夹",
         "points": [
           "输入文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，无需离开键盘就能将当前网页保存到那里",
-          "输入 食谱/意面 这样的路径，有小的拼写错误也能找到文件夹",
+          "输入 ai/llms 这样的路径，有小的拼写错误也能找到文件夹",
           "在任意网页上按 {{SHORTCUT:commands.quick-save}}，即可将其保存到最匹配的文件夹；页面中的小通知提供“撤消”和其他文件夹",
           "已在该文件夹中的网页不会重复保存，最近保存过的文件夹排在前面",
           "在设置中开启右键菜单后（默认关闭），即可通过右键菜单将链接保存到最近使用的文件夹",
@@ -153,7 +131,7 @@
         "tab": "查找和整理",
         "heading": "查找和整理你保存的内容",
         "caption": "书签管理器取代 Chrome 的书签页面，用法也与之一致，提供文件夹树、路径导航和可排序的表格。",
-        "alt": "打开书签栏的 Bookmark Scout 管理器，包含文件夹树（Recipes、School、Travel、Family、Shopping）、一个搜索框和书签表格",
+        "alt": "打开 AI / LLMs / Fine-tuning 文件夹的 Bookmark Scout 管理器，包含文件夹树（AI、Dev、Design、Tools、Reading list）、一个搜索框和书签表格，每个书签都显示其网站图标",
         "points": [
           "输入时即可搜索你的所有书签",
           "可在浏览器侧边栏（Firefox 中为侧栏）中保持打开同样的文件夹树和搜索",
@@ -182,7 +160,7 @@
         "tab": "AI（可选）",
         "heading": "可选的 AI，由你选择用哪家公司",
         "caption": "在你开启之前，AI 始终处于关闭状态。使用 AI 需要一个 AI 公司的账号（每次使用可能会收取少量费用），或一个在你自己电脑上运行的免费 AI 程序。在 Chrome 中，其内置 AI 可以免费推荐文件夹。",
-        "alt": "设置中的 AI 标签页：“AI 是可选的”说明了使用 AI 需要什么、可能产生的费用，AI 功能处于关闭状态（默认）",
+        "alt": "设置中的 AI 标签页：AI 功能已开启，“添加服务”下方是用户添加的两个 AI 服务：一个隐藏了密钥的默认云端 AI 服务，以及一个在本机运行的模型",
         "points": [
           "为当前网页获取文件夹建议，或按 {{SHORTCUT:commands.ai-quick-save}} 保存到第一个建议的文件夹",
           "就书签向 AI 提问：它会搜索书签、检查链接，并以方案的形式提议移动、重命名和新建文件夹，在你批准之前不做任何更改",

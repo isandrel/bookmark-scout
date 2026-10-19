@@ -121,17 +121,17 @@ test("hero demo saves the page to a folder found by name", async ({ page }) => {
     await expect(options).toHaveCount(0);
 
     // A path and a typo both find the folder; the first match is selected.
-    await input.fill("travel/japan");
-    await expect(options.first()).toContainText("Japan");
-    await input.fill("reserch");
-    await expect(options.first()).toContainText("Research");
+    await input.fill("ai/llms");
+    await expect(options.first()).toContainText("LLMs");
+    await input.fill("agnets");
+    await expect(options.first()).toContainText("Agents");
 
-    await input.fill("pas");
+    await input.fill("fin");
     await expect(options.first()).toHaveAttribute("aria-selected", "true");
     await input.press("Enter");
-    await expect(page.getByText("Saved to Recipes / Pasta.")).toBeVisible();
+    await expect(page.getByText("Saved to AI / LLMs / Fine-tuning.")).toBeVisible();
     await options.first().click();
-    await expect(page.getByText("Already in Recipes / Pasta, so it was not saved twice.")).toBeVisible();
+    await expect(page.getByText("Already in AI / LLMs / Fine-tuning, so it was not saved twice.")).toBeVisible();
 });
 
 test("tabs follow the ARIA tabs pattern", async ({ page, isMobile }) => {

@@ -6,8 +6,8 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Optional manifest description | 131 |
 | Firefox Add-ons summary | 250 |
-| Full description, Chrome and Edge | 10,671 |
-| Full description, Firefox | 6,237 |
+| Full description, Chrome and Edge | 10,663 |
+| Full description, Firefox | 6,229 |
 | What's new in 0.3.3 | 1,181 |
 
 ## Name
@@ -48,14 +48,14 @@ favoritos com IA
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 10,671 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
+Plain text, 10,663 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 O Bookmark Scout salva cada página na pasta certa em segundos, pela barra de ferramentas ou com um atalho de teclado, e depois ajuda você a encontrar e arrumar seus favoritos sem sair do navegador. Gratuito, sem conta e sem anúncios.
 
 SALVE NA PASTA CERTA EM SEGUNDOS
 • Clique no botão do Bookmark Scout, digite parte do nome de qualquer pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página nela sem tirar as mãos do teclado
-• Digite um caminho como receitas/massas; um pequeno erro de digitação ainda encontra a pasta, e as pastas que você usou recentemente aparecem primeiro
+• Digite um caminho como ai/llms; um pequeno erro de digitação ainda encontra a pasta, e as pastas que você usou recentemente aparecem primeiro
 • Uma página que já está nessa pasta não é salva duas vezes
 • A IA opcional sugere a melhor pasta para a página, ou uma nova pasta que você revisa antes de ela ser criada
 • Menu de clique com o botão direito opcional (vem desativado; ative Menu do botão direito nas Configurações) para salvar links em pastas recentes
@@ -146,7 +146,7 @@ O Bookmark Scout salva cada página na pasta certa em segundos, pela barra de fe
 
 SALVE NA PASTA CERTA EM SEGUNDOS
 • Clique no botão do Bookmark Scout, digite parte do nome de qualquer pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página nela sem tirar as mãos do teclado
-• Digite um caminho como receitas/massas; um pequeno erro de digitação ainda encontra a pasta, e as pastas que você usou recentemente aparecem primeiro
+• Digite um caminho como ai/llms; um pequeno erro de digitação ainda encontra a pasta, e as pastas que você usou recentemente aparecem primeiro
 • Uma página que já está nessa pasta não é salva duas vezes
 • A IA opcional sugere a melhor pasta para a página, ou uma nova pasta que você revisa antes de ela ser criada
 • Salve links em pastas recentes pelo menu de clique com o botão direito, depois de ativar Menu do botão direito nas Configurações

@@ -95,16 +95,8 @@
     "demo": {
       "label": "試試看：把這個網頁儲存到資料夾",
       "pageLabel": "目前網頁",
-      "pageTitle": "20 分鐘完成的培根蛋麵",
       "placeholder": "輸入資料夾名稱的一部分",
       "try": "試試看",
-      "chips": [
-        "食",
-        "旅行/日本",
-        "react",
-        "css"
-      ],
-      "autoQuery": "義",
       "clear": "清除",
       "startHint": "輸入資料夾名稱中的幾個字。相符的資料夾會顯示在這裡，包括位於深層的資料夾。",
       "matches": "儲存到資料夾",
@@ -113,22 +105,8 @@
       "saved": "已儲存到 {folder}。",
       "alreadySaved": "已在 {folder} 中，沒有重複儲存。",
       "emptyTitle": "沒有與「{query}」相符的資料夾。",
-      "emptyHint": "試試輸入資料夾名稱的一部分，或像 旅行/日本 這樣的路徑。",
-      "keys": "↑ ↓ 選擇，Enter 儲存",
-      "folders": {
-        "devDocs": "開發文件",
-        "css": "CSS",
-        "react": "React",
-        "research": "研究",
-        "recipes": "食譜",
-        "pasta": "義大利麵",
-        "baking": "烘焙",
-        "travel": "旅行",
-        "japan": "日本",
-        "kyoto": "京都",
-        "reading": "閱讀",
-        "inbox": "待整理"
-      }
+      "emptyHint": "試試輸入資料夾名稱的一部分，或像 ai/llms 這樣的路徑。",
+      "keys": "↑ ↓ 選擇，Enter 儲存"
     },
     "tour": {
       "title": "可以用它做什麼",
@@ -139,10 +117,10 @@
         "tab": "儲存",
         "heading": "儲存到正確的資料夾",
         "caption": "工具列彈出式視窗：輸入資料夾名稱的一部分，或在樹狀結構中選擇資料夾，一鍵儲存網頁。",
-        "alt": "兩個彈出式視窗：在搜尋框中輸入「pas」，在「儲存到資料夾」下選取 Pasta 資料夾（Recipes / Italian）；以及針對目前網頁的 AI 建議：現有的 Recipes/Italian/Pasta 資料夾和新的 Recipes/Quick Dinners 資料夾",
+        "alt": "兩個彈出式視窗：在搜尋框中輸入「fin」，在「儲存到資料夾」下選取 Fine-tuning 資料夾（AI / LLMs）；以及針對另一個網頁的 AI 建議：新的 AI/LLMs/Inference 資料夾和現有的 AI/LLMs 資料夾",
         "points": [
           "輸入資料夾名稱的一部分，即使是樹狀結構深處的資料夾也能找到，不必離開鍵盤就能將目前網頁儲存到那裡",
-          "可以輸入 recipes/pasta 之類的路徑，有小小的拼字錯誤也能找到資料夾",
+          "可以輸入 ai/llms 之類的路徑，有小小的拼字錯誤也能找到資料夾",
           "在任何網頁上按 {{SHORTCUT:commands.quick-save}}，即可將網頁儲存到最相符的資料夾；網頁中會出現一則小通知，提供復原和其他資料夾",
           "已在該資料夾中的網頁不會重複儲存，最近儲存過的資料夾也會排在前面",
           "在「設定」中開啟右鍵選單後 (預設為關閉)，即可從右鍵選單將連結儲存至最近使用的資料夾",
@@ -153,7 +131,7 @@
         "tab": "尋找和整理",
         "heading": "尋找和整理儲存過的內容",
         "caption": "書籤管理員取代 Chrome 的「書籤」頁面，操作方式也與它相同，並提供資料夾樹狀結構、路徑導覽和可排序的表格。",
-        "alt": "開啟書籤列的 Bookmark Scout 管理員，包含資料夾樹狀結構 (Recipes、School、Travel、Family、Shopping)、一個搜尋框和書籤表格",
+        "alt": "開啟 AI / LLMs / Fine-tuning 資料夾的 Bookmark Scout 管理員，包含資料夾樹狀結構 (AI、Dev、Design、Tools、Reading list)、一個搜尋框和書籤表格，每個書籤都顯示其網站圖示",
         "points": [
           "邊輸入邊搜尋所有書籤",
           "可以在瀏覽器的側邊面板 (Firefox 中為側邊欄) 中持續開啟相同的樹狀結構和搜尋",
@@ -182,7 +160,7 @@
         "tab": "AI (選用)",
         "heading": "選用的 AI，來自你選擇的 AI 公司",
         "caption": "在你開啟之前，AI 都會維持關閉。使用 AI 需要 AI 公司的帳戶 (每次使用可能會收取少許費用)，或在自己電腦上執行的免費 AI 程式。在 Chrome 中，其內建 AI 可以免費推薦資料夾。",
-        "alt": "設定中的「AI」分頁：「AI 是選用功能」方塊說明使用 AI 需要什麼及可能的費用，「AI 功能」為關閉 (預設值)",
+        "alt": "設定中的「AI」分頁：「AI 功能」已開啟，「新增服務」下方是使用者新增的兩個 AI 服務：一個隱藏金鑰的預設雲端 AI 服務，以及一個在本機執行的模型",
         "points": [
           "為目前所在的網頁取得資料夾建議，或按 {{SHORTCUT:commands.ai-quick-save}} 儲存到第一個建議",
           "詢問 AI 有關書籤的問題：它會搜尋書籤、檢查連結，並以計畫的形式提議移動、重新命名和新增資料夾，在你核准之前不會做任何變更",

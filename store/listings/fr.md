@@ -6,8 +6,8 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Optional manifest description | 132 |
 | Firefox Add-ons summary | 250 |
-| Full description, Chrome and Edge | 12,064 |
-| Full description, Firefox | 7,034 |
+| Full description, Chrome and Edge | 12,057 |
+| Full description, Firefox | 7,027 |
 | What's new in 0.3.3 | 1,380 |
 
 ## Name
@@ -55,7 +55,7 @@ Bookmark Scout enregistre chaque page dans le bon dossier en quelques secondes, 
 
 ENREGISTRER DANS LE BON DOSSIER EN QUELQUES SECONDES
 • Cliquez sur le bouton Bookmark Scout, saisissez une partie du nom de n'importe quel dossier, même profondément imbriqué dans l'arborescence, et enregistrez-y la page sans quitter le clavier
-• Saisissez un chemin comme recettes/pâtes ; une petite faute de frappe n'empêche pas de trouver le dossier, et les dossiers utilisés récemment apparaissent en premier
+• Saisissez un chemin comme ai/llms ; une petite faute de frappe n'empêche pas de trouver le dossier, et les dossiers utilisés récemment apparaissent en premier
 • Une page déjà présente dans ce dossier n'est pas enregistrée deux fois
 • L'IA facultative suggère le meilleur dossier pour la page, ou un nouveau dossier que vous vérifiez avant sa création
 • Menu du clic droit facultatif (désactivé au départ ; activez Menu du clic droit dans les paramètres) pour enregistrer des liens dans les dossiers récents
@@ -146,7 +146,7 @@ Bookmark Scout enregistre chaque page dans le bon dossier en quelques secondes, 
 
 ENREGISTRER DANS LE BON DOSSIER EN QUELQUES SECONDES
 • Cliquez sur le bouton Bookmark Scout, saisissez une partie du nom de n'importe quel dossier, même profondément imbriqué dans l'arborescence, et enregistrez-y la page sans quitter le clavier
-• Saisissez un chemin comme recettes/pâtes ; une petite faute de frappe n'empêche pas de trouver le dossier, et les dossiers utilisés récemment apparaissent en premier
+• Saisissez un chemin comme ai/llms ; une petite faute de frappe n'empêche pas de trouver le dossier, et les dossiers utilisés récemment apparaissent en premier
 • Une page déjà présente dans ce dossier n'est pas enregistrée deux fois
 • L'IA facultative suggère le meilleur dossier pour la page, ou un nouveau dossier que vous vérifiez avant sa création
 • Enregistrement de liens dans les dossiers récents depuis le menu du clic droit, une fois Menu du clic droit activé dans les paramètres

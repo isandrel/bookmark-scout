@@ -4,7 +4,8 @@ import { useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
     DEMO_FOLDER_TREE,
-    DEMO_PAGE_URL,
+    DEMO_PAGE,
+    DEMO_QUERIES,
     DEMO_SETTINGS,
     type DemoFolderNode,
 } from "@/lib/content/demo-folders";
@@ -12,12 +13,14 @@ import { type DemoFolder, findDemoFolderMatches } from "@/lib/folder-match";
 
 type Status = { kind: "saved" | "already"; folderId: string } | null;
 
-function flatten(nodes: readonly DemoFolderNode[], name: (key: string) => string, parents: string[] = []): DemoFolder[] {
+function flatten(nodes: readonly DemoFolderNode[], parents: string[] = []): DemoFolder[] {
     return nodes.flatMap((node) => {
-        const folder = { id: node.key, name: name(node.key), parents };
-        return [folder, ...flatten(node.children ?? [], name, [...parents, folder.name])];
+        const folder = { id: node.id, name: node.name, parents };
+        return [folder, ...flatten(node.children ?? [], [...parents, folder.name])];
     });
 }
+
+const FOLDERS = flatten(DEMO_FOLDER_TREE);
 
 function FolderIcon() {
     return (
@@ -40,8 +43,7 @@ export function SaveDemo() {
     const t = useTranslations("home.demo");
     const inputId = useId();
     const listId = useId();
-    const chips = t.raw("chips") as string[];
-    const autoQuery = t("autoQuery");
+    const { chips, auto: autoQuery } = DEMO_QUERIES;
 
     const [query, setQuery] = useState("");
     const [autoTyping, setAutoTyping] = useState(false);
@@ -52,10 +54,9 @@ export function SaveDemo() {
     const touched = useRef(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const folders = useMemo(() => flatten(DEMO_FOLDER_TREE, (key) => t(`folders.${key}`)), [t]);
     const matches = useMemo(
-        () => findDemoFolderMatches(folders, query, { limit: DEMO_SETTINGS.maxMatches, recentIds }),
-        [folders, query, recentIds],
+        () => findDemoFolderMatches(FOLDERS, query, { limit: DEMO_SETTINGS.maxMatches, recentIds }),
+        [query, recentIds],
     );
     const pathOf = (folder: DemoFolder) => [...folder.parents, folder.name].join(" / ");
 
@@ -108,7 +109,7 @@ export function SaveDemo() {
     };
 
     const activeIndex = Math.min(active, Math.max(matches.length - 1, 0));
-    const statusFolder = status && folders.find((folder) => folder.id === status.folderId);
+    const statusFolder = status && FOLDERS.find((folder) => folder.id === status.folderId);
 
     return (
         <div className="relative overflow-hidden rounded-[1.25rem] border border-line bg-surface shadow-[0_30px_60px_-30px_rgb(15_33_53/0.35)]">
@@ -120,8 +121,8 @@ export function SaveDemo() {
                 </label>
                 <p className="min-w-0 truncate text-sm text-ink-soft">
                     <span className="sr-only">{t("pageLabel")}: </span>
-                    <span className="font-medium text-ink">{t("pageTitle")}</span>
-                    <span className="ml-2 font-mono text-xs">{DEMO_PAGE_URL}</span>
+                    <span className="font-medium text-ink">{DEMO_PAGE.title}</span>
+                    <span className="ml-2 font-mono text-xs">{DEMO_PAGE.url}</span>
                 </p>
             </div>
 

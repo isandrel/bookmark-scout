@@ -6,8 +6,8 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Manifest description | 131 |
 | Firefox Add-ons summary | 248 |
-| Full description, Chrome and Edge | 11,109 |
-| Full description, Firefox | 6,472 |
+| Full description, Chrome and Edge | 11,103 |
+| Full description, Firefox | 6,466 |
 | What's new in 0.3.3 | 1,248 |
 
 ## Name
@@ -48,14 +48,14 @@ marcadores con IA
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 11,109 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
+Plain text, 11,103 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout guarda cada página en la carpeta correcta en segundos, desde la barra de herramientas o con una sola combinación de teclas, y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador. Gratis, sin cuenta y sin anuncios.
 
 GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • Haz clic en el botón de Bookmark Scout, escribe parte del nombre de cualquier carpeta, aunque esté muy dentro del árbol, y guarda ahí la página sin soltar el teclado
-• Escribe una ruta como recetas/pasta; un pequeño error de escritura no impide encontrar la carpeta, y las carpetas que usaste hace poco aparecen primero
+• Escribe una ruta como ai/llms; un pequeño error de escritura no impide encontrar la carpeta, y las carpetas que usaste hace poco aparecen primero
 • Una página que ya está en esa carpeta no se guarda dos veces
 • La IA opcional sugiere la mejor carpeta para la página, o una carpeta nueva que revisas antes de que se cree
 • Menú del clic derecho opcional (desactivado al principio; activa Menú del clic derecho en Configuración) para guardar enlaces en carpetas recientes
@@ -146,7 +146,7 @@ Bookmark Scout guarda cada página en la carpeta correcta en segundos, desde la 
 
 GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • Haz clic en el botón de Bookmark Scout, escribe parte del nombre de cualquier carpeta, aunque esté muy dentro del árbol, y guarda ahí la página sin soltar el teclado
-• Escribe una ruta como recetas/pasta; un pequeño error de escritura no impide encontrar la carpeta, y las carpetas que usaste hace poco aparecen primero
+• Escribe una ruta como ai/llms; un pequeño error de escritura no impide encontrar la carpeta, y las carpetas que usaste hace poco aparecen primero
 • Una página que ya está en esa carpeta no se guarda dos veces
 • La IA opcional sugiere la mejor carpeta para la página, o una carpeta nueva que revisas antes de que se cree
 • Guarda enlaces en carpetas recientes desde el menú del clic derecho, una vez que actives Menú del clic derecho en Configuración

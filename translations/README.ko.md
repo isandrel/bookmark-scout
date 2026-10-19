@@ -30,7 +30,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-dark.png">
-    <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="Bookmark Scout 팝업. &quot;pas&quot;를 입력하면 Recipes / Italian 안의 Pasta 폴더가 찾아지고, Enter를 누르면 그곳에 페이지가 저장됨. 옆에는 파스타 레시피 페이지에 대한 선택형 AI 추천." width="800">
+    <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="Bookmark Scout 팝업. &quot;fin&quot;을 입력하면 AI / LLMs 안의 Fine-tuning 폴더가 찾아지고, Enter를 누르면 그곳에 페이지가 저장됨. 옆에는 프롬프트 캐싱에 관한 글에 대한 선택형 AI 추천(새 폴더 포함)." width="800">
   </picture>
 </p>
 

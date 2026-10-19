@@ -95,16 +95,8 @@
     "demo": {
       "label": "Try it: save this page to a folder",
       "pageLabel": "Current page",
-      "pageTitle": "Weeknight carbonara in 20 minutes",
       "placeholder": "Type part of a folder name",
       "try": "Try",
-      "chips": [
-        "rec",
-        "travel/japan",
-        "reserch",
-        "react"
-      ],
-      "autoQuery": "pas",
       "clear": "Clear",
       "startHint": "Type a few letters of a folder name. Matching folders appear here, nested ones included.",
       "matches": "Save to folder",
@@ -113,22 +105,8 @@
       "saved": "Saved to {folder}.",
       "alreadySaved": "Already in {folder}, so it was not saved twice.",
       "emptyTitle": "No folder matches “{query}”.",
-      "emptyHint": "Try part of a folder name, or a path such as travel/japan. A word of 4 letters or more may have one typo.",
-      "keys": "↑ ↓ to choose, Enter to save",
-      "folders": {
-        "devDocs": "Dev Docs",
-        "css": "CSS",
-        "react": "React",
-        "research": "Research",
-        "recipes": "Recipes",
-        "pasta": "Pasta",
-        "baking": "Baking",
-        "travel": "Travel",
-        "japan": "Japan",
-        "kyoto": "Kyoto",
-        "reading": "Reading",
-        "inbox": "Inbox"
-      }
+      "emptyHint": "Try part of a folder name, or a path such as ai/llms. A word of 4 letters or more may have one typo.",
+      "keys": "↑ ↓ to choose, Enter to save"
     },
     "tour": {
       "title": "What you can do with it",
@@ -139,10 +117,10 @@
         "tab": "Save",
         "heading": "Save to the right folder",
         "caption": "The toolbar popup: type part of a folder's name, or pick a folder in the tree, and save the page in one click.",
-        "alt": "Two popups: \"pas\" typed in the search box with the Pasta folder (Recipes / Italian) selected under Save to folder, and AI suggestions for the current page: the existing Recipes/Italian/Pasta folder and a new Recipes/Quick Dinners folder",
+        "alt": "Two popups: \"fin\" typed in the search box with the Fine-tuning folder (AI / LLMs) selected under Save to folder, and AI suggestions for another page: a new AI/LLMs/Inference folder and the existing AI/LLMs folder",
         "points": [
           "Type part of a folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard",
-          "Type a path such as recipes/pasta, and still find the folder with a small typo",
+          "Type a path such as ai/llms, and still find the folder with a small typo",
           "Press {{SHORTCUT:commands.quick-save}} on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
           "A page already in that folder is not saved twice, and folders you saved to recently come first",
           "Save links from the right-click menu into recent folders, once you turn the menu on in Settings (it is off at first)",
@@ -153,7 +131,7 @@
         "tab": "Find & organize",
         "heading": "Find and organize what you saved",
         "caption": "The manager replaces Chrome's Bookmarks page and works like it, with a folder tree, breadcrumbs, and a sortable table.",
-        "alt": "The Bookmark Scout manager on the Bookmarks Bar, with the folder tree (Recipes, School, Travel, Family, Shopping), one search box, and the bookmark table",
+        "alt": "The Bookmark Scout manager on the AI / LLMs / Fine-tuning folder, with the folder tree (AI, Dev, Design, Tools, Reading list), one search box, and the bookmark table, each bookmark with its site's icon",
         "points": [
           "Search all your bookmarks as you type",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
@@ -182,7 +160,7 @@
         "tab": "AI (optional)",
         "heading": "Optional AI, from the company you choose",
         "caption": "AI is off until you turn it on. It needs an account with an AI company, which may charge a little each time you use it, or a free AI program on your own computer. In Chrome, its built-in AI suggests folders for free.",
-        "alt": "The AI tab in Settings: the AI is optional box says what AI needs and may cost, and AI Features is off, the default",
+        "alt": "The AI tab in Settings: AI Features is on, and under Add service are two AI services the user added: a cloud AI company with its key hidden, set as the default, and a model on the computer",
         "points": [
           "Get folder suggestions for the page you are on, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}",
           "Ask AI about your bookmarks: it searches them, checks links, and proposes moves, renames, and new folders as a plan that changes nothing until you approve it",

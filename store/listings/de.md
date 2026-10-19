@@ -6,8 +6,8 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Optional manifest description | 130 |
 | Firefox Add-ons summary | 248 |
-| Full description, Chrome and Edge | 11,248 |
-| Full description, Firefox | 6,607 |
+| Full description, Chrome and Edge | 11,242 |
+| Full description, Firefox | 6,601 |
 | What's new in 0.3.3 | 1,300 |
 
 ## Name
@@ -55,7 +55,7 @@ Bookmark Scout speichert jede Seite in Sekunden im richtigen Ordner, über die S
 
 IN SEKUNDEN IM RICHTIGEN ORDNER SPEICHERN
 • Auf die Schaltfläche von Bookmark Scout klicken, einen Teil eines beliebigen Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die Seite dort speichern, ohne die Tastatur zu verlassen
-• Einen Pfad wie rezepte/pasta eingeben; ein kleiner Tippfehler findet den Ordner trotzdem, und zuletzt verwendete Ordner stehen oben
+• Einen Pfad wie ai/llms eingeben; ein kleiner Tippfehler findet den Ordner trotzdem, und zuletzt verwendete Ordner stehen oben
 • Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
 • Optionale KI schlägt den besten Ordner für die Seite vor oder einen neuen Ordner, den Sie prüfen, bevor er erstellt wird
 • Optionales Rechtsklickmenü (anfangs aus; aktivieren Sie „Rechtsklickmenü“ in den Einstellungen), um Links in zuletzt verwendeten Ordnern zu speichern
@@ -146,7 +146,7 @@ Bookmark Scout speichert jede Seite in Sekunden im richtigen Ordner, über die S
 
 IN SEKUNDEN IM RICHTIGEN ORDNER SPEICHERN
 • Auf die Schaltfläche von Bookmark Scout klicken, einen Teil eines beliebigen Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die Seite dort speichern, ohne die Tastatur zu verlassen
-• Einen Pfad wie rezepte/pasta eingeben; ein kleiner Tippfehler findet den Ordner trotzdem, und zuletzt verwendete Ordner stehen oben
+• Einen Pfad wie ai/llms eingeben; ein kleiner Tippfehler findet den Ordner trotzdem, und zuletzt verwendete Ordner stehen oben
 • Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
 • Optionale KI schlägt den besten Ordner für die Seite vor oder einen neuen Ordner, den Sie prüfen, bevor er erstellt wird
 • Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern, sobald Sie „Rechtsklickmenü“ in den Einstellungen aktivieren

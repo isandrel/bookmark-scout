@@ -30,7 +30,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="{{SCREENSHOT:popup:dark}}">
-    <img src="{{SCREENSHOT:popup:light}}" alt="The Bookmark Scout popup: typing &quot;pas&quot; finds the Pasta folder inside Recipes / Italian, ready to save the page there with Enter. Beside it, optional AI suggestions for a pasta recipe page." width="800">
+    <img src="{{SCREENSHOT:popup:light}}" alt="The Bookmark Scout popup: typing &quot;fin&quot; finds the Fine-tuning folder inside AI / LLMs, ready to save the page there with Enter. Beside it, optional AI suggestions for an article about prompt caching, including a new folder." width="800">
   </picture>
 </p>
 

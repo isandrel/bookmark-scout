@@ -95,16 +95,8 @@
     "demo": {
       "label": "Experimente: salve esta página em uma pasta",
       "pageLabel": "Página atual",
-      "pageTitle": "Carbonara em 20 minutos",
       "placeholder": "Digite parte do nome de uma pasta",
       "try": "Experimente",
-      "chips": [
-        "rec",
-        "viagem/jap",
-        "pesqisa",
-        "react"
-      ],
-      "autoQuery": "mass",
       "clear": "Limpar",
       "startHint": "Digite algumas letras do nome de uma pasta. As pastas correspondentes aparecem aqui, inclusive as subpastas.",
       "matches": "Salvar na pasta",
@@ -113,22 +105,8 @@
       "saved": "Salvo em {folder}.",
       "alreadySaved": "Já está em {folder}, então não foi salvo duas vezes.",
       "emptyTitle": "Nenhuma pasta corresponde a “{query}”.",
-      "emptyHint": "Tente parte do nome de uma pasta ou um caminho como viagem/jap. Uma palavra com 4 letras ou mais pode ter um erro de digitação.",
-      "keys": "↑ ↓ para escolher, Enter para salvar",
-      "folders": {
-        "devDocs": "Docs de desenvolvimento",
-        "css": "CSS",
-        "react": "React",
-        "research": "Pesquisa",
-        "recipes": "Receitas",
-        "pasta": "Massas",
-        "baking": "Confeitaria",
-        "travel": "Viagem",
-        "japan": "Japão",
-        "kyoto": "Quioto",
-        "reading": "Leitura",
-        "inbox": "Caixa de entrada"
-      }
+      "emptyHint": "Tente parte do nome de uma pasta ou um caminho como ai/llms. Uma palavra com 4 letras ou mais pode ter um erro de digitação.",
+      "keys": "↑ ↓ para escolher, Enter para salvar"
     },
     "tour": {
       "title": "O que você pode fazer com ele",
@@ -139,10 +117,10 @@
         "tab": "Salvar",
         "heading": "Salve na pasta certa",
         "caption": "O pop-up da barra de ferramentas: digite parte do nome de uma pasta, ou escolha uma pasta na árvore, e salve a página com um clique.",
-        "alt": "Dois pop-ups: \"pas\" digitado na caixa de pesquisa com a pasta Pasta (Recipes / Italian) selecionada em Salvar na pasta, e sugestões da IA para a página atual: a pasta existente Recipes/Italian/Pasta e uma nova pasta Recipes/Quick Dinners",
+        "alt": "Dois pop-ups: \"fin\" digitado na caixa de pesquisa com a pasta Fine-tuning (AI / LLMs) selecionada em Salvar na pasta, e sugestões da IA para outra página: uma nova pasta AI/LLMs/Inference e a pasta existente AI/LLMs",
         "points": [
           "Digite parte do nome de uma pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página atual nela sem tirar as mãos do teclado",
-          "Digite um caminho como receitas/massas e encontre a pasta mesmo com um pequeno erro de digitação",
+          "Digite um caminho como ai/llms e encontre a pasta mesmo com um pequeno erro de digitação",
           "Pressione {{SHORTCUT:commands.quick-save}} em qualquer página para salvá-la na pasta que melhor corresponde a ela; uma pequena notificação na página oferece Desfazer e outras pastas",
           "Uma página que já está nessa pasta não é salva duas vezes, e as pastas em que você salvou recentemente aparecem primeiro",
           "Salve links em pastas recentes pelo menu de clique com o botão direito, depois de ativar esse menu nas Configurações (ele vem desativado)",
@@ -153,7 +131,7 @@
         "tab": "Encontrar e organizar",
         "heading": "Encontre e organize o que você salvou",
         "caption": "O gerenciador substitui a página de favoritos do Chrome e funciona como ela, com uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
-        "alt": "O gerenciador do Bookmark Scout na barra de favoritos, com a árvore de pastas (Recipes, School, Travel, Family, Shopping), uma única caixa de pesquisa e a tabela de favoritos",
+        "alt": "O gerenciador do Bookmark Scout na pasta AI / LLMs / Fine-tuning, com a árvore de pastas (AI, Dev, Design, Tools, Reading list), uma única caixa de pesquisa e a tabela de favoritos, cada um com o ícone do site",
         "points": [
           "Pesquise em todos os seus favoritos enquanto digita",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
@@ -182,7 +160,7 @@
         "tab": "IA (opcional)",
         "heading": "IA opcional, da empresa que você escolher",
         "caption": "A IA fica desativada até você ativá-la. Ela precisa de uma conta em uma empresa de IA, que pode cobrar um pouco a cada uso, ou de um programa de IA gratuito no seu próprio computador. No Chrome, a IA integrada do navegador sugere pastas de graça.",
-        "alt": "A guia IA das configurações: o quadro A IA é opcional explica do que a IA precisa e quanto pode custar, e Recursos de IA está desativado, o padrão",
+        "alt": "A guia IA das configurações: Recursos de IA está ativado e, abaixo de Adicionar serviço, aparecem dois serviços de IA adicionados pelo usuário: uma empresa de IA na nuvem, com a chave oculta, como padrão, e um modelo no próprio computador",
         "points": [
           "Receba sugestões de pasta para a página em que você está, ou salve na primeira delas com {{SHORTCUT:commands.ai-quick-save}}",
           "Pergunte à IA sobre seus favoritos: ela os pesquisa, verifica links e propõe movimentações, renomeações e novas pastas como um plano que não altera nada até você aprová-lo",

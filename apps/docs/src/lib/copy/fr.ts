@@ -60,17 +60,17 @@ export const fr: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "Deux fenêtres pop-up : « pas » saisi dans le champ de recherche avec le dossier Pasta (Recipes / Italian) sélectionné sous Enregistrer dans un dossier, et des suggestions de l’IA pour la page actuelle : le dossier existant Recipes/Italian/Pasta et un nouveau dossier Recipes/Quick Dinners",
+      "Deux fenêtres pop-up : « fin » saisi dans le champ de recherche avec le dossier Fine-tuning (AI / LLMs) sélectionné sous Enregistrer dans un dossier, et des suggestions de l’IA pour une autre page : un nouveau dossier AI/LLMs/Inference et le dossier existant AI/LLMs",
     "quick-save":
-      "Une page de recette avec la notification d'enregistrement rapide dans le coin supérieur : enregistrée dans Pasta, avec Annuler et d'autres dossiers sous Déplacer vers",
+      "Un guide pour développeurs avec la notification d'enregistrement rapide dans le coin supérieur : enregistré dans Agents (AI / Agents), avec Annuler et Papers sous Déplacer vers",
     manager:
-      "Le gestionnaire de favoris sur la barre de favoris : l'arborescence avec Recipes, School, Travel, Family et Shopping, un seul champ de recherche et le tableau des favoris",
+      "Le gestionnaire de favoris sur AI / LLMs / Fine-tuning : l'arborescence avec AI, Dev, Design, Tools et Reading list, un seul champ de recherche et le tableau des favoris avec l'icône de chaque site",
     duplicates:
       "La vérification du nettoyeur de doublons au-dessus du gestionnaire, avec le favori à conserver marqué Conserver dans chaque groupe",
     settings:
       "L'onglet L'essentiel des paramètres : Dossier d'enregistrement rapide, Dossier de destination, Menu du clic droit (désactivé), Thème et Langue",
     "options-ai":
-      "L'onglet IA des paramètres : l'encadré L'IA est facultative explique ce qu'il faut pour l'IA et ce qu'elle peut coûter, et les Fonctionnalités d'IA sont désactivées, par défaut",
+      "L'onglet IA des paramètres : les Fonctionnalités d'IA sont activées et, sous Ajouter un service, figurent deux services d'IA ajoutés par l'utilisateur : une entreprise d'IA en ligne, avec sa clé masquée, par défaut, et un modèle sur l'ordinateur",
   },
 
   /**

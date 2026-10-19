@@ -75,17 +75,17 @@ const en = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      'Two popups: "pas" typed in the search box with the Pasta folder (Recipes / Italian) selected under Save to folder, and AI suggestions for the current page: the existing Recipes/Italian/Pasta folder and a new Recipes/Quick Dinners folder',
+      'Two popups: "fin" typed in the search box with the Fine-tuning folder (AI / LLMs) selected under Save to folder, and AI suggestions for another page: a new AI/LLMs/Inference folder and the existing AI/LLMs folder',
     "quick-save":
-      "A recipe page with the quick save notification in its top corner: saved to Pasta, with Undo and other folders under Move to",
+      "A developer guide page with the quick save notification in its top corner: saved to Agents (AI / Agents), with Undo and Papers under Move to",
     manager:
-      "The bookmarks manager on the Bookmarks Bar: the folder tree with Recipes, School, Travel, Family, and Shopping, one search box, and the bookmark table",
+      "The bookmarks manager on AI / LLMs / Fine-tuning: the folder tree with AI, Dev, Design, Tools, and Reading list, one search box, and the bookmark table with each site's icon",
     duplicates:
       "The Duplicate Cleaner review over the manager, with the bookmark to keep in each group marked Keep",
     settings:
       "The Essentials tab in Settings: Quick Save Folder, Folder to Save To, Right-Click Menu (off), Theme, and Language",
     "options-ai":
-      "The AI tab in Settings: the AI is optional box says what AI needs and may cost, and AI Features is off, the default",
+      "The AI tab in Settings: AI Features is on, and under Add service are two AI services the user added: a cloud AI company with its key hidden, set as the default, and a model on the computer",
   },
 
   /**

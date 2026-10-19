@@ -60,17 +60,17 @@ export const es: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      'Dos ventanas emergentes: "pas" escrito en el cuadro de búsqueda con la carpeta Pasta (Recipes / Italian) seleccionada en Guardar en carpeta, y sugerencias de IA para la página actual: la carpeta existente Recipes/Italian/Pasta y una carpeta nueva Recipes/Quick Dinners',
+      'Dos ventanas emergentes: "fin" escrito en el cuadro de búsqueda con la carpeta Fine-tuning (AI / LLMs) seleccionada en Guardar en carpeta, y sugerencias de IA para otra página: una carpeta nueva AI/LLMs/Inference y la carpeta existente AI/LLMs',
     "quick-save":
-      "Una página de receta con el aviso de guardado rápido en la esquina superior: guardada en Pasta, con Deshacer y otras carpetas en Mover a",
+      "Una guía para desarrolladores con el aviso de guardado rápido en la esquina superior: guardada en Agents (AI / Agents), con Deshacer y Papers en Mover a",
     manager:
-      "El gestor de marcadores en la barra de marcadores: el árbol de carpetas con Recipes, School, Travel, Family y Shopping, un único cuadro de búsqueda y la tabla de marcadores",
+      "El gestor de marcadores en AI / LLMs / Fine-tuning: el árbol de carpetas con AI, Dev, Design, Tools y Reading list, un único cuadro de búsqueda y la tabla de marcadores con el icono de cada sitio",
     duplicates:
       "La revisión del Limpiador de duplicados sobre el administrador, con el marcador que se conserva en cada grupo marcado como Conservar",
     settings:
       "La pestaña Lo esencial de la configuración: Carpeta de guardado rápido, Carpeta de destino, Menú del clic derecho (desactivado), Tema e Idioma",
     "options-ai":
-      "La pestaña IA de la configuración: el recuadro La IA es opcional explica qué necesita la IA y cuánto puede costar, y Funciones de IA está desactivado, como viene por defecto",
+      "La pestaña IA de la configuración: Funciones de IA está activado y, bajo Añadir servicio, aparecen dos servicios de IA que añadió el usuario: una empresa de IA en la nube con la clave oculta, como predeterminado, y un modelo en el propio ordenador",
   },
 
   /**
