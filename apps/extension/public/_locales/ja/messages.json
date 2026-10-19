@@ -752,7 +752,7 @@
         "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
     },
     "settings_linkOpenTargetDesc": {
-        "message": "Bookmark Scout でリンクをクリックしたときに開く場所です。中クリックや Ctrl/Cmd+クリックはブラウザーの動作に従います。",
+        "message": "Bookmark Scout でリンクをクリックしたときに開く場所です。中クリックや Cmd/Ctrl+クリックはブラウザーの動作に従います。",
         "description": "Settings > Behavior: description of the Open links in setting"
     },
     "settings_linkOpenNewTab": {

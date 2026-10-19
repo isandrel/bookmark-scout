@@ -8,14 +8,18 @@ import {
 	isApplePlatform,
 	isSameOnEveryPlatform,
 	parseShortcutConfig,
+	platformOrder,
 	SHORTCUT_LITERAL,
 	type ShortcutConfig,
 	shortcutIds,
+	shortcutPair,
 	shortcutText,
+	splitShortcutNote,
 } from "./shortcuts";
 
 // A fixture, so the expectations below do not change when the real defaults do.
 const config: ShortcutConfig = {
+	display: { primary: "mac" },
 	commands: { "quick-save": "Alt+Shift+S" },
 	browser: { bookmark_page: "Ctrl+D", open_manager: { other: "Ctrl+Shift+O", mac: "Alt+Command+B" } },
 	popup: { focus_search: [{ key: "/" }], recent: [{ key: "ArrowDown", alt: true }] },
@@ -42,12 +46,13 @@ describe("shortcuts config", () => {
 	it("rejects unknown fields, bad platforms, and keys outside the command format", () => {
 		expect(() =>
 			parseShortcutConfig({
+				display: { primary: "windows" },
 				commands: { save: "Alt+Shift+Ö" },
 				browser: {},
 				popup: { search: [{ key: "/", ctrl: true }] },
 				manager: { undo: [{ key: "z", platform: "linux" }] },
 			}),
-		).toThrow(/commands\.save[\s\S]*ctrl: unknown key[\s\S]*platform: must be/);
+		).toThrow(/display\.primary: must be[\s\S]*commands\.save[\s\S]*ctrl: unknown key[\s\S]*platform: must be/);
 		expect(() => parseShortcutConfig({ commands: {}, browser: {}, popup: {} })).toThrow(/manager: missing/);
 	});
 });
@@ -98,19 +103,56 @@ describe("formatting", () => {
 	});
 });
 
+describe("text that names both platforms", () => {
+	const otherFirst: ShortcutConfig = { ...config, display: { primary: "other" } };
+
+	it("puts the configured primary platform first", () => {
+		expect(platformOrder(config)).toEqual(["mac", "other"]);
+		expect(platformOrder(otherFirst)).toEqual(["other", "mac"]);
+		expect(shortcutPair(config, "manager.redo")).toEqual({
+			primary: { platform: "mac", keys: ["⇧⌘Z"] },
+			secondary: { platform: "other", keys: ["Ctrl+Y", "Ctrl+Shift+Z"] },
+		});
+		expect(shortcutPair(otherFirst, "commands.quick-save").primary).toEqual({ platform: "other", keys: ["Alt+Shift+S"] });
+		expect(shortcutPair(config, "popup.focus_search")).toEqual({ primary: { platform: "mac", keys: ["/"] } });
+	});
+
+	it("splits a note around its keys, keeping its leading space apart", () => {
+		expect(splitShortcutNote(" ({keys} on a Mac)")).toEqual({ space: " ", before: "(", after: " on a Mac)" });
+		expect(splitShortcutNote("（Mac：{keys}）")).toEqual({ space: "", before: "（Mac：", after: "）" });
+		expect(() => splitShortcutNote(" (on a Mac)")).toThrow(/\{keys\} once/);
+	});
+});
+
 describe("fillShortcutPlaceholders", () => {
-	it("fills keys for each platform and the n-th way", () => {
-		expect(fillShortcutPlaceholders("{{SHORTCUT:commands.quick-save}} / {{SHORTCUT_MAC:commands.quick-save}}", config)).toBe(
-			"Alt+Shift+S / ⌥⇧S",
+	const format = {
+		notes: { mac: " ({keys} on a Mac)", other: " ({keys} on Windows and Linux)" },
+		note: (note: string) => `<sub>${note}</sub>`,
+	};
+
+	it("names both platforms, primary first, with the other in a note", () => {
+		expect(fillShortcutPlaceholders("Press {{SHORTCUT:commands.quick-save}} now", config, format)).toBe(
+			"Press ⌥⇧S <sub>(Alt+Shift+S on Windows and Linux)</sub> now",
 		);
-		expect(fillShortcutPlaceholders("{{SHORTCUT:manager.redo#2}}", config)).toBe("Ctrl+Shift+Z");
-		expect(() => fillShortcutPlaceholders("{{SHORTCUT:manager.redo#3}}", config)).toThrow(/no way 3/);
+		expect(fillShortcutPlaceholders("{{SHORTCUT:commands.quick-save}}", { ...config, display: { primary: "other" } }, format)).toBe(
+			"Alt+Shift+S <sub>(⌥⇧S on a Mac)</sub>",
+		);
+		expect(fillShortcutPlaceholders("{{SHORTCUT:popup.focus_search}}", config, format)).toBe("/");
+	});
+
+	it("fills one platform's keys and the n-th way", () => {
+		expect(
+			fillShortcutPlaceholders("{{SHORTCUT_OTHER:commands.quick-save}} / {{SHORTCUT_MAC:commands.quick-save}}", config, format),
+		).toBe("Alt+Shift+S / ⌥⇧S");
+		expect(fillShortcutPlaceholders("{{SHORTCUT_OTHER:manager.redo#2}}", config, format)).toBe("Ctrl+Shift+Z");
+		expect(() => fillShortcutPlaceholders("{{SHORTCUT:manager.redo#2}}", config, format)).toThrow(/no way 2 on mac/);
+		expect(() => fillShortcutPlaceholders("{{SHORTCUT_OTHER:manager.redo#3}}", config, format)).toThrow(/no way 3/);
 	});
 
 	it("stays fast on text full of unfinished placeholders", () => {
 		const text = "{{SHORTCUT:".repeat(20_000);
 		const start = performance.now();
-		expect(fillShortcutPlaceholders(text, config)).toBe(text);
+		expect(fillShortcutPlaceholders(text, config, format)).toBe(text);
 		expect(performance.now() - start).toBeLessThan(500);
 	});
 });

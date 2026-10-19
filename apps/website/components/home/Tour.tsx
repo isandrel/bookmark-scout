@@ -3,7 +3,7 @@ import { FEATURED_AI_PROVIDERS } from "@/lib/content/ai-providers";
 import { SCREENSHOT_SIZES, TOUR_TABS, type TourTab } from "@/lib/content/tour";
 import { SCREENSHOT_SIZE, site } from "@bookmark-scout/config";
 import { IMAGE_FORMATS, srcSet } from "@/lib/images";
-import { inlineLinkClass } from "./rich";
+import { inlineLinkClass, richTags } from "./rich";
 import { Tabs, type TabItem } from "./Tabs";
 
 /** Docs guide for developers: AI agents on the user's computer (MCP). */
@@ -66,10 +66,10 @@ export async function Tour({ locale }: { locale: string }) {
                     <h3 className="font-display text-2xl font-bold tracking-tight">{t(`${tab.id}.heading`)}</h3>
                     <p className="mt-3 leading-relaxed text-ink-soft">{t(`${tab.id}.caption`)}</p>
                     <ul className="mt-6 space-y-3">
-                        {(t.raw(`${tab.id}.points`) as string[]).map((point) => (
+                        {(t.raw(`${tab.id}.points`) as string[]).map((point, index) => (
                             <li key={point} className="flex gap-3 leading-snug">
                                 <span aria-hidden="true" className="mt-[0.45em] size-1.5 shrink-0 rounded-[1px] bg-teal" />
-                                <span>{point}</span>
+                                <span>{t.rich(`${tab.id}.points.${index}`, richTags)}</span>
                             </li>
                         ))}
                     </ul>

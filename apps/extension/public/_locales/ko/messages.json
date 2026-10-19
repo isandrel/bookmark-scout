@@ -768,7 +768,7 @@
         "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
     },
     "settings_linkOpenTargetDesc": {
-        "message": "Bookmark Scout에서 링크를 클릭했을 때 열리는 위치입니다. 가운데 클릭과 Ctrl/Cmd+클릭은 브라우저 동작을 따릅니다.",
+        "message": "Bookmark Scout에서 링크를 클릭했을 때 열리는 위치입니다. 가운데 클릭과 Cmd/Ctrl+클릭은 브라우저 동작을 따릅니다.",
         "description": "Settings > Behavior: description of the Open links in setting"
     },
     "settings_linkOpenNewTab": {

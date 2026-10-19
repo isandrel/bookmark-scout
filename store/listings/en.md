@@ -20,10 +20,10 @@ The Chrome Web Store shows the manifest description as the summary, and Edge use
 Save pages to the right folder fast: type part of a folder name or let AI suggest one. Plus bookmark search and cleanup tools.
 ```
 
-### Firefox Add-ons summary (250 characters maximum, 223 characters)
+### Firefox Add-ons summary (250 characters maximum, 240 characters on 2026-10-18)
 
 ```text
-Save pages to the right bookmark folder fast: type part of any folder's name, press Alt+Shift+S to save to the best match, or let opt-in AI suggest a folder. Plus instant search, a folder tree, and a full bookmarks manager.
+Save pages to the right bookmark folder fast: type part of any folder's name, press ⌥⇧S (Alt+Shift+S on Windows and Linux) to save to the best match, or let opt-in AI suggest a folder. Plus instant search, a folder tree, and a full manager.
 ```
 
 ## Category
@@ -50,7 +50,7 @@ AI bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 8,949 characters (2026-10-18); the Chrome Web Store allows 16,000. It is written for people who are not developers: the benefit first, plain words, and technical details (search options, OpenAI-compatible endpoints, local AI agents, the license) in For developers near the end. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 9,066 characters (2026-10-18); the Chrome Web Store allows 16,000. It is written for people who are not developers: the benefit first, plain words, and technical details (search options, OpenAI-compatible endpoints, local AI agents, the license) in For developers near the end. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and tidy your bookmarks without leaving the browser. Free, with no account and no ads.
@@ -63,10 +63,10 @@ SAVE TO THE RIGHT FOLDER IN SECONDS
 • Optional right-click menu (off at first; turn on Right-Click Menu in Settings) to save links into recent folders
 
 QUICK SAVE SHORTCUTS
-• Press Alt+Shift+S on any page to save it without opening Bookmark Scout: by default to the folder that best matches the page (worked out on your device), or to the folder you used last or one you choose
+• Press ⌥⇧S (Alt+Shift+S on Windows and Linux) on any page to save it without opening Bookmark Scout: by default to the folder that best matches the page (worked out on your device), or to the folder you used last or one you choose
 • A small notification in the page says where it went, with Undo and other folders to move it to
-• With AI turned on, Alt+Shift+D saves the page to the first AI folder suggestion
-• Change the keys on the browser's shortcut page. You can also give quick save Ctrl+D (⌘D on a Mac) there, so it replaces the browser's bookmark dialog; Settings shows how
+• With AI turned on, ⌥⇧D (Alt+Shift+D on Windows and Linux) saves the page to the first AI folder suggestion
+• Change the keys on the browser's shortcut page. You can also give quick save ⌘D (Ctrl+D on Windows and Linux) there, so it replaces the browser's bookmark dialog; Settings shows how
 
 FIND YOUR BOOKMARKS
 • Search all your bookmarks as you type, right from the toolbar
@@ -78,7 +78,7 @@ BOOKMARKS MANAGER
 Bookmark Scout replaces the browser's Bookmarks page with a manager that works like the browser's own, plus breadcrumbs, a sortable table, and saved searches that always show current results.
 • Right-click menus on bookmarks, folders, and empty space: edit, rename, cut, copy, paste, open in new tabs or windows, show in folder, and delete
 • Drag and drop to move bookmarks into folders or reorder them; links dropped from other pages become bookmarks
-• Select several rows with Ctrl+click and Shift+click, and use the keyboard shortcuts of the browser's own manager (Cmd on a Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z to undo, and Ctrl+Shift+Z to redo
+• Select several rows with Cmd+click and Shift+click, and use the keyboard shortcuts of the browser's own manager: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z to undo, and ⇧⌘Z to redo (Ctrl+click, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z, and Ctrl+Shift+Z on Windows and Linux)
 • Undo and redo cover edits, moves, sorting, and deletions, including changes made by Ask AI
 • Choose which commands the right-click and ⋯ menus show, and in what order (Settings)
 
@@ -143,7 +143,7 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 5,243 characters (2026-10-18). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps Ctrl+D for itself, so this text claims neither.
+AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 5,328 characters (2026-10-18). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps its bookmark key (⌘D, or Ctrl+D on Windows and Linux) for itself, so this text claims neither.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser. Free, with no account and no ads.
@@ -156,9 +156,9 @@ SAVE TO THE RIGHT FOLDER IN SECONDS
 • Save links from the right-click menu into recent folders, once you turn on Right-Click Menu in Settings
 
 QUICK SAVE SHORTCUTS
-• Press Alt+Shift+S on any page to save it without opening Bookmark Scout: by default to the folder that best matches the page (worked out on your device), or to the folder you used last or one you choose
+• Press ⌥⇧S (Alt+Shift+S on Windows and Linux) on any page to save it without opening Bookmark Scout: by default to the folder that best matches the page (worked out on your device), or to the folder you used last or one you choose
 • A small notification in the page says where it went, with Undo and other folders to move it to
-• With AI turned on, Alt+Shift+D saves the page to the first AI folder suggestion
+• With AI turned on, ⌥⇧D (Alt+Shift+D on Windows and Linux) saves the page to the first AI folder suggestion
 • Change the keys in Settings > Saving & Search > Keyboard shortcuts
 
 FIND YOUR BOOKMARKS
@@ -171,7 +171,7 @@ BOOKMARKS MANAGER
 Open bookmark manager in the toolbar popup or the sidebar opens a full manager in a new tab, with a folder tree and a sortable table.
 • Right-click menus on bookmarks, folders, and empty space: edit, rename, cut, copy, paste, open, show in folder, and delete
 • Drag and drop to move bookmarks into folders or reorder them; links dropped from other pages become bookmarks
-• Select several rows with Ctrl+click and Shift+click (Cmd on a Mac), copy, cut, and paste with the usual keys, and undo and redo your changes with Ctrl+Z and Ctrl+Shift+Z
+• Select several rows with Cmd+click and Shift+click, copy, cut, and paste with the usual keys, and undo and redo your changes with ⌘Z and ⇧⌘Z (Ctrl+click, Ctrl+Z, and Ctrl+Shift+Z on Windows and Linux)
 
 WHAT FIREFOX WILL ASK, AND WHY
 At install, Firefox asks for one thing: "Read and modify bookmarks". Anything else is asked for only when you use the feature that needs it, after a short explanation. If you say no, only that feature stays off.
@@ -207,10 +207,10 @@ Made by an independent developer: no company, no ads, no account. Available in 9
 
 ## What's new in 0.3.3
 
-Paste into AMO's release notes for the 0.3.3 version (shown to users on the version history page). The Chrome Web Store and Edge Add-ons have no public release-notes field; use it there only where the dashboard asks for notes. Plain text, 901 characters (2026-10-12). It names no Chrome- or Edge-only feature, so one text fits every store.
+Paste into AMO's release notes for the 0.3.3 version (shown to users on the version history page). The Chrome Web Store and Edge Add-ons have no public release-notes field; use it there only where the dashboard asks for notes. Plain text, 955 characters (2026-10-18). It names no Chrome- or Edge-only feature, so one text fits every store.
 
 ```text
-• Quick save: press Alt+Shift+S on any page to save it to the folder that best matches it. A notification in the page says where it went, with Undo and other folders to move it to. With AI on, Alt+Shift+D saves to the first AI suggestion
+• Quick save: press ⌥⇧S (Alt+Shift+S on Windows and Linux) on any page to save it to the folder that best matches it. A notification in the page says where it went, with Undo and other folders to move it to. With AI on, ⌥⇧D (Alt+Shift+D on Windows and Linux) saves to the first AI suggestion
 • Bookmarks manager: right-click menus, drag and drop, cut, copy, and paste, selecting several rows, and undo and redo
 • Ask AI can save pages and propose moves, renames, deletions, and new folders that change nothing until you approve them, and every change can be undone. Answers can end with buttons you click
 • Choose which commands the manager's menus show, and what Ask AI may do

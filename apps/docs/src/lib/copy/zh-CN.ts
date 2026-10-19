@@ -37,7 +37,10 @@ export const zhCN: DocsCopy = {
 
   shortcut: {
     or: " 或 ",
-    mac: "（Mac：{keys}）",
+    notes: {
+      mac: "（Mac：{keys}）",
+      other: "（Windows 和 Linux：{keys}）",
+    },
   },
 
   page: {

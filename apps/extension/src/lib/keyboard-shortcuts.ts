@@ -68,6 +68,9 @@ const commandKeysSchema = z.string().refine(isValidCommandShortcut, {
 const shortcutsConfig = readConfig(
   'ui/shortcuts',
   z.strictObject({
+    // Which platform's keys come first where text names both; the extension shows only the
+    // reader's platform, so only the docs, website, and READMEs read it.
+    display: z.strictObject({ primary: z.enum(['mac', 'other']) }),
     commands: z.strictObject({
       'quick-save': commandKeysSchema,
       'ai-quick-save': commandKeysSchema,

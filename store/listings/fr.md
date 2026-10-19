@@ -1,14 +1,14 @@
 # French Listing Copy (Français)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the two full descriptions on 2026-10-18, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 132 |
-| Firefox Add-ons summary | 242 |
-| Full description, Chrome and Edge | 11,944 |
-| Full description, Firefox | 6,948 |
-| What's new in 0.3.3 | 1,324 |
+| Firefox Add-ons summary | 250 |
+| Full description, Chrome and Edge | 12,064 |
+| Full description, Firefox | 7,034 |
+| What's new in 0.3.3 | 1,380 |
 
 ## Name
 
@@ -28,10 +28,10 @@ Packaged as `extDescription` (changing it needs a new version). Ships with 0.3.3
 Classez vite vos pages dans le bon dossier : tapez une partie de son nom ou laissez l'IA le suggérer. Recherche et nettoyage inclus.
 ```
 
-### Firefox Add-ons summary (250 characters maximum, 242 characters)
+### Firefox Add-ons summary (250 characters maximum, 250 characters on 2026-10-18)
 
 ```text
-Classez vite vos pages dans le bon dossier : tapez une partie de son nom, appuyez sur Alt+Shift+S pour enregistrer dans le plus pertinent ou laissez l'IA facultative en suggérer un. Recherche instantanée, arborescence et gestionnaire complet.
+Classez vite vos pages dans le bon dossier : tapez un bout de son nom, appuyez sur ⌥⇧S (Alt+Shift+S sous Windows et Linux) pour le plus pertinent ou laissez l'IA facultative en suggérer un. Recherche instantanée, arborescence et gestionnaire complet.
 ```
 
 ## Search terms (Edge Add-ons)
@@ -61,10 +61,10 @@ ENREGISTRER DANS LE BON DOSSIER EN QUELQUES SECONDES
 • Menu du clic droit facultatif (désactivé au départ ; activez Menu du clic droit dans les paramètres) pour enregistrer des liens dans les dossiers récents
 
 RACCOURCIS D'ENREGISTREMENT RAPIDE
-• Appuyez sur Alt+Shift+S sur n'importe quelle page pour l'enregistrer sans ouvrir Bookmark Scout : par défaut dans le dossier qui correspond le mieux à la page (déterminé sur votre appareil), ou dans le dernier dossier utilisé ou un dossier de votre choix
+• Appuyez sur ⌥⇧S (Alt+Shift+S sous Windows et Linux) sur n'importe quelle page pour l'enregistrer sans ouvrir Bookmark Scout : par défaut dans le dossier qui correspond le mieux à la page (déterminé sur votre appareil), ou dans le dernier dossier utilisé ou un dossier de votre choix
 • Une petite notification dans la page indique où elle a été enregistrée, avec Annuler et d'autres dossiers vers lesquels la déplacer
-• Lorsque l'IA est activée, Alt+Shift+D enregistre la page dans le premier dossier suggéré par l'IA
-• Modifiez les touches sur la page des raccourcis du navigateur. Vous pouvez aussi y attribuer Ctrl+D (⌘D sur Mac) à l'enregistrement rapide, qui remplace alors la fenêtre de favoris du navigateur ; les paramètres expliquent comment faire
+• Lorsque l'IA est activée, ⌥⇧D (Alt+Shift+D sous Windows et Linux) enregistre la page dans le premier dossier suggéré par l'IA
+• Modifiez les touches sur la page des raccourcis du navigateur. Vous pouvez aussi y attribuer ⌘D (Ctrl+D sous Windows et Linux) à l'enregistrement rapide, qui remplace alors la fenêtre de favoris du navigateur ; les paramètres expliquent comment faire
 
 RETROUVER VOS FAVORIS
 • Recherchez dans tous vos favoris pendant la saisie, directement depuis la barre d'outils
@@ -76,7 +76,7 @@ GESTIONNAIRE DE FAVORIS
 Bookmark Scout remplace la page Favoris du navigateur par un gestionnaire qui fonctionne comme celui du navigateur, avec en plus un fil d'Ariane, un tableau triable et des recherches enregistrées qui affichent toujours des résultats à jour.
 • Menus contextuels sur les favoris, les dossiers et les zones vides : modifier, renommer, couper, copier, coller, ouvrir dans de nouveaux onglets ou de nouvelles fenêtres, afficher dans le dossier et supprimer
 • Glisser-déposer pour déplacer des favoris dans des dossiers ou les réorganiser ; les liens déposés depuis d'autres pages deviennent des favoris
-• Sélectionnez plusieurs lignes avec Ctrl+clic et Shift+clic, et utilisez les raccourcis clavier du gestionnaire de favoris du navigateur (Cmd sur Mac) : Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z pour annuler et Ctrl+Shift+Z pour rétablir
+• Sélectionnez plusieurs lignes avec Cmd+clic et Shift+clic, et utilisez les raccourcis clavier du gestionnaire de favoris du navigateur : ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z pour annuler et ⇧⌘Z pour rétablir (Ctrl+clic, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z et Ctrl+Shift+Z sous Windows et Linux)
 • Annuler et rétablir s'appliquent aux modifications, aux déplacements, aux tris et aux suppressions, y compris ceux effectués par Demander à l'IA
 • Choisissez les commandes affichées dans le menu du clic droit et le menu ⋯, ainsi que leur ordre (Paramètres)
 
@@ -152,9 +152,9 @@ ENREGISTRER DANS LE BON DOSSIER EN QUELQUES SECONDES
 • Enregistrement de liens dans les dossiers récents depuis le menu du clic droit, une fois Menu du clic droit activé dans les paramètres
 
 RACCOURCIS D'ENREGISTREMENT RAPIDE
-• Appuyez sur Alt+Shift+S sur n'importe quelle page pour l'enregistrer sans ouvrir Bookmark Scout : par défaut dans le dossier qui correspond le mieux à la page (déterminé sur votre appareil), ou dans le dernier dossier utilisé ou un dossier de votre choix
+• Appuyez sur ⌥⇧S (Alt+Shift+S sous Windows et Linux) sur n'importe quelle page pour l'enregistrer sans ouvrir Bookmark Scout : par défaut dans le dossier qui correspond le mieux à la page (déterminé sur votre appareil), ou dans le dernier dossier utilisé ou un dossier de votre choix
 • Une petite notification dans la page indique où elle a été enregistrée, avec Annuler et d'autres dossiers vers lesquels la déplacer
-• Lorsque l'IA est activée, Alt+Shift+D enregistre la page dans le premier dossier suggéré par l'IA
+• Lorsque l'IA est activée, ⌥⇧D (Alt+Shift+D sous Windows et Linux) enregistre la page dans le premier dossier suggéré par l'IA
 • Modifiez les touches dans Paramètres > Enregistrement et recherche > Raccourcis clavier
 
 RETROUVER VOS FAVORIS
@@ -167,7 +167,7 @@ GESTIONNAIRE DE FAVORIS
 Ouvrir le gestionnaire de favoris, dans la fenêtre pop-up de la barre d'outils ou dans la barre latérale, ouvre un gestionnaire complet dans un nouvel onglet, avec une arborescence de dossiers et un tableau triable.
 • Menus contextuels sur les favoris, les dossiers et les zones vides : modifier, renommer, couper, copier, coller, ouvrir, afficher dans le dossier et supprimer
 • Glisser-déposer pour déplacer des favoris dans des dossiers ou les réorganiser ; les liens déposés depuis d'autres pages deviennent des favoris
-• Sélectionnez plusieurs lignes avec Ctrl+clic et Shift+clic (Cmd sur Mac), copiez, coupez et collez avec les touches habituelles, et annulez ou rétablissez vos modifications avec Ctrl+Z et Ctrl+Shift+Z
+• Sélectionnez plusieurs lignes avec Cmd+clic et Shift+clic, copiez, coupez et collez avec les touches habituelles, et annulez ou rétablissez vos modifications avec ⌘Z et ⇧⌘Z (Ctrl+clic, Ctrl+Z et Ctrl+Shift+Z sous Windows et Linux)
 
 CE QUE FIREFOX VA DEMANDER, ET POURQUOI
 À l'installation, Firefox ne demande qu'une chose : l'autorisation de lire et de modifier vos favoris. Tout le reste n'est demandé que lorsque vous utilisez la fonctionnalité qui en a besoin, après une courte explication. Si vous refusez, seule cette fonctionnalité reste désactivée.
@@ -206,7 +206,7 @@ Créé par un développeur indépendant : ni entreprise, ni publicité, ni compt
 Translation of the English release notes; paste into AMO's release notes for 0.3.3.
 
 ```text
-• Enregistrement rapide : appuyez sur Alt+Shift+S sur n'importe quelle page pour l'enregistrer dans le dossier qui lui correspond le mieux. Une notification dans la page indique où elle a été enregistrée, avec Annuler et d'autres dossiers vers lesquels la déplacer. Lorsque l'IA est activée, Alt+Shift+D enregistre la page dans la première suggestion de l'IA
+• Enregistrement rapide : appuyez sur ⌥⇧S (Alt+Shift+S sous Windows et Linux) sur n'importe quelle page pour l'enregistrer dans le dossier qui lui correspond le mieux. Une notification dans la page indique où elle a été enregistrée, avec Annuler et d'autres dossiers vers lesquels la déplacer. Lorsque l'IA est activée, ⌥⇧D (Alt+Shift+D sous Windows et Linux) enregistre la page dans la première suggestion de l'IA
 • Gestionnaire de favoris : menus contextuels, glisser-déposer, couper, copier et coller, sélection de plusieurs lignes, annulation et rétablissement
 • Demander à l'IA peut enregistrer des pages et proposer des déplacements, renommages, suppressions et nouveaux dossiers qui ne modifient rien tant que vous ne les avez pas approuvés, et chaque modification peut être annulée. Les réponses peuvent se terminer par des boutons sur lesquels cliquer
 • Choisissez les commandes affichées dans les menus du gestionnaire, et ce que Demander à l'IA peut faire

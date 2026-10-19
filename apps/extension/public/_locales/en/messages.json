@@ -776,7 +776,7 @@
         "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
     },
     "settings_linkOpenTargetDesc": {
-        "message": "Where a link opens when you click it in Bookmark Scout. Middle-click and Ctrl/Cmd-click still work the way your browser does.",
+        "message": "Where a link opens when you click it in Bookmark Scout. Middle-click and Cmd/Ctrl-click still work the way your browser does.",
         "description": "Settings > Behavior: description of the Open links in setting"
     },
     "settings_linkOpenNewTab": {

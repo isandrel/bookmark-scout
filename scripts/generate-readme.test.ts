@@ -13,6 +13,7 @@ import {
 	sitePage,
 	storeBadges,
 	storeLinks,
+	templateLocale,
 } from "./generate-readme";
 import { site } from "@bookmark-scout/config";
 
@@ -25,7 +26,7 @@ const context = {
 	sitePage: (argument: string) => `<page ${argument}>`,
 	contact: (role: string) => `<contact ${role}>`,
 	screenshot: (argument: string) => `<shot ${argument}>`,
-	shortcut: (argument: string, platform: string) => `<keys ${argument} ${platform}>`,
+	shortcut: (argument: string, which: string, locale: string) => `<keys ${argument} ${which} ${locale}>`,
 };
 
 describe("render", () => {
@@ -41,16 +42,26 @@ describe("render", () => {
 		);
 	});
 
-	test("passes shortcut ids and the platform through", () => {
-		expect(render("{{SHORTCUT:commands.quick-save}} {{SHORTCUT_MAC:manager.redo#2}}", context)).toBe(
-			"<keys commands.quick-save other> <keys manager.redo#2 mac>",
-		);
+	test("passes shortcut ids, the platform, and the template's language through", () => {
+		expect(
+			render("{{SHORTCUT:commands.quick-save}} {{SHORTCUT_MAC:manager.redo#2}} {{SHORTCUT_OTHER:manager.undo}}", context, "t", "ja"),
+		).toBe("<keys commands.quick-save both ja> <keys manager.redo#2 mac ja> <keys manager.undo other ja>");
 	});
 
-	test("prints the configured shortcut keys", () => {
+	test("prints the configured shortcut keys, primary platform first", () => {
 		const real = repositoryContext();
-		expect(real.shortcut("commands.quick-save", "other")).toMatch(/^[A-Za-z]+\+/);
-		expect(() => real.shortcut("commands.nope", "other")).toThrow(/Unknown shortcut/);
+		const both = real.shortcut("commands.quick-save", "both", "en");
+		expect(both.startsWith(real.shortcut("commands.quick-save", "mac", "en"))).toBe(true);
+		expect(both).toContain(`<sub>(${real.shortcut("commands.quick-save", "other", "en")} on Windows and Linux)</sub>`);
+		expect(real.shortcut("commands.quick-save", "other", "en")).toMatch(/^[A-Za-z]+\+/);
+		expect(() => real.shortcut("commands.nope", "other", "en")).toThrow(/Unknown shortcut/);
+	});
+
+	test("reads each template's language from its name", () => {
+		expect(templateLocale("README.md")).toBe(site.locales.default);
+		expect(templateLocale("DEVELOPMENT.md")).toBe(site.locales.default);
+		expect(templateLocale("README.ja.md")).toBe("ja");
+		expect(() => templateLocale("README.xx.md")).toThrow(/not a supported locale/);
 	});
 
 	test("passes a workspace-qualified version to the version lookup", () => {

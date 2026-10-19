@@ -23,9 +23,13 @@
  *   {{SITE_PAGE:<locale>:<route>}} a website page, such as {{SITE_PAGE:en:/privacy}}
  *   {{CONTACT:<role>}}       a contact address from config/project.toml, such as support
  *   {{SCREENSHOT:<name>:<theme>}} raw GitHub URL of a product screenshot (light or dark)
- *   {{SHORTCUT:<id>}}        a shortcut's keys from apps/extension/config/ui/shortcuts.toml, such as
- *                            {{SHORTCUT:commands.quick-save}} (Alt+Shift+S); <id>#2 is its second way
- *   {{SHORTCUT_MAC:<id>}}    the same keys on a Mac (⌥⇧S)
+ *   {{SHORTCUT:<id>}}        a shortcut from apps/extension/config/ui/shortcuts.toml on both platforms:
+ *                            the primary platform's keys (`[display]` in that file), then the other
+ *                            platform's in a smaller `<sub>` note worded by `shortcutNotes` in the
+ *                            website messages of the template's language, such as
+ *                            ⌥⇧S <sub>(Alt+Shift+S on Windows and Linux)</sub>; <id>#2 is its second way
+ *   {{SHORTCUT_MAC:<id>}}    its keys on a Mac only (⌥⇧S)
+ *   {{SHORTCUT_OTHER:<id>}}  its keys on Windows, Linux, and ChromeOS only (Alt+Shift+S)
  *
  * STORE_BADGES and STORE_LINKS text may use per-browser tokens: @BROWSER (browser name),
  * @STORE (store name), @ID (browser id, also its tab anchor on the docs install page), and
@@ -42,6 +46,8 @@ import {
 	type ShortcutPlatform,
 	type Site,
 	type StoreListing,
+	type ShortcutNotes,
+	shortcutPlaceholderPair,
 	shortcutPlaceholderText,
 	site,
 } from "@bookmark-scout/config";
@@ -203,11 +209,12 @@ type RenderContext = {
 	sitePage: (argument: string) => string;
 	contact: (role: string) => string;
 	screenshot: (argument: string) => string;
-	shortcut: (argument: string, platform: ShortcutPlatform) => string;
+	/** `which` is one platform, or `both` for the primary platform's keys with the other's in a note. */
+	shortcut: (argument: string, which: ShortcutPlatform | "both", locale: string) => string;
 };
 
 /** Fills every placeholder in `template`; throws listing any it cannot fill. */
-export function render(template: string, context: RenderContext, label = "template"): string {
+export function render(template: string, context: RenderContext, label = "template", locale = site.locales.default): string {
 	const unknown = new Set<string>();
 	const output = template.replace(PLACEHOLDER, (match, name: string, argument?: string) => {
 		if (name === "VERSION" && argument) {
@@ -220,8 +227,9 @@ export function render(template: string, context: RenderContext, label = "templa
 		if (name === "SITE_PAGE" && argument) return context.sitePage(argument);
 		if (name === "CONTACT" && argument) return context.contact(argument);
 		if (name === "SCREENSHOT" && argument) return context.screenshot(argument);
-		if (name === "SHORTCUT" && argument) return context.shortcut(argument, "other");
-		if (name === "SHORTCUT_MAC" && argument) return context.shortcut(argument, "mac");
+		if (name === "SHORTCUT" && argument) return context.shortcut(argument, "both", locale);
+		if (name === "SHORTCUT_MAC" && argument) return context.shortcut(argument, "mac", locale);
+		if (name === "SHORTCUT_OTHER" && argument) return context.shortcut(argument, "other", locale);
 		const value = argument === undefined ? context.values[name] : undefined;
 		if (value === undefined) {
 			unknown.add(match);
@@ -231,6 +239,30 @@ export function render(template: string, context: RenderContext, label = "templa
 	});
 	if (unknown.size > 0) throw new Error(`${label}: unknown placeholders ${[...unknown].join(", ")}`);
 	return output;
+}
+
+/** The language a template is written in: `README.<locale>.md`, or the default language. */
+export function templateLocale(file: string, model: Site = site): string {
+	const locale = /^README\.(.+)\.md$/.exec(file)?.[1];
+	if (locale === undefined) return model.locales.default;
+	if (!model.locales.supported.includes(locale)) throw new Error(`templates/${file}: "${locale}" is not a supported locale`);
+	return locale;
+}
+
+/**
+ * The notes that name the secondary platform's keys in `locale`, from `shortcutNotes` in the
+ * website messages, so the READMEs word them as the website does.
+ */
+export function shortcutNotes(locale: string, root = rootDir): ShortcutNotes {
+	const file = join(root, "apps/website/messages", `${locale}.json`);
+	const notes = (JSON.parse(readFileSync(file, "utf8")) as { shortcutNotes?: unknown }).shortcutNotes;
+	const valid =
+		typeof notes === "object" &&
+		notes !== null &&
+		typeof (notes as Record<string, unknown>).mac === "string" &&
+		typeof (notes as Record<string, unknown>).other === "string";
+	if (!valid) throw new Error(`${file}: expected "shortcutNotes": { "mac": "...", "other": "..." }`);
+	return notes as ShortcutNotes;
 }
 
 /** `README.md` goes to the root; `README.<locale>.md` to translations/; anything else to the root. */
@@ -251,7 +283,13 @@ export function repositoryContext(root = rootDir): RenderContext {
 		sitePage: (argument) => sitePage(argument),
 		contact: (role) => contactAddress(role),
 		screenshot: (argument) => screenshotUrl(argument),
-		shortcut: (argument, platform) => shortcutPlaceholderText(shortcuts, argument, platform),
+		shortcut: (argument, which, locale) =>
+			which === "both"
+				? shortcutPlaceholderPair(shortcuts, argument, {
+					notes: shortcutNotes(locale, root),
+					note: (note) => `<sub>${note}</sub>`,
+				})
+				: shortcutPlaceholderText(shortcuts, argument, which),
 	};
 }
 
@@ -260,7 +298,7 @@ if (import.meta.main) {
 	const context = repositoryContext();
 	const stale: string[] = [];
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
-		const output = render(readFileSync(join(templatesDir, file), "utf8"), context, `templates/${file}`);
+		const output = render(readFileSync(join(templatesDir, file), "utf8"), context, `templates/${file}`, templateLocale(file));
 		const target = outputPathFor(file);
 		const relative = target.slice(rootDir.length + 1);
 		if (check) {

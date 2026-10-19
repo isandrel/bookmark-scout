@@ -1,4 +1,8 @@
 {
+  "shortcutNotes": {
+    "mac": " ({keys} auf dem Mac)",
+    "other": " ({keys} unter Windows und Linux)"
+  },
   "metadata": {
     "title": "Bookmark Scout – Lesezeichen schnell im richtigen Ordner speichern",
     "description": "Browsererweiterung, die Seiten im richtigen Lesezeichenordner speichert: Ordnernamen eingeben, Tastenkürzel drücken oder von KI vorschlagen lassen. Dazu Suche und Bereinigung.",
@@ -83,7 +87,7 @@
   "home": {
     "hero": {
       "title": "Jede Seite in Sekunden im richtigen Ordner speichern.",
-      "description": "Geben Sie einen Teil eines Ordnernamens ein oder drücken Sie auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} auf dem Mac), und die Seite wird in dem Ordner gespeichert, in den sie gehört. Wenn Sie möchten, schlägt auch KI den Ordner vor. Bookmark Scout findet außerdem Ihre vorhandenen Lesezeichen und räumt sie auf, direkt in Ihrem Browser. Kein Konto, keine Werbung, und wir verfolgen nicht, was Sie tun.",
+      "description": "Geben Sie einen Teil eines Ordnernamens ein oder drücken Sie auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}}, und die Seite wird in dem Ordner gespeichert, in den sie gehört. Wenn Sie möchten, schlägt auch KI den Ordner vor. Bookmark Scout findet außerdem Ihre vorhandenen Lesezeichen und räumt sie auf, direkt in Ihrem Browser. Kein Konto, keine Werbung, und wir verfolgen nicht, was Sie tun.",
       "download": "Von GitHub herunterladen",
       "docs": "Dokumentation lesen",
       "demoNote": "Diese Demo nutzt eine erfundene Ordnerstruktur und behält nichts. Die Erweiterung zeigt Ihre eigenen Ordner, in Ihrem Browser."
@@ -139,7 +143,7 @@
         "points": [
           "Einen Teil eines Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen",
           "Einen Pfad wie rezepte/pasta eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
-          "Auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} auf dem Mac) drücken, um sie im am besten passenden Ordner zu speichern; eine kleine Benachrichtigung auf der Seite bietet Rückgängig und weitere Ordner an",
+          "Auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}} drücken, um sie im am besten passenden Ordner zu speichern; eine kleine Benachrichtigung auf der Seite bietet Rückgängig und weitere Ordner an",
           "Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert, und Ordner, in denen Sie zuletzt gespeichert haben, stehen oben",
           "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern, sobald Sie das Menü in den Einstellungen aktivieren (anfangs ist es aus)",
           "Mit aktivierter KI Ordnervorschläge für die Seite erhalten oder mit {{SHORTCUT:commands.ai-quick-save}} im ersten Vorschlag speichern"
@@ -155,7 +159,7 @@
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche speichern, die dann immer die aktuellen Ergebnisse zeigt",
           "Zeilen mit Shift und Ctrl auswählen, per Rechtsklick ausschneiden, kopieren, einfügen und alle öffnen, und Lesezeichen und Ordner dorthin ziehen, wo sie hingehören",
-          "Änderungen mit {{SHORTCUT:manager.undo}} und {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} und {{SHORTCUT_MAC:manager.redo}} auf dem Mac) rückgängig machen und wiederholen, auch nach einem Neuladen",
+          "Änderungen mit {{SHORTCUT:manager.undo}} und {{SHORTCUT:manager.redo}} rückgängig machen und wiederholen, auch nach einem Neuladen",
           "Lesezeichen nach einer Vorschau aus einer Datei importieren und als HTML, JSON, Markdown oder CSV exportieren",
           "Auf einen Ordner oder eine Suche verlinken und sich mit der Tastatur durch alles bewegen"
         ]
@@ -299,7 +303,7 @@
         },
         "changes": {
           "q": "Ändert die Erweiterung meine Lesezeichen ohne Nachfrage?",
-          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. KI-Funktionen zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Vor dem Löschen wird standardmäßig nachgefragt, und der Lesezeichen-Manager kann Änderungen mit {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} auf dem Mac) rückgängig machen."
+          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. KI-Funktionen zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Vor dem Löschen wird standardmäßig nachgefragt, und der Lesezeichen-Manager kann Änderungen mit {{SHORTCUT:manager.undo}} rückgängig machen."
         },
         "otherBrowsers": {
           "q": "Funktioniert sie in Firefox und Edge?",

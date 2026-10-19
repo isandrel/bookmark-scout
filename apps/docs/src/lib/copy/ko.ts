@@ -40,7 +40,10 @@ export const ko: DocsCopy = {
 
   shortcut: {
     or: " 또는 ",
-    mac: "(Mac에서는 {keys})",
+    notes: {
+      mac: "(Mac에서는 {keys})",
+      other: "(Windows와 Linux에서는 {keys})",
+    },
   },
 
   page: {

@@ -768,7 +768,7 @@
         "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
     },
     "settings_linkOpenTargetDesc": {
-        "message": "在 Bookmark Scout 中點選連結時要在哪裡開啟。按滑鼠中鍵和 Ctrl/Cmd+點選仍依瀏覽器的方式開啟。",
+        "message": "在 Bookmark Scout 中點選連結時要在哪裡開啟。按滑鼠中鍵和 Cmd/Ctrl+點選仍依瀏覽器的方式開啟。",
         "description": "Settings > Behavior: description of the Open links in setting"
     },
     "settings_linkOpenNewTab": {

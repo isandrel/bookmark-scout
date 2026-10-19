@@ -1,4 +1,8 @@
 {
+  "shortcutNotes": {
+    "mac": " ({keys} on a Mac)",
+    "other": " ({keys} on Windows and Linux)"
+  },
   "metadata": {
     "title": "Bookmark Scout – Save bookmarks to the right folder, fast",
     "description": "Browser extension that saves pages to the right bookmark folder: type a folder name, press a shortcut, or let AI suggest one. Plus search and cleanup.",
@@ -83,7 +87,7 @@
   "home": {
     "hero": {
       "title": "Save every page to the right folder, in seconds.",
-      "description": "Type part of a folder's name, or press {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} on a Mac) on any page, and the page is saved to the folder it belongs in. If you like, AI can suggest the folder too. Bookmark Scout also finds and tidies the bookmarks you already have, right in your browser. No account, no ads, and we don't track what you do.",
+      "description": "Type part of a folder's name, or press {{SHORTCUT:commands.quick-save}} on any page, and the page is saved to the folder it belongs in. If you like, AI can suggest the folder too. Bookmark Scout also finds and tidies the bookmarks you already have, right in your browser. No account, no ads, and we don't track what you do.",
       "download": "Download from GitHub",
       "docs": "Read the docs",
       "demoNote": "This demo uses a made-up folder tree and keeps nothing. The extension shows your own folders, inside your browser."
@@ -139,7 +143,7 @@
         "points": [
           "Type part of a folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard",
           "Type a path such as recipes/pasta, and still find the folder with a small typo",
-          "Press {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} on a Mac) on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
+          "Press {{SHORTCUT:commands.quick-save}} on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
           "A page already in that folder is not saved twice, and folders you saved to recently come first",
           "Save links from the right-click menu into recent folders, once you turn the menu on in Settings (it is off at first)",
           "With AI turned on, get folder suggestions for the page, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}"
@@ -155,7 +159,7 @@
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search, and it always shows the current results",
           "Select rows with Shift and Ctrl, right-click for cut, copy, paste, and open all, and drag bookmarks and folders where they belong",
-          "Undo and redo changes with {{SHORTCUT:manager.undo}} and {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} and {{SHORTCUT_MAC:manager.redo}} on a Mac), even after a reload",
+          "Undo and redo changes with {{SHORTCUT:manager.undo}} and {{SHORTCUT:manager.redo}}, even after a reload",
           "Import bookmarks from a file after a preview, and export them as HTML, JSON, Markdown, or CSV",
           "Link to a folder or a search, and move through it all with the keyboard"
         ]
@@ -299,7 +303,7 @@
         },
         "changes": {
           "q": "Will it change my bookmarks without asking?",
-          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. AI features show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} on a Mac)."
+          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. AI features show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "Does it work in Firefox and Edge?",
