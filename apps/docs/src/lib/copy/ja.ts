@@ -47,7 +47,10 @@ export const ja: DocsCopy = {
 
   shortcut: {
     or: " または ",
-    mac: "（Mac：{keys}）",
+    notes: {
+      mac: "（Mac：{keys}）",
+      other: "（Windows と Linux：{keys}）",
+    },
   },
 
   page: {

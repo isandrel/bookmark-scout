@@ -208,9 +208,20 @@ kbd.bs-kbd {
 }
 
 /*
- * Without JavaScript the shortcut reads "keys (Mac keys on a Mac)". Once PlatformAttribute marks
- * <html data-platform>, only the reader's keys show; the tooltip keeps both.
+ * Without JavaScript the shortcut reads "⌥⇧S (Alt+Shift+S on Windows and Linux)": the primary
+ * platform's keys, then the other platform's in a smaller, softer note. Once PlatformAttribute
+ * marks <html data-platform>, only the reader's keys show, at full size; the tooltip keeps both.
  */
+.bs-shortcut-note {
+  font-size: 0.85em;
+  color: var(--bs-ink-soft);
+}
+
+:root[data-platform] .bs-shortcut-note {
+  font-size: inherit;
+  color: inherit;
+}
+
 :root[data-platform] .bs-shortcut [data-platform-note],
 :root[data-platform="mac"] .bs-shortcut [data-platform-keys="other"],
 :root[data-platform="other"] .bs-shortcut [data-platform-keys="mac"] {

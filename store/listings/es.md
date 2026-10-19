@@ -1,14 +1,14 @@
 # Spanish Listing Copy (Español)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox full description on 2026-10-15, the Chrome Web Store and Edge Add-ons full description on 2026-10-18, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Manifest description | 131 |
-| Firefox Add-ons summary | 246 |
-| Full description, Chrome and Edge | 10,628 |
-| Full description, Firefox | 6,375 |
-| What's new in 0.3.3 | 1,198 |
+| Firefox Add-ons summary | 248 |
+| Full description, Chrome and Edge | 11,109 |
+| Full description, Firefox | 6,472 |
+| What's new in 0.3.3 | 1,248 |
 
 ## Name
 
@@ -31,7 +31,7 @@ Guarda páginas rápido en la carpeta correcta: escribe parte de su nombre o dej
 ### Firefox Add-ons summary (250 characters maximum)
 
 ```text
-Guarda páginas rápido en la carpeta de marcadores correcta: escribe parte de su nombre, pulsa Alt+Shift+S para guardar en la más adecuada o deja que la IA opcional sugiera una. Con búsqueda instantánea, árbol de carpetas y administrador completo.
+Guarda páginas rápido en la carpeta correcta: escribe parte de su nombre, pulsa ⌥⇧S (Alt+Shift+S en Windows y Linux) para guardar en la más adecuada o deja que la IA opcional sugiera una. Con búsqueda instantánea, árbol de carpetas y administrador.
 ```
 
 ## Search terms (Edge Add-ons)
@@ -48,7 +48,7 @@ marcadores con IA
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 11,000 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
+Plain text, 11,109 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout guarda cada página en la carpeta correcta en segundos, desde la barra de herramientas o con una sola combinación de teclas, y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador. Gratis, sin cuenta y sin anuncios.
@@ -61,10 +61,10 @@ GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • Menú del clic derecho opcional (desactivado al principio; activa Menú del clic derecho en Configuración) para guardar enlaces en carpetas recientes
 
 ATAJOS DE GUARDADO RÁPIDO
-• Pulsa Alt+Shift+S en cualquier página para guardarla sin abrir Bookmark Scout: de forma predeterminada, en la carpeta que mejor coincide con la página (calculada en tu dispositivo), o en la última carpeta que usaste o en una que elijas
+• Pulsa ⌥⇧S (Alt+Shift+S en Windows y Linux) en cualquier página para guardarla sin abrir Bookmark Scout: de forma predeterminada, en la carpeta que mejor coincide con la página (calculada en tu dispositivo), o en la última carpeta que usaste o en una que elijas
 • Una pequeña notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla
-• Con la IA activada, Alt+Shift+D guarda la página en la primera carpeta que sugiere la IA
-• Cambia las teclas en la página de combinaciones de teclas del navegador. Ahí también puedes asignar Ctrl+D (⌘D en Mac) al guardado rápido para que sustituya al cuadro de diálogo de marcadores del navegador; Configuración explica cómo
+• Con la IA activada, ⌥⇧D (Alt+Shift+D en Windows y Linux) guarda la página en la primera carpeta que sugiere la IA
+• Cambia las teclas en la página de combinaciones de teclas del navegador. Ahí también puedes asignar ⌘D (Ctrl+D en Windows y Linux) al guardado rápido para que sustituya al cuadro de diálogo de marcadores del navegador; Configuración explica cómo
 
 ENCUENTRA TUS MARCADORES
 • Busca en todos tus marcadores mientras escribes, directamente desde la barra de herramientas
@@ -76,7 +76,7 @@ ADMINISTRADOR DE MARCADORES
 Bookmark Scout sustituye la página Marcadores del navegador por un administrador que funciona como el del propio navegador y añade ruta de navegación, una tabla que se puede ordenar y búsquedas guardadas que siempre muestran los resultados actuales.
 • Menús contextuales en marcadores, carpetas y espacios vacíos: editar, cambiar nombre, cortar, copiar, pegar, abrir en pestañas o ventanas nuevas, mostrar en la carpeta y eliminar
 • Arrastra y suelta para mover marcadores a carpetas o cambiar su orden; los enlaces que sueltas desde otras páginas se convierten en marcadores
-• Selecciona varias filas con Ctrl+clic y Mayús+clic, y usa las combinaciones de teclas del propio administrador del navegador (Cmd en Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z para deshacer y Ctrl+Shift+Z para rehacer
+• Selecciona varias filas con Cmd+clic y Mayús+clic, y usa las combinaciones de teclas del propio administrador del navegador: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z para deshacer y ⇧⌘Z para rehacer (Ctrl+clic, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z y Ctrl+Shift+Z en Windows y Linux)
 • Deshacer y rehacer abarcan ediciones, movimientos, ordenaciones y eliminaciones, incluidos los cambios que hace Preguntar a la IA
 • Elige qué comandos muestran los menús contextuales y ⋯, y en qué orden (Configuración)
 
@@ -152,9 +152,9 @@ GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • Guarda enlaces en carpetas recientes desde el menú del clic derecho, una vez que actives Menú del clic derecho en Configuración
 
 ATAJOS DE GUARDADO RÁPIDO
-• Pulsa Alt+Shift+S en cualquier página para guardarla sin abrir Bookmark Scout: de forma predeterminada, en la carpeta que mejor coincide con la página (calculada en tu dispositivo), o en la última carpeta que usaste o en una que elijas
+• Pulsa ⌥⇧S (Alt+Shift+S en Windows y Linux) en cualquier página para guardarla sin abrir Bookmark Scout: de forma predeterminada, en la carpeta que mejor coincide con la página (calculada en tu dispositivo), o en la última carpeta que usaste o en una que elijas
 • Una pequeña notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla
-• Con la IA activada, Alt+Shift+D guarda la página en la primera carpeta que sugiere la IA
+• Con la IA activada, ⌥⇧D (Alt+Shift+D en Windows y Linux) guarda la página en la primera carpeta que sugiere la IA
 • Cambia las teclas en Configuración > Guardar y buscar > Atajos de teclado
 
 ENCUENTRA TUS MARCADORES
@@ -167,7 +167,7 @@ ADMINISTRADOR DE MARCADORES
 Abrir el administrador de marcadores, en la ventana emergente de la barra de herramientas o en la barra lateral, abre un administrador completo en una pestaña nueva, con árbol de carpetas y una tabla que se puede ordenar.
 • Menús contextuales en marcadores, carpetas y espacios vacíos: editar, cambiar nombre, cortar, copiar, pegar, abrir, mostrar en la carpeta y eliminar
 • Arrastra y suelta para mover marcadores a carpetas o cambiar su orden; los enlaces que sueltas desde otras páginas se convierten en marcadores
-• Selecciona varias filas con Ctrl+clic y Mayús+clic (Cmd en Mac), copia, corta y pega con las teclas habituales, y deshaz y rehaz tus cambios con Ctrl+Z y Ctrl+Shift+Z
+• Selecciona varias filas con Cmd+clic y Mayús+clic, copia, corta y pega con las teclas habituales, y deshaz y rehaz tus cambios con ⌘Z y ⇧⌘Z (Ctrl+clic, Ctrl+Z y Ctrl+Shift+Z en Windows y Linux)
 
 QUÉ TE PEDIRÁ FIREFOX Y POR QUÉ
 Al instalarla, Firefox pide una sola cosa: permiso para leer y modificar los marcadores. Todo lo demás se pide solo cuando usas la función que lo necesita, después de una breve explicación. Si dices que no, solo esa función queda desactivada.
@@ -206,7 +206,7 @@ Creado por un desarrollador independiente: sin empresa, sin anuncios y sin cuent
 Translation of the English release notes; paste into AMO's release notes for 0.3.3.
 
 ```text
-• Guardado rápido: pulsa Alt+Shift+S en cualquier página para guardarla en la carpeta que mejor coincide con ella. Una notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla. Con la IA activada, Alt+Shift+D guarda en la primera sugerencia de la IA
+• Guardado rápido: pulsa ⌥⇧S (Alt+Shift+S en Windows y Linux) en cualquier página para guardarla en la carpeta que mejor coincide con ella. Una notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla. Con la IA activada, ⌥⇧D (Alt+Shift+D en Windows y Linux) guarda en la primera sugerencia de la IA
 • Administrador de marcadores: menús contextuales, arrastrar y soltar, cortar, copiar y pegar, selección de varias filas, y deshacer y rehacer
 • Preguntar a la IA puede guardar páginas y proponer movimientos, cambios de nombre, eliminaciones y carpetas nuevas que no cambian nada hasta que los apruebas, y todos los cambios se pueden deshacer. Las respuestas pueden terminar con botones en los que puedes hacer clic
 • Elige qué comandos muestran los menús del administrador y qué puede hacer Preguntar a la IA

@@ -45,7 +45,10 @@ export const fr: DocsCopy = {
 
   shortcut: {
     or: " ou ",
-    mac: " ({keys} sur Mac)",
+    notes: {
+      mac: " ({keys} sur Mac)",
+      other: " ({keys} sous Windows et Linux)",
+    },
   },
 
   page: {

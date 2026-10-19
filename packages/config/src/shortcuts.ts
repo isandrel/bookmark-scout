@@ -30,7 +30,14 @@ export type ConfiguredBinding = KeyBinding & { platform?: ShortcutPlatform };
  */
 export type CommandKeys = string | { other: string; mac: string };
 
+/** How text that names both platforms' keys orders them. */
+export type ShortcutDisplay = {
+	/** The platform whose keys come first; the other platform's follow in a smaller note. */
+	primary: ShortcutPlatform;
+};
+
 export type ShortcutConfig = {
+	display: ShortcutDisplay;
 	/** The extension's browser commands, by manifest command name, with the keys they suggest. */
 	commands: Record<string, string>;
 	/** The browser's own keys that the extension acts on or its documentation names. */
@@ -41,7 +48,7 @@ export type ShortcutConfig = {
 	manager: Record<string, ConfiguredBinding[]>;
 };
 
-export type ShortcutSection = keyof ShortcutConfig;
+export type ShortcutSection = "commands" | "browser" | "popup" | "manager";
 
 export const SHORTCUT_SECTIONS: readonly ShortcutSection[] = ["commands", "browser", "popup", "manager"];
 
@@ -99,8 +106,15 @@ const commandKeys: Check<CommandKeys> = (value, path, issues) =>
 
 const bindings = list(binding, { minLength: 1 });
 
+const platform: Check<ShortcutPlatform> = (value, path, issues) => {
+	if (value === "mac" || value === "other") return value;
+	issues.push(`${path}: must be "mac" or "other"`);
+	return "other";
+};
+
 /** Validates parsed `shortcuts.toml`, recording every problem in `issues`. */
 export const shortcutConfigSchema: Check<ShortcutConfig> = table({
+	display: table({ primary: platform }),
 	commands: record(commandText),
 	browser: record(commandKeys),
 	popup: record(bindings),
@@ -290,6 +304,60 @@ export function isSameOnEveryPlatform(text: ShortcutText): boolean {
 	return text.other.length === text.mac.length && text.other.every((keys, index) => keys === text.mac[index]);
 }
 
+// ---------------------------------------------------------------------------------------------
+// Text that names both platforms: the primary platform's keys, then the other's in a note
+
+/**
+ * The two platforms in the order text that names both prints them: `display.primary` in
+ * shortcuts.toml first, so `["mac", "other"]` prints `⌥⇧S` before `Alt+Shift+S`.
+ */
+export function platformOrder(config: Pick<ShortcutConfig, "display">): [ShortcutPlatform, ShortcutPlatform] {
+	return config.display.primary === "mac" ? ["mac", "other"] : ["other", "mac"];
+}
+
+/** One platform's ways to press a shortcut, as text. */
+export type PlatformKeys = { platform: ShortcutPlatform; keys: string[] };
+
+/**
+ * A shortcut for text that names both platforms: the primary platform's keys, and the other
+ * platform's (`secondary`, for the smaller note after them) when they differ.
+ */
+export type ShortcutPair = { primary: PlatformKeys; secondary?: PlatformKeys };
+
+/** Every way to press shortcut `id`, primary platform first. */
+export function shortcutPair(config: ShortcutConfig, id: string): ShortcutPair {
+	const text = shortcutText(config, id);
+	const [first, second] = platformOrder(config);
+	const primary = { platform: first, keys: text[first] };
+	return isSameOnEveryPlatform(text) ? { primary } : { primary, secondary: { platform: second, keys: text[second] } };
+}
+
+/**
+ * The note that names the secondary platform's keys, by the platform it names, with `{keys}`
+ * where they go: `{ mac: " ({keys} on a Mac)", other: " ({keys} on Windows and Linux)" }`. Each
+ * surface keeps its notes with its other copy, in every language; both are needed so that
+ * `display.primary` can name either platform first.
+ */
+export type ShortcutNotes = Readonly<Record<ShortcutPlatform, string>>;
+
+/**
+ * A note split around its keys: the space before it (which stays outside the note's smaller
+ * style), and the text before and after the keys. Throws unless `{keys}` appears once.
+ */
+export function splitShortcutNote(note: string): { space: string; before: string; after: string } {
+	const space = /^\s*/.exec(note)?.[0] ?? "";
+	const parts = note.slice(space.length).split("{keys}");
+	if (parts.length !== 2) throw new Error(`A shortcut note needs {keys} once, got "${note}"`);
+	return { space, before: parts[0] ?? "", after: parts[1] ?? "" };
+}
+
+/** How `{{SHORTCUT:<id>}}` prints the note after the primary keys. */
+export type ShortcutNoteFormat = {
+	notes: ShortcutNotes;
+	/** Marks the note up as smaller text, such as `<sub>…</sub>` in Markdown. */
+	note?: (note: string) => string;
+};
+
 /**
  * One way to press a shortcut as text, for a placeholder argument `<id>` or `<id>#<n>` (the n-th
  * way, from 1; the first by default): `commands.quick-save` gives `Alt+Shift+S`, or `⌥⇧S` on a Mac.
@@ -306,16 +374,34 @@ export function shortcutPlaceholderText(config: ShortcutConfig, argument: string
 }
 
 /**
- * `{{SHORTCUT:<id>}}` and `{{SHORTCUT_MAC:<id>}}` (optionally `<id>#<n>`) in website messages and
- * README templates: the shortcut's keys elsewhere and on a Mac.
+ * One way to press a shortcut on both platforms, for `{{SHORTCUT:<id>}}`: the primary
+ * platform's keys, then the note with the other platform's when they differ, such as
+ * `⌥⇧S (Alt+Shift+S on Windows and Linux)`.
  */
-export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(_MAC)?:([A-Za-z0-9_.#-]+)\}\}/g;
+export function shortcutPlaceholderPair(config: ShortcutConfig, argument: string, format: ShortcutNoteFormat): string {
+	const [first, second] = platformOrder(config);
+	const primary = shortcutPlaceholderText(config, argument, first);
+	const secondary = shortcutPlaceholderText(config, argument, second);
+	if (primary === secondary) return primary;
+	const { space, before, after } = splitShortcutNote(format.notes[second]);
+	const note = `${before}${secondary}${after}`;
+	return `${primary}${space}${format.note ? format.note(note) : note}`;
+}
+
+/**
+ * Shortcut placeholders in website messages and README templates, optionally `<id>#<n>`:
+ * `{{SHORTCUT:<id>}}` names both platforms, primary first, with the other in a note;
+ * `{{SHORTCUT_MAC:<id>}}` and `{{SHORTCUT_OTHER:<id>}}` name one platform's keys only.
+ */
+export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(?:_(MAC|OTHER))?:([A-Za-z0-9_.#-]+)\}\}/g;
 
 /** Replaces every shortcut placeholder in `text`; throws for an unknown shortcut. */
-export function fillShortcutPlaceholders(text: string, config: ShortcutConfig): string {
-	return text.replace(SHORTCUT_PLACEHOLDER, (_match, mac: string | undefined, argument: string) =>
-		shortcutPlaceholderText(config, argument, mac ? "mac" : "other"),
-	);
+export function fillShortcutPlaceholders(text: string, config: ShortcutConfig, format: ShortcutNoteFormat): string {
+	return text.replace(SHORTCUT_PLACEHOLDER, (_match, only: string | undefined, argument: string) => {
+		if (only === "MAC") return shortcutPlaceholderText(config, argument, "mac");
+		if (only === "OTHER") return shortcutPlaceholderText(config, argument, "other");
+		return shortcutPlaceholderPair(config, argument, format);
+	});
 }
 
 /**

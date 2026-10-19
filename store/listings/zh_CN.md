@@ -1,14 +1,14 @@
 # Simplified Chinese Listing Copy (简体中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the full descriptions on 2026-10-18, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox summary, the full descriptions, and What's new on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 50 |
-| Firefox Add-ons summary | 92 |
-| Full description, Chrome and Edge | 3,636 |
-| Full description, Firefox | 2,114 |
-| What's new in 0.3.3 | 382 |
+| Firefox Add-ons summary | 116 |
+| Full description, Chrome and Edge | 3,735 |
+| Full description, Firefox | 2,186 |
+| What's new in 0.3.3 | 430 |
 
 ## Name
 
@@ -28,10 +28,10 @@ Read from `extName` in `apps/extension/public/_locales/zh_CN/messages.json`.
 快速将网页保存到合适的文件夹：输入文件夹名称的一部分，或让 AI 建议一个。另有书签搜索和清理工具。
 ```
 
-### Firefox Add-ons summary (250 characters maximum, 92 characters)
+### Firefox Add-ons summary (250 characters maximum, 116 characters on 2026-10-18)
 
 ```text
-快速将网页保存到合适的书签文件夹：输入任意文件夹名称的一部分，按 Alt+Shift+S 保存到最匹配的文件夹，或让可选的 AI 建议文件夹。另有即时搜索、文件夹树和完整的书签管理器。
+快速将网页保存到合适的书签文件夹：输入任意文件夹名称的一部分，按 ⌥⇧S（Windows 和 Linux 上为 Alt+Shift+S） 保存到最匹配的文件夹，或让可选的 AI 建议文件夹。另有即时搜索、文件夹树和完整的书签管理器。
 ```
 
 ## Search terms (Edge Add-ons)
@@ -61,10 +61,10 @@ Bookmark Scout 可以通过工具栏或一个键盘快捷键，在几秒钟内�
 • 可选的右键菜单（默认关闭；在设置中开启“右键菜单”），可将链接保存到最近使用的文件夹
 
 快速保存快捷键
-• 在任意网页上按 Alt+Shift+S，无需打开 Bookmark Scout 即可保存：默认保存到与网页最匹配的文件夹（在你的设备上计算得出），也可以保存到上次使用的文件夹或指定的文件夹
+• 在任意网页上按 ⌥⇧S（Windows 和 Linux 上为 Alt+Shift+S），无需打开 Bookmark Scout 即可保存：默认保存到与网页最匹配的文件夹（在你的设备上计算得出），也可以保存到上次使用的文件夹或指定的文件夹
 • 网页中会显示一条小通知，说明保存到了哪里，并提供“撤消”和可移动到的其他文件夹
-• 开启 AI 后，按 Alt+Shift+D 可将网页保存到 AI 建议的第一个文件夹
-• 可在浏览器的快捷键页面中更改按键。也可以在那里将 Ctrl+D（Mac 上为 ⌘D）分配给快速保存，以代替浏览器的书签对话框；设置中有操作说明
+• 开启 AI 后，按 ⌥⇧D（Windows 和 Linux 上为 Alt+Shift+D） 可将网页保存到 AI 建议的第一个文件夹
+• 可在浏览器的快捷键页面中更改按键。也可以在那里将 ⌘D（Windows 和 Linux 上为 Ctrl+D）分配给快速保存，以代替浏览器的书签对话框；设置中有操作说明
 
 查找书签
 • 直接在工具栏中，边输入边搜索你的所有书签
@@ -76,7 +76,7 @@ Bookmark Scout 可以通过工具栏或一个键盘快捷键，在几秒钟内�
 Bookmark Scout 将浏览器的书签页面替换为一个用法与浏览器自带管理器相同的管理器，并增加了路径导航、可排序的表格，以及始终显示最新结果的已保存搜索。
 • 书签、文件夹和空白处都有右键菜单：修改、重命名、剪切、复制、粘贴、在新标签页或新窗口中打开、在文件夹中显示以及删除
 • 通过拖放将书签移入文件夹或调整顺序；从其他网页拖入的链接会成为书签
-• 用 Ctrl+点击和 Shift+点击选择多行，并使用与浏览器自带管理器相同的键盘快捷键（Mac 上为 Cmd）：Ctrl+A、Ctrl+C、Ctrl+X、Ctrl+V、Delete，Ctrl+Z 撤消，Ctrl+Shift+Z 重做
+• 用 Cmd+点击和 Shift+点击选择多行，并使用与浏览器自带管理器相同的键盘快捷键：⌘A、⌘C、⌘X、⌘V、⌘⌫，⌘Z 撤消，⇧⌘Z 重做（Windows 和 Linux 上为 Ctrl+点击、Ctrl+A、Ctrl+C、Ctrl+X、Ctrl+V、Delete、Ctrl+Z 和 Ctrl+Shift+Z）
 • 撤消和重做涵盖修改、移动、排序和删除，包括“询问 AI”所做的更改
 • 可选择右键菜单和 ⋯ 菜单显示哪些命令以及显示顺序（在设置中）
 
@@ -152,9 +152,9 @@ Bookmark Scout 可以通过工具栏或一个键盘快捷键，在几秒钟内�
 • 在设置中开启“右键菜单”后，可通过右键菜单将链接保存到最近使用的文件夹
 
 快速保存快捷键
-• 在任意网页上按 Alt+Shift+S，无需打开 Bookmark Scout 即可保存：默认保存到与网页最匹配的文件夹（在你的设备上计算得出），也可以保存到上次使用的文件夹或指定的文件夹
+• 在任意网页上按 ⌥⇧S（Windows 和 Linux 上为 Alt+Shift+S），无需打开 Bookmark Scout 即可保存：默认保存到与网页最匹配的文件夹（在你的设备上计算得出），也可以保存到上次使用的文件夹或指定的文件夹
 • 网页中会显示一条小通知，说明保存到了哪里，并提供“撤消”和可移动到的其他文件夹
-• 开启 AI 后，按 Alt+Shift+D 可将网页保存到 AI 建议的第一个文件夹
+• 开启 AI 后，按 ⌥⇧D（Windows 和 Linux 上为 Alt+Shift+D） 可将网页保存到 AI 建议的第一个文件夹
 • 可在“设置 > 保存与搜索 > 键盘快捷键”中更改按键
 
 查找书签
@@ -167,7 +167,7 @@ Bookmark Scout 可以通过工具栏或一个键盘快捷键，在几秒钟内�
 在工具栏弹出窗口或侧栏中点击“打开书签管理器”，即可在新标签页中打开完整的管理器，其中有文件夹树和可排序的表格。
 • 书签、文件夹和空白处都有右键菜单：修改、重命名、剪切、复制、粘贴、打开、在文件夹中显示以及删除
 • 通过拖放将书签移入文件夹或调整顺序；从其他网页拖入的链接会成为书签
-• 用 Ctrl+点击和 Shift+点击选择多行（Mac 上为 Cmd），用常用按键复制、剪切和粘贴，并用 Ctrl+Z 和 Ctrl+Shift+Z 撤消和重做更改
+• 用 Cmd+点击和 Shift+点击选择多行，用常用按键复制、剪切和粘贴，并用 ⌘Z 和 ⇧⌘Z 撤消和重做更改（Windows 和 Linux 上为 Ctrl+点击、Ctrl+Z 和 Ctrl+Shift+Z）
 
 Firefox 会询问什么，以及原因
 安装时，Firefox 只请求一项权限：读取和修改书签。其他权限只会在使用需要它的功能时才请求，并且会先显示简短说明。如果拒绝，只有该功能会保持关闭。
@@ -206,7 +206,7 @@ AI 是可选的，以上所有功能无需 AI 即可使用。要使用 AI，你�
 Translation of the English release notes; paste into AMO's release notes for 0.3.3.
 
 ```text
-• 快速保存：在任意网页上按 Alt+Shift+S，即可将其保存到最匹配的文件夹。网页中会显示一条通知，说明保存到了哪里，并提供“撤消”和可移动到的其他文件夹。开启 AI 后，按 Alt+Shift+D 可保存到 AI 建议的第一个文件夹
+• 快速保存：在任意网页上按 ⌥⇧S（Windows 和 Linux 上为 Alt+Shift+S），即可将其保存到最匹配的文件夹。网页中会显示一条通知，说明保存到了哪里，并提供“撤消”和可移动到的其他文件夹。开启 AI 后，按 ⌥⇧D（Windows 和 Linux 上为 Alt+Shift+D） 可保存到 AI 建议的第一个文件夹
 • 书签管理器：右键菜单、拖放、剪切、复制和粘贴、选择多行，以及撤消和重做
 • “询问 AI”可以保存网页，并提出移动、重命名、删除和新建文件夹的方案，批准前不会更改任何内容，且每项更改都可以撤消。回答末尾可以带有可点击的按钮
 • 可选择管理器菜单显示哪些命令，以及“询问 AI”可以执行哪些操作

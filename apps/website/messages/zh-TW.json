@@ -1,4 +1,8 @@
 {
+  "shortcutNotes": {
+    "mac": "（Mac 上為 {keys}）",
+    "other": "（Windows 和 Linux 上為 {keys}）"
+  },
   "metadata": {
     "title": "Bookmark Scout – 快速將書籤儲存到正確的資料夾",
     "description": "將網頁儲存到正確書籤資料夾的瀏覽器擴充功能：輸入資料夾名稱、按下快捷鍵，或讓 AI 建議資料夾。另外也提供搜尋和清理功能。",
@@ -83,7 +87,7 @@
   "home": {
     "hero": {
       "title": "幾秒內將每個網頁儲存到正確的資料夾。",
-      "description": "輸入資料夾名稱的一部分，或在任何網頁上按 {{SHORTCUT:commands.quick-save}}（Mac 上為 {{SHORTCUT_MAC:commands.quick-save}}），網頁就會儲存到它所屬的資料夾。如果想要，也可以讓 AI 建議資料夾。Bookmark Scout 也能直接在瀏覽器中找出和整理現有的書籤。不需要帳戶、沒有廣告，我們也不會追蹤你的使用行為。",
+      "description": "輸入資料夾名稱的一部分，或在任何網頁上按 {{SHORTCUT:commands.quick-save}}，網頁就會儲存到它所屬的資料夾。如果想要，也可以讓 AI 建議資料夾。Bookmark Scout 也能直接在瀏覽器中找出和整理現有的書籤。不需要帳戶、沒有廣告，我們也不會追蹤你的使用行為。",
       "download": "從 GitHub 下載",
       "docs": "閱讀說明文件",
       "demoNote": "這個示範使用虛構的資料夾結構，不會儲存任何內容。擴充功能則會在瀏覽器中顯示你自己的資料夾。"
@@ -139,7 +143,7 @@
         "points": [
           "輸入資料夾名稱的一部分，即使是樹狀結構深處的資料夾也能找到，不必離開鍵盤就能將目前網頁儲存到那裡",
           "可以輸入 recipes/pasta 之類的路徑，有小小的拼字錯誤也能找到資料夾",
-          "在任何網頁上按 {{SHORTCUT:commands.quick-save}}（Mac 上為 {{SHORTCUT_MAC:commands.quick-save}}），即可將網頁儲存到最相符的資料夾；網頁中會出現一則小通知，提供復原和其他資料夾",
+          "在任何網頁上按 {{SHORTCUT:commands.quick-save}}，即可將網頁儲存到最相符的資料夾；網頁中會出現一則小通知，提供復原和其他資料夾",
           "已在該資料夾中的網頁不會重複儲存，最近儲存過的資料夾也會排在前面",
           "在「設定」中開啟右鍵選單後 (預設為關閉)，即可從右鍵選單將連結儲存至最近使用的資料夾",
           "開啟 AI 後，可為網頁取得資料夾建議，或按 {{SHORTCUT:commands.ai-quick-save}} 儲存到第一個建議"
@@ -155,7 +159,7 @@
           "可以在瀏覽器的側邊面板 (Firefox 中為側邊欄) 中持續開啟相同的樹狀結構和搜尋",
           "儲存搜尋後，它一律會顯示最新結果",
           "使用 Shift 和 Ctrl 選取列，按右鍵即可剪下、複製、貼上和全部開啟，並將書籤和資料夾拖曳到所屬位置",
-          "用 {{SHORTCUT:manager.undo}} 和 {{SHORTCUT:manager.redo}}（Mac 上為 {{SHORTCUT_MAC:manager.undo}} 和 {{SHORTCUT_MAC:manager.redo}}）復原和重做變更，重新載入後也能使用",
+          "用 {{SHORTCUT:manager.undo}} 和 {{SHORTCUT:manager.redo}}復原和重做變更，重新載入後也能使用",
           "預覽後從檔案匯入書籤，並可匯出為 HTML、JSON、Markdown 或 CSV",
           "連結到資料夾或搜尋，並可用鍵盤操作所有功能"
         ]
@@ -299,7 +303,7 @@
         },
         "changes": {
           "q": "它會未經詢問就變更我的書籤嗎？",
-          "a": "不會。清理重複書籤、清理網址、修復失效連結、擷取標題、AI 重組和匯入，都會在寫入任何內容之前先顯示確認畫面。AI 功能會以計畫的形式呈現變更，並等待你核准。刪除時預設會要求確認，書籤管理員也可以用 {{SHORTCUT:manager.undo}}（Mac 上為 {{SHORTCUT_MAC:manager.undo}}）復原變更。"
+          "a": "不會。清理重複書籤、清理網址、修復失效連結、擷取標題、AI 重組和匯入，都會在寫入任何內容之前先顯示確認畫面。AI 功能會以計畫的形式呈現變更，並等待你核准。刪除時預設會要求確認，書籤管理員也可以用 {{SHORTCUT:manager.undo}}復原變更。"
         },
         "otherBrowsers": {
           "q": "可以在 Firefox 和 Edge 中使用嗎？",

@@ -20,7 +20,7 @@ Follow the release runbook in the root `AGENTS.md`.
 
 The full Chromium E2E suite runs against the Edge build as the required `Edge E2E` CI check. Still test the exact ZIP in a fresh Edge profile with synthetic bookmarks (`edge://extensions` → Developer mode → Load unpacked):
 
-- [ ] **Bookmarks page override.** Open the browser's Favorites manager (`edge://favorites`, Ctrl+Shift+O). Record whether Edge shows the Bookmark Scout manager. If it does not, the manager and Tools sidebar are unreachable in Edge: use a reduced description (the Firefox text minus the Firefox-specific lines) and leave out the manager screenshots.
+- [ ] **Bookmarks page override.** Open the browser's Favorites manager (`edge://favorites`). Record whether Edge shows the Bookmark Scout manager. If it does not, the manager and Tools sidebar are unreachable in Edge: use a reduced description (the Firefox text minus the Firefox-specific lines) and leave out the manager screenshots.
 - [ ] Popup: search, folder tree, save the current page, delete and Undo.
 - [ ] Side panel opens.
 - [ ] Bookmark icons from the browser cache render after turning on Use the browser's icon cache and allowing it (optional `favicon`).

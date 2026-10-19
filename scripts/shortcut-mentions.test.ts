@@ -1,17 +1,21 @@
 /**
  * Every shortcut is defined once, in apps/extension/config/ui/shortcuts.toml. The docs render keys
- * with <Shortcut id="..." />, website messages and README templates with {{SHORTCUT:<id>}} and
- * {{SHORTCUT_MAC:<id>}}, so these tests fail when a document spells keys out by hand, names a
- * shortcut the config lacks, or (for the docs' shortcut list) leaves a configured shortcut out.
- * Store listings are pasted into the stores by hand, so their keys are checked against the config.
+ * with <Shortcut id="..." />, website messages and README templates with {{SHORTCUT:<id>}} (both
+ * platforms, primary first) or {{SHORTCUT_MAC:<id>}} and {{SHORTCUT_OTHER:<id>}}, so these tests
+ * fail when a document spells keys out by hand, names a shortcut the config lacks, or (for the
+ * docs' shortcut list) leaves a configured shortcut out. Store listings are pasted into the stores
+ * by hand, so their keys are checked against the config, and they and the store checklists must
+ * name the primary platform's keys (`[display]` in shortcuts.toml) before the other's.
  */
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import {
+	platformOrder,
 	readShortcutConfig,
 	SHORTCUT_LITERAL,
 	SHORTCUT_PLACEHOLDER,
+	type ShortcutPlatform,
 	shortcutIds,
 	shortcutText,
 	site,
@@ -104,5 +108,37 @@ describe("store listings name the configured keys", () => {
 	test.each(files(join(root, "store/listings"), ".md").map((file) => [relative(root, file), file]))("%s", (_name, file) => {
 		const unknown = (readFileSync(file, "utf8").match(SHORTCUT_LITERAL) ?? []).filter((keys) => !known.has(keys));
 		expect(unknown).toEqual([]);
+	});
+});
+
+describe("store listings and checklists name the primary platform's keys first", () => {
+	// Keys only one platform uses: `⌥⇧S` is Mac-only, `Alt+Shift+S` is not.
+	const [first, second] = platformOrder(config);
+	const ways = (platform: ShortcutPlatform) => new Set(shortcutIds(config).flatMap((id) => shortcutText(config, id)[platform]));
+	const primary = ways(first);
+	const secondary = new Set([...ways(second)].filter((keys) => !primary.has(keys)));
+	const onlyPrimary = new Set([...primary].filter((keys) => !ways(second).has(keys)));
+	// The Chrome Web Store reviewer notes are a record of the dashboard field as entered.
+	const recorded = /^No login needed\. /;
+
+	test.each(
+		[...files(join(root, "store/listings"), ".md"), ...files(join(root, "store/checklists"), ".md")].map((file) => [
+			relative(root, file),
+			file,
+		]),
+	)("%s", (_name, file) => {
+		// A secondary platform's keys need the primary platform's keys earlier on the line, as in
+		// "⌥⇧S (Alt+Shift+S on Windows and Linux)".
+		const late = readFileSync(file, "utf8")
+			.split("\n")
+			.flatMap((line, index) => {
+				if (recorded.test(line)) return [];
+				const found = line.match(SHORTCUT_LITERAL) ?? [];
+				const firstPrimary = found.findIndex((keys) => onlyPrimary.has(keys));
+				return found
+					.filter((keys, position) => secondary.has(keys) && (firstPrimary === -1 || position < firstPrimary))
+					.map((keys) => `${index + 1}: ${keys}`);
+			});
+		expect(late).toEqual([]);
 	});
 });

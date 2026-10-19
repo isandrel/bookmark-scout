@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { ContourLines } from "./ContourLines";
 import { DownloadButton, secondaryButtonClass } from "./DownloadButton";
 import { PermissionsNote } from "./PermissionsNote";
+import { richTags } from "./rich";
 import { SaveDemo } from "./SaveDemo";
 
 export async function Hero({ locale }: { locale: string }) {
@@ -27,7 +28,7 @@ export async function Hero({ locale }: { locale: string }) {
                         {t("title")}
                     </h1>
                     <p className="mt-6 max-w-[58ch] text-lg leading-relaxed text-ink-soft sm:text-xl">
-                        {t("description")}
+                        {t.rich("description", richTags)}
                     </p>
                     <div className="mt-8 flex flex-wrap gap-3">
                         <DownloadButton href={primary.href} label={primary.label} icon={primary.icon} />

@@ -1,14 +1,14 @@
 # Brazilian Portuguese Listing Copy (Português (Brasil))
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters and were measured on 2026-10-12, the Firefox full description on 2026-10-15 and the Chrome Web Store and Edge Add-ons full description on 2026-10-18.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters and were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-18.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 131 |
 | Firefox Add-ons summary | 250 |
-| Full description, Chrome and Edge | 10,186 |
-| Full description, Firefox | 6,127 |
-| What's new in 0.3.3 | 1,125 |
+| Full description, Chrome and Edge | 10,671 |
+| Full description, Firefox | 6,237 |
+| What's new in 0.3.3 | 1,181 |
 
 ## Name
 
@@ -28,10 +28,10 @@ Packaged as `extDescription`; changing it needs a new version. Ships with 0.3.3 
 Salve páginas na pasta certa, rápido: digite parte do nome de uma pasta ou deixe a IA sugerir. E ferramentas de pesquisa e limpeza.
 ```
 
-### Firefox Add-ons summary (250 characters maximum, 250 characters)
+### Firefox Add-ons summary (250 characters maximum, 250 characters on 2026-10-18)
 
 ```text
-Salve páginas na pasta de favoritos certa, rápido: digite parte do nome de uma pasta, use Alt+Shift+S para salvar na mais adequada ou deixe a IA opcional sugerir uma. E mais: pesquisa instantânea, árvore de pastas e gerenciador de favoritos completo.
+Salve páginas na pasta certa, rápido: digite parte do nome de uma pasta, use ⌥⇧S (Alt+Shift+S no Windows e no Linux) para salvar na mais adequada ou deixe a IA opcional sugerir uma. Mais: pesquisa instantânea, árvore de pastas e gerenciador completo.
 ```
 
 ## Search terms (Edge Add-ons)
@@ -48,7 +48,7 @@ favoritos com IA
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 10,548 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
+Plain text, 10,671 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 O Bookmark Scout salva cada página na pasta certa em segundos, pela barra de ferramentas ou com um atalho de teclado, e depois ajuda você a encontrar e arrumar seus favoritos sem sair do navegador. Gratuito, sem conta e sem anúncios.
@@ -61,10 +61,10 @@ SALVE NA PASTA CERTA EM SEGUNDOS
 • Menu de clique com o botão direito opcional (vem desativado; ative Menu do botão direito nas Configurações) para salvar links em pastas recentes
 
 ATALHOS DE SALVAMENTO RÁPIDO
-• Pressione Alt+Shift+S em qualquer página para salvá-la sem abrir o Bookmark Scout: por padrão, na pasta que melhor corresponde à página (calculada no seu dispositivo), ou na última pasta que você usou ou em uma que você escolher
+• Pressione ⌥⇧S (Alt+Shift+S no Windows e no Linux) em qualquer página para salvá-la sem abrir o Bookmark Scout: por padrão, na pasta que melhor corresponde à página (calculada no seu dispositivo), ou na última pasta que você usou ou em uma que você escolher
 • Uma pequena notificação na página mostra onde ela foi salva, com Desfazer e outras pastas para onde você pode movê-la
-• Com a IA ativada, Alt+Shift+D salva a página na primeira pasta sugerida pela IA
-• Altere as teclas na página de atalhos do navegador. Lá você também pode atribuir Ctrl+D (⌘D no Mac) ao salvamento rápido, para que ele substitua a janela de favoritos do navegador; as Configurações mostram como
+• Com a IA ativada, ⌥⇧D (Alt+Shift+D no Windows e no Linux) salva a página na primeira pasta sugerida pela IA
+• Altere as teclas na página de atalhos do navegador. Lá você também pode atribuir ⌘D (Ctrl+D no Windows e no Linux) ao salvamento rápido, para que ele substitua a janela de favoritos do navegador; as Configurações mostram como
 
 ENCONTRE SEUS FAVORITOS
 • Pesquise em todos os seus favoritos enquanto digita, direto pela barra de ferramentas
@@ -76,7 +76,7 @@ GERENCIADOR DE FAVORITOS
 O Bookmark Scout substitui a página de favoritos do navegador por um gerenciador que funciona como o do próprio navegador e ainda tem trilha de navegação, tabela com classificação e pesquisas salvas que sempre mostram resultados atualizados.
 • Menus de clique com o botão direito em favoritos, pastas e espaços vazios: editar, renomear, recortar, copiar, colar, abrir em novas guias ou janelas, mostrar na pasta e excluir
 • Arraste e solte para mover favoritos para pastas ou reordená-los; links arrastados de outras páginas viram favoritos
-• Selecione várias linhas com Ctrl+clique e Shift+clique e use os atalhos de teclado do próprio gerenciador do navegador (Cmd no Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z para desfazer e Ctrl+Shift+Z para refazer
+• Selecione várias linhas com Cmd+clique e Shift+clique e use os atalhos de teclado do próprio gerenciador do navegador: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z para desfazer e ⇧⌘Z para refazer (Ctrl+clique, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z e Ctrl+Shift+Z no Windows e no Linux)
 • Desfazer e refazer valem para edições, movimentações, classificações e exclusões, incluindo as alterações feitas pelo Perguntar à IA
 • Escolha quais comandos os menus de clique com o botão direito e ⋯ mostram, e em que ordem (Configurações)
 
@@ -152,9 +152,9 @@ SALVE NA PASTA CERTA EM SEGUNDOS
 • Salve links em pastas recentes pelo menu de clique com o botão direito, depois de ativar Menu do botão direito nas Configurações
 
 ATALHOS DE SALVAMENTO RÁPIDO
-• Pressione Alt+Shift+S em qualquer página para salvá-la sem abrir o Bookmark Scout: por padrão, na pasta que melhor corresponde à página (calculada no seu dispositivo), ou na última pasta que você usou ou em uma que você escolher
+• Pressione ⌥⇧S (Alt+Shift+S no Windows e no Linux) em qualquer página para salvá-la sem abrir o Bookmark Scout: por padrão, na pasta que melhor corresponde à página (calculada no seu dispositivo), ou na última pasta que você usou ou em uma que você escolher
 • Uma pequena notificação na página mostra onde ela foi salva, com Desfazer e outras pastas para onde você pode movê-la
-• Com a IA ativada, Alt+Shift+D salva a página na primeira pasta sugerida pela IA
+• Com a IA ativada, ⌥⇧D (Alt+Shift+D no Windows e no Linux) salva a página na primeira pasta sugerida pela IA
 • Altere as teclas em Configurações > Salvar e pesquisar > Atalhos de teclado
 
 ENCONTRE SEUS FAVORITOS
@@ -167,7 +167,7 @@ GERENCIADOR DE FAVORITOS
 Abrir gerenciador de favoritos, no pop-up da barra de ferramentas ou no painel lateral, abre um gerenciador completo em uma nova aba, com árvore de pastas e tabela com classificação.
 • Menus de clique com o botão direito em favoritos, pastas e espaços vazios: editar, renomear, recortar, copiar, colar, abrir, mostrar na pasta e excluir
 • Arraste e solte para mover favoritos para pastas ou reordená-los; links arrastados de outras páginas viram favoritos
-• Selecione várias linhas com Ctrl+clique e Shift+clique (Cmd no Mac), copie, recorte e cole com as teclas de sempre, e desfaça e refaça suas alterações com Ctrl+Z e Ctrl+Shift+Z
+• Selecione várias linhas com Cmd+clique e Shift+clique, copie, recorte e cole com as teclas de sempre, e desfaça e refaça suas alterações com ⌘Z e ⇧⌘Z (Ctrl+clique, Ctrl+Z e Ctrl+Shift+Z no Windows e no Linux)
 
 O QUE O FIREFOX VAI PEDIR E POR QUÊ
 Na instalação, o Firefox pede uma coisa: ler e modificar os favoritos. Todo o resto é pedido somente quando você usa o recurso que precisa disso, depois de uma breve explicação. Se você disser não, somente esse recurso continua desativado.
@@ -206,7 +206,7 @@ Feito por um desenvolvedor independente: sem empresa, sem anúncios, sem conta. 
 Translation of the English release notes; paste into AMO's release notes for 0.3.3.
 
 ```text
-• Salvamento rápido: pressione Alt+Shift+S em qualquer página para salvá-la na pasta que melhor corresponde a ela. Uma notificação na página mostra onde ela foi salva, com Desfazer e outras pastas para onde você pode movê-la. Com a IA ativada, Alt+Shift+D salva na primeira sugestão da IA
+• Salvamento rápido: pressione ⌥⇧S (Alt+Shift+S no Windows e no Linux) em qualquer página para salvá-la na pasta que melhor corresponde a ela. Uma notificação na página mostra onde ela foi salva, com Desfazer e outras pastas para onde você pode movê-la. Com a IA ativada, ⌥⇧D (Alt+Shift+D no Windows e no Linux) salva na primeira sugestão da IA
 • Gerenciador de favoritos: menus de clique com o botão direito, arrastar e soltar, recortar, copiar e colar, seleção de várias linhas, e desfazer e refazer
 • O Perguntar à IA pode salvar páginas e propor movimentações, renomeações, exclusões e novas pastas que não alteram nada até você aprová-las, e toda alteração pode ser desfeita. As respostas podem terminar com botões em que você clica
 • Escolha quais comandos os menus do gerenciador mostram e o que o Perguntar à IA pode fazer

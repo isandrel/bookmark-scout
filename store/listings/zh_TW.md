@@ -1,14 +1,14 @@
 # Traditional Chinese (Taiwan) Listing Copy (繁體中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters, measured on 2026-10-12, the full descriptions on 2026-10-18.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters, measured on 2026-10-12, the Firefox summary, the full descriptions, and What's new on 2026-10-18.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 54 |
-| Firefox Add-ons summary | 101 |
-| Full description, Chrome and Edge | 3,752 |
-| Full description, Firefox | 2,194 |
-| What's new in 0.3.3 | 381 |
+| Firefox Add-ons summary | 126 |
+| Full description, Chrome and Edge | 3,853 |
+| Full description, Firefox | 2,268 |
+| What's new in 0.3.3 | 431 |
 
 ## Name
 
@@ -28,10 +28,10 @@ Read from `extName` in `apps/extension/public/_locales/zh_TW/messages.json`. The
 快速將網頁儲存到正確的資料夾：輸入資料夾名稱的一部分，或讓 AI 建議資料夾。另外也提供書籤搜尋和清理工具。
 ```
 
-### Firefox Add-ons summary (250 characters maximum, 101 characters)
+### Firefox Add-ons summary (250 characters maximum, 126 characters on 2026-10-18)
 
 ```text
-快速將網頁儲存到正確的書籤資料夾：輸入任何資料夾名稱的一部分、按 Alt+Shift+S 儲存到最相符的資料夾，或讓需自行啟用的 AI 建議資料夾。另外還提供即時搜尋、資料夾樹狀結構和完整的書籤管理員。
+快速將網頁儲存到正確的書籤資料夾：輸入任何資料夾名稱的一部分、按 ⌥⇧S (Windows 和 Linux 上為 Alt+Shift+S) 儲存到最相符的資料夾，或讓需自行啟用的 AI 建議資料夾。另外還提供即時搜尋、資料夾樹狀結構和完整的書籤管理員。
 ```
 
 ## Search terms (Edge Add-ons)
@@ -61,10 +61,10 @@ Bookmark Scout 能從工具列或用一組鍵盤快捷鍵，在幾秒內將每�
 • 選用的右鍵選單 (預設關閉；在「設定」中開啟「右鍵選單」)，可將連結儲存至最近使用的資料夾
 
 快速儲存快捷鍵
-• 在任何網頁上按 Alt+Shift+S，不必開啟 Bookmark Scout 就能儲存網頁：預設儲存到與網頁最相符的資料夾 (在本裝置上比對)，也可以改為儲存到上次使用的資料夾或指定的資料夾
+• 在任何網頁上按 ⌥⇧S (Windows 和 Linux 上為 Alt+Shift+S)，不必開啟 Bookmark Scout 就能儲存網頁：預設儲存到與網頁最相符的資料夾 (在本裝置上比對)，也可以改為儲存到上次使用的資料夾或指定的資料夾
 • 網頁中會顯示小型通知，說明網頁儲存到哪裡，並提供「復原」和可改為移動到的其他資料夾
-• 開啟 AI 後，按 Alt+Shift+D 會將網頁儲存到 AI 建議的第一個資料夾
-• 可在瀏覽器的快捷鍵頁面變更按鍵。也可以在該頁面將 Ctrl+D (Mac 上為 ⌘D) 指定給快速儲存，取代瀏覽器的書籤對話方塊；「設定」中有操作說明
+• 開啟 AI 後，按 ⌥⇧D (Windows 和 Linux 上為 Alt+Shift+D) 會將網頁儲存到 AI 建議的第一個資料夾
+• 可在瀏覽器的快捷鍵頁面變更按鍵。也可以在該頁面將 ⌘D (Windows 和 Linux 上為 Ctrl+D) 指定給快速儲存，取代瀏覽器的書籤對話方塊；「設定」中有操作說明
 
 尋找書籤
 • 直接從工具列邊輸入邊搜尋所有書籤
@@ -76,7 +76,7 @@ Bookmark Scout 能從工具列或用一組鍵盤快捷鍵，在幾秒內將每�
 Bookmark Scout 會以自己的管理員取代瀏覽器的「書籤」頁面，操作方式與瀏覽器內建的管理員相同，另外還提供路徑導覽、可排序的表格，以及一律顯示最新結果的已儲存搜尋。
 • 書籤、資料夾和空白處都有右鍵選單：編輯、重新命名、剪下、複製、貼上、在新分頁或新視窗中開啟、在資料夾中顯示，以及刪除
 • 拖放即可將書籤移入資料夾或重新排序；從其他網頁拖入的連結會成為書籤
-• 用 Ctrl+點選和 Shift+點選選取多列，並使用與瀏覽器內建管理員相同的快捷鍵 (Mac 上為 Cmd)：Ctrl+A、Ctrl+C、Ctrl+X、Ctrl+V、Delete、Ctrl+Z 復原，以及 Ctrl+Shift+Z 重做
+• 用 Cmd+點選和 Shift+點選選取多列，並使用與瀏覽器內建管理員相同的快捷鍵：⌘A、⌘C、⌘X、⌘V、⌘⌫、⌘Z 復原，以及 ⇧⌘Z 重做 (Windows 和 Linux 上為 Ctrl+點選、Ctrl+A、Ctrl+C、Ctrl+X、Ctrl+V、Delete、Ctrl+Z 和 Ctrl+Shift+Z)
 • 復原和重做涵蓋編輯、移動、排序和刪除，包括「詢問 AI」所做的變更
 • 可選擇右鍵選單和 ⋯ 選單顯示哪些命令，以及顯示順序 (「設定」)
 
@@ -152,9 +152,9 @@ Bookmark Scout 能從工具列或用一組鍵盤快捷鍵，在幾秒內將每�
 • 在「設定」中開啟「右鍵選單」後，即可從右鍵選單將連結儲存至最近使用的資料夾
 
 快速儲存快捷鍵
-• 在任何網頁上按 Alt+Shift+S，不必開啟 Bookmark Scout 就能儲存網頁：預設儲存到與網頁最相符的資料夾 (在本裝置上比對)，也可以改為儲存到上次使用的資料夾或指定的資料夾
+• 在任何網頁上按 ⌥⇧S (Windows 和 Linux 上為 Alt+Shift+S)，不必開啟 Bookmark Scout 就能儲存網頁：預設儲存到與網頁最相符的資料夾 (在本裝置上比對)，也可以改為儲存到上次使用的資料夾或指定的資料夾
 • 網頁中會顯示小型通知，說明網頁儲存到哪裡，並提供「復原」和可改為移動到的其他資料夾
-• 開啟 AI 後，按 Alt+Shift+D 會將網頁儲存到 AI 建議的第一個資料夾
+• 開啟 AI 後，按 ⌥⇧D (Windows 和 Linux 上為 Alt+Shift+D) 會將網頁儲存到 AI 建議的第一個資料夾
 • 可在「設定」>「儲存與搜尋」>「鍵盤快捷鍵」中變更按鍵
 
 尋找書籤
@@ -167,7 +167,7 @@ Bookmark Scout 能從工具列或用一組鍵盤快捷鍵，在幾秒內將每�
 在工具列的彈出式視窗或側邊欄中點選「開啟書籤管理員」，即可在新分頁中開啟完整的管理員，提供資料夾樹狀結構和可排序的表格。
 • 書籤、資料夾和空白處都有右鍵選單：編輯、重新命名、剪下、複製、貼上、開啟、在資料夾中顯示，以及刪除
 • 拖放即可將書籤移入資料夾或重新排序；從其他網頁拖入的連結會成為書籤
-• 用 Ctrl+點選和 Shift+點選選取多列 (Mac 上為 Cmd)，使用常用按鍵複製、剪下和貼上，並用 Ctrl+Z 和 Ctrl+Shift+Z 復原和重做變更
+• 用 Cmd+點選和 Shift+點選選取多列，使用常用按鍵複製、剪下和貼上，並用 ⌘Z 和 ⇧⌘Z 復原和重做變更 (Windows 和 Linux 上為 Ctrl+點選、Ctrl+Z 和 Ctrl+Shift+Z)
 
 Firefox 會要求哪些權限，以及原因
 安裝時，Firefox 只會要求一項權限：「讀取及修改書籤」。其他權限只會在使用需要該權限的功能時，先顯示簡短說明後才要求。如果拒絕，只有該功能會維持關閉。
@@ -203,10 +203,10 @@ AI 是選用功能，以上所有功能不需要 AI 都能使用。如要使用 
 
 ## What's new in 0.3.3
 
-Translation of the English release notes; paste into AMO's release notes for 0.3.3 (381 characters).
+Translation of the English release notes; paste into AMO's release notes for 0.3.3 (431 characters on 2026-10-18).
 
 ```text
-• 快速儲存：在任何網頁上按 Alt+Shift+S，即可將網頁儲存到最相符的資料夾。網頁中的通知會說明網頁儲存到哪裡，並提供「復原」和可改為移動到的其他資料夾。開啟 AI 後，按 Alt+Shift+D 會儲存到 AI 建議的第一個資料夾
+• 快速儲存：在任何網頁上按 ⌥⇧S (Windows 和 Linux 上為 Alt+Shift+S)，即可將網頁儲存到最相符的資料夾。網頁中的通知會說明網頁儲存到哪裡，並提供「復原」和可改為移動到的其他資料夾。開啟 AI 後，按 ⌥⇧D (Windows 和 Linux 上為 Alt+Shift+D) 會儲存到 AI 建議的第一個資料夾
 • 書籤管理員：右鍵選單、拖放、剪下、複製和貼上、選取多列，以及復原和重做
 • 「詢問 AI」可以儲存網頁，並提出移動、重新命名、刪除和新資料夾的建議，核准前不會變更任何內容，而且每項變更都可以復原。回答結尾可以附上可點選的按鈕
 • 可選擇管理員選單顯示哪些命令，以及「詢問 AI」可以執行的動作

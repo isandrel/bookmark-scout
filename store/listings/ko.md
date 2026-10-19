@@ -1,14 +1,14 @@
 # Korean Listing Copy (한국어)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox full description on 2026-10-15, the Chrome Web Store and Edge full description on 2026-10-18, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox summary, the full descriptions, and What's new on 2026-10-18, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 75 |
-| Firefox Add-ons summary | 150 |
-| Full description, Chrome and Edge | 4,887 |
-| Full description, Firefox | 2,939 |
-| What's new in 0.3.3 | 585 |
+| Firefox Add-ons summary | 173 |
+| Full description, Chrome and Edge | 5,162 |
+| Full description, Firefox | 3,020 |
+| What's new in 0.3.3 | 631 |
 
 ## Name
 
@@ -28,10 +28,10 @@ Ships with 0.3.3 (`extDescription`; changing it needs a new version; 75 characte
 폴더 이름의 일부를 입력하거나 AI 추천을 받아 페이지를 알맞은 폴더에 빠르게 저장하세요. 북마크 검색과 정돈 도구도 함께 제공합니다.
 ```
 
-### Firefox Add-ons summary (250 characters maximum, 150 characters)
+### Firefox Add-ons summary (250 characters maximum, 173 characters on 2026-10-18)
 
 ```text
-페이지를 알맞은 북마크 폴더에 빠르게 저장하세요. 어떤 폴더든 이름의 일부를 입력하거나, Alt+Shift+S를 눌러 가장 잘 맞는 폴더에 저장하거나, 선택형 AI에게 폴더를 추천받을 수 있습니다. 즉시 검색, 폴더 트리, 모든 기능을 갖춘 북마크 관리자도 제공합니다.
+페이지를 알맞은 북마크 폴더에 빠르게 저장하세요. 어떤 폴더든 이름의 일부를 입력하거나, ⌥⇧S(Windows와 Linux에서는 Alt+Shift+S)를 눌러 가장 잘 맞는 폴더에 저장하거나, 선택형 AI에게 폴더를 추천받을 수 있습니다. 즉시 검색, 폴더 트리, 모든 기능을 갖춘 북마크 관리자도 제공합니다.
 ```
 
 ## Search terms (Edge Add-ons)
@@ -48,7 +48,7 @@ AI 북마크
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 5,062 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
+Plain text, 5,162 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout(북마크 스카우트)는 툴바에서 또는 키보드 단축키 하나로 모든 페이지를 몇 초 만에 알맞은 폴더에 저장하고, 브라우저를 떠나지 않고 북마크를 찾고 정돈할 수 있게 도와주는 확장 프로그램입니다. 무료이며, 계정도 광고도 없습니다.
@@ -61,10 +61,10 @@ Bookmark Scout(북마크 스카우트)는 툴바에서 또는 키보드 단축�
 • 선택형 오른쪽 클릭 메뉴(처음에는 꺼져 있으며, 설정에서 '마우스 오른쪽 버튼 메뉴'를 켜서 사용)로 링크를 최근 폴더에 저장
 
 빠른 저장 단축키
-• 아무 페이지에서나 Alt+Shift+S를 눌러 Bookmark Scout를 열지 않고 저장: 기본적으로 페이지에 가장 잘 맞는 폴더(기기 안에서 판단)에 저장하며, 마지막으로 사용한 폴더나 직접 고른 폴더로 바꿀 수 있음
+• 아무 페이지에서나 ⌥⇧S(Windows와 Linux에서는 Alt+Shift+S)를 눌러 Bookmark Scout를 열지 않고 저장: 기본적으로 페이지에 가장 잘 맞는 폴더(기기 안에서 판단)에 저장하며, 마지막으로 사용한 폴더나 직접 고른 폴더로 바꿀 수 있음
 • 페이지에 작은 알림이 표시되어 저장한 위치를 알려 주고, 실행 취소와 옮길 수 있는 다른 폴더를 제공
-• AI를 켜면 Alt+Shift+D로 페이지를 첫 번째 AI 추천 폴더에 저장
-• 키는 브라우저의 단축키 페이지에서 변경. 그곳에서 빠른 저장에 Ctrl+D(Mac에서는 ⌘D)를 지정해 브라우저의 북마크 대화상자 대신 사용할 수도 있으며, 방법은 설정에서 안내
+• AI를 켜면 ⌥⇧D(Windows와 Linux에서는 Alt+Shift+D)로 페이지를 첫 번째 AI 추천 폴더에 저장
+• 키는 브라우저의 단축키 페이지에서 변경. 그곳에서 빠른 저장에 ⌘D(Windows와 Linux에서는 Ctrl+D)를 지정해 브라우저의 북마크 대화상자 대신 사용할 수도 있으며, 방법은 설정에서 안내
 
 북마크 찾기
 • 툴바에서 바로, 입력하는 즉시 모든 북마크를 검색
@@ -76,7 +76,7 @@ Bookmark Scout(북마크 스카우트)는 툴바에서 또는 키보드 단축�
 Bookmark Scout는 브라우저의 북마크 페이지를 브라우저 자체 관리자처럼 동작하는 관리자로 바꾸고, 이동 경로, 정렬 가능한 표, 항상 최신 결과를 보여 주는 저장된 검색을 더합니다.
 • 북마크, 폴더, 빈 공간의 오른쪽 클릭 메뉴: 편집, 이름 바꾸기, 잘라내기, 복사, 붙여넣기, 새 탭이나 새 창에서 열기, 폴더에서 보기, 삭제
 • 드래그 앤 드롭으로 북마크를 폴더로 옮기거나 순서 변경(다른 페이지에서 끌어 온 링크는 북마크가 됨)
-• Ctrl+클릭과 Shift+클릭으로 여러 행을 선택하고, 브라우저 자체 관리자와 같은 키보드 단축키 사용(Mac에서는 Cmd): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, 실행 취소는 Ctrl+Z, 다시 실행은 Ctrl+Shift+Z
+• Cmd+클릭과 Shift+클릭으로 여러 행을 선택하고, 브라우저 자체 관리자와 같은 키보드 단축키 사용: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, 실행 취소는 ⌘Z, 다시 실행은 ⇧⌘Z(Windows와 Linux에서는 Ctrl+클릭, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z, Ctrl+Shift+Z)
 • 편집, 이동, 정렬, 삭제를 실행 취소하고 다시 실행 가능('AI에게 묻기'가 한 변경 포함)
 • 오른쪽 클릭 메뉴와 ⋯ 메뉴에 표시할 명령과 그 순서를 선택(설정)
 
@@ -152,9 +152,9 @@ Bookmark Scout(북마크 스카우트)는 툴바에서 또는 키보드 단축�
 • 설정에서 '마우스 오른쪽 버튼 메뉴'를 켜면 오른쪽 클릭 메뉴로 링크를 최근 폴더에 저장
 
 빠른 저장 단축키
-• 아무 페이지에서나 Alt+Shift+S를 눌러 Bookmark Scout를 열지 않고 저장: 기본적으로 페이지에 가장 잘 맞는 폴더(기기 안에서 판단)에 저장하며, 마지막으로 사용한 폴더나 직접 고른 폴더로 바꿀 수 있음
+• 아무 페이지에서나 ⌥⇧S(Windows와 Linux에서는 Alt+Shift+S)를 눌러 Bookmark Scout를 열지 않고 저장: 기본적으로 페이지에 가장 잘 맞는 폴더(기기 안에서 판단)에 저장하며, 마지막으로 사용한 폴더나 직접 고른 폴더로 바꿀 수 있음
 • 페이지에 작은 알림이 표시되어 저장한 위치를 알려 주고, 실행 취소와 옮길 수 있는 다른 폴더를 제공
-• AI를 켜면 Alt+Shift+D로 페이지를 첫 번째 AI 추천 폴더에 저장
+• AI를 켜면 ⌥⇧D(Windows와 Linux에서는 Alt+Shift+D)로 페이지를 첫 번째 AI 추천 폴더에 저장
 • 키는 설정 > 저장 및 검색 > 키보드 단축키에서 변경
 
 북마크 찾기
@@ -167,7 +167,7 @@ Bookmark Scout(북마크 스카우트)는 툴바에서 또는 키보드 단축�
 툴바 팝업이나 사이드바에서 '북마크 관리자 열기'를 누르면 폴더 트리와 정렬 가능한 표를 갖춘 전체 관리자가 새 탭에서 열립니다.
 • 북마크, 폴더, 빈 공간의 오른쪽 클릭 메뉴: 편집, 이름 바꾸기, 잘라내기, 복사, 붙여넣기, 열기, 폴더에서 보기, 삭제
 • 드래그 앤 드롭으로 북마크를 폴더로 옮기거나 순서 변경(다른 페이지에서 끌어 온 링크는 북마크가 됨)
-• Ctrl+클릭과 Shift+클릭으로 여러 행 선택(Mac에서는 Cmd), 일반적인 키로 복사, 잘라내기, 붙여넣기, Ctrl+Z와 Ctrl+Shift+Z로 변경 사항 실행 취소와 다시 실행
+• Cmd+클릭과 Shift+클릭으로 여러 행 선택, 일반적인 키로 복사, 잘라내기, 붙여넣기, ⌘Z와 ⇧⌘Z로 변경 사항 실행 취소와 다시 실행(Windows와 Linux에서는 Ctrl+클릭, Ctrl+Z, Ctrl+Shift+Z)
 
 Firefox가 요청하는 권한과 그 이유
 설치할 때 Firefox는 북마크를 읽고 수정하는 권한 한 가지만 요청합니다. 그 밖의 권한은 필요한 기능을 사용할 때만, 짧은 설명을 먼저 보여 준 뒤에 요청합니다. 거부하면 해당 기능만 꺼진 상태로 유지됩니다.
@@ -206,7 +206,7 @@ AI는 선택 사항이며, 위의 모든 기능은 AI 없이 동작합니다. AI
 Translation of the English release notes; paste into AMO's release notes for 0.3.3.
 
 ```text
-• 빠른 저장: 아무 페이지에서나 Alt+Shift+S를 누르면 페이지에 가장 잘 맞는 폴더에 저장합니다. 페이지에 표시되는 알림이 저장한 위치를 알려 주고, 실행 취소와 옮길 수 있는 다른 폴더를 제공합니다. AI를 켜면 Alt+Shift+D로 첫 번째 AI 추천 폴더에 저장합니다
+• 빠른 저장: 아무 페이지에서나 ⌥⇧S(Windows와 Linux에서는 Alt+Shift+S)를 누르면 페이지에 가장 잘 맞는 폴더에 저장합니다. 페이지에 표시되는 알림이 저장한 위치를 알려 주고, 실행 취소와 옮길 수 있는 다른 폴더를 제공합니다. AI를 켜면 ⌥⇧D(Windows와 Linux에서는 Alt+Shift+D)로 첫 번째 AI 추천 폴더에 저장합니다
 • 북마크 관리자: 오른쪽 클릭 메뉴, 드래그 앤 드롭, 잘라내기, 복사, 붙여넣기, 여러 행 선택, 실행 취소와 다시 실행
 • 'AI에게 묻기'가 페이지를 저장하고, 이동, 이름 바꾸기, 삭제, 새 폴더를 제안할 수 있습니다. 제안은 승인하기 전까지 아무것도 변경하지 않으며, 모든 변경은 실행 취소할 수 있습니다. 답변 끝에 클릭할 수 있는 버튼이 표시될 수 있습니다
 • 관리자 메뉴에 표시할 명령과 'AI에게 묻기'가 할 수 있는 작업을 선택할 수 있습니다

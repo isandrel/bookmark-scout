@@ -1,4 +1,8 @@
 {
+  "shortcutNotes": {
+    "mac": " ({keys} en Mac)",
+    "other": " ({keys} en Windows y Linux)"
+  },
   "metadata": {
     "title": "Bookmark Scout – Guarda marcadores en la carpeta correcta, rápido",
     "description": "Extensión del navegador que guarda páginas en la carpeta de marcadores correcta: escribe el nombre de una carpeta, pulsa un atajo o deja que la IA sugiera una. Además, búsqueda y limpieza.",
@@ -83,7 +87,7 @@
   "home": {
     "hero": {
       "title": "Guarda cada página en la carpeta correcta, en segundos.",
-      "description": "Escribe parte del nombre de una carpeta, o pulsa {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} en Mac) en cualquier página, y la página se guarda en la carpeta que le corresponde. Si quieres, la IA también puede sugerir la carpeta. Bookmark Scout también encuentra y ordena los marcadores que ya tienes, directamente en tu navegador. Sin cuenta, sin anuncios y sin rastrear lo que haces.",
+      "description": "Escribe parte del nombre de una carpeta, o pulsa {{SHORTCUT:commands.quick-save}} en cualquier página, y la página se guarda en la carpeta que le corresponde. Si quieres, la IA también puede sugerir la carpeta. Bookmark Scout también encuentra y ordena los marcadores que ya tienes, directamente en tu navegador. Sin cuenta, sin anuncios y sin rastrear lo que haces.",
       "download": "Descargar desde GitHub",
       "docs": "Leer la documentación",
       "demoNote": "Esta demostración usa un árbol de carpetas ficticio y no guarda nada. La extensión muestra tus propias carpetas, dentro de tu navegador."
@@ -139,7 +143,7 @@
         "points": [
           "Escribe parte del nombre de una carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado",
           "Escribe una ruta como recetas/pasta y encuentra la carpeta aunque cometas un pequeño error de escritura",
-          "Pulsa {{SHORTCUT:commands.quick-save}} ({{SHORTCUT_MAC:commands.quick-save}} en Mac) en cualquier página para guardarla en la carpeta que mejor le corresponde; una pequeña notificación en la página ofrece Deshacer y otras carpetas",
+          "Pulsa {{SHORTCUT:commands.quick-save}} en cualquier página para guardarla en la carpeta que mejor le corresponde; una pequeña notificación en la página ofrece Deshacer y otras carpetas",
           "Una página que ya está en esa carpeta no se guarda dos veces, y las carpetas en las que guardaste hace poco aparecen primero",
           "Guarda enlaces en carpetas recientes desde el menú del clic derecho, una vez que lo actives en Configuración (al principio está desactivado)",
           "Con la IA activada, obtén sugerencias de carpeta para la página, o guarda en la primera con {{SHORTCUT:commands.ai-quick-save}}"
@@ -155,7 +159,7 @@
           "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",
           "Guarda una búsqueda y siempre mostrará los resultados actuales",
           "Selecciona filas con Shift y Ctrl, haz clic con el botón derecho para cortar, copiar, pegar y abrir todo, y arrastra marcadores y carpetas adonde correspondan",
-          "Deshaz y rehaz los cambios con {{SHORTCUT:manager.undo}} y {{SHORTCUT:manager.redo}} ({{SHORTCUT_MAC:manager.undo}} y {{SHORTCUT_MAC:manager.redo}} en Mac), incluso después de recargar",
+          "Deshaz y rehaz los cambios con {{SHORTCUT:manager.undo}} y {{SHORTCUT:manager.redo}}, incluso después de recargar",
           "Importa marcadores desde un archivo tras una vista previa, y expórtalos a HTML, JSON, Markdown o CSV",
           "Enlaza a una carpeta o a una búsqueda, y muévete por todo con el teclado"
         ]
@@ -299,7 +303,7 @@
         },
         "changes": {
           "q": "¿Cambiará mis marcadores sin preguntar?",
-          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Las funciones de IA muestran sus cambios como un plan y esperan tu aprobación. Al eliminar se pide confirmación de forma predeterminada, y el administrador de marcadores puede deshacer los cambios con {{SHORTCUT:manager.undo}} ({{SHORTCUT_MAC:manager.undo}} en Mac)."
+          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Las funciones de IA muestran sus cambios como un plan y esperan tu aprobación. Al eliminar se pide confirmación de forma predeterminada, y el administrador de marcadores puede deshacer los cambios con {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "¿Funciona en Firefox y Edge?",

@@ -1,4 +1,8 @@
 {
+  "shortcutNotes": {
+    "mac": "（Mac 上为 {keys}）",
+    "other": "（Windows 和 Linux 上为 {keys}）"
+  },
   "metadata": {
     "title": "Bookmark Scout – 快速将书签保存到合适的文件夹",
     "description": "一款浏览器扩展程序，可将网页保存到合适的书签文件夹：输入文件夹名称、按快捷键，或让 AI 建议一个。另有搜索和清理功能。",
@@ -83,7 +87,7 @@
   "home": {
     "hero": {
       "title": "几秒钟内，把每个网页保存到合适的文件夹。",
-      "description": "输入文件夹名称的一部分，或在任意网页上按 {{SHORTCUT:commands.quick-save}}（Mac 上为 {{SHORTCUT_MAC:commands.quick-save}}），网页就会保存到它所属的文件夹。如果你愿意，还可以让 AI 建议文件夹。Bookmark Scout 还能直接在浏览器中查找和整理你已有的书签。无需账号，没有广告，我们也不会跟踪你的操作。",
+      "description": "输入文件夹名称的一部分，或在任意网页上按 {{SHORTCUT:commands.quick-save}}，网页就会保存到它所属的文件夹。如果你愿意，还可以让 AI 建议文件夹。Bookmark Scout 还能直接在浏览器中查找和整理你已有的书签。无需账号，没有广告，我们也不会跟踪你的操作。",
       "download": "从 GitHub 下载",
       "docs": "阅读文档",
       "demoNote": "此演示使用虚构的文件夹结构，不会保存任何内容。扩展程序会在你的浏览器中显示你自己的文件夹。"
@@ -139,7 +143,7 @@
         "points": [
           "输入文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，无需离开键盘就能将当前网页保存到那里",
           "输入 食谱/意面 这样的路径，有小的拼写错误也能找到文件夹",
-          "在任意网页上按 {{SHORTCUT:commands.quick-save}}（Mac 上为 {{SHORTCUT_MAC:commands.quick-save}}），即可将其保存到最匹配的文件夹；页面中的小通知提供“撤消”和其他文件夹",
+          "在任意网页上按 {{SHORTCUT:commands.quick-save}}，即可将其保存到最匹配的文件夹；页面中的小通知提供“撤消”和其他文件夹",
           "已在该文件夹中的网页不会重复保存，最近保存过的文件夹排在前面",
           "在设置中开启右键菜单后（默认关闭），即可通过右键菜单将链接保存到最近使用的文件夹",
           "开启 AI 后，可为当前网页获取文件夹建议，或按 {{SHORTCUT:commands.ai-quick-save}} 保存到第一个建议的文件夹"
@@ -155,7 +159,7 @@
           "可在浏览器侧边栏（Firefox 中为侧栏）中保持打开同样的文件夹树和搜索",
           "保存搜索后，它会始终显示最新结果",
           "用 Shift 和 Ctrl 选择多行，右键可剪切、复制、粘贴和全部打开，还能把书签和文件夹拖到合适的位置",
-          "用 {{SHORTCUT:manager.undo}} 和 {{SHORTCUT:manager.redo}}（Mac 上为 {{SHORTCUT_MAC:manager.undo}} 和 {{SHORTCUT_MAC:manager.redo}}）撤消和重做更改，重新加载后依然有效",
+          "用 {{SHORTCUT:manager.undo}} 和 {{SHORTCUT:manager.redo}}撤消和重做更改，重新加载后依然有效",
           "预览后从文件导入书签，并可导出为 HTML、JSON、Markdown 或 CSV",
           "可链接到某个文件夹或搜索，并全程用键盘操作"
         ]
@@ -299,7 +303,7 @@
         },
         "changes": {
           "q": "它会不经询问就更改我的书签吗？",
-          "a": "不会。重复书签清理、网址清理、失效链接修复、获取的标题、AI 重组和导入，都会在写入任何内容之前先显示供你审核的内容。AI 功能会以方案的形式展示更改，并等待你批准。删除默认需要确认，书签管理器还可以用 {{SHORTCUT:manager.undo}}（Mac 上为 {{SHORTCUT_MAC:manager.undo}}）撤消更改。"
+          "a": "不会。重复书签清理、网址清理、失效链接修复、获取的标题、AI 重组和导入，都会在写入任何内容之前先显示供你审核的内容。AI 功能会以方案的形式展示更改，并等待你批准。删除默认需要确认，书签管理器还可以用 {{SHORTCUT:manager.undo}}撤消更改。"
         },
         "otherBrowsers": {
           "q": "它能在 Firefox 和 Edge 中使用吗？",

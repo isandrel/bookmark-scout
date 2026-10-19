@@ -19,6 +19,14 @@
 # answers the same way and which are not configurable (arrow keys, Home, End, Enter, Space, Tab,
 # and Escape; TREE_KEY_BINDINGS in src/lib/keyboard-shortcuts.ts).
 
+# Text that names both platforms' keys (the docs before they know the reader's computer, the
+# website, the READMEs, the store listings) prints the `primary` platform's keys first and the
+# other platform's after them in a smaller note: "⌥⇧S (Alt+Shift+S on Windows and Linux)". "mac"
+# or "other" (Windows, Linux, and ChromeOS). Pages that know the reader's platform, such as the
+# extension's own, show only that platform's keys.
+[display]
+primary = "mac"
+
 # The extension's browser commands (`manifest.commands`), by command name, with the keys the
 # manifest suggests, in the browser's command format (MDN `commands`: up to two of Ctrl, Alt,
 # Command, MacCtrl, and Shift, then one key; `Ctrl` is Command on a Mac). The browser keeps the keys
