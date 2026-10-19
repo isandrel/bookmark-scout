@@ -6,8 +6,8 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Optional manifest description | 50 |
 | Firefox Add-ons summary | 116 |
-| Full description, Chrome and Edge | 3,735 |
-| Full description, Firefox | 2,186 |
+| Full description, Chrome and Edge | 3,737 |
+| Full description, Firefox | 2,188 |
 | What's new in 0.3.3 | 430 |
 
 ## Name
@@ -55,7 +55,7 @@ Bookmark Scout 可以通过工具栏或一个键盘快捷键，在几秒钟内�
 
 几秒钟内保存到合适的文件夹
 • 点击 Bookmark Scout 按钮，输入任意文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，无需离开键盘就能将网页保存到那里
-• 输入 食谱/意面 这样的路径；有小的拼写错误也能找到文件夹，最近使用过的文件夹排在前面
+• 输入 ai/llms 这样的路径；有小的拼写错误也能找到文件夹，最近使用过的文件夹排在前面
 • 已在该文件夹中的网页不会重复保存
 • 可选的 AI 会为网页建议最合适的文件夹，或建议一个新文件夹，经确认后才会创建
 • 可选的右键菜单（默认关闭；在设置中开启“右键菜单”），可将链接保存到最近使用的文件夹
@@ -146,7 +146,7 @@ Bookmark Scout 可以通过工具栏或一个键盘快捷键，在几秒钟内�
 
 几秒钟内保存到合适的文件夹
 • 点击 Bookmark Scout 按钮，输入任意文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，无需离开键盘就能将网页保存到那里
-• 输入 食谱/意面 这样的路径；有小的拼写错误也能找到文件夹，最近使用过的文件夹排在前面
+• 输入 ai/llms 这样的路径；有小的拼写错误也能找到文件夹，最近使用过的文件夹排在前面
 • 已在该文件夹中的网页不会重复保存
 • 可选的 AI 会为网页建议最合适的文件夹，或建议一个新文件夹，经确认后才会创建
 • 在设置中开启“右键菜单”后，可通过右键菜单将链接保存到最近使用的文件夹

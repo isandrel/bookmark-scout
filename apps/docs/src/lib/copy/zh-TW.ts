@@ -53,17 +53,17 @@ export const zhTW: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "兩個彈出式視窗：在搜尋框中輸入「pas」，在「儲存到資料夾」下選取 Pasta 資料夾（Recipes / Italian）；以及針對目前網頁的 AI 建議：現有的 Recipes/Italian/Pasta 資料夾和新的 Recipes/Quick Dinners 資料夾",
+      "兩個彈出式視窗：在搜尋框中輸入「fin」，在「儲存到資料夾」下選取 Fine-tuning 資料夾（AI / LLMs）；以及針對另一個網頁的 AI 建議：新的 AI/LLMs/Inference 資料夾和現有的 AI/LLMs 資料夾",
     "quick-save":
-      "食譜網頁上方角落的快速儲存通知：已儲存到 Pasta，並提供「復原」和「移動到」底下的其他資料夾",
+      "開發者指南網頁上方角落的快速儲存通知：已儲存到 Agents（AI / Agents），並提供「復原」和「移動到」底下的 Papers",
     manager:
-      "開啟書籤列的書籤管理員：包含 Recipes、School、Travel、Family 和 Shopping 的資料夾樹狀結構、一個搜尋框和書籤表格",
+      "開啟 AI / LLMs / Fine-tuning 的書籤管理員：包含 AI、Dev、Design、Tools 和 Reading list 的資料夾樹狀結構、一個搜尋框和顯示網站圖示的書籤表格",
     duplicates:
       "書籤管理員上方的重複書籤清理工具確認畫面，每個群組中要保留的書籤標示為「保留」",
     settings:
       "設定中的「常用設定」分頁：快速儲存資料夾、儲存到的資料夾、右鍵選單 (關閉)、主題和語言",
     "options-ai":
-      "設定中的「AI」分頁：「AI 是選用功能」方塊說明使用 AI 需要什麼及可能的費用，「AI 功能」為關閉 (預設值)",
+      "設定中的「AI」分頁：「AI 功能」已開啟，「新增服務」下方是使用者新增的兩個 AI 服務：一個隱藏金鑰的預設雲端 AI 服務，以及一個在本機執行的模型",
   },
 
   /**

@@ -30,7 +30,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="{{SCREENSHOT:popup:dark}}">
-    <img src="{{SCREENSHOT:popup:light}}" alt="Bookmark Scout のポップアップ。「pas」と入力すると Recipes / Italian の中の Pasta フォルダが見つかり、Enter でそこにページを保存できる。横には、パスタのレシピページに対する任意の AI の提案。" width="800">
+    <img src="{{SCREENSHOT:popup:light}}" alt="Bookmark Scout のポップアップ。「fin」と入力すると AI / LLMs の中の Fine-tuning フォルダが見つかり、Enter でそこにページを保存できる。横には、プロンプトキャッシュの記事に対する任意の AI の提案（新しいフォルダを含む）。" width="800">
   </picture>
 </p>
 

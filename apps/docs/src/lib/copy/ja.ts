@@ -62,17 +62,17 @@ export const ja: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "2 つのポップアップ: 検索ボックスに「pas」と入力し、フォルダに保存 で Pasta フォルダ（Recipes / Italian）を選んだ画面と、現在のページに対する AI の提案（既存の Recipes/Italian/Pasta フォルダと新しい Recipes/Quick Dinners フォルダ）",
+      "2 つのポップアップ: 検索ボックスに「fin」と入力し、フォルダに保存 で Fine-tuning フォルダ（AI / LLMs）を選んだ画面と、別のページに対する AI の提案（新しい AI/LLMs/Inference フォルダと既存の AI/LLMs フォルダ）",
     "quick-save":
-      "レシピのページの上隅に表示されたクイック保存の通知。Pasta に保存され、「元に戻す」と「移動先」のほかのフォルダが並んでいる",
+      "開発者向けガイドのページの上隅に表示されたクイック保存の通知。Agents（AI / Agents）に保存され、「元に戻す」と「移動先」の Papers が並んでいる",
     manager:
-      "ブックマークバーを開いたブックマークマネージャー。Recipes、School、Travel、Family、Shopping のフォルダツリー、1 つの検索ボックス、ブックマークの表",
+      "AI / LLMs / Fine-tuning を開いたブックマークマネージャー。AI、Dev、Design、Tools、Reading list のフォルダツリー、1 つの検索ボックス、サイトのアイコン付きのブックマークの表",
     duplicates:
       "マネージャーの上に表示された重複クリーナーの確認画面。各グループで残すブックマークに「保持」の印が付いている",
     settings:
       "設定の「基本設定」タブ。クイック保存のフォルダ、保存先フォルダ、右クリックメニュー（オフ）、テーマ、言語",
     "options-ai":
-      "設定の AI タブ。「AI は任意です」の欄で AI に必要なものとかかりうる費用を説明し、AI機能は初期設定どおりオフになっている",
+      "設定の AI タブ。AI機能がオンで、サービスを追加 の下に、ユーザーが追加した 2 つの AI サービスがある。キーが伏せられた既定のクラウドの AI サービスと、自分のコンピューターで動くモデル",
   },
 
   /**

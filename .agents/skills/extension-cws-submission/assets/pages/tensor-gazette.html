@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Fine-tuning small LLMs with LoRA · Tensor Gazette</title><link rel="icon" type="image/svg+xml" href="/icon.svg"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fbfaf7;color:#1d1b18;font-family:Charter,'Iowan Old Style',Georgia,serif;-webkit-font-smoothing:antialiased}
+.top{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-bottom:1px solid #e6e1d8}
+.mast{font-family:'Iowan Old Style',Charter,serif;font-size:26px;font-weight:700;letter-spacing:.02em}
+.mast span{color:#b4532a}
+nav{display:flex;gap:26px;font-family:'Avenir Next','Helvetica Neue',sans-serif;font-size:14px;color:#5a544b;letter-spacing:.02em}
+.wrap{display:grid;grid-template-columns:700px 1fr;gap:64px;padding:40px 56px 0}
+.rail{border-left:1px solid #e6e1d8;padding-left:28px;font-family:'Avenir Next',sans-serif}
+.rail h4{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#b4532a}
+.rail a{display:block;margin-top:16px;font-family:'Iowan Old Style',Charter,serif;font-size:18px;line-height:1.3;color:#1d1b18;text-decoration:none}
+.rail span{display:block;margin-top:4px;font-size:12.5px;color:#6b655c}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.kicker{font-family:'Avenir Next',sans-serif;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#b4532a}
+h1{margin-top:12px;font-family:'Iowan Old Style',Charter,serif;font-size:50px;line-height:1.06;font-weight:700;letter-spacing:-.01em}
+.dek{margin-top:16px;font-size:21px;line-height:1.45;color:#4b463f;font-style:italic}
+.by{margin-top:22px;display:flex;align-items:center;gap:12px;font-family:'Avenir Next',sans-serif;font-size:14px;color:#5a544b}
+.by b{color:#1d1b18;font-weight:600}
+p.body{margin-top:22px;font-size:18px;line-height:1.62}
+.fig{border:1px solid #e6e1d8;background:#fff;border-radius:6px;padding:18px 18px 12px}
+.cap{margin-top:8px;font-family:'Avenir Next',sans-serif;font-size:12.5px;color:#6b655c}
+pre{margin-top:18px;background:#1f1d1a;color:#ece6dc;border-radius:6px;padding:16px 18px;font:13px/1.55 Menlo,'SF Mono',monospace}
+.tags{margin-top:14px;display:flex;gap:8px;font-family:'Avenir Next',sans-serif;font-size:12px}
+.tags span{border:1px solid #e6e1d8;border-radius:3px;padding:3px 8px;color:#5a544b}
+</style></head><body>
+<div class="top"><div class="mast">Tensor <span>Gazette</span></div><nav><span>Models</span><span>Training</span><span>Inference</span><span>Papers</span><span>Newsletter</span></nav></div>
+<div class="wrap"><div>
+<div class="kicker">Training · How-to</div>
+<h1>Fine-tuning small LLMs with LoRA</h1>
+<p class="dek">Train a few million parameters instead of billions, and leave the base model untouched.</p>
+<div class="by"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="20" fill="#e9d8c7"/><circle cx="26" cy="15" r="9" fill="#b4532a"/></svg><span><b>Juno Park</b> · Oct 14, 2026 · 7 min read</span></div>
+<p class="body">Full fine-tuning updates every weight in a model. Low-rank adaptation takes another route: it freezes the pretrained weights and learns a small update for chosen layers, written as the product of two thin matrices, B and A. With a rank of 8 or 16, the trainable part is often well under one percent of the model.</p>
+<p class="body">Because the base model never changes, one copy can serve many tasks. Each task keeps only its small adapter, loaded at inference time or merged back into the weights.</p>
+<div class="two"><div class="fig"><svg viewBox="0 0 460 210" width="100%" font-family="Avenir Next, sans-serif" font-size="13">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5a544b"/></marker></defs>
+<text x="20" y="108" fill="#1d1b18" font-size="16" font-style="italic">x</text>
+<path d="M36 104 H76" stroke="#5a544b" stroke-width="1.5" marker-end="url(#ar)"/><path d="M56 104 V170 H96" stroke="#5a544b" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+<rect x="80" y="40" width="150" height="120" rx="6" fill="#efeae2" stroke="#cfc7ba"/><text x="155" y="96" text-anchor="middle" fill="#1d1b18" font-size="15">W</text><text x="155" y="116" text-anchor="middle" fill="#6b655c">frozen · d × d</text>
+<rect x="100" y="164" width="60" height="30" rx="4" fill="#f6dccd" stroke="#b4532a"/><text x="130" y="184" text-anchor="middle" fill="#7a3418">A · r×d</text>
+<rect x="190" y="164" width="60" height="30" rx="4" fill="#f6dccd" stroke="#b4532a"/><text x="220" y="184" text-anchor="middle" fill="#7a3418">B · d×r</text>
+<path d="M160 179 H186" stroke="#b4532a" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M230 100 H318" stroke="#5a544b" stroke-width="1.5" marker-end="url(#ar)"/><path d="M250 179 H335 V122" stroke="#b4532a" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+<circle cx="335" cy="100" r="16" fill="#fff" stroke="#5a544b"/><text x="335" y="105" text-anchor="middle" font-size="18" fill="#1d1b18">+</text>
+<path d="M351 100 H400" stroke="#5a544b" stroke-width="1.5" marker-end="url(#ar)"/><text x="410" y="105" fill="#1d1b18" font-size="16" font-style="italic">h</text>
+</svg><div class="cap">Figure 1. Only the update ΔW = BA is trained; W stays frozen.</div></div>
+<pre><span style="color:#d99bd1">from</span> peft <span style="color:#d99bd1">import</span> LoraConfig, get_peft_model
+
+config = LoraConfig(
+    r=<span style="color:#e7a07a">16</span>,
+    lora_alpha=<span style="color:#e7a07a">32</span>,
+    target_modules=[<span style="color:#a9d18e">"q_proj"</span>, <span style="color:#a9d18e">"v_proj"</span>],
+    lora_dropout=<span style="color:#e7a07a">0.05</span>,
+    task_type=<span style="color:#a9d18e">"CAUSAL_LM"</span>,
+)
+model = get_peft_model(base_model, config)
+model.print_trainable_parameters()</pre>
+</div><div class="tags"><span>fine-tuning</span><span>lora</span><span>llms</span></div>
+</div><aside class="rail"><h4>More in Training</h4><a href="#">Choosing a LoRA rank<span>5 min read</span></a><a href="#">Quantization-aware fine-tuning<span>9 min read</span></a><a href="#">Evaluating small models<span>6 min read</span></a></aside></div></body></html>

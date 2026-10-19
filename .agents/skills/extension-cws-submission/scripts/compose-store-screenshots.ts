@@ -1,9 +1,10 @@
-// Turn raw captures into the store screenshots: frame the two popup captures side by side on the
-// brand paper color, copy the page captures, and convert everything to 24-bit RGB without alpha
-// (the Chrome Web Store rejects alpha). No text is added, so one set suits every language;
-// headlines and captions belong in each page's own copy.
+// Turn raw captures into the store screenshots, in the promo video's style: brand paper with faint
+// static contour lines, and the real UI large, flat, and upright in a window with a 1px line border
+// and one soft shadow (no tilt, glow, gradient, or grain). The popup frame sets two popups side by
+// side. Every output is 1280x800 24-bit RGB without alpha (the Chrome Web Store rejects alpha). No
+// text is added, so one set suits every language; captions belong in each page's own copy.
 // Usage: bun compose-store-screenshots.ts <shots dir> <output dir>
-import { copyFileSync, mkdirSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { chromium } from '@playwright/test';
 
@@ -13,21 +14,66 @@ if (!shots || !out) {
 }
 mkdirSync(out, { recursive: true });
 
-// Brand tokens from DESIGN.md.
-const THEMES = {
-  light: { paper: '#f4f7fb', line: '#d6dfea', shadow: 'rgba(15,33,53,.14)' },
-  dark: { paper: '#0d1b2a', line: '#23394f', shadow: 'rgba(0,0,0,.5)' },
-} as const;
-const POPUP_CROP = '400x500+0+0';
+const FRAME = { width: 1280, height: 800 };
+/** Page captures (1280x800, taken at 2x) shown at 7/8 size, with an even paper margin. */
+const PAGE_WINDOW = { width: 1120, height: 700, radius: 16 };
+/** Popup captures (400x500, taken at 2x) shown at 1.2x. */
+const POPUP_WINDOW = { width: 480, height: 600, radius: 12, gap: 64 };
 
-/** Page captures copied as they are: output name prefix, capture name. */
-const PAGES: [string, string][] = [
-  ['02-quick-save', 'quick-save'],
-  ['03-manager', 'manager'],
-  ['04-tools-duplicates', 'duplicates'],
-  ['05-settings', 'settings'],
-  ['06-options-ai', 'options-ai'],
+// Brand tokens from DESIGN.md; the dark contour line is the promo video's, a step fainter than Line.
+const THEMES = {
+  light: {
+    paper: '#f4f7fb',
+    contour: '#d6dfea',
+    line: '#d6dfea',
+    shadow: '0 30px 60px -28px rgba(15,33,53,.35), 0 2px 6px rgba(15,33,53,.06)',
+  },
+  dark: {
+    paper: '#0d1b2a',
+    contour: '#1d3046',
+    line: '#23394f',
+    shadow: '0 30px 60px -28px rgba(0,0,0,.65), 0 2px 6px rgba(0,0,0,.3)',
+  },
+} as const;
+
+/** Output name prefix and the captures it shows: one page, or two popups side by side. */
+const FRAMES: [string, string[]][] = [
+  ['01-popup', ['popup-match', 'popup-ai']],
+  ['02-quick-save', ['quick-save']],
+  ['03-manager', ['manager']],
+  ['04-tools-duplicates', ['duplicates']],
+  ['05-settings', ['settings']],
+  ['06-options-ai', ['options-ai']],
 ];
+
+/** The promo video's contour lines: deterministic, static, around three centers. */
+const contours = (() => {
+  const centers = [
+    { x: 260, y: 900, rings: 9 },
+    { x: 1700, y: 160, rings: 8 },
+    { x: 1180, y: 1180, rings: 6 },
+  ];
+  return centers
+    .flatMap((center) =>
+      Array.from({ length: center.rings }, (_, index) => {
+        const ring = index + 1;
+        const radius = 70 * ring + 30;
+        const points = Array.from({ length: 73 }, (_, step) => {
+          const angle = (step / 72) * Math.PI * 2;
+          const wobble =
+            1 +
+            0.09 * Math.sin(3 * angle + ring * 0.7 + center.x) +
+            0.05 * Math.sin(5 * angle - ring * 0.4) +
+            0.03 * Math.sin(7 * angle + center.y);
+          const x = center.x + radius * 1.25 * wobble * Math.cos(angle);
+          const y = center.y + radius * 0.85 * wobble * Math.sin(angle);
+          return `${x.toFixed(1)},${y.toFixed(1)}`;
+        });
+        return `<path d="M${points.join('L')}Z"/>`;
+      }),
+    )
+    .join('');
+})();
 
 const magick = (...args: string[]) => {
   const result = Bun.spawnSync(['magick', ...args]);
@@ -35,26 +81,29 @@ const magick = (...args: string[]) => {
 };
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
-for (const [scheme, t] of Object.entries(THEMES)) {
-  for (const [target, source] of PAGES) {
-    copyFileSync(path.join(shots, `${source}-${scheme}.png`), path.join(out, `${target}-${scheme}.png`));
-  }
-  for (const name of ['popup-match', 'popup-ai']) {
-    magick(path.join(shots, `${name}-${scheme}.png`), '-crop', POPUP_CROP, '+repage', path.join(shots, `crop-${name}-${scheme}.png`));
-  }
-  const html = `<!doctype html><html><head><style>
-html,body{margin:0;width:1280px;height:800px;background:${t.paper};overflow:hidden}
-.row{display:flex;gap:64px;justify-content:center;align-items:center;height:800px}
-img{width:400px;height:500px;border-radius:16px;border:1px solid ${t.line};box-shadow:0 18px 40px ${t.shadow}}
+const page = await browser.newPage({ viewport: FRAME });
+for (const [scheme, theme] of Object.entries(THEMES)) {
+  for (const [target, sources] of FRAMES) {
+    const size = sources.length > 1 ? POPUP_WINDOW : PAGE_WINDOW;
+    const windows = sources
+      .map((source) => `<img src="file://${path.join(shots, `${source}-${scheme}.png`)}" alt="">`)
+      .join('');
+    const html = `<!doctype html><html><head><style>
+html,body{margin:0;width:${FRAME.width}px;height:${FRAME.height}px;overflow:hidden;background:${theme.paper}}
+svg{position:absolute;inset:0;width:100%;height:100%}
+path{fill:none;stroke:${theme.contour};stroke-width:1;vector-effect:non-scaling-stroke}
+.row{position:relative;display:flex;gap:${POPUP_WINDOW.gap}px;justify-content:center;align-items:center;height:100%}
+img{display:block;width:${size.width}px;height:${size.height}px;border:1px solid ${theme.line};border-radius:${size.radius}px;box-shadow:${theme.shadow}}
 </style></head><body>
-<div class="row"><img src="file://${shots}/crop-popup-match-${scheme}.png"><img src="file://${shots}/crop-popup-ai-${scheme}.png"></div>
+<svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${contours}</svg>
+<div class="row">${windows}</div>
 </body></html>`;
-  const htmlPath = path.join(shots, `compose-${scheme}.html`);
-  await Bun.write(htmlPath, html);
-  await page.goto(`file://${htmlPath}`);
-  await page.waitForTimeout(500);
-  await page.screenshot({ path: path.join(out, `01-popup-${scheme}.png`) });
+    const htmlPath = path.join(shots, `compose-${target}-${scheme}.html`);
+    await Bun.write(htmlPath, html);
+    await page.goto(`file://${htmlPath}`);
+    await page.waitForFunction(() => [...document.images].every((image) => image.complete && image.naturalWidth > 0));
+    await page.screenshot({ path: path.join(out, `${target}-${scheme}.png`) });
+  }
 }
 await browser.close();
 

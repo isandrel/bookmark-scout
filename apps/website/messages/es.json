@@ -95,16 +95,8 @@
     "demo": {
       "label": "Pruébalo: guarda esta página en una carpeta",
       "pageLabel": "Página actual",
-      "pageTitle": "Carbonara en 20 minutos",
       "placeholder": "Escribe parte del nombre de una carpeta",
       "try": "Prueba",
-      "chips": [
-        "rec",
-        "viajes/jap",
-        "investigacion",
-        "react"
-      ],
-      "autoQuery": "pas",
       "clear": "Borrar",
       "startHint": "Escribe unas letras del nombre de una carpeta. Las carpetas coincidentes aparecen aquí, también las anidadas.",
       "matches": "Guardar en carpeta",
@@ -113,22 +105,8 @@
       "saved": "Guardado en {folder}.",
       "alreadySaved": "Ya está en {folder}, así que no se guardó dos veces.",
       "emptyTitle": "Ninguna carpeta coincide con «{query}».",
-      "emptyHint": "Prueba con parte del nombre de una carpeta o con una ruta como viajes/jap. Una palabra de 4 letras o más puede tener un error.",
-      "keys": "↑ ↓ para elegir, Enter para guardar",
-      "folders": {
-        "devDocs": "Documentación técnica",
-        "css": "CSS",
-        "react": "React",
-        "research": "Investigación",
-        "recipes": "Recetas",
-        "pasta": "Pasta",
-        "baking": "Repostería",
-        "travel": "Viajes",
-        "japan": "Japón",
-        "kyoto": "Kioto",
-        "reading": "Lecturas",
-        "inbox": "Bandeja de entrada"
-      }
+      "emptyHint": "Prueba con parte del nombre de una carpeta o con una ruta como ai/llms. Una palabra de 4 letras o más puede tener un error.",
+      "keys": "↑ ↓ para elegir, Enter para guardar"
     },
     "tour": {
       "title": "Lo que puedes hacer con ella",
@@ -139,10 +117,10 @@
         "tab": "Guardar",
         "heading": "Guarda en la carpeta correcta",
         "caption": "La ventana emergente de la barra de herramientas: escribe parte del nombre de una carpeta, o elige una carpeta en el árbol, y guarda la página con un clic.",
-        "alt": "Dos ventanas emergentes: \"pas\" escrito en el cuadro de búsqueda con la carpeta Pasta (Recipes / Italian) seleccionada en Guardar en carpeta, y sugerencias de IA para la página actual: la carpeta existente Recipes/Italian/Pasta y una carpeta nueva Recipes/Quick Dinners",
+        "alt": "Dos ventanas emergentes: \"fin\" escrito en el cuadro de búsqueda con la carpeta Fine-tuning (AI / LLMs) seleccionada en Guardar en carpeta, y sugerencias de IA para otra página: una carpeta nueva AI/LLMs/Inference y la carpeta existente AI/LLMs",
         "points": [
           "Escribe parte del nombre de una carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado",
-          "Escribe una ruta como recetas/pasta y encuentra la carpeta aunque cometas un pequeño error de escritura",
+          "Escribe una ruta como ai/llms y encuentra la carpeta aunque cometas un pequeño error de escritura",
           "Pulsa {{SHORTCUT:commands.quick-save}} en cualquier página para guardarla en la carpeta que mejor le corresponde; una pequeña notificación en la página ofrece Deshacer y otras carpetas",
           "Una página que ya está en esa carpeta no se guarda dos veces, y las carpetas en las que guardaste hace poco aparecen primero",
           "Guarda enlaces en carpetas recientes desde el menú del clic derecho, una vez que lo actives en Configuración (al principio está desactivado)",
@@ -153,7 +131,7 @@
         "tab": "Buscar y organizar",
         "heading": "Encuentra y organiza lo que guardaste",
         "caption": "El administrador sustituye la página Marcadores de Chrome y funciona como ella, con un árbol de carpetas, una ruta de navegación y una tabla que se puede ordenar.",
-        "alt": "El gestor de Bookmark Scout en la barra de marcadores, con el árbol de carpetas (Recipes, School, Travel, Family, Shopping), un único cuadro de búsqueda y la tabla de marcadores",
+        "alt": "El gestor de Bookmark Scout en la carpeta AI / LLMs / Fine-tuning, con el árbol de carpetas (AI, Dev, Design, Tools, Reading list), un único cuadro de búsqueda y la tabla de marcadores, cada uno con el icono de su sitio",
         "points": [
           "Busca en todos tus marcadores mientras escribes",
           "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",
@@ -182,7 +160,7 @@
         "tab": "IA (opcional)",
         "heading": "IA opcional, de la empresa que elijas",
         "caption": "La IA está desactivada hasta que la activas. Necesita una cuenta con una empresa de IA, que puede cobrar un poco cada vez que la usas, o un programa de IA gratuito en tu propio equipo. En Chrome, su IA integrada sugiere carpetas gratis.",
-        "alt": "La pestaña IA de la configuración: el recuadro La IA es opcional explica qué necesita la IA y cuánto puede costar, y Funciones de IA está desactivado, como viene por defecto",
+        "alt": "La pestaña IA de la configuración: Funciones de IA está activado y, bajo Añadir servicio, aparecen dos servicios de IA que añadió el usuario: una empresa de IA en la nube con la clave oculta, como predeterminado, y un modelo en el propio ordenador",
         "points": [
           "Obtén sugerencias de carpeta para la página en la que estás, o guarda en la primera con {{SHORTCUT:commands.ai-quick-save}}",
           "Pregunta a la IA por tus marcadores: los busca, comprueba enlaces y propone movimientos, cambios de nombre y carpetas nuevas como un plan que no cambia nada hasta que lo apruebas",

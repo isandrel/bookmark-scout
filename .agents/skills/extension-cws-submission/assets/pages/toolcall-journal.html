@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Building agents with MCP · Toolcall Journal</title><link rel="icon" type="image/svg+xml" href="/icon.svg"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0c111b;color:#d8dee9;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased}
+.top{height:58px;display:flex;align-items:center;gap:28px;padding:0 28px;border-bottom:1px solid #1d2636}
+.logo{display:flex;align-items:center;gap:10px;font-weight:650;font-size:16px;color:#fff}
+.logo i{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#38bdf8,#6366f1);display:inline-block}
+.search{margin-left:auto;width:240px;height:32px;border:1px solid #243046;border-radius:8px;color:#6b7a93;font-size:13px;display:flex;align-items:center;padding:0 12px}
+.grid{display:grid;grid-template-columns:230px 1fr 220px;height:742px}
+aside{border-right:1px solid #1d2636;padding:22px 20px;font-size:13.5px;color:#8b98ad;line-height:2.15}
+aside b{display:block;margin-top:10px;color:#e2e8f0;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+aside .on{color:#7dd3fc;font-weight:600}
+main{padding:30px 40px}
+.crumb{font-size:13px;color:#6b7a93}
+h1{margin-top:10px;font-size:40px;line-height:1.1;font-weight:700;color:#fff;letter-spacing:-.02em}
+.dek{margin-top:12px;font-size:17px;line-height:1.5;color:#a3b0c4}
+.by{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:13px;color:#8b98ad}
+p.body{margin-top:16px;font-size:15.5px;line-height:1.65;color:#c9d2df}
+code.i{font:13.5px Menlo,monospace;background:#151d2b;border:1px solid #243046;border-radius:4px;padding:1px 5px;color:#e2e8f0}
+pre{margin-top:16px;background:#0a0f17;border:1px solid #1d2636;border-radius:10px;padding:14px 16px;font:12.5px/1.55 Menlo,'SF Mono',monospace;color:#d8dee9}
+.diag{margin-top:16px}
+</style></head><body>
+<div class="top"><div class="logo"><i></i>Toolcall Journal</div><span style="font-size:14px;color:#8b98ad">Guides</span><span style="font-size:14px;color:#8b98ad">Reference</span><span style="font-size:14px;color:#8b98ad">Changelog</span><div class="search">Search guides…</div></div>
+<div class="grid"><aside><b>Get started</b>Introduction<br>Concepts<b>Agents</b><span class="on">Building agents with MCP</span><br>Tools and schemas<br>Resources<br>Prompts<br>Transports<b>Operate</b>Testing<br>Security</aside>
+<main><div class="crumb">Guides / Agents</div>
+<h1>Building agents with MCP</h1>
+<p class="dek">Give an agent tools through a small, typed server instead of custom glue code.</p>
+<div class="by"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="20" fill="#1e293b"/><path d="M8 30 L20 9 L32 30 Z" fill="#38bdf8"/></svg><span>Rae Ilunga · Updated Oct 9, 2026 · 6 min</span></div>
+<p class="body">The Model Context Protocol is an open protocol for connecting AI applications to tools and data. A server describes what it offers (tools, resources, and prompts), and the client inside the AI application calls them with <code class="i">JSON-RPC</code> messages.</p>
+<p class="body">Each tool has a name, a description the model reads, and a JSON Schema for its input, so the agent knows exactly what to send.</p>
+<svg class="diag" viewBox="0 0 640 74" width="640" font-family="-apple-system, sans-serif" font-size="13">
+<rect x="0" y="12" width="170" height="50" rx="8" fill="#111a29" stroke="#2a3a55"/><text x="85" y="34" text-anchor="middle" fill="#e2e8f0">AI application</text><text x="85" y="51" text-anchor="middle" fill="#6b7a93">client</text>
+<path d="M176 37 H268" stroke="#7dd3fc" stroke-width="1.5"/><text x="222" y="30" text-anchor="middle" fill="#7dd3fc" font-size="11.5">JSON-RPC</text>
+<rect x="274" y="12" width="150" height="50" rx="8" fill="#111a29" stroke="#38bdf8"/><text x="349" y="34" text-anchor="middle" fill="#e2e8f0">MCP server</text><text x="349" y="51" text-anchor="middle" fill="#6b7a93">tools · resources</text>
+<path d="M430 37 H492" stroke="#6b7a93" stroke-width="1.5" stroke-dasharray="4 4"/>
+<rect x="498" y="12" width="142" height="50" rx="8" fill="#111a29" stroke="#2a3a55"/><text x="569" y="34" text-anchor="middle" fill="#e2e8f0">Files, APIs, data</text><text x="569" y="51" text-anchor="middle" fill="#6b7a93">your systems</text></svg>
+<pre>{
+  <span style="color:#7dd3fc">"name"</span>: <span style="color:#a5d6a7">"search_notes"</span>,
+  <span style="color:#7dd3fc">"description"</span>: <span style="color:#a5d6a7">"Find notes that mention a topic"</span>,
+  <span style="color:#7dd3fc">"inputSchema"</span>: {
+    <span style="color:#7dd3fc">"type"</span>: <span style="color:#a5d6a7">"object"</span>,
+    <span style="color:#7dd3fc">"properties"</span>: { <span style="color:#7dd3fc">"query"</span>: { <span style="color:#7dd3fc">"type"</span>: <span style="color:#a5d6a7">"string"</span> } },
+    <span style="color:#7dd3fc">"required"</span>: [<span style="color:#a5d6a7">"query"</span>]
+  }
+}</pre>
+</main><div style="padding:30px 20px;font-size:13px;color:#8b98ad;line-height:2"><b style="color:#e2e8f0">On this page</b><br>What a server offers<br>Defining a tool<br>Connecting a client<br>Next steps</div></div>
+</body></html>

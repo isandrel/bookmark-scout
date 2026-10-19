@@ -54,17 +54,17 @@ export const ko: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      '두 개의 팝업: 검색창에 "pas"를 입력해 폴더에 저장에서 Pasta 폴더(Recipes / Italian)를 선택한 화면과, 현재 페이지에 대한 AI 추천(기존 Recipes/Italian/Pasta 폴더와 새 Recipes/Quick Dinners 폴더)',
+      '두 개의 팝업: 검색창에 "fin"을 입력해 폴더에 저장에서 Fine-tuning 폴더(AI / LLMs)를 선택한 화면과, 다른 페이지에 대한 AI 추천(새 AI/LLMs/Inference 폴더와 기존 AI/LLMs 폴더)',
     "quick-save":
-      "레시피 페이지 위쪽 모서리에 표시된 빠른 저장 알림: Pasta에 저장되었고, 실행 취소와 이동할 다른 폴더가 있음",
+      "개발자 가이드 페이지 위쪽 모서리에 표시된 빠른 저장 알림: Agents(AI / Agents)에 저장되었고, 실행 취소와 이동할 폴더 Papers가 있음",
     manager:
-      "북마크바를 연 북마크 관리자: Recipes, School, Travel, Family, Shopping 폴더 트리, 검색창 하나, 북마크 표",
+      "AI / LLMs / Fine-tuning을 연 북마크 관리자: AI, Dev, Design, Tools, Reading list 폴더 트리, 검색창 하나, 사이트 아이콘이 붙은 북마크 표",
     duplicates:
       "관리자 위에 표시된 중복 정리 검토 화면. 각 그룹에서 남길 북마크에 유지 표시가 붙어 있음",
     settings:
       "설정의 기본 설정 탭: 빠른 저장 폴더, 저장할 폴더, 마우스 오른쪽 버튼 메뉴(꺼짐), 테마, 언어",
     "options-ai":
-      "설정의 AI 탭: 'AI는 선택 사항입니다' 상자가 AI에 필요한 것과 들 수 있는 비용을 설명하고, AI 기능은 기본값대로 꺼져 있음",
+      "설정의 AI 탭: AI 기능이 켜져 있고, 서비스 추가 아래에 사용자가 추가한 AI 서비스 두 개가 있음. 키가 가려진 기본 클라우드 AI 서비스와 내 컴퓨터에서 실행되는 모델",
   },
 
   /**

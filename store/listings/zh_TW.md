@@ -6,8 +6,8 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Optional manifest description | 54 |
 | Firefox Add-ons summary | 126 |
-| Full description, Chrome and Edge | 3,853 |
-| Full description, Firefox | 2,268 |
+| Full description, Chrome and Edge | 3,847 |
+| Full description, Firefox | 2,262 |
 | What's new in 0.3.3 | 431 |
 
 ## Name
@@ -55,7 +55,7 @@ Bookmark Scout 能從工具列或用一組鍵盤快捷鍵，在幾秒內將每�
 
 幾秒內儲存到正確的資料夾
 • 按一下 Bookmark Scout 按鈕，輸入任何資料夾名稱的一部分，即使是樹狀結構深處的資料夾也能找到，不必離開鍵盤就能將網頁儲存到那裡
-• 可以輸入 recipes/pasta 之類的路徑；有小小的拼字錯誤也能找到資料夾，最近使用過的資料夾會排在前面
+• 可以輸入 ai/llms 之類的路徑；有小小的拼字錯誤也能找到資料夾，最近使用過的資料夾會排在前面
 • 已在該資料夾中的網頁不會重複儲存
 • 選用的 AI 會為網頁建議最適合的資料夾，或建議新的資料夾，確認後才會建立
 • 選用的右鍵選單 (預設關閉；在「設定」中開啟「右鍵選單」)，可將連結儲存至最近使用的資料夾
@@ -146,7 +146,7 @@ Bookmark Scout 能從工具列或用一組鍵盤快捷鍵，在幾秒內將每�
 
 幾秒內儲存到正確的資料夾
 • 按一下 Bookmark Scout 按鈕，輸入任何資料夾名稱的一部分，即使是樹狀結構深處的資料夾也能找到，不必離開鍵盤就能將網頁儲存到那裡
-• 可以輸入 recipes/pasta 之類的路徑；有小小的拼字錯誤也能找到資料夾，最近使用過的資料夾會排在前面
+• 可以輸入 ai/llms 之類的路徑；有小小的拼字錯誤也能找到資料夾，最近使用過的資料夾會排在前面
 • 已在該資料夾中的網頁不會重複儲存
 • 選用的 AI 會為網頁建議最適合的資料夾，或建議新的資料夾，確認後才會建立
 • 在「設定」中開啟「右鍵選單」後，即可從右鍵選單將連結儲存至最近使用的資料夾

@@ -3,36 +3,37 @@ import { expect, test } from "bun:test";
 import { type DemoFolder, findDemoFolderMatches } from "./folder-match";
 
 const folders: DemoFolder[] = [
-    { id: "dev", name: "Dev Docs", parents: [] },
-    { id: "react", name: "React", parents: ["Dev Docs"] },
-    { id: "recipes", name: "Recipes", parents: [] },
-    { id: "research", name: "Research", parents: [] },
-    { id: "travel", name: "Travel", parents: [] },
-    { id: "japan", name: "Japan", parents: ["Travel"] },
-    { id: "kyoto", name: "Kyoto", parents: ["Travel", "Japan"] },
+    { id: "ai", name: "AI", parents: [] },
+    { id: "llms", name: "LLMs", parents: ["AI"] },
+    { id: "fine-tuning", name: "Fine-tuning", parents: ["AI", "LLMs"] },
+    { id: "agents", name: "Agents", parents: ["AI"] },
+    { id: "papers", name: "Papers", parents: ["AI"] },
+    { id: "dev", name: "Dev", parents: [] },
+    { id: "rust", name: "Rust", parents: ["Dev"] },
+    { id: "reading-list", name: "Reading list", parents: [] },
 ];
 const names = (query: string, recentIds?: string[]) =>
     findDemoFolderMatches(folders, query, { limit: 5, recentIds }).map((match) => match.folder.name);
 
 test("ranks a name that starts with the word above one that contains it", () => {
-    expect(names("re")).toEqual(["Recipes", "Research", "React"]);
+    expect(names("a")).toEqual(["AI", "Agents", "Reading list", "Papers"]);
 });
 
 test("matches a path against parent folders", () => {
-    expect(names("travel/japan")).toEqual(["Japan"]);
-    expect(names("japan kyoto")).toEqual(["Kyoto"]);
+    expect(names("ai/llms")).toEqual(["LLMs"]);
+    expect(names("llms fine")).toEqual(["Fine-tuning"]);
 });
 
 test("allows one typo in longer words only", () => {
-    expect(names("reserch")).toEqual(["Research"]);
-    expect(names("rect")).toEqual(["React"]);
-    expect(names("kyt")).toEqual([]);
+    expect(names("agnets")).toEqual(["Agents"]);
+    expect(names("rsut")).toEqual(["Rust"]);
+    expect(names("rsu")).toEqual([]);
 });
 
 test("ranks a recently used folder first among equal matches", () => {
-    expect(names("re", ["research"])[0]).toBe("Research");
+    expect(names("a", ["agents"])[0]).toBe("Agents");
 });
 
 test("highlights the matched part of the name", () => {
-    expect(findDemoFolderMatches(folders, "doc", { limit: 5 })[0].range).toEqual([4, 7]);
+    expect(findDemoFolderMatches(folders, "list", { limit: 5 })[0].range).toEqual([8, 12]);
 });

@@ -95,16 +95,8 @@
     "demo": {
       "label": "Ausprobieren: diese Seite in einem Ordner speichern",
       "pageLabel": "Aktuelle Seite",
-      "pageTitle": "Carbonara in 20 Minuten",
       "placeholder": "Teil eines Ordnernamens eingeben",
       "try": "Beispiele",
-      "chips": [
-        "rez",
-        "reisen/japan",
-        "recherce",
-        "react"
-      ],
-      "autoQuery": "pas",
       "clear": "Löschen",
       "startHint": "Geben Sie ein paar Buchstaben eines Ordnernamens ein. Passende Ordner erscheinen hier, auch verschachtelte.",
       "matches": "In Ordner speichern",
@@ -113,22 +105,8 @@
       "saved": "In {folder} gespeichert.",
       "alreadySaved": "Bereits in {folder}, daher nicht doppelt gespeichert.",
       "emptyTitle": "Kein Ordner passt zu „{query}“.",
-      "emptyHint": "Versuchen Sie einen Teil eines Ordnernamens oder einen Pfad wie reisen/japan. Ein Wort ab 4 Buchstaben darf einen Tippfehler haben.",
-      "keys": "↑ ↓ auswählen, Enter speichert",
-      "folders": {
-        "devDocs": "Entwickler-Doku",
-        "css": "CSS",
-        "react": "React",
-        "research": "Recherche",
-        "recipes": "Rezepte",
-        "pasta": "Pasta",
-        "baking": "Backen",
-        "travel": "Reisen",
-        "japan": "Japan",
-        "kyoto": "Kyoto",
-        "reading": "Lesestoff",
-        "inbox": "Eingang"
-      }
+      "emptyHint": "Versuchen Sie einen Teil eines Ordnernamens oder einen Pfad wie ai/llms. Ein Wort ab 4 Buchstaben darf einen Tippfehler haben.",
+      "keys": "↑ ↓ auswählen, Enter speichert"
     },
     "tour": {
       "title": "Was Sie damit tun können",
@@ -139,10 +117,10 @@
         "tab": "Speichern",
         "heading": "Im richtigen Ordner speichern",
         "caption": "Das Pop-up in der Symbolleiste: Geben Sie einen Teil eines Ordnernamens ein oder wählen Sie einen Ordner im Baum, und speichern Sie die Seite mit einem Klick.",
-        "alt": "Zwei Pop-ups: „pas“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Pasta (Recipes / Italian) ausgewählt, und KI-Vorschläge für die aktuelle Seite: der vorhandene Ordner Recipes/Italian/Pasta und ein neuer Ordner Recipes/Quick Dinners",
+        "alt": "Zwei Pop-ups: „fin“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Fine-tuning (AI / LLMs) ausgewählt, und KI-Vorschläge für eine andere Seite: ein neuer Ordner AI/LLMs/Inference und der vorhandene Ordner AI/LLMs",
         "points": [
           "Einen Teil eines Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen",
-          "Einen Pfad wie rezepte/pasta eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
+          "Einen Pfad wie ai/llms eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
           "Auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}} drücken, um sie im am besten passenden Ordner zu speichern; eine kleine Benachrichtigung auf der Seite bietet Rückgängig und weitere Ordner an",
           "Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert, und Ordner, in denen Sie zuletzt gespeichert haben, stehen oben",
           "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern, sobald Sie das Menü in den Einstellungen aktivieren (anfangs ist es aus)",
@@ -153,7 +131,7 @@
         "tab": "Finden und ordnen",
         "heading": "Gespeichertes finden und ordnen",
         "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome und funktioniert wie sie, mit einem Ordnerbaum, einer Pfadnavigation und einer sortierbaren Tabelle.",
-        "alt": "Der Bookmark-Scout-Manager in der Lesezeichenleiste mit dem Ordnerbaum (Recipes, School, Travel, Family, Shopping), einem Suchfeld und der Lesezeichentabelle",
+        "alt": "Der Bookmark-Scout-Manager im Ordner AI / LLMs / Fine-tuning mit dem Ordnerbaum (AI, Dev, Design, Tools, Reading list), einem Suchfeld und der Lesezeichentabelle, jedes Lesezeichen mit dem Symbol seiner Website",
         "points": [
           "Alle Ihre Lesezeichen schon beim Tippen durchsuchen",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
@@ -182,7 +160,7 @@
         "tab": "KI (optional)",
         "heading": "Optionale KI, von einem Unternehmen Ihrer Wahl",
         "caption": "KI bleibt aus, bis Sie sie aktivieren. Sie brauchen dafür ein Konto bei einem KI-Unternehmen, das für jede Nutzung einen kleinen Betrag berechnen kann, oder ein kostenloses KI-Programm auf Ihrem eigenen Computer. In Chrome schlägt die integrierte KI des Browsers kostenlos Ordner vor.",
-        "alt": "Der Tab „KI“ in den Einstellungen: Der Kasten „KI ist optional“ erklärt, was KI braucht und was sie kosten kann, und die KI-Funktionen sind aus, der Standard",
+        "alt": "Der Tab „KI“ in den Einstellungen: Die KI-Funktionen sind an, und unter „Dienst hinzufügen“ stehen zwei KI-Dienste, die der Nutzer hinzugefügt hat: ein KI-Anbieter im Internet mit verborgenem Schlüssel als Standard und ein Modell auf dem eigenen Computer",
         "points": [
           "Ordnervorschläge für die aktuelle Seite erhalten oder mit {{SHORTCUT:commands.ai-quick-save}} im ersten Vorschlag speichern",
           "„KI fragen“ zu Ihren Lesezeichen: durchsucht sie, prüft Links und schlägt Verschiebungen, Umbenennungen und neue Ordner als Plan vor, der nichts ändert, bis Sie zustimmen",

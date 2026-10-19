@@ -50,14 +50,14 @@ AI bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 9,066 characters (2026-10-18); the Chrome Web Store allows 16,000. It is written for people who are not developers: the benefit first, plain words, and technical details (search options, OpenAI-compatible endpoints, local AI agents, the license) in For developers near the end. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 9,060 characters (2026-10-18); the Chrome Web Store allows 16,000. It is written for people who are not developers: the benefit first, plain words, and technical details (search options, OpenAI-compatible endpoints, local AI agents, the license) in For developers near the end. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and tidy your bookmarks without leaving the browser. Free, with no account and no ads.
 
 SAVE TO THE RIGHT FOLDER IN SECONDS
 • Click the Bookmark Scout button, type part of any folder's name, even one nested deep in the tree, and save the page there without leaving the keyboard
-• Type a path such as recipes/pasta; a small typo still finds the folder, and folders you used recently come first
+• Type a path such as ai/llms; a small typo still finds the folder, and folders you used recently come first
 • A page already in that folder is not saved twice
 • Optional AI suggests the best folder for the page, or a new folder that you review before it is created
 • Optional right-click menu (off at first; turn on Right-Click Menu in Settings) to save links into recent folders
@@ -143,14 +143,14 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 5,328 characters (2026-10-18). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps its bookmark key (⌘D, or Ctrl+D on Windows and Linux) for itself, so this text claims neither.
+AMO descriptions accept limited Markdown; this text is plain. AMO limits the summary to 250 characters and sets no practical limit on the description. 5,322 characters (2026-10-18). It describes the bookmarks manager's editing features, which the Firefox smoke suite covers (right-click menus, cut, copy, and paste, drag and drop, undo, and the folder tree), but not its maintenance tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../DEVELOPMENT.md`). Firefox has no bookmarks-page override and keeps its bookmark key (⌘D, or Ctrl+D on Windows and Linux) for itself, so this text claims neither.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, from the toolbar or with one keyboard shortcut, then helps you find and organize your bookmarks without leaving the browser. Free, with no account and no ads.
 
 SAVE TO THE RIGHT FOLDER IN SECONDS
 • Click the Bookmark Scout button, type part of any folder's name, even one nested deep in the tree, and save the page there without leaving the keyboard
-• Type a path such as recipes/pasta; a small typo still finds the folder, and folders you used recently come first
+• Type a path such as ai/llms; a small typo still finds the folder, and folders you used recently come first
 • A page already in that folder is not saved twice
 • Optional AI suggests the best folder for the page, or a new folder that you review before it is created
 • Save links from the right-click menu into recent folders, once you turn on Right-Click Menu in Settings

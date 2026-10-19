@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Prompt caching, explained · Prefix Weekly</title><link rel="icon" type="image/svg+xml" href="/icon.svg"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#ffffff;color:#16181d;font-family:'Avenir Next','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased}
+.top{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 64px;border-bottom:1px solid #eceef2}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.brand i{width:24px;height:24px;border-radius:50%;border:5px solid #16a34a;display:inline-block}
+.sub{font-size:14px;font-weight:600;color:#fff;background:#16181d;border-radius:999px;padding:8px 16px}
+.col{width:720px;margin-left:120px;padding-top:36px}
+.issue{font-size:13px;font-weight:600;color:#16a34a;letter-spacing:.06em;text-transform:uppercase}
+h1{margin-top:10px;font-size:46px;line-height:1.08;font-weight:700;letter-spacing:-.025em}
+.dek{margin-top:12px;font-size:19px;line-height:1.5;color:#4b5160}
+.by{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:14px;color:#6b7180}
+p.body{margin-top:16px;font-family:Georgia,'Iowan Old Style',serif;font-size:17.5px;line-height:1.65;color:#23262d}
+.row{display:grid;grid-template-columns:1fr 250px;gap:22px;margin-top:18px}
+pre{background:#f6f7f9;border:1px solid #eceef2;border-radius:10px;padding:14px 16px;font:12.5px/1.6 Menlo,'SF Mono',monospace;color:#23262d}
+.chart{border:1px solid #eceef2;border-radius:10px;padding:12px 14px;font-size:12px;color:#6b7180}
+</style></head><body>
+<div class="top"><div class="brand"><i></i>Prefix Weekly</div><span class="sub">Subscribe</span></div>
+<div class="col">
+<div class="issue">Issue 42 · Inference</div>
+<h1>Prompt caching, explained</h1>
+<p class="dek">Put what stays the same first. A repeated prefix can come from cache: faster, and often cheaper.</p>
+<div class="by"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="20" fill="#dcfce7"/><rect x="11" y="11" width="18" height="18" rx="3" fill="#16a34a" transform="rotate(12 20 20)"/></svg><span>Noor Hale · Oct 16, 2026 · 5 min read</span></div>
+<p class="body">Every request makes a model process its whole prompt before it writes a single token. When many requests start with the same long prefix, such as a system prompt, a style guide, or a shared document, several providers can reuse the work already done for that prefix instead of computing it again.</p>
+<p class="body">The rule of thumb: stable content first, variable content last. A cache hit needs an identical prefix, and cached entries expire after a few minutes without use.</p>
+<div class="row"><pre>messages = [
+    {<span style="color:#7c3aed">"role"</span>: <span style="color:#b45309">"system"</span>, <span style="color:#7c3aed">"content"</span>: STYLE_GUIDE},  <span style="color:#16a34a"># stable</span>
+    {<span style="color:#7c3aed">"role"</span>: <span style="color:#b45309">"user"</span>, <span style="color:#7c3aed">"content"</span>: REFERENCE_DOC},  <span style="color:#16a34a"># stable</span>
+    {<span style="color:#7c3aed">"role"</span>: <span style="color:#b45309">"user"</span>, <span style="color:#7c3aed">"content"</span>: question},       <span style="color:#16a34a"># changes</span>
+]</pre>
+<div class="chart">Time to first token (illustrative)<svg viewBox="0 0 220 70" width="220" style="margin-top:8px"><rect x="0" y="8" width="200" height="18" rx="4" fill="#d4d8e0"/><text x="6" y="21" font-size="11" fill="#23262d">Cold prefix</text><rect x="0" y="40" width="70" height="18" rx="4" fill="#16a34a"/><text x="6" y="53" font-size="11" fill="#fff">Cached</text></svg></div></div>
+</div></body></html>

@@ -60,17 +60,17 @@ export const de: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "Zwei Pop-ups: „pas“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Pasta (Recipes / Italian) ausgewählt, und KI-Vorschläge für die aktuelle Seite: der vorhandene Ordner Recipes/Italian/Pasta und ein neuer Ordner Recipes/Quick Dinners",
+      "Zwei Pop-ups: „fin“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Fine-tuning (AI / LLMs) ausgewählt, und KI-Vorschläge für eine andere Seite: ein neuer Ordner AI/LLMs/Inference und der vorhandene Ordner AI/LLMs",
     "quick-save":
-      "Eine Rezeptseite mit der Schnellspeichern-Meldung in der oberen Ecke: in Pasta gespeichert, mit „Rückgängig“ und weiteren Ordnern unter „Verschieben nach“",
+      "Eine Anleitungsseite für Entwickler mit der Schnellspeichern-Meldung in der oberen Ecke: in Agents (AI / Agents) gespeichert, mit „Rückgängig“ und Papers unter „Verschieben nach“",
     manager:
-      "Der Lesezeichen-Manager in der Lesezeichenleiste: der Ordnerbaum mit Recipes, School, Travel, Family und Shopping, ein Suchfeld und die Lesezeichentabelle",
+      "Der Lesezeichen-Manager im Ordner AI / LLMs / Fine-tuning: der Ordnerbaum mit AI, Dev, Design, Tools und Reading list, ein Suchfeld und die Lesezeichentabelle mit dem Symbol jeder Website",
     duplicates:
       "Die Prüfung der Duplikatbereinigung über dem Manager, wobei das zu behaltende Lesezeichen jeder Gruppe mit „Behalten“ markiert ist",
     settings:
       "Der Tab „Das Wichtigste“ in den Einstellungen: Ordner für Schnellspeichern, Zielordner, Rechtsklickmenü (aus), Design und Sprache",
     "options-ai":
-      "Der Tab „KI“ in den Einstellungen: Der Kasten „KI ist optional“ erklärt, was KI braucht und was sie kosten kann, und die KI-Funktionen sind aus, der Standard",
+      "Der Tab „KI“ in den Einstellungen: Die KI-Funktionen sind an, und unter „Dienst hinzufügen“ stehen zwei KI-Dienste, die der Nutzer hinzugefügt hat: ein KI-Anbieter im Internet mit verborgenem Schlüssel als Standard und ein Modell auf dem eigenen Computer",
   },
 
   /**

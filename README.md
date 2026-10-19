@@ -30,7 +30,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-dark.png">
-    <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="The Bookmark Scout popup: typing &quot;pas&quot; finds the Pasta folder inside Recipes / Italian, ready to save the page there with Enter. Beside it, optional AI suggestions for a pasta recipe page." width="800">
+    <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/apps/website/public/screenshots/01-popup-light.png" alt="The Bookmark Scout popup: typing &quot;fin&quot; finds the Fine-tuning folder inside AI / LLMs, ready to save the page there with Enter. Beside it, optional AI suggestions for an article about prompt caching, including a new folder." width="800">
   </picture>
 </p>
 

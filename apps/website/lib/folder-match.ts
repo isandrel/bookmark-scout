@@ -1,7 +1,7 @@
 /**
  * Folder matching for the hero save demo: a compact copy of the extension's rules in
  * apps/extension/src/lib/folder-match.ts, so the demo ranks folders the way the extension does.
- * The last word matches the folder's own name, earlier words match it or a parent (`travel/japan`),
+ * The last word matches the folder's own name, earlier words match it or a parent (`ai/llms`),
  * and a word of `FUZZY_MIN_LENGTH` letters or more may be one typo away from a word in the name.
  * Recently used folders rank higher.
  */
