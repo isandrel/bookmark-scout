@@ -58,12 +58,23 @@ function describeRestoreError(error: unknown): string {
   return getErrorMessage(error);
 }
 
-/** Restores lower original indexes first so every item lands back in its old position. */
-async function restoreSnapshots(snapshots: BookmarkDeletionSnapshot[]): Promise<void> {
+/** What an undone deletion brought back: items left alone, and items back without their tags. */
+type RestoreGaps = { skipped: number; metadataNotRestored: number };
+
+/**
+ * Restores lower original indexes first so every item lands back in its old position. Counts the
+ * items that came back without their tags and summaries.
+ */
+async function restoreSnapshots(snapshots: BookmarkDeletionSnapshot[]): Promise<RestoreGaps> {
   const ordered = [...snapshots].sort(
     (left, right) => (left.node.index ?? 0) - (right.node.index ?? 0),
   );
-  for (const snapshot of ordered) await restoreBookmarkDeletion(snapshot);
+  let metadataNotRestored = 0;
+  for (const snapshot of ordered) {
+    const { metadataRestored } = await restoreBookmarkDeletion(snapshot);
+    if (!metadataRestored) metadataNotRestored += 1;
+  }
+  return { skipped: 0, metadataNotRestored };
 }
 
 /** Whether the live item is still the one the user chose: same title, and same URL if known. */
@@ -141,14 +152,12 @@ export async function deleteBookmarksWithUndo(
 
   const seconds = String(BOOKMARK_DELETION_UNDO_WINDOW_MS / MS_PER_SECOND);
   const deletedTitle = deleted.length === 1 ? await quoteToastItemTitle(deleted[0].title) : '';
-  const restore = async () => {
-    if (!recorded) {
-      await restoreSnapshots(snapshots);
-      return;
-    }
+  const restore = async (): Promise<RestoreGaps> => {
+    if (!recorded) return restoreSnapshots(snapshots);
     const undone = await undoRecordedBookmarkChange(recorded);
     // Null: undone already (Ctrl+Z). Nothing applied: the bookmarks changed since.
     if (undone && undone.applied === 0) throw new Error(t('toast_undoChanged'));
+    return { skipped: undone?.skipped ?? 0, metadataNotRestored: undone?.metadataNotRestored ?? 0 };
   };
   const undoWindow = [
     deleted.length > 1
@@ -168,8 +177,21 @@ export async function deleteBookmarksWithUndo(
     variant: partial ? 'destructive' : 'success',
     onUndo: async () => {
       try {
-        await restore();
+        const gaps = await restore();
         await onChanged();
+        if (gaps.skipped > 0 || gaps.metadataNotRestored > 0) {
+          // Part of it could not come back as it was; say what, never "restored" alone.
+          toast.error({
+            title: t('toast_deletePartlyRestored'),
+            description: [
+              ...(gaps.skipped > 0 ? [t('toast_historySkipped', String(gaps.skipped))] : []),
+              ...(gaps.metadataNotRestored > 0
+                ? [t('toast_metadataNotRestored', String(gaps.metadataNotRestored))]
+                : []),
+            ].join(' '),
+          });
+          return;
+        }
         toast.success({
           title: t('toast_deleteRestored'),
           description:

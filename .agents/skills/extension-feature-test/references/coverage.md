@@ -51,6 +51,7 @@ Not covered in Firefox: context-menu saves, the quick save action itself, drag a
 ## Unit only
 
 - **Sorting.**
+- **Partial restores reported:** when recreated bookmarks are back but their tags and summaries cannot be stored again, a deletion restore and an undo say so (`metadataRestored`, `metadataNotRestored`) instead of reporting success (`bookmark-deletion-recovery.test.ts`, `bookmark-history.test.ts`, a metadata write rejected).
 - **Compiled configuration:** `toml-config.test.ts` checks every current TOML file against the original parser, including table prototypes, special keys and numeric values, strict single-owner runtime validation, and a real Vite module graph without the runtime parser; existing config tests retain namespace and schema coverage.
 - **Locale messages:** `locale-messages.test.ts` checks identical keys, placeholders, and plural forms across locales, that every literal `t('key')` exists, and that every English key is used (keys built from a prefix are listed in `DYNAMIC_KEY_PREFIXES`).
 - **Distribution assets:** `distribution-assets.test.ts` preserves every locale's messages and placeholders while compacting output copies; `provider-logo-assets.test.ts` and provider-catalog tests check exact-byte aliases and output cleanup; `font-coverage.test.ts` guards the fixed Options title in every locale and retains body/mono font coverage.

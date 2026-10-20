@@ -103,6 +103,11 @@ export type BookmarkHistoryOutcome = {
   applied: number;
   /** Operations left alone because their bookmark changed since, or the browser refused them. */
   skipped: number;
+  /**
+   * Recreated items whose tags and summaries could not be stored again: the bookmarks are back,
+   * the restore is partial. Absent when none.
+   */
+  metadataNotRestored?: number;
 };
 
 const placeSchema = z.object({
@@ -448,7 +453,12 @@ export async function recordBookmarkWrites<T>(
   return { result, recorded };
 }
 
-type StepResult = { applied: number; skipped: number; ids: Map<string, string> };
+type StepResult = {
+  applied: number;
+  skipped: number;
+  metadataNotRestored: number;
+  ids: Map<string, string>;
+};
 
 function sameFields(live: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields) {
   return (Object.keys(fields) as (keyof BookmarkFields)[]).every(
@@ -530,7 +540,7 @@ async function replayEntry(
   entry: BookmarkHistoryEntry,
   direction: 'undo' | 'redo',
 ): Promise<{ entry: BookmarkHistoryEntry } & StepResult> {
-  const result: StepResult = { applied: 0, skipped: 0, ids: new Map() };
+  const result: StepResult = { applied: 0, skipped: 0, metadataNotRestored: 0, ids: new Map() };
   const operations = [...entry.operations];
   const order = direction === 'undo' ? [...operations.keys()].reverse() : [...operations.keys()];
   const mapped = (id: string) => result.ids.get(id) ?? id;
@@ -552,6 +562,7 @@ async function replayEntry(
           const recreated = await recreateAt(node, at);
           if (recreated) {
             for (const [oldId, newId] of recreated.ids) result.ids.set(oldId, newId);
+            if (!recreated.metadataRestored) result.metadataNotRestored += 1;
             operations[position] = { ...op, at, node };
             done = true;
           }
@@ -580,6 +591,15 @@ async function replayEntry(
   return { ...result, entry: remapEntryIds({ ...entry, operations }, result.ids) };
 }
 
+function toOutcome(label: BookmarkHistoryLabel, result: StepResult): BookmarkHistoryOutcome {
+  return {
+    label,
+    applied: result.applied,
+    skipped: result.skipped,
+    ...(result.metadataNotRestored > 0 ? { metadataNotRestored: result.metadataNotRestored } : {}),
+  };
+}
+
 async function step(
   direction: 'undo' | 'redo',
   entryId?: string,
@@ -595,7 +615,7 @@ async function step(
     if (!stored) return history;
     const entry = await unpackBookmarkHistoryEntry(stored);
     const replayed = await replayEntry(entry, direction);
-    outcome = { label: entry.label, applied: replayed.applied, skipped: replayed.skipped };
+    outcome = toOutcome(entry.label, replayed);
     const rest = from.filter((_, index) => index !== position);
     // Undoing an older entry out of order (a toast's Undo) drops what could be redone.
     const outOfOrder = position !== from.length - 1;
@@ -628,8 +648,7 @@ export async function undoRecordedBookmarkChange({
   stored,
 }: RecordedBookmarkChange): Promise<BookmarkHistoryOutcome | null> {
   if (stored) return undoBookmarkChange(entry.id);
-  const replayed = await replayEntry(entry, 'undo');
-  return { label: entry.label, applied: replayed.applied, skipped: replayed.skipped };
+  return toOutcome(entry.label, await replayEntry(entry, 'undo'));
 }
 
 /** The entry `entryId` while it can still be undone, or undefined (undone already, or dropped). */

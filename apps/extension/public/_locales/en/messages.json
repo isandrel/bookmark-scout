@@ -6734,5 +6734,13 @@
     "settings_treeDragAndDropDesc": {
         "message": "In the popup and side panel, drag bookmarks and folders to move them, and drop links from a web page on a side panel folder to save them there",
         "description": "Description of the Drag and Drop in the Tree setting"
+    },
+    "toast_metadataNotRestored": {
+        "message": "Restored without their tags and summaries, which could not be saved again: $1.",
+        "description": "Toast detail after an undo that recreated bookmarks but could not store their tags and summaries again. $1 is how many recreated items lost them."
+    },
+    "toast_deletePartlyRestored": {
+        "message": "Deletion partly undone",
+        "description": "Toast title after undoing a deletion brought back only part of it: some items changed since, or lost their tags and summaries."
     }
 }
