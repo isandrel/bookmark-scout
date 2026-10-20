@@ -10,7 +10,9 @@
  *
  * Undo and redo read each bookmark again first and skip an operation whose bookmark changed since
  * (edited, moved, or deleted elsewhere), so they never overwrite a newer change; the outcome says
- * how many were skipped. A bookmark recreated by undo or redo gets a new id from the browser, and
+ * how many were skipped. Removing a folder again compares everything inside it at every depth
+ * (`isSameRecordedSubtree`), and moving an item back within one folder needs it still at the
+ * position the move left it at, so a newer reorder there is kept. A bookmark recreated by undo or redo gets a new id from the browser, and
  * every entry that named the old id is rewritten to the new one, so older entries keep working.
  *
  * The history has a size limit (`config/bookmarks/history.toml`). A large entry, such as a
@@ -471,22 +473,42 @@ async function liveFolderChildren(parentId: string) {
   return getBookmarkChildren(parentId);
 }
 
+const sameList = (left: readonly string[] = [], right: readonly string[] = []) =>
+  left.length === right.length && left.every((value, index) => value === right[index]);
+
+/**
+ * Whether `current` (read now) is still exactly what `recorded` says: the same ids, titles,
+ * addresses, kinds, tags, and summaries, at every depth, with the children in the same order. A
+ * recorded node without children (a created item) matches only one that has none now.
+ */
+export function isSameRecordedSubtree(
+  recorded: RecoverableBookmarkNode,
+  current: RecoverableBookmarkNode,
+): boolean {
+  const recordedChildren = recorded.children ?? [];
+  const currentChildren = current.children ?? [];
+  return (
+    (recorded.id === undefined || recorded.id === current.id) &&
+    recorded.title === current.title &&
+    (recorded.url ?? undefined) === (current.url ?? undefined) &&
+    (recorded.type ?? undefined) === (current.type ?? undefined) &&
+    sameList(recorded.metadata?.tags, current.metadata?.tags) &&
+    (recorded.metadata?.summary ?? '') === (current.metadata?.summary ?? '') &&
+    recordedChildren.length === currentChildren.length &&
+    recordedChildren.every((child, index) => isSameRecordedSubtree(child, currentChildren[index]))
+  );
+}
+
 async function removeIfUnchanged(
   node: RecoverableBookmarkNode,
 ): Promise<{ node: RecoverableBookmarkNode; at: BookmarkPlace } | undefined> {
   if (!node.id) return undefined;
   const live = await readNode(node.id);
-  if (
-    !live?.parentId ||
-    live.title !== node.title ||
-    (live.url ?? undefined) !== (node.url ?? undefined)
-  ) {
-    return undefined;
-  }
-  // A folder that gained items since is left alone: removing it would take them too.
-  const children = live.url ? [] : await getBookmarkChildren(node.id);
-  if (children.length > (node.children?.length ?? 0)) return undefined;
+  if (!live?.parentId) return undefined;
+  // Anything changed inside since (an edit, a replaced or added item, new tags, at any depth) is
+  // left alone with everything around it: removing the folder would take the newer work too.
   const { node: current } = await captureBookmarkSubtree(node.id, { keepIds: true });
+  if (!isSameRecordedSubtree(node, current)) return undefined;
   const at = await placeWithNeighbors(node.id, live.parentId);
   await deleteBookmark(node.id);
   return { node: current, at };
@@ -500,8 +522,10 @@ async function recreateAt(node: RecoverableBookmarkNode, at: BookmarkPlace) {
 
 async function moveIfAt(id: string, expected: BookmarkPlace, target: BookmarkPlace) {
   const live = await readNode(id);
-  // An item moved again since is left where the user put it.
+  // An item moved again since is left where the user put it. Within one folder its folder says
+  // nothing, so its position must be the one the move left it at.
   if (!live || live.parentId !== expected.parentId) return false;
+  if (expected.parentId === target.parentId && live.index !== expected.index) return false;
   if (!(await liveFolderChildren(target.parentId))) return false;
   await moveBookmarkToPosition(id, target);
   return true;
