@@ -230,7 +230,8 @@ describe('undo and redo in the audit history', () => {
     const [undo, original, ...others] = await auditRecords();
     expect(others).toEqual([]);
     expect(undo).toMatchObject({
-      label: { action: 'undo' },
+      label: { action: 'delete' },
+      replay: 'undo',
       relatedOperationId: original.id,
       state: 'verified_success',
       counts: { planned: 1, applied: 1, skipped: 0 },
@@ -240,14 +241,13 @@ describe('undo and redo in the audit history', () => {
     });
     // The original keeps its own outcome and gains the undone mark.
     expect(original).toMatchObject({
-      label: { action: 'delete' },
       state: 'verified_success',
       undo: { operationId: undo.id, complete: true },
     });
 
     await redoBookmarkChange();
     const [redo, , first] = await auditRecords();
-    expect(redo).toMatchObject({ label: { action: 'redo' }, relatedOperationId: first.id });
+    expect(redo).toMatchObject({ replay: 'redo', relatedOperationId: first.id });
     expect(first.undo).toBeUndefined();
   });
 

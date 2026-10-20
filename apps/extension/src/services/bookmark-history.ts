@@ -687,9 +687,10 @@ async function replayEntry(
  * or redoes, which is marked undone (or no longer undone) without rewriting its own outcome.
  */
 async function replayEntryWithAudit(entry: BookmarkHistoryEntry, direction: 'undo' | 'redo') {
-  const label = { ...entry.label, action: direction };
+  const { label } = entry;
   const operationId = await beginAuditOperation({
     label,
+    replay: direction,
     ...(entry.operationId ? { relatedOperationId: entry.operationId } : {}),
   }).catch((error: unknown) => {
     console.warn('Undo or redo not recorded in the Audit History:', error);

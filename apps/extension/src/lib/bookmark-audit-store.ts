@@ -91,7 +91,7 @@ export const UNRESOLVED_AUDIT_STATES: readonly AuditState[] = [
 ];
 
 const labelSchema = z.object({
-  action: z.enum(['add', 'edit', 'move', 'delete', 'sort', 'change', 'import', 'undo', 'redo']),
+  action: z.enum(['add', 'edit', 'move', 'delete', 'sort', 'change', 'import']),
   title: z.string().optional(),
   count: z.number().int().nonnegative().optional(),
   /** Message key of the Tools sidebar tool that made the change. */
@@ -127,6 +127,8 @@ export const auditOperationSchema = z.object({
     .optional(),
   /** The Ctrl+Z history entry for this change, while the session keeps it. */
   undoHistoryId: z.string().optional(),
+  /** Set on the record of an undo or redo; its label is that of the change it replays. */
+  replay: z.enum(['undo', 'redo']).optional(),
   /** The record this one undoes or redoes. */
   relatedOperationId: z.string().optional(),
   /** Set on a record once a later undo of it ran: which record, and whether all came back. */

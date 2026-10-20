@@ -25,7 +25,8 @@ export type AuditInit = {
   actor?: AuditActor;
   /** An agent's own name for itself, unverified. */
   actorLabel?: string;
-  /** The record this one undoes or redoes. */
+  /** For an undo or redo: which, and the record of the change it replays. */
+  replay?: 'undo' | 'redo';
   relatedOperationId?: string;
 };
 
@@ -51,7 +52,16 @@ function newOperationId(): string {
  * Reserves a `prepared` record and reads it back. Throws `AuditStoreError` when it could not be
  * stored; the caller decides whether to go on without one.
  */
-export async function beginAuditOperation(init: AuditInit, now = Date.now()): Promise<string> {
+/**
+ * The time now in epoch milliseconds with sub-millisecond precision where the browser has it, so
+ * two records started in the same millisecond (a change and its undo) still sort in order.
+ */
+function preciseNow(): number {
+  const { performance } = globalThis;
+  return performance?.timeOrigin ? performance.timeOrigin + performance.now() : Date.now();
+}
+
+export async function beginAuditOperation(init: AuditInit, now = preciseNow()): Promise<string> {
   const id = newOperationId();
   const source = init.source ?? (init.label.tool ? 'tools' : currentAuditSource());
   await putAuditOperation({
@@ -64,6 +74,7 @@ export async function beginAuditOperation(init: AuditInit, now = Date.now()): Pr
     ...(init.actorLabel ? { actorLabel: init.actorLabel.slice(0, 200) } : {}),
     state: 'prepared',
     counts: { planned: 0, applied: 0, skipped: 0, failed: 0 },
+    ...(init.replay ? { replay: init.replay } : {}),
     ...(init.relatedOperationId ? { relatedOperationId: init.relatedOperationId } : {}),
     originConfidence: 'verified_internal',
   });
