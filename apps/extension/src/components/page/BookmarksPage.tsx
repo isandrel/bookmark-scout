@@ -6,6 +6,7 @@
 
 import {
   CircleAlert,
+  History,
   Info,
   Link2,
   PanelLeft,
@@ -237,6 +238,11 @@ export default function BookmarksPage() {
       })),
     };
   }, [allData, language]);
+  const folderLabels = useMemo(
+    () => new Map(facetOptions.parentId.map((option) => [option.value, option.label])),
+    [facetOptions.parentId],
+  );
+  const openHistory = useAuditHistoryView((view) => view.openHistory);
 
   const savedSearchContext = useMemo<DataTableSavedSearchContext>(
     () => ({
@@ -394,6 +400,16 @@ export default function BookmarksPage() {
               </Button>
             </div>
             <div className="flex shrink-0 items-center gap-1" data-testid="manager-header-actions">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0"
+                title={t('history_button')}
+                aria-label={t('history_button')}
+                onClick={() => openHistory()}
+              >
+                <History className="h-4 w-4" />
+              </Button>
               <ManagerShortcutsHelp
                 open={shortcuts.helpOpen}
                 onOpenChange={shortcuts.setHelpOpen}
@@ -504,6 +520,7 @@ export default function BookmarksPage() {
             />
           )}
         </div>
+        <HistoryDialog folderLabels={folderLabels} />
       </main>
 
       {/* Right Sidebar - Tools */}

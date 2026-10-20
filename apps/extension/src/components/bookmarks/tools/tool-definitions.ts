@@ -53,6 +53,8 @@ export type ToolOutcome = {
   undo?: () => Promise<ToolOutcome>;
   /** When `undo` stops working (epoch milliseconds); the bookmark undo window by default. */
   undoExpiresAt?: number;
+  /** The change's Audit History record, for View in History. */
+  historyId?: string;
 };
 
 /** A file to save after the export privacy review (see `useExportPrivacyReview`). */
@@ -223,26 +225,29 @@ function undoOffer(
 function reportChanges(
   counts: ChangeCounts,
   keys: ChangeMessageKeys,
-  result: Pick<BookmarkChangesResult, 'undo' | 'expiresAt'>,
+  result: Pick<BookmarkChangesResult, 'undo' | 'expiresAt' | 'recorded'>,
 ): ToolOutcome {
   const undo = undoOffer(counts.applied, result.undo, result.expiresAt);
-  return isComplete(counts)
-    ? {
-        title: t(keys.appliedTitle),
-        description: tPlural(keys.appliedDescription, counts.applied),
-        variant: 'success',
-        ...undo,
-      }
-    : {
-        title: t(keys.partialTitle),
-        description: t(keys.partialDescription, [
-          String(counts.applied),
-          String(counts.skipped),
-          String(counts.failed),
-        ]),
-        variant: 'destructive',
-        ...undo,
-      };
+  const historyId = result.recorded?.entry.operationId;
+  return {
+    ...(isComplete(counts)
+      ? {
+          title: t(keys.appliedTitle),
+          description: tPlural(keys.appliedDescription, counts.applied),
+          variant: 'success' as const,
+        }
+      : {
+          title: t(keys.partialTitle),
+          description: t(keys.partialDescription, [
+            String(counts.applied),
+            String(counts.skipped),
+            String(counts.failed),
+          ]),
+          variant: 'destructive' as const,
+        }),
+    ...undo,
+    ...(historyId ? { historyId } : {}),
+  };
 }
 
 /** The report for saved AI suggestions, naming how many were skipped as stale. */
@@ -390,6 +395,9 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
           text: t(REORGANIZE_ISSUE_KEYS[issue.reason], [getBookmarkDisplayTitle(issue.title)]),
         })),
         undoExpiresAt: result.expiresAt,
+        ...(result.recorded?.entry.operationId
+          ? { historyId: result.recorded.entry.operationId }
+          : {}),
         undo:
           applied > 0
             ? async () => {
@@ -442,6 +450,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
       return {
         title: complete ? t('toast_duplicatesRemoved') : t('toast_duplicatesPartiallyRemoved'),
         description,
+        ...(removal.historyId ? { historyId: removal.historyId } : {}),
         variant: complete ? 'success' : 'destructive',
         // A partial run stays open so the user sees what is left next to the counts.
         keepOpen: !complete,

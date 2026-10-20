@@ -6532,5 +6532,341 @@
     "error_auditStore": {
         "message": "未进行更改：无法在此设备上保存书签历史记录。",
         "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
+    },
+    "history_button": {
+        "message": "书签历史记录",
+        "description": "Manager header button that opens the bookmark change History."
+    },
+    "history_title": {
+        "message": "书签历史记录",
+        "description": "Title of the History dialog in the manager."
+    },
+    "history_description": {
+        "message": "Bookmark Scout 对你的书签所做的更改，仅保存在此设备上。从此版本开始记录，不知道扩展程序关闭期间的更改。",
+        "description": "Explanation under the History title."
+    },
+    "history_filterLabel": {
+        "message": "显示",
+        "description": "Accessible name of the History filter segments."
+    },
+    "history_filterAll": {
+        "message": "全部",
+        "description": "History filter: every record."
+    },
+    "history_filterAttention": {
+        "message": "需要注意",
+        "description": "History filter: records that are partial, interrupted, need review, or conflicted."
+    },
+    "history_filterExtension": {
+        "message": "Bookmark Scout",
+        "description": "History filter: changes Bookmark Scout made."
+    },
+    "history_filterElsewhere": {
+        "message": "来自其他地方",
+        "description": "History filter: changes seen from elsewhere (unknown source, or found after a gap)."
+    },
+    "history_search": {
+        "message": "搜索历史记录",
+        "description": "Search box placeholder and label in the History."
+    },
+    "history_export": {
+        "message": "导出历史记录",
+        "description": "Button that saves the History as a JSON file."
+    },
+    "history_exportConfirmTitle": {
+        "message": "导出历史记录？",
+        "description": "Title of the privacy confirmation before exporting the History."
+    },
+    "history_exportConfirm": {
+        "message": "文件包含已更改书签的标题、网址和文件夹。文件未加密，请妥善保管。",
+        "description": "Privacy notice before exporting the History."
+    },
+    "history_clear": {
+        "message": "清除历史记录",
+        "description": "Button that clears finished History records."
+    },
+    "history_clearConfirmTitle": {
+        "message": "清除历史记录？",
+        "description": "Title of the confirmation before clearing the History."
+    },
+    "history_clearConfirm": {
+        "message": "从此设备删除已完成的记录。仍需检查的记录会保留。你的书签不会被更改。",
+        "description": "What clearing the History removes and keeps."
+    },
+    "history_cleared": {
+        "message": "已删除 $1 条记录，保留了 $2 条仍需检查的记录。",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
+    "history_loading": {
+        "message": "正在加载…",
+        "description": "Shown while History records load."
+    },
+    "history_unavailable": {
+        "message": "目前无法在此设备上读取历史记录。你的书签不受影响。",
+        "description": "Shown when the History storage cannot be read."
+    },
+    "history_corrupt": {
+        "message": "有 $1 条记录无法读取，未显示。",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_empty": {
+        "message": "尚未记录任何更改。",
+        "description": "History with no records yet."
+    },
+    "history_noMatches": {
+        "message": "没有匹配的记录。",
+        "description": "History filter or search with no matching records."
+    },
+    "history_statusInProgress": {
+        "message": "进行中",
+        "description": "History status: a change still running."
+    },
+    "history_statusVerified": {
+        "message": "已验证",
+        "description": "History status: everything planned was done and read back as intended."
+    },
+    "history_statusPartial": {
+        "message": "部分完成",
+        "description": "History status: part of the change was done, part skipped or failed."
+    },
+    "history_statusFailed": {
+        "message": "未完成",
+        "description": "History status: nothing was changed."
+    },
+    "history_statusNeedsReview": {
+        "message": "需要检查",
+        "description": "History status: the result did not read back as intended."
+    },
+    "history_statusConflicted": {
+        "message": "冲突",
+        "description": "History status: a conflict with newer changes."
+    },
+    "history_statusObserved": {
+        "message": "已观察到",
+        "description": "History status: a change seen from elsewhere."
+    },
+    "history_statusInterrupted": {
+        "message": "已中断",
+        "description": "History status: a change stopped before it finished (a closed page or browser)."
+    },
+    "history_badgeUndone": {
+        "message": "已撤消",
+        "description": "History badge: the change was undone."
+    },
+    "history_badgePartlyUndone": {
+        "message": "部分撤消",
+        "description": "History badge: an undo brought back only part of the change."
+    },
+    "history_sourceManager": {
+        "message": "书签管理器",
+        "description": "History source: the bookmark manager."
+    },
+    "history_sourceTools": {
+        "message": "工具",
+        "description": "History source: a tool in the Tools sidebar."
+    },
+    "history_sourcePopup": {
+        "message": "弹出窗口",
+        "description": "History source: the toolbar popup."
+    },
+    "history_sourceSidePanel": {
+        "message": "侧边栏",
+        "description": "History source: the side panel."
+    },
+    "history_sourceSettings": {
+        "message": "设置",
+        "description": "History source: the Settings page."
+    },
+    "history_sourceQuickSave": {
+        "message": "快速保存",
+        "description": "History source: the quick save shortcut."
+    },
+    "history_sourceContextMenu": {
+        "message": "右键菜单",
+        "description": "History source: the right-click menu on web pages."
+    },
+    "history_sourceAskAi": {
+        "message": "询问 AI",
+        "description": "History source: Ask AI."
+    },
+    "history_sourceLocalAgent": {
+        "message": "本地智能体",
+        "description": "History source: a local AI agent through the bridge."
+    },
+    "history_sourceImport": {
+        "message": "导入",
+        "description": "History source: Import Bookmarks."
+    },
+    "history_sourceBackground": {
+        "message": "Bookmark Scout",
+        "description": "History source: Bookmark Scout working without an open page."
+    },
+    "history_sourceUnknown": {
+        "message": "来源未知（观察到的浏览器事件）",
+        "description": "History source: a browser event no Bookmark Scout change explains; the writer is unknown."
+    },
+    "history_sourceReconciliation": {
+        "message": "间隔后检测到（净差异）",
+        "description": "History source: a difference found after a gap in observation; times and writer unknown."
+    },
+    "history_counts": {
+        "message": "完成 $1 · 跳过 $2 · 失败 $3",
+        "description": "History row counts. $1 done, $2 skipped, $3 failed."
+    },
+    "history_factStarted": {
+        "message": "开始",
+        "description": "History detail label: when the change started."
+    },
+    "history_factFinished": {
+        "message": "结束",
+        "description": "History detail label: when the change finished."
+    },
+    "history_factCounts": {
+        "message": "计划 $1，完成 $2，跳过 $3，失败 $4。",
+        "description": "History detail counts. $1 planned, $2 done, $3 skipped, $4 failed."
+    },
+    "history_verifyPassed": {
+        "message": "更改后已检查：书签与更改后的状态一致。",
+        "description": "History detail: the bookmarks were read again after the change and are as it left them."
+    },
+    "history_verifyFailed": {
+        "message": "更改后已检查：有 $1 项与更改后的状态不一致。",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
+    "history_verifyNotRun": {
+        "message": "未检查：没有任何更改。",
+        "description": "History detail: nothing was changed, so nothing was checked."
+    },
+    "history_factAgentName": {
+        "message": "智能体自称的名称（未验证）",
+        "description": "History detail label: the name a local AI agent gave itself, which is not verified."
+    },
+    "history_undoUnavailable": {
+        "message": "无法撤消：此浏览器会话的撤消历史记录中已没有这项更改。",
+        "description": "History detail: why a record offers no Undo."
+    },
+    "history_showOriginal": {
+        "message": "显示被撤消的更改",
+        "description": "History button on an undo or redo record: shows the change it replays."
+    },
+    "history_showUndo": {
+        "message": "显示撤消记录",
+        "description": "History button on an undone record: shows the undo record."
+    },
+    "history_detailsMissing": {
+        "message": "未保留这项更改的项目。",
+        "description": "History detail when the item rows were not kept."
+    },
+    "history_detailsCorrupt": {
+        "message": "无法读取这项更改的项目。",
+        "description": "History detail when the stored item rows could not be read."
+    },
+    "history_itemsLabel": {
+        "message": "更改的项目",
+        "description": "Accessible name of the list of items a change touched."
+    },
+    "history_showMoreItems": {
+        "message": "显示更多（还有 $1 项）",
+        "description": "History button that lists more items of a large change. $1 is how many are left."
+    },
+    "history_omitted": {
+        "message": "另有 $1 项未保留在此记录中。",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
+    "history_folderGone": {
+        "message": "已不存在的文件夹（ID $1）",
+        "description": "History: a folder that no longer exists. $1 is its old id."
+    },
+    "history_place": {
+        "message": "$1，第 $2 位",
+        "description": "History: a place in a folder. $1 is the folder path, $2 the position (1-based)."
+    },
+    "history_itemWasIn": {
+        "message": "原位于 $1",
+        "description": "History item: where a deleted item was. $1 is a place."
+    },
+    "history_itemAddedTo": {
+        "message": "添加到 $1",
+        "description": "History item: where a new item went. $1 is a place."
+    },
+    "history_itemInside": {
+        "message": "内含 $1 项",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_changeCreate": {
+        "message": "已添加",
+        "description": "History item change: added."
+    },
+    "history_changeRemove": {
+        "message": "已删除",
+        "description": "History item change: deleted."
+    },
+    "history_changeUpdate": {
+        "message": "已编辑",
+        "description": "History item change: edited."
+    },
+    "history_changeMove": {
+        "message": "已移动",
+        "description": "History item change: moved."
+    },
+    "history_outcomeApplied": {
+        "message": "已完成",
+        "description": "History item outcome: done."
+    },
+    "history_outcomeSkipped": {
+        "message": "已跳过",
+        "description": "History item outcome: skipped."
+    },
+    "history_outcomeFailed": {
+        "message": "失败",
+        "description": "History item outcome: the browser refused it."
+    },
+    "history_outcomeConflicted": {
+        "message": "冲突",
+        "description": "History item outcome: a conflict with newer changes."
+    },
+    "history_reasonDeleted": {
+        "message": "检查后已被删除",
+        "description": "History item: skipped because it was deleted since the review."
+    },
+    "history_reasonChanged": {
+        "message": "检查后已被更改",
+        "description": "History item: skipped because it changed since the review."
+    },
+    "history_reasonFailed": {
+        "message": "浏览器拒绝了此更改",
+        "description": "History item: the browser refused the change."
+    },
+    "history_factSource": {
+        "message": "来源",
+        "description": "History detail label: where the change came from."
+    },
+    "history_factResult": {
+        "message": "结果",
+        "description": "History detail label: planned, done, skipped, and failed counts."
+    },
+    "history_factCheck": {
+        "message": "检查",
+        "description": "History detail label: whether the bookmarks were read back as the change left them."
+    },
+    "history_today": {
+        "message": "今天",
+        "description": "History day heading for today."
+    },
+    "history_yesterday": {
+        "message": "昨天",
+        "description": "History day heading for yesterday."
+    },
+    "history_emptyHint": {
+        "message": "你用 Bookmark Scout 进行的编辑、移动、删除、导入和清理会显示在这里，包括更改了什么以及能否撤消。",
+        "description": "History empty state: what will show up here."
+    },
+    "history_itemCount": {
+        "message": "$1 项",
+        "description": "History row summary: how many items the change touched. $1 is the count."
+    },
+    "history_viewInHistory": {
+        "message": "在历史记录中查看",
+        "description": "Link in a result that opens its record in the manager History."
     }
 }

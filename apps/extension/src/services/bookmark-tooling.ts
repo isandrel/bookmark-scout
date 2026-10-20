@@ -81,6 +81,8 @@ export type DuplicateRemovalResult = {
   undo: () => Promise<BookmarkChangesUndoResult>;
   /** After this time (epoch milliseconds) the removed bookmarks can no longer be restored. */
   expiresAt: number;
+  /** The removal's Audit History record. */
+  historyId?: string;
 };
 
 export type UrlCleanerOptions = {
@@ -354,8 +356,13 @@ export function collectBookmarkStatistics(
     totalBookmarks: flatBookmarks.length,
     totalFolders: countFolders(nodes),
     bookmarksInScope: flatBookmarks.length,
-    deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmarkLevel(bookmark)), 0),
-    ...(options.includeDepthBreakdown ? { depthBreakdown: buildDepthBreakdown(flatBookmarks) } : {}),
+    deepestLevel: flatBookmarks.reduce(
+      (depth, bookmark) => Math.max(depth, bookmarkLevel(bookmark)),
+      0,
+    ),
+    ...(options.includeDepthBreakdown
+      ? { depthBreakdown: buildDepthBreakdown(flatBookmarks) }
+      : {}),
     ...(options.includeDomains ? { topDomains: toTopEntries(domains, options.topN) } : {}),
     ...(options.includeFolders
       ? {
@@ -464,6 +471,7 @@ export async function removeDuplicateExtras(
     failed: result.failed,
     undo: result.undo,
     expiresAt: result.expiresAt,
+    ...(result.recorded?.entry.operationId ? { historyId: result.recorded.entry.operationId } : {}),
   };
 }
 
@@ -499,9 +507,10 @@ function duplicateGroupLabel(
   options: DuplicateMatchOptions,
 ): string {
   const title = (node.title ?? '').trim();
-  const url = options.strategy === 'exact_url'
-    ? (node.url ?? '')
-    : (normalizeDuplicateUrl(node.url, options) ?? '').replace(/^\/\//, '');
+  const url =
+    options.strategy === 'exact_url'
+      ? (node.url ?? '')
+      : (normalizeDuplicateUrl(node.url, options) ?? '').replace(/^\/\//, '');
   switch (options.strategy) {
     case 'title_only':
       return title;
@@ -530,15 +539,11 @@ function normalizeDuplicateUrl(url: string | undefined, options: DuplicateMatchO
     }
     const protocol = options.ignoreProtocol ? '' : parsed.protocol;
     const host = options.normalizeWww ? parsed.host.replace(/^www\./, '') : parsed.host;
-    const pathname = options.ignoreTrailingSlash && parsed.pathname !== '/'
-      ? parsed.pathname.replace(/\/$/, '')
-      : parsed.pathname;
-    const query = parsed.search
-      .slice(1)
-      .split('&')
-      .filter(Boolean)
-      .sort()
-      .join('&');
+    const pathname =
+      options.ignoreTrailingSlash && parsed.pathname !== '/'
+        ? parsed.pathname.replace(/\/$/, '')
+        : parsed.pathname;
+    const query = parsed.search.slice(1).split('&').filter(Boolean).sort().join('&');
 
     return `${protocol}//${host}${pathname}${query ? `?${query}` : ''}${parsed.hash}`;
   } catch {
