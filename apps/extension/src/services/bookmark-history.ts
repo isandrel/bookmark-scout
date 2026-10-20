@@ -251,11 +251,15 @@ function remapEntryIds(
 
 /** Changes bookmarks and notes each change, for one history entry. */
 export type BookmarkWriter = {
+  /** Creates an item; `metadata` (tags and summary) is stored for it too, and undo checks it. */
   create: (details: {
     parentId: string;
     index?: number;
     title: string;
     url?: string;
+    /** Firefox separators only. */
+    type?: 'separator';
+    metadata?: StoredBookmarkMetadata;
   }) => Promise<Browser.bookmarks.BookmarkTreeNode>;
   update: (id: string, changes: BookmarkFields) => Promise<void>;
   move: (id: string, to: { parentId: string; index?: number }) => Promise<void>;
@@ -306,17 +310,23 @@ function restoreIndex(at: BookmarkPlace, siblings: readonly { id: string }[]): n
 
 function createWriter(operations: BookmarkHistoryOperation[]): BookmarkWriter {
   return {
-    async create(details) {
+    async create({ metadata, ...details }) {
       const created = await createBookmark(details);
-      operations.push({
-        kind: 'create',
-        at: placeOf(created),
-        node: {
-          id: created.id,
-          title: created.title,
-          ...(created.url ? { url: created.url } : {}),
-        },
-      });
+      const node: RecoverableBookmarkNode = {
+        id: created.id,
+        title: created.title,
+        ...(created.url ? { url: created.url } : {}),
+        ...(details.type ? { type: details.type } : {}),
+      };
+      operations.push({ kind: 'create', at: placeOf(created), node });
+      if (metadata && (metadata.tags?.length || metadata.summary)) {
+        await mergeStoredBookmarkMetadata(
+          { [created.id]: metadata },
+          { tagMode: 'replace', summaryMode: 'replace', dedupeTags: true },
+        );
+        // Recorded once stored, so undo removes the item only while its tags are still these.
+        node.metadata = metadata;
+      }
       return created;
     },
     async update(id, changes) {

@@ -12,6 +12,7 @@ import {
   sortBookmarkFolder,
   sortedFolderOrder,
 } from '@/services/bookmark-organize';
+import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
 let bookmarks: FakeBookmarks;
@@ -83,6 +84,49 @@ describe('cut, copy, and paste', () => {
     await undoBookmarkChange();
     await undoBookmarkChange();
     expect(titles('g')).toEqual([]);
+  });
+
+  it('copies a deep folder with tags, summaries, empty folders, and separators (L16, L17)', async () => {
+    bookmarks = installFakeBookmarks([
+      { id: 'src', title: 'Source' },
+      { id: 'dst', title: 'Target' },
+      { id: 'n1', parentId: 'src', title: 'Docs', url: 'https://e2e.invalid/docs' },
+      { id: 'sep', parentId: 'src', title: '', type: 'separator' },
+      { id: 'empty', parentId: 'src', title: 'Empty' },
+      { id: 'deep', parentId: 'src', title: 'Deep' },
+      { id: 'n2', parentId: 'deep', title: 'Docs', url: 'https://e2e.invalid/docs' },
+      { id: 'n3', parentId: 'deep', title: '', url: 'https://e2e.invalid/x?b=2&a=1#frag' },
+    ]);
+    await bookmarkMetadataValue.set({
+      n1: { tags: ['work'], summary: 'Top copy' },
+      n2: { tags: ['deep'] },
+    });
+    const sourceBefore = await fakeBrowser.bookmarks.getSubTree('src');
+
+    await setBookmarkClipboard('copy', ['src']);
+    await expect(pasteBookmarks({ parentId: 'dst' })).resolves.toEqual({ pasted: 1, skipped: 0 });
+
+    const [copy] = await fakeBrowser.bookmarks.getSubTree('dst');
+    const [folder] = copy.children ?? [];
+    const shape = (node: Browser.bookmarks.BookmarkTreeNode): unknown => ({
+      title: node.title,
+      url: node.url,
+      type: (node as { type?: string }).type,
+      children: node.children?.map(shape),
+    });
+    const [source] = sourceBefore;
+    expect(shape(folder)).toEqual(shape(source));
+    // Tags and summaries follow the copies, under their new ids.
+    const metadata = await bookmarkMetadataValue.get();
+    const [docs, , , deep] = folder.children ?? [];
+    expect(metadata[docs.id]).toEqual({ tags: ['work'], summary: 'Top copy' });
+    expect(metadata[deep.children?.[0]?.id ?? '']).toEqual({ tags: ['deep'] });
+    // The source is untouched.
+    expect(await fakeBrowser.bookmarks.getSubTree('src')).toEqual(sourceBefore);
+
+    // One undo removes the whole paste, copied tags included.
+    await expect(undoBookmarkChange()).resolves.toMatchObject({ skipped: 0 });
+    expect(bookmarks.childIds('dst')).toEqual([]);
   });
 
   it('moves cut items on paste, once; one that could not move stays cut', async () => {
