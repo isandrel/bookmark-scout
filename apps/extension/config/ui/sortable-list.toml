@@ -1,0 +1,9 @@
+# Drag to reorder in ordered lists (src/components/ui/sortable-list.tsx): the manager menus, AI
+# services, prompt library, table columns, and saved searches. Read by src/lib/sortable.ts.
+
+# Milliseconds the moved item's background stays highlighted after a drop or a keyboard move
+flash_ms = 700
+
+# Pixels between the pointer and the top left of the drag preview
+preview_offset_x = 16
+preview_offset_y = 8

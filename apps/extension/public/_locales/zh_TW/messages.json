@@ -4716,7 +4716,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "可以儲存任意數量的供應商。AI 工具會使用預設服務。內建 AI 只負責建議資料夾，所以它是預設服務時，其他工具會使用第一個已開啟的其他服務。",
+        "message": "可以儲存任意數量的供應商。AI 工具會使用預設服務。內建 AI 只負責建議資料夾，所以它是預設服務時，其他工具會使用第一個已開啟的其他服務。 拖曳服務的控點可調整先後順序。",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {
@@ -5995,14 +5995,6 @@
         "message": "沒有等待你核准的內容。",
         "description": "Approval window when no request is waiting"
     },
-    "settings_actionMoveUp": {
-        "message": "上移 $1",
-        "description": "Button that moves a menu item up within its group. $1 is the item name."
-    },
-    "settings_actionMoveDown": {
-        "message": "下移 $1",
-        "description": "Button that moves a menu item down within its group. $1 is the item name."
-    },
     "settings_actionsReset": {
         "message": "還原預設值",
         "description": "Button that restores the default bookmark manager menu or AI actions"
@@ -6496,5 +6488,29 @@
     "qaManager_allFolders": {
         "message": "所有資料夾中的結果",
         "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
+    },
+    "sortable_handle": {
+        "message": "調整 $1 的順序",
+        "description": "Drag handle and menu button of a reorderable list item (settings lists, table columns). $1 is the item name."
+    },
+    "sortable_moveTop": {
+        "message": "移到最上方",
+        "description": "Menu item of a reorderable list item's handle: moves it to the top of the list."
+    },
+    "sortable_moveUp": {
+        "message": "上移",
+        "description": "Menu item of a reorderable list item's handle: moves it one place up."
+    },
+    "sortable_moveDown": {
+        "message": "下移",
+        "description": "Menu item of a reorderable list item's handle: moves it one place down."
+    },
+    "sortable_moveBottom": {
+        "message": "移到最下方",
+        "description": "Menu item of a reorderable list item's handle: moves it to the bottom of the list."
+    },
+    "sortable_moved": {
+        "message": "已將 $1 移到第 $2 位（共 $3 項）",
+        "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
     }
 }

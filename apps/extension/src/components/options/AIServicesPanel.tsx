@@ -190,20 +190,23 @@ export function AIServicesPanel({
         </p>
       )}
 
-      <ul
-        ref={listRef}
-        className={cn(
-          'divide-y overflow-hidden rounded-md border',
-          state.services.length === 0 && 'hidden',
-        )}
-      >
-        {state.services.map((service) => {
+      <SortableList
+        listRef={listRef}
+        items={state.services}
+        getId={(service) => service.id}
+        getLabel={(service) => service.name}
+        onReorder={(ids) => void reorderAIServices(ids)}
+        label={t('options_aiServices')}
+        className={cn('divide-y rounded-md border', state.services.length === 0 && 'hidden')}
+        itemProps={(service) => ({ 'data-testid': 'ai-service', 'data-service-id': service.id })}
+        renderItem={(service, handle) => {
           const isDefault = service.id === state.defaultServiceId;
           const isOpen = service.id === openId;
           const editorId = `ai-service-${service.id}-panel`;
           return (
-            <li key={service.id} data-testid="ai-service" data-service-id={service.id}>
+            <>
               <div className="flex items-center gap-3 px-3 py-2">
+                {handle}
                 <ServiceLogo provider={service.provider} />
                 <button
                   type="button"
@@ -301,10 +304,10 @@ export function AIServicesPanel({
                   )}
                 </div>
               )}
-            </li>
+            </>
           );
-        })}
-      </ul>
+        }}
+      />
 
       <AddServiceDialog
         open={adding}

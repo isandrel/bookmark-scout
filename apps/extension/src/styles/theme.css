@@ -317,6 +317,60 @@ tr[data-drop-zone='into'] > td {
   box-shadow: inset 0 -2px 0 hsl(var(--primary));
 }
 
+/* Reorderable lists (`SortableList`): Atlassian's DropIndicator draws the 2px line with a terminal
+   where the item will land; its design-system tokens map to ours here. The dragged item stays at
+   40% opacity and the moved item flashes briefly. */
+.sortable-item {
+  position: relative;
+  --ds-border-selected: hsl(var(--primary));
+  --ds-border-width-selected: 2px;
+}
+
+.sortable-item[data-dragging] {
+  opacity: 0.4;
+}
+
+.sortable-item[data-flash] {
+  animation: sortable-flash var(--sortable-flash, 700ms) ease-out;
+}
+
+@keyframes sortable-flash {
+  from {
+    background-color: hsl(var(--accent));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sortable-item[data-flash] {
+    animation: none;
+    background-color: hsl(var(--accent));
+  }
+}
+
+.sortable-handle {
+  cursor: grab;
+}
+
+.sortable-handle-slot {
+  display: inline-block;
+  width: 1.75rem;
+  flex-shrink: 0;
+}
+
+.sortable-preview {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.12);
+}
+
 /* Ask AI answers: Markdown from the model, rendered without raw HTML. */
 .ask-ai-markdown {
   & > * + * {

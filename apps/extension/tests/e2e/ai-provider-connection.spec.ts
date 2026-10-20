@@ -1,6 +1,6 @@
 import type { BrowserContext, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
 import { openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
+import { expect, test } from './fixtures';
 import { setSettings } from './popup-helpers';
 import { seedAIServices } from './storage';
 
@@ -203,4 +203,27 @@ test('a second check keeps the last result and the buttons in place while it run
   release();
   await expect(status).not.toHaveAttribute('data-stale', '');
   await expect(refresh).toBeEnabled();
+});
+
+test('AI services reorder from the handle menu, and the new order is stored', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedAIServices(extensionWorker, [
+    { provider: 'custom', id: 'first', name: 'First proxy' },
+    { provider: 'custom', id: 'second', name: 'Second proxy' },
+  ]);
+  await openAIOptions(page, extensionId);
+
+  const names = () =>
+    page.getByTestId('ai-service').locator('span.truncate.font-medium').allTextContents();
+  await expect.poll(names).toEqual(['First proxy', 'Second proxy']);
+  await page.getByRole('button', { name: 'Reorder Second proxy' }).click();
+  await page.getByRole('menuitem', { name: 'Move to top' }).click();
+  await expect.poll(names).toEqual(['Second proxy', 'First proxy']);
+  await expect
+    .poll(async () => (await readAIServices(page))?.services.map((service) => service.id))
+    .toEqual(['second', 'first']);
 });

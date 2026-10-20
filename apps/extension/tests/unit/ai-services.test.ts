@@ -16,6 +16,7 @@ import {
   duplicateAIService,
   getAIServicesState,
   getDefaultAIService,
+  reorderAIServices,
   setDefaultAIService,
   updateAIService,
 } from '@/lib/ai-services-storage';
@@ -89,6 +90,25 @@ describe('named AI services', () => {
       model: 'home-model',
     });
     expect((await getDefaultAIService())?.name).toBe('Home proxy');
+  });
+
+  it('reorders services, and the order picks the fallback for tools the default cannot run', async () => {
+    const builtin = await addAIService('chrome_builtin');
+    const first = await addAIService('custom', 'First');
+    const second = await addAIService('custom', 'Second');
+    await saveStoredAIProviderConfig(first.id, { apiKey: 'first', baseUrl: 'https://a.test/v1' });
+    await saveStoredAIProviderConfig(second.id, { apiKey: 'second', baseUrl: 'https://b.test/v1' });
+    await setDefaultAIService(builtin.id);
+    // Built-in AI only suggests folders, so Ask AI uses the first other enabled service.
+    await expect(getActiveAISettings(true, 'askAI')).resolves.toMatchObject({ apiKey: 'first' });
+
+    await reorderAIServices([builtin.id, second.id, first.id, 'gone']);
+    expect((await getAIServicesState()).services.map((service) => service.name)).toEqual([
+      builtin.name,
+      'Second',
+      'First',
+    ]);
+    await expect(getActiveAISettings(true, 'askAI')).resolves.toMatchObject({ apiKey: 'second' });
   });
 
   it('duplicates a service with its credentials and deletes credentials with a service', async () => {

@@ -28,26 +28,33 @@
 # Uncompressed raised again on 2026-10-20 (5,202,000 to 5,212,000) after #710 and #712 (next, docs,
 # and minor dependency updates) merged into #709: CI measured the Firefox build at 5,202,161 B, 161 B
 # over; the new limit is about 10 KB above that.
+# Raised on 2026-10-20 (ZIP 1,632,000 to 1,644,000, uncompressed 5,212,000 to 5,236,000, javascript
+# 3,464,000 to 3,494,000, css 81,000 to 84,000) for the shared reorderable list (SortableList on
+# Pragmatic drag and drop with its closest-edge hitbox, auto-scroll, live region, and Atlassian's
+# React drop indicator with its compiled CSS) and its copy in 9 languages. Firefox measured ZIP
+# 1,629,718 and 5,202,241 B uncompressed on main, and with the list 5,227,193 B uncompressed,
+# 3,484,153 B of JavaScript, and 81,522 B of CSS; the new limits are about 10 KB (CSS 2.5 KB)
+# above that, so the later drag-and-drop phases measure their own growth.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_632_000
-raw_bytes = 5_212_000
+zip_bytes = 1_644_000
+raw_bytes = 5_236_000
 
 [targets.edge]
-zip_bytes = 1_632_000
-raw_bytes = 5_212_000
+zip_bytes = 1_644_000
+raw_bytes = 5_236_000
 
 [targets.firefox]
-zip_bytes = 1_632_000
-raw_bytes = 5_212_000
+zip_bytes = 1_644_000
+raw_bytes = 5_236_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_464_000
-css = 81_000
+javascript = 3_494_000
+css = 84_000
 fonts = 143_000
 locales = 1_195_000
 images = 320_000
