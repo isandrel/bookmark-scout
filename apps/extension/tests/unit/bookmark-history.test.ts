@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
+import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import {
   type BookmarkHistory,
   type BookmarkHistoryEntry,
@@ -396,5 +397,21 @@ describe('replay never erases newer work', () => {
 
     await expect(undoBookmarkChange()).resolves.toMatchObject({ applied: 0, skipped: 1 });
     expect(titles('f')).toEqual(['B', 'C', 'Sub', 'A']);
+  });
+});
+
+describe('restores that lose tags say so', () => {
+  it('undo of a deletion reports tags and summaries it could not restore (L25)', async () => {
+    await bookmarkMetadataValue.set({ s1: { tags: ['keep'], summary: 'Kept note' } });
+    await recordBookmarkWrites({ action: 'delete', title: 'Sub' }, (w) => w.remove('s'));
+    vi.spyOn(bookmarkMetadataValue, 'update').mockRejectedValueOnce(new Error('quota'));
+
+    await expect(undoBookmarkChange()).resolves.toMatchObject({
+      applied: 1,
+      skipped: 0,
+      metadataNotRestored: 1,
+    });
+    // The bookmarks are back; only the tags are missing, and the outcome does not hide it.
+    expect(titles('f')).toContain('Sub');
   });
 });

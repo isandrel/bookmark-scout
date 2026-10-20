@@ -51,6 +51,7 @@ Not covered in Firefox: context-menu saves, the quick save action itself, drag a
 ## Unit only
 
 - **Sorting.**
+- **Partial restores reported:** when recreated bookmarks are back but their tags and summaries cannot be stored again, a deletion restore and an undo say so (`metadataRestored`, `metadataNotRestored`) instead of reporting success (`bookmark-deletion-recovery.test.ts`, `bookmark-history.test.ts`, a metadata write rejected).
 - **Import undo safety:** undoing an import removes only top-level items still exactly as imported (place, titles, addresses, tags, summaries, contents at every depth); an item renamed, edited inside, re-addressed, re-tagged, or moved out since is kept and counted (`bookmark-import.test.ts`).
 - **Copy and paste fidelity:** pasting a copied folder reproduces its hierarchy, empty folders, duplicate addresses, untitled items, Firefox separators (as separators), and tags and summaries under the new ids, leaves the source untouched, and one undo removes the whole paste (`bookmark-organize.test.ts`, separators in the fake bookmarks).
 - **Bookmark safety under concurrent changes:** Duplicate Cleaner re-reads the kept bookmark right before removing each extra, so a keeper that changes address while the batch runs keeps the last copy of the group (`bookmark-duplicates.test.ts`, a change injected between two removals).

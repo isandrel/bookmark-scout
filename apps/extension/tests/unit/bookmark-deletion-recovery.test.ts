@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
+  bookmarkMetadataValue,
   getStoredBookmarkMetadata,
   removeStoredBookmarkMetadata,
   saveBookmarkMetadata,
@@ -152,8 +153,8 @@ describe('bookmark deletion recovery', () => {
     const restored = await restoreBookmarkDeletion(snapshot, 1_000);
 
     expect(childTitles(ROOT_FOLDER_ID)).toEqual(['Before', 'Target Folder', 'After']);
-    expect(restored.id).not.toBe(TARGET_FOLDER_ID);
-    expect(shape(restored.id)).toEqual(before);
+    expect(restored.node.id).not.toBe(TARGET_FOLDER_ID);
+    expect(shape(restored.node.id)).toEqual(before);
   });
 
   it('keeps the snapshot free of browser IDs and bounded to the undo window', async () => {
@@ -235,14 +236,14 @@ describe('bookmark deletion recovery', () => {
     await removeStoredBookmarkMetadata(['3', '6']);
 
     const restored = await restoreBookmarkDeletion(snapshot, 0);
-    const restoredDeep = nodes.get(restored.id)?.children?.[1]?.children?.[0];
+    const restoredDeep = nodes.get(restored.node.id)?.children?.[1]?.children?.[0];
     expect(restoredDeep?.title).toBe('Deep');
     expect(restoredDeep?.id).not.toBe('6');
 
     expect(
-      await getStoredBookmarkMetadata([restored.id, restoredDeep?.id ?? '', '3', '6']),
+      await getStoredBookmarkMetadata([restored.node.id, restoredDeep?.id ?? '', '3', '6']),
     ).toEqual({
-      [restored.id]: { tags: ['folder-tag'] },
+      [restored.node.id]: { tags: ['folder-tag'] },
       [restoredDeep?.id ?? '']: { tags: ['deep'], summary: 'Deep summary' },
     });
     expect(await readStoredData(STORAGE_ITEMS.bookmarkMetadata)).toHaveProperty('10', {
@@ -289,5 +290,27 @@ describe('restoring several deletions out of order', () => {
     await restoreBookmarkDeletion(target, 0);
     await restoreBookmarkDeletion(before, 0);
     expect(childTitles(ROOT_FOLDER_ID)).toEqual(['Before', 'Target Folder', 'After']);
+  });
+});
+
+describe('restores that lose tags say so', () => {
+  it('reports a restore whose tags and summaries could not be stored again (L25)', async () => {
+    await saveBookmarkMetadata('6', { tags: ['deep'] });
+    const snapshot = await captureBookmarkDeletion(TARGET_FOLDER_ID, 0);
+    await deleteBookmark(TARGET_FOLDER_ID);
+    vi.spyOn(bookmarkMetadataValue, 'update').mockRejectedValueOnce(new Error('quota'));
+
+    const restored = await restoreBookmarkDeletion(snapshot, 0);
+    expect(restored.metadataRestored).toBe(false);
+    expect(childTitles(ROOT_FOLDER_ID)).toEqual(['Before', 'Target Folder', 'After']);
+  });
+
+  it('says the metadata came back when it did', async () => {
+    await saveBookmarkMetadata('6', { tags: ['deep'] });
+    const snapshot = await captureBookmarkDeletion(TARGET_FOLDER_ID, 0);
+    await deleteBookmark(TARGET_FOLDER_ID);
+    await expect(restoreBookmarkDeletion(snapshot, 0)).resolves.toMatchObject({
+      metadataRestored: true,
+    });
   });
 });
