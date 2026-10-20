@@ -1,7 +1,8 @@
 /**
  * The Audit History records for the manager's History, while it is open: read when it opens (old
  * finished records are pruned first), and again whenever any page or the background writes one
- * (`AUDIT_CHANNEL`). Also which records can still be undone with the session's undo history.
+ * (`AUDIT_CHANNEL`). Also which records can still be undone with the session's undo history, and
+ * which undone one Redo would bring back (only the newest: redo runs in order, like Ctrl+Y).
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -41,5 +42,10 @@ export function useAuditHistory(open: boolean) {
   const { value: undoStack } = useStoredValue(bookmarkHistoryValue, (history) => history.undo);
   const undoableEntryIds = useMemo(() => new Set(undoStack.map((entry) => entry.id)), [undoStack]);
 
-  return { state, reload: load, undoableEntryIds };
+  const { value: nextRedoEntryId } = useStoredValue(
+    bookmarkHistoryValue,
+    (history) => history.redo.at(-1)?.id,
+  );
+
+  return { state, reload: load, undoableEntryIds, nextRedoEntryId };
 }

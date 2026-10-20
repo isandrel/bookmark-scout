@@ -64,7 +64,7 @@ export type HistoryDialogProps = {
 
 export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
   const { open, focusId, closeHistory } = useAuditHistoryView();
-  const { state, undoableEntryIds } = useAuditHistory(open);
+  const { state, undoableEntryIds, nextRedoEntryId } = useAuditHistory(open);
   const [filter, setFilter] = useState<AuditHistoryFilter>('all');
   const [query, setQuery] = useState('');
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
@@ -223,6 +223,10 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
                             operation.undoHistoryId !== undefined &&
                             undoableEntryIds.has(operation.undoHistoryId)
                           }
+                          redoable={
+                            operation.undoHistoryId !== undefined &&
+                            operation.undoHistoryId === nextRedoEntryId
+                          }
                           folderLabels={folderLabels}
                         />
                       ))}
@@ -285,6 +289,8 @@ type HistoryRecordProps = {
   onToggle: () => void;
   onShowRecord: (id: string) => void;
   undoable: boolean;
+  /** Undone, and the newest change Redo would bring back. */
+  redoable: boolean;
   folderLabels: ReadonlyMap<string, string>;
 };
 
@@ -295,6 +301,7 @@ function HistoryRecord({
   onToggle,
   onShowRecord,
   undoable,
+  redoable,
   folderLabels,
 }: HistoryRecordProps) {
   const status = auditStatusView(operation);
@@ -372,6 +379,7 @@ function HistoryRecord({
           <HistoryRecordDetails
             operation={operation}
             undoable={undoable}
+            redoable={redoable}
             onShowRecord={onShowRecord}
             folderLabels={folderLabels}
           />
@@ -384,6 +392,7 @@ function HistoryRecord({
 function HistoryRecordDetails({
   operation,
   undoable,
+  redoable,
   onShowRecord,
   folderLabels,
 }: Omit<HistoryRecordProps, 'expanded' | 'focused' | 'onToggle'>) {
@@ -405,11 +414,16 @@ function HistoryRecordDetails({
     };
   }, [operation.id]);
 
-  const undo = async () => {
+  const replay = async (step: 'undo' | 'redo') => {
     if (!operation.undoHistoryId) return;
     setUndoing(true);
     try {
-      reportBookmarkHistoryOutcome('undo', await undoBookmarkChange(operation.undoHistoryId));
+      reportBookmarkHistoryOutcome(
+        step,
+        step === 'undo'
+          ? await undoBookmarkChange(operation.undoHistoryId)
+          : await redoBookmarkChange(),
+      );
     } catch (error) {
       toast.error({ title: t('error_generic'), description: getErrorMessage(error) });
     } finally {
@@ -472,9 +486,24 @@ function HistoryRecordDetails({
 
       <div className="flex flex-wrap items-center gap-2">
         {undoable && canHaveUndo ? (
-          <Button size="sm" variant="outline" disabled={undoing} onClick={() => void undo()}>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={undoing}
+            onClick={() => void replay('undo')}
+          >
             <Undo2 />
             {t('action_undo')}
+          </Button>
+        ) : redoable && operation.undo ? (
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={undoing}
+            onClick={() => void replay('redo')}
+          >
+            <Redo2 />
+            {t('action_redo')}
           </Button>
         ) : canHaveUndo ? (
           <p className="text-xs text-muted-foreground" data-testid="history-undo-unavailable">

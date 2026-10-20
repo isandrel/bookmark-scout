@@ -133,6 +133,17 @@ test('undo from History is recorded once, linked to the change (H04, H05)', asyn
   await expect(records.nth(1)).toContainText('Undone');
   // The undone change offers no second undo.
   await expect(records.nth(1).getByRole('button', { name: 'Undo', exact: true })).toHaveCount(0);
+
+  // Redo brings the change back, recorded once more and linked; the change can be undone again.
+  await records.nth(1).getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toEqual(['Second']);
+  await expect(records).toHaveCount(3);
+  await expect(records.first().getByTestId('history-record-label')).toHaveText(
+    'Redone: Delete "First"',
+  );
+  const original = records.nth(2);
+  await expect(original).not.toContainText('Undone');
+  await expect(original.getByRole('button', { name: 'Undo', exact: true })).toBeVisible();
   await page.screenshot({ path: test.info().outputPath('history-undo.png') });
 });
 

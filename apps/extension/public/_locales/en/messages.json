@@ -7078,5 +7078,9 @@
     "history_viewInHistory": {
         "message": "View in History",
         "description": "Link in a result that opens its record in the manager History."
+    },
+    "action_redo": {
+        "message": "Redo",
+        "description": "Button that redoes a change undone before (the manager History)."
     }
 }
