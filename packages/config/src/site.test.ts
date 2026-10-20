@@ -66,7 +66,6 @@ privacy_effective_date = "2026-01-31"
 [markdown]
 dir = "i18n"
 documents = ["README", "DEVELOPMENT"]
-language_order = ["en", "ja"]
 
 [markdown.languages]
 DEVELOPMENT = ["en"]
@@ -250,28 +249,40 @@ describe("strict loading", () => {
 		expect(() => parseProjectConfig(extraBrowser)).toThrow(/browsers\.names: missing edge[\s\S]*stores: missing edge/);
 	});
 
-	test("lists each Markdown document's languages in the switcher order", () => {
+	test("lists each Markdown document's languages in the order of locales.supported", () => {
 		expect(site.markdown.dir).toBe("i18n");
 		expect(site.markdown.documents).toEqual([
 			{ name: "README", languages: ["en", "ja"] },
 			{ name: "DEVELOPMENT", languages: ["en"] },
 		]);
-		expect(site.markdown.languageOrder).toEqual(["en", "ja"]);
+		const reordered = parseProjectConfig(
+			PROJECT.replace('supported = ["en", "ja"]', 'supported = ["en", "ko", "ja"]')
+				.replace('extension = ["en", "ja", "zh-CN"]', 'extension = ["en", "ko", "ja", "zh-CN"]')
+				.replace('ja = "日本語"', 'ja = "日本語"\nko = "한국어"')
+				.replace('ja = "ja_JP"', 'ja = "ja_JP"\nko = "ko_KR"')
+				.replace('DEVELOPMENT = ["en"]', 'DEVELOPMENT = ["en", "ja", "ko"]'),
+		);
+		const languages = createSite(reordered, parseWebConfig(WEB)).markdown.documents.map((document) => document.languages);
+		expect(languages).toEqual([
+			["en", "ko", "ja"],
+			["en", "ko", "ja"],
+		]);
 	});
 
-	test("rejects a Markdown language order that is not every supported language once, default first", () => {
-		expect(() => parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["en"]'))).toThrow(
-			/markdown\.language_order: missing ja/,
+	test("rejects language lists that do not start with the default or disagree on order", () => {
+		expect(() => parseProjectConfig(PROJECT.replace('supported = ["en", "ja"]', 'supported = ["ja", "en"]'))).toThrow(
+			/locales\.supported: must start with the default language "en"/,
 		);
-		expect(() => parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["en", "ja", "ja"]'))).toThrow(
-			/markdown\.language_order: has duplicate entries/,
+		expect(() => parseProjectConfig(PROJECT.replace('extension = ["en", "ja", "zh-CN"]', 'extension = ["ja", "en", "zh-CN"]'))).toThrow(
+			/locales\.extension: must start with the default language "en"/,
 		);
-		expect(() => parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["ja", "en"]'))).toThrow(
-			/markdown\.language_order: must start with the default language/,
-		);
-		expect(() =>
-			parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["en", "ja", "ko"]')),
-		).toThrow(/markdown\.language_order: unexpected ko/);
+		// A language only the extension has may go anywhere; the shared ones keep the website's order.
+		expect(() => parseProjectConfig(PROJECT.replace('extension = ["en", "ja", "zh-CN"]', 'extension = ["en", "zh-CN", "ja"]'))).not.toThrow();
+		const swapped = PROJECT.replace('supported = ["en", "ja"]', 'supported = ["en", "ja", "ko"]')
+			.replace('extension = ["en", "ja", "zh-CN"]', 'extension = ["en", "ko", "ja"]')
+			.replace('ja = "日本語"', 'ja = "日本語"\nko = "한국어"')
+			.replace('ja = "ja_JP"', 'ja = "ja_JP"\nko = "ko_KR"');
+		expect(() => parseProjectConfig(swapped)).toThrow(/locales\.extension: must list the languages it shares with locales\.supported in the same order \(en, ja, ko\)/);
 	});
 
 	test("rejects Markdown languages for an unknown document, an unsupported language, or without the default", () => {

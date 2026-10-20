@@ -90,7 +90,7 @@ Build verification is particularly important when the change touches:
 
 The website uses `next-intl` and locale routing from `i18n/routing.ts`.
 
-Supported locales are `[locales] supported` in `config/project.toml` (language tags such as `zh-CN`, which are also the URL segment and the message file name). Adding one needs its three message files, its own name and Open Graph code in the same config, and a font stack in `app/globals.css` if its script needs one (Chinese does).
+Supported locales are `[locales] supported` in `config/project.toml` (language tags such as `zh-CN`, which are also the URL segment and the message file name), and its order is the order of the language links, the hreflang alternates, and the sitemap (`website:verify` checks it). Adding one needs its three message files, its own name and Open Graph code in the same config, and a font stack in `app/globals.css` if its script needs one (Chinese does).
 
 Rules:
 

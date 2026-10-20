@@ -59,7 +59,6 @@ const projectSchema = table({
 	markdown: table({
 		dir: slug,
 		documents: list(documentName, { minLength: 1, unique: true }),
-		language_order: list(localeCode, { minLength: 1, unique: true }),
 		languages: record(list(localeCode, { minLength: 1, unique: true })),
 	}),
 	offer: table({ price: text({ pattern: /^\d+(\.\d+)?$/, hint: "a decimal number" }), currency: text({ pattern: /^[A-Z]{3}$/, hint: "an ISO 4217 code such as USD" }) }),
@@ -103,14 +102,19 @@ export type WorkspaceConfig = { project: ProjectConfig; web: WebConfig };
 /** Rules that span several tables: every locale and browser list must agree. */
 function checkProject(config: ProjectConfig, issues: Issues): void {
 	const { locales, browsers, stores, markdown } = config;
+	// The list order is the display order of every language menu, so both lists start with the
+	// default language and agree on the order of the languages they share.
 	for (const list of ["supported", "extension"] as const) {
 		if (!locales[list].includes(locales.default)) {
 			issues.push(`locales.default: "${locales.default}" is not in locales.${list}`);
+		} else if (locales[list][0] !== locales.default) {
+			issues.push(`locales.${list}: must start with the default language "${locales.default}"`);
 		}
 	}
-	expectKeys("markdown.language_order", markdown.language_order, locales.supported, issues);
-	if (markdown.language_order[0] !== locales.default) {
-		issues.push(`markdown.language_order: must start with the default language "${locales.default}"`);
+	const shared = locales.extension.filter((language) => locales.supported.includes(language));
+	const supportedOrder = locales.supported.filter((language) => shared.includes(language));
+	if (shared.join() !== supportedOrder.join()) {
+		issues.push(`locales.extension: must list the languages it shares with locales.supported in the same order (${supportedOrder.join(", ")})`);
 	}
 	for (const [document, languages] of Object.entries(markdown.languages)) {
 		const path = `markdown.languages.${document}`;

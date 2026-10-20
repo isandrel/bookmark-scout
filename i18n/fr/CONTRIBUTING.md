@@ -1,11 +1,11 @@
 <p align="center">
   <a href="../../CONTRIBUTING.md" lang="en" hreflang="en">English</a> ·
-  <a href="../es/CONTRIBUTING.md" lang="es" hreflang="es">Español</a> ·
-  <a href="../pt-BR/CONTRIBUTING.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
-  <a href="../ja/CONTRIBUTING.md" lang="ja" hreflang="ja">日本語</a> ·
-  <a href="../de/CONTRIBUTING.md" lang="de" hreflang="de">Deutsch</a> ·
-  <strong lang="fr">Français</strong> ·
   <a href="../zh-CN/CONTRIBUTING.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="../es/CONTRIBUTING.md" lang="es" hreflang="es">Español</a> ·
+  <strong lang="fr">Français</strong> ·
+  <a href="../pt-BR/CONTRIBUTING.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../de/CONTRIBUTING.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="../ja/CONTRIBUTING.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="../ko/CONTRIBUTING.md" lang="ko" hreflang="ko">한국어</a> ·
   <a href="../zh-TW/CONTRIBUTING.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>

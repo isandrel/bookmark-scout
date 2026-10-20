@@ -52,6 +52,18 @@ export const es: DocsCopy = {
     },
   },
 
+  languages: {
+    en: "inglés",
+    "zh-CN": "chino simplificado",
+    es: "español",
+    fr: "francés",
+    "pt-BR": "portugués de Brasil",
+    de: "alemán",
+    ja: "japonés",
+    ko: "coreano",
+    "zh-TW": "chino tradicional",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated:
