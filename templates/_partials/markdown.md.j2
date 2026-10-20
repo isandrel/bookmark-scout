@@ -1,0 +1,53 @@
+{#
+  Macros shared by the Markdown templates. Import them with a path relative to the template:
+  {% import "_partials/markdown.md.j2" as md %} at the root, or
+  {% import "../../_partials/markdown.md.j2" as md %} in i18n/<tag>/.
+
+  Store and badge text may name, for each browser: {browser} (its name), {store} (its store's
+  name), {id} (its id, also its tab on the docs install page), and {docs} (the docs home in the
+  document's language).
+#}
+{% macro fill(text, store) %}{{ text|replace("{browser}", store.browser_name)|replace("{store}", store.name)|replace("{id}", store.browser)|replace("{docs}", docs_url) }}{% endmacro %}
+
+{# Text for a shields.io static badge path segment. #}
+{% macro badge_text(text) %}{{ text|replace("-", "--")|replace("_", "__")|replace(" ", "%20") }}{% endmacro %}
+
+{#
+  This document in each language that has it, in the configured order: the current language in
+  bold, the others linked, each named in its own language. Nothing for a one-language document.
+#}
+{% macro language_switcher() %}
+{% if languages|length > 1 %}
+<p align="center">
+{% for language in languages %}
+{% if language.current %}
+  <strong lang="{{ language.tag }}">{{ language.name }}</strong>{{ "" if loop.last else " ·" }}
+{% else %}
+  <a href="{{ language.href }}" lang="{{ language.tag }}" hreflang="{{ language.tag }}">{{ language.name }}</a>{{ "" if loop.last else " ·" }}
+{% endif %}
+{% endfor %}
+</p>
+{% endif %}
+{% endmacro %}
+
+{# One small badge per supported browser, reading `label`. #}
+{% macro browser_badges(label) %}
+{% for browser in browsers %}
+{{ "" if loop.first else "\n" }}  <img src="https://img.shields.io/badge/{{ badge_text(browser.name) }}-{{ badge_text(label) }}-{{ browser.badge.color }}?style=flat-square&logo={{ browser.badge.logo }}&logoColor=white" alt="{{ browser.name }}">
+{%- endfor %}
+{% endmacro %}
+
+{# One large linked button per live store listing, reading `label`; nothing while none is live. #}
+{% macro store_badges(label) %}
+{% for store in stores if store.live %}
+{% set text = fill(label, store) %}
+{{ "" if loop.first else "\n" }}  <a href="{{ store.url }}"><img src="https://img.shields.io/badge/{{ badge_text(text) }}-{{ store.badge.color }}?style=for-the-badge&logo={{ store.badge.logo }}&logoColor=white" alt="{{ text }} ({{ store.name }})" height="40"></a>
+{%- endfor %}
+{% endmacro %}
+
+{# One list item per supported browser: its store listing when live, otherwise the `pending` text. #}
+{% macro store_links(pending) %}
+{% for store in stores %}
+{{ "" if loop.first else "\n" }}- **{{ store.browser_name }}**: {{ "[" ~ store.name ~ "](" ~ store.url ~ ")" if store.live else fill(pending, store) }}
+{%- endfor %}
+{% endmacro %}

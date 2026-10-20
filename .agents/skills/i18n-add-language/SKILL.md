@@ -33,22 +33,23 @@ A language touches four surfaces that each have their own rules. This skill is t
 Split it into pull requests that each pass CI on their own:
 
 1. **Wiring (no translations yet).**
-   - Add the tag to `[locales] extension`, `[locales] supported`, `[locales.names]`, and `[locales.og]` in `config/project.toml`.
+   - Add the tag to `[locales] extension`, `[locales] supported`, `[locales.names]`, `[locales.og]`, and `[markdown] language_order` (the README language switcher's order, by audience) in `config/project.toml`.
    - Add the folder to `SupportedLocale` and a `react-day-picker` locale to `calendarLocales` in `src/components/ui/calendar.tsx`. The type check fails until both exist.
    - Add aliases.
    - Add font stacks where the script needs them: `:root:lang(<tag>)` in `apps/extension/src/styles/theme.css`, and `html:lang(<tag>) body, .font-sans, .font-display` in `apps/website/app/globals.css`.
    - The website's `@theme inline` tokens ignore a CSS variable override, so set `font-family` directly as the existing Chinese and Korean rules do.
    - Update both `DESIGN.md` files.
-   - A language listed in config with no files is fine for the docs (English fallback), not for the website or extension, so land this together with step 2 or keep the tag out of `supported` until then.
+   - A language listed in config with no files is fine for the docs (English fallback), not for the website, the extension, or the generated Markdown (every supported language needs its README and CONTRIBUTING templates unless `[markdown.languages]` lists fewer), so land this together with steps 2 and 3 or keep the tag out of `supported` until then.
 2. **Extension, store listing, website.** One translator subagent per language, using round 1 of `references/translation-brief.md`.
    - Each translator writes to `~/.cache/bookmark-scout-i18n/round1/<TAG>/`, never into the repository, so parallel agents do not collide.
    - The orchestrating agent validates each language, then copies its files into place:
      - `apps/extension/public/_locales/<FOLDER>/messages.json`
      - `store/listings/<FOLDER>.md`
      - `apps/website/messages/<TAG>.json`, `privacy/<TAG>.json`, `support/<TAG>.json`
-3. **Docs.** Round 2 of the brief, reusing round 1's `glossary.md`.
+3. **Docs and the repository's Markdown.** Round 2 of the brief, reusing round 1's `glossary.md`.
    - Copy pages to `apps/docs/content/docs/**/<page>.<TAG>.mdx` and `meta.<TAG>.json`.
    - Copy the UI copy to `apps/docs/src/lib/copy/<TAG>.ts`, then import it into `TRANSLATIONS` in `apps/docs/src/lib/copy.ts`.
+   - Copy the README and CONTRIBUTING templates to `templates/i18n/<TAG>/README.md` and `CONTRIBUTING.md`, then run `bun run generate:markdown` and `bun test scripts`. The Markdown rules are in "Generated Markdown" of `DEVELOPMENT.md`.
 4. **Store dashboards (maintainer).** The Chrome Web Store adds a listing language for each `_locales` folder in the uploaded package; Edge needs each language's description and images entered by hand. Paste from `store/listings/<FOLDER>.md` after the release that contains the folder. See `extension-cws-submission`.
 
 Fix the English source before translating. A stale English claim (the docs once said Firefox could not open the manager) gets copied into every language, and then needs fixing in nine places.

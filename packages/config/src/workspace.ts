@@ -37,6 +37,8 @@ export const CONFIG_FILES = {
 
 const slug = text({ pattern: /^[a-z0-9]+(-[a-z0-9]+)*$/, hint: "lowercase words joined by hyphens" });
 const localeCode = text({ pattern: /^[a-z]{2,3}(-[A-Z]{2})?$/, hint: "a language code such as en or pt-BR" });
+/** A root Markdown file's name without `.md`, such as README or CODE_OF_CONDUCT. */
+const documentName = text({ pattern: /^[A-Z][A-Z0-9_]*$/, hint: "a root file name without .md, such as README" });
 
 const projectSchema = table({
 	project: table({ name: text(), slug, description: text() }),
@@ -54,6 +56,12 @@ const projectSchema = table({
 	stores: record(table({ name: text(), url: url({ allowEmpty: true }) })),
 	contact: table({ privacy: email, security: email, support: email }),
 	legal: table({ privacy_effective_date: isoDate }),
+	markdown: table({
+		dir: slug,
+		documents: list(documentName, { minLength: 1, unique: true }),
+		language_order: list(localeCode, { minLength: 1, unique: true }),
+		languages: record(list(localeCode, { minLength: 1, unique: true })),
+	}),
 	offer: table({ price: text({ pattern: /^\d+(\.\d+)?$/, hint: "a decimal number" }), currency: text({ pattern: /^[A-Z]{3}$/, hint: "an ISO 4217 code such as USD" }) }),
 });
 
@@ -94,11 +102,22 @@ export type WorkspaceConfig = { project: ProjectConfig; web: WebConfig };
 
 /** Rules that span several tables: every locale and browser list must agree. */
 function checkProject(config: ProjectConfig, issues: Issues): void {
-	const { locales, browsers, stores } = config;
+	const { locales, browsers, stores, markdown } = config;
 	for (const list of ["supported", "extension"] as const) {
 		if (!locales[list].includes(locales.default)) {
 			issues.push(`locales.default: "${locales.default}" is not in locales.${list}`);
 		}
+	}
+	expectKeys("markdown.language_order", markdown.language_order, locales.supported, issues);
+	if (markdown.language_order[0] !== locales.default) {
+		issues.push(`markdown.language_order: must start with the default language "${locales.default}"`);
+	}
+	for (const [document, languages] of Object.entries(markdown.languages)) {
+		const path = `markdown.languages.${document}`;
+		if (!markdown.documents.includes(document)) issues.push(`${path}: "${document}" is not in markdown.documents`);
+		const unknown = languages.filter((language) => !locales.supported.includes(language));
+		if (unknown.length) issues.push(`${path}: not in locales.supported: ${unknown.join(", ")}`);
+		if (!languages.includes(locales.default)) issues.push(`${path}: must include the default language "${locales.default}"`);
 	}
 	expectKeys("locales.names", Object.keys(locales.names), locales.supported, issues);
 	expectKeys("locales.og", Object.keys(locales.og), locales.supported, issues);

@@ -15,7 +15,8 @@ describe("ci scopes", () => {
         "apps/docs/AGENTS.md",
         "apps/extension/DESIGN.md",
         "apps/extension/tests/settings-matrix.md",
-        "templates/README.ja.md",
+        "templates/i18n/ja/README.md",
+        "templates/_partials/markdown.md.j2",
         ".agents/skills/repo-maintenance/scripts/merge-queue.sh",
         "backlog/tasks/task-1 - Something.md",
         "store/privacy-policy.md",
@@ -49,7 +50,7 @@ describe("ci scopes", () => {
     ]) {
       expect(scopes(file)).toEqual(all);
     }
-    expect(scopes("scripts/generate-readme.ts")).toEqual(all);
+    expect(scopes("scripts/generate-markdown.ts")).toEqual(all);
   });
 
   it("runs nothing for an empty change list", () => {

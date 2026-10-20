@@ -80,12 +80,13 @@ jobs:
       - name: Test the workspace config, scripts, and MCP bridge
         run: bun test packages scripts apps/website/lib
 
-      # README.md, translations/, and DEVELOPMENT.md come from templates/, config/, and the
-      # installed package versions; --check fails on a missing or stale output.
-      - name: Check generated READMEs match templates
+      # README.md, CONTRIBUTING.md, DEVELOPMENT.md, and i18n/ come from templates/, config/, and
+      # the installed package versions; --check fails on a missing or stale output and warns
+      # about translations made from an older English template.
+      - name: Check generated Markdown matches templates
         run: |
-          bun run generate:readme --check || {
-            echo "::error::Generated Markdown differs from its inputs (templates/, config/, installed package versions). Run 'bun run generate:readme' and commit the result."
+          bun run generate:markdown --check || {
+            echo "::error::Generated Markdown differs from its inputs (templates/, config/, installed package versions). Run 'bun run generate:markdown' and commit the result."
             exit 1
           }
 

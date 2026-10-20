@@ -54,6 +54,7 @@
 - [Install a release build](#-install-a-release-build)
 - [Build from source](#-build-from-source)
 - [Project structure](#-project-structure)
+- [Generated Markdown](#-generated-markdown)
 - [Local AI agents (MCP)](#-local-ai-agents-mcp)
 - [Permissions](#-permissions)
 
@@ -237,11 +238,33 @@ bookmark-scout/
 ├── config/
 │   ├── project.toml        # Project identity shared by every app
 │   └── web.toml            # Website and docs hosting
-├── scripts/                # Repository scripts, such as the README generator
-└── templates/              # Templates for README.md, translations/, and DEVELOPMENT.md
+├── i18n/<language>/        # README.md and CONTRIBUTING.md in each other language (generated)
+├── scripts/                # Repository scripts, such as the Markdown generator
+└── templates/              # Templates for README.md, CONTRIBUTING.md, DEVELOPMENT.md, and i18n/
 ```
 
 ---
+
+## 📝 Generated Markdown
+
+`README.md`, `CONTRIBUTING.md`, `DEVELOPMENT.md`, and their translations in `i18n/<language>/` are generated: edit the template at the same path under `templates/` (`templates/i18n/ja/README.md` for `i18n/ja/README.md`), never the output. `[markdown]` in `config/project.toml` lists the documents, the languages each one has (every supported language unless it lists fewer), and the language switcher's order. Adding a language or a document is a config entry plus a template.
+
+Templates are [MiniJinja](https://docs.rs/minijinja/latest/minijinja/syntax/index.html), rendered by the `minijinja-js` package with the settings in `templates/minijinja.toml`. Values come from the workspace config, the website messages, the extension's shortcuts, and the installed packages, never typed by hand: `{{ site.name }}`, `{{ shortcuts["commands.quick-save"].both }}`, `{{ versions.react }}`, `{{ pages.privacy }}`. The language switcher, badges, and store lines are macros in `templates/_partials/markdown.md.j2`. An unknown variable fails the run. With trim-blocks on, a `{% %}` tag at the end of a text line also removes that line's newline, so end text lines with text or a `{{ }}` expression.
+
+```bash
+bun run generate:markdown          # write every output (the pre-commit hook runs it)
+bun run generate:markdown --check  # fail if an output is missing or stale (CI's Lint job)
+bun run generate:markdown --stale  # list translations made from an older English template
+```
+
+Each translation starts with `{# source: <hash> #}`, the hash of the English template it was translated from. When the English template changes, `--check` warns and `--stale` names the translation and the new hash to record once it is updated.
+
+To preview one template while editing it, dump its context and render it with [minijinja-cli](https://github.com/mitsuhiko/minijinja/tree/main/minijinja-cli). It is optional (`brew install minijinja-cli`); the generator needs only `bun install`.
+
+```bash
+bun run generate:markdown --dump-context README ja > /tmp/readme-ja.json
+minijinja-cli --config-file templates/minijinja.toml templates/i18n/ja/README.md /tmp/readme-ja.json
+```
 
 ---
 

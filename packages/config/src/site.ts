@@ -210,6 +210,22 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 			fileUrl: repo.file(project.license.file),
 		},
 
+		/**
+		 * The generated root Markdown documents. Each lists its languages in `languageOrder`, the
+		 * order every language switcher uses: every supported language unless config lists fewer.
+		 */
+		markdown: {
+			dir: project.markdown.dir,
+			languageOrder: project.markdown.language_order,
+			documents: project.markdown.documents.map((name) => {
+				const only = project.markdown.languages[name];
+				return {
+					name,
+					languages: project.markdown.language_order.filter((locale) => only === undefined || only.includes(locale)),
+				};
+			}),
+		},
+
 		legal: { privacyEffectiveDate: project.legal.privacy_effective_date },
 		offer: project.offer,
 
