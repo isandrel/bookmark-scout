@@ -46,6 +46,18 @@ export const zhTW: DocsCopy = {
     },
   },
 
+  languages: {
+    en: "英文",
+    "zh-CN": "簡體中文",
+    es: "西班牙文",
+    fr: "法文",
+    "pt-BR": "巴西葡萄牙文",
+    de: "德文",
+    ja: "日文",
+    ko: "韓文",
+    "zh-TW": "繁體中文",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated: "這個頁面尚未翻譯，因此以英文顯示。",

@@ -19,8 +19,8 @@ export type BundledMessage = {
 
 type LocaleMessages = Record<string, BundledMessage>;
 
-// Only each locale's own name is bundled (JSON named imports are tree-shaken); the folder list
-// under public/_locales is the list of supported locales.
+// Only each locale's own name is bundled (JSON named imports are tree-shaken), keyed by its
+// public/_locales folder.
 const localeNameEntries = import.meta.glob<BundledMessage | undefined>(
   '../../public/_locales/*/messages.json',
   { eager: true, import: 'meta_languageName' },
@@ -33,15 +33,26 @@ const localeNames = Object.fromEntries(
 );
 
 /**
- * A language the extension ships messages for, named like its `_locales/` folder (`zh_CN`, with
- * an underscore). Types cannot list folders, so a new folder also goes here, and its language tag
- * in `config/project.toml` `[locales] extension`; tests/unit/locale-messages.test.ts fails until
- * both do.
+ * Bundled locales, one per `_locales/` folder and named like it (`zh_CN`, with an underscore), in
+ * the order the Language setting lists them: the order of `[locales] extension` in
+ * `config/project.toml`, the one language order of every surface. Types cannot list folders, so
+ * a new folder also goes here, at its place in that list; tests/unit/locale-messages.test.ts fails
+ * until it does.
  */
-export type SupportedLocale = 'de' | 'en' | 'es' | 'fr' | 'ja' | 'ko' | 'pt_BR' | 'zh_CN' | 'zh_TW';
+export const SUPPORTED_LOCALES = [
+  'en',
+  'zh_CN',
+  'es',
+  'fr',
+  'pt_BR',
+  'de',
+  'ja',
+  'ko',
+  'zh_TW',
+] as const;
 
-/** Bundled locales (one per `_locales/` folder) in the order the Language setting lists them. */
-export const SUPPORTED_LOCALES = Object.keys(localeNames) as SupportedLocale[];
+/** A language the extension ships messages for. */
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 /** Shown when the browser language is not bundled; the manifest's `default_locale` (unit-tested). */
 export const FALLBACK_LOCALE: SupportedLocale = 'en';

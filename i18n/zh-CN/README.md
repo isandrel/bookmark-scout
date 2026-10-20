@@ -1,11 +1,11 @@
 <p align="center">
   <a href="../../README.md" lang="en" hreflang="en">English</a> ·
-  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
-  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
-  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
-  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
-  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <strong lang="zh-CN">简体中文</strong> ·
+  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
@@ -49,7 +49,7 @@
 - ✨ **可选的 AI 建议**。让 AI 替你选择文件夹：可以使用自己的 AI 账号，也可以使用在自己电脑上运行的免费 AI 模型，例如 Chrome 内置的模型。在你开启之前，AI 始终处于关闭状态。
 - 🔒 **从设计上保护隐私**。无需账号，没有广告，没有跟踪，也不会向开发者发送任何内容。即使离线，也能保存和搜索。
 
-🌍 支持的语言：English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil)
+🌍 支持的语言：English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文
 
 ## 📦 安装
 

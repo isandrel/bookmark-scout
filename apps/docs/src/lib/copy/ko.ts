@@ -47,6 +47,18 @@ export const ko: DocsCopy = {
     },
   },
 
+  languages: {
+    en: "영어",
+    "zh-CN": "중국어 간체",
+    es: "스페인어",
+    fr: "프랑스어",
+    "pt-BR": "브라질 포르투갈어",
+    de: "독일어",
+    ja: "일본어",
+    ko: "한국어",
+    "zh-TW": "중국어 번체",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated: "이 페이지는 아직 번역되지 않아 영어로 표시됩니다.",

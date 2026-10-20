@@ -67,6 +67,23 @@ const en = {
     },
   },
 
+  /**
+   * Each language's name in this language, by tag, for `<Languages />`, which lists them in the
+   * order of `[locales]` in config/project.toml. Every tag in `supported` and `extension` needs
+   * one; scripts/language-order.test.ts checks it.
+   */
+  languages: {
+    en: "English",
+    "zh-CN": "Simplified Chinese",
+    es: "Spanish",
+    fr: "French",
+    "pt-BR": "Brazilian Portuguese",
+    de: "German",
+    ja: "Japanese",
+    ko: "Korean",
+    "zh-TW": "Traditional Chinese",
+  } as Record<string, string>,
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated:

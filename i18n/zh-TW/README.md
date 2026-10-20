@@ -1,11 +1,11 @@
 <p align="center">
   <a href="../../README.md" lang="en" hreflang="en">English</a> ·
-  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
-  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
-  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
-  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
-  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="../zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
   <strong lang="zh-TW">繁體中文</strong>
 </p>
@@ -49,7 +49,7 @@
 - ✨ **選用的 AI 建議。** 讓 AI 為你挑選資料夾：可以使用自己的 AI 帳戶，或在自己電腦上執行的免費 AI 模型，例如 Chrome 內建的 AI。在你開啟之前，AI 會一直維持關閉。
 - 🔒 **從設計上保護隱私。** 不需要帳戶、沒有廣告、沒有追蹤，也不會傳送任何資料給開發人員。儲存和搜尋甚至可以離線使用。
 
-🌍 支援語言：English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil)
+🌍 支援語言：English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文
 
 ## 📦 安裝
 

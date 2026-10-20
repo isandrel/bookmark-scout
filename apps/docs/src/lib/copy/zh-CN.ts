@@ -44,6 +44,18 @@ export const zhCN: DocsCopy = {
     },
   },
 
+  languages: {
+    en: "英语",
+    "zh-CN": "简体中文",
+    es: "西班牙语",
+    fr: "法语",
+    "pt-BR": "巴西葡萄牙语",
+    de: "德语",
+    ja: "日语",
+    ko: "韩语",
+    "zh-TW": "繁体中文",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated: "此页面尚未翻译，因此以英文显示。",
