@@ -1,41 +1,46 @@
 import {
   readShortcutConfig,
+  type ShortcutNoteText,
   type ShortcutPair,
+  shortcutNoteText,
   shortcutPair,
-  splitShortcutNote,
 } from "@bookmark-scout/config";
 import { getCopy } from "@/lib/copy";
 
 /**
  * Keyboard shortcuts as the docs print them, from the extension's shortcuts file
  * (`apps/extension/config/ui/shortcuts.toml`), so a page never spells a key out by hand. Text
- * that names both platforms puts `[display] primary` first and the other platform in a note.
+ * that names both platforms puts `[display] primary` first, each platform's keys named, and the
+ * other platform in parentheses.
  */
 const config = readShortcutConfig();
 
 export type ShortcutParts = ShortcutPair & {
   /** Between two ways to press it. */
   or: string;
-  /** The note around the secondary keys: the space before it, and the text before and after them. */
-  note: { space: string; before: string; after: string };
+  /** The text around both platforms' keys: before the primary keys, between the two, and after. */
+  note: ShortcutNoteText;
 };
 
-const NO_NOTE = { space: "", before: "", after: "" };
+const NO_NOTE: ShortcutNoteText = { before: "", middle: "", after: "" };
 
 /** The parts of a shortcut's text: the primary platform's keys, and the note when the other's differ. */
 export function shortcutParts(id: string, locale: string): ShortcutParts {
   const pair = shortcutPair(config, id);
   const copy = getCopy(locale).shortcut;
   const note = pair.secondary
-    ? splitShortcutNote(copy.notes[pair.secondary.platform])
+    ? shortcutNoteText(copy.notes, [
+        pair.primary.platform,
+        pair.secondary.platform,
+      ])
     : NO_NOTE;
   return { ...pair, or: copy.or, note };
 }
 
 /**
  * A shortcut as one line of text, each way to press it passed through `key`: the primary
- * platform's keys, then the note when the other platform differs, such as
- * `⌥⇧S (Alt+Shift+S on Windows and Linux)`.
+ * platform's keys, then, when the other platform differs, its keys, each named, such as
+ * `⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)`.
  */
 export function shortcutLine(
   parts: ShortcutParts,
@@ -44,11 +49,11 @@ export function shortcutLine(
   const list = (ways: string[]) => ways.map(key).join(parts.or);
   const primary = list(parts.primary.keys);
   if (!parts.secondary) return primary;
-  const { space, before, after } = parts.note;
-  return `${primary}${space}${before}${list(parts.secondary.keys)}${after}`;
+  const { before, middle, after } = parts.note;
+  return `${before}${primary}${middle}${list(parts.secondary.keys)}${after}`;
 }
 
-/** A shortcut as Markdown, for the LLM text: `` `⌥⇧S` (`Alt+Shift+S` on Windows and Linux) ``. */
+/** A shortcut as Markdown, for the LLM text: `` `⌥⇧S` on Mac (`Alt+Shift+S` on Windows and Linux) ``. */
 export function shortcutMarkdown(id: string, locale: string): string {
   return shortcutLine(shortcutParts(id, locale), (keys) => `\`${keys}\``);
 }

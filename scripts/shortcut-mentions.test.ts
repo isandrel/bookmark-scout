@@ -5,12 +5,14 @@
  * fail when a document spells keys out by hand, names a shortcut the config lacks, or (for the
  * docs' shortcut list) leaves a configured shortcut out. Store listings are pasted into the stores
  * by hand, so their keys are checked against the config, and they and the store checklists must
- * name the primary platform's keys (`[display]` in shortcuts.toml) before the other's.
+ * name the primary platform's keys (`[display]` in shortcuts.toml) before the other's, each
+ * labelled with its platform as the website's `shortcutNotes` in that language words it.
  */
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import {
+	parseShortcutNotes,
 	platformOrder,
 	readShortcutConfig,
 	SHORTCUT_LITERAL,
@@ -111,7 +113,7 @@ describe("store listings name the configured keys", () => {
 	});
 });
 
-describe("store listings and checklists name the primary platform's keys first", () => {
+describe("store listings and checklists name each platform, the primary platform's keys first", () => {
 	// Keys only one platform uses: `⌥⇧S` is Mac-only, `Alt+Shift+S` is not.
 	const [first, second] = platformOrder(config);
 	const ways = (platform: ShortcutPlatform) => new Set(shortcutIds(config).flatMap((id) => shortcutText(config, id)[platform]));
@@ -120,6 +122,14 @@ describe("store listings and checklists name the primary platform's keys first",
 	const onlyPrimary = new Set([...primary].filter((keys) => !ways(second).has(keys)));
 	// The Chrome Web Store reviewer notes are a record of the dashboard field as entered.
 	const recorded = /^No login needed\. /;
+	// A platform's label without its keys, as the website words it: "on Mac", "Mac の".
+	const labels = (file: string) => {
+		const name = relative(join(root, "store/listings"), file);
+		const locale = name.startsWith("..") ? site.locales.default : name.replace(/\.md$/, "").replace("_", "-");
+		const messages = join(root, "apps/website/messages", `${locale}.json`);
+		const notes = parseShortcutNotes(JSON.parse(readFileSync(messages, "utf8")).shortcutNotes, messages);
+		return { primary: notes[first].replace("{keys}", "").trim(), secondary: notes[second].replace("{keys}", "").trim() };
+	};
 
 	test.each(
 		[...files(join(root, "store/listings"), ".md"), ...files(join(root, "store/checklists"), ".md")].map((file) => [
@@ -127,18 +137,26 @@ describe("store listings and checklists name the primary platform's keys first",
 			file,
 		]),
 	)("%s", (_name, file) => {
-		// A secondary platform's keys need the primary platform's keys earlier on the line, as in
-		// "⌥⇧S (Alt+Shift+S on Windows and Linux)".
-		const late = readFileSync(file, "utf8")
+		// A secondary platform's keys need the primary platform's keys earlier on the line, and a
+		// line that names both labels each platform, as in "⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)".
+		const label = labels(file);
+		const problems = readFileSync(file, "utf8")
 			.split("\n")
 			.flatMap((line, index) => {
 				if (recorded.test(line)) return [];
 				const found = line.match(SHORTCUT_LITERAL) ?? [];
 				const firstPrimary = found.findIndex((keys) => onlyPrimary.has(keys));
-				return found
+				const late = found
 					.filter((keys, position) => secondary.has(keys) && (firstPrimary === -1 || position < firstPrimary))
-					.map((keys) => `${index + 1}: ${keys}`);
+					.map((keys) => `${index + 1}: ${keys} before the ${first} keys`);
+				const both = firstPrimary !== -1 && found.some((keys) => secondary.has(keys));
+				const unlabelled = both
+					? [label.primary, label.secondary]
+							.filter((text) => !line.includes(text))
+							.map((text) => `${index + 1}: no "${text}"`)
+					: [];
+				return [...late, ...unlabelled];
 			});
-		expect(late).toEqual([]);
+		expect(problems).toEqual([]);
 	});
 });

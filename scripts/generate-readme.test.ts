@@ -50,9 +50,11 @@ describe("render", () => {
 
 	test("prints the configured shortcut keys, primary platform first", () => {
 		const real = repositoryContext();
-		const both = real.shortcut("commands.quick-save", "both", "en");
-		expect(both.startsWith(real.shortcut("commands.quick-save", "mac", "en"))).toBe(true);
-		expect(both).toContain(`<sub>(${real.shortcut("commands.quick-save", "other", "en")} on Windows and Linux)</sub>`);
+		const mac = real.shortcut("commands.quick-save", "mac", "en");
+		const other = real.shortcut("commands.quick-save", "other", "en");
+		// Plain parentheses at the size of the text around them: GitHub lowers and shrinks <sub>.
+		expect(real.shortcut("commands.quick-save", "both", "en")).toBe(`${mac} on Mac (${other} on Windows and Linux)`);
+		expect(real.shortcut("commands.quick-save", "both", "ja")).toBe(`Mac の ${mac}（Windows と Linux の ${other}）`);
 		expect(real.shortcut("commands.quick-save", "other", "en")).toMatch(/^[A-Za-z]+\+/);
 		expect(() => real.shortcut("commands.nope", "other", "en")).toThrow(/Unknown shortcut/);
 	});

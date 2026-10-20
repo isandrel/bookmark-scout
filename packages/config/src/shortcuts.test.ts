@@ -8,13 +8,14 @@ import {
 	isApplePlatform,
 	isSameOnEveryPlatform,
 	parseShortcutConfig,
+	parseShortcutNotes,
 	platformOrder,
 	SHORTCUT_LITERAL,
 	type ShortcutConfig,
 	shortcutIds,
+	shortcutNoteText,
 	shortcutPair,
 	shortcutText,
-	splitShortcutNote,
 } from "./shortcuts";
 
 // A fixture, so the expectations below do not change when the real defaults do.
@@ -117,25 +118,44 @@ describe("text that names both platforms", () => {
 		expect(shortcutPair(config, "popup.focus_search")).toEqual({ primary: { platform: "mac", keys: ["/"] } });
 	});
 
-	it("splits a note around its keys, keeping its leading space apart", () => {
-		expect(splitShortcutNote(" ({keys} on a Mac)")).toEqual({ space: " ", before: "(", after: " on a Mac)" });
-		expect(splitShortcutNote("（Mac：{keys}）")).toEqual({ space: "", before: "（Mac：", after: "）" });
-		expect(() => splitShortcutNote(" (on a Mac)")).toThrow(/\{keys\} once/);
+	it("words both platforms from one language's labels, primary first", () => {
+		const english = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})" };
+		expect(shortcutNoteText(english, ["mac", "other"])).toEqual({
+			before: "",
+			middle: " on Mac (",
+			after: " on Windows and Linux)",
+		});
+		expect(shortcutNoteText(english, ["other", "mac"])).toEqual({
+			before: "",
+			middle: " on Windows and Linux (",
+			after: " on Mac)",
+		});
+		const japanese = { mac: "Mac の {keys}", other: "Windows と Linux の {keys}", pair: "{primary}（{secondary}）" };
+		expect(shortcutNoteText(japanese, ["mac", "other"])).toEqual({
+			before: "Mac の ",
+			middle: "（Windows と Linux の ",
+			after: "）",
+		});
+	});
+
+	it("rejects notes without each placeholder once, in order", () => {
+		const notes = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})" };
+		expect(parseShortcutNotes(notes, "en.json")).toEqual(notes);
+		expect(() => parseShortcutNotes({ ...notes, mac: "on Mac" }, "en.json")).toThrow(/en\.json: .*\{keys\} once/);
+		expect(() => parseShortcutNotes({ ...notes, pair: "{secondary} ({primary})" }, "en.json")).toThrow(/\{secondary\} once/);
+		expect(() => parseShortcutNotes({ mac: notes.mac, other: notes.other }, "en.json")).toThrow(/"pair"/);
 	});
 });
 
 describe("fillShortcutPlaceholders", () => {
-	const format = {
-		notes: { mac: " ({keys} on a Mac)", other: " ({keys} on Windows and Linux)" },
-		note: (note: string) => `<sub>${note}</sub>`,
-	};
+	const format = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})" };
 
-	it("names both platforms, primary first, with the other in a note", () => {
+	it("names both platforms, primary first, with the other in parentheses", () => {
 		expect(fillShortcutPlaceholders("Press {{SHORTCUT:commands.quick-save}} now", config, format)).toBe(
-			"Press ⌥⇧S <sub>(Alt+Shift+S on Windows and Linux)</sub> now",
+			"Press ⌥⇧S on Mac (Alt+Shift+S on Windows and Linux) now",
 		);
 		expect(fillShortcutPlaceholders("{{SHORTCUT:commands.quick-save}}", { ...config, display: { primary: "other" } }, format)).toBe(
-			"Alt+Shift+S <sub>(⌥⇧S on a Mac)</sub>",
+			"Alt+Shift+S on Windows and Linux (⌥⇧S on Mac)",
 		);
 		expect(fillShortcutPlaceholders("{{SHORTCUT:popup.focus_search}}", config, format)).toBe("/");
 	});

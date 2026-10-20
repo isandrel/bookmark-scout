@@ -1,7 +1,8 @@
 {
   "shortcutNotes": {
-    "mac": " ({keys} on a Mac)",
-    "other": " ({keys} on Windows and Linux)"
+    "mac": "{keys} on Mac",
+    "other": "{keys} on Windows and Linux",
+    "pair": "{primary} ({secondary})"
   },
   "metadata": {
     "title": "Bookmark Scout – Save bookmarks to the right folder, fast",

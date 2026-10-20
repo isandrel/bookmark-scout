@@ -32,7 +32,7 @@ export type CommandKeys = string | { other: string; mac: string };
 
 /** How text that names both platforms' keys orders them. */
 export type ShortcutDisplay = {
-	/** The platform whose keys come first; the other platform's follow in a smaller note. */
+	/** The platform whose keys come first; the other platform's follow in parentheses. */
 	primary: ShortcutPlatform;
 };
 
@@ -305,7 +305,7 @@ export function isSameOnEveryPlatform(text: ShortcutText): boolean {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Text that names both platforms: the primary platform's keys, then the other's in a note
+// Text that names both platforms: each platform's keys with its name, the other's in parentheses
 
 /**
  * The two platforms in the order text that names both prints them: `display.primary` in
@@ -320,7 +320,7 @@ export type PlatformKeys = { platform: ShortcutPlatform; keys: string[] };
 
 /**
  * A shortcut for text that names both platforms: the primary platform's keys, and the other
- * platform's (`secondary`, for the smaller note after them) when they differ.
+ * platform's (`secondary`, named in parentheses after them) when they differ.
  */
 export type ShortcutPair = { primary: PlatformKeys; secondary?: PlatformKeys };
 
@@ -333,30 +333,60 @@ export function shortcutPair(config: ShortcutConfig, id: string): ShortcutPair {
 }
 
 /**
- * The note that names the secondary platform's keys, by the platform it names, with `{keys}`
- * where they go: `{ mac: " ({keys} on a Mac)", other: " ({keys} on Windows and Linux)" }`. Each
- * surface keeps its notes with its other copy, in every language; both are needed so that
- * `display.primary` can name either platform first.
+ * How one language names both platforms' keys, all in the same text size: a label for each
+ * platform's keys, with `{keys}` where they go, and `pair`, which puts the primary platform's
+ * label first and the other's after it. `{ mac: "{keys} on Mac", other: "{keys} on Windows and
+ * Linux", pair: "{primary} ({secondary})" }` prints "⌥⇧S on Mac (Alt+Shift+S on Windows and
+ * Linux)". Each surface keeps its notes with its other copy, in every language; both labels are
+ * needed so that `display.primary` can name either platform first.
  */
-export type ShortcutNotes = Readonly<Record<ShortcutPlatform, string>>;
+export type ShortcutNotes = Readonly<Record<ShortcutPlatform | "pair", string>>;
 
-/**
- * A note split around its keys: the space before it (which stays outside the note's smaller
- * style), and the text before and after the keys. Throws unless `{keys}` appears once.
- */
-export function splitShortcutNote(note: string): { space: string; before: string; after: string } {
-	const space = /^\s*/.exec(note)?.[0] ?? "";
-	const parts = note.slice(space.length).split("{keys}");
-	if (parts.length !== 2) throw new Error(`A shortcut note needs {keys} once, got "${note}"`);
-	return { space, before: parts[0] ?? "", after: parts[1] ?? "" };
+/** The text around both platforms' keys: before the primary keys, between the two, and after. */
+export type ShortcutNoteText = { before: string; middle: string; after: string };
+
+/** `template` split around `placeholder`; throws unless it appears exactly once. */
+function splitOnce(template: string, placeholder: string): [string, string] {
+	const parts = template.split(placeholder);
+	if (parts.length !== 2) throw new Error(`A shortcut note needs ${placeholder} once, got "${template}"`);
+	return [parts[0] ?? "", parts[1] ?? ""];
 }
 
-/** How `{{SHORTCUT:<id>}}` prints the note after the primary keys. */
-export type ShortcutNoteFormat = {
-	notes: ShortcutNotes;
-	/** Marks the note up as smaller text, such as `<sub>…</sub>` in Markdown. */
-	note?: (note: string) => string;
-};
+/**
+ * The fixed text of a line that names both platforms, primary platform first: with the English
+ * notes and the Mac first, `{ before: "", middle: " on Mac (", after: " on Windows and Linux)" }`.
+ * Throws when a label lacks `{keys}` or `pair` lacks `{primary}` before `{secondary}`.
+ */
+export function shortcutNoteText(
+	notes: ShortcutNotes,
+	[first, second]: readonly [ShortcutPlatform, ShortcutPlatform],
+): ShortcutNoteText {
+	const [pairStart, pairRest] = splitOnce(notes.pair, "{primary}");
+	const [pairMiddle, pairEnd] = splitOnce(pairRest, "{secondary}");
+	const [primaryBefore, primaryAfter] = splitOnce(notes[first], "{keys}");
+	const [secondaryBefore, secondaryAfter] = splitOnce(notes[second], "{keys}");
+	return {
+		before: `${pairStart}${primaryBefore}`,
+		middle: `${primaryAfter}${pairMiddle}${secondaryBefore}`,
+		after: `${secondaryAfter}${pairEnd}`,
+	};
+}
+
+/** Validates one language's notes as read from a messages or copy file; throws naming `source`. */
+export function parseShortcutNotes(value: unknown, source: string): ShortcutNotes {
+	const notes = (typeof value === "object" && value !== null ? value : {}) as Record<string, unknown>;
+	const { mac, other, pair } = notes;
+	if (typeof mac !== "string" || typeof other !== "string" || typeof pair !== "string") {
+		throw new Error(`${source}: expected "shortcutNotes": { "mac": "...", "other": "...", "pair": "..." }`);
+	}
+	const parsed = { mac, other, pair };
+	try {
+		shortcutNoteText(parsed, ["mac", "other"]);
+	} catch (error) {
+		throw new Error(`${source}: ${(error as Error).message}`);
+	}
+	return parsed;
+}
 
 /**
  * One way to press a shortcut as text, for a placeholder argument `<id>` or `<id>#<n>` (the n-th
@@ -375,32 +405,31 @@ export function shortcutPlaceholderText(config: ShortcutConfig, argument: string
 
 /**
  * One way to press a shortcut on both platforms, for `{{SHORTCUT:<id>}}`: the primary
- * platform's keys, then the note with the other platform's when they differ, such as
- * `⌥⇧S (Alt+Shift+S on Windows and Linux)`.
+ * platform's keys and, when they differ, the other platform's, each named, such as
+ * `⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)`.
  */
-export function shortcutPlaceholderPair(config: ShortcutConfig, argument: string, format: ShortcutNoteFormat): string {
-	const [first, second] = platformOrder(config);
-	const primary = shortcutPlaceholderText(config, argument, first);
-	const secondary = shortcutPlaceholderText(config, argument, second);
+export function shortcutPlaceholderPair(config: ShortcutConfig, argument: string, notes: ShortcutNotes): string {
+	const order = platformOrder(config);
+	const primary = shortcutPlaceholderText(config, argument, order[0]);
+	const secondary = shortcutPlaceholderText(config, argument, order[1]);
 	if (primary === secondary) return primary;
-	const { space, before, after } = splitShortcutNote(format.notes[second]);
-	const note = `${before}${secondary}${after}`;
-	return `${primary}${space}${format.note ? format.note(note) : note}`;
+	const { before, middle, after } = shortcutNoteText(notes, order);
+	return `${before}${primary}${middle}${secondary}${after}`;
 }
 
 /**
  * Shortcut placeholders in website messages and README templates, optionally `<id>#<n>`:
- * `{{SHORTCUT:<id>}}` names both platforms, primary first, with the other in a note;
+ * `{{SHORTCUT:<id>}}` names both platforms, primary first, with the other in parentheses;
  * `{{SHORTCUT_MAC:<id>}}` and `{{SHORTCUT_OTHER:<id>}}` name one platform's keys only.
  */
 export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(?:_(MAC|OTHER))?:([A-Za-z0-9_.#-]+)\}\}/g;
 
 /** Replaces every shortcut placeholder in `text`; throws for an unknown shortcut. */
-export function fillShortcutPlaceholders(text: string, config: ShortcutConfig, format: ShortcutNoteFormat): string {
+export function fillShortcutPlaceholders(text: string, config: ShortcutConfig, notes: ShortcutNotes): string {
 	return text.replace(SHORTCUT_PLACEHOLDER, (_match, only: string | undefined, argument: string) => {
 		if (only === "MAC") return shortcutPlaceholderText(config, argument, "mac");
 		if (only === "OTHER") return shortcutPlaceholderText(config, argument, "other");
-		return shortcutPlaceholderPair(config, argument, format);
+		return shortcutPlaceholderPair(config, argument, notes);
 	});
 }
 

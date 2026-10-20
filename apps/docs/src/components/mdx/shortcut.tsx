@@ -14,10 +14,11 @@ function Keys({ keys, or }: { keys: string[]; or: string }) {
 /**
  * A keyboard shortcut from `apps/extension/config/ui/shortcuts.toml`, by id
  * (`<Shortcut id="commands.quick-save" />`): the primary platform's keys (`[display]` in that
- * file) as key caps, then, where the other platform's differ, a smaller note naming them. The
- * page prints both platforms; once the reader's platform is known, `PlatformAttribute` marks
- * `<html data-platform>` and the CSS in `global.css` shows that platform's keys alone, at full
- * size, with both in the tooltip.
+ * file) as key caps, then, where the other platform's differ, both named, the other in
+ * parentheses at the same size: "⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)". The page prints
+ * both platforms; once the reader's platform is known, `PlatformAttribute` marks
+ * `<html data-platform>` and the CSS in `global.css` shows that platform's keys alone, without
+ * the names, with both in the tooltip.
  */
 export function Shortcut({
   id,
@@ -34,21 +35,18 @@ export function Shortcut({
       </span>
     );
   }
-  const { space, before, after } = parts.note;
+  const { before, middle, after } = parts.note;
   return (
     <span className="bs-shortcut" title={shortcutLine(parts)}>
+      <span data-platform-note="">{before}</span>
       <span data-platform-keys={parts.primary.platform}>
         <Keys keys={parts.primary.keys} or={parts.or} />
       </span>
-      <span data-platform-note="">{space}</span>
-      <span
-        className="bs-shortcut-note"
-        data-platform-keys={parts.secondary.platform}
-      >
-        <span data-platform-note="">{before}</span>
+      <span data-platform-note="">{middle}</span>
+      <span data-platform-keys={parts.secondary.platform}>
         <Keys keys={parts.secondary.keys} or={parts.or} />
-        <span data-platform-note="">{after}</span>
       </span>
+      <span data-platform-note="">{after}</span>
     </span>
   );
 }

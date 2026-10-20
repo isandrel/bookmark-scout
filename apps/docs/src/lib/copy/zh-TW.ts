@@ -40,8 +40,9 @@ export const zhTW: DocsCopy = {
   shortcut: {
     or: " 或 ",
     notes: {
-      mac: "（Mac：{keys}）",
-      other: "（Windows 和 Linux：{keys}）",
+      mac: "Mac 上的 {keys}",
+      other: "Windows 和 Linux 上的 {keys}",
+      pair: "{primary}（{secondary}）",
     },
   },
 

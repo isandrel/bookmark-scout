@@ -1,14 +1,14 @@
 # German Listing Copy (Deutsch)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-18, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-19, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 130 |
-| Firefox Add-ons summary | 248 |
-| Full description, Chrome and Edge | 11,242 |
-| Full description, Firefox | 6,601 |
-| What's new in 0.3.3 | 1,300 |
+| Firefox Add-ons summary | 246 |
+| Full description, Chrome and Edge | 11,290 |
+| Full description, Firefox | 6,637 |
+| What's new in 0.3.3 | 1,324 |
 
 ## Name
 
@@ -31,7 +31,7 @@ Seiten schnell im richtigen Ordner speichern: Namensteil tippen oder KI vorschla
 ### Firefox Add-ons summary (250 characters maximum)
 
 ```text
-Seiten schnell im richtigen Ordner speichern: Teil des Namens tippen, mit ⌥⇧S (Alt+Shift+S unter Windows und Linux) im passendsten Ordner speichern oder optionale KI Ordner vorschlagen lassen. Dazu Sofortsuche, Ordnerbaum und vollständiger Manager.
+Seiten schnell im richtigen Ordner speichern: Teil des Namens tippen, mit ⌥⇧S auf dem Mac (Alt+Shift+S unter Windows und Linux) im passendsten Ordner speichern oder optionale KI Ordner vorschlagen lassen. Dazu Sofortsuche, Ordnerbaum und Manager.
 ```
 
 ## Search terms (Edge Add-ons)
@@ -61,10 +61,10 @@ IN SEKUNDEN IM RICHTIGEN ORDNER SPEICHERN
 • Optionales Rechtsklickmenü (anfangs aus; aktivieren Sie „Rechtsklickmenü“ in den Einstellungen), um Links in zuletzt verwendeten Ordnern zu speichern
 
 TASTENKÜRZEL ZUM SCHNELLSPEICHERN
-• Auf einer beliebigen Seite ⌥⇧S (Alt+Shift+S unter Windows und Linux) drücken, um sie zu speichern, ohne Bookmark Scout zu öffnen: standardmäßig im Ordner, der am besten zur Seite passt (ermittelt auf Ihrem Gerät), oder im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl
+• Auf einer beliebigen Seite ⌥⇧S auf dem Mac (Alt+Shift+S unter Windows und Linux) drücken, um sie zu speichern, ohne Bookmark Scout zu öffnen: standardmäßig im Ordner, der am besten zur Seite passt (ermittelt auf Ihrem Gerät), oder im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl
 • Eine kleine Benachrichtigung auf der Seite zeigt, wo sie gespeichert wurde, mit „Rückgängig“ und weiteren Ordnern, in die Sie sie verschieben können
-• Bei aktivierter KI speichert ⌥⇧D (Alt+Shift+D unter Windows und Linux) die Seite im ersten KI-Ordnervorschlag
-• Die Tasten ändern Sie auf der Seite für Tastenkombinationen des Browsers. Dort können Sie dem Schnellspeichern auch ⌘D (Ctrl+D unter Windows und Linux) zuweisen, sodass es den Lesezeichendialog des Browsers ersetzt; die Einstellungen zeigen, wie das geht
+• Bei aktivierter KI speichert ⌥⇧D auf dem Mac (Alt+Shift+D unter Windows und Linux) die Seite im ersten KI-Ordnervorschlag
+• Die Tasten ändern Sie auf der Seite für Tastenkombinationen des Browsers. Dort können Sie dem Schnellspeichern auch ⌘D auf dem Mac (Ctrl+D unter Windows und Linux) zuweisen, sodass es den Lesezeichendialog des Browsers ersetzt; die Einstellungen zeigen, wie das geht
 
 IHRE LESEZEICHEN FINDEN
 • Alle Ihre Lesezeichen schon beim Tippen durchsuchen, direkt in der Symbolleiste
@@ -76,7 +76,7 @@ LESEZEICHEN-MANAGER
 Bookmark Scout ersetzt die Lesezeichenseite des Browsers durch einen Manager, der wie der browsereigene funktioniert, ergänzt um Pfadnavigation, eine sortierbare Tabelle und gespeicherte Suchen, die immer aktuelle Ergebnisse zeigen.
 • Rechtsklickmenüs für Lesezeichen, Ordner und leere Flächen: Bearbeiten, Umbenennen, Ausschneiden, Kopieren, Einfügen, Öffnen in neuen Tabs oder Fenstern, Anzeigen im Ordner und Löschen
 • Lesezeichen per Drag-and-drop in Ordner verschieben oder neu anordnen; Links, die aus anderen Seiten hineingezogen werden, werden zu Lesezeichen
-• Mehrere Zeilen mit Cmd+Klick und Shift+Klick auswählen und die Tastenkombinationen des browsereigenen Managers verwenden: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z zum Rückgängigmachen und ⇧⌘Z zum Wiederholen (Ctrl+Klick, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z und Ctrl+Shift+Z unter Windows und Linux)
+• Mehrere Zeilen mit Cmd+Klick und Shift+Klick auswählen und die Tastenkombinationen des browsereigenen Managers verwenden: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z zum Rückgängigmachen und ⇧⌘Z zum Wiederholen auf dem Mac (Ctrl+Klick, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z und Ctrl+Shift+Z unter Windows und Linux)
 • Rückgängigmachen und Wiederholen umfassen Bearbeitungen, Verschiebungen, Sortierungen und Löschungen, auch Änderungen durch „KI fragen“
 • Festlegen, welche Befehle die Rechtsklick- und ⋯-Menüs zeigen und in welcher Reihenfolge (Einstellungen)
 
@@ -152,9 +152,9 @@ IN SEKUNDEN IM RICHTIGEN ORDNER SPEICHERN
 • Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern, sobald Sie „Rechtsklickmenü“ in den Einstellungen aktivieren
 
 TASTENKÜRZEL ZUM SCHNELLSPEICHERN
-• Auf einer beliebigen Seite ⌥⇧S (Alt+Shift+S unter Windows und Linux) drücken, um sie zu speichern, ohne Bookmark Scout zu öffnen: standardmäßig im Ordner, der am besten zur Seite passt (ermittelt auf Ihrem Gerät), oder im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl
+• Auf einer beliebigen Seite ⌥⇧S auf dem Mac (Alt+Shift+S unter Windows und Linux) drücken, um sie zu speichern, ohne Bookmark Scout zu öffnen: standardmäßig im Ordner, der am besten zur Seite passt (ermittelt auf Ihrem Gerät), oder im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl
 • Eine kleine Benachrichtigung auf der Seite zeigt, wo sie gespeichert wurde, mit „Rückgängig“ und weiteren Ordnern, in die Sie sie verschieben können
-• Bei aktivierter KI speichert ⌥⇧D (Alt+Shift+D unter Windows und Linux) die Seite im ersten KI-Ordnervorschlag
+• Bei aktivierter KI speichert ⌥⇧D auf dem Mac (Alt+Shift+D unter Windows und Linux) die Seite im ersten KI-Ordnervorschlag
 • Die Tasten ändern Sie unter Einstellungen > Speichern & Suche > Tastenkürzel
 
 IHRE LESEZEICHEN FINDEN
@@ -167,7 +167,7 @@ LESEZEICHEN-MANAGER
 „Lesezeichen-Manager öffnen“ im Pop-up der Symbolleiste oder in der Sidebar öffnet einen vollständigen Manager in einem neuen Tab, mit Ordnerbaum und sortierbarer Tabelle.
 • Rechtsklickmenüs für Lesezeichen, Ordner und leere Flächen: Bearbeiten, Umbenennen, Ausschneiden, Kopieren, Einfügen, Öffnen, Anzeigen im Ordner und Löschen
 • Lesezeichen per Drag-and-drop in Ordner verschieben oder neu anordnen; Links, die aus anderen Seiten hineingezogen werden, werden zu Lesezeichen
-• Mehrere Zeilen mit Cmd+Klick und Shift+Klick auswählen, mit den üblichen Tasten kopieren, ausschneiden und einfügen und Ihre Änderungen mit ⌘Z und ⇧⌘Z rückgängig machen und wiederholen (Ctrl+Klick, Ctrl+Z und Ctrl+Shift+Z unter Windows und Linux)
+• Mehrere Zeilen mit Cmd+Klick und Shift+Klick auswählen, mit den üblichen Tasten kopieren, ausschneiden und einfügen und Ihre Änderungen auf dem Mac mit ⌘Z und ⇧⌘Z rückgängig machen und wiederholen (Ctrl+Klick, Ctrl+Z und Ctrl+Shift+Z unter Windows und Linux)
 
 WAS FIREFOX FRAGT UND WARUM
 Bei der Installation fragt Firefox nur nach einem: der Berechtigung, Lesezeichen zu lesen und zu ändern. Alles andere wird erst angefragt, wenn Sie die Funktion verwenden, die es benötigt, nach einer kurzen Erklärung. Wenn Sie ablehnen, bleibt nur diese Funktion deaktiviert.
@@ -206,7 +206,7 @@ Entwickelt von einem unabhängigen Entwickler: keine Firma, keine Werbung, kein 
 Translation of the English release notes; paste into AMO's release notes for 0.3.3.
 
 ```text
-• Schnellspeichern: Drücken Sie auf einer beliebigen Seite ⌥⇧S (Alt+Shift+S unter Windows und Linux), um sie im Ordner zu speichern, der am besten zu ihr passt. Eine Benachrichtigung auf der Seite zeigt, wo sie gespeichert wurde, mit „Rückgängig“ und weiteren Ordnern, in die Sie sie verschieben können. Bei aktivierter KI speichert ⌥⇧D (Alt+Shift+D unter Windows und Linux) im ersten KI-Vorschlag
+• Schnellspeichern: Drücken Sie auf einer beliebigen Seite ⌥⇧S auf dem Mac (Alt+Shift+S unter Windows und Linux), um sie im Ordner zu speichern, der am besten zu ihr passt. Eine Benachrichtigung auf der Seite zeigt, wo sie gespeichert wurde, mit „Rückgängig“ und weiteren Ordnern, in die Sie sie verschieben können. Bei aktivierter KI speichert ⌥⇧D auf dem Mac (Alt+Shift+D unter Windows und Linux) im ersten KI-Vorschlag
 • Lesezeichen-Manager: Rechtsklickmenüs, Drag-and-drop, Ausschneiden, Kopieren und Einfügen, Auswahl mehrerer Zeilen sowie Rückgängigmachen und Wiederholen
 • „KI fragen“ kann Seiten speichern und Verschiebungen, Umbenennungen, Löschungen und neue Ordner vorschlagen, die nichts ändern, bis Sie sie genehmigen, und jede Änderung lässt sich rückgängig machen. Antworten können mit Schaltflächen enden, die Sie anklicken
 • Festlegen, welche Befehle die Menüs des Managers zeigen und was „KI fragen“ tun darf

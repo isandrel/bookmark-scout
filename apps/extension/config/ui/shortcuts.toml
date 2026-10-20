@@ -21,8 +21,8 @@
 
 # Text that names both platforms' keys (the docs before they know the reader's computer, the
 # website, the READMEs, the store listings) prints the `primary` platform's keys first and the
-# other platform's after them in a smaller note: "⌥⇧S (Alt+Shift+S on Windows and Linux)". "mac"
-# or "other" (Windows, Linux, and ChromeOS). Pages that know the reader's platform, such as the
+# other platform's after them in parentheses, each labelled, all at the same size: "⌥⇧S on Mac
+# (Alt+Shift+S on Windows and Linux)". "mac" or "other" (Windows, Linux, and ChromeOS). Pages that know the reader's platform, such as the
 # extension's own, show only that platform's keys.
 [display]
 primary = "mac"

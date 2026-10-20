@@ -1,7 +1,8 @@
 {
   "shortcutNotes": {
-    "mac": "（Mac 上為 {keys}）",
-    "other": "（Windows 和 Linux 上為 {keys}）"
+    "mac": "Mac 上的 {keys}",
+    "other": "Windows 和 Linux 上的 {keys}",
+    "pair": "{primary}（{secondary}）"
   },
   "metadata": {
     "title": "Bookmark Scout – 快速將書籤儲存到正確的資料夾",

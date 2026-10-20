@@ -1,7 +1,8 @@
 {
   "shortcutNotes": {
-    "mac": " ({keys} auf dem Mac)",
-    "other": " ({keys} unter Windows und Linux)"
+    "mac": "{keys} auf dem Mac",
+    "other": "{keys} unter Windows und Linux",
+    "pair": "{primary} ({secondary})"
   },
   "metadata": {
     "title": "Bookmark Scout – Lesezeichen schnell im richtigen Ordner speichern",

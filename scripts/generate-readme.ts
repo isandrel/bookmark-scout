@@ -25,9 +25,9 @@
  *   {{SCREENSHOT:<name>:<theme>}} raw GitHub URL of a product screenshot (light or dark)
  *   {{SHORTCUT:<id>}}        a shortcut from apps/extension/config/ui/shortcuts.toml on both platforms:
  *                            the primary platform's keys (`[display]` in that file), then the other
- *                            platform's in a smaller `<sub>` note worded by `shortcutNotes` in the
- *                            website messages of the template's language, such as
- *                            ⌥⇧S <sub>(Alt+Shift+S on Windows and Linux)</sub>; <id>#2 is its second way
+ *                            platform's in plain parentheses, each named as `shortcutNotes` in the
+ *                            website messages of the template's language words it, such as
+ *                            ⌥⇧S on Mac (Alt+Shift+S on Windows and Linux); <id>#2 is its second way
  *   {{SHORTCUT_MAC:<id>}}    its keys on a Mac only (⌥⇧S)
  *   {{SHORTCUT_OTHER:<id>}}  its keys on Windows, Linux, and ChromeOS only (Alt+Shift+S)
  *
@@ -47,6 +47,7 @@ import {
 	type Site,
 	type StoreListing,
 	type ShortcutNotes,
+	parseShortcutNotes,
 	shortcutPlaceholderPair,
 	shortcutPlaceholderText,
 	site,
@@ -250,19 +251,13 @@ export function templateLocale(file: string, model: Site = site): string {
 }
 
 /**
- * The notes that name the secondary platform's keys in `locale`, from `shortcutNotes` in the
- * website messages, so the READMEs word them as the website does.
+ * How `locale` names each platform's keys, from `shortcutNotes` in the website messages, so the
+ * READMEs word them as the website does.
  */
 export function shortcutNotes(locale: string, root = rootDir): ShortcutNotes {
 	const file = join(root, "apps/website/messages", `${locale}.json`);
 	const notes = (JSON.parse(readFileSync(file, "utf8")) as { shortcutNotes?: unknown }).shortcutNotes;
-	const valid =
-		typeof notes === "object" &&
-		notes !== null &&
-		typeof (notes as Record<string, unknown>).mac === "string" &&
-		typeof (notes as Record<string, unknown>).other === "string";
-	if (!valid) throw new Error(`${file}: expected "shortcutNotes": { "mac": "...", "other": "..." }`);
-	return notes as ShortcutNotes;
+	return parseShortcutNotes(notes, file);
 }
 
 /** `README.md` goes to the root; `README.<locale>.md` to translations/; anything else to the root. */
@@ -285,10 +280,7 @@ export function repositoryContext(root = rootDir): RenderContext {
 		screenshot: (argument) => screenshotUrl(argument),
 		shortcut: (argument, which, locale) =>
 			which === "both"
-				? shortcutPlaceholderPair(shortcuts, argument, {
-					notes: shortcutNotes(locale, root),
-					note: (note) => `<sub>${note}</sub>`,
-				})
+				? shortcutPlaceholderPair(shortcuts, argument, shortcutNotes(locale, root))
 				: shortcutPlaceholderText(shortcuts, argument, which),
 	};
 }

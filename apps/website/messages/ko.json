@@ -1,7 +1,8 @@
 {
   "shortcutNotes": {
-    "mac": "(Mac에서는 {keys})",
-    "other": "(Windows와 Linux에서는 {keys})"
+    "mac": "Mac의 {keys}",
+    "other": "Windows와 Linux의 {keys}",
+    "pair": "{primary}({secondary})"
   },
   "metadata": {
     "title": "Bookmark Scout – 북마크를 알맞은 폴더에 빠르게 저장",
