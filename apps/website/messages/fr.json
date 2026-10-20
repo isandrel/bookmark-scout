@@ -1,7 +1,8 @@
 {
   "shortcutNotes": {
-    "mac": " ({keys} sur Mac)",
-    "other": " ({keys} sous Windows et Linux)"
+    "mac": "{keys} sur Mac",
+    "other": "{keys} sous Windows et Linux",
+    "pair": "{primary} ({secondary})"
   },
   "metadata": {
     "title": "Bookmark Scout – Enregistrez vos favoris dans le bon dossier, rapidement",

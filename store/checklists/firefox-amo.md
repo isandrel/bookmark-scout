@@ -41,7 +41,7 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 - [ ] Turning on AI asks Firefox's data collection consent; declining leaves AI off. Withdrawing it in `about:addons` → Permissions turns AI off.
 - [ ] Saving the current page from the sidebar asks for tab access ("Access browser tabs"); the popup saves without asking.
 - [ ] Keyboard shortcuts in the popup.
-- [ ] Quick save: ⌥⇧S (Alt+Shift+S on Windows and Linux) on a web page saves it and shows the in-page notification; Undo and Move work. With AI on and a test provider, ⌥⇧D (Alt+Shift+D on Windows and Linux) saves to the first suggestion.
+- [ ] Quick save: ⌥⇧S on Mac (Alt+Shift+S on Windows and Linux) on a web page saves it and shows the in-page notification; Undo and Move work. With AI on and a test provider, ⌥⇧D on Mac (Alt+Shift+D on Windows and Linux) saves to the first suggestion.
 - [ ] Settings > Export saves a backup, and Import restores it.
 - [ ] **Open bookmark manager** in the popup opens the manager in a new tab. Before the description claims the manager tools, run Duplicate Cleaner, Check Dead Links (allow website access when asked), and an import there.
 - [ ] Delete with confirmation and Undo.

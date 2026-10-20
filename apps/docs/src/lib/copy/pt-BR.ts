@@ -46,8 +46,9 @@ export const ptBR: DocsCopy = {
   shortcut: {
     or: " ou ",
     notes: {
-      mac: " ({keys} no Mac)",
-      other: " ({keys} no Windows e no Linux)",
+      mac: "{keys} no Mac",
+      other: "{keys} no Windows e no Linux",
+      pair: "{primary} ({secondary})",
     },
   },
 

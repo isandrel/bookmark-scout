@@ -52,17 +52,18 @@ const en = {
       `No page matches “${query}”. Try fewer words, or use Search at the top of the page to search inside every page.`,
   },
 
-  /** How `<Shortcut>` joins keys: between two ways to press it, and the note for the other platform. */
+  /** How `<Shortcut>` joins keys: between two ways to press it, and how it names each platform. */
   shortcut: {
     or: " or ",
     /**
-     * The note after the primary platform's keys that names the other platform's, by the
-     * platform it names (`[display]` in shortcuts.toml picks the primary); `{keys}` is
-     * replaced with its keys.
+     * Each platform's label, with `{keys}` where its keys go, and `pair`, which puts the primary
+     * platform's label (`[display]` in shortcuts.toml) before the other's, in the same text
+     * size: "⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)".
      */
     notes: {
-      mac: " ({keys} on a Mac)",
-      other: " ({keys} on Windows and Linux)",
+      mac: "{keys} on Mac",
+      other: "{keys} on Windows and Linux",
+      pair: "{primary} ({secondary})",
     },
   },
 

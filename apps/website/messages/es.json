@@ -1,7 +1,8 @@
 {
   "shortcutNotes": {
-    "mac": " ({keys} en Mac)",
-    "other": " ({keys} en Windows y Linux)"
+    "mac": "{keys} en Mac",
+    "other": "{keys} en Windows y Linux",
+    "pair": "{primary} ({secondary})"
   },
   "metadata": {
     "title": "Bookmark Scout – Guarda marcadores en la carpeta correcta, rápido",

@@ -1,14 +1,14 @@
 # Japanese Listing Copy (日本語)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox summary, the full descriptions, and What's new on 2026-10-18, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox summary, the full descriptions, and What's new on 2026-10-19, and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 75 |
-| Firefox Add-ons summary | 163 |
-| Full description, Chrome and Edge | 4,994 |
-| Full description, Firefox | 2,934 |
-| What's new in 0.3.3 | 575 |
+| Firefox Add-ons summary | 168 |
+| Full description, Chrome and Edge | 5,014 |
+| Full description, Firefox | 2,949 |
+| What's new in 0.3.3 | 585 |
 
 ## Name
 
@@ -31,7 +31,7 @@ Ships with 0.3.3 (`extDescription`; changing it needs a new version; 75 characte
 ### Firefox Add-ons summary (250 characters maximum)
 
 ```text
-ページをブックマークの正しいフォルダにすばやく保存。フォルダ名の一部を入力するか、⌥⇧S（Windows と Linux では Alt+Shift+S）を押して最も一致するフォルダに保存するか、オプトインの AI にフォルダを提案させることができます。即時検索、フォルダツリー、本格的なブックマークマネージャーも備えています。
+ページをブックマークの正しいフォルダにすばやく保存。フォルダ名の一部を入力するか、Mac の ⌥⇧S（Windows と Linux の Alt+Shift+S）を押して最も一致するフォルダに保存するか、オプトインの AI にフォルダを提案させることができます。即時検索、フォルダツリー、本格的なブックマークマネージャーも備えています。
 ```
 
 ## Search terms (Edge Add-ons)
@@ -48,7 +48,7 @@ AI ブックマーク
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 4,994 characters (2026-10-18); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
+Plain text, 5,014 characters (2026-10-19); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout（ブックマークスカウト）は、ツールバーから、またはキーボードショートカット 1 つで、どのページも数秒で正しいフォルダに保存し、ブラウザを離れずにブックマークを探して整理できる拡張機能です。無料で、アカウントも広告もありません。
@@ -61,10 +61,10 @@ Bookmark Scout（ブックマークスカウト）は、ツールバーから、
 • 右クリックメニュー（最初はオフ。設定で「右クリックメニュー」をオン）からリンクを最近使ったフォルダに保存
 
 クイック保存ショートカット
-• どのページでも ⌥⇧S（Windows と Linux では Alt+Shift+S）を押すと、Bookmark Scout を開かずにページを保存。既定ではページに最も一致するフォルダ（判定はこの端末上で実行）に、または最後に使ったフォルダや指定のフォルダに保存
+• どのページでも Mac の ⌥⇧S（Windows と Linux の Alt+Shift+S）を押すと、Bookmark Scout を開かずにページを保存。既定ではページに最も一致するフォルダ（判定はこの端末上で実行）に、または最後に使ったフォルダや指定のフォルダに保存
 • ページ内の小さな通知に保存先が表示され、「元に戻す」と、移動先にできる別のフォルダも選べます
-• AI をオンにすると、⌥⇧D（Windows と Linux では Alt+Shift+D）で AI が最初に提案したフォルダにページを保存
-• キーはブラウザのショートカットのページで変更できます。そこでクイック保存に ⌘D（Windows と Linux では Ctrl+D）を割り当てて、ブラウザのブックマークダイアログの代わりに使うこともできます。手順は設定に表示されます
+• AI をオンにすると、Mac の ⌥⇧D（Windows と Linux の Alt+Shift+D）で AI が最初に提案したフォルダにページを保存
+• キーはブラウザのショートカットのページで変更できます。そこでクイック保存に Mac の ⌘D（Windows と Linux の Ctrl+D）を割り当てて、ブラウザのブックマークダイアログの代わりに使うこともできます。手順は設定に表示されます
 
 ブックマークを探す
 • ツールバーからすぐに、入力と同時にすべてのブックマークを検索
@@ -76,7 +76,7 @@ Bookmark Scout（ブックマークスカウト）は、ツールバーから、
 ブラウザの「ブックマーク」ページを、ブラウザ標準のマネージャーと同じように使えるマネージャーに置き換えます。さらに、パンくずリスト、並べ替えができる表、常に最新の結果を表示する保存した検索を備えています。
 • ブックマーク、フォルダ、空白部分の右クリックメニュー：編集、名前を変更、切り取り、コピー、貼り付け、新しいタブやウィンドウで開く、フォルダ内に表示、削除
 • ドラッグ＆ドロップでブックマークをフォルダへ移動したり並べ替えたりできます。ほかのページからドロップしたリンクはブックマークになります
-• Cmd+クリックと Shift+クリックで複数の行を選択し、ブラウザ標準のマネージャーと同じキーボードショートカットを使えます：⌘A、⌘C、⌘X、⌘V、⌘⌫、⌘Z で元に戻す、⇧⌘Z でやり直す（Windows と Linux では Ctrl+クリック、Ctrl+A、Ctrl+C、Ctrl+X、Ctrl+V、Delete、Ctrl+Z、Ctrl+Shift+Z）
+• Cmd+クリックと Shift+クリックで複数の行を選択し、ブラウザ標準のマネージャーと同じキーボードショートカットを使えます：Mac の ⌘A、⌘C、⌘X、⌘V、⌘⌫、⌘Z で元に戻す、⇧⌘Z でやり直す（Windows と Linux の Ctrl+クリック、Ctrl+A、Ctrl+C、Ctrl+X、Ctrl+V、Delete、Ctrl+Z、Ctrl+Shift+Z）
 • 元に戻す・やり直しは、編集、移動、並べ替え、削除に対応し、「AI に質問」による変更も対象です
 • 右クリックメニューと ⋯ メニューに表示するコマンドとその順序を選択（設定）
 
@@ -152,9 +152,9 @@ Bookmark Scout（ブックマークスカウト）は、ツールバーから、
 • 設定で「右クリックメニュー」をオンにすると、右クリックメニューからリンクを最近使ったフォルダに保存
 
 クイック保存ショートカット
-• どのページでも ⌥⇧S（Windows と Linux では Alt+Shift+S）を押すと、Bookmark Scout を開かずにページを保存。既定ではページに最も一致するフォルダ（判定はこの端末上で実行）に、または最後に使ったフォルダや指定のフォルダに保存
+• どのページでも Mac の ⌥⇧S（Windows と Linux の Alt+Shift+S）を押すと、Bookmark Scout を開かずにページを保存。既定ではページに最も一致するフォルダ（判定はこの端末上で実行）に、または最後に使ったフォルダや指定のフォルダに保存
 • ページ内の小さな通知に保存先が表示され、「元に戻す」と、移動先にできる別のフォルダも選べます
-• AI をオンにすると、⌥⇧D（Windows と Linux では Alt+Shift+D）で AI が最初に提案したフォルダにページを保存
+• AI をオンにすると、Mac の ⌥⇧D（Windows と Linux の Alt+Shift+D）で AI が最初に提案したフォルダにページを保存
 • キーは「設定 > 保存と検索 > キーボードショートカット」で変更できます
 
 ブックマークを探す
@@ -167,7 +167,7 @@ Bookmark Scout（ブックマークスカウト）は、ツールバーから、
 ツールバーのポップアップまたはサイドバーで「ブックマークマネージャーを開く」を選ぶと、フォルダツリーと並べ替えができる表を備えた本格的なマネージャーが新しいタブで開きます。
 • ブックマーク、フォルダ、空白部分の右クリックメニュー：編集、名前を変更、切り取り、コピー、貼り付け、開く、フォルダ内に表示、削除
 • ドラッグ＆ドロップでブックマークをフォルダへ移動したり並べ替えたりできます。ほかのページからドロップしたリンクはブックマークになります
-• Cmd+クリックと Shift+クリックで複数の行を選択。いつものキーでコピー、切り取り、貼り付けができ、⌘Z と ⇧⌘Z で変更を元に戻す・やり直すことができます（Windows と Linux では Ctrl+クリック、Ctrl+Z、Ctrl+Shift+Z）
+• Cmd+クリックと Shift+クリックで複数の行を選択。いつものキーでコピー、切り取り、貼り付けができ、Mac の ⌘Z と ⇧⌘Z で変更を元に戻す・やり直すことができます（Windows と Linux の Ctrl+クリック、Ctrl+Z、Ctrl+Shift+Z）
 
 Firefox が確認する内容とその理由
 インストール時に Firefox が求めるのは 1 つだけで、ブックマークの読み取りと変更の許可です。それ以外はすべて、必要な機能を使うときにだけ、短い説明の後に求めます。許可しなかった場合は、その機能だけがオフのままになります。
@@ -206,7 +206,7 @@ AI は任意で、ここまでの機能はすべて AI なしで使えます。A
 Translation of the English release notes; paste into AMO's release notes for 0.3.3.
 
 ```text
-• クイック保存：どのページでも ⌥⇧S（Windows と Linux では Alt+Shift+S）を押すと、ページに最も一致するフォルダに保存します。ページ内の通知に保存先が表示され、「元に戻す」と、移動先にできる別のフォルダも選べます。AI をオンにすると、⌥⇧D（Windows と Linux では Alt+Shift+D）で AI の最初の提案に保存します
+• クイック保存：どのページでも Mac の ⌥⇧S（Windows と Linux の Alt+Shift+S）を押すと、ページに最も一致するフォルダに保存します。ページ内の通知に保存先が表示され、「元に戻す」と、移動先にできる別のフォルダも選べます。AI をオンにすると、Mac の ⌥⇧D（Windows と Linux の Alt+Shift+D）で AI の最初の提案に保存します
 • ブックマークマネージャー：右クリックメニュー、ドラッグ＆ドロップ、切り取り・コピー・貼り付け、複数行の選択、元に戻す・やり直し
 • 「AI に質問」でページを保存したり、移動、名前の変更、削除、新しいフォルダを提案したりできます。提案は承認するまで何も変更せず、変更はすべて元に戻せます。回答の最後に、クリックして使えるボタンが表示されることがあります
 • マネージャーのメニューに表示するコマンドと、「AI に質問」でできることを選べるようになりました

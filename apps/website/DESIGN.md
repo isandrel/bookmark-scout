@@ -199,7 +199,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 
 **`faq-item`**: native `<details>` and `<summary>` separated by `line` rules.
 
-**`shortcut-note`** (`components/site/shortcut-note.tsx`): a keyboard shortcut in running text names both platforms, Mac first, `⌥⇧S (Alt+Shift+S on Windows and Linux)`, because the static site cannot know the visitor's computer. Messages write `{{SHORTCUT:<id>}}`; `i18n/request.ts` fills the primary platform's keys (`[display] primary` in the extension's `shortcuts.toml`) and wraps the note, worded by `shortcutNotes` in each language's messages, in a `<shortcutNote>` tag that renders as `<small>` at 0.85em in `ink-soft`. Every `t.rich` tag set includes it (`richTags`, `proseTags`), so a message that names a shortcut is rendered with `t.rich`, never `t` or `t.raw`.
+**`shortcut-note`**: a keyboard shortcut in running text names both platforms, each labelled, Mac first, `⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)`, because the static site cannot know the visitor's computer. It is plain text at the size and color of the text around it, with the other platform in ordinary parentheses: no `<small>`, `<sub>`, or softer color. Messages write `{{SHORTCUT:<id>}}`; `i18n/request.ts` fills it at build time, the order from `[display] primary` in the extension's `shortcuts.toml` and the wording from `shortcutNotes` in each language's messages (a label per platform, `"{keys} on Mac"`, and a `pair` template, `"{primary} ({secondary})"`; CJK languages put the platform first and use full-width brackets).
 
 **`site-footer`**: `sunken` background, five columns (brand, Product, Project, Contact, Legal). Contact shows the role addresses from config.
 

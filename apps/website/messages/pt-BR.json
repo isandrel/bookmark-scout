@@ -1,7 +1,8 @@
 {
   "shortcutNotes": {
-    "mac": " ({keys} no Mac)",
-    "other": " ({keys} no Windows e no Linux)"
+    "mac": "{keys} no Mac",
+    "other": "{keys} no Windows e no Linux",
+    "pair": "{primary} ({secondary})"
   },
   "metadata": {
     "title": "Bookmark Scout – Salve favoritos na pasta certa, rápido",
