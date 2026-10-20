@@ -244,6 +244,26 @@ describe('duplicate removal', () => {
     expect(removed()).toEqual([]);
   });
 
+  it('re-checks the keeper before each removal, so the last copy survives a change mid-batch (L04)', async () => {
+    const result = scanDuplicateBookmarks(folder(items), { ...normalized, keepRule: 'oldest' });
+    // The keeper of the first group (1) moves to another address right after the first extra
+    // (2) is removed, before the second extra (3) is.
+    const spy = vi.mocked(fakeBrowser.bookmarks.removeTree);
+    const removeTree = spy.getMockImplementation();
+    spy.mockImplementation(async (id: string) => {
+      await removeTree?.(id);
+      if (id === '2') await edit('1', { url: 'https://example.com/elsewhere' });
+    });
+
+    const outcome = await removeDuplicateExtras(result.groups, result.match);
+    expect(removed()).toEqual(['remove 2', 'remove 5']);
+    expect(outcome).toMatchObject({ removed: 2, skipped: 1, failed: 0 });
+    // One bookmark still has the group's address.
+    expect(live().filter((id) => bookmarks.get(id)?.url === 'https://example.com/a')).toEqual([
+      '3',
+    ]);
+  });
+
   it('undoes a removal by restoring the extras in their places', async () => {
     const result = scanDuplicateBookmarks(folder(items), normalized);
     const outcome = await removeDuplicateExtras(result.groups, result.match);
