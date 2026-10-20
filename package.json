@@ -33,7 +33,7 @@
     "@bookmark-scout/config": "workspace:*",
     "@nx/js": "^23.3.0",
     "@playwright/test": "^1.64.1",
-    "@types/bun": "1.4.2",
+    "@types/bun": "1.4.3",
     "github-slugger": "2.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
