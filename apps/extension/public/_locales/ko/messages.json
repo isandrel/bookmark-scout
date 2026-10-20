@@ -4914,7 +4914,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "제공자를 원하는 만큼 저장할 수 있습니다. AI 도구는 기본 서비스를 사용합니다. 내장 AI는 폴더 추천만 하므로, 내장 AI가 기본인 동안 다른 도구는 켜져 있는 다른 서비스 중 첫 번째를 사용합니다.",
+        "message": "제공자를 원하는 만큼 저장할 수 있습니다. AI 도구는 기본 서비스를 사용합니다. 내장 AI는 폴더 추천만 하므로, 내장 AI가 기본인 동안 다른 도구는 켜져 있는 다른 서비스 중 첫 번째를 사용합니다. 핸들을 끌어 어떤 서비스가 먼저 올지 바꿀 수 있습니다.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {
@@ -6193,14 +6193,6 @@
         "message": "승인을 기다리는 항목이 없습니다.",
         "description": "Approval window when no request is waiting"
     },
-    "settings_actionMoveUp": {
-        "message": "$1 위로 이동",
-        "description": "Button that moves a menu item up within its group. $1 is the item name."
-    },
-    "settings_actionMoveDown": {
-        "message": "$1 아래로 이동",
-        "description": "Button that moves a menu item down within its group. $1 is the item name."
-    },
     "settings_actionsReset": {
         "message": "기본값 복원",
         "description": "Button that restores the default bookmark manager menu or AI actions"
@@ -6694,5 +6686,29 @@
     "qaManager_allFolders": {
         "message": "모든 폴더의 결과",
         "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
+    },
+    "sortable_handle": {
+        "message": "$1 순서 변경",
+        "description": "Drag handle and menu button of a reorderable list item (settings lists, table columns). $1 is the item name."
+    },
+    "sortable_moveTop": {
+        "message": "맨 위로 이동",
+        "description": "Menu item of a reorderable list item's handle: moves it to the top of the list."
+    },
+    "sortable_moveUp": {
+        "message": "위로 이동",
+        "description": "Menu item of a reorderable list item's handle: moves it one place up."
+    },
+    "sortable_moveDown": {
+        "message": "아래로 이동",
+        "description": "Menu item of a reorderable list item's handle: moves it one place down."
+    },
+    "sortable_moveBottom": {
+        "message": "맨 아래로 이동",
+        "description": "Menu item of a reorderable list item's handle: moves it to the bottom of the list."
+    },
+    "sortable_moved": {
+        "message": "$1을(를) $3개 중 $2번째로 옮겼습니다",
+        "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
     }
 }

@@ -4922,7 +4922,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "Save as many providers as you like. AI tools use the default service. Built-in AI only suggests folders, so while it is the default, the other tools use the first other service that is turned on.",
+        "message": "Save as many providers as you like. AI tools use the default service. Built-in AI only suggests folders, so while it is the default, the other tools use the first other service that is turned on. Drag a service by its handle to change which one comes first.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {
@@ -6201,14 +6201,6 @@
         "message": "Nothing is waiting for your approval.",
         "description": "Approval window when no request is waiting"
     },
-    "settings_actionMoveUp": {
-        "message": "Move $1 up",
-        "description": "Button that moves a menu item up within its group. $1 is the item name."
-    },
-    "settings_actionMoveDown": {
-        "message": "Move $1 down",
-        "description": "Button that moves a menu item down within its group. $1 is the item name."
-    },
     "settings_actionsReset": {
         "message": "Restore defaults",
         "description": "Button that restores the default bookmark manager menu or AI actions"
@@ -6702,5 +6694,29 @@
     "qaManager_allFolders": {
         "message": "Results from all folders",
         "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
+    },
+    "sortable_handle": {
+        "message": "Reorder $1",
+        "description": "Drag handle and menu button of a reorderable list item (settings lists, table columns). $1 is the item name."
+    },
+    "sortable_moveTop": {
+        "message": "Move to top",
+        "description": "Menu item of a reorderable list item's handle: moves it to the top of the list."
+    },
+    "sortable_moveUp": {
+        "message": "Move up",
+        "description": "Menu item of a reorderable list item's handle: moves it one place up."
+    },
+    "sortable_moveDown": {
+        "message": "Move down",
+        "description": "Menu item of a reorderable list item's handle: moves it one place down."
+    },
+    "sortable_moveBottom": {
+        "message": "Move to bottom",
+        "description": "Menu item of a reorderable list item's handle: moves it to the bottom of the list."
+    },
+    "sortable_moved": {
+        "message": "$1 moved to position $2 of $3",
+        "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
     }
 }

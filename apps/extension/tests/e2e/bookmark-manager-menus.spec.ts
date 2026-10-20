@@ -295,7 +295,9 @@ test('Options hides and reorders the manager menu items', async ({
   const panel = options.getByTestId('manager-menus');
   await expect(panel).toBeVisible();
   await panel.getByRole('checkbox', { name: 'Copy Bookmark ID' }).click();
-  await panel.getByRole('button', { name: 'Move View Details up' }).click();
+  // Each command's handle is also a menu button with the moves, so reordering works by keyboard.
+  await panel.getByRole('button', { name: 'Reorder View Details' }).click();
+  await options.getByRole('menuitem', { name: 'Move up' }).click();
   await expect
     .poll(() =>
       extensionWorker.evaluate(async () => {
@@ -319,4 +321,44 @@ test('Options hides and reorders the manager menu items', async ({
   const restored = await menuItemNames(page);
   expect(restored).toContain('Copy Bookmark ID');
   expect(restored.indexOf('Edit')).toBeLessThan(restored.indexOf('View Details'));
+});
+
+test('Settings > manager menus reorder by dragging a command by its handle', async ({
+  extensionId,
+  page,
+}) => {
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  // Each menu section is its own list; reorder within the first one that holds two commands.
+  const panel = page
+    .getByTestId('manager-menus')
+    .locator('ul')
+    .filter({ has: page.locator('li + li') })
+    .first();
+  const labelOf = (name: string) => panel.locator('li').filter({ hasText: name }).first();
+  const order = () =>
+    panel.locator('li').evaluateAll((items) => items.map((item) => item.textContent?.trim()));
+  await panel.scrollIntoViewIfNeeded();
+  const before = await order();
+  const first = before[0] ?? '';
+  // Drag the second command above the first one: the drop line marks the top edge.
+  const second = before[1] ?? '';
+  const handle = panel.getByRole('button', { name: `Reorder ${second}` });
+  const target = labelOf(first);
+  const box = await target.boundingBox();
+  if (!box) throw new Error('no target');
+  // A real pointer drag: press on the handle, nudge to start the drag, then move in steps.
+  const from = await handle.boundingBox();
+  if (!from) throw new Error('no handle');
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2 + 6, from.y + from.height / 2 - 6, { steps: 3 });
+  await page.mouse.move(box.x + box.width / 2, box.y + 4, { steps: 12 });
+  await expect(target).toHaveAttribute('data-drop-edge', 'top');
+  await page.mouse.up();
+  await expect.poll(order).toEqual([second, first, ...before.slice(2)]);
+  // The new order is the setting, so it is there after a reload.
+  await page.reload();
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  await expect.poll(order).toEqual([second, first, ...before.slice(2)]);
 });

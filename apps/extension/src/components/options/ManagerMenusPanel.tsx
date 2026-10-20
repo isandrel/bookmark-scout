@@ -4,8 +4,6 @@
  * from `config/ui/actions.toml`). Changes apply at once, like every setting; an empty setting is
  * the default menu.
  */
-import { ArrowDown, ArrowUp } from 'lucide-react';
-
 const PANEL_ID = 'manager-menus';
 
 export function ManagerMenusPanel() {
@@ -33,16 +31,18 @@ export function ManagerMenusPanel() {
     if (visible.length === 0) return;
     void setValue(visible).catch(() => undefined);
   };
+  const labelOf = (id: ActionId) => {
+    const action = getAction(id);
+    return action.labelKey ? t(action.labelKey) : id;
+  };
   const keptLabels = formatList(
     ITEM_MENU_KEEP_ONE_OF.map((id) => {
       const action = getAction(id);
       return action.labelKey ? t(action.labelKey) : id;
     }),
   );
-  const move = (groupIndex: number, index: number, by: -1 | 1) => {
-    const next = groups.map((group) => [...group]);
-    const group = next[groupIndex];
-    [group[index], group[index + by]] = [group[index + by], group[index]];
+  const reorder = (groupIndex: number, ids: string[]) => {
+    const next = groups.map((group, index) => (index === groupIndex ? (ids as ActionId[]) : group));
     save(next);
   };
 
@@ -65,17 +65,25 @@ export function ManagerMenusPanel() {
       }
     >
       {groups.map((group, groupIndex) => (
-        <ul key={group.join()} className="divide-y rounded-md border">
-          {group.map((id, index) => {
+        <SortableList
+          key={group.join()}
+          items={group}
+          getId={(id) => id}
+          getLabel={labelOf}
+          isMovable={(id) => shownIds.has(id)}
+          onReorder={(ids) => reorder(groupIndex, ids)}
+          label={t('settings_managerMenuActions')}
+          className="divide-y rounded-md border"
+          itemClassName="flex min-h-10 items-center gap-2 px-2 py-1"
+          renderItem={(id, handle) => {
             const action = getAction(id);
-            const label = action.labelKey ? t(action.labelKey) : id;
             const Icon = action.icon ? ACTION_ICONS[action.icon] : undefined;
-            const visible = shownIds.has(id);
             return (
-              <li key={id} data-action={id} className="flex min-h-10 items-center gap-2 px-3 py-1">
+              <>
+                {handle}
                 <Checkbox
                   id={`${PANEL_ID}-${id}`}
-                  checked={visible}
+                  checked={shownIds.has(id)}
                   // The last command that works on any one item stays (see the description).
                   disabled={isKept(id)}
                   onCheckedChange={(checked) => toggle(id, checked === true)}
@@ -83,36 +91,15 @@ export function ManagerMenusPanel() {
                 <label
                   htmlFor={`${PANEL_ID}-${id}`}
                   className="flex min-w-0 flex-1 items-center gap-2 text-sm"
+                  data-action={id}
                 >
                   {Icon && <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />}
-                  <span className="truncate">{label}</span>
+                  <span className="truncate">{labelOf(id)}</span>
                 </label>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label={t('settings_actionMoveUp', label)}
-                  title={t('settings_actionMoveUp', label)}
-                  disabled={!visible || index === 0 || !shownIds.has(group[index - 1])}
-                  onClick={() => move(groupIndex, index, -1)}
-                >
-                  <ArrowUp className="h-4 w-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label={t('settings_actionMoveDown', label)}
-                  title={t('settings_actionMoveDown', label)}
-                  disabled={!visible || !shownIds.has(group[index + 1] ?? '')}
-                  onClick={() => move(groupIndex, index, 1)}
-                >
-                  <ArrowDown className="h-4 w-4" />
-                </Button>
-              </li>
+              </>
             );
-          })}
-        </ul>
+          }}
+        />
       ))}
     </OptionsPanel>
   );

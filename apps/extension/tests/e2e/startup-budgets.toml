@@ -17,8 +17,9 @@
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
 # for the manager's shared title and folder-path helpers Options loads with the page shell
-# (1,061 on 2026-10-12).
-"options.html" = 1075
+# (1,061 on 2026-10-12), then from 1075 for the reorderable list in Settings (1,109 on 2026-10-20:
+# Pragmatic drag and drop's drop indicator with its Compiled styles, auto-scroll, and live region).
+"options.html" = 1125
 "bookmarks.html" = 1370
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
