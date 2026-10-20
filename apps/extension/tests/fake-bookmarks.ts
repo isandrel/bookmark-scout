@@ -18,6 +18,8 @@ export type FakeBookmarkSeed = {
   dateAdded?: number;
   /** A folder the browser manages (`'managed'`). */
   unmodifiable?: 'managed';
+  /** A Firefox separator: no URL and no children. */
+  type?: 'separator';
 };
 
 export type FakeBookmarks = {
@@ -42,6 +44,7 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
     children?: string[];
     dateAdded?: number;
     unmodifiable?: 'managed';
+    type?: 'separator';
   };
   const nodes = new Map<string, Stored>([
     [FAKE_ROOT_ID, { id: FAKE_ROOT_ID, title: '', children: [] }],
@@ -71,6 +74,7 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       ...(stored.url ? { url: stored.url } : {}),
       ...(stored.dateAdded ? { dateAdded: stored.dateAdded } : {}),
       ...(stored.unmodifiable ? { unmodifiable: stored.unmodifiable } : {}),
+      ...(stored.type ? { type: stored.type } : {}),
       ...(index !== undefined && index >= 0 ? { index } : {}),
       ...(stored.children ? { children: stored.children.map((child) => toNode(need(child))) } : {}),
     } as Node;
@@ -83,6 +87,7 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       url?: string;
       dateAdded?: number;
       unmodifiable?: 'managed';
+      type?: 'separator';
     },
     id = String(nextId++),
   ) => {
@@ -95,7 +100,11 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       id,
       parentId,
       title: details.title ?? '',
-      ...(details.url ? { url: details.url } : { children: [] }),
+      ...(details.type === 'separator'
+        ? { type: details.type }
+        : details.url
+          ? { url: details.url }
+          : { children: [] }),
       ...(details.dateAdded ? { dateAdded: details.dateAdded } : {}),
       ...(details.unmodifiable ? { unmodifiable: details.unmodifiable } : {}),
     });

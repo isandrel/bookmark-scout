@@ -239,18 +239,24 @@ async function storeBookmarkClipboard(
   return data;
 }
 
+/**
+ * Creates a copy of `node` with everything inside it: titles, addresses, empty folders, Firefox
+ * separators (only Firefox has them, so only Firefox copies them), and tags and summaries under
+ * the copies' new ids. Browser-managed fields (ids, dates) are the browser's own for the copies.
+ */
 async function createCopy(
   writer: BookmarkWriter,
   node: RecoverableBookmarkNode,
   parentId: string,
   index?: number,
 ): Promise<number> {
-  if (node.type === 'separator') return 0;
   const created = await writer.create({
     parentId,
     ...(index === undefined ? {} : { index }),
     title: node.title,
     ...(node.url ? { url: node.url } : {}),
+    ...(node.type ? { type: node.type } : {}),
+    ...(node.metadata ? { metadata: node.metadata } : {}),
   });
   let count = 1;
   for (const child of node.children ?? []) count += await createCopy(writer, child, created.id);

@@ -561,8 +561,11 @@ export type BookmarkChange = {
   title: string;
   /** Values the live bookmark must still have. */
   expect?: BookmarkExpectation;
-  /** Any further condition on the live bookmark (with its subtree), such as a duplicate key. */
-  check?: (live: Browser.bookmarks.BookmarkTreeNode) => boolean;
+  /**
+   * Any further condition, checked right before this change is made: on the live bookmark (with
+   * its subtree), such as a duplicate key, or on others it depends on, such as a kept copy.
+   */
+  check?: (live: Browser.bookmarks.BookmarkTreeNode) => boolean | Promise<boolean>;
 } & (
   | { kind: 'update'; set: BookmarkFields }
   | { kind: 'move'; to: BookmarkMoveTarget }
@@ -704,7 +707,7 @@ export async function applyBookmarkChanges(
           issues.push({ id: change.id, title: change.title, reason: 'deleted' });
           continue;
         }
-        if (!matchesFields(live, change.expect) || (change.check && !change.check(live))) {
+        if (!matchesFields(live, change.expect) || (change.check && !(await change.check(live)))) {
           issues.push({ id: change.id, title: change.title, reason: 'changed' });
           continue;
         }

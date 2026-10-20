@@ -21,7 +21,10 @@ beforeEach(() => {
   fakeBrowser.reset();
   vi.restoreAllMocks();
   setLanguage('en');
-  bookmarks = installFakeBookmarks([{ id: 'target', title: 'Target' }]);
+  bookmarks = installFakeBookmarks([
+    { id: 'target', title: 'Target' },
+    { id: 'other', title: 'Other folder' },
+  ]);
 });
 
 const titles = (folderId: string) =>
@@ -423,5 +426,34 @@ describe('applying an import plan', () => {
     expect(await outcome.undo()).toEqual({ removed: 2, failed: 1 });
     expect(titles('target')).toEqual(['Other']);
     expect(titles(otherId)).toEqual(['Mine']);
+  });
+
+  it('undo keeps imported items the user edited, moved, or re-tagged since (L23)', async () => {
+    const plan = planImport(
+      parseJson([
+        { title: 'Renamed later', url: 'https://e2e.invalid/renamed' },
+        { title: 'Folder', children: [{ title: 'Inner', url: 'https://e2e.invalid/inner' }] },
+        { title: 'Re-addressed', url: 'https://e2e.invalid/old' },
+        { title: 'Tagged later', url: 'https://e2e.invalid/tagged' },
+        { title: 'Moved out', url: 'https://e2e.invalid/moved' },
+        { title: 'Untouched', url: 'https://e2e.invalid/untouched' },
+      ]),
+      browserTree(),
+      'target',
+      'import-all',
+    );
+    const outcome = await applyImportPlan(plan);
+    const [renamed, folder, readdressed, tagged, moved] = bookmarks.childIds('target');
+    const [inner] = bookmarks.childIds(folder);
+    await fakeBrowser.bookmarks.update(renamed, { title: 'My name' });
+    await fakeBrowser.bookmarks.update(inner, { title: 'Edited inside' });
+    await fakeBrowser.bookmarks.update(readdressed, { url: 'https://e2e.invalid/new' });
+    await bookmarkMetadataValue.set({ [tagged]: { tags: ['mine'] } });
+    await fakeBrowser.bookmarks.move(moved, { parentId: 'other' });
+
+    expect(await outcome.undo()).toEqual({ removed: 1, failed: 5 });
+    expect(titles('target')).toEqual(['My name', 'Folder', 'Re-addressed', 'Tagged later']);
+    expect(titles(folder)).toEqual(['Edited inside']);
+    expect(bookmarks.get(moved)?.parentId).toBe('other');
   });
 });
