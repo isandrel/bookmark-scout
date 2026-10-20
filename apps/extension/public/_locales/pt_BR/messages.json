@@ -6734,5 +6734,9 @@
     "settings_treeDragAndDropDesc": {
         "message": "No pop-up e no painel lateral, arraste favoritos e pastas para movê-los, e solte links de uma página da web em uma pasta do painel lateral para salvá-los nela",
         "description": "Description of the Drag and Drop in the Tree setting"
+    },
+    "error_auditStore": {
+        "message": "A alteração não foi feita: não foi possível salvar o histórico de favoritos neste dispositivo.",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
     }
 }

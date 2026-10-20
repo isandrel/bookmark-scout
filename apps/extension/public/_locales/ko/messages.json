@@ -6726,5 +6726,9 @@
     "settings_treeDragAndDropDesc": {
         "message": "팝업과 사이드 패널에서 북마크와 폴더를 끌어 옮기고, 웹 페이지의 링크를 사이드 패널의 폴더에 놓아 저장합니다",
         "description": "Description of the Drag and Drop in the Tree setting"
+    },
+    "error_auditStore": {
+        "message": "변경하지 않았습니다: 이 기기에 북마크 기록을 저장할 수 없었습니다.",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
     }
 }

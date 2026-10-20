@@ -6726,5 +6726,9 @@
     "settings_treeDragAndDropDesc": {
         "message": "ポップアップとサイドパネルで、ブックマークやフォルダをドラッグして移動し、ウェブページのリンクをサイドパネルのフォルダにドロップして保存します",
         "description": "Description of the Drag and Drop in the Tree setting"
+    },
+    "error_auditStore": {
+        "message": "変更は行われませんでした: このデバイスにブックマークの履歴を保存できませんでした。",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
     }
 }

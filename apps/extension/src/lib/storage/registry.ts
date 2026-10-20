@@ -169,3 +169,17 @@ export function isRegisteredKey(area: StorageAreaName, key: string): boolean {
  * storage, not extension storage, so the cleanup never sees it.
  */
 export const THEME_CACHE_STORAGE_KEY = 'theme';
+
+/**
+ * IndexedDB databases the extension keeps, next to the storage items above, for data too large
+ * or too structured for extension storage. Device-local like `local`, never synced, and never in
+ * the backup file. The install and update cleanup does not touch them; each owner versions its
+ * own schema (IndexedDB's `version` and an upgrade step) and prunes by its own retention.
+ */
+export const INDEXED_DATABASES = {
+  /**
+   * The Bookmark Audit History (`lib/bookmark-audit-store.ts`): records of bookmark changes and
+   * their item rows, kept for `config/bookmarks/audit.toml`'s retention.
+   */
+  bookmarkAudit: { name: 'bookmark-scout-audit', backup: 'exclude' },
+} as const satisfies Record<string, { name: string; backup: BackupPolicy }>;

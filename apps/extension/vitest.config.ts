@@ -14,7 +14,7 @@ export default defineConfig({
   define: siteDefines,
   test: {
     include: ['tests/unit/**/*.test.{ts,tsx}'],
-    setupFiles: ['tests/unit/setup/register-locales.ts'],
+    setupFiles: ['tests/unit/setup/register-locales.ts', 'tests/unit/setup/indexeddb.ts'],
     // The drop indicator imports its compiled CSS, which Node cannot load: use its ES module build
     // (as the extension build does) and let Vite transform it.
     alias: [

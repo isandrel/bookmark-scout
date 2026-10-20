@@ -6528,5 +6528,9 @@
     "settings_treeDragAndDropDesc": {
         "message": "在彈出視窗和側邊面板中拖曳書籤和資料夾來移動它們，並可將網頁中的連結拖到側邊面板的資料夾上儲存",
         "description": "Description of the Drag and Drop in the Tree setting"
+    },
+    "error_auditStore": {
+        "message": "未進行變更：無法在此裝置上儲存書籤記錄。",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
     }
 }

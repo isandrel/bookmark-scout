@@ -20,7 +20,9 @@
 # (1,061 on 2026-10-12), then from 1075 for the reorderable list in Settings (1,109 on 2026-10-20:
 # Pragmatic drag and drop's drop indicator with its Compiled styles, auto-scroll, and live region).
 "options.html" = 1125
-"bookmarks.html" = 1370
+# Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
+# written around every bookmark change), which the manager needs from its first change.
+"bookmarks.html" = 1400
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

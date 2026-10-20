@@ -6734,5 +6734,9 @@
     "settings_treeDragAndDropDesc": {
         "message": "En la ventana emergente y el panel lateral, arrastra marcadores y carpetas para moverlos, y suelta enlaces de una página web sobre una carpeta del panel lateral para guardarlos ahí",
         "description": "Description of the Drag and Drop in the Tree setting"
+    },
+    "error_auditStore": {
+        "message": "No se hizo el cambio: no se pudo guardar el historial de marcadores en este dispositivo.",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
     }
 }

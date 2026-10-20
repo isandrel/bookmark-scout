@@ -1,6 +1,6 @@
 # Privacy Disclosures
 
-What the extension does with data in the source after version `0.3.2` (the next release), checked against the source on 2026-10-18, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/privacy/>.
+What the extension does with data in the source after version `0.3.2` (the next release), checked against the source on 2026-10-20, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/privacy/>.
 
 ## Facts checked in the code
 
@@ -49,6 +49,7 @@ What the extension does with data in the source after version `0.3.2` (the next 
 | Last quick save (`quick-save.last`): the page title and URL, where it was saved, and the folders offered, for Undo and Move | `storage.session`, cleared when the browser closes | No | No |
 | Bookmark changes Ask AI proposed (`ai.action-plans`): the changes in each plan (bookmark and folder ids, titles, URLs, folder paths) and a one-line summary the model wrote, until the user applies it; at most 10 plans, each usable for 60 minutes (`apps/extension/config/ai/actions.toml`) | `storage.session`, cleared when the browser closes | No | No |
 | Manager undo history (`bookmarks.history`): the bookmarks changed in the manager or by Ask AI (ids, titles, URLs, folders, positions), with copies of deleted ones and their tags and summaries, for Ctrl+Z and Ctrl+Y; at most the last 100 changes and 4 MB, a large change stored gzip-compressed (`apps/extension/config/bookmarks/history.toml`) | `storage.session`, cleared when the browser closes | No | No |
+| Bookmark change history (IndexedDB `bookmark-scout-audit`, `apps/extension/src/lib/bookmark-audit-store.ts`): one record per change Bookmark Scout makes to bookmarks (when, which surface, counts, outcome) and its rows (bookmark ids, titles, URLs, folder ids and positions before and after), for the History; finished records kept for `retention_days` in `config/bookmarks/audit.toml`, at most `max_operations`; records that need review are kept until resolved | IndexedDB on this device | No | No |
 | Manager clipboard (`manager.clipboard`): the ids of the bookmarks the manager's Cut or Copy holds, whether they were cut, when, and a short hash of the text put on the system clipboard (not the text), so every manager tab can paste them; at most 10,000 items (`apps/extension/config/bookmarks/clipboard.toml`) | `storage.session`, cleared when the browser closes | No | No |
 | Recent searches (`search.history`) | `storage.local`, can be turned off in Settings | No | No |
 | Site icons (`site-icons.cache`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No | No |

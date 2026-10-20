@@ -6734,5 +6734,9 @@
     "settings_treeDragAndDropDesc": {
         "message": "Im Pop-up und in der Seitenleiste Lesezeichen und Ordner ziehen, um sie zu verschieben, und Links von einer Webseite auf einen Ordner der Seitenleiste ziehen, um sie dort zu speichern",
         "description": "Description of the Drag and Drop in the Tree setting"
+    },
+    "error_auditStore": {
+        "message": "Die Änderung wurde nicht ausgeführt: Der Lesezeichen-Verlauf konnte auf diesem Gerät nicht gespeichert werden.",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
     }
 }
