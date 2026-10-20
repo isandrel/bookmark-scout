@@ -6718,5 +6718,13 @@
     "fileDrop_restore": {
         "message": "設定のバックアップをドロップして復元",
         "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "ツリーのドラッグ＆ドロップ",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "ポップアップとサイドパネルで、ブックマークやフォルダをドラッグして移動し、ウェブページのリンクをサイドパネルのフォルダにドロップして保存します",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

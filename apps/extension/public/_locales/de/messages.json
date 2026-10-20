@@ -6726,5 +6726,13 @@
     "fileDrop_restore": {
         "message": "Einstellungssicherung ablegen, um sie wiederherzustellen",
         "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "Ziehen und Ablegen in der Baumansicht",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "Im Pop-up und in der Seitenleiste Lesezeichen und Ordner ziehen, um sie zu verschieben, und Links von einer Webseite auf einen Ordner der Seitenleiste ziehen, um sie dort zu speichern",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

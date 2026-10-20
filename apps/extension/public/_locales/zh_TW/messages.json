@@ -6520,5 +6520,13 @@
     "fileDrop_restore": {
         "message": "拖入設定備份即可還原",
         "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "樹狀清單中的拖放",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "在彈出視窗和側邊面板中拖曳書籤和資料夾來移動它們，並可將網頁中的連結拖到側邊面板的資料夾上儲存",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

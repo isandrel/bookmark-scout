@@ -26,11 +26,15 @@ export type PopupTreeProps = {
   canReorder: boolean;
   /** Called with the dragged row's id when a drag starts, and null when it ends. */
   onDraggingChange?: (id: string | null) => void;
+  /** Whether rows drag and take link drops (the Drag and Drop in the Tree setting). */
+  dragAndDrop?: boolean;
+  /** Links dropped from a web page on a folder row. */
+  onLinksDrop?: (folder: BookmarkTreeNode, links: { url: string; title: string }[]) => void;
 };
 
 export type PopupTreeContextValue = Omit<
   PopupTreeProps,
-  'onDrop' | 'folders' | 'canReorder' | 'onDraggingChange'
+  'onDrop' | 'folders' | 'canReorder' | 'onDraggingChange' | 'dragAndDrop' | 'onLinksDrop'
 > &
   TreeDnd & {
     /** Browsers reject moving or deleting permanent root folders and any change to managed nodes. */
@@ -50,6 +54,8 @@ export function PopupTreeProvider({
   onDrop,
   canReorder,
   onDraggingChange,
+  dragAndDrop,
+  onLinksDrop,
   ...actions
 }: PopupTreeProps & { children: ReactNode }) {
   const canModify = useMemo(() => {
@@ -62,7 +68,13 @@ export function PopupTreeProvider({
     (node: BookmarkTreeNode) => node.children === undefined || canModify(node),
     [canModify],
   );
-  const dnd = useTreeDnd(onDrop, { canMove, canReorder, onDraggingChange });
+  const dnd = useTreeDnd(onDrop, {
+    canMove,
+    canReorder,
+    onDraggingChange,
+    enabled: dragAndDrop,
+    onLinksDrop,
+  });
   const fullNode = useMemo(() => {
     const byId = new Map<string, BookmarkTreeNode>();
     const index = (nodes: readonly BookmarkTreeNode[]) => {

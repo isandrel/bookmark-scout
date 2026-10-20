@@ -6726,5 +6726,13 @@
     "fileDrop_restore": {
         "message": "Drop a settings backup to restore it",
         "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "Drag and Drop in the Tree",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "In the popup and side panel, drag bookmarks and folders to move them, and drop links from a web page on a side panel folder to save them there",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

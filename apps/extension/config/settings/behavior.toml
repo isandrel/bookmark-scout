@@ -6,6 +6,9 @@
 sort_order = "browser"
 # Organize bookmarks by folder structure
 group_by_folders = true
+# Drag bookmarks and folders in the popup and side panel tree, and drop links from web pages on a
+# side panel folder; off keeps the tree still for people who drag by accident while scrolling
+drag_and_drop = true
 
 [links]
 # Where a clicked link opens: "new_tab" (switch to it), "background_tab" (stay here), or

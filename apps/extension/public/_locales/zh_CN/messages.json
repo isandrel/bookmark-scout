@@ -6520,5 +6520,13 @@
     "fileDrop_restore": {
         "message": "拖入设置备份即可恢复",
         "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "树中的拖放",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "在弹出窗口和侧边栏中拖动书签和文件夹来移动它们，并可将网页中的链接拖到侧边栏的文件夹上保存",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }
