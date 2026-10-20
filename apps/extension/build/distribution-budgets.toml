@@ -25,19 +25,22 @@
 # 5,191,926 / 5,191,888 / 5,192,153 B (Chrome / Edge / Firefox), and 3,453,673 B of JavaScript,
 # against main (87cbf244) at ZIP 1,613,680 and 5,151,110 B uncompressed (Firefox); the new limits are
 # about 6 KB (ZIP) and 10 KB above the branch.
+# Uncompressed raised again on 2026-10-20 (5,202,000 to 5,212,000) after #710 and #712 (next, docs,
+# and minor dependency updates) merged into #709: CI measured the Firefox build at 5,202,161 B, 161 B
+# over; the new limit is about 10 KB above that.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_632_000
-raw_bytes = 5_202_000
+raw_bytes = 5_212_000
 
 [targets.edge]
 zip_bytes = 1_632_000
-raw_bytes = 5_202_000
+raw_bytes = 5_212_000
 
 [targets.firefox]
 zip_bytes = 1_632_000
-raw_bytes = 5_202_000
+raw_bytes = 5_212_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
