@@ -154,6 +154,11 @@ export async function deleteSavedSearch(id: string): Promise<SavedSearch[]> {
   return savedSearchesValue.update((current) => current.filter((search) => search.id !== id));
 }
 
+/** Puts the saved searches in `ids` order (the order the menu lists them in). */
+export async function reorderSavedSearches(ids: readonly string[]): Promise<SavedSearch[]> {
+  return savedSearchesValue.update((current) => orderByIds(current, (search) => search.id, ids));
+}
+
 /** Puts a deleted saved search back at its old position (undo). */
 export function restoreSavedSearchInList(
   searches: readonly SavedSearch[],

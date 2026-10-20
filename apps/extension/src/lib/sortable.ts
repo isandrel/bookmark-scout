@@ -109,3 +109,19 @@ export function availableMoves(
     SORTABLE_MOVES.map((move) => [move, reorderByMove(ids, id, move, isMovable) !== null]),
   ) as Record<SortableMove, boolean>;
 }
+
+/**
+ * `items` in the order of `ids`, for storing a reordered list: ids that are gone are skipped,
+ * and items missing from `ids` (added in another tab meanwhile) stay at the end in their order.
+ */
+export function orderByIds<T>(
+  items: readonly T[],
+  getId: (item: T) => string,
+  ids: readonly string[],
+): T[] {
+  const rank = new Map(ids.map((id, index) => [id, index]));
+  const last = Number.MAX_SAFE_INTEGER;
+  return [...items].sort(
+    (left, right) => (rank.get(getId(left)) ?? last) - (rank.get(getId(right)) ?? last),
+  );
+}

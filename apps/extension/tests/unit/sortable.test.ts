@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   availableMoves,
+  orderByIds,
   reorderByDrop,
   reorderByMove,
   SORTABLE_FLASH_MS,
@@ -68,4 +69,12 @@ describe('availableMoves', () => {
 
 it('reads the flash length from config/ui/sortable-list.toml', () => {
   expect(SORTABLE_FLASH_MS).toBe(readConfigToml('ui/sortable-list.toml').flash_ms);
+});
+
+describe('orderByIds', () => {
+  it('orders items by id, skips ids that are gone, and keeps new items at the end', () => {
+    const items = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'new' }];
+    const ordered = orderByIds(items, (item) => item.id, ['c', 'gone', 'a', 'b']);
+    expect(ordered.map((item) => item.id)).toEqual(['c', 'a', 'b', 'new']);
+  });
 });

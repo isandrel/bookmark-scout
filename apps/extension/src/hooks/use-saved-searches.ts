@@ -11,5 +11,6 @@ export function useSavedSearches() {
     rename: renameSavedSearch,
     remove: deleteSavedSearch,
     restore: restoreSavedSearch,
+    reorder: reorderSavedSearches,
   };
 }

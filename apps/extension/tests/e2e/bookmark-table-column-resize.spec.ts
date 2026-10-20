@@ -228,3 +228,46 @@ test('narrow tables still hide Folder Path and URL so Title stays visible', asyn
   expect(urlReset).toBeGreaterThan(urlStart);
   expect(urlReset).not.toBe(urlStart + 80);
 });
+
+test('the View menu reorders columns by dragging a column by its grip', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'E2E Column Order', [
+    { title: 'Ordered Row', url: 'https://order.e2e.invalid/' },
+  ]);
+  await page.goto(managerUrl(extensionId, folderId));
+  await page.getByRole('button', { name: 'Customize table view' }).click();
+  const list = page.getByRole('list', { name: 'Customize columns' });
+  await expect(list).toBeVisible();
+  const order = () =>
+    list
+      .locator('li')
+      .evaluateAll((items) => items.map((item) => item.getAttribute('data-sortable-id')));
+  const before = await order();
+  const [first, second] = before;
+  const grip = list.locator(`li[data-sortable-id="${second}"] .sortable-grip`);
+  const target = list.locator(`li[data-sortable-id="${first}"]`);
+  const from = await grip.boundingBox();
+  const to = await target.boundingBox();
+  if (!from || !to) throw new Error('Column rows are not visible');
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2 + 4, from.y + from.height / 2 - 4, { steps: 3 });
+  await page.mouse.move(to.x + to.width / 2, to.y + 3, { steps: 12 });
+  await expect(target).toHaveAttribute('data-drop-edge', 'top');
+  await page.mouse.up();
+  await expect.poll(order).toEqual([second, first, ...before.slice(2)]);
+  // The order is the table view's, which syncs.
+  await expect
+    .poll(async () => {
+      const view = await readStored<{ columnOrder?: string[] }>(
+        extensionWorker,
+        STORAGE_ITEMS.tableView,
+      );
+      const columnOrder = view?.columnOrder ?? [];
+      return columnOrder.indexOf(second ?? '') < columnOrder.indexOf(first ?? '');
+    })
+    .toBe(true);
+});

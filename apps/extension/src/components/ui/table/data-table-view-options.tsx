@@ -42,6 +42,17 @@ export function DataTableViewOptions<TData extends RowData>({
     return -1;
   };
 
+  /** Applies a new order of the configurable columns, keeping the fixed columns in place. */
+  const applyConfigurableOrder = (configurableIds: readonly string[]) => {
+    const configurableSet = new Set(configurableIds);
+    let nextConfigurableIndex = 0;
+    table.setColumnOrder(
+      table.state.columnOrder.map((id) =>
+        configurableSet.has(id) ? configurableIds[nextConfigurableIndex++] : id,
+      ),
+    );
+  };
+
   const moveColumn = (index: number, direction: -1 | 1) => {
     const swapIndex = findSwapIndex(index, direction);
     if (index < 0 || swapIndex < 0) return;
@@ -51,13 +62,7 @@ export function DataTableViewOptions<TData extends RowData>({
       configurableIds[swapIndex],
       configurableIds[index],
     ];
-    const configurableSet = new Set(configurableIds);
-    let nextConfigurableIndex = 0;
-    table.setColumnOrder(
-      table.state.columnOrder.map((id) =>
-        configurableSet.has(id) ? configurableIds[nextConfigurableIndex++] : id,
-      ),
-    );
+    applyConfigurableOrder(configurableIds);
   };
 
   return (
@@ -79,49 +84,61 @@ export function DataTableViewOptions<TData extends RowData>({
         <DropdownMenuGroup>
           <DropdownMenuLabel>{t('table_toggleColumns')}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {configurableColumns.map((column, index) => {
-            const hiddenForSpace = spaceHiddenColumnIds.includes(column.id);
-            return (
-              <div key={column.id} className="flex items-center gap-1">
-                <DropdownMenuCheckboxItem
-                  className="min-w-0 flex-1"
-                  checked={
-                    hiddenForSpace
-                      ? columnVisibilityPreference[column.id] !== false
-                      : column.getIsVisible()
-                  }
-                  disabled={hiddenForSpace}
-                  title={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}
-                  aria-description={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {getBookmarkColumnLabel(column.id)}
-                </DropdownMenuCheckboxItem>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  disabled={findSwapIndex(index, -1) < 0}
-                  aria-label={t('table_moveColumnUp', getBookmarkColumnLabel(column.id))}
-                  onClick={() => moveColumn(index, -1)}
-                >
-                  <ArrowUp />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  disabled={findSwapIndex(index, 1) < 0}
-                  aria-label={t('table_moveColumnDown', getBookmarkColumnLabel(column.id))}
-                  onClick={() => moveColumn(index, 1)}
-                >
-                  <ArrowDown />
-                </Button>
-              </div>
-            );
-          })}
+          {/* Drag a column by its grip; the arrow buttons are the same moves from the keyboard. */}
+          <SortableList
+            items={configurableColumns}
+            getId={(column) => column.id}
+            getLabel={(column) => getBookmarkColumnLabel(column.id)}
+            onReorder={applyConfigurableOrder}
+            label={t('table_toggleColumns')}
+            itemClassName="flex items-center gap-1"
+            moveMenu={false}
+            renderItem={(column, handle) => {
+              const index = configurableColumns.indexOf(column);
+              const hiddenForSpace = spaceHiddenColumnIds.includes(column.id);
+              return (
+                <>
+                  {handle}
+                  <DropdownMenuCheckboxItem
+                    className="min-w-0 flex-1"
+                    checked={
+                      hiddenForSpace
+                        ? columnVisibilityPreference[column.id] !== false
+                        : column.getIsVisible()
+                    }
+                    disabled={hiddenForSpace}
+                    title={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}
+                    aria-description={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {getBookmarkColumnLabel(column.id)}
+                  </DropdownMenuCheckboxItem>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    disabled={findSwapIndex(index, -1) < 0}
+                    aria-label={t('table_moveColumnUp', getBookmarkColumnLabel(column.id))}
+                    onClick={() => moveColumn(index, -1)}
+                  >
+                    <ArrowUp />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    disabled={findSwapIndex(index, 1) < 0}
+                    aria-label={t('table_moveColumnDown', getBookmarkColumnLabel(column.id))}
+                    onClick={() => moveColumn(index, 1)}
+                  >
+                    <ArrowDown />
+                  </Button>
+                </>
+              );
+            }}
+          />
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <Button
