@@ -15,6 +15,11 @@ interface DataTableViewOptionsProps<TData extends RowData> {
   columnVisibilityPreference?: Record<string, boolean>;
 }
 
+/** A data column the user may hide and move; the selection and actions columns stay put. */
+export function isConfigurableColumn(column: { accessorFn?: unknown; getCanHide: () => boolean }) {
+  return typeof column.accessorFn !== 'undefined' && column.getCanHide();
+}
+
 export function DataTableViewOptions<TData extends RowData>({
   table,
   onResetView,
@@ -23,7 +28,7 @@ export function DataTableViewOptions<TData extends RowData>({
 }: DataTableViewOptionsProps<TData>) {
   const configurableColumns = table
     .getAllColumns()
-    .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
+    .filter(isConfigurableColumn)
     .sort((left, right) => {
       const order = table.state.columnOrder;
       return order.indexOf(left.id) - order.indexOf(right.id);

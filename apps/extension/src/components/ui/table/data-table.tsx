@@ -533,6 +533,17 @@ export function DataTable<TData extends RowData>({
     },
   });
 
+  // Shown data columns move by dragging their headers, or from the header menus.
+  const columnReorder = useColumnReorder({
+    order: columnOrder,
+    onReorder: setColumnOrder,
+    isMovable: (id) => {
+      const column = table.getColumn(id);
+      return column !== undefined && isConfigurableColumn(column) && visibleColumnIds.includes(id);
+    },
+    getLabel: getBookmarkColumnLabel,
+  });
+
   // Keep the page in range when refreshes or deletions shrink the list. Not before the saved view
   // loads: the restored page may only exist at the saved page size.
   const pageCount = table.getPageCount();
@@ -912,32 +923,35 @@ export function DataTable<TData extends RowData>({
               data-testid="bookmark-grid"
             >
               <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} aria-rowindex={1}>
-                    {headerGroup.headers.map((header) => (
-                      <React.Fragment key={header.id}>
-                        {header.column.id === STICKY_COLUMN_ID && (
-                          <TableHead aria-hidden="true" className={FILLER_CELL_CLASS} />
-                        )}
-                        <TableHead
-                          style={{ width: header.getSize() }}
-                          className={cn(
-                            header.column.getCanResize() && 'relative truncate',
-                            header.column.id === STICKY_COLUMN_ID &&
-                              'sticky right-0 z-10 border-l bg-card px-1',
+                <ColumnReorderContext.Provider value={columnReorder}>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id} aria-rowindex={1}>
+                      {headerGroup.headers.map((header) => (
+                        <React.Fragment key={header.id}>
+                          {header.column.id === STICKY_COLUMN_ID && (
+                            <TableHead aria-hidden="true" className={FILLER_CELL_CLASS} />
                           )}
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(header.column.columnDef.header, header.getContext())}
-                          {header.column.getCanResize() && (
-                            <DataTableColumnResizer header={header} />
-                          )}
-                        </TableHead>
-                      </React.Fragment>
-                    ))}
-                  </TableRow>
-                ))}
+                          <DraggableTableHead
+                            columnId={header.column.id}
+                            style={{ width: header.getSize() }}
+                            className={cn(
+                              header.column.getCanResize() && 'relative truncate',
+                              header.column.id === STICKY_COLUMN_ID &&
+                                'sticky right-0 z-10 border-l bg-card px-1',
+                            )}
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(header.column.columnDef.header, header.getContext())}
+                            {header.column.getCanResize() && (
+                              <DataTableColumnResizer header={header} />
+                            )}
+                          </DraggableTableHead>
+                        </React.Fragment>
+                      ))}
+                    </TableRow>
+                  ))}
+                </ColumnReorderContext.Provider>
               </TableHeader>
               <TableBody>
                 {table.getRowModel().rows?.length ? (
