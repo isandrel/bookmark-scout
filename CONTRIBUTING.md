@@ -1,11 +1,11 @@
 <p align="center">
   <strong lang="en">English</strong> ·
-  <a href="i18n/es/CONTRIBUTING.md" lang="es" hreflang="es">Español</a> ·
-  <a href="i18n/pt-BR/CONTRIBUTING.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
-  <a href="i18n/ja/CONTRIBUTING.md" lang="ja" hreflang="ja">日本語</a> ·
-  <a href="i18n/de/CONTRIBUTING.md" lang="de" hreflang="de">Deutsch</a> ·
-  <a href="i18n/fr/CONTRIBUTING.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="i18n/zh-CN/CONTRIBUTING.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="i18n/es/CONTRIBUTING.md" lang="es" hreflang="es">Español</a> ·
+  <a href="i18n/fr/CONTRIBUTING.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="i18n/pt-BR/CONTRIBUTING.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="i18n/de/CONTRIBUTING.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="i18n/ja/CONTRIBUTING.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="i18n/ko/CONTRIBUTING.md" lang="ko" hreflang="ko">한국어</a> ·
   <a href="i18n/zh-TW/CONTRIBUTING.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>

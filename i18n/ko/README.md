@@ -1,11 +1,11 @@
 <p align="center">
   <a href="../../README.md" lang="en" hreflang="en">English</a> ·
-  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
-  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
-  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
-  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
-  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="../zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <strong lang="ko">한국어</strong> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
@@ -49,7 +49,7 @@
 - ✨ **AI 추천은 선택 사항.** 내 AI 계정이나, Chrome에 내장된 AI처럼 내 컴퓨터에서 돌아가는 무료 AI 모델로 AI가 폴더를 골라 주게 할 수 있습니다. AI는 직접 켜기 전까지 꺼져 있습니다.
 - 🔒 **개인정보를 생각한 설계.** 계정, 광고, 추적이 없고, 개발자에게는 아무것도 전송되지 않습니다. 저장과 검색은 인터넷 연결 없이도 됩니다.
 
-🌍 지원 언어: English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil)
+🌍 지원 언어: English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文
 
 ## 📦 설치
 

@@ -22,6 +22,25 @@ const PREFIXED_LOCALES = site.locales.supported.filter(
 
 const outDir = join(resolve(import.meta.dir, ".."), "out");
 
+/**
+ * Fails unless a list of language tags keeps the configured order (`[locales] supported`), the
+ * one order every language list uses. A list may leave languages out (`complete` says it may not).
+ */
+function checkLanguageOrder(
+  label: string,
+  tags: readonly string[],
+  complete = false,
+) {
+  const expected = site.locales.supported.filter(
+    (tag) => complete || tags.includes(tag),
+  );
+  if (tags.join() !== expected.join()) {
+    fail(
+      `${label}: languages ${tags.join(", ")} should be ${expected.join(", ")}`,
+    );
+  }
+}
+
 /** URLs published before the docs were restructured. They must keep working. */
 const LEGACY_PATHS = [
   "/",
@@ -115,10 +134,30 @@ function checkPage(path: string) {
     fail(`${path}: <html lang="${lang}"> should be "${localeOf(path)}"`);
   }
 
-  for (const [, hreflang, href] of html.matchAll(
-    /<link rel="alternate" hrefLang="([^"]+)" href="([^"]+)"/g,
-  )) {
+  const alternates = [
+    ...html.matchAll(
+      /<link rel="alternate" hrefLang="([^"]+)" href="([^"]+)"/g,
+    ),
+  ];
+  for (const [, hreflang, href] of alternates) {
     checkDocsLink(`${path}: hreflang ${hreflang}`, href ?? "");
+  }
+  checkLanguageOrder(
+    `${path}: hreflang alternates`,
+    alternates.map(([, tag]) => tag ?? "").filter((tag) => tag !== "x-default"),
+  );
+  // The language menu's list, as the page passes it to Fumadocs' client provider.
+  const menu = /\\"locales\\":\[(\{\\"locale\\"[^\]]*)\]/.exec(html)?.[1];
+  if (menu === undefined) {
+    fail(`${path}: no language menu list found`);
+  } else {
+    checkLanguageOrder(
+      `${path}: language menu`,
+      [...menu.matchAll(/\\"locale\\":\\"([^\\"]+)\\"/g)].map(
+        ([, tag]) => tag ?? "",
+      ),
+      true,
+    );
   }
 
   const title = decodeEntities(
@@ -181,6 +220,14 @@ function checkSitemap(): string[] {
     /<xhtml:link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g,
   )) {
     checkDocsLink(`sitemap.xml: hreflang ${hreflang}`, href ?? "");
+  }
+  for (const [index, entry] of sitemap.split("<url>").slice(1).entries()) {
+    checkLanguageOrder(
+      `sitemap.xml: entry ${index + 1} alternates`,
+      [...entry.matchAll(/hreflang="([^"]+)"/g)]
+        .map(([, tag]) => tag ?? "")
+        .filter((tag) => tag !== "x-default"),
+    );
   }
   return paths;
 }

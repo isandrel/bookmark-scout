@@ -105,7 +105,7 @@
 - [x] 💬 **Ask AI** — A chat in the popup and side panel that searches your bookmarks (by words, folder, tag, site, or date), finds duplicates, checks links, and suggests folders. When you ask, it saves pages and proposes moves, renames, deletions, and new folders as a plan that changes nothing until you approve it; answers can end with buttons for the next step. Choose what it may do in Settings
 - [x] 🔌 **Local AI Agents (MCP)** — Let Claude Code, Codex, Cursor, and other MCP clients on your computer search and organize your bookmarks through the `bookmark-scout-mcp` program (`packages/mcp-bridge`), which reaches the extension through native messaging and never opens a network port. Off by default; changes need **Allow changes**, and each one waits for your approval in the browser. See [Use with local AI agents]({{ docs_url }}/guides/local-agents)
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders, after turning on **Right-Click Menu** in Settings
-- [x] 🌍 **i18n** — English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese in the extension, website, and docs
+- [x] 🌍 **i18n** — English, Simplified Chinese, Spanish, French, Brazilian Portuguese, German, Japanese, Korean, and Traditional Chinese in the extension, website, and docs
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
 - [x] ⚙️ **Settings Sync and Backup** — Only the settings you change sync with `chrome.storage.sync`; device-specific values and AI services stay on the device. A backup file saves and restores settings, custom prompts, AI services (never API keys), and saved searches
 

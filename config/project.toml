@@ -23,37 +23,45 @@ spdx = "AGPL-3.0"
 url  = "https://www.gnu.org/licenses/agpl-3.0.html"
 file = "LICENSE"
 
-# Language tags (BCP 47, such as zh-CN). `supported` lists the website's languages, which the
-# README links too; `extension` lists the extension's, one per apps/extension/public/_locales
-# folder (zh-CN is the folder zh_CN), and may be ahead of the website.
+# Language tags (BCP 47, such as zh-CN). `supported` lists the website's and docs' languages,
+# which the README links too; `extension` lists the extension's, one per
+# apps/extension/public/_locales folder (zh-CN is the folder zh_CN), and may be ahead of the website.
+#
+# The list order is the display order everywhere: the website and docs language menus, the
+# README and CONTRIBUTING switchers, the sitemap's alternates, and the extension's Language
+# setting. The rule is most speakers first, with English first as the source language: a new
+# language goes in by its speaker count, at the same place in both lists. Approximate total
+# speakers (Ethnologue-style 2025 estimates): English ~1.5B; Mandarin (Simplified Chinese) ~1.2B;
+# Spanish ~560M; French ~310M; Portuguese ~265M; German ~135M; Japanese ~125M; Korean ~82M;
+# Traditional Chinese readers (Taiwan and Hong Kong) ~30M.
 [locales]
 default   = "en"
-supported = ["en", "ja", "ko", "zh-CN", "zh-TW", "es", "de", "fr", "pt-BR"]
-extension = ["en", "ja", "ko", "zh-CN", "zh-TW", "es", "de", "fr", "pt-BR"]
+supported = ["en", "zh-CN", "es", "fr", "pt-BR", "de", "ja", "ko", "zh-TW"]
+extension = ["en", "zh-CN", "es", "fr", "pt-BR", "de", "ja", "ko", "zh-TW"]
 
 # Each language's own name, for language switchers.
 [locales.names]
 en = "English"
-ja = "日本語"
-ko = "한국어"
 "zh-CN" = "简体中文"
-"zh-TW" = "繁體中文"
 es = "Español"
-de = "Deutsch"
 fr = "Français"
 "pt-BR" = "Português (Brasil)"
+de = "Deutsch"
+ja = "日本語"
+ko = "한국어"
+"zh-TW" = "繁體中文"
 
 # Open Graph locale codes.
 [locales.og]
 en = "en_US"
-ja = "ja_JP"
-ko = "ko_KR"
 "zh-CN" = "zh_CN"
-"zh-TW" = "zh_TW"
 es = "es_ES"
-de = "de_DE"
 fr = "fr_FR"
 "pt-BR" = "pt_BR"
+de = "de_DE"
+ja = "ja_JP"
+ko = "ko_KR"
+"zh-TW" = "zh_TW"
 
 [browsers]
 supported = ["chrome", "firefox", "edge"]
@@ -93,15 +101,11 @@ privacy_effective_date = "2026-10-18"
 # a file at the root without `.md`. A document has every language in `[locales] supported`
 # unless [markdown.languages] lists fewer (the default language is required). The default
 # language's copy goes to the root (README.md), the others to <dir>/<tag>/ (i18n/ja/README.md),
-# and each template sits at the same path under templates/.
+# and each template sits at the same path under templates/. The language switcher follows the
+# order of `[locales] supported`.
 [markdown]
 dir       = "i18n"
 documents = ["README", "CONTRIBUTING", "DEVELOPMENT"]
-# The language switcher's order, by audience: English is the source; Spanish and Portuguese
-# (Brazil) are large Chrome audiences; the Chrome Web Store is not reachable from mainland China
-# without a VPN, so Simplified Chinese sits lower for a Chrome-first extension. Lists every
-# supported language exactly once, the default language first.
-language_order = ["en", "es", "pt-BR", "ja", "de", "fr", "zh-CN", "ko", "zh-TW"]
 
 # Documents with fewer languages than every supported one.
 [markdown.languages]

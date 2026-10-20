@@ -248,9 +248,9 @@ Any new or changed user-facing extension string must be reflected in every `publ
 
 To add a language:
 
-1. Add its tag (BCP 47, such as `zh-CN`) to `[locales] extension` in `config/project.toml`. The website's `supported` list is separate and can come later.
+1. Add its tag (BCP 47, such as `zh-CN`) to `[locales] extension` in `config/project.toml`, at its place by speaker count (the list order is the Language setting's order, and the one language order of every surface). The website's `supported` list is separate and can come later, at the same place.
 2. Add `public/_locales/<folder>/messages.json`, where the folder is the tag with an underscore (`zh_CN`), as Chrome expects. Translate every key, `meta_languageName` included (the language's own name), and keep every `$1`/`$NAME$` placeholder.
-3. Add the folder name to the `SupportedLocale` type in `src/hooks/use-i18n.ts` and a `react-day-picker` locale to `calendarLocales` in `src/components/ui/calendar.tsx` (a type error until you do).
+3. Add the folder name to `SUPPORTED_LOCALES` in `src/hooks/use-i18n.ts`, at the same place as in `[locales] extension` (`tests/unit/locale-messages.test.ts` checks the order), and a `react-day-picker` locale to `calendarLocales` in `src/components/ui/calendar.tsx` (a type error until you do).
 4. Plurals: `tPlural` picks `<key>_<category>` by `Intl.PluralRules` (`_one` in English; `_one`, `_few`, `_many` in Russian) and falls back to `<key>`. `tests/unit/locale-messages.test.ts` lists any form a language needs and lacks.
 5. Add `store/listings/<folder>.md`; the Chrome Web Store adds a listing language for each `_locales` folder.
 

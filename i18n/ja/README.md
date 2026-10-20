@@ -1,11 +1,11 @@
 <p align="center">
   <a href="../../README.md" lang="en" hreflang="en">English</a> ·
-  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
-  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
-  <strong lang="ja">日本語</strong> ·
-  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
-  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="../zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <strong lang="ja">日本語</strong> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
@@ -49,7 +49,7 @@
 - ✨ **AI の提案は任意。** 自分の AI アカウント、または Chrome に組み込まれた AI など自分のパソコンで動く無料の AI モデルを使って、AI にフォルダを選ばせることもできます。AI は自分でオンにするまでオフのままです。
 - 🔒 **プライバシーを重視した設計。** アカウント、広告、トラッキングはなく、開発者には何も届きません。保存と検索はオフラインでも使えます。
 
-🌍 対応言語: English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil)
+🌍 対応言語: English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文
 
 ## 📦 インストール
 

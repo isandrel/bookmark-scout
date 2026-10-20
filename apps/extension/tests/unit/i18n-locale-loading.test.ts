@@ -130,14 +130,14 @@ describe('on-demand locale loading', () => {
 
   it('names every locale without loading its messages', () => {
     expect(i18n.SUPPORTED_LOCALES.map(i18n.getLanguageName)).toEqual([
-      'Deutsch',
       'English',
+      '简体中文',
       'Español',
       'Français',
+      'Português (Brasil)',
+      'Deutsch',
       '日本語',
       '한국어',
-      'Português (Brasil)',
-      '简体中文',
       '繁體中文',
     ]);
     expect(fetchFile).not.toHaveBeenCalled();

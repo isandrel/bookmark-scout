@@ -55,6 +55,17 @@ function attr(html: string, pattern: RegExp): string[] {
     return [...html.matchAll(pattern)].map((match) => match[1] ?? "");
 }
 
+/**
+ * Fails unless a list of language tags is the configured order (`[locales] supported`), once or
+ * repeated (the header has a desktop menu and a mobile list). Every language list on the site
+ * uses that one order.
+ */
+function checkLanguageOrder(label: string, tags: readonly string[]) {
+    const inOrder = tags.length > 0 && tags.length % LOCALES.length === 0 &&
+        tags.every((tag, index) => tag === LOCALES[index % LOCALES.length]);
+    if (!inOrder) fail(`${label}: languages ${tags.join(", ")} should be in the order ${LOCALES.join(", ")}`);
+}
+
 function checkPage(locale: string, route: string) {
     const label = pagePath(locale, route);
     const html = readOut(join(label, "index.html"));
@@ -92,6 +103,9 @@ function checkPage(locale: string, route: string) {
     if (alternates.get("x-default") !== pageUrl(DEFAULT_LOCALE, route)) {
         fail(`${label}: hreflang x-default should point to ${pageUrl(DEFAULT_LOCALE, route)}`);
     }
+    checkLanguageOrder(`${label}: hreflang alternates`, [...alternates.keys()].filter((tag) => tag !== "x-default") as string[]);
+    const header = /<header[\s\S]*?<\/header>/.exec(html)?.[0] ?? "";
+    checkLanguageOrder(`${label}: header language links`, attr(header, /<a [^>]*hrefLang="([^"]+)"/g));
 
     for (const image of attr(html, /<meta property="og:image" content="([^"]+)"/g)) {
         if (!image.startsWith(SITE_URL)) fail(`${label}: og:image ${image} is not on ${SITE_URL}`);
@@ -124,6 +138,12 @@ function checkSitemap() {
             const loc = pageUrl(locale, route);
             if (!sitemap.includes(`<loc>${loc}</loc>`)) fail(`sitemap.xml: missing ${loc}`);
         }
+    }
+    for (const [index, entry] of sitemap.split("<url>").slice(1).entries()) {
+        checkLanguageOrder(
+            `sitemap.xml: entry ${index + 1} alternates`,
+            attr(entry, /hreflang="([^"]+)"/g).filter((tag) => tag !== "x-default"),
+        );
     }
     if (/<lastmod>[^<]*T\d{2}:\d{2}:\d{2}\.\d{3}Z<\/lastmod>/.test(sitemap)) {
         fail("sitemap.xml: lastmod looks like the build time; use a content date or omit it");

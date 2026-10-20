@@ -237,26 +237,14 @@ describe('bundled locales', () => {
     };
   };
 
-  it('are the _locales folders, each named by the SupportedLocale type', () => {
+  it('are the _locales folders', () => {
     const folders = readdirSync(path.join(appRoot, 'public/_locales')).sort();
-    expect([...SUPPORTED_LOCALES]).toEqual(folders);
-    // A new folder needs its code in the type too (excess keys fail type checking).
-    const typed = {
-      de: true,
-      en: true,
-      es: true,
-      fr: true,
-      ja: true,
-      ko: true,
-      pt_BR: true,
-      zh_CN: true,
-      zh_TW: true,
-    } satisfies Record<SupportedLocale, true>;
-    expect([...SUPPORTED_LOCALES]).toEqual(Object.keys(typed));
+    expect([...SUPPORTED_LOCALES].sort()).toEqual(folders);
   });
 
-  it('are the workspace extension locales, with the workspace default as the fallback', () => {
-    expect(SUPPORTED_LOCALES.map(toLanguageTag).sort()).toEqual([...project.locales.extension].sort());
+  it('are the workspace extension locales in their order, with the workspace default as the fallback', () => {
+    // The Language setting lists them in this order, the one language order of every surface.
+    expect(SUPPORTED_LOCALES.map(toLanguageTag)).toEqual(project.locales.extension);
     expect(FALLBACK_LOCALE).toBe(project.locales.default);
   });
 

@@ -1,11 +1,11 @@
 <p align="center">
   <a href="../../README.md" lang="en" hreflang="en">English</a> ·
-  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
-  <strong lang="pt-BR">Português (Brasil)</strong> ·
-  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
-  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
-  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="../zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <strong lang="pt-BR">Português (Brasil)</strong> ·
+  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
@@ -49,7 +49,7 @@
 - ✨ **Sugestões opcionais da IA.** Deixe a IA escolher a pasta para você, usando sua própria conta de IA ou um modelo de IA gratuito no seu computador, como o que vem integrado ao Chrome. A IA fica desativada até você ativá-la.
 - 🔒 **Privacidade desde o início.** Sem conta, sem anúncios, sem rastreamento, e nada vai para o desenvolvedor. Salvar e pesquisar funcionam até sem internet.
 
-🌍 Disponível em English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil).
+🌍 Disponível em English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文.
 
 ## 📦 Instalação
 
