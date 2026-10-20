@@ -5,6 +5,7 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
 import type { ComponentType } from "react";
 import { StartHere } from "@/components/home/start-here";
+import { Languages } from "@/components/mdx/languages";
 import {
   Contact,
   License,
@@ -28,6 +29,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Tab,
     Tabs,
     Contact,
+    Languages,
     License,
     PrivacyEffectiveDate,
     ReleaseLink,
@@ -58,6 +60,7 @@ function withLocale<Props extends { locale?: string }>(
  */
 export function localizedMdxComponents(locale: string): MDXComponents {
   return {
+    Languages: withLocale(Languages, locale),
     PrivacyEffectiveDate: withLocale(PrivacyEffectiveDate, locale),
     ReleaseLink: withLocale(ReleaseLink, locale),
     Screenshot: withLocale(Screenshot, locale),

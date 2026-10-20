@@ -306,7 +306,7 @@ If the logic already belongs to an established layer, extend that layer instead 
 
 Bookmark Scout already supports multiple locales and agents must preserve that support.
 
-Languages appear in one order everywhere: the order of `[locales] supported` (and `extension`) in `config/project.toml`, most speakers first with English first as the source language. The website and docs language menus, hreflang alternates and sitemaps, the README and CONTRIBUTING switchers, and the extension's Language setting all derive it; a new language goes in at its place by speaker count. The config loader, `scripts/language-order.test.ts`, each site's `verify` script, and the extension's `locale-messages.test.ts` fail on another order, so never sort or hand-type a language list.
+Languages appear in one order everywhere: the order of `[locales] supported` (and `extension`) in `config/project.toml`, most speakers first with English first as the source language. The website and docs language menus, hreflang alternates and sitemaps, the README and CONTRIBUTING switchers, the docs pages' `<Languages />` lists, and the extension's Language setting all derive it; a new language goes in at its place by speaker count. The config loader, `scripts/language-order.test.ts`, each site's `verify` script, and the extension's `locale-messages.test.ts` fail on another order, so never sort or hand-type a language list.
 
 ### Extension
 

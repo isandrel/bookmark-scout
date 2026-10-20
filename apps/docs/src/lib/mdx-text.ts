@@ -1,6 +1,7 @@
 import { site } from "@bookmark-scout/config";
 import { getCopy } from "@/lib/copy";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
+import { languageList } from "@/lib/languages";
 import {
   type ContactRole,
   contactAddress,
@@ -81,6 +82,18 @@ const replacementsFor = (
   ],
   [/<Shortcut\s+id="([^"]+)"\s*\/>/g, (id) => shortcutMarkdown(id, locale)],
   [/<License\s*\/>/g, () => `[${license.name}](${license.url})`],
+  [
+    /<Languages((?:\s+\w+(?:="[^"]*")?)*)\s*\/>/g,
+    (attributes) =>
+      languageList(locale, {
+        of:
+          attribute(attributes, "of") === "extension"
+            ? "extension"
+            : "supported",
+        join: attribute(attributes, "join") === "or" ? "or" : "and",
+        capitalize: /\scapitalize(?![\w=])/.test(attributes),
+      }),
+  ],
   [/<PrivacyEffectiveDate\s*\/>/g, () => privacyEffectiveDate(locale).text],
   [/<StartHere\s*\/>\n?/g, () => ""],
 ];

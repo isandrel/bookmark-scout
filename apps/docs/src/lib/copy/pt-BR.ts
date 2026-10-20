@@ -52,6 +52,18 @@ export const ptBR: DocsCopy = {
     },
   },
 
+  languages: {
+    en: "inglês",
+    "zh-CN": "chinês simplificado",
+    es: "espanhol",
+    fr: "francês",
+    "pt-BR": "português do Brasil",
+    de: "alemão",
+    ja: "japonês",
+    ko: "coreano",
+    "zh-TW": "chinês tradicional",
+  },
+
   page: {
     /** Shown above a page that has no translation for the current language yet. */
     untranslated:

@@ -168,6 +168,8 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 		locales: {
 			default: locales.default,
 			supported: locales.supported,
+			/** The extension's languages, in the same order; it may have some the website lacks yet. */
+			extension: locales.extension,
 			isSupported: (locale: string) => locales.supported.includes(locale),
 			/** The language list for the client-safe URL helpers in `@bookmark-scout/config/locale-path`. */
 			routing,
