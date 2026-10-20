@@ -1,7 +1,13 @@
 <p align="center">
-  <a href="../README.md">English</a> ·
-  <strong>日本語</strong> ·
-  <a href="./README.ko.md">한국어</a>
+  <a href="../../README.md" lang="en" hreflang="en">English</a> ·
+  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <strong lang="ja">日本語</strong> ·
+  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="../zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 
 <p align="center">
@@ -96,10 +102,10 @@ Bookmark Scout は企業ではなく、個人の開発者 [@isandrel](https://gi
 
 ## 🛠️ 開発者と AI エージェントの方へ
 
-ソースからのビルド、技術スタック、開発状況、テストは [DEVELOPMENT.md](../DEVELOPMENT.md)（英語）にあります。協力していただける場合は [CONTRIBUTING.md](../CONTRIBUTING.md) をお読みください。Claude Code など、パソコン上の AI コーディングエージェントに、承認したうえでブックマークの検索と整理を任せることもできます。[ローカル AI エージェントで使う](https://docs.bookmark-scout.com/ja/guides/local-agents) をご覧ください。
+ソースからのビルド、技術スタック、開発状況、テストは [DEVELOPMENT.md](../../DEVELOPMENT.md)（英語）にあります。協力していただける場合は [CONTRIBUTING.md](CONTRIBUTING.md) をお読みください。Claude Code など、パソコン上の AI コーディングエージェントに、承認したうえでブックマークの検索と整理を任せることもできます。[ローカル AI エージェントで使う](https://docs.bookmark-scout.com/ja/guides/local-agents) をご覧ください。
 
 ---
 
 <p align="center">
-  <a href="../LICENSE">AGPL-3.0 ライセンス</a>の無料オープンソースです。
+  <a href="../../LICENSE">AGPL-3.0 ライセンス</a>の無料オープンソースです。
 </p>

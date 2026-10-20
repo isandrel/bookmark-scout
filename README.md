@@ -1,7 +1,13 @@
 <p align="center">
-  <strong>English</strong> ·
-  <a href="./translations/README.ja.md">日本語</a> ·
-  <a href="./translations/README.ko.md">한국어</a>
+  <strong lang="en">English</strong> ·
+  <a href="i18n/es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="i18n/pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="i18n/ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
+  <a href="i18n/de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="i18n/fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="i18n/zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="i18n/ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="i18n/zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 
 <p align="center">

@@ -1,9 +1,11 @@
 /**
  * Every shortcut is defined once, in apps/extension/config/ui/shortcuts.toml. The docs render keys
- * with <Shortcut id="..." />, website messages and README templates with {{SHORTCUT:<id>}} (both
- * platforms, primary first) or {{SHORTCUT_MAC:<id>}} and {{SHORTCUT_OTHER:<id>}}, so these tests
- * fail when a document spells keys out by hand, names a shortcut the config lacks, or (for the
- * docs' shortcut list) leaves a configured shortcut out. Store listings are pasted into the stores
+ * with <Shortcut id="..." />, website messages with {{SHORTCUT:<id>}} (both platforms, primary
+ * first) or {{SHORTCUT_MAC:<id>}} and {{SHORTCUT_OTHER:<id>}}, and the Markdown templates (every
+ * language, under templates/) with {{ shortcuts["<id>"].both }}, `.mac`, or `.other`, so these
+ * tests fail when a document spells keys out by hand, names a shortcut the config lacks, or (for
+ * the docs' shortcut list) leaves a configured shortcut out. The generated Markdown may only name
+ * configured keys. Store listings are pasted into the stores
  * by hand, so their keys are checked against the config, and they and the store checklists must
  * name the primary platform's keys (`[display]` in shortcuts.toml) before the other's, each
  * labelled with its platform as the website's `shortcutNotes` in that language words it.
@@ -22,6 +24,7 @@ import {
 	shortcutText,
 	site,
 } from "@bookmark-scout/config";
+import { planDocuments } from "./generate-markdown";
 
 const root = resolve(import.meta.dir, "..");
 const config = readShortcutConfig(root);
@@ -49,13 +52,18 @@ function literals(file: string): string[] {
 
 const docsPages = files(docsDir, ".mdx");
 const websiteMessages = files(join(root, "apps/website/messages"), ".json");
+/** Every Markdown template, in every language (templates/i18n/<tag>/ too). */
 const templates = files(join(root, "templates"), ".md");
+/** A shortcut in a Markdown template: `shortcuts["<id>"].both`, `.mac`, or `.other`. */
+const TEMPLATE_SHORTCUT = /shortcuts\["([A-Za-z0-9_.#-]+)"\]\.(?:both|mac|other)\b/g;
+/** The generated Markdown (README.md, i18n/<tag>/README.md, ...), as the generator lists it. */
+const generated = planDocuments().map((entry) => join(root, entry.output));
 
 describe("shortcuts are never typed by hand", () => {
 	test.each([
 		["docs pages", docsPages],
 		["website messages", websiteMessages],
-		["README templates", templates],
+		["Markdown templates", templates],
 	])("%s", (_name, list) => {
 		expect(list.flatMap(literals)).toEqual([]);
 	});
@@ -70,8 +78,22 @@ describe("every shortcut named exists in the config", () => {
 		}
 	});
 
-	test("{{SHORTCUT:<id>}} in website messages and README templates", () => {
-		for (const file of [...websiteMessages, ...templates]) {
+	test('{{ shortcuts["<id>"] }} in the Markdown templates', () => {
+		for (const file of templates) {
+			const text = readFileSync(file, "utf8");
+			// The website's placeholder would print as text, and any other use of `shortcuts` could
+			// name a key this check does not see.
+			expect(text.includes("{{SHORTCUT"), relative(root, file)).toBe(false);
+			expect(text.split("shortcuts[").length - 1, relative(root, file)).toBe([...text.matchAll(TEMPLATE_SHORTCUT)].length);
+			for (const [, argument] of text.matchAll(TEMPLATE_SHORTCUT)) {
+				const id = (argument ?? "").split("#")[0] ?? "";
+				expect(() => shortcutText(config, id), relative(root, file)).not.toThrow();
+			}
+		}
+	});
+
+	test("{{SHORTCUT:<id>}} in website messages", () => {
+		for (const file of websiteMessages) {
 			const text = readFileSync(file, "utf8");
 			// A misspelled placeholder would stay in the page as text.
 			expect(text.split("{{SHORTCUT").length - 1, relative(root, file)).toBe([...text.matchAll(SHORTCUT_PLACEHOLDER)].length);
@@ -98,7 +120,7 @@ describe("the keyboard shortcuts guide lists every configured shortcut", () => {
 	});
 });
 
-describe("store listings name the configured keys", () => {
+describe("store listings and the generated Markdown name the configured keys", () => {
 	// Every way to press every configured shortcut, as text on either platform.
 	const known = new Set(
 		shortcutIds(config).flatMap((id) => {
@@ -107,7 +129,9 @@ describe("store listings name the configured keys", () => {
 		}),
 	);
 
-	test.each(files(join(root, "store/listings"), ".md").map((file) => [relative(root, file), file]))("%s", (_name, file) => {
+	test.each(
+		[...files(join(root, "store/listings"), ".md"), ...generated].map((file) => [relative(root, file), file]),
+	)("%s", (_name, file) => {
 		const unknown = (readFileSync(file, "utf8").match(SHORTCUT_LITERAL) ?? []).filter((keys) => !known.has(keys));
 		expect(unknown).toEqual([]);
 	});

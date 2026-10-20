@@ -63,6 +63,14 @@ support = "support@example.com"
 [legal]
 privacy_effective_date = "2026-01-31"
 
+[markdown]
+dir = "i18n"
+documents = ["README", "DEVELOPMENT"]
+language_order = ["en", "ja"]
+
+[markdown.languages]
+DEVELOPMENT = ["en"]
+
 [offer]
 price = "0"
 currency = "USD"
@@ -240,6 +248,46 @@ describe("strict loading", () => {
 	test("requires a store and a name for every supported browser", () => {
 		const extraBrowser = PROJECT.replace('supported = ["chrome", "firefox"]', 'supported = ["chrome", "firefox", "edge"]');
 		expect(() => parseProjectConfig(extraBrowser)).toThrow(/browsers\.names: missing edge[\s\S]*stores: missing edge/);
+	});
+
+	test("lists each Markdown document's languages in the switcher order", () => {
+		expect(site.markdown.dir).toBe("i18n");
+		expect(site.markdown.documents).toEqual([
+			{ name: "README", languages: ["en", "ja"] },
+			{ name: "DEVELOPMENT", languages: ["en"] },
+		]);
+		expect(site.markdown.languageOrder).toEqual(["en", "ja"]);
+	});
+
+	test("rejects a Markdown language order that is not every supported language once, default first", () => {
+		expect(() => parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["en"]'))).toThrow(
+			/markdown\.language_order: missing ja/,
+		);
+		expect(() => parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["en", "ja", "ja"]'))).toThrow(
+			/markdown\.language_order: has duplicate entries/,
+		);
+		expect(() => parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["ja", "en"]'))).toThrow(
+			/markdown\.language_order: must start with the default language/,
+		);
+		expect(() =>
+			parseProjectConfig(PROJECT.replace('language_order = ["en", "ja"]', 'language_order = ["en", "ja", "ko"]')),
+		).toThrow(/markdown\.language_order: unexpected ko/);
+	});
+
+	test("rejects Markdown languages for an unknown document, an unsupported language, or without the default", () => {
+		expect(() => parseProjectConfig(PROJECT.replace('DEVELOPMENT = ["en"]', 'SECURITY = ["en"]'))).toThrow(
+			/markdown\.languages\.SECURITY: "SECURITY" is not in markdown\.documents/,
+		);
+		expect(() => parseProjectConfig(PROJECT.replace('DEVELOPMENT = ["en"]', 'DEVELOPMENT = ["en", "ko"]'))).toThrow(
+			/markdown\.languages\.DEVELOPMENT: not in locales\.supported: ko/,
+		);
+		expect(() => parseProjectConfig(PROJECT.replace('DEVELOPMENT = ["en"]', 'DEVELOPMENT = ["ja"]'))).toThrow(
+			/must include the default language/,
+		);
+		expect(() => parseProjectConfig(PROJECT.replace('documents = ["README", "DEVELOPMENT"]', 'documents = ["readme"]'))).toThrow(
+			/markdown\.documents\[0\]/,
+		);
+		expect(() => parseProjectConfig(PROJECT.replace('dir = "i18n"', 'dir = "../out"'))).toThrow(/markdown\.dir/);
 	});
 
 	test("rejects base URLs with a trailing slash", () => {

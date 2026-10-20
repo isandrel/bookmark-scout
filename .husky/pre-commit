@@ -1,8 +1,8 @@
 bunx lint-staged
 
-# README.md, translations/, and DEVELOPMENT.md are generated from templates/, the workspace
-# config, and the installed package versions. Regenerate and stage them whenever an input is
-# part of the commit.
-if git diff --cached --name-only | grep -qE '^(templates/|config/|packages/config/|scripts/generate-readme\.ts$|bun\.lock$|(apps/[^/]+/|packages/[^/]+/)?package\.json$)'; then
-  bun run generate:readme >/dev/null && git add README.md DEVELOPMENT.md translations
+# README.md, CONTRIBUTING.md, DEVELOPMENT.md, and i18n/ are generated from templates/, the
+# workspace config, and the installed package versions. Regenerate and stage them whenever an
+# input is part of the commit; --list prints every output path.
+if git diff --cached --name-only | grep -qE '^(templates/|config/|packages/config/|scripts/generate-markdown\.ts$|bun\.lock$|(apps/[^/]+/|packages/[^/]+/)?package\.json$)'; then
+  bun run generate:markdown >/dev/null && bun run generate:markdown --list | xargs git add --
 fi

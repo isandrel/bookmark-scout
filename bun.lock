@@ -13,6 +13,7 @@
         "github-slugger": "2.0.0",
         "husky": "^9.1.7",
         "lint-staged": "^17.6.0",
+        "minijinja-js": "3.0.1",
         "nx": "^23.3.0",
         "typescript": "^6.0.3",
       },
@@ -1911,6 +1912,8 @@
     "micromatch": ["micromatch@4.0.8", "", { "dependencies": { "braces": "^3.0.3", "picomatch": "^2.3.1" } }, "sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA=="],
 
     "mimic-fn": ["mimic-fn@2.1.0", "", {}, "sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg=="],
+
+    "minijinja-js": ["minijinja-js@3.0.1", "", {}, "sha512-LvQO/pkeSK5mMZhz/yrn7JrYQpGfYrmU/AGIKKF33N8mMY5a+NV+6ye7BczbUm1RX1t3mkzidcDo+MhxZSSoCg=="],
 
     "minimatch": ["minimatch@10.2.5", "", { "dependencies": { "brace-expansion": "^5.0.5" } }, "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg=="],
 

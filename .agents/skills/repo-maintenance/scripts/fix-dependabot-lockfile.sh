@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # Usage: fix-dependabot-lockfile.sh <pr-number>
-# Merge origin/main into a Dependabot Bun PR, regenerate bun.lock and the READMEs, verify, and push.
+# Merge origin/main into a Dependabot Bun PR, regenerate bun.lock and the generated Markdown, verify, and push.
 set -eu
 pr=${1:?pr number required}
 root=$(/usr/bin/git rev-parse --show-toplevel)
@@ -15,36 +15,20 @@ cd "$wt"
 /usr/bin/git merge --abort 2>/dev/null || true
 /usr/bin/git reset -q --hard "origin/$branch"
 /usr/bin/git merge -q --no-edit origin/main >/dev/null 2>&1 || true
-# bun.lock and the generated Markdown (READMEs, DEVELOPMENT.md) are rebuilt below, so their conflicts resolve themselves.
-generated='^(bun\.lock|README\.md|DEVELOPMENT\.md|translations/README\..*\.md)
+# bun.lock and the generated Markdown (README.md, CONTRIBUTING.md, DEVELOPMENT.md, i18n/) are rebuilt below, so their conflicts resolve themselves.
+generated='^(bun\.lock|README\.md|CONTRIBUTING\.md|DEVELOPMENT\.md|i18n/.*\.md)$'
 others=$(/usr/bin/git diff --name-only --diff-filter=U | grep -Ev "$generated" || true)
 if [[ -n "$others" ]]; then
-  echo "Conflicts outside bun.lock and the READMEs; resolve by hand in $wt:" >&2
+  echo "Conflicts outside bun.lock and the generated Markdown; resolve by hand in $wt:" >&2
   echo "$others" >&2
   exit 1
 fi
-/usr/bin/git checkout -q --theirs bun.lock README.md DEVELOPMENT.md translations 2>/dev/null || true
+/usr/bin/git checkout -q --theirs bun.lock README.md CONTRIBUTING.md DEVELOPMENT.md i18n 2>/dev/null || true
 bun install >/dev/null
 bun install --frozen-lockfile
 # DEVELOPMENT.md version badges show each library's installed major version, so a major bump changes them.
-bun run generate:readme >/dev/null
-/usr/bin/git add bun.lock README.md DEVELOPMENT.md translations
-/usr/bin/git commit -q -m "🔧 chore(deps): refresh bun.lock and READMEs" || true
-/usr/bin/git push -q origin "HEAD:$branch"
-echo "PR #$pr updated: $(/usr/bin/git log -1 --format=%h). Worktree: $wt"
-
-others=$(/usr/bin/git diff --name-only --diff-filter=U | grep -Ev "$generated" || true)
-if [[ -n "$others" ]]; then
-  echo "Conflicts outside bun.lock and the READMEs; resolve by hand in $wt:" >&2
-  echo "$others" >&2
-  exit 1
-fi
-/usr/bin/git checkout -q --theirs bun.lock README.md translations 2>/dev/null || true
-bun install >/dev/null
-bun install --frozen-lockfile
-# README version badges show each library's installed major version, so a major bump changes them.
-bun run generate:readme >/dev/null
-/usr/bin/git add bun.lock README.md translations
-/usr/bin/git commit -q -m "🔧 chore(deps): refresh bun.lock and READMEs" || true
+bun run generate:markdown >/dev/null
+bun run generate:markdown --list | xargs /usr/bin/git add bun.lock
+/usr/bin/git commit -q -m "🔧 chore(deps): refresh bun.lock and the generated Markdown" || true
 /usr/bin/git push -q origin "HEAD:$branch"
 echo "PR #$pr updated: $(/usr/bin/git log -1 --format=%h). Worktree: $wt"

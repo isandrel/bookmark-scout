@@ -47,6 +47,16 @@ Docs rules:
 - Bold that ends in punctuation and is followed directly by a letter does not render in CommonMark (`**设置。**然后`). Use `<strong>…</strong>` there, or move the punctuation outside.
 - The privacy and permissions pages are legal-adjacent: translate faithfully.
 
+### Round 2: the repository's Markdown
+
+Sources: `templates/README.md` and `templates/CONTRIBUTING.md` (MiniJinja). Write `README.md` and `CONTRIBUTING.md`; the orchestrator copies them to `templates/i18n/<TAG>/`. Read an existing translation, such as `templates/i18n/ja/`, first.
+
+- The first three lines are `{# source: <hash> #}` (the generator's error message prints the hash), `{% import "../../_partials/markdown.md.j2" as md %}`, and `{{ md.language_switcher() }}`.
+- Keep every `{{ ... }}` and `{% ... %}` tag; a tag may move within its sentence. Never type a value a tag prints: the product name is `{{ site.name }}`, and `{{ shortcuts["<id>"].both }}` prints both platforms' keys labelled in the target language, so the sentence must read naturally around them. Translate the text inside `md.store_badges("...")` and `md.store_links("...")`, keeping `{browser}`, `{store}`, `{id}`, `{docs}`, and the link target.
+- Anchors follow the translated headings as GitHub builds them (`## 📦 Instalación` is `#-instalación`), including `{{ links.README }}#-<install heading>` in CONTRIBUTING.
+- Code blocks stay identical except comment lines. The README follows the README's plain-language rule; CONTRIBUTING may keep established English developer terms.
+- `bun run generate:markdown` and `bun test scripts/generate-markdown.test.ts` check tags, links, anchors, and the switcher once the files are in place.
+
 ## Style for both rounds
 
 - Plain, specific, and concise, the way the browser's own UI and help centre read in that language. No hype, and no exclamation marks the English lacks.

@@ -25,7 +25,8 @@
     "dev:docs": "nx run docs:dev",
     "build:docs": "nx run docs:build",
     "graph": "nx graph",
-    "generate:readme": "bun run scripts/generate-readme.ts",
+    "generate:markdown": "bun run scripts/generate-markdown.ts",
+    "generate:readme": "bun run scripts/generate-markdown.ts",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "github-slugger": "2.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
+    "minijinja-js": "3.0.1",
     "nx": "^23.3.0",
     "typescript": "^6.0.3"
   },

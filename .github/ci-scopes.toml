@@ -11,9 +11,11 @@
 # To add a scope, add it under [scopes] and gate its jobs on
 # `fromJSON(needs.changes.outputs.scopes).<name>` in ci.yml.
 
-# Notes and content that no build or test reads. Lint checks the generated READMEs.
+# Notes and content that no build or test reads. Lint checks the generated Markdown and its
+# templates (including the partials and minijinja.toml).
 ignore = [
   "**/*.md",
+  "templates/**",
   ".agents/**",
   "backlog/**",
   "store/**",

@@ -1,0 +1,13 @@
+# MiniJinja settings for the Markdown templates, in minijinja-cli's config format. The generator
+# (scripts/generate-markdown.ts) reads this file too, so both engines render alike:
+#   minijinja-cli --config-file templates/minijinja.toml <template> <context.json>
+# Only these keys are allowed.
+
+# An undefined variable fails the run.
+strict = true
+# A line holding only a {% %} tag leaves no blank line. A block tag at the end of a text line
+# also removes that line's newline, so end text lines with text or a {{ }} expression.
+trim-blocks = true
+lstrip-blocks = true
+# Markdown, not HTML: print values as they are.
+autoescape = "none"

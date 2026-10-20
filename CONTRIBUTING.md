@@ -1,19 +1,32 @@
+<p align="center">
+  <strong lang="en">English</strong> ·
+  <a href="i18n/es/CONTRIBUTING.md" lang="es" hreflang="es">Español</a> ·
+  <a href="i18n/pt-BR/CONTRIBUTING.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="i18n/ja/CONTRIBUTING.md" lang="ja" hreflang="ja">日本語</a> ·
+  <a href="i18n/de/CONTRIBUTING.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="i18n/fr/CONTRIBUTING.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="i18n/zh-CN/CONTRIBUTING.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="i18n/ko/CONTRIBUTING.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="i18n/zh-TW/CONTRIBUTING.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
+</p>
+
 # 🤝 Contributing to Bookmark Scout
 
 First off, thank you for considering contributing to Bookmark Scout! It's people like you that make this extension better for everyone.
 
 ## 📋 Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
-- [How Can I Contribute?](#how-can-i-contribute)
-- [Development Setup](#development-setup)
-- [Pull Request Process](#pull-request-process)
-- [Style Guidelines](#style-guidelines)
-- [Community](#community)
+- [Code of Conduct](#-code-of-conduct)
+- [How Can I Contribute?](#-how-can-i-contribute)
+- [Development Setup](#-development-setup)
+- [Pull Request Process](#-pull-request-process)
+- [Style Guidelines](#-style-guidelines)
+- [Internationalization](#-internationalization)
+- [Questions?](#-questions)
 
 ## 📜 Code of Conduct
 
-This project adheres to a Code of Conduct. By participating, you are expected to uphold respectful and inclusive behavior. Please report unacceptable behavior via GitHub Issues.
+This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold respectful and inclusive behavior. Please report unacceptable behavior via GitHub Issues.
 
 ## 🎯 How Can I Contribute?
 
@@ -56,7 +69,7 @@ To use Bookmark Scout, install it from your browser's store or a GitHub release,
 
 - [Bun](https://bun.sh) (latest version)
 - [mise](https://mise.jdx.dev/) for runtime management
-- Chrome, Firefox, or Edge browser
+- One of these browsers: Chrome, Firefox, Edge
 
 ### Installation
 
@@ -263,8 +276,10 @@ apps/extension/src/
 When adding user-facing text:
 
 1. Add strings to `apps/extension/public/_locales/<locale>/messages.json`
-2. Add them to every locale listed under `[locales] extension` in `config/project.toml` (English, Japanese, Korean, Simplified and Traditional Chinese, Spanish, German, French, and Brazilian Portuguese)
+2. Add them to every locale listed under `[locales] extension` in `config/project.toml`
 3. Use the existing i18n helper: `t("message_key")`
+
+`README.md`, this guide, and their translations in `i18n/<language>/` are generated from `templates/`: edit the template, never the generated file. See [Generated Markdown](DEVELOPMENT.md#-generated-markdown).
 
 ## 🤔 Questions?
 

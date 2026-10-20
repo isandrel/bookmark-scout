@@ -1,8 +1,9 @@
+{% import "_partials/markdown.md.j2" as md %}
 <p align="center">
   <a href="README.md">← Back to the README</a>
 </p>
 
-<h1 align="center">{{SITE_NAME}} for developers</h1>
+<h1 align="center">{{ site.name }} for developers</h1>
 
 <p align="center">
   How the extension, website, and docs are built, what works today, and where to start.<br>
@@ -10,37 +11,37 @@
 </p>
 
 <p align="center">
-  <a href="{{LICENSE_FILE_URL}}"><img src="https://img.shields.io/badge/license-{{LICENSE_BADGE}}-blue?style=flat-square" alt="License"></a>
-  <a href="{{GITHUB_URL}}"><img src="https://img.shields.io/github/stars/{{GITHUB_REPO}}?style=flat-square" alt="Stars"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/issues"><img src="https://img.shields.io/github/issues/{{GITHUB_REPO}}?style=flat-square" alt="Issues"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/pulls"><img src="https://img.shields.io/github/issues-pr/{{GITHUB_REPO}}?style=flat-square" alt="PRs"></a>
+  <a href="{{ site.license.file_url }}"><img src="https://img.shields.io/badge/license-{{ md.badge_text(site.license.spdx) }}-blue?style=flat-square" alt="License"></a>
+  <a href="{{ site.repo.url }}"><img src="https://img.shields.io/github/stars/{{ site.repo.slug }}?style=flat-square" alt="Stars"></a>
+  <a href="https://github.com/{{ site.repo.slug }}/issues"><img src="https://img.shields.io/github/issues/{{ site.repo.slug }}?style=flat-square" alt="Issues"></a>
+  <a href="https://github.com/{{ site.repo.slug }}/pulls"><img src="https://img.shields.io/github/issues-pr/{{ site.repo.slug }}?style=flat-square" alt="PRs"></a>
   <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3">
 </p>
 
 <p align="center">
-  <a href="https://github.com/{{GITHUB_REPO}}/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{GITHUB_REPO}}/ci.yml?style=flat-square&label=ci" alt="CI"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/actions/workflows/release-extension.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{GITHUB_REPO}}/release-extension.yml?style=flat-square&label=release" alt="Release CI"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/releases"><img src="https://img.shields.io/github/v/release/{{GITHUB_REPO}}?style=flat-square" alt="Release"></a>
-  <img src="https://img.shields.io/github/last-commit/{{GITHUB_REPO}}?style=flat-square" alt="Last Commit">
-  <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="Website"></a>
-  <a href="{{DOCS_URL}}"><img src="https://img.shields.io/badge/docs-live-blue?style=flat-square" alt="Documentation"></a>
+  <a href="https://github.com/{{ site.repo.slug }}/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{ site.repo.slug }}/ci.yml?style=flat-square&label=ci" alt="CI"></a>
+  <a href="https://github.com/{{ site.repo.slug }}/actions/workflows/release-extension.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{ site.repo.slug }}/release-extension.yml?style=flat-square&label=release" alt="Release CI"></a>
+  <a href="https://github.com/{{ site.repo.slug }}/releases"><img src="https://img.shields.io/github/v/release/{{ site.repo.slug }}?style=flat-square" alt="Release"></a>
+  <img src="https://img.shields.io/github/last-commit/{{ site.repo.slug }}?style=flat-square" alt="Last Commit">
+  <a href="{{ site.url }}"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="Website"></a>
+  <a href="{{ docs_url }}"><img src="https://img.shields.io/badge/docs-live-blue?style=flat-square" alt="Documentation"></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-{{VERSION:react}}-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-{{VERSION:apps/extension:typescript}}-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/WXT-{{VERSION:wxt}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Vite-{{VERSION:vite}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-{{VERSION:tailwindcss}}-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-{{VERSION:zustand}}-764ABC?style=flat-square" alt="Zustand">
+  <img src="https://img.shields.io/badge/React-{{ versions.react }}-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-{{ workspace_versions["apps/extension"].typescript }}-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/WXT-{{ versions.wxt }}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
+  <img src="https://img.shields.io/badge/Vite-{{ versions.vite }}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/TailwindCSS-{{ versions.tailwindcss }}-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Zustand-{{ versions.zustand }}-764ABC?style=flat-square" alt="Zustand">
   <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square" alt="shadcn/ui">
-  <img src="https://img.shields.io/badge/Nx-{{VERSION:nx}}-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
-  <img src="https://img.shields.io/badge/Bun-{{VERSION:bun}}-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
-  <img src="https://img.shields.io/badge/Biome-{{VERSION:@biomejs/biome}}-60A5FA?style=flat-square" alt="Biome">
+  <img src="https://img.shields.io/badge/Nx-{{ versions.nx }}-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
+  <img src="https://img.shields.io/badge/Bun-{{ versions.bun }}-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
+  <img src="https://img.shields.io/badge/Biome-{{ versions["@biomejs/biome"] }}-60A5FA?style=flat-square" alt="Biome">
 </p>
 
 <p align="center">
-{{BROWSER_BADGES:Supported}}
+{{ md.browser_badges("Supported") }}
   <img src="https://img.shields.io/badge/Safari-Not%20Supported-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
 </p>
 
@@ -52,6 +53,7 @@
 - [Install a release build](#-install-a-release-build)
 - [Build from source](#-build-from-source)
 - [Project structure](#-project-structure)
+- [Generated Markdown](#-generated-markdown)
 - [Local AI agents (MCP)](#-local-ai-agents-mcp)
 - [Permissions](#-permissions)
 
@@ -76,7 +78,7 @@
 
 - [x] 📥 **Save to a Folder by Name** — Type part of a folder's name, even a nested folder or a path such as `work/react`, then press Enter to save the current page to the first matching folder (↓ picks another); small typos still match and recently used folders come first
 - [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, about 200 more from the models.dev catalog, or custom OpenAI-compatible providers. In Chrome, also free on the computer with Chrome's built-in AI (Gemini Nano through the Prompt API), which picks from a shortlist the local word match makes and falls back to it. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
-- [x] ⚡ **Quick Save Shortcuts** — Press {{SHORTCUT:commands.quick-save}} on any page to save it to the best matching folder (ranked on your device from folder names and the bookmarks in them), the last used folder, or a folder you choose, or {{SHORTCUT:commands.ai-quick-save}} to save it where AI suggests. A small notification shows where it went, with Undo and other folders to move it to; no extension window needs to be open
+- [x] ⚡ **Quick Save Shortcuts** — Press {{ shortcuts["commands.quick-save"].both }} on any page to save it to the best matching folder (ranked on your device from folder names and the bookmarks in them), the last used folder, or a folder you choose, or {{ shortcuts["commands.ai-quick-save"].both }} to save it where AI suggests. A small notification shows where it went, with Undo and other folders to move it to; no extension window needs to be open
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
@@ -88,9 +90,9 @@
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
-- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `{{SHORTCUT:popup.focus_search}}` searches, arrow keys move through and open folders, and Enter saves the current page, without taking any Cmd/Ctrl shortcut; in the manager, Chrome's keys for select all, copy, cut, paste, undo, redo, open, edit, and delete, such as {{SHORTCUT:manager.select_all}} and {{SHORTCUT:manager.undo}}, plus `{{SHORTCUT:manager.show_help}}` to list shortcuts and `{{SHORTCUT:manager.open_saved_searches}}` for saved searches
+- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `{{ shortcuts["popup.focus_search"].both }}` searches, arrow keys move through and open folders, and Enter saves the current page, without taking any Cmd/Ctrl shortcut; in the manager, Chrome's keys for select all, copy, cut, paste, undo, redo, open, edit, and delete, such as {{ shortcuts["manager.select_all"].both }} and {{ shortcuts["manager.undo"].both }}, plus `{{ shortcuts["manager.show_help"].both }}` to list shortcuts and `{{ shortcuts["manager.open_saved_searches"].both }}` for saved searches
 - [x] 🔖 **Saved Searches** — Save the manager's filters, sort, and folder scope as named smart views, then open, rename, or delete them. Only the query is stored (on this device, not synced), so results always reflect your current bookmarks; deleted folders are skipped with a notice
-- [x] 🗑️ **Delete and Undo** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo. The manager keeps an undo and redo history of the last 100 changes ({{SHORTCUT:manager.undo}} and {{SHORTCUT:manager.redo}}) for the browser session, including changes made from the popup, Ask AI, and local AI agents
+- [x] 🗑️ **Delete and Undo** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo. The manager keeps an undo and redo history of the last 100 changes ({{ shortcuts["manager.undo"].both }} and {{ shortcuts["manager.redo"].both }}) for the browser session, including changes made from the popup, Ask AI, and local AI agents
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes, with undo
 - [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links, then review and apply repairs (delete, redirect target, archived copy, or edited URL) with undo
@@ -101,7 +103,7 @@
 - [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. JSON exports keep each bookmark's tags and summary. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
 - [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags (reusing the names of your most used tags), summarize bookmarks, and plan folder reorganizations that are always previewed before they apply, each with undo. Prompts are editable, with a placeholder list in the editor (today's date, the AI output language, About me, and existing tags); an AI output language setting chooses the language of tags, summaries, and new folder names, and an About me text tells every prompt about the user
 - [x] 💬 **Ask AI** — A chat in the popup and side panel that searches your bookmarks (by words, folder, tag, site, or date), finds duplicates, checks links, and suggests folders. When you ask, it saves pages and proposes moves, renames, deletions, and new folders as a plan that changes nothing until you approve it; answers can end with buttons for the next step. Choose what it may do in Settings
-- [x] 🔌 **Local AI Agents (MCP)** — Let Claude Code, Codex, Cursor, and other MCP clients on your computer search and organize your bookmarks through the `bookmark-scout-mcp` program (`packages/mcp-bridge`), which reaches the extension through native messaging and never opens a network port. Off by default; changes need **Allow changes**, and each one waits for your approval in the browser. See [Use with local AI agents]({{DOCS_URL}}/guides/local-agents)
+- [x] 🔌 **Local AI Agents (MCP)** — Let Claude Code, Codex, Cursor, and other MCP clients on your computer search and organize your bookmarks through the `bookmark-scout-mcp` program (`packages/mcp-bridge`), which reaches the extension through native messaging and never opens a network port. Off by default; changes need **Allow changes**, and each one waits for your approval in the browser. See [Use with local AI agents]({{ docs_url }}/guides/local-agents)
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders, after turning on **Right-Click Menu** in Settings
 - [x] 🌍 **i18n** — English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese in the extension, website, and docs
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
@@ -136,36 +138,36 @@
 
 |                                                    Technology                                                     | Version | Description          |
 | :---------------------------------------------------------------------------------------------------------------: | :-----: | -------------------- |
-|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |  {{VERSION:react}}   | UI library           |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |   {{VERSION:apps/extension:typescript}}   | Type-safe JavaScript |
-|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |   {{VERSION:next}}    | Website framework    |
+|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |  {{ versions.react }}   | UI library           |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |   {{ workspace_versions["apps/extension"].typescript }}   | Type-safe JavaScript |
+|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |   {{ versions.next }}    | Website framework    |
 
 ### Build & Tooling
 
 |                                           Technology                                            | Version | Description          |
 | :---------------------------------------------------------------------------------------------: | :-----: | -------------------- |
-|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |  {{VERSION:wxt}}   | Extension framework  |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |    {{VERSION:vite}}    | Build tool           |
-|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |   {{VERSION:nx}}    | Monorepo management  |
-|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |   {{VERSION:bun}}   | JavaScript runtime   |
-|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |   {{VERSION:@biomejs/biome}}   | Linting & formatting |
+|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |  {{ versions.wxt }}   | Extension framework  |
+| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |    {{ versions.vite }}    | Build tool           |
+|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |   {{ versions.nx }}    | Monorepo management  |
+|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |   {{ versions.bun }}   | JavaScript runtime   |
+|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |   {{ versions["@biomejs/biome"] }}   | Linting & formatting |
 
 ### UI & Styling
 
 |                                                      Technology                                                      | Version | Description            |
 | :------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |   {{VERSION:tailwindcss}}   | Utility-first CSS      |
+| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |   {{ versions.tailwindcss }}   | Utility-first CSS      |
 |                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |   —   | Base UI-based components |
-|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |   {{VERSION:@base-ui/react}}   | Headless UI primitives |
-|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |   {{VERSION:lucide-react}}   | Icon library           |
+|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |   {{ versions["@base-ui/react"] }}   | Headless UI primitives |
+|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |   {{ versions["lucide-react"] }}   | Icon library           |
 
 ### State & Data
 
 |                                                       Technology                                                       | Version | Description            |
 | :--------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
-|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |   {{VERSION:zustand}}   | State management       |
-|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |  {{VERSION:@tanstack/react-table}}   | Headless table library |
-| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |   {{VERSION:@atlaskit/pragmatic-drag-and-drop}}   | Drag & drop            |
+|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |   {{ versions.zustand }}   | State management       |
+|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |  {{ versions["@tanstack/react-table"] }}   | Headless table library |
+| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |   {{ versions["@atlaskit/pragmatic-drag-and-drop"] }}   | Drag & drop            |
 
 ### Deploy & Infrastructure
 
@@ -178,11 +180,11 @@
 
 ## 📦 Install a release build
 
-Store installs are listed in the [README](README.md#-install). Builds for every browser are attached to each [GitHub release](https://github.com/{{GITHUB_REPO}}/releases):
+Store installs are listed in the [README](README.md#-install). Builds for every browser are attached to each [GitHub release](https://github.com/{{ site.repo.slug }}/releases):
 
 ```bash
 # Download release assets using GitHub CLI
-gh release download --repo {{GITHUB_REPO}} --pattern "bookmark-scout-*-chrome.zip"
+gh release download --repo {{ site.repo.slug }} --pattern "bookmark-scout-*-chrome.zip"
 
 # Extract the Chrome zip file
 unzip bookmark-scout-*-chrome.zip -d bookmark-scout
@@ -195,7 +197,7 @@ Release assets are published per browser:
 - `bookmark-scout-*-firefox.zip` for Firefox temporary add-on installation
 - `bookmark-scout-*-edge.zip` for Edge unpacked installation
 
-To load one, follow the steps for your browser in the [installation guide]({{DOCS_URL}}/installation#install-from-a-github-release).
+To load one, follow the steps for your browser in the [installation guide]({{ docs_url }}/installation#install-from-a-github-release).
 
 ---
 
@@ -204,7 +206,7 @@ To load one, follow the steps for your browser in the [installation guide]({{DOC
 [CONTRIBUTING.md](CONTRIBUTING.md#-development-setup) has the setup, build, and load-unpacked steps, and [the test suites](CONTRIBUTING.md#code-style). In short:
 
 ```bash
-gh repo clone {{GITHUB_REPO}}
+gh repo clone {{ site.repo.slug }}
 cd bookmark-scout
 bun install
 bun run build   # then load apps/extension/dist/chrome-mv3 with Load unpacked
@@ -235,32 +237,54 @@ bookmark-scout/
 ├── config/
 │   ├── project.toml        # Project identity shared by every app
 │   └── web.toml            # Website and docs hosting
-├── scripts/                # Repository scripts, such as the README generator
-└── templates/              # Templates for README.md, translations/, and DEVELOPMENT.md
+├── i18n/<language>/        # README.md and CONTRIBUTING.md in each other language (generated)
+├── scripts/                # Repository scripts, such as the Markdown generator
+└── templates/              # Templates for README.md, CONTRIBUTING.md, DEVELOPMENT.md, and i18n/
 ```
 
 ---
+
+## 📝 Generated Markdown
+
+`README.md`, `CONTRIBUTING.md`, `DEVELOPMENT.md`, and their translations in `i18n/<language>/` are generated: edit the template at the same path under `templates/` (`templates/i18n/ja/README.md` for `i18n/ja/README.md`), never the output. `[markdown]` in `config/project.toml` lists the documents, the languages each one has (every supported language unless it lists fewer), and the language switcher's order. Adding a language or a document is a config entry plus a template.
+
+Templates are [MiniJinja](https://docs.rs/minijinja/latest/minijinja/syntax/index.html), rendered by the `minijinja-js` package with the settings in `templates/minijinja.toml`. Values come from the workspace config, the website messages, the extension's shortcuts, and the installed packages, never typed by hand: `{% raw %}{{ site.name }}{% endraw %}`, `{% raw %}{{ shortcuts["commands.quick-save"].both }}{% endraw %}`, `{% raw %}{{ versions.react }}{% endraw %}`, `{% raw %}{{ pages.privacy }}{% endraw %}`. The language switcher, badges, and store lines are macros in `templates/_partials/markdown.md.j2`. An unknown variable fails the run. With trim-blocks on, a `{% raw %}{% %}{% endraw %}` tag at the end of a text line also removes that line's newline, so end text lines with text or a `{% raw %}{{ }}{% endraw %}` expression.
+
+```bash
+bun run generate:markdown          # write every output (the pre-commit hook runs it)
+bun run generate:markdown --check  # fail if an output is missing or stale (CI's Lint job)
+bun run generate:markdown --stale  # list translations made from an older English template
+```
+
+Each translation starts with `{% raw %}{# source: <hash> #}{% endraw %}`, the hash of the English template it was translated from. When the English template changes, `--check` warns and `--stale` names the translation and the new hash to record once it is updated.
+
+To preview one template while editing it, dump its context and render it with [minijinja-cli](https://github.com/mitsuhiko/minijinja/tree/main/minijinja-cli). It is optional (`brew install minijinja-cli`); the generator needs only `bun install`.
+
+```bash
+bun run generate:markdown --dump-context README ja > /tmp/readme-ja.json
+minijinja-cli --config-file templates/minijinja.toml templates/i18n/ja/README.md /tmp/readme-ja.json
+```
 
 ---
 
 ## 🔌 Local AI agents (MCP)
 
-`packages/mcp-bridge` is `bookmark-scout-mcp`, an MCP server and native messaging host that lets Claude Code, Codex, Cursor, and other MCP clients search and organize bookmarks through the extension, with every change approved in the browser. It never opens a network port. Setup for users: [Use with local AI agents]({{DOCS_URL}}/guides/local-agents). Building, testing, and distribution: [packages/mcp-bridge/README.md](packages/mcp-bridge/README.md).
+`packages/mcp-bridge` is `bookmark-scout-mcp`, an MCP server and native messaging host that lets Claude Code, Codex, Cursor, and other MCP clients search and organize bookmarks through the extension, with every change approved in the browser. It never opens a network port. Setup for users: [Use with local AI agents]({{ docs_url }}/guides/local-agents). Building, testing, and distribution: [packages/mcp-bridge/README.md](packages/mcp-bridge/README.md).
 
 ---
 
 ## 🔐 Permissions
 
-Every permission, when the browser asks for it, and why is on the docs [Permissions]({{DOCS_URL}}/permissions) page. The justifications submitted to the stores are in [store/permissions.md](store/permissions.md).
+Every permission, when the browser asks for it, and why is on the docs [Permissions]({{ docs_url }}/permissions) page. The justifications submitted to the stores are in [store/permissions.md](store/permissions.md).
 
 ---
 
 ## ⭐ Star History
 
-<a href="https://star-history.com/#{{GITHUB_REPO}}&Date">
+<a href="https://star-history.com/#{{ site.repo.slug }}&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos={{GITHUB_REPO}}&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos={{ site.repo.slug }}&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos={{ site.repo.slug }}&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos={{ site.repo.slug }}&type=Date" />
  </picture>
 </a>

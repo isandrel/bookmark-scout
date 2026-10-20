@@ -1,7 +1,13 @@
 <p align="center">
-  <a href="../README.md">English</a> ·
-  <a href="./README.ja.md">日本語</a> ·
-  <strong>한국어</strong>
+  <a href="../../README.md" lang="en" hreflang="en">English</a> ·
+  <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
+  <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="../zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <strong lang="ko">한국어</strong> ·
+  <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 
 <p align="center">
@@ -96,10 +102,10 @@ Bookmark Scout는 회사가 아닌 개인 개발자 [@isandrel](https://github.c
 
 ## 🛠️ 개발자와 AI 에이전트를 위한 안내
 
-소스에서 빌드하기, 기술 스택, 개발 현황, 테스트는 [DEVELOPMENT.md](../DEVELOPMENT.md)(영어)에 있습니다. 기여하고 싶다면 [CONTRIBUTING.md](../CONTRIBUTING.md)를 읽어 주세요. Claude Code 같은 내 컴퓨터의 AI 코딩 에이전트가 승인을 거쳐 북마크를 검색하고 정리하게 할 수도 있습니다. [로컬 AI 에이전트와 함께 사용하기](https://docs.bookmark-scout.com/ko/guides/local-agents)를 참고하세요.
+소스에서 빌드하기, 기술 스택, 개발 현황, 테스트는 [DEVELOPMENT.md](../../DEVELOPMENT.md)(영어)에 있습니다. 기여하고 싶다면 [CONTRIBUTING.md](CONTRIBUTING.md)를 읽어 주세요. Claude Code 같은 내 컴퓨터의 AI 코딩 에이전트가 승인을 거쳐 북마크를 검색하고 정리하게 할 수도 있습니다. [로컬 AI 에이전트와 함께 사용하기](https://docs.bookmark-scout.com/ko/guides/local-agents)를 참고하세요.
 
 ---
 
 <p align="center">
-  <a href="../LICENSE">AGPL-3.0 라이선스</a>의 무료 오픈 소스입니다.
+  <a href="../../LICENSE">AGPL-3.0 라이선스</a>의 무료 오픈 소스입니다.
 </p>

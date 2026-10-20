@@ -89,6 +89,24 @@ support  = "support@bookmark-scout.com"
 [legal]
 privacy_effective_date = "2026-10-18"
 
+# Root Markdown documents generated from templates/ by `bun run generate:markdown`. Each name is
+# a file at the root without `.md`. A document has every language in `[locales] supported`
+# unless [markdown.languages] lists fewer (the default language is required). The default
+# language's copy goes to the root (README.md), the others to <dir>/<tag>/ (i18n/ja/README.md),
+# and each template sits at the same path under templates/.
+[markdown]
+dir       = "i18n"
+documents = ["README", "CONTRIBUTING", "DEVELOPMENT"]
+# The language switcher's order, by audience: English is the source; Spanish and Portuguese
+# (Brazil) are large Chrome audiences; the Chrome Web Store is not reachable from mainland China
+# without a VPN, so Simplified Chinese sits lower for a Chrome-first extension. Lists every
+# supported language exactly once, the default language first.
+language_order = ["en", "es", "pt-BR", "ja", "de", "fr", "zh-CN", "ko", "zh-TW"]
+
+# Documents with fewer languages than every supported one.
+[markdown.languages]
+DEVELOPMENT = ["en"]
+
 # Price for structured data (schema.org Offer).
 [offer]
 price    = "0"
