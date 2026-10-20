@@ -211,17 +211,17 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 		},
 
 		/**
-		 * The generated root Markdown documents. Each lists its languages in `languageOrder`, the
-		 * order every language switcher uses: every supported language unless config lists fewer.
+		 * The generated root Markdown documents. Each lists its languages in the order of
+		 * `locales.supported`, which every language switcher uses: every supported language unless
+		 * config lists fewer.
 		 */
 		markdown: {
 			dir: project.markdown.dir,
-			languageOrder: project.markdown.language_order,
 			documents: project.markdown.documents.map((name) => {
 				const only = project.markdown.languages[name];
 				return {
 					name,
-					languages: project.markdown.language_order.filter((locale) => only === undefined || only.includes(locale)),
+					languages: locales.supported.filter((locale) => only === undefined || only.includes(locale)),
 				};
 			}),
 		},

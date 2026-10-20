@@ -171,7 +171,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 
 ## Shapes
 
-- Buttons and language links are pills (`rounded.pill`).
+- Buttons and language links are pills (`rounded.pill`). Language links list each language by its own name in the order of `[locales] supported`, never sorted.
 - Panels and screenshot frames use `rounded.xl` or `rounded.lg`.
 - The ribbon is a clip-path shape: a rectangle with a V-notch at the bottom.
 

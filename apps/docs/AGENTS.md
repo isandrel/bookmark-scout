@@ -114,7 +114,7 @@ Be careful when editing these files because they affect page discovery, processi
 
 ## Languages
 
-The docs serve every language in `[locales] supported` of `config/project.toml`; never list languages in docs code. English is the default and the source of every page.
+The docs serve every language in `[locales] supported` of `config/project.toml`, and the language menu, hreflang alternates, and sitemap follow that list's order (`verify` checks it); never list or sort languages in docs code. English is the default and the source of every page.
 
 - URLs: English keeps unprefixed URLs (`/faq`); another language lives under its BCP 47 tag (`/ja/faq`, `/zh-CN/faq`). One optional catch-all route renders all of them, and `src/components/docs-shell.tsx` reads the language from the path, because a static export has no middleware to rewrite unprefixed URLs. A top-level English page may not be named like a language tag (`source.ts` throws).
 - Content: Fumadocs' dot parser. `faq.ja.mdx` translates `faq.mdx` and `meta.ja.json` translates `meta.json`. A page without a translation is the English page served under the language's URL, with a notice, its canonical URL on the English page, and no sitemap entry. Adding a language to config therefore never breaks the build.

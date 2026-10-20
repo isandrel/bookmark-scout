@@ -35,7 +35,7 @@ function scratch(files: Record<string, string>): string {
 
 const twoLanguages = {
 	locales: { ...site.locales, default: "en" },
-	markdown: { dir: "i18n", languageOrder: ["en", "ja"], documents: [{ name: "README", languages: ["en", "ja"] }] },
+	markdown: { dir: "i18n", documents: [{ name: "README", languages: ["en", "ja"] }] },
 } as unknown as Pick<Site, "locales" | "markdown">;
 
 describe("versions", () => {
@@ -169,9 +169,9 @@ describe("language switcher", () => {
 		});
 	});
 
-	test("follows the configured language order", () => {
+	test("follows the order of locales.supported", () => {
 		const readme = documents.filter((document) => document.document === "README").map((document) => document.language);
-		expect(readme).toEqual(site.markdown.languageOrder);
+		expect(readme).toEqual(site.locales.supported);
 	});
 });
 

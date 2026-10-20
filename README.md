@@ -1,11 +1,11 @@
 <p align="center">
   <strong lang="en">English</strong> ·
-  <a href="i18n/es/README.md" lang="es" hreflang="es">Español</a> ·
-  <a href="i18n/pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
-  <a href="i18n/ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
-  <a href="i18n/de/README.md" lang="de" hreflang="de">Deutsch</a> ·
-  <a href="i18n/fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="i18n/zh-CN/README.md" lang="zh-CN" hreflang="zh-CN">简体中文</a> ·
+  <a href="i18n/es/README.md" lang="es" hreflang="es">Español</a> ·
+  <a href="i18n/fr/README.md" lang="fr" hreflang="fr">Français</a> ·
+  <a href="i18n/pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="i18n/de/README.md" lang="de" hreflang="de">Deutsch</a> ·
+  <a href="i18n/ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="i18n/ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
   <a href="i18n/zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
@@ -49,7 +49,7 @@
 - ✨ **Optional AI suggestions.** Let AI pick the folder for you, using your own AI account or a free AI model on your own computer, such as the one built into Chrome. AI stays off until you turn it on.
 - 🔒 **Private by design.** No account, no ads, no tracking, and nothing goes to the developer. Saving and searching even work offline.
 
-🌍 Available in English · 日本語 · 한국어 · 简体中文 · 繁體中文 · Español · Deutsch · Français · Português (Brasil).
+🌍 Available in English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文.
 
 ## 📦 Install
 

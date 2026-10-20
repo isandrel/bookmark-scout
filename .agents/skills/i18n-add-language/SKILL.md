@@ -16,7 +16,7 @@ A language touches four surfaces that each have their own rules. This skill is t
 | Use | Form | Example |
 | --- | --- | --- |
 | Config lists, website and docs URLs and files, `<html lang>` | BCP 47 tag | `zh-CN`, `pt-BR` |
-| Extension `_locales` folder, `SupportedLocale`, store listing file | Chrome folder code | `zh_CN`, `pt_BR` |
+| Extension `_locales` folder, `SUPPORTED_LOCALES`, store listing file | Chrome folder code | `zh_CN`, `pt_BR` |
 | Docs UI copy identifier | Tag without punctuation | `zhCN`, `ptBR` |
 
 `toLanguageTag` in `apps/extension/src/hooks/use-i18n.ts` converts folder codes to tags. Never type a list of languages in code; read `[locales]` in `config/project.toml`.
@@ -33,8 +33,8 @@ A language touches four surfaces that each have their own rules. This skill is t
 Split it into pull requests that each pass CI on their own:
 
 1. **Wiring (no translations yet).**
-   - Add the tag to `[locales] extension`, `[locales] supported`, `[locales.names]`, `[locales.og]`, and `[markdown] language_order` (the README language switcher's order, by audience) in `config/project.toml`.
-   - Add the folder to `SupportedLocale` and a `react-day-picker` locale to `calendarLocales` in `src/components/ui/calendar.tsx`. The type check fails until both exist.
+   - Add the tag to `[locales] extension`, `[locales] supported`, `[locales.names]`, and `[locales.og]` in `config/project.toml`. Insert it in both lists at its place by total speakers (the rule and the counts are in the comment above `[locales]`): the list order is the display order of every language menu, the README switchers, the hreflang alternates, and the extension's Language setting, and the config loader fails when the two lists disagree.
+   - Add the folder to `SUPPORTED_LOCALES` in `use-i18n.ts` at the same place, and a `react-day-picker` locale to `calendarLocales` in `src/components/ui/calendar.tsx`. The type check fails until both exist.
    - Add aliases.
    - Add font stacks where the script needs them: `:root:lang(<tag>)` in `apps/extension/src/styles/theme.css`, and `html:lang(<tag>) body, .font-sans, .font-display` in `apps/website/app/globals.css`.
    - The website's `@theme inline` tokens ignore a CSS variable override, so set `font-family` directly as the existing Chinese and Korean rules do.
