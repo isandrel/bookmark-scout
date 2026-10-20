@@ -1,6 +1,8 @@
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Locator, Page, Worker } from '@playwright/test';
+import { dropFile } from './file-drop';
 import { expect, test, toastRegion } from './fixtures';
 import { openTools, seedFolder } from './tool-helpers';
 
@@ -352,4 +354,20 @@ test('a partial import failure is reported with counts and the errors stay visib
   expect(await subtreeOf(extensionWorker, targetId)).toEqual([
     { title: 'Existing', url: 'https://e2e.invalid/existing' },
   ]);
+});
+
+test('a bookmarks file dropped on the Import card opens the same preview', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { targetId } = await seedConflicts(extensionWorker);
+  await openTools(page, extensionId, targetId);
+  const card = page.locator('.file-drop-target').filter({ hasText: 'Import' });
+  await dropFile(page, card, {
+    name: 'dropped.html',
+    mimeType: 'text/html',
+    text: readFileSync(HTML_FIXTURE, 'utf8'),
+  });
+  await expect(page.getByRole('dialog', { name: 'Import preview' })).toBeVisible();
 });

@@ -6512,5 +6512,21 @@
     "sortable_moved": {
         "message": "已将 $1 移到第 $2 位（共 $3 项）",
         "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
+    },
+    "fileDrop_import": {
+        "message": "将书签文件拖到这里即可导入",
+        "description": "Hint on the Tools > Import card while a file is dragged over the page: dropping a bookmarks file on the card imports it."
+    },
+    "fileDrop_restore": {
+        "message": "拖入设置备份即可恢复",
+        "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "树中的拖放",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "在弹出窗口和侧边栏中拖动书签和文件夹来移动它们，并可将网页中的链接拖到侧边栏的文件夹上保存",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

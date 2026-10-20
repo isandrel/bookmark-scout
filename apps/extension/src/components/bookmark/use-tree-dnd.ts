@@ -9,6 +9,8 @@ import {
   dropTargetForElements,
   monitorForElements,
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { dropTargetForExternal } from '@atlaskit/pragmatic-drag-and-drop/external/adapter';
+import { containsURLs } from '@atlaskit/pragmatic-drag-and-drop/utils/contains-ur-ls';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { BookmarkTreeNode, DragData, DragOperation } from '@/types';
 
@@ -31,6 +33,13 @@ type TreeDndOptions = {
   canReorder?: boolean;
   /** Called when a drag starts (with the row's id) and when it ends or is cancelled (null). */
   onDraggingChange?: (id: string | null) => void;
+  /** Whether rows drag at all (the Drag and Drop in the Tree setting). */
+  enabled?: boolean;
+  /**
+   * Links dragged in from a web page and dropped on a folder row (the side panel stays open for
+   * that; the popup closes when the pointer leaves it).
+   */
+  onLinksDrop?: (folder: BookmarkTreeNode, links: { url: string; title: string }[]) => void;
 };
 
 export type TreeDnd = {
@@ -86,9 +95,11 @@ export function useTreeDnd(
   // Registrations outlive renders, so they read the latest callbacks through a ref.
   const current = () => ({
     onDrop,
-    canMove: options.canMove ?? canAlwaysMove,
+    canMove: options.enabled === false ? () => false : (options.canMove ?? canAlwaysMove),
     canReorder: options.canReorder ?? true,
     onDraggingChange: options.onDraggingChange,
+    enabled: options.enabled ?? true,
+    onLinksDrop: options.onLinksDrop,
   });
   const latest = useRef(current());
   useLayoutEffect(() => {
@@ -166,6 +177,28 @@ export function useTreeDnd(
               if (operation) latest.current.onDrop(operation);
             },
           }),
+          // Links from a web page land in a folder row.
+          kind === 'folder'
+            ? dropTargetForExternal({
+                element,
+                canDrop: (args) =>
+                  containsURLs(args) &&
+                  latest.current.enabled &&
+                  latest.current.onLinksDrop !== undefined &&
+                  !node.unmodifiable,
+                onDragEnter: () => showDropIndicator(element, kind, 'into'),
+                onDragLeave: () => clearDropIndicator(element, kind),
+                onDrop: ({ source }) => {
+                  clearDropIndicator(element, kind);
+                  const links = parseDroppedLinks({
+                    uriList: source.getStringData('text/uri-list') ?? undefined,
+                    html: source.getStringData('text/html') ?? undefined,
+                    plain: source.getStringData('text/plain') ?? undefined,
+                  });
+                  latest.current.onLinksDrop?.(node, links);
+                },
+              })
+            : () => {},
           () => clearDropIndicator(element, kind),
         );
       };

@@ -6718,5 +6718,21 @@
     "sortable_moved": {
         "message": "$1 an Position $2 von $3 verschoben",
         "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
+    },
+    "fileDrop_import": {
+        "message": "Lesezeichendatei hier ablegen, um sie zu importieren",
+        "description": "Hint on the Tools > Import card while a file is dragged over the page: dropping a bookmarks file on the card imports it."
+    },
+    "fileDrop_restore": {
+        "message": "Einstellungssicherung ablegen, um sie wiederherzustellen",
+        "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "Ziehen und Ablegen in der Baumansicht",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "Im Pop-up und in der Seitenleiste Lesezeichen und Ordner ziehen, um sie zu verschieben, und Links von einer Webseite auf einen Ordner der Seitenleiste ziehen, um sie dort zu speichern",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

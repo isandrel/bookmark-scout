@@ -3,8 +3,8 @@
  * folder suggestions for the current page. Tree state lives in the bookmark store.
  */
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { BookmarkIcon, CircleAlert, SearchX } from 'lucide-react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 import '@/styles/popup.scss';
 
@@ -89,13 +89,15 @@ function PopupPage() {
   // In memory only: reopening the popup starts on the bookmarks, with no chat history.
   const [askAIOpen, setAskAIOpen] = useState(false);
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
-  const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
+  const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } =
+    useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
   const { value: showFavicons } = useSetting('showFavicons');
   const { value: faviconSize } = useSetting('faviconSize');
   const { value: defaultNewFolderName } = useSetting('defaultNewFolderName');
   const { value: sortOrder } = useSetting('sortOrder');
   const { value: groupByFolders } = useSetting('groupByFolders');
+  const { value: treeDragAndDrop } = useSetting('treeDragAndDrop');
   const { value: maxSearchResults } = useSetting('maxSearchResults');
   const { value: expandFoldersOnSearch } = useSetting('expandFoldersOnSearch');
   const { value: searchHistoryEnabled, isLoading: searchHistoryLoading } =
@@ -108,7 +110,8 @@ function PopupPage() {
   const { value: recentFolders } = useStoredValue(recentFoldersValue);
   const recentFolderIds = useMemo(() => recentFolders.map((folder) => folder.id), [recentFolders]);
   const setExpandFoldersOnSearch = useBookmarkStore((state) => state.setExpandFoldersOnSearch);
-  const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } = useSetting('aiAutoTriggerOnOpen');
+  const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } =
+    useSetting('aiAutoTriggerOnOpen');
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
@@ -208,7 +211,14 @@ function PopupPage() {
       // Without access to the current tab there is nothing to suggest for; it never asks unprompted.
       handleAIRecommend().catch(() => undefined);
     }
-  }, [aiAutoTriggerLoading, isLoading, aiReady, aiAutoTriggerOnOpen, folders.length, handleAIRecommend]);
+  }, [
+    aiAutoTriggerLoading,
+    isLoading,
+    aiReady,
+    aiAutoTriggerOnOpen,
+    folders.length,
+    handleAIRecommend,
+  ]);
 
   // Toast wrapper for operations
   const withToast = useCallback(
@@ -494,9 +504,30 @@ function PopupPage() {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const handleDropWithToast = useCallback(
     async (operation: DragOperation) => {
-      await withToast(() => handleDrop(operation), t('toast_itemMoved'), t('toast_errorMovingItem'));
+      await withToast(
+        () => handleDrop(operation),
+        t('toast_itemMoved'),
+        t('toast_errorMovingItem'),
+      );
     },
     [handleDrop, withToast],
+  );
+
+  // Links dragged in from a web page (the side panel stays open while you drag).
+  const handleLinksDrop = useCallback(
+    async (folder: BookmarkTreeNode, links: { url: string; title: string }[]) => {
+      if (links.length === 0) {
+        toast({ title: t('toast_noLinksDropped') });
+        return;
+      }
+      try {
+        await addDroppedLinks(links, { parentId: folder.id, beforeId: null });
+        toast.success({ title: tPlural('toast_linksAdded', links.length) });
+      } catch (error) {
+        toast.error({ title: t('toast_linksAddFailed'), description: getErrorMessage(error) });
+      }
+    },
+    [],
   );
 
   const { requestDeletion } = deletion;
@@ -728,6 +759,8 @@ function PopupPage() {
                 onToggleExpandAllChildren={toggleExpandAllChildren}
                 canReorder={canReorder}
                 onDraggingChange={setDraggingId}
+                dragAndDrop={treeDragAndDrop}
+                onLinksDrop={(folder, links) => void handleLinksDrop(folder, links)}
               >
                 <PopupTree
                   roots={displayFolders}

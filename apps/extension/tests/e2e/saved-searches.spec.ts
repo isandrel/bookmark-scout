@@ -370,3 +370,29 @@ test('malformed saved searches are ignored and never break the manager', async (
     { name: 'Recovered', query: { filters: { title: 'Survivor' } } },
   ]);
 });
+
+test('saved searches reorder from each handle menu, and the order is stored', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const query = { filters: { title: 'alpha' }, sorting: [] };
+  await writeSavedSearches(extensionWorker, [
+    storedSearch('one', 'First search', query),
+    storedSearch('two', 'Second search', query),
+  ]);
+  await page.goto(managerUrl(extensionId));
+  const menu = await openSavedSearches(page);
+  const names = () => menu.getByRole('list').locator('li').allTextContents();
+
+  await menu.getByRole('button', { name: 'Reorder Second search' }).click();
+  await page.getByRole('menuitem', { name: 'Move to top' }).click();
+  // The popover stays open, so several moves can follow one another.
+  await expect(menu).toBeVisible();
+  await expect
+    .poll(async () => (await names()).map((text) => text.trim()))
+    .toEqual(['Second search', 'First search']);
+  await expect
+    .poll(async () => (await readSavedSearches(extensionWorker)).local)
+    .toEqual([expect.objectContaining({ id: 'two' }), expect.objectContaining({ id: 'one' })]);
+});

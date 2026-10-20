@@ -195,6 +195,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   groupByFolders: tested(POPUP, [
     e2e('popup-tree.spec.ts', 'groupByFolders lists folders before links under date and alphabetical order'),
   ]),
+  treeDragAndDrop: tested(POPUP, [
+    e2e(
+      'tree-drag-drop.spec.ts',
+      'with drag and drop turned off, rows cannot be dragged and links are not taken',
+    ),
+  ]),
   linkOpenTarget: tested('components/ui/url-link.tsx', [
     e2e(
       'link-open-target.spec.ts',

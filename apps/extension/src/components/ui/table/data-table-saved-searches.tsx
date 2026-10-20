@@ -31,7 +31,7 @@ function describeError(error: SavedSearchError): string {
 }
 
 export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSavedSearchesProps) {
-  const { searches, create, rename, remove, restore } = useSavedSearches();
+  const { searches, create, rename, remove, restore, reorder } = useSavedSearches();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
@@ -179,12 +179,18 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
         {searches.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t('savedSearches_empty')}</p>
         ) : (
-          <ul
+          <SortableList
+            items={searches}
+            getId={(search) => search.id}
+            getLabel={(search) => search.name}
+            onReorder={(ids) => void reorder(ids)}
+            label={t('savedSearches_listLabel')}
             className="max-h-72 space-y-1 overflow-y-auto"
-            aria-label={t('savedSearches_listLabel')}
-          >
-            {searches.map((search) => (
-              <li key={search.id} className="flex items-center gap-1">
+            itemClassName="flex items-center gap-1"
+            scrollable
+            renderItem={(search, handle) => (
+              <>
+                {handle}
                 {renaming?.id === search.id ? (
                   <form className="flex min-w-0 flex-1 flex-col gap-1" onSubmit={handleRename}>
                     <div className="flex gap-1">
@@ -258,9 +264,9 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
                     </Button>
                   </>
                 )}
-              </li>
-            ))}
-          </ul>
+              </>
+            )}
+          />
         )}
       </PopoverContent>
     </Popover>

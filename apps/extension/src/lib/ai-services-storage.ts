@@ -147,19 +147,13 @@ export async function updateAIService(
 
 /**
  * Puts the services in `ids` order. The order matters: an AI feature the default service cannot
- * run uses the first enabled service that can (`pickAIService`). Ids that are gone are skipped,
- * and services missing from `ids` (added in another tab meanwhile) stay at the end.
+ * run uses the first enabled service that can (`pickAIService`).
  */
 export async function reorderAIServices(ids: readonly string[]): Promise<void> {
-  await updateServices((state) => {
-    const rank = new Map(ids.map((id, index) => [id, index]));
-    const services = [...state.services].sort(
-      (left, right) =>
-        (rank.get(left.id) ?? Number.MAX_SAFE_INTEGER) -
-        (rank.get(right.id) ?? Number.MAX_SAFE_INTEGER),
-    );
-    return { ...state, services };
-  });
+  await updateServices((state) => ({
+    ...state,
+    services: orderByIds(state.services, (service) => service.id, ids),
+  }));
 }
 
 export async function setDefaultAIService(id: string): Promise<void> {

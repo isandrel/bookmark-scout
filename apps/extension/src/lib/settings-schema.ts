@@ -616,6 +616,7 @@ const fields = {
     getSortOrderLabel,
   ),
   groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
+  treeDragAndDrop: switchField('behavior.tree.drag_and_drop', 'treeDragAndDrop'),
   linkOpenTarget: enumField(
     'behavior.links.open_target',
     'linkOpenTarget',
@@ -1181,7 +1182,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       },
     ]),
     behavior: category('settings_behavior', 'settings_behaviorDesc', [
-      { id: 'tree', labelKey: 'settings_sectionTree', fields: ['sortOrder', 'groupByFolders'] },
+      { id: 'tree', labelKey: 'settings_sectionTree', fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'] },
       { id: 'links', labelKey: 'settings_sectionLinks', fields: ['linkOpenTarget'] },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       { id: 'managerMenus', fields: [], panel: 'managerMenus' },

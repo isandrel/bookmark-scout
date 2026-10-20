@@ -18,7 +18,10 @@ import {
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview';
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
-import { autoScrollWindowForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
+import {
+  autoScrollForElements,
+  autoScrollWindowForElements,
+} from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import {
   attachClosestEdge,
   extractClosestEdge,
@@ -54,6 +57,14 @@ type SortableListProps<T> = {
   /** Extra attributes for an item's `li`, such as test ids. */
   itemProps?: (item: T) => Record<`data-${string}`, string>;
   listRef?: Ref<HTMLUListElement>;
+  /**
+   * Whether each handle is also a menu with the moves (the default). Turn it off only where the
+   * list already offers the same moves another way, such as inside a menu that has its own
+   * move buttons; the handle is then a drag grip only.
+   */
+  moveMenu?: boolean;
+  /** Whether the list scrolls by itself; a drag near its edges then scrolls it too. */
+  scrollable?: boolean;
   'data-testid'?: string;
 };
 
@@ -84,8 +95,19 @@ export function SortableList<T>({
   itemClassName,
   itemProps,
   listRef,
+  moveMenu = true,
+  scrollable = false,
   'data-testid': testId,
 }: SortableListProps<T>) {
+  const [listElement, setListElement] = useState<HTMLUListElement | null>(null);
+  const setListRefs = useCallback(
+    (element: HTMLUListElement | null) => {
+      setListElement(element);
+      if (typeof listRef === 'function') listRef(element);
+      else if (listRef) listRef.current = element;
+    },
+    [listRef],
+  );
   const [listId] = useState(() => Symbol('sortable-list'));
   const [dragging, setDragging] = useState<string | null>(null);
   const [flashing, setFlashing] = useState<string | null>(null);
@@ -121,6 +143,14 @@ export function SortableList<T>({
     const timer = setTimeout(() => setFlashing(null), SORTABLE_FLASH_MS);
     return () => clearTimeout(timer);
   }, [flashing]);
+
+  useEffect(() => {
+    if (!scrollable || !listElement) return;
+    return autoScrollForElements({
+      element: listElement,
+      canScroll: ({ source }) => itemDataOf(source.data)?.listId === listId,
+    });
+  }, [listElement, listId, scrollable]);
 
   useEffect(
     () =>
@@ -203,7 +233,7 @@ export function SortableList<T>({
 
   return (
     <ul
-      ref={listRef}
+      ref={setListRefs}
       aria-label={label}
       className={className}
       data-testid={testId}
@@ -221,6 +251,7 @@ export function SortableList<T>({
             moves={availableMoves(ids, id, movable)}
             onMove={(move) => moveBy(id, move)}
             register={register}
+            moveMenu={moveMenu}
             dragging={dragging === id}
             flashing={flashing === id}
             dropEdge={drop?.id === id ? drop.edge : null}
@@ -244,6 +275,7 @@ type SortableItemProps = {
   register: (
     id: string,
   ) => (element: HTMLElement | null, handle: HTMLElement | null) => (() => void) | undefined;
+  moveMenu: boolean;
   dragging: boolean;
   flashing: boolean;
   dropEdge: 'top' | 'bottom' | null;
@@ -259,6 +291,7 @@ function SortableItem({
   moves,
   onMove,
   register,
+  moveMenu,
   dragging,
   flashing,
   dropEdge,
@@ -267,7 +300,7 @@ function SortableItem({
   children,
 }: SortableItemProps) {
   const itemRef = useRef<HTMLLIElement>(null);
-  const handleRef = useRef<HTMLButtonElement>(null);
+  const handleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!movable) return;
@@ -278,7 +311,21 @@ function SortableItem({
   // handle opens its menu on click instead; a keyboard press still opens it the usual way.
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handle = movable ? (
+  const grip = <GripVertical aria-hidden="true" className="h-4 w-4" />;
+  const handle = !movable ? (
+    // Keeps the row's columns aligned with movable rows.
+    <span aria-hidden="true" className="sortable-handle-slot" />
+  ) : !moveMenu ? (
+    // A drag grip only: the list offers the same moves another way (see `moveMenu`).
+    <span
+      ref={handleRef as Ref<HTMLSpanElement>}
+      aria-hidden="true"
+      className="sortable-handle sortable-grip"
+      title={t('sortable_handle', name)}
+    >
+      {grip}
+    </span>
+  ) : (
     <DropdownMenu
       open={menuOpen}
       onOpenChange={(open, details) => {
@@ -289,7 +336,7 @@ function SortableItem({
       <DropdownMenuTrigger
         render={
           <Button
-            ref={handleRef}
+            ref={handleRef as Ref<HTMLButtonElement>}
             type="button"
             variant="ghost"
             size="icon-sm"
@@ -303,7 +350,7 @@ function SortableItem({
           />
         }
       >
-        <GripVertical aria-hidden="true" className="h-4 w-4" />
+        {grip}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         {SORTABLE_MOVES.map((move) => (
@@ -313,9 +360,6 @@ function SortableItem({
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  ) : (
-    // Keeps the row's columns aligned with movable rows.
-    <span aria-hidden="true" className="sortable-handle-slot" />
   );
 
   return (

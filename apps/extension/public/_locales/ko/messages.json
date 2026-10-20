@@ -6710,5 +6710,21 @@
     "sortable_moved": {
         "message": "$1을(를) $3개 중 $2번째로 옮겼습니다",
         "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
+    },
+    "fileDrop_import": {
+        "message": "북마크 파일을 여기에 놓아 가져오기",
+        "description": "Hint on the Tools > Import card while a file is dragged over the page: dropping a bookmarks file on the card imports it."
+    },
+    "fileDrop_restore": {
+        "message": "설정 백업을 놓아 복원",
+        "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "트리에서 끌어서 놓기",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "팝업과 사이드 패널에서 북마크와 폴더를 끌어 옮기고, 웹 페이지의 링크를 사이드 패널의 폴더에 놓아 저장합니다",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

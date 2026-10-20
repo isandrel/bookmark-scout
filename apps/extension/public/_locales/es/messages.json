@@ -6718,5 +6718,21 @@
     "sortable_moved": {
         "message": "$1 movido a la posición $2 de $3",
         "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
+    },
+    "fileDrop_import": {
+        "message": "Suelta aquí un archivo de marcadores para importarlo",
+        "description": "Hint on the Tools > Import card while a file is dragged over the page: dropping a bookmarks file on the card imports it."
+    },
+    "fileDrop_restore": {
+        "message": "Suelta una copia de seguridad de la configuración para restaurarla",
+        "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
+    },
+    "settings_treeDragAndDrop": {
+        "message": "Arrastrar y soltar en el árbol",
+        "description": "Options > Behavior > Tree: switch for drag and drop in the popup and side panel tree"
+    },
+    "settings_treeDragAndDropDesc": {
+        "message": "En la ventana emergente y el panel lateral, arrastra marcadores y carpetas para moverlos, y suelta enlaces de una página web sobre una carpeta del panel lateral para guardarlos ahí",
+        "description": "Description of the Drag and Drop in the Tree setting"
     }
 }

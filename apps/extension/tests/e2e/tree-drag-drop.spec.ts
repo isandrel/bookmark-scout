@@ -1,4 +1,5 @@
 import type { Locator, Page, Worker } from '@playwright/test';
+import { dropData } from './file-drop';
 import { expect, test, toastRegion } from './fixtures';
 import { bookmarkRow, childTitles, folderRow, seedFolder, setSettings } from './popup-helpers';
 
@@ -327,3 +328,53 @@ for (const surface of ['popup', 'sidepanel'] as const) {
     });
   });
 }
+
+test.describe('links dropped from another app', () => {
+  test('a link dropped on a side panel folder is added to that folder', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    await setSettings(extensionWorker, { folderMatchesEnabled: false });
+    const seeded = await seedFolder(extensionWorker, 'Link Drop Inbox', [
+      { title: 'Link Drop Resident', url: 'https://e2e.invalid/resident' },
+    ]);
+
+    await openTree(page, extensionId, 'sidepanel');
+    await searchTree(page, 'Link Drop');
+    await dropData(page, folderHandle(page, 'Link Drop Inbox'), {
+      'text/uri-list': 'https://e2e.invalid/dropped',
+      'text/plain': 'https://e2e.invalid/dropped',
+    });
+
+    await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toHaveLength(2);
+    await expect(toastRegion(page).getByText(/Added 1 bookmark$/)).toBeVisible();
+  });
+
+  test('with drag and drop turned off, rows cannot be dragged and links are not taken', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    await setSettings(extensionWorker, { folderMatchesEnabled: false, treeDragAndDrop: false });
+    const source = await seedFolder(extensionWorker, 'DnD Off Source', [
+      { title: 'DnD Off Traveller', url: 'https://e2e.invalid/off-traveller' },
+    ]);
+    const destination = await seedFolder(extensionWorker, 'DnD Off Destination', []);
+
+    await openTree(page, extensionId, 'sidepanel');
+    await searchTree(page, 'DnD Off');
+    await pointerDrag(
+      page,
+      bookmarkHandle(page, 'DnD Off Traveller'),
+      folderHandle(page, 'DnD Off Destination'),
+      'into',
+    );
+    await dropData(page, folderHandle(page, 'DnD Off Destination'), {
+      'text/uri-list': 'https://e2e.invalid/off-dropped',
+    });
+
+    expect(await childTitles(extensionWorker, source.folderId)).toEqual(['DnD Off Traveller']);
+    expect(await childTitles(extensionWorker, destination.folderId)).toEqual([]);
+  });
+});

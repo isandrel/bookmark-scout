@@ -35,19 +35,24 @@
 # 1,629,718 and 5,202,241 B uncompressed on main, and with the list 5,227,193 B uncompressed,
 # 3,484,153 B of JavaScript, and 81,522 B of CSS; the new limits are about 10 KB (CSS 2.5 KB)
 # above that, so the later drag-and-drop phases measure their own growth.
+# Raised on 2026-10-20 (ZIP 1,644,000 to 1,652,000, uncompressed 5,236,000 to 5,248,000) for the
+# later drag-and-drop phases: reorderable columns and saved searches, file drops on Import and
+# Settings, link drops on side panel folders, and the setting that turns tree drag off, with their
+# copy in 9 languages. Firefox measured ZIP 1,643,008 and 5,238,392 B uncompressed; the new limits
+# are about 9 KB above that.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_644_000
-raw_bytes = 5_236_000
+zip_bytes = 1_652_000
+raw_bytes = 5_248_000
 
 [targets.edge]
-zip_bytes = 1_644_000
-raw_bytes = 5_236_000
+zip_bytes = 1_652_000
+raw_bytes = 5_248_000
 
 [targets.firefox]
-zip_bytes = 1_644_000
-raw_bytes = 5_236_000
+zip_bytes = 1_652_000
+raw_bytes = 5_248_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
