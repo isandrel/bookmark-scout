@@ -398,14 +398,14 @@ export type ImportApplyOutcome = {
   /** Items the browser rejected, including the planned contents of folders that failed. */
   failed: number;
   errors: string[];
-  /** Every created ID, used to check that an undo only removes imported items. */
+  /** Every created ID. */
   createdIds: string[];
   /** IDs of the created items directly inside the target folder. */
   createdRootIds: string[];
   /**
-   * Removes what the import created, once. A top-level item is removed only while its subtree
-   * holds nothing but imported items, so bookmarks added to an imported folder are never
-   * deleted. A later call returns the first call's result.
+   * Removes what the import created, once. A top-level item is removed only while it is exactly
+   * as the import left it (place, titles, addresses, tags, summaries, and contents at every
+   * depth), so later work in it is never deleted. A later call returns the first call's result.
    */
   undo(): Promise<ImportUndoResult>;
 };
@@ -600,26 +600,54 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
       outcome.errors.push(getErrorMessage(err));
     }
   }
+  // What the import left, read back (with tags and summaries), so undo can tell any later change.
+  const imported = await Promise.all(
+    outcome.createdRootIds.map((id) =>
+      captureBookmarkSubtree(id, { keepIds: true }).catch(() => null),
+    ),
+  );
   let undone: Promise<ImportUndoResult> | undefined;
-  return { ...outcome, undo: () => (undone ??= removeImported(outcome)) };
+  return {
+    ...outcome,
+    undo: () => (undone ??= removeImported(plan.targetFolderId, imported)),
+  };
 }
 
+/**
+ * Removes each top-level item the import created, but only while it is exactly as the import
+ * left it: still in the target folder, with the same titles, addresses, tags, summaries, and
+ * items at every depth. Anything edited, moved, re-tagged, or added to since is the user's work
+ * and stays; it counts as not removed.
+ */
 async function removeImported(
-  outcome: Pick<ImportApplyOutcome, 'createdIds' | 'createdRootIds'>,
+  targetFolderId: string,
+  imported: readonly (BookmarkSubtreeSnapshot | null)[],
 ): Promise<ImportUndoResult> {
-  const created = new Set(outcome.createdIds);
   const result = await applyBookmarkChanges(
-    outcome.createdRootIds.map((id) => ({
-      kind: 'remove',
-      id,
-      title: '',
-      // Undoing an import is itself not undone; the user can import the file again.
-      undoable: false,
-      check: (live) => subtreeIds(live).every((itemId) => created.has(itemId)),
-    })),
+    imported.flatMap((snapshot) =>
+      snapshot?.node.id
+        ? [
+            {
+              kind: 'remove' as const,
+              id: snapshot.node.id,
+              title: snapshot.node.title,
+              expect: { parentId: targetFolderId },
+              // Undoing an import is itself not undone; the user can import the file again.
+              undoable: false,
+              check: async () => {
+                const live = await captureBookmarkSubtree(snapshot.node.id ?? '', {
+                  keepIds: true,
+                }).catch(() => null);
+                return live !== null && isSameRecordedSubtree(snapshot.node, live.node);
+              },
+            },
+          ]
+        : [],
+    ),
   );
+  const unreadable = imported.filter((snapshot) => !snapshot?.node.id).length;
   // An item that changed since the import counts as not removed, like a browser failure.
-  return { removed: result.applied, failed: result.skipped + result.failed };
+  return { removed: result.applied, failed: result.skipped + result.failed + unreadable };
 }
 
 /**
