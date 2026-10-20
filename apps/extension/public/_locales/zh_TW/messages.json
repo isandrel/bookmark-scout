@@ -6512,5 +6512,13 @@
     "sortable_moved": {
         "message": "已將 $1 移到第 $2 位（共 $3 項）",
         "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
+    },
+    "fileDrop_import": {
+        "message": "將書籤檔案拖到這裡即可匯入",
+        "description": "Hint on the Tools > Import card while a file is dragged over the page: dropping a bookmarks file on the card imports it."
+    },
+    "fileDrop_restore": {
+        "message": "拖入設定備份即可還原",
+        "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
     }
 }

@@ -250,10 +250,7 @@ const OptionsPage: React.FC = () => {
     }
   };
 
-  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const restoreFile = async (file: File) => {
     try {
       const content = await file.text();
       // A backup restores everything it holds; any other JSON is read as a settings file.
@@ -292,6 +289,22 @@ const OptionsPage: React.FC = () => {
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
+
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) void restoreFile(file);
+  };
+
+  // A backup or settings file dropped anywhere on the page restores like Restore settings.
+  const fileDrop = useFileDrop<HTMLDivElement>({
+    accept: (file) => file.name.toLowerCase().endsWith(`.${jsonFormat.extension}`),
+    onFiles: ([file]) => void restoreFile(file),
+    onReject: () =>
+      toast.error({
+        title: t('toast_importFailed'),
+        description: t('error_invalidSettingsFile'),
+      }),
+  });
 
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return null;
@@ -568,7 +581,21 @@ const OptionsPage: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div
+      ref={fileDrop.ref}
+      data-testid="options-page"
+      className="flex min-h-screen flex-col bg-background"
+    >
+      {fileDrop.fileDragActive && (
+        <div
+          aria-hidden="true"
+          data-testid="restore-drop-overlay"
+          data-file-over={fileDrop.over || undefined}
+          className="file-drop-overlay"
+        >
+          <p>{t('fileDrop_restore')}</p>
+        </div>
+      )}
       <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 sm:px-6">
         <header className="py-6">
           <div className="flex items-start justify-between gap-2">

@@ -6710,5 +6710,13 @@
     "sortable_moved": {
         "message": "$1을(를) $3개 중 $2번째로 옮겼습니다",
         "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
+    },
+    "fileDrop_import": {
+        "message": "북마크 파일을 여기에 놓아 가져오기",
+        "description": "Hint on the Tools > Import card while a file is dragged over the page: dropping a bookmarks file on the card imports it."
+    },
+    "fileDrop_restore": {
+        "message": "설정 백업을 놓아 복원",
+        "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
     }
 }

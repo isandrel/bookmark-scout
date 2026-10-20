@@ -382,6 +382,44 @@ tr[data-drop-zone='into'] > td {
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.12);
 }
 
+/* File drops (`useFileDrop`): while files are dragged over the page, a target shows a dashed
+   outline, and the one under the pointer a teal-wash fill with a 2px primary ring. */
+.file-drop-target {
+  border-radius: 0.5rem;
+  transition: background-color 150ms ease-out;
+}
+
+.file-drop-target[data-file-drag] {
+  outline: 2px dashed hsl(var(--border));
+  outline-offset: -2px;
+}
+
+.file-drop-target[data-file-over] {
+  background-color: hsl(var(--accent));
+  outline: 2px solid hsl(var(--primary));
+}
+
+.file-drop-overlay {
+  position: fixed;
+  inset: 0.75rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed hsl(var(--border));
+  border-radius: 0.75rem;
+  background-color: hsl(var(--background) / 0.85);
+  color: hsl(var(--foreground));
+  font-size: 1rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.file-drop-overlay[data-file-over] {
+  border: 2px solid hsl(var(--primary));
+  background-color: hsl(var(--accent) / 0.9);
+}
+
 /* Ask AI answers: Markdown from the model, rendered without raw HTML. */
 .ask-ai-markdown {
   & > * + * {

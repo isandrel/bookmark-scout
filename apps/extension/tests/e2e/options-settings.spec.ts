@@ -1,4 +1,5 @@
 import type { Page, Worker } from '@playwright/test';
+import { dropFile } from './file-drop';
 import { expect, test, toastRegion } from './fixtures';
 import { settingRow } from './options-helpers';
 import {
@@ -852,8 +853,7 @@ test('switching the theme changes the page once, without flashing back', async (
       if (seen.at(-1) !== dark) seen.push(dark);
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   });
-  const seen = () =>
-    page.evaluate(() => (window as unknown as { themeSeen: boolean[] }).themeSeen);
+  const seen = () => page.evaluate(() => (window as unknown as { themeSeen: boolean[] }).themeSeen);
 
   await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('dark');
@@ -864,4 +864,20 @@ test('switching the theme changes the page once, without flashing back', async (
   // Each click applies the new theme once; before the fix the old setting came back for a frame
   // and the page flashed.
   expect(await seen()).toEqual([true, false]);
+});
+
+test('a settings file dropped on the page restores like Restore settings', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  await dropFile(page, page.getByTestId('options-page'), {
+    name: 'dropped.json',
+    mimeType: 'application/json',
+    text: JSON.stringify({ theme: 'dark' }),
+  });
+  await expect(toastRegion(page).getByText('1 settings changed: Theme')).toBeVisible();
+  await expect.poll(() => readSettings(extensionWorker)).toMatchObject({ theme: 'dark' });
 });

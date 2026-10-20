@@ -135,10 +135,7 @@ export function ImportToolCard({ environment }: DataToolProps) {
   const [isImporting, setIsImporting] = useState(false);
   const [importSource, setImportSource] = useState<ImportPreviewSource | null>(null);
 
-  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const importFile = async (file: File) => {
     setIsImporting(true);
     try {
       const format = detectFormat(file.name);
@@ -162,8 +159,30 @@ export function ImportToolCard({ environment }: DataToolProps) {
     }
   };
 
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) void importFile(file);
+  };
+
+  // A bookmarks file dropped on the card imports like one picked with the button.
+  const drop = useFileDrop<HTMLDivElement>({
+    accept: (file) => detectFormat(file.name) !== null,
+    onFiles: ([file]) => void importFile(file),
+    onReject: () =>
+      toast.error({
+        title: t('toast_importFailed'),
+        description: t('error_unsupportedFileFormat'),
+      }),
+    disabled: isImporting,
+  });
+
   return (
-    <div className="space-y-2 p-3">
+    <div
+      ref={drop.ref}
+      className="file-drop-target space-y-2 p-3"
+      data-file-drag={drop.fileDragActive || undefined}
+      data-file-over={drop.over || undefined}
+    >
       <ToolCardHeader
         icon={<Upload className={TOOL_ICON_CLASS} />}
         title={t('tools_import')}
@@ -189,6 +208,11 @@ export function ImportToolCard({ environment }: DataToolProps) {
           {isImporting ? t('tools_importing') : t('action_import')}
         </Button>
       </div>
+      {drop.fileDragActive && (
+        <p className="text-xs text-muted-foreground" data-testid="import-drop-hint">
+          {t('fileDrop_import')}
+        </p>
+      )}
       <ImportPreviewDialog
         source={importSource}
         defaultTargetId={environment.currentFolderId}

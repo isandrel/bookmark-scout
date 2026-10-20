@@ -6718,5 +6718,13 @@
     "sortable_moved": {
         "message": "$1 movido para a posição $2 de $3",
         "description": "Screen reader announcement after reordering. $1 is the item name, $2 its new position, $3 the number of items."
+    },
+    "fileDrop_import": {
+        "message": "Solte aqui um arquivo de favoritos para importá-lo",
+        "description": "Hint on the Tools > Import card while a file is dragged over the page: dropping a bookmarks file on the card imports it."
+    },
+    "fileDrop_restore": {
+        "message": "Solte um backup das configurações para restaurá-lo",
+        "description": "Shown over the whole Settings page while a file is dragged over it: dropping a settings backup restores it, like Restore settings."
     }
 }
