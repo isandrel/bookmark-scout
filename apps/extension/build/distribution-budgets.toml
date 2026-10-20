@@ -18,25 +18,35 @@
 # builds of feat/ai-prompt-placeholders on e5f11db0 measured ZIP 1,612,939 / 1,612,953 / 1,613,031,
 # uncompressed 5,148,937 / 5,148,899 / 5,149,164 B (Chrome / Edge / Firefox), and 1,185,334 B of
 # locales; the new limits are about 5 KB (ZIP) and 10 KB above that.
+# Raised on 2026-10-19 (ZIP 1,618,000 to 1,632,000, uncompressed 5,159,000 to 5,202,000, javascript
+# 3,446,000 to 3,464,000) for the ai-sdk patch updates in Dependabot #709 (ai 7.0.137 to 7.0.142 and
+# eleven @ai-sdk packages), which grow the provider chunks by 1 to 3 KB each with no local code
+# change. Local builds of that branch measured ZIP 1,626,013 / 1,625,965 / 1,626,131, uncompressed
+# 5,191,926 / 5,191,888 / 5,192,153 B (Chrome / Edge / Firefox), and 3,453,673 B of JavaScript,
+# against main (87cbf244) at ZIP 1,613,680 and 5,151,110 B uncompressed (Firefox); the new limits are
+# about 6 KB (ZIP) and 10 KB above the branch.
+# Uncompressed raised again on 2026-10-20 (5,202,000 to 5,212,000) after #710 and #712 (next, docs,
+# and minor dependency updates) merged into #709: CI measured the Firefox build at 5,202,161 B, 161 B
+# over; the new limit is about 10 KB above that.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_618_000
-raw_bytes = 5_159_000
+zip_bytes = 1_632_000
+raw_bytes = 5_212_000
 
 [targets.edge]
-zip_bytes = 1_618_000
-raw_bytes = 5_159_000
+zip_bytes = 1_632_000
+raw_bytes = 5_212_000
 
 [targets.firefox]
-zip_bytes = 1_618_000
-raw_bytes = 5_159_000
+zip_bytes = 1_632_000
+raw_bytes = 5_212_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_446_000
+javascript = 3_464_000
 css = 81_000
 fonts = 143_000
 locales = 1_195_000
