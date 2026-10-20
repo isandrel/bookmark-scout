@@ -1,5 +1,6 @@
 import type { Column, RowData } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff, X } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ChevronsUpDown, EyeOff, X } from 'lucide-react';
+import { useContext } from 'react';
 
 interface DataTableColumnHeaderProps<TData extends RowData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -12,16 +13,23 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
   title,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  // The button also drags the column (`DraggableTableHead`), so its menu opens on click.
+  const menu = useClickOpenMenu();
+  const reorder = useContext(ColumnReorderContext);
+  const movable = reorder?.isMovable(column.id) ?? false;
+
   if (!column.getCanSort()) {
     return <div className={cn('truncate', className)}>{title}</div>;
   }
 
   return (
     <div className={cn('flex min-w-0 items-center space-x-2', className)}>
-      <DropdownMenu>
+      <DropdownMenu {...menu.menuProps}>
         <DropdownMenuTrigger
           render={
             <Button
+              data-column-drag-handle
+              onClick={menu.onTriggerClick}
               variant="ghost"
               size="sm"
               className="-ml-3 h-8 max-w-[calc(100%+0.75rem)] data-popup-open:bg-accent"
@@ -58,6 +66,25 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
               <X className="h-3.5 w-3.5 text-muted-foreground/70" />
               {t('table_clearSort')}
             </DropdownMenuItem>
+          )}
+          {movable && reorder && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                disabled={!reorder.canMove(column.id, 'left')}
+                onClick={() => reorder.move(column.id, 'left')}
+              >
+                <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground/70" />
+                {t('table_moveColumnUp', title)}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={!reorder.canMove(column.id, 'right')}
+                onClick={() => reorder.move(column.id, 'right')}
+              >
+                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/70" />
+                {t('table_moveColumnDown', title)}
+              </DropdownMenuItem>
+            </>
           )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>

@@ -271,3 +271,56 @@ test('the View menu reorders columns by dragging a column by its grip', async ({
     })
     .toBe(true);
 });
+
+test('a column moves by dragging its header, or from the header menu', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'E2E Header Order', [
+    { title: 'Header Row', url: 'https://header.e2e.invalid/' },
+  ]);
+  await page.goto(managerUrl(extensionId, folderId));
+  const grid = page.getByTestId('bookmark-grid');
+  const headerOrder = () =>
+    grid
+      .locator('thead th.column-drag-head')
+      .evaluateAll((cells) => cells.map((cell) => cell.getAttribute('data-column-id')));
+  const before = await headerOrder();
+  const [first, second] = before;
+  const firstHead = grid.locator(`thead th[data-column-id="${first}"]`);
+  const secondButton = grid.locator(
+    `thead th[data-column-id="${second}"] [data-column-drag-handle]`,
+  );
+
+  // Drag the second header onto the left edge of the first.
+  const from = await secondButton.boundingBox();
+  const to = await firstHead.boundingBox();
+  if (!from || !to) throw new Error('Headers are not visible');
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2 - 4, from.y + from.height / 2 + 2, { steps: 3 });
+  await page.mouse.move(to.x + 6, to.y + to.height / 2, { steps: 12 });
+  await expect(grid.locator(`thead th[data-column-id="${second}"]`)).toHaveAttribute(
+    'data-dragging',
+  );
+  await page.mouse.up();
+  await expect.poll(headerOrder).toEqual([second, first, ...before.slice(2)]);
+  await expect(page.locator('body > div[role="status"]')).toHaveText(/moved to position 1 of/);
+  // The order is the table view's, which syncs.
+  await expect
+    .poll(async () => {
+      const view = await readStored<{ columnOrder?: string[] }>(
+        extensionWorker,
+        STORAGE_ITEMS.tableView,
+      );
+      const columnOrder = view?.columnOrder ?? [];
+      return columnOrder.indexOf(second ?? '') < columnOrder.indexOf(first ?? '');
+    })
+    .toBe(true);
+
+  // A click still opens the header's menu, which moves the column back.
+  await secondButton.click();
+  await page.getByRole('menuitem', { name: /right$/ }).click();
+  await expect.poll(headerOrder).toEqual(before);
+});

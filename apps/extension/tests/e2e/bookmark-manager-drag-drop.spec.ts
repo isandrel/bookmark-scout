@@ -36,6 +36,11 @@ async function dropExternal(target: Locator, data: Record<string, string>) {
   }, data);
 }
 
+/** The live region drag and drop announces moves in (Pragmatic drag and drop's `announce`). */
+function liveRegion(page: Page) {
+  return page.locator('body > div[role="status"]');
+}
+
 test.use({ viewport: { width: 1400, height: 900 } });
 
 test.beforeEach(async ({ extensionWorker }) => {
@@ -62,6 +67,8 @@ test('rows reorder in browser order, and drop into folder rows and tree folders'
     .poll(() => childTitles(extensionWorker, seeded.folderId))
     .toEqual(['Drag Box', 'Drag Three', 'Drag One', 'Drag Two']);
   await expect(page.locator('[data-drop-zone]')).toHaveCount(0);
+  // Screen readers hear where it went, from the live region.
+  await expect(liveRegion(page)).toHaveText('"Drag Three" reordered to position 2');
 
   // A selection drags together; the middle of a folder row drops into it.
   await row(page, 'Drag Three').click({ position: { x: 200, y: 10 } });
@@ -70,6 +77,7 @@ test('rows reorder in browser order, and drop into folder rows and tree folders'
   await expect
     .poll(() => childTitles(extensionWorker, seeded.ids['Drag Box']))
     .toEqual(['Drag Three', 'Drag One']);
+  await expect(liveRegion(page)).toHaveText('Moved 2 items');
 
   // One undo step puts both back.
   await page.locator('tbody tr').first().focus();

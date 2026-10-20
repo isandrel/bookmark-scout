@@ -78,3 +78,11 @@ describe('orderByIds', () => {
     expect(ordered.map((item) => item.id)).toEqual(['c', 'a', 'b', 'new']);
   });
 });
+
+describe('reorderByDrop across a row', () => {
+  it('drops before or after the target on its left or right edge', () => {
+    expect(reorderByDrop(ids, 'd', 'b', 'left')).toEqual(['a', 'd', 'b', 'c']);
+    expect(reorderByDrop(ids, 'a', 'c', 'right')).toEqual(['b', 'c', 'a', 'd']);
+    expect(reorderByDrop(ids, 'b', 'c', 'left')).toBeNull();
+  });
+});

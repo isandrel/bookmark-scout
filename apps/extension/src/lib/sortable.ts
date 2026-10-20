@@ -31,6 +31,9 @@ export const SORTABLE_PREVIEW_OFFSET = {
 export const SORTABLE_MOVES = ['top', 'up', 'down', 'bottom'] as const;
 export type SortableMove = (typeof SORTABLE_MOVES)[number];
 
+/** The edge of the target an item is dropped on: top and bottom in a list, left and right in a row. */
+export type SortableEdge = 'top' | 'bottom' | 'left' | 'right';
+
 type IsMovable = (id: string) => boolean;
 const always: IsMovable = () => true;
 
@@ -53,14 +56,14 @@ function reorderMovable(
 }
 
 /**
- * The order after dropping `id` on `targetId`'s `edge`, or null when nothing would change or
+ * The order after dropping `id` on `targetId`'s `edge` (the axis follows the edge), or null when nothing would change or
  * either item cannot move.
  */
 export function reorderByDrop(
   ids: readonly string[],
   id: string,
   targetId: string,
-  edge: 'top' | 'bottom',
+  edge: SortableEdge,
   isMovable: IsMovable = always,
 ): string[] | null {
   if (id === targetId || !isMovable(id) || !isMovable(targetId)) return null;
@@ -72,7 +75,7 @@ export function reorderByDrop(
       startIndex,
       indexOfTarget,
       closestEdgeOfTarget: edge,
-      axis: 'vertical',
+      axis: edge === 'left' || edge === 'right' ? 'horizontal' : 'vertical',
     });
     return { startIndex, finishIndex };
   });

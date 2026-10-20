@@ -11,10 +11,12 @@
  *   the list), and hovering a closed folder there opens it.
  * - Links dropped from elsewhere become bookmarks where they land.
  *
- * Every drop is one undo history entry. The drop indicator is a `data-drop-zone` attribute on the
- * row (`before`, `after`, or `into`), styled in theme.css.
+ * Every drop is one undo history entry, and every move is announced in a live region, worded as
+ * the popup's move toasts. The drop indicator is a `data-drop-zone` attribute on the row
+ * (`before`, `after`, or `into`), styled in theme.css.
  */
 
+import { announce } from '@atlaskit/pragmatic-drag-and-drop-live-region';
 import {
   type DragEvent,
   type HTMLAttributes,
@@ -32,6 +34,28 @@ type DragDropOptions = {
 };
 
 const LINK_TYPES = ['text/uri-list', 'text/x-moz-url', 'text/plain'];
+
+/**
+ * What a screen reader hears after a drop moved `ids`: where one item went (its new position
+ * when it stayed in its folder), or how many moved. `items` is the data from before the move.
+ */
+async function describeMove(
+  ids: readonly string[],
+  destination: ManagerDropDestination,
+  items: readonly Bookmark[],
+): Promise<string> {
+  if (ids.length !== 1) return t('bookmarks_bulkMoved', String(ids.length));
+  const byId = getManagerItemsById(items);
+  const item = byId.get(ids[0]);
+  const title = await quoteToastItemTitle(item?.title);
+  if (item?.parentId !== destination.parentId) {
+    const folder = await quoteToastItemTitle(byId.get(destination.parentId)?.title);
+    return t('toast_itemMovedDesc', [title, folder]);
+  }
+  const siblings = await getBookmarkChildren(destination.parentId);
+  const position = siblings.findIndex((sibling) => sibling.id === ids[0]) + 1;
+  return t('toast_itemReorderedDesc', [title, String(position)]);
+}
 
 function setDropZone(element: Element | null, zone: BookmarkDropZone | null) {
   for (const marked of document.querySelectorAll('[data-drop-zone]')) {
@@ -137,7 +161,9 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
       event.preventDefault();
       try {
         if (ids) {
+          const before = latest.current.allData;
           await moveBookmarksTo(ids, destination);
+          announce(await describeMove(ids, destination, before));
           return;
         }
         const links = parseDroppedLinks({

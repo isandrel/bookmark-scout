@@ -307,9 +307,7 @@ function SortableItem({
     return register(id)(itemRef.current, handleRef.current);
   }, [id, movable, register]);
 
-  // Base UI opens a menu on mousedown, which would take the press a drag starts with, so the
-  // handle opens its menu on click instead; a keyboard press still opens it the usual way.
-  const [menuOpen, setMenuOpen] = useState(false);
+  const menu = useClickOpenMenu();
 
   const grip = <GripVertical aria-hidden="true" className="h-4 w-4" />;
   const handle = !movable ? (
@@ -326,13 +324,7 @@ function SortableItem({
       {grip}
     </span>
   ) : (
-    <DropdownMenu
-      open={menuOpen}
-      onOpenChange={(open, details) => {
-        if (open && details.event?.type === 'mousedown') return;
-        setMenuOpen(open);
-      }}
-    >
+    <DropdownMenu {...menu.menuProps}>
       <DropdownMenuTrigger
         render={
           <Button
@@ -343,10 +335,7 @@ function SortableItem({
             className="sortable-handle"
             aria-label={t('sortable_handle', name)}
             title={t('sortable_handle', name)}
-            // A keyboard press (detail 0) is already handled by the menu itself.
-            onClick={(event) => {
-              if (event.detail > 0) setMenuOpen((open) => !open);
-            }}
+            onClick={menu.onTriggerClick}
           />
         }
       >

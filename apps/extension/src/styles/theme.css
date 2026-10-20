@@ -319,15 +319,23 @@ tr[data-drop-zone='into'] > td {
 
 /* Reorderable lists (`SortableList`): Atlassian's DropIndicator draws the 2px line with a terminal
    where the item will land; its design-system tokens map to ours here. The dragged item stays at
-   40% opacity and the moved item flashes briefly. */
-.sortable-item {
+   40% opacity and the moved item flashes briefly. Manager table headers (`DraggableTableHead`)
+   share the line and the opacity. */
+.sortable-item,
+.column-drag-head {
   position: relative;
   --ds-border-selected: hsl(var(--primary));
   --ds-border-width-selected: 2px;
 }
 
-.sortable-item[data-dragging] {
+.sortable-item[data-dragging],
+.column-drag-head[data-dragging] {
   opacity: 0.4;
+}
+
+/* A truncating header would clip the drop line's terminal while it shows. */
+.column-drag-head[data-drop-edge] {
+  overflow: visible;
 }
 
 .sortable-item[data-flash] {
