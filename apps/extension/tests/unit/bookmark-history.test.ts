@@ -338,3 +338,63 @@ describe('bookmark history labels', () => {
     expect(await getUndoableBookmarkChange(entry.id)).toBeUndefined();
   });
 });
+
+describe('replay never erases newer work', () => {
+  /** Deletes Sub, undoes it, and returns the recreated folder's id and its child's. */
+  async function deleteAndRestoreSub() {
+    await recordBookmarkWrites({ action: 'delete', title: 'Sub' }, (w) => w.remove('s'));
+    await undoBookmarkChange();
+    const [subId] = bookmarks.childIds('f').filter((id) => bookmarks.get(id)?.title === 'Sub');
+    const [childId] = bookmarks.childIds(subId);
+    return { subId, childId };
+  }
+
+  it('redo does not delete a folder whose bookmark was renamed since (L11)', async () => {
+    const { subId, childId } = await deleteAndRestoreSub();
+    await fakeBrowser.bookmarks.update(childId, { title: 'S1 edited elsewhere' });
+
+    await expect(redoBookmarkChange()).resolves.toMatchObject({ applied: 0, skipped: 1 });
+    expect(bookmarks.get(subId)?.title).toBe('Sub');
+    expect(bookmarks.get(childId)?.title).toBe('S1 edited elsewhere');
+  });
+
+  it('redo does not delete a folder whose bookmark was replaced, at the same count (L12)', async () => {
+    const { subId, childId } = await deleteAndRestoreSub();
+    await fakeBrowser.bookmarks.removeTree(childId);
+    const replacement = await fakeBrowser.bookmarks.create({
+      parentId: subId,
+      title: 'New work',
+      url: 'https://e2e.invalid/new',
+    });
+
+    await expect(redoBookmarkChange()).resolves.toMatchObject({ applied: 0, skipped: 1 });
+    expect(bookmarks.childIds(subId)).toEqual([replacement.id]);
+  });
+
+  it('redo does not delete a folder whose subfolder content changed deeper down', async () => {
+    const { subId, childId } = await deleteAndRestoreSub();
+    await fakeBrowser.bookmarks.update(childId, { url: 'https://e2e.invalid/s1-moved' });
+
+    await expect(redoBookmarkChange()).resolves.toMatchObject({ applied: 0, skipped: 1 });
+    expect(bookmarks.get(subId)).toBeDefined();
+  });
+
+  it('redo still deletes the folder when nothing in it changed', async () => {
+    const { subId } = await deleteAndRestoreSub();
+    await expect(redoBookmarkChange()).resolves.toMatchObject({ applied: 1, skipped: 0 });
+    expect(bookmarks.get(subId)).toBeUndefined();
+  });
+
+  it('undo of a move within a folder leaves a newer reorder alone (L13)', async () => {
+    await recordBookmarkWrites({ action: 'move', title: 'A' }, (w) =>
+      w.move('a', { parentId: 'f', index: 3 }),
+    );
+    expect(titles('f')).toEqual(['B', 'C', 'A', 'Sub']);
+    // Someone else reorders A again in the same folder.
+    await fakeBrowser.bookmarks.move('a', { parentId: 'f', index: 4 });
+    expect(titles('f')).toEqual(['B', 'C', 'Sub', 'A']);
+
+    await expect(undoBookmarkChange()).resolves.toMatchObject({ applied: 0, skipped: 1 });
+    expect(titles('f')).toEqual(['B', 'C', 'Sub', 'A']);
+  });
+});
