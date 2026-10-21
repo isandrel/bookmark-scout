@@ -27,11 +27,16 @@ export function reportBookmarkHistoryOutcome(
     toast.error({ title: t(messages.changed) });
     return;
   }
-  toast.success({
+  const details = [
+    ...(outcome.skipped > 0 ? [t('toast_historySkipped', String(outcome.skipped))] : []),
+    ...(outcome.metadataNotRestored
+      ? [t('toast_metadataNotRestored', String(outcome.metadataNotRestored))]
+      : []),
+  ];
+  // Bookmarks back without their tags are a partial restore, not a success.
+  (outcome.metadataNotRestored ? toast.error : toast.success)({
     title: t(messages.done, describeBookmarkHistoryLabel(outcome.label)),
-    ...(outcome.skipped > 0
-      ? { description: t('toast_historySkipped', String(outcome.skipped)) }
-      : {}),
+    ...(details.length > 0 ? { description: details.join(' ') } : {}),
   });
 }
 

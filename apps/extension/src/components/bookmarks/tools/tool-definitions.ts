@@ -196,13 +196,29 @@ export function alreadyUndoneOutcome(): ToolOutcome {
 }
 
 /** What reverting a batch of reviewed changes reports. */
-function reportUndone({ restored, failed, alreadyUndone }: BookmarkChangesUndoResult): ToolOutcome {
+function reportUndone({
+  restored,
+  failed,
+  alreadyUndone,
+  metadataNotRestored,
+}: BookmarkChangesUndoResult): ToolOutcome {
   if (alreadyUndone) return alreadyUndoneOutcome();
+  const partial = failed > 0 || Boolean(metadataNotRestored);
   return {
-    title: failed ? t('toast_changesUndonePartial') : t('toast_changesUndone'),
-    description: t('toast_changesUndoneDesc', [String(restored), String(failed)]),
-    variant: failed ? 'destructive' : 'success',
+    title: partial ? t('toast_changesUndonePartial') : t('toast_changesUndone'),
+    description: withMetadataGap(
+      t('toast_changesUndoneDesc', [String(restored), String(failed)]),
+      metadataNotRestored,
+    ),
+    variant: partial ? 'destructive' : 'success',
   };
+}
+
+/** `description` plus how many restored items lost their tags, when any did. */
+function withMetadataGap(description: string, metadataNotRestored = 0): string {
+  return metadataNotRestored > 0
+    ? `${description} ${t('toast_metadataNotRestored', String(metadataNotRestored))}`
+    : description;
 }
 
 /** The undo a reviewed batch offers, when it changed anything. */
@@ -403,15 +419,17 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
             ? async () => {
                 const undone = await result.undo();
                 if (undone.alreadyUndone) return alreadyUndoneOutcome();
+                const partial = undone.failed > 0 || Boolean(undone.metadataNotRestored);
                 return {
-                  title: undone.failed
-                    ? t('toast_reorganizeUndoPartial')
-                    : t('toast_reorganizeUndone'),
-                  description: t('toast_reorganizeUndoneDesc', [
-                    String(undone.restored),
-                    String(undone.failed),
-                  ]),
-                  variant: undone.failed ? 'destructive' : 'success',
+                  title: partial ? t('toast_reorganizeUndoPartial') : t('toast_reorganizeUndone'),
+                  description: withMetadataGap(
+                    t('toast_reorganizeUndoneDesc', [
+                      String(undone.restored),
+                      String(undone.failed),
+                    ]),
+                    undone.metadataNotRestored,
+                  ),
+                  variant: partial ? 'destructive' : 'success',
                 };
               }
             : undefined,

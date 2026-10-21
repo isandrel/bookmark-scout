@@ -6735,6 +6735,14 @@
         "message": "No pop-up e no painel lateral, arraste favoritos e pastas para movê-los, e solte links de uma página da web em uma pasta do painel lateral para salvá-los nela",
         "description": "Description of the Drag and Drop in the Tree setting"
     },
+    "toast_metadataNotRestored": {
+        "message": "Restaurados sem as tags e os resumos, que não puderam ser salvos de novo: $1.",
+        "description": "Toast detail after an undo that recreated bookmarks but could not store their tags and summaries again. $1 is how many recreated items lost them."
+    },
+    "toast_deletePartlyRestored": {
+        "message": "Exclusão desfeita em parte",
+        "description": "Toast title after undoing a deletion brought back only part of it: some items changed since, or lost their tags and summaries."
+    },
     "error_auditStore": {
         "message": "A alteração não foi feita: não foi possível salvar o histórico de favoritos neste dispositivo.",
         "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
