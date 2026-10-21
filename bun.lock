@@ -108,7 +108,7 @@
         "autoprefixer": "^10.6.1",
         "fake-indexeddb": "^6.2.6",
         "linkedom": "^0.18.13",
-        "monocart-coverage-reports": "3.0.0",
+        "monocart-coverage-reports": "^3.0.0",
         "postcss": "^8.5.29",
         "sass": "^1.105.2",
         "selenium-webdriver": "^4.51.0",
