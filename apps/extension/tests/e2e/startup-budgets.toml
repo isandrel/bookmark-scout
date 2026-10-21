@@ -26,8 +26,9 @@
 # Pragmatic drag and drop's drop indicator with its Compiled styles, auto-scroll, and live region),
 # then from 1125 for the Bookmark Audit History records and the View in History link in the shared
 # tool results (1,133 on 2026-10-20), then from 1150 for the seven settings that were config and
-# their explanatory tooltips (1,159 on 2026-10-21).
-"options.html" = 1170
+# their explanatory tooltips (1,159 on 2026-10-21), then from 1170 for the settings' help
+# toggletips (1,172 on 2026-10-21).
+"options.html" = 1185
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),

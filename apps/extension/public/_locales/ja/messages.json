@@ -7406,5 +7406,65 @@
     "history_part": {
         "message": "$1 (パート $2/$3)",
         "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
+    },
+    "settings_helpFor": {
+        "message": "$1 について",
+        "description": "Settings: label of the button that shows more about a setting; $1 is the setting"
+    },
+    "settings_deadLinksConcurrencyHelp": {
+        "message": "同時にチェックするリンクの数です。多いほど早く終わりますが、1 つのブラウザーからの多数の同時リクエストを遅くしたり拒否したりするサイトもあります。到達できないリンクが多い場合は減らしてください。",
+        "description": "Settings: more about the deadLinksConcurrency setting, in a toggletip"
+    },
+    "settings_deadLinksRequestTimeoutMsHelp": {
+        "message": "サイトの応答を待つ時間です。時間内に応答しないリンクは手動確認として一覧に出し、リンク切れ確定とはしません。遅いサイトにはより長い時間が必要です。",
+        "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_deadLinksRetryCountHelp": {
+        "message": "失敗したリンクを報告する前に、追加で試す回数です。再試行で一時的なネットワークの不調を除外できますが、回数ごとに失敗するリンクの確認に時間がかかります。",
+        "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
+    },
+    "settings_deadLinksSuccessStatusesHelp": {
+        "message": "到達できたとみなす HTTP の応答です。200 はページが読み込めたこと、301、302、307、308 はリダイレクトです。信頼できるサイトがその応答を返す場合にだけコードを追加してください。",
+        "description": "Settings: more about the deadLinksSuccessStatuses setting, in a toggletip"
+    },
+    "settings_deadLinksFollowRedirectsHelp": {
+        "message": "オンにすると、リダイレクトするリンクを新しいアドレスまでたどって確認し、表示します。ブックマークを更新するのに使えます。",
+        "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
+    },
+    "settings_metadataFetcherConcurrencyHelp": {
+        "message": "同時に読み取るページの数です。多いほど早く終わりますが、サイトと回線への負荷が増えます。",
+        "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
+    },
+    "settings_metadataFetcherRequestTimeoutMsHelp": {
+        "message": "ページを諦めるまで待つ時間です。各ページの先頭だけを読むため、ほとんどのページはこれより十分早く応答します。",
+        "description": "Settings: more about the metadataFetcherRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_duplicatesMatchStrategyHelp": {
+        "message": "2 つのブックマークを同じとみなす基準です。アドレスが完全に一致するか、あまり意味のない違い (www、http と https、末尾のスラッシュ。下の設定による) を除いて一致するかです。",
+        "description": "Settings: more about the duplicatesMatchStrategy setting, in a toggletip"
+    },
+    "settings_duplicatesKeepRuleHelp": {
+        "message": "重複を削除するときに残すコピーです。ほかのコピーは確認後にだけ削除され、履歴から復元できます。",
+        "description": "Settings: more about the duplicatesKeepRule setting, in a toggletip"
+    },
+    "settings_reorganizationMinConfidenceHelp": {
+        "message": "AI は提案する移動それぞれを 0 から 100% で評価します。これより低い移動はプランから除かれます。値を上げると、移動は少なくなりますが確実になります。",
+        "description": "Settings: more about the reorganizationMinConfidence setting, in a toggletip"
+    },
+    "settings_reorganizationBatchSizeHelp": {
+        "message": "1 回の AI リクエストに含めるブックマークの数です。大きいほどリクエスト数は減りますが、モデルのコンテキストを多く使います。AI サービスが長いリクエストを拒否する場合は減らしてください。",
+        "description": "Settings: more about the reorganizationBatchSize setting, in a toggletip"
+    },
+    "settings_searchDelayHelp": {
+        "message": "最後のキー入力から検索を始めるまでポップアップが待つ時間です。1 文字ごとに検索しないためのものです。ブックマークが少ない場合は短いほうが速く感じます。",
+        "description": "Settings: more about the searchDelay setting, in a toggletip"
+    },
+    "settings_folderMatchesTyposHelp": {
+        "message": "入力と 1、2 文字違う名前のフォルダも一致させます。小さな入力ミスがあってもフォルダが見つかります。",
+        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
+    },
+    "settings_jobsApplyInBackgroundAboveHelp": {
+        "message": "大きな変更はページを閉じても続き、各部分は履歴から元に戻せます。小さな変更はすぐに適用され、通知から元に戻せます。",
+        "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     }
 }

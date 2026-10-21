@@ -454,6 +454,11 @@ export function formatBundledMessage(
  * messages come first (a selected language, or 'auto' showing a locale the browser does not
  * serve); otherwise, and for a key a loaded locale lacks, `browser.i18n.getMessage`.
  */
+/** A message that may not exist (optional extra text): undefined when the key has none. */
+export function tOptional(key: MessageKey, substitutions?: string | string[]): string | undefined {
+  return lookupMessage(key, substitutions);
+}
+
 function lookupMessage(key: MessageKey, substitutions?: string | string[]): string | undefined {
   try {
     const entry = messagesLocale && loadedMessages[messagesLocale]?.[key];

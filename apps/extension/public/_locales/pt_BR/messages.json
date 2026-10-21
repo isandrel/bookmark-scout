@@ -7434,5 +7434,65 @@
     "history_part": {
         "message": "$1 (parte $2 de $3)",
         "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
+    },
+    "settings_helpFor": {
+        "message": "Sobre $1",
+        "description": "Settings: label of the button that shows more about a setting; $1 is the setting"
+    },
+    "settings_deadLinksConcurrencyHelp": {
+        "message": "Quantos links são verificados ao mesmo tempo. Mais termina antes, mas alguns sites ficam lentos ou recusam muitas solicitações simultâneas de um navegador; diminua se muitos links aparecerem como inacessíveis.",
+        "description": "Settings: more about the deadLinksConcurrency setting, in a toggletip"
+    },
+    "settings_deadLinksRequestTimeoutMsHelp": {
+        "message": "Quanto tempo esperar a resposta de um site. Um link que não responde a tempo é listado para verificar à mão, nunca como quebrado confirmado; sites lentos precisam de mais tempo.",
+        "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_deadLinksRetryCountHelp": {
+        "message": "Quantas vezes a mais um link que falhou é tentado antes de ser relatado. Uma nova tentativa descarta uma falha rápida da rede; cada uma faz a verificação de um link com falha demorar mais.",
+        "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
+    },
+    "settings_deadLinksSuccessStatusesHelp": {
+        "message": "Respostas HTTP que contam como acessível. 200 significa que a página carregou; 301, 302, 307 e 308 são redirecionamentos. Adicione um código só quando um site confiável responder com ele.",
+        "description": "Settings: more about the deadLinksSuccessStatuses setting, in a toggletip"
+    },
+    "settings_deadLinksFollowRedirectsHelp": {
+        "message": "Quando ativado, um link que redireciona é seguido até o novo endereço, que é verificado e mostrado, para você atualizar o favorito.",
+        "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
+    },
+    "settings_metadataFetcherConcurrencyHelp": {
+        "message": "Quantas páginas são lidas ao mesmo tempo. Mais termina antes, mas sobrecarrega mais os sites e a sua conexão.",
+        "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
+    },
+    "settings_metadataFetcherRequestTimeoutMsHelp": {
+        "message": "Quanto tempo esperar uma página antes de desistir dela. Só o começo de cada página é lido, então a maioria responde bem antes.",
+        "description": "Settings: more about the metadataFetcherRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_duplicatesMatchStrategyHelp": {
+        "message": "Quando dois favoritos contam como iguais: pelo endereço exato, ou por um endereço sem diferenças que raramente importam (www, http ou https, uma barra final, conforme o que está abaixo).",
+        "description": "Settings: more about the duplicatesMatchStrategy setting, in a toggletip"
+    },
+    "settings_duplicatesKeepRuleHelp": {
+        "message": "Qual cópia fica quando duplicatas são removidas. As outras só são excluídas depois da sua revisão e podem ser restauradas no Histórico.",
+        "description": "Settings: more about the duplicatesKeepRule setting, in a toggletip"
+    },
+    "settings_reorganizationMinConfidenceHelp": {
+        "message": "A IA avalia cada movimentação sugerida de 0 a 100%. As com nota menor ficam fora do plano: um valor maior dá menos movimentações, porém mais seguras.",
+        "description": "Settings: more about the reorganizationMinConfidence setting, in a toggletip"
+    },
+    "settings_reorganizationBatchSizeHelp": {
+        "message": "Quantos favoritos vão em uma solicitação de IA. Lotes maiores precisam de menos solicitações, mas de mais contexto do modelo; diminua se o serviço de IA recusar solicitações longas.",
+        "description": "Settings: more about the reorganizationBatchSize setting, in a toggletip"
+    },
+    "settings_searchDelayHelp": {
+        "message": "Quanto tempo o pop-up espera depois da última tecla antes de pesquisar, para não pesquisar a cada letra. Menos parece mais rápido em uma coleção pequena.",
+        "description": "Settings: more about the searchDelay setting, in a toggletip"
+    },
+    "settings_folderMatchesTyposHelp": {
+        "message": "Também encontrar pastas cujo nome difere em uma ou duas letras do que você digitou, para que um pequeno erro de digitação ainda encontre a pasta.",
+        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
+    },
+    "settings_jobsApplyInBackgroundAboveHelp": {
+        "message": "Alterações maiores continuam se você fechar a página, e cada parte pode ser desfeita no Histórico. As menores são aplicadas na hora, com Desfazer na notificação.",
+        "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     }
 }

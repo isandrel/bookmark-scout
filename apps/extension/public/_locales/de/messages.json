@@ -7434,5 +7434,65 @@
     "history_part": {
         "message": "$1 (Teil $2 von $3)",
         "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
+    },
+    "settings_helpFor": {
+        "message": "Mehr zu $1",
+        "description": "Settings: label of the button that shows more about a setting; $1 is the setting"
+    },
+    "settings_deadLinksConcurrencyHelp": {
+        "message": "Wie viele Links gleichzeitig geprüft werden. Mehr ist schneller fertig, aber manche Websites bremsen oder lehnen viele Anfragen eines Browsers auf einmal ab; senken Sie den Wert, wenn viele Links als nicht erreichbar erscheinen.",
+        "description": "Settings: more about the deadLinksConcurrency setting, in a toggletip"
+    },
+    "settings_deadLinksRequestTimeoutMsHelp": {
+        "message": "Wie lange auf die Antwort einer Website gewartet wird. Ein Link, der nicht rechtzeitig antwortet, wird zur manuellen Prüfung aufgeführt, nie als sicher defekt; langsame Websites brauchen mehr Zeit.",
+        "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_deadLinksRetryCountHelp": {
+        "message": "Wie oft ein fehlgeschlagener Link erneut versucht wird, bevor er gemeldet wird. Ein erneuter Versuch schließt eine kurze Netzwerkstörung aus; jeder macht die Prüfung eines defekten Links länger.",
+        "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
+    },
+    "settings_deadLinksSuccessStatusesHelp": {
+        "message": "HTTP-Antworten, die als erreichbar gelten. 200 heißt, die Seite wurde geladen; 301, 302, 307 und 308 sind Weiterleitungen. Fügen Sie einen Code nur hinzu, wenn eine vertrauenswürdige Website damit antwortet.",
+        "description": "Settings: more about the deadLinksSuccessStatuses setting, in a toggletip"
+    },
+    "settings_deadLinksFollowRedirectsHelp": {
+        "message": "Wenn an, wird ein weiterleitender Link zu seiner neuen Adresse verfolgt, die geprüft und angezeigt wird, damit Sie das Lesezeichen aktualisieren können.",
+        "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
+    },
+    "settings_metadataFetcherConcurrencyHelp": {
+        "message": "Wie viele Seiten gleichzeitig gelesen werden. Mehr ist schneller fertig, belastet aber die Websites und Ihre Verbindung stärker.",
+        "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
+    },
+    "settings_metadataFetcherRequestTimeoutMsHelp": {
+        "message": "Wie lange auf eine Seite gewartet wird, bevor sie aufgegeben wird. Es wird nur der Anfang jeder Seite gelesen, daher antworten die meisten Seiten deutlich schneller.",
+        "description": "Settings: more about the metadataFetcherRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_duplicatesMatchStrategyHelp": {
+        "message": "Wann zwei Lesezeichen als gleich gelten: bei genau gleicher Adresse oder bei einer Adresse ohne Unterschiede, die selten zählen (www, http oder https, ein abschließender Schrägstrich, wie unten eingestellt).",
+        "description": "Settings: more about the duplicatesMatchStrategy setting, in a toggletip"
+    },
+    "settings_duplicatesKeepRuleHelp": {
+        "message": "Welche Kopie beim Entfernen von Duplikaten bleibt. Die anderen werden erst nach Ihrer Prüfung gelöscht und lassen sich im Verlauf wiederherstellen.",
+        "description": "Settings: more about the duplicatesKeepRule setting, in a toggletip"
+    },
+    "settings_reorganizationMinConfidenceHelp": {
+        "message": "Die KI bewertet jede vorgeschlagene Verschiebung von 0 bis 100 %. Niedriger bewertete werden aus dem Plan gelassen: Ein höherer Wert ergibt weniger, aber sicherere Verschiebungen.",
+        "description": "Settings: more about the reorganizationMinConfidence setting, in a toggletip"
+    },
+    "settings_reorganizationBatchSizeHelp": {
+        "message": "Wie viele Lesezeichen in eine KI-Anfrage kommen. Größere Gruppen brauchen weniger Anfragen, aber mehr vom Kontext des Modells; senken Sie den Wert, wenn der KI-Dienst lange Anfragen ablehnt.",
+        "description": "Settings: more about the reorganizationBatchSize setting, in a toggletip"
+    },
+    "settings_searchDelayHelp": {
+        "message": "Wie lange das Popup nach dem letzten Tastendruck wartet, bevor es sucht, damit es nicht bei jedem Buchstaben sucht. Weniger fühlt sich bei einer kleinen Sammlung schneller an.",
+        "description": "Settings: more about the searchDelay setting, in a toggletip"
+    },
+    "settings_folderMatchesTyposHelp": {
+        "message": "Auch Ordner finden, deren Namen sich um ein oder zwei Buchstaben von der Eingabe unterscheiden, damit ein kleiner Tippfehler den Ordner trotzdem findet.",
+        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
+    },
+    "settings_jobsApplyInBackgroundAboveHelp": {
+        "message": "Größere Änderungen laufen weiter, wenn Sie die Seite schließen, und jeder Teil lässt sich im Verlauf rückgängig machen. Kleinere werden sofort übernommen, mit Rückgängig in der Benachrichtigung.",
+        "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     }
 }
