@@ -89,13 +89,23 @@ async function poll<T>(read: () => T | undefined | Promise<T | undefined>): Prom
   return undefined;
 }
 
+/** The highest TCP port. */
+const MAX_PORT = 65_535;
+
+/**
+ * The port on the first line of the browser's `DevToolsActivePort` file, as a number, so only a
+ * port reaches the address asked below; undefined until the browser has written a valid one.
+ */
+function readPort(portFile: string): number | undefined {
+  const port = Number.parseInt(readFileSync(portFile, 'utf8').split('\n')[0] ?? '', 10);
+  return Number.isInteger(port) && port > 0 && port <= MAX_PORT ? port : undefined;
+}
+
 /** Starts precise coverage in the extension's service worker, over the profile's DevTools port. */
 async function startWorker(userDataDir: string): Promise<DevTools | undefined> {
   const portFile = path.join(userDataDir, 'DevToolsActivePort');
-  const port = await poll(() =>
-    existsSync(portFile) ? readFileSync(portFile, 'utf8').split('\n')[0] : undefined,
-  );
-  if (!port) return undefined;
+  const port = await poll(() => (existsSync(portFile) ? readPort(portFile) : undefined));
+  if (port === undefined) return undefined;
   const target = await poll(async () => {
     const targets = (await (await fetch(`http://localhost:${port}/json/list`)).json()) as {
       type: string;
