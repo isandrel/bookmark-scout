@@ -1,0 +1,5 @@
+# How pages follow background jobs (src/hooks/use-jobs.ts).
+
+# A page reads the job store again at most this often (ms) while jobs change: a running job saves
+# results many times a second, and the progress shown needs no more than a few updates.
+refresh_ms = 250

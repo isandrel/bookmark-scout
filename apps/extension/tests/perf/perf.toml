@@ -55,3 +55,12 @@ concurrency = 8
 "options.open" = 1000
 "options.search.results" = 300
 "options.stepper" = 300
+# Background jobs, from 2026-10-21 after results were saved in batches and pages read the store at
+# most every refresh_ms (before: 115 links/s, 170 s in all, pause 279 ms, manager open 801 ms).
+# Measured: accept 1,546 ms, pause 177 ms, manager open while running 599 ms, review 145 ms,
+# 19,500 links in 49,925 ms (391 links/s), 8.1 MiB stored.
+"jobs.accept" = 4000
+"jobs.pause" = 500
+"jobs.managerOpenWhileRunning" = 2000
+"jobs.total" = 125000
+"jobs.reviewOpen" = 400

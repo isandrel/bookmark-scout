@@ -3,9 +3,16 @@
 # device (src/lib/job-store.ts).
 
 # A slice is the work done before the coordinator saves and checks for other work; the next slice
-# starts right away while work remains. Results are saved one item at a time either way.
+# starts right away while work remains.
 slice_max_items = { value = 100, min = 1, max = 1000 }
 slice_max_ms = { value = 20_000, min = 1000, max = 25_000 }
+
+# Results of reading work are saved in batches: at most this many, or after this long (ms),
+# whichever comes first, and always before a slice ends. A stopped worker loses at most one
+# batch, which is checked again. Work that cannot be taken back (an AI request, a bookmark
+# write) is always saved one item at a time.
+commit_batch_items = { value = 50, min = 1, max = 1000 }
+commit_batch_ms = { value = 1000, min = 50, max = 10_000 }
 
 # While a job can run, an alarm wakes the background this often (minutes) to pick it up again
 # after the browser stopped the background worker. Chrome's shortest packed alarm is 0.5.

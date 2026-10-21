@@ -21,6 +21,8 @@ const schedulerConfig = readConfig(
   z.strictObject({
     slice_max_items: boundedNumber({ integer: true }),
     slice_max_ms: boundedNumber({ integer: true }),
+    commit_batch_items: boundedNumber({ integer: true }),
+    commit_batch_ms: boundedNumber({ integer: true }),
     watchdog_minutes: boundedNumber({ integer: false }),
     retention_days: boundedNumber({ integer: true }),
     max_finished_jobs: boundedNumber({ integer: true }),
@@ -32,6 +34,8 @@ const schedulerConfig = readConfig(
 export const JOB_LIMITS = {
   sliceMaxItems: schedulerConfig.slice_max_items,
   sliceMaxMs: schedulerConfig.slice_max_ms,
+  commitBatchItems: schedulerConfig.commit_batch_items,
+  commitBatchMs: schedulerConfig.commit_batch_ms,
   watchdogMinutes: schedulerConfig.watchdog_minutes,
   retentionMs: schedulerConfig.retention_days * MS_PER_DAY,
   maxFinishedJobs: schedulerConfig.max_finished_jobs,
@@ -433,34 +437,52 @@ export async function commitItem(
   result: unknown,
   now = Date.now(),
 ): Promise<JobRecord | undefined> {
+  return commitItems(jobId, generation, [{ index, outcome, result }], now);
+}
+
+/** One item's result, as `commitItems` saves it. */
+export type ItemCommit = { index: number; outcome: ItemOutcome; result: unknown };
+
+/**
+ * Saves several items' results and the job's counters in one transaction, under the same rule as
+ * `commitItem`: nothing is saved unless the claim holds, and an item already done is not counted
+ * again. Resolves with the updated job, or undefined when nothing was saved.
+ */
+export async function commitItems(
+  jobId: string,
+  generation: number,
+  commits: readonly ItemCommit[],
+  now = Date.now(),
+): Promise<JobRecord | undefined> {
   const db = await openJobDb();
   const tx = db.transaction(['jobs', 'items'], 'readwrite');
   const job = parseJob(await tx.objectStore('jobs').get(jobId));
-  const item = await tx.objectStore('items').get([jobId, index]);
   const owned =
     job !== undefined &&
     job.generation === generation &&
     (job.state === 'running' ||
       job.state === 'pause_requested' ||
       job.state === 'cancel_requested');
-  if (!job || !owned || !item || item.state !== 'pending') {
+  if (!job || !owned) {
     await tx.done;
     return undefined;
   }
-  const { inFlightSince: _answered, ...settled } = item;
-  await tx.objectStore('items').put({
-    ...settled,
-    state: 'done',
-    outcome,
-    result,
-    attempts: item.attempts + 1,
-  });
-  const next: JobRecord = {
-    ...job,
-    done: { ...job.done, [outcome]: job.done[outcome] + 1 },
-    revision: job.revision + 1,
-    updatedAt: now,
-  };
+  const items = tx.objectStore('items');
+  const done = { ...job.done };
+  let saved = 0;
+  for (const { index, outcome, result } of commits) {
+    const item = await items.get([jobId, index]);
+    if (item?.state !== 'pending') continue;
+    const { inFlightSince: _answered, ...settled } = item;
+    await items.put({ ...settled, state: 'done', outcome, result, attempts: item.attempts + 1 });
+    done[outcome] += 1;
+    saved += 1;
+  }
+  if (saved === 0) {
+    await tx.done;
+    return undefined;
+  }
+  const next: JobRecord = { ...job, done, revision: job.revision + 1, updatedAt: now };
   await tx.objectStore('jobs').put(next);
   try {
     await tx.done;

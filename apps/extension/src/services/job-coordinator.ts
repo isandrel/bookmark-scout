@@ -163,6 +163,37 @@ async function runLoop(): Promise<void> {
 }
 
 /** One slice of a job: up to the slice's items or time, then saved and released or finished. */
+/**
+ * Saves a slice's results: in batches (`commit_batch_items`, `commit_batch_ms`) for reading
+ * work, which a stopped worker only has to check again; one at a time for work that cannot be
+ * taken back (`unsureAfterStop`), whose in-flight mark each save clears.
+ */
+function commitBuffer(job: JobRecord, run: ActiveRun, batched: boolean) {
+  const waiting: ItemCommit[] = [];
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let saving: Promise<unknown> = Promise.resolve();
+  const flush = () => {
+    clearTimeout(timer);
+    timer = undefined;
+    if (waiting.length > 0) {
+      const batch = waiting.splice(0);
+      saving = saving.then(() => commitItems(job.id, run.generation, batch));
+    }
+    return saving;
+  };
+  return {
+    flush,
+    save(commit: ItemCommit) {
+      waiting.push(commit);
+      if (!batched || waiting.length >= JOB_LIMITS.commitBatchItems) return flush();
+      // A result is never kept back longer than the batch time, even while the next item waits
+      // on a slow site.
+      timer ??= setTimeout(() => void flush(), JOB_LIMITS.commitBatchMs);
+      return saving;
+    },
+  };
+}
+
 async function runSlice(waiting: JobRecord): Promise<void> {
   const job = await claimJob(waiting.id, SESSION);
   if (!job) return;
@@ -177,15 +208,21 @@ async function runSlice(waiting: JobRecord): Promise<void> {
     } else {
       const overTime = () => Date.now() - started > JOB_LIMITS.sliceMaxMs;
       const workers = Math.max(1, Math.min(adapter.concurrency(job.options), queue.length));
-      await withJobTools(job, adapter, async (tools) => {
-        const worker = async () => {
-          for (let item = queue.shift(); item; item = queue.shift()) {
-            if (run.stop || overTime()) return;
-            await runItem(job, run, adapter, item, tools);
-          }
-        };
-        await Promise.all(Array.from({ length: workers }, worker));
-      });
+      const results = commitBuffer(job, run, !adapter.unsureAfterStop);
+      try {
+        await withJobTools(job, adapter, async (tools) => {
+          const worker = async () => {
+            for (let item = queue.shift(); item; item = queue.shift()) {
+              if (run.stop || overTime()) return;
+              await runItem(job, run, adapter, item, tools, results.save);
+            }
+          };
+          await Promise.all(Array.from({ length: workers }, worker));
+        });
+      } finally {
+        // Whatever finished is saved before the slice settles, also when it stopped early.
+        await results.flush();
+      }
     }
   } catch (error) {
     if (error instanceof JobBlockedError) {
@@ -234,10 +271,11 @@ async function runBatchSlice(
     await markItemsInFlight(job.id, run.generation, indexes, undefined);
     throw error;
   }
-  for (const [position, item] of items.entries()) {
-    const { outcome, result } = runs[position];
-    await commitItem(job.id, run.generation, item.index, outcome, result);
-  }
+  await commitItems(
+    job.id,
+    run.generation,
+    items.map((item, position) => ({ index: item.index, ...runs[position] })),
+  );
 }
 
 async function runItem(
@@ -246,6 +284,7 @@ async function runItem(
   adapter: Extract<JobAdapter, { run: unknown }>,
   item: JobItem,
   tools: JobTools,
+  save: (commit: ItemCommit) => Promise<unknown>,
 ) {
   // Work that cannot be taken back is marked before it starts, so a stopped worker shows it.
   if (
@@ -263,7 +302,7 @@ async function runItem(
       controller.signal,
       tools,
     );
-    await commitItem(job.id, run.generation, item.index, outcome, result);
+    await save({ index: item.index, outcome, result });
   } catch (error) {
     if (error instanceof JobBlockedError) {
       // The request was answered, with an error: nothing is in flight, and the item stays to do.
@@ -276,8 +315,10 @@ async function runItem(
     }
     // Stopped by pause or cancel: left to do, never a finding.
     if (error instanceof RequestAbortedError || controller.signal.aborted) return;
-    await commitItem(job.id, run.generation, item.index, 'failed', {
-      error: error instanceof Error ? error.name : 'Error',
+    await save({
+      index: item.index,
+      outcome: 'failed',
+      result: { error: error instanceof Error ? error.name : 'Error' },
     });
   } finally {
     run.controllers.delete(controller);

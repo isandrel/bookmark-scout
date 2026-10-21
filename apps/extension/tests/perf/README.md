@@ -19,6 +19,7 @@ keeps the JSON for 30 days; it is not a pull request check, because timings vary
 | `popup.perf.spec.ts` | `popup.open`, `popup.search.results`, `popup.search.keystroke`, `popup.save`, `popup.expandAll`, `popup.scroll.*` |
 | `manager.perf.spec.ts` | `manager.open`, `manager.openFolder`, `manager.filter.*`, `manager.outsideChange` |
 | `options.perf.spec.ts` | `options.open`, `options.search.*`, `options.stepper` |
+| `jobs.perf.spec.ts` | `jobs.accept`, `jobs.pause`, `jobs.managerOpenWhileRunning`, `jobs.total`, `jobs.linksPerSecond`, `jobs.reviewOpen`, `jobs.storageKiB`: Check Dead Links over the whole library against a local server that answers at once (`[jobs]` in `perf.toml`), so the cost per link is the extension's own |
 
 - **open**: from navigation start to the first frame showing the page's content.
 - **Actions** (`save`, `expandAll`, `openFolder`, `stepper`, `outsideChange`): from the last key press or click to the first frame showing the result.
