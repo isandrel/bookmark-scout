@@ -7,35 +7,47 @@
  * Runtime feature checks (an API that may be missing in an older version) stay feature checks.
  */
 import { z } from 'zod';
-import {
-  isSupportedBrowser,
-  SUPPORTED_BROWSERS,
-  type SupportedBrowser,
-} from './supported-browsers';
+import type { SupportedBrowser } from './supported-browsers';
+
+/** `[browsers] supported` of config/project.toml, in its order. */
+export const SUPPORTED_BROWSERS = z
+  .tuple([z.string()], z.string())
+  .parse(JSON.parse(import.meta.env.BOOKMARK_SCOUT_BROWSERS)) as readonly [
+  SupportedBrowser,
+  ...SupportedBrowser[],
+];
 
 const PRIVATE_WINDOW_KINDS = ['incognito', 'in_private', 'private'] as const;
 
-/** A URL with a scheme, ending in `/` where it takes `?id=`; empty for none. */
-const optionalUrl = z.union([z.literal(''), z.string().regex(/^[a-z][a-z0-9+.-]*:\/\/\S+$/)]);
+/** An address with a scheme; `trailingSlash` for one that takes `?id=`. Empty for none. */
+const optionalUrl = (trailingSlash: boolean) =>
+  z.union([
+    z.literal(''),
+    z
+      .string()
+      .regex(trailingSlash ? /^[a-z][a-z0-9+.-]*:\/\/\S+\/$/ : /^[a-z][a-z0-9+.-]*:\/\/\S+$/),
+  ]);
 
 const profileSchema = z.strictObject({
   separators: z.boolean(),
   private_window: z.enum(PRIVATE_WINDOW_KINDS),
   private_windows_need_permission: z.boolean(),
   data_collection_consent: z.boolean(),
-  bookmark_manager_url: z.union([z.literal(''), z.string().regex(/^[a-z][a-z0-9+.-]*:\/\/\S+\/$/)]),
-  shortcut_settings_url: optionalUrl,
+  bookmark_manager_url: optionalUrl(true),
+  shortcut_settings_url: optionalUrl(false),
 });
 
 // Every supported browser has exactly one profile; an unknown or missing table fails the load.
-const profiles = readConfig(
+const config = readConfig(
   'browsers/profiles',
-  z.strictObject(
-    Object.fromEntries(SUPPORTED_BROWSERS.map((browser) => [browser, profileSchema])) as Record<
-      SupportedBrowser,
-      typeof profileSchema
-    >,
-  ),
+  z.strictObject({
+    profiles: z.strictObject(
+      Object.fromEntries(SUPPORTED_BROWSERS.map((browser) => [browser, profileSchema])) as Record<
+        SupportedBrowser,
+        typeof profileSchema
+      >,
+    ),
+  }),
 );
 
 export type BrowserProfile = {
@@ -51,7 +63,7 @@ export type BrowserProfile = {
 
 const BROWSER_PROFILES = Object.fromEntries(
   SUPPORTED_BROWSERS.map((browser) => {
-    const profile = profiles[browser];
+    const profile = config.profiles[browser];
     return [
       browser,
       Object.freeze({
@@ -66,13 +78,19 @@ const BROWSER_PROFILES = Object.fromEntries(
   }),
 ) as Readonly<Record<SupportedBrowser, BrowserProfile>>;
 
+export function isSupportedBrowser(value: unknown): value is SupportedBrowser {
+  return (SUPPORTED_BROWSERS as readonly unknown[]).includes(value);
+}
+
 /**
- * The browser this build is for (WXT's `BROWSER`), Chrome for any other Chromium build. Read at
- * call time, so tests can set it with `vi.stubEnv('BROWSER', ...)`.
+ * The browser this build is for: WXT's `BROWSER`, which the build sets from its target and the
+ * manifest build checks against the supported list, so there is no other value to fall back to.
+ * Read at call time, so tests can set it with `vi.stubEnv('BROWSER', ...)`.
  */
 export function currentBrowser(): SupportedBrowser {
   const browser = import.meta.env.BROWSER;
-  return isSupportedBrowser(browser) ? browser : 'chrome';
+  if (!isSupportedBrowser(browser)) throw new Error(`Unsupported browser build: ${browser}`);
+  return browser;
 }
 
 /** The profile of `browser`, by default the one this build is for. */

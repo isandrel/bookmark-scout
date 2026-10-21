@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod';
-import { isSeparatorNode } from '@/lib/bookmark-separators';
+import { isSeparatorNode, SEPARATOR_TYPE } from '@/lib/bookmark-separators';
 import type { BookmarkTreeNode } from '@/types';
 
 const FILENAME_PLACEHOLDERS = ['prefix', 'scope', 'date', 'extension'] as const;
@@ -136,7 +136,7 @@ export const jsonFormat: ExportFormat = {
     const cleanNode = (n: BookmarkTreeNode): Record<string, unknown> => {
       if (isSeparatorNode(n)) {
         return {
-          type: 'separator',
+          type: SEPARATOR_TYPE,
           ...(includeDates && n.dateAdded ? { dateAdded: n.dateAdded } : {}),
         };
       }

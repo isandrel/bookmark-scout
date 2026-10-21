@@ -89,7 +89,7 @@ function toRecoverableNode(
     title: node.title,
     ...(node.url ? { url: node.url } : {}),
     ...(typeof node.index === 'number' ? { index: node.index } : {}),
-    ...(nodeType === 'separator' ? { type: 'separator' as const } : {}),
+    ...(nodeType === SEPARATOR_TYPE ? { type: SEPARATOR_TYPE } : {}),
     ...(metadata ? { metadata } : {}),
     ...(node.children
       ? {

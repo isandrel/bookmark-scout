@@ -20,7 +20,7 @@
 # shortcut_settings_url             The page where the user sets extension shortcuts. Empty where
 #                                   the extension opens the browser's own editor through its API.
 
-[chrome]
+[profiles.chrome]
 separators = false
 private_window = "incognito"
 private_windows_need_permission = false
@@ -28,7 +28,7 @@ data_collection_consent = false
 bookmark_manager_url = "chrome://bookmarks/"
 shortcut_settings_url = "chrome://extensions/shortcuts"
 
-[firefox]
+[profiles.firefox]
 separators = true
 private_window = "private"
 private_windows_need_permission = true
@@ -36,7 +36,7 @@ data_collection_consent = true
 bookmark_manager_url = ""
 shortcut_settings_url = ""
 
-[edge]
+[profiles.edge]
 separators = false
 private_window = "in_private"
 private_windows_need_permission = false

@@ -44,6 +44,13 @@ export const FIREFOX_DATA_COLLECTION_PERMISSIONS =
  * one, and declaring it for `<all_urls>` would only let web pages load icons through the extension.
  */
 export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserManifest {
+  // Every build is for a browser in `[browsers] supported` of config/project.toml, which has a
+  // profile in config/browsers/profiles.toml; the extension reads it from this build target.
+  if (!site.browsers.supported.includes(browser)) {
+    throw new Error(
+      `Unsupported browser build: ${browser}; supported: ${site.browsers.supported.join(', ')}`,
+    );
+  }
   const { permissions, optional } = getManifestApiPermissions(browser as SupportedBrowser);
   return {
     name: '__MSG_extName__',

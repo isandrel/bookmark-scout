@@ -37,16 +37,13 @@ type ObservedEvent =
     }
   | { type: 'reconcile'; force: boolean };
 
-const typeOf = (node: { url?: string; type?: string }): BaselineNode['type'] =>
-  node.type === 'separator' ? 'separator' : node.url ? 'bookmark' : 'folder';
-
 function toBaselineNode(node: RawNode): BaselineNode {
   return {
     id: node.id,
     parentId: node.parentId ?? '',
     title: node.title,
     ...(node.url ? { url: node.url } : {}),
-    type: typeOf(node as { url?: string; type?: string }),
+    type: bookmarkNodeKind(node as { url?: string; type?: string }),
   };
 }
 

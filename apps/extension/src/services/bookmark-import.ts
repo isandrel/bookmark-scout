@@ -3,7 +3,7 @@
  * Extensible import with strategy pattern for multiple formats.
  */
 
-import { isSeparatorNode } from '@/lib/bookmark-separators';
+import { isSeparatorNode, SEPARATOR_TYPE } from '@/lib/bookmark-separators';
 import { browserProfile } from '@/lib/browser-profiles';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -70,6 +70,16 @@ function isImportableUrl(url: string): boolean {
   }
 }
 
+/** The Netscape bookmark file's elements and attributes the HTML import reads. */
+const NETSCAPE = {
+  bookmark: 'A',
+  folder: 'H3',
+  separator: 'HR',
+  list: 'DL',
+  address: 'HREF',
+  added: 'ADD_DATE',
+} as const;
+
 /** Netscape files store dates as Unix seconds. */
 function parseNetscapeDate(value: string | null): number {
   // Not a `cond ? x * MS_PER_SECOND : y` ternary: WXT's auto-import skips an identifier right
@@ -94,7 +104,7 @@ export const htmlImportFormat: ImportFormat = {
     const generateId = createImportIdGenerator();
 
     const parseBookmark = (element: Element, parentId?: string): BookmarkTreeNode | null => {
-      const url = element.getAttribute('HREF')?.trim();
+      const url = element.getAttribute(NETSCAPE.address)?.trim();
       if (!url || !isImportableUrl(url)) {
         skipped += 1;
         return null;
@@ -104,7 +114,7 @@ export const htmlImportFormat: ImportFormat = {
         parentId,
         title: getBookmarkDisplayTitle(element.textContent?.trim()),
         url,
-        dateAdded: parseNetscapeDate(element.getAttribute('ADD_DATE')),
+        dateAdded: parseNetscapeDate(element.getAttribute(NETSCAPE.added)),
       };
     };
 
@@ -117,18 +127,18 @@ export const htmlImportFormat: ImportFormat = {
     const walk = (element: Element, list: BookmarkTreeNode[], parentId?: string): void => {
       for (const child of Array.from(element.children)) {
         switch (child.tagName) {
-          case 'A': {
+          case NETSCAPE.bookmark: {
             folderAwaitingItems = undefined;
             const node = parseBookmark(child, parentId);
             if (node) list.push(node);
             break;
           }
-          case 'H3': {
+          case NETSCAPE.folder: {
             const folder: BookmarkTreeNode = {
               id: generateId(),
               parentId,
               title: getBookmarkDisplayTitle(child.textContent?.trim()),
-              dateAdded: parseNetscapeDate(child.getAttribute('ADD_DATE')),
+              dateAdded: parseNetscapeDate(child.getAttribute(NETSCAPE.added)),
               children: [],
             };
             list.push(folder);
@@ -136,12 +146,12 @@ export const htmlImportFormat: ImportFormat = {
             folderAwaitingItems = folder;
             break;
           }
-          case 'HR':
+          case NETSCAPE.separator:
             // The Netscape separator, which Firefox writes.
             folderAwaitingItems = undefined;
-            list.push({ id: generateId(), parentId, title: '', type: 'separator' });
+            list.push({ id: generateId(), parentId, title: '', type: SEPARATOR_TYPE });
             break;
-          case 'DL': {
+          case NETSCAPE.list: {
             const folder = folderAwaitingItems;
             folderAwaitingItems = undefined;
             if (folder?.children) walk(child, folder.children, folder.id);
@@ -155,7 +165,7 @@ export const htmlImportFormat: ImportFormat = {
     };
 
     // The items start at the first <DL> (anything before it, like the <H1> title, is not one).
-    const mainDL = doc.querySelector('DL');
+    const mainDL = doc.querySelector(NETSCAPE.list);
     if (mainDL) walk(mainDL, result);
     // An empty folder has no children list, like a folder parsed from JSON.
     for (const folder of folders) {
@@ -191,12 +201,12 @@ export const jsonImportFormat: ImportFormat = {
         skipped += 1;
         return null;
       }
-      if (raw.type === 'separator') {
+      if (raw.type === SEPARATOR_TYPE) {
         return {
           id: generateId(),
           parentId,
           title: '',
-          type: 'separator',
+          type: SEPARATOR_TYPE,
           ...(typeof raw.dateAdded === 'number' ? { dateAdded: raw.dateAdded } : {}),
         };
       }
@@ -497,7 +507,7 @@ export function planImport(
     if (isSeparatorNode(node)) {
       if (separators) counts.separatorsToCreate += 1;
       else counts.separatorsUnsupported += 1;
-      return { title: '', type: 'separator', action: separators ? 'create' : 'skip' };
+      return { title: '', type: SEPARATOR_TYPE, action: separators ? 'create' : 'skip' };
     }
     if (node.url) {
       const url = node.url;

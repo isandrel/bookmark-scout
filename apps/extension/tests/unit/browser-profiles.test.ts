@@ -3,8 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'smol-toml';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { browserProfile, currentBrowser } from '@/lib/browser-profiles';
-import { SUPPORTED_BROWSERS } from '@/lib/supported-browsers';
+import { browserProfile, currentBrowser, SUPPORTED_BROWSERS } from '@/lib/browser-profiles';
+import type { SupportedBrowser } from '@/lib/supported-browsers';
 
 const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -30,15 +30,20 @@ describe('browser profiles', () => {
     const profiles = parse(
       readFileSync(path.join(appRoot, 'config/browsers/profiles.toml'), 'utf8'),
     );
-    expect(Object.keys(profiles)).toEqual(project.browsers.supported);
+    expect(Object.keys((profiles as { profiles: object }).profiles)).toEqual(
+      project.browsers.supported,
+    );
+    // The type names the same browsers.
+    const typed: Record<SupportedBrowser, true> = { chrome: true, firefox: true, edge: true };
+    expect(Object.keys(typed).sort()).toEqual([...project.browsers.supported].sort());
   });
 
-  it('follow the build, and treat another Chromium build as Chrome', () => {
+  it('follow the build, and refuse a build for another browser', () => {
     vi.stubEnv('BROWSER', 'firefox');
     expect(currentBrowser()).toBe('firefox');
     expect(browserProfile()).toMatchObject({ separators: true, bookmarkManagerUrl: null });
     vi.stubEnv('BROWSER', 'opera');
-    expect(currentBrowser()).toBe('chrome');
+    expect(() => currentBrowser()).toThrow(/Unsupported browser build: opera/);
     expect(browserProfile('edge')).toMatchObject({
       privateWindow: 'in_private',
       bookmarkManagerUrl: 'edge://favorites/',
