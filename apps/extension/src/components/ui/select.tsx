@@ -145,10 +145,10 @@ SelectItem.displayName = 'SelectItem';
 
 export {
   Select,
-  SelectValue,
-  SelectTrigger,
   SelectContent,
   SelectItem,
-  SelectScrollUpButton,
   SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectTrigger,
+  SelectValue,
 };

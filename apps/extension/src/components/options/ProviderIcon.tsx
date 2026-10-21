@@ -4,8 +4,8 @@
  * model), or the first letter of its name, so every provider in a list has an icon.
  */
 
-import { Laptop, Plug, Server } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { Laptop, Plug, Server } from 'lucide-react';
 
 const GROUP_ICONS: Partial<Record<AIProviderGroup, LucideIcon>> = {
   local: Server,

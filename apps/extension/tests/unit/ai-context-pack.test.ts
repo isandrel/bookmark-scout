@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildAIContextPack, type AIContextPackOptions } from '@/services/ai-bookmark-tools';
+import { type AIContextPackOptions, buildAIContextPack } from '@/services/ai-bookmark-tools';
 import type { BookmarkTreeNode } from '@/types';
 
 const nodes: BookmarkTreeNode[] = [

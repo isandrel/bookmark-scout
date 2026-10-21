@@ -31,8 +31,7 @@ function item(id: string, choice: RepairItem['choice'], newUrl?: string): Repair
   };
 }
 
-const urls = () =>
-  bookmarks.childIds('folder').map((id) => [id, bookmarks.get(id)?.url] as const);
+const urls = () => bookmarks.childIds('folder').map((id) => [id, bookmarks.get(id)?.url] as const);
 
 beforeEach(() => {
   fakeBrowser.reset();

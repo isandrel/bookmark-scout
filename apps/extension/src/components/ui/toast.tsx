@@ -35,8 +35,7 @@ const toastVariants = cva(
     variants: {
       variant: {
         default: 'border bg-popover text-popover-foreground',
-        destructive:
-          'destructive group border-destructive/40 bg-destructive-wash text-foreground',
+        destructive: 'destructive group border-destructive/40 bg-destructive-wash text-foreground',
         success: 'border-success/40 bg-success-wash text-foreground',
       },
     },
@@ -149,7 +148,10 @@ ToastDescription.displayName = 'ToastDescription';
 // Progress bar that animates from 100% to 0% over the toast duration
 const ToastProgress = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'destructive' | 'success' | null; duration?: number }
+  React.HTMLAttributes<HTMLDivElement> & {
+    variant?: 'default' | 'destructive' | 'success' | null;
+    duration?: number;
+  }
 >(({ className, variant, duration = defaultSettings.toastDurationMs, ...props }, ref) => {
   const progressColors = {
     default: 'bg-primary/50',
@@ -185,14 +187,14 @@ type ToastPropsExport = VariantProps<typeof toastVariants> & {
 type ToastActionElement = React.ReactElement<typeof ToastAction>;
 
 export {
-  type ToastPropsExport as ToastProps,
-  type ToastActionElement,
-  ToastProvider,
-  ToastViewport,
   Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
   ToastAction,
+  type ToastActionElement,
+  ToastClose,
+  ToastDescription,
   ToastProgress,
+  type ToastPropsExport as ToastProps,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
 };

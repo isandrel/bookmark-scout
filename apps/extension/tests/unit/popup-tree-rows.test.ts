@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { getBookmarkDisplayTitle } from '@/lib/bookmark-tree';
 import {
   areAllSubfoldersExpanded,
   bookmarkRowTooltip,
   flattenVisibleTree,
 } from '@/lib/popup-tree-rows';
-import { getBookmarkDisplayTitle } from '@/lib/bookmark-tree';
 import type { BookmarkTreeNode } from '@/types';
 
 const link = (id: string, parentId: string): BookmarkTreeNode => ({

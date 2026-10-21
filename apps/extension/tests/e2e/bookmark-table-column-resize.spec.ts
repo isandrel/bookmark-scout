@@ -293,6 +293,13 @@ test('a column moves by dragging its header, or from the header menu', async ({
     `thead th[data-column-id="${second}"] [data-column-drag-handle]`,
   );
 
+  // Measure once the table is drawn and the headers can be dragged: a press before then starts
+  // no drag, and the column widths settle after the first rows.
+  await expect(grid.getByText('Header Row')).toBeVisible();
+  await expect(grid.locator(`thead th[data-column-id="${second}"]`)).toHaveAttribute(
+    'draggable',
+    'true',
+  );
   // Drag the second header onto the left edge of the first.
   const from = await secondButton.boundingBox();
   const to = await firstHead.boundingBox();

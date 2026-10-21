@@ -6916,5 +6916,77 @@
     "history_noUndoElsewhere": {
         "message": "不是 Bookmark Scout 所做的更改，因此无法在此撤消。",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "history_restore": {
+        "message": "恢复",
+        "description": "History button: bring back items a change removed, from their recovery points."
+    },
+    "history_restoreHint": {
+        "message": "已无法撤消，但已删除的项目被保留了下来：恢复会把它们放回原处。",
+        "description": "History detail next to Restore: why Undo is gone and what Restore does."
+    },
+    "history_restoreConfirmTitle": {
+        "message": "恢复已删除的项目？",
+        "description": "Title of the confirmation before restoring removed items."
+    },
+    "history_restoreConfirm": {
+        "message": "$1 个已删除的项目会连同其内容、标签和摘要回到原来的文件夹。浏览器会为它们分配新的 ID 和日期。所在文件夹已不存在的项目不会恢复。",
+        "description": "Confirmation text before restoring. $1 is how many top-level items."
+    },
+    "history_restored": {
+        "message": "已恢复 $1 个项目",
+        "description": "Toast after restoring. $1 is how many top-level items came back."
+    },
+    "history_restoredPartial": {
+        "message": "已恢复 $1 个项目；$2 个因所在文件夹已不存在而无法恢复。",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "settings_sectionDates": {
+        "message": "日期和时间",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "日期格式",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "所有地方的日期显示方式：日期列、历史记录和详细信息",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "时间格式",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "以 12 小时制或 24 小时制显示时间，或按你的语言习惯显示",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "与我的语言一致",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "简短",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "完整",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "年-月-日",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "与我的语言一致",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12 小时制",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24 小时制",
+        "description": "Time format option: 24-hour clock."
     }
 }

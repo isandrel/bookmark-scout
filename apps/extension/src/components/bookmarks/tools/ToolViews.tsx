@@ -182,11 +182,7 @@ function BrowserIconsOffer() {
       data-testid="browser-icons-offer"
     >
       <p className="text-xs text-muted-foreground">{t('perm_browserIconsOffer')}</p>
-      <Button
-        size="sm"
-        className="h-8 text-xs"
-        onClick={() => void gate.run(() => setValue(true))}
-      >
+      <Button size="sm" className="h-8 text-xs" onClick={() => void gate.run(() => setValue(true))}>
         {t('perm_browserIconsUse')}
       </Button>
       <PermissionDialog {...gate.dialogProps} />

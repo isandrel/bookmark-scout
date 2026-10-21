@@ -7126,5 +7126,85 @@
     "history_noUndoElsewhere": {
         "message": "Pas effectué par Bookmark Scout, donc impossible à annuler ici.",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "history_restore": {
+        "message": "Restaurer",
+        "description": "History button: bring back items a change removed, from their recovery points."
+    },
+    "history_restoreHint": {
+        "message": "L'annulation n'est plus disponible, mais les éléments supprimés ont été conservés : Restaurer les remet à leur place.",
+        "description": "History detail next to Restore: why Undo is gone and what Restore does."
+    },
+    "history_restoreConfirmTitle": {
+        "message": "Restaurer les éléments supprimés ?",
+        "description": "Title of the confirmation before restoring removed items."
+    },
+    "history_restoreConfirm": {
+        "message": "$1 éléments supprimés reviennent dans leurs dossiers, avec leur contenu, leurs étiquettes et résumés. Le navigateur leur donne de nouveaux ID et dates. Les éléments dont le dossier n'existe plus sont ignorés.",
+        "description": "Confirmation text before restoring. $1 is how many top-level items."
+    },
+    "history_restoreConfirm_one": {
+        "message": "$1 élément supprimé revient dans son dossier, avec son contenu, ses étiquettes et son résumé. Le navigateur lui donne un nouvel ID et de nouvelles dates. Il est ignoré si son dossier n'existe plus.",
+        "description": "Confirmation text before restoring one item."
+    },
+    "history_restored": {
+        "message": "$1 éléments restaurés",
+        "description": "Toast after restoring. $1 is how many top-level items came back."
+    },
+    "history_restored_one": {
+        "message": "$1 élément restauré",
+        "description": "Toast after restoring one item."
+    },
+    "history_restoredPartial": {
+        "message": "$1 éléments restaurés ; $2 n'ont pas pu revenir car leur dossier n'existe plus.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "settings_sectionDates": {
+        "message": "Dates et heures",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "Format de date",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "Affichage des dates partout : colonnes de date, historique et détails",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "Format d'heure",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "Afficher les heures sur 12 ou 24 heures, ou selon votre langue",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "Comme dans ma langue",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "Court",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "Long",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "Année-mois-jour",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "Comme dans ma langue",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12 heures",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24 heures",
+        "description": "Time format option: 24-hour clock."
     }
 }
