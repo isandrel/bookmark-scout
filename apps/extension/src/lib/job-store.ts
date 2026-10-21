@@ -67,6 +67,7 @@ export const JOB_BLOCK_CODES = [
   'ai-request',
   'uncertain-request',
   'uncertain-write',
+  'site-access',
   'slice-setup',
 ] as const;
 export type JobBlockCode = (typeof JOB_BLOCK_CODES)[number];

@@ -36,7 +36,11 @@ function onVisible(): void {
   if (document.visibilityState === 'visible') read();
 }
 
-function subscribe(listener: () => void): () => void {
+/**
+ * Calls `listener` whenever the page's reading of the store changes; returns the unsubscribe. The
+ * first listener opens the page's one channel and the last one closes it.
+ */
+export function watchJobs(listener: () => void): () => void {
   listeners.add(listener);
   if (listeners.size === 1) {
     read();
@@ -59,9 +63,14 @@ function subscribe(listener: () => void): () => void {
   };
 }
 
+/** The page's latest reading: the newest jobs, newest first; undefined before the first. */
+export function currentJobs(): JobRecord[] | undefined {
+  return jobs;
+}
+
 /** The newest jobs, newest first; undefined while loading. */
 export function useJobs(): JobRecord[] | undefined {
-  return useSyncExternalStore(subscribe, () => jobs);
+  return useSyncExternalStore(watchJobs, currentJobs);
 }
 
 /** The newest job of `kind`, if any. */

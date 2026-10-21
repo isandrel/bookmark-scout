@@ -2,7 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { claimJob, getJob, getJobItems, JOB_LIMITS, markItemsInFlight } from '@/lib/job-store';
 import { saveSettings } from '@/lib/settings-storage';
+import * as bookmarkAudit from '@/services/bookmark-audit';
+import { undoBookmarkChange } from '@/services/bookmark-history';
 import type { BookmarkChange } from '@/services/bookmarks';
+import { JOB_ADAPTERS } from '@/services/job-adapters';
 import {
   resetJobCoordinatorForTests,
   runJobCommand,
@@ -53,6 +56,34 @@ beforeEach(async () => {
 afterEach(async () => {
   await whenJobsIdle().catch(() => undefined);
 });
+
+/** Holds each part before it writes, until the test lets it go or frees the rest. */
+function holdParts() {
+  const adapter = JOB_ADAPTERS.applyChanges;
+  if (!('runBatch' in adapter)) throw new Error('not a part adapter');
+  const runBatch = adapter.runBatch.bind(adapter);
+  const waiting: (() => void)[] = [];
+  let free = false;
+  vi.spyOn(adapter, 'runBatch').mockImplementation(async (...args) => {
+    if (!free) await new Promise<void>((resolve) => waiting.push(resolve));
+    return runBatch(...args);
+  });
+  return {
+    waiting: () => waiting.length,
+    release: () => waiting.shift()?.(),
+    freeAll: () => {
+      free = true;
+      for (const resolve of waiting.splice(0)) resolve();
+    },
+  };
+}
+
+/** Starts applying `changes` as a background task and returns its id. */
+async function applyInBackground(changes: BookmarkChange[]) {
+  const applied = await applyReviewedChanges(changes, { tool: 'tools_aiReorganize' });
+  if (!applied.background) throw new Error('applied in the page');
+  return applied.job.id;
+}
 
 const parts = (records: Awaited<ReturnType<typeof auditRecords>>) =>
   records
@@ -135,5 +166,83 @@ describe('applying reviewed changes', () => {
       .filter((item) => item.outcome === 'skipped')
       .map((item) => (item.result as { id: string }).id);
     expect(skipped).toEqual(ids.slice(0, 10));
+  });
+
+  it('waits for a part already writing before it pauses, then goes on after a change made since (J16, J42)', async () => {
+    const held = holdParts();
+    const jobId = await applyInBackground(moves);
+    await vi.waitFor(() => expect(held.waiting()).toBe(1));
+    await runJobCommand({ type: 'pause', jobId });
+    // A part's writes cannot be stopped halfway: pausing waits for it.
+    expect((await getJob(jobId))?.state).toBe('pause_requested');
+    held.release();
+    await whenJobsIdle();
+    expect(await getJob(jobId)).toMatchObject({
+      state: 'paused',
+      done: { succeeded: JOB_LIMITS.sliceMaxItems },
+    });
+    expect(bookmarks.childIds('to')).toHaveLength(JOB_LIMITS.sliceMaxItems);
+
+    // While paused, a bookmark of a later part is moved elsewhere.
+    const elsewhere = await fakeBrowser.bookmarks.create({ title: 'Elsewhere' });
+    const later = ids[JOB_LIMITS.sliceMaxItems + 1] ?? '';
+    await fakeBrowser.bookmarks.move(later, { parentId: elsewhere.id });
+    held.freeAll();
+    await runJobCommand({ type: 'resume', jobId });
+    await whenJobsIdle();
+    expect(await getJob(jobId)).toMatchObject({
+      state: 'succeeded',
+      done: { succeeded: COUNT - 1, skipped: 1 },
+    });
+    expect(bookmarks.childIds(elsewhere.id)).toEqual([later]);
+  });
+
+  it('keeps the parts applied when cancelled, finishes the part writing, and starts no more (J14)', async () => {
+    const held = holdParts();
+    const jobId = await applyInBackground(moves);
+    await vi.waitFor(() => expect(held.waiting()).toBe(1));
+    held.release();
+    // The first part is applied and saved; the second is about to write.
+    await vi.waitFor(() => expect(held.waiting()).toBe(1));
+    await runJobCommand({ type: 'cancel', jobId });
+    held.release();
+    await whenJobsIdle();
+    const job = await getJob(jobId);
+    expect(job?.state).toBe('cancelled');
+    expect(job?.done.succeeded).toBe(2 * JOB_LIMITS.sliceMaxItems);
+    expect(bookmarks.childIds('to')).toHaveLength(2 * JOB_LIMITS.sliceMaxItems);
+    expect(held.waiting()).toBe(0);
+    // Nothing applied is undone by the cancel; each part has its History record.
+    expect(parts(await auditRecords())).toHaveLength(2);
+  });
+
+  it('removes nothing when the record of what goes cannot be kept (J45)', async () => {
+    vi.spyOn(bookmarkAudit, 'beginAuditOperation').mockRejectedValue(new Error('quota'));
+    const removals: BookmarkChange[] = ids.map((id) => ({
+      kind: 'remove',
+      id,
+      title: id,
+      expect: { parentId: 'from' },
+    }));
+    const jobId = await applyInBackground(removals);
+    await whenJobsIdle();
+    const job = await getJob(jobId);
+    expect(job?.state).toBe('failed');
+    expect(job?.done).toEqual({ succeeded: 0, skipped: 0, failed: 0 });
+    expect(bookmarks.childIds('from')).toHaveLength(COUNT);
+    // Nothing is left marked as maybe written.
+    const items = await getJobItems(jobId, { limit: COUNT });
+    expect(items.every((item) => item.inFlightSince === undefined)).toBe(true);
+  });
+
+  it('undoes a finished background task part by part with Ctrl+Z (J48)', async () => {
+    await whenJobsIdle();
+    await applyInBackground(moves);
+    await whenJobsIdle();
+    expect(bookmarks.childIds('to')).toHaveLength(COUNT);
+    await undoBookmarkChange();
+    expect(bookmarks.childIds('from')).toHaveLength(COUNT - 2 * JOB_LIMITS.sliceMaxItems);
+    await undoBookmarkChange();
+    expect(bookmarks.childIds('from')).toHaveLength(COUNT - JOB_LIMITS.sliceMaxItems);
   });
 });
