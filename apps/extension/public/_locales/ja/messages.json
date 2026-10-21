@@ -7366,5 +7366,45 @@
     "jobs_errorSetup": {
         "message": "このタスクは続行できませんでした。もう一度開始してください。",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "バックグラウンドで適用する件数",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "確認済みの変更がこの数より多いブックマークに及ぶ場合は、バックグラウンドで分割して適用し、ページを閉じても続きます。各部分は履歴から元に戻せます",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "変更を適用中: $1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "$1 件の変更",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_countsApply": {
+        "message": "$1 件適用、$2 件は変更されていたためスキップ、$3 件失敗",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "停止しました。ここまでの変更は残ります。履歴から元に戻せます。",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "バックグラウンドで適用中",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "$1 件の変更を分割して適用しています。バックグラウンドのタスクで進行状況を確認でき、各部分は履歴から元に戻せます。",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "一時停止中: 変更の適用中にブラウザーが止まりました。再開すると、残りの各ブックマークをもう一度確認し、すでに変更済みのものはスキップします。",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1 (パート $2/$3)",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }

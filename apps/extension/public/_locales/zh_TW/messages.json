@@ -7168,5 +7168,45 @@
     "jobs_errorSetup": {
         "message": "此工作無法繼續。請重新開始。",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "超過此數量時在背景套用",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "涉及書籤數量超過此數的已檢視變更會在背景分批套用，關閉頁面後仍會繼續；每一批都可在歷史記錄中復原",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "正在套用變更：$1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "$1 項變更",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_countsApply": {
+        "message": "已套用 $1 項，$2 項因已變更而略過，$3 項失敗",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "已停止。已做出的變更會保留；可在歷史記錄中復原。",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "正在背景套用",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "$1 項變更正在分批套用。可在背景工作中查看進度，每一批都可在歷史記錄中復原。",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "已暫停：套用變更時瀏覽器停止了。繼續會重新檢查剩餘的每個書籤，並略過已經變更的書籤。",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1（第 $2 批，共 $3 批）",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }

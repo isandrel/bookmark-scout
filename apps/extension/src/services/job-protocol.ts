@@ -19,12 +19,21 @@ export const jobCommandSchema = z.discriminatedUnion('type', [
     type: z.literal('start'),
     /** Made once by the page before the first send, so a resend returns the same job. */
     commandId: id,
-    kind: z.enum(JOB_KINDS),
+    kind: z.enum(SCAN_JOB_KINDS),
     source: z.enum(JOB_SOURCES),
     scope: z.discriminatedUnion('mode', [
       z.strictObject({ mode: z.literal('all') }),
       z.strictObject({ mode: z.literal('folder'), folderId: bookmarkId }),
     ]),
+  }),
+  z.strictObject({
+    type: z.literal('apply'),
+    /** Made once by the page when the user applies, so a resend returns the same job. */
+    commandId: id,
+    source: z.enum(JOB_SOURCES),
+    /** Reviewed changes the user approved, applied in order and checked again before each. */
+    tool: applyJobOptionsSchema.shape.tool,
+    changes: z.array(storedBookmarkChangeSchema).min(1).max(JOB_LIMITS.maxItems),
   }),
   z.strictObject({ type: z.literal('pause'), jobId: id }),
   z.strictObject({ type: z.literal('resume'), jobId: id }),
