@@ -1213,6 +1213,10 @@
         "message": "Lien",
         "description": "Bookmark item type label"
     },
+    "table_typeSeparator": {
+        "message": "Séparateur",
+        "description": "Bookmark item type label for a Firefox separator (a line between bookmarks)"
+    },
     "table_openMenu": {
         "message": "Ouvrir le menu",
         "description": "Accessible label for the bookmark row actions menu"

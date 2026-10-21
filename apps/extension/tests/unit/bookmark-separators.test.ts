@@ -1,6 +1,7 @@
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { getLocalizedTypeOptions } from '@/components/ui/table/columns';
 import { setLanguage } from '@/hooks/use-i18n';
 import { toBookmarkTreeNode } from '@/lib/bookmark-tree-changes';
 import {
@@ -147,5 +148,18 @@ describe('separators in imports (L17, L19)', () => {
       expect(outcome).toMatchObject({ bookmarksCreated: 2, failed: 0, skipped: 2 });
       expect(kinds(bookmarks.childIds('target')[before])).toEqual(['bookmark', 'bookmark']);
     }
+  });
+});
+
+describe('separators in the manager', () => {
+  it('offers the Separator type filter only in Firefox', () => {
+    vi.stubEnv('BROWSER', 'chrome');
+    expect(getLocalizedTypeOptions().map((option) => option.value)).toEqual(['folder', 'link']);
+    vi.stubEnv('BROWSER', 'firefox');
+    expect(getLocalizedTypeOptions().map((option) => option.label)).toEqual([
+      'Folder',
+      'Link',
+      'Separator',
+    ]);
   });
 });

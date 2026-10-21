@@ -244,6 +244,34 @@ test('bookmark manager loads a folder, filters titles, and opens subfolders', as
   await extension.findByText('tbody tr', 'Inside');
 });
 
+test('a separator shows as a separator in the manager and the popup, never as a data: link', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Separators', [
+    { title: 'Above', url: 'https://e2e.invalid/above' },
+  ]);
+  await extension.call(async (browser, id) => {
+    await browser.bookmarks.create({ parentId: id, type: 'separator' });
+    await browser.bookmarks.create({
+      parentId: id,
+      title: 'Below',
+      url: 'https://e2e.invalid/below',
+    });
+  }, folder.folderId);
+
+  await extension.open(`bookmarks.html?id=${folder.folderId}`);
+  await expect.poll(() => visibleRows(extension)).toBe(3);
+  await extension.findByText('tbody tr', 'Separator');
+  expect(await extension.countVisible('a[href^="data:"]')).toBe(0);
+
+  await extension.open('popup.html');
+  await (await extension.findByText('.folder-item', folder.rootTitle)).click();
+  await (await extension.findByText('.folder-item', 'E2E Firefox Separators')).click();
+  await extension.findByText('.bookmark-item', 'Below');
+  await expect.poll(() => extension.countVisible('[data-slot="tree-separator"]')).toBe(1);
+  expect(await extension.countVisible('a[href^="data:"]')).toBe(0);
+});
+
 test('bookmark manager keeps the search in the address and links to its own page', async ({
   extension,
 }) => {

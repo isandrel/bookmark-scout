@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { isSeparatorNode } from '@/lib/bookmark-separators';
 import type { BookmarkTreeNode } from '@/types';
 
 const processNode = (
@@ -14,14 +15,16 @@ const processNode = (
   isRootFolder: boolean,
 ): Bookmark => {
   const isFolder = node.children !== undefined;
+  const isSeparator = isSeparatorNode(node);
   return {
-    type: isFolder ? ItemTypeEnum.Folder : ItemTypeEnum.Link,
+    type: isFolder ? ItemTypeEnum.Folder : isSeparator ? ItemTypeEnum.Separator : ItemTypeEnum.Link,
     id: node.id,
     parentId: node.parentId,
     folderPath,
     index: node.index,
     title: node.title,
-    url: node.url,
+    // Firefox's `data:` is no address: search, copy, and open never see it.
+    url: isSeparator ? undefined : node.url,
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
     unmodifiable: node.unmodifiable,

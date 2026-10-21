@@ -1205,6 +1205,10 @@
         "message": "链接",
         "description": "Bookmark item type label"
     },
+    "table_typeSeparator": {
+        "message": "分隔线",
+        "description": "Bookmark item type label for a Firefox separator (a line between bookmarks)"
+    },
     "table_openMenu": {
         "message": "打开菜单",
         "description": "Accessible label for the bookmark row actions menu"
