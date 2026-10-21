@@ -39,7 +39,8 @@ export default defineConfig<ExtensionProjectOptions>({
   expect: {
     timeout: 5_000,
   },
-  reporter: 'line',
+  // On CI a test that passed only on a retry is also a warning and a line in the job summary.
+  reporter: isCI ? [['line'], ['./tests/e2e/flaky-reporter.ts']] : 'line',
   outputDir: './test-results/playwright',
   use: {
     screenshot: 'only-on-failure',
