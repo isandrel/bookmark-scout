@@ -6756,7 +6756,7 @@
         "description": "Title of the History dialog in the manager."
     },
     "history_description": {
-        "message": "What Bookmark Scout changed in your bookmarks, kept on this device only. It starts with this version and does not know about changes made while the extension was off.",
+        "message": "Changes to your bookmarks: those Bookmark Scout made, and those seen from elsewhere. Kept on this device only, from this version on; changes made while the extension was off show as one difference later.",
         "description": "Explanation under the History title."
     },
     "history_filterLabel": {
@@ -7090,5 +7090,33 @@
     "action_redo": {
         "message": "Redo",
         "description": "Button that redoes a change undone before (the manager History)."
+    },
+    "settings_sectionHistory": {
+        "message": "Bookmark History",
+        "description": "Settings section heading: the manager Bookmark history."
+    },
+    "settings_historyRecordOutsideChanges": {
+        "message": "Record Changes Made Elsewhere",
+        "description": "Setting label: also record bookmark changes made outside Bookmark Scout in the History."
+    },
+    "settings_historyRecordOutsideChangesDesc": {
+        "message": "Also list changes made in the browser's own bookmark manager, by other extensions, or by browser sync. They show as Source unknown: the browser does not say who made them. Turned off, nothing from elsewhere is recorded; turned on again, what changed meanwhile shows as one difference.",
+        "description": "Setting description: what recording changes from elsewhere means, and what pausing it does."
+    },
+    "history_reasonBeforeUnknown": {
+        "message": "What it was before is not known: it was not recorded.",
+        "description": "History item: a change seen from elsewhere whose earlier state was never recorded."
+    },
+    "history_factObservedSince": {
+        "message": "Happened between",
+        "description": "History detail label: the interval in which differences found after a gap happened."
+    },
+    "history_between": {
+        "message": "$1 and $2 (exact times unknown)",
+        "description": "History detail: two dates and times, the interval a difference happened in. $1 and $2 are dates."
+    },
+    "history_noUndoElsewhere": {
+        "message": "Not made by Bookmark Scout, so it cannot be undone here.",
+        "description": "History detail for a change seen from elsewhere: why it offers no Undo."
     }
 }

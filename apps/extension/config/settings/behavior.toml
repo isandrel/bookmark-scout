@@ -23,3 +23,10 @@ actions = { default = [], max_items = 16, max_length = 20 }
 [deleting]
 # Show confirmation dialog before deleting items
 confirm = true
+
+[history]
+# List bookmark changes made outside Bookmark Scout (the browser's own bookmark manager, other
+# extensions, browser sync) in the manager's History, as from an unknown source. Off pauses it:
+# nothing from elsewhere is recorded, and turning it on again records what changed meanwhile as
+# one difference. Kept on this device only, like the History itself.
+record_outside_changes = true

@@ -629,6 +629,10 @@ const fields = {
       })[value],
   ),
   confirmBeforeDelete: switchField('behavior.deleting.confirm', 'confirmDelete'),
+  historyRecordOutsideChanges: switchField(
+    'behavior.history.record_outside_changes',
+    'historyRecordOutsideChanges',
+  ),
   defaultNewFolderName: textField('search.saving.default_new_folder_name', 'defaultFolderName'),
   recentFoldersMax: numberField('search.saving.recent_folders_max', 'recentFoldersMax'),
   recentFoldersEnabled: switchField('search.saving.recent_folders_enabled', 'recentFoldersEnabled'),
@@ -1185,6 +1189,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       { id: 'tree', labelKey: 'settings_sectionTree', fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'] },
       { id: 'links', labelKey: 'settings_sectionLinks', fields: ['linkOpenTarget'] },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
+      {
+        id: 'history',
+        labelKey: 'settings_sectionHistory',
+        fields: ['historyRecordOutsideChanges'],
+      },
       { id: 'managerMenus', fields: [], panel: 'managerMenus' },
     ]),
     ai: category('settings_ai', 'settings_aiDesc', [

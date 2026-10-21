@@ -6756,7 +6756,7 @@
         "description": "Title of the History dialog in the manager."
     },
     "history_description": {
-        "message": "Lo que Bookmark Scout cambió en tus marcadores, guardado solo en este dispositivo. Empieza con esta versión y no conoce los cambios hechos mientras la extensión estaba desactivada.",
+        "message": "Cambios en tus marcadores: los que hizo Bookmark Scout y los observados de otro origen. Se guardan solo en este dispositivo, desde esta versión; los cambios hechos con la extensión desactivada aparecen después como una sola diferencia.",
         "description": "Explanation under the History title."
     },
     "history_filterLabel": {
@@ -7090,5 +7090,33 @@
     "action_redo": {
         "message": "Rehacer",
         "description": "Button that redoes a change undone before (the manager History)."
+    },
+    "settings_sectionHistory": {
+        "message": "Historial de marcadores",
+        "description": "Settings section heading: the manager Bookmark history."
+    },
+    "settings_historyRecordOutsideChanges": {
+        "message": "Registrar cambios hechos en otro lugar",
+        "description": "Setting label: also record bookmark changes made outside Bookmark Scout in the History."
+    },
+    "settings_historyRecordOutsideChangesDesc": {
+        "message": "Mostrar también los cambios hechos en el administrador de marcadores del navegador, por otras extensiones o por la sincronización del navegador. Aparecen como origen desconocido: el navegador no dice quién los hizo. Desactivado, no se registra nada de otro lugar; al volver a activarlo, lo que cambió entretanto aparece como una sola diferencia.",
+        "description": "Setting description: what recording changes from elsewhere means, and what pausing it does."
+    },
+    "history_reasonBeforeUnknown": {
+        "message": "No se sabe cómo era antes: no se registró.",
+        "description": "History item: a change seen from elsewhere whose earlier state was never recorded."
+    },
+    "history_factObservedSince": {
+        "message": "Ocurrió entre",
+        "description": "History detail label: the interval in which differences found after a gap happened."
+    },
+    "history_between": {
+        "message": "$1 y $2 (horas exactas desconocidas)",
+        "description": "History detail: two dates and times, the interval a difference happened in. $1 and $2 are dates."
+    },
+    "history_noUndoElsewhere": {
+        "message": "No lo hizo Bookmark Scout, así que no se puede deshacer aquí.",
+        "description": "History detail for a change seen from elsewhere: why it offers no Undo."
     }
 }
