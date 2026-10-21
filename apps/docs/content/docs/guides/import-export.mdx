@@ -29,6 +29,7 @@ File details:
 
 - File names start with **Filename Prefix** (default `bookmarks_`) and keep non-ASCII folder names.
 - CSV files start with a UTF-8 byte order mark. The Folder column joins folders with `/`, and writes a `/` inside a folder name as `\/` and a backslash as `\\`.
+- Separators, which only Firefox has, are written as separators in HTML (`<HR>`) and JSON and come back as separators when you import that file in Firefox. Markdown and CSV leave them out, and Chrome and Edge, which have no separators, leave them out of an import; the preview counts them.
 - **Include Dates** and **Include URLs**, and the indent sizes for each format, are on the **Data** tab of [Settings](/settings).
 
 A JSON export includes each bookmark's tags and summary, and importing that file gives them to the bookmarks it creates, but not to ones it skips as duplicates. HTML, Markdown, and CSV exports leave them out. To hand bookmarks with their tags and summaries to an AI tool, use **AI Context Packer**; see [Set up AI tools](/guides/ai-tools#export-context-for-an-ai-chat).

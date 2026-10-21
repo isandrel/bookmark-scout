@@ -119,6 +119,8 @@ export function flattenBookmarks(nodes: BookmarkTreeNode[]): FlatBookmark[] {
   const result: FlatBookmark[] = [];
 
   const walk = (node: BookmarkTreeNode, folderPath: string[], depth: number) => {
+    // A separator's `data:` URL is no bookmark: never a duplicate, a link to check, or an input.
+    if (isSeparatorNode(node)) return;
     if (node.url) {
       const normalizedUrl = safeNormalizeUrl(node.url);
       result.push({

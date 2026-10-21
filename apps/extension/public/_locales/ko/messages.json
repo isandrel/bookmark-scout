@@ -4253,6 +4253,14 @@
         "message": "무시되는 잘못된 항목: $1",
         "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
     },
+    "tools_importPreviewSeparators": {
+        "message": "만들 구분선: $1",
+        "description": "Import preview count of Firefox separators the import creates; $1 is the count"
+    },
+    "tools_importPreviewSeparatorsUnsupported": {
+        "message": "제외되는 구분선(이 브라우저에는 없음): $1",
+        "description": "Import preview count of separators in the file that this browser (Chrome, Edge) cannot store; $1 is the count"
+    },
     "tools_importNothingToCreate": {
         "message": "이 설정으로는 새로 가져올 항목이 없습니다.",
         "description": "Import preview note when every item would be skipped"

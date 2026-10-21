@@ -4217,6 +4217,14 @@
         "message": "無視される無効な項目: $1",
         "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
     },
+    "tools_importPreviewSeparators": {
+        "message": "作成する区切り線: $1",
+        "description": "Import preview count of Firefox separators the import creates; $1 is the count"
+    },
+    "tools_importPreviewSeparatorsUnsupported": {
+        "message": "省略する区切り線（このブラウザにはありません）: $1",
+        "description": "Import preview count of separators in the file that this browser (Chrome, Edge) cannot store; $1 is the count"
+    },
     "tools_importNothingToCreate": {
         "message": "この設定ではインポートする新しい項目はありません。",
         "description": "Import preview note when every item would be skipped"

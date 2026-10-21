@@ -12,6 +12,7 @@ const fixturesDirectory = path.join(
 );
 const HTML_FIXTURE = path.join(fixturesDirectory, 'conflicts.html');
 const JSON_FIXTURE = path.join(fixturesDirectory, 'conflicts.json');
+const SEPARATORS_FIXTURE = path.join(fixturesDirectory, 'firefox-separators.html');
 
 type TreeShape = { title: string; url?: string; children?: TreeShape[] };
 
@@ -370,4 +371,37 @@ test('a bookmarks file dropped on the Import card opens the same preview', async
     text: readFileSync(HTML_FIXTURE, 'utf8'),
   });
   await expect(page.getByRole('dialog', { name: 'Import preview' })).toBeVisible();
+});
+
+test('a Firefox file with separators imports in order, leaving the separators out (L19)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { targetId } = await seedConflicts(extensionWorker);
+  await openTools(page, extensionId, targetId);
+  const dialog = await openPreview(page, SEPARATORS_FIXTURE);
+  await expectSummary(dialog, [
+    'Bookmarks to create: 4',
+    'Folders to create: 1',
+    'Separators left out (this browser has none): 2',
+  ]);
+  await dialog.getByRole('button', { name: 'Import', exact: true }).click();
+  await expect(dialog).toBeHidden();
+
+  // No separator came back as an empty folder or a `data:` bookmark.
+  await expect
+    .poll(() => subtreeOf(extensionWorker, targetId))
+    .toEqual([
+      { title: 'Existing', url: 'https://e2e.invalid/existing' },
+      { title: 'Before', url: 'https://e2e.invalid/before' },
+      {
+        title: 'Folder',
+        children: [
+          { title: 'Inside 1', url: 'https://e2e.invalid/inside-1' },
+          { title: 'Inside 2', url: 'https://e2e.invalid/inside-2' },
+        ],
+      },
+      { title: 'After', url: 'https://e2e.invalid/after' },
+    ]);
 });
