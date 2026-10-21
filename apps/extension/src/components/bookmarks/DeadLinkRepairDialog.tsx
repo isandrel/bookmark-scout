@@ -99,6 +99,8 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
 
   const apply = async (): Promise<ReviewApplyReport> => {
     const applied = await applyDeadLinkRepairs(repairItems);
+    if (applied.background)
+      return { ...reportBackgroundApply(applied), complete: true, details: [] };
     await onChanged();
     const complete = applied.skipped === 0 && applied.failed === 0;
     return {

@@ -138,6 +138,8 @@ bun run build:edge
 
 [Gitmoji](https://gitmoji.dev/)를 붙인 [Conventional Commits](https://www.conventionalcommits.org/) 형식을 사용합니다.
 
+`commit-msg` 훅과 **PR title** 검사가 이 형식을 확인하며, 허용되는 유형은 `config/commits.toml`에 있습니다.
+
 ```
 ✨ feat(scope): add new feature
 🐛 fix(scope): fix bug description

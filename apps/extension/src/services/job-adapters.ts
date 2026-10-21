@@ -45,17 +45,26 @@ const HEX_RADIX = 16;
 
 export type JobStart = JobCommand & { type: 'start' };
 
-/** How one kind of job does its work, from its frozen options and stored inputs. */
-export type JobAdapter = {
-  /** The inputs (one per item), options, and scope counts for a new job; read on acceptance. */
-  prepare(command: JobStart): Promise<{
+/** A part of a job whose slices are one change each (`runBatch`): which, and of how many. */
+export type JobPart = { jobId: string; index: number; of: number };
+
+type JobAdapterBase = {
+  /**
+   * The inputs (one per item), options, and scope counts for a new job; read on acceptance.
+   * Absent for a kind whose inputs come with its command (`applyChanges`).
+   */
+  prepare?(command: JobStart): Promise<{
     inputs: unknown[];
     options: unknown;
     label: string;
     summary?: Record<string, number>;
   }>;
-  /** Items checked at the same time. */
-  concurrency(options: unknown): number;
+  /**
+   * Items whose work cannot be taken back once started (a paid request, a bookmark write) are
+   * marked in flight first. A stopped worker leaves the mark, and the job then pauses with this
+   * reason instead of doing that work again on its own.
+   */
+  unsureAfterStop?: JobBlockCode;
   /** Whether items read HTML, so the slice needs `JobTools.readHead`. */
   readsHtml?: boolean;
   /**
@@ -64,9 +73,30 @@ export type JobAdapter = {
    * and a request a stopped worker left unanswered is sent again only once the user resumes.
    */
   ai?: { feature: AIFeature; source: AIActivitySource; destination(options: unknown): string };
-  /** Does one item; throws `RequestAbortedError` when stopped, which leaves it to do. */
-  run(input: unknown, options: unknown, signal: AbortSignal, tools: JobTools): Promise<JobRun>;
 };
+
+/** How one kind of job does its work, from its frozen options and stored inputs. */
+export type JobAdapter = JobAdapterBase &
+  (
+    | {
+        /** Items checked at the same time. */
+        concurrency(options: unknown): number;
+        /** Does one item; throws `RequestAbortedError` when stopped, which leaves it to do. */
+        run(
+          input: unknown,
+          options: unknown,
+          signal: AbortSignal,
+          tools: JobTools,
+        ): Promise<JobRun>;
+      }
+    | {
+        /**
+         * Does a whole slice as one step that is not stopped halfway (one recorded change), and
+         * returns each item's outcome in order. Pause and cancel take effect between slices.
+         */
+        runBatch(inputs: unknown[], options: unknown, part: JobPart): Promise<JobRun[]>;
+      }
+  );
 
 const linkTargetSchema = z.strictObject({
   id: z.string(),
@@ -180,6 +210,7 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
     },
     // One request at a time, in order, as the page did.
     concurrency: () => 1,
+    unsureAfterStop: 'uncertain-request',
     ai: {
       feature: 'reorganization',
       source: 'reorganization',
@@ -204,6 +235,25 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
         }
         throw new JobBlockedError('ai-request', getErrorMessage(error));
       }
+    },
+  },
+  applyChanges: {
+    // A part that stopped halfway is checked item by item again on Resume; nothing is replayed
+    // on its own.
+    unsureAfterStop: 'uncertain-write',
+    async runBatch(inputs, options, part) {
+      const changes = inputs.map((input) => storedBookmarkChangeSchema.parse(input));
+      const { tool } = applyJobOptionsSchema.parse(options);
+      // The same writer as a change applied in the page: each change is checked against the
+      // live bookmark first, so one already made, or changed since the review, is skipped.
+      const result = await applyBookmarkChanges(changes, { tool, part });
+      const issues = new Map(result.issues.map((issue) => [issue.id, issue.reason]));
+      return changes.map((change) => {
+        const reason = issues.get(change.id);
+        const result = { id: change.id, title: change.title, ...(reason ? { reason } : {}) };
+        if (!reason) return { outcome: 'succeeded', result };
+        return { outcome: reason === 'failed' ? 'failed' : 'skipped', result };
+      });
     },
   },
   siteIcons: {

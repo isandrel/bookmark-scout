@@ -7366,5 +7366,45 @@
     "jobs_errorSetup": {
         "message": "이 작업을 계속할 수 없었습니다. 다시 시작하세요.",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "백그라운드 적용 기준",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "검토한 변경이 이 수보다 많은 북마크에 해당하면 백그라운드에서 나누어 적용하며, 페이지를 닫아도 계속됩니다. 각 부분은 기록에서 실행 취소할 수 있습니다",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "변경 적용 중: $1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "변경 $1개",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_countsApply": {
+        "message": "$1개 적용, $2개는 변경되어 건너뜀, $3개 실패",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "중지되었습니다. 지금까지의 변경은 남아 있으며, 기록에서 실행 취소할 수 있습니다.",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "백그라운드에서 적용 중",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "변경 $1개를 나누어 적용하고 있습니다. 백그라운드 작업에서 확인하고, 각 부분은 기록에서 실행 취소하세요.",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "일시 중지됨: 변경을 적용하는 중에 브라우저가 멈췄습니다. 다시 시작하면 남은 북마크를 하나씩 다시 확인하고 이미 바뀐 것은 건너뜁니다.",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1 ($3개 중 $2번째 부분)",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }

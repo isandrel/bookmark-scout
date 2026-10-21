@@ -695,6 +695,18 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     unit(SETTINGS_UNIT, 'dead-link scans treat only the saved success statuses as reachable'),
   ]),
 
+  // Background tasks
+  jobsApplyInBackgroundAbove: tested('services/reviewed-apply.ts', [
+    unit(
+      'background-apply.test.ts',
+      'applies above the Apply in the Background Above setting as a background task, one History record a part (J46)',
+    ),
+    e2e(
+      'background-jobs.spec.ts',
+      'reviewed changes above the Apply in the Background Above setting are applied as a background task, one History record a part (J46)',
+    ),
+  ]),
+
   // Metadata fetcher
   metadataFetcherEnabled: tested(TOOL_TABLE, [toolFlags]),
   metadataFetcherDefaultScope: tested(TOOL_TABLE, [

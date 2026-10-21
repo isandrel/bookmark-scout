@@ -67,6 +67,8 @@ export type BookmarkHistoryLabel = {
    * (`tools_findDuplicates`), named next to what it did.
    */
   tool?: string;
+  /** One part of a change applied in parts by a background task: which, and of how many. */
+  part?: { index: number; of: number };
 };
 
 export type BookmarkHistoryOperation =
@@ -166,6 +168,9 @@ const labelSchema = z.object({
   title: z.string().optional(),
   count: z.number().int().positive().optional(),
   tool: z.string().optional(),
+  part: z
+    .object({ index: z.number().int().positive(), of: z.number().int().positive() })
+    .optional(),
 });
 const entrySchema: z.ZodType<StoredBookmarkHistoryEntry> = z.union([
   z.object({
@@ -447,6 +452,7 @@ function completeLabel(
     ...(title !== undefined ? { title } : {}),
     ...(count !== undefined ? { count } : {}),
     ...(label.tool !== undefined ? { tool: label.tool } : {}),
+    ...(label.part !== undefined ? { part: label.part } : {}),
   };
 }
 
@@ -882,5 +888,8 @@ export function describeBookmarkHistoryLabel(label: BookmarkHistoryLabel): strin
     many && label.count !== undefined && label.count > 1
       ? tPlural(many, label.count)
       : t(one, getBookmarkDisplayTitle(label.title));
-  return label.tool ? t('qaManager_byTool', [what, t(label.tool)]) : what;
+  const described = label.tool ? t('qaManager_byTool', [what, t(label.tool)]) : what;
+  return label.part
+    ? t('history_part', [described, String(label.part.index), String(label.part.of)])
+    : described;
 }

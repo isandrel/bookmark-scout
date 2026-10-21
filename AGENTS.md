@@ -336,6 +336,7 @@ This repository includes AI-backed functionality and user bookmark data. Treat p
 - avoid logging sensitive data unless there is a strong existing pattern and a concrete debugging need
 - preserve explicit user control for enabling AI features and selecting providers
 - do not weaken existing consent, disclosure, or privacy messaging
+- every storage item, IndexedDB database, and declared permission must be named in `store/privacy-disclosures.md` or `store/permissions.md` and the docs permissions pages; `scripts/disclosure-sync.test.ts` fails otherwise
 - when a change alters what data leaves the device, update `store/privacy-policy.md`, `store/privacy-disclosures.md`, `store/permissions.md`, the docs `privacy.mdx` and `permissions.mdx`, and every `apps/website/messages/privacy/<locale>.json` in the same change (the full list and order: the `privacy-disclosure-sync` skill)
 
 ## Documentation policy
@@ -369,6 +370,7 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 - keep temporary scripts, screenshots, logs, and one-off reports out of the repository; put them in `~/.cache/bookmark-scout-<topic>/`. Session scratchpads get wiped and are shared between parallel agents, so use them only for throwaway output. Third-party tools and skills sometimes write reports into the working tree (a migration skill once committed `.migration/`); check `git status` for new top-level folders before committing
 - script repository files (TOML, JSON, Markdown) with Bun and the workspace's libraries (`smol-toml` for TOML), not the system `python3`, which may lack `tomllib`; one Python edit to the README generator overwrote the READMEs
 - after changing a generator or its templates, run it and check `git diff --exit-code` on its output before trusting it; the README templates once lagged months behind their output
+- commit messages and pull request titles follow `config/commits.toml` ("<emoji> <type>(<scope>): <summary>"); the `commit-msg` hook and the `PR title` CI job check them with `scripts/check-commit-message.ts`
 - do not add CI jobs that commit generated files back; generate locally (pre-commit hook) and let CI fail on drift
 - put one-time infrastructure setup (hosting projects, domains, DNS, secrets) in a local, idempotent script with `--dry-run`, not in CI
 
@@ -393,7 +395,7 @@ Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Sk
 
 Current skills: `feature-delivery`, `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `extension-bookmark-actions`, `extension-stored-data`, `extension-performance`, `extension-background-jobs`, `mcp-bridge-change`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
 
-Update a skill when a session teaches a lesson that future agents would otherwise relearn.
+Update a skill when a session teaches a lesson that future agents would otherwise relearn. `scripts/skills-index.test.ts` fails when the list above and `.agents/skills/` differ, or a skill's front matter does not name its folder.
 
 ## When to add or update nested AGENTS.md files
 

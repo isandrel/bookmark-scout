@@ -7386,5 +7386,53 @@
     "jobs_errorSetup": {
         "message": "Esta tarefa não pôde continuar. Inicie-a de novo.",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "Aplicar em segundo plano acima de",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "Alterações revisadas em mais favoritos do que este número são aplicadas em segundo plano, em partes, e continuam quando você fecha a página; desfaça cada parte no Histórico",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "Aplicando alterações: $1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "$1 alterações",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_applyScope_one": {
+        "message": "$1 alteração",
+        "description": "Background tasks: how many changes a task applies (one)"
+    },
+    "jobs_countsApply": {
+        "message": "$1 aplicadas, $2 ignoradas porque mudaram, $3 com falha",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "Interrompido. As alterações feitas até aqui ficam; desfaça-as no Histórico.",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "Aplicando em segundo plano",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "$1 alterações estão sendo aplicadas em partes. Acompanhe em Tarefas em segundo plano e desfaça cada parte no Histórico.",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_applyStartedDesc_one": {
+        "message": "$1 alteração está sendo aplicada em segundo plano. Acompanhe em Tarefas em segundo plano e desfaça-a no Histórico.",
+        "description": "Notification: one change is applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "Pausada: o navegador parou enquanto as alterações eram aplicadas. Retomar verifica de novo cada favorito restante e ignora os que já mudaram.",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1 (parte $2 de $3)",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }

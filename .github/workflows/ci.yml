@@ -90,6 +90,24 @@ jobs:
             exit 1
           }
 
+  # Squash merges make the title the commit on main, so it follows config/commits.toml as the
+  # commit-msg hook does for local commits.
+  pr-title:
+    name: PR title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      - name: Check the title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: bun scripts/check-commit-message.ts --title "$PR_TITLE"
+
   build:
     name: Build Extension
     runs-on: ubuntu-latest
@@ -122,6 +140,14 @@ jobs:
       - name: Check distribution size for ${{ matrix.target }}
         if: env.RUN == 'true'
         run: bun run --cwd apps/extension size:check ${{ matrix.target }}
+
+      # A WXT auto-import that the bundle left unresolved passes lint, tsc, and unit tests, and
+      # fails at runtime (once it broke HTML import): look for the names in the built output.
+      - name: Check auto-imports resolve for ${{ matrix.target }}
+        if: env.RUN == 'true'
+        run: |
+          output=$(cd apps/extension/dist && ls -d ${{ matrix.target }}-mv*)
+          bun .agents/skills/extension-feature-test/scripts/scan-unresolved-imports.ts apps/extension "dist/$output"
 
   # The browser suites do not wait for Lint: it is a required check of its own, and starting them
   # at once takes Lint off the critical path.
