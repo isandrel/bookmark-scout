@@ -15,6 +15,7 @@
       "tests/**/*.tsx",
       "build/**/*.ts",
       "scripts/check-distribution-size.ts",
+      "scripts/coverage-summary.ts",
       "manifest.config.ts",
       "vitest.config.ts",
       "playwright.config.ts"
