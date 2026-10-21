@@ -40,7 +40,9 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Panel
     ref={ref}
     className={cn(
-      'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      // The panel being left stays mounted for a frame (`data-ending-style`): hidden, so two
+      // panels never show at once and the page does not jump.
+      'mt-2 data-[ending-style]:hidden ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
       className,
     )}
     {...props}

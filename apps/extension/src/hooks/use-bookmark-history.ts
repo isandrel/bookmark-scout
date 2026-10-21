@@ -41,22 +41,27 @@ export function reportBookmarkHistoryOutcome(
 }
 
 export function useBookmarkHistoryCommands() {
-  // One step at a time: a held Ctrl+Z repeats the key faster than a step finishes.
-  const running = useRef(false);
-  const run = useCallback(async (step: HistoryStep) => {
-    if (running.current) return;
-    running.current = true;
-    try {
-      const outcome = step === 'undo' ? await undoBookmarkChange() : await redoBookmarkChange();
-      reportBookmarkHistoryOutcome(step, outcome);
-    } catch (error) {
-      toast.error({ title: t('error_generic'), description: getErrorMessage(error) });
-    } finally {
-      running.current = false;
-    }
+  // Steps run one after another, so Ctrl+Z and then Ctrl+Shift+Z pressed quickly both happen, in
+  // that order. A held key repeats faster than a step finishes: a repeat is dropped while a step
+  // runs, so letting go stops undoing.
+  const queue = useRef<Promise<void>>(Promise.resolve());
+  const pending = useRef(0);
+  const run = useCallback((step: HistoryStep, repeat = false) => {
+    if (repeat && pending.current > 0) return;
+    pending.current += 1;
+    queue.current = queue.current.then(async () => {
+      try {
+        const outcome = step === 'undo' ? await undoBookmarkChange() : await redoBookmarkChange();
+        reportBookmarkHistoryOutcome(step, outcome);
+      } catch (error) {
+        toast.error({ title: t('error_generic'), description: getErrorMessage(error) });
+      } finally {
+        pending.current -= 1;
+      }
+    });
   }, []);
   return {
-    undo: useCallback(() => void run('undo'), [run]),
-    redo: useCallback(() => void run('redo'), [run]),
+    undo: useCallback((repeat?: boolean) => run('undo', repeat), [run]),
+    redo: useCallback((repeat?: boolean) => run('redo', repeat), [run]),
   };
 }

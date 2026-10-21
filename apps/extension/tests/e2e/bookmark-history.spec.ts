@@ -108,17 +108,19 @@ test('a manager deletion is one verified record that survives a browser restart 
     await expect
       .poll(() => childTitles(worker, seeded.folderId))
       .toEqual(['Keep me', 'Old Projects']);
-    const restored = await worker.evaluate(async (parentId) => {
-      const children = await chrome.bookmarks.getChildren(parentId);
-      const folder = children.find((child) => child.title === 'Old Projects');
-      return folder
-        ? (await chrome.bookmarks.getChildren(folder.id)).map((child) => [
-            child.title,
-            child.url ?? null,
-          ])
-        : [];
-    }, seeded.folderId);
-    expect(restored).toEqual([
+    // The folder appears before what was inside it is created again.
+    const restored = () =>
+      worker.evaluate(async (parentId) => {
+        const children = await chrome.bookmarks.getChildren(parentId);
+        const folder = children.find((child) => child.title === 'Old Projects');
+        return folder
+          ? (await chrome.bookmarks.getChildren(folder.id)).map((child) => [
+              child.title,
+              child.url ?? null,
+            ])
+          : [];
+      }, seeded.folderId);
+    await expect.poll(restored).toEqual([
       ['Spec', 'https://e2e.invalid/spec#part-2'],
       ['Empty inside', null],
     ]);

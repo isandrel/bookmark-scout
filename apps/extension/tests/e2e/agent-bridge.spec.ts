@@ -1,4 +1,4 @@
-import type { Worker } from '@playwright/test';
+import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { childTitles, seedFolder } from './popup-helpers';
 import { readSettings, setSettings } from './storage';
@@ -160,6 +160,20 @@ test('Options turns on access for local AI agents, which look up bookmarks throu
   await expect.poll(async () => (await bridgeState(extensionWorker)).disconnects).toBe(1);
 });
 
+/**
+ * Clicks an answer in the approval window. The window may close itself before the click returns;
+ * the result the agent gets is the check.
+ */
+async function answer(approvals: Page, name: 'Approve' | 'Decline') {
+  await approvals
+    .getByTestId('agent-approval')
+    .getByRole('button', { name })
+    .click()
+    .catch((error: unknown) => {
+      if (!approvals.isClosed()) throw error;
+    });
+}
+
 test('a local agent saves a page only after the user approves it in the approval window', async ({
   context,
   extensionWorker,
@@ -199,20 +213,14 @@ test('a local agent saves a page only after the user approves it in the approval
   await expect(request).toContainText('Save “Approved page” to');
   // Nothing is saved before the answer.
   expect(await childTitles(extensionWorker, folderId)).toEqual([]);
-  // The window may close itself before the click returns; the result below is the check.
-  await request
-    .getByRole('button', { name: 'Approve' })
-    .click()
-    .catch((error: unknown) => {
-      if (!approvals.isClosed()) throw error;
-    });
+  await answer(approvals, 'Approve');
   await result('2.1').toMatchObject({ type: 'result', isError: false, result: { created: true } });
   expect(await childTitles(extensionWorker, folderId)).toEqual(['Approved page']);
 
   // Declined: the agent is told, and nothing changes.
   const reopened = context.waitForEvent('page', (page) => page.url().includes('agent-approval'));
   await save('2.2', 'Declined page');
-  await (await reopened).getByRole('button', { name: 'Decline' }).click();
+  await answer(await reopened, 'Decline');
   await result('2.2').toMatchObject({
     isError: true,
     result: { error: { code: 'not_allowed', message: 'The user declined this change.' } },
