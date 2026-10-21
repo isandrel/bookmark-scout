@@ -191,9 +191,9 @@ export function useTreeDnd(
                 onDrop: ({ source }) => {
                   clearDropIndicator(element, kind);
                   const links = parseDroppedLinks({
-                    uriList: source.getStringData('text/uri-list') ?? undefined,
-                    html: source.getStringData('text/html') ?? undefined,
-                    plain: source.getStringData('text/plain') ?? undefined,
+                    uriList: source.getStringData(MIME.uriList) ?? undefined,
+                    html: source.getStringData(MIME.html) ?? undefined,
+                    plain: source.getStringData(MIME.plainText) ?? undefined,
                   });
                   latest.current.onLinksDrop?.(node, links);
                 },

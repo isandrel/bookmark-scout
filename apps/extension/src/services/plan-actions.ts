@@ -144,11 +144,7 @@ const proposeChanges = defineAction({
   labelKey: 'actionName_proposeChanges',
   targets: ['bookmark', 'folder'],
   agent: {
-    description:
-      'Propose bookmark changes for the user to approve: moves (optionally into a new folder), ' +
-      'renames, deletions, and new folders, checked against the library now. Nothing changes ' +
-      'yet. Returns a planId and the changes as the user will see them; then call applyChanges ' +
-      'with the planId, which asks the user. Folders are named by ref or full path.',
+    description: agentText('propose_changes.agent_description'),
     partOfChanges: true,
   },
   input: z.object({
@@ -157,7 +153,7 @@ const proposeChanges = defineAction({
       .trim()
       .min(1)
       .max(INPUT_LIMITS.chars.plan_summary)
-      .describe('One short sentence on what this does'),
+      .describe(agentText('propose_changes.summary')),
     changes: z.array(operationInput).min(1).max(actionLimits.max_plan_operations),
   }),
   output: z.object({ planId: z.string(), changes: previewOutput, deletes: z.number().int() }),
@@ -290,17 +286,13 @@ const applyChanges = defineAction({
   labelKey: 'actionName_applyChanges',
   targets: ['bookmark', 'folder'],
   agent: {
-    description:
-      'Apply a plan from proposeChanges. The user is always asked first and sees the plan; if ' +
-      'they decline, do not try again. A plan is applied once; one that expired, was applied, ' +
-      'or names items changed since is refused at once, so propose again. Items that change ' +
-      'while the user decides are skipped. Returns a change id for undoChange.',
+    description: agentText('apply_changes.agent_description'),
   },
   input: z.object({ planId: z.string().min(1) }),
   output: z.object({
     change: z.string().optional(),
-    applied: z.number().int().describe('Items changed, as the plan listed them'),
-    skipped: z.array(z.string()).describe('Titles left alone because they changed since'),
+    applied: z.number().int().describe(agentText('apply_changes.applied')),
+    skipped: z.array(z.string()).describe(agentText('apply_changes.skipped')),
     failed: z.array(z.string()),
   }),
   describe: () => t('askAI_toolApply'),

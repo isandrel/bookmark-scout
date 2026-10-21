@@ -94,10 +94,10 @@ function parseNetscapeDate(value: string | null): number {
 export const htmlImportFormat: ImportFormat = {
   name: 'HTML (Chrome/Netscape)',
   extensions: ['html', 'htm'],
-  mimeTypes: ['text/html'],
+  mimeTypes: [MIME.html],
   parse(content: string): ParsedImport {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'text/html');
+    const doc = parser.parseFromString(content, MIME.html);
     const result: BookmarkTreeNode[] = [];
     let skipped = 0;
 
@@ -182,7 +182,7 @@ export const htmlImportFormat: ImportFormat = {
 export const jsonImportFormat: ImportFormat = {
   name: 'JSON',
   extensions: ['json'],
-  mimeTypes: ['application/json'],
+  mimeTypes: [MIME.json],
   parse(content: string): ParsedImport {
     let skipped = 0;
     const generateId = createImportIdGenerator();

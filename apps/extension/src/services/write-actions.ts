@@ -15,16 +15,10 @@ import type { BookmarkTreeNode } from '@/types';
 const refList = (what: string) =>
   z.array(z.string()).min(1).max(actionLimits.max_plan_operations).describe(what);
 
-const folderSpecInput = z
-  .string()
-  .min(1)
-  .describe('A folder: its ref (f:<id>) or its full path, such as "Bookmarks Bar/Work"');
+const folderSpecInput = z.string().min(1).describe(agentText('folder_spec_input.self'));
 
 const changeOutput = {
-  change: z
-    .string()
-    .optional()
-    .describe('The change id, for undoChange; absent when part of a plan'),
+  change: z.string().optional().describe(agentText('change_output.change')),
 };
 
 /** Runs `write` as its own undo entry, or as part of the plan whose writer the context holds. */
@@ -98,13 +92,8 @@ async function folderNamed(writer: BookmarkWriter, parentId: string, title: stri
 
 const moveInput = z.object({
   refs: refList('Bookmark refs (b:<id>) or folder refs (f:<id>) to move'),
-  to: folderSpecInput.describe('The folder to move them into'),
-  newFolder: z
-    .string()
-    .trim()
-    .min(1)
-    .optional()
-    .describe('Put them in a folder with this name inside `to`, created when missing'),
+  to: folderSpecInput.describe(agentText('move_input.to')),
+  newFolder: z.string().trim().min(1).optional().describe(agentText('move_input.new_folder')),
 });
 
 const moveBookmarks = defineAction({
@@ -165,7 +154,7 @@ const renameBookmark = defineAction({
   labelKey: 'actionName_renameBookmark',
   targets: ['bookmark', 'folder'],
   input: z.object({
-    ref: z.string().describe('A bookmark ref (b:<id>) or folder ref (f:<id>)'),
+    ref: z.string().describe(agentText('rename_bookmark.ref')),
     title: z.string().trim().min(1).max(INPUT_LIMITS.chars.bookmark_title),
   }),
   output: z.object({ ref: z.string(), title: z.string(), ...changeOutput }),
@@ -237,7 +226,7 @@ const createFolder = defineAction({
   labelKey: 'actionName_createFolder',
   targets: ['folder'],
   input: z.object({
-    parent: folderSpecInput.describe('The folder to create it in'),
+    parent: folderSpecInput.describe(agentText('create_folder.parent')),
     title: z.string().trim().min(1).max(INPUT_LIMITS.chars.bookmark_title),
   }),
   output: z.object({ ref: z.string(), path: z.string(), ...changeOutput }),
@@ -283,26 +272,23 @@ const saveBookmark = defineAction({
   labelKey: 'actionName_saveBookmark',
   targets: ['url', 'page'],
   agent: {
-    description:
-      'Save a web page as a bookmark in a folder. If the folder already has a bookmark of that ' +
-      'URL, nothing is saved and that bookmark is returned. Use newFolder to save into a new ' +
-      'folder inside the given one. The user may be asked to approve it.',
+    description: agentText('save_bookmark.agent_description'),
   },
   input: z.object({
-    url: z.string().describe('The page URL, http or https'),
+    url: z.string().describe(agentText('save_bookmark.url')),
     title: z
       .string()
       .trim()
       .max(INPUT_LIMITS.chars.bookmark_title)
       .optional()
-      .describe('Defaults to the URL'),
+      .describe(agentText('save_bookmark.title')),
     folder: folderSpecInput,
-    newFolder: z.string().trim().min(1).optional().describe('A folder to create inside `folder`'),
+    newFolder: z.string().trim().min(1).optional().describe(agentText('save_bookmark.new_folder')),
   }),
   output: z.object({
     ref: z.string(),
     folder: z.string(),
-    created: z.boolean().describe('False when the folder already had this URL'),
+    created: z.boolean().describe(agentText('save_bookmark.created')),
     ...changeOutput,
   }),
   describe: (input) => t('askAI_toolSave', input.title || input.url || ''),
@@ -362,14 +348,12 @@ const undoChange = defineAction({
   labelKey: 'actionName_undoChange',
   targets: ['library'],
   agent: {
-    description:
-      'Undo a change made by saveBookmark or applyChanges, by its change id. Items changed ' +
-      'since are left as they are. The user may be asked to approve it.',
+    description: agentText('undo_change.agent_description'),
   },
-  input: z.object({ change: z.string().min(1).describe('The change id a write returned') }),
+  input: z.object({ change: z.string().min(1).describe(agentText('undo_change.change')) }),
   output: z.object({
     undone: z.number().int(),
-    skipped: z.number().int().describe('Parts left alone because they changed since'),
+    skipped: z.number().int().describe(agentText('undo_change.skipped')),
   }),
   describe: () => t('askAI_toolUndo'),
   async precheck(input) {

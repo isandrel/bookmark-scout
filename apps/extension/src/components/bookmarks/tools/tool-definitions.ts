@@ -169,7 +169,7 @@ const AI_CONTEXT_PACK_FILES = {
     name: `bookmark-context.${markdownFormat.extension}`,
     mimeType: markdownFormat.mimeType,
   },
-  xml: { name: 'bookmark-context.xml', mimeType: 'application/xml' },
+  xml: { name: 'bookmark-context.xml', mimeType: MIME.xml },
 } as const satisfies Record<AIContextFormat, { name: string; mimeType: string }>;
 
 type ChangeCounts = { applied: number; skipped: number; failed: number };

@@ -78,12 +78,12 @@ export function hostnameMatchesDomain(hostname: string, domain: string): boolean
 
 const SCRIPT_URL_SCHEMES = new Set(['javascript', 'vbscript']);
 // data: documents a browser renders as a page, where embedded script can run.
-const ACTIVE_DATA_MIME_TYPES = new Set([
-  'text/html',
-  'application/xhtml+xml',
-  'image/svg+xml',
-  'text/xml',
-  'application/xml',
+const ACTIVE_DATA_MIME_TYPES: ReadonlySet<string> = new Set([
+  MIME.html,
+  MIME.xhtml,
+  MIME.svg,
+  MIME.textXml,
+  MIME.xml,
 ]);
 
 /** The highest code point the URL parser strips from a URL's start: C0 controls and space. */
