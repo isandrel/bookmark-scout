@@ -28,8 +28,8 @@ const ITEM_TYPES: Record<ItemTypeEnum, { labelKey: MessageKey; icon: ItemType['i
 export function getLocalizedTypeOptions(): ItemType[] {
   return (
     Object.values(ItemTypeEnum)
-      // Only Firefox has separators.
-      .filter((type) => type !== ItemTypeEnum.Separator || browserHasSeparators())
+      // Only browsers with separators (Firefox) offer the kind.
+      .filter((type) => type !== ItemTypeEnum.Separator || browserProfile().separators)
       .map((type) => ({
         value: type,
         label: t(ITEM_TYPES[type].labelKey),

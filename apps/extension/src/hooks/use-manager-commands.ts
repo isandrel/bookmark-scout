@@ -43,8 +43,10 @@ async function reportClipboard(mode: 'cut' | 'copy', items: Bookmark[]) {
 export function useManagerCommands(options: ManagerCommandOptions) {
   const latest = useRef(options);
   latest.current = options;
-  // Firefox opens private windows only when the user allowed the extension in them.
-  const [canOpenPrivate, setCanOpenPrivate] = useState(import.meta.env.BROWSER !== 'firefox');
+  // Some browsers (Firefox) open private windows only when the user allowed the extension in them.
+  const [canOpenPrivate, setCanOpenPrivate] = useState(
+    !browserProfile().privateWindowsNeedPermission,
+  );
   useEffect(() => {
     void canOpenPrivateWindows().then(setCanOpenPrivate);
   }, []);

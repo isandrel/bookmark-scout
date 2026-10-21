@@ -177,7 +177,7 @@ export const BOOKMARK_SHORTCUT_TAKEOVER = {
 
 /** Keys each browser keeps for itself although an extension may assign them. */
 export const BROWSER_KEPT_SHORTCUTS: Readonly<
-  Partial<Record<PermissionBrowser, readonly string[]>>
+  Partial<Record<SupportedBrowser, readonly string[]>>
 > = Object.fromEntries(
   Object.entries(BROWSER_KEPT_KEY_NAMES).map(([browser, names]) => [
     browser,

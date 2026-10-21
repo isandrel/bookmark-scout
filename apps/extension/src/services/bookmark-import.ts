@@ -3,7 +3,8 @@
  * Extensible import with strategy pattern for multiple formats.
  */
 
-import { browserHasSeparators, isSeparatorNode } from '@/lib/bookmark-separators';
+import { isSeparatorNode } from '@/lib/bookmark-separators';
+import { browserProfile } from '@/lib/browser-profiles';
 import type { BookmarkTreeNode } from '@/types';
 
 // ============================================================================
@@ -491,7 +492,7 @@ export function planImport(
     return undefined;
   };
 
-  const separators = browserHasSeparators();
+  const separators = browserProfile().separators;
   const planNode = (node: BookmarkTreeNode): ImportPlanNode => {
     if (isSeparatorNode(node)) {
       if (separators) counts.separatorsToCreate += 1;

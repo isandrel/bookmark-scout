@@ -846,7 +846,7 @@ export async function openBookmarkUrls(
  * reveals; Firefox needs the extension to be allowed in private windows.
  */
 export async function canOpenPrivateWindows(): Promise<boolean> {
-  if (import.meta.env.BROWSER !== 'firefox') return true;
+  if (!browserProfile().privateWindowsNeedPermission) return true;
   return browser.extension.isAllowedIncognitoAccess().catch(() => false);
 }
 

@@ -24,7 +24,6 @@ const managerUrlConfig = readConfig(
   'ui/manager-url',
   z.strictObject({
     search_history_dwell_ms: z.number().int().nonnegative(),
-    folder_link_base: z.record(z.string(), z.string().regex(/^[a-z][a-z0-9+.-]*:\/\/\S+\/$/)),
   }),
 );
 
@@ -122,10 +121,10 @@ export function resolveManagerFolderAlias(
  */
 export function getManagerFolderLink(
   folderId: string | null,
-  browser: string,
+  browser: SupportedBrowser,
   extensionPageUrl: string,
 ): string {
-  const base = managerUrlConfig.folder_link_base[browser] ?? extensionPageUrl;
+  const base = browserProfile(browser).bookmarkManagerUrl ?? extensionPageUrl;
   return folderId ? `${base}?${new URLSearchParams({ [MANAGER_FOLDER_PARAM]: folderId })}` : base;
 }
 

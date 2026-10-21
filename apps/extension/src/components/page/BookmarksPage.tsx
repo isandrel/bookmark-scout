@@ -33,7 +33,7 @@ const isFolderRow = (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folde
 async function copyManagerFolderLink(folderId: string | null) {
   const link = getManagerFolderLink(
     folderId,
-    import.meta.env.BROWSER,
+    currentBrowser(),
     browser.runtime.getURL(BOOKMARK_MANAGER_PATH),
   );
   try {

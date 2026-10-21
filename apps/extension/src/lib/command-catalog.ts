@@ -24,7 +24,7 @@
  * (`BROWSER_KEPT_SHORTCUTS`).
  */
 
-import type { PermissionBrowser } from './permission-catalog';
+import type { SupportedBrowser } from './supported-browsers';
 
 export type QuickSaveMode = 'local' | 'ai';
 
@@ -55,7 +55,7 @@ export const BOOKMARK_SHORTCUT_TAKEOVER_RULE = {
 } as const satisfies {
   key: BrowserKeyName;
   command: ExtensionCommand;
-  browsers: readonly PermissionBrowser[];
+  browsers: readonly SupportedBrowser[];
 };
 
 /**
@@ -64,7 +64,7 @@ export const BOOKMARK_SHORTCUT_TAKEOVER_RULE = {
  * tabs.
  */
 export const BROWSER_KEPT_KEY_NAMES: Readonly<
-  Partial<Record<PermissionBrowser, readonly BrowserKeyName[]>>
+  Partial<Record<SupportedBrowser, readonly BrowserKeyName[]>>
 > = {
   firefox: ['bookmarkPage', 'bookmarkAllTabs'],
 };

@@ -1431,7 +1431,7 @@ export function getSettingPermission(key: keyof Settings): PermissionFeature | u
 function isSettingSupported(key: keyof Settings): boolean {
   const feature = getSettingPermission(key);
   return (
-    !feature || isPermissionFeatureSupported(feature, import.meta.env.BROWSER as PermissionBrowser)
+    !feature || isPermissionFeatureSupported(feature, currentBrowser())
   );
 }
 

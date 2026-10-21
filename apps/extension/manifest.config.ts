@@ -5,7 +5,7 @@ import { getManifestCommands } from './src/lib/command-catalog';
 import {
   getFirefoxDataCollectionPermissions,
   getManifestApiPermissions,
-  type PermissionBrowser,
+  type SupportedBrowser,
   WEB_ORIGINS,
 } from './src/lib/permission-catalog';
 
@@ -44,7 +44,7 @@ export const FIREFOX_DATA_COLLECTION_PERMISSIONS =
  * one, and declaring it for `<all_urls>` would only let web pages load icons through the extension.
  */
 export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserManifest {
-  const { permissions, optional } = getManifestApiPermissions(browser as PermissionBrowser);
+  const { permissions, optional } = getManifestApiPermissions(browser as SupportedBrowser);
   return {
     name: '__MSG_extName__',
     description: '__MSG_extDescription__',

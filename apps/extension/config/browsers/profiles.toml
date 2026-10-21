@@ -1,0 +1,45 @@
+# What differs between the browser builds, one table per browser in `[browsers] supported` of
+# config/project.toml. Read by src/lib/browser-profiles.ts; code asks the profile for a
+# capability instead of comparing browser names, so supporting another browser is a new table.
+# These are facts about each browser, not user settings.
+#
+# separators                        Bookmark folders can hold separators. Firefox reports them with
+#                                   `type: 'separator'` and the URL `data:`; elsewhere an import
+#                                   leaves them out and says so.
+# private_window                    What the browser calls a private window, which names the menu
+#                                   commands: "incognito", "in_private", or "private".
+# private_windows_need_permission   Opening a private window needs the user to allow the extension
+#                                   in them. Chrome and Edge let any extension open one unless a
+#                                   policy turns them off, which only the attempt reveals.
+# data_collection_consent           Optional permission requests also ask for the browser's data
+#                                   collection consent.
+# bookmark_manager_url              The browser's own bookmark manager, which the extension's
+#                                   manager page replaces there; "Copy link to this folder" copies
+#                                   it with `?id=<folder>`. Empty where the page cannot replace it,
+#                                   which copies the extension page's own address instead.
+# shortcut_settings_url             The page where the user sets extension shortcuts. Empty where
+#                                   the extension opens the browser's own editor through its API.
+
+[chrome]
+separators = false
+private_window = "incognito"
+private_windows_need_permission = false
+data_collection_consent = false
+bookmark_manager_url = "chrome://bookmarks/"
+shortcut_settings_url = "chrome://extensions/shortcuts"
+
+[firefox]
+separators = true
+private_window = "private"
+private_windows_need_permission = true
+data_collection_consent = true
+bookmark_manager_url = ""
+shortcut_settings_url = ""
+
+[edge]
+separators = false
+private_window = "in_private"
+private_windows_need_permission = false
+data_collection_consent = false
+bookmark_manager_url = "edge://favorites/"
+shortcut_settings_url = "edge://extensions/shortcuts"
