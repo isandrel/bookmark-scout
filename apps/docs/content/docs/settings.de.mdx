@@ -35,14 +35,14 @@ Darunter sagt **KI ist optional**, dass Bookmark Scout auch ohne KI funktioniert
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Passende Ordner** | An | Zeigt bei der Suche über den Ergebnissen die Ordner mit passendem Namen, um die aktuelle Seite dort zu speichern |
-| **Maximal passende Ordner** | 5 | Wie viele passende Ordner angezeigt werden |
+| **Maximal passende Ordner** | <SettingDefault path="search.folder_matches.max" /> | Wie viele passende Ordner angezeigt werden |
 | **Tippfehler erlauben** | An | Ein Suchwort mit 4 oder mehr Buchstaben passt auch mit einem Tippfehler zu einem Ordnernamen |
 
 ### Suche [#searching]
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Suchverzögerung** | 300 ms | Wie lange das Pop-up nach Ihrer letzten Eingabe wartet, bevor es sucht |
+| **Suchverzögerung** | <SettingDefault path="search.search.debounce_ms" /> ms | Wie lange das Pop-up nach Ihrer letzten Eingabe wartet, bevor es sucht |
 | **Max. Suchergebnisse** | 20 Ergebnisse | Höchstzahl angezeigter Treffer; ein Hinweis erscheint, wenn es mehr gibt |
 | **Ordner bei Suche ausklappen** | An | Die Ordner öffnen, die Treffer enthalten |
 | **Suchverlauf** | An | Letzte Suchen auf diesem Gerät speichern |
@@ -55,7 +55,7 @@ Siehe [Suche und gespeicherte Suchen](/guides/search).
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Letzte Ordner** | An | Zuletzt verwendete Ordner im Pop-up und im Rechtsklickmenü anzeigen |
-| **Max. letzte Ordner** | 5 | Wie viele zuletzt verwendete Ordner angezeigt werden |
+| **Max. letzte Ordner** | <SettingDefault path="search.saving.recent_folders_max" /> | Wie viele zuletzt verwendete Ordner angezeigt werden |
 | **Standardname für Ordner** | Neuer Ordner | Der Name, mit dem ein neuer Ordner beginnt |
 
 Siehe [Speichern und ordnen](/guides/save-and-organize).
@@ -101,15 +101,15 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Pop-up-Breite** | 400 px | Browser erlauben höchstens 800 px |
-| **Pop-up-Höhe** | 500 px | Browser erlauben höchstens 600 px |
-| **Kürzungslänge** | 50 Zeichen | Kürzt den Seitentitel in der Kopfzeile der KI-Vorschläge im Pop-up |
+| **Pop-up-Breite** | <SettingDefault path="appearance.popup.width" /> px | Browser erlauben höchstens 800 px |
+| **Pop-up-Höhe** | <SettingDefault path="appearance.popup.height" /> px | Browser erlauben höchstens 600 px |
+| **Kürzungslänge** | <SettingDefault path="appearance.popup.truncate_length" /> Zeichen | Kürzt den Seitentitel in der Kopfzeile der KI-Vorschläge im Pop-up |
 
 ### Benachrichtigungen [#notifications]
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Anzeigedauer von Benachrichtigungen** | 4 s | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
+| **Anzeigedauer von Benachrichtigungen** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
 | **Verzögerung für Tooltips** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Wie lange der Zeiger auf einem Bedienelement ruht, bevor die Erklärung erscheint |
 
 ## Verhalten [#behavior]
@@ -161,7 +161,7 @@ Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigen
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Beim Öffnen automatisch vorschlagen** | Aus | Bei jedem Öffnen des Pop-ups Ordnervorschläge anfordern |
-| **Max. Vorschläge** | 5 | Höchstzahl anzufordernder Ordnervorschläge |
+| **Max. Vorschläge** | <SettingDefault path="ai.suggestions.max_recommendations" /> | Höchstzahl anzufordernder Ordnervorschläge |
 
 ### Seiteninhalt lesen [#read-page-content]
 
@@ -202,10 +202,10 @@ Jedes Tool hat einen Schalter zum Aktivieren (standardmäßig an), etwa **Automa
 
 | Tool | Einstellungen und Standardwerte |
 | --- | --- |
-| **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** 200; **Max. Tiefe** 8; **Auszugslänge** 240 |
-| **Automatische Tags** | **Min. Tags** 2; **Max. Tags** 5; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an; **Vorhandene Tags senden** an |
-| **Inhaltszusammenfassung** | **Länge der Zusammenfassung** 160; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
-| **KI-Ordnerneuordnung** | **Mindestkonfidenz** 55 % (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
+| **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** <SettingDefault path="ai_tools.context_packer.max_items" />; **Max. Tiefe** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Auszugslänge** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **Automatische Tags** | **Min. Tags** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Max. Tags** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an; **Vorhandene Tags senden** an |
+| **Inhaltszusammenfassung** | **Länge der Zusammenfassung** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
+| **KI-Ordnerneuordnung** | **Mindestkonfidenz** 55 % (Verschiebungen darunter werden verworfen); **Batchgröße** <SettingDefault path="ai_tools.reorganization.batch_size" /> Lesezeichen pro Anfrage |
 
 Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Ordner.
 
@@ -220,9 +220,9 @@ Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Or
 
 | Tool | Einstellungen und Standardwerte |
 | --- | --- |
-| **Duplikatbereinigung** | **Vergleichsmethode** Normalisierte URL; **www normalisieren**, **Protokoll ignorieren** und **Abschließenden Schrägstrich ignorieren** an; **Behalten-Regel** Ältestes; **Max. Gruppen** 500. Prüft immer alle Lesezeichen |
+| **Duplikatbereinigung** | **Vergleichsmethode** Normalisierte URL; **www normalisieren**, **Protokoll ignorieren** und **Abschließenden Schrägstrich ignorieren** an; **Behalten-Regel** Ältestes; **Max. Gruppen** <SettingDefault path="maintenance.duplicates.max_groups" />. Prüft immer alle Lesezeichen |
 | **URL-Bereinigung** | **Fragmente entfernen** aus; **Abfrageparameter sortieren** und **Doppelte Abfrageparameter entfernen** an; Listen **Beizubehaltende Parameter** und **Zu entfernende Parameter** |
-| **Defekte Links prüfen** | **Zeitlimit für Anfragen** 8 s; **Parallele Anfragen** 4; **Wiederholungen** 1; **Weiterleitungen folgen** an; **Erfolgs-Statuscodes** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Defekte Links prüfen** | **Zeitlimit für Anfragen** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> s; **Parallele Anfragen** <SettingDefault path="maintenance.dead_links.concurrency" />; **Wiederholungen** <SettingDefault path="maintenance.dead_links.retry_count" />; **Weiterleitungen folgen** an; **Erfolgs-Statuscodes** 200, 201, 202, 204, 301, 302, 307, 308 |
 | **Hintergrundaufgaben** | **Im Hintergrund übernehmen ab** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />: Geprüfte Änderungen an mehr Lesezeichen werden im Hintergrund in Teilen übernommen und laufen weiter, wenn Sie die Seite schließen; jeder Teil ist eine Änderung im [Verlauf](/guides/save-and-organize) und wird dort rückgängig gemacht |
 
 Die Tools beginnen mit **Alle Lesezeichen**, damit eine Prüfung aus dem Ordner, mit dem sich die Lesezeichenverwaltung öffnet, die anderen nicht übersieht. Ändern Sie den **Standardbereich** eines Tools, wenn es stattdessen mit dem geöffneten Ordner beginnen soll. **KI-Ordnerneuordnung** beginnt mit dem geöffneten Ordner, weil ein Plan für alle Lesezeichen sie alle an Ihren KI-Anbieter sendet. Auf der obersten Ebene der Verwaltung, wo kein Ordner geöffnet ist, beginnt jedes Tool mit **Alle Lesezeichen**.
@@ -238,8 +238,8 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | **Metadatenabruf aktivieren** | An | **Metadatenabruf** in der Tools-Leiste anzeigen |
 | **Titel überschreiben** | Aus | Auch für Lesezeichen, die bereits einen Titel haben, neue Titel vorschlagen |
 | **Beschreibungen abrufen** | An | Seitenbeschreibungen bei der Prüfung anzeigen. Sie werden nie gespeichert |
-| **Zeitlimit für Anfragen** | 8 s | Pro Seite. Wird auch von **Website-Symbole aktualisieren** verwendet |
-| **Parallele Anfragen** | 4 | Gleichzeitig angefragte Seiten. Wird auch von **Website-Symbole aktualisieren** verwendet |
+| **Zeitlimit für Anfragen** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> s | Pro Seite. Wird auch von **Website-Symbole aktualisieren** verwendet |
+| **Parallele Anfragen** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | Gleichzeitig angefragte Seiten. Wird auch von **Website-Symbole aktualisieren** verwendet |
 
 ### Website-Symbole aktualisieren [#refresh-site-icons]
 
@@ -247,8 +247,8 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | --- | --- | --- |
 | **„Website-Symbole aktualisieren“ aktivieren** | An | **Website-Symbole aktualisieren** in der Tools-Leiste anzeigen |
 | **Standardbereich** | Alle Lesezeichen | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
-| **Bevorzugte Symbolgröße** | 32px | Wenn eine Seite mehrere Symbole angibt, wird das dieser Größe am nächsten liegende heruntergeladen |
-| **Max. Dateigröße pro Symbol** | 64 KB | Größere Symboldateien werden weder heruntergeladen noch gespeichert |
+| **Bevorzugte Symbolgröße** | <SettingDefault path="metadata_content.site_icons.preferred_size" />px | Wenn eine Seite mehrere Symbole angibt, wird das dieser Größe am nächsten liegende heruntergeladen |
+| **Max. Dateigröße pro Symbol** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | Größere Symboldateien werden weder heruntergeladen noch gespeichert |
 | **Speicherbegrenzung für Symbole** | 4 MB | Gesamtgröße der gespeicherten Symbole auf diesem Gerät; die ältesten werden zuerst entfernt |
 
 ## Sicherheit [#security]
@@ -267,7 +267,7 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | --- | --- | --- |
 | **Statistik aktivieren** | An | **Lesezeichen-Statistik** in der Tools-Leiste anzeigen |
 | **Domains einschließen**, **Ordner einschließen**, **Duplikate einschließen**, **Protokolle einschließen**, **Aufschlüsselung nach Tiefe einschließen** | An | Abschnitte des Berichts; ein deaktivierter Abschnitt wird ausgeblendet |
-| **Anzahl der Top-Einträge** | 10 | Länge der Listen der häufigsten Domains und Ordner |
+| **Anzahl der Top-Einträge** | <SettingDefault path="analytics.statistics.top_n" /> | Länge der Listen der häufigsten Domains und Ordner |
 
 ## Import & Export [#data]
 
@@ -276,7 +276,7 @@ Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben
 | **Export-Tool anzeigen** und **Import-Tool anzeigen** | An | Diese Tools in der Tools-Leiste anzeigen |
 | **Standard-Exportformat** | HTML | Format, das beim Öffnen des Export-Tools ausgewählt ist |
 | **Dateinamenpräfix** | `bookmarks_` | Anfang jedes Exportdateinamens |
-| **Max. Dateinamenlänge** | 50 | Längster erzeugter Dateiname |
+| **Max. Dateinamenlänge** | <SettingDefault path="data.export.filename_max_length" /> | Längster erzeugter Dateiname |
 | **JSON-Einrückung**, **HTML-Einrückung**, **Markdown-Einrückung** | 2, 4, 2 | Leerzeichen pro Ebene im jeweiligen Format |
 | **Datum einschließen** und **URLs einschließen** | An | In Exporte aufnehmen |
 
