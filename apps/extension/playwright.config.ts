@@ -29,9 +29,9 @@ function workersFromEnv(value: string | undefined): number | string {
 export default defineConfig<ExtensionProjectOptions>({
   fullyParallel: true,
   workers: workersFromEnv(process.env.PW_WORKERS),
-  // One retry absorbs a cold-start timeout on a CI runner; a test that needs it shows as flaky in
-  // the report. Locally a failure fails at once.
-  retries: isCI ? 1 : 0,
+  // No retries, on CI either: a test that fails once fails the run, so a flaky test is found and
+  // fixed rather than passed on its second try. The Weekly reports workflow ranks recent failures.
+  retries: 0,
   // Removes profiles and build copies a fixture left behind; fails a clean run that left any.
   // Then, with BS_E2E_COVERAGE=1, merges the pages' coverage into coverage/e2e.
   globalTeardown: ['./tests/e2e/temp-dirs.ts', './tests/e2e/coverage.ts'],
@@ -39,8 +39,7 @@ export default defineConfig<ExtensionProjectOptions>({
   expect: {
     timeout: 5_000,
   },
-  // On CI a test that passed only on a retry is also a warning and a line in the job summary.
-  reporter: isCI ? [['line'], ['./tests/e2e/flaky-reporter.ts']] : 'line',
+  reporter: 'line',
   outputDir: './test-results/playwright',
   use: {
     screenshot: 'only-on-failure',

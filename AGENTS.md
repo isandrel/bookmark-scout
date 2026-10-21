@@ -150,7 +150,7 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 - extension Firefox build: `nx run extension:build:firefox`
 - extension Edge build: `nx run extension:build:edge`
 - extension unit tests: `nx run extension:test:unit`
-- extension end-to-end coverage: `nx run extension:test:e2e:coverage` (the Chromium suite on a build with inline source maps in `apps/extension/dist-coverage`, V8 coverage of the pages and the background service worker through monocart; HTML in `apps/extension/coverage/e2e`, table with `bun scripts/coverage-summary.ts e2e`; on demand, not a check)
+- extension end-to-end coverage: `nx run extension:test:e2e:coverage` (the Chromium suite on a build with inline source maps in `apps/extension/dist-coverage`, V8 coverage of the pages and the background service worker through monocart; HTML in `apps/extension/coverage/e2e`, table with `bun scripts/coverage-summary.ts e2e`; on demand and weekly in the **Weekly reports** workflow, not a check)
 - extension unit tests with coverage: `nx run extension:test:coverage` (fails under the floors in `apps/extension/build/unit-coverage.toml`; CI runs this and posts the table in the job summary, with the HTML report as the `unit-coverage` artifact)
 - extension end-to-end tests: `nx run extension:test:e2e`
 - extension Edge end-to-end tests: `nx run extension:test:e2e:edge`
