@@ -243,6 +243,9 @@ export default function BookmarksPage() {
     [facetOptions.parentId],
   );
   const openHistory = useAuditHistoryView((view) => view.openHistory);
+  const [tasksOpen, setTasksOpen] = useState(
+    () => window.location.hash === `#${MANAGER_TASKS_HASH}`,
+  );
 
   const savedSearchContext = useMemo<DataTableSavedSearchContext>(
     () => ({
@@ -400,6 +403,7 @@ export default function BookmarksPage() {
               </Button>
             </div>
             <div className="flex shrink-0 items-center gap-1" data-testid="manager-header-actions">
+              <TasksButton onOpen={() => setTasksOpen(true)} />
               <Button
                 variant="ghost"
                 size="icon"
@@ -521,6 +525,7 @@ export default function BookmarksPage() {
           )}
         </div>
         <HistoryDialog folderLabels={folderLabels} />
+        <TasksDialog open={tasksOpen} onOpenChange={setTasksOpen} />
       </main>
 
       {/* Right Sidebar - Tools */}

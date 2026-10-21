@@ -1,5 +1,6 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
+import type { ConsoleMessage } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
@@ -119,7 +120,11 @@ test.describe('with website access granted', () => {
 
     await openTools(page, extensionId, folder.folderId);
     const consoleMessages: string[] = [];
-    page.on('console', (message) => consoleMessages.push(`${message.type()}: ${message.text()}`));
+    const record = (message: ConsoleMessage) =>
+      consoleMessages.push(`${message.type()}: ${message.text()}`);
+    // The check runs as a background job in the service worker; the page only shows it.
+    page.on('console', record);
+    extensionWorker.on('console', record);
     await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
     const results = page.getByRole('dialog', { name: 'Check Dead Links' });
     const row = (title: string) =>
@@ -138,9 +143,8 @@ test.describe('with website access granted', () => {
     await expect(row('Moved')).not.toContainText('HTTP 0');
     await expect(row('Bookmarklet')).toContainText('Not a web link; skipped');
     await expect(results).not.toContainText('Failed to fetch');
-    // Chrome itself logs one "Failed to load resource" line per failed request; pages cannot
-    // suppress it. The scan must add nothing else, and never bookmark data of its own.
-    expect(consoleMessages.length).toBeGreaterThan(0);
+    // Chrome itself may log one "Failed to load resource" line per failed request, which code
+    // cannot suppress. The scan must add nothing else, and never bookmark data of its own.
     expect(
       consoleMessages.filter((message) => !message.startsWith('error: Failed to load resource: ')),
     ).toEqual([]);

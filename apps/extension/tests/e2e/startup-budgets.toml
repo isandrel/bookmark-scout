@@ -9,12 +9,14 @@
 # 305 for access for local AI agents (352 on 2026-10-11): the action registry and JSON Schema
 # conversion answer the bridge's calls in the service worker, which cannot load code later.
 # Lowered from 395 on 2026-10-15 after replacing pino with a small console logger (338 before,
-# 324 after).
-"background.js" = 365
+# 324 after). Raised from 365 on 2026-10-21 for background jobs, whose store and coordinator must
+# be loaded when a command or the watchdog alarm wakes the worker (377).
+"background.js" = 390
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
-# validate at startup (952 on 2026-10-21).
-"popup.html" = 965
-"sidepanel.html" = 965
+# validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
+# tasks, which reads the job store (970 on 2026-10-21).
+"popup.html" = 985
+"sidepanel.html" = 985
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
@@ -27,8 +29,9 @@
 "options.html" = 1170
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
-# Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403).
-"bookmarks.html" = 1410
+# Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
+# then from 1410 for the job status and Background tasks dialog the header and Tools load (1,416).
+"bookmarks.html" = 1425
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

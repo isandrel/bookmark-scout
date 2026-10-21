@@ -99,6 +99,11 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
   /** Network tools ask for optional website access before the first scan. */
   needsHostAccess?: boolean;
   /**
+   * The scan runs as a background job of this kind (`services/job-coordinator.ts`): it keeps
+   * going when the page closes, with pause, resume, and cancel; `scan` is then unused here.
+   */
+  job?: JobKind;
+  /**
    * The AI feature the tool is (`AI_FEATURES`), which picks its AI service. Disabled, with a
    * notice, while AI features are off or that service is not set up.
    */
@@ -531,6 +536,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     descriptionKey: 'tools_checkDeadLinksDesc',
     actionKey: () => 'action_scan',
     needsHostAccess: true,
+    job: 'deadLinks',
     // Repairs are reviewed and applied in DeadLinkRepairDialog.
     scan: async ({ nodes, options }) =>
       scanDeadLinks(nodes, {

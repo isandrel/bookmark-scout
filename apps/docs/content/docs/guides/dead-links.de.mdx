@@ -25,6 +25,16 @@ Warten Sie auf die Ergebnisse. Eine Zusammenfassung oben zählt die Links, die s
 
 Der Zugriff auf Websites ist optional und wird bei der Installation nicht gewährt. Anfragen werden ohne Cookies gesendet, und Sie können den Zugriff in den Erweiterungseinstellungen des Browsers widerrufen. Ein Link, der auf eine Website außerhalb der Prüfung weiterleitet, kann nicht verfolgt werden und zeigt daher **Manuell prüfen** statt **Sicher defekt**. Siehe [Berechtigungen](/permissions).
 
+## Im Hintergrund laufen lassen [#let-it-run-in-the-background]
+
+Die Prüfung läuft im Hintergrund. Sie können die Verwaltung, das Popup oder die Seitenleiste schließen, und sie läuft weiter, solange der Browser geöffnet ist; beendet der Browser den Hintergrund der Erweiterung oder startet er neu, macht sie bei den bereits geprüften Links weiter. Während sie läuft, zeigen Popup und Seitenleiste ihren Fortschritt in einer Zeile, die **Hintergrundaufgaben** in der Verwaltung öffnet.
+
+- **Anhalten** stoppt neue Anfragen, und **Fortsetzen** prüft nur die noch nicht geprüften Links. Eine angehaltene Prüfung bleibt nach einem Neustart angehalten.
+- **Abbrechen** beendet die Prüfung und behält die bisherigen Ergebnisse. Es ändert keine Lesezeichen.
+- **Ergebnisse ansehen** öffnet die Ergebnisse jederzeit, und **Löschen** entfernt eine abgeschlossene Prüfung. Abgeschlossene Prüfungen werden nach einiger Zeit von selbst entfernt.
+
+Reparaturen geschehen nie im Hintergrund: Sie prüfen und übernehmen sie wie unten beschrieben.
+
 ## Die Ergebnisse lesen [#read-the-results]
 
 | Ergebnis | Bedeutung |

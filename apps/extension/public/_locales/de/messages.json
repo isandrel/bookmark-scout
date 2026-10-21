@@ -7266,5 +7266,101 @@
     "settings_tooltipDelayDesc": {
         "message": "Wie lange der Zeiger auf einem Bedienelement ruht, bevor die Erklärung erscheint",
         "description": "Setting description: tooltipDelay"
+    },
+    "error_jobStore": {
+        "message": "Hintergrundaufgaben konnten auf diesem Gerät nicht gespeichert werden.",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "Hintergrundaufgaben",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "Lange Werkzeuge laufen hier weiter, wenn Sie die Seite schließen, die sie gestartet hat.",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "Noch keine Hintergrundaufgaben.",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "Hintergrundaufgaben: $1 laufen",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "Wartet",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "Läuft",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "Wird angehalten …",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "Angehalten",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "Wird beendet …",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "Beendet",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "Fertig",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "Fertig, einige konnten nicht geprüft werden",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "Fehlgeschlagen",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$1 von $2",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "$1 geprüft, $2 übersprungen, $3 nicht prüfbar",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "Läuft weiter, solange der Browser geöffnet ist, und setzt nach einem Neustart fort.",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "Beendet. Die bisherigen Ergebnisse bleiben erhalten; nichts wurde geändert.",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "Ergebnisse ansehen",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "Anhalten",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "Fortsetzen",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "Die Hintergrundaufgabe konnte nicht geändert werden",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1: $2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "Hintergrundaufgaben: $1 laufen",
+        "description": "Background tasks: popupMany"
     }
 }

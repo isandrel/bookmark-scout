@@ -184,4 +184,10 @@ export const INDEXED_DATABASES = {
    * their item rows, kept for `config/bookmarks/audit.toml`'s retention.
    */
   bookmarkAudit: { name: 'bookmark-scout-audit', backup: 'exclude' },
+  /**
+   * Background jobs (`lib/job-store.ts`): long tools' progress and results, so they survive
+   * the page that started them and a browser restart; finished ones kept for
+   * `config/jobs/scheduler.toml`'s retention.
+   */
+  backgroundJobs: { name: 'bookmark-scout-jobs', backup: 'exclude' },
 } as const satisfies Record<string, { name: string; backup: BackupPolicy }>;

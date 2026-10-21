@@ -1,4 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createServer, type ServerResponse } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import { error, Key, until } from 'selenium-webdriver';
 import { STORAGE_ITEMS, storageAreaKey } from '../../src/lib/storage/registry';
@@ -807,4 +809,78 @@ test('statistics and privacy scanner run without website access', async ({ exten
   await clickToolButton(extension, 'Privacy Scanner', 'Scan');
   const privacy = await extension.findByText('[role="dialog"]', 'Privacy Link');
   await expect.poll(() => privacy.getText()).toContain('Sensitive query parameter: token');
+});
+
+test('Check Dead Links runs as a background job that goes on after its page closes (J01)', async ({
+  extension,
+}) => {
+  // A local server that holds each request until the test lets them all through.
+  const requests: string[] = [];
+  const waiting: ServerResponse[] = [];
+  let gateOpen = false;
+  const answer = (res: ServerResponse) => {
+    if (res.writableEnded || res.destroyed) return;
+    res.writeHead(200, { 'content-type': 'text/html' });
+    res.end('<title>Held</title>');
+  };
+  const server = createServer((req, res) => {
+    requests.push(`${req.method} ${req.url}`);
+    if (gateOpen) answer(res);
+    else waiting.push(res);
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  try {
+    const folder = await seedFolder(extension, 'E2E Firefox Job', [
+      { title: 'Job Link 1', url: `${origin}/1` },
+      { title: 'Job Link 2', url: `${origin}/2` },
+      { title: 'Job Link 3', url: `${origin}/3` },
+    ]);
+    await setSettings(extension, {
+      deadLinksConcurrency: 1,
+      deadLinksRetryCount: 0,
+      deadLinksFollowRedirects: false,
+      deadLinksDefaultScope: 'folder',
+    });
+    await openTools(extension, folder.folderId);
+    await clickToolButton(extension, 'Check Dead Links', 'Scan');
+    const dialog = await extension.findByText('[role="dialog"]', 'Allow access to websites?');
+    await dialog.findElement(By.xpath('.//button[normalize-space()="Allow access"]')).click();
+    await expect.poll(() => requests.length).toBe(1);
+
+    // The manager closes; the background page carries on with the job.
+    await extension.open('options.html');
+    gateOpen = true;
+    for (const res of waiting) answer(res);
+    const storedJob = () =>
+      extension.call(async () => {
+        const db = await new Promise<IDBDatabase>((resolve, reject) => {
+          const request = indexedDB.open('bookmark-scout-jobs');
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+        const jobs = await new Promise<{ state: string; done: { succeeded: number } }[]>(
+          (resolve, reject) => {
+            const request = db.transaction('jobs').objectStore('jobs').getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+          },
+        );
+        db.close();
+        return jobs.map((job) => ({ state: job.state, succeeded: job.done.succeeded }));
+      }, null);
+    await expect
+      .poll(storedJob, { timeout: 15_000 })
+      .toEqual([{ state: 'succeeded', succeeded: 3 }]);
+    expect(requests.sort()).toEqual(['HEAD /1', 'HEAD /2', 'HEAD /3']);
+
+    // Any page shows the finished job and its results.
+    await openTools(extension, folder.folderId);
+    await clickToolButton(extension, 'Check Dead Links', 'Review results');
+    const results = await extension.findByText('[role="dialog"]', 'Job Link 3');
+    expect(await results.getText()).toContain('Reachable');
+  } finally {
+    server.close();
+    server.closeAllConnections();
+  }
 });

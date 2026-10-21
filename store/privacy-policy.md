@@ -2,7 +2,7 @@
 
 > **Published** at <https://bookmark-scout.com/privacy/> (live once the website is next deployed from `main`), with a translation for every other website language at `https://bookmark-scout.com/<locale>/privacy/` (English has no language prefix; the old `/en/privacy/` redirects to it). The website copy lives in `apps/website/messages/privacy/<locale>.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, every message file, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
 
-**Effective date:** October 18, 2026
+**Effective date:** October 21, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.3.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`
 
 This policy is also available in other languages. If a translation differs from the English version, the English version applies.
@@ -47,6 +47,7 @@ Everything is kept in your browser's extension storage:
 - **Your last quick save** (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.
 - **The bookmark manager's undo history** (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes.
 - **The bookmark change history** (what changed in your bookmarks and when, whether Bookmark Scout made the change or it was seen from elsewhere: titles, URLs, folders, and the outcome of each change), and a copy of every bookmark's title, URL, and folder as last seen (to tell what changed outside Bookmark Scout), are kept on this device only, in the browser's IndexedDB, for a limited time. They are never synced and never in the backup file. Recording changes made elsewhere can be turned off in Settings. Also a copy of each item Bookmark Scout deletes, with what was inside it and its tags and summary, so it can be restored from the History; removed with its change.
+- **Background tasks** (a tool such as Check Dead Links that keeps running after you close its page): the bookmarks it checks (titles, URLs, and folders) and each result are kept on this device only, in the browser's IndexedDB, so the task can go on after a restart and its results can be reviewed later. They are never synced and never in the backup file, and are removed after a limited time or when you delete the task under Background tasks.
 
 Uninstalling the extension removes the data it stored in this browser. Your bookmarks themselves stay in the browser.
 

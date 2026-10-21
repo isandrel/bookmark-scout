@@ -41,6 +41,9 @@ export default defineBackground(() => {
   registerAgentApprovals();
   registerAgentBridge();
 
+  // Long tools that keep running when their page closes; a command or the alarm wakes them.
+  registerJobs();
+
   // A background worker may be started by any event, not only install or startup.
   void initializeContextMenu().catch((error) => {
     console.error('[Background] Failed to initialize context menu:', error);

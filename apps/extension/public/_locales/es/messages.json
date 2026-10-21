@@ -7266,5 +7266,101 @@
     "settings_tooltipDelayDesc": {
         "message": "Cuánto tiempo descansa el puntero sobre un control antes de que aparezca su explicación",
         "description": "Setting description: tooltipDelay"
+    },
+    "error_jobStore": {
+        "message": "No se pudieron guardar las tareas en segundo plano en este dispositivo.",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "Tareas en segundo plano",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "Las herramientas largas siguen aquí aunque cierres la página que las inició.",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "Todavía no hay tareas en segundo plano.",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "Tareas en segundo plano: $1 en curso",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "En espera",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "En curso",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "Pausando…",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "En pausa",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "Deteniendo…",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "Detenida",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "Terminada",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "Terminada; algunos no se pudieron comprobar",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "Error",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$1 de $2",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "$1 comprobados, $2 omitidos, $3 sin comprobar",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "Sigue mientras el navegador esté abierto y continúa tras un reinicio.",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "Detenida. Se conservan los resultados hasta ahora; no se cambió nada.",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "Ver resultados",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "Pausar",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "Reanudar",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "No se pudo cambiar la tarea en segundo plano",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1: $2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "Tareas en segundo plano: $1 en curso",
+        "description": "Background tasks: popupMany"
     }
 }

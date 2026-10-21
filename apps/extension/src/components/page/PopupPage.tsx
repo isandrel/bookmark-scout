@@ -650,6 +650,7 @@ function PopupPage() {
         />
 
         <CurrentPageLine folders={folders} />
+        <ActiveJobsLine />
 
         {/* A quick save made on a page that could not show its notification. */}
         <QuickSaveResultPanel />

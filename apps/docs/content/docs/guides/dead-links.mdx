@@ -25,6 +25,16 @@ Wait for the results. A summary at the top counts the links that are confirmed d
 
 Website access is optional and is not granted at install. Requests are sent without cookies, and you can revoke the access in the browser's extension settings. A link that redirects to a site outside the scan cannot be followed, so it shows **Check manually** instead of **Confirmed dead**. See [Permissions](/permissions).
 
+## Let it run in the background
+
+The check runs in the background. You can close the manager, the popup, or the side panel, and it keeps going while the browser is open; if the browser stops the extension's background or restarts, it picks up again from the links already checked. While it runs, the popup and side panel show its progress in one line, which opens **Background tasks** in the manager.
+
+- **Pause** stops new requests, and **Resume** checks only the links not yet checked. A paused check stays paused after a restart.
+- **Cancel** stops the check and keeps the results so far. It changes no bookmarks.
+- **Review results** opens the results at any time, and **Delete** removes a finished check. Finished checks are removed on their own after a while.
+
+Repairs never happen in the background: you review and apply them as below.
+
 ## Read the results
 
 | Result | What it means |

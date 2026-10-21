@@ -35,6 +35,7 @@ description: Bookmark Scout 请求的每项浏览器权限、需要它的原因�
 | `scripting` | 全部 | 按下快速保存快捷键后，仅在该标签页中显示通知。它不会从网页读取任何内容 |
 | `sidePanel` | Chrome、Edge | 提供侧边栏视图。Firefox 则将同一页面声明为侧栏 |
 | `offscreen` | Chrome、Edge | 在隐藏的扩展程序页面中运行 AI 快速保存的请求，请求结束后浏览器会关闭该页面。Firefox 的后台页面会自行完成这项工作 |
+| `alarms` | 全部 | 按定时唤醒后台，使 **检查失效链接** 等后台任务在浏览器停止后台后继续进行。不会显示提示 |
 | `contextMenus` | Firefox | Firefox 不允许扩展程序稍后再请求此权限。菜单仍然只会在你开启**右键菜单**后才出现 |
 
 在 Chrome 和 Edge 中，扩展程序还会用 Bookmark Scout 书签管理器替换浏览器的书签页面。这是页面替换，而不是权限。Firefox 不允许这样做，因此在 Firefox 中需通过弹出窗口中的**打开书签管理器**来打开书签管理器；请参阅[浏览器支持](/browser-support)。

@@ -25,6 +25,16 @@ Espera a que aparezcan los resultados. Un resumen en la parte superior cuenta lo
 
 El acceso a los sitios web es opcional y no se concede al instalar. Las solicitudes se envían sin cookies, y puedes retirar el acceso en la configuración de extensiones del navegador. Un enlace que redirige a un sitio fuera del análisis no se puede seguir, así que aparece como **Comprobar a mano** en lugar de **Roto (confirmado)**. Consulta [Permisos](/permissions).
 
+## Dejar que siga en segundo plano [#let-it-run-in-the-background]
+
+La comprobación se ejecuta en segundo plano. Puedes cerrar el administrador, la ventana emergente o el panel lateral, y sigue mientras el navegador esté abierto; si el navegador detiene el segundo plano de la extensión o se reinicia, continúa desde los enlaces ya comprobados. Mientras se ejecuta, la ventana emergente y el panel lateral muestran su progreso en una línea, que abre **Tareas en segundo plano** en el administrador.
+
+- **Pausar** detiene las nuevas solicitudes, y **Reanudar** comprueba solo los enlaces aún no comprobados. Una comprobación en pausa sigue en pausa tras un reinicio.
+- **Cancelar** detiene la comprobación y conserva los resultados obtenidos. No cambia ningún marcador.
+- **Ver resultados** abre los resultados en cualquier momento, y **Eliminar** quita una comprobación terminada. Las comprobaciones terminadas se eliminan solas al cabo de un tiempo.
+
+Las reparaciones nunca se hacen en segundo plano: las revisas y aplicas como se explica abajo.
+
 ## Interpretar los resultados [#read-the-results]
 
 | Resultado | Qué significa |

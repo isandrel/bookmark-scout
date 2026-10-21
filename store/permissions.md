@@ -18,7 +18,7 @@ Every permission that a browser lets an extension ask for later is optional and 
 | Key | Chrome `chrome-mv3` | Edge `edge-mv3` | Firefox `firefox-mv2` |
 | --- | --- | --- | --- |
 | `manifest_version` | 3 | 3 | 2 |
-| `permissions` (granted at install) | `bookmarks`, `storage`, `activeTab`, `sidePanel`, `scripting`, `offscreen` | Same as Chrome | `bookmarks`, `storage`, `activeTab`, `scripting`, `contextMenus` |
+| `permissions` (granted at install) | `bookmarks`, `storage`, `activeTab`, `sidePanel`, `scripting`, `offscreen`, `alarms` | Same as Chrome | `bookmarks`, `storage`, `activeTab`, `scripting`, `alarms`, `contextMenus` |
 | `optional_permissions` | `tabs`, `favicon`, `contextMenus`, `nativeMessaging` | Same as Chrome | `tabs`, `nativeMessaging`, `http://*/*`, `https://*/*` |
 | Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*` | Same as Chrome | In `optional_permissions` (MV2) |
 | Host permissions at install | None | None | None |
@@ -29,7 +29,7 @@ Every permission that a browser lets an extension ask for later is optional and 
 | `commands` | `quick-save` (Alt+Shift+S), `ai-quick-save` (Alt+Shift+D) | Same as Chrome | Same as Chrome |
 | `browser_specific_settings.gecko` | Not applicable | Not applicable | `id`: `bookmark-scout@isandrel.github.io`, `strict_min_version`: `140.0`, `data_collection_permissions`: `required: ["none"]`, `optional: ["authenticationInfo", "bookmarksInfo", "browsingActivity", "websiteContent"]` (see [`privacy-disclosures.md`](privacy-disclosures.md#firefox-add-ons-data-collection-declaration)); `gecko_android.strict_min_version`: `142.0` |
 
-Why the rest stay required: `bookmarks` is the product; `storage` holds settings every page reads, has no warning, and cannot be optional in Firefox; `activeTab` has no warning and gives the toolbar popup and right-click menu the current page; `sidePanel` has no warning, and Chrome registers a side panel granted at runtime only after the extension reloads; `scripting` and `offscreen` have no warning, and quick save needs them at the moment a shortcut is pressed, with no page open to ask from. Firefox cannot make `contextMenus` optional, so it stays required there (it shows no prompt).
+Why the rest stay required: `bookmarks` is the product; `storage` holds settings every page reads, has no warning, and cannot be optional in Firefox; `activeTab` has no warning and gives the toolbar popup and right-click menu the current page; `sidePanel` has no warning, and Chrome registers a side panel granted at runtime only after the extension reloads; `scripting` and `offscreen` have no warning, and quick save needs them at the moment a shortcut is pressed, with no page open to ask from; `alarms` has no warning, and a background task needs it to pick up again after the browser stops the background, when no page may be open. Firefox cannot make `contextMenus` optional, so it stays required there (it shows no prompt).
 
 ### Install-time warnings
 
@@ -97,6 +97,14 @@ Used only by AI quick save, a keyboard shortcut the user presses after turning o
 ```
 
 Code: `src/services/quick-save-ai-host.ts`, `src/services/quick-save-ai-runner.ts`, `src/entrypoints/ai-host/`. No warning. Firefox's background is a page, so it holds the same page in a frame and the Firefox manifest has no `offscreen`.
+
+### `alarms`
+
+```text
+Keeps background tasks going. A long tool the user starts, such as Check Dead Links, runs in the background and keeps going after the user closes the page that started it. While a task is waiting or running, one alarm wakes the background about once a minute, so a task picks up again from its saved results after the browser stops the background. The alarm is removed when no task is left to run. It reads no data and sends nothing.
+```
+
+Code: `src/services/job-coordinator.ts` (the watchdog interval is `watchdog_minutes` in `config/jobs/scheduler.toml`). No warning in any browser.
 
 ### `tabs` (optional)
 
