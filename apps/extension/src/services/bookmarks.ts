@@ -734,6 +734,13 @@ export async function applyBookmarkChanges(
         }
       }
     },
+    {
+      // Nothing is removed without a record of what went.
+      required: changes.some((change) => change.kind === 'remove'),
+      report: () => ({
+        skipped: issues.map((issue) => ({ ...issue, failed: issue.reason === 'failed' })),
+      }),
+    },
   );
 
   let undone: Promise<BookmarkChangesUndoResult> | undefined;

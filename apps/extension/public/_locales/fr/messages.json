@@ -6742,5 +6742,9 @@
     "toast_deletePartlyRestored": {
         "message": "Suppression annulée en partie",
         "description": "Toast title after undoing a deletion brought back only part of it: some items changed since, or lost their tags and summaries."
+    },
+    "error_auditStore": {
+        "message": "La modification n’a pas été faite : l’historique des favoris n’a pas pu être enregistré sur cet appareil.",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
     }
 }

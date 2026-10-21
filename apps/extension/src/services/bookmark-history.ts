@@ -73,12 +73,22 @@ export type BookmarkHistoryOperation =
   | { kind: 'create'; at: BookmarkPlace; node: RecoverableBookmarkNode }
   | { kind: 'remove'; at: BookmarkPlace; node: RecoverableBookmarkNode }
   | { kind: 'update'; id: string; before: BookmarkFields; after: BookmarkFields }
-  | { kind: 'move'; id: string; from: BookmarkPlace; to: BookmarkPlace };
+  | {
+      kind: 'move';
+      id: string;
+      from: BookmarkPlace;
+      to: BookmarkPlace;
+      /** The item's title and address when it moved, for the Audit History's rows. */
+      title?: string;
+      url?: string;
+    };
 
 export type BookmarkHistoryEntry = {
   id: string;
   label: BookmarkHistoryLabel;
   operations: BookmarkHistoryOperation[];
+  /** The change's Audit History record, so its undo and redo are recorded as linked to it. */
+  operationId?: string;
 };
 
 /** A large entry as stored: its operations as gzip-compressed JSON, in base64. */
@@ -86,6 +96,7 @@ export type PackedBookmarkHistoryEntry = {
   id: string;
   label: BookmarkHistoryLabel;
   packed: string;
+  operationId?: string;
 };
 
 export type StoredBookmarkHistoryEntry = BookmarkHistoryEntry | PackedBookmarkHistoryEntry;
@@ -139,7 +150,14 @@ const operationSchema: z.ZodType<BookmarkHistoryOperation> = z.discriminatedUnio
     before: fieldsSchema,
     after: fieldsSchema,
   }),
-  z.object({ kind: z.literal('move'), id: z.string(), from: placeSchema, to: placeSchema }),
+  z.object({
+    kind: z.literal('move'),
+    id: z.string(),
+    from: placeSchema,
+    to: placeSchema,
+    title: z.string().optional(),
+    url: z.string().optional(),
+  }),
 ]);
 const labelSchema = z.object({
   action: z.enum(['add', 'edit', 'move', 'delete', 'sort', 'change']),
@@ -148,8 +166,18 @@ const labelSchema = z.object({
   tool: z.string().optional(),
 });
 const entrySchema: z.ZodType<StoredBookmarkHistoryEntry> = z.union([
-  z.object({ id: z.string(), label: labelSchema, operations: z.array(operationSchema).min(1) }),
-  z.object({ id: z.string(), label: labelSchema, packed: z.string().min(1) }),
+  z.object({
+    id: z.string(),
+    label: labelSchema,
+    operations: z.array(operationSchema).min(1),
+    operationId: z.string().optional(),
+  }),
+  z.object({
+    id: z.string(),
+    label: labelSchema,
+    packed: z.string().min(1),
+    operationId: z.string().optional(),
+  }),
 ]);
 const historySchema = z.object({ undo: z.array(entrySchema), redo: z.array(entrySchema) });
 const operationsSchema = z.array(operationSchema).min(1);
@@ -164,7 +192,12 @@ export async function packBookmarkHistoryEntry(
   if (isPacked(entry)) return entry;
   const json = JSON.stringify(entry.operations);
   if (json.length <= historyConfig.compress_above_bytes) return entry;
-  return { id: entry.id, label: entry.label, packed: await gzipToBase64(json) };
+  return {
+    id: entry.id,
+    label: entry.label,
+    packed: await gzipToBase64(json),
+    ...(entry.operationId ? { operationId: entry.operationId } : {}),
+  };
 }
 
 /** The entry with its operations, whether it was stored compressed or not. */
@@ -173,7 +206,12 @@ export async function unpackBookmarkHistoryEntry(
 ): Promise<BookmarkHistoryEntry> {
   if (!isPacked(entry)) return entry;
   const operations = operationsSchema.parse(JSON.parse(await gunzipFromBase64(entry.packed)));
-  return { id: entry.id, label: entry.label, operations };
+  return {
+    id: entry.id,
+    label: entry.label,
+    operations,
+    ...(entry.operationId ? { operationId: entry.operationId } : {}),
+  };
 }
 
 /** Whether a history holding only `entry` stays within the size limit. */
@@ -315,6 +353,11 @@ function restoreIndex(at: BookmarkPlace, siblings: readonly { id: string }[]): n
   return Math.min(at.index, siblings.length);
 }
 
+/** The title and address a move records about its item. */
+function movedItem(node: Browser.bookmarks.BookmarkTreeNode): { title: string; url?: string } {
+  return { title: node.title, ...(node.url ? { url: node.url } : {}) };
+}
+
 function createWriter(operations: BookmarkHistoryOperation[]): BookmarkWriter {
   return {
     async create({ metadata, ...details }) {
@@ -350,7 +393,7 @@ function createWriter(operations: BookmarkHistoryOperation[]): BookmarkWriter {
       if (!live) throw new Error(t('error_bookmarkNotFound'));
       const from = placeOf(live);
       const moved = await moveBookmark(id, to);
-      operations.push({ kind: 'move', id, from, to: placeOf(moved) });
+      operations.push({ kind: 'move', id, from, to: placeOf(moved), ...movedItem(live) });
     },
     async moveBefore(id, parentId, beforeId) {
       const live = await readNode(id);
@@ -362,7 +405,7 @@ function createWriter(operations: BookmarkHistoryOperation[]): BookmarkWriter {
       // Leaving its own place shifts everything after it up by one.
       const final = live.parentId === parentId && from.index < position ? position - 1 : position;
       const moved = await moveBookmarkToPosition(id, { parentId, index: final });
-      operations.push({ kind: 'move', id, from, to: placeOf(moved) });
+      operations.push({ kind: 'move', id, from, to: placeOf(moved), ...movedItem(live) });
     },
     async remove(id) {
       const { parentId, node } = await captureBookmarkSubtree(id, { keepIds: true });
@@ -434,21 +477,57 @@ async function addBookmarkHistoryEntry(
  * is null when nothing changed. `label` can be a function, read once `write` finished, for a
  * label that depends on what was written.
  */
+/** How a change is recorded in the Audit History (`bookmark-audit.ts`). */
+export type BookmarkWriteAudit = Omit<AuditInit, 'label'> & {
+  /**
+   * Refuse to start when its record cannot be stored and read back: changes that remove
+   * bookmarks, so none happens without a record of what went.
+   */
+  required?: boolean;
+  /** What the caller planned and left out, read once `write` finished. */
+  report?: () => AuditReport;
+};
+
+/**
+ * Runs `write` with a writer that records what it changes, and adds it to the history as one
+ * entry (clearing what could be redone). Changes made before `write` threw are recorded too,
+ * then the error is passed on. Resolves to what `write` returned and the recorded change, which
+ * is null when nothing changed. `label` can be a function, read once `write` finished, for a
+ * label that depends on what was written.
+ *
+ * The change is also recorded in the Audit History: a record is reserved before `write` runs and
+ * finished with what was read back after it. With `audit.required`, `write` never runs unless
+ * that record could be stored (it throws `AuditStoreError`).
+ */
 export async function recordBookmarkWrites<T>(
   label: BookmarkHistoryLabel | (() => BookmarkHistoryLabel),
   write: (writer: BookmarkWriter) => Promise<T>,
+  audit: BookmarkWriteAudit = {},
 ): Promise<{ result: T; recorded: RecordedBookmarkChange | null }> {
+  const labelNow = () => (typeof label === 'function' ? label() : label);
+  const { required = false, report, ...init } = audit;
+  let operationId: string | undefined;
+  try {
+    operationId = await beginAuditOperation({ ...init, label: labelNow() });
+  } catch (error) {
+    if (required) throw error;
+    console.warn('Bookmark change not recorded in the Audit History:', error);
+  }
   const operations: BookmarkHistoryOperation[] = [];
   let recorded: RecordedBookmarkChange | null = null;
   let result: T;
+  let threw = true;
   try {
     result = await write(createWriter(operations));
+    threw = false;
   } finally {
+    const finalLabel = completeLabel(labelNow(), operations);
     if (operations.length > 0) {
       const entry: BookmarkHistoryEntry = {
         id: newEntryId(),
-        label: completeLabel(typeof label === 'function' ? label() : label, operations),
+        label: finalLabel,
         operations,
+        ...(operationId ? { operationId } : {}),
       };
       // The bookmarks changed either way; a history that cannot be stored only loses undo.
       const stored = await addBookmarkHistoryEntry(entry, HISTORY_LIMITS).catch(
@@ -459,6 +538,17 @@ export async function recordBookmarkWrites<T>(
       );
       recorded = { entry, stored };
     }
+    if (operationId) {
+      await finishAuditOperation(operationId, {
+        label: finalLabel,
+        operations,
+        ...(report ? { report: report() } : {}),
+        ...(recorded?.stored ? { undoHistoryId: recorded.entry.id } : {}),
+        threw,
+      }).catch((error: unknown) =>
+        console.error('Failed to finish a bookmark Audit History record:', error),
+      );
+    }
   }
   return { result, recorded };
 }
@@ -468,6 +558,8 @@ type StepResult = {
   skipped: number;
   metadataNotRestored: number;
   ids: Map<string, string>;
+  /** Whether each operation (in the entry's order) was replayed. */
+  done: boolean[];
 };
 
 function sameFields(live: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields) {
@@ -550,7 +642,13 @@ async function replayEntry(
   entry: BookmarkHistoryEntry,
   direction: 'undo' | 'redo',
 ): Promise<{ entry: BookmarkHistoryEntry } & StepResult> {
-  const result: StepResult = { applied: 0, skipped: 0, metadataNotRestored: 0, ids: new Map() };
+  const result: StepResult = {
+    applied: 0,
+    skipped: 0,
+    metadataNotRestored: 0,
+    ids: new Map(),
+    done: entry.operations.map(() => false),
+  };
   const operations = [...entry.operations];
   const order = direction === 'undo' ? [...operations.keys()].reverse() : [...operations.keys()];
   const mapped = (id: string) => result.ids.get(id) ?? id;
@@ -592,6 +690,7 @@ async function replayEntry(
         const to = { ...op.to, parentId: mapped(op.to.parentId) };
         done = direction === 'undo' ? await moveIfAt(id, to, from) : await moveIfAt(id, from, to);
       }
+      result.done[position] = done;
       if (done) result.applied += 1;
       else result.skipped += 1;
     } catch {
@@ -599,6 +698,46 @@ async function replayEntry(
     }
   }
   return { ...result, entry: remapEntryIds({ ...entry, operations }, result.ids) };
+}
+
+/**
+ * `replayEntry` recorded in the Audit History as its own record, linked to the change it undoes
+ * or redoes, which is marked undone (or no longer undone) without rewriting its own outcome.
+ */
+async function replayEntryWithAudit(entry: BookmarkHistoryEntry, direction: 'undo' | 'redo') {
+  const { label } = entry;
+  const operationId = await beginAuditOperation({
+    label,
+    replay: direction,
+    ...(entry.operationId ? { relatedOperationId: entry.operationId } : {}),
+  }).catch((error: unknown) => {
+    console.warn('Undo or redo not recorded in the Audit History:', error);
+    return undefined;
+  });
+  const replayed = await replayEntry(entry, direction);
+  if (operationId) {
+    await finishReplayAuditOperation(operationId, {
+      label,
+      operations: replayed.entry.operations,
+      done: replayed.done,
+      direction,
+    })
+      .then(() =>
+        entry.operationId
+          ? direction === 'undo'
+            ? markAuditOperationUndone(
+                entry.operationId,
+                operationId,
+                replayed.skipped === 0 && replayed.metadataNotRestored === 0,
+              )
+            : markAuditOperationRedone(entry.operationId)
+          : undefined,
+      )
+      .catch((error: unknown) =>
+        console.error('Failed to finish a bookmark Audit History record:', error),
+      );
+  }
+  return replayed;
 }
 
 function toOutcome(label: BookmarkHistoryLabel, result: StepResult): BookmarkHistoryOutcome {
@@ -624,7 +763,7 @@ async function step(
     const stored = from[position];
     if (!stored) return history;
     const entry = await unpackBookmarkHistoryEntry(stored);
-    const replayed = await replayEntry(entry, direction);
+    const replayed = await replayEntryWithAudit(entry, direction);
     outcome = toOutcome(entry.label, replayed);
     const rest = from.filter((_, index) => index !== position);
     // Undoing an older entry out of order (a toast's Undo) drops what could be redone.
@@ -658,7 +797,7 @@ export async function undoRecordedBookmarkChange({
   stored,
 }: RecordedBookmarkChange): Promise<BookmarkHistoryOutcome | null> {
   if (stored) return undoBookmarkChange(entry.id);
-  return toOutcome(entry.label, await replayEntry(entry, 'undo'));
+  return toOutcome(entry.label, await replayEntryWithAudit(entry, 'undo'));
 }
 
 /** The entry `entryId` while it can still be undone, or undefined (undone already, or dropped). */

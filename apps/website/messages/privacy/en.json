@@ -85,7 +85,8 @@
                             "<strong>Tags, summaries, saved searches, recent folders, and recent searches</strong> are kept in local storage on this device only. You can turn off recent searches in Settings.",
                             "<strong>Site icons</strong> you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.",
                             "<strong>Your last quick save</strong> (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.",
-                            "<strong>The bookmark manager's undo history</strong> (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes."
+                            "<strong>The bookmark manager's undo history</strong> (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes.",
+                            "<strong>The bookmark change history</strong> (what Bookmark Scout changed in your bookmarks and when: titles, URLs, folders, and the outcome of each change) is kept on this device only, in the browser's IndexedDB, for a limited time. It is never synced and never in the backup file."
                         ]
                     },
                     {
