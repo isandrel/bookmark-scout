@@ -1087,3 +1087,69 @@ test('AI Folder Reorganization runs as a background job through the background p
     provider.close();
   }
 });
+
+test('applying in the background moves a separator and leaves the browser folders alone (J63)', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Apply', [
+    { title: 'Target', children: [] },
+    { title: 'First', url: 'https://e2e.invalid/first' },
+    { title: 'Second', url: 'https://e2e.invalid/second' },
+  ]);
+  const ids = await extension.call(async (api, parentId: string) => {
+    const separator = await api.bookmarks.create({ parentId, type: 'separator' });
+    const [toolbar] = await api.bookmarks.get('toolbar_____');
+    return { separator: separator.id, toolbar: toolbar?.id ?? '', toolbarTitle: toolbar?.title };
+  }, folder.folderId);
+  const response = await extension.call(
+    (api, command) => api.runtime.sendMessage({ type: 'bookmark-scout:job-command', command }),
+    {
+      type: 'apply',
+      commandId: crypto.randomUUID(),
+      source: 'manager',
+      tool: 'tools_aiReorganize',
+      changes: [
+        { kind: 'move', id: ids.separator, title: '', to: { parentId: folder.ids.Target } },
+        // The browser refuses to move its own folders; the rest goes on.
+        {
+          kind: 'move',
+          id: ids.toolbar,
+          title: ids.toolbarTitle ?? '',
+          to: { parentId: folder.ids.Target },
+        },
+        { kind: 'move', id: folder.ids.Second, title: 'Second', to: { parentId: folder.folderId } },
+      ],
+    },
+  );
+  expect((response as { ok: boolean }).ok).toBe(true);
+  const job = () =>
+    extension.call(async () => {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open('bookmark-scout-jobs');
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      const jobs = await new Promise<{ kind: string; state: string; done: unknown }[]>(
+        (resolve, reject) => {
+          const request = db.transaction('jobs').objectStore('jobs').getAll();
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        },
+      );
+      db.close();
+      const apply = jobs.find((stored) => stored.kind === 'applyChanges');
+      return apply ? { state: apply.state, done: apply.done } : undefined;
+    }, undefined);
+  await expect.poll(job, { timeout: 15_000 }).toEqual({
+    state: 'partial',
+    done: { succeeded: 2, skipped: 0, failed: 1 },
+  });
+  const after = await extension.call(
+    async (api, { target, toolbar }: { target: string; toolbar: string }) => ({
+      inTarget: (await api.bookmarks.getChildren(target)).map((node) => node.type),
+      toolbarParent: (await api.bookmarks.get(toolbar))[0]?.parentId,
+    }),
+    { target: folder.ids.Target, toolbar: ids.toolbar },
+  );
+  expect(after).toEqual({ inTarget: ['separator'], toolbarParent: 'root________' });
+});
