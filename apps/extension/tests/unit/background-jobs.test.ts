@@ -328,7 +328,10 @@ describe('a reply that comes too late (J15)', () => {
       await commitItem(jobId, cancelled.generation, pending.index, 'succeeded', {}),
     ).toBeUndefined();
     await new Promise((resolve) => setTimeout(resolve, 30));
-    expect(await getJob(jobId)).toMatchObject({ done: cancelled.done, revision: cancelled.revision });
+    expect(await getJob(jobId)).toMatchObject({
+      done: cancelled.done,
+      revision: cancelled.revision,
+    });
     expect(held.requests).toHaveLength(requested);
   });
 });
