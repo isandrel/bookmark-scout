@@ -32,7 +32,7 @@ const { reportsDirectory, folders, title } =
     : {
         reportsDirectory: e2eCoverage.reports_directory,
         folders: e2eCoverage.summary_folders,
-        title: 'End-to-end coverage (pages, the files they loaded)',
+        title: 'End-to-end coverage (pages and the background, the files they loaded)',
       };
 const summary = summarySchema.parse(
   JSON.parse(readFileSync(path.join(appRoot, reportsDirectory, 'coverage-summary.json'), 'utf8')),
@@ -68,6 +68,6 @@ console.log(
     '',
     kind === 'unit'
       ? 'Floors: `apps/extension/build/unit-coverage.toml`. Pages, components, and hooks are covered by the Playwright suites, which this does not measure.'
-      : 'Settings: `apps/extension/build/e2e-coverage.toml`. Only files the pages loaded count; the background service worker is not measured.',
+      : 'Settings: `apps/extension/build/e2e-coverage.toml`. Only files the pages and the background service worker loaded count; the worker from when its test starts.',
   ].join('\n'),
 );

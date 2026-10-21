@@ -2,9 +2,10 @@
 # with V8 (monocart-coverage-reports) on a build with inline source maps. Read by
 # build/e2e-coverage.ts; run with `bun run test:e2e:coverage`.
 #
-# Only pages are measured (popup, side panel, manager, Options, and the others a test opens);
-# the background service worker is not, and a page a test closes itself before its context
-# closes is not either. Unit coverage is build/unit-coverage.toml.
+# Measured: the pages a test opens (popup, side panel, manager, Options, and the others) and the
+# background service worker, reached over a DevTools port the browser opens in this mode, from when
+# its test starts (the worker's own startup ran before that). Not measured: a page a test closes
+# itself before its context closes, and a worker a test stops. Unit coverage is build/unit-coverage.toml.
 
 # The coverage build goes here, beside dist/, so the build the maintainer's browser loads from
 # dist/ is never replaced by it.

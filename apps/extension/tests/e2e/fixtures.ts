@@ -12,7 +12,7 @@ import {
 } from '@playwright/test';
 import { extensionOutDir } from '../../build/e2e-coverage';
 import { readConfigToml } from '../config-files';
-import { saveCoverage, watchCoverage } from './coverage';
+import { coverageLaunchArgs, saveCoverage, watchCoverage } from './coverage';
 import { profileDir, removeTempDir, workerTempDir } from './temp-dirs';
 
 /** Chromium-family browsers: Playwright's bundled Chromium, or the installed Microsoft Edge. */
@@ -156,7 +156,11 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
         // Popups still animating out would sit over the next control and catch its click.
         // Reduced motion shortens every animation to a single frame and covers that path too.
         reducedMotion: 'reduce',
-        args: [`--disable-extensions-except=${loadPath}`, `--load-extension=${loadPath}`],
+        args: [
+          `--disable-extensions-except=${loadPath}`,
+          `--load-extension=${loadPath}`,
+          ...coverageLaunchArgs(),
+        ],
       })
       .catch((error: unknown) => {
         removeTempDir(userDataDir);
@@ -164,7 +168,7 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
       });
 
     try {
-      watchCoverage(context);
+      watchCoverage(context, userDataDir);
       if (welcomeOpensOnInstall && !keepWelcomePage) await closeWelcomePage(context);
       await use(context);
     } finally {
