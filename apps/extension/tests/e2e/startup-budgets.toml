@@ -24,7 +24,8 @@
 "options.html" = 1150
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
-"bookmarks.html" = 1400
+# Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403).
+"bookmarks.html" = 1410
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
