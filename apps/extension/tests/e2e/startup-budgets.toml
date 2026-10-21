@@ -11,8 +11,10 @@
 # Lowered from 395 on 2026-10-15 after replacing pino with a small console logger (338 before,
 # 324 after).
 "background.js" = 365
-"popup.html" = 950
-"sidepanel.html" = 950
+# Raised from 950 when the numeric and string constants moved into config the popup and side panel
+# validate at startup (952 on 2026-10-21).
+"popup.html" = 965
+"sidepanel.html" = 965
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
