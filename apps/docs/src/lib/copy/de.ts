@@ -49,6 +49,7 @@ export const de: DocsCopy = {
       mac: "{keys} auf dem Mac",
       other: "{keys} unter Windows und Linux",
       pair: "{primary} ({secondary})",
+      click: "Klick",
     },
   },
 

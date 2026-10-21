@@ -2,7 +2,8 @@
   "shortcutNotes": {
     "mac": "{keys} sur Mac",
     "other": "{keys} sous Windows et Linux",
-    "pair": "{primary} ({secondary})"
+    "pair": "{primary} ({secondary})",
+    "click": "clic"
   },
   "metadata": {
     "title": "Bookmark Scout – Enregistrez vos favoris dans le bon dossier, rapidement",
@@ -137,7 +138,7 @@
           "Recherchez dans tous vos favoris pendant la saisie",
           "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",
           "Enregistrez une recherche : elle affiche toujours les résultats à jour",
-          "Sélectionnez des lignes avec Shift et Ctrl, effectuez un clic droit pour couper, copier, coller et tout ouvrir, et faites glisser favoris et dossiers là où ils doivent aller",
+          "Sélectionnez plusieurs lignes avec {{SHORTCUT:mouse.select_toggle}}, effectuez un clic droit pour couper, copier, coller et tout ouvrir, et faites glisser favoris et dossiers là où ils doivent aller",
           "Annulez et rétablissez les modifications avec {{SHORTCUT:manager.undo}} et {{SHORTCUT:manager.redo}}, même après un rechargement",
           "Importez des favoris depuis un fichier après un aperçu, et exportez-les au format HTML, JSON, Markdown ou CSV",
           "Créez un lien vers un dossier ou une recherche, et parcourez le tout au clavier"
@@ -154,7 +155,8 @@
           "Trouvez les liens morts et réparez-les : supprimez-les, utilisez la redirection, pointez vers une copie archivée ou modifiez l'URL",
           "Récupérez les titres des pages et appliquez uniquement ceux que vous choisissez",
           "Téléchargez l'icône propre à chaque site, pour l'afficher à côté des favoris, même dans Firefox",
-          "Annulez les suppressions et les nettoyages depuis la notification qui suit"
+          "Annulez les suppressions et les nettoyages depuis la notification qui suit",
+          "Voyez dans l'historique chaque modification de vos favoris, même celles faites hors de Bookmark Scout, et récupérez ceux supprimés, même après un redémarrage du navigateur"
         ]
       },
       "ai": {

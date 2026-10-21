@@ -46,11 +46,25 @@ export type ShortcutConfig = {
 	popup: Record<string, ConfiguredBinding[]>;
 	/** The bookmark manager page. */
 	manager: Record<string, ConfiguredBinding[]>;
+	/**
+	 * Mouse gestures the extension answers or its documentation names: a click (`key = "click"`)
+	 * with modifiers, such as Cmd-click on a Mac and Ctrl+click elsewhere.
+	 */
+	mouse: Record<string, ConfiguredBinding[]>;
 };
 
-export type ShortcutSection = "commands" | "browser" | "popup" | "manager";
+export type ShortcutSection = "commands" | "browser" | "popup" | "manager" | "mouse";
 
-export const SHORTCUT_SECTIONS: readonly ShortcutSection[] = ["commands", "browser", "popup", "manager"];
+export const SHORTCUT_SECTIONS: readonly ShortcutSection[] = ["commands", "browser", "popup", "manager", "mouse"];
+
+/** The mouse buttons a gesture can name, as `key` in the `[mouse]` section. */
+export const MOUSE_BUTTONS = ["click"] as const;
+
+/**
+ * Where a gesture's text names the click, filled with the reader's language (`click` in the
+ * notes): "⌘-{click}" becomes "⌘-click", or "⌘-クリック" in Japanese.
+ */
+export const CLICK_TOKEN = "{click}";
 
 /** One shortcut, written `section.name`: `commands.quick-save`, `manager.undo`. */
 export type ShortcutId = `${ShortcutSection}.${string}`;
@@ -106,6 +120,14 @@ const commandKeys: Check<CommandKeys> = (value, path, issues) =>
 
 const bindings = list(binding, { minLength: 1 });
 
+const mouseBinding: Check<ConfiguredBinding> = (value, path, issues) => {
+	const result = binding(value, path, issues);
+	if (!(MOUSE_BUTTONS as readonly string[]).includes(result.key)) {
+		issues.push(`${path}.key: must be one of ${MOUSE_BUTTONS.join(", ")}`);
+	}
+	return result;
+};
+
 const platform: Check<ShortcutPlatform> = (value, path, issues) => {
 	if (value === "mac" || value === "other") return value;
 	issues.push(`${path}: must be "mac" or "other"`);
@@ -119,6 +141,7 @@ export const shortcutConfigSchema: Check<ShortcutConfig> = table({
 	browser: record(commandKeys),
 	popup: record(bindings),
 	manager: record(bindings),
+	mouse: record(list(mouseBinding, { minLength: 1 })),
 });
 
 /** Validates parsed `shortcuts.toml`; throws listing every problem. */
@@ -260,8 +283,25 @@ const TEXT_KEY_NAMES: Readonly<Record<string, string>> = { "↵": "Enter" };
 
 /** A binding as running text: `Ctrl+Shift+Z` elsewhere, `⌘⇧Z` on a Mac, `Alt+↓`, `Enter`. */
 export function formatBinding(entry: KeyBinding, apple: boolean): string {
+	if ((MOUSE_BUTTONS as readonly string[]).includes(entry.key)) return formatGesture(entry, apple);
 	const caps = bindingKeyCaps(entry, apple).map((cap) => TEXT_KEY_NAMES[cap] ?? cap);
 	return caps.join(apple ? "" : "+");
+}
+
+/**
+ * A mouse gesture as running text, the click named by `CLICK_TOKEN`: `⌘-{click}` on a Mac, as
+ * Apple writes it, and `Ctrl+{click}` elsewhere.
+ */
+function formatGesture(entry: KeyBinding, apple: boolean): string {
+	const labels = apple ? APPLE_KEY_CAP_LABELS : KEY_CAP_LABELS;
+	const modifiers = bindingModifiers(entry, apple).map((key) => labels[key] ?? key);
+	if (modifiers.length === 0) return CLICK_TOKEN;
+	return apple ? `${modifiers.join("")}-${CLICK_TOKEN}` : `${modifiers.join("+")}+${CLICK_TOKEN}`;
+}
+
+/** `text` with the click of a mouse gesture named in the notes' language. */
+export function withClickWord(text: string, notes: Pick<ShortcutNotes, "click">): string {
+	return text.replaceAll(CLICK_TOKEN, notes.click);
 }
 
 /** The ways to press one shortcut on each platform, as text; usually one each. */
@@ -338,9 +378,10 @@ export function shortcutPair(config: ShortcutConfig, id: string): ShortcutPair {
  * label first and the other's after it. `{ mac: "{keys} on Mac", other: "{keys} on Windows and
  * Linux", pair: "{primary} ({secondary})" }` prints "⌥⇧S on Mac (Alt+Shift+S on Windows and
  * Linux)". Each surface keeps its notes with its other copy, in every language; both labels are
- * needed so that `display.primary` can name either platform first.
+ * needed so that `display.primary` can name either platform first. `click` names a mouse click
+ * in gestures ("⌘-click").
  */
-export type ShortcutNotes = Readonly<Record<ShortcutPlatform | "pair", string>>;
+export type ShortcutNotes = Readonly<Record<ShortcutPlatform | "pair" | "click", string>>;
 
 /** The text around both platforms' keys: before the primary keys, between the two, and after. */
 export type ShortcutNoteText = { before: string; middle: string; after: string };
@@ -375,11 +416,13 @@ export function shortcutNoteText(
 /** Validates one language's notes as read from a messages or copy file; throws naming `source`. */
 export function parseShortcutNotes(value: unknown, source: string): ShortcutNotes {
 	const notes = (typeof value === "object" && value !== null ? value : {}) as Record<string, unknown>;
-	const { mac, other, pair } = notes;
-	if (typeof mac !== "string" || typeof other !== "string" || typeof pair !== "string") {
-		throw new Error(`${source}: expected "shortcutNotes": { "mac": "...", "other": "...", "pair": "..." }`);
+	const { mac, other, pair, click } = notes;
+	if (typeof mac !== "string" || typeof other !== "string" || typeof pair !== "string" || typeof click !== "string") {
+		throw new Error(
+			`${source}: expected "shortcutNotes": { "mac": "...", "other": "...", "pair": "...", "click": "..." }`,
+		);
 	}
-	const parsed = { mac, other, pair };
+	const parsed = { mac, other, pair, click };
 	try {
 		shortcutNoteText(parsed, ["mac", "other"]);
 	} catch (error) {
@@ -410,8 +453,8 @@ export function shortcutPlaceholderText(config: ShortcutConfig, argument: string
  */
 export function shortcutPlaceholderPair(config: ShortcutConfig, argument: string, notes: ShortcutNotes): string {
 	const order = platformOrder(config);
-	const primary = shortcutPlaceholderText(config, argument, order[0]);
-	const secondary = shortcutPlaceholderText(config, argument, order[1]);
+	const primary = withClickWord(shortcutPlaceholderText(config, argument, order[0]), notes);
+	const secondary = withClickWord(shortcutPlaceholderText(config, argument, order[1]), notes);
 	if (primary === secondary) return primary;
 	const { before, middle, after } = shortcutNoteText(notes, order);
 	return `${before}${primary}${middle}${secondary}${after}`;
@@ -427,8 +470,8 @@ export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(?:_(MAC|OTHER))?:([A-Za-z0-9_.
 /** Replaces every shortcut placeholder in `text`; throws for an unknown shortcut. */
 export function fillShortcutPlaceholders(text: string, config: ShortcutConfig, notes: ShortcutNotes): string {
 	return text.replace(SHORTCUT_PLACEHOLDER, (_match, only: string | undefined, argument: string) => {
-		if (only === "MAC") return shortcutPlaceholderText(config, argument, "mac");
-		if (only === "OTHER") return shortcutPlaceholderText(config, argument, "other");
+		if (only === "MAC") return withClickWord(shortcutPlaceholderText(config, argument, "mac"), notes);
+		if (only === "OTHER") return withClickWord(shortcutPlaceholderText(config, argument, "other"), notes);
 		return shortcutPlaceholderPair(config, argument, notes);
 	});
 }
