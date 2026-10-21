@@ -119,6 +119,8 @@ export type BookmarkHistoryOutcome = {
    * the restore is partial. Absent when none.
    */
   metadataNotRestored?: number;
+  /** Skipped items that could not come back because their folder no longer exists. */
+  parentMissing?: number;
 };
 
 const placeSchema = z.object({
@@ -557,6 +559,7 @@ type StepResult = {
   applied: number;
   skipped: number;
   metadataNotRestored: number;
+  parentMissing: number;
   ids: Map<string, string>;
   /** Whether each operation (in the entry's order) was replayed. */
   done: boolean[];
@@ -646,6 +649,7 @@ async function replayEntry(
     applied: 0,
     skipped: 0,
     metadataNotRestored: 0,
+    parentMissing: 0,
     ids: new Map(),
     done: entry.operations.map(() => false),
   };
@@ -668,6 +672,7 @@ async function replayEntry(
           }
         } else {
           const recreated = await recreateAt(node, at);
+          if (!recreated) result.parentMissing += 1;
           if (recreated) {
             for (const [oldId, newId] of recreated.ids) result.ids.set(oldId, newId);
             if (!recreated.metadataRestored) result.metadataNotRestored += 1;
@@ -746,6 +751,7 @@ function toOutcome(label: BookmarkHistoryLabel, result: StepResult): BookmarkHis
     applied: result.applied,
     skipped: result.skipped,
     ...(result.metadataNotRestored > 0 ? { metadataNotRestored: result.metadataNotRestored } : {}),
+    ...(result.parentMissing > 0 ? { parentMissing: result.parentMissing } : {}),
   };
 }
 

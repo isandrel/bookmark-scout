@@ -81,12 +81,14 @@ export function extractFolderPaths(nodes: BookmarkTreeNode[]): { id: string; pat
 
 /** The one suggestion for a library without folders: a new folder at the top. */
 export function noFoldersRecommendation(): FolderRecommendation[] {
-  return [{
-    type: 'new',
-    folderPath: t('bookmarks_root'),
-    confidence: 1,
-    reason: t('ai_recommendationNoFolders'),
-  }];
+  return [
+    {
+      type: 'new',
+      folderPath: t('bookmarks_root'),
+      confidence: 1,
+      reason: t('ai_recommendationNoFolders'),
+    },
+  ];
 }
 
 /** The system prompt and the JSON the model reads, for one page and the folder list. */
@@ -294,6 +296,11 @@ export type RecommendedFolderPathResult = {
 export async function createRecommendedFolderPath(
   recommendation: FolderRecommendation,
   folders: readonly BookmarkTreeNode[],
+  /** Creates and removes the folders; a history writer records them. */
+  writer: Pick<BookmarkWriter, 'create' | 'remove'> = {
+    create: (details) => createBookmark(details),
+    remove: deleteBookmark,
+  },
 ): Promise<RecommendedFolderPathResult> {
   const { folder, existingTitles, newTitles } = resolveRecommendedFolderPath(
     recommendation,
@@ -309,25 +316,45 @@ export async function createRecommendedFolderPath(
   let folderId = folder.id;
   try {
     for (const title of newTitles) {
-      const created = await createBookmark({ parentId: folderId, title });
+      const created = await writer.create({ parentId: folderId, title });
       createdFolderIds.push(created.id);
       folderId = created.id;
     }
   } catch (error) {
-    await removeEmptyFolders(createdFolderIds);
+    await removeEmptyFolders(createdFolderIds, writer.remove);
     throw error;
   }
   return { folderId, folderTitles: [...existingTitles, ...newTitles], createdFolderIds };
 }
 
+/**
+ * Saves `bookmark` into the suggested folder, creating the folders it needs; one undo history
+ * entry and one History record (`audit` names where from, such as quick save).
+ */
 export async function createRecommendedFolderBookmark(
   recommendation: FolderRecommendation,
   bookmark: { title: string; url: string },
   folders: BookmarkTreeNode[],
+  audit: BookmarkWriteAudit = {},
+): Promise<RecommendedFolderBookmarkResult> {
+  const { result } = await recordBookmarkWrites(
+    { action: 'add', title: bookmark.title },
+    (writer) => saveIntoRecommendedFolder(recommendation, bookmark, folders, writer),
+    audit,
+  );
+  return result;
+}
+
+async function saveIntoRecommendedFolder(
+  recommendation: FolderRecommendation,
+  bookmark: { title: string; url: string },
+  folders: BookmarkTreeNode[],
+  writer: BookmarkWriter,
 ): Promise<RecommendedFolderBookmarkResult> {
   const { folderId, folderTitles, createdFolderIds } = await createRecommendedFolderPath(
     recommendation,
     folders,
+    writer,
   );
 
   try {
@@ -345,7 +372,7 @@ export async function createRecommendedFolderBookmark(
       };
     }
 
-    const createdBookmark = await createBookmark({
+    const createdBookmark = await writer.create({
       parentId: folderId,
       title: bookmark.title || t('popup_newBookmark'),
       url: bookmark.url,
@@ -359,7 +386,7 @@ export async function createRecommendedFolderBookmark(
       createdFolderIds,
     };
   } catch (error) {
-    await removeEmptyFolders(createdFolderIds);
+    await removeEmptyFolders(createdFolderIds, writer.remove);
     throw error;
   }
 }

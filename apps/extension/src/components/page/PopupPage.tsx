@@ -124,7 +124,8 @@ function PopupPage() {
     [folders, pendingNewFolder],
   );
   const autoTriggerExecutedRef = useRef(false);
-  const deletion = useBookmarkDeletion({ onChanged: refreshFolders });
+  // Recorded like the manager's: Ctrl+Z there restores it after the toast, and History lists it.
+  const deletion = useBookmarkDeletion({ onChanged: refreshFolders, recordHistory: true });
 
   // Debounce search query using configurable delay
   const debouncedQuery = useDebounce(query, searchDebounceMs);

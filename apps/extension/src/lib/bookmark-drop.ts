@@ -98,7 +98,7 @@ export type DroppedData = { uriList?: string; plain?: string; html?: string; moz
 export function parseDroppedLinks(data: DroppedData): { url: string; title: string }[] {
   const titles = new Map<string, string>();
   if (data.html && typeof DOMParser !== 'undefined') {
-    const document = new DOMParser().parseFromString(data.html, 'text/html');
+    const document = parseFetchedHtml(data.html);
     for (const anchor of document.querySelectorAll('a[href]')) {
       const title = anchor.textContent?.trim();
       if (title) titles.set(anchor.getAttribute('href') ?? '', title);
