@@ -63,5 +63,12 @@ export function useToolRun<Result, Selection>(
     }),
   );
   const state = useSyncExternalStore(run.subscribe, run.getState);
-  return { state, run: run.run, apply: run.apply, undo: run.undo, close: run.close };
+  return {
+    state,
+    run: run.run,
+    review: run.review,
+    apply: run.apply,
+    undo: run.undo,
+    close: run.close,
+  };
 }

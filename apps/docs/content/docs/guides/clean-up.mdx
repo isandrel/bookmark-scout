@@ -83,6 +83,8 @@ Click **Save** (for example **Save 12 icons**) to keep them, or close the dialog
 
 For each website (origin) in scope, the tool requests one bookmarked page without cookies, reads only its head, and downloads the icon the page lists that is closest to **Preferred Icon Size**, or the site's `/favicon.ico`. Only icon files on the bookmark's own domain are used, never a third-party icon service. Files over **Maximum Icon File Size** (64 KB) or that are not images are skipped.
 
+The refresh runs in the background: it keeps going after you close the manager, and its card and **Background tasks** show its progress, with **Pause**, **Resume**, and **Cancel**. Its results wait for **Review results**; nothing is saved until you click **Save**.
+
 Saved icons are stored in this browser's local storage, not synced, and show in the popup, side panel, and manager. They take priority over the browser's cached icon. The card shows how many are saved; **Clear saved icons** deletes them all. When the total reaches **Icon Storage Limit** (4 MB), the oldest icons are removed first. A site that fails on a later refresh keeps the icon saved earlier.
 
 <Callout title="Firefox">
@@ -93,4 +95,4 @@ In Firefox, open the manager with **Open bookmark manager** in the toolbar popup
 
 - [Find and repair dead links](/guides/dead-links) checks whether bookmarked pages still load.
 - **Privacy Scanner** (under **Security**) flags URLs that contain tokens, email addresses, UUIDs, or sensitive parameters (and titles, if **Scan Titles** is on), so you can edit or delete them yourself. Ordinary in-page links and app addresses such as Gmail's `#inbox` are not flagged.
-- **Metadata Fetcher** (under **Page Titles & Icons**) suggests page titles from the live pages and applies only the ones you select. It uses the same website access as the dead link check.
+- **Metadata Fetcher** (under **Page Titles & Icons**) suggests page titles from the live pages and applies only the ones you select. It uses the same website access as the dead link check. It runs in the background too, and its titles wait for **Review results**.

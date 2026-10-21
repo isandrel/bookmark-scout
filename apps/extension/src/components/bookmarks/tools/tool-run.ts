@@ -105,6 +105,8 @@ export type ToolRun<Result, Selection> = {
   subscribe(listener: () => void): () => void;
   /** Scans the scope, then opens the review or, for an auto-apply tool, applies. */
   run(scope: BookmarkToolScope): Promise<void>;
+  /** Opens the review on a result scanned elsewhere (a background job's), as a scan would. */
+  review(result: Result, scope: BookmarkToolScope): void;
   /** Applies the reviewed result. */
   apply(selection: Selection): Promise<void>;
   /** Reverts the last apply, at most once, from the review or the toast. */
@@ -167,9 +169,12 @@ export function createToolRun<Result, Selection>(
   };
 
   const rescan = async () => tool.scan(context(await deps.freshNodes(scope)));
-  /** The result to review after a change: rescanned, or kept when the tool says so. */
+  /**
+   * The result to review after a change: rescanned, or kept when the tool says so or its scan
+   * runs as a background job, which the page never runs itself.
+   */
   const resultAfterChange = async (current: Result) =>
-    tool.keepResultAfterApply ? current : rescan();
+    tool.keepResultAfterApply || tool.job ? current : rescan();
 
   /** Wraps an outcome's undo so the review and the toast share one revert until it expires. */
   const offerUndo = (revert: () => Promise<ToolOutcome>, expiresAt?: number) => {
@@ -282,6 +287,11 @@ export function createToolRun<Result, Selection>(
       // A review closed while scanning stays closed.
       const closed = tool.reviewWhileScanning && !state.open;
       update({ phase: closed ? 'idle' : 'review', open: !closed, result });
+    },
+    review(result, nextScope) {
+      scope = nextScope;
+      pendingUndo = null;
+      update({ ...IDLE, phase: 'review', open: true, result });
     },
     async apply(selection) {
       const { result } = state;

@@ -40,7 +40,7 @@ export const JOB_LIMITS = {
 } as const;
 
 /** What a job does. Each kind has an adapter in the coordinator. */
-export const JOB_KINDS = ['deadLinks'] as const;
+export const JOB_KINDS = ['deadLinks', 'metadataFetcher', 'siteIcons'] as const;
 export type JobKind = (typeof JOB_KINDS)[number];
 
 /** Where a job was started from, as far as the extension knows. */
@@ -110,6 +110,8 @@ export const jobRecordSchema = z.strictObject({
   }),
   /** The kind's settings at the start, validated by its adapter; never secrets. */
   options: z.unknown(),
+  /** Counts about the scope fixed at the start that no item shows (bookmarks never requested). */
+  summary: z.record(z.string(), z.number().int().nonnegative()).optional(),
   total: z.number().int().nonnegative(),
   done: counts,
   /** Bumped by every claim; a result from an older claim is refused. */
@@ -225,6 +227,7 @@ export type NewJob = {
   source: JobRecord['source'];
   scope: JobRecord['scope'];
   options: unknown;
+  summary?: JobRecord['summary'];
   /** The work, in order; each becomes one item. */
   inputs: readonly unknown[];
   now: number;
@@ -257,6 +260,7 @@ export async function acceptJob(job: NewJob): Promise<{ job: JobRecord; created:
     state: 'queued',
     scope: job.scope,
     options: job.options,
+    ...(job.summary ? { summary: job.summary } : {}),
     total: job.inputs.length,
     done: { succeeded: 0, skipped: 0, failed: 0 },
     generation: 0,

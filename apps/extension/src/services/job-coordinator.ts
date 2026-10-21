@@ -20,83 +20,32 @@
  * did not see a request that was stopped in flight. Jobs only read; repairs stay reviewed page
  * actions through the audited bookmark writer.
  */
-import { z } from 'zod';
 
 /** This background run; a job claimed by another one was left behind by a stopped worker. */
 const SESSION = crypto.randomUUID();
 const JOB_ALARM = 'bookmark-scout:jobs';
 
-type JobRun = { outcome: ItemOutcome; result: unknown };
-
-/** How one kind of job does its work, from its frozen options and stored inputs. */
-type JobAdapter = {
-  /** The inputs (one per item) and options for a new job; read when the job is accepted. */
-  prepare(scope: JobCommand & { type: 'start' }): Promise<{
-    inputs: unknown[];
-    options: unknown;
-    label: string;
-  }>;
-  /** Items checked at the same time. */
-  concurrency(options: unknown): number;
-  /** Does one item; throws `RequestAbortedError` when stopped, which leaves it to do. */
-  run(input: unknown, options: unknown, signal: AbortSignal): Promise<JobRun>;
-};
-
-const deadLinkOptionsSchema = z.strictObject({
-  requestTimeoutMs: z.number().int().positive(),
-  concurrency: z.number().int().positive(),
-  retryCount: z.number().int().nonnegative(),
-  followRedirects: z.boolean(),
-  successStatuses: z.array(httpStatusCodeSchema),
-  allSitesAccess: z.boolean().optional(),
-});
-const deadLinkTargetSchema = z.strictObject({
-  id: z.string(),
-  title: z.string(),
-  url: z.string(),
-  folderPath: z.string(),
-});
-
-/** The bookmarks of a Start's scope, read from the browser now, never from a page's tree. */
-async function scopeNodes(command: JobCommand & { type: 'start' }) {
-  const tree = await fetchBookmarkTree();
-  const folderId = command.scope.mode === 'folder' ? command.scope.folderId : null;
-  const nodes = getScopedNodes(tree, folderId, command.scope.mode);
-  const label = folderId ? getBookmarkDisplayTitle(nodes[0]?.title) : '';
-  return { nodes, label };
+/**
+ * Runs `work` with what a slice of `adapter`'s items needs. Firefox's background page parses
+ * HTML itself; a service worker has no DOM parser, so it asks the AI host page, open for the slice.
+ */
+async function withJobTools(adapter: JobAdapter, work: (tools: JobTools) => Promise<void>) {
+  if (!adapter.readsHtml || typeof DOMParser === 'function') {
+    return work({ readHead: async (html, descriptions) => readHtmlHead(html, descriptions) });
+  }
+  const { language } = await getSettings();
+  return withAIHost(null, { locale: resolveAppLocale(language) }, (host) =>
+    work({ readHead: host.readHead }),
+  );
 }
-
-const ADAPTERS: Record<JobKind, JobAdapter> = {
-  deadLinks: {
-    async prepare(command) {
-      const { nodes, label } = await scopeNodes(command);
-      const settings = await getSettings();
-      const options = {
-        ...getToolOptions(settings).deadLinks,
-        // Granted only the bookmarks' own sites, a redirect elsewhere is not a confirmed loop.
-        allSitesAccess: await hasPermission('webAccess'),
-      };
-      return { inputs: deadLinkTargets(nodes), options, label };
-    },
-    concurrency: (options) => deadLinkOptionsSchema.parse(options).concurrency,
-    async run(input, options, signal) {
-      const result = await checkDeadLink(
-        deadLinkTargetSchema.parse(input),
-        deadLinkOptionsSchema.parse(options),
-        signal,
-      );
-      // Not a web address: nothing to check.
-      const skipped = result.status === 'skipped' || result.status === 'invalid';
-      return { outcome: skipped ? 'skipped' : 'succeeded', result };
-    },
-  },
-};
 
 /** The job running in this background, with what stops its work in flight. */
 type ActiveRun = {
   generation: number;
   controllers: Set<AbortController>;
-  stop?: 'pause' | 'cancel';
+  /** `fail`: the slice could not run at all, with `failure` the error's name. */
+  stop?: 'pause' | 'cancel' | 'fail';
+  failure?: string;
 };
 const active = new Map<string, ActiveRun>();
 let loop: Promise<void> | undefined;
@@ -189,32 +138,50 @@ async function runLoop(): Promise<void> {
 async function runSlice(waiting: JobRecord): Promise<void> {
   const job = await claimJob(waiting.id, SESSION);
   if (!job) return;
-  const adapter = ADAPTERS[job.kind];
+  const adapter = JOB_ADAPTERS[job.kind];
   const run: ActiveRun = { generation: job.generation, controllers: new Set() };
   active.set(job.id, run);
   const started = Date.now();
   try {
     const queue = await getPendingItems(job.id, JOB_LIMITS.sliceMaxItems);
     const overTime = () => Date.now() - started > JOB_LIMITS.sliceMaxMs;
-    const worker = async () => {
-      for (let item = queue.shift(); item; item = queue.shift()) {
-        if (run.stop || overTime()) return;
-        await runItem(job, run, adapter, item);
-      }
-    };
     const workers = Math.max(1, Math.min(adapter.concurrency(job.options), queue.length));
-    await Promise.all(Array.from({ length: workers }, worker));
+    await withJobTools(adapter, async (tools) => {
+      const worker = async () => {
+        for (let item = queue.shift(); item; item = queue.shift()) {
+          if (run.stop || overTime()) return;
+          await runItem(job, run, adapter, item, tools);
+        }
+      };
+      await Promise.all(Array.from({ length: workers }, worker));
+    });
+  } catch (error) {
+    // What the slice needed could not be set up (the AI host page): the job cannot go on.
+    console.error('[Jobs] Slice could not run:', error instanceof Error ? error.name : error);
+    run.stop ??= 'fail';
+    run.failure = error instanceof Error ? error.name : 'Error';
   } finally {
     active.delete(job.id);
   }
   await settleSlice(job.id, run);
 }
 
-async function runItem(job: JobRecord, run: ActiveRun, adapter: JobAdapter, item: JobItem) {
+async function runItem(
+  job: JobRecord,
+  run: ActiveRun,
+  adapter: JobAdapter,
+  item: JobItem,
+  tools: JobTools,
+) {
   const controller = new AbortController();
   run.controllers.add(controller);
   try {
-    const { outcome, result } = await adapter.run(item.input, job.options, controller.signal);
+    const { outcome, result } = await adapter.run(
+      item.input,
+      job.options,
+      controller.signal,
+      tools,
+    );
     await commitItem(job.id, run.generation, item.index, outcome, result);
   } catch (error) {
     // Stopped by pause or cancel: left to do, never a finding.
@@ -236,6 +203,14 @@ async function settleSlice(jobId: string, run: ActiveRun): Promise<void> {
   });
   if (run.stop === 'pause') {
     await transitionJob(jobId, ['pause_requested'], 'paused', ended);
+    return;
+  }
+  if (run.stop === 'fail') {
+    await transitionJob(jobId, ['running'], 'failed', (job) => ({
+      ...ended(job),
+      finishedAt: Date.now(),
+      lastError: { code: 'slice-setup', message: run.failure ?? 'Error' },
+    }));
     return;
   }
   if (run.stop === 'cancel') {
@@ -270,7 +245,7 @@ function stopActive(jobId: string, stop: 'pause' | 'cancel'): boolean {
 }
 
 async function start(command: JobCommand & { type: 'start' }): Promise<JobRecord> {
-  const { inputs, options, label } = await ADAPTERS[command.kind].prepare(command);
+  const { inputs, options, label, summary } = await JOB_ADAPTERS[command.kind].prepare(command);
   const { job } = await acceptJob({
     commandId: command.commandId,
     kind: command.kind,
@@ -281,6 +256,7 @@ async function start(command: JobCommand & { type: 'start' }): Promise<JobRecord
       label,
     },
     options,
+    ...(summary ? { summary } : {}),
     inputs,
     now: Date.now(),
   });

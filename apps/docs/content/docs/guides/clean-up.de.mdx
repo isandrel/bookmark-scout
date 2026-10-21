@@ -83,6 +83,8 @@ Klicken Sie auf **Speichern** (zum Beispiel **12 Symbole speichern**), um sie zu
 
 Für jede Website (Origin) im Bereich fragt das Tool eine gespeicherte Seite ohne Cookies an, liest nur deren Kopfbereich und lädt das von der Seite angegebene Symbol herunter, das der Einstellung **Bevorzugte Symbolgröße** am nächsten kommt, oder die `/favicon.ico` der Website. Es werden nur Symboldateien auf der eigenen Domain des Lesezeichens verwendet, nie ein Symboldienst von Dritten. Dateien, die größer als **Max. Dateigröße pro Symbol** (64 KB) oder keine Bilder sind, werden übersprungen.
 
+Die Aktualisierung läuft im Hintergrund: Sie läuft weiter, wenn Sie die Verwaltung schließen, und ihre Karte sowie **Hintergrundaufgaben** zeigen den Fortschritt, mit **Anhalten**, **Fortsetzen** und **Abbrechen**. Die Ergebnisse warten unter **Ergebnisse ansehen**; gespeichert wird erst, wenn Sie auf **Speichern** klicken.
+
 Gespeicherte Symbole werden im lokalen Speicher dieses Browsers abgelegt, nicht synchronisiert und im Pop-up, in der Seitenleiste und im Manager angezeigt. Sie haben Vorrang vor dem Symbol aus dem Browser-Cache. Die Karte zeigt an, wie viele gespeichert sind; **Gespeicherte Symbole löschen** löscht sie alle. Wenn die Gesamtgröße die **Speicherbegrenzung für Symbole** (4 MB) erreicht, werden die ältesten Symbole zuerst entfernt. Schlägt eine Website bei einer späteren Aktualisierung fehl, behält sie das zuvor gespeicherte Symbol.
 
 <Callout title="Firefox">
@@ -93,4 +95,4 @@ Gespeicherte Symbole werden im lokalen Speicher dieses Browsers abgelegt, nicht 
 
 - [Defekte Links finden und reparieren](/guides/dead-links) prüft, ob gespeicherte Seiten noch laden.
 - **Datenschutzprüfung** (unter **Sicherheit**) markiert URLs, die Tokens, E-Mail-Adressen, UUIDs oder sensible Parameter enthalten (und Titel, wenn **Titel prüfen** aktiviert ist), damit Sie sie selbst bearbeiten oder löschen können. Gewöhnliche Links innerhalb einer Seite und App-Adressen wie Gmails `#inbox` werden nicht markiert.
-- **Metadatenabruf** (unter **Seitentitel und Symbole**) schlägt Seitentitel aus den Live-Seiten vor und übernimmt nur die von Ihnen ausgewählten. Er verwendet denselben Zugriff auf Websites wie die Linkprüfung.
+- **Metadatenabruf** (unter **Seitentitel und Symbole**) schlägt Seitentitel aus den Live-Seiten vor und übernimmt nur die von Ihnen ausgewählten. Er verwendet denselben Zugriff auf Websites wie die Linkprüfung. Auch er läuft im Hintergrund, und seine Titel warten unter **Ergebnisse ansehen**.

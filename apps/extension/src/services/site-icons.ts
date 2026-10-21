@@ -369,6 +369,7 @@ type IconDownload = { icon: string } | { rejection: SiteIconRejection } | { miss
 async function downloadIcon(
   iconUrl: string,
   options: Pick<SiteIconRefreshOptions, 'maxIconBytes' | 'requestTimeoutMs'>,
+  signal?: AbortSignal,
 ): Promise<IconDownload> {
   try {
     return await requestWithTimeout(
@@ -389,13 +390,17 @@ async function downloadIcon(
         const mimeType = bytes.byteLength ? sniffImageType(bytes) : null;
         return mimeType ? { icon: toDataUrl(bytes, mimeType) } : { rejection: 'notImage' };
       },
+      undefined,
+      signal,
     );
-  } catch {
+  } catch (error) {
+    if (error instanceof RequestAbortedError) throw error;
     return { missing: true };
   }
 }
 
-type OriginGroup = { origin: string; pageUrl: string; bookmarkCount: number };
+/** The bookmarks of one origin: one page is read for all of them. */
+export type OriginGroup = { origin: string; pageUrl: string; bookmarkCount: number };
 
 /** Groups web bookmarks by origin, keeping the first bookmarked page of each. */
 export function groupBookmarksByOrigin(nodes: BookmarkTreeNode[]): {
@@ -420,10 +425,15 @@ export function groupBookmarksByOrigin(nodes: BookmarkTreeNode[]): {
   return { groups: [...groups.values()], scannedBookmarks: bookmarks.length, skippedBookmarks };
 }
 
-async function refreshOrigin(
+/**
+ * Downloads one origin's icon. With `signal` aborted it throws {@link RequestAbortedError}, so a
+ * stopped refresh is never a result.
+ */
+export async function refreshOrigin(
   group: OriginGroup,
   options: SiteIconRefreshOptions,
   cachedIcon: string | undefined,
+  signal?: AbortSignal,
 ): Promise<SiteIconResultItem> {
   const keepsCachedIcon = Boolean(cachedIcon);
   let page: HtmlPage;
@@ -433,16 +443,18 @@ async function refreshOrigin(
       timeoutMs: options.requestTimeoutMs,
       maxBytes: METADATA_MAX_BYTES,
       until: 'head',
+      signal,
     });
   } catch (error) {
-    const errorKind = await classifyFailure(error, group.pageUrl, options.requestTimeoutMs);
+    if (error instanceof RequestAbortedError) throw error;
+    const errorKind = await classifyFailure(error, group.pageUrl, options.requestTimeoutMs, signal);
     return { ...group, status: 'failed', errorKind, keepsCachedIcon };
   }
 
   const candidates = page.html ? parseIconCandidates(page.html, page.url) : [];
   let rejection: SiteIconRejection | undefined;
   for (const iconUrl of selectIconUrls(candidates, group.pageUrl, options.preferredSize)) {
-    const download = await downloadIcon(iconUrl, options);
+    const download = await downloadIcon(iconUrl, options, signal);
     if ('icon' in download) {
       return {
         ...group,
