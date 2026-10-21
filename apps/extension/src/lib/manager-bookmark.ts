@@ -4,10 +4,12 @@
  * with no dependencies: the background may load the actions.
  */
 
-/** What a manager row is: a folder or a bookmark (link). */
+/** What a manager row is: a folder, a bookmark (link), or a Firefox separator. */
 export enum ItemTypeEnum {
   Folder = 'folder',
   Link = 'link',
+  /** Firefox only; a row with no address, which cannot be opened or renamed. */
+  Separator = 'separator',
 }
 
 /**
@@ -32,6 +34,11 @@ export type Bookmark = {
   /** Top-level folders only: stored in the signed-in account rather than only on this device. */
   syncing?: boolean;
 };
+
+/** Whether `bookmark` is a Firefox separator. */
+export function isSeparatorItem(bookmark: Pick<Bookmark, 'type'> | undefined): boolean {
+  return bookmark?.type === ItemTypeEnum.Separator;
+}
 
 /** Whether the browser allows renaming, moving, or deleting this item. */
 export function isModifiableBookmark(bookmark: Bookmark): boolean {

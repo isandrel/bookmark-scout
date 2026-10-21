@@ -1205,6 +1205,10 @@
         "message": "링크",
         "description": "Bookmark item type label"
     },
+    "table_typeSeparator": {
+        "message": "구분선",
+        "description": "Bookmark item type label for a Firefox separator (a line between bookmarks)"
+    },
     "table_openMenu": {
         "message": "메뉴 열기",
         "description": "Accessible label for the bookmark row actions menu"

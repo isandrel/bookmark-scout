@@ -57,7 +57,9 @@ export const ITEM_ACTIONS = {
     icon: 'pencil',
     itemMenu: {
       label: (items) => (isFolderItem(single(items)) ? t('menu_rename') : t('table_edit')),
-      available: (items) => single(items) !== undefined && allModifiable(items),
+      // Firefox cannot rename a separator.
+      available: (items) =>
+        single(items) !== undefined && !isSeparatorItem(items[0]) && allModifiable(items),
       run: (items, host) => host.edit(items[0]),
     },
   }),
@@ -67,7 +69,7 @@ export const ITEM_ACTIONS = {
     labelKey: 'bookmarks_viewDetails',
     icon: 'info',
     itemMenu: {
-      available: (items) => single(items) !== undefined,
+      available: (items) => single(items) !== undefined && !isSeparatorItem(items[0]),
       run: (items, host) => host.showDetails(items[0]),
     },
   }),
