@@ -14,6 +14,9 @@ drag_and_drop = true
 # Where a clicked link opens: "new_tab" (switch to it), "background_tab" (stay here), or
 # "current_tab" (replace the page). Middle-click and Ctrl/Cmd-click keep the browser's behavior.
 open_target = "new_tab"
+# Opening more bookmarks than this at once (Enter, Open all) asks first, as Chrome's manager does
+# at 15. A folder counts the bookmarks directly inside it.
+confirm_open_above = { default = 15, min = 2, max = 200, step = 1 }
 
 [manager_menus]
 # The bookmark manager's item menu (right-click and ⋯): the actions shown, in order, as action ids

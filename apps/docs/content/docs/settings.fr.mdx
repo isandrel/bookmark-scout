@@ -46,6 +46,7 @@ En dessous, **L'IA est facultative** indique que Bookmark Scout fonctionne sans 
 | **Nombre maximal de résultats** | 20 résultats | Nombre maximal de correspondances affichées ; une note indique s'il y en a davantage |
 | **Développer les dossiers lors de la recherche** | Activé | Ouvre les dossiers qui contiennent des correspondances |
 | **Historique des recherches** | Activé | Mémorise les recherches récentes sur cet appareil |
+| **Recherches récentes conservées** | <SettingDefault path="search.search.history_max" /> | Nombre de recherches récentes mémorisées |
 
 Consultez [Recherche et recherches enregistrées](/guides/search).
 
@@ -65,6 +66,8 @@ Consultez [Enregistrer et organiser](/guides/save-and-organize).
 | --- | --- | --- |
 | **Dossier d'enregistrement rapide** | Meilleure correspondance | Où <Shortcut id="commands.quick-save" /> enregistre la page actuelle : le dossier qui lui correspond le mieux, le dernier dossier utilisé ou un dossier choisi. Le raccourci IA utilise toujours la suggestion de l'IA |
 | **Dossier de destination** | Non choisi | Le dossier utilisé pour **Dossier choisi**. S'il est supprimé, l'enregistrement rapide utilise le dernier dossier utilisé |
+| **Autres dossiers proposés** | <SettingDefault path="search.quick_save.alternatives" /> | Nombre d'autres dossiers proposés par la notification d'enregistrement rapide pour déplacer la page |
+| **Durée de la notification** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | Durée d'affichage de la notification d'enregistrement rapide avant sa fermeture ; la survoler la garde ouverte |
 
 En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque raccourci dans votre navigateur, avec **Modifier les raccourcis**. Dans Firefox, vous pouvez aussi saisir directement de nouvelles touches à cet endroit et rétablir celles par défaut. Dans Chrome et Edge, cette section explique aussi comment attribuer <Shortcut id="browser.bookmark_page" /> à l'enregistrement rapide. Consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save) et [Utiliser la touche des favoris pour l'enregistrement rapide](/guides/save-and-organize#ctrl-d).
 
@@ -107,6 +110,7 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Durée des notifications** | 4 s | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
+| **Délai des infobulles** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Temps pendant lequel le pointeur reste sur une commande avant que son explication s'affiche |
 
 ## Comportement [#behavior]
 
@@ -123,6 +127,7 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Ouvrir les liens dans** | Nouvel onglet | **Nouvel onglet**, **Nouvel onglet en arrière-plan** ou **Onglet actuel** : où s'ouvre un lien lorsque vous cliquez dessus dans Bookmark Scout. Le clic du milieu et Cmd/Ctrl+clic fonctionnent toujours comme dans votre navigateur |
+| **Demander au-delà de** | <SettingDefault path="behavior.links.confirm_open_above" /> | Ouvrir plus de favoris que ce nombre à la fois (Entrée, **Tout ouvrir**) demande d'abord, comme le gestionnaire de Chrome ; un dossier compte les favoris qu'il contient directement |
 
 ### Suppression [#deleting]
 
@@ -163,6 +168,7 @@ En dessous, le panneau du fournisseur contient **Clé API**, **URL de base**, **
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Lire le contenu des pages** | Désactivé | Envoie le texte principal de chaque page, et pas seulement son titre et son URL, aux recommandations de dossiers, à l'étiquetage automatique et au générateur de résumés. Demande l'accès aux sites Web lors de l'activation |
+| **Ignorer les pages du réseau local** | Activé | Ne jamais lire les pages de votre réseau local (comme un routeur ou un intranet), pour que leur contenu n'arrive pas chez votre entreprise d'IA |
 
 ### Langue de sortie de l'IA [#ai-output-language]
 
@@ -173,6 +179,12 @@ En dessous, le panneau du fournisseur contient **Clé API**, **URL de base**, **
 ### À propos de moi [#about-me]
 
 **À propos de moi** (vide par défaut) contient quelques mots sur vous, par exemple « Je suis enseignant ; j'enregistre des supports de cours », jusqu'à 1 000 caractères. Tant qu'il contient du texte, les prompts intégrés de chaque fonction d'IA l'envoient à votre fournisseur d'IA pour adapter les résultats ; un prompt personnalisé ne l'envoie que s'il utilise `{{aboutMe}}`. Il est synchronisé via votre compte de navigateur et enregistré quand vous quittez le champ.
+
+### Demander à l'IA [#ask-ai]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Étapes maximales par réponse** | <SettingDefault path="ai.ask_ai.max_steps" /> | Nombre de fois où Demander à l'IA peut appeler le modèle pour une réponse : moins coûte moins, plus lui permet de chercher plus loin |
 
 ### Ce que Demander à l'IA peut faire [#ask-ai-actions]
 

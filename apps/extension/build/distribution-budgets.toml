@@ -69,19 +69,24 @@
 # JavaScript raised on 2026-10-21 (3,580,000 to 3,590,000) for reading HTTP statuses, private
 # networks, image signatures, and value bounds from config (the loaders and their schemas).
 # Firefox measured 3,580,283 B.
+# Uncompressed raised on 2026-10-21 (5,410,000 to 5,440,000) for the same seven settings, the root
+# tooltip provider, and the browser profile config; Firefox measured 5,422,236 B before the
+# remaining numbers moved into config (#739).
+# Locales raised on 2026-10-21 (1,280,000 to 1,290,000) for seven settings that were config (their
+# labels and descriptions in 9 languages): 1,283,868 B measured.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_700_000
-raw_bytes = 5_410_000
+raw_bytes = 5_440_000
 
 [targets.edge]
 zip_bytes = 1_700_000
-raw_bytes = 5_410_000
+raw_bytes = 5_440_000
 
 [targets.firefox]
 zip_bytes = 1_700_000
-raw_bytes = 5_410_000
+raw_bytes = 5_440_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -90,6 +95,6 @@ raw_bytes = 5_410_000
 javascript = 3_590_000
 css = 84_000
 fonts = 143_000
-locales = 1_280_000
+locales = 1_290_000
 images = 320_000
 other = 27_000

@@ -6992,5 +6992,61 @@
     "settings_timeFormatHours24": {
         "message": "24 小时制",
         "description": "Time format option: 24-hour clock."
+    },
+    "settings_openConfirmAbove": {
+        "message": "超过此数量时先确认",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "一次打开的书签多于此数量时先询问；文件夹按其中直接包含的书签计数",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "保留的最近搜索",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "记住的最近搜索数量",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "提供的其他文件夹",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "快速保存通知提供多少个其他文件夹用于移动网页",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "通知显示时长",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "快速保存通知自动关闭前显示多久；指针悬停时保持打开",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "每个回答的最多步数",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "询问 AI 为一个回答最多调用模型几次：越少越省钱，越多可以查得越深入",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "跳过本地网络中的网页",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "从不读取本地网络中的网页（例如路由器或内网），以免其内容发送给 AI 公司",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "提示延迟",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "指针停留在控件上多久后显示说明",
+        "description": "Setting description: tooltipDelay"
     }
 }

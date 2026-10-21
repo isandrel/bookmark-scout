@@ -17,9 +17,7 @@ import type { BookmarkTreeNode } from '@/types';
 const quickSaveConfig = readConfig(
   'ui/quick-save',
   z.strictObject({
-    alternatives: boundedNumber({ integer: true }),
     recent_alternatives: boundedNumber({ integer: true }),
-    auto_dismiss_ms: boundedNumber({ integer: true }),
     visible_tolerance_px: boundedNumber({ integer: false }),
     badge_clear_ms: boundedNumber({ integer: true }),
     popup_result_max_age_ms: boundedNumber({ integer: true }),
@@ -204,7 +202,7 @@ export function buildExpiredQuickSaveView(id: string, settings: Settings): Quick
     note: t('quickSave_replacedNote'),
     actions: [],
     alternatives: [],
-    autoDismissMs: quickSaveConfig.auto_dismiss_ms,
+    autoDismissMs: settings.quickSaveNotificationMs,
   };
 }
 
@@ -252,7 +250,7 @@ export function buildQuickSaveView(
           title: pathText(alternative.path),
         }))
       : [],
-    autoDismissMs: record.status === 'saving' ? null : quickSaveConfig.auto_dismiss_ms,
+    autoDismissMs: record.status === 'saving' ? null : settings.quickSaveNotificationMs,
   };
 }
 
@@ -429,7 +427,7 @@ async function saveLocally(
   // Every strategy offers the folders that match the page; only best match chooses one, and only
   // a strong one (FOLDER_RANKING_MIN_SCORE).
   const ranked = rankFolders(getRankingIndex(tree), page, {
-    limit: quickSaveConfig.alternatives + 1,
+    limit: settings.quickSaveAlternatives + 1,
     minScore: Number.MIN_VALUE,
   });
   const target = chooseQuickSaveTarget(tree, {
@@ -438,7 +436,7 @@ async function saveLocally(
     recentFolderIds,
     ranked,
     minScore: FOLDER_RANKING_MIN_SCORE,
-    alternatives: quickSaveConfig.alternatives,
+    alternatives: settings.quickSaveAlternatives,
     recentAlternatives: quickSaveConfig.recent_alternatives,
     ...(existing?.node.parentId ? { excludeIds: new Set([existing.node.parentId]) } : {}),
   });
@@ -453,7 +451,7 @@ async function saveLocally(
       base,
       existing,
       choices
-        .slice(0, quickSaveConfig.alternatives)
+        .slice(0, settings.quickSaveAlternatives)
         .map(({ id, path }) => ({ folderId: id, path })),
     );
   }

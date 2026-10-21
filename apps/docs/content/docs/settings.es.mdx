@@ -46,6 +46,7 @@ Debajo, **La IA es opcional** explica que Bookmark Scout funciona sin IA; **Conf
 | **Máximo de resultados de búsqueda** | 20 resultados | Máximo de coincidencias que se muestran; una nota avisa cuando hay más |
 | **Desplegar carpetas al buscar** | Activado | Abre las carpetas que contienen coincidencias |
 | **Historial de búsqueda** | Activado | Recuerda las búsquedas recientes en este dispositivo |
+| **Búsquedas recientes guardadas** | <SettingDefault path="search.search.history_max" /> | Cuántas búsquedas recientes se recuerdan |
 
 Consulta [Búsqueda y búsquedas guardadas](/guides/search).
 
@@ -65,6 +66,8 @@ Consulta [Guardar y organizar](/guides/save-and-organize).
 | --- | --- | --- |
 | **Carpeta de guardado rápido** | Mejor coincidencia | Dónde guarda <Shortcut id="commands.quick-save" /> la página actual: en la carpeta que mejor le corresponde, en la última carpeta usada o en una carpeta elegida. El atajo de IA siempre usa la sugerencia de la IA |
 | **Carpeta de destino** | Sin elegir | La carpeta para **Carpeta elegida**. Si se elimina, el guardado rápido usa la última carpeta usada |
+| **Otras carpetas ofrecidas** | <SettingDefault path="search.quick_save.alternatives" /> | Cuántas carpetas más ofrece la notificación del guardado rápido para mover la página |
+| **Duración de la notificación** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | Cuánto dura la notificación del guardado rápido antes de cerrarse; señalarla la mantiene abierta |
 
 Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu navegador, con **Cambiar atajos**. En Firefox también puedes escribir ahí mismo teclas nuevas y restablecer las predeterminadas. En Chrome y Edge también explica cómo asignar <Shortcut id="browser.bookmark_page" /> al guardado rápido. Consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save) y [Usar la tecla de marcadores para el guardado rápido](/guides/save-and-organize#ctrl-d).
 
@@ -107,6 +110,7 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Duración de las notificaciones** | 4 s | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
+| **Retraso de las sugerencias** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Cuánto tiempo descansa el puntero sobre un control antes de que aparezca su explicación |
 
 ## Comportamiento [#behavior]
 
@@ -123,6 +127,7 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Abrir enlaces en** | Pestaña nueva | **Pestaña nueva**, **Pestaña nueva en segundo plano** o **Pestaña actual**: dónde se abre un enlace al hacer clic en él en Bookmark Scout. El clic central y Cmd/Ctrl+clic siguen funcionando como en tu navegador |
+| **Preguntar al abrir más de** | <SettingDefault path="behavior.links.confirm_open_above" /> | Abrir más marcadores que este número a la vez (Intro, **Abrir todo**) pregunta antes, como el administrador de Chrome; una carpeta cuenta los marcadores que tiene directamente |
 
 ### Eliminar [#deleting]
 
@@ -163,6 +168,7 @@ Debajo de estos, el panel del proveedor contiene **Clave de API**, **URL base**,
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Leer el contenido de la página** | Desactivado | Envía el texto principal de cada página, no solo su título y su URL, a las recomendaciones de carpetas, al Etiquetado automático y al Generador de resúmenes. Al activarlo, se pide acceso a los sitios web |
+| **Omitir páginas de la red local** | Activado | No leer nunca páginas de tu red local (como un router o una intranet), para que su contenido no llegue a tu empresa de IA |
 
 ### Idioma de salida de la IA [#ai-output-language]
 
@@ -173,6 +179,12 @@ Debajo de estos, el panel del proveedor contiene **Clave de API**, **URL base**,
 ### Sobre mí [#about-me]
 
 **Sobre mí** (vacío de forma predeterminada) son unas palabras sobre ti, como «Soy docente; guardo material para clases», de hasta 1.000 caracteres. Mientras tenga texto, los prompts integrados de cada función de IA lo envían a tu proveedor de IA para adaptar los resultados; un prompt personalizado solo lo envía si usa `{{aboutMe}}`. Se sincroniza con tu cuenta del navegador y se guarda al salir del campo.
+
+### Preguntar a la IA [#ask-ai]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Pasos máximos por respuesta** | <SettingDefault path="ai.ask_ai.max_steps" /> | Cuántas veces puede Preguntar a la IA llamar al modelo para una respuesta: menos es más barato, más le permite buscar más |
 
 ### Qué puede hacer Preguntar a la IA [#ask-ai-actions]
 

@@ -32,3 +32,5 @@ truncate_length = { default = 50, min = 20, max = 200, step = 10 }
 [notifications]
 # Duration in milliseconds before toast notifications auto-dismiss
 toast_duration_ms = { default = 4000, min = 2000, max = 10000, step = 500 }
+# Milliseconds the pointer rests on a control before its tooltip opens; every page shares it
+tooltip_delay_ms = { default = 200, min = 0, max = 2000, step = 100 }

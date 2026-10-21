@@ -50,7 +50,7 @@ export async function createAskAIAgent() {
     instructions: system,
     toolContext: await createAskAIToolContext(appSettings),
     webSearch: appSettings.askAiWebSearch,
-    maxSteps: ASK_AI_CONFIG.max_steps,
+    maxSteps: appSettings.askAiMaxSteps,
     webSearchMaxUses: ASK_AI_CONFIG.web_search_max_uses,
   });
 }

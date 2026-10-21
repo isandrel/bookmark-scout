@@ -14,6 +14,9 @@ max_recommendations = { default = 5, min = 1, max = 10, step = 1 }
 # Send the readable text of each page, not only its title and URL, to folder recommendations,
 # Auto-Tagging, and Content Summarizer. Needs website access, which is asked for when turned on.
 read_page_content = false
+# Never read pages on the local network (private addresses and names such as .local), so intranet
+# content does not reach an AI company. The address patterns are config/network/private-networks.toml.
+skip_private_hosts = true
 
 [output_language]
 # The language AI writes tags, summaries, and new folder names in, filled into prompts as
@@ -32,3 +35,6 @@ recording = false
 web_search = false
 # Actions Ask AI may not use, as action ids; empty lets it use all of them. Edited in Options > AI.
 disabled_actions = { default = [], max_items = 16, max_length = 20 }
+# Model calls in one Ask AI answer at most, counting each round of tool use: fewer keep an answer
+# cheaper, more let it look further
+max_steps = { default = 8, min = 1, max = 30, step = 1 }

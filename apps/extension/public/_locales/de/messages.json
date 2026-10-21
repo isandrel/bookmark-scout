@@ -7210,5 +7210,61 @@
     "settings_timeFormatHours24": {
         "message": "24 Stunden",
         "description": "Time format option: 24-hour clock."
+    },
+    "settings_openConfirmAbove": {
+        "message": "Nachfragen ab mehr als",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "Wer mehr Lesezeichen auf einmal öffnet, wird zuerst gefragt; ein Ordner zählt die Lesezeichen direkt darin",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "Gespeicherte letzte Suchen",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "Wie viele letzte Suchen gespeichert werden",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "Angebotene andere Ordner",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "Wie viele andere Ordner die Schnellspeichern-Benachrichtigung zum Verschieben anbietet",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "Anzeigedauer der Benachrichtigung",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "Wie lange die Schnellspeichern-Benachrichtigung bleibt; zeigt der Zeiger darauf, bleibt sie offen",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "Höchstens Schritte pro Antwort",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "Wie oft „KI fragen“ das Modell für eine Antwort aufrufen darf: weniger ist günstiger, mehr lässt es weiter suchen",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "Seiten im lokalen Netzwerk überspringen",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "Seiten in Ihrem lokalen Netzwerk (etwa ein Router oder ein Intranet) nie lesen, damit ihr Inhalt kein KI-Unternehmen erreicht",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "Verzögerung für Tooltips",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "Wie lange der Zeiger auf einem Bedienelement ruht, bevor die Erklärung erscheint",
+        "description": "Setting description: tooltipDelay"
     }
 }

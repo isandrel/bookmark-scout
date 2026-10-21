@@ -15,7 +15,6 @@ const config = readConfig(
     max_chars_per_page: z.number().int().positive(),
     max_pages_per_run: z.number().int().nonnegative(),
     concurrency: z.number().int().positive(),
-    skip_private_hosts: z.boolean(),
     private_host_suffixes: z.array(z.string().min(1)),
     drop_elements: z.array(z.string().regex(/^[a-z][a-z0-9-]*$/)),
   }),
@@ -41,10 +40,13 @@ export function isPrivateHost(hostname: string): boolean {
   );
 }
 
-/** Whether a URL may be read: web URLs only, and local hosts only when the config allows it. */
-export function isReadablePageUrl(url: string): boolean {
+/**
+ * Whether a URL may be read: web URLs only, and local hosts only when the Skip Local Network
+ * Pages setting is off.
+ */
+export function isReadablePageUrl(url: string, skipPrivateHosts: boolean): boolean {
   if (!isWebUrl(url)) return false;
-  return !config.skip_private_hosts || !isPrivateHost(new URL(url).hostname);
+  return !skipPrivateHosts || !isPrivateHost(new URL(url).hostname);
 }
 
 /** The readable text of a parsed page, or undefined when it has none. */
@@ -58,14 +60,15 @@ export async function extractPageText(
 
 /** Downloads and reads one page; undefined when it cannot or may not be read. */
 export async function readPageText(url: string): Promise<PageText | undefined> {
-  if (!isReadablePageUrl(url)) return undefined;
+  const { readPageSkipPrivateHosts } = await getSettings();
+  if (!isReadablePageUrl(url, readPageSkipPrivateHosts)) return undefined;
   try {
     const { html } = await fetchHtmlPage(url, {
       timeoutMs: config.timeout_ms,
       maxBytes: config.max_bytes,
       until: 'end',
       // A redirect can lead to a local host; that page is not read either.
-      allowUrl: isReadablePageUrl,
+      allowUrl: (next) => isReadablePageUrl(next, readPageSkipPrivateHosts),
     });
     if (!html) return undefined;
     return await extractPageText(parseFetchedHtml(html));
@@ -96,7 +99,10 @@ export async function addPageText<Item extends { url: string }>(
  * was read to its text; the rest are missing.
  */
 export async function readPagesText(urls: string[]): Promise<Map<string, PageText>> {
-  const unique = [...new Set(urls.filter(isReadablePageUrl))].slice(0, config.max_pages_per_run);
+  const { readPageSkipPrivateHosts } = await getSettings();
+  const unique = [
+    ...new Set(urls.filter((url) => isReadablePageUrl(url, readPageSkipPrivateHosts))),
+  ].slice(0, config.max_pages_per_run);
   const pages = await mapWithConcurrency(unique, config.concurrency, async (url) => ({
     url,
     page: await readPageText(url),

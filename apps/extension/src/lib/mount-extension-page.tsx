@@ -87,8 +87,10 @@ function renderPage(rootElement: HTMLElement, page: ReactNode, titleKey?: Messag
       <ErrorBoundary>
         <ThemeProvider storageKey={THEME_CACHE_STORAGE_KEY}>
           <LanguageRoot>
-            <PageTitle titleKey={titleKey} />
-            {page}
+            <TooltipProvider>
+              <PageTitle titleKey={titleKey} />
+              {page}
+            </TooltipProvider>
           </LanguageRoot>
         </ThemeProvider>
       </ErrorBoundary>

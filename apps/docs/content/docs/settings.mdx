@@ -46,6 +46,7 @@ Below them, **AI is optional** says that Bookmark Scout works without AI; **Set 
 | **Max Search Results** | 20 results | Most matches shown; a note says when there are more |
 | **Expand Folders on Search** | On | Open the folders that contain matches |
 | **Search History** | On | Remember recent searches on this device |
+| **Recent Searches Kept** | <SettingDefault path="search.search.history_max" /> | How many recent searches to remember |
 
 See [Search and saved searches](/guides/search).
 
@@ -65,6 +66,8 @@ See [Save and organize](/guides/save-and-organize).
 | --- | --- | --- |
 | **Quick Save Folder** | Best match | Where <Shortcut id="commands.quick-save" /> saves the current page: the folder that best matches it, the last used folder, or a chosen folder. The AI shortcut always uses the AI suggestion |
 | **Folder to Save To** | Not chosen | The folder for **Chosen folder**. If it is deleted, quick save uses the last used folder |
+| **Other Folders Offered** | <SettingDefault path="search.quick_save.alternatives" /> | How many other folders the quick save notification offers to move the page to |
+| **Notification Duration** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | How long the quick save notification stays before it closes; pointing at it keeps it open |
 
 Below them, **Keyboard shortcuts** shows the keys each shortcut has in your browser, with **Change shortcuts**. In Firefox you can also type new keys right there and reset them to the default. In Chrome and Edge it also explains how to give quick save <Shortcut id="browser.bookmark_page" />. See [Save with a keyboard shortcut](/guides/save-and-organize#quick-save) and [Use the bookmark key for quick save](/guides/save-and-organize#ctrl-d).
 
@@ -107,6 +110,7 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | Setting | Default | What it does |
 | --- | --- | --- |
 | **Toast Duration** | 4 s | How long messages stay open. Undo messages keep their own 10-second window |
+| **Tooltip Delay** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | How long the pointer rests on a control before its explanation appears |
 
 ## Behavior [#behavior]
 
@@ -123,6 +127,7 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | Setting | Default | What it does |
 | --- | --- | --- |
 | **Open links in** | New tab | **New tab**, **New background tab**, or **Current tab**: where a link opens when you click it in Bookmark Scout. Middle-click and Cmd/Ctrl-click keep working the way your browser does |
+| **Ask Before Opening More Than** | <SettingDefault path="behavior.links.confirm_open_above" /> | Opening more bookmarks than this at once (Enter, **Open all**) asks first, as Chrome's manager does; a folder counts the bookmarks directly inside it |
 
 ### Deleting [#deleting]
 
@@ -163,6 +168,7 @@ Below these, the provider panel holds **API Key**, **Base URL**, **Custom Model*
 | Setting | Default | What it does |
 | --- | --- | --- |
 | **Read page content** | Off | Send the main text of each page, not only its title and URL, to folder recommendations, Auto-Tagging, and Content Summarizer. Asks for website access when turned on |
+| **Skip Local Network Pages** | On | Never read pages on your local network (such as a router or an intranet), so their content does not reach your AI company |
 
 ### AI output language [#ai-output-language]
 
@@ -173,6 +179,12 @@ Below these, the provider panel holds **API Key**, **Base URL**, **Custom Model*
 ### About me [#about-me]
 
 **About me** (empty by default) is a few words about you, such as "I'm a teacher; I save lesson material", up to 1,000 characters. While it has text, the built-in prompts of every AI feature send it to your AI provider, so results fit you better; a custom prompt sends it only if it uses `{{aboutMe}}`. It syncs through your browser account and is saved when you leave the field.
+
+### Ask AI [#ask-ai]
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Most Steps per Answer** | <SettingDefault path="ai.ask_ai.max_steps" /> | How many times Ask AI may call the model for one answer: fewer keep it cheaper, more let it look further |
 
 ### What Ask AI may do [#ask-ai-actions]
 
