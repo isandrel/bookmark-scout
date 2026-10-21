@@ -96,6 +96,42 @@ describe('AI host page requests', () => {
   });
 });
 
+describe('one AI host page shared by a quick save and a background task (J57)', () => {
+  it('opens the page once, keeps it while either still uses it, and closes it after the last', async () => {
+    vi.spyOn(fakeBrowser.runtime, 'sendMessage').mockResolvedValue({
+      ok: true,
+      head: { title: 'T' },
+    });
+    const offscreen = (
+      fakeBrowser as unknown as { offscreen: { createDocument: Mock; closeDocument: Mock } }
+    ).offscreen;
+    // The background task's slice holds the page while it reads heads.
+    let finishSlice = () => {};
+    const sliceDone = new Promise<void>((resolve) => {
+      finishSlice = resolve;
+    });
+    const slice = withAIHost(null, { locale: 'en' }, async (host) => {
+      await host.readHead('<title>A</title>', false);
+      await sliceDone;
+      return host.readHead('<title>B</title>', false);
+    });
+    await vi.waitFor(() => expect(offscreen.createDocument).toHaveBeenCalledOnce());
+
+    // A quick save comes and goes meanwhile; the page stays for the task.
+    await withAIHost(
+      settings,
+      { locale: 'en', source: 'folderRecommendation' },
+      async () => undefined,
+    );
+    expect(offscreen.closeDocument).not.toHaveBeenCalled();
+
+    finishSlice();
+    expect(await slice).toEqual({ title: 'T' });
+    expect(offscreen.createDocument).toHaveBeenCalledOnce();
+    expect(offscreen.closeDocument).toHaveBeenCalledOnce();
+  });
+});
+
 describe("the built-in model's warm AI host page", () => {
   const builtin: AISettings = {
     enabled: true,

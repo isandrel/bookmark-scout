@@ -452,6 +452,39 @@ describe('a worker that just started (J18, J21, J22)', () => {
   });
 });
 
+describe('a short job started during a long one (J32)', () => {
+  it("runs between the long one's slices instead of waiting for it to end", async () => {
+    const big = JOB_LIMITS.sliceMaxItems * 2 + 1;
+    installFakeBookmarks([
+      { id: 'big', title: 'Big' },
+      { id: 'small', title: 'Small' },
+      ...Array.from({ length: big }, (_, index) => ({
+        id: `big${index}`,
+        parentId: 'big',
+        title: `Big ${index}`,
+        url: `https://e2e.invalid/big/${index}`,
+      })),
+      { id: 's1', parentId: 'small', title: 'S1', url: 'https://e2e.invalid/small/1' },
+    ]);
+    const order: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        order.push(new URL(input).pathname);
+        return new Response('', { status: 200 });
+      }),
+    );
+    const long = await start(crypto.randomUUID(), 'big');
+    const short = await start(crypto.randomUUID(), 'small');
+    if (!long.ok || !short.ok || !long.job || !short.job) throw new Error('not accepted');
+    await whenJobsIdle();
+    // The short job's one link was asked for before the long job's last slice.
+    expect(order.indexOf('/small/1')).toBeLessThan(order.length - 1 - JOB_LIMITS.sliceMaxItems);
+    expect((await getJob(short.job.id))?.state).toBe('succeeded');
+    expect((await getJob(long.job.id))?.done.succeeded).toBe(big);
+  });
+});
+
 describe('jobs side by side (J30, J56)', () => {
   it('runs two jobs over the same sites one after the other (J30)', async () => {
     const held = heldFetch();
@@ -483,7 +516,7 @@ describe('jobs side by side (J30, J56)', () => {
 });
 
 describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
-  it('counts nothing a failed save did not keep, and stops the job with the reason (J26)', async () => {
+  it('counts nothing a failed save did not keep, pauses with the reason, and goes on when resumed (J26)', async () => {
     const held = heldFetch();
     vi.stubGlobal('fetch', held.fetch);
     vi.spyOn(jobStore, 'commitItems').mockRejectedValueOnce(new JobStoreError('write-failed'));
@@ -492,7 +525,7 @@ describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
     const jobId = response.job.id;
     await until(async () => {
       held.releaseAll();
-      return (await getJob(jobId))?.state === 'failed';
+      return (await getJob(jobId))?.state === 'paused';
     });
     const job = await getJob(jobId);
     const items = await getJobItems(jobId);
@@ -502,6 +535,11 @@ describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
       done,
     );
     expect(job?.lastError?.code).toBe('slice-setup');
+
+    await runJobCommand({ type: 'resume', jobId });
+    await drain(held, jobId);
+    // Every link counted once in the end, those whose save failed included.
+    expect((await getJob(jobId))?.done.succeeded).toBe(6);
   });
 
   it('lets another page upgrade the store, and answers commands with an error, not a hang (J65)', async () => {

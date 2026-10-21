@@ -424,28 +424,15 @@ export async function fetchMetadataItem(
   const { url } = base;
   const item = { ...base, changed: false };
   if (!isWebUrl(url)) return { ...item, status: 'skipped' };
+  let page: Awaited<ReturnType<typeof fetchHtmlPage>>;
   try {
     // Error pages ("404 Not Found") must never become title suggestions.
-    const page = await fetchHtmlPage(url, {
+    page = await fetchHtmlPage(url, {
       timeoutMs: options.requestTimeoutMs,
       maxBytes: METADATA_MAX_BYTES,
       until: 'head',
       signal,
     });
-    if (!page.ok) return { ...item, status: 'httpError', statusCode: page.status };
-    if (page.html === null) return { ...item, status: 'notHtml', statusCode: page.status };
-    const { title: suggestedTitle, description } = await readHead(page.html);
-    const changed = Boolean(
-      (options.overwriteTitles || !base.title) && suggestedTitle && suggestedTitle !== base.title,
-    );
-    return {
-      ...item,
-      status: 'ok',
-      statusCode: page.status,
-      suggestedTitle,
-      description: options.fetchDescriptions ? description : undefined,
-      changed,
-    };
   } catch (error) {
     if (error instanceof RequestAbortedError) throw error;
     const errorKind = await classifyFailure(error, url, options.requestTimeoutMs, signal);
@@ -453,6 +440,22 @@ export async function fetchMetadataItem(
       ? { ...item, status: 'timeout' }
       : { ...item, status: 'error', errorKind };
   }
+  if (!page.ok) return { ...item, status: 'httpError', statusCode: page.status };
+  if (page.html === null) return { ...item, status: 'notHtml', statusCode: page.status };
+  // Outside the page's errors: a parser that fails (the AI host page gone) is thrown to the
+  // caller, never reported as something wrong with this page.
+  const { title: suggestedTitle, description } = await readHead(page.html);
+  const changed = Boolean(
+    (options.overwriteTitles || !base.title) && suggestedTitle && suggestedTitle !== base.title,
+  );
+  return {
+    ...item,
+    status: 'ok',
+    statusCode: page.status,
+    suggestedTitle,
+    description: options.fetchDescriptions ? description : undefined,
+    changed,
+  };
 }
 
 export async function fetchBookmarkMetadata(

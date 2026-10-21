@@ -42,7 +42,7 @@ Each step adds one entry; no step adds a special case.
 
 - **Outcomes.** `succeeded` means checked, whatever was found (a dead link is a result). `skipped` means not checkable (not a web link). `failed` means the item could not be checked at all.
 - **Stopping.** A stopped item is never a result. Pause and cancel abort the item's signal, and the item stays pending.
-- **Blocking.** When the user has to act first, throw `JobBlockedError(code, detail)`. The job pauses with the reason and is never retried on its own. Examples: AI is off, the service is not set up or changed, or a request failed. Resume is the user's answer.
+- **Blocking.** When the user has to act first, throw `JobBlockedError(code, detail)`. The job pauses with the reason and is never retried on its own. Examples: AI is off, the service is not set up or changed, or a request failed. Resume is the user's answer. Anything else a slice throws (the AI host page gone, a save refused) pauses it too, as `slice-setup`, with nothing counted that was not saved; a job never ends as failed on its own. A tool helper must let errors that are not about the item it reads (a head reader, a store) reach the coordinator instead of reporting them as that item's result.
 - **Requests that may cost money.** For an `ai` adapter, every item is marked in flight before it is sent. A stopped worker leaves the mark, so reconcile pauses the job with `uncertain-request` instead of sending the request again. An AI request is not aborted on pause: it is allowed to finish and its answer is saved.
 - **Where requests go.** An `ai` job keeps only a digest of its service (`aiDestination`) and stops when the service changes. Never store a key or its settings in options or results.
 - **Fencing.** Every commit checks the claim's generation and the item's pending state in one transaction. Never write results outside `commitItem` and `commitItems`.
@@ -50,6 +50,7 @@ Each step adds one entry; no step adds a special case.
 - **Writes.** Scan jobs only read; nothing a job finds is applied without the review. Applying a review goes through `applyReviewedChanges`: up to the `jobsApplyInBackgroundAbove` setting it runs in the page as before, above it the page sends the stored changes (no `check`, which is code) to an `applyChanges` job. That job's `runBatch` applies one slice per call to `applyBookmarkChanges` (`part: { jobId, index, of }`): each part is one undo entry and one Audit History record linked by `jobId` and labelled "(part n of m)". Every change is checked against the live bookmark first, so on Resume after a stop (`uncertain-write`) a change already made is skipped, never repeated. Pause and cancel take effect between parts.
 - **DOM.** A service worker has no DOM parser. Firefox's background page has one. Otherwise HTML goes to the AI host page (`withAIHost`, `readHead`), which is opened once per slice.
 - **Startup.** `registerJobs()` registers its listeners synchronously in the background's main function. Every wake reconciles first.
+- **Turns.** One slice runs at a time. Jobs take turns by slice, the one that waited longest first (`nextRunnable`), so a short job started during a long one runs between its slices instead of after it.
 
 ## Tests
 

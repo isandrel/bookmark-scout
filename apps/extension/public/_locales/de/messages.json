@@ -7388,8 +7388,8 @@
         "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
     },
     "jobs_errorSetup": {
-        "message": "Diese Aufgabe konnte nicht weiterlaufen. Starten Sie sie neu.",
-        "description": "A background task stopped and cannot go on"
+        "message": "Angehalten: Etwas, das diese Aufgabe braucht, konnte nicht starten oder speichern. Setzen Sie fort, um dort weiterzumachen, wo sie stehen blieb.",
+        "description": "A background task paused because something it needs could not start or a result could not be saved; Resume goes on"
     },
     "settings_jobsApplyInBackgroundAbove": {
         "message": "Im Hintergrund übernehmen ab",

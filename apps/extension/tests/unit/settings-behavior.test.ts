@@ -2,6 +2,7 @@
  * Service-level checks that settings change results. Each test flips one setting and asserts the
  * output differs; the matrix in tests/settings-matrix.ts points here for these settings.
  */
+import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildAIContextPack } from '@/services/ai-bookmark-tools';
 import {
@@ -149,6 +150,8 @@ describe('network tool settings', () => {
   });
 
   it('metadata fetches never exceed the saved concurrency', async () => {
+    // The pages the fetcher runs in parse HTML; this test runs where there is no parser.
+    vi.stubGlobal('DOMParser', LinkedomParser);
     const options = {
       overwriteTitles: true,
       fetchDescriptions: false,
