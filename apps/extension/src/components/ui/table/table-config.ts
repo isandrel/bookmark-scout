@@ -3,6 +3,7 @@
  * widths, and the save delay, date filter, and filter badge limits.
  */
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const pixels = z.number().int().positive();
 
@@ -27,7 +28,7 @@ const managerTableConfig = readConfig(
       default_columns: z.array(z.string().min(1)).min(1),
       column_sizing_save_delay_ms: z.number().int().nonnegative(),
       removed_row_focus_wait_ms: z.number().int().nonnegative(),
-      date_filter_months: z.number().int().min(1).max(12),
+      date_filter_months: boundedNumber({ integer: true }),
       facet_badges_max: z.number().int().nonnegative(),
       columns: z.record(z.string(), columnLayoutSchema),
     })

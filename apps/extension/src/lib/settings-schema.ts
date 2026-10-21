@@ -5,6 +5,7 @@
  */
 
 import { z } from 'zod';
+import { httpStatusCodeSchema } from '@/lib/http-status';
 
 /** `folder` stores a bookmark folder id, chosen from the user's folders by path. */
 type SettingsFieldType = 'switch' | 'select' | 'number' | 'text' | 'folder';
@@ -249,8 +250,6 @@ export const faviconSizeSchema = z.literal([16, 24, 32]);
 export type FaviconSize = z.infer<typeof faviconSizeSchema>;
 
 export const maxSearchResultsSchema = z.literal([10, 20, 50, 100]);
-
-export const httpStatusCodeSchema = z.number().int().min(100).max(599);
 
 const toolScopeSchema = z.enum(['folder', 'all']);
 const contextMenuNamingSchema = z.enum(['link_text', 'page_title', 'link_url']);

@@ -15,9 +15,9 @@ test.use({ grantPermissions: ['tabs'] });
 const { popup } = readConfigToml('settings/appearance.toml') as {
   popup: { width: { min: number } };
 };
-const { min_text_width_px: minTextWidth } = readConfigToml('ui/popup-search.toml') as {
-  min_text_width_px: number;
-};
+const minTextWidth = (
+  readConfigToml('ui/popup-search.toml') as { min_text_width_px: { value: number } }
+).min_text_width_px.value;
 
 type Box = { label: string; left: number; right: number; top: number; bottom: number };
 

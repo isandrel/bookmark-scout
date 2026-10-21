@@ -6,10 +6,11 @@
 import { type ReactNode, StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const pageOpenConfig = readConfig(
   'ui/page-open',
-  z.strictObject({ preload_wait_ms: z.number().int().min(0).max(1000) }),
+  z.strictObject({ preload_wait_ms: boundedNumber({ integer: true }) }),
 );
 
 /** The element each entrypoint's index.html renders into (unit-tested against the HTML files). */

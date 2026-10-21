@@ -21,7 +21,7 @@ column_sizing_save_delay_ms = 400
 removed_row_focus_wait_ms = 1500
 
 # Months shown side by side in the Date Added filter's calendar
-date_filter_months = 2
+date_filter_months = { value = 2, min = 1, max = 12 }
 
 # A filter button names up to this many selected options; more are shown as a count
 facet_badges_max = 2

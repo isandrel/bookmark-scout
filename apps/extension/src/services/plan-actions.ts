@@ -51,7 +51,7 @@ export const actionPlansValue = defineStoredValue<ActionPlan[]>(STORAGE_ITEMS.ac
   isEmpty: (plans) => plans.length === 0,
 });
 
-const PLAN_TTL_MS = actionLimits.plan_ttl_minutes * 60_000;
+const PLAN_TTL_MS = actionLimits.plan_ttl_minutes * MS_PER_MINUTE;
 
 function clientName(client: ActionClient): string {
   return client.kind === 'askAI' ? 'askAI' : client.name;

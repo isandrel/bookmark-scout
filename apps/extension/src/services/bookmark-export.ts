@@ -186,10 +186,7 @@ export function escapeMarkdownLineStart(text: string): string {
 
 /** Percent-encodes characters that would end or break a Markdown link destination. */
 function escapeMarkdownUrl(url: string): string {
-  return url.replace(
-    /[\s()<>]/g,
-    (char) => `%${char.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`,
-  );
+  return url.replace(/[\s()<>]/g, (char) => `%${byteToHex(char.charCodeAt(0)).toUpperCase()}`);
 }
 
 /**

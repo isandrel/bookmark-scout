@@ -6,4 +6,4 @@
 # its final layout instead of rows and buttons appearing a moment later and moving what is under
 # the pointer. These reads usually take 10 to 60 ms; past this cap the page renders anyway and
 # fills in what is still missing.
-preload_wait_ms = 150
+preload_wait_ms = { value = 150, min = 0, max = 1000 }

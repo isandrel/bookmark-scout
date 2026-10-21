@@ -94,9 +94,9 @@ function decodeHtmlEntities(value: string): string {
     if (entity[0] === '#') {
       const codePoint =
         entity[1] === 'x' || entity[1] === 'X'
-          ? Number.parseInt(entity.slice(2), 16)
+          ? Number.parseInt(entity.slice(2), HEX_RADIX)
           : Number.parseInt(entity.slice(1), 10);
-      return Number.isFinite(codePoint) && codePoint > 0 && codePoint <= 0x10ffff
+      return Number.isFinite(codePoint) && codePoint > 0 && codePoint <= MAX_CODE_POINT
         ? String.fromCodePoint(codePoint)
         : match;
     }
@@ -275,7 +275,29 @@ export function selectIconUrls(
   return declared.includes(fallback) ? declared : [...declared, fallback];
 }
 
-function startsWithBytes(bytes: Uint8Array, signature: number[], offset = 0): boolean {
+const BYTE = z.number().int().min(0).max(BYTE_MAX);
+
+const imageSignatures = readConfig(
+  'network/image-signatures',
+  z.strictObject({
+    binary: z.array(
+      z.strictObject({
+        type: z.string().startsWith('image/'),
+        parts: z
+          .array(
+            z.strictObject({ offset: z.number().int().nonnegative(), bytes: z.array(BYTE).min(1) }),
+          )
+          .min(1),
+      }),
+    ),
+    svg: z.strictObject({
+      type: z.string().startsWith('image/'),
+      sniff_bytes: z.number().int().positive(),
+    }),
+  }),
+);
+
+function startsWithBytes(bytes: Uint8Array, signature: readonly number[], offset: number): boolean {
   return signature.every((value, index) => bytes[offset + index] === value);
 }
 
@@ -284,24 +306,19 @@ function startsWithBytes(bytes: Uint8Array, signature: number[], offset = 0): bo
  * page served as `image/png`, for example). SVG must start with markup that opens `<svg`.
  */
 export function sniffImageType(bytes: Uint8Array): string | null {
-  if (startsWithBytes(bytes, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) return 'image/png';
-  if (startsWithBytes(bytes, [0x00, 0x00, 0x01, 0x00])) return 'image/x-icon';
-  if (startsWithBytes(bytes, [0x47, 0x49, 0x46, 0x38])) return 'image/gif';
-  if (startsWithBytes(bytes, [0xff, 0xd8, 0xff])) return 'image/jpeg';
-  if (
-    startsWithBytes(bytes, [0x52, 0x49, 0x46, 0x46]) &&
-    startsWithBytes(bytes, [0x57, 0x45, 0x42, 0x50], 8)
-  ) {
-    return 'image/webp';
-  }
-  if (startsWithBytes(bytes, [0x42, 0x4d])) return 'image/bmp';
-  let text = new TextDecoder('utf-8').decode(bytes.subarray(0, 1024)).replace(/^\ufeff/, '');
+  const binary = imageSignatures.binary.find(({ parts }) =>
+    parts.every((part) => startsWithBytes(bytes, part.bytes, part.offset)),
+  );
+  if (binary) return binary.type;
+  let text = new TextDecoder()
+    .decode(bytes.subarray(0, imageSignatures.svg.sniff_bytes))
+    .replace(/^\ufeff/, '');
   // Skip a leading XML declaration, comments, and doctype one token at a time.
   const prolog = /^\s*(?:<\?xml[\s\S]*?\?>|<!--[\s\S]*?-->|<!DOCTYPE[^>]*>)/i;
   for (let match = prolog.exec(text); match; match = prolog.exec(text)) {
     text = text.slice(match[0].length);
   }
-  return /^\s*<svg[\s>]/i.test(text) ? 'image/svg+xml' : null;
+  return /^\s*<svg[\s>]/i.test(text) ? imageSignatures.svg.type : null;
 }
 
 export function isImageContentType(contentType: string | null): boolean {

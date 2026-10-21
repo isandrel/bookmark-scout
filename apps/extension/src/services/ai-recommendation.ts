@@ -7,6 +7,7 @@
  */
 
 import { z } from 'zod';
+import { PERCENT } from '@/lib/units';
 import type { BookmarkTreeNode } from '@/types';
 
 /**
@@ -116,7 +117,7 @@ export async function buildFolderRecommendationRequest(
 
 /** A confidence from 0 to 1; a model that answered in percent (85) is rescaled. */
 export function normalizeConfidence(confidence: number): number {
-  const fraction = confidence > 1 ? confidence / 100 : confidence;
+  const fraction = confidence > 1 ? confidence / PERCENT : confidence;
   return Math.min(1, Math.max(0, fraction));
 }
 

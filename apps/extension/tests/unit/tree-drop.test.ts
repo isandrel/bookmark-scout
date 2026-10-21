@@ -11,9 +11,12 @@ import {
 import type { BookmarkTreeNode } from '@/types';
 import { readConfigToml } from '../config-files';
 
-const { folder_edge_fraction: edge, bookmark_split_fraction: split } = readConfigToml(
-  'ui/drag-drop.toml',
-) as { folder_edge_fraction: number; bookmark_split_fraction: number };
+const dragDrop = readConfigToml('ui/drag-drop.toml') as {
+  folder_edge_fraction: { value: number };
+  bookmark_split_fraction: number;
+};
+const edge = dragDrop.folder_edge_fraction.value;
+const split = dragDrop.bookmark_split_fraction;
 
 const folderNode: BookmarkTreeNode = {
   id: 'f1',

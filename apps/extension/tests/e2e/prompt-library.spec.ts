@@ -345,9 +345,9 @@ test('the prompt size counter and limit count the prompt as sync storage stores 
   extensionWorker,
   page,
 }) => {
-  const { prompt_max_bytes: maxBytes } = readConfigToml('ai/prompt-library.toml') as {
-    prompt_max_bytes: number;
-  };
+  const maxBytes = (
+    readConfigToml('ai/prompt-library.toml') as { prompt_max_bytes: { value: number } }
+  ).prompt_max_bytes.value;
   const kilobytes = (bytes: number) => `${Math.round((bytes / 1024) * 10) / 10} KB`;
   await setSettings(extensionWorker, { language: 'en' });
   await page.goto(`chrome-extension://${extensionId}/options.html`);

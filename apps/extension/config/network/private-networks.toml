@@ -1,0 +1,19 @@
+# Addresses not reachable from the public internet. Read by src/lib/private-network.ts; page
+# reading skips them and connection errors name them. Host name suffixes are in
+# config/ai/page-reading.toml.
+
+# IPv4 ranges in CIDR notation (RFC 1122, 1918, 6598, 3927).
+ipv4 = [
+  "0.0.0.0/8",
+  "10.0.0.0/8",
+  "100.64.0.0/10",
+  "127.0.0.0/8",
+  "169.254.0.0/16",
+  "172.16.0.0/12",
+  "192.168.0.0/16",
+]
+
+# IPv6: the unspecified and loopback addresses, and the start of unique local (fc00::/7) and
+# link local (fe80::/10) addresses, written in lower case.
+ipv6_addresses = ["::", "::1"]
+ipv6_prefixes = ["fc", "fd", "fe8", "fe9", "fea", "feb"]

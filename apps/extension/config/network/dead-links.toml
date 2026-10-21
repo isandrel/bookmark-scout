@@ -1,0 +1,10 @@
+# How Find Dead Links names a failed check, by HTTP status. Read by
+# src/services/bookmark-network-tools.ts. A status not listed is a server error from
+# `server_error_min` in config/network/http.toml, else an HTTP error. `method_rejected`: HEAD
+# and the GET fallback were both refused, so the server refuses automated checks.
+
+[status_categories]
+not_found = [404, 410]
+auth = [401, 403, 407]
+rate_limited = [429]
+method_rejected = [405, 501]

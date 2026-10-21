@@ -10,13 +10,14 @@
  */
 
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 import type { BookmarkTreeNode } from '@/types';
 
 const folderMatchConfig = readConfig(
   'ui/popup-folder-matches',
   z.strictObject({
-    fuzzy_min_length: z.number().int().min(2).max(20),
-    recent_bonus: z.number().int().min(0).max(100),
+    fuzzy_min_length: boundedNumber({ integer: true }),
+    recent_bonus: boundedNumber({ integer: true }),
     max_height_fraction: z.number().gt(0).max(1),
   }),
 );

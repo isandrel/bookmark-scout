@@ -50,29 +50,37 @@ const CONFIRMED_DEAD_CATEGORIES: ReadonlySet<DeadLinkCategory> = new Set([
   'redirectLoop',
 ]);
 
-/**
- * Failure categories of specific HTTP statuses. `methodRejected`: HEAD and the GET fallback
- * were both rejected, so the server refuses automated checks.
- */
-const HTTP_FAILURE_CATEGORIES: ReadonlyMap<number, DeadLinkCategory> = new Map([
-  [404, 'notFound'],
-  [410, 'notFound'],
-  [401, 'auth'],
-  [403, 'auth'],
-  [407, 'auth'],
-  [429, 'rateLimited'],
-  [405, 'methodRejected'],
-  [501, 'methodRejected'],
-]);
+const deadLinkConfig = readConfig(
+  'network/dead-links',
+  z.strictObject({
+    status_categories: z.strictObject({
+      not_found: z.array(httpStatusCodeSchema),
+      auth: z.array(httpStatusCodeSchema),
+      rate_limited: z.array(httpStatusCodeSchema),
+      method_rejected: z.array(httpStatusCodeSchema),
+    }),
+  }),
+);
 
-/** Statuses from here up are server errors when no specific category applies. */
-const SERVER_ERROR_MIN_STATUS = 500;
+/** Failure categories of specific HTTP statuses (config/network/dead-links.toml). */
+const HTTP_FAILURE_CATEGORIES: ReadonlyMap<number, DeadLinkCategory> = new Map(
+  (
+    [
+      ['not_found', 'notFound'],
+      ['auth', 'auth'],
+      ['rate_limited', 'rateLimited'],
+      ['method_rejected', 'methodRejected'],
+    ] as const
+  ).flatMap(([key, category]) =>
+    deadLinkConfig.status_categories[key].map((status) => [status, category] as const),
+  ),
+);
 
 /** Classifies a non-success HTTP status. A HEAD error has already been retried with GET. */
 export function classifyHttpFailure(statusCode: number): DeadLinkCategory {
   return (
     HTTP_FAILURE_CATEGORIES.get(statusCode) ??
-    (statusCode >= SERVER_ERROR_MIN_STATUS ? 'serverError' : 'httpError')
+    (statusCode >= HTTP_STATUS.serverErrorMin ? 'serverError' : 'httpError')
   );
 }
 
@@ -258,7 +266,7 @@ async function probeUrl(url: string, timeoutMs: number): Promise<ProbeResult> {
     timeoutMs,
     summarize,
   );
-  if (head.status < 400) {
+  if (!isHttpErrorStatus(head.status)) {
     return head;
   }
   return requestWithTimeout(url, { method: 'GET', redirect: 'follow' }, timeoutMs, summarize);

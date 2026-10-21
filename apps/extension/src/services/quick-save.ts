@@ -11,17 +11,18 @@
  */
 
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 import type { BookmarkTreeNode } from '@/types';
 
 const quickSaveConfig = readConfig(
   'ui/quick-save',
   z.strictObject({
-    alternatives: z.number().int().min(0).max(8),
-    recent_alternatives: z.number().int().min(0).max(8),
-    auto_dismiss_ms: z.number().int().min(1000).max(120_000),
-    visible_tolerance_px: z.number().min(0).max(64),
-    badge_clear_ms: z.number().int().min(500).max(60_000),
-    popup_result_max_age_ms: z.number().int().min(1000),
+    alternatives: boundedNumber({ integer: true }),
+    recent_alternatives: boundedNumber({ integer: true }),
+    auto_dismiss_ms: boundedNumber({ integer: true }),
+    visible_tolerance_px: boundedNumber({ integer: false }),
+    badge_clear_ms: boundedNumber({ integer: true }),
+    popup_result_max_age_ms: boundedNumber({ integer: true }),
     badge_success_text: z.string().min(1).max(4),
     badge_failure_text: z.string().min(1).max(4),
     badge_success_color: z.string().regex(/^#[0-9a-f]{6}$/i),

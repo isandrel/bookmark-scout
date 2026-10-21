@@ -5,4 +5,4 @@
 # options, Clear). When the row is too narrow for that next to every button it may show
 # (with AI on and a search typed), the buttons move to a second row below the search box. The
 # check counts buttons that are not shown yet, so the layout does not jump while typing.
-min_text_width_px = 72
+min_text_width_px = { value = 72, min = 16, max = 400 }

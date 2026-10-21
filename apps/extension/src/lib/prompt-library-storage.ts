@@ -10,6 +10,7 @@
  * failed write; leftovers older than a grace period are removed (`removeOrphanPrompts`).
  */
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const customPromptSchema = z.object({
   id: z.string().min(1),
@@ -37,7 +38,7 @@ export type PromptLibrary = {
 const promptLibraryConfig = readConfig(
   'ai/prompt-library',
   z.strictObject({
-    prompt_max_bytes: z.number().int().positive().max(8192),
+    prompt_max_bytes: boundedNumber({ integer: true }),
     max_prompts: z.number().int().positive(),
     orphan_grace_hours: z.number().positive(),
   }),
@@ -52,7 +53,7 @@ export const MAX_PROMPT_BYTES = promptLibraryConfig.prompt_max_bytes;
 /** Most custom prompts in all, so that with the other synced items they fit the 100 KB quota. */
 export const MAX_PROMPTS = promptLibraryConfig.max_prompts;
 
-const ORPHAN_GRACE_MS = promptLibraryConfig.orphan_grace_hours * 60 * 60 * 1000;
+const ORPHAN_GRACE_MS = promptLibraryConfig.orphan_grace_hours * MS_PER_HOUR;
 
 const indexSchema = z.object({
   ids: z.array(z.unknown()),

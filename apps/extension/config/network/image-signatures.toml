@@ -1,0 +1,37 @@
+# What a downloaded site icon really is, from its first bytes, so an HTML error page served as
+# `image/png` is not saved as an icon. Read by src/services/site-icons.ts. A type matches when
+# every part's bytes appear at its offset; types are tried in this order.
+
+[[binary]]
+type = "image/png"
+parts = [{ offset = 0, bytes = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] }]
+
+[[binary]]
+type = "image/x-icon"
+parts = [{ offset = 0, bytes = [0x00, 0x00, 0x01, 0x00] }]
+
+[[binary]]
+type = "image/gif"
+parts = [{ offset = 0, bytes = [0x47, 0x49, 0x46, 0x38] }]
+
+[[binary]]
+type = "image/jpeg"
+parts = [{ offset = 0, bytes = [0xff, 0xd8, 0xff] }]
+
+[[binary]]
+type = "image/webp"
+# "RIFF", then "WEBP" after the 4-byte file size.
+parts = [
+  { offset = 0, bytes = [0x52, 0x49, 0x46, 0x46] },
+  { offset = 8, bytes = [0x57, 0x45, 0x42, 0x50] },
+]
+
+[[binary]]
+type = "image/bmp"
+parts = [{ offset = 0, bytes = [0x42, 0x4d] }]
+
+# SVG is text: after an optional XML declaration, comments, and doctype, the file must open an
+# `<svg` element within its first `sniff_bytes`.
+[svg]
+type = "image/svg+xml"
+sniff_bytes = 1024

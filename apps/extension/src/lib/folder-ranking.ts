@@ -14,17 +14,18 @@
  */
 
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 import type { BookmarkTreeNode } from '@/types';
 
 const rankingConfig = readConfig(
   'bookmarks/folder-ranking',
   z.strictObject({
-    k1: z.number().min(0).max(5),
+    k1: boundedNumber({ integer: false }),
     b: z.number().min(0).max(1),
     min_score: z.number().min(0),
-    name_weight: z.number().min(0).max(20),
-    path_weight: z.number().min(0).max(20),
-    bookmark_weight: z.number().min(0).max(20),
+    name_weight: boundedNumber({ integer: false }),
+    path_weight: boundedNumber({ integer: false }),
+    bookmark_weight: boundedNumber({ integer: false }),
     min_token_length: z.number().int().min(1).max(10),
     stop_words: z.array(z.string().min(1)),
   }),
