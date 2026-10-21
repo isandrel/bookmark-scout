@@ -17,7 +17,8 @@ export type ToolEnvironment = {
  * Undo until the offer ends: used here or in the review, or expired.
  */
 export function showToolOutcome(outcome: ToolOutcome, undo?: UndoOffer) {
-  const { title, description, variant } = outcome;
+  const { title, variant } = outcome;
+  const description = withHistoryLink(outcome.description, outcome.historyId);
   if (undo) {
     undo.attach(
       toast.withUndo({

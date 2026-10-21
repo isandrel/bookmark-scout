@@ -6734,5 +6734,349 @@
     "toast_deletePartlyRestored": {
         "message": "削除を一部元に戻しました",
         "description": "Toast title after undoing a deletion brought back only part of it: some items changed since, or lost their tags and summaries."
+    },
+    "error_auditStore": {
+        "message": "変更は行われませんでした: このデバイスにブックマークの履歴を保存できませんでした。",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
+    },
+    "history_button": {
+        "message": "ブックマークの履歴",
+        "description": "Manager header button that opens the bookmark change History."
+    },
+    "history_title": {
+        "message": "ブックマークの履歴",
+        "description": "Title of the History dialog in the manager."
+    },
+    "history_description": {
+        "message": "Bookmark Scout がブックマークに加えた変更で、このデバイスにのみ保存されます。このバージョンから始まり、拡張機能がオフだった間の変更は分かりません。",
+        "description": "Explanation under the History title."
+    },
+    "history_filterLabel": {
+        "message": "表示",
+        "description": "Accessible name of the History filter segments."
+    },
+    "history_filterAll": {
+        "message": "すべて",
+        "description": "History filter: every record."
+    },
+    "history_filterAttention": {
+        "message": "要確認",
+        "description": "History filter: records that are partial, interrupted, need review, or conflicted."
+    },
+    "history_filterExtension": {
+        "message": "Bookmark Scout",
+        "description": "History filter: changes Bookmark Scout made."
+    },
+    "history_filterElsewhere": {
+        "message": "ほかから",
+        "description": "History filter: changes seen from elsewhere (unknown source, or found after a gap)."
+    },
+    "history_search": {
+        "message": "履歴を検索",
+        "description": "Search box placeholder and label in the History."
+    },
+    "history_export": {
+        "message": "履歴をエクスポート",
+        "description": "Button that saves the History as a JSON file."
+    },
+    "history_exportConfirmTitle": {
+        "message": "履歴をエクスポートしますか？",
+        "description": "Title of the privacy confirmation before exporting the History."
+    },
+    "history_exportConfirm": {
+        "message": "ファイルには変更されたブックマークのタイトル、アドレス、フォルダが含まれます。暗号化されていないため、他人に渡さないでください。",
+        "description": "Privacy notice before exporting the History."
+    },
+    "history_clear": {
+        "message": "履歴を消去",
+        "description": "Button that clears finished History records."
+    },
+    "history_clearConfirmTitle": {
+        "message": "履歴を消去しますか？",
+        "description": "Title of the confirmation before clearing the History."
+    },
+    "history_clearConfirm": {
+        "message": "完了した記録をこのデバイスから削除します。まだ確認が必要な記録は残ります。ブックマークは変更されません。",
+        "description": "What clearing the History removes and keeps."
+    },
+    "history_cleared": {
+        "message": "$1 件の記録を削除しました。まだ確認が必要な $2 件は残しました。",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
+    "history_loading": {
+        "message": "読み込み中…",
+        "description": "Shown while History records load."
+    },
+    "history_unavailable": {
+        "message": "現在このデバイスで履歴を読み込めません。ブックマークには影響ありません。",
+        "description": "Shown when the History storage cannot be read."
+    },
+    "history_corrupt": {
+        "message": "$1 件の記録を読み込めなかったため、表示していません。",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_empty": {
+        "message": "記録された変更はまだありません。",
+        "description": "History with no records yet."
+    },
+    "history_noMatches": {
+        "message": "一致する記録はありません。",
+        "description": "History filter or search with no matching records."
+    },
+    "history_statusInProgress": {
+        "message": "実行中",
+        "description": "History status: a change still running."
+    },
+    "history_statusVerified": {
+        "message": "確認済み",
+        "description": "History status: everything planned was done and read back as intended."
+    },
+    "history_statusPartial": {
+        "message": "一部のみ",
+        "description": "History status: part of the change was done, part skipped or failed."
+    },
+    "history_statusFailed": {
+        "message": "未実行",
+        "description": "History status: nothing was changed."
+    },
+    "history_statusNeedsReview": {
+        "message": "要確認",
+        "description": "History status: the result did not read back as intended."
+    },
+    "history_statusConflicted": {
+        "message": "競合",
+        "description": "History status: a conflict with newer changes."
+    },
+    "history_statusObserved": {
+        "message": "検出",
+        "description": "History status: a change seen from elsewhere."
+    },
+    "history_statusInterrupted": {
+        "message": "中断",
+        "description": "History status: a change stopped before it finished (a closed page or browser)."
+    },
+    "history_badgeUndone": {
+        "message": "元に戻し済み",
+        "description": "History badge: the change was undone."
+    },
+    "history_badgePartlyUndone": {
+        "message": "一部元に戻し済み",
+        "description": "History badge: an undo brought back only part of the change."
+    },
+    "history_sourceManager": {
+        "message": "マネージャー",
+        "description": "History source: the bookmark manager."
+    },
+    "history_sourceTools": {
+        "message": "ツール",
+        "description": "History source: a tool in the Tools sidebar."
+    },
+    "history_sourcePopup": {
+        "message": "ポップアップ",
+        "description": "History source: the toolbar popup."
+    },
+    "history_sourceSidePanel": {
+        "message": "サイドパネル",
+        "description": "History source: the side panel."
+    },
+    "history_sourceSettings": {
+        "message": "設定",
+        "description": "History source: the Settings page."
+    },
+    "history_sourceQuickSave": {
+        "message": "クイック保存",
+        "description": "History source: the quick save shortcut."
+    },
+    "history_sourceContextMenu": {
+        "message": "右クリックメニュー",
+        "description": "History source: the right-click menu on web pages."
+    },
+    "history_sourceAskAi": {
+        "message": "AI に質問",
+        "description": "History source: Ask AI."
+    },
+    "history_sourceLocalAgent": {
+        "message": "ローカルエージェント",
+        "description": "History source: a local AI agent through the bridge."
+    },
+    "history_sourceImport": {
+        "message": "インポート",
+        "description": "History source: Import Bookmarks."
+    },
+    "history_sourceBackground": {
+        "message": "Bookmark Scout",
+        "description": "History source: Bookmark Scout working without an open page."
+    },
+    "history_sourceUnknown": {
+        "message": "変更元不明（ブラウザのイベントを検出）",
+        "description": "History source: a browser event no Bookmark Scout change explains; the writer is unknown."
+    },
+    "history_sourceReconciliation": {
+        "message": "空白期間の後に検出（差分）",
+        "description": "History source: a difference found after a gap in observation; times and writer unknown."
+    },
+    "history_counts": {
+        "message": "完了 $1 · スキップ $2 · 失敗 $3",
+        "description": "History row counts. $1 done, $2 skipped, $3 failed."
+    },
+    "history_factStarted": {
+        "message": "開始",
+        "description": "History detail label: when the change started."
+    },
+    "history_factFinished": {
+        "message": "終了",
+        "description": "History detail label: when the change finished."
+    },
+    "history_factCounts": {
+        "message": "予定 $1、完了 $2、スキップ $3、失敗 $4。",
+        "description": "History detail counts. $1 planned, $2 done, $3 skipped, $4 failed."
+    },
+    "history_verifyPassed": {
+        "message": "変更後に確認済み: ブックマークは変更どおりの状態です。",
+        "description": "History detail: the bookmarks were read again after the change and are as it left them."
+    },
+    "history_verifyFailed": {
+        "message": "変更後に確認: $1 件が変更どおりの状態ではありません。",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
+    "history_verifyNotRun": {
+        "message": "未確認: 何も変更されていません。",
+        "description": "History detail: nothing was changed, so nothing was checked."
+    },
+    "history_factAgentName": {
+        "message": "エージェントが名乗った名前（未確認）",
+        "description": "History detail label: the name a local AI agent gave itself, which is not verified."
+    },
+    "history_undoUnavailable": {
+        "message": "元に戻せません: このブラウザセッションの元に戻す履歴に、この変更はもうありません。",
+        "description": "History detail: why a record offers no Undo."
+    },
+    "history_showOriginal": {
+        "message": "元に戻した変更を表示",
+        "description": "History button on an undo or redo record: shows the change it replays."
+    },
+    "history_showUndo": {
+        "message": "元に戻した記録を表示",
+        "description": "History button on an undone record: shows the undo record."
+    },
+    "history_detailsMissing": {
+        "message": "この変更の項目は保存されていません。",
+        "description": "History detail when the item rows were not kept."
+    },
+    "history_detailsCorrupt": {
+        "message": "この変更の項目を読み込めません。",
+        "description": "History detail when the stored item rows could not be read."
+    },
+    "history_itemsLabel": {
+        "message": "変更された項目",
+        "description": "Accessible name of the list of items a change touched."
+    },
+    "history_showMoreItems": {
+        "message": "さらに表示（残り $1 件）",
+        "description": "History button that lists more items of a large change. $1 is how many are left."
+    },
+    "history_omitted": {
+        "message": "ほかに $1 件の項目はこの記録に保存されていません。",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
+    "history_folderGone": {
+        "message": "存在しないフォルダ（ID $1）",
+        "description": "History: a folder that no longer exists. $1 is its old id."
+    },
+    "history_place": {
+        "message": "$1、$2 番目",
+        "description": "History: a place in a folder. $1 is the folder path, $2 the position (1-based)."
+    },
+    "history_itemWasIn": {
+        "message": "元の場所: $1",
+        "description": "History item: where a deleted item was. $1 is a place."
+    },
+    "history_itemAddedTo": {
+        "message": "追加先: $1",
+        "description": "History item: where a new item went. $1 is a place."
+    },
+    "history_itemInside": {
+        "message": "中に $1 件",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_changeCreate": {
+        "message": "追加",
+        "description": "History item change: added."
+    },
+    "history_changeRemove": {
+        "message": "削除",
+        "description": "History item change: deleted."
+    },
+    "history_changeUpdate": {
+        "message": "編集",
+        "description": "History item change: edited."
+    },
+    "history_changeMove": {
+        "message": "移動",
+        "description": "History item change: moved."
+    },
+    "history_outcomeApplied": {
+        "message": "完了",
+        "description": "History item outcome: done."
+    },
+    "history_outcomeSkipped": {
+        "message": "スキップ",
+        "description": "History item outcome: skipped."
+    },
+    "history_outcomeFailed": {
+        "message": "失敗",
+        "description": "History item outcome: the browser refused it."
+    },
+    "history_outcomeConflicted": {
+        "message": "競合",
+        "description": "History item outcome: a conflict with newer changes."
+    },
+    "history_reasonDeleted": {
+        "message": "確認後に削除されていた",
+        "description": "History item: skipped because it was deleted since the review."
+    },
+    "history_reasonChanged": {
+        "message": "確認後に変更されていた",
+        "description": "History item: skipped because it changed since the review."
+    },
+    "history_reasonFailed": {
+        "message": "ブラウザが変更を拒否しました",
+        "description": "History item: the browser refused the change."
+    },
+    "history_factSource": {
+        "message": "変更元",
+        "description": "History detail label: where the change came from."
+    },
+    "history_factResult": {
+        "message": "結果",
+        "description": "History detail label: planned, done, skipped, and failed counts."
+    },
+    "history_factCheck": {
+        "message": "確認",
+        "description": "History detail label: whether the bookmarks were read back as the change left them."
+    },
+    "history_today": {
+        "message": "今日",
+        "description": "History day heading for today."
+    },
+    "history_yesterday": {
+        "message": "昨日",
+        "description": "History day heading for yesterday."
+    },
+    "history_emptyHint": {
+        "message": "Bookmark Scout で行った編集、移動、削除、インポート、整理がここに表示され、何が変わったか、元に戻せるかが分かります。",
+        "description": "History empty state: what will show up here."
+    },
+    "history_itemCount": {
+        "message": "$1 件",
+        "description": "History row summary: how many items the change touched. $1 is the count."
+    },
+    "history_viewInHistory": {
+        "message": "履歴で見る",
+        "description": "Link in a result that opens its record in the manager History."
+    },
+    "action_redo": {
+        "message": "やり直す",
+        "description": "Button that redoes a change undone before (the manager History)."
     }
 }

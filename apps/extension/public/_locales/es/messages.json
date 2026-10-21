@@ -6742,5 +6742,353 @@
     "toast_deletePartlyRestored": {
         "message": "Eliminación deshecha en parte",
         "description": "Toast title after undoing a deletion brought back only part of it: some items changed since, or lost their tags and summaries."
+    },
+    "error_auditStore": {
+        "message": "No se hizo el cambio: no se pudo guardar el historial de marcadores en este dispositivo.",
+        "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
+    },
+    "history_button": {
+        "message": "Historial de marcadores",
+        "description": "Manager header button that opens the bookmark change History."
+    },
+    "history_title": {
+        "message": "Historial de marcadores",
+        "description": "Title of the History dialog in the manager."
+    },
+    "history_description": {
+        "message": "Lo que Bookmark Scout cambió en tus marcadores, guardado solo en este dispositivo. Empieza con esta versión y no conoce los cambios hechos mientras la extensión estaba desactivada.",
+        "description": "Explanation under the History title."
+    },
+    "history_filterLabel": {
+        "message": "Mostrar",
+        "description": "Accessible name of the History filter segments."
+    },
+    "history_filterAll": {
+        "message": "Todo",
+        "description": "History filter: every record."
+    },
+    "history_filterAttention": {
+        "message": "Requiere atención",
+        "description": "History filter: records that are partial, interrupted, need review, or conflicted."
+    },
+    "history_filterExtension": {
+        "message": "Bookmark Scout",
+        "description": "History filter: changes Bookmark Scout made."
+    },
+    "history_filterElsewhere": {
+        "message": "De otro origen",
+        "description": "History filter: changes seen from elsewhere (unknown source, or found after a gap)."
+    },
+    "history_search": {
+        "message": "Buscar en el historial",
+        "description": "Search box placeholder and label in the History."
+    },
+    "history_export": {
+        "message": "Exportar historial",
+        "description": "Button that saves the History as a JSON file."
+    },
+    "history_exportConfirmTitle": {
+        "message": "¿Exportar el historial?",
+        "description": "Title of the privacy confirmation before exporting the History."
+    },
+    "history_exportConfirm": {
+        "message": "El archivo contiene los títulos, las direcciones y las carpetas de los marcadores que cambiaron. No está cifrado; mantenlo en privado.",
+        "description": "Privacy notice before exporting the History."
+    },
+    "history_clear": {
+        "message": "Borrar historial",
+        "description": "Button that clears finished History records."
+    },
+    "history_clearConfirmTitle": {
+        "message": "¿Borrar el historial?",
+        "description": "Title of the confirmation before clearing the History."
+    },
+    "history_clearConfirm": {
+        "message": "Quita de este dispositivo los registros terminados. Los que aún requieren revisión se conservan. Tus marcadores no cambian.",
+        "description": "What clearing the History removes and keeps."
+    },
+    "history_cleared": {
+        "message": "Se quitaron $1 registros. Se conservaron $2 que aún requieren revisión.",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
+    "history_loading": {
+        "message": "Cargando…",
+        "description": "Shown while History records load."
+    },
+    "history_unavailable": {
+        "message": "Ahora no se puede leer el historial en este dispositivo. Tus marcadores no se ven afectados.",
+        "description": "Shown when the History storage cannot be read."
+    },
+    "history_corrupt": {
+        "message": "No se pudieron leer $1 registros y no se muestran.",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_empty": {
+        "message": "Todavía no hay cambios registrados.",
+        "description": "History with no records yet."
+    },
+    "history_noMatches": {
+        "message": "Ningún registro coincide.",
+        "description": "History filter or search with no matching records."
+    },
+    "history_statusInProgress": {
+        "message": "En curso",
+        "description": "History status: a change still running."
+    },
+    "history_statusVerified": {
+        "message": "Verificado",
+        "description": "History status: everything planned was done and read back as intended."
+    },
+    "history_statusPartial": {
+        "message": "Parcial",
+        "description": "History status: part of the change was done, part skipped or failed."
+    },
+    "history_statusFailed": {
+        "message": "No realizado",
+        "description": "History status: nothing was changed."
+    },
+    "history_statusNeedsReview": {
+        "message": "Requiere revisión",
+        "description": "History status: the result did not read back as intended."
+    },
+    "history_statusConflicted": {
+        "message": "Conflicto",
+        "description": "History status: a conflict with newer changes."
+    },
+    "history_statusObserved": {
+        "message": "Observado",
+        "description": "History status: a change seen from elsewhere."
+    },
+    "history_statusInterrupted": {
+        "message": "Interrumpido",
+        "description": "History status: a change stopped before it finished (a closed page or browser)."
+    },
+    "history_badgeUndone": {
+        "message": "Deshecho",
+        "description": "History badge: the change was undone."
+    },
+    "history_badgePartlyUndone": {
+        "message": "Deshecho en parte",
+        "description": "History badge: an undo brought back only part of the change."
+    },
+    "history_sourceManager": {
+        "message": "Administrador",
+        "description": "History source: the bookmark manager."
+    },
+    "history_sourceTools": {
+        "message": "Herramientas",
+        "description": "History source: a tool in the Tools sidebar."
+    },
+    "history_sourcePopup": {
+        "message": "Ventana emergente",
+        "description": "History source: the toolbar popup."
+    },
+    "history_sourceSidePanel": {
+        "message": "Panel lateral",
+        "description": "History source: the side panel."
+    },
+    "history_sourceSettings": {
+        "message": "Configuración",
+        "description": "History source: the Settings page."
+    },
+    "history_sourceQuickSave": {
+        "message": "Guardado rápido",
+        "description": "History source: the quick save shortcut."
+    },
+    "history_sourceContextMenu": {
+        "message": "Menú contextual",
+        "description": "History source: the right-click menu on web pages."
+    },
+    "history_sourceAskAi": {
+        "message": "Preguntar a la IA",
+        "description": "History source: Ask AI."
+    },
+    "history_sourceLocalAgent": {
+        "message": "Agente local",
+        "description": "History source: a local AI agent through the bridge."
+    },
+    "history_sourceImport": {
+        "message": "Importación",
+        "description": "History source: Import Bookmarks."
+    },
+    "history_sourceBackground": {
+        "message": "Bookmark Scout",
+        "description": "History source: Bookmark Scout working without an open page."
+    },
+    "history_sourceUnknown": {
+        "message": "Origen desconocido (evento del navegador observado)",
+        "description": "History source: a browser event no Bookmark Scout change explains; the writer is unknown."
+    },
+    "history_sourceReconciliation": {
+        "message": "Detectado tras una interrupción (diferencia neta)",
+        "description": "History source: a difference found after a gap in observation; times and writer unknown."
+    },
+    "history_counts": {
+        "message": "Hechos $1 · Omitidos $2 · Con error $3",
+        "description": "History row counts. $1 done, $2 skipped, $3 failed."
+    },
+    "history_factStarted": {
+        "message": "Inicio",
+        "description": "History detail label: when the change started."
+    },
+    "history_factFinished": {
+        "message": "Fin",
+        "description": "History detail label: when the change finished."
+    },
+    "history_factCounts": {
+        "message": "Previstos $1, hechos $2, omitidos $3, con error $4.",
+        "description": "History detail counts. $1 planned, $2 done, $3 skipped, $4 failed."
+    },
+    "history_verifyPassed": {
+        "message": "Comprobado tras el cambio: los marcadores están como los dejó.",
+        "description": "History detail: the bookmarks were read again after the change and are as it left them."
+    },
+    "history_verifyFailed": {
+        "message": "Comprobado tras el cambio: $1 elementos no están como los dejó.",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
+    "history_verifyNotRun": {
+        "message": "Sin comprobar: no se cambió nada.",
+        "description": "History detail: nothing was changed, so nothing was checked."
+    },
+    "history_factAgentName": {
+        "message": "Nombre propio del agente (sin verificar)",
+        "description": "History detail label: the name a local AI agent gave itself, which is not verified."
+    },
+    "history_undoUnavailable": {
+        "message": "No se puede deshacer: el historial para deshacer de esta sesión del navegador ya no tiene este cambio.",
+        "description": "History detail: why a record offers no Undo."
+    },
+    "history_showOriginal": {
+        "message": "Mostrar el cambio deshecho",
+        "description": "History button on an undo or redo record: shows the change it replays."
+    },
+    "history_showUndo": {
+        "message": "Mostrar el deshacer",
+        "description": "History button on an undone record: shows the undo record."
+    },
+    "history_detailsMissing": {
+        "message": "No se guardaron los elementos de este cambio.",
+        "description": "History detail when the item rows were not kept."
+    },
+    "history_detailsCorrupt": {
+        "message": "No se pueden leer los elementos de este cambio.",
+        "description": "History detail when the stored item rows could not be read."
+    },
+    "history_itemsLabel": {
+        "message": "Elementos cambiados",
+        "description": "Accessible name of the list of items a change touched."
+    },
+    "history_showMoreItems": {
+        "message": "Mostrar más (quedan $1)",
+        "description": "History button that lists more items of a large change. $1 is how many are left."
+    },
+    "history_omitted": {
+        "message": "Otros $1 elementos no se guardaron en este registro.",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
+    "history_folderGone": {
+        "message": "una carpeta que ya no existe (ID $1)",
+        "description": "History: a folder that no longer exists. $1 is its old id."
+    },
+    "history_place": {
+        "message": "$1, posición $2",
+        "description": "History: a place in a folder. $1 is the folder path, $2 the position (1-based)."
+    },
+    "history_itemWasIn": {
+        "message": "Estaba en $1",
+        "description": "History item: where a deleted item was. $1 is a place."
+    },
+    "history_itemAddedTo": {
+        "message": "Añadido a $1",
+        "description": "History item: where a new item went. $1 is a place."
+    },
+    "history_itemInside": {
+        "message": "$1 elementos dentro",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_changeCreate": {
+        "message": "Añadido",
+        "description": "History item change: added."
+    },
+    "history_changeRemove": {
+        "message": "Eliminado",
+        "description": "History item change: deleted."
+    },
+    "history_changeUpdate": {
+        "message": "Editado",
+        "description": "History item change: edited."
+    },
+    "history_changeMove": {
+        "message": "Movido",
+        "description": "History item change: moved."
+    },
+    "history_outcomeApplied": {
+        "message": "Hecho",
+        "description": "History item outcome: done."
+    },
+    "history_outcomeSkipped": {
+        "message": "Omitido",
+        "description": "History item outcome: skipped."
+    },
+    "history_outcomeFailed": {
+        "message": "Con error",
+        "description": "History item outcome: the browser refused it."
+    },
+    "history_outcomeConflicted": {
+        "message": "Conflicto",
+        "description": "History item outcome: a conflict with newer changes."
+    },
+    "history_reasonDeleted": {
+        "message": "Eliminado después de la revisión",
+        "description": "History item: skipped because it was deleted since the review."
+    },
+    "history_reasonChanged": {
+        "message": "Cambió después de la revisión",
+        "description": "History item: skipped because it changed since the review."
+    },
+    "history_reasonFailed": {
+        "message": "El navegador rechazó el cambio",
+        "description": "History item: the browser refused the change."
+    },
+    "history_factSource": {
+        "message": "Origen",
+        "description": "History detail label: where the change came from."
+    },
+    "history_factResult": {
+        "message": "Resultado",
+        "description": "History detail label: planned, done, skipped, and failed counts."
+    },
+    "history_factCheck": {
+        "message": "Comprobación",
+        "description": "History detail label: whether the bookmarks were read back as the change left them."
+    },
+    "history_today": {
+        "message": "Hoy",
+        "description": "History day heading for today."
+    },
+    "history_yesterday": {
+        "message": "Ayer",
+        "description": "History day heading for yesterday."
+    },
+    "history_emptyHint": {
+        "message": "Aquí aparecen las ediciones, los movimientos, las eliminaciones, las importaciones y las limpiezas que hagas con Bookmark Scout, con lo que cambió y si se puede deshacer.",
+        "description": "History empty state: what will show up here."
+    },
+    "history_itemCount": {
+        "message": "$1 elementos",
+        "description": "History row summary: how many items the change touched. $1 is the count."
+    },
+    "history_itemCount_one": {
+        "message": "$1 elemento",
+        "description": "History row summary for one item. $1 is 1."
+    },
+    "history_viewInHistory": {
+        "message": "Ver en el historial",
+        "description": "Link in a result that opens its record in the manager History."
+    },
+    "action_redo": {
+        "message": "Rehacer",
+        "description": "Button that redoes a change undone before (the manager History)."
     }
 }

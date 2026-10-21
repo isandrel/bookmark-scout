@@ -85,7 +85,8 @@
                             "<strong>Las etiquetas, los resúmenes, las búsquedas guardadas, las carpetas recientes y las búsquedas recientes</strong> se guardan en el almacenamiento local, solo en este dispositivo. Puedes desactivar las búsquedas recientes en Configuración.",
                             "<strong>Los iconos de sitios</strong> que guardas con Actualizar iconos de sitios se guardan en el almacenamiento local, solo en este dispositivo, hasta un límite de tamaño que puedes cambiar en Configuración. Puedes eliminarlos en cualquier momento con Borrar los iconos guardados.",
                             "<strong>Tu último guardado rápido</strong> (el título y la URL de la página y dónde se guardó), para Deshacer y Mover a, se guarda en el almacenamiento de sesión hasta que cierras el navegador.",
-                            "<strong>El historial para deshacer del administrador de marcadores</strong> (los marcadores que cambiaste allí, con copias de los que eliminaste y sus etiquetas y resúmenes), para Deshacer y Rehacer, se guarda en el almacenamiento de sesión hasta que cierras el navegador."
+                            "<strong>El historial para deshacer del administrador de marcadores</strong> (los marcadores que cambiaste allí, con copias de los que eliminaste y sus etiquetas y resúmenes), para Deshacer y Rehacer, se guarda en el almacenamiento de sesión hasta que cierras el navegador.",
+                            "<strong>El historial de cambios de marcadores</strong> (qué cambió Bookmark Scout en tus marcadores y cuándo: títulos, URL, carpetas y el resultado de cada cambio) se guarda solo en este dispositivo, en IndexedDB del navegador, durante un tiempo limitado. Nunca se sincroniza ni está en el archivo de copia de seguridad."
                         ]
                     },
                     {

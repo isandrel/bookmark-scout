@@ -120,6 +120,14 @@ The folder tree on the left works like Chrome's too: the arrow keys move through
 
 The full list of keys is in [Keyboard shortcuts](/guides/keyboard-shortcuts#bookmarks-manager).
 
+## See what changed [#history]
+
+The **Bookmark history** button in the manager's header opens a list of every change Bookmark Scout made to your bookmarks on this device: edits, moves, deletions, imports, cleanups, and their undos, newest first under day headings. Each change says where it came from (the manager, a tool, Ask AI, a local agent), how many items it touched, and when. A change that only partly went through, was interrupted, or did not read back as intended is marked so you can find it under **Needs attention**.
+
+Open a change to see each item it touched: a deleted item with the folder and position it was in, an edit with the old and new title or exact address, a move with where it was and where it went. After every change Bookmark Scout reads the bookmarks again and says whether they are as the change left them. While the browser session still holds the change, **Undo** is there too; after the browser restarts the change stays listed, but Undo is no longer available. Tool results link to their change with **View in History**.
+
+The history stays on this device, is never synced, and is not in the settings backup. It starts with this version and does not know about changes made while the extension was off. Export it as a JSON file (it holds bookmark titles and addresses), or clear it; changes that still need review are kept.
+
 ## Right-click menus in the manager
 
 Right-click a row, or a folder in the folder tree, for the same commands as Chrome's bookmark manager. A right click on a selected row acts on the whole selection; on any other row it selects that row first. The menu key or <Shortcut id="browser.context_menu" /> opens it from the keyboard. A row's ⋯ button opens the same menu for that row.

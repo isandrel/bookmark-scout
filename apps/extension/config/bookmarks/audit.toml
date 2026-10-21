@@ -1,0 +1,18 @@
+# Bookmark Audit History: the local record of every change Bookmark Scout makes to bookmarks,
+# shown in the manager's History. Read by src/lib/bookmark-audit-store.ts. Kept in this device's
+# IndexedDB, never synced, never in the settings backup.
+
+# Days a finished record is kept. Records that still need review (interrupted, conflicted, or
+# partly restored) are never removed by age.
+retention_days = 180
+
+# Most records kept; the oldest finished ones are removed first to make room.
+max_operations = 5000
+
+# Item rows kept for one record. A larger batch keeps its counts and the first rows, and its
+# details say how many rows were left out.
+max_items_per_operation = 2000
+
+# Milliseconds a record may stay "applying" before History treats it as interrupted (a closed
+# page or a stopped background), so it shows as needing review instead of still running.
+interrupted_after_ms = 120000

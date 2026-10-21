@@ -379,6 +379,26 @@ export function formatDateTime(value: number | Date): string {
   }
 }
 
+/** Time of day in the extension's language, e.g. "3:05 PM" in English. */
+export function formatTime(value: number | Date): string {
+  const date = value instanceof Date ? value : new Date(value);
+  try {
+    return date.toLocaleTimeString(getFormattingLocale(), { hour: 'numeric', minute: '2-digit' });
+  } catch {
+    return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+}
+
+/** A day in the extension's language, e.g. "Oct 20, 2026" in English. */
+export function formatDay(value: number | Date): string {
+  const date = value instanceof Date ? value : new Date(value);
+  try {
+    return date.toLocaleDateString(getFormattingLocale(), { dateStyle: 'medium' });
+  } catch {
+    return date.toLocaleDateString(undefined, { dateStyle: 'medium' });
+  }
+}
+
 export type MessageKey = string;
 
 /**

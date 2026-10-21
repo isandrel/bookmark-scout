@@ -42,27 +42,36 @@
 # are about 9 KB above that.
 # JavaScript raised on 2026-10-20 (3,494,000 to 3,504,000) for dragging the manager table's column
 # headers and announcing manager drops: Firefox measured 3,494,169 B of JavaScript.
+# Raised on 2026-10-20 (ZIP 1,652,000 to 1,662,000, uncompressed 5,248,000 to 5,280,000, javascript
+# 3,504,000 to 3,530,000) for the Bookmark Audit History store (`idb`, the records written around
+# every bookmark change, and undo and redo linked to them) and its error copy in 9 languages.
+# Firefox measured ZIP 1,652,985, 5,268,941 B uncompressed, and 3,519,656 B of JavaScript.
+# Raised on 2026-10-20 (ZIP 1,662,000 to 1,680,000, uncompressed 5,280,000 to 5,352,000, javascript
+# 3,530,000 to 3,550,000) for the manager's Bookmark history (the dialog, its view rules, and about
+# 80 messages in 9 languages). Firefox measured ZIP 1,670,353, 5,340,282 B uncompressed, and
+# 3,539,986 B of JavaScript.
+# Locales raised the same day (1,195,000 to 1,250,000) for those messages: 1,243,201 B measured.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_652_000
-raw_bytes = 5_248_000
+zip_bytes = 1_680_000
+raw_bytes = 5_352_000
 
 [targets.edge]
-zip_bytes = 1_652_000
-raw_bytes = 5_248_000
+zip_bytes = 1_680_000
+raw_bytes = 5_352_000
 
 [targets.firefox]
-zip_bytes = 1_652_000
-raw_bytes = 5_248_000
+zip_bytes = 1_680_000
+raw_bytes = 5_352_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_504_000
+javascript = 3_550_000
 css = 84_000
 fonts = 143_000
-locales = 1_195_000
+locales = 1_250_000
 images = 320_000
 other = 27_000
