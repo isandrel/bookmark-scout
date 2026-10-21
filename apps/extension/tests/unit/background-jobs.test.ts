@@ -1,4 +1,5 @@
 import { IDBFactory } from 'fake-indexeddb';
+import { openDB } from 'idb';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
@@ -8,6 +9,11 @@ import {
   commitItem,
   getJob,
   getJobItems,
+  JOB_DB_NAME,
+  JOB_LIMITS,
+  JobStoreError,
+  listJobs,
+  pruneJobs,
   transitionJob,
 } from '@/lib/job-store';
 import { checkDeadLink, RequestAbortedError } from '@/services/bookmark-network-tools';
@@ -72,6 +78,33 @@ const links = (count: number) =>
     title: `Link ${index + 1}`,
     url: `https://e2e.invalid/${index + 1}`,
   }));
+
+/** A Check Dead Links job over `count` links, stored as a Start leaves it, before any run. */
+const acceptDeadLinks = (count: number) =>
+  acceptJob({
+    commandId: crypto.randomUUID(),
+    kind: 'deadLinks',
+    source: 'manager',
+    scope: { mode: 'folder', rootIds: ['f'], label: 'Folder' },
+    options: {
+      requestTimeoutMs: 5000,
+      concurrency: 2,
+      retryCount: 0,
+      followRedirects: true,
+      successStatuses: [200],
+      allSitesAccess: true,
+    },
+    inputs: links(count).map((link) => ({
+      id: link.id,
+      title: link.title,
+      url: link.url,
+      folderPath: 'Folder',
+    })),
+    now: 1,
+  });
+
+/** Wakes this background with a command that finds no job, as any message or alarm would. */
+const wake = () => runJobCommand({ type: 'pause', jobId: crypto.randomUUID() });
 
 const start = (commandId = crypto.randomUUID(), folderId = 'f') =>
   runJobCommand({
@@ -185,28 +218,7 @@ describe('a stopped worker (J17, J25)', () => {
   it('starts again from the saved items, and a later item done first skips none', async () => {
     const held = heldFetch();
     vi.stubGlobal('fetch', held.fetch);
-    const inputs = links(6).map((link) => ({
-      id: link.id,
-      title: link.title,
-      url: link.url,
-      folderPath: 'Folder',
-    }));
-    const { job } = await acceptJob({
-      commandId: crypto.randomUUID(),
-      kind: 'deadLinks',
-      source: 'manager',
-      scope: { mode: 'folder', rootIds: ['f'], label: 'Folder' },
-      options: {
-        requestTimeoutMs: 5000,
-        concurrency: 2,
-        retryCount: 0,
-        followRedirects: true,
-        successStatuses: [200],
-        allSitesAccess: true,
-      },
-      inputs,
-      now: 1,
-    });
+    const { job } = await acceptDeadLinks(6);
     // A worker that has since stopped claimed it and finished the third link before the first two.
     const claimed = await claimJob(job.id, 'stopped-worker');
     await commitItem(job.id, claimed?.generation ?? 0, 2, 'succeeded', { status: 'ok' });
@@ -294,6 +306,113 @@ describe('stopping a check (J36)', () => {
     ).rejects.toBeInstanceOf(RequestAbortedError);
     // No retry and no redirect probe after the stop.
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('a reply that comes too late (J15)', () => {
+  it('cannot add a result, count, or start more work once the job is cancelled', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const response = await start();
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    const jobId = response.job.id;
+    await until(() => held.waiting.length > 0);
+    await runJobCommand({ type: 'cancel', jobId });
+    await until(async () => (await getJob(jobId))?.state === 'cancelled');
+    const cancelled = await getJob(jobId);
+    const requested = held.requests.length;
+    // The answer of a request that was in flight arrives after the cancel, for the same claim.
+    const [pending] = (await getJobItems(jobId)).filter((item) => item.state === 'pending');
+    if (!cancelled || !pending) throw new Error('nothing left to do');
+    expect(
+      await commitItem(jobId, cancelled.generation, pending.index, 'succeeded', {}),
+    ).toBeUndefined();
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(await getJob(jobId)).toMatchObject({
+      done: cancelled.done,
+      revision: cancelled.revision,
+    });
+    expect(held.requests).toHaveLength(requested);
+  });
+});
+
+describe('scheduling (J20, J21, J23)', () => {
+  it('runs a job stored before a stopped worker scheduled it, and sets the alarm again (J20, J21)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    // The Start was stored, then the worker stopped before it set the alarm or started a run.
+    const { job } = await acceptDeadLinks(2);
+    expect(await browser.alarms.getAll()).toHaveLength(0);
+
+    await wake();
+    await until(async () => (await browser.alarms.getAll()).length === 1);
+    await drain(held, job.id);
+    expect(held.requests).toHaveLength(2);
+  });
+
+  it('removes the alarm once nothing can run, and keeps finished jobs readable (J23)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const response = await start();
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    expect(await browser.alarms.getAll()).toHaveLength(1);
+    await drain(held, response.job.id);
+    await whenJobsIdle();
+    await until(async () => (await browser.alarms.getAll()).length === 0);
+    expect((await getJob(response.job.id))?.state).toBe('succeeded');
+    expect(await getJobItems(response.job.id)).toHaveLength(6);
+  });
+});
+
+describe('storage limits and records it cannot read (J66, J67)', () => {
+  it('stores nothing of a job too large to keep, and answers that it could not', async () => {
+    const accepting = acceptJob({
+      commandId: crypto.randomUUID(),
+      kind: 'deadLinks',
+      source: 'manager',
+      scope: { mode: 'all', rootIds: [], label: '' },
+      options: {},
+      inputs: Array.from({ length: JOB_LIMITS.maxItems + 1 }, () => 'x'),
+      now: 1,
+    });
+    await expect(accepting).rejects.toBeInstanceOf(JobStoreError);
+    expect(await listJobs()).toHaveLength(0);
+  });
+
+  it('never runs, lists, or removes a job stored in another format (J66)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const { job } = await acceptDeadLinks(2);
+    // A newer release stored this job in a format this one does not know.
+    const raw = await openDB(JOB_DB_NAME);
+    await raw.put('jobs', { ...job, schemaVersion: job.schemaVersion + 1 });
+
+    expect(await runJobCommand({ type: 'resume', jobId: job.id })).toEqual({
+      ok: false,
+      error: 'not-found',
+    });
+    await whenJobsIdle();
+    expect(await listJobs()).toHaveLength(0);
+    expect(await pruneJobs(Number.MAX_SAFE_INTEGER)).toBe(0);
+    expect(await raw.get('jobs', job.id)).toBeDefined();
+    expect(held.requests).toHaveLength(0);
+    raw.close();
+  });
+});
+
+describe('the clock (J69)', () => {
+  it('never counts negative time when the clock went back while a worker ran the job', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const { job } = await acceptDeadLinks(2);
+    // A worker that has since stopped claimed it an hour ahead of the clock now.
+    await claimJob(job.id, 'stopped-worker', Date.now() + 60 * 60 * 1000);
+
+    await wake();
+    await drain(held, job.id);
+    const finished = await getJob(job.id);
+    expect(finished?.activeMs).toBeGreaterThanOrEqual(0);
+    expect(finished?.activeMs).toBeLessThan(60 * 60 * 1000);
   });
 });
 
