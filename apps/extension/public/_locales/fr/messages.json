@@ -6735,6 +6735,14 @@
         "message": "Dans la fenêtre contextuelle et le panneau latéral, faites glisser favoris et dossiers pour les déplacer, et déposez des liens d'une page web sur un dossier du panneau latéral pour les y enregistrer",
         "description": "Description of the Drag and Drop in the Tree setting"
     },
+    "toast_metadataNotRestored": {
+        "message": "Restaurés sans leurs étiquettes ni leurs résumés, qui n’ont pas pu être réenregistrés : $1.",
+        "description": "Toast detail after an undo that recreated bookmarks but could not store their tags and summaries again. $1 is how many recreated items lost them."
+    },
+    "toast_deletePartlyRestored": {
+        "message": "Suppression annulée en partie",
+        "description": "Toast title after undoing a deletion brought back only part of it: some items changed since, or lost their tags and summaries."
+    },
     "error_auditStore": {
         "message": "La modification n’a pas été faite : l’historique des favoris n’a pas pu être enregistré sur cet appareil.",
         "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."

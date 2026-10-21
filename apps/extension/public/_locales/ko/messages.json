@@ -6727,6 +6727,14 @@
         "message": "팝업과 사이드 패널에서 북마크와 폴더를 끌어 옮기고, 웹 페이지의 링크를 사이드 패널의 폴더에 놓아 저장합니다",
         "description": "Description of the Drag and Drop in the Tree setting"
     },
+    "toast_metadataNotRestored": {
+        "message": "태그와 요약을 다시 저장하지 못해 그것 없이 복원됨: $1개.",
+        "description": "Toast detail after an undo that recreated bookmarks but could not store their tags and summaries again. $1 is how many recreated items lost them."
+    },
+    "toast_deletePartlyRestored": {
+        "message": "삭제를 일부만 실행 취소했습니다",
+        "description": "Toast title after undoing a deletion brought back only part of it: some items changed since, or lost their tags and summaries."
+    },
     "error_auditStore": {
         "message": "변경하지 않았습니다: 이 기기에 북마크 기록을 저장할 수 없었습니다.",
         "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."

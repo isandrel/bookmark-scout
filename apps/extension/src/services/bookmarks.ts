@@ -391,11 +391,22 @@ async function recreateBookmarkNode(
  * their tags and summaries. Resolves to the new root and the new id of every node that had one
  * (`old id -> new id`). A partly created tree is removed again before the error is thrown.
  */
+/**
+ * What a recreated subtree came back with. `metadataRestored` is false when the bookmarks are back
+ * but their tags and summaries could not be stored again, which callers must report as a partial
+ * restore, never as a complete one.
+ */
+export type RecreatedBookmarkSubtree = {
+  root: Browser.bookmarks.BookmarkTreeNode;
+  ids: Map<string, string>;
+  metadataRestored: boolean;
+};
+
 export async function recreateBookmarkSubtree(
   node: RecoverableBookmarkNode,
   parentId: string,
   index?: number,
-): Promise<{ root: Browser.bookmarks.BookmarkTreeNode; ids: Map<string, string> }> {
+): Promise<RecreatedBookmarkSubtree> {
   const ids = new Map<string, string>();
   const restoredMetadata: StoredBookmarkMetadataById = {};
   let root: Browser.bookmarks.BookmarkTreeNode | undefined;
@@ -423,15 +434,20 @@ export async function recreateBookmarkSubtree(
     }
     throw error;
   }
+  let metadataRestored = true;
   if (Object.keys(restoredMetadata).length > 0) {
-    // The bookmarks are already back; losing tags must not report the whole restore as failed.
+    // The bookmarks are already back; losing tags must not report the whole restore as failed,
+    // nor as complete.
     await mergeStoredBookmarkMetadata(restoredMetadata, {
       tagMode: 'replace',
       summaryMode: 'replace',
       dedupeTags: true,
-    }).catch((error: unknown) => console.error('Failed to restore bookmark metadata:', error));
+    }).catch((error: unknown) => {
+      console.error('Failed to restore bookmark metadata:', error);
+      metadataRestored = false;
+    });
   }
-  return { root, ids };
+  return { root, ids, metadataRestored };
 }
 
 /**
@@ -441,7 +457,7 @@ export async function recreateBookmarkSubtree(
 export async function restoreBookmarkDeletion(
   snapshot: BookmarkDeletionSnapshot,
   now: number = Date.now(),
-): Promise<Browser.bookmarks.BookmarkTreeNode> {
+): Promise<{ node: Browser.bookmarks.BookmarkTreeNode; metadataRestored: boolean }> {
   if (now > snapshot.expiresAt) {
     throw new BookmarkRestoreError(t('toast_restoreExpired'), 'expired');
   }
@@ -473,8 +489,9 @@ export async function restoreBookmarkDeletion(
       : undefined);
 
   let restoredRoot: Browser.bookmarks.BookmarkTreeNode;
+  let metadataRestored: boolean;
   try {
-    ({ root: restoredRoot } = await recreateBookmarkSubtree(
+    ({ root: restoredRoot, metadataRestored } = await recreateBookmarkSubtree(
       snapshot.node,
       snapshot.parentId,
       index,
@@ -493,7 +510,7 @@ export async function restoreBookmarkDeletion(
     const position = siblingOrder?.indexOf(snapshot.id) ?? -1;
     if (siblingOrder && position >= 0) siblingOrder[position] = restoredRoot.id;
   }
-  return restoredRoot;
+  return { node: restoredRoot, metadataRestored };
 }
 
 export async function getBookmarkSubTree(
@@ -544,8 +561,11 @@ export type BookmarkChange = {
   title: string;
   /** Values the live bookmark must still have. */
   expect?: BookmarkExpectation;
-  /** Any further condition on the live bookmark (with its subtree), such as a duplicate key. */
-  check?: (live: Browser.bookmarks.BookmarkTreeNode) => boolean;
+  /**
+   * Any further condition, checked right before this change is made: on the live bookmark (with
+   * its subtree), such as a duplicate key, or on others it depends on, such as a kept copy.
+   */
+  check?: (live: Browser.bookmarks.BookmarkTreeNode) => boolean | Promise<boolean>;
 } & (
   | { kind: 'update'; set: BookmarkFields }
   | { kind: 'move'; to: BookmarkMoveTarget }
@@ -569,6 +589,8 @@ export type BookmarkChangeIssue = {
 export type BookmarkChangesUndoResult = {
   restored: number;
   failed: number;
+  /** Restored items that came back without their tags and summaries; absent when none. */
+  metadataNotRestored?: number;
   /** Nothing was reverted because the change was undone already, with Ctrl+Z. */
   alreadyUndone?: boolean;
 };
@@ -685,7 +707,7 @@ export async function applyBookmarkChanges(
           issues.push({ id: change.id, title: change.title, reason: 'deleted' });
           continue;
         }
-        if (!matchesFields(live, change.expect) || (change.check && !change.check(live))) {
+        if (!matchesFields(live, change.expect) || (change.check && !(await change.check(live)))) {
           issues.push({ id: change.id, title: change.title, reason: 'changed' });
           continue;
         }
@@ -732,7 +754,13 @@ export async function applyBookmarkChanges(
         (change) => change.kind !== 'remove' || change.undoable !== false,
       ).length;
       const restored = Math.min(outcome.applied, reviewed);
-      return { restored, failed: reviewed - restored };
+      return {
+        restored,
+        failed: reviewed - restored,
+        ...(outcome.metadataNotRestored
+          ? { metadataNotRestored: outcome.metadataNotRestored }
+          : {}),
+      };
     })();
     return undone;
   };

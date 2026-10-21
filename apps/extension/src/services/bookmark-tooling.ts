@@ -426,8 +426,10 @@ export function getDuplicateKeepRuleIds(result: DuplicateScanResult) {
 /**
  * Removes every previewed extra (all items after the first in each group). Each group is
  * re-read first against the rules it was scanned with: a group whose kept bookmark is gone or
- * no longer matches the group key is left untouched, so the last copy of a URL is never lost.
- * Extras that vanished, were edited, or no longer match the group are skipped individually.
+ * no longer matches the group key is left untouched. The kept bookmark is read again right before
+ * each extra is removed too, since it can change while the batch runs, so the last copy of a URL
+ * is never lost. Extras that vanished, were edited, or no longer match the group are skipped
+ * individually.
  */
 export async function removeDuplicateExtras(
   groups: DuplicateGroup[],
@@ -439,8 +441,11 @@ export async function removeDuplicateExtras(
 
   for (const group of groups) {
     const [keeper, ...extras] = group.items;
-    const liveKeeper = keeper ? await getLiveBookmark(keeper.node.id) : undefined;
-    if (!liveKeeper || buildDuplicateKey(liveKeeper, match) !== group.key) {
+    const keeperQualifies = async () => {
+      const liveKeeper = keeper ? await getLiveBookmark(keeper.node.id) : undefined;
+      return liveKeeper !== undefined && buildDuplicateKey(liveKeeper, match) === group.key;
+    };
+    if (!(await keeperQualifies())) {
       skippedExtras += extras.length;
       skippedGroups += 1;
       continue;
@@ -451,7 +456,8 @@ export async function removeDuplicateExtras(
         id: extra.node.id,
         title: extra.node.title,
         expect: { url: extra.node.url },
-        check: (live) => buildDuplicateKey(live, match) === group.key,
+        check: async (live) =>
+          buildDuplicateKey(live, match) === group.key && (await keeperQualifies()),
       });
     }
   }
