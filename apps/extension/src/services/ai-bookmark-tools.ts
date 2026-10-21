@@ -240,7 +240,7 @@ export async function summarizeBookmarksWithAI(
       bookmarkId: bookmark.node.id,
       title: bookmark.node.title,
       url: bookmark.node.url ?? '',
-      domain: options.includeDomainHint ? bookmark.hostname ?? '' : '',
+      domain: options.includeDomainHint ? (bookmark.hostname ?? '') : '',
       folderPath: bookmark.pathLabel,
     })),
     settings,

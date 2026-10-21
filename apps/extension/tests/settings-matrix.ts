@@ -27,11 +27,12 @@ export type SettingCoverage =
 const e2e = (file: string, title: string): SettingTestRef => ({ kind: 'e2e', file, title });
 const unit = (file: string, title: string): SettingTestRef => ({ kind: 'unit', file, title });
 
-const tested = (
-  consumer: string,
-  tests: SettingTestRef[],
-  note?: string,
-): SettingCoverage => ({ status: 'tested', consumer, tests, ...(note ? { note } : {}) });
+const tested = (consumer: string, tests: SettingTestRef[], note?: string): SettingCoverage => ({
+  status: 'tested',
+  consumer,
+  tests,
+  ...(note ? { note } : {}),
+});
 
 const TOOL_TABLE = 'components/bookmarks/tools/tool-definitions.ts';
 const TOOL_OPTIONS = 'services/tool-options.ts';
@@ -147,10 +148,20 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e('options-settings.spec.ts', 'theme is one synced setting applied live in every open page'),
   ]),
   showFavicons: tested(POPUP, [popupDisplay]),
-  browserIconCache: tested('hooks/use-site-icon.ts', [
-    e2e('favicon-access.spec.ts', "Use the browser's icon cache shows cached icons only once it is on and allowed"),
-    unit('site-icons.test.ts', 'prefers a saved icon over the browser icon cache, which is used only when allowed'),
-  ], 'Chrome and Edge only; Options hides it in Firefox, which has no icon cache.'),
+  browserIconCache: tested(
+    'hooks/use-site-icon.ts',
+    [
+      e2e(
+        'favicon-access.spec.ts',
+        "Use the browser's icon cache shows cached icons only once it is on and allowed",
+      ),
+      unit(
+        'site-icons.test.ts',
+        'prefers a saved icon over the browser icon cache, which is used only when allowed',
+      ),
+    ],
+    'Chrome and Edge only; Options hides it in Firefox, which has no icon cache.',
+  ),
   faviconSize: tested(POPUP, [popupDisplay]),
 
   // Search
@@ -169,14 +180,18 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   searchHistory: tested(POPUP, [
     e2e('popup-tree.spec.ts', 'search history records, reuses, clears, and respects the setting'),
   ]),
-  folderMatchesEnabled: tested(POPUP, [e2e(
+  folderMatchesEnabled: tested(POPUP, [
+    e2e(
       'folder-match-save.spec.ts',
       'folder match settings hide the list, limit its length, and turn off typo matching',
-    )]),
-  folderMatchesMax: tested(POPUP, [e2e(
+    ),
+  ]),
+  folderMatchesMax: tested(POPUP, [
+    e2e(
       'folder-match-save.spec.ts',
       'folder match settings hide the list, limit its length, and turn off typo matching',
-    )]),
+    ),
+  ]),
   folderMatchesTypos: tested(POPUP, [
     e2e(
       'folder-match-save.spec.ts',
@@ -187,13 +202,22 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
 
   // Behavior
   sortOrder: tested(POPUP, [
-    e2e('bookmark-workflows.spec.ts', 'updates popup ordering from synced settings and creates a folder'),
+    e2e(
+      'bookmark-workflows.spec.ts',
+      'updates popup ordering from synced settings and creates a folder',
+    ),
     e2e('sorting.spec.ts', 'applies an Options UI sorting change to an open bookmarks table'),
-    e2e('popup-tree.spec.ts', 'lists each folder in the browser order by default, as the bookmarks bar does'),
+    e2e(
+      'popup-tree.spec.ts',
+      'lists each folder in the browser order by default, as the bookmarks bar does',
+    ),
     e2e('manager-defaults.spec.ts', 'names another Sort Order beside the Browser order button'),
   ]),
   groupByFolders: tested(POPUP, [
-    e2e('popup-tree.spec.ts', 'groupByFolders lists folders before links under date and alphabetical order'),
+    e2e(
+      'popup-tree.spec.ts',
+      'groupByFolders lists folders before links under date and alphabetical order',
+    ),
   ]),
   treeDragAndDrop: tested(POPUP, [
     e2e(
@@ -201,12 +225,16 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'with drag and drop turned off, rows cannot be dragged and links are not taken',
     ),
   ]),
-  linkOpenTarget: tested('components/ui/url-link.tsx', [
-    e2e(
-      'link-open-target.spec.ts',
-      'linkOpenTarget opens a manager URL in a new tab, a background tab, or the current tab',
-    ),
-  ], 'Popup rows, tool results, and dialogs share the same click handler.'),
+  linkOpenTarget: tested(
+    'components/ui/url-link.tsx',
+    [
+      e2e(
+        'link-open-target.spec.ts',
+        'linkOpenTarget opens a manager URL in a new tab, a background tab, or the current tab',
+      ),
+    ],
+    'Popup rows, tool results, and dialogs share the same click handler.',
+  ),
   historyRecordOutsideChanges: tested('services/bookmark-observer.ts', [
     unit(
       'bookmark-observer.test.ts',
@@ -224,90 +252,206 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ),
   ]),
   defaultNewFolderName: tested(POPUP, [popupDisplay]),
-  recentFoldersMax: tested('services/context-menu.ts', [
-    unit('context-menu.test.ts', 'shows recent folders limited by the recent-folders max setting'),
-  ], 'The popup Recent Folders panel also reads it; only the context menu limit is asserted.'),
-  recentFoldersEnabled: tested('services/context-menu.ts', [recentFoldersMenu],
-    'The popup Recent Folders panel also reads it; only the context menu toggle is asserted.'),
+  recentFoldersMax: tested(
+    'services/context-menu.ts',
+    [
+      unit(
+        'context-menu.test.ts',
+        'shows recent folders limited by the recent-folders max setting',
+      ),
+    ],
+    'The popup Recent Folders panel also reads it; only the context menu limit is asserted.',
+  ),
+  recentFoldersEnabled: tested(
+    'services/context-menu.ts',
+    [recentFoldersMenu],
+    'The popup Recent Folders panel also reads it; only the context menu toggle is asserted.',
+  ),
 
   // Advanced
   popupWidth: tested('hooks/use-popup-size.ts', [popupDisplay]),
   popupHeight: tested('hooks/use-popup-size.ts', [popupDisplay]),
-  truncateLength: tested(POPUP, [
-    popupAi,
-    unit('bookmark-deletion-flow.test.ts', 'quotes titles cut at the truncateLength setting'),
-  ], 'Shortens the page title in the popup AI suggestions header and titles quoted in toasts.'),
-  toastDurationMs: tested('components/ui/toaster.tsx', [
-    e2e(SETTINGS_E2E, 'toast duration setting controls how long popup toasts stay open'),
-  ], 'Undo toasts keep their own fixed undo window.'),
+  truncateLength: tested(
+    POPUP,
+    [
+      popupAi,
+      unit('bookmark-deletion-flow.test.ts', 'quotes titles cut at the truncateLength setting'),
+    ],
+    'Shortens the page title in the popup AI suggestions header and titles quoted in toasts.',
+  ),
+  toastDurationMs: tested(
+    'components/ui/toaster.tsx',
+    [e2e(SETTINGS_E2E, 'toast duration setting controls how long popup toasts stay open')],
+    'Undo toasts keep their own fixed undo window.',
+  ),
 
   // AI
   aiEnabled: tested(POPUP, [
-    e2e('popup-search.spec.ts', 'theme toggle follows the system theme and AI button hides when AI is off'),
+    e2e(
+      'popup-search.spec.ts',
+      'theme toggle follows the system theme and AI button hides when AI is off',
+    ),
     e2e(
       'additional-workflows.spec.ts',
       '[mocked provider contract] provider-backed AI previews stop at opt-in without making external requests',
     ),
   ]),
-  aiActivityRecording: tested('services/ai-activity.ts', [
-    unit('ai-activity.test.ts', 'records nothing while recording is off'),
-    unit('ai-activity.test.ts', 'records the call with credentials redacted and leaves the response readable'),
-    e2e(
-      'ai-activity.spec.ts',
-      '[mocked provider contract] AI activity records a request with its key and extra headers redacted, only while on',
-    ),
-  ], 'A device setting: it never syncs.'),
-  askAiDisabledActions: tested('services/actions.ts', [
-    unit('actions.test.ts', 'leaves out and refuses the actions the user turned off for Ask AI'),
-    e2e('ask-ai.spec.ts', '[mocked provider contract] Ask AI is not offered the actions turned off in Options'),
-  ], 'Edited in Options > AI > What Ask AI may do (AskAIActionsPanel).'),
-  agentBridgeEnabled: tested('services/agent-bridge.ts', [
-    unit('agent-bridge.test.ts', 'answers a call through the action registry and refuses one while access is off'),
-    unit('agent-bridge.test.ts', 'connects through native messaging, announces the tools, and answers calls'),
-    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
-  ], 'A device setting; turning it on asks for native messaging.'),
-  agentBridgeWrites: tested('services/actions.ts', [
-    unit('agent-approvals.test.ts', 'refuses changes without asking while changes are not allowed'),
-    unit('agent-approvals.test.ts', 'asks before a local agent saves a page, and saves nothing when declined'),
-    e2e('agent-bridge.spec.ts', 'a local agent saves a page only after the user approves it in the approval window'),
-  ], 'A device setting; every change still waits for approval.'),
+  aiActivityRecording: tested(
+    'services/ai-activity.ts',
+    [
+      unit('ai-activity.test.ts', 'records nothing while recording is off'),
+      unit(
+        'ai-activity.test.ts',
+        'records the call with credentials redacted and leaves the response readable',
+      ),
+      e2e(
+        'ai-activity.spec.ts',
+        '[mocked provider contract] AI activity records a request with its key and extra headers redacted, only while on',
+      ),
+    ],
+    'A device setting: it never syncs.',
+  ),
+  askAiDisabledActions: tested(
+    'services/actions.ts',
+    [
+      unit('actions.test.ts', 'leaves out and refuses the actions the user turned off for Ask AI'),
+      e2e(
+        'ask-ai.spec.ts',
+        '[mocked provider contract] Ask AI is not offered the actions turned off in Options',
+      ),
+    ],
+    'Edited in Options > AI > What Ask AI may do (AskAIActionsPanel).',
+  ),
+  agentBridgeEnabled: tested(
+    'services/agent-bridge.ts',
+    [
+      unit(
+        'agent-bridge.test.ts',
+        'answers a call through the action registry and refuses one while access is off',
+      ),
+      unit(
+        'agent-bridge.test.ts',
+        'connects through native messaging, announces the tools, and answers calls',
+      ),
+      e2e(
+        'agent-bridge.spec.ts',
+        'Options turns on access for local AI agents, which look up bookmarks through the bridge',
+      ),
+    ],
+    'A device setting; turning it on asks for native messaging.',
+  ),
+  agentBridgeWrites: tested(
+    'services/actions.ts',
+    [
+      unit(
+        'agent-approvals.test.ts',
+        'refuses changes without asking while changes are not allowed',
+      ),
+      unit(
+        'agent-approvals.test.ts',
+        'asks before a local agent saves a page, and saves nothing when declined',
+      ),
+      e2e(
+        'agent-bridge.spec.ts',
+        'a local agent saves a page only after the user approves it in the approval window',
+      ),
+    ],
+    'A device setting; every change still waits for approval.',
+  ),
   agentBridgeRedactUrls: tested('services/agent-bridge.ts', [
     unit('agent-bridge.test.ts', 'hides private values in the titles and URLs agents receive'),
-    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
+    e2e(
+      'agent-bridge.spec.ts',
+      'Options turns on access for local AI agents, which look up bookmarks through the bridge',
+    ),
   ]),
-  agentBridgeDisabledActions: tested('services/actions.ts', [
-    unit('agent-bridge.test.ts', 'leaves out and refuses the actions the user turned off for local agents'),
-    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
-  ], 'Edited in Options > AI > Local AI agents (AgentBridgeActionsPanel).'),
-  managerMenuActions: tested('components/ui/table/bookmark-row-menu.tsx', [
-    unit('action-menus.test.ts', 'hide and reorder item-menu actions as the user arranged them'),
-    e2e('bookmark-manager-menus.spec.ts', 'Options hides and reorders the manager menu items'),
-  ], 'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).'),
-  askAiWebSearch: tested('services/ai-agent.ts', [
-    unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on"),
-  ], 'A device setting, switched with the globe button in Ask AI.'),
+  agentBridgeDisabledActions: tested(
+    'services/actions.ts',
+    [
+      unit(
+        'agent-bridge.test.ts',
+        'leaves out and refuses the actions the user turned off for local agents',
+      ),
+      e2e(
+        'agent-bridge.spec.ts',
+        'Options turns on access for local AI agents, which look up bookmarks through the bridge',
+      ),
+    ],
+    'Edited in Options > AI > Local AI agents (AgentBridgeActionsPanel).',
+  ),
+  managerMenuActions: tested(
+    'components/ui/table/bookmark-row-menu.tsx',
+    [
+      unit('action-menus.test.ts', 'hide and reorder item-menu actions as the user arranged them'),
+      e2e('bookmark-manager-menus.spec.ts', 'Options hides and reorders the manager menu items'),
+    ],
+    'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).',
+  ),
+  askAiWebSearch: tested(
+    'services/ai-agent.ts',
+    [unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on")],
+    'A device setting, switched with the globe button in Ask AI.',
+  ),
   aiMaxRecommendations: tested(POPUP, [
     popupAi,
-    unit('ai-prompt-settings.test.ts', 'asks for and returns at most the saved number of folder recommendations'),
+    unit(
+      'ai-prompt-settings.test.ts',
+      'asks for and returns at most the saved number of folder recommendations',
+    ),
   ]),
   aiAutoTriggerOnOpen: tested(POPUP, [popupAi]),
-  aiReadPageContent: tested(POPUP, [
-    e2e('ai-page-reading.spec.ts', '[mocked provider contract] Read page content sends the page text as untrusted data'),
-    e2e('ai-page-reading.spec.ts', '[mocked provider contract] without Read page content only the title and URL are sent'),
-    e2e('ai-page-reading.spec.ts', 'Read page content turns on once website access is granted'),
-    unit('page-reader.test.ts', 'leaves items unchanged when page reading is off or website access is missing'),
-  ], 'Also read by Auto-Tagging and Content Summarizer in services/tool-options.ts.'),
-  aiOutputLanguage: tested('services/prompt-config.ts', [
-    unit('prompt-library.test.ts', 'names the chosen language whatever the extension language is'),
-    unit('prompt-library.test.ts', 'asks for each page language in page mode, with the extension language as the fallback'),
-    e2e('prompt-library.spec.ts', '[mocked provider contract] auto-tagging asks for the AI output language: the extension language, then each page'),
-  ], 'Prompt-level; provider compliance is checked only by the live AI suite.'),
-  aiMaxCategories: tested('services/ai-reorganization.ts', [reorgLimits, unlimitedPromptVariables],
-    'Prompt-level limit; provider compliance is not verified. Unlimited (-1) is left out of the rules and request, and its {{variable}} reads as a phrase.'),
-  aiMinItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits],
-    'Prompt-level target; provider compliance is not verified.'),
-  aiMaxItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits, unlimitedPromptVariables],
-    'Prompt-level limit; provider compliance is not verified. Unlimited (-1) is left out of the rules and request, and its {{variable}} reads as a phrase.'),
+  aiReadPageContent: tested(
+    POPUP,
+    [
+      e2e(
+        'ai-page-reading.spec.ts',
+        '[mocked provider contract] Read page content sends the page text as untrusted data',
+      ),
+      e2e(
+        'ai-page-reading.spec.ts',
+        '[mocked provider contract] without Read page content only the title and URL are sent',
+      ),
+      e2e('ai-page-reading.spec.ts', 'Read page content turns on once website access is granted'),
+      unit(
+        'page-reader.test.ts',
+        'leaves items unchanged when page reading is off or website access is missing',
+      ),
+    ],
+    'Also read by Auto-Tagging and Content Summarizer in services/tool-options.ts.',
+  ),
+  aiOutputLanguage: tested(
+    'services/prompt-config.ts',
+    [
+      unit(
+        'prompt-library.test.ts',
+        'names the chosen language whatever the extension language is',
+      ),
+      unit(
+        'prompt-library.test.ts',
+        'asks for each page language in page mode, with the extension language as the fallback',
+      ),
+      e2e(
+        'prompt-library.spec.ts',
+        '[mocked provider contract] auto-tagging asks for the AI output language: the extension language, then each page',
+      ),
+    ],
+    'Prompt-level; provider compliance is checked only by the live AI suite.',
+  ),
+  aiMaxCategories: tested(
+    'services/ai-reorganization.ts',
+    [reorgLimits, unlimitedPromptVariables],
+    'Prompt-level limit; provider compliance is not verified. Unlimited (-1) is left out of the rules and request, and its {{variable}} reads as a phrase.',
+  ),
+  aiMinItemsPerFolder: tested(
+    'services/ai-reorganization.ts',
+    [reorgLimits],
+    'Prompt-level target; provider compliance is not verified.',
+  ),
+  aiMaxItemsPerFolder: tested(
+    'services/ai-reorganization.ts',
+    [reorgLimits, unlimitedPromptVariables],
+    'Prompt-level limit; provider compliance is not verified. Unlimited (-1) is left out of the rules and request, and its {{variable}} reads as a phrase.',
+  ),
 
   // Export
   exportFilenamePrefix: tested(DATA_TOOLS, [exportPreferences]),
@@ -322,9 +466,18 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
 
   // Context menu
   contextMenuEnabled: tested('services/context-menu.ts', [
-    unit('context-menu.test.ts', 'removes the menu when disabled, rejects stale clicks, and restores it when enabled'),
-    unit('context-menu.test.ts', 'builds the menu only while its permission is granted and removes it on revoke'),
-    e2e('permission-requests.spec.ts', 'turning on Context Menu asks for the permission, builds the menu, and a revoke turns it off'),
+    unit(
+      'context-menu.test.ts',
+      'removes the menu when disabled, rejects stale clicks, and restores it when enabled',
+    ),
+    unit(
+      'context-menu.test.ts',
+      'builds the menu only while its permission is granted and removes it on revoke',
+    ),
+    e2e(
+      'permission-requests.spec.ts',
+      'turning on Context Menu asks for the permission, builds the menu, and a revoke turns it off',
+    ),
   ]),
   contextMenuBookmarkNaming: tested('services/context-menu.ts', [
     unit(SETTINGS_UNIT, 'names bookmarks from the page title or the link URL when selected'),
@@ -335,11 +488,17 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'quick-save.test.ts',
       'each strategy picks its own folder and offers ranked, then recent, alternatives',
     ),
-    e2e('quick-save.spec.ts', 'the last used and chosen folder strategies decide where quick save goes'),
+    e2e(
+      'quick-save.spec.ts',
+      'the last used and chosen folder strategies decide where quick save goes',
+    ),
   ]),
   quickSaveFixedFolder: tested('services/quick-save.ts', [
     unit('quick-save.test.ts', 'a chosen folder that no longer exists falls back and says so'),
-    e2e('quick-save.spec.ts', 'the last used and chosen folder strategies decide where quick save goes'),
+    e2e(
+      'quick-save.spec.ts',
+      'the last used and chosen folder strategies decide where quick save goes',
+    ),
   ]),
 
   // AI context packer
@@ -365,20 +524,48 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     reason: 'Auto-tagging only runs on the current folder; the setting is fixed to "folder".',
     tests: [toolFlags],
   },
-  autoTaggingMinTags: tested(TOOL_OPTIONS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
-  autoTaggingMaxTags: tested(TOOL_OPTIONS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
-  autoTaggingTagStyle: tested(TOOL_OPTIONS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
+  autoTaggingMinTags: tested(
+    TOOL_OPTIONS,
+    [aiPrompts],
+    'Prompt-level; provider compliance is not verified.',
+  ),
+  autoTaggingMaxTags: tested(
+    TOOL_OPTIONS,
+    [aiPrompts],
+    'Prompt-level; provider compliance is not verified.',
+  ),
+  autoTaggingTagStyle: tested(
+    TOOL_OPTIONS,
+    [aiPrompts],
+    'Prompt-level; provider compliance is not verified.',
+  ),
   autoTaggingMergeMode: tested(TOOL_TABLE, [
     metadataMerge,
-    unit('bookmark-metadata-storage.test.ts', 'appends tags without dedupe and replaces tags when requested'),
+    unit(
+      'bookmark-metadata-storage.test.ts',
+      'appends tags without dedupe and replaces tags when requested',
+    ),
   ]),
   autoTaggingDedupeTags: tested(TOOL_TABLE, [
-    unit('bookmark-metadata-storage.test.ts', 'appends tags without dedupe and replaces tags when requested'),
+    unit(
+      'bookmark-metadata-storage.test.ts',
+      'appends tags without dedupe and replaces tags when requested',
+    ),
   ]),
-  autoTaggingSendExistingTags: tested(TOOL_OPTIONS, [
-    unit('prompt-library.test.ts', 'sends the most used tags only while Send Existing Tags is on, within the configured caps'),
-    e2e('prompt-library.spec.ts', '[mocked provider contract] auto-tagging sends existing tags and About me only when there is something to send'),
-  ], 'Read by services/prompt-config.ts ({{existingTags}}).'),
+  autoTaggingSendExistingTags: tested(
+    TOOL_OPTIONS,
+    [
+      unit(
+        'prompt-library.test.ts',
+        'sends the most used tags only while Send Existing Tags is on, within the configured caps',
+      ),
+      e2e(
+        'prompt-library.spec.ts',
+        '[mocked provider contract] auto-tagging sends existing tags and About me only when there is something to send',
+      ),
+    ],
+    'Read by services/prompt-config.ts ({{existingTags}}).',
+  ),
 
   // Summarizer
   summarizerEnabled: tested(TOOL_TABLE, [toolFlags]),
@@ -387,15 +574,28 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     consumer: TOOL_TABLE,
     reason: 'The summarizer only runs on the current folder; the setting is fixed to "folder".',
   },
-  summarizerSummaryLength: tested(TOOL_OPTIONS, [
-    unit('ai-prompt-settings.test.ts', 'puts the saved summary length into the summarizer prompt'),
-  ], 'Prompt-level; provider compliance is not verified.'),
+  summarizerSummaryLength: tested(
+    TOOL_OPTIONS,
+    [
+      unit(
+        'ai-prompt-settings.test.ts',
+        'puts the saved summary length into the summarizer prompt',
+      ),
+    ],
+    'Prompt-level; provider compliance is not verified.',
+  ),
   summarizerIncludeDomainHint: tested(TOOL_OPTIONS, [
-    unit('ai-bookmark-workflows.test.ts', 'includes optional domain context and filters unknown or duplicate summarizer results'),
+    unit(
+      'ai-bookmark-workflows.test.ts',
+      'includes optional domain context and filters unknown or duplicate summarizer results',
+    ),
   ]),
   summarizerMergeMode: tested(TOOL_TABLE, [
     metadataMerge,
-    unit('bookmark-metadata-storage.test.ts', 'appends or replaces summaries according to the merge mode'),
+    unit(
+      'bookmark-metadata-storage.test.ts',
+      'appends or replaces summaries according to the merge mode',
+    ),
   ]),
 
   // Reorganization
@@ -414,17 +614,29 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   },
   duplicatesMatchStrategy: tested(TOOL_OPTIONS, [
     duplicateSettings,
-    e2e('tool-data-safety.spec.ts', 'duplicate cleaner warns before title-only matching removes bookmarks with different URLs'),
+    e2e(
+      'tool-data-safety.spec.ts',
+      'duplicate cleaner warns before title-only matching removes bookmarks with different URLs',
+    ),
   ]),
   duplicatesNormalizeWww: tested(TOOL_OPTIONS, [duplicateSettings]),
   duplicatesIgnoreProtocol: tested(TOOL_OPTIONS, [
-    unit('bookmark-duplicates.test.ts', 'normalizes scheme and host case, default ports, www, protocol, and trailing slash'),
+    unit(
+      'bookmark-duplicates.test.ts',
+      'normalizes scheme and host case, default ports, www, protocol, and trailing slash',
+    ),
   ]),
   duplicatesIgnoreTrailingSlash: tested(TOOL_OPTIONS, [
-    unit('bookmark-duplicates.test.ts', 'normalizes scheme and host case, default ports, www, protocol, and trailing slash'),
+    unit(
+      'bookmark-duplicates.test.ts',
+      'normalizes scheme and host case, default ports, www, protocol, and trailing slash',
+    ),
   ]),
   duplicatesKeepRule: tested(TOOL_OPTIONS, [
-    e2e('tool-data-safety.spec.ts', 'duplicate cleaner keeps the newest item it labels Keep and ignores case, port, and query-order lookalikes'),
+    e2e(
+      'tool-data-safety.spec.ts',
+      'duplicate cleaner keeps the newest item it labels Keep and ignores case, port, and query-order lookalikes',
+    ),
   ]),
   duplicatesMaxGroups: tested(TOOL_OPTIONS, [
     duplicateSettings,
@@ -432,15 +644,19 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   ]),
 
   // URL cleaner
-  urlCleanerEnabled: tested(TOOL_TABLE, [
-    fixedScopes,
-  ]),
+  urlCleanerEnabled: tested(TOOL_TABLE, [fixedScopes]),
   urlCleanerDefaultScope: tested(TOOL_TABLE, [
-    e2e('tool-settings.spec.ts', 'tools sidebar headings, cards, scopes, and dialogs follow the selected language'),
+    e2e(
+      'tool-settings.spec.ts',
+      'tools sidebar headings, cards, scopes, and dialogs follow the selected language',
+    ),
   ]),
   urlCleanerRemoveHash: tested(TOOL_OPTIONS, [urlCleanerE2e]),
   urlCleanerSortQueryParams: tested(TOOL_OPTIONS, [
-    e2e('tool-data-safety.spec.ts', 'URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmarks edited after the preview'),
+    e2e(
+      'tool-data-safety.spec.ts',
+      'URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmarks edited after the preview',
+    ),
   ]),
   urlCleanerDedupeQueryParams: tested(TOOL_OPTIONS, [
     urlCleanerE2e,
@@ -467,16 +683,28 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   // Metadata fetcher
   metadataFetcherEnabled: tested(TOOL_TABLE, [toolFlags]),
   metadataFetcherDefaultScope: tested(TOOL_TABLE, [
-    e2e('tool-network.spec.ts', 'metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles'),
+    e2e(
+      'tool-network.spec.ts',
+      'metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles',
+    ),
   ]),
   metadataFetcherOverwriteTitles: tested(TOOL_OPTIONS, [
-    e2e('tool-network.spec.ts', 'metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles'),
+    e2e(
+      'tool-network.spec.ts',
+      'metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles',
+    ),
   ]),
   metadataFetcherFetchDescriptions: tested(TOOL_OPTIONS, [
-    e2e('additional-workflows.spec.ts', 'metadata fetcher previews mocked page metadata without changing bookmarks'),
+    e2e(
+      'additional-workflows.spec.ts',
+      'metadata fetcher previews mocked page metadata without changing bookmarks',
+    ),
   ]),
   metadataFetcherRequestTimeoutMs: tested(TOOL_OPTIONS, [
-    e2e('tool-network.spec.ts', 'metadata fetcher times out on a stalled body, skips non-HTML files, and leaves Running'),
+    e2e(
+      'tool-network.spec.ts',
+      'metadata fetcher times out on a stalled body, skips non-HTML files, and leaves Running',
+    ),
   ]),
   metadataFetcherConcurrency: tested(TOOL_OPTIONS, [
     unit(SETTINGS_UNIT, 'metadata fetches never exceed the saved concurrency'),
@@ -490,7 +718,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   ]),
   siteIconsMaxIconKb: tested(TOOL_OPTIONS, [
     siteIconsRefresh,
-    unit(SITE_ICONS_UNIT, 'rejects icon files over the saved byte cap and files that are not images'),
+    unit(
+      SITE_ICONS_UNIT,
+      'rejects icon files over the saved byte cap and files that are not images',
+    ),
   ]),
   siteIconsMaxCacheKb: tested(TOOL_TABLE, [
     unit(SITE_ICONS_UNIT, 'evicts the oldest icons to stay within the saved cache limit'),
@@ -518,7 +749,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   statisticsIncludeDuplicates: tested(TOOL_OPTIONS, [statisticsSections]),
   statisticsIncludeProtocols: tested(TOOL_OPTIONS, [statisticsSections]),
   statisticsIncludeDepthBreakdown: tested(TOOL_OPTIONS, [
-    e2e('tool-reports.spec.ts', 'statistics count folders inside the scope and show the depth breakdown only when enabled'),
+    e2e(
+      'tool-reports.spec.ts',
+      'statistics count folders inside the scope and show the depth breakdown only when enabled',
+    ),
   ]),
   statisticsTopN: tested(TOOL_OPTIONS, [
     reportSettings,
@@ -527,10 +761,16 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
 
   // Data tools
   dataShowExport: tested(TOOLS, [
-    e2e('tool-data-io.spec.ts', 'export and import cards follow their visibility settings without changing bookmarks'),
+    e2e(
+      'tool-data-io.spec.ts',
+      'export and import cards follow their visibility settings without changing bookmarks',
+    ),
   ]),
   dataShowImport: tested(TOOLS, [
-    e2e('tool-data-io.spec.ts', 'export and import cards follow their visibility settings without changing bookmarks'),
+    e2e(
+      'tool-data-io.spec.ts',
+      'export and import cards follow their visibility settings without changing bookmarks',
+    ),
   ]),
   dataDefaultExportFormat: tested(DATA_TOOLS, [exportPreferences]),
 };

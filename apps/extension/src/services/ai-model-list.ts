@@ -274,7 +274,11 @@ export async function listProviderModels(
   options: { signal?: AbortSignal; source?: AIActivitySource } = {},
 ): Promise<DetectedAIModel[]> {
   const style = getProviderModelListStyle(settings.provider);
-  const baseUrl = getProviderEndpoint(settings.provider, settings.baseUrl, settings.providerOptions);
+  const baseUrl = getProviderEndpoint(
+    settings.provider,
+    settings.baseUrl,
+    settings.providerOptions,
+  );
   if (style === 'none' || !baseUrl) {
     throw new Error(t('error_aiModelListUnavailable'));
   }

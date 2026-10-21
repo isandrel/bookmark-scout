@@ -911,114 +911,114 @@ export function DataTable<TData extends RowData>({
         >
           <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
             <RowFolderPathContext.Provider value={showRowFolders}>
-            {/* Fixed layout applies the column sizes as given; the table only grows past the frame
+              {/* Fixed layout applies the column sizes as given; the table only grows past the frame
               (and scrolls) when the columns need more room than it has. */}
-            <Table
-              className="table-fixed"
-              style={{ minWidth: table.getTotalSize() }}
-              role="grid"
-              aria-multiselectable="true"
-              aria-rowcount={shownRows.length + 1}
-              aria-label={label}
-              data-testid="bookmark-grid"
-            >
-              <TableHeader>
-                <ColumnReorderContext.Provider value={columnReorder}>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id} aria-rowindex={1}>
-                      {headerGroup.headers.map((header) => (
-                        <React.Fragment key={header.id}>
-                          {header.column.id === STICKY_COLUMN_ID && (
-                            <TableHead aria-hidden="true" className={FILLER_CELL_CLASS} />
-                          )}
-                          <DraggableTableHead
-                            columnId={header.column.id}
-                            style={{ width: header.getSize() }}
-                            className={cn(
-                              header.column.getCanResize() && 'relative truncate',
-                              header.column.id === STICKY_COLUMN_ID &&
-                                'sticky right-0 z-10 border-l bg-card px-1',
+              <Table
+                className="table-fixed"
+                style={{ minWidth: table.getTotalSize() }}
+                role="grid"
+                aria-multiselectable="true"
+                aria-rowcount={shownRows.length + 1}
+                aria-label={label}
+                data-testid="bookmark-grid"
+              >
+                <TableHeader>
+                  <ColumnReorderContext.Provider value={columnReorder}>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <TableRow key={headerGroup.id} aria-rowindex={1}>
+                        {headerGroup.headers.map((header) => (
+                          <React.Fragment key={header.id}>
+                            {header.column.id === STICKY_COLUMN_ID && (
+                              <TableHead aria-hidden="true" className={FILLER_CELL_CLASS} />
                             )}
-                          >
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(header.column.columnDef.header, header.getContext())}
-                            {header.column.getCanResize() && (
-                              <DataTableColumnResizer header={header} />
-                            )}
-                          </DraggableTableHead>
-                        </React.Fragment>
-                      ))}
-                    </TableRow>
-                  ))}
-                </ColumnReorderContext.Provider>
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  pageRows.map((row, rowIndex) => {
-                    const selectable = row.getCanSelect();
-                    return (
-                      <TableRow
-                        key={row.id}
-                        data-row-id={row.id}
-                        data-state={row.getIsSelected() && 'selected'}
-                        aria-selected={selectable ? row.getIsSelected() : undefined}
-                        // The header row is 1; rows count across pages.
-                        aria-rowindex={pagination.pageIndex * pagination.pageSize + rowIndex + 2}
-                        className={cn(
-                          'scroll-mb-(--selection-bar-height) focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
-                          rowClassName?.(row.original),
-                        )}
-                        tabIndex={row.id === tabStopRowId ? 0 : -1}
-                        onFocus={(event) => {
-                          if (event.target === event.currentTarget) setFocusedRowId(row.id);
-                        }}
-                        onMouseDown={(event) => {
-                          // Shift+click selects rows, not text.
-                          if (event.shiftKey) event.preventDefault();
-                        }}
-                        onClick={(event) => handleRowClick(event, row.id)}
-                        onDoubleClick={(event) => {
-                          if (!isFromControl(event)) onRowOpen?.(row.original);
-                        }}
-                        onAuxClick={(event) => {
-                          if (event.button !== 1 || !onRowOpenInBackground) return;
-                          event.preventDefault();
-                          onRowOpenInBackground(row.original);
-                        }}
-                        onKeyDown={(event) => handleRowKeyDown(event, row.id)}
-                        {...getRowProps?.(row.original)}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <React.Fragment key={cell.id}>
-                            {cell.column.id === STICKY_COLUMN_ID && (
-                              <TableCell aria-hidden="true" className={FILLER_CELL_CLASS} />
-                            )}
-                            <TableCell
+                            <DraggableTableHead
+                              columnId={header.column.id}
+                              style={{ width: header.getSize() }}
                               className={cn(
-                                cell.column.getCanResize() && 'truncate',
-                                cell.column.id === STICKY_COLUMN_ID && stickyColumnClass,
+                                header.column.getCanResize() && 'relative truncate',
+                                header.column.id === STICKY_COLUMN_ID &&
+                                  'sticky right-0 z-10 border-l bg-card px-1',
                               )}
                             >
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </TableCell>
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(header.column.columnDef.header, header.getContext())}
+                              {header.column.getCanResize() && (
+                                <DataTableColumnResizer header={header} />
+                              )}
+                            </DraggableTableHead>
                           </React.Fragment>
                         ))}
                       </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={table.getVisibleLeafColumns().length + 1}
-                      className="h-24 text-center"
-                    >
-                      {t('table_noResults')}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                    ))}
+                  </ColumnReorderContext.Provider>
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    pageRows.map((row, rowIndex) => {
+                      const selectable = row.getCanSelect();
+                      return (
+                        <TableRow
+                          key={row.id}
+                          data-row-id={row.id}
+                          data-state={row.getIsSelected() && 'selected'}
+                          aria-selected={selectable ? row.getIsSelected() : undefined}
+                          // The header row is 1; rows count across pages.
+                          aria-rowindex={pagination.pageIndex * pagination.pageSize + rowIndex + 2}
+                          className={cn(
+                            'scroll-mb-(--selection-bar-height) focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
+                            rowClassName?.(row.original),
+                          )}
+                          tabIndex={row.id === tabStopRowId ? 0 : -1}
+                          onFocus={(event) => {
+                            if (event.target === event.currentTarget) setFocusedRowId(row.id);
+                          }}
+                          onMouseDown={(event) => {
+                            // Shift+click selects rows, not text.
+                            if (event.shiftKey) event.preventDefault();
+                          }}
+                          onClick={(event) => handleRowClick(event, row.id)}
+                          onDoubleClick={(event) => {
+                            if (!isFromControl(event)) onRowOpen?.(row.original);
+                          }}
+                          onAuxClick={(event) => {
+                            if (event.button !== 1 || !onRowOpenInBackground) return;
+                            event.preventDefault();
+                            onRowOpenInBackground(row.original);
+                          }}
+                          onKeyDown={(event) => handleRowKeyDown(event, row.id)}
+                          {...getRowProps?.(row.original)}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <React.Fragment key={cell.id}>
+                              {cell.column.id === STICKY_COLUMN_ID && (
+                                <TableCell aria-hidden="true" className={FILLER_CELL_CLASS} />
+                              )}
+                              <TableCell
+                                className={cn(
+                                  cell.column.getCanResize() && 'truncate',
+                                  cell.column.id === STICKY_COLUMN_ID && stickyColumnClass,
+                                )}
+                              >
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </TableCell>
+                            </React.Fragment>
+                          ))}
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={table.getVisibleLeafColumns().length + 1}
+                        className="h-24 text-center"
+                      >
+                        {t('table_noResults')}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </RowFolderPathContext.Provider>
           </MoveDisabledReasonContext.Provider>
         </div>,

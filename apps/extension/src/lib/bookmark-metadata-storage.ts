@@ -64,7 +64,10 @@ export function getTagVocabulary(metadata: StoredBookmarkMetadataById): string[]
  * `tags` with each one that matches a tag in `vocabulary` apart from case, width, or spacing
  * written as the vocabulary spells it, so a suggestion never adds a near-duplicate of a tag in use.
  */
-export function matchTagSpellings(tags: readonly string[], vocabulary: readonly string[]): string[] {
+export function matchTagSpellings(
+  tags: readonly string[],
+  vocabulary: readonly string[],
+): string[] {
   const spellings = new Map(vocabulary.map((tag) => [tagKey(tag), tag]));
   return tags.map((tag) => spellings.get(tagKey(tag)) ?? tag);
 }

@@ -24,7 +24,8 @@ This prevents data races at compile time, which is one of the reasons Rust is po
 <script>window.tracking = true;</script></article>
 <footer>Copyright example</footer></body></html>`;
 
-const parse = (html: string) => new LinkedomParser().parseFromString(html, 'text/html') as unknown as Document;
+const parse = (html: string) =>
+  new LinkedomParser().parseFromString(html, 'text/html') as unknown as Document;
 
 beforeEach(() => {
   fakeBrowser.reset();
@@ -58,12 +59,16 @@ describe('isPrivateHost', () => {
     expect(isPrivateHost(host)).toBe(true);
   });
 
-  it.each(['example.com', '8.8.8.8', '172.32.0.1', '192.169.0.1', '[2001:db8::1]', 'localhost.com'])(
-    'treats %s as public',
-    (host) => {
-      expect(isPrivateHost(host)).toBe(false);
-    },
-  );
+  it.each([
+    'example.com',
+    '8.8.8.8',
+    '172.32.0.1',
+    '192.169.0.1',
+    '[2001:db8::1]',
+    'localhost.com',
+  ])('treats %s as public', (host) => {
+    expect(isPrivateHost(host)).toBe(false);
+  });
 
   it('reads only web URLs on public hosts', () => {
     expect(isReadablePageUrl('https://example.com/a')).toBe(true);
@@ -125,7 +130,10 @@ describe('readPagesText', () => {
   });
 
   it('reads at most the configured number of pages in one run', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => html(ARTICLE)));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => html(ARTICLE)),
+    );
     const urls = Array.from(
       { length: MAX_PAGES_PER_RUN + 5 },
       (_, index) => `https://example.com/${index}`,
@@ -148,7 +156,10 @@ describe('addPageText', () => {
   });
 
   it('adds the page title and text when reading is on and access is granted', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response(ARTICLE, { headers: { 'content-type': 'text/html' } })));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(ARTICLE, { headers: { 'content-type': 'text/html' } })),
+    );
     vi.spyOn(fakeBrowser.permissions, 'contains').mockResolvedValue(true);
     const [item] = await addPageText([{ url: 'https://example.com/article', id: 'a' }], true);
     expect(item).toMatchObject({ id: 'a', pageTitle: 'Rust ownership explained' });

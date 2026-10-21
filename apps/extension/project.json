@@ -169,7 +169,7 @@
             }
         },
         "lint": {
-            "command": "biome lint ./src ./tests ./build ./scripts/check-distribution-size.ts ./manifest.config.ts ./vitest.config.ts ./playwright.config.ts",
+            "command": "biome check ./src ./tests ./build ./scripts/check-distribution-size.ts ./manifest.config.ts ./vitest.config.ts ./playwright.config.ts",
             "options": {
                 "cwd": "apps/extension"
             }
