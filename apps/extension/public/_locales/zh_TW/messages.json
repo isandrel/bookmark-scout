@@ -7144,5 +7144,29 @@
     "jobs_popupMany": {
         "message": "背景工作：$1 個正在執行",
         "description": "Background tasks: popupMany"
+    },
+    "jobs_blockedAIOff": {
+        "message": "已暫停：AI 功能已關閉。請在設定中開啟後再繼續。",
+        "description": "A background task paused because AI features were turned off"
+    },
+    "jobs_blockedAISetup": {
+        "message": "已暫停：AI 服務尚未就緒（$1）。請在設定中修正後再繼續。",
+        "description": "A background task paused because its AI service is not set up; $1 is the reason"
+    },
+    "jobs_blockedServiceChanged": {
+        "message": "已暫停：此工作開始後 AI 服務已變更，因此沒有再傳送任何內容。若要使用新服務，請重新開始此工作。",
+        "description": "A background task paused because the AI service changed after it started"
+    },
+    "jobs_blockedAIRequest": {
+        "message": "已暫停：AI 服務沒有回應（$1）。繼續即可重試。",
+        "description": "A background task paused because an AI request failed; $1 is the reason"
+    },
+    "jobs_uncertainRequest": {
+        "message": "已暫停：等待 AI 回答時瀏覽器停止了，這次回答可能已經計費。繼續會再次傳送該要求。",
+        "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
+    },
+    "jobs_errorSetup": {
+        "message": "此工作無法繼續。請重新開始。",
+        "description": "A background task stopped and cannot go on"
     }
 }

@@ -33,6 +33,7 @@ export function JobStatus({
   const [busy, setBusy] = useState(false);
   const processed = processedCount(job);
   const active = isJobActive(job);
+  const errorMessage = jobErrorMessage(job);
   const run = (action: keyof typeof ACTION_ICONS) => {
     setBusy(true);
     void sendCommand({ type: action, jobId: job.id }).finally(() => setBusy(false));
@@ -62,6 +63,11 @@ export function JobStatus({
           formatCount(job.done.failed),
         ])}
       </p>
+      {errorMessage ? (
+        <p className="text-xs text-warning" data-testid="job-error">
+          {errorMessage}
+        </p>
+      ) : null}
       {active ? <p className="text-xs text-muted-foreground">{t('jobs_runsNote')}</p> : null}
       {job.state === 'cancelled' ? (
         <p className="text-xs text-muted-foreground">{t('jobs_cancelledNote')}</p>

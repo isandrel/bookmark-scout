@@ -7144,5 +7144,29 @@
     "jobs_popupMany": {
         "message": "后台任务：$1 个正在运行",
         "description": "Background tasks: popupMany"
+    },
+    "jobs_blockedAIOff": {
+        "message": "已暂停：AI 功能已关闭。请在设置中打开后再继续。",
+        "description": "A background task paused because AI features were turned off"
+    },
+    "jobs_blockedAISetup": {
+        "message": "已暂停：AI 服务尚未就绪（$1）。请在设置中修正后再继续。",
+        "description": "A background task paused because its AI service is not set up; $1 is the reason"
+    },
+    "jobs_blockedServiceChanged": {
+        "message": "已暂停：此任务开始后 AI 服务已更改，因此没有再发送任何内容。要使用新服务，请重新开始此任务。",
+        "description": "A background task paused because the AI service changed after it started"
+    },
+    "jobs_blockedAIRequest": {
+        "message": "已暂停：AI 服务没有回应（$1）。继续即可重试。",
+        "description": "A background task paused because an AI request failed; $1 is the reason"
+    },
+    "jobs_uncertainRequest": {
+        "message": "已暂停：等待 AI 回答时浏览器停止了，这次回答可能已经计费。继续会再次发送该请求。",
+        "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
+    },
+    "jobs_errorSetup": {
+        "message": "此任务无法继续。请重新开始。",
+        "description": "A background task stopped and cannot go on"
     }
 }

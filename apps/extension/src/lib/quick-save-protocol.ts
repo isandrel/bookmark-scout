@@ -120,6 +120,8 @@ export const AI_HOST_SCHEMA_NAMES = [
   'folderRecommendations',
   // Ids picked from `choices` (the browser's built-in model choosing among shortlisted folders).
   'folderIds',
+  // One batch of AI Folder Reorganization run as a background job.
+  'reorganization',
 ] as const;
 
 export type AIHostSchemaName = (typeof AI_HOST_SCHEMA_NAMES)[number];
@@ -174,4 +176,9 @@ export type QuickSaveHostResponse =
       page?: { title?: string; text: string } | null;
       head?: { title?: string; description?: string };
     }
-  | { ok: false; error: string };
+  | {
+      ok: false;
+      error: string;
+      /** `answer`: the model answered, but not in the requested shape; the request itself worked. */
+      errorKind?: 'answer';
+    };

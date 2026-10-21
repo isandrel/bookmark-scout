@@ -185,6 +185,8 @@ A quantidade e o estilo das tags, o tamanho do resumo e os limites da reorganiza
 
 A **Reorganização de pastas com IA** pergunta ao provedor em qual pasta cada favorito deve ficar. O plano sempre se abre primeiro como uma lista de movimentações de favoritos, com as movimentações para novas pastas marcadas e contadas, e nada muda até você clicar em **Aplicar alterações**.
 
+A análise roda em segundo plano, uma solicitação para cada grupo de favoritos: continua quando você fecha o gerenciador, e o plano espera em **Ver resultados** até você olhá-lo. Se o serviço de IA falhar, for desativado ou mudar, a tarefa pausa e diz o motivo, e nada mais é enviado até você retomar. Se o navegador parar enquanto uma resposta está chegando, a tarefa pergunta antes de enviar essa solicitação de novo, já que ela talvez já tenha sido cobrada.
+
 - **Aplicar alterações** move os favoritos e cria as novas pastas indicadas no plano. Se já existir uma pasta com esse nome no mesmo lugar, ela é usada.
 - Um favorito que você moveu, cujo URL você alterou ou que você excluiu depois da prévia é ignorado e fica onde está, para que o plano nunca se sobreponha a uma alteração mais recente. Quando só parte do plano é aplicada, a notificação conta os favoritos movidos, as novas pastas e os itens ignorados e com falha, e indica os favoritos ignorados.
 - Clique em **Desfazer** na notificação ou na revisão, ou pressione <Shortcut id="manager.undo" /> no gerenciador de favoritos, para mover os favoritos de volta e remover as novas pastas que ainda estiverem vazias. Um favorito que você moveu de novo nesse meio-tempo fica onde você o colocou.

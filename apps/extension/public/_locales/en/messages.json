@@ -7362,5 +7362,29 @@
     "jobs_popupMany": {
         "message": "Background tasks: $1 running",
         "description": "Background tasks: popupMany"
+    },
+    "jobs_blockedAIOff": {
+        "message": "Paused: AI features are off. Turn them on in Settings, then resume.",
+        "description": "A background task paused because AI features were turned off"
+    },
+    "jobs_blockedAISetup": {
+        "message": "Paused: the AI service is not ready ($1). Fix it in Settings, then resume.",
+        "description": "A background task paused because its AI service is not set up; $1 is the reason"
+    },
+    "jobs_blockedServiceChanged": {
+        "message": "Paused: the AI service changed since this task started, so nothing more was sent. Start the task again to use the new service.",
+        "description": "A background task paused because the AI service changed after it started"
+    },
+    "jobs_blockedAIRequest": {
+        "message": "Paused: the AI service did not answer ($1). Resume to try again.",
+        "description": "A background task paused because an AI request failed; $1 is the reason"
+    },
+    "jobs_uncertainRequest": {
+        "message": "Paused: the browser stopped while waiting for an AI answer, which may already have been charged. Resume sends that request again.",
+        "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
+    },
+    "jobs_errorSetup": {
+        "message": "This task could not continue. Start it again.",
+        "description": "A background task stopped and cannot go on"
     }
 }

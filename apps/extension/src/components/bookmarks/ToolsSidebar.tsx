@@ -31,6 +31,30 @@ type ToolEntryProps = {
 };
 
 /**
+ * Whether an AI tool can start: off while the setting is off or, in Firefox, while data sharing
+ * for AI is not allowed; on but without a usable default service, the notice says to finish the
+ * setup instead of failing on click.
+ */
+function useToolAIGate(tool: ToolDefinition): { blocked: boolean; notice?: string } {
+  const aiSetup = useAISetup(tool.aiFeature);
+  const blocked = Boolean(tool.aiFeature) && aiSetup !== 'ready';
+  // With only the built-in model, which does not run tools, say what is missing.
+  const { service: defaultService } = useAIFeatureService();
+  const needsOtherService =
+    defaultService !== undefined &&
+    tool.aiFeature !== undefined &&
+    !providerSupportsFeature(defaultService.provider, tool.aiFeature);
+  if (!blocked || aiSetup === 'loading') return { blocked };
+  const notice =
+    aiSetup !== 'needsSetup'
+      ? t('ai_featuresDisabledNotice')
+      : needsOtherService
+        ? t('builtinAi_needsOtherService')
+        : t('aiOnboard_setupNotice');
+  return { blocked, notice };
+}
+
+/**
  * A tool that runs as a background job: the card starts it with the scope frozen now, shows the
  * newest job of its kind (also one started from another page), and opens the review on its saved
  * results, where applying and undo work as after a scan. Closing the page or the review never
@@ -45,6 +69,7 @@ function JobToolEntry({
 }: ToolEntryProps & { job: NonNullable<ToolDefinition['job']> }) {
   const job = useLatestJob(jobTool.kind);
   const { state, review, apply, undo, close } = useToolRun(tool, environment);
+  const aiGate = useToolAIGate(tool);
   // The job this page started: its review opens once it finishes while the page is open, as a
   // scan did; closing the page first leaves the results for Review results.
   const [watching, setWatching] = useState<string | null>(null);
@@ -72,7 +97,8 @@ function JobToolEntry({
     review(jobTool.result(shown, results), shown.scope.mode);
   };
   useEffect(() => {
-    if (!job || job.id !== watching || isJobActive(job)) return;
+    // A paused job is still this page's: resumed here, its review opens when it finishes.
+    if (!job || job.id !== watching || isJobActive(job) || job.state === 'paused') return;
     setWatching(null);
     if (job.state === 'succeeded' || job.state === 'partial') void openReview(job);
   });
@@ -85,10 +111,17 @@ function JobToolEntry({
         description={t(tool.descriptionKey)}
         buttonLabel={t(tool.actionKey(settings))}
         onClick={(scope) => {
+          if (!tool.needsHostAccess) {
+            void start(scope);
+            return;
+          }
+          // Access only to the sites this run requests: the same nodes the job reads.
           const nodes = getScopedNodes(environment.folders, environment.currentFolderId, scope);
           const urls = flattenBookmarks(nodes).flatMap(({ node }) => node.url ?? []);
           runWithAccess(() => start(scope), getUrlSites(urls));
         }}
+        disabled={aiGate.blocked}
+        notice={aiGate.notice}
         scopeCapability={getToolScopeCapability(tool.id)}
         defaultScope={getToolDefaultScope(settings, tool, environment.currentFolderId)}
         currentFolderName={currentFolderName}
@@ -127,22 +160,7 @@ function ToolEntry(props: ToolEntryProps) {
 function ScanToolEntry({ tool, environment, currentFolderName, runWithAccess }: ToolEntryProps) {
   const { state, run, apply, undo, close } = useToolRun(tool, environment);
   const { settings } = environment;
-  // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed; on but
-  // without a usable default service, it says to finish the setup instead of failing on click.
-  const aiSetup = useAISetup(tool.aiFeature);
-  const aiBlocked = Boolean(tool.aiFeature) && aiSetup !== 'ready';
-  // With only the built-in model, which does not run tools, say what is missing.
-  const { service: defaultService } = useAIFeatureService();
-  const needsOtherService =
-    defaultService !== undefined &&
-    tool.aiFeature !== undefined &&
-    !providerSupportsFeature(defaultService.provider, tool.aiFeature);
-  const aiNotice =
-    aiSetup !== 'needsSetup'
-      ? t('ai_featuresDisabledNotice')
-      : needsOtherService
-        ? t('builtinAi_needsOtherService')
-        : t('aiOnboard_setupNotice');
+  const aiGate = useToolAIGate(tool);
   const Review = TOOL_REVIEWS[tool.id] as
     | ((props: ToolReviewProps<ToolId>) => React.ReactNode)
     | undefined;
@@ -164,8 +182,8 @@ function ScanToolEntry({ tool, environment, currentFolderName, runWithAccess }: 
             runWithAccess(() => run(scope), getUrlSites(urls));
           } else void run(scope);
         }}
-        disabled={aiBlocked}
-        notice={aiBlocked && aiSetup !== 'loading' ? aiNotice : undefined}
+        disabled={aiGate.blocked}
+        notice={aiGate.notice}
         scopeCapability={getToolScopeCapability(tool.id)}
         defaultScope={getToolDefaultScope(settings, tool, environment.currentFolderId)}
         currentFolderName={currentFolderName}

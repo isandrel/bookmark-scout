@@ -119,7 +119,7 @@ const moveOperationSchema = z.object({
   reason: z.string().describe('Why move this bookmark (do not include confidence here)'),
 });
 
-const reorganizationResultSchema = z.object({
+export const reorganizationResultSchema = z.object({
   operations: z.array(moveOperationSchema).describe('List of bookmark moves'),
   summary: z.string().describe('Brief summary of reorganization'),
 });
@@ -244,11 +244,78 @@ function limitsForRequest(cfg: ReorganizationConfig) {
 // Main Service
 // ============================================================================
 
-export async function generateReorganizationPlan(
-  bookmarks: BookmarkTreeNode[],
-  settings: AISettings,
+export type ReorganizationResult = z.infer<typeof reorganizationResultSchema>;
+
+/**
+ * What a plan needs besides the model's answers, fixed when the analysis starts: the prompt,
+ * the limits, every folder in scope, and where new folders go. A background job keeps it as its
+ * options, so the plan is built the same way from answers it saved earlier.
+ */
+export type ReorganizationContext = {
+  system: string;
+  config: ReorganizationConfig;
+  folders: FolderInfo[];
+  newFolderRootId?: string;
+};
+
+const bookmarkInfoSchema = z.strictObject({
+  id: z.string(),
+  title: z.string(),
+  url: z.string(),
+  currentFolderId: z.string(),
+  currentFolderPath: z.string(),
+});
+
+/** A stored `ReorganizationContext`, checked before a job uses it. */
+export const reorganizationContextSchema = z.strictObject({
+  system: z.string(),
+  config: z.strictObject({
+    maxCategories: z.number(),
+    minItemsPerFolder: z.number(),
+    maxItemsPerFolder: z.number(),
+    minConfidence: z.number(),
+    batchSize: z.number().int().positive(),
+  }),
+  folders: z.array(
+    z.strictObject({
+      id: z.string(),
+      title: z.string(),
+      path: z.string(),
+      bookmarkCount: z.number().int().nonnegative(),
+    }),
+  ),
+  newFolderRootId: z.string().optional(),
+}) satisfies z.ZodType<ReorganizationContext>;
+
+/** A reorganization job's options: what its plan is built with, and where its requests go. */
+export const reorganizationJobOptionsSchema = z.strictObject({
+  context: reorganizationContextSchema,
+  destination: z.string(),
+});
+
+/** A stored batch of bookmarks for one request. */
+export const reorganizationBatchSchema = z.array(bookmarkInfoSchema);
+
+/** A stored batch result; a batch whose answer did not fit has no `response`. */
+export const reorganizationBatchResultSchema = z.object({
+  bookmarks: reorganizationBatchSchema,
+  response: reorganizationResultSchema.optional(),
+});
+
+/** One request's bookmarks and the model's answer for them. */
+export type ReorganizationBatchResult = {
+  bookmarks: BookmarkInfo[];
+  response: ReorganizationResult;
+};
+
+/**
+ * Reads the scope and the stored limits and builds the prompt; the bookmarks come back in the
+ * batches one request each holds. Throws when the scope has no bookmarks.
+ */
+export async function prepareReorganization(
+  scope: BookmarkTreeNode[],
   config?: Partial<ReorganizationConfig>,
-): Promise<ReorganizationPlan> {
+): Promise<{ context: ReorganizationContext; batches: BookmarkInfo[][] }> {
   // Folder limits are Options settings; defaults alone would silently ignore the user's values.
   const stored = await getSettings();
   const cfg = resolveReorgConfig({
@@ -257,118 +324,102 @@ export async function generateReorganizationPlan(
     maxItemsPerFolder: stored.aiMaxItemsPerFolder,
     ...config,
   });
-  validateAISettings(settings);
-
-  aiLogger.info({ inputNodes: bookmarks.length }, 'Starting reorganization plan generation');
-
-  const allBookmarks = collectBookmarks(bookmarks);
-  const allFolders = collectFolders(bookmarks);
-
+  const allBookmarks = collectBookmarks(scope);
+  const folders = collectFolders(scope);
   aiLogger.debug(
-    {
-      bookmarkCount: allBookmarks.length,
-      folderCount: allFolders.length,
-      config: cfg,
-    },
+    { bookmarkCount: allBookmarks.length, folderCount: folders.length, config: cfg },
     'Collected bookmarks and folders',
   );
-
   if (allBookmarks.length === 0) {
     aiLogger.warn('No bookmarks found in scope');
     throw new Error(t('error_aiReorganizeEmptyScope'));
   }
-
   const { system } = await buildPrompt('folder_reorganization', {
     aiMaxCategories: cfg.maxCategories,
     aiMinItemsPerFolder: cfg.minItemsPerFolder,
     aiMaxItemsPerFolder: cfg.maxItemsPerFolder,
   });
+  const newFolderRootId = findNewFolderRoot(scope, folders)?.id;
+  return {
+    context: { system, config: cfg, folders, ...(newFolderRootId ? { newFolderRootId } : {}) },
+    batches: chunkItems(allBookmarks, cfg.batchSize),
+  };
+}
 
-  aiLogger.info(
-    { provider: settings.provider, model: settings.model },
-    'Calling AI for reorganization',
-  );
+/** The prompt of one request: its bookmarks, every folder, and the limits. */
+export function reorganizationRequest(context: ReorganizationContext, bookmarks: BookmarkInfo[]) {
+  return {
+    bookmarks: bookmarks.map((bookmark) => ({
+      id: bookmark.id,
+      title: bookmark.title,
+      url: bookmark.url,
+      currentFolder: bookmark.currentFolderPath,
+    })),
+    folders: context.folders.map((folder) => ({
+      path: folder.path,
+      bookmarkCount: folder.bookmarkCount,
+    })),
+    config: limitsForRequest(context.config),
+  };
+}
 
-  const bookmarkBatches = chunkItems(allBookmarks, cfg.batchSize);
-  const batchResults = [];
-
-  for (const bookmarkBatch of bookmarkBatches) {
-    const request = {
-      bookmarks: bookmarkBatch.map((bookmark) => ({
-        id: bookmark.id,
-        title: bookmark.title,
-        url: bookmark.url,
-        currentFolder: bookmark.currentFolderPath,
-      })),
-      folders: allFolders.map((folder) => ({
-        path: folder.path,
-        bookmarkCount: folder.bookmarkCount,
-      })),
-      config: limitsForRequest(cfg),
-    };
-    const { object } = await generateAIObject({
-      settings,
-      source: 'reorganization',
-      schema: reorganizationResultSchema,
-      system,
-      prompt: JSON.stringify(request),
-    });
-
-    batchResults.push({ request, response: object, bookmarkBatch });
-  }
-
+/**
+ * The plan from the model's answers, in batch order: moves under the confidence threshold, for
+ * bookmarks outside their batch, repeated, or to where the bookmark already is are dropped.
+ */
+export function buildReorganizationPlan(
+  context: ReorganizationContext,
+  batchResults: ReorganizationBatchResult[],
+): ReorganizationPlan {
+  const cfg = context.config;
+  const allFolders = context.folders;
+  const allBookmarks = batchResults.flatMap(({ bookmarks }) => bookmarks);
+  const newFolderRoot = allFolders.find((folder) => folder.id === context.newFolderRootId);
   const returnedOperations = batchResults.flatMap(({ response }) => response.operations);
   aiLogger.info(
     { operationsCount: returnedOperations.length, batchCount: batchResults.length },
     'AI returned operations',
   );
 
-  const newFolderRoot = findNewFolderRoot(bookmarks, allFolders);
   const seenBookmarkIds = new Set<string>();
   let excludedLowConfidence = 0;
-  const operations: ReorganizationOperation[] = batchResults.flatMap(
-    ({ response, bookmarkBatch }) => {
-      const batchBookmarkIds = new Set(bookmarkBatch.map((bookmark) => bookmark.id));
-      return response.operations.flatMap((op) => {
-        if (op.confidence < cfg.minConfidence) {
-          excludedLowConfidence += 1;
-          return [];
-        }
+  const operations: ReorganizationOperation[] = batchResults.flatMap(({ response, bookmarks }) => {
+    const batchBookmarkIds = new Set(bookmarks.map((bookmark) => bookmark.id));
+    return response.operations.flatMap((op) => {
+      if (op.confidence < cfg.minConfidence) {
+        excludedLowConfidence += 1;
+        return [];
+      }
 
-        const bookmark = allBookmarks.find((b) => b.id === op.bookmarkId);
-        if (
-          !bookmark ||
-          !batchBookmarkIds.has(op.bookmarkId) ||
-          seenBookmarkIds.has(op.bookmarkId)
-        ) {
-          return [];
-        }
+      const bookmark = allBookmarks.find((b) => b.id === op.bookmarkId);
+      if (!bookmark || !batchBookmarkIds.has(op.bookmarkId) || seenBookmarkIds.has(op.bookmarkId)) {
+        return [];
+      }
 
-        const target = planTargetFolder(op.toFolderPath, allFolders, newFolderRoot);
-        if (
-          !target ||
-          (target.newFolderTitles.length === 0 && target.toFolderId === bookmark.currentFolderId)
-        ) {
-          return [];
-        }
+      const target = planTargetFolder(op.toFolderPath, allFolders, newFolderRoot);
+      if (
+        !target ||
+        (target.newFolderTitles.length === 0 && target.toFolderId === bookmark.currentFolderId)
+      ) {
+        return [];
+      }
 
-        seenBookmarkIds.add(op.bookmarkId);
-        return [
-          {
-            type: 'move' as const,
-            bookmarkId: op.bookmarkId,
-            bookmarkTitle: bookmark.title,
-            bookmarkUrl: bookmark.url,
-            fromFolderId: bookmark.currentFolderId,
-            fromFolderPath: bookmark.currentFolderPath,
-            ...target,
-            confidence: op.confidence,
-            reason: op.reason,
-          } satisfies MoveBookmarkOp,
-        ];
-      });
-    },
-  );
+      seenBookmarkIds.add(op.bookmarkId);
+      return [
+        {
+          type: 'move' as const,
+          bookmarkId: op.bookmarkId,
+          bookmarkTitle: bookmark.title,
+          bookmarkUrl: bookmark.url,
+          fromFolderId: bookmark.currentFolderId,
+          fromFolderPath: bookmark.currentFolderPath,
+          ...target,
+          confidence: op.confidence,
+          reason: op.reason,
+        } satisfies MoveBookmarkOp,
+      ];
+    });
+  });
 
   aiLogger.info(
     { filteredCount: operations.length, excludedLowConfidence },
@@ -389,11 +440,37 @@ export async function generateReorganizationPlan(
       excludedLowConfidence,
     },
     debugData: {
-      request: batchResults.map(({ request }) => request),
+      request: batchResults.map(({ bookmarks }) => reorganizationRequest(context, bookmarks)),
       response: batchResults.map(({ response }) => response),
-      systemPrompt: system,
+      systemPrompt: context.system,
     },
   };
+}
+
+export async function generateReorganizationPlan(
+  bookmarks: BookmarkTreeNode[],
+  settings: AISettings,
+  config?: Partial<ReorganizationConfig>,
+): Promise<ReorganizationPlan> {
+  validateAISettings(settings);
+  aiLogger.info({ inputNodes: bookmarks.length }, 'Starting reorganization plan generation');
+  const { context, batches } = await prepareReorganization(bookmarks, config);
+  aiLogger.info(
+    { provider: settings.provider, model: settings.model },
+    'Calling AI for reorganization',
+  );
+  const batchResults: ReorganizationBatchResult[] = [];
+  for (const bookmarkBatch of batches) {
+    const { object } = await generateAIObject({
+      settings,
+      source: 'reorganization',
+      schema: reorganizationResultSchema,
+      system: context.system,
+      prompt: JSON.stringify(reorganizationRequest(context, bookmarkBatch)),
+    });
+    batchResults.push({ bookmarks: bookmarkBatch, response: object });
+  }
+  return buildReorganizationPlan(context, batchResults);
 }
 
 /**
