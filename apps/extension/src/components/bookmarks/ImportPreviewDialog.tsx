@@ -154,6 +154,17 @@ export function ImportPreviewDialog({
         ...(plan.counts.invalid > 0
           ? [t('tools_importPreviewInvalid', String(plan.counts.invalid))]
           : []),
+        ...(plan.counts.separatorsToCreate > 0
+          ? [t('tools_importPreviewSeparators', String(plan.counts.separatorsToCreate))]
+          : []),
+        ...(plan.counts.separatorsUnsupported > 0
+          ? [
+              t(
+                'tools_importPreviewSeparatorsUnsupported',
+                String(plan.counts.separatorsUnsupported),
+              ),
+            ]
+          : []),
       ]
     : [];
 

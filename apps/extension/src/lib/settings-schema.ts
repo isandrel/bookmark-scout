@@ -581,6 +581,18 @@ const fields = {
         dark: t('settings_themeDark'),
       })[value],
   ),
+  dateFormat: enumField(
+    'appearance.dates.date_format',
+    'dateFormat',
+    z.enum(DATE_FORMAT_IDS),
+    (value) => `${t(dateFormatLabelKey('date', value))} (${formatDateSample('date', value)})`,
+  ),
+  timeFormat: enumField(
+    'appearance.dates.time_format',
+    'timeFormat',
+    z.enum(TIME_FORMAT_IDS),
+    (value) => `${t(dateFormatLabelKey('time', value))} (${formatDateSample('time', value)})`,
+  ),
   showFavicons: switchField('appearance.theme_icons.show_favicons', 'showFavicons'),
   browserIconCache: switchField('appearance.theme_icons.browser_icon_cache', 'browserIconCache'),
   faviconSize: literalField(
@@ -1074,6 +1086,8 @@ export const settingsSchema = z.object(settingsShape).superRefine((value, ctx) =
 
 export type Settings = z.infer<typeof settingsSchema>;
 export const defaultSettings: Settings = settingsSchema.parse({});
+// Dates show in the default formats until the settings are read.
+setDefaultDateTimeFormat(defaultSettings.dateFormat, defaultSettings.timeFormat);
 
 /** Where a setting is stored: synced to every device, or kept on this one (`DEVICE_SETTING_KEYS`). */
 export type SettingScope = 'sync' | 'device';
@@ -1168,6 +1182,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         labelKey: 'settings_sectionThemeIcons',
         fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
       },
+      { id: 'dates', labelKey: 'settings_sectionDates', fields: ['dateFormat', 'timeFormat'] },
       {
         id: 'popup',
         labelKey: 'settings_sectionPopup',
@@ -1428,9 +1443,7 @@ export function getSettingPermission(key: keyof Settings): PermissionFeature | u
 /** False for a setting whose feature this browser lacks (the icon cache in Firefox). */
 function isSettingSupported(key: keyof Settings): boolean {
   const feature = getSettingPermission(key);
-  return (
-    !feature || isPermissionFeatureSupported(feature, import.meta.env.BROWSER as PermissionBrowser)
-  );
+  return !feature || isPermissionFeatureSupported(feature, currentBrowser());
 }
 
 /**

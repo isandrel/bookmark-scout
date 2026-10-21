@@ -9,14 +9,17 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
   const { favicon, rowRef, draggingId, onDeleteBookmark } = usePopupTree();
   const { node } = row;
   const onLinkClick = useLinkClick();
+  // A Firefox separator: a line, not a link to its `data:` address.
+  const separator = isSeparatorNode(node);
 
   return (
     // At least one icon-button tall; a larger site icon grows the row instead of touching the next.
     <div className="group bookmark-item relative flex min-h-8 items-center rounded-md px-2 py-1 transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
       <a
         ref={rowRef(node, 'bookmark')}
-        href={node.url}
+        href={separator ? undefined : node.url}
         role="treeitem"
+        aria-label={separator ? t('table_typeSeparator') : undefined}
         aria-level={row.level}
         aria-posinset={row.posInSet}
         aria-setsize={row.setSize}
@@ -25,11 +28,11 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
           [POPUP_TREE_ROW_ATTRIBUTE]: 'bookmark',
         }}
         // Long titles are cut off, so hovering shows the whole title and where the link goes.
-        title={bookmarkRowTooltip(node)}
+        title={separator ? undefined : bookmarkRowTooltip(node)}
         target="_blank"
         rel="noopener noreferrer"
         onClick={(event) => {
-          if (isOpenableUrl(node.url)) onLinkClick(event, node.url);
+          if (!separator && isOpenableUrl(node.url)) onLinkClick(event, node.url);
         }}
         data-slot="drag-handle"
         className={cn(
@@ -39,14 +42,17 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
       >
         {/* Empty chevron slot, so the icon and title line up with folders at the same depth. */}
         <span aria-hidden="true" data-slot="tree-indent" className="mr-1 size-4 shrink-0" />
-        {favicon.show && (
+        {separator ? (
+          <span aria-hidden="true" data-slot="tree-separator" className="h-px flex-1 bg-border" />
+        ) : null}
+        {!separator && favicon.show && (
           <SiteIcon
             url={node.url ?? ''}
             size={favicon.size}
             className="mr-2 shrink-0 rounded-sm bookmark-favicon"
           />
         )}
-        {node.title.trim() ? (
+        {separator ? null : node.title.trim() ? (
           <HighlightedText
             showTitle={false}
             className="truncate text-sm"

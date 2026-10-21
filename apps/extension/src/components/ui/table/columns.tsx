@@ -14,22 +14,28 @@ import type {
   HeaderContext,
   SortFn,
 } from '@tanstack/react-table';
-import { Folder, Link } from 'lucide-react';
+import { Folder, Link, SeparatorHorizontal } from 'lucide-react';
 import type { ComponentType, MouseEvent, ReactNode } from 'react';
 import type { DateRange } from 'react-day-picker';
 
 const ITEM_TYPES: Record<ItemTypeEnum, { labelKey: MessageKey; icon: ItemType['icon'] }> = {
   [ItemTypeEnum.Folder]: { labelKey: 'table_typeFolder', icon: Folder },
   [ItemTypeEnum.Link]: { labelKey: 'table_typeLink', icon: Link },
+  [ItemTypeEnum.Separator]: { labelKey: 'table_typeSeparator', icon: SeparatorHorizontal },
 };
 
 /** Type filter options with labels resolved in the active UI language. */
 export function getLocalizedTypeOptions(): ItemType[] {
-  return Object.values(ItemTypeEnum).map((type) => ({
-    value: type,
-    label: t(ITEM_TYPES[type].labelKey),
-    icon: ITEM_TYPES[type].icon,
-  }));
+  return (
+    Object.values(ItemTypeEnum)
+      // Only browsers with separators (Firefox) offer the kind.
+      .filter((type) => type !== ItemTypeEnum.Separator || browserProfile().separators)
+      .map((type) => ({
+        value: type,
+        label: t(ITEM_TYPES[type].labelKey),
+        icon: ITEM_TYPES[type].icon,
+      }))
+  );
 }
 
 type ItemType = {
@@ -240,6 +246,18 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     cell: ({ row }) => {
       const title = row.original.title.trim();
       const url = row.original.url;
+
+      if (isSeparatorItem(row.original)) {
+        return (
+          <div className="flex min-w-0 items-center gap-2 text-muted-foreground">
+            <SeparatorHorizontal className="h-4 w-4 shrink-0" />
+            <div className="flex min-w-0 flex-col">
+              <span className="min-w-0 truncate italic">{t('table_typeSeparator')}</span>
+              <RowFolderPath path={row.original.folderPath} />
+            </div>
+          </div>
+        );
+      }
 
       // Show favicon for links, folder icon for folders
       const icon =

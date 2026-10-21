@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { BookmarkActionMenuItems } from '@/components/ui/table/bookmark-row-menu';
 import { setLanguage } from '@/hooks/use-i18n';
-import type { Bookmark } from '@/lib/manager-bookmark';
+import { type Bookmark, ItemTypeEnum } from '@/lib/manager-bookmark';
 import { getSettingsFieldMeta } from '@/lib/settings-schema';
 import {
   ACTION_MENUS,
@@ -86,6 +86,17 @@ describe('bookmark action menus', () => {
       ['openInNewTab', 'openInNewWindow', 'openInPrivateWindow'],
       ['delete'],
     ]);
+  });
+
+  it('offers a Firefox separator only what works on one: no edit, details, or open', () => {
+    const separator: Bookmark = {
+      ...link,
+      id: 'separator-1',
+      type: ItemTypeEnum.Separator,
+      title: '',
+      url: undefined,
+    };
+    expect(sections([separator])).toEqual([['cut', 'copy', 'copyId'], ['delete']]);
   });
 
   it('keeps edit, cut, and delete off rows the browser does not allow changing', () => {

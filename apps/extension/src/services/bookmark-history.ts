@@ -136,7 +136,7 @@ const nodeSchema: z.ZodType<RecoverableBookmarkNode> = z.lazy(() =>
     title: z.string(),
     url: z.string().optional(),
     index: z.number().int().optional(),
-    type: z.literal('separator').optional(),
+    type: z.literal(SEPARATOR_TYPE).optional(),
     metadata: z
       .object({ tags: z.array(z.string()).optional(), summary: z.string().optional() })
       .optional(),

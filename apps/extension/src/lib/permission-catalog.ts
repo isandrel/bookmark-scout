@@ -8,7 +8,9 @@
  * `store/permissions.md` and the privacy documents in step with any change here.
  */
 
-export type PermissionBrowser = 'chrome' | 'edge' | 'firefox';
+import type { SupportedBrowser } from './supported-browsers';
+
+export type { SupportedBrowser };
 
 /** `required` is granted at install; `optional` is asked for by a feature below. */
 type PermissionGrant = 'required' | 'optional';
@@ -35,7 +37,7 @@ export const API_PERMISSIONS = {
   contextMenus: { chrome: 'optional', edge: 'optional', firefox: 'required' },
   // "Communicate with cooperating native applications": only for access for local AI agents.
   nativeMessaging: { chrome: 'optional', edge: 'optional', firefox: 'optional' },
-} as const satisfies Record<string, Partial<Record<PermissionBrowser, PermissionGrant>>>;
+} as const satisfies Record<string, Partial<Record<SupportedBrowser, PermissionGrant>>>;
 
 export type ApiPermission = keyof typeof API_PERMISSIONS;
 
@@ -212,34 +214,39 @@ function featureDefinition(feature: PermissionFeature): PermissionFeatureDefinit
 /** False where the browser lacks one of the feature's permissions (the icon cache in Firefox). */
 export function isPermissionFeatureSupported(
   feature: PermissionFeature,
-  browser: PermissionBrowser,
+  browser: SupportedBrowser,
 ): boolean {
   return (featureDefinition(feature).permissions ?? []).every(
     (permission) =>
-      (API_PERMISSIONS[permission] as Partial<Record<PermissionBrowser, PermissionGrant>>)[
+      (API_PERMISSIONS[permission] as Partial<Record<SupportedBrowser, PermissionGrant>>)[
         browser
       ] !== undefined,
   );
 }
 
 /**
- * What `feature` has to ask `browser` for, plus any `extraOrigins` (one AI provider's address).
- * Null when nothing: every part is granted at install there.
+ * What `feature` has to ask `browser` for, plus any `extraOrigins` (one AI provider's address),
+ * and the data it collects where the browser asks for that consent too (its profile's
+ * `data_collection_consent`, `lib/browser-profiles.ts`). Null when nothing: every part is granted
+ * at install there.
  */
 export function getPermissionRequest(
   feature: PermissionFeature,
-  browser: PermissionBrowser,
-  extraOrigins: readonly string[] = [],
+  browser: SupportedBrowser,
+  options: { extraOrigins?: readonly string[]; dataCollectionConsent: boolean },
 ): PermissionRequest | null {
+  const extraOrigins = options.extraOrigins ?? [];
   const definition = featureDefinition(feature);
   const permissions = (definition.permissions ?? []).filter(
     (permission) =>
-      (API_PERMISSIONS[permission] as Partial<Record<PermissionBrowser, PermissionGrant>>)[
+      (API_PERMISSIONS[permission] as Partial<Record<SupportedBrowser, PermissionGrant>>)[
         browser
       ] === 'optional',
   );
   const origins = [...(definition.origins ?? []), ...extraOrigins];
-  const dataCollection = browser === 'firefox' ? [...(definition.dataCollection ?? [])] : [];
+  const dataCollection = options.dataCollectionConsent
+    ? [...(definition.dataCollection ?? [])]
+    : [];
   const request: PermissionRequest = {
     ...(permissions.length > 0 ? { permissions: [...permissions] } : {}),
     ...(origins.length > 0 ? { origins } : {}),
@@ -249,13 +256,13 @@ export function getPermissionRequest(
 }
 
 /** The manifest's `permissions` and `optional_permissions` (API names only) for `browser`. */
-export function getManifestApiPermissions(browser: PermissionBrowser): {
+export function getManifestApiPermissions(browser: SupportedBrowser): {
   permissions: ApiPermission[];
   optional: ApiPermission[];
 } {
   const entries = Object.entries(API_PERMISSIONS) as [
     ApiPermission,
-    Partial<Record<PermissionBrowser, PermissionGrant>>,
+    Partial<Record<SupportedBrowser, PermissionGrant>>,
   ][];
   return {
     permissions: entries

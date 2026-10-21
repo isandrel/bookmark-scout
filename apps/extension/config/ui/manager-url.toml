@@ -5,10 +5,3 @@
 # manager uses 200.
 search_history_dwell_ms = 200
 
-# What "Copy link to this folder" copies, by browser build: the address of the browser's own
-# bookmark manager, which this page replaces there, followed by `?id=<folder>`. A browser without
-# an entry (Firefox, where the page cannot replace the browser's manager) copies the extension
-# page's own address instead.
-[folder_link_base]
-chrome = "chrome://bookmarks/"
-edge = "edge://favorites/"

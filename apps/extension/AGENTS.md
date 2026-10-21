@@ -191,6 +191,7 @@ Use these before writing a new helper; each replaced several copies. Their file 
 
 - be careful with cross-browser API assumptions
 - do not introduce a fix that works only for Chrome if the existing code clearly supports Firefox or Edge
+- put what differs between browsers in `config/browsers/profiles.toml` (one table per browser in `[browsers] supported` of `config/project.toml`, validated by `src/lib/browser-profiles.ts`) and ask `browserProfile()` for the capability; never compare browser names or read `import.meta.env.BROWSER` elsewhere (`tests/unit/browser-profiles.test.ts` fails on either). Code the manifest build reads takes `SupportedBrowser` from `src/lib/supported-browsers.ts`, and the permission and command catalogs keep their per-browser tables. A missing API in some browser versions stays a runtime feature check.
 - keep background, sidepanel, popup, and options flows consistent with their runtime boundaries
 - use WXT's promise-based `browser.*` API, never callback-style `chrome.*`; Firefox's `browser` is promise-only, so a renamed callback call breaks there
 

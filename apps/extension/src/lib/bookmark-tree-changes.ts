@@ -9,6 +9,7 @@
  * it) is skipped, so a batch can land on a tree read before or after its events.
  */
 
+import { isSeparatorNode, SEPARATOR_TYPE } from '@/lib/bookmark-separators';
 import type { BookmarkTreeNode } from '@/types';
 
 /** A node as the browser reports it; Firefox adds `type` (`bookmark`, `folder`, `separator`). */
@@ -55,6 +56,7 @@ export function toBookmarkTreeNode(node: BrowserBookmarkNode): BookmarkTreeNode 
     ...(node.folderType ? { folderType: node.folderType } : {}),
     ...(typeof node.syncing === 'boolean' ? { syncing: node.syncing } : {}),
     ...(node.unmodifiable ? { unmodifiable: node.unmodifiable } : {}),
+    ...(isSeparatorNode(node) ? { type: SEPARATOR_TYPE } : {}),
     children: node.children
       ? node.children.map(toBookmarkTreeNode)
       : isFolderNode(node)

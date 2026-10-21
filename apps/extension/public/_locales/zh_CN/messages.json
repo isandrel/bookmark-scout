@@ -1205,6 +1205,10 @@
         "message": "链接",
         "description": "Bookmark item type label"
     },
+    "table_typeSeparator": {
+        "message": "分隔线",
+        "description": "Bookmark item type label for a Firefox separator (a line between bookmarks)"
+    },
     "table_openMenu": {
         "message": "打开菜单",
         "description": "Accessible label for the bookmark row actions menu"
@@ -4113,6 +4117,14 @@
         "message": "已忽略的无效条目：$1",
         "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
     },
+    "tools_importPreviewSeparators": {
+        "message": "将创建的分隔线：$1",
+        "description": "Import preview count of Firefox separators the import creates; $1 is the count"
+    },
+    "tools_importPreviewSeparatorsUnsupported": {
+        "message": "略过的分隔线（此浏览器没有分隔线）：$1",
+        "description": "Import preview count of separators in the file that this browser (Chrome, Edge) cannot store; $1 is the count"
+    },
     "tools_importNothingToCreate": {
         "message": "按此选项没有新的内容可导入。",
         "description": "Import preview note when every item would be skipped"
@@ -6932,5 +6944,53 @@
     "history_restoredPartial": {
         "message": "已恢复 $1 个项目；$2 个因所在文件夹已不存在而无法恢复。",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "settings_sectionDates": {
+        "message": "日期和时间",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "日期格式",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "所有地方的日期显示方式：日期列、历史记录和详细信息",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "时间格式",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "以 12 小时制或 24 小时制显示时间，或按你的语言习惯显示",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "与我的语言一致",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "简短",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "完整",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "年-月-日",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "与我的语言一致",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12 小时制",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24 小时制",
+        "description": "Time format option: 24-hour clock."
     }
 }

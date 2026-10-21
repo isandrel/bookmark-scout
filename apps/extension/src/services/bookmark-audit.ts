@@ -91,9 +91,6 @@ export type AuditReport = {
   skipped?: readonly AuditSkippedItem[];
 };
 
-const nodeType = (node: { url?: string; type?: string }): AuditItem['type'] =>
-  node.type === 'separator' ? 'separator' : node.url ? 'bookmark' : 'folder';
-
 function countInside(node: RecoverableBookmarkNode): number {
   return (node.children ?? []).reduce((sum, child) => sum + 1 + countInside(child), 0);
 }
@@ -115,7 +112,7 @@ function auditItemOf(op: BookmarkHistoryOperation): AuditItem {
         outcome: 'applied',
         title: op.node.title,
         ...(op.node.url ? { url: op.node.url } : {}),
-        type: nodeType(op.node),
+        type: bookmarkNodeKind(op.node),
         ...(op.kind === 'create' ? { after: place } : { before: place }),
         ...(inside > 0 ? { descendants: inside } : {}),
       };

@@ -10,8 +10,8 @@ let stopWatching: (() => void) | undefined;
 
 /** Granted when the feature needs nothing at runtime in this browser; null until checked. */
 function initialGrant(feature: PermissionFeature): boolean | null {
-  if (!isPermissionFeatureSupported(feature, CURRENT_PERMISSION_BROWSER)) return false;
-  return getPermissionRequest(feature, CURRENT_PERMISSION_BROWSER) ? null : true;
+  if (!isPermissionFeatureSupported(feature, currentBrowser())) return false;
+  return getCurrentPermissionRequest(feature) ? null : true;
 }
 
 /** The known state, or the state before any check. */

@@ -13,8 +13,16 @@
  * `notifyPermissionDenied`. This file stays free of UI code: the background imports it.
  */
 
-/** The browser this build is for, as the permission tables name it. */
-export const CURRENT_PERMISSION_BROWSER = import.meta.env.BROWSER as PermissionBrowser;
+/** What `feature` has to ask this browser for (`getPermissionRequest`), or null when nothing. */
+export function getCurrentPermissionRequest(
+  feature: PermissionFeature,
+  extraOrigins: readonly string[] = [],
+): PermissionRequest | null {
+  return getPermissionRequest(feature, currentBrowser(), {
+    extraOrigins,
+    dataCollectionConsent: browserProfile().dataCollectionConsent,
+  });
+}
 
 /** Thrown when a feature runs without the permission it needs; the message says what is missing. */
 export class PermissionRequiredError extends Error {
@@ -29,8 +37,8 @@ export class PermissionRequiredError extends Error {
 
 /** True when the feature can run in this browser and every part it needs is granted. */
 export async function hasPermission(feature: PermissionFeature): Promise<boolean> {
-  if (!isPermissionFeatureSupported(feature, CURRENT_PERMISSION_BROWSER)) return false;
-  const request = getPermissionRequest(feature, CURRENT_PERMISSION_BROWSER);
+  if (!isPermissionFeatureSupported(feature, currentBrowser())) return false;
+  const request = getCurrentPermissionRequest(feature);
   if (!request) return true;
   try {
     return await browser.permissions.contains(request as Browser.permissions.Permissions);
@@ -53,10 +61,10 @@ export function requestPermission(
   feature: PermissionFeature,
   extraOrigins: readonly string[] = [],
 ): Promise<boolean> {
-  if (!isPermissionFeatureSupported(feature, CURRENT_PERMISSION_BROWSER)) {
+  if (!isPermissionFeatureSupported(feature, currentBrowser())) {
     return Promise.resolve(false);
   }
-  const request = getPermissionRequest(feature, CURRENT_PERMISSION_BROWSER, extraOrigins);
+  const request = getCurrentPermissionRequest(feature, extraOrigins);
   if (!request) return Promise.resolve(true);
   try {
     return browser.permissions
@@ -75,8 +83,7 @@ function siteAccessRequest(
   feature: PermissionFeature,
   origins: readonly string[],
 ): Browser.permissions.Permissions | null {
-  const { origins: _declared, ...rest } =
-    getPermissionRequest(feature, CURRENT_PERMISSION_BROWSER) ?? {};
+  const { origins: _declared, ...rest } = getCurrentPermissionRequest(feature) ?? {};
   const request = { ...rest, ...(origins.length > 0 ? { origins: [...origins] } : {}) };
   return Object.keys(request).length > 0 ? (request as Browser.permissions.Permissions) : null;
 }
@@ -86,7 +93,7 @@ export async function hasSiteAccess(
   feature: PermissionFeature,
   origins: readonly string[],
 ): Promise<boolean> {
-  if (!isPermissionFeatureSupported(feature, CURRENT_PERMISSION_BROWSER)) return false;
+  if (!isPermissionFeatureSupported(feature, currentBrowser())) return false;
   const request = siteAccessRequest(feature, origins);
   if (!request) return true;
   try {
@@ -104,7 +111,7 @@ export function requestSiteAccess(
   feature: PermissionFeature,
   origins: readonly string[],
 ): Promise<boolean> {
-  if (!isPermissionFeatureSupported(feature, CURRENT_PERMISSION_BROWSER)) {
+  if (!isPermissionFeatureSupported(feature, currentBrowser())) {
     return Promise.resolve(false);
   }
   const request = siteAccessRequest(feature, origins);

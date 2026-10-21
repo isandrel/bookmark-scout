@@ -5,6 +5,7 @@
  */
 
 import { z } from 'zod';
+import { isSeparatorNode, SEPARATOR_TYPE } from '@/lib/bookmark-separators';
 import type { BookmarkTreeNode } from '@/types';
 
 const FILENAME_PLACEHOLDERS = ['prefix', 'scope', 'date', 'extension'] as const;
@@ -86,6 +87,9 @@ export const htmlFormat: ExportFormat = {
     const renderNode = (n: BookmarkTreeNode, depth: number): string => {
       const nodeIndent = indent.repeat(depth);
 
+      // The Netscape format's own separator, which Firefox writes and reads.
+      if (isSeparatorNode(n)) return `${nodeIndent}<HR>\n`;
+
       if (n.url) {
         const dateAttr =
           includeDates && n.dateAdded
@@ -130,6 +134,12 @@ export const jsonFormat: ExportFormat = {
     const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
 
     const cleanNode = (n: BookmarkTreeNode): Record<string, unknown> => {
+      if (isSeparatorNode(n)) {
+        return {
+          type: SEPARATOR_TYPE,
+          ...(includeDates && n.dateAdded ? { dateAdded: n.dateAdded } : {}),
+        };
+      }
       const result: Record<string, unknown> = {
         title: n.title,
       };
@@ -207,6 +217,9 @@ export const markdownFormat: ExportFormat = {
       const nodeIndent = indent.repeat(depth);
       const title = escapeMarkdownText(n.title);
 
+      // A list for reading, not a backup: separators are left out (as in CSV).
+      if (isSeparatorNode(n)) return '';
+
       if (n.url) {
         return includeUrls
           ? `${nodeIndent}- [${title}](${escapeMarkdownUrl(n.url)})\n`
@@ -260,6 +273,7 @@ export const csvFormat: ExportFormat = {
     ];
 
     const collectRows = (n: BookmarkTreeNode, path: string): void => {
+      if (isSeparatorNode(n)) return;
       if (n.url) {
         rows.push([
           n.title,
@@ -351,7 +365,8 @@ export function exportIncludesUrls(format: ExportFormat, includeUrls: boolean): 
 
 export function countExportedBookmarks(root: BookmarkTreeNode): number {
   return (root.children ?? []).reduce(
-    (total, node) => total + (node.url ? 1 : countExportedBookmarks(node)),
+    (total, node) =>
+      total + (isSeparatorNode(node) ? 0 : node.url ? 1 : countExportedBookmarks(node)),
     0,
   );
 }

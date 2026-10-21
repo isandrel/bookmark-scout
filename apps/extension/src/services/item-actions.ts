@@ -26,14 +26,16 @@ function openLabel(one: MessageKey, many: MessageKey) {
   };
 }
 
-/** Each browser's name for a private window. */
-const PRIVATE_WINDOW_LABELS: Record<string, { one: MessageKey; many: MessageKey }> = {
-  chrome: { one: 'menu_openIncognito', many: 'menu_openAllIncognito' },
-  edge: { one: 'menu_openInPrivate', many: 'menu_openAllInPrivate' },
-  firefox: { one: 'menu_openPrivate', many: 'menu_openAllPrivate' },
+/** The menu commands for each browser's name for a private window. */
+const PRIVATE_WINDOW_LABELS: Record<
+  BrowserProfile['privateWindow'],
+  { one: MessageKey; many: MessageKey }
+> = {
+  incognito: { one: 'menu_openIncognito', many: 'menu_openAllIncognito' },
+  in_private: { one: 'menu_openInPrivate', many: 'menu_openAllInPrivate' },
+  private: { one: 'menu_openPrivate', many: 'menu_openAllPrivate' },
 };
-const privateWindowLabel =
-  PRIVATE_WINDOW_LABELS[import.meta.env.BROWSER] ?? PRIVATE_WINDOW_LABELS.chrome;
+const privateWindowLabel = PRIVATE_WINDOW_LABELS[browserProfile().privateWindow];
 
 export const ITEM_ACTIONS = {
   showInFolder: defineMenuAction({
@@ -57,7 +59,9 @@ export const ITEM_ACTIONS = {
     icon: 'pencil',
     itemMenu: {
       label: (items) => (isFolderItem(single(items)) ? t('menu_rename') : t('table_edit')),
-      available: (items) => single(items) !== undefined && allModifiable(items),
+      // Firefox cannot rename a separator.
+      available: (items) =>
+        single(items) !== undefined && !isSeparatorItem(items[0]) && allModifiable(items),
       run: (items, host) => host.edit(items[0]),
     },
   }),
@@ -67,7 +71,7 @@ export const ITEM_ACTIONS = {
     labelKey: 'bookmarks_viewDetails',
     icon: 'info',
     itemMenu: {
-      available: (items) => single(items) !== undefined,
+      available: (items) => single(items) !== undefined && !isSeparatorItem(items[0]),
       run: (items, host) => host.showDetails(items[0]),
     },
   }),

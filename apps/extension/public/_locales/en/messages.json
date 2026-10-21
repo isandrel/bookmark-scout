@@ -1213,6 +1213,10 @@
         "message": "Link",
         "description": "Bookmark item type label"
     },
+    "table_typeSeparator": {
+        "message": "Separator",
+        "description": "Bookmark item type label for a Firefox separator (a line between bookmarks)"
+    },
     "table_openMenu": {
         "message": "Open menu",
         "description": "Accessible label for the bookmark row actions menu"
@@ -4261,6 +4265,14 @@
         "message": "Invalid entries ignored: $1",
         "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
     },
+    "tools_importPreviewSeparators": {
+        "message": "Separators to create: $1",
+        "description": "Import preview count of Firefox separators the import creates; $1 is the count"
+    },
+    "tools_importPreviewSeparatorsUnsupported": {
+        "message": "Separators left out (this browser has none): $1",
+        "description": "Import preview count of separators in the file that this browser (Chrome, Edge) cannot store; $1 is the count"
+    },
     "tools_importNothingToCreate": {
         "message": "Nothing new to import with this choice.",
         "description": "Import preview note when every item would be skipped"
@@ -7150,5 +7162,53 @@
     "history_restoredPartial": {
         "message": "Restored $1 items; $2 could not come back because their folder no longer exists.",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "settings_sectionDates": {
+        "message": "Dates and Times",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "Date Format",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "How dates show everywhere: the date columns, the History, and details",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "Time Format",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "Show times on a 12-hour or 24-hour clock, or as your language does",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "As in my language",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "Short",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "Long",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "Year-month-day",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "As in my language",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12-hour",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24-hour",
+        "description": "Time format option: 24-hour clock."
     }
 }

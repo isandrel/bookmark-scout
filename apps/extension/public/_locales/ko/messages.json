@@ -1205,6 +1205,10 @@
         "message": "링크",
         "description": "Bookmark item type label"
     },
+    "table_typeSeparator": {
+        "message": "구분선",
+        "description": "Bookmark item type label for a Firefox separator (a line between bookmarks)"
+    },
     "table_openMenu": {
         "message": "메뉴 열기",
         "description": "Accessible label for the bookmark row actions menu"
@@ -4253,6 +4257,14 @@
         "message": "무시되는 잘못된 항목: $1",
         "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
     },
+    "tools_importPreviewSeparators": {
+        "message": "만들 구분선: $1",
+        "description": "Import preview count of Firefox separators the import creates; $1 is the count"
+    },
+    "tools_importPreviewSeparatorsUnsupported": {
+        "message": "제외되는 구분선(이 브라우저에는 없음): $1",
+        "description": "Import preview count of separators in the file that this browser (Chrome, Edge) cannot store; $1 is the count"
+    },
     "tools_importNothingToCreate": {
         "message": "이 설정으로는 새로 가져올 항목이 없습니다.",
         "description": "Import preview note when every item would be skipped"
@@ -7130,5 +7142,53 @@
     "history_restoredPartial": {
         "message": "$1개 항목을 복원했습니다. $2개는 폴더가 더 이상 없어 되돌리지 못했습니다.",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "settings_sectionDates": {
+        "message": "날짜와 시간",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "날짜 형식",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "날짜를 표시하는 방식(날짜 열, 기록, 세부 정보 등 모든 곳)",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "시간 형식",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "시간을 12시간제 또는 24시간제로, 또는 언어의 기본 방식으로 표시합니다",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "내 언어에 맞춤",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "짧게",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "길게",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "연-월-일",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "내 언어에 맞춤",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12시간제",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24시간제",
+        "description": "Time format option: 24-hour clock."
     }
 }

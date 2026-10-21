@@ -29,6 +29,7 @@ description: 将书签导出为 HTML、JSON、Markdown 或 CSV，导出前会进
 
 - 文件名以**文件名前缀**（默认为 `bookmarks_`）开头，并保留非 ASCII 字符的文件夹名称。
 - CSV 文件以 UTF-8 字节顺序标记（BOM）开头。Folder 列用 `/` 连接各级文件夹，并将文件夹名称中的 `/` 写为 `\/`，将反斜杠写为 `\\`。
+- 只有 Firefox 才有的分隔线，在 HTML（`<HR>`）和 JSON 中会作为分隔线写出，在 Firefox 中导入该文件时仍是分隔线。Markdown 和 CSV 不包含分隔线；没有分隔线的 Chrome 和 Edge 在导入时会略过它们，预览会显示数量。
 - **包含日期**和**包含网址**以及各格式的缩进大小，位于[设置](/settings)的**数据**标签页中。
 
 JSON 导出文件会包含每个书签的标签和摘要。导入该文件时，新建的书签会获得这些标签和摘要，但作为重复项跳过的书签不会。HTML、Markdown 和 CSV 导出文件不包含它们。如需将书签连同其标签和摘要一起提供给 AI 工具，请使用 **AI 上下文打包**；请参阅[设置 AI 工具](/guides/ai-tools#export-context-for-an-ai-chat)。

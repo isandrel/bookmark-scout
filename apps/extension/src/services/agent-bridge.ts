@@ -221,7 +221,7 @@ async function buildHello(settings: Settings): Promise<HelloMessage> {
     type: 'hello',
     protocol: PROTOCOL_VERSION,
     extensionVersion: browser.runtime.getManifest().version,
-    browser: import.meta.env.BROWSER,
+    browser: currentBrowser(),
     profileId: await getAgentBridgeProfileId(),
     tools: (await agentActionIds(context)).map(toBridgeTool),
   };

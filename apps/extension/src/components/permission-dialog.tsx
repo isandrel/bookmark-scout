@@ -42,9 +42,7 @@ export function PermissionDialog({
   if (!explanation) return null;
   const Extra = EXPLANATION_EXTRAS[feature];
   // Only where the browser also asks for data collection consent (Firefox).
-  const asksDataCollection = Boolean(
-    getPermissionRequest(feature, CURRENT_PERMISSION_BROWSER)?.data_collection?.length,
-  );
+  const asksDataCollection = Boolean(getCurrentPermissionRequest(feature)?.data_collection?.length);
   return (
     <Dialog
       open={open}

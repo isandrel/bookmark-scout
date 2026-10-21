@@ -3,6 +3,8 @@
  * Extensible import with strategy pattern for multiple formats.
  */
 
+import { isSeparatorNode, SEPARATOR_TYPE } from '@/lib/bookmark-separators';
+import { browserProfile } from '@/lib/browser-profiles';
 import type { BookmarkTreeNode } from '@/types';
 
 // ============================================================================
@@ -68,6 +70,16 @@ function isImportableUrl(url: string): boolean {
   }
 }
 
+/** The Netscape bookmark file's elements and attributes the HTML import reads. */
+const NETSCAPE = {
+  bookmark: 'A',
+  folder: 'H3',
+  separator: 'HR',
+  list: 'DL',
+  address: 'HREF',
+  added: 'ADD_DATE',
+} as const;
+
 /** Netscape files store dates as Unix seconds. */
 function parseNetscapeDate(value: string | null): number {
   // Not a `cond ? x * MS_PER_SECOND : y` ternary: WXT's auto-import skips an identifier right
@@ -91,82 +103,73 @@ export const htmlImportFormat: ImportFormat = {
 
     const generateId = createImportIdGenerator();
 
-    const parseNode = (element: Element, parentId?: string): BookmarkTreeNode | null => {
-      // Handle <A> tags (bookmarks)
-      if (element.tagName === 'A') {
-        const url = element.getAttribute('HREF')?.trim();
-        if (!url || !isImportableUrl(url)) {
-          skipped += 1;
-          return null;
-        }
-        const title = getBookmarkDisplayTitle(element.textContent?.trim());
-        const dateAdded = element.getAttribute('ADD_DATE');
-
-        return {
-          id: generateId(),
-          parentId,
-          title,
-          url,
-          dateAdded: parseNetscapeDate(dateAdded),
-        };
+    const parseBookmark = (element: Element, parentId?: string): BookmarkTreeNode | null => {
+      const url = element.getAttribute(NETSCAPE.address)?.trim();
+      if (!url || !isImportableUrl(url)) {
+        skipped += 1;
+        return null;
       }
-
-      // Handle <H3> tags (folders)
-      if (element.tagName === 'H3') {
-        const title = getBookmarkDisplayTitle(element.textContent?.trim());
-        const dateAdded = element.getAttribute('ADD_DATE');
-        const id = generateId();
-
-        // Find the sibling <DL> that contains the folder's children
-        let sibling = element.closest('DT')?.nextElementSibling;
-        // May also be nested within the same DT
-        if (sibling?.tagName !== 'DL') {
-          sibling = element.closest('DT')?.querySelector('DL');
-        }
-
-        const children: BookmarkTreeNode[] = [];
-        if (sibling && sibling.tagName === 'DL') {
-          const dtElements = sibling.querySelectorAll(':scope > DT');
-          dtElements.forEach((dt) => {
-            const anchor = dt.querySelector(':scope > A');
-            const heading = dt.querySelector(':scope > H3');
-            if (anchor) {
-              const child = parseNode(anchor, id);
-              if (child) children.push(child);
-            } else if (heading) {
-              const child = parseNode(heading, id);
-              if (child) children.push(child);
-            }
-          });
-        }
-
-        return {
-          id,
-          parentId,
-          title,
-          dateAdded: parseNetscapeDate(dateAdded),
-          children: children.length > 0 ? children : undefined,
-        };
-      }
-
-      return null;
+      return {
+        id: generateId(),
+        parentId,
+        title: getBookmarkDisplayTitle(element.textContent?.trim()),
+        url,
+        dateAdded: parseNetscapeDate(element.getAttribute(NETSCAPE.added)),
+      };
     };
 
-    // Find the main <DL> (may be nested within body or directly)
-    const mainDL = doc.querySelector('DL');
-    if (mainDL) {
-      const dtElements = mainDL.querySelectorAll(':scope > DT');
-      dtElements.forEach((dt) => {
-        const anchor = dt.querySelector(':scope > A');
-        const heading = dt.querySelector(':scope > H3');
-        if (anchor) {
-          const node = parseNode(anchor, undefined);
-          if (node) result.push(node);
-        } else if (heading) {
-          const node = parseNode(heading, undefined);
-          if (node) result.push(node);
+    // The file is read in document order, by its A, H3, HR, and DL elements only: parsers nest
+    // the unclosed <DT> and <p> differently (a browser puts a folder's <DL>, and an <HR> after an
+    // item, inside that item's <DT>), but the order of those four is the same everywhere. A <DL>
+    // right after an <H3> holds that folder's items.
+    let folderAwaitingItems: BookmarkTreeNode | undefined;
+    const folders: BookmarkTreeNode[] = [];
+    const walk = (element: Element, list: BookmarkTreeNode[], parentId?: string): void => {
+      for (const child of Array.from(element.children)) {
+        switch (child.tagName) {
+          case NETSCAPE.bookmark: {
+            folderAwaitingItems = undefined;
+            const node = parseBookmark(child, parentId);
+            if (node) list.push(node);
+            break;
+          }
+          case NETSCAPE.folder: {
+            const folder: BookmarkTreeNode = {
+              id: generateId(),
+              parentId,
+              title: getBookmarkDisplayTitle(child.textContent?.trim()),
+              dateAdded: parseNetscapeDate(child.getAttribute(NETSCAPE.added)),
+              children: [],
+            };
+            list.push(folder);
+            folders.push(folder);
+            folderAwaitingItems = folder;
+            break;
+          }
+          case NETSCAPE.separator:
+            // The Netscape separator, which Firefox writes.
+            folderAwaitingItems = undefined;
+            list.push({ id: generateId(), parentId, title: '', type: SEPARATOR_TYPE });
+            break;
+          case NETSCAPE.list: {
+            const folder = folderAwaitingItems;
+            folderAwaitingItems = undefined;
+            if (folder?.children) walk(child, folder.children, folder.id);
+            else walk(child, list, parentId);
+            break;
+          }
+          default:
+            walk(child, list, parentId);
         }
-      });
+      }
+    };
+
+    // The items start at the first <DL> (anything before it, like the <H1> title, is not one).
+    const mainDL = doc.querySelector(NETSCAPE.list);
+    if (mainDL) walk(mainDL, result);
+    // An empty folder has no children list, like a folder parsed from JSON.
+    for (const folder of folders) {
+      if (folder.children?.length === 0) folder.children = undefined;
     }
 
     return { bookmarks: result, skipped };
@@ -197,6 +200,15 @@ export const jsonImportFormat: ImportFormat = {
       if (!isPlainObject(raw)) {
         skipped += 1;
         return null;
+      }
+      if (raw.type === SEPARATOR_TYPE) {
+        return {
+          id: generateId(),
+          parentId,
+          title: '',
+          type: SEPARATOR_TYPE,
+          ...(typeof raw.dateAdded === 'number' ? { dateAdded: raw.dateAdded } : {}),
+        };
       }
       const url = typeof raw.url === 'string' && raw.url.trim() ? raw.url.trim() : undefined;
       const rawChildren = Array.isArray(raw.children) ? raw.children : undefined;
@@ -300,6 +312,7 @@ export function parseBookmarks(content: string, format: ImportFormat): ImportRes
 
   const countItems = (nodes: BookmarkTreeNode[]): void => {
     for (const node of nodes) {
+      if (isSeparatorNode(node)) continue;
       if (node.url) {
         bookmarkCount++;
       } else {
@@ -350,6 +363,8 @@ export type ImportConflictKind = 'in-target' | 'elsewhere' | 'in-file';
 export type ImportPlanNode = {
   title: string;
   url?: string;
+  /** A Firefox separator; created only where the browser has separators. */
+  type?: 'separator';
   action: 'create' | 'skip';
   /** Set when the URL already exists, whether or not the strategy skips it. */
   conflict?: ImportConflictKind;
@@ -375,6 +390,9 @@ export type ImportPlanCounts = {
   foldersToSkip: number;
   /** Entries the parser dropped because they were not valid bookmarks or folders. */
   invalid: number;
+  separatorsToCreate: number;
+  /** Separators left out because this browser has none (Chrome, Edge). */
+  separatorsUnsupported: number;
   duplicatesInTarget: number;
   duplicatesElsewhere: number;
   duplicatesInFile: number;
@@ -465,6 +483,8 @@ export function planImport(
     bookmarksToSkip: 0,
     foldersToSkip: 0,
     invalid: parsed.skipped,
+    separatorsToCreate: 0,
+    separatorsUnsupported: 0,
     duplicatesInTarget: 0,
     duplicatesElsewhere: 0,
     duplicatesInFile: 0,
@@ -482,7 +502,13 @@ export function planImport(
     return undefined;
   };
 
+  const separators = browserProfile().separators;
   const planNode = (node: BookmarkTreeNode): ImportPlanNode => {
+    if (isSeparatorNode(node)) {
+      if (separators) counts.separatorsToCreate += 1;
+      else counts.separatorsUnsupported += 1;
+      return { title: '', type: SEPARATOR_TYPE, action: separators ? 'create' : 'skip' };
+    }
     if (node.url) {
       const url = node.url;
       const conflict = detectConflict(url);
@@ -550,7 +576,11 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
   const outcome: Omit<ImportApplyOutcome, 'undo'> = {
     bookmarksCreated: 0,
     foldersCreated: 0,
-    skipped: plan.counts.bookmarksToSkip + plan.counts.foldersToSkip + plan.counts.invalid,
+    skipped:
+      plan.counts.bookmarksToSkip +
+      plan.counts.foldersToSkip +
+      plan.counts.invalid +
+      plan.counts.separatorsUnsupported,
     failed: 0,
     errors: [],
     createdIds: [],
@@ -571,10 +601,11 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
       const created = await writer.create({
         parentId,
         title: node.title,
-        ...(node.url ? { url: node.url } : {}),
+        ...(node.type ? { type: node.type } : node.url ? { url: node.url } : {}),
       });
       outcome.createdIds.push(created.id);
       if (isTopLevel) outcome.createdRootIds.push(created.id);
+      if (node.type) return;
       if (node.url) {
         outcome.bookmarksCreated += 1;
         if (node.metadata) metadata[created.id] = node.metadata;
