@@ -30,6 +30,7 @@ Website access is optional and is not granted at install. Requests are sent with
 The check runs in the background. You can close the manager, the popup, or the side panel, and it keeps going while the browser is open; if the browser stops the extension's background or restarts, it picks up again from the links already checked. While it runs, the popup and side panel show its progress in one line, which opens **Background tasks** in the manager.
 
 - **Pause** stops new requests, and **Resume** checks only the links not yet checked. A paused check stays paused after a restart.
+- If website access is taken back while the check runs, it pauses and says so; **Resume** asks for access again.
 - **Cancel** stops the check and keeps the results so far. It changes no bookmarks.
 - **Review results** opens the results at any time, and **Delete** removes a finished check. Finished checks are removed on their own after a while.
 

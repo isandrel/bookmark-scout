@@ -7367,6 +7367,10 @@
         "message": "Paused: AI features are off. Turn them on in Settings, then resume.",
         "description": "A background task paused because AI features were turned off"
     },
+    "jobs_blockedSiteAccess": {
+        "message": "Paused: website access was taken back. Resume asks for it again.",
+        "description": "A background task paused because website access was taken back while it ran"
+    },
     "jobs_blockedAISetup": {
         "message": "Paused: the AI service is not ready ($1). Fix it in Settings, then resume.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"

@@ -278,6 +278,14 @@ async function runBatchSlice(
   );
 }
 
+/** Whether website access still covers `urls` (a site, or all websites past the site limit). */
+async function hasItemSiteAccess(urls: string[]): Promise<boolean> {
+  const sites = getUrlSites(urls);
+  if (sites.length === 0) return true;
+  const origins = getSiteAccessOrigins(sites);
+  return origins ? hasSiteAccess('webAccess', origins) : hasPermission('webAccess');
+}
+
 async function runItem(
   job: JobRecord,
   run: ActiveRun,
@@ -296,6 +304,9 @@ async function runItem(
   const controller = new AbortController();
   run.controllers.add(controller);
   try {
+    if (adapter.siteUrls && !(await hasItemSiteAccess(adapter.siteUrls(item.input)))) {
+      throw new JobBlockedError('site-access');
+    }
     const { outcome, result } = await adapter.run(
       item.input,
       job.options,

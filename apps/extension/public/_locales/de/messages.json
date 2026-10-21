@@ -7367,6 +7367,10 @@
         "message": "Angehalten: KI-Funktionen sind aus. Schalten Sie sie in den Einstellungen ein und setzen Sie dann fort.",
         "description": "A background task paused because AI features were turned off"
     },
+    "jobs_blockedSiteAccess": {
+        "message": "Angehalten: Der Zugriff auf Websites wurde entzogen. Beim Fortsetzen wird erneut danach gefragt.",
+        "description": "A background task paused because website access was taken back while it ran"
+    },
     "jobs_blockedAISetup": {
         "message": "Angehalten: Der KI-Dienst ist nicht bereit ($1). Beheben Sie das in den Einstellungen und setzen Sie dann fort.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
