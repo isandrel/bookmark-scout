@@ -1,0 +1,78 @@
+name: Weekly reports
+
+# Reports that are too slow, or about too many runs, for a pull request check: end-to-end coverage
+# of the extension (about ten minutes of the Chromium suite on a source-mapped build) and the
+# end-to-end tests that failed in recent CI runs. Each writes a table to its job summary; nothing
+# here fails because of what it finds. Run it by hand for a fresh report.
+on:
+  schedule:
+    - cron: "23 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-coverage:
+    name: End-to-end coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      - name: Install Chromium
+        working-directory: apps/extension
+        run: bunx playwright install --with-deps --no-shell chromium
+
+      # A failing test still leaves the coverage of the rest, so the report is written either way.
+      - name: Run the Chromium suite with coverage
+        run: bunx nx run extension:test:e2e:coverage
+
+      - name: Summarize coverage
+        if: ${{ !cancelled() }}
+        run: bun apps/extension/scripts/coverage-summary.ts e2e >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-coverage
+          path: apps/extension/coverage/e2e
+          if-no-files-found: ignore
+          retention-days: 30
+
+  flaky-tests:
+    name: End-to-end failures in recent CI runs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      # The tests that failed in the CI runs of the past week or so, ranked, with where each
+      # stopped (.agents/skills/extension-feature-test/scripts/ci-flaky-tests.ts).
+      - name: Rank failed tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "### End-to-end tests that failed in recent CI runs"
+            echo
+            echo '```text'
+            bun .agents/skills/extension-feature-test/scripts/ci-flaky-tests.ts 100
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
