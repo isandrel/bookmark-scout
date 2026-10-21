@@ -173,7 +173,7 @@ function BrowserIconsOffer() {
   const inUse = useEffectiveSetting('browserIconCache');
   const { setValue } = useSetting('browserIconCache');
   const gate = usePermissionGate('browserIcons');
-  if (inUse || !isPermissionFeatureSupported('browserIcons', CURRENT_PERMISSION_BROWSER)) {
+  if (inUse || !isPermissionFeatureSupported('browserIcons', currentBrowser())) {
     return null;
   }
   return (

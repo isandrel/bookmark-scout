@@ -1444,9 +1444,7 @@ export function getSettingPermission(key: keyof Settings): PermissionFeature | u
 /** False for a setting whose feature this browser lacks (the icon cache in Firefox). */
 function isSettingSupported(key: keyof Settings): boolean {
   const feature = getSettingPermission(key);
-  return (
-    !feature || isPermissionFeatureSupported(feature, import.meta.env.BROWSER as PermissionBrowser)
-  );
+  return !feature || isPermissionFeatureSupported(feature, currentBrowser());
 }
 
 /**

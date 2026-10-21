@@ -53,8 +53,8 @@ const WINDOWS_11_PLATFORM_VERSION = 13;
 
 /** Whether this build shows the check (Chrome; Edge names its switch differently). */
 export function canCheckBuiltinAIDevice(): boolean {
-  const browsers: readonly PermissionBrowser[] = builtinAIConfig.check.browsers;
-  return browsers.includes(CURRENT_PERMISSION_BROWSER);
+  const browsers: readonly SupportedBrowser[] = builtinAIConfig.check.browsers;
+  return browsers.includes(currentBrowser());
 }
 
 function majorOf(version: string | undefined): number | undefined {

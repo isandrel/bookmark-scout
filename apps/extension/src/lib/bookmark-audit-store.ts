@@ -158,7 +158,7 @@ export const auditItemSchema = z.object({
   outcome: z.enum(['applied', 'skipped', 'failed', 'conflicted']),
   title: z.string(),
   url: z.string().optional(),
-  type: z.enum(['bookmark', 'folder', 'separator']),
+  type: z.enum(BOOKMARK_NODE_KINDS),
   before: placeSchema.optional(),
   after: placeSchema.optional(),
   /** Items inside a removed or created folder, at every depth. */

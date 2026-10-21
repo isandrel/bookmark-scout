@@ -21,12 +21,6 @@ type EditableCommands = {
   };
 };
 
-/** Chromium's shortcut page per build. Firefox needs none: it can edit shortcuts from Options. */
-const BROWSER_SHORTCUT_PAGES: Partial<Record<PermissionBrowser, string>> = {
-  chrome: 'chrome://extensions/shortcuts',
-  edge: 'edge://extensions/shortcuts',
-};
-
 /** Element id of the Options shortcuts panel, the target of `openCommandShortcutsInOptions`. */
 export const SHORTCUTS_PANEL_ID = 'quick-save-shortcuts';
 
@@ -86,13 +80,13 @@ export function watchCommandShortcuts(callback: () => void): () => void {
  * that on the browser's shortcut page (Chrome, Edge); `null` elsewhere. See `command-catalog.ts`.
  */
 export function getBookmarkShortcutTakeover(): typeof BOOKMARK_SHORTCUT_TAKEOVER | null {
-  const browsers: readonly PermissionBrowser[] = BOOKMARK_SHORTCUT_TAKEOVER.browsers;
-  return browsers.includes(CURRENT_PERMISSION_BROWSER) ? BOOKMARK_SHORTCUT_TAKEOVER : null;
+  const browsers: readonly SupportedBrowser[] = BOOKMARK_SHORTCUT_TAKEOVER.browsers;
+  return browsers.includes(currentBrowser()) ? BOOKMARK_SHORTCUT_TAKEOVER : null;
 }
 
 /** Whether this browser runs its own action for `shortcut`, so an extension never receives it. */
 export function isShortcutKeptByBrowser(shortcut: string, apple = isApplePlatform()): boolean {
-  return (BROWSER_KEPT_SHORTCUTS[CURRENT_PERMISSION_BROWSER] ?? []).some((kept) =>
+  return (BROWSER_KEPT_SHORTCUTS[currentBrowser()] ?? []).some((kept) =>
     isSameCommandShortcut(kept, shortcut, { apple }),
   );
 }
@@ -100,7 +94,7 @@ export function isShortcutKeptByBrowser(shortcut: string, apple = isApplePlatfor
 /** Whether the browser has a shortcut settings page this extension can open. */
 export function canOpenBrowserShortcutSettings(): boolean {
   return (
-    BROWSER_SHORTCUT_PAGES[CURRENT_PERMISSION_BROWSER] !== undefined ||
+    browserProfile().shortcutSettingsUrl !== null ||
     typeof editableCommands()?.openShortcutSettings === 'function'
   );
 }
@@ -112,7 +106,7 @@ export async function openBrowserShortcutSettings(): Promise<void> {
     await openShortcutSettings();
     return;
   }
-  const url = BROWSER_SHORTCUT_PAGES[CURRENT_PERMISSION_BROWSER];
+  const url = browserProfile().shortcutSettingsUrl;
   if (url) await browser.tabs.create({ url, active: true });
 }
 

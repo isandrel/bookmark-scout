@@ -43,7 +43,7 @@ export const builtinAIConfig = readConfig(
       windows_platform_version: z.number().int().positive(),
     }),
     check: z.strictObject({
-      browsers: z.array(z.enum(['chrome', 'edge', 'firefox'])),
+      browsers: z.array(z.enum(SUPPORTED_BROWSERS)),
       brands: z.array(z.string().min(1)).min(1),
       reported_memory_cap_gb: z.number().positive(),
       flag_url: z.string().regex(/^chrome:\/\/flags\/#[\w-]+$/),

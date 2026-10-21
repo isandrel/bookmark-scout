@@ -89,7 +89,7 @@ function toRecoverableNode(
     title: node.title,
     ...(node.url ? { url: node.url } : {}),
     ...(typeof node.index === 'number' ? { index: node.index } : {}),
-    ...(nodeType === 'separator' ? { type: 'separator' as const } : {}),
+    ...(nodeType === SEPARATOR_TYPE ? { type: SEPARATOR_TYPE } : {}),
     ...(metadata ? { metadata } : {}),
     ...(node.children
       ? {
@@ -846,7 +846,7 @@ export async function openBookmarkUrls(
  * reveals; Firefox needs the extension to be allowed in private windows.
  */
 export async function canOpenPrivateWindows(): Promise<boolean> {
-  if (import.meta.env.BROWSER !== 'firefox') return true;
+  if (!browserProfile().privateWindowsNeedPermission) return true;
   return browser.extension.isAllowedIncognitoAccess().catch(() => false);
 }
 

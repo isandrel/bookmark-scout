@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
+import { browserProfile } from '@/lib/browser-profiles';
 import {
   getFirefoxDataCollectionPermissions,
   getManifestApiPermissions,
@@ -15,6 +16,7 @@ import {
   getUrlSites,
   SITE_ACCESS_MAX_SITES,
 } from '@/lib/site-access';
+import type { SupportedBrowser } from '@/lib/supported-browsers';
 import {
   assertPermission,
   hasPermission,
@@ -31,46 +33,53 @@ const AI_DATA = ['authenticationInfo', 'bookmarksInfo', 'browsingActivity'];
 /** Every category any feature may ask for, as the Firefox manifest declares them. */
 const ALL_DATA = ['authenticationInfo', 'bookmarksInfo', 'browsingActivity', 'websiteContent'];
 
+/** What `feature` asks `browser` for, with that browser's data collection consent. */
+const request = (feature: PermissionFeature, browser: SupportedBrowser, extraOrigins?: string[]) =>
+  getPermissionRequest(feature, browser, {
+    extraOrigins,
+    dataCollectionConsent: browserProfile(browser).dataCollectionConsent,
+  });
+
 describe('permission catalog', () => {
   it('asks each browser only for the parts that are optional there', () => {
-    expect(getPermissionRequest('contextMenu', 'chrome')).toEqual({
+    expect(request('contextMenu', 'chrome')).toEqual({
       permissions: ['contextMenus'],
     });
-    expect(getPermissionRequest('contextMenu', 'edge')).toEqual({ permissions: ['contextMenus'] });
+    expect(request('contextMenu', 'edge')).toEqual({ permissions: ['contextMenus'] });
     // Firefox grants contextMenus at install; it cannot be optional there.
-    expect(getPermissionRequest('contextMenu', 'firefox')).toBeNull();
+    expect(request('contextMenu', 'firefox')).toBeNull();
 
     for (const browser of ['chrome', 'edge', 'firefox'] as const) {
-      expect(getPermissionRequest('currentTab', browser)).toEqual({ permissions: ['tabs'] });
-      expect(getPermissionRequest('webAccess', browser)).toEqual({ origins: [...WEB_ORIGINS] });
+      expect(request('currentTab', browser)).toEqual({ permissions: ['tabs'] });
+      expect(request('webAccess', browser)).toEqual({ origins: [...WEB_ORIGINS] });
     }
-    expect(getPermissionRequest('browserIcons', 'chrome')).toEqual({ permissions: ['favicon'] });
+    expect(request('browserIcons', 'chrome')).toEqual({ permissions: ['favicon'] });
   });
 
   it('asks for Firefox data collection consent only in Firefox, per feature', () => {
-    expect(getPermissionRequest('ai', 'chrome')).toBeNull();
-    expect(getPermissionRequest('ai', 'firefox')).toEqual({ data_collection: AI_DATA });
-    expect(getPermissionRequest('pageReading', 'chrome')).toEqual({ origins: [...WEB_ORIGINS] });
+    expect(request('ai', 'chrome')).toBeNull();
+    expect(request('ai', 'firefox')).toEqual({ data_collection: AI_DATA });
+    expect(request('pageReading', 'chrome')).toEqual({ origins: [...WEB_ORIGINS] });
     // Page text only: the rest is asked for when AI is turned on.
-    expect(getPermissionRequest('pageReading', 'firefox')).toEqual({
+    expect(request('pageReading', 'firefox')).toEqual({
       origins: [...WEB_ORIGINS],
       data_collection: ['websiteContent'],
     });
     const provider = ['https://api.example.test/*'];
-    expect(getPermissionRequest('aiProviderCheck', 'chrome', provider)).toEqual({
+    expect(request('aiProviderCheck', 'chrome', provider)).toEqual({
       origins: provider,
     });
-    expect(getPermissionRequest('aiProviderCheck', 'firefox', provider)).toEqual({
+    expect(request('aiProviderCheck', 'firefox', provider)).toEqual({
       origins: provider,
       data_collection: ['authenticationInfo'],
     });
-    expect(getPermissionRequest('aiProviderCheck', 'chrome')).toBeNull();
+    expect(request('aiProviderCheck', 'chrome')).toBeNull();
     // Local AI agents: native messaging everywhere, plus what agents read in Firefox (page text
     // comes with Read page content's own consent).
-    expect(getPermissionRequest('agentBridge', 'chrome')).toEqual({
+    expect(request('agentBridge', 'chrome')).toEqual({
       permissions: ['nativeMessaging'],
     });
-    expect(getPermissionRequest('agentBridge', 'firefox')).toEqual({
+    expect(request('agentBridge', 'firefox')).toEqual({
       permissions: ['nativeMessaging'],
       data_collection: ['bookmarksInfo', 'browsingActivity'],
     });
