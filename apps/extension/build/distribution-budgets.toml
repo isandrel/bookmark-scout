@@ -87,19 +87,22 @@
 # JavaScript, and 1,304,930 B of locales.
 # Uncompressed raised again on 2026-10-21 (5,520,000 to 5,540,000) for applying reviewed changes as
 # a background task (the setting and its messages in 9 languages). Firefox measured 5,522,092 B.
+# Raised on 2026-10-21 (uncompressed 5,540,000 to 5,570,000, locales 1,320,000 to 1,355,000) for
+# the settings' help toggletips: 15 messages in 9 languages. Firefox measured 5,550,586 B
+# uncompressed and 1,344,233 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_740_000
-raw_bytes = 5_540_000
+raw_bytes = 5_570_000
 
 [targets.edge]
 zip_bytes = 1_740_000
-raw_bytes = 5_540_000
+raw_bytes = 5_570_000
 
 [targets.firefox]
 zip_bytes = 1_740_000
-raw_bytes = 5_540_000
+raw_bytes = 5_570_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -108,6 +111,6 @@ raw_bytes = 5_540_000
 javascript = 3_660_000
 css = 84_000
 fonts = 143_000
-locales = 1_320_000
+locales = 1_355_000
 images = 320_000
 other = 27_000

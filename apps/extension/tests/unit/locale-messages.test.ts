@@ -167,6 +167,8 @@ describe('extension locale messages', () => {
       const prefix = DYNAMIC_KEY_PREFIXES.find((candidate) => base.startsWith(candidate));
       if (prefix === undefined) return false;
       if (prefix === 'settings_' && base.endsWith('Desc') && used(base.slice(0, -4))) return true;
+      // A setting's toggletip text, read by fieldLabels like its label and description.
+      if (prefix === 'settings_' && base.endsWith('Help') && used(base.slice(0, -4))) return true;
       return quotedWords.has(base.slice(prefix.length));
     };
     expect(Object.keys(byLocale.en.messages).filter((key) => !used(key))).toEqual([]);
