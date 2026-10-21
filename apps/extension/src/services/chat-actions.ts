@@ -73,41 +73,14 @@ function isKnownPage(
 const suggestionInput = z.object({
   kind: z
     .enum(['ask', 'option', 'save', 'open', 'show'])
-    .describe(
-      'ask: a next question the user may ask. option: one of several ideas or choices, whose ' +
-        'text is sent to act on or ask about it. save: save a page to a folder. open: open a ' +
-        'bookmark. show: show a bookmark or folder in the bookmark manager.',
-    ),
-  label: z
-    .string()
-    .trim()
-    .optional()
-    .describe("ask, option: short button text in the user's language"),
-  text: z
-    .string()
-    .trim()
-    .optional()
-    .describe('ask, option: the message sent when the user clicks it'),
-  folder: z
-    .string()
-    .trim()
-    .optional()
-    .describe('save (required): an existing folder, its ref (f:<id>) or full path'),
-  url: z
-    .string()
-    .trim()
-    .optional()
-    .describe(
-      'save: the page to save, the current page when left out: a URL the user typed or a tool ' +
-        'result gave, never one only seen in page text',
-    ),
-  title: z.string().trim().optional().describe('save: the page title'),
-  newFolder: z.string().trim().optional().describe('save: a new folder to create inside `folder`'),
-  ref: z
-    .string()
-    .trim()
-    .optional()
-    .describe('open (required): a bookmark, b:<id>. show (required): b:<id> or f:<id>'),
+    .describe(agentText('suggestion_input.kind')),
+  label: z.string().trim().optional().describe(agentText('suggestion_input.label')),
+  text: z.string().trim().optional().describe(agentText('suggestion_input.text')),
+  folder: z.string().trim().optional().describe(agentText('suggestion_input.folder')),
+  url: z.string().trim().optional().describe(agentText('suggestion_input.url')),
+  title: z.string().trim().optional().describe(agentText('suggestion_input.title')),
+  newFolder: z.string().trim().optional().describe(agentText('suggestion_input.new_folder')),
+  ref: z.string().trim().optional().describe(agentText('suggestion_input.ref')),
 });
 
 /** The fields a kind needs, for the reason a button without them is left out. */
@@ -253,7 +226,7 @@ const suggestActions = defineAction({
   }),
   output: z.object({
     suggestions: z.array(suggestionOutput),
-    dropped: z.array(z.string()).describe('Why suggestions were left out'),
+    dropped: z.array(z.string()).describe(agentText('suggest_actions.dropped')),
   }),
   describe: () => t('askAI_toolSuggest'),
   async execute(input, context) {

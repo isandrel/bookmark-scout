@@ -138,6 +138,8 @@ bun run build:edge
 
 Usamos [Conventional Commits](https://www.conventionalcommits.org/) con [Gitmoji](https://gitmoji.dev/):
 
+El hook `commit-msg` y la comprobación **PR title** lo exigen; los tipos permitidos están en `config/commits.toml`.
+
 ```
 ✨ feat(scope): add new feature
 🐛 fix(scope): fix bug description
