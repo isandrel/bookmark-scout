@@ -820,7 +820,7 @@ async function startHeldServer() {
     if (res.writableEnded || res.destroyed) return;
     res.writeHead(200, { 'content-type': 'text/html' });
     // Only the page number goes into the HTML, never the raw request path.
-    const page = /^\/(\d+)$/.exec(path)?.[1] ?? '0';
+    const page = Number(/^\/(\d+)$/.exec(path)?.[1] ?? 0);
     res.end(`<head><title>Page /${page}</title></head>`);
   };
   const paths = new Map<ServerResponse, string>();
