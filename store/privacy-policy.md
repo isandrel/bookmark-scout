@@ -46,7 +46,7 @@ Everything is kept in your browser's extension storage:
 - **Site icons** you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.
 - **Your last quick save** (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.
 - **The bookmark manager's undo history** (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes.
-- **The bookmark change history** (what Bookmark Scout changed in your bookmarks and when: titles, URLs, folders, and the outcome of each change) is kept on this device only, in the browser's IndexedDB, for a limited time. It is never synced and never in the backup file.
+- **The bookmark change history** (what changed in your bookmarks and when, whether Bookmark Scout made the change or it was seen from elsewhere: titles, URLs, folders, and the outcome of each change), and a copy of every bookmark's title, URL, and folder as last seen (to tell what changed outside Bookmark Scout), are kept on this device only, in the browser's IndexedDB, for a limited time. They are never synced and never in the backup file. Recording changes made elsewhere can be turned off in Settings.
 
 Uninstalling the extension removes the data it stored in this browser. Your bookmarks themselves stay in the browser.
 

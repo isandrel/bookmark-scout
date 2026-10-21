@@ -136,6 +136,11 @@ export const auditOperationSchema = z.object({
   originConfidence: z.enum(['verified_internal', 'unattributed_event', 'inferred_net_diff']),
   /** Codes of what went wrong, never raw error text (which may hold bookmark data). */
   errorCodes: z.array(z.string().max(64)).max(20).optional(),
+  /**
+   * For differences found after a gap: when the bookmarks were last seen as recorded. The
+   * changes happened at unknown times between this and `startedAt`.
+   */
+  observedSince: z.number().optional(),
 });
 export type AuditOperation = z.infer<typeof auditOperationSchema>;
 
@@ -171,6 +176,43 @@ export const auditDetailsSchema = z.object({
 });
 export type AuditDetails = z.infer<typeof auditDetailsSchema>;
 
+/**
+ * What the bookmarks were when last seen, one record per item, so a change seen from elsewhere
+ * can say what it was before (`services/bookmark-observer.ts`). Order within a folder is not kept.
+ */
+export type BaselineNode = {
+  id: string;
+  parentId: string;
+  title: string;
+  url?: string;
+  type: 'bookmark' | 'folder' | 'separator';
+};
+
+/**
+ * A write Bookmark Scout is about to make, noted before the call so the background can tell its
+ * own changes from changes made elsewhere when the browser reports them.
+ */
+export type BookmarkWriteIntent = {
+  key?: number;
+  kind: 'create' | 'update' | 'move' | 'remove';
+  /** The item, except for a create (the browser gives the id). */
+  id?: string;
+  /** Where a create or move goes. */
+  parentId?: string;
+  title?: string;
+  url?: string;
+  at: number;
+};
+
+/** What the observer keeps between events: when it last saw the bookmarks, the open burst. */
+export type ObserverMeta = {
+  key: 'observer';
+  /** When the baseline last matched the bookmarks (an event, or a reconciliation). */
+  lastSeenAt: number;
+  /** The record changes from elsewhere are being added to, while they keep coming. */
+  openRecord?: { id: string; lastEventAt: number };
+};
+
 interface AuditDb extends DBSchema {
   operations: {
     key: string;
@@ -178,10 +220,14 @@ interface AuditDb extends DBSchema {
     indexes: { startedAt: number };
   };
   details: { key: string; value: AuditDetails };
+  baseline: { key: string; value: BaselineNode; indexes: { parentId: string } };
+  intents: { key: number; value: BookmarkWriteIntent };
+  meta: { key: string; value: ObserverMeta };
 }
 
 export const AUDIT_DB_NAME = INDEXED_DATABASES.bookmarkAudit.name;
-const AUDIT_DB_VERSION = 1;
+/** 2 added the baseline, write intents, and observer state. */
+const AUDIT_DB_VERSION = 2;
 
 /** Broadcast name pages listen on to refresh when any context writes a record. */
 export const AUDIT_CHANNEL = 'bookmark-scout-audit';
@@ -201,10 +247,18 @@ function openAuditDb(): Promise<IDBPDatabase<AuditDb>> {
   database ??= Promise.resolve()
     .then(() =>
       openDB<AuditDb>(AUDIT_DB_NAME, AUDIT_DB_VERSION, {
-        upgrade(db) {
-          const operations = db.createObjectStore('operations', { keyPath: 'id' });
-          operations.createIndex('startedAt', 'startedAt');
-          db.createObjectStore('details', { keyPath: 'operationId' });
+        upgrade(db, oldVersion) {
+          if (oldVersion < 1) {
+            const operations = db.createObjectStore('operations', { keyPath: 'id' });
+            operations.createIndex('startedAt', 'startedAt');
+            db.createObjectStore('details', { keyPath: 'operationId' });
+          }
+          if (oldVersion < 2) {
+            const baseline = db.createObjectStore('baseline', { keyPath: 'id' });
+            baseline.createIndex('parentId', 'parentId');
+            db.createObjectStore('intents', { keyPath: 'key', autoIncrement: true });
+            db.createObjectStore('meta', { keyPath: 'key' });
+          }
         },
         // Another context opened a newer version: let it, and reopen on the next call.
         blocking() {
@@ -228,7 +282,12 @@ export async function closeAuditDb(): Promise<void> {
   (await open?.catch(() => undefined))?.close();
 }
 
-function notifyAuditChanged(): void {
+/** The database, for the observer's own stores (`services/bookmark-observer.ts`). */
+export function openAuditDatabase(): Promise<IDBPDatabase<AuditDb>> {
+  return openAuditDb();
+}
+
+export function notifyAuditChanged(): void {
   try {
     const channel = new BroadcastChannel(AUDIT_CHANNEL);
     channel.postMessage('changed');

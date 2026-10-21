@@ -72,6 +72,10 @@ export const AUDIT_FILTER_LABEL_KEYS: Record<AuditHistoryFilter, MessageKey> = {
 
 const ELSEWHERE_SOURCES: readonly AuditSource[] = ['source_unknown', 'reconciliation'];
 
+/** Whether a record is of a change seen from elsewhere, which Bookmark Scout did not make. */
+export const isFromElsewhere = (operation: AuditOperation) =>
+  ELSEWHERE_SOURCES.includes(operation.source);
+
 /** The records a filter and a search (over what each did and where from) keep, in order. */
 export function filterAuditOperations(
   operations: readonly AuditOperation[],
@@ -110,6 +114,7 @@ export function auditReasonLabel(reason: string | undefined): string | undefined
   if (reason === 'deleted') return t('history_reasonDeleted');
   if (reason === 'changed') return t('history_reasonChanged');
   if (reason === 'failed') return t('history_reasonFailed');
+  if (reason === 'before_unknown') return t('history_reasonBeforeUnknown');
   return undefined;
 }
 

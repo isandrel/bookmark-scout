@@ -432,43 +432,62 @@ function HistoryRecordDetails({
   };
 
   const { verification } = operation;
+  const elsewhere = isFromElsewhere(operation);
   const facts: { label: string; value: ReactNode }[] = [
     { label: t('history_factSource'), value: t(AUDIT_SOURCE_LABEL_KEYS[operation.source]) },
     ...(operation.actorLabel
       ? [{ label: t('history_factAgentName'), value: operation.actorLabel }]
       : []),
-    { label: t('history_factStarted'), value: formatDateTime(operation.startedAt) },
-    ...(operation.finishedAt
-      ? [{ label: t('history_factFinished'), value: formatDateTime(operation.finishedAt) }]
-      : []),
-    {
-      label: t('history_factResult'),
-      value: t('history_factCounts', [
-        String(operation.counts.planned),
-        String(operation.counts.applied),
-        String(operation.counts.skipped),
-        String(operation.counts.failed),
-      ]),
-    },
-    {
-      label: t('history_factCheck'),
-      value:
-        verification?.status === 'passed' ? (
-          <span className="inline-flex items-center gap-1.5">
-            <CircleCheck className="h-3.5 w-3.5 shrink-0 text-success" aria-hidden="true" />
-            {t('history_verifyPassed')}
-          </span>
-        ) : verification?.status === 'failed' ? (
-          <span className="inline-flex items-center gap-1.5 text-warning">
-            <CircleAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            {t('history_verifyFailed', String(verification.mismatchCount ?? 0))}
-          </span>
-        ) : (
-          t('history_verifyNotRun')
-        ),
-    },
+    ...(operation.observedSince !== undefined
+      ? [
+          {
+            label: t('history_factObservedSince'),
+            value: t('history_between', [
+              formatDateTime(operation.observedSince),
+              formatDateTime(operation.startedAt),
+            ]),
+          },
+        ]
+      : [
+          { label: t('history_factStarted'), value: formatDateTime(operation.startedAt) },
+          ...(operation.finishedAt
+            ? [{ label: t('history_factFinished'), value: formatDateTime(operation.finishedAt) }]
+            : []),
+        ]),
+    // A change seen from elsewhere was neither planned nor checked by Bookmark Scout.
+    ...(elsewhere
+      ? []
+      : [
+          {
+            label: t('history_factResult'),
+            value: t('history_factCounts', [
+              String(operation.counts.planned),
+              String(operation.counts.applied),
+              String(operation.counts.skipped),
+              String(operation.counts.failed),
+            ]),
+          },
+          {
+            label: t('history_factCheck'),
+            value:
+              verification?.status === 'passed' ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <CircleCheck className="h-3.5 w-3.5 shrink-0 text-success" aria-hidden="true" />
+                  {t('history_verifyPassed')}
+                </span>
+              ) : verification?.status === 'failed' ? (
+                <span className="inline-flex items-center gap-1.5 text-warning">
+                  <CircleAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  {t('history_verifyFailed', String(verification.mismatchCount ?? 0))}
+                </span>
+              ) : (
+                t('history_verifyNotRun')
+              ),
+          },
+        ]),
   ];
-  const canHaveUndo = !operation.replay && operation.state !== 'failed' && !operation.undo;
+  const canHaveUndo =
+    !elsewhere && !operation.replay && operation.state !== 'failed' && !operation.undo;
 
   return (
     <>
@@ -508,6 +527,10 @@ function HistoryRecordDetails({
         ) : canHaveUndo ? (
           <p className="text-xs text-muted-foreground" data-testid="history-undo-unavailable">
             {t('history_undoUnavailable')}
+          </p>
+        ) : elsewhere ? (
+          <p className="text-xs text-muted-foreground" data-testid="history-undo-unavailable">
+            {t('history_noUndoElsewhere')}
           </p>
         ) : null}
         {operation.relatedOperationId ? (

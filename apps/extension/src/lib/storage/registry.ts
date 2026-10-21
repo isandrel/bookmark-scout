@@ -137,6 +137,8 @@ export const DEVICE_SETTING_KEYS = [
   'agentBridgeWrites',
   'agentBridgeRedactUrls',
   'agentBridgeDisabledActions',
+  /** The History is kept on each device, and so is whether it records changes from elsewhere. */
+  'historyRecordOutsideChanges',
 ] as const;
 
 export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];
