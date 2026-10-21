@@ -49,7 +49,7 @@ export function getTreeDropZone(
   pointer: TreeDropPointer,
   canReorder = true,
 ): TreeDropZone {
-  const fraction = pointer.height > 0 ? (pointer.clientY - pointer.top) / pointer.height : 0.5;
+  const fraction = rowFraction(pointer.clientY, pointer);
   const zone = getManagerDropZone(
     {
       id: target.node.id,

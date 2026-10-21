@@ -329,12 +329,15 @@ function buildXmlContext(
   return `<bookmarks count="${bookmarks.length}">${items}</bookmarks>`;
 }
 
+/** Ends text cut to fit the context; plain dots, which every model reads the same way. */
+const TRUNCATION_MARK = '...';
+
 function truncateForContext(text: string, maxLength: number) {
   if (text.length <= maxLength) {
     return text;
   }
 
-  return `${text.slice(0, maxLength - 3)}...`;
+  return `${text.slice(0, maxLength - TRUNCATION_MARK.length)}${TRUNCATION_MARK}`;
 }
 
 /** HTML escaping plus `'`, which XML attribute values may be quoted with. */

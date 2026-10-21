@@ -402,14 +402,9 @@ function formatWith(
   }
 }
 
-/** An afternoon, so a sample shows both how dates are ordered and 12- or 24-hour times. */
-const SAMPLE_DATE = new Date(2026, 2, 14, 15, 9, 26);
-
 /** A sample of one date or time format, for its entry in the settings list. */
 export function formatDateSample(kind: 'date' | 'time', id: string): string {
-  return kind === 'date'
-    ? formatWith('day', SAMPLE_DATE, { date: id, time: 'auto' })
-    : formatWith('time', SAMPLE_DATE, { date: 'auto', time: id });
+  return formatWith(kind === 'date' ? 'day' : 'time', DATE_FORMAT_SAMPLE, choiceWith(kind, id));
 }
 
 /** Date and time in the chosen formats, e.g. "2026/9/24 15:05:49" in Japanese by default. */

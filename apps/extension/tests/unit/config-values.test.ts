@@ -61,3 +61,38 @@ describe('private networks from config/network/private-networks.toml', () => {
     expect(isPrivateIPv6('2001:db8::1')).toBe(false);
   });
 });
+
+describe('shared helpers that replaced inline numbers', () => {
+  it('round, and spell a host with and without www.', async () => {
+    const { roundTo } = await import('@/lib/units');
+    const { otherWwwHost, withoutWww } = await import('@/lib/url-domain');
+    expect(roundTo(1.23456, 2)).toBe(1.23);
+    expect(withoutWww('www.example.com')).toBe('example.com');
+    expect(withoutWww('wwwexample.com')).toBe('wwwexample.com');
+    expect(otherWwwHost('example.com')).toBe('www.example.com');
+    expect(otherWwwHost('www.example.com')).toBe('example.com');
+  });
+
+  it('place a pointer on a row, and count an unmeasured row or a stray pointer as configured', async () => {
+    const { rowFraction } = await import('@/lib/bookmark-drop');
+    const { unmeasured_fraction: unmeasured } = readConfigToml('ui/drag-drop.toml') as {
+      unmeasured_fraction: number;
+    };
+    expect(rowFraction(25, { top: 0, height: 100 })).toBe(0.25);
+    expect(rowFraction(25, { top: 0, height: 0 })).toBe(unmeasured);
+    expect(rowFraction(250, { top: 0, height: 100 })).toBe(unmeasured);
+    expect(rowFraction(25, undefined)).toBe(unmeasured);
+  });
+
+  it('offer the configured choices for the icon size and the result count', async () => {
+    const { getSettingsFieldMeta, settingsSchema } = await import('@/lib/settings-schema');
+    const appearance = readConfigToml('settings/appearance.toml') as {
+      theme_icons: { favicon_size: { options: { value: number }[] } };
+    };
+    const sizes = appearance.theme_icons.favicon_size.options.map((option) => option.value);
+    const meta = getSettingsFieldMeta().faviconSize;
+    expect(meta.options?.map((option) => option.value)).toEqual(sizes);
+    expect(settingsSchema.shape.faviconSize.safeParse(sizes[0]).success).toBe(true);
+    expect(settingsSchema.shape.faviconSize.safeParse(Math.max(...sizes) + 1).success).toBe(false);
+  });
+});

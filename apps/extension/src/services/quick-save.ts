@@ -23,8 +23,8 @@ const quickSaveConfig = readConfig(
     visible_tolerance_px: boundedNumber({ integer: false }),
     badge_clear_ms: boundedNumber({ integer: true }),
     popup_result_max_age_ms: boundedNumber({ integer: true }),
-    badge_success_text: z.string().min(1).max(4),
-    badge_failure_text: z.string().min(1).max(4),
+    badge_success_text: z.string().min(1).max(INPUT_LIMITS.chars.action_badge),
+    badge_failure_text: z.string().min(1).max(INPUT_LIMITS.chars.action_badge),
     badge_success_color: z.string().regex(/^#[0-9a-f]{6}$/i),
     badge_failure_color: z.string().regex(/^#[0-9a-f]{6}$/i),
   }),
@@ -68,7 +68,7 @@ const recordSchema = z.strictObject({
    * The document in the tab that first showed this quick save's notification. Later views go only
    * to that document; after the tab navigates, the popup shows the result instead.
    */
-  documentToken: z.string().max(100).optional(),
+  documentToken: z.string().max(INPUT_LIMITS.chars.document_token).optional(),
   /** Where the notification goes: the page, or the popup when the page cannot show it. */
   delivery: z.enum(['page', 'popup']),
   page: z.strictObject({ title: z.string(), url: z.string() }),
@@ -188,6 +188,7 @@ function viewFrame(settings: Settings) {
     alternativesLabel: t('quickSave_moveTo'),
     dismissLabel: t('action_dismiss'),
     visibleTolerancePx: quickSaveConfig.visible_tolerance_px,
+    documentTokenBytes: INPUT_LIMITS.ids.document_token_bytes,
   } satisfies Partial<QuickSaveToastView>;
 }
 

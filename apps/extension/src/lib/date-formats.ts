@@ -28,6 +28,7 @@ const timeFormatSchema = z.strictObject({
 const formatsConfig = readConfig(
   'ui/date-formats',
   z.strictObject({
+    sample: z.iso.datetime({ local: true }),
     time_parts: z.strictObject({ minute: NUMERIC, second: NUMERIC, time_style: STYLE }),
     date_formats: z.record(z.string(), dateFormatSchema),
     time_formats: z.record(z.string(), timeFormatSchema),
@@ -67,6 +68,14 @@ function currentChoice(): FormatChoice {
   const choice = chosen ?? defaults;
   if (!choice) throw new Error('The date and time format settings are not loaded');
   return choice;
+}
+
+/** The date each choice shows as its sample in Settings (a local time). */
+export const DATE_FORMAT_SAMPLE = new Date(formatsConfig.sample);
+
+/** The current choice with format `id` of `kind` in its place, to show that format's sample. */
+export function choiceWith(kind: 'date' | 'time', id: string): FormatChoice {
+  return { ...currentChoice(), [kind]: id };
 }
 
 /** Applies the user's choice; returns whether it changed, so pages show dates again. */
