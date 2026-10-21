@@ -29,6 +29,7 @@ Détails des fichiers :
 
 - Les noms de fichier commencent par le **Préfixe du nom de fichier** (par défaut `bookmarks_`) et conservent les noms de dossier non ASCII.
 - Les fichiers CSV commencent par une marque d'ordre des octets UTF-8. La colonne Folder relie les dossiers par `/`, et écrit un `/` présent dans un nom de dossier sous la forme `\/` et une barre oblique inverse sous la forme `\\`.
+- Les séparateurs, que seul Firefox connaît, sont écrits comme séparateurs en HTML (`<HR>`) et en JSON, et reviennent comme séparateurs quand vous importez ce fichier dans Firefox. Markdown et CSV les omettent, et Chrome et Edge, qui n’en ont pas, les omettent à l’importation ; l’aperçu les compte.
 - **Inclure les dates** et **Inclure les URL**, ainsi que l'indentation de chaque format, se trouvent dans l'onglet **Données** des [Paramètres](/settings).
 
 Une exportation en JSON inclut les étiquettes et le résumé de chaque favori, et l'importation de ce fichier les attribue aux favoris qu'elle crée, mais pas à ceux qu'elle ignore comme doublons. Les exportations HTML, Markdown et CSV ne les incluent pas. Pour transmettre des favoris avec leurs étiquettes et résumés à un outil d'IA, utilisez le **Préparateur de contexte IA** ; consultez [Configurer les outils d'IA](/guides/ai-tools#export-context-for-an-ai-chat).

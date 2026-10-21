@@ -71,7 +71,8 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       title: stored.title,
       syncing: false,
       ...(stored.parentId ? { parentId: stored.parentId } : {}),
-      ...(stored.url ? { url: stored.url } : {}),
+      // Firefox gives separators the URL `data:`.
+      ...(stored.type === 'separator' ? { url: 'data:' } : stored.url ? { url: stored.url } : {}),
       ...(stored.dateAdded ? { dateAdded: stored.dateAdded } : {}),
       ...(stored.unmodifiable ? { unmodifiable: stored.unmodifiable } : {}),
       ...(stored.type ? { type: stored.type } : {}),

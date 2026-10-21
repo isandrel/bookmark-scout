@@ -4113,6 +4113,14 @@
         "message": "已忽略的无效条目：$1",
         "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
     },
+    "tools_importPreviewSeparators": {
+        "message": "将创建的分隔线：$1",
+        "description": "Import preview count of Firefox separators the import creates; $1 is the count"
+    },
+    "tools_importPreviewSeparatorsUnsupported": {
+        "message": "略过的分隔线（此浏览器没有分隔线）：$1",
+        "description": "Import preview count of separators in the file that this browser (Chrome, Edge) cannot store; $1 is the count"
+    },
     "tools_importNothingToCreate": {
         "message": "按此选项没有新的内容可导入。",
         "description": "Import preview note when every item would be skipped"

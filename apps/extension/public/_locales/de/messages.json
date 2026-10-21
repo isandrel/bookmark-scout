@@ -4261,6 +4261,14 @@
         "message": "Ignorierte ungültige Einträge: $1",
         "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
     },
+    "tools_importPreviewSeparators": {
+        "message": "Zu erstellende Trennlinien: $1",
+        "description": "Import preview count of Firefox separators the import creates; $1 is the count"
+    },
+    "tools_importPreviewSeparatorsUnsupported": {
+        "message": "Ausgelassene Trennlinien (dieser Browser hat keine): $1",
+        "description": "Import preview count of separators in the file that this browser (Chrome, Edge) cannot store; $1 is the count"
+    },
     "tools_importNothingToCreate": {
         "message": "Mit dieser Auswahl gibt es nichts Neues zu importieren.",
         "description": "Import preview note when every item would be skipped"

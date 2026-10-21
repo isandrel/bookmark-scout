@@ -163,6 +163,8 @@ describe('import plan (dry run)', () => {
       bookmarksToSkip: 0,
       foldersToSkip: 0,
       invalid: 1,
+      separatorsToCreate: 0,
+      separatorsUnsupported: 0,
       duplicatesInTarget: 2,
       duplicatesElsewhere: 2,
       duplicatesInFile: 1,

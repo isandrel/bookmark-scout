@@ -688,12 +688,16 @@ test('a tool run asks Firefox for its bookmarks’ site only, inside the declare
   expect(await origins()).not.toContain('https://*/*');
 });
 
-test('JSON export downloads the folder and importing it restores a deleted bookmark', async ({
+test('JSON export downloads the folder and importing it restores a deleted bookmark and separator', async ({
   extension,
 }, testInfo) => {
   const folder = await seedFolder(extension, 'E2E Firefox Data', [
     { title: 'Round Trip Link', url: 'https://e2e.invalid/round-trip' },
   ]);
+  // Firefox gives a separator the URL `data:`; it must stay a separator (L17).
+  await extension.call(async (browser, id) => {
+    await browser.bookmarks.create({ parentId: id, type: 'separator' });
+  }, folder.folderId);
   await setSettings(extension, { dataDefaultExportFormat: 'json' });
 
   await openTools(extension, folder.folderId);
@@ -712,10 +716,14 @@ test('JSON export downloads the folder and importing it restores a deleted bookm
     .toMatch(/^bookmarks_E2E_Firefox_Data_\d{4}-\d{2}-\d{2}\.json$/);
   const raw = readFileSync(path.join(extension.downloadDirectory, exportedName), 'utf8');
   expect(raw).toContain('Round Trip Link');
+  expect(raw).toContain('"type": "separator"');
+  expect(raw).not.toContain('data:');
 
   await extension.call(async (browser, id) => {
-    await browser.bookmarks.remove(id);
-  }, folder.ids['Round Trip Link']);
+    for (const child of await browser.bookmarks.getChildren(id)) {
+      await browser.bookmarks.remove(child.id);
+    }
+  }, folder.folderId);
   await expect.poll(() => childrenOf(extension, folder.folderId)).toEqual([]);
 
   const importFile = testInfo.outputPath('round-trip.json');
@@ -740,14 +748,17 @@ test('JSON export downloads the folder and importing it restores a deleted bookm
         const [tree] = await browser.bookmarks.getSubTree(id);
         return (tree.children ?? []).map((child) => ({
           title: child.title,
-          children: (child.children ?? []).map((item) => [item.title, item.url]),
+          children: (child.children ?? []).map((item) => [item.title, item.url, item.type]),
         }));
       }, folder.folderId),
     )
     .toEqual([
       {
         title: 'E2E Firefox Data',
-        children: [['Round Trip Link', 'https://e2e.invalid/round-trip']],
+        children: [
+          ['Round Trip Link', 'https://e2e.invalid/round-trip', 'bookmark'],
+          ['', 'data:', 'separator'],
+        ],
       },
     ]);
 });

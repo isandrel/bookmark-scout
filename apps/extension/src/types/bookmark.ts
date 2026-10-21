@@ -23,6 +23,11 @@ export interface BookmarkTreeNode {
    * on this device. With both kinds, there are two bookmarks bars.
    */
   syncing?: boolean;
+  /**
+   * Firefox separators (`lib/bookmark-separators.ts`). They keep the URL `data:` Firefox gives
+   * them, so code that tells folders by a missing URL never takes one for a folder.
+   */
+  type?: 'separator';
   /** Set when the browser forbids modifying this node, e.g. admin-managed bookmarks. */
   unmodifiable?: 'managed';
   /** UI-only flag marking a node whose title matched the active search query. */
