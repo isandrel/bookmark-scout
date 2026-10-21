@@ -79,7 +79,7 @@ export function escapeHtml(text: string): string {
 export const htmlFormat: ExportFormat = {
   nameKey: 'export_formatHtml',
   extension: 'html',
-  mimeType: 'text/html',
+  mimeType: MIME.html,
   serialize(root: BookmarkTreeNode, options?: ExportOptions): string {
     const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
     const indent = ' '.repeat(options?.htmlIndentSpaces ?? defaultSettings.exportHtmlIndentSpaces);
@@ -113,7 +113,7 @@ export const htmlFormat: ExportFormat = {
 <!-- This is an automatically generated file.
      It will be read and overwritten.
      DO NOT EDIT! -->
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<META HTTP-EQUIV="Content-Type" CONTENT=MIME.htmlUtf8>
 <TITLE>${htmlTitle}</TITLE>
 <H1>${htmlTitle}</H1>
 <DL><p>
@@ -128,7 +128,7 @@ ${content}</DL><p>
 export const jsonFormat: ExportFormat = {
   nameKey: 'export_formatJson',
   extension: 'json',
-  mimeType: 'application/json',
+  mimeType: MIME.json,
   serialize(root: BookmarkTreeNode, options?: ExportOptions): string {
     const indentSize = options?.jsonIndentSize ?? defaultSettings.exportJsonIndentSize;
     const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
@@ -205,7 +205,7 @@ function escapeMarkdownUrl(url: string): string {
 export const markdownFormat: ExportFormat = {
   nameKey: 'export_formatMarkdown',
   extension: 'md',
-  mimeType: 'text/markdown',
+  mimeType: MIME.markdown,
   urlsOptional: true,
   serialize(root: BookmarkTreeNode, options?: ExportOptions): string {
     const includeUrls = options?.includeUrls ?? defaultSettings.exportIncludeUrls;
@@ -258,7 +258,7 @@ const UTF8_BOM = '﻿';
 export const csvFormat: ExportFormat = {
   nameKey: 'export_formatCsv',
   extension: 'csv',
-  mimeType: 'text/csv;charset=utf-8',
+  mimeType: MIME.csvUtf8,
   urlsOptional: true,
   serialize(root: BookmarkTreeNode, options?: ExportOptions): string {
     const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;

@@ -7208,5 +7208,65 @@
     "history_part": {
         "message": "$1（第 $2 批，共 $3 批）",
         "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
+    },
+    "settings_helpFor": {
+        "message": "关于$1",
+        "description": "Settings: label of the button that shows more about a setting; $1 is the setting"
+    },
+    "settings_deadLinksConcurrencyHelp": {
+        "message": "同时检查的链接数量。越多完成越快，但有些网站会放慢或拒绝来自同一浏览器的大量同时请求；如果很多链接显示无法访问，请调低。",
+        "description": "Settings: more about the deadLinksConcurrency setting, in a toggletip"
+    },
+    "settings_deadLinksRequestTimeoutMsHelp": {
+        "message": "等待网站响应的时间。未能及时响应的链接会列为需手动检查，而不会判定为确认失效；较慢的网站需要更长时间。",
+        "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_deadLinksRetryCountHelp": {
+        "message": "失败的链接在报告前再尝试的次数。重试可排除短暂的网络波动；每多一次，检查失败链接的时间就更长。",
+        "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
+    },
+    "settings_deadLinksSuccessStatusesHelp": {
+        "message": "视为可访问的 HTTP 响应。200 表示页面已加载；301、302、307 和 308 是重定向。只有当你信任的网站返回某个代码时才添加它。",
+        "description": "Settings: more about the deadLinksSuccessStatuses setting, in a toggletip"
+    },
+    "settings_deadLinksFollowRedirectsHelp": {
+        "message": "开启后，会跟随重定向的链接到新地址并检查和显示，方便你更新书签。",
+        "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
+    },
+    "settings_metadataFetcherConcurrencyHelp": {
+        "message": "同时读取的页面数量。越多完成越快，但会给网站和你的网络带来更大负担。",
+        "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
+    },
+    "settings_metadataFetcherRequestTimeoutMsHelp": {
+        "message": "放弃一个页面前等待的时间。只读取每个页面的开头，所以大多数页面会远早于此响应。",
+        "description": "Settings: more about the metadataFetcherRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_duplicatesMatchStrategyHelp": {
+        "message": "两个书签何时算作相同：网址完全一致，或去掉很少有影响的差异后一致（www、http 或 https、末尾斜杠，按下方设置）。",
+        "description": "Settings: more about the duplicatesMatchStrategy setting, in a toggletip"
+    },
+    "settings_duplicatesKeepRuleHelp": {
+        "message": "移除重复项时保留哪一份。其他副本只有在你审阅后才会删除，并可在历史记录中恢复。",
+        "description": "Settings: more about the duplicatesKeepRule setting, in a toggletip"
+    },
+    "settings_reorganizationMinConfidenceHelp": {
+        "message": "AI 会给每项建议的移动打 0 到 100% 的分数。低于此值的移动不会放入方案：数值越高，移动越少但越可靠。",
+        "description": "Settings: more about the reorganizationMinConfidence setting, in a toggletip"
+    },
+    "settings_reorganizationBatchSizeHelp": {
+        "message": "一次 AI 请求包含的书签数量。批次越大请求越少，但会占用更多模型上下文；如果 AI 服务拒绝过长的请求，请调低。",
+        "description": "Settings: more about the reorganizationBatchSize setting, in a toggletip"
+    },
+    "settings_searchDelayHelp": {
+        "message": "你最后一次按键后，弹出窗口等待多久才开始搜索，避免每输入一个字母就搜索一次。书签较少时调低会感觉更快。",
+        "description": "Settings: more about the searchDelay setting, in a toggletip"
+    },
+    "settings_folderMatchesTyposHelp": {
+        "message": "也匹配名称与输入相差一两个字母的文件夹，这样小的拼写错误也能找到文件夹。",
+        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
+    },
+    "settings_jobsApplyInBackgroundAboveHelp": {
+        "message": "较大的更改在你关闭页面后仍会继续，每一批都可在历史记录中撤消。较小的更改会立即应用，可在通知中撤消。",
+        "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     }
 }

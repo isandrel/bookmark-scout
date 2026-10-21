@@ -105,7 +105,7 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
     downloadExport(
       buildAuditHistoryExport(records),
       `bookmark-scout-history-${date}.json`,
-      'application/json',
+      MIME.json,
     );
   };
 

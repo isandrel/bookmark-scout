@@ -183,8 +183,8 @@ async function writeSystemClipboard({ text, html }: { text: string; html: string
     try {
       await navigator.clipboard.write([
         new ClipboardItem({
-          'text/plain': new Blob([text], { type: 'text/plain' }),
-          'text/html': new Blob([html], { type: 'text/html' }),
+          [MIME.plainText]: new Blob([text], { type: MIME.plainText }),
+          [MIME.html]: new Blob([html], { type: MIME.html }),
         }),
       ]);
       return;

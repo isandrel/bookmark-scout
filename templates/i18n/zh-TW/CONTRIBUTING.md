@@ -1,4 +1,4 @@
-{# source: 100d02461807 #}
+{# source: c43b8d0cbafe #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 # 🤝 為 {{ site.name }} 做出貢獻
@@ -128,6 +128,8 @@ bun run build:edge
 ### Commit 訊息
 
 我們使用 [Conventional Commits](https://www.conventionalcommits.org/) 搭配 [Gitmoji](https://gitmoji.dev/)：
+
+`commit-msg` hook 與 **PR title** 檢查會強制採用此格式，允許的類型見 `config/commits.toml`。
 
 ```
 ✨ feat(scope): add new feature

@@ -138,6 +138,8 @@ bun run build:edge
 
 [Conventional Commits](https://www.conventionalcommits.org/) と [Gitmoji](https://gitmoji.dev/) を組み合わせて使います。
 
+`commit-msg` フックと **PR title** チェックがこの形式を確認します。使える種類は `config/commits.toml` にあります。
+
 ```
 ✨ feat(scope): add new feature
 🐛 fix(scope): fix bug description

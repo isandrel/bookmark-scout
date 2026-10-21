@@ -7434,5 +7434,65 @@
     "history_part": {
         "message": "$1 (part $2 of $3)",
         "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
+    },
+    "settings_helpFor": {
+        "message": "About $1",
+        "description": "Settings: label of the button that shows more about a setting; $1 is the setting"
+    },
+    "settings_deadLinksConcurrencyHelp": {
+        "message": "How many links are checked at the same time. More finishes sooner, but some sites slow down or refuse many requests at once from one browser; lower it if many links show as unreachable.",
+        "description": "Settings: more about the deadLinksConcurrency setting, in a toggletip"
+    },
+    "settings_deadLinksRequestTimeoutMsHelp": {
+        "message": "How long to wait for a site to answer. A link that does not answer in time is listed to check by hand, never as confirmed dead; slow sites need more time.",
+        "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_deadLinksRetryCountHelp": {
+        "message": "How many more times a link that failed is tried before it is reported. A retry rules out a brief network hiccup; each one makes a failing link take longer to check.",
+        "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
+    },
+    "settings_deadLinksSuccessStatusesHelp": {
+        "message": "HTTP answers that count as reachable. 200 means the page loaded; 301, 302, 307, and 308 are redirects. Add a code only when a site you trust answers with it.",
+        "description": "Settings: more about the deadLinksSuccessStatuses setting, in a toggletip"
+    },
+    "settings_deadLinksFollowRedirectsHelp": {
+        "message": "When on, a link that redirects is followed to its new address, which is checked and shown, so you can update the bookmark.",
+        "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
+    },
+    "settings_metadataFetcherConcurrencyHelp": {
+        "message": "How many pages are read at the same time. More finishes sooner but puts more load on the sites and your connection.",
+        "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
+    },
+    "settings_metadataFetcherRequestTimeoutMsHelp": {
+        "message": "How long to wait for a page before giving up on it. Only the start of each page is read, so most pages answer well within this.",
+        "description": "Settings: more about the metadataFetcherRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_duplicatesMatchStrategyHelp": {
+        "message": "How two bookmarks count as the same: by their exact address, or by an address with differences that rarely matter removed (www, http or https, a trailing slash, as set below).",
+        "description": "Settings: more about the duplicatesMatchStrategy setting, in a toggletip"
+    },
+    "settings_duplicatesKeepRuleHelp": {
+        "message": "Which copy stays when duplicates are removed. The others are deleted only after you review them, and can be restored from History.",
+        "description": "Settings: more about the duplicatesKeepRule setting, in a toggletip"
+    },
+    "settings_reorganizationMinConfidenceHelp": {
+        "message": "The AI rates each suggested move from 0 to 100%. Moves rated lower than this are left out of the plan: a higher value gives fewer but surer moves.",
+        "description": "Settings: more about the reorganizationMinConfidence setting, in a toggletip"
+    },
+    "settings_reorganizationBatchSizeHelp": {
+        "message": "How many bookmarks go into one AI request. Larger batches need fewer requests but more of the model's context; lower it if the AI service rejects long requests.",
+        "description": "Settings: more about the reorganizationBatchSize setting, in a toggletip"
+    },
+    "settings_searchDelayHelp": {
+        "message": "How long the popup waits after your last key press before it searches, so it does not search on every letter. Lower feels quicker on a small library.",
+        "description": "Settings: more about the searchDelay setting, in a toggletip"
+    },
+    "settings_folderMatchesTyposHelp": {
+        "message": "Also match folders whose names differ from what you typed by a letter or two, so a small typo still finds the folder.",
+        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
+    },
+    "settings_jobsApplyInBackgroundAboveHelp": {
+        "message": "Larger changes keep going if you close the page, and each part can be undone from History. Smaller ones apply at once, with Undo in the notification.",
+        "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     }
 }

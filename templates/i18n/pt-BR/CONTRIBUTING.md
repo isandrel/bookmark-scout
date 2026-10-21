@@ -1,4 +1,4 @@
-{# source: 100d02461807 #}
+{# source: c43b8d0cbafe #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 # 🤝 Como contribuir com o {{ site.name }}
@@ -128,6 +128,8 @@ bun run build:edge
 ### Mensagens de commit
 
 Usamos [Conventional Commits](https://www.conventionalcommits.org/) com [Gitmoji](https://gitmoji.dev/):
+
+O hook `commit-msg` e a verificação **PR title** exigem isso; os tipos permitidos estão em `config/commits.toml`.
 
 ```
 ✨ feat(scope): add new feature

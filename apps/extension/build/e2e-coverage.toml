@@ -1,0 +1,18 @@
+# End-to-end coverage: which source the Chromium suite runs in the extension's pages, measured
+# with V8 (monocart-coverage-reports) on a build with inline source maps. Read by
+# build/e2e-coverage.ts; run with `bun run test:e2e:coverage`.
+#
+# Only pages are measured (popup, side panel, manager, Options, and the others a test opens);
+# the background service worker is not, and a page a test closes itself before its context
+# closes is not either. Unit coverage is build/unit-coverage.toml.
+
+# The coverage build goes here, beside dist/, so the build the maintainer's browser loads from
+# dist/ is never replaced by it.
+out_dir = "dist-coverage"
+reports_directory = "coverage/e2e"
+# v8 for the browsable report, json-summary for the table, lcov for other tools.
+reporters = ["v8", "json-summary", "lcov", "console-summary"]
+# Source files counted, after the source maps are applied.
+include = ["src/**"]
+# Folders the summary table lists (scripts/coverage-summary.ts e2e).
+summary_folders = ["src/components/**", "src/hooks/**", "src/lib/**", "src/services/**", "src/stores/**"]

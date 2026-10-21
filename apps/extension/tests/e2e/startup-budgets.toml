@@ -26,13 +26,15 @@
 # Pragmatic drag and drop's drop indicator with its Compiled styles, auto-scroll, and live region),
 # then from 1125 for the Bookmark Audit History records and the View in History link in the shared
 # tool results (1,133 on 2026-10-20), then from 1150 for the seven settings that were config and
-# their explanatory tooltips (1,159 on 2026-10-21).
-"options.html" = 1170
+# their explanatory tooltips (1,159 on 2026-10-21), then from 1170 for the settings' help
+# toggletips (1,172 on 2026-10-21).
+"options.html" = 1185
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
 # then from 1410 for the job status and Background tasks dialog the header and Tools load (1,416).
-"bookmarks.html" = 1425
+# Raised from 1425 on 2026-10-21 for the agent text and media types now read from config (1,426).
+"bookmarks.html" = 1435
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -40,7 +42,9 @@
 "agent-approval.html" = 710
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
-"ai-host.html" = 380
+# Raised from 380 on 2026-10-21 for config/ai/agent-text.toml, which holds the answer schema text
+# the page sends (382).
+"ai-host.html" = 390
 # The welcome page opened once after install (516 on 2026-10-14).
 # Raised from 580 on 2026-10-21 for the tooltip provider every page now mounts at its root and
 # the config modules it reads (607).

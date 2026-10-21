@@ -138,6 +138,8 @@ bun run build:edge
 
 我們使用 [Conventional Commits](https://www.conventionalcommits.org/) 搭配 [Gitmoji](https://gitmoji.dev/)：
 
+`commit-msg` hook 與 **PR title** 檢查會強制採用此格式，允許的類型見 `config/commits.toml`。
+
 ```
 ✨ feat(scope): add new feature
 🐛 fix(scope): fix bug description

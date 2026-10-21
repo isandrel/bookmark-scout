@@ -3,7 +3,7 @@
  * own drag and drop so links come in from other pages and apps and go out to them:
  *
  * - Rows drag (the selection, when the row is in it) and so do folders in the tree, except the
- *   top-level ones. A drag carries the bookmarks' URLs (`text/uri-list`, plain text, and HTML
+ *   top-level ones. A drag carries the bookmarks' URLs (`MIME.uriList`, plain text, and HTML
  *   links) for other apps, and their ids for this page and other manager tabs.
  * - Drops on rows reorder (only while the table shows the folder in the browser's order) or go
  *   into a folder row; drops on the table's empty space go to the end of the folder shown; drops
@@ -33,7 +33,7 @@ type DragDropOptions = {
   table: RefObject<DataTableHandle<Bookmark> | null>;
 };
 
-const LINK_TYPES = ['text/uri-list', 'text/x-moz-url', 'text/plain'];
+const LINK_TYPES = [MIME.uriList, MIME.mozUrl, MIME.plainText];
 
 /**
  * What a screen reader hears after a drop moved `ids`: where one item went (its new position
@@ -95,9 +95,9 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
     const urls = movable.flatMap((item) => (item.url ? [item.url] : []));
     event.dataTransfer.effectAllowed = 'copyMove';
     event.dataTransfer.setData(MANAGER_DRAG_TYPE, JSON.stringify(ids));
-    if (urls.length > 0) event.dataTransfer.setData('text/uri-list', urls.join('\r\n'));
-    event.dataTransfer.setData('text/plain', text);
-    event.dataTransfer.setData('text/html', html);
+    if (urls.length > 0) event.dataTransfer.setData(MIME.uriList, urls.join('\r\n'));
+    event.dataTransfer.setData(MIME.plainText, text);
+    event.dataTransfer.setData(MIME.html, html);
   }, []);
 
   const endDrag = useCallback(() => {
@@ -167,10 +167,10 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
           return;
         }
         const links = parseDroppedLinks({
-          uriList: event.dataTransfer.getData('text/uri-list'),
-          mozUrl: event.dataTransfer.getData('text/x-moz-url'),
-          plain: event.dataTransfer.getData('text/plain'),
-          html: event.dataTransfer.getData('text/html'),
+          uriList: event.dataTransfer.getData(MIME.uriList),
+          mozUrl: event.dataTransfer.getData(MIME.mozUrl),
+          plain: event.dataTransfer.getData(MIME.plainText),
+          html: event.dataTransfer.getData(MIME.html),
         });
         // Text from another app can only be read on drop; say why nothing was added.
         if (links.length === 0) {

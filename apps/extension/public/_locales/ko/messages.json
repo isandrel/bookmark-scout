@@ -7406,5 +7406,65 @@
     "history_part": {
         "message": "$1 ($3개 중 $2번째 부분)",
         "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
+    },
+    "settings_helpFor": {
+        "message": "$1 정보",
+        "description": "Settings: label of the button that shows more about a setting; $1 is the setting"
+    },
+    "settings_deadLinksConcurrencyHelp": {
+        "message": "동시에 확인하는 링크 수입니다. 많을수록 빨리 끝나지만, 한 브라우저에서 오는 많은 동시 요청을 느리게 하거나 거부하는 사이트도 있습니다. 연결할 수 없는 링크가 많이 보이면 줄이세요.",
+        "description": "Settings: more about the deadLinksConcurrency setting, in a toggletip"
+    },
+    "settings_deadLinksRequestTimeoutMsHelp": {
+        "message": "사이트의 응답을 기다리는 시간입니다. 시간 안에 응답하지 않은 링크는 직접 확인할 항목으로 나열되며, 깨진 것으로 확정되지 않습니다. 느린 사이트에는 더 긴 시간이 필요합니다.",
+        "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_deadLinksRetryCountHelp": {
+        "message": "실패한 링크를 보고하기 전에 더 시도하는 횟수입니다. 재시도로 잠깐의 네트워크 문제를 배제할 수 있지만, 횟수마다 실패하는 링크의 확인이 길어집니다.",
+        "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
+    },
+    "settings_deadLinksSuccessStatusesHelp": {
+        "message": "연결된 것으로 보는 HTTP 응답입니다. 200은 페이지가 열렸다는 뜻이고 301, 302, 307, 308은 리디렉션입니다. 신뢰하는 사이트가 그 응답을 보낼 때만 코드를 추가하세요.",
+        "description": "Settings: more about the deadLinksSuccessStatuses setting, in a toggletip"
+    },
+    "settings_deadLinksFollowRedirectsHelp": {
+        "message": "켜면 리디렉션되는 링크를 새 주소까지 따라가 확인하고 보여 주므로 북마크를 업데이트할 수 있습니다.",
+        "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
+    },
+    "settings_metadataFetcherConcurrencyHelp": {
+        "message": "동시에 읽는 페이지 수입니다. 많을수록 빨리 끝나지만 사이트와 연결에 부담이 커집니다.",
+        "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
+    },
+    "settings_metadataFetcherRequestTimeoutMsHelp": {
+        "message": "페이지를 포기하기 전까지 기다리는 시간입니다. 각 페이지의 앞부분만 읽으므로 대부분의 페이지는 훨씬 빨리 응답합니다.",
+        "description": "Settings: more about the metadataFetcherRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_duplicatesMatchStrategyHelp": {
+        "message": "두 북마크를 같은 것으로 보는 기준입니다. 주소가 정확히 같을 때, 또는 별 의미 없는 차이(www, http와 https, 끝의 슬래시, 아래 설정에 따름)를 뺀 주소가 같을 때입니다.",
+        "description": "Settings: more about the duplicatesMatchStrategy setting, in a toggletip"
+    },
+    "settings_duplicatesKeepRuleHelp": {
+        "message": "중복을 제거할 때 남길 사본입니다. 나머지는 검토한 뒤에만 삭제되며 기록에서 복원할 수 있습니다.",
+        "description": "Settings: more about the duplicatesKeepRule setting, in a toggletip"
+    },
+    "settings_reorganizationMinConfidenceHelp": {
+        "message": "AI는 제안하는 이동마다 0~100%로 평가합니다. 이보다 낮은 이동은 계획에서 빠지므로, 값을 높이면 이동은 줄지만 더 확실해집니다.",
+        "description": "Settings: more about the reorganizationMinConfidence setting, in a toggletip"
+    },
+    "settings_reorganizationBatchSizeHelp": {
+        "message": "AI 요청 하나에 넣는 북마크 수입니다. 묶음이 클수록 요청은 줄지만 모델의 컨텍스트를 더 씁니다. AI 서비스가 긴 요청을 거부하면 줄이세요.",
+        "description": "Settings: more about the reorganizationBatchSize setting, in a toggletip"
+    },
+    "settings_searchDelayHelp": {
+        "message": "마지막 키 입력 뒤 팝업이 검색을 시작하기까지 기다리는 시간으로, 글자마다 검색하지 않게 합니다. 북마크가 적으면 짧을수록 빠르게 느껴집니다.",
+        "description": "Settings: more about the searchDelay setting, in a toggletip"
+    },
+    "settings_folderMatchesTyposHelp": {
+        "message": "입력한 것과 한두 글자 다른 이름의 폴더도 찾아, 작은 오타가 있어도 폴더를 찾습니다.",
+        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
+    },
+    "settings_jobsApplyInBackgroundAboveHelp": {
+        "message": "큰 변경은 페이지를 닫아도 계속되며, 각 부분은 기록에서 실행 취소할 수 있습니다. 작은 변경은 바로 적용되며 알림에서 실행 취소할 수 있습니다.",
+        "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     }
 }

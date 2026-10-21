@@ -1,0 +1,10 @@
+# Commit messages and pull request titles (squash merges make the title the commit on main):
+# an emoji, a Conventional Commits type, an optional (scope) and !, then ": " and a summary.
+# Example: "✨ feat(extension): run Check Dead Links as a background job".
+# Checked by scripts/check-commit-message.ts (the commit-msg hook and the PR title CI job).
+
+types = ["feat", "fix", "perf", "refactor", "style", "docs", "test", "build", "ci", "chore", "revert"]
+
+# Longest first line, in characters, not counting a " (#123)" a squash merge adds. The last 300
+# commits on main reached 148.
+max_header_length = 150
