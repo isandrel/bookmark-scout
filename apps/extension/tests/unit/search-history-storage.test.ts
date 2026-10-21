@@ -4,8 +4,9 @@ import {
   addSearchHistoryEntry,
   clearSearchHistory,
   getSearchHistory,
-  MAX_SEARCH_HISTORY_ENTRIES,
 } from '@/lib/search-history-storage';
+import { defaultSettings } from '@/lib/settings-schema';
+import { STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 describe('search history storage', () => {
   beforeEach(() => {
@@ -29,13 +30,20 @@ describe('search history storage', () => {
   });
 
   it('retains at most the configured number of entries', async () => {
-    for (let index = 0; index < MAX_SEARCH_HISTORY_ENTRIES + 3; index += 1) {
+    const max = defaultSettings.searchHistoryMax;
+    for (let index = 0; index < max + 3; index += 1) {
       await addSearchHistoryEntry(`query ${index}`);
     }
 
     const history = await getSearchHistory();
-    expect(history).toHaveLength(MAX_SEARCH_HISTORY_ENTRIES);
-    expect(history[0]).toBe(`query ${MAX_SEARCH_HISTORY_ENTRIES + 2}`);
+    expect(history).toHaveLength(max);
+    expect(history[0]).toBe(`query ${max + 2}`);
+  });
+
+  it('keeps as many as the Recent Searches Kept setting says', async () => {
+    await seedStored(STORAGE_ITEMS.settings, { searchHistoryMax: 2 });
+    for (const query of ['one', 'two', 'three']) await addSearchHistoryEntry(query);
+    expect(await getSearchHistory()).toEqual(['three', 'two']);
   });
 
   it('clears all entries and stays on local storage only', async () => {

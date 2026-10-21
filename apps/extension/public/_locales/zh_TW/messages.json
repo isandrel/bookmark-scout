@@ -6993,6 +6993,62 @@
         "message": "24 小時制",
         "description": "Time format option: 24-hour clock."
     },
+    "settings_openConfirmAbove": {
+        "message": "超過此數量時先確認",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "一次開啟的書籤多於此數量時先詢問；資料夾以其中直接包含的書籤計數",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "保留的最近搜尋",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "記住的最近搜尋數量",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "提供的其他資料夾",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "快速儲存通知提供多少個其他資料夾用於移動網頁",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "通知顯示時間",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "快速儲存通知自動關閉前顯示多久；指標停留時保持開啟",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "每個回答的最多步驟",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "詢問 AI 為一個回答最多呼叫模型幾次：越少越省錢，越多可以查得越深入",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "略過區域網路中的網頁",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "從不讀取區域網路中的網頁（例如路由器或內部網路），以免其內容傳送給 AI 公司",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "提示延遲",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "指標停留在控制項上多久後顯示說明",
+        "description": "Setting description: tooltipDelay"
+    },
     "error_jobStore": {
         "message": "無法在此裝置上儲存背景工作。",
         "description": "Error when the background job store cannot be opened or written"

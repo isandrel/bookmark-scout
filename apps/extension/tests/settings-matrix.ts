@@ -291,6 +291,9 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ],
     'Shortens the page title in the popup AI suggestions header and titles quoted in toasts.',
   ),
+  tooltipDelayMs: tested('components/ui/tooltip.tsx', [
+    e2e(SETTINGS_E2E, 'tooltip delay setting controls when a tooltip opens'),
+  ]),
   toastDurationMs: tested(
     'components/ui/toaster.tsx',
     [e2e(SETTINGS_E2E, 'toast duration setting controls how long popup toasts stay open')],
@@ -785,4 +788,39 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ),
   ]),
   dataDefaultExportFormat: tested(DATA_TOOLS, [exportPreferences]),
+
+  // Values that were config, now Settings
+  openConfirmAbove: tested('hooks/use-bookmark-opener.ts', [
+    e2e(
+      'bookmark-manager-keyboard.spec.ts',
+      'opening asks first above the Ask Before Opening More Than setting',
+    ),
+  ]),
+  searchHistoryMax: tested('lib/search-history-storage.ts', [
+    unit(
+      'search-history-storage.test.ts',
+      'keeps as many as the Recent Searches Kept setting says',
+    ),
+  ]),
+  quickSaveAlternatives: tested('services/quick-save.ts', [
+    unit(
+      'quick-save.test.ts',
+      'closes the notification and offers as many folders as the quick save settings say',
+    ),
+  ]),
+  quickSaveNotificationMs: tested('services/quick-save.ts', [
+    unit(
+      'quick-save.test.ts',
+      'closes the notification and offers as many folders as the quick save settings say',
+    ),
+  ]),
+  askAiMaxSteps: tested('services/ai-agent.ts', [
+    unit(
+      'ai-agent.test.ts',
+      'stops after as many model calls as the Most Steps per Answer setting',
+    ),
+  ]),
+  readPageSkipPrivateHosts: tested('services/page-reader.ts', [
+    unit('page-reader.test.ts', 'reads local network pages only with Skip Local Network Pages off'),
+  ]),
 };

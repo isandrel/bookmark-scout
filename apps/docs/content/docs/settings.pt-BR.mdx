@@ -46,6 +46,7 @@ Abaixo delas, **A IA é opcional** explica que o Bookmark Scout funciona sem IA;
 | **Máximo de resultados da pesquisa** | 20 resultados | Número máximo de correspondências mostradas; uma observação avisa quando há mais |
 | **Expandir pastas na pesquisa** | Ativado | Abre as pastas que contêm correspondências |
 | **Histórico de pesquisa** | Ativado | Lembra as pesquisas recentes neste dispositivo |
+| **Pesquisas recentes guardadas** | <SettingDefault path="search.search.history_max" /> | Quantas pesquisas recentes lembrar |
 
 Consulte [Pesquisa e pesquisas salvas](/guides/search).
 
@@ -65,6 +66,8 @@ Consulte [Salvar e organizar](/guides/save-and-organize).
 | --- | --- | --- |
 | **Pasta de salvamento rápido** | Melhor correspondência | Onde <Shortcut id="commands.quick-save" /> salva a página atual: na pasta que melhor corresponde a ela, na última pasta usada ou em uma pasta escolhida. O atalho de IA sempre usa a sugestão da IA |
 | **Pasta de destino** | Não escolhida | A pasta usada com **Pasta escolhida**. Se ela for excluída, o salvamento rápido usa a última pasta usada |
+| **Outras pastas oferecidas** | <SettingDefault path="search.quick_save.alternatives" /> | Quantas outras pastas a notificação do salvamento rápido oferece para mover a página |
+| **Duração da notificação** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | Quanto tempo a notificação do salvamento rápido fica antes de fechar; apontar para ela a mantém aberta |
 
 Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu navegador, com **Alterar atalhos**. No Firefox, você também pode digitar novas teclas ali mesmo e redefini-las para o padrão. No Chrome e no Edge, a seção também explica como atribuir <Shortcut id="browser.bookmark_page" /> ao salvamento rápido. Consulte [Salvar com um atalho de teclado](/guides/save-and-organize#quick-save) e [Usar a tecla de favoritos para salvar rapidamente](/guides/save-and-organize#ctrl-d).
 
@@ -107,6 +110,7 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Duração das notificações** | 4 s | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
+| **Atraso das dicas** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Quanto tempo o ponteiro fica sobre um controle antes de a explicação aparecer |
 
 ## Comportamento [#behavior]
 
@@ -123,6 +127,7 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Abrir links em** | Nova guia | **Nova guia**, **Nova guia em segundo plano** ou **Guia atual**: onde um link abre quando você clica nele no Bookmark Scout. O clique do meio e <Shortcut id="mouse.open_in_background" /> continuam funcionando como no seu navegador |
+| **Perguntar ao abrir mais de** | <SettingDefault path="behavior.links.confirm_open_above" /> | Abrir mais favoritos do que isso de uma vez (Enter, **Abrir todos**) pergunta antes, como o gerenciador do Chrome; uma pasta conta os favoritos diretamente dentro dela |
 
 ### Excluir [#deleting]
 
@@ -163,6 +168,7 @@ Abaixo delas, o painel do provedor contém **Chave de API**, **URL base**, **Mod
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Ler conteúdo da página** | Desativado | Envia o texto principal de cada página, e não só o título e o URL, para as recomendações de pasta, Tags automáticas e Gerador de resumos. Ao ativar, é pedido acesso aos sites |
+| **Pular páginas da rede local** | Ativado | Nunca ler páginas da sua rede local (como um roteador ou uma intranet), para que o conteúdo não chegue à sua empresa de IA |
 
 ### Idioma de saída da IA [#ai-output-language]
 
@@ -173,6 +179,12 @@ Abaixo delas, o painel do provedor contém **Chave de API**, **URL base**, **Mod
 ### Sobre mim [#about-me]
 
 **Sobre mim** (vazio por padrão) são algumas palavras sobre você, como “Sou professor; salvo material de aula”, com até 1.000 caracteres. Enquanto tiver texto, os prompts integrados de cada recurso de IA o enviam ao seu provedor de IA para adaptar os resultados; um prompt personalizado só o envia se usar `{{aboutMe}}`. Ele é sincronizado pela sua conta do navegador e salvo quando você sai do campo.
+
+### Perguntar à IA [#ask-ai]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Máximo de etapas por resposta** | <SettingDefault path="ai.ask_ai.max_steps" /> | Quantas vezes Perguntar à IA pode chamar o modelo para uma resposta: menos sai mais barato, mais permite pesquisar mais |
 
 ### O que Perguntar à IA pode fazer [#ask-ai-actions]
 

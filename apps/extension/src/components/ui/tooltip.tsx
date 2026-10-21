@@ -1,18 +1,13 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import * as React from 'react';
-import { z } from 'zod';
 
-const tooltipConfig = readConfig(
-  'ui/tooltips',
-  z.strictObject({ delay_ms: z.number().int().nonnegative() }),
-);
-
-/** Shares the open delay from config/ui/tooltips.toml with the tooltips inside it. */
-function TooltipProvider({
-  delay = tooltipConfig.delay_ms,
-  ...props
-}: TooltipPrimitive.Provider.Props) {
-  return <TooltipPrimitive.Provider delay={delay} {...props} />;
+/**
+ * Shares the open delay with the tooltips inside it: the Tooltip Delay setting, unless `delay`
+ * says otherwise. Every page has one at its root (`mountExtensionPage`).
+ */
+function TooltipProvider({ delay, ...props }: TooltipPrimitive.Provider.Props) {
+  const { value: setting } = useSetting('tooltipDelayMs');
+  return <TooltipPrimitive.Provider delay={delay ?? setting} {...props} />;
 }
 
 const Tooltip = TooltipPrimitive.Root;
@@ -41,6 +36,7 @@ const TooltipContent = React.forwardRef<
       >
         <TooltipPrimitive.Popup
           ref={ref}
+          data-slot="tooltip"
           className={cn(
             'z-50 overflow-hidden whitespace-normal break-words rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
             className,

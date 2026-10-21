@@ -25,6 +25,8 @@ expand_folders = true
 history = true
 # Delay in milliseconds before search starts after typing
 debounce_ms = { default = 300, min = 50, max = 1000, step = 50 }
+# Recent searches kept; older ones are dropped
+history_max = { default = 10, min = 1, max = 50, step = 1 }
 
 [saving]
 # Enable recent folders quick select panel
@@ -51,3 +53,9 @@ bookmark_naming = "link_text"
 folder_strategy = "best_match"
 # Bookmark id of the folder for "fixed"; empty until the user picks one in Options.
 fixed_folder = ""
+# How many other folders the notification offers to move the page to: without AI, the next best
+# matching folders; with AI, the other suggestions, up to Maximum Recommendations
+alternatives = { default = 3, min = 0, max = 8, step = 1 }
+# Milliseconds before the quick save notification closes on its own; hovering or focusing it
+# pauses the countdown, and "Saving…" stays until the save finishes
+notification_ms = { default = 8000, min = 2000, max = 60000, step = 1000 }

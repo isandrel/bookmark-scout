@@ -7191,6 +7191,62 @@
         "message": "24 時間制",
         "description": "Time format option: 24-hour clock."
     },
+    "settings_openConfirmAbove": {
+        "message": "確認する件数",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "この数より多いブックマークを一度に開くときは先に確認します。フォルダは直下のブックマークを数えます",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "保存する最近の検索",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "覚えておく最近の検索の数",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "提案するほかのフォルダ",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "クイック保存の通知が移動先として提案するほかのフォルダの数",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "通知の表示時間",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "クイック保存の通知が閉じるまでの時間。ポインタを合わせている間は開いたままです",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "1 回の回答の最大ステップ数",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "1 つの回答で AI に質問がモデルを呼び出せる回数。少ないほど安く、多いほど詳しく調べられます",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "ローカルネットワークのページを読まない",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "ローカルネットワーク上のページ（ルーターやイントラネットなど）は読まず、その内容が AI 企業に届かないようにします",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "ツールチップの表示までの時間",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "ポインタを操作部品の上に置いてから説明が表示されるまでの時間",
+        "description": "Setting description: tooltipDelay"
+    },
     "error_jobStore": {
         "message": "バックグラウンドのタスクをこのデバイスに保存できませんでした。",
         "description": "Error when the background job store cannot be opened or written"

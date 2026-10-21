@@ -11,8 +11,6 @@ max_chars_per_page = 3000
 max_pages_per_run = 40
 # Pages downloaded at the same time
 concurrency = 4
-# Never read pages on the local network, so intranet content does not reach a cloud provider
-skip_private_hosts = true
 # Host names ending in these labels count as local, in addition to private IP addresses
 private_host_suffixes = ["localhost", "local", "internal", "lan", "home.arpa"]
 # Elements dropped from the readable text: media and code cost tokens and say little about the topic

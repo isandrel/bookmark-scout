@@ -7211,6 +7211,62 @@
         "message": "24 horas",
         "description": "Time format option: 24-hour clock."
     },
+    "settings_openConfirmAbove": {
+        "message": "Preguntar al abrir más de",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "Abrir más marcadores que este número a la vez pregunta antes; una carpeta cuenta los marcadores que tiene directamente",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "Búsquedas recientes guardadas",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "Cuántas búsquedas recientes se recuerdan",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "Otras carpetas ofrecidas",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "Cuántas carpetas más ofrece la notificación del guardado rápido para mover la página",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "Duración de la notificación",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "Cuánto dura la notificación del guardado rápido antes de cerrarse; señalarla la mantiene abierta",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "Pasos máximos por respuesta",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "Cuántas veces puede Preguntar a la IA llamar al modelo para una respuesta: menos es más barato, más le permite buscar más",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "Omitir páginas de la red local",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "No leer nunca páginas de tu red local (como un router o una intranet), para que su contenido no llegue a una empresa de IA",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "Retraso de las sugerencias",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "Cuánto tiempo descansa el puntero sobre un control antes de que aparezca su explicación",
+        "description": "Setting description: tooltipDelay"
+    },
     "error_jobStore": {
         "message": "No se pudieron guardar las tareas en segundo plano en este dispositivo.",
         "description": "Error when the background job store cannot be opened or written"

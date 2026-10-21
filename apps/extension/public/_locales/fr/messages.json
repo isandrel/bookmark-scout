@@ -7211,6 +7211,62 @@
         "message": "24 heures",
         "description": "Time format option: 24-hour clock."
     },
+    "settings_openConfirmAbove": {
+        "message": "Demander au-delà de",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "Ouvrir plus de favoris que ce nombre à la fois demande d'abord ; un dossier compte les favoris qu'il contient directement",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "Recherches récentes conservées",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "Nombre de recherches récentes mémorisées",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "Autres dossiers proposés",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "Nombre d'autres dossiers proposés par la notification d'enregistrement rapide pour déplacer la page",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "Durée de la notification",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "Durée d'affichage de la notification d'enregistrement rapide avant sa fermeture ; la survoler la garde ouverte",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "Étapes maximales par réponse",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "Nombre de fois où Demander à l'IA peut appeler le modèle pour une réponse : moins coûte moins, plus lui permet de chercher plus loin",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "Ignorer les pages du réseau local",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "Ne jamais lire les pages de votre réseau local (comme un routeur ou un intranet), pour que leur contenu n'arrive pas chez une entreprise d'IA",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "Délai des infobulles",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "Temps pendant lequel le pointeur reste sur une commande avant que son explication s'affiche",
+        "description": "Setting description: tooltipDelay"
+    },
     "error_jobStore": {
         "message": "Impossible d'enregistrer les tâches en arrière-plan sur cet appareil.",
         "description": "Error when the background job store cannot be opened or written"

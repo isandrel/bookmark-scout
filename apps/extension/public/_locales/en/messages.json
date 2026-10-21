@@ -7211,6 +7211,62 @@
         "message": "24-hour",
         "description": "Time format option: 24-hour clock."
     },
+    "settings_openConfirmAbove": {
+        "message": "Ask Before Opening More Than",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "Opening more bookmarks than this at once asks first; a folder counts the bookmarks directly inside it",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "Recent Searches Kept",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "How many recent searches to remember",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "Other Folders Offered",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "How many other folders the quick save notification offers to move the page to",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "Notification Duration",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "How long the quick save notification stays before it closes; pointing at it keeps it open",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "Most Steps per Answer",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "How many times Ask AI may call the model for one answer: fewer keep it cheaper, more let it look further",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "Skip Local Network Pages",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "Never read pages on your local network (such as a router or an intranet), so their content does not reach an AI company",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "Tooltip Delay",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "How long the pointer rests on a control before its explanation appears",
+        "description": "Setting description: tooltipDelay"
+    },
     "error_jobStore": {
         "message": "Background tasks could not be saved on this device.",
         "description": "Error when the background job store cannot be opened or written"
