@@ -8,6 +8,8 @@ import {
   setLanguage,
 } from '@/hooks/use-i18n';
 import { DATE_FORMAT_IDS, TIME_FORMAT_IDS } from '@/lib/date-formats';
+// Hands the default formats to the date formatter, as every page does by reading settings.
+import '@/lib/settings-schema';
 import { readConfigToml } from '../config-files';
 
 const SAMPLE = new Date(2026, 8, 24, 15, 5, 49);
@@ -32,6 +34,8 @@ describe('Dates and Times settings', () => {
     setLanguage('en');
     setDateTimeFormat('iso', 'hours24');
     expect(formatDateTime(SAMPLE)).toBe('2026-09-24 15:05:49');
+    // Before 10 in the morning too: the 24-hour clock writes two digits (CI failed at 05:51).
+    expect(formatDateTime(new Date(2026, 8, 24, 5, 7, 9))).toBe('2026-09-24 05:07:09');
     expect(formatDay(SAMPLE)).toBe('2026-09-24');
     expect(formatTime(SAMPLE)).toBe('15:05');
 

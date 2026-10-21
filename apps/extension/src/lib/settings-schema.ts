@@ -1087,6 +1087,8 @@ export const settingsSchema = z.object(settingsShape).superRefine((value, ctx) =
 
 export type Settings = z.infer<typeof settingsSchema>;
 export const defaultSettings: Settings = settingsSchema.parse({});
+// Dates show in the default formats until the settings are read.
+setDefaultDateTimeFormat(defaultSettings.dateFormat, defaultSettings.timeFormat);
 
 /** Where a setting is stored: synced to every device, or kept on this one (`DEVICE_SETTING_KEYS`). */
 export type SettingScope = 'sync' | 'device';

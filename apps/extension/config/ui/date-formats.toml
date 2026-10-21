@@ -2,6 +2,15 @@
 # Times. Read by src/lib/date-formats.ts. Each format is a set of Intl.DateTimeFormat options in
 # snake_case, so a new one is a new table here plus its label message (`label`, in every
 # language). `locale` pins the order for a format that must not follow the extension's language.
+# The setting's default choice is in config/settings/appearance.toml.
+
+# The parts every time shows besides its hour (each time format sets `hour`); `second` only
+# where a date and time show together. A date written with `date_style` takes `time_style`
+# instead, which cannot be mixed with single parts.
+[time_parts]
+minute = "2-digit"
+second = "2-digit"
+time_style = "medium"
 
 [date_formats.auto]
 label = "settings_dateFormatAuto"
@@ -26,11 +35,15 @@ day = "2-digit"
 
 [time_formats.auto]
 label = "settings_timeFormatAuto"
+hour = "numeric"
 
 [time_formats.hours12]
 label = "settings_timeFormatHours12"
+hour = "numeric"
 hour_cycle = "h12"
 
 [time_formats.hours24]
 label = "settings_timeFormatHours24"
+# Two digits, so every time lines up (05:51, not 5:51).
+hour = "2-digit"
 hour_cycle = "h23"
