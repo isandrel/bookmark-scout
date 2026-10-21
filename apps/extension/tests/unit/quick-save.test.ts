@@ -18,6 +18,7 @@ import {
 } from '@/services/quick-save';
 import { chooseQuickSaveTarget } from '@/services/quick-save-target';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+import { auditRecords, resetAuditDatabase } from './audit-helpers';
 import { readStoredData, STORAGE_ITEMS } from './storage-helpers';
 
 let bookmarks: FakeBookmarks;
@@ -573,5 +574,22 @@ describe('the notification view', () => {
       lang: 'ja',
       dir: 'ltr',
     });
+  });
+});
+
+describe('quick saves in the History', () => {
+  it('records a quick save and its undo as quick save changes', async () => {
+    await resetAuditDatabase();
+    const record = await runQuickSave('quick-save', tab('https://react.dev/learn', 'React'));
+    expect(record.status).toBe('saved');
+    await undoQuickSave(record);
+    const [undo, save, ...others] = await auditRecords();
+    expect(others).toEqual([]);
+    expect(save).toMatchObject({
+      source: 'quick_save',
+      label: { action: 'add', title: 'React' },
+      state: 'verified_success',
+    });
+    expect(undo).toMatchObject({ source: 'quick_save', label: { action: 'delete' } });
   });
 });

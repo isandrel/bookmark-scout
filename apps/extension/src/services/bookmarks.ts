@@ -669,11 +669,15 @@ function matchesFields(node: Browser.bookmarks.BookmarkTreeNode, fields: Bookmar
  * Removes folders a change created, newest (innermost) first, only while they are still empty:
  * one the user or another change put something in since is kept. Best effort; never throws.
  */
-export async function removeEmptyFolders(ids: readonly string[]): Promise<void> {
+export async function removeEmptyFolders(
+  ids: readonly string[],
+  /** Removes one folder; a history writer's `remove` records it. */
+  remove: (id: string) => Promise<void> = deleteBookmark,
+): Promise<void> {
   for (const id of [...ids].reverse()) {
     const children = await getBookmarkChildren(id).catch(() => undefined);
     if (children?.length !== 0) continue;
-    await deleteBookmark(id).catch(() => undefined);
+    await remove(id).catch(() => undefined);
   }
 }
 
