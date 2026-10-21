@@ -64,6 +64,7 @@ const en = {
       mac: "{keys} on Mac",
       other: "{keys} on Windows and Linux",
       pair: "{primary} ({secondary})",
+      click: "click",
     },
   },
 

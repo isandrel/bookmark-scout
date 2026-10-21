@@ -1,4 +1,4 @@
-{# source: 4d963e58c520 #}
+{# source: 755c10623769 #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -37,6 +37,7 @@
 - ⚡ **Enregistrez avec un seul raccourci.** Appuyez sur {{ shortcuts["commands.quick-save"].both }} sur n'importe quelle page. Un petit message indique où la page a été enregistrée, avec **Annuler** et d'autres dossiers vers lesquels la déplacer.
 - 🔎 **Retrouvez tout ce que vous avez enregistré.** Recherchez dans tous vos favoris pendant la saisie, depuis la barre d'outils, le panneau latéral ou un gestionnaire de favoris en pleine page.
 - 🧹 **Faites le tri dans des années de favoris.** Supprimez les doublons, trouvez les liens qui ne fonctionnent plus et retirez les codes de suivi des adresses Web. Vous voyez chaque modification avant qu'elle ait lieu, et vous pouvez l'annuler.
+- 🕘 **Voyez chaque modification et récupérez ce que vous avez supprimé.** L'historique liste chaque modification de vos favoris, même celles faites hors de Bookmark Scout, et restaure ce qui a été supprimé, même après un redémarrage du navigateur. Il reste sur votre ordinateur.
 - ✨ **Des suggestions de l'IA, si vous le souhaitez.** Laissez l'IA choisir le dossier à votre place, avec votre propre compte d'IA ou un modèle d'IA gratuit sur votre ordinateur, comme celui intégré à Chrome. L'IA reste désactivée tant que vous ne l'activez pas.
 - 🔒 **Conçu pour protéger votre vie privée.** Aucun compte, aucune publicité, aucun suivi, et rien n'est envoyé au développeur. L'enregistrement et la recherche fonctionnent même hors connexion.
 

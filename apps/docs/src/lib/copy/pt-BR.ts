@@ -49,6 +49,7 @@ export const ptBR: DocsCopy = {
       mac: "{keys} no Mac",
       other: "{keys} no Windows e no Linux",
       pair: "{primary} ({secondary})",
+      click: "clique",
     },
   },
 

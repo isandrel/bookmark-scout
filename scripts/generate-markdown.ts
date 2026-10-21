@@ -34,6 +34,7 @@ import {
 	shortcutIds,
 	shortcutPlaceholderPair,
 	shortcutText,
+	withClickWord,
 	type Site,
 	site,
 } from "@bookmark-scout/config";
@@ -155,8 +156,8 @@ export function shortcutContext(config: ShortcutConfig, notes: ShortcutNotes): R
 				const other = text.other[index];
 				const entry: ShortcutEntry = {};
 				if (mac !== undefined && other !== undefined) entry.both = shortcutPlaceholderPair(config, key, notes);
-				if (mac !== undefined) entry.mac = mac;
-				if (other !== undefined) entry.other = other;
+				if (mac !== undefined) entry.mac = withClickWord(mac, notes);
+				if (other !== undefined) entry.other = withClickWord(other, notes);
 				return [key, entry] as const;
 			});
 		}),

@@ -2,7 +2,8 @@
   "shortcutNotes": {
     "mac": "{keys} on Mac",
     "other": "{keys} on Windows and Linux",
-    "pair": "{primary} ({secondary})"
+    "pair": "{primary} ({secondary})",
+    "click": "click"
   },
   "metadata": {
     "title": "Bookmark Scout – Save bookmarks to the right folder, fast",
@@ -137,7 +138,7 @@
           "Search all your bookmarks as you type",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search, and it always shows the current results",
-          "Select rows with Shift and Ctrl, right-click for cut, copy, paste, and open all, and drag bookmarks and folders where they belong",
+          "Select several rows with {{SHORTCUT:mouse.select_toggle}}, right-click for cut, copy, paste, and open all, and drag bookmarks and folders where they belong",
           "Undo and redo changes with {{SHORTCUT:manager.undo}} and {{SHORTCUT:manager.redo}}, even after a reload",
           "Import bookmarks from a file after a preview, and export them as HTML, JSON, Markdown, or CSV",
           "Link to a folder or a search, and move through it all with the keyboard"
@@ -154,7 +155,8 @@
           "Find dead links and repair them: delete, use the redirect, point to an archived copy, or edit the URL",
           "Fetch page titles and apply only the ones you pick",
           "Download each site's own icon, so bookmarks show it even in Firefox",
-          "Undo deletions and cleanups from the message that follows"
+          "Undo deletions and cleanups from the message that follows",
+          "See every change to your bookmarks in the History, even ones made outside Bookmark Scout, and get deleted ones back, even after the browser restarts"
         ]
       },
       "ai": {

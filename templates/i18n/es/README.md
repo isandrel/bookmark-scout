@@ -1,4 +1,4 @@
-{# source: 4d963e58c520 #}
+{# source: 755c10623769 #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -37,6 +37,7 @@
 - ⚡ **Guarda con un solo atajo.** Pulsa {{ shortcuts["commands.quick-save"].both }} en cualquier página. Un pequeño mensaje indica dónde se guardó la página, con **Deshacer** y otras carpetas a las que moverla.
 - 🔎 **Encuentra todo lo que guardaste.** Busca en todos tus marcadores mientras escribes, desde la barra de herramientas, el panel lateral o un administrador de marcadores a página completa.
 - 🧹 **Ordena años de marcadores.** Quita los duplicados, encuentra los enlaces que ya no funcionan y elimina los códigos de seguimiento de las direcciones web. Ves cada cambio antes de que se haga y puedes deshacerlo.
+- 🕘 **Ve cada cambio y recupera lo que borraste.** El historial muestra cada cambio en tus marcadores, también los hechos fuera de Bookmark Scout, y recupera lo eliminado, incluso después de reiniciar el navegador. Se queda en tu ordenador.
 - ✨ **Sugerencias de IA opcionales.** Deja que la IA elija la carpeta por ti, con tu propia cuenta de IA o con un modelo de IA gratuito en tu propio equipo, como el que viene integrado en Chrome. La IA está desactivada hasta que la activas.
 - 🔒 **Privacidad desde el diseño.** Sin cuenta, sin anuncios, sin seguimiento, y no se envía nada al desarrollador. Guardar y buscar funcionan incluso sin conexión.
 

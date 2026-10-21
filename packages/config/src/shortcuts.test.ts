@@ -35,6 +35,7 @@ const config: ShortcutConfig = {
 		],
 		delete: [{ key: "Delete" }, { key: "Backspace", mod: true, platform: "mac" }],
 	},
+	mouse: { toggle: [{ key: "click", mod: true }], range: [{ key: "click", shift: true }] },
 };
 
 describe("shortcuts config", () => {
@@ -75,6 +76,17 @@ describe("shortcutText", () => {
 	it("tells keys that are the same everywhere apart", () => {
 		expect(isSameOnEveryPlatform(shortcutText(config, "popup.focus_search"))).toBe(true);
 		expect(isSameOnEveryPlatform(shortcutText(config, "commands.quick-save"))).toBe(false);
+	});
+
+	it("names mouse gestures as each platform does, the click in the reader's language", () => {
+		expect(shortcutText(config, "mouse.toggle")).toEqual({ other: ["Ctrl+{click}"], mac: ["⌘-{click}"] });
+		const japanese = { mac: "Mac の {keys}", other: "Windows と Linux の {keys}", pair: "{primary}（{secondary}）", click: "クリック" };
+		expect(fillShortcutPlaceholders("{{SHORTCUT:mouse.range}}", config, japanese)).toBe(
+			"Mac の ⇧-クリック（Windows と Linux の Shift+クリック）",
+		);
+		expect(() =>
+			parseShortcutConfig({ ...config, mouse: { wheel: [{ key: "scroll" }] } }),
+		).toThrow(/mouse\.wheel\[0\]\.key: must be one of click/);
 	});
 
 	it("throws for an id the config does not define", () => {
@@ -119,7 +131,7 @@ describe("text that names both platforms", () => {
 	});
 
 	it("words both platforms from one language's labels, primary first", () => {
-		const english = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})" };
+		const english = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})", click: "click" };
 		expect(shortcutNoteText(english, ["mac", "other"])).toEqual({
 			before: "",
 			middle: " on Mac (",
@@ -130,7 +142,7 @@ describe("text that names both platforms", () => {
 			middle: " on Windows and Linux (",
 			after: " on Mac)",
 		});
-		const japanese = { mac: "Mac の {keys}", other: "Windows と Linux の {keys}", pair: "{primary}（{secondary}）" };
+		const japanese = { mac: "Mac の {keys}", other: "Windows と Linux の {keys}", pair: "{primary}（{secondary}）", click: "クリック" };
 		expect(shortcutNoteText(japanese, ["mac", "other"])).toEqual({
 			before: "Mac の ",
 			middle: "（Windows と Linux の ",
@@ -139,7 +151,7 @@ describe("text that names both platforms", () => {
 	});
 
 	it("rejects notes without each placeholder once, in order", () => {
-		const notes = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})" };
+		const notes = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})", click: "click" };
 		expect(parseShortcutNotes(notes, "en.json")).toEqual(notes);
 		expect(() => parseShortcutNotes({ ...notes, mac: "on Mac" }, "en.json")).toThrow(/en\.json: .*\{keys\} once/);
 		expect(() => parseShortcutNotes({ ...notes, pair: "{secondary} ({primary})" }, "en.json")).toThrow(/\{secondary\} once/);
@@ -148,7 +160,7 @@ describe("text that names both platforms", () => {
 });
 
 describe("fillShortcutPlaceholders", () => {
-	const format = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})" };
+	const format = { mac: "{keys} on Mac", other: "{keys} on Windows and Linux", pair: "{primary} ({secondary})", click: "click" };
 
 	it("names both platforms, primary first, with the other in parentheses", () => {
 		expect(fillShortcutPlaceholders("Press {{SHORTCUT:commands.quick-save}} now", config, format)).toBe(

@@ -51,6 +51,7 @@ export const ja: DocsCopy = {
       mac: "Mac の {keys}",
       other: "Windows と Linux の {keys}",
       pair: "{primary}（{secondary}）",
+      click: "クリック",
     },
   },
 
