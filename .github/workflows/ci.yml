@@ -285,6 +285,12 @@ jobs:
             bunx playwright install --with-deps msedge
           fi
           microsoft-edge --version
+          # The first launch on a fresh runner sets up caches and once took over a minute, so the
+          # first test of each worker timed out while starting the browser; start it once here.
+          profile="$(mktemp -d)"
+          timeout 120 microsoft-edge --headless=new --no-first-run --user-data-dir="$profile" \
+            --dump-dom about:blank > /dev/null || true
+          rm -rf "$profile"
 
       - name: Run browser test shard ${{ matrix.shard }} in Edge
         run: bunx nx run extension:test:e2e:edge -- --shard=${{ matrix.shard }}/${{ strategy.job-total }}

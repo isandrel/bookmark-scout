@@ -498,19 +498,21 @@ test('undoing single deletions out of order restores the original order', async 
   }
   await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toEqual(['Order D']);
 
+  // The toasts restack as each Undo closes one, so a pointer click can land on the toast that
+  // moved under it; this test is about the order, so it clicks the button itself.
   const undo = (title: string) =>
     page
       .locator('ol > li')
       .filter({ hasText: `Deleted "${title}". Undo within 10 seconds.` })
       .getByRole('button', { name: 'Undo', exact: true })
-      .click();
+      .dispatchEvent('click');
+  const shown = () => expect.poll(() => childTitles(extensionWorker, seeded.folderId));
   await undo('Order B');
-  await expect
-    .poll(() => childTitles(extensionWorker, seeded.folderId))
-    .toEqual(['Order B', 'Order D']);
+  await shown().toEqual(['Order B', 'Order D']);
   await undo('Order C');
+  await shown().toEqual(['Order B', 'Order C', 'Order D']);
   await undo('Order A');
-  await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toEqual(titles);
+  await shown().toEqual(titles);
 });
 
 test('Back returns to the table page that was open', async ({

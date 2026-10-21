@@ -63,8 +63,9 @@ export type ManagerRowCommands = {
   deleteRows: (rows: Bookmark[]) => void;
   renameRow: (row: Bookmark) => void;
   openRows: (rows: Bookmark[], target: BookmarkOpenTarget) => void;
-  undo: () => void;
-  redo: () => void;
+  /** `repeat`: the key is held down (a repeated keydown). */
+  undo: (repeat?: boolean) => void;
+  redo: (repeat?: boolean) => void;
 };
 
 export type ManagerShortcutOptions = {
@@ -163,10 +164,10 @@ export function useManagerShortcuts(options: ManagerShortcutOptions) {
           case 'openInNewWindow':
             return runRowCommand(action, rows(), commands);
           case 'undo':
-            commands.undo();
+            commands.undo(event.repeat);
             return true;
           case 'redo':
-            commands.redo();
+            commands.redo(event.repeat);
             return true;
         }
       })();

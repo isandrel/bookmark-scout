@@ -208,4 +208,19 @@ describe('changes made outside Bookmark Scout', () => {
     const [record] = await auditRecords();
     expect(record).toMatchObject({ source: 'reconciliation', observedSince: 1_000 });
   });
+
+  it('keeps a change made while paused in the gap when recording is on again by its turn (X16)', async () => {
+    await fakeBrowser.bookmarks.update('a', { title: 'While paused' });
+    // The event arrived while paused; recording was turned on again before it was handled.
+    await handleBookmarkEvent(
+      { type: 'changed', id: 'a', title: 'While paused' },
+      2_000,
+      Promise.resolve(false),
+    );
+    expect(await auditRecords()).toEqual([]);
+    await reconcileBookmarks({ force: true, now: 3_000 });
+    const [record, ...others] = await auditRecords();
+    expect(others).toEqual([]);
+    expect(record).toMatchObject({ source: 'reconciliation', observedSince: 1_000 });
+  });
 });

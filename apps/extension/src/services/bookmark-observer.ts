@@ -148,14 +148,22 @@ async function touchMeta(now: number): Promise<void> {
   if (meta) await writeMeta({ ...meta, lastSeenAt: now });
 }
 
-/** Handles one browser event: updates the baseline and records a change from elsewhere. */
-export async function handleBookmarkEvent(event: ObservedEvent, now = Date.now()): Promise<void> {
+/**
+ * Handles one browser event: updates the baseline and records a change from elsewhere.
+ * `recording` is whether recording was on when the event arrived (read then, since events wait
+ * their turn and the setting can change meanwhile).
+ */
+export async function handleBookmarkEvent(
+  event: ObservedEvent,
+  now = Date.now(),
+  recording: Promise<boolean> = isRecording(),
+): Promise<void> {
   if (event.type === 'reconcile') {
     await reconcileBookmarks({ force: event.force, now });
     return;
   }
   // Paused: the baseline stays as it was, so turning recording on again shows the difference.
-  if (!(await isRecording())) return;
+  if (!(await recording)) return;
   // No baseline yet (the first start has not compared): nothing to say what came before.
   if (!(await readMeta())) return;
   const db = await openAuditDatabase();
@@ -426,8 +434,11 @@ let importing = false;
 /** Handles events one at a time, in the order the browser sent them; a failure skips one. */
 function enqueue(event: ObservedEvent): void {
   if (importing && event.type !== 'reconcile') return;
+  // A change made while recording was paused stays in the gap, even if recording is turned on
+  // again before its turn comes.
+  const recording = isRecording();
   queue = queue
-    .then(() => handleBookmarkEvent(event))
+    .then(() => handleBookmarkEvent(event, Date.now(), recording))
     .catch((error: unknown) => console.error('[Observer] Bookmark event not recorded:', error));
 }
 
