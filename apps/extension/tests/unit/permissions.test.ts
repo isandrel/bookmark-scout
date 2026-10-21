@@ -93,11 +93,19 @@ describe('permission catalog', () => {
 
   it('builds the manifests and the Firefox declaration from the same table', () => {
     expect(getManifestApiPermissions('chrome')).toEqual({
-      permissions: ['bookmarks', 'storage', 'activeTab', 'sidePanel', 'scripting', 'offscreen'],
+      permissions: [
+        'bookmarks',
+        'storage',
+        'activeTab',
+        'sidePanel',
+        'scripting',
+        'offscreen',
+        'alarms',
+      ],
       optional: ['tabs', 'favicon', 'contextMenus', 'nativeMessaging'],
     });
     expect(getManifestApiPermissions('firefox')).toEqual({
-      permissions: ['bookmarks', 'storage', 'activeTab', 'scripting', 'contextMenus'],
+      permissions: ['bookmarks', 'storage', 'activeTab', 'scripting', 'alarms', 'contextMenus'],
       optional: ['tabs', 'nativeMessaging'],
     });
     expect(getFirefoxDataCollectionPermissions()).toEqual({

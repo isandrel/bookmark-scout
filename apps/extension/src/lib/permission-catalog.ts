@@ -32,6 +32,9 @@ export const API_PERMISSIONS = {
   // No warning. AI quick save runs the AI request and page reading in an offscreen document,
   // because a service worker cannot load the AI SDK or parse HTML. Firefox's background is a page.
   offscreen: { chrome: 'required', edge: 'required' },
+  // No warning. Wakes the background to pick up a background job again after the browser
+  // stopped its worker (`services/job-coordinator.ts`).
+  alarms: { chrome: 'required', edge: 'required', firefox: 'required' },
   tabs: { chrome: 'optional', edge: 'optional', firefox: 'optional' },
   favicon: { chrome: 'optional', edge: 'optional' },
   contextMenus: { chrome: 'optional', edge: 'optional', firefox: 'required' },

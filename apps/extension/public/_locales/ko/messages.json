@@ -7190,5 +7190,101 @@
     "settings_timeFormatHours24": {
         "message": "24시간제",
         "description": "Time format option: 24-hour clock."
+    },
+    "error_jobStore": {
+        "message": "이 기기에 백그라운드 작업을 저장하지 못했습니다.",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "백그라운드 작업",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "오래 걸리는 도구는 시작한 페이지를 닫아도 여기서 계속됩니다.",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "아직 백그라운드 작업이 없습니다.",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "백그라운드 작업: $1개 실행 중",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "대기 중",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "실행 중",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "일시 중지하는 중…",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "일시 중지됨",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "중지하는 중…",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "중지됨",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "완료",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "완료, 일부는 확인하지 못함",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "실패",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$2개 중 $1개",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "$1개 확인, $2개 건너뜀, $3개 확인 못 함",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "브라우저가 열려 있는 동안 계속되고, 다시 시작한 뒤에도 이어서 진행합니다.",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "중지됨. 지금까지의 결과는 남아 있고, 바뀐 것은 없습니다.",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "결과 보기",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "일시 중지",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "다시 시작",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "백그라운드 작업을 변경하지 못했습니다",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1: $2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "백그라운드 작업: $1개 실행 중",
+        "description": "Background tasks: popupMany"
     }
 }

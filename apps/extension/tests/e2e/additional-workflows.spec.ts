@@ -334,6 +334,7 @@ test('[mocked provider contract] summarizer surfaces a route-mocked provider err
 });
 
 test('dead-link checker reports mocked reachable and missing URLs', async ({
+  context,
   extensionId,
   extensionWorker,
   page,
@@ -344,7 +345,8 @@ test('dead-link checker reports mocked reachable and missing URLs', async ({
   ]);
   await setSettings(extensionWorker, { deadLinksRetryCount: 0 });
   const requested: string[] = [];
-  await page.route('https://e2e.invalid/**', async (route) => {
+  // The check runs as a background job, so its requests come from the service worker.
+  await context.route('https://e2e.invalid/**', async (route) => {
     requested.push(`${route.request().method()} ${route.request().url()}`);
     await route.fulfill({
       status: route.request().url().endsWith('/ok') ? 200 : 404,
@@ -445,6 +447,7 @@ test('metadata fetcher previews mocked page metadata without changing bookmarks'
 });
 
 test('network tools report route-mocked transport failures without mutating bookmarks', async ({
+  context,
   extensionId,
   extensionWorker,
   page,
@@ -454,7 +457,8 @@ test('network tools report route-mocked transport failures without mutating book
   ]);
   await setSettings(extensionWorker, { deadLinksRetryCount: 1 });
   const requests: string[] = [];
-  await page.route('https://e2e.invalid/offline', async (route) => {
+  // The check runs as a background job, so its requests come from the service worker.
+  await context.route('https://e2e.invalid/offline', async (route) => {
     requests.push(route.request().method());
     await route.abort('failed');
   });

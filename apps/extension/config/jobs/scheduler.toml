@@ -1,0 +1,23 @@
+# Background jobs: long tools that keep running when the page that started them closes
+# (src/services/job-coordinator.ts), and the store that keeps their progress and results on this
+# device (src/lib/job-store.ts).
+
+# A slice is the work done before the coordinator saves and checks for other work; the next slice
+# starts right away while work remains. Results are saved one item at a time either way.
+slice_max_items = { value = 100, min = 1, max = 1000 }
+slice_max_ms = { value = 20_000, min = 1000, max = 25_000 }
+
+# While a job can run, an alarm wakes the background this often (minutes) to pick it up again
+# after the browser stopped the background worker. Chrome's shortest packed alarm is 0.5.
+watchdog_minutes = { value = 1, min = 0.5, max = 60 }
+
+# Finished jobs are kept this many days, and at most this many; jobs that are running, paused,
+# or waiting for review are never removed on their own.
+retention_days = { value = 30, min = 1, max = 365 }
+max_finished_jobs = { value = 50, min = 1, max = 1000 }
+
+# Most bookmarks one job may hold.
+max_items = { value = 50_000, min = 1, max = 200_000 }
+
+# Results a view reads at a time.
+page_size = { value = 200, min = 10, max = 2000 }

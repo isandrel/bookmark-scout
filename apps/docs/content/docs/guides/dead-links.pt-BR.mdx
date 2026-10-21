@@ -25,6 +25,16 @@ Aguarde os resultados. Um resumo no topo conta os links quebrados confirmados, o
 
 O acesso aos sites é opcional e não é concedido na instalação. As solicitações são enviadas sem cookies, e você pode revogar o acesso nas configurações de extensões do navegador. Um link que redireciona para um site fora da verificação não pode ser seguido, então ele aparece como **Verificar manualmente** em vez de **Quebrado (confirmado)**. Consulte [Permissões](/permissions).
 
+## Deixar rodar em segundo plano [#let-it-run-in-the-background]
+
+A verificação roda em segundo plano. Você pode fechar o gerenciador, o pop-up ou o painel lateral, e ela continua enquanto o navegador estiver aberto; se o navegador parar o segundo plano da extensão ou reiniciar, ela retoma a partir dos links já verificados. Enquanto roda, o pop-up e o painel lateral mostram o progresso em uma linha, que abre **Tarefas em segundo plano** no gerenciador.
+
+- **Pausar** interrompe novas solicitações, e **Retomar** verifica só os links ainda não verificados. Uma verificação pausada continua pausada depois de reiniciar.
+- **Cancelar** interrompe a verificação e mantém os resultados até ali. Nenhum favorito é alterado.
+- **Ver resultados** abre os resultados a qualquer momento, e **Excluir** remove uma verificação concluída. As verificações concluídas são removidas sozinhas depois de um tempo.
+
+Os reparos nunca acontecem em segundo plano: você os revisa e aplica como explicado abaixo.
+
 ## Entender os resultados [#read-the-results]
 
 | Resultado | O que significa |

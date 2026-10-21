@@ -7210,5 +7210,101 @@
     "settings_timeFormatHours24": {
         "message": "24 heures",
         "description": "Time format option: 24-hour clock."
+    },
+    "error_jobStore": {
+        "message": "Impossible d'enregistrer les tâches en arrière-plan sur cet appareil.",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "Tâches en arrière-plan",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "Les outils longs continuent ici quand vous fermez la page qui les a lancés.",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "Aucune tâche en arrière-plan pour l'instant.",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "Tâches en arrière-plan : $1 en cours",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "En attente",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "En cours",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "Mise en pause…",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "En pause",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "Arrêt…",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "Arrêtée",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "Terminée",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "Terminée, certains n'ont pas pu être vérifiés",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "Échec",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$1 sur $2",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "$1 vérifiés, $2 ignorés, $3 non vérifiables",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "Continue tant que le navigateur est ouvert, et reprend après un redémarrage.",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "Arrêtée. Les résultats obtenus sont conservés ; rien n'a été modifié.",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "Voir les résultats",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "Mettre en pause",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "Reprendre",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "Impossible de modifier la tâche en arrière-plan",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1 : $2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "Tâches en arrière-plan : $1 en cours",
+        "description": "Background tasks: popupMany"
     }
 }

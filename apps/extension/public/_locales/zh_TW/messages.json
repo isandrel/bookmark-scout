@@ -6992,5 +6992,101 @@
     "settings_timeFormatHours24": {
         "message": "24 小時制",
         "description": "Time format option: 24-hour clock."
+    },
+    "error_jobStore": {
+        "message": "無法在此裝置上儲存背景工作。",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "背景工作",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "耗時較長的工具在你關閉啟動它們的頁面後，會在這裡繼續執行。",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "還沒有背景工作。",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "背景工作：$1 個正在執行",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "等待中",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "執行中",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "正在暫停…",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "已暫停",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "正在停止…",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "已停止",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "已完成",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "已完成，部分無法檢查",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "失敗",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$1 / $2",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "已檢查 $1 個，略過 $2 個，無法檢查 $3 個",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "瀏覽器開啟期間會持續執行，重新啟動後會繼續。",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "已停止。目前的結果已保留，沒有做任何變更。",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "查看結果",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "暫停",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "繼續",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "無法變更背景工作",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1：$2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "背景工作：$1 個正在執行",
+        "description": "Background tasks: popupMany"
     }
 }

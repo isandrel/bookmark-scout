@@ -39,6 +39,7 @@ describe('manifest config', () => {
         'sidePanel',
         'scripting',
         'offscreen',
+        'alarms',
       ]);
       expect(manifest.optional_permissions).toEqual([
         'tabs',
@@ -55,6 +56,7 @@ describe('manifest config', () => {
       'storage',
       'activeTab',
       'scripting',
+      'alarms',
       'contextMenus',
     ]);
     expect(firefox.optional_permissions).toEqual(['tabs', 'nativeMessaging']);
@@ -73,6 +75,7 @@ describe('manifest config', () => {
         'sidePanel',
         'scripting',
         'offscreen',
+        'alarms',
         'contextMenus',
       ];
       const manifest = createManifest({ browser }) as Browser.runtime.Manifest & {

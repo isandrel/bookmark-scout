@@ -7190,5 +7190,101 @@
     "settings_timeFormatHours24": {
         "message": "24 時間制",
         "description": "Time format option: 24-hour clock."
+    },
+    "error_jobStore": {
+        "message": "バックグラウンドのタスクをこのデバイスに保存できませんでした。",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "バックグラウンドのタスク",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "時間のかかるツールは、開始したページを閉じてもここで続きます。",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "バックグラウンドのタスクはまだありません。",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "バックグラウンドのタスク: $1 件実行中",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "待機中",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "実行中",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "一時停止中…",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "一時停止",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "停止中…",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "停止しました",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "完了",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "完了（確認できなかったものがあります）",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "失敗",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$2 件中 $1 件",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "確認 $1 件、スキップ $2 件、確認できず $3 件",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "ブラウザが開いている間は続き、再起動後も再開します。",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "停止しました。ここまでの結果は残っています。何も変更していません。",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "結果を見る",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "一時停止",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "再開",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "バックグラウンドのタスクを変更できませんでした",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1: $2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "バックグラウンドのタスク: $1 件実行中",
+        "description": "Background tasks: popupMany"
     }
 }

@@ -6992,5 +6992,101 @@
     "settings_timeFormatHours24": {
         "message": "24 小时制",
         "description": "Time format option: 24-hour clock."
+    },
+    "error_jobStore": {
+        "message": "无法在此设备上保存后台任务。",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "后台任务",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "耗时较长的工具在你关闭启动它们的页面后，会在这里继续运行。",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "还没有后台任务。",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "后台任务：$1 个正在运行",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "等待中",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "运行中",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "正在暂停…",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "已暂停",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "正在停止…",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "已停止",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "已完成",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "已完成，部分无法检查",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "失败",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$1 / $2",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "已检查 $1 个，跳过 $2 个，无法检查 $3 个",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "浏览器打开期间会持续运行，重启后会继续。",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "已停止。目前的结果已保留，没有做任何更改。",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "查看结果",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "暂停",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "继续",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "无法更改后台任务",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1：$2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "后台任务：$1 个正在运行",
+        "description": "Background tasks: popupMany"
     }
 }

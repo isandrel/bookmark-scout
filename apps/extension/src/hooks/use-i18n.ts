@@ -325,6 +325,15 @@ export function formatKilobytes(bytes: number): string {
   return `${value} ${t('unit_kb')}`;
 }
 
+/** A count in the extension's language, with its digit grouping ("1,234", "1.234"). */
+export function formatNumber(value: number): string {
+  try {
+    return new Intl.NumberFormat(getFormattingLocale()).format(value);
+  } catch {
+    return new Intl.NumberFormat().format(value);
+  }
+}
+
 /** A 0–1 ratio as a whole percentage in the extension's language, e.g. "85%". */
 export function formatPercent(ratio: number): string {
   const options: Intl.NumberFormatOptions = { style: 'percent', maximumFractionDigits: 0 };

@@ -198,6 +198,17 @@ class RequestTimeoutError extends Error {
   }
 }
 
+/**
+ * The caller stopped the request (a paused or cancelled job): never a finding about the link,
+ * never retried, and never classified as a timeout or network failure.
+ */
+export class RequestAbortedError extends Error {
+  constructor() {
+    super('Request stopped');
+    this.name = 'RequestAbortedError';
+  }
+}
+
 const WEB_URL_PROTOCOLS: ReadonlySet<string> = new Set(['http:', 'https:']);
 
 /** Only web URLs are requested; bookmarklets, data:, and browser-internal URLs are skipped. */
@@ -230,6 +241,7 @@ export async function classifyFailure(
   error: unknown,
   url: string,
   timeoutMs: number,
+  signal?: AbortSignal,
 ): Promise<NetworkErrorKind> {
   if (error instanceof RequestTimeoutError) return 'timeout';
   try {
@@ -238,9 +250,12 @@ export async function classifyFailure(
       { method: 'GET', redirect: 'manual' },
       timeoutMs,
       async (response) => response.type === 'opaqueredirect',
+      undefined,
+      signal,
     );
     return redirected ? 'redirect' : 'network';
-  } catch {
+  } catch (classifyError) {
+    if (classifyError instanceof RequestAbortedError) throw classifyError;
     return 'network';
   }
 }
@@ -254,7 +269,11 @@ type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'>;
  * fetch's `redirect: 'manual'` yields an opaque response that hides both the status and the
  * Location header, which previously surfaced as "HTTP 0".
  */
-async function probeUrl(url: string, timeoutMs: number): Promise<ProbeResult> {
+async function probeUrl(
+  url: string,
+  timeoutMs: number,
+  signal?: AbortSignal,
+): Promise<ProbeResult> {
   const summarize = async ({ status, redirected, url: finalUrl }: Response) => ({
     status,
     redirected,
@@ -265,81 +284,107 @@ async function probeUrl(url: string, timeoutMs: number): Promise<ProbeResult> {
     { method: 'HEAD', redirect: 'follow' },
     timeoutMs,
     summarize,
+    undefined,
+    signal,
   );
   if (!isHttpErrorStatus(head.status)) {
     return head;
   }
-  return requestWithTimeout(url, { method: 'GET', redirect: 'follow' }, timeoutMs, summarize);
+  return requestWithTimeout(
+    url,
+    { method: 'GET', redirect: 'follow' },
+    timeoutMs,
+    summarize,
+    undefined,
+    signal,
+  );
+}
+
+/** One bookmark to check: what a dead-link result reports about it. */
+export type DeadLinkTarget = Pick<DeadLinkResultItem, 'id' | 'title' | 'url' | 'folderPath'>;
+
+/**
+ * Checks one bookmark's link. With `signal` aborted it throws {@link RequestAbortedError} at the
+ * next request or retry, so a stopped check is never reported as a dead link.
+ */
+export async function checkDeadLink(
+  base: DeadLinkTarget,
+  options: DeadLinkOptions,
+  signal?: AbortSignal,
+): Promise<DeadLinkResultItem> {
+  const { url } = base;
+  try {
+    new URL(url);
+  } catch {
+    return { ...base, status: 'invalid' };
+  }
+  if (!isWebUrl(url)) {
+    return { ...base, status: 'skipped' };
+  }
+  const successStatuses = new Set(options.successStatuses);
+
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= options.retryCount; attempt += 1) {
+    if (signal?.aborted) throw new RequestAbortedError();
+    try {
+      const response = await probeUrl(url, options.requestTimeoutMs, signal);
+      const redirectUrl = response.redirected ? response.url : undefined;
+      let status: DeadLinkStatus;
+      if (redirectUrl && !options.followRedirects) {
+        // Redirects are findings rather than successes when "follow redirects" is off.
+        status = 'redirect';
+      } else if (successStatuses.has(response.status)) {
+        status = redirectUrl ? 'redirect' : 'ok';
+      } else {
+        status = 'error';
+      }
+      return {
+        ...base,
+        status,
+        statusCode: response.status,
+        ...(redirectUrl ? { redirectUrl } : {}),
+        ...(status === 'error' ? { category: classifyHttpFailure(response.status) } : {}),
+      };
+    } catch (error) {
+      if (error instanceof RequestAbortedError) throw error;
+      lastError = error;
+    }
+  }
+
+  const errorKind = await classifyFailure(lastError, url, options.requestTimeoutMs, signal);
+  const category =
+    errorKind === 'redirect' && options.allSitesAccess === false
+      ? 'redirectElsewhere'
+      : TRANSPORT_FAILURE_CATEGORIES[errorKind];
+  return {
+    ...base,
+    status: errorKind === 'timeout' ? 'timeout' : 'error',
+    errorKind,
+    category,
+  };
+}
+
+/** The bookmarks a dead-link check reads in `nodes`, as targets, in tree order. */
+export function deadLinkTargets(nodes: BookmarkTreeNode[]): DeadLinkTarget[] {
+  return flattenBookmarks(nodes)
+    .filter((bookmark) => Boolean(bookmark.node.url))
+    .map((bookmark) => ({
+      id: bookmark.node.id,
+      title: bookmark.node.title,
+      url: bookmark.node.url ?? '',
+      folderPath: bookmark.pathLabel,
+    }));
 }
 
 export async function scanDeadLinks(
   nodes: BookmarkTreeNode[],
   options: DeadLinkOptions,
 ): Promise<DeadLinkScanResult> {
-  const bookmarks = flattenBookmarks(nodes).filter((bookmark) => Boolean(bookmark.node.url));
-  const successStatuses = new Set(options.successStatuses);
-
-  const items = await mapWithConcurrency(bookmarks, options.concurrency, async (bookmark) => {
-    const url = bookmark.node.url ?? '';
-    const base = {
-      id: bookmark.node.id,
-      title: bookmark.node.title,
-      url,
-      folderPath: bookmark.pathLabel,
-    };
-
-    try {
-      new URL(url);
-    } catch {
-      return { ...base, status: 'invalid' } satisfies DeadLinkResultItem;
-    }
-    if (!isWebUrl(url)) {
-      return { ...base, status: 'skipped' } satisfies DeadLinkResultItem;
-    }
-
-    let lastError: unknown;
-    for (let attempt = 0; attempt <= options.retryCount; attempt += 1) {
-      try {
-        const response = await probeUrl(url, options.requestTimeoutMs);
-        const redirectUrl = response.redirected ? response.url : undefined;
-        let status: DeadLinkStatus;
-        if (redirectUrl && !options.followRedirects) {
-          // Redirects are findings rather than successes when "follow redirects" is off.
-          status = 'redirect';
-        } else if (successStatuses.has(response.status)) {
-          status = redirectUrl ? 'redirect' : 'ok';
-        } else {
-          status = 'error';
-        }
-        return {
-          ...base,
-          status,
-          statusCode: response.status,
-          ...(redirectUrl ? { redirectUrl } : {}),
-          ...(status === 'error' ? { category: classifyHttpFailure(response.status) } : {}),
-        } satisfies DeadLinkResultItem;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-
-    const errorKind = await classifyFailure(lastError, url, options.requestTimeoutMs);
-    const category =
-      errorKind === 'redirect' && options.allSitesAccess === false
-        ? 'redirectElsewhere'
-        : TRANSPORT_FAILURE_CATEGORIES[errorKind];
-    return {
-      ...base,
-      status: errorKind === 'timeout' ? 'timeout' : 'error',
-      errorKind,
-      category,
-    } satisfies DeadLinkResultItem;
-  });
-
-  return {
-    scannedBookmarks: bookmarks.length,
-    items,
-  };
+  const targets = deadLinkTargets(nodes);
+  const items = await mapWithConcurrency(targets, options.concurrency, (target) =>
+    checkDeadLink(target, options),
+  );
+  return { scannedBookmarks: targets.length, items };
 }
 
 const CHARSET_PATTERN = /charset\s*=\s*["']?([A-Za-z0-9_\-:.]+)/i;
@@ -638,9 +683,14 @@ export async function requestWithTimeout<T>(
   timeoutMs: number,
   consume: (response: Response) => Promise<T>,
   fetch: typeof globalThis.fetch = globalThis.fetch,
+  signal?: AbortSignal,
 ): Promise<T> {
+  if (signal?.aborted) throw new RequestAbortedError();
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  // The caller's stop aborts the same request, and is told apart from the timeout below.
+  const stop = () => controller.abort();
+  signal?.addEventListener('abort', stop, { once: true });
   let response: Response | undefined;
 
   try {
@@ -652,12 +702,14 @@ export async function requestWithTimeout<T>(
     });
     return await consume(response);
   } catch (error) {
+    if (signal?.aborted) throw new RequestAbortedError();
     if (controller.signal.aborted) {
       throw new RequestTimeoutError();
     }
     throw error;
   } finally {
     clearTimeout(timeoutId);
+    signal?.removeEventListener('abort', stop);
     if (response?.body && !response.body.locked) {
       response.body.cancel().catch(() => undefined);
     }

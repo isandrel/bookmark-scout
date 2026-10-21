@@ -25,6 +25,16 @@ Attendez les résultats. Un résumé en haut indique le nombre de liens morts co
 
 L'accès aux sites Web est facultatif et n'est pas accordé à l'installation. Les requêtes sont envoyées sans cookies, et vous pouvez révoquer cet accès dans les paramètres des extensions du navigateur. Un lien qui redirige vers un site extérieur à l'analyse ne peut pas être suivi : il s'affiche donc comme **À vérifier manuellement** au lieu de **Lien mort confirmé**. Consultez [Autorisations](/permissions).
 
+## La laisser tourner en arrière-plan [#let-it-run-in-the-background]
+
+La vérification s'exécute en arrière-plan. Vous pouvez fermer le gestionnaire, la fenêtre contextuelle ou le panneau latéral : elle continue tant que le navigateur est ouvert ; si le navigateur arrête l'arrière-plan de l'extension ou redémarre, elle reprend à partir des liens déjà vérifiés. Pendant qu'elle tourne, la fenêtre contextuelle et le panneau latéral affichent sa progression sur une ligne, qui ouvre **Tâches en arrière-plan** dans le gestionnaire.
+
+- **Mettre en pause** arrête les nouvelles requêtes, et **Reprendre** ne vérifie que les liens pas encore vérifiés. Une vérification en pause le reste après un redémarrage.
+- **Annuler** arrête la vérification et garde les résultats obtenus. Aucun favori n'est modifié.
+- **Voir les résultats** ouvre les résultats à tout moment, et **Supprimer** retire une vérification terminée. Les vérifications terminées sont retirées d'elles-mêmes au bout d'un certain temps.
+
+Les réparations ne se font jamais en arrière-plan : vous les examinez et les appliquez comme expliqué ci-dessous.
+
 ## Lire les résultats [#read-the-results]
 
 | Résultat | Signification |

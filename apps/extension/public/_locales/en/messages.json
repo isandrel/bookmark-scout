@@ -7210,5 +7210,101 @@
     "settings_timeFormatHours24": {
         "message": "24-hour",
         "description": "Time format option: 24-hour clock."
+    },
+    "error_jobStore": {
+        "message": "Background tasks could not be saved on this device.",
+        "description": "Error when the background job store cannot be opened or written"
+    },
+    "jobs_title": {
+        "message": "Background tasks",
+        "description": "Background tasks: title"
+    },
+    "jobs_description": {
+        "message": "Long tools keep running here when you close the page that started them.",
+        "description": "Background tasks: description"
+    },
+    "jobs_empty": {
+        "message": "No background tasks yet.",
+        "description": "Background tasks: empty"
+    },
+    "jobs_buttonRunning": {
+        "message": "Background tasks: $1 running",
+        "description": "Background tasks: buttonRunning"
+    },
+    "jobs_stateQueued": {
+        "message": "Waiting",
+        "description": "Background tasks: stateQueued"
+    },
+    "jobs_stateRunning": {
+        "message": "Running",
+        "description": "Background tasks: stateRunning"
+    },
+    "jobs_statePausing": {
+        "message": "Pausing…",
+        "description": "Background tasks: statePausing"
+    },
+    "jobs_statePaused": {
+        "message": "Paused",
+        "description": "Background tasks: statePaused"
+    },
+    "jobs_stateCancelling": {
+        "message": "Stopping…",
+        "description": "Background tasks: stateCancelling"
+    },
+    "jobs_stateCancelled": {
+        "message": "Stopped",
+        "description": "Background tasks: stateCancelled"
+    },
+    "jobs_stateSucceeded": {
+        "message": "Done",
+        "description": "Background tasks: stateSucceeded"
+    },
+    "jobs_statePartial": {
+        "message": "Done, some could not be checked",
+        "description": "Background tasks: statePartial"
+    },
+    "jobs_stateFailed": {
+        "message": "Failed",
+        "description": "Background tasks: stateFailed"
+    },
+    "jobs_progress": {
+        "message": "$1 of $2",
+        "description": "Background tasks: progress"
+    },
+    "jobs_counts": {
+        "message": "$1 checked, $2 skipped, $3 could not be checked",
+        "description": "Background tasks: counts"
+    },
+    "jobs_runsNote": {
+        "message": "Keeps running while the browser is open, and picks up again after a restart.",
+        "description": "Background tasks: runsNote"
+    },
+    "jobs_cancelledNote": {
+        "message": "Stopped. The results so far are kept; nothing was changed.",
+        "description": "Background tasks: cancelledNote"
+    },
+    "jobs_review": {
+        "message": "Review results",
+        "description": "Background tasks: review"
+    },
+    "jobs_pause": {
+        "message": "Pause",
+        "description": "Background tasks: pause"
+    },
+    "jobs_resume": {
+        "message": "Resume",
+        "description": "Background tasks: resume"
+    },
+    "jobs_commandFailed": {
+        "message": "The background task could not be changed",
+        "description": "Background tasks: commandFailed"
+    },
+    "jobs_popupOne": {
+        "message": "$1: $2",
+        "description": "Background tasks: popupOne"
+    },
+    "jobs_popupMany": {
+        "message": "Background tasks: $1 running",
+        "description": "Background tasks: popupMany"
     }
 }

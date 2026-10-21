@@ -64,6 +64,22 @@ for (const width of [600, 420]) {
     ]);
     await page.goto(managerUrl(extensionId, seeded.folderId));
     await expect(breadcrumbCurrent(page)).toHaveText('E2E Narrow');
+    // A background task adds the Background tasks button, the most the header holds.
+    await page.evaluate(
+      (folderId) =>
+        chrome.runtime.sendMessage({
+          type: 'bookmark-scout:job-command',
+          command: {
+            type: 'start',
+            commandId: crypto.randomUUID(),
+            kind: 'deadLinks',
+            source: 'manager',
+            scope: { mode: 'folder', folderId },
+          },
+        }),
+      seeded.folderId,
+    );
+    await expect(page.getByTestId('tasks-button')).toBeVisible();
     await page.mouse.move(0, 0);
 
     // The folder sidebar starts closed and takes no room from the table.

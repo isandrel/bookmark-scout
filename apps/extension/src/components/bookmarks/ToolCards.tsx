@@ -18,6 +18,8 @@ type ToolCardProps = {
   controls?: React.ReactNode;
   /** Explains why the tool cannot run right now (for example, AI is turned off). */
   notice?: string;
+  /** Shown under the action button, such as the tool's background job. */
+  footer?: React.ReactNode;
 };
 
 function resolveScope(
@@ -42,6 +44,7 @@ export function ToolCard({
   currentFolderName,
   controls,
   notice,
+  footer,
 }: ToolCardProps) {
   const resolvedDefault = resolveScope(scopeCapability, defaultScope);
   const [selection, setSelection] = useState<{
@@ -117,6 +120,7 @@ export function ToolCard({
           {isLoading ? t('tools_running') : buttonLabel}
         </Button>
       </div>
+      {footer}
     </div>
   );
 }

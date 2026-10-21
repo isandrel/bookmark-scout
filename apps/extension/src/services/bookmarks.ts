@@ -880,6 +880,17 @@ export async function openBookmarkManager(): Promise<void> {
  */
 export const MANAGER_EXPORT_HASH = 'export-bookmarks';
 
+/** Hash that opens the manager's Background tasks, which the popup links to. */
+export const MANAGER_TASKS_HASH = 'tasks';
+
+/** Opens the manager on its Background tasks (`MANAGER_TASKS_HASH`). */
+export async function openBackgroundTasks(): Promise<void> {
+  await browser.tabs.create({
+    url: browser.runtime.getURL(`${BOOKMARK_MANAGER_PATH}#${MANAGER_TASKS_HASH}`),
+    active: true,
+  });
+}
+
 /** Opens the manager with the Tools sidebar on its Export Bookmarks card (`MANAGER_EXPORT_HASH`). */
 export async function openBookmarkExport(): Promise<void> {
   await browser.tabs.create({
