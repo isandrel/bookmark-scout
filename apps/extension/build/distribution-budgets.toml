@@ -75,27 +75,32 @@
 # config, the root tooltip provider, and the browser profile config.
 # Locales raised on 2026-10-21 (1,280,000 to 1,290,000) for seven settings that were config (their
 # labels and descriptions in 9 languages): 1,283,868 B measured.
+# Raised on 2026-10-21 (ZIP 1,700,000 to 1,720,000, uncompressed 5,450,000 to 5,480,000, javascript
+# 3,590,000 to 3,625,000, locales 1,290,000 to 1,305,000) for background jobs: the job store, the
+# coordinator in the background, the job status and Background tasks UI, and their messages in 9
+# languages. Firefox measured ZIP 1,711,048, 5,467,976 B uncompressed, 3,612,808 B of JavaScript,
+# and 1,297,198 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_700_000
-raw_bytes = 5_450_000
+zip_bytes = 1_720_000
+raw_bytes = 5_480_000
 
 [targets.edge]
-zip_bytes = 1_700_000
-raw_bytes = 5_450_000
+zip_bytes = 1_720_000
+raw_bytes = 5_480_000
 
 [targets.firefox]
-zip_bytes = 1_700_000
-raw_bytes = 5_450_000
+zip_bytes = 1_720_000
+raw_bytes = 5_480_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_590_000
+javascript = 3_625_000
 css = 84_000
 fonts = 143_000
-locales = 1_290_000
+locales = 1_305_000
 images = 320_000
 other = 27_000
