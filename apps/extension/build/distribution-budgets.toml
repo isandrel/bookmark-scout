@@ -85,19 +85,21 @@
 # (the reorganization module in the background and AI host page, why a job paused in 9
 # languages). Firefox measured ZIP 1,723,758, 5,503,288 B uncompressed, 3,640,388 B of
 # JavaScript, and 1,304,930 B of locales.
+# Uncompressed raised again on 2026-10-21 (5,520,000 to 5,540,000) for applying reviewed changes as
+# a background task (the setting and its messages in 9 languages). Firefox measured 5,522,092 B.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_740_000
-raw_bytes = 5_520_000
+raw_bytes = 5_540_000
 
 [targets.edge]
 zip_bytes = 1_740_000
-raw_bytes = 5_520_000
+raw_bytes = 5_540_000
 
 [targets.firefox]
 zip_bytes = 1_740_000
-raw_bytes = 5_520_000
+raw_bytes = 5_540_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:

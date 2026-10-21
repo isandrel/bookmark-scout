@@ -22,7 +22,7 @@ import {
   mockChatCompletionBody,
   seedMockCustomProvider,
 } from './ai-provider-mock';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { managerUrl } from './manager-helpers';
 import { removeTempDir } from './temp-dirs';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
@@ -535,6 +535,46 @@ test('AI Folder Reorganization pauses with the reason when the service fails, an
   const review = page.getByRole('dialog', { name: 'AI Folder Reorganization' });
   await expect(review.getByText('New folders: 1', { exact: true })).toBeVisible();
   expect(requests).toBe(3);
+});
+
+test('reviewed changes above the Apply in the Background Above setting are applied as a background task, one History record a part (J46)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedReorganization(extensionWorker, 'Apply Folder');
+  await setSettings(extensionWorker, { jobsApplyInBackgroundAbove: 1 });
+  await context.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: MOCK_PROVIDER_CORS_HEADERS });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: MOCK_PROVIDER_CORS_HEADERS,
+      body: sortedAnswer(route, 'Apply Folder'),
+    });
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'AI Folder Reorganization').getByRole('button', { name: 'Analyze' }).click();
+  const review = page.getByRole('dialog', { name: 'AI Folder Reorganization' });
+  await review.getByRole('button', { name: 'Apply Changes' }).click();
+  await expect(
+    toastRegion(page).getByText('✓ Applying in the background', { exact: true }),
+  ).toBeVisible();
+  await expect
+    .poll(async () => (await latestJob(extensionWorker, 'applyChanges'))?.state)
+    .toBe('succeeded');
+  await expect.poll(() => childTitles(extensionWorker, folderId)).toEqual(['Sorted']);
+
+  // The part is one change in the History, by the tool, marked as a part.
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Bookmark history' }).click();
+  const history = page.getByTestId('history-dialog');
+  await expect(history.getByTestId('history-record-label').first()).toContainText('(part 1 of 1)');
 });
 
 async function launch(userDataDir: string, extensionPath: string, channel: string) {

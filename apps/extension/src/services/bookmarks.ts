@@ -708,8 +708,47 @@ async function resolveMoveTarget(
 export type ApplyBookmarkChangesOptions = {
   /** The title message key of the Tools sidebar tool applying them, for the undo history. */
   tool?: string;
+  /** A background task applying a larger change in parts: its id and this part. */
+  part?: { jobId: string; index: number; of: number };
   now?: number;
 };
+
+const bookmarkFieldsSchema = z.strictObject({
+  title: z.string().optional(),
+  url: z.string().optional(),
+});
+
+/**
+ * A reviewed change a background task can keep and apply later: a `BookmarkChange` without
+ * `check`, which is code and cannot be stored. Changes that need one apply in the page.
+ */
+export const storedBookmarkChangeSchema = z.discriminatedUnion('kind', [
+  z.strictObject({
+    id: z.string().min(1),
+    title: z.string(),
+    expect: bookmarkFieldsSchema.extend({ parentId: z.string().optional() }).optional(),
+    kind: z.literal('update'),
+    set: bookmarkFieldsSchema,
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    title: z.string(),
+    expect: bookmarkFieldsSchema.extend({ parentId: z.string().optional() }).optional(),
+    kind: z.literal('move'),
+    to: z.strictObject({
+      parentId: z.string().min(1),
+      createPath: z.array(z.string()).optional(),
+    }),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    title: z.string(),
+    expect: bookmarkFieldsSchema.extend({ parentId: z.string().optional() }).optional(),
+    kind: z.literal('remove'),
+    undoable: z.boolean().optional(),
+  }),
+]) satisfies z.ZodType<BookmarkChange>;
+export type StoredBookmarkChange = z.infer<typeof storedBookmarkChangeSchema>;
 
 /**
  * Writes reviewed changes one by one, in order, re-checking each against the live bookmark
@@ -719,7 +758,7 @@ export type ApplyBookmarkChangesOptions = {
  */
 export async function applyBookmarkChanges(
   changes: readonly BookmarkChange[],
-  { tool, now = Date.now() }: ApplyBookmarkChangesOptions = {},
+  { tool, part, now = Date.now() }: ApplyBookmarkChangesOptions = {},
 ): Promise<BookmarkChangesResult> {
   const issues: BookmarkChangeIssue[] = [];
   const applied: BookmarkChange[] = [];
@@ -728,7 +767,10 @@ export async function applyBookmarkChanges(
   const moveTargets = new Map<string, Promise<string>>();
 
   const { recorded } = await recordBookmarkWrites(
-    () => changesLabel(applied, tool),
+    () => ({
+      ...changesLabel(applied, tool),
+      ...(part ? { part: { index: part.index, of: part.of } } : {}),
+    }),
     async (writer) => {
       for (const change of changes) {
         const live = await getLiveBookmark(change.id);
@@ -766,6 +808,7 @@ export async function applyBookmarkChanges(
     {
       // Nothing is removed without a record of what went.
       required: changes.some((change) => change.kind === 'remove'),
+      ...(part ? { jobId: part.jobId } : {}),
       report: () => ({
         skipped: issues.map((issue) => ({ ...issue, failed: issue.reason === 'failed' })),
       }),

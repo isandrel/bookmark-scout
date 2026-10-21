@@ -3,16 +3,34 @@
  * estimated. No React here.
  */
 
-/** The tool title each kind of job shows. */
-const JOB_TITLE_KEYS: Record<JobKind, MessageKey> = {
+/** The tool title each kind of scan job shows. */
+const JOB_TITLE_KEYS: Record<ScanJobKind, MessageKey> = {
   deadLinks: 'tools_checkDeadLinks',
   metadataFetcher: 'tools_metadataFetcher',
   siteIcons: 'tools_siteIcons',
   reorganization: 'tools_aiReorganize',
 };
 
-export function jobTitle(job: Pick<JobRecord, 'kind'>): string {
-  return t(JOB_TITLE_KEYS[job.kind]);
+/** The tool whose reviewed changes an `applyChanges` job applies (its title key). */
+function appliedTool(job: Pick<JobRecord, 'options'>): string {
+  return applyJobOptionsSchema.parse(job.options).tool;
+}
+
+export function jobTitle(job: Pick<JobRecord, 'kind' | 'options'>): string {
+  return job.kind === 'applyChanges'
+    ? t('jobs_applyTitle', t(appliedTool(job)))
+    : t(JOB_TITLE_KEYS[job.kind]);
+}
+
+/** What one kind of job counts: links checked, or changes applied. */
+export function jobCountsLabel(job: Pick<JobRecord, 'kind' | 'done'>): string {
+  const counts = [job.done.succeeded, job.done.skipped, job.done.failed].map(formatCount);
+  return t(job.kind === 'applyChanges' ? 'jobs_countsApply' : 'jobs_counts', counts);
+}
+
+/** What a stopped job kept: scan results, or the changes already made. */
+export function jobCancelledNote(job: Pick<JobRecord, 'kind'>): string {
+  return t(job.kind === 'applyChanges' ? 'jobs_cancelledApplyNote' : 'jobs_cancelledNote');
 }
 
 const STATE_KEYS: Record<JobState, MessageKey> = {
@@ -31,8 +49,9 @@ export function jobStateLabel(state: JobState): string {
   return t(STATE_KEYS[state]);
 }
 
-/** Where the job runs: all bookmarks, or the folder it was started on. */
-export function jobScopeLabel(job: Pick<JobRecord, 'scope'>): string {
+/** Where the job runs: all bookmarks, the folder it was started on, or how many changes. */
+export function jobScopeLabel(job: Pick<JobRecord, 'kind' | 'scope' | 'total'>): string {
+  if (job.kind === 'applyChanges') return tPlural('jobs_applyScope', job.total);
   return job.scope.mode === 'all' ? t('settings_scopeAll') : job.scope.label;
 }
 
@@ -56,6 +75,7 @@ const JOB_BLOCK_KEYS: Record<JobBlockCode, MessageKey> = {
   'ai-service-changed': 'jobs_blockedServiceChanged',
   'ai-request': 'jobs_blockedAIRequest',
   'uncertain-request': 'jobs_uncertainRequest',
+  'uncertain-write': 'jobs_uncertainWrite',
   'slice-setup': 'jobs_errorSetup',
 };
 

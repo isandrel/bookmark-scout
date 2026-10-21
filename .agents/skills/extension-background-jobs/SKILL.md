@@ -18,6 +18,7 @@ background does the work in slices. The module headers explain each part in deta
 | Limits (slice size and time, watchdog, retention, page size) | `config/jobs/scheduler.toml` |
 | UI: job status, Background tasks, popup line | `JobStatus.tsx`, `TasksDialog.tsx`, `ActiveJobsLine.tsx`, `use-jobs.ts` |
 | Tool card and review on saved results | `JobToolEntry` in `ToolsSidebar.tsx`, `createToolRun().review` |
+| Reviewed changes applied in parts (`applyChanges`, the `apply` command) | `src/services/reviewed-apply.ts`, `runBatch` in `job-adapters.ts` |
 
 ## Make a tool a job
 
@@ -44,7 +45,7 @@ Each step adds one entry; no step adds a special case.
 - **Requests that may cost money.** For an `ai` adapter, every item is marked in flight before it is sent. A stopped worker leaves the mark, so reconcile pauses the job with `uncertain-request` instead of sending the request again. An AI request is not aborted on pause: it is allowed to finish and its answer is saved.
 - **Where requests go.** An `ai` job keeps only a digest of its service (`aiDestination`) and stops when the service changes. Never store a key or its settings in options or results.
 - **Fencing.** Every commit checks the claim's generation and the item's pending state in one transaction. Never write results outside `commitItem`.
-- **Writes.** Jobs read. Bookmark changes stay reviewed page actions through `applyBookmarkChanges`; nothing a job finds is applied without the review.
+- **Writes.** Scan jobs only read; nothing a job finds is applied without the review. Applying a review goes through `applyReviewedChanges`: up to the `jobsApplyInBackgroundAbove` setting it runs in the page as before, above it the page sends the stored changes (no `check`, which is code) to an `applyChanges` job. That job's `runBatch` applies one slice per call to `applyBookmarkChanges` (`part: { jobId, index, of }`): each part is one undo entry and one Audit History record linked by `jobId` and labelled "(part n of m)". Every change is checked against the live bookmark first, so on Resume after a stop (`uncertain-write`) a change already made is skipped, never repeated. Pause and cancel take effect between parts.
 - **DOM.** A service worker has no DOM parser. Firefox's background page has one. Otherwise HTML goes to the AI host page (`withAIHost`, `readHead`), which is opened once per slice.
 - **Startup.** `registerJobs()` registers its listeners synchronously in the background's main function. Every wake reconciles first.
 

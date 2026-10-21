@@ -28,6 +28,8 @@ export type AuditInit = {
   /** For an undo or redo: which, and the record of the change it replays. */
   replay?: 'undo' | 'redo';
   relatedOperationId?: string;
+  /** The background task applying the change in parts, which links its records. */
+  jobId?: string;
 };
 
 /** Extension pages and the surface their changes come from, by file name. */
@@ -78,6 +80,7 @@ export async function beginAuditOperation(init: AuditInit, now = preciseNow()): 
     counts: { planned: 0, applied: 0, skipped: 0, failed: 0 },
     ...(init.replay ? { replay: init.replay } : {}),
     ...(init.relatedOperationId ? { relatedOperationId: init.relatedOperationId } : {}),
+    ...(init.jobId ? { jobId: init.jobId } : {}),
     originConfidence: 'verified_internal',
   });
   return id;

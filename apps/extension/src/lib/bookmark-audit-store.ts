@@ -96,6 +96,10 @@ const labelSchema = z.object({
   count: z.number().int().nonnegative().optional(),
   /** Message key of the Tools sidebar tool that made the change. */
   tool: z.string().optional(),
+  /** One part of a change a background task applied in parts. */
+  part: z
+    .object({ index: z.number().int().positive(), of: z.number().int().positive() })
+    .optional(),
 });
 export type AuditLabel = z.infer<typeof labelSchema>;
 
@@ -131,6 +135,8 @@ export const auditOperationSchema = z.object({
   replay: z.enum(['undo', 'redo']).optional(),
   /** The record this one undoes or redoes. */
   relatedOperationId: z.string().optional(),
+  /** The background task that applied this change, one record per part. */
+  jobId: z.string().optional(),
   /** Set on a record once a later undo of it ran: which record, and whether all came back. */
   undo: z.object({ operationId: z.string(), at: z.number(), complete: z.boolean() }).optional(),
   originConfidence: z.enum(['verified_internal', 'unattributed_event', 'inferred_net_diff']),

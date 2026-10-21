@@ -57,11 +57,7 @@ export function JobStatus({
       <p className="text-xs text-muted-foreground" data-testid="job-progress">
         {jobProgressLabel(job)}
         {' · '}
-        {t('jobs_counts', [
-          formatCount(job.done.succeeded),
-          formatCount(job.done.skipped),
-          formatCount(job.done.failed),
-        ])}
+        {jobCountsLabel(job)}
       </p>
       {errorMessage ? (
         <p className="text-xs text-warning" data-testid="job-error">
@@ -70,7 +66,7 @@ export function JobStatus({
       ) : null}
       {active ? <p className="text-xs text-muted-foreground">{t('jobs_runsNote')}</p> : null}
       {job.state === 'cancelled' ? (
-        <p className="text-xs text-muted-foreground">{t('jobs_cancelledNote')}</p>
+        <p className="text-xs text-muted-foreground">{jobCancelledNote(job)}</p>
       ) : null}
       <div className="flex flex-wrap gap-1.5">
         {onReview && processed > 0 ? (
