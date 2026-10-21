@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+# The end-to-end coverage build (apps/extension/build/e2e-coverage.toml)
+dist-coverage
 *.local
 
 # App build outputs

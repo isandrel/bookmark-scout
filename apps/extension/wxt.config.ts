@@ -7,13 +7,15 @@ import { tomlConfig } from './build/toml-config';
 import { compactDistributionLocales } from './build/distribution-assets';
 import { createProviderLogoAssets } from './build/provider-logo-assets';
 import { siteDefines } from './build/site-defines';
+import { e2eCoverageEnabled, extensionOutDir } from './build/e2e-coverage';
 
 const providerLogos = createProviderLogoAssets(path.resolve(__dirname, './public'));
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
     srcDir: 'src',
-    outDir: 'dist',
+    // The end-to-end coverage build has its own folder (build/e2e-coverage.toml).
+    outDir: extensionOutDir(),
 
     // WXT already scans components/, composables/, hooks/, and utils/ (top level only).
     // `*.lazy.ts(x)` files are loaded on first use with import(); an auto-import would make them
@@ -87,6 +89,8 @@ export default defineConfig({
     vite: () => ({
         plugins: [tomlConfig(), providerLogos.plugin, react()],
         define: siteDefines,
+        // Inline source maps let coverage lead back to the sources; only in the coverage build.
+        ...(e2eCoverageEnabled() ? { build: { sourcemap: 'inline' as const } } : {}),
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, './src'),
