@@ -28,6 +28,7 @@ const AI_HOST_SCHEMAS = {
   folderRecommendations: () => folderRecommendationsSchema,
   folderIds: ({ choices, maxChoices }) =>
     choices && maxChoices ? builtinFolderAnswerSchema(choices, maxChoices) : undefined,
+  reorganization: () => reorganizationResultSchema,
 } satisfies {
   [Name in AIHostSchemaName]: (
     request: HostGenerateRequest,
@@ -142,7 +143,11 @@ export async function handleAIHostRequest(
     });
     return { ok: true, object };
   } catch (error) {
-    return { ok: false, error: describeAIError(error) };
+    return {
+      ok: false,
+      error: describeAIError(error),
+      ...(isNoAnswerError(error) ? { errorKind: 'answer' as const } : {}),
+    };
   }
 }
 

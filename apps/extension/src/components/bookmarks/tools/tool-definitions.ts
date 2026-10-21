@@ -394,6 +394,18 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     changesBookmarks: true,
     reviewWhileScanning: true,
     scanFailureKey: 'ai_reorgAnalyzeFailed',
+    // Each batch is one AI request; a batch whose answer did not fit adds nothing to the plan.
+    job: {
+      kind: 'reorganization',
+      result: (job, results) =>
+        buildReorganizationPlan(
+          reorganizationJobOptionsSchema.parse(job.options).context,
+          results.flatMap((result) => {
+            const { bookmarks, response } = reorganizationBatchResultSchema.parse(result);
+            return response ? [{ bookmarks, response }] : [];
+          }),
+        ),
+    },
     async scan({ nodes, options, aiSettings }) {
       return generateReorganizationPlan(nodes, await aiSettings(), options.reorganization);
     },

@@ -949,3 +949,141 @@ test('Metadata Fetcher runs as a background job whose titles a later page applie
     server.close();
   }
 });
+
+/** A local OpenAI-compatible service that moves every bookmark it is sent into "<folder>/Sorted". */
+async function startSortingProvider(folder: string) {
+  const prompts: string[] = [];
+  const cors = {
+    'access-control-allow-origin': '*',
+    'access-control-allow-headers': '*',
+    'access-control-allow-methods': 'POST, OPTIONS',
+  };
+  const server = createServer(async (req, res) => {
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204, cors);
+      res.end();
+      return;
+    }
+    let body = '';
+    for await (const chunk of req) body += chunk;
+    const { messages } = JSON.parse(body) as { messages: { content: string }[] };
+    const prompt = messages.at(-1)?.content ?? '{}';
+    prompts.push(prompt);
+    const { bookmarks } = JSON.parse(prompt) as { bookmarks: { id: string; title: string }[] };
+    const answer = {
+      operations: bookmarks.map((bookmark) => ({
+        bookmarkId: bookmark.id,
+        bookmarkTitle: bookmark.title,
+        toFolderPath: `${folder}/Sorted`,
+        confidence: 0.9,
+        reason: 'Sorted',
+      })),
+      summary: 'Sorted',
+    };
+    res.writeHead(200, { ...cors, 'content-type': 'application/json' });
+    res.end(
+      JSON.stringify({
+        id: 'chatcmpl_e2e',
+        object: 'chat.completion',
+        created: 0,
+        model: 'e2e-model',
+        choices: [
+          {
+            index: 0,
+            finish_reason: 'stop',
+            message: { role: 'assistant', content: JSON.stringify(answer) },
+          },
+        ],
+        usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+      }),
+    );
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  return {
+    baseUrl: `http://localhost:${(server.address() as AddressInfo).port}/v1`,
+    prompts,
+    close: () => {
+      server.close();
+      server.closeAllConnections();
+    },
+  };
+}
+
+test('AI Folder Reorganization runs as a background job through the background page frame (J41, J61)', async ({
+  extension,
+}) => {
+  const provider = await startSortingProvider('E2E Firefox Reorg');
+  try {
+    const folder = await seedFolder(extension, 'E2E Firefox Reorg', [
+      { title: 'First', url: 'https://e2e.invalid/first' },
+      { title: 'Second', url: 'https://e2e.invalid/second' },
+      { title: 'Third', url: 'https://e2e.invalid/third' },
+    ]);
+    await extension.call(
+      async (browser, { services, credentials, v, baseUrl }) => {
+        await browser.storage.local.set({
+          [services]: {
+            v,
+            data: {
+              services: [
+                {
+                  id: 'custom',
+                  name: 'custom',
+                  provider: 'custom',
+                  model: 'e2e-model',
+                  enabled: true,
+                },
+              ],
+              defaultServiceId: 'custom',
+            },
+          },
+          [credentials]: { v, data: { custom: { apiKey: 'synthetic-e2e-key', baseUrl } } },
+        });
+      },
+      {
+        services: storageAreaKey(STORAGE_ITEMS.aiServices),
+        credentials: storageAreaKey(STORAGE_ITEMS.aiCredentials),
+        v: STORAGE_ITEMS.aiServices.v,
+        baseUrl: provider.baseUrl,
+      },
+    );
+    await setSettings(extension, {
+      language: 'en',
+      reorganizationEnabled: true,
+      reorganizationMinConfidence: 0.5,
+      reorganizationBatchSize: 2,
+      reorganizationDefaultScope: 'folder',
+    });
+    // Firefox asks for data collection consent when AI is turned on; prompts are off here.
+    await extension.open('options.html');
+    await extension.find('[role="tab"]');
+    await extension.driver
+      .findElement(By.xpath('//button[@role="tab" and normalize-space()="AI"]'))
+      .click();
+    await (await extension.find('[data-setting="aiEnabled"] [role="switch"]')).click();
+    const consent = await extension.find('[role="dialog"]');
+    await consent.findElement(By.xpath('.//button[normalize-space()="Allow access"]')).click();
+    await expect.poll(async () => (await readSettings(extension)).aiEnabled).toBe(true);
+
+    await openTools(extension, folder.folderId);
+    await clickToolButton(extension, 'AI Folder Reorganization', 'Analyze');
+    // Two bookmarks a request: three make two requests, sent from the background page.
+    await expect
+      .poll(() => storedJobs(extension), { timeout: 15_000 })
+      .toEqual([{ kind: 'reorganization', state: 'succeeded', succeeded: 2 }]);
+    expect(provider.prompts).toHaveLength(2);
+    expect((await childrenOf(extension, folder.folderId)).map((item) => item.title)).toEqual([
+      'First',
+      'Second',
+      'Third',
+    ]);
+
+    const review = await extension.findByText('[role="dialog"]', 'New folders: 1');
+    await review.findElement(By.xpath('.//button[normalize-space()="Apply Changes"]')).click();
+    await expect
+      .poll(async () => (await childrenOf(extension, folder.folderId)).map((item) => item.title))
+      .toEqual(['Sorted']);
+  } finally {
+    provider.close();
+  }
+});

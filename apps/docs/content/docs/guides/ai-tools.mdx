@@ -185,6 +185,8 @@ The tag count and style, summary length, and reorganization limits in Settings a
 
 **AI Folder Reorganization** asks the provider which folder each bookmark belongs in. The plan always opens first as a list of bookmark moves, with moves into new folders marked and counted, and nothing changes until you click **Apply Changes**.
 
+The analysis runs in the background, one request for each batch of bookmarks: it keeps going after you close the manager, and the plan waits under **Review results** until you look at it. If the AI service fails, is turned off, or changes, the task pauses and says why, and nothing more is sent until you resume. If the browser stops while an answer is on its way, the task asks before sending that request again, since it may already have been charged.
+
 - **Apply Changes** moves the bookmarks and creates the new folders the plan names. If a folder with that name already exists in the same place, it is used instead.
 - A bookmark you moved, gave a new URL, or deleted after the preview is skipped and left where it is, so the plan never overrides a newer change. When only part of the plan applies, the message counts the moved bookmarks, new folders, and skipped and failed items, and names the skipped bookmarks.
 - Click **Undo** in the message or in the review, or press <Shortcut id="manager.undo" /> in the bookmark manager, to move the bookmarks back and remove the new folders that are still empty. A bookmark you moved again in the meantime stays where you put it.

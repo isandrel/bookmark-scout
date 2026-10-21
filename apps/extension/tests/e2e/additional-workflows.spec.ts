@@ -1,5 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
+import {
+  MOCK_PROVIDER_BASE_URL,
+  MOCK_PROVIDER_CORS_HEADERS,
+  mockChatCompletionBody,
+  seedMockCustomProvider,
+} from './ai-provider-mock';
 import { expect, test, toastRegion } from './fixtures';
 import { toggleSearchOption } from './popup-helpers';
 import { STORAGE_ITEMS, seedAIServices, setSettings, updateStored } from './storage';
@@ -184,43 +190,6 @@ test('[mocked provider contract] provider-backed AI previews stop at opt-in with
   expect(providerRequests).toBe(0);
 });
 
-const MOCK_PROVIDER_BASE_URL = 'https://provider.invalid/v1';
-const MOCK_PROVIDER_CORS_HEADERS = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-headers': '*',
-  'access-control-allow-methods': 'POST, OPTIONS',
-};
-
-async function useMockCustomProvider(worker: Worker) {
-  await setSettings(worker, { aiEnabled: true });
-  await seedAIServices(worker, [
-    {
-      provider: 'custom',
-      model: 'e2e-model',
-      credentials: { apiKey: 'synthetic-e2e-key', baseUrl: MOCK_PROVIDER_BASE_URL },
-    },
-  ]);
-}
-
-// Minimal Chat Completions envelope, the API OpenAI-compatible providers share; asserts our
-// contract with the SDK, not live compatibility.
-function mockChatCompletionBody(payload: unknown) {
-  return JSON.stringify({
-    id: 'chatcmpl_e2e',
-    object: 'chat.completion',
-    created: 0,
-    model: 'e2e-model',
-    choices: [
-      {
-        index: 0,
-        finish_reason: 'stop',
-        message: { role: 'assistant', content: JSON.stringify(payload) },
-      },
-    ],
-    usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
-  });
-}
-
 test('[mocked provider contract] auto-tagging previews route-mocked provider tags without mutating bookmarks', async ({
   extensionId,
   extensionWorker,
@@ -232,7 +201,7 @@ test('[mocked provider contract] auto-tagging previews route-mocked provider tag
   const [bookmark] = await extensionWorker.evaluate(async (id) => {
     return chrome.bookmarks.getChildren(id);
   }, folderId);
-  await useMockCustomProvider(extensionWorker);
+  await seedMockCustomProvider(extensionWorker);
   const providerRequests: { authorization?: string; body: string }[] = [];
   await page.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
     const request = route.request();
@@ -295,7 +264,7 @@ test('[mocked provider contract] summarizer surfaces a route-mocked provider err
   const folderId = await seedFolder(extensionWorker, 'E2E AI Summary Error', [
     { title: 'Summary Fixture', url: 'https://e2e.invalid/summary-fixture' },
   ]);
-  await useMockCustomProvider(extensionWorker);
+  await seedMockCustomProvider(extensionWorker);
   let providerCalls = 0;
   await page.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
     if (route.request().method() === 'OPTIONS') {
@@ -487,6 +456,7 @@ test('network tools report route-mocked transport failures without mutating book
 });
 
 test('[mocked provider contract] reorganization creates suggested folders, skips moves made stale, and undoes the rest', async ({
+  context,
   extensionId,
   extensionWorker,
   page,
@@ -505,12 +475,13 @@ test('[mocked provider contract] reorganization creates suggested folders, skips
     async (id) => chrome.bookmarks.getChildren(id),
     folderId,
   );
-  await useMockCustomProvider(extensionWorker);
+  await seedMockCustomProvider(extensionWorker);
   await setSettings(extensionWorker, {
     reorganizationEnabled: true,
     reorganizationMinConfidence: 0.5,
   });
-  await page.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
+  // The analysis runs as a background job, so the AI request comes from the service worker.
+  await context.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
     if (route.request().method() === 'OPTIONS') {
       await route.fulfill({ status: 204, headers: MOCK_PROVIDER_CORS_HEADERS });
       return;

@@ -185,6 +185,8 @@ El número y el estilo de las etiquetas, la longitud del resumen y los límites 
 
 La **Reorganización de carpetas con IA** pregunta al proveedor a qué carpeta pertenece cada marcador. El plan siempre se abre primero como una lista de movimientos de marcadores, con los movimientos a carpetas nuevas marcados y contados, y no cambia nada hasta que haces clic en **Aplicar cambios**.
 
+El análisis se ejecuta en segundo plano, una solicitud por cada grupo de marcadores: sigue cuando cierras el administrador, y el plan espera en **Ver resultados** hasta que lo mires. Si el servicio de IA falla, se desactiva o cambia, la tarea se pausa e indica el motivo, y no se envía nada más hasta que la reanudes. Si el navegador se detiene mientras llega una respuesta, la tarea pregunta antes de volver a enviar esa solicitud, ya que quizá ya se haya cobrado.
+
 - **Aplicar cambios** mueve los marcadores y crea las carpetas nuevas que indica el plan. Si ya existe una carpeta con ese nombre en el mismo lugar, se usa esa.
 - Un marcador que moviste, al que le diste una URL nueva o que eliminaste después de la vista previa se omite y se deja donde está, así que el plan nunca anula un cambio más reciente. Cuando solo se aplica una parte del plan, el mensaje cuenta los marcadores movidos, las carpetas nuevas y los elementos omitidos y con errores, e indica los marcadores omitidos.
 - Haz clic en **Deshacer** en el mensaje o en la revisión, o pulsa <Shortcut id="manager.undo" /> en el administrador de marcadores, para devolver los marcadores a su sitio y quitar las carpetas nuevas que sigan vacías. Un marcador que volviste a mover mientras tanto se queda donde lo pusiste.

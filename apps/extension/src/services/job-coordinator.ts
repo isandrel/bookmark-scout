@@ -26,25 +26,47 @@ const SESSION = crypto.randomUUID();
 const JOB_ALARM = 'bookmark-scout:jobs';
 
 /**
- * Runs `work` with what a slice of `adapter`'s items needs. Firefox's background page parses
- * HTML itself; a service worker has no DOM parser, so it asks the AI host page, open for the slice.
+ * Runs `work` with what a slice of `adapter`'s items needs, open for the slice. An AI kind gets
+ * the AI host page with the feature's current service, only while AI is on, set up, and still
+ * the service the job started with. For HTML, Firefox's background page parses it itself; a
+ * service worker has no DOM parser, so it asks the AI host page. Throws `JobBlockedError` when
+ * the user has to act first.
  */
-async function withJobTools(adapter: JobAdapter, work: (tools: JobTools) => Promise<void>) {
+async function withJobTools(
+  job: JobRecord,
+  adapter: JobAdapter,
+  work: (tools: JobTools) => Promise<void>,
+) {
+  const settings = await getSettings();
+  const locale = resolveAppLocale(settings.language);
+  if (adapter.ai) {
+    if (!settings.aiEnabled) throw new JobBlockedError('ai-off');
+    const service = await getActiveAISettings(true, adapter.ai.feature).catch((error: unknown) => {
+      throw new JobBlockedError('ai-not-set-up', getErrorMessage(error));
+    });
+    if ((await aiDestination(service)) !== adapter.ai.destination(job.options)) {
+      throw new JobBlockedError('ai-service-changed');
+    }
+    return withAIHost(service, { locale, source: adapter.ai.source }, (host) =>
+      work({ readHead: host.readHead, ai: host }),
+    );
+  }
   if (!adapter.readsHtml || typeof DOMParser === 'function') {
     return work({ readHead: async (html, descriptions) => readHtmlHead(html, descriptions) });
   }
-  const { language } = await getSettings();
-  return withAIHost(null, { locale: resolveAppLocale(language) }, (host) =>
-    work({ readHead: host.readHead }),
-  );
+  return withAIHost(null, { locale }, (host) => work({ readHead: host.readHead }));
 }
 
 /** The job running in this background, with what stops its work in flight. */
 type ActiveRun = {
   generation: number;
   controllers: Set<AbortController>;
-  /** `fail`: the slice could not run at all, with `failure` the error's name. */
-  stop?: 'pause' | 'cancel' | 'fail';
+  /**
+   * `block`: the user has to act first (`blocked` says why), and the job pauses. `fail`: the
+   * slice could not run at all, with `failure` the error's name.
+   */
+  stop?: 'pause' | 'cancel' | 'block' | 'fail';
+  blocked?: { code: JobBlockCode; detail?: string };
   failure?: string;
 };
 const active = new Map<string, ActiveRun>();
@@ -60,14 +82,21 @@ async function reconcile(): Promise<void> {
       stored.runningSince
         ? stored.activeMs + Math.max(0, Date.now() - stored.runningSince)
         : stored.activeMs;
+    // An AI request the stopped worker sent may have been answered, and paid for, with nothing
+    // saved: the job waits for the user instead of sending it again on its own.
+    const uncertain =
+      JOB_ADAPTERS[job.kind].ai !== undefined && (await getInFlightItems(job.id)).length > 0;
+    const uncertainError = uncertain
+      ? { lastError: { code: 'uncertain-request' satisfies JobBlockCode, message: '' } }
+      : {};
     if (job.state === 'running') {
-      // Checking links only reads, so it starts again from its saved items.
-      await transitionJob(job.id, ['running'], 'queued', (stored) =>
-        orphan({ activeMs: ran(stored), runningSince: undefined }),
+      // Reading work starts again from its saved items.
+      await transitionJob(job.id, ['running'], uncertain ? 'paused' : 'queued', (stored) =>
+        orphan({ activeMs: ran(stored), runningSince: undefined, ...uncertainError }),
       );
     } else if (job.state === 'pause_requested') {
       await transitionJob(job.id, ['pause_requested'], 'paused', (stored) =>
-        orphan({ activeMs: ran(stored), runningSince: undefined }),
+        orphan({ activeMs: ran(stored), runningSince: undefined, ...uncertainError }),
       );
     } else if (job.state === 'cancel_requested') {
       await transitionJob(job.id, ['cancel_requested'], 'cancelled', (stored) =>
@@ -146,7 +175,7 @@ async function runSlice(waiting: JobRecord): Promise<void> {
     const queue = await getPendingItems(job.id, JOB_LIMITS.sliceMaxItems);
     const overTime = () => Date.now() - started > JOB_LIMITS.sliceMaxMs;
     const workers = Math.max(1, Math.min(adapter.concurrency(job.options), queue.length));
-    await withJobTools(adapter, async (tools) => {
+    await withJobTools(job, adapter, async (tools) => {
       const worker = async () => {
         for (let item = queue.shift(); item; item = queue.shift()) {
           if (run.stop || overTime()) return;
@@ -156,10 +185,15 @@ async function runSlice(waiting: JobRecord): Promise<void> {
       await Promise.all(Array.from({ length: workers }, worker));
     });
   } catch (error) {
-    // What the slice needed could not be set up (the AI host page): the job cannot go on.
-    console.error('[Jobs] Slice could not run:', error instanceof Error ? error.name : error);
-    run.stop ??= 'fail';
-    run.failure = error instanceof Error ? error.name : 'Error';
+    if (error instanceof JobBlockedError) {
+      run.stop ??= 'block';
+      run.blocked ??= { code: error.code, detail: error.detail };
+    } else {
+      // What the slice needed could not be set up (the AI host page): the job cannot go on.
+      console.error('[Jobs] Slice could not run:', error instanceof Error ? error.name : error);
+      run.stop ??= 'fail';
+      run.failure = error instanceof Error ? error.name : 'Error';
+    }
   } finally {
     active.delete(job.id);
   }
@@ -173,6 +207,10 @@ async function runItem(
   item: JobItem,
   tools: JobTools,
 ) {
+  // A request that may cost money is marked before it is sent, so a stopped worker shows it.
+  if (adapter.ai && !(await markItemInFlight(job.id, run.generation, item.index, Date.now()))) {
+    return;
+  }
   const controller = new AbortController();
   run.controllers.add(controller);
   try {
@@ -184,6 +222,13 @@ async function runItem(
     );
     await commitItem(job.id, run.generation, item.index, outcome, result);
   } catch (error) {
+    if (error instanceof JobBlockedError) {
+      // The request was answered, with an error: nothing is in flight, and the item stays to do.
+      if (adapter.ai) await markItemInFlight(job.id, run.generation, item.index, undefined);
+      run.stop ??= 'block';
+      run.blocked ??= { code: error.code, detail: error.detail };
+      return;
+    }
     // Stopped by pause or cancel: left to do, never a finding.
     if (error instanceof RequestAbortedError || controller.signal.aborted) return;
     await commitItem(job.id, run.generation, item.index, 'failed', {
@@ -203,6 +248,14 @@ async function settleSlice(jobId: string, run: ActiveRun): Promise<void> {
   });
   if (run.stop === 'pause') {
     await transitionJob(jobId, ['pause_requested'], 'paused', ended);
+    return;
+  }
+  if (run.stop === 'block') {
+    const { code, detail } = run.blocked ?? { code: 'slice-setup' };
+    await transitionJob(jobId, ['running', 'pause_requested'], 'paused', (job) => ({
+      ...ended(job),
+      lastError: { code, message: detail ?? '' },
+    }));
     return;
   }
   if (run.stop === 'fail') {
@@ -281,8 +334,12 @@ async function pause(jobId: string): Promise<JobRecord | undefined> {
 }
 
 async function resume(jobId: string): Promise<JobRecord | undefined> {
-  const resumed = await transitionJob(jobId, ['paused'], 'queued');
+  // Resuming is the user's answer to whatever stopped the job, an unanswered request included.
+  const resumed = await transitionJob(jobId, ['paused'], 'queued', () => ({
+    lastError: undefined,
+  }));
   if (resumed) {
+    await clearInFlightItems(jobId);
     await reschedule();
     kick();
   }

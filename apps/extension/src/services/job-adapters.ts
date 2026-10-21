@@ -12,7 +12,36 @@ export type JobRun = { outcome: ItemOutcome; result: unknown };
 export type JobTools = {
   /** Reads a fetched page's `<head>`; a service worker has no DOM parser of its own. */
   readHead(html: string, descriptions: boolean): Promise<HtmlHead>;
+  /** The AI host page with the job's AI service, for a kind with `ai`. */
+  ai?: AIHostSession;
 };
+
+/**
+ * Stops a job until the user acts: it is paused with the reason, never retried on its own. The
+ * item in progress stays to do. `detail` is a message already in the user's language.
+ */
+export class JobBlockedError extends Error {
+  constructor(
+    readonly code: JobBlockCode,
+    readonly detail?: string,
+  ) {
+    super(code);
+    this.name = 'JobBlockedError';
+  }
+}
+
+/**
+ * Where a job's AI requests go, as a digest of the provider, model, and endpoint (never the key):
+ * the job keeps it, and stops when the service changed, so the rest is never sent elsewhere.
+ */
+export async function aiDestination(settings: AISettings): Promise<string> {
+  const text = JSON.stringify([settings.provider, settings.model, settings.baseUrl ?? null]);
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(digest)]
+    .map((byte) => byte.toString(HEX_RADIX).padStart(2, '0'))
+    .join('');
+}
+const HEX_RADIX = 16;
 
 export type JobStart = JobCommand & { type: 'start' };
 
@@ -29,6 +58,12 @@ export type JobAdapter = {
   concurrency(options: unknown): number;
   /** Whether items read HTML, so the slice needs `JobTools.readHead`. */
   readsHtml?: boolean;
+  /**
+   * Items send AI requests, which may cost money: the slice opens the AI host page with the
+   * feature's current service, checked against the one the job started with (`destination`),
+   * and a request a stopped worker left unanswered is sent again only once the user resumes.
+   */
+  ai?: { feature: AIFeature; source: AIActivitySource; destination(options: unknown): string };
   /** Does one item; throws `RequestAbortedError` when stopped, which leaves it to do. */
   run(input: unknown, options: unknown, signal: AbortSignal, tools: JobTools): Promise<JobRun>;
 };
@@ -126,6 +161,49 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
             ? 'failed'
             : 'succeeded';
       return { outcome, result };
+    },
+  },
+  reorganization: {
+    async prepare(command) {
+      const { nodes, label } = await scopeNodes(command);
+      const settings = await getSettings();
+      const { context, batches } = await prepareReorganization(
+        nodes,
+        getToolOptions(settings).reorganization,
+      );
+      const service = await getActiveAISettings(settings.aiEnabled, 'reorganization');
+      return {
+        inputs: batches,
+        options: { context, destination: await aiDestination(service) },
+        label,
+      };
+    },
+    // One request at a time, in order, as the page did.
+    concurrency: () => 1,
+    ai: {
+      feature: 'reorganization',
+      source: 'reorganization',
+      destination: (options) => reorganizationJobOptionsSchema.parse(options).destination,
+    },
+    // An AI request cannot be taken back once sent, so a pause lets the one in flight finish.
+    async run(input, options, _signal, tools) {
+      if (!tools.ai) throw new JobBlockedError('slice-setup');
+      const { context } = reorganizationJobOptionsSchema.parse(options);
+      const bookmarks = reorganizationBatchSchema.parse(input);
+      try {
+        const response = await tools.ai.generate({
+          schema: 'reorganization',
+          system: context.system,
+          prompt: JSON.stringify(reorganizationRequest(context, bookmarks)),
+        });
+        return { outcome: 'succeeded', result: { bookmarks, response } };
+      } catch (error) {
+        // An answer that did not fit loses this batch only; the plan keeps the others.
+        if (error instanceof AIHostError && error.kind === 'answer') {
+          return { outcome: 'failed', result: { bookmarks } };
+        }
+        throw new JobBlockedError('ai-request', getErrorMessage(error));
+      }
     },
   },
   siteIcons: {

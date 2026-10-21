@@ -10,8 +10,9 @@
 # conversion answer the bridge's calls in the service worker, which cannot load code later.
 # Lowered from 395 on 2026-10-15 after replacing pino with a small console logger (338 before,
 # 324 after). Raised from 365 on 2026-10-21 for background jobs, whose store and coordinator must
-# be loaded when a command or the watchdog alarm wakes the worker (377).
-"background.js" = 390
+# be loaded when a command or the watchdog alarm wakes the worker (377), then from 390 for AI
+# Folder Reorganization as a job, whose batches and plan are built in the background (401).
+"background.js" = 415
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21).
