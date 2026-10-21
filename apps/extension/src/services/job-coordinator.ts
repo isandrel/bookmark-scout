@@ -82,13 +82,12 @@ async function reconcile(): Promise<void> {
       stored.runningSince
         ? stored.activeMs + Math.max(0, Date.now() - stored.runningSince)
         : stored.activeMs;
-    // An AI request the stopped worker sent may have been answered, and paid for, with nothing
-    // saved: the job waits for the user instead of sending it again on its own.
-    const uncertain =
-      JOB_ADAPTERS[job.kind].ai !== undefined && (await getInFlightItems(job.id)).length > 0;
-    const uncertainError = uncertain
-      ? { lastError: { code: 'uncertain-request' satisfies JobBlockCode, message: '' } }
-      : {};
+    // Work the stopped worker started may have happened (an AI request answered and paid for,
+    // a bookmark written) with nothing saved: the job waits for the user instead of doing it
+    // again on its own.
+    const unsure = JOB_ADAPTERS[job.kind].unsureAfterStop;
+    const uncertain = unsure !== undefined && (await getInFlightItems(job.id)).length > 0;
+    const uncertainError = uncertain && unsure ? { lastError: { code: unsure, message: '' } } : {};
     if (job.state === 'running') {
       // Reading work starts again from its saved items.
       await transitionJob(job.id, ['running'], uncertain ? 'paused' : 'queued', (stored) =>
@@ -173,17 +172,21 @@ async function runSlice(waiting: JobRecord): Promise<void> {
   const started = Date.now();
   try {
     const queue = await getPendingItems(job.id, JOB_LIMITS.sliceMaxItems);
-    const overTime = () => Date.now() - started > JOB_LIMITS.sliceMaxMs;
-    const workers = Math.max(1, Math.min(adapter.concurrency(job.options), queue.length));
-    await withJobTools(job, adapter, async (tools) => {
-      const worker = async () => {
-        for (let item = queue.shift(); item; item = queue.shift()) {
-          if (run.stop || overTime()) return;
-          await runItem(job, run, adapter, item, tools);
-        }
-      };
-      await Promise.all(Array.from({ length: workers }, worker));
-    });
+    if ('runBatch' in adapter) {
+      await runBatchSlice(job, run, adapter, queue);
+    } else {
+      const overTime = () => Date.now() - started > JOB_LIMITS.sliceMaxMs;
+      const workers = Math.max(1, Math.min(adapter.concurrency(job.options), queue.length));
+      await withJobTools(job, adapter, async (tools) => {
+        const worker = async () => {
+          for (let item = queue.shift(); item; item = queue.shift()) {
+            if (run.stop || overTime()) return;
+            await runItem(job, run, adapter, item, tools);
+          }
+        };
+        await Promise.all(Array.from({ length: workers }, worker));
+      });
+    }
   } catch (error) {
     if (error instanceof JobBlockedError) {
       run.stop ??= 'block';
@@ -200,15 +203,55 @@ async function runSlice(waiting: JobRecord): Promise<void> {
   await settleSlice(job.id, run);
 }
 
+/**
+ * One slice of a kind that does a slice as one step (`runBatch`): its items are marked in flight
+ * first, so a worker stopped halfway leaves the job for the user, then every outcome is saved.
+ */
+async function runBatchSlice(
+  job: JobRecord,
+  run: ActiveRun,
+  adapter: Extract<JobAdapter, { runBatch: unknown }>,
+  items: JobItem[],
+) {
+  const [first] = items;
+  if (!first || run.stop) return;
+  const indexes = items.map((item) => item.index);
+  if (!(await markItemsInFlight(job.id, run.generation, indexes, Date.now()))) return;
+  const part = {
+    jobId: job.id,
+    index: Math.floor(first.index / JOB_LIMITS.sliceMaxItems) + 1,
+    of: Math.ceil(job.total / JOB_LIMITS.sliceMaxItems),
+  };
+  let runs: JobRun[];
+  try {
+    runs = await adapter.runBatch(
+      items.map((item) => item.input),
+      job.options,
+      part,
+    );
+  } catch (error) {
+    // It refused before writing (a record of what goes could not be kept): nothing is in flight.
+    await markItemsInFlight(job.id, run.generation, indexes, undefined);
+    throw error;
+  }
+  for (const [position, item] of items.entries()) {
+    const { outcome, result } = runs[position];
+    await commitItem(job.id, run.generation, item.index, outcome, result);
+  }
+}
+
 async function runItem(
   job: JobRecord,
   run: ActiveRun,
-  adapter: JobAdapter,
+  adapter: Extract<JobAdapter, { run: unknown }>,
   item: JobItem,
   tools: JobTools,
 ) {
-  // A request that may cost money is marked before it is sent, so a stopped worker shows it.
-  if (adapter.ai && !(await markItemInFlight(job.id, run.generation, item.index, Date.now()))) {
+  // Work that cannot be taken back is marked before it starts, so a stopped worker shows it.
+  if (
+    adapter.unsureAfterStop &&
+    !(await markItemInFlight(job.id, run.generation, item.index, Date.now()))
+  ) {
     return;
   }
   const controller = new AbortController();
@@ -224,7 +267,9 @@ async function runItem(
   } catch (error) {
     if (error instanceof JobBlockedError) {
       // The request was answered, with an error: nothing is in flight, and the item stays to do.
-      if (adapter.ai) await markItemInFlight(job.id, run.generation, item.index, undefined);
+      if (adapter.unsureAfterStop) {
+        await markItemInFlight(job.id, run.generation, item.index, undefined);
+      }
       run.stop ??= 'block';
       run.blocked ??= { code: error.code, detail: error.detail };
       return;
@@ -298,7 +343,9 @@ function stopActive(jobId: string, stop: 'pause' | 'cancel'): boolean {
 }
 
 async function start(command: JobCommand & { type: 'start' }): Promise<JobRecord> {
-  const { inputs, options, label, summary } = await JOB_ADAPTERS[command.kind].prepare(command);
+  const { prepare } = JOB_ADAPTERS[command.kind];
+  if (!prepare) throw new Error('This kind of job is not started on a scope');
+  const { inputs, options, label, summary } = await prepare(command);
   const { job } = await acceptJob({
     commandId: command.commandId,
     kind: command.kind,
@@ -314,6 +361,22 @@ async function start(command: JobCommand & { type: 'start' }): Promise<JobRecord
     now: Date.now(),
   });
   // The alarm before the answer, so a worker stopped right after still comes back for it.
+  await reschedule();
+  kick();
+  return job;
+}
+
+/** Accepts reviewed changes the user approved, to apply in parts (`applyChanges`). */
+async function apply(command: JobCommand & { type: 'apply' }): Promise<JobRecord> {
+  const { job } = await acceptJob({
+    commandId: command.commandId,
+    kind: 'applyChanges',
+    source: command.source,
+    scope: { mode: 'all', rootIds: [], label: '' },
+    options: { tool: command.tool },
+    inputs: command.changes,
+    now: Date.now(),
+  });
   await reschedule();
   kick();
   return job;
@@ -367,6 +430,7 @@ export async function runJobCommand(command: JobCommand): Promise<JobCommandResp
   await initialize();
   try {
     if (command.type === 'start') return { ok: true, job: await start(command) };
+    if (command.type === 'apply') return { ok: true, job: await apply(command) };
     if (command.type === 'delete') {
       await deleteJob(command.jobId);
       return { ok: true, job: null };

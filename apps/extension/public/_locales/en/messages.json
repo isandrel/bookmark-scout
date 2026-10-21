@@ -7386,5 +7386,53 @@
     "jobs_errorSetup": {
         "message": "This task could not continue. Start it again.",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "Apply in the Background Above",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "Reviewed changes to more bookmarks than this are applied in the background, in parts, and keep going when you close the page; undo each part from History",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "Applying changes: $1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "$1 changes",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_applyScope_one": {
+        "message": "$1 change",
+        "description": "Background tasks: how many changes a task applies (one)"
+    },
+    "jobs_countsApply": {
+        "message": "$1 applied, $2 skipped because they changed, $3 failed",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "Stopped. The changes made so far stay; undo them from History.",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "Applying in the background",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "$1 changes are applied in parts. Follow them under Background tasks, and undo each part from History.",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_applyStartedDesc_one": {
+        "message": "$1 change is applied in the background. Follow it under Background tasks, and undo it from History.",
+        "description": "Notification: one change is applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "Paused: the browser stopped while changes were being applied. Resume checks each remaining bookmark again and skips the ones already changed.",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1 (part $2 of $3)",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }

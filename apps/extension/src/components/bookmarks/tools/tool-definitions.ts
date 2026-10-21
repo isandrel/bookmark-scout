@@ -104,7 +104,7 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
    * `result` turns the job's saved results into what the review shows, and the review keeps
    * them after an apply instead of scanning again.
    */
-  job?: { kind: JobKind; result(job: JobRecord, results: unknown[]): Result };
+  job?: { kind: ScanJobKind; result(job: JobRecord, results: unknown[]): Result };
   /**
    * The AI feature the tool is (`AI_FEATURES`), which picks its AI service. Disabled, with a
    * notice, while AI features are off or that service is not set up.
@@ -273,6 +273,18 @@ function reportChanges(
   };
 }
 
+/**
+ * The report for reviewed changes handed to a background task: no Undo here, since each part is
+ * undone from the History.
+ */
+export function reportBackgroundApply({ count }: { count: number }): ToolOutcome {
+  return {
+    title: t('jobs_applyStarted'),
+    description: tPlural('jobs_applyStartedDesc', count),
+    variant: 'success',
+  };
+}
+
 /** The report for saved AI suggestions, naming how many were skipped as stale. */
 function reportMetadataSaved(
   { saved, skipped, undo }: ReviewedMetadataSaveResult,
@@ -414,6 +426,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     async apply(plan, _selection, { reviewed }) {
       const result = await applyReorganizationPlan(plan, { previewConfirmed: reviewed });
       if (result.status === 'blocked') return { title: t('error_generic'), errors: [result.error] };
+      if (result.status === 'background') return reportBackgroundApply(result);
       const { applied, foldersCreated, skipped, failed } = result;
       const complete = isComplete({ applied, skipped, failed });
       const counts = [applied, foldersCreated, skipped, failed].map(String);
@@ -525,9 +538,11 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     changesBookmarks: true,
     scan: ({ nodes, options }) => previewCleanUrls(nodes, options.urlCleaner),
     async apply(result) {
-      const changes = await applyBookmarkChanges(getUrlCleanerChanges(result.previews), {
+      const applied = await applyReviewedChanges(getUrlCleanerChanges(result.previews), {
         tool: 'tools_cleanUrls',
       });
+      if (applied.background) return reportBackgroundApply(applied);
+      const changes = applied.result;
       return reportChanges(
         changes,
         {
@@ -586,7 +601,9 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     scan: ({ nodes, options }) => fetchBookmarkMetadata(nodes, options.metadataFetcher),
     async apply(_result, selected) {
       const titleChanges = getMetadataTitleChanges(selected);
-      const changes = await applyBookmarkChanges(titleChanges, { tool: 'tools_metadataFetcher' });
+      const applied = await applyReviewedChanges(titleChanges, { tool: 'tools_metadataFetcher' });
+      if (applied.background) return reportBackgroundApply(applied);
+      const changes = applied.result;
       return reportChanges(
         // Picked items without a suggestion have nothing to apply.
         { ...changes, skipped: changes.skipped + selected.length - titleChanges.length },

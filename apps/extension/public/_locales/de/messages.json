@@ -7386,5 +7386,53 @@
     "jobs_errorSetup": {
         "message": "Diese Aufgabe konnte nicht weiterlaufen. Starten Sie sie neu.",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "Im Hintergrund übernehmen ab",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "Geprüfte Änderungen an mehr Lesezeichen als dieser Zahl werden im Hintergrund in Teilen übernommen und laufen weiter, wenn Sie die Seite schließen; jeden Teil machen Sie im Verlauf rückgängig",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "Änderungen werden übernommen: $1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "$1 Änderungen",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_applyScope_one": {
+        "message": "$1 Änderung",
+        "description": "Background tasks: how many changes a task applies (one)"
+    },
+    "jobs_countsApply": {
+        "message": "$1 übernommen, $2 übersprungen, weil sie sich geändert haben, $3 fehlgeschlagen",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "Beendet. Die bisherigen Änderungen bleiben; machen Sie sie im Verlauf rückgängig.",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "Wird im Hintergrund übernommen",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "$1 Änderungen werden in Teilen übernommen. Verfolgen Sie sie unter Hintergrundaufgaben und machen Sie jeden Teil im Verlauf rückgängig.",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_applyStartedDesc_one": {
+        "message": "$1 Änderung wird im Hintergrund übernommen. Verfolgen Sie sie unter Hintergrundaufgaben und machen Sie sie im Verlauf rückgängig.",
+        "description": "Notification: one change is applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "Angehalten: Der Browser wurde beendet, während Änderungen übernommen wurden. Fortsetzen prüft jedes verbleibende Lesezeichen erneut und überspringt die bereits geänderten.",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1 (Teil $2 von $3)",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }

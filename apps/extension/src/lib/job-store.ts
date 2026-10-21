@@ -40,7 +40,19 @@ export const JOB_LIMITS = {
 } as const;
 
 /** What a job does. Each kind has an adapter in the coordinator. */
-export const JOB_KINDS = ['deadLinks', 'metadataFetcher', 'siteIcons', 'reorganization'] as const;
+/** Jobs a tool starts on a scope (`start` command). */
+export const SCAN_JOB_KINDS = [
+  'deadLinks',
+  'metadataFetcher',
+  'siteIcons',
+  'reorganization',
+] as const;
+export const JOB_KINDS = [
+  ...SCAN_JOB_KINDS,
+  // Reviewed bookmark changes applied in parts (`apply` command).
+  'applyChanges',
+] as const;
+export type ScanJobKind = (typeof SCAN_JOB_KINDS)[number];
 export type JobKind = (typeof JOB_KINDS)[number];
 
 /** Why a job cannot go on until the user acts; each has a message (`JOB_BLOCK_KEYS` in `job-view.ts`). */
@@ -50,9 +62,13 @@ export const JOB_BLOCK_CODES = [
   'ai-service-changed',
   'ai-request',
   'uncertain-request',
+  'uncertain-write',
   'slice-setup',
 ] as const;
 export type JobBlockCode = (typeof JOB_BLOCK_CODES)[number];
+
+/** An `applyChanges` job's options: the tool whose reviewed changes it applies (title key). */
+export const applyJobOptionsSchema = z.strictObject({ tool: z.string().regex(/^tools_\w+$/) });
 
 /** Where a job was started from, as far as the extension knows. */
 export const JOB_SOURCES = ['manager', 'popup', 'sidePanel'] as const;
@@ -479,7 +495,32 @@ export async function markItemInFlight(
   return true;
 }
 
-/** Pending items whose request may have reached the provider with no answer saved. */
+/** Marks or clears several pending items at once (`markItemInFlight` for each, in one transaction). */
+export async function markItemsInFlight(
+  jobId: string,
+  generation: number,
+  indexes: readonly number[],
+  since: number | undefined,
+): Promise<boolean> {
+  const db = await openJobDb();
+  const tx = db.transaction(['jobs', 'items'], 'readwrite');
+  const job = parseJob(await tx.objectStore('jobs').get(jobId));
+  if (!job || job.generation !== generation) {
+    await tx.done;
+    return false;
+  }
+  const items = tx.objectStore('items');
+  for (const index of indexes) {
+    const item = await items.get([jobId, index]);
+    if (item?.state !== 'pending') continue;
+    const { inFlightSince: _previous, ...rest } = item;
+    await items.put(since === undefined ? rest : { ...rest, inFlightSince: since });
+  }
+  await tx.done;
+  return true;
+}
+
+/** Pending items whose request or write may have happened, with no result saved. */
 export async function getInFlightItems(jobId: string): Promise<JobItem[]> {
   const pending = await getPendingItems(jobId, Number.MAX_SAFE_INTEGER);
   return pending.filter((item) => item.inFlightSince !== undefined);

@@ -7168,5 +7168,45 @@
     "jobs_errorSetup": {
         "message": "此任务无法继续。请重新开始。",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "超过此数量时在后台应用",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "涉及书签数量超过此数的已审阅更改会在后台分批应用，关闭页面后仍会继续；每一批都可在历史记录中撤消",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "正在应用更改：$1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "$1 项更改",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_countsApply": {
+        "message": "已应用 $1 项，$2 项因已变化而跳过，$3 项失败",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "已停止。已做出的更改会保留；可在历史记录中撤消。",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "正在后台应用",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "$1 项更改正在分批应用。可在后台任务中查看进度，每一批都可在历史记录中撤消。",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "已暂停：应用更改时浏览器停止了。继续会重新检查剩余的每个书签，并跳过已经更改的书签。",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1（第 $2 批，共 $3 批）",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }
