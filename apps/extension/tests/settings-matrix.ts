@@ -147,6 +147,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e('options-settings.spec.ts', 'theme is one synced setting applied live in every open page'),
   ]),
   showFavicons: tested(POPUP, [popupDisplay]),
+  dateFormat: tested('lib/settings-storage.ts', [
+    unit('i18n-date-format.test.ts', 'shows dates and times in the chosen formats, in every place at once'),
+  ]),
+  timeFormat: tested('lib/settings-storage.ts', [
+    unit('i18n-date-format.test.ts', 'shows dates and times in the chosen formats, in every place at once'),
+  ]),
   browserIconCache: tested('hooks/use-site-icon.ts', [
     e2e('favicon-access.spec.ts', "Use the browser's icon cache shows cached icons only once it is on and allowed"),
     unit('site-icons.test.ts', 'prefers a saved icon over the browser icon cache, which is used only when allowed'),

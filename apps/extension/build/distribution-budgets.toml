@@ -56,19 +56,21 @@
 # outside Bookmark Scout (the background observer, write notes, and its setting and messages).
 # Firefox measured ZIP 1,682,501, 5,368,778 B uncompressed, 3,557,114 B of JavaScript, and
 # 1,253,871 B of locales.
+# Uncompressed raised again the same day (5,380,000 to 5,392,000) for the Dates and Times settings
+# (the formats in config/ui/date-formats.toml and their messages): 5,380,714 B measured.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_690_000
-raw_bytes = 5_380_000
+raw_bytes = 5_392_000
 
 [targets.edge]
 zip_bytes = 1_690_000
-raw_bytes = 5_380_000
+raw_bytes = 5_392_000
 
 [targets.firefox]
 zip_bytes = 1_690_000
-raw_bytes = 5_380_000
+raw_bytes = 5_392_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:

@@ -1,0 +1,36 @@
+# Ways the extension shows dates and times: the choices of Settings > Appearance > Dates and
+# Times. Read by src/lib/date-formats.ts. Each format is a set of Intl.DateTimeFormat options in
+# snake_case, so a new one is a new table here plus its label message (`label`, in every
+# language). `locale` pins the order for a format that must not follow the extension's language.
+
+[date_formats.auto]
+label = "settings_dateFormatAuto"
+year = "numeric"
+month = "numeric"
+day = "numeric"
+
+[date_formats.short]
+label = "settings_dateFormatShort"
+date_style = "short"
+
+[date_formats.long]
+label = "settings_dateFormatLong"
+date_style = "long"
+
+[date_formats.iso]
+label = "settings_dateFormatIso"
+locale = "sv-SE"
+year = "numeric"
+month = "2-digit"
+day = "2-digit"
+
+[time_formats.auto]
+label = "settings_timeFormatAuto"
+
+[time_formats.hours12]
+label = "settings_timeFormatHours12"
+hour_cycle = "h12"
+
+[time_formats.hours24]
+label = "settings_timeFormatHours24"
+hour_cycle = "h23"

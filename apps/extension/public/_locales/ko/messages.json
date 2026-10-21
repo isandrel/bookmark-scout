@@ -7106,5 +7106,53 @@
     "history_noUndoElsewhere": {
         "message": "Bookmark Scout가 한 변경이 아니어서 여기서 실행 취소할 수 없습니다.",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "settings_sectionDates": {
+        "message": "날짜와 시간",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "날짜 형식",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "날짜를 표시하는 방식(날짜 열, 기록, 세부 정보 등 모든 곳)",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "시간 형식",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "시간을 12시간제 또는 24시간제로, 또는 언어의 기본 방식으로 표시합니다",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "내 언어에 맞춤",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "짧게",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "길게",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "연-월-일",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "내 언어에 맞춤",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12시간제",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24시간제",
+        "description": "Time format option: 24-hour clock."
     }
 }

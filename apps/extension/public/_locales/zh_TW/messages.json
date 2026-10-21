@@ -6908,5 +6908,53 @@
     "history_noUndoElsewhere": {
         "message": "不是 Bookmark Scout 所做的變更，因此無法在此復原。",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "settings_sectionDates": {
+        "message": "日期和時間",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "日期格式",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "所有地方的日期顯示方式：日期欄、記錄和詳細資料",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "時間格式",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "以 12 小時制或 24 小時制顯示時間，或依你的語言習慣顯示",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "與我的語言一致",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "簡短",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "完整",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "年-月-日",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "與我的語言一致",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12 小時制",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24 小時制",
+        "description": "Time format option: 24-hour clock."
     }
 }

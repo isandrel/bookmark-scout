@@ -7106,5 +7106,53 @@
     "history_noUndoElsewhere": {
         "message": "Bookmark Scout による変更ではないため、ここでは元に戻せません。",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "settings_sectionDates": {
+        "message": "日付と時刻",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "日付の形式",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "日付の表示方法（日付の列、履歴、詳細など、すべての場所）",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "時刻の形式",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "時刻を 12 時間制または 24 時間制、あるいは言語の標準で表示します",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "言語に合わせる",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "短い",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "長い",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "年-月-日",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "言語に合わせる",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12 時間制",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24 時間制",
+        "description": "Time format option: 24-hour clock."
     }
 }

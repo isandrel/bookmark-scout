@@ -7118,5 +7118,53 @@
     "history_noUndoElsewhere": {
         "message": "Não foi feito pelo Bookmark Scout, então não pode ser desfeito aqui.",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "settings_sectionDates": {
+        "message": "Datas e horas",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "Formato de data",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "Como as datas aparecem em todo lugar: colunas de data, histórico e detalhes",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "Formato de hora",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "Mostrar horas no formato de 12 ou 24 horas, ou como no seu idioma",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "Como no meu idioma",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "Curto",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "Longo",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "Ano-mês-dia",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "Como no meu idioma",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12 horas",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24 horas",
+        "description": "Time format option: 24-hour clock."
     }
 }

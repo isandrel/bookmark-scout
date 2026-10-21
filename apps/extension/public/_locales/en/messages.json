@@ -7118,5 +7118,53 @@
     "history_noUndoElsewhere": {
         "message": "Not made by Bookmark Scout, so it cannot be undone here.",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "settings_sectionDates": {
+        "message": "Dates and Times",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "Date Format",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "How dates show everywhere: the date columns, the History, and details",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "Time Format",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "Show times on a 12-hour or 24-hour clock, or as your language does",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "As in my language",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "Short",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "Long",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "Year-month-day",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "As in my language",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12-hour",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24-hour",
+        "description": "Time format option: 24-hour clock."
     }
 }
