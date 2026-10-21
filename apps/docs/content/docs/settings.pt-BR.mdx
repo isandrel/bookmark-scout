@@ -35,14 +35,14 @@ Abaixo delas, **A IA é opcional** explica que o Bookmark Scout funciona sem IA;
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Pastas correspondentes** | Ativado | Durante a pesquisa, mostra acima dos resultados as pastas cujo nome corresponde, para salvar a página atual nelas |
-| **Máximo de pastas correspondentes** | 5 | Quantas pastas correspondentes mostrar |
+| **Máximo de pastas correspondentes** | <SettingDefault path="search.folder_matches.max" /> | Quantas pastas correspondentes mostrar |
 | **Permitir erros de digitação** | Ativado | Uma palavra com 4 letras ou mais corresponde a um nome de pasta mesmo com um erro de digitação |
 
 ### Pesquisa [#searching]
 
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
-| **Atraso da pesquisa** | 300 ms | Quanto tempo esperar depois que você para de digitar antes de o pop-up pesquisar |
+| **Atraso da pesquisa** | <SettingDefault path="search.search.debounce_ms" /> ms | Quanto tempo esperar depois que você para de digitar antes de o pop-up pesquisar |
 | **Máximo de resultados da pesquisa** | 20 resultados | Número máximo de correspondências mostradas; uma observação avisa quando há mais |
 | **Expandir pastas na pesquisa** | Ativado | Abre as pastas que contêm correspondências |
 | **Histórico de pesquisa** | Ativado | Lembra as pesquisas recentes neste dispositivo |
@@ -55,7 +55,7 @@ Consulte [Pesquisa e pesquisas salvas](/guides/search).
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Pastas recentes** | Ativado | Mostra as pastas usadas recentemente no pop-up e no menu de clique com o botão direito |
-| **Máximo de pastas recentes** | 5 | Quantas pastas recentes mostrar |
+| **Máximo de pastas recentes** | <SettingDefault path="search.saving.recent_folders_max" /> | Quantas pastas recentes mostrar |
 | **Nome padrão da pasta** | Nova pasta | O nome inicial de uma nova pasta |
 
 Consulte [Salvar e organizar](/guides/save-and-organize).
@@ -101,15 +101,15 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
-| **Largura do pop-up** | 400 px | Os navegadores permitem no máximo 800 px |
-| **Altura do pop-up** | 500 px | Os navegadores permitem no máximo 600 px |
-| **Limite de caracteres** | 50 caracteres | Encurta o título da página no cabeçalho das sugestões de IA do pop-up |
+| **Largura do pop-up** | <SettingDefault path="appearance.popup.width" /> px | Os navegadores permitem no máximo 800 px |
+| **Altura do pop-up** | <SettingDefault path="appearance.popup.height" /> px | Os navegadores permitem no máximo 600 px |
+| **Limite de caracteres** | <SettingDefault path="appearance.popup.truncate_length" /> caracteres | Encurta o título da página no cabeçalho das sugestões de IA do pop-up |
 
 ### Notificações [#notifications]
 
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
-| **Duração das notificações** | 4 s | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
+| **Duração das notificações** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
 | **Atraso das dicas** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Quanto tempo o ponteiro fica sobre um controle antes de a explicação aparecer |
 
 ## Comportamento [#behavior]
@@ -161,7 +161,7 @@ Abaixo delas, o painel do provedor contém **Chave de API**, **URL base**, **Mod
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
 | **Recomendar ao abrir** | Desativado | Pede recomendações de pasta sempre que o pop-up é aberto |
-| **Máximo de recomendações** | 5 | Número máximo de recomendações de pasta solicitadas |
+| **Máximo de recomendações** | <SettingDefault path="ai.suggestions.max_recommendations" /> | Número máximo de recomendações de pasta solicitadas |
 
 ### Ler conteúdo da página [#read-page-content]
 
@@ -202,10 +202,10 @@ Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma
 
 | Ferramenta | Configurações e padrões |
 | --- | --- |
-| **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** 200; **Profundidade máxima** 8; **Tamanho do trecho** 240 |
-| **Tags automáticas** | **Mínimo de tags** 2; **Máximo de tags** 5; **Estilo das tags** kebab-case; **Modo de mesclagem** Acrescentar; **Remover tags duplicadas** ativado; **Enviar tags existentes** ativado |
-| **Gerador de resumos** | **Tamanho do resumo** 160; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
-| **Reorganização de pastas com IA** | **Confiança mínima** 55% (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** 100 favoritos por solicitação |
+| **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profundidade máxima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Tamanho do trecho** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **Tags automáticas** | **Mínimo de tags** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Máximo de tags** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Estilo das tags** kebab-case; **Modo de mesclagem** Acrescentar; **Remover tags duplicadas** ativado; **Enviar tags existentes** ativado |
+| **Gerador de resumos** | **Tamanho do resumo** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
+| **Reorganização de pastas com IA** | **Confiança mínima** 55% (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** <SettingDefault path="ai_tools.reorganization.batch_size" /> favoritos por solicitação |
 
 Tags automáticas e Gerador de resumos sempre trabalham na pasta atual.
 
@@ -220,9 +220,9 @@ Tags automáticas e Gerador de resumos sempre trabalham na pasta atual.
 
 | Ferramenta | Configurações e padrões |
 | --- | --- |
-| **Limpador de duplicatas** | **Critério de correspondência** URL normalizado; **Normalizar www**, **Ignorar protocolo** e **Ignorar barra final** ativados; **Regra de manutenção** Mais antigo; **Máximo de grupos** 500. Sempre verifica todos os favoritos |
+| **Limpador de duplicatas** | **Critério de correspondência** URL normalizado; **Normalizar www**, **Ignorar protocolo** e **Ignorar barra final** ativados; **Regra de manutenção** Mais antigo; **Máximo de grupos** <SettingDefault path="maintenance.duplicates.max_groups" />. Sempre verifica todos os favoritos |
 | **Limpador de URLs** | **Remover fragmentos** desativado; **Ordenar parâmetros de consulta** e **Remover parâmetros de consulta duplicados** ativados; listas de **Parâmetros preservados** e **Parâmetros removidos** |
-| **Verificar links quebrados** | **Tempo limite da solicitação** 8 s; **Simultaneidade** 4; **Número de tentativas** 1; **Seguir redirecionamentos** ativado; **Códigos de status de sucesso** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Verificar links quebrados** | **Tempo limite da solicitação** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> s; **Simultaneidade** <SettingDefault path="maintenance.dead_links.concurrency" />; **Número de tentativas** <SettingDefault path="maintenance.dead_links.retry_count" />; **Seguir redirecionamentos** ativado; **Códigos de status de sucesso** 200, 201, 202, 204, 301, 302, 307, 308 |
 | **Tarefas em segundo plano** | **Aplicar em segundo plano acima de** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />: alterações revisadas em mais favoritos são aplicadas em segundo plano, em partes, e continuam quando você fecha a página; cada parte é uma alteração no [Histórico](/guides/save-and-organize), onde é desfeita |
 
 As ferramentas começam em **Todos os favoritos**, para que uma verificação a partir da pasta em que o gerenciador abre não deixe as outras de fora. Altere o **Escopo padrão** de uma ferramenta para que ela comece na pasta aberta. **Reorganização de pastas com IA** começa na pasta aberta, porque um plano para todos os favoritos envia todos eles ao seu provedor de IA. No nível superior do gerenciador, onde nenhuma pasta está aberta, todas as ferramentas começam em **Todos os favoritos**.
@@ -238,8 +238,8 @@ Listas como **Parâmetros removidos** são editadas como etiquetas: digite um no
 | **Ativar Buscador de metadados** | Ativado | Mostra o **Buscador de metadados** na barra lateral Ferramentas |
 | **Substituir títulos** | Desativado | Oferece novos títulos também para favoritos que já têm um |
 | **Buscar descrições** | Ativado | Mostra as descrições das páginas na revisão. Elas nunca são salvas |
-| **Tempo limite da solicitação** | 8 s | Por página. Também usado por **Atualizar ícones dos sites** |
-| **Simultaneidade** | 4 | Páginas solicitadas ao mesmo tempo. Também usado por **Atualizar ícones dos sites** |
+| **Tempo limite da solicitação** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> s | Por página. Também usado por **Atualizar ícones dos sites** |
+| **Simultaneidade** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | Páginas solicitadas ao mesmo tempo. Também usado por **Atualizar ícones dos sites** |
 
 ### Atualizar ícones dos sites [#refresh-site-icons]
 
@@ -247,8 +247,8 @@ Listas como **Parâmetros removidos** são editadas como etiquetas: digite um no
 | --- | --- | --- |
 | **Ativar Atualizar ícones dos sites** | Ativado | Mostra **Atualizar ícones dos sites** na barra lateral Ferramentas |
 | **Escopo padrão** | Todos os favoritos | Escopo com que a atualização dos ícones dos sites começa |
-| **Tamanho preferido do ícone** | 32 px | Quando uma página lista vários ícones, baixa o de tamanho mais próximo deste |
-| **Tamanho máximo do arquivo de ícone** | 64 KB | Arquivos de ícone maiores não são baixados nem salvos |
+| **Tamanho preferido do ícone** | <SettingDefault path="metadata_content.site_icons.preferred_size" /> px | Quando uma página lista vários ícones, baixa o de tamanho mais próximo deste |
+| **Tamanho máximo do arquivo de ícone** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | Arquivos de ícone maiores não são baixados nem salvos |
 | **Limite de armazenamento de ícones** | 4 MB | Tamanho total dos ícones salvos neste dispositivo; os mais antigos são removidos primeiro |
 
 ## Segurança [#security]
@@ -267,7 +267,7 @@ Listas como **Parâmetros removidos** são editadas como etiquetas: digite um no
 | --- | --- | --- |
 | **Ativar estatísticas** | Ativado | Mostra **Estatísticas dos favoritos** na barra lateral Ferramentas |
 | **Incluir domínios**, **Incluir pastas**, **Incluir duplicatas**, **Incluir protocolos**, **Incluir distribuição por nível** | Ativado | Seções do relatório; uma seção desativada fica oculta |
-| **Quantidade de itens principais** | 10 | Tamanho das listas dos principais domínios e pastas |
+| **Quantidade de itens principais** | <SettingDefault path="analytics.statistics.top_n" /> | Tamanho das listas dos principais domínios e pastas |
 
 ## Importar e exportar [#data]
 
@@ -276,7 +276,7 @@ Listas como **Parâmetros removidos** são editadas como etiquetas: digite um no
 | **Mostrar ferramenta de exportação** e **Mostrar ferramenta de importação** | Ativado | Mostra essas ferramentas na barra lateral Ferramentas |
 | **Formato de exportação padrão** | HTML | Formato selecionado quando a ferramenta de exportação é aberta |
 | **Prefixo do nome do arquivo** | `bookmarks_` | Início do nome de todo arquivo exportado |
-| **Tamanho máximo do nome do arquivo** | 50 | Nome de arquivo gerado mais longo possível |
+| **Tamanho máximo do nome do arquivo** | <SettingDefault path="data.export.filename_max_length" /> | Nome de arquivo gerado mais longo possível |
 | **Recuo do JSON**, **Recuo do HTML**, **Recuo do Markdown** | 2, 4, 2 | Espaços por nível em cada formato |
 | **Incluir datas** e **Incluir URLs** | Ativado | Inclui esses dados nas exportações |
 

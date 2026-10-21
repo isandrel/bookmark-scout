@@ -35,14 +35,14 @@ description: 按标签页逐一介绍 Bookmark Scout 设置页面中的每项设
 | 设置 | 默认值 | 作用 |
 | --- | --- | --- |
 | **匹配的文件夹** | 开启 | 搜索时，在结果上方列出名称匹配的文件夹，方便把当前网页保存到那里 |
-| **匹配文件夹数量上限** | 5 | 最多列出多少个匹配的文件夹 |
+| **匹配文件夹数量上限** | <SettingDefault path="search.folder_matches.max" /> | 最多列出多少个匹配的文件夹 |
 | **允许拼写错误** | 开启 | 4 个字母及以上的搜索词，与文件夹名相差一个字母也能匹配 |
 
 ### 搜索 [#searching]
 
 | 设置 | 默认值 | 作用 |
 | --- | --- | --- |
-| **搜索延迟** | 300 ms | 停止输入后，弹出窗口等待多长时间再开始搜索 |
+| **搜索延迟** | <SettingDefault path="search.search.debounce_ms" /> ms | 停止输入后，弹出窗口等待多长时间再开始搜索 |
 | **最大搜索结果数** | 20 个结果 | 最多显示的匹配项数量；如有更多匹配项，会显示提示 |
 | **搜索时展开文件夹** | 开启 | 展开包含匹配项的文件夹 |
 | **搜索历史记录** | 开启 | 在本设备上记住最近的搜索 |
@@ -55,7 +55,7 @@ description: 按标签页逐一介绍 Bookmark Scout 设置页面中的每项设
 | 设置 | 默认值 | 作用 |
 | --- | --- | --- |
 | **最近文件夹** | 开启 | 在弹出窗口和右键菜单中显示最近使用的文件夹 |
-| **最近文件夹数量上限** | 5 | 显示多少个最近文件夹 |
+| **最近文件夹数量上限** | <SettingDefault path="search.saving.recent_folders_max" /> | 显示多少个最近文件夹 |
 | **默认文件夹名称** | 新建文件夹 | 新文件夹的初始名称 |
 
 请参阅[保存和整理](/guides/save-and-organize)。
@@ -101,15 +101,15 @@ description: 按标签页逐一介绍 Bookmark Scout 设置页面中的每项设
 
 | 设置 | 默认值 | 作用 |
 | --- | --- | --- |
-| **弹出窗口宽度** | 400 px | 浏览器最多允许 800 px |
-| **弹出窗口高度** | 500 px | 浏览器最多允许 600 px |
-| **截断长度** | 50 个字符 | 缩短弹出窗口中 AI 建议标题栏里显示的网页标题 |
+| **弹出窗口宽度** | <SettingDefault path="appearance.popup.width" /> px | 浏览器最多允许 800 px |
+| **弹出窗口高度** | <SettingDefault path="appearance.popup.height" /> px | 浏览器最多允许 600 px |
+| **截断长度** | <SettingDefault path="appearance.popup.truncate_length" /> 个字符 | 缩短弹出窗口中 AI 建议标题栏里显示的网页标题 |
 
 ### 通知 [#notifications]
 
 | 设置 | 默认值 | 作用 |
 | --- | --- | --- |
-| **通知显示时长** | 4 秒 | 消息保持显示的时长。撤消消息有自己独立的 10 秒时限 |
+| **通知显示时长** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> 秒 | 消息保持显示的时长。撤消消息有自己独立的 10 秒时限 |
 | **提示延迟** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> 毫秒 | 指针停留在控件上多久后显示说明 |
 
 ## 行为 [#behavior]
@@ -161,7 +161,7 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | 设置 | 默认值 | 作用 |
 | --- | --- | --- |
 | **打开时自动推荐** | 关闭 | 每次打开弹出窗口时都请求文件夹推荐 |
-| **最大推荐数** | 5 | 最多请求多少条文件夹推荐 |
+| **最大推荐数** | <SettingDefault path="ai.suggestions.max_recommendations" /> | 最多请求多少条文件夹推荐 |
 
 ### 读取网页内容 [#read-page-content]
 
@@ -202,9 +202,9 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 
 | 工具 | 设置和默认值 |
 | --- | --- |
-| **AI 上下文打包** | **输出格式** Markdown；**包含文件夹路径**、**包含日期**、**包含已保存的标签**和**包含已保存的摘要**开启；**最大项数** 200；**最大深度** 8；**摘录长度** 240 |
-| **自动标签** | **最少标签数** 2；**最多标签数** 5；**标签样式** kebab-case；**合并方式**追加；**移除重复标签**开启；**发送现有标签**开启 |
-| **内容摘要** | **摘要长度** 160；**包含域名提示**开启；**合并方式**替换 |
+| **AI 上下文打包** | **输出格式** Markdown；**包含文件夹路径**、**包含日期**、**包含已保存的标签**和**包含已保存的摘要**开启；**最大项数** <SettingDefault path="ai_tools.context_packer.max_items" />；**最大深度** <SettingDefault path="ai_tools.context_packer.max_depth" />；**摘录长度** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **自动标签** | **最少标签数** <SettingDefault path="ai_tools.auto_tagging.min_tags" />；**最多标签数** <SettingDefault path="ai_tools.auto_tagging.max_tags" />；**标签样式** kebab-case；**合并方式**追加；**移除重复标签**开启；**发送现有标签**开启 |
+| **内容摘要** | **摘要长度** <SettingDefault path="ai_tools.summarizer.summary_length" />；**包含域名提示**开启；**合并方式**替换 |
 | **AI 文件夹重组** | **最低置信度** 55%（低于此值的移动会被舍弃）；**批次大小**每次请求 100 个书签 |
 
 自动标签和内容摘要始终作用于当前文件夹。
@@ -220,9 +220,9 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 
 | 工具 | 设置和默认值 |
 | --- | --- |
-| **重复书签清理** | **匹配策略**规范化网址；**统一 www**、**忽略协议**和**忽略末尾斜杠**开启；**保留规则**最早的；**最大组数** 500。始终扫描所有书签 |
+| **重复书签清理** | **匹配策略**规范化网址；**统一 www**、**忽略协议**和**忽略末尾斜杠**开启；**保留规则**最早的；**最大组数** <SettingDefault path="maintenance.duplicates.max_groups" />。始终扫描所有书签 |
 | **网址清理** | **移除片段**关闭；**排序查询参数**和**去除重复查询参数**开启；**保留的参数**和**移除的参数**列表 |
-| **检查失效链接** | **请求超时** 8 秒；**并发数** 4；**重试次数** 1；**跟随重定向**开启；**成功状态码** 200、201、202、204、301、302、307、308 |
+| **检查失效链接** | **请求超时** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒；**并发数** <SettingDefault path="maintenance.dead_links.concurrency" />；**重试次数** <SettingDefault path="maintenance.dead_links.retry_count" />；**跟随重定向**开启；**成功状态码** 200、201、202、204、301、302、307、308 |
 | **后台任务** | **超过此数量时在后台应用** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />：涉及更多书签的已审阅更改会在后台分批应用，关闭页面后仍会继续；每一批都是[历史记录](/guides/save-and-organize)中的一项更改，可在那里撤消 |
 
 工具会从**所有书签**开始，这样即使从管理器打开时所在的文件夹开始扫描，也不会漏掉其他文件夹。如果想让工具从当前打开的文件夹开始，请更改它的**默认范围**。**AI 文件夹重组**从当前打开的文件夹开始，因为针对所有书签的方案会把它们全部发送给你的 AI 服务商。在管理器的顶层（没有打开任何文件夹），所有工具都从**所有书签**开始。
@@ -238,8 +238,8 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | **启用元数据获取** | 开启 | 在工具侧栏中显示**元数据获取** |
 | **覆盖标题** | 关闭 | 也为已有标题的书签提供新标题 |
 | **获取描述** | 开启 | 在审阅时显示网页描述。描述永远不会保存 |
-| **请求超时** | 8 秒 | 针对每个网页。**刷新网站图标**也使用此设置 |
-| **并发数** | 4 | 同时请求的网页数。**刷新网站图标**也使用此设置 |
+| **请求超时** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> 秒 | 针对每个网页。**刷新网站图标**也使用此设置 |
+| **并发数** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | 同时请求的网页数。**刷新网站图标**也使用此设置 |
 
 ### 刷新网站图标 [#refresh-site-icons]
 
@@ -247,8 +247,8 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | --- | --- | --- |
 | **启用“刷新网站图标”** | 开启 | 在工具侧栏中显示**刷新网站图标** |
 | **默认范围** | 所有书签 | 网站图标刷新开始时使用的范围 |
-| **首选图标大小** | 32px | 当网页列出多个图标时，下载最接近此大小的图标 |
-| **图标文件大小上限** | 64 KB | 超过此大小的图标文件不会下载或保存 |
+| **首选图标大小** | <SettingDefault path="metadata_content.site_icons.preferred_size" />px | 当网页列出多个图标时，下载最接近此大小的图标 |
+| **图标文件大小上限** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | 超过此大小的图标文件不会下载或保存 |
 | **图标存储上限** | 4 MB | 本设备上已保存图标的总大小；超出时会先移除最早保存的图标 |
 
 ## 安全 [#security]
@@ -267,7 +267,7 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | --- | --- | --- |
 | **启用统计** | 开启 | 在工具侧栏中显示**书签统计** |
 | **包含域名**、**包含文件夹**、**包含重复项**、**包含协议**、**包含层级分布** | 开启 | 报告中的各个部分；关闭的部分会被隐藏 |
-| **前 N 项** | 10 | 热门域名和热门文件夹列表的长度 |
+| **前 N 项** | <SettingDefault path="analytics.statistics.top_n" /> | 热门域名和热门文件夹列表的长度 |
 
 ## 导入与导出 [#data]
 
@@ -276,8 +276,8 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | **显示导出工具**和**显示导入工具** | 开启 | 在工具侧栏中显示它们 |
 | **默认导出格式** | HTML | 打开导出工具时选中的格式 |
 | **文件名前缀** | `bookmarks_` | 每个导出文件名的开头 |
-| **文件名最大长度** | 50 | 生成的文件名的最大长度 |
-| **JSON 缩进大小**、**HTML 缩进大小**、**Markdown 缩进大小** | 2、4、2 | 各格式中每一层级缩进的空格数 |
+| **文件名最大长度** | <SettingDefault path="data.export.filename_max_length" /> | 生成的文件名的最大长度 |
+| **JSON 缩进大小**、**HTML 缩进大小**、**Markdown 缩进大小** | <SettingDefault path="data.export.markdown_indent_spaces" />、4、2 | 各格式中每一层级缩进的空格数 |
 | **包含日期**和**包含网址** | 开启 | 在导出文件中包含这些信息 |
 
 请参阅[导入和导出](/guides/import-export)。
