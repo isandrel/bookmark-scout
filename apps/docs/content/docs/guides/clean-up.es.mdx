@@ -83,6 +83,8 @@ Haz clic en **Guardar** (por ejemplo, **Guardar 12 iconos**) para conservarlos, 
 
 Para cada sitio web (origen) del ámbito, la herramienta solicita una página guardada sin cookies, lee solo su encabezado y descarga el icono indicado por la página que más se acerque al **Tamaño de icono preferido**, o el `/favicon.ico` del sitio. Solo se usan archivos de icono del propio dominio del marcador, nunca un servicio de iconos de terceros. Se omiten los archivos que superan el **Tamaño máximo del archivo de icono** (64 KB) o que no son imágenes.
 
+La actualización se ejecuta en segundo plano: sigue cuando cierras el administrador, y su tarjeta y **Tareas en segundo plano** muestran su progreso, con **Pausar**, **Reanudar** y **Cancelar**. Sus resultados esperan en **Ver resultados**; no se guarda nada hasta que haces clic en **Guardar**.
+
 Los iconos guardados se almacenan en el almacenamiento local de este navegador, no se sincronizan y se muestran en la ventana emergente, el panel lateral y el administrador. Tienen prioridad sobre el icono en caché del navegador. La tarjeta muestra cuántos hay guardados; **Borrar los iconos guardados** los elimina todos. Cuando el total llega al **Límite de almacenamiento de iconos** (4 MB), se quitan primero los iconos más antiguos. Un sitio que falla en una actualización posterior conserva el icono guardado antes.
 
 <Callout title="Firefox">
@@ -93,4 +95,4 @@ En Firefox, abre el administrador con **Abrir el administrador de marcadores** e
 
 - [Encontrar y reparar enlaces rotos](/guides/dead-links) comprueba si las páginas guardadas en marcadores siguen cargando.
 - **Escáner de privacidad** (en **Seguridad**) marca las URLs que contienen tokens, direcciones de correo electrónico, UUID o parámetros sensibles (y los títulos, si **Analizar títulos** está activado), para que puedas editarlas o eliminarlas tú mismo. Los enlaces normales dentro de una página y las direcciones de aplicaciones como `#inbox` de Gmail no se marcan.
-- **Extractor de metadatos** (en **Títulos e iconos de páginas**) sugiere títulos de página a partir de las páginas en vivo y solo aplica los que selecciones. Usa el mismo acceso a sitios web que la comprobación de enlaces rotos.
+- **Extractor de metadatos** (en **Títulos e iconos de páginas**) sugiere títulos de página a partir de las páginas en vivo y solo aplica los que selecciones. Usa el mismo acceso a sitios web que la comprobación de enlaces rotos. También se ejecuta en segundo plano, y sus títulos esperan en **Ver resultados**.

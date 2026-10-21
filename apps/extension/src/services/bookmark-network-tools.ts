@@ -303,15 +303,15 @@ async function probeUrl(
   );
 }
 
-/** One bookmark to check: what a dead-link result reports about it. */
-export type DeadLinkTarget = Pick<DeadLinkResultItem, 'id' | 'title' | 'url' | 'folderPath'>;
+/** One bookmark a network tool checks: what its result reports about it. */
+export type LinkTarget = Pick<DeadLinkResultItem, 'id' | 'title' | 'url' | 'folderPath'>;
 
 /**
  * Checks one bookmark's link. With `signal` aborted it throws {@link RequestAbortedError} at the
  * next request or retry, so a stopped check is never reported as a dead link.
  */
 export async function checkDeadLink(
-  base: DeadLinkTarget,
+  base: LinkTarget,
   options: DeadLinkOptions,
   signal?: AbortSignal,
 ): Promise<DeadLinkResultItem> {
@@ -368,7 +368,7 @@ export async function checkDeadLink(
 }
 
 /** The bookmarks a dead-link check reads in `nodes`, as targets, in tree order. */
-export function deadLinkTargets(nodes: BookmarkTreeNode[]): DeadLinkTarget[] {
+export function linkTargets(nodes: BookmarkTreeNode[]): LinkTarget[] {
   return flattenBookmarks(nodes)
     .filter((bookmark) => Boolean(bookmark.node.url))
     .map((bookmark) => ({
@@ -383,7 +383,7 @@ export async function scanDeadLinks(
   nodes: BookmarkTreeNode[],
   options: DeadLinkOptions,
 ): Promise<DeadLinkScanResult> {
-  const targets = deadLinkTargets(nodes);
+  const targets = linkTargets(nodes);
   const items = await mapWithConcurrency(targets, options.concurrency, (target) =>
     checkDeadLink(target, options),
   );
@@ -410,80 +410,60 @@ function decodeHtml(bytes: ArrayBuffer, contentType: string | null): string {
   return new TextDecoder('utf-8').decode(bytes);
 }
 
+/**
+ * Fetches one bookmark's page head and suggests its title. `readHead` parses the HTML (a page
+ * parses it itself; a service worker, which has no DOM parser, asks the AI host page). With
+ * `signal` aborted it throws {@link RequestAbortedError}, so a stopped fetch is never a result.
+ */
+export async function fetchMetadataItem(
+  base: LinkTarget,
+  options: MetadataOptions,
+  readHead: (html: string) => HtmlHead | Promise<HtmlHead>,
+  signal?: AbortSignal,
+): Promise<MetadataFetchResultItem> {
+  const { url } = base;
+  const item = { ...base, changed: false };
+  if (!isWebUrl(url)) return { ...item, status: 'skipped' };
+  try {
+    // Error pages ("404 Not Found") must never become title suggestions.
+    const page = await fetchHtmlPage(url, {
+      timeoutMs: options.requestTimeoutMs,
+      maxBytes: METADATA_MAX_BYTES,
+      until: 'head',
+      signal,
+    });
+    if (!page.ok) return { ...item, status: 'httpError', statusCode: page.status };
+    if (page.html === null) return { ...item, status: 'notHtml', statusCode: page.status };
+    const { title: suggestedTitle, description } = await readHead(page.html);
+    const changed = Boolean(
+      (options.overwriteTitles || !base.title) && suggestedTitle && suggestedTitle !== base.title,
+    );
+    return {
+      ...item,
+      status: 'ok',
+      statusCode: page.status,
+      suggestedTitle,
+      description: options.fetchDescriptions ? description : undefined,
+      changed,
+    };
+  } catch (error) {
+    if (error instanceof RequestAbortedError) throw error;
+    const errorKind = await classifyFailure(error, url, options.requestTimeoutMs, signal);
+    return errorKind === 'timeout'
+      ? { ...item, status: 'timeout' }
+      : { ...item, status: 'error', errorKind };
+  }
+}
+
 export async function fetchBookmarkMetadata(
   nodes: BookmarkTreeNode[],
   options: MetadataOptions,
 ): Promise<MetadataFetchResult> {
-  const bookmarks = flattenBookmarks(nodes).filter((bookmark) => Boolean(bookmark.node.url));
-
-  const items = await mapWithConcurrency(bookmarks, options.concurrency, async (bookmark) => {
-    const url = bookmark.node.url ?? '';
-    const base = {
-      id: bookmark.node.id,
-      title: bookmark.node.title,
-      url,
-      folderPath: bookmark.pathLabel,
-      changed: false,
-    };
-    if (!isWebUrl(url)) {
-      return { ...base, status: 'skipped' } satisfies MetadataFetchResultItem;
-    }
-
-    try {
-      // Error pages ("404 Not Found") must never become title suggestions.
-      const page = await fetchHtmlPage(url, {
-        timeoutMs: options.requestTimeoutMs,
-        maxBytes: METADATA_MAX_BYTES,
-        until: 'head',
-      });
-      if (!page.ok) {
-        return {
-          ...base,
-          status: 'httpError',
-          statusCode: page.status,
-        } satisfies MetadataFetchResultItem;
-      }
-      if (page.html === null) {
-        return {
-          ...base,
-          status: 'notHtml',
-          statusCode: page.status,
-        } satisfies MetadataFetchResultItem;
-      }
-
-      const doc = parseFetchedHtml(page.html);
-      const suggestedTitle =
-        doc.querySelector('title')?.textContent?.replace(/\s+/g, ' ').trim() || undefined;
-      const description = options.fetchDescriptions
-        ? doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim() ||
-          undefined
-        : undefined;
-      const changed = Boolean(
-        (options.overwriteTitles || !bookmark.node.title) &&
-          suggestedTitle &&
-          suggestedTitle !== bookmark.node.title,
-      );
-
-      return {
-        ...base,
-        status: 'ok',
-        statusCode: page.status,
-        suggestedTitle,
-        description,
-        changed,
-      } satisfies MetadataFetchResultItem;
-    } catch (error) {
-      const errorKind = await classifyFailure(error, url, options.requestTimeoutMs);
-      return errorKind === 'timeout'
-        ? ({ ...base, status: 'timeout' } satisfies MetadataFetchResultItem)
-        : ({ ...base, status: 'error', errorKind } satisfies MetadataFetchResultItem);
-    }
-  });
-
-  return {
-    scannedBookmarks: bookmarks.length,
-    items,
-  };
+  const targets = linkTargets(nodes);
+  const items = await mapWithConcurrency(targets, options.concurrency, (target) =>
+    fetchMetadataItem(target, options, (html) => readHtmlHead(html, options.fetchDescriptions)),
+  );
+  return { scannedBookmarks: targets.length, items };
 }
 
 /**
@@ -750,6 +730,8 @@ export type FetchHtmlPageOptions = {
   allowUrl?: (url: string) => boolean;
   /** Defaults to the global fetch. */
   fetch?: typeof globalThis.fetch;
+  /** Stops the download; it then throws {@link RequestAbortedError}. */
+  signal?: AbortSignal;
 };
 
 /**
@@ -773,6 +755,7 @@ export function fetchHtmlPage(url: string, options: FetchHtmlPageOptions): Promi
       return { ...page, html: decodeHtml(bytes, contentType) };
     },
     options.fetch,
+    options.signal,
   );
 }
 

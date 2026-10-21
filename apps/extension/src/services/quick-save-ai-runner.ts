@@ -105,6 +105,9 @@ function isActivitySource(source: string): source is AIActivitySource {
 export async function handleAIHostRequest(
   request: QuickSaveHostRequest,
 ): Promise<QuickSaveHostResponse> {
+  if (request.type === QUICK_SAVE_MESSAGE.hostReadHead) {
+    return { ok: true, head: readHtmlHead(request.html, request.descriptions) };
+  }
   if (request.type === QUICK_SAVE_MESSAGE.hostReadPage) {
     const page = await readPageText(request.url);
     return { ok: true, page: page ?? null };

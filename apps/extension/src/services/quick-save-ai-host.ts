@@ -14,9 +14,10 @@ export const AI_HOST_PATH = '/ai-host.html';
 
 /**
  * An AI call in progress: its service (none when it only reads pages, as for local agents), and
- * what made it, which its log entries name.
+ * what made it, which its log entries name. A session with no source (a background job reading
+ * page heads) makes no AI request, so the host cannot send one for it.
  */
-type ActiveCall = { provider?: string; model?: string; source: AIActivitySource };
+type ActiveCall = { provider?: string; model?: string; source?: AIActivitySource };
 
 /** AI calls in progress, by token; the host's provider requests must carry one of them. */
 const activeCalls = new Map<string, ActiveCall>();
@@ -38,7 +39,7 @@ async function openHost(): Promise<void> {
     await browser.offscreen.createDocument({
       url: AI_HOST_PATH,
       reasons: ['DOM_PARSER'],
-      justification: 'Suggests a folder with AI and reads the page text for a quick save.',
+      justification: 'Suggests folders with AI, reads page text, and reads page titles.',
     });
     return;
   }
@@ -94,6 +95,8 @@ type AIHostGenerateRequest<Name extends AIHostSchemaName> = {
 
 export type AIHostSession = {
   readPage: (url: string) => Promise<{ title?: string; text: string } | null>;
+  /** Reads a fetched page's `<head>`, which a service worker cannot parse itself. */
+  readHead: (html: string, descriptions: boolean) => Promise<HtmlHead>;
   generate: <Name extends AIHostSchemaName>(
     request: AIHostGenerateRequest<Name>,
   ) => Promise<AIHostSchemaOutputs[Name]>;
@@ -112,13 +115,13 @@ export async function withAIHost<T>(
     locale,
     source,
     keepOpen = false,
-  }: { locale: SupportedLocale; source: AIActivitySource; keepOpen?: boolean },
+  }: { locale: SupportedLocale; source?: AIActivitySource; keepOpen?: boolean },
   work: (session: AIHostSession) => Promise<T>,
 ): Promise<T> {
   const token = crypto.randomUUID();
   activeCalls.set(token, {
     ...(settings ? { provider: settings.provider, model: settings.model } : {}),
-    source,
+    ...(source ? { source } : {}),
   });
   try {
     hostReady ??= openHost().catch((error: unknown) => {
@@ -133,6 +136,15 @@ export async function withAIHost<T>(
         const response = await askHost({ type: QUICK_SAVE_MESSAGE.hostReadPage, token, url });
         return response.ok ? (response.page ?? null) : null;
       },
+      readHead: async (html, descriptions) => {
+        const response = await askHost({
+          type: QUICK_SAVE_MESSAGE.hostReadHead,
+          token,
+          html,
+          descriptions,
+        });
+        return response.ok ? (response.head ?? {}) : {};
+      },
       generate: async <Name extends AIHostSchemaName>({
         schema,
         choices,
@@ -140,7 +152,7 @@ export async function withAIHost<T>(
         system,
         prompt,
       }: AIHostGenerateRequest<Name>) => {
-        if (!settings) throw new Error('No AI service was given for this session.');
+        if (!settings || !source) throw new Error('No AI service was given for this session.');
         const response = await askHost({
           type: QUICK_SAVE_MESSAGE.hostGenerate,
           token,
@@ -190,7 +202,7 @@ export async function recordAIHostActivity(
   const parsed = quickSaveHostActivitySchema.safeParse(message);
   if (!parsed.success || !isFromAIHost(sender)) return;
   const call = activeCalls.get(parsed.data.token);
-  if (!call?.provider || !call.model) return;
+  if (!call?.provider || !call.model || !call.source) return;
   const { input, output, error, durationMs } = parsed.data;
   await recordOnDeviceActivity({
     source: call.source,
@@ -219,10 +231,10 @@ export async function forwardAIHostFetch(
   const parsed = quickSaveHostFetchSchema.safeParse(message);
   if (!parsed.success || !isFromAIHost(sender)) return null;
   const call = activeCalls.get(parsed.data.token);
-  if (!call) return { ok: false, error: 'No AI call in progress' };
+  if (!call?.source) return { ok: false, error: 'No AI call in progress' };
   const { url, method, headers, body } = parsed.data;
   try {
-    const logged = createLoggingFetch(call);
+    const logged = createLoggingFetch({ ...call, source: call.source });
     const response = await logged(url, { method, headers, body });
     return {
       ok: true,

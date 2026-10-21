@@ -46,10 +46,13 @@ function summaryCount(page: Page, status: string) {
 
 type MockedResponse = { status?: number; contentType?: string; body?: string | Buffer } | 'abort';
 
-/** Route-mocks every *.e2e.invalid request and records the URLs that were requested. */
+/**
+ * Route-mocks every *.e2e.invalid request and records the URLs that were requested. The refresh
+ * runs as a background job, so the routes are on the context, which covers the service worker.
+ */
 async function mockSites(page: Page, responses: Record<string, MockedResponse>) {
   const requests: string[] = [];
-  await page.route('https://*.e2e.invalid/**', async (route: Route) => {
+  await page.context().route('https://*.e2e.invalid/**', async (route: Route) => {
     const url = route.request().url();
     requests.push(url);
     const response = responses[url];

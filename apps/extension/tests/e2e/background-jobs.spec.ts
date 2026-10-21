@@ -39,34 +39,54 @@ type HeldSite = {
   close: () => Promise<void>;
 };
 
-/** A real HTTP server whose links answer only when the test releases them. */
+// A real 1x1 PNG, so it passes the image check.
+const PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+  'base64',
+);
+
+/**
+ * A real HTTP server whose links answer only when the test releases them: `/link/N` is a page
+ * titled "Title N", `/icon-page` declares `/icon.png`, and `/icon.png` is a PNG.
+ */
 async function startHeldSite(): Promise<HeldSite> {
   const requests: string[] = [];
-  const waiting: ServerResponse[] = [];
+  const waiting: { res: ServerResponse; path: string }[] = [];
   let gateOpen = false;
-  const answer = (res: ServerResponse) => {
+  const answer = ({ res, path }: { res: ServerResponse; path: string }) => {
     if (res.writableEnded || res.destroyed) return;
+    if (path === '/icon.png') {
+      res.writeHead(200, { 'content-type': 'image/png' });
+      res.end(PNG);
+      return;
+    }
     res.writeHead(200, { 'content-type': 'text/html' });
-    res.end('<title>Held</title>');
+    const link = /^\/link\/(\d+)$/.exec(path);
+    res.end(
+      path === '/icon-page'
+        ? '<head><link rel="icon" href="/icon.png"></head>'
+        : `<head><title>${link ? `Title ${link[1]}` : 'Held'}</title></head>`,
+    );
   };
   const server: Server = createServer((req, res) => {
-    requests.push(`${req.method} ${new URL(req.url ?? '/', 'http://localhost').pathname}`);
-    if (gateOpen) answer(res);
-    else waiting.push(res);
+    const path = new URL(req.url ?? '/', 'http://localhost').pathname;
+    requests.push(`${req.method} ${path}`);
+    if (gateOpen) answer({ res, path });
+    else waiting.push({ res, path });
   });
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
   const { port } = server.address() as AddressInfo;
   // A request the extension stopped (pause, or a stopped worker) closes its connection.
-  const live = () => waiting.filter((res) => !res.destroyed && !res.writableEnded);
+  const live = () => waiting.filter(({ res }) => !res.destroyed && !res.writableEnded);
   return {
     origin: `http://127.0.0.1:${port}`,
     requests,
     release: (count) => {
-      for (const res of live().slice(0, count)) answer(res);
+      for (const held of live().slice(0, count)) answer(held);
     },
     open: () => {
       gateOpen = true;
-      for (const res of live()) answer(res);
+      for (const held of live()) answer(held);
     },
     hold: () => {
       gateOpen = false;
@@ -107,6 +127,7 @@ async function setDeadLinkSettings(worker: Worker, concurrency: number) {
 
 type StoredJob = {
   id: string;
+  kind: string;
   state: string;
   total: number;
   done: { succeeded: number; skipped: number; failed: number };
@@ -262,6 +283,101 @@ test('pause stops new requests, and resume asks only for links not yet checked (
     'HEAD /link/5': 1,
     'HEAD /link/6': 1,
   });
+});
+
+/** The newest job of `kind` as stored. */
+async function latestJob(target: Page | Worker, kind: string) {
+  return (await storedJobs(target)).find((job) => job.kind === kind);
+}
+
+test('Metadata Fetcher keeps going with its page closed, and a later page applies its titles (J01, J05)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(
+    extensionWorker,
+    'Metadata Folder',
+    links(site)
+      .slice(0, 3)
+      .map((link, index) => ({ ...link, title: `Old ${index + 1}` })),
+  );
+  await setSettings(extensionWorker, {
+    metadataFetcherConcurrency: 1,
+    metadataFetcherRequestTimeoutMs: 60_000,
+    metadataFetcherOverwriteTitles: true,
+    metadataFetcherDefaultScope: 'folder',
+  });
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Metadata Fetcher').getByRole('button', { name: 'Scan' }).click();
+  await expect.poll(() => site.held()).toBe(1);
+  await page.close();
+
+  site.open();
+  await expect
+    .poll(async () => (await latestJob(extensionWorker, 'metadataFetcher'))?.state)
+    .toBe('succeeded');
+  expect(requestCounts(site)).toEqual({ 'GET /link/1': 1, 'GET /link/2': 1, 'GET /link/3': 1 });
+
+  const manager = await context.newPage();
+  await openTools(manager, extensionId, folderId);
+  const status = toolCard(manager, 'Metadata Fetcher').getByTestId('job-status');
+  await expect(status).toHaveAttribute('data-job-state', 'succeeded');
+  await status.getByRole('button', { name: 'Review results' }).click();
+  const review = manager.getByRole('dialog', { name: 'Metadata Fetcher' });
+  await review.getByRole('button', { name: 'Apply 3 titles' }).click();
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(
+        async (id) => (await chrome.bookmarks.getChildren(id)).map((item) => item.title),
+        folderId,
+      ),
+    )
+    .toEqual(['Title 1', 'Title 2', 'Title 3']);
+  // Applying read nothing from the network again.
+  expect(site.requests).toHaveLength(3);
+});
+
+test('Refresh Site Icons keeps going with its page closed, and a later page saves the icon (J01, J05)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'Icons Folder', [
+    { title: 'Icon Page', url: `${site.origin}/icon-page` },
+    { title: 'Same Site', url: `${site.origin}/link/1` },
+    { title: 'Bookmarklet', url: 'javascript:void(0)' },
+  ]);
+  await setSettings(extensionWorker, {
+    siteIconsRequestTimeoutMs: 60_000,
+    siteIconsDefaultScope: 'folder',
+  });
+  await openTools(page, extensionId, folderId);
+  const card = toolCard(page, 'Refresh Site Icons');
+  await expect(card).toContainText('0 icons saved (0 KB)');
+  await card.getByRole('button', { name: 'Refresh', exact: true }).click();
+  await expect.poll(() => site.held()).toBe(1);
+  await page.close();
+
+  site.open();
+  await expect
+    .poll(async () => (await latestJob(extensionWorker, 'siteIcons'))?.state)
+    .toBe('succeeded');
+  // One site, read once: its page, then its icon.
+  expect(requestCounts(site)).toEqual({ 'GET /icon-page': 1, 'GET /icon.png': 1 });
+
+  const manager = await context.newPage();
+  await openTools(manager, extensionId, folderId);
+  const later = toolCard(manager, 'Refresh Site Icons');
+  await later.getByTestId('job-status').getByRole('button', { name: 'Review results' }).click();
+  const review = manager.getByRole('dialog', { name: 'Refresh Site Icons' });
+  await expect(
+    review.getByText('1 bookmark is not a web link and was skipped.', { exact: true }),
+  ).toBeVisible();
+  await review.getByRole('button', { name: 'Save 1 icon' }).click();
+  await expect(later).toContainText('1 icon saved');
 });
 
 async function launch(userDataDir: string, extensionPath: string, channel: string) {

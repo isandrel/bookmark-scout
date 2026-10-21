@@ -411,6 +411,7 @@ test('URL cleaner honors preserved parameters and fragment settings', async ({
 });
 
 test('metadata fetcher previews mocked page metadata without changing bookmarks', async ({
+  context,
   extensionId,
   extensionWorker,
   page,
@@ -421,7 +422,8 @@ test('metadata fetcher previews mocked page metadata without changing bookmarks'
   await setSettings(extensionWorker, {
     metadataFetcherFetchDescriptions: true,
   });
-  await page.route('https://e2e.invalid/metadata', (route) =>
+  // The fetch runs as a background job, so its requests come from the service worker.
+  await context.route('https://e2e.invalid/metadata', (route) =>
     route.fulfill({
       status: 200,
       contentType: 'text/html',
@@ -574,6 +576,7 @@ test('[mocked provider contract] reorganization creates suggested folders, skips
 });
 
 test('reading fetched pages leaves no Content Security Policy errors', async ({
+  context,
   extensionId,
   extensionWorker,
   page,
@@ -582,12 +585,14 @@ test('reading fetched pages leaves no Content Security Policy errors', async ({
     { title: 'Scripted page', url: 'https://e2e.invalid/scripted' },
   ]);
   const cspErrors: string[] = [];
-  page.on('console', (message) => {
+  // The page head is parsed in the AI host page (Chrome's offscreen document), not this tab.
+  context.on('console', (message) => {
     if (message.type() === 'error' && message.text().includes('Content Security Policy')) {
       cspErrors.push(message.text());
     }
   });
-  await page.route('https://e2e.invalid/scripted', (route) =>
+  // The fetch runs as a background job, so its requests come from the service worker.
+  await context.route('https://e2e.invalid/scripted', (route) =>
     route.fulfill({
       status: 200,
       contentType: 'text/html',
