@@ -44,6 +44,7 @@ export const ko: DocsCopy = {
       mac: "Mac의 {keys}",
       other: "Windows와 Linux의 {keys}",
       pair: "{primary}({secondary})",
+      click: "클릭",
     },
   },
 

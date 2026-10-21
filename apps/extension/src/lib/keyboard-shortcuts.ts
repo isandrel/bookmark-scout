@@ -100,6 +100,9 @@ const shortcutsConfig = readConfig(
       paste: managerBindingsSchema,
     }),
     popup: z.strictObject({ focus_search: bindingsSchema, recent_searches: bindingsSchema }),
+    // Mouse gestures, which the docs and website name; the manager selects as Chrome's does, and
+    // @bookmark-scout/config validates them.
+    mouse: z.record(z.string(), z.array(z.unknown()).min(1)),
   }),
 );
 

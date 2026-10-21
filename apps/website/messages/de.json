@@ -2,7 +2,8 @@
   "shortcutNotes": {
     "mac": "{keys} auf dem Mac",
     "other": "{keys} unter Windows und Linux",
-    "pair": "{primary} ({secondary})"
+    "pair": "{primary} ({secondary})",
+    "click": "Klick"
   },
   "metadata": {
     "title": "Bookmark Scout – Lesezeichen schnell im richtigen Ordner speichern",
@@ -137,7 +138,7 @@
           "Alle Ihre Lesezeichen schon beim Tippen durchsuchen",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche speichern, die dann immer die aktuellen Ergebnisse zeigt",
-          "Zeilen mit Shift und Ctrl auswählen, per Rechtsklick ausschneiden, kopieren, einfügen und alle öffnen, und Lesezeichen und Ordner dorthin ziehen, wo sie hingehören",
+          "Mehrere Zeilen mit {{SHORTCUT:mouse.select_toggle}} auswählen, per Rechtsklick ausschneiden, kopieren, einfügen und alle öffnen, und Lesezeichen und Ordner dorthin ziehen, wo sie hingehören",
           "Änderungen mit {{SHORTCUT:manager.undo}} und {{SHORTCUT:manager.redo}} rückgängig machen und wiederholen, auch nach einem Neuladen",
           "Lesezeichen nach einer Vorschau aus einer Datei importieren und als HTML, JSON, Markdown oder CSV exportieren",
           "Auf einen Ordner oder eine Suche verlinken und sich mit der Tastatur durch alles bewegen"
@@ -154,7 +155,8 @@
           "Defekte Links finden und reparieren: löschen, Weiterleitung verwenden, auf eine Archivkopie verweisen oder URL bearbeiten",
           "Seitentitel abrufen und nur die ausgewählten übernehmen",
           "Das Symbol jeder Website herunterladen, damit Lesezeichen es anzeigen, auch in Firefox",
-          "Löschungen und Bereinigungen über die anschließende Benachrichtigung rückgängig machen"
+          "Löschungen und Bereinigungen über die anschließende Benachrichtigung rückgängig machen",
+          "Jede Änderung an Ihren Lesezeichen im Verlauf sehen, auch solche außerhalb von Bookmark Scout, und Gelöschtes zurückholen, auch nach einem Neustart des Browsers"
         ]
       },
       "ai": {

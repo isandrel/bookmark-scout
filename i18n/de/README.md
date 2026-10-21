@@ -46,6 +46,7 @@
 - ⚡ **Mit einem Tastenkürzel speichern.** Drücken Sie auf einer beliebigen Seite ⌥⇧S auf dem Mac (Alt+Shift+S unter Windows und Linux). Eine kleine Meldung zeigt, wo die Seite gespeichert wurde, mit **Rückgängig** und weiteren Ordnern, in die Sie sie verschieben können.
 - 🔎 **Alles Gespeicherte wiederfinden.** Durchsuchen Sie alle Lesezeichen schon beim Tippen, über die Symbolleiste, die Seitenleiste oder einen Lesezeichen-Manager in voller Seitengröße.
 - 🧹 **Lesezeichen aus vielen Jahren aufräumen.** Entfernen Sie doppelte Lesezeichen, finden Sie Links, die nicht mehr funktionieren, und entfernen Sie Tracking-Codes aus Webadressen. Sie sehen jede Änderung, bevor sie ausgeführt wird, und können sie rückgängig machen.
+- 🕘 **Jede Änderung sehen und Gelöschtes zurückholen.** Der Verlauf listet jede Änderung an Ihren Lesezeichen auf, auch solche außerhalb von Bookmark Scout, und holt Gelöschtes zurück, auch nach einem Neustart des Browsers. Er bleibt auf Ihrem Computer.
 - ✨ **Optionale KI-Vorschläge.** Lassen Sie KI den Ordner für Sie auswählen, mit Ihrem eigenen KI-Konto oder einem kostenlosen KI-Modell auf Ihrem Computer, etwa dem in Chrome integrierten. KI bleibt aus, bis Sie sie aktivieren.
 - 🔒 **Von Grund auf privat.** Kein Konto, keine Werbung, kein Tracking, und nichts geht an den Entwickler. Speichern und Suchen funktionieren sogar offline.
 

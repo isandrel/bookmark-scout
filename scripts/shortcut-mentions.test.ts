@@ -69,6 +69,30 @@ describe("shortcuts are never typed by hand", () => {
 	});
 });
 
+/**
+ * A mouse gesture typed by hand ("Ctrl+click", "Cmd/Ctrl-click", "Strg-Klick"), in any language
+ * the docs and website use: gestures are `mouse.*` shortcuts too.
+ */
+const MOUSE_LITERAL =
+	/\b(?:Ctrl|Cmd|Command|Strg|Shift|Mayús|Option|Alt)(?:\/(?:Ctrl|Cmd|Strg))?\s?[+-]\s?(?:click|clic|clique|klick|クリック|클릭|点击|點選|點擊)|\b(?:Cmd\/Ctrl|Ctrl\/Cmd|Cmd\/Strg)\b/gi;
+
+describe("mouse gestures are never typed by hand", () => {
+	test.each([
+		["docs pages", docsPages],
+		["website messages", websiteMessages],
+		["Markdown templates", templates],
+	])("%s", (_name, list) => {
+		const found = list.flatMap((file) =>
+			readFileSync(file, "utf8")
+				.split("\n")
+				.flatMap((line, index) =>
+					(line.match(MOUSE_LITERAL) ?? []).map((text) => `${relative(root, file)}:${index + 1}: ${text}`),
+				),
+		);
+		expect(found).toEqual([]);
+	});
+});
+
 describe("every shortcut named exists in the config", () => {
 	test("<Shortcut id> in the docs", () => {
 		for (const file of docsPages) {
@@ -156,7 +180,11 @@ describe("store listings and checklists name each platform, the primary platform
 	};
 
 	test.each(
-		[...files(join(root, "store/listings"), ".md"), ...files(join(root, "store/checklists"), ".md")].map((file) => [
+		[
+			...files(join(root, "store/listings"), ".md"),
+			...files(join(root, "store/checklists"), ".md"),
+			join(root, "store/README.md"),
+		].map((file) => [
 			relative(root, file),
 			file,
 		]),

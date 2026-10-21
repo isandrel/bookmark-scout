@@ -46,6 +46,7 @@
 - ⚡ **Salve com um só atalho.** Pressione ⌥⇧S no Mac (Alt+Shift+S no Windows e no Linux) em qualquer página. Uma pequena mensagem mostra onde a página foi salva, com **Desfazer** e outras pastas para onde você pode movê-la.
 - 🔎 **Encontre tudo o que você salvou.** Pesquise em todos os seus favoritos enquanto digita, pela barra de ferramentas, pelo painel lateral ou por um gerenciador de favoritos em página inteira.
 - 🧹 **Arrume anos de favoritos.** Remova duplicatas, encontre links que não funcionam mais e tire os códigos de rastreamento dos endereços da web. Você vê cada alteração antes que ela aconteça e pode desfazê-la.
+- 🕘 **Veja cada alteração e recupere o que excluiu.** O histórico lista cada alteração nos seus favoritos, até as feitas fora do Bookmark Scout, e traz de volta o que foi excluído, mesmo depois de reiniciar o navegador. Ele fica no seu computador.
 - ✨ **Sugestões opcionais da IA.** Deixe a IA escolher a pasta para você, usando sua própria conta de IA ou um modelo de IA gratuito no seu computador, como o que vem integrado ao Chrome. A IA fica desativada até você ativá-la.
 - 🔒 **Privacidade desde o início.** Sem conta, sem anúncios, sem rastreamento, e nada vai para o desenvolvedor. Salvar e pesquisar funcionam até sem internet.
 

@@ -79,6 +79,17 @@ copy = [{ key = "c", mod = true }]
 cut = [{ key = "x", mod = true }]
 paste = [{ key = "v", mod = true }]
 
+# Mouse gestures the manager answers or the docs name: `key = "click"` with the same modifiers
+# as keys (`mod` is Ctrl, or Cmd on a Mac). Text names them "⌘-click" on a Mac (as Apple writes
+# them) and "Ctrl+click" elsewhere, the word for the click in each language.
+[mouse]
+# Adds a row to the selection or takes it out, in the manager's table and folder tree
+select_toggle = [{ key = "click", mod = true }]
+# Selects every row from the last one clicked to this one
+select_range = [{ key = "click", shift = true }]
+# The browser's own: opens a link in a new background tab
+open_in_background = [{ key = "click", mod = true }]
+
 # Popup and side panel.
 [popup]
 focus_search = [{ key = "/" }]
