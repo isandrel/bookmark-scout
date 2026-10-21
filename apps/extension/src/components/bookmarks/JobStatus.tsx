@@ -84,14 +84,20 @@ export function JobStatus({
         ) : null}
         {jobActions(job.state).map((action) => {
           const Icon = ACTION_ICONS[action];
+          // Waiting buttons stay focusable (`aria-disabled`, not `disabled`): disabling the
+          // focused button, or removing it, would drop keyboard focus to the page.
+          const waiting = busy || isJobActionPending(job.state, action);
           return (
             <Button
-              key={action}
+              // Pause and Resume are one button, so focus stays on it when one becomes the other.
+              key={action === 'resume' ? 'pause' : action}
               size="sm"
               variant="ghost"
-              className="h-7 text-xs"
-              disabled={busy}
-              onClick={() => run(action)}
+              className="h-7 text-xs aria-disabled:opacity-50"
+              aria-disabled={waiting || undefined}
+              onClick={() => {
+                if (!waiting) run(action);
+              }}
             >
               <Icon className="h-3.5 w-3.5" />
               {t(ACTION_LABELS[action])}
