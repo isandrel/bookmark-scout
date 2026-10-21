@@ -4,9 +4,9 @@
  * background worker, and a browser restart. `services/job-coordinator.ts` owns every state
  * change; pages only read, and hear about changes through `JOB_CHANNEL`.
  *
- * Every write is one transaction: an item's result and the job's counters commit together, and
- * a commit is refused unless the job is still owned by the same claim (`generation`), so a late
- * result from a paused, cancelled, or replaced run never counts. A command id is stored with the
+ * Every write is one transaction: items' results (one, or a batch, `commitItems`) and the job's
+ * counters commit together, and a commit is refused unless the job is still owned by the same
+ * claim (`generation`), so a late result from a paused, cancelled, or replaced run never counts. A command id is stored with the
  * job it started, so the same Start sent twice returns the same job.
  *
  * Records read back are validated; one that does not match its schema is reported as unreadable,
