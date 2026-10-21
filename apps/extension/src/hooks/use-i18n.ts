@@ -326,7 +326,7 @@ export function formatKilobytes(bytes: number): string {
 }
 
 /** A count in the extension's language, with its digit grouping ("1,234", "1.234"). */
-export function formatNumber(value: number): string {
+export function formatCount(value: number): string {
   try {
     return new Intl.NumberFormat(getFormattingLocale()).format(value);
   } catch {

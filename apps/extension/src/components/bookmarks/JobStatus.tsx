@@ -57,9 +57,9 @@ export function JobStatus({
         {jobProgressLabel(job)}
         {' · '}
         {t('jobs_counts', [
-          formatNumber(job.done.succeeded),
-          formatNumber(job.done.skipped),
-          formatNumber(job.done.failed),
+          formatCount(job.done.succeeded),
+          formatCount(job.done.skipped),
+          formatCount(job.done.failed),
         ])}
       </p>
       {active ? <p className="text-xs text-muted-foreground">{t('jobs_runsNote')}</p> : null}

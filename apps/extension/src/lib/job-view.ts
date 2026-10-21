@@ -35,7 +35,7 @@ export function jobScopeLabel(job: Pick<JobRecord, 'scope'>): string {
 
 /** "40 of 120"; the total is known from the start, so the share is never made up. */
 export function jobProgressLabel(job: Pick<JobRecord, 'done' | 'total'>): string {
-  return t('jobs_progress', [formatNumber(processedCount(job)), formatNumber(job.total)]);
+  return t('jobs_progress', [formatCount(processedCount(job)), formatCount(job.total)]);
 }
 
 /** The commands that make sense in a state, in the order the UI shows them. */
