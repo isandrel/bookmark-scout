@@ -36,7 +36,7 @@ export function stripActiveHtml(html: string): string {
 
 /** Parses fetched or dropped HTML for reading, with active content removed first. */
 export function parseFetchedHtml(html: string): Document {
-  return new DOMParser().parseFromString(stripActiveHtml(html), 'text/html');
+  return new DOMParser().parseFromString(stripActiveHtml(html), MIME.html);
 }
 
 /** What the Metadata Fetcher reads from a page's `<head>`. */

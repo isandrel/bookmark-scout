@@ -167,7 +167,7 @@ export function modelListHeaders(
   style: ModelListStyle,
   settings: AISettings,
 ): Record<string, string> {
-  const headers: Record<string, string> = { Accept: 'application/json', ...settings.extraHeaders };
+  const headers: Record<string, string> = { Accept: MIME.json, ...settings.extraHeaders };
   if (style === 'none') return headers;
   return { ...headers, ...MODEL_LIST_STYLES[style].headers(settings.apiKey.trim(), settings) };
 }

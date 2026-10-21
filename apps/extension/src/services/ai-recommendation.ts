@@ -48,10 +48,10 @@ export class RecommendedFolderError extends Error {
  */
 const singleRecommendationSchema = z.object({
   type: z.enum(['existing', 'new']),
-  folderPath: z.string().describe('Full folder path like "AI/Tools" or new folder name'),
-  parentPath: z.string().describe('Parent path for new folder, empty string if type is existing'),
-  confidence: z.number().describe('Confidence score from 0 to 1'),
-  reason: z.string().describe('Brief reason for this recommendation'),
+  folderPath: z.string().describe(agentText('single_recommendation_schema.folder_path')),
+  parentPath: z.string().describe(agentText('single_recommendation_schema.parent_path')),
+  confidence: z.number().describe(agentText('single_recommendation_schema.confidence')),
+  reason: z.string().describe(agentText('single_recommendation_schema.reason')),
 });
 
 type RawFolderRecommendation = z.infer<typeof singleRecommendationSchema>;

@@ -192,14 +192,14 @@ export function parseIconCandidates(html: string, pageUrl: string): SiteIconCand
 }
 
 const TYPE_BY_MIME: Record<string, string> = {
-  'image/png': 'png',
-  'image/svg+xml': 'svg',
-  'image/x-icon': 'ico',
-  'image/vnd.microsoft.icon': 'ico',
-  'image/gif': 'gif',
-  'image/jpeg': 'jpeg',
-  'image/webp': 'webp',
-  'image/bmp': 'bmp',
+  [MIME.png]: 'png',
+  [MIME.svg]: 'svg',
+  [MIME.icon]: 'ico',
+  [MIME.microsoftIcon]: 'ico',
+  [MIME.gif]: 'gif',
+  [MIME.jpeg]: 'jpeg',
+  [MIME.webp]: 'webp',
+  [MIME.bmp]: 'bmp',
 };
 
 /** The icon's format from its `type` attribute, else its file extension; '' when unknown. */
@@ -303,7 +303,7 @@ function startsWithBytes(bytes: Uint8Array, signature: readonly number[], offset
 
 /**
  * The image type a file really is, from its first bytes; null for anything else (an HTML error
- * page served as `image/png`, for example). SVG must start with markup that opens `<svg`.
+ * page served as `MIME.png`, for example). SVG must start with markup that opens `<svg`.
  */
 export function sniffImageType(bytes: Uint8Array): string | null {
   const binary = imageSignatures.binary.find(({ parts }) =>

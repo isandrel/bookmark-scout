@@ -23,7 +23,7 @@ const dragConfig = readConfig(
 export const MANAGER_DRAG_AUTO_EXPAND_MS = dragConfig.manager_auto_expand_ms;
 
 /** The data type that marks a drag of the manager's own bookmarks (their ids, as JSON). */
-export const MANAGER_DRAG_TYPE = 'application/x-bookmark-scout-ids';
+export const MANAGER_DRAG_TYPE = MIME.bookmarkIds;
 
 export type BookmarkDropZone = 'before' | 'into' | 'after';
 
@@ -107,7 +107,7 @@ export function resolveManagerDrop(
 export type DroppedData = { uriList?: string; plain?: string; html?: string; mozUrl?: string };
 
 /**
- * The links dropped from another page or app: `text/uri-list` (or Firefox's `text/x-moz-url`, or
+ * The links dropped from another page or app: `MIME.uriList` (or Firefox's `MIME.mozUrl`, or
  * plain text holding URLs), titled from the HTML links that came with them, else by the URL.
  */
 export function parseDroppedLinks(data: DroppedData): { url: string; title: string }[] {
