@@ -7190,5 +7190,61 @@
     "settings_timeFormatHours24": {
         "message": "24시간제",
         "description": "Time format option: 24-hour clock."
+    },
+    "settings_openConfirmAbove": {
+        "message": "확인할 개수",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "이 개수보다 많은 북마크를 한 번에 열면 먼저 확인합니다. 폴더는 바로 안의 북마크를 셉니다",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "보관할 최근 검색",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "기억할 최근 검색 수",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "제안할 다른 폴더",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "빠른 저장 알림이 옮길 곳으로 제안하는 다른 폴더 수",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "알림 표시 시간",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "빠른 저장 알림이 닫히기 전까지 표시되는 시간. 포인터를 올려 두면 계속 열려 있습니다",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "답변당 최대 단계",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "한 답변에서 AI에게 묻기가 모델을 호출할 수 있는 횟수. 적을수록 저렴하고, 많을수록 더 찾아볼 수 있습니다",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "로컬 네트워크 페이지 건너뛰기",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "로컬 네트워크의 페이지(라우터나 인트라넷 등)는 읽지 않아 그 내용이 AI 회사에 전달되지 않게 합니다",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "도움말 표시 지연",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "컨트롤 위에 포인터를 올려 두고 설명이 나타날 때까지의 시간",
+        "description": "Setting description: tooltipDelay"
     }
 }

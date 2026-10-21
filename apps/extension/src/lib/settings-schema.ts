@@ -649,6 +649,22 @@ const fields = {
     unit: 'ms',
     display: IN_SECONDS,
   }),
+  tooltipDelayMs: numberField('appearance.notifications.tooltip_delay_ms', 'tooltipDelay', {
+    unit: 'ms',
+  }),
+  openConfirmAbove: numberField('behavior.links.confirm_open_above', 'openConfirmAbove'),
+  searchHistoryMax: numberField('search.search.history_max', 'searchHistoryMax'),
+  quickSaveAlternatives: numberField('search.quick_save.alternatives', 'quickSaveAlternatives'),
+  quickSaveNotificationMs: numberField(
+    'search.quick_save.notification_ms',
+    'quickSaveNotification',
+    { unit: 'ms', display: IN_SECONDS },
+  ),
+  askAiMaxSteps: numberField('ai.ask_ai.max_steps', 'askAiMaxSteps'),
+  readPageSkipPrivateHosts: switchField(
+    'ai.page_reading.skip_private_hosts',
+    'readPageSkipPrivateHosts',
+  ),
 
   aiEnabled: switchField('ai.enable.enabled', 'aiEnabled'),
   aiMaxRecommendations: numberField('ai.suggestions.max_recommendations', 'aiMaxRecommendations'),
@@ -1153,7 +1169,13 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'search',
         labelKey: 'settings_search',
-        fields: ['maxSearchResults', 'expandFoldersOnSearch', 'searchHistory', 'searchDebounceMs'],
+        fields: [
+          'maxSearchResults',
+          'expandFoldersOnSearch',
+          'searchHistory',
+          'searchHistoryMax',
+          'searchDebounceMs',
+        ],
       },
       {
         id: 'saving',
@@ -1163,7 +1185,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'quickSave',
         labelKey: 'settings_sectionQuickSave',
-        fields: ['quickSaveFolderStrategy', 'quickSaveFixedFolder'],
+        fields: [
+          'quickSaveFolderStrategy',
+          'quickSaveFixedFolder',
+          'quickSaveAlternatives',
+          'quickSaveNotificationMs',
+        ],
         panel: 'shortcuts',
       },
       {
@@ -1188,7 +1215,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'notifications',
         labelKey: 'settings_sectionNotifications',
-        fields: ['toastDurationMs'],
+        fields: ['toastDurationMs', 'tooltipDelayMs'],
       },
     ]),
     behavior: category('settings_behavior', 'settings_behaviorDesc', [
@@ -1197,7 +1224,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         labelKey: 'settings_sectionTree',
         fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'],
       },
-      { id: 'links', labelKey: 'settings_sectionLinks', fields: ['linkOpenTarget'] },
+      {
+        id: 'links',
+        labelKey: 'settings_sectionLinks',
+        fields: ['linkOpenTarget', 'openConfirmAbove'],
+      },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       {
         id: 'history',
@@ -1220,7 +1251,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'pageReading',
         labelKey: 'settings_aiReadPageContent',
-        fields: ['aiReadPageContent'],
+        fields: ['aiReadPageContent', 'readPageSkipPrivateHosts'],
         requires: 'aiEnabled',
       },
       {
@@ -1230,6 +1261,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         requires: 'aiEnabled',
       },
       { id: 'aboutMe', fields: [], panel: 'aboutMe', requires: 'aiEnabled' },
+      {
+        id: 'askAi',
+        labelKey: 'askAI_title',
+        fields: ['askAiMaxSteps'],
+        requires: 'aiEnabled',
+      },
       { id: 'askAiActions', fields: [], panel: 'askAiActions', requires: 'aiEnabled' },
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),

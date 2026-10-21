@@ -338,6 +338,25 @@ test('rename, bulk move, and reorder are undone and redone; changes made since a
   expect(await childTitles(extensionWorker, seeded.ids['Target Box'])).toEqual(['Edit 03']);
 });
 
+test('opening asks first above the Ask Before Opening More Than setting', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { openConfirmAbove: 2 });
+  const seeded = await seedFolder(extensionWorker, 'E2E Open Limit', links('Few', 3));
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const start = await tabCount(extensionWorker);
+  await row(page, 'Few 01').click({ position: { x: 200, y: 10 } });
+  await row(page, 'Few 03').click({ position: { x: 200, y: 10 }, modifiers: ['Shift'] });
+  await page.keyboard.press('ControlOrMeta+Enter');
+  // Three is more than the setting's two, though far below the default.
+  const confirm = page.getByRole('dialog', { name: 'Open 3 tabs?' });
+  await confirm.getByRole('button', { name: 'Cancel' }).click();
+  await waitForNoOverlay(page);
+  expect(await tabCount(extensionWorker)).toBe(start);
+});
+
 test('Enter, Ctrl/Cmd+Enter, Shift+Enter, and double click open, asking first for many', async ({
   extensionId,
   extensionWorker,

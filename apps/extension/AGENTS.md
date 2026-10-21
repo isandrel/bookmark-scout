@@ -271,7 +271,7 @@ Follow local Biome rules and established code style:
 - trailing commas
 - line width 100
 
-Format only the files you touched; `biome check --write` across the app reformats dozens of unrelated files.
+Every file is formatted: `nx run extension:lint` runs `biome check`, so format with `biome check --write` and keep what it changes. React hook dependencies are a warning, not an error, so read them: a stale value in a `useCallback` once ignored a setting.
 
 Type rules:
 
@@ -293,6 +293,5 @@ Type rules:
 
 - keep changes narrowly scoped to the requested behavior
 - do not edit generated output directories
-- do not reformat unrelated files
 - update user-facing copy or docs when the behavior materially changes
 - if a fix requires a broader cleanup than expected, call that out explicitly rather than silently broadening scope

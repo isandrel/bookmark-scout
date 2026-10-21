@@ -196,6 +196,25 @@ describe('runQuickSave', () => {
     expect(await quickSaveRecordValue.get()).toMatchObject({ id: record.id, delivery: 'popup' });
   });
 
+  it('closes the notification and offers as many folders as the quick save settings say', async () => {
+    // A fixed folder unrelated to the page, so every matching folder is an alternative.
+    const fixed = { quickSaveFolderStrategy: 'fixed', quickSaveFixedFolder: 'reading' } as const;
+    const page = tab('https://react.dev/learn', 'Quick Start – React Dev');
+    await saveSettings({ language: 'en', ...fixed });
+    const many = await runQuickSave('quick-save', page);
+    expect(many.alternatives.length).toBeGreaterThan(1);
+
+    await saveSettings({ language: 'en', ...fixed, quickSaveAlternatives: 1 });
+    const one = await runQuickSave('quick-save', page);
+    expect(one.alternatives).toHaveLength(1);
+
+    const custom = settings({ quickSaveNotificationMs: 5000 });
+    expect(buildQuickSaveView(one, custom).autoDismissMs).toBe(5000);
+    expect(buildQuickSaveView(one, settings()).autoDismissMs).toBe(
+      defaultSettings.quickSaveNotificationMs,
+    );
+  });
+
   it('does not save a page twice: it reports where the page already is', async () => {
     const before = bookmarks.childIds('cooking').length;
     const record = await runQuickSave('quick-save', tab('https://food.example/pasta', 'Pasta'));

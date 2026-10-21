@@ -46,6 +46,7 @@ Darunter sagt **KI ist optional**, dass Bookmark Scout auch ohne KI funktioniert
 | **Max. Suchergebnisse** | 20 Ergebnisse | Höchstzahl angezeigter Treffer; ein Hinweis erscheint, wenn es mehr gibt |
 | **Ordner bei Suche ausklappen** | An | Die Ordner öffnen, die Treffer enthalten |
 | **Suchverlauf** | An | Letzte Suchen auf diesem Gerät speichern |
+| **Gespeicherte letzte Suchen** | <SettingDefault path="search.search.history_max" /> | Wie viele letzte Suchen gespeichert werden |
 
 Siehe [Suche und gespeicherte Suchen](/guides/search).
 
@@ -65,6 +66,8 @@ Siehe [Speichern und ordnen](/guides/save-and-organize).
 | --- | --- | --- |
 | **Ordner für Schnellspeichern** | Beste Übereinstimmung | Wo <Shortcut id="commands.quick-save" /> die aktuelle Seite speichert: im am besten passenden Ordner, im zuletzt verwendeten Ordner oder in einem gewählten Ordner. Das KI-Kürzel verwendet immer den KI-Vorschlag |
 | **Zielordner** | Nicht gewählt | Der Ordner für **Gewählter Ordner**. Wird er gelöscht, verwendet das Schnellspeichern den zuletzt verwendeten Ordner |
+| **Angebotene andere Ordner** | <SettingDefault path="search.quick_save.alternatives" /> | Wie viele andere Ordner die Schnellspeichern-Benachrichtigung zum Verschieben anbietet |
+| **Anzeigedauer der Benachrichtigung** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | Wie lange die Schnellspeichern-Benachrichtigung bleibt; zeigt der Zeiger darauf, bleibt sie offen |
 
 Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Browser hat, mit **Kürzel ändern**. In Firefox können Sie dort auch direkt neue Tasten eingeben und sie auf den Standard zurücksetzen. In Chrome und Edge wird dort außerdem erklärt, wie Sie dem Schnellspeichern <Shortcut id="browser.bookmark_page" /> zuweisen. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save) und [Die Lesezeichentaste zum Schnellspeichern verwenden](/guides/save-and-organize#ctrl-d).
 
@@ -107,6 +110,7 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Anzeigedauer von Benachrichtigungen** | 4 s | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
+| **Verzögerung für Tooltips** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Wie lange der Zeiger auf einem Bedienelement ruht, bevor die Erklärung erscheint |
 
 ## Verhalten [#behavior]
 
@@ -123,6 +127,7 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Links öffnen in** | Neuer Tab | **Neuer Tab**, **Neuer Tab im Hintergrund** oder **Aktueller Tab**: wo sich ein Link öffnet, wenn Sie in Bookmark Scout darauf klicken. Mittelklick und <Shortcut id="mouse.open_in_background" /> funktionieren weiterhin wie in Ihrem Browser |
+| **Nachfragen ab mehr als** | <SettingDefault path="behavior.links.confirm_open_above" /> | Wer mehr Lesezeichen auf einmal öffnet (Eingabetaste, **Alle öffnen**), wird zuerst gefragt, wie im Manager von Chrome; ein Ordner zählt die Lesezeichen direkt darin |
 
 ### Löschen [#deleting]
 
@@ -163,6 +168,7 @@ Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigen
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Seiteninhalt lesen** | Aus | Den Haupttext jeder Seite, nicht nur Titel und URL, an Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung senden. Fragt beim Aktivieren nach Zugriff auf Websites |
+| **Seiten im lokalen Netzwerk überspringen** | An | Seiten in Ihrem lokalen Netzwerk (etwa ein Router oder ein Intranet) nie lesen, damit ihr Inhalt Ihr KI-Unternehmen nicht erreicht |
 
 ### Ausgabesprache der KI [#ai-output-language]
 
@@ -173,6 +179,12 @@ Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigen
 ### Über mich [#about-me]
 
 **Über mich** (standardmäßig leer) sind ein paar Worte über Sie, etwa „Ich bin Lehrerin und speichere Unterrichtsmaterial“, bis zu 1.000 Zeichen. Solange dort Text steht, senden die integrierten Prompts jeder KI-Funktion ihn an Ihren KI-Anbieter, damit die Ergebnisse besser passen; ein eigener Prompt sendet ihn nur, wenn er `{{aboutMe}}` verwendet. Der Text wird über Ihr Browserkonto synchronisiert und gespeichert, wenn Sie das Feld verlassen.
+
+### KI fragen [#ask-ai]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Höchstens Schritte pro Antwort** | <SettingDefault path="ai.ask_ai.max_steps" /> | Wie oft „KI fragen“ das Modell für eine Antwort aufrufen darf: weniger ist günstiger, mehr lässt es weiter suchen |
 
 ### Was „KI fragen“ tun darf [#ask-ai-actions]
 

@@ -1,4 +1,5 @@
 import { site } from "@bookmark-scout/config";
+import { settingDefaultText } from "@/components/mdx/setting-default";
 import { getCopy } from "@/lib/copy";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { languageList } from "@/lib/languages";
@@ -81,6 +82,10 @@ const replacementsFor = (
     },
   ],
   [/<Shortcut\s+id="([^"]+)"\s*\/>/g, (id) => shortcutMarkdown(id, locale)],
+  [
+    /<SettingDefault\s+path="([^"]+)"(\s+seconds)?\s*\/>/g,
+    (path, seconds) => settingDefaultText(path, locale, Boolean(seconds)),
+  ],
   [/<License\s*\/>/g, () => `[${license.name}](${license.url})`],
   [
     /<Languages((?:\s+\w+(?:="[^"]*")?)*)\s*\/>/g,

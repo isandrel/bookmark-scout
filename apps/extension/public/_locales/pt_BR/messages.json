@@ -7210,5 +7210,61 @@
     "settings_timeFormatHours24": {
         "message": "24 horas",
         "description": "Time format option: 24-hour clock."
+    },
+    "settings_openConfirmAbove": {
+        "message": "Perguntar ao abrir mais de",
+        "description": "Setting label: openConfirmAbove"
+    },
+    "settings_openConfirmAboveDesc": {
+        "message": "Abrir mais favoritos do que isso de uma vez pergunta antes; uma pasta conta os favoritos diretamente dentro dela",
+        "description": "Setting description: openConfirmAbove"
+    },
+    "settings_searchHistoryMax": {
+        "message": "Pesquisas recentes guardadas",
+        "description": "Setting label: searchHistoryMax"
+    },
+    "settings_searchHistoryMaxDesc": {
+        "message": "Quantas pesquisas recentes lembrar",
+        "description": "Setting description: searchHistoryMax"
+    },
+    "settings_quickSaveAlternatives": {
+        "message": "Outras pastas oferecidas",
+        "description": "Setting label: quickSaveAlternatives"
+    },
+    "settings_quickSaveAlternativesDesc": {
+        "message": "Quantas outras pastas a notificação do salvamento rápido oferece para mover a página",
+        "description": "Setting description: quickSaveAlternatives"
+    },
+    "settings_quickSaveNotification": {
+        "message": "Duração da notificação",
+        "description": "Setting label: quickSaveNotification"
+    },
+    "settings_quickSaveNotificationDesc": {
+        "message": "Quanto tempo a notificação do salvamento rápido fica antes de fechar; apontar para ela a mantém aberta",
+        "description": "Setting description: quickSaveNotification"
+    },
+    "settings_askAiMaxSteps": {
+        "message": "Máximo de etapas por resposta",
+        "description": "Setting label: askAiMaxSteps"
+    },
+    "settings_askAiMaxStepsDesc": {
+        "message": "Quantas vezes Perguntar à IA pode chamar o modelo para uma resposta: menos sai mais barato, mais permite pesquisar mais",
+        "description": "Setting description: askAiMaxSteps"
+    },
+    "settings_readPageSkipPrivateHosts": {
+        "message": "Pular páginas da rede local",
+        "description": "Setting label: readPageSkipPrivateHosts"
+    },
+    "settings_readPageSkipPrivateHostsDesc": {
+        "message": "Nunca ler páginas da sua rede local (como um roteador ou uma intranet), para que o conteúdo não chegue a uma empresa de IA",
+        "description": "Setting description: readPageSkipPrivateHosts"
+    },
+    "settings_tooltipDelay": {
+        "message": "Atraso das dicas",
+        "description": "Setting label: tooltipDelay"
+    },
+    "settings_tooltipDelayDesc": {
+        "message": "Quanto tempo o ponteiro fica sobre um controle antes de a explicação aparecer",
+        "description": "Setting description: tooltipDelay"
     }
 }

@@ -93,6 +93,28 @@ test('search delay setting controls when the popup filters results', async ({
   await expect(target).toBeVisible({ timeout: 700 });
 });
 
+test('tooltip delay setting controls when a tooltip opens', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const help = () =>
+    page.getByRole('button', { name: 'When unchecked, filters search all bookmarks.' });
+  const tooltip = page.locator('[data-slot="tooltip"]');
+
+  await setSettings(extensionWorker, { tooltipDelayMs: 2000 });
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html`);
+  await help().hover();
+  await page.waitForTimeout(600);
+  // Still closed well inside the 2000 ms delay.
+  await expect(tooltip).toHaveCount(0);
+
+  await setSettings(extensionWorker, { tooltipDelayMs: 0 });
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html`);
+  await help().hover();
+  await expect(tooltip).toBeVisible({ timeout: 600 });
+});
+
 async function stubRecommendations(context: BrowserContext, folderPaths: string[]) {
   const requests: string[] = [];
   const text = JSON.stringify({

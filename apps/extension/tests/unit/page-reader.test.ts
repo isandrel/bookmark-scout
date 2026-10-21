@@ -71,10 +71,16 @@ describe('isPrivateHost', () => {
   });
 
   it('reads only web URLs on public hosts', () => {
-    expect(isReadablePageUrl('https://example.com/a')).toBe(true);
-    expect(isReadablePageUrl('http://localhost:3000/')).toBe(false);
-    expect(isReadablePageUrl('javascript:alert(1)')).toBe(false);
-    expect(isReadablePageUrl('chrome://settings')).toBe(false);
+    expect(isReadablePageUrl('https://example.com/a', true)).toBe(true);
+    expect(isReadablePageUrl('http://localhost:3000/', true)).toBe(false);
+    expect(isReadablePageUrl('javascript:alert(1)', true)).toBe(false);
+    expect(isReadablePageUrl('chrome://settings', true)).toBe(false);
+  });
+
+  it('reads local network pages only with Skip Local Network Pages off', () => {
+    expect(isReadablePageUrl('http://localhost:3000/', false)).toBe(true);
+    expect(isReadablePageUrl('http://192.168.1.1/', false)).toBe(true);
+    expect(isReadablePageUrl('javascript:alert(1)', false)).toBe(false);
   });
 });
 

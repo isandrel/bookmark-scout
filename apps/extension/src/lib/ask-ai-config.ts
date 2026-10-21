@@ -8,7 +8,6 @@ import { z } from 'zod';
 export const ASK_AI_CONFIG = readConfig(
   'ai/agent',
   z.strictObject({
-    max_steps: z.number().int().positive(),
     web_search_max_uses: z.number().int().positive(),
     max_suggestions: z.number().int().positive(),
     suggestion_label_chars: z.number().int().positive(),
