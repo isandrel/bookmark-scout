@@ -5,6 +5,7 @@
  * skeleton. Every frame of the first second is recorded from inside the page.
  */
 import type { Page } from '@playwright/test';
+import { e2eCoverageEnabled } from '../../build/e2e-coverage';
 import { expect, test } from './fixtures';
 import { seedFolder } from './popup-helpers';
 import { replaceSettings, STORAGE_ITEMS, seedAIServices, writeStored } from './storage';
@@ -122,6 +123,9 @@ function changesAfterFirstFrame(frames: readonly Frame[]): string[] {
   }
   return [...changes.values()];
 }
+
+// Collecting coverage slows every frame, so frame-by-frame layout checks say nothing then.
+test.skip(e2eCoverageEnabled(), 'measured without coverage only');
 
 for (const surface of ['popup', 'sidepanel'] as const) {
   for (const language of ['en', 'zh_CN'] as const) {
