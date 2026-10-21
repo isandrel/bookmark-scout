@@ -138,8 +138,22 @@ jobs:
       - name: Set up workspace
         uses: ./.github/actions/setup-workspace
 
-      - name: Run unit tests
-        run: bunx nx run extension:test:unit
+      # The unit tests with coverage: they fail when coverage falls under a floor in
+      # apps/extension/build/unit-coverage.toml.
+      - name: Run unit tests with coverage
+        run: bunx nx run extension:test:coverage
+
+      - name: Summarize coverage
+        if: ${{ !cancelled() }}
+        run: bun apps/extension/scripts/coverage-summary.ts >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-coverage
+          path: apps/extension/coverage/unit
+          retention-days: 14
 
   # Shards split the suite by test (`fullyParallel`), and each shard runs the worker count from
   # apps/extension/playwright.config.ts. Change the shard count here only; the total is read from
