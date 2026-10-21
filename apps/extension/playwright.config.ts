@@ -33,7 +33,8 @@ export default defineConfig<ExtensionProjectOptions>({
   // the report. Locally a failure fails at once.
   retries: isCI ? 1 : 0,
   // Removes profiles and build copies a fixture left behind; fails a clean run that left any.
-  globalTeardown: './tests/e2e/temp-dirs.ts',
+  // Then, with BS_E2E_COVERAGE=1, merges the pages' coverage into coverage/e2e.
+  globalTeardown: ['./tests/e2e/temp-dirs.ts', './tests/e2e/coverage.ts'],
   timeout: 60_000,
   expect: {
     timeout: 5_000,

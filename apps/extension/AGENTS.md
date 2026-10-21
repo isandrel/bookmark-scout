@@ -85,6 +85,7 @@ unless the task explicitly concerns generated artifacts or debugging generated o
 - build Firefox: `nx run extension:build:firefox`
 - build Edge: `nx run extension:build:edge`
 - unit tests: `nx run extension:test:unit`
+- end-to-end coverage: `nx run extension:test:e2e:coverage` (settings in `build/e2e-coverage.toml`; measures the pages, not the background service worker; the startup-size and frame-stability specs skip themselves in that build)
 - unit tests with coverage: `nx run extension:test:coverage` (V8 coverage; per-folder floors in `build/unit-coverage.toml`, raised as tests are added, never lowered to pass; the HTML report is `coverage/unit/index.html`)
 - Chromium end-to-end tests: `nx run extension:test:e2e`
 - Edge end-to-end tests: `nx run extension:test:e2e:edge`

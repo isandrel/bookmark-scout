@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'smol-toml';
 import { z } from 'zod';
+import { e2eCoverageEnabled } from '../../build/e2e-coverage';
 import { expect, test } from './fixtures';
 
 /**
@@ -92,6 +93,9 @@ const contains = (buildPath: string, file: string, markers: readonly RegExp[]) =
 };
 
 test.describe('startup code', () => {
+  // The coverage build carries inline source maps, so its sizes and contents say nothing here.
+  test.skip(e2eCoverageEnabled(), 'measured on the release build only');
+
   for (const { name, markers } of LAZY_CODE) {
     test(`${name} stays out of the code every page and the background load at start`, ({
       extensionPath,
