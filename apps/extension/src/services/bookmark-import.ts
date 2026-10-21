@@ -558,10 +558,17 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
   };
 
   const metadata: Record<string, StoredBookmarkMetadata> = {};
-  const createNode = async (node: ImportPlanNode, parentId: string, isTopLevel: boolean) => {
+  // Titles of the entries the browser rejected, for the History (never the raw error text).
+  const failedTitles: string[] = [];
+  const createNode = async (
+    writer: BookmarkWriter,
+    node: ImportPlanNode,
+    parentId: string,
+    isTopLevel: boolean,
+  ) => {
     if (node.action === 'skip') return;
     try {
-      const created = await createBookmark({
+      const created = await writer.create({
         parentId,
         title: node.title,
         ...(node.url ? { url: node.url } : {}),
@@ -575,10 +582,11 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
       }
       outcome.foldersCreated += 1;
       for (const child of node.children ?? []) {
-        await createNode(child, created.id, false);
+        await createNode(writer, child, created.id, false);
       }
     } catch (err) {
       outcome.failed += countPlanned(node);
+      failedTitles.push(node.title);
       // Named, so the user can tell which entry of the file to fix.
       outcome.errors.push(
         t('tools_importItemFailed', [getBookmarkDisplayTitle(node.title), getErrorMessage(err)]),
@@ -586,9 +594,27 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
     }
   };
 
-  for (const node of plan.nodes) {
-    await createNode(node, plan.targetFolderId, true);
-  }
+  // One History record (and one undo history entry) for the whole import, with what failed.
+  await recordBookmarkWrites(
+    () => ({ action: 'add', count: Math.max(1, outcome.createdIds.length), tool: 'tools_import' }),
+    async (writer) => {
+      for (const node of plan.nodes) {
+        await createNode(writer, node, plan.targetFolderId, true);
+      }
+    },
+    {
+      source: 'import',
+      report: () => ({
+        planned: outcome.createdIds.length + outcome.failed,
+        skipped: failedTitles.map((title, index) => ({
+          id: `import-failed-${index}`,
+          title,
+          reason: 'failed',
+          failed: true,
+        })),
+      }),
+    },
+  );
   if (Object.keys(metadata).length > 0) {
     try {
       await mergeStoredBookmarkMetadata(metadata, {

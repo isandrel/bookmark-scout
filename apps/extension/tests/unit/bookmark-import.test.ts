@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
+import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
+import { buildExportRoot, jsonFormat } from '@/services/bookmark-export';
 import {
   applyImportPlan,
   isSameImportPlan,
@@ -9,10 +11,9 @@ import {
   parseBookmarks,
   planImport,
 } from '@/services/bookmark-import';
-import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
-import { buildExportRoot, jsonFormat } from '@/services/bookmark-export';
 import type { BookmarkTreeNode } from '@/types';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+import { auditRecords, resetAuditDatabase } from './audit-helpers';
 
 /** The browser side: an empty import target folder. */
 let bookmarks: FakeBookmarks;
@@ -455,5 +456,31 @@ describe('applying an import plan', () => {
     expect(titles('target')).toEqual(['My name', 'Folder', 'Re-addressed', 'Tagged later']);
     expect(titles(folder)).toEqual(['Edited inside']);
     expect(bookmarks.get(moved)?.parentId).toBe('other');
+  });
+});
+
+describe('imports in the History', () => {
+  it('records one import as one record, with what the browser rejected', async () => {
+    await resetAuditDatabase();
+    bookmarks.fail.create.add('Rejected');
+    const plan = planImport(
+      parseJson([
+        { title: 'Kept', url: 'https://e2e.invalid/kept' },
+        { title: 'Rejected', url: 'https://e2e.invalid/rejected' },
+        { title: 'Folder', children: [{ title: 'Inner', url: 'https://e2e.invalid/inner' }] },
+      ]),
+      browserTree(),
+      'target',
+      'import-all',
+    );
+    await applyImportPlan(plan);
+    const [record, ...others] = await auditRecords();
+    expect(others).toEqual([]);
+    expect(record).toMatchObject({
+      source: 'import',
+      label: { action: 'add', count: 3, tool: 'tools_import' },
+      state: 'partially_applied',
+      counts: { applied: 3, failed: 1 },
+    });
   });
 });

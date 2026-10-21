@@ -326,12 +326,12 @@ class ContextMenuManager {
       }
       const bookmarkTitle = getBookmarkTitle(settings.naming, info, tab);
 
-      // Create the bookmark
-      const bookmark = await createBookmark({
-        parentId: folderId,
-        title: bookmarkTitle,
-        url: linkUrl,
-      });
+      // Create the bookmark, recorded in the History (and undoable with Ctrl+Z in the manager)
+      const { result: bookmark } = await recordBookmarkWrites(
+        { action: 'add', title: bookmarkTitle },
+        (writer) => writer.create({ parentId: folderId, title: bookmarkTitle, url: linkUrl }),
+        { source: 'context_menu' },
+      );
 
       // Get folder title for feedback
       const folder = await getBookmark(folderId);
