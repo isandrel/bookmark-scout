@@ -84,6 +84,15 @@
                 "cwd": "apps/extension"
             }
         },
+        "test:coverage": {
+            "command": "vitest run --config vitest.config.ts --coverage",
+            "options": {
+                "cwd": "apps/extension"
+            },
+            "outputs": [
+                "{projectRoot}/coverage/unit"
+            ]
+        },
         "test:e2e": {
             "command": "playwright install --with-deps --no-shell chromium && playwright test --config playwright.config.ts --project=chromium",
             "dependsOn": [

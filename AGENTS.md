@@ -150,6 +150,7 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 - extension Firefox build: `nx run extension:build:firefox`
 - extension Edge build: `nx run extension:build:edge`
 - extension unit tests: `nx run extension:test:unit`
+- extension unit tests with coverage: `nx run extension:test:coverage` (fails under the floors in `apps/extension/build/unit-coverage.toml`; CI runs this and posts the table in the job summary, with the HTML report as the `unit-coverage` artifact)
 - extension end-to-end tests: `nx run extension:test:e2e`
 - extension Edge end-to-end tests: `nx run extension:test:e2e:edge`
 - extension Firefox end-to-end smoke tests: `nx run extension:test:e2e:firefox`

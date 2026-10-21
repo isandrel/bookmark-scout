@@ -1,0 +1,36 @@
+# Unit test coverage (V8, through @vitest/coverage-v8), measured by `bun run test:coverage` and
+# the CI unit job. Read by build/unit-coverage.ts.
+#
+# The limits are floors just under what the suite reached, so coverage cannot fall without a
+# reason in the pull request; raise them as tests are added, never lower one to pass. Pages,
+# components, and hooks are covered by the Playwright suites, which this does not measure, so
+# the strict floors are for the logic folders.
+
+reports_directory = "coverage/unit"
+# text-summary for the log, json-summary for the CI job summary, lcov and html to browse.
+reporters = ["text-summary", "json-summary", "lcov", "html"]
+include = ["src/**/*.{ts,tsx}"]
+exclude = ["src/**/*.d.ts", "src/entrypoints/**"]
+
+# Percentages for the whole of `include` (measured 2026-10-21: lines 58.08, statements 56.80,
+# functions 52.24, branches 50.50).
+[thresholds]
+lines = 57
+statements = 56
+functions = 51
+branches = 50
+
+# Per folder, by glob (measured 2026-10-21).
+# src/lib: lines 93.3, statements 91.7, functions 92.1, branches 85.7.
+[thresholds.folders."src/lib/**"]
+lines = 92
+statements = 90
+functions = 91
+branches = 84
+
+# src/services: lines 90.0, statements 87.4, functions 86.5, branches 80.9.
+[thresholds.folders."src/services/**"]
+lines = 89
+statements = 86
+functions = 85
+branches = 80
