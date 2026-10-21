@@ -195,3 +195,25 @@ test('one search box matches titles and addresses; folder and address filters wa
   await more.click();
   await expect(toolbar.getByPlaceholder('Filter URLs...')).toHaveCount(0);
 });
+
+test('the Dates and Times settings change how the manager shows dates', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Date Format', [
+    { title: 'Dated', url: 'https://e2e.invalid/dated' },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const cell = page.locator('tbody tr').first().locator('td').filter({ hasText: /\d{4}/ });
+  // By default the language decides: English shows month/day/year with AM or PM.
+  await expect(cell).toHaveText(/^\d{1,2}\/\d{1,2}\/\d{4}, \d{1,2}:\d{2}:\d{2} [AP]M$/);
+
+  await setSettings(extensionWorker, { dateFormat: 'iso', timeFormat: 'hours24' });
+  // The open page follows at once, like after a language change.
+  await expect(cell).toHaveText(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+
+  // Options names each format with a sample.
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=appearance`);
+  await expect(page.getByText('Year-month-day (2026-03-14)')).toHaveCount(1);
+});

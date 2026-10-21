@@ -7150,5 +7150,53 @@
     "history_restoredPartial": {
         "message": "Se restauraron $1 elementos; $2 no pudieron volver porque su carpeta ya no existe.",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "settings_sectionDates": {
+        "message": "Fechas y horas",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "Formato de fecha",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "Cómo se muestran las fechas en todas partes: columnas de fecha, historial y detalles",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "Formato de hora",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "Mostrar las horas en formato de 12 o 24 horas, o como en tu idioma",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "Como en mi idioma",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "Corto",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "Largo",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "Año-mes-día",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "Como en mi idioma",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12 horas",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24 horas",
+        "description": "Time format option: 24-hour clock."
     }
 }
