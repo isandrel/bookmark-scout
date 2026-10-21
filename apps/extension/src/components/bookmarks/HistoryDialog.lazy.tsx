@@ -401,6 +401,42 @@ function HistoryRecordDetails({
   );
   const [rows, setRows] = useState(ROWS_PER_PAGE);
   const [undoing, setUndoing] = useState(false);
+  // Removed items kept as recovery points, restorable once the session's undo is gone.
+  const [recoverable, setRecoverable] = useState(0);
+  const [confirmRestore, setConfirmRestore] = useState(false);
+
+  useEffect(() => {
+    let current = true;
+    if (operation.undo || isFromElsewhere(operation)) return;
+    void countRecoveryCheckpoints(operation.id)
+      .catch(() => 0)
+      .then((count) => {
+        if (current) setRecoverable(count);
+      });
+    return () => {
+      current = false;
+    };
+  }, [operation]);
+
+  const restore = async () => {
+    setUndoing(true);
+    try {
+      const outcome = await restoreFromCheckpoints(operation);
+      if (outcome.alreadyUndone) toast({ title: t('qaManager_alreadyUndone') });
+      else if (outcome.parentMissing > 0) {
+        toast.error({
+          title: t('history_restoredPartial', [
+            String(outcome.restored),
+            String(outcome.parentMissing),
+          ]),
+        });
+      } else toast.success({ title: tPlural('history_restored', outcome.restored) });
+    } catch (error) {
+      toast.error({ title: t('error_generic'), description: getErrorMessage(error) });
+    } finally {
+      setUndoing(false);
+    }
+  };
 
   useEffect(() => {
     let current = true;
@@ -502,6 +538,12 @@ function HistoryRecordDetails({
           </div>
         ))}
       </dl>
+      <RestoreConfirm
+        open={confirmRestore}
+        count={recoverable}
+        onOpenChange={setConfirmRestore}
+        onConfirm={() => void restore()}
+      />
 
       <div className="flex flex-wrap items-center gap-2">
         {undoable && canHaveUndo ? (
@@ -524,6 +566,21 @@ function HistoryRecordDetails({
             <Redo2 />
             {t('action_redo')}
           </Button>
+        ) : canHaveUndo && recoverable > 0 ? (
+          <>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={undoing}
+              onClick={() => setConfirmRestore(true)}
+            >
+              <Undo2 />
+              {t('history_restore')}
+            </Button>
+            <p className="text-xs text-muted-foreground" data-testid="history-restore-hint">
+              {t('history_restoreHint')}
+            </p>
+          </>
         ) : canHaveUndo ? (
           <p className="text-xs text-muted-foreground" data-testid="history-undo-unavailable">
             {t('history_undoUnavailable')}
@@ -575,6 +632,31 @@ function HistoryRecordDetails({
         </>
       )}
     </>
+  );
+}
+
+/** Asks before bringing removed items back from their recovery points. */
+function RestoreConfirm({
+  open,
+  count,
+  onOpenChange,
+  onConfirm,
+}: {
+  open: boolean;
+  count: number;
+  onOpenChange: (open: boolean) => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <ConfirmDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('history_restoreConfirmTitle')}
+      description={tPlural('history_restoreConfirm', count)}
+      confirmLabel={t('history_restore')}
+      variant="default"
+      onConfirm={onConfirm}
+    />
   );
 }
 

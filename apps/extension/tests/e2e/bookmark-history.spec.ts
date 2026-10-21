@@ -95,9 +95,35 @@ test('a manager deletion is one verified record that survives a browser restart 
     await expect(kept.getByTestId('history-record-status')).toHaveText('Verified');
     await kept.getByRole('button', { expanded: false }).click();
     await expect(kept.getByTestId('history-item')).toContainText('2 items inside');
-    await expect(kept.getByTestId('history-undo-unavailable')).toBeVisible();
+    // Undo is gone with the session, but the removed folder was kept as a recovery point.
     await expect(kept.getByRole('button', { name: 'Undo', exact: true })).toHaveCount(0);
+    await expect(kept.getByTestId('history-restore-hint')).toBeVisible();
     await after.screenshot({ path: testInfo.outputPath('history-after-restart.png') });
+    await kept.getByRole('button', { name: 'Restore', exact: true }).click();
+    await after
+      .getByRole('dialog', { name: 'Restore removed items?' })
+      .getByRole('button', { name: 'Restore' })
+      .click();
+    // Back in its place, with what was inside it (new ids, the same content).
+    await expect
+      .poll(() => childTitles(worker, seeded.folderId))
+      .toEqual(['Keep me', 'Old Projects']);
+    const restored = await worker.evaluate(async (parentId) => {
+      const children = await chrome.bookmarks.getChildren(parentId);
+      const folder = children.find((child) => child.title === 'Old Projects');
+      return folder
+        ? (await chrome.bookmarks.getChildren(folder.id)).map((child) => [
+            child.title,
+            child.url ?? null,
+          ])
+        : [];
+    }, seeded.folderId);
+    expect(restored).toEqual([
+      ['Spec', 'https://e2e.invalid/spec#part-2'],
+      ['Empty inside', null],
+    ]);
+    await expect(kept).toContainText('Undone');
+    await expect(kept.getByRole('button', { name: 'Restore', exact: true })).toHaveCount(0);
   } finally {
     await context?.close();
     removeTempDir(userDataDir);
