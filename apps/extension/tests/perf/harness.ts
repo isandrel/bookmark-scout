@@ -28,6 +28,7 @@ const perfConfigSchema = z.strictObject({
     areas: z.number().int().positive(),
     topics_per_area: z.number().int().positive(),
     pages_per_topic: z.number().int().nonnegative(),
+    url_base: z.url(),
   }),
   run: z.strictObject({
     cpu_throttle: z.number().min(1),
@@ -36,6 +37,11 @@ const perfConfigSchema = z.strictObject({
     scroll_steps: z.number().int().positive(),
     scroll_step_px: z.number().int().positive(),
     long_frame_ms: z.number().positive(),
+  }),
+  jobs: z.strictObject({
+    repeats: z.number().int().positive(),
+    pause_after_items: z.number().int().positive(),
+    concurrency: z.number().int().positive(),
   }),
   /** Upper bounds for the median of each metric, in milliseconds; a metric without one is only reported. */
   budgets_ms: z.record(z.string(), z.number().positive()),
@@ -60,37 +66,46 @@ export const libraryNames = {
   page: (a: number, b: number, c: number) => `Page ${a}-${b}-${c}`,
 };
 
-/** Seeds the library from config into the bookmarks bar; returns how many nodes were created. */
-export async function seedLibrary(worker: Worker): Promise<number> {
-  return worker.evaluate(async ({ areas, topics_per_area, pages_per_topic }) => {
-    const [root] = await chrome.bookmarks.getTree();
-    const bar = root.children?.find((node) => node.children !== undefined);
-    if (!bar) throw new Error('No writable bookmark root found');
-    let created = 0;
-    for (let a = 0; a < areas; a++) {
-      const area = await chrome.bookmarks.create({ parentId: bar.id, title: `Area ${a}` });
-      created += 1;
-      await Promise.all(
-        Array.from({ length: topics_per_area }, async (_, b) => {
-          const topic = await chrome.bookmarks.create({
-            parentId: area.id,
-            title: `Topic ${a}-${b}`,
-          });
-          await Promise.all(
-            Array.from({ length: pages_per_topic }, (_, c) =>
-              chrome.bookmarks.create({
-                parentId: topic.id,
-                title: `Page ${a}-${b}-${c}`,
-                url: `https://example.com/${a}/${b}/${c}`,
-              }),
-            ),
-          );
-          created += 1 + pages_per_topic;
-        }),
-      );
-    }
-    return created;
-  }, perfConfig.library);
+/**
+ * Seeds the library from config into the bookmarks bar; returns how many nodes were created.
+ * Page addresses start with `urlBase` (a local server for scenarios that request them).
+ */
+export async function seedLibrary(
+  worker: Worker,
+  urlBase = perfConfig.library.url_base,
+): Promise<number> {
+  return worker.evaluate(
+    async ({ areas, topics_per_area, pages_per_topic, base }) => {
+      const [root] = await chrome.bookmarks.getTree();
+      const bar = root.children?.find((node) => node.children !== undefined);
+      if (!bar) throw new Error('No writable bookmark root found');
+      let created = 0;
+      for (let a = 0; a < areas; a++) {
+        const area = await chrome.bookmarks.create({ parentId: bar.id, title: `Area ${a}` });
+        created += 1;
+        await Promise.all(
+          Array.from({ length: topics_per_area }, async (_, b) => {
+            const topic = await chrome.bookmarks.create({
+              parentId: area.id,
+              title: `Topic ${a}-${b}`,
+            });
+            await Promise.all(
+              Array.from({ length: pages_per_topic }, (_, c) =>
+                chrome.bookmarks.create({
+                  parentId: topic.id,
+                  title: `Page ${a}-${b}-${c}`,
+                  url: `${base}/${a}/${b}/${c}`,
+                }),
+              ),
+            );
+            created += 1 + pages_per_topic;
+          }),
+        );
+      }
+      return created;
+    },
+    { ...perfConfig.library, base: urlBase },
+  );
 }
 
 type Probe = {
