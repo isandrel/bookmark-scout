@@ -60,11 +60,17 @@ export function jobProgressLabel(job: Pick<JobRecord, 'done' | 'total'>): string
   return t('jobs_progress', [formatCount(processedCount(job)), formatCount(job.total)]);
 }
 
+/** Whether `action` is shown but waiting: Pause asked for and not taken effect yet. */
+export function isJobActionPending(state: JobState, action: string): boolean {
+  return action === 'pause' && state === 'pause_requested';
+}
+
 /** The commands that make sense in a state, in the order the UI shows them. */
 export function jobActions(state: JobState): ('pause' | 'resume' | 'cancel' | 'delete')[] {
   if (state === 'queued' || state === 'running') return ['pause', 'cancel'];
   if (state === 'paused') return ['resume', 'cancel'];
-  if (state === 'pause_requested') return ['cancel'];
+  // Pause stays while it takes effect, shown as waiting, so focus on it is not lost.
+  if (state === 'pause_requested') return ['pause', 'cancel'];
   if (FINISHED_JOB_STATES.has(state)) return ['delete'];
   return [];
 }
