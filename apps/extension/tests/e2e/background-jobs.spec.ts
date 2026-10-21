@@ -724,6 +724,8 @@ test('applying in the background leaves the browser folders alone and moves with
   expect(stillThere?.parentId).toBe('0');
   expect(await childTitles(extensionWorker, seeded.ids.Target)).toEqual(['First']);
   expect(await childTitles(extensionWorker, seeded.folderId)).toEqual(['Target', 'Second']);
+});
+
 test('Background tasks works by keyboard, narrow, dark, and in German, and announces states only (J70)', async ({
   extensionId,
   extensionWorker,
