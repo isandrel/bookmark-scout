@@ -395,7 +395,7 @@ export async function fetchBookmarkMetadata(
         } satisfies MetadataFetchResultItem;
       }
 
-      const doc = new DOMParser().parseFromString(page.html, 'text/html');
+      const doc = parseFetchedHtml(page.html);
       const suggestedTitle =
         doc.querySelector('title')?.textContent?.replace(/\s+/g, ' ').trim() || undefined;
       const description = options.fetchDescriptions

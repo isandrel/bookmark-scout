@@ -67,10 +67,7 @@ export function PopupTree({
 }: PopupTreeProps) {
   const expanded = useMemo(() => new Set(expandedIds), [expandedIds]);
   const rows = useMemo(() => flattenVisibleTree(roots, expanded), [roots, expanded]);
-  const indexById = useMemo(
-    () => new Map(rows.map((row, index) => [row.node.id, index])),
-    [rows],
-  );
+  const indexById = useMemo(() => new Map(rows.map((row, index) => [row.node.id, index])), [rows]);
 
   // The focused row stays rendered while it scrolls out of view, so focus is never lost.
   const focusedIndexRef = useRef<number | null>(null);

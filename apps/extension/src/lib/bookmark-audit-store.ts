@@ -213,6 +213,20 @@ export type ObserverMeta = {
   openRecord?: { id: string; lastEventAt: number };
 };
 
+/**
+ * A recovery point: an item removed by a recorded change, with everything inside it, its tags and
+ * summaries, and where it was, stored and read back before the removal. It lets the History bring
+ * the item back after the session's undo is gone (with new ids), as long as the record is kept.
+ */
+export type RecoveryCheckpoint = {
+  key?: number;
+  operationId: string;
+  /** Where it was: its folder, position, and the siblings it sat between. */
+  at: { parentId: string; index: number; previousId?: string; nextId?: string };
+  node: RecoverableBookmarkNode;
+  createdAt: number;
+};
+
 interface AuditDb extends DBSchema {
   operations: {
     key: string;
@@ -223,11 +237,12 @@ interface AuditDb extends DBSchema {
   baseline: { key: string; value: BaselineNode; indexes: { parentId: string } };
   intents: { key: number; value: BookmarkWriteIntent };
   meta: { key: string; value: ObserverMeta };
+  checkpoints: { key: number; value: RecoveryCheckpoint; indexes: { operationId: string } };
 }
 
 export const AUDIT_DB_NAME = INDEXED_DATABASES.bookmarkAudit.name;
-/** 2 added the baseline, write intents, and observer state. */
-const AUDIT_DB_VERSION = 2;
+/** 2 added the baseline, write intents, and observer state; 3 recovery checkpoints. */
+const AUDIT_DB_VERSION = 3;
 
 /** Broadcast name pages listen on to refresh when any context writes a record. */
 export const AUDIT_CHANNEL = 'bookmark-scout-audit';
@@ -258,6 +273,13 @@ function openAuditDb(): Promise<IDBPDatabase<AuditDb>> {
             baseline.createIndex('parentId', 'parentId');
             db.createObjectStore('intents', { keyPath: 'key', autoIncrement: true });
             db.createObjectStore('meta', { keyPath: 'key' });
+          }
+          if (oldVersion < 3) {
+            const checkpoints = db.createObjectStore('checkpoints', {
+              keyPath: 'key',
+              autoIncrement: true,
+            });
+            checkpoints.createIndex('operationId', 'operationId');
           }
         },
         // Another context opened a newer version: let it, and reopen on the next call.
@@ -414,14 +436,52 @@ export async function pruneAuditOperations(now: number = Date.now()): Promise<nu
 async function removeOperations(ids: readonly string[]): Promise<number> {
   if (ids.length === 0) return 0;
   const db = await openAuditDb();
-  const transaction = db.transaction(['operations', 'details'], 'readwrite');
+  const transaction = db.transaction(['operations', 'details', 'checkpoints'], 'readwrite');
   for (const id of ids) {
     void transaction.objectStore('operations').delete(id);
     void transaction.objectStore('details').delete(id);
+    // A record's recovery points go with it, never before it.
+    const checkpoints = transaction.objectStore('checkpoints');
+    void checkpoints
+      .index('operationId')
+      .getAllKeys(id)
+      .then((keys) => {
+        for (const key of keys) void checkpoints.delete(key);
+      });
   }
   await transaction.done;
   notifyAuditChanged();
   return ids.length;
+}
+
+/**
+ * Stores a recovery point and reads it back; throws `AuditStoreError` unless it was stored as
+ * written, so the item is never removed without one.
+ */
+export async function putRecoveryCheckpoint(checkpoint: RecoveryCheckpoint): Promise<void> {
+  const db = await openAuditDb();
+  try {
+    const key = await db.add('checkpoints', checkpoint);
+    const stored = await db.get('checkpoints', key);
+    if (JSON.stringify(stored?.node) !== JSON.stringify(checkpoint.node)) {
+      throw new Error('read-back mismatch');
+    }
+  } catch (error) {
+    console.error('Failed to store a recovery point:', error);
+    throw new AuditStoreError('write-failed');
+  }
+}
+
+/** A record's recovery points, in the order the items were removed. */
+export async function getRecoveryCheckpoints(operationId: string): Promise<RecoveryCheckpoint[]> {
+  const db = await openAuditDb();
+  return db.getAllFromIndex('checkpoints', 'operationId', operationId);
+}
+
+/** How many recovery points a record has (0 when none or the store cannot be read). */
+export async function countRecoveryCheckpoints(operationId: string): Promise<number> {
+  const db = await openAuditDb();
+  return db.countFromIndex('checkpoints', 'operationId', operationId);
 }
 
 /** Removes one record and its rows (a reserved record that turned out to change nothing). */

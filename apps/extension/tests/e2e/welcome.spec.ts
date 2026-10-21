@@ -40,10 +40,7 @@ test.describe('right after install', () => {
     await expect(bookmarkKeys).toHaveText(
       `Use ${process.platform === 'darwin' ? '⌘D' : 'Ctrl+D'} instead`,
     );
-    const [shortcutSetup] = await Promise.all([
-      context.waitForEvent('page'),
-      bookmarkKeys.click(),
-    ]);
+    const [shortcutSetup] = await Promise.all([context.waitForEvent('page'), bookmarkKeys.click()]);
     await expect(shortcutSetup).toHaveURL(
       new RegExp(`^chrome-extension://${extensionId}/options\\.html.*#`),
     );

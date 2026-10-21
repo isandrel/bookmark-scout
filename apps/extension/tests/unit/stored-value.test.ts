@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { z } from 'zod';
+import { setLanguage } from '@/hooks/use-i18n';
 import type { StorageItem } from '@/lib/storage/registry';
 import {
   defineStoredValue,
@@ -8,7 +9,6 @@ import {
   NewerStoredValueError,
   preloadStoredValue,
 } from '@/lib/storage/stored-value';
-import { setLanguage } from '@/hooks/use-i18n';
 import { readStoredRaw, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 type Counter = { count: number; items: string[] };

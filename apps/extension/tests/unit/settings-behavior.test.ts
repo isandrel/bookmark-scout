@@ -3,11 +3,15 @@
  * output differs; the matrix in tests/settings-matrix.ts points here for these settings.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { BookmarkTreeNode } from '@/types';
 import { buildAIContextPack } from '@/services/ai-bookmark-tools';
-import { scanDeadLinks, fetchBookmarkMetadata, scanBookmarkPrivacy } from '@/services/bookmark-network-tools';
+import {
+  fetchBookmarkMetadata,
+  scanBookmarkPrivacy,
+  scanDeadLinks,
+} from '@/services/bookmark-network-tools';
 import { collectBookmarkStatistics, scanDuplicateBookmarks } from '@/services/bookmark-tooling';
 import { getBookmarkTitle } from '@/services/context-menu';
+import type { BookmarkTreeNode } from '@/types';
 
 function folder(children: BookmarkTreeNode[], title = 'Folder'): BookmarkTreeNode[] {
   return [{ id: 'root', title, children }];
@@ -54,7 +58,9 @@ describe('privacy scanner settings', () => {
     expect(kinds(email, {})).toEqual(['email']);
     expect(kinds(email, { emailDetection: false })).toEqual([]);
 
-    const uuid = folder([link('u', 'https://e2e.invalid/doc/123e4567-e89b-12d3-a456-426614174000')]);
+    const uuid = folder([
+      link('u', 'https://e2e.invalid/doc/123e4567-e89b-12d3-a456-426614174000'),
+    ]);
     expect(kinds(uuid, {})).toEqual(['uuid']);
     expect(kinds(uuid, { uuidDetection: false })).toEqual([]);
   });
@@ -74,7 +80,8 @@ describe('network tool settings', () => {
   function delayedResponse(delayMs: number, signal: AbortSignal | null | undefined, body = '') {
     return new Promise<Response>((resolve, reject) => {
       const timer = setTimeout(
-        () => resolve(new Response(body, { status: 200, headers: { 'content-type': 'text/html' } })),
+        () =>
+          resolve(new Response(body, { status: 200, headers: { 'content-type': 'text/html' } })),
         delayMs,
       );
       signal?.addEventListener('abort', () => {
@@ -200,7 +207,11 @@ describe('AI context pack limits', () => {
     [
       link('one', 'https://e2e.invalid/one', 'Pack One'),
       link('two', 'https://e2e.invalid/two', 'Pack Two'),
-      { id: 'sub', title: 'Nested', children: [link('deep', 'https://e2e.invalid/deep', 'Pack Deep')] },
+      {
+        id: 'sub',
+        title: 'Nested',
+        children: [link('deep', 'https://e2e.invalid/deep', 'Pack Deep')],
+      },
     ],
     'Pack',
   );
@@ -224,7 +235,9 @@ describe('AI context pack limits', () => {
     expect(shallow.content).toContain('Pack Two');
     expect(shallow.content).not.toContain('Pack Deep');
 
-    expect(buildAIContextPack(nodes, options, metadata).content).toContain(`Summary: ${'S'.repeat(100)}`);
+    expect(buildAIContextPack(nodes, options, metadata).content).toContain(
+      `Summary: ${'S'.repeat(100)}`,
+    );
     const short = buildAIContextPack(nodes, { ...options, excerptLength: 40 }, metadata);
     expect(short.content).toContain(`Summary: ${'S'.repeat(37)}...`);
   });

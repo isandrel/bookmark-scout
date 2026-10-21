@@ -11,6 +11,7 @@ import { replaceSettings, STORAGE_ITEMS, seedAIServices, updateStored } from './
 // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
 // so these tests grant the optional tabs permission to read the current page.
 test.use({ grantPermissions: ['tabs'] });
+
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 async function downloadContextPack(page: Page) {

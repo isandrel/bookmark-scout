@@ -167,9 +167,7 @@ test('applies each reviewed repair only after Apply, and undo restores the batch
   );
   await expect(review.getByRole('button', { name: /^Apply/ })).toBeDisabled();
   await editField.fill(`${site.origin}/new-page`);
-  await expect(review).toContainText(
-    `New URL: https://web.archive.org/web/${folder.refused}`,
-  );
+  await expect(review).toContainText(`New URL: https://web.archive.org/web/${folder.refused}`);
   await expect(review.getByTestId('dead-link-repair-summary')).toHaveText(
     'Delete: 1. Replace URL: 3. Keep: 1.',
   );

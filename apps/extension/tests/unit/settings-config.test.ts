@@ -71,10 +71,12 @@ describe('settings defined from config', () => {
     for (const [tool, capability] of Object.entries(TOOL_SCOPE_CAPABILITIES)) {
       const key = `${tool}DefaultScope` as keyof typeof meta;
       const [tab, section] = getSettingsConfigSections()[key].split('.');
-      const config = (readConfigToml(`settings/${tab.replaceAll('_', '-')}.toml`) as Record<
-        string,
-        Record<string, unknown>
-      >)[section];
+      const config = (
+        readConfigToml(`settings/${tab.replaceAll('_', '-')}.toml`) as Record<
+          string,
+          Record<string, unknown>
+        >
+      )[section];
       const values = meta[key].options?.map((option) => option.value);
       if (capability === 'both') {
         expect(values, tool).toEqual(['folder', 'all']);

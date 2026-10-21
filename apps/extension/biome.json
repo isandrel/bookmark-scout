@@ -1,48 +1,48 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
-    "vcs": {
-        "enabled": true,
-        "clientKind": "git",
-        "useIgnoreFile": false,
-        "root": "../.."
-    },
-    "files": {
-        "ignoreUnknown": true,
-        "includes": [
-            "src/**/*.ts",
-            "src/**/*.tsx",
-            "tests/**/*.ts",
-            "tests/**/*.tsx",
-            "build/**/*.ts",
-            "scripts/check-distribution-size.ts",
-            "manifest.config.ts",
-            "vitest.config.ts",
-            "playwright.config.ts"
-        ]
-    },
-    "formatter": {
-        "enabled": true,
-        "indentStyle": "space",
-        "indentWidth": 2,
-        "lineWidth": 100
-    },
-    "linter": {
-        "enabled": true,
-        "rules": {
-            "preset": "recommended",
-            "correctness": {
-                "useExhaustiveDependencies": "warn",
-                "useHookAtTopLevel": "error"
-            },
-            "suspicious": {
-                "noExplicitAny": "warn"
-            }
-        }
-    },
-    "javascript": {
-        "formatter": {
-            "quoteStyle": "single",
-            "trailingCommas": "all"
-        }
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": false,
+    "root": "../.."
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "tests/**/*.ts",
+      "tests/**/*.tsx",
+      "build/**/*.ts",
+      "scripts/check-distribution-size.ts",
+      "manifest.config.ts",
+      "vitest.config.ts",
+      "playwright.config.ts"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "correctness": {
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn"
+      }
     }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all"
+    }
+  }
 }

@@ -56,7 +56,10 @@ describe('getTopLevelBookmarkNodes', () => {
         ...root,
         children: root.children?.map((child) =>
           child.id === '3'
-            ? { ...child, children: [{ id: '30', parentId: '3', title: 'Phone', url: 'https://m.example' }] }
+            ? {
+                ...child,
+                children: [{ id: '30', parentId: '3', title: 'Phone', url: 'https://m.example' }],
+              }
             : child,
         ),
       },

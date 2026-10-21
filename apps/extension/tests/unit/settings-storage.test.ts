@@ -1,6 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { setLanguage } from '@/hooks/use-i18n';
 import { syncItemBytes } from '@/lib/prompt-library-storage';
+import {
+  coerceSelectValue,
+  commitNumberSetting,
+  dropSettledErrors,
+  formatListSetting,
+  fromUnlimitedSliderValue,
+  getChangedSettings,
+  parseListSetting,
+  parseListTokens,
+  toUnlimitedSliderValue,
+} from '@/lib/settings-form';
 import {
   defaultSettings,
   getSettingScope,
@@ -16,28 +28,16 @@ import {
   importSettings,
   registerSettingsSaveListener,
   resetSettings,
+  SettingsValidationError,
   sanitizeSettings,
   saveSettings,
   saveValidSettings,
-  SettingsValidationError,
   settingsValue,
   undoResetSettings,
   validateSettingsUpdate,
 } from '@/lib/settings-storage';
 import { DEVICE_SETTING_KEYS, storageAreaKey } from '@/lib/storage/registry';
 import { toStoredEnvelope } from '@/lib/storage/stored-value';
-import {
-  coerceSelectValue,
-  commitNumberSetting,
-  dropSettledErrors,
-  formatListSetting,
-  fromUnlimitedSliderValue,
-  getChangedSettings,
-  parseListSetting,
-  parseListTokens,
-  toUnlimitedSliderValue,
-} from '@/lib/settings-form';
-import { setLanguage } from '@/hooks/use-i18n';
 import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 /** What sync storage holds for settings. */

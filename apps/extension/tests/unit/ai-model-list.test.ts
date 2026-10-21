@@ -43,9 +43,14 @@ describe('model list response shapes', () => {
   const url = new URL('https://api.example.test/v1/models');
 
   it('reads OpenAI-style data[].id', () => {
-    expect(parseModelPage('openai', { data: [{ id: 'b' }, { id: 'a', name: 'A' }, {}] }, url)).toEqual(
-      { models: [{ id: 'b', name: 'b' }, { id: 'a', name: 'A' }] },
-    );
+    expect(
+      parseModelPage('openai', { data: [{ id: 'b' }, { id: 'a', name: 'A' }, {}] }, url),
+    ).toEqual({
+      models: [
+        { id: 'b', name: 'b' },
+        { id: 'a', name: 'A' },
+      ],
+    });
   });
 
   it('reads Anthropic display names and the next page', () => {
@@ -116,7 +121,11 @@ describe('model list request headers', () => {
           extraHeaders: { 'X-Proxy': 'yes' },
         }),
       ),
-    ).toMatchObject({ 'OpenAI-Organization': 'org-1', 'OpenAI-Project': 'proj_1', 'X-Proxy': 'yes' });
+    ).toMatchObject({
+      'OpenAI-Organization': 'org-1',
+      'OpenAI-Project': 'proj_1',
+      'X-Proxy': 'yes',
+    });
   });
 });
 
@@ -215,7 +224,9 @@ describe('connection error classification', () => {
     fetchMock.mockImplementationOnce(
       (_url, init) =>
         new Promise((_resolve, reject) => {
-          init?.signal?.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')));
+          init?.signal?.addEventListener('abort', () =>
+            reject(new DOMException('Aborted', 'AbortError')),
+          );
         }),
     );
     const pending = listProviderModels(settings({})).catch((error: unknown) => error);
