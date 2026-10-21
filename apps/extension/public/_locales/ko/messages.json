@@ -7106,5 +7106,29 @@
     "history_noUndoElsewhere": {
         "message": "Bookmark Scout가 한 변경이 아니어서 여기서 실행 취소할 수 없습니다.",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "history_restore": {
+        "message": "복원",
+        "description": "History button: bring back items a change removed, from their recovery points."
+    },
+    "history_restoreHint": {
+        "message": "실행 취소는 더 이상 할 수 없지만, 삭제한 항목은 보관되어 있습니다. 복원하면 원래 자리로 돌아옵니다.",
+        "description": "History detail next to Restore: why Undo is gone and what Restore does."
+    },
+    "history_restoreConfirmTitle": {
+        "message": "삭제한 항목을 복원할까요?",
+        "description": "Title of the confirmation before restoring removed items."
+    },
+    "history_restoreConfirm": {
+        "message": "삭제한 항목 $1개가 내용, 태그, 요약과 함께 원래 폴더로 돌아옵니다. 브라우저가 새 ID와 날짜를 부여합니다. 폴더가 더 이상 없는 항목은 제외됩니다.",
+        "description": "Confirmation text before restoring. $1 is how many top-level items."
+    },
+    "history_restored": {
+        "message": "$1개 항목을 복원했습니다",
+        "description": "Toast after restoring. $1 is how many top-level items came back."
+    },
+    "history_restoredPartial": {
+        "message": "$1개 항목을 복원했습니다. $2개는 폴더가 더 이상 없어 되돌리지 못했습니다.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
     }
 }

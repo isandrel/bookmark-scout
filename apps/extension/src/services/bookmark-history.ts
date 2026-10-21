@@ -358,7 +358,11 @@ function movedItem(node: Browser.bookmarks.BookmarkTreeNode): { title: string; u
   return { title: node.title, ...(node.url ? { url: node.url } : {}) };
 }
 
-function createWriter(operations: BookmarkHistoryOperation[]): BookmarkWriter {
+function createWriter(
+  operations: BookmarkHistoryOperation[],
+  /** The change's Audit History record; a removal needs one for its recovery point. */
+  operationId: string | undefined,
+): BookmarkWriter {
   return {
     async create({ metadata, ...details }) {
       const created = await createBookmark(details);
@@ -410,6 +414,9 @@ function createWriter(operations: BookmarkHistoryOperation[]): BookmarkWriter {
     async remove(id) {
       const { parentId, node } = await captureBookmarkSubtree(id, { keepIds: true });
       const at = await placeWithNeighbors(id, parentId);
+      // Nothing is removed without a stored, read-back recovery point (fail closed).
+      if (!operationId) throw new AuditStoreError('unavailable');
+      await putRecoveryCheckpoint({ operationId, at, node, createdAt: Date.now() });
       await deleteBookmark(id);
       operations.push({ kind: 'remove', at, node });
     },
@@ -518,7 +525,7 @@ export async function recordBookmarkWrites<T>(
   let result: T;
   let threw = true;
   try {
-    result = await write(createWriter(operations));
+    result = await write(createWriter(operations, operationId));
     threw = false;
   } finally {
     const finalLabel = completeLabel(labelNow(), operations);
