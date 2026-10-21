@@ -682,3 +682,46 @@ test('a stopped worker picks up from saved results, and a paused job stays pause
     removeTempDir(userDataDir);
   }
 });
+
+test('applying in the background leaves the browser folders alone and moves within a folder (J63)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'Apply Folder', [
+    { title: 'Target', children: [] },
+    { title: 'First', url: `${site.origin}/first` },
+    { title: 'Second', url: `${site.origin}/second` },
+  ]);
+  const [bar] = await extensionWorker.evaluate(() => chrome.bookmarks.getChildren('0'));
+  if (!bar) throw new Error('no browser folders');
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const response = (await sendCommand(page, {
+    type: 'apply',
+    commandId: crypto.randomUUID(),
+    source: 'manager',
+    tool: 'tools_aiReorganize',
+    changes: [
+      // A browser folder cannot move; the browser refuses it, and the rest goes on.
+      { kind: 'move', id: bar.id, title: bar.title, to: { parentId: seeded.ids.Target } },
+      { kind: 'move', id: seeded.ids.First, title: 'First', to: { parentId: seeded.ids.Target } },
+      // Within the folder it is already in.
+      { kind: 'move', id: seeded.ids.Second, title: 'Second', to: { parentId: seeded.folderId } },
+    ],
+  })) as { ok: boolean; job: { id: string } };
+  expect(response.ok).toBe(true);
+  await expect
+    .poll(
+      async () =>
+        (await storedJobs(extensionWorker)).find((job) => job.id === response.job.id)?.state,
+    )
+    .toBe('partial');
+  const [job] = (await storedJobs(extensionWorker)).filter(
+    (stored) => stored.id === response.job.id,
+  );
+  expect(job?.done).toEqual({ succeeded: 2, skipped: 0, failed: 1 });
+  const [stillThere] = await extensionWorker.evaluate((id) => chrome.bookmarks.get(id), bar.id);
+  expect(stillThere?.parentId).toBe('0');
+  expect(await childTitles(extensionWorker, seeded.ids.Target)).toEqual(['First']);
+  expect(await childTitles(extensionWorker, seeded.folderId)).toEqual(['Target', 'Second']);
+});
