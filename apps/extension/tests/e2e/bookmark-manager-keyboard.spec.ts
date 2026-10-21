@@ -418,3 +418,26 @@ test("a deletion toast's Undo and Ctrl/Cmd+Z share one history", async ({
   await expect(toastRegion(page).getByText('Nothing to undo', { exact: true })).toBeVisible();
   expect(await childTitles(extensionWorker, seeded.folderId)).toEqual(['Toast 01', 'Toast 02']);
 });
+
+test("a deletion toast's Undo after Ctrl/Cmd+Z says it was already undone (L30)", async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Toast Twice', links('Twice', 2));
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await row(page, 'Twice 01').getByRole('button', { name: 'Open menu' }).click();
+  await page.getByRole('menuitem', { name: 'Delete' }).click();
+  await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toEqual(['Twice 02']);
+
+  await page.locator('tbody tr').first().focus();
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(
+    toastRegion(page).getByText('✓ Undone: Delete "Twice 01"', { exact: true }),
+  ).toBeVisible();
+  await toastRegion(page).getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(toastRegion(page).getByText('Already undone', { exact: true })).toBeVisible();
+  // Restored once, not twice.
+  expect(await childTitles(extensionWorker, seeded.folderId)).toEqual(['Twice 01', 'Twice 02']);
+  await expect(toastRegion(page).getByText('Deletion undone', { exact: true })).toHaveCount(0);
+});
