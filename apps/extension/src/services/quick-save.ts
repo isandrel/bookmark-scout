@@ -458,11 +458,11 @@ async function saveLocally(
   }
   if (!target) return { ...base, status: 'failed', failure: 'saveFailed' };
 
-  const bookmark = await createBookmark({
-    parentId: target.folder.id,
-    title: page.title,
-    url: page.url,
-  });
+  const { result: bookmark } = await recordBookmarkWrites(
+    { action: 'add', title: page.title },
+    (writer) => writer.create({ parentId: target.folder.id, title: page.title, url: page.url }),
+    { source: 'quick_save' },
+  );
   await trackRecentFolder(target.folder.id, target.folder.path);
   return {
     ...base,
@@ -605,7 +605,7 @@ async function saveWithAI(
 
   let result: RecommendedFolderBookmarkResult;
   try {
-    result = await createRecommendedFolderBookmark(first, page, tree);
+    result = await createRecommendedFolderBookmark(first, page, tree, { source: 'quick_save' });
   } catch (error) {
     return {
       ...saving,
@@ -732,13 +732,20 @@ function currentAsAlternative(record: QuickSaveRecord): QuickSaveAlternative | n
 /** Undo: removes a new bookmark and the folders it created, or moves a saved one back. */
 export async function undoQuickSave(record: QuickSaveRecord): Promise<QuickSaveRecord> {
   if (record.status !== 'saved' || !record.bookmarkId) return record;
+  const { bookmarkId } = record;
   if (record.origin.kind === 'created') {
-    try {
-      await deleteBookmark(record.bookmarkId);
-    } catch {
-      // Already removed elsewhere; the folders below are still cleaned up.
-    }
-    await removeEmptyFolders(record.createdFolderIds);
+    await recordBookmarkWrites(
+      { action: 'delete', title: record.page.title },
+      async (writer) => {
+        try {
+          await writer.remove(bookmarkId);
+        } catch {
+          // Already removed elsewhere; the folders below are still cleaned up.
+        }
+        await removeEmptyFolders(record.createdFolderIds, writer.remove);
+      },
+      { source: 'quick_save', required: true },
+    );
     return {
       ...record,
       status: 'removed',
@@ -749,14 +756,20 @@ export async function undoQuickSave(record: QuickSaveRecord): Promise<QuickSaveR
     };
   }
   const { parentId, index, path } = record.origin;
-  try {
-    await moveBookmark(record.bookmarkId, { parentId, index });
-  } catch {
-    // The old position may no longer exist (the folder shrank); the end of the folder does.
-    await moveBookmark(record.bookmarkId, { parentId });
-  }
+  await recordBookmarkWrites(
+    { action: 'move', title: record.page.title },
+    async (writer) => {
+      try {
+        await writer.move(bookmarkId, { parentId, index });
+      } catch {
+        // The old position may no longer exist (the folder shrank); the end of the folder does.
+        await writer.move(bookmarkId, { parentId });
+      }
+      await removeEmptyFolders(record.createdFolderIds, writer.remove);
+    },
+    { source: 'quick_save' },
+  );
   const current = currentAsAlternative(record);
-  await removeEmptyFolders(record.createdFolderIds);
   return {
     ...record,
     status: 'duplicate',
@@ -787,27 +800,35 @@ export async function moveQuickSave(
   }
   const tree = await fetchBookmarkTree();
   const folders = indexWritableFolders(tree);
-  let target: { folderId: string; path: string[]; createdFolderIds: string[] };
-  if (choice.folderId && folders.has(choice.folderId)) {
-    target = {
-      folderId: choice.folderId,
-      path: folders.get(choice.folderId)?.path ?? choice.path,
-      createdFolderIds: [],
-    };
-  } else if (choice.recommendation) {
-    const created = await createRecommendedFolderPath(choice.recommendation, tree);
-    target = {
-      folderId: created.folderId,
-      path: created.folderTitles,
-      createdFolderIds: created.createdFolderIds,
-    };
-  } else {
-    throw new Error(t('quickSave_folderGone'));
-  }
-
-  await moveBookmark(record.bookmarkId, { parentId: target.folderId });
+  const { bookmarkId } = record;
+  // The folders it creates, the move, and the folders it leaves empty are one change.
+  const { result: target } = await recordBookmarkWrites(
+    { action: 'move', title: record.page.title },
+    async (writer) => {
+      let next: { folderId: string; path: string[]; createdFolderIds: string[] };
+      if (choice.folderId && folders.has(choice.folderId)) {
+        next = {
+          folderId: choice.folderId,
+          path: folders.get(choice.folderId)?.path ?? choice.path,
+          createdFolderIds: [],
+        };
+      } else if (choice.recommendation) {
+        const created = await createRecommendedFolderPath(choice.recommendation, tree, writer);
+        next = {
+          folderId: created.folderId,
+          path: created.folderTitles,
+          createdFolderIds: created.createdFolderIds,
+        };
+      } else {
+        throw new Error(t('quickSave_folderGone'));
+      }
+      await writer.move(bookmarkId, { parentId: next.folderId });
+      await removeEmptyFolders(record.createdFolderIds, writer.remove);
+      return next;
+    },
+    { source: 'quick_save' },
+  );
   const current = currentAsAlternative(record);
-  await removeEmptyFolders(record.createdFolderIds);
   await trackRecentFolder(target.folderId, target.path);
   return {
     ...record,
