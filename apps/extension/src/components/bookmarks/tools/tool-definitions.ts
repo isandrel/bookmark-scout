@@ -101,8 +101,10 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
   /**
    * The scan runs as a background job of this kind (`services/job-coordinator.ts`): it keeps
    * going when the page closes, with pause, resume, and cancel; `scan` is then unused here.
+   * `result` turns the job's saved results into what the review shows, and the review keeps
+   * them after an apply instead of scanning again.
    */
-  job?: JobKind;
+  job?: { kind: JobKind; result(job: JobRecord, results: unknown[]): Result };
   /**
    * The AI feature the tool is (`AI_FEATURES`), which picks its AI service. Disabled, with a
    * notice, while AI features are off or that service is not set up.
@@ -536,7 +538,13 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     descriptionKey: 'tools_checkDeadLinksDesc',
     actionKey: () => 'action_scan',
     needsHostAccess: true,
-    job: 'deadLinks',
+    job: {
+      kind: 'deadLinks',
+      result: (job, results) => ({
+        scannedBookmarks: job.total,
+        items: results as DeadLinkResultItem[],
+      }),
+    },
     // Repairs are reviewed and applied in DeadLinkRepairDialog.
     scan: async ({ nodes, options }) =>
       scanDeadLinks(nodes, {
@@ -556,6 +564,13 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     actionKey: () => 'action_scan',
     needsHostAccess: true,
     changesBookmarks: true,
+    job: {
+      kind: 'metadataFetcher',
+      result: (job, results) => ({
+        scannedBookmarks: job.total,
+        items: results as MetadataFetchResultItem[],
+      }),
+    },
     scan: ({ nodes, options }) => fetchBookmarkMetadata(nodes, options.metadataFetcher),
     async apply(_result, selected) {
       const titleChanges = getMetadataTitleChanges(selected);
@@ -583,6 +598,14 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     descriptionKey: 'tools_siteIconsDesc',
     actionKey: () => 'action_refresh',
     needsHostAccess: true,
+    job: {
+      kind: 'siteIcons',
+      // The adapter stores both counts when it accepts the job.
+      result: (job, results) => ({
+        ...siteIconJobSummarySchema.parse(job.summary),
+        items: results as SiteIconResultItem[],
+      }),
+    },
     async scan({ nodes, options }) {
       const cached = await getSiteIconCache();
       const cachedIcons = Object.fromEntries(
@@ -627,6 +650,11 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     scan: ({ nodes, options }) => collectBookmarkStatistics(nodes, options.statistics),
   },
 };
+
+const siteIconJobSummarySchema = z.strictObject({
+  scannedBookmarks: z.number().int().nonnegative(),
+  skippedBookmarks: z.number().int().nonnegative(),
+});
 
 /** Lists every id of `ids` exactly once, in any order. */
 const listsEachOnce = (ids: readonly string[]) => (list: readonly string[]) =>

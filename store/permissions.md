@@ -93,10 +93,10 @@ Code: `showInTab` in `src/services/quick-save.ts`, `src/entrypoints/quick-save-t
 ### `offscreen` (Chrome and Edge)
 
 ```text
-Used only by AI quick save, a keyboard shortcut the user presses after turning on AI. The background service worker cannot load the AI library or parse HTML, so it opens a hidden extension page (an offscreen document) for the duration of that one request: it builds the request to the AI provider the user configured and, if the user turned on Read page content, reads the page's text. The request itself is sent and logged by the background, exactly like AI folder suggestions in the popup. The page closes when the request ends.
+Used by AI quick save (a keyboard shortcut the user presses after turning on AI), by local AI agents the user connected that read a page, and by the Metadata Fetcher, which runs in the background. The background service worker cannot load the AI library or parse HTML, so it opens a hidden extension page (an offscreen document) while that work runs. For AI quick save it builds the request to the AI provider the user configured and, if the user turned on Read page content, reads the page's text; the request itself is sent and logged by the background, exactly like AI folder suggestions in the popup. For the Metadata Fetcher it reads the title and description from page heads the background already downloaded, and sends nothing. The page closes when the work ends.
 ```
 
-Code: `src/services/quick-save-ai-host.ts`, `src/services/quick-save-ai-runner.ts`, `src/entrypoints/ai-host/`. No warning. Firefox's background is a page, so it holds the same page in a frame and the Firefox manifest has no `offscreen`.
+Code: `src/services/quick-save-ai-host.ts`, `src/services/quick-save-ai-runner.ts`, `src/entrypoints/ai-host/`, and `withJobTools` in `src/services/job-coordinator.ts`. No warning. Firefox's background is a page, so it holds the same page in a frame and the Firefox manifest has no `offscreen`.
 
 ### `alarms`
 

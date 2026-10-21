@@ -313,6 +313,30 @@ describe('network tools', () => {
     expect(titles()).toEqual(['Old one', 'Renamed by user', 'Script']);
   });
 
+  it("reviews a background job's results and applies them without fetching again", async () => {
+    const run = createToolRun(TOOL_DEFINITIONS.metadataFetcher, deps());
+    const items = [
+      { id: '1', title: 'Old one', url: 'https://e2e.invalid/1', folderPath: 'Folder' },
+      { id: '2', title: 'Old two', url: 'https://e2e.invalid/2', folderPath: 'Folder' },
+    ].map((item, index) => ({
+      ...item,
+      status: 'ok' as const,
+      suggestedTitle: `Job ${index + 1}`,
+      changed: true,
+    }));
+    run.review({ scannedBookmarks: 2, items }, 'all');
+    expect(run.getState()).toMatchObject({ phase: 'review', open: true });
+    await fakeBrowser.bookmarks.update('2', { title: 'Renamed by user' });
+
+    await run.apply(items);
+    expect(titles()).toEqual(['Job 1', 'Renamed by user', 'Script']);
+    // The page never runs the job's scan, not even after the change.
+    expect(fetchMock).not.toHaveBeenCalled();
+    await notices[0].undo?.run();
+    expect(titles()).toEqual(['Old one', 'Renamed by user', 'Script']);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('opens the dead-link review without an apply step', async () => {
     fetchMock.mockImplementation(async (url: string) => ({
       status: url.endsWith('/2') ? 404 : 200,

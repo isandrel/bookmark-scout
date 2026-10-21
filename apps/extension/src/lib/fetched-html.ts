@@ -38,3 +38,16 @@ export function stripActiveHtml(html: string): string {
 export function parseFetchedHtml(html: string): Document {
   return new DOMParser().parseFromString(stripActiveHtml(html), 'text/html');
 }
+
+/** What the Metadata Fetcher reads from a page's `<head>`. */
+export type HtmlHead = { title?: string; description?: string };
+
+/** The title and, when asked for, the meta description of a fetched page's `<head>`. */
+export function readHtmlHead(html: string, descriptions: boolean): HtmlHead {
+  const doc = parseFetchedHtml(html);
+  const title = doc.querySelector('title')?.textContent?.replace(/\s+/g, ' ').trim() || undefined;
+  const description = descriptions
+    ? doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim() || undefined
+    : undefined;
+  return { ...(title ? { title } : {}), ...(description ? { description } : {}) };
+}

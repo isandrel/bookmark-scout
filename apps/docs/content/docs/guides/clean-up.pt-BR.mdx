@@ -83,6 +83,8 @@ Clique em **Salvar** (por exemplo, **Salvar 12 ícones**) para guardá-los ou fe
 
 Para cada site (origem) no escopo, a ferramenta solicita uma página salva nos favoritos sem cookies, lê somente o cabeçalho (head) dela e baixa o ícone indicado pela página com o tamanho mais próximo do **Tamanho preferido do ícone**, ou o `/favicon.ico` do site. Só são usados arquivos de ícone do próprio domínio do favorito, nunca um serviço de ícones de terceiros. Os arquivos maiores que o **Tamanho máximo do arquivo de ícone** (64 KB) ou que não são imagens são ignorados.
 
+A atualização roda em segundo plano: continua quando você fecha o gerenciador, e o cartão e **Tarefas em segundo plano** mostram o progresso, com **Pausar**, **Retomar** e **Cancelar**. Os resultados esperam em **Ver resultados**; nada é salvo até você clicar em **Salvar**.
+
 Os ícones salvos ficam no armazenamento local deste navegador, não são sincronizados e aparecem no pop-up, no painel lateral e no gerenciador. Eles têm prioridade sobre o ícone em cache do navegador. O cartão mostra quantos estão salvos; **Limpar ícones salvos** exclui todos eles. Quando o total chega ao **Limite de armazenamento de ícones** (4 MB), os ícones mais antigos são removidos primeiro. Um site que falhar em uma atualização posterior mantém o ícone salvo antes.
 
 <Callout title="Firefox">
@@ -93,4 +95,4 @@ No Firefox, abra o gerenciador com **Abrir gerenciador de favoritos** no pop-up 
 
 - [Encontrar e corrigir links quebrados](/guides/dead-links) verifica se as páginas salvas nos favoritos ainda carregam.
 - **Verificador de privacidade** (em **Segurança**) sinaliza URLs que contêm tokens, endereços de e-mail, UUIDs ou parâmetros confidenciais (e títulos, se **Verificar títulos** estiver ativado), para que você mesmo possa editá-los ou excluí-los. Links comuns para partes da página e endereços de aplicativos, como o `#inbox` do Gmail, não são sinalizados.
-- **Buscador de metadados** (em **Títulos e ícones das páginas**) sugere títulos a partir das páginas ativas e aplica somente os que você selecionar. Ele usa o mesmo acesso aos sites que a verificação de links quebrados.
+- **Buscador de metadados** (em **Títulos e ícones das páginas**) sugere títulos a partir das páginas ativas e aplica somente os que você selecionar. Ele usa o mesmo acesso aos sites que a verificação de links quebrados. Ele também roda em segundo plano, e seus títulos esperam em **Ver resultados**.

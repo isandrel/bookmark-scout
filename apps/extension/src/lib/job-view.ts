@@ -6,6 +6,8 @@
 /** The tool title each kind of job shows. */
 const JOB_TITLE_KEYS: Record<JobKind, MessageKey> = {
   deadLinks: 'tools_checkDeadLinks',
+  metadataFetcher: 'tools_metadataFetcher',
+  siteIcons: 'tools_siteIcons',
 };
 
 export function jobTitle(job: Pick<JobRecord, 'kind'>): string {
