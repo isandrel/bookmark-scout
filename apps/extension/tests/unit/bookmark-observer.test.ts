@@ -2,7 +2,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { OBSERVER_LIMITS } from '@/services/bookmark-intents';
 import { handleBookmarkEvent, reconcileBookmarks } from '@/services/bookmark-observer';
-import { createBookmark, deleteBookmark, moveBookmark, updateBookmark } from '@/services/bookmarks';
+import {
+  applyBookmarkChanges,
+  createBookmark,
+  deleteBookmark,
+  moveBookmark,
+  updateBookmark,
+} from '@/services/bookmarks';
 import { installFakeBookmarks } from '../fake-bookmarks';
 import { auditRecords, resetAuditDatabase } from './audit-helpers';
 import { STORAGE_ITEMS, seedStored } from './storage-helpers';
@@ -222,5 +228,35 @@ describe('changes made outside Bookmark Scout', () => {
     const [record, ...others] = await auditRecords();
     expect(others).toEqual([]);
     expect(record).toMatchObject({ source: 'reconciliation', observedSince: 1_000 });
+  });
+
+  it('tells changes made elsewhere from writes a background task makes at the same moment (J47)', async () => {
+    // A background task moves "A" (its own write, noted first), while something else renames
+    // "S1" and then moves "A" back, all in the same burst of events.
+    await applyBookmarkChanges([
+      { kind: 'move', id: 'a', title: 'A', expect: { parentId: 'f' }, to: { parentId: 'g' } },
+    ]);
+    await fakeBrowser.bookmarks.update('s1', { title: 'Renamed elsewhere' });
+    await fakeBrowser.bookmarks.move('a', { parentId: 'f' });
+    await handleBookmarkEvent({ type: 'changed', id: 's1', title: 'Renamed elsewhere' }, 2_000);
+    await handleBookmarkEvent(
+      { type: 'moved', id: 'a', parentId: 'g', index: 0, oldParentId: 'f', oldIndex: 0 },
+      2_000,
+    );
+    await handleBookmarkEvent(
+      { type: 'moved', id: 'a', parentId: 'f', index: 0, oldParentId: 'g', oldIndex: 0 },
+      2_000,
+    );
+
+    const observed = (await auditRecords()).filter((record) => record.state === 'observed');
+    const items = observed.flatMap(
+      (record) => (record.details as { items: { id: string; change: string }[] }).items,
+    );
+    // The rename and the move back are from elsewhere; the task's own move is not.
+    expect(items.map(({ id, change }) => [id, change])).toEqual([
+      ['s1', 'update'],
+      ['a', 'move'],
+    ]);
+    expect(observed.every((record) => record.source === 'source_unknown')).toBe(true);
   });
 });

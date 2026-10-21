@@ -682,3 +682,95 @@ test('a stopped worker picks up from saved results, and a paused job stays pause
     removeTempDir(userDataDir);
   }
 });
+
+test('applying in the background leaves the browser folders alone and moves within a folder (J63)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'Apply Folder', [
+    { title: 'Target', children: [] },
+    { title: 'First', url: `${site.origin}/first` },
+    { title: 'Second', url: `${site.origin}/second` },
+  ]);
+  const [bar] = await extensionWorker.evaluate(() => chrome.bookmarks.getChildren('0'));
+  if (!bar) throw new Error('no browser folders');
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const response = (await sendCommand(page, {
+    type: 'apply',
+    commandId: crypto.randomUUID(),
+    source: 'manager',
+    tool: 'tools_aiReorganize',
+    changes: [
+      // A browser folder cannot move; the browser refuses it, and the rest goes on.
+      { kind: 'move', id: bar.id, title: bar.title, to: { parentId: seeded.ids.Target } },
+      { kind: 'move', id: seeded.ids.First, title: 'First', to: { parentId: seeded.ids.Target } },
+      // Within the folder it is already in.
+      { kind: 'move', id: seeded.ids.Second, title: 'Second', to: { parentId: seeded.folderId } },
+    ],
+  })) as { ok: boolean; job: { id: string } };
+  expect(response.ok).toBe(true);
+  await expect
+    .poll(
+      async () =>
+        (await storedJobs(extensionWorker)).find((job) => job.id === response.job.id)?.state,
+    )
+    .toBe('partial');
+  const [job] = (await storedJobs(extensionWorker)).filter(
+    (stored) => stored.id === response.job.id,
+  );
+  expect(job?.done).toEqual({ succeeded: 2, skipped: 0, failed: 1 });
+  const [stillThere] = await extensionWorker.evaluate((id) => chrome.bookmarks.get(id), bar.id);
+  expect(stillThere?.parentId).toBe('0');
+  expect(await childTitles(extensionWorker, seeded.ids.Target)).toEqual(['First']);
+  expect(await childTitles(extensionWorker, seeded.folderId)).toEqual(['Target', 'Second']);
+});
+
+test('Background tasks works by keyboard, narrow, dark, and in German, and announces states only (J70)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'Jobs Folder', links(site));
+  await setDeadLinkSettings(extensionWorker, 2);
+  await startFromManager(page, extensionId, folderId);
+  await expect.poll(() => site.held()).toBe(2);
+  await setSettings(extensionWorker, { language: 'de', theme: 'dark' });
+  await page.setViewportSize({ width: 420, height: 800 });
+  await page.goto(managerUrl(extensionId, folderId));
+  await expect(page.locator('html')).toHaveClass(/\bdark\b/);
+
+  await page.getByTestId('tasks-button').focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', { name: 'Hintergrundaufgaben' });
+  await expect(dialog).toBeVisible();
+  // One announcement per job, for its state; progress changes are not read out one by one.
+  await expect(dialog.locator('[aria-live]')).toHaveCount(1);
+  await expect(dialog.getByTestId('job-progress')).not.toHaveAttribute('aria-live');
+
+  // Pause is reachable with Tab, and focus stays in the dialog after it.
+  const pause = dialog.getByRole('button', { name: 'Anhalten' });
+  for (
+    let presses = 0;
+    presses < 10 && !(await pause.evaluate((b) => b === document.activeElement));
+    presses += 1
+  ) {
+    await page.keyboard.press('Tab');
+  }
+  await expect(pause).toBeFocused();
+  await page.keyboard.press('Enter');
+  site.release(2);
+  await expect(dialog.getByTestId('job-status')).toHaveAttribute('data-job-state', 'paused');
+  await expect(dialog.locator('[aria-live]')).toHaveText('Angehalten');
+  expect(await dialog.evaluate((node) => node.contains(document.activeElement))).toBe(true);
+
+  // Nothing is cut off at 420px in the longer language.
+  const clipped = await dialog.evaluate((node) =>
+    [node, ...node.querySelectorAll('button, p, span')]
+      // Text only screen readers get is 1px wide on purpose.
+      .filter((element) => element.clientWidth > 1 && element.scrollWidth > element.clientWidth + 1)
+      .map((element) => element.textContent),
+  );
+  expect(clipped).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('tasks-de-dark-420.png') });
+});
