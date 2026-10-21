@@ -17,9 +17,9 @@ policy_error_pattern = "enterprise policy"
 [folders]
 # Folders the local word match (the quick save ranking) shortlists for the model, best first;
 # the model only picks among them, which keeps the prompt within its small context
-candidates = 25
+candidates = { value = 25, min = 1, max = 100 }
 # Characters of the page's text sent with Read page content on
-page_excerpt_chars = 1200
+page_excerpt_chars = { value = 1200, min = 0, max = 10_000 }
 # How long folder suggestions wait for the model before using the word match instead (ms)
 timeout_ms = 20000
 # Share of the shown confidence from the model's order; the rest is the word match's score

@@ -44,11 +44,7 @@ export type CachedModelList = z.infer<typeof cachedModelListSchema>;
 /** How long a fetched model list is offered before it must be fetched again. */
 const MODEL_CACHE_MAX_AGE_MS =
   readConfig('ai/model-cache', z.strictObject({ max_age_days: z.number().positive() }))
-    .max_age_days *
-  24 *
-  60 *
-  60 *
-  1000;
+    .max_age_days * MS_PER_DAY;
 
 /** Credentials stay on this device: local area only, never sync. Keyed by service id. */
 export const aiProviderConfigValue = defineStoredValue<Record<string, StoredAIProviderConfig>>(

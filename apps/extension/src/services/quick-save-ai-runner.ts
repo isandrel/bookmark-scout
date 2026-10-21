@@ -62,8 +62,6 @@ function onDeviceOptions(token: string): BuiltinOnDeviceOptions {
   };
 }
 
-const NULL_BODY_STATUSES: ReadonlySet<number> = new Set([101, 204, 205, 304]);
-
 /** A fetch that hands each request to the background and rebuilds its response. */
 export function createAIHostTransport(token: string): typeof fetch {
   return async (input, init) => {
@@ -87,7 +85,7 @@ export function createAIHostTransport(token: string): typeof fetch {
       | undefined;
     // A failed request surfaces like a network error, which the AI error messages describe.
     if (!response?.ok) throw new TypeError(response?.error ?? 'Failed to fetch');
-    return new Response(NULL_BODY_STATUSES.has(response.status) ? null : response.body, {
+    return new Response(isNullBodyStatus(response.status) ? null : response.body, {
       status: response.status,
       statusText: response.statusText,
       headers: response.headers,

@@ -28,45 +28,6 @@ export type PageText = {
   text: string;
 };
 
-/** IPv4 ranges that are not reachable from the public internet (RFC 1918, 6598, 3927, 1122). */
-const PRIVATE_IPV4_RANGES: readonly [number, number][] = [
-  [0x00000000, 8], // 0.0.0.0/8
-  [0x0a000000, 8], // 10.0.0.0/8
-  [0x64400000, 10], // 100.64.0.0/10
-  [0x7f000000, 8], // 127.0.0.0/8
-  [0xa9fe0000, 16], // 169.254.0.0/16
-  [0xac100000, 12], // 172.16.0.0/12
-  [0xc0a80000, 16], // 192.168.0.0/16
-];
-
-function parseIPv4(host: string): number | undefined {
-  const parts = host.split('.');
-  if (parts.length !== 4 || !parts.every((part) => /^\d{1,3}$/.test(part))) return undefined;
-  const bytes = parts.map(Number);
-  if (bytes.some((byte) => byte > 255)) return undefined;
-  return bytes.reduce((value, byte) => value * 256 + byte, 0);
-}
-
-function isPrivateIPv4(host: string): boolean {
-  const address = parseIPv4(host);
-  if (address === undefined) return false;
-  return PRIVATE_IPV4_RANGES.some(([base, bits]) => {
-    const size = 2 ** (32 - bits);
-    return Math.floor(address / size) === Math.floor(base / size);
-  });
-}
-
-function isPrivateIPv6(host: string): boolean {
-  const address = host.replace(/^\[|\]$/g, '').toLowerCase();
-  if (!address.includes(':')) return false;
-  if (address === '::' || address === '::1') return true;
-  // IPv4-mapped addresses (::ffff:10.0.0.1) inherit the IPv4 answer.
-  const mapped = address.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
-  if (mapped) return isPrivateIPv4(mapped[1]);
-  // fc00::/7 unique local and fe80::/10 link local.
-  return /^f[cd]/.test(address) || /^fe[89ab]/.test(address);
-}
-
 /**
  * True for hosts on the local network: private and loopback addresses, and names ending in a
  * configured local suffix such as `localhost`. A public name that resolves to a private address

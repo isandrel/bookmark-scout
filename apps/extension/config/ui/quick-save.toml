@@ -5,22 +5,22 @@
 # How many other folders the notification offers to move the bookmark to: without AI, the next
 # best matching folders (ranked like the pick); with AI, the other suggestions, up to the user's
 # Maximum recommendations setting.
-alternatives = 3
+alternatives = { value = 3, min = 0, max = 8 }
 # How many of those may be recently used folders, offered only when fewer folders match the
 # page. They say nothing about the page, so they come after every match.
-recent_alternatives = 1
+recent_alternatives = { value = 1, min = 0, max = 8 }
 # Milliseconds before the notification closes on its own. Hovering or focusing it pauses the
 # countdown. "Saving…" stays until the save finishes.
-auto_dismiss_ms = 8000
+auto_dismiss_ms = { value = 8000, min = 1000, max = 120_000 }
 # After drawing it, the notification checks it is really on screen: inside the viewport (give or
 # take this many CSS pixels, for rounding on zoomed pages) and not covered at its center. When it
 # is not, it removes itself and the badge and popup show the result instead.
-visible_tolerance_px = 2
+visible_tolerance_px = { value = 2, min = 0, max = 64 }
 # On pages the extension cannot show the notification in (browser pages, the store, PDF viewer),
 # the toolbar badge shows the result for this many milliseconds, and the popup shows the last
 # quick save with Undo for this long after it happened.
-badge_clear_ms = 4000
-popup_result_max_age_ms = 300000
+badge_clear_ms = { value = 4000, min = 500, max = 60_000 }
+popup_result_max_age_ms = { value = 300000, min = 1000, max = 3_600_000 }
 # Badge text and background per result. Colors are the DESIGN.md success and danger tokens.
 badge_success_text = "✓"
 badge_failure_text = "✗"

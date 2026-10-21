@@ -80,7 +80,7 @@ export function FolderMatchesPanel({
       aria-labelledby="folder-matches-title"
       data-testid="folder-matches"
       className="flex shrink-0 flex-col border-b px-2 pb-1.5 pt-1"
-      style={{ maxHeight: `${FOLDER_MATCH_MAX_HEIGHT_FRACTION * 100}%` }}
+      style={{ maxHeight: `${FOLDER_MATCH_MAX_HEIGHT_FRACTION * PERCENT}%` }}
     >
       <h2
         id="folder-matches-title"

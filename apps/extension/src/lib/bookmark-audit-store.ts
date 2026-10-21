@@ -32,7 +32,7 @@ const auditConfig = readConfig(
 );
 
 export const AUDIT_LIMITS = {
-  retentionMs: auditConfig.retention_days * 24 * 60 * 60 * 1000,
+  retentionMs: auditConfig.retention_days * MS_PER_DAY,
   maxOperations: auditConfig.max_operations,
   maxItemsPerOperation: auditConfig.max_items_per_operation,
   interruptedAfterMs: auditConfig.interrupted_after_ms,

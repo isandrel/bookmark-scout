@@ -204,10 +204,10 @@ const STATUS_ERRORS: Readonly<Record<number, { code: AIConnectionErrorCode; key:
 function connectionErrorForStatus(status: number, body: string, url: URL): AIConnectionError {
   const known = STATUS_ERRORS[status];
   if (known) return new AIConnectionError(known.code, t(known.key), status);
-  if (status === 400 && INVALID_KEY_PATTERN.test(body)) {
+  if (status === HTTP_STATUS.badRequest && INVALID_KEY_PATTERN.test(body)) {
     return new AIConnectionError('invalid_key', t('ai_connErrorInvalidKey'), status);
   }
-  if (status === 403) {
+  if (status === HTTP_STATUS.forbidden) {
     // Ollama and LM Studio reject extension origins with 403 until they are allowed.
     return isPrivateHost(url.hostname)
       ? new AIConnectionError('origin_rejected', t('ai_connErrorOriginRejected'), status)

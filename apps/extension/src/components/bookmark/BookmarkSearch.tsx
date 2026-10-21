@@ -22,10 +22,11 @@ import {
 } from 'lucide-react';
 import { type RefObject, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const searchRowConfig = readConfig(
   'ui/popup-search',
-  z.strictObject({ min_text_width_px: z.number().int().min(16).max(400) }),
+  z.strictObject({ min_text_width_px: boundedNumber({ integer: true }) }),
 );
 
 /** The search options in the search box's options menu, in menu order. */

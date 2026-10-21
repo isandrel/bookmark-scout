@@ -7,11 +7,12 @@
  * manager's part to the DOM.
  */
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const dragConfig = readConfig(
   'ui/drag-drop',
   z.strictObject({
-    folder_edge_fraction: z.number().gt(0).max(0.5),
+    folder_edge_fraction: boundedNumber({ integer: false }),
     bookmark_split_fraction: z.number().gt(0).lt(1),
     manager_auto_expand_ms: z.number().int().nonnegative(),
   }),

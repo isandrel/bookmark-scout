@@ -188,7 +188,7 @@ export function ChatSuggestions({ suggestions, send, typing }: ChatSuggestionsPr
       // A save waiting for approval stays on screen while the user types.
       hidden={typing && confirming === null}
       className="shrink-0 space-y-2 overflow-y-auto px-2 pt-2"
-      style={{ maxHeight: `${dockConfig.max_height_fraction * 100}%` }}
+      style={{ maxHeight: `${dockConfig.max_height_fraction * PERCENT}%` }}
     >
       <ul
         aria-label={t('askAI_suggestions')}

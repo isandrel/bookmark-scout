@@ -47,7 +47,9 @@ describe('AI runtime config', () => {
     const activity = readConfigToml('ai/activity.toml');
     expect(MAX_AI_ACTIVITY_ENTRIES).toBe(activity.max_entries);
     expect(MAX_AI_ACTIVITY_BODY_CHARS).toBe(activity.max_body_chars);
-    expect(MAX_PROMPT_BYTES).toBe(readConfigToml('ai/prompt-library.toml').prompt_max_bytes);
+    expect(MAX_PROMPT_BYTES).toBe(
+      (readConfigToml('ai/prompt-library.toml').prompt_max_bytes as { value: number }).value,
+    );
     expect(MAX_PROMPT_BYTES).toBeLessThanOrEqual(8192);
   });
 });

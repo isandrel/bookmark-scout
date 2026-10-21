@@ -33,7 +33,7 @@ export function isTokenListSetting(fieldKey: string): fieldKey is TokenListSetti
 const STATUS_GROUPS = [
   ...listSettingsConfig.status_codes
     .reduce((groups, status) => {
-      const group = `${Math.floor(status.code / 100)}xx`;
+      const group = httpStatusClass(status.code);
       groups.set(group, [...(groups.get(group) ?? []), status]);
       return groups;
     }, new Map<string, typeof listSettingsConfig.status_codes>())

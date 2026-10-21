@@ -263,7 +263,7 @@ function scheduleRetry(): void {
   const seconds = delays[Math.min(attempt, delays.length - 1)] ?? delays[0] ?? 60;
   attempt += 1;
   clearTimeout(retryTimer);
-  retryTimer = setTimeout(() => void syncAgentBridge(), seconds * 1000);
+  retryTimer = setTimeout(() => void syncAgentBridge(), seconds * MS_PER_SECOND);
 }
 
 async function onHostMessage(from: Port, raw: unknown): Promise<void> {

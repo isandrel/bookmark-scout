@@ -167,7 +167,7 @@ export function groupAuditOperationsByDay(
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
   const today = dayKey(now);
-  const yesterday = dayKey(now - 24 * 60 * 60 * 1000);
+  const yesterday = dayKey(now - MS_PER_DAY);
   const groups: AuditDayGroup[] = [];
   for (const operation of operations) {
     const key = dayKey(operation.startedAt);

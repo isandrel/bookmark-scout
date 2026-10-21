@@ -66,6 +66,9 @@
 # the History's Restore landed together, each having raised the uncompressed limit alone. Firefox
 # measured ZIP 1,689,447, 5,394,445 B uncompressed, 3,568,254 B of JavaScript, and 1,268,398 B of
 # locales.
+# JavaScript raised on 2026-10-21 (3,580,000 to 3,590,000) for reading HTTP statuses, private
+# networks, image signatures, and value bounds from config (the loaders and their schemas).
+# Firefox measured 3,580,283 B.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -84,7 +87,7 @@ raw_bytes = 5_410_000
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_580_000
+javascript = 3_590_000
 css = 84_000
 fonts = 143_000
 locales = 1_280_000

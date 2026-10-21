@@ -33,7 +33,7 @@ export function AISuggestionsPanel({
     <div
       data-testid="ai-suggestions"
       className="flex shrink-0 flex-col border-b py-2"
-      style={{ maxHeight: `${suggestionsConfig.max_height_fraction * 100}%` }}
+      style={{ maxHeight: `${suggestionsConfig.max_height_fraction * PERCENT}%` }}
     >
       <div className="flex shrink-0 items-center justify-between gap-2 px-3">
         <span className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-muted-foreground">

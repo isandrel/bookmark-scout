@@ -8,6 +8,7 @@
  * Firefox has no `LanguageModel`, so the provider stays hidden there (`unsupported`).
  */
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const MODEL_LANGUAGES = ['en', 'ja', 'es', 'de', 'fr'] as const;
 
@@ -19,8 +20,8 @@ export const builtinAIConfig = readConfig(
     status_poll_ms: z.number().int().positive(),
     policy_error_pattern: z.string().min(1),
     folders: z.strictObject({
-      candidates: z.number().int().min(1).max(100),
-      page_excerpt_chars: z.number().int().min(0).max(10_000),
+      candidates: boundedNumber({ integer: true }),
+      page_excerpt_chars: boundedNumber({ integer: true }),
       timeout_ms: z.number().int().positive(),
       rank_weight: z.number().min(0).max(1),
       max_confidence: z.number().gt(0).max(1),

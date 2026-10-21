@@ -79,7 +79,7 @@ export async function requestAgentApproval(
   const outcome = new Promise<ApprovalOutcome>((resolve) => {
     const timer = setTimeout(
       () => void settle(request.id, 'expired'),
-      approvalConfig.timeout_seconds * 1000,
+      approvalConfig.timeout_seconds * MS_PER_SECOND,
     );
     waiting.set(request.id, { resolve, timer });
   });

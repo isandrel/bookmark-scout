@@ -4,7 +4,7 @@
 # the query. Folders are scored with BM25. Read by src/lib/folder-ranking.ts.
 
 # BM25 term-frequency saturation: higher lets repeated words keep adding to a folder's score.
-k1 = 1.2
+k1 = { value = 1.2, min = 0, max = 5 }
 # BM25 length normalization, 0 to 1: higher favors small folders over large ones with the same words.
 b = 0.75
 # A folder must score at least this to be chosen; below it quick save falls back to the last used
@@ -13,9 +13,9 @@ min_score = 2.0
 
 # How much each part of a folder counts. A word in the folder's own name says more about what
 # belongs there than the same word in one of its bookmarks.
-name_weight = 3
-path_weight = 1
-bookmark_weight = 1
+name_weight = { value = 3, min = 0, max = 20 }
+path_weight = { value = 1, min = 0, max = 20 }
+bookmark_weight = { value = 1, min = 0, max = 20 }
 
 # Words shorter than this are ignored. A Chinese, Japanese, or Korean character counts as two, so
 # single-character words in those languages are kept.

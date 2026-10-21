@@ -1,0 +1,19 @@
+# HTTP status codes the extension reads (RFC 9110), in one place. Read by src/lib/http-status.ts.
+
+# The lowest and highest status a response can have.
+status_min = 100
+status_max = 599
+# A status this high or higher is an error: 4xx from the client side, 5xx from the server.
+error_min = 400
+server_error_min = 500
+# A class is a hundred statuses that share the first digit; its label is that digit and this
+# suffix ("4xx").
+class_size = 100
+class_label_suffix = "xx"
+# Statuses whose response has no body, so a Response is rebuilt without one.
+null_body = [101, 204, 205, 304]
+
+# Statuses the code tells apart by name.
+[named]
+bad_request = 400
+forbidden = 403

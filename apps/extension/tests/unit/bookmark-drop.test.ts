@@ -12,7 +12,7 @@ import {
 import { readConfigToml } from '../config-files';
 
 const config = readConfigToml('ui/drag-drop.toml') as {
-  folder_edge_fraction: number;
+  folder_edge_fraction: { value: number };
   bookmark_split_fraction: number;
   manager_auto_expand_ms: number;
 };
@@ -35,7 +35,7 @@ const items = [
 describe('manager drop zones', () => {
   it('reads the zone sizes and hover delay from config', () => {
     expect(MANAGER_DRAG_AUTO_EXPAND_MS).toBe(config.manager_auto_expand_ms);
-    const edge = config.folder_edge_fraction;
+    const edge = config.folder_edge_fraction.value;
     expect(getManagerDropZone(folder, edge / 2, true)).toBe('before');
     expect(getManagerDropZone(folder, 0.5, true)).toBe('into');
     expect(getManagerDropZone(folder, 1 - edge / 2, true)).toBe('after');

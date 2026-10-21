@@ -265,7 +265,7 @@ export function counterZoom(rootZoom: string): string {
 /** A random id for this document; `crypto.randomUUID` is missing on plain `http:` pages. */
 function newDocumentToken(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
-  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(bytes, byteToHex).join('');
 }
 
 function measure(host: HTMLElement): ToastPlacement {

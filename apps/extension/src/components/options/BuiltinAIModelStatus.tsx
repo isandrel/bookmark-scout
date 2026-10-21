@@ -190,13 +190,13 @@ export function BuiltinAIModelStatus() {
                 aria-label={t('builtinAi_statusDownloading')}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                aria-valuenow={Math.round(progress * 100)}
+                aria-valuenow={Math.round(progress * PERCENT)}
                 data-testid="builtin-ai-progress"
                 className="h-1.5 w-full overflow-hidden rounded-full bg-background"
               >
                 <div
                   className="h-full rounded-full bg-primary transition-[width]"
-                  style={{ width: `${progress * 100}%` }}
+                  style={{ width: `${progress * PERCENT}%` }}
                 />
               </div>
               <p className="font-mono text-xs tabular-nums">{formatPercent(progress)}</p>

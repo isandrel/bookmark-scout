@@ -17,7 +17,8 @@ function formatBody(body: string | undefined): string {
 }
 
 function statusTone(entry: AIActivityEntry): string {
-  if (entry.error || (entry.status ?? 0) >= 400) return 'bg-destructive-wash text-destructive-text';
+  if (entry.error || (entry.status !== undefined && isHttpErrorStatus(entry.status)))
+    return 'bg-destructive-wash text-destructive-text';
   return 'bg-success-wash text-success';
 }
 
