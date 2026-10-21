@@ -568,3 +568,41 @@ test('[mocked provider contract] reorganization creates suggested folders, skips
   await expect.poll(() => children(folderId)).toEqual(['Quarterly Report']);
   expect(await children(elsewhereId)).toEqual(['Pasta Recipe']);
 });
+
+test('reading fetched pages leaves no Content Security Policy errors', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E Metadata CSP', [
+    { title: 'Scripted page', url: 'https://e2e.invalid/scripted' },
+  ]);
+  const cspErrors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error' && message.text().includes('Content Security Policy')) {
+      cspErrors.push(message.text());
+    }
+  });
+  await page.route('https://e2e.invalid/scripted', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'text/html',
+      headers: { 'access-control-allow-origin': '*' },
+      body: [
+        '<html><head><title>Scripted Title</title>',
+        '<link rel="modulepreload" href="https://e2e.invalid/m.js">',
+        '<script src="https://e2e.invalid/app.js"></script>',
+        '</head><body onload="start()"><img src="x.png" onerror="fail()">',
+        '<button onclick="go()">Go</button></body></html>',
+      ].join(''),
+    }),
+  );
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Metadata Fetcher').getByRole('button', { name: 'Scan' }).click();
+  const results = page.getByRole('dialog', { name: 'Metadata Fetcher' });
+  await expect(results).toContainText('Page title: Scripted Title');
+  // Chrome would report every script and handler it blocks in the parsed page.
+  await page.waitForTimeout(500);
+  expect(cspErrors).toEqual([]);
+});
