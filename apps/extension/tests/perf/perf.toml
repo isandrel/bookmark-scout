@@ -6,6 +6,8 @@
 areas = 30
 topics_per_area = 50
 pages_per_topic = 13
+# Where page addresses point; a scenario that requests them seeds them with a local server instead.
+url_base = "https://example.com"
 
 [run]
 # CPU slowdown applied with the DevTools protocol; 4 approximates a mid-range laptop on battery.
@@ -20,6 +22,15 @@ scroll_steps = 40
 scroll_step_px = 400
 # A frame longer than this counts as a visible stutter.
 long_frame_ms = 50
+
+# Background jobs (jobs.perf.spec.ts): Check Dead Links over the whole library against a local
+# server that answers at once, so the numbers are the extension's own cost per link.
+[jobs]
+repeats = 1
+# Pause once this many links are checked, and time how long until the job shows Paused.
+pause_after_items = 2000
+# Requests at the same time (the Concurrency setting).
+concurrency = 8
 
 # Upper bounds for the median of each metric, in milliseconds. A metric without a budget is only
 # reported. Set at about 2.5x the first local baseline (2026-10-10, 19,500 bookmarks, 4x throttle),
@@ -44,3 +55,12 @@ long_frame_ms = 50
 "options.open" = 1000
 "options.search.results" = 300
 "options.stepper" = 300
+# Background jobs, from 2026-10-21 after results were saved in batches and pages read the store at
+# most every refresh_ms (before: 115 links/s, 170 s in all, pause 279 ms, manager open 801 ms).
+# Measured: accept 1,546 ms, pause 177 ms, manager open while running 599 ms, review 145 ms,
+# 19,500 links in 49,925 ms (391 links/s), 8.1 MiB stored.
+"jobs.accept" = 4000
+"jobs.pause" = 500
+"jobs.managerOpenWhileRunning" = 2000
+"jobs.total" = 125000
+"jobs.reviewOpen" = 400

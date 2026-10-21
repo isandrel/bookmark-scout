@@ -138,9 +138,11 @@ describe('pause, resume, and cancel (J09, J10, J12, J13)', () => {
     if (!response.ok || !response.job) throw new Error('not accepted');
     const jobId = response.job.id;
     await until(() => held.waiting.length > 0);
-    // Finish one, then pause with the others in flight.
+    // Finish one, then pause with the others in flight. Results are saved in batches, so wait
+    // until the finished link's worker moved on to the next one.
+    const first = held.requests.length;
     held.waiting[0]?.resolve();
-    await until(async () => (await getJob(jobId))?.done.succeeded === 1);
+    await until(() => held.requests.length === first + 1);
     const paused = await runJobCommand({ type: 'pause', jobId });
     const again = await runJobCommand({ type: 'pause', jobId });
     expect(paused.ok && again.ok).toBe(true);
@@ -168,8 +170,9 @@ describe('pause, resume, and cancel (J09, J10, J12, J13)', () => {
     if (!response.ok || !response.job) throw new Error('not accepted');
     const jobId = response.job.id;
     await until(() => held.waiting.length > 0);
+    const first = held.requests.length;
     held.waiting[0]?.resolve();
-    await until(async () => (await getJob(jobId))?.done.succeeded === 1);
+    await until(() => held.requests.length === first + 1);
     await runJobCommand({ type: 'cancel', jobId });
     await until(async () => (await getJob(jobId))?.state === 'cancelled');
     const items = await getJobItems(jobId);
