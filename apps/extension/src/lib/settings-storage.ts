@@ -167,6 +167,7 @@ export const settingsValue = defineDerivedValue(
   ([sync, device]) => {
     const settings = composeSettings(sync, device);
     setLanguage(settings.language);
+    setDateTimeFormat(settings.dateFormat, settings.timeFormat);
     return settings;
   },
   defaultSettings,

@@ -368,35 +368,54 @@ export function formatListPreview(items: readonly string[], limit: number): stri
   return formatList(more > 0 ? [...shown, t('format_moreItems', String(more))] : shown);
 }
 
-/** Date and time in the extension's language, e.g. "2026/9/24 15:05:49" in Japanese. */
-export function formatDateTime(value: number | Date): string {
+/**
+ * Applies the Dates and Times settings (`lib/date-formats.ts`). Pages re-render like after a
+ * language change, so every date shows in the new format.
+ */
+export function setDateTimeFormat(date: string, time: string): void {
+  if (!setDateTimeFormatChoice(date, time)) return;
+  languageRevision += 1;
+  for (const listener of [...languageListeners]) listener();
+}
+
+function formatWith(
+  kind: 'day' | 'time' | 'dateTime',
+  value: number | Date,
+  choice?: { date: string; time: string },
+): string {
   const date = value instanceof Date ? value : new Date(value);
+  const { locale, options } = dateTimeFormatOptions(kind, choice);
   try {
-    return date.toLocaleString(getFormattingLocale());
+    return new Intl.DateTimeFormat(locale ?? getFormattingLocale(), options).format(date);
   } catch {
     // An unsupported locale tag falls back to the runtime default.
-    return date.toLocaleString();
+    return new Intl.DateTimeFormat(undefined, options).format(date);
   }
 }
 
-/** Time of day in the extension's language, e.g. "3:05 PM" in English. */
+/** An afternoon, so a sample shows both how dates are ordered and 12- or 24-hour times. */
+const SAMPLE_DATE = new Date(2026, 2, 14, 15, 9, 26);
+
+/** A sample of one date or time format, for its entry in the settings list. */
+export function formatDateSample(kind: 'date' | 'time', id: string): string {
+  return kind === 'date'
+    ? formatWith('day', SAMPLE_DATE, { date: id, time: 'auto' })
+    : formatWith('time', SAMPLE_DATE, { date: 'auto', time: id });
+}
+
+/** Date and time in the chosen formats, e.g. "2026/9/24 15:05:49" in Japanese by default. */
+export function formatDateTime(value: number | Date): string {
+  return formatWith('dateTime', value);
+}
+
+/** Time of day in the chosen time format, e.g. "3:05 PM" in English by default. */
 export function formatTime(value: number | Date): string {
-  const date = value instanceof Date ? value : new Date(value);
-  try {
-    return date.toLocaleTimeString(getFormattingLocale(), { hour: 'numeric', minute: '2-digit' });
-  } catch {
-    return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-  }
+  return formatWith('time', value);
 }
 
-/** A day in the extension's language, e.g. "Oct 20, 2026" in English. */
+/** A day in the chosen date format, e.g. "Oct 20, 2026" in English by default. */
 export function formatDay(value: number | Date): string {
-  const date = value instanceof Date ? value : new Date(value);
-  try {
-    return date.toLocaleDateString(getFormattingLocale(), { dateStyle: 'medium' });
-  } catch {
-    return date.toLocaleDateString(undefined, { dateStyle: 'medium' });
-  }
+  return formatWith('day', value);
 }
 
 export type MessageKey = string;

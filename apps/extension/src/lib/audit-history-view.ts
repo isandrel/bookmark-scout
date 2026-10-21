@@ -114,6 +114,7 @@ export function auditReasonLabel(reason: string | undefined): string | undefined
   if (reason === 'deleted') return t('history_reasonDeleted');
   if (reason === 'changed') return t('history_reasonChanged');
   if (reason === 'failed') return t('history_reasonFailed');
+  if (reason === 'parent_missing') return t('toast_restoreParentMissing');
   if (reason === 'before_unknown') return t('history_reasonBeforeUnknown');
   return undefined;
 }

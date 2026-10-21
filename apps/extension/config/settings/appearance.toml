@@ -14,6 +14,12 @@ browser_icon_cache = false
 # Size of favicon icons in pixels: 16, 24, or 32
 favicon_size = 16
 
+[dates]
+# How dates and times show everywhere (the manager's date columns, History, details): a format
+# id from config/ui/date-formats.toml. "auto" follows the extension's language.
+date_format = "auto"
+time_format = "auto"
+
 [popup]
 # Popup window size in pixels. Chrome and Edge cap extension popups at 800x600, so larger stored
 # values snap to the limit (clamp) instead of resetting. src/entrypoints/popup/index.html opens at

@@ -107,7 +107,7 @@ export async function readPageText(url: string): Promise<PageText | undefined> {
       allowUrl: isReadablePageUrl,
     });
     if (!html) return undefined;
-    return await extractPageText(new DOMParser().parseFromString(html, 'text/html'));
+    return await extractPageText(parseFetchedHtml(html));
   } catch {
     // Unreachable pages are sent with their title and URL only.
     return undefined;

@@ -582,6 +582,18 @@ const fields = {
         dark: t('settings_themeDark'),
       })[value],
   ),
+  dateFormat: enumField(
+    'appearance.dates.date_format',
+    'dateFormat',
+    z.enum(DATE_FORMAT_IDS),
+    (value) => `${t(dateFormatLabelKey('date', value))} (${formatDateSample('date', value)})`,
+  ),
+  timeFormat: enumField(
+    'appearance.dates.time_format',
+    'timeFormat',
+    z.enum(TIME_FORMAT_IDS),
+    (value) => `${t(dateFormatLabelKey('time', value))} (${formatDateSample('time', value)})`,
+  ),
   showFavicons: switchField('appearance.theme_icons.show_favicons', 'showFavicons'),
   browserIconCache: switchField('appearance.theme_icons.browser_icon_cache', 'browserIconCache'),
   faviconSize: literalField(
@@ -609,12 +621,7 @@ const fields = {
   folderMatchesMax: numberField('search.folder_matches.max', 'folderMatchesMax'),
   folderMatchesTypos: switchField('search.folder_matches.typos', 'folderMatchesTypos'),
 
-  sortOrder: enumField(
-    'behavior.tree.sort_order',
-    'sortOrder',
-    sortOrderSchema,
-    getSortOrderLabel,
-  ),
+  sortOrder: enumField('behavior.tree.sort_order', 'sortOrder', sortOrderSchema, getSortOrderLabel),
   groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
   treeDragAndDrop: switchField('behavior.tree.drag_and_drop', 'treeDragAndDrop'),
   linkOpenTarget: enumField(
@@ -1080,6 +1087,8 @@ export const settingsSchema = z.object(settingsShape).superRefine((value, ctx) =
 
 export type Settings = z.infer<typeof settingsSchema>;
 export const defaultSettings: Settings = settingsSchema.parse({});
+// Dates show in the default formats until the settings are read.
+setDefaultDateTimeFormat(defaultSettings.dateFormat, defaultSettings.timeFormat);
 
 /** Where a setting is stored: synced to every device, or kept on this one (`DEVICE_SETTING_KEYS`). */
 export type SettingScope = 'sync' | 'device';
@@ -1174,6 +1183,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         labelKey: 'settings_sectionThemeIcons',
         fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
       },
+      { id: 'dates', labelKey: 'settings_sectionDates', fields: ['dateFormat', 'timeFormat'] },
       {
         id: 'popup',
         labelKey: 'settings_sectionPopup',
@@ -1186,7 +1196,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       },
     ]),
     behavior: category('settings_behavior', 'settings_behaviorDesc', [
-      { id: 'tree', labelKey: 'settings_sectionTree', fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'] },
+      {
+        id: 'tree',
+        labelKey: 'settings_sectionTree',
+        fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'],
+      },
       { id: 'links', labelKey: 'settings_sectionLinks', fields: ['linkOpenTarget'] },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       {

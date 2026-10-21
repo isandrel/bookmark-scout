@@ -57,7 +57,7 @@ const sortComparators = {
   // whole tree (search results across folders) in the order the browser shows it.
   browser: <T>(left: SortableItem<T>, right: SortableItem<T>) =>
     left.originalPosition - right.originalPosition,
-  date:<T>(left: SortableItem<T>, right: SortableItem<T>, accessors: BookmarkSortAccessors<T>) => {
+  date: <T>(left: SortableItem<T>, right: SortableItem<T>, accessors: BookmarkSortAccessors<T>) => {
     const leftDate = accessors.getDateAdded(left.item);
     const rightDate = accessors.getDateAdded(right.item);
 
@@ -130,13 +130,18 @@ export function sortBookmarkTree(
       children: node.children ? sortNodes(node.children) : undefined,
     }));
 
-    return sortBookmarkItems(withSortedChildren, order, {
-      getTitle: (node) => titlesById.get(node.id) ?? node.title,
-      getDateAdded: (node) => node.dateAdded ?? node.dateGroupModified,
-      isFolder: (node) => node.children !== undefined,
-      getIndex: (node) => node.index,
-      isPinned: (node) => node.isTemporary === true,
-    }, options);
+    return sortBookmarkItems(
+      withSortedChildren,
+      order,
+      {
+        getTitle: (node) => titlesById.get(node.id) ?? node.title,
+        getDateAdded: (node) => node.dateAdded ?? node.dateGroupModified,
+        isFolder: (node) => node.children !== undefined,
+        getIndex: (node) => node.index,
+        isPinned: (node) => node.isTemporary === true,
+      },
+      options,
+    );
   };
 
   return sortNodes(nodes);

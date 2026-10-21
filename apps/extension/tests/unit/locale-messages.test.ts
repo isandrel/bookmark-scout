@@ -1,8 +1,8 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
 import { parse } from 'smol-toml';
+import { describe, expect, it } from 'vitest';
 import {
   FALLBACK_LOCALE,
   formatBundledMessage,
@@ -120,11 +120,14 @@ describe('extension locale messages', () => {
       [...message.matchAll(/\$([A-Za-z0-9_@]+)\$|\$[1-9]/g)].map((match) => match[0]).sort();
     // A plural form English lacks (_few) is compared with its base key.
     const english = (key: string) =>
-      byLocale.en.messages[key] ?? byLocale.en.messages[key.replace(/_(zero|one|two|few|many)$/, '')];
+      byLocale.en.messages[key] ??
+      byLocale.en.messages[key.replace(/_(zero|one|two|few|many)$/, '')];
     const mismatched = Object.entries(byLocale[locale].messages)
       .filter(([key, entry]) => {
         const source = english(key);
-        return source && JSON.stringify(tokens(entry.message)) !== JSON.stringify(tokens(source.message));
+        return (
+          source && JSON.stringify(tokens(entry.message)) !== JSON.stringify(tokens(source.message))
+        );
       })
       .map(([key]) => key);
     expect(mismatched).toEqual([]);

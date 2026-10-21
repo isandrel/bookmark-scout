@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AISettings } from '@/services/ai-client';
 import { suggestBookmarkTags, summarizeBookmarksWithAI } from '@/services/ai-bookmark-tools';
+import type { AISettings } from '@/services/ai-client';
 import type { BookmarkTreeNode } from '@/types';
 
 const mocks = vi.hoisted(() => ({

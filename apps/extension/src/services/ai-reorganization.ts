@@ -140,14 +140,15 @@ export function stripLeadingFolder(path: string, folderTitle: string | undefined
 export function collectBookmarks(
   nodes: BookmarkTreeNode[],
   parentPath = '',
-  parentId = ''
+  parentId = '',
 ): BookmarkInfo[] {
   const result: BookmarkInfo[] = [];
   aiLogger.debug({ nodesCount: nodes.length }, 'collectBookmarks called');
   for (const node of nodes) {
-    const currentPath = parentPath && node.title
-      ? `${parentPath}${AI_FOLDER_PATH_SEPARATOR}${node.title}`
-      : node.title || parentPath;
+    const currentPath =
+      parentPath && node.title
+        ? `${parentPath}${AI_FOLDER_PATH_SEPARATOR}${node.title}`
+        : node.title || parentPath;
     if (node.url) {
       result.push({
         id: node.id,
@@ -158,21 +159,14 @@ export function collectBookmarks(
       });
     }
     if (node.children) {
-      result.push(...collectBookmarks(
-        node.children, 
-        node.url ? parentPath : currentPath,
-        node.id
-      ));
+      result.push(...collectBookmarks(node.children, node.url ? parentPath : currentPath, node.id));
     }
   }
   return result;
 }
 
-export function findFolderByPath(
-  folders: FolderInfo[],
-  path: string
-): FolderInfo | undefined {
-  return folders.find(f => f.path === path);
+export function findFolderByPath(folders: FolderInfo[], path: string): FolderInfo | undefined {
+  return folders.find((f) => f.path === path);
 }
 
 type PlannedTarget = Pick<MoveBookmarkOp, 'toFolderId' | 'toFolderPath' | 'newFolderTitles'>;
@@ -270,11 +264,14 @@ export async function generateReorganizationPlan(
   const allBookmarks = collectBookmarks(bookmarks);
   const allFolders = collectFolders(bookmarks);
 
-  aiLogger.debug({ 
-    bookmarkCount: allBookmarks.length, 
-    folderCount: allFolders.length,
-    config: cfg 
-  }, 'Collected bookmarks and folders');
+  aiLogger.debug(
+    {
+      bookmarkCount: allBookmarks.length,
+      folderCount: allFolders.length,
+      config: cfg,
+    },
+    'Collected bookmarks and folders',
+  );
 
   if (allBookmarks.length === 0) {
     aiLogger.warn('No bookmarks found in scope');
@@ -287,7 +284,10 @@ export async function generateReorganizationPlan(
     aiMaxItemsPerFolder: cfg.maxItemsPerFolder,
   });
 
-  aiLogger.info({ provider: settings.provider, model: settings.model }, 'Calling AI for reorganization');
+  aiLogger.info(
+    { provider: settings.provider, model: settings.model },
+    'Calling AI for reorganization',
+  );
 
   const bookmarkBatches = chunkItems(allBookmarks, cfg.batchSize);
   const batchResults = [];

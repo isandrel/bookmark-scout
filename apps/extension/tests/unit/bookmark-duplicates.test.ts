@@ -47,7 +47,9 @@ describe('duplicate matching', () => {
     expect(label(normalized)).toBe('example.com/recipes');
     expect(label({ ...normalized, ignoreProtocol: false })).toBe('https://example.com/recipes');
     expect(label({ ...normalized, strategy: 'title_only' })).toBe('Weeknight Pasta');
-    expect(label({ ...normalized, strategy: 'title_url' })).toBe('Weeknight Pasta · example.com/recipes');
+    expect(label({ ...normalized, strategy: 'title_url' })).toBe(
+      'Weeknight Pasta · example.com/recipes',
+    );
   });
 
   it('keeps path and query case and explicit ports distinct', () => {
@@ -230,13 +232,18 @@ describe('duplicate removal', () => {
       strategy: 'title_url',
     });
     await edit('2', { title: 'Renamed' });
-    await expect(removeDuplicateExtras(byTitleUrl.groups, byTitleUrl.match)).resolves.toMatchObject({
-      removed: 0,
-      skipped: 1,
-      skippedGroups: 0,
-    });
+    await expect(removeDuplicateExtras(byTitleUrl.groups, byTitleUrl.match)).resolves.toMatchObject(
+      {
+        removed: 0,
+        skipped: 1,
+        skippedGroups: 0,
+      },
+    );
 
-    const byTitle = scanDuplicateBookmarks(folder(titled), { ...normalized, strategy: 'title_only' });
+    const byTitle = scanDuplicateBookmarks(folder(titled), {
+      ...normalized,
+      strategy: 'title_only',
+    });
     await edit('3', { title: 'Start' });
     const outcome = await removeDuplicateExtras(byTitle.groups, byTitle.match);
     expect(outcome.skippedGroups).toBe(1);

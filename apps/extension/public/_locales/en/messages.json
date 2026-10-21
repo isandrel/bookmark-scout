@@ -7130,5 +7130,85 @@
     "history_noUndoElsewhere": {
         "message": "Not made by Bookmark Scout, so it cannot be undone here.",
         "description": "History detail for a change seen from elsewhere: why it offers no Undo."
+    },
+    "history_restore": {
+        "message": "Restore",
+        "description": "History button: bring back items a change removed, from their recovery points."
+    },
+    "history_restoreHint": {
+        "message": "Undo is no longer available, but the removed items were kept: Restore brings them back where they were.",
+        "description": "History detail next to Restore: why Undo is gone and what Restore does."
+    },
+    "history_restoreConfirmTitle": {
+        "message": "Restore removed items?",
+        "description": "Title of the confirmation before restoring removed items."
+    },
+    "history_restoreConfirm": {
+        "message": "$1 removed items come back in the folders they were in, with their contents, tags, and summaries. The browser gives them new ids and dates. Items whose folder no longer exists are left out.",
+        "description": "Confirmation text before restoring. $1 is how many top-level items."
+    },
+    "history_restoreConfirm_one": {
+        "message": "$1 removed item comes back in the folder it was in, with its contents, tags, and summary. The browser gives it a new id and dates. It is left out if its folder no longer exists.",
+        "description": "Confirmation text before restoring one item."
+    },
+    "history_restored": {
+        "message": "Restored $1 items",
+        "description": "Toast after restoring. $1 is how many top-level items came back."
+    },
+    "history_restored_one": {
+        "message": "Restored $1 item",
+        "description": "Toast after restoring one item."
+    },
+    "history_restoredPartial": {
+        "message": "Restored $1 items; $2 could not come back because their folder no longer exists.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "settings_sectionDates": {
+        "message": "Dates and Times",
+        "description": "Settings section heading: how dates and times show."
+    },
+    "settings_dateFormat": {
+        "message": "Date Format",
+        "description": "Setting label: date format."
+    },
+    "settings_dateFormatDesc": {
+        "message": "How dates show everywhere: the date columns, the History, and details",
+        "description": "Setting description: date format."
+    },
+    "settings_timeFormat": {
+        "message": "Time Format",
+        "description": "Setting label: time format."
+    },
+    "settings_timeFormatDesc": {
+        "message": "Show times on a 12-hour or 24-hour clock, or as your language does",
+        "description": "Setting description: time format."
+    },
+    "settings_dateFormatAuto": {
+        "message": "As in my language",
+        "description": "Date format option: follow the extension language."
+    },
+    "settings_dateFormatShort": {
+        "message": "Short",
+        "description": "Date format option: short numeric date."
+    },
+    "settings_dateFormatLong": {
+        "message": "Long",
+        "description": "Date format option: long date with the month name."
+    },
+    "settings_dateFormatIso": {
+        "message": "Year-month-day",
+        "description": "Date format option: year-month-day (ISO 8601)."
+    },
+    "settings_timeFormatAuto": {
+        "message": "As in my language",
+        "description": "Time format option: follow the extension language."
+    },
+    "settings_timeFormatHours12": {
+        "message": "12-hour",
+        "description": "Time format option: 12-hour clock."
+    },
+    "settings_timeFormatHours24": {
+        "message": "24-hour",
+        "description": "Time format option: 24-hour clock."
     }
 }

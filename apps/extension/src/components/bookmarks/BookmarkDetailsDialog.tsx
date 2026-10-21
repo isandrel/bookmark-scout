@@ -144,10 +144,9 @@ function BookmarkDetailsContent({
             ? t('bookmarks_detailsPathUnavailable')
             : folderPath === null
               ? t('bookmarks_detailsLoadingPath')
-              : [
-                  t('bookmarks_root'),
-                  ...folderPath.map(getBookmarkDisplayTitle),
-                ].join(FOLDER_PATH_SEPARATOR)}
+              : [t('bookmarks_root'), ...folderPath.map(getBookmarkDisplayTitle)].join(
+                  FOLDER_PATH_SEPARATOR,
+                )}
         </DetailField>
         <DetailField label={t('bookmarks_detailsDateAdded')} testId="bookmark-details-added">
           <DateValue value={bookmark.dateAdded} />
@@ -160,7 +159,10 @@ function BookmarkDetailsContent({
         </DetailField>
       </dl>
       {bookmarkUrl ? (
-        <section className="space-y-4 rounded-lg border p-4" aria-label={t('bookmarks_metadataTitle')}>
+        <section
+          className="space-y-4 rounded-lg border p-4"
+          aria-label={t('bookmarks_metadataTitle')}
+        >
           <div>
             <h3 className="text-sm font-semibold">{t('bookmarks_metadataTitle')}</h3>
             <p className="text-xs text-muted-foreground">{t('bookmarks_metadataDescription')}</p>
@@ -222,12 +224,7 @@ function BookmarkDetailsContent({
       ) : null}
       <DialogFooter className="gap-2 sm:justify-start">
         {bookmarkUrl ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => copyValue(bookmarkUrl)}
-          >
+          <Button type="button" variant="outline" size="sm" onClick={() => copyValue(bookmarkUrl)}>
             {t('bookmarks_detailsCopyUrl')}
           </Button>
         ) : null}
