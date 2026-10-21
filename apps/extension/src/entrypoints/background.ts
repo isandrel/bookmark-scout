@@ -14,6 +14,8 @@ export default defineBackground(() => {
   // Saves settings a closing Options page hands over.
   registerSettingsSaveListener();
   registerPromptCleanup();
+  // Bookmark changes made outside Bookmark Scout, for the History; before the listeners below.
+  registerBookmarkObserver();
 
   browser.bookmarks.onRemoved.addListener((_id, removeInfo) => {
     const removedIds = subtreeIds(removeInfo.node);

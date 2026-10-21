@@ -142,6 +142,11 @@ export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
   return tree.map(toBookmarkTreeNode);
 }
 
+/** The whole tree as the browser gives it, with Firefox separators' `type`. */
+export function fetchRawBookmarkTree(): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
+  return requireBookmarksApi().getTree();
+}
+
 /**
  * The bookmarks bar (Firefox: bookmarks toolbar) among the permanent folders of `tree`, found by
  * what each browser reports instead of a browser-specific id: Chrome's and Edge's `folderType`,
@@ -239,7 +244,16 @@ export async function createBookmark(details: {
   /** Firefox-only; Chrome has no separators and never receives this field. */
   type?: 'separator';
 }): Promise<Browser.bookmarks.BookmarkTreeNode> {
-  return requireBookmarksApi().create(details);
+  // Every write is noted first, so the History tells it from changes made elsewhere.
+  return withBookmarkWriteNote(
+    {
+      kind: 'create',
+      ...(details.parentId ? { parentId: details.parentId } : {}),
+      title: details.title ?? '',
+      ...(details.url ? { url: details.url } : {}),
+    },
+    () => requireBookmarksApi().create(details),
+  );
 }
 
 /**
@@ -251,7 +265,10 @@ export async function moveBookmark(
   id: string,
   destination: { parentId?: string; index?: number },
 ): Promise<Browser.bookmarks.BookmarkTreeNode> {
-  return requireBookmarksApi().move(id, destination);
+  return withBookmarkWriteNote(
+    { kind: 'move', id, ...(destination.parentId ? { parentId: destination.parentId } : {}) },
+    () => requireBookmarksApi().move(id, destination),
+  );
 }
 
 /**
@@ -312,7 +329,15 @@ export async function updateBookmark(
   id: string,
   changes: Browser.bookmarks.UpdateChanges,
 ): Promise<Browser.bookmarks.BookmarkTreeNode> {
-  return requireBookmarksApi().update(id, changes);
+  return withBookmarkWriteNote(
+    {
+      kind: 'update',
+      id,
+      ...(changes.title !== undefined ? { title: changes.title } : {}),
+      ...(changes.url !== undefined ? { url: changes.url } : {}),
+    },
+    () => requireBookmarksApi().update(id, changes),
+  );
 }
 
 /**
@@ -320,7 +345,7 @@ export async function updateBookmark(
  * @param id - The bookmark/folder ID
  */
 export async function deleteBookmark(id: string): Promise<void> {
-  return requireBookmarksApi().removeTree(id);
+  return withBookmarkWriteNote({ kind: 'remove', id }, () => requireBookmarksApi().removeTree(id));
 }
 
 /**

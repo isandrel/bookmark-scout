@@ -1,0 +1,14 @@
+# Watching bookmark changes made outside Bookmark Scout (the browser's own bookmark manager, other
+# extensions, browser sync), for the History. Read by src/services/bookmark-observer.ts.
+
+# Milliseconds between two changes seen from elsewhere that still count as one burst, shown as
+# one History record (a sync or another extension changing many bookmarks at once)
+burst_window_ms = 3000
+
+# Milliseconds a note of Bookmark Scout's own pending write stays valid; the browser reports a
+# write within milliseconds, so a note this old belongs to a write that never happened
+intent_ttl_ms = 60000
+
+# Milliseconds between two full comparisons of the bookmarks with what was last seen, when the
+# background starts again on its own (browser start and extension updates always compare)
+reconcile_min_interval_ms = 600000
