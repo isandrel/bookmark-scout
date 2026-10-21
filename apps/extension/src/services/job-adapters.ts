@@ -68,6 +68,11 @@ type JobAdapterBase = {
   /** Whether items read HTML, so the slice needs `JobTools.readHead`. */
   readsHtml?: boolean;
   /**
+   * The web addresses an item requests. Website access is checked before each item, so access
+   * taken back while the job runs pauses it (`site-access`) instead of reading as failures.
+   */
+  siteUrls?(input: unknown): string[];
+  /**
    * Items send AI requests, which may cost money: the slice opens the AI host page with the
    * feature's current service, checked against the one the job started with (`destination`),
    * and a request a stopped worker left unanswered is sent again only once the user resumes.
@@ -157,6 +162,7 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
       return { inputs: linkTargets(nodes), options, label };
     },
     concurrency: (options) => deadLinkOptionsSchema.parse(options).concurrency,
+    siteUrls: (input) => [linkTargetSchema.parse(input).url],
     async run(input, options, signal) {
       const result = await checkDeadLink(
         linkTargetSchema.parse(input),
@@ -175,6 +181,7 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
     },
     concurrency: (options) => metadataOptionsSchema.parse(options).concurrency,
     readsHtml: true,
+    siteUrls: (input) => [linkTargetSchema.parse(input).url],
     async run(input, options, signal, tools) {
       const parsed = metadataOptionsSchema.parse(options);
       const result = await fetchMetadataItem(
@@ -268,6 +275,7 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
       };
     },
     concurrency: (options) => siteIconOptionsSchema.parse(options).concurrency,
+    siteUrls: (input) => [originGroupSchema.parse(input).pageUrl],
     async run(input, options, signal) {
       const group = originGroupSchema.parse(input);
       // Read when the origin is checked, so an icon saved meanwhile counts as unchanged.

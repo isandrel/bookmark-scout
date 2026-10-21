@@ -7149,6 +7149,10 @@
         "message": "已暂停：AI 功能已关闭。请在设置中打开后再继续。",
         "description": "A background task paused because AI features were turned off"
     },
+    "jobs_blockedSiteAccess": {
+        "message": "已暂停：网站访问权限已被收回。继续时会重新请求。",
+        "description": "A background task paused because website access was taken back while it ran"
+    },
     "jobs_blockedAISetup": {
         "message": "已暂停：AI 服务尚未就绪（$1）。请在设置中修正后再继续。",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"

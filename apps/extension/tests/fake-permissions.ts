@@ -20,8 +20,12 @@ export function installFakePermissions(granted: Request = {}) {
   const removed = new Set<Listener>();
   const control = { answer: true };
 
+  // As in the browser, all websites of a scheme (`https://*/*`) cover any site on it.
+  const has = (key: (typeof KEYS)[number], value: string) =>
+    state[key].has(value) ||
+    (key === 'origins' && state.origins.has(`${value.split('://')[0]}://*/*`));
   const covers = (request: Request) =>
-    KEYS.every((key) => (request[key] ?? []).every((value) => state[key].has(value)));
+    KEYS.every((key) => (request[key] ?? []).every((value) => has(key, value)));
   const apply = (request: Request, present: boolean) => {
     for (const key of KEYS) {
       for (const value of request[key] ?? []) {

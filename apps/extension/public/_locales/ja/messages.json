@@ -7347,6 +7347,10 @@
         "message": "一時停止中: AI 機能がオフです。設定でオンにしてから再開してください。",
         "description": "A background task paused because AI features were turned off"
     },
+    "jobs_blockedSiteAccess": {
+        "message": "一時停止中: ウェブサイトへのアクセスが取り消されました。再開すると改めて許可を求めます。",
+        "description": "A background task paused because website access was taken back while it ran"
+    },
     "jobs_blockedAISetup": {
         "message": "一時停止中: AI サービスの準備ができていません ($1)。設定で直してから再開してください。",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
