@@ -12,13 +12,13 @@ import type { BookmarkTreeNode } from '@/types';
 
 /** A bookmark as tools return it. */
 export const actionBookmarkSchema = z.object({
-  ref: z.string().describe('Bookmark reference, b:<id>'),
+  ref: z.string().describe(agentText('action_bookmark_schema.ref')),
   title: z.string(),
   url: z.string(),
   host: z.string(),
-  folder: z.string().describe('Full path of the folder it is in'),
-  folderRef: z.string().describe('Folder reference, f:<id>'),
-  added: z.string().optional().describe('Date added, YYYY-MM-DD'),
+  folder: z.string().describe(agentText('action_bookmark_schema.folder')),
+  folderRef: z.string().describe(agentText('action_bookmark_schema.folder_ref')),
+  added: z.string().optional().describe(agentText('action_bookmark_schema.added')),
   tags: z.array(z.string()).optional(),
   summary: z.string().optional(),
 });
@@ -27,11 +27,11 @@ export type ActionBookmark = z.infer<typeof actionBookmarkSchema>;
 
 /** A folder as tools return it. */
 export const actionFolderSchema = z.object({
-  ref: z.string().describe('Folder reference, f:<id>'),
+  ref: z.string().describe(agentText('action_folder_schema.ref')),
   path: z.string(),
-  bookmarks: z.number().int().optional().describe('Bookmarks directly inside'),
-  folders: z.number().int().optional().describe('Folders directly inside'),
-  managed: z.boolean().optional().describe('Managed by the browser or a policy; cannot change'),
+  bookmarks: z.number().int().optional().describe(agentText('action_folder_schema.bookmarks')),
+  folders: z.number().int().optional().describe(agentText('action_folder_schema.folders')),
+  managed: z.boolean().optional().describe(agentText('action_folder_schema.managed')),
 });
 
 export type ActionFolder = z.infer<typeof actionFolderSchema>;

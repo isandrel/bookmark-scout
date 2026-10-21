@@ -84,6 +84,12 @@
                 "cwd": "apps/extension"
             }
         },
+        "test:e2e:coverage": {
+            "command": "bun run test:e2e:coverage",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
         "test:coverage": {
             "command": "vitest run --config vitest.config.ts --coverage",
             "options": {

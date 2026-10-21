@@ -10,7 +10,9 @@ import {
   type Page,
   type Worker,
 } from '@playwright/test';
+import { extensionOutDir } from '../../build/e2e-coverage';
 import { readConfigToml } from '../config-files';
+import { saveCoverage, watchCoverage } from './coverage';
 import { profileDir, removeTempDir, workerTempDir } from './temp-dirs';
 
 /** Chromium-family browsers: Playwright's bundled Chromium, or the installed Microsoft Edge. */
@@ -50,7 +52,7 @@ type WorkerFixtures = ExtensionProjectOptions & {
 };
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
-const distDirectory = path.resolve(currentDirectory, '../../dist');
+const distDirectory = path.resolve(currentDirectory, '../..', extensionOutDir());
 
 /** The welcome page the extension opens on install, when its config says so. */
 const WELCOME_PAGE = '/welcome.html';
@@ -162,9 +164,11 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
       });
 
     try {
+      watchCoverage(context);
       if (welcomeOpensOnInstall && !keepWelcomePage) await closeWelcomePage(context);
       await use(context);
     } finally {
+      await saveCoverage(context);
       await context.close();
       removeTempDir(userDataDir);
     }

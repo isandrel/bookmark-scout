@@ -131,8 +131,8 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         if (mode === 'copy' && rows.some((row) => row.isRootFolder)) return;
         event.preventDefault();
         const { text, html } = bookmarkClipboardData(rows);
-        event.clipboardData?.setData('text/plain', text);
-        event.clipboardData?.setData('text/html', html);
+        event.clipboardData?.setData(MIME.plainText, text);
+        event.clipboardData?.setData(MIME.html, html);
         const ids = pruneNestedSelection(rows, latest.current.allData).map((item) => item.id);
         void setBookmarkClipboard(mode, ids, { systemText: text }).then(
           () => reportClipboard(mode, rows),
@@ -146,7 +146,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       paste: (event: ClipboardEvent, rows: Bookmark[]) => {
         if (!canAddTo(currentFolder())) return;
         event.preventDefault();
-        pasteNextTo(rows, event.clipboardData?.getData('text/plain') ?? undefined);
+        pasteNextTo(rows, event.clipboardData?.getData(MIME.plainText) ?? undefined);
       },
       /** Paste on a folder in the tree: at the end of that folder. */
       pasteInto: (event: ClipboardEvent, folder: Bookmark) => {
@@ -154,7 +154,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         event.preventDefault();
         void pasteInto(
           { parentId: folder.id },
-          event.clipboardData?.getData('text/plain') ?? undefined,
+          event.clipboardData?.getData(MIME.plainText) ?? undefined,
         );
       },
     };

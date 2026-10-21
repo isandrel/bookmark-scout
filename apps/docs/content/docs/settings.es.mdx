@@ -35,14 +35,14 @@ Debajo, **La IA es opcional** explica que Bookmark Scout funciona sin IA; **Conf
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Carpetas coincidentes** | Activado | Mientras buscas, muestra sobre los resultados las carpetas cuyo nombre coincide, para guardar ahí la página actual |
-| **Máximo de carpetas coincidentes** | 5 | Cuántas carpetas coincidentes mostrar |
+| **Máximo de carpetas coincidentes** | <SettingDefault path="search.folder_matches.max" /> | Cuántas carpetas coincidentes mostrar |
 | **Permitir errores de escritura** | Activado | Una palabra de 4 letras o más coincide con un nombre de carpeta aunque tenga un error |
 
 ### Búsqueda [#searching]
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Retraso de búsqueda** | 300 ms | Cuánto esperar después de que dejas de escribir antes de que la ventana emergente busque |
+| **Retraso de búsqueda** | <SettingDefault path="search.search.debounce_ms" /> ms | Cuánto esperar después de que dejas de escribir antes de que la ventana emergente busque |
 | **Máximo de resultados de búsqueda** | 20 resultados | Máximo de coincidencias que se muestran; una nota avisa cuando hay más |
 | **Desplegar carpetas al buscar** | Activado | Abre las carpetas que contienen coincidencias |
 | **Historial de búsqueda** | Activado | Recuerda las búsquedas recientes en este dispositivo |
@@ -55,7 +55,7 @@ Consulta [Búsqueda y búsquedas guardadas](/guides/search).
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Carpetas recientes** | Activado | Muestra las carpetas usadas recientemente en la ventana emergente y en el menú contextual |
-| **Máximo de carpetas recientes** | 5 | Cuántas carpetas recientes se muestran |
+| **Máximo de carpetas recientes** | <SettingDefault path="search.saving.recent_folders_max" /> | Cuántas carpetas recientes se muestran |
 | **Nombre de carpeta predeterminado** | Nueva carpeta | El nombre con el que empieza una carpeta nueva |
 
 Consulta [Guardar y organizar](/guides/save-and-organize).
@@ -101,15 +101,15 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Ancho de la ventana emergente** | 400 px | Los navegadores permiten como máximo 800 px |
-| **Alto de la ventana emergente** | 500 px | Los navegadores permiten como máximo 600 px |
-| **Longitud de recorte** | 50 caracteres | Acorta el título de la página en el encabezado de sugerencias de IA de la ventana emergente |
+| **Ancho de la ventana emergente** | <SettingDefault path="appearance.popup.width" /> px | Los navegadores permiten como máximo 800 px |
+| **Alto de la ventana emergente** | <SettingDefault path="appearance.popup.height" /> px | Los navegadores permiten como máximo 600 px |
+| **Longitud de recorte** | <SettingDefault path="appearance.popup.truncate_length" /> caracteres | Acorta el título de la página en el encabezado de sugerencias de IA de la ventana emergente |
 
 ### Notificaciones [#notifications]
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Duración de las notificaciones** | 4 s | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
+| **Duración de las notificaciones** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
 | **Retraso de las sugerencias** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Cuánto tiempo descansa el puntero sobre un control antes de que aparezca su explicación |
 
 ## Comportamiento [#behavior]
@@ -161,7 +161,7 @@ Debajo de estos, el panel del proveedor contiene **Clave de API**, **URL base**,
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Recomendar al abrir** | Desactivado | Pide recomendaciones de carpetas cada vez que se abre la ventana emergente |
-| **Máximo de recomendaciones** | 5 | Máximo de recomendaciones de carpetas que se solicitan |
+| **Máximo de recomendaciones** | <SettingDefault path="ai.suggestions.max_recommendations" /> | Máximo de recomendaciones de carpetas que se solicitan |
 
 ### Leer el contenido de la página [#read-page-content]
 
@@ -202,10 +202,10 @@ Cada herramienta tiene un interruptor **Activar** (activado de forma predetermin
 
 | Herramienta | Ajustes y valores predeterminados |
 | --- | --- |
-| **Empaquetador de contexto para IA** | **Formato de salida** Markdown; **Incluir rutas de carpeta**, **Incluir fechas**, **Incluir etiquetas guardadas** e **Incluir resúmenes guardados** activados; **Máximo de elementos** 200; **Profundidad máxima** 8; **Longitud del extracto** 240 |
-| **Etiquetado automático** | **Mínimo de etiquetas** 2; **Máximo de etiquetas** 5; **Estilo de etiquetas** kebab-case; **Modo de combinación** Añadir; **Quitar etiquetas duplicadas** activado; **Enviar etiquetas existentes** activado |
-| **Generador de resúmenes** | **Longitud del resumen** 160; **Incluir el dominio como pista** activado; **Modo de combinación** Reemplazar |
-| **Reorganización de carpetas con IA** | **Confianza mínima** 55 % (los movimientos por debajo se descartan); **Tamaño del lote** 100 marcadores por solicitud |
+| **Empaquetador de contexto para IA** | **Formato de salida** Markdown; **Incluir rutas de carpeta**, **Incluir fechas**, **Incluir etiquetas guardadas** e **Incluir resúmenes guardados** activados; **Máximo de elementos** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profundidad máxima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Longitud del extracto** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **Etiquetado automático** | **Mínimo de etiquetas** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Máximo de etiquetas** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Estilo de etiquetas** kebab-case; **Modo de combinación** Añadir; **Quitar etiquetas duplicadas** activado; **Enviar etiquetas existentes** activado |
+| **Generador de resúmenes** | **Longitud del resumen** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Incluir el dominio como pista** activado; **Modo de combinación** Reemplazar |
+| **Reorganización de carpetas con IA** | **Confianza mínima** 55 % (los movimientos por debajo se descartan); **Tamaño del lote** <SettingDefault path="ai_tools.reorganization.batch_size" /> marcadores por solicitud |
 
 El Etiquetado automático y el Generador de resúmenes siempre trabajan con la carpeta actual.
 
@@ -220,9 +220,9 @@ El Etiquetado automático y el Generador de resúmenes siempre trabajan con la c
 
 | Herramienta | Ajustes y valores predeterminados |
 | --- | --- |
-| **Limpiador de duplicados** | **Criterio de coincidencia** URL normalizada; **Normalizar www**, **Ignorar el protocolo** e **Ignorar la barra final** activados; **Regla de conservación** El más antiguo; **Máximo de grupos** 500. Siempre analiza todos los marcadores |
+| **Limpiador de duplicados** | **Criterio de coincidencia** URL normalizada; **Normalizar www**, **Ignorar el protocolo** e **Ignorar la barra final** activados; **Regla de conservación** El más antiguo; **Máximo de grupos** <SettingDefault path="maintenance.duplicates.max_groups" />. Siempre analiza todos los marcadores |
 | **Limpiador de URLs** | **Quitar fragmentos** desactivado; **Ordenar parámetros de consulta** y **Quitar parámetros de consulta repetidos** activados; listas **Parámetros que se conservan** y **Parámetros que se quitan** |
-| **Comprobar enlaces rotos** | **Tiempo de espera de la solicitud** 8 s; **Solicitudes simultáneas** 4; **Número de reintentos** 1; **Seguir redirecciones** activado; **Códigos de estado correctos** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Comprobar enlaces rotos** | **Tiempo de espera de la solicitud** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> s; **Solicitudes simultáneas** <SettingDefault path="maintenance.dead_links.concurrency" />; **Número de reintentos** <SettingDefault path="maintenance.dead_links.retry_count" />; **Seguir redirecciones** activado; **Códigos de estado correctos** 200, 201, 202, 204, 301, 302, 307, 308 |
 | **Tareas en segundo plano** | **Aplicar en segundo plano a partir de** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />: los cambios revisados en más marcadores se aplican en segundo plano, por partes, y siguen cuando cierras la página; cada parte es un cambio en el [Historial](/guides/save-and-organize), donde se deshace |
 
 Las herramientas empiezan en **Todos los marcadores**, para que un análisis desde la carpeta en la que se abre el administrador no se salte las demás. Cambia el **Ámbito predeterminado** de una herramienta para que empiece en la carpeta abierta. **Reorganización de carpetas con IA** empieza en la carpeta abierta, porque un plan para todos los marcadores los envía todos a tu proveedor de IA. En el nivel superior del administrador, donde no hay ninguna carpeta abierta, todas las herramientas empiezan en **Todos los marcadores**.
@@ -238,8 +238,8 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | **Activar el Extractor de metadatos** | Activado | Muestra **Extractor de metadatos** en la barra lateral de herramientas |
 | **Sobrescribir títulos** | Desactivado | Ofrece títulos nuevos para los marcadores que ya tienen uno |
 | **Obtener descripciones** | Activado | Muestra las descripciones de las páginas en la revisión. Nunca se guardan |
-| **Tiempo de espera de la solicitud** | 8 s | Por página. También lo usa **Actualizar iconos de sitios** |
-| **Solicitudes simultáneas** | 4 | Páginas solicitadas a la vez. También lo usa **Actualizar iconos de sitios** |
+| **Tiempo de espera de la solicitud** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> s | Por página. También lo usa **Actualizar iconos de sitios** |
+| **Solicitudes simultáneas** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | Páginas solicitadas a la vez. También lo usa **Actualizar iconos de sitios** |
 
 ### Actualizar iconos de sitios [#refresh-site-icons]
 
@@ -247,8 +247,8 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | --- | --- | --- |
 | **Activar Actualizar iconos de sitios** | Activado | Muestra **Actualizar iconos de sitios** en la barra lateral de herramientas |
 | **Ámbito predeterminado** | Todos los marcadores | Ámbito con el que empieza la actualización de iconos de sitios |
-| **Tamaño de icono preferido** | 32px | Cuando una página indica varios iconos, descarga el más cercano a este tamaño |
-| **Tamaño máximo del archivo de icono** | 64 KB | Los archivos de icono más grandes no se descargan ni se guardan |
+| **Tamaño de icono preferido** | <SettingDefault path="metadata_content.site_icons.preferred_size" />px | Cuando una página indica varios iconos, descarga el más cercano a este tamaño |
+| **Tamaño máximo del archivo de icono** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | Los archivos de icono más grandes no se descargan ni se guardan |
 | **Límite de almacenamiento de iconos** | 4 MB | Tamaño total de los iconos guardados en este dispositivo; los más antiguos se quitan primero |
 
 ## Seguridad [#security]
@@ -267,7 +267,7 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | --- | --- | --- |
 | **Activar las estadísticas** | Activado | Muestra **Estadísticas de marcadores** en la barra lateral de herramientas |
 | **Incluir dominios**, **Incluir carpetas**, **Incluir duplicados**, **Incluir protocolos**, **Incluir desglose por profundidad** | Activado | Secciones del informe; una sección desactivada se oculta |
-| **Número de entradas principales** | 10 | Longitud de las listas de dominios y carpetas principales |
+| **Número de entradas principales** | <SettingDefault path="analytics.statistics.top_n" /> | Longitud de las listas de dominios y carpetas principales |
 
 ## Importar y exportar [#data]
 
@@ -276,7 +276,7 @@ Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe 
 | **Mostrar la herramienta de exportación** y **Mostrar la herramienta de importación** | Activado | Las muestra en la barra lateral de herramientas |
 | **Formato de exportación predeterminado** | HTML | Formato seleccionado cuando se abre la herramienta de exportación |
 | **Prefijo del nombre de archivo** | `bookmarks_` | Comienzo del nombre de cada archivo exportado |
-| **Longitud máxima del nombre de archivo** | 50 | Nombre de archivo generado más largo |
+| **Longitud máxima del nombre de archivo** | <SettingDefault path="data.export.filename_max_length" /> | Nombre de archivo generado más largo |
 | **Sangría de JSON**, **Sangría de HTML**, **Sangría de Markdown** | 2, 4, 2 | Espacios por nivel en cada formato |
 | **Incluir fechas** e **Incluir URLs** | Activado | Los incluye en las exportaciones |
 

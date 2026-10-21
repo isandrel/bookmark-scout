@@ -35,14 +35,14 @@ Below them, **AI is optional** says that Bookmark Scout works without AI; **Set 
 | Setting | Default | What it does |
 | --- | --- | --- |
 | **Folder Matches** | On | While you search, list the folders whose names match above the results, to save the current page there |
-| **Maximum Folder Matches** | 5 | How many matching folders to list |
+| **Maximum Folder Matches** | <SettingDefault path="search.folder_matches.max" /> | How many matching folders to list |
 | **Allow Typos** | On | A search word of 4 letters or more may match a folder name with one typo |
 
 ### Search [#searching]
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| **Search Delay** | 300 ms | How long to wait after you stop typing before the popup searches |
+| **Search Delay** | <SettingDefault path="search.search.debounce_ms" /> ms | How long to wait after you stop typing before the popup searches |
 | **Max Search Results** | 20 results | Most matches shown; a note says when there are more |
 | **Expand Folders on Search** | On | Open the folders that contain matches |
 | **Search History** | On | Remember recent searches on this device |
@@ -55,7 +55,7 @@ See [Search and saved searches](/guides/search).
 | Setting | Default | What it does |
 | --- | --- | --- |
 | **Recent Folders** | On | Show recently used folders in the popup and the right-click menu |
-| **Recent Folders Max** | 5 | How many recent folders to show |
+| **Recent Folders Max** | <SettingDefault path="search.saving.recent_folders_max" /> | How many recent folders to show |
 | **Default Folder Name** | New Folder | The name a new folder starts with |
 
 See [Save and organize](/guides/save-and-organize).
@@ -101,15 +101,15 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| **Popup Width** | 400 px | Browsers allow at most 800 px |
-| **Popup Height** | 500 px | Browsers allow at most 600 px |
-| **Truncate Length** | 50 characters | Shortens the page title in the popup's AI suggestions header |
+| **Popup Width** | <SettingDefault path="appearance.popup.width" /> px | Browsers allow at most 800 px |
+| **Popup Height** | <SettingDefault path="appearance.popup.height" /> px | Browsers allow at most 600 px |
+| **Truncate Length** | <SettingDefault path="appearance.popup.truncate_length" /> characters | Shortens the page title in the popup's AI suggestions header |
 
 ### Notifications [#notifications]
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| **Toast Duration** | 4 s | How long messages stay open. Undo messages keep their own 10-second window |
+| **Toast Duration** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | How long messages stay open. Undo messages keep their own 10-second window |
 | **Tooltip Delay** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | How long the pointer rests on a control before its explanation appears |
 
 ## Behavior [#behavior]
@@ -161,7 +161,7 @@ Below these, the provider panel holds **API Key**, **Base URL**, **Custom Model*
 | Setting | Default | What it does |
 | --- | --- | --- |
 | **Auto-recommend on Open** | Off | Ask for folder recommendations every time the popup opens |
-| **Max Recommendations** | 5 | Most folder recommendations to request |
+| **Max Recommendations** | <SettingDefault path="ai.suggestions.max_recommendations" /> | Most folder recommendations to request |
 
 ### Read page content [#read-page-content]
 
@@ -202,10 +202,10 @@ Each tool has an **Enable** switch (on by default). Turning one off hides it fro
 
 | Tool | Settings and defaults |
 | --- | --- |
-| **AI Context Packer** | **Output Format** Markdown; **Include Folder Paths**, **Include Dates**, **Include Saved Tags**, and **Include Saved Summaries** on; **Max Items** 200; **Max Depth** 8; **Excerpt Length** 240 |
-| **Auto-Tagging** | **Minimum Tags** 2; **Maximum Tags** 5; **Tag Style** kebab-case; **Merge Mode** Append; **Remove Duplicate Tags** on; **Send Existing Tags** on |
-| **Content Summarizer** | **Summary Length** 160; **Include Domain Hint** on; **Merge Mode** Replace |
-| **AI Folder Reorganization** | **Minimum Confidence** 55% (moves below it are dropped); **Batch Size** 100 bookmarks per request |
+| **AI Context Packer** | **Output Format** Markdown; **Include Folder Paths**, **Include Dates**, **Include Saved Tags**, and **Include Saved Summaries** on; **Max Items** <SettingDefault path="ai_tools.context_packer.max_items" />; **Max Depth** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Excerpt Length** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **Auto-Tagging** | **Minimum Tags** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Maximum Tags** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Tag Style** kebab-case; **Merge Mode** Append; **Remove Duplicate Tags** on; **Send Existing Tags** on |
+| **Content Summarizer** | **Summary Length** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Include Domain Hint** on; **Merge Mode** Replace |
+| **AI Folder Reorganization** | **Minimum Confidence** 55% (moves below it are dropped); **Batch Size** <SettingDefault path="ai_tools.reorganization.batch_size" /> bookmarks per request |
 
 Auto-Tagging and Content Summarizer always work on the current folder.
 
@@ -220,9 +220,9 @@ Auto-Tagging and Content Summarizer always work on the current folder.
 
 | Tool | Settings and defaults |
 | --- | --- |
-| **Duplicate Cleaner** | **Match Strategy** Normalized URL; **Normalize www**, **Ignore Protocol**, and **Ignore Trailing Slash** on; **Keep Rule** Oldest; **Max Groups** 500. Always scans all bookmarks |
+| **Duplicate Cleaner** | **Match Strategy** Normalized URL; **Normalize www**, **Ignore Protocol**, and **Ignore Trailing Slash** on; **Keep Rule** Oldest; **Max Groups** <SettingDefault path="maintenance.duplicates.max_groups" />. Always scans all bookmarks |
 | **URL Cleaner** | **Remove Fragments** off; **Sort Query Parameters** and **Deduplicate Query Parameters** on; **Preserve Parameters** and **Remove Parameters** lists |
-| **Check Dead Links** | **Request Timeout** 8 s; **Concurrency** 4; **Retry Count** 1; **Follow Redirects** on; **Success Status Codes** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Check Dead Links** | **Request Timeout** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> s; **Concurrency** <SettingDefault path="maintenance.dead_links.concurrency" />; **Retry Count** <SettingDefault path="maintenance.dead_links.retry_count" />; **Follow Redirects** on; **Success Status Codes** 200, 201, 202, 204, 301, 302, 307, 308 |
 | **Background tasks** | **Apply in the Background Above** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />: reviewed changes to more bookmarks than this are applied in the background, in parts, and keep going when you close the page; each part is one change in the [History](/guides/save-and-organize), undone there |
 
 Tools start on **All Bookmarks**, so a scan from the folder the manager opens on does not miss the others; change a tool's **Default Scope** to start on the open folder instead. **AI Folder Reorganization** starts on the open folder, because a plan for every bookmark sends them all to your AI provider. At the manager's top level, where no folder is open, every tool starts on **All Bookmarks**.
@@ -238,8 +238,8 @@ Lists such as **Remove Parameters** are edited as chips: type a name and press E
 | **Enable Metadata Fetcher** | On | Show **Metadata Fetcher** in the Tools sidebar |
 | **Overwrite Titles** | Off | Offer new titles for bookmarks that already have one |
 | **Fetch Descriptions** | On | Show page descriptions in the review. They are never saved |
-| **Request Timeout** | 8 s | Per page. Also used by **Refresh Site Icons** |
-| **Concurrency** | 4 | Pages requested at a time. Also used by **Refresh Site Icons** |
+| **Request Timeout** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> s | Per page. Also used by **Refresh Site Icons** |
+| **Concurrency** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | Pages requested at a time. Also used by **Refresh Site Icons** |
 
 ### Refresh Site Icons [#refresh-site-icons]
 
@@ -247,8 +247,8 @@ Lists such as **Remove Parameters** are edited as chips: type a name and press E
 | --- | --- | --- |
 | **Enable Refresh Site Icons** | On | Show **Refresh Site Icons** in the Tools sidebar |
 | **Default Scope** | All bookmarks | Scope the site icon refresh starts with |
-| **Preferred Icon Size** | 32px | When a page lists several icons, download the one closest to this size |
-| **Maximum Icon File Size** | 64 KB | Larger icon files are not downloaded or saved |
+| **Preferred Icon Size** | <SettingDefault path="metadata_content.site_icons.preferred_size" />px | When a page lists several icons, download the one closest to this size |
+| **Maximum Icon File Size** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | Larger icon files are not downloaded or saved |
 | **Icon Storage Limit** | 4 MB | Total size of saved icons on this device; the oldest are removed first |
 
 ## Security [#security]
@@ -267,7 +267,7 @@ Lists such as **Remove Parameters** are edited as chips: type a name and press E
 | --- | --- | --- |
 | **Enable Statistics** | On | Show **Bookmark Statistics** in the Tools sidebar |
 | **Include Domains**, **Include Folders**, **Include Duplicates**, **Include Protocols**, **Include Depth Breakdown** | On | Sections of the report; a section turned off is hidden |
-| **Top N Entries** | 10 | Length of the top domain and folder lists |
+| **Top N Entries** | <SettingDefault path="analytics.statistics.top_n" /> | Length of the top domain and folder lists |
 
 ## Import & Export [#data]
 
@@ -276,7 +276,7 @@ Lists such as **Remove Parameters** are edited as chips: type a name and press E
 | **Show Export Tool** and **Show Import Tool** | On | Show them in the Tools sidebar |
 | **Default Export Format** | HTML | Format selected when the export tool opens |
 | **Filename Prefix** | `bookmarks_` | Start of every export file name |
-| **Max Filename Length** | 50 | Longest generated file name |
+| **Max Filename Length** | <SettingDefault path="data.export.filename_max_length" /> | Longest generated file name |
 | **JSON Indent Size**, **HTML Indent Size**, **Markdown Indent Size** | 2, 4, 2 | Spaces per level in each format |
 | **Include Dates** and **Include URLs** | On | Include them in exports |
 

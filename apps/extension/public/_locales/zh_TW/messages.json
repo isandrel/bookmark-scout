@@ -7208,5 +7208,65 @@
     "history_part": {
         "message": "$1（第 $2 批，共 $3 批）",
         "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
+    },
+    "settings_helpFor": {
+        "message": "關於$1",
+        "description": "Settings: label of the button that shows more about a setting; $1 is the setting"
+    },
+    "settings_deadLinksConcurrencyHelp": {
+        "message": "同時檢查的連結數量。越多完成越快，但有些網站會放慢或拒絕來自同一瀏覽器的大量同時要求；如果很多連結顯示無法連線，請調低。",
+        "description": "Settings: more about the deadLinksConcurrency setting, in a toggletip"
+    },
+    "settings_deadLinksRequestTimeoutMsHelp": {
+        "message": "等待網站回應的時間。未能及時回應的連結會列為需手動檢查，而不會判定為確定失效；較慢的網站需要更長時間。",
+        "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_deadLinksRetryCountHelp": {
+        "message": "失敗的連結在回報前再嘗試的次數。重試可排除短暫的網路異常；每多一次，檢查失敗連結的時間就更長。",
+        "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
+    },
+    "settings_deadLinksSuccessStatusesHelp": {
+        "message": "視為可連線的 HTTP 回應。200 表示頁面已載入；301、302、307 和 308 是重新導向。只有當你信任的網站回傳某個代碼時才新增它。",
+        "description": "Settings: more about the deadLinksSuccessStatuses setting, in a toggletip"
+    },
+    "settings_deadLinksFollowRedirectsHelp": {
+        "message": "開啟後，會追蹤重新導向的連結到新網址並檢查和顯示，方便你更新書籤。",
+        "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
+    },
+    "settings_metadataFetcherConcurrencyHelp": {
+        "message": "同時讀取的頁面數量。越多完成越快，但會給網站和你的網路帶來更大負擔。",
+        "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
+    },
+    "settings_metadataFetcherRequestTimeoutMsHelp": {
+        "message": "放棄一個頁面前等待的時間。只讀取每個頁面的開頭，所以大多數頁面會遠早於此回應。",
+        "description": "Settings: more about the metadataFetcherRequestTimeoutMs setting, in a toggletip"
+    },
+    "settings_duplicatesMatchStrategyHelp": {
+        "message": "兩個書籤何時算作相同：網址完全一致，或去掉很少有影響的差異後一致（www、http 或 https、結尾斜線，依下方設定）。",
+        "description": "Settings: more about the duplicatesMatchStrategy setting, in a toggletip"
+    },
+    "settings_duplicatesKeepRuleHelp": {
+        "message": "移除重複項目時保留哪一份。其他副本只有在你檢視後才會刪除，並可在歷史記錄中還原。",
+        "description": "Settings: more about the duplicatesKeepRule setting, in a toggletip"
+    },
+    "settings_reorganizationMinConfidenceHelp": {
+        "message": "AI 會給每項建議的移動打 0 到 100% 的分數。低於此值的移動不會放入方案：數值越高，移動越少但越可靠。",
+        "description": "Settings: more about the reorganizationMinConfidence setting, in a toggletip"
+    },
+    "settings_reorganizationBatchSizeHelp": {
+        "message": "一次 AI 要求包含的書籤數量。批次越大要求越少，但會佔用更多模型脈絡；如果 AI 服務拒絕過長的要求，請調低。",
+        "description": "Settings: more about the reorganizationBatchSize setting, in a toggletip"
+    },
+    "settings_searchDelayHelp": {
+        "message": "你最後一次按鍵後，彈出式視窗等待多久才開始搜尋，避免每輸入一個字母就搜尋一次。書籤較少時調低會感覺更快。",
+        "description": "Settings: more about the searchDelay setting, in a toggletip"
+    },
+    "settings_folderMatchesTyposHelp": {
+        "message": "也比對名稱與輸入相差一兩個字母的資料夾，這樣小的拼字錯誤也能找到資料夾。",
+        "description": "Settings: more about the folderMatchesTypos setting, in a toggletip"
+    },
+    "settings_jobsApplyInBackgroundAboveHelp": {
+        "message": "較大的變更在你關閉頁面後仍會繼續，每一批都可在歷史記錄中復原。較小的變更會立即套用，可在通知中復原。",
+        "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     }
 }

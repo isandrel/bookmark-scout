@@ -17,7 +17,9 @@ export type SettingDefault = string | number | boolean | readonly unknown[];
 export function readSettingDefault(path: string, root: string = dirname(findConfigDir())): SettingDefault {
 	const [file, ...keys] = path.split(".");
 	if (!file || keys.length === 0) throw new Error(`A setting path is <file>.<section>.<key>, got "${path}"`);
-	const raw = parse(readFileSync(join(root, SETTINGS_CONFIG_DIR, `${file}.toml`), "utf8")) as Record<string, unknown>;
+	// A path names its file as the extension's config loader does: `ai_tools` is ai-tools.toml.
+	const fileName = `${file.replaceAll("_", "-")}.toml`;
+	const raw = parse(readFileSync(join(root, SETTINGS_CONFIG_DIR, fileName), "utf8")) as Record<string, unknown>;
 	let node: unknown = raw;
 	for (const key of keys) {
 		node = typeof node === "object" && node !== null ? (node as Record<string, unknown>)[key] : undefined;
@@ -27,7 +29,7 @@ export function readSettingDefault(path: string, root: string = dirname(findConf
 			? (node as { default: unknown }).default
 			: node;
 	if (value === undefined || (typeof value === "object" && !Array.isArray(value))) {
-		throw new Error(`No setting default at "${path}" in ${SETTINGS_CONFIG_DIR}/${file}.toml`);
+		throw new Error(`No setting default at "${path}" in ${SETTINGS_CONFIG_DIR}/${fileName}`);
 	}
 	return value as SettingDefault;
 }

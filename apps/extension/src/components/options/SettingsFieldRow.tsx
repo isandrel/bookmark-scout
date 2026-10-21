@@ -805,7 +805,12 @@ export function SettingsFieldRow({
         label={meta.label}
         description={meta.description}
         error={error}
-        badge={isChanged && <ModifiedBadge />}
+        badge={
+          <>
+            {meta.help ? <SettingHelp label={meta.label} help={meta.help} /> : null}
+            {isChanged && <ModifiedBadge />}
+          </>
+        }
         actions={
           <ResetSlot
             visible={isChanged || Boolean(error)}

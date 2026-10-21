@@ -8,16 +8,18 @@ import { z } from 'zod';
 // Simplified schema for OpenAI - all fields must be required
 // Only supporting move operations for now (most common use case)
 const moveOperationSchema = z.object({
-  bookmarkId: z.string().describe('ID of bookmark to move'),
-  bookmarkTitle: z.string().describe('Title of the bookmark'),
-  toFolderPath: z.string().describe('Target folder path'),
-  confidence: z.number().min(0).max(1).describe('Confidence score from 0 to 1'),
-  reason: z.string().describe('Why move this bookmark (do not include confidence here)'),
+  bookmarkId: z.string().describe(agentText('move_operation_schema.bookmark_id')),
+  bookmarkTitle: z.string().describe(agentText('move_operation_schema.bookmark_title')),
+  toFolderPath: z.string().describe(agentText('move_operation_schema.to_folder_path')),
+  confidence: z.number().min(0).max(1).describe(agentText('move_operation_schema.confidence')),
+  reason: z.string().describe(agentText('move_operation_schema.reason')),
 });
 
 export const reorganizationResultSchema = z.object({
-  operations: z.array(moveOperationSchema).describe('List of bookmark moves'),
-  summary: z.string().describe('Brief summary of reorganization'),
+  operations: z
+    .array(moveOperationSchema)
+    .describe(agentText('reorganization_result_schema.operations')),
+  summary: z.string().describe(agentText('reorganization_result_schema.summary')),
 });
 
 export type ReorganizationResult = z.infer<typeof reorganizationResultSchema>;

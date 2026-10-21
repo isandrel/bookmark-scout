@@ -13,6 +13,12 @@ type SettingsFieldType = 'switch' | 'select' | 'number' | 'text' | 'folder';
 export type SettingsFieldMeta = {
   label: string;
   description: string;
+  /**
+   * More about the setting, for those who want it: shown in a toggletip beside the label. The
+   * description under the label stays the one thing a user must read. Present when a
+   * `settings_<stem>Help` message exists.
+   */
+  help?: string;
   type: SettingsFieldType;
   options?: { value: string | number; label: string; group?: string; iconUrl?: string }[];
   /** Long option lists get a search box instead of a plain select. */
@@ -327,8 +333,13 @@ function extrasMeta({ unit, display, ...extras }: FieldExtras): Partial<Settings
 const IN_SECONDS = { unit: 's', scale: 1000 } as const;
 
 /** Labels follow `settings_<stem>` and `settings_<stem>Desc` in the locale files. */
-function fieldLabels(stem: string): Pick<SettingsFieldMeta, 'label' | 'description'> {
-  return { label: t(`settings_${stem}`), description: t(`settings_${stem}Desc`) };
+function fieldLabels(stem: string): Pick<SettingsFieldMeta, 'label' | 'description' | 'help'> {
+  const help = tOptional(`settings_${stem}Help`);
+  return {
+    label: t(`settings_${stem}`),
+    description: t(`settings_${stem}Desc`),
+    ...(help ? { help } : {}),
+  };
 }
 
 function switchField(

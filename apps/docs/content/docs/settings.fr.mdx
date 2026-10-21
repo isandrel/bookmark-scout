@@ -35,14 +35,14 @@ En dessous, **L'IA est facultative** indique que Bookmark Scout fonctionne sans 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Dossiers correspondants** | Activé | Pendant la recherche, affiche au-dessus des résultats les dossiers dont le nom correspond, pour y enregistrer la page actuelle |
-| **Nombre maximal de dossiers correspondants** | 5 | Combien de dossiers correspondants afficher |
+| **Nombre maximal de dossiers correspondants** | <SettingDefault path="search.folder_matches.max" /> | Combien de dossiers correspondants afficher |
 | **Tolérer les fautes de frappe** | Activé | Un mot de 4 lettres ou plus correspond à un nom de dossier malgré une faute de frappe |
 
 ### Recherche [#searching]
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Délai de recherche** | 300 ms | Temps d'attente après la fin de la saisie avant que la fenêtre pop-up lance la recherche |
+| **Délai de recherche** | <SettingDefault path="search.search.debounce_ms" /> ms | Temps d'attente après la fin de la saisie avant que la fenêtre pop-up lance la recherche |
 | **Nombre maximal de résultats** | 20 résultats | Nombre maximal de correspondances affichées ; une note indique s'il y en a davantage |
 | **Développer les dossiers lors de la recherche** | Activé | Ouvre les dossiers qui contiennent des correspondances |
 | **Historique des recherches** | Activé | Mémorise les recherches récentes sur cet appareil |
@@ -55,7 +55,7 @@ Consultez [Recherche et recherches enregistrées](/guides/search).
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Dossiers récents** | Activé | Affiche les dossiers récemment utilisés dans la fenêtre pop-up et le menu contextuel |
-| **Nombre maximal de dossiers récents** | 5 | Nombre de dossiers récents à afficher |
+| **Nombre maximal de dossiers récents** | <SettingDefault path="search.saving.recent_folders_max" /> | Nombre de dossiers récents à afficher |
 | **Nom de dossier par défaut** | Nouveau dossier | Le nom initial d'un nouveau dossier |
 
 Consultez [Enregistrer et organiser](/guides/save-and-organize).
@@ -101,15 +101,15 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Largeur de la fenêtre pop-up** | 400 px | Les navigateurs autorisent au maximum 800 px |
-| **Hauteur de la fenêtre pop-up** | 500 px | Les navigateurs autorisent au maximum 600 px |
-| **Longueur de troncature** | 50 caractères | Raccourcit le titre de la page dans l'en-tête des suggestions d'IA de la fenêtre pop-up |
+| **Largeur de la fenêtre pop-up** | <SettingDefault path="appearance.popup.width" /> px | Les navigateurs autorisent au maximum 800 px |
+| **Hauteur de la fenêtre pop-up** | <SettingDefault path="appearance.popup.height" /> px | Les navigateurs autorisent au maximum 600 px |
+| **Longueur de troncature** | <SettingDefault path="appearance.popup.truncate_length" /> caractères | Raccourcit le titre de la page dans l'en-tête des suggestions d'IA de la fenêtre pop-up |
 
 ### Notifications [#notifications]
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Durée des notifications** | 4 s | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
+| **Durée des notifications** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
 | **Délai des infobulles** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Temps pendant lequel le pointeur reste sur une commande avant que son explication s'affiche |
 
 ## Comportement [#behavior]
@@ -161,7 +161,7 @@ En dessous, le panneau du fournisseur contient **Clé API**, **URL de base**, **
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Recommander à l'ouverture** | Désactivé | Demande des recommandations de dossiers à chaque ouverture de la fenêtre pop-up |
-| **Nombre maximal de recommandations** | 5 | Nombre maximal de recommandations de dossiers à demander |
+| **Nombre maximal de recommandations** | <SettingDefault path="ai.suggestions.max_recommendations" /> | Nombre maximal de recommandations de dossiers à demander |
 
 ### Lire le contenu des pages [#read-page-content]
 
@@ -202,10 +202,10 @@ Chaque outil dispose d'un interrupteur **Activer** (activé par défaut). Le dé
 
 | Outil | Paramètres et valeurs par défaut |
 | --- | --- |
-| **Préparateur de contexte IA** | **Format de sortie** Markdown ; **Inclure les chemins de dossier**, **Inclure les dates**, **Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés** activés ; **Nombre maximal d'éléments** 200 ; **Profondeur maximale** 8 ; **Longueur des extraits** 240 |
-| **Étiquetage automatique** | **Nombre minimal d'étiquettes** 2 ; **Nombre maximal d'étiquettes** 5 ; **Style des étiquettes** kebab-case ; **Mode de fusion** Ajouter ; **Supprimer les étiquettes en double** activé ; **Envoyer les étiquettes existantes** activé |
-| **Générateur de résumés** | **Longueur du résumé** 160 ; **Inclure le domaine** activé ; **Mode de fusion** Remplacer |
-| **Réorganisation des dossiers par IA** | **Confiance minimale** 55 % (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** 100 favoris par requête |
+| **Préparateur de contexte IA** | **Format de sortie** Markdown ; **Inclure les chemins de dossier**, **Inclure les dates**, **Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés** activés ; **Nombre maximal d'éléments** <SettingDefault path="ai_tools.context_packer.max_items" /> ; **Profondeur maximale** <SettingDefault path="ai_tools.context_packer.max_depth" /> ; **Longueur des extraits** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **Étiquetage automatique** | **Nombre minimal d'étiquettes** <SettingDefault path="ai_tools.auto_tagging.min_tags" /> ; **Nombre maximal d'étiquettes** <SettingDefault path="ai_tools.auto_tagging.max_tags" /> ; **Style des étiquettes** kebab-case ; **Mode de fusion** Ajouter ; **Supprimer les étiquettes en double** activé ; **Envoyer les étiquettes existantes** activé |
+| **Générateur de résumés** | **Longueur du résumé** <SettingDefault path="ai_tools.summarizer.summary_length" /> ; **Inclure le domaine** activé ; **Mode de fusion** Remplacer |
+| **Réorganisation des dossiers par IA** | **Confiance minimale** 55 % (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** <SettingDefault path="ai_tools.reorganization.batch_size" /> favoris par requête |
 
 L'étiquetage automatique et le générateur de résumés portent toujours sur le dossier actuel.
 
@@ -220,9 +220,9 @@ L'étiquetage automatique et le générateur de résumés portent toujours sur l
 
 | Outil | Paramètres et valeurs par défaut |
 | --- | --- |
-| **Nettoyeur de doublons** | **Méthode de comparaison** URL normalisée ; **Normaliser www**, **Ignorer le protocole** et **Ignorer la barre oblique finale** activés ; **Règle de conservation** Le plus ancien ; **Nombre maximal de groupes** 500. Analyse toujours tous les favoris |
+| **Nettoyeur de doublons** | **Méthode de comparaison** URL normalisée ; **Normaliser www**, **Ignorer le protocole** et **Ignorer la barre oblique finale** activés ; **Règle de conservation** Le plus ancien ; **Nombre maximal de groupes** <SettingDefault path="maintenance.duplicates.max_groups" />. Analyse toujours tous les favoris |
 | **Nettoyeur d'URL** | **Supprimer les fragments** désactivé ; **Trier les paramètres de requête** et **Dédoublonner les paramètres de requête** activés ; listes **Paramètres à conserver** et **Paramètres à supprimer** |
-| **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8 s ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Vérifier les liens morts** | **Délai d'expiration des requêtes** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> s ; **Requêtes simultanées** <SettingDefault path="maintenance.dead_links.concurrency" /> ; **Nombre de nouvelles tentatives** <SettingDefault path="maintenance.dead_links.retry_count" /> ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
 | **Tâches en arrière-plan** | **Appliquer en arrière-plan au-delà de** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" /> : les modifications vérifiées portant sur plus de favoris sont appliquées en arrière-plan, par parties, et continuent quand vous fermez la page ; chaque partie est une modification de l'[Historique](/guides/save-and-organize), où elle s'annule |
 
 Les outils commencent sur **Tous les favoris**, pour qu'une analyse lancée depuis le dossier sur lequel s'ouvre le gestionnaire n'oublie pas les autres. Modifiez la **Portée par défaut** d'un outil pour qu'il commence plutôt sur le dossier ouvert. **Réorganisation des dossiers par IA** commence sur le dossier ouvert, car un plan pour tous les favoris les envoie tous à votre fournisseur d'IA. Au niveau supérieur du gestionnaire, où aucun dossier n'est ouvert, chaque outil commence sur **Tous les favoris**.
@@ -238,8 +238,8 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | **Activer la récupération des métadonnées** | Activé | Affiche **Récupération des métadonnées** dans la barre latérale Outils |
 | **Remplacer les titres** | Désactivé | Propose de nouveaux titres pour les favoris qui en ont déjà un |
 | **Récupérer les descriptions** | Activé | Affiche les descriptions des pages dans la vérification. Elles ne sont jamais enregistrées |
-| **Délai d'expiration des requêtes** | 8 s | Par page. Également utilisé par **Actualiser les icônes de site** |
-| **Requêtes simultanées** | 4 | Nombre de pages demandées en même temps. Également utilisé par **Actualiser les icônes de site** |
+| **Délai d'expiration des requêtes** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> s | Par page. Également utilisé par **Actualiser les icônes de site** |
+| **Requêtes simultanées** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | Nombre de pages demandées en même temps. Également utilisé par **Actualiser les icônes de site** |
 
 ### Actualiser les icônes de site [#refresh-site-icons]
 
@@ -247,8 +247,8 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | --- | --- | --- |
 | **Activer l'outil Actualiser les icônes de site** | Activé | Affiche **Actualiser les icônes de site** dans la barre latérale Outils |
 | **Portée par défaut** | Tous les favoris | Portée initiale de l'actualisation des icônes de site |
-| **Taille d'icône préférée** | 32 px | Lorsqu'une page propose plusieurs icônes, télécharge celle dont la taille est la plus proche de cette valeur |
-| **Taille maximale du fichier d'icône** | 64 Ko | Les fichiers d'icône plus volumineux ne sont ni téléchargés ni enregistrés |
+| **Taille d'icône préférée** | <SettingDefault path="metadata_content.site_icons.preferred_size" /> px | Lorsqu'une page propose plusieurs icônes, télécharge celle dont la taille est la plus proche de cette valeur |
+| **Taille maximale du fichier d'icône** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> Ko | Les fichiers d'icône plus volumineux ne sont ni téléchargés ni enregistrés |
 | **Limite de stockage des icônes** | 4 Mo | Taille totale des icônes enregistrées sur cet appareil ; les plus anciennes sont supprimées en premier |
 
 ## Sécurité [#security]
@@ -267,7 +267,7 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | --- | --- | --- |
 | **Activer les statistiques** | Activé | Affiche **Statistiques des favoris** dans la barre latérale Outils |
 | **Inclure les domaines**, **Inclure les dossiers**, **Inclure les doublons**, **Inclure les protocoles**, **Inclure la répartition par profondeur** | Activé | Sections du rapport ; une section désactivée est masquée |
-| **Nombre d'entrées principales** | 10 | Longueur des listes des principaux domaines et dossiers |
+| **Nombre d'entrées principales** | <SettingDefault path="analytics.statistics.top_n" /> | Longueur des listes des principaux domaines et dossiers |
 
 ## Importation et exportation [#data]
 
@@ -276,7 +276,7 @@ Les listes telles que **Paramètres à supprimer** se modifient sous forme d'ét
 | **Afficher l'outil d'exportation** et **Afficher l'outil d'importation** | Activé | Affiche ces outils dans la barre latérale Outils |
 | **Format d'exportation par défaut** | HTML | Format sélectionné à l'ouverture de l'outil d'exportation |
 | **Préfixe du nom de fichier** | `bookmarks_` | Début du nom de chaque fichier exporté |
-| **Longueur maximale du nom de fichier** | 50 | Longueur maximale d'un nom de fichier généré |
+| **Longueur maximale du nom de fichier** | <SettingDefault path="data.export.filename_max_length" /> | Longueur maximale d'un nom de fichier généré |
 | **Indentation JSON**, **Indentation HTML**, **Indentation Markdown** | 2, 4, 2 | Nombre d'espaces par niveau dans chaque format |
 | **Inclure les dates** et **Inclure les URL** | Activé | Les inclut dans les exportations |
 
