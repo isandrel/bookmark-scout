@@ -50,6 +50,7 @@ Each step adds one entry; no step adds a special case.
 - **Writes.** Scan jobs only read; nothing a job finds is applied without the review. Applying a review goes through `applyReviewedChanges`: up to the `jobsApplyInBackgroundAbove` setting it runs in the page as before, above it the page sends the stored changes (no `check`, which is code) to an `applyChanges` job. That job's `runBatch` applies one slice per call to `applyBookmarkChanges` (`part: { jobId, index, of }`): each part is one undo entry and one Audit History record linked by `jobId` and labelled "(part n of m)". Every change is checked against the live bookmark first, so on Resume after a stop (`uncertain-write`) a change already made is skipped, never repeated. Pause and cancel take effect between parts.
 - **DOM.** A service worker has no DOM parser. Firefox's background page has one. Otherwise HTML goes to the AI host page (`withAIHost`, `readHead`), which is opened once per slice.
 - **Startup.** `registerJobs()` registers its listeners synchronously in the background's main function. Every wake reconciles first.
+- **Turns.** One slice runs at a time. Jobs take turns by slice, the one that waited longest first (`nextRunnable`), so a short job started during a long one runs between its slices instead of after it.
 
 ## Tests
 

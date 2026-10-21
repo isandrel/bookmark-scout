@@ -155,14 +155,22 @@ function kick(): void {
     });
 }
 
-/** The oldest job that can run: one this background holds, or a waiting one. */
+/** When each job last had a slice in this background; a job not yet run has none. */
+const lastSliceAt = new Map<string, number>();
+
+/**
+ * The job to give the next slice: one this background holds, or a waiting one. Jobs take turns
+ * by slice, the one that waited longest first (a new job before any that has run, then the
+ * oldest), so a short job started during a long one is not held until the long one ends.
+ */
 async function nextRunnable(): Promise<JobRecord | undefined> {
   const jobs = await listJobs(Number.MAX_SAFE_INTEGER);
+  const turn = (job: JobRecord) => lastSliceAt.get(job.id) ?? Number.NEGATIVE_INFINITY;
   return jobs
     .filter(
       (job) => job.state === 'queued' || (job.state === 'running' && job.ownerSession === SESSION),
     )
-    .sort((a, b) => a.createdAt - b.createdAt)[0];
+    .sort((a, b) => turn(a) - turn(b) || a.createdAt - b.createdAt)[0];
 }
 
 async function runLoop(): Promise<void> {
@@ -205,6 +213,7 @@ function commitBuffer(job: JobRecord, run: ActiveRun, batched: boolean) {
 }
 
 async function runSlice(waiting: JobRecord): Promise<void> {
+  lastSliceAt.set(waiting.id, Date.now());
   const job = await claimJob(waiting.id, SESSION);
   if (!job) return;
   const adapter = JOB_ADAPTERS[job.kind];
@@ -538,4 +547,5 @@ export function resetJobCoordinatorForTests(): void {
   initialized = undefined;
   loop = undefined;
   active.clear();
+  lastSliceAt.clear();
 }
