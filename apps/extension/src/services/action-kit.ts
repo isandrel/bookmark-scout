@@ -21,6 +21,7 @@ export const actionLimits = readConfig(
     max_link_checks: z.number().int().positive(),
     max_suggestions: z.number().int().positive(),
     max_candidates: z.number().int().positive(),
+    folder_score_decimals: z.number().int().nonnegative(),
     summary_chars: z.number().int().positive(),
     max_page_chars: z.number().int().positive(),
     max_result_chars: z.number().int().positive(),

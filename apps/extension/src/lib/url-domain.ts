@@ -37,6 +37,19 @@ export function getUrlHostname(url: string | undefined): string {
 }
 
 /** The registrable domain ("eTLD+1") for a hostname, e.g. news.bbc.co.uk -> bbc.co.uk. */
+/** The subdomain most sites also answer without, as in www.example.com and example.com. */
+const WWW_PREFIX = 'www.';
+
+/** `host` without a leading `www.`. */
+export function withoutWww(host: string): string {
+  return host.startsWith(WWW_PREFIX) ? host.slice(WWW_PREFIX.length) : host;
+}
+
+/** The other spelling of `host`: without `www.` when it has it, else with it. */
+export function otherWwwHost(host: string): string {
+  return host.startsWith(WWW_PREFIX) ? withoutWww(host) : `${WWW_PREFIX}${host}`;
+}
+
 export function getRegistrableDomain(hostname: string): string {
   const host = hostname.toLowerCase().replace(/\.$/, '');
   if (!host || isIpAddress(host)) return host;
@@ -73,10 +86,13 @@ const ACTIVE_DATA_MIME_TYPES = new Set([
   'application/xml',
 ]);
 
+/** The highest code point the URL parser strips from a URL's start: C0 controls and space. */
+const C0_CONTROL_OR_SPACE_MAX = 0x20;
+
 /** Lowercased URL as the browser reads its scheme: leading controls and tabs/newlines removed. */
 function normalizeForScheme(url: string): string {
   let start = 0;
-  while (start < url.length && url.charCodeAt(start) <= 0x20) start += 1;
+  while (start < url.length && url.charCodeAt(start) <= C0_CONTROL_OR_SPACE_MAX) start += 1;
   return url
     .slice(start)
     .replace(/[\t\n\r]/g, '')

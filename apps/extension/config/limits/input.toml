@@ -1,0 +1,40 @@
+# How much text and how many items the extension accepts in fields that come from outside it
+# (AI agents and models, web pages, the local bridge program) or that it stores, and how long the
+# ids it makes are. Read by src/lib/input-limits.ts.
+
+# Longest text, in characters.
+[chars]
+# A title an agent gives when it saves a page, renames an item, or creates a folder.
+bookmark_title = 500
+# The one-sentence summary of an agent's plan.
+plan_summary = 200
+# A folder id stored in a setting.
+folder_id = 200
+# The browser's reason the local bridge program stopped.
+agent_bridge_status_detail = 500
+# An agent's own name, and an error code or reason, in a History record.
+audit_actor_label = 200
+audit_error_code = 64
+audit_reason = 64
+# Ids, feature names, and the page's token in quick save messages.
+message_id = 100
+message_source = 50
+document_token = 100
+# The text on the toolbar button's badge, which the browser fits in about four characters.
+action_badge = 4
+
+# Most items.
+[counts]
+audit_error_codes = 20
+# The highest position of an alternative folder a quick save toast can pick.
+alternative_index = 50
+request_headers = 100
+
+# Lengths of the ids the extension makes.
+[ids]
+# Random bytes of the token a page's quick save toast identifies itself with.
+document_token_bytes = 16
+# Characters of a random id after the provider's name in an AI service id.
+service_suffix = 8
+# Characters of a saved prompt's id.
+prompt = 12

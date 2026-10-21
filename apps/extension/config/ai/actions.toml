@@ -35,3 +35,5 @@ max_plan_deleted_bookmarks = 200
 search_title_weight = 2
 # Bookmark search score per query word found in the URL, folder path, saved tags, or summary
 search_text_weight = 1
+# Decimal places of the scores folder suggestions report to the model
+folder_score_decimals = 2

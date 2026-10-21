@@ -116,7 +116,7 @@ export const auditOperationSchema = z.object({
   source: z.enum(AUDIT_SOURCES),
   actor: z.enum(AUDIT_ACTORS),
   /** A name the agent gave itself; never verified, and shown as such. */
-  actorLabel: z.string().max(200).optional(),
+  actorLabel: z.string().max(INPUT_LIMITS.chars.audit_actor_label).optional(),
   state: z.enum(AUDIT_STATES),
   counts: countsSchema,
   verification: z
@@ -135,7 +135,10 @@ export const auditOperationSchema = z.object({
   undo: z.object({ operationId: z.string(), at: z.number(), complete: z.boolean() }).optional(),
   originConfidence: z.enum(['verified_internal', 'unattributed_event', 'inferred_net_diff']),
   /** Codes of what went wrong, never raw error text (which may hold bookmark data). */
-  errorCodes: z.array(z.string().max(64)).max(20).optional(),
+  errorCodes: z
+    .array(z.string().max(INPUT_LIMITS.chars.audit_error_code))
+    .max(INPUT_LIMITS.counts.audit_error_codes)
+    .optional(),
   /**
    * For differences found after a gap: when the bookmarks were last seen as recorded. The
    * changes happened at unknown times between this and `startedAt`.
@@ -164,7 +167,7 @@ export const auditItemSchema = z.object({
   /** Items inside a removed or created folder, at every depth. */
   descendants: z.number().int().nonnegative().optional(),
   /** Why it was skipped or failed: `deleted`, `changed`, `failed`. */
-  reason: z.string().max(64).optional(),
+  reason: z.string().max(INPUT_LIMITS.chars.audit_reason).optional(),
 });
 export type AuditItem = z.infer<typeof auditItemSchema>;
 
@@ -241,8 +244,9 @@ interface AuditDb extends DBSchema {
 }
 
 export const AUDIT_DB_NAME = INDEXED_DATABASES.bookmarkAudit.name;
-/** 2 added the baseline, write intents, and observer state; 3 recovery checkpoints. */
-const AUDIT_DB_VERSION = 3;
+/** The schema versions, each with the stores it added; the database opens at the last one. */
+const AUDIT_DB_VERSIONS = { records: 1, observer: 2, checkpoints: 3 } as const;
+const AUDIT_DB_VERSION = Math.max(...Object.values(AUDIT_DB_VERSIONS));
 
 /** Broadcast name pages listen on to refresh when any context writes a record. */
 export const AUDIT_CHANNEL = 'bookmark-scout-audit';
@@ -263,18 +267,18 @@ function openAuditDb(): Promise<IDBPDatabase<AuditDb>> {
     .then(() =>
       openDB<AuditDb>(AUDIT_DB_NAME, AUDIT_DB_VERSION, {
         upgrade(db, oldVersion) {
-          if (oldVersion < 1) {
+          if (oldVersion < AUDIT_DB_VERSIONS.records) {
             const operations = db.createObjectStore('operations', { keyPath: 'id' });
             operations.createIndex('startedAt', 'startedAt');
             db.createObjectStore('details', { keyPath: 'operationId' });
           }
-          if (oldVersion < 2) {
+          if (oldVersion < AUDIT_DB_VERSIONS.observer) {
             const baseline = db.createObjectStore('baseline', { keyPath: 'id' });
             baseline.createIndex('parentId', 'parentId');
             db.createObjectStore('intents', { keyPath: 'key', autoIncrement: true });
             db.createObjectStore('meta', { keyPath: 'key' });
           }
-          if (oldVersion < 3) {
+          if (oldVersion < AUDIT_DB_VERSIONS.checkpoints) {
             const checkpoints = db.createObjectStore('checkpoints', {
               keyPath: 'key',
               autoIncrement: true,

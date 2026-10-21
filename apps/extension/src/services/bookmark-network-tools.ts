@@ -3,7 +3,10 @@ import type { BookmarkTreeNode } from '@/types';
 
 const htmlConfig = readConfig(
   'network/html',
-  z.strictObject({ head_max_bytes: z.number().int().positive() }),
+  z.strictObject({
+    head_max_bytes: z.number().int().positive(),
+    stop_pattern_overlap_chars: z.number().int().positive(),
+  }),
 );
 
 const privacyConfig = readConfig(
@@ -747,7 +750,7 @@ async function readResponseBytes(
       if (stopAt) {
         const text = tail + scanner.decode(chunk);
         if (stopAt.test(text)) break;
-        tail = text.slice(-16);
+        tail = text.slice(-htmlConfig.stop_pattern_overlap_chars);
       }
     }
   } finally {

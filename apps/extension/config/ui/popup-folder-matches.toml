@@ -5,6 +5,8 @@
 # With Settings > Search > Allow typos on, a search word this long or longer may match a folder
 # name with one typo ("rect" finds React). Shorter words would match too many unrelated names.
 fuzzy_min_length = { value = 4, min = 2, max = 20 }
+# How many typos such a word may have: letters added, removed, changed, or two swapped.
+typo_max_edits = 1
 
 # Extra rank for a folder you saved to recently: the most recent folder gets this much, and each
 # older one a step less, so recent folders win ties between equally good name matches.

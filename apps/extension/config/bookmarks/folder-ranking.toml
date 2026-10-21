@@ -7,6 +7,8 @@
 k1 = { value = 1.2, min = 0, max = 5 }
 # BM25 length normalization, 0 to 1: higher favors small folders over large ones with the same words.
 b = 0.75
+# BM25's smoothing of word rarity: added to how many folders have a word and to how many do not.
+idf_smoothing = 0.5
 # A folder must score at least this to be chosen; below it quick save falls back to the last used
 # folder, then the bookmarks bar. One distinctive shared word scores about 2 to 4.
 min_score = 2.0

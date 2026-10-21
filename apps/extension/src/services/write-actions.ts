@@ -166,7 +166,7 @@ const renameBookmark = defineAction({
   targets: ['bookmark', 'folder'],
   input: z.object({
     ref: z.string().describe('A bookmark ref (b:<id>) or folder ref (f:<id>)'),
-    title: z.string().trim().min(1).max(500),
+    title: z.string().trim().min(1).max(INPUT_LIMITS.chars.bookmark_title),
   }),
   output: z.object({ ref: z.string(), title: z.string(), ...changeOutput }),
   describe: (input) => t('askAI_toolRename', input.title ?? ''),
@@ -238,7 +238,7 @@ const createFolder = defineAction({
   targets: ['folder'],
   input: z.object({
     parent: folderSpecInput.describe('The folder to create it in'),
-    title: z.string().trim().min(1).max(500),
+    title: z.string().trim().min(1).max(INPUT_LIMITS.chars.bookmark_title),
   }),
   output: z.object({ ref: z.string(), path: z.string(), ...changeOutput }),
   describe: (input) => t('askAI_toolCreateFolder', input.title ?? ''),
@@ -290,7 +290,12 @@ const saveBookmark = defineAction({
   },
   input: z.object({
     url: z.string().describe('The page URL, http or https'),
-    title: z.string().trim().max(500).optional().describe('Defaults to the URL'),
+    title: z
+      .string()
+      .trim()
+      .max(INPUT_LIMITS.chars.bookmark_title)
+      .optional()
+      .describe('Defaults to the URL'),
     folder: folderSpecInput,
     newFolder: z.string().trim().min(1).optional().describe('A folder to create inside `folder`'),
   }),

@@ -11,6 +11,14 @@ export const MS_PER_DAY = MS_PER_HOUR * HOURS_PER_DAY;
 /** Kilobytes are binary here, matching how sizes are shown (`formatKilobytes`). */
 export const BYTES_PER_KB = 1024;
 
+/** `value` rounded to `decimals` decimal places. */
+export function roundTo(value: number, decimals: number): number {
+  const scale = DECIMAL_BASE ** decimals;
+  return Math.round(value * scale) / scale;
+}
+
+const DECIMAL_BASE = 10;
+
 /** A whole in percent: `fraction * PERCENT` is a percentage. */
 export const PERCENT = 100;
 

@@ -546,7 +546,7 @@ function normalizeDuplicateUrl(url: string | undefined, options: DuplicateMatchO
       return url.trim();
     }
     const protocol = options.ignoreProtocol ? '' : parsed.protocol;
-    const host = options.normalizeWww ? parsed.host.replace(/^www\./, '') : parsed.host;
+    const host = options.normalizeWww ? withoutWww(parsed.host) : parsed.host;
     const pathname =
       options.ignoreTrailingSlash && parsed.pathname !== '/'
         ? parsed.pathname.replace(/\/$/, '')

@@ -69,19 +69,21 @@
 # JavaScript raised on 2026-10-21 (3,580,000 to 3,590,000) for reading HTTP statuses, private
 # networks, image signatures, and value bounds from config (the loaders and their schemas).
 # Firefox measured 3,580,283 B.
+# Uncompressed raised on 2026-10-21 (5,410,000 to 5,425,000) for the rest of the numbers moved into
+# config (input limits, value bounds, number choices). Firefox measured 5,414,469 B.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_700_000
-raw_bytes = 5_410_000
+raw_bytes = 5_425_000
 
 [targets.edge]
 zip_bytes = 1_700_000
-raw_bytes = 5_410_000
+raw_bytes = 5_425_000
 
 [targets.firefox]
 zip_bytes = 1_700_000
-raw_bytes = 5_410_000
+raw_bytes = 5_425_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
