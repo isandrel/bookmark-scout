@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 import type { BookmarkTreeNode } from '@/types';
 
 const htmlConfig = readConfig(
@@ -62,8 +63,35 @@ const deadLinkConfig = readConfig(
       rate_limited: z.array(httpStatusCodeSchema),
       method_rejected: z.array(httpStatusCodeSchema),
     }),
+    retry_after: z.strictObject({
+      statuses: z.array(httpStatusCodeSchema),
+      max_ms: boundedNumber({ integer: true }),
+    }),
   }),
 );
+
+/** Busy statuses whose Retry-After a check waits for, up to `RETRY_AFTER_MAX_MS`. */
+const RETRY_AFTER_STATUSES: ReadonlySet<number> = new Set(deadLinkConfig.retry_after.statuses);
+const RETRY_AFTER_MAX_MS = deadLinkConfig.retry_after.max_ms;
+
+/** Waits `ms`, or throws {@link RequestAbortedError} as soon as `signal` stops the check. */
+function waitUnlessStopped(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new RequestAbortedError());
+      return;
+    }
+    const stop = () => {
+      clearTimeout(timer);
+      reject(new RequestAbortedError());
+    };
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', stop);
+      resolve();
+    }, ms);
+    signal?.addEventListener('abort', stop, { once: true });
+  });
+}
 
 /** Failure categories of specific HTTP statuses (config/network/dead-links.toml). */
 const HTTP_FAILURE_CATEGORIES: ReadonlyMap<number, DeadLinkCategory> = new Map(
@@ -263,7 +291,10 @@ export async function classifyFailure(
   }
 }
 
-type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'>;
+type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'> & {
+  /** The response's Retry-After header, if any. */
+  retryAfter: string | null;
+};
 
 /**
  * Checks reachability with HEAD and falls back to a GET (body discarded) whenever HEAD returns
@@ -277,10 +308,11 @@ async function probeUrl(
   timeoutMs: number,
   signal?: AbortSignal,
 ): Promise<ProbeResult> {
-  const summarize = async ({ status, redirected, url: finalUrl }: Response) => ({
+  const summarize = async ({ status, redirected, url: finalUrl, headers }: Response) => ({
     status,
     redirected,
     url: finalUrl,
+    retryAfter: headers.get('retry-after'),
   });
   const head = await requestWithTimeout(
     url,
@@ -340,6 +372,14 @@ export async function checkDeadLink(
         status = redirectUrl ? 'redirect' : 'ok';
       } else {
         status = 'error';
+        // A busy site that says when to come back, soon enough, is asked again then.
+        const wait = RETRY_AFTER_STATUSES.has(response.status)
+          ? parseRetryAfter(response.retryAfter, Date.now())
+          : undefined;
+        if (attempt < options.retryCount && wait !== undefined && wait <= RETRY_AFTER_MAX_MS) {
+          await waitUnlessStopped(wait, signal);
+          continue;
+        }
       }
       return {
         ...base,

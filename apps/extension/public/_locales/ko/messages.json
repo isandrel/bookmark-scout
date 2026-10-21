@@ -7424,7 +7424,7 @@
         "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
     },
     "settings_deadLinksRetryCountHelp": {
-        "message": "실패한 링크를 보고하기 전에 더 시도하는 횟수입니다. 재시도로 잠깐의 네트워크 문제를 배제할 수 있지만, 횟수마다 실패하는 링크의 확인이 길어집니다.",
+        "message": "실패한 링크를 보고하기 전에 더 시도하는 횟수입니다. 재시도로 잠깐의 네트워크 문제를 배제할 수 있지만, 횟수마다 실패하는 링크의 확인이 길어집니다. 사용량이 많다고 응답하며 몇 초 뒤에 다시 요청해 달라는 사이트는 그 시간을 기다린 뒤 다시 시도합니다(이 횟수에 포함됩니다).",
         "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
     },
     "settings_deadLinksSuccessStatusesHelp": {

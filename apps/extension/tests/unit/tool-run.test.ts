@@ -343,6 +343,7 @@ describe('network tools', () => {
       ok: !url.endsWith('/2'),
       redirected: false,
       url: '',
+      headers: new Headers(),
       body: { cancel: vi.fn(async () => undefined) },
     }));
     const run = createToolRun(TOOL_DEFINITIONS.deadLinks, deps());
