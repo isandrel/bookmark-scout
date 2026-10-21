@@ -6748,7 +6748,7 @@
         "description": "Title of the History dialog in the manager."
     },
     "history_description": {
-        "message": "Bookmark Scout がブックマークに加えた変更で、このデバイスにのみ保存されます。このバージョンから始まり、拡張機能がオフだった間の変更は分かりません。",
+        "message": "ブックマークの変更: Bookmark Scout が行ったものと、ほかで行われたことを検出したもの。このバージョンから、このデバイスにのみ保存されます。拡張機能がオフの間の変更は、後で 1 つの差分として表示されます。",
         "description": "Explanation under the History title."
     },
     "history_filterLabel": {
@@ -7078,5 +7078,33 @@
     "action_redo": {
         "message": "やり直す",
         "description": "Button that redoes a change undone before (the manager History)."
+    },
+    "settings_sectionHistory": {
+        "message": "ブックマークの履歴",
+        "description": "Settings section heading: the manager Bookmark history."
+    },
+    "settings_historyRecordOutsideChanges": {
+        "message": "ほかで行われた変更も記録",
+        "description": "Setting label: also record bookmark changes made outside Bookmark Scout in the History."
+    },
+    "settings_historyRecordOutsideChangesDesc": {
+        "message": "ブラウザ自体のブックマークマネージャー、ほかの拡張機能、ブラウザの同期で行われた変更も一覧に表示します。変更元は不明と表示されます（ブラウザは誰が変更したかを伝えません）。オフにすると、ほかからの変更は記録されません。再びオンにすると、その間に変わった内容が 1 つの差分として表示されます。",
+        "description": "Setting description: what recording changes from elsewhere means, and what pausing it does."
+    },
+    "history_reasonBeforeUnknown": {
+        "message": "変更前の状態は記録されていないため不明です。",
+        "description": "History item: a change seen from elsewhere whose earlier state was never recorded."
+    },
+    "history_factObservedSince": {
+        "message": "発生期間",
+        "description": "History detail label: the interval in which differences found after a gap happened."
+    },
+    "history_between": {
+        "message": "$1 ～ $2（正確な時刻は不明）",
+        "description": "History detail: two dates and times, the interval a difference happened in. $1 and $2 are dates."
+    },
+    "history_noUndoElsewhere": {
+        "message": "Bookmark Scout による変更ではないため、ここでは元に戻せません。",
+        "description": "History detail for a change seen from elsewhere: why it offers no Undo."
     }
 }

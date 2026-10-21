@@ -118,6 +118,8 @@ test('undo from History is recorded once, linked to the change (H04, H05)', asyn
   await deleteRow(page, 'First');
 
   const dialog = await openHistory(page);
+  // Seeding through the browser API is a change from elsewhere; this test is about own changes.
+  await dialog.getByRole('radio', { name: 'Bookmark Scout' }).click();
   const record = dialog.getByTestId('history-record').first();
   await record.getByRole('button', { expanded: false }).click();
   await record.getByRole('button', { name: 'Undo', exact: true }).click();
@@ -188,4 +190,106 @@ test('a Duplicate Cleaner result opens its record in History, with the removed c
   // The exact address, never normalized.
   await expect(items.nth(0)).toContainText('https://e2e.invalid/same?sig=a%2Fb&x=1');
   await page.screenshot({ path: test.info().outputPath('history-duplicates.png') });
+});
+
+/** Waits until the background has taken its first baseline of the bookmarks. */
+async function waitForBaseline(worker: Worker) {
+  await expect
+    .poll(() =>
+      worker.evaluate(
+        () =>
+          new Promise<boolean>((resolve) => {
+            const open = indexedDB.open('bookmark-scout-audit');
+            open.onsuccess = () => {
+              const db = open.result;
+              if (!db.objectStoreNames.contains('meta')) return resolve(false);
+              const read = db.transaction('meta').objectStore('meta').get('observer');
+              read.onsuccess = () => resolve(read.result !== undefined);
+              read.onerror = () => resolve(false);
+            };
+            open.onerror = () => resolve(false);
+          }),
+      ),
+    )
+    .toBe(true);
+}
+
+test('a change made outside Bookmark Scout shows as from an unknown source, its own changes do not (X01, X07, H22)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { confirmBeforeDelete: false, sortOrder: 'browser' });
+  await waitForBaseline(extensionWorker);
+  // Seeded through the browser API: itself a change from elsewhere, in the same burst.
+  const seeded = await seedFolder(extensionWorker, 'History Outside', [
+    { title: 'Mine to delete', url: 'https://e2e.invalid/mine' },
+  ]);
+  // With no Bookmark Scout page open, something else adds and renames bookmarks through the
+  // browser (here the API itself, as another extension would).
+  await extensionWorker.evaluate(async (parentId) => {
+    const added = await chrome.bookmarks.create({
+      parentId,
+      title: 'Added elsewhere',
+      url: 'https://e2e.invalid/elsewhere?x=1',
+    });
+    await chrome.bookmarks.update(added.id, { title: 'Renamed elsewhere' });
+  }, seeded.folderId);
+
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await deleteRow(page, 'Mine to delete');
+  const dialog = await openHistory(page);
+  const records = dialog.getByTestId('history-record');
+  // Bookmark Scout's own deletion is one record, never also an unknown one.
+  await dialog.getByRole('radio', { name: 'Bookmark Scout' }).click();
+  await expect(records).toHaveCount(1);
+  await expect(records.first().getByTestId('history-record-label')).toHaveText(
+    'Delete "Mine to delete"',
+  );
+  await expect(records.first()).toContainText('Manager');
+  // Everything else came from outside, as one burst.
+  await dialog.getByRole('radio', { name: 'From elsewhere' }).click();
+  await expect(records).toHaveCount(1);
+  const outside = records.first();
+  await expect(outside).toContainText('Source unknown (observed browser event)');
+  await expect(outside.getByTestId('history-record-status')).toHaveText('Observed');
+  await outside.getByRole('button', { expanded: false }).click();
+  await expect(outside.getByTestId('history-undo-unavailable')).toHaveText(
+    'Not made by Bookmark Scout, so it cannot be undone here.',
+  );
+  const items = outside.getByTestId('history-item');
+  // The seeded folder and bookmark, then the addition and the rename.
+  await expect(items).toHaveCount(4);
+  await expect(items.nth(2)).toContainText('Added elsewhere');
+  await expect(items.nth(2)).toContainText('https://e2e.invalid/elsewhere?x=1');
+  await expect(items.nth(3)).toContainText('Added elsewhere');
+  await expect(items.nth(3)).toContainText('Renamed elsewhere');
+  await page.screenshot({ path: test.info().outputPath('history-outside.png') });
+});
+
+test('changes made while recording was paused show as one difference after a gap (X10, X16)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await waitForBaseline(extensionWorker);
+  const seeded = await seedFolder(extensionWorker, 'History Gap', [
+    { title: 'Before the gap', url: 'https://e2e.invalid/gap' },
+  ]);
+  await setSettings(extensionWorker, { historyRecordOutsideChanges: false });
+  await extensionWorker.evaluate(async (parentId) => {
+    const [first] = await chrome.bookmarks.getChildren(parentId);
+    await chrome.bookmarks.update(first.id, { title: 'Changed during the gap' });
+    await chrome.bookmarks.create({ parentId, title: 'Added during the gap' });
+  }, seeded.folderId);
+  await setSettings(extensionWorker, { historyRecordOutsideChanges: true });
+
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const dialog = await openHistory(page);
+  const record = dialog.getByTestId('history-record').first();
+  await expect(record).toContainText('Detected after a gap (net difference)');
+  await record.getByRole('button', { expanded: false }).click();
+  await expect(record.getByTestId('history-record-facts')).toContainText('exact times unknown');
+  await expect(record.getByTestId('history-item')).toHaveCount(2);
+  await expect(record.getByTestId('history-item').first()).toContainText('Changed during the gap');
 });

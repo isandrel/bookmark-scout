@@ -6748,7 +6748,7 @@
         "description": "Title of the History dialog in the manager."
     },
     "history_description": {
-        "message": "Bookmark Scout가 북마크에 한 변경으로, 이 기기에만 보관됩니다. 이 버전부터 시작되며 확장 프로그램이 꺼져 있던 동안의 변경은 알 수 없습니다.",
+        "message": "북마크 변경: Bookmark Scout가 한 것과 다른 곳에서 감지된 것. 이 버전부터 이 기기에만 보관되며, 확장 프로그램이 꺼져 있던 동안의 변경은 나중에 하나의 차이로 표시됩니다.",
         "description": "Explanation under the History title."
     },
     "history_filterLabel": {
@@ -7078,5 +7078,33 @@
     "action_redo": {
         "message": "다시 실행",
         "description": "Button that redoes a change undone before (the manager History)."
+    },
+    "settings_sectionHistory": {
+        "message": "북마크 기록",
+        "description": "Settings section heading: the manager Bookmark history."
+    },
+    "settings_historyRecordOutsideChanges": {
+        "message": "다른 곳에서 한 변경도 기록",
+        "description": "Setting label: also record bookmark changes made outside Bookmark Scout in the History."
+    },
+    "settings_historyRecordOutsideChangesDesc": {
+        "message": "브라우저 자체 북마크 관리자, 다른 확장 프로그램, 브라우저 동기화로 한 변경도 목록에 표시합니다. 출처 알 수 없음으로 표시됩니다(브라우저는 누가 바꿨는지 알려 주지 않음). 끄면 다른 곳의 변경은 기록하지 않으며, 다시 켜면 그 사이에 바뀐 내용이 하나의 차이로 표시됩니다.",
+        "description": "Setting description: what recording changes from elsewhere means, and what pausing it does."
+    },
+    "history_reasonBeforeUnknown": {
+        "message": "이전 상태는 기록되지 않아 알 수 없습니다.",
+        "description": "History item: a change seen from elsewhere whose earlier state was never recorded."
+    },
+    "history_factObservedSince": {
+        "message": "발생 기간",
+        "description": "History detail label: the interval in which differences found after a gap happened."
+    },
+    "history_between": {
+        "message": "$1 ~ $2(정확한 시각 알 수 없음)",
+        "description": "History detail: two dates and times, the interval a difference happened in. $1 and $2 are dates."
+    },
+    "history_noUndoElsewhere": {
+        "message": "Bookmark Scout가 한 변경이 아니어서 여기서 실행 취소할 수 없습니다.",
+        "description": "History detail for a change seen from elsewhere: why it offers no Undo."
     }
 }

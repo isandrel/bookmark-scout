@@ -51,27 +51,32 @@
 # 80 messages in 9 languages). Firefox measured ZIP 1,670,353, 5,340,282 B uncompressed, and
 # 3,539,986 B of JavaScript.
 # Locales raised the same day (1,195,000 to 1,250,000) for those messages: 1,243,201 B measured.
+# Raised again the same day (ZIP 1,680,000 to 1,690,000, uncompressed 5,352,000 to 5,380,000, javascript
+# 3,550,000 to 3,565,000, locales 1,250,000 to 1,262,000) for watching bookmark changes made
+# outside Bookmark Scout (the background observer, write notes, and its setting and messages).
+# Firefox measured ZIP 1,682,501, 5,368,778 B uncompressed, 3,557,114 B of JavaScript, and
+# 1,253,871 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_680_000
-raw_bytes = 5_352_000
+zip_bytes = 1_690_000
+raw_bytes = 5_380_000
 
 [targets.edge]
-zip_bytes = 1_680_000
-raw_bytes = 5_352_000
+zip_bytes = 1_690_000
+raw_bytes = 5_380_000
 
 [targets.firefox]
-zip_bytes = 1_680_000
-raw_bytes = 5_352_000
+zip_bytes = 1_690_000
+raw_bytes = 5_380_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_550_000
+javascript = 3_565_000
 css = 84_000
 fonts = 143_000
-locales = 1_250_000
+locales = 1_262_000
 images = 320_000
 other = 27_000

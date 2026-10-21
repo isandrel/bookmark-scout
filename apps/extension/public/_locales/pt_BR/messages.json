@@ -6756,7 +6756,7 @@
         "description": "Title of the History dialog in the manager."
     },
     "history_description": {
-        "message": "O que o Bookmark Scout alterou nos seus favoritos, guardado só neste dispositivo. Começa nesta versão e não conhece alterações feitas enquanto a extensão estava desativada.",
+        "message": "Alterações nos seus favoritos: as feitas pelo Bookmark Scout e as observadas de outro lugar. Guardadas só neste dispositivo, a partir desta versão; alterações feitas com a extensão desativada aparecem depois como uma única diferença.",
         "description": "Explanation under the History title."
     },
     "history_filterLabel": {
@@ -7090,5 +7090,33 @@
     "action_redo": {
         "message": "Refazer",
         "description": "Button that redoes a change undone before (the manager History)."
+    },
+    "settings_sectionHistory": {
+        "message": "Histórico de favoritos",
+        "description": "Settings section heading: the manager Bookmark history."
+    },
+    "settings_historyRecordOutsideChanges": {
+        "message": "Registrar alterações feitas em outro lugar",
+        "description": "Setting label: also record bookmark changes made outside Bookmark Scout in the History."
+    },
+    "settings_historyRecordOutsideChangesDesc": {
+        "message": "Listar também alterações feitas no gerenciador de favoritos do navegador, por outras extensões ou pela sincronização do navegador. Elas aparecem com origem desconhecida: o navegador não diz quem as fez. Desativado, nada de outro lugar é registrado; ativado de novo, o que mudou nesse meio-tempo aparece como uma única diferença.",
+        "description": "Setting description: what recording changes from elsewhere means, and what pausing it does."
+    },
+    "history_reasonBeforeUnknown": {
+        "message": "Não se sabe como era antes: não foi registrado.",
+        "description": "History item: a change seen from elsewhere whose earlier state was never recorded."
+    },
+    "history_factObservedSince": {
+        "message": "Aconteceu entre",
+        "description": "History detail label: the interval in which differences found after a gap happened."
+    },
+    "history_between": {
+        "message": "$1 e $2 (horários exatos desconhecidos)",
+        "description": "History detail: two dates and times, the interval a difference happened in. $1 and $2 are dates."
+    },
+    "history_noUndoElsewhere": {
+        "message": "Não foi feito pelo Bookmark Scout, então não pode ser desfeito aqui.",
+        "description": "History detail for a change seen from elsewhere: why it offers no Undo."
     }
 }

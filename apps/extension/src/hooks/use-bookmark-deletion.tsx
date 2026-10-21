@@ -58,8 +58,11 @@ function describeRestoreError(error: unknown): string {
   return getErrorMessage(error);
 }
 
-/** What an undone deletion brought back: items left alone, and items back without their tags. */
-type RestoreGaps = { skipped: number; metadataNotRestored: number };
+/**
+ * What an undone deletion brought back: items left alone, and items back without their tags;
+ * `alreadyUndone` when it had been undone elsewhere first (Ctrl+Z, or the History).
+ */
+type RestoreGaps = { skipped: number; metadataNotRestored: number; alreadyUndone?: boolean };
 
 /**
  * Restores lower original indexes first so every item lands back in its old position. Counts the
@@ -155,13 +158,13 @@ export async function deleteBookmarksWithUndo(
   const restore = async (): Promise<RestoreGaps> => {
     if (!recorded) return restoreSnapshots(snapshots);
     const undone = await undoRecordedBookmarkChange(recorded);
-    // Null: undone already (Ctrl+Z). Nothing applied: the folder it was in is gone, or the
-    // bookmarks changed since.
-    if (undone && undone.applied === 0 && undone.parentMissing) {
+    if (!undone) return { skipped: 0, metadataNotRestored: 0, alreadyUndone: true };
+    // Nothing applied: the folder it was in is gone, or the bookmarks changed since.
+    if (undone.applied === 0 && undone.parentMissing) {
       throw new BookmarkRestoreError(t('toast_restoreParentMissing'), 'parent-missing');
     }
-    if (undone && undone.applied === 0) throw new Error(t('toast_undoChanged'));
-    return { skipped: undone?.skipped ?? 0, metadataNotRestored: undone?.metadataNotRestored ?? 0 };
+    if (undone.applied === 0) throw new Error(t('toast_undoChanged'));
+    return { skipped: undone.skipped, metadataNotRestored: undone.metadataNotRestored ?? 0 };
   };
   const undoWindow = [
     deleted.length > 1
@@ -183,6 +186,11 @@ export async function deleteBookmarksWithUndo(
       try {
         const gaps = await restore();
         await onChanged();
+        // Undone elsewhere first: saying "restored" again would claim a second restore.
+        if (gaps.alreadyUndone) {
+          toast({ title: t('qaManager_alreadyUndone') });
+          return;
+        }
         if (gaps.skipped > 0 || gaps.metadataNotRestored > 0) {
           // Part of it could not come back as it was; say what, never "restored" alone.
           toast.error({

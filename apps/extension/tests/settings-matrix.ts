@@ -207,6 +207,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'linkOpenTarget opens a manager URL in a new tab, a background tab, or the current tab',
     ),
   ], 'Popup rows, tool results, and dialogs share the same click handler.'),
+  historyRecordOutsideChanges: tested('services/bookmark-observer.ts', [
+    unit(
+      'bookmark-observer.test.ts',
+      'records nothing while paused, then the difference once it is back on (X16)',
+    ),
+  ]),
   confirmBeforeDelete: tested('hooks/use-bookmark-deletion.tsx', [
     e2e(
       'bookmark-workflows.spec.ts',
