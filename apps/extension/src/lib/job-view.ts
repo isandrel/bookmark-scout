@@ -82,8 +82,24 @@ const JOB_BLOCK_KEYS: Record<JobBlockCode, MessageKey> = {
   'ai-request': 'jobs_blockedAIRequest',
   'uncertain-request': 'jobs_uncertainRequest',
   'uncertain-write': 'jobs_uncertainWrite',
+  'site-access': 'jobs_blockedSiteAccess',
   'slice-setup': 'jobs_errorSetup',
 };
+
+/** What Resume asks the browser for first, where the reason a job paused is a missing permission. */
+export const JOB_BLOCK_PERMISSIONS: Partial<Record<JobBlockCode, PermissionFeature>> = {
+  'site-access': 'webAccess',
+};
+
+/** The permission Resume has to ask for before resuming `job`, if any. */
+export function jobResumePermission(
+  job: Pick<JobRecord, 'lastError'>,
+): PermissionFeature | undefined {
+  const code = job.lastError?.code;
+  return code && (JOB_BLOCK_CODES as readonly string[]).includes(code)
+    ? JOB_BLOCK_PERMISSIONS[code as JobBlockCode]
+    : undefined;
+}
 
 /** Why a job stopped or waits for the user, in the current language; undefined when it did not. */
 export function jobErrorMessage(job: Pick<JobRecord, 'lastError'>): string | undefined {

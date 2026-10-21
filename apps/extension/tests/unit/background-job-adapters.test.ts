@@ -78,7 +78,8 @@ beforeEach(async () => {
   await closeJobDb();
   globalThis.indexedDB = new IDBFactory();
   resetJobCoordinatorForTests();
-  installFakePermissions();
+  // Started from a page, which asked for the bookmarks' sites first.
+  installFakePermissions({ origins: [...WEB_ORIGINS] });
   host.heads = [];
   host.open = 0;
   installFakeBookmarks([

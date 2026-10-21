@@ -2,6 +2,7 @@ import { IDBFactory } from 'fake-indexeddb';
 import { openDB } from 'idb';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import * as jobStore from '@/lib/job-store';
 import {
   acceptJob,
   claimJob,
@@ -17,7 +18,9 @@ import {
   transitionJob,
 } from '@/lib/job-store';
 import { checkDeadLink, RequestAbortedError } from '@/services/bookmark-network-tools';
+import { JOB_ADAPTERS } from '@/services/job-adapters';
 import {
+  registerJobs,
   resetJobCoordinatorForTests,
   runJobCommand,
   whenJobsIdle,
@@ -115,13 +118,16 @@ const start = (commandId = crypto.randomUUID(), folderId = 'f') =>
     scope: { mode: 'folder', folderId },
   });
 
+let permissions: ReturnType<typeof installFakePermissions>;
+
 beforeEach(async () => {
   fakeBrowser.reset();
   vi.restoreAllMocks();
   await closeJobDb();
   globalThis.indexedDB = new IDBFactory();
   resetJobCoordinatorForTests();
-  installFakePermissions();
+  // Started from a page, which asked for the bookmarks' sites first.
+  permissions = installFakePermissions({ origins: [...WEB_ORIGINS] });
   installFakeBookmarks([{ id: 'f', title: 'Folder' }, ...links(6), { id: 'g', title: 'Other' }]);
 });
 
@@ -413,6 +419,182 @@ describe('the clock (J69)', () => {
     const finished = await getJob(job.id);
     expect(finished?.activeMs).toBeGreaterThanOrEqual(0);
     expect(finished?.activeMs).toBeLessThan(60 * 60 * 1000);
+  });
+});
+
+describe('a worker that just started (J18, J21, J22)', () => {
+  it('answers commands sent before it finished starting, and a repeated Start once (J18, J21)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const commandId = crypto.randomUUID();
+    // Both arrive before the first wake has reconciled the store.
+    const [first, again] = await Promise.all([start(commandId), start(commandId)]);
+    if (!first.ok || !again.ok || !first.job || !again.job) throw new Error('not accepted');
+    expect(again.job.id).toBe(first.job.id);
+    expect(await listJobs()).toHaveLength(1);
+    await drain(held, first.job.id);
+    expect(held.requests).toHaveLength(6);
+  });
+
+  it('runs each item once when the alarm fires late and twice at once (J22)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    registerJobs();
+    const { job } = await acceptDeadLinks(4);
+    const alarm = { name: 'bookmark-scout:jobs', scheduledTime: 0 };
+    await Promise.all([
+      fakeBrowser.alarms.onAlarm.trigger(alarm),
+      fakeBrowser.alarms.onAlarm.trigger(alarm),
+    ]);
+    await drain(held, job.id);
+    expect(held.requests).toHaveLength(4);
+    expect(new Set(held.requests).size).toBe(4);
+  });
+});
+
+describe('jobs side by side (J30, J56)', () => {
+  it('runs two jobs over the same sites one after the other (J30)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const first = await start();
+    const second = await start();
+    if (!first.ok || !second.ok || !first.job || !second.job) throw new Error('not accepted');
+    await until(() => held.waiting.length > 0);
+    expect((await getJob(second.job.id))?.state).toBe('queued');
+    await drain(held, first.job.id);
+    await drain(held, second.job.id);
+    // Each job asked for each link once.
+    expect(held.requests).toHaveLength(12);
+  });
+
+  it('removes a finished job but never one still running (J56)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const running = await start();
+    if (!running.ok || !running.job) throw new Error('not accepted');
+    await until(() => held.waiting.length > 0);
+    await runJobCommand({ type: 'delete', jobId: running.job.id });
+    expect(await getJob(running.job.id)).toBeDefined();
+    await drain(held, running.job.id);
+    await runJobCommand({ type: 'delete', jobId: running.job.id });
+    expect(await getJob(running.job.id)).toBeUndefined();
+    expect(await getJobItems(running.job.id)).toHaveLength(0);
+  });
+});
+
+describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
+  it('counts nothing a failed save did not keep, and stops the job with the reason (J26)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    vi.spyOn(jobStore, 'commitItems').mockRejectedValueOnce(new JobStoreError('write-failed'));
+    const response = await start();
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    const jobId = response.job.id;
+    await until(async () => {
+      held.releaseAll();
+      return (await getJob(jobId))?.state === 'failed';
+    });
+    const job = await getJob(jobId);
+    const items = await getJobItems(jobId);
+    // The counters and the items agree: what was not saved is still to do, and not counted.
+    const done = items.filter((item) => item.state === 'done').length;
+    expect(jobStore.processedCount(job ?? { done: { succeeded: 0, skipped: 0, failed: 0 } })).toBe(
+      done,
+    );
+    expect(job?.lastError?.code).toBe('slice-setup');
+  });
+
+  it('lets another page upgrade the store, and answers commands with an error, not a hang (J65)', async () => {
+    const { job } = await acceptDeadLinks(1);
+    // A newer release opens the store at a higher version while this one has it open.
+    const newer = await openDB(JOB_DB_NAME, 2);
+    newer.close();
+    expect(await runJobCommand({ type: 'pause', jobId: job.id })).toEqual({
+      ok: false,
+      error: 'store',
+    });
+  });
+
+  it('ends as partial when some items could not be checked, with counts that match the items (J71)', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const check = JOB_ADAPTERS.deadLinks;
+    if (!('run' in check)) throw new Error('not an item adapter');
+    const run = check.run.bind(check);
+    vi.spyOn(check, 'run').mockImplementation((input, ...rest) =>
+      (input as { url: string }).url.endsWith('/3')
+        ? Promise.reject(new TypeError('unreadable'))
+        : run(input, ...rest),
+    );
+    const response = await start();
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    await drain(held, response.job.id);
+    const job = await getJob(response.job.id);
+    const items = await getJobItems(response.job.id);
+    expect(job?.state).toBe('partial');
+    expect(job?.done).toEqual({ succeeded: 5, skipped: 0, failed: 1 });
+    expect(items.map((item) => item.outcome)).toEqual([
+      'succeeded',
+      'succeeded',
+      'failed',
+      'succeeded',
+      'succeeded',
+      'succeeded',
+    ]);
+  });
+});
+
+describe('a busy or refusing site (J34)', () => {
+  it('reports 429 and 503 as findings, whatever Retry-After says, with no retry loop', async () => {
+    const answers: Record<string, Response> = {
+      '/1': new Response('', { status: 429, headers: { 'Retry-After': '0' } }),
+      '/2': new Response('', { status: 429, headers: { 'Retry-After': '86400' } }),
+      '/3': new Response('', { status: 503, headers: { 'Retry-After': 'soon' } }),
+    };
+    const fetch = vi.fn(async (input: string, _init?: RequestInit) => {
+      const answer = answers[new URL(input).pathname];
+      return answer?.clone() ?? new Response('', { status: 200 });
+    });
+    vi.stubGlobal('fetch', fetch);
+    const response = await start();
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    await until(async () => (await getJob(response.job?.id ?? ''))?.state === 'succeeded');
+    const results = (await getJobItems(response.job.id)).map(
+      (item) => (item.result as { statusCode?: number }).statusCode,
+    );
+    expect(results).toEqual([429, 429, 503, 200, 200, 200]);
+    // A busy site is a finding: HEAD and the one GET it falls back to, never retried or waited on.
+    const asked = (path: string) =>
+      fetch.mock.calls
+        .filter(([url]) => new URL(url).pathname === path)
+        .map(([, init]) => init?.method);
+    for (const path of ['/1', '/2', '/3']) expect(asked(path)).toEqual(['HEAD', 'GET']);
+    expect(asked('/4')).toEqual(['HEAD']);
+  });
+});
+
+describe('website access taken back while a job runs (J51)', () => {
+  it('pauses with the reason and sends nothing more, then finishes once access is back', async () => {
+    const held = heldFetch();
+    vi.stubGlobal('fetch', held.fetch);
+    const response = await start();
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    const jobId = response.job.id;
+    await until(() => held.waiting.length > 0);
+    const inFlight = held.waiting.length;
+    permissions.revoke({ origins: [...WEB_ORIGINS] });
+    // The checks already in flight end; nothing new starts without access.
+    held.releaseAll();
+    await until(async () => (await getJob(jobId))?.state === 'paused');
+    expect((await getJob(jobId))?.lastError?.code).toBe('site-access');
+    expect(held.requests).toHaveLength(inFlight);
+    expect((await getJob(jobId))?.done.failed).toBe(0);
+
+    permissions.grant({ origins: [...WEB_ORIGINS] });
+    await runJobCommand({ type: 'resume', jobId });
+    await drain(held, jobId);
+    expect((await getJob(jobId))?.done.succeeded).toBe(6);
+    expect(new Set(held.requests).size).toBe(6);
   });
 });
 

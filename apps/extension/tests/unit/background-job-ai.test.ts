@@ -1,4 +1,5 @@
 import { IDBFactory } from 'fake-indexeddb';
+import { openDB } from 'idb';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { TOOL_DEFINITIONS } from '@/components/bookmarks/tools/tool-definitions';
@@ -8,6 +9,7 @@ import {
   closeJobDb,
   getJob,
   getJobItems,
+  JOB_DB_NAME,
   type JobRecord,
   markItemInFlight,
 } from '@/lib/job-store';
@@ -242,5 +244,26 @@ describe('AI Folder Reorganization as a background job', () => {
     await whenJobsIdle();
     expect(await getJob(job.id)).toMatchObject({ state: 'paused', lastError: { code: 'ai-off' } });
     expect(ai.generate.mock.calls.length).toBe(sentBefore);
+  });
+
+  it('keeps the key, its headers, and the service address out of everything the job stores (J54)', async () => {
+    // A value that must never be written: the key, a header, and the address it goes to.
+    const canary = 'canary-key-0f3c9d';
+    ai.service = {
+      ...ai.service,
+      apiKey: canary,
+      baseUrl: `https://${canary}.invalid/v1`,
+      extraHeaders: { 'X-Canary': canary },
+    };
+    const job = await start();
+    await whenJobsIdle();
+    expect((await getJob(job.id))?.state).toBe('succeeded');
+    const raw = await openDB(JOB_DB_NAME);
+    const stored = JSON.stringify(
+      await Promise.all([...raw.objectStoreNames].map((name) => raw.getAll(name))),
+    );
+    raw.close();
+    expect(stored).toContain('Folder/Sorted');
+    expect(stored).not.toContain(canary);
   });
 });

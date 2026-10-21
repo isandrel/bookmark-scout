@@ -7367,6 +7367,10 @@
         "message": "En pause : les fonctions d'IA sont désactivées. Activez-les dans les Paramètres, puis reprenez.",
         "description": "A background task paused because AI features were turned off"
     },
+    "jobs_blockedSiteAccess": {
+        "message": "En pause : l’accès aux sites web a été retiré. Reprendre le redemande.",
+        "description": "A background task paused because website access was taken back while it ran"
+    },
     "jobs_blockedAISetup": {
         "message": "En pause : le service d'IA n'est pas prêt ($1). Corrigez-le dans les Paramètres, puis reprenez.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"

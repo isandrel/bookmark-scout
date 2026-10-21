@@ -35,8 +35,16 @@ export function JobStatus({
   const active = isJobActive(job);
   const errorMessage = jobErrorMessage(job);
   const run = (action: keyof typeof ACTION_ICONS) => {
+    const permission = action === 'resume' ? jobResumePermission(job) : undefined;
+    // Asked first, while the click still counts as the user's gesture.
+    const granted = permission ? requestPermission(permission) : Promise.resolve(true);
     setBusy(true);
-    void sendCommand({ type: action, jobId: job.id }).finally(() => setBusy(false));
+    void granted
+      .then((ok) => {
+        if (ok) return sendCommand({ type: action, jobId: job.id });
+        if (permission) notifyPermissionDenied(permission);
+      })
+      .finally(() => setBusy(false));
   };
 
   return (
