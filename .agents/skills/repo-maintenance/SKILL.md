@@ -104,7 +104,7 @@ The TOML has `ignore` patterns (every `*.md`, `.agents/`, `backlog/`, `store/`),
 
 ## Branch and worktree cleanup
 
-Only with the user's approval. `scripts/cleanup-branches.sh` (dry run by default, `--apply` to act):
+The branch and worktree of a PR you made go right after it merges, without asking (the `feature-delivery` skill, step 5): the maintainer wants no finished branches or worktrees lying around. Everything else, and any bulk cleanup, only with the user's approval, through `scripts/cleanup-branches.sh` (dry run by default, `--apply` to act):
 
 - Saves every ref to `~/.cache/bookmark-scout-branch-backup-<time>.txt` first. Restore with `git branch <name> <sha>` until git garbage-collects.
 - Maps each branch to its PR state with `gh pr list --state all`. Squash merges hide ancestry, so do not rely on `git branch --merged`.

@@ -53,6 +53,11 @@ function describeAPICallError(error: APICallError): string {
   return key ? t(key) : t('ai_connErrorHttp', [String(statusCode), hostOf(url)]);
 }
 
+/** Whether the model answered, but not in the requested shape (or not at all). */
+export function isNoAnswerError(error: unknown): boolean {
+  return NO_ANSWER_ERRORS.some((name) => isSDKError(error, `AI_${name}`));
+}
+
 /** A message for a failed AI request that the UI can show in the user's language. */
 export function describeAIError(error: unknown): string {
   if (isRetryError(error)) {

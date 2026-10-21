@@ -40,8 +40,19 @@ export const JOB_LIMITS = {
 } as const;
 
 /** What a job does. Each kind has an adapter in the coordinator. */
-export const JOB_KINDS = ['deadLinks', 'metadataFetcher', 'siteIcons'] as const;
+export const JOB_KINDS = ['deadLinks', 'metadataFetcher', 'siteIcons', 'reorganization'] as const;
 export type JobKind = (typeof JOB_KINDS)[number];
+
+/** Why a job cannot go on until the user acts; each has a message (`JOB_BLOCK_KEYS` in `job-view.ts`). */
+export const JOB_BLOCK_CODES = [
+  'ai-off',
+  'ai-not-set-up',
+  'ai-service-changed',
+  'ai-request',
+  'uncertain-request',
+  'slice-setup',
+] as const;
+export type JobBlockCode = (typeof JOB_BLOCK_CODES)[number];
 
 /** Where a job was started from, as far as the extension knows. */
 export const JOB_SOURCES = ['manager', 'popup', 'sidePanel'] as const;
@@ -138,6 +149,11 @@ export const jobItemSchema = z.strictObject({
   /** The result, validated by the kind's adapter; null until done. */
   result: z.unknown(),
   attempts: z.number().int().nonnegative(),
+  /**
+   * When a request that may cost money (an AI request) was sent for the item and its answer is
+   * not saved yet. A stopped worker leaves it set, so the job asks the user before sending again.
+   */
+  inFlightSince: z.number().optional(),
 });
 export type JobItem = z.infer<typeof jobItemSchema>;
 
@@ -415,8 +431,9 @@ export async function commitItem(
     await tx.done;
     return undefined;
   }
+  const { inFlightSince: _answered, ...settled } = item;
   await tx.objectStore('items').put({
-    ...item,
+    ...settled,
     state: 'done',
     outcome,
     result,
@@ -436,6 +453,46 @@ export async function commitItem(
   }
   broadcast({ jobId, revision: next.revision });
   return next;
+}
+
+/**
+ * Marks a pending item as having a request in flight (`since`), or clears the mark once the
+ * request ended without a result to save. Refused, like a commit, unless the claim holds.
+ */
+export async function markItemInFlight(
+  jobId: string,
+  generation: number,
+  index: number,
+  since: number | undefined,
+): Promise<boolean> {
+  const db = await openJobDb();
+  const tx = db.transaction(['jobs', 'items'], 'readwrite');
+  const job = parseJob(await tx.objectStore('jobs').get(jobId));
+  const item = await tx.objectStore('items').get([jobId, index]);
+  if (!job || job.generation !== generation || !item || item.state !== 'pending') {
+    await tx.done;
+    return false;
+  }
+  const { inFlightSince: _previous, ...rest } = item;
+  await tx.objectStore('items').put(since === undefined ? rest : { ...rest, inFlightSince: since });
+  await tx.done;
+  return true;
+}
+
+/** Pending items whose request may have reached the provider with no answer saved. */
+export async function getInFlightItems(jobId: string): Promise<JobItem[]> {
+  const pending = await getPendingItems(jobId, Number.MAX_SAFE_INTEGER);
+  return pending.filter((item) => item.inFlightSince !== undefined);
+}
+
+/** Clears every in-flight mark of a job: the user chose to send those requests again. */
+export async function clearInFlightItems(jobId: string): Promise<void> {
+  const items = await getInFlightItems(jobId);
+  if (items.length === 0) return;
+  const db = await openJobDb();
+  const tx = db.transaction('items', 'readwrite');
+  for (const { inFlightSince: _sent, ...item } of items) void tx.store.put(item);
+  await tx.done;
 }
 
 /** Items done so far: succeeded, skipped, and failed. */

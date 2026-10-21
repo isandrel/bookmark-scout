@@ -74,7 +74,7 @@ async function askHost(request: QuickSaveHostRequest): Promise<QuickSaveHostResp
     | QuickSaveHostResponse
     | undefined;
   if (!response) throw new Error(t('quickSave_aiHostUnavailable'));
-  if (!response.ok) throw new Error(response.error);
+  if (!response.ok) throw new AIHostError(response.error, response.errorKind);
   return response;
 }
 
@@ -82,7 +82,20 @@ async function askHost(request: QuickSaveHostRequest): Promise<QuickSaveHostResp
 export type AIHostSchemaOutputs = {
   folderRecommendations: FolderRecommendationsObject;
   folderIds: BuiltinFolderAnswer;
+  reorganization: ReorganizationResult;
 };
+
+/** An AI call the host page could not complete, with whether the model answered at all. */
+export class AIHostError extends Error {
+  constructor(
+    message: string,
+    /** `answer`: the request worked, but the answer did not fit; the next request may work. */
+    readonly kind?: 'answer',
+  ) {
+    super(message);
+    this.name = 'AIHostError';
+  }
+}
 
 type AIHostGenerateRequest<Name extends AIHostSchemaName> = {
   schema: Name;

@@ -109,4 +109,4 @@ bunx nx run extension:test:e2e
 
 - Verify the latest CI run on `main` is green, not just the PR checks.
 - Summarize per PR: what changed, tests added, verification results, deferred items, and manual checks still needed (Firefox and Edge runtime, live permission prompts, real AI providers).
-- Offer to clean up finished worktrees and branches; delete them only with approval, using `repo-maintenance/scripts/cleanup-branches.sh` (dry run first, ref backup).
+- Remove each agent's worktree and branch as soon as its PR merges (the `feature-delivery` skill, step 5), so finished work never piles up; anything else (unmerged, unpushed, or not yours) only with approval, using `repo-maintenance/scripts/cleanup-branches.sh` (dry run first, ref backup).

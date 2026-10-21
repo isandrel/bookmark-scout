@@ -8,6 +8,7 @@ const JOB_TITLE_KEYS: Record<JobKind, MessageKey> = {
   deadLinks: 'tools_checkDeadLinks',
   metadataFetcher: 'tools_metadataFetcher',
   siteIcons: 'tools_siteIcons',
+  reorganization: 'tools_aiReorganize',
 };
 
 export function jobTitle(job: Pick<JobRecord, 'kind'>): string {
@@ -47,6 +48,25 @@ export function jobActions(state: JobState): ('pause' | 'resume' | 'cancel' | 'd
   if (state === 'pause_requested') return ['cancel'];
   if (FINISHED_JOB_STATES.has(state)) return ['delete'];
   return [];
+}
+
+const JOB_BLOCK_KEYS: Record<JobBlockCode, MessageKey> = {
+  'ai-off': 'jobs_blockedAIOff',
+  'ai-not-set-up': 'jobs_blockedAISetup',
+  'ai-service-changed': 'jobs_blockedServiceChanged',
+  'ai-request': 'jobs_blockedAIRequest',
+  'uncertain-request': 'jobs_uncertainRequest',
+  'slice-setup': 'jobs_errorSetup',
+};
+
+/** Why a job stopped or waits for the user, in the current language; undefined when it did not. */
+export function jobErrorMessage(job: Pick<JobRecord, 'lastError'>): string | undefined {
+  const error = job.lastError;
+  if (!error) return undefined;
+  const key = (JOB_BLOCK_CODES as readonly string[]).includes(error.code)
+    ? JOB_BLOCK_KEYS[error.code as JobBlockCode]
+    : 'jobs_errorSetup';
+  return t(key, error.message);
 }
 
 /** Whether a job is still going (its progress can change). */

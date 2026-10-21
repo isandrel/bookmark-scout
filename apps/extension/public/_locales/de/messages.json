@@ -7362,5 +7362,29 @@
     "jobs_popupMany": {
         "message": "Hintergrundaufgaben: $1 laufen",
         "description": "Background tasks: popupMany"
+    },
+    "jobs_blockedAIOff": {
+        "message": "Angehalten: KI-Funktionen sind aus. Schalten Sie sie in den Einstellungen ein und setzen Sie dann fort.",
+        "description": "A background task paused because AI features were turned off"
+    },
+    "jobs_blockedAISetup": {
+        "message": "Angehalten: Der KI-Dienst ist nicht bereit ($1). Beheben Sie das in den Einstellungen und setzen Sie dann fort.",
+        "description": "A background task paused because its AI service is not set up; $1 is the reason"
+    },
+    "jobs_blockedServiceChanged": {
+        "message": "Angehalten: Der KI-Dienst hat sich seit dem Start dieser Aufgabe geändert, daher wurde nichts mehr gesendet. Starten Sie die Aufgabe neu, um den neuen Dienst zu verwenden.",
+        "description": "A background task paused because the AI service changed after it started"
+    },
+    "jobs_blockedAIRequest": {
+        "message": "Angehalten: Der KI-Dienst hat nicht geantwortet ($1). Setzen Sie fort, um es erneut zu versuchen.",
+        "description": "A background task paused because an AI request failed; $1 is the reason"
+    },
+    "jobs_uncertainRequest": {
+        "message": "Angehalten: Der Browser wurde beendet, während auf eine KI-Antwort gewartet wurde, die möglicherweise schon berechnet wurde. Fortsetzen sendet diese Anfrage erneut.",
+        "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
+    },
+    "jobs_errorSetup": {
+        "message": "Diese Aufgabe konnte nicht weiterlaufen. Starten Sie sie neu.",
+        "description": "A background task stopped and cannot go on"
     }
 }

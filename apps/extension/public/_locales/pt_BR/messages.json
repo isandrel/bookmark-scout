@@ -7362,5 +7362,29 @@
     "jobs_popupMany": {
         "message": "Tarefas em segundo plano: $1 em andamento",
         "description": "Background tasks: popupMany"
+    },
+    "jobs_blockedAIOff": {
+        "message": "Pausada: os recursos de IA estão desativados. Ative-os em Configurações e retome.",
+        "description": "A background task paused because AI features were turned off"
+    },
+    "jobs_blockedAISetup": {
+        "message": "Pausada: o serviço de IA não está pronto ($1). Corrija-o em Configurações e retome.",
+        "description": "A background task paused because its AI service is not set up; $1 is the reason"
+    },
+    "jobs_blockedServiceChanged": {
+        "message": "Pausada: o serviço de IA mudou desde que esta tarefa começou, então nada mais foi enviado. Inicie a tarefa de novo para usar o novo serviço.",
+        "description": "A background task paused because the AI service changed after it started"
+    },
+    "jobs_blockedAIRequest": {
+        "message": "Pausada: o serviço de IA não respondeu ($1). Retome para tentar de novo.",
+        "description": "A background task paused because an AI request failed; $1 is the reason"
+    },
+    "jobs_uncertainRequest": {
+        "message": "Pausada: o navegador parou enquanto esperava uma resposta da IA, que talvez já tenha sido cobrada. Retomar envia essa solicitação de novo.",
+        "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
+    },
+    "jobs_errorSetup": {
+        "message": "Esta tarefa não pôde continuar. Inicie-a de novo.",
+        "description": "A background task stopped and cannot go on"
     }
 }

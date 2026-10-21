@@ -373,6 +373,8 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 
 ## Default agent workflow
 
+The `feature-delivery` skill is this workflow in full, from a fresh worktree to a merged PR and the branch and worktree removed right after the merge.
+
 1. identify the target app and read the relevant local files
 2. read the matching nested `AGENTS.md` if one exists
 3. understand the current implementation before proposing structural changes
@@ -388,7 +390,7 @@ Each app keeps its design file next to its `AGENTS.md`: `apps/extension/DESIGN.m
 
 Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Rules go in `AGENTS.md` files and workflows in skills; never add vendor-specific instruction files such as `CLAUDE.md`, `.cursorrules`, or `GEMINI.md`. Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
 
-Current skills: `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `extension-bookmark-actions`, `extension-stored-data`, `extension-performance`, `mcp-bridge-change`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
+Current skills: `feature-delivery`, `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `extension-bookmark-actions`, `extension-stored-data`, `extension-performance`, `extension-background-jobs`, `mcp-bridge-change`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
 
 Update a skill when a session teaches a lesson that future agents would otherwise relearn.
 

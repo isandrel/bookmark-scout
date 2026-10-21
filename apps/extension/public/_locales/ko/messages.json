@@ -7342,5 +7342,29 @@
     "jobs_popupMany": {
         "message": "백그라운드 작업: $1개 실행 중",
         "description": "Background tasks: popupMany"
+    },
+    "jobs_blockedAIOff": {
+        "message": "일시 중지됨: AI 기능이 꺼져 있습니다. 설정에서 켠 뒤 다시 시작하세요.",
+        "description": "A background task paused because AI features were turned off"
+    },
+    "jobs_blockedAISetup": {
+        "message": "일시 중지됨: AI 서비스가 준비되지 않았습니다($1). 설정에서 고친 뒤 다시 시작하세요.",
+        "description": "A background task paused because its AI service is not set up; $1 is the reason"
+    },
+    "jobs_blockedServiceChanged": {
+        "message": "일시 중지됨: 이 작업이 시작된 뒤 AI 서비스가 바뀌어 더 이상 보내지 않았습니다. 새 서비스를 쓰려면 작업을 다시 시작하세요.",
+        "description": "A background task paused because the AI service changed after it started"
+    },
+    "jobs_blockedAIRequest": {
+        "message": "일시 중지됨: AI 서비스가 응답하지 않았습니다($1). 다시 시작하면 다시 시도합니다.",
+        "description": "A background task paused because an AI request failed; $1 is the reason"
+    },
+    "jobs_uncertainRequest": {
+        "message": "일시 중지됨: AI 응답을 기다리는 동안 브라우저가 멈췄으며, 이 응답은 이미 요금이 청구되었을 수 있습니다. 다시 시작하면 그 요청을 다시 보냅니다.",
+        "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
+    },
+    "jobs_errorSetup": {
+        "message": "이 작업을 계속할 수 없었습니다. 다시 시작하세요.",
+        "description": "A background task stopped and cannot go on"
     }
 }

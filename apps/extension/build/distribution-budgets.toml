@@ -80,27 +80,32 @@
 # coordinator in the background, the job status and Background tasks UI, and their messages in 9
 # languages. Firefox measured ZIP 1,711,048, 5,467,976 B uncompressed, 3,612,808 B of JavaScript,
 # and 1,297,198 B of locales.
+# Raised on 2026-10-21 (ZIP 1,720,000 to 1,740,000, uncompressed 5,480,000 to 5,520,000, javascript
+# 3,625,000 to 3,660,000, locales 1,305,000 to 1,320,000) for AI Folder Reorganization as a job
+# (the reorganization module in the background and AI host page, why a job paused in 9
+# languages). Firefox measured ZIP 1,723,758, 5,503,288 B uncompressed, 3,640,388 B of
+# JavaScript, and 1,304,930 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_720_000
-raw_bytes = 5_480_000
+zip_bytes = 1_740_000
+raw_bytes = 5_520_000
 
 [targets.edge]
-zip_bytes = 1_720_000
-raw_bytes = 5_480_000
+zip_bytes = 1_740_000
+raw_bytes = 5_520_000
 
 [targets.firefox]
-zip_bytes = 1_720_000
-raw_bytes = 5_480_000
+zip_bytes = 1_740_000
+raw_bytes = 5_520_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_625_000
+javascript = 3_660_000
 css = 84_000
 fonts = 143_000
-locales = 1_305_000
+locales = 1_320_000
 images = 320_000
 other = 27_000

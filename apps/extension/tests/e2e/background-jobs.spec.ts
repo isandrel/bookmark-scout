@@ -13,8 +13,15 @@ import {
   chromium,
   type Locator,
   type Page,
+  type Route,
   type Worker,
 } from '@playwright/test';
+import {
+  MOCK_PROVIDER_BASE_URL,
+  MOCK_PROVIDER_CORS_HEADERS,
+  mockChatCompletionBody,
+  seedMockCustomProvider,
+} from './ai-provider-mock';
 import { expect, test } from './fixtures';
 import { managerUrl } from './manager-helpers';
 import { removeTempDir } from './temp-dirs';
@@ -65,7 +72,7 @@ async function startHeldSite(): Promise<HeldSite> {
     res.end(
       path === '/icon-page'
         ? '<head><link rel="icon" href="/icon.png"></head>'
-        : `<head><title>${link ? `Title ${link[1]}` : 'Held'}</title></head>`,
+        : `<head><title>${link ? `Title ${Number(link[1])}` : 'Held'}</title></head>`,
     );
   };
   const server: Server = createServer((req, res) => {
@@ -271,6 +278,10 @@ test('pause stops new requests, and resume asks only for links not yet checked (
     sendCommand(page, { type: 'resume', jobId: paused.id }),
     sendCommand(popup, { type: 'resume', jobId: paused.id }),
   ]);
+  // The page that started the job is still waiting for it, so its results open when it finishes.
+  const review = page.getByRole('dialog', { name: 'Check Dead Links' });
+  await expect(review.locator('[data-slot="tool-result-row"]')).toHaveCount(LINK_COUNT);
+  await review.getByRole('button', { name: 'Close' }).first().click();
   await expect(status).toHaveAttribute('data-job-state', 'succeeded');
   const jobs = await storedJobs(extensionWorker);
   expect(jobs.map((job) => job.id)).toEqual([paused.id]);
@@ -378,6 +389,152 @@ test('Refresh Site Icons keeps going with its page closed, and a later page save
   ).toBeVisible();
   await review.getByRole('button', { name: 'Save 1 icon' }).click();
   await expect(later).toContainText('1 icon saved');
+});
+
+/** Moves every bookmark of a reorganization request into "<folder>/Sorted". */
+function sortedAnswer(route: Route, folder: string) {
+  const { messages } = route.request().postDataJSON() as { messages: { content: string }[] };
+  const request = JSON.parse(messages.at(-1)?.content ?? '{}') as {
+    bookmarks: { id: string; title: string }[];
+  };
+  return mockChatCompletionBody({
+    operations: request.bookmarks.map((bookmark) => ({
+      bookmarkId: bookmark.id,
+      bookmarkTitle: bookmark.title,
+      toFolderPath: `${folder}/Sorted`,
+      confidence: 0.9,
+      reason: 'Sorted',
+    })),
+    summary: 'Sorted',
+  });
+}
+
+async function seedReorganization(worker: Worker, folder: string) {
+  const seeded = await seedFolder(worker, folder, [
+    { title: 'First', url: 'https://e2e.invalid/first' },
+    { title: 'Second', url: 'https://e2e.invalid/second' },
+    { title: 'Third', url: 'https://e2e.invalid/third' },
+  ]);
+  await seedMockCustomProvider(worker);
+  await setSettings(worker, {
+    reorganizationEnabled: true,
+    reorganizationMinConfidence: 0.5,
+    // Two bookmarks a request: three make two requests.
+    reorganizationBatchSize: 2,
+    reorganizationDefaultScope: 'folder',
+  });
+  return seeded;
+}
+
+const childTitles = (worker: Worker, id: string) =>
+  worker.evaluate(
+    async (parentId) => (await chrome.bookmarks.getChildren(parentId)).map((item) => item.title),
+    id,
+  );
+
+test('AI Folder Reorganization finishes with its page closed and moves nothing until a later page applies the plan (J01, J41)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedReorganization(extensionWorker, 'Reorg Folder');
+  const held: Route[] = [];
+  let answering = false;
+  await context.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: MOCK_PROVIDER_CORS_HEADERS });
+      return;
+    }
+    if (!answering) {
+      held.push(route);
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: MOCK_PROVIDER_CORS_HEADERS,
+      body: sortedAnswer(route, 'Reorg Folder'),
+    });
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'AI Folder Reorganization').getByRole('button', { name: 'Analyze' }).click();
+  await expect.poll(() => held.length).toBe(1);
+  await page.close();
+  answering = true;
+  for (const route of held) {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: MOCK_PROVIDER_CORS_HEADERS,
+      body: sortedAnswer(route, 'Reorg Folder'),
+    });
+  }
+  await expect
+    .poll(async () => (await latestJob(extensionWorker, 'reorganization'))?.state)
+    .toBe('succeeded');
+  // The plan waits for review: nothing moved.
+  expect(await childTitles(extensionWorker, folderId)).toEqual(['First', 'Second', 'Third']);
+
+  const manager = await context.newPage();
+  await openTools(manager, extensionId, folderId);
+  await toolCard(manager, 'AI Folder Reorganization')
+    .getByTestId('job-status')
+    .getByRole('button', { name: 'Review results' })
+    .click();
+  const review = manager.getByRole('dialog', { name: 'AI Folder Reorganization' });
+  await expect(review.getByText('New folders: 1', { exact: true })).toBeVisible();
+  await review.getByRole('button', { name: 'Apply Changes' }).click();
+  await expect.poll(() => childTitles(extensionWorker, folderId)).toEqual(['Sorted']);
+});
+
+test('AI Folder Reorganization pauses with the reason when the service fails, and goes on when resumed (J35, J37)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedReorganization(extensionWorker, 'Failing Folder');
+  let requests = 0;
+  await context.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: MOCK_PROVIDER_CORS_HEADERS });
+      return;
+    }
+    requests += 1;
+    // The second request (the second batch) is refused once.
+    if (requests === 2) {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        headers: MOCK_PROVIDER_CORS_HEADERS,
+        body: JSON.stringify({ error: { message: 'Invalid key' } }),
+      });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: MOCK_PROVIDER_CORS_HEADERS,
+      body: sortedAnswer(route, 'Failing Folder'),
+    });
+  });
+
+  await openTools(page, extensionId, folderId);
+  const card = toolCard(page, 'AI Folder Reorganization');
+  await card.getByRole('button', { name: 'Analyze' }).click();
+  const status = card.getByTestId('job-status');
+  await expect(status).toHaveAttribute('data-job-state', 'paused');
+  await expect(status.getByTestId('job-error')).toContainText('the AI service did not answer');
+  await expect(status.getByTestId('job-progress')).toContainText('1 of 2');
+  expect(requests).toBe(2);
+
+  await status.getByRole('button', { name: 'Resume' }).click();
+  // Only the batch that failed is asked again; the page that started the job opens the plan.
+  const review = page.getByRole('dialog', { name: 'AI Folder Reorganization' });
+  await expect(review.getByText('New folders: 1', { exact: true })).toBeVisible();
+  expect(requests).toBe(3);
 });
 
 async function launch(userDataDir: string, extensionPath: string, channel: string) {
