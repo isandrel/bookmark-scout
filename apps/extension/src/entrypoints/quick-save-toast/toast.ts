@@ -263,8 +263,8 @@ export function counterZoom(rootZoom: string): string {
 }
 
 /** A random id for this document; `crypto.randomUUID` is missing on plain `http:` pages. */
-function newDocumentToken(): string {
-  const bytes = crypto.getRandomValues(new Uint8Array(16));
+function newDocumentToken(length: number): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(length));
   return Array.from(bytes, byteToHex).join('');
 }
 
@@ -296,8 +296,9 @@ type Mounted = {
  */
 export function createQuickSaveToast(send: QuickSaveToastSend) {
   let mounted: Mounted | undefined;
-  // One controller per document: a page the tab navigated to gets a new one, with a new token.
-  const documentToken = newDocumentToken();
+  // One controller per document: a page the tab navigated to gets a new one, with a new token,
+  // made on the first view, which says how long it is.
+  let documentToken: string | undefined;
 
   const stopTimer = (state: Mounted) => {
     if (state.timer !== undefined) clearTimeout(state.timer);
@@ -404,6 +405,7 @@ export function createQuickSaveToast(send: QuickSaveToastSend) {
     view: QuickSaveToastView,
     binding?: QuickSaveToastBinding,
   ): QuickSaveRenderResult {
+    documentToken ??= newDocumentToken(view.documentTokenBytes);
     // The tab moved on to another page since this quick save began: the popup shows the result.
     if (!isBoundPage(binding, { document: documentToken, url: location.href })) {
       return { shown: false, document: documentToken };

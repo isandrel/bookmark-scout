@@ -11,8 +11,12 @@ show_favicons = true
 # Chrome and Edge: also show icons from the browser's own icon cache, for sites without an icon
 # saved by Refresh Site Icons. Needs the optional `favicon` permission, asked for when turned on.
 browser_icon_cache = false
-# Size of favicon icons in pixels: 16, 24, or 32
-favicon_size = 16
+# Size of favicon icons in pixels, one of the options; each option's label is a message key
+favicon_size = { default = 16, options = [
+  { value = 16, label = "settings_faviconSmall" },
+  { value = 24, label = "settings_faviconMedium" },
+  { value = 32, label = "settings_faviconLarge" },
+] }
 
 [dates]
 # How dates and times show everywhere (the manager's date columns, History, details): a format

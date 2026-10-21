@@ -14,6 +14,7 @@ const dragConfig = readConfig(
   z.strictObject({
     folder_edge_fraction: boundedNumber({ integer: false }),
     bookmark_split_fraction: z.number().gt(0).lt(1),
+    unmeasured_fraction: z.number().min(0).max(1),
     manager_auto_expand_ms: z.number().int().nonnegative(),
   }),
 );
@@ -25,6 +26,19 @@ export const MANAGER_DRAG_AUTO_EXPAND_MS = dragConfig.manager_auto_expand_ms;
 export const MANAGER_DRAG_TYPE = 'application/x-bookmark-scout-ids';
 
 export type BookmarkDropZone = 'before' | 'into' | 'after';
+
+/**
+ * How far down a row (`top`, `height`) the pointer is, from 0 to 1; the configured position when
+ * the row has no height, or the pointer is outside it (a drag event without a position).
+ */
+export function rowFraction(
+  clientY: number,
+  row: { top: number; height: number } | undefined,
+): number {
+  if (!row || row.height <= 0) return dragConfig.unmeasured_fraction;
+  const fraction = (clientY - row.top) / row.height;
+  return fraction >= 0 && fraction <= 1 ? fraction : dragConfig.unmeasured_fraction;
+}
 
 /** The zone at `fraction` of a row's height, for a row that takes drops beside it. */
 export function dropZoneAt(isFolder: boolean, fraction: number): BookmarkDropZone {

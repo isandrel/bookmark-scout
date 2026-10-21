@@ -118,14 +118,11 @@ const searchBookmarks = defineAction({
     const folder = input.folder ? resolveActionFolder(library, input.folder) : undefined;
     if (isActionError(folder)) return folder;
     const tags = (input.tags ?? []).map((tag) => tag.trim().toLowerCase()).filter(Boolean);
-    const domain = input.domain
-      ?.trim()
-      .toLowerCase()
-      .replace(/^www\./, '');
+    const domain = input.domain ? withoutWww(input.domain.trim().toLowerCase()) : undefined;
 
     const matches = library.bookmarks.flatMap((bookmark) => {
       if (folder && !isInFolder(bookmark.folder, folder)) return [];
-      if (domain && !hostnameMatchesDomain(bookmark.host.replace(/^www\./, ''), domain)) {
+      if (domain && !hostnameMatchesDomain(withoutWww(bookmark.host), domain)) {
         return [];
       }
       const added = bookmark.node.dateAdded ?? 0;
@@ -486,7 +483,12 @@ const suggestFolders = defineAction({
       folders: ranked.flatMap(({ id, score }) => {
         const folder = library.folderById.get(id);
         return folder
-          ? [{ ...toActionFolder(folder, { counts: false }), score: Math.round(score * 100) / 100 }]
+          ? [
+              {
+                ...toActionFolder(folder, { counts: false }),
+                score: roundTo(score, actionLimits.folder_score_decimals),
+              },
+            ]
           : [];
       }),
     };

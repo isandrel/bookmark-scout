@@ -246,11 +246,6 @@ export const PAGE_LANGUAGE = 'page';
 export const aiOutputLanguageSchema = z.enum([AUTO_LANGUAGE, PAGE_LANGUAGE, ...SUPPORTED_LOCALES]);
 export type AIOutputLanguage = z.infer<typeof aiOutputLanguageSchema>;
 
-export const faviconSizeSchema = z.literal([16, 24, 32]);
-export type FaviconSize = z.infer<typeof faviconSizeSchema>;
-
-export const maxSearchResultsSchema = z.literal([10, 20, 50, 100]);
-
 const toolScopeSchema = z.enum(['folder', 'all']);
 const contextMenuNamingSchema = z.enum(['link_text', 'page_title', 'link_url']);
 export const quickSaveFolderStrategySchema = z.enum(['best_match', 'last_used', 'fixed']);
@@ -398,7 +393,7 @@ function textField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.Z
 
 /** A bookmark folder, stored by id; empty means none chosen. */
 function folderField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.ZodString>> {
-  const schema = z.string().max(200);
+  const schema = z.string().max(INPUT_LIMITS.chars.folder_id);
   return {
     section: sectionOf(path),
     schema: schema.default(configValue(path, schema)),
@@ -501,20 +496,37 @@ function enumField<T extends OptionValues>(
   };
 }
 
-function literalField<T extends number>(
-  path: string,
-  stem: string,
-  schema: z.ZodLiteral<T>,
-  label: (value: T) => string,
-): FieldDefinition<z.ZodDefault<z.ZodLiteral<T>>> {
-  const value = configValue(path, schema);
+/**
+ * A number picked from the options its config lists (`{ default, options = [{ value, label }] }`):
+ * each label is a message key, given the value as its placeholder.
+ */
+function numberChoiceField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.ZodNumber>> {
+  const choice = configValue(
+    path,
+    z
+      .strictObject({
+        default: z.number(),
+        options: z.array(z.strictObject({ value: z.number(), label: z.string().min(1) })).min(1),
+      })
+      .refine(
+        ({ default: value, options }) => options.some((option) => option.value === value),
+        'default must be one of the options',
+      ),
+  );
+  const values = choice.options.map((option) => option.value);
   return {
     section: sectionOf(path),
-    schema: schema.default(value as z.util.NoUndefined<T>),
+    schema: z
+      .number()
+      .refine((value) => values.includes(value), 'must be one of the options')
+      .default(choice.default) as unknown as z.ZodDefault<z.ZodNumber>,
     meta: () => ({
       ...fieldLabels(stem),
       type: 'select',
-      options: [...schema.values].map((option) => ({ value: option, label: label(option) })),
+      options: choice.options.map((option) => ({
+        value: option.value,
+        label: t(option.label as MessageKey, String(option.value)),
+      })),
     }),
   };
 }
@@ -595,25 +607,10 @@ const fields = {
   ),
   showFavicons: switchField('appearance.theme_icons.show_favicons', 'showFavicons'),
   browserIconCache: switchField('appearance.theme_icons.browser_icon_cache', 'browserIconCache'),
-  faviconSize: literalField(
-    'appearance.theme_icons.favicon_size',
-    'faviconSize',
-    faviconSizeSchema,
-    (value) =>
-      ({
-        16: t('settings_faviconSmall'),
-        24: t('settings_faviconMedium'),
-        32: t('settings_faviconLarge'),
-      })[value],
-  ),
+  faviconSize: numberChoiceField('appearance.theme_icons.favicon_size', 'faviconSize'),
 
   searchDebounceMs: numberField('search.search.debounce_ms', 'searchDelay', { unit: 'ms' }),
-  maxSearchResults: literalField(
-    'search.search.max_results',
-    'maxResults',
-    maxSearchResultsSchema,
-    (value) => t('settings_results', String(value)),
-  ),
+  maxSearchResults: numberChoiceField('search.search.max_results', 'maxResults'),
   expandFoldersOnSearch: switchField('search.search.expand_folders', 'expandFolders'),
   searchHistory: switchField('search.search.history', 'searchHistory'),
   folderMatchesEnabled: switchField('search.folder_matches.enabled', 'folderMatchesEnabled'),

@@ -4,3 +4,6 @@
 # Bytes read from one page at most when only its <head> is needed (titles, descriptions, icon
 # links); reading stops earlier at the end of the <head>
 head_max_bytes = 524288
+# Characters of the previous chunk kept when looking for the end of the <head>, so a closing tag
+# split across two chunks is still found
+stop_pattern_overlap_chars = 16

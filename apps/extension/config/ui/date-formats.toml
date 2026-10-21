@@ -7,6 +7,10 @@
 # The parts every time shows besides its hour (each time format sets `hour`); `second` only
 # where a date and time show together. A date written with `date_style` takes `time_style`
 # instead, which cannot be mixed with single parts.
+# The date each choice shows as its sample in Settings: an afternoon, so it shows how dates are
+# ordered and 12- or 24-hour times. A local time, with no time zone.
+sample = "2026-03-14T15:09:26"
+
 [time_parts]
 minute = "2-digit"
 second = "2-digit"

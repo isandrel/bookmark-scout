@@ -22,6 +22,7 @@ const rankingConfig = readConfig(
   z.strictObject({
     k1: boundedNumber({ integer: false }),
     b: z.number().min(0).max(1),
+    idf_smoothing: z.number().positive(),
     min_score: z.number().min(0),
     name_weight: boundedNumber({ integer: false }),
     path_weight: boundedNumber({ integer: false }),
@@ -221,12 +222,12 @@ export function rankFolders(
   const total = index.documents.length;
   if (words.length === 0 || total === 0 || limit <= 0) return [];
 
-  const { k1, b } = rankingConfig;
+  const { k1, b, idf_smoothing: smoothing } = rankingConfig;
   const weights = words.flatMap((word) => {
     const frequency = index.documentFrequency.get(word);
     if (!frequency) return [];
     // BM25 with the +1 that keeps a word found in most folders from scoring below zero.
-    return [{ word, idf: Math.log(1 + (total - frequency + 0.5) / (frequency + 0.5)) }];
+    return [{ word, idf: Math.log(1 + (total - frequency + smoothing) / (frequency + smoothing)) }];
   });
   if (weights.length === 0) return [];
 

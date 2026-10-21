@@ -130,6 +130,9 @@ export type ContextMenuClickResult =
   | { success: true; folderTitle: string; bookmarkTitle: string }
   | { success: false; code: ContextMenuClickErrorCode; error?: string };
 
+/** A menu item id is the prefix, the item's type, and its folder id. */
+const MENU_ID_PARTS = 3;
+
 export function createMenuItemId(type: string, folderId: string): string {
   return `${MENU_PREFIX}${SEPARATOR}${type}${SEPARATOR}${folderId}`;
 }
@@ -139,7 +142,7 @@ export function parseMenuItemId(menuItemId: string): { type: string; folderId: s
     return null;
   }
   const parts = menuItemId.split(SEPARATOR);
-  if (parts.length < 3) return null;
+  if (parts.length < MENU_ID_PARTS) return null;
   return {
     type: parts[1],
     folderId: parts.slice(2).join(SEPARATOR), // Handle folder IDs with separators

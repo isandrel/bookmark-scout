@@ -11,8 +11,14 @@ max = { default = 5, min = 1, max = 10, step = 1 }
 typos = true
 
 [search]
-# Maximum number of search results to display: 10, 20, 50, or 100
-max_results = 20
+# Maximum number of search results to display, one of the options; the label message takes the
+# number
+max_results = { default = 20, options = [
+  { value = 10, label = "settings_results" },
+  { value = 20, label = "settings_results" },
+  { value = 50, label = "settings_results" },
+  { value = 100, label = "settings_results" },
+] }
 # Automatically expand folders when searching
 expand_folders = true
 # Remember and display recent searches

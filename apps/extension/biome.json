@@ -44,5 +44,17 @@
       "quoteStyle": "single",
       "trailingCommas": "all"
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noMagicNumbers": "error"
+          }
+        }
+      }
+    }
+  ]
 }

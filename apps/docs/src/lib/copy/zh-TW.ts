@@ -43,6 +43,7 @@ export const zhTW: DocsCopy = {
       mac: "Mac 上的 {keys}",
       other: "Windows 和 Linux 上的 {keys}",
       pair: "{primary}（{secondary}）",
+      click: "點擊",
     },
   },
 

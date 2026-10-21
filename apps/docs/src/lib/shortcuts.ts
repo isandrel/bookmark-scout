@@ -4,6 +4,7 @@ import {
   type ShortcutPair,
   shortcutNoteText,
   shortcutPair,
+  withClickWord,
 } from "@bookmark-scout/config";
 import { getCopy } from "@/lib/copy";
 
@@ -26,8 +27,17 @@ const NO_NOTE: ShortcutNoteText = { before: "", middle: "", after: "" };
 
 /** The parts of a shortcut's text: the primary platform's keys, and the note when the other's differ. */
 export function shortcutParts(id: string, locale: string): ShortcutParts {
-  const pair = shortcutPair(config, id);
   const copy = getCopy(locale).shortcut;
+  const named = shortcutPair(config, id);
+  // A mouse gesture names the click in the page's language.
+  const words = (keys: string[]) =>
+    keys.map((way) => withClickWord(way, copy.notes));
+  const pair: ShortcutPair = {
+    primary: { ...named.primary, keys: words(named.primary.keys) },
+    ...(named.secondary
+      ? { secondary: { ...named.secondary, keys: words(named.secondary.keys) } }
+      : {}),
+  };
   const note = pair.secondary
     ? shortcutNoteText(copy.notes, [
         pair.primary.platform,

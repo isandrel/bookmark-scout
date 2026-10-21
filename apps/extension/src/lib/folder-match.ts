@@ -17,6 +17,7 @@ const folderMatchConfig = readConfig(
   'ui/popup-folder-matches',
   z.strictObject({
     fuzzy_min_length: boundedNumber({ integer: true }),
+    typo_max_edits: z.number().int().positive(),
     recent_bonus: boundedNumber({ integer: true }),
     max_height_fraction: z.number().gt(0).max(1),
   }),
@@ -46,9 +47,12 @@ function normalize(text: string): string {
   return text.normalize('NFKC').toLocaleLowerCase();
 }
 
-/** Damerau-Levenshtein distance; lengths more than 2 apart return 3, which is all the typo check needs. */
-function editDistanceAtMost2(a: string, b: string): number {
-  if (Math.abs(a.length - b.length) > 2) return 3;
+/**
+ * Damerau-Levenshtein distance, or `limit + 1` when the lengths alone differ by more than
+ * `limit`, which is all the typo check needs.
+ */
+function editDistanceWithin(a: string, b: string, limit: number): number {
+  if (Math.abs(a.length - b.length) > limit) return limit + 1;
   const rows = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
   for (let j = 1; j <= b.length; j++) rows[0][j] = j;
   for (let i = 1; i <= a.length; i++) {
@@ -70,7 +74,8 @@ function editDistanceAtMost2(a: string, b: string): number {
 function isOneTypoAway(word: string, name: string): boolean {
   if (word.length < folderMatchConfig.fuzzy_min_length) return false;
   for (const [nameWord] of name.matchAll(NAME_WORD)) {
-    if (editDistanceAtMost2(word, nameWord) <= 1) return true;
+    const limit = folderMatchConfig.typo_max_edits;
+    if (editDistanceWithin(word, nameWord, limit) <= limit) return true;
   }
   return false;
 }

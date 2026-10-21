@@ -2,7 +2,8 @@
   "shortcutNotes": {
     "mac": "{keys} no Mac",
     "other": "{keys} no Windows e no Linux",
-    "pair": "{primary} ({secondary})"
+    "pair": "{primary} ({secondary})",
+    "click": "clique"
   },
   "metadata": {
     "title": "Bookmark Scout – Salve favoritos na pasta certa, rápido",
@@ -137,7 +138,7 @@
           "Pesquise em todos os seus favoritos enquanto digita",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
           "Salve uma pesquisa, e ela sempre mostra os resultados atualizados",
-          "Selecione linhas com Shift e Ctrl, clique com o botão direito para recortar, copiar, colar e abrir todos, e arraste favoritos e pastas para onde eles devem ficar",
+          "Selecione várias linhas com {{SHORTCUT:mouse.select_toggle}}, clique com o botão direito para recortar, copiar, colar e abrir todos, e arraste favoritos e pastas para onde eles devem ficar",
           "Desfaça e refaça alterações com {{SHORTCUT:manager.undo}} e {{SHORTCUT:manager.redo}}, mesmo depois de recarregar a página",
           "Importe favoritos de um arquivo depois de uma prévia e exporte-os como HTML, JSON, Markdown ou CSV",
           "Crie um link para uma pasta ou uma pesquisa e navegue por tudo com o teclado"
@@ -154,7 +155,8 @@
           "Encontre links quebrados e corrija-os: exclua, use o redirecionamento, aponte para uma cópia arquivada ou edite o URL",
           "Busque títulos de página e aplique só os que você escolher",
           "Baixe o ícone de cada site para que os favoritos o mostrem, inclusive no Firefox",
-          "Desfaça exclusões e limpezas pela notificação que aparece em seguida"
+          "Desfaça exclusões e limpezas pela notificação que aparece em seguida",
+          "Veja no histórico cada alteração nos seus favoritos, até as feitas fora do Bookmark Scout, e recupere os excluídos, mesmo depois de reiniciar o navegador"
         ]
       },
       "ai": {

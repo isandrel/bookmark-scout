@@ -71,7 +71,9 @@ export async function beginAuditOperation(init: AuditInit, now = preciseNow()): 
     label: init.label,
     source,
     actor: init.actor ?? (source === 'background' ? 'system' : 'user'),
-    ...(init.actorLabel ? { actorLabel: init.actorLabel.slice(0, 200) } : {}),
+    ...(init.actorLabel
+      ? { actorLabel: init.actorLabel.slice(0, INPUT_LIMITS.chars.audit_actor_label) }
+      : {}),
     state: 'prepared',
     counts: { planned: 0, applied: 0, skipped: 0, failed: 0 },
     ...(init.replay ? { replay: init.replay } : {}),
