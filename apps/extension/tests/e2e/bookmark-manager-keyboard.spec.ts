@@ -407,6 +407,10 @@ test("a deletion toast's Undo and Ctrl/Cmd+Z share one history", async ({
   await page.locator('tbody tr').first().focus();
   await page.keyboard.press('ControlOrMeta+Shift+z');
   await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toEqual(['Toast 02']);
+  // Each step ends with its toast; a key pressed before that is ignored, like a held key.
+  await expect(
+    toastRegion(page).getByText('✓ Redone: Delete "Toast 01"', { exact: true }),
+  ).toBeVisible();
   await page.keyboard.press('ControlOrMeta+z');
   await expect
     .poll(() => childTitles(extensionWorker, seeded.folderId))

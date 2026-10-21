@@ -64,7 +64,7 @@ export function ManagerShortcutsHelp({ open, onOpenChange }: ManagerShortcutsHel
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto shrink-0"
+            className="ml-auto hidden shrink-0 sm:inline-flex"
             aria-label={t('shortcuts_title')}
             aria-keyshortcuts={ariaKeyShortcuts(manager.showHelp)}
             title={t('shortcuts_buttonTitle')}

@@ -6738,5 +6738,345 @@
     "error_auditStore": {
         "message": "변경하지 않았습니다: 이 기기에 북마크 기록을 저장할 수 없었습니다.",
         "description": "Error when a change that removes bookmarks did not start because its Audit History record could not be stored on this device (fail closed)."
+    },
+    "history_button": {
+        "message": "북마크 기록",
+        "description": "Manager header button that opens the bookmark change History."
+    },
+    "history_title": {
+        "message": "북마크 기록",
+        "description": "Title of the History dialog in the manager."
+    },
+    "history_description": {
+        "message": "Bookmark Scout가 북마크에 한 변경으로, 이 기기에만 보관됩니다. 이 버전부터 시작되며 확장 프로그램이 꺼져 있던 동안의 변경은 알 수 없습니다.",
+        "description": "Explanation under the History title."
+    },
+    "history_filterLabel": {
+        "message": "표시",
+        "description": "Accessible name of the History filter segments."
+    },
+    "history_filterAll": {
+        "message": "모두",
+        "description": "History filter: every record."
+    },
+    "history_filterAttention": {
+        "message": "확인 필요",
+        "description": "History filter: records that are partial, interrupted, need review, or conflicted."
+    },
+    "history_filterExtension": {
+        "message": "Bookmark Scout",
+        "description": "History filter: changes Bookmark Scout made."
+    },
+    "history_filterElsewhere": {
+        "message": "다른 곳에서",
+        "description": "History filter: changes seen from elsewhere (unknown source, or found after a gap)."
+    },
+    "history_search": {
+        "message": "기록 검색",
+        "description": "Search box placeholder and label in the History."
+    },
+    "history_export": {
+        "message": "기록 내보내기",
+        "description": "Button that saves the History as a JSON file."
+    },
+    "history_exportConfirmTitle": {
+        "message": "기록을 내보낼까요?",
+        "description": "Title of the privacy confirmation before exporting the History."
+    },
+    "history_exportConfirm": {
+        "message": "파일에는 변경된 북마크의 제목, 주소, 폴더가 들어 있습니다. 암호화되지 않으므로 다른 사람과 공유하지 마세요.",
+        "description": "Privacy notice before exporting the History."
+    },
+    "history_clear": {
+        "message": "기록 지우기",
+        "description": "Button that clears finished History records."
+    },
+    "history_clearConfirmTitle": {
+        "message": "기록을 지울까요?",
+        "description": "Title of the confirmation before clearing the History."
+    },
+    "history_clearConfirm": {
+        "message": "완료된 기록을 이 기기에서 지웁니다. 아직 확인이 필요한 기록은 남습니다. 북마크는 바뀌지 않습니다.",
+        "description": "What clearing the History removes and keeps."
+    },
+    "history_cleared": {
+        "message": "기록 $1개를 지웠습니다. 아직 확인이 필요한 $2개는 남겼습니다.",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
+    "history_loading": {
+        "message": "불러오는 중…",
+        "description": "Shown while History records load."
+    },
+    "history_unavailable": {
+        "message": "지금 이 기기에서 기록을 읽을 수 없습니다. 북마크에는 영향이 없습니다.",
+        "description": "Shown when the History storage cannot be read."
+    },
+    "history_corrupt": {
+        "message": "기록 $1개를 읽을 수 없어 표시하지 않습니다.",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_empty": {
+        "message": "아직 기록된 변경이 없습니다.",
+        "description": "History with no records yet."
+    },
+    "history_noMatches": {
+        "message": "일치하는 기록이 없습니다.",
+        "description": "History filter or search with no matching records."
+    },
+    "history_statusInProgress": {
+        "message": "진행 중",
+        "description": "History status: a change still running."
+    },
+    "history_statusVerified": {
+        "message": "확인됨",
+        "description": "History status: everything planned was done and read back as intended."
+    },
+    "history_statusPartial": {
+        "message": "일부만",
+        "description": "History status: part of the change was done, part skipped or failed."
+    },
+    "history_statusFailed": {
+        "message": "실행 안 됨",
+        "description": "History status: nothing was changed."
+    },
+    "history_statusNeedsReview": {
+        "message": "확인 필요",
+        "description": "History status: the result did not read back as intended."
+    },
+    "history_statusConflicted": {
+        "message": "충돌",
+        "description": "History status: a conflict with newer changes."
+    },
+    "history_statusObserved": {
+        "message": "감지됨",
+        "description": "History status: a change seen from elsewhere."
+    },
+    "history_statusInterrupted": {
+        "message": "중단됨",
+        "description": "History status: a change stopped before it finished (a closed page or browser)."
+    },
+    "history_badgeUndone": {
+        "message": "실행 취소됨",
+        "description": "History badge: the change was undone."
+    },
+    "history_badgePartlyUndone": {
+        "message": "일부 실행 취소됨",
+        "description": "History badge: an undo brought back only part of the change."
+    },
+    "history_sourceManager": {
+        "message": "관리자",
+        "description": "History source: the bookmark manager."
+    },
+    "history_sourceTools": {
+        "message": "도구",
+        "description": "History source: a tool in the Tools sidebar."
+    },
+    "history_sourcePopup": {
+        "message": "팝업",
+        "description": "History source: the toolbar popup."
+    },
+    "history_sourceSidePanel": {
+        "message": "사이드 패널",
+        "description": "History source: the side panel."
+    },
+    "history_sourceSettings": {
+        "message": "설정",
+        "description": "History source: the Settings page."
+    },
+    "history_sourceQuickSave": {
+        "message": "빠른 저장",
+        "description": "History source: the quick save shortcut."
+    },
+    "history_sourceContextMenu": {
+        "message": "오른쪽 클릭 메뉴",
+        "description": "History source: the right-click menu on web pages."
+    },
+    "history_sourceAskAi": {
+        "message": "AI에게 묻기",
+        "description": "History source: Ask AI."
+    },
+    "history_sourceLocalAgent": {
+        "message": "로컬 에이전트",
+        "description": "History source: a local AI agent through the bridge."
+    },
+    "history_sourceImport": {
+        "message": "가져오기",
+        "description": "History source: Import Bookmarks."
+    },
+    "history_sourceBackground": {
+        "message": "Bookmark Scout",
+        "description": "History source: Bookmark Scout working without an open page."
+    },
+    "history_sourceUnknown": {
+        "message": "출처 알 수 없음(감지된 브라우저 이벤트)",
+        "description": "History source: a browser event no Bookmark Scout change explains; the writer is unknown."
+    },
+    "history_sourceReconciliation": {
+        "message": "공백 이후 감지됨(순 차이)",
+        "description": "History source: a difference found after a gap in observation; times and writer unknown."
+    },
+    "history_counts": {
+        "message": "완료 $1 · 건너뜀 $2 · 실패 $3",
+        "description": "History row counts. $1 done, $2 skipped, $3 failed."
+    },
+    "history_factStarted": {
+        "message": "시작",
+        "description": "History detail label: when the change started."
+    },
+    "history_factFinished": {
+        "message": "종료",
+        "description": "History detail label: when the change finished."
+    },
+    "history_factCounts": {
+        "message": "예정 $1, 완료 $2, 건너뜀 $3, 실패 $4.",
+        "description": "History detail counts. $1 planned, $2 done, $3 skipped, $4 failed."
+    },
+    "history_verifyPassed": {
+        "message": "변경 후 확인함: 북마크가 변경한 그대로입니다.",
+        "description": "History detail: the bookmarks were read again after the change and are as it left them."
+    },
+    "history_verifyFailed": {
+        "message": "변경 후 확인함: $1개 항목이 변경한 그대로가 아닙니다.",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
+    "history_verifyNotRun": {
+        "message": "확인 안 함: 바뀐 것이 없습니다.",
+        "description": "History detail: nothing was changed, so nothing was checked."
+    },
+    "history_factAgentName": {
+        "message": "에이전트가 밝힌 이름(확인 안 됨)",
+        "description": "History detail label: the name a local AI agent gave itself, which is not verified."
+    },
+    "history_undoUnavailable": {
+        "message": "실행 취소할 수 없습니다: 이 브라우저 세션의 실행 취소 기록에 이 변경이 더 이상 없습니다.",
+        "description": "History detail: why a record offers no Undo."
+    },
+    "history_showOriginal": {
+        "message": "실행 취소한 변경 보기",
+        "description": "History button on an undo or redo record: shows the change it replays."
+    },
+    "history_showUndo": {
+        "message": "실행 취소 기록 보기",
+        "description": "History button on an undone record: shows the undo record."
+    },
+    "history_detailsMissing": {
+        "message": "이 변경의 항목은 보관되지 않았습니다.",
+        "description": "History detail when the item rows were not kept."
+    },
+    "history_detailsCorrupt": {
+        "message": "이 변경의 항목을 읽을 수 없습니다.",
+        "description": "History detail when the stored item rows could not be read."
+    },
+    "history_itemsLabel": {
+        "message": "변경된 항목",
+        "description": "Accessible name of the list of items a change touched."
+    },
+    "history_showMoreItems": {
+        "message": "더 보기($1개 남음)",
+        "description": "History button that lists more items of a large change. $1 is how many are left."
+    },
+    "history_omitted": {
+        "message": "항목 $1개는 이 기록에 보관되지 않았습니다.",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
+    "history_folderGone": {
+        "message": "더 이상 없는 폴더(ID $1)",
+        "description": "History: a folder that no longer exists. $1 is its old id."
+    },
+    "history_place": {
+        "message": "$1, $2번째",
+        "description": "History: a place in a folder. $1 is the folder path, $2 the position (1-based)."
+    },
+    "history_itemWasIn": {
+        "message": "원래 위치: $1",
+        "description": "History item: where a deleted item was. $1 is a place."
+    },
+    "history_itemAddedTo": {
+        "message": "추가 위치: $1",
+        "description": "History item: where a new item went. $1 is a place."
+    },
+    "history_itemInside": {
+        "message": "안에 $1개",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_changeCreate": {
+        "message": "추가",
+        "description": "History item change: added."
+    },
+    "history_changeRemove": {
+        "message": "삭제",
+        "description": "History item change: deleted."
+    },
+    "history_changeUpdate": {
+        "message": "편집",
+        "description": "History item change: edited."
+    },
+    "history_changeMove": {
+        "message": "이동",
+        "description": "History item change: moved."
+    },
+    "history_outcomeApplied": {
+        "message": "완료",
+        "description": "History item outcome: done."
+    },
+    "history_outcomeSkipped": {
+        "message": "건너뜀",
+        "description": "History item outcome: skipped."
+    },
+    "history_outcomeFailed": {
+        "message": "실패",
+        "description": "History item outcome: the browser refused it."
+    },
+    "history_outcomeConflicted": {
+        "message": "충돌",
+        "description": "History item outcome: a conflict with newer changes."
+    },
+    "history_reasonDeleted": {
+        "message": "검토 후 삭제됨",
+        "description": "History item: skipped because it was deleted since the review."
+    },
+    "history_reasonChanged": {
+        "message": "검토 후 변경됨",
+        "description": "History item: skipped because it changed since the review."
+    },
+    "history_reasonFailed": {
+        "message": "브라우저가 변경을 거부했습니다",
+        "description": "History item: the browser refused the change."
+    },
+    "history_factSource": {
+        "message": "출처",
+        "description": "History detail label: where the change came from."
+    },
+    "history_factResult": {
+        "message": "결과",
+        "description": "History detail label: planned, done, skipped, and failed counts."
+    },
+    "history_factCheck": {
+        "message": "확인",
+        "description": "History detail label: whether the bookmarks were read back as the change left them."
+    },
+    "history_today": {
+        "message": "오늘",
+        "description": "History day heading for today."
+    },
+    "history_yesterday": {
+        "message": "어제",
+        "description": "History day heading for yesterday."
+    },
+    "history_emptyHint": {
+        "message": "Bookmark Scout로 한 편집, 이동, 삭제, 가져오기, 정리가 여기에 표시되며, 무엇이 바뀌었는지와 실행 취소할 수 있는지 알 수 있습니다.",
+        "description": "History empty state: what will show up here."
+    },
+    "history_itemCount": {
+        "message": "$1개 항목",
+        "description": "History row summary: how many items the change touched. $1 is the count."
+    },
+    "history_viewInHistory": {
+        "message": "기록에서 보기",
+        "description": "Link in a result that opens its record in the manager History."
+    },
+    "action_redo": {
+        "message": "다시 실행",
+        "description": "Button that redoes a change undone before (the manager History)."
     }
 }
