@@ -109,21 +109,6 @@ function chunkItems<T>(items: T[], size: number): T[][] {
   return chunks;
 }
 
-// Simplified schema for OpenAI - all fields must be required
-// Only supporting move operations for now (most common use case)
-const moveOperationSchema = z.object({
-  bookmarkId: z.string().describe('ID of bookmark to move'),
-  bookmarkTitle: z.string().describe('Title of the bookmark'),
-  toFolderPath: z.string().describe('Target folder path'),
-  confidence: z.number().min(0).max(1).describe('Confidence score from 0 to 1'),
-  reason: z.string().describe('Why move this bookmark (do not include confidence here)'),
-});
-
-export const reorganizationResultSchema = z.object({
-  operations: z.array(moveOperationSchema).describe('List of bookmark moves'),
-  summary: z.string().describe('Brief summary of reorganization'),
-});
-
 // ============================================================================
 // Helper Functions
 // ============================================================================
@@ -243,8 +228,6 @@ function limitsForRequest(cfg: ReorganizationConfig) {
 // ============================================================================
 // Main Service
 // ============================================================================
-
-export type ReorganizationResult = z.infer<typeof reorganizationResultSchema>;
 
 /**
  * What a plan needs besides the model's answers, fixed when the analysis starts: the prompt,
