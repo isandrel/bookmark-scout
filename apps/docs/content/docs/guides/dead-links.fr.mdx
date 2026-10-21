@@ -45,6 +45,8 @@ Les réparations ne se font jamais en arrière-plan : vous les examinez et les a
 | **Redirigé** | Le lien fonctionne, mais pointe désormais ailleurs ; la destination est affichée |
 | **Ignoré** | Pas un lien Web, par exemple un bookmarklet |
 
+Un site qui répond 429 ou 503 et demande d'être réessayé dans quelques secondes est revérifié après ce délai, dans la limite de **Nombre de nouvelles tentatives** ; un site qui demande plus longtemps apparaît ici aussitôt.
+
 Toute erreur renvoyée par une requête `HEAD` est confirmée par une requête `GET` avant d'être signalée, car certains serveurs ne prennent pas en charge `HEAD`.
 
 <Callout type="info" title="Messages de la console dans Chrome">

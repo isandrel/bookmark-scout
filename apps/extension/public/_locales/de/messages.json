@@ -7452,7 +7452,7 @@
         "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
     },
     "settings_deadLinksRetryCountHelp": {
-        "message": "Wie oft ein fehlgeschlagener Link erneut versucht wird, bevor er gemeldet wird. Ein erneuter Versuch schließt eine kurze Netzwerkstörung aus; jeder macht die Prüfung eines defekten Links länger.",
+        "message": "Wie oft ein fehlgeschlagener Link erneut versucht wird, bevor er gemeldet wird. Ein erneuter Versuch schließt eine kurze Netzwerkstörung aus; jeder macht die Prüfung eines defekten Links länger. Eine Website, die meldet, dass sie ausgelastet ist, und in wenigen Sekunden erneut gefragt werden möchte, wird nach dieser Wartezeit erneut versucht, als einer dieser Versuche.",
         "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
     },
     "settings_deadLinksSuccessStatusesHelp": {

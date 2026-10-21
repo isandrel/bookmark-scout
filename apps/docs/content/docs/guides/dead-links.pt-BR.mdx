@@ -45,6 +45,8 @@ Os reparos nunca acontecem em segundo plano: você os revisa e aplica como expli
 | **Redirecionado** | O link funciona, mas agora aponta para outro lugar; o destino é mostrado |
 | **Ignorado** | Não é um link da web, como um bookmarklet |
 
+Um site que responde 429 ou 503 e pede para ser consultado de novo em poucos segundos é verificado de novo depois dessa espera, dentro de **Número de tentativas**; um que pede mais tempo aparece aqui na hora.
+
 Qualquer erro de uma solicitação `HEAD` é confirmado com uma solicitação `GET` antes de ser informado, porque alguns servidores não aceitam `HEAD`.
 
 <Callout type="info" title="Mensagens do console no Chrome">

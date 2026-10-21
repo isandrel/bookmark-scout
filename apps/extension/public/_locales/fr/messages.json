@@ -7452,7 +7452,7 @@
         "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
     },
     "settings_deadLinksRetryCountHelp": {
-        "message": "Combien de fois de plus un lien en échec est réessayé avant d'être signalé. Un nouvel essai écarte un bref incident réseau ; chacun allonge la vérification d'un lien en échec.",
+        "message": "Combien de fois de plus un lien en échec est réessayé avant d'être signalé. Un nouvel essai écarte un bref incident réseau ; chacun allonge la vérification d'un lien en échec. Un site qui se dit occupé et demande d'être réessayé dans quelques secondes est réessayé après ce délai, comme l'un de ces essais.",
         "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
     },
     "settings_deadLinksSuccessStatusesHelp": {
