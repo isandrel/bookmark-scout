@@ -1,5 +1,5 @@
-import { expect, test, toastRegion } from './fixtures';
 import { openAIOptions } from './ai-helpers';
+import { expect, test, toastRegion } from './fixtures';
 import { setSettings } from './popup-helpers';
 import { readStoredRaw, STORAGE_ITEMS, seedAIServices } from './storage';
 

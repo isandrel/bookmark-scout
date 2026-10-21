@@ -4,8 +4,8 @@
  * next-themes' localStorage entry only caches it to avoid a flash on first paint.
  */
 
-import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from 'next-themes';
 import type { ThemeProviderProps } from 'next-themes';
+import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from 'next-themes';
 import { useCallback, useEffect, useRef } from 'react';
 
 /**

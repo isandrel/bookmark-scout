@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { urlsInText } from '@/lib/bookmark-drop';
+import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { undoBookmarkChange } from '@/services/bookmark-history';
 import {
   addDroppedLinks,
@@ -12,7 +13,6 @@ import {
   sortBookmarkFolder,
   sortedFolderOrder,
 } from '@/services/bookmark-organize';
-import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
 let bookmarks: FakeBookmarks;

@@ -25,7 +25,7 @@ function isSDKError(error: unknown, name?: string): error is Error {
  */
 const NO_ANSWER_ERRORS = ['NoObjectGeneratedError', 'NoOutputGeneratedError'] as const;
 
-const isRetryError =(error: unknown): error is RetryError => isSDKError(error, 'AI_RetryError');
+const isRetryError = (error: unknown): error is RetryError => isSDKError(error, 'AI_RetryError');
 const isAPICallError = (error: unknown): error is APICallError =>
   isSDKError(error, 'AI_APICallError');
 

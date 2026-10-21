@@ -3,8 +3,8 @@
  * Shows recently used folders for quick bookmark saving.
  */
 
-import { useMemo } from 'react';
 import { Clock, Folder } from 'lucide-react';
+import { useMemo } from 'react';
 import type { BookmarkTreeNode } from '@/types';
 
 interface RecentFoldersPanelProps {

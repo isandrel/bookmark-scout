@@ -28,7 +28,12 @@ const tree: BookmarkTreeNode[] = [
             title: 'Recipes',
             children: [
               { id: 'soup', parentId: 'recipes', title: 'Soup', url: 'https://soup.example' },
-              { id: 'recipe-cake', parentId: 'recipes', title: 'Recipe cake', url: 'https://c.example' },
+              {
+                id: 'recipe-cake',
+                parentId: 'recipes',
+                title: 'Recipe cake',
+                url: 'https://c.example',
+              },
               { id: 'baking', parentId: 'recipes', title: 'Baking', children: [] },
             ],
           },
@@ -145,7 +150,12 @@ describe('permanent folders and invalid queries', () => {
     expect(ids(filterBookmarkTree(tree, 'bookmarks', defaults))).toEqual([]);
     expect(ids(filterBookmarkTree(tree, '^$', { ...defaults, useRegex: true }))).toEqual([]);
     expect(ids(filterBookmarkTree(tree, 'bar', defaults))).toEqual([]);
-    expect(ids(filterBookmarkTree(tree, 'jira', defaults))).toEqual(['root', 'bar', 'work', 'jira']);
+    expect(ids(filterBookmarkTree(tree, 'jira', defaults))).toEqual([
+      'root',
+      'bar',
+      'work',
+      'jira',
+    ]);
   });
 
   it('reports invalid regex queries and still searches them as plain text', () => {
