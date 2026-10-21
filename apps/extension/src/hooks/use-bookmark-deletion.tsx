@@ -155,7 +155,11 @@ export async function deleteBookmarksWithUndo(
   const restore = async (): Promise<RestoreGaps> => {
     if (!recorded) return restoreSnapshots(snapshots);
     const undone = await undoRecordedBookmarkChange(recorded);
-    // Null: undone already (Ctrl+Z). Nothing applied: the bookmarks changed since.
+    // Null: undone already (Ctrl+Z). Nothing applied: the folder it was in is gone, or the
+    // bookmarks changed since.
+    if (undone && undone.applied === 0 && undone.parentMissing) {
+      throw new BookmarkRestoreError(t('toast_restoreParentMissing'), 'parent-missing');
+    }
     if (undone && undone.applied === 0) throw new Error(t('toast_undoChanged'));
     return { skipped: undone?.skipped ?? 0, metadataNotRestored: undone?.metadataNotRestored ?? 0 };
   };

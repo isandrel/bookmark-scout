@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { z } from 'zod';
 import { SETTING_NUMBER_BOUNDS } from '@/lib/settings-schema';
 import { generateAIObject } from '@/services/ai-client';
@@ -59,6 +60,14 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(deleteBookmark).mockResolvedValue();
   vi.mocked(getBookmarkChildren).mockResolvedValue([]);
+  // Saves go through the history writer, which (importing the real module) calls the browser:
+  // route those calls to the mocks the tests set up.
+  vi.spyOn(fakeBrowser.bookmarks, 'create').mockImplementation((details) =>
+    vi.mocked(createBookmark)(details),
+  );
+  vi.spyOn(fakeBrowser.bookmarks, 'removeTree').mockImplementation((id) =>
+    vi.mocked(deleteBookmark)(id),
+  );
 });
 
 describe('[mocked provider contract] folder recommendations', () => {
@@ -363,7 +372,7 @@ describe('recommended folder bookmark creation', () => {
       ),
     ).rejects.toThrow('Synthetic bookmark failure');
     // Only while still empty: removeTree would also take whatever was put in it meanwhile.
-    expect(removeEmptyFolders).toHaveBeenCalledWith(['research']);
+    expect(removeEmptyFolders).toHaveBeenCalledWith(['research'], expect.any(Function));
     expect(deleteBookmark).not.toHaveBeenCalled();
   });
 });
