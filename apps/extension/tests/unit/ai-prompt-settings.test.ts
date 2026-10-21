@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { BookmarkTreeNode } from '@/types';
-import type { AISettings } from '@/services/ai-client';
 import { saveSettings } from '@/lib/settings-storage';
+import type { AISettings } from '@/services/ai-client';
+import type { BookmarkTreeNode } from '@/types';
 
 const mocks = vi.hoisted(() => ({
   generateAIObject: vi.fn(),
@@ -53,8 +53,15 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
   it('asks every tool prompt for the saved AI output language', async () => {
     await saveSettings({ aiOutputLanguage: 'de' });
     try {
-      await suggestBookmarkTags(nodes, settings, { minTags: 1, maxTags: 3, tagStyle: 'snake_case' });
-      await summarizeBookmarksWithAI(nodes, settings, { summaryLength: 60, includeDomainHint: false });
+      await suggestBookmarkTags(nodes, settings, {
+        minTags: 1,
+        maxTags: 3,
+        tagStyle: 'snake_case',
+      });
+      await summarizeBookmarksWithAI(nodes, settings, {
+        summaryLength: 60,
+        includeDomainHint: false,
+      });
       mocks.generateAIObject.mockResolvedValue({ object: { recommendations: [] } });
       await recommendFolders({ title: 'Paper', url: 'https://paper.example/one' }, nodes, settings);
     } finally {
@@ -68,8 +75,14 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
   });
 
   it('puts the saved summary length into the summarizer prompt', async () => {
-    await summarizeBookmarksWithAI(nodes, settings, { summaryLength: 60, includeDomainHint: false });
-    await summarizeBookmarksWithAI(nodes, settings, { summaryLength: 400, includeDomainHint: false });
+    await summarizeBookmarksWithAI(nodes, settings, {
+      summaryLength: 60,
+      includeDomainHint: false,
+    });
+    await summarizeBookmarksWithAI(nodes, settings, {
+      summaryLength: 400,
+      includeDomainHint: false,
+    });
 
     const [first, second] = mocks.generateAIObject.mock.calls.map(([request]) => request.system);
     expect(first).toContain('Keep summary under 60 characters');
@@ -86,7 +99,11 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
     });
     mocks.generateAIObject.mockResolvedValue({
       object: {
-        recommendations: [recommendation('Research'), recommendation('Other'), recommendation('Third')],
+        recommendations: [
+          recommendation('Research'),
+          recommendation('Other'),
+          recommendation('Third'),
+        ],
       },
     });
 

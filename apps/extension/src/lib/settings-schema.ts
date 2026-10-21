@@ -621,12 +621,7 @@ const fields = {
   folderMatchesMax: numberField('search.folder_matches.max', 'folderMatchesMax'),
   folderMatchesTypos: switchField('search.folder_matches.typos', 'folderMatchesTypos'),
 
-  sortOrder: enumField(
-    'behavior.tree.sort_order',
-    'sortOrder',
-    sortOrderSchema,
-    getSortOrderLabel,
-  ),
+  sortOrder: enumField('behavior.tree.sort_order', 'sortOrder', sortOrderSchema, getSortOrderLabel),
   groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
   treeDragAndDrop: switchField('behavior.tree.drag_and_drop', 'treeDragAndDrop'),
   linkOpenTarget: enumField(
@@ -1199,7 +1194,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       },
     ]),
     behavior: category('settings_behavior', 'settings_behaviorDesc', [
-      { id: 'tree', labelKey: 'settings_sectionTree', fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'] },
+      {
+        id: 'tree',
+        labelKey: 'settings_sectionTree',
+        fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'],
+      },
       { id: 'links', labelKey: 'settings_sectionLinks', fields: ['linkOpenTarget'] },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       {

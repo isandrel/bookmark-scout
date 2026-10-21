@@ -53,11 +53,15 @@ test('Add service lists well-known providers first, the catalog by search, and a
   await expect(popup.getByRole('option', { name: 'Ollama (Local)', exact: true })).toBeVisible();
   // Every listed provider has an icon: its logo, or a generic one for its kind (a local program,
   // a custom endpoint) when it has no logo.
-  const iconless = await popup.getByRole('option').evaluateAll((options) =>
-    options
-      .filter((option) => !option.querySelector('[data-slot="option-icon"], svg:not(.lucide-check)'))
-      .map((option) => option.textContent),
-  );
+  const iconless = await popup
+    .getByRole('option')
+    .evaluateAll((options) =>
+      options
+        .filter(
+          (option) => !option.querySelector('[data-slot="option-icon"], svg:not(.lucide-check)'),
+        )
+        .map((option) => option.textContent),
+    );
   expect(iconless).toEqual([]);
   // The long catalog waits for a search, and the line under the list says so.
   await expect(popup.getByText('More providers (models.dev)')).toHaveCount(0);

@@ -56,29 +56,37 @@
 # outside Bookmark Scout (the background observer, write notes, and its setting and messages).
 # Firefox measured ZIP 1,682,501, 5,368,778 B uncompressed, 3,557,114 B of JavaScript, and
 # 1,253,871 B of locales.
+# Uncompressed raised on 2026-10-20 (5,380,000 to 5,392,000) for restoring deleted items from the
+# History (recovery checkpoints, the Restore button, and its messages in 9 languages). Firefox
+# measured 5,380,660 B uncompressed, ZIP 1,685,331.
 # Uncompressed raised again the same day (5,380,000 to 5,392,000) for the Dates and Times settings
 # (the formats in config/ui/date-formats.toml and their messages): 5,380,714 B measured.
+# Raised on 2026-10-20 (ZIP 1,690,000 to 1,700,000, uncompressed 5,392,000 to 5,410,000, javascript
+# 3,565,000 to 3,580,000, locales 1,262,000 to 1,280,000) when the Dates and Times settings and
+# the History's Restore landed together, each having raised the uncompressed limit alone. Firefox
+# measured ZIP 1,689,447, 5,394,445 B uncompressed, 3,568,254 B of JavaScript, and 1,268,398 B of
+# locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_690_000
-raw_bytes = 5_392_000
+zip_bytes = 1_700_000
+raw_bytes = 5_410_000
 
 [targets.edge]
-zip_bytes = 1_690_000
-raw_bytes = 5_392_000
+zip_bytes = 1_700_000
+raw_bytes = 5_410_000
 
 [targets.firefox]
-zip_bytes = 1_690_000
-raw_bytes = 5_392_000
+zip_bytes = 1_700_000
+raw_bytes = 5_410_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_565_000
+javascript = 3_580_000
 css = 84_000
 fonts = 143_000
-locales = 1_262_000
+locales = 1_280_000
 images = 320_000
 other = 27_000

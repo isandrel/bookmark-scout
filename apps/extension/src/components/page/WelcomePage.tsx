@@ -5,7 +5,7 @@
  * really has, and the Bookmarks page note shows only where the manager replaces the browser's.
  */
 
-import { BookOpen, BookMarked, Settings } from 'lucide-react';
+import { BookMarked, BookOpen, Settings } from 'lucide-react';
 
 type WelcomeStep = { id: string; title: string; body: React.ReactNode };
 
@@ -60,10 +60,7 @@ function QuickSaveKeys() {
           data-testid="welcome-bookmark-keys"
           onClick={() => void openCommandShortcutsInOptions()}
         >
-          {t(
-            'newcomer_useBookmarkKeyInstead',
-            formatCommandShortcut(takeover.shortcut, { apple }),
-          )}
+          {t('newcomer_useBookmarkKeyInstead', formatCommandShortcut(takeover.shortcut, { apple }))}
         </Button>
       )}
     </span>
@@ -86,9 +83,7 @@ export function WelcomePage() {
         <header className="flex items-center gap-4">
           <img src="/icon-96.png" alt="" width={48} height={48} className="size-12" />
           <div className="min-w-0 space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {t('welcome_heading')}
-            </h1>
+            <h1 className="text-2xl font-semibold tracking-tight">{t('welcome_heading')}</h1>
             <p className="text-sm text-muted-foreground">{t('welcome_intro')}</p>
           </div>
         </header>

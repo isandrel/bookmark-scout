@@ -73,10 +73,9 @@ const prompts = readConfig(
       }),
       // Exactly one name per bundled locale, so a new language fails here until it has one.
       languages: z.strictObject(
-        Object.fromEntries(SUPPORTED_LOCALES.map((locale) => [locale, z.string().min(1)])) as Record<
-          SupportedLocale,
-          z.ZodString
-        >,
+        Object.fromEntries(
+          SUPPORTED_LOCALES.map((locale) => [locale, z.string().min(1)]),
+        ) as Record<SupportedLocale, z.ZodString>,
       ),
       existing_tags: z.strictObject({
         max_tags: z.number().int().positive(),
@@ -457,9 +456,7 @@ const PLACEHOLDER_LINE = /^[ \t]*\{\{(\w+)\}\}[ \t]*$/;
 
 /** The placeholder names `text` uses, in order, without `\{{` escapes. */
 export function promptPlaceholderNames(text: string): string[] {
-  return [...text.matchAll(PLACEHOLDER_OR_ESCAPE)].flatMap((match) =>
-    match[1] ? [match[1]] : [],
-  );
+  return [...text.matchAll(PLACEHOLDER_OR_ESCAPE)].flatMap((match) => (match[1] ? [match[1]] : []));
 }
 
 /**

@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
-import { reducer } from '@/hooks/use-toast';
 import { clampPopupSize } from '@/hooks/use-popup-size';
+import { reducer } from '@/hooks/use-toast';
 
 type ToastInput = Parameters<typeof reducer>[1] extends infer A
   ? A extends { type: 'ADD_TOAST'; toast: infer T }
