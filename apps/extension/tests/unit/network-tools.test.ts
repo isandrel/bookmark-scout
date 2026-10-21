@@ -31,6 +31,7 @@ function response(status: number, init: { redirectedTo?: string } = {}) {
     ok: status >= 200 && status < 300,
     redirected: Boolean(init.redirectedTo),
     url: init.redirectedTo ?? '',
+    headers: new Headers(),
     body: { cancel: vi.fn(async () => undefined) },
   } as unknown as Response;
 }

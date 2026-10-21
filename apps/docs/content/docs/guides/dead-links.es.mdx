@@ -45,6 +45,8 @@ Las reparaciones nunca se hacen en segundo plano: las revisas y aplicas como se 
 | **Redirigido** | El enlace funciona, pero ahora apunta a otro sitio; se muestra el destino |
 | **Omitido** | No es un enlace web, como un bookmarklet |
 
+Un sitio que responde 429 o 503 y pide que se vuelva a consultar en unos segundos se comprueba de nuevo tras esa espera, dentro de **Número de reintentos**; uno que pide más tiempo aparece aquí de inmediato.
+
 Cualquier error de una solicitud `HEAD` se confirma con una solicitud `GET` antes de notificarse, porque algunos servidores no admiten `HEAD`.
 
 <Callout type="info" title="Mensajes de la consola en Chrome">

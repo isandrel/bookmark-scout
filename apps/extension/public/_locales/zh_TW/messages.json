@@ -7226,7 +7226,7 @@
         "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
     },
     "settings_deadLinksRetryCountHelp": {
-        "message": "失敗的連結在回報前再嘗試的次數。重試可排除短暫的網路異常；每多一次，檢查失敗連結的時間就更長。",
+        "message": "失敗的連結在回報前再嘗試的次數。重試可排除短暫的網路異常；每多一次，檢查失敗連結的時間就更長。網站表示忙碌並要求幾秒後再試時，會等待這段時間後重試，計入此次數。",
         "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
     },
     "settings_deadLinksSuccessStatusesHelp": {

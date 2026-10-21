@@ -7452,7 +7452,7 @@
         "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
     },
     "settings_deadLinksRetryCountHelp": {
-        "message": "How many more times a link that failed is tried before it is reported. A retry rules out a brief network hiccup; each one makes a failing link take longer to check.",
+        "message": "How many more times a link that failed is tried before it is reported. A retry rules out a brief network hiccup; each one makes a failing link take longer to check. A site that says it is busy and asks to be asked again within a few seconds is tried again after that wait, as one of these retries.",
         "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
     },
     "settings_deadLinksSuccessStatusesHelp": {

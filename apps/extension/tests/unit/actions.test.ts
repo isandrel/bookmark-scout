@@ -276,6 +276,7 @@ describe('findDuplicates, checkLinks, and suggestFolders', () => {
       ok: !url.includes('rust'),
       redirected: false,
       url,
+      headers: new Headers(),
       body: { cancel: vi.fn(async () => undefined) },
     }));
     vi.stubGlobal('fetch', fetchMock);

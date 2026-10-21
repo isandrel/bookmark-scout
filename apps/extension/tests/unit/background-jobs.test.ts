@@ -583,34 +583,79 @@ describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
 });
 
 describe('a busy or refusing site (J34)', () => {
-  it('reports 429 and 503 as findings, whatever Retry-After says, with no retry loop', async () => {
-    const answers: Record<string, Response> = {
-      '/1': new Response('', { status: 429, headers: { 'Retry-After': '0' } }),
-      '/2': new Response('', { status: 429, headers: { 'Retry-After': '86400' } }),
-      '/3': new Response('', { status: 503, headers: { 'Retry-After': 'soon' } }),
+  const target = (path: string) => ({
+    id: 'b',
+    title: 'B',
+    url: `https://e2e.invalid${path}`,
+    folderPath: '',
+  });
+  const options = {
+    requestTimeoutMs: 1000,
+    concurrency: 1,
+    retryCount: 1,
+    followRedirects: true,
+    successStatuses: [200],
+  };
+
+  it('asks a busy site again after a short Retry-After, and reports a long, missing, or unreadable one at once', async () => {
+    const answers: Record<string, () => Response> = {
+      '/soon': () => new Response('', { status: 429, headers: { 'Retry-After': '0' } }),
+      '/tomorrow': () => new Response('', { status: 429, headers: { 'Retry-After': '86400' } }),
+      '/unreadable': () => new Response('', { status: 503, headers: { 'Retry-After': 'soon' } }),
+      '/silent': () => new Response('', { status: 503 }),
     };
     const fetch = vi.fn(async (input: string, _init?: RequestInit) => {
       const answer = answers[new URL(input).pathname];
-      return answer?.clone() ?? new Response('', { status: 200 });
+      return answer?.() ?? new Response('', { status: 200 });
     });
     vi.stubGlobal('fetch', fetch);
-    const response = await start();
-    if (!response.ok || !response.job) throw new Error('not accepted');
-    await until(async () => (await getJob(response.job?.id ?? ''))?.state === 'succeeded');
-    const results = (await getJobItems(response.job.id)).map(
-      (item) => (item.result as { statusCode?: number }).statusCode,
-    );
-    expect(results).toEqual([429, 429, 503, 200, 200, 200]);
-    // A busy site is a finding: HEAD and the one GET it falls back to, never retried or waited on.
     const asked = (path: string) =>
       fetch.mock.calls
         .filter(([url]) => new URL(url).pathname === path)
         .map(([, init]) => init?.method);
-    for (const path of ['/1', '/2', '/3']) expect(asked(path)).toEqual(['HEAD', 'GET']);
-    expect(asked('/4')).toEqual(['HEAD']);
+
+    // Still busy when asked again: one more round (HEAD, then the GET it falls back to), then
+    // reported. The Retry Count setting bounds it.
+    expect(await checkDeadLink(target('/soon'), options)).toMatchObject({
+      statusCode: 429,
+      category: 'rateLimited',
+    });
+    expect(asked('/soon')).toEqual(['HEAD', 'GET', 'HEAD', 'GET']);
+    for (const path of ['/tomorrow', '/unreadable', '/silent']) {
+      await checkDeadLink(target(path), options);
+      expect(asked(path)).toEqual(['HEAD', 'GET']);
+    }
+    // With no retries allowed, a short Retry-After is reported at once too.
+    await checkDeadLink(target('/soon'), { ...options, retryCount: 0 });
+    expect(asked('/soon')).toHaveLength(6);
+  });
+
+  it('counts a site that answers once its Retry-After has passed as reachable', async () => {
+    let busy = true;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        if (!busy) return new Response('', { status: 200 });
+        return new Response('', { status: 429, headers: { 'Retry-After': '0' } });
+      }),
+    );
+    const checking = checkDeadLink(target('/later'), options);
+    busy = false;
+    expect(await checking).toMatchObject({ status: 'ok', statusCode: 200 });
+  });
+
+  it('stops while waiting out a Retry-After, as a stopped check', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('', { status: 429, headers: { 'Retry-After': '5' } })),
+    );
+    const controller = new AbortController();
+    const checking = checkDeadLink(target('/wait'), options, controller.signal);
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    controller.abort();
+    await expect(checking).rejects.toBeInstanceOf(RequestAbortedError);
   });
 });
-
 describe('website access taken back while a job runs (J51)', () => {
   it('pauses with the reason and sends nothing more, then finishes once access is back', async () => {
     const held = heldFetch();

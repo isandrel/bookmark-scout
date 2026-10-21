@@ -7452,7 +7452,7 @@
         "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
     },
     "settings_deadLinksRetryCountHelp": {
-        "message": "Quantas vezes a mais um link que falhou é tentado antes de ser relatado. Uma nova tentativa descarta uma falha rápida da rede; cada uma faz a verificação de um link com falha demorar mais.",
+        "message": "Quantas vezes a mais um link que falhou é tentado antes de ser relatado. Uma nova tentativa descarta uma falha rápida da rede; cada uma faz a verificação de um link com falha demorar mais. Um site que diz estar ocupado e pede para ser consultado de novo em poucos segundos é tentado de novo depois dessa espera, como uma dessas tentativas.",
         "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
     },
     "settings_deadLinksSuccessStatusesHelp": {

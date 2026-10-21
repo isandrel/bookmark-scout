@@ -45,6 +45,8 @@ Reparaturen geschehen nie im Hintergrund: Sie prüfen und übernehmen sie wie un
 | **Weitergeleitet** | Der Link funktioniert, verweist aber inzwischen auf ein anderes Ziel; das Ziel wird angezeigt |
 | **Übersprungen** | Kein Weblink, zum Beispiel ein Bookmarklet |
 
+Eine Website, die mit 429 oder 503 antwortet und in wenigen Sekunden erneut gefragt werden möchte, wird nach dieser Wartezeit erneut geprüft, im Rahmen von **Wiederholungen**; eine, die länger warten lässt, steht sofort hier.
+
 Jeder Fehler bei einer `HEAD`-Anfrage wird mit einer `GET`-Anfrage bestätigt, bevor er gemeldet wird, da manche Server `HEAD` nicht unterstützen.
 
 <Callout type="info" title="Konsolenmeldungen in Chrome">

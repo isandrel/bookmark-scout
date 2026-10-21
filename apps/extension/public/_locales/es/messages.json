@@ -7452,7 +7452,7 @@
         "description": "Settings: more about the deadLinksRequestTimeoutMs setting, in a toggletip"
     },
     "settings_deadLinksRetryCountHelp": {
-        "message": "Cuántas veces más se intenta un enlace que falló antes de informarlo. Un reintento descarta un fallo breve de la red; cada uno hace que comprobar un enlace roto tarde más.",
+        "message": "Cuántas veces más se intenta un enlace que falló antes de informarlo. Un reintento descarta un fallo breve de la red; cada uno hace que comprobar un enlace roto tarde más. Un sitio que indica que está ocupado y pide que se vuelva a consultar en unos segundos se reintenta tras esa espera, como uno de estos reintentos.",
         "description": "Settings: more about the deadLinksRetryCount setting, in a toggletip"
     },
     "settings_deadLinksSuccessStatusesHelp": {
