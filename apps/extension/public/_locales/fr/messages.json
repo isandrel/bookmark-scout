@@ -7386,5 +7386,53 @@
     "jobs_errorSetup": {
         "message": "Cette tâche n'a pas pu continuer. Relancez-la.",
         "description": "A background task stopped and cannot go on"
+    },
+    "settings_jobsApplyInBackgroundAbove": {
+        "message": "Appliquer en arrière-plan au-delà de",
+        "description": "Setting label: jobsApplyInBackgroundAbove"
+    },
+    "settings_jobsApplyInBackgroundAboveDesc": {
+        "message": "Les modifications vérifiées portant sur plus de favoris que ce nombre sont appliquées en arrière-plan, par parties, et continuent quand vous fermez la page ; annulez chaque partie depuis l'Historique",
+        "description": "Setting description: jobsApplyInBackgroundAbove"
+    },
+    "jobs_applyTitle": {
+        "message": "Application des modifications : $1",
+        "description": "Background tasks: title of a task applying reviewed changes; $1 is the tool"
+    },
+    "jobs_applyScope": {
+        "message": "$1 modifications",
+        "description": "Background tasks: how many changes a task applies"
+    },
+    "jobs_applyScope_one": {
+        "message": "$1 modification",
+        "description": "Background tasks: how many changes a task applies (one)"
+    },
+    "jobs_countsApply": {
+        "message": "$1 appliquées, $2 ignorées car modifiées entre-temps, $3 en échec",
+        "description": "Background tasks: applied, skipped, and failed changes"
+    },
+    "jobs_cancelledApplyNote": {
+        "message": "Arrêté. Les modifications déjà faites restent ; annulez-les depuis l'Historique.",
+        "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_applyStarted": {
+        "message": "Application en arrière-plan",
+        "description": "Notification title: reviewed changes are applied in the background"
+    },
+    "jobs_applyStartedDesc": {
+        "message": "$1 modifications sont appliquées par parties. Suivez-les dans Tâches en arrière-plan et annulez chaque partie depuis l'Historique.",
+        "description": "Notification: how many changes are applied in the background"
+    },
+    "jobs_applyStartedDesc_one": {
+        "message": "$1 modification est appliquée en arrière-plan. Suivez-la dans Tâches en arrière-plan et annulez-la depuis l'Historique.",
+        "description": "Notification: one change is applied in the background"
+    },
+    "jobs_uncertainWrite": {
+        "message": "En pause : le navigateur s'est arrêté pendant l'application des modifications. Reprendre vérifie à nouveau chaque favori restant et ignore ceux déjà modifiés.",
+        "description": "A background task paused because the browser stopped while it was applying changes"
+    },
+    "history_part": {
+        "message": "$1 (partie $2 sur $3)",
+        "description": "History: a change applied in parts; $1 is the change, $2 the part, $3 how many parts"
     }
 }

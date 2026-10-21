@@ -26,7 +26,11 @@ export type DeadLinkRepairSummary = { keep: number; delete: number; replace: num
 /** `changed`: deleted, moved to another URL, or otherwise edited since the scan. */
 export type DeadLinkRepairIssue = BookmarkChangeIssue;
 
+/** Repairs handed to a background task, applied in parts (`services/reviewed-apply.ts`). */
+export type DeadLinkRepairInBackground = { background: true; count: number };
+
 export type DeadLinkRepairOutcome = {
+  background?: false;
   deleted: number;
   replaced: number;
   skipped: number;
@@ -97,11 +101,13 @@ function toBookmarkChange(item: DeadLinkRepairItem): BookmarkChange {
  */
 export async function applyDeadLinkRepairs(
   items: DeadLinkRepairItem[],
-): Promise<DeadLinkRepairOutcome> {
+): Promise<DeadLinkRepairOutcome | DeadLinkRepairInBackground> {
   const actionable = items.filter(isActionableRepair);
-  const result = await applyBookmarkChanges(actionable.map(toBookmarkChange), {
+  const reviewed = await applyReviewedChanges(actionable.map(toBookmarkChange), {
     tool: 'tools_checkDeadLinks',
   });
+  if (reviewed.background) return { background: true, count: reviewed.count };
+  const { result } = reviewed;
   const notApplied = new Set(result.issues.map((issue) => issue.id));
   const applied = actionable.filter((item) => !notApplied.has(item.id));
   const deleted = applied.filter((item) => item.choice === 'delete').length;

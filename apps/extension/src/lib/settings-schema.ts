@@ -943,6 +943,10 @@ const fields = {
     'deadLinksSuccessStatuses',
     httpStatusCodeSchema,
   ),
+  jobsApplyInBackgroundAbove: numberField(
+    'maintenance.background_tasks.apply_in_background_above',
+    'jobsApplyInBackgroundAbove',
+  ),
 
   metadataFetcherEnabled: switchField(
     'metadata_content.metadata_fetcher.enabled',
@@ -1371,6 +1375,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'deadLinksRetryCount',
           'deadLinksSuccessStatuses',
         ],
+      },
+      {
+        id: 'backgroundTasks',
+        labelKey: 'jobs_title',
+        fields: ['jobsApplyInBackgroundAbove'],
       },
     ]),
     metadataContent: category('settings_metadataContent', 'settings_metadataContentDesc', [
