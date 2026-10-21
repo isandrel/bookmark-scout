@@ -1,4 +1,4 @@
-{# source: 100d02461807 #}
+{# source: c43b8d0cbafe #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 # 🤝 {{ site.name }} へのコントリビュート
@@ -128,6 +128,8 @@ bun run build:edge
 ### コミットメッセージ
 
 [Conventional Commits](https://www.conventionalcommits.org/) と [Gitmoji](https://gitmoji.dev/) を組み合わせて使います。
+
+`commit-msg` フックと **PR title** チェックがこの形式を確認します。使える種類は `config/commits.toml` にあります。
 
 ```
 ✨ feat(scope): add new feature

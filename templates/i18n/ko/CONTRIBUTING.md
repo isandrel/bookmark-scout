@@ -1,4 +1,4 @@
-{# source: 100d02461807 #}
+{# source: c43b8d0cbafe #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 # 🤝 {{ site.name }}에 기여하기
@@ -128,6 +128,8 @@ bun run build:edge
 ### 커밋 메시지
 
 [Gitmoji](https://gitmoji.dev/)를 붙인 [Conventional Commits](https://www.conventionalcommits.org/) 형식을 사용합니다.
+
+`commit-msg` 훅과 **PR title** 검사가 이 형식을 확인하며, 허용되는 유형은 `config/commits.toml`에 있습니다.
 
 ```
 ✨ feat(scope): add new feature

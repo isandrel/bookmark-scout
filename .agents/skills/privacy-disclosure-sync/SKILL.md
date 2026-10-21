@@ -70,6 +70,8 @@ Update them in this order, because each one is derived from the one before:
 
 ## 3. Check before opening the PR
 
+`scripts/disclosure-sync.test.ts` (in `bun test scripts`, part of the Lint job) fails when a storage item, IndexedDB database, or declared permission is missing from `store/privacy-disclosures.md`, `store/permissions.md`, or a docs permissions page. It checks names, not wording: still read what each row says.
+
 ```bash
 rg -n -i "never (reads|fetches|sends)|no page content|only the title" store apps/website/messages/privacy apps/docs/content/docs/privacy*.mdx
 nx run extension:test:unit

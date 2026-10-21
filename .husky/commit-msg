@@ -1,0 +1,2 @@
+# The first line follows config/commits.toml: "<emoji> <type>(<scope>): <summary>".
+bun scripts/check-commit-message.ts "$1"
