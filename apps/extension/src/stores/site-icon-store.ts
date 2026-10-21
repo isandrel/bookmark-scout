@@ -68,6 +68,6 @@ export function lookupSiteIcon(
   const exact = state.byOrigin[origin];
   if (exact) return exact;
   const host = new URL(origin).hostname;
-  const alternateHost = host.startsWith('www.') ? host.slice(4) : `www.${host}`;
+  const alternateHost = otherWwwHost(host);
   return state.byHost[host] ?? state.byHost[alternateHost];
 }

@@ -118,7 +118,7 @@ export function syncItemBytes(key: string, value: unknown): number {
 export type CustomPromptDraft = Pick<CustomPrompt, 'task' | 'name' | 'system'> & { id?: string };
 
 function newPromptId(): string {
-  return crypto.randomUUID().slice(0, 12);
+  return crypto.randomUUID().slice(0, INPUT_LIMITS.ids.prompt);
 }
 
 /** The item a draft is stored as; `updatedAt` is the time of the save. */

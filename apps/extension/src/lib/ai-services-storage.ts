@@ -85,7 +85,7 @@ async function updateServices(
 /** A new id that no stored service or credential entry uses yet. */
 function newServiceId(provider: AIProvider, taken: Set<string>): string {
   for (;;) {
-    const id = `${provider}-${crypto.randomUUID().slice(0, 8)}`;
+    const id = `${provider}-${crypto.randomUUID().slice(0, INPUT_LIMITS.ids.service_suffix)}`;
     if (!taken.has(id)) return id;
   }
 }

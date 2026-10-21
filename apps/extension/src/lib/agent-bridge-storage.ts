@@ -17,7 +17,7 @@ export type AgentBridgeState = (typeof AGENT_BRIDGE_STATES)[number];
 const statusSchema = z.object({
   state: z.enum(AGENT_BRIDGE_STATES),
   /** The browser's reason when the bridge program could not start or stopped. */
-  detail: z.string().max(500).optional(),
+  detail: z.string().max(INPUT_LIMITS.chars.agent_bridge_status_detail).optional(),
 });
 
 export type AgentBridgeStatus = z.infer<typeof statusSchema>;

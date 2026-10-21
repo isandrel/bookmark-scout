@@ -11,8 +11,10 @@
 # Lowered from 395 on 2026-10-15 after replacing pino with a small console logger (338 before,
 # 324 after).
 "background.js" = 365
-"popup.html" = 950
-"sidepanel.html" = 950
+# Raised from 950 when the numeric and string constants moved into config the popup and side panel
+# validate at startup (952 on 2026-10-21).
+"popup.html" = 965
+"sidepanel.html" = 965
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
@@ -24,12 +26,14 @@
 "options.html" = 1150
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
-"bookmarks.html" = 1400
+# Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403).
+"bookmarks.html" = 1410
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
 "agent-approval.html" = 690
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
-"ai-host.html" = 370
+# Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
+"ai-host.html" = 380
 # The welcome page opened once after install (516 on 2026-10-14).
 "welcome.html" = 580

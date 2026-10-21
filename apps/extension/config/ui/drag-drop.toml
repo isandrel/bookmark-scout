@@ -9,5 +9,9 @@ folder_edge_fraction = { value = 0.25, min = 0.05, max = 0.5 }
 # A drop above this point of a bookmark row goes before it, and below it goes after it
 bookmark_split_fraction = 0.5
 
+# Where a drop counts when the row has no height to measure, or the drag event has no position
+# inside it: the row's middle
+unmeasured_fraction = 0.5
+
 # Milliseconds a drag must hover over a closed folder in the manager's folder tree before it opens
 manager_auto_expand_ms = 700

@@ -305,7 +305,7 @@ async function connect(): Promise<void> {
     cancelAllAgentApprovals();
     void setStatus({
       state: reason && NOT_INSTALLED.test(reason) ? 'notInstalled' : 'failed',
-      ...(reason ? { detail: reason.slice(0, 500) } : {}),
+      ...(reason ? { detail: reason.slice(0, INPUT_LIMITS.chars.agent_bridge_status_detail) } : {}),
     });
     scheduleRetry();
   });

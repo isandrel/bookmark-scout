@@ -152,7 +152,12 @@ const proposeChanges = defineAction({
     partOfChanges: true,
   },
   input: z.object({
-    summary: z.string().trim().min(1).max(200).describe('One short sentence on what this does'),
+    summary: z
+      .string()
+      .trim()
+      .min(1)
+      .max(INPUT_LIMITS.chars.plan_summary)
+      .describe('One short sentence on what this does'),
     changes: z.array(operationInput).min(1).max(actionLimits.max_plan_operations),
   }),
   output: z.object({ planId: z.string(), changes: previewOutput, deletes: z.number().int() }),

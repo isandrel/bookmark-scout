@@ -41,6 +41,11 @@ export type QuickSaveToastActionId = (typeof QUICK_SAVE_TOAST_ACTIONS)[number];
 export type QuickSaveToastView = {
   /** The quick save this notification belongs to; actions echo it back. */
   id: string;
+  /**
+   * Random bytes in the token the page's notification makes for itself on its first view; the
+   * notification reads no config of its own, so the page gets no more of the extension.
+   */
+  documentTokenBytes: number;
   status: QuickSaveStatus;
   theme: QuickSaveTheme;
   /** The language tag of the strings, for `lang`. */

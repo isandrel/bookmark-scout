@@ -210,7 +210,7 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
           : undefined;
         if (item) {
           const box = rowElement?.getBoundingClientRect();
-          const fraction = box && box.height > 0 ? (event.clientY - box.top) / box.height : 0.5;
+          const fraction = rowFraction(event.clientY, box);
           const target = dropTargetFor(item);
           const zone = getManagerDropZone(
             target,
@@ -269,9 +269,7 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
         // folder's bottom edge is where its first child starts, so it takes the drop into it.
         const target = dropTargetFor(folder);
         const box = element?.getBoundingClientRect();
-        const offset = box && box.height > 0 ? (event.clientY - box.top) / box.height : 0.5;
-        // A pointer outside the row (a drag event without a position) counts as its middle.
-        const fraction = offset >= 0 && offset <= 1 ? offset : 0.5;
+        const fraction = rowFraction(event.clientY, box);
         const edgeZone = getManagerDropZone(target, fraction, true) ?? 'into';
         const zone =
           edgeZone === 'after' && element?.getAttribute('aria-expanded') === 'true'

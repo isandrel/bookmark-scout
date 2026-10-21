@@ -136,11 +136,15 @@ export const bookmarkClipboardValue = defineStoredValue<BookmarkClipboard | null
 );
 
 /** FNV-1a: a short, stable fingerprint of the clipboard text, so the text itself is not kept. */
+/** FNV-1a's 32-bit offset basis and prime. */
+const FNV_OFFSET_BASIS = 0x811c9dc5;
+const FNV_PRIME = 0x01000193;
+
 function hashText(text: string): string {
-  let hash = 0x811c9dc5;
+  let hash = FNV_OFFSET_BASIS;
   for (let index = 0; index < text.length; index += 1) {
     hash ^= text.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193);
+    hash = Math.imul(hash, FNV_PRIME);
   }
   return (hash >>> 0).toString(HEX_RADIX);
 }

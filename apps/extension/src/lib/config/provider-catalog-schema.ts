@@ -28,7 +28,13 @@ const isSafeUrl = (value: string) => {
   }
 };
 
-const catalogUrlSchema = z.string().max(2048).refine(isSafeUrl, 'Expected an https or local URL');
+/** The longest address the catalog may list, the length browsers and servers widely accept. */
+const MAX_CATALOG_URL_LENGTH = 2048;
+
+const catalogUrlSchema = z
+  .string()
+  .max(MAX_CATALOG_URL_LENGTH)
+  .refine(isSafeUrl, 'Expected an https or local URL');
 
 export const catalogProviderSchema = z.strictObject({
   // No control characters: the name is shown in the provider picker.

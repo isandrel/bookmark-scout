@@ -192,6 +192,7 @@ Use these before writing a new helper; each replaced several copies. Their file 
 - be careful with cross-browser API assumptions
 - do not introduce a fix that works only for Chrome if the existing code clearly supports Firefox or Edge
 - put what differs between browsers in `config/browsers/profiles.toml` (one table per browser in `[browsers] supported` of `config/project.toml`, validated by `src/lib/browser-profiles.ts`) and ask `browserProfile()` for the capability; never compare browser names or read `import.meta.env.BROWSER` elsewhere (`tests/unit/browser-profiles.test.ts` fails on either). Code the manifest build reads takes `SupportedBrowser` from `src/lib/supported-browsers.ts`, and the permission and command catalogs keep their per-browser tables. A missing API in some browser versions stays a runtime feature check.
+- never type a number in `src/`: a tunable value goes in `config/` (with its bounds beside it, `{ value, min, max }`, read through `lib/config/bounded.ts`), a unit or protocol fact gets one named constant (`lib/units.ts`, `lib/http-status.ts`); Biome's `noMagicNumbers` is an error in `src/`, so `nx run extension:lint` fails on one. No fallback values either: a value has one source, and an unknown one is an error
 - keep background, sidepanel, popup, and options flows consistent with their runtime boundaries
 - use WXT's promise-based `browser.*` API, never callback-style `chrome.*`; Firefox's `browser` is promise-only, so a renamed callback call breaks there
 
