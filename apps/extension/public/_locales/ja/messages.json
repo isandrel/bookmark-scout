@@ -7368,8 +7368,8 @@
         "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
     },
     "jobs_errorSetup": {
-        "message": "このタスクは続行できませんでした。もう一度開始してください。",
-        "description": "A background task stopped and cannot go on"
+        "message": "一時停止中: このタスクに必要な処理を開始または保存できませんでした。再開すると、止まったところから続けます。",
+        "description": "A background task paused because something it needs could not start or a result could not be saved; Resume goes on"
     },
     "settings_jobsApplyInBackgroundAbove": {
         "message": "バックグラウンドで適用する件数",

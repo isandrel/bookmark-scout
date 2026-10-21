@@ -7368,8 +7368,8 @@
         "description": "A background task paused because an AI request may have been answered and charged without a saved answer"
     },
     "jobs_errorSetup": {
-        "message": "이 작업을 계속할 수 없었습니다. 다시 시작하세요.",
-        "description": "A background task stopped and cannot go on"
+        "message": "일시 중지됨: 이 작업에 필요한 처리를 시작하거나 저장하지 못했습니다. 다시 시작하면 멈춘 곳부터 이어 갑니다.",
+        "description": "A background task paused because something it needs could not start or a result could not be saved; Resume goes on"
     },
     "settings_jobsApplyInBackgroundAbove": {
         "message": "백그라운드 적용 기준",

@@ -18,7 +18,11 @@ import { installFakePermissions } from '../fake-permissions';
 
 // A service worker has no DOM parser, so it reads page heads through the AI host page; the tests
 // stand in for that page and count what it was asked.
-const host = vi.hoisted(() => ({ heads: [] as string[], open: 0 }));
+const host = vi.hoisted(() => ({
+  heads: [] as string[],
+  open: 0,
+  lostAfter: Number.POSITIVE_INFINITY,
+}));
 vi.mock('@/services/quick-save-ai-host', () => ({
   withAIHost: async (
     _settings: unknown,
@@ -28,6 +32,8 @@ vi.mock('@/services/quick-save-ai-host', () => ({
     host.open += 1;
     return work({
       readHead: async (html) => {
+        // The page closed under the job: every read after it fails.
+        if (host.heads.length >= host.lostAfter) throw new Error('The host page closed');
         host.heads.push(html);
         return { title: 'Read by the host page' };
       },
@@ -82,6 +88,7 @@ beforeEach(async () => {
   installFakePermissions({ origins: [...WEB_ORIGINS] });
   host.heads = [];
   host.open = 0;
+  host.lostAfter = Number.POSITIVE_INFINITY;
   installFakeBookmarks([
     { id: 'f', title: 'Folder' },
     { id: 'b1', parentId: 'f', title: 'Old one', url: 'https://one.invalid/page' },
@@ -130,6 +137,29 @@ describe('Metadata Fetcher as a background job', () => {
       { suggestedTitle: 'Read by the host page' },
       { suggestedTitle: 'Read by the host page' },
     ]);
+  });
+});
+
+describe('the AI host page lost mid-slice (J59)', () => {
+  it('pauses with what it read, and reads the rest when resumed', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    stubFetch({
+      'https://one.invalid/page': () => html('New one'),
+      'https://two.invalid/page': () => html('New two'),
+    });
+    host.lostAfter = 1;
+    const { job, outcomes } = await runToEnd('metadataFetcher');
+    expect(job).toMatchObject({ state: 'paused', lastError: { code: 'slice-setup' } });
+    // The page whose head could not be read is still to do, not reported as unreadable.
+    expect(outcomes.slice(0, 2)).toEqual(['succeeded', undefined]);
+
+    host.lostAfter = Number.POSITIVE_INFINITY;
+    if (!job) throw new Error('no job');
+    await runJobCommand({ type: 'resume', jobId: job.id });
+    await whenJobsIdle();
+    const items = await getJobItems(job.id);
+    expect((await getJob(job.id))?.state).not.toBe('paused');
+    expect(items.slice(0, 2).map((item) => item.outcome)).toEqual(['succeeded', 'succeeded']);
   });
 });
 

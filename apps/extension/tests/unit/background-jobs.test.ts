@@ -483,7 +483,7 @@ describe('jobs side by side (J30, J56)', () => {
 });
 
 describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
-  it('counts nothing a failed save did not keep, and stops the job with the reason (J26)', async () => {
+  it('counts nothing a failed save did not keep, pauses with the reason, and goes on when resumed (J26)', async () => {
     const held = heldFetch();
     vi.stubGlobal('fetch', held.fetch);
     vi.spyOn(jobStore, 'commitItems').mockRejectedValueOnce(new JobStoreError('write-failed'));
@@ -492,7 +492,7 @@ describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
     const jobId = response.job.id;
     await until(async () => {
       held.releaseAll();
-      return (await getJob(jobId))?.state === 'failed';
+      return (await getJob(jobId))?.state === 'paused';
     });
     const job = await getJob(jobId);
     const items = await getJobItems(jobId);
@@ -502,6 +502,11 @@ describe('when saving fails, and how a job ends (J26, J65, J71)', () => {
       done,
     );
     expect(job?.lastError?.code).toBe('slice-setup');
+
+    await runJobCommand({ type: 'resume', jobId });
+    await drain(held, jobId);
+    // Every link counted once in the end, those whose save failed included.
+    expect((await getJob(jobId))?.done.succeeded).toBe(6);
   });
 
   it('lets another page upgrade the store, and answers commands with an error, not a hang (J65)', async () => {

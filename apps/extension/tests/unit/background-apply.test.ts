@@ -216,8 +216,10 @@ describe('applying reviewed changes', () => {
     expect(parts(await auditRecords())).toHaveLength(2);
   });
 
-  it('removes nothing when the record of what goes cannot be kept (J45)', async () => {
-    vi.spyOn(bookmarkAudit, 'beginAuditOperation').mockRejectedValue(new Error('quota'));
+  it('removes nothing when the record of what goes cannot be kept, and goes on once it can (J45)', async () => {
+    const audit = vi
+      .spyOn(bookmarkAudit, 'beginAuditOperation')
+      .mockRejectedValue(new Error('quota'));
     const removals: BookmarkChange[] = ids.map((id) => ({
       kind: 'remove',
       id,
@@ -227,12 +229,18 @@ describe('applying reviewed changes', () => {
     const jobId = await applyInBackground(removals);
     await whenJobsIdle();
     const job = await getJob(jobId);
-    expect(job?.state).toBe('failed');
+    expect(job).toMatchObject({ state: 'paused', lastError: { code: 'slice-setup' } });
     expect(job?.done).toEqual({ succeeded: 0, skipped: 0, failed: 0 });
     expect(bookmarks.childIds('from')).toHaveLength(COUNT);
     // Nothing is left marked as maybe written.
     const items = await getJobItems(jobId, { limit: COUNT });
     expect(items.every((item) => item.inFlightSince === undefined)).toBe(true);
+
+    audit.mockRestore();
+    await runJobCommand({ type: 'resume', jobId });
+    await whenJobsIdle();
+    expect(await getJob(jobId)).toMatchObject({ state: 'succeeded', done: { succeeded: COUNT } });
+    expect(bookmarks.childIds('from')).toHaveLength(0);
   });
 
   it('undoes a finished background task part by part with Ctrl+Z (J48)', async () => {

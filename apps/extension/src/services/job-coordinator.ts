@@ -48,13 +48,24 @@ async function withJobTools(
       throw new JobBlockedError('ai-service-changed');
     }
     return withAIHost(service, { locale, source: adapter.ai.source }, (host) =>
-      work({ readHead: host.readHead, ai: host }),
+      work({ readHead: hostReadHead(host.readHead), ai: host }),
     );
   }
   if (!adapter.readsHtml || typeof DOMParser === 'function') {
     return work({ readHead: async (html, descriptions) => readHtmlHead(html, descriptions) });
   }
-  return withAIHost(null, { locale }, (host) => work({ readHead: host.readHead }));
+  return withAIHost(null, { locale }, (host) => work({ readHead: hostReadHead(host.readHead) }));
+}
+
+/**
+ * The host page's head reader, whose failure (the page closed or gone) pauses the job instead of
+ * counting the page being read as unreadable.
+ */
+function hostReadHead(readHead: JobTools['readHead']): JobTools['readHead'] {
+  return (html, descriptions) =>
+    Promise.resolve(readHead(html, descriptions)).catch((error: unknown) => {
+      throw new JobBlockedError('slice-setup', error instanceof Error ? error.name : 'Error');
+    });
 }
 
 /** The job running in this background, with what stops its work in flight. */
@@ -62,12 +73,11 @@ type ActiveRun = {
   generation: number;
   controllers: Set<AbortController>;
   /**
-   * `block`: the user has to act first (`blocked` says why), and the job pauses. `fail`: the
-   * slice could not run at all, with `failure` the error's name.
+   * `block`: the job pauses until the user acts (`blocked` says why), also when the slice could
+   * not run at all (`slice-setup`, with the error's name).
    */
-  stop?: 'pause' | 'cancel' | 'block' | 'fail';
+  stop?: 'pause' | 'cancel' | 'block';
   blocked?: { code: JobBlockCode; detail?: string };
-  failure?: string;
 };
 const active = new Map<string, ActiveRun>();
 let loop: Promise<void> | undefined;
@@ -229,10 +239,14 @@ async function runSlice(waiting: JobRecord): Promise<void> {
       run.stop ??= 'block';
       run.blocked ??= { code: error.code, detail: error.detail };
     } else {
-      // What the slice needed could not be set up (the AI host page): the job cannot go on.
+      // What the slice needed could not be set up or saved (the AI host page gone, a save
+      // refused): the job pauses with what it has, and Resume tries again from there.
       console.error('[Jobs] Slice could not run:', error instanceof Error ? error.name : error);
-      run.stop ??= 'fail';
-      run.failure = error instanceof Error ? error.name : 'Error';
+      run.stop ??= 'block';
+      run.blocked ??= {
+        code: 'slice-setup',
+        detail: error instanceof Error ? error.name : 'Error',
+      };
     }
   } finally {
     active.delete(job.id);
@@ -352,14 +366,6 @@ async function settleSlice(jobId: string, run: ActiveRun): Promise<void> {
     await transitionJob(jobId, ['running', 'pause_requested'], 'paused', (job) => ({
       ...ended(job),
       lastError: { code, message: detail ?? '' },
-    }));
-    return;
-  }
-  if (run.stop === 'fail') {
-    await transitionJob(jobId, ['running'], 'failed', (job) => ({
-      ...ended(job),
-      finishedAt: Date.now(),
-      lastError: { code: 'slice-setup', message: run.failure ?? 'Error' },
     }));
     return;
   }
