@@ -40,7 +40,9 @@
 # linked redirect targets, which the Tools sidebar's review loads with it (1,440).
 # Lowered from 1450 on 2026-10-22 when every tool review moved to ToolReviews.lazy.tsx, loaded the
 # first time a tool runs (1,375 measured).
-"bookmarks.html" = 1390
+# Raised from 1390 on 2026-10-22 for the one-row toolbar: the Filters menu, filter chips, and the
+# search syntax help with its operator list (1,395).
+"bookmarks.html" = 1405
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

@@ -120,19 +120,22 @@
 # 5,636,530 B uncompressed, 3,691,477 B of JavaScript, and 1,385,224 B of locales.
 # Other raised on 2026-10-22 (28,000 to 28,500) when the manager's search (#781) met these reviews:
 # CI's Firefox build measured 28,065 B of other files.
+# Raised on 2026-10-22 (uncompressed 5,648,000 to 5,668,000, locales 1,396,000 to 1,410,000) for the
+# one-row manager toolbar: the Filters menu, filter chips, and the search syntax help, with their
+# copy in 9 languages. Firefox measured 5,660,349 B uncompressed and 1,401,392 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_777_000
-raw_bytes = 5_648_000
+raw_bytes = 5_668_000
 
 [targets.edge]
 zip_bytes = 1_777_000
-raw_bytes = 5_648_000
+raw_bytes = 5_668_000
 
 [targets.firefox]
 zip_bytes = 1_777_000
-raw_bytes = 5_648_000
+raw_bytes = 5_668_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -141,6 +144,6 @@ raw_bytes = 5_648_000
 javascript = 3_704_000
 css = 84_000
 fonts = 143_000
-locales = 1_396_000
+locales = 1_410_000
 images = 320_000
 other = 28_500
