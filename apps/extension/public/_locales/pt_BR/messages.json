@@ -636,11 +636,11 @@
         "description": "Settings section title: the manager's Tools sidebar"
     },
     "settings_toolsSidebarLayout": {
-        "message": "Layout da barra de ferramentas",
+        "message": "Layout da barra lateral Ferramentas",
         "description": "Setting label: how the Tools sidebar lists its tools"
     },
     "settings_toolsSidebarLayoutDesc": {
-        "message": "Abas mostra uma seção da barra de ferramentas do gerenciador por vez; Uma lista mostra todas as seções em sequência.",
+        "message": "Abas mostra uma seção da barra lateral Ferramentas do gerenciador por vez; Uma lista mostra todas as seções em sequência.",
         "description": "Setting description for Tools Sidebar Layout"
     },
     "settings_toolsSidebarLayoutTabs": {
@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Mostra Indexar texto das páginas na barra de ferramentas e deixa a pesquisa olhar dentro das páginas indexadas. Cada página indexada é baixada; o texto fica neste dispositivo. O botão Indexar o texto desta página do pop-up só lê a página que você está vendo quando você clica nele e mostra o texto antes de guardá-lo.",
+        "message": "Mostra Indexar texto das páginas na barra lateral Ferramentas e deixa a pesquisa olhar dentro das páginas indexadas. Cada página indexada é baixada; o texto fica neste dispositivo. O botão Indexar o texto desta página do pop-up só lê a página que você está vendo quando você clica nele e mostra o texto antes de guardá-lo.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8254,7 +8254,7 @@
         "description": "Settings: switch that turns Fetch Covers on"
     },
     "settings_coversEnabledDesc": {
-        "message": "Mostra Buscar capas na barra de ferramentas. Baixa o cabeçalho de cada página e sua imagem de prévia; uma cópia pequena fica neste dispositivo e os cartões a mostram.",
+        "message": "Mostra Buscar capas na barra lateral Ferramentas. Baixa o cabeçalho de cada página e sua imagem de prévia; uma cópia pequena fica neste dispositivo e os cartões a mostram.",
         "description": "Settings: what turning Fetch Covers on does"
     },
     "settings_coversDefaultScope": {
@@ -8438,7 +8438,7 @@
         "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
     },
     "settings_bookmarkRulesEnabledDesc": {
-        "message": "Mostrar Regras inteligentes na barra de ferramentas",
+        "message": "Mostrar Regras inteligentes na barra lateral Ferramentas",
         "description": "Settings: description of the Enable Smart Rules switch"
     },
     "settings_bookmarkRulesDefaultScope": {
@@ -8454,7 +8454,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Cada regra encontra favoritos com uma pesquisa e adiciona tags, move-os para uma pasta ou as duas coisas. As regras não mudam nada até você executar Regras inteligentes na barra de ferramentas e aplicar a revisão. Quando duas regras movem um favorito, vence a que está mais acima. Ficam somente neste dispositivo.",
+        "message": "Cada regra encontra favoritos com uma pesquisa e adiciona tags, move-os para uma pasta ou as duas coisas. As regras não mudam nada até você executar Regras inteligentes na barra lateral Ferramentas e aplicar a revisão. Quando duas regras movem um favorito, vence a que está mais acima. Ficam somente neste dispositivo.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8518,7 +8518,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Uma regra encontra favoritos com uma pesquisa e diz o que fazer com eles. Ela não muda nada até você executar Regras inteligentes na barra de ferramentas.",
+        "message": "Uma regra encontra favoritos com uma pesquisa e diz o que fazer com eles. Ela não muda nada até você executar Regras inteligentes na barra lateral Ferramentas.",
         "description": "Rule editor description"
     },
     "rules_name": {

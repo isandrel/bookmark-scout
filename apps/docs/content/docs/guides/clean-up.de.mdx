@@ -103,7 +103,7 @@ Klicken Sie in den [Einstellungen](/settings#maintenance) unter **Intelligente R
 Geben Sie der Regel einen Namen und eine Suche, etwa `domain:github.com`, `folder:Lesen -tag:gelesen` oder `(domain:github.com OR domain:gitlab.com) -tag:archived`. Der Editor zeigt, wie viele Lesezeichen sie jetzt findet, oder was an der Suche nicht stimmt, etwa eine nicht geschlossene Klammer; eine Regel lässt sich erst speichern, wenn ihre Suche lesbar ist. Fügen Sie durch Kommas getrennte Tags hinzu, wählen Sie einen Zielordner oder beides, und speichern Sie.
 </Step>
 <Step>
-Wählen Sie in der Werkzeugleiste des Managers den Bereich auf der Karte **Intelligente Regeln** und klicken Sie auf **Ausführen**.
+Wählen Sie in der Tools-Leiste des Managers den Bereich auf der Karte **Intelligente Regeln** und klicken Sie auf **Ausführen**.
 </Step>
 <Step>
 Prüfen Sie die Lesezeichen nach Tab: **Änderungen**, **Konflikte** (zwei Regeln würden es in verschiedene Ordner verschieben), **Blockiert** (sein Ordner fehlt oder wird verwaltet) und **Schon erledigt**. Änderungen stehen zuerst auf **Übernehmen**, Konflikte auf **Überspringen**; ändern Sie andere einzeln oder mit **Auswahl festlegen auf …** und klicken Sie dann auf **Übernehmen** (zum Beispiel **12 Änderungen übernehmen**).
@@ -115,7 +115,7 @@ Gut zu wissen:
 - Regeln laufen in der Reihenfolge der Liste. Jede passende Regel fügt ihre Tags hinzu; die erste, die ein Lesezeichen verschiebt, gewinnt, und Ordner späterer Regeln erscheinen als Konflikte. Ziehen Sie eine Regel, um die Reihenfolge zu ändern.
 - Ein Tag, das ein Lesezeichen schon hat, wird in keiner Schreibweise erneut hinzugefügt. Ordner werden nie getaggt oder verschoben.
 - **Rückgängig** in der Meldung nach dem Übernehmen stellt Verschiebungen und Tags wieder her. Die Verschiebungen sind eine Änderung im Verlauf.
-- Regeln bleiben auf diesem Gerät und sind Teil von **Einstellungen sichern**. Eine auf einem anderen Gerät wiederhergestellte Regel verschiebt Lesezeichen nur, wenn ihr Ordner dort existiert; sonst sind ihre Verschiebungen blockiert, bis Sie den Ordner erneut wählen. Es findet diesen Ordner über seinen Pfad, wenn er dort eine andere ID hat, solange nur ein Ordner diesen Pfad hat.
+- Regeln bleiben auf diesem Gerät und sind Teil von **Einstellungen sichern**. Eine auf einem anderen Gerät wiederhergestellte Regel verschiebt Lesezeichen nur, wenn ihr Ordner dort existiert; sonst sind ihre Verschiebungen blockiert, bis Sie den Ordner erneut wählen. Sie findet diesen Ordner über seinen Pfad, wenn er dort eine andere ID hat, solange nur ein Ordner diesen Pfad hat.
 - Mit **Neue Lesezeichen taggen** in den Einstellungen fügen aktive Regeln jedem Lesezeichen beim Hinzufügen ihre Tags hinzu, ob aus Bookmark Scout, über den Stern des Browsers, aus einer anderen Erweiterung oder per Synchronisierung, denn der Browser sagt nicht, woher ein Lesezeichen kommt. Es werden nur Tags hinzugefügt; das Verschieben einer Regel wartet auf einen Lauf, den Sie prüfen. Viele auf einmal hinzugefügte Lesezeichen (eine Synchronisierung oder ein Import) bleiben unverändert, ebenso ein Lesezeichen, das hinzugefügt wurde, während die Einstellung aus war. Jede automatische Vergabe steht in den Einstellungen unter **Automatisch getaggt**, mit einem Rückgängig, das ihre Tags entfernt.
 - Eine Regel, die gespeichert wurde, bevor die Suche `OR` und Klammern las, findet weiter, was sie gefunden hat: Beides wird als Text in Anführungszeichen gelesen.
 
@@ -128,7 +128,7 @@ Gut zu wissen:
 Schalten Sie **Seitentext indexieren aktivieren** in den [Einstellungen](/settings#index-page-text) ein.
 </Step>
 <Step>
-Wählen Sie in der Werkzeugleiste des Managers den Bereich auf der Karte **Seitentext indexieren** und klicken Sie auf **Indexieren**. Erlauben Sie auf Nachfrage den Zugriff auf die Websites dieses Bereichs. Das Indexieren läuft im Hintergrund: Es läuft weiter, wenn Sie die Verwaltung schließen, und seine Karte sowie **Hintergrundaufgaben** zeigen den Fortschritt, mit **Anhalten**, **Fortsetzen** und **Abbrechen**; die Seiten warten dann unter **Ergebnisse ansehen**.
+Wählen Sie in der Tools-Leiste des Managers den Bereich auf der Karte **Seitentext indexieren** und klicken Sie auf **Indexieren**. Erlauben Sie auf Nachfrage den Zugriff auf die Websites dieses Bereichs. Das Indexieren läuft im Hintergrund: Es läuft weiter, wenn Sie die Verwaltung schließen, und seine Karte sowie **Hintergrundaufgaben** zeigen den Fortschritt, mit **Anhalten**, **Fortsetzen** und **Abbrechen**; die Seiten warten dann unter **Ergebnisse ansehen**.
 </Step>
 <Step>
 Prüfen Sie die Seiten nach Tab: **Text gefunden**, **Kein Text**, **Anmeldeseite** (die Seite verlangte eine Anmeldung, statt ihren Inhalt zu zeigen; ihr Text wird nie gespeichert), **Fehlgeschlagen**, **Schon indexiert** (vorher von derselben Adresse) und **Übersprungen** (keine Webseite oder im lokalen Netzwerk). Seiten mit Text stehen zuerst auf **Text speichern**; klicken Sie auf **Speichern** (zum Beispiel **Text von 12 Seiten speichern**).
@@ -148,7 +148,7 @@ Beim Indexieren werden Seiten ohne Ihre Cookies heruntergeladen, daher zeigt ein
 Schalten Sie **Titelbilder laden aktivieren** in den [Einstellungen](/settings#fetch-covers) ein.
 </Step>
 <Step>
-Wählen Sie in der Werkzeugleiste des Managers den Bereich auf der Karte **Titelbilder laden** und klicken Sie auf **Laden**. Erlauben Sie auf Nachfrage den Zugriff auf die Websites dieses Bereichs.
+Wählen Sie in der Tools-Leiste des Managers den Bereich auf der Karte **Titelbilder laden** und klicken Sie auf **Laden**. Erlauben Sie auf Nachfrage den Zugriff auf die Websites dieses Bereichs.
 </Step>
 <Step>
 Prüfen Sie die Seiten nach Tab: **Titelbild gefunden** (mit dem Bild), **Kein Titelbild**, **Auf anderer Website** (das Bild liegt auf einer Website, die Sie nicht erlaubt haben), **Fehlgeschlagen**, **Schon geladen** und **Übersprungen**. Gefundene Titelbilder stehen zuerst auf **Titelbild speichern**; klicken Sie auf **Speichern** (zum Beispiel **12 Titelbilder speichern**).

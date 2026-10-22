@@ -636,11 +636,11 @@
         "description": "Settings section title: the manager's Tools sidebar"
     },
     "settings_toolsSidebarLayout": {
-        "message": "Diseño de la barra de herramientas",
+        "message": "Diseño de la barra lateral Herramientas",
         "description": "Setting label: how the Tools sidebar lists its tools"
     },
     "settings_toolsSidebarLayoutDesc": {
-        "message": "Pestañas muestra una sección de la barra de herramientas del gestor a la vez; Una lista muestra todas las secciones seguidas.",
+        "message": "Pestañas muestra una sección de la barra lateral Herramientas del gestor a la vez; Una lista muestra todas las secciones seguidas.",
         "description": "Setting description for Tools Sidebar Layout"
     },
     "settings_toolsSidebarLayoutTabs": {
@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Muestra Indexar texto de páginas en la barra de herramientas y deja que la búsqueda mire dentro de las páginas indexadas. Descarga cada página que indexas; el texto se queda en este dispositivo. El botón Indexar el texto de esta página de la ventana emergente lee la página que estás viendo solo cuando haces clic en él y muestra el texto antes de guardarlo.",
+        "message": "Muestra Indexar texto de páginas en la barra lateral Herramientas y deja que la búsqueda mire dentro de las páginas indexadas. Descarga cada página que indexas; el texto se queda en este dispositivo. El botón Indexar el texto de esta página de la ventana emergente lee la página que estás viendo solo cuando haces clic en él y muestra el texto antes de guardarlo.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8254,7 +8254,7 @@
         "description": "Settings: switch that turns Fetch Covers on"
     },
     "settings_coversEnabledDesc": {
-        "message": "Muestra Obtener portadas en la barra de herramientas. Descarga la cabecera de cada página y su imagen de vista previa; una copia pequeña se queda en este dispositivo y las tarjetas la muestran.",
+        "message": "Muestra Obtener portadas en la barra lateral Herramientas. Descarga la cabecera de cada página y su imagen de vista previa; una copia pequeña se queda en este dispositivo y las tarjetas la muestran.",
         "description": "Settings: what turning Fetch Covers on does"
     },
     "settings_coversDefaultScope": {
@@ -8438,7 +8438,7 @@
         "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
     },
     "settings_bookmarkRulesEnabledDesc": {
-        "message": "Mostrar Reglas inteligentes en la barra de herramientas",
+        "message": "Mostrar Reglas inteligentes en la barra lateral Herramientas",
         "description": "Settings: description of the Enable Smart Rules switch"
     },
     "settings_bookmarkRulesDefaultScope": {
@@ -8454,7 +8454,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Cada regla encuentra marcadores con una búsqueda y añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas no cambian nada hasta que ejecutas Reglas inteligentes en la barra de herramientas y aplicas su revisión. Si dos reglas mueven un marcador, gana la que está más arriba. Solo se guardan en este dispositivo.",
+        "message": "Cada regla encuentra marcadores con una búsqueda y añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas no cambian nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas y aplicas su revisión. Si dos reglas mueven un marcador, gana la que está más arriba. Solo se guardan en este dispositivo.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8518,7 +8518,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Una regla encuentra marcadores con una búsqueda e indica qué hacer con ellos. No cambia nada hasta que ejecutas Reglas inteligentes en la barra de herramientas.",
+        "message": "Una regla encuentra marcadores con una búsqueda e indica qué hacer con ellos. No cambia nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas.",
         "description": "Rule editor description"
     },
     "rules_name": {

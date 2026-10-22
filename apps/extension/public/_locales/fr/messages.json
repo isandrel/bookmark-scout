@@ -636,11 +636,11 @@
         "description": "Settings section title: the manager's Tools sidebar"
     },
     "settings_toolsSidebarLayout": {
-        "message": "Disposition de la barre des outils",
+        "message": "Disposition de la barre latérale Outils",
         "description": "Setting label: how the Tools sidebar lists its tools"
     },
     "settings_toolsSidebarLayoutDesc": {
-        "message": "Onglets affiche une section de la barre des outils du gestionnaire à la fois ; Une liste affiche toutes les sections à la suite.",
+        "message": "Onglets affiche une section de la barre latérale Outils du gestionnaire à la fois ; Une liste affiche toutes les sections à la suite.",
         "description": "Setting description for Tools Sidebar Layout"
     },
     "settings_toolsSidebarLayoutTabs": {
@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Afficher Indexer le texte des pages dans la barre d'outils et laisser la recherche regarder dans les pages indexées. Chaque page indexée est téléchargée ; le texte reste sur cet appareil. Le bouton Indexer le texte de cette page de la fenêtre pop-up ne lit la page que vous consultez que lorsque vous cliquez dessus, et montre le texte avant de le conserver.",
+        "message": "Afficher Indexer le texte des pages dans la barre latérale Outils et laisser la recherche regarder dans les pages indexées. Chaque page indexée est téléchargée ; le texte reste sur cet appareil. Le bouton Indexer le texte de cette page de la fenêtre pop-up ne lit la page que vous consultez que lorsque vous cliquez dessus, et montre le texte avant de le conserver.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8254,7 +8254,7 @@
         "description": "Settings: switch that turns Fetch Covers on"
     },
     "settings_coversEnabledDesc": {
-        "message": "Afficher Récupérer les couvertures dans la barre d'outils. L'en-tête de chaque page et son image d'aperçu sont téléchargés ; une petite copie reste sur cet appareil et les cartes l'affichent.",
+        "message": "Afficher Récupérer les couvertures dans la barre latérale Outils. L'en-tête de chaque page et son image d'aperçu sont téléchargés ; une petite copie reste sur cet appareil et les cartes l'affichent.",
         "description": "Settings: what turning Fetch Covers on does"
     },
     "settings_coversDefaultScope": {
@@ -8438,7 +8438,7 @@
         "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
     },
     "settings_bookmarkRulesEnabledDesc": {
-        "message": "Afficher les Règles intelligentes dans la barre d'outils",
+        "message": "Afficher les Règles intelligentes dans la barre latérale Outils",
         "description": "Settings: description of the Enable Smart Rules switch"
     },
     "settings_bookmarkRulesDefaultScope": {
@@ -8454,7 +8454,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Chaque règle trouve des favoris avec une recherche et ajoute des étiquettes, les déplace dans un dossier, ou les deux. Les règles ne changent rien tant que vous n'exécutez pas Règles intelligentes dans la barre d'outils et n'appliquez pas sa vérification. Si deux règles déplacent un favori, la plus haute l'emporte. Conservées sur cet appareil uniquement.",
+        "message": "Chaque règle trouve des favoris avec une recherche et ajoute des étiquettes, les déplace dans un dossier, ou les deux. Les règles ne changent rien tant que vous n'exécutez pas Règles intelligentes dans la barre latérale Outils et n'appliquez pas sa vérification. Si deux règles déplacent un favori, la plus haute l'emporte. Conservées sur cet appareil uniquement.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8518,7 +8518,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Une règle trouve des favoris avec une recherche et indique quoi en faire. Elle ne change rien tant que vous n'exécutez pas Règles intelligentes dans la barre d'outils.",
+        "message": "Une règle trouve des favoris avec une recherche et indique quoi en faire. Elle ne change rien tant que vous n'exécutez pas Règles intelligentes dans la barre latérale Outils.",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8738,7 +8738,7 @@
         "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
     },
     "covers_captureWarning": {
-        "message": "Voici ce que l'onglet affiche maintenant. Avant de l'enregistrer, vérifiez qu'il ne montre rien de privé, comme des informations de compte ou des messages. Elle est conservée sur cet appareil uniquement.",
+        "message": "Voici ce que l'onglet affiche maintenant. Avant de l'enregistrer, vérifiez qu'il ne montre rien de privé, comme des informations de compte ou des messages. Cette image est conservée sur cet appareil uniquement.",
         "description": "Popup: privacy warning under the picture of the tab, before it is saved"
     },
     "covers_captureDiscard": {
