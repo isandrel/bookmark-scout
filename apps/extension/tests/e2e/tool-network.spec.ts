@@ -195,8 +195,12 @@ test.describe('with website access granted', () => {
     await expect(results).toContainText('Not a web link; skipped');
     expect(site.requests).not.toContain('GET /javascript');
 
-    await results
-      .getByRole('checkbox', { name: 'Apply suggested title for Other Original' })
+    // One new title is kept as it is; the others start on Use page title.
+    await results.getByRole('combobox', { name: 'Action for Other Original' }).click();
+    await page
+      .getByRole('listbox')
+      .filter({ visible: true })
+      .getByRole('option', { name: 'Keep as is', exact: true })
       .click();
     await results.getByRole('button', { name: 'Apply 2 titles' }).click();
     await expect(toastRegion(page).getByText('✓ Titles updated', { exact: true })).toBeVisible();
@@ -235,9 +239,7 @@ test.describe('with website access granted', () => {
     await card.getByRole('button', { name: 'Scan' }).click();
     const results = page.getByRole('dialog', { name: 'Metadata Fetcher' });
     const row = (title: string) =>
-      results
-        .locator('[data-slot="tool-result-row"]')
-        .filter({ has: page.getByText(title, { exact: true }) });
+      results.getByTestId('metadata-item').filter({ has: page.getByText(title, { exact: true }) });
     await expect(row('Stalled')).toContainText('Request timed out', { timeout: 10_000 });
     await expect(row('Document')).toContainText('Not an HTML page; skipped');
     await expect(row('Plain Original')).toContainText('Suggested title: Plain Page Title');

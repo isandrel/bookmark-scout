@@ -431,6 +431,32 @@ export function DuplicateResultsView({
   );
 }
 
+type UrlCleanerAction = 'clean' | 'keep';
+const URL_CLEANER_ACTIONS = ['clean', 'keep'] as const satisfies readonly UrlCleanerAction[];
+
+/** A URL Cleaner review category: the Remove Parameters entry, a repeated parameter, or a fragment. */
+function urlCleanerCategory(reason: UrlCleanerReason): string {
+  return reason.kind === 'pattern' ? `${URL_CLEANER_PATTERN_PREFIX}${reason.pattern}` : reason.kind;
+}
+/** Marks a category named after a Remove Parameters entry, so no entry is taken for another kind. */
+const URL_CLEANER_PATTERN_PREFIX = 'pattern:';
+
+function urlCleanerCategoryLabel(category: string, count: number): string {
+  if (category.startsWith(URL_CLEANER_PATTERN_PREFIX)) {
+    return t('review_categoryNamed', [
+      category.slice(URL_CLEANER_PATTERN_PREFIX.length),
+      String(count),
+    ]);
+  }
+  return category === 'duplicate'
+    ? t('tools_urlCleanerCategoryDuplicate', String(count))
+    : t('tools_urlCleanerCategoryFragment', String(count));
+}
+
+/**
+ * URL Cleaner's review: each URL, by the rule that cleans it, starting on Clean (or Keep as is,
+ * as `[defaults] url_cleaner` says), with batch actions; only the URLs left on Clean change.
+ */
 export function UrlCleanerResultsView({
   result,
   isApplying,
@@ -440,47 +466,79 @@ export function UrlCleanerResultsView({
   result: UrlCleanerResult | null;
   isApplying: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (previews: UrlCleanerPreview[]) => void;
 }) {
+  const previews = useMemo(() => result?.previews ?? [], [result]);
+  const categories = useMemo(
+    () => [...new Set(previews.map((preview) => urlCleanerCategory(preview.reason)))],
+    [previews],
+  );
+  // Picks belong to the scan they were made in, so a new scan starts from the defaults.
+  const [picked, setPicked] = useState({
+    previews,
+    actions: {} as Record<string, UrlCleanerAction>,
+  });
+  const actions = picked.previews === previews ? picked.actions : {};
+  const actionOf = (preview: UrlCleanerPreview) =>
+    actions[preview.id] ?? REVIEW_DEFAULT_ACTIONS.url_cleaner;
+  const chosen = previews.filter((preview) => actionOf(preview) === 'clean');
   return (
     <div className="space-y-4">
-      {result?.previews.length ? (
-        result.previews.map((preview) => (
-          <ToolResultRow key={preview.id} title={getBookmarkDisplayTitle(preview.title)}>
-            <div className="text-xs text-muted-foreground">
-              {preview.folderPath || t('tools_rootFolder')}
-            </div>
-            <div className="break-all rounded-md bg-muted/40 p-2 text-xs">
-              <UrlLink href={preview.originalUrl} />
-            </div>
-            <div className="break-all rounded-md bg-success-wash p-2 text-xs text-success">
-              <UrlLink href={preview.cleanedUrl} />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {preview.removedParams.map((param) => (
-                <Badge key={`${preview.id}-${param}`} variant="outline">
-                  {param}
-                </Badge>
-              ))}
-            </div>
-          </ToolResultRow>
-        ))
+      {previews.length ? (
+        <ReviewList
+          items={previews}
+          idOf={(preview) => preview.id}
+          categories={categories}
+          categoryOf={(preview) => urlCleanerCategory(preview.reason)}
+          categoryLabel={urlCleanerCategoryLabel}
+          actionsOf={() => URL_CLEANER_ACTIONS}
+          actionLabel={(action) =>
+            action === 'clean'
+              ? t('tools_urlCleanerActionClean')
+              : t(DEAD_LINK_REPAIR_CHOICE_LABEL_KEYS.keep)
+          }
+          batchActions={URL_CLEANER_ACTIONS}
+          actionOf={actionOf}
+          onAction={(ids, action) =>
+            setPicked({
+              previews,
+              actions: { ...actions, ...Object.fromEntries(ids.map((id) => [id, action])) },
+            })
+          }
+          titleOf={(preview) => getBookmarkDisplayTitle(preview.title)}
+          disabled={isApplying}
+          rowTestId="url-cleaner-item"
+          renderDetails={(preview) => (
+            <>
+              <p className="truncate text-xs text-muted-foreground line-through">
+                <UrlLink href={preview.originalUrl} />
+              </p>
+              <p className="truncate text-xs text-success">
+                <UrlLink href={preview.cleanedUrl} />
+              </p>
+              <p className="truncate text-xs text-muted-foreground">
+                {[preview.folderPath || t('tools_rootFolder'), ...preview.removedParams].join(
+                  ' · ',
+                )}
+              </p>
+            </>
+          )}
+        />
       ) : (
         <ToolEmptyState message={t('state_noUrlChangesFound')} />
       )}
 
       <ReviewFooter
-        label={t('action_applyChanges')}
+        label={tPlural('tools_urlCleanerApplySelected', chosen.length)}
         busyLabel={t('action_applying')}
         busy={isApplying}
-        disabled={!result?.previews.length}
-        onConfirm={onConfirm}
+        disabled={chosen.length === 0}
+        onConfirm={() => onConfirm(chosen)}
         onCancel={onClose}
       />
     </div>
   );
 }
-
 export function StatisticsResultsView({ result }: { result: BookmarkStatistics | null }) {
   if (!result) {
     return null;
@@ -585,6 +643,41 @@ export function DeadLinkResultsView({
   );
 }
 
+const METADATA_CATEGORIES = ['title', 'same', 'failed', 'notHtml', 'skipped'] as const;
+type MetadataCategory = (typeof METADATA_CATEGORIES)[number];
+type MetadataAction = 'apply' | 'skip';
+
+const METADATA_CATEGORY_LABEL_KEYS = {
+  title: 'tools_metadataCategory_title',
+  same: 'tools_metadataCategory_same',
+  failed: 'tools_metadataCategory_failed',
+  notHtml: 'tools_metadataCategory_notHtml',
+  skipped: 'tools_metadataCategory_skipped',
+} as const satisfies Record<MetadataCategory, string>;
+
+/** Whether the fetch found a title the bookmark can take. */
+function canApplyTitle(item: MetadataFetchResultItem): boolean {
+  return item.changed && Boolean(item.suggestedTitle);
+}
+
+function metadataCategory(item: MetadataFetchResultItem): MetadataCategory {
+  if (canApplyTitle(item)) return 'title';
+  switch (item.status) {
+    case 'ok':
+      return 'same';
+    case 'notHtml':
+    case 'skipped':
+      return item.status;
+    default:
+      return 'failed';
+  }
+}
+
+/**
+ * Metadata Fetcher's review: each bookmark by what the fetch found, a new title starting on Use
+ * page title (or Keep as is, as `[defaults] metadata_fetcher` says), with batch actions; only the
+ * titles left on Use page title change.
+ */
 export function MetadataResultsView({
   result,
   isApplying,
@@ -594,71 +687,76 @@ export function MetadataResultsView({
   isApplying: boolean;
   onApply: (items: MetadataFetchResultItem[]) => void;
 }) {
-  const applicable = useMemo(
-    () => result?.items.filter((item) => item.changed && item.suggestedTitle) ?? [],
-    [result],
-  );
-  const applicableIds = useMemo(() => applicable.map((item) => item.id), [applicable]);
-  const { selected, toggle } = useIdSelection(applicableIds);
+  const items = useMemo(() => result?.items ?? [], [result]);
+  const [picked, setPicked] = useState({ items, actions: {} as Record<string, MetadataAction> });
+  const actions = picked.items === items ? picked.actions : {};
+  const actionOf = (item: MetadataFetchResultItem): MetadataAction =>
+    canApplyTitle(item) ? (actions[item.id] ?? REVIEW_DEFAULT_ACTIONS.metadata_fetcher) : 'skip';
+  const chosen = items.filter((item) => actionOf(item) === 'apply');
 
-  if (!result?.items.length) {
+  if (!items.length) {
     return <ToolEmptyState message={t('state_noMetadataFound')} />;
   }
 
   return (
     <div className="space-y-4">
-      <div className="space-y-3">
-        {result.items.map((item) => {
-          const canApply = item.changed && Boolean(item.suggestedTitle);
-          const title = getBookmarkDisplayTitle(item.title);
-          return (
-            <ToolResultRow
-              key={item.id}
-              title={title}
-              leading={
-                canApply ? (
-                  <Checkbox
-                    id={`metadata-apply-${item.id}`}
-                    className="mt-0.5"
-                    checked={selected.has(item.id)}
-                    onCheckedChange={(checked) => toggle(item.id, checked === true)}
-                    aria-label={t('tools_metadataApplyItem', title)}
-                  />
-                ) : undefined
-              }
-            >
-              <ResultLine>
-                <UrlLink href={item.url} />
-              </ResultLine>
-              {item.status === 'ok' && canApply ? (
-                <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
-              ) : null}
-              {item.status === 'ok' && hasOtherPageTitle(item) ? (
-                <div className="text-sm text-muted-foreground">
-                  {t('qaManager_pageTitle', item.suggestedTitle)}
-                </div>
-              ) : null}
-              {item.status === 'ok' && item.description ? (
-                <div className="text-xs text-muted-foreground">{item.description}</div>
-              ) : null}
-              <ResultLine>{describeMetadata(item)}</ResultLine>
-            </ToolResultRow>
-          );
-        })}
-      </div>
-      {applicable.length ? (
-        <ReviewFooter
-          label={tPlural('tools_metadataApplySelected', selected.size)}
-          busyLabel={t('action_applying')}
-          busy={isApplying}
-          disabled={selected.size === 0}
-          onConfirm={() => onApply(applicable.filter((item) => selected.has(item.id)))}
-        />
-      ) : null}
+      <ReviewList
+        items={items}
+        idOf={(item) => item.id}
+        categories={METADATA_CATEGORIES}
+        categoryOf={metadataCategory}
+        categoryLabel={(category, count) =>
+          t(METADATA_CATEGORY_LABEL_KEYS[category], String(count))
+        }
+        actionsOf={(item) =>
+          canApplyTitle(item) ? (['apply', 'skip'] as const) : (['skip'] as const)
+        }
+        actionLabel={(action) =>
+          action === 'apply'
+            ? t('tools_metadataActionApply')
+            : t(DEAD_LINK_REPAIR_CHOICE_LABEL_KEYS.keep)
+        }
+        batchActions={['apply', 'skip'] as const}
+        actionOf={actionOf}
+        onAction={(ids, action) =>
+          setPicked({
+            items,
+            actions: { ...actions, ...Object.fromEntries(ids.map((id) => [id, action])) },
+          })
+        }
+        titleOf={(item) => getBookmarkDisplayTitle(item.title)}
+        disabled={isApplying}
+        rowTestId="metadata-item"
+        renderDetails={(item) => (
+          <>
+            <p className="truncate text-xs text-muted-foreground">
+              <UrlLink href={item.url} />
+            </p>
+            {item.status === 'ok' && canApplyTitle(item) ? (
+              <p className="text-xs">{t('tools_suggestedTitle', item.suggestedTitle)}</p>
+            ) : null}
+            {item.status === 'ok' && hasOtherPageTitle(item) ? (
+              <p className="text-xs text-muted-foreground">
+                {t('qaManager_pageTitle', item.suggestedTitle)}
+              </p>
+            ) : null}
+            {item.status === 'ok' && item.description ? (
+              <p className="truncate text-xs text-muted-foreground">{item.description}</p>
+            ) : null}
+            <p className="text-xs text-muted-foreground">{describeMetadata(item)}</p>
+          </>
+        )}
+      />
+      <ReviewFooter
+        label={tPlural('tools_metadataApplySelected', chosen.length)}
+        busyLabel={t('action_applying')}
+        busy={isApplying}
+        disabled={chosen.length === 0}
+        onConfirm={() => onApply(chosen)}
+      />
     </div>
   );
 }
-
 const SITE_ICON_SUMMARY: Array<{ key: string; labelKey: string }> = [
   { key: 'updated', labelKey: 'tools_siteIconStatus_updated' },
   { key: 'unchanged', labelKey: 'tools_siteIconStatus_unchanged' },

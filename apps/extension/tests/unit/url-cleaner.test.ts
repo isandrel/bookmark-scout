@@ -17,6 +17,7 @@ describe('URL cleaner', () => {
     ).toEqual({
       cleanedUrl: 'https://e2e.invalid/p?amp&plus=a+b&q=a%20b',
       removedParams: ['utm_source'],
+      reason: { kind: 'pattern', pattern: 'utm_source' },
     });
   });
 
@@ -33,12 +34,16 @@ describe('URL cleaner', () => {
       cleanBookmarkUrl('https://e2e.invalid/p?id=2#top', { ...options, removeHash: true })
         ?.cleanedUrl,
     ).toBe('https://e2e.invalid/p?id=2');
+    expect(
+      cleanBookmarkUrl('https://e2e.invalid/p?id=2#top', { ...options, removeHash: true })?.reason,
+    ).toEqual({ kind: 'fragment' });
   });
 
   it('dedupes identical key/value pairs only', () => {
     expect(cleanBookmarkUrl('https://e2e.invalid/p?a=1&a=1&a=2', options)).toEqual({
       cleanedUrl: 'https://e2e.invalid/p?a=1&a=2',
       removedParams: ['a'],
+      reason: { kind: 'duplicate' },
     });
   });
 
@@ -67,6 +72,7 @@ describe('query parameter name patterns', () => {
     expect(cleanBookmarkUrl(reddit, { ...options, removeParams: ['utm_*'] })).toEqual({
       cleanedUrl: 'https://www.reddit.com/r/csMajors/comments/s2b1iy/x/',
       removedParams: ['utm_name'],
+      reason: { kind: 'pattern', pattern: 'utm_*' },
     });
     expect(
       cleanBookmarkUrl(`${reddit}&utm_source=x`, {

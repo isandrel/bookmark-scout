@@ -14,8 +14,15 @@ const reviewConfig = readConfig(
   z.strictObject({
     row_estimate_px: z.number().int().positive(),
     overscan_rows: z.number().int().nonnegative(),
+    defaults: z.strictObject({
+      url_cleaner: z.enum(['clean', 'keep']),
+      metadata_fetcher: z.enum(['apply', 'skip']),
+    }),
   }),
 );
+
+/** What each tool's review starts its items on (`[defaults]` in config/ui/tool-review.toml). */
+export const REVIEW_DEFAULT_ACTIONS = reviewConfig.defaults;
 
 export type ReviewListProps<Item, Category extends string, Action extends string> = {
   items: readonly Item[];

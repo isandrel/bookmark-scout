@@ -559,10 +559,6 @@
         "message": "Annuler",
         "description": "Undo deletion button label"
     },
-    "action_applyChanges": {
-        "message": "Appliquer les modifications",
-        "description": "Apply previewed changes button label"
-    },
     "action_resetAll": {
         "message": "Tout réinitialiser",
         "description": "Reset all settings button label"
@@ -3891,16 +3887,6 @@
         "message": "Ignoré",
         "description": "Dead link status badge"
     },
-    "tools_metadataApplyItem": {
-        "message": "Appliquer le titre suggéré pour $title$",
-        "description": "Accessible label for the checkbox that selects a title suggestion",
-        "placeholders": {
-            "title": {
-                "content": "$1",
-                "example": "Example"
-            }
-        }
-    },
     "tools_metadataApplySelected": {
         "message": "Appliquer $count$ titres",
         "description": "Button that applies selected title suggestions",
@@ -4586,6 +4572,54 @@
     "review_categoryAll": {
         "message": "Tout ($1)",
         "description": "Review list: the tab that shows every item; $1 is how many"
+    },
+    "review_categoryNamed": {
+        "message": "$1 ($2)",
+        "description": "Review list: a tab named after what its items share; $1 is that name, $2 how many"
+    },
+    "tools_urlCleanerCategoryDuplicate": {
+        "message": "Paramètres répétés ($1)",
+        "description": "URL Cleaner review: the tab of URLs cleaned of a parameter repeated with the same value; $1 is how many"
+    },
+    "tools_urlCleanerCategoryFragment": {
+        "message": "Fragment seul ($1)",
+        "description": "URL Cleaner review: the tab of URLs that lose only their fragment; $1 is how many"
+    },
+    "tools_urlCleanerActionClean": {
+        "message": "Nettoyer",
+        "description": "URL Cleaner review: the action that cleans a URL"
+    },
+    "tools_urlCleanerApplySelected": {
+        "message": "Nettoyer $1 URL",
+        "description": "URL Cleaner review: button that cleans the URLs left on Clean; $1 is how many"
+    },
+    "tools_urlCleanerApplySelected_one": {
+        "message": "Nettoyer $1 URL",
+        "description": "URL Cleaner review: button that cleans the URLs left on Clean (singular); $1 is how many"
+    },
+    "tools_metadataCategory_title": {
+        "message": "Nouveau titre ($1)",
+        "description": "Metadata Fetcher review: tab of bookmarks with a new page title; $1 is how many"
+    },
+    "tools_metadataCategory_same": {
+        "message": "Aucun changement ($1)",
+        "description": "Metadata Fetcher review: tab of bookmarks whose title stays; $1 is how many"
+    },
+    "tools_metadataCategory_failed": {
+        "message": "Illisible ($1)",
+        "description": "Metadata Fetcher review: tab of pages that could not be read; $1 is how many"
+    },
+    "tools_metadataCategory_notHtml": {
+        "message": "Pas une page Web ($1)",
+        "description": "Metadata Fetcher review: tab of addresses that are files, not web pages; $1 is how many"
+    },
+    "tools_metadataCategory_skipped": {
+        "message": "Ignoré ($1)",
+        "description": "Metadata Fetcher review: tab of bookmarks not checked; $1 is how many"
+    },
+    "tools_metadataActionApply": {
+        "message": "Utiliser le titre de la page",
+        "description": "Metadata Fetcher review: the action that gives the bookmark the page title"
     },
     "tools_deadLinkGroup_dead": {
         "message": "Lien mort confirmé ($1)",

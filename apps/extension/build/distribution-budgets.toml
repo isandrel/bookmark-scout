@@ -114,27 +114,33 @@
 # 5,617,129 B uncompressed and 1,372,887 B of locales; the limits are about 10 KB above that.
 # Locales raised on 2026-10-22 (1,368,000 to 1,382,000) for the Tools sidebar tabs and their
 # layout setting in 9 languages; Firefox measured 1,371,070 B of locales.
+# Raised on 2026-10-22 (ZIP 1,767,000 to 1,777,000, uncompressed 5,630,000 to 5,648,000, javascript
+# 3,694,000 to 3,704,000, locales 1,382,000 to 1,396,000) when the URL Cleaner and Metadata
+# Fetcher reviews (#780) met the Tools sidebar tabs (#778) on main: Firefox measured ZIP 1,765,437,
+# 5,636,530 B uncompressed, 3,691,477 B of JavaScript, and 1,385,224 B of locales.
+# Other raised on 2026-10-22 (28,000 to 28,500) when the manager's search (#781) met these reviews:
+# CI's Firefox build measured 28,065 B of other files.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_767_000
-raw_bytes = 5_630_000
+zip_bytes = 1_777_000
+raw_bytes = 5_648_000
 
 [targets.edge]
-zip_bytes = 1_767_000
-raw_bytes = 5_630_000
+zip_bytes = 1_777_000
+raw_bytes = 5_648_000
 
 [targets.firefox]
-zip_bytes = 1_767_000
-raw_bytes = 5_630_000
+zip_bytes = 1_777_000
+raw_bytes = 5_648_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_694_000
+javascript = 3_704_000
 css = 84_000
 fonts = 143_000
-locales = 1_382_000
+locales = 1_396_000
 images = 320_000
-other = 28_000
+other = 28_500
