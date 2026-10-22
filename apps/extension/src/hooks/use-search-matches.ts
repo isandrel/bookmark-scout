@@ -29,10 +29,10 @@ export function preloadSearchMatches(): void {
 }
 
 /**
- * The ids a query matches; `all` when it filters nothing (no query, or none of its terms could be
- * read), and `pending` while the query filter has not read it yet.
+ * The ids a query matches, each with where it matched; `all` when it filters nothing (no query, or
+ * none of its terms could be read), and `pending` while the query filter has not read it yet.
  */
-export type SearchMatches = ReadonlySet<string> | 'all' | 'pending';
+export type SearchMatches = ReadonlyMap<string, readonly SearchMatchReason[]> | 'all' | 'pending';
 
 /**
  * Matches `query` against `tree`. Typing stays responsive on a large library: the matches follow

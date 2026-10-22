@@ -185,7 +185,8 @@ describe('filterBookmarkTreeByQuery', () => {
 
   it('lists the same matches by id for the manager table', () => {
     const metadata: StoredBookmarkMetadataById = { soup: { tags: ['Food'] } };
-    const sorted = (matches: ReadonlySet<string> | undefined) => [...(matches ?? [])].sort();
+    const sorted = (matches: ReadonlyMap<string, unknown> | undefined) =>
+      [...(matches?.keys() ?? [])].sort();
     // A plain word naming a folder lists the folder, not everything in it.
     expect(sorted(matchBookmarkTreeQuery(tree, 'recipes', metadata))).toEqual(['recipes']);
     expect(sorted(matchBookmarkTreeQuery(tree, 'folder:recipes', metadata))).toEqual([
@@ -205,7 +206,7 @@ describe('filterBookmarkTreeByQuery', () => {
   it('typing on checks only what the last query found, and stays right when it widens', () => {
     const metadata: StoredBookmarkMetadataById = { soup: { tags: ['Food'] } };
     const sorted = (text: string) =>
-      [...(matchBookmarkTreeQuery(tree, text, metadata) ?? [])].sort();
+      [...(matchBookmarkTreeQuery(tree, text, metadata)?.keys() ?? [])].sort();
     // Each step matches what a search from scratch matches, typed one after another.
     const steps: [string, string[]][] = [
       ['re', ['recipe-cake', 'recipe-db', 'recipes']],
