@@ -118,6 +118,8 @@
 # 3,694,000 to 3,704,000, locales 1,382,000 to 1,396,000) when the URL Cleaner and Metadata
 # Fetcher reviews (#780) met the Tools sidebar tabs (#778) on main: Firefox measured ZIP 1,765,437,
 # 5,636,530 B uncompressed, 3,691,477 B of JavaScript, and 1,385,224 B of locales.
+# Other raised on 2026-10-22 (28,000 to 28,500) when the manager's search (#781) met these reviews:
+# CI's Firefox build measured 28,065 B of other files.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -141,4 +143,4 @@ css = 84_000
 fonts = 143_000
 locales = 1_396_000
 images = 320_000
-other = 28_000
+other = 28_500
