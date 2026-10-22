@@ -9,7 +9,9 @@ import {
   filterBookmarkTree,
   getSearchExpandedFolderIds,
   getSearchMatchRanges,
+  getSearchRegexProblem,
   isSearchQueryValid,
+  isSlowRegex,
   limitSearchResults,
   type SearchOptions,
   usesTitleSearch,
@@ -340,5 +342,29 @@ describe('limitSearchResults', () => {
   it('keeps a single match when the limit is one', () => {
     const limited = limitSearchResults(filterBookmarkTree(tree, 'recipe', defaults), 1);
     expect(ids(limited)).toEqual(['root', 'bar', 'recipes', 'soup', 'baking']);
+  });
+});
+
+describe('slow regular expressions', () => {
+  const regex = { matchCase: false, wholeWord: false, useRegex: true };
+
+  it('flags a group that repeats something repeating, and nothing else', () => {
+    for (const pattern of ['(a+)+', '(\\w*)*$', '((ab)*c+){2,}', '(x+y)+z']) {
+      expect(isSlowRegex(pattern), pattern).toBe(true);
+    }
+    for (const pattern of ['a+b*', '(ab)+', '(a|b)*', '[(a+)]+', '\\(a+\\)+', '(a{2})+', 'docs?']) {
+      expect(isSlowRegex(pattern), pattern).toBe(false);
+    }
+  });
+
+  it('searches a slow pattern as plain text and says why', () => {
+    // Built from parts: code scanning would otherwise report this test data itself as a slow regex,
+    // which the code under test refuses to compile.
+    const slow = ['(a+)', '+$'].join('');
+    expect(getSearchRegexProblem(slow, regex)).toBe('slow');
+    expect(getSearchRegexProblem('(', regex)).toBe('invalid');
+    expect(getSearchRegexProblem('rea(d|ct)', regex)).toBeUndefined();
+    expect(getSearchRegexProblem('(a+)+', { ...regex, useRegex: false })).toBeUndefined();
+    expect(getSearchMatchRanges(`${'a'.repeat(40)}!`, slow, regex)).toEqual([]);
   });
 });

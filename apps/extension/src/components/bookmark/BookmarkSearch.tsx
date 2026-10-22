@@ -20,7 +20,15 @@ import {
   WholeWord,
   X,
 } from 'lucide-react';
-import { type RefObject, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import {
+  type RefObject,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { z } from 'zod';
 import { boundedNumber } from '@/lib/config/bounded';
 
@@ -232,7 +240,15 @@ export function BookmarkSearch({
   const [historyRequested, setHistoryRequested] = useState(false);
   const [activeHistoryIndex, setActiveHistoryIndex] = useState(-1);
   const showHistory = isFocused && historyRequested && !query && searchHistory.length > 0;
-  const isInvalidRegex = !isSearchQueryValid(query, searchOptions);
+  const regexProblem = getSearchRegexProblem(query, searchOptions);
+  const isInvalidRegex = regexProblem !== undefined;
+  // A query the operators cannot use as typed, such as an unknown `is:` value or a date that is
+  // not one, says so instead of quietly finding nothing (the manager does the same).
+  const queryProblem = useMemo(() => {
+    if (usesTitleSearch(searchOptions)) return undefined;
+    const [diagnostic] = parseSearchQuery(query).diagnostics;
+    return diagnostic ? describeSearchDiagnostic(diagnostic) : undefined;
+  }, [query, searchOptions]);
   // Keep focus in the input so choosing a history entry or toggling an option does not blur it.
   const keepInputFocus = (e: React.MouseEvent) => e.preventDefault();
 
@@ -546,7 +562,16 @@ export function BookmarkSearch({
       </div>
       {isInvalidRegex && (
         <p role="alert" className="mt-1 px-1 text-xs text-destructive-text">
-          {t('search_invalidRegex')}
+          {t(regexProblem === 'slow' ? 'search_slowRegex' : 'search_invalidRegex')}
+        </p>
+      )}
+      {queryProblem && (
+        <p
+          role="status"
+          data-testid="search-query-problem"
+          className="mt-1 px-1 text-xs text-warning"
+        >
+          {queryProblem}
         </p>
       )}
     </div>

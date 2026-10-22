@@ -145,6 +145,24 @@ test('whole-word search matches CJK and symbol-edged terms, and invalid regex wa
   await expect(page.getByRole('alert')).toContainText('Invalid regular expression');
   await search.fill('[x]');
   await expect(page.getByRole('alert')).toHaveCount(0);
+  // A pattern that repeats a repeating group could freeze the popup: it is searched as text.
+  await search.fill('(a+)+$');
+  await expect(page.getByRole('alert')).toContainText('could take too long');
+});
+
+test('a query the operators cannot use says so under the search box', async ({
+  extensionId,
+  page,
+}) => {
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+  const problem = page.getByTestId('search-query-problem');
+  await search.fill('is:bogus recipe');
+  await expect(problem).toHaveText('is:bogus is not a known value, so it is left out.');
+  await search.fill('after:yesterday recipe');
+  await expect(problem).toContainText('is not a date in the form YYYY-MM-DD');
+  await search.fill('recipe');
+  await expect(problem).toHaveCount(0);
 });
 
 test('search box is focused on open and the result limit notice stays visible', async ({

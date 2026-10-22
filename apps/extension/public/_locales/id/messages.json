@@ -3567,6 +3567,10 @@
         "message": "Ekspresi reguler tidak valid. Menelusuri sebagai teks biasa.",
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
+    "search_slowRegex": {
+        "message": "Pola ini bisa terlalu lama pada beberapa judul. Mencari sebagai teks biasa.",
+        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+    },
     "search_reasonUrl": {
         "message": "di URL",
         "description": "Muted note after a popup search result whose title did not match, saying the query matched its URL"

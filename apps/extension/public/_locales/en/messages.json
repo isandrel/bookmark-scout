@@ -3587,6 +3587,10 @@
         "message": "Invalid regular expression. Searching as plain text instead.",
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
+    "search_slowRegex": {
+        "message": "This pattern could take too long on some titles. Searching as plain text instead.",
+        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+    },
     "search_reasonUrl": {
         "message": "in URL",
         "description": "Muted note after a popup search result whose title did not match, saying the query matched its URL"

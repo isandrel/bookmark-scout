@@ -32,7 +32,46 @@ const REGEX_SPECIAL_CHARACTERS = /[.*+?^${}()|[\]\\]/g;
 const WORD_CHARACTER =
   '(?:(?![\\p{Script=Han}\\p{Script=Hiragana}\\p{Script=Katakana}])[\\p{L}\\p{N}\\p{M}_])';
 
+/** An unbounded quantifier at `index` of a pattern: `*`, `+`, or `{n,}`. */
+function unboundedQuantifierAt(source: string, index: number): boolean {
+  const char = source[index];
+  if (char === '*' || char === '+') return true;
+  return char === '{' && /^\{\d+,\}/.test(source.slice(index));
+}
+
+/**
+ * Whether a user pattern repeats a group that itself repeats without bound, such as `(a+)+` or
+ * `(\w*)*`: on a title that almost matches, the engine tries every way to split it, which can
+ * freeze the page for minutes. Such a pattern is searched as plain text instead.
+ */
+export function isSlowRegex(source: string): boolean {
+  const groups: boolean[] = [];
+  let inClass = false;
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    if (char === '\\') {
+      index += 1;
+      continue;
+    }
+    if (inClass) {
+      if (char === ']') inClass = false;
+      continue;
+    }
+    if (char === '[') inClass = true;
+    else if (char === '(') groups.push(false);
+    else if (char === ')') {
+      const repeatsInside = groups.pop() ?? false;
+      if (repeatsInside && unboundedQuantifierAt(source, index + 1)) return true;
+      if (repeatsInside && groups.length > 0) groups[groups.length - 1] = true;
+    } else if (unboundedQuantifierAt(source, index) && groups.length > 0) {
+      groups[groups.length - 1] = true;
+    }
+  }
+  return false;
+}
+
 function buildSearchRegex(query: string, options: SearchOptions): RegExp {
+  if (options.useRegex && isSlowRegex(query)) throw new SyntaxError('slow pattern');
   const source = options.useRegex ? query : query.replace(REGEX_SPECIAL_CHARACTERS, '\\$&');
   // Always Unicode mode, so Whole Word never changes which patterns compile or what `\p{L}` means.
   const flags = options.matchCase ? 'gu' : 'giu';
@@ -41,15 +80,27 @@ function buildSearchRegex(query: string, options: SearchOptions): RegExp {
     : new RegExp(source, flags);
 }
 
-/** Whether a regex-mode query compiles; invalid patterns fall back to a plain text search. */
-export function isSearchQueryValid(query: string, options: SearchOptions): boolean {
-  if (!options.useRegex || !query) return true;
+/**
+ * Why a regex-mode query is searched as plain text instead: it does not compile (`invalid`), or
+ * it could take too long (`slow`, see `isSlowRegex`). Undefined when it is used as typed.
+ */
+export function getSearchRegexProblem(
+  query: string,
+  options: SearchOptions,
+): 'invalid' | 'slow' | undefined {
+  if (!options.useRegex || !query) return undefined;
+  if (isSlowRegex(query)) return 'slow';
   try {
     buildSearchRegex(query, options);
-    return true;
+    return undefined;
   } catch {
-    return false;
+    return 'invalid';
   }
+}
+
+/** Whether a regex-mode query is used as typed; otherwise it falls back to a plain text search. */
+export function isSearchQueryValid(query: string, options: SearchOptions): boolean {
+  return getSearchRegexProblem(query, options) === undefined;
 }
 
 function substringSearch(query: string, matchCase: boolean): CompiledSearch {

@@ -3543,6 +3543,10 @@
         "message": "正規表現が無効です。通常のテキストとして検索しています。",
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
+    "search_slowRegex": {
+        "message": "このパターンは一部のタイトルで時間がかかりすぎる可能性があるため、通常のテキストとして検索しています。",
+        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+    },
     "search_reasonUrl": {
         "message": "URL に一致",
         "description": "Muted note after a popup search result whose title did not match, saying the query matched its URL"
