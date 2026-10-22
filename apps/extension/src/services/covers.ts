@@ -226,3 +226,51 @@ export async function saveCoverResults(
   await pruneCovers(await fetchBookmarkIds());
   return { saved };
 }
+
+/** Why a picture of the current tab did not become a cover. */
+export type TabCoverError = 'changed' | 'private' | 'denied' | 'unreadable';
+
+/** A picture of the current tab, shrunk, for every bookmark of its address. */
+export type TabCover = { covers: CoverImage[]; preview: string };
+
+function dataUrlBytes(dataUrl: string): Uint8Array {
+  const binary = atob(dataUrl.slice(dataUrl.indexOf(',') + 1));
+  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+}
+
+/**
+ * Takes a picture of what the active tab shows now, as a cover for the bookmarks of `url`, only
+ * after a click (the toolbar popup's activeTab allows it) and only while that tab shows `url`
+ * before and after the picture, so a picture is never kept for another page. Private windows are
+ * never pictured. Nothing is stored; save the reviewed picture with `saveCovers`.
+ */
+export async function captureTabCover(
+  url: string,
+  widthPx: number,
+): Promise<{ cover: TabCover } | { error: TabCoverError }> {
+  const activeTab = async () =>
+    (await browser.tabs.query({ active: true, currentWindow: true }))[0];
+  const tab = await activeTab();
+  if (!tab || tab.url !== url) return { error: 'changed' };
+  if (tab.incognito) return { error: 'private' };
+  let dataUrl: string;
+  try {
+    dataUrl = await browser.tabs.captureVisibleTab(tab.windowId, { format: 'png' });
+  } catch {
+    return { error: 'denied' };
+  }
+  const after = await activeTab();
+  if (after?.id !== tab.id || after.url !== url) return { error: 'changed' };
+  const image = await shrinkImage(dataUrlBytes(dataUrl), 'image/png', widthPx).catch(
+    () => undefined,
+  );
+  if (!image) return { error: 'unreadable' };
+  const bookmarks = (await findBookmarksByUrl(url)).filter((node) => node.url === url);
+  if (bookmarks.length === 0) return { error: 'changed' };
+  return {
+    cover: {
+      covers: bookmarks.map((node) => ({ bookmarkId: node.id, url, ...image })),
+      preview: toDataUrl(new Uint8Array(image.data), image.type),
+    },
+  };
+}

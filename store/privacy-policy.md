@@ -28,7 +28,7 @@ Bookmark Scout's use of information received through browser extension APIs adhe
 - **Site icons from your browser's own icon cache** (Chrome and Edge), to show next to bookmarks. No network request is made for them.
 - **Site icons from the bookmarked websites**, only when you run Refresh Site Icons (see below).
 - **The text of bookmarked pages**, only when you run Index Page Text (see below).
-- **The preview image of bookmarked pages**, only when you run Fetch Covers (see below).
+- **The preview image of bookmarked pages**, only when you run Fetch Covers (see below), and **a picture of the tab you are viewing**, only when you click Use this view as the cover in the popup.
 
 The extension declares no content scripts and does not read the pages open in your tabs. After you press a quick save shortcut, it shows a small notification in that one tab, which reads nothing from the page. Only when you turn on Read page content does it download pages separately, as described below. It also downloads the bookmarked pages you run Index Page Text on, and keeps their text on this device, and the head and preview image of the pages you run Fetch Covers on, keeping a small copy of the image on this device.
 
@@ -47,7 +47,7 @@ Everything is kept in your browser's extension storage:
 - **Tags, summaries, saved searches, recent folders, and recent searches** are kept in local storage on this device only. You can turn off recent searches in Settings.
 - **Site icons** you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.
 - **Page text** you save with Index Page Text is kept on this device only and used only by search. You can delete it at any time with Delete page text in Settings.
-- **Covers** you save with Fetch Covers are small copies of each page's preview image, kept on this device only and shown only on the manager's cards. You can delete them at any time with Delete covers in Settings.
+- **Covers** you save with Fetch Covers are small copies of each page's preview image, kept on this device only and shown only on the manager's cards. A cover can also be a picture of the tab you were viewing, taken only when you click Use this view as the cover in the popup and kept only after you have seen it. You can delete them at any time with Delete covers in Settings.
 - **Your last quick save** (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.
 - **The bookmark manager's undo history** (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes.
 - **The bookmark change history** (what changed in your bookmarks and when, whether Bookmark Scout made the change or it was seen from elsewhere: titles, URLs, folders, and the outcome of each change), and a copy of every bookmark's title, URL, and folder as last seen (to tell what changed outside Bookmark Scout), are kept on this device only, in the browser's IndexedDB, for a limited time. They are never synced and never in the backup file. Recording changes made elsewhere can be turned off in Settings. Also a copy of each item Bookmark Scout deletes, with what was inside it and its tags and summary, so it can be restored from the History; removed with its change.

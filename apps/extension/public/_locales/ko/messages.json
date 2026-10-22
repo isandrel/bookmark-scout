@@ -8608,5 +8608,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "사용 중인 규칙이 Bookmark Scout, 브라우저, 동기화 중 어디서 추가되었든 각 북마크가 추가될 때 태그를 붙입니다. 자동으로 옮기지는 않으며, 한꺼번에 추가된 많은 북마크(동기화나 가져오기)는 그대로 둡니다.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "이 화면을 표지로 사용",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "이 화면을 표지로 사용할까요?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "탭에 지금 보이는 화면입니다. 저장하기 전에 계정 정보나 메시지 같은 개인적인 내용이 보이지 않는지 확인하세요. 이 기기에만 보관됩니다.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "버리기",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "표지 저장됨",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "관리자의 카드에 이 북마크의 표지로 표시됩니다.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "표지를 찍지 않음",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "찍기 전에 탭이 바뀌었습니다. 북마크한 페이지를 열고 다시 시도하세요.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "시크릿 창의 페이지는 찍지 않습니다.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "브라우저가 이 탭을 찍도록 허용하지 않았습니다. 해당 페이지에서 툴바 팝업을 열고 다시 시도하세요.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "이 이미지를 표지로 사용할 수 없습니다.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

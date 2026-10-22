@@ -12,7 +12,13 @@ import {
   pruneCovers,
   saveCovers,
 } from '@/lib/cover-store';
-import { findCoverUrls, mayFetchCover, saveCoverResults, scanCovers } from '@/services/covers';
+import {
+  captureTabCover,
+  findCoverUrls,
+  mayFetchCover,
+  saveCoverResults,
+  scanCovers,
+} from '@/services/covers';
 
 const PAGE = 'https://news.example.com/story/1';
 
@@ -256,5 +262,83 @@ describe('Fetch Covers runs', () => {
     );
     expect(saved).toBe(1);
     expect([...(await getCoverInfos()).keys()]).toEqual(['a']);
+  });
+});
+
+describe('Use this view as the cover', () => {
+  const URL_SAVED = 'https://news.example.com/story';
+  const PNG_DATA_URL = `data:image/png;base64,${btoa(String.fromCharCode(...PNG))}`;
+  type Tab = Browser.tabs.Tab;
+  const tab = (overrides: Partial<Tab> = {}) =>
+    ({ id: 7, windowId: 1, url: URL_SAVED, incognito: false, ...overrides }) as Tab;
+
+  beforeEach(() => {
+    vi.stubGlobal('createImageBitmap', async () => ({
+      width: 1600,
+      height: 1000,
+      close: () => undefined,
+    }));
+    vi.stubGlobal(
+      'OffscreenCanvas',
+      class {
+        constructor(
+          readonly width: number,
+          readonly height: number,
+        ) {}
+        getContext() {
+          return { drawImage: () => undefined };
+        }
+        async convertToBlob({ type }: { type: string }) {
+          return new Blob([new Uint8Array(9)], { type });
+        }
+      },
+    );
+    vi.spyOn(fakeBrowser.bookmarks, 'search').mockResolvedValue([
+      { id: 'b1', title: 'Story', url: URL_SAVED, syncing: false },
+      { id: 'b2', title: 'Story again', url: URL_SAVED, syncing: false },
+    ]);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('pictures the tab, shrunk, for every bookmark of its address', async () => {
+    vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab()]);
+    const capture = vi
+      .spyOn(fakeBrowser.tabs, 'captureVisibleTab')
+      .mockResolvedValue(PNG_DATA_URL as never);
+    const result = await captureTabCover(URL_SAVED, 320);
+    expect(capture).toHaveBeenCalledWith(1, { format: 'png' });
+    if (!('cover' in result)) throw new Error(result.error);
+    expect(
+      result.cover.covers.map((cover) => [cover.bookmarkId, cover.width, cover.height]),
+    ).toEqual([
+      ['b1', 320, 200],
+      ['b2', 320, 200],
+    ]);
+    expect(result.cover.preview).toMatch(/^data:image\//);
+  });
+
+  it('takes no picture of another page, or of a private window', async () => {
+    const capture = vi.spyOn(fakeBrowser.tabs, 'captureVisibleTab');
+    vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab({ url: 'https://other.example/' })]);
+    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'changed' });
+    vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab({ incognito: true })]);
+    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'private' });
+    expect(capture).not.toHaveBeenCalled();
+  });
+
+  it('drops a picture when the tab moved on while it was taken, or the browser refused', async () => {
+    const query = vi
+      .spyOn(fakeBrowser.tabs, 'query')
+      .mockResolvedValueOnce([tab()])
+      .mockResolvedValueOnce([tab({ url: 'https://other.example/' })]);
+    vi.spyOn(fakeBrowser.tabs, 'captureVisibleTab').mockResolvedValue(PNG_DATA_URL as never);
+    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'changed' });
+    query.mockResolvedValue([tab()]);
+    vi.spyOn(fakeBrowser.tabs, 'captureVisibleTab').mockRejectedValue(new Error('no access'));
+    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'denied' });
   });
 });

@@ -8262,5 +8262,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "已啟用的規則會在每個書籤新增時為其加上標籤，無論書籤來自 Bookmark Scout、瀏覽器還是同步。絕不會自動移動書籤，一次新增的大量書籤 (同步或匯入) 會保持不變。",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "將目前畫面設為封面",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "將目前畫面設為封面？",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "這是分頁目前顯示的內容。儲存前請確認畫面中沒有帳戶資料或訊息等私人內容。它只會保存在這部裝置上。",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "捨棄",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "封面已儲存",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "書籤管理員的卡片會為這個書籤顯示它。",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "未擷取封面",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "擷取前分頁已變更。請開啟該書籤的網頁後再試一次。",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "絕不會擷取無痕視窗中的網頁。",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "瀏覽器不允許擷取這個分頁。請在該網頁上開啟工具列彈出式視窗後再試一次。",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "無法將這張圖片設為封面。",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

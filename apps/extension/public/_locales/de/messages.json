@@ -8636,5 +8636,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "Aktive Regeln fügen jedem Lesezeichen beim Hinzufügen ihre Tags hinzu, ob aus Bookmark Scout, dem Browser oder der Synchronisierung. Verschoben wird nie automatisch, und viele auf einmal hinzugefügte Lesezeichen (eine Synchronisierung oder ein Import) bleiben unverändert.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "Diese Ansicht als Titelbild verwenden",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "Diese Ansicht als Titelbild verwenden?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "So sieht der Tab gerade aus. Prüfen Sie vor dem Speichern, dass nichts Privates zu sehen ist, etwa Kontodaten oder Nachrichten. Das Bild bleibt nur auf diesem Gerät.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "Verwerfen",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "Titelbild gespeichert",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "Die Karten im Manager zeigen es für dieses Lesezeichen.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "Kein Titelbild aufgenommen",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "Der Tab hat sich vor der Aufnahme geändert. Öffnen Sie die Seite des Lesezeichens und versuchen Sie es erneut.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "Seiten in privaten Fenstern werden nie aufgenommen.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "Der Browser hat keine Aufnahme dieses Tabs erlaubt. Öffnen Sie das Pop-up in der Symbolleiste auf der Seite und versuchen Sie es erneut.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "Das Bild konnte nicht als Titelbild verwendet werden.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

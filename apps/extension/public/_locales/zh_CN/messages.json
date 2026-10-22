@@ -8262,5 +8262,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "已启用的规则会在每个书签添加时为其加上标签，无论书签来自 Bookmark Scout、浏览器还是同步。绝不会自动移动书签，一次添加的大量书签（同步或导入）会保持不变。",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "用当前画面作为封面",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "用当前画面作为封面？",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "这是标签页当前显示的内容。保存前请确认其中没有账号信息或消息等私密内容。它只保存在此设备上。",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "舍弃",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "封面已保存",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "书签管理器的卡片会为此书签显示它。",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "未截取封面",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "截图前标签页已变化。请打开该书签的网页后重试。",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "绝不会截取隐私窗口中的网页。",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "浏览器不允许截取此标签页。请在该网页上打开工具栏弹出窗口后重试。",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "无法将这张图片用作封面。",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

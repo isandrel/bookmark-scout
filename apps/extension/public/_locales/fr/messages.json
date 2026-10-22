@@ -8636,5 +8636,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "Les règles actives ajoutent leurs étiquettes à chaque favori dès son ajout, depuis Bookmark Scout, le navigateur ou la synchronisation. Rien n'est jamais déplacé automatiquement, et les nombreux favoris ajoutés d'un coup (une synchronisation ou une importation) restent tels quels.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "Utiliser cette vue comme couverture",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "Utiliser cette vue comme couverture ?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "Voici ce que l'onglet affiche maintenant. Avant de l'enregistrer, vérifiez qu'il ne montre rien de privé, comme des informations de compte ou des messages. Elle est conservée sur cet appareil uniquement.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "Abandonner",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "Couverture enregistrée",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "Les cartes du gestionnaire l’affichent pour ce favori.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "Aucune couverture prise",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "L'onglet a changé avant la capture. Ouvrez la page du favori et réessayez.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "Les pages des fenêtres privées ne sont jamais capturées.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "Le navigateur n'a pas autorisé la capture de cet onglet. Ouvrez la fenêtre pop-up de la barre d'outils sur la page et réessayez.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "L'image n'a pas pu servir de couverture.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

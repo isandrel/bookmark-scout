@@ -77,10 +77,10 @@ Code: `apps/extension/src/services/bookmarks.ts` and the background listeners in
 ### `activeTab`
 
 ```text
-When the user clicks the toolbar button or the right-click menu, or presses a quick save keyboard shortcut, the extension reads the title and URL of that tab only, so the popup or the shortcut can save the page the user is viewing into a folder (and, if the user turned on AI, suggest a folder for it), and a right-click save can be named after the page title. After a quick save it also shows a small notification in that tab. No access to other tabs and no browsing history.
+When the user clicks the toolbar button or the right-click menu, or presses a quick save keyboard shortcut, the extension reads the title and URL of that tab only, so the popup or the shortcut can save the page the user is viewing into a folder (and, if the user turned on AI, suggest a folder for it), and a right-click save can be named after the page title. After a quick save it also shows a small notification in that tab. With Fetch Covers on, the popup's Use this view as the cover button takes one picture of that tab (tabs.captureVisibleTab), only after the click, only while the tab still shows the bookmarked page, never in a private window; the user sees the picture before it is kept on the device. No access to other tabs and no browsing history.
 ```
 
-Code: `getCurrentTab` in `src/services/bookmarks.ts`, `PopupPage.tsx`, `getBookmarkTitle` in `src/services/context-menu.ts`, `runQuickSave` in `src/services/quick-save.ts`.
+Code: `getCurrentTab` in `src/services/bookmarks.ts`, `PopupPage.tsx`, `getBookmarkTitle` in `src/services/context-menu.ts`, `runQuickSave` in `src/services/quick-save.ts`, `captureTabCover` in `src/services/covers.ts`.
 
 ### `scripting`
 
