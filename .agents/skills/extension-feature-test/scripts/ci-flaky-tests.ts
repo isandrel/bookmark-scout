@@ -26,14 +26,32 @@ const runIds = (
   .split('\n')
   .filter(Boolean);
 
-type Job = { id: number; name: string; conclusion: string | null };
-const jobs: Job[] = [];
-for (const run of runIds) {
-  const found = await $`gh api ${`repos/${repo}/actions/runs/${run}/jobs?per_page=100`} --jq .jobs`
-    .json()
-    .catch(() => [] as Job[]);
-  jobs.push(...(found as Job[]).filter((job) => /E2E|smoke/.test(job.name)));
+/** Requests to GitHub at the same time: hundreds of job logs one by one took over 20 minutes. */
+const PARALLEL = 8;
+
+/** Runs `work` on every item, `PARALLEL` at a time, keeping the order of `items`. */
+async function inParallel<T, R>(items: readonly T[], work: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let next = 0;
+  const worker = async () => {
+    for (let index = next++; index < items.length; index = next++) {
+      results[index] = await work(items[index] as T);
+    }
+  };
+  await Promise.all(Array.from({ length: PARALLEL }, worker));
+  return results;
 }
+
+type Job = { id: number; name: string; conclusion: string | null };
+const jobs = (
+  await inParallel(runIds, async (run) =>
+    (
+      (await $`gh api ${`repos/${repo}/actions/runs/${run}/jobs?per_page=100`} --jq .jobs`
+        .json()
+        .catch(() => [])) as Job[]
+    ).filter((job) => /E2E|smoke/.test(job.name)),
+  )
+).flat();
 // Cancelled jobs stop mid-run and say nothing about a test.
 const readable = jobs.filter((job) => job.conclusion === 'success' || job.conclusion === 'failure');
 
@@ -55,9 +73,10 @@ const clean = (line: string) =>
     .join('\t')
     .replace(/^\S+Z /, '');
 
+const logs = await inParallel(readable, logOf);
 const failures = new Map<string, { jobs: Set<number>; errors: Map<string, number> }>();
-for (const job of readable) {
-  const lines = (await logOf(job)).split('\n').map(clean);
+for (const [position, job] of readable.entries()) {
+  const lines = (logs[position] ?? '').split('\n').map(clean);
   let title = '';
   let block: string[] = [];
   const flush = () => {
