@@ -12,25 +12,25 @@ reporters = ["text-summary", "json-summary", "lcov", "html"]
 include = ["src/**/*.{ts,tsx}"]
 exclude = ["src/**/*.d.ts", "src/entrypoints/**"]
 
-# Percentages for the whole of `include` (measured 2026-10-21: lines 58.08, statements 56.80,
-# functions 52.24, branches 50.50).
+# Percentages for the whole of `include`, each half a point under what was measured, rounded down
+# (measured 2026-10-21: lines 59.2, statements 57.9, functions 53.3, branches 51.3).
 [thresholds]
-lines = 57
-statements = 56
-functions = 51
+lines = 58
+statements = 57
+functions = 52
 branches = 50
 
 # Per folder, by glob (measured 2026-10-21).
-# src/lib: lines 93.3, statements 91.7, functions 92.1, branches 85.7.
+# src/lib: lines 93.6, statements 92.0, functions 92.4, branches 85.6.
 [thresholds.folders."src/lib/**"]
-lines = 92
-statements = 90
+lines = 93
+statements = 91
 functions = 91
-branches = 84
+branches = 85
 
-# src/services: lines 90.0, statements 87.4, functions 86.5, branches 80.9.
+# src/services: lines 90.6, statements 88.0, functions 87.0, branches 81.4.
 [thresholds.folders."src/services/**"]
-lines = 89
-statements = 86
-functions = 85
+lines = 90
+statements = 87
+functions = 86
 branches = 80

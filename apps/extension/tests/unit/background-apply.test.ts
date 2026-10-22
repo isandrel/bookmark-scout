@@ -59,11 +59,11 @@ afterEach(async () => {
 
 /**
  * A part is a hundred writes, each with its History record; on a loaded CI runner measuring
- * coverage that took more than a second, so waits for a part and the tests that wait on two get
- * room well beyond it.
+ * coverage one took more than a second, and a test applying every part more than five. Waits for a
+ * part, and every test here, get room well beyond that.
  */
 const PART_WAIT_MS = 15_000;
-const TWO_PARTS_TEST_MS = 2 * PART_WAIT_MS;
+const APPLY_TEST_MS = 2 * PART_WAIT_MS;
 const eventually = (check: () => void) => vi.waitFor(check, { timeout: PART_WAIT_MS });
 
 /** Holds each part before it writes, until the test lets it go or frees the rest. */
@@ -100,7 +100,7 @@ const parts = (records: Awaited<ReturnType<typeof auditRecords>>) =>
     .map((record) => [record.label.part?.index, record.label.part?.of, record.counts.applied])
     .sort(([a], [b]) => Number(a) - Number(b));
 
-describe('applying reviewed changes', () => {
+describe('applying reviewed changes', { timeout: APPLY_TEST_MS }, () => {
   it('applies up to the Apply in the Background Above setting at once, with Undo', async () => {
     const applied = await applyReviewedChanges(moves.slice(0, JOB_LIMITS.sliceMaxItems), {
       tool: 'tools_aiReorganize',
@@ -177,61 +177,53 @@ describe('applying reviewed changes', () => {
     expect(skipped).toEqual(ids.slice(0, 10));
   });
 
-  it(
-    'waits for a part already writing before it pauses, then goes on after a change made since (J16, J42)',
-    async () => {
-      const held = holdParts();
-      const jobId = await applyInBackground(moves);
-      await eventually(() => expect(held.waiting()).toBe(1));
-      await runJobCommand({ type: 'pause', jobId });
-      // A part's writes cannot be stopped halfway: pausing waits for it.
-      expect((await getJob(jobId))?.state).toBe('pause_requested');
-      held.release();
-      await whenJobsIdle();
-      expect(await getJob(jobId)).toMatchObject({
-        state: 'paused',
-        done: { succeeded: JOB_LIMITS.sliceMaxItems },
-      });
-      expect(bookmarks.childIds('to')).toHaveLength(JOB_LIMITS.sliceMaxItems);
+  it('waits for a part already writing before it pauses, then goes on after a change made since (J16, J42)', async () => {
+    const held = holdParts();
+    const jobId = await applyInBackground(moves);
+    await eventually(() => expect(held.waiting()).toBe(1));
+    await runJobCommand({ type: 'pause', jobId });
+    // A part's writes cannot be stopped halfway: pausing waits for it.
+    expect((await getJob(jobId))?.state).toBe('pause_requested');
+    held.release();
+    await whenJobsIdle();
+    expect(await getJob(jobId)).toMatchObject({
+      state: 'paused',
+      done: { succeeded: JOB_LIMITS.sliceMaxItems },
+    });
+    expect(bookmarks.childIds('to')).toHaveLength(JOB_LIMITS.sliceMaxItems);
 
-      // While paused, a bookmark of a later part is moved elsewhere.
-      const elsewhere = await fakeBrowser.bookmarks.create({ title: 'Elsewhere' });
-      const later = ids[JOB_LIMITS.sliceMaxItems + 1] ?? '';
-      await fakeBrowser.bookmarks.move(later, { parentId: elsewhere.id });
-      held.freeAll();
-      await runJobCommand({ type: 'resume', jobId });
-      await whenJobsIdle();
-      expect(await getJob(jobId)).toMatchObject({
-        state: 'succeeded',
-        done: { succeeded: COUNT - 1, skipped: 1 },
-      });
-      expect(bookmarks.childIds(elsewhere.id)).toEqual([later]);
-    },
-    TWO_PARTS_TEST_MS,
-  );
+    // While paused, a bookmark of a later part is moved elsewhere.
+    const elsewhere = await fakeBrowser.bookmarks.create({ title: 'Elsewhere' });
+    const later = ids[JOB_LIMITS.sliceMaxItems + 1] ?? '';
+    await fakeBrowser.bookmarks.move(later, { parentId: elsewhere.id });
+    held.freeAll();
+    await runJobCommand({ type: 'resume', jobId });
+    await whenJobsIdle();
+    expect(await getJob(jobId)).toMatchObject({
+      state: 'succeeded',
+      done: { succeeded: COUNT - 1, skipped: 1 },
+    });
+    expect(bookmarks.childIds(elsewhere.id)).toEqual([later]);
+  });
 
-  it(
-    'keeps the parts applied when cancelled, finishes the part writing, and starts no more (J14)',
-    async () => {
-      const held = holdParts();
-      const jobId = await applyInBackground(moves);
-      await eventually(() => expect(held.waiting()).toBe(1));
-      held.release();
-      // The first part is applied and saved; the second is about to write.
-      await eventually(() => expect(held.waiting()).toBe(1));
-      await runJobCommand({ type: 'cancel', jobId });
-      held.release();
-      await whenJobsIdle();
-      const job = await getJob(jobId);
-      expect(job?.state).toBe('cancelled');
-      expect(job?.done.succeeded).toBe(2 * JOB_LIMITS.sliceMaxItems);
-      expect(bookmarks.childIds('to')).toHaveLength(2 * JOB_LIMITS.sliceMaxItems);
-      expect(held.waiting()).toBe(0);
-      // Nothing applied is undone by the cancel; each part has its History record.
-      expect(parts(await auditRecords())).toHaveLength(2);
-    },
-    TWO_PARTS_TEST_MS,
-  );
+  it('keeps the parts applied when cancelled, finishes the part writing, and starts no more (J14)', async () => {
+    const held = holdParts();
+    const jobId = await applyInBackground(moves);
+    await eventually(() => expect(held.waiting()).toBe(1));
+    held.release();
+    // The first part is applied and saved; the second is about to write.
+    await eventually(() => expect(held.waiting()).toBe(1));
+    await runJobCommand({ type: 'cancel', jobId });
+    held.release();
+    await whenJobsIdle();
+    const job = await getJob(jobId);
+    expect(job?.state).toBe('cancelled');
+    expect(job?.done.succeeded).toBe(2 * JOB_LIMITS.sliceMaxItems);
+    expect(bookmarks.childIds('to')).toHaveLength(2 * JOB_LIMITS.sliceMaxItems);
+    expect(held.waiting()).toBe(0);
+    // Nothing applied is undone by the cancel; each part has its History record.
+    expect(parts(await auditRecords())).toHaveLength(2);
+  });
 
   it('removes nothing when the record of what goes cannot be kept, and goes on once it can (J45)', async () => {
     const audit = vi
