@@ -10,6 +10,8 @@ import {
 } from '@/components/bookmarks/tools/tool-run';
 import { setLanguage } from '@/hooks/use-i18n';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
+import { bookmarkRulesValue } from '@/lib/bookmark-rules-storage';
+import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import type { AISettings } from '@/services/ai-client';
@@ -685,5 +687,40 @@ describe('reports', () => {
     expect(privacy.getState().result?.items).toHaveLength(1);
     privacy.close();
     expect(privacy.getState()).toMatchObject({ phase: 'idle', open: false });
+  });
+});
+
+describe('Smart Rules', () => {
+  beforeEach(async () => {
+    seed([
+      { id: 'r1', title: 'Repo', url: 'https://github.com/acme/repo' },
+      { id: 'n1', title: 'News', url: 'https://news.example.com/' },
+    ]);
+    tree = await readTree();
+    await bookmarkMetadataValue.set({});
+    await bookmarkRulesValue.set([
+      {
+        id: 'gh',
+        name: 'GitHub',
+        enabled: true,
+        query: 'domain:github.com',
+        syntaxVersion: SEARCH_SYNTAX_VERSION,
+        addTags: ['development'],
+      },
+    ]);
+  });
+
+  it('plans only matching bookmarks, saves their tags, and undoes them from the toast', async () => {
+    const run = createToolRun(TOOL_DEFINITIONS.bookmarkRules, deps());
+    await run.run('folder');
+    const plan = run.getState().result ?? [];
+    expect(plan).toEqual([expect.objectContaining({ id: 'r1', addTags: ['development'] })]);
+
+    await run.apply(plan);
+    await expect(bookmarkMetadataValue.get()).resolves.toEqual({ r1: { tags: ['development'] } });
+    expect(notices[0].outcome).toMatchObject({ variant: 'success' });
+
+    await notices[0].undo?.run();
+    await expect(bookmarkMetadataValue.get()).resolves.toEqual({});
   });
 });

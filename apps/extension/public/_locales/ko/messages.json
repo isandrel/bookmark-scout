@@ -7913,6 +7913,306 @@
         "message": "큰 변경은 페이지를 닫아도 계속되며, 각 부분은 기록에서 실행 취소할 수 있습니다. 작은 변경은 바로 적용되며 알림에서 실행 취소할 수 있습니다.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_bookmarkRules": {
+        "message": "스마트 규칙",
+        "description": "Tools sidebar: name of the Smart Rules tool"
+    },
+    "tools_bookmarkRulesDesc": {
+        "message": "검색과 일치하는 북마크에 검토 후 태그를 추가하고 이동합니다",
+        "description": "Tools sidebar: what Smart Rules does"
+    },
+    "action_run": {
+        "message": "실행",
+        "description": "Button that runs a tool and opens its review"
+    },
+    "settings_bookmarkRulesEnabled": {
+        "message": "스마트 규칙 사용",
+        "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
+    },
+    "settings_bookmarkRulesEnabledDesc": {
+        "message": "도구 사이드바에 스마트 규칙을 표시합니다",
+        "description": "Settings: description of the Enable Smart Rules switch"
+    },
+    "settings_bookmarkRulesDefaultScope": {
+        "message": "기본 범위",
+        "description": "Settings: default scope of Smart Rules"
+    },
+    "settings_bookmarkRulesDefaultScopeDesc": {
+        "message": "규칙이 기본으로 적용되는 북마크",
+        "description": "Settings: description of the Smart Rules default scope"
+    },
+    "rules_title": {
+        "message": "스마트 규칙",
+        "description": "Settings: heading of the smart rules list"
+    },
+    "rules_description": {
+        "message": "각 규칙은 검색으로 북마크를 찾아 태그를 추가하거나, 폴더로 옮기거나, 둘 다 합니다. 도구 사이드바에서 스마트 규칙을 실행하고 검토 내용을 적용하기 전에는 아무것도 바뀌지 않습니다. 두 규칙이 같은 북마크를 옮기면 위에 있는 규칙이 우선합니다. 이 기기에만 저장됩니다.",
+        "description": "Settings: what smart rules are and where they run"
+    },
+    "rules_add": {
+        "message": "규칙 추가",
+        "description": "Settings: button that adds a smart rule"
+    },
+    "rules_fromTemplate": {
+        "message": "템플릿으로 시작",
+        "description": "Settings: menu of starter smart rules"
+    },
+    "rules_templateGithub": {
+        "message": "GitHub 페이지에 development 태그 추가",
+        "description": "Starter smart rule: GitHub pages get the tag development"
+    },
+    "rules_templateYoutube": {
+        "message": "YouTube 동영상에 watch-later 태그 추가",
+        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+    },
+    "rules_templateTutorial": {
+        "message": "튜토리얼에 learning 태그 추가",
+        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_empty": {
+        "message": "아직 규칙이 없습니다.",
+        "description": "Settings: shown when there are no smart rules"
+    },
+    "rules_turnOn": {
+        "message": "$1 켜기",
+        "description": "Settings: accessible name of a rule checkbox; $1 is the rule name"
+    },
+    "rules_editRule": {
+        "message": "$1 편집",
+        "description": "Settings: accessible name of a rule edit button; $1 is the rule name"
+    },
+    "rules_duplicate": {
+        "message": "$1 복제",
+        "description": "Settings: accessible name of a rule duplicate button; $1 is the rule name"
+    },
+    "rules_delete": {
+        "message": "$1 삭제",
+        "description": "Settings: accessible name of a rule delete button; $1 is the rule name"
+    },
+    "rules_summary": {
+        "message": "$1: $2",
+        "description": "Settings: one rule in one line; $1 is its search, $2 what it does"
+    },
+    "rules_summaryTags": {
+        "message": "태그 $1 추가",
+        "description": "Settings: what a rule does; $1 is the list of tags"
+    },
+    "rules_summaryMove": {
+        "message": "$1(으)로 이동",
+        "description": "Settings: what a rule does; $1 is the folder path"
+    },
+    "rules_newTitle": {
+        "message": "새 규칙",
+        "description": "Rule editor title for a new rule"
+    },
+    "rules_editTitle": {
+        "message": "규칙 편집",
+        "description": "Rule editor title for an existing rule"
+    },
+    "rules_editorDescription": {
+        "message": "규칙은 검색으로 북마크를 찾고 무엇을 할지 정합니다. 도구 사이드바에서 스마트 규칙을 실행하기 전에는 아무것도 바뀌지 않습니다.",
+        "description": "Rule editor description"
+    },
+    "rules_name": {
+        "message": "이름",
+        "description": "Rule editor: name field"
+    },
+    "rules_query": {
+        "message": "일치하는 북마크",
+        "description": "Rule editor: the search field"
+    },
+    "rules_queryHelp": {
+        "message": "검색창과 같은 검색(예: domain:github.com, folder:읽을거리)",
+        "description": "Rule editor: help under the search field"
+    },
+    "rules_matchCount": {
+        "message": "현재 북마크 $count$개와 일치",
+        "description": "Rule editor: how many bookmarks the search finds now",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_matchCount_one": {
+        "message": "현재 북마크 $count$개와 일치",
+        "description": "Rule editor: how many bookmarks the search finds now (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_addTags": {
+        "message": "태그 추가",
+        "description": "Rule editor: tags field"
+    },
+    "rules_addTagsHelp": {
+        "message": "태그는 쉼표로 구분합니다. 북마크에 이미 있는 태그는 다시 추가하지 않습니다.",
+        "description": "Rule editor: help under the tags field"
+    },
+    "rules_moveTo": {
+        "message": "폴더로 이동",
+        "description": "Rule editor: folder field"
+    },
+    "rules_moveToHelp": {
+        "message": "태그만 추가하려면 선택하지 마세요.",
+        "description": "Rule editor: help under the folder field"
+    },
+    "rules_enabled": {
+        "message": "켜짐",
+        "description": "Rule editor: checkbox that turns the rule on"
+    },
+    "rules_save": {
+        "message": "저장",
+        "description": "Rule editor: save button"
+    },
+    "rules_errorName": {
+        "message": "이름을 입력하세요.",
+        "description": "Rule editor error: no name"
+    },
+    "rules_errorQuery": {
+        "message": "이 검색을 읽을 수 없습니다. 연산자와 날짜를 확인하세요.",
+        "description": "Rule editor error: the search has a problem"
+    },
+    "rules_errorAction": {
+        "message": "태그를 추가하거나 폴더를 선택하세요.",
+        "description": "Rule editor error: the rule does nothing"
+    },
+    "rules_errorInvalid": {
+        "message": "이 규칙을 저장할 수 없습니다. 각 항목을 확인하세요.",
+        "description": "Rule editor error: another field is invalid"
+    },
+    "rules_errorSaveFailed": {
+        "message": "규칙을 저장하지 못했습니다.",
+        "description": "Rule editor error: storage failed"
+    },
+    "rules_deleted": {
+        "message": "규칙 \"$1\" 삭제됨",
+        "description": "Toast after deleting a rule; $1 is its name"
+    },
+    "rules_copyName": {
+        "message": "$1 (사본)",
+        "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "tools_bookmarkRulesDialogDesc": {
+        "message": "규칙이 바꿀 내용입니다. 적용하기 전에는 아무것도 바뀌지 않습니다.",
+        "description": "Smart Rules review: description"
+    },
+    "tools_rulesCategory_change": {
+        "message": "변경 ($1)",
+        "description": "Smart Rules review: tab of bookmarks the rules change; $1 is how many"
+    },
+    "tools_rulesCategory_conflict": {
+        "message": "충돌 ($1)",
+        "description": "Smart Rules review: tab of bookmarks two rules move to different folders; $1 is how many"
+    },
+    "tools_rulesCategory_blocked": {
+        "message": "차단됨 ($1)",
+        "description": "Smart Rules review: tab of bookmarks a rule cannot move; $1 is how many"
+    },
+    "tools_rulesCategory_satisfied": {
+        "message": "이미 적용됨 ($1)",
+        "description": "Smart Rules review: tab of bookmarks that already follow the rules; $1 is how many"
+    },
+    "tools_rulesActionApply": {
+        "message": "적용",
+        "description": "Smart Rules review: action that applies the rules to a bookmark"
+    },
+    "tools_rulesApplySelected": {
+        "message": "변경 $count$개 적용",
+        "description": "Smart Rules review: button that applies the changes left on Apply",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesApplySelected_one": {
+        "message": "변경 $count$개 적용",
+        "description": "Smart Rules review: button that applies the changes left on Apply (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesAddTags": {
+        "message": "태그 추가: $1",
+        "description": "Smart Rules review: tags a bookmark gets; $1 is the list"
+    },
+    "tools_rulesMoveTo": {
+        "message": "이동할 위치: $1",
+        "description": "Smart Rules review: folder a bookmark moves to; $1 is its path"
+    },
+    "tools_rulesConflict": {
+        "message": "뒤의 규칙은 다음 위치로 옮깁니다: $1",
+        "description": "Smart Rules review: another folder a later rule names; $1 is its path"
+    },
+    "tools_rulesBlocked_missingFolder": {
+        "message": "폴더가 없습니다. 설정에서 규칙의 폴더를 다시 선택하세요.",
+        "description": "Smart Rules review: the rule folder no longer exists"
+    },
+    "tools_rulesBlocked_managed": {
+        "message": "조직에서 관리하는 폴더라서 이동할 수 없습니다.",
+        "description": "Smart Rules review: the folder is managed by policy"
+    },
+    "tools_rulesMatchedBy": {
+        "message": "규칙: $1",
+        "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
+    },
+    "tools_rulesNoRules": {
+        "message": "켜진 규칙이 없습니다. 설정의 유지보수에서 규칙을 추가하세요.",
+        "description": "Smart Rules review: shown when no rule is turned on"
+    },
+    "toast_rulesApplied": {
+        "message": "규칙 적용됨",
+        "description": "Toast title after Smart Rules applied its changes"
+    },
+    "toast_rulesAppliedDesc": {
+        "message": "태그 추가: $1. 이동: $2.",
+        "description": "Toast after Smart Rules; $1 bookmarks tagged, $2 moved"
+    },
+    "toast_rulesPartial": {
+        "message": "일부 규칙 변경이 적용되지 않았습니다",
+        "description": "Toast title when some Smart Rules changes were not made"
+    },
+    "toast_rulesPartialDesc": {
+        "message": "태그 추가: $1. 이동: $2. 검토 후 변경되어 건너뜀: $3. 실패: $4.",
+        "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
+    },
+    "toast_rulesBackgroundDesc": {
+        "message": "태그 추가: $1. 북마크 $2개를 백그라운드에서 이동하는 중입니다.",
+        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "tools_rulesOnCount": {
+        "message": "켜진 규칙 $count$개",
+        "description": "Smart Rules card: how many rules are turned on",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesOnCount_one": {
+        "message": "켜진 규칙 $count$개",
+        "description": "Smart Rules card: how many rules are turned on (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesEdit": {
+        "message": "규칙 편집",
+        "description": "Smart Rules card: button that opens the rules in Settings"
+    },
     "settings_managerViewMode": {
         "message": "관리자 보기",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"

@@ -436,6 +436,8 @@ const OptionsPage: React.FC = () => {
         return matchesOnly ? null : <AskAIActionsPanel />;
       case 'agentBridge':
         return matchesOnly ? null : <AgentBridgePanel />;
+      case 'bookmarkRules':
+        return matchesOnly ? null : <BookmarkRulesPanel />;
       case 'essentialsAi':
         return matchesOnly ? null : (
           <OptionsPanel

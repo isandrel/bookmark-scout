@@ -7675,6 +7675,276 @@
         "message": "較大的變更在你關閉頁面後仍會繼續，每一批都可在歷史記錄中復原。較小的變更會立即套用，可在通知中復原。",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_bookmarkRules": {
+        "message": "智慧規則",
+        "description": "Tools sidebar: name of the Smart Rules tool"
+    },
+    "tools_bookmarkRulesDesc": {
+        "message": "確認後為符合搜尋的書籤加上標籤並移動",
+        "description": "Tools sidebar: what Smart Rules does"
+    },
+    "action_run": {
+        "message": "執行",
+        "description": "Button that runs a tool and opens its review"
+    },
+    "settings_bookmarkRulesEnabled": {
+        "message": "啟用智慧規則",
+        "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
+    },
+    "settings_bookmarkRulesEnabledDesc": {
+        "message": "在工具側邊欄中顯示智慧規則",
+        "description": "Settings: description of the Enable Smart Rules switch"
+    },
+    "settings_bookmarkRulesDefaultScope": {
+        "message": "預設範圍",
+        "description": "Settings: default scope of Smart Rules"
+    },
+    "settings_bookmarkRulesDefaultScopeDesc": {
+        "message": "規則預設套用的書籤",
+        "description": "Settings: description of the Smart Rules default scope"
+    },
+    "rules_title": {
+        "message": "智慧規則",
+        "description": "Settings: heading of the smart rules list"
+    },
+    "rules_description": {
+        "message": "每條規則都會用搜尋找到書籤，然後加上標籤、移到資料夾，或兩者都做。在工具側邊欄中執行智慧規則並套用確認結果之前，規則不會做任何變更。兩條規則都移動同一個書籤時，排在上面的規則優先。只會儲存在這部裝置上。",
+        "description": "Settings: what smart rules are and where they run"
+    },
+    "rules_add": {
+        "message": "新增規則",
+        "description": "Settings: button that adds a smart rule"
+    },
+    "rules_fromTemplate": {
+        "message": "從範本開始",
+        "description": "Settings: menu of starter smart rules"
+    },
+    "rules_templateGithub": {
+        "message": "為 GitHub 網頁加上 development 標籤",
+        "description": "Starter smart rule: GitHub pages get the tag development"
+    },
+    "rules_templateYoutube": {
+        "message": "為 YouTube 影片加上 watch-later 標籤",
+        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+    },
+    "rules_templateTutorial": {
+        "message": "為教學加上 learning 標籤",
+        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_empty": {
+        "message": "還沒有規則。",
+        "description": "Settings: shown when there are no smart rules"
+    },
+    "rules_turnOn": {
+        "message": "開啟 $1",
+        "description": "Settings: accessible name of a rule checkbox; $1 is the rule name"
+    },
+    "rules_editRule": {
+        "message": "編輯 $1",
+        "description": "Settings: accessible name of a rule edit button; $1 is the rule name"
+    },
+    "rules_duplicate": {
+        "message": "複製 $1",
+        "description": "Settings: accessible name of a rule duplicate button; $1 is the rule name"
+    },
+    "rules_delete": {
+        "message": "刪除 $1",
+        "description": "Settings: accessible name of a rule delete button; $1 is the rule name"
+    },
+    "rules_summary": {
+        "message": "$1：$2",
+        "description": "Settings: one rule in one line; $1 is its search, $2 what it does"
+    },
+    "rules_summaryTags": {
+        "message": "加上標籤 $1",
+        "description": "Settings: what a rule does; $1 is the list of tags"
+    },
+    "rules_summaryMove": {
+        "message": "移到 $1",
+        "description": "Settings: what a rule does; $1 is the folder path"
+    },
+    "rules_newTitle": {
+        "message": "新規則",
+        "description": "Rule editor title for a new rule"
+    },
+    "rules_editTitle": {
+        "message": "編輯規則",
+        "description": "Rule editor title for an existing rule"
+    },
+    "rules_editorDescription": {
+        "message": "規則會用搜尋找到書籤，並決定如何處理它們。在工具側邊欄中執行智慧規則之前，它不會做任何變更。",
+        "description": "Rule editor description"
+    },
+    "rules_name": {
+        "message": "名稱",
+        "description": "Rule editor: name field"
+    },
+    "rules_query": {
+        "message": "符合的書籤",
+        "description": "Rule editor: the search field"
+    },
+    "rules_queryHelp": {
+        "message": "與搜尋框相同的搜尋，例如 domain:github.com 或 folder:稍後閱讀",
+        "description": "Rule editor: help under the search field"
+    },
+    "rules_matchCount": {
+        "message": "目前符合 $count$ 個書籤",
+        "description": "Rule editor: how many bookmarks the search finds now",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_addTags": {
+        "message": "加上標籤",
+        "description": "Rule editor: tags field"
+    },
+    "rules_addTagsHelp": {
+        "message": "用逗號分隔標籤。書籤已有的標籤不會重複加上。",
+        "description": "Rule editor: help under the tags field"
+    },
+    "rules_moveTo": {
+        "message": "移到資料夾",
+        "description": "Rule editor: folder field"
+    },
+    "rules_moveToHelp": {
+        "message": "只加上標籤時請不要選擇。",
+        "description": "Rule editor: help under the folder field"
+    },
+    "rules_enabled": {
+        "message": "已開啟",
+        "description": "Rule editor: checkbox that turns the rule on"
+    },
+    "rules_save": {
+        "message": "儲存",
+        "description": "Rule editor: save button"
+    },
+    "rules_errorName": {
+        "message": "請輸入名稱。",
+        "description": "Rule editor error: no name"
+    },
+    "rules_errorQuery": {
+        "message": "無法讀取這個搜尋。請檢查其中的運算子和日期。",
+        "description": "Rule editor error: the search has a problem"
+    },
+    "rules_errorAction": {
+        "message": "請加上標籤或選擇資料夾。",
+        "description": "Rule editor error: the rule does nothing"
+    },
+    "rules_errorInvalid": {
+        "message": "無法儲存這條規則。請檢查每個欄位。",
+        "description": "Rule editor error: another field is invalid"
+    },
+    "rules_errorSaveFailed": {
+        "message": "無法儲存規則。",
+        "description": "Rule editor error: storage failed"
+    },
+    "rules_deleted": {
+        "message": "已刪除規則「$1」",
+        "description": "Toast after deleting a rule; $1 is its name"
+    },
+    "rules_copyName": {
+        "message": "$1 (副本)",
+        "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "tools_bookmarkRulesDialogDesc": {
+        "message": "規則將做出的變更。套用之前不會有任何變更。",
+        "description": "Smart Rules review: description"
+    },
+    "tools_rulesCategory_change": {
+        "message": "變更 ($1)",
+        "description": "Smart Rules review: tab of bookmarks the rules change; $1 is how many"
+    },
+    "tools_rulesCategory_conflict": {
+        "message": "衝突 ($1)",
+        "description": "Smart Rules review: tab of bookmarks two rules move to different folders; $1 is how many"
+    },
+    "tools_rulesCategory_blocked": {
+        "message": "已封鎖 ($1)",
+        "description": "Smart Rules review: tab of bookmarks a rule cannot move; $1 is how many"
+    },
+    "tools_rulesCategory_satisfied": {
+        "message": "已完成 ($1)",
+        "description": "Smart Rules review: tab of bookmarks that already follow the rules; $1 is how many"
+    },
+    "tools_rulesActionApply": {
+        "message": "套用",
+        "description": "Smart Rules review: action that applies the rules to a bookmark"
+    },
+    "tools_rulesApplySelected": {
+        "message": "套用 $count$ 項變更",
+        "description": "Smart Rules review: button that applies the changes left on Apply",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesAddTags": {
+        "message": "加上標籤：$1",
+        "description": "Smart Rules review: tags a bookmark gets; $1 is the list"
+    },
+    "tools_rulesMoveTo": {
+        "message": "移到：$1",
+        "description": "Smart Rules review: folder a bookmark moves to; $1 is its path"
+    },
+    "tools_rulesConflict": {
+        "message": "後面的規則會將它移到：$1",
+        "description": "Smart Rules review: another folder a later rule names; $1 is its path"
+    },
+    "tools_rulesBlocked_missingFolder": {
+        "message": "它的資料夾已不存在。請在設定中重新為規則選擇資料夾。",
+        "description": "Smart Rules review: the rule folder no longer exists"
+    },
+    "tools_rulesBlocked_managed": {
+        "message": "這個資料夾由你的組織管理，因此無法移動。",
+        "description": "Smart Rules review: the folder is managed by policy"
+    },
+    "tools_rulesMatchedBy": {
+        "message": "規則：$1",
+        "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
+    },
+    "tools_rulesNoRules": {
+        "message": "沒有已開啟的規則。請在設定的「維護」中新增規則。",
+        "description": "Smart Rules review: shown when no rule is turned on"
+    },
+    "toast_rulesApplied": {
+        "message": "規則已套用",
+        "description": "Toast title after Smart Rules applied its changes"
+    },
+    "toast_rulesAppliedDesc": {
+        "message": "已加上標籤：$1。已移動：$2。",
+        "description": "Toast after Smart Rules; $1 bookmarks tagged, $2 moved"
+    },
+    "toast_rulesPartial": {
+        "message": "部分規則變更未完成",
+        "description": "Toast title when some Smart Rules changes were not made"
+    },
+    "toast_rulesPartialDesc": {
+        "message": "已加上標籤：$1。已移動：$2。因確認後有變更而略過：$3。失敗：$4。",
+        "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
+    },
+    "toast_rulesBackgroundDesc": {
+        "message": "已加上標籤：$1。正在背景移動 $2 個書籤。",
+        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "tools_rulesOnCount": {
+        "message": "已開啟 $count$ 條規則",
+        "description": "Smart Rules card: how many rules are turned on",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesEdit": {
+        "message": "編輯規則",
+        "description": "Smart Rules card: button that opens the rules in Settings"
+    },
     "settings_managerViewMode": {
         "message": "管理員檢視",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"

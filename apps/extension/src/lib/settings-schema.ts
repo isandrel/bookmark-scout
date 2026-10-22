@@ -59,6 +59,8 @@ export type SettingsPanelId =
   | 'managerMenus'
   | 'askAiActions'
   | 'agentBridge'
+  /** Maintenance: the smart rules, their own local item (src/lib/bookmark-rules-storage.ts). */
+  | 'bookmarkRules'
   /** Essentials: a pointer to the AI tab, which is optional and set up there. */
   | 'essentialsAi';
 
@@ -290,6 +292,7 @@ export const TOOL_SCOPE_CAPABILITIES = {
   siteIcons: 'both',
   privacyScanner: 'all',
   statistics: 'both',
+  bookmarkRules: 'both',
 } as const satisfies Record<string, z.infer<typeof toolScopeSchema> | 'both'>;
 
 // ============================================================================
@@ -1054,6 +1057,13 @@ const fields = {
     },
   ),
 
+  bookmarkRulesEnabled: switchField('maintenance.bookmark_rules.enabled', 'bookmarkRulesEnabled'),
+  bookmarkRulesDefaultScope: scopeField(
+    'maintenance.bookmark_rules',
+    'bookmarkRulesDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.bookmarkRules,
+  ),
+
   privacyScannerEnabled: switchField('security.privacy_scanner.enabled', 'privacyScannerEnabled'),
   privacyScannerDefaultScope: scopeField(
     'security.privacy_scanner',
@@ -1456,6 +1466,13 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'deadLinksRetryCount',
           'deadLinksSuccessStatuses',
         ],
+      },
+      {
+        id: 'bookmarkRules',
+        labelKey: 'tools_bookmarkRules',
+        toggle: 'bookmarkRulesEnabled',
+        fields: ['bookmarkRulesDefaultScope'],
+        panel: 'bookmarkRules',
       },
       {
         id: 'backgroundTasks',

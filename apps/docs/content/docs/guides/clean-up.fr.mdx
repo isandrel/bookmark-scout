@@ -91,6 +91,32 @@ Les icônes enregistrées sont stockées dans le stockage local de ce navigateur
 Dans Firefox, ouvrez le gestionnaire avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up de la barre d'outils pour lancer l'outil. Une fois les icônes enregistrées dans le gestionnaire, la fenêtre pop-up et le panneau latéral les affichent.
 </Callout>
 
+## Étiqueter et déplacer avec les Règles intelligentes [#tag-and-move-with-smart-rules]
+
+Une règle intelligente trouve des favoris avec une recherche, avec les mêmes mots et [opérateurs](/guides/search#search-words-and-operators) que les champs de recherche, et leur ajoute des étiquettes, les déplace dans un dossier, ou les deux. Les règles n'agissent jamais seules : chaque exécution est une vérification que vous appliquez.
+
+<Steps>
+<Step>
+Dans les [paramètres](/settings#maintenance), sous **Règles intelligentes**, cliquez sur **Ajouter une règle**, ou sur **Partir d’un modèle** pour une règle qui étiquette les pages GitHub, les vidéos YouTube ou les tutoriels. Les modèles commencent désactivés.
+</Step>
+<Step>
+Donnez à la règle un nom et une recherche, comme `domain:github.com` ou `folder:Lecture -tag:lu`. L'éditeur indique combien de favoris elle trouve actuellement. Ajoutez des étiquettes séparées par des virgules, choisissez un dossier de destination, ou les deux, puis enregistrez.
+</Step>
+<Step>
+Dans la barre d'outils du gestionnaire, choisissez la portée sur la carte **Règles intelligentes** et cliquez sur **Exécuter**.
+</Step>
+<Step>
+Vérifiez les favoris par onglet : **Modifications**, **Conflits** (deux règles le déplaceraient vers des dossiers différents), **Bloqués** (son dossier n'existe plus ou est géré) et **Déjà fait**. Les modifications commencent sur **Appliquer** et les conflits sur **Ignorer** ; changez-en d'autres un par un ou avec **Appliquer à la sélection…**, puis cliquez sur **Appliquer** (par exemple **Appliquer 12 modifications**).
+</Step>
+</Steps>
+
+Bon à savoir :
+
+- Les règles s'exécutent dans l'ordre de la liste. Chaque règle qui correspond ajoute ses étiquettes ; la première qui déplace un favori l'emporte, et les dossiers des règles suivantes apparaissent comme des conflits. Faites glisser une règle pour changer l'ordre.
+- Une étiquette qu'un favori a déjà, quelle que soit son écriture, n'est pas ajoutée de nouveau. Les dossiers ne sont jamais étiquetés ni déplacés.
+- **Annuler** dans le message qui suit l'application remet à la fois les déplacements et les étiquettes. Les déplacements forment une seule modification dans l'historique.
+- Les règles restent sur cet appareil et font partie de **Sauvegarder les paramètres**. Une règle restaurée sur un autre appareil ne déplace des favoris que si son dossier y existe ; sinon, ses déplacements sont bloqués jusqu'à ce que vous choisissiez de nouveau le dossier.
+
 ## Outils associés [#related-tools]
 
 - [Trouver et réparer les liens morts](/guides/dead-links) vérifie si les pages enregistrées en favoris se chargent toujours.

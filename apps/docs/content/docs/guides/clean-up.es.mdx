@@ -91,6 +91,32 @@ Los iconos guardados se almacenan en el almacenamiento local de este navegador, 
 En Firefox, abre el administrador con **Abrir el administrador de marcadores** en la ventana emergente de la barra de herramientas para ejecutar la herramienta. Después de guardar iconos allí, la ventana emergente y el panel lateral los muestran.
 </Callout>
 
+## Etiquetar y mover con Reglas inteligentes [#tag-and-move-with-smart-rules]
+
+Una regla inteligente encuentra marcadores con una búsqueda, con las mismas palabras y [operadores](/guides/search#search-words-and-operators) que los cuadros de búsqueda, y les añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas nunca actúan solas: cada ejecución es una revisión que tú aplicas.
+
+<Steps>
+<Step>
+En [Configuración](/settings#maintenance), en **Reglas inteligentes**, haz clic en **Añadir regla**, o en **Empezar con una plantilla** para una regla que etiqueta páginas de GitHub, vídeos de YouTube o tutoriales. Las plantillas empiezan desactivadas.
+</Step>
+<Step>
+Ponle a la regla un nombre y una búsqueda, como `domain:github.com` o `folder:Lectura -tag:leído`. El editor indica con cuántos marcadores coincide ahora. Añade etiquetas separadas por comas, elige una carpeta a la que moverlos, o ambas cosas, y guarda.
+</Step>
+<Step>
+En la barra de herramientas del administrador, elige el ámbito en la tarjeta **Reglas inteligentes** y haz clic en **Ejecutar**.
+</Step>
+<Step>
+Revisa los marcadores por pestaña: **Cambios**, **Conflictos** (dos reglas lo moverían a carpetas distintas), **Bloqueados** (su carpeta ya no existe o está administrada) y **Ya hecho**. Los cambios empiezan en **Aplicar** y los conflictos en **Omitir**; cambia otros uno a uno o con **Aplicar a la selección…** y haz clic en **Aplicar** (por ejemplo, **Aplicar 12 cambios**).
+</Step>
+</Steps>
+
+Ten en cuenta:
+
+- Las reglas se ejecutan en el orden de la lista. Cada regla que coincide añade sus etiquetas; la primera que mueve un marcador gana, y las carpetas de reglas posteriores aparecen como conflictos. Arrastra una regla para cambiar el orden.
+- Una etiqueta que el marcador ya tiene, escrita de cualquier forma, no se vuelve a añadir. Las carpetas nunca se etiquetan ni se mueven.
+- **Deshacer** en el mensaje tras aplicar devuelve tanto los movimientos como las etiquetas. Los movimientos son un solo cambio en el historial.
+- Las reglas se quedan en este dispositivo y forman parte de **Hacer copia de los ajustes**. Una regla restaurada en otro dispositivo solo mueve marcadores si su carpeta existe allí; si no, sus movimientos quedan bloqueados hasta que vuelvas a elegir la carpeta.
+
 ## Herramientas relacionadas [#related-tools]
 
 - [Encontrar y reparar enlaces rotos](/guides/dead-links) comprueba si las páginas guardadas en marcadores siguen cargando.

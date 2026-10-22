@@ -7941,6 +7941,306 @@
         "message": "Los cambios grandes siguen si cierras la página, y cada parte se puede deshacer desde el Historial. Los pequeños se aplican al momento, con Deshacer en la notificación.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_bookmarkRules": {
+        "message": "Reglas inteligentes",
+        "description": "Tools sidebar: name of the Smart Rules tool"
+    },
+    "tools_bookmarkRulesDesc": {
+        "message": "Etiqueta y mueve los marcadores que coinciden con una búsqueda, tras una revisión",
+        "description": "Tools sidebar: what Smart Rules does"
+    },
+    "action_run": {
+        "message": "Ejecutar",
+        "description": "Button that runs a tool and opens its review"
+    },
+    "settings_bookmarkRulesEnabled": {
+        "message": "Activar Reglas inteligentes",
+        "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
+    },
+    "settings_bookmarkRulesEnabledDesc": {
+        "message": "Mostrar Reglas inteligentes en la barra de herramientas",
+        "description": "Settings: description of the Enable Smart Rules switch"
+    },
+    "settings_bookmarkRulesDefaultScope": {
+        "message": "Ámbito predeterminado",
+        "description": "Settings: default scope of Smart Rules"
+    },
+    "settings_bookmarkRulesDefaultScopeDesc": {
+        "message": "Marcadores a los que se aplican las reglas de forma predeterminada",
+        "description": "Settings: description of the Smart Rules default scope"
+    },
+    "rules_title": {
+        "message": "Reglas inteligentes",
+        "description": "Settings: heading of the smart rules list"
+    },
+    "rules_description": {
+        "message": "Cada regla encuentra marcadores con una búsqueda y añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas no cambian nada hasta que ejecutas Reglas inteligentes en la barra de herramientas y aplicas su revisión. Si dos reglas mueven un marcador, gana la que está más arriba. Solo se guardan en este dispositivo.",
+        "description": "Settings: what smart rules are and where they run"
+    },
+    "rules_add": {
+        "message": "Añadir regla",
+        "description": "Settings: button that adds a smart rule"
+    },
+    "rules_fromTemplate": {
+        "message": "Empezar con una plantilla",
+        "description": "Settings: menu of starter smart rules"
+    },
+    "rules_templateGithub": {
+        "message": "Etiquetar páginas de GitHub como development",
+        "description": "Starter smart rule: GitHub pages get the tag development"
+    },
+    "rules_templateYoutube": {
+        "message": "Etiquetar vídeos de YouTube como watch-later",
+        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+    },
+    "rules_templateTutorial": {
+        "message": "Etiquetar tutoriales como learning",
+        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_empty": {
+        "message": "Aún no hay reglas.",
+        "description": "Settings: shown when there are no smart rules"
+    },
+    "rules_turnOn": {
+        "message": "Activar $1",
+        "description": "Settings: accessible name of a rule checkbox; $1 is the rule name"
+    },
+    "rules_editRule": {
+        "message": "Editar $1",
+        "description": "Settings: accessible name of a rule edit button; $1 is the rule name"
+    },
+    "rules_duplicate": {
+        "message": "Duplicar $1",
+        "description": "Settings: accessible name of a rule duplicate button; $1 is the rule name"
+    },
+    "rules_delete": {
+        "message": "Eliminar $1",
+        "description": "Settings: accessible name of a rule delete button; $1 is the rule name"
+    },
+    "rules_summary": {
+        "message": "$1: $2",
+        "description": "Settings: one rule in one line; $1 is its search, $2 what it does"
+    },
+    "rules_summaryTags": {
+        "message": "añadir etiquetas $1",
+        "description": "Settings: what a rule does; $1 is the list of tags"
+    },
+    "rules_summaryMove": {
+        "message": "mover a $1",
+        "description": "Settings: what a rule does; $1 is the folder path"
+    },
+    "rules_newTitle": {
+        "message": "Regla nueva",
+        "description": "Rule editor title for a new rule"
+    },
+    "rules_editTitle": {
+        "message": "Editar regla",
+        "description": "Rule editor title for an existing rule"
+    },
+    "rules_editorDescription": {
+        "message": "Una regla encuentra marcadores con una búsqueda e indica qué hacer con ellos. No cambia nada hasta que ejecutas Reglas inteligentes en la barra de herramientas.",
+        "description": "Rule editor description"
+    },
+    "rules_name": {
+        "message": "Nombre",
+        "description": "Rule editor: name field"
+    },
+    "rules_query": {
+        "message": "Marcadores que coinciden",
+        "description": "Rule editor: the search field"
+    },
+    "rules_queryHelp": {
+        "message": "Una búsqueda como en los cuadros de búsqueda, por ejemplo domain:github.com o folder:Lectura",
+        "description": "Rule editor: help under the search field"
+    },
+    "rules_matchCount": {
+        "message": "Ahora coincide con $count$ marcadores",
+        "description": "Rule editor: how many bookmarks the search finds now",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_matchCount_one": {
+        "message": "Ahora coincide con $count$ marcador",
+        "description": "Rule editor: how many bookmarks the search finds now (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_addTags": {
+        "message": "Añadir etiquetas",
+        "description": "Rule editor: tags field"
+    },
+    "rules_addTagsHelp": {
+        "message": "Separa las etiquetas con comas. Una etiqueta que el marcador ya tiene no se vuelve a añadir.",
+        "description": "Rule editor: help under the tags field"
+    },
+    "rules_moveTo": {
+        "message": "Mover a la carpeta",
+        "description": "Rule editor: folder field"
+    },
+    "rules_moveToHelp": {
+        "message": "Déjalo sin elegir para solo añadir etiquetas.",
+        "description": "Rule editor: help under the folder field"
+    },
+    "rules_enabled": {
+        "message": "Activada",
+        "description": "Rule editor: checkbox that turns the rule on"
+    },
+    "rules_save": {
+        "message": "Guardar",
+        "description": "Rule editor: save button"
+    },
+    "rules_errorName": {
+        "message": "Escribe un nombre.",
+        "description": "Rule editor error: no name"
+    },
+    "rules_errorQuery": {
+        "message": "No se puede leer esta búsqueda. Revisa sus operadores y fechas.",
+        "description": "Rule editor error: the search has a problem"
+    },
+    "rules_errorAction": {
+        "message": "Añade una etiqueta o elige una carpeta.",
+        "description": "Rule editor error: the rule does nothing"
+    },
+    "rules_errorInvalid": {
+        "message": "No se puede guardar esta regla. Revisa cada campo.",
+        "description": "Rule editor error: another field is invalid"
+    },
+    "rules_errorSaveFailed": {
+        "message": "No se pudo guardar la regla.",
+        "description": "Rule editor error: storage failed"
+    },
+    "rules_deleted": {
+        "message": "Se eliminó la regla \"$1\"",
+        "description": "Toast after deleting a rule; $1 is its name"
+    },
+    "rules_copyName": {
+        "message": "$1 (copia)",
+        "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "tools_bookmarkRulesDialogDesc": {
+        "message": "Lo que cambiarían las reglas. No cambia nada hasta que lo apliques.",
+        "description": "Smart Rules review: description"
+    },
+    "tools_rulesCategory_change": {
+        "message": "Cambios ($1)",
+        "description": "Smart Rules review: tab of bookmarks the rules change; $1 is how many"
+    },
+    "tools_rulesCategory_conflict": {
+        "message": "Conflictos ($1)",
+        "description": "Smart Rules review: tab of bookmarks two rules move to different folders; $1 is how many"
+    },
+    "tools_rulesCategory_blocked": {
+        "message": "Bloqueados ($1)",
+        "description": "Smart Rules review: tab of bookmarks a rule cannot move; $1 is how many"
+    },
+    "tools_rulesCategory_satisfied": {
+        "message": "Ya hecho ($1)",
+        "description": "Smart Rules review: tab of bookmarks that already follow the rules; $1 is how many"
+    },
+    "tools_rulesActionApply": {
+        "message": "Aplicar",
+        "description": "Smart Rules review: action that applies the rules to a bookmark"
+    },
+    "tools_rulesApplySelected": {
+        "message": "Aplicar $count$ cambios",
+        "description": "Smart Rules review: button that applies the changes left on Apply",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesApplySelected_one": {
+        "message": "Aplicar $count$ cambio",
+        "description": "Smart Rules review: button that applies the changes left on Apply (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesAddTags": {
+        "message": "Añadir etiquetas: $1",
+        "description": "Smart Rules review: tags a bookmark gets; $1 is the list"
+    },
+    "tools_rulesMoveTo": {
+        "message": "Mover a: $1",
+        "description": "Smart Rules review: folder a bookmark moves to; $1 is its path"
+    },
+    "tools_rulesConflict": {
+        "message": "Una regla posterior lo movería a: $1",
+        "description": "Smart Rules review: another folder a later rule names; $1 is its path"
+    },
+    "tools_rulesBlocked_missingFolder": {
+        "message": "Su carpeta ya no existe. Vuelve a elegir la carpeta de la regla en Configuración.",
+        "description": "Smart Rules review: the rule folder no longer exists"
+    },
+    "tools_rulesBlocked_managed": {
+        "message": "Tu organización administra esta carpeta, así que no se puede mover.",
+        "description": "Smart Rules review: the folder is managed by policy"
+    },
+    "tools_rulesMatchedBy": {
+        "message": "Reglas: $1",
+        "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
+    },
+    "tools_rulesNoRules": {
+        "message": "No hay ninguna regla activada. Añade reglas en Configuración, en Mantenimiento.",
+        "description": "Smart Rules review: shown when no rule is turned on"
+    },
+    "toast_rulesApplied": {
+        "message": "Reglas aplicadas",
+        "description": "Toast title after Smart Rules applied its changes"
+    },
+    "toast_rulesAppliedDesc": {
+        "message": "Etiquetados: $1. Movidos: $2.",
+        "description": "Toast after Smart Rules; $1 bookmarks tagged, $2 moved"
+    },
+    "toast_rulesPartial": {
+        "message": "Algunos cambios de las reglas no se hicieron",
+        "description": "Toast title when some Smart Rules changes were not made"
+    },
+    "toast_rulesPartialDesc": {
+        "message": "Etiquetados: $1. Movidos: $2. Omitidos porque cambiaron después de la revisión: $3. Con error: $4.",
+        "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
+    },
+    "toast_rulesBackgroundDesc": {
+        "message": "Etiquetados: $1. Moviendo $2 marcadores en segundo plano.",
+        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "tools_rulesOnCount": {
+        "message": "$count$ reglas activadas",
+        "description": "Smart Rules card: how many rules are turned on",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesOnCount_one": {
+        "message": "$count$ regla activada",
+        "description": "Smart Rules card: how many rules are turned on (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesEdit": {
+        "message": "Editar reglas",
+        "description": "Smart Rules card: button that opens the rules in Settings"
+    },
     "settings_managerViewMode": {
         "message": "Vista del administrador",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"

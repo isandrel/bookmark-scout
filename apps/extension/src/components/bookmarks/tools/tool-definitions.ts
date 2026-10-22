@@ -16,6 +16,7 @@ import {
   ShieldAlert,
   Sparkles,
   Tags,
+  Wand2,
 } from 'lucide-react';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
@@ -147,6 +148,7 @@ export type ToolResults = {
   siteIcons: SiteIconRefreshResult;
   privacyScanner: PrivacyScanResult;
   statistics: BookmarkStatistics;
+  bookmarkRules: RulePlanItem[];
 };
 
 /** What a review passes to `apply` for the tools that let the user pick. */
@@ -163,6 +165,8 @@ type PickedItems = {
   summarizer: SummarizerResultItem[];
   /** The flagged bookmarks to delete, left on Delete in the review. */
   privacyScanner: PrivacyScanItem[];
+  /** The bookmarks to change as the rules say, left on Apply in the review. */
+  bookmarkRules: RulePlanItem[];
 };
 
 /** What the review passes to `apply`: the items the user picked, where a tool lets them pick. */
@@ -320,6 +324,113 @@ function reportMetadataSaved(
         variant: 'destructive',
         ...offer,
       };
+}
+
+/**
+ * The moves of reviewed plan items as bookmark changes, each only while the bookmark is still
+ * where the plan found it, with the same address.
+ */
+function getRuleMoveChanges(items: readonly RulePlanItem[]): BookmarkChange[] {
+  return items.flatMap((item) =>
+    item.move
+      ? [
+          {
+            kind: 'move' as const,
+            id: item.id,
+            title: item.title,
+            expect: { url: item.url, parentId: item.parentId },
+            to: { parentId: item.move.folderId },
+          },
+        ]
+      : [],
+  );
+}
+
+/**
+ * Applies the rule changes the review kept: the tags first, as one metadata save with its own
+ * undo, then the moves, as one bookmark change in the history. The two cannot be written at once,
+ * so the report counts each, and Undo puts back both.
+ */
+async function applyRulePlan(items: readonly RulePlanItem[]): Promise<ToolOutcome> {
+  const tagged = items.filter((item) => item.addTags.length > 0);
+  const tags = await saveReviewedBookmarkMetadata(
+    tagged.map((item) => ({ bookmarkId: item.id, url: item.url, tags: item.addTags })),
+    (item) => ({ tags: item.tags }),
+    { tagMode: 'append', summaryMode: 'replace', dedupeTags: true },
+  );
+  const moves = getRuleMoveChanges(items);
+  if (moves.length === 0) {
+    return reportRuleChanges(
+      { tagged: tags.saved, moved: 0, skipped: tags.skipped, failed: 0 },
+      {
+        undo: tags.undo,
+      },
+    );
+  }
+  const applied = await applyReviewedChanges(moves, { tool: 'tools_bookmarkRules' });
+  if (applied.background) {
+    return {
+      ...reportBackgroundApply(applied),
+      description: t('toast_rulesBackgroundDesc', [String(tags.saved), String(applied.count)]),
+    };
+  }
+  const { result } = applied;
+  return reportRuleChanges(
+    {
+      tagged: tags.saved,
+      moved: result.applied,
+      skipped: tags.skipped + result.skipped,
+      failed: result.failed,
+    },
+    {
+      undo: async () => {
+        const undoneMoves = await result.undo();
+        const undoneTags = await tags.undo();
+        return {
+          ...undoneMoves,
+          restored: undoneMoves.restored + undoneTags.restored,
+          failed: undoneMoves.failed + undoneTags.failed,
+        };
+      },
+      ...(result.expiresAt !== undefined ? { expiresAt: result.expiresAt } : {}),
+      ...(result.recorded ? { historyId: result.recorded.entry.operationId } : {}),
+    },
+  );
+}
+
+function reportRuleChanges(
+  counts: { tagged: number; moved: number; skipped: number; failed: number },
+  {
+    undo,
+    expiresAt,
+    historyId,
+  }: {
+    undo: () => Promise<BookmarkChangesUndoResult>;
+    expiresAt?: number;
+    historyId?: string;
+  },
+): ToolOutcome {
+  const complete = counts.skipped === 0 && counts.failed === 0;
+  return {
+    ...(complete
+      ? {
+          title: t('toast_rulesApplied'),
+          description: t('toast_rulesAppliedDesc', [String(counts.tagged), String(counts.moved)]),
+          variant: 'success' as const,
+        }
+      : {
+          title: t('toast_rulesPartial'),
+          description: t('toast_rulesPartialDesc', [
+            String(counts.tagged),
+            String(counts.moved),
+            String(counts.skipped),
+            String(counts.failed),
+          ]),
+          variant: 'destructive' as const,
+        }),
+    ...undoOffer(counts.tagged + counts.moved, undo, expiresAt),
+    ...(historyId ? { historyId } : {}),
+  };
 }
 
 /** What an export reports when its scope holds no bookmarks, instead of writing an empty file. */
@@ -701,6 +812,25 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         changes,
       );
     },
+  },
+  bookmarkRules: {
+    id: 'bookmarkRules',
+    enabledSetting: 'bookmarkRulesEnabled',
+    scopeSetting: 'bookmarkRulesDefaultScope',
+    section: 'maintenance',
+    icon: Wand2,
+    titleKey: 'tools_bookmarkRules',
+    descriptionKey: 'tools_bookmarkRulesDesc',
+    actionKey: () => 'action_run',
+    changesBookmarks: true,
+    async scan({ nodes }) {
+      const [rules, metadata] = await Promise.all([
+        bookmarkRulesValue.get(),
+        bookmarkMetadataValue.get(),
+      ]);
+      return planBookmarkRules(rules, nodes, metadata);
+    },
+    apply: (_items, picked) => applyRulePlan(picked),
   },
   statistics: {
     id: 'statistics',

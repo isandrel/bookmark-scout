@@ -794,6 +794,15 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   privacyScannerEmailDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
   privacyScannerUuidDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
 
+  // Smart Rules
+  bookmarkRulesEnabled: tested(TOOL_TABLE, [toolFlags]),
+  bookmarkRulesDefaultScope: tested(TOOL_TABLE, [
+    e2e(
+      'bookmark-rules.spec.ts',
+      'a rule made in Settings tags and moves matching bookmarks after a review, and undo puts them back',
+    ),
+  ]),
+
   // Statistics
   statisticsEnabled: tested(TOOL_TABLE, [toolFlags]),
   statisticsDefaultScope: tested(TOOL_TABLE, [toolFlags]),

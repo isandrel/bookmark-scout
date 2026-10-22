@@ -110,6 +110,7 @@ const BACKUP_ITEMS: Partial<
   prompt: customPromptItems,
   aiServices: aiServicesValue,
   savedSearches: savedSearchesValue,
+  bookmarkRules: bookmarkRulesValue,
   aboutMe: aboutMeValue,
 } as Partial<Record<StorageItemId, StoredValue<unknown> | StoredCollection<unknown>>>;
 
