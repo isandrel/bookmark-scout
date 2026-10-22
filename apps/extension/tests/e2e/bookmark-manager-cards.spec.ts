@@ -110,3 +110,40 @@ test('cards keep the search, selection, and live changes the list has', async ({
   await extensionWorker.evaluate((id) => chrome.bookmarks.remove(id), ids['Work Notes'] as string);
   await expect(cards).toHaveCount(1);
 });
+
+test('a row the search matched outside its title says where, in the list and on the card', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Match Reasons', [
+    { title: 'Weekly plan', url: 'https://plans.e2e.invalid/week' },
+    { title: 'Soup', url: 'https://kitchen.e2e.invalid/soup' },
+    { title: 'Kitchen notes', url: 'https://notes.e2e.invalid/' },
+  ]);
+  const ids = seeded.ids as Record<string, string>;
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [ids.Soup as string]: { tags: ['dinner'] },
+  });
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const reason = (title: string) =>
+    page.locator('tbody tr').filter({ hasText: title }).getByTestId('row-search-reason');
+
+  await managerSearch(page).fill('dinner');
+  await expect(reason('Soup')).toHaveText('tag: dinner');
+  await managerSearch(page).fill('kitchen');
+  // The title says it already; only the address match is named.
+  await expect(reason('Kitchen notes')).toHaveCount(0);
+  await expect(reason('Soup')).toHaveText('in URL');
+
+  await page
+    .getByRole('group', { name: 'Manager View' })
+    .getByRole('button', { name: 'Cards' })
+    .click();
+  await expect(
+    page
+      .locator('[data-slot="bookmark-card"]')
+      .filter({ hasText: 'Soup' })
+      .getByTestId('row-search-reason'),
+  ).toHaveText('in URL');
+});

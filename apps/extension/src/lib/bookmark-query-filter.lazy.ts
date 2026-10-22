@@ -266,20 +266,20 @@ export function filterBookmarkTreeByQuery(
 }
 
 /**
- * The ids of the bookmarks and folders a search box's query matches, for a flat list such as the
- * manager's table; undefined when the query has no terms, so it filters nothing. A folder a plain
+ * The bookmarks and folders a search box's query matches, with where each matched, for a flat list
+ * such as the manager's table; undefined when the query has no terms, so it filters nothing. A folder a plain
  * word names is listed, not everything in it.
  */
 export function matchBookmarkTreeQuery(
   nodes: readonly BookmarkTreeNode[],
   text: string,
   metadata: StoredBookmarkMetadataById,
-): ReadonlySet<string> | undefined {
+): ReadonlyMap<string, readonly SearchMatchReason[]> | undefined {
   const matched = matchQuery(nodes, text, metadata);
   if (!matched) return undefined;
-  const ids = new Set<string>();
+  const reasons = new Map<string, readonly SearchMatchReason[]>();
   for (const [id, result] of matched.results) {
-    if (!matchesOnlyByFolder(matched.query, result)) ids.add(id);
+    if (!matchesOnlyByFolder(matched.query, result)) reasons.set(id, result.reasons);
   }
-  return ids;
+  return reasons;
 }

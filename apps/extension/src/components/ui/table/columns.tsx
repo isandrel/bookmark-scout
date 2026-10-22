@@ -301,6 +301,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
               </span>
             )}
             <RowFolderPath path={row.original.folderPath} />
+            <RowSearchReason id={row.original.id} />
           </div>
         </div>
       );
