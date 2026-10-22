@@ -1,0 +1,7 @@
+# The review list every tool's review uses: category tabs, selection, batch actions, and rows
+# drawn only while on screen. Read by src/components/bookmarks/review/ReviewList.tsx.
+
+# A row's height before it is measured, in pixels
+row_estimate_px = 72
+# Rows drawn above and below the ones on screen
+overscan_rows = 6

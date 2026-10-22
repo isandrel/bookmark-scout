@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const HTTP_FAILURE_LABEL_KEYS: Partial<Record<DeadLinkCategory, string>> = {
   notFound: 'tools_deadLinkCategory_notFound',
@@ -79,55 +79,9 @@ const DEAD_LINK_GROUP_LABEL_KEYS = {
   skipped: 'tools_deadLinkGroup_skipped',
 } as const satisfies Record<DeadLinkGroup, string>;
 
-/**
- * Which group of dead-link results to show, with each group's count; groups with none are left
- * out. `all` shows every result.
- */
-export function DeadLinkGroupFilter({
-  items,
-  value,
-  onValueChange,
-  groups = DEAD_LINK_GROUPS,
-}: {
-  items: readonly DeadLinkResultItem[];
-  value: DeadLinkGroup | 'all';
-  onValueChange: (value: DeadLinkGroup | 'all') => void;
-  groups?: readonly DeadLinkGroup[];
-}) {
-  const labelId = useId();
-  const counts = new Map<DeadLinkGroup, number>();
-  for (const item of items) {
-    const group = deadLinkGroup(item);
-    counts.set(group, (counts.get(group) ?? 0) + 1);
-  }
-  const options = [
-    { value: 'all', label: t('tools_deadLinkGroup_all', String(items.length)) },
-    ...groups
-      .filter((group) => counts.has(group))
-      .map((group) => ({
-        value: group,
-        label: t(DEAD_LINK_GROUP_LABEL_KEYS[group], String(counts.get(group))),
-      })),
-  ];
-  return (
-    <>
-      <span id={labelId} className="sr-only">
-        {t('tools_deadLinkGroupLabel')}
-      </span>
-      <SegmentedControl
-        aria-labelledby={labelId}
-        value={value}
-        options={options}
-        className="h-auto flex-wrap"
-        onValueChange={(next) => onValueChange(next as DeadLinkGroup | 'all')}
-      />
-    </>
-  );
-}
-
-/** Whether a result belongs to the group a filter shows. */
-export function inDeadLinkGroup(item: DeadLinkResultItem, group: DeadLinkGroup | 'all'): boolean {
-  return group === 'all' || deadLinkGroup(item) === group;
+/** A dead-link category's tab text, with its count. */
+export function deadLinkGroupLabel(group: DeadLinkGroup, count: number): string {
+  return t(DEAD_LINK_GROUP_LABEL_KEYS[group], String(count));
 }
 
 function describeMetadata(item: MetadataFetchResultItem): string {
@@ -567,7 +521,7 @@ export function DeadLinkResultsView({
   /** Opens the reviewed repair workflow for failed and redirected links. */
   onReview?: () => void;
 }) {
-  const [group, setGroup] = useState<DeadLinkGroup | 'all'>('all');
+  const [group, setGroup] = useState<CategoryFilter<DeadLinkGroup>>(ALL_CATEGORIES);
   const items = result?.items ?? [];
   const count = (wanted: DeadLinkGroup) =>
     items.filter((item) => deadLinkGroup(item) === wanted).length;
@@ -591,34 +545,39 @@ export function DeadLinkResultsView({
           </Button>
         ) : null}
       </div>
-      <DeadLinkGroupFilter items={items} value={group} onValueChange={setGroup} />
-      {items
-        .filter((item) => inDeadLinkGroup(item, group))
-        .map((item) => (
-          <ToolResultRow
-            key={item.id}
-            title={getBookmarkDisplayTitle(item.title)}
-            badges={
-              <>
-                <DeadLinkCategoryBadge item={item} />
-                <Badge
-                  variant={
-                    item.status === 'ok' || item.status === 'skipped' ? 'secondary' : 'destructive'
-                  }
-                >
-                  {t(`tools_deadLinkStatus_${item.status}`)}
-                </Badge>
-              </>
-            }
-          >
-            <ResultLine>
-              <UrlLink href={item.url} />
-            </ResultLine>
-            <ResultLine>
-              <DeadLinkDescription item={item} />
-            </ResultLine>
-          </ToolResultRow>
-        ))}
+      <CategoryTabs
+        items={items}
+        categories={DEAD_LINK_GROUPS}
+        categoryOf={deadLinkGroup}
+        categoryLabel={deadLinkGroupLabel}
+        value={group}
+        onValueChange={setGroup}
+      />
+      {inCategory(items, group, deadLinkGroup).map((item) => (
+        <ToolResultRow
+          key={item.id}
+          title={getBookmarkDisplayTitle(item.title)}
+          badges={
+            <>
+              <DeadLinkCategoryBadge item={item} />
+              <Badge
+                variant={
+                  item.status === 'ok' || item.status === 'skipped' ? 'secondary' : 'destructive'
+                }
+              >
+                {t(`tools_deadLinkStatus_${item.status}`)}
+              </Badge>
+            </>
+          }
+        >
+          <ResultLine>
+            <UrlLink href={item.url} />
+          </ResultLine>
+          <ResultLine>
+            <DeadLinkDescription item={item} />
+          </ResultLine>
+        </ToolResultRow>
+      ))}
     </div>
   ) : (
     <ToolEmptyState message={t('state_noDeadLinksFound')} />
