@@ -6,6 +6,8 @@
 max_query_length = { value = 500, min = 50, max = 5000 }
 # Most terms a query keeps; later ones are ignored and the search says so.
 max_terms = { value = 32, min = 1, max = 256 }
+# Characters of page text shown around a match in a page's indexed text (Index Page Text)
+content_snippet_chars = 80
 
 # How much a term counts toward a result's rank, by where it matched. A term that matches in
 # several places counts its best one. Results rank by the sum over the query's terms; equal sums
@@ -27,3 +29,5 @@ domain = 15
 url = 10
 # The saved summary has the term.
 summary = 5
+# The page's indexed text has the term (Index Page Text).
+content = 3

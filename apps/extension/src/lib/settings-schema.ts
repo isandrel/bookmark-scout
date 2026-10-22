@@ -61,6 +61,8 @@ export type SettingsPanelId =
   | 'agentBridge'
   /** Maintenance: the smart rules, their own local item (src/lib/bookmark-rules-storage.ts). */
   | 'bookmarkRules'
+  /** Metadata & Content: how much page text is indexed, and a button that deletes it. */
+  | 'pageText'
   /** Essentials: a pointer to the AI tab, which is optional and set up there. */
   | 'essentialsAi';
 
@@ -293,6 +295,7 @@ export const TOOL_SCOPE_CAPABILITIES = {
   privacyScanner: 'all',
   statistics: 'both',
   bookmarkRules: 'both',
+  pageText: 'both',
 } as const satisfies Record<string, z.infer<typeof toolScopeSchema> | 'both'>;
 
 // ============================================================================
@@ -1063,6 +1066,12 @@ const fields = {
     'bookmarkRulesDefaultScope',
     TOOL_SCOPE_CAPABILITIES.bookmarkRules,
   ),
+  pageTextEnabled: switchField('metadata_content.page_text.enabled', 'pageTextEnabled'),
+  pageTextDefaultScope: scopeField(
+    'metadata_content.page_text',
+    'pageTextDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.pageText,
+  ),
 
   privacyScannerEnabled: switchField('security.privacy_scanner.enabled', 'privacyScannerEnabled'),
   privacyScannerDefaultScope: scopeField(
@@ -1499,6 +1508,13 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         toggle: 'siteIconsEnabled',
         fields: ['siteIconsDefaultScope'],
         advanced: ['siteIconsPreferredSize', 'siteIconsMaxIconKb', 'siteIconsMaxCacheKb'],
+      },
+      {
+        id: 'pageText',
+        labelKey: 'tools_pageText',
+        toggle: 'pageTextEnabled',
+        fields: ['pageTextDefaultScope'],
+        panel: 'pageText',
       },
     ]),
     security: category('settings_security', 'settings_securityDesc', [

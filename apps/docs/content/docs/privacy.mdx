@@ -19,6 +19,7 @@ This is a summary. The full <SiteLink to="privacy">privacy policy</SiteLink> on 
 - The title and URL of the active tab, when you save the page you are on (from the popup, the side panel, or a quick save shortcut) or ask for a folder suggestion.
 - Site icons from the browser's own icon cache, in Chrome and Edge, once you turn on **Use the browser's icon cache**.
 - Site icons you download with **Refresh Site Icons**, from each bookmarked website.
+- The text of bookmarked pages, when you run **Index Page Text**, from each page in the run.
 
 It does not read the content of the pages you visit. After a quick save shortcut it shows its own notification in that tab, which reads nothing from the page.
 
@@ -39,6 +40,7 @@ It does not read the content of the pages you visit. After a quick save shortcut
 | AI activity, only while **Record requests** is on (off by default, per device): the last AI requests with what was sent and what came back, including bookmark titles, URLs, folder paths, and with **Read page content** on, page text. API keys and other credentials are removed before storing; turning recording off deletes it | Local storage on this device | No |
 | Tags, summaries, saved searches, smart rules, recent folders, recent searches | Local storage on this device | No |
 | Site icons saved with **Refresh Site Icons**, up to 4 MB by default | Local storage on this device | No |
+| Page text saved with **Index Page Text** | IndexedDB on this device | No |
 | The last quick save (the page's title and URL, and where it went), for **Undo** and **Move to** | Session storage on this device, cleared when the browser closes | No |
 | The manager's undo history (the bookmarks you changed there, with copies of deleted ones and their tags and summaries), for undo and redo | Session storage on this device, cleared when the browser closes | No |
 | The bookmark change history: what changed in your bookmarks and when, whether Bookmark Scout made the change or it was seen from elsewhere (titles, URLs, folders, and the outcome of each change), kept for a limited time; and a copy of every bookmark's title, URL, and folder as last seen, to tell what changed outside Bookmark Scout. Also a copy of each item Bookmark Scout deletes, with what was inside it and its tags and summary, so it can be restored from the History; removed with its change. Not in the backup file | IndexedDB on this device | No |
@@ -59,6 +61,7 @@ Only when you use one of these, and only to the place named:
 | Ask AI | The AI provider you configured | Your messages and the conversation so far, and what the AI looks up to answer: matching bookmarks (with their folders, dates added, tags, and summaries), folder names, the current page's title and URL, whether bookmarked links it checks still work, and with **Read page content** on, the text of pages it reads. With its web search on, the provider also searches the web. The conversation is not saved |
 | Check Dead Links, Metadata Fetcher, Ask AI link checks | Each bookmarked website | A request for the page, without cookies, after you allow website access |
 | Refresh Site Icons | Each bookmarked website | A request for one bookmarked page per site and for an icon file on that site's domain, without cookies, after you allow website access. No third-party icon service is used |
+| Index Page Text | Each bookmarked page in the run | A request for the page, without cookies, after you allow website access. Its readable text stays on this device |
 | Local AI agents, only with **Allow local AI agents** on (off by default) | The bookmark-scout-mcp program on your computer, and the AI agents you run there | What an agent asks for: matching bookmarks (with their folders, dates added, tags, and summaries), folder names, the current page's title and URL, whether bookmarked links still work (after you allow website access), and with **Read page content** on, a page's text. Private values in titles and URLs are hidden unless you turn that off. Agents may send what they read to their own AI provider. Each lookup is in AI activity while **Record requests** is on |
 
 Every AI feature that uses a provider also sends your **About me** text (**AI** settings) while it has any; it is empty by default.

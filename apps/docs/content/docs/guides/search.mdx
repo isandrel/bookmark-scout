@@ -47,12 +47,16 @@ The search boxes in the popup, side panel, and manager read a search the same wa
 | `folder:Work` or `path:Work` | Everything in a folder with that exact name, at any depth; `folder:"Work / Docs"` names a folder inside another |
 | `tag:reading` | Bookmarks with that exact tag |
 | `summary:recipe` | Summaries that contain the text |
+| `content:recipe` | The text of pages you indexed with **Index Page Text** |
 | `is:bookmark` or `is:folder` | Only bookmarks, or only folders |
 | `is:untagged` | Bookmarks without tags |
 | `has:tags` or `has:summary` | Items with tags, or with a summary |
+| `has:content` | Bookmarks whose page text is indexed |
 | `after:2026-01-31` or `before:2026-01-31` | Items added on or after that day, or on or before it |
 
 Tags and summaries are the ones you add in **Bookmark Details** or keep from the **Auto-Tagging** and **Content Summarizer** tools. They stay on this device.
+
+With **Index Page Text** on, plain words also match the text of the pages you indexed, after titles, addresses, tags, and summaries; a popup result found that way shows the words around the match. See [Search inside pages](/guides/clean-up#search-inside-pages).
 
 ## Filter in the bookmarks manager
 

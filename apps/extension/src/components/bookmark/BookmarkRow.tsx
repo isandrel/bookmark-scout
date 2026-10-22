@@ -11,6 +11,7 @@ const SEARCH_REASONS = [
   ['url', 'search_reasonUrl'],
   ['domain', 'search_reasonUrl'],
   ['summary', 'search_reasonSummary'],
+  ['content', 'search_reasonContent'],
   ['folder', 'search_reasonFolder'],
 ] as const satisfies readonly (readonly [SearchMatchField, MessageKey])[];
 
@@ -19,7 +20,10 @@ function searchReasonLabel(reasons: readonly SearchMatchReason[] = []): string |
   if (reasons.some((reason) => reason.field === 'title')) return undefined;
   for (const [field, message] of SEARCH_REASONS) {
     const reason = reasons.find((candidate) => candidate.field === field);
-    if (reason) return t(message, reason.field === 'tag' ? [reason.value] : undefined);
+    if (!reason) continue;
+    if (reason.field === 'tag') return t(message, [reason.value]);
+    if (reason.field === 'content') return t(message, [reason.snippet]);
+    return t(message);
   }
   return undefined;
 }

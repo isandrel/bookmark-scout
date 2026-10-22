@@ -1,0 +1,15 @@
+# Page text search: the readable text of bookmarked pages, downloaded only when the user runs Index
+# Page Text and kept on this device (src/lib/page-text-store.ts), so search finds words inside
+# pages.
+
+# Most characters kept per page, from its readable text
+max_chars_per_page = 3000
+# Most pages kept; indexing stops adding past it
+max_pages = 10000
+# Downloading one page
+timeout_ms = 10000
+max_bytes = 2000000
+# Pages downloaded at a time
+concurrency = 4
+# Raised when the kept text would read differently, so pages are indexed again
+extractor_version = 1

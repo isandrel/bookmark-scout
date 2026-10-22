@@ -17,6 +17,7 @@ import {
   Sparkles,
   Tags,
   Wand2,
+  TextSearch,
 } from 'lucide-react';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
@@ -149,6 +150,7 @@ export type ToolResults = {
   privacyScanner: PrivacyScanResult;
   statistics: BookmarkStatistics;
   bookmarkRules: RulePlanItem[];
+  pageText: PageTextScanResult;
 };
 
 /** What a review passes to `apply` for the tools that let the user pick. */
@@ -167,6 +169,8 @@ type PickedItems = {
   privacyScanner: PrivacyScanItem[];
   /** The bookmarks to change as the rules say, left on Apply in the review. */
   bookmarkRules: RulePlanItem[];
+  /** The pages whose text to keep, left on Save in the review. */
+  pageText: PageTextScanItem[];
 };
 
 /** What the review passes to `apply`: the items the user picked, where a tool lets them pick. */
@@ -780,6 +784,26 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
           evicted > 0
             ? t('toast_siteIconsSavedEvictedDesc', [String(saved), String(evicted)])
             : tPlural('toast_siteIconsSavedDesc', saved),
+        variant: 'success',
+      };
+    },
+  },
+  pageText: {
+    id: 'pageText',
+    enabledSetting: 'pageTextEnabled',
+    scopeSetting: 'pageTextDefaultScope',
+    section: 'metadata',
+    icon: TextSearch,
+    titleKey: 'tools_pageText',
+    descriptionKey: 'tools_pageTextDesc',
+    actionKey: () => 'action_index',
+    needsHostAccess: true,
+    scan: ({ nodes, options }) => scanPageTexts(nodes, options.pageText),
+    async apply(_result, picked) {
+      const { saved } = await savePageTextResults(picked);
+      return {
+        title: t('toast_pageTextSaved'),
+        description: tPlural('toast_pageTextSavedDesc', saved),
         variant: 'success',
       };
     },

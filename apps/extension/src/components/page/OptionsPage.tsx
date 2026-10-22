@@ -438,6 +438,8 @@ const OptionsPage: React.FC = () => {
         return matchesOnly ? null : <AgentBridgePanel />;
       case 'bookmarkRules':
         return matchesOnly ? null : <BookmarkRulesPanel />;
+      case 'pageText':
+        return matchesOnly ? null : <PageTextPanel />;
       case 'essentialsAi':
         return matchesOnly ? null : (
           <OptionsPanel

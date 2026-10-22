@@ -168,6 +168,15 @@ const TOOL_REVIEWS: {
     </ReviewDialog>
   ),
   bookmarkRules: (props) => <BookmarkRulesReview {...props} />,
+  pageText: (props) => (
+    <ReviewDialog {...props} description={t('tools_pageTextDialogDesc')}>
+      <PageTextResultsView
+        result={props.state.result}
+        isSaving={props.state.phase === 'applying'}
+        onSave={props.apply}
+      />
+    </ReviewDialog>
+  ),
   statistics: (props) => (
     <ReviewDialog {...props} description={t('tools_statisticsDialogDesc')}>
       <StatisticsResultsView result={props.state.result} />

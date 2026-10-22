@@ -116,6 +116,23 @@ Ten en cuenta:
 - Una etiqueta que el marcador ya tiene, escrita de cualquier forma, no se vuelve a añadir. Las carpetas nunca se etiquetan ni se mueven.
 - **Deshacer** en el mensaje tras aplicar devuelve tanto los movimientos como las etiquetas. Los movimientos son un solo cambio en el historial.
 - Las reglas se quedan en este dispositivo y forman parte de **Hacer copia de los ajustes**. Una regla restaurada en otro dispositivo solo mueve marcadores si su carpeta existe allí; si no, sus movimientos quedan bloqueados hasta que vuelvas a elegir la carpeta.
+## Buscar dentro de las páginas [#search-inside-pages]
+
+**Indexar texto de páginas** guarda el texto legible de las páginas marcadas en este dispositivo, para que la búsqueda encuentre palabras que solo están dentro de una página. Está desactivado hasta que lo actives y descarga cada página que indexas.
+
+<Steps>
+<Step>
+Activa **Activar Indexar texto de páginas** en [Configuración](/settings#index-page-text).
+</Step>
+<Step>
+En la barra de herramientas del administrador, elige el ámbito en la tarjeta **Indexar texto de páginas** y haz clic en **Indexar**. Si se te pide, permite el acceso a los sitios de ese ámbito.
+</Step>
+<Step>
+Revisa las páginas por pestaña: **Con texto**, **Sin texto**, **Con error**, **Ya indexadas** (antes, desde la misma dirección) y **Omitidas** (no son páginas web o están en tu red local). Las páginas con texto empiezan en **Guardar texto**; haz clic en **Guardar** (por ejemplo, **Guardar el texto de 12 páginas**).
+</Step>
+</Steps>
+
+Después, la búsqueda encuentra esos marcadores por su texto en la ventana emergente, el panel lateral y el administrador. `content:` busca solo en el texto de las páginas, y `has:content` encuentra los marcadores que lo tienen. Una página se vuelve a leer cuando cambia la dirección de su marcador. **Eliminar texto de páginas** en Configuración elimina el índice; los marcadores, las etiquetas y el historial no cambian.
 
 ## Herramientas relacionadas [#related-tools]
 

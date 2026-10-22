@@ -25,10 +25,12 @@ export type ToolOptions = {
   statistics: StatisticsOptions;
   /** Smart Rules run the rules saved in Settings, with no options of their own. */
   bookmarkRules: Record<never, never>;
+  pageText: PageTextScanOptions;
 };
 
 const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool] } = {
   bookmarkRules: () => ({}),
+  pageText: (settings) => ({ skipPrivateHosts: settings.readPageSkipPrivateHosts }),
   aiContextPacker: (settings) => ({
     format: settings.aiContextPackerOutputFormat,
     includeFolderPath: settings.aiContextPackerIncludeFolderPath,

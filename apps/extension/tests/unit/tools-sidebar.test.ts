@@ -52,14 +52,14 @@ describe('Tools sidebar scope', () => {
     expect(getToolStartScope('folder', null)).toBe('all');
   });
 
-  it('starts every tool that can choose on all bookmarks by default, except AI reorganization', () => {
+  it('starts every tool that can choose on all bookmarks by default, except AI reorganization and page text, which download or send each page', () => {
     const tools = Object.values(TOOL_DEFINITIONS).filter(
       (tool) => getToolScopeCapability(tool.id) === 'both',
     );
     const folderFirst = tools
       .filter((tool) => getToolDefaultScope(defaultSettings, tool, '1') === 'folder')
       .map((tool) => tool.id);
-    expect(folderFirst).toEqual(['reorganization']);
+    expect(folderFirst).toEqual(['reorganization', 'pageText']);
     expect(EXPORT_DEFAULT_SCOPE).toBe('all');
   });
 });

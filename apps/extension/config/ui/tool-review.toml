@@ -19,3 +19,5 @@ site_icons = "save"
 ai_metadata = "save"
 privacy_scanner = "keep"
 bookmark_rules = "apply"
+# Index Page Text "save" or "skip" for each page whose text it read.
+page_text = "save"

@@ -26,18 +26,29 @@ export type SearchDocument = {
   dateAdded?: number;
   tags: readonly string[];
   summary?: string;
+  /** The page's indexed text (`page-text-store.ts`), when it was read from this address. */
+  content?: string;
 };
 
-export type SearchMatchField = 'title' | 'url' | 'domain' | 'folder' | 'tag' | 'summary';
+export type SearchMatchField =
+  | 'title'
+  | 'url'
+  | 'domain'
+  | 'folder'
+  | 'tag'
+  | 'summary'
+  | 'content';
 
 /**
  * Where a document matched; `ranges` are highlights in that field's text, `[start, end)` in UTF-16
  * units.
  */
 export type SearchMatchReason =
-  | { field: Exclude<SearchMatchField, 'tag'>; ranges: SearchMatchRange[] }
+  | { field: Exclude<SearchMatchField, 'tag' | 'content'>; ranges: SearchMatchRange[] }
   /** `value` is the tag, and `ranges` are in it. */
-  | { field: 'tag'; value: string; ranges: SearchMatchRange[] };
+  | { field: 'tag'; value: string; ranges: SearchMatchRange[] }
+  /** `snippet` is the page text around the first match, as plain text. */
+  | { field: 'content'; snippet: string; ranges: SearchMatchRange[] };
 
 export type SearchResult = {
   document: SearchDocument;
@@ -88,6 +99,7 @@ type FoldedDocument = {
   folderPath: Folded;
   folders: readonly string[];
   summary?: Folded;
+  content?: Folded;
   tags: readonly Folded[];
   tagKeys: readonly string[];
 };
@@ -103,6 +115,7 @@ function foldedOf(document: SearchDocument): FoldedDocument {
       folderPath: fold(document.folderPath),
       folders: document.folders.map((name) => name.toLowerCase()),
       ...(document.summary ? { summary: fold(document.summary) } : {}),
+      ...(document.content ? { content: fold(document.content) } : {}),
       tags: document.tags.map(fold),
       tagKeys: document.tags.map(tagKey),
     };
@@ -111,8 +124,17 @@ function foldedOf(document: SearchDocument): FoldedDocument {
   return folded;
 }
 
-/** A node's last document, with the metadata entry it was built from. */
-type BuiltDocument = { document: SearchDocument; own: StoredBookmarkMetadata | undefined };
+/** A node's last document, with the metadata entry and page text it was built from. */
+type BuiltDocument = {
+  document: SearchDocument;
+  own: StoredBookmarkMetadata | undefined;
+  content: string | undefined;
+};
+
+/** Indexed page text by bookmark id, with the address it was read from. */
+export type SearchPageTexts = ReadonlyMap<string, { url: string; text: string }>;
+
+const NO_PAGE_TEXTS: SearchPageTexts = new Map();
 
 /**
  * The document last built for each node. Tree updates replace only the nodes that changed
@@ -129,9 +151,17 @@ function documentOf(
   node: BookmarkTreeNode,
   folders: readonly string[],
   own: StoredBookmarkMetadata | undefined,
+  page: { url: string; text: string } | undefined,
 ): SearchDocument {
+  // Text read from another address is not this bookmark's page any more.
+  const content = page && page.url === node.url && page.text ? page.text : undefined;
   const built = builtDocuments.get(node);
-  if (built && built.own === own && sameNames(built.document.folders, folders)) {
+  if (
+    built &&
+    built.own === own &&
+    built.content === content &&
+    sameNames(built.document.folders, folders)
+  ) {
     return built.document;
   }
   const isFolder = Boolean(node.children);
@@ -146,8 +176,9 @@ function documentOf(
     ...(node.dateAdded !== undefined ? { dateAdded: node.dateAdded } : {}),
     tags: own?.tags ?? [],
     ...(own?.summary ? { summary: own.summary } : {}),
+    ...(content ? { content } : {}),
   };
-  builtDocuments.set(node, { document, own });
+  builtDocuments.set(node, { document, own, content });
   return document;
 }
 
@@ -158,6 +189,7 @@ function documentOf(
 export function* searchDocumentsOf(
   roots: readonly BookmarkTreeNode[],
   metadata: StoredBookmarkMetadataById,
+  pageTexts: SearchPageTexts = NO_PAGE_TEXTS,
 ): Generator<SearchDocument, void, undefined> {
   // Depth first in tree order, without recursion: a generator per level would cost a frame each.
   const stack: { node: BookmarkTreeNode; folders: readonly string[]; container: boolean }[] = [];
@@ -167,7 +199,9 @@ export function* searchDocumentsOf(
   }
   for (let entry = stack.pop(); entry; entry = stack.pop()) {
     const { node, folders, container } = entry;
-    if (!container && !isSeparatorNode(node)) yield documentOf(node, folders, metadata[node.id]);
+    if (!container && !isSeparatorNode(node)) {
+      yield documentOf(node, folders, metadata[node.id], pageTexts.get(node.id));
+    }
     if (!node.children) continue;
     const inside = container ? folders : [...folders, node.title];
     // The root's children are the browser's own folders: containers too.
@@ -183,13 +217,26 @@ export function* searchDocumentsOf(
 export function buildSearchDocuments(
   roots: readonly BookmarkTreeNode[],
   metadata: StoredBookmarkMetadataById,
+  pageTexts: SearchPageTexts = NO_PAGE_TEXTS,
 ): SearchDocument[] {
-  return Array.from(searchDocumentsOf(roots, metadata));
+  return Array.from(searchDocumentsOf(roots, metadata, pageTexts));
 }
 
 /** Works out a document's text without case ahead of the first search that reads it. */
 export function foldSearchDocument(document: SearchDocument): void {
   foldedOf(document);
+}
+
+const ELLIPSIS = '…';
+
+/** The text around a match, on one line, at most `SEARCH_CONTENT_SNIPPET_CHARS` long. */
+function snippetAround(text: string, range: SearchMatchRange | undefined): string {
+  const [start = 0, end = 0] = range ?? [];
+  const room = Math.max(0, SEARCH_CONTENT_SNIPPET_CHARS - (end - start));
+  const from = Math.max(0, start - Math.floor(room / 2));
+  const to = Math.min(text.length, from + SEARCH_CONTENT_SNIPPET_CHARS);
+  const body = text.slice(from, to).replace(/\s+/g, ' ').trim();
+  return `${from > 0 ? ELLIPSIS : ''}${body}${to < text.length ? ELLIPSIS : ''}`;
 }
 
 /** A host name as typed, made comparable to `SearchDocument.host` (punycode, no `www.`). */
@@ -297,6 +344,13 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
   if (wants('summary') && folded.summary?.text.includes(needle)) {
     add({ field: 'summary', ranges: findAll(folded.summary, needle) }, SEARCH_WEIGHTS.summary);
   }
+  if (wants('content') && document.content && folded.content?.text.includes(needle)) {
+    const ranges = findAll(folded.content, needle);
+    add(
+      { field: 'content', snippet: snippetAround(document.content, ranges[0]), ranges },
+      SEARCH_WEIGHTS.content,
+    );
+  }
   return { matched: reasons.length > 0, score, reasons };
 }
 
@@ -331,7 +385,9 @@ function holds(term: Exclude<SearchTerm, { kind: 'text' }>, document: SearchDocu
       : document.kind === term.value;
   }
   if (term.kind === 'has') {
-    return term.value === 'summary' ? Boolean(document.summary) : document.tags.length > 0;
+    if (term.value === 'summary') return Boolean(document.summary);
+    if (term.value === 'content') return Boolean(document.content);
+    return document.tags.length > 0;
   }
   if (document.dateAdded === undefined) return false;
   return term.bound === 'after'

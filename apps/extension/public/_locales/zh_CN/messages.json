@@ -7675,6 +7675,166 @@
         "message": "较大的更改在你关闭页面后仍会继续，每一批都可在历史记录中撤消。较小的更改会立即应用，可在通知中撤消。",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_pageText": {
+        "message": "索引网页正文",
+        "description": "Tools sidebar: name of the Index Page Text tool"
+    },
+    "tools_pageTextDesc": {
+        "message": "在此设备上保存书签网页的正文，让搜索也能找到网页中的词语",
+        "description": "Tools sidebar: what Index Page Text does"
+    },
+    "action_index": {
+        "message": "索引",
+        "description": "Button that runs Index Page Text"
+    },
+    "settings_pageTextEnabled": {
+        "message": "启用索引网页正文",
+        "description": "Settings: switch that turns Index Page Text on"
+    },
+    "settings_pageTextEnabledDesc": {
+        "message": "在工具侧边栏中显示“索引网页正文”，并让搜索查找已索引网页的内容。每个要索引的网页都会被下载；正文只保存在此设备上。",
+        "description": "Settings: what turning Index Page Text on does"
+    },
+    "settings_pageTextDefaultScope": {
+        "message": "默认范围",
+        "description": "Settings: default scope of Index Page Text"
+    },
+    "settings_pageTextDefaultScopeDesc": {
+        "message": "“索引网页正文”默认读取的书签",
+        "description": "Settings: description of the Index Page Text default scope"
+    },
+    "tools_pageTextDialogDesc": {
+        "message": "从每个网页读取的正文。只有你保存的内容才会保留在此设备上。",
+        "description": "Index Page Text review: description"
+    },
+    "tools_pageTextCategory_read": {
+        "message": "有正文 ($1)",
+        "description": "Index Page Text review tab: pages with readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_empty": {
+        "message": "无正文 ($1)",
+        "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_failed": {
+        "message": "失败 ($1)",
+        "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_pageTextCategory_current": {
+        "message": "已索引 ($1)",
+        "description": "Index Page Text review tab: pages indexed before from the same address; $1 is how many"
+    },
+    "tools_pageTextCategory_skipped": {
+        "message": "已跳过 ($1)",
+        "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextActionSave": {
+        "message": "保存正文",
+        "description": "Index Page Text review: action that keeps a page text"
+    },
+    "tools_pageTextSaveSelected": {
+        "message": "保存 $count$ 个网页的正文",
+        "description": "Index Page Text review: button that saves the text left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextNothing": {
+        "message": "此范围内没有网页。",
+        "description": "Index Page Text review: shown when the scope has no web pages"
+    },
+    "tools_pageTextOverLimit": {
+        "message": "索引已满，已略过 $count$ 个书签。",
+        "description": "Index Page Text review: bookmarks left out because the index is full",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextSaved": {
+        "message": "网页正文已保存",
+        "description": "Toast title after saving page text"
+    },
+    "toast_pageTextSavedDesc": {
+        "message": "现在可以按正文搜索到 $count$ 个网页。",
+        "description": "Toast after saving page text; how many pages",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "search_reasonContent": {
+        "message": "网页：$1",
+        "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
+    },
+    "searchHelp_content": {
+        "message": "在已索引的网页正文中",
+        "description": "Search syntax help: what content: does"
+    },
+    "searchHelp_hasContent": {
+        "message": "有已索引的网页正文",
+        "description": "Search syntax help: what has:content does"
+    },
+    "pageText_indexTitle": {
+        "message": "网页正文索引",
+        "description": "Settings: heading of the page text index panel"
+    },
+    "pageText_indexSummary": {
+        "message": "已索引 $count$ 个网页，共 $chars$ 个字符。只保存在此设备上，绝不会离开此设备。",
+        "description": "Settings: how much page text is kept; $1 pages, $2 characters",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "chars": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "pageText_indexLoading": {
+        "message": "正在读取索引…",
+        "description": "Settings: shown while the page text index is read"
+    },
+    "pageText_clear": {
+        "message": "删除网页正文",
+        "description": "Settings: button that deletes the page text index"
+    },
+    "pageText_cleared": {
+        "message": "网页正文已删除",
+        "description": "Toast title after deleting the page text index"
+    },
+    "pageText_clearedDesc": {
+        "message": "书签、标签和历史记录都没有改变。",
+        "description": "Toast after deleting the page text index"
+    },
+    "settings_managerViewMode": {
+        "message": "管理器视图",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "以列表或卡片显示文件夹和搜索结果。保存在此设备上。",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "列表",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "卡片",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "管理器视图",
+        "description": "Settings: heading of the section with Manager View"
+    },
     "tools_bookmarkRules": {
         "message": "智能规则",
         "description": "Tools sidebar: name of the Smart Rules tool"
@@ -7944,25 +8104,5 @@
     "tools_rulesEdit": {
         "message": "编辑规则",
         "description": "Smart Rules card: button that opens the rules in Settings"
-    },
-    "settings_managerViewMode": {
-        "message": "管理器视图",
-        "description": "Settings and manager toolbar: how the manager shows a folder or search"
-    },
-    "settings_managerViewModeDesc": {
-        "message": "以列表或卡片显示文件夹和搜索结果。保存在此设备上。",
-        "description": "Settings: description of Manager View"
-    },
-    "settings_managerViewModeList": {
-        "message": "列表",
-        "description": "Manager View option and toolbar button: the table"
-    },
-    "settings_managerViewModeCards": {
-        "message": "卡片",
-        "description": "Manager View option and toolbar button: a grid of cards"
-    },
-    "settings_sectionManagerView": {
-        "message": "管理器视图",
-        "description": "Settings: heading of the section with Manager View"
     }
 }

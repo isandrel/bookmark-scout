@@ -16,6 +16,7 @@ tools = [
   "bookmarkRules",
   "metadataFetcher",
   "siteIcons",
+  "pageText",
   "privacyScanner",
   "statistics",
   "reorganization",

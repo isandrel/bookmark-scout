@@ -7941,6 +7941,210 @@
         "message": "Größere Änderungen laufen weiter, wenn Sie die Seite schließen, und jeder Teil lässt sich im Verlauf rückgängig machen. Kleinere werden sofort übernommen, mit Rückgängig in der Benachrichtigung.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_pageText": {
+        "message": "Seitentext indexieren",
+        "description": "Tools sidebar: name of the Index Page Text tool"
+    },
+    "tools_pageTextDesc": {
+        "message": "Den Text gespeicherter Seiten auf diesem Gerät behalten, damit die Suche Wörter darin findet",
+        "description": "Tools sidebar: what Index Page Text does"
+    },
+    "action_index": {
+        "message": "Indexieren",
+        "description": "Button that runs Index Page Text"
+    },
+    "settings_pageTextEnabled": {
+        "message": "Seitentext indexieren aktivieren",
+        "description": "Settings: switch that turns Index Page Text on"
+    },
+    "settings_pageTextEnabledDesc": {
+        "message": "Seitentext indexieren in der Werkzeugleiste anzeigen und die Suche in indexierten Seiten suchen lassen. Jede indexierte Seite wird heruntergeladen; der Text bleibt auf diesem Gerät.",
+        "description": "Settings: what turning Index Page Text on does"
+    },
+    "settings_pageTextDefaultScope": {
+        "message": "Standardbereich",
+        "description": "Settings: default scope of Index Page Text"
+    },
+    "settings_pageTextDefaultScopeDesc": {
+        "message": "Lesezeichen, die Seitentext indexieren standardmäßig liest",
+        "description": "Settings: description of the Index Page Text default scope"
+    },
+    "tools_pageTextDialogDesc": {
+        "message": "Der aus jeder Seite gelesene Text. Nur was Sie speichern, wird behalten, auf diesem Gerät.",
+        "description": "Index Page Text review: description"
+    },
+    "tools_pageTextCategory_read": {
+        "message": "Text gefunden ($1)",
+        "description": "Index Page Text review tab: pages with readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_empty": {
+        "message": "Kein Text ($1)",
+        "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_failed": {
+        "message": "Fehlgeschlagen ($1)",
+        "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_pageTextCategory_current": {
+        "message": "Schon indexiert ($1)",
+        "description": "Index Page Text review tab: pages indexed before from the same address; $1 is how many"
+    },
+    "tools_pageTextCategory_skipped": {
+        "message": "Übersprungen ($1)",
+        "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextActionSave": {
+        "message": "Text speichern",
+        "description": "Index Page Text review: action that keeps a page text"
+    },
+    "tools_pageTextSaveSelected": {
+        "message": "Text von $count$ Seiten speichern",
+        "description": "Index Page Text review: button that saves the text left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextSaveSelected_one": {
+        "message": "Text von $count$ Seite speichern",
+        "description": "Index Page Text review: button that saves the text left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextNothing": {
+        "message": "Keine Webseiten in diesem Bereich.",
+        "description": "Index Page Text review: shown when the scope has no web pages"
+    },
+    "tools_pageTextOverLimit": {
+        "message": "$count$ Lesezeichen wurden ausgelassen, weil der Index voll ist.",
+        "description": "Index Page Text review: bookmarks left out because the index is full",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextOverLimit_one": {
+        "message": "$count$ Lesezeichen wurde ausgelassen, weil der Index voll ist.",
+        "description": "Index Page Text review: bookmarks left out because the index is full (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextSaved": {
+        "message": "Seitentext gespeichert",
+        "description": "Toast title after saving page text"
+    },
+    "toast_pageTextSavedDesc": {
+        "message": "Die Suche findet jetzt $count$ Seiten über ihren Text.",
+        "description": "Toast after saving page text; how many pages",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextSavedDesc_one": {
+        "message": "Die Suche findet jetzt $count$ Seite über ihren Text.",
+        "description": "Toast after saving page text; how many pages (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "search_reasonContent": {
+        "message": "Seite: $1",
+        "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
+    },
+    "searchHelp_content": {
+        "message": "Im indexierten Seitentext",
+        "description": "Search syntax help: what content: does"
+    },
+    "searchHelp_hasContent": {
+        "message": "Mit indexiertem Seitentext",
+        "description": "Search syntax help: what has:content does"
+    },
+    "pageText_indexTitle": {
+        "message": "Seitentext-Index",
+        "description": "Settings: heading of the page text index panel"
+    },
+    "pageText_indexSummary": {
+        "message": "$count$ Seiten indexiert, $chars$ Zeichen Text. Auf diesem Gerät gespeichert; er verlässt es nie.",
+        "description": "Settings: how much page text is kept; $1 pages, $2 characters",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "chars": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "pageText_indexSummary_one": {
+        "message": "$count$ Seite indexiert, $chars$ Zeichen Text. Auf diesem Gerät gespeichert; er verlässt es nie.",
+        "description": "Settings: how much page text is kept; $1 pages, $2 characters (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "chars": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "pageText_indexLoading": {
+        "message": "Index wird gelesen …",
+        "description": "Settings: shown while the page text index is read"
+    },
+    "pageText_clear": {
+        "message": "Seitentext löschen",
+        "description": "Settings: button that deletes the page text index"
+    },
+    "pageText_cleared": {
+        "message": "Seitentext gelöscht",
+        "description": "Toast title after deleting the page text index"
+    },
+    "pageText_clearedDesc": {
+        "message": "Lesezeichen, Tags und der Verlauf wurden nicht geändert.",
+        "description": "Toast after deleting the page text index"
+    },
+    "settings_managerViewMode": {
+        "message": "Manageransicht",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "Ordner und Suchen als Liste oder als Karten anzeigen. Wird auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "Liste",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "Karten",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "Manageransicht",
+        "description": "Settings: heading of the section with Manager View"
+    },
     "tools_bookmarkRules": {
         "message": "Intelligente Regeln",
         "description": "Tools sidebar: name of the Smart Rules tool"
@@ -8240,25 +8444,5 @@
     "tools_rulesEdit": {
         "message": "Regeln bearbeiten",
         "description": "Smart Rules card: button that opens the rules in Settings"
-    },
-    "settings_managerViewMode": {
-        "message": "Manageransicht",
-        "description": "Settings and manager toolbar: how the manager shows a folder or search"
-    },
-    "settings_managerViewModeDesc": {
-        "message": "Ordner und Suchen als Liste oder als Karten anzeigen. Wird auf diesem Gerät gespeichert.",
-        "description": "Settings: description of Manager View"
-    },
-    "settings_managerViewModeList": {
-        "message": "Liste",
-        "description": "Manager View option and toolbar button: the table"
-    },
-    "settings_managerViewModeCards": {
-        "message": "Karten",
-        "description": "Manager View option and toolbar button: a grid of cards"
-    },
-    "settings_sectionManagerView": {
-        "message": "Manageransicht",
-        "description": "Settings: heading of the section with Manager View"
     }
 }

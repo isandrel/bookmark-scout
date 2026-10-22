@@ -801,6 +801,19 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'bookmark-rules.spec.ts',
       'a rule made in Settings tags and moves matching bookmarks after a review, and undo puts them back',
     ),
+  // Index Page Text
+  pageTextEnabled: tested(TOOL_TABLE, [
+    toolFlags,
+    e2e(
+      'page-text.spec.ts',
+      'indexed page text is searchable after the review saves it, and Options deletes it',
+    ),
+  ]),
+  pageTextDefaultScope: tested(TOOL_TABLE, [
+    e2e(
+      'page-text.spec.ts',
+      'indexed page text is searchable after the review saves it, and Options deletes it',
+    ),
   ]),
 
   // Statistics
