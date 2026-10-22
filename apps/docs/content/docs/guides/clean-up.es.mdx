@@ -59,8 +59,8 @@ Si un marcador cambió después de la vista previa, se omite y se cuenta en el m
 
 Las reglas están en la pestaña **Mantenimiento** de la configuración:
 
-- **Parámetros que se quitan**: los parámetros que se eliminan. La lista predeterminada es `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src` y `si`.
-- **Parámetros que se conservan**: los parámetros que nunca se quitan. Predeterminados: `id`, `page`, `q`, `p` y `lang`.
+- **Parámetros que se quitan**: los parámetros que se eliminan. La lista predeterminada es <SettingDefault path="maintenance.url_cleaner.remove_params" />. Un nombre que termina en `*` incluye todos los nombres que empiezan así.
+- **Parámetros que se conservan**: los parámetros que nunca se quitan. Predeterminados: <SettingDefault path="maintenance.url_cleaner.preserve_params" />.
 - **Quitar parámetros de consulta repetidos** (activado de forma predeterminada) elimina los parámetros repetidos.
 - **Ordenar parámetros de consulta** (activado de forma predeterminada) ordena alfabéticamente los parámetros restantes.
 - **Quitar fragmentos** (desactivado de forma predeterminada) también quita partes como `#section`.

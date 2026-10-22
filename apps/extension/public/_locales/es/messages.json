@@ -2431,6 +2431,10 @@
         "message": "Parámetros de consulta que nunca se quitan",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "Termina un nombre con * para incluir todos los nombres que empiezan así: utm_* incluye utm_source y utm_name. No distingue mayúsculas y minúsculas.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "Parámetros que se quitan",
         "description": "URL cleaner remove params label"
@@ -2438,6 +2442,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "Parámetros de consulta que se quitan de las URL",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "Termina un nombre con * para incluir todos los nombres que empiezan así: utm_* incluye utm_source y utm_name. No distingue mayúsculas y minúsculas.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "Activar el Comprobador de enlaces rotos",
@@ -2590,6 +2598,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "Nombres de parámetros marcados como sensibles",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "Termina un nombre con * para incluir todos los nombres que empiezan así: utm_* incluye utm_source y utm_name. No distingue mayúsculas y minúsculas.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "Detectar correos electrónicos",

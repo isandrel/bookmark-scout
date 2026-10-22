@@ -611,8 +611,11 @@ export function scanBookmarkPrivacy(
   nodes: BookmarkTreeNode[],
   options: PrivacyScanOptions,
 ): PrivacyScanResult {
-  const sensitiveParams = new Set(options.sensitiveParams.map((item) => item.toLowerCase()));
-  const fragmentSensitive = new Set([...sensitiveParams, ...FRAGMENT_TOKEN_PARAMS]);
+  const sensitive = createParamNameMatcher(options.sensitiveParams);
+  const fragmentSensitive = createParamNameMatcher([
+    ...options.sensitiveParams,
+    ...FRAGMENT_TOKEN_PARAMS,
+  ]);
   const bookmarks = flattenBookmarks(nodes).filter((bookmark) => Boolean(bookmark.node.url));
 
   const items = bookmarks.flatMap((bookmark) => {
@@ -635,7 +638,7 @@ export function scanBookmarkPrivacy(
 
     if (options.scanQueryParams) {
       parsed.searchParams.forEach((value, key) => {
-        if (sensitiveParams.has(key.toLowerCase())) {
+        if (sensitive(key)) {
           add({ kind: 'sensitiveParam', param: key });
         }
         if (containsTokenValue(value)) add({ kind: 'tokenPattern' });
@@ -646,7 +649,7 @@ export function scanBookmarkPrivacy(
       const params = parseFragmentParams(parsed.hash);
       if (params) {
         params.forEach((value, key) => {
-          if (fragmentSensitive.has(key.toLowerCase())) {
+          if (fragmentSensitive(key)) {
             add({ kind: 'sensitiveFragmentParam', param: key });
           }
           if (containsTokenValue(value)) add({ kind: 'tokenPattern' });

@@ -59,8 +59,8 @@ Firefox 不允许扩展程序替换其自带的书签页面，因此在 Firefox 
 
 规则位于设置的**维护**标签页中：
 
-- **移除的参数**：要去除的参数。默认列表为 `utm_source`、`utm_medium`、`utm_campaign`、`utm_term`、`utm_content`、`utm_id`、`gclid`、`fbclid`、`mc_cid`、`mc_eid`、`ref`、`ref_src` 和 `si`。
-- **保留的参数**：永远不会被移除的参数。默认值：`id`、`page`、`q`、`p` 和 `lang`。
+- **移除的参数**：要去除的参数。默认列表为 <SettingDefault path="maintenance.url_cleaner.remove_params" />。以 `*` 结尾的名称会匹配所有以此开头的名称。
+- **保留的参数**：永远不会被移除的参数。默认值：<SettingDefault path="maintenance.url_cleaner.preserve_params" />。
 - **去除重复查询参数**（默认开启）会移除重复出现的参数。
 - **排序查询参数**（默认开启）会按字母顺序排列剩余的参数。
 - **移除片段**（默认关闭）还会移除 `#section` 之类的部分。

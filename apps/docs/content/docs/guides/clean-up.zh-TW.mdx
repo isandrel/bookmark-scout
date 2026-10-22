@@ -59,8 +59,8 @@ Firefox 不允許擴充功能取代其書籤頁面，因此在 Firefox 中，請
 
 規則位於設定的「**維護**」分頁中：
 
-- 「**移除參數**」：要清除的參數。預設清單為 `utm_source`、`utm_medium`、`utm_campaign`、`utm_term`、`utm_content`、`utm_id`、`gclid`、`fbclid`、`mc_cid`、`mc_eid`、`ref`、`ref_src` 和 `si`。
-- 「**保留參數**」：一律不會移除的參數。預設值：`id`、`page`、`q`、`p` 和 `lang`。
+- 「**移除參數**」：要清除的參數。預設清單為 <SettingDefault path="maintenance.url_cleaner.remove_params" />。以 `*` 結尾的名稱會符合所有以此開頭的名稱。
+- 「**保留參數**」：一律不會移除的參數。預設值：<SettingDefault path="maintenance.url_cleaner.preserve_params" />。
 - 「**移除重複的查詢參數**」(預設為開啟) 會移除重複出現的參數。
 - 「**排序查詢參數**」(預設為開啟) 會依字母順序排列其餘的參數。
 - 「**移除片段**」(預設為關閉) 也會移除 `#section` 這類部分。

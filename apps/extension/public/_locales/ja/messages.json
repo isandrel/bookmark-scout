@@ -2387,6 +2387,10 @@
         "message": "削除しないクエリパラメーター",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "名前の末尾に * を付けると、その文字列で始まるすべての名前に一致します。utm_* は utm_source と utm_name に一致します。大文字と小文字は区別しません。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "削除するパラメータ",
         "description": "URL cleaner remove params label"
@@ -2394,6 +2398,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "URL から削除するクエリパラメーター",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "名前の末尾に * を付けると、その文字列で始まるすべての名前に一致します。utm_* は utm_source と utm_name に一致します。大文字と小文字は区別しません。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "リンク切れチェックを有効化",
@@ -2546,6 +2554,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "機密として警告するパラメーター名",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "名前の末尾に * を付けると、その文字列で始まるすべての名前に一致します。utm_* は utm_source と utm_name に一致します。大文字と小文字は区別しません。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "メールアドレスを検出",

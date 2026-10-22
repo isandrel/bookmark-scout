@@ -59,8 +59,8 @@ Hat sich ein Lesezeichen nach der Vorschau geändert, wird es übersprungen und 
 
 Die Regeln befinden sich im Tab **Wartung** der Einstellungen:
 
-- **Zu entfernende Parameter**: Parameter, die entfernt werden. Die Standardliste lautet `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src` und `si`.
-- **Beizubehaltende Parameter**: Parameter, die nie entfernt werden. Standard: `id`, `page`, `q`, `p` und `lang`.
+- **Zu entfernende Parameter**: Parameter, die entfernt werden. Die Standardliste lautet <SettingDefault path="maintenance.url_cleaner.remove_params" />. Ein Name, der auf `*` endet, erfasst jeden Namen, der so beginnt.
+- **Beizubehaltende Parameter**: Parameter, die nie entfernt werden. Standard: <SettingDefault path="maintenance.url_cleaner.preserve_params" />.
 - **Doppelte Abfrageparameter entfernen** (standardmäßig an) entfernt wiederholte Parameter.
 - **Abfrageparameter sortieren** (standardmäßig an) sortiert die verbleibenden Parameter alphabetisch.
 - **Fragmente entfernen** (standardmäßig aus) entfernt zusätzlich Teile wie `#section`.

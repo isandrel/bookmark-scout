@@ -54,7 +54,7 @@ function sensitiveValues(text: string, options: ExportPrivacyOptions) {
 /** Redacts the values of `a=1&b=2`-style parameters, keeping every other byte as written. */
 function redactParams(
   raw: string,
-  sensitiveNames: Set<string>,
+  isSensitive: (name: string) => boolean,
   nameKind: 'queryParam' | 'fragmentParam',
   options: ExportPrivacyOptions,
   fields: ExportPrivacyField[],
@@ -70,7 +70,7 @@ function redactParams(
       const name = decodeUrlComponent(rawName, true);
       const { tokens, emails } = sensitiveValues(value, options);
       let field: ExportPrivacyField | null = null;
-      if (sensitiveNames.has(name.toLowerCase())) field = { kind: nameKind, location: 'url', name };
+      if (isSensitive(name)) field = { kind: nameKind, location: 'url', name };
       else if (tokens.length) field = { kind: 'token', location: 'url', name };
       else if (emails.length) field = { kind: 'email', location: 'url', name };
       if (!field) return pair;
@@ -97,7 +97,7 @@ function redactPath(path: string, options: ExportPrivacyOptions, fields: ExportP
 
 function redactFragment(
   fragment: string,
-  sensitiveNames: Set<string>,
+  isSensitive: (name: string) => boolean,
   options: ExportPrivacyOptions,
   fields: ExportPrivacyField[],
 ): string {
@@ -105,7 +105,7 @@ function redactFragment(
     const queryStart = fragment.indexOf('?');
     const prefix = queryStart >= 0 ? fragment.slice(0, queryStart + 1) : '';
     const params = queryStart >= 0 ? fragment.slice(queryStart + 1) : fragment;
-    return prefix + redactParams(params, sensitiveNames, 'fragmentParam', options, fields);
+    return prefix + redactParams(params, isSensitive, 'fragmentParam', options, fields);
   }
   const { tokens, emails } = sensitiveValues(decodeUrlComponent(fragment), options);
   if (!tokens.length && !emails.length) return fragment;
@@ -127,8 +127,11 @@ function redactUrl(url: string, options: ExportPrivacyOptions, fields: ExportPri
       : redacted;
   }
 
-  const sensitiveNames = new Set(options.sensitiveParams.map((name) => name.toLowerCase()));
-  const fragmentNames = new Set([...sensitiveNames, ...FRAGMENT_TOKEN_PARAMS]);
+  const sensitiveNames = createParamNameMatcher(options.sensitiveParams);
+  const fragmentNames = createParamNameMatcher([
+    ...options.sensitiveParams,
+    ...FRAGMENT_TOKEN_PARAMS,
+  ]);
 
   const hashIndex = url.indexOf('#');
   const beforeHash = hashIndex >= 0 ? url.slice(0, hashIndex) : url;

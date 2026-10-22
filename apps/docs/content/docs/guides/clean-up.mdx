@@ -59,8 +59,8 @@ If a bookmark changed after the preview, it is skipped and counted in the messag
 
 The rules are on the **Maintenance** tab of Settings:
 
-- **Remove Parameters**: parameters to strip. The default list is `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src`, and `si`.
-- **Preserve Parameters**: parameters that are never removed. Default: `id`, `page`, `q`, `p`, and `lang`.
+- **Remove Parameters**: parameters to strip. The default list is <SettingDefault path="maintenance.url_cleaner.remove_params" />. A name ending in `*` matches every name that starts with it.
+- **Preserve Parameters**: parameters that are never removed. Default: <SettingDefault path="maintenance.url_cleaner.preserve_params" />.
 - **Deduplicate Query Parameters** (on by default) removes repeated parameters.
 - **Sort Query Parameters** (on by default) sorts the remaining parameters alphabetically.
 - **Remove Fragments** (off by default) also removes parts such as `#section`.

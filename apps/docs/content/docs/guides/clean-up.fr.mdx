@@ -59,8 +59,8 @@ Si un favori a été modifié après l'aperçu, il est ignoré et comptabilisé 
 
 Les règles se trouvent dans l'onglet **Maintenance** des paramètres :
 
-- **Paramètres à supprimer** : paramètres à retirer. La liste par défaut est `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src` et `si`.
-- **Paramètres à conserver** : paramètres qui ne sont jamais retirés. Par défaut : `id`, `page`, `q`, `p` et `lang`.
+- **Paramètres à supprimer** : paramètres à retirer. La liste par défaut est <SettingDefault path="maintenance.url_cleaner.remove_params" />. Un nom qui se termine par `*` inclut tous les noms qui commencent ainsi.
+- **Paramètres à conserver** : paramètres qui ne sont jamais retirés. Par défaut : <SettingDefault path="maintenance.url_cleaner.preserve_params" />.
 - **Dédoublonner les paramètres de requête** (activé par défaut) supprime les paramètres répétés.
 - **Trier les paramètres de requête** (activé par défaut) trie les paramètres restants par ordre alphabétique.
 - **Supprimer les fragments** (désactivé par défaut) supprime aussi les parties telles que `#section`.
