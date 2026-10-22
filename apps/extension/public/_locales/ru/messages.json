@@ -8645,6 +8645,10 @@
         "message": "Нет текста ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
     },
+    "tools_pageTextCategory_unsupported": {
+        "message": "Не веб-страница ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
+    },
     "tools_pageTextCategory_signIn": {
         "message": "Страница входа ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
@@ -8664,6 +8668,14 @@
     "tools_pageTextCategory_skipped": {
         "message": "Пропущено ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "Не загружено: адрес содержит имя пользователя и пароль, которые получил бы сайт.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "Не загружено: адрес содержит параметр из списка конфиденциальных параметров проверки конфиденциальности, например токен, который получил бы сайт.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Не выбрано ($1)",
@@ -8887,6 +8899,10 @@
         "message": "С проиндексированным текстом страницы",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "Поиск по тексту страниц выключен, поэтому content: и has:content ничего не находят. Включите «Индексация текста страниц» в настройках.",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "Индекс текста страниц",
         "description": "Settings: heading of the page text index panel"
@@ -8962,6 +8978,46 @@
     "pageText_clearedDesc": {
         "message": "Закладки, теги и история не изменились.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "Проиндексировано: $1 из $2 закладок, доступных для индексации",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "Устарело: $1 (прочитано по прежнему адресу или старой версией; при следующем запуске будет прочитано снова)",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "Не удалось при последнем запуске: $1",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "Повторить неудавшиеся",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "Повторное чтение страниц: $1",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStarted_one": {
+        "message": "Повторно читается $1 страница",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages (singular)"
+    },
+    "pageText_retryStarted_few": {
+        "message": "Повторно читаются $1 страницы",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStarted_many": {
+        "message": "Повторно читается $1 страниц",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "Это выполняется в фоне. Когда закончится, сохраните текст через «Просмотреть результаты» на карточке «Индексация текста страниц» в инструментах менеджера закладок.",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "Если отозвать доступ к сайту, текст, проиндексированный с него, удаляется.",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "Проиндексировать текст этой страницы",

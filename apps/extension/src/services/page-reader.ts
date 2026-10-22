@@ -6,6 +6,7 @@
  * the first page read, so pages that never read one do not parse them at start.
  */
 import { z } from 'zod';
+import type { BlockTextOptions } from './page-reader.lazy';
 
 const config = readConfig(
   'ai/page-reading',
@@ -73,6 +74,18 @@ export async function extractPageText(
 ): Promise<PageText | undefined> {
   const { extractReadableText } = await import('./page-reader.lazy');
   return extractReadableText(doc, { maxChars, dropElements: config.drop_elements });
+}
+
+/**
+ * The readable text of a parsed page as plain text, one block per line (`extractReadableBlocks`),
+ * or undefined when it has none: what Index Page Text keeps for search.
+ */
+export async function extractPageBlocks(
+  doc: Document,
+  options: BlockTextOptions,
+): Promise<string | undefined> {
+  const { extractReadableBlocks } = await import('./page-reader.lazy');
+  return extractReadableBlocks(doc, options);
 }
 
 /** Downloads and reads one page; undefined when it cannot or may not be read. */

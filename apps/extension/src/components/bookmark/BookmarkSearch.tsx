@@ -243,12 +243,16 @@ export function BookmarkSearch({
   const regexProblem = getSearchRegexProblem(query, searchOptions);
   const isInvalidRegex = regexProblem !== undefined;
   // A query the operators cannot use as typed, such as an unknown `is:` value or a date that is
-  // not one, says so instead of quietly finding nothing (the manager does the same).
-  const queryProblem = useMemo(() => {
-    if (usesTitleSearch(searchOptions)) return undefined;
-    const [diagnostic] = parseSearchQuery(query).diagnostics;
-    return diagnostic ? describeSearchDiagnostic(diagnostic) : undefined;
-  }, [query, searchOptions]);
+  // not one, or `content:` while page text is off, says so instead of quietly finding nothing
+  // (the manager does the same).
+  const { value: pageTextEnabled } = useSetting('pageTextEnabled');
+  const queryProblem = useMemo(
+    () =>
+      usesTitleSearch(searchOptions)
+        ? undefined
+        : describeSearchProblems(query, pageTextEnabled)[0],
+    [query, searchOptions, pageTextEnabled],
+  );
   // Keep focus in the input so choosing a history entry or toggling an option does not blur it.
   const keepInputFocus = (e: React.MouseEvent) => e.preventDefault();
 

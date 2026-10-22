@@ -8065,6 +8065,10 @@
         "message": "Aucun texte ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
     },
+    "tools_pageTextCategory_unsupported": {
+        "message": "Pas une page web ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
+    },
     "tools_pageTextCategory_signIn": {
         "message": "Page de connexion ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
@@ -8084,6 +8088,14 @@
     "tools_pageTextCategory_skipped": {
         "message": "Ignorées ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "Non téléchargée : l’adresse contient un nom d’utilisateur et un mot de passe, que le site recevrait.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "Non téléchargée : l’adresse contient un paramètre de la liste des paramètres sensibles du Analyseur de confidentialité, comme un jeton, que le site recevrait.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Non choisis ($1)",
@@ -8231,6 +8243,10 @@
         "message": "Avec du texte de page indexé",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "La recherche dans le texte des pages est désactivée : content: et has:content ne trouvent donc rien. Activez Indexer le texte des pages dans les Paramètres.",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "Index du texte des pages",
         "description": "Settings: heading of the page text index panel"
@@ -8278,6 +8294,38 @@
     "pageText_clearedDesc": {
         "message": "Les favoris, les étiquettes et l'historique n'ont pas été modifiés.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "Indexés : $1 sur $2 favoris pouvant être indexés",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "Obsolètes : $1 (lus à une adresse précédente ou par une version antérieure ; la prochaine exécution les relit)",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "En échec lors de la dernière exécution : $1",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "Réessayer les échecs",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "Relecture de $1 pages",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStarted_one": {
+        "message": "Relecture de $1 page",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages (singular)"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "Cela s’exécute en arrière-plan. Une fois terminé, enregistrez le texte depuis Voir les résultats sur la carte Indexer le texte des pages, dans les Outils du gestionnaire de favoris.",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "Retirer l’accès à un site supprime le texte indexé depuis ce site.",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "Indexer le texte de cette page",

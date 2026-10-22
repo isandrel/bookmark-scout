@@ -31,6 +31,11 @@ export const jobCommandSchema = z.discriminatedUnion('type', [
      * never more sites than items.
      */
     sites: z.array(urlSiteSchema).max(JOB_LIMITS.maxItems).optional(),
+    /**
+     * Only these bookmarks of the scope, such as the pages a run could not read (Index Page
+     * Text's Retry failed in Options); absent: every bookmark of the scope.
+     */
+    bookmarkIds: z.array(bookmarkId).min(1).max(JOB_LIMITS.maxItems).optional(),
   }),
   z.strictObject({
     type: z.literal('apply'),

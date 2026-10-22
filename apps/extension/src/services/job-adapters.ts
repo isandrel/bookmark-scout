@@ -141,12 +141,16 @@ const pageTextOptionsSchema = z.strictObject({
   skipPrivateHosts: z.boolean(),
   /** The sites the user chose before the run; the job requests no other site. */
   sites: z.array(urlSiteSchema).optional(),
+  /** Used when the job is accepted (`planPageTextScan`); a job accepted before it has none. */
+  sensitiveParams: z.array(z.string()).optional(),
 });
 /** A bookmark of an Index Page Text run, and whether its page is to be read (`planPageTextScan`). */
 const pageTextInputSchema = z.strictObject({
   item: z.strictObject({
     ...linkTargetSchema.shape,
     status: z.enum(['current', 'notChosen', 'skipped']),
+    skipReason: pageTextScanItemSchema.shape.skipReason,
+    sameAs: pageTextScanItemSchema.shape.sameAs,
   }),
   read: z.boolean(),
 });
@@ -156,12 +160,19 @@ const originGroupSchema = z.strictObject({
   bookmarkCount: z.number().int().positive(),
 });
 
-/** The bookmarks of a Start's scope, read from the browser now, never from a page's tree. */
+/**
+ * The bookmarks of a Start's scope, read from the browser now, never from a page's tree; with
+ * `bookmarkIds`, only those of them, in their folders.
+ */
 async function scopeNodes(command: JobStart) {
   const tree = await fetchBookmarkTree();
   const folderId = command.scope.mode === 'folder' ? command.scope.folderId : null;
-  const nodes = getScopedNodes(tree, folderId, command.scope.mode);
-  const label = folderId ? getBookmarkDisplayTitle(nodes[0]?.title) : '';
+  const scoped = getScopedNodes(tree, folderId, command.scope.mode);
+  const only = command.bookmarkIds ? new Set(command.bookmarkIds) : null;
+  const nodes = only
+    ? filterTree(scoped, (node) => (node.url && only.has(node.id) ? {} : undefined))
+    : scoped;
+  const label = folderId ? getBookmarkDisplayTitle(scoped[0]?.title) : '';
   return { nodes, label };
 }
 
@@ -285,11 +296,14 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
   },
   pageText: {
     async prepare(command) {
+      const settings = await getSettings();
+      // Downloading pages for search is its own choice: AI page reading never turns it on.
+      if (!settings.pageTextEnabled) throw new Error('Index Page Text is off');
       const { nodes, label } = await scopeNodes(command);
       // The sites chosen in the page are frozen with the job, so it honors them after the page
       // closes; a bookmark added since on another site is not chosen either.
       const options = {
-        ...(await toolOptions()).pageText,
+        ...getToolOptions(settings).pageText,
         ...(command.sites ? { sites: command.sites } : {}),
       };
       const { items, overLimit, toRead } = await planPageTextScan(nodes, options);

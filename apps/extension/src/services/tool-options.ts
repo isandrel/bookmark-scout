@@ -31,7 +31,10 @@ export type ToolOptions = {
 
 const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool] } = {
   bookmarkRules: () => ({}),
-  pageText: (settings) => ({ skipPrivateHosts: settings.readPageSkipPrivateHosts }),
+  pageText: (settings) => ({
+    skipPrivateHosts: settings.readPageSkipPrivateHosts,
+    sensitiveParams: settings.privacyScannerSensitiveParams,
+  }),
   covers: (settings) => ({
     widthPx: settings.coversWidthPx,
     maxImageBytes: settings.coversMaxImageKb * BYTES_PER_KB,

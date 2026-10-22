@@ -1184,6 +1184,7 @@ const PAGE_TEXT_CATEGORIES = [
   'read',
   'empty',
   'signIn',
+  'unsupported',
   'redirected',
   'failed',
   'current',
@@ -1194,6 +1195,7 @@ const PAGE_TEXT_CATEGORIES = [
 const PAGE_TEXT_CATEGORY_LABEL_KEYS = {
   read: 'tools_pageTextCategory_read',
   empty: 'tools_pageTextCategory_empty',
+  unsupported: 'tools_pageTextCategory_unsupported',
   signIn: 'tools_pageTextCategory_signIn',
   redirected: 'tools_pageTextCategory_redirected',
   failed: 'tools_pageTextCategory_failed',
@@ -1201,6 +1203,12 @@ const PAGE_TEXT_CATEGORY_LABEL_KEYS = {
   notChosen: 'tools_pageTextCategory_notChosen',
   skipped: 'tools_pageTextCategory_skipped',
 } as const satisfies Record<PageTextScanStatus, string>;
+
+/** Why a page whose address may hold a secret was not requested, under its row. */
+const PAGE_TEXT_SKIP_REASON_KEYS = {
+  credentials: 'tools_pageTextSkipCredentials',
+  sensitiveParam: 'tools_pageTextSkipSensitiveParam',
+} as const satisfies Record<PageTextSkipReason, MessageKey>;
 
 type PageTextAction = (typeof REVIEW_DEFAULT_ACTIONS)['page_text'];
 const PAGE_TEXT_ACTIONS = ['save', 'skip'] as const satisfies readonly PageTextAction[];
@@ -1258,6 +1266,11 @@ export function PageTextResultsView({
               <UrlLink href={item.url} />
             </p>
             {item.status === 'redirected' ? <RedirectNotFollowedNote /> : null}
+            {item.skipReason ? (
+              <p className="text-xs text-muted-foreground">
+                {t(PAGE_TEXT_SKIP_REASON_KEYS[item.skipReason])}
+              </p>
+            ) : null}
             {item.readFrom ? <ReadFromNote url={item.readFrom} /> : null}
             {item.text ? <p className="line-clamp-2 text-xs">{item.text}</p> : null}
           </>

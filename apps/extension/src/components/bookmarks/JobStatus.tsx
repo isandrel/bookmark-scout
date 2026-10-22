@@ -111,15 +111,3 @@ export function JobStatus({
     </div>
   );
 }
-
-/** Every result of a job, in order, read page by page. */
-export async function readJobResults(jobId: string): Promise<unknown[]> {
-  const results: unknown[] = [];
-  for (let from = 0; ; ) {
-    const page = await getJobItems(jobId, { from });
-    for (const item of page) if (item.state === 'done') results.push(item.result);
-    const last = page.at(-1);
-    if (!last || page.length < JOB_LIMITS.pageSize) return results;
-    from = last.index + 1;
-  }
-}

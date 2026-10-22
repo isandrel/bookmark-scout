@@ -608,6 +608,61 @@ async function stopWorker(page: Page, extensionId: string) {
   await session.detach();
 }
 
+test('Index Page Text picks up after its worker is stopped mid-run: a page opened later wakes it, and only pages not yet saved are read again (S50, S25)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(
+    extensionWorker,
+    'Page Text Restart',
+    [1, 2, 3].map((n) => ({ title: `Article ${n}`, url: `${site.origin}/article?n=${n}` })),
+  );
+  await setSettings(extensionWorker, {
+    pageTextEnabled: true,
+    pageTextDefaultScope: 'folder',
+    // The test site is on this computer.
+    readPageSkipPrivateHosts: false,
+  });
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Index Page Text')
+    .getByRole('button', { name: 'Index', exact: true })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Choose sites to read' })
+    .getByRole('button', { name: 'Start with 1 site' })
+    .click();
+  // All three pages are requested at once; one is answered and saved, two are in flight.
+  await expect.poll(() => site.held()).toBe(3);
+  site.release(1);
+  await expect
+    .poll(async () => (await latestJob(extensionWorker, 'pageText'))?.done.succeeded)
+    .toBe(1);
+  await page.close();
+
+  const later = await context.newPage();
+  await later.goto('about:blank');
+  await stopWorker(later, extensionId);
+  await expect.poll(() => site.held()).toBe(0);
+  site.open();
+
+  // A page opened later shows the job and wakes the worker with its first command.
+  await openTools(later, extensionId, folderId);
+  const status = toolCard(later, 'Index Page Text').getByTestId('job-status');
+  await expect(status).toBeVisible();
+  const [job] = (await storedJobs(later)).filter((stored) => stored.kind === 'pageText');
+  if (!job) throw new Error('no job');
+  expect(await sendCommand(later, { type: 'resume', jobId: job.id })).toMatchObject({ ok: true });
+  await expect(status).toHaveAttribute('data-job-state', 'succeeded');
+  // The saved page was not requested again; the two stopped in flight were.
+  expect(requestCounts(site)).toEqual({ 'GET /article': 5 });
+  await status.getByRole('button', { name: 'Review results' }).click();
+  const review = later.getByRole('dialog', { name: 'Index Page Text' });
+  await expect(review.getByRole('radio', { name: 'Text found (3)' })).toBeVisible();
+  await expect(review.getByTestId('page-text-item')).toHaveCount(3);
+});
+
 test('a stopped worker picks up from saved results, and a paused job stays paused after a restart (J11, J17, J19)', async ({
   extensionBrowser,
   grantedBuild,

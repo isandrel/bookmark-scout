@@ -48,6 +48,18 @@ export function addSearchSyntax(query: string, insert: string): string {
   return `${query} ${insert}`;
 }
 
+/**
+ * What a search box says under a query, in the user's language: each problem in it, and that page
+ * text is not searched while Index Page Text is off, so `content:` and `has:content` find
+ * nothing instead of seeming to find no page with the words.
+ */
+export function describeSearchProblems(text: string, pageTextEnabled: boolean): string[] {
+  const { query, diagnostics } = parseSearchQuery(text);
+  const problems = diagnostics.map(describeSearchDiagnostic);
+  if (!pageTextEnabled && searchesPageText(query)) problems.push(t('search_pageTextOff'));
+  return problems;
+}
+
 /** What a problem in a query means, in the user's language. */
 export function describeSearchDiagnostic(diagnostic: SearchQueryDiagnostic): string {
   switch (diagnostic.code) {

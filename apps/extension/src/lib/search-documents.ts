@@ -26,7 +26,10 @@ export type SearchDocument = {
   dateAdded?: number;
   tags: readonly string[];
   summary?: string;
-  /** The page's indexed text (`page-text-store.ts`), when it was read from this address. */
+  /**
+   * The page's indexed text (`page-text-store.ts`), when it was read from this address: one
+   * block (a paragraph, heading, or list item) per line, so a match never spans two of them.
+   */
   content?: string;
 };
 
@@ -229,14 +232,23 @@ export function foldSearchDocument(document: SearchDocument): void {
 
 const ELLIPSIS = '…';
 
-/** The text around a match, on one line, at most `SEARCH_CONTENT_SNIPPET_CHARS` long. */
+/** What separates the blocks of page text (`extractReadableBlocks`). */
+const BLOCK_BREAK = '\n';
+
+/**
+ * The text around a match, at most `SEARCH_CONTENT_SNIPPET_CHARS` long and inside the block
+ * (paragraph) the match is in, so it reads as one passage.
+ */
 function snippetAround(text: string, range: SearchMatchRange | undefined): string {
   const [start = 0, end = 0] = range ?? [];
+  const blockStart = text.lastIndexOf(BLOCK_BREAK, start - 1) + 1;
+  const blockBreak = text.indexOf(BLOCK_BREAK, end);
+  const blockEnd = blockBreak === -1 ? text.length : blockBreak;
   const room = Math.max(0, SEARCH_CONTENT_SNIPPET_CHARS - (end - start));
-  const from = Math.max(0, start - Math.floor(room / 2));
-  const to = Math.min(text.length, from + SEARCH_CONTENT_SNIPPET_CHARS);
+  const from = Math.max(blockStart, start - Math.floor(room / 2));
+  const to = Math.min(blockEnd, from + SEARCH_CONTENT_SNIPPET_CHARS);
   const body = text.slice(from, to).replace(/\s+/g, ' ').trim();
-  return `${from > 0 ? ELLIPSIS : ''}${body}${to < text.length ? ELLIPSIS : ''}`;
+  return `${from > blockStart ? ELLIPSIS : ''}${body}${to < blockEnd ? ELLIPSIS : ''}`;
 }
 
 /** A host name as typed, made comparable to `SearchDocument.host` (punycode, no `www.`). */
@@ -259,6 +271,11 @@ type CompiledText = {
   kind: 'text';
   term: SearchTerm & { kind: 'text' };
   needle: string;
+  /**
+   * The needle for page text: its whitespace as single spaces, which never stand for a block
+   * break there, so a phrase matches inside one paragraph only.
+   */
+  contentNeedle: string;
   tagKey: string;
   domain: string;
   /** For `folder:`, the folder names it lists, without case. */
@@ -287,6 +304,7 @@ function compileTerm(term: SearchTerm): CompiledNode {
     kind: 'text',
     term,
     needle: term.value.toLowerCase(),
+    contentNeedle: term.value.toLowerCase().replace(/\s+/gu, ' '),
     tagKey: tagKey(term.value),
     domain: term.field === 'domain' ? domainOf(term.value) : '',
     folders:
@@ -357,8 +375,9 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
   if (wants('summary') && folded.summary?.text.includes(needle)) {
     add({ field: 'summary', ranges: findAll(folded.summary, needle) }, SEARCH_WEIGHTS.summary);
   }
-  if (wants('content') && document.content && folded.content?.text.includes(needle)) {
-    const ranges = findAll(folded.content, needle);
+  const { contentNeedle } = compiled;
+  if (wants('content') && document.content && folded.content?.text.includes(contentNeedle)) {
+    const ranges = findAll(folded.content, contentNeedle);
     add(
       { field: 'content', snippet: snippetAround(document.content, ranges[0]), ranges },
       SEARCH_WEIGHTS.content,
