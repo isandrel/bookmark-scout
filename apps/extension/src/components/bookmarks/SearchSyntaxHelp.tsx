@@ -18,20 +18,26 @@ export function SearchSyntaxHelp({ query, onQueryChange, inputRef }: SearchSynta
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        render={
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7 text-muted-foreground"
-            aria-label={label}
-            title={label}
-            data-testid="search-syntax-help"
-          />
-        }
-      >
-        <CircleHelp />
-      </PopoverTrigger>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <PopoverTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-muted-foreground"
+                  aria-label={label}
+                  data-testid="search-syntax-help"
+                />
+              }
+            />
+          }
+        >
+          <CircleHelp />
+        </TooltipTrigger>
+        <TooltipContent>{label}</TooltipContent>
+      </Tooltip>
       <PopoverContent align="end" className="w-80 p-0" finalFocus={inputRef}>
         <div className="border-b px-3 py-2">
           <p className="text-sm font-medium">{label}</p>
