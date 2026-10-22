@@ -2947,9 +2947,41 @@
         "message": "Applying...",
         "description": "Button label while changes are applied"
     },
-    "action_removeDuplicates": {
-        "message": "Remove duplicates",
-        "description": "Remove duplicates button label"
+    "tools_duplicatesHint": {
+        "message": "Pick the bookmark to keep in each group. Checked copies are removed.",
+        "description": "Duplicate Cleaner review: how to choose what to keep and remove"
+    },
+    "tools_duplicatesSelectAll": {
+        "message": "Select every extra copy",
+        "description": "Duplicate Cleaner review: checkbox that checks every copy that is not kept"
+    },
+    "tools_duplicatesSelectGroup": {
+        "message": "Remove the extra copies of $1",
+        "description": "Duplicate Cleaner review: checkbox for one group; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepLabel": {
+        "message": "Bookmark to keep for $1",
+        "description": "Duplicate Cleaner review: name of one group's keep choice; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepItem": {
+        "message": "Keep $1",
+        "description": "Duplicate Cleaner review: radio that keeps this bookmark; $1 is its title"
+    },
+    "tools_duplicatesRemoveItem": {
+        "message": "Remove $1",
+        "description": "Duplicate Cleaner review: checkbox that removes this copy; $1 is its title"
+    },
+    "tools_duplicatesRemove": {
+        "message": "Remove",
+        "description": "Duplicate Cleaner review: visible label of the checkbox that removes a copy"
+    },
+    "tools_duplicatesRemoveSelected": {
+        "message": "Remove $1 duplicates",
+        "description": "Duplicate Cleaner review: button that removes the checked copies; $1 is how many"
+    },
+    "tools_duplicatesRemoveSelected_one": {
+        "message": "Remove $1 duplicate",
+        "description": "Duplicate Cleaner review: button that removes the checked copies (singular); $1 is how many"
     },
     "stats_totalBookmarks": {
         "message": "Bookmarks",

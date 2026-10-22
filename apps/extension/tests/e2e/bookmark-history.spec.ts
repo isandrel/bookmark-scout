@@ -193,7 +193,7 @@ test('a Duplicate Cleaner result opens its record in History, with the removed c
   await openTools(page, extensionId, folder.folderId);
   await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
   const tool = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
-  await tool.getByRole('button', { name: 'Remove duplicates' }).click();
+  await tool.getByRole('button', { name: /^Remove \d+ duplicates?$/ }).click();
   await expect
     .poll(async () =>
       (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title),

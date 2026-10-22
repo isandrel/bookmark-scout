@@ -2947,9 +2947,41 @@
         "message": "Wird übernommen...",
         "description": "Button label while changes are applied"
     },
-    "action_removeDuplicates": {
-        "message": "Duplikate entfernen",
-        "description": "Remove duplicates button label"
+    "tools_duplicatesHint": {
+        "message": "Wählen Sie in jeder Gruppe das Lesezeichen, das bleibt. Markierte Kopien werden entfernt.",
+        "description": "Duplicate Cleaner review: how to choose what to keep and remove"
+    },
+    "tools_duplicatesSelectAll": {
+        "message": "Alle zusätzlichen Kopien auswählen",
+        "description": "Duplicate Cleaner review: checkbox that checks every copy that is not kept"
+    },
+    "tools_duplicatesSelectGroup": {
+        "message": "Zusätzliche Kopien von $1 entfernen",
+        "description": "Duplicate Cleaner review: checkbox for one group; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepLabel": {
+        "message": "Lesezeichen, das für $1 bleibt",
+        "description": "Duplicate Cleaner review: name of one group's keep choice; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepItem": {
+        "message": "$1 behalten",
+        "description": "Duplicate Cleaner review: radio that keeps this bookmark; $1 is its title"
+    },
+    "tools_duplicatesRemoveItem": {
+        "message": "$1 entfernen",
+        "description": "Duplicate Cleaner review: checkbox that removes this copy; $1 is its title"
+    },
+    "tools_duplicatesRemove": {
+        "message": "Entfernen",
+        "description": "Duplicate Cleaner review: visible label of the checkbox that removes a copy"
+    },
+    "tools_duplicatesRemoveSelected": {
+        "message": "$1 Duplikate entfernen",
+        "description": "Duplicate Cleaner review: button that removes the checked copies; $1 is how many"
+    },
+    "tools_duplicatesRemoveSelected_one": {
+        "message": "$1 Duplikat entfernen",
+        "description": "Duplicate Cleaner review: button that removes the checked copies (singular); $1 is how many"
     },
     "stats_totalBookmarks": {
         "message": "Lesezeichen",

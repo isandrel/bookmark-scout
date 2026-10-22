@@ -149,10 +149,17 @@ export type ToolResults = {
   statistics: BookmarkStatistics;
 };
 
+/** What a review passes to `apply` for the tools that let the user pick. */
+type PickedItems = {
+  metadataFetcher: MetadataFetchResultItem[];
+  /** The groups to remove from, each with the bookmark to keep first and then the copies. */
+  duplicates: DuplicateGroup[];
+};
+
 /** What the review passes to `apply`: the items the user picked, where a tool lets them pick. */
 export type ToolSelections = {
   // biome-ignore lint/suspicious/noConfusingVoidType: tools without a pick call `apply()` bare.
-  [Id in ToolId]: Id extends 'metadataFetcher' ? MetadataFetchResultItem[] : void;
+  [Id in ToolId]: Id extends keyof PickedItems ? PickedItems[Id] : void;
 };
 
 export type ToolDefinitions = {
@@ -479,8 +486,8 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     actionKey: () => 'action_scan',
     changesBookmarks: true,
     scan: ({ nodes, options }) => scanDuplicateBookmarks(nodes, options.duplicates),
-    async apply(result) {
-      const removal = await removeDuplicateExtras(result.groups, result.match);
+    async apply(result, groups) {
+      const removal = await removeDuplicateExtras(groups, result.match);
       const counts = { applied: removal.removed, skipped: removal.skipped, failed: removal.failed };
       const complete = isComplete(counts);
       const description = complete

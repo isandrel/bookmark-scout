@@ -693,7 +693,7 @@ test('previews and applies duplicate and URL cleanup tools', async ({
   const duplicates = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
   await expect(duplicates).toContainText('Duplicate One');
   await expect(duplicates).toContainText('Duplicate Two');
-  await duplicates.getByRole('button', { name: 'Remove duplicates' }).click();
+  await duplicates.getByRole('button', { name: /^Remove \d+ duplicates?$/ }).click();
 
   await expect
     .poll(() =>

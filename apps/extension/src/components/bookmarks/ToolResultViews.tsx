@@ -1,4 +1,3 @@
-import { Info } from 'lucide-react';
 import { useId, useMemo, useState } from 'react';
 
 const HTTP_FAILURE_LABEL_KEYS: Partial<Record<DeadLinkCategory, string>> = {
@@ -257,6 +256,31 @@ export function ReviewFooter({
   );
 }
 
+/**
+ * The groups to remove from: in each, the bookmark to keep first, then the checked copies.
+ * Groups with nothing checked are left out.
+ */
+function chosenDuplicateGroups(
+  groups: readonly DuplicateGroup[],
+  keeperOf: (group: DuplicateGroup) => string | undefined,
+  removes: ReadonlySet<string>,
+): DuplicateGroup[] {
+  return groups.flatMap((group) => {
+    const keeperId = keeperOf(group);
+    const keeper = group.items.find((item) => item.node.id === keeperId);
+    const extras = group.items.filter(
+      (item) => item.node.id !== keeperId && removes.has(item.node.id),
+    );
+    return keeper && extras.length > 0 ? [{ ...group, items: [keeper, ...extras] }] : [];
+  });
+}
+
+/**
+ * Duplicate groups to review: one bookmark to keep in each (the first, until another is picked),
+ * and a checkbox on every other copy, all checked at first. A group's address shows once in its
+ * header; rows name their folder and date added, and their own address only when title-only
+ * matching grouped different pages.
+ */
 export function DuplicateResultsView({
   result,
   isRemoving,
@@ -268,16 +292,46 @@ export function DuplicateResultsView({
   result: DuplicateScanResult | null;
   isRemoving: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (groups: DuplicateGroup[]) => void;
   /** Outcome of a partial removal, shown above the refreshed groups. */
   notice?: string;
   onUndo?: () => void;
 }) {
+  const groups = useMemo(() => result?.groups ?? [], [result]);
+  // Picks belong to the groups they were made in, so a new scan starts from its first bookmarks.
+  const [picked, setPicked] = useState({ groups, keepers: {} as Record<string, string> });
+  const keepers = picked.groups === groups ? picked.keepers : {};
+  const keeperOf = (group: DuplicateGroup) => keepers[group.key] ?? group.items[0]?.node.id;
+  const firstExtras = useMemo(
+    () => groups.flatMap((group) => group.items.slice(1).map((item) => item.node.id)),
+    [groups],
+  );
+  const { selected, toggle, setMany } = useIdSelection(firstExtras);
+  const extrasOf = (group: DuplicateGroup) =>
+    group.items.map((item) => item.node.id).filter((id) => id !== keeperOf(group));
+  const allExtras = groups.flatMap(extrasOf);
+  const chosen = chosenDuplicateGroups(groups, keeperOf, selected);
+  const removing = chosen.reduce((count, group) => count + group.items.length - 1, 0);
+  const checkState = (ids: readonly string[]) => {
+    const checked = ids.filter((id) => selected.has(id)).length;
+    return {
+      checked: checked > 0 && checked === ids.length,
+      indeterminate: checked > 0 && checked < ids.length,
+    };
+  };
+  const keep = (group: DuplicateGroup, id: string) => {
+    const previous = keeperOf(group);
+    setPicked({ groups, keepers: { ...keepers, [group.key]: id } });
+    // The new keeper is never removed; the old one becomes a copy, removed like the others.
+    setMany([id], false);
+    if (previous) setMany([previous], true);
+  };
+
   // Title-only matching can group bookmarks that point to different pages; removing the
   // extras would then delete those pages, so say so before the user confirms.
   const mixedUrlKeys = new Set(
     result?.match.strategy === 'title_only'
-      ? result.groups
+      ? groups
           .filter((group) => new Set(group.items.map((item) => item.node.url)).size > 1)
           .map((group) => group.key)
       : [],
@@ -305,47 +359,117 @@ export function DuplicateResultsView({
           ) : null}
         </div>
       ) : null}
-      {result?.groups.length ? (
-        result.groups.map((group) => (
-          <div key={group.key} className="space-y-3 rounded-lg border p-3">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary">{group.items.length}</Badge>
-              <code className="truncate text-xs text-muted-foreground">{group.label}</code>
-              {mixedUrlKeys.has(group.key) ? (
-                <Badge variant="outline">{t('tools_duplicatesDifferentUrls')}</Badge>
-              ) : null}
-            </div>
-            <div className="space-y-2">
-              {group.items.map((item, index) => (
-                <div key={item.node.id} className="rounded-md bg-muted/40 p-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    {index === 0 ? <Info className="h-3.5 w-3.5 text-primary" /> : null}
-                    <span data-slot="tool-result-title" className="font-medium">
-                      {getBookmarkDisplayTitle(item.node.title)}
-                    </span>
-                    {index === 0 ? <Badge>{t('state_keep')}</Badge> : null}
-                  </div>
-                  <p className="break-all text-xs text-muted-foreground">
-                    <UrlLink href={item.node.url ?? ''} />
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.pathLabel || t('tools_rootFolder')}
-                  </p>
-                </div>
-              ))}
-            </div>
+      {groups.length ? (
+        <>
+          <div
+            data-testid="duplicate-selection"
+            className="flex flex-wrap items-center gap-2 rounded-lg bg-muted/40 p-2 text-xs"
+          >
+            <Checkbox
+              {...checkState(allExtras)}
+              onCheckedChange={(checked) => setMany(allExtras, checked === true)}
+              aria-label={t('tools_duplicatesSelectAll')}
+              disabled={isRemoving}
+            />
+            <span className="text-muted-foreground">{t('tools_duplicatesHint')}</span>
           </div>
-        ))
+          {groups.map((group) => {
+            const keeperId = keeperOf(group);
+            const mixed = mixedUrlKeys.has(group.key);
+            const extras = extrasOf(group);
+            return (
+              <section
+                key={group.key}
+                data-slot="duplicate-group"
+                className="min-w-0 overflow-hidden rounded-lg border"
+              >
+                <div className="flex min-w-0 items-center gap-2 bg-muted/40 px-3 py-2">
+                  <Checkbox
+                    {...checkState(extras)}
+                    onCheckedChange={(checked) => setMany(extras, checked === true)}
+                    aria-label={t('tools_duplicatesSelectGroup', group.label)}
+                    disabled={isRemoving}
+                  />
+                  <Badge variant="secondary">{group.items.length}</Badge>
+                  <code className="min-w-0 truncate text-xs text-muted-foreground">
+                    {group.label}
+                  </code>
+                  {mixed ? (
+                    <Badge variant="outline">{t('tools_duplicatesDifferentUrls')}</Badge>
+                  ) : null}
+                </div>
+                <RadioGroup
+                  value={keeperId}
+                  onValueChange={(value) => keep(group, String(value))}
+                  aria-label={t('tools_duplicatesKeepLabel', group.label)}
+                  disabled={isRemoving}
+                >
+                  {group.items.map((item) => {
+                    const title = getBookmarkDisplayTitle(item.node.title);
+                    const isKeeper = item.node.id === keeperId;
+                    return (
+                      <div
+                        key={item.node.id}
+                        data-slot="duplicate-item"
+                        data-keep={isKeeper || undefined}
+                        className="flex min-w-0 items-center gap-3 border-t px-3 py-2 text-sm data-keep:bg-accent/40"
+                      >
+                        <RadioGroupItem
+                          value={item.node.id}
+                          aria-label={t('tools_duplicatesKeepItem', title)}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex min-w-0 items-center gap-2">
+                            <span
+                              data-slot="tool-result-title"
+                              className="min-w-0 truncate font-medium"
+                              title={title}
+                            >
+                              {title}
+                            </span>
+                            {isKeeper ? <Badge>{t('state_keep')}</Badge> : null}
+                          </div>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {item.pathLabel || t('tools_rootFolder')}
+                            {item.node.dateAdded === undefined
+                              ? null
+                              : ` · ${formatDateTime(item.node.dateAdded)}`}
+                          </p>
+                          {mixed ? (
+                            <p className="truncate text-xs text-muted-foreground">
+                              <UrlLink href={item.node.url ?? ''} />
+                            </p>
+                          ) : null}
+                        </div>
+                        {isKeeper ? null : (
+                          <span className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
+                            <Checkbox
+                              checked={selected.has(item.node.id)}
+                              onCheckedChange={(checked) => toggle(item.node.id, checked === true)}
+                              aria-label={t('tools_duplicatesRemoveItem', title)}
+                              disabled={isRemoving}
+                            />
+                            <span aria-hidden="true">{t('tools_duplicatesRemove')}</span>
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </RadioGroup>
+              </section>
+            );
+          })}
+        </>
       ) : (
         <ToolEmptyState message={t('state_noDuplicatesFound')} />
       )}
 
       <ReviewFooter
-        label={t('action_removeDuplicates')}
+        label={tPlural('tools_duplicatesRemoveSelected', removing)}
         busyLabel={t('action_removing')}
         busy={isRemoving}
-        disabled={!result?.groups.length}
-        onConfirm={onConfirm}
+        disabled={removing === 0}
+        onConfirm={() => onConfirm(chosen)}
         onCancel={onClose}
       />
     </div>

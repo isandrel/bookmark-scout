@@ -2903,9 +2903,41 @@
         "message": "適用中...",
         "description": "Button label while changes are applied"
     },
-    "action_removeDuplicates": {
-        "message": "重複を削除",
-        "description": "Remove duplicates button label"
+    "tools_duplicatesHint": {
+        "message": "各グループで残すブックマークを選びます。チェックしたコピーは削除されます。",
+        "description": "Duplicate Cleaner review: how to choose what to keep and remove"
+    },
+    "tools_duplicatesSelectAll": {
+        "message": "余分なコピーをすべて選択",
+        "description": "Duplicate Cleaner review: checkbox that checks every copy that is not kept"
+    },
+    "tools_duplicatesSelectGroup": {
+        "message": "$1 の余分なコピーを削除",
+        "description": "Duplicate Cleaner review: checkbox for one group; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepLabel": {
+        "message": "$1 で残すブックマーク",
+        "description": "Duplicate Cleaner review: name of one group's keep choice; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepItem": {
+        "message": "$1 を残す",
+        "description": "Duplicate Cleaner review: radio that keeps this bookmark; $1 is its title"
+    },
+    "tools_duplicatesRemoveItem": {
+        "message": "$1 を削除",
+        "description": "Duplicate Cleaner review: checkbox that removes this copy; $1 is its title"
+    },
+    "tools_duplicatesRemove": {
+        "message": "削除",
+        "description": "Duplicate Cleaner review: visible label of the checkbox that removes a copy"
+    },
+    "tools_duplicatesRemoveSelected": {
+        "message": "重複 $1 件を削除",
+        "description": "Duplicate Cleaner review: button that removes the checked copies; $1 is how many"
+    },
+    "tools_duplicatesRemoveSelected_one": {
+        "message": "重複 $1 件を削除",
+        "description": "Duplicate Cleaner review: button that removes the checked copies (singular); $1 is how many"
     },
     "stats_totalBookmarks": {
         "message": "ブックマーク",
