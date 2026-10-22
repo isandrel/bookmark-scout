@@ -8033,6 +8033,10 @@
         "message": "로그인 페이지 ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "리디렉션됨 ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "실패 ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -8157,6 +8161,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "일부 페이지 본문이 저장되지 않았습니다",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "저장됨: $saved$. 이 기기의 확장 프로그램 저장 공간이 가득 차서 저장되지 않음: $notSaved$. 디스크 공간을 확보하거나 설정에서 페이지 본문을 삭제한 다음 다시 색인하세요.",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -8349,9 +8371,17 @@
         "message": "표지 없음 ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "사용할 수 없는 이미지 ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "다른 사이트 ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "리디렉션됨 ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "실패 ($1)",
@@ -8397,6 +8427,10 @@
         "message": "이미지가 $1에 있으며, 이번 실행은 그 사이트에 접근할 수 없습니다.",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "이 주소는 다른 주소로 리디렉션되며, 그 주소는 열지 않으므로 허용하지 않은 사이트에는 연결하지 않습니다. 이동하는 주소를 북마크한 다음 도구를 다시 실행하세요.",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
     "toast_coversSaved": {
         "message": "표지 저장됨",
         "description": "Toast title after saving covers"
@@ -8417,6 +8451,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "일부 표지가 저장되지 않았습니다",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "저장됨: $saved$. 이 기기의 확장 프로그램 저장 공간이 가득 차서 저장되지 않음: $notSaved$. 디스크 공간을 확보하거나 설정에서 표지를 삭제한 다음 다시 가져오세요.",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

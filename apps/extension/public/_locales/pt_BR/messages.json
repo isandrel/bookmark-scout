@@ -8061,6 +8061,10 @@
         "message": "Página de login ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "Redirecionadas ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "Com falha ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -8185,6 +8189,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "Parte do texto das páginas não foi salva",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "Salvas: $saved$. Não salvas porque o armazenamento da extensão neste dispositivo está cheio: $notSaved$. Libere espaço em disco ou exclua o texto das páginas nas Configurações e indexe de novo.",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -8377,9 +8399,17 @@
         "message": "Sem capa ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "Imagem inutilizável ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "Em outro site ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "Redirecionadas ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "Com falha ($1)",
@@ -8425,6 +8455,10 @@
         "message": "A imagem está em $1, que esta execução não pode acessar.",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "Este endereço redireciona para outro, que não é aberto; assim, um site que você não permitiu nunca é contatado. Salve nos favoritos o endereço para onde ele leva e execute a ferramenta de novo.",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
     "toast_coversSaved": {
         "message": "Capas salvas",
         "description": "Toast title after saving covers"
@@ -8445,6 +8479,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "Algumas capas não foram salvas",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "Salvas: $saved$. Não salvas porque o armazenamento da extensão neste dispositivo está cheio: $notSaved$. Libere espaço em disco ou exclua as capas nas Configurações e busque de novo.",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

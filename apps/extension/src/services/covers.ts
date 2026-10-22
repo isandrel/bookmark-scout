@@ -7,7 +7,21 @@
  */
 import type { BookmarkTreeNode } from '@/types';
 
-export type CoverScanStatus = 'found' | 'none' | 'elsewhere' | 'failed' | 'current' | 'skipped';
+/**
+ * `unusable`: the page names an image, but none could be kept: a file that is not an image of a
+ * kept type (by its Content-Type or its first bytes), larger than the byte cap, or one the
+ * browser cannot decode. `redirected`: the page sends to another address, which is not
+ * requested (`fetchHtmlPage`).
+ */
+export type CoverScanStatus =
+  | 'found'
+  | 'none'
+  | 'unusable'
+  | 'elsewhere'
+  | 'redirected'
+  | 'failed'
+  | 'current'
+  | 'skipped';
 
 export type CoverScanItem = {
   id: string;
@@ -62,35 +76,13 @@ export function findCoverUrls(html: string, pageUrl: string): string[] {
   return urls;
 }
 
+/** A kept image's bytes, `unusable` for a file that is no such image, null when not received. */
+type Download = { bytes: Uint8Array; type: string } | 'unusable' | null;
+
 /**
- * Whether an image may be downloaded for a page: not on the local network (when skipped), and on
- * the page's own site or a site the user gave access to.
+ * Downloads one image under the byte cap: `unusable` when it is not a kept image type or too
+ * large, null when the request failed or the site answered with an error.
  */
-export async function mayFetchCover(
-  imageUrl: string,
-  pageUrl: string,
-  skipPrivateHosts: boolean,
-  hasAccess: (site: string) => Promise<boolean> = hasCoverSiteAccess,
-): Promise<boolean> {
-  if (!isReadablePageUrl(imageUrl, skipPrivateHosts)) return false;
-  const site = getUrlSite(imageUrl);
-  if (!site) return false;
-  return site === getUrlSite(pageUrl) || hasAccess(site);
-}
-
-async function hasCoverSiteAccess(site: string): Promise<boolean> {
-  const origins = getSiteAccessOrigins([site]);
-  if (!origins) return false;
-  try {
-    return await browser.permissions.contains({ origins });
-  } catch {
-    return false;
-  }
-}
-
-type Download = { bytes: Uint8Array; type: string } | null;
-
-/** Downloads one image under the byte cap; null when it is not a kept image type. */
 async function downloadImage(imageUrl: string, options: CoverScanOptions): Promise<Download> {
   return requestWithTimeout(
     imageUrl,
@@ -99,12 +91,13 @@ async function downloadImage(imageUrl: string, options: CoverScanOptions): Promi
     { method: 'GET', redirect: 'error', referrerPolicy: 'no-referrer' },
     COVER_LIMITS.timeoutMs,
     async (response): Promise<Download> => {
-      if (!response.ok || !isImageContentType(response.headers.get('content-type'))) return null;
+      if (!response.ok) return null;
+      if (!isImageContentType(response.headers.get('content-type'))) return 'unusable';
       const declared = Number(response.headers.get('content-length'));
-      if (Number.isFinite(declared) && declared > options.maxImageBytes) return null;
+      if (Number.isFinite(declared) && declared > options.maxImageBytes) return 'unusable';
       const bytes = await readBodyWithLimit(response, options.maxImageBytes);
       const type = bytes?.byteLength ? sniffImageType(bytes) : null;
-      return bytes && type && COVER_LIMITS.types.has(type) ? { bytes, type } : null;
+      return bytes && type && COVER_LIMITS.types.has(type) ? { bytes, type } : 'unusable';
     },
   );
 }
@@ -142,9 +135,14 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
     timeoutMs: COVER_LIMITS.timeoutMs,
     maxBytes: COVER_LIMITS.maxPageBytes,
     until: 'head',
-    // A redirect can lead to a local host; that page is not read either.
-    allowUrl: (next) => isReadablePageUrl(next, options.skipPrivateHosts),
+    // Each address, a redirect's target too, is checked before it is requested: never the local
+    // network (when skipped) or a site the run has no access to.
+    allowUrl: (next) => mayRequestFrom(next, item.url, options.skipPrivateHosts),
   });
+  if (page.stopped) {
+    item.status = 'redirected';
+    return;
+  }
   if (!page.ok) {
     item.status = 'failed';
     return;
@@ -152,15 +150,24 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
   const candidates = page.html ? findCoverUrls(page.html, page.url) : [];
   item.status = 'none';
   for (const imageUrl of candidates) {
-    if (!(await mayFetchCover(imageUrl, page.url, options.skipPrivateHosts))) {
+    if (!(await mayRequestFrom(imageUrl, page.url, options.skipPrivateHosts))) {
       item.status = 'elsewhere';
       item.imageSite ??= getUrlSite(imageUrl) ?? undefined;
       continue;
     }
     // A redirect or a failed request leaves this image out; the next one named is tried.
     const download = await downloadImage(imageUrl, options).catch(() => null);
-    if (!download) continue;
-    const image = await shrinkImage(download.bytes, download.type, options.widthPx);
+    // Unusable only while nothing else is known about the page's images.
+    const markUnusable = () => {
+      if (item.status === 'none') item.status = 'unusable';
+    };
+    if (download === 'unusable') markUnusable();
+    if (!download || download === 'unusable') continue;
+    // A file the browser cannot decode is no cover, whatever its first bytes say.
+    const image = await shrinkImage(download.bytes, download.type, options.widthPx).catch(
+      () => null,
+    );
+    if (image === null) markUnusable();
     if (!image) continue;
     item.status = 'found';
     item.imageSite = undefined;
@@ -203,17 +210,20 @@ export async function scanCovers(
   return { items };
 }
 
-/** Stores the covers the review kept, and drops covers of bookmarks that are gone. */
+/**
+ * Stores the covers the review kept, and drops covers of bookmarks that are gone. `notSaved`
+ * counts covers left out because this device's storage for the extension is full.
+ */
 export async function saveCoverResults(
   items: readonly CoverScanItem[],
   maxCacheBytes: number,
-): Promise<{ saved: number }> {
-  const saved = await saveCovers(
+): Promise<CoverSaveResult> {
+  const result = await saveCovers(
     items.flatMap((item) => (item.status === 'found' && item.cover ? [item.cover] : [])),
     maxCacheBytes,
   );
   await pruneCovers(await fetchBookmarkIds());
-  return { saved };
+  return result;
 }
 
 /** Why a picture of the current tab did not become a cover. */

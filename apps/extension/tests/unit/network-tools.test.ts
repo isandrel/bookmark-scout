@@ -3,6 +3,7 @@ import {
   fetchBookmarkMetadata,
   fetchHtmlPage,
   isConfirmedDeadLink,
+  MAX_PAGE_REDIRECTS,
   scanDeadLinks,
 } from '@/services/bookmark-network-tools';
 import type { BookmarkTreeNode } from '@/types';
@@ -370,21 +371,149 @@ describe('fetchHtmlPage', () => {
     expect(result.html !== null).toBe(isHtml);
   });
 
-  it('does not download error pages or pages the caller refuses after redirects', async () => {
+  it('does not download error pages', async () => {
     const missing = new Response('<title>404 Not Found</title>', { status: 404 });
     await expect(
       fetchHtmlPage('https://e2e.invalid/', { ...options, fetch: page(missing) }),
     ).resolves.toMatchObject({ status: 404, ok: false, html: null });
+  });
 
-    const redirected = streamedResponse(['<title>Router</title>']);
-    Object.defineProperty(redirected.response, 'url', { value: 'http://192.168.0.1/' });
-    const refused = await fetchHtmlPage('https://e2e.invalid/', {
-      ...options,
-      allowUrl: (url) => !url.includes('192.168.'),
-      fetch: page(redirected.response),
+  describe('redirects, with every address checked before it is requested', () => {
+    /**
+     * A fetch that answers from `routes` (a redirect is a Location, a page its HTML) and an
+     * `allowUrl` that refuses the local network, both writing to one log in call order.
+     */
+    function recordedSite(routes: Record<string, { location: string } | { html: string }>) {
+      const log: string[] = [];
+      const redirectModes: (RequestRedirect | undefined)[] = [];
+      const fetch = vi.fn(async (input: string, init?: RequestInit) => {
+        log.push(`request ${input}`);
+        redirectModes.push(init?.redirect);
+        const route = routes[input];
+        if (!route) throw new TypeError('Failed to fetch');
+        return 'location' in route
+          ? new Response(null, { status: 302, headers: { location: route.location } })
+          : new Response(route.html, { status: 200, headers: { 'content-type': 'text/html' } });
+      });
+      const allowUrl = vi.fn(async (url: string) => {
+        log.push(`check ${url}`);
+        return !new URL(url).hostname.startsWith('192.168.');
+      });
+      return { log, redirectModes, fetch, allowUrl };
+    }
+
+    it('follows allowed redirects by hand, checking each target first', async () => {
+      const site = recordedSite({
+        'http://e2e.invalid/a': { location: 'https://e2e.invalid/a' },
+        'https://e2e.invalid/a': { location: '/b' },
+        'https://e2e.invalid/b': { html: '<title>B</title>' },
+      });
+      const result = await fetchHtmlPage('http://e2e.invalid/a', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toEqual({
+        status: 200,
+        ok: true,
+        url: 'https://e2e.invalid/b',
+        html: '<title>B</title>',
+      });
+      expect(site.log).toEqual([
+        'check http://e2e.invalid/a',
+        'request http://e2e.invalid/a',
+        'check https://e2e.invalid/a',
+        'request https://e2e.invalid/a',
+        'check https://e2e.invalid/b',
+        'request https://e2e.invalid/b',
+      ]);
+      expect(site.redirectModes).toEqual(['manual', 'manual', 'manual']);
     });
-    expect(refused).toMatchObject({ url: 'http://192.168.0.1/', html: null });
-    expect(redirected.state.cancelled).toBe(true);
+
+    it('never requests a refused target, at any hop', async () => {
+      const site = recordedSite({
+        'https://e2e.invalid/': { location: 'https://e2e.invalid/next' },
+        'https://e2e.invalid/next': { location: 'http://192.168.0.1/admin' },
+        'http://192.168.0.1/admin': { html: '<title>Router</title>' },
+      });
+      const result = await fetchHtmlPage('https://e2e.invalid/', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toEqual({
+        status: 302,
+        ok: false,
+        url: 'https://e2e.invalid/next',
+        html: null,
+        stopped: 'refused',
+      });
+      expect(site.log).toContain('check http://192.168.0.1/admin');
+      expect(site.log).not.toContain('request http://192.168.0.1/admin');
+      expect(site.log.at(-1)).toBe('check http://192.168.0.1/admin');
+    });
+
+    it('stops after the configured number of redirects', async () => {
+      const hops = MAX_PAGE_REDIRECTS + 2;
+      const site = recordedSite(
+        Object.fromEntries(
+          Array.from({ length: hops }, (_, hop) => [
+            `https://e2e.invalid/${hop}`,
+            { location: `/${hop + 1}` },
+          ]),
+        ),
+      );
+      const result = await fetchHtmlPage('https://e2e.invalid/0', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toMatchObject({ html: null, stopped: 'tooMany' });
+      // The first request plus MAX_PAGE_REDIRECTS followed redirects, and no more.
+      expect(site.fetch).toHaveBeenCalledTimes(MAX_PAGE_REDIRECTS + 1);
+      expect(site.log).not.toContain(`request https://e2e.invalid/${MAX_PAGE_REDIRECTS + 1}`);
+    });
+
+    it('reports a redirect whose target the browser hides, without requesting it', async () => {
+      // What Chrome and Firefox give an extension for `redirect: 'manual'`.
+      const opaque = new Response(null, { status: 200 });
+      Object.defineProperty(opaque, 'type', { value: 'opaqueredirect' });
+      Object.defineProperty(opaque, 'status', { value: 0 });
+      Object.defineProperty(opaque, 'ok', { value: false });
+      const fetch = vi.fn(async () => opaque);
+      const result = await fetchHtmlPage('https://e2e.invalid/', {
+        ...options,
+        allowUrl: () => true,
+        fetch,
+      });
+      expect(result).toEqual({
+        status: 0,
+        ok: false,
+        url: 'https://e2e.invalid/',
+        html: null,
+        stopped: 'hidden',
+      });
+      expect(fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it('checks the first address too, and lets the browser follow redirects without a check', async () => {
+      const refusedFetch = vi.fn();
+      await expect(
+        fetchHtmlPage('http://192.168.0.1/', {
+          ...options,
+          allowUrl: () => false,
+          fetch: refusedFetch,
+        }),
+      ).resolves.toMatchObject({ html: null, stopped: 'refused' });
+      expect(refusedFetch).not.toHaveBeenCalled();
+
+      const followed = vi.fn(
+        async (_url: string, _init?: RequestInit) =>
+          new Response('<title>T</title>', { headers: { 'content-type': 'text/html' } }),
+      );
+      await fetchHtmlPage('https://e2e.invalid/', { ...options, fetch: followed });
+      expect(followed.mock.calls[0]?.[1]?.redirect).toBe('follow');
+    });
   });
 
   it('decodes pages using the declared or sniffed charset', async () => {

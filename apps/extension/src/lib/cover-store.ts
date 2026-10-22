@@ -193,30 +193,42 @@ async function deleteCovers(db: IDBPDatabase<CoverDb>, ids: readonly string[]): 
   await transaction.done;
 }
 
+/** How many covers a save kept, and how many it left out because storage was full. */
+export type CoverSaveResult = { saved: number; notSaved: number };
+
 /**
- * Stores covers, then removes the oldest until all of them fit in `maxBytes`. Returns how many of
- * `covers` are kept.
+ * Stores covers, then removes the oldest until all of them fit in `maxBytes`. `saved` counts the
+ * covers of `covers` kept. When this device's storage for the extension runs out, the covers
+ * stored before it are kept and the rest are counted in `notSaved` (`saveInBatches`); a cover's
+ * info and image are written in one transaction, so neither is kept without the other.
  */
-export async function saveCovers(covers: readonly CoverImage[], maxBytes: number): Promise<number> {
-  if (covers.length === 0) return 0;
+export async function saveCovers(
+  covers: readonly CoverImage[],
+  maxBytes: number,
+): Promise<CoverSaveResult> {
+  if (covers.length === 0) return { saved: 0, notSaved: 0 };
   const db = await openCoverDb();
-  const transaction = db.transaction(['info', 'images'], 'readwrite');
   const savedAt = Date.now();
-  for (const cover of covers) {
-    await transaction.objectStore('info').put({
-      bookmarkId: cover.bookmarkId,
-      url: cover.url,
-      width: cover.width,
-      height: cover.height,
-      bytes: cover.data.byteLength,
-      savedAt,
-      version: COVER_LIMITS.version,
-    });
-    await transaction
-      .objectStore('images')
-      .put({ bookmarkId: cover.bookmarkId, type: cover.type, data: cover.data });
-  }
-  await transaction.done;
+  const { written, notWritten } = await saveInBatches(covers, (batch) => {
+    const transaction = db.transaction(['info', 'images'], 'readwrite');
+    return commitIndexedWrites(transaction, () =>
+      batch.flatMap((cover) => [
+        transaction.objectStore('info').put({
+          bookmarkId: cover.bookmarkId,
+          url: cover.url,
+          width: cover.width,
+          height: cover.height,
+          bytes: cover.data.byteLength,
+          savedAt,
+          version: COVER_LIMITS.version,
+        }),
+        transaction
+          .objectStore('images')
+          .put({ bookmarkId: cover.bookmarkId, type: cover.type, data: cover.data }),
+      ]),
+    );
+  });
+  if (written === 0) return { saved: 0, notSaved: notWritten };
   const infos = [...(await getCoverInfos()).values()].sort((a, b) => b.savedAt - a.savedAt);
   let total = 0;
   const evicted: string[] = [];
@@ -227,7 +239,10 @@ export async function saveCovers(covers: readonly CoverImage[], maxBytes: number
   await deleteCovers(db, evicted);
   announceChange();
   const gone = new Set(evicted);
-  return covers.filter((cover) => !gone.has(cover.bookmarkId)).length;
+  return {
+    saved: covers.slice(0, written).filter((cover) => !gone.has(cover.bookmarkId)).length,
+    notSaved: notWritten,
+  };
 }
 
 /** Removes the covers of bookmarks that are gone, so deleted bookmarks leave nothing behind. */

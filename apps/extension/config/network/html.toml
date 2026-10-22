@@ -1,5 +1,5 @@
-# Reading web pages for the network tools (Metadata Fetcher, Refresh Site Icons).
-# Read by src/services/bookmark-network-tools.ts.
+# Reading web pages for the network tools (Metadata Fetcher, Refresh Site Icons, Index Page Text,
+# Fetch Covers, AI page reading). Read by src/services/bookmark-network-tools.ts.
 
 # Bytes read from one page at most when only its <head> is needed (titles, descriptions, icon
 # links); reading stops earlier at the end of the <head>
@@ -7,3 +7,8 @@ head_max_bytes = 524288
 # Characters of the previous chunk kept when looking for the end of the <head>, so a closing tag
 # split across two chunks is still found
 stop_pattern_overlap_chars = 16
+# A read that checks each address before requesting it (Index Page Text, Fetch Covers, AI page
+# reading) follows at most this many redirects whose target it can read, then stops and reports
+# the page as redirected. Browsers hide the target of a redirect from extensions, so there such a
+# read stops at the first redirect whatever this says.
+max_redirects = { value = 5, min = 0, max = 20 }

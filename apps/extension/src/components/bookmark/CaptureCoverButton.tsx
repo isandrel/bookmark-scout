@@ -38,8 +38,22 @@ export function CaptureCoverButton({ url }: { url: string }) {
   const save = async () => {
     if (!cover) return;
     try {
-      await saveCovers(cover.covers, settings.coversMaxCacheMb * BYTES_PER_MB);
-      toast.success({ title: t('covers_captureSaved'), description: t('covers_captureSavedDesc') });
+      const { saved, notSaved } = await saveCovers(
+        cover.covers,
+        settings.coversMaxCacheMb * BYTES_PER_MB,
+      );
+      if (notSaved > 0) {
+        // Storage is full: never reported as saved.
+        toast.error({
+          title: t('toast_coversPartial'),
+          description: t('toast_coversPartialDesc', [String(saved), String(notSaved)]),
+        });
+      } else {
+        toast.success({
+          title: t('covers_captureSaved'),
+          description: t('covers_captureSavedDesc'),
+        });
+      }
     } catch (error) {
       toast.error({ title: t('covers_captureFailed'), description: getErrorMessage(error) });
     }

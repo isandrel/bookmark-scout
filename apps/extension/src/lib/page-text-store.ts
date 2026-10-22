@@ -112,26 +112,36 @@ export function isPageTextCurrent(
   );
 }
 
-/** Saves pages' text, each cut to `max_chars_per_page`. */
+/** How many pages a save kept, and how many it left out because storage was full. */
+export type PageTextSaveResult = { saved: number; notSaved: number };
+
+/**
+ * Saves pages' text, each cut to `max_chars_per_page`. When this device's storage for the
+ * extension runs out, the pages saved before it are kept and the rest are counted in `notSaved`
+ * (`saveInBatches`), so the caller can say so instead of reporting a full save.
+ */
 export async function savePageTexts(
   pages: readonly Pick<PageTextRecord, 'bookmarkId' | 'url' | 'text'>[],
-): Promise<number> {
-  if (pages.length === 0) return 0;
+): Promise<PageTextSaveResult> {
+  if (pages.length === 0) return { saved: 0, notSaved: 0 };
   const db = await openPageTextDb();
-  const transaction = db.transaction('pages', 'readwrite');
   const indexedAt = Date.now();
-  for (const page of pages) {
-    await transaction.store.put({
-      bookmarkId: page.bookmarkId,
-      url: page.url,
-      text: page.text.slice(0, PAGE_TEXT_LIMITS.maxCharsPerPage),
-      indexedAt,
-      extractorVersion: PAGE_TEXT_LIMITS.extractorVersion,
-    });
-  }
-  await transaction.done;
-  announceChange();
-  return pages.length;
+  const { written, notWritten } = await saveInBatches(pages, (batch) => {
+    const transaction = db.transaction('pages', 'readwrite');
+    return commitIndexedWrites(transaction, () =>
+      batch.map((page) =>
+        transaction.store.put({
+          bookmarkId: page.bookmarkId,
+          url: page.url,
+          text: page.text.slice(0, PAGE_TEXT_LIMITS.maxCharsPerPage),
+          indexedAt,
+          extractorVersion: PAGE_TEXT_LIMITS.extractorVersion,
+        }),
+      ),
+    );
+  });
+  if (written > 0) announceChange();
+  return { saved: written, notSaved: notWritten };
 }
 
 /** Removes the text of bookmarks that are gone, so deleted bookmarks leave nothing behind. */

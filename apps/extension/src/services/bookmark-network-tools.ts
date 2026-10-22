@@ -7,6 +7,7 @@ const htmlConfig = readConfig(
   z.strictObject({
     head_max_bytes: z.number().int().positive(),
     stop_pattern_overlap_chars: z.number().int().positive(),
+    max_redirects: boundedNumber({ integer: true }),
   }),
 );
 
@@ -765,14 +766,23 @@ function isHtmlContentType(contentType: string | null): boolean {
   return !contentType?.trim() || HTML_CONTENT_TYPE_PATTERN.test(contentType);
 }
 
+/**
+ * Why a page checked address by address (`allowUrl`) was not read: `hidden`, a redirect whose
+ * target the browser does not show; `refused`, an address `allowUrl` refused; `tooMany`, more
+ * redirects than `max_redirects`.
+ */
+export type PageStop = 'hidden' | 'refused' | 'tooMany';
+
 export type HtmlPage = {
-  /** HTTP status of the final response. */
+  /** HTTP status of the last response; `HTTP_STATUS.opaque` when nothing was requested. */
   status: number;
   ok: boolean;
-  /** The URL after redirects. */
+  /** The last URL requested: the URL after redirects. */
   url: string;
   /** The decoded page; null for error statuses and non-HTML files, which are not downloaded. */
   html: string | null;
+  /** Set when the page was not read because of where it is or where it redirects. */
+  stopped?: PageStop;
 };
 
 export type FetchHtmlPageOptions = {
@@ -782,37 +792,106 @@ export type FetchHtmlPageOptions = {
   maxBytes: number;
   /** `head` stops at the end of `<head>` (or the start of `<body>`); `end` reads the whole page. */
   until: 'head' | 'end';
-  /** A page whose final URL (after redirects) fails this is not downloaded; `html` is null. */
-  allowUrl?: (url: string) => boolean;
+  /**
+   * Checks every address before it is requested, the first one and each redirect's target, so a
+   * refused address is never contacted. Without it, redirects are followed as the browser does.
+   */
+  allowUrl?: (url: string) => boolean | Promise<boolean>;
   /** Defaults to the global fetch. */
   fetch?: typeof globalThis.fetch;
   /** Stops the download; it then throws {@link RequestAbortedError}. */
   signal?: AbortSignal;
 };
 
+/** Redirects a read checked address by address follows at most (config/network/html.toml). */
+export const MAX_PAGE_REDIRECTS = htmlConfig.max_redirects;
+
+/** The absolute address a redirect's Location header names, or null when it names none. */
+function redirectTarget(response: Response, url: string): string | null {
+  const location = response.headers.get('location');
+  if (!location) return null;
+  try {
+    return new URL(location, url).href;
+  } catch {
+    return null;
+  }
+}
+
+/** Reads a response that is not a redirect to follow: the page, unless it is not HTML. */
+async function readPage(
+  response: Response,
+  url: string,
+  options: FetchHtmlPageOptions,
+): Promise<HtmlPage> {
+  const page = { status: response.status, ok: response.ok, url: response.url || url };
+  const contentType = response.headers.get('content-type');
+  if (!response.ok || !isHtmlContentType(contentType)) return { ...page, html: null };
+  const stopAt = options.until === 'head' ? HEAD_END_PATTERN : undefined;
+  const bytes = await readResponseBytes(response, options.maxBytes, stopAt);
+  return { ...page, html: decodeHtml(bytes, contentType) };
+}
+
 /**
- * Downloads a web page without cookies, following redirects, and decodes it by its declared
- * charset. Throws on a timeout (see {@link classifyFailure}) and on network failures.
+ * Downloads a web page without cookies and decodes it by its declared charset. Throws on a
+ * timeout (see {@link classifyFailure}) and on network failures.
+ *
+ * With `allowUrl`, redirects are followed by hand (`redirect: 'manual'`), each target checked
+ * before it is requested. Chrome and Firefox both answer such a request from an extension page
+ * or worker with an opaque redirect (status 0, no Location header; measured on 2026-10-22 in
+ * Chromium's service worker and pages with host access, and in a Firefox extension page), so
+ * there the target cannot be checked and is never requested: the page is reported
+ * `stopped: 'hidden'`, the `redirect: 'error'` outcome told apart from a network failure. Where
+ * the Location header is readable (another runtime, or a browser that one day shows it to
+ * extensions), each target is checked and at most `max_redirects` are followed. The timeout
+ * covers every request of one page together.
  */
-export function fetchHtmlPage(url: string, options: FetchHtmlPageOptions): Promise<HtmlPage> {
-  return requestWithTimeout(
-    url,
-    { method: 'GET', redirect: 'follow' },
-    options.timeoutMs,
-    async (response) => {
-      const page = { status: response.status, ok: response.ok, url: response.url || url };
-      const contentType = response.headers.get('content-type');
-      const allowed = options.allowUrl?.(page.url) ?? true;
-      if (!response.ok || !allowed || !isHtmlContentType(contentType)) {
-        return { ...page, html: null };
-      }
-      const stopAt = options.until === 'head' ? HEAD_END_PATTERN : undefined;
-      const bytes = await readResponseBytes(response, options.maxBytes, stopAt);
-      return { ...page, html: decodeHtml(bytes, contentType) };
-    },
-    options.fetch,
-    options.signal,
-  );
+export async function fetchHtmlPage(url: string, options: FetchHtmlPageOptions): Promise<HtmlPage> {
+  const { allowUrl } = options;
+  if (!allowUrl) {
+    return requestWithTimeout(
+      url,
+      { method: 'GET', redirect: 'follow' },
+      options.timeoutMs,
+      (response) => readPage(response, url, options),
+      options.fetch,
+      options.signal,
+    );
+  }
+  const deadline = Date.now() + options.timeoutMs;
+  let current = url;
+  // What a refused address reports: nothing requested yet, or the redirect that pointed to it.
+  let previous: Omit<HtmlPage, 'html'> = { status: HTTP_STATUS.opaque, ok: false, url };
+  for (let redirects = 0; ; redirects += 1) {
+    if (!(await allowUrl(current))) return { ...previous, html: null, stopped: 'refused' };
+    const remainingMs = deadline - Date.now();
+    if (remainingMs <= 0) throw new RequestTimeoutError();
+    const requested = current;
+    const step = await requestWithTimeout(
+      requested,
+      { method: 'GET', redirect: 'manual' },
+      remainingMs,
+      async (response): Promise<HtmlPage | { next: string; status: number }> => {
+        if (response.type !== 'opaqueredirect' && !isRedirectStatus(response.status)) {
+          return readPage(response, requested, options);
+        }
+        const next = redirectTarget(response, requested);
+        if (next) return { next, status: response.status };
+        return {
+          status: response.status,
+          ok: false,
+          url: requested,
+          html: null,
+          stopped: 'hidden',
+        };
+      },
+      options.fetch,
+      options.signal,
+    );
+    if (!('next' in step)) return step;
+    previous = { status: step.status, ok: false, url: requested };
+    if (redirects >= MAX_PAGE_REDIRECTS) return { ...previous, html: null, stopped: 'tooMany' };
+    current = step.next;
+  }
 }
 
 /**

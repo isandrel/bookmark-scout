@@ -103,6 +103,12 @@ export async function hasSiteAccess(
   }
 }
 
+/** Whether the user gave website access to `site` (`getUrlSite`), on its own or with all websites. */
+export async function hasWebSiteAccess(site: string): Promise<boolean> {
+  const origins = getSiteAccessOrigins([site]);
+  return origins !== null && hasSiteAccess('webAccess', origins);
+}
+
 /**
  * Like `requestPermission`, asking only for `origins` instead of all the websites the feature
  * declares, so the browser's prompt names those sites. Call it synchronously from a click.

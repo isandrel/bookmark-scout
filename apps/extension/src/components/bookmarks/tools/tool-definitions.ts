@@ -310,6 +310,29 @@ function reportChanges(
 }
 
 /**
+ * The report for a save of derived data (page text, covers): a success, or, when this device's
+ * storage for the extension ran out and some were left out, a partial save that says how many
+ * were kept and how many were not, never a success.
+ */
+function reportDerivedSave(
+  { saved, notSaved }: { saved: number; notSaved: number },
+  keys: { title: string; description: string; partialTitle: string; partialDescription: string },
+): ToolOutcome {
+  if (notSaved > 0) {
+    return {
+      title: t(keys.partialTitle),
+      description: t(keys.partialDescription, [String(saved), String(notSaved)]),
+      variant: 'destructive',
+    };
+  }
+  return {
+    title: t(keys.title),
+    description: tPlural(keys.description, saved),
+    variant: 'success',
+  };
+}
+
+/**
  * The report for reviewed changes handed to a background task: no Undo here, since each part is
  * undone from the History.
  */
@@ -821,12 +844,12 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     },
     scan: ({ nodes, options }) => scanPageTexts(nodes, options.pageText),
     async apply(_result, picked) {
-      const { saved } = await savePageTextResults(picked);
-      return {
-        title: t('toast_pageTextSaved'),
-        description: tPlural('toast_pageTextSavedDesc', saved),
-        variant: 'success',
-      };
+      return reportDerivedSave(await savePageTextResults(picked), {
+        title: 'toast_pageTextSaved',
+        description: 'toast_pageTextSavedDesc',
+        partialTitle: 'toast_pageTextPartial',
+        partialDescription: 'toast_pageTextPartialDesc',
+      });
     },
   },
   covers: {
@@ -841,12 +864,12 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     needsHostAccess: true,
     scan: ({ nodes, options }) => scanCovers(nodes, options.covers),
     async apply(_result, picked, { options }) {
-      const { saved } = await saveCoverResults(picked, options.covers.maxCacheBytes);
-      return {
-        title: t('toast_coversSaved'),
-        description: tPlural('toast_coversSavedDesc', saved),
-        variant: 'success',
-      };
+      return reportDerivedSave(await saveCoverResults(picked, options.covers.maxCacheBytes), {
+        title: 'toast_coversSaved',
+        description: 'toast_coversSavedDesc',
+        partialTitle: 'toast_coversPartial',
+        partialDescription: 'toast_coversPartialDesc',
+      });
     },
   },
   privacyScanner: {
