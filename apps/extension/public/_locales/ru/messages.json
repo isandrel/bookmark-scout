@@ -3627,6 +3627,10 @@
         "message": "Недопустимое регулярное выражение. Поиск выполняется как по обычному тексту.",
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
+    "search_slowRegex": {
+        "message": "Этот шаблон может слишком долго обрабатывать некоторые названия. Поиск идёт как по обычному тексту.",
+        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+    },
     "search_reasonUrl": {
         "message": "в URL",
         "description": "Muted note after a popup search result whose title did not match, saying the query matched its URL"

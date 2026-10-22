@@ -153,6 +153,8 @@
 # 1,944,179, 6,445,005 B uncompressed, 3,783,666 B of JavaScript, and 2,100,386 B of locales.
 # Uncompressed raised on 2026-10-22 (6,460,000 to 6,475,000) for Use this view as the cover and its
 # 11 messages in 12 languages: Firefox measured 6,461,434 B.
+# Locales raised on 2026-10-22 (2,115,000 to 2,130,000) for the slow-pattern search warning and the
+# capture messages in 12 languages: 2,115,594 B measured.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -174,6 +176,6 @@ raw_bytes = 6_475_000
 javascript = 3_795_000
 css = 85_000
 fonts = 143_000
-locales = 2_115_000
+locales = 2_130_000
 images = 320_000
 other = 29_000

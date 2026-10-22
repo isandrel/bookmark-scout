@@ -3571,6 +3571,10 @@
         "message": "正则表达式无效。改为按纯文本搜索。",
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
+    "search_slowRegex": {
+        "message": "此模式在某些标题上可能耗时过长，已改为按纯文本搜索。",
+        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+    },
     "search_reasonUrl": {
         "message": "匹配网址",
         "description": "Muted note after a popup search result whose title did not match, saying the query matched its URL"

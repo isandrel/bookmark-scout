@@ -3579,6 +3579,10 @@
         "message": "정규식이 올바르지 않습니다. 일반 텍스트로 검색합니다.",
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
+    "search_slowRegex": {
+        "message": "이 패턴은 일부 제목에서 너무 오래 걸릴 수 있어 일반 텍스트로 검색합니다.",
+        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+    },
     "search_reasonUrl": {
         "message": "URL에서 일치",
         "description": "Muted note after a popup search result whose title did not match, saying the query matched its URL"

@@ -88,24 +88,17 @@ async function hasCoverSiteAccess(site: string): Promise<boolean> {
   }
 }
 
-type Download = { bytes: Uint8Array; type: string } | { elsewhere: string } | null;
+type Download = { bytes: Uint8Array; type: string } | null;
 
 /** Downloads one image under the byte cap; null when it is not a kept image type. */
-async function downloadImage(
-  imageUrl: string,
-  pageUrl: string,
-  options: CoverScanOptions,
-): Promise<Download> {
+async function downloadImage(imageUrl: string, options: CoverScanOptions): Promise<Download> {
   return requestWithTimeout(
     imageUrl,
-    // The bookmarked address is not sent to the image's site.
-    { method: 'GET', redirect: 'follow', referrerPolicy: 'no-referrer' },
+    // The bookmarked address is not sent to the image's site, and a redirect is never followed:
+    // its target was not checked against the sites the user allowed before the request.
+    { method: 'GET', redirect: 'error', referrerPolicy: 'no-referrer' },
     COVER_LIMITS.timeoutMs,
     async (response): Promise<Download> => {
-      const finalUrl = response.url || imageUrl;
-      if (!(await mayFetchCover(finalUrl, pageUrl, options.skipPrivateHosts))) {
-        return { elsewhere: getUrlSite(finalUrl) ?? '' };
-      }
       if (!response.ok || !isImageContentType(response.headers.get('content-type'))) return null;
       const declared = Number(response.headers.get('content-length'));
       if (Number.isFinite(declared) && declared > options.maxImageBytes) return null;
@@ -164,13 +157,9 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
       item.imageSite ??= getUrlSite(imageUrl) ?? undefined;
       continue;
     }
-    const download = await downloadImage(imageUrl, page.url, options);
+    // A redirect or a failed request leaves this image out; the next one named is tried.
+    const download = await downloadImage(imageUrl, options).catch(() => null);
     if (!download) continue;
-    if ('elsewhere' in download) {
-      item.status = 'elsewhere';
-      item.imageSite ??= download.elsewhere || undefined;
-      continue;
-    }
     const image = await shrinkImage(download.bytes, download.type, options.widthPx);
     if (!image) continue;
     item.status = 'found';

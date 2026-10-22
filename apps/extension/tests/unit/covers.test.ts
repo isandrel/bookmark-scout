@@ -228,6 +228,29 @@ describe('Fetch Covers runs', () => {
     expect(items.find((item) => item.id === 'elsewhere')?.imageSite).toBe('other.net');
   });
 
+  it('never follows a redirect for an image, and tries the next one the page names', async () => {
+    const inner = vi.mocked(fetch).getMockImplementation();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string, init?: RequestInit) => {
+        const url = new URL(input);
+        if (url.hostname === 'moved.example' && url.pathname === '/') {
+          return new Response(
+            '<html><head><meta property="og:image" content="/moved.png">' +
+              '<meta name="twitter:image" content="/cover.png"></head></html>',
+            { status: 200, headers: { 'content-type': 'text/html' } },
+          );
+        }
+        if (url.pathname.endsWith('.png')) expect(init?.redirect).toBe('error');
+        // The browser rejects a redirect it was told not to follow.
+        if (url.pathname === '/moved.png') throw new TypeError('Failed to fetch');
+        return inner?.(input, init) as Promise<Response>;
+      }),
+    );
+    const { items } = await scanCovers([node('moved', 'https://moved.example/')], OPTIONS);
+    expect(items[0]?.status).toBe('found');
+  });
+
   it('leaves out an image too small to be a cover', async () => {
     decoded = { width: COVER_LIMITS.minWidthPx - 1, height: 10 };
     const { items } = await scanCovers([node('tiny', 'https://tiny.example/')], OPTIONS);
