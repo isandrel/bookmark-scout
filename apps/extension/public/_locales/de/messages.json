@@ -6384,7 +6384,7 @@
         "description": "Setting label: which folder the quick save shortcut uses"
     },
     "settings_quickSaveFolderStrategyDesc": {
-        "message": "Wohin das Tastenkürzel die aktuelle Seite speichert. Beste Übereinstimmung vergleicht die Seite auf diesem Gerät mit deinen Ordnernamen und den Lesezeichen darin. Das KI-Kürzel verwendet immer den KI-Vorschlag.",
+        "message": "Wohin das Tastenkürzel die aktuelle Seite speichert. Beste Übereinstimmung vergleicht die Seite auf diesem Gerät mit Ihren Ordnernamen und den Lesezeichen darin. Das KI-Kürzel verwendet immer den KI-Vorschlag.",
         "description": "Setting description for settings_quickSaveFolderStrategy"
     },
     "settings_quickSaveBestMatch": {
@@ -6452,11 +6452,11 @@
         "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
     },
     "settings_shortcutNeedsModifier": {
-        "message": "Halte Strg oder Alt gedrückt, während du die Taste drückst. Nur Funktionstasten funktionieren allein.",
+        "message": "Halten Sie Strg oder Alt gedrückt, während Sie die Taste drücken. Nur Funktionstasten funktionieren allein.",
         "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
     },
     "settings_shortcutNeedsModifierApple": {
-        "message": "Halte Befehl, Control oder Option gedrückt, während du die Taste drückst. Nur Funktionstasten funktionieren allein.",
+        "message": "Halten Sie Befehl, Control oder Option gedrückt, während Sie die Taste drücken. Nur Funktionstasten funktionieren allein.",
         "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
     },
     "settings_shortcutTooManyModifiers": {
@@ -6480,7 +6480,7 @@
         "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
     },
     "settings_shortcutBookmarkKeyHint": {
-        "message": "Der Browser nutzt $1 für seinen eigenen Lesezeichen-Dialog und gibt es Erweiterungen nicht von selbst, aber du kannst es tun: Öffne die Kürzel-Seite, suche Bookmark Scout, klicke auf den Stift neben „$2“ und drücke $1.",
+        "message": "Der Browser nutzt $1 für seinen eigenen Lesezeichen-Dialog und gibt es Erweiterungen nicht von selbst, aber Sie können es tun: Öffnen Sie die Kürzel-Seite, suchen Sie Bookmark Scout, klicken Sie auf den Stift neben „$2“ und drücken Sie $1.",
         "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
     },
     "settings_shortcutBookmarkKeyActive": {
