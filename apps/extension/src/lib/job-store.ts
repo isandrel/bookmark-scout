@@ -84,7 +84,7 @@ export const applyJobOptionsSchema = z.strictObject({
 });
 
 /** Where a job was started from, as far as the extension knows. */
-export const JOB_SOURCES = ['manager', 'popup', 'sidePanel'] as const;
+export const JOB_SOURCES = ['manager', 'popup', 'sidePanel', 'options'] as const;
 
 /**
  * A job's state. `pause_requested` and `cancel_requested` hold while work already started
@@ -342,6 +342,18 @@ export async function listJobs(limit = JOB_LIMITS.maxFinishedJobs): Promise<JobR
     cursor = await cursor.continue();
   }
   return jobs;
+}
+
+/** Every result of a job, in order, read page by page. */
+export async function readJobResults(jobId: string): Promise<unknown[]> {
+  const results: unknown[] = [];
+  for (let from = 0; ; ) {
+    const page = await getJobItems(jobId, { from });
+    for (const item of page) if (item.state === 'done') results.push(item.result);
+    const last = page.at(-1);
+    if (!last || page.length < JOB_LIMITS.pageSize) return results;
+    from = last.index + 1;
+  }
 }
 
 /** A page of a job's items in order, from `from`. */

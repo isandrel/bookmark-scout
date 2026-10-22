@@ -88,3 +88,37 @@ export function getSiteAccessOrigins(sites: readonly string[]): string[] | null 
     return SITE_SCHEMES.map((scheme) => `${scheme}://${host}/*`);
   });
 }
+
+/** The host permission that stands for every website. */
+const ALL_URLS = '<all_urls>';
+/** A host permission pattern: its scheme and host, the path after them. */
+const HOST_PATTERN = /^(\*|https?):\/\/([^/]+)\//;
+const ANY_SUBDOMAIN = '*.';
+const ANY_HOST = '*';
+
+/**
+ * Whether a web URL is inside a host permission pattern (one site's, such as
+ * `https://*.example.com` with any path, every website's, or `<all_urls>`): its scheme and host;
+ * site access is granted for whole sites, so the path is not compared.
+ */
+export function isUrlInOrigin(url: string, pattern: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+  const scheme = parsed.protocol.replace(/:$/, '');
+  if (!SITE_SCHEMES.some((web) => web === scheme)) return false;
+  if (pattern === ALL_URLS) return true;
+  const match = HOST_PATTERN.exec(pattern);
+  if (!match) return false;
+  const [, patternScheme = '', patternHost = ''] = match;
+  if (patternScheme !== ANY_HOST && patternScheme !== scheme) return false;
+  // Firefox may name a port; a site is granted on every port.
+  const host = patternHost.replace(/:\d+$/, '');
+  if (host === ANY_HOST) return true;
+  if (!host.startsWith(ANY_SUBDOMAIN)) return parsed.hostname === host;
+  const domain = host.slice(ANY_SUBDOMAIN.length);
+  return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
+}

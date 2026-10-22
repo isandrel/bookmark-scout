@@ -7787,6 +7787,14 @@
         "message": "「索引網頁內文」預設讀取的書籤",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "略過含登入資訊或機密的網址",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "絕不下載包含使用者名稱和密碼、或包含隱私掃描工具「敏感參數」所列參數 (例如權杖) 的網址，因為網站會收到這些內容。關閉後，這些書籤會像其他書籤一樣被讀取。",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "從每個網頁讀取的內文。只有你儲存的內容才會留在這部裝置上。",
         "description": "Index Page Text review: description"
@@ -7798,6 +7806,10 @@
     "tools_pageTextCategory_empty": {
         "message": "沒有內文 ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_unsupported": {
+        "message": "不是網頁 ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
     },
     "tools_pageTextCategory_signIn": {
         "message": "登入頁面 ($1)",
@@ -7818,6 +7830,14 @@
     "tools_pageTextCategory_skipped": {
         "message": "已略過 ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "未下載：該網址包含使用者名稱和密碼，網站會收到它們。",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "未下載：該網址包含隱私掃描工具的敏感參數清單中的參數（例如權杖），網站會收到它。",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "未選擇 ($1)",
@@ -7927,6 +7947,10 @@
         "message": "有已索引的網頁內文",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "頁面文字搜尋已關閉，因此 content: 和 has:content 找不到任何內容。請在設定中開啟「索引網頁內文」。",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "網頁內文索引",
         "description": "Settings: heading of the page text index panel"
@@ -7960,6 +7984,34 @@
     "pageText_clearedDesc": {
         "message": "書籤、標籤和記錄都沒有變更。",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "已索引：可索引的 $2 個書籤中的 $1 個",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "已過期：$1 個（讀取自以前的網址或由舊版本讀取；下次執行時會重新讀取）",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "上次執行失敗：$1 個",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "重試失敗項目",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "正在重新讀取 $1 個頁面",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "它會在背景執行。完成後，請在書籤管理員「工具」中的「索引網頁內文」卡片上透過「檢視結果」儲存文字。",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "撤銷對某個網站的存取權會刪除從該網站索引的文字。",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "索引此網頁的內文",

@@ -36,6 +36,7 @@ Each step adds one entry; no step adds a special case.
    - `result` turns the saved results into exactly what the tool's review already shows.
    - Apply, undo, and the audited bookmark writer then work as after a scan.
    - To let the user choose the sites a run requests (Index Page Text), add `chooseSites(nodes, options)` returning `countUrlSites` of what the run would download. The card then opens `SiteChoiceDialog`, asks website access for the chosen sites only, and sends them as the start command's `sites`; `prepare` freezes `command.sites` in the job's options and marks the other items so `siteUrls` returns nothing for them.
+   - A start command's `bookmarkIds` narrows the scope to those bookmarks in their folders (`scopeNodes`), for a run on chosen items such as Index Page Text's **Retry failed** in Options.
 5. **Messages:** add every new message to all locales. A new block reason is a `JOB_BLOCK_CODES` entry plus a key in `JOB_BLOCK_KEYS`.
 6. **Tests, docs, and disclosures:** see below.
 

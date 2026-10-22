@@ -8025,6 +8025,14 @@
         "message": "페이지 본문 색인이 기본으로 읽는 북마크",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "로그인 정보나 비밀이 든 주소 건너뛰기",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "사용자 이름과 비밀번호, 또는 개인정보 스캐너의 민감한 매개변수에 있는 매개변수(예: 토큰)가 든 주소는 사이트가 받게 되므로 다운로드하지 않습니다. 끄면 그런 북마크도 다른 북마크처럼 읽습니다.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "각 페이지에서 읽은 본문입니다. 저장한 것만 이 기기에 남습니다.",
         "description": "Index Page Text review: description"
@@ -8036,6 +8044,10 @@
     "tools_pageTextCategory_empty": {
         "message": "본문 없음 ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_unsupported": {
+        "message": "웹 페이지 아님 ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
     },
     "tools_pageTextCategory_signIn": {
         "message": "로그인 페이지 ($1)",
@@ -8056,6 +8068,14 @@
     "tools_pageTextCategory_skipped": {
         "message": "건너뜀 ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "다운로드하지 않음: 주소에 사용자 이름과 비밀번호가 들어 있어 사이트가 받게 됩니다.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "다운로드하지 않음: 주소에 개인정보 스캐너의 민감한 매개변수 목록에 있는 매개변수(예: 토큰)가 들어 있어 사이트가 받게 됩니다.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "선택 안 함 ($1)",
@@ -8203,6 +8223,10 @@
         "message": "색인된 페이지 본문 있음",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "페이지 텍스트 검색이 꺼져 있어 content:와 has:content로는 아무것도 찾지 못합니다. 설정에서 페이지 본문 색인을 켜세요.",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "페이지 본문 색인",
         "description": "Settings: heading of the page text index panel"
@@ -8250,6 +8274,34 @@
     "pageText_clearedDesc": {
         "message": "북마크, 태그, 기록은 바뀌지 않았습니다.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "색인됨: 색인할 수 있는 북마크 $2개 중 $1개",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "오래됨: $1개 (이전 주소나 이전 버전에서 읽음, 다음 실행 때 다시 읽음)",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "지난 실행에서 실패: $1개",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "실패한 항목 다시 시도",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "$1개 페이지를 다시 읽는 중",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "백그라운드에서 실행됩니다. 끝나면 북마크 관리자 도구의 페이지 본문 색인 카드에서 결과 보기를 열어 텍스트를 저장하세요.",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "사이트에 대한 웹사이트 액세스를 거두면 그 사이트에서 색인한 텍스트가 삭제됩니다.",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "이 페이지 본문 색인",

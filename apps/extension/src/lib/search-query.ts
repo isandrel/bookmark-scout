@@ -495,3 +495,12 @@ export function* searchQueryTerms(
     else yield { term: node, excludes };
   }
 }
+
+/** Whether a query looks in page text (`content:` or `has:content`), which Index Page Text keeps. */
+export function searchesPageText(query: SearchQuery): boolean {
+  for (const { term } of searchQueryTerms(query.terms)) {
+    if (term.kind === 'text' && term.field === 'content') return true;
+    if (term.kind === 'has' && term.value === 'content') return true;
+  }
+  return false;
+}

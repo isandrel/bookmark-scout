@@ -8053,6 +8053,14 @@
         "message": "Lesezeichen, die Seitentext indexieren standardmäßig liest",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Adressen mit Anmeldedaten oder Geheimnissen überspringen",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Nie eine Adresse herunterladen, die einen Benutzernamen und ein Passwort oder einen Parameter aus den sensiblen Parametern der Datenschutzprüfung (etwa ein Token) enthält, den die Website erhalten würde. Ausgeschaltet werden diese Lesezeichen wie alle anderen gelesen.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Der aus jeder Seite gelesene Text. Nur was Sie speichern, wird behalten, auf diesem Gerät.",
         "description": "Index Page Text review: description"
@@ -8064,6 +8072,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Kein Text ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_unsupported": {
+        "message": "Keine Webseite ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
     },
     "tools_pageTextCategory_signIn": {
         "message": "Anmeldeseite ($1)",
@@ -8084,6 +8096,14 @@
     "tools_pageTextCategory_skipped": {
         "message": "Übersprungen ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "Nicht heruntergeladen: Die Adresse enthält einen Benutzernamen und ein Passwort, die die Website erhalten würde.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "Nicht heruntergeladen: Die Adresse enthält einen Parameter aus den sensiblen Parametern der Datenschutzprüfung, etwa ein Token, den die Website erhalten würde.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Nicht ausgewählt ($1)",
@@ -8231,6 +8251,10 @@
         "message": "Mit indexiertem Seitentext",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "Die Suche im Seitentext ist aus, daher finden content: und has:content nichts. Schalten Sie „Seitentext indexieren“ in den Einstellungen ein.",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "Seitentext-Index",
         "description": "Settings: heading of the page text index panel"
@@ -8278,6 +8302,38 @@
     "pageText_clearedDesc": {
         "message": "Lesezeichen, Tags und der Verlauf wurden nicht geändert.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "Indexiert: $1 von $2 indexierbaren Lesezeichen",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "Veraltet: $1 (unter einer früheren Adresse oder von einer älteren Version gelesen; der nächste Lauf liest sie erneut)",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "Im letzten Lauf fehlgeschlagen: $1",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "Fehlgeschlagene wiederholen",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "$1 Seiten werden erneut gelesen",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStarted_one": {
+        "message": "$1 Seite wird erneut gelesen",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages (singular)"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "Das läuft im Hintergrund. Wenn es fertig ist, speichern Sie den Text über „Ergebnisse ansehen“ auf der Karte „Seitentext indexieren“ in den Tools der Lesezeichenverwaltung.",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "Wenn Sie den Websitezugriff für eine Website zurücknehmen, wird der von ihr indexierte Text gelöscht.",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "Text dieser Seite indexieren",

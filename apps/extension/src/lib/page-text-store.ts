@@ -16,6 +16,10 @@ const pageTextConfig = readConfig(
     max_bytes: z.number().int().positive(),
     concurrency: z.number().int().positive(),
     extractor_version: z.number().int().positive(),
+    text: z.strictObject({
+      drop: z.array(z.string().min(1)).min(1),
+      blocks: z.array(z.string().regex(/^[a-z][a-z0-9]*$/)).min(1),
+    }),
     sign_in: z.strictObject({
       fields: z.array(z.string().min(1)).min(1),
       outside: z.array(z.string().min(1)),
@@ -32,6 +36,12 @@ export const PAGE_TEXT_LIMITS = {
   maxBytes: pageTextConfig.max_bytes,
   concurrency: pageTextConfig.concurrency,
   extractorVersion: pageTextConfig.extractor_version,
+} as const;
+
+/** What is kept of a page (`[text]` in the config): elements left out, and those that start a block. */
+export const PAGE_TEXT_EXTRACTION = {
+  dropSelector: pageTextConfig.text.drop.join(','),
+  blockSelector: pageTextConfig.text.blocks.join(','),
 } as const;
 
 /**
@@ -148,13 +158,23 @@ export async function savePageTexts(
 export async function prunePageTexts(keepIds: ReadonlySet<string>): Promise<number> {
   const db = await openPageTextDb();
   const ids = await db.getAllKeys('pages');
-  const gone = ids.filter((id) => !keepIds.has(id));
-  if (gone.length === 0) return 0;
+  return removePageTexts(ids.filter((id) => !keepIds.has(id)));
+}
+
+/** Removes the text of the bookmarks `ids`; returns how many pages had text. */
+export async function removePageTexts(ids: Iterable<string>): Promise<number> {
+  const db = await openPageTextDb();
   const transaction = db.transaction('pages', 'readwrite');
-  for (const id of gone) await transaction.store.delete(id);
+  let removed = 0;
+  for (const id of ids) {
+    if (await transaction.store.getKey(id)) {
+      await transaction.store.delete(id);
+      removed += 1;
+    }
+  }
   await transaction.done;
-  announceChange();
-  return gone.length;
+  if (removed > 0) announceChange();
+  return removed;
 }
 
 /** Deletes the whole index; bookmarks, tags, and the History are not touched. */

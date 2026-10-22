@@ -803,10 +803,11 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     needsHostAccess: true,
     job: {
       kind: 'pageText',
-      // The adapter stores the count left out when it accepts the job.
+      // The adapter stores the count left out when it accepts the job; bookmarks that shared a
+      // download get what it found.
       result: (job, results) => ({
         ...pageTextJobSummarySchema.parse(job.summary),
-        items: results as PageTextScanItem[],
+        items: sharePageTextReads(results as PageTextScanItem[]),
       }),
       chooseSites: (nodes, options) => listPageTextSites(nodes, options.pageText),
     },

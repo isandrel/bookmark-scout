@@ -1096,6 +1096,10 @@ const fields = {
     'pageTextDefaultScope',
     TOOL_SCOPE_CAPABILITIES.pageText,
   ),
+  pageTextSkipSecretUrls: switchField(
+    'metadata_content.page_text.skip_secret_urls',
+    'pageTextSkipSecretUrls',
+  ),
 
   coversEnabled: switchField('metadata_content.covers.enabled', 'coversEnabled'),
   coversDefaultScope: scopeField(
@@ -1556,7 +1560,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'pageText',
         labelKey: 'tools_pageText',
         toggle: 'pageTextEnabled',
-        fields: ['pageTextDefaultScope'],
+        fields: ['pageTextDefaultScope', 'pageTextSkipSecretUrls'],
         panel: 'pageText',
       },
       {

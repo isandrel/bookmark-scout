@@ -2,19 +2,23 @@ import { IDBFactory } from 'fake-indexeddb';
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { TOOL_DEFINITIONS } from '@/components/bookmarks/tools/tool-definitions';
 import { INPUT_LIMITS } from '@/lib/input-limits';
 import type { JobKind } from '@/lib/job-store';
 import { closeJobDb, getJob, getJobItems } from '@/lib/job-store';
-import { PAGE_TEXT_LIMITS } from '@/lib/page-text-store';
+import { clearPageTexts, PAGE_TEXT_LIMITS, savePageTexts } from '@/lib/page-text-store';
 import type { PageTextReading } from '@/lib/quick-save-protocol';
 import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { pageTextReadingSchema, quickSaveHostRequestSchema } from '@/lib/quick-save-validation';
+import { saveSettings } from '@/lib/settings-storage';
 import { METADATA_MAX_BYTES } from '@/services/bookmark-network-tools';
 import {
   resetJobCoordinatorForTests,
   runJobCommand,
   whenJobsIdle,
 } from '@/services/job-coordinator';
+import type { PageTextScanResult } from '@/services/page-text';
+import { getPageTextCoverage } from '@/services/page-text-coverage';
 import { installFakeBookmarks } from '../fake-bookmarks';
 import { installFakePermissions } from '../fake-permissions';
 
@@ -202,6 +206,10 @@ describe('Refresh Site Icons as a background job', () => {
 });
 
 describe('Index Page Text as a background job (S25-S27)', () => {
+  beforeEach(async () => {
+    await saveSettings({ pageTextEnabled: true });
+  });
+
   const article = (words: string) =>
     new Response(
       `<html><head><title>T</title></head><body><article><h1>Heading</h1><p>${words}</p></article></body></html>`,
@@ -291,6 +299,97 @@ describe('Index Page Text as a background job (S25-S27)', () => {
     const items = await getJobItems(job.id);
     expect(items.slice(0, 2).map((item) => item.outcome)).toEqual(['succeeded', 'succeeded']);
     expect(host.texts).toHaveLength(2);
+  });
+
+  it('downloads an address once for every bookmark of it, and each bookmark gets the text (S19)', async () => {
+    installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      { id: 'd1', parentId: 'f', title: 'Copy one', url: 'https://one.invalid/page' },
+      { id: 'd2', parentId: 'f', title: 'Copy two', url: 'https://one.invalid/page' },
+      { id: 'd3', parentId: 'f', title: 'Copy three', url: 'https://one.invalid/page' },
+    ]);
+    const requests = stubFetch({ 'https://one.invalid/page': () => article('One') });
+    const { job, results } = await runToEnd('pageText');
+    expect(requests).toEqual(['https://one.invalid/page']);
+    if (!job) throw new Error('no job');
+    const shown = TOOL_DEFINITIONS.pageText.job?.result(job, results) as PageTextScanResult;
+    expect(shown.items.map((item) => [item.id, item.status, item.text])).toEqual([
+      ['d1', 'read', 'Text read by the host page'],
+      ['d2', 'read', 'Text read by the host page'],
+      ['d3', 'read', 'Text read by the host page'],
+    ]);
+    // The shared download is stored once, with the bookmark that made it.
+    expect(results.filter((result) => (result as { text?: string }).text)).toHaveLength(1);
+  });
+
+  it('freezes Skip Addresses with Sign-in Details or Secrets when the job starts', async () => {
+    installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      { id: 's1', parentId: 'f', title: 'Feed', url: 'https://one.invalid/page?token=abc' },
+    ]);
+    const requests = stubFetch({ 'https://one.invalid/page?token=abc': () => article('One') });
+    // On by default: the address is listed as skipped and never requested.
+    let run = await runToEnd('pageText');
+    expect(run.job?.options).toMatchObject({ skipSecretUrls: true });
+    expect(run.results).toMatchObject([
+      { id: 's1', status: 'skipped', skipReason: 'sensitiveParam' },
+    ]);
+    expect(requests).toEqual([]);
+    // Turned off, the next run reads it like any other.
+    await saveSettings({ pageTextSkipSecretUrls: false });
+    run = await runToEnd('pageText');
+    expect(run.job?.options).toMatchObject({ skipSecretUrls: false });
+    expect(run.results).toMatchObject([{ id: 's1', status: 'read' }]);
+    expect(requests).toEqual(['https://one.invalid/page?token=abc']);
+  });
+
+  it('is refused while Index Page Text is off, even with AI page reading on (S49)', async () => {
+    await saveSettings({ pageTextEnabled: false, aiReadPageContent: true });
+    const requests = stubFetch({});
+    const response = await runJobCommand({
+      type: 'start',
+      commandId: crypto.randomUUID(),
+      kind: 'pageText',
+      source: 'manager',
+      scope: { mode: 'folder', folderId: 'f' },
+    });
+    expect(response.ok).toBe(false);
+    await whenJobsIdle();
+    expect(requests).toEqual([]);
+  });
+
+  it('says what the index covers and what the last run could not read, and retries only those', async () => {
+    await clearPageTexts();
+    stubFetch({
+      'https://one.invalid/page': () => article('One'),
+      'https://two.invalid/page': () => article('Two'),
+    });
+    await runToEnd('pageText');
+    // One page saved; another kept from an earlier address of its bookmark.
+    await savePageTexts([
+      { bookmarkId: 'b1', url: 'https://one.invalid/page', text: 'one' },
+      { bookmarkId: 'b2', url: 'https://two.invalid/old', text: 'two' },
+    ]);
+    const coverage = await getPageTextCoverage();
+    expect(coverage).toMatchObject({ eligible: 3, indexed: 1, stale: 1 });
+    expect(coverage.failed.map((item) => item.id)).toEqual(['b3']);
+
+    const requests = stubFetch({ 'https://down.invalid/page': () => article('Back') });
+    const response = await runJobCommand({
+      type: 'start',
+      commandId: crypto.randomUUID(),
+      kind: 'pageText',
+      source: 'options',
+      scope: { mode: 'all' },
+      sites: ['down.invalid'],
+      bookmarkIds: ['b3'],
+    });
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    await whenJobsIdle();
+    const items = await getJobItems(response.job.id);
+    expect(items.map((item) => item.result)).toMatchObject([{ id: 'b3', status: 'read' }]);
+    expect(requests).toEqual(['https://down.invalid/page']);
+    expect((await getPageTextCoverage()).failed).toEqual([]);
   });
 });
 

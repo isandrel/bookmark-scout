@@ -8053,6 +8053,14 @@
         "message": "Bookmarks Index Page Text reads by default",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Skip Addresses with Sign-in Details or Secrets",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Never download an address that holds a user name and password, or a parameter listed in the Privacy Scanner's Sensitive Parameters (such as a token), which the site would receive. Turned off, those bookmarks are read like any other.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "The text read from each page. Only what you save is kept, on this device.",
         "description": "Index Page Text review: description"
@@ -8064,6 +8072,10 @@
     "tools_pageTextCategory_empty": {
         "message": "No text ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_unsupported": {
+        "message": "Not a web page ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
     },
     "tools_pageTextCategory_signIn": {
         "message": "Sign-in page ($1)",
@@ -8083,7 +8095,15 @@
     },
     "tools_pageTextCategory_skipped": {
         "message": "Skipped ($1)",
-        "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+        "description": "Index Page Text review tab: bookmarks that are not web pages, are on the local network, or whose address may hold a secret; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "Not downloaded: the address holds a user name and password, which the site would receive.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "Not downloaded: the address holds a parameter listed in the Privacy Scanner's Sensitive Parameters, such as a token, which the site would receive.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Not chosen ($1)",
@@ -8231,6 +8251,10 @@
         "message": "With indexed page text",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "Page text search is off, so content: and has:content find nothing. Turn on Index Page Text in Settings.",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "Page text index",
         "description": "Settings: heading of the page text index panel"
@@ -8278,6 +8302,38 @@
     "pageText_clearedDesc": {
         "message": "Bookmarks, tags, and the History were not changed.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "Indexed: $1 of $2 bookmarks that can be indexed",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "Out of date: $1 (read at an earlier address or by an older version; the next run reads them again)",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "Failed in the last run: $1",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "Retry failed",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "Reading $1 pages again",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStarted_one": {
+        "message": "Reading $1 page again",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages (singular)"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "It runs in the background. When it finishes, save the text from Review results on the Index Page Text card in the bookmark manager's Tools.",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "Taking back website access to a site deletes the text indexed from it.",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "Index this page's text",

@@ -13,8 +13,27 @@ timeout_ms = 10000
 max_bytes = 2000000
 # Pages downloaded at a time
 concurrency = 4
-# Raised when the kept text would read differently, so pages are indexed again
-extractor_version = 1
+# Raised when the kept text would read differently, so pages are indexed again. 2: plain text,
+# one block per line ([text]), instead of Markdown
+extractor_version = 2
+
+# What is kept of a page: its readable text as plain text, one block per line, so a phrase search
+# never matches across two paragraphs (src/services/page-reader.lazy.ts)
+[text]
+# Elements whose text is never kept: code, templates, what shows only without scripts, form
+# fields (a hidden field keeps its value in an attribute, which is never read either), and
+# hidden elements
+drop = [
+  "script", "style", "template", "noscript", "svg", "iframe", "object", "input", "textarea",
+  "select", "option", "button", "[hidden]", "[aria-hidden=\"true\"]",
+]
+# Elements that start a block of their own
+blocks = [
+  "address", "article", "aside", "blockquote", "br", "caption", "dd", "details", "div", "dl",
+  "dt", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6",
+  "header", "hr", "legend", "li", "main", "nav", "ol", "p", "pre", "section", "summary", "table",
+  "td", "th", "tr", "ul",
+]
 
 # Sign-in pages: a page that asks for a sign-in instead of showing what was bookmarked is listed
 # on its own in the review and never saved as the page's text (src/services/page-text.ts).

@@ -204,7 +204,7 @@ describe('Index Page Text runs', () => {
         { id: 'local', parentId: 'f', title: 'Router', url: 'http://192.168.1.1/' },
         { id: 'js', parentId: 'f', title: 'Script', url: 'javascript:void(0)' },
       ]),
-      { skipPrivateHosts: true },
+      { skipPrivateHosts: true, sensitiveParams: [] },
     );
     expect(overLimit).toBe(0);
     expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
@@ -237,16 +237,19 @@ describe('Index Page Text runs', () => {
       { id: 'js', parentId: 'f', title: 'Script', url: 'javascript:void(0)' },
     ]);
     // Pages indexed already and pages that may not be read are not sites to choose.
-    expect(await listPageTextSites(nodes, { skipPrivateHosts: true })).toEqual([
-      { site: 'alpha.example', count: 2 },
-      { site: 'beta.example', count: 1 },
-      { site: 'delta.example', count: 1 },
-      { site: 'epsilon.example', count: 1 },
-      { site: 'gamma.example', count: 1 },
-    ]);
+    expect(await listPageTextSites(nodes, { skipPrivateHosts: true, sensitiveParams: [] })).toEqual(
+      [
+        { site: 'alpha.example', count: 2 },
+        { site: 'beta.example', count: 1 },
+        { site: 'delta.example', count: 1 },
+        { site: 'epsilon.example', count: 1 },
+        { site: 'gamma.example', count: 1 },
+      ],
+    );
 
     const { items } = await scanPageTexts(nodes, {
       skipPrivateHosts: true,
+      sensitiveParams: [],
       sites: ['alpha.example', 'gamma.example'],
     });
     expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
@@ -276,7 +279,7 @@ describe('Index Page Text runs', () => {
           { id: 'b1', parentId: 'f', title: 'B one', url: 'https://beta.example/1' },
           { id: 'c1', parentId: 'f', title: 'C one', url: 'https://gamma.example/1' },
         ]),
-        { skipPrivateHosts: true, sites: ['gamma.example'] },
+        { skipPrivateHosts: true, sensitiveParams: [], sites: ['gamma.example'] },
       );
     } finally {
       limits.maxPages = maxPages;
@@ -315,7 +318,7 @@ describe('Index Page Text runs', () => {
         { id: 'moved', parentId: 'f', title: 'Moved', url: 'https://moved.example/' },
         { id: 'elsewhere', parentId: 'f', title: 'Away', url: 'https://elsewhere.example/' },
       ]),
-      { skipPrivateHosts: true },
+      { skipPrivateHosts: true, sensitiveParams: [] },
     );
     expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
       moved: 'redirected',
@@ -342,7 +345,7 @@ describe('Index Page Text runs', () => {
     );
     const { items } = await scanPageTexts(
       folder([{ id: 'old', parentId: 'f', title: 'Old link', url: 'http://trip.example/notes' }]),
-      { skipPrivateHosts: true },
+      { skipPrivateHosts: true, sensitiveParams: [] },
     );
     expect(items[0]).toMatchObject({ status: 'read', readFrom: 'https://trip.example/notes' });
     expect(requested).toEqual(['http://trip.example/notes', 'https://trip.example/notes']);
@@ -420,7 +423,18 @@ describe('Index Page Text runs', () => {
     await saveSettings({ language: 'en' });
     setLanguage('en');
     vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockResolvedValue([
-      { id: '0', title: '', syncing: false, children: [] },
+      {
+        id: '0',
+        title: '',
+        syncing: false,
+        children: ['a', 'b'].map((id) => ({
+          id,
+          parentId: '0',
+          title: id,
+          url: `https://${id}.example/`,
+          syncing: false,
+        })),
+      },
     ]);
     const picked = ['a', 'b'].map((id) => ({
       id,

@@ -935,6 +935,29 @@ function storedJobs(extension: FirefoxExtension) {
   }, null);
 }
 
+/** How many pages the page text index keeps, read from an extension page. */
+function indexedPageTexts(extension: FirefoxExtension) {
+  return extension.call(async () => {
+    const names = (await indexedDB.databases()).map((db) => db.name);
+    if (!names.includes('bookmark-scout-page-text')) return 0;
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('bookmark-scout-page-text');
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    try {
+      if (!db.objectStoreNames.contains('pages')) return 0;
+      return await new Promise<number>((resolve, reject) => {
+        const request = db.transaction('pages').objectStore('pages').count();
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    } finally {
+      db.close();
+    }
+  }, null);
+}
+
 /** Starts `tool` from the manager, grants the site, and closes the manager once a request held. */
 async function startJobAndClosePage(
   extension: FirefoxExtension,
@@ -1027,7 +1050,7 @@ test('Metadata Fetcher runs as a background job whose titles a later page applie
   }
 });
 
-test('Index Page Text runs as a background job that reads the text in the background page frame (S25)', async ({
+test('Index Page Text runs as a background job that reads the text in the background page frame, and taking back the site’s access deletes its text (S25, S46)', async ({
   extension,
 }) => {
   const server = await startHeldServer();
@@ -1058,6 +1081,18 @@ test('Index Page Text runs as a background job that reads the text in the backgr
     await clickToolButton(extension, 'Index Page Text', 'Review results');
     const results = await extension.findByText('[role="dialog"]', 'Notes 2');
     expect(await results.getText()).toContain('quokka');
+    await results
+      .findElement(By.xpath('.//button[normalize-space()="Save text of 2 pages"]'))
+      .click();
+    await expect.poll(() => indexedPageTexts(extension)).toBe(2);
+
+    // S46: the background page hears the access taken back and deletes the site's text.
+    await extension.call(
+      (browser) =>
+        browser.permissions.remove({ origins: ['http://127.0.0.1/*', 'https://127.0.0.1/*'] }),
+      null,
+    );
+    await expect.poll(() => indexedPageTexts(extension)).toBe(0);
   } finally {
     server.close();
   }

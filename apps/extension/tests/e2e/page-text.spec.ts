@@ -9,8 +9,9 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { latestJob } from './job-helpers';
-import { managerUrl } from './manager-helpers';
+import { managerSearch, managerUrl } from './manager-helpers';
 import { openPopup } from './popup-helpers';
+import { readSettings } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 const ARTICLE = `<!doctype html><html><head><title>Field trip</title></head><body><article>
@@ -46,6 +47,34 @@ const indexedCount = (worker: Worker) =>
       };
     });
   });
+
+/** Stores page text records the way Index Page Text saves them, from the background. */
+function seedPageTexts(worker: Worker, pages: { bookmarkId: string; url: string; text: string }[]) {
+  return worker.evaluate(async (records) => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const open = indexedDB.open('bookmark-scout-page-text', 1);
+      open.onupgradeneeded = () =>
+        open.result.createObjectStore('pages', { keyPath: 'bookmarkId' });
+      open.onsuccess = () => resolve(open.result);
+      open.onerror = () => reject(open.error);
+    });
+    const transaction = db.transaction('pages', 'readwrite');
+    for (const record of records) {
+      transaction
+        .objectStore('pages')
+        .put({ ...record, indexedAt: Date.now(), extractorVersion: 2 });
+    }
+    await new Promise((resolve, reject) => {
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(transaction.error);
+    });
+    db.close();
+    // Open pages read the index again, as after a save.
+    const channel = new BroadcastChannel('bookmark-scout-page-text');
+    channel.postMessage('changed');
+    channel.close();
+  }, pages);
+}
 
 test.describe('with website access granted', () => {
   test.use({ grantWebHostAccess: true });
@@ -350,6 +379,182 @@ test.describe('with website access granted', () => {
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(await indexedCount(extensionWorker)).toBe(0);
   });
+
+  test('bookmarks of one address are downloaded once, Options shows the coverage, and Retry failed reads only the failed pages again (S19)', async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const { folderId } = await seedFolder(extensionWorker, 'E2E Page Text Coverage', [
+      { title: 'Trip notes', url: 'https://trip.e2e.invalid/notes' },
+      { title: 'Trip notes again', url: 'https://trip.e2e.invalid/notes' },
+      { title: 'Flaky page', url: 'https://flaky.e2e.invalid/' },
+      { title: 'Bookmarklet', url: 'javascript:void(0)' },
+    ]);
+    await setSettings(extensionWorker, { pageTextEnabled: true, pageTextDefaultScope: 'folder' });
+    const requested: string[] = [];
+    let flakyAnswers = false;
+    await context.route('https://*.e2e.invalid/**', (route) => {
+      const url = route.request().url();
+      requested.push(url);
+      if (url.startsWith('https://flaky.') && !flakyAnswers) return route.abort('failed');
+      return route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE });
+    });
+
+    await openTools(page, extensionId, folderId);
+    await toolCard(page, 'Index Page Text')
+      .getByRole('button', { name: 'Index', exact: true })
+      .click();
+    await page
+      .getByRole('dialog', { name: 'Choose sites to read' })
+      .getByRole('button', { name: 'Start with 1 site' })
+      .click();
+    const review = page.getByRole('dialog', { name: 'Index Page Text' });
+    // Both bookmarks of the address got its text from one download.
+    await expect(review.getByRole('radio', { name: 'Text found (2)' })).toBeVisible();
+    await expect(review.getByRole('radio', { name: 'Failed (1)' })).toBeVisible();
+    expect(requested.filter((url) => url.startsWith('https://trip.'))).toEqual([
+      'https://trip.e2e.invalid/notes',
+    ]);
+    await review.getByRole('button', { name: 'Save text of 2 pages' }).click();
+    await expect(review).toHaveCount(0);
+    await expect.poll(() => indexedCount(extensionWorker)).toBe(2);
+
+    await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+    const coverage = page.getByTestId('page-text-coverage');
+    await expect(coverage.getByRole('listitem')).toHaveText([
+      /^Indexed: 2 of \d+ bookmarks that can be indexed$/,
+      /^Out of date: 0 /,
+      'Failed in the last run: 1',
+    ]);
+    const before = requested.length;
+    flakyAnswers = true;
+    await page.getByTestId('page-text-index').getByRole('button', { name: 'Retry failed' }).click();
+    await expect(
+      toastRegion(page).getByText('✓ Reading 1 page again', { exact: true }),
+    ).toBeVisible();
+    await expect
+      .poll(async () => (await latestJob(extensionWorker, 'pageText'))?.state)
+      .toBe('succeeded');
+    // Only the failed page was requested again.
+    expect(requested.slice(before)).toEqual(['https://flaky.e2e.invalid/']);
+    expect((await latestJob(extensionWorker, 'pageText'))?.total).toBe(1);
+    await expect(coverage.getByRole('listitem').last()).toHaveText('Failed in the last run: 0');
+  });
+
+  test('addresses with sign-in details or a token are skipped unrequested until Skip Addresses with Sign-in Details or Secrets is turned off in Options', async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const { folderId } = await seedFolder(extensionWorker, 'E2E Page Text Secrets', [
+      { title: 'Trip notes', url: 'https://trip.e2e.invalid/notes' },
+      { title: 'Private feed', url: 'https://feed.e2e.invalid/rss?token=abc123' },
+    ]);
+    await setSettings(extensionWorker, { pageTextEnabled: true, pageTextDefaultScope: 'folder' });
+    const requested: string[] = [];
+    await context.route('https://*.e2e.invalid/**', (route) => {
+      requested.push(route.request().url());
+      return route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE });
+    });
+    const run = async () => {
+      await openTools(page, extensionId, folderId);
+      await toolCard(page, 'Index Page Text')
+        .getByRole('button', { name: 'Index', exact: true })
+        .click();
+      await page
+        .getByRole('dialog', { name: 'Choose sites to read' })
+        .getByRole('button', { name: 'Start with 1 site' })
+        .click();
+      return page.getByRole('dialog', { name: 'Index Page Text' });
+    };
+
+    // On by default: the feed is listed as skipped with the reason, and never requested.
+    let review = await run();
+    await expect(review.getByRole('radio', { name: 'Text found (1)' })).toBeVisible();
+    await review.getByRole('radio', { name: 'Skipped (1)' }).click();
+    await expect(
+      review.getByTestId('page-text-item').filter({ hasText: 'Private feed' }),
+    ).toContainText(
+      "Not downloaded: the address holds a parameter listed in the Privacy Scanner's Sensitive Parameters, such as a token, which the site would receive.",
+    );
+    expect(requested).toEqual(['https://trip.e2e.invalid/notes']);
+
+    // Turned off in Options, the next run reads the feed like any other.
+    await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+    const toggle = page.getByRole('switch', {
+      name: 'Skip Addresses with Sign-in Details or Secrets',
+    });
+    await expect(toggle).toBeChecked();
+    await toggle.click();
+    await expect(toggle).not.toBeChecked();
+    await expect
+      .poll(async () => (await readSettings(extensionWorker)).pageTextSkipSecretUrls)
+      .toBe(false);
+    requested.length = 0;
+    review = await run();
+    await expect(review.getByRole('radio', { name: 'Text found (2)' })).toBeVisible();
+    expect(requested.sort()).toEqual([
+      'https://feed.e2e.invalid/rss?token=abc123',
+      'https://trip.e2e.invalid/notes',
+    ]);
+    expect((await latestJob(extensionWorker, 'pageText'))?.options).toMatchObject({
+      skipSecretUrls: false,
+    });
+  });
+
+  test("removing the extension's website access deletes the page text it indexed (S46)", async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const { ids } = await seedFolder(extensionWorker, 'E2E Page Text Access', [
+      { title: 'Alpha page', url: 'https://alpha-s46.invalid/' },
+      { title: 'Beta page', url: 'http://beta-s46.invalid/' },
+    ]);
+    await seedPageTexts(
+      extensionWorker,
+      Object.entries(ids).map(([title, bookmarkId]) => ({
+        bookmarkId,
+        url: title.startsWith('Alpha') ? 'https://alpha-s46.invalid/' : 'http://beta-s46.invalid/',
+        text: `${title} quokka`,
+      })),
+    );
+    expect(await indexedCount(extensionWorker)).toBe(2);
+    await setSettings(extensionWorker, { pageTextEnabled: true });
+    await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+    const panel = page.getByTestId('page-text-index');
+    await expect(panel).toContainText(
+      'Taking back website access to a site deletes the text indexed from it.',
+    );
+    await expect(panel).toContainText('2 pages indexed');
+
+    // This build declares website access as required, which cannot be removed, so the browser's
+    // report is dispatched as Chrome sends it when the user removes one site's access, with the
+    // access check answering as it then would: alpha is gone, beta still allowed.
+    const revoke = (site: string) =>
+      extensionWorker.evaluate((removed) => {
+        const contains = chrome.permissions.contains.bind(chrome.permissions);
+        Object.defineProperty(chrome.permissions, 'contains', {
+          configurable: true,
+          value: async (request: chrome.permissions.Permissions) =>
+            !request.origins?.some((origin) => origin.includes(removed)) && contains(request),
+        });
+        const origins = [`http://*.${removed}/*`, `https://*.${removed}/*`];
+        (
+          chrome.permissions.onRemoved as unknown as {
+            dispatch: (permissions: chrome.permissions.Permissions) => void;
+          }
+        ).dispatch({ origins, permissions: [] });
+      }, site);
+    await revoke('alpha-s46.invalid');
+    await expect.poll(() => indexedCount(extensionWorker)).toBe(1);
+    await expect(panel).toContainText('1 page indexed');
+    await revoke('beta-s46.invalid');
+    await expect.poll(() => indexedCount(extensionWorker)).toBe(0);
+  });
 });
 
 test('website access is asked for the chosen sites only, and nothing is requested when it is declined (S03)', async ({
@@ -422,6 +627,70 @@ test('website access is asked for the chosen sites only, and nothing is requeste
     },
   ]);
   expect(requested).toEqual([]);
+});
+
+test('while Index Page Text is off, content: and has:content say so in the popup and the manager instead of finding nothing (S47)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const notice =
+    'Page text search is off, so content: and has:content find nothing. Turn on Index Page Text in Settings.';
+  await seedFolder(extensionWorker, 'E2E Search Notice', [
+    { title: 'Notice page', url: 'https://notice.e2e.invalid/' },
+  ]);
+  await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:quokka')}`);
+  await expect(page.getByRole('status').filter({ hasText: notice })).toBeVisible();
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+  await search.fill('has:content');
+  await expect(page.getByText(notice, { exact: true })).toBeVisible();
+  // A plain word is no page text query.
+  await search.fill('quokka');
+  await expect(page.getByText(notice, { exact: true })).toHaveCount(0);
+  await search.fill('content:quokka');
+  await expect(page.getByText(notice, { exact: true })).toBeVisible();
+  // Turned on, the notice goes at once.
+  await setSettings(extensionWorker, { pageTextEnabled: true });
+  await expect(page.getByText(notice, { exact: true })).toHaveCount(0);
+  await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:quokka')}`);
+  await expect(managerSearch(page)).toHaveValue('content:quokka');
+  await expect(page.getByText(notice, { exact: true })).toHaveCount(0);
+});
+
+test('page text that looks like HTML shows as text in search results, never as markup (S35)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { ids } = await seedFolder(extensionWorker, 'E2E Page Text Markup', [
+    { title: 'Markup page', url: 'https://markup.e2e.invalid/' },
+  ]);
+  const id = ids['Markup page'];
+  if (!id) throw new Error('not seeded');
+  const markup = '<img src=x onerror="window.pageTextXss=1"><b>bold</b>';
+  await seedPageTexts(extensionWorker, [
+    { bookmarkId: id, url: 'https://markup.e2e.invalid/', text: `A quokka note ${markup}` },
+  ]);
+  await setSettings(extensionWorker, { pageTextEnabled: true });
+  await openPopup(page, extensionId);
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('onerror');
+  const hit = page.locator('.bookmark-item').filter({ hasText: 'Markup page' });
+  await expect(hit).toContainText(markup);
+  await expect(hit.locator('img[src="x"], b')).toHaveCount(0);
+  expect(
+    await page.evaluate(() => (window as { pageTextXss?: number }).pageTextXss),
+  ).toBeUndefined();
+
+  await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:onerror')}`);
+  const row = page.locator('tbody tr').filter({ hasText: 'Markup page' });
+  await expect(row).toContainText(markup);
+  await expect(row.locator('img[src="x"], b')).toHaveCount(0);
+  expect(
+    await page.evaluate(() => (window as { pageTextXss?: number }).pageTextXss),
+  ).toBeUndefined();
 });
 
 /**

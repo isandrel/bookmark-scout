@@ -8025,6 +8025,14 @@
         "message": "ページ本文の索引が既定で読むブックマーク",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "ログイン情報や秘密を含むアドレスをスキップ",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "ユーザー名とパスワード、またはプライバシースキャナーの「機密パラメータ」にあるパラメータ (トークンなど) を含むアドレスは、サイトに送られてしまうためダウンロードしません。オフにすると、それらのブックマークもほかと同じように読み込みます。",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "各ページから読み取った本文です。保存したものだけがこの端末に残ります。",
         "description": "Index Page Text review: description"
@@ -8036,6 +8044,10 @@
     "tools_pageTextCategory_empty": {
         "message": "本文なし ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_unsupported": {
+        "message": "Web ページではない ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
     },
     "tools_pageTextCategory_signIn": {
         "message": "ログインページ ($1)",
@@ -8056,6 +8068,14 @@
     "tools_pageTextCategory_skipped": {
         "message": "スキップ ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "ダウンロードしていません: アドレスにユーザー名とパスワードが含まれており、サイトに送られてしまうためです。",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "ダウンロードしていません: アドレスに、プライバシースキャナーの「機密パラメータ」にあるパラメーター (トークンなど) が含まれており、サイトに送られてしまうためです。",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "選択外 ($1)",
@@ -8203,6 +8223,10 @@
         "message": "索引済みのページ本文あり",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "ページ本文の検索はオフのため、content: と has:content では何も見つかりません。設定で「ページ本文の索引」をオンにしてください。",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "ページ本文の索引",
         "description": "Settings: heading of the page text index panel"
@@ -8250,6 +8274,34 @@
     "pageText_clearedDesc": {
         "message": "ブックマーク、タグ、履歴は変更されていません。",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "インデックス済み: インデックス可能なブックマーク $2 件中 $1 件",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "古い: $1 件 (以前のアドレスまたは古いバージョンで読み込んだもの。次回の実行で読み込み直します)",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "前回の実行で失敗: $1 件",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "失敗したものを再試行",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "$1 ページを読み込み直しています",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "バックグラウンドで実行されます。終わったら、ブックマーク マネージャーのツールにある「ページ本文の索引」カードの「結果を見る」から本文を保存してください。",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "サイトへのアクセスを取り消すと、そのサイトからインデックスした本文は削除されます。",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "このページの本文を索引に追加",

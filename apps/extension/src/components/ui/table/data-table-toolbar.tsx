@@ -122,9 +122,10 @@ export function DataTableToolbar<TData extends RowData>({
   const searchRef = useRef<HTMLInputElement>(null);
   const setSearchText = (text: string) => searchColumn?.setFilterValue(text || undefined);
   // Problems in the query, said under the toolbar; the query still runs without them.
+  const { value: pageTextEnabled } = useSetting('pageTextEnabled');
   const diagnostics = useMemo(
-    () => parseSearchQuery(searchText).diagnostics.map(describeSearchDiagnostic),
-    [searchText],
+    () => describeSearchProblems(searchText, pageTextEnabled),
+    [searchText, pageTextEnabled],
   );
   const browserOrderLocked = order.browserOrder && order.browserOrderIsDefault;
 

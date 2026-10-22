@@ -49,3 +49,63 @@ export function extractReadableText(
   if (!text) return undefined;
   return { title: article?.title?.trim() || title, text: text.slice(0, maxChars) };
 }
+
+export type BlockTextOptions = {
+  maxChars: number;
+  /** Elements whose text is left out (a CSS selector list): scripts, templates, form fields. */
+  dropSelector: string;
+  /** Elements that start a new block of text: paragraphs, headings, list items, table rows. */
+  blockSelector: string;
+};
+
+const ELEMENT_NODE = 1;
+const TEXT_NODE = 3;
+const BLOCK_BREAK = '\n';
+
+/**
+ * The readable text of a parsed page as plain text, one block (a paragraph, heading, or list
+ * item) per line, each block's whitespace collapsed to single spaces; undefined when it has none.
+ * Blocks stay apart, so a phrase never reads as one across two of them. Readability keeps the
+ * article where it finds one; otherwise the whole body is read the same way. Text inside dropped
+ * elements, and attribute values such as a hidden field's, are never part of it.
+ */
+export function extractReadableBlocks(
+  doc: Document,
+  { maxChars, dropSelector, blockSelector }: BlockTextOptions,
+): string | undefined {
+  const description =
+    doc
+      .querySelector('meta[name="description"], meta[property="og:description"]')
+      ?.getAttribute('content') ?? '';
+  // Readability changes the document it reads, so it gets a copy; the element it keeps is read.
+  const article = new Readability<Node>(doc.cloneNode(true) as Document, {
+    serializer: (node) => node,
+  }).parse();
+  const root = article?.content ?? doc.body;
+  const blocks: string[] = [];
+  let line = '';
+  const flush = () => {
+    const text = line.replace(/\s+/gu, ' ').trim();
+    if (text) blocks.push(text);
+    line = '';
+  };
+  line = description;
+  flush();
+  const walk = (node: Node) => {
+    if (node.nodeType === TEXT_NODE) {
+      line += node.nodeValue ?? '';
+      return;
+    }
+    if (node.nodeType !== ELEMENT_NODE) return;
+    const element = node as Element;
+    if (element.matches(dropSelector)) return;
+    const block = element.matches(blockSelector);
+    if (block) flush();
+    for (const child of element.childNodes) walk(child);
+    if (block) flush();
+  };
+  if (root) walk(root);
+  flush();
+  const text = blocks.join(BLOCK_BREAK).slice(0, maxChars).trim();
+  return text || undefined;
+}

@@ -24,6 +24,10 @@ export default defineBackground(() => {
     void removeStoredBookmarkMetadata(removedIds).catch((error) => {
       console.error('[Background] Failed to remove bookmark metadata:', error);
     });
+    // Indexed page text belongs to the bookmark; a restored one gets a new id and is read again.
+    void removePageTexts(removedIds).catch((error) => {
+      console.error('[Background] Failed to remove page text:', error);
+    });
     // Recent-folder storage changes rebuild the context menu.
     void removeRecentFolders(removedIds).catch((error) => {
       console.error('[Background] Failed to prune recent folders:', error);
@@ -45,6 +49,8 @@ export default defineBackground(() => {
 
   // Long tools that keep running when their page closes; a command or the alarm wakes them.
   registerJobs();
+  // Taking back a site's website access deletes the page text indexed from it.
+  registerPageTextAccessCleanup();
 
   // A background worker may be started by any event, not only install or startup.
   void initializeContextMenu().catch((error) => {

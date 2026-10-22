@@ -7763,6 +7763,14 @@
         "message": "Bookmark yang dibaca Indeks Teks Halaman secara default",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Lewati Alamat dengan Data Masuk atau Rahasia",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Jangan pernah mengunduh alamat yang memuat nama pengguna dan kata sandi, atau parameter yang tercantum di Parameter Sensitif Pemindai Privasi (misalnya token), yang akan diterima situs. Jika dinonaktifkan, bookmark tersebut dibaca seperti yang lain.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Teks yang dibaca dari setiap halaman. Hanya yang Anda simpan yang dipertahankan, di perangkat ini.",
         "description": "Index Page Text review: description"
@@ -7774,6 +7782,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Tanpa teks ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_unsupported": {
+        "message": "Bukan halaman web ($1)",
+        "description": "Index Page Text review tab: addresses that answer with a file that is not a web page (a PDF, an image), which is not downloaded; $1 is how many"
     },
     "tools_pageTextCategory_signIn": {
         "message": "Halaman masuk ($1)",
@@ -7794,6 +7806,14 @@
     "tools_pageTextCategory_skipped": {
         "message": "Dilewati ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextSkipCredentials": {
+        "message": "Tidak diunduh: alamatnya memuat nama pengguna dan kata sandi, yang akan diterima situs.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a user name and password, so it is never requested"
+    },
+    "tools_pageTextSkipSensitiveParam": {
+        "message": "Tidak diunduh: alamatnya memuat parameter yang tercantum di parameter sensitif Pemindai Privasi, misalnya token, yang akan diterima situs.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Tidak dipilih ($1)",
@@ -7903,6 +7923,10 @@
         "message": "Dengan teks halaman yang diindeks",
         "description": "Search syntax help: what has:content does"
     },
+    "search_pageTextOff": {
+        "message": "Pencarian teks halaman nonaktif, jadi content: dan has:content tidak menemukan apa pun. Aktifkan Indeks Teks Halaman di Setelan.",
+        "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
+    },
     "pageText_indexTitle": {
         "message": "Indeks teks halaman",
         "description": "Settings: heading of the page text index panel"
@@ -7936,6 +7960,34 @@
     "pageText_clearedDesc": {
         "message": "Bookmark, tag, dan Histori tidak diubah.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_coverageIndexed": {
+        "message": "Terindeks: $1 dari $2 bookmark yang dapat diindeks",
+        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+    },
+    "pageText_coverageStale": {
+        "message": "Usang: $1 (dibaca dari alamat sebelumnya atau oleh versi lama; proses berikutnya membacanya lagi)",
+        "description": "Settings, page text index: bookmarks whose text was read at another address or by an older version; $1 is how many"
+    },
+    "pageText_coverageFailed": {
+        "message": "Gagal pada proses terakhir: $1",
+        "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
+    },
+    "pageText_retryFailed": {
+        "message": "Coba lagi yang gagal",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
+    },
+    "pageText_retryStarted": {
+        "message": "Membaca ulang $1 halaman",
+        "description": "Toast title after Retry failed starts a run; $1 is how many pages"
+    },
+    "pageText_retryStartedDesc": {
+        "message": "Ini berjalan di latar belakang. Setelah selesai, simpan teksnya dari Tinjau hasil pada kartu Indeks Teks Halaman di Alat pengelola bookmark.",
+        "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_accessNote": {
+        "message": "Mencabut akses ke sebuah situs akan menghapus teks yang diindeks dari situs itu.",
+        "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {
         "message": "Indeks teks halaman ini",

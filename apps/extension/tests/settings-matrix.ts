@@ -795,7 +795,13 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   privacyScannerScanTitles: tested(TOOL_OPTIONS, [reportSettings, privacyUnit]),
   privacyScannerScanQueryParams: tested(TOOL_OPTIONS, [privacyUnit]),
   privacyScannerScanFragments: tested(TOOL_OPTIONS, [privacyUnit]),
-  privacyScannerSensitiveParams: tested(TOOL_OPTIONS, [privacyDetectors]),
+  privacyScannerSensitiveParams: tested(TOOL_OPTIONS, [
+    privacyDetectors,
+    unit(
+      'page-text-quality.test.ts',
+      'never requests an address with a password or a sensitive parameter, and says why',
+    ),
+  ]),
   privacyScannerEmailDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
   privacyScannerUuidDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
 
@@ -852,6 +858,20 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e(
       'page-text.spec.ts',
       "the popup indexes the current tab's text only after its preview is saved (S17)",
+    ),
+  ]),
+  pageTextSkipSecretUrls: tested(TOOL_OPTIONS, [
+    unit(
+      'page-text-quality.test.ts',
+      'reads those addresses like any other with Skip Addresses with Sign-in Details or Secrets off',
+    ),
+    unit(
+      'background-job-adapters.test.ts',
+      'freezes Skip Addresses with Sign-in Details or Secrets when the job starts',
+    ),
+    e2e(
+      'page-text.spec.ts',
+      'addresses with sign-in details or a token are skipped unrequested until Skip Addresses with Sign-in Details or Secrets is turned off in Options',
     ),
   ]),
   pageTextDefaultScope: tested(TOOL_TABLE, [
