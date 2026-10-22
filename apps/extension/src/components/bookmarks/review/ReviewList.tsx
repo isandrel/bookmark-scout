@@ -85,15 +85,6 @@ export function ReviewList<Item, Category extends string, Action extends string>
   const shownIds = category === ALL_CATEGORIES ? ids : shown.map(idOf);
   const selectedShown = shownIds.filter((id) => selected.has(id));
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const virtualizer = useVirtualizer({
-    count: shown.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => reviewConfig.row_estimate_px,
-    overscan: reviewConfig.overscan_rows,
-    getItemKey: (index) => idOf(shown[index]),
-  });
-
   const setSelected = (action: Action) =>
     onAction(
       shown
@@ -136,59 +127,89 @@ export function ReviewList<Item, Category extends string, Action extends string>
           onAction={setSelected}
         />
       </div>
-      <div
-        ref={scrollRef}
-        data-slot="review-scroll"
-        className="max-h-[50vh] min-h-0 overflow-x-hidden overflow-y-auto"
-      >
-        <ul className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
-          {virtualizer.getVirtualItems().map((row) => {
-            const item = shown[row.index];
-            const id = idOf(item);
-            const title = titleOf(item);
-            return (
-              <li
-                key={row.key}
-                data-index={row.index}
-                data-testid={rowTestId}
-                ref={virtualizer.measureElement}
-                className="absolute top-0 left-0 w-full pb-2"
-                style={{ transform: `translateY(${row.start}px)` }}
-              >
-                <div className="flex min-w-0 gap-3 rounded-lg border p-3 text-sm">
-                  <Checkbox
-                    className="mt-0.5"
-                    checked={selected.has(id)}
-                    onCheckedChange={(checked) => toggle(id, checked === true)}
-                    aria-label={t('review_selectItem', title)}
-                    disabled={disabled}
-                  />
-                  <div className="min-w-0 flex-1 space-y-1">
-                    <div className="flex min-w-0 items-center justify-between gap-2">
-                      <span className="min-w-0 truncate font-medium" title={title}>
-                        {title}
-                      </span>
-                      {renderBadges ? (
-                        <div className="flex shrink-0 items-center gap-1">{renderBadges(item)}</div>
-                      ) : null}
-                    </div>
-                    {renderDetails(item)}
-                  </div>
-                  <ActionSelect
-                    className="w-40 shrink-0 self-start"
-                    actions={actionsOf(item)}
-                    actionLabel={actionLabel}
-                    label={t('review_itemAction', title)}
-                    value={actionOf(item)}
-                    disabled={disabled}
-                    onAction={(action) => onAction([id], action)}
-                  />
+      {/* One list per tab: a tab starts at its top, measured afresh, never at the scroll
+          position or row sizes another tab left behind. */}
+      <ReviewRows key={category} items={shown} idOf={idOf} rowTestId={rowTestId}>
+        {(item) => {
+          const id = idOf(item);
+          const title = titleOf(item);
+          return (
+            <div className="flex min-w-0 gap-3 rounded-lg border p-3 text-sm">
+              <Checkbox
+                className="mt-0.5"
+                checked={selected.has(id)}
+                onCheckedChange={(checked) => toggle(id, checked === true)}
+                aria-label={t('review_selectItem', title)}
+                disabled={disabled}
+              />
+              <div className="min-w-0 flex-1 space-y-1">
+                <div className="flex min-w-0 items-center justify-between gap-2">
+                  <span className="min-w-0 truncate font-medium" title={title}>
+                    {title}
+                  </span>
+                  {renderBadges ? (
+                    <div className="flex shrink-0 items-center gap-1">{renderBadges(item)}</div>
+                  ) : null}
                 </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+                {renderDetails(item)}
+              </div>
+              <ActionSelect
+                className="w-40 shrink-0 self-start"
+                actions={actionsOf(item)}
+                actionLabel={actionLabel}
+                label={t('review_itemAction', title)}
+                value={actionOf(item)}
+                disabled={disabled}
+                onAction={(action) => onAction([id], action)}
+              />
+            </div>
+          );
+        }}
+      </ReviewRows>
+    </div>
+  );
+}
+
+/** The rows of one tab, drawn only while on screen, in their own scroll area. */
+function ReviewRows<Item>({
+  items,
+  idOf,
+  rowTestId,
+  children,
+}: {
+  items: readonly Item[];
+  idOf: (item: Item) => string;
+  rowTestId: string;
+  children: (item: Item) => React.ReactNode;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => reviewConfig.row_estimate_px,
+    overscan: reviewConfig.overscan_rows,
+    getItemKey: (index) => idOf(items[index]),
+  });
+  return (
+    <div
+      ref={scrollRef}
+      data-slot="review-scroll"
+      className="max-h-[50vh] min-h-0 overflow-x-hidden overflow-y-auto"
+    >
+      <ul className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+        {virtualizer.getVirtualItems().map((row) => (
+          <li
+            key={row.key}
+            data-index={row.index}
+            data-testid={rowTestId}
+            ref={virtualizer.measureElement}
+            className="absolute top-0 left-0 w-full pb-2"
+            style={{ transform: `translateY(${row.start}px)` }}
+          >
+            {children(items[row.index])}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
