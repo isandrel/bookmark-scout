@@ -2423,6 +2423,10 @@
         "message": "제거하지 않을 쿼리 매개변수",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "이름 끝에 *를 붙이면 그 문자열로 시작하는 모든 이름과 일치합니다. utm_*는 utm_source와 utm_name과 일치합니다. 대소문자는 구분하지 않습니다.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "제거할 매개변수",
         "description": "URL cleaner remove params label"
@@ -2430,6 +2434,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "URL에서 제거할 쿼리 매개변수",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "이름 끝에 *를 붙이면 그 문자열로 시작하는 모든 이름과 일치합니다. utm_*는 utm_source와 utm_name과 일치합니다. 대소문자는 구분하지 않습니다.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "깨진 링크 확인 사용",
@@ -2478,6 +2486,30 @@
     "settings_deadLinksFollowRedirectsDesc": {
         "message": "깨진 링크를 검사할 때 리디렉션되는 URL을 접속 가능으로 취급합니다",
         "description": "Dead links follow redirects description"
+    },
+    "settings_deadLinksOnDead": {
+        "message": "깨진 링크 확인됨 기본값",
+        "description": "Setting label: the repair action confirmed dead links start on"
+    },
+    "settings_deadLinksOnDeadDesc": {
+        "message": "변경하기 전까지 복구 검토가 이 링크마다 선택하는 작업입니다. 그대로 유지는 아무것도 바꾸지 않습니다.",
+        "description": "Setting description for the default repair actions"
+    },
+    "settings_deadLinksOnCheck": {
+        "message": "직접 확인할 링크 기본값",
+        "description": "Setting label: the repair action links to check manually start on"
+    },
+    "settings_deadLinksOnCheckDesc": {
+        "message": "변경하기 전까지 복구 검토가 이 링크마다 선택하는 작업입니다. 그대로 유지는 아무것도 바꾸지 않습니다.",
+        "description": "Setting description for the default repair actions"
+    },
+    "settings_deadLinksOnRedirect": {
+        "message": "리디렉션된 링크 기본값",
+        "description": "Setting label: the repair action redirected links start on"
+    },
+    "settings_deadLinksOnRedirectDesc": {
+        "message": "변경하기 전까지 복구 검토가 이 링크마다 선택하는 작업입니다. 그대로 유지는 아무것도 바꾸지 않습니다.",
+        "description": "Setting description for the default repair actions"
     },
     "settings_deadLinksSuccessStatuses": {
         "message": "성공 상태 코드",
@@ -2582,6 +2614,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "민감한 정보로 표시할 매개변수 이름",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "이름 끝에 *를 붙이면 그 문자열로 시작하는 모든 이름과 일치합니다. utm_*는 utm_source와 utm_name과 일치합니다. 대소문자는 구분하지 않습니다.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "이메일 감지",
@@ -4507,13 +4543,13 @@
         "message": "링크 복구 또는 삭제",
         "description": "Button that opens the reviewed dead-link repair dialog"
     },
-    "tools_deadLinkGroupLabel": {
+    "review_categoryLabel": {
         "message": "결과 보기",
-        "description": "Accessible name of the dead link results filter"
+        "description": "Review list: accessible name of the category tabs"
     },
-    "tools_deadLinkGroup_all": {
+    "review_categoryAll": {
         "message": "모두 ($1)",
-        "description": "Dead link results filter: every result; $1 is how many"
+        "description": "Review list: the tab that shows every item; $1 is how many"
     },
     "tools_deadLinkGroup_dead": {
         "message": "깨진 링크 확인됨 ($1)",
@@ -4535,21 +4571,21 @@
         "message": "건너뜀 ($1)",
         "description": "Dead link results filter: the skipped (not a web address) group; $1 is how many results it has"
     },
-    "tools_deadLinkSelectShown": {
+    "review_selectShown": {
         "message": "표시된 항목 모두 선택",
-        "description": "Dead link repairs: checkbox that selects every link the filter shows"
+        "description": "Review list: checkbox that selects every item the tab shows"
     },
-    "tools_deadLinkSelectItem": {
+    "review_selectItem": {
         "message": "$1 선택",
-        "description": "Dead link repairs: checkbox for one link; $1 is its title"
+        "description": "Review list: checkbox for one item; $1 is its title"
     },
-    "tools_deadLinkSelectedCount": {
+    "review_selectedCount": {
         "message": "$1개 선택됨",
-        "description": "Dead link repairs: how many links are selected; $1 is the count"
+        "description": "Review list: how many items are selected; $1 is the count"
     },
-    "tools_deadLinkSetSelected": {
+    "review_setSelected": {
         "message": "선택 항목 설정…",
-        "description": "Dead link repairs: menu that sets one action on every selected link"
+        "description": "Review list: menu that sets one action on every selected item"
     },
     "tools_deadLinkRepairTitle": {
         "message": "깨진 링크 복구 검토",
@@ -4559,9 +4595,9 @@
         "message": "각 링크의 처리 방법을 선택하세요. 적용하기 전에는 아무것도 변경되지 않습니다.",
         "description": "Dead-link repair dialog description"
     },
-    "tools_deadLinkRepairAction": {
+    "review_itemAction": {
         "message": "$1 처리 방법",
-        "description": "Accessible label of the per-link repair choice; $1 is the bookmark title"
+        "description": "Review list: menu of one item's action; $1 is its title"
     },
     "tools_deadLinkRepairChoice_keep": {
         "message": "그대로 유지",

@@ -2423,6 +2423,10 @@
         "message": "永不移除的查詢參數",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "在名稱結尾加上 * 可符合所有以此開頭的名稱：utm_* 符合 utm_source 和 utm_name。不區分大小寫。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "移除參數",
         "description": "URL cleaner remove params label"
@@ -2430,6 +2434,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "從網址中移除的查詢參數",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "在名稱結尾加上 * 可符合所有以此開頭的名稱：utm_* 符合 utm_source 和 utm_name。不區分大小寫。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "啟用失效連結檢查工具",
@@ -2478,6 +2486,30 @@
     "settings_deadLinksFollowRedirectsDesc": {
         "message": "掃描失效連結時，將重新導向的網址視為可連線",
         "description": "Dead links follow redirects description"
+    },
+    "settings_deadLinksOnDead": {
+        "message": "確定失效連結的預設處理",
+        "description": "Setting label: the repair action confirmed dead links start on"
+    },
+    "settings_deadLinksOnDeadDesc": {
+        "message": "修復檢查在你變更前為這類連結選擇的處理方式。「維持不變」不會做任何變更。",
+        "description": "Setting description for the default repair actions"
+    },
+    "settings_deadLinksOnCheck": {
+        "message": "需手動檢查連結的預設處理",
+        "description": "Setting label: the repair action links to check manually start on"
+    },
+    "settings_deadLinksOnCheckDesc": {
+        "message": "修復檢查在你變更前為這類連結選擇的處理方式。「維持不變」不會做任何變更。",
+        "description": "Setting description for the default repair actions"
+    },
+    "settings_deadLinksOnRedirect": {
+        "message": "已重新導向連結的預設處理",
+        "description": "Setting label: the repair action redirected links start on"
+    },
+    "settings_deadLinksOnRedirectDesc": {
+        "message": "修復檢查在你變更前為這類連結選擇的處理方式。「維持不變」不會做任何變更。",
+        "description": "Setting description for the default repair actions"
     },
     "settings_deadLinksSuccessStatuses": {
         "message": "成功狀態碼",
@@ -2582,6 +2614,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "標示為敏感的參數名稱",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "在名稱結尾加上 * 可符合所有以此開頭的名稱：utm_* 符合 utm_source 和 utm_name。不區分大小寫。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "偵測電子郵件地址",
@@ -4367,13 +4403,13 @@
         "message": "修復或刪除連結",
         "description": "Button that opens the reviewed dead-link repair dialog"
     },
-    "tools_deadLinkGroupLabel": {
+    "review_categoryLabel": {
         "message": "顯示結果",
-        "description": "Accessible name of the dead link results filter"
+        "description": "Review list: accessible name of the category tabs"
     },
-    "tools_deadLinkGroup_all": {
+    "review_categoryAll": {
         "message": "全部 ($1)",
-        "description": "Dead link results filter: every result; $1 is how many"
+        "description": "Review list: the tab that shows every item; $1 is how many"
     },
     "tools_deadLinkGroup_dead": {
         "message": "確定失效 ($1)",
@@ -4395,21 +4431,21 @@
         "message": "已略過 ($1)",
         "description": "Dead link results filter: the skipped (not a web address) group; $1 is how many results it has"
     },
-    "tools_deadLinkSelectShown": {
+    "review_selectShown": {
         "message": "全選目前顯示項目",
-        "description": "Dead link repairs: checkbox that selects every link the filter shows"
+        "description": "Review list: checkbox that selects every item the tab shows"
     },
-    "tools_deadLinkSelectItem": {
+    "review_selectItem": {
         "message": "選取 $1",
-        "description": "Dead link repairs: checkbox for one link; $1 is its title"
+        "description": "Review list: checkbox for one item; $1 is its title"
     },
-    "tools_deadLinkSelectedCount": {
+    "review_selectedCount": {
         "message": "已選 $1 項",
-        "description": "Dead link repairs: how many links are selected; $1 is the count"
+        "description": "Review list: how many items are selected; $1 is the count"
     },
-    "tools_deadLinkSetSelected": {
+    "review_setSelected": {
         "message": "將所選設為…",
-        "description": "Dead link repairs: menu that sets one action on every selected link"
+        "description": "Review list: menu that sets one action on every selected item"
     },
     "tools_deadLinkRepairTitle": {
         "message": "確認失效連結修復項目",
@@ -4419,9 +4455,9 @@
         "message": "選擇每個連結的處理方式。套用之前不會做任何變更。",
         "description": "Dead-link repair dialog description"
     },
-    "tools_deadLinkRepairAction": {
+    "review_itemAction": {
         "message": "「$1」的處理方式",
-        "description": "Accessible label of the per-link repair choice; $1 is the bookmark title"
+        "description": "Review list: menu of one item's action; $1 is its title"
     },
     "tools_deadLinkRepairChoice_keep": {
         "message": "維持不變",

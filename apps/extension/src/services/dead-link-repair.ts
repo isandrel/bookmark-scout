@@ -9,8 +9,6 @@ const config = readConfig(
   z.strictObject({ archive_url_prefix: z.string().url() }),
 );
 
-export type DeadLinkRepairChoice = 'keep' | 'delete' | 'redirect' | 'archive' | 'edit';
-
 export type DeadLinkRepairItem = {
   id: string;
   title: string;

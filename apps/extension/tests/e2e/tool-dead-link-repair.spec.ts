@@ -375,7 +375,7 @@ test('results and repairs filter by group, and a batch deletes every selected li
   await expect(review.getByTestId('dead-link-repair-item')).toHaveCount(4);
   await expect(review.getByRole('combobox', { name: 'Set selected to…' })).toBeDisabled();
   await review.getByRole('checkbox', { name: 'Select all shown' }).click();
-  await expect(review.getByTestId('dead-link-repair-batch')).toContainText('4 selected');
+  await expect(review.locator('[data-slot="review-batch"]')).toContainText('4 selected');
   await page.screenshot({ path: test.info().outputPath('dead-link-batch.png') });
   await review.getByRole('combobox', { name: 'Set selected to…' }).click();
   await page
@@ -394,4 +394,25 @@ test('results and repairs filter by group, and a batch deletes every selected li
       (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title),
     )
     .toEqual(['Plain', 'Moved', 'Refused', 'Private']);
+});
+
+test('each category starts on the action its setting names, and a link that cannot do it stays kept', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedBrokenLinks(extensionWorker, 'E2E Repair Defaults');
+  await setSettings(extensionWorker, {
+    deadLinksOnDead: 'archive',
+    deadLinksOnCheck: 'delete',
+    deadLinksOnRedirect: 'redirect',
+  });
+  const review = await openRepairReview(page, extensionId, folder.folderId);
+  const action = (title: string) => review.getByRole('combobox', { name: `Action for ${title}` });
+  await expect(action('Missing')).toContainText('Use archived copy');
+  await expect(action('Private')).toContainText('Delete bookmark');
+  await expect(action('Moved')).toContainText('Use redirect target');
+  await expect(review.getByTestId('dead-link-repair-summary')).toHaveText(
+    'Delete: 1. Replace URL: 4. Keep: 0.',
+  );
 });

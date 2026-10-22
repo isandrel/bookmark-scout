@@ -754,7 +754,8 @@ test('a section switch folds its tool, search opens Advanced settings, and a swi
   await expect(deadLinks).toContainText('Turned off. Turn it on to change its settings.');
   await expect(deadLinks.getByRole('radiogroup')).toHaveCount(0);
   await deadLinks.getByRole('switch', { name: 'Enable Dead Link Checker' }).click();
-  await expect(deadLinks.getByRole('radiogroup')).toHaveCount(1);
+  // The scope and the redirect default are segmented choices.
+  await expect(deadLinks.getByRole('radiogroup')).toHaveCount(2);
 
   // Technical settings start folded, named in the summary, and a search opens the fold.
   const fold = deadLinks.locator('[data-slot="settings-advanced"]');

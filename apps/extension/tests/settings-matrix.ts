@@ -694,6 +694,17 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   ]),
   deadLinksRetryCount: tested(TOOL_OPTIONS, [networkRealServer]),
   deadLinksFollowRedirects: tested(TOOL_OPTIONS, [networkRealServer]),
+  ...Object.fromEntries(
+    (['deadLinksOnDead', 'deadLinksOnCheck', 'deadLinksOnRedirect'] as const).map((key) => [
+      key,
+      tested('components/bookmarks/DeadLinkRepairDialog.lazy.tsx', [
+        e2e(
+          'tool-dead-link-repair.spec.ts',
+          'each category starts on the action its setting names, and a link that cannot do it stays kept',
+        ),
+      ]),
+    ]),
+  ),
   deadLinksSuccessStatuses: tested(TOOL_OPTIONS, [
     unit(SETTINGS_UNIT, 'dead-link scans treat only the saved success statuses as reachable'),
   ]),
