@@ -795,7 +795,13 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   privacyScannerScanTitles: tested(TOOL_OPTIONS, [reportSettings, privacyUnit]),
   privacyScannerScanQueryParams: tested(TOOL_OPTIONS, [privacyUnit]),
   privacyScannerScanFragments: tested(TOOL_OPTIONS, [privacyUnit]),
-  privacyScannerSensitiveParams: tested(TOOL_OPTIONS, [privacyDetectors]),
+  privacyScannerSensitiveParams: tested(TOOL_OPTIONS, [
+    privacyDetectors,
+    unit(
+      'page-text-quality.test.ts',
+      'never requests an address with a password or a sensitive parameter, and says why',
+    ),
+  ]),
   privacyScannerEmailDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
   privacyScannerUuidDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
 
