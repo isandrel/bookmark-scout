@@ -7025,17 +7025,21 @@
         "message": "una carpeta que ya no existe (ID $1)",
         "description": "History: a folder that no longer exists. $1 is its old id."
     },
-    "history_place": {
-        "message": "$1, posición $2",
-        "description": "History: a place in a folder. $1 is the folder path, $2 the position (1-based)."
-    },
     "history_itemWasIn": {
-        "message": "Estaba en $1",
-        "description": "History item: where a deleted item was. $1 is a place."
+        "message": "Estaba en",
+        "description": "History item: label for the folder a deleted item was in."
+    },
+    "history_itemPosition": {
+        "message": "Posición",
+        "description": "History item: label for an item's position in its folder (1-based)."
+    },
+    "history_itemFolder": {
+        "message": "Carpeta",
+        "description": "History item: label for the folder a moved item was in and went to."
     },
     "history_itemAddedTo": {
-        "message": "Añadido a $1",
-        "description": "History item: where a new item went. $1 is a place."
+        "message": "Añadido a",
+        "description": "History item: label for the folder a new item went to."
     },
     "history_itemInside": {
         "message": "$1 elementos dentro",

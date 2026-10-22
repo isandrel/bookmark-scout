@@ -693,10 +693,39 @@ function HistoryItemRow({
 }) {
   const folder = (id: string | undefined) =>
     id === undefined ? '' : (folderLabels.get(id) ?? t('history_folderGone', id));
-  const place = (at: AuditItem['before']) =>
-    at?.parentId === undefined
-      ? ''
-      : t('history_place', [folder(at.parentId), String((at.index ?? 0) + 1)]);
+  const position = (at: AuditItem['before']) => String((at?.index ?? 0) + 1);
+  // Where the item was or went, as label and value rows like the record's own facts.
+  const places: { label: string; value: ReactNode }[] =
+    item.change === 'move'
+      ? [
+          {
+            label: t('history_itemFolder'),
+            value:
+              item.before?.parentId === item.after?.parentId ? (
+                folder(item.after?.parentId)
+              ) : (
+                <BeforeAfter
+                  before={folder(item.before?.parentId)}
+                  after={folder(item.after?.parentId)}
+                />
+              ),
+          },
+          {
+            label: t('history_itemPosition'),
+            value: <BeforeAfter before={position(item.before)} after={position(item.after)} />,
+          },
+        ]
+      : item.change === 'remove' && item.before?.parentId !== undefined
+        ? [
+            { label: t('history_itemWasIn'), value: folder(item.before.parentId) },
+            { label: t('history_itemPosition'), value: position(item.before) },
+          ]
+        : item.change === 'create' && item.after?.parentId !== undefined
+          ? [
+              { label: t('history_itemAddedTo'), value: folder(item.after.parentId) },
+              { label: t('history_itemPosition'), value: position(item.after) },
+            ]
+          : [];
   const Icon = CHANGE_ICONS[item.change];
   const reason = auditReasonLabel(item.reason);
   const titleChanged = item.before?.title !== undefined && item.after?.title !== undefined;
@@ -724,17 +753,21 @@ function HistoryItemRow({
         {item.url && !urlChanged ? (
           // The exact address, shortened on screen; the tooltip holds it whole.
           <p className="truncate font-mono text-muted-foreground" title={item.url}>
-            {item.url}
+            <UrlLink href={item.url} data-slot="history-item-url" />
           </p>
         ) : null}
-        {item.change === 'move' ? (
-          <BeforeAfter before={place(item.before)} after={place(item.after)} />
-        ) : null}
-        {item.change === 'remove' && item.before ? (
-          <p className="text-muted-foreground">{t('history_itemWasIn', place(item.before))}</p>
-        ) : null}
-        {item.change === 'create' && item.after ? (
-          <p className="text-muted-foreground">{t('history_itemAddedTo', place(item.after))}</p>
+        {places.length > 0 ? (
+          <dl
+            className="grid grid-cols-[max-content_1fr] gap-x-3 text-muted-foreground"
+            data-slot="history-item-place"
+          >
+            {places.map((place) => (
+              <div key={place.label} className="contents">
+                <dt>{place.label}</dt>
+                <dd className="min-w-0 break-words text-foreground">{place.value}</dd>
+              </div>
+            ))}
+          </dl>
         ) : null}
         {titleChanged ? (
           <BeforeAfter before={item.before?.title ?? ''} after={item.after?.title ?? ''} />

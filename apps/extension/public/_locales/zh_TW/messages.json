@@ -6819,17 +6819,21 @@
         "message": "已不存在的資料夾（ID $1）",
         "description": "History: a folder that no longer exists. $1 is its old id."
     },
-    "history_place": {
-        "message": "$1，第 $2 位",
-        "description": "History: a place in a folder. $1 is the folder path, $2 the position (1-based)."
-    },
     "history_itemWasIn": {
-        "message": "原位於 $1",
-        "description": "History item: where a deleted item was. $1 is a place."
+        "message": "原位於",
+        "description": "History item: label for the folder a deleted item was in."
+    },
+    "history_itemPosition": {
+        "message": "位置",
+        "description": "History item: label for an item's position in its folder (1-based)."
+    },
+    "history_itemFolder": {
+        "message": "資料夾",
+        "description": "History item: label for the folder a moved item was in and went to."
     },
     "history_itemAddedTo": {
-        "message": "新增到 $1",
-        "description": "History item: where a new item went. $1 is a place."
+        "message": "新增到",
+        "description": "History item: label for the folder a new item went to."
     },
     "history_itemInside": {
         "message": "內含 $1 項",
