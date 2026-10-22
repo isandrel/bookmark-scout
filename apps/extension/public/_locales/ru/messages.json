@@ -3636,7 +3636,7 @@
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
     "search_slowRegex": {
-        "message": "Этот шаблон может слишком долго обрабатывать некоторые названия. Поиск идёт как по обычному тексту.",
+        "message": "Проверка этого шаблона на некоторых названиях может занять слишком много времени. Поиск выполняется как по обычному тексту.",
         "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
     },
     "search_reasonUrl": {
@@ -3770,7 +3770,7 @@
         "description": "Note under the manager search box when parentheses have nothing in them: ()"
     },
     "searchDiagnostic_misplacedOr": {
-        "message": "У OR должно быть условие с каждой стороны, поэтому он не учитывается.",
+        "message": "Для OR нужно условие с каждой стороны, поэтому он не учитывается.",
         "description": "Note under the manager search box when OR is first, last, or doubled. Keep OR as is: it is the word to type"
     },
     "searchDiagnostic_tooLong": {
@@ -9530,7 +9530,7 @@
         "description": "Toast title after saving the picture of the tab as a cover"
     },
     "covers_captureSavedDesc": {
-        "message": "Карточки в диспетчере показывают её для этой закладки.",
+        "message": "Теперь она показывается на карточке этой закладки в диспетчере закладок.",
         "description": "Toast after saving the picture of the tab as a cover"
     },
     "covers_captureFailed": {
@@ -9542,7 +9542,7 @@
         "description": "Toast: the tab changed before the picture was taken"
     },
     "covers_capturePrivate": {
-        "message": "Страницы в приватных окнах никогда не снимаются.",
+        "message": "Снимки страниц в приватных окнах никогда не делаются.",
         "description": "Toast: private windows are never pictured"
     },
     "covers_captureDenied": {

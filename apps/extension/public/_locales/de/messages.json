@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Seitentext indexieren in der Werkzeugleiste anzeigen und die Suche in indexierten Seiten suchen lassen. Jede indexierte Seite wird heruntergeladen; der Text bleibt auf diesem Gerät. Die Schaltfläche „Text dieser Seite indexieren“ im Pop-up liest die angezeigte Seite nur, wenn Sie darauf klicken, und zeigt den Text, bevor er behalten wird.",
+        "message": "Seitentext indexieren in der Tools-Leiste anzeigen und die Suche in indexierten Seiten suchen lassen. Jede indexierte Seite wird heruntergeladen; der Text bleibt auf diesem Gerät. Die Schaltfläche „Text dieser Seite indexieren“ im Pop-up liest die angezeigte Seite nur, wenn Sie darauf klicken, und zeigt den Text, bevor er behalten wird.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8254,7 +8254,7 @@
         "description": "Settings: switch that turns Fetch Covers on"
     },
     "settings_coversEnabledDesc": {
-        "message": "Titelbilder laden in der Werkzeugleiste anzeigen. Es lädt den Kopf jeder Seite und ihr Vorschaubild herunter; eine kleine Kopie bleibt auf diesem Gerät, und die Karten zeigen sie.",
+        "message": "Titelbilder laden in der Tools-Leiste anzeigen. Es lädt den Kopf jeder Seite und ihr Vorschaubild herunter; eine kleine Kopie bleibt auf diesem Gerät, und die Karten zeigen sie.",
         "description": "Settings: what turning Fetch Covers on does"
     },
     "settings_coversDefaultScope": {
@@ -8438,7 +8438,7 @@
         "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
     },
     "settings_bookmarkRulesEnabledDesc": {
-        "message": "Intelligente Regeln in der Werkzeugleiste anzeigen",
+        "message": "Intelligente Regeln in der Tools-Leiste anzeigen",
         "description": "Settings: description of the Enable Smart Rules switch"
     },
     "settings_bookmarkRulesDefaultScope": {
@@ -8454,7 +8454,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Jede Regel findet Lesezeichen mit einer Suche und fügt Tags hinzu, verschiebt sie in einen Ordner oder beides. Regeln ändern nichts, bis Sie Intelligente Regeln in der Werkzeugleiste ausführen und die Überprüfung übernehmen. Verschieben zwei Regeln ein Lesezeichen, gewinnt die höhere. Nur auf diesem Gerät gespeichert.",
+        "message": "Jede Regel findet Lesezeichen mit einer Suche und fügt Tags hinzu, verschiebt sie in einen Ordner oder beides. Regeln ändern nichts, bis Sie Intelligente Regeln in der Tools-Leiste ausführen und die Überprüfung übernehmen. Verschieben zwei Regeln ein Lesezeichen, gewinnt die höhere. Nur auf diesem Gerät gespeichert.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8518,7 +8518,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Eine Regel findet Lesezeichen mit einer Suche und legt fest, was mit ihnen geschieht. Sie ändert nichts, bis Sie Intelligente Regeln in der Werkzeugleiste ausführen.",
+        "message": "Eine Regel findet Lesezeichen mit einer Suche und legt fest, was mit ihnen geschieht. Sie ändert nichts, bis Sie Intelligente Regeln in der Tools-Leiste ausführen.",
         "description": "Rule editor description"
     },
     "rules_name": {

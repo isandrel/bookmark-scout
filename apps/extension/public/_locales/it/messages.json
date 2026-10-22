@@ -3596,7 +3596,7 @@
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
     "search_slowRegex": {
-        "message": "Questo schema potrebbe richiedere troppo tempo su alcuni titoli. Ricerca come testo normale.",
+        "message": "Questo pattern potrebbe richiedere troppo tempo su alcuni titoli. La ricerca viene eseguita come testo semplice.",
         "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
     },
     "search_reasonUrl": {
@@ -3722,7 +3722,7 @@
         "description": "Note under the manager search box when an opening parenthesis ( is not closed"
     },
     "searchDiagnostic_unopenedGroup": {
-        "message": "Una parentesi chiusa non ha quella aperta, quindi viene ignorata.",
+        "message": "Una parentesi chiusa non ha la parentesi aperta corrispondente, quindi viene ignorata.",
         "description": "Note under the manager search box when a closing parenthesis ) has no opening one"
     },
     "searchDiagnostic_emptyGroup": {
@@ -3742,7 +3742,7 @@
         "description": "Note under the manager search box; $1 is how many terms are read"
     },
     "searchDiagnostic_tooDeep": {
-        "message": "Le parentesi si annidano al massimo su $1 livelli, quindi il resto non viene cercato.",
+        "message": "Le parentesi si possono annidare al massimo su $1 livelli, quindi il resto non viene cercato.",
         "description": "Note under the manager search box; $1 is how deep parentheses may nest, such as 8"
     },
     "searchDiagnostic_tooManyBranches": {
@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Mostra Indicizza il testo delle pagine nella barra laterale Strumenti e consente alla ricerca di guardare nelle pagine indicizzate. Scarica ogni pagina che indicizzi; il testo resta su questo dispositivo. Il pulsante Indicizza il testo di questa pagina del popup legge la pagina che stai guardando solo quando ci fai clic e mostra il testo prima di conservarlo.",
+        "message": "Mostra Indicizza il testo delle pagine nella barra laterale Strumenti e permette alla ricerca di trovare parole all'interno delle pagine indicizzate. Scarica ogni pagina che indicizzi; il testo resta su questo dispositivo. Il pulsante Indicizza il testo di questa pagina del popup legge la pagina che stai guardando solo quando ci fai clic e mostra il testo prima di conservarlo.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8182,7 +8182,7 @@
         "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
     },
     "pageText_tabWarning": {
-        "message": "Questo è il testo che la scheda mostra adesso, così come lo vedi, anche sui siti in cui hai effettuato l'accesso. Prima di salvarlo, controlla che non contenga nulla di privato, come dati dell'account o messaggi. Resta solo su questo dispositivo e lo usa solo la ricerca.",
+        "message": "Questo è il testo che la scheda mostra adesso, così come lo vedi, anche sui siti in cui hai effettuato l'accesso. Prima di salvarlo, controlla che non contenga nulla di privato, come dati dell'account o messaggi. Viene conservato solo su questo dispositivo e usato solo dalla ricerca.",
         "description": "Popup: privacy warning above the text read from the tab, before it is saved"
     },
     "pageText_tabDiscard": {
@@ -8750,7 +8750,7 @@
         "description": "Toast title after saving the picture of the tab as a cover"
     },
     "covers_captureSavedDesc": {
-        "message": "I riquadri di Gestione preferiti la mostrano per questo preferito.",
+        "message": "Ora la copertina compare nel riquadro di questo preferito nella gestione preferiti.",
         "description": "Toast after saving the picture of the tab as a cover"
     },
     "covers_captureFailed": {
@@ -8782,7 +8782,7 @@
         "description": "Settings, Smart Rules: button that empties the list of automatic taggings; the tags stay"
     },
     "rules_autoLogTags": {
-        "message": "Aggiunto $1 · $2",
+        "message": "Aggiunti: $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
     "rules_autoLogUndoLabel": {
