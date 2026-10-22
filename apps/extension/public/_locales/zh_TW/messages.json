@@ -8310,5 +8310,35 @@
     "covers_captureUnreadable": {
         "message": "無法將這張圖片設為封面。",
         "description": "Toast: the picture could not be made into a cover"
+    },
+    "rules_autoLogTitle": {
+        "message": "自動加上的標籤",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+    },
+    "rules_autoLogClear": {
+        "message": "清除清單",
+        "description": "Settings, Smart Rules: button that empties the list of automatic taggings; the tags stay"
+    },
+    "rules_autoLogTags": {
+        "message": "已加上 $1 · $2",
+        "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
+    },
+    "rules_autoLogUndoLabel": {
+        "message": "復原加到 $1 的標籤",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndone": {
+        "message": "已移除標籤",
+        "description": "Toast title after undoing one automatic tagging"
+    },
+    "rules_autoLogUndoneDesc": {
+        "message": "已從書籤移除 $count$ 個標籤。",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     }
 }

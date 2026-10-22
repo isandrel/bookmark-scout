@@ -10,6 +10,7 @@
  *   star, other extensions, and sync as well as Bookmark Scout. Bookmarks added together are
  *   handled in one batch, and a batch larger than `max_batch` (a sync or an import) is left
  *   alone, as are bookmarks the browser imports.
+ * - **Traceable:** each tagging is listed in Settings with its Undo (`auto-tag-log.ts`).
  * - **Fresh:** the bookmark is read again when its batch runs; one deleted by then is skipped. A
  *   bookmark added while the setting was off is never tagged, even when it is turned on before
  *   the batch runs.
@@ -38,6 +39,10 @@ export async function autoTagBookmarks(ids: readonly string[]): Promise<number> 
   await mergeStoredBookmarkMetadata(
     Object.fromEntries(plan.map((item) => [item.id, { tags: item.addTags }])),
     { tagMode: 'append', summaryMode: 'replace', dedupeTags: true },
+  );
+  // Tags are not bookmark changes, so the History never shows them: Settings lists them instead.
+  await recordAutoTags(
+    plan.map((item) => ({ bookmarkId: item.id, title: item.title, tags: item.addTags })),
   );
   return plan.length;
 }

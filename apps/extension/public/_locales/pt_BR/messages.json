@@ -8684,5 +8684,45 @@
     "covers_captureUnreadable": {
         "message": "Não foi possível usar a imagem como capa.",
         "description": "Toast: the picture could not be made into a cover"
+    },
+    "rules_autoLogTitle": {
+        "message": "Marcados automaticamente",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+    },
+    "rules_autoLogClear": {
+        "message": "Limpar lista",
+        "description": "Settings, Smart Rules: button that empties the list of automatic taggings; the tags stay"
+    },
+    "rules_autoLogTags": {
+        "message": "Adicionado $1 · $2",
+        "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
+    },
+    "rules_autoLogUndoLabel": {
+        "message": "Desfazer as tags adicionadas a $1",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndone": {
+        "message": "Tags removidas",
+        "description": "Toast title after undoing one automatic tagging"
+    },
+    "rules_autoLogUndoneDesc": {
+        "message": "$count$ tags removidas do favorito.",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneDesc_one": {
+        "message": "$count$ tag removida do favorito.",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     }
 }

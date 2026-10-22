@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { autoTagLogValue } from '@/lib/auto-tag-log';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { BOOKMARK_RULE_LIMITS, type BookmarkRule } from '@/lib/bookmark-rules';
 import { bookmarkRulesValue } from '@/lib/bookmark-rules-storage';
@@ -45,6 +46,7 @@ beforeEach(async () => {
   ];
   vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockImplementation(async () => tree());
   await bookmarkMetadataValue.set({});
+  await autoTagLogValue.set([]);
   await bookmarkRulesValue.set([rule({ moveTo: { folderId: '1', path: 'Bookmarks bar' } })]);
 });
 
@@ -58,6 +60,10 @@ describe('Tag New Bookmarks', () => {
     const move = vi.spyOn(fakeBrowser.bookmarks, 'move');
     expect(await autoTagBookmarks(['a', 'b'])).toBe(1);
     expect(await bookmarkMetadataValue.get()).toEqual({ a: { tags: ['development'] } });
+    // Listed in Settings, where it can be undone.
+    expect(await autoTagLogValue.get()).toMatchObject([
+      { bookmarkId: 'a', title: 'Repo', tags: ['development'] },
+    ]);
     // Handling the same bookmark again changes nothing.
     expect(await autoTagBookmarks(['a'])).toBe(0);
     expect(await bookmarkMetadataValue.get()).toEqual({ a: { tags: ['development'] } });

@@ -376,6 +376,11 @@ export function formatGigabytes(value: number): string {
   }
 }
 
+/** Short parts of one line joined by the language's separator with a space on each side ("a · b"). */
+export function formatSeparated(parts: readonly string[]): string {
+  return parts.join(` ${t('format_separator')} `);
+}
+
 /** Items joined as a list in the extension's language, e.g. "A, B, and C" or "A、B、C". */
 export function formatList(items: readonly string[]): string {
   try {

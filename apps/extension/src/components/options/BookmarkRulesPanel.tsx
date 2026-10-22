@@ -265,6 +265,7 @@ export function BookmarkRulesPanel() {
           )}
         />
       )}
+      <AutoTagLogList />
       <RuleEditorDialog draft={editing} onClose={() => setEditing(null)} />
     </OptionsPanel>
   );

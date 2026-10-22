@@ -54,7 +54,9 @@ describe('smart rule drafts', () => {
     if (!('rule' in result)) throw new Error('not saved');
     expect(result.rule.moveTo?.path).toBe(ruleFolderPath(tree, 'dev'));
     expect(ruleDraftOf(result.rule)).toEqual({ ...draft, id: 'new-id', folderId: 'dev' });
-    expect(describeRule(result.rule)).toMatch(/^domain:github\.com: /);
+    expect(describeRule(result.rule)).toMatch(
+      /^domain:github\.com: add tags dev and code · move to /,
+    );
   });
 
   it('says why a draft cannot be saved, name first', () => {

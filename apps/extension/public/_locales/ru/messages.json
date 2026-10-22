@@ -9464,5 +9464,65 @@
     "covers_captureUnreadable": {
         "message": "Снимок не удалось использовать как обложку.",
         "description": "Toast: the picture could not be made into a cover"
+    },
+    "rules_autoLogTitle": {
+        "message": "Теги, добавленные автоматически",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+    },
+    "rules_autoLogClear": {
+        "message": "Очистить список",
+        "description": "Settings, Smart Rules: button that empties the list of automatic taggings; the tags stay"
+    },
+    "rules_autoLogTags": {
+        "message": "Добавлено: $1 · $2",
+        "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
+    },
+    "rules_autoLogUndoLabel": {
+        "message": "Отменить теги, добавленные к «$1»",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndone": {
+        "message": "Теги удалены",
+        "description": "Toast title after undoing one automatic tagging"
+    },
+    "rules_autoLogUndoneDesc": {
+        "message": "Из закладки удалено тегов: $count$.",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneDesc_one": {
+        "message": "Из закладки удалён $count$ тег.",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneDesc_few": {
+        "message": "Из закладки удалено $count$ тега.",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed (few)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneDesc_many": {
+        "message": "Из закладки удалено $count$ тегов.",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed (many)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     }
 }

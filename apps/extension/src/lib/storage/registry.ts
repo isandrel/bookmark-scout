@@ -85,6 +85,11 @@ export const STORAGE_ITEMS = {
   savedSearches: { area: 'local', name: 'search.saved', v: 1, backup: 'include' },
   /** Local: rules name folder ids local to this device, and their searches can reveal bookmarks. */
   bookmarkRules: { area: 'local', name: 'rules.list', v: 1, backup: 'include' },
+  /**
+   * Local: the bookmarks Tag New Bookmarks tagged lately, with the tags and their titles, for its
+   * list and Undo in Settings; bookmark ids belong to this device, and the titles can be private.
+   */
+  autoTagLog: { area: 'local', name: 'rules.auto-tag-log', v: 1, backup: 'exclude' },
   /** Local: downloaded icons are large and can be downloaded again. */
   siteIcons: { area: 'local', name: 'site-icons.cache', v: 1, backup: 'exclude' },
   /**
