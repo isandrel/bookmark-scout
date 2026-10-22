@@ -1,8 +1,9 @@
 name: Set up workspace
 description: >-
   Installs the Bun version pinned by `packageManager` in package.json and, unless turned off,
-  the workspace dependencies from bun.lock. Run actions/checkout first: a local action is
-  read from the checked-out repository.
+  the workspace dependencies from bun.lock. On Linux it also makes apt give up on a stalled
+  package mirror and try again. Run actions/checkout first: a local action is read from the
+  checked-out repository.
 
 inputs:
   install:
@@ -13,6 +14,17 @@ inputs:
 runs:
   using: composite
   steps:
+    # `playwright install --with-deps` runs apt-get update, which has no time limit of its own: a
+    # mirror that stalled mid-transfer held a Chromium shard for 24 minutes until the job was
+    # cancelled (2026-10-22). The timeout covers both connecting and a transfer that stops.
+    - name: Time out stalled package mirrors
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        printf '%s\n' 'Acquire::Retries "3";' 'Acquire::http::Timeout "30";' \
+          'Acquire::https::Timeout "30";' |
+          sudo tee /etc/apt/apt.conf.d/99-stalled-mirror-timeout > /dev/null
+
     - name: Setup Bun
       uses: oven-sh/setup-bun@v2
       with:
