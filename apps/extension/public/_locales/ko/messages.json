@@ -7912,5 +7912,25 @@
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "큰 변경은 페이지를 닫아도 계속되며, 각 부분은 기록에서 실행 취소할 수 있습니다. 작은 변경은 바로 적용되며 알림에서 실행 취소할 수 있습니다.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
+    },
+    "settings_managerViewMode": {
+        "message": "관리자 보기",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "폴더와 검색 결과를 목록 또는 카드로 표시합니다. 이 기기에 저장됩니다.",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "목록",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "카드",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "관리자 보기",
+        "description": "Settings: heading of the section with Manager View"
     }
 }

@@ -236,7 +236,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       if (!rowUrl) return null;
       return (
         <div className="flex min-w-0 items-center gap-2">
-          <SiteIcon url={rowUrl} className="shrink-0" />
+          <AddressIcon url={rowUrl} />
           <UrlLink href={rowUrl} className="block min-w-0 truncate" title={rowUrl} />
         </div>
       );
@@ -294,9 +294,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
           {icon}
           <div className="flex min-w-0 flex-col">
             {title ? (
-              <span className="min-w-0 truncate" title={title}>
-                {title}
-              </span>
+              <RowTitle title={title} />
             ) : (
               <span className="min-w-0 truncate italic text-muted-foreground">
                 {t('popup_untitled')}
@@ -348,19 +346,22 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       return (
         <div className="flex items-center justify-end gap-1">
           {isModifiableBookmark(bookmark) && (
-            // Shown on hover or focus in the column's own room before the menu (its width in
-            // config/ui/manager-table.toml), so they never cover the row's other columns.
-            <div className="pointer-events-none opacity-0 transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
-              <MoveBookmarkButtons
-                position={position}
-                onMove={async (direction) => {
-                  // Recorded, so Ctrl+Z puts the item back.
-                  await recordBookmarkWrites({ action: 'move', title: bookmark.title }, (writer) =>
-                    moveBookmarkWithinFolder(bookmark, direction, writer.move),
-                  );
-                }}
-              />
-            </div>
+            <ListOnly>
+              {/* Shown on hover or focus in the column's own room before the menu (its width in
+            config/ui/manager-table.toml), so they never cover the row's other columns. */}
+              <div className="pointer-events-none opacity-0 transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
+                <MoveBookmarkButtons
+                  position={position}
+                  onMove={async (direction) => {
+                    // Recorded, so Ctrl+Z puts the item back.
+                    await recordBookmarkWrites(
+                      { action: 'move', title: bookmark.title },
+                      (writer) => moveBookmarkWithinFolder(bookmark, direction, writer.move),
+                    );
+                  }}
+                />
+              </div>
+            </ListOnly>
           )}
           <BookmarkRowMenu bookmark={bookmark} host={actionHost} />
         </div>

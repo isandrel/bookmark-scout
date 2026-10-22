@@ -7940,5 +7940,25 @@
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Les grosses modifications continuent si vous fermez la page, et chaque partie s'annule depuis l'Historique. Les petites s'appliquent tout de suite, avec Annuler dans la notification.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
+    },
+    "settings_managerViewMode": {
+        "message": "Vue du gestionnaire",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "Afficher les dossiers et les recherches en liste ou en cartes. Conservé sur cet appareil.",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "Liste",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "Cartes",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "Vue du gestionnaire",
+        "description": "Settings: heading of the section with Manager View"
     }
 }

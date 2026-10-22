@@ -1,9 +1,42 @@
 import type { Column, ReactTable, RowData } from '@tanstack/react-table';
-import { ListOrdered, Search, SlidersHorizontal, X } from 'lucide-react';
+import { LayoutGrid, List, ListOrdered, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useMemo, useRef } from 'react';
 import type { DateRange } from 'react-day-picker';
 
 type FacetOption = { value: string; label: string };
+
+/** The manager's two views of the same rows (the Manager View setting): the list, or cards. */
+const VIEW_MODES = [
+  { value: 'list', icon: List, labelKey: 'settings_managerViewModeList' },
+  { value: 'cards', icon: LayoutGrid, labelKey: 'settings_managerViewModeCards' },
+] as const;
+
+function ViewModeToggle() {
+  const { value, setValue } = useSetting('managerViewMode');
+  return (
+    // biome-ignore lint/a11y/useSemanticElements: a pair of toggle buttons, not a form fieldset.
+    <div
+      role="group"
+      aria-label={t('settings_managerViewMode')}
+      className="inline-flex h-8 shrink-0 rounded-md border p-0.5"
+    >
+      {VIEW_MODES.map(({ value: mode, icon: Icon, labelKey }) => (
+        <Button
+          key={mode}
+          variant={value === mode ? 'secondary' : 'ghost'}
+          size="icon"
+          className="h-6.5 w-7"
+          aria-pressed={value === mode}
+          aria-label={t(labelKey)}
+          title={t(labelKey)}
+          onClick={() => void setValue(mode)}
+        >
+          <Icon />
+        </Button>
+      ))}
+    </div>
+  );
+}
 
 /** A filter in use, as the chip that names it and removes it. */
 type FilterChip = { id: string; text: string; remove: () => void };
@@ -329,6 +362,7 @@ export function DataTableToolbar<TData extends RowData>({
             <ListOrdered />
             {t('table_browserOrder')}
           </Button>
+          <ViewModeToggle />
           <DataTableViewOptions
             table={table}
             onResetView={onResetView}

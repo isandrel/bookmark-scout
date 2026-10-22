@@ -30,6 +30,7 @@ const managerTableConfig = readConfig(
       removed_row_focus_wait_ms: z.number().int().nonnegative(),
       date_filter_months: boundedNumber({ integer: true }),
       facet_badges_max: z.number().int().nonnegative(),
+      card_min_width_px: z.number().int().positive(),
       columns: z.record(z.string(), columnLayoutSchema),
     })
     .refine((config) => config.page_sizes.includes(config.default_page_size), {
@@ -64,6 +65,9 @@ export const DATE_FILTER_MONTHS = managerTableConfig.date_filter_months;
 
 /** Selected options a filter button names before it shows a count instead. */
 export const FACET_BADGES_MAX = managerTableConfig.facet_badges_max;
+
+/** The narrowest card of the cards view, in pixels. */
+export const CARD_MIN_WIDTH_PX = managerTableConfig.card_min_width_px;
 
 /** Column ids that have a layout in the config. */
 export const CONFIGURED_COLUMN_IDS: readonly string[] = Object.keys(managerTableConfig.columns);

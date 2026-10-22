@@ -127,6 +127,9 @@
 # 1,410,000 to 1,424,000) for the site icon, privacy, and AI suggestion reviews on the shared review
 # list, with their tabs and actions in 9 languages. Firefox measured ZIP 1,775,024, 5,675,945 B
 # uncompressed, and 1,414,144 B of locales.
+# Raised on 2026-10-22 (javascript 3,704,000 to 3,716,000, css 84,000 to 85,000) for the manager's
+# cards view: the card grid, its key moves, and the List/Cards toggle. Firefox measured 3,705,755 B
+# of JavaScript and 84,137 B of CSS.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -145,8 +148,8 @@ raw_bytes = 5_686_000
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_704_000
-css = 84_000
+javascript = 3_716_000
+css = 85_000
 fonts = 143_000
 locales = 1_424_000
 images = 320_000

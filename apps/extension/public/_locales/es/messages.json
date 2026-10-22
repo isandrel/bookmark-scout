@@ -7940,5 +7940,25 @@
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Los cambios grandes siguen si cierras la página, y cada parte se puede deshacer desde el Historial. Los pequeños se aplican al momento, con Deshacer en la notificación.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
+    },
+    "settings_managerViewMode": {
+        "message": "Vista del administrador",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "Muestra carpetas y búsquedas como lista o como tarjetas. Se guarda en este dispositivo.",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "Lista",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "Tarjetas",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "Vista del administrador",
+        "description": "Settings: heading of the section with Manager View"
     }
 }

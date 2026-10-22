@@ -7940,5 +7940,25 @@
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "Größere Änderungen laufen weiter, wenn Sie die Seite schließen, und jeder Teil lässt sich im Verlauf rückgängig machen. Kleinere werden sofort übernommen, mit Rückgängig in der Benachrichtigung.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
+    },
+    "settings_managerViewMode": {
+        "message": "Manageransicht",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "Ordner und Suchen als Liste oder als Karten anzeigen. Wird auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "Liste",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "Karten",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "Manageransicht",
+        "description": "Settings: heading of the section with Manager View"
     }
 }
