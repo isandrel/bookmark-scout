@@ -197,25 +197,29 @@
 # address, paragraphs, access cleanup, coverage and Retry failed, the secrets setting) on top of
 # the Smart Rules automatic moves. Firefox measured ZIP 1,998,620, 6,673,471 B uncompressed,
 # 3,852,059 B of JavaScript, and 2,258,042 B of locales on the branch rebased onto 8d6fb8a1.
+# Raised on 2026-10-22 (ZIP 2,005,000 to 2,015,000, uncompressed 6,690,000 to 6,710,000, javascript
+# 3,860,000 to 3,880,000) for the bookmark hover card in the popup and side panel and the manager's
+# Tags and Summary columns. Firefox measured ZIP 2,008,326, 6,696,934 B uncompressed, and
+# 3,871,412 B of JavaScript on the branch rebased onto 45fdd7b4.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_005_000
-raw_bytes = 6_690_000
+zip_bytes = 2_015_000
+raw_bytes = 6_710_000
 
 [targets.edge]
-zip_bytes = 2_005_000
-raw_bytes = 6_690_000
+zip_bytes = 2_015_000
+raw_bytes = 6_710_000
 
 [targets.firefox]
-zip_bytes = 2_005_000
-raw_bytes = 6_690_000
+zip_bytes = 2_015_000
+raw_bytes = 6_710_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_860_000
+javascript = 3_880_000
 css = 89_000
 fonts = 143_000
 locales = 2_270_000
