@@ -37,7 +37,7 @@ Was als Duplikat gilt, legen Sie im Tab **Wartung** der [Einstellungen](/setting
 | **Protokoll ignorieren** | An | `http`- und `https`-Versionen als Duplikate behandeln |
 | **Abschließenden Schrägstrich ignorieren** | An | URLs mit und ohne abschließendes `/` als Duplikate behandeln |
 | **Behalten-Regel** | Ältestes | Welches Lesezeichen jeder Gruppe erhalten bleibt: **Ältestes**, **Neuestes** oder **Zuerst gefundenes** |
-| **Max. Gruppen** | 500 | Höchstzahl der Gruppen, die eine Prüfung liefert |
+| **Max. Gruppen** | <SettingDefault path="maintenance.duplicates.max_groups" /> | Höchstzahl der Gruppen, die eine Prüfung liefert |
 
 Bevor etwas entfernt wird, wird jede Gruppe erneut geprüft. Wurde das mit **Behalten** markierte Lesezeichen gelöscht oder verweist es inzwischen auf ein anderes Ziel, bleibt die ganze Gruppe unangetastet, und die Benachrichtigung zeigt an, wie viele Gruppen übersprungen wurden. Beim Abgleich mit **Nur Titel** erscheint eine Warnung, wenn eine Gruppe unterschiedliche URLs enthält, denn das Entfernen dieser Kopien löscht verschiedene Seiten.
 
@@ -81,7 +81,7 @@ Klicken Sie auf **Speichern** (zum Beispiel **12 Symbole speichern**), um sie zu
 </Step>
 </Steps>
 
-Für jede Website (Origin) im Bereich fragt das Tool eine gespeicherte Seite ohne Cookies an, liest nur deren Kopfbereich und lädt das von der Seite angegebene Symbol herunter, das der Einstellung **Bevorzugte Symbolgröße** am nächsten kommt, oder die `/favicon.ico` der Website. Es werden nur Symboldateien auf der eigenen Domain des Lesezeichens verwendet, nie ein Symboldienst von Dritten. Dateien, die größer als **Max. Dateigröße pro Symbol** (64 KB) oder keine Bilder sind, werden übersprungen.
+Für jede Website (Origin) im Bereich fragt das Tool eine gespeicherte Seite ohne Cookies an, liest nur deren Kopfbereich und lädt das von der Seite angegebene Symbol herunter, das der Einstellung **Bevorzugte Symbolgröße** am nächsten kommt, oder die `/favicon.ico` der Website. Es werden nur Symboldateien auf der eigenen Domain des Lesezeichens verwendet, nie ein Symboldienst von Dritten. Dateien, die größer als **Max. Dateigröße pro Symbol** (<SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB) oder keine Bilder sind, werden übersprungen.
 
 Die Aktualisierung läuft im Hintergrund: Sie läuft weiter, wenn Sie die Verwaltung schließen, und ihre Karte sowie **Hintergrundaufgaben** zeigen den Fortschritt, mit **Anhalten**, **Fortsetzen** und **Abbrechen**. Die Ergebnisse warten unter **Ergebnisse ansehen**; gespeichert wird erst, wenn Sie auf **Speichern** klicken.
 

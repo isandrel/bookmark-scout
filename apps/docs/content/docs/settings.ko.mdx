@@ -205,7 +205,7 @@ AI에게 묻기가 조회하고 변경할 수 있는 모든 작업이 여기에 
 | **AI 컨텍스트 패커** | **출력 형식** Markdown, **폴더 경로 포함**, **날짜 포함**, **저장된 태그 포함**, **저장된 요약 포함** 켜짐, **최대 항목 수** <SettingDefault path="ai_tools.context_packer.max_items" />, **최대 깊이** <SettingDefault path="ai_tools.context_packer.max_depth" />, **발췌 길이** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **자동 태그 지정** | **최소 태그 수** <SettingDefault path="ai_tools.auto_tagging.min_tags" />, **최대 태그 수** <SettingDefault path="ai_tools.auto_tagging.max_tags" />, **태그 스타일** kebab-case, **병합 모드** 추가, **중복 태그 제거** 켜짐, **기존 태그 보내기** 켜짐 |
 | **콘텐츠 요약** | **요약 길이** <SettingDefault path="ai_tools.summarizer.summary_length" />, **도메인 힌트 포함** 켜짐, **병합 모드** 교체 |
-| **AI 폴더 재구성** | **최소 신뢰도** 55%(이보다 낮은 이동은 제외), **배치 크기** 요청당 북마크 100개 |
+| **AI 폴더 재구성** | **최소 신뢰도** 55%(이보다 낮은 이동은 제외), **배치 크기** 요청당 북마크 <SettingDefault path="ai_tools.reorganization.batch_size" />개 |
 
 자동 태그 지정과 콘텐츠 요약은 항상 현재 폴더에서 동작합니다.
 
@@ -277,7 +277,7 @@ AI에게 묻기가 조회하고 변경할 수 있는 모든 작업이 여기에 
 | **기본 내보내기 형식** | HTML | 내보내기 도구를 열 때 선택되는 형식 |
 | **파일 이름 접두사** | `bookmarks_` | 모든 내보내기 파일 이름의 앞부분 |
 | **최대 파일 이름 길이** | <SettingDefault path="data.export.filename_max_length" /> | 생성되는 파일 이름의 최대 길이 |
-| **JSON 들여쓰기 크기**, **HTML 들여쓰기 크기**, **Markdown 들여쓰기 크기** | 2, 4, 2 | 형식별 단계당 공백 수 |
+| **JSON 들여쓰기 크기**, **HTML 들여쓰기 크기**, **Markdown 들여쓰기 크기** | <SettingDefault path="data.export.json_indent_size" />, <SettingDefault path="data.export.html_indent_spaces" />, <SettingDefault path="data.export.markdown_indent_spaces" /> | 형식별 단계당 공백 수 |
 | **날짜 포함**과 **URL 포함** | 켜짐 | 내보내기에 포함합니다 |
 
 [가져오기와 내보내기](/guides/import-export)를 참고하세요.

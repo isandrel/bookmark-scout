@@ -83,8 +83,8 @@ Chrome 会为每个失败的请求在网页的开发者控制台中记录一行�
 
 | 设置 | 默认值 |
 | --- | --- |
-| **请求超时** | 每个请求 8 秒 |
-| **并发数** | 同时 4 个请求 |
+| **请求超时** | 每个请求 <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒 |
+| **并发数** | 同时 <SettingDefault path="maintenance.dead_links.concurrency" /> 个请求 |
 | **重试次数** | 重试 1 次 |
 | **跟随重定向** | 开启 |
 | **成功状态码** | 200、201、202、204、301、302、307、308 |

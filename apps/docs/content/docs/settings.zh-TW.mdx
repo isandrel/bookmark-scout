@@ -202,10 +202,10 @@ AI 預設為關閉。只有在開啟「**AI 功能**」後，這些設定才會�
 
 | 工具 | 設定和預設值 |
 | --- | --- |
-| **AI 脈絡打包工具** | 「**輸出格式**」Markdown；「**包含資料夾路徑**」、「**包含日期**」、「**包含已儲存的標籤**」和「**包含已儲存的摘要**」開啟；「**項目數量上限**」200；「**深度上限**」8；「**摘錄長度**」240 |
-| **自動加上標籤** | 「**標籤數量下限**」2；「**標籤數量上限**」5；「**標籤樣式**」kebab-case；「**合併模式**」附加；「**移除重複的標籤**」開啟；「**傳送現有標籤**」開啟 |
-| **內容摘要工具** | 「**摘要長度**」160；「**包含網域提示**」開啟；「**合併模式**」取代 |
-| **AI 資料夾重組** | 「**最低信賴度**」55% (低於此值的移動會被捨棄)；「**批次大小**」每次要求 100 個書籤 |
+| **AI 脈絡打包工具** | 「**輸出格式**」Markdown；「**包含資料夾路徑**」、「**包含日期**」、「**包含已儲存的標籤**」和「**包含已儲存的摘要**」開啟；「**項目數量上限**」<SettingDefault path="ai_tools.context_packer.max_items" />；「**深度上限**」<SettingDefault path="ai_tools.context_packer.max_depth" />；「**摘錄長度**」<SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **自動加上標籤** | 「**標籤數量下限**」<SettingDefault path="ai_tools.auto_tagging.min_tags" />；「**標籤數量上限**」<SettingDefault path="ai_tools.auto_tagging.max_tags" />；「**標籤樣式**」kebab-case；「**合併模式**」附加；「**移除重複的標籤**」開啟；「**傳送現有標籤**」開啟 |
+| **內容摘要工具** | 「**摘要長度**」<SettingDefault path="ai_tools.summarizer.summary_length" />；「**包含網域提示**」開啟；「**合併模式**」取代 |
+| **AI 資料夾重組** | 「**最低信賴度**」55% (低於此值的移動會被捨棄)；「**批次大小**」每次要求 <SettingDefault path="ai_tools.reorganization.batch_size" /> 個書籤 |
 
 自動加上標籤和內容摘要工具一律處理目前資料夾。
 
@@ -220,9 +220,9 @@ AI 預設為關閉。只有在開啟「**AI 功能**」後，這些設定才會�
 
 | 工具 | 設定和預設值 |
 | --- | --- |
-| **重複書籤清理工具** | 「**比對方式**」正規化網址；「**統一 www**」、「**忽略通訊協定**」和「**忽略結尾斜線**」開啟；「**保留規則**」最舊的；「**群組數量上限**」500。一律掃描所有書籤 |
+| **重複書籤清理工具** | 「**比對方式**」正規化網址；「**統一 www**」、「**忽略通訊協定**」和「**忽略結尾斜線**」開啟；「**保留規則**」最舊的；「**群組數量上限**」<SettingDefault path="maintenance.duplicates.max_groups" />。一律掃描所有書籤 |
 | **網址清理工具** | 「**移除片段**」關閉；「**排序查詢參數**」和「**移除重複的查詢參數**」開啟；「**保留參數**」和「**移除參數**」清單 |
-| **檢查失效連結** | 「**要求逾時**」8 秒；「**同時要求數**」4；「**重試次數**」1；「**追蹤重新導向**」開啟；「**成功狀態碼**」200, 201, 202, 204, 301, 302, 307, 308 |
+| **檢查失效連結** | 「**要求逾時**」<SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒；「**同時要求數**」<SettingDefault path="maintenance.dead_links.concurrency" />；「**重試次數**」<SettingDefault path="maintenance.dead_links.retry_count" />；「**追蹤重新導向**」開啟；「**成功狀態碼**」200, 201, 202, 204, 301, 302, 307, 308 |
 | **背景工作** | **超過此數量時在背景套用** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />：涉及更多書籤的已檢視變更會在背景分批套用，關閉頁面後仍會繼續；每一批都是[歷史記錄](/guides/save-and-organize)中的一項變更，可在那裡復原 |
 
 工具會從「**所有書籤**」開始，這樣即使從管理員開啟時所在的資料夾開始掃描，也不會漏掉其他資料夾。如果想讓工具從目前開啟的資料夾開始，請變更它的「**預設範圍**」。「**AI 資料夾重組**」會從目前開啟的資料夾開始，因為針對所有書籤的計畫會把它們全部傳送給你的 AI 供應商。在管理員的最上層 (沒有開啟任何資料夾) 時，所有工具都會從「**所有書籤**」開始。
@@ -277,7 +277,7 @@ AI 預設為關閉。只有在開啟「**AI 功能**」後，這些設定才會�
 | **預設匯出格式** | HTML | 開啟匯出工具時選取的格式 |
 | **檔案名稱前置字串** | `bookmarks_` | 每個匯出檔案名稱的開頭 |
 | **檔案名稱長度上限** | <SettingDefault path="data.export.filename_max_length" /> | 產生的檔案名稱長度上限 |
-| **JSON 縮排大小**、**HTML 縮排大小**、**Markdown 縮排大小** | <SettingDefault path="data.export.markdown_indent_spaces" />、4、2 | 各格式每一層的空格數 |
+| **JSON 縮排大小**、**HTML 縮排大小**、**Markdown 縮排大小** | <SettingDefault path="data.export.json_indent_size" />、<SettingDefault path="data.export.html_indent_spaces" />、<SettingDefault path="data.export.markdown_indent_spaces" /> | 各格式每一層的空格數 |
 | **包含日期**和**包含網址** | 開啟 | 在匯出檔案中包含這些資料 |
 
 請參閱「[匯入和匯出](/guides/import-export)」。

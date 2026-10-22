@@ -37,7 +37,7 @@ Ce qui est considéré comme un doublon se règle dans l'onglet **Maintenance** 
 | **Ignorer le protocole** | Activé | Considère les versions `http` et `https` comme des doublons |
 | **Ignorer la barre oblique finale** | Activé | Considère les URL avec et sans `/` final comme des doublons |
 | **Règle de conservation** | Le plus ancien | Conserve le favori **Le plus ancien**, **Le plus récent** ou **Le premier trouvé** de chaque groupe |
-| **Nombre maximal de groupes** | 500 | Nombre maximal de groupes renvoyés par une analyse |
+| **Nombre maximal de groupes** | <SettingDefault path="maintenance.duplicates.max_groups" /> | Nombre maximal de groupes renvoyés par une analyse |
 
 Avant toute suppression, chaque groupe est vérifié à nouveau. Si le favori marqué **Conserver** a été supprimé ou pointe désormais ailleurs, le groupe entier est laissé intact et la notification indique combien de groupes ont été ignorés. Avec la comparaison **Titre uniquement**, un avertissement s'affiche lorsqu'un groupe contient des URL différentes, car supprimer ces copies revient à supprimer des pages différentes.
 
@@ -81,7 +81,7 @@ Cliquez sur **Enregistrer** (par exemple **Enregistrer 12 icônes**) pour les co
 </Step>
 </Steps>
 
-Pour chaque site Web (origine) compris dans la portée, l'outil demande une page enregistrée en favori sans cookies, n'en lit que l'en-tête, et télécharge l'icône indiquée par la page dont la taille est la plus proche de la **Taille d'icône préférée**, ou à défaut le fichier `/favicon.ico` du site. Seuls les fichiers d'icône situés sur le domaine du favori lui-même sont utilisés, jamais un service d'icônes tiers. Les fichiers qui dépassent la **Taille maximale du fichier d'icône** (64 Ko) ou qui ne sont pas des images sont ignorés.
+Pour chaque site Web (origine) compris dans la portée, l'outil demande une page enregistrée en favori sans cookies, n'en lit que l'en-tête, et télécharge l'icône indiquée par la page dont la taille est la plus proche de la **Taille d'icône préférée**, ou à défaut le fichier `/favicon.ico` du site. Seuls les fichiers d'icône situés sur le domaine du favori lui-même sont utilisés, jamais un service d'icônes tiers. Les fichiers qui dépassent la **Taille maximale du fichier d'icône** (<SettingDefault path="metadata_content.site_icons.max_icon_kb" /> Ko) ou qui ne sont pas des images sont ignorés.
 
 L'actualisation s'exécute en arrière-plan : elle continue quand vous fermez le gestionnaire, et sa carte ainsi que **Tâches en arrière-plan** affichent sa progression, avec **Mettre en pause**, **Reprendre** et **Annuler**. Ses résultats attendent dans **Voir les résultats** ; rien n'est enregistré tant que vous ne cliquez pas sur **Enregistrer**.
 
