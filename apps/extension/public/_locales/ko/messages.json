@@ -7285,6 +7285,18 @@
         "message": "날짜와 시간",
         "description": "Settings section heading: how dates and times show."
     },
+    "settings_sectionAddresses": {
+        "message": "주소",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "끝 슬래시 표시",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "https://example.com/처럼 주소 끝의 /를 표시합니다. 링크는 항상 정확한 주소를 엽니다.",
+        "description": "Setting description for Show Trailing Slash"
+    },
     "settings_dateFormat": {
         "message": "날짜 형식",
         "description": "Setting label: date format."

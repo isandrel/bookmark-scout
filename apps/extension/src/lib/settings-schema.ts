@@ -625,6 +625,7 @@ const fields = {
   showFavicons: switchField('appearance.theme_icons.show_favicons', 'showFavicons'),
   browserIconCache: switchField('appearance.theme_icons.browser_icon_cache', 'browserIconCache'),
   faviconSize: numberChoiceField('appearance.theme_icons.favicon_size', 'faviconSize'),
+  showTrailingSlash: switchField('appearance.addresses.show_trailing_slash', 'showTrailingSlash'),
 
   searchDebounceMs: numberField('search.search.debounce_ms', 'searchDelay', { unit: 'ms' }),
   maxSearchResults: numberChoiceField('search.search.max_results', 'maxResults'),
@@ -1256,6 +1257,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
       },
       { id: 'dates', labelKey: 'settings_sectionDates', fields: ['dateFormat', 'timeFormat'] },
+      { id: 'addresses', labelKey: 'settings_sectionAddresses', fields: ['showTrailingSlash'] },
       {
         id: 'popup',
         labelKey: 'settings_sectionPopup',

@@ -7305,6 +7305,18 @@
         "message": "Datas e horas",
         "description": "Settings section heading: how dates and times show."
     },
+    "settings_sectionAddresses": {
+        "message": "Endereços",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "Mostrar barra final",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "Mostra a / no fim dos endereços, como em https://example.com/. Os links sempre abrem o endereço exato.",
+        "description": "Setting description for Show Trailing Slash"
+    },
     "settings_dateFormat": {
         "message": "Formato de data",
         "description": "Setting label: date format."
