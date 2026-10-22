@@ -6,7 +6,7 @@
 [suggestions]
 urlCleanerPreserveParams = [ "id", "page", "q", "p", "lang", "s", "query", "search", "sort", "tab", "v", "t" ]
 urlCleanerRemoveParams = [
-  "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "utm_id",
+  "utm_*",
   "gclid", "dclid", "gbraid", "wbraid", "fbclid", "msclkid", "yclid", "twclid", "ttclid",
   "li_fat_id", "igshid", "mc_cid", "mc_eid", "_ga", "_gl", "ref", "ref_src", "si", "spm",
 ]

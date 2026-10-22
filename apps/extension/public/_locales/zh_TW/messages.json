@@ -2423,6 +2423,10 @@
         "message": "永不移除的查詢參數",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "在名稱結尾加上 * 可符合所有以此開頭的名稱：utm_* 符合 utm_source 和 utm_name。不區分大小寫。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "移除參數",
         "description": "URL cleaner remove params label"
@@ -2430,6 +2434,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "從網址中移除的查詢參數",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "在名稱結尾加上 * 可符合所有以此開頭的名稱：utm_* 符合 utm_source 和 utm_name。不區分大小寫。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "啟用失效連結檢查工具",
@@ -2606,6 +2614,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "標示為敏感的參數名稱",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "在名稱結尾加上 * 可符合所有以此開頭的名稱：utm_* 符合 utm_source 和 utm_name。不區分大小寫。",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "偵測電子郵件地址",

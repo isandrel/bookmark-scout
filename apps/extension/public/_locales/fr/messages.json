@@ -2431,6 +2431,10 @@
         "message": "Paramètres de requête jamais supprimés",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "Terminez un nom par * pour inclure tous les noms qui commencent ainsi : utm_* inclut utm_source et utm_name. La casse est ignorée.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "Paramètres à supprimer",
         "description": "URL cleaner remove params label"
@@ -2438,6 +2442,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "Paramètres de requête supprimés des URL",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "Terminez un nom par * pour inclure tous les noms qui commencent ainsi : utm_* inclut utm_source et utm_name. La casse est ignorée.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "Activer le vérificateur de liens morts",
@@ -2614,6 +2622,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "Noms de paramètres signalés comme sensibles",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "Terminez un nom par * pour inclure tous les noms qui commencent ainsi : utm_* inclut utm_source et utm_name. La casse est ignorée.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "Détecter les adresses e-mail",

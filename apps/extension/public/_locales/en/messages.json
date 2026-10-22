@@ -2431,6 +2431,10 @@
         "message": "Query parameters that are never removed",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "End a name with * to match every name that starts with it: utm_* matches utm_source and utm_name. Case is ignored.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "Remove Parameters",
         "description": "URL cleaner remove params label"
@@ -2438,6 +2442,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "Query parameters removed from URLs",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "End a name with * to match every name that starts with it: utm_* matches utm_source and utm_name. Case is ignored.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "Enable Dead Link Checker",
@@ -2614,6 +2622,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "Parameter names flagged as sensitive",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "End a name with * to match every name that starts with it: utm_* matches utm_source and utm_name. Case is ignored.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "Detect Emails",

@@ -59,8 +59,8 @@ Firefox では拡張機能が Firefox 自体のブックマークページを置
 
 ルールは設定の **メンテナンス** タブにあります。
 
-- **削除するパラメータ**: 取り除くパラメータです。初期設定のリストは `utm_source`、`utm_medium`、`utm_campaign`、`utm_term`、`utm_content`、`utm_id`、`gclid`、`fbclid`、`mc_cid`、`mc_eid`、`ref`、`ref_src`、`si` です。
-- **保持するパラメータ**: 削除しないパラメータです。初期設定: `id`、`page`、`q`、`p`、`lang`。
+- **削除するパラメータ**: 取り除くパラメータです。初期設定のリストは <SettingDefault path="maintenance.url_cleaner.remove_params" /> です。末尾が `*` の名前は、その文字列で始まるすべての名前に一致します。
+- **保持するパラメータ**: 削除しないパラメータです。初期設定: <SettingDefault path="maintenance.url_cleaner.preserve_params" />。
 - **クエリパラメータの重複を削除**（初期設定でオン）は、繰り返し出てくるパラメータを削除します。
 - **クエリパラメータを並べ替え**（初期設定でオン）は、残ったパラメータをアルファベット順に並べ替えます。
 - **フラグメントを削除**（初期設定でオフ）は、`#section` のような部分も削除します。
