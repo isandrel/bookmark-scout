@@ -11,3 +11,20 @@ id_max_length = 64
 max_tags = 10
 # Longest tag a rule adds, in characters
 tag_max_length = 50
+
+# Starter rules Settings offers, added turned off. Each id has a name in every locale
+# (TEMPLATE_NAME_KEYS in src/components/options/BookmarkRulesPanel.tsx).
+[[templates]]
+id = "github"
+query = "domain:github.com"
+add_tags = ["development"]
+
+[[templates]]
+id = "youtube"
+query = "domain:youtube.com url:/watch"
+add_tags = ["watch-later"]
+
+[[templates]]
+id = "tutorial"
+query = "title:tutorial"
+add_tags = ["learning"]

@@ -20,11 +20,22 @@ const rulesConfig = readConfig(
     id_max_length: z.number().int().positive(),
     max_tags: z.number().int().positive(),
     tag_max_length: z.number().int().positive(),
+    templates: z.array(
+      z.strictObject({
+        id: z.string().min(1),
+        query: z.string().min(1),
+        add_tags: z.array(z.string().min(1)).min(1),
+      }),
+    ),
   }),
 );
 
 export const MAX_BOOKMARK_RULES = rulesConfig.max_rules;
 export const BOOKMARK_RULE_LIMITS = rulesConfig;
+
+/** Starter rules Settings offers (`[[templates]]`), each added turned off. */
+export const BOOKMARK_RULE_TEMPLATES = rulesConfig.templates;
+export type BookmarkRuleTemplateId = (typeof BOOKMARK_RULE_TEMPLATES)[number]['id'];
 
 /** A query a rule can run: read without a problem and with at least one term. */
 const ruleQuerySchema = z

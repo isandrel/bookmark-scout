@@ -23,9 +23,12 @@ export type ToolOptions = {
   siteIcons: SiteIconRefreshOptions;
   privacyScanner: PrivacyScanOptions;
   statistics: StatisticsOptions;
+  /** Smart Rules run the rules saved in Settings, with no options of their own. */
+  bookmarkRules: Record<never, never>;
 };
 
 const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool] } = {
+  bookmarkRules: () => ({}),
   aiContextPacker: (settings) => ({
     format: settings.aiContextPackerOutputFormat,
     includeFolderPath: settings.aiContextPackerIncludeFolderPath,

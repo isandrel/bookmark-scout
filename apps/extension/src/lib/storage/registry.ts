@@ -83,6 +83,8 @@ export const STORAGE_ITEMS = {
   searchHistory: { area: 'local', name: 'search.history', v: 1, backup: 'exclude' },
   /** Local: filters can reveal bookmark contents and name folder ids local to this device. */
   savedSearches: { area: 'local', name: 'search.saved', v: 1, backup: 'include' },
+  /** Local: rules name folder ids local to this device, and their searches can reveal bookmarks. */
+  bookmarkRules: { area: 'local', name: 'rules.list', v: 1, backup: 'include' },
   /** Local: downloaded icons are large and can be downloaded again. */
   siteIcons: { area: 'local', name: 'site-icons.cache', v: 1, backup: 'exclude' },
   /**

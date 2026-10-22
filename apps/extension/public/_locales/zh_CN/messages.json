@@ -7675,6 +7675,262 @@
         "message": "较大的更改在你关闭页面后仍会继续，每一批都可在历史记录中撤消。较小的更改会立即应用，可在通知中撤消。",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_bookmarkRules": {
+        "message": "智能规则",
+        "description": "Tools sidebar: name of the Smart Rules tool"
+    },
+    "tools_bookmarkRulesDesc": {
+        "message": "审阅后为与搜索匹配的书签添加标签并移动",
+        "description": "Tools sidebar: what Smart Rules does"
+    },
+    "action_run": {
+        "message": "运行",
+        "description": "Button that runs a tool and opens its review"
+    },
+    "settings_bookmarkRulesEnabled": {
+        "message": "启用智能规则",
+        "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
+    },
+    "settings_bookmarkRulesEnabledDesc": {
+        "message": "在工具侧边栏中显示智能规则",
+        "description": "Settings: description of the Enable Smart Rules switch"
+    },
+    "settings_bookmarkRulesDefaultScope": {
+        "message": "默认范围",
+        "description": "Settings: default scope of Smart Rules"
+    },
+    "settings_bookmarkRulesDefaultScopeDesc": {
+        "message": "规则默认应用的书签",
+        "description": "Settings: description of the Smart Rules default scope"
+    },
+    "rules_title": {
+        "message": "智能规则",
+        "description": "Settings: heading of the smart rules list"
+    },
+    "rules_description": {
+        "message": "每条规则用搜索找到书签，然后添加标签、移动到文件夹，或两者都做。在工具侧边栏中运行智能规则并应用审阅结果之前，规则不会做任何更改。两条规则都移动同一个书签时，排在上面的规则优先。只保存在此设备上。",
+        "description": "Settings: what smart rules are and where they run"
+    },
+    "rules_add": {
+        "message": "添加规则",
+        "description": "Settings: button that adds a smart rule"
+    },
+    "rules_fromTemplate": {
+        "message": "从模板开始",
+        "description": "Settings: menu of starter smart rules"
+    },
+    "rules_templateGithub": {
+        "message": "为 GitHub 页面添加 development 标签",
+        "description": "Starter smart rule: GitHub pages get the tag development"
+    },
+    "rules_templateYoutube": {
+        "message": "为 YouTube 视频添加 watch-later 标签",
+        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+    },
+    "rules_templateTutorial": {
+        "message": "为教程添加 learning 标签",
+        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_empty": {
+        "message": "还没有规则。",
+        "description": "Settings: shown when there are no smart rules"
+    },
+    "rules_turnOn": {
+        "message": "开启 $1",
+        "description": "Settings: accessible name of a rule checkbox; $1 is the rule name"
+    },
+    "rules_editRule": {
+        "message": "编辑 $1",
+        "description": "Settings: accessible name of a rule edit button; $1 is the rule name"
+    },
+    "rules_duplicate": {
+        "message": "复制 $1",
+        "description": "Settings: accessible name of a rule duplicate button; $1 is the rule name"
+    },
+    "rules_delete": {
+        "message": "删除 $1",
+        "description": "Settings: accessible name of a rule delete button; $1 is the rule name"
+    },
+    "rules_summary": {
+        "message": "$1：$2",
+        "description": "Settings: one rule in one line; $1 is its search, $2 what it does"
+    },
+    "rules_summaryTags": {
+        "message": "添加标签 $1",
+        "description": "Settings: what a rule does; $1 is the list of tags"
+    },
+    "rules_summaryMove": {
+        "message": "移动到 $1",
+        "description": "Settings: what a rule does; $1 is the folder path"
+    },
+    "rules_newTitle": {
+        "message": "新规则",
+        "description": "Rule editor title for a new rule"
+    },
+    "rules_editTitle": {
+        "message": "编辑规则",
+        "description": "Rule editor title for an existing rule"
+    },
+    "rules_editorDescription": {
+        "message": "规则用搜索找到书签，并决定如何处理它们。在工具侧边栏中运行智能规则之前，它不会做任何更改。",
+        "description": "Rule editor description"
+    },
+    "rules_name": {
+        "message": "名称",
+        "description": "Rule editor: name field"
+    },
+    "rules_query": {
+        "message": "匹配的书签",
+        "description": "Rule editor: the search field"
+    },
+    "rules_queryHelp": {
+        "message": "与搜索框相同的搜索，例如 domain:github.com 或 folder:稍后阅读",
+        "description": "Rule editor: help under the search field"
+    },
+    "rules_matchCount": {
+        "message": "当前匹配 $count$ 个书签",
+        "description": "Rule editor: how many bookmarks the search finds now",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_addTags": {
+        "message": "添加标签",
+        "description": "Rule editor: tags field"
+    },
+    "rules_addTagsHelp": {
+        "message": "用逗号分隔标签。书签已有的标签不会重复添加。",
+        "description": "Rule editor: help under the tags field"
+    },
+    "rules_moveTo": {
+        "message": "移动到文件夹",
+        "description": "Rule editor: folder field"
+    },
+    "rules_moveToHelp": {
+        "message": "只添加标签时请不要选择。",
+        "description": "Rule editor: help under the folder field"
+    },
+    "rules_enabled": {
+        "message": "已开启",
+        "description": "Rule editor: checkbox that turns the rule on"
+    },
+    "rules_save": {
+        "message": "保存",
+        "description": "Rule editor: save button"
+    },
+    "rules_errorName": {
+        "message": "请输入名称。",
+        "description": "Rule editor error: no name"
+    },
+    "rules_errorQuery": {
+        "message": "无法读取此搜索。请检查其中的运算符和日期。",
+        "description": "Rule editor error: the search has a problem"
+    },
+    "rules_errorAction": {
+        "message": "请添加标签或选择文件夹。",
+        "description": "Rule editor error: the rule does nothing"
+    },
+    "rules_errorInvalid": {
+        "message": "无法保存此规则。请检查每一项。",
+        "description": "Rule editor error: another field is invalid"
+    },
+    "rules_errorSaveFailed": {
+        "message": "无法保存规则。",
+        "description": "Rule editor error: storage failed"
+    },
+    "rules_deleted": {
+        "message": "已删除规则“$1”",
+        "description": "Toast after deleting a rule; $1 is its name"
+    },
+    "rules_copyName": {
+        "message": "$1（副本）",
+        "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "tools_bookmarkRulesDialogDesc": {
+        "message": "规则将做出的更改。应用之前不会有任何更改。",
+        "description": "Smart Rules review: description"
+    },
+    "tools_rulesCategory_change": {
+        "message": "更改 ($1)",
+        "description": "Smart Rules review: tab of bookmarks the rules change; $1 is how many"
+    },
+    "tools_rulesCategory_conflict": {
+        "message": "冲突 ($1)",
+        "description": "Smart Rules review: tab of bookmarks two rules move to different folders; $1 is how many"
+    },
+    "tools_rulesCategory_blocked": {
+        "message": "已阻止 ($1)",
+        "description": "Smart Rules review: tab of bookmarks a rule cannot move; $1 is how many"
+    },
+    "tools_rulesCategory_satisfied": {
+        "message": "已完成 ($1)",
+        "description": "Smart Rules review: tab of bookmarks that already follow the rules; $1 is how many"
+    },
+    "tools_rulesActionApply": {
+        "message": "应用",
+        "description": "Smart Rules review: action that applies the rules to a bookmark"
+    },
+    "tools_rulesApplySelected": {
+        "message": "应用 $count$ 项更改",
+        "description": "Smart Rules review: button that applies the changes left on Apply",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesAddTags": {
+        "message": "添加标签：$1",
+        "description": "Smart Rules review: tags a bookmark gets; $1 is the list"
+    },
+    "tools_rulesMoveTo": {
+        "message": "移动到：$1",
+        "description": "Smart Rules review: folder a bookmark moves to; $1 is its path"
+    },
+    "tools_rulesConflict": {
+        "message": "后面的规则会将它移动到：$1",
+        "description": "Smart Rules review: another folder a later rule names; $1 is its path"
+    },
+    "tools_rulesBlocked_missingFolder": {
+        "message": "它的文件夹已不存在。请在设置中重新为规则选择文件夹。",
+        "description": "Smart Rules review: the rule folder no longer exists"
+    },
+    "tools_rulesBlocked_managed": {
+        "message": "此文件夹由你的组织管理，因此无法移动。",
+        "description": "Smart Rules review: the folder is managed by policy"
+    },
+    "tools_rulesMatchedBy": {
+        "message": "规则：$1",
+        "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
+    },
+    "tools_rulesNoRules": {
+        "message": "没有已开启的规则。请在设置的“维护”中添加规则。",
+        "description": "Smart Rules review: shown when no rule is turned on"
+    },
+    "toast_rulesApplied": {
+        "message": "规则已应用",
+        "description": "Toast title after Smart Rules applied its changes"
+    },
+    "toast_rulesAppliedDesc": {
+        "message": "已添加标签：$1。已移动：$2。",
+        "description": "Toast after Smart Rules; $1 bookmarks tagged, $2 moved"
+    },
+    "toast_rulesPartial": {
+        "message": "部分规则更改未完成",
+        "description": "Toast title when some Smart Rules changes were not made"
+    },
+    "toast_rulesPartialDesc": {
+        "message": "已添加标签：$1。已移动：$2。因审阅后有改动而跳过：$3。失败：$4。",
+        "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
+    },
+    "toast_rulesBackgroundDesc": {
+        "message": "已添加标签：$1。正在后台移动 $2 个书签。",
+        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
     "settings_managerViewMode": {
         "message": "管理器视图",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"

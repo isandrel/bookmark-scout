@@ -7941,6 +7941,282 @@
         "message": "Les grosses modifications continuent si vous fermez la page, et chaque partie s'annule depuis l'Historique. Les petites s'appliquent tout de suite, avec Annuler dans la notification.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_bookmarkRules": {
+        "message": "Règles intelligentes",
+        "description": "Tools sidebar: name of the Smart Rules tool"
+    },
+    "tools_bookmarkRulesDesc": {
+        "message": "Étiqueter et déplacer les favoris qui correspondent à une recherche, après vérification",
+        "description": "Tools sidebar: what Smart Rules does"
+    },
+    "action_run": {
+        "message": "Exécuter",
+        "description": "Button that runs a tool and opens its review"
+    },
+    "settings_bookmarkRulesEnabled": {
+        "message": "Activer les Règles intelligentes",
+        "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
+    },
+    "settings_bookmarkRulesEnabledDesc": {
+        "message": "Afficher les Règles intelligentes dans la barre d'outils",
+        "description": "Settings: description of the Enable Smart Rules switch"
+    },
+    "settings_bookmarkRulesDefaultScope": {
+        "message": "Portée par défaut",
+        "description": "Settings: default scope of Smart Rules"
+    },
+    "settings_bookmarkRulesDefaultScopeDesc": {
+        "message": "Favoris auxquels les règles s’appliquent par défaut",
+        "description": "Settings: description of the Smart Rules default scope"
+    },
+    "rules_title": {
+        "message": "Règles intelligentes",
+        "description": "Settings: heading of the smart rules list"
+    },
+    "rules_description": {
+        "message": "Chaque règle trouve des favoris avec une recherche et ajoute des étiquettes, les déplace dans un dossier, ou les deux. Les règles ne changent rien tant que vous n'exécutez pas Règles intelligentes dans la barre d'outils et n'appliquez pas sa vérification. Si deux règles déplacent un favori, la plus haute l'emporte. Conservées sur cet appareil uniquement.",
+        "description": "Settings: what smart rules are and where they run"
+    },
+    "rules_add": {
+        "message": "Ajouter une règle",
+        "description": "Settings: button that adds a smart rule"
+    },
+    "rules_fromTemplate": {
+        "message": "Partir d’un modèle",
+        "description": "Settings: menu of starter smart rules"
+    },
+    "rules_templateGithub": {
+        "message": "Étiqueter les pages GitHub en development",
+        "description": "Starter smart rule: GitHub pages get the tag development"
+    },
+    "rules_templateYoutube": {
+        "message": "Étiqueter les vidéos YouTube en watch-later",
+        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+    },
+    "rules_templateTutorial": {
+        "message": "Étiqueter les tutoriels en learning",
+        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_empty": {
+        "message": "Aucune règle pour l’instant.",
+        "description": "Settings: shown when there are no smart rules"
+    },
+    "rules_turnOn": {
+        "message": "Activer $1",
+        "description": "Settings: accessible name of a rule checkbox; $1 is the rule name"
+    },
+    "rules_editRule": {
+        "message": "Modifier $1",
+        "description": "Settings: accessible name of a rule edit button; $1 is the rule name"
+    },
+    "rules_duplicate": {
+        "message": "Dupliquer $1",
+        "description": "Settings: accessible name of a rule duplicate button; $1 is the rule name"
+    },
+    "rules_delete": {
+        "message": "Supprimer $1",
+        "description": "Settings: accessible name of a rule delete button; $1 is the rule name"
+    },
+    "rules_summary": {
+        "message": "$1 : $2",
+        "description": "Settings: one rule in one line; $1 is its search, $2 what it does"
+    },
+    "rules_summaryTags": {
+        "message": "ajouter les étiquettes $1",
+        "description": "Settings: what a rule does; $1 is the list of tags"
+    },
+    "rules_summaryMove": {
+        "message": "déplacer vers $1",
+        "description": "Settings: what a rule does; $1 is the folder path"
+    },
+    "rules_newTitle": {
+        "message": "Nouvelle règle",
+        "description": "Rule editor title for a new rule"
+    },
+    "rules_editTitle": {
+        "message": "Modifier la règle",
+        "description": "Rule editor title for an existing rule"
+    },
+    "rules_editorDescription": {
+        "message": "Une règle trouve des favoris avec une recherche et indique quoi en faire. Elle ne change rien tant que vous n'exécutez pas Règles intelligentes dans la barre d'outils.",
+        "description": "Rule editor description"
+    },
+    "rules_name": {
+        "message": "Nom",
+        "description": "Rule editor: name field"
+    },
+    "rules_query": {
+        "message": "Favoris correspondants",
+        "description": "Rule editor: the search field"
+    },
+    "rules_queryHelp": {
+        "message": "Une recherche comme dans les champs de recherche, par exemple domain:github.com ou folder:Lecture",
+        "description": "Rule editor: help under the search field"
+    },
+    "rules_matchCount": {
+        "message": "Correspond à $count$ favoris actuellement",
+        "description": "Rule editor: how many bookmarks the search finds now",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_matchCount_one": {
+        "message": "Correspond à $count$ favori actuellement",
+        "description": "Rule editor: how many bookmarks the search finds now (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_addTags": {
+        "message": "Ajouter des étiquettes",
+        "description": "Rule editor: tags field"
+    },
+    "rules_addTagsHelp": {
+        "message": "Séparez les étiquettes par des virgules. Une étiquette qu'un favori a déjà n'est pas ajoutée de nouveau.",
+        "description": "Rule editor: help under the tags field"
+    },
+    "rules_moveTo": {
+        "message": "Déplacer vers le dossier",
+        "description": "Rule editor: folder field"
+    },
+    "rules_moveToHelp": {
+        "message": "Laissez vide pour seulement ajouter des étiquettes.",
+        "description": "Rule editor: help under the folder field"
+    },
+    "rules_enabled": {
+        "message": "Activée",
+        "description": "Rule editor: checkbox that turns the rule on"
+    },
+    "rules_save": {
+        "message": "Enregistrer",
+        "description": "Rule editor: save button"
+    },
+    "rules_errorName": {
+        "message": "Saisissez un nom.",
+        "description": "Rule editor error: no name"
+    },
+    "rules_errorQuery": {
+        "message": "Cette recherche ne peut pas être lue. Vérifiez ses opérateurs et ses dates.",
+        "description": "Rule editor error: the search has a problem"
+    },
+    "rules_errorAction": {
+        "message": "Ajoutez une étiquette ou choisissez un dossier.",
+        "description": "Rule editor error: the rule does nothing"
+    },
+    "rules_errorInvalid": {
+        "message": "Cette règle ne peut pas être enregistrée. Vérifiez chaque champ.",
+        "description": "Rule editor error: another field is invalid"
+    },
+    "rules_errorSaveFailed": {
+        "message": "La règle n'a pas pu être enregistrée.",
+        "description": "Rule editor error: storage failed"
+    },
+    "rules_deleted": {
+        "message": "Règle « $1 » supprimée",
+        "description": "Toast after deleting a rule; $1 is its name"
+    },
+    "rules_copyName": {
+        "message": "$1 (copie)",
+        "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "tools_bookmarkRulesDialogDesc": {
+        "message": "Ce que les règles changeraient. Rien ne change avant que vous l'appliquiez.",
+        "description": "Smart Rules review: description"
+    },
+    "tools_rulesCategory_change": {
+        "message": "Modifications ($1)",
+        "description": "Smart Rules review: tab of bookmarks the rules change; $1 is how many"
+    },
+    "tools_rulesCategory_conflict": {
+        "message": "Conflits ($1)",
+        "description": "Smart Rules review: tab of bookmarks two rules move to different folders; $1 is how many"
+    },
+    "tools_rulesCategory_blocked": {
+        "message": "Bloqués ($1)",
+        "description": "Smart Rules review: tab of bookmarks a rule cannot move; $1 is how many"
+    },
+    "tools_rulesCategory_satisfied": {
+        "message": "Déjà fait ($1)",
+        "description": "Smart Rules review: tab of bookmarks that already follow the rules; $1 is how many"
+    },
+    "tools_rulesActionApply": {
+        "message": "Appliquer",
+        "description": "Smart Rules review: action that applies the rules to a bookmark"
+    },
+    "tools_rulesApplySelected": {
+        "message": "Appliquer $count$ modifications",
+        "description": "Smart Rules review: button that applies the changes left on Apply",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesApplySelected_one": {
+        "message": "Appliquer $count$ modification",
+        "description": "Smart Rules review: button that applies the changes left on Apply (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesAddTags": {
+        "message": "Ajouter les étiquettes : $1",
+        "description": "Smart Rules review: tags a bookmark gets; $1 is the list"
+    },
+    "tools_rulesMoveTo": {
+        "message": "Déplacer vers : $1",
+        "description": "Smart Rules review: folder a bookmark moves to; $1 is its path"
+    },
+    "tools_rulesConflict": {
+        "message": "Une règle suivante le déplacerait vers : $1",
+        "description": "Smart Rules review: another folder a later rule names; $1 is its path"
+    },
+    "tools_rulesBlocked_missingFolder": {
+        "message": "Son dossier n'existe plus. Choisissez de nouveau le dossier de la règle dans les paramètres.",
+        "description": "Smart Rules review: the rule folder no longer exists"
+    },
+    "tools_rulesBlocked_managed": {
+        "message": "Votre organisation gère ce dossier, il ne peut donc pas être déplacé.",
+        "description": "Smart Rules review: the folder is managed by policy"
+    },
+    "tools_rulesMatchedBy": {
+        "message": "Règles : $1",
+        "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
+    },
+    "tools_rulesNoRules": {
+        "message": "Aucune règle n'est activée. Ajoutez des règles dans les paramètres, sous Maintenance.",
+        "description": "Smart Rules review: shown when no rule is turned on"
+    },
+    "toast_rulesApplied": {
+        "message": "Règles appliquées",
+        "description": "Toast title after Smart Rules applied its changes"
+    },
+    "toast_rulesAppliedDesc": {
+        "message": "Étiquetés : $1. Déplacés : $2.",
+        "description": "Toast after Smart Rules; $1 bookmarks tagged, $2 moved"
+    },
+    "toast_rulesPartial": {
+        "message": "Certaines modifications des règles n'ont pas été faites",
+        "description": "Toast title when some Smart Rules changes were not made"
+    },
+    "toast_rulesPartialDesc": {
+        "message": "Étiquetés : $1. Déplacés : $2. Ignorés, car modifiés après la vérification : $3. Échecs : $4.",
+        "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
+    },
+    "toast_rulesBackgroundDesc": {
+        "message": "Étiquetés : $1. Déplacement de $2 favoris en arrière-plan.",
+        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
     "settings_managerViewMode": {
         "message": "Vue du gestionnaire",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"

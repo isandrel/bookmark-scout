@@ -7941,6 +7941,282 @@
         "message": "Larger changes keep going if you close the page, and each part can be undone from History. Smaller ones apply at once, with Undo in the notification.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_bookmarkRules": {
+        "message": "Smart Rules",
+        "description": "Tools sidebar: name of the Smart Rules tool"
+    },
+    "tools_bookmarkRulesDesc": {
+        "message": "Tag and move bookmarks that match a search, after a review",
+        "description": "Tools sidebar: what Smart Rules does"
+    },
+    "action_run": {
+        "message": "Run",
+        "description": "Button that runs a tool and opens its review"
+    },
+    "settings_bookmarkRulesEnabled": {
+        "message": "Enable Smart Rules",
+        "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
+    },
+    "settings_bookmarkRulesEnabledDesc": {
+        "message": "Show Smart Rules in the Tools sidebar",
+        "description": "Settings: description of the Enable Smart Rules switch"
+    },
+    "settings_bookmarkRulesDefaultScope": {
+        "message": "Default Scope",
+        "description": "Settings: default scope of Smart Rules"
+    },
+    "settings_bookmarkRulesDefaultScopeDesc": {
+        "message": "Bookmarks the rules run on by default",
+        "description": "Settings: description of the Smart Rules default scope"
+    },
+    "rules_title": {
+        "message": "Smart rules",
+        "description": "Settings: heading of the smart rules list"
+    },
+    "rules_description": {
+        "message": "Each rule finds bookmarks with a search and adds tags, moves them to a folder, or both. Rules change nothing until you run Smart Rules in the Tools sidebar and apply its review. When two rules move a bookmark, the higher one wins. Kept on this device only.",
+        "description": "Settings: what smart rules are and where they run"
+    },
+    "rules_add": {
+        "message": "Add rule",
+        "description": "Settings: button that adds a smart rule"
+    },
+    "rules_fromTemplate": {
+        "message": "Start from a template",
+        "description": "Settings: menu of starter smart rules"
+    },
+    "rules_templateGithub": {
+        "message": "Tag GitHub pages as development",
+        "description": "Starter smart rule: GitHub pages get the tag development"
+    },
+    "rules_templateYoutube": {
+        "message": "Tag YouTube videos to watch later",
+        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+    },
+    "rules_templateTutorial": {
+        "message": "Tag tutorials as learning",
+        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_empty": {
+        "message": "No rules yet.",
+        "description": "Settings: shown when there are no smart rules"
+    },
+    "rules_turnOn": {
+        "message": "Turn on $1",
+        "description": "Settings: accessible name of a rule checkbox; $1 is the rule name"
+    },
+    "rules_editRule": {
+        "message": "Edit $1",
+        "description": "Settings: accessible name of a rule edit button; $1 is the rule name"
+    },
+    "rules_duplicate": {
+        "message": "Duplicate $1",
+        "description": "Settings: accessible name of a rule duplicate button; $1 is the rule name"
+    },
+    "rules_delete": {
+        "message": "Delete $1",
+        "description": "Settings: accessible name of a rule delete button; $1 is the rule name"
+    },
+    "rules_summary": {
+        "message": "$1: $2",
+        "description": "Settings: one rule in one line; $1 is its search, $2 what it does"
+    },
+    "rules_summaryTags": {
+        "message": "add tags $1",
+        "description": "Settings: what a rule does; $1 is the list of tags"
+    },
+    "rules_summaryMove": {
+        "message": "move to $1",
+        "description": "Settings: what a rule does; $1 is the folder path"
+    },
+    "rules_newTitle": {
+        "message": "New rule",
+        "description": "Rule editor title for a new rule"
+    },
+    "rules_editTitle": {
+        "message": "Edit rule",
+        "description": "Rule editor title for an existing rule"
+    },
+    "rules_editorDescription": {
+        "message": "A rule finds bookmarks with a search and says what to do with them. It changes nothing until you run Smart Rules in the Tools sidebar.",
+        "description": "Rule editor description"
+    },
+    "rules_name": {
+        "message": "Name",
+        "description": "Rule editor: name field"
+    },
+    "rules_query": {
+        "message": "Bookmarks that match",
+        "description": "Rule editor: the search field"
+    },
+    "rules_queryHelp": {
+        "message": "A search, as in the search boxes, such as domain:github.com or folder:Reading",
+        "description": "Rule editor: help under the search field"
+    },
+    "rules_matchCount": {
+        "message": "Matches $count$ bookmarks now",
+        "description": "Rule editor: how many bookmarks the search finds now",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_matchCount_one": {
+        "message": "Matches $count$ bookmark now",
+        "description": "Rule editor: how many bookmarks the search finds now (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_addTags": {
+        "message": "Add tags",
+        "description": "Rule editor: tags field"
+    },
+    "rules_addTagsHelp": {
+        "message": "Separate tags with commas. A tag a bookmark already has is not added again.",
+        "description": "Rule editor: help under the tags field"
+    },
+    "rules_moveTo": {
+        "message": "Move to folder",
+        "description": "Rule editor: folder field"
+    },
+    "rules_moveToHelp": {
+        "message": "Leave it unchosen to only add tags.",
+        "description": "Rule editor: help under the folder field"
+    },
+    "rules_enabled": {
+        "message": "Turned on",
+        "description": "Rule editor: checkbox that turns the rule on"
+    },
+    "rules_save": {
+        "message": "Save",
+        "description": "Rule editor: save button"
+    },
+    "rules_errorName": {
+        "message": "Enter a name.",
+        "description": "Rule editor error: no name"
+    },
+    "rules_errorQuery": {
+        "message": "This search cannot be read. Check its operators and dates.",
+        "description": "Rule editor error: the search has a problem"
+    },
+    "rules_errorAction": {
+        "message": "Add a tag or choose a folder.",
+        "description": "Rule editor error: the rule does nothing"
+    },
+    "rules_errorInvalid": {
+        "message": "This rule cannot be saved. Check each field.",
+        "description": "Rule editor error: another field is invalid"
+    },
+    "rules_errorSaveFailed": {
+        "message": "The rule could not be saved.",
+        "description": "Rule editor error: storage failed"
+    },
+    "rules_deleted": {
+        "message": "Deleted rule \"$1\"",
+        "description": "Toast after deleting a rule; $1 is its name"
+    },
+    "rules_copyName": {
+        "message": "$1 (copy)",
+        "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "tools_bookmarkRulesDialogDesc": {
+        "message": "What the rules would change. Nothing changes until you apply it.",
+        "description": "Smart Rules review: description"
+    },
+    "tools_rulesCategory_change": {
+        "message": "Changes ($1)",
+        "description": "Smart Rules review: tab of bookmarks the rules change; $1 is how many"
+    },
+    "tools_rulesCategory_conflict": {
+        "message": "Conflicts ($1)",
+        "description": "Smart Rules review: tab of bookmarks two rules move to different folders; $1 is how many"
+    },
+    "tools_rulesCategory_blocked": {
+        "message": "Blocked ($1)",
+        "description": "Smart Rules review: tab of bookmarks a rule cannot move; $1 is how many"
+    },
+    "tools_rulesCategory_satisfied": {
+        "message": "Already done ($1)",
+        "description": "Smart Rules review: tab of bookmarks that already follow the rules; $1 is how many"
+    },
+    "tools_rulesActionApply": {
+        "message": "Apply",
+        "description": "Smart Rules review: action that applies the rules to a bookmark"
+    },
+    "tools_rulesApplySelected": {
+        "message": "Apply $count$ changes",
+        "description": "Smart Rules review: button that applies the changes left on Apply",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesApplySelected_one": {
+        "message": "Apply $count$ change",
+        "description": "Smart Rules review: button that applies the changes left on Apply (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesAddTags": {
+        "message": "Add tags: $1",
+        "description": "Smart Rules review: tags a bookmark gets; $1 is the list"
+    },
+    "tools_rulesMoveTo": {
+        "message": "Move to: $1",
+        "description": "Smart Rules review: folder a bookmark moves to; $1 is its path"
+    },
+    "tools_rulesConflict": {
+        "message": "A later rule would move it to: $1",
+        "description": "Smart Rules review: another folder a later rule names; $1 is its path"
+    },
+    "tools_rulesBlocked_missingFolder": {
+        "message": "Its folder is gone. Choose the folder for the rule again in Settings.",
+        "description": "Smart Rules review: the rule folder no longer exists"
+    },
+    "tools_rulesBlocked_managed": {
+        "message": "Your organization manages this folder, so it cannot move.",
+        "description": "Smart Rules review: the folder is managed by policy"
+    },
+    "tools_rulesMatchedBy": {
+        "message": "Rules: $1",
+        "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
+    },
+    "tools_rulesNoRules": {
+        "message": "No rules are turned on. Add rules in Settings, under Maintenance.",
+        "description": "Smart Rules review: shown when no rule is turned on"
+    },
+    "toast_rulesApplied": {
+        "message": "Rules applied",
+        "description": "Toast title after Smart Rules applied its changes"
+    },
+    "toast_rulesAppliedDesc": {
+        "message": "Tagged: $1. Moved: $2.",
+        "description": "Toast after Smart Rules; $1 bookmarks tagged, $2 moved"
+    },
+    "toast_rulesPartial": {
+        "message": "Some rule changes were not made",
+        "description": "Toast title when some Smart Rules changes were not made"
+    },
+    "toast_rulesPartialDesc": {
+        "message": "Tagged: $1. Moved: $2. Skipped because they changed after the review: $3. Failed: $4.",
+        "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
+    },
+    "toast_rulesBackgroundDesc": {
+        "message": "Tagged: $1. Moving $2 bookmarks in the background.",
+        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
     "settings_managerViewMode": {
         "message": "Manager View",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"

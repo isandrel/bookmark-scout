@@ -7941,6 +7941,282 @@
         "message": "Größere Änderungen laufen weiter, wenn Sie die Seite schließen, und jeder Teil lässt sich im Verlauf rückgängig machen. Kleinere werden sofort übernommen, mit Rückgängig in der Benachrichtigung.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_bookmarkRules": {
+        "message": "Intelligente Regeln",
+        "description": "Tools sidebar: name of the Smart Rules tool"
+    },
+    "tools_bookmarkRulesDesc": {
+        "message": "Lesezeichen, die zu einer Suche passen, nach einer Prüfung mit Tags versehen und verschieben",
+        "description": "Tools sidebar: what Smart Rules does"
+    },
+    "action_run": {
+        "message": "Ausführen",
+        "description": "Button that runs a tool and opens its review"
+    },
+    "settings_bookmarkRulesEnabled": {
+        "message": "Intelligente Regeln aktivieren",
+        "description": "Settings: switch that shows Smart Rules in the Tools sidebar"
+    },
+    "settings_bookmarkRulesEnabledDesc": {
+        "message": "Intelligente Regeln in der Werkzeugleiste anzeigen",
+        "description": "Settings: description of the Enable Smart Rules switch"
+    },
+    "settings_bookmarkRulesDefaultScope": {
+        "message": "Standardbereich",
+        "description": "Settings: default scope of Smart Rules"
+    },
+    "settings_bookmarkRulesDefaultScopeDesc": {
+        "message": "Lesezeichen, auf die die Regeln standardmäßig angewendet werden",
+        "description": "Settings: description of the Smart Rules default scope"
+    },
+    "rules_title": {
+        "message": "Intelligente Regeln",
+        "description": "Settings: heading of the smart rules list"
+    },
+    "rules_description": {
+        "message": "Jede Regel findet Lesezeichen mit einer Suche und fügt Tags hinzu, verschiebt sie in einen Ordner oder beides. Regeln ändern nichts, bis Sie Intelligente Regeln in der Werkzeugleiste ausführen und die Überprüfung übernehmen. Verschieben zwei Regeln ein Lesezeichen, gewinnt die höhere. Nur auf diesem Gerät gespeichert.",
+        "description": "Settings: what smart rules are and where they run"
+    },
+    "rules_add": {
+        "message": "Regel hinzufügen",
+        "description": "Settings: button that adds a smart rule"
+    },
+    "rules_fromTemplate": {
+        "message": "Mit einer Vorlage beginnen",
+        "description": "Settings: menu of starter smart rules"
+    },
+    "rules_templateGithub": {
+        "message": "GitHub-Seiten als development markieren",
+        "description": "Starter smart rule: GitHub pages get the tag development"
+    },
+    "rules_templateYoutube": {
+        "message": "YouTube-Videos als watch-later markieren",
+        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+    },
+    "rules_templateTutorial": {
+        "message": "Tutorials als learning markieren",
+        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_empty": {
+        "message": "Noch keine Regeln.",
+        "description": "Settings: shown when there are no smart rules"
+    },
+    "rules_turnOn": {
+        "message": "$1 einschalten",
+        "description": "Settings: accessible name of a rule checkbox; $1 is the rule name"
+    },
+    "rules_editRule": {
+        "message": "$1 bearbeiten",
+        "description": "Settings: accessible name of a rule edit button; $1 is the rule name"
+    },
+    "rules_duplicate": {
+        "message": "$1 duplizieren",
+        "description": "Settings: accessible name of a rule duplicate button; $1 is the rule name"
+    },
+    "rules_delete": {
+        "message": "$1 löschen",
+        "description": "Settings: accessible name of a rule delete button; $1 is the rule name"
+    },
+    "rules_summary": {
+        "message": "$1: $2",
+        "description": "Settings: one rule in one line; $1 is its search, $2 what it does"
+    },
+    "rules_summaryTags": {
+        "message": "Tags $1 hinzufügen",
+        "description": "Settings: what a rule does; $1 is the list of tags"
+    },
+    "rules_summaryMove": {
+        "message": "nach $1 verschieben",
+        "description": "Settings: what a rule does; $1 is the folder path"
+    },
+    "rules_newTitle": {
+        "message": "Neue Regel",
+        "description": "Rule editor title for a new rule"
+    },
+    "rules_editTitle": {
+        "message": "Regel bearbeiten",
+        "description": "Rule editor title for an existing rule"
+    },
+    "rules_editorDescription": {
+        "message": "Eine Regel findet Lesezeichen mit einer Suche und legt fest, was mit ihnen geschieht. Sie ändert nichts, bis Sie Intelligente Regeln in der Werkzeugleiste ausführen.",
+        "description": "Rule editor description"
+    },
+    "rules_name": {
+        "message": "Name",
+        "description": "Rule editor: name field"
+    },
+    "rules_query": {
+        "message": "Passende Lesezeichen",
+        "description": "Rule editor: the search field"
+    },
+    "rules_queryHelp": {
+        "message": "Eine Suche wie in den Suchfeldern, etwa domain:github.com oder folder:Lesen",
+        "description": "Rule editor: help under the search field"
+    },
+    "rules_matchCount": {
+        "message": "Passt jetzt auf $count$ Lesezeichen",
+        "description": "Rule editor: how many bookmarks the search finds now",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_matchCount_one": {
+        "message": "Passt jetzt auf $count$ Lesezeichen",
+        "description": "Rule editor: how many bookmarks the search finds now (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_addTags": {
+        "message": "Tags hinzufügen",
+        "description": "Rule editor: tags field"
+    },
+    "rules_addTagsHelp": {
+        "message": "Tags mit Kommas trennen. Ein Tag, das ein Lesezeichen schon hat, wird nicht erneut hinzugefügt.",
+        "description": "Rule editor: help under the tags field"
+    },
+    "rules_moveTo": {
+        "message": "In Ordner verschieben",
+        "description": "Rule editor: folder field"
+    },
+    "rules_moveToHelp": {
+        "message": "Lassen Sie ihn leer, um nur Tags hinzuzufügen.",
+        "description": "Rule editor: help under the folder field"
+    },
+    "rules_enabled": {
+        "message": "Eingeschaltet",
+        "description": "Rule editor: checkbox that turns the rule on"
+    },
+    "rules_save": {
+        "message": "Speichern",
+        "description": "Rule editor: save button"
+    },
+    "rules_errorName": {
+        "message": "Geben Sie einen Namen ein.",
+        "description": "Rule editor error: no name"
+    },
+    "rules_errorQuery": {
+        "message": "Diese Suche kann nicht gelesen werden. Prüfen Sie ihre Operatoren und Daten.",
+        "description": "Rule editor error: the search has a problem"
+    },
+    "rules_errorAction": {
+        "message": "Fügen Sie ein Tag hinzu oder wählen Sie einen Ordner.",
+        "description": "Rule editor error: the rule does nothing"
+    },
+    "rules_errorInvalid": {
+        "message": "Diese Regel kann nicht gespeichert werden. Prüfen Sie jedes Feld.",
+        "description": "Rule editor error: another field is invalid"
+    },
+    "rules_errorSaveFailed": {
+        "message": "Die Regel konnte nicht gespeichert werden.",
+        "description": "Rule editor error: storage failed"
+    },
+    "rules_deleted": {
+        "message": "Regel „$1“ gelöscht",
+        "description": "Toast after deleting a rule; $1 is its name"
+    },
+    "rules_copyName": {
+        "message": "$1 (Kopie)",
+        "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "tools_bookmarkRulesDialogDesc": {
+        "message": "Was die Regeln ändern würden. Nichts ändert sich, bevor Sie es übernehmen.",
+        "description": "Smart Rules review: description"
+    },
+    "tools_rulesCategory_change": {
+        "message": "Änderungen ($1)",
+        "description": "Smart Rules review: tab of bookmarks the rules change; $1 is how many"
+    },
+    "tools_rulesCategory_conflict": {
+        "message": "Konflikte ($1)",
+        "description": "Smart Rules review: tab of bookmarks two rules move to different folders; $1 is how many"
+    },
+    "tools_rulesCategory_blocked": {
+        "message": "Blockiert ($1)",
+        "description": "Smart Rules review: tab of bookmarks a rule cannot move; $1 is how many"
+    },
+    "tools_rulesCategory_satisfied": {
+        "message": "Schon erledigt ($1)",
+        "description": "Smart Rules review: tab of bookmarks that already follow the rules; $1 is how many"
+    },
+    "tools_rulesActionApply": {
+        "message": "Übernehmen",
+        "description": "Smart Rules review: action that applies the rules to a bookmark"
+    },
+    "tools_rulesApplySelected": {
+        "message": "$count$ Änderungen übernehmen",
+        "description": "Smart Rules review: button that applies the changes left on Apply",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesApplySelected_one": {
+        "message": "$count$ Änderung übernehmen",
+        "description": "Smart Rules review: button that applies the changes left on Apply (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesAddTags": {
+        "message": "Tags hinzufügen: $1",
+        "description": "Smart Rules review: tags a bookmark gets; $1 is the list"
+    },
+    "tools_rulesMoveTo": {
+        "message": "Verschieben nach: $1",
+        "description": "Smart Rules review: folder a bookmark moves to; $1 is its path"
+    },
+    "tools_rulesConflict": {
+        "message": "Eine spätere Regel würde es verschieben nach: $1",
+        "description": "Smart Rules review: another folder a later rule names; $1 is its path"
+    },
+    "tools_rulesBlocked_missingFolder": {
+        "message": "Sein Ordner existiert nicht mehr. Wählen Sie den Ordner der Regel in den Einstellungen erneut.",
+        "description": "Smart Rules review: the rule folder no longer exists"
+    },
+    "tools_rulesBlocked_managed": {
+        "message": "Ihre Organisation verwaltet diesen Ordner, daher kann es nicht verschoben werden.",
+        "description": "Smart Rules review: the folder is managed by policy"
+    },
+    "tools_rulesMatchedBy": {
+        "message": "Regeln: $1",
+        "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
+    },
+    "tools_rulesNoRules": {
+        "message": "Keine Regel ist eingeschaltet. Fügen Sie Regeln in den Einstellungen unter Wartung hinzu.",
+        "description": "Smart Rules review: shown when no rule is turned on"
+    },
+    "toast_rulesApplied": {
+        "message": "Regeln angewendet",
+        "description": "Toast title after Smart Rules applied its changes"
+    },
+    "toast_rulesAppliedDesc": {
+        "message": "Mit Tags versehen: $1. Verschoben: $2.",
+        "description": "Toast after Smart Rules; $1 bookmarks tagged, $2 moved"
+    },
+    "toast_rulesPartial": {
+        "message": "Einige Regeländerungen wurden nicht vorgenommen",
+        "description": "Toast title when some Smart Rules changes were not made"
+    },
+    "toast_rulesPartialDesc": {
+        "message": "Mit Tags versehen: $1. Verschoben: $2. Übersprungen, weil sie sich nach der Prüfung geändert haben: $3. Fehlgeschlagen: $4.",
+        "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
+    },
+    "toast_rulesBackgroundDesc": {
+        "message": "Mit Tags versehen: $1. $2 Lesezeichen werden im Hintergrund verschoben.",
+        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
     "settings_managerViewMode": {
         "message": "Manageransicht",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"
