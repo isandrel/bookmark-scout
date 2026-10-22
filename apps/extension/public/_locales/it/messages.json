@@ -8459,6 +8459,10 @@
         "message": "Questo indirizzo reindirizza a un altro, che non viene aperto, quindi un sito che non hai consentito non viene mai contattato. Aggiungi ai preferiti l'indirizzo a cui porta, poi esegui di nuovo lo strumento.",
         "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
     },
+    "tools_readFromAddress": {
+        "message": "Letta da $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Copertine salvate",
         "description": "Toast title after saving covers"

@@ -8131,6 +8131,10 @@
         "message": "此地址会重定向到另一个地址，而该地址不会被打开，因此不会联系你未允许的网站。请为它指向的地址添加书签，然后再次运行此工具。",
         "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
     },
+    "tools_readFromAddress": {
+        "message": "读取自 $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "封面已保存",
         "description": "Toast title after saving covers"

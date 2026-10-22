@@ -12,3 +12,9 @@ stop_pattern_overlap_chars = 16
 # the page as redirected. Browsers hide the target of a redirect from extensions, so there such a
 # read stops at the first redirect whatever this says.
 max_redirects = { value = 5, min = 0, max = 20 }
+# When a redirect's target is hidden, the likely targets tried first, at most this many requests:
+# the page's https: address, then its host with www. added or removed (same registrable domain).
+# Each is checked like any address before it is requested and is read only when it answers with a
+# page itself; one that redirects again is not followed. 0 turns guessing off, so every redirect
+# is reported as redirected.
+redirect_guesses = { value = 3, min = 0, max = 6 }

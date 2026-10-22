@@ -391,7 +391,8 @@ describe('Fetch Covers runs', () => {
             headers: { location: 'https://cdn.other.net/' },
           });
         }
-        if (input === 'https://hidden.example/') {
+        // Its likely target, the www. address, redirects too, so it is a wrong guess.
+        if (input === 'https://hidden.example/' || input === 'https://www.hidden.example/') {
           // What Chrome and Firefox return to an extension for `redirect: 'manual'`.
           const opaque = new Response(null, { status: 200 });
           Object.defineProperty(opaque, 'type', { value: 'opaqueredirect' });
@@ -414,6 +415,7 @@ describe('Fetch Covers runs', () => {
       'https://away.example/',
       'https://hidden.example/',
       'https://local.example/',
+      'https://www.hidden.example/',
     ]);
   });
 

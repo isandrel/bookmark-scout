@@ -8459,6 +8459,10 @@
         "message": "Diese Adresse leitet auf eine andere weiter, die nicht geöffnet wird. So wird nie eine Website kontaktiert, die du nicht erlaubt hast. Lege für die Zieladresse ein Lesezeichen an und führe das Werkzeug erneut aus.",
         "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
     },
+    "tools_readFromAddress": {
+        "message": "Gelesen von $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Titelbilder gespeichert",
         "description": "Toast title after saving covers"

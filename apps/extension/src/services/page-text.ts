@@ -29,6 +29,8 @@ export type PageTextScanItem = {
   title: string;
   url: string;
   folderPath: string;
+  /** The address the page was read from, when its own redirected there (`HtmlPage.readFrom`). */
+  readFrom?: string;
   status: PageTextScanStatus;
   /** The page's readable text, for `read` items. */
   text?: string;
@@ -88,7 +90,7 @@ export async function readPageTextItem(
   item: PageTextScanItem,
   options: PageTextScanOptions & { readText: PageTextReader; signal?: AbortSignal },
 ): Promise<void> {
-  const { html, status, stopped } = await fetchHtmlPage(item.url, {
+  const { html, status, stopped, readFrom } = await fetchHtmlPage(item.url, {
     timeoutMs: PAGE_TEXT_LIMITS.timeoutMs,
     maxBytes: PAGE_TEXT_LIMITS.maxBytes,
     until: 'end',
@@ -101,6 +103,7 @@ export async function readPageTextItem(
     item.status = 'redirected';
     return;
   }
+  if (readFrom) item.readFrom = readFrom;
   let reading: PageTextReading = { status: 'empty' };
   // An answer such as 401 is a sign-in page whatever it shows.
   if (PAGE_TEXT_SIGN_IN.httpStatuses.has(status)) reading = { status: 'signIn' };

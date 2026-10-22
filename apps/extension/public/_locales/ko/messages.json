@@ -8431,6 +8431,10 @@
         "message": "이 주소는 다른 주소로 리디렉션되며, 그 주소는 열지 않으므로 허용하지 않은 사이트에는 연결하지 않습니다. 이동하는 주소를 북마크한 다음 도구를 다시 실행하세요.",
         "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
     },
+    "tools_readFromAddress": {
+        "message": "$1에서 읽음",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "표지 저장됨",
         "description": "Toast title after saving covers"

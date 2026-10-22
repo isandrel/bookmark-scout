@@ -324,6 +324,30 @@ describe('Index Page Text runs', () => {
     expect(requested).toEqual(['https://moved.example/', 'https://elsewhere.example/']);
   });
 
+  it('reads the https: address of a page whose redirect the browser hides, and says so', async () => {
+    const requested: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        requested.push(input);
+        if (input.startsWith('http:')) {
+          // What Chrome and Firefox return to an extension for `redirect: 'manual'`.
+          const opaque = new Response(null, { status: 200 });
+          Object.defineProperty(opaque, 'type', { value: 'opaqueredirect' });
+          Object.defineProperty(opaque, 'status', { value: 0 });
+          return opaque;
+        }
+        return new Response(ARTICLE, { status: 200, headers: { 'content-type': 'text/html' } });
+      }),
+    );
+    const { items } = await scanPageTexts(
+      folder([{ id: 'old', parentId: 'f', title: 'Old link', url: 'http://trip.example/notes' }]),
+      { skipPrivateHosts: true },
+    );
+    expect(items[0]).toMatchObject({ status: 'read', readFrom: 'https://trip.example/notes' });
+    expect(requested).toEqual(['http://trip.example/notes', 'https://trip.example/notes']);
+  });
+
   it('reads a page the background downloaded in the AI host page, cut to the limit it asks for', async () => {
     const maxChars = 40;
     const response = await handleAIHostRequest({

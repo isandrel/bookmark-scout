@@ -1,12 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createConfigReader, loadAppConfig } from '@/lib/config/loader';
 import {
   fetchBookmarkMetadata,
   fetchHtmlPage,
   isConfirmedDeadLink,
   MAX_PAGE_REDIRECTS,
+  MAX_REDIRECT_GUESSES,
+  redirectGuesses,
   scanDeadLinks,
 } from '@/services/bookmark-network-tools';
 import type { BookmarkTreeNode } from '@/types';
+import { readConfigTomlFiles } from '../config-files';
 
 const deadLinkOptions = {
   requestTimeoutMs: 1000,
@@ -418,6 +422,7 @@ describe('fetchHtmlPage', () => {
         ok: true,
         url: 'https://e2e.invalid/b',
         html: '<title>B</title>',
+        readFrom: 'https://e2e.invalid/b',
       });
       expect(site.log).toEqual([
         'check http://e2e.invalid/a',
@@ -483,7 +488,8 @@ describe('fetchHtmlPage', () => {
       const fetch = vi.fn(async () => opaque);
       const result = await fetchHtmlPage('https://e2e.invalid/', {
         ...options,
-        allowUrl: () => true,
+        // Its likely targets are refused, so none is tried.
+        allowUrl: (url) => url === 'https://e2e.invalid/',
         fetch,
       });
       expect(result).toEqual({
@@ -513,6 +519,172 @@ describe('fetchHtmlPage', () => {
       );
       await fetchHtmlPage('https://e2e.invalid/', { ...options, fetch: followed });
       expect(followed.mock.calls[0]?.[1]?.redirect).toBe('follow');
+    });
+  });
+
+  describe('likely targets of a redirect the browser hides', () => {
+    /** What Chrome and Firefox give an extension for `redirect: 'manual'`. */
+    function opaqueRedirect() {
+      const response = new Response(null, { status: 200 });
+      Object.defineProperty(response, 'type', { value: 'opaqueredirect' });
+      Object.defineProperty(response, 'status', { value: 0 });
+      Object.defineProperty(response, 'ok', { value: false });
+      return response;
+    }
+
+    /** Pages by address (any other address redirects, hidden), and a log of checks and requests. */
+    function hiddenSite(
+      pages: Record<string, string | { location: string }>,
+      allow: (url: string) => boolean = () => true,
+    ) {
+      const log: string[] = [];
+      const fetch = vi.fn(async (input: string, init?: RequestInit) => {
+        log.push(`request ${input}`);
+        expect(init?.redirect).toBe('manual');
+        const page = pages[input];
+        if (page === undefined) return opaqueRedirect();
+        if (typeof page !== 'string') {
+          return new Response(null, { status: 301, headers: { location: page.location } });
+        }
+        return new Response(page, { status: 200, headers: { 'content-type': 'text/html' } });
+      });
+      const allowUrl = vi.fn(async (url: string) => {
+        log.push(`check ${url}`);
+        return allow(url);
+      });
+      return { log, fetch, allowUrl };
+    }
+
+    it('guesses https:, then www. added or removed, on the same site only', () => {
+      expect(redirectGuesses('http://example.test/a?b=1')).toEqual([
+        'https://example.test/a?b=1',
+        'https://www.example.test/a?b=1',
+        'http://www.example.test/a?b=1',
+      ]);
+      expect(redirectGuesses('https://www.example.test/')).toEqual(['https://example.test/']);
+      // No www. on a subdomain, an address, or a name without a site; no scheme change with a port.
+      expect(redirectGuesses('https://blog.example.test/')).toEqual([]);
+      expect(redirectGuesses('http://192.168.0.1/')).toEqual(['https://192.168.0.1/']);
+      expect(redirectGuesses('https://localhost/')).toEqual([]);
+      expect(redirectGuesses('http://example.test:8080/')).toEqual([
+        'http://www.example.test:8080/',
+      ]);
+    });
+
+    it('reads the https: address of an http: page that redirects', async () => {
+      const site = hiddenSite({ 'https://example.test/a': '<title>A</title>' });
+      const result = await fetchHtmlPage('http://example.test/a', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toEqual({
+        status: 200,
+        ok: true,
+        url: 'https://example.test/a',
+        html: '<title>A</title>',
+        readFrom: 'https://example.test/a',
+      });
+      expect(site.log).toEqual([
+        'check http://example.test/a',
+        'request http://example.test/a',
+        'check https://example.test/a',
+        'request https://example.test/a',
+      ]);
+    });
+
+    it('reads the www. address when the page redirects there', async () => {
+      const site = hiddenSite({ 'https://www.example.test/a': '<title>A</title>' });
+      const result = await fetchHtmlPage('https://example.test/a', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toMatchObject({
+        html: '<title>A</title>',
+        readFrom: 'https://www.example.test/a',
+      });
+      expect(site.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it('never requests a guess allowUrl refuses, and tries the next one', async () => {
+      const site = hiddenSite(
+        {
+          'https://example.test/': '<title>Refused</title>',
+          'https://www.example.test/': '<title>W</title>',
+        },
+        (url) => url !== 'https://example.test/',
+      );
+      const result = await fetchHtmlPage('http://example.test/', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toMatchObject({
+        html: '<title>W</title>',
+        readFrom: 'https://www.example.test/',
+      });
+      expect(site.log).toContain('check https://example.test/');
+      expect(site.log).not.toContain('request https://example.test/');
+    });
+
+    it('treats a guess that redirects again as wrong, without following it', async () => {
+      const site = hiddenSite({
+        'https://www.example.test/': { location: 'https://elsewhere.test/' },
+      });
+      const result = await fetchHtmlPage('https://example.test/', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toMatchObject({ url: 'https://example.test/', html: null, stopped: 'hidden' });
+      expect(site.log.join('\n')).not.toContain('elsewhere.test');
+    });
+
+    it('sends at most the configured number of guesses, and none when it is 0', async () => {
+      expect(MAX_REDIRECT_GUESSES).toBeGreaterThan(0);
+      const site = hiddenSite({});
+      const result = await fetchHtmlPage('http://example.test/', {
+        ...options,
+        allowUrl: site.allowUrl,
+        fetch: site.fetch,
+      });
+      expect(result).toMatchObject({ html: null, stopped: 'hidden' });
+      const guesses = Math.min(
+        MAX_REDIRECT_GUESSES,
+        redirectGuesses('http://example.test/').length,
+      );
+      expect(site.fetch).toHaveBeenCalledTimes(1 + guesses);
+
+      for (const limit of [0, 1]) {
+        const files = readConfigTomlFiles();
+        files['network/html.toml'] = files['network/html.toml'].replace(
+          /redirect_guesses = \{ value = \d+/,
+          `redirect_guesses = { value = ${limit}`,
+        );
+        const reader = createConfigReader(loadAppConfig(files));
+        vi.resetModules();
+        vi.doMock('@/lib/app-config', () => ({
+          readConfig: reader.read,
+          getConfigClaims: reader.claims,
+        }));
+        try {
+          const tools = await import('@/services/bookmark-network-tools');
+          expect(tools.MAX_REDIRECT_GUESSES).toBe(limit);
+          const limited = hiddenSite({ 'https://www.example.test/': '<title>W</title>' });
+          const page = await tools.fetchHtmlPage('http://example.test/', {
+            ...options,
+            allowUrl: limited.allowUrl,
+            fetch: limited.fetch,
+          });
+          // The page is second in line, past either limit.
+          expect(page).toMatchObject({ html: null, stopped: 'hidden' });
+          expect(limited.fetch).toHaveBeenCalledTimes(1 + limit);
+        } finally {
+          vi.doUnmock('@/lib/app-config');
+          vi.resetModules();
+        }
+      }
     });
   });
 

@@ -8459,6 +8459,10 @@
         "message": "Cette adresse redirige vers une autre, qui n'est pas ouverte : un site que vous n'avez pas autorisé n'est donc jamais contacté. Ajoutez aux favoris l'adresse vers laquelle elle mène, puis relancez l'outil.",
         "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
     },
+    "tools_readFromAddress": {
+        "message": "Lue depuis $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Couvertures enregistrées",
         "description": "Toast title after saving covers"

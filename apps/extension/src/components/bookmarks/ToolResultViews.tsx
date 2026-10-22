@@ -1257,6 +1257,7 @@ export function PageTextResultsView({
               <UrlLink href={item.url} />
             </p>
             {item.status === 'redirected' ? <RedirectNotFollowedNote /> : null}
+            {item.readFrom ? <ReadFromNote url={item.readFrom} /> : null}
             {item.text ? <p className="line-clamp-2 text-xs">{item.text}</p> : null}
           </>
         )}
@@ -1275,6 +1276,13 @@ export function PageTextResultsView({
 /** Why a page that redirects was not read, under its row in the Index Page Text and Fetch Covers reviews. */
 function RedirectNotFollowedNote() {
   return <p className="text-xs text-muted-foreground">{t('tools_redirectNotFollowedReason')}</p>;
+}
+
+/** The address a page that redirects was read from instead, under its row in the same reviews. */
+function ReadFromNote({ url }: { url: string }) {
+  return (
+    <p className="truncate text-xs text-muted-foreground">{t('tools_readFromAddress', url)}</p>
+  );
 }
 
 /** Fetch Covers' review tabs, by what reading the page found. */
@@ -1349,6 +1357,7 @@ export function CoverResultsView({
               <UrlLink href={item.url} />
             </p>
             {item.status === 'redirected' ? <RedirectNotFollowedNote /> : null}
+            {item.readFrom ? <ReadFromNote url={item.readFrom} /> : null}
             {item.status === 'elsewhere' && item.imageSite ? (
               <p className="text-xs text-muted-foreground">
                 {t('tools_coversElsewhereReason', item.imageSite)}

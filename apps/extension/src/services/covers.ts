@@ -28,6 +28,8 @@ export type CoverScanItem = {
   title: string;
   url: string;
   folderPath: string;
+  /** The address the page was read from, when its own redirected there (`HtmlPage.readFrom`). */
+  readFrom?: string;
   status: CoverScanStatus;
   /** For `found`: the shrunk image to store, and a data URL of it for the review. */
   cover?: CoverImage;
@@ -143,6 +145,7 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
     item.status = 'redirected';
     return;
   }
+  if (page.readFrom) item.readFrom = page.readFrom;
   if (!page.ok) {
     item.status = 'failed';
     return;

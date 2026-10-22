@@ -8131,6 +8131,10 @@
         "message": "此網址會重新導向到另一個網址，而該網址不會被開啟，因此不會連線到你未允許的網站。請為它導向的網址加入書籤，然後再次執行此工具。",
         "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
     },
+    "tools_readFromAddress": {
+        "message": "讀取自 $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "封面已儲存",
         "description": "Toast title after saving covers"

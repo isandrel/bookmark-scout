@@ -8431,6 +8431,10 @@
         "message": "このアドレスは別のアドレスへリダイレクトしますが、その先は開かないため、許可していないサイトに接続することはありません。リダイレクト先のアドレスをブックマークしてから、もう一度ツールを実行してください。",
         "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
     },
+    "tools_readFromAddress": {
+        "message": "$1 から読み取り",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "カバー画像を保存しました",
         "description": "Toast title after saving covers"
