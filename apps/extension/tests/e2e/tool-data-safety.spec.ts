@@ -25,7 +25,7 @@ test('duplicate cleaner keeps the newest item it labels Keep and ignores case, p
   await expect(dialog.getByText(/^1 duplicate groups? found/)).toBeVisible();
   const keptRow = dialog.getByText('Keep', { exact: true }).locator('..');
   const keptTitle = (await keptRow.locator('[data-slot="tool-result-title"]').textContent()) ?? '';
-  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+  await dialog.getByRole('button', { name: /^Remove \d+ duplicates?$/ }).click();
 
   await expect
     .poll(async () => (await childrenOf(extensionWorker, folder.folderId)).length)
@@ -65,7 +65,7 @@ test('duplicate removal reports partial results, refreshes the dialog, and undo 
     },
     { removeId: folder.ids.A2, editId: folder.ids.B2 },
   );
-  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+  await dialog.getByRole('button', { name: /^Remove \d+ duplicates?$/ }).click();
 
   await expect(
     toastRegion(page).getByText('× Some duplicates were not removed', { exact: true }),
@@ -108,7 +108,7 @@ test('a partial duplicate removal withdraws Undo from the review and the toast w
   await expect(dialog).toContainText('B2');
   await extensionWorker.evaluate(async (id) => chrome.bookmarks.remove(id), folder.ids.B2);
   await page.clock.install();
-  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+  await dialog.getByRole('button', { name: /^Remove \d+ duplicates?$/ }).click();
   await expect(dialog.getByRole('status').getByRole('button', { name: 'Undo' })).toBeVisible();
   await expect(toastRegion(page).getByRole('button', { name: 'Undo' })).toHaveCount(1);
 
@@ -142,7 +142,7 @@ test('duplicate removal never deletes the last copy when the kept item was moved
   await extensionWorker.evaluate(async (id) => {
     await chrome.bookmarks.update(id, { url: 'https://e2e.invalid/elsewhere' });
   }, folder.ids.K1);
-  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+  await dialog.getByRole('button', { name: /^Remove \d+ duplicates?$/ }).click();
 
   await expect(
     toastRegion(page).getByText('× Some duplicates were not removed', { exact: true }),
@@ -233,4 +233,45 @@ test('URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmar
       Reordered: 'https://e2e.invalid/r?b=2&a=1',
       'Edited Later': 'https://e2e.invalid/e?utm_source=kept-by-user',
     });
+});
+
+test('duplicate cleaner keeps the bookmark picked in each group and removes only checked copies', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Dup Pick', [
+    { title: 'A first', url: 'https://e2e.invalid/a' },
+    { title: 'A second', url: 'https://e2e.invalid/a' },
+    { title: 'A third', url: 'https://e2e.invalid/a' },
+    { title: 'B first', url: 'https://e2e.invalid/b' },
+    { title: 'B second', url: 'https://e2e.invalid/b' },
+  ]);
+  await setSettings(extensionWorker, {
+    duplicatesKeepRule: 'oldest',
+    duplicatesDefaultScope: 'all',
+  });
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
+  await expect(dialog.locator('[data-slot="duplicate-group"]')).toHaveCount(2);
+  // The address shows once per group, not on every row.
+  await expect(dialog.locator('[data-slot="duplicate-item"]').getByRole('link')).toHaveCount(0);
+  await expect(dialog.getByRole('button', { name: 'Remove 3 duplicates' })).toBeEnabled();
+
+  // Keep the third A instead of the first: the first becomes a checked copy.
+  await dialog.getByRole('radio', { name: 'Keep A third' }).click();
+  await expect(dialog.getByRole('checkbox', { name: 'Remove A first' })).toBeChecked();
+  await expect(dialog.getByRole('checkbox', { name: 'Remove A third' })).toHaveCount(0);
+  // Leave the B group alone.
+  await dialog.getByRole('checkbox', { name: /^Remove the extra copies of .*\/b/ }).click();
+  await expect(dialog.getByRole('button', { name: 'Remove 2 duplicates' })).toBeEnabled();
+  await page.screenshot({ path: test.info().outputPath('duplicates-pick.png') });
+  await dialog.getByRole('button', { name: 'Remove 2 duplicates' }).click();
+
+  await expect
+    .poll(async () =>
+      (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title),
+    )
+    .toEqual(['A third', 'B first', 'B second']);
 });

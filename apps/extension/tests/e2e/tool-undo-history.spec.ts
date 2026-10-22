@@ -31,7 +31,7 @@ test('Ctrl/Cmd+Z undoes a Duplicate Cleaner batch after a reload, and redo remov
   await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
   const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
   await expect(dialog).toContainText('A3');
-  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+  await dialog.getByRole('button', { name: /^Remove \d+ duplicates?$/ }).click();
   await expect.poll(titles).toEqual(['A1', 'B1']);
   // The outcome toast shows once the batch and its history entry are written.
   await expect(toastRegion(page).getByRole('button', { name: 'Undo', exact: true })).toBeVisible();
