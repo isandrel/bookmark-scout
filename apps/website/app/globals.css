@@ -58,9 +58,10 @@
   --color-inverse: var(--inverse);
   --color-inverse-ink: var(--inverse-ink);
   --color-inverse-soft: var(--inverse-soft);
-  --font-sans: var(--font-instrument), "Hiragino Sans", "Apple SD Gothic Neo", "Noto Sans JP",
+  /* Cyrillic and Greek (a language's own name in the menu) before the CJK fonts, which draw them wide. */
+  --font-sans: var(--font-instrument), "Segoe UI", "Helvetica Neue", Roboto, "Noto Sans", Arial, "Hiragino Sans", "Apple SD Gothic Neo", "Noto Sans JP",
     "Noto Sans KR", system-ui, sans-serif;
-  --font-display: var(--font-bricolage), var(--font-instrument), "Hiragino Sans", "Apple SD Gothic Neo",
+  --font-display: var(--font-bricolage), var(--font-instrument), "Segoe UI", "Helvetica Neue", Roboto, "Noto Sans", Arial, "Hiragino Sans", "Apple SD Gothic Neo",
     system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }

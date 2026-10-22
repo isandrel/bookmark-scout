@@ -84,12 +84,15 @@
   --color-marker: var(--bs-marker);
   --color-marker-ink: var(--bs-marker-ink);
 
+  /* Cyrillic and Greek (a language's own name in the menu) before the CJK fonts, which draw them wide. */
   --font-sans:
-    var(--font-instrument), "Hiragino Sans", "Apple SD Gothic Neo",
-    "Noto Sans JP", "Noto Sans KR", system-ui, sans-serif;
+    var(--font-instrument), "Segoe UI", "Helvetica Neue", Roboto, "Noto Sans",
+    Arial, "Hiragino Sans", "Apple SD Gothic Neo", "Noto Sans JP",
+    "Noto Sans KR", system-ui, sans-serif;
   --font-display:
-    var(--font-bricolage), var(--font-instrument), "Hiragino Sans",
-    "Apple SD Gothic Neo", system-ui, sans-serif;
+    var(--font-bricolage), var(--font-instrument), "Segoe UI", "Helvetica Neue",
+    Roboto, "Noto Sans", Arial, "Hiragino Sans", "Apple SD Gothic Neo",
+    system-ui, sans-serif;
   --font-mono:
     var(--font-jetbrains), ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
