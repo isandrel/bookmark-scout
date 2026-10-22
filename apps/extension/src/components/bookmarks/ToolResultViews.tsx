@@ -1254,3 +1254,91 @@ export function PageTextResultsView({
     </div>
   );
 }
+
+/** Fetch Covers' review tabs, by what reading the page found. */
+const COVER_CATEGORIES = ['found', 'none', 'elsewhere', 'failed', 'current', 'skipped'] as const;
+
+const COVER_CATEGORY_LABEL_KEYS = {
+  found: 'tools_coversCategory_found',
+  none: 'tools_coversCategory_none',
+  elsewhere: 'tools_coversCategory_elsewhere',
+  failed: 'tools_coversCategory_failed',
+  current: 'tools_coversCategory_current',
+  skipped: 'tools_coversCategory_skipped',
+} as const satisfies Record<CoverScanStatus, string>;
+
+type CoverAction = (typeof REVIEW_DEFAULT_ACTIONS)['covers'];
+const COVER_ACTIONS = ['save', 'skip'] as const satisfies readonly CoverAction[];
+
+/**
+ * Fetch Covers' review: each page by what its head named, a found cover shown small and starting
+ * on Save (or Skip, as `[defaults] covers` says); only covers left on Save are stored.
+ */
+export function CoverResultsView({
+  result,
+  isSaving,
+  onSave,
+}: {
+  result: CoverScanResult | null;
+  isSaving: boolean;
+  onSave: (items: CoverScanItem[]) => void;
+}) {
+  const items = useMemo(() => result?.items ?? [], [result]);
+  const { actionOf, setAction, chosen } = useReviewChoices<CoverScanItem, CoverAction>(
+    items,
+    (item) => item.id,
+    (item) => (item.status === 'found' ? REVIEW_DEFAULT_ACTIONS.covers : 'skip'),
+  );
+  const saved = chosen('save');
+
+  if (!items.length) return <ToolEmptyState message={t('tools_coversNothing')} />;
+  return (
+    <div className="space-y-4">
+      <ReviewList
+        items={items}
+        idOf={(item) => item.id}
+        categories={COVER_CATEGORIES}
+        categoryOf={(item) => item.status}
+        categoryLabel={(category, count) => t(COVER_CATEGORY_LABEL_KEYS[category], String(count))}
+        actionsOf={(item) => (item.status === 'found' ? COVER_ACTIONS : (['skip'] as const))}
+        actionLabel={(action) =>
+          action === 'save' ? t('tools_coversActionSave') : t('tools_reviewActionSkip')
+        }
+        batchActions={COVER_ACTIONS}
+        actionOf={actionOf}
+        onAction={setAction}
+        titleOf={(item) => getBookmarkDisplayTitle(item.title)}
+        disabled={isSaving}
+        rowTestId="cover-item"
+        renderDetails={(item) => (
+          <>
+            <p className="truncate text-xs text-muted-foreground">
+              <UrlLink href={item.url} />
+            </p>
+            {item.status === 'elsewhere' && item.imageSite ? (
+              <p className="text-xs text-muted-foreground">
+                {t('tools_coversElsewhereReason', item.imageSite)}
+              </p>
+            ) : null}
+            {item.preview && item.cover ? (
+              <img
+                src={item.preview}
+                alt=""
+                width={item.cover.width}
+                height={item.cover.height}
+                className="mt-1 h-auto max-h-24 w-auto max-w-40 rounded border object-cover"
+              />
+            ) : null}
+          </>
+        )}
+      />
+      <ReviewFooter
+        label={tPlural('tools_coversSaveSelected', saved.length)}
+        busyLabel={t('action_saving')}
+        busy={isSaving}
+        disabled={saved.length === 0}
+        onConfirm={() => onSave(saved)}
+      />
+    </div>
+  );
+}

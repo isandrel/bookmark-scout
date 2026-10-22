@@ -96,13 +96,6 @@ export async function savePageTextResults(
         : [],
     ),
   );
-  const tree = await fetchBookmarkTree();
-  const ids = new Set<string>();
-  const walk = (node: BookmarkTreeNode) => {
-    ids.add(node.id);
-    for (const child of node.children ?? []) walk(child);
-  };
-  for (const root of tree) walk(root);
-  await prunePageTexts(ids);
+  await prunePageTexts(await fetchBookmarkIds());
   return { saved };
 }

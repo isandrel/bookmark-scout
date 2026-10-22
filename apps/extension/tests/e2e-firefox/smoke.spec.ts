@@ -4,6 +4,7 @@ import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import { error, Key, until } from 'selenium-webdriver';
 import { STORAGE_ITEMS, storageAreaKey } from '../../src/lib/storage/registry';
+import { solidPng } from '../solid-png';
 import { By, expect, type FirefoxExtension, test } from './fixtures';
 
 /**
@@ -1154,4 +1155,62 @@ test('applying in the background moves a separator and leaves the browser folder
     { target: folder.ids.Target, toolbar: ids.toolbar },
   );
   expect(after).toEqual({ inTarget: ['separator'], toolbarParent: 'root________' });
+});
+
+test('Fetch Covers keeps a copy Firefox drew of a page image, and the cards show it', async ({
+  extension,
+}) => {
+  const server = createServer((req, res) => {
+    if (req.url === '/cover.png') {
+      res.writeHead(200, { 'content-type': 'image/png' });
+      res.end(solidPng(1200, 630));
+      return;
+    }
+    res.writeHead(200, { 'content-type': 'text/html' });
+    res.end('<head><title>Story</title><meta property="og:image" content="/cover.png"></head>');
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  try {
+    const folder = await seedFolder(extension, 'E2E Firefox Covers', [
+      { title: 'Story', url: `${origin}/story` },
+    ]);
+    // The test server is on this computer, which the setting otherwise skips.
+    await setSettings(extension, {
+      coversEnabled: true,
+      coversDefaultScope: 'folder',
+      readPageSkipPrivateHosts: false,
+    });
+    await openTools(extension, folder.folderId);
+    await clickToolButton(extension, 'Fetch Covers', 'Fetch');
+    const access = await extension.findByText('[role="dialog"]', 'Allow access to websites?');
+    await access.findElement(By.xpath('.//button[normalize-space()="Allow access"]')).click();
+    const review = await extension.findByText('[role="dialog"]', 'Save 1 cover');
+    await review.findElement(By.xpath('.//button[normalize-space()="Save 1 cover"]')).click();
+    const stored = () =>
+      extension.call(
+        () =>
+          new Promise<string[]>((resolve) => {
+            const open = indexedDB.open('bookmark-scout-covers');
+            open.onsuccess = () => {
+              const db = open.result;
+              if (!db.objectStoreNames.contains('images')) return resolve([]);
+              const all = db.transaction('images').objectStore('images').getAll();
+              all.onsuccess = () =>
+                resolve((all.result as { type: string }[]).map((image) => image.type));
+            };
+          }),
+        undefined,
+      );
+    // Firefox writes WebP from a canvas, or PNG where it cannot; either is a picture it drew.
+    await expect.poll(stored).toEqual([expect.stringMatching(/^image\/(webp|png)$/)]);
+
+    await extension.open(`bookmarks.html?id=${folder.folderId}`);
+    await (await extension.find('button[title="Cards"]')).click();
+    const image = await extension.find('[data-testid="bookmark-cover"]');
+    expect(await image.getAttribute('src')).toMatch(/^blob:/);
+  } finally {
+    server.close();
+    server.closeAllConnections();
+  }
 });

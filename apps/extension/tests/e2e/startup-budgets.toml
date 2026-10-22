@@ -14,7 +14,8 @@
 # Folder Reorganization as a job, whose batches and plan are built in the background (401).
 # Raised from 415 on 2026-10-22 for the settings the background reads growing with the search,
 # rules, and manager view settings (416).
-"background.js" = 425
+# Raised from 425 on 2026-10-22 for the cover and page text settings the background reads (427).
+"background.js" = 435
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -51,7 +52,8 @@
 # loads for its menus (1,406).
 # Raised from 1415 on 2026-10-22 for page text in the manager search: the store it watches and the
 # content field (1,417).
-"bookmarks.html" = 1425
+# Raised from 1425 on 2026-10-22 for the cards view drawing stored covers (1,426).
+"bookmarks.html" = 1435
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -68,4 +70,6 @@
 # The welcome page opened once after install (516 on 2026-10-14).
 # Raised from 580 on 2026-10-21 for the tooltip provider every page now mounts at its root and
 # the config modules it reads (607).
-"welcome.html" = 620
+# Raised from 620 on 2026-10-22 for the cover store's config and the megabyte format every page's
+# shared modules carry (622).
+"welcome.html" = 630

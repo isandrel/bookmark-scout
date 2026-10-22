@@ -9,6 +9,7 @@ import {
   Eraser,
   FileOutput,
   FileText,
+  ImageDown,
   ImageIcon,
   Link2Off,
   type LucideIcon,
@@ -151,6 +152,7 @@ export type ToolResults = {
   statistics: BookmarkStatistics;
   bookmarkRules: RulePlanItem[];
   pageText: PageTextScanResult;
+  covers: CoverScanResult;
 };
 
 /** What a review passes to `apply` for the tools that let the user pick. */
@@ -171,6 +173,8 @@ type PickedItems = {
   bookmarkRules: RulePlanItem[];
   /** The pages whose text to keep, left on Save in the review. */
   pageText: PageTextScanItem[];
+  /** The covers to keep, left on Save in the review. */
+  covers: CoverScanItem[];
 };
 
 /** What the review passes to `apply`: the items the user picked, where a tool lets them pick. */
@@ -804,6 +808,26 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
       return {
         title: t('toast_pageTextSaved'),
         description: tPlural('toast_pageTextSavedDesc', saved),
+        variant: 'success',
+      };
+    },
+  },
+  covers: {
+    id: 'covers',
+    enabledSetting: 'coversEnabled',
+    scopeSetting: 'coversDefaultScope',
+    section: 'metadata',
+    icon: ImageDown,
+    titleKey: 'tools_covers',
+    descriptionKey: 'tools_coversDesc',
+    actionKey: () => 'action_fetch',
+    needsHostAccess: true,
+    scan: ({ nodes, options }) => scanCovers(nodes, options.covers),
+    async apply(_result, picked, { options }) {
+      const { saved } = await saveCoverResults(picked, options.covers.maxCacheBytes);
+      return {
+        title: t('toast_coversSaved'),
+        description: tPlural('toast_coversSavedDesc', saved),
         variant: 'success',
       };
     },

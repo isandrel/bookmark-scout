@@ -8117,6 +8117,190 @@
         "message": "マネージャーの表示",
         "description": "Settings: heading of the section with Manager View"
     },
+    "tools_covers": {
+        "message": "カバー画像の取得",
+        "description": "Tools sidebar: name of the Fetch Covers tool"
+    },
+    "tools_coversDesc": {
+        "message": "各ページのプレビュー画像の小さなコピーをこの端末に保存し、マネージャーのカードに表示します",
+        "description": "Tools sidebar: what Fetch Covers does"
+    },
+    "action_fetch": {
+        "message": "取得",
+        "description": "Button that runs Fetch Covers"
+    },
+    "settings_coversEnabled": {
+        "message": "カバー画像の取得を有効にする",
+        "description": "Settings: switch that turns Fetch Covers on"
+    },
+    "settings_coversEnabledDesc": {
+        "message": "ツールサイドバーにカバー画像の取得を表示します。各ページのヘッダー部分とプレビュー画像をダウンロードし、小さなコピーをこの端末に保存してカードに表示します。",
+        "description": "Settings: what turning Fetch Covers on does"
+    },
+    "settings_coversDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Settings: default scope of Fetch Covers"
+    },
+    "settings_coversDefaultScopeDesc": {
+        "message": "カバー画像の取得が既定で読むブックマーク",
+        "description": "Settings: description of the Fetch Covers default scope"
+    },
+    "settings_coversWidthPx": {
+        "message": "カバー画像の幅",
+        "description": "Settings: width of a stored cover"
+    },
+    "settings_coversWidthPxDesc": {
+        "message": "各カバー画像として保存するコピーの幅。これより大きい画像は縮小されます",
+        "description": "Settings: description of the cover width"
+    },
+    "settings_coversMaxImageKb": {
+        "message": "画像の最大サイズ",
+        "description": "Settings: largest image file Fetch Covers downloads"
+    },
+    "settings_coversMaxImageKbDesc": {
+        "message": "これより大きい画像ファイルはダウンロードしません",
+        "description": "Settings: description of the largest cover image"
+    },
+    "settings_coversMaxCacheMb": {
+        "message": "カバー画像の保存容量",
+        "description": "Settings: how much room stored covers may take"
+    },
+    "settings_coversMaxCacheMbDesc": {
+        "message": "カバー画像がこの端末で使える容量。古いものから削除されます",
+        "description": "Settings: description of the cover storage limit"
+    },
+    "tools_coversDialogDesc": {
+        "message": "各ページが自ら指定しているプレビュー画像です。保存したカバー画像だけがこの端末に残ります。",
+        "description": "Fetch Covers review: description"
+    },
+    "tools_coversCategory_found": {
+        "message": "カバーあり ($1)",
+        "description": "Fetch Covers review tab: pages with a cover found; $1 is how many"
+    },
+    "tools_coversCategory_none": {
+        "message": "カバーなし ($1)",
+        "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
+    },
+    "tools_coversCategory_elsewhere": {
+        "message": "別のサイト ($1)",
+        "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_failed": {
+        "message": "失敗 ($1)",
+        "description": "Fetch Covers review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_coversCategory_current": {
+        "message": "取得済み ($1)",
+        "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_skipped": {
+        "message": "スキップ ($1)",
+        "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_coversActionSave": {
+        "message": "カバーを保存",
+        "description": "Fetch Covers review: action that keeps a cover"
+    },
+    "tools_coversSaveSelected": {
+        "message": "$count$ 件のカバーを保存",
+        "description": "Fetch Covers review: button that saves the covers left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversSaveSelected_one": {
+        "message": "$count$ 件のカバーを保存",
+        "description": "Fetch Covers review: button that saves the covers left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversNothing": {
+        "message": "この範囲にウェブページはありません。",
+        "description": "Fetch Covers review: shown when the scope has no web pages"
+    },
+    "tools_coversElsewhereReason": {
+        "message": "画像は $1 にあり、この実行ではアクセスできません。",
+        "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
+    },
+    "toast_coversSaved": {
+        "message": "カバー画像を保存しました",
+        "description": "Toast title after saving covers"
+    },
+    "toast_coversSavedDesc": {
+        "message": "$count$ 件のブックマークのカードにカバー画像が表示されるようになりました。",
+        "description": "Toast after saving covers; how many bookmarks",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversSavedDesc_one": {
+        "message": "$count$ 件のブックマークのカードにカバー画像が表示されるようになりました。",
+        "description": "Toast after saving covers; how many bookmarks (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeTitle": {
+        "message": "ブックマークのカバー画像",
+        "description": "Settings: heading of the stored covers panel"
+    },
+    "covers_storeSummary": {
+        "message": "カバー画像 $count$ 件、$size$。この端末に保存され、外部に送られることはありません。",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeSummary_one": {
+        "message": "カバー画像 $count$ 件、$size$。この端末に保存され、外部に送られることはありません。",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeLoading": {
+        "message": "カバー画像を数えています…",
+        "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_clear": {
+        "message": "カバー画像を削除",
+        "description": "Settings: button that deletes every stored cover"
+    },
+    "covers_cleared": {
+        "message": "カバー画像を削除しました",
+        "description": "Toast title after deleting the covers"
+    },
+    "covers_clearedDesc": {
+        "message": "ブックマーク、タグ、履歴は変更されていません。",
+        "description": "Toast after deleting the covers"
+    },
     "tools_bookmarkRules": {
         "message": "スマートルール",
         "description": "Tools sidebar: name of the Smart Rules tool"

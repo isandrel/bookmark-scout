@@ -22,6 +22,7 @@ const reviewConfig = readConfig(
       privacy_scanner: z.enum(['keep', 'delete']),
       bookmark_rules: z.enum(['apply', 'skip']),
       page_text: z.enum(['save', 'skip']),
+      covers: z.enum(['save', 'skip']),
     }),
   }),
 );

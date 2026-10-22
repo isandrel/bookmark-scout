@@ -26,11 +26,18 @@ export type ToolOptions = {
   /** Smart Rules run the rules saved in Settings, with no options of their own. */
   bookmarkRules: Record<never, never>;
   pageText: PageTextScanOptions;
+  covers: CoverScanOptions;
 };
 
 const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool] } = {
   bookmarkRules: () => ({}),
   pageText: (settings) => ({ skipPrivateHosts: settings.readPageSkipPrivateHosts }),
+  covers: (settings) => ({
+    widthPx: settings.coversWidthPx,
+    maxImageBytes: settings.coversMaxImageKb * BYTES_PER_KB,
+    skipPrivateHosts: settings.readPageSkipPrivateHosts,
+    maxCacheBytes: settings.coversMaxCacheMb * BYTES_PER_MB,
+  }),
   aiContextPacker: (settings) => ({
     format: settings.aiContextPackerOutputFormat,
     includeFolderPath: settings.aiContextPackerIncludeFolderPath,

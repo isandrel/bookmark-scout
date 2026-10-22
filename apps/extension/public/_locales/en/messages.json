@@ -8145,6 +8145,190 @@
         "message": "Manager view",
         "description": "Settings: heading of the section with Manager View"
     },
+    "tools_covers": {
+        "message": "Fetch Covers",
+        "description": "Tools sidebar: name of the Fetch Covers tool"
+    },
+    "tools_coversDesc": {
+        "message": "Keep a small copy of each page's preview image on this device, for the manager's cards",
+        "description": "Tools sidebar: what Fetch Covers does"
+    },
+    "action_fetch": {
+        "message": "Fetch",
+        "description": "Button that runs Fetch Covers"
+    },
+    "settings_coversEnabled": {
+        "message": "Enable Fetch Covers",
+        "description": "Settings: switch that turns Fetch Covers on"
+    },
+    "settings_coversEnabledDesc": {
+        "message": "Show Fetch Covers in the Tools sidebar. It downloads each page's head and its preview image; a small copy stays on this device, and cards show it.",
+        "description": "Settings: what turning Fetch Covers on does"
+    },
+    "settings_coversDefaultScope": {
+        "message": "Default Scope",
+        "description": "Settings: default scope of Fetch Covers"
+    },
+    "settings_coversDefaultScopeDesc": {
+        "message": "Bookmarks Fetch Covers reads by default",
+        "description": "Settings: description of the Fetch Covers default scope"
+    },
+    "settings_coversWidthPx": {
+        "message": "Cover Width",
+        "description": "Settings: width of a stored cover"
+    },
+    "settings_coversWidthPxDesc": {
+        "message": "Width of the copy kept for each cover; larger images are shrunk to it",
+        "description": "Settings: description of the cover width"
+    },
+    "settings_coversMaxImageKb": {
+        "message": "Max Image Size",
+        "description": "Settings: largest image file Fetch Covers downloads"
+    },
+    "settings_coversMaxImageKbDesc": {
+        "message": "Image files larger than this are not downloaded",
+        "description": "Settings: description of the largest cover image"
+    },
+    "settings_coversMaxCacheMb": {
+        "message": "Cover Storage",
+        "description": "Settings: how much room stored covers may take"
+    },
+    "settings_coversMaxCacheMbDesc": {
+        "message": "Room stored covers may take on this device; the oldest are removed first",
+        "description": "Settings: description of the cover storage limit"
+    },
+    "tools_coversDialogDesc": {
+        "message": "The preview image each page names for itself. Only the covers you save are kept, on this device.",
+        "description": "Fetch Covers review: description"
+    },
+    "tools_coversCategory_found": {
+        "message": "Cover found ($1)",
+        "description": "Fetch Covers review tab: pages with a cover found; $1 is how many"
+    },
+    "tools_coversCategory_none": {
+        "message": "No cover ($1)",
+        "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
+    },
+    "tools_coversCategory_elsewhere": {
+        "message": "On another site ($1)",
+        "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_failed": {
+        "message": "Failed ($1)",
+        "description": "Fetch Covers review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_coversCategory_current": {
+        "message": "Already fetched ($1)",
+        "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_skipped": {
+        "message": "Skipped ($1)",
+        "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_coversActionSave": {
+        "message": "Save cover",
+        "description": "Fetch Covers review: action that keeps a cover"
+    },
+    "tools_coversSaveSelected": {
+        "message": "Save $count$ covers",
+        "description": "Fetch Covers review: button that saves the covers left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversSaveSelected_one": {
+        "message": "Save $count$ cover",
+        "description": "Fetch Covers review: button that saves the covers left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversNothing": {
+        "message": "No web pages in this scope.",
+        "description": "Fetch Covers review: shown when the scope has no web pages"
+    },
+    "tools_coversElsewhereReason": {
+        "message": "The image is on $1, which this run has no access to.",
+        "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
+    },
+    "toast_coversSaved": {
+        "message": "Covers saved",
+        "description": "Toast title after saving covers"
+    },
+    "toast_coversSavedDesc": {
+        "message": "$count$ bookmarks now show a cover on their cards.",
+        "description": "Toast after saving covers; how many bookmarks",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversSavedDesc_one": {
+        "message": "$count$ bookmark now shows a cover on its card.",
+        "description": "Toast after saving covers; how many bookmarks (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeTitle": {
+        "message": "Bookmark covers",
+        "description": "Settings: heading of the stored covers panel"
+    },
+    "covers_storeSummary": {
+        "message": "$count$ covers, $size$. Kept on this device; they never leave it.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeSummary_one": {
+        "message": "$count$ cover, $size$. Kept on this device; it never leaves it.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeLoading": {
+        "message": "Counting covers…",
+        "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_clear": {
+        "message": "Delete covers",
+        "description": "Settings: button that deletes every stored cover"
+    },
+    "covers_cleared": {
+        "message": "Covers deleted",
+        "description": "Toast title after deleting the covers"
+    },
+    "covers_clearedDesc": {
+        "message": "Bookmarks, tags, and the History were not changed.",
+        "description": "Toast after deleting the covers"
+    },
     "tools_bookmarkRules": {
         "message": "Smart Rules",
         "description": "Tools sidebar: name of the Smart Rules tool"

@@ -177,6 +177,15 @@ const TOOL_REVIEWS: {
       />
     </ReviewDialog>
   ),
+  covers: (props) => (
+    <ReviewDialog {...props} description={t('tools_coversDialogDesc')}>
+      <CoverResultsView
+        result={props.state.result}
+        isSaving={props.state.phase === 'applying'}
+        onSave={props.apply}
+      />
+    </ReviewDialog>
+  ),
   statistics: (props) => (
     <ReviewDialog {...props} description={t('tools_statisticsDialogDesc')}>
       <StatisticsResultsView result={props.state.result} />

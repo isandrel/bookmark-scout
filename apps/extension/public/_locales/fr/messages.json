@@ -8145,6 +8145,190 @@
         "message": "Vue du gestionnaire",
         "description": "Settings: heading of the section with Manager View"
     },
+    "tools_covers": {
+        "message": "Récupérer les couvertures",
+        "description": "Tools sidebar: name of the Fetch Covers tool"
+    },
+    "tools_coversDesc": {
+        "message": "Conserver sur cet appareil une petite copie de l'image d'aperçu de chaque page, pour les cartes du gestionnaire",
+        "description": "Tools sidebar: what Fetch Covers does"
+    },
+    "action_fetch": {
+        "message": "Récupérer",
+        "description": "Button that runs Fetch Covers"
+    },
+    "settings_coversEnabled": {
+        "message": "Activer Récupérer les couvertures",
+        "description": "Settings: switch that turns Fetch Covers on"
+    },
+    "settings_coversEnabledDesc": {
+        "message": "Afficher Récupérer les couvertures dans la barre d'outils. L'en-tête de chaque page et son image d'aperçu sont téléchargés ; une petite copie reste sur cet appareil et les cartes l'affichent.",
+        "description": "Settings: what turning Fetch Covers on does"
+    },
+    "settings_coversDefaultScope": {
+        "message": "Portée par défaut",
+        "description": "Settings: default scope of Fetch Covers"
+    },
+    "settings_coversDefaultScopeDesc": {
+        "message": "Favoris que lit Récupérer les couvertures par défaut",
+        "description": "Settings: description of the Fetch Covers default scope"
+    },
+    "settings_coversWidthPx": {
+        "message": "Largeur des couvertures",
+        "description": "Settings: width of a stored cover"
+    },
+    "settings_coversWidthPxDesc": {
+        "message": "Largeur de la copie gardée pour chaque couverture ; les images plus grandes y sont réduites",
+        "description": "Settings: description of the cover width"
+    },
+    "settings_coversMaxImageKb": {
+        "message": "Taille maximale d'image",
+        "description": "Settings: largest image file Fetch Covers downloads"
+    },
+    "settings_coversMaxImageKbDesc": {
+        "message": "Les fichiers d'image plus lourds ne sont pas téléchargés",
+        "description": "Settings: description of the largest cover image"
+    },
+    "settings_coversMaxCacheMb": {
+        "message": "Stockage des couvertures",
+        "description": "Settings: how much room stored covers may take"
+    },
+    "settings_coversMaxCacheMbDesc": {
+        "message": "Place que les couvertures peuvent occuper sur cet appareil ; les plus anciennes sont supprimées en premier",
+        "description": "Settings: description of the cover storage limit"
+    },
+    "tools_coversDialogDesc": {
+        "message": "L'image d'aperçu que chaque page indique pour elle-même. Seules les couvertures enregistrées sont conservées, sur cet appareil.",
+        "description": "Fetch Covers review: description"
+    },
+    "tools_coversCategory_found": {
+        "message": "Couverture trouvée ($1)",
+        "description": "Fetch Covers review tab: pages with a cover found; $1 is how many"
+    },
+    "tools_coversCategory_none": {
+        "message": "Aucune couverture ($1)",
+        "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
+    },
+    "tools_coversCategory_elsewhere": {
+        "message": "Sur un autre site ($1)",
+        "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_failed": {
+        "message": "Échec ($1)",
+        "description": "Fetch Covers review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_coversCategory_current": {
+        "message": "Déjà récupérées ($1)",
+        "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_skipped": {
+        "message": "Ignorées ($1)",
+        "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_coversActionSave": {
+        "message": "Enregistrer la couverture",
+        "description": "Fetch Covers review: action that keeps a cover"
+    },
+    "tools_coversSaveSelected": {
+        "message": "Enregistrer $count$ couvertures",
+        "description": "Fetch Covers review: button that saves the covers left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversSaveSelected_one": {
+        "message": "Enregistrer $count$ couverture",
+        "description": "Fetch Covers review: button that saves the covers left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversNothing": {
+        "message": "Aucune page web dans cette portée.",
+        "description": "Fetch Covers review: shown when the scope has no web pages"
+    },
+    "tools_coversElsewhereReason": {
+        "message": "L'image est sur $1, auquel cette exécution n'a pas accès.",
+        "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
+    },
+    "toast_coversSaved": {
+        "message": "Couvertures enregistrées",
+        "description": "Toast title after saving covers"
+    },
+    "toast_coversSavedDesc": {
+        "message": "$count$ favoris affichent maintenant une couverture sur leur carte.",
+        "description": "Toast after saving covers; how many bookmarks",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversSavedDesc_one": {
+        "message": "$count$ favori affiche maintenant une couverture sur sa carte.",
+        "description": "Toast after saving covers; how many bookmarks (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeTitle": {
+        "message": "Couvertures des favoris",
+        "description": "Settings: heading of the stored covers panel"
+    },
+    "covers_storeSummary": {
+        "message": "$count$ couvertures, $size$. Conservées sur cet appareil ; elles n'en sortent jamais.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeSummary_one": {
+        "message": "$count$ couverture, $size$. Conservée sur cet appareil ; elle n'en sort jamais.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeLoading": {
+        "message": "Comptage des couvertures…",
+        "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_clear": {
+        "message": "Supprimer les couvertures",
+        "description": "Settings: button that deletes every stored cover"
+    },
+    "covers_cleared": {
+        "message": "Couvertures supprimées",
+        "description": "Toast title after deleting the covers"
+    },
+    "covers_clearedDesc": {
+        "message": "Les favoris, les étiquettes et l'historique n'ont pas été modifiés.",
+        "description": "Toast after deleting the covers"
+    },
     "tools_bookmarkRules": {
         "message": "Règles intelligentes",
         "description": "Tools sidebar: name of the Smart Rules tool"

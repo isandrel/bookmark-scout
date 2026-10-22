@@ -520,6 +520,9 @@ export default function BookmarksPage() {
                   ? 'is-folder bg-muted/50 hover:bg-muted/70'
                   : 'hover:bg-muted/50'
               }
+              cardMedia={(row: Bookmark) =>
+                row.url ? <BookmarkCover bookmarkId={row.id} url={row.url} /> : null
+              }
               onRowOpen={(row: Bookmark) => openRows([row], 'tabs')}
               onRowOpenInBackground={(row: Bookmark) => {
                 if (row.type !== ItemTypeEnum.Folder) openRows([row], 'background-tabs');

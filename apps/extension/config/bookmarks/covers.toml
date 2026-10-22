@@ -1,0 +1,24 @@
+# Bookmark covers: the preview image a page names for itself (Open Graph or Twitter card), fetched
+# only when the user runs Fetch Covers, shrunk, and kept on this device
+# (src/lib/cover-store.ts) for the manager's cards. Never fetched just to show a card.
+
+# Where a page names its preview image, tried in this order: `meta` elements by their `property`
+# or `name`.
+meta_names = ["og:image:secure_url", "og:image", "og:image:url", "twitter:image", "twitter:image:src"]
+# Image types kept, from the file's first bytes; SVG and icons are never covers.
+types = ["image/png", "image/jpeg", "image/webp", "image/gif"]
+# Images larger than this, decoded, are refused (width times height), so a small file that
+# decodes to a huge picture cannot exhaust memory.
+max_pixels = 40000000
+# The stored copy: WebP at this quality (0 to 1), or PNG where the browser cannot write WebP.
+output_type = "image/webp"
+output_quality = 0.8
+# Images narrower than this are not covers (a tracking pixel or a small logo).
+min_width_px = 64
+# Downloading the page's head and the image
+timeout_ms = 10000
+max_page_bytes = 512000
+# Pages read at a time
+concurrency = 4
+# Raised when stored covers would come out differently, so pages are fetched again
+version = 1

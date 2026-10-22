@@ -20,6 +20,7 @@ Este é um resumo. A <SiteLink to="privacy">política de privacidade</SiteLink> 
 - Os ícones dos sites no cache de ícones do próprio navegador, no Chrome e no Edge, depois que você ativa **Usar o cache de ícones do navegador**.
 - Os ícones dos sites que você baixa com **Atualizar ícones dos sites**, de cada site salvo nos favoritos.
 - O texto das páginas dos favoritos, quando você executa **Indexar texto das páginas**, de cada página da execução.
+- O cabeçalho das páginas dos favoritos e a imagem de prévia que cada uma indica, quando você executa **Buscar capas**, de cada página da execução.
 
 Ela não lê o conteúdo das páginas que você visita. Depois de um atalho de salvamento rápido, ela mostra a própria notificação nessa guia, que não lê nada da página.
 
@@ -41,6 +42,7 @@ Ela não lê o conteúdo das páginas que você visita. Depois de um atalho de s
 | Tags, resumos, pesquisas salvas, regras inteligentes, pastas recentes, pesquisas recentes | Armazenamento local neste dispositivo | Não |
 | Ícones dos sites salvos com **Atualizar ícones dos sites**, até 4 MB por padrão | Armazenamento local neste dispositivo | Não |
 | Texto das páginas salvo com **Indexar texto das páginas** | IndexedDB neste dispositivo | Não |
+| Capas salvas com **Buscar capas** | IndexedDB neste dispositivo | Não |
 | O último salvamento rápido (o título e o URL da página, e onde ela foi salva), para **Desfazer** e **Mover para** | Armazenamento da sessão neste dispositivo, apagado quando o navegador fecha | Não |
 | O histórico de desfazer do gerenciador (os favoritos que você alterou nele, com cópias dos excluídos e as tags e os resumos deles), para desfazer e refazer | Armazenamento da sessão neste dispositivo, apagado quando o navegador fecha | Não |
 | O histórico de alterações de favoritos: o que mudou nos seus favoritos e quando, feito pelo Bookmark Scout ou observado de outro lugar (títulos, URLs, pastas e o resultado de cada alteração), guardado por um tempo limitado; e uma cópia do título, da URL e da pasta de cada favorito como vistos pela última vez, para saber o que mudou fora do Bookmark Scout. Também uma cópia de cada item que o Bookmark Scout exclui, com o que havia dentro e suas tags e resumo, para poder restaurá-lo pelo histórico; ela é apagada com sua alteração. Não fica no arquivo de backup | IndexedDB neste dispositivo | Não |
@@ -62,6 +64,7 @@ Somente quando você usa um destes recursos, e somente para o destino indicado:
 | Verificar links quebrados, Buscador de metadados, verificação de links de Perguntar à IA | Cada site salvo nos favoritos | Uma solicitação da página, sem cookies, depois que você permite o acesso aos sites |
 | Atualizar ícones dos sites | Cada site salvo nos favoritos | Uma solicitação de uma página salva nos favoritos por site e de um arquivo de ícone no domínio desse site, sem cookies, depois que você permite o acesso aos sites. Nenhum serviço de ícones de terceiros é usado |
 | Indexar texto das páginas | Cada página dos favoritos da execução | Uma solicitação da página, sem cookies, depois que você permite o acesso ao site. O texto legível fica neste dispositivo |
+| Buscar capas | Cada página dos favoritos da execução e a imagem que ela indica | Uma solicitação do cabeçalho da página e da imagem, sem cookies nem o endereço da página, só em sites que você permitiu. Uma cópia pequena fica neste dispositivo |
 | Agentes de IA locais, só com **Permitir agentes de IA locais** ativado (desativado por padrão) | O programa bookmark-scout-mcp no seu computador e os agentes de IA que você executa ali | O que um agente pede: favoritos correspondentes (com suas pastas, datas de inclusão, tags e resumos), nomes de pastas, o título e o URL da página atual, se os links salvos ainda funcionam (depois que você permitir o acesso a sites) e, com **Ler conteúdo da página** ativado, o texto de uma página. Valores privados em títulos e URLs ficam ocultos, a menos que você desative isso. Os agentes podem enviar o que leem ao próprio provedor de IA. Cada consulta aparece na atividade de IA enquanto **Registrar solicitações** estiver ativado |
 
 Cada recurso de IA que usa um provedor também envia seu texto de **Sobre mim** (configurações de IA) enquanto tiver conteúdo; ele é vazio por padrão.

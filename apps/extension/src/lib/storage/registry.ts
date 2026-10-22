@@ -135,6 +135,8 @@ export const DEVICE_SETTING_KEYS = [
   'quickSaveFixedFolder',
   /** How much of this device's local storage saved site icons may take. */
   'siteIconsMaxCacheKb',
+  /** How much of this device's storage bookmark covers may take. */
+  'coversMaxCacheMb',
   /** Recording AI requests is a debugging choice for one device; the log stays on it too. */
   'aiActivityRecording',
   /** Whether Ask AI adds the provider's web search, chosen where the chat runs. */
@@ -206,4 +208,9 @@ export const INDEXED_DATABASES = {
    * search; derived from the pages and downloaded again when needed, so never backed up.
    */
   pageText: { name: 'bookmark-scout-page-text', backup: 'exclude' },
+  /**
+   * Covers (`lib/cover-store.ts`): small copies of the preview images of the pages the user
+   * fetched covers for, shown on the manager's cards; fetched again when needed, so never backed up.
+   */
+  covers: { name: 'bookmark-scout-covers', backup: 'exclude' },
 } as const satisfies Record<string, { name: string; backup: BackupPolicy }>;
