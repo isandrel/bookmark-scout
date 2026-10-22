@@ -73,6 +73,15 @@ test.describe('with website access granted', () => {
     await expect(hit).toContainText('page:');
     await expect(hit).toContainText('quokka');
 
+    // Turned off, search leaves page text out without deleting it; turned on, it is back.
+    await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:quokka')}`);
+    await expect(page.locator('tbody tr').filter({ hasText: 'Trip notes' })).toBeVisible();
+    await setSettings(extensionWorker, { pageTextEnabled: false });
+    await expect(page.locator('tbody tr').filter({ hasText: 'Trip notes' })).toHaveCount(0);
+    await setSettings(extensionWorker, { pageTextEnabled: true });
+    await expect(page.locator('tbody tr').filter({ hasText: 'Trip notes' })).toBeVisible();
+    expect(await indexedCount()).toBe(1);
+
     // Options says what the index keeps and deletes it.
     await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
     const panel = page.getByTestId('page-text-index');

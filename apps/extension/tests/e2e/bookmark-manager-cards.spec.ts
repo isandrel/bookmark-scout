@@ -3,8 +3,8 @@
  * same selection, keys, menus, and opening, kept on this device.
  */
 import { expect, test } from './fixtures';
-import { managerUrl } from './manager-helpers';
-import { readStored, STORAGE_ITEMS } from './storage';
+import { managerSearch, managerUrl } from './manager-helpers';
+import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 import { seedFolder } from './tool-helpers';
 
 test.use({ viewport: { width: 1400, height: 900 } });
@@ -66,4 +66,47 @@ test('cards show the folder as the list does, with selection, keys, and menus, a
   await toggle.getByRole('button', { name: 'List' }).click();
   await expect(page.getByTestId('bookmark-grid')).toBeVisible();
   await expect(page.locator('tbody tr').filter({ hasText: 'Deep Link' })).toBeVisible();
+});
+
+test('cards keep the search, selection, and live changes the list has', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Cards Parity', [
+    { title: 'Work Plan', url: 'https://plan.e2e.invalid/' },
+    { title: 'Work Notes', url: 'https://notes.e2e.invalid/' },
+    { title: 'Holiday', url: 'https://holiday.e2e.invalid/' },
+  ]);
+  const ids = seeded.ids as Record<string, string>;
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [ids['Work Plan'] as string]: { tags: ['work'] },
+    [ids['Work Notes'] as string]: { tags: ['work'] },
+  });
+  await page.goto(`${managerUrl(extensionId, seeded.folderId)}`);
+  const search = managerSearch(page);
+  await search.fill('tag:work');
+  const rows = page.locator('tbody tr');
+  await expect(rows).toHaveCount(2);
+  await rows.filter({ hasText: 'Work Plan' }).getByRole('checkbox').check();
+  await expect(rows.filter({ hasText: 'Work Plan' })).toHaveAttribute('aria-selected', 'true');
+
+  // The same rows, the same selection, and the same search after the switch.
+  await page
+    .getByRole('group', { name: 'Manager View' })
+    .getByRole('button', { name: 'Cards' })
+    .click();
+  const cards = page.getByTestId('bookmark-cards').locator('[data-slot="bookmark-card"]');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.filter({ hasText: 'Work Plan' })).toHaveAttribute('aria-selected', 'true');
+  await expect(search).toHaveValue('tag:work');
+
+  // Changes made in the browser show at once, as in the list.
+  await extensionWorker.evaluate(
+    (id) => chrome.bookmarks.update(id, { title: 'Work Plan v2' }),
+    ids['Work Plan'] as string,
+  );
+  await expect(cards.filter({ hasText: 'Work Plan v2' })).toHaveCount(1);
+  await extensionWorker.evaluate((id) => chrome.bookmarks.remove(id), ids['Work Notes'] as string);
+  await expect(cards).toHaveCount(1);
 });
