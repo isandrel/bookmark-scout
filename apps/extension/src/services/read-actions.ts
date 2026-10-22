@@ -39,6 +39,50 @@ function searchScore(bookmark: LibraryBookmark, words: readonly string[]): numbe
   );
 }
 
+/**
+ * The bookmarks a query in the search query language (`search-query.ts`) matches, by id, the way
+ * the extension's search boxes match it; an error naming what could not be read. Unlike `query`,
+ * whose words each find bookmarks on their own, every term must match.
+ */
+function matchFilterQuery(
+  library: ActionLibrary,
+  text: string,
+): ReadonlyMap<string, SearchResult> | ActionError {
+  const { query, diagnostics } = parseSearchQuery(text);
+  if (diagnostics.length > 0) {
+    return actionError(
+      'invalid_input',
+      `filterQuery could not be read: ${diagnostics.map(describeDiagnostic).join('; ')}.`,
+      { hint: agentText('search_bookmarks.filter_query_hint') },
+    );
+  }
+  const match = compileSearchQuery(query);
+  const results = new Map<string, SearchResult>();
+  for (const document of buildSearchDocuments(library.tree, library.metadata)) {
+    if (document.kind !== 'bookmark') continue;
+    const result = match(document);
+    if (result) results.set(document.id, result);
+  }
+  return results;
+}
+
+function describeDiagnostic(diagnostic: SearchQueryDiagnostic): string {
+  switch (diagnostic.code) {
+    case 'unknown-operator':
+      return `unknown operator "${diagnostic.operator}:"`;
+    case 'unknown-value':
+      return `unknown value "${diagnostic.operator}:${diagnostic.value}"`;
+    case 'invalid-date':
+      return `invalid date "${diagnostic.value}"`;
+    case 'unclosed-quote':
+      return 'a quote is not closed';
+    case 'too-long':
+      return `longer than ${diagnostic.limit} characters`;
+    case 'too-many-terms':
+      return `more than ${diagnostic.limit} terms`;
+  }
+}
+
 function parseDate(value: string | undefined, field: string): number | ActionError | undefined {
   if (value === undefined) return undefined;
   const time = Date.parse(value);
@@ -76,6 +120,7 @@ const searchBookmarks = defineAction({
   },
   input: z.object({
     query: z.string().optional().describe(agentText('search_bookmarks.query')),
+    filterQuery: z.string().optional().describe(agentText('search_bookmarks.filter_query')),
     folder: folderSpec.optional(),
     tags: z.array(z.string()).optional().describe(agentText('search_bookmarks.tags')),
     domain: z.string().optional().describe(agentText('search_bookmarks.domain')),
@@ -88,13 +133,14 @@ const searchBookmarks = defineAction({
     cursor: cursorInput,
   }),
   output: z.object({ results: z.array(actionBookmarkSchema), ...pagedOutput }),
-  describe: (input) =>
-    input.query?.trim()
-      ? t('askAI_toolSearchBookmarks', input.query)
-      : t('askAI_toolFilterBookmarks'),
+  describe: (input) => {
+    const text = input.query?.trim() || input.filterQuery?.trim();
+    return text ? t('askAI_toolSearchBookmarks', text) : t('askAI_toolFilterBookmarks');
+  },
   async execute(input) {
     const words = (input.query ?? '').toLowerCase().split(/\s+/).filter(Boolean);
-    const filters = [input.folder, input.tags?.length, input.domain, input.addedAfter];
+    const filterQuery = input.filterQuery?.trim();
+    const filters = [input.folder, input.tags?.length, input.domain, input.addedAfter, filterQuery];
     if (words.length === 0 && !filters.some(Boolean) && !input.addedBefore) {
       return actionError('invalid_input', 'Give a query or at least one filter.', {
         hint: 'For an overview of the library, call listFolders instead.',
@@ -110,6 +156,8 @@ const searchBookmarks = defineAction({
     if (isActionError(folder)) return folder;
     const tags = (input.tags ?? []).map((tag) => tag.trim().toLowerCase()).filter(Boolean);
     const domain = input.domain ? withoutWww(input.domain.trim().toLowerCase()) : undefined;
+    const filtered = filterQuery ? matchFilterQuery(library, filterQuery) : undefined;
+    if (isActionError(filtered)) return filtered;
 
     const matches = library.bookmarks.flatMap((bookmark) => {
       if (folder && !isInFolder(bookmark.folder, folder)) return [];
@@ -122,9 +170,11 @@ const searchBookmarks = defineAction({
       }
       const own = new Set((bookmark.metadata.tags ?? []).map((tag) => tag.toLowerCase()));
       if (!tags.every((tag) => own.has(tag))) return [];
+      const queried = filtered?.get(bookmark.node.id);
+      if (filtered && !queried) return [];
       const score = searchScore(bookmark, words);
       if (words.length > 0 && score === 0) return [];
-      return [{ bookmark, score, added }];
+      return [{ bookmark, score: score + (queried?.score ?? 0), added }];
     });
     matches.sort((left, right) => right.score - left.score || right.added - left.added);
 

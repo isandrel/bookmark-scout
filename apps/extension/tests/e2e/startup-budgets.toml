@@ -32,7 +32,9 @@
 # tool results (1,133 on 2026-10-20), then from 1150 for the seven settings that were config and
 # their explanatory tooltips (1,159 on 2026-10-21), then from 1170 for the settings' help
 # toggletips (1,172 on 2026-10-21).
-"options.html" = 1185
+# Raised from 1185 on 2026-10-22 for the manager view setting and the filter query action in the
+# action registry the AI permission settings list (1,191).
+"options.html" = 1200
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
@@ -44,14 +46,17 @@
 # first time a tool runs (1,375 measured).
 # Raised from 1390 on 2026-10-22 for the one-row toolbar: the Filters menu, filter chips, and the
 # search syntax help with its operator list (1,395).
-"bookmarks.html" = 1405
+# Raised from 1405 on 2026-10-22 for the filter query action in the action registry the manager
+# loads for its menus (1,406).
+"bookmarks.html" = 1415
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
 # Raised from 690 on 2026-10-21 for the tooltip provider every page now mounts at its root (700).
 # Raised from 710 on 2026-10-21 for waiting out a short Retry-After in the link check the action
 # registry carries (711).
-"agent-approval.html" = 720
+# Raised from 720 on 2026-10-22 for the filter query action, which parses the search operators (722).
+"agent-approval.html" = 730
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
 # Raised from 380 on 2026-10-21 for config/ai/agent-text.toml, which holds the answer schema text

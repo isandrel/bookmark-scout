@@ -130,27 +130,31 @@
 # Raised on 2026-10-22 (javascript 3,704,000 to 3,716,000, css 84,000 to 85,000) for the manager's
 # cards view: the card grid, its key moves, and the List/Cards toggle. Firefox measured 3,705,755 B
 # of JavaScript and 84,137 B of CSS.
+# Raised on 2026-10-22 (uncompressed 5,686,000 to 5,704,000, javascript 3,716,000 to 3,726,000,
+# other 28,500 to 29,000) for letting Ask AI and agents search with the search boxes' operators
+# (the filter query action, its diagnostics, and its agent text). Firefox measured 5,694,475 B
+# uncompressed, 3,716,009 B of JavaScript, and 28,727 B of other files on b52783da.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_787_000
-raw_bytes = 5_686_000
+raw_bytes = 5_704_000
 
 [targets.edge]
 zip_bytes = 1_787_000
-raw_bytes = 5_686_000
+raw_bytes = 5_704_000
 
 [targets.firefox]
 zip_bytes = 1_787_000
-raw_bytes = 5_686_000
+raw_bytes = 5_704_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_716_000
+javascript = 3_726_000
 css = 85_000
 fonts = 143_000
 locales = 1_424_000
 images = 320_000
-other = 28_500
+other = 29_000
