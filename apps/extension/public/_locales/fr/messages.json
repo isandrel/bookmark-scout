@@ -627,6 +627,26 @@
         "message": "Liens",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "Barre des outils",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "Disposition de la barre des outils",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "Onglets affiche une section de la barre des outils du gestionnaire à la fois ; Une liste affiche toutes les sections à la suite.",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "Onglets",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "Une liste",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "Suppression",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1048,6 +1068,14 @@
     "tools_title": {
         "message": "Outils",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "Tout",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "Afficher les outils",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "Vérifier les liens morts",
@@ -7338,6 +7366,18 @@
     "settings_sectionDates": {
         "message": "Dates et heures",
         "description": "Settings section heading: how dates and times show."
+    },
+    "settings_sectionAddresses": {
+        "message": "Adresses",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "Afficher la barre oblique finale",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "Affiche le / qui termine les adresses, comme dans https://example.com/. Les liens ouvrent toujours l’adresse exacte.",
+        "description": "Setting description for Show Trailing Slash"
     },
     "settings_dateFormat": {
         "message": "Format de date",

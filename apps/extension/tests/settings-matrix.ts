@@ -148,6 +148,9 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e('options-settings.spec.ts', 'theme is one synced setting applied live in every open page'),
   ]),
   showFavicons: tested(POPUP, [popupDisplay]),
+  showTrailingSlash: tested('components/ui/url-link.tsx', [
+    unit('display-url.test.ts', 'drops only the final slash, unless the setting shows it'),
+  ]),
   dateFormat: tested('lib/settings-storage.ts', [
     unit(
       'i18n-date-format.test.ts',
@@ -394,6 +397,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ],
     'Edited in Options > AI > Local AI agents (AgentBridgeActionsPanel).',
   ),
+  toolsSidebarLayout: tested('components/bookmarks/ToolsSidebar.tsx', [
+    e2e(
+      'tool-settings.spec.ts',
+      'the Tools sidebar shows one section a tab, and One list shows them all',
+    ),
+  ]),
   managerMenuActions: tested(
     'components/ui/table/bookmark-row-menu.tsx',
     [

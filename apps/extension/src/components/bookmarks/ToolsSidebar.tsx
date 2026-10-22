@@ -5,16 +5,21 @@
  */
 
 import { Wrench } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useId, useState } from 'react';
+
+/** The tab each card a link can open on (`#<id>` in the manager's address) is in. */
+const HASH_TABS: Readonly<Record<string, ToolSidebarTab>> = { [MANAGER_EXPORT_HASH]: 'data' };
 
 type ToolSectionProps = {
   title: string;
+  /** Hidden while another tab shows; it stays mounted, so a running tool keeps its review. */
+  hidden?: boolean;
   children: React.ReactNode;
 };
 
-function ToolSection({ title, children }: ToolSectionProps) {
+function ToolSection({ title, hidden, children }: ToolSectionProps) {
   return (
-    <section className="space-y-2">
+    <section className="space-y-2" hidden={hidden}>
       <h3 className="px-1 text-xs font-semibold text-muted-foreground">{title}</h3>
       {/* Tools are rows in one panel, separated by lines, not a stack of cards. */}
       <div className="divide-y overflow-hidden rounded-lg border bg-card">{children}</div>
@@ -218,6 +223,29 @@ export const ToolsSidebar = memo(function ToolsSidebar({
     saveFile: exportPrivacyReview.reviewBeforeExport,
   };
   const showData = settings.dataShowExport || settings.dataShowImport;
+  // Tabs for the sections that have tools to show, then Data, after All.
+  const sections = TOOL_SECTIONS.map((section) => ({
+    ...section,
+    tools: getSectionTools(settings, section.id),
+  })).filter((section) => section.tools.length > 0);
+  const tabs: { id: ToolSidebarTab; label: string }[] = [
+    { id: 'all', label: t('tools_tabAll') },
+    ...sections.map((section) => ({ id: section.id, label: t(section.titleKey) })),
+    ...(showData ? [{ id: 'data' as const, label: t('tools_category_data') }] : []),
+  ];
+  // A link to a card (the manager's address ends in its id) opens on the card's tab.
+  const [pickedTab, setPickedTab] = useState<ToolSidebarTab>(
+    () => HASH_TABS[window.location.hash.slice(1)] ?? TOOL_SIDEBAR_DEFAULT_TAB,
+  );
+  const useTabs = settings.toolsSidebarLayout === 'tabs';
+  // A tab whose tools were all turned off falls back to the first tab after All.
+  const tab = !useTabs
+    ? 'all'
+    : tabs.some((entry) => entry.id === pickedTab)
+      ? pickedTab
+      : (tabs[1]?.id ?? 'all');
+  const shows = (id: ToolSidebarTab) => tab === 'all' || tab === id;
+  const tabsLabelId = useId();
 
   return (
     <div className="h-full flex flex-col">
@@ -233,10 +261,28 @@ export const ToolsSidebar = memo(function ToolsSidebar({
       <div className="flex-1 overflow-y-auto">
         {isLoading ? null : (
           <div className="space-y-5 p-3">
-            {TOOL_SECTIONS.map((section) => {
-              const tools = getSectionTools(settings, section.id);
-              return tools.length ? (
-                <ToolSection key={section.id} title={t(section.titleKey)}>
+            {useTabs ? (
+              <div data-testid="tools-tabs">
+                <span id={tabsLabelId} className="sr-only">
+                  {t('tools_tabsLabel')}
+                </span>
+                <SegmentedControl
+                  aria-labelledby={tabsLabelId}
+                  value={tab}
+                  options={tabs.map((entry) => ({ value: entry.id, label: entry.label }))}
+                  className="h-auto w-full flex-wrap"
+                  onValueChange={(value) => setPickedTab(value as ToolSidebarTab)}
+                />
+              </div>
+            ) : null}
+            {sections.map((section) => {
+              const tools = section.tools;
+              return (
+                <ToolSection
+                  key={section.id}
+                  title={t(section.titleKey)}
+                  hidden={!shows(section.id)}
+                >
                   {tools.map((tool) => (
                     <ToolEntry
                       key={tool.id}
@@ -247,11 +293,11 @@ export const ToolsSidebar = memo(function ToolsSidebar({
                     />
                   ))}
                 </ToolSection>
-              ) : null;
+              );
             })}
 
             {showData ? (
-              <ToolSection title={t('tools_category_data')}>
+              <ToolSection title={t('tools_category_data')} hidden={!shows('data')}>
                 {settings.dataShowExport ? (
                   <ExportToolCard environment={environment} currentFolderName={currentFolderName} />
                 ) : null}

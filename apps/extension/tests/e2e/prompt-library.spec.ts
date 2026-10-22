@@ -4,7 +4,7 @@ import type { BrowserContext } from '@playwright/test';
 import { appRoot, readConfigToml } from '../config-files';
 import { expect, test } from './fixtures';
 import { readStored, STORAGE_ITEMS, seedAIServices, writeStored } from './storage';
-import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
+import { openTools, seedFolder, setSettings, showAllTools, toolCard } from './tool-helpers';
 
 test('[mocked provider contract] a custom prompt saved in Options is what auto-tagging sends', async ({
   context,
@@ -130,6 +130,7 @@ test('[mocked provider contract] auto-tagging asks for the AI output language: t
   const analyze = async () => {
     await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
     await page.getByTitle(ja.bookmarks_showTools.message).click();
+    await showAllTools(page);
     await toolCard(page, ja.tools_autoTagging.message)
       .getByRole('button', { name: ja.action_analyze.message })
       .click();
@@ -366,7 +367,12 @@ test('the prompt size counter and limit count the prompt as sync storage stores 
   // Quotes take two bytes each once stored, so this is over the limit although the text is not,
   // and the counter, the error, and the limit all use the same unit.
   await text.fill('"'.repeat(maxBytes - 10));
-  await expect(size).toHaveText(new RegExp(`^13\\.[5-6] KB of ${limit}$`));
+  // Twice the text's length, plus the name and fields (at most a few hundred bytes).
+  const quotedBytes = 2 * (maxBytes - 10);
+  await expect(size).toHaveText(new RegExp(` KB of ${limit}$`));
+  const shownKilobytes = Number.parseFloat((await size.textContent()) ?? '');
+  expect(shownKilobytes).toBeGreaterThanOrEqual(Math.floor((quotedBytes / 1024) * 10) / 10);
+  expect(shownKilobytes).toBeLessThanOrEqual((quotedBytes + 512) / 1024);
   await expect(size).toHaveClass(/text-destructive-text/);
   await editor.getByRole('button', { name: 'Save prompt' }).click();
   await expect(editor.getByRole('alert')).toHaveText(

@@ -625,6 +625,7 @@ const fields = {
   showFavicons: switchField('appearance.theme_icons.show_favicons', 'showFavicons'),
   browserIconCache: switchField('appearance.theme_icons.browser_icon_cache', 'browserIconCache'),
   faviconSize: numberChoiceField('appearance.theme_icons.favicon_size', 'faviconSize'),
+  showTrailingSlash: switchField('appearance.addresses.show_trailing_slash', 'showTrailingSlash'),
 
   searchDebounceMs: numberField('search.search.debounce_ms', 'searchDelay', { unit: 'ms' }),
   maxSearchResults: numberChoiceField('search.search.max_results', 'maxResults'),
@@ -712,6 +713,15 @@ const fields = {
     'agentBridgeDisabledActions',
   ),
   managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
+  toolsSidebarLayout: enumField(
+    'behavior.tools_sidebar.layout',
+    'toolsSidebarLayout',
+    z.enum(['tabs', 'list']),
+    (value) =>
+      ({ tabs: t('settings_toolsSidebarLayoutTabs'), list: t('settings_toolsSidebarLayoutList') })[
+        value
+      ],
+  ),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField(
     'ai_tools.reorganization.min_items_per_folder',
@@ -1141,24 +1151,34 @@ export const defaultSettings: Settings = settingsSchema.parse({});
 // Dates show in the default formats until the settings are read.
 setDefaultDateTimeFormat(defaultSettings.dateFormat, defaultSettings.timeFormat);
 
-/** Where a setting is stored: synced to every device, or kept on this one (`DEVICE_SETTING_KEYS`). */
-export type SettingScope = 'sync' | 'device';
+/**
+ * Where a setting is stored: synced to every device (`sync`, or `lists` for a list, so each
+ * synced item stays within the sync quota), or kept on this one (`DEVICE_SETTING_KEYS`).
+ */
+export type SettingScope = 'sync' | 'lists' | 'device';
+export const SETTING_SCOPES = [
+  'sync',
+  'lists',
+  'device',
+] as const satisfies readonly SettingScope[];
 
 const deviceSettingKeys = new Set<string>(DEVICE_SETTING_KEYS);
 
 export function getSettingScope(key: keyof Settings): SettingScope {
-  return deviceSettingKeys.has(key) ? 'device' : 'sync';
+  if (deviceSettingKeys.has(key)) return 'device';
+  return Array.isArray(defaultSettings[key]) ? 'lists' : 'sync';
 }
 
+const SETTINGS_KEYS = Object.keys(defaultSettings) as (keyof Settings)[];
+
 /** Every setting stored in `scope`. */
-export const SETTING_KEYS_BY_SCOPE: Readonly<Record<SettingScope, readonly (keyof Settings)[]>> = {
-  sync: (Object.keys(defaultSettings) as (keyof Settings)[]).filter(
-    (key) => getSettingScope(key) === 'sync',
-  ),
-  device: (Object.keys(defaultSettings) as (keyof Settings)[]).filter(
-    (key) => getSettingScope(key) === 'device',
-  ),
-};
+export const SETTING_KEYS_BY_SCOPE: Readonly<Record<SettingScope, readonly (keyof Settings)[]>> =
+  Object.fromEntries(
+    SETTING_SCOPES.map((scope) => [
+      scope,
+      SETTINGS_KEYS.filter((key) => getSettingScope(key) === scope),
+    ]),
+  ) as Record<SettingScope, (keyof Settings)[]>;
 
 type NumberSettingKey = {
   [K in SettingsKey]: SettingsFields[K] extends NumberFieldDefinition ? K : never;
@@ -1246,6 +1266,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
       },
       { id: 'dates', labelKey: 'settings_sectionDates', fields: ['dateFormat', 'timeFormat'] },
+      { id: 'addresses', labelKey: 'settings_sectionAddresses', fields: ['showTrailingSlash'] },
       {
         id: 'popup',
         labelKey: 'settings_sectionPopup',
@@ -1267,6 +1288,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'links',
         labelKey: 'settings_sectionLinks',
         fields: ['linkOpenTarget', 'openConfirmAbove'],
+      },
+      {
+        id: 'toolsSidebar',
+        labelKey: 'settings_sectionToolsSidebar',
+        fields: ['toolsSidebarLayout'],
       },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       {

@@ -157,6 +157,27 @@ describe('settings persistence', () => {
     expect((await getSettings()).quickSaveFixedFolder).toBe('42');
   });
 
+  it('keeps list settings in their own synced item, and moves lists an earlier release stored', async () => {
+    await saveSettings({ urlCleanerRemoveParams: ['utm_*'], theme: 'dark' });
+    expect(await readStored()).toEqual({ theme: 'dark' });
+    expect(await readStoredData(STORAGE_ITEMS.settingsLists)).toEqual({
+      urlCleanerRemoveParams: ['utm_*'],
+    });
+    expect(getSettingScope('urlCleanerRemoveParams')).toBe('lists');
+    expect(getSettingScope('agentBridgeDisabledActions')).toBe('device');
+
+    // Lists an earlier release kept in the settings item still count, and the next save moves them.
+    await seedStored(STORAGE_ITEMS.settingsLists, {});
+    await seedStored(STORAGE_ITEMS.settings, { theme: 'dark', managerMenuActions: ['open'] });
+    expect((await getSettings()).managerMenuActions).toEqual(['open']);
+    await saveSettings({ showFavicons: false });
+    expect(await readStored()).toEqual({ theme: 'dark', showFavicons: false });
+    expect(await readStoredData(STORAGE_ITEMS.settingsLists)).toEqual({
+      managerMenuActions: ['open'],
+    });
+    expect((await getSettings()).managerMenuActions).toEqual(['open']);
+  });
+
   it('keeps settings a newer release stored when it saves its own', async () => {
     await seedStored(STORAGE_ITEMS.settings, {
       theme: 'dark',
@@ -230,7 +251,7 @@ describe('settings persistence', () => {
     stop();
   });
 
-  it('caps the synced settings item within the 8,192-byte sync quota at its largest', () => {
+  it('caps each synced settings item within the 8,192-byte sync quota at its largest', () => {
     // Every synced setting at its largest stored form: lists full of the longest names, text at
     // its maximum length in the costliest character (Chrome stores `<` as 6 bytes), numbers at
     // their longest form, and each choice at its longest option.
@@ -239,7 +260,7 @@ describe('settings persistence', () => {
     const longestOf = <T>(values: T[]) =>
       values.reduce((a, b) => (JSON.stringify(b).length > JSON.stringify(a).length ? b : a));
     const largest = Object.fromEntries(
-      SETTING_KEYS_BY_SCOPE.sync.map((key) => {
+      [...SETTING_KEYS_BY_SCOPE.sync, ...SETTING_KEYS_BY_SCOPE.lists].map((key) => {
         const field = meta[key];
         const fallback = defaultSettings[key];
         if (field.list) {
@@ -272,11 +293,17 @@ describe('settings persistence', () => {
       );
     }
 
-    const bytes = syncItemBytes(
-      storageAreaKey(STORAGE_ITEMS.settings),
-      toStoredEnvelope(STORAGE_ITEMS.settings, largest),
-    );
-    expect(bytes).toBeLessThanOrEqual(8192);
+    // Each synced item holds its own scope's settings and has its own quota.
+    for (const [scope, item] of [
+      ['sync', STORAGE_ITEMS.settings],
+      ['lists', STORAGE_ITEMS.settingsLists],
+    ] as const) {
+      const stored = Object.fromEntries(
+        SETTING_KEYS_BY_SCOPE[scope].map((key) => [key, largest[key]]),
+      );
+      const bytes = syncItemBytes(storageAreaKey(item), toStoredEnvelope(item, stored));
+      expect(bytes, item.name).toBeLessThanOrEqual(8192);
+    }
   });
 });
 

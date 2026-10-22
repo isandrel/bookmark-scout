@@ -109,11 +109,21 @@ export async function removeStored(
 const deviceSettingKeys = new Set<string>(DEVICE_SETTING_KEYS);
 
 /** `settings` split into what sync storage holds and what this device's storage holds. */
+/**
+ * Settings by the item that stores them: this device's, synced lists (every list setting, as
+ * `getSettingScope` decides by the default being a list), and the other synced ones.
+ */
 function splitSettings(settings: Record<string, unknown>) {
   const entries = Object.entries(settings);
+  const device = (key: string) => deviceSettingKeys.has(key);
   return {
-    sync: Object.fromEntries(entries.filter(([key]) => !deviceSettingKeys.has(key))),
-    device: Object.fromEntries(entries.filter(([key]) => deviceSettingKeys.has(key))),
+    sync: Object.fromEntries(
+      entries.filter(([key, value]) => !device(key) && !Array.isArray(value)),
+    ),
+    lists: Object.fromEntries(
+      entries.filter(([key, value]) => !device(key) && Array.isArray(value)),
+    ),
+    device: Object.fromEntries(entries.filter(([key]) => device(key))),
   };
 }
 
@@ -126,12 +136,18 @@ export async function setSettings(
   target: StorageTarget,
   updates: Record<string, unknown>,
 ): Promise<void> {
-  const { sync, device } = splitSettings(updates);
+  const { sync, lists, device } = splitSettings(updates);
   type Overrides = Record<string, unknown>;
   if (Object.keys(sync).length > 0) {
     await updateStored<Overrides>(target, STORAGE_ITEMS.settings, (current) => ({
       ...current,
       ...sync,
+    }));
+  }
+  if (Object.keys(lists).length > 0) {
+    await updateStored<Overrides>(target, STORAGE_ITEMS.settingsLists, (current) => ({
+      ...current,
+      ...lists,
     }));
   }
   if (Object.keys(device).length > 0) {
@@ -147,9 +163,10 @@ export async function replaceSettings(
   target: StorageTarget,
   settings: Record<string, unknown>,
 ): Promise<void> {
-  const { sync, device } = splitSettings(settings);
+  const { sync, lists, device } = splitSettings(settings);
   await writeStoredItems(target, [
     [STORAGE_ITEMS.settings, sync],
+    [STORAGE_ITEMS.settingsLists, lists],
     [STORAGE_ITEMS.deviceSettings, device],
   ]);
 }
@@ -162,6 +179,7 @@ export async function readSettings(target: StorageTarget): Promise<Record<string
   type Overrides = Record<string, unknown>;
   return {
     ...(await readStored<Overrides>(target, STORAGE_ITEMS.settings)),
+    ...(await readStored<Overrides>(target, STORAGE_ITEMS.settingsLists)),
     ...(await readStored<Overrides>(target, STORAGE_ITEMS.deviceSettings)),
   };
 }

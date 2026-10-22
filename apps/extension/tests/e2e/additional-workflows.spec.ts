@@ -9,6 +9,7 @@ import {
 import { expect, test, toastRegion } from './fixtures';
 import { toggleSearchOption } from './popup-helpers';
 import { STORAGE_ITEMS, seedAIServices, setSettings, updateStored } from './storage';
+import { showAllTools } from './tool-helpers';
 
 // Dead-link and metadata scans need the optional web host access; route mocks stand in for sites.
 test.use({ grantWebHostAccess: true });
@@ -62,6 +63,7 @@ function toolCard(page: Page, title: string) {
 async function openTools(page: Page, extensionId: string, folderId: string) {
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
 }
 
 test('popup search honors case, whole-word, and regex controls', async ({

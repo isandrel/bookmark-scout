@@ -711,8 +711,20 @@ const sidebarConfig = readConfig(
       .refine(listsEachOnce(Object.keys(TOOL_DEFINITIONS)), 'must list every tool once'),
     top_level_scope: z.enum(['folder', 'all']),
     export_scope: z.enum(['folder', 'all']),
+    default_tab: z
+      .string()
+      .refine(
+        (tab) => ['all', 'data', ...Object.keys(TOOL_SECTION_TITLES)].includes(tab),
+        'must be "all", "data", or a section',
+      ),
   }),
 );
+
+/** A tab of the sidebar: every section, one section, or the data section (export and import). */
+export type ToolSidebarTab = 'all' | ToolSectionId | 'data';
+
+/** The tab the sidebar opens on (`default_tab`). */
+export const TOOL_SIDEBAR_DEFAULT_TAB = sidebarConfig.default_tab as ToolSidebarTab;
 
 /** The scope the export card starts on in a folder (`export_scope`). */
 export const EXPORT_DEFAULT_SCOPE: BookmarkToolScope = sidebarConfig.export_scope;

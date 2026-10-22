@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { setSettings } from './storage';
+import { showAllTools, showToolsTab } from './tool-helpers';
 
 async function seedFolder(worker: Worker, title: string) {
   return worker.evaluate(async (folderTitle) => {
@@ -50,6 +51,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
 
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
   for (const title of [
     'AI Context Packer',
     'Auto-Tagging',
@@ -134,6 +136,7 @@ test('unsupported and malformed saved scopes fall back without resetting other t
   });
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
   // A malformed saved scope falls back to the default, all bookmarks.
   await expect(toolCard(page, 'Bookmark Statistics').getByRole('combobox')).toContainText(
     'All Bookmarks',
@@ -188,6 +191,7 @@ test('tools sidebar lists cleanup tools first and starts on all bookmarks at the
   );
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${rootId}`);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
   const sidebar = page.getByTestId('tools-sidebar');
   const headings = await sidebar.getByRole('heading', { level: 3 }).allTextContents();
   expect(headings[0]).toBe('Maintenance');
@@ -201,6 +205,7 @@ test('tools sidebar lists cleanup tools first and starts on all bookmarks at the
   // In a folder, the Default Scope setting applies again.
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
   await expect(toolCard(page, 'Check Dead Links').getByRole('combobox')).toHaveText(
     'E2E Tool Scope',
   );
@@ -233,6 +238,7 @@ test('tools sidebar headings, cards, scopes, and dialogs follow the selected lan
 
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
   for (const heading of ['AI', 'Maintenance', 'Security', 'Analytics', 'Data']) {
     await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
   }
@@ -267,4 +273,35 @@ test('tools sidebar headings, cards, scopes, and dialogs follow the selected lan
   await expect(page.getByRole('dialog', { name: 'URL 정리' })).toContainText(
     '0개의 북마크를 정리할 수 있습니다',
   );
+});
+
+test('the Tools sidebar shows one section a tab, and One list shows them all', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E Tool Tabs');
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
+  await page.getByTitle('Show tools').click();
+  const sidebar = page.getByTestId('tools-sidebar');
+  const tabs = sidebar.getByTestId('tools-tabs').getByRole('radio');
+  await expect(tabs.first()).toHaveText('All');
+  // It opens on Maintenance (default_tab), with the other sections hidden.
+  await expect(sidebar.getByTestId('tools-tabs').getByRole('radio', { checked: true })).toHaveText(
+    'Maintenance',
+  );
+  await expect(toolCard(page, 'Duplicate Cleaner')).toBeVisible();
+  await expect(toolCard(page, 'Metadata Fetcher')).toBeHidden();
+
+  await showToolsTab(page, 'Data');
+  await expect(toolCard(page, 'Export Bookmarks')).toBeVisible();
+  await expect(toolCard(page, 'Duplicate Cleaner')).toBeHidden();
+  await showToolsTab(page, 'All');
+  await expect(toolCard(page, 'Duplicate Cleaner')).toBeVisible();
+  await expect(toolCard(page, 'Export Bookmarks')).toBeVisible();
+
+  await setSettings(extensionWorker, { toolsSidebarLayout: 'list' });
+  await expect(sidebar.getByTestId('tools-tabs')).toHaveCount(0);
+  await expect(toolCard(page, 'Metadata Fetcher')).toBeVisible();
+  await expect(toolCard(page, 'Duplicate Cleaner')).toBeVisible();
 });

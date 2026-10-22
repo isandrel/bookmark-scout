@@ -112,6 +112,8 @@
 # Raised again on 2026-10-22 (uncompressed 5,614,000 to 5,630,000, locales 1,368,000 to 1,382,000)
 # when the review list met the parameter name patterns (#774) on main: Firefox measured
 # 5,617,129 B uncompressed and 1,372,887 B of locales; the limits are about 10 KB above that.
+# Locales raised on 2026-10-22 (1,368,000 to 1,382,000) for the Tools sidebar tabs and their
+# layout setting in 9 languages; Firefox measured 1,371,070 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]

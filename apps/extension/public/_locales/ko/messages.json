@@ -619,6 +619,26 @@
         "message": "링크",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "도구 사이드바",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "도구 사이드바 레이아웃",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "탭은 관리자의 도구 사이드바를 한 번에 한 섹션씩 보여 주고, 한 목록은 모든 섹션을 이어서 보여 줍니다.",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "탭",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "한 목록",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "삭제",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1040,6 +1060,14 @@
     "tools_title": {
         "message": "도구",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "모두",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "도구 보기",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "깨진 링크 확인",
@@ -7318,6 +7346,18 @@
     "settings_sectionDates": {
         "message": "날짜와 시간",
         "description": "Settings section heading: how dates and times show."
+    },
+    "settings_sectionAddresses": {
+        "message": "주소",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "끝 슬래시 표시",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "https://example.com/처럼 주소 끝의 /를 표시합니다. 링크는 항상 정확한 주소를 엽니다.",
+        "description": "Setting description for Show Trailing Slash"
     },
     "settings_dateFormat": {
         "message": "날짜 형식",

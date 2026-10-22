@@ -3,6 +3,7 @@ import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { addressFilter, showTableColumns } from './manager-helpers';
 import { readSettings, setSettings } from './storage';
+import { showAllTools } from './tool-helpers';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -688,6 +689,7 @@ test('previews and applies duplicate and URL cleanup tools', async ({
   await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(3);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
 
   await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
   const duplicates = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
@@ -733,6 +735,7 @@ test('reports scoped statistics and privacy findings', async ({
   await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(2);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
 
   await toolCard(page, 'Bookmark Statistics').getByRole('button', { name: 'View' }).click();
   const statistics = page.getByRole('dialog', { name: 'Bookmark Statistics' });
@@ -758,6 +761,7 @@ test('exports and imports bookmark data without manual file handling', async ({
   await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(1);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
 
   const exportCard = toolCard(page, 'Export Bookmarks');
   await exportCard.getByRole('combobox', { name: 'Format' }).click();
