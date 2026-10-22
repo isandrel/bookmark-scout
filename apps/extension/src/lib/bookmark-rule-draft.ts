@@ -104,5 +104,5 @@ export function describeRule(rule: BookmarkRule): string {
     ...(rule.addTags.length > 0 ? [t('rules_summaryTags', formatList(rule.addTags))] : []),
     ...(rule.moveTo ? [t('rules_summaryMove', rule.moveTo.path)] : []),
   ];
-  return t('rules_summary', [rule.query, actions.join(t('format_separator'))]);
+  return t('rules_summary', [rule.query, formatSeparated(actions)]);
 }

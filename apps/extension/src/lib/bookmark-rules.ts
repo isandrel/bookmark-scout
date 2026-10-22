@@ -30,6 +30,7 @@ const rulesConfig = readConfig(
     auto_tag: z.strictObject({
       batch_window_ms: z.number().int().positive(),
       max_batch: z.number().int().positive(),
+      log_max: z.number().int().positive(),
     }),
   }),
 );

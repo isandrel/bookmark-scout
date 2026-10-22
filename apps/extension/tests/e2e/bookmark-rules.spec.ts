@@ -123,7 +123,9 @@ test('templates start turned off, and a run with no rule on says so', async ({
 });
 
 test('with Tag New Bookmarks on, a bookmark added in the browser gets its rules tags and stays put', async ({
+  extensionId,
   extensionWorker,
+  page,
 }) => {
   const seeded = await seedFolder(extensionWorker, 'E2E Auto Tag', [
     { title: 'Elsewhere', children: [] },
@@ -157,4 +159,13 @@ test('with Tag New Bookmarks on, a bookmark added in the browser gets its rules 
   expect(await tagsOf(extensionWorker, before)).toEqual([]);
   // The rule's move is never made automatically.
   expect(await parentOf(extensionWorker, repo)).toBe(seeded.folderId);
+
+  // Settings lists the tagging, and its Undo takes the tags back.
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const log = page.getByTestId('auto-tag-log');
+  await expect(log.getByTestId('auto-tag-entry')).toHaveCount(1);
+  await expect(log).toContainText('Repo');
+  await log.getByRole('button', { name: 'Undo the tags added to Repo' }).click();
+  await expect.poll(() => tagsOf(extensionWorker, repo)).toEqual([]);
+  await expect(log).toHaveCount(0);
 });

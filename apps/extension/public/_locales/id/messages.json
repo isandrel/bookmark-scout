@@ -8294,5 +8294,35 @@
     "covers_captureUnreadable": {
         "message": "Gambar tidak dapat digunakan sebagai sampul.",
         "description": "Toast: the picture could not be made into a cover"
+    },
+    "rules_autoLogTitle": {
+        "message": "Diberi tag otomatis",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+    },
+    "rules_autoLogClear": {
+        "message": "Kosongkan daftar",
+        "description": "Settings, Smart Rules: button that empties the list of automatic taggings; the tags stay"
+    },
+    "rules_autoLogTags": {
+        "message": "Ditambahkan $1 · $2",
+        "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
+    },
+    "rules_autoLogUndoLabel": {
+        "message": "Urungkan tag yang ditambahkan ke $1",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndone": {
+        "message": "Tag dihapus",
+        "description": "Toast title after undoing one automatic tagging"
+    },
+    "rules_autoLogUndoneDesc": {
+        "message": "$count$ tag dihapus dari bookmark.",
+        "description": "Toast after undoing one automatic tagging; how many tags were removed",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     }
 }

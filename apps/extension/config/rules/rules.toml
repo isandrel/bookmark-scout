@@ -35,3 +35,5 @@ add_tags = ["learning"]
 batch_window_ms = 2000
 # A batch with more bookmarks than this (a sync, or an import from another program) is left alone.
 max_batch = 20
+# Most recent automatic taggings kept for Settings, each with its Undo; older ones are dropped.
+log_max = 50

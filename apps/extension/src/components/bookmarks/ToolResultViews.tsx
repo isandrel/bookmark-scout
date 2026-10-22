@@ -1152,13 +1152,13 @@ export function RulesResultsView({
               <p className="text-xs text-warning">{t(RULE_BLOCK_KEYS[item.blocked])}</p>
             ) : null}
             <p className="truncate text-xs text-muted-foreground">
-              {[
+              {formatSeparated([
                 item.folderPath || t('tools_rootFolder'),
                 t(
                   'tools_rulesMatchedBy',
                   formatList(item.ruleIds.map((id) => ruleNames.get(id) ?? id)),
                 ),
-              ].join(t('format_separator'))}
+              ])}
             </p>
           </>
         )}
