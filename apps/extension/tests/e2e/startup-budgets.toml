@@ -74,7 +74,8 @@
 # Raised from 1435 on 2026-10-22 for the Russian, Indonesian, and Italian calendar locales (1452).
 # Raised from 1460 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
 # editor's search notes (1,463).
-"bookmarks.html" = 1470
+# Raised from 1470 on 2026-10-22 for tags, summaries, and folder counts on manager cards (1,474).
+"bookmarks.html" = 1480
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
