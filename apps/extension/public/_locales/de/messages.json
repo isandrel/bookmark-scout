@@ -8053,6 +8053,14 @@
         "message": "Lesezeichen, die Seitentext indexieren standardmäßig liest",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Adressen mit Anmeldedaten oder Geheimnissen überspringen",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Nie eine Adresse herunterladen, die einen Benutzernamen und ein Passwort oder einen Parameter aus den sensiblen Parametern der Datenschutzprüfung (etwa ein Token) enthält, den die Website erhalten würde. Ausgeschaltet werden diese Lesezeichen wie alle anderen gelesen.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Der aus jeder Seite gelesene Text. Nur was Sie speichern, wird behalten, auf diesem Gerät.",
         "description": "Index Page Text review: description"

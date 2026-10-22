@@ -8053,6 +8053,14 @@
         "message": "Favoritos que Indexar texto das páginas lê por padrão",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Ignorar endereços com dados de login ou segredos",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Nunca baixar um endereço que contenha um nome de usuário e uma senha, ou um parâmetro da lista Parâmetros confidenciais do Verificador de privacidade (como um token), que o site receberia. Desativado, esses favoritos são lidos como qualquer outro.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "O texto lido de cada página. Só o que você salvar é guardado, neste dispositivo.",
         "description": "Index Page Text review: description"

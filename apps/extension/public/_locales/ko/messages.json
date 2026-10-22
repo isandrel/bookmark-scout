@@ -8025,6 +8025,14 @@
         "message": "페이지 본문 색인이 기본으로 읽는 북마크",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "로그인 정보나 비밀이 든 주소 건너뛰기",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "사용자 이름과 비밀번호, 또는 개인정보 스캐너의 민감한 매개변수에 있는 매개변수(예: 토큰)가 든 주소는 사이트가 받게 되므로 다운로드하지 않습니다. 끄면 그런 북마크도 다른 북마크처럼 읽습니다.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "각 페이지에서 읽은 본문입니다. 저장한 것만 이 기기에 남습니다.",
         "description": "Index Page Text review: description"

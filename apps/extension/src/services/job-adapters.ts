@@ -141,7 +141,11 @@ const pageTextOptionsSchema = z.strictObject({
   skipPrivateHosts: z.boolean(),
   /** The sites the user chose before the run; the job requests no other site. */
   sites: z.array(urlSiteSchema).optional(),
-  /** Used when the job is accepted (`planPageTextScan`); a job accepted before it has none. */
+  /**
+   * Used when the job is accepted (`planPageTextScan`), frozen with it; a job accepted before
+   * these settings has none.
+   */
+  skipSecretUrls: z.boolean().optional(),
   sensitiveParams: z.array(z.string()).optional(),
 });
 /** A bookmark of an Index Page Text run, and whether its page is to be read (`planPageTextScan`). */

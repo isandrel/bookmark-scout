@@ -7787,6 +7787,14 @@
         "message": "“索引网页正文”默认读取的书签",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "跳过含登录信息或机密的地址",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "绝不下载包含用户名和密码、或包含隐私扫描“敏感参数”中所列参数（例如令牌）的地址，因为网站会收到这些内容。关闭后，这些书签会像其他书签一样被读取。",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "从每个网页读取的正文。只有你保存的内容才会保留在此设备上。",
         "description": "Index Page Text review: description"

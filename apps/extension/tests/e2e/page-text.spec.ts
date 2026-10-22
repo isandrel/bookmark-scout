@@ -11,6 +11,7 @@ import { expect, test, toastRegion } from './fixtures';
 import { latestJob } from './job-helpers';
 import { managerSearch, managerUrl } from './manager-helpers';
 import { openPopup } from './popup-helpers';
+import { readSettings } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 const ARTICLE = `<!doctype html><html><head><title>Field trip</title></head><body><article>
@@ -440,6 +441,68 @@ test.describe('with website access granted', () => {
     expect(requested.slice(before)).toEqual(['https://flaky.e2e.invalid/']);
     expect((await latestJob(extensionWorker, 'pageText'))?.total).toBe(1);
     await expect(coverage.getByRole('listitem').last()).toHaveText('Failed in the last run: 0');
+  });
+
+  test('addresses with sign-in details or a token are skipped unrequested until Skip Addresses with Sign-in Details or Secrets is turned off in Options', async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const { folderId } = await seedFolder(extensionWorker, 'E2E Page Text Secrets', [
+      { title: 'Trip notes', url: 'https://trip.e2e.invalid/notes' },
+      { title: 'Private feed', url: 'https://feed.e2e.invalid/rss?token=abc123' },
+    ]);
+    await setSettings(extensionWorker, { pageTextEnabled: true, pageTextDefaultScope: 'folder' });
+    const requested: string[] = [];
+    await context.route('https://*.e2e.invalid/**', (route) => {
+      requested.push(route.request().url());
+      return route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE });
+    });
+    const run = async () => {
+      await openTools(page, extensionId, folderId);
+      await toolCard(page, 'Index Page Text')
+        .getByRole('button', { name: 'Index', exact: true })
+        .click();
+      await page
+        .getByRole('dialog', { name: 'Choose sites to read' })
+        .getByRole('button', { name: 'Start with 1 site' })
+        .click();
+      return page.getByRole('dialog', { name: 'Index Page Text' });
+    };
+
+    // On by default: the feed is listed as skipped with the reason, and never requested.
+    let review = await run();
+    await expect(review.getByRole('radio', { name: 'Text found (1)' })).toBeVisible();
+    await review.getByRole('radio', { name: 'Skipped (1)' }).click();
+    await expect(
+      review.getByTestId('page-text-item').filter({ hasText: 'Private feed' }),
+    ).toContainText(
+      "Not downloaded: the address holds a parameter listed in the Privacy Scanner's Sensitive Parameters, such as a token, which the site would receive.",
+    );
+    expect(requested).toEqual(['https://trip.e2e.invalid/notes']);
+
+    // Turned off in Options, the next run reads the feed like any other.
+    await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+    const toggle = page.getByRole('switch', {
+      name: 'Skip Addresses with Sign-in Details or Secrets',
+    });
+    await expect(toggle).toBeChecked();
+    await toggle.click();
+    await expect(toggle).not.toBeChecked();
+    await expect
+      .poll(async () => (await readSettings(extensionWorker)).pageTextSkipSecretUrls)
+      .toBe(false);
+    requested.length = 0;
+    review = await run();
+    await expect(review.getByRole('radio', { name: 'Text found (2)' })).toBeVisible();
+    expect(requested.sort()).toEqual([
+      'https://feed.e2e.invalid/rss?token=abc123',
+      'https://trip.e2e.invalid/notes',
+    ]);
+    expect((await latestJob(extensionWorker, 'pageText'))?.options).toMatchObject({
+      skipSecretUrls: false,
+    });
   });
 
   test("removing the extension's website access deletes the page text it indexed (S46)", async ({

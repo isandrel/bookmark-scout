@@ -8633,6 +8633,14 @@
         "message": "Закладки, которые индексация текста страниц читает по умолчанию",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Пропускать адреса с данными для входа или секретами",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Никогда не загружать адрес, содержащий имя пользователя и пароль или параметр из списка «Конфиденциальные параметры» проверки конфиденциальности (например, токен), который получил бы сайт. Если выключено, такие закладки читаются как любые другие.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Текст, прочитанный с каждой страницы. Хранится только то, что вы сохраните, и только на этом устройстве.",
         "description": "Index Page Text review: description"

@@ -33,6 +33,7 @@ const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool
   bookmarkRules: () => ({}),
   pageText: (settings) => ({
     skipPrivateHosts: settings.readPageSkipPrivateHosts,
+    skipSecretUrls: settings.pageTextSkipSecretUrls,
     sensitiveParams: settings.privacyScannerSensitiveParams,
   }),
   covers: (settings) => ({

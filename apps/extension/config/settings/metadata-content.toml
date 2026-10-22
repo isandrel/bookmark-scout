@@ -15,6 +15,10 @@ concurrency = { default = 4, min = 1, max = 20, step = 1 }
 # each page.
 enabled = false
 default_scope = "folder"
+# Never request an address that holds a user name and password, or a query parameter named in the
+# Privacy Scanner's Sensitive Parameters (such as a token), which the site would receive; such a
+# bookmark is listed as skipped with the reason. Turned off, those addresses are read like any other.
+skip_secret_urls = true
 
 [site_icons]
 # Refresh Site Icons downloads each website's own icon into local storage. It reuses the

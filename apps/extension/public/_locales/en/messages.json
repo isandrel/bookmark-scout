@@ -8053,6 +8053,14 @@
         "message": "Bookmarks Index Page Text reads by default",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Skip Addresses with Sign-in Details or Secrets",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Never download an address that holds a user name and password, or a parameter listed in the Privacy Scanner's Sensitive Parameters (such as a token), which the site would receive. Turned off, those bookmarks are read like any other.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "The text read from each page. Only what you save is kept, on this device.",
         "description": "Index Page Text review: description"

@@ -42,7 +42,11 @@ import type { BookmarkTreeNode } from '@/types';
 import { installFakeBookmarks } from '../fake-bookmarks';
 import { installFakePermissions } from '../fake-permissions';
 
-const OPTIONS = { skipPrivateHosts: true, sensitiveParams: ['token', 'session*'] };
+const OPTIONS = {
+  skipPrivateHosts: true,
+  skipSecretUrls: true,
+  sensitiveParams: ['token', 'session*'],
+};
 const MAX = PAGE_TEXT_LIMITS.maxCharsPerPage;
 const HTML_TYPE = { headers: { 'content-type': 'text/html' } };
 
@@ -314,8 +318,15 @@ describe('one download per address (S19, S20)', () => {
 });
 
 describe('addresses that may hold a secret', () => {
-  it('never requests an address with a password or a sensitive parameter, and says why', async () => {
-    const requested: string[] = [];
+  const nodes = folder([
+    { id: 'login', url: 'https://user:secret@private.example/' },
+    { id: 'token', url: 'https://api.example/feed?Token=abc123' },
+    { id: 'session', url: 'https://app.example/?sessionId=1' },
+    { id: 'fine', url: 'https://fine.example/?page=2' },
+  ]);
+  let requested: string[] = [];
+  beforeEach(() => {
+    requested = [];
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: string) => {
@@ -325,12 +336,9 @@ describe('addresses that may hold a secret', () => {
         });
       }),
     );
-    const nodes = folder([
-      { id: 'login', url: 'https://user:secret@private.example/' },
-      { id: 'token', url: 'https://api.example/feed?Token=abc123' },
-      { id: 'session', url: 'https://app.example/?sessionId=1' },
-      { id: 'fine', url: 'https://fine.example/?page=2' },
-    ]);
+  });
+
+  it('never requests an address with a password or a sensitive parameter, and says why', async () => {
     expect(await listPageTextSites(nodes, OPTIONS)).toEqual([{ site: 'fine.example', count: 1 }]);
     const { items } = await scanPageTexts(nodes, OPTIONS);
     expect(items.map((item) => [item.id, item.status, item.skipReason])).toEqual([
@@ -340,6 +348,19 @@ describe('addresses that may hold a secret', () => {
       ['fine', 'read', undefined],
     ]);
     expect(requested).toEqual(['https://fine.example/?page=2']);
+  });
+
+  it('reads those addresses like any other with Skip Addresses with Sign-in Details or Secrets off', async () => {
+    const options = { ...OPTIONS, skipSecretUrls: false };
+    expect(await listPageTextSites(nodes, options)).toHaveLength(4);
+    const { items } = await scanPageTexts(nodes, options);
+    expect(items.map((item) => [item.id, item.status, item.skipReason])).toEqual([
+      ['login', 'read', undefined],
+      ['token', 'read', undefined],
+      ['session', 'read', undefined],
+      ['fine', 'read', undefined],
+    ]);
+    expect(requested).toHaveLength(4);
   });
 });
 

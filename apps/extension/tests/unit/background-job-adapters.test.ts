@@ -322,6 +322,27 @@ describe('Index Page Text as a background job (S25-S27)', () => {
     expect(results.filter((result) => (result as { text?: string }).text)).toHaveLength(1);
   });
 
+  it('freezes Skip Addresses with Sign-in Details or Secrets when the job starts', async () => {
+    installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      { id: 's1', parentId: 'f', title: 'Feed', url: 'https://one.invalid/page?token=abc' },
+    ]);
+    const requests = stubFetch({ 'https://one.invalid/page?token=abc': () => article('One') });
+    // On by default: the address is listed as skipped and never requested.
+    let run = await runToEnd('pageText');
+    expect(run.job?.options).toMatchObject({ skipSecretUrls: true });
+    expect(run.results).toMatchObject([
+      { id: 's1', status: 'skipped', skipReason: 'sensitiveParam' },
+    ]);
+    expect(requests).toEqual([]);
+    // Turned off, the next run reads it like any other.
+    await saveSettings({ pageTextSkipSecretUrls: false });
+    run = await runToEnd('pageText');
+    expect(run.job?.options).toMatchObject({ skipSecretUrls: false });
+    expect(run.results).toMatchObject([{ id: 's1', status: 'read' }]);
+    expect(requests).toEqual(['https://one.invalid/page?token=abc']);
+  });
+
   it('is refused while Index Page Text is off, even with AI page reading on (S49)', async () => {
     await saveSettings({ pageTextEnabled: false, aiReadPageContent: true });
     const requests = stubFetch({});

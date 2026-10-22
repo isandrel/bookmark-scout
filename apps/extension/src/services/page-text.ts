@@ -72,7 +72,12 @@ export type PageTextScanOptions = {
    * `notChosen` and never requested. Absent: every site of the run.
    */
   sites?: readonly string[];
-  /** Query parameter names never sent to a site (the Privacy Scanner's sensitive parameters). */
+  /**
+   * Never request an address that may hold a secret (`PageTextSkipReason`): the Skip Addresses
+   * with Sign-in Details or Secrets setting. Off, such addresses are read like any other.
+   */
+  skipSecretUrls: boolean;
+  /** Query parameter names that count as secrets (the Privacy Scanner's sensitive parameters). */
   sensitiveParams: readonly string[];
 };
 
@@ -178,7 +183,7 @@ export function pageTextNeed(
 ): PageTextNeed {
   if (isPageTextCurrent(indexed, url)) return { status: 'current' };
   if (!isReadablePageUrl(url, options.skipPrivateHosts)) return { status: 'skipped' };
-  const reason = pageTextPrivacyReason(url, isSensitiveParam);
+  const reason = options.skipSecretUrls ? pageTextPrivacyReason(url, isSensitiveParam) : undefined;
   return reason ? { status: 'skipped', reason } : { status: 'read' };
 }
 

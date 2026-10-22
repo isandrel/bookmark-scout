@@ -8053,6 +8053,14 @@
         "message": "I preferiti che Indicizza il testo delle pagine legge per impostazione predefinita",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Salta gli indirizzi con credenziali o segreti",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Non scaricare mai un indirizzo che contiene un nome utente e una password, o un parametro presente in Parametri sensibili del Controllo privacy (come un token), che il sito riceverebbe. Se disattivato, quei segnalibri vengono letti come gli altri.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Il testo letto da ogni pagina. Viene conservato solo ciò che salvi, su questo dispositivo.",
         "description": "Index Page Text review: description"

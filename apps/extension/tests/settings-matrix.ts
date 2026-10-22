@@ -860,6 +860,20 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       "the popup indexes the current tab's text only after its preview is saved (S17)",
     ),
   ]),
+  pageTextSkipSecretUrls: tested(TOOL_OPTIONS, [
+    unit(
+      'page-text-quality.test.ts',
+      'reads those addresses like any other with Skip Addresses with Sign-in Details or Secrets off',
+    ),
+    unit(
+      'background-job-adapters.test.ts',
+      'freezes Skip Addresses with Sign-in Details or Secrets when the job starts',
+    ),
+    e2e(
+      'page-text.spec.ts',
+      'addresses with sign-in details or a token are skipped unrequested until Skip Addresses with Sign-in Details or Secrets is turned off in Options',
+    ),
+  ]),
   pageTextDefaultScope: tested(TOOL_TABLE, [
     e2e(
       'page-text.spec.ts',

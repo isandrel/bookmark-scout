@@ -8025,6 +8025,14 @@
         "message": "ページ本文の索引が既定で読むブックマーク",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "ログイン情報や秘密を含むアドレスをスキップ",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "ユーザー名とパスワード、またはプライバシースキャナーの「機密パラメータ」にあるパラメータ (トークンなど) を含むアドレスは、サイトに送られてしまうためダウンロードしません。オフにすると、それらのブックマークもほかと同じように読み込みます。",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "各ページから読み取った本文です。保存したものだけがこの端末に残ります。",
         "description": "Index Page Text review: description"

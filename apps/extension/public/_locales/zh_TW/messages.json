@@ -7787,6 +7787,14 @@
         "message": "「索引網頁內文」預設讀取的書籤",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "略過含登入資訊或機密的網址",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "絕不下載包含使用者名稱和密碼、或包含隱私掃描工具「敏感參數」所列參數 (例如權杖) 的網址，因為網站會收到這些內容。關閉後，這些書籤會像其他書籤一樣被讀取。",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "從每個網頁讀取的內文。只有你儲存的內容才會留在這部裝置上。",
         "description": "Index Page Text review: description"

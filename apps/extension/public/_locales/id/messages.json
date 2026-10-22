@@ -7763,6 +7763,14 @@
         "message": "Bookmark yang dibaca Indeks Teks Halaman secara default",
         "description": "Settings: description of the Index Page Text default scope"
     },
+    "settings_pageTextSkipSecretUrls": {
+        "message": "Lewati Alamat dengan Data Masuk atau Rahasia",
+        "description": "Settings: switch of Index Page Text that keeps addresses with sign-in details or secrets from being downloaded"
+    },
+    "settings_pageTextSkipSecretUrlsDesc": {
+        "message": "Jangan pernah mengunduh alamat yang memuat nama pengguna dan kata sandi, atau parameter yang tercantum di Parameter Sensitif Pemindai Privasi (misalnya token), yang akan diterima situs. Jika dinonaktifkan, bookmark tersebut dibaca seperti yang lain.",
+        "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Teks yang dibaca dari setiap halaman. Hanya yang Anda simpan yang dipertahankan, di perangkat ini.",
         "description": "Index Page Text review: description"
