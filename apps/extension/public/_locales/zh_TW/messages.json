@@ -8210,8 +8210,8 @@
         "description": "Smart Rules review: the rule folder no longer exists"
     },
     "tools_rulesBlocked_managed": {
-        "message": "這個資料夾由你的組織管理，因此無法移動。",
-        "description": "Smart Rules review: the folder is managed by policy"
+        "message": "這個書籤或目標資料夾由你的組織管理，因此書籤會留在原處。",
+        "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
     "tools_rulesMatchedBy": {
         "message": "規則：$1",

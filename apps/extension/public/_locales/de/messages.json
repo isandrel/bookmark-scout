@@ -8574,8 +8574,8 @@
         "description": "Smart Rules review: the rule folder no longer exists"
     },
     "tools_rulesBlocked_managed": {
-        "message": "Ihre Organisation verwaltet diesen Ordner, daher kann es nicht verschoben werden.",
-        "description": "Smart Rules review: the folder is managed by policy"
+        "message": "Ihre Organisation verwaltet dieses Lesezeichen oder den Zielordner, daher bleibt es, wo es ist.",
+        "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
     "tools_rulesMatchedBy": {
         "message": "Regeln: $1",

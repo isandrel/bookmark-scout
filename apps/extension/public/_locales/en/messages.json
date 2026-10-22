@@ -8574,8 +8574,8 @@
         "description": "Smart Rules review: the rule folder no longer exists"
     },
     "tools_rulesBlocked_managed": {
-        "message": "Your organization manages this folder, so it cannot move.",
-        "description": "Smart Rules review: the folder is managed by policy"
+        "message": "Your organization manages this bookmark or the folder it would move to, so it stays where it is.",
+        "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
     "tools_rulesMatchedBy": {
         "message": "Rules: $1",

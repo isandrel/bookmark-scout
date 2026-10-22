@@ -8546,8 +8546,8 @@
         "description": "Smart Rules review: the rule folder no longer exists"
     },
     "tools_rulesBlocked_managed": {
-        "message": "조직에서 관리하는 폴더라서 이동할 수 없습니다.",
-        "description": "Smart Rules review: the folder is managed by policy"
+        "message": "조직이 이 북마크 또는 이동할 폴더를 관리하므로 북마크는 그대로 있습니다.",
+        "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
     "tools_rulesMatchedBy": {
         "message": "규칙: $1",
