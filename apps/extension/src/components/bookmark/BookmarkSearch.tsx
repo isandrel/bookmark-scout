@@ -95,10 +95,8 @@ function useSearchBoxFit(
     () =>
       observeSizes([inputRef?.current], () => {
         const input = inputRef?.current;
-        const context = document.createElement('canvas').getContext('2d');
-        if (!input || !context) return;
+        if (!input?.parentElement) return;
         const style = getComputedStyle(input);
-        context.font = style.font;
         // Firefox's clientWidth of an input already leaves out the padding; the border box does
         // not differ between browsers.
         const px = (value: string) => Number.parseFloat(value) || 0;
@@ -108,8 +106,20 @@ function useSearchBoxFit(
           px(style.borderRightWidth) -
           px(style.paddingLeft) -
           px(style.paddingRight);
-        const fitsText = (text: string) => context.measureText(text).width <= free;
+        // Measured in the page, not on a canvas: a canvas can pick other fallback fonts for
+        // characters the first font lacks (CJK), so the choice changed once fonts settled.
+        const probe = document.createElement('span');
+        probe.style.cssText =
+          'position:absolute;visibility:hidden;white-space:pre;pointer-events:none';
+        probe.style.font = style.font;
+        probe.style.letterSpacing = style.letterSpacing;
+        input.parentElement.append(probe);
+        const fitsText = (text: string) => {
+          probe.textContent = text;
+          return probe.getBoundingClientRect().width <= free;
+        };
         setFits(fitsText(full) ? 'full' : fitsText(short) ? 'short' : 'none');
+        probe.remove();
       }),
     [full, short, inputRef, reservedRight],
   );
