@@ -138,6 +138,13 @@ export type DataTableHandle<TData> = {
   clearSelection: () => boolean;
   /** Moves focus one row down or up (to the next page if needed) and selects that row. */
   moveFocus: (step: 1 | -1) => boolean;
+  /** The rows of the page shown, in display order (the bookmark preview steps through them). */
+  getPageRows: () => TData[];
+  /**
+   * Makes `rowId` the focused row and the only selected one, as the arrow keys do, without moving
+   * keyboard focus; false when the filters do not show it.
+   */
+  selectRow: (rowId: string) => boolean;
   /**
    * The rows a right click on `rowId` acts on, as in Chrome: the selection when the row is in
    * it; otherwise the row alone, which becomes the selection.
@@ -827,6 +834,13 @@ export function DataTable<TData extends RowData>({
         return true;
       },
       moveFocus: (step) => moveRowFocus(step === 1 ? 'next' : 'previous'),
+      getPageRows: () => table.getRowModel().rows.map((row) => row.original),
+      selectRow: (rowId) => {
+        if (!latestRef.current.shownRowsById.has(rowId)) return false;
+        changeSelection(rowId, { clear: true, range: false, toggle: false });
+        setFocusedRowId(rowId);
+        return true;
+      },
       canReorderRows: () => moveDisabledReasonRef.current === null,
       targetRowsAt: (rowId) => {
         const { shownRows: rows, shownRowsById: byId, rowSelection: selection } = latestRef.current;
@@ -840,7 +854,7 @@ export function DataTable<TData extends RowData>({
         return [row.original];
       },
     }),
-    [canSelectId, changeSelection, moveRowFocus],
+    [canSelectId, changeSelection, moveRowFocus, table],
   );
 
   const handleRowClick = (event: React.MouseEvent<HTMLElement>, rowId: string) => {

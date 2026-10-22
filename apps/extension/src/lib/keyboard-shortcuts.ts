@@ -87,6 +87,8 @@ const shortcutsConfig = readConfig(
       previous_row: managerBindingsSchema,
       open_saved_searches: managerBindingsSchema,
       preview: managerBindingsSchema,
+      preview_previous: managerBindingsSchema,
+      preview_next: managerBindingsSchema,
       select_all: managerBindingsSchema,
       clear_selection: managerBindingsSchema,
       delete: managerBindingsSchema,
@@ -141,6 +143,14 @@ export const SHORTCUT_BINDINGS = {
     openInNewWindow: bindingsForPlatform(managerConfig.open_in_new_window),
     undo: bindingsForPlatform(managerConfig.undo),
     redo: bindingsForPlatform(managerConfig.redo),
+  },
+  /**
+   * Keys of the open bookmark preview, which act only inside it (the manager's other shortcuts
+   * pause while a dialog is open): the previous or next bookmark of the table's page.
+   */
+  managerPreview: {
+    previous: bindingsForPlatform(managerConfig.preview_previous),
+    next: bindingsForPlatform(managerConfig.preview_next),
   },
   /**
    * The browser's copy, cut, and paste keys. The manager acts on clipboard events, not on these

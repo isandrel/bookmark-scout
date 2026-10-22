@@ -49,3 +49,25 @@ export function isModifiableBookmark(bookmark: Bookmark): boolean {
 export function isOpenableBookmark(bookmark: Bookmark): boolean {
   return bookmark.type === ItemTypeEnum.Link && Boolean(bookmark.url) && !isScriptUrl(bookmark.url);
 }
+
+/** Whether the manager can preview this item: a bookmark with an address, not a folder or a separator. */
+export function isPreviewableBookmark(bookmark: Bookmark | undefined): boolean {
+  return bookmark?.type === ItemTypeEnum.Link && Boolean(bookmark.url);
+}
+
+/** The bookmarks a preview's Previous and Next go to; missing at either end of the rows. */
+export type PreviewNeighbors = { previous?: Bookmark; next?: Bookmark };
+
+/**
+ * The previewable rows just before and after the one with `id`, in the order of `rows` (the
+ * table's page as shown), skipping folders and separators. Nothing past either end: the preview
+ * stops there rather than wrapping around. A row that is not in `rows` has no neighbors.
+ */
+export function previewNeighbors(rows: readonly Bookmark[], id: string): PreviewNeighbors {
+  const index = rows.findIndex((row) => row.id === id);
+  if (index < 0) return {};
+  return {
+    previous: rows.slice(0, index).reverse().find(isPreviewableBookmark),
+    next: rows.slice(index + 1).find(isPreviewableBookmark),
+  };
+}

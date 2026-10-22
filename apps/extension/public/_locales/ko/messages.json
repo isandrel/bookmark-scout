@@ -139,6 +139,10 @@
         "message": "포커스된 북마크 미리 보기",
         "description": "Manager shortcuts help: p opens the preview of the focused bookmark (cover, folder, tags, and summary)"
     },
+    "shortcuts_previewPreviousNext": {
+        "message": "미리 보기에서 이전 또는 다음 북마크 표시",
+        "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
     "shortcuts_showHelp": {
         "message": "키보드 단축키 보기",
         "description": "Keyboard shortcut description: ? opens this dialog"
@@ -1432,6 +1436,14 @@
     "bookmarks_preview": {
         "message": "미리 보기",
         "description": "Bookmark manager action and the preview key's action: a dialog with a bookmark's cover, address, folder, tags, and summary"
+    },
+    "bookmarks_previewPrevious": {
+        "message": "이전 북마크",
+        "description": "Bookmark preview: button (and the left arrow key) that shows the previous bookmark of the page, skipping folders"
+    },
+    "bookmarks_previewNext": {
+        "message": "다음 북마크",
+        "description": "Bookmark preview: button (and the right arrow key) that shows the next bookmark of the page, skipping folders"
     },
     "bookmarks_detailsTitle": {
         "message": "북마크 세부정보",
