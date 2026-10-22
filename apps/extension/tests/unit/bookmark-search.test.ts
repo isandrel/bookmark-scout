@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
-import { filterBookmarkTreeByQuery } from '@/lib/bookmark-query-filter.lazy';
+import {
+  filterBookmarkTreeByQuery,
+  matchBookmarkTreeQuery,
+} from '@/lib/bookmark-query-filter.lazy';
 import {
   countSearchMatches,
   filterBookmarkTree,
@@ -176,6 +179,25 @@ describe('filterBookmarkTreeByQuery', () => {
     expect(ids(filterBookmarkTreeByQuery(tree, 'recipe', noMetadata))).toEqual(
       ids(filterBookmarkTree(tree, 'recipe', defaults)),
     );
+  });
+
+  it('lists the same matches by id for the manager table', () => {
+    const metadata: StoredBookmarkMetadataById = { soup: { tags: ['Food'] } };
+    const sorted = (matches: ReadonlySet<string> | undefined) => [...(matches ?? [])].sort();
+    // A plain word naming a folder lists the folder, not everything in it.
+    expect(sorted(matchBookmarkTreeQuery(tree, 'recipes', metadata))).toEqual(['recipes']);
+    expect(sorted(matchBookmarkTreeQuery(tree, 'folder:recipes', metadata))).toEqual([
+      'baking',
+      'recipe-cake',
+      'soup',
+    ]);
+    // Every word, each anywhere: the folder path counts with another field.
+    expect(sorted(matchBookmarkTreeQuery(tree, 'work jira', metadata))).toEqual(['jira']);
+    expect(sorted(matchBookmarkTreeQuery(tree, 'tag:food', metadata))).toEqual(['soup']);
+    // An address the old title-or-address search found is still found.
+    expect(sorted(matchBookmarkTreeQuery(tree, 'db.example', metadata))).toEqual(['recipe-db']);
+    // A query with no terms it can read filters nothing.
+    expect(matchBookmarkTreeQuery(tree, 'is:nothing', metadata)).toBeUndefined();
   });
 
   it('applies operators and exclusions', () => {

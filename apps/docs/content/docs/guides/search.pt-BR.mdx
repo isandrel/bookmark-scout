@@ -1,6 +1,6 @@
 ---
 title: Pesquisa e pesquisas salvas
-description: Encontre qualquer favorito pelo título ou pelo URL no pop-up ou no painel lateral, filtre a tabela do gerenciador e guarde combinações de filtros como pesquisas salvas com nome.
+description: Encontre qualquer favorito pelo título, endereço, pasta, tag ou resumo no pop-up, no painel lateral ou no gerenciador, refine uma pesquisa com operadores e guarde combinações de filtros como pesquisas salvas com nome.
 ---
 
 ## Pesquisar no pop-up ou no painel lateral [#search-from-the-popup-or-side-panel]
@@ -10,10 +10,10 @@ description: Encontre qualquer favorito pelo título ou pelo URL no pop-up ou no
 Clique no ícone do Bookmark Scout na barra de ferramentas. Você também pode abrir o Bookmark Scout no painel lateral do navegador (a barra lateral, no Firefox), que continua aberto enquanto você navega.
 </Step>
 <Step>
-Digite na caixa de pesquisa no topo, que mostra **Digite uma pasta para salvar esta página…** e também pesquisa seus favoritos (pressione <Shortcut id="popup.focus_search" /> para ir até lá). Os resultados aparecem enquanto você digita, dentro das pastas deles, com cada correspondência destacada.
+Digite na caixa de pesquisa no topo, que mostra **Digite uma pasta para salvar esta página…** e também pesquisa seus favoritos (pressione <Shortcut id="popup.focus_search" /> para ir até lá). Os resultados aparecem enquanto você digita, dentro das pastas deles, com cada correspondência destacada. Cada palavra precisa corresponder, no título, no endereço, na pasta ou nas tags e no resumo; veja [Palavras e operadores de pesquisa](#search-words-and-operators).
 </Step>
 <Step>
-Restrinja a correspondência com **Mais opções de pesquisa**, o botão dentro da caixa de pesquisa: **Diferenciar maiúsculas e minúsculas**, **Palavra inteira** e **Pesquisa avançada por padrão (regex)**, que trata a pesquisa como uma expressão regular. O botão fica destacado enquanto qualquer uma delas estiver ativada.
+Restrinja a correspondência com **Mais opções de pesquisa**, o botão dentro da caixa de pesquisa: **Diferenciar maiúsculas e minúsculas**, **Palavra inteira** e **Pesquisa avançada por padrão (regex)**, que trata a pesquisa como uma expressão regular. O botão fica destacado enquanto qualquer uma delas estiver ativada. Essas opções pesquisam somente os títulos, como digitados, sem operadores.
 </Step>
 <Step>
 Clique em um favorito, ou vá até ele com as teclas de seta e pressione `Enter`, para abri-lo em uma nova guia.
@@ -29,11 +29,36 @@ Clique em um favorito, ou vá até ele com as teclas de seta e pressione `Enter`
 - Limpar a pesquisa (com o botão de limpar ou com `Esc` na caixa de pesquisa) restaura as pastas que você tinha abertas antes.
 - As pesquisas recentes ficam guardadas neste dispositivo. Clique na caixa de pesquisa vazia, ou pressione <Shortcut id="popup.recent_searches" /> nela, para listá-las. Apague-as nessa lista ou desative o **Histórico de pesquisa** nas Configurações.
 
+## Palavras e operadores de pesquisa [#search-words-and-operators]
+
+As caixas de pesquisa do pop-up, do painel lateral e do gerenciador leem uma pesquisa do mesmo jeito. Elas pesquisam somente os favoritos deste navegador e não enviam nada para lugar nenhum.
+
+- Cada palavra precisa corresponder, cada uma em qualquer lugar: o título, o endereço da web, o caminho da pasta ou as tags e o resumo do favorito. `receitas sopa` encontra um favorito chamado "Sopa" em uma pasta chamada "Receitas".
+- Aspas mantêm as palavras juntas: `"sopa de tomate"`.
+- Um `-` na frente deixa de fora o que corresponde: `receitas -bolo` ou `-tag:arquivo`.
+- Uma palavra que nomeia uma pasta encontra a pasta. No pop-up, os favoritos dela aparecem dentro dela; `folder:` lista tudo o que há nela.
+- Texto que não é um operador é pesquisado como digitado, como `C++`, `10:30` ou um endereço da web. O mesmo vale para um operador que o Bookmark Scout não conhece, como `foo:bar`. Um valor que ele não consegue ler, como uma data inválida, é ignorado.
+
+| Pesquisa | Encontra |
+| --- | --- |
+| `title:react` | Títulos que contêm o texto; `title:"react hooks"` aceita várias palavras |
+| `url:github` | Endereços da web que contêm o texto |
+| `domain:github.com` | Favoritos desse site, incluindo seus subdomínios |
+| `folder:Trabalho` ou `path:Trabalho` | Tudo em uma pasta com exatamente esse nome, em qualquer nível; `folder:"Trabalho / Docs"` nomeia uma pasta dentro de outra |
+| `tag:leitura` | Favoritos com exatamente essa tag |
+| `summary:receita` | Resumos que contêm o texto |
+| `is:bookmark` ou `is:folder` | Somente favoritos, ou somente pastas |
+| `is:untagged` | Favoritos sem tags |
+| `has:tags` ou `has:summary` | Itens com tags, ou com um resumo |
+| `after:2026-01-31` ou `before:2026-01-31` | Itens adicionados nesse dia ou depois, ou nesse dia ou antes |
+
+As tags e os resumos são os que você adiciona em **Detalhes do favorito** ou mantém das ferramentas **Tags automáticas** e **Gerador de resumos**. Eles ficam neste dispositivo.
+
 ## Filtrar no gerenciador de favoritos [#filter-in-the-bookmarks-manager]
 
 A tabela do gerenciador tem filtros mais precisos. No Chrome, abra a página de favoritos do navegador para chegar até ela. Ele abre na sua barra de favoritos.
 
-- **Pesquisar títulos e endereços** encontra texto no título ou no endereço da web de um favorito. Pressione <Shortcut id="manager.focus_filter" /> para ir direto até essa caixa.
+- **Pesquisar títulos, endereços, pastas e tags** lê [palavras e operadores de pesquisa](#search-words-and-operators) e lista as pastas e os favoritos que correspondem. Pressione <Shortcut id="manager.focus_filter" /> para ir direto até essa caixa.
 - **Tipo**, **Domínio** e **Data de adição** restringem ainda mais as linhas. **Mais filtros** adiciona **Filtrar URLs...**, que pesquisa só no endereço da web, e **Pasta**, que mantém só os itens das pastas que você escolher.
 - **Somente a pasta atual** limita os filtros à pasta em que você está. Quando essa opção está desativada, os filtros pesquisam todos os favoritos, cada resultado mostra a pasta dele abaixo do título e o caminho no topo diz **Resultados de todas as pastas**.
 - Classifique por qualquer coluna pelo cabeçalho dela. Enquanto a tabela não estiver na ordem do navegador, o texto ao lado de **Ordem do navegador** indica a ordem atual; clique em **Ordem do navegador** para voltar.
@@ -45,7 +70,7 @@ A tabela do gerenciador tem filtros mais precisos. No Chrome, abra a página de 
 O endereço do gerenciador acompanha o que você está vendo, então **Voltar** e **Avançar** do navegador percorrem as pastas e as pesquisas, e você pode salvar uma visualização nos favoritos ou compartilhá-la.
 
 - `?id=` indica a pasta aberta, como no próprio gerenciador do Chrome: `chrome://bookmarks/?id=12` abre a pasta 12 no Chrome, e `edge://favorites/?id=12` no Edge. Links do Chrome 154 ao 156, que indicavam a Barra de favoritos, Outros favoritos e Favoritos para dispositivos móveis por um ID longo, também abrem essas pastas. Sem `?id=`, o gerenciador abre na barra de favoritos; **Favoritos**, no início do caminho da pasta, mostra o nível mais alto.
-- `?q=` é a pesquisa: `chrome://bookmarks/?q=react` abre o gerenciador pesquisando "react" nos títulos e endereços. Enquanto você digita em **Pesquisar títulos e endereços**, o endereço acompanha, e uma sequência contínua de digitação equivale a um passo de **Voltar**. Uma pesquisa tem prioridade sobre a pasta; a pasta ainda vale quando **Somente a pasta atual** está marcada.
+- `?q=` é a pesquisa: `chrome://bookmarks/?q=react` abre o gerenciador pesquisando "react", e `?q=tag:reading` pesquisando a tag. Enquanto você digita em **Pesquisar títulos, endereços, pastas e tags**, o endereço acompanha, e uma sequência contínua de digitação equivale a um passo de **Voltar**. Uma pesquisa tem prioridade sobre a pasta; a pasta ainda vale quando **Somente a pasta atual** está marcada.
 - **Copiar link para esta pasta**, ao lado do caminho da pasta no cabeçalho e no menu da linha de uma pasta, copia esse endereço. No Firefox, ele copia o endereço da própria página do gerenciador. O Chrome e o Edge continuam mostrando o endereço com que você abriu o gerenciador, mesmo quando você muda de pasta.
 - O título da guia indica a pasta ou, durante uma pesquisa, a pesquisa.
 
@@ -66,6 +91,8 @@ Digite um nome em **Dê um nome a esta pesquisa** e clique em **Salvar**.
 </Steps>
 
 Para usar uma delas, abra **Pesquisas salvas** e escolha a pesquisa. Os filtros e a classificação dela substituem os atuais e, se ela estava limitada a uma pasta, o gerenciador volta para essa pasta. Cada item pode ser renomeado ou excluído, e uma exclusão pode ser desfeita na notificação que aparece em seguida. Arraste uma entrada pela alça para mudar a ordem, ou abra o menu da alça para movê-la pelo teclado.
+
+O texto da caixa de pesquisa é salvo como digitado, com os operadores. Uma pesquisa salva antes de a caixa de pesquisa ler operadores procurava o texto somente em títulos e endereços. Agora ela abre com esse texto entre aspas quando ele tem várias palavras ou dois-pontos, então continua encontrando todos os favoritos que encontrava.
 
 Uma pesquisa salva guarda as definições dos filtros, nunca cópias dos favoritos, então os resultados sempre correspondem aos seus favoritos como estão agora. Se uma pasta indicada nela tiver sido excluída, essa pasta é ignorada, os outros filtros continuam valendo e uma notificação informa quantas pastas foram ignoradas.
 

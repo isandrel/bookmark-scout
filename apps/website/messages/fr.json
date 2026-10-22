@@ -135,7 +135,7 @@
         "caption": "Le gestionnaire remplace la page Favoris de Chrome et fonctionne comme elle, avec une arborescence de dossiers, un fil d'Ariane et un tableau triable.",
         "alt": "Le gestionnaire de Bookmark Scout sur le dossier AI / LLMs / Fine-tuning, avec l'arborescence (AI, Dev, Design, Tools, Reading list), un seul champ de recherche et le tableau des favoris, chacun avec l'icône de son site",
         "points": [
-          "Recherchez dans tous vos favoris pendant la saisie",
+          "Recherchez dans tous vos favoris pendant la saisie, par titre, adresse, dossier ou étiquette",
           "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",
           "Enregistrez une recherche : elle affiche toujours les résultats à jour",
           "Sélectionnez plusieurs lignes avec {{SHORTCUT:mouse.select_toggle}}, effectuez un clic droit pour couper, copier, coller et tout ouvrir, et faites glisser favoris et dossiers là où ils doivent aller",

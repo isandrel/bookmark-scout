@@ -135,7 +135,7 @@
         "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome und funktioniert wie sie, mit einem Ordnerbaum, einer Pfadnavigation und einer sortierbaren Tabelle.",
         "alt": "Der Bookmark-Scout-Manager im Ordner AI / LLMs / Fine-tuning mit dem Ordnerbaum (AI, Dev, Design, Tools, Reading list), einem Suchfeld und der Lesezeichentabelle, jedes Lesezeichen mit dem Symbol seiner Website",
         "points": [
-          "Alle Ihre Lesezeichen schon beim Tippen durchsuchen",
+          "Alle Ihre Lesezeichen schon beim Tippen durchsuchen, nach Titel, Adresse, Ordner oder Tag",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche speichern, die dann immer die aktuellen Ergebnisse zeigt",
           "Mehrere Zeilen mit {{SHORTCUT:mouse.select_toggle}} auswählen, per Rechtsklick ausschneiden, kopieren, einfügen und alle öffnen, und Lesezeichen und Ordner dorthin ziehen, wo sie hingehören",

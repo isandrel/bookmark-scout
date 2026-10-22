@@ -92,7 +92,7 @@ test('a backup made after changes in Options and the manager restores them, with
   // Manager: a saved search, and tags on a bookmark.
   const manager = await context.newPage();
   await manager.goto(managerUrl(extensionId, docs.folderId));
-  await manager.getByPlaceholder('Search titles and addresses').fill('Docs');
+  await manager.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Docs');
   await expect(managerRow(manager, 'Backup Beta Notes')).toHaveCount(0);
   const menu = await openSavedSearches(manager);
   await expect(menu.getByLabel('Name for the current search')).toBeFocused();
@@ -182,7 +182,9 @@ test('a backup made after changes in Options and the manager restores them, with
   await manager.goto(managerUrl(extensionId, docs.folderId));
   const restored = await openSavedSearches(manager);
   await restored.getByRole('button', { name: 'Docs only', exact: true }).click();
-  await expect(manager.getByPlaceholder('Search titles and addresses')).toHaveValue('Docs');
+  await expect(manager.getByPlaceholder('Search titles, addresses, folders, and tags')).toHaveValue(
+    'Docs',
+  );
   await expect(managerRow(manager, 'Backup Alpha Docs')).toHaveCount(1);
   await expect(managerRow(manager, 'Backup Beta Notes')).toHaveCount(0);
 });

@@ -165,6 +165,7 @@ export function useBookmarkNavigation() {
   const searchQueryRef = useRef(searchQuery);
   const [searchHistoryDwell] = useState(() => createSearchHistoryDwell());
   const [allData, setAllData] = useState<Bookmark[]>([]);
+  const [tree, setTreeState] = useState<readonly BookmarkTreeNode[]>([]);
   const [rootId, setRootId] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -242,6 +243,7 @@ export function useBookmarkNavigation() {
       itemsRef.current = bookmarks;
       rootIdRef.current = tree[0]?.id;
       setAllData(bookmarks);
+      setTreeState(tree);
       setRootId(tree[0]?.id);
       // The first load of a page opened without a folder shows the bookmarks bar; the address
       // then names it, so Back and reload keep it.
@@ -345,6 +347,8 @@ export function useBookmarkNavigation() {
     rootId,
     data,
     allData,
+    /** The bookmark tree the rows come from, for the search box (`useSearchMatches`). */
+    tree,
     isLoading,
     error,
     notice,

@@ -48,7 +48,7 @@ function row(page: Page, title: string) {
 }
 
 function titleFilter(page: Page) {
-  return page.getByRole('textbox', { name: 'Search titles and addresses' });
+  return page.getByRole('textbox', { name: 'Search titles, addresses, folders, and tags' });
 }
 
 function breadcrumbCurrent(page: Page) {

@@ -6314,7 +6314,7 @@
         "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
-        "message": "搜尋標題和網址",
+        "message": "搜尋標題、網址、資料夾和標籤",
         "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
     },
     "managerDefaults_moreFilters": {

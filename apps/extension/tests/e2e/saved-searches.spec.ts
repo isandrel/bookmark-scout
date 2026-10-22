@@ -97,7 +97,7 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
   await expect(menu.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
   await page.keyboard.press('Escape');
 
-  await page.getByPlaceholder('Search titles and addresses').fill('Saved');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Saved');
   await (await addressFilter(page)).fill('docs.e2e.invalid');
   await page.getByRole('button', { name: 'Title', exact: true }).click();
   await page.getByRole('menuitem', { name: 'Desc' }).click();
@@ -129,6 +129,7 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
       name: 'Docs pages',
       query: {
         filters: { title: 'Saved', url: 'docs.e2e.invalid' },
+        syntaxVersion: 1,
         sorting: [{ id: 'title', desc: true }],
       },
     },
@@ -139,11 +140,15 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
   // Clear everything, reload, and reopen the saved search.
   await page.getByRole('button', { name: 'Reset', exact: true }).click();
   await page.reload();
-  await expect(page.getByPlaceholder('Search titles and addresses')).toHaveValue('');
+  await expect(page.getByPlaceholder('Search titles, addresses, folders, and tags')).toHaveValue(
+    '',
+  );
   menu = await openSavedSearches(page);
   await menu.getByRole('button', { name: 'Docs pages', exact: true }).click();
   await expect(menu).toHaveCount(0);
-  await expect(page.getByPlaceholder('Search titles and addresses')).toHaveValue('Saved');
+  await expect(page.getByPlaceholder('Search titles, addresses, folders, and tags')).toHaveValue(
+    'Saved',
+  );
   await expect(page.getByPlaceholder('Filter URLs...')).toHaveValue('docs.e2e.invalid');
   await expect(page.getByRole('button', { name: 'Title, sorted descending' })).toBeVisible();
   await expect
@@ -178,6 +183,64 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
     ]);
   await expect(row(page, 'Saved Gamma Docs')).toHaveCount(0);
   expect(JSON.stringify((await readSavedSearches(extensionWorker)).local)).toBe(storedText);
+});
+
+test('the search box reads operators and tags, and old saved searches find what they found', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Query Work', [
+    { title: 'Query Guide', url: 'https://docs.e2e.invalid/guide' },
+    { title: 'Query Notes', url: 'https://notes.e2e.invalid/notes' },
+    { title: 'Query Plain', url: 'https://other.e2e.invalid/docs-only' },
+  ]);
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [seeded.ids['Query Notes'] as string]: { tags: ['reading'] },
+  });
+  const search = page.getByPlaceholder('Search titles, addresses, folders, and tags');
+
+  // `?q=` opens the manager on a query in the search query language.
+  await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('tag:reading')}`);
+  await expect(search).toHaveValue('tag:reading');
+  await expect.poll(() => rowTitles(page)).toEqual([expect.stringContaining('Query Notes')]);
+
+  // Every word must match, each anywhere: the folder path counts with the title.
+  await search.fill('query work guide');
+  await expect.poll(() => rowTitles(page)).toEqual([expect.stringContaining('Query Guide')]);
+  await search.fill('domain:docs.e2e.invalid');
+  await expect.poll(() => rowTitles(page)).toEqual([expect.stringContaining('Query Guide')]);
+  // A word naming a folder lists the folder; `folder:` lists what is in it.
+  await search.fill('folder:"E2E Query Work" -is:untagged');
+  await expect.poll(() => rowTitles(page)).toEqual([expect.stringContaining('Query Notes')]);
+  // The address follows the query, for Back and for links.
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get('q'))
+    .toBe('folder:"E2E Query Work" -is:untagged');
+
+  // A search saved before the search query language matched its text in titles and addresses.
+  // It still finds a bookmark whose address alone has the text, and a colon stays text.
+  await writeSavedSearches(extensionWorker, [
+    storedSearch('old', 'Old docs', { filters: { title: 'docs' }, sorting: [] }),
+    storedSearch('colon', 'Old colon', { filters: { title: 'tag:reading' }, sorting: [] }),
+  ]);
+  await page.reload();
+  let menu = await openSavedSearches(page);
+  await menu.getByRole('button', { name: 'Old docs', exact: true }).click();
+  await expect(search).toHaveValue('docs');
+  await expect
+    .poll(async () => (await rowTitles(page)).sort())
+    .toEqual([expect.stringContaining('Query Guide'), expect.stringContaining('Query Plain')]);
+  menu = await openSavedSearches(page);
+  await menu.getByRole('button', { name: 'Old colon', exact: true }).click();
+  await expect(search).toHaveValue('"tag:reading"');
+  await expect(rows(page).filter({ hasText: 'Query' })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  // Opening it rewrote nothing.
+  expect((await readSavedSearches(extensionWorker)).local).toEqual([
+    storedSearch('old', 'Old docs', { filters: { title: 'docs' }, sorting: [] }),
+    storedSearch('colon', 'Old colon', { filters: { title: 'tag:reading' }, sorting: [] }),
+  ]);
 });
 
 test('renames and deletes saved searches from the keyboard, with undo', async ({
@@ -259,7 +322,7 @@ test('a folder-scoped search reopens its folder, and stale folder IDs are skippe
   ]);
   await page.goto(managerUrl(extensionId, work.folderId));
 
-  await page.getByPlaceholder('Search titles and addresses').fill('Scoped');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Scoped');
   await page.getByRole('checkbox', { name: 'Current folder only' }).check();
   await expect(rows(page)).toHaveCount(1);
   let menu = await openSavedSearches(page);
@@ -347,7 +410,7 @@ test('malformed saved searches are ignored and never break the manager', async (
     storedSearch('good', hostileName, { filters: { title: 'Survivor' }, sorting: [] }),
   ]);
   await page.goto(managerUrl(extensionId));
-  await expect(page.getByPlaceholder('Search titles and addresses')).toBeVisible();
+  await expect(page.getByPlaceholder('Search titles, addresses, folders, and tags')).toBeVisible();
 
   let menu = await openSavedSearches(page);
   await expect(menu.getByRole('listitem')).toHaveCount(1);
@@ -359,8 +422,8 @@ test('malformed saved searches are ignored and never break the manager', async (
   // A payload that is not a list at all reads as empty; saving replaces it.
   await writeSavedSearches(extensionWorker, 'corrupted');
   await page.reload();
-  await expect(page.getByPlaceholder('Search titles and addresses')).toBeVisible();
-  await page.getByPlaceholder('Search titles and addresses').fill('Survivor');
+  await expect(page.getByPlaceholder('Search titles, addresses, folders, and tags')).toBeVisible();
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Survivor');
   menu = await openSavedSearches(page);
   await expect(menu).toContainText('No saved searches yet.');
   await menu.getByLabel('Name for the current search').fill('Recovered');

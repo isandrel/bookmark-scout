@@ -1,6 +1,6 @@
 /**
- * The popup and side panel search in the search query language (`search-query.ts`), matched
- * against every field (`search-documents.ts`). The store loads it on the first search, so pages
+ * The popup, side panel, and manager search in the search query language (`search-query.ts`),
+ * matched against every field (`search-documents.ts`). They load it on the first search, so pages
  * open without it; `bookmark-search.ts` keeps the tree helpers and the title search.
  */
 import type { BookmarkTreeNode } from '@/types';
@@ -63,6 +63,30 @@ function asksForFolders(query: SearchQuery): boolean {
   );
 }
 
+/** Every document the query matches, by bookmark id; undefined when it has no terms. */
+function matchQuery(
+  nodes: readonly BookmarkTreeNode[],
+  text: string,
+  metadata: StoredBookmarkMetadataById,
+): { query: SearchQuery; results: Map<string, SearchResult> } | undefined {
+  const { query } = parseSearchQuery(text);
+  if (query.terms.length === 0) return undefined;
+  const results = new Map<string, SearchResult>();
+  for (const document of documentsOf(nodes, metadata)) {
+    const result = resultOf(text, query, document);
+    if (result) results.set(document.id, result);
+  }
+  return { query, results };
+}
+
+/**
+ * Whether a result matched only by its folder path, which a plain word naming a folder does for
+ * everything in it. The folder is the match then, unless the query asks for folders (`folder:`).
+ */
+function matchesOnlyByFolder(query: SearchQuery, result: SearchResult): boolean {
+  return !asksForFolders(query) && result.reasons.every((reason) => reason.field === 'folder');
+}
+
 /**
  * The tree filtered by a search box's query, read in the search query language and matched against
  * titles, addresses, folders, and the local tags and summaries in `metadata`.
@@ -72,26 +96,14 @@ export function filterBookmarkTreeByQuery(
   text: string,
   metadata: StoredBookmarkMetadataById,
 ): BookmarkTreeNode[] {
-  const { query } = parseSearchQuery(text);
-  if (query.terms.length === 0) return [...nodes];
-  const results = new Map<string, SearchResult>();
-  for (const document of documentsOf(nodes, metadata)) {
-    const result = resultOf(text, query, document);
-    if (result) results.set(document.id, result);
-  }
-  const folderMatches = asksForFolders(query);
+  const matched = matchQuery(nodes, text, metadata);
+  if (!matched) return [...nodes];
+  const { query, results } = matched;
   return filterTree(nodes, (node, insideMatch) => {
     const result = results.get(node.id);
     if (!result) return undefined;
-    // A plain word that names a matching folder matches everything in it by its folder path;
-    // the folder is the match, and its contents show beneath it unflagged, as before.
-    if (
-      insideMatch &&
-      !folderMatches &&
-      result.reasons.every((reason) => reason.field === 'folder')
-    ) {
-      return undefined;
-    }
+    // The contents of a matching folder show beneath it unflagged, as before.
+    if (insideMatch && matchesOnlyByFolder(query, result)) return undefined;
     const title = result.reasons.find((reason) => reason.field === 'title');
     return {
       isSearchMatch: true,
@@ -99,4 +111,23 @@ export function filterBookmarkTreeByQuery(
       searchMatchReasons: result.reasons,
     };
   });
+}
+
+/**
+ * The ids of the bookmarks and folders a search box's query matches, for a flat list such as the
+ * manager's table; undefined when the query has no terms, so it filters nothing. A folder a plain
+ * word names is listed, not everything in it.
+ */
+export function matchBookmarkTreeQuery(
+  nodes: readonly BookmarkTreeNode[],
+  text: string,
+  metadata: StoredBookmarkMetadataById,
+): ReadonlySet<string> | undefined {
+  const matched = matchQuery(nodes, text, metadata);
+  if (!matched) return undefined;
+  const ids = new Set<string>();
+  for (const [id, result] of matched.results) {
+    if (!matchesOnlyByFolder(matched.query, result)) ids.add(id);
+  }
+  return ids;
 }

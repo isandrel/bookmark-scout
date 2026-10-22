@@ -59,6 +59,7 @@ export default function BookmarksPage() {
     rootId,
     data,
     allData,
+    tree,
     isLoading,
     error,
     notice,
@@ -70,6 +71,7 @@ export default function BookmarksPage() {
     rememberPageIndex,
     refresh,
   } = useBookmarkNavigation();
+  const searchMatches = useSearchMatches(tree, searchQuery);
   const [revealRow, setRevealRow] = useState<DataTableRevealRequest | null>(null);
   // Whether the table lists matches from every folder; the breadcrumb then says so.
   const [showsAllFolders, setShowsAllFolders] = useState(false);
@@ -492,6 +494,7 @@ export default function BookmarksPage() {
               renderSelectionActions={renderSelectionActions}
               savedSearchContext={savedSearchContext}
               searchQuery={searchQuery}
+              searchMatches={searchMatches}
               onSearchQueryChange={setSearchQuery}
               revealRow={revealRow}
               onShowsAllBookmarksChange={setShowsAllFolders}

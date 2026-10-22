@@ -6520,8 +6520,8 @@
         "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
-        "message": "Search titles and addresses",
-        "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
+        "message": "Search titles, addresses, folders, and tags",
+        "description": "Bookmark manager: placeholder and label of the search box, which matches titles, web addresses, folders, tags, and summaries in the search query language"
     },
     "managerDefaults_moreFilters": {
         "message": "More filters",

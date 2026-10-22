@@ -4,6 +4,7 @@ import {
   captureSavedSearchQuery,
   hasSavedSearchFilters,
   isSameSavedSearchQuery,
+  legacyTitleSearch,
   parseSavedSearchQuery,
   resolveSavedSearchQuery,
   type SavedSearchQuery,
@@ -21,13 +22,16 @@ import {
   restoreSavedSearchInList,
   type SavedSearch,
 } from '@/lib/saved-searches-storage';
+import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 const from = new Date(2026, 0, 5);
 const to = new Date(2026, 0, 20);
 
+// A query as saved now: the search box text is in the search query language.
 const query = (filters: SavedSearchQuery['filters'], extra: Partial<SavedSearchQuery> = {}) => ({
   filters,
+  ...(filters.title !== undefined ? { syntaxVersion: SEARCH_SYNTAX_VERSION } : {}),
   sorting: [],
   ...extra,
 });
@@ -69,10 +73,47 @@ describe('saved search query', () => {
         domain: ['example.com', 'github.com'],
         dateAdded: { from: from.getTime(), to: to.getTime() },
       },
+      syntaxVersion: SEARCH_SYNTAX_VERSION,
       sorting: [{ id: 'title', desc: true }],
       folderId: '10',
     });
     expect(JSON.parse(JSON.stringify(captured))).toEqual(captured);
+  });
+
+  it('captures the search box text from the table, where it comes with its matches', () => {
+    const captured = captureSavedSearchQuery({
+      columnFilters: [{ id: 'title', value: { text: ' tag:work ', matches: new Set(['1']) } }],
+      sorting: [],
+      currentFolderOnly: false,
+      currentFolderId: null,
+    });
+    expect(captured).toEqual(query({ title: 'tag:work' }));
+  });
+
+  it('reads a search saved before the search query language so it finds what it found', () => {
+    // It matched the text as typed in the title or address; one plain word still does.
+    expect(legacyTitleSearch('docs')).toBe('docs');
+    // Anything the language would read differently becomes one phrase.
+    expect(legacyTitleSearch('react hooks')).toBe('"react hooks"');
+    expect(legacyTitleSearch('tag:work')).toBe('"tag:work"');
+    expect(legacyTitleSearch('-draft')).toBe('"-draft"');
+    expect(legacyTitleSearch('say "hi"')).toBe('"say hi"');
+
+    const legacy = { filters: { title: 'react hooks', url: '/guide' }, sorting: [] };
+    const upgraded = parseSavedSearchQuery(legacy);
+    expect(upgraded).toEqual(query({ title: '"react hooks"', url: '/guide' }));
+    expect(resolveSavedSearchQuery(upgraded as SavedSearchQuery, new Set()).columnFilters).toEqual([
+      { id: 'title', value: '"react hooks"' },
+      { id: 'url', value: '/guide' },
+    ]);
+    // Reopened and saved again unchanged, it is the same search.
+    expect(isSameSavedSearchQuery(legacy as SavedSearchQuery, upgraded as SavedSearchQuery)).toBe(
+      true,
+    );
+    // A search saved in the language keeps its operators.
+    expect(parseSavedSearchQuery(query({ title: 'tag:work' }))).toEqual(
+      query({ title: 'tag:work' }),
+    );
   });
 
   it('leaves out empty filters and the scope when results are not limited to a folder', () => {

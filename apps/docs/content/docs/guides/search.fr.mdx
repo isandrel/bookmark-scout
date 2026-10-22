@@ -1,6 +1,6 @@
 ---
 title: Recherche et recherches enregistrées
-description: Trouvez n'importe quel favori par titre ou par URL depuis la fenêtre pop-up ou le panneau latéral, filtrez le tableau du gestionnaire, et conservez des combinaisons de filtres sous forme de recherches enregistrées nommées.
+description: Trouvez n'importe quel favori par titre, adresse, dossier, étiquette ou résumé depuis la fenêtre pop-up, le panneau latéral ou le gestionnaire, affinez une recherche avec des opérateurs, et conservez des combinaisons de filtres sous forme de recherches enregistrées nommées.
 ---
 
 ## Rechercher depuis la fenêtre pop-up ou le panneau latéral [#search-from-the-popup-or-side-panel]
@@ -10,10 +10,10 @@ description: Trouvez n'importe quel favori par titre ou par URL depuis la fenêt
 Cliquez sur l'icône de Bookmark Scout dans la barre d'outils. Vous pouvez aussi ouvrir Bookmark Scout dans le panneau latéral du navigateur (la barre latérale dans Firefox), qui reste ouvert pendant votre navigation.
 </Step>
 <Step>
-Saisissez votre recherche dans le champ en haut, qui indique **Saisissez un dossier pour enregistrer cette page…** et recherche aussi dans vos favoris (appuyez sur <Shortcut id="popup.focus_search" /> pour y accéder directement). Les résultats s'affichent pendant la saisie, dans leurs dossiers, avec chaque correspondance mise en surbrillance.
+Saisissez votre recherche dans le champ en haut, qui indique **Saisissez un dossier pour enregistrer cette page…** et recherche aussi dans vos favoris (appuyez sur <Shortcut id="popup.focus_search" /> pour y accéder directement). Les résultats s'affichent pendant la saisie, dans leurs dossiers, avec chaque correspondance mise en surbrillance. Chaque mot doit correspondre, dans le titre, l'adresse, le dossier, ou les étiquettes et le résumé ; voir [Mots et opérateurs de recherche](#search-words-and-operators).
 </Step>
 <Step>
-Affinez la correspondance avec **Plus d’options de recherche**, le bouton situé dans le champ de recherche : **Respecter la casse**, **Mot entier** et **Recherche avancée par motif (regex)**, qui traite la recherche comme une expression régulière. Le bouton est mis en surbrillance tant que l'une de ces options est activée.
+Affinez la correspondance avec **Plus d’options de recherche**, le bouton situé dans le champ de recherche : **Respecter la casse**, **Mot entier** et **Recherche avancée par motif (regex)**, qui traite la recherche comme une expression régulière. Le bouton est mis en surbrillance tant que l'une de ces options est activée. Ces options ne cherchent que dans les titres, tels que saisis, sans opérateurs.
 </Step>
 <Step>
 Cliquez sur un favori, ou accédez-y avec les touches fléchées et appuyez sur `Enter`, pour l'ouvrir dans un nouvel onglet.
@@ -29,11 +29,36 @@ Bon à savoir :
 - Effacer la recherche (avec le bouton d'effacement, ou `Esc` dans le champ de recherche) rouvre les dossiers qui étaient ouverts auparavant.
 - Les recherches récentes sont mémorisées sur cet appareil. Cliquez dans le champ de recherche vide, ou appuyez sur <Shortcut id="popup.recent_searches" /> dans ce champ, pour les afficher. Effacez-les depuis cette liste, ou désactivez l'**Historique des recherches** dans les paramètres.
 
+## Mots et opérateurs de recherche [#search-words-and-operators]
+
+Les champs de recherche de la fenêtre pop-up, du panneau latéral et du gestionnaire lisent une recherche de la même façon. Ils ne cherchent que dans les favoris de ce navigateur et n'envoient rien nulle part.
+
+- Chaque mot doit correspondre, chacun n'importe où : le titre, l'adresse web, le chemin du dossier, ou les étiquettes et le résumé du favori. `recettes soupe` trouve un favori nommé « Soupe » dans un dossier nommé « Recettes ».
+- Les guillemets gardent les mots ensemble : `"soupe de tomates"`.
+- Un `-` devant exclut ce qui correspond : `recettes -gâteau` ou `-tag:archive`.
+- Un mot qui nomme un dossier trouve le dossier. Dans la fenêtre pop-up, ses favoris s'affichent à l'intérieur ; `folder:` liste tout ce qu'il contient.
+- Le texte qui n'est pas un opérateur est recherché tel que saisi, comme `C++`, `10:30` ou une adresse web. De même pour un opérateur que Bookmark Scout ne connaît pas, comme `foo:bar`. Une valeur qu'il ne sait pas lire, comme une date non valide, est ignorée.
+
+| Recherche | Trouve |
+| --- | --- |
+| `title:react` | Les titres qui contiennent le texte ; `title:"react hooks"` accepte plusieurs mots |
+| `url:github` | Les adresses web qui contiennent le texte |
+| `domain:github.com` | Les favoris de ce site, sous-domaines compris |
+| `folder:Travail` ou `path:Travail` | Tout ce qui se trouve dans un dossier portant exactement ce nom, à toute profondeur ; `folder:"Travail / Docs"` désigne un dossier dans un autre |
+| `tag:lecture` | Les favoris qui ont exactement cette étiquette |
+| `summary:recette` | Les résumés qui contiennent le texte |
+| `is:bookmark` ou `is:folder` | Uniquement les favoris, ou uniquement les dossiers |
+| `is:untagged` | Les favoris sans étiquette |
+| `has:tags` ou `has:summary` | Les éléments avec des étiquettes, ou avec un résumé |
+| `after:2026-01-31` ou `before:2026-01-31` | Les éléments ajoutés ce jour-là ou après, ou ce jour-là ou avant |
+
+Les étiquettes et les résumés sont ceux que vous ajoutez dans **Détails du favori** ou que vous gardez des outils **Étiquetage automatique** et **Générateur de résumés**. Ils restent sur cet appareil.
+
 ## Filtrer dans le gestionnaire de favoris [#filter-in-the-bookmarks-manager]
 
 Le tableau du gestionnaire offre des filtres plus précis. Dans Chrome, ouvrez la page Favoris du navigateur pour y accéder. Il s'ouvre sur votre barre de favoris.
 
-- **Rechercher titres et adresses** trouve du texte dans le titre d'un favori ou dans son adresse web. Appuyez sur <Shortcut id="manager.focus_filter" /> pour y accéder directement.
+- **Rechercher titres, adresses, dossiers et étiquettes** lit les [mots et opérateurs de recherche](#search-words-and-operators) et liste les dossiers et les favoris qui correspondent. Appuyez sur <Shortcut id="manager.focus_filter" /> pour y accéder directement.
 - **Type**, **Domaine** et **Date d'ajout** restreignent encore les lignes. **Plus de filtres** ajoute **Filtrer les URL…**, qui ne cherche que dans l'adresse web, et **Dossier**, qui ne garde que les éléments des dossiers que vous choisissez.
 - **Dossier actuel uniquement** limite les filtres au dossier dans lequel vous vous trouvez. Lorsque cette option est désactivée, les filtres portent sur tous les favoris, chaque résultat affiche son dossier sous son titre, et le chemin en haut indique **Résultats de tous les dossiers**.
 - Triez sur n'importe quelle colonne depuis son en-tête. Tant que le tableau n'est pas dans l'ordre du navigateur, le texte à côté de **Ordre du navigateur** indique l'ordre actuel. Cliquez sur **Ordre du navigateur** pour y revenir.
@@ -45,7 +70,7 @@ Le tableau du gestionnaire offre des filtres plus précis. Dans Chrome, ouvrez l
 L'adresse du gestionnaire suit ce que vous affichez : les boutons **Précédent** et **Suivant** du navigateur parcourent ainsi les dossiers et les recherches, et vous pouvez enregistrer une vue en favori ou la partager.
 
 - `?id=` désigne le dossier ouvert, comme dans le gestionnaire de Chrome : `chrome://bookmarks/?id=12` ouvre le dossier 12 dans Chrome, et `edge://favorites/?id=12` dans Edge. Les liens de Chrome 154 à 156, qui désignaient la Barre de favoris, Autres favoris et Favoris sur mobile par un long identifiant, ouvrent aussi ces dossiers. Sans `?id=`, le gestionnaire s'ouvre sur la barre de favoris. **Favoris**, au début du chemin du dossier, affiche le niveau supérieur.
-- `?q=` correspond à la recherche : `chrome://bookmarks/?q=react` ouvre le gestionnaire avec une recherche de « react » dans les titres et les adresses. Pendant que vous saisissez du texte dans **Rechercher titres et adresses**, l'adresse suit, et une même série de frappes correspond à une seule étape **Précédent**. Une recherche l'emporte sur le dossier ; le dossier s'applique toutefois lorsque **Dossier actuel uniquement** est coché.
+- `?q=` correspond à la recherche : `chrome://bookmarks/?q=react` ouvre le gestionnaire avec une recherche de « react », et `?q=tag:reading` avec une recherche de l'étiquette. Pendant que vous saisissez du texte dans **Rechercher titres, adresses, dossiers et étiquettes**, l'adresse suit, et une même série de frappes correspond à une seule étape **Précédent**. Une recherche l'emporte sur le dossier ; le dossier s'applique toutefois lorsque **Dossier actuel uniquement** est coché.
 - **Copier le lien vers ce dossier**, à côté du chemin du dossier dans l'en-tête et dans le menu d'une ligne de dossier, copie cette adresse. Dans Firefox, la commande copie l'adresse propre de la page du gestionnaire. Chrome et Edge continuent d'afficher l'adresse avec laquelle vous avez ouvert le gestionnaire, même lorsque vous passez d'un dossier à l'autre.
 - Le titre de l'onglet indique le dossier, ou la recherche pendant que vous recherchez.
 
@@ -66,6 +91,8 @@ Saisissez un nom dans **Nommez cette recherche** et cliquez sur **Enregistrer**.
 </Steps>
 
 Pour en utiliser une, ouvrez **Recherches enregistrées** et choisissez-la. Ses filtres et son tri remplacent ceux en cours et, si elle était limitée à un dossier, le gestionnaire revient à ce dossier. Chaque entrée peut être renommée ou supprimée, et une suppression peut être annulée depuis la notification qui suit. Faites glisser une entrée par sa poignée pour changer l'ordre, ou ouvrez le menu de la poignée pour la déplacer au clavier.
+
+Le texte du champ de recherche est enregistré tel que saisi, opérateurs compris. Une recherche enregistrée avant que le champ de recherche ne lise les opérateurs cherchait son texte uniquement dans les titres et les adresses. Elle s'ouvre désormais avec ce texte entre guillemets lorsqu'il contient plusieurs mots ou un deux-points, et trouve donc toujours chaque favori qu'elle trouvait.
 
 Une recherche enregistrée stocke la définition des filtres, jamais des copies de favoris : ses résultats correspondent donc toujours à l'état actuel de vos favoris. Si un dossier qu'elle cible a été supprimé, ce dossier est ignoré, les autres filtres s'appliquent toujours, et une notification indique combien de dossiers ont été ignorés.
 

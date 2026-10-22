@@ -20,7 +20,9 @@ test('a language change re-renders open pages without a reload', async ({
   await openPopup(page, extensionId);
   const manager = await context.newPage();
   await manager.goto(`chrome-extension://${extensionId}/bookmarks.html`);
-  await expect(manager.getByPlaceholder('Search titles and addresses')).toBeVisible();
+  await expect(
+    manager.getByPlaceholder('Search titles, addresses, folders, and tags'),
+  ).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   // Typed text survives the switch: the page re-renders instead of remounting.
   await page
@@ -33,7 +35,7 @@ test('a language change re-renders open pages without a reload', async ({
     'typed before the switch',
   );
   await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
-  await expect(manager.getByPlaceholder('タイトルとアドレスを検索')).toBeVisible();
+  await expect(manager.getByPlaceholder('タイトル・アドレス・フォルダ・タグを検索')).toBeVisible();
   await expect(manager.getByTestId('folder-sidebar').getByRole('heading')).toHaveText(
     'ブックマーク',
   );
@@ -43,7 +45,9 @@ test('a language change re-renders open pages without a reload', async ({
   await expect(
     page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' }),
   ).toBeVisible();
-  await expect(manager.getByPlaceholder('Search titles and addresses')).toBeVisible();
+  await expect(
+    manager.getByPlaceholder('Search titles, addresses, folders, and tags'),
+  ).toBeVisible();
 });
 
 test('a page opened in a selected language shows it from the first paint', async ({

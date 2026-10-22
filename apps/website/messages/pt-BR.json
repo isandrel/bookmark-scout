@@ -135,7 +135,7 @@
         "caption": "O gerenciador substitui a página de favoritos do Chrome e funciona como ela, com uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
         "alt": "O gerenciador do Bookmark Scout na pasta AI / LLMs / Fine-tuning, com a árvore de pastas (AI, Dev, Design, Tools, Reading list), uma única caixa de pesquisa e a tabela de favoritos, cada um com o ícone do site",
         "points": [
-          "Pesquise em todos os seus favoritos enquanto digita",
+          "Pesquise em todos os seus favoritos enquanto digita, por título, endereço, pasta ou tag",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
           "Salve uma pesquisa, e ela sempre mostra os resultados atualizados",
           "Selecione várias linhas com {{SHORTCUT:mouse.select_toggle}}, clique com o botão direito para recortar, copiar, colar e abrir todos, e arraste favoritos e pastas para onde eles devem ficar",
