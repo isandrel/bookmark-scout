@@ -8254,5 +8254,13 @@
     "tools_rulesEdit": {
         "message": "编辑规则",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "为新书签添加标签",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "已启用的规则会在每个书签添加时为其加上标签，无论书签来自 Bookmark Scout、浏览器还是同步。绝不会自动移动书签，一次添加的大量书签（同步或导入）会保持不变。",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }

@@ -8628,5 +8628,13 @@
     "tools_rulesEdit": {
         "message": "Editar regras",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "Marcar favoritos novos",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "As regras ativas adicionam suas tags a cada favorito quando ele é adicionado, pelo Bookmark Scout, pelo navegador ou pela sincronização. Nada é movido automaticamente, e muitos favoritos adicionados de uma vez (uma sincronização ou uma importação) ficam como estão.",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }

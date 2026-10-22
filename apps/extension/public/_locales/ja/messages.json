@@ -8600,5 +8600,13 @@
     "tools_rulesEdit": {
         "message": "ルールを編集",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "新しいブックマークにタグを付ける",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "有効なルールが、Bookmark Scout、ブラウザ、同期のどこから追加されたかにかかわらず、追加された各ブックマークにタグを付けます。自動で移動することはなく、一度に多数追加されたブックマーク（同期やインポート）はそのままにします。",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }

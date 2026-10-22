@@ -8628,5 +8628,13 @@
     "tools_rulesEdit": {
         "message": "Edit rules",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "Tag New Bookmarks",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "Enabled rules add their tags to each bookmark as it is added, whether from Bookmark Scout, the browser, or sync. Moves are never made automatically, and many bookmarks added at once (a sync or an import) are left alone.",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }

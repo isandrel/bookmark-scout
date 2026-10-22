@@ -121,3 +121,40 @@ test('templates start turned off, and a run with no rule on says so', async ({
   await expect(review).toContainText('No rules are turned on.');
   expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata)).toBeFalsy();
 });
+
+test('with Tag New Bookmarks on, a bookmark added in the browser gets its rules tags and stays put', async ({
+  extensionWorker,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Auto Tag', [
+    { title: 'Elsewhere', children: [] },
+  ]);
+  const target = (seeded.ids as Record<string, string>).Elsewhere as string;
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkRules, [
+    {
+      id: 'gh',
+      name: 'GitHub',
+      enabled: true,
+      query: 'domain:github.com',
+      syntaxVersion: 1,
+      addTags: ['development'],
+      moveTo: { folderId: target, path: 'E2E Auto Tag/Elsewhere' },
+    },
+  ]);
+  const add = (title: string, url: string) =>
+    extensionWorker.evaluate(
+      async ({ parentId, title, url }) =>
+        (await chrome.bookmarks.create({ parentId, title, url })).id,
+      { parentId: seeded.folderId, title, url },
+    );
+
+  // Off by default: a bookmark added then is never tagged, even in the same batch.
+  const before = await add('Before', 'https://github.com/org/before');
+  await setSettings(extensionWorker, { bookmarkRulesAutoTag: true });
+  const repo = await add('Repo', 'https://github.com/org/repo');
+  const other = await add('Other', 'https://other.e2e.invalid/');
+  await expect.poll(() => tagsOf(extensionWorker, repo)).toEqual(['development']);
+  expect(await tagsOf(extensionWorker, other)).toEqual([]);
+  expect(await tagsOf(extensionWorker, before)).toEqual([]);
+  // The rule's move is never made automatically.
+  expect(await parentOf(extensionWorker, repo)).toBe(seeded.folderId);
+});

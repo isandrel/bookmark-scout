@@ -8628,5 +8628,13 @@
     "tools_rulesEdit": {
         "message": "Regeln bearbeiten",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "Neue Lesezeichen taggen",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "Aktive Regeln fügen jedem Lesezeichen beim Hinzufügen ihre Tags hinzu, ob aus Bookmark Scout, dem Browser oder der Synchronisierung. Verschoben wird nie automatisch, und viele auf einmal hinzugefügte Lesezeichen (eine Synchronisierung oder ein Import) bleiben unverändert.",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }
