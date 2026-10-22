@@ -63,6 +63,47 @@ function asksForFolders(query: SearchQuery): boolean {
   );
 }
 
+/**
+ * A term that needs its text to appear somewhere (a plain word or phrase, or one limited to the
+ * title, address, or summary), so more characters typed on it can only match fewer documents.
+ * Exclusions, whole-name operators (`tag:`, `folder:`, `domain:`), and conditions do not.
+ */
+function needsText(term: SearchTerm): term is SearchTerm & { kind: 'text' } {
+  return (
+    term.kind === 'text' &&
+    !term.negate &&
+    (term.field === undefined ||
+      term.field === 'title' ||
+      term.field === 'url' ||
+      term.field === 'summary')
+  );
+}
+
+/**
+ * Whether `next` can only match documents `previous` matched: typing on, it keeps every term of
+ * `previous`, may lengthen the last one, and may add more (all terms must match).
+ */
+function narrows(previous: SearchQuery, next: SearchQuery): boolean {
+  const last = previous.terms.length - 1;
+  if (last < 0 || next.terms.length < previous.terms.length) return false;
+  return previous.terms.every((term, index) => {
+    const following = next.terms[index];
+    if (!needsText(term) || !following || !needsText(following)) return false;
+    if (term.field !== following.field || term.phrase !== following.phrase) return false;
+    return index === last
+      ? following.value.toLowerCase().startsWith(term.value.toLowerCase())
+      : following.value === term.value;
+  });
+}
+
+/**
+ * The last query matched over a library and the documents it found, so typing on checks only
+ * those (`narrows`) instead of the whole library.
+ */
+let lastMatch:
+  | { documents: readonly SearchDocument[]; query: SearchQuery; found: SearchDocument[] }
+  | undefined;
+
 /** Every document the query matches, by bookmark id; undefined when it has no terms. */
 function matchQuery(
   nodes: readonly BookmarkTreeNode[],
@@ -71,12 +112,58 @@ function matchQuery(
 ): { query: SearchQuery; results: Map<string, SearchResult> } | undefined {
   const { query } = parseSearchQuery(text);
   if (query.terms.length === 0) return undefined;
+  const documents = documentsOf(nodes, metadata);
+  const candidates =
+    lastMatch?.documents === documents && narrows(lastMatch.query, query)
+      ? lastMatch.found
+      : documents;
   const results = new Map<string, SearchResult>();
-  for (const document of documentsOf(nodes, metadata)) {
+  const found: SearchDocument[] = [];
+  for (const document of candidates) {
     const result = resultOf(text, query, document);
-    if (result) results.set(document.id, result);
+    if (!result) continue;
+    results.set(document.id, result);
+    found.push(document);
   }
+  lastMatch = { documents, query, found };
   return { query, results };
+}
+
+/** Documents being built ahead of the first search, for the library they belong to. */
+let preparing:
+  | {
+      nodes: readonly BookmarkTreeNode[];
+      metadata: StoredBookmarkMetadataById;
+      pending: Iterator<SearchDocument>;
+      documents: SearchDocument[];
+    }
+  | undefined;
+
+/**
+ * Builds and folds a library's search documents ahead of the first search, a slice at a time:
+ * it stops when `shouldYield` says so and goes on from there on the next call. True once they
+ * are ready, so the first keystroke only matches.
+ */
+export function prepareSearchDocuments(
+  nodes: readonly BookmarkTreeNode[],
+  metadata: StoredBookmarkMetadataById,
+  shouldYield: () => boolean,
+): boolean {
+  if (searchedLibrary?.nodes === nodes && searchedLibrary.metadata === metadata) return true;
+  if (preparing?.nodes !== nodes || preparing.metadata !== metadata) {
+    preparing = { nodes, metadata, pending: searchDocumentsOf(nodes, metadata), documents: [] };
+  }
+  while (!shouldYield()) {
+    const next = preparing.pending.next();
+    if (next.done) {
+      searchedLibrary = { nodes, metadata, documents: preparing.documents };
+      preparing = undefined;
+      return true;
+    }
+    foldSearchDocument(next.value);
+    preparing.documents.push(next.value);
+  }
+  return false;
 }
 
 /**

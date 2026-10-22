@@ -200,6 +200,27 @@ describe('filterBookmarkTreeByQuery', () => {
     expect(matchBookmarkTreeQuery(tree, 'is:nothing', metadata)).toBeUndefined();
   });
 
+  it('typing on checks only what the last query found, and stays right when it widens', () => {
+    const metadata: StoredBookmarkMetadataById = { soup: { tags: ['Food'] } };
+    const sorted = (text: string) =>
+      [...(matchBookmarkTreeQuery(tree, text, metadata) ?? [])].sort();
+    // Each step matches what a search from scratch matches, typed one after another.
+    const steps: [string, string[]][] = [
+      ['re', ['recipe-cake', 'recipe-db', 'recipes']],
+      ['rec', ['recipe-cake', 'recipe-db', 'recipes']],
+      ['recipe c', ['recipe-cake', 'recipe-db', 'recipes']],
+      ['recipe ca', ['recipe-cake']],
+      ['recipe', ['recipe-cake', 'recipe-db', 'recipes']],
+      ['recipe -cake', ['recipe-db', 'recipes']],
+      ['recipe -cak', ['recipe-db', 'recipes']],
+      ['tag', []],
+      ['tag:food', ['soup']],
+      ['"recipe', ['recipe-cake', 'recipe-db', 'recipes']],
+      ['"recipe c', ['recipe-cake']],
+    ];
+    for (const [text, expected] of steps) expect(sorted(text), text).toEqual(expected);
+  });
+
   it('applies operators and exclusions', () => {
     expect(ids(filterBookmarkTreeByQuery(tree, 'recipe -cake is:bookmark', noMetadata))).toEqual([
       'root',
