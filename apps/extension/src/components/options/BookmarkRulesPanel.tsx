@@ -15,46 +15,15 @@ const TEMPLATE_NAME_KEYS: Record<BookmarkRuleTemplateId, MessageKey> = {
   tutorial: 'rules_templateTutorial',
 };
 
-type Draft = {
-  /** Undefined for a rule that is not saved yet. */
-  id?: string;
-  name: string;
-  query: string;
-  tags: string;
-  folderId: string;
-  enabled: boolean;
-};
+const RULE_DRAFT_ERROR_KEYS = {
+  name: 'rules_errorName',
+  query: 'rules_errorQuery',
+  action: 'rules_errorAction',
+  invalid: 'rules_errorInvalid',
+} as const satisfies Record<RuleDraftError, MessageKey>;
 
-const EMPTY_DRAFT: Draft = { name: '', query: '', tags: '', folderId: '', enabled: true };
-
-function draftOf(rule: BookmarkRule): Draft {
-  return {
-    id: rule.id,
-    name: rule.name,
-    query: rule.query,
-    tags: rule.addTags.join(', '),
-    folderId: rule.moveTo?.folderId ?? '',
-    enabled: rule.enabled,
-  };
-}
-
-/** The folder path a rule names, as the tree shows it now. */
-function folderPathOf(tree: readonly BookmarkTreeNode[], folderId: string): string | undefined {
-  const folder = indexWritableFolders(tree).get(folderId);
-  return folder?.path.map((title) => getBookmarkDisplayTitle(title)).join(FOLDER_PATH_SEPARATOR);
-}
-
-/** A rule in one line: its search, then what it does. */
-function describeRule(rule: BookmarkRule): string {
-  const actions = [
-    ...(rule.addTags.length > 0 ? [t('rules_summaryTags', formatList(rule.addTags))] : []),
-    ...(rule.moveTo ? [t('rules_summaryMove', rule.moveTo.path)] : []),
-  ];
-  return t('rules_summary', [rule.query, actions.join(t('format_separator'))]);
-}
-
-function RuleEditorDialog({ draft, onClose }: { draft: Draft | null; onClose: () => void }) {
-  const [value, setValue] = useState<Draft>(EMPTY_DRAFT);
+function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose: () => void }) {
+  const [value, setValue] = useState<RuleDraft>(EMPTY_RULE_DRAFT);
   const [library, setLibrary] = useState<{
     tree: BookmarkTreeNode[];
     metadata: StoredBookmarkMetadataById;
@@ -71,54 +40,25 @@ function RuleEditorDialog({ draft, onClose }: { draft: Draft | null; onClose: ()
       .catch(() => setLibrary(undefined));
   }, [draft]);
 
-  const tags = parseBookmarkTags(value.tags);
-  const queryReadable = useMemo(() => {
-    const { query, diagnostics } = parseSearchQuery(value.query);
-    return query.terms.length > 0 && diagnostics.length === 0;
-  }, [value.query]);
-  // How many bookmarks the search finds now, as the run would, whatever the actions.
-  const matches = useMemo(() => {
-    if (!library || !queryReadable) return undefined;
-    const probe: BookmarkRule = {
-      id: 'probe',
-      name: 'probe',
-      enabled: true,
-      query: value.query.trim(),
-      syntaxVersion: SEARCH_SYNTAX_VERSION,
-      addTags: [],
-      moveTo: { folderId: '', path: '' },
-    };
-    return planBookmarkRules([probe], library.tree, library.metadata).length;
-  }, [library, queryReadable, value.query]);
+  const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
+  const matches = useMemo(
+    () =>
+      library && queryReadable
+        ? countRuleMatches(value.query, library.tree, library.metadata)
+        : undefined,
+    [library, queryReadable, value.query],
+  );
 
   const save = async () => {
     if (!draft) return;
-    const path = value.folderId && library ? folderPathOf(library.tree, value.folderId) : undefined;
-    const candidate = {
-      id: draft.id ?? createBookmarkRuleId(),
-      name: value.name,
-      enabled: value.enabled,
-      query: value.query,
-      syntaxVersion: SEARCH_SYNTAX_VERSION,
-      addTags: tags,
-      ...(value.folderId ? { moveTo: { folderId: value.folderId, path: path ?? '' } } : {}),
-    };
-    const parsed = bookmarkRuleSchema.safeParse(candidate);
-    if (!parsed.success) {
-      setError(
-        !value.name.trim()
-          ? t('rules_errorName')
-          : !queryReadable
-            ? t('rules_errorQuery')
-            : tags.length === 0 && !value.folderId
-              ? t('rules_errorAction')
-              : t('rules_errorInvalid'),
-      );
+    const result = ruleFromDraft(value, draft.id ?? createBookmarkRuleId(), library?.tree);
+    if ('error' in result) {
+      setError(t(RULE_DRAFT_ERROR_KEYS[result.error]));
       return;
     }
     setSaving(true);
     try {
-      await saveBookmarkRule(parsed.data);
+      await saveBookmarkRule(result.rule);
       onClose();
     } catch {
       setError(t('rules_errorSaveFailed'));
@@ -213,7 +153,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: Draft | null; onClose: ()
 
 export function BookmarkRulesPanel() {
   const { value: rules } = useStoredValue(bookmarkRulesValue);
-  const [editing, setEditing] = useState<Draft | null>(null);
+  const [editing, setEditing] = useState<RuleDraft | null>(null);
 
   const addTemplate = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) =>
     void saveBookmarkRule({
@@ -246,7 +186,7 @@ export function BookmarkRulesPanel() {
       actionsLayout="wrap"
       actions={
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" onClick={() => setEditing(EMPTY_DRAFT)}>
+          <Button size="sm" onClick={() => setEditing(EMPTY_RULE_DRAFT)}>
             <Plus />
             {t('rules_add')}
           </Button>
@@ -295,7 +235,7 @@ export function BookmarkRulesPanel() {
                 variant="ghost"
                 size="icon-sm"
                 aria-label={t('rules_editRule', rule.name)}
-                onClick={() => setEditing(draftOf(rule))}
+                onClick={() => setEditing(ruleDraftOf(rule))}
               >
                 <Pencil />
               </Button>
@@ -305,7 +245,7 @@ export function BookmarkRulesPanel() {
                 aria-label={t('rules_duplicate', rule.name)}
                 onClick={() =>
                   setEditing({
-                    ...draftOf(rule),
+                    ...ruleDraftOf(rule),
                     id: undefined,
                     name: t('rules_copyName', rule.name),
                   })
