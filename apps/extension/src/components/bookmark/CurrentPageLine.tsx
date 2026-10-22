@@ -78,7 +78,10 @@ export function CurrentPageLine({ folders }: { folders: readonly BookmarkTreeNod
         <p data-testid="current-page-saved-in" title={savedText} className={lineClassName}>
           <BookmarkCheck aria-hidden="true" className="size-3.5 shrink-0" />
           <span className="min-w-0 truncate">{savedText}</span>
-          <CaptureCoverButton url={page.url} />
+          <span className="ml-auto flex shrink-0 items-center gap-0.5">
+            <IndexTabTextButton url={page.url} />
+            <CaptureCoverButton url={page.url} />
+          </span>
         </p>
       )}
     </>

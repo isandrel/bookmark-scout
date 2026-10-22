@@ -131,11 +131,13 @@ Activa **Activar Indexar texto de páginas** en [Configuración](/settings#index
 En la barra de herramientas del administrador, elige el ámbito en la tarjeta **Indexar texto de páginas** y haz clic en **Indexar**. Si se te pide, permite el acceso a los sitios de ese ámbito. La indexación se ejecuta en segundo plano: sigue cuando cierras el administrador, y su tarjeta y **Tareas en segundo plano** muestran su progreso, con **Pausar**, **Reanudar** y **Cancelar**; después, las páginas esperan en **Ver resultados**.
 </Step>
 <Step>
-Revisa las páginas por pestaña: **Con texto**, **Sin texto**, **Con error**, **Ya indexadas** (antes, desde la misma dirección) y **Omitidas** (no son páginas web o están en tu red local). Las páginas con texto empiezan en **Guardar texto**; haz clic en **Guardar** (por ejemplo, **Guardar el texto de 12 páginas**).
+Revisa las páginas por pestaña: **Con texto**, **Sin texto**, **Página de inicio de sesión** (la página pidió iniciar sesión en lugar de mostrar su contenido; su texto nunca se guarda), **Con error**, **Ya indexadas** (antes, desde la misma dirección) y **Omitidas** (no son páginas web o están en tu red local). Las páginas con texto empiezan en **Guardar texto**; haz clic en **Guardar** (por ejemplo, **Guardar el texto de 12 páginas**).
 </Step>
 </Steps>
 
 Después, la búsqueda encuentra esos marcadores por su texto en la ventana emergente, el panel lateral y el administrador. `content:` busca solo en el texto de las páginas, y `has:content` encuentra los marcadores que lo tienen. Una página se vuelve a leer cuando cambia la dirección de su marcador. **Eliminar texto de páginas** en Configuración elimina el índice; los marcadores, las etiquetas y el historial no cambian.
+
+La indexación descarga las páginas sin tus cookies, así que una página que solo puedes leer con la sesión iniciada muestra en su lugar su página de inicio de sesión y queda en **Página de inicio de sesión**. Para indexar lo que ves en una página así, ábrela: si está en marcadores e Indexar texto de páginas está activado, el botón de la línea de la ventana emergente que indica dónde está guardada la página, **Indexar el texto de esta página**, lee el texto que muestra la pestaña y te lo muestra con un recordatorio para comprobar que no contiene nada privado. Solo se guarda cuando haces clic en **Guardar texto**. El texto solo se lee desde la ventana emergente de la barra de herramientas, nunca en una ventana privada, nunca de una página de inicio de sesión, y solo mientras la pestaña muestra la página del marcador antes y después de leerla; si la pestaña pasa a otra página entretanto, no se guarda nada.
 
 ## Mostrar portadas en las tarjetas [#show-covers-on-cards]
 

@@ -6,8 +6,9 @@ import { INPUT_LIMITS } from '@/lib/input-limits';
 import type { JobKind } from '@/lib/job-store';
 import { closeJobDb, getJob, getJobItems } from '@/lib/job-store';
 import { PAGE_TEXT_LIMITS } from '@/lib/page-text-store';
+import type { PageTextReading } from '@/lib/quick-save-protocol';
 import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
-import { quickSaveHostRequestSchema } from '@/lib/quick-save-validation';
+import { pageTextReadingSchema, quickSaveHostRequestSchema } from '@/lib/quick-save-validation';
 import { METADATA_MAX_BYTES } from '@/services/bookmark-network-tools';
 import {
   resetJobCoordinatorForTests,
@@ -31,7 +32,7 @@ vi.mock('@/services/quick-save-ai-host', () => ({
     _options: unknown,
     work: (session: {
       readHead: (html: string) => Promise<{ title: string }>;
-      readText: (html: string) => Promise<string>;
+      readText: (html: string) => Promise<PageTextReading>;
     }) => Promise<unknown>,
   ) => {
     host.open += 1;
@@ -45,7 +46,9 @@ vi.mock('@/services/quick-save-ai-host', () => ({
       readText: async (html) => {
         if (host.texts.length >= host.lostAfter) throw new Error('The host page closed');
         host.texts.push(html);
-        return 'Text read by the host page';
+        // The host page tells sign-in pages apart (`readPageTextHtml`); here, by a marker.
+        if (html.includes('SIGN-IN')) return { status: 'signIn' };
+        return { status: 'read', text: 'Text read by the host page' };
       },
     });
   },
@@ -226,6 +229,30 @@ describe('Index Page Text as a background job (S25-S27)', () => {
     expect(host.open).toBe(1);
   });
 
+  it('lists sign-in pages on their own without text: an HTTP 401 unread, a password page as the host reads it (S12)', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    stubFetch({
+      'https://one.invalid/page': () => article('SIGN-IN'),
+      'https://two.invalid/page': () =>
+        new Response('<html><body>Please sign in</body></html>', {
+          status: 401,
+          headers: { 'content-type': 'text/html' },
+        }),
+    });
+    const { results, outcomes } = await runToEnd('pageText');
+    expect(outcomes.slice(0, 2)).toEqual(['succeeded', 'succeeded']);
+    expect(results.slice(0, 2)).toEqual([
+      expect.objectContaining({ id: 'b1', status: 'signIn' }),
+      expect.objectContaining({ id: 'b2', status: 'signIn' }),
+    ]);
+    expect(results.slice(0, 2).map((result) => (result as { text?: string }).text)).toEqual([
+      undefined,
+      undefined,
+    ]);
+    // The 401 page is never handed to the reader.
+    expect(host.texts).toEqual([expect.stringContaining('SIGN-IN')]);
+  });
+
   it('pauses when the AI host page is lost, and reads the rest when resumed', async () => {
     vi.stubGlobal('DOMParser', undefined);
     stubFetch({
@@ -260,6 +287,24 @@ describe('the AI host page reading a page', () => {
     const max = PAGE_TEXT_LIMITS.maxBytes;
     expect(quickSaveHostRequestSchema.safeParse(request(max)).success).toBe(true);
     expect(quickSaveHostRequestSchema.safeParse(request(max + 1)).success).toBe(false);
+    // Text no longer than the index keeps is asked for.
+    const longer = { ...request(1), maxChars: PAGE_TEXT_LIMITS.maxCharsPerPage + 1 };
+    expect(quickSaveHostRequestSchema.safeParse(longer).success).toBe(false);
+  });
+
+  it('answers with text no longer than the index keeps, or a status without text', () => {
+    const text = (length: number) => ({ status: 'read', text: 'x'.repeat(length) });
+    expect(pageTextReadingSchema.safeParse(text(PAGE_TEXT_LIMITS.maxCharsPerPage)).success).toBe(
+      true,
+    );
+    expect(
+      pageTextReadingSchema.safeParse(text(PAGE_TEXT_LIMITS.maxCharsPerPage + 1)).success,
+    ).toBe(false);
+    expect(pageTextReadingSchema.safeParse(text(0)).success).toBe(false);
+    expect(pageTextReadingSchema.safeParse({ status: 'signIn' }).success).toBe(true);
+    // A sign-in page never carries text.
+    expect(pageTextReadingSchema.safeParse({ status: 'signIn', text: 'x' }).success).toBe(false);
+    expect(pageTextReadingSchema.safeParse({ status: 'other' }).success).toBe(false);
   });
 });
 

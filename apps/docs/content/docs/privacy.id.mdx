@@ -19,10 +19,10 @@ Ini adalah ringkasan. <SiteLink to="privacy">Kebijakan privasi</SiteLink> lengka
 - Judul dan URL tab aktif, saat Anda menyimpan halaman yang sedang dibuka (dari popup, panel samping, atau pintasan simpan cepat) atau meminta saran folder.
 - Ikon situs dari cache ikon browser sendiri, di Chrome dan Edge, setelah Anda mengaktifkan **Gunakan cache ikon browser**.
 - Ikon situs yang Anda unduh dengan **Perbarui Ikon Situs**, dari setiap situs web yang di-bookmark.
-- Teks halaman yang di-bookmark, saat Anda menjalankan **Indeks Teks Halaman**, dari setiap halaman dalam proses tersebut.
+- Teks halaman yang di-bookmark, saat Anda menjalankan **Indeks Teks Halaman**, dari setiap halaman dalam proses tersebut. Atau teks tab yang sedang Anda lihat, seperti yang Anda lihat, saat Anda mengklik **Indeks teks halaman ini** di popup.
 - Bagian head halaman yang di-bookmark dan gambar pratinjau yang disebutkan setiap halaman, saat Anda menjalankan **Ambil Sampul**, dari setiap halaman dalam proses tersebut. Atau gambar tab yang sedang Anda lihat, saat Anda mengklik **Gunakan tampilan ini sebagai sampul** di popup.
 
-Ekstensi tidak membaca konten halaman yang Anda kunjungi. Setelah pintasan simpan cepat, ekstensi menampilkan notifikasinya sendiri di tab itu, yang tidak membaca apa pun dari halaman.
+Ekstensi tidak membaca konten halaman yang Anda kunjungi, kecuali teks tab yang sedang Anda lihat saat Anda mengklik **Indeks teks halaman ini** di popup, yang Anda lihat sebelum disimpan. Setelah pintasan simpan cepat, ekstensi menampilkan notifikasinya sendiri di tab itu, yang tidak membaca apa pun dari halaman.
 
 ## Apa yang disimpannya [#what-it-stores]
 
@@ -41,7 +41,7 @@ Ekstensi tidak membaca konten halaman yang Anda kunjungi. Setelah pintasan simpa
 | Aktivitas AI, hanya selama **Rekam permintaan** aktif (nonaktif secara default, per perangkat): permintaan AI terakhir beserta apa yang dikirim dan apa yang diterima, termasuk judul bookmark, URL, jalur folder, dan jika **Baca konten halaman** aktif, teks halaman. Kunci API dan kredensial lain dihapus sebelum disimpan; menonaktifkan perekaman menghapusnya | Penyimpanan lokal di perangkat ini | Tidak |
 | Tag, ringkasan, penelusuran tersimpan, aturan pintar, daftar tag otomatis, folder terbaru, penelusuran terbaru | Penyimpanan lokal di perangkat ini | Tidak |
 | Ikon situs yang disimpan dengan **Perbarui Ikon Situs**, hingga 4 MB secara default | Penyimpanan lokal di perangkat ini | Tidak |
-| Teks halaman yang disimpan dengan **Indeks Teks Halaman** | IndexedDB di perangkat ini | Tidak |
+| Teks halaman yang disimpan dengan **Indeks Teks Halaman** atau **Indeks teks halaman ini** | IndexedDB di perangkat ini | Tidak |
 | Sampul yang disimpan dengan **Ambil Sampul** | IndexedDB di perangkat ini | Tidak |
 | Simpan cepat terakhir (judul dan URL halaman, dan ke mana halaman itu disimpan), untuk **Urungkan** dan **Pindahkan ke** | Penyimpanan sesi di perangkat ini, dihapus saat browser ditutup | Tidak |
 | Histori urungkan pengelola (bookmark yang Anda ubah di sana, dengan salinan bookmark yang dihapus beserta tag dan ringkasannya), untuk urungkan dan ulangi | Penyimpanan sesi di perangkat ini, dihapus saat browser ditutup | Tidak |

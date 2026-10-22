@@ -16,6 +16,12 @@ const pageTextConfig = readConfig(
     max_bytes: z.number().int().positive(),
     concurrency: z.number().int().positive(),
     extractor_version: z.number().int().positive(),
+    sign_in: z.strictObject({
+      fields: z.array(z.string().min(1)).min(1),
+      outside: z.array(z.string().min(1)),
+      max_text_chars: z.number().int().positive(),
+      http_statuses: z.array(httpStatusCodeSchema),
+    }),
   }),
 );
 
@@ -26,6 +32,17 @@ export const PAGE_TEXT_LIMITS = {
   maxBytes: pageTextConfig.max_bytes,
   concurrency: pageTextConfig.concurrency,
   extractorVersion: pageTextConfig.extractor_version,
+} as const;
+
+/**
+ * How a sign-in page is told apart from content (`[sign_in]` in the config): a password field in
+ * the main content with little readable text, or an answer such as 401 Unauthorized.
+ */
+export const PAGE_TEXT_SIGN_IN = {
+  fieldSelector: pageTextConfig.sign_in.fields.join(','),
+  outsideSelector: pageTextConfig.sign_in.outside.join(','),
+  maxTextChars: pageTextConfig.sign_in.max_text_chars,
+  httpStatuses: new Set<number>(pageTextConfig.sign_in.http_statuses),
 } as const;
 
 /** One indexed page: what the bookmark's address showed when it was read. */

@@ -164,19 +164,23 @@
 # Rules: the grouped parser and matcher, the syntax help entries, and 8 messages in 12 languages.
 # Firefox measured ZIP 1,959,861, 6,502,302 B uncompressed, 3,807,840 B of JavaScript, and
 # 2,133,114 B of locales on the branch rebased onto 55fcf0aa.
+# Raised on 2026-10-22 (uncompressed 6,510,000 to 6,535,000, locales 2,140,000 to 2,160,000) for
+# Index Page Text's sign-in page check and Index this page's text in the popup, with 12 messages
+# in 12 languages. Firefox measured 6,525,732 B uncompressed and 2,152,390 B of locales on the
+# branch rebased onto 59301a48.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_965_000
-raw_bytes = 6_510_000
+raw_bytes = 6_535_000
 
 [targets.edge]
 zip_bytes = 1_965_000
-raw_bytes = 6_510_000
+raw_bytes = 6_535_000
 
 [targets.firefox]
 zip_bytes = 1_965_000
-raw_bytes = 6_510_000
+raw_bytes = 6_535_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -185,6 +189,6 @@ raw_bytes = 6_510_000
 javascript = 3_815_000
 css = 85_000
 fonts = 143_000
-locales = 2_140_000
+locales = 2_160_000
 images = 320_000
 other = 29_000

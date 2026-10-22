@@ -131,11 +131,13 @@ Activez **Activer Indexer le texte des pages** dans les [paramètres](/settings#
 Dans la barre d'outils du gestionnaire, choisissez la portée sur la carte **Indexer le texte des pages** et cliquez sur **Indexer**. Si on vous le demande, autorisez l'accès aux sites de cette portée. L'indexation s'exécute en arrière-plan : elle continue quand vous fermez le gestionnaire, et sa carte ainsi que **Tâches en arrière-plan** affichent sa progression, avec **Mettre en pause**, **Reprendre** et **Annuler** ; les pages attendent ensuite dans **Voir les résultats**.
 </Step>
 <Step>
-Vérifiez les pages par onglet : **Texte trouvé**, **Aucun texte**, **Échec**, **Déjà indexées** (auparavant, depuis la même adresse) et **Ignorées** (pas une page web, ou sur votre réseau local). Les pages avec du texte commencent sur **Enregistrer le texte** ; cliquez sur **Enregistrer** (par exemple **Enregistrer le texte de 12 pages**).
+Vérifiez les pages par onglet : **Texte trouvé**, **Aucun texte**, **Page de connexion** (la page demandait de vous connecter au lieu d'afficher son contenu ; son texte n'est jamais enregistré), **Échec**, **Déjà indexées** (auparavant, depuis la même adresse) et **Ignorées** (pas une page web, ou sur votre réseau local). Les pages avec du texte commencent sur **Enregistrer le texte** ; cliquez sur **Enregistrer** (par exemple **Enregistrer le texte de 12 pages**).
 </Step>
 </Steps>
 
 La recherche trouve ensuite ces favoris par leur texte dans la fenêtre pop-up, le panneau latéral et le gestionnaire. `content:` cherche uniquement dans le texte des pages, et `has:content` trouve les favoris qui en ont. Une page est relue quand l'adresse de son favori change. **Supprimer le texte des pages** dans les paramètres supprime l'index ; les favoris, les étiquettes et l'historique restent tels quels.
+
+L'indexation télécharge les pages sans vos cookies : une page que vous ne pouvez lire qu'une fois connecté affiche donc sa page de connexion et se retrouve sous **Page de connexion**. Pour indexer ce que vous voyez sur une telle page, ouvrez-la : si elle est en favori et qu'Indexer le texte des pages est activé, le bouton de la ligne de la fenêtre pop-up qui indique où la page est enregistrée, **Indexer le texte de cette page**, lit le texte que l'onglet affiche et vous le montre avec un rappel de vérifier qu'il ne contient rien de privé. Il n'est conservé que si vous cliquez sur **Enregistrer le texte**. Le texte n'est lu que depuis la fenêtre pop-up de la barre d'outils, jamais dans une fenêtre privée, jamais sur une page de connexion, et seulement tant que l'onglet affiche la page du favori avant et après la lecture ; si l'onglet passe à une autre page entre-temps, rien n'est conservé.
 
 ## Afficher les couvertures sur les cartes [#show-covers-on-cards]
 

@@ -58,11 +58,6 @@ export async function extractPageText(
   return extractReadableText(doc, { maxChars, dropElements: config.drop_elements });
 }
 
-/** The readable text of a downloaded page; parsing it needs a DOM parser. */
-export async function readHtmlText(html: string, maxChars: number): Promise<string | undefined> {
-  return (await extractPageText(parseFetchedHtml(html), maxChars))?.text;
-}
-
 /** Downloads and reads one page; undefined when it cannot or may not be read. */
 export async function readPageText(url: string): Promise<PageText | undefined> {
   const { readPageSkipPrivateHosts } = await getSettings();

@@ -1174,12 +1174,16 @@ export function RulesResultsView({
   );
 }
 
-/** Index Page Text's review tabs, by what reading the page found. */
-const PAGE_TEXT_CATEGORIES = ['read', 'empty', 'failed', 'current', 'skipped'] as const;
+/**
+ * Index Page Text's review tabs, by what reading the page found. Sign-in pages have their own
+ * tab and only Skip: what they show is not the bookmarked page.
+ */
+const PAGE_TEXT_CATEGORIES = ['read', 'empty', 'signIn', 'failed', 'current', 'skipped'] as const;
 
 const PAGE_TEXT_CATEGORY_LABEL_KEYS = {
   read: 'tools_pageTextCategory_read',
   empty: 'tools_pageTextCategory_empty',
+  signIn: 'tools_pageTextCategory_signIn',
   failed: 'tools_pageTextCategory_failed',
   current: 'tools_pageTextCategory_current',
   skipped: 'tools_pageTextCategory_skipped',

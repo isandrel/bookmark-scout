@@ -28,10 +28,12 @@
 # Raised from 995 on 2026-10-22 for the settings schema growing with the page text, covers, and Tag
 # New Bookmarks settings (996).
 # Raised from 1005 on 2026-10-22 for Use this view as the cover on the current page line (1,010).
-"popup.html" = 1020
+# Raised from 1020 on 2026-10-22 for Index this page's text on the current page line (1,024).
+"popup.html" = 1030
 # Raised from 995 on 2026-10-22 with the popup, for the same settings schema growth (996).
 # Raised from 1005 on 2026-10-22 with the popup, for the same button (1,010).
-"sidepanel.html" = 1020
+# Raised from 1020 on 2026-10-22 for Index this page's text on the current page line (1,024).
+"sidepanel.html" = 1030
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),

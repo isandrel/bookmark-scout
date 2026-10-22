@@ -110,8 +110,7 @@ export async function handleAIHostRequest(
     return { ok: true, head: readHtmlHead(request.html, request.descriptions) };
   }
   if (request.type === QUICK_SAVE_MESSAGE.hostReadText) {
-    const text = await readHtmlText(request.html, request.maxChars);
-    return { ok: true, ...(text ? { text } : {}) };
+    return { ok: true, reading: await readPageTextHtml(request.html, request.maxChars) };
   }
   if (request.type === QUICK_SAVE_MESSAGE.hostReadPage) {
     const page = await readPageText(request.url);

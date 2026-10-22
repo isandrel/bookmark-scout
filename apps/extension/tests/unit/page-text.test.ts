@@ -1,4 +1,4 @@
-import { DOMParser as LinkedomParser } from 'linkedom';
+import { DOMParser as LinkedomParser, parseHTML } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
@@ -11,9 +11,15 @@ import {
   savePageTexts,
 } from '@/lib/page-text-store';
 import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
+import { pageTextReadingSchema } from '@/lib/quick-save-validation';
 import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
-import { savePageTextResults, scanPageTexts } from '@/services/page-text';
+import {
+  readPageTextHtml,
+  readTabPageText,
+  savePageTextResults,
+  scanPageTexts,
+} from '@/services/page-text';
 import { handleAIHostRequest } from '@/services/quick-save-ai-runner';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -119,6 +125,12 @@ const ARTICLE = `<!doctype html><html><head><title>Trip</title></head><body><art
 <h1>Trip</h1><p>We finally saw a quokka resting under a peppermint tree on the island.</p>
 <p>${'More notes about the trip and the island. '.repeat(20)}</p></article></body></html>`;
 
+/** A page that asks for a password instead of showing what was bookmarked. */
+const SIGN_IN = `<!doctype html><html><head><title>Sign in</title></head><body><main>
+<h1>Sign in to continue</h1><form><label>Email <input name="user"></label>
+<label>Password <input type="password" name="pw"></label><button>Sign in</button></form>
+</main></body></html>`;
+
 describe('Index Page Text runs', () => {
   const folder = (children: BookmarkTreeNode[]): BookmarkTreeNode[] => [
     { id: 'f', parentId: '1', title: 'Folder', children },
@@ -131,8 +143,12 @@ describe('Index Page Text runs', () => {
       'fetch',
       vi.fn(async (input: string) => {
         if (input.includes('down.')) throw new TypeError('Failed to fetch');
-        const body = input.includes('empty.') ? '<html><body></body></html>' : ARTICLE;
-        return new Response(body, { status: 200, headers: { 'content-type': 'text/html' } });
+        // An HTTP 401 is a sign-in page whatever its body says.
+        const status = input.includes('locked.') ? 401 : 200;
+        let body = ARTICLE;
+        if (input.includes('empty.')) body = '<html><body></body></html>';
+        if (input.includes('login.')) body = SIGN_IN;
+        return new Response(body, { status, headers: { 'content-type': 'text/html' } });
       }),
     );
   });
@@ -149,6 +165,8 @@ describe('Index Page Text runs', () => {
         { id: 'read', parentId: 'f', title: 'Trip', url: 'https://trip.example/' },
         { id: 'empty', parentId: 'f', title: 'Empty', url: 'https://empty.example/' },
         { id: 'down', parentId: 'f', title: 'Down', url: 'https://down.example/' },
+        { id: 'login', parentId: 'f', title: 'Wall', url: 'https://login.example/' },
+        { id: 'locked', parentId: 'f', title: 'Locked', url: 'https://locked.example/' },
         { id: 'kept', parentId: 'f', title: 'Kept', url: 'https://kept.example/' },
         { id: 'local', parentId: 'f', title: 'Router', url: 'http://192.168.1.1/' },
         { id: 'js', parentId: 'f', title: 'Script', url: 'javascript:void(0)' },
@@ -160,12 +178,16 @@ describe('Index Page Text runs', () => {
       read: 'read',
       empty: 'empty',
       down: 'failed',
+      login: 'signIn',
+      locked: 'signIn',
       kept: 'current',
       local: 'skipped',
       js: 'skipped',
     });
     expect(items.find((item) => item.id === 'read')?.text).toContain('quokka');
-    expect(fetch).toHaveBeenCalledTimes(3);
+    // A sign-in page keeps no text, so it can never be saved as the page.
+    expect(items.find((item) => item.id === 'login')?.text).toBeUndefined();
+    expect(fetch).toHaveBeenCalledTimes(5);
   });
 
   it('reads a page the background downloaded in the AI host page, cut to the limit it asks for', async () => {
@@ -176,15 +198,25 @@ describe('Index Page Text runs', () => {
       html: ARTICLE,
       maxChars,
     });
-    expect(response).toMatchObject({ ok: true, text: expect.stringContaining('quokka') });
-    expect(response.ok && response.text?.length).toBeLessThanOrEqual(maxChars);
-    const empty = await handleAIHostRequest({
-      type: QUICK_SAVE_MESSAGE.hostReadText,
-      token: 'token',
-      html: '<html><body></body></html>',
-      maxChars,
+    expect(response).toMatchObject({
+      ok: true,
+      reading: { status: 'read', text: expect.stringContaining('quokka') },
     });
-    expect(empty).toEqual({ ok: true });
+    const reading = response.ok ? response.reading : undefined;
+    expect(reading?.status === 'read' && reading.text.length).toBeLessThanOrEqual(maxChars);
+    expect(pageTextReadingSchema.safeParse(reading).success).toBe(true);
+    const ask = (html: string) =>
+      handleAIHostRequest({
+        type: QUICK_SAVE_MESSAGE.hostReadText,
+        token: 'token',
+        html,
+        maxChars,
+      });
+    expect(await ask('<html><body></body></html>')).toEqual({
+      ok: true,
+      reading: { status: 'empty' },
+    });
+    expect(await ask(SIGN_IN)).toEqual({ ok: true, reading: { status: 'signIn' } });
   });
 
   it('saves only the pages left on Save, and drops text of bookmarks that are gone', async () => {
@@ -224,5 +256,164 @@ describe('Index Page Text runs', () => {
     ]);
     expect(saved).toBe(1);
     expect([...(await getPageTexts()).keys()]).toEqual(['read']);
+  });
+});
+
+describe('sign-in pages (S12)', () => {
+  const page = (body: string) =>
+    `<!doctype html><html><head><title>Page</title></head><body>${body}</body></html>`;
+  const shortArticle =
+    '<article><h1>Trip</h1><p>We finally saw a quokka resting under a peppermint tree.</p></article>';
+
+  beforeEach(() => {
+    vi.stubGlobal('DOMParser', LinkedomParser);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('marks a page asking for a password in its main content, with little text, as sign-in', async () => {
+    const max = PAGE_TEXT_LIMITS.maxCharsPerPage;
+    expect(await readPageTextHtml(SIGN_IN, max)).toEqual({ status: 'signIn' });
+    // A password field alone, with no readable text at all, is a sign-in page, not an empty one.
+    expect(await readPageTextHtml(page('<form><input type="PASSWORD"></form>'), max)).toEqual({
+      status: 'signIn',
+    });
+    expect(
+      await readPageTextHtml(page('<input autocomplete="username current-password">'), max),
+    ).toEqual({ status: 'signIn' });
+  });
+
+  it('keeps the text of articles with a newsletter form, a header sign-in box, or much text', async () => {
+    const max = PAGE_TEXT_LIMITS.maxCharsPerPage;
+    const newsletter = page(
+      `${shortArticle}<form><input type="email" placeholder="Email"><button>Subscribe</button></form>`,
+    );
+    const headerSignIn = page(
+      `<header><form><input name="user"><input type="password"></form></header>${shortArticle}`,
+    );
+    const long = page(
+      `<main><article><h1>Trip</h1><p>${'We saw a quokka by the river. '.repeat(60)}</p>
+      <form><input type="password"></form></article></main>`,
+    );
+    for (const html of [newsletter, headerSignIn, long]) {
+      expect(await readPageTextHtml(html, max)).toMatchObject({
+        status: 'read',
+        text: expect.stringContaining('quokka'),
+      });
+    }
+  });
+
+  it('cuts the text to the limit asked for, after deciding with as much text as the check needs', async () => {
+    const long = page(
+      `<main><article><p>${'We saw a quokka by the river. '.repeat(60)}</p>
+      <form><input type="password"></form></article></main>`,
+    );
+    const maxChars = 20;
+    const reading = await readPageTextHtml(long, maxChars);
+    expect(reading.status).toBe('read');
+    expect(reading.status === 'read' && reading.text.length).toBeLessThanOrEqual(maxChars);
+  });
+});
+
+describe("Index this page's text from the current tab (S17, S18)", () => {
+  type Tab = Browser.tabs.Tab;
+  const URL_SAVED = 'https://news.example/story';
+  const SHOWN = `<!doctype html><html><head><title>Story</title></head><body><article>
+  <h1>Story</h1><p>Only signed-in readers see that the quokka story continues here.</p>
+  <p>${'More of the story for subscribers. '.repeat(10)}</p>
+  <form><input name="comment" value="typed-secret"><textarea>draft-secret</textarea></form>
+  </article></body></html>`;
+  const tab = (overrides: Partial<Tab> = {}) =>
+    ({ id: 7, windowId: 1, url: URL_SAVED, incognito: false, ...overrides }) as Tab;
+  let shownHtml = SHOWN;
+  let shownUrl = URL_SAVED;
+  const snapshots: { url: string; html: string }[] = [];
+
+  beforeEach(async () => {
+    await clearPageTexts();
+    vi.stubGlobal('DOMParser', LinkedomParser);
+    shownHtml = SHOWN;
+    shownUrl = URL_SAVED;
+    snapshots.length = 0;
+    // Runs the function the extension injects, against the page the tab shows.
+    vi.spyOn(fakeBrowser.scripting, 'executeScript').mockImplementation((async (injection: {
+      func: (...args: unknown[]) => { url: string; html: string };
+      args: unknown[];
+    }) => {
+      const { document } = parseHTML(shownHtml);
+      vi.stubGlobal('document', document);
+      vi.stubGlobal('location', { href: shownUrl });
+      const result = injection.func(...injection.args);
+      snapshots.push(result);
+      return [{ frameId: 0, documentId: 'doc', result }];
+    }) as never);
+    vi.spyOn(fakeBrowser.bookmarks, 'search').mockResolvedValue([
+      { id: 'b1', title: 'Story', url: URL_SAVED, syncing: false },
+      { id: 'b2', title: 'Story again', url: URL_SAVED, syncing: false },
+    ]);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('reads what the tab shows for every bookmark of its address, without typed text', async () => {
+    vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab()]);
+    const result = await readTabPageText(URL_SAVED);
+    if (!('page' in result)) throw new Error(result.error);
+    expect(result.page.text).toContain('quokka story continues');
+    expect(result.page.text.length).toBeLessThanOrEqual(PAGE_TEXT_LIMITS.maxCharsPerPage);
+    expect(result.page.pages.map((page) => page.bookmarkId)).toEqual(['b1', 'b2']);
+    expect(fakeBrowser.scripting.executeScript).toHaveBeenCalledWith(
+      expect.objectContaining({ target: { tabId: 7 }, args: [PAGE_TEXT_LIMITS.maxBytes] }),
+    );
+    // What was typed into the page's fields never leaves the tab.
+    expect(snapshots[0]?.html).not.toContain('typed-secret');
+    expect(snapshots[0]?.html).not.toContain('draft-secret');
+    // Nothing is kept before the preview is saved.
+    expect((await getPageTexts()).size).toBe(0);
+  });
+
+  it('rejects the read when the tab shows or moves to another page, and never reads private windows', async () => {
+    const query = vi.spyOn(fakeBrowser.tabs, 'query');
+    query.mockResolvedValue([tab({ url: 'https://other.example/' })]);
+    expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'changed' });
+    query.mockResolvedValue([tab({ incognito: true })]);
+    expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'private' });
+    expect(fakeBrowser.scripting.executeScript).not.toHaveBeenCalled();
+
+    // The tab moved on while the text was read.
+    query
+      .mockResolvedValueOnce([tab()])
+      .mockResolvedValueOnce([tab({ url: 'https://next.example/' })]);
+    expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'changed' });
+    // ...or the document read was already another one.
+    query.mockResolvedValue([tab()]);
+    shownUrl = 'https://news.example/next-story';
+    expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'changed' });
+  });
+
+  it('reports a refused read, a sign-in page, a page without text, and a full index', async () => {
+    vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab()]);
+    shownHtml = SIGN_IN;
+    expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'signIn' });
+    shownHtml = '<html><body></body></html>';
+    expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'empty' });
+
+    shownHtml = SHOWN;
+    const limits = PAGE_TEXT_LIMITS as { maxPages: number };
+    const maxPages = limits.maxPages;
+    try {
+      limits.maxPages = 1;
+      expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'full' });
+    } finally {
+      limits.maxPages = maxPages;
+    }
+
+    vi.spyOn(fakeBrowser.scripting, 'executeScript').mockRejectedValue(new Error('no access'));
+    expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'denied' });
   });
 });

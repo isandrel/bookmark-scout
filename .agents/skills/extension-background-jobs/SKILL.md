@@ -29,7 +29,7 @@ Each step adds one entry; no step adds a special case.
    - `prepare` reads the scope with `scopeNodes`, and the settings and options now (they are frozen).
    - Each input is one item. Keep inputs small: store what every item shares once, in `options`.
    - `run` checks one item and validates its stored input and options with zod.
-   - Flags declare what a slice needs: `readsHtml` gives `tools.readHead`, `readsText` gives `tools.readText` (a page's readable text, always read in the AI host page), and `ai` gives `tools.ai`.
+   - Flags declare what a slice needs: `readsHtml` gives `tools.readHead`, `readsText` gives `tools.readText` (a page read in the AI host page, answered as a `PageTextReading`: `read` with its text, `empty`, or `signIn`, from `readPageTextHtml`, the one reader the in-page scan and the popup's current-tab read also use), and `ai` gives `tools.ai`.
    - A kind that requests websites lists each item's addresses in `siteUrls`. Access is checked before each item, so access taken back mid-run pauses the job (`site-access`, whose Resume asks again through `JOB_BLOCK_PERMISSIONS` in `job-view.ts`) instead of counting failures.
 3. **Per-item work:** split the tool's scan into a per-item function that takes an `AbortSignal` and throws `RequestAbortedError` when stopped. Examples: `checkDeadLink`, `fetchMetadataItem`, `refreshOrigin`. Keep the old whole-scan function as a loop over the per-item one, so there is one code path.
 4. **Tool definition:** add `job: { kind, result(job, results) }` to its `TOOL_DEFINITIONS` entry.
