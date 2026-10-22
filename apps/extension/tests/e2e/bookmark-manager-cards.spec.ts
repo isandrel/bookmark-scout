@@ -51,6 +51,11 @@ test('cards show the folder as the list does, with selection, keys, and menus, a
   await card('Card Three').getByRole('button', { name: 'Open menu' }).click();
   await expect(page.getByRole('menuitem', { name: 'Edit' })).toBeVisible();
   await page.keyboard.press('Escape');
+  // So is its right-click menu, never the one for empty space.
+  await card('Card One').click({ button: 'right' });
+  await expect(page.getByRole('menuitem', { name: 'Edit' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Add new folder' })).toHaveCount(0);
+  await page.keyboard.press('Escape');
 
   // Kept on this device, across a reload.
   await page.reload();

@@ -196,9 +196,9 @@ export default function BookmarksPage() {
       }),
     [managerCommands],
   );
-  // A right click on a row acts on the selection when the row is in it, else on that row.
+  // A right click on a row or card acts on the selection when it is in it, else on that one.
   const resolveRowMenuItems = useCallback((target: EventTarget | null) => {
-    const row = target instanceof Element ? target.closest<HTMLElement>('tr[data-row-id]') : null;
+    const row = target instanceof Element ? target.closest<HTMLElement>('[data-row-id]') : null;
     const rowId = row?.dataset.rowId;
     return rowId ? (tableRef.current?.targetRowsAt(rowId) ?? []) : [];
   }, []);
