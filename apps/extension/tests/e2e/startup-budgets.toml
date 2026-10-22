@@ -61,7 +61,9 @@
 # editor's search notes (1,221).
 # Raised from 1230 on 2026-10-22 for the Smart Rules changes list with reviewed runs, the moving
 # template, and New Bookmarks From (1,233).
-"options.html" = 1240
+# Raised from 1240 on 2026-10-22 for page text coverage, Retry failed, and the secrets setting in
+# Options with Smart Rules automatic moves (1,247).
+"options.html" = 1255
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),

@@ -192,27 +192,32 @@
 # 3,842,899 B of JavaScript and 2,234,850 B of locales.
 # CSS raised on 2026-10-22 (87,000 to 89,000) for the Cyrillic and Greek font faces and the Smart Rules
 # automatic moves UI: 87,077 B measured on the branch rebased onto 00a6a602.
+# Raised on 2026-10-22 (ZIP 1,995,000 to 2,005,000, uncompressed 6,650,000 to 6,690,000, javascript
+# 3,850,000 to 3,860,000, locales 2,245,000 to 2,270,000) for page text quality (one download per
+# address, paragraphs, access cleanup, coverage and Retry failed, the secrets setting) on top of
+# the Smart Rules automatic moves. Firefox measured ZIP 1,998,620, 6,673,471 B uncompressed,
+# 3,852,059 B of JavaScript, and 2,258,042 B of locales on the branch rebased onto 8d6fb8a1.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_995_000
-raw_bytes = 6_650_000
+zip_bytes = 2_005_000
+raw_bytes = 6_690_000
 
 [targets.edge]
-zip_bytes = 1_995_000
-raw_bytes = 6_650_000
+zip_bytes = 2_005_000
+raw_bytes = 6_690_000
 
 [targets.firefox]
-zip_bytes = 1_995_000
-raw_bytes = 6_650_000
+zip_bytes = 2_005_000
+raw_bytes = 6_690_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_850_000
+javascript = 3_860_000
 css = 89_000
 fonts = 143_000
-locales = 2_245_000
+locales = 2_270_000
 images = 320_000
 other = 29_000
