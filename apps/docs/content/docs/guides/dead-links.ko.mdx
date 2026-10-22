@@ -83,8 +83,8 @@ Chrome은 실패한 요청마다 페이지의 개발자 콘솔에 "Failed to loa
 
 | 설정 | 기본값 |
 | --- | --- |
-| **요청 제한 시간** | 요청당 8초 |
-| **동시 요청 수** | 한 번에 요청 4개 |
+| **요청 제한 시간** | 요청당 <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds />초 |
+| **동시 요청 수** | 한 번에 요청 <SettingDefault path="maintenance.dead_links.concurrency" />개 |
 | **재시도 횟수** | 재시도 1회 |
 | **리디렉션 따라가기** | 켜짐 |
 | **성공 상태 코드** | 200, 201, 202, 204, 301, 302, 307, 308 |

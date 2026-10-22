@@ -83,8 +83,8 @@ Dans l'onglet **Maintenance** des [Paramètres](/settings) :
 
 | Paramètre | Valeur par défaut |
 | --- | --- |
-| **Délai d'expiration des requêtes** | 8 secondes par requête |
-| **Requêtes simultanées** | 4 requêtes à la fois |
+| **Délai d'expiration des requêtes** | <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> secondes par requête |
+| **Requêtes simultanées** | <SettingDefault path="maintenance.dead_links.concurrency" /> requêtes à la fois |
 | **Nombre de nouvelles tentatives** | 1 nouvelle tentative |
 | **Suivre les redirections** | Activé |
 | **Codes d'état de réussite** | 200, 201, 202, 204, 301, 302, 307, 308 |

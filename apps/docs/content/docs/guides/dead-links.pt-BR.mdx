@@ -83,8 +83,8 @@ Na guia **Manutenção** das [Configurações](/settings):
 
 | Configuração | Padrão |
 | --- | --- |
-| **Tempo limite da solicitação** | 8 segundos por solicitação |
-| **Simultaneidade** | 4 solicitações ao mesmo tempo |
+| **Tempo limite da solicitação** | <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> segundos por solicitação |
+| **Simultaneidade** | <SettingDefault path="maintenance.dead_links.concurrency" /> solicitações ao mesmo tempo |
 | **Número de tentativas** | 1 nova tentativa |
 | **Seguir redirecionamentos** | Ativado |
 | **Códigos de status de sucesso** | 200, 201, 202, 204, 301, 302, 307, 308 |

@@ -83,8 +83,8 @@ En la pestaña **Mantenimiento** de la [Configuración](/settings):
 
 | Ajuste | Predeterminado |
 | --- | --- |
-| **Tiempo de espera de la solicitud** | 8 segundos por solicitud |
-| **Solicitudes simultáneas** | 4 solicitudes a la vez |
+| **Tiempo de espera de la solicitud** | <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> segundos por solicitud |
+| **Solicitudes simultáneas** | <SettingDefault path="maintenance.dead_links.concurrency" /> solicitudes a la vez |
 | **Número de reintentos** | 1 reintento |
 | **Seguir redirecciones** | Activado |
 | **Códigos de estado correctos** | 200, 201, 202, 204, 301, 302, 307, 308 |

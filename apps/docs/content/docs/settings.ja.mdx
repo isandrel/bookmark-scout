@@ -205,7 +205,7 @@ AI に質問が調べたり変更したりできる操作がここに一覧表�
 | **AIコンテキストパッカー** | **出力形式** Markdown、**フォルダパスを含める**、**日付を含める**、**保存済みタグを含める**、**保存済み要約を含める** はオン、**最大件数** <SettingDefault path="ai_tools.context_packer.max_items" />、**最大階層** <SettingDefault path="ai_tools.context_packer.max_depth" />、**抜粋の長さ** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **自動タグ付け** | **最小タグ数** <SettingDefault path="ai_tools.auto_tagging.min_tags" />、**最大タグ数** <SettingDefault path="ai_tools.auto_tagging.max_tags" />、**タグのスタイル** kebab-case、**統合モード** 追加、**重複タグを削除** オン、**既存のタグを送信** オン |
 | **コンテンツ要約** | **要約の長さ** <SettingDefault path="ai_tools.summarizer.summary_length" />、**ドメインのヒントを含める** オン、**統合モード** 置換 |
-| **AIフォルダ整理** | **最小信頼度** 55%（これを下回る移動は除外されます）、**バッチサイズ** 1 リクエストあたり 100 件のブックマーク |
+| **AIフォルダ整理** | **最小信頼度** 55%（これを下回る移動は除外されます）、**バッチサイズ** 1 リクエストあたり <SettingDefault path="ai_tools.reorganization.batch_size" /> 件のブックマーク |
 
 自動タグ付けとコンテンツ要約は、常に現在のフォルダを対象にします。
 
@@ -277,7 +277,7 @@ AI に質問が調べたり変更したりできる操作がここに一覧表�
 | **既定の書き出し形式** | HTML | エクスポートツールを開いたときに選ばれている形式 |
 | **ファイル名の接頭辞** | `bookmarks_` | すべてのエクスポートファイル名の先頭 |
 | **ファイル名の最大長** | <SettingDefault path="data.export.filename_max_length" /> | 生成されるファイル名の最大の長さ |
-| **JSONのインデント幅**、**HTMLのインデント幅**、**Markdownのインデント幅** | <SettingDefault path="data.export.markdown_indent_spaces" />、4、2 | 各形式での 1 階層あたりのスペースの数 |
+| **JSONのインデント幅**、**HTMLのインデント幅**、**Markdownのインデント幅** | <SettingDefault path="data.export.json_indent_size" />、<SettingDefault path="data.export.html_indent_spaces" />、<SettingDefault path="data.export.markdown_indent_spaces" /> | 各形式での 1 階層あたりのスペースの数 |
 | **日付を含める** と **URLを含める** | オン | エクスポートに含めます |
 
 [インポートとエクスポート](/guides/import-export)をご覧ください。
