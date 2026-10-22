@@ -103,6 +103,7 @@ const BACKUP_ITEMS: Partial<
   Record<StorageItemId, StoredValue<unknown> | StoredCollection<unknown>>
 > = {
   settings: settingsOverrideValues.sync,
+  settingsLists: settingsOverrideValues.lists,
   deviceSettings: settingsOverrideValues.device,
   tableView: bookmarkTableViewValue,
   promptIndex: promptLibraryIndexValue,

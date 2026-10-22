@@ -113,29 +113,45 @@ export type StoredOverrides = Record<string, unknown>;
 
 const parseOverrides = (raw: unknown): StoredOverrides => (isPlainObject(raw) ? raw : {});
 
-/** What each scope stores; read settings through `settingsValue`, change them through `saveSettings`. */
-export const settingsOverrideValues: Record<SettingScope, StoredValue<StoredOverrides>> = {
-  sync: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.settings, {
-    parse: parseOverrides,
-    empty: {},
-    isEmpty: (overrides) => Object.keys(overrides).length === 0,
-  }),
-  device: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.deviceSettings, {
-    parse: parseOverrides,
-    empty: {},
-    isEmpty: (overrides) => Object.keys(overrides).length === 0,
-  }),
+const overridesOptions = {
+  parse: parseOverrides,
+  empty: {},
+  isEmpty: (overrides: StoredOverrides) => Object.keys(overrides).length === 0,
 };
 
+/** What each scope stores; read settings through `settingsValue`, change them through `saveSettings`. */
+export const settingsOverrideValues: Record<SettingScope, StoredValue<StoredOverrides>> = {
+  sync: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.settings, overridesOptions),
+  lists: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.settingsLists, overridesOptions),
+  device: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.deviceSettings, overridesOptions),
+};
+
+type ScopedOverrides = Record<SettingScope, StoredOverrides>;
+
+/** The stored settings of `scope` in `overrides`. */
+function pickScope(overrides: StoredOverrides, scope: SettingScope): StoredOverrides {
+  return Object.fromEntries(
+    Object.entries(overrides).filter(
+      ([key]) => isSettingsKey(key) && getSettingScope(key) === scope,
+    ),
+  );
+}
+
+/**
+ * The lists scope as stored, with lists an earlier release kept in the settings item: they count
+ * until the next save moves them (`changeSettings`), and the lists item wins over them.
+ */
+function storedLists(stored: ScopedOverrides): StoredOverrides {
+  return { ...pickScope(stored.sync, 'lists'), ...stored.lists };
+}
+
 /** Valid settings from what each scope stores; a key stored in the wrong scope is ignored. */
-function composeSettings(sync: StoredOverrides, device: StoredOverrides): Settings {
-  const pick = (overrides: StoredOverrides, scope: SettingScope) =>
-    Object.fromEntries(
-      Object.entries(overrides).filter(
-        ([key]) => isSettingsKey(key) && getSettingScope(key) === scope,
-      ),
-    );
-  return sanitizeSettings({ ...pick(sync, 'sync'), ...pick(device, 'device') });
+function composeSettings(stored: ScopedOverrides): Settings {
+  return sanitizeSettings({
+    ...pickScope(stored.sync, 'sync'),
+    ...pickScope(storedLists(stored), 'lists'),
+    ...pickScope(stored.device, 'device'),
+  });
 }
 
 /**
@@ -163,9 +179,13 @@ function nextOverrides(
  * page follows a language change made anywhere.
  */
 export const settingsValue = defineDerivedValue(
-  [settingsOverrideValues.sync, settingsOverrideValues.device] as const,
-  ([sync, device]) => {
-    const settings = composeSettings(sync, device);
+  [
+    settingsOverrideValues.sync,
+    settingsOverrideValues.lists,
+    settingsOverrideValues.device,
+  ] as const,
+  ([sync, lists, device]) => {
+    const settings = composeSettings({ sync, lists, device });
     setLanguage(settings.language);
     setDateTimeFormat(settings.dateFormat, settings.timeFormat);
     return settings;
@@ -174,8 +194,9 @@ export const settingsValue = defineDerivedValue(
 );
 
 /**
- * Applies `change` to the current settings and stores the result in both scopes, each under its
- * own lock (synced first, then this device's, in that order everywhere). Nothing is stored when
+ * Applies `change` to the current settings and stores the result in every scope, each under its
+ * own lock (synced settings, synced lists, then this device's, in that order everywhere), moving
+ * lists an earlier release kept in the settings item to the lists item. Nothing is stored when
  * `change` throws. Resolves to the settings before and after.
  */
 async function changeSettings(
@@ -191,12 +212,22 @@ async function changeSettings(
   let result: { before: Settings; after: Settings } | undefined;
   await settingsOverrideValues.sync.update(async (sync) => {
     let nextSync = sync;
-    await settingsOverrideValues.device.update((device) => {
-      const before = composeSettings(sync, device);
-      const after = change(before);
-      result = { before, after };
-      nextSync = storeScope('sync', sync, before, after);
-      return storeScope('device', device, before, after);
+    await settingsOverrideValues.lists.update(async (lists) => {
+      let nextLists = lists;
+      await settingsOverrideValues.device.update((device) => {
+        const stored = { sync, lists, device };
+        const before = composeSettings(stored);
+        const after = change(before);
+        result = { before, after };
+        const listKeys = new Set(Object.keys(pickScope(sync, 'lists')));
+        const syncWithoutLists = Object.fromEntries(
+          Object.entries(sync).filter(([key]) => !listKeys.has(key)),
+        );
+        nextSync = storeScope('sync', syncWithoutLists, before, after);
+        nextLists = storeScope('lists', storedLists(stored), before, after);
+        return storeScope('device', device, before, after);
+      });
+      return nextLists;
     });
     return nextSync;
   });
@@ -273,7 +304,7 @@ export function registerSettingsSaveListener(): void {
 }
 
 /**
- * Reset every setting this release knows to its default, in both scopes (synced across devices
+ * Reset every setting this release knows to its default, in every scope (synced across devices
  * and this device's own). Resolves to the settings before, for `undoResetSettings`.
  */
 export async function resetSettings(): Promise<Settings> {

@@ -231,8 +231,10 @@ describe('updating from 0.3.3', () => {
     const device = new Set<string>(DEVICE_SETTINGS_0_3_3);
     for (const key of SETTINGS_0_3_3) {
       expect(key in defaultSettings, key).toBe(true);
-      // A setting moved to the other scope would be ignored where 0.3.3 stored it.
-      expect(getSettingScope(key as keyof Settings), key).toBe(device.has(key) ? 'device' : 'sync');
+      // A setting moved to another scope would be ignored where 0.3.3 stored it, except lists,
+      // which are still read from the settings item until the next save moves them.
+      const scope = getSettingScope(key as keyof Settings);
+      expect(scope === 'lists' ? 'sync' : scope, key).toBe(device.has(key) ? 'device' : 'sync');
     }
   });
 

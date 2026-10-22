@@ -404,11 +404,12 @@ describe('prompt library storage', () => {
   const draft = (name: string) => ({ task: 'auto_tagging' as const, name, system: 'Text' });
 
   it('fits the most prompts at their largest, with the other synced items, in the sync quota', () => {
-    // Settings, table view, prompt index, and About me are capped at the 8,192-byte item quota.
+    // Settings, list settings, table view, prompt index, and About me are capped at the 8,192-byte
+    // item quota.
     const otherSyncedItems = Object.values(STORAGE_ITEMS).filter(
       (item) => item.area === 'sync' && !('collection' in item),
     );
-    expect(otherSyncedItems).toHaveLength(4);
+    expect(otherSyncedItems).toHaveLength(5);
     expect(MAX_PROMPTS * MAX_PROMPT_BYTES + otherSyncedItems.length * 8192).toBeLessThanOrEqual(
       102_400,
     );

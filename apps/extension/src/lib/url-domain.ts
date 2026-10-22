@@ -164,3 +164,16 @@ export function getBlockedEditUrl(url: string): BlockedEditUrl | null {
     ? { kind: 'data-document', prefix: `data:${mimeType}` }
     : null;
 }
+
+/** The path separator a URL may end with. */
+const PATH_SEPARATOR = '/';
+
+/**
+ * An address as shown, without the `/` it ends with unless `showTrailingSlash` (the Appearance
+ * setting): `https://example.com/` shows as `https://example.com`. Only a final `/` goes, never
+ * one before a query or a fragment; links still open the exact address.
+ */
+export function formatDisplayUrl(url: string, showTrailingSlash: boolean): string {
+  if (showTrailingSlash || !url.endsWith(PATH_SEPARATOR) || /[?#]/.test(url)) return url;
+  return url.slice(0, -PATH_SEPARATOR.length);
+}

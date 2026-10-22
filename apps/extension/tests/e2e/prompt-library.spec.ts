@@ -367,7 +367,12 @@ test('the prompt size counter and limit count the prompt as sync storage stores 
   // Quotes take two bytes each once stored, so this is over the limit although the text is not,
   // and the counter, the error, and the limit all use the same unit.
   await text.fill('"'.repeat(maxBytes - 10));
-  await expect(size).toHaveText(new RegExp(`^13\\.[5-6] KB of ${limit}$`));
+  // Twice the text's length, plus the name and fields (at most a few hundred bytes).
+  const quotedBytes = 2 * (maxBytes - 10);
+  await expect(size).toHaveText(new RegExp(` KB of ${limit}$`));
+  const shownKilobytes = Number.parseFloat((await size.textContent()) ?? '');
+  expect(shownKilobytes).toBeGreaterThanOrEqual(Math.floor((quotedBytes / 1024) * 10) / 10);
+  expect(shownKilobytes).toBeLessThanOrEqual((quotedBytes + 512) / 1024);
   await expect(size).toHaveClass(/text-destructive-text/);
   await editor.getByRole('button', { name: 'Save prompt' }).click();
   await expect(editor.getByRole('alert')).toHaveText(

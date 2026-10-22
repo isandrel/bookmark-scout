@@ -7333,6 +7333,18 @@
         "message": "Datum und Uhrzeit",
         "description": "Settings section heading: how dates and times show."
     },
+    "settings_sectionAddresses": {
+        "message": "Adressen",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "Abschließenden Schrägstrich anzeigen",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "Zeigt den / am Ende von Adressen, etwa https://example.com/. Links öffnen immer die genaue Adresse.",
+        "description": "Setting description for Show Trailing Slash"
+    },
     "settings_dateFormat": {
         "message": "Datumsformat",
         "description": "Setting label: date format."

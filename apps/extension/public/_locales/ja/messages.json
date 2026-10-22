@@ -7313,6 +7313,18 @@
         "message": "日付と時刻",
         "description": "Settings section heading: how dates and times show."
     },
+    "settings_sectionAddresses": {
+        "message": "アドレス",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "末尾のスラッシュを表示",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "https://example.com/ のように、アドレス末尾の / を表示します。リンクは常に正確なアドレスを開きます。",
+        "description": "Setting description for Show Trailing Slash"
+    },
     "settings_dateFormat": {
         "message": "日付の形式",
         "description": "Setting label: date format."
