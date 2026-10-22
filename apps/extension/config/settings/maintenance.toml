@@ -44,6 +44,12 @@ concurrency        = { default = 4, min = 1, max = 20, step = 1 }
 retry_count        = { default = 1, min = 0, max = 10, step = 1 }
 follow_redirects   = true
 success_statuses   = { max_items = 20, default = [ 200, 201, 202, 204, 301, 302, 307, 308 ] }
+# What the repair review starts each link on, by category; "keep" changes nothing until the
+# user picks. Dead and manual-check links: "keep", "delete", or "archive"; redirects: "keep" or
+# "redirect" (the target the scan saw).
+on_dead     = "keep"
+on_check    = "keep"
+on_redirect = "keep"
 
 [background_tasks]
 # Reviewed changes to more bookmarks than this are applied as a background task, in parts, so

@@ -2487,6 +2487,30 @@
         "message": "Treat redirected URLs as reachable when scanning dead links",
         "description": "Dead links follow redirects description"
     },
+    "settings_deadLinksOnDead": {
+        "message": "Default for confirmed dead links",
+        "description": "Setting label: the repair action confirmed dead links start on"
+    },
+    "settings_deadLinksOnDeadDesc": {
+        "message": "What the repair review picks for each of these links until you change it. Keep as is changes nothing.",
+        "description": "Setting description for the default repair actions"
+    },
+    "settings_deadLinksOnCheck": {
+        "message": "Default for links to check manually",
+        "description": "Setting label: the repair action links to check manually start on"
+    },
+    "settings_deadLinksOnCheckDesc": {
+        "message": "What the repair review picks for each of these links until you change it. Keep as is changes nothing.",
+        "description": "Setting description for the default repair actions"
+    },
+    "settings_deadLinksOnRedirect": {
+        "message": "Default for redirected links",
+        "description": "Setting label: the repair action redirected links start on"
+    },
+    "settings_deadLinksOnRedirectDesc": {
+        "message": "What the repair review picks for each of these links until you change it. Keep as is changes nothing.",
+        "description": "Setting description for the default repair actions"
+    },
     "settings_deadLinksSuccessStatuses": {
         "message": "Success Status Codes",
         "description": "Dead links success statuses label"
@@ -4483,13 +4507,13 @@
         "message": "Fix or remove links",
         "description": "Button that opens the reviewed dead-link repair dialog"
     },
-    "tools_deadLinkGroupLabel": {
+    "review_categoryLabel": {
         "message": "Show results",
-        "description": "Accessible name of the dead link results filter"
+        "description": "Review list: accessible name of the category tabs"
     },
-    "tools_deadLinkGroup_all": {
+    "review_categoryAll": {
         "message": "All ($1)",
-        "description": "Dead link results filter: every result; $1 is how many"
+        "description": "Review list: the tab that shows every item; $1 is how many"
     },
     "tools_deadLinkGroup_dead": {
         "message": "Confirmed dead ($1)",
@@ -4511,21 +4535,21 @@
         "message": "Skipped ($1)",
         "description": "Dead link results filter: the skipped (not a web address) group; $1 is how many results it has"
     },
-    "tools_deadLinkSelectShown": {
+    "review_selectShown": {
         "message": "Select all shown",
-        "description": "Dead link repairs: checkbox that selects every link the filter shows"
+        "description": "Review list: checkbox that selects every item the tab shows"
     },
-    "tools_deadLinkSelectItem": {
+    "review_selectItem": {
         "message": "Select $1",
-        "description": "Dead link repairs: checkbox for one link; $1 is its title"
+        "description": "Review list: checkbox for one item; $1 is its title"
     },
-    "tools_deadLinkSelectedCount": {
+    "review_selectedCount": {
         "message": "$1 selected",
-        "description": "Dead link repairs: how many links are selected; $1 is the count"
+        "description": "Review list: how many items are selected; $1 is the count"
     },
-    "tools_deadLinkSetSelected": {
+    "review_setSelected": {
         "message": "Set selected to…",
-        "description": "Dead link repairs: menu that sets one action on every selected link"
+        "description": "Review list: menu that sets one action on every selected item"
     },
     "tools_deadLinkRepairTitle": {
         "message": "Review dead-link repairs",
@@ -4535,9 +4559,9 @@
         "message": "Choose what to do with each link. Nothing changes until you apply.",
         "description": "Dead-link repair dialog description"
     },
-    "tools_deadLinkRepairAction": {
+    "review_itemAction": {
         "message": "Action for $1",
-        "description": "Accessible label of the per-link repair choice; $1 is the bookmark title"
+        "description": "Review list: menu of one item's action; $1 is its title"
     },
     "tools_deadLinkRepairChoice_keep": {
         "message": "Keep as is",
