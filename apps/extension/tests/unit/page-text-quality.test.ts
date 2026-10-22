@@ -30,12 +30,14 @@ import { addPageText } from '@/services/page-reader';
 import {
   listPageTextSites,
   type PageTextScanItem,
-  purgePageTextsWithoutAccess,
   readPageTextHtml,
-  registerPageTextAccessCleanup,
   savePageTextResults,
   scanPageTexts,
 } from '@/services/page-text';
+import {
+  purgePageTextsWithoutAccess,
+  registerPageTextAccessCleanup,
+} from '@/services/page-text-coverage';
 import type { BookmarkTreeNode } from '@/types';
 import { installFakeBookmarks } from '../fake-bookmarks';
 import { installFakePermissions } from '../fake-permissions';

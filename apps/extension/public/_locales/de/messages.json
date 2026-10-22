@@ -8244,7 +8244,7 @@
         "description": "Search syntax help: what has:content does"
     },
     "search_pageTextOff": {
-        "message": "Die Suche im Seitentext ist aus, daher finden content: und has:content nichts. Schalte „Seitentext indexieren“ in den Einstellungen ein.",
+        "message": "Die Suche im Seitentext ist aus, daher finden content: und has:content nichts. Schalten Sie „Seitentext indexieren“ in den Einstellungen ein.",
         "description": "Note under the popup and manager search boxes when the query uses content: or has:content while Index Page Text is off"
     },
     "pageText_indexTitle": {
@@ -8320,11 +8320,11 @@
         "description": "Toast title after Retry failed starts a run; $1 is how many pages (singular)"
     },
     "pageText_retryStartedDesc": {
-        "message": "Das läuft im Hintergrund. Wenn es fertig ist, speichere den Text über „Ergebnisse ansehen“ auf der Karte „Seitentext indexieren“ in den Tools der Lesezeichenverwaltung.",
+        "message": "Das läuft im Hintergrund. Wenn es fertig ist, speichern Sie den Text über „Ergebnisse ansehen“ auf der Karte „Seitentext indexieren“ in den Tools der Lesezeichenverwaltung.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
     },
     "pageText_accessNote": {
-        "message": "Wenn du den Websitezugriff für eine Website zurücknimmst, wird der von ihr indexierte Text gelöscht.",
+        "message": "Wenn Sie den Websitezugriff für eine Website zurücknehmen, wird der von ihr indexierte Text gelöscht.",
         "description": "Settings, page text index: what happens to indexed text when a site's website access is removed"
     },
     "pageText_tabButton": {

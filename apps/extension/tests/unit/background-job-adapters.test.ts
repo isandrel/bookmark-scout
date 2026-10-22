@@ -17,7 +17,8 @@ import {
   runJobCommand,
   whenJobsIdle,
 } from '@/services/job-coordinator';
-import { getPageTextCoverage, type PageTextScanResult } from '@/services/page-text';
+import type { PageTextScanResult } from '@/services/page-text';
+import { getPageTextCoverage } from '@/services/page-text-coverage';
 import { installFakeBookmarks } from '../fake-bookmarks';
 import { installFakePermissions } from '../fake-permissions';
 
