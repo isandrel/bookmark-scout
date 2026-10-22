@@ -26,6 +26,10 @@ date_filter_months = { value = 2, min = 1, max = 12 }
 # A filter button names up to this many selected options; more are shown as a count
 facet_badges_max = 2
 
+# The cards view (Manager View setting): the narrowest a card gets, in pixels; the grid fits as
+# many cards in a row as this allows
+card_min_width_px = 224
+
 # Column widths in pixels, by column id (src/components/ui/table/columns.tsx). `size` is the
 # starting width and `min_size` the narrowest a user can resize it to; a `fixed` column never
 # resizes. `hide_below_width` hides the column while the table is narrower than that, in pixels.

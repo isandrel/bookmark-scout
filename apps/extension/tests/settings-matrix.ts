@@ -397,6 +397,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ],
     'Edited in Options > AI > Local AI agents (AgentBridgeActionsPanel).',
   ),
+  managerViewMode: tested('components/ui/table/data-table.tsx', [
+    e2e(
+      'bookmark-manager-cards.spec.ts',
+      'cards show the folder as the list does, with selection, keys, and menus, and stay on reload',
+    ),
+  ]),
   toolsSidebarLayout: tested('components/bookmarks/ToolsSidebar.tsx', [
     e2e(
       'tool-settings.spec.ts',

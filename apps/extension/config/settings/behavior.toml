@@ -23,6 +23,11 @@ confirm_open_above = { default = 15, min = 2, max = 200, step = 1 }
 # from config/ui/actions.toml. Empty means that file's menu. Edited in Options > Behavior.
 actions = { default = [], max_items = 16, max_length = 20 }
 
+[manager_view]
+# How the manager shows a folder or search: "list" (the table) or "cards" (a grid of cards with the
+# same rows, selection, and menus)
+mode = "list"
+
 [tools_sidebar]
 # How the manager's Tools sidebar lists its tools: "tabs" (one tab per section, plus All, opening
 # on default_tab in config/ui/tools-sidebar.toml) or "list" (every section, one after another)

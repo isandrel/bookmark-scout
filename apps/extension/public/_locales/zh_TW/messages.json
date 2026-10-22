@@ -7674,5 +7674,25 @@
     "settings_jobsApplyInBackgroundAboveHelp": {
         "message": "較大的變更在你關閉頁面後仍會繼續，每一批都可在歷史記錄中復原。較小的變更會立即套用，可在通知中復原。",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
+    },
+    "settings_managerViewMode": {
+        "message": "管理員檢視",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "以清單或卡片顯示資料夾和搜尋結果。儲存在這部裝置上。",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "清單",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "卡片",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "管理員檢視",
+        "description": "Settings: heading of the section with Manager View"
     }
 }

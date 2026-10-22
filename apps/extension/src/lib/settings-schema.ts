@@ -713,6 +713,15 @@ const fields = {
     'agentBridgeDisabledActions',
   ),
   managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
+  managerViewMode: enumField(
+    'behavior.manager_view.mode',
+    'managerViewMode',
+    z.enum(['list', 'cards']),
+    (value) =>
+      ({ list: t('settings_managerViewModeList'), cards: t('settings_managerViewModeCards') })[
+        value
+      ],
+  ),
   toolsSidebarLayout: enumField(
     'behavior.tools_sidebar.layout',
     'toolsSidebarLayout',
@@ -1288,6 +1297,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'links',
         labelKey: 'settings_sectionLinks',
         fields: ['linkOpenTarget', 'openConfirmAbove'],
+      },
+      {
+        id: 'managerView',
+        labelKey: 'settings_sectionManagerView',
+        fields: ['managerViewMode'],
       },
       {
         id: 'toolsSidebar',

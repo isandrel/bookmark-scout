@@ -146,6 +146,8 @@ export const DEVICE_SETTING_KEYS = [
   'historyRecordOutsideChanges',
   /** How the Tools sidebar lists its tools, which suits one screen's size. */
   'toolsSidebarLayout',
+  /** Whether the manager shows a list or cards, which suits one screen's size too. */
+  'managerViewMode',
 ] as const;
 
 export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];
