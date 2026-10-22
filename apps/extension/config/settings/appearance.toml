@@ -37,6 +37,10 @@ width = { default = 400, min = 300, max = 800, step = 50, clamp = true }
 height = { default = 500, min = 300, max = 600, step = 50, clamp = true }
 # Maximum characters before truncating bookmark titles
 truncate_length = { default = 50, min = 20, max = 200, step = 10 }
+# Resting the pointer on a bookmark in the popup or side panel, or moving to it with the arrow keys,
+# shows its details (address, folder, tags, summary, cover, date added) in a card; the delays and
+# sizes are in config/ui/hover-card.toml. Off, the row keeps the browser's plain tooltip
+show_hover_details = true
 
 [notifications]
 # Duration in milliseconds before toast notifications auto-dismiss

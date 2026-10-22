@@ -879,6 +879,14 @@
         "message": "Número máximo de caracteres antes de cortar o texto",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "Mostrar detalhes ao passar o ponteiro",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "Ao deixar o ponteiro sobre um favorito, ou chegar a ele com as setas, um cartão mostra o endereço, a pasta, as tags e o resumo",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "Duração das notificações",
         "description": "Toast duration setting label"

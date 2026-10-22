@@ -43,6 +43,13 @@ card_summary_lines = 2
 cover_aspect_ratio = 1.91
 card_placeholder_icon_px = 32
 
+# The optional Tags and Summary columns of the list (View menu; hidden at first). Tags stay on one
+# line, at most `column_max_tags` chips and a "+N" chip; the summary is cut to
+# `summary_column_lines` lines, and resting the pointer on (or moving to the row of) a summary cut
+# short shows it whole in the hover card (config/ui/hover-card.toml)
+column_max_tags = 2
+summary_column_lines = 2
+
 # Column widths in pixels, by column id (src/components/ui/table/columns.tsx). `size` is the
 # starting width and `min_size` the narrowest a user can resize it to; a `fixed` column never
 # resizes. `hide_below_width` hides the column while the table is narrower than that, in pixels.
@@ -63,6 +70,11 @@ title = { size = 160, min_size = 120, fill = 3 }
 dateAdded = { size = 184, min_size = 100 }
 dateGroupModified = { size = 184, min_size = 100 }
 unmodifiable = { size = 130, min_size = 80 }
+# Tags keep a compact width; Summary also takes a share of any spare width, as Title and URL do.
+# With both on, every column still fits a 1400px window beside the folder tree (measured
+# 2026-10-22), so the pinned row menu never covers the end of a summary
+tags = { size = 200, min_size = 90 }
+summary = { size = 160, min_size = 120, fill = 2 }
 # The four move buttons (24px each) and the row menu, side by side with the cell padding, so the
 # buttons shown on hover have their own room and never cover the columns before them
 actions = { fixed = 140 }

@@ -855,6 +855,14 @@
         "message": "テキストを省略する前の最大文字数",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "ポインタを合わせて詳細を表示",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "ブックマークにポインタを置くか矢印キーで移動すると、アドレス、フォルダ、タグ、要約をカードで表示します",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "通知の表示時間",
         "description": "Toast duration setting label"

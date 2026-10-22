@@ -35,6 +35,8 @@ const managerTableConfig = readConfig(
       card_summary_lines: z.number().int().positive(),
       cover_aspect_ratio: z.number().positive(),
       card_placeholder_icon_px: pixels,
+      column_max_tags: z.number().int().positive(),
+      summary_column_lines: z.number().int().positive(),
       columns: z.record(z.string(), columnLayoutSchema),
     })
     .refine((config) => config.page_sizes.includes(config.default_page_size), {
@@ -84,6 +86,12 @@ export const COVER_ASPECT_RATIO = managerTableConfig.cover_aspect_ratio;
 
 /** The site or folder icon in a card's room for a cover while it has none, in pixels. */
 export const CARD_PLACEHOLDER_ICON_PX = managerTableConfig.card_placeholder_icon_px;
+
+/** Tag chips the Tags column shows before a "+N" chip. */
+export const COLUMN_MAX_TAGS = managerTableConfig.column_max_tags;
+
+/** Lines of a bookmark's summary the Summary column shows. */
+export const SUMMARY_COLUMN_LINES = managerTableConfig.summary_column_lines;
 
 /** Column ids that have a layout in the config. */
 export const CONFIGURED_COLUMN_IDS: readonly string[] = Object.keys(managerTableConfig.columns);

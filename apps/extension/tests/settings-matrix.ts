@@ -299,6 +299,16 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ],
     'Shortens the page title in the popup AI suggestions header and titles quoted in toasts.',
   ),
+  showHoverDetails: tested('components/bookmark/PopupTree.tsx', [
+    e2e(
+      'bookmark-hover-card.spec.ts',
+      'Show Details on Hover off shows no card and keeps the plain tooltip',
+    ),
+    e2e(
+      'bookmark-hover-card.spec.ts',
+      'popup: resting on a bookmark shows its details after the delay, Escape closes it in place, and the pointer can move onto it',
+    ),
+  ]),
   tooltipDelayMs: tested('components/ui/tooltip.tsx', [
     e2e(SETTINGS_E2E, 'tooltip delay setting controls when a tooltip opens'),
   ]),

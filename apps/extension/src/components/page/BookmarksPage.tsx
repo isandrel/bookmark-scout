@@ -245,6 +245,22 @@ export default function BookmarksPage() {
   );
   // What each folder card counts.
   const folderItemCounts = useMemo(() => countFolderItems(allData), [allData]);
+  // The Summary column shows a summary it cuts short whole in this card.
+  const hoverCard = useHoverCard(true);
+  const resolveHoverBookmark = useCallback(
+    (id: string): HoverCardBookmark | undefined => {
+      const item = getManagerItemsById(allData).get(id);
+      if (!item?.url) return undefined;
+      return {
+        id,
+        title: item.title,
+        url: item.url,
+        folderPath: item.folderPath,
+        ...(item.dateAdded === undefined ? {} : { dateAdded: item.dateAdded }),
+      };
+    },
+    [allData],
+  );
   // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the label.
   const dataOrder = useMemo(
     () => ({ browserOrder: sortOrder === 'browser', label: getSortOrderLabel(sortOrder) }),
@@ -503,61 +519,64 @@ export default function BookmarksPage() {
               </div>
             </div>
           ) : (
-            <DataTable
-              columns={columns}
-              data={sortedData}
-              browserOrderData={browserOrderData}
-              dataOrder={dataOrder}
-              allData={sortedAllData}
-              getRowId={getBookmarkRowId}
-              canSelectRow={isModifiableBookmark}
-              resetKey={currentFolder}
-              initialPageIndex={folderPageIndex}
-              onPageIndexChange={rememberPageIndex}
-              facetOptions={facetOptions}
-              renderSelectionActions={renderSelectionActions}
-              savedSearchContext={savedSearchContext}
-              searchQuery={searchQuery}
-              searchMatches={searchMatches}
-              onSearchQueryChange={setSearchQuery}
-              revealRow={revealRow}
-              onShowsAllBookmarksChange={setShowsAllFolders}
-              onSelectedCountChange={setSelectedCount}
-              handleRef={tableRef}
-              getRowProps={dragDrop.rowProps}
-              renderFrame={(frame) => (
-                // Fills the room down to the pagination, so right clicks and drops below the
-                // rows reach the folder's empty-space menu and its end.
-                <ItemContextMenu
-                  resolveItems={resolveRowMenuItems}
-                  itemHost={managerCommands.tableItemHost}
-                  folderHost={managerCommands.folderHost}
-                  className="flex-1"
-                  testId="bookmark-table-menu-area"
-                  areaProps={dragDrop.frameProps}
-                >
-                  {frame}
-                </ItemContextMenu>
-              )}
-              label={currentFolderName ?? t('bookmarks_root')}
-              rowClassName={(row: Bookmark) =>
-                row.type === ItemTypeEnum.Folder
-                  ? 'is-folder bg-muted/50 hover:bg-muted/70'
-                  : 'hover:bg-muted/50'
-              }
-              cardMedia={(row: Bookmark) => <BookmarkCardMedia item={row} />}
-              cardDetails={(row: Bookmark) => (
-                <BookmarkCardDetails
-                  item={row}
-                  folderItemCount={folderItemCounts.get(row.id) ?? 0}
-                />
-              )}
-              onRowOpen={(row: Bookmark) => openRows([row], 'tabs')}
-              onRowOpenInBackground={(row: Bookmark) => {
-                if (row.type !== ItemTypeEnum.Folder) openRows([row], 'background-tabs');
-              }}
-            />
+            <HoverCardControllerContext.Provider value={hoverCard.controller}>
+              <DataTable
+                columns={columns}
+                data={sortedData}
+                browserOrderData={browserOrderData}
+                dataOrder={dataOrder}
+                allData={sortedAllData}
+                getRowId={getBookmarkRowId}
+                canSelectRow={isModifiableBookmark}
+                resetKey={currentFolder}
+                initialPageIndex={folderPageIndex}
+                onPageIndexChange={rememberPageIndex}
+                facetOptions={facetOptions}
+                renderSelectionActions={renderSelectionActions}
+                savedSearchContext={savedSearchContext}
+                searchQuery={searchQuery}
+                searchMatches={searchMatches}
+                onSearchQueryChange={setSearchQuery}
+                revealRow={revealRow}
+                onShowsAllBookmarksChange={setShowsAllFolders}
+                onSelectedCountChange={setSelectedCount}
+                handleRef={tableRef}
+                getRowProps={dragDrop.rowProps}
+                renderFrame={(frame) => (
+                  // Fills the room down to the pagination, so right clicks and drops below the
+                  // rows reach the folder's empty-space menu and its end.
+                  <ItemContextMenu
+                    resolveItems={resolveRowMenuItems}
+                    itemHost={managerCommands.tableItemHost}
+                    folderHost={managerCommands.folderHost}
+                    className="flex-1"
+                    testId="bookmark-table-menu-area"
+                    areaProps={dragDrop.frameProps}
+                  >
+                    {frame}
+                  </ItemContextMenu>
+                )}
+                label={currentFolderName ?? t('bookmarks_root')}
+                rowClassName={(row: Bookmark) =>
+                  row.type === ItemTypeEnum.Folder
+                    ? 'is-folder bg-muted/50 hover:bg-muted/70'
+                    : 'hover:bg-muted/50'
+                }
+                cardMedia={(row: Bookmark) => <BookmarkCardMedia item={row} />}
+                cardDetails={(row: Bookmark) => (
+                  <BookmarkCardDetails
+                    item={row}
+                    folderItemCount={folderItemCounts.get(row.id) ?? 0}
+                  />
+                )}
+                onRowOpen={(row: Bookmark) => openRows([row], 'tabs')}
+                onRowOpenInBackground={(row: Bookmark) => {
+                  if (row.type !== ItemTypeEnum.Folder) openRows([row], 'background-tabs');
+                }}
+              />
+            </HoverCardControllerContext.Provider>
           )}
+          <BookmarkHoverCard hoverCard={hoverCard} resolve={resolveHoverBookmark} />
         </div>
         <HistoryDialog folderLabels={folderLabels} />
         <TasksDialog open={tasksOpen} onOpenChange={setTasksOpen} />

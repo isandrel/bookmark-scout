@@ -678,6 +678,7 @@ const fields = {
   truncateLength: numberField('appearance.popup.truncate_length', 'truncateLength', {
     unit: 'chars',
   }),
+  showHoverDetails: switchField('appearance.popup.show_hover_details', 'showHoverDetails'),
   toastDurationMs: numberField('appearance.notifications.toast_duration_ms', 'toastDuration', {
     unit: 'ms',
     display: IN_SECONDS,
@@ -1340,7 +1341,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'popup',
         labelKey: 'settings_sectionPopup',
-        fields: ['popupWidth', 'popupHeight', 'truncateLength'],
+        fields: ['popupWidth', 'popupHeight', 'truncateLength', 'showHoverDetails'],
       },
       {
         id: 'notifications',

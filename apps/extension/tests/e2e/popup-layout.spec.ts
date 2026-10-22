@@ -214,7 +214,12 @@ test('tree rows show the whole title, and bookmarks their address, on hover', as
   extensionWorker,
   page,
 }) => {
-  await replaceSettings(extensionWorker, { language: 'en', popupWidth: popup.width.min });
+  // With Show Details on Hover off; on, the hover card shows both (bookmark-hover-card.spec.ts).
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    popupWidth: popup.width.min,
+    showHoverDetails: false,
+  });
   const longFolder = 'E2E A folder with a name far too long for the narrowest popup to show';
   const longTitle = 'E2E A bookmark title that keeps going well past what one popup row can show';
   const url = 'https://e2e.invalid/a/long/path?with=query';

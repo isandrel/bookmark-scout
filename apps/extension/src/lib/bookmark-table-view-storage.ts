@@ -44,6 +44,14 @@ const DEFAULT_COLUMN_ORDER: readonly string[] = (() => {
   );
 })();
 
+/** Columns that stay after every column the user may hide, such as the row menu. */
+const TRAILING_COLUMN_IDS: ReadonlySet<string> = (() => {
+  const lastHideable = Math.max(
+    ...HIDEABLE_COLUMN_IDS.map((id) => DEFAULT_COLUMN_ORDER.indexOf(id)),
+  );
+  return new Set(DEFAULT_COLUMN_ORDER.slice(lastHideable + 1));
+})();
+
 const columnsSchema = z.object({
   columnVisibility: z.record(z.string(), z.boolean()).default({}),
   columnOrder: z.array(z.string()).default([...DEFAULT_COLUMN_ORDER]),
@@ -116,9 +124,11 @@ export function parseBookmarkTableColumns(value: unknown): BookmarkTableColumns 
     seenColumns.add(id);
     return true;
   });
-  for (const id of BOOKMARK_TABLE_COLUMN_IDS) {
-    if (!seenColumns.has(id)) columnOrder.push(id);
-  }
+  // Columns the saved view does not know join it in registry order, before the row menu (and any
+  // other column fixed at the end), so they never land after it.
+  const missing = BOOKMARK_TABLE_COLUMN_IDS.filter((id) => !seenColumns.has(id));
+  const end = columnOrder.findIndex((id) => TRAILING_COLUMN_IDS.has(id));
+  columnOrder.splice(end < 0 ? columnOrder.length : end, 0, ...missing);
 
   const columnVisibility = { ...DEFAULT_COLUMNS.columnVisibility };
   for (const [id, visible] of Object.entries(parsed.data.columnVisibility)) {

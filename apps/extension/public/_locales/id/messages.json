@@ -871,6 +871,14 @@
         "message": "Jumlah karakter maksimum sebelum teks dipotong",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "Tampilkan Detail saat Kursor di Atasnya",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "Saat kursor berhenti di atas bookmark, atau Anda mencapainya dengan tombol panah, sebuah kartu menampilkan alamat, folder, tag, dan ringkasannya",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "Durasi Notifikasi",
         "description": "Toast duration setting label"

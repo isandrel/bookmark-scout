@@ -879,6 +879,14 @@
         "message": "Maximum characters before truncating text",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "Show Details on Hover",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "Rest the pointer on a bookmark, or reach it with the arrow keys, to see its address, folder, tags, and summary in a card",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "Toast Duration",
         "description": "Toast duration setting label"
