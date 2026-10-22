@@ -134,27 +134,32 @@
 # other 28,500 to 29,000) for letting Ask AI and agents search with the search boxes' operators
 # (the filter query action, its diagnostics, and its agent text). Firefox measured 5,694,475 B
 # uncompressed, 3,716,009 B of JavaScript, and 28,727 B of other files on b52783da.
+# Raised on 2026-10-22 (ZIP 1,787,000 to 1,806,000, uncompressed 5,704,000 to 5,766,000, javascript
+# 3,726,000 to 3,741,000, locales 1,424,000 to 1,474,000) for Smart Rules: the rule engine, its
+# storage and Settings editor, the tool and its review, and about 66 messages in 9 languages.
+# Firefox measured ZIP 1,796,032, 5,755,852 B uncompressed, 3,731,261 B of JavaScript, and
+# 1,463,517 B of locales on 8f9b86bf.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_787_000
-raw_bytes = 5_704_000
+zip_bytes = 1_806_000
+raw_bytes = 5_766_000
 
 [targets.edge]
-zip_bytes = 1_787_000
-raw_bytes = 5_704_000
+zip_bytes = 1_806_000
+raw_bytes = 5_766_000
 
 [targets.firefox]
-zip_bytes = 1_787_000
-raw_bytes = 5_704_000
+zip_bytes = 1_806_000
+raw_bytes = 5_766_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_726_000
+javascript = 3_741_000
 css = 85_000
 fonts = 143_000
-locales = 1_424_000
+locales = 1_474_000
 images = 320_000
 other = 29_000
