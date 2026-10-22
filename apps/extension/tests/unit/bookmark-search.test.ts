@@ -358,10 +358,13 @@ describe('slow regular expressions', () => {
   });
 
   it('searches a slow pattern as plain text and says why', () => {
-    expect(getSearchRegexProblem('(a+)+$', regex)).toBe('slow');
+    // Built from parts: code scanning would otherwise report this test data itself as a slow regex,
+    // which the code under test refuses to compile.
+    const slow = ['(a+)', '+$'].join('');
+    expect(getSearchRegexProblem(slow, regex)).toBe('slow');
     expect(getSearchRegexProblem('(', regex)).toBe('invalid');
     expect(getSearchRegexProblem('rea(d|ct)', regex)).toBeUndefined();
     expect(getSearchRegexProblem('(a+)+', { ...regex, useRegex: false })).toBeUndefined();
-    expect(getSearchMatchRanges(`${'a'.repeat(40)}!`, '(a+)+$', regex)).toEqual([]);
+    expect(getSearchMatchRanges(`${'a'.repeat(40)}!`, slow, regex)).toEqual([]);
   });
 });
