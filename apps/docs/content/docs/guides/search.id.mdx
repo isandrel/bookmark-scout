@@ -36,8 +36,10 @@ Kotak penelusuran di popup, panel samping, dan pengelola membaca penelusuran den
 - Setiap kata harus cocok, masing-masing di mana saja: judul, alamat web, jalur folder, atau tag dan ringkasan bookmark. `recipe soup` menemukan bookmark bernama "Soup" di folder bernama "Recipes".
 - Tanda kutip menjaga kata tetap bersama: `"tomato soup"`.
 - Tanda `-` di depan mengecualikan yang cocok: `recipe -cake` atau `-tag:archive`.
+- `OR` dengan huruf kapital di antara dua istilah menemukan salah satunya: `tag:react OR tag:vue`. Ikatannya lebih kuat daripada spasi, jadi `domain:github.com tag:react OR tag:vue` menemukan halaman GitHub dengan salah satu dari kedua tag itu. `or` dengan huruf kecil tetap kata biasa yang dicari.
+- Tanda kurung mengelompokkan istilah: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Tanda `-` di depan kelompok mengecualikan yang cocok dengan kelompok itu: `-(tag:old OR tag:archive)`. Tanda kurung di dalam kata, seperti `f(x)`, ditelusuri sebagai teks.
 - Kata yang menyebutkan nama folder menemukan folder itu. Di popup, bookmark-nya ditampilkan di dalamnya; `folder:` mencantumkan semua isinya.
-- Teks yang bukan operator ditelusuri seperti yang diketik, seperti `C++`, `10:30`, atau alamat web. Begitu pula operator yang tidak dikenal Bookmark Scout, seperti `foo:bar`. Nilai yang tidak bisa dibacanya, seperti tanggal yang tidak valid, dilewati.
+- Teks yang bukan operator ditelusuri seperti yang diketik, seperti `C++`, `10:30`, atau alamat web. Begitu pula operator yang tidak dikenal Bookmark Scout, seperti `foo:bar`. Nilai yang tidak bisa dibacanya, seperti tanggal yang tidak valid, dilewati. Catatan di bawah kotak penelusuran memberi tahu jika tanda kurung tidak ditutup atau `OR` tidak punya istilah di salah satu sisinya. Tanda kurung yang bersarang terlalu dalam atau daftar `OR` yang terlalu panjang dipotong, disertai catatan.
 
 | Penelusuran | Menemukan |
 | --- | --- |
@@ -53,6 +55,8 @@ Kotak penelusuran di popup, panel samping, dan pengelola membaca penelusuran den
 | `has:tags` atau `has:summary` | Item yang memiliki tag, atau ringkasan |
 | `has:content` | Bookmark yang teks halamannya sudah diindeks |
 | `after:2026-01-31` atau `before:2026-01-31` | Item yang ditambahkan pada atau setelah hari itu, atau pada atau sebelum hari itu |
+| `tag:react OR tag:vue` | Bookmark yang cocok dengan salah satu sisi; `OR` harus huruf kapital |
+| `(tag:react OR tag:vue) -tag:old` | Istilah yang dikelompokkan dalam tanda kurung: bertag react atau vue, dan bukan old |
 
 Tag dan ringkasan adalah yang Anda tambahkan di **Detail Bookmark** atau pertahankan dari alat **Tag Otomatis** dan **Peringkas Konten**. Semuanya tetap di perangkat ini.
 
@@ -98,7 +102,7 @@ Masukkan nama di **Beri nama penelusuran ini** lalu klik **Simpan**.
 
 Untuk memakainya, buka **Penelusuran tersimpan** dan pilih penelusuran tersebut. Filter dan pengurutannya menggantikan yang sekarang, dan jika penelusuran itu dibatasi ke satu folder, pengelola kembali ke folder itu. Setiap entri bisa diganti namanya atau dihapus, dan penghapusan bisa diurungkan dari pesan yang muncul setelahnya. Seret entri dengan pegangannya untuk mengubah urutan, atau buka menu pegangan untuk memindahkannya dengan keyboard.
 
-Teks kotak penelusuran disimpan seperti yang diketik, termasuk operator. Penelusuran yang disimpan sebelum kotak penelusuran membaca operator hanya menemukan teksnya di judul dan alamat. Kini penelusuran seperti itu terbuka dengan teksnya diberi tanda kutip jika berisi beberapa kata atau titik dua, sehingga tetap menemukan setiap bookmark yang dulu ditemukannya.
+Teks kotak penelusuran disimpan seperti yang diketik, termasuk operator. Penelusuran yang disimpan sebelum kotak penelusuran membaca operator hanya menemukan teksnya di judul dan alamat. Kini penelusuran seperti itu terbuka dengan teksnya diberi tanda kutip jika berisi beberapa kata atau titik dua, sehingga tetap menemukan setiap bookmark yang dulu ditemukannya. Penelusuran yang disimpan sebelum `OR` dan tanda kurung dibaca akan terbuka dengan keduanya dalam tanda kutip, untuk alasan yang sama.
 
 Penelusuran tersimpan menyimpan definisi filter, tidak pernah salinan bookmark, jadi hasilnya selalu sesuai dengan bookmark Anda saat ini. Jika folder yang disebutkannya sudah dihapus, folder itu dilewati, filter lainnya tetap berlaku, dan sebuah pesan menyebutkan berapa folder yang dilewati.
 

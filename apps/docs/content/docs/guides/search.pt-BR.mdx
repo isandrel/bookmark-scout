@@ -36,8 +36,10 @@ As caixas de pesquisa do pop-up, do painel lateral e do gerenciador leem uma pes
 - Cada palavra precisa corresponder, cada uma em qualquer lugar: o título, o endereço da web, o caminho da pasta ou as tags e o resumo do favorito. `receitas sopa` encontra um favorito chamado "Sopa" em uma pasta chamada "Receitas".
 - Aspas mantêm as palavras juntas: `"sopa de tomate"`.
 - Um `-` na frente deixa de fora o que corresponde: `receitas -bolo` ou `-tag:arquivo`.
+- `OR` em maiúsculas, entre dois termos, encontra qualquer um dos dois: `tag:react OR tag:vue`. Ele se liga mais forte que o espaço, então `domain:github.com tag:react OR tag:vue` encontra páginas do GitHub com qualquer uma das duas tags. Um `or` em minúsculas é só mais uma palavra a procurar.
+- Parênteses agrupam termos: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Um `-` na frente de um grupo deixa de fora o que o grupo encontra: `-(tag:old OR tag:archive)`. Parênteses dentro de uma palavra, como `f(x)`, são pesquisados como texto.
 - Uma palavra que nomeia uma pasta encontra a pasta. No pop-up, os favoritos dela aparecem dentro dela; `folder:` lista tudo o que há nela.
-- Texto que não é um operador é pesquisado como digitado, como `C++`, `10:30` ou um endereço da web. O mesmo vale para um operador que o Bookmark Scout não conhece, como `foo:bar`. Um valor que ele não consegue ler, como uma data inválida, é ignorado.
+- Texto que não é um operador é pesquisado como digitado, como `C++`, `10:30` ou um endereço da web. O mesmo vale para um operador que o Bookmark Scout não conhece, como `foo:bar`. Um valor que ele não consegue ler, como uma data inválida, é ignorado. Uma nota abaixo da caixa de pesquisa avisa quando um parêntese não foi fechado ou um `OR` não tem nada de um lado. Parênteses aninhados fundo demais ou uma lista de `OR` longa demais são cortados, com uma nota.
 
 | Pesquisa | Encontra |
 | --- | --- |
@@ -53,6 +55,8 @@ As caixas de pesquisa do pop-up, do painel lateral e do gerenciador leem uma pes
 | `has:tags` ou `has:summary` | Itens com tags, ou com um resumo |
 | `has:content` | Favoritos cujo texto da página está indexado |
 | `after:2026-01-31` ou `before:2026-01-31` | Itens adicionados nesse dia ou depois, ou nesse dia ou antes |
+| `tag:react OR tag:vue` | Favoritos que correspondem a qualquer um dos lados; `OR` vai em maiúsculas |
+| `(tag:react OR tag:vue) -tag:old` | Termos agrupados entre parênteses: com a tag react ou vue, e sem old |
 
 As tags e os resumos são os que você adiciona em **Detalhes do favorito** ou mantém das ferramentas **Tags automáticas** e **Gerador de resumos**. Eles ficam neste dispositivo.
 
@@ -98,7 +102,7 @@ Digite um nome em **Dê um nome a esta pesquisa** e clique em **Salvar**.
 
 Para usar uma delas, abra **Pesquisas salvas** e escolha a pesquisa. Os filtros e a classificação dela substituem os atuais e, se ela estava limitada a uma pasta, o gerenciador volta para essa pasta. Cada item pode ser renomeado ou excluído, e uma exclusão pode ser desfeita na notificação que aparece em seguida. Arraste uma entrada pela alça para mudar a ordem, ou abra o menu da alça para movê-la pelo teclado.
 
-O texto da caixa de pesquisa é salvo como digitado, com os operadores. Uma pesquisa salva antes de a caixa de pesquisa ler operadores procurava o texto somente em títulos e endereços. Agora ela abre com esse texto entre aspas quando ele tem várias palavras ou dois-pontos, então continua encontrando todos os favoritos que encontrava.
+O texto da caixa de pesquisa é salvo como digitado, com os operadores. Uma pesquisa salva antes de a caixa de pesquisa ler operadores procurava o texto somente em títulos e endereços. Agora ela abre com esse texto entre aspas quando ele tem várias palavras ou dois-pontos, então continua encontrando todos os favoritos que encontrava. Uma pesquisa salva antes de `OR` e parênteses serem lidos abre com eles entre aspas, pelo mesmo motivo.
 
 Uma pesquisa salva guarda as definições dos filtros, nunca cópias dos favoritos, então os resultados sempre correspondem aos seus favoritos como estão agora. Se uma pasta indicada nela tiver sido excluída, essa pasta é ignorada, os outros filtros continuam valendo e uma notificação informa quantas pastas foram ignoradas.
 

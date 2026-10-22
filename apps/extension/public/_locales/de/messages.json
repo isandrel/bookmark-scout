@@ -3637,6 +3637,14 @@
         "message": "Ausschließen",
         "description": "Search syntax help: what a leading minus does (-word)"
     },
+    "searchHelp_or": {
+        "message": "Eins von beiden",
+        "description": "Search syntax help: what OR between two terms does (tag:react OR tag:vue): one of them is enough"
+    },
+    "searchHelp_group": {
+        "message": "Begriffe gruppieren",
+        "description": "Search syntax help: what parentheses do ((tag:react OR tag:vue) -tag:old): they group terms"
+    },
     "searchHelp_title": {
         "message": "In Titeln",
         "description": "Search syntax help: what title: does"
@@ -3709,6 +3717,22 @@
         "message": "Ein Anführungszeichen ist nicht geschlossen, daher reicht die Wortgruppe bis zum Ende.",
         "description": "Note under the manager search box when a quote mark is not closed"
     },
+    "searchDiagnostic_unclosedGroup": {
+        "message": "Eine Klammer ist nicht geschlossen, daher reicht die Gruppe bis zum Ende.",
+        "description": "Note under the manager search box when an opening parenthesis ( is not closed"
+    },
+    "searchDiagnostic_unopenedGroup": {
+        "message": "Zu einer schließenden Klammer fehlt die öffnende, daher wird sie ausgelassen.",
+        "description": "Note under the manager search box when a closing parenthesis ) has no opening one"
+    },
+    "searchDiagnostic_emptyGroup": {
+        "message": "Ein Klammerpaar ist leer und wird ausgelassen.",
+        "description": "Note under the manager search box when parentheses have nothing in them: ()"
+    },
+    "searchDiagnostic_misplacedOr": {
+        "message": "OR braucht auf beiden Seiten einen Begriff und wird daher ausgelassen.",
+        "description": "Note under the manager search box when OR is first, last, or doubled. Keep OR as is: it is the word to type"
+    },
     "searchDiagnostic_tooLong": {
         "message": "Nur die ersten $1 Zeichen werden gesucht.",
         "description": "Note under the manager search box; $1 is the longest search read"
@@ -3716,6 +3740,14 @@
     "searchDiagnostic_tooManyTerms": {
         "message": "Nur die ersten $1 Begriffe werden gesucht.",
         "description": "Note under the manager search box; $1 is how many terms are read"
+    },
+    "searchDiagnostic_tooDeep": {
+        "message": "Klammern lassen sich höchstens $1 Ebenen tief verschachteln, der Rest wird nicht gesucht.",
+        "description": "Note under the manager search box; $1 is how deep parentheses may nest, such as 8"
+    },
+    "searchDiagnostic_tooManyBranches": {
+        "message": "Ein OR verbindet höchstens $1 Begriffe, der Rest wird nicht gesucht.",
+        "description": "Note under the manager search box; $1 is how many terms one OR may join, such as 16. Keep OR as is"
     },
     "ai_folderRecommendation": {
         "message": "KI-Ordnervorschlag",

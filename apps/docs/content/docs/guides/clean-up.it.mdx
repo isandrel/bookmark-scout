@@ -100,7 +100,7 @@ Una regola intelligente trova i preferiti con una ricerca, con le stesse parole 
 Nelle [Impostazioni](/settings#maintenance), in **Regole intelligenti**, fai clic su **Aggiungi regola**, oppure su **Inizia da un modello** per una regola che aggiunge tag alle pagine di GitHub, ai video di YouTube o ai tutorial. I modelli partono disattivati.
 </Step>
 <Step>
-Dai alla regola un nome e una ricerca, come `domain:github.com` o `folder:Reading -tag:read`. L'editor indica quanti preferiti corrispondono in quel momento. Aggiungi tag separati da virgole, scegli una cartella in cui spostarli, o entrambe le cose, e salva.
+Dai alla regola un nome e una ricerca, come `domain:github.com`, `folder:Reading -tag:read` o `(domain:github.com OR domain:gitlab.com) -tag:archived`. L'editor indica quanti preferiti corrispondono in quel momento, oppure cosa non va nella ricerca, come una parentesi non chiusa; la regola si può salvare solo quando la ricerca è leggibile. Aggiungi tag separati da virgole, scegli una cartella in cui spostarli, o entrambe le cose, e salva.
 </Step>
 <Step>
 Nella barra laterale Strumenti della gestione preferiti, scegli l'ambito nella scheda **Regole intelligenti** e fai clic su **Esegui**.
@@ -117,6 +117,7 @@ Buono a sapersi:
 - **Annulla** nel messaggio dopo l'applicazione ripristina sia gli spostamenti sia i tag. Gli spostamenti sono una sola modifica nella Cronologia.
 - Le regole restano su questo dispositivo e fanno parte di **Esegui il backup delle impostazioni**. Una regola ripristinata su un altro dispositivo sposta i preferiti solo se la sua cartella esiste lì; altrimenti i suoi spostamenti restano bloccati finché non scegli di nuovo la cartella. La regola trova la cartella dal suo percorso quando lì ha un altro ID, purché una sola cartella abbia quel percorso.
 - Con **Aggiungi tag ai nuovi preferiti** attivo nelle Impostazioni, le regole attivate aggiungono i propri tag a ogni preferito nel momento in cui viene aggiunto, da Bookmark Scout, dalla stella del browser, da un'altra estensione o dalla sincronizzazione, poiché il browser non dice da dove proviene un preferito. Vengono aggiunti solo i tag; lo spostamento di una regola attende un'esecuzione che revisioni tu. Molti preferiti aggiunti insieme (una sincronizzazione o un'importazione) vengono lasciati stare, così come un preferito aggiunto mentre l'impostazione era disattivata. Ogni aggiunta automatica di tag è elencata nelle impostazioni in **Tag aggiunti automaticamente**, con un Annulla che rimuove quei tag.
+- Una regola salvata prima che le ricerche leggessero `OR` e le parentesi continua a trovare ciò che trovava: vengono letti come testo, tra virgolette.
 ## Cercare all'interno delle pagine [#search-inside-pages]
 
 **Indicizza il testo delle pagine** conserva su questo dispositivo il testo leggibile delle pagine salvate nei preferiti, così la ricerca trova parole che si trovano solo all'interno di una pagina. È disattivato finché non lo attivi, e scarica ogni pagina che indicizzi.

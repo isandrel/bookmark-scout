@@ -74,5 +74,17 @@ describe('smart rule drafts', () => {
   it('counts the bookmarks a search finds now', () => {
     expect(countRuleMatches('domain:github.com', tree, {})).toBe(1);
     expect(countRuleMatches('domain:nowhere.example', tree, {})).toBe(0);
+    expect(countRuleMatches('domain:github.com OR domain:example.com', tree, {})).toBe(2);
+    expect(countRuleMatches('-(domain:github.com OR title:news)', tree, {})).toBe(0);
+  });
+
+  it('saves and describes a rule with OR, and refuses unbalanced parentheses (R07)', () => {
+    const query = '(domain:github.com OR domain:example.com) -title:news';
+    const result = ruleFromDraft({ ...draft, query }, 'or-id', tree);
+    if (!('rule' in result)) throw new Error('not saved');
+    expect(result.rule.query).toBe(query);
+    expect(describeRule(result.rule)).toBe(`${query}: add tags dev and code`);
+    expect(isRuleQueryReadable('(domain:github.com OR tag:x')).toBe(false);
+    expect(ruleFromDraft({ ...draft, query: 'a OR' }, 'x', tree)).toEqual({ error: 'query' });
   });
 });

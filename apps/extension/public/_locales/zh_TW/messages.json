@@ -3621,6 +3621,14 @@
         "message": "排除",
         "description": "Search syntax help: what a leading minus does (-word)"
     },
+    "searchHelp_or": {
+        "message": "任一即可",
+        "description": "Search syntax help: what OR between two terms does (tag:react OR tag:vue): one of them is enough"
+    },
+    "searchHelp_group": {
+        "message": "組合搜尋字詞",
+        "description": "Search syntax help: what parentheses do ((tag:react OR tag:vue) -tag:old): they group terms"
+    },
     "searchHelp_title": {
         "message": "在標題中",
         "description": "Search syntax help: what title: does"
@@ -3693,6 +3701,22 @@
         "message": "有引號未關閉，因此片語會延續到結尾。",
         "description": "Note under the manager search box when a quote mark is not closed"
     },
+    "searchDiagnostic_unclosedGroup": {
+        "message": "有括號未關閉，因此群組會延續到結尾。",
+        "description": "Note under the manager search box when an opening parenthesis ( is not closed"
+    },
+    "searchDiagnostic_unopenedGroup": {
+        "message": "右括號沒有對應的左括號，因此已略過。",
+        "description": "Note under the manager search box when a closing parenthesis ) has no opening one"
+    },
+    "searchDiagnostic_emptyGroup": {
+        "message": "有一對括號是空的，因此已略過。",
+        "description": "Note under the manager search box when parentheses have nothing in them: ()"
+    },
+    "searchDiagnostic_misplacedOr": {
+        "message": "OR 兩側都需要有搜尋字詞，因此已略過。",
+        "description": "Note under the manager search box when OR is first, last, or doubled. Keep OR as is: it is the word to type"
+    },
     "searchDiagnostic_tooLong": {
         "message": "只會搜尋前 $1 個字元。",
         "description": "Note under the manager search box; $1 is the longest search read"
@@ -3700,6 +3724,14 @@
     "searchDiagnostic_tooManyTerms": {
         "message": "只會使用前 $1 個搜尋字詞。",
         "description": "Note under the manager search box; $1 is how many terms are read"
+    },
+    "searchDiagnostic_tooDeep": {
+        "message": "括號最多巢狀 $1 層，其餘部分不會搜尋。",
+        "description": "Note under the manager search box; $1 is how deep parentheses may nest, such as 8"
+    },
+    "searchDiagnostic_tooManyBranches": {
+        "message": "一個 OR 最多連接 $1 個搜尋字詞，其餘部分不會搜尋。",
+        "description": "Note under the manager search box; $1 is how many terms one OR may join, such as 16. Keep OR as is"
     },
     "ai_folderRecommendation": {
         "message": "AI 資料夾推薦",

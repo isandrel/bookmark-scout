@@ -6,7 +6,8 @@
  * `filters.title` is the search box, in the search query language (`search-query.ts`) of the
  * `syntaxVersion` saved with it. A search saved before the language has no version: its text was
  * found as typed in the title or address, so it reads as one phrase (`legacyTitleSearch`), which
- * still finds every bookmark it found.
+ * still finds every bookmark it found. One saved in an older version is rewritten to read the same
+ * in the current one (`upgradeSearchText`).
  */
 
 import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
@@ -54,7 +55,7 @@ const filtersSchema = z.object({
 export const savedSearchQuerySchema = z.object({
   filters: filtersSchema,
   // The search query language version `filters.title` was saved in; absent before it existed.
-  syntaxVersion: z.literal(SEARCH_SYNTAX_VERSION).optional(),
+  syntaxVersion: searchSyntaxVersionSchema.optional(),
   sorting: z
     .array(z.object({ id: z.string(), desc: z.boolean() }))
     .max(SORTING_MAX_LENGTH)
@@ -76,8 +77,11 @@ export type SavedSearchFilters = {
 
 export type SavedSearchQuery = {
   filters: SavedSearchFilters;
-  /** The search query language version of `filters.title`; set whenever it is. */
-  syntaxVersion?: typeof SEARCH_SYNTAX_VERSION;
+  /**
+   * The search query language version of `filters.title`; set whenever it is, and the current one
+   * once read (`parseSavedSearchQuery`).
+   */
+  syntaxVersion?: SearchSyntaxVersion;
   sorting: Array<{ id: string; desc: boolean }>;
   /** Present when the search is limited to one folder; null is the top level. */
   folderId?: string | null;
@@ -179,15 +183,19 @@ export function legacyTitleSearch(text: string): string {
 
 /**
  * Rebuilds a query in canonical key and value order, reading a search box text saved before the
- * search query language as `legacyTitleSearch` does.
+ * search query language as `legacyTitleSearch` does, and one saved in an older version of it in
+ * the current one.
  */
 function normalizeQuery(query: SavedSearchQuery): SavedSearchQuery {
   const filters: SavedSearchFilters = {};
   for (const id of FILTER_IDS) {
     let value = query.filters[id];
     if (value === undefined) continue;
-    if (id === 'title' && query.syntaxVersion === undefined) {
-      value = legacyTitleSearch(value as string);
+    if (id === 'title') {
+      value =
+        query.syntaxVersion === undefined
+          ? legacyTitleSearch(value as string)
+          : upgradeSearchText(value as string, query.syntaxVersion);
     }
     const normalized = Array.isArray(value) ? uniqueSorted(value) : value;
     Object.assign(filters, { [id]: normalized });

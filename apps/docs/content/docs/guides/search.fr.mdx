@@ -36,8 +36,10 @@ Les champs de recherche de la fenêtre pop-up, du panneau latéral et du gestion
 - Chaque mot doit correspondre, chacun n'importe où : le titre, l'adresse web, le chemin du dossier, ou les étiquettes et le résumé du favori. `recettes soupe` trouve un favori nommé « Soupe » dans un dossier nommé « Recettes ».
 - Les guillemets gardent les mots ensemble : `"soupe de tomates"`.
 - Un `-` devant exclut ce qui correspond : `recettes -gâteau` ou `-tag:archive`.
+- `OR` en majuscules, entre deux termes, trouve l'un ou l'autre : `tag:react OR tag:vue`. Il lie plus fort que l'espace, donc `domain:github.com tag:react OR tag:vue` trouve les pages GitHub qui ont l'une des deux étiquettes. Un `or` en minuscules reste un mot à chercher.
+- Les parenthèses regroupent des termes : `domain:github.com (tag:react OR tag:vue) -tag:archived`. Un `-` devant un groupe exclut ce que le groupe trouve : `-(tag:old OR tag:archive)`. Les parenthèses à l'intérieur d'un mot, comme `f(x)`, sont recherchées comme du texte.
 - Un mot qui nomme un dossier trouve le dossier. Dans la fenêtre pop-up, ses favoris s'affichent à l'intérieur ; `folder:` liste tout ce qu'il contient.
-- Le texte qui n'est pas un opérateur est recherché tel que saisi, comme `C++`, `10:30` ou une adresse web. De même pour un opérateur que Bookmark Scout ne connaît pas, comme `foo:bar`. Une valeur qu'il ne sait pas lire, comme une date non valide, est ignorée.
+- Le texte qui n'est pas un opérateur est recherché tel que saisi, comme `C++`, `10:30` ou une adresse web. De même pour un opérateur que Bookmark Scout ne connaît pas, comme `foo:bar`. Une valeur qu'il ne sait pas lire, comme une date non valide, est ignorée. Une note sous le champ de recherche signale une parenthèse non fermée ou un `OR` sans terme d'un côté. Des parenthèses imbriquées très profondément ou une très longue liste de `OR` sont tronquées, avec une note.
 
 | Recherche | Trouve |
 | --- | --- |
@@ -53,6 +55,8 @@ Les champs de recherche de la fenêtre pop-up, du panneau latéral et du gestion
 | `has:tags` ou `has:summary` | Les éléments avec des étiquettes, ou avec un résumé |
 | `has:content` | Les favoris dont le texte de page est indexé |
 | `after:2026-01-31` ou `before:2026-01-31` | Les éléments ajoutés ce jour-là ou après, ou ce jour-là ou avant |
+| `tag:react OR tag:vue` | Les favoris qui correspondent à l'un ou l'autre côté ; `OR` s'écrit en majuscules |
+| `(tag:react OR tag:vue) -tag:old` | Des termes regroupés entre parenthèses : étiquetés react ou vue, et pas old |
 
 Les étiquettes et les résumés sont ceux que vous ajoutez dans **Détails du favori** ou que vous gardez des outils **Étiquetage automatique** et **Générateur de résumés**. Ils restent sur cet appareil.
 
@@ -98,7 +102,7 @@ Saisissez un nom dans **Nommez cette recherche** et cliquez sur **Enregistrer**.
 
 Pour en utiliser une, ouvrez **Recherches enregistrées** et choisissez-la. Ses filtres et son tri remplacent ceux en cours et, si elle était limitée à un dossier, le gestionnaire revient à ce dossier. Chaque entrée peut être renommée ou supprimée, et une suppression peut être annulée depuis la notification qui suit. Faites glisser une entrée par sa poignée pour changer l'ordre, ou ouvrez le menu de la poignée pour la déplacer au clavier.
 
-Le texte du champ de recherche est enregistré tel que saisi, opérateurs compris. Une recherche enregistrée avant que le champ de recherche ne lise les opérateurs cherchait son texte uniquement dans les titres et les adresses. Elle s'ouvre désormais avec ce texte entre guillemets lorsqu'il contient plusieurs mots ou un deux-points, et trouve donc toujours chaque favori qu'elle trouvait.
+Le texte du champ de recherche est enregistré tel que saisi, opérateurs compris. Une recherche enregistrée avant que le champ de recherche ne lise les opérateurs cherchait son texte uniquement dans les titres et les adresses. Elle s'ouvre désormais avec ce texte entre guillemets lorsqu'il contient plusieurs mots ou un deux-points, et trouve donc toujours chaque favori qu'elle trouvait. Une recherche enregistrée avant la prise en charge de `OR` et des parenthèses s'ouvre avec eux entre guillemets, pour la même raison.
 
 Une recherche enregistrée stocke la définition des filtres, jamais des copies de favoris : ses résultats correspondent donc toujours à l'état actuel de vos favoris. Si un dossier qu'elle cible a été supprimé, ce dossier est ignoré, les autres filtres s'appliquent toujours, et une notification indique combien de dossiers ont été ignorés.
 

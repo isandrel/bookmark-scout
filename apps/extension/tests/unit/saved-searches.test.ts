@@ -116,6 +116,24 @@ describe('saved search query', () => {
     );
   });
 
+  it('reads a search saved before OR and parentheses so it finds what it found (R07)', () => {
+    // In version 1, OR and "(draft)" were text; they are kept as text, in quotes.
+    expect(
+      parseSavedSearchQuery({
+        filters: { title: 'cats OR (draft)' },
+        syntaxVersion: 1,
+        sorting: [],
+      }),
+    ).toEqual(query({ title: 'cats "OR" "(draft)"' }));
+    // A search that reads the same in both versions keeps its text.
+    expect(
+      parseSavedSearchQuery({ filters: { title: 'tag:work f(x)' }, syntaxVersion: 1, sorting: [] }),
+    ).toEqual(query({ title: 'tag:work f(x)' }));
+    expect(parseSavedSearchQuery(query({ title: 'tag:a OR tag:b' }))).toEqual(
+      query({ title: 'tag:a OR tag:b' }),
+    );
+  });
+
   it('leaves out empty filters and the scope when results are not limited to a folder', () => {
     const captured = captureSavedSearchQuery({
       columnFilters: [

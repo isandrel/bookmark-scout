@@ -100,7 +100,7 @@ Une règle intelligente trouve des favoris avec une recherche, avec les mêmes m
 Dans les [paramètres](/settings#maintenance), sous **Règles intelligentes**, cliquez sur **Ajouter une règle**, ou sur **Partir d’un modèle** pour une règle qui étiquette les pages GitHub, les vidéos YouTube ou les tutoriels. Les modèles commencent désactivés.
 </Step>
 <Step>
-Donnez à la règle un nom et une recherche, comme `domain:github.com` ou `folder:Lecture -tag:lu`. L'éditeur indique combien de favoris elle trouve actuellement. Ajoutez des étiquettes séparées par des virgules, choisissez un dossier de destination, ou les deux, puis enregistrez.
+Donnez à la règle un nom et une recherche, comme `domain:github.com`, `folder:Lecture -tag:lu` ou `(domain:github.com OR domain:gitlab.com) -tag:archived`. L'éditeur indique combien de favoris elle trouve actuellement, ou ce qui ne va pas dans la recherche, comme une parenthèse non fermée ; une règle ne peut être enregistrée que si sa recherche se lit. Ajoutez des étiquettes séparées par des virgules, choisissez un dossier de destination, ou les deux, puis enregistrez.
 </Step>
 <Step>
 Dans la barre d'outils du gestionnaire, choisissez la portée sur la carte **Règles intelligentes** et cliquez sur **Exécuter**.
@@ -117,6 +117,7 @@ Bon à savoir :
 - **Annuler** dans le message qui suit l'application remet à la fois les déplacements et les étiquettes. Les déplacements forment une seule modification dans l'historique.
 - Les règles restent sur cet appareil et font partie de **Sauvegarder les paramètres**. Une règle restaurée sur un autre appareil ne déplace des favoris que si son dossier y existe ; sinon, ses déplacements sont bloqués jusqu'à ce que vous choisissiez de nouveau le dossier. Elle retrouve ce dossier par son chemin quand il y a un autre identifiant, tant qu’un seul dossier a ce chemin.
 - Avec **Étiqueter les nouveaux favoris** activé dans les paramètres, les règles actives ajoutent leurs étiquettes à chaque favori dès son ajout, depuis Bookmark Scout, l'étoile du navigateur, une autre extension ou la synchronisation, car le navigateur n'indique pas d'où vient un favori. Seules des étiquettes sont ajoutées ; le déplacement d'une règle attend une exécution que vous vérifiez. Les nombreux favoris ajoutés d'un coup (une synchronisation ou une importation) restent tels quels, tout comme un favori ajouté pendant que le paramètre était désactivé. Chaque étiquetage automatique figure dans les paramètres sous **Étiquetés automatiquement**, avec un Annuler qui retire ses étiquettes.
+- Une règle enregistrée avant que les recherches lisent `OR` et les parenthèses trouve toujours les mêmes favoris : ils sont lus comme du texte, entre guillemets.
 
 ## Chercher dans les pages [#search-inside-pages]
 

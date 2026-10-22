@@ -36,8 +36,10 @@ Le caselle di ricerca del popup, del riquadro laterale e della gestione preferit
 - Ogni parola deve corrispondere, ciascuna in un punto qualsiasi: il titolo, l'indirizzo web, il percorso della cartella o i tag e il riassunto del preferito. `recipe soup` trova un preferito chiamato "Soup" in una cartella chiamata "Recipes".
 - Le virgolette tengono insieme le parole: `"tomato soup"`.
 - Un `-` davanti esclude ciò che corrisponde: `recipe -cake` o `-tag:archive`.
+- `OR` in maiuscolo, tra due termini, trova l'uno o l'altro: `tag:react OR tag:vue`. Lega più dello spazio, quindi `domain:github.com tag:react OR tag:vue` trova le pagine GitHub con uno dei due tag. Un `or` in minuscolo è una parola da cercare come le altre.
+- Le parentesi raggruppano i termini: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Un `-` davanti a un gruppo esclude ciò che il gruppo trova: `-(tag:old OR tag:archive)`. Le parentesi dentro una parola, come `f(x)`, vengono cercate come testo.
 - Una parola che indica una cartella trova la cartella. Nel popup, i suoi preferiti compaiono al suo interno; `folder:` elenca tutto ciò che contiene.
-- Il testo che non è un operatore viene cercato così come l'hai digitato, ad esempio `C++`, `10:30` o un indirizzo web. Lo stesso vale per un operatore che Bookmark Scout non conosce, come `foo:bar`. Un valore che non riesce a interpretare, come una data non valida, viene ignorato.
+- Il testo che non è un operatore viene cercato così come l'hai digitato, ad esempio `C++`, `10:30` o un indirizzo web. Lo stesso vale per un operatore che Bookmark Scout non conosce, come `foo:bar`. Un valore che non riesce a interpretare, come una data non valida, viene ignorato. Una nota sotto la casella di ricerca avvisa quando una parentesi non è chiusa o un `OR` non ha nulla da un lato. Parentesi annidate troppo in profondità o un elenco di `OR` troppo lungo vengono troncati, con una nota.
 
 | Ricerca | Trova |
 | --- | --- |
@@ -53,6 +55,8 @@ Le caselle di ricerca del popup, del riquadro laterale e della gestione preferit
 | `has:tags` o `has:summary` | Elementi con tag, o con un riassunto |
 | `has:content` | Preferiti il cui testo della pagina è indicizzato |
 | `after:2026-01-31` o `before:2026-01-31` | Elementi aggiunti in quel giorno o dopo, oppure in quel giorno o prima |
+| `tag:react OR tag:vue` | I preferiti che corrispondono a uno dei due lati; `OR` va scritto in maiuscolo |
+| `(tag:react OR tag:vue) -tag:old` | Termini raggruppati tra parentesi: con il tag react o vue, e senza old |
 
 I tag e i riassunti sono quelli che aggiungi in **Dettagli preferito** o che conservi dagli strumenti **Tag automatici** e **Riassunti dei contenuti**. Restano su questo dispositivo.
 
@@ -98,7 +102,7 @@ Inserisci un nome in **Dai un nome a questa ricerca** e fai clic su **Salva**.
 
 Per usarne una, apri **Ricerche salvate** e sceglila. I suoi filtri e il suo ordinamento sostituiscono quelli correnti e, se era limitata a una cartella, la gestione preferiti torna a quella cartella. Ogni voce si può rinominare o eliminare, e un'eliminazione si può annullare dal messaggio che segue. Trascina una voce per la maniglia per cambiarne l'ordine, oppure apri il menu della maniglia per spostarla da tastiera.
 
-Il testo della casella di ricerca viene salvato come l'hai digitato, operatori inclusi. Una ricerca salvata prima che la casella di ricerca interpretasse gli operatori cercava il suo testo solo in titoli e indirizzi. Ora si apre con quel testo tra virgolette quando contiene più parole o i due punti, così trova ancora tutti i preferiti che trovava prima.
+Il testo della casella di ricerca viene salvato come l'hai digitato, operatori inclusi. Una ricerca salvata prima che la casella di ricerca interpretasse gli operatori cercava il suo testo solo in titoli e indirizzi. Ora si apre con quel testo tra virgolette quando contiene più parole o i due punti, così trova ancora tutti i preferiti che trovava prima. Una ricerca salvata prima che `OR` e le parentesi venissero letti si apre con questi tra virgolette, per lo stesso motivo.
 
 Una ricerca salvata archivia le definizioni dei filtri, mai copie dei preferiti, quindi i suoi risultati corrispondono sempre ai tuoi preferiti attuali. Se una cartella che indica è stata eliminata, quella cartella viene ignorata, gli altri filtri si applicano comunque e un messaggio indica quante cartelle sono state ignorate.
 

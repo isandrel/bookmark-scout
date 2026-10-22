@@ -9,6 +9,7 @@ import {
 } from '@/lib/bookmark-rules';
 import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
+import { readConfigToml } from '../config-files';
 
 const link = (id: string, parentId: string, title: string, url: string): BookmarkTreeNode => ({
   id,
@@ -180,6 +181,18 @@ describe('planBookmarkRules', () => {
     expect(root[0]?.blocked).toBe('missingFolder');
   });
 
+  it('combines terms with AND, OR, and NOT, in groups (R07)', () => {
+    const query = '(domain:github.com OR domain:docs.example.com) -title:gist';
+    expect(ids(plan([rule({ query, addTags: ['x'] })]))).toEqual(['d1', 'gh']);
+    // Rules still read the bookmark as it was: an OR rule and a plain one both match it.
+    const items = plan([
+      rule({ query: 'tag:read OR title:repo', addTags: ['later'] }),
+      rule({ query: '-(tag:read OR domain:example.com) repo', addTags: ['code'] }),
+    ]);
+    expect(items.find((item) => item.id === 'gh')).toMatchObject({ addTags: ['later', 'code'] });
+    expect(ids(items)).toEqual(['gh']);
+  });
+
   it('runs only enabled rules, and never on folders', () => {
     expect(plan([rule({ query: 'repo', addTags: ['x'], enabled: false })])).toEqual([]);
     expect(ids(plan([rule({ query: 'work', addTags: ['x'] })]))).toEqual(['d1', 'gh', 'ghsub']);
@@ -204,6 +217,39 @@ describe('parseBookmarkRules', () => {
     ]);
     expect(parsed.map((entry) => entry.id)).toEqual(['ok', 'second']);
     expect(parseBookmarkRules({ rules: [valid] })).toEqual([]);
+  });
+
+  it('keeps OR rules, and drops one whose search is unbalanced or past the limits (R07)', () => {
+    const search = readConfigToml('bookmarks/search.toml') as Record<string, { value: number }>;
+    const depth = search.max_group_depth?.value ?? 0;
+    const branches = search.max_or_branches?.value ?? 0;
+    const parsed = parseBookmarkRules([
+      { ...valid, id: 'or', query: 'domain:github.com (tag:react OR tag:vue) -tag:archived' },
+      { ...valid, id: 'unclosed', query: '(tag:react OR tag:vue' },
+      { ...valid, id: 'unopened', query: 'tag:react)' },
+      { ...valid, id: 'dangling', query: 'tag:react OR' },
+      { ...valid, id: 'deep', query: `${'('.repeat(depth + 1)}a${')'.repeat(depth + 1)}` },
+      {
+        ...valid,
+        id: 'wide',
+        query: Array.from({ length: branches + 1 }, (_, index) => `t${index}`).join(' OR '),
+      },
+    ]);
+    expect(parsed.map((entry) => entry.id)).toEqual(['or']);
+  });
+
+  it('keeps a rule saved before OR existed, rewritten to find the same bookmarks (R07)', () => {
+    const [old] = parseBookmarkRules([
+      { ...valid, id: 'v1', query: 'Repo OR (draft)', syntaxVersion: 1 },
+    ]);
+    expect(old).toMatchObject({ id: 'v1', query: 'Repo "OR" "(draft)"', syntaxVersion: 2 });
+    const [kept] = parseBookmarkRules([
+      { ...valid, id: 'v1-same', query: 'domain:github.com', syntaxVersion: 1 },
+    ]);
+    expect(kept).toMatchObject({
+      query: 'domain:github.com',
+      syntaxVersion: SEARCH_SYNTAX_VERSION,
+    });
   });
 
   it(`keeps at most ${MAX_BOOKMARK_RULES} rules`, () => {

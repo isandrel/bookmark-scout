@@ -3593,6 +3593,14 @@
         "message": "除外",
         "description": "Search syntax help: what a leading minus does (-word)"
     },
+    "searchHelp_or": {
+        "message": "どちらか一方",
+        "description": "Search syntax help: what OR between two terms does (tag:react OR tag:vue): one of them is enough"
+    },
+    "searchHelp_group": {
+        "message": "語句をまとめる",
+        "description": "Search syntax help: what parentheses do ((tag:react OR tag:vue) -tag:old): they group terms"
+    },
     "searchHelp_title": {
         "message": "タイトル内",
         "description": "Search syntax help: what title: does"
@@ -3665,6 +3673,22 @@
         "message": "引用符が閉じていないため、末尾までをひと続きとして扱います。",
         "description": "Note under the manager search box when a quote mark is not closed"
     },
+    "searchDiagnostic_unclosedGroup": {
+        "message": "かっこが閉じていないため、末尾までをひとまとまりとして扱います。",
+        "description": "Note under the manager search box when an opening parenthesis ( is not closed"
+    },
+    "searchDiagnostic_unopenedGroup": {
+        "message": "閉じかっこに対応する開きかっこがないため、除外します。",
+        "description": "Note under the manager search box when a closing parenthesis ) has no opening one"
+    },
+    "searchDiagnostic_emptyGroup": {
+        "message": "かっこの中が空のため、除外します。",
+        "description": "Note under the manager search box when parentheses have nothing in them: ()"
+    },
+    "searchDiagnostic_misplacedOr": {
+        "message": "OR の両側に語句が必要なため、除外します。",
+        "description": "Note under the manager search box when OR is first, last, or doubled. Keep OR as is: it is the word to type"
+    },
     "searchDiagnostic_tooLong": {
         "message": "最初の $1 文字だけを検索します。",
         "description": "Note under the manager search box; $1 is the longest search read"
@@ -3672,6 +3696,14 @@
     "searchDiagnostic_tooManyTerms": {
         "message": "最初の $1 個の語句だけを検索します。",
         "description": "Note under the manager search box; $1 is how many terms are read"
+    },
+    "searchDiagnostic_tooDeep": {
+        "message": "かっこの入れ子は $1 段までのため、残りは検索しません。",
+        "description": "Note under the manager search box; $1 is how deep parentheses may nest, such as 8"
+    },
+    "searchDiagnostic_tooManyBranches": {
+        "message": "1 つの OR で結べる語句は $1 個までのため、残りは検索しません。",
+        "description": "Note under the manager search box; $1 is how many terms one OR may join, such as 16. Keep OR as is"
     },
     "ai_folderRecommendation": {
         "message": "AI フォルダのおすすめ",

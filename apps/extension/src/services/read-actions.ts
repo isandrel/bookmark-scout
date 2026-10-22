@@ -76,10 +76,22 @@ function describeDiagnostic(diagnostic: SearchQueryDiagnostic): string {
       return `invalid date "${diagnostic.value}"`;
     case 'unclosed-quote':
       return 'a quote is not closed';
+    case 'unclosed-group':
+      return 'a parenthesis is not closed';
+    case 'unopened-group':
+      return 'a closing parenthesis has no opening one';
+    case 'empty-group':
+      return 'a pair of parentheses is empty';
+    case 'misplaced-or':
+      return 'an OR has no term on one side';
     case 'too-long':
       return `longer than ${diagnostic.limit} characters`;
     case 'too-many-terms':
       return `more than ${diagnostic.limit} terms`;
+    case 'too-deep':
+      return `parentheses nested more than ${diagnostic.limit} deep`;
+    case 'too-many-branches':
+      return `more than ${diagnostic.limit} terms joined by one OR`;
   }
 }
 

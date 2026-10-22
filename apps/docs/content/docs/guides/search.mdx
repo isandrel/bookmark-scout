@@ -36,8 +36,10 @@ The search boxes in the popup, side panel, and manager read a search the same wa
 - Every word must match, each anywhere: the title, the web address, the folder path, or the bookmark's tags and summary. `recipe soup` finds a bookmark named "Soup" in a folder named "Recipes".
 - Quotes keep words together: `"tomato soup"`.
 - A `-` in front leaves out what matches: `recipe -cake` or `-tag:archive`.
+- `OR` in capitals, between two terms, finds either one: `tag:react OR tag:vue`. It binds closer than the space, so `domain:github.com tag:react OR tag:vue` finds GitHub pages with either tag. A lowercase `or` is a word to find, as before.
+- Parentheses group terms: `domain:github.com (tag:react OR tag:vue) -tag:archived`. A `-` in front of a group leaves out what the group matches: `-(tag:old OR tag:archive)`. Parentheses inside a word, such as `f(x)`, are searched as text.
 - A word that names a folder finds the folder. In the popup, its bookmarks show inside it; `folder:` lists everything in it.
-- Text that is not an operator is searched as typed, such as `C++`, `10:30`, or a web address. So is an operator Bookmark Scout does not know, such as `foo:bar`. A value it cannot read, such as an invalid date, is skipped.
+- Text that is not an operator is searched as typed, such as `C++`, `10:30`, or a web address. So is an operator Bookmark Scout does not know, such as `foo:bar`. A value it cannot read, such as an invalid date, is skipped. A note under the search box says when a parenthesis is not closed or an `OR` has nothing on one side. Parentheses nested very deep, or a very long `OR` list, are cut short, with a note.
 
 | Search | Finds |
 | --- | --- |
@@ -53,6 +55,8 @@ The search boxes in the popup, side panel, and manager read a search the same wa
 | `has:tags` or `has:summary` | Items with tags, or with a summary |
 | `has:content` | Bookmarks whose page text is indexed |
 | `after:2026-01-31` or `before:2026-01-31` | Items added on or after that day, or on or before it |
+| `tag:react OR tag:vue` | Bookmarks that match either side; `OR` must be in capitals |
+| `(tag:react OR tag:vue) -tag:old` | Terms grouped in parentheses: tagged react or vue, and not old |
 
 Tags and summaries are the ones you add in **Bookmark Details** or keep from the **Auto-Tagging** and **Content Summarizer** tools. They stay on this device.
 
@@ -98,7 +102,7 @@ Enter a name in **Name this search** and click **Save**.
 
 To use one, open **Saved searches** and choose it. Its filters and sort replace the current ones, and if it was limited to one folder, the manager returns to that folder. Each entry can be renamed or deleted, and a deletion can be undone from the message that follows. Drag an entry by its handle to change the order, or open the handle's menu to move it from the keyboard.
 
-The search box text is saved as typed, operators included. A search saved before the search box read operators found its text in titles and addresses only. It now opens with that text in quotes where it has several words or a colon, so it still finds every bookmark it found.
+The search box text is saved as typed, operators included. A search saved before the search box read operators found its text in titles and addresses only. It now opens with that text in quotes where it has several words or a colon, so it still finds every bookmark it found. A search saved before `OR` and parentheses were read opens with them in quotes, for the same reason.
 
 A saved search stores the filter definitions, never copies of bookmarks, so its results always match your bookmarks as they are now. If a folder it names was deleted, that folder is skipped, the other filters still apply, and a message says how many folders were skipped.
 

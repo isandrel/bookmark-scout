@@ -99,6 +99,67 @@ test('a rule made in Settings tags and moves matching bookmarks after a review, 
   expect(await tagsOf(extensionWorker, ids.Gist as string)).toEqual(['DEV']);
 });
 
+test('a rule with OR and an excluded term is refused while unbalanced, then reviewed and applied', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E OR Rules', [
+    { title: 'Repo', url: 'https://github.com/org/repo' },
+    { title: 'Gist', url: 'https://gist.github.com/x' },
+    { title: 'Lab', url: 'https://gitlab.com/org/lab' },
+    { title: 'Recipe', url: 'https://food.e2e.invalid/r' },
+  ]);
+  const ids = seeded.ids as Record<string, string>;
+  await setSettings(extensionWorker, { bookmarkRulesDefaultScope: 'folder' });
+
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const panel = page.getByTestId('bookmark-rules');
+  await panel.getByRole('button', { name: 'Add rule' }).click();
+  const editor = page.getByRole('dialog', { name: 'New rule' });
+  await editor.getByRole('textbox', { name: 'Name' }).fill('Code hosts');
+  const query = editor.getByRole('textbox', { name: 'Bookmarks that match' });
+  await editor.getByRole('textbox', { name: 'Add tags' }).fill('code');
+  // An unclosed group is never saved: the editor says what is wrong.
+  await query.fill('(domain:github.com OR domain:gitlab.com -title:gist');
+  await expect(
+    editor.getByText('A parenthesis is not closed, so the group runs to the end.'),
+  ).toBeVisible();
+  await editor.getByRole('button', { name: 'Save' }).click();
+  await expect(
+    editor.getByText('This search cannot be read. Check its operators and dates.'),
+  ).toBeVisible();
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toBeFalsy();
+
+  await query.fill('(domain:github.com OR domain:gitlab.com) -title:gist');
+  await expect(editor).toContainText('Matches 2 bookmarks now');
+  await editor.getByRole('button', { name: 'Save' }).click();
+  await expect(editor).toHaveCount(0);
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toEqual([
+    expect.objectContaining({
+      query: '(domain:github.com OR domain:gitlab.com) -title:gist',
+      syntaxVersion: 2,
+      addTags: ['code'],
+    }),
+  ]);
+
+  await openTools(page, extensionId, seeded.folderId);
+  await toolCard(page, 'Smart Rules').getByRole('button', { name: 'Run', exact: true }).click();
+  const review = page.getByRole('dialog', { name: 'Smart Rules' });
+  await expect(review.getByRole('radio', { name: 'Changes (2)' })).toBeVisible();
+  const row = (title: string) => review.getByTestId('rule-item').filter({ hasText: title });
+  await expect(row('Repo')).toContainText('Add tags: code');
+  await expect(row('Lab')).toContainText('Add tags: code');
+  await expect(row('Gist')).toHaveCount(0);
+  await expect(row('Recipe')).toHaveCount(0);
+
+  await review.getByRole('button', { name: 'Apply 2 changes' }).click();
+  await expect(review).toHaveCount(0);
+  await expect.poll(() => tagsOf(extensionWorker, ids.Lab as string)).toEqual(['code']);
+  expect(await tagsOf(extensionWorker, ids.Repo as string)).toEqual(['code']);
+  expect(await tagsOf(extensionWorker, ids.Gist as string)).toEqual([]);
+});
+
 test('templates start turned off, and a run with no rule on says so', async ({
   extensionId,
   extensionWorker,

@@ -3637,6 +3637,14 @@
         "message": "Escludi",
         "description": "Search syntax help: what a leading minus does (-word)"
     },
+    "searchHelp_or": {
+        "message": "L'uno o l'altro",
+        "description": "Search syntax help: what OR between two terms does (tag:react OR tag:vue): one of them is enough"
+    },
+    "searchHelp_group": {
+        "message": "Raggruppa termini",
+        "description": "Search syntax help: what parentheses do ((tag:react OR tag:vue) -tag:old): they group terms"
+    },
     "searchHelp_title": {
         "message": "Nei titoli",
         "description": "Search syntax help: what title: does"
@@ -3709,6 +3717,22 @@
         "message": "Una virgoletta non è chiusa, quindi la frase arriva fino alla fine.",
         "description": "Note under the manager search box when a quote mark is not closed"
     },
+    "searchDiagnostic_unclosedGroup": {
+        "message": "Una parentesi non è chiusa, quindi il gruppo arriva fino alla fine.",
+        "description": "Note under the manager search box when an opening parenthesis ( is not closed"
+    },
+    "searchDiagnostic_unopenedGroup": {
+        "message": "Una parentesi chiusa non ha quella aperta, quindi viene ignorata.",
+        "description": "Note under the manager search box when a closing parenthesis ) has no opening one"
+    },
+    "searchDiagnostic_emptyGroup": {
+        "message": "Una coppia di parentesi è vuota, quindi viene ignorata.",
+        "description": "Note under the manager search box when parentheses have nothing in them: ()"
+    },
+    "searchDiagnostic_misplacedOr": {
+        "message": "OR richiede un termine su ciascun lato, quindi viene ignorato.",
+        "description": "Note under the manager search box when OR is first, last, or doubled. Keep OR as is: it is the word to type"
+    },
     "searchDiagnostic_tooLong": {
         "message": "Vengono cercati solo i primi $1 caratteri.",
         "description": "Note under the manager search box; $1 is the longest search read"
@@ -3716,6 +3740,14 @@
     "searchDiagnostic_tooManyTerms": {
         "message": "Vengono cercati solo i primi $1 termini.",
         "description": "Note under the manager search box; $1 is how many terms are read"
+    },
+    "searchDiagnostic_tooDeep": {
+        "message": "Le parentesi si annidano al massimo su $1 livelli, quindi il resto non viene cercato.",
+        "description": "Note under the manager search box; $1 is how deep parentheses may nest, such as 8"
+    },
+    "searchDiagnostic_tooManyBranches": {
+        "message": "Un OR unisce al massimo $1 termini, quindi il resto non viene cercato.",
+        "description": "Note under the manager search box; $1 is how many terms one OR may join, such as 16. Keep OR as is"
     },
     "ai_folderRecommendation": {
         "message": "Cartella suggerita dall'IA",

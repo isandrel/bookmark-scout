@@ -12,7 +12,7 @@ self = "nextCursor from the previous result, for the next page"
 [search_bookmarks]
 agent_description = "Search the user's bookmarks by keywords in titles, URLs, folder paths, saved tags, and summaries, and filter by folder (with its subfolders), tags, site, or date added. Give a query, a filter, or both. Results are best first, or newest first without a query."
 query = "Space-separated keywords; a bookmark matching any of them is a result, more matches rank higher"
-filter_query = "Only bookmarks matching this search, in the language of the extension's search boxes: every term must match. Plain words and \"quoted phrases\" look in the title, URL, folder path, tags, and summary; -term excludes; title:, url:, domain:, folder: (a whole folder name, or \"A / B\"), tag: (a whole tag), summary:, is:untagged, has:tags, has:summary, after:YYYY-MM-DD, before:YYYY-MM-DD"
+filter_query = "Only bookmarks matching this search, in the language of the extension's search boxes: every term must match. Plain words and \"quoted phrases\" look in the title, URL, folder path, tags, and summary; -term excludes; title:, url:, domain:, folder: (a whole folder name, or \"A / B\"), tag: (a whole tag), summary:, is:untagged, has:tags, has:summary, after:YYYY-MM-DD, before:YYYY-MM-DD; a OR b (OR in capitals) needs either one; parentheses group terms, as in domain:github.com (tag:react OR tag:vue), and -( ) excludes a group"
 filter_query_hint = "Fix the term or leave it out. Plain text needs no operator."
 tags = "Only bookmarks with all of these tags"
 domain = "Only bookmarks on this site, such as github.com"
