@@ -1,0 +1,29 @@
+# The search query every search box shares: what a query may hold and how a match ranks. Read by
+# src/lib/search-query.ts (limits) and src/lib/search-documents.ts (weights).
+
+# Longest query read, in characters; the rest is ignored and the search says so. A pasted page
+# of text would otherwise be thousands of terms to check against every bookmark.
+max_query_length = { value = 500, min = 50, max = 5000 }
+# Most terms a query keeps; later ones are ignored and the search says so.
+max_terms = { value = 32, min = 1, max = 256 }
+
+# How much a term counts toward a result's rank, by where it matched. A term that matches in
+# several places counts its best one. Results rank by the sum over the query's terms; equal sums
+# keep the library's own order. A starting point, not a measured optimum.
+[weights]
+# The whole title is the term.
+title_exact = 100
+# The title starts with the term.
+title_prefix = 60
+# The term is elsewhere in the title.
+title = 40
+# A tag is the term.
+tag = 30
+# A folder the item is in has the term in its name.
+folder = 20
+# The site's address has the term.
+domain = 15
+# The rest of the address has the term.
+url = 10
+# The saved summary has the term.
+summary = 5
