@@ -116,7 +116,7 @@ function replaceTree(data: BookmarkTreeNode[]): void {
   if (useBookmarkStore.getState().debouncedQuery) useBookmarkStore.getState().applyFilter();
 }
 
-type QueryFilter = typeof import('@/lib/bookmark-query-filter');
+type QueryFilter = typeof import('@/lib/bookmark-query-filter.lazy');
 
 /** The search query language filter, once it and the tags and summaries it matches are loaded. */
 let queryFilter: QueryFilter | undefined;
@@ -130,7 +130,7 @@ let loadingQueryFilter = false;
 function loadQueryFilter(): void {
   if (loadingQueryFilter) return;
   loadingQueryFilter = true;
-  import('@/lib/bookmark-query-filter')
+  import('@/lib/bookmark-query-filter.lazy')
     .then((filter) => {
       filter.observeSearchMetadata((bookmarkMetadata) => {
         queryFilter = filter;

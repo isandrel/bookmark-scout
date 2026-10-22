@@ -181,8 +181,8 @@ export function filterTree(
 
 /**
  * The tree filtered by titles, searched as typed with Match case, Whole word, or regular
- * expressions (`usesTitleSearch`). Without them, `bookmark-query-filter.ts` reads the query in the
- * search query language.
+ * expressions (`usesTitleSearch`). Without them, `bookmark-query-filter.lazy.ts` reads the query
+ * in the search query language.
  */
 export function filterBookmarkTree(
   nodes: readonly BookmarkTreeNode[],

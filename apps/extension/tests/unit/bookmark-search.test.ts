@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
-import { filterBookmarkTreeByQuery } from '@/lib/bookmark-query-filter';
+import { filterBookmarkTreeByQuery } from '@/lib/bookmark-query-filter.lazy';
 import {
   countSearchMatches,
   filterBookmarkTree,
