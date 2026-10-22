@@ -20,7 +20,7 @@ export function ToolResultsDialog({
           <DialogTitle>{title}</DialogTitle>
           {description ? <DialogDescription>{description}</DialogDescription> : null}
         </DialogHeader>
-        <div className="max-h-[65vh] overflow-y-auto pr-1">{children}</div>
+        <div className="max-h-[65vh] overflow-x-hidden overflow-y-auto pr-1">{children}</div>
       </DialogContent>
     </Dialog>
   );

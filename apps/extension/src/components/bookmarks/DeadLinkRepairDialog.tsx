@@ -31,6 +31,15 @@ const ISSUE_KEYS = {
   failed: 'tools_deadLinkRepairIssueFailed',
 } as const satisfies Record<DeadLinkRepairIssue['reason'], string>;
 
+/** The groups the review lists, in order; the choices a batch can set. */
+const REPAIR_GROUPS = ['dead', 'check', 'redirect'] as const satisfies readonly DeadLinkGroup[];
+const BATCH_CHOICES = [
+  'keep',
+  'delete',
+  'redirect',
+  'archive',
+] as const satisfies readonly DeadLinkRepairChoice[];
+
 /** Confirmed dead links first, then links that need a manual check, then redirects. */
 function reviewRank(item: DeadLinkResultItem): number {
   if (isConfirmedDeadLink(item)) return 0;
@@ -70,6 +79,7 @@ function describeOutcome(outcome: DeadLinkRepairOutcome): string {
 
 export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRepairDialogProps) {
   const [choices, setChoices] = useState<Record<string, ChoiceState>>({});
+  const [group, setGroup] = useState<DeadLinkGroup | 'all'>('all');
 
   const candidates = useMemo(
     () =>
@@ -80,10 +90,17 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
     [result],
   );
 
-  // Every review starts with all links kept, so nothing changes without a choice.
+  // Every review starts with all links kept and none selected, so nothing changes without a choice.
   useEffect(() => {
-    if (result) setChoices({});
+    if (!result) return;
+    setChoices({});
+    setGroup('all');
   }, [result]);
+  const noneSelected = useMemo<string[]>(() => [], []);
+  const { selected, toggle, setMany } = useIdSelection(noneSelected);
+  const shown = candidates.filter((item) => inDeadLinkGroup(item, group));
+  const shownIds = shown.map((item) => item.id);
+  const selectedShown = shownIds.filter((id) => selected.has(id));
 
   const stateFor = (item: DeadLinkResultItem): ChoiceState =>
     choices[item.id] ?? { choice: 'keep', editedUrl: item.redirectUrl ?? item.url };
@@ -96,6 +113,16 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
 
   const update = (item: DeadLinkResultItem, changes: Partial<ChoiceState>) =>
     setChoices((previous) => ({ ...previous, [item.id]: { ...stateFor(item), ...changes } }));
+  /** Sets one choice on every selected link shown that offers it (a redirect needs a target). */
+  const setSelectedChoice = (choice: DeadLinkRepairChoice) =>
+    setChoices((previous) => {
+      const next = { ...previous };
+      for (const item of shown) {
+        if (!selected.has(item.id) || !availableChoices(item).includes(choice)) continue;
+        next[item.id] = { ...stateFor(item), choice };
+      }
+      return next;
+    });
 
   const apply = async (): Promise<ReviewApplyReport> => {
     const applied = await applyDeadLinkRepairs(repairItems);
@@ -164,91 +191,151 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
         candidates.length === 0 ? (
           <ToolEmptyState message={t('state_noDeadLinksFound')} />
         ) : (
-          <ul className="space-y-3">
-            {candidates.map((item, index) => {
-              const state = stateFor(item);
-              const title = getBookmarkDisplayTitle(item.title);
-              const newUrl = resolveRepairUrl(repairItems[index]);
-              const options = availableChoices(item);
-              return (
-                <li
-                  key={item.id}
-                  data-testid="dead-link-repair-item"
-                  className="space-y-2 rounded-lg border p-3 text-sm"
+          <div className="space-y-3">
+            <DeadLinkGroupFilter
+              items={candidates}
+              value={group}
+              onValueChange={setGroup}
+              groups={REPAIR_GROUPS}
+            />
+            <div
+              data-testid="dead-link-repair-batch"
+              className="flex flex-wrap items-center gap-2 rounded-lg bg-muted/40 p-2 text-xs"
+            >
+              <Checkbox
+                checked={selectedShown.length > 0 && selectedShown.length === shownIds.length}
+                indeterminate={selectedShown.length > 0 && selectedShown.length < shownIds.length}
+                onCheckedChange={(checked) => setMany(shownIds, checked === true)}
+                aria-label={t('tools_deadLinkSelectShown')}
+                disabled={applying}
+              />
+              <span className="text-muted-foreground">
+                {t('tools_deadLinkSelectedCount', String(selectedShown.length))}
+              </span>
+              <Select
+                value={null}
+                onValueChange={(value) => {
+                  if (value !== null) setSelectedChoice(value as DeadLinkRepairChoice);
+                }}
+                items={BATCH_CHOICES.map((choice) => ({
+                  value: choice,
+                  label: t(CHOICE_LABEL_KEYS[choice]),
+                }))}
+                disabled={applying || selectedShown.length === 0}
+              >
+                <SelectTrigger
+                  className="ml-auto h-8 w-full text-xs sm:w-56"
+                  aria-label={t('tools_deadLinkSetSelected')}
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-medium">{title}</span>
-                    <div className="flex flex-shrink-0 items-center gap-1">
-                      <DeadLinkCategoryBadge item={item} />
-                      <Badge variant={item.status === 'redirect' ? 'secondary' : 'destructive'}>
-                        {t(`tools_deadLinkStatus_${item.status}`)}
-                      </Badge>
-                    </div>
-                  </div>
-                  <p className="break-all text-xs text-muted-foreground">
-                    <UrlLink href={item.url} />
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.folderPath || t('tools_rootFolder')}
-                  </p>
-                  <p className="break-all text-xs text-muted-foreground">
-                    {describeDeadLink(item)}
-                  </p>
-                  <Select
-                    value={state.choice}
-                    onValueChange={(value) => {
-                      if (value !== null) update(item, { choice: value as DeadLinkRepairChoice });
-                    }}
-                    items={options.map((option) => ({
-                      value: option,
-                      label: t(CHOICE_LABEL_KEYS[option]),
-                    }))}
-                    disabled={applying}
+                  <SelectValue placeholder={t('tools_deadLinkSetSelected')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {BATCH_CHOICES.map((choice) => (
+                    <SelectItem key={choice} value={choice}>
+                      {t(CHOICE_LABEL_KEYS[choice])}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <ul className="space-y-3">
+              {shown.map((item) => {
+                const state = stateFor(item);
+                const title = getBookmarkDisplayTitle(item.title);
+                const newUrl = resolveRepairUrl(toRepairItem(item, state));
+                const options = availableChoices(item);
+                return (
+                  <li
+                    key={item.id}
+                    data-testid="dead-link-repair-item"
+                    className="flex min-w-0 gap-3 rounded-lg border p-3 text-sm"
                   >
-                    <SelectTrigger
-                      className="h-8 w-full text-xs sm:w-72"
-                      aria-label={t('tools_deadLinkRepairAction', title)}
-                    >
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {options.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {t(CHOICE_LABEL_KEYS[option])}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {state.choice === 'edit' ? (
-                    <div className="space-y-1">
-                      <Input
-                        value={state.editedUrl}
-                        onChange={(event) => update(item, { editedUrl: event.target.value })}
-                        aria-label={t('tools_deadLinkRepairNewUrl', title)}
-                        aria-invalid={newUrl === undefined}
+                    <Checkbox
+                      className="mt-0.5"
+                      checked={selected.has(item.id)}
+                      onCheckedChange={(checked) => toggle(item.id, checked === true)}
+                      aria-label={t('tools_deadLinkSelectItem', title)}
+                      disabled={applying}
+                    />
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="min-w-0 font-medium [overflow-wrap:anywhere]">
+                          {title}
+                        </span>
+                        <div className="flex flex-shrink-0 items-center gap-1">
+                          <DeadLinkCategoryBadge item={item} />
+                          <Badge variant={item.status === 'redirect' ? 'secondary' : 'destructive'}>
+                            {t(`tools_deadLinkStatus_${item.status}`)}
+                          </Badge>
+                        </div>
+                      </div>
+                      <p className="break-all text-xs text-muted-foreground">
+                        <UrlLink href={item.url} />
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.folderPath || t('tools_rootFolder')}
+                      </p>
+                      <p className="break-all text-xs text-muted-foreground">
+                        <DeadLinkDescription item={item} />
+                      </p>
+                      <Select
+                        value={state.choice}
+                        onValueChange={(value) => {
+                          if (value !== null)
+                            update(item, { choice: value as DeadLinkRepairChoice });
+                        }}
+                        items={options.map((option) => ({
+                          value: option,
+                          label: t(CHOICE_LABEL_KEYS[option]),
+                        }))}
                         disabled={applying}
-                        className="h-8 text-xs"
-                      />
-                      {newUrl === undefined ? (
-                        <p className="text-xs text-destructive-text">
-                          {t('tools_deadLinkRepairInvalidUrl')}
+                      >
+                        <SelectTrigger
+                          className="h-8 w-full text-xs sm:w-72"
+                          aria-label={t('tools_deadLinkRepairAction', title)}
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {t(CHOICE_LABEL_KEYS[option])}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {state.choice === 'edit' ? (
+                        <div className="space-y-1">
+                          <Input
+                            value={state.editedUrl}
+                            onChange={(event) => update(item, { editedUrl: event.target.value })}
+                            aria-label={t('tools_deadLinkRepairNewUrl', title)}
+                            aria-invalid={newUrl === undefined}
+                            disabled={applying}
+                            className="h-8 text-xs"
+                          />
+                          {newUrl === undefined ? (
+                            <p className="text-xs text-destructive-text">
+                              {t('tools_deadLinkRepairInvalidUrl')}
+                            </p>
+                          ) : null}
+                        </div>
+                      ) : newUrl ? (
+                        <p className="break-all rounded-md bg-success-wash p-2 text-xs text-success">
+                          {t('tools_deadLinkRepairWillChange', newUrl)}
+                        </p>
+                      ) : null}
+                      {state.choice === 'archive' ? (
+                        <p className="text-xs text-muted-foreground">
+                          {t('tools_deadLinkRepairArchiveNote')}
                         </p>
                       ) : null}
                     </div>
-                  ) : newUrl ? (
-                    <p className="break-all rounded-md bg-success-wash p-2 text-xs text-success">
-                      {t('tools_deadLinkRepairWillChange', newUrl)}
-                    </p>
-                  ) : null}
-                  {state.choice === 'archive' ? (
-                    <p className="text-xs text-muted-foreground">
-                      {t('tools_deadLinkRepairArchiveNote')}
-                    </p>
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         )
       }
     </ReviewApplyDialog>

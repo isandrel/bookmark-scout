@@ -80,7 +80,7 @@ async function openRepairReview(page: Page, extensionId: string, folderId: strin
   await expect(results.getByTestId('dead-link-summary')).toContainText(
     'Confirmed dead: 3. Need a manual check: 1. Redirected: 1.',
   );
-  await results.getByRole('button', { name: 'Review repairs' }).click();
+  await results.getByRole('button', { name: 'Fix or remove links' }).click();
   const review = page.getByRole('dialog', { name: 'Review dead-link repairs' });
   await expect(review).toBeVisible();
   return review;
@@ -222,7 +222,7 @@ test('cancelling the review leaves every bookmark unchanged', async ({
   await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
   await page
     .getByRole('dialog', { name: 'Check Dead Links' })
-    .getByRole('button', { name: 'Review repairs' })
+    .getByRole('button', { name: 'Fix or remove links' })
     .click();
   await expect(review.getByTestId('dead-link-repair-summary')).toHaveText(
     'Delete: 0. Replace URL: 0. Keep: 5.',
@@ -322,4 +322,76 @@ test('a partial repair withdraws Undo from the review and the toast when the und
     'Renamed Page',
     'Private',
   ]);
+});
+
+test('results and repairs filter by group, and a batch deletes every selected link', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedBrokenLinks(extensionWorker, 'E2E Repair Batch');
+  // A long unbroken title and address must wrap instead of widening the dialogs.
+  const long = 'x'.repeat(400);
+  await extensionWorker.evaluate(
+    ({ parentId, title, url }) => chrome.bookmarks.create({ parentId, title, url }),
+    { parentId: folder.folderId, title: long, url: `${site.origin}/missing-${long}` },
+  );
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
+  const results = page.getByRole('dialog', { name: 'Check Dead Links' });
+  const groups = results.getByRole('radio');
+  await expect(groups).toHaveText([
+    'All (7)',
+    'Confirmed dead (4)',
+    'Check manually (1)',
+    'Redirected (1)',
+    'OK (1)',
+  ]);
+  const scroller = (dialog: typeof results) =>
+    dialog
+      .locator('.overflow-y-auto')
+      .first()
+      .evaluate((node) => node.scrollWidth - node.clientWidth);
+  expect(await scroller(results)).toBe(0);
+
+  await results.getByRole('radio', { name: 'Redirected (1)' }).click();
+  await expect(results.locator('[data-slot="tool-result-row"]')).toHaveCount(1);
+  // The target is a link.
+  await expect(results.locator('[data-slot="dead-link-redirect"]')).toHaveAttribute(
+    'href',
+    `${site.origin}/plain`,
+  );
+
+  await results.getByRole('button', { name: 'Fix or remove links' }).click();
+  const review = page.getByRole('dialog', { name: 'Review dead-link repairs' });
+  await expect(review.getByRole('radio')).toHaveText([
+    'All (6)',
+    'Confirmed dead (4)',
+    'Check manually (1)',
+    'Redirected (1)',
+  ]);
+  expect(await scroller(review)).toBe(0);
+  await review.getByRole('radio', { name: 'Confirmed dead (4)' }).click();
+  await expect(review.getByTestId('dead-link-repair-item')).toHaveCount(4);
+  await expect(review.getByRole('combobox', { name: 'Set selected to…' })).toBeDisabled();
+  await review.getByRole('checkbox', { name: 'Select all shown' }).click();
+  await expect(review.getByTestId('dead-link-repair-batch')).toContainText('4 selected');
+  await page.screenshot({ path: test.info().outputPath('dead-link-batch.png') });
+  await review.getByRole('combobox', { name: 'Set selected to…' }).click();
+  await page
+    .getByRole('listbox')
+    .filter({ visible: true })
+    .getByRole('option', { name: 'Delete bookmark', exact: true })
+    .click();
+  await expect(review.getByTestId('dead-link-repair-summary')).toHaveText(
+    'Delete: 4. Replace URL: 0. Keep: 2.',
+  );
+  // One link can still be changed on its own.
+  await choose(page, 'Refused', 'Keep as is');
+  await review.getByRole('button', { name: 'Apply 3 changes' }).click();
+  await expect
+    .poll(async () =>
+      (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title),
+    )
+    .toEqual(['Plain', 'Moved', 'Refused', 'Private']);
 });

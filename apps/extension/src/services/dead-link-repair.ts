@@ -46,6 +46,28 @@ export type DeadLinkRepairOutcome = {
   expiresAt: number;
 };
 
+/** The groups a review shows results in, in this order. */
+export const DEAD_LINK_GROUPS = ['dead', 'check', 'redirect', 'ok', 'skipped'] as const;
+export type DeadLinkGroup = (typeof DEAD_LINK_GROUPS)[number];
+
+/**
+ * Which group a result is shown in: confirmed dead, needs a manual check (any other failure),
+ * redirected, reachable, or not checked (not a web address).
+ */
+export function deadLinkGroup(
+  item: Pick<DeadLinkResultItem, 'status' | 'category'>,
+): DeadLinkGroup {
+  if (isConfirmedDeadLink(item)) return 'dead';
+  switch (item.status) {
+    case 'redirect':
+    case 'ok':
+    case 'skipped':
+      return item.status;
+    default:
+      return 'check';
+  }
+}
+
 /** Results the review lists: failures, timeouts, and redirects. */
 export function isDeadLinkRepairCandidate(item: Pick<DeadLinkResultItem, 'status'>): boolean {
   return item.status === 'error' || item.status === 'timeout' || item.status === 'redirect';

@@ -1,5 +1,5 @@
 import { Info } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 
 const HTTP_FAILURE_LABEL_KEYS: Partial<Record<DeadLinkCategory, string>> = {
   notFound: 'tools_deadLinkCategory_notFound',
@@ -26,15 +26,20 @@ function isSameSite(url: string, otherUrl: string): boolean {
   return site !== null && site === getUrlSite(otherUrl);
 }
 
+/** The message naming where a redirect goes, as `$1`. */
+function redirectMessageKey(item: DeadLinkResultItem & { redirectUrl: string }): MessageKey {
+  return isSameSite(item.url, item.redirectUrl)
+    ? 'qaManager_redirectSameSite'
+    : 'tools_deadLinkRedirectsTo';
+}
+
 export function describeDeadLink(item: DeadLinkResultItem): string {
   switch (item.status) {
     case 'ok':
       return t('tools_deadLinkReachable');
     case 'redirect':
       if (!item.redirectUrl) return t('tools_deadLinkRedirected');
-      return isSameSite(item.url, item.redirectUrl)
-        ? t('qaManager_redirectSameSite', item.redirectUrl)
-        : t('tools_deadLinkRedirectsTo', item.redirectUrl);
+      return t(redirectMessageKey({ ...item, redirectUrl: item.redirectUrl }), item.redirectUrl);
     case 'timeout':
       return t('tools_deadLinkTimedOut');
     case 'invalid':
@@ -53,6 +58,77 @@ export function describeDeadLink(item: DeadLinkResultItem): string {
       return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
     }
   }
+}
+
+/** `describeDeadLink`, with the address a redirect goes to as a link. */
+export function DeadLinkDescription({ item }: { item: DeadLinkResultItem }) {
+  const { redirectUrl } = item;
+  if (item.status !== 'redirect' || !redirectUrl) return describeDeadLink(item);
+  return (
+    <RichMessage
+      messageKey={redirectMessageKey({ ...item, redirectUrl })}
+      values={[<UrlLink key="target" href={redirectUrl} data-slot="dead-link-redirect" />]}
+    />
+  );
+}
+
+const DEAD_LINK_GROUP_LABEL_KEYS = {
+  dead: 'tools_deadLinkGroup_dead',
+  check: 'tools_deadLinkGroup_check',
+  redirect: 'tools_deadLinkGroup_redirect',
+  ok: 'tools_deadLinkGroup_ok',
+  skipped: 'tools_deadLinkGroup_skipped',
+} as const satisfies Record<DeadLinkGroup, string>;
+
+/**
+ * Which group of dead-link results to show, with each group's count; groups with none are left
+ * out. `all` shows every result.
+ */
+export function DeadLinkGroupFilter({
+  items,
+  value,
+  onValueChange,
+  groups = DEAD_LINK_GROUPS,
+}: {
+  items: readonly DeadLinkResultItem[];
+  value: DeadLinkGroup | 'all';
+  onValueChange: (value: DeadLinkGroup | 'all') => void;
+  groups?: readonly DeadLinkGroup[];
+}) {
+  const labelId = useId();
+  const counts = new Map<DeadLinkGroup, number>();
+  for (const item of items) {
+    const group = deadLinkGroup(item);
+    counts.set(group, (counts.get(group) ?? 0) + 1);
+  }
+  const options = [
+    { value: 'all', label: t('tools_deadLinkGroup_all', String(items.length)) },
+    ...groups
+      .filter((group) => counts.has(group))
+      .map((group) => ({
+        value: group,
+        label: t(DEAD_LINK_GROUP_LABEL_KEYS[group], String(counts.get(group))),
+      })),
+  ];
+  return (
+    <>
+      <span id={labelId} className="sr-only">
+        {t('tools_deadLinkGroupLabel')}
+      </span>
+      <SegmentedControl
+        aria-labelledby={labelId}
+        value={value}
+        options={options}
+        className="h-auto flex-wrap"
+        onValueChange={(next) => onValueChange(next as DeadLinkGroup | 'all')}
+      />
+    </>
+  );
+}
+
+/** Whether a result belongs to the group a filter shows. */
+export function inDeadLinkGroup(item: DeadLinkResultItem, group: DeadLinkGroup | 'all'): boolean {
+  return group === 'all' || deadLinkGroup(item) === group;
 }
 
 function describeMetadata(item: MetadataFetchResultItem): string {
@@ -117,19 +193,20 @@ export function ToolResultRow({
   const details = (
     <>
       <div className="flex items-center justify-between gap-2">
-        <span className="font-medium">{title}</span>
+        {/* Long unbroken titles wrap anywhere, so they never widen the dialog. */}
+        <span className="min-w-0 font-medium [overflow-wrap:anywhere]">{title}</span>
         {badges ? <div className="flex flex-shrink-0 items-center gap-1">{badges}</div> : null}
       </div>
       {children}
     </>
   );
   return leading ? (
-    <div data-slot="tool-result-row" className="flex gap-3 rounded-lg border p-3 text-sm">
+    <div data-slot="tool-result-row" className="flex min-w-0 gap-3 rounded-lg border p-3 text-sm">
       {leading}
       <div className="min-w-0 flex-1 space-y-2">{details}</div>
     </div>
   ) : (
-    <div data-slot="tool-result-row" className="space-y-2 rounded-lg border p-3 text-sm">
+    <div data-slot="tool-result-row" className="min-w-0 space-y-2 rounded-lg border p-3 text-sm">
       {details}
     </div>
   );
@@ -366,11 +443,11 @@ export function DeadLinkResultsView({
   /** Opens the reviewed repair workflow for failed and redirected links. */
   onReview?: () => void;
 }) {
-  const confirmed = result?.items.filter(isConfirmedDeadLink).length ?? 0;
-  const needsCheck =
-    result?.items.filter((item) => item.category && !isConfirmedDeadLink(item)).length ?? 0;
-  const redirected = result?.items.filter((item) => item.status === 'redirect').length ?? 0;
-  const repairable = result?.items.filter(isDeadLinkRepairCandidate).length ?? 0;
+  const [group, setGroup] = useState<DeadLinkGroup | 'all'>('all');
+  const items = result?.items ?? [];
+  const count = (wanted: DeadLinkGroup) =>
+    items.filter((item) => deadLinkGroup(item) === wanted).length;
+  const repairable = items.filter(isDeadLinkRepairCandidate).length;
   return result?.items.length ? (
     <div className="space-y-3">
       <div
@@ -378,7 +455,11 @@ export function DeadLinkResultsView({
         className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/40 p-3 text-sm"
       >
         <span>
-          {t('tools_deadLinkSummary', [String(confirmed), String(needsCheck), String(redirected)])}
+          {t('tools_deadLinkSummary', [
+            String(count('dead')),
+            String(count('check')),
+            String(count('redirect')),
+          ])}
         </span>
         {onReview && repairable > 0 ? (
           <Button size="sm" onClick={onReview}>
@@ -386,29 +467,34 @@ export function DeadLinkResultsView({
           </Button>
         ) : null}
       </div>
-      {result.items.map((item) => (
-        <ToolResultRow
-          key={item.id}
-          title={getBookmarkDisplayTitle(item.title)}
-          badges={
-            <>
-              <DeadLinkCategoryBadge item={item} />
-              <Badge
-                variant={
-                  item.status === 'ok' || item.status === 'skipped' ? 'secondary' : 'destructive'
-                }
-              >
-                {t(`tools_deadLinkStatus_${item.status}`)}
-              </Badge>
-            </>
-          }
-        >
-          <ResultLine>
-            <UrlLink href={item.url} />
-          </ResultLine>
-          <ResultLine>{describeDeadLink(item)}</ResultLine>
-        </ToolResultRow>
-      ))}
+      <DeadLinkGroupFilter items={items} value={group} onValueChange={setGroup} />
+      {items
+        .filter((item) => inDeadLinkGroup(item, group))
+        .map((item) => (
+          <ToolResultRow
+            key={item.id}
+            title={getBookmarkDisplayTitle(item.title)}
+            badges={
+              <>
+                <DeadLinkCategoryBadge item={item} />
+                <Badge
+                  variant={
+                    item.status === 'ok' || item.status === 'skipped' ? 'secondary' : 'destructive'
+                  }
+                >
+                  {t(`tools_deadLinkStatus_${item.status}`)}
+                </Badge>
+              </>
+            }
+          >
+            <ResultLine>
+              <UrlLink href={item.url} />
+            </ResultLine>
+            <ResultLine>
+              <DeadLinkDescription item={item} />
+            </ResultLine>
+          </ToolResultRow>
+        ))}
     </div>
   ) : (
     <ToolEmptyState message={t('state_noDeadLinksFound')} />
@@ -428,18 +514,8 @@ export function MetadataResultsView({
     () => result?.items.filter((item) => item.changed && item.suggestedTitle) ?? [],
     [result],
   );
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  useEffect(() => {
-    setSelected(new Set(applicable.map((item) => item.id)));
-  }, [applicable]);
-
-  const toggle = (id: string, checked: boolean) =>
-    setSelected((previous) => {
-      const next = new Set(previous);
-      if (checked) next.add(id);
-      else next.delete(id);
-      return next;
-    });
+  const applicableIds = useMemo(() => applicable.map((item) => item.id), [applicable]);
+  const { selected, toggle } = useIdSelection(applicableIds);
 
   if (!result?.items.length) {
     return <ToolEmptyState message={t('state_noMetadataFound')} />;

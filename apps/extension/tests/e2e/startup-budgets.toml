@@ -36,7 +36,9 @@
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
 # then from 1410 for the job status and Background tasks dialog the header and Tools load (1,416).
 # Raised from 1425 on 2026-10-21 for the agent text and media types now read from config (1,426).
-"bookmarks.html" = 1435
+# Raised from 1435 on 2026-10-22 for the dead-link review's group filter, batch selection, and
+# linked redirect targets, which the Tools sidebar's review loads with it (1,440).
+"bookmarks.html" = 1450
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

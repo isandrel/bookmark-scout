@@ -98,19 +98,22 @@
 # query language: the lazily loaded query filter, the match notes ("in URL", "tag: ...") in 9
 # languages, and main's growth from the query parser and its config (#769). Firefox measured ZIP
 # 1,747,414, 5,580,460 B uncompressed, 3,672,311 B of JavaScript, and 27,144 B of other files.
+# Raised on 2026-10-22 (uncompressed 5,590,000 to 5,602,000, locales 1,355,000 to 1,368,000) for
+# the dead-link review's group filter and batch selection, whose copy in 9 languages adds 7 KB to
+# the locales. Firefox measured 5,589,292 B uncompressed and 1,355,815 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_757_000
-raw_bytes = 5_590_000
+raw_bytes = 5_602_000
 
 [targets.edge]
 zip_bytes = 1_757_000
-raw_bytes = 5_590_000
+raw_bytes = 5_602_000
 
 [targets.firefox]
 zip_bytes = 1_757_000
-raw_bytes = 5_590_000
+raw_bytes = 5_602_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -119,6 +122,6 @@ raw_bytes = 5_590_000
 javascript = 3_682_000
 css = 84_000
 fonts = 143_000
-locales = 1_355_000
+locales = 1_368_000
 images = 320_000
 other = 28_000

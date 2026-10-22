@@ -4332,8 +4332,52 @@
         "description": "Dead link scan summary; $1 confirmed dead, $2 need a manual check, $3 redirected"
     },
     "tools_deadLinkReview": {
-        "message": "检查修复方案",
+        "message": "修复或删除链接",
         "description": "Button that opens the reviewed dead-link repair dialog"
+    },
+    "tools_deadLinkGroupLabel": {
+        "message": "显示结果",
+        "description": "Accessible name of the dead link results filter"
+    },
+    "tools_deadLinkGroup_all": {
+        "message": "全部 ($1)",
+        "description": "Dead link results filter: every result; $1 is how many"
+    },
+    "tools_deadLinkGroup_dead": {
+        "message": "确认失效 ($1)",
+        "description": "Dead link results filter: the confirmed dead group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_check": {
+        "message": "需手动检查 ($1)",
+        "description": "Dead link results filter: the check manually group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_redirect": {
+        "message": "已重定向 ($1)",
+        "description": "Dead link results filter: the redirected group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_ok": {
+        "message": "正常 ($1)",
+        "description": "Dead link results filter: the reachable group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_skipped": {
+        "message": "已跳过 ($1)",
+        "description": "Dead link results filter: the skipped (not a web address) group; $1 is how many results it has"
+    },
+    "tools_deadLinkSelectShown": {
+        "message": "全选当前显示项",
+        "description": "Dead link repairs: checkbox that selects every link the filter shows"
+    },
+    "tools_deadLinkSelectItem": {
+        "message": "选择 $1",
+        "description": "Dead link repairs: checkbox for one link; $1 is its title"
+    },
+    "tools_deadLinkSelectedCount": {
+        "message": "已选 $1 项",
+        "description": "Dead link repairs: how many links are selected; $1 is the count"
+    },
+    "tools_deadLinkSetSelected": {
+        "message": "将所选设为…",
+        "description": "Dead link repairs: menu that sets one action on every selected link"
     },
     "tools_deadLinkRepairTitle": {
         "message": "检查失效链接修复方案",
