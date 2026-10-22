@@ -142,27 +142,32 @@
 # Raised on 2026-10-22 (uncompressed 5,766,000 to 5,800,000, locales 1,474,000 to 1,500,000) for
 # Index Page Text: its store, tool, review, search field, and 32 messages in 9 languages. Firefox
 # measured 5,790,968 B uncompressed and 1,490,147 B of locales on 6004c2c5.
+# Raised on 2026-10-22 (ZIP 1,806,000 to 1,822,000, uncompressed 5,800,000 to 5,842,000, javascript
+# 3,741,000 to 3,763,000, locales 1,500,000 to 1,528,000) for Fetch Covers: the cover store, the
+# page-image fetch and shrink, its review and Options panel, and 35 messages in 9 languages.
+# Firefox measured ZIP 1,811,768, 5,832,167 B uncompressed, 3,752,958 B of JavaScript, and
+# 1,518,381 B of locales on 76827720 (Index Page Text).
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_806_000
-raw_bytes = 5_800_000
+zip_bytes = 1_822_000
+raw_bytes = 5_842_000
 
 [targets.edge]
-zip_bytes = 1_806_000
-raw_bytes = 5_800_000
+zip_bytes = 1_822_000
+raw_bytes = 5_842_000
 
 [targets.firefox]
-zip_bytes = 1_806_000
-raw_bytes = 5_800_000
+zip_bytes = 1_822_000
+raw_bytes = 5_842_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_741_000
+javascript = 3_763_000
 css = 85_000
 fonts = 143_000
-locales = 1_500_000
+locales = 1_528_000
 images = 320_000
 other = 29_000
