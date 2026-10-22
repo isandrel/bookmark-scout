@@ -123,7 +123,7 @@
 
 ### 🟡 Partial
 
-- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage and are not synced or searchable in the popup; JSON bookmark exports and imports carry them, Ask AI can look them up, and AI context exports include them when enabled
+- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage and are not synced; search in the popup, side panel, and manager matches them and says where a result matched; JSON bookmark exports and imports carry them, Ask AI can look them up, and AI context exports include them when enabled
 - [x] 🎛️ **AI tool limits** — Tag count and style, summary length, and reorganization folder limits are sent to the provider as instructions; the provider's output is not checked against them
 - [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and an 18-test smoke suite in Firefox (popup, side panel page, manager address, undo, folder tree keys, menus, and drag and drop, quick save shortcut setup, settings, per-site website access, import/export, and reports); both are required checks. In Firefox, the browser's icon cache is unavailable (no favicon API), so bookmarks show icons saved with Refresh Site Icons or a generic icon, and the manager opens from the popup's Open bookmark manager button, because Firefox cannot replace the bookmarks page
 
