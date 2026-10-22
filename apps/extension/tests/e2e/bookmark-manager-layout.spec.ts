@@ -7,6 +7,7 @@ import type { Locator, Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { breadcrumbCurrent, managerUrl, treeFolder } from './manager-helpers';
 import { seedFolder, setSettings } from './popup-helpers';
+import { STORAGE_ITEMS, writeStored } from './storage';
 
 type Box = { x: number; y: number; width: number; height: number };
 
@@ -149,4 +150,53 @@ test('deep folders stop indenting in the tree, and a deep path collapses its mid
   await page.getByRole('menuitem', { name: 'Deep 3', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Deep 3']}$`));
   await expect(breadcrumbCurrent(page)).toHaveText('Deep 3');
+});
+
+/** Every distinct place the visible column header named `name` was drawn while the page opened. */
+async function headerPlacesWhileOpening(page: Page, name: string, url: string): Promise<number[]> {
+  await page.addInitScript((header) => {
+    const places: number[] = [];
+    Object.assign(window, { headerPlaces: places });
+    const record = () => {
+      const cell = [...document.querySelectorAll('th')].find(
+        (th) =>
+          th.textContent?.includes(header) && th.checkVisibility({ visibilityProperty: true }),
+      );
+      const left = cell ? Math.round(cell.getBoundingClientRect().left) : undefined;
+      if (left !== undefined && places.at(-1) !== left) places.push(left);
+      requestAnimationFrame(record);
+    };
+    requestAnimationFrame(record);
+  }, name);
+  await page.goto(url);
+  await expect(page.getByRole('row').nth(1)).toBeVisible();
+  // Long enough for the stored view and every width report to have arrived.
+  await page.waitForTimeout(OPEN_SETTLE_MS);
+  return page.evaluate(() => (window as unknown as { headerPlaces: number[] }).headerPlaces);
+}
+
+const OPEN_SETTLE_MS = 1_000;
+
+test('the table opens with its columns in place, with the default and a saved view', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await page.setViewportSize({ width: 1400, height: 900 });
+  const { folderId } = await seedFolder(extensionWorker, 'Opening Columns', [
+    { title: 'Opening A', url: 'https://e2e.invalid/a' },
+    { title: 'Opening Folder', children: [] },
+  ]);
+  // Title and URL fill the room: Date Added used to show at the default widths first.
+  expect(
+    await headerPlacesWhileOpening(page, 'Date Added', managerUrl(extensionId, folderId)),
+  ).toHaveLength(1);
+
+  await writeStored(extensionWorker, STORAGE_ITEMS.tableLayout, {
+    pageSize: 50,
+    columnSizing: { title: 420 },
+  });
+  const reopened = await page.context().newPage();
+  const places = await headerPlacesWhileOpening(reopened, 'URL', managerUrl(extensionId, folderId));
+  expect(places).toHaveLength(1);
 });
