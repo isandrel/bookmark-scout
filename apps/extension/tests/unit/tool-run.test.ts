@@ -723,4 +723,15 @@ describe('Smart Rules', () => {
     await notices[0].undo?.run();
     await expect(bookmarkMetadataValue.get()).resolves.toEqual({});
   });
+
+  it('skips a bookmark whose address changed after the review, and says so', async () => {
+    const run = createToolRun(TOOL_DEFINITIONS.bookmarkRules, deps());
+    await run.run('folder');
+    const plan = run.getState().result ?? [];
+    await fakeBrowser.bookmarks.update('r1', { url: 'https://gitlab.example/acme/repo' });
+
+    await run.apply(plan);
+    await expect(bookmarkMetadataValue.get()).resolves.toEqual({});
+    expect(notices[0].outcome.variant).not.toBe('success');
+  });
 });
