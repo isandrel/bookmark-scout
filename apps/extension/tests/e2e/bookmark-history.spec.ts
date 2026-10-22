@@ -67,7 +67,10 @@ test('a manager deletion is one verified record that survives a browser restart 
     await expect(item).toContainText('Deleted');
     await expect(item).toContainText('Old Projects');
     await expect(item).toContainText('2 items inside');
-    await expect(item).toContainText('History Folder, position 2');
+    // Where it was, as label and value rows.
+    const place = item.locator('[data-slot="history-item-place"]');
+    await expect(place.locator('dt')).toHaveText(['Was in', 'Position']);
+    await expect(place.locator('dd')).toHaveText([`${seeded.barTitle} / History Folder`, '2']);
     await expect(record.getByTestId('history-record-facts')).toContainText(
       'Checked after the change: the bookmarks are as it left them.',
     );
@@ -210,7 +213,11 @@ test('a Duplicate Cleaner result opens its record in History, with the removed c
   await expect(items).toHaveCount(2);
   await expect(items.nth(0)).toContainText('Copy two');
   await expect(items.nth(1)).toContainText('Copy three');
-  // The exact address, never normalized.
+  // The exact address, never normalized, as a link.
+  await expect(items.nth(0).locator('[data-slot="history-item-url"]')).toHaveAttribute(
+    'href',
+    'https://e2e.invalid/same?sig=a%2Fb&x=1',
+  );
   await expect(items.nth(0)).toContainText('https://e2e.invalid/same?sig=a%2Fb&x=1');
   await page.screenshot({ path: test.info().outputPath('history-duplicates.png') });
 });

@@ -76,7 +76,8 @@ export function JobStatus({
       {job.state === 'cancelled' ? (
         <p className="text-xs text-muted-foreground">{jobCancelledNote(job)}</p>
       ) : null}
-      <div className="flex flex-wrap gap-1.5">
+      {/* One row in the narrow Tools sidebar: the job's own actions are icon buttons. */}
+      <div className="flex items-center gap-1" data-slot="job-actions">
         {onReview && processed > 0 ? (
           <Button size="sm" variant="secondary" className="h-7 text-xs" onClick={onReview}>
             {t('jobs_review')}
@@ -87,20 +88,22 @@ export function JobStatus({
           // Waiting buttons stay focusable (`aria-disabled`, not `disabled`): disabling the
           // focused button, or removing it, would drop keyboard focus to the page.
           const waiting = busy || isJobActionPending(job.state, action);
+          const label = t(ACTION_LABELS[action]);
           return (
             <Button
               // Pause and Resume are one button, so focus stays on it when one becomes the other.
               key={action === 'resume' ? 'pause' : action}
-              size="sm"
+              size="icon-sm"
               variant="ghost"
-              className="h-7 text-xs aria-disabled:opacity-50"
+              className="aria-disabled:opacity-50"
+              aria-label={label}
+              title={label}
               aria-disabled={waiting || undefined}
               onClick={() => {
                 if (!waiting) run(action);
               }}
             >
               <Icon className="h-3.5 w-3.5" />
-              {t(ACTION_LABELS[action])}
             </Button>
           );
         })}
