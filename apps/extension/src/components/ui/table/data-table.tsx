@@ -95,8 +95,10 @@ interface DataTableProps<TData extends RowData> {
   label?: string;
   /** Enables saved searches, which need to know and change the folder the manager shows. */
   savedSearchContext?: DataTableSavedSearchContext;
-  /** The title filter, kept by the page (it is the address's `?q=`). */
+  /** The search box, kept by the page (it is the address's `?q=`). */
   searchQuery: string;
+  /** What the search box's query matches (`useSearchMatches`). */
+  searchMatches: SearchMatches;
   onSearchQueryChange: (query: string) => void;
   /**
    * Shows a row in the folder the table switches to (Show in folder): clears the filters, opens
@@ -138,7 +140,7 @@ export type DataTableRevealRequest = {
   resetKey: string | null;
 };
 
-/** The column the page-level title search filters. */
+/** The column the page's search box filters. */
 const SEARCH_COLUMN_ID = 'title';
 
 export type DataTableSavedSearchContext = {
@@ -190,6 +192,7 @@ export function DataTable<TData extends RowData>({
   label,
   savedSearchContext,
   searchQuery,
+  searchMatches,
   onSearchQueryChange,
   revealRow,
   onShowsAllBookmarksChange,
@@ -198,23 +201,21 @@ export function DataTable<TData extends RowData>({
   const [preloadedView] = React.useState(readPreloadedBookmarkTableView);
   const initialView = preloadedView ?? DEFAULT_BOOKMARK_TABLE_VIEW;
   const [sorting, setSorting] = React.useState<SortingState>(initialView.sorting);
-  // Filters other than the title search, which the page keeps (`searchQuery`).
+  // Filters other than the search box, which the page keeps (`searchQuery`).
   const [otherColumnFilters, setOtherColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const columnFilters = React.useMemo<ColumnFiltersState>(
-    () =>
-      searchQuery
-        ? [{ id: SEARCH_COLUMN_ID, value: searchQuery }, ...otherColumnFilters]
-        : otherColumnFilters,
-    [otherColumnFilters, searchQuery],
-  );
+  const columnFilters = React.useMemo<ColumnFiltersState>(() => {
+    if (!searchQuery) return otherColumnFilters;
+    const search: TitleSearchFilter = { text: searchQuery, matches: searchMatches };
+    return [{ id: SEARCH_COLUMN_ID, value: search }, ...otherColumnFilters];
+  }, [otherColumnFilters, searchMatches, searchQuery]);
   const columnFiltersRef = React.useRef(columnFilters);
   columnFiltersRef.current = columnFilters;
   const onSearchQueryChangeRef = React.useRef(onSearchQueryChange);
   onSearchQueryChangeRef.current = onSearchQueryChange;
-  /** Splits filters into the title search, which goes to the page, and the rest. */
+  /** Splits filters into the search box, which goes to the page, and the rest. */
   const setColumnFilters = React.useCallback((filters: ColumnFiltersState) => {
     const search = filters.find((filter) => filter.id === SEARCH_COLUMN_ID)?.value;
-    onSearchQueryChangeRef.current(typeof search === 'string' ? search : '');
+    onSearchQueryChangeRef.current(titleSearchText(search));
     setOtherColumnFilters(filters.filter((filter) => filter.id !== SEARCH_COLUMN_ID));
   }, []);
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>(

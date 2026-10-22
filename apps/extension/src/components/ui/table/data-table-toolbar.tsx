@@ -109,7 +109,8 @@ export function DataTableToolbar<TData extends RowData>({
           placeholder={t('managerDefaults_search')}
           aria-label={t('managerDefaults_search')}
           {...{ [MANAGER_SEARCH_ATTRIBUTE]: '' }}
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+          value={titleSearchText(table.getColumn('title')?.getFilterValue())}
+          onFocus={preloadSearchMatches}
           onChange={(event) =>
             table.getColumn('title')?.setFilterValue(event.target.value || undefined)
           }

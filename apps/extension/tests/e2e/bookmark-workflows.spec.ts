@@ -485,7 +485,7 @@ test('navigates folders and filters bookmarks by title and URL', async ({
   const rows = page.locator('tbody tr');
   await expect(rows).toHaveCount(3);
 
-  await page.getByPlaceholder('Search titles and addresses').fill('alpha');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('alpha');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Alpha Item');
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -529,7 +529,7 @@ test('manager filters globally across nested folders or only the selected folder
   await expect(rows).toHaveCount(2);
   await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
 
-  await page.getByPlaceholder('Search titles and addresses').fill('Shared Target');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Shared Target');
   await expect(rows).toHaveCount(3);
   await expect(
     rows
@@ -584,7 +584,7 @@ test('keeps full titles and URLs available past the former truncation limits', a
   await expect(rows.nth(1).getByTitle(zuluTitle, { exact: true })).toBeVisible();
   await expect(rows.nth(1).getByTitle(longUrl, { exact: true })).toBeVisible();
 
-  await page.getByPlaceholder('Search titles and addresses').fill('Zulu');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Zulu');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText(zuluTitle);
   await page.getByRole('button', { name: 'Reset' }).click();

@@ -193,7 +193,7 @@ test('external folder renames and moves update the paths of everything inside', 
   await expect(row(page, 'Path Inner')).toHaveCount(0);
 
   // A filter searches every bookmark: the moved folder's contents carry their new path.
-  await page.getByPlaceholder('Search titles and addresses').fill('Path Deep Link');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Path Deep Link');
   await expect(row(page, 'Path Deep Link')).toContainText('E2E Paths / Path Target / Path Inner');
 });
 
@@ -445,7 +445,7 @@ test('a search across folders names each match’s folder and says the results s
   await expect(breadcrumbCurrent(page)).toHaveText('Work');
   await expect(page.locator('[data-slot="row-folder-path"]')).toHaveCount(0);
 
-  await page.getByPlaceholder('Search titles and addresses').fill('Same Page');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Same Page');
   const matches = row(page, 'Same Page');
   await expect(matches).toHaveCount(2);
   await expect(breadcrumbCurrent(page)).toHaveText('Results from all folders');
@@ -637,7 +637,7 @@ test('edits trim titles and reject script URLs; untitled items and trimmed filte
     )
     .toBe('GitHub Spaced');
 
-  await page.getByPlaceholder('Search titles and addresses').fill('  github  ');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('  github  ');
   await expect(page.locator('tbody tr')).toHaveCount(1);
   await expect(row(page, 'GitHub Spaced')).toBeVisible();
 });

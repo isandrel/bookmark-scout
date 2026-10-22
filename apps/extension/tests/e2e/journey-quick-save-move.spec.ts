@@ -61,7 +61,7 @@ test('a quick save moved from the notification shows in the manager, and Show in
 
   // A search finds it anywhere; the row's context menu opens its folder with it selected.
   await manager
-    .getByRole('textbox', { name: 'Search titles and addresses' })
+    .getByRole('textbox', { name: 'Search titles, addresses, folders, and tags' })
     .fill('hooks patterns');
   await expect(managerRow(manager, ARTICLE_TITLE)).toHaveCount(1);
   await managerRow(manager, ARTICLE_TITLE).click({ button: 'right' });

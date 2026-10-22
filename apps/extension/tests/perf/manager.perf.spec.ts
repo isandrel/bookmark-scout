@@ -42,7 +42,7 @@ test('bookmarks manager: open, open a folder, filter, update after an outside ch
       continue;
     }
 
-    const filter = page.getByPlaceholder('Search titles and addresses');
+    const filter = page.getByPlaceholder('Search titles, addresses, folders, and tags');
     const filtered = await measureSettled(
       page,
       () => filter.pressSequentially(`${area}-7`, { delay: 60 }),

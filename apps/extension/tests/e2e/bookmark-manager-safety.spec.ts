@@ -81,7 +81,7 @@ test('bulk delete and move only touch selected rows visible under the filters', 
 
   await page.getByRole('checkbox', { name: 'Select all' }).check();
   await expect(bulk).toContainText('5 selected');
-  await page.getByPlaceholder('Search titles and addresses').fill('Target X');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('"Target X"');
   await expect(page.locator('tbody tr')).toHaveCount(1);
 
   // Toolbar, footer, and the confirmation all count the one visible row.
@@ -101,10 +101,10 @@ test('bulk delete and move only touch selected rows visible under the filters', 
   await expect(bulk).toHaveCount(0);
 
   // Bulk move behaves the same way: only the visible selected row moves.
-  await page.getByPlaceholder('Search titles and addresses').fill('');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('');
   await page.getByRole('checkbox', { name: 'Select "Keep me"' }).check();
   await page.getByRole('checkbox', { name: 'Select "Target Y"' }).check();
-  await page.getByPlaceholder('Search titles and addresses').fill('Target Y');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Target Y');
   await expect(bulk).toContainText('1 selected');
   await bulk.getByRole('button', { name: 'Move to folder' }).click();
   const moveDialog = page.getByRole('dialog', { name: /^Move 1 item/ });
@@ -387,7 +387,7 @@ test('bulk move explains nested items, names them, and skips their current folde
   const bulk = page.getByTestId('bulk-actions');
 
   // A folder and an item inside it: only the folder moves, and the dialog says why.
-  await page.getByPlaceholder('Search titles and addresses').fill('Wording');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Wording');
   await page.getByRole('checkbox', { name: 'Select "Wording Parent"' }).check();
   await page.getByRole('checkbox', { name: 'Select "Wording Child"' }).check();
   await expect(bulk).toContainText('2 selected');
@@ -413,7 +413,7 @@ test('bulk move explains nested items, names them, and skips their current folde
     'Wording Child',
   ]);
 
-  await page.getByPlaceholder('Search titles and addresses').fill('');
+  await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('');
   await page.getByRole('checkbox', { name: 'Select "Wording Link"' }).check();
   await page.getByRole('checkbox', { name: 'Select "Wording Target"' }).check();
   await bulk.getByRole('button', { name: 'Move to folder' }).click();

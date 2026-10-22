@@ -235,9 +235,9 @@ test('bookmark manager loads a folder, filters titles, and opens subfolders', as
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(3);
 
-  await (await extension.find('input[placeholder="Search titles and addresses"]')).sendKeys(
-    'alpha',
-  );
+  await (
+    await extension.find('input[placeholder="Search titles, addresses, folders, and tags"]')
+  ).sendKeys('alpha');
   await expect.poll(() => visibleRows(extension)).toBe(1);
   await extension.findByText('tbody tr', 'Alpha Item');
 
@@ -289,9 +289,9 @@ test('bookmark manager keeps the search in the address and links to its own page
 
   await extension.open(`bookmarks.html?id=${folder.folderId}`);
   await expect.poll(() => visibleRows(extension)).toBe(2);
-  await (await extension.find('input[placeholder="Search titles and addresses"]')).sendKeys(
-    'Delta',
-  );
+  await (
+    await extension.find('input[placeholder="Search titles, addresses, folders, and tags"]')
+  ).sendKeys('Delta');
   await expect
     .poll(async () => new URL(await driver.getCurrentUrl()).searchParams.get('q'))
     .toBe('Delta');
