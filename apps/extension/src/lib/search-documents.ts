@@ -151,24 +151,45 @@ function documentOf(
   return document;
 }
 
+/**
+ * The documents for a tree, keyed to the local metadata by bookmark id, one at a time, so a page
+ * can build them in slices while idle (`bookmark-query-filter.lazy.ts`).
+ */
+export function* searchDocumentsOf(
+  roots: readonly BookmarkTreeNode[],
+  metadata: StoredBookmarkMetadataById,
+): Generator<SearchDocument, void, undefined> {
+  // Depth first in tree order, without recursion: a generator per level would cost a frame each.
+  const stack: { node: BookmarkTreeNode; folders: readonly string[]; container: boolean }[] = [];
+  for (let index = roots.length - 1; index >= 0; index -= 1) {
+    const root = roots[index];
+    if (root) stack.push({ node: root, folders: [], container: true });
+  }
+  for (let entry = stack.pop(); entry; entry = stack.pop()) {
+    const { node, folders, container } = entry;
+    if (!container && !isSeparatorNode(node)) yield documentOf(node, folders, metadata[node.id]);
+    if (!node.children) continue;
+    const inside = container ? folders : [...folders, node.title];
+    // The root's children are the browser's own folders: containers too.
+    const childContainer = isBookmarkTreeRoot(node);
+    for (let index = node.children.length - 1; index >= 0; index -= 1) {
+      const child = node.children[index];
+      if (child) stack.push({ node: child, folders: inside, container: childContainer });
+    }
+  }
+}
+
 /** Builds the documents for a tree, keyed to the local metadata by bookmark id. */
 export function buildSearchDocuments(
   roots: readonly BookmarkTreeNode[],
   metadata: StoredBookmarkMetadataById,
 ): SearchDocument[] {
-  const documents: SearchDocument[] = [];
-  const visit = (node: BookmarkTreeNode, folders: readonly string[], container: boolean) => {
-    if (!container && !isSeparatorNode(node)) {
-      documents.push(documentOf(node, folders, metadata[node.id]));
-    }
-    if (!node.children) return;
-    const inside = container ? folders : [...folders, node.title];
-    const isRoot = isBookmarkTreeRoot(node);
-    // The root's children are the browser's own folders: containers too.
-    for (const child of node.children) visit(child, inside, isRoot);
-  };
-  for (const root of roots) visit(root, [], true);
-  return documents;
+  return Array.from(searchDocumentsOf(roots, metadata));
+}
+
+/** Works out a document's text without case ahead of the first search that reads it. */
+export function foldSearchDocument(document: SearchDocument): void {
+  foldedOf(document);
 }
 
 /** A host name as typed, made comparable to `SearchDocument.host` (punycode, no `www.`). */
