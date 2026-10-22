@@ -17,6 +17,7 @@ tools = [
   "metadataFetcher",
   "siteIcons",
   "pageText",
+  "covers",
   "privacyScanner",
   "statistics",
   "reorganization",

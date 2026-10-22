@@ -63,6 +63,8 @@ export type SettingsPanelId =
   | 'bookmarkRules'
   /** Metadata & Content: how much page text is indexed, and a button that deletes it. */
   | 'pageText'
+  /** Metadata & Content: how many covers are stored, and a button that deletes them. */
+  | 'covers'
   /** Essentials: a pointer to the AI tab, which is optional and set up there. */
   | 'essentialsAi';
 
@@ -296,6 +298,7 @@ export const TOOL_SCOPE_CAPABILITIES = {
   statistics: 'both',
   bookmarkRules: 'both',
   pageText: 'both',
+  covers: 'both',
 } as const satisfies Record<string, z.infer<typeof toolScopeSchema> | 'both'>;
 
 // ============================================================================
@@ -1073,6 +1076,20 @@ const fields = {
     TOOL_SCOPE_CAPABILITIES.pageText,
   ),
 
+  coversEnabled: switchField('metadata_content.covers.enabled', 'coversEnabled'),
+  coversDefaultScope: scopeField(
+    'metadata_content.covers',
+    'coversDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.covers,
+  ),
+  coversWidthPx: numberField('metadata_content.covers.width_px', 'coversWidthPx', { unit: 'px' }),
+  coversMaxImageKb: numberField('metadata_content.covers.max_image_kb', 'coversMaxImageKb', {
+    unit: 'kb',
+  }),
+  coversMaxCacheMb: numberField('metadata_content.covers.max_cache_mb', 'coversMaxCacheMb', {
+    unit: 'mb',
+  }),
+
   privacyScannerEnabled: switchField('security.privacy_scanner.enabled', 'privacyScannerEnabled'),
   privacyScannerDefaultScope: scopeField(
     'security.privacy_scanner',
@@ -1515,6 +1532,14 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         toggle: 'pageTextEnabled',
         fields: ['pageTextDefaultScope'],
         panel: 'pageText',
+      },
+      {
+        id: 'covers',
+        labelKey: 'tools_covers',
+        toggle: 'coversEnabled',
+        fields: ['coversDefaultScope'],
+        advanced: ['coversWidthPx', 'coversMaxImageKb', 'coversMaxCacheMb'],
+        panel: 'covers',
       },
     ]),
     security: category('settings_security', 'settings_securityDesc', [

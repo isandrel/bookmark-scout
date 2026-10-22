@@ -96,6 +96,8 @@ interface DataTableProps<TData extends RowData> {
   /** Middle-click: open a bookmark in a background tab. */
   onRowOpenInBackground?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
+  /** Drawn at the top of a row's card in the cards view, such as a stored cover. */
+  cardMedia?: (row: TData) => React.ReactNode;
   /** Receives the table's selection commands, for the page's keyboard shortcuts. */
   handleRef?: React.Ref<DataTableHandle<TData>>;
   /** Wraps the table's frame, for example in a right-click menu. */
@@ -197,6 +199,7 @@ export function DataTable<TData extends RowData>({
   onRowOpen,
   onRowOpenInBackground,
   rowClassName,
+  cardMedia,
   handleRef,
   renderFrame,
   getRowProps,
@@ -1015,6 +1018,7 @@ export function DataTable<TData extends RowData>({
                               rowClassName?.(row.original),
                             )}
                           >
+                            {cardMedia?.(row.original)}
                             {/* biome-ignore lint/a11y/useSemanticElements lint/a11y/useFocusableInteractive: a card's cell; the card takes focus, as a table row does. */}
                             <div role="gridcell" className="flex min-w-0 items-start gap-2">
                               {cellOf('select')}

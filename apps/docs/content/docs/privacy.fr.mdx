@@ -20,6 +20,7 @@ Ceci est un résumé. Seule la <SiteLink to="privacy">politique de confidentiali
 - Les icônes de site du cache d'icônes du navigateur, dans Chrome et Edge, une fois l'option **Utiliser le cache d'icônes du navigateur** activée.
 - Les icônes de site que vous téléchargez avec **Actualiser les icônes de site**, depuis chaque site enregistré en favori.
 - Le texte des pages en favori, quand vous lancez **Indexer le texte des pages**, pour chaque page de l'exécution.
+- L'en-tête des pages en favori et l'image d'aperçu que chacune indique, quand vous lancez **Récupérer les couvertures**, pour chaque page de l'exécution.
 
 Elle ne lit pas le contenu des pages que vous consultez. Après un raccourci d'enregistrement rapide, elle affiche sa propre notification dans cet onglet, qui ne lit rien de la page.
 
@@ -41,6 +42,7 @@ Elle ne lit pas le contenu des pages que vous consultez. Après un raccourci d'e
 | Étiquettes, résumés, recherches enregistrées, règles intelligentes, dossiers récents, recherches récentes | Stockage local de cet appareil | Non |
 | Icônes de site enregistrées avec **Actualiser les icônes de site**, jusqu'à 4 Mo par défaut | Stockage local de cet appareil | Non |
 | Texte des pages enregistré avec **Indexer le texte des pages** | IndexedDB sur cet appareil | Non |
+| Couvertures enregistrées avec **Récupérer les couvertures** | IndexedDB sur cet appareil | Non |
 | Le dernier enregistrement rapide (le titre et l'URL de la page, et l'endroit où elle a été enregistrée), pour **Annuler** et **Déplacer vers** | Stockage de session de cet appareil, vidé à la fermeture du navigateur | Non |
 | L'historique d'annulation du gestionnaire (les favoris que vous y avez modifiés, avec des copies des favoris supprimés et de leurs étiquettes et résumés), pour annuler et rétablir | Stockage de session de cet appareil, vidé à la fermeture du navigateur | Non |
 | L'historique des modifications de favoris : ce qui a changé dans vos favoris et quand, que Bookmark Scout l'ait fait ou que ce soit observé ailleurs (titres, URL, dossiers et le résultat de chaque modification), conservé pendant une durée limitée ; et une copie du titre, de l'URL et du dossier de chaque favori tels que vus la dernière fois, pour savoir ce qui a changé hors de Bookmark Scout. Aussi une copie de chaque élément que Bookmark Scout supprime, avec son contenu, ses tags et son résumé, pour pouvoir le restaurer depuis l'historique ; elle est supprimée avec sa modification. Absent du fichier de sauvegarde | IndexedDB sur cet appareil | Non |
@@ -62,6 +64,7 @@ Uniquement lorsque vous utilisez l'une de ces fonctionnalités, et uniquement ve
 | Vérifier les liens morts, Récupération des métadonnées, vérification des liens par Demander à l'IA | Chaque site enregistré en favori | Une requête pour la page, sans cookies, après que vous avez autorisé l'accès aux sites Web |
 | Actualiser les icônes de site | Chaque site enregistré en favori | Une requête pour une page enregistrée en favori par site et pour un fichier d'icône sur le domaine de ce site, sans cookies, après que vous avez autorisé l'accès aux sites Web. Aucun service d'icônes tiers n'est utilisé |
 | Indexer le texte des pages | Chaque page en favori de l'exécution | Une requête pour la page, sans cookies, après que vous avez autorisé l'accès au site. Son texte lisible reste sur cet appareil |
+| Récupérer les couvertures | Chaque page en favori de l'exécution et l'image qu'elle indique | Une requête pour l'en-tête de la page et pour son image, sans cookies ni l'adresse de la page, uniquement sur les sites que vous avez autorisés. Une petite copie reste sur cet appareil |
 | Agents d'IA locaux, seulement avec **Autoriser les agents d'IA locaux** activé (désactivé par défaut) | Le programme bookmark-scout-mcp de votre ordinateur et les agents d'IA que vous y exécutez | Ce qu'un agent demande : les favoris correspondants (avec leurs dossiers, dates d'ajout, étiquettes et résumés), les noms de dossiers, le titre et l'URL de la page actuelle, si les liens enregistrés fonctionnent encore (après que vous avez autorisé l'accès aux sites Web) et, avec **Lire le contenu des pages** activé, le texte d'une page. Les valeurs privées des titres et URL sont masquées sauf si vous désactivez cette option. Les agents peuvent envoyer ce qu'ils lisent à leur propre fournisseur d'IA. Chaque consultation figure dans l'activité IA tant que **Enregistrer les requêtes** est activé |
 
 Chaque fonction d'IA qui utilise un fournisseur envoie aussi votre texte **À propos de moi** (paramètres d'IA) tant qu'il n'est pas vide ; il est vide par défaut.

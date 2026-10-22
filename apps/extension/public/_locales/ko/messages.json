@@ -8117,6 +8117,190 @@
         "message": "관리자 보기",
         "description": "Settings: heading of the section with Manager View"
     },
+    "tools_covers": {
+        "message": "표지 가져오기",
+        "description": "Tools sidebar: name of the Fetch Covers tool"
+    },
+    "tools_coversDesc": {
+        "message": "각 페이지의 미리 보기 이미지를 작게 복사해 이 기기에 보관하고, 관리자의 카드에 표시합니다",
+        "description": "Tools sidebar: what Fetch Covers does"
+    },
+    "action_fetch": {
+        "message": "가져오기",
+        "description": "Button that runs Fetch Covers"
+    },
+    "settings_coversEnabled": {
+        "message": "표지 가져오기 사용",
+        "description": "Settings: switch that turns Fetch Covers on"
+    },
+    "settings_coversEnabledDesc": {
+        "message": "도구 사이드바에 표지 가져오기를 표시합니다. 각 페이지의 머리 부분과 미리 보기 이미지를 내려받고, 작은 복사본을 이 기기에 보관해 카드에 표시합니다.",
+        "description": "Settings: what turning Fetch Covers on does"
+    },
+    "settings_coversDefaultScope": {
+        "message": "기본 범위",
+        "description": "Settings: default scope of Fetch Covers"
+    },
+    "settings_coversDefaultScopeDesc": {
+        "message": "표지 가져오기가 기본으로 읽는 북마크",
+        "description": "Settings: description of the Fetch Covers default scope"
+    },
+    "settings_coversWidthPx": {
+        "message": "표지 너비",
+        "description": "Settings: width of a stored cover"
+    },
+    "settings_coversWidthPxDesc": {
+        "message": "각 표지로 보관하는 복사본의 너비이며, 더 큰 이미지는 이 너비로 줄어듭니다",
+        "description": "Settings: description of the cover width"
+    },
+    "settings_coversMaxImageKb": {
+        "message": "최대 이미지 크기",
+        "description": "Settings: largest image file Fetch Covers downloads"
+    },
+    "settings_coversMaxImageKbDesc": {
+        "message": "이보다 큰 이미지 파일은 내려받지 않습니다",
+        "description": "Settings: description of the largest cover image"
+    },
+    "settings_coversMaxCacheMb": {
+        "message": "표지 저장 공간",
+        "description": "Settings: how much room stored covers may take"
+    },
+    "settings_coversMaxCacheMbDesc": {
+        "message": "보관한 표지가 이 기기에서 차지할 수 있는 공간이며, 오래된 것부터 지웁니다",
+        "description": "Settings: description of the cover storage limit"
+    },
+    "tools_coversDialogDesc": {
+        "message": "각 페이지가 스스로 지정한 미리 보기 이미지입니다. 저장한 표지만 이 기기에 남습니다.",
+        "description": "Fetch Covers review: description"
+    },
+    "tools_coversCategory_found": {
+        "message": "표지 있음 ($1)",
+        "description": "Fetch Covers review tab: pages with a cover found; $1 is how many"
+    },
+    "tools_coversCategory_none": {
+        "message": "표지 없음 ($1)",
+        "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
+    },
+    "tools_coversCategory_elsewhere": {
+        "message": "다른 사이트 ($1)",
+        "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_failed": {
+        "message": "실패 ($1)",
+        "description": "Fetch Covers review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_coversCategory_current": {
+        "message": "이미 가져옴 ($1)",
+        "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_skipped": {
+        "message": "건너뜀 ($1)",
+        "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_coversActionSave": {
+        "message": "표지 저장",
+        "description": "Fetch Covers review: action that keeps a cover"
+    },
+    "tools_coversSaveSelected": {
+        "message": "표지 $count$개 저장",
+        "description": "Fetch Covers review: button that saves the covers left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversSaveSelected_one": {
+        "message": "표지 $count$개 저장",
+        "description": "Fetch Covers review: button that saves the covers left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversNothing": {
+        "message": "이 범위에 웹 페이지가 없습니다.",
+        "description": "Fetch Covers review: shown when the scope has no web pages"
+    },
+    "tools_coversElsewhereReason": {
+        "message": "이미지가 $1에 있으며, 이번 실행은 그 사이트에 접근할 수 없습니다.",
+        "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
+    },
+    "toast_coversSaved": {
+        "message": "표지 저장됨",
+        "description": "Toast title after saving covers"
+    },
+    "toast_coversSavedDesc": {
+        "message": "이제 북마크 $count$개의 카드에 표지가 표시됩니다.",
+        "description": "Toast after saving covers; how many bookmarks",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversSavedDesc_one": {
+        "message": "이제 북마크 $count$개의 카드에 표지가 표시됩니다.",
+        "description": "Toast after saving covers; how many bookmarks (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeTitle": {
+        "message": "북마크 표지",
+        "description": "Settings: heading of the stored covers panel"
+    },
+    "covers_storeSummary": {
+        "message": "표지 $count$개, $size$. 이 기기에 보관되며 밖으로 나가지 않습니다.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeSummary_one": {
+        "message": "표지 $count$개, $size$. 이 기기에 보관되며 밖으로 나가지 않습니다.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeLoading": {
+        "message": "표지를 세는 중…",
+        "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_clear": {
+        "message": "표지 삭제",
+        "description": "Settings: button that deletes every stored cover"
+    },
+    "covers_cleared": {
+        "message": "표지 삭제됨",
+        "description": "Toast title after deleting the covers"
+    },
+    "covers_clearedDesc": {
+        "message": "북마크, 태그, 기록은 바뀌지 않았습니다.",
+        "description": "Toast after deleting the covers"
+    },
     "tools_bookmarkRules": {
         "message": "스마트 규칙",
         "description": "Tools sidebar: name of the Smart Rules tool"

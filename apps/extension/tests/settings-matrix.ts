@@ -130,6 +130,11 @@ const networkRealServer = e2e(
 );
 
 const SITE_ICONS_UNIT = 'site-icons.test.ts';
+const COVERS_UNIT = 'covers.test.ts';
+const coversRun = e2e(
+  'covers.spec.ts',
+  'a fetched cover shows on its card after the review saves it, and Options deletes it',
+);
 const siteIconsRefresh = e2e(
   'tool-site-icons.spec.ts',
   'site icon refresh dedupes origins, rejects oversized and non-image icons, and renders saved icons',
@@ -816,6 +821,15 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'page-text.spec.ts',
       'indexed page text is searchable after the review saves it, and Options deletes it',
     ),
+  ]),
+
+  // Fetch Covers
+  coversEnabled: tested(TOOL_TABLE, [toolFlags, coversRun]),
+  coversDefaultScope: tested(TOOL_TABLE, [coversRun]),
+  coversWidthPx: tested(TOOL_OPTIONS, [coversRun]),
+  coversMaxImageKb: tested(TOOL_OPTIONS, [coversRun]),
+  coversMaxCacheMb: tested(TOOL_OPTIONS, [
+    unit(COVERS_UNIT, 'remove the oldest past the storage limit'),
   ]),
 
   // Statistics

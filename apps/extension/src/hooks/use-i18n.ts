@@ -344,6 +344,21 @@ export function formatPercent(ratio: number): string {
   }
 }
 
+/** A byte count in megabytes in the extension's language, e.g. "4.2 MB". */
+export function formatMegabytes(bytes: number): string {
+  const options: Intl.NumberFormatOptions = {
+    style: 'unit',
+    unit: 'megabyte',
+    maximumFractionDigits: 1,
+  };
+  const value = bytes / BYTES_PER_MB;
+  try {
+    return new Intl.NumberFormat(getFormattingLocale(), options).format(value);
+  } catch {
+    return new Intl.NumberFormat(undefined, options).format(value);
+  }
+}
+
 /** A size in gigabytes in the extension's language, e.g. "2.7 GB". */
 export function formatGigabytes(value: number): string {
   const options: Intl.NumberFormatOptions = {

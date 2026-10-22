@@ -27,3 +27,16 @@ preferred_size = { default = 32, min = 16, max = 256, step = 8, integer = true }
 max_icon_kb = { default = 64, min = 1, max = 512, step = 1, integer = true }
 # Total size of all cached icons in local storage, in KB; the oldest are removed first
 max_cache_kb = { default = 4096, min = 256, max = 8192, step = 256, integer = true }
+
+[covers]
+# Fetch Covers keeps a small copy of the preview image each page names for itself on this device,
+# for the manager's cards (config/bookmarks/covers.toml). Off until the user turns it on: it
+# downloads each page's head and its image.
+enabled = false
+default_scope = "folder"
+# Width of the stored copy in pixels; taller or wider images are shrunk to it
+width_px = { default = 480, min = 160, max = 960, step = 40, integer = true }
+# Largest image file that is downloaded, in KB
+max_image_kb = { default = 2048, min = 128, max = 8192, step = 128, integer = true }
+# Total size of all stored covers on this device, in MB; the oldest are removed first
+max_cache_mb = { default = 50, min = 10, max = 500, step = 10, integer = true }

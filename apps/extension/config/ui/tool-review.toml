@@ -21,3 +21,5 @@ privacy_scanner = "keep"
 bookmark_rules = "apply"
 # Index Page Text "save" or "skip" for each page whose text it read.
 page_text = "save"
+# Fetch Covers "save" or "skip" for each page whose cover it found.
+covers = "save"

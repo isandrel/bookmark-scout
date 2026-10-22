@@ -8145,6 +8145,190 @@
         "message": "Manageransicht",
         "description": "Settings: heading of the section with Manager View"
     },
+    "tools_covers": {
+        "message": "Titelbilder laden",
+        "description": "Tools sidebar: name of the Fetch Covers tool"
+    },
+    "tools_coversDesc": {
+        "message": "Eine kleine Kopie des Vorschaubilds jeder Seite auf diesem Gerät behalten, für die Karten im Manager",
+        "description": "Tools sidebar: what Fetch Covers does"
+    },
+    "action_fetch": {
+        "message": "Laden",
+        "description": "Button that runs Fetch Covers"
+    },
+    "settings_coversEnabled": {
+        "message": "Titelbilder laden aktivieren",
+        "description": "Settings: switch that turns Fetch Covers on"
+    },
+    "settings_coversEnabledDesc": {
+        "message": "Titelbilder laden in der Werkzeugleiste anzeigen. Es lädt den Kopf jeder Seite und ihr Vorschaubild herunter; eine kleine Kopie bleibt auf diesem Gerät, und die Karten zeigen sie.",
+        "description": "Settings: what turning Fetch Covers on does"
+    },
+    "settings_coversDefaultScope": {
+        "message": "Standardbereich",
+        "description": "Settings: default scope of Fetch Covers"
+    },
+    "settings_coversDefaultScopeDesc": {
+        "message": "Lesezeichen, die Titelbilder laden standardmäßig liest",
+        "description": "Settings: description of the Fetch Covers default scope"
+    },
+    "settings_coversWidthPx": {
+        "message": "Breite der Titelbilder",
+        "description": "Settings: width of a stored cover"
+    },
+    "settings_coversWidthPxDesc": {
+        "message": "Breite der Kopie jedes Titelbilds; größere Bilder werden darauf verkleinert",
+        "description": "Settings: description of the cover width"
+    },
+    "settings_coversMaxImageKb": {
+        "message": "Maximale Bildgröße",
+        "description": "Settings: largest image file Fetch Covers downloads"
+    },
+    "settings_coversMaxImageKbDesc": {
+        "message": "Größere Bilddateien werden nicht heruntergeladen",
+        "description": "Settings: description of the largest cover image"
+    },
+    "settings_coversMaxCacheMb": {
+        "message": "Speicher für Titelbilder",
+        "description": "Settings: how much room stored covers may take"
+    },
+    "settings_coversMaxCacheMbDesc": {
+        "message": "Platz, den gespeicherte Titelbilder auf diesem Gerät belegen dürfen; die ältesten werden zuerst entfernt",
+        "description": "Settings: description of the cover storage limit"
+    },
+    "tools_coversDialogDesc": {
+        "message": "Das Vorschaubild, das jede Seite für sich angibt. Nur die gespeicherten Titelbilder werden behalten, auf diesem Gerät.",
+        "description": "Fetch Covers review: description"
+    },
+    "tools_coversCategory_found": {
+        "message": "Titelbild gefunden ($1)",
+        "description": "Fetch Covers review tab: pages with a cover found; $1 is how many"
+    },
+    "tools_coversCategory_none": {
+        "message": "Kein Titelbild ($1)",
+        "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
+    },
+    "tools_coversCategory_elsewhere": {
+        "message": "Auf anderer Website ($1)",
+        "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_failed": {
+        "message": "Fehlgeschlagen ($1)",
+        "description": "Fetch Covers review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_coversCategory_current": {
+        "message": "Schon geladen ($1)",
+        "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_skipped": {
+        "message": "Übersprungen ($1)",
+        "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_coversActionSave": {
+        "message": "Titelbild speichern",
+        "description": "Fetch Covers review: action that keeps a cover"
+    },
+    "tools_coversSaveSelected": {
+        "message": "$count$ Titelbilder speichern",
+        "description": "Fetch Covers review: button that saves the covers left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversSaveSelected_one": {
+        "message": "$count$ Titelbild speichern",
+        "description": "Fetch Covers review: button that saves the covers left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversNothing": {
+        "message": "Keine Webseiten in diesem Bereich.",
+        "description": "Fetch Covers review: shown when the scope has no web pages"
+    },
+    "tools_coversElsewhereReason": {
+        "message": "Das Bild liegt auf $1; dieser Lauf hat darauf keinen Zugriff.",
+        "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
+    },
+    "toast_coversSaved": {
+        "message": "Titelbilder gespeichert",
+        "description": "Toast title after saving covers"
+    },
+    "toast_coversSavedDesc": {
+        "message": "$count$ Lesezeichen zeigen jetzt ein Titelbild auf ihrer Karte.",
+        "description": "Toast after saving covers; how many bookmarks",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversSavedDesc_one": {
+        "message": "$count$ Lesezeichen zeigt jetzt ein Titelbild auf seiner Karte.",
+        "description": "Toast after saving covers; how many bookmarks (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeTitle": {
+        "message": "Titelbilder der Lesezeichen",
+        "description": "Settings: heading of the stored covers panel"
+    },
+    "covers_storeSummary": {
+        "message": "$count$ Titelbilder, $size$. Auf diesem Gerät gespeichert; sie verlassen es nie.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeSummary_one": {
+        "message": "$count$ Titelbild, $size$. Auf diesem Gerät gespeichert; es verlässt es nie.",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeLoading": {
+        "message": "Titelbilder werden gezählt …",
+        "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_clear": {
+        "message": "Titelbilder löschen",
+        "description": "Settings: button that deletes every stored cover"
+    },
+    "covers_cleared": {
+        "message": "Titelbilder gelöscht",
+        "description": "Toast title after deleting the covers"
+    },
+    "covers_clearedDesc": {
+        "message": "Lesezeichen, Tags und der Verlauf wurden nicht geändert.",
+        "description": "Toast after deleting the covers"
+    },
     "tools_bookmarkRules": {
         "message": "Intelligente Regeln",
         "description": "Tools sidebar: name of the Smart Rules tool"

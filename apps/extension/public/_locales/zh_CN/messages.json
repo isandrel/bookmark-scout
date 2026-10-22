@@ -7835,6 +7835,156 @@
         "message": "管理器视图",
         "description": "Settings: heading of the section with Manager View"
     },
+    "tools_covers": {
+        "message": "获取封面",
+        "description": "Tools sidebar: name of the Fetch Covers tool"
+    },
+    "tools_coversDesc": {
+        "message": "在此设备上保存每个网页预览图的小副本，用于书签管理器的卡片",
+        "description": "Tools sidebar: what Fetch Covers does"
+    },
+    "action_fetch": {
+        "message": "获取",
+        "description": "Button that runs Fetch Covers"
+    },
+    "settings_coversEnabled": {
+        "message": "启用获取封面",
+        "description": "Settings: switch that turns Fetch Covers on"
+    },
+    "settings_coversEnabledDesc": {
+        "message": "在工具侧边栏中显示获取封面。它会下载每个网页的头部及其预览图；小副本保存在此设备上，并显示在卡片中。",
+        "description": "Settings: what turning Fetch Covers on does"
+    },
+    "settings_coversDefaultScope": {
+        "message": "默认范围",
+        "description": "Settings: default scope of Fetch Covers"
+    },
+    "settings_coversDefaultScopeDesc": {
+        "message": "获取封面默认读取的书签",
+        "description": "Settings: description of the Fetch Covers default scope"
+    },
+    "settings_coversWidthPx": {
+        "message": "封面宽度",
+        "description": "Settings: width of a stored cover"
+    },
+    "settings_coversWidthPxDesc": {
+        "message": "每个封面所保存副本的宽度；更大的图片会缩小到此宽度",
+        "description": "Settings: description of the cover width"
+    },
+    "settings_coversMaxImageKb": {
+        "message": "最大图片大小",
+        "description": "Settings: largest image file Fetch Covers downloads"
+    },
+    "settings_coversMaxImageKbDesc": {
+        "message": "不下载超过此大小的图片文件",
+        "description": "Settings: description of the largest cover image"
+    },
+    "settings_coversMaxCacheMb": {
+        "message": "封面存储空间",
+        "description": "Settings: how much room stored covers may take"
+    },
+    "settings_coversMaxCacheMbDesc": {
+        "message": "封面在此设备上可占用的空间；最早保存的会先被删除",
+        "description": "Settings: description of the cover storage limit"
+    },
+    "tools_coversDialogDesc": {
+        "message": "每个网页为自己指定的预览图。只有你保存的封面才会留在此设备上。",
+        "description": "Fetch Covers review: description"
+    },
+    "tools_coversCategory_found": {
+        "message": "有封面 ($1)",
+        "description": "Fetch Covers review tab: pages with a cover found; $1 is how many"
+    },
+    "tools_coversCategory_none": {
+        "message": "无封面 ($1)",
+        "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
+    },
+    "tools_coversCategory_elsewhere": {
+        "message": "在其他网站 ($1)",
+        "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_failed": {
+        "message": "失败 ($1)",
+        "description": "Fetch Covers review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_coversCategory_current": {
+        "message": "已获取 ($1)",
+        "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_skipped": {
+        "message": "已跳过 ($1)",
+        "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_coversActionSave": {
+        "message": "保存封面",
+        "description": "Fetch Covers review: action that keeps a cover"
+    },
+    "tools_coversSaveSelected": {
+        "message": "保存 $count$ 个封面",
+        "description": "Fetch Covers review: button that saves the covers left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversNothing": {
+        "message": "此范围内没有网页。",
+        "description": "Fetch Covers review: shown when the scope has no web pages"
+    },
+    "tools_coversElsewhereReason": {
+        "message": "图片位于 $1，本次运行无权访问该网站。",
+        "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
+    },
+    "toast_coversSaved": {
+        "message": "封面已保存",
+        "description": "Toast title after saving covers"
+    },
+    "toast_coversSavedDesc": {
+        "message": "现在有 $count$ 个书签的卡片显示封面。",
+        "description": "Toast after saving covers; how many bookmarks",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeTitle": {
+        "message": "书签封面",
+        "description": "Settings: heading of the stored covers panel"
+    },
+    "covers_storeSummary": {
+        "message": "$count$ 个封面，$size$。保存在此设备上，绝不会离开此设备。",
+        "description": "Settings: how many covers are stored; $1 covers, $2 their size",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "size": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "covers_storeLoading": {
+        "message": "正在统计封面…",
+        "description": "Settings: shown while the stored covers are counted"
+    },
+    "covers_clear": {
+        "message": "删除封面",
+        "description": "Settings: button that deletes every stored cover"
+    },
+    "covers_cleared": {
+        "message": "封面已删除",
+        "description": "Toast title after deleting the covers"
+    },
+    "covers_clearedDesc": {
+        "message": "书签、标签和历史记录均未更改。",
+        "description": "Toast after deleting the covers"
+    },
     "tools_bookmarkRules": {
         "message": "智能规则",
         "description": "Tools sidebar: name of the Smart Rules tool"

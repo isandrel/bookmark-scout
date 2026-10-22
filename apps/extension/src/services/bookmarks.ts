@@ -142,6 +142,17 @@ export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
   return tree.map(toBookmarkTreeNode);
 }
 
+/** The id of every bookmark and folder, so data kept by id can drop what is gone. */
+export async function fetchBookmarkIds(): Promise<Set<string>> {
+  const ids = new Set<string>();
+  const walk = (node: Browser.bookmarks.BookmarkTreeNode) => {
+    ids.add(node.id);
+    for (const child of node.children ?? []) walk(child);
+  };
+  for (const root of await requireBookmarksApi().getTree()) walk(root);
+  return ids;
+}
+
 /** The whole tree as the browser gives it, with Firefox separators' `type`. */
 export function fetchRawBookmarkTree(): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
   return requireBookmarksApi().getTree();

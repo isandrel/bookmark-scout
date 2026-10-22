@@ -10,6 +10,7 @@ export const MS_PER_DAY = MS_PER_HOUR * HOURS_PER_DAY;
 
 /** Kilobytes are binary here, matching how sizes are shown (`formatKilobytes`). */
 export const BYTES_PER_KB = 1024;
+export const BYTES_PER_MB = BYTES_PER_KB * BYTES_PER_KB;
 
 /** `value` rounded to `decimals` decimal places. */
 export function roundTo(value: number, decimals: number): number {
