@@ -8586,7 +8586,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Cada regla encuentra marcadores con una búsqueda y añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas no cambian nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas y aplicas su revisión. Si dos reglas mueven un marcador, gana la que está más arriba. Solo se guardan en este dispositivo.",
+        "message": "Cada regla encuentra marcadores con una búsqueda y añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas no cambian nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas y aplicas su revisión, o activas Etiquetar marcadores nuevos o Mover marcadores nuevos. Si dos reglas mueven un marcador, gana la que está más arriba. Solo se guardan en este dispositivo.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8650,7 +8650,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Una regla encuentra marcadores con una búsqueda e indica qué hacer con ellos. No cambia nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas.",
+        "message": "Una regla encuentra marcadores con una búsqueda e indica qué hacer con ellos. No cambia nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas, salvo que Etiquetar marcadores nuevos o Mover marcadores nuevos esté activado.",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8701,6 +8701,14 @@
         "message": "Déjalo sin elegir para solo añadir etiquetas.",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "Mover marcadores nuevos automáticamente",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "Mientras Mover marcadores nuevos esté activado, cada marcador nuevo que encuentre esta regla se mueve a esta carpeta sin revisión. Solo a esta carpeta exacta: si se elimina, cambia de nombre o se mueve, los movimientos automáticos se detienen hasta que vuelvas a guardar la regla. Elige primero una carpeta.",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "Activada",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8736,6 +8744,18 @@
     "rules_copyName": {
         "message": "$1 (copia)",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "Mueve marcadores nuevos automáticamente",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "Movimientos automáticos detenidos: su carpeta se eliminó, cambió de nombre, se movió o está administrada. Vuelve a elegir la carpeta y guarda la regla.",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "Reglas inteligentes, automáticamente",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "Lo que cambiarían las reglas. No cambia nada hasta que lo apliques.",
@@ -8858,8 +8878,16 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Las reglas activas añaden sus etiquetas a cada marcador al añadirlo, ya sea desde Bookmark Scout, el navegador o la sincronización. Nunca se mueve nada automáticamente, y muchos marcadores añadidos a la vez (una sincronización o una importación) no se tocan.",
+        "message": "Las reglas activas añaden sus etiquetas a cada marcador al añadirlo, ya sea desde Bookmark Scout, el navegador o la sincronización. Etiquetar nunca mueve un marcador; para eso está Mover marcadores nuevos. Muchos marcadores añadidos a la vez (una sincronización o una importación) no se tocan.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "Mover marcadores nuevos",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "Las reglas que configuras para mover marcadores nuevos automáticamente mueven a su carpeta cada marcador añadido con la estrella del navegador, otra extensión o la sincronización, solo mientras sea la carpeta que elegiste. Etiquetar marcadores nuevos nunca activa esto. Los marcadores que guarda Bookmark Scout se quedan donde se pusieron, y muchos añadidos a la vez no se tocan. Cada movimiento aparece en el Historial de marcadores y en Cambiados automáticamente, con Deshacer.",
+        "description": "Settings: what Move New Bookmarks does"
     },
     "covers_captureButton": {
         "message": "Usar esta vista como portada",
@@ -8906,8 +8934,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Etiquetados automáticamente",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "Cambiados automáticamente",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "Vaciar lista",
@@ -8917,9 +8945,17 @@
         "message": "Añadido $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "Movido a $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "Deshacer las etiquetas añadidas a $1",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "Devolver $1 a su sitio",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
     "rules_autoLogUndone": {
         "message": "Etiquetas quitadas",
@@ -8944,5 +8980,25 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "Devuelto a su sitio",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "No se devolvió a su sitio",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "El marcador se eliminó después.",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "El marcador se movió de nuevo después, así que se queda donde está.",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "La carpeta en la que estaba ya no existe, así que se queda donde está.",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

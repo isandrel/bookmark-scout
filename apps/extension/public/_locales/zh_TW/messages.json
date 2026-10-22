@@ -8234,7 +8234,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "每條規則都會用搜尋找到書籤，然後加上標籤、移到資料夾，或兩者都做。在工具側邊欄中執行智慧規則並套用確認結果之前，規則不會做任何變更。兩條規則都移動同一個書籤時，排在上面的規則優先。只會儲存在這部裝置上。",
+        "message": "每條規則都會用搜尋找到書籤，然後加上標籤、移到資料夾，或兩者都做。在工具側邊欄中執行智慧規則並套用確認結果，或開啟「為新書籤加上標籤」或「移動新書籤」之前，規則不會做任何變更。兩條規則都移動同一個書籤時，排在上面的規則優先。只會儲存在這部裝置上。",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8298,7 +8298,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "規則會用搜尋找到書籤，並決定如何處理它們。在工具側邊欄中執行智慧規則之前，它不會做任何變更。",
+        "message": "規則會用搜尋找到書籤，並決定如何處理它們。除非開啟了「為新書籤加上標籤」或「移動新書籤」，否則在工具側邊欄中執行智慧規則之前，它不會做任何變更。",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8339,6 +8339,14 @@
         "message": "只加上標籤時請不要選擇。",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "自動移動新書籤",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "開啟「移動新書籤」時，此規則符合的每個新書籤都會不經確認移到這個資料夾。只會移到這個資料夾：如果它被刪除、重新命名或移動，自動移動會停止，直到你再次儲存規則。請先選擇資料夾。",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "已開啟",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8374,6 +8382,18 @@
     "rules_copyName": {
         "message": "$1 (副本)",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "自動移動新書籤",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "自動移動已停止：其資料夾已被刪除、重新命名或移動，或者受管理。請重新選擇資料夾並儲存規則。",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "智慧規則，自動",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "規則將做出的變更。套用之前不會有任何變更。",
@@ -8476,8 +8496,16 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "已啟用的規則會在每個書籤新增時為其加上標籤，無論書籤來自 Bookmark Scout、瀏覽器還是同步。絕不會自動移動書籤，一次新增的大量書籤 (同步或匯入) 會保持不變。",
+        "message": "已啟用的規則會在每個書籤新增時為其加上標籤，無論書籤來自 Bookmark Scout、瀏覽器還是同步。加上標籤絕不會移動書籤；移動需要開啟「移動新書籤」。一次新增的大量書籤 (同步或匯入) 會保持不變。",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "移動新書籤",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "設為自動移動新書籤的規則，會把透過瀏覽器星號、其他擴充功能或同步新增的每個書籤移到其資料夾，但僅限該資料夾仍是你選擇的資料夾時。開啟「為新書籤加上標籤」絕不會開啟此項。Bookmark Scout 儲存的書籤會留在原處，一次新增的大量書籤會保持不變。每次移動都會記錄在書籤記錄和「自動變更」中，並可復原。",
+        "description": "Settings: what Move New Bookmarks does"
     },
     "covers_captureButton": {
         "message": "將目前畫面設為封面",
@@ -8524,8 +8552,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "自動加上的標籤",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "自動變更",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "清除清單",
@@ -8535,9 +8563,17 @@
         "message": "已加上 $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "已移到 $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "復原加到 $1 的標籤",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "將 $1 移回原處",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
     "rules_autoLogUndone": {
         "message": "已移除標籤",
@@ -8552,5 +8588,25 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "已移回原處",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "未移回原處",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "此後書籤已被刪除。",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "此後書籤又被移動過，因此保持在目前位置。",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "它原本所在的資料夾已不存在，因此保持在目前位置。",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

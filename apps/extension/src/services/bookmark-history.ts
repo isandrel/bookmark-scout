@@ -221,6 +221,28 @@ export async function unpackBookmarkHistoryEntry(
   };
 }
 
+/**
+ * Every bookmark and folder id the undo and redo history names: items Bookmark Scout added, put
+ * back, moved, or edited in this session, so code acting on new bookmarks can leave alone the
+ * ones a page of the extension just put where the user chose.
+ */
+export async function bookmarkIdsInHistory(): Promise<Set<string>> {
+  const history = await bookmarkHistoryValue.get();
+  const ids = new Set<string>();
+  const addNode = (node: RecoverableBookmarkNode) => {
+    if (node.id) ids.add(node.id);
+    for (const child of node.children ?? []) addNode(child);
+  };
+  for (const stored of [...history.undo, ...history.redo]) {
+    const entry = await unpackBookmarkHistoryEntry(stored).catch(() => undefined);
+    for (const op of entry?.operations ?? []) {
+      if (op.kind === 'create' || op.kind === 'remove') addNode(op.node);
+      else ids.add(op.id);
+    }
+  }
+  return ids;
+}
+
 /** Whether a history holding only `entry` stays within the size limit. */
 function fitsAlone(entry: StoredBookmarkHistoryEntry, limits: HistoryLimits): boolean {
   return JSON.stringify({ undo: [entry], redo: [] }).length <= limits.maxBytes;

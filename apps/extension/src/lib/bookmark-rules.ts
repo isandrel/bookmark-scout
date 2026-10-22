@@ -8,6 +8,10 @@
  * wins: the first rule that moves a bookmark does, and any other folder a later rule names is a
  * conflict to review. Tags from every matching rule are added once each, compared by `tagKey`,
  * and a tag the bookmark already has is not added again. Folders are never moved or tagged.
+ *
+ * A rule can also move new bookmarks without a review (`autoMove`, `rule-automation.ts`), but only
+ * to the exact folder it was saved with: `ruleAutoMoveBlocks` stops it when that folder is gone,
+ * managed, or no longer at the path the rule names, and never looks for another by its path.
  */
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
@@ -27,7 +31,7 @@ const rulesConfig = readConfig(
         add_tags: z.array(z.string().min(1)).min(1),
       }),
     ),
-    auto_tag: z.strictObject({
+    automatic: z.strictObject({
       batch_window_ms: z.number().int().positive(),
       max_batch: z.number().int().positive(),
       log_max: z.number().int().positive(),
@@ -72,11 +76,18 @@ export const bookmarkRuleSchema = z
      * is gone (another profile, or the folder was deleted and restored).
      */
     moveTo: z.strictObject({ folderId: z.string().min(1), path: z.string() }).optional(),
+    /**
+     * Move new bookmarks to `moveTo` without a review, while Move New Bookmarks is on. The user
+     * turns it on for this rule and this folder; rules saved before it existed leave it out (off).
+     */
+    autoMove: z.boolean().optional(),
   })
-  .transform((rule) => ({
+  .transform(({ autoMove, ...rule }) => ({
     ...rule,
     query: upgradeSearchText(rule.query, rule.syntaxVersion),
     syntaxVersion: SEARCH_SYNTAX_VERSION,
+    // Only a rule with a folder can move; kept only when on, so a rule reads as it was saved.
+    ...(autoMove && rule.moveTo ? { autoMove: true } : {}),
   }))
   .refine((rule) => isRunnableQuery(rule.query), { message: 'A rule needs a search it can run' })
   .refine((rule) => rule.addTags.length > 0 || rule.moveTo !== undefined, {
@@ -260,4 +271,36 @@ export function planBookmarkRules(
     });
   }
   return items;
+}
+
+/**
+ * Why a rule's automatic moves are stopped: its folder is gone or managed (as for a reviewed
+ * move), or `folderChanged`, when the folder with that id is no longer at the path the rule was
+ * saved with (renamed or moved, or another profile's folder with the same id after a restore).
+ */
+export type RuleAutoMoveBlock = RuleMoveBlock | 'folderChanged';
+
+/**
+ * For each rule that moves new bookmarks automatically, by id: why it cannot now, or undefined
+ * when its folder is the one it was saved with. Unlike a reviewed run, the folder is never looked
+ * for by its path: a move nobody reviews goes only to the folder the user approved.
+ */
+export function ruleAutoMoveBlocks(
+  rules: readonly BookmarkRule[],
+  tree: readonly BookmarkTreeNode[],
+): Map<string, RuleAutoMoveBlock | undefined> {
+  const blocks = new Map<string, RuleAutoMoveBlock | undefined>();
+  let index: TreeIndex | undefined;
+  let paths: Map<string, string[]> | undefined;
+  for (const rule of rules) {
+    if (!rule.autoMove || !rule.moveTo) continue;
+    index ??= indexTree(tree);
+    paths ??= indexFolderPaths(tree);
+    const { folderId, path } = rule.moveTo;
+    const block =
+      moveTarget(index, folderId) ??
+      (paths.get(path)?.includes(folderId) ? undefined : 'folderChanged');
+    blocks.set(rule.id, block);
+  }
+  return blocks;
 }

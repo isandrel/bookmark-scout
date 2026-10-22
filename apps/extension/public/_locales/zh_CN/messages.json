@@ -8234,7 +8234,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "每条规则用搜索找到书签，然后添加标签、移动到文件夹，或两者都做。在工具侧边栏中运行智能规则并应用审阅结果之前，规则不会做任何更改。两条规则都移动同一个书签时，排在上面的规则优先。只保存在此设备上。",
+        "message": "每条规则用搜索找到书签，然后添加标签、移动到文件夹，或两者都做。在工具侧边栏中运行智能规则并应用审阅结果，或开启“为新书签添加标签”或“移动新书签”之前，规则不会做任何更改。两条规则都移动同一个书签时，排在上面的规则优先。只保存在此设备上。",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8298,7 +8298,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "规则用搜索找到书签，并决定如何处理它们。在工具侧边栏中运行智能规则之前，它不会做任何更改。",
+        "message": "规则用搜索找到书签，并决定如何处理它们。除非开启了“为新书签添加标签”或“移动新书签”，否则在工具侧边栏中运行智能规则之前，它不会做任何更改。",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8339,6 +8339,14 @@
         "message": "只添加标签时请不要选择。",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "自动移动新书签",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "开启“移动新书签”时，此规则匹配的每个新书签都会不经审阅移到此文件夹。只移到这个文件夹：如果它被删除、重命名或移动，自动移动会停止，直到你再次保存规则。请先选择文件夹。",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "已开启",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8374,6 +8382,18 @@
     "rules_copyName": {
         "message": "$1（副本）",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "自动移动新书签",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "自动移动已停止：其文件夹已被删除、重命名或移动，或者受管理。请重新选择文件夹并保存规则。",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "智能规则，自动",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "规则将做出的更改。应用之前不会有任何更改。",
@@ -8476,8 +8496,16 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "已启用的规则会在每个书签添加时为其加上标签，无论书签来自 Bookmark Scout、浏览器还是同步。绝不会自动移动书签，一次添加的大量书签（同步或导入）会保持不变。",
+        "message": "已启用的规则会在每个书签添加时为其加上标签，无论书签来自 Bookmark Scout、浏览器还是同步。添加标签绝不会移动书签；移动需要开启“移动新书签”。一次添加的大量书签（同步或导入）会保持不变。",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "移动新书签",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "设为自动移动新书签的规则会把通过浏览器星标、其他扩展或同步添加的每个书签移到其文件夹，但仅在该文件夹仍是你所选的文件夹时。开启“为新书签添加标签”绝不会开启此项。Bookmark Scout 保存的书签留在原处，一次添加的大量书签保持不变。每次移动都会记录在书签历史记录和“自动更改”中，并可撤消。",
+        "description": "Settings: what Move New Bookmarks does"
     },
     "covers_captureButton": {
         "message": "用当前画面作为封面",
@@ -8524,8 +8552,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "自动添加的标签",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "自动更改",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "清空列表",
@@ -8535,9 +8563,17 @@
         "message": "已添加 $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "已移到 $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "撤消为 $1 添加的标签",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "将 $1 移回原处",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
     "rules_autoLogUndone": {
         "message": "标签已移除",
@@ -8552,5 +8588,25 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "已移回原处",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "未移回原处",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "此后书签已被删除。",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "此后书签又被移动过，因此保持在当前位置。",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "它原来所在的文件夹已不存在，因此保持在当前位置。",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

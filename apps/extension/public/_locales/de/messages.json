@@ -8586,7 +8586,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Jede Regel findet Lesezeichen mit einer Suche und fügt Tags hinzu, verschiebt sie in einen Ordner oder beides. Regeln ändern nichts, bis Sie Intelligente Regeln in der Tools-Leiste ausführen und die Überprüfung übernehmen. Verschieben zwei Regeln ein Lesezeichen, gewinnt die höhere. Nur auf diesem Gerät gespeichert.",
+        "message": "Jede Regel findet Lesezeichen mit einer Suche und fügt Tags hinzu, verschiebt sie in einen Ordner oder beides. Regeln ändern nichts, bis Sie Intelligente Regeln in der Tools-Leiste ausführen und die Überprüfung übernehmen oder Neue Lesezeichen taggen oder Neue Lesezeichen verschieben einschalten. Verschieben zwei Regeln ein Lesezeichen, gewinnt die höhere. Nur auf diesem Gerät gespeichert.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8650,7 +8650,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Eine Regel findet Lesezeichen mit einer Suche und legt fest, was mit ihnen geschieht. Sie ändert nichts, bis Sie Intelligente Regeln in der Tools-Leiste ausführen.",
+        "message": "Eine Regel findet Lesezeichen mit einer Suche und legt fest, was mit ihnen geschieht. Sie ändert nichts, bis Sie Intelligente Regeln in der Tools-Leiste ausführen, außer wenn Neue Lesezeichen taggen oder Neue Lesezeichen verschieben eingeschaltet ist.",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8701,6 +8701,14 @@
         "message": "Lassen Sie ihn leer, um nur Tags hinzuzufügen.",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "Neue Lesezeichen automatisch verschieben",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "Solange Neue Lesezeichen verschieben eingeschaltet ist, wird jedes neue Lesezeichen, das diese Regel findet, ohne Überprüfung in diesen Ordner verschoben. Nur in genau diesen Ordner: Wird er gelöscht, umbenannt oder verschoben, stoppen automatische Verschiebungen, bis Sie die Regel erneut speichern. Wählen Sie zuerst einen Ordner.",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "Eingeschaltet",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8736,6 +8744,18 @@
     "rules_copyName": {
         "message": "$1 (Kopie)",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "Verschiebt neue Lesezeichen automatisch",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "Automatische Verschiebungen gestoppt: Der Ordner wurde gelöscht, umbenannt oder verschoben oder wird verwaltet. Wählen Sie den Ordner erneut und speichern Sie die Regel.",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "Intelligente Regeln, automatisch",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "Was die Regeln ändern würden. Nichts ändert sich, bevor Sie es übernehmen.",
@@ -8858,8 +8878,16 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Aktive Regeln fügen jedem Lesezeichen beim Hinzufügen ihre Tags hinzu, ob aus Bookmark Scout, dem Browser oder der Synchronisierung. Verschoben wird nie automatisch, und viele auf einmal hinzugefügte Lesezeichen (eine Synchronisierung oder ein Import) bleiben unverändert.",
+        "message": "Aktive Regeln fügen jedem Lesezeichen beim Hinzufügen ihre Tags hinzu, ob aus Bookmark Scout, dem Browser oder der Synchronisierung. Taggen verschiebt nie ein Lesezeichen; dafür gibt es Neue Lesezeichen verschieben. Viele auf einmal hinzugefügte Lesezeichen (eine Synchronisierung oder ein Import) bleiben unverändert.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "Neue Lesezeichen verschieben",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "Regeln, die Sie neue Lesezeichen automatisch verschieben lassen, verschieben jedes Lesezeichen, das über den Stern des Browsers, eine andere Erweiterung oder die Synchronisierung hinzukommt, in ihren Ordner, nur solange es der von Ihnen gewählte Ordner ist. Neue Lesezeichen taggen schaltet dies nie ein. Von Bookmark Scout gespeicherte Lesezeichen bleiben, wo sie abgelegt wurden, und viele auf einmal hinzugefügte bleiben unverändert. Jede Verschiebung steht im Lesezeichen-Verlauf und unter Automatisch geändert, mit Rückgängig.",
+        "description": "Settings: what Move New Bookmarks does"
     },
     "covers_captureButton": {
         "message": "Diese Ansicht als Titelbild verwenden",
@@ -8906,8 +8934,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Automatisch getaggt",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "Automatisch geändert",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "Liste leeren",
@@ -8917,9 +8945,17 @@
         "message": "Hinzugefügt: $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "Verschoben nach $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "Tags für $1 rückgängig machen",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "$1 zurückverschieben",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
     "rules_autoLogUndone": {
         "message": "Tags entfernt",
@@ -8944,5 +8980,25 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "Zurückverschoben",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "Nicht zurückverschoben",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "Das Lesezeichen wurde inzwischen gelöscht.",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "Das Lesezeichen wurde inzwischen erneut verschoben und bleibt daher, wo es ist.",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "Der Ordner, in dem es war, existiert nicht mehr. Es bleibt daher, wo es ist.",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

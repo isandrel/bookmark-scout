@@ -1,6 +1,7 @@
 /**
  * Smart Rules end to end: a rule made in Settings, run from the Tools sidebar on a review that
- * changes nothing until applied, then applied (tags and a move) and undone.
+ * changes nothing until applied, then applied (tags and a move) and undone; and new bookmarks
+ * tagged and moved without a review, each only with its own opt-in.
  */
 import type { Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
@@ -183,7 +184,7 @@ test('templates start turned off, and a run with no rule on says so', async ({
   expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata)).toBeFalsy();
 });
 
-test('with Tag New Bookmarks on, a bookmark added in the browser gets its rules tags and stays put', async ({
+test('with Tag New Bookmarks on, a bookmark added in the browser gets its rules tags and stays put, even when a rule may move new bookmarks', async ({
   extensionId,
   extensionWorker,
   page,
@@ -201,6 +202,7 @@ test('with Tag New Bookmarks on, a bookmark added in the browser gets its rules 
       syntaxVersion: 1,
       addTags: ['development'],
       moveTo: { folderId: target, path: 'E2E Auto Tag/Elsewhere' },
+      autoMove: true,
     },
   ]);
   const add = (title: string, url: string) =>
@@ -218,15 +220,96 @@ test('with Tag New Bookmarks on, a bookmark added in the browser gets its rules 
   await expect.poll(() => tagsOf(extensionWorker, repo)).toEqual(['development']);
   expect(await tagsOf(extensionWorker, other)).toEqual([]);
   expect(await tagsOf(extensionWorker, before)).toEqual([]);
-  // The rule's move is never made automatically.
+  // Tagging never moves, even for a rule that may move new bookmarks.
   expect(await parentOf(extensionWorker, repo)).toBe(seeded.folderId);
 
   // Settings lists the tagging, and its Undo takes the tags back.
   await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
-  const log = page.getByTestId('auto-tag-log');
-  await expect(log.getByTestId('auto-tag-entry')).toHaveCount(1);
+  const log = page.getByTestId('rule-auto-log');
+  await expect(log.getByTestId('rule-auto-entry')).toHaveCount(1);
+  await expect(log.getByRole('heading', { name: 'Changed automatically' })).toBeVisible();
   await expect(log).toContainText('Repo');
   await log.getByRole('button', { name: 'Undo the tags added to Repo' }).click();
   await expect.poll(() => tagsOf(extensionWorker, repo)).toEqual([]);
   await expect(log).toHaveCount(0);
+});
+
+test('with Move New Bookmarks on, a rule set to move new bookmarks moves one added in the browser, logs it, and Undo puts it back', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Auto Move', [
+    { title: 'Target', children: [] },
+  ]);
+  const target = (seeded.ids as Record<string, string>).Target as string;
+  const add = (title: string, url: string) =>
+    extensionWorker.evaluate(
+      async ({ parentId, title, url }) =>
+        (await chrome.bookmarks.create({ parentId, title, url })).id,
+      { parentId: seeded.folderId, title, url },
+    );
+
+  // The opt-in is on the rule, next to its folder, and the list says the rule moves on its own.
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const panel = page.getByTestId('bookmark-rules');
+  await panel.getByRole('button', { name: 'Add rule' }).click();
+  const editor = page.getByRole('dialog', { name: 'New rule' });
+  await editor.getByRole('textbox', { name: 'Name' }).fill('GitHub');
+  await editor.getByRole('textbox', { name: 'Bookmarks that match' }).fill('domain:github.com');
+  await editor.getByRole('textbox', { name: 'Add tags' }).fill('dev');
+  const autoMove = editor.getByRole('checkbox', { name: 'Move new bookmarks automatically' });
+  // No folder, nothing to move to.
+  await expect(autoMove).toBeDisabled();
+  await editor.getByRole('combobox', { name: 'Move to folder' }).click();
+  await page.getByRole('combobox', { name: 'Search...' }).fill('E2E Auto Move / Target');
+  await page.getByRole('option', { name: /E2E Auto Move \/ Target$/ }).click();
+  await autoMove.click();
+  await editor.getByRole('button', { name: 'Save' }).click();
+  await expect(editor).toHaveCount(0);
+  const rule = panel.getByTestId('bookmark-rule');
+  await expect(rule.getByTestId('rule-auto-move')).toHaveText('Moves new bookmarks automatically');
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toEqual([
+    expect.objectContaining({
+      autoMove: true,
+      moveTo: { folderId: target, path: expect.stringMatching(/E2E Auto Move \/ Target$/) },
+    }),
+  ]);
+
+  // Tag New Bookmarks alone never moves.
+  await setSettings(extensionWorker, { bookmarkRulesAutoTag: true });
+  const tagged = await add('Tagged', 'https://github.com/org/tagged');
+  await expect.poll(() => tagsOf(extensionWorker, tagged)).toEqual(['dev']);
+  expect(await parentOf(extensionWorker, tagged)).toBe(seeded.folderId);
+
+  // With Move New Bookmarks on too, a new bookmark the rule matches goes to the rule's folder.
+  await setSettings(extensionWorker, { bookmarkRulesAutoMove: true });
+  await expect(page.getByRole('switch', { name: 'Move New Bookmarks' })).toBeChecked();
+  const repo = await add('Repo', 'https://github.com/org/repo');
+  const other = await add('Other', 'https://other.e2e.invalid/');
+  await expect.poll(() => parentOf(extensionWorker, repo)).toBe(target);
+  expect(await tagsOf(extensionWorker, repo)).toEqual(['dev']);
+  expect(await parentOf(extensionWorker, other)).toBe(seeded.folderId);
+  expect(await parentOf(extensionWorker, tagged)).toBe(seeded.folderId);
+
+  // Listed under Changed automatically, where Undo puts it back.
+  const log = page.getByTestId('rule-auto-log');
+  const moved = log.locator('[data-testid="rule-auto-entry"][data-kind="move"]');
+  await expect(moved).toHaveCount(1);
+  await expect(moved).toContainText('Repo');
+  await expect(moved).toContainText(/Moved to .*E2E Auto Move \/ Target/);
+  await moved.getByRole('button', { name: 'Move Repo back' }).click();
+  await expect.poll(() => parentOf(extensionWorker, repo)).toBe(seeded.folderId);
+  await expect(toastRegion(page).getByText('✓ Moved back', { exact: true })).toBeVisible();
+  await expect(moved).toHaveCount(0);
+
+  // The folder renamed: the rule says its automatic moves stopped, and the next bookmark stays.
+  await extensionWorker.evaluate(
+    async (id) => chrome.bookmarks.update(id, { title: 'Renamed' }),
+    target,
+  );
+  await expect(rule.getByTestId('rule-auto-move-paused')).toBeVisible();
+  const later = await add('Later', 'https://github.com/org/later');
+  await expect.poll(() => tagsOf(extensionWorker, later)).toEqual(['dev']);
+  expect(await parentOf(extensionWorker, later)).toBe(seeded.folderId);
 });

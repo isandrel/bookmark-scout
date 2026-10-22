@@ -1070,6 +1070,10 @@ const fields = {
     TOOL_SCOPE_CAPABILITIES.bookmarkRules,
   ),
   bookmarkRulesAutoTag: switchField('maintenance.bookmark_rules.auto_tag', 'bookmarkRulesAutoTag'),
+  bookmarkRulesAutoMove: switchField(
+    'maintenance.bookmark_rules.auto_move',
+    'bookmarkRulesAutoMove',
+  ),
   pageTextEnabled: switchField('metadata_content.page_text.enabled', 'pageTextEnabled'),
   pageTextDefaultScope: scopeField(
     'metadata_content.page_text',
@@ -1498,7 +1502,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'bookmarkRules',
         labelKey: 'tools_bookmarkRules',
         toggle: 'bookmarkRulesEnabled',
-        fields: ['bookmarkRulesDefaultScope', 'bookmarkRulesAutoTag'],
+        fields: ['bookmarkRulesDefaultScope', 'bookmarkRulesAutoTag', 'bookmarkRulesAutoMove'],
         panel: 'bookmarkRules',
       },
       {

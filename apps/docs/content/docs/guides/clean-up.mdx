@@ -93,7 +93,7 @@ In Firefox, open the manager with **Open bookmark manager** in the toolbar popup
 
 ## Tag and move with Smart Rules
 
-A smart rule finds bookmarks with a search, in the same words and [operators](/guides/search#search-words-and-operators) as the search boxes, and adds tags to them, moves them to a folder, or both. Rules never act on their own: each run is a review you apply.
+A smart rule finds bookmarks with a search, in the same words and [operators](/guides/search#search-words-and-operators) as the search boxes, and adds tags to them, moves them to a folder, or both. Rules act on their own only where you turn that on, below; otherwise each run is a review you apply.
 
 <Steps>
 <Step>
@@ -116,7 +116,8 @@ Good to know:
 - A tag a bookmark already has, in any spelling, is not added again. Folders are never tagged or moved.
 - **Undo** in the message after applying puts back both the moves and the tags. The moves are one change in the History.
 - Rules stay on this device and are part of **Back up settings**. A rule restored on another device moves bookmarks only if its folder exists there; otherwise its moves are blocked until you choose the folder again. It finds that folder by its path when the folder has another id there, as long as only one folder has that path.
-- With **Tag New Bookmarks** on in Settings, enabled rules add their tags to each bookmark as it is added, from Bookmark Scout, the browser's star, another extension, or sync, since the browser does not say where a bookmark came from. Only tags are added; a rule's move waits for a run you review. Many bookmarks added at once (a sync or an import) are left alone, and so is a bookmark added while the setting was off. Each automatic tagging is listed under **Tagged automatically** in Settings, with an Undo that removes its tags.
+- With **Tag New Bookmarks** on in Settings, enabled rules add their tags to each bookmark as it is added, from Bookmark Scout, the browser's star, another extension, or sync, since the browser does not say where a bookmark came from. It never moves anything. Many bookmarks added at once (a sync or an import) are left alone, and so is a bookmark added while the setting was off. Each automatic tagging is listed under **Changed automatically** in Settings, with an Undo that removes its tags.
+- Moving without a review takes two choices of yours, apart from tagging: **Move new bookmarks automatically** on the rule, next to its folder, and **Move New Bookmarks** in Settings. The rules list says **Moves new bookmarks automatically** under such a rule. A new bookmark it matches then goes to that folder, and only that one: if the folder is deleted, renamed, moved, or managed, the rule says its automatic moves stopped and nothing moves until you choose the folder again and save the rule; a folder with the same path is never used instead. As in a run, the first rule that moves a bookmark decides, and a bookmark two rules would move to different folders stays put. Bookmarks Bookmark Scout saves (quick save, the manager) stay where they were put, and so do many added at once and one moved again within a few seconds. Each batch of moves is one change in the [History](/guides/save-and-organize), from Bookmark Scout, named Smart Rules, automatically, and each move is listed under **Changed automatically**, where Undo puts the bookmark back in its earlier folder unless it was moved since.
 - A rule saved before searches read `OR` and parentheses keeps finding what it found: they are read as text, in quotes.
 
 ## Search inside pages

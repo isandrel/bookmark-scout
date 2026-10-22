@@ -8558,7 +8558,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "各ルールは検索でブックマークを見つけ、タグを追加する、フォルダに移動する、またはその両方を行います。ツールサイドバーでスマートルールを実行して確認内容を適用するまで、何も変わりません。2 つのルールが同じブックマークを移動する場合は、上にあるルールが優先されます。この端末にのみ保存されます。",
+        "message": "各ルールは検索でブックマークを見つけ、タグを追加する、フォルダに移動する、またはその両方を行います。ツールサイドバーでスマートルールを実行して確認内容を適用するか、「新しいブックマークにタグを付ける」または「新しいブックマークを移動する」をオンにするまで、何も変わりません。2 つのルールが同じブックマークを移動する場合は、上にあるルールが優先されます。この端末にのみ保存されます。",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8622,7 +8622,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "ルールは検索でブックマークを見つけ、それをどうするかを決めます。ツールサイドバーでスマートルールを実行するまで、何も変わりません。",
+        "message": "ルールは検索でブックマークを見つけ、それをどうするかを決めます。「新しいブックマークにタグを付ける」または「新しいブックマークを移動する」がオンでない限り、ツールサイドバーでスマートルールを実行するまで何も変わりません。",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8673,6 +8673,14 @@
         "message": "タグの追加だけなら選ばないでください。",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "新しいブックマークを自動で移動",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "「新しいブックマークを移動する」がオンの間、このルールに一致する新しいブックマークは確認なしでこのフォルダに移動します。移動先はこのフォルダだけです。フォルダが削除、名前変更、移動されると、ルールを保存し直すまで自動移動は止まります。先にフォルダを選んでください。",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "オン",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8708,6 +8716,18 @@
     "rules_copyName": {
         "message": "$1（コピー）",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "新しいブックマークを自動で移動します",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "自動移動は停止中です。フォルダが削除、名前変更、移動されたか、管理対象です。フォルダを選び直してルールを保存してください。",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "スマートルール、自動",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "ルールによる変更内容です。適用するまで何も変わりません。",
@@ -8830,8 +8850,16 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "有効なルールが、Bookmark Scout、ブラウザ、同期のどこから追加されたかにかかわらず、追加された各ブックマークにタグを付けます。自動で移動することはなく、一度に多数追加されたブックマーク（同期やインポート）はそのままにします。",
+        "message": "有効なルールが、Bookmark Scout、ブラウザ、同期のどこから追加されたかにかかわらず、追加された各ブックマークにタグを付けます。タグ付けでブックマークが移動することはありません。移動するには「新しいブックマークを移動する」が必要です。一度に多数追加されたブックマーク（同期やインポート）はそのままにします。",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "新しいブックマークを移動する",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "新しいブックマークを自動で移動するように設定したルールは、ブラウザの星、他の拡張機能、同期で追加された各ブックマークを、選んだフォルダのままである間だけ、そのフォルダに移動します。「新しいブックマークにタグを付ける」をオンにしてもこれはオンになりません。Bookmark Scout で保存したブックマークは置いた場所のままで、一度に多数追加されたものはそのままにします。各移動は「ブックマークの履歴」と「自動で変更」に記録され、元に戻せます。",
+        "description": "Settings: what Move New Bookmarks does"
     },
     "covers_captureButton": {
         "message": "この画面をカバー画像にする",
@@ -8878,8 +8906,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "自動で付けたタグ",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "自動で変更",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "リストを消去",
@@ -8889,9 +8917,17 @@
         "message": "追加: $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "$1 に移動 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "$1 に付けたタグを元に戻す",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "$1 を元の場所に戻す",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
     "rules_autoLogUndone": {
         "message": "タグを削除しました",
@@ -8906,5 +8942,25 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "元の場所に戻しました",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "元の場所に戻せませんでした",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "その後ブックマークが削除されました。",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "その後ブックマークが再び移動されたため、今の場所のままにします。",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "元のフォルダがなくなったため、今の場所のままにします。",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

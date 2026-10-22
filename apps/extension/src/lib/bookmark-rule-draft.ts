@@ -13,6 +13,8 @@ export type RuleDraft = {
   tags: string;
   /** The folder to move to, or '' for none. */
   folderId: string;
+  /** Move new bookmarks to that folder without a review; saved only with a folder. */
+  autoMove: boolean;
   enabled: boolean;
 };
 
@@ -21,6 +23,7 @@ export const EMPTY_RULE_DRAFT: RuleDraft = {
   query: '',
   tags: '',
   folderId: '',
+  autoMove: false,
   enabled: true,
 };
 
@@ -34,6 +37,7 @@ export function ruleDraftOf(rule: BookmarkRule): RuleDraft {
     query: rule.query,
     tags: rule.addTags.join(', '),
     folderId: rule.moveTo?.folderId ?? '',
+    autoMove: rule.autoMove === true,
     enabled: rule.enabled,
   };
 }
@@ -90,6 +94,8 @@ export function ruleFromDraft(
     syntaxVersion: SEARCH_SYNTAX_VERSION,
     addTags: tags,
     ...(draft.folderId ? { moveTo: { folderId: draft.folderId, path: path ?? '' } } : {}),
+    // Saving approves the folder chosen now, at the path read now, for automatic moves.
+    ...(draft.folderId && draft.autoMove ? { autoMove: true } : {}),
   });
   if (parsed.success) return { rule: parsed.data };
   if (!draft.name.trim()) return { error: 'name' };

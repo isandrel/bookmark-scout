@@ -9,6 +9,8 @@ import {
   ruleFolderPath,
   ruleFromDraft,
 } from '@/lib/bookmark-rule-draft';
+import { bookmarkRuleSchema, ruleAutoMoveBlocks } from '@/lib/bookmark-rules';
+import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
 
 const tree: BookmarkTreeNode[] = [
@@ -57,6 +59,33 @@ describe('smart rule drafts', () => {
     expect(describeRule(result.rule)).toMatch(
       /^domain:github\.com: add tags dev and code · move to /,
     );
+  });
+
+  it('saves the automatic move opt-in only with a folder, approving that folder and its path', () => {
+    const moving = ruleFromDraft({ ...draft, folderId: 'dev', autoMove: true }, 'id', tree);
+    expect(moving).toMatchObject({
+      rule: { autoMove: true, moveTo: { folderId: 'dev', path: 'Bookmarks bar / Dev' } },
+    });
+    if (!('rule' in moving)) throw new Error('not saved');
+    expect(ruleDraftOf(moving.rule).autoMove).toBe(true);
+    expect(ruleAutoMoveBlocks([moving.rule], tree)).toEqual(new Map([['id', undefined]]));
+    // Without a folder there is nothing to move to, and the opt-in is not kept.
+    const tagging = ruleFromDraft({ ...draft, autoMove: true }, 'id', tree);
+    if (!('rule' in tagging)) throw new Error('not saved');
+    expect('autoMove' in tagging.rule).toBe(false);
+    // Rules saved before the opt-in existed read as they were: off.
+    const old = bookmarkRuleSchema.parse({
+      id: 'old',
+      name: 'Old',
+      enabled: true,
+      query: 'domain:github.com',
+      syntaxVersion: SEARCH_SYNTAX_VERSION,
+      addTags: [],
+      moveTo: { folderId: 'dev', path: 'Bookmarks bar / Dev' },
+    });
+    expect('autoMove' in old).toBe(false);
+    expect(ruleDraftOf(old).autoMove).toBe(false);
+    expect(ruleAutoMoveBlocks([old], tree)).toEqual(new Map());
   });
 
   it('says why a draft cannot be saved, name first', () => {

@@ -235,7 +235,7 @@ AI 預設為關閉。只有在開啟「**AI 功能**」後，這些設定才會�
 | --- | --- |
 | **重複書籤清理工具** | 「**比對方式**」正規化網址；「**統一 www**」、「**忽略通訊協定**」和「**忽略結尾斜線**」開啟；「**保留規則**」最舊的；「**群組數量上限**」<SettingDefault path="maintenance.duplicates.max_groups" />。一律掃描所有書籤 |
 | **網址清理工具** | 「**移除片段**」關閉；「**排序查詢參數**」和「**移除重複的查詢參數**」開啟；「**保留參數**」和「**移除參數**」清單 |
-| 「**智慧規則**」 | 依執行順序排列的規則：使用「**新增規則**」或「**從範本開始**」，再設定每條規則的名稱、搜尋、標籤和資料夾，以及是否開啟；拖曳規則可以改變哪個移動優先。範本預設為關閉。請參閱[用智慧規則加上標籤和移動](/guides/clean-up#tag-and-move-with-smart-rules) 「**為新書籤加上標籤**」關閉：開啟後，已啟用的規則會在每個書籤新增時為其加上標籤 (絕不會自動移動)。 |
+| 「**智慧規則**」 | 依執行順序排列的規則：使用「**新增規則**」或「**從範本開始**」，再設定每條規則的名稱、搜尋、標籤和資料夾，以及是否開啟；拖曳規則可以改變哪個移動優先。範本預設為關閉。請參閱[用智慧規則加上標籤和移動](/guides/clean-up#tag-and-move-with-smart-rules)。「**為新書籤加上標籤**」關閉：開啟後，已啟用的規則會在每個書籤新增時為其加上標籤，但絕不移動書籤。「**移動新書籤**」關閉：開啟後，勾選了「**自動移動新書籤**」的規則會把新書籤移到其資料夾。兩者都只對這部裝置有效。 |
 | **檢查失效連結** | 「**要求逾時**」<SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒；「**同時要求數**」<SettingDefault path="maintenance.dead_links.concurrency" />；「**重試次數**」<SettingDefault path="maintenance.dead_links.retry_count" />；「**追蹤重新導向**」開啟；「**成功狀態碼**」<SettingDefault path="maintenance.dead_links.success_statuses" />；「**確定失效連結的預設處理**」、「**需手動檢查連結的預設處理**」和「**已重新導向連結的預設處理**」維持不變 |
 | **背景工作** | **超過此數量時在背景套用** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />：涉及更多書籤的已檢視變更會在背景分批套用，關閉頁面後仍會繼續；每一批都是[歷史記錄](/guides/save-and-organize)中的一項變更，可在那裡復原 |
 
