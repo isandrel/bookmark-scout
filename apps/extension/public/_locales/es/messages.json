@@ -1717,6 +1717,14 @@
         "message": "Selecciona el ámbito",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "Resultados de búsqueda",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "Marcadores seleccionados",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "Ejecutando...",
         "description": "Tool button label while the tool runs"
@@ -8586,7 +8594,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Cada regla encuentra marcadores con una búsqueda y añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas no cambian nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas y aplicas su revisión. Si dos reglas mueven un marcador, gana la que está más arriba. Solo se guardan en este dispositivo.",
+        "message": "Cada regla encuentra marcadores con una búsqueda y añade etiquetas, los mueve a una carpeta o ambas cosas. Las reglas no cambian nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas y aplicas su revisión, o activas Etiquetar marcadores nuevos o Mover marcadores nuevos. Si dos reglas mueven un marcador, gana la que está más arriba. Solo se guardan en este dispositivo.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8608,6 +8616,10 @@
     "rules_templateTutorial": {
         "message": "Etiquetar tutoriales como learning",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_templateReading": {
+        "message": "Mover Work / Reading a una carpeta que elijas",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
     },
     "rules_empty": {
         "message": "Aún no hay reglas.",
@@ -8650,7 +8662,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Una regla encuentra marcadores con una búsqueda e indica qué hacer con ellos. No cambia nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas.",
+        "message": "Una regla encuentra marcadores con una búsqueda e indica qué hacer con ellos. No cambia nada hasta que ejecutas Reglas inteligentes en la barra lateral Herramientas, salvo que Etiquetar marcadores nuevos o Mover marcadores nuevos esté activado.",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8701,6 +8713,14 @@
         "message": "Déjalo sin elegir para solo añadir etiquetas.",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "Mover marcadores nuevos automáticamente",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "Mientras Mover marcadores nuevos esté activado, cada marcador nuevo que encuentre esta regla se mueve a esta carpeta sin revisión. Solo a esta carpeta exacta: si se elimina, cambia de nombre o se mueve, los movimientos automáticos se detienen hasta que vuelvas a guardar la regla. Elige primero una carpeta.",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "Activada",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8736,6 +8756,18 @@
     "rules_copyName": {
         "message": "$1 (copia)",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "Mueve marcadores nuevos automáticamente",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "Movimientos automáticos detenidos: su carpeta se eliminó, cambió de nombre, se movió o está administrada. Vuelve a elegir la carpeta y guarda la regla.",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "Reglas inteligentes, automáticamente",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "Lo que cambiarían las reglas. No cambia nada hasta que lo apliques.",
@@ -8801,6 +8833,10 @@
         "message": "Tu organización administra este marcador o la carpeta de destino, así que se queda donde está.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "No se mueve: en esa carpeta otra regla lo volvería a mover, así que cada ejecución lo movería de nuevo.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "Reglas: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8828,6 +8864,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "Etiquetados: $1. Moviendo $2 marcadores en segundo plano.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "No se movió nada: el Historial de marcadores no pudo registrar los movimientos, así que no se hizo ninguno.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "$count$ reglas activadas",
@@ -8858,8 +8898,32 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Las reglas activas añaden sus etiquetas a cada marcador al añadirlo, ya sea desde Bookmark Scout, el navegador o la sincronización. Nunca se mueve nada automáticamente, y muchos marcadores añadidos a la vez (una sincronización o una importación) no se tocan.",
+        "message": "Las reglas activas añaden sus etiquetas a cada marcador nuevo que permita Marcadores nuevos de. Etiquetar nunca mueve un marcador; para eso está Mover marcadores nuevos. Muchos marcadores añadidos a la vez (una sincronización o una importación) no se tocan.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "Mover marcadores nuevos",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "Las reglas que configuras para mover marcadores nuevos automáticamente mueven a su carpeta cada marcador nuevo que coincide, solo mientras sea la carpeta que elegiste. Los marcadores que guarda Bookmark Scout se quedan donde se pusieron, así que esto solo mueve marcadores de la estrella del navegador, otra extensión o la sincronización, y solo cuando Marcadores nuevos de es Cualquier origen. Etiquetar marcadores nuevos nunca activa esto, y muchos marcadores añadidos a la vez no se tocan. Cada movimiento aparece en el Historial de marcadores y en Cambiados por reglas, con Deshacer.",
+        "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "Marcadores nuevos de",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "Sobre qué marcadores nuevos actúan Etiquetar marcadores nuevos y Mover marcadores nuevos. El navegador no indica quién añadió un marcador, así que Cualquier origen trata igual la estrella del navegador, la sincronización y otras extensiones.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Guardados con Bookmark Scout",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "Cualquier origen",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "Usar esta vista como portada",
@@ -8906,8 +8970,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Etiquetados automáticamente",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "Cambiados por reglas",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "Vaciar lista",
@@ -8917,9 +8981,33 @@
         "message": "Añadido $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "Movido a $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "Deshacer las etiquetas añadidas a $1",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "Devolver $1 a su sitio",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
+    },
+    "rules_autoLogRun": {
+        "message": "Ejecución de reglas inteligentes",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "Etiquetados: $1 · Movidos: $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "No aparecen aquí, así que Deshacer conserva sus etiquetas: $1.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "Deshacer las etiquetas que añadió esta ejecución",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
     },
     "rules_autoLogUndone": {
         "message": "Etiquetas quitadas",
@@ -8944,5 +9032,45 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "Se quitaron las etiquetas de $count$ marcadores. Deshaz los movimientos de la ejecución en el Historial de marcadores.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_one": {
+        "message": "Se quitaron las etiquetas de $count$ marcador. Deshaz los movimientos de la ejecución en el Historial de marcadores.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "Devuelto a su sitio",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "No se devolvió a su sitio",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "El marcador se eliminó después.",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "El marcador se movió de nuevo después, así que se queda donde está.",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "La carpeta en la que estaba ya no existe, así que se queda donde está.",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

@@ -10,6 +10,14 @@ export type ToolEnvironment = {
   refresh(): Promise<void>;
   /** `useExportPrivacyReview().reviewBeforeExport`. */
   saveFile: ToolRunDeps['saveFile'];
+  /** What the manager lists now, for tools with `narrowScopes`. */
+  listing?: ManagerListing;
+};
+
+/** The narrow scopes the manager has now, and the bookmarks in each, read when a run starts. */
+export type ManagerListing = {
+  available: readonly NarrowToolScope[];
+  ids(scope: NarrowToolScope): readonly string[];
 };
 
 /**
@@ -56,6 +64,8 @@ export function useToolRun<Result, Selection>(
       },
       freshNodes: async (scope) =>
         getScopedNodes(await fetchBookmarkTree(), environmentRef.current.currentFolderId, scope),
+      // No listing, no bookmarks: a narrow scope is offered only while the manager has one.
+      listed: (scope) => environmentRef.current.listing?.ids(scope) ?? [],
       refresh: () => environmentRef.current.refresh(),
       aiSettings: (feature) => getActiveAISettings(true, feature),
       saveFile: (request, write) => environmentRef.current.saveFile(request, write),

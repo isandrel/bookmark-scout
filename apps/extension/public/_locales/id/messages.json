@@ -1701,6 +1701,14 @@
         "message": "Pilih cakupan",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "Hasil penelusuran",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "Bookmark yang dipilih",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "Menjalankan...",
         "description": "Tool button label while the tool runs"
@@ -8210,7 +8218,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Setiap aturan menemukan bookmark dengan penelusuran lalu menambahkan tag, memindahkannya ke folder, atau keduanya. Aturan tidak mengubah apa pun sampai Anda menjalankan Aturan Pintar di bilah samping Alat dan menerapkan hasil tinjauannya. Jika dua aturan memindahkan bookmark, aturan yang lebih atas yang berlaku. Hanya disimpan di perangkat ini.",
+        "message": "Setiap aturan menemukan bookmark dengan penelusuran lalu menambahkan tag, memindahkannya ke folder, atau keduanya. Aturan tidak mengubah apa pun sampai Anda menjalankan Aturan Pintar di bilah samping Alat dan menerapkan hasil tinjauannya, atau mengaktifkan Beri Tag pada Bookmark Baru atau Pindahkan Bookmark Baru. Jika dua aturan memindahkan bookmark, aturan yang lebih atas yang berlaku. Hanya disimpan di perangkat ini.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8232,6 +8240,10 @@
     "rules_templateTutorial": {
         "message": "Beri tag learning pada tutorial",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_templateReading": {
+        "message": "Pindahkan Work / Reading ke folder pilihan Anda",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
     },
     "rules_empty": {
         "message": "Belum ada aturan.",
@@ -8274,7 +8286,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Aturan menemukan bookmark dengan penelusuran dan menentukan apa yang dilakukan pada bookmark tersebut. Aturan tidak mengubah apa pun sampai Anda menjalankan Aturan Pintar di bilah samping Alat.",
+        "message": "Aturan menemukan bookmark dengan penelusuran dan menentukan apa yang dilakukan pada bookmark tersebut. Aturan tidak mengubah apa pun sampai Anda menjalankan Aturan Pintar di bilah samping Alat, kecuali Beri Tag pada Bookmark Baru atau Pindahkan Bookmark Baru aktif.",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8315,6 +8327,14 @@
         "message": "Biarkan tidak dipilih jika hanya ingin menambahkan tag.",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "Pindahkan bookmark baru secara otomatis",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "Selama Pindahkan Bookmark Baru aktif, setiap bookmark baru yang cocok dengan aturan ini dipindahkan ke folder ini tanpa tinjauan. Hanya ke folder ini persis: jika folder dihapus, diganti namanya, atau dipindahkan, pemindahan otomatis berhenti sampai Anda menyimpan aturan lagi. Pilih folder terlebih dahulu.",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "Aktif",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8350,6 +8370,18 @@
     "rules_copyName": {
         "message": "$1 (salinan)",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "Memindahkan bookmark baru secara otomatis",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "Pemindahan otomatis berhenti: foldernya dihapus, diganti namanya, dipindahkan, atau dikelola. Pilih foldernya lagi dan simpan aturan.",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "Aturan Pintar, otomatis",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "Apa yang akan diubah oleh aturan. Tidak ada yang berubah sampai Anda menerapkannya.",
@@ -8405,6 +8437,10 @@
         "message": "Organisasi Anda mengelola bookmark ini atau folder tujuannya, jadi bookmark tetap di tempatnya.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "Tidak dipindahkan: di folder itu aturan lain akan memindahkannya lagi, sehingga setiap proses akan terus memindahkannya.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "Aturan: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8433,6 +8469,10 @@
         "message": "Diberi tag: $1. Memindahkan $2 bookmark di latar belakang.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
     },
+    "toast_rulesNoRecordDesc": {
+        "message": "Tidak ada yang dipindahkan: Histori bookmark tidak dapat mencatat pemindahan, jadi tidak ada yang dilakukan.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
     "tools_rulesOnCount": {
         "message": "$count$ aturan aktif",
         "description": "Smart Rules card: how many rules are turned on",
@@ -8452,8 +8492,32 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Aturan yang aktif menambahkan tag-nya ke setiap bookmark saat bookmark ditambahkan, baik dari Bookmark Scout, browser, maupun sinkronisasi. Pemindahan tidak pernah dilakukan secara otomatis, dan banyak bookmark yang ditambahkan sekaligus (dari sinkronisasi atau impor) dibiarkan apa adanya.",
+        "message": "Aturan yang aktif menambahkan tag-nya ke setiap bookmark baru yang diizinkan Bookmark Baru dari. Pemberian tag tidak pernah memindahkan bookmark; untuk itu ada Pindahkan Bookmark Baru. Banyak bookmark yang ditambahkan sekaligus (dari sinkronisasi atau impor) dibiarkan apa adanya.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "Pindahkan Bookmark Baru",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "Aturan yang Anda setel untuk memindahkan bookmark baru secara otomatis memindahkan setiap bookmark baru yang cocok ke foldernya, hanya selama folder itu adalah folder yang Anda pilih. Bookmark yang disimpan Bookmark Scout tetap di tempatnya, jadi ini hanya memindahkan bookmark dari bintang browser, ekstensi lain, atau sinkronisasi, dan hanya jika Bookmark Baru dari disetel ke Mana saja. Beri Tag pada Bookmark Baru tidak pernah mengaktifkan ini, dan banyak bookmark yang ditambahkan sekaligus dibiarkan apa adanya. Setiap pemindahan ada di Histori bookmark dan di Diubah oleh aturan, dengan Urungkan.",
+        "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "Bookmark Baru dari",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "Bookmark baru mana yang diproses Beri Tag pada Bookmark Baru dan Pindahkan Bookmark Baru. Browser tidak memberi tahu siapa yang menambahkan bookmark, jadi Mana saja memperlakukan bintang browser, sinkronisasi, dan ekstensi lain dengan cara yang sama.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Disimpan dengan Bookmark Scout",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "Mana saja",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "Gunakan tampilan ini sebagai sampul",
@@ -8500,8 +8564,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Diberi tag otomatis",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "Diubah oleh aturan",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "Kosongkan daftar",
@@ -8511,9 +8575,33 @@
         "message": "Ditambahkan $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "Dipindahkan ke $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "Urungkan tag yang ditambahkan ke $1",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "Pindahkan $1 kembali",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
+    },
+    "rules_autoLogRun": {
+        "message": "Proses Aturan Pintar",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "Diberi tag: $1 · Dipindahkan: $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "Tidak tercantum di sini, jadi Urungkan membiarkan tag-nya: $1.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "Urungkan tag yang ditambahkan proses ini",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
     },
     "rules_autoLogUndone": {
         "message": "Tag dihapus",
@@ -8528,5 +8616,35 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "Tag dihapus dari $count$ bookmark. Urungkan pemindahan proses ini di Histori bookmark.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "Dipindahkan kembali",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "Tidak dipindahkan kembali",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "Bookmark sudah dihapus sejak itu.",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "Bookmark sudah dipindahkan lagi sejak itu, jadi tetap di tempatnya.",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "Folder tempatnya semula sudah tidak ada, jadi tetap di tempatnya.",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

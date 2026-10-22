@@ -13,6 +13,8 @@ export type RuleDraft = {
   tags: string;
   /** The folder to move to, or '' for none. */
   folderId: string;
+  /** Move new bookmarks to that folder without a review; saved only with a folder. */
+  autoMove: boolean;
   enabled: boolean;
 };
 
@@ -21,6 +23,7 @@ export const EMPTY_RULE_DRAFT: RuleDraft = {
   query: '',
   tags: '',
   folderId: '',
+  autoMove: false,
   enabled: true,
 };
 
@@ -34,7 +37,33 @@ export function ruleDraftOf(rule: BookmarkRule): RuleDraft {
     query: rule.query,
     tags: rule.addTags.join(', '),
     folderId: rule.moveTo?.folderId ?? '',
+    autoMove: rule.autoMove === true,
     enabled: rule.enabled,
+  };
+}
+
+/**
+ * Whether a draft does something: tags to add or a folder to move to. Until it does it cannot be
+ * saved or turned on, so a template that moves (`move = true`, no folder) waits for one.
+ */
+export function hasRuleAction(draft: Pick<RuleDraft, 'tags' | 'folderId'>): boolean {
+  return parseBookmarkTags(draft.tags).length > 0 || draft.folderId !== '';
+}
+
+/**
+ * The editor's draft for a template: its search and tags, turned off. A template that moves
+ * names no folder (ids differ on every profile), so the user picks one before it can save.
+ */
+export function ruleDraftOfTemplate(
+  template: (typeof BOOKMARK_RULE_TEMPLATES)[number],
+  name: string,
+): RuleDraft {
+  return {
+    ...EMPTY_RULE_DRAFT,
+    name,
+    query: template.query,
+    tags: template.add_tags.join(', '),
+    enabled: false,
   };
 }
 
@@ -90,6 +119,8 @@ export function ruleFromDraft(
     syntaxVersion: SEARCH_SYNTAX_VERSION,
     addTags: tags,
     ...(draft.folderId ? { moveTo: { folderId: draft.folderId, path: path ?? '' } } : {}),
+    // Saving approves the folder chosen now, at the path read now, for automatic moves.
+    ...(draft.folderId && draft.autoMove ? { autoMove: true } : {}),
   });
   if (parsed.success) return { rule: parsed.data };
   if (!draft.name.trim()) return { error: 'name' };

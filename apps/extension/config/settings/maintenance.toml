@@ -15,10 +15,19 @@ max_groups            = { default = 500, min = 1, max = 5000, step = 10 }
 # Smart Rules: the rules themselves are kept on this device (src/lib/bookmark-rules-storage.ts).
 enabled = true
 default_scope = "all"
-# Tag New Bookmarks: enabled rules add their tags to bookmarks as they are added, from Bookmark
-# Scout, the browser, or sync (config/rules/rules.toml [auto_tag]). Off until the user turns it on;
-# moves are never made automatically.
+# Tag New Bookmarks: enabled rules add their tags to bookmarks as they are added (config/rules/
+# rules.toml [automatic]), from the sources new_from allows. Off until the user turns it on; it
+# never moves anything.
 auto_tag = false
+# Move New Bookmarks: rules the user marked "Move new bookmarks automatically" move new bookmarks to
+# their folder. A separate opt-in from tagging, off until the user turns it on. It never moves a
+# bookmark Bookmark Scout saved (the user chose its folder), so it acts only with new_from = "any".
+auto_move = false
+# Which new bookmarks both act on: "scout", only those saved through Bookmark Scout (the
+# extension's own undo history names them), or "any", also those from the browser's star, sync,
+# and other extensions, which the browser does not tell apart. Changes from elsewhere are only
+# observed until the user opts in (maintainer decision R4).
+new_from = "scout"
 
 [url_cleaner]
 enabled = true

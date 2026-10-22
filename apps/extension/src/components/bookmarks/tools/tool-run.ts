@@ -28,6 +28,8 @@ export type ToolRunDeps = {
   nodes(scope: BookmarkToolScope): BookmarkTreeNode[];
   /** Bookmarks in a scope, read again from the browser after a change. */
   freshNodes(scope: BookmarkToolScope): Promise<BookmarkTreeNode[]>;
+  /** The ids of the bookmarks the manager lists now in a narrow scope (search results, selection). */
+  listed(scope: NarrowToolScope): readonly string[];
   /** Reloads the page's tree after bookmarks changed. */
   refresh(): Promise<void>;
   /** The AI service `feature` uses, read only after the AI-enabled check passed. */
@@ -104,7 +106,7 @@ export type ToolRun<Result, Selection> = {
   getState(): ToolRunState<Result>;
   subscribe(listener: () => void): () => void;
   /** Scans the scope, then opens the review or, for an auto-apply tool, applies. */
-  run(scope: BookmarkToolScope): Promise<void>;
+  run(scope: ToolRunScope): Promise<void>;
   /** Opens the review on a result scanned elsewhere (a background job's), as a scan would. */
   review(result: Result, scope: BookmarkToolScope): void;
   /** Applies the reviewed result. */
@@ -128,7 +130,11 @@ export function createToolRun<Result, Selection>(
   deps: ToolRunDeps,
 ): ToolRun<Result, Selection> {
   let state: ToolRunState<Result> = IDLE;
-  let scope: BookmarkToolScope = 'all';
+  let scope: ToolRunScope = 'all';
+  // A narrow scope's bookmarks, taken when the run starts, so a rescan looks at the same ones.
+  let only: ReadonlySet<string> | undefined;
+  /** The nodes a scan reads: the scope's, or every bookmark for a narrow scope (with `only`). */
+  const nodesOf = (current: ToolRunScope) => (isNarrowToolScope(current) ? 'all' : current);
   let pendingUndo: UndoOffer | null = null;
   const listeners = new Set<() => void>();
 
@@ -151,6 +157,7 @@ export function createToolRun<Result, Selection>(
       options: getToolOptions(settings),
       scope,
       nodes,
+      ...(only ? { only } : {}),
       // The enabled check comes first so a disabled AI never surfaces provider or key errors.
       aiSettings: async () => {
         if (!settings.aiEnabled || !tool.aiFeature) throw new Error(t('ai_featuresDisabled'));
@@ -168,7 +175,7 @@ export function createToolRun<Result, Selection>(
     };
   };
 
-  const rescan = async () => tool.scan(context(await deps.freshNodes(scope)));
+  const rescan = async () => tool.scan(context(await deps.freshNodes(nodesOf(scope))));
   /**
    * The result to review after a change: rescanned, or kept when the tool says so or its scan
    * runs as a background job, which the page never runs itself.
@@ -209,7 +216,7 @@ export function createToolRun<Result, Selection>(
   const applyResult = async (result: Result, selection: Selection, reviewed: boolean) => {
     if (!tool.apply) return;
     const outcome = await tool.apply(result, selection, {
-      ...context(deps.nodes(scope)),
+      ...context(deps.nodes(nodesOf(scope))),
       reviewed,
     });
     if (tool.changesBookmarks) await deps.refresh();
@@ -258,11 +265,12 @@ export function createToolRun<Result, Selection>(
     },
     async run(nextScope) {
       scope = nextScope;
+      only = isNarrowToolScope(nextScope) ? new Set(deps.listed(nextScope)) : undefined;
       pendingUndo = null;
       update({ ...IDLE, phase: 'scanning', open: Boolean(tool.reviewWhileScanning) });
       let result: Result;
       try {
-        result = await tool.scan(context(deps.nodes(scope)));
+        result = await tool.scan(context(deps.nodes(nodesOf(scope))));
       } catch (error) {
         if (tool.reviewWhileScanning) {
           update({
@@ -290,6 +298,7 @@ export function createToolRun<Result, Selection>(
     },
     review(result, nextScope) {
       scope = nextScope;
+      only = undefined;
       pendingUndo = null;
       update({ ...IDLE, phase: 'review', open: true, result });
     },

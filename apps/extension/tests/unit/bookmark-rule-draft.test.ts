@@ -4,11 +4,19 @@ import {
   countRuleMatches,
   describeRule,
   EMPTY_RULE_DRAFT,
+  hasRuleAction,
   isRuleQueryReadable,
   ruleDraftOf,
+  ruleDraftOfTemplate,
   ruleFolderPath,
   ruleFromDraft,
 } from '@/lib/bookmark-rule-draft';
+import {
+  BOOKMARK_RULE_TEMPLATES,
+  bookmarkRuleSchema,
+  ruleAutoMoveBlocks,
+} from '@/lib/bookmark-rules';
+import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
 
 const tree: BookmarkTreeNode[] = [
@@ -57,6 +65,53 @@ describe('smart rule drafts', () => {
     expect(describeRule(result.rule)).toMatch(
       /^domain:github\.com: add tags dev and code · move to /,
     );
+  });
+
+  it('saves the automatic move opt-in only with a folder, approving that folder and its path', () => {
+    const moving = ruleFromDraft({ ...draft, folderId: 'dev', autoMove: true }, 'id', tree);
+    expect(moving).toMatchObject({
+      rule: { autoMove: true, moveTo: { folderId: 'dev', path: 'Bookmarks bar / Dev' } },
+    });
+    if (!('rule' in moving)) throw new Error('not saved');
+    expect(ruleDraftOf(moving.rule).autoMove).toBe(true);
+    expect(ruleAutoMoveBlocks([moving.rule], tree)).toEqual(new Map([['id', undefined]]));
+    // Without a folder there is nothing to move to, and the opt-in is not kept.
+    const tagging = ruleFromDraft({ ...draft, autoMove: true }, 'id', tree);
+    if (!('rule' in tagging)) throw new Error('not saved');
+    expect('autoMove' in tagging.rule).toBe(false);
+    // Rules saved before the opt-in existed read as they were: off.
+    const old = bookmarkRuleSchema.parse({
+      id: 'old',
+      name: 'Old',
+      enabled: true,
+      query: 'domain:github.com',
+      syntaxVersion: SEARCH_SYNTAX_VERSION,
+      addTags: [],
+      moveTo: { folderId: 'dev', path: 'Bookmarks bar / Dev' },
+    });
+    expect('autoMove' in old).toBe(false);
+    expect(ruleDraftOf(old).autoMove).toBe(false);
+    expect(ruleAutoMoveBlocks([old], tree)).toEqual(new Map());
+  });
+
+  it('opens a moving template turned off, and saves it only once a folder is chosen (R19)', () => {
+    const template = BOOKMARK_RULE_TEMPLATES.find((entry) => entry.id === 'reading');
+    if (!template) throw new Error('no reading template');
+    const opened = ruleDraftOfTemplate(template, 'Reading');
+    expect(opened).toMatchObject({ name: 'Reading', tags: '', folderId: '', enabled: false });
+    expect(opened.id).toBeUndefined();
+    // Nothing to do yet: it cannot be turned on or saved.
+    expect(hasRuleAction(opened)).toBe(false);
+    expect(ruleFromDraft({ ...opened, enabled: true }, 'r', tree)).toEqual({ error: 'action' });
+    const chosen = { ...opened, folderId: 'dev' };
+    expect(hasRuleAction(chosen)).toBe(true);
+    expect(ruleFromDraft(chosen, 'r', tree)).toMatchObject({
+      rule: { enabled: false, addTags: [], moveTo: { folderId: 'dev' } },
+    });
+    // A tagging template opens with its tags, so it has something to do at once.
+    const tagging = BOOKMARK_RULE_TEMPLATES.find((entry) => entry.id === 'github');
+    if (!tagging) throw new Error('no github template');
+    expect(hasRuleAction(ruleDraftOfTemplate(tagging, 'GitHub'))).toBe(true);
   });
 
   it('says why a draft cannot be saved, name first', () => {

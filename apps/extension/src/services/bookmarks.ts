@@ -721,6 +721,17 @@ export type ApplyBookmarkChangesOptions = {
   tool?: string;
   /** A background task applying a larger change in parts: its id and this part. */
   part?: { jobId: string; index: number; of: number };
+  /**
+   * Where the Audit History says the change came from, when no page or tool the user worked in
+   * made it (Smart Rules moving new bookmarks on their own).
+   */
+  origin?: { source: AuditSource; actor: AuditActor };
+  /**
+   * Refuse to start, throwing `AuditStoreError`, when the Audit History record cannot be stored
+   * first, as for changes that remove bookmarks: Smart Rules' moves, which a rule decides, never
+   * happen without a record to find and undo them by (R25).
+   */
+  requireRecord?: boolean;
   now?: number;
 };
 
@@ -769,7 +780,7 @@ export type StoredBookmarkChange = z.infer<typeof storedBookmarkChangeSchema>;
  */
 export async function applyBookmarkChanges(
   changes: readonly BookmarkChange[],
-  { tool, part, now = Date.now() }: ApplyBookmarkChangesOptions = {},
+  { tool, part, origin, requireRecord = false, now = Date.now() }: ApplyBookmarkChangesOptions = {},
 ): Promise<BookmarkChangesResult> {
   const issues: BookmarkChangeIssue[] = [];
   const applied: BookmarkChange[] = [];
@@ -818,8 +829,9 @@ export async function applyBookmarkChanges(
     },
     {
       // Nothing is removed without a record of what went.
-      required: changes.some((change) => change.kind === 'remove'),
+      required: requireRecord || changes.some((change) => change.kind === 'remove'),
       ...(part ? { jobId: part.jobId } : {}),
+      ...origin,
       report: () => ({
         skipped: issues.map((issue) => ({ ...issue, failed: issue.reason === 'failed' })),
       }),

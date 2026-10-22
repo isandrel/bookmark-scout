@@ -73,8 +73,15 @@ export const JOB_BLOCK_CODES = [
 ] as const;
 export type JobBlockCode = (typeof JOB_BLOCK_CODES)[number];
 
-/** An `applyChanges` job's options: the tool whose reviewed changes it applies (title key). */
-export const applyJobOptionsSchema = z.strictObject({ tool: z.string().regex(/^tools_\w+$/) });
+/**
+ * An `applyChanges` job's options: the tool whose reviewed changes it applies (title key), and
+ * whether each part refuses to start without its Audit History record (`requireRecord` of
+ * `applyBookmarkChanges`).
+ */
+export const applyJobOptionsSchema = z.strictObject({
+  tool: z.string().regex(/^tools_\w+$/),
+  requireRecord: z.boolean().optional(),
+});
 
 /** Where a job was started from, as far as the extension knows. */
 export const JOB_SOURCES = ['manager', 'popup', 'sidePanel'] as const;

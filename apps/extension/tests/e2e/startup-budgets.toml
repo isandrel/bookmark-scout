@@ -19,7 +19,9 @@
 # which cannot load code later.
 # Raised from 435 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
 # editor's search notes (439).
-"background.js" = 445
+# Raised from 445 on 2026-10-22 for Smart Rules moving new bookmarks (fail closed without an Audit
+# History record), New Bookmarks From, and the reviewed run's record in the rules log (447).
+"background.js" = 455
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -54,7 +56,9 @@
 # Raised from 1215 on 2026-10-22 for the search reason wording shared with the manager (1,211).
 # Raised from 1220 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
 # editor's search notes (1,221).
-"options.html" = 1230
+# Raised from 1230 on 2026-10-22 for the Smart Rules changes list with reviewed runs, the moving
+# template, and New Bookmarks From (1,233).
+"options.html" = 1240
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
@@ -75,7 +79,9 @@
 # Raised from 1460 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
 # editor's search notes (1,463).
 # Raised from 1470 on 2026-10-22 for tags, summaries, and folder counts on manager cards (1,474).
-"bookmarks.html" = 1480
+# Raised from 1480 on 2026-10-22 for Smart Rules runs on search results or the selection and the
+# reviewed run's fail-closed apply and record (1,483).
+"bookmarks.html" = 1490
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

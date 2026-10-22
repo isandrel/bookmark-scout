@@ -1,6 +1,21 @@
 import type { BookmarkTreeNode } from '@/types';
 
+/** Where a tool runs, and what a card starts on: the folder shown, or every bookmark. */
 export type BookmarkToolScope = 'folder' | 'all';
+
+/**
+ * What the manager lists now, for tools that can run on just that (`narrowScopes` on their
+ * entry): the search box's results, or the selected bookmarks. Taken when the run starts.
+ */
+export type NarrowToolScope = 'search' | 'selection';
+
+/** Where one run looks: a scope a card saves as its default, or what the manager lists now. */
+export type ToolRunScope = BookmarkToolScope | NarrowToolScope;
+
+/** Whether a run's scope is what the manager lists now rather than a folder or everything. */
+export function isNarrowToolScope(scope: ToolRunScope): scope is NarrowToolScope {
+  return scope === 'search' || scope === 'selection';
+}
 
 export type FlatBookmark = {
   node: BookmarkTreeNode;

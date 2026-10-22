@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
 import {
+  BOOKMARK_RULE_TEMPLATES,
   type BookmarkRule,
   changesBookmark,
   MAX_BOOKMARK_RULES,
@@ -295,5 +296,151 @@ describe('parseBookmarkRules', () => {
       id: `rule-${index}`,
     }));
     expect(parseBookmarkRules(many)).toHaveLength(MAX_BOOKMARK_RULES);
+  });
+});
+
+describe('runs that settle (R33)', () => {
+  /** Inbox and Archive, with one bookmark in Inbox, and its tree after moving it. */
+  const library = (parentId: 'inbox' | 'archive' | 'later'): BookmarkTreeNode[] => {
+    const folder = (id: string, title: string): BookmarkTreeNode => ({
+      id,
+      parentId: '1',
+      title,
+      children: id === parentId ? [link('x', id, 'Old notes', 'https://notes.example/x')] : [],
+    });
+    return [
+      {
+        id: '0',
+        title: '',
+        children: [
+          {
+            id: '1',
+            parentId: '0',
+            title: 'Bookmarks bar',
+            children: [
+              folder('inbox', 'Inbox'),
+              folder('archive', 'Archive'),
+              folder('later', 'Later'),
+            ],
+          },
+        ],
+      },
+    ];
+  };
+  const runOn = (rules: BookmarkRule[], parentId: 'inbox' | 'archive' | 'later') =>
+    planBookmarkRules(rules, library(parentId), {}).find((item) => item.id === 'x');
+
+  it('moves a bookmark once, never back and forth between two rules, in either order', () => {
+    // A: notes go to Archive. B: what is in Archive goes back to Inbox.
+    const toArchive = rule({
+      query: 'title:notes',
+      moveTo: { folderId: 'archive', path: 'Archive' },
+    });
+    const backToInbox = rule({
+      query: 'folder:Archive',
+      moveTo: { folderId: 'inbox', path: 'Inbox' },
+    });
+    for (const rules of [
+      [toArchive, backToInbox],
+      [backToInbox, toArchive],
+    ]) {
+      // From Inbox, only A matches: it moves to Archive.
+      expect(runOn(rules, 'inbox')?.move?.folderId).toBe('archive');
+      // In Archive, A still names Archive, so B's Inbox is a conflict, not a move back.
+      const there = runOn(rules, 'archive');
+      expect(there?.move).toBeUndefined();
+      expect(there?.blocked).toBeUndefined();
+      expect(there?.conflicts.map((move) => move.folderId)).toEqual(['inbox']);
+    }
+  });
+
+  it('never moves a bookmark around a ring of rules', () => {
+    const rules = [
+      rule({ query: 'folder:Inbox', moveTo: { folderId: 'archive', path: 'Archive' } }),
+      rule({ query: 'folder:Archive', moveTo: { folderId: 'later', path: 'Later' } }),
+      rule({ query: 'folder:Later', moveTo: { folderId: 'inbox', path: 'Inbox' } }),
+    ];
+    for (const parentId of ['inbox', 'archive', 'later'] as const) {
+      expect(runOn(rules, parentId)).toMatchObject({ blocked: 'unstable' });
+      expect(runOn(rules, parentId)?.move).toBeUndefined();
+    }
+  });
+
+  it('moves where the result is stable, and a second run then changes nothing', () => {
+    const rules = [
+      rule({ query: 'title:notes', moveTo: { folderId: 'archive', path: 'Archive' } }),
+      // Reads the tag the first rule adds: moving with it must still settle.
+      rule({ query: 'title:notes', addTags: ['old'] }),
+      rule({ query: 'tag:old -folder:Archive', moveTo: { folderId: 'later', path: 'Later' } }),
+    ];
+    const first = runOn(rules, 'inbox');
+    expect(first?.move?.folderId).toBe('archive');
+    expect(first?.addTags).toEqual(['old']);
+    const second = planBookmarkRules(rules, library('archive'), { x: { tags: ['old'] } }).find(
+      (item) => item.id === 'x',
+    );
+    expect(second && changesBookmark(second)).toBe(false);
+  });
+});
+
+describe('bookmarks with the same address (R37)', () => {
+  it('plans each by its own id, folder, and tags', () => {
+    const twins: BookmarkTreeNode[] = [
+      {
+        id: '0',
+        title: '',
+        children: [
+          {
+            id: '1',
+            parentId: '0',
+            title: 'Bookmarks bar',
+            children: [
+              {
+                id: 'work',
+                parentId: '1',
+                title: 'Work',
+                children: [link('w', 'work', 'Docs', 'https://docs.example/')],
+              },
+              {
+                id: 'home',
+                parentId: '1',
+                title: 'Home',
+                children: [link('h', 'home', 'Docs', 'https://docs.example/')],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const items = planBookmarkRules(
+      [
+        rule({ query: 'folder:Work', addTags: ['job'] }),
+        rule({ query: 'docs -tag:read', addTags: ['unread'] }),
+      ],
+      twins,
+      { h: { tags: ['read'] } },
+    );
+    expect(items.map(({ id, addTags }) => ({ id, addTags }))).toEqual([
+      { id: 'w', addTags: ['job', 'unread'] },
+    ]);
+  });
+});
+
+describe('templates (R19)', () => {
+  it('offers a folder move that names no folder, next to the tagging ones', () => {
+    expect(BOOKMARK_RULE_TEMPLATES.map((template) => template.id)).toEqual([
+      'github',
+      'youtube',
+      'tutorial',
+      'reading',
+    ]);
+    const reading = BOOKMARK_RULE_TEMPLATES.find((template) => template.id === 'reading');
+    expect(reading).toMatchObject({ move: true, add_tags: [] });
+    // Its search reads the folder path, not the address.
+    const items = plan([
+      rule({ query: reading?.query ?? '', moveTo: { folderId: 'library', path: 'Library' } }),
+    ]);
+    expect(items).toEqual([]);
+    expect(ids(plan([rule({ query: 'folder:"Work / Docs"', addTags: ['a'] })]))).toEqual(['d1']);
   });
 });

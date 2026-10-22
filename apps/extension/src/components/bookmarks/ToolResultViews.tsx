@@ -1080,6 +1080,7 @@ const RULE_CATEGORY_LABEL_KEYS = {
 const RULE_BLOCK_KEYS = {
   missingFolder: 'tools_rulesBlocked_missingFolder',
   managed: 'tools_rulesBlocked_managed',
+  unstable: 'tools_rulesBlocked_unstable',
 } as const satisfies Record<RuleMoveBlock, string>;
 
 type RuleAction = (typeof REVIEW_DEFAULT_ACTIONS)['bookmark_rules'];

@@ -1717,6 +1717,14 @@
         "message": "Seleziona l'ambito",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "Risultati della ricerca",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "Preferiti selezionati",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "In esecuzione...",
         "description": "Tool button label while the tool runs"
@@ -8586,7 +8594,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Ogni regola trova i preferiti con una ricerca e aggiunge tag, li sposta in una cartella o entrambe le cose. Le regole non cambiano nulla finché non esegui Regole intelligenti nella barra laterale Strumenti e ne applichi la revisione. Quando due regole spostano un preferito, vince quella più in alto. Conservate solo su questo dispositivo.",
+        "message": "Ogni regola trova i preferiti con una ricerca e aggiunge tag, li sposta in una cartella o entrambe le cose. Le regole non cambiano nulla finché non esegui Regole intelligenti nella barra laterale Strumenti e ne applichi la revisione, o attivi Aggiungi tag ai nuovi preferiti o Sposta i nuovi preferiti. Quando due regole spostano un preferito, vince quella più in alto. Conservate solo su questo dispositivo.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -8608,6 +8616,10 @@
     "rules_templateTutorial": {
         "message": "Aggiungi il tag learning ai tutorial",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_templateReading": {
+        "message": "Sposta Work / Reading in una cartella a tua scelta",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
     },
     "rules_empty": {
         "message": "Ancora nessuna regola.",
@@ -8650,7 +8662,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Una regola trova i preferiti con una ricerca e indica cosa farne. Non cambia nulla finché non esegui Regole intelligenti nella barra laterale Strumenti.",
+        "message": "Una regola trova i preferiti con una ricerca e indica cosa farne. Non cambia nulla finché non esegui Regole intelligenti nella barra laterale Strumenti, a meno che Aggiungi tag ai nuovi preferiti o Sposta i nuovi preferiti sia attivo.",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -8701,6 +8713,14 @@
         "message": "Non sceglierla per aggiungere solo tag.",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "Sposta automaticamente i nuovi preferiti",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "Finché Sposta i nuovi preferiti è attivo, ogni nuovo preferito trovato da questa regola viene spostato in questa cartella senza revisione. Solo in questa cartella esatta: se viene eliminata, rinominata o spostata, gli spostamenti automatici si fermano finché non salvi di nuovo la regola. Scegli prima una cartella.",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "Attiva",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -8736,6 +8756,18 @@
     "rules_copyName": {
         "message": "$1 (copia)",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "Sposta automaticamente i nuovi preferiti",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "Spostamenti automatici fermati: la sua cartella è stata eliminata, rinominata o spostata, oppure è gestita. Scegli di nuovo la cartella e salva la regola.",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "Regole intelligenti, automaticamente",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "Cosa cambierebbero le regole. Nulla cambia finché non applichi.",
@@ -8801,6 +8833,10 @@
         "message": "La tua organizzazione gestisce questo preferito o la cartella di destinazione, quindi resta dove si trova.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "Non spostato: in quella cartella un'altra regola lo sposterebbe di nuovo, quindi ogni esecuzione continuerebbe a spostarlo.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "Regole: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8828,6 +8864,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "Con tag aggiunti: $1. Spostamento di $2 preferiti in background.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "Non è stato spostato nulla: la Cronologia preferiti non ha potuto registrare gli spostamenti, quindi non ne è stato fatto nessuno.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "$count$ regole attive",
@@ -8858,8 +8898,32 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Le regole attive aggiungono i loro tag a ogni preferito appena viene aggiunto, che provenga da Bookmark Scout, dal browser o dalla sincronizzazione. Gli spostamenti non vengono mai eseguiti automaticamente e molti preferiti aggiunti insieme (una sincronizzazione o un'importazione) vengono lasciati invariati.",
+        "message": "Le regole attive aggiungono i loro tag a ogni nuovo preferito consentito da Nuovi preferiti da. L'aggiunta di tag non sposta mai un preferito; per questo c'è Sposta i nuovi preferiti. Molti preferiti aggiunti insieme (una sincronizzazione o un'importazione) vengono lasciati invariati.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "Sposta i nuovi preferiti",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "Le regole che imposti per spostare automaticamente i nuovi preferiti spostano nella loro cartella ogni nuovo preferito corrispondente, solo finché è la cartella che hai scelto. I preferiti salvati da Bookmark Scout restano dove sono stati messi, quindi questa opzione sposta solo preferiti dalla stella del browser, da un'altra estensione o dalla sincronizzazione, e solo se Nuovi preferiti da è impostato su Ovunque. Aggiungi tag ai nuovi preferiti non attiva mai questa opzione e molti preferiti aggiunti insieme vengono lasciati invariati. Ogni spostamento è nella Cronologia preferiti e in Modificati dalle regole, con Annulla.",
+        "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "Nuovi preferiti da",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "Su quali nuovi preferiti agiscono Aggiungi tag ai nuovi preferiti e Sposta i nuovi preferiti. Il browser non dice chi ha aggiunto un preferito, quindi Ovunque tratta allo stesso modo la stella del browser, la sincronizzazione e le altre estensioni.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Salvati con Bookmark Scout",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "Ovunque",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "Usa questa vista come copertina",
@@ -8906,8 +8970,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Tag aggiunti automaticamente",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "Modificati dalle regole",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "Svuota elenco",
@@ -8917,9 +8981,33 @@
         "message": "Aggiunti: $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "Spostato in $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "Annulla i tag aggiunti a $1",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "Riporta $1 al suo posto",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
+    },
+    "rules_autoLogRun": {
+        "message": "Esecuzione delle regole intelligenti",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "Con tag aggiunti: $1 · Spostati: $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "Non elencati qui, quindi Annulla lascia i loro tag: $1.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "Annulla i tag aggiunti da questa esecuzione",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
     },
     "rules_autoLogUndone": {
         "message": "Tag rimossi",
@@ -8944,5 +9032,45 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "Tag rimossi da $count$ preferiti. Annulla gli spostamenti dell'esecuzione nella Cronologia preferiti.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_one": {
+        "message": "Tag rimossi da $count$ preferito. Annulla gli spostamenti dell'esecuzione nella Cronologia preferiti.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "Riportato al suo posto",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "Non riportato al suo posto",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "Il preferito è stato eliminato nel frattempo.",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "Il preferito è stato spostato di nuovo nel frattempo, quindi resta dov’è.",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "La cartella in cui si trovava non esiste più, quindi resta dov’è.",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

@@ -71,9 +71,14 @@ export type ToolFileRequest = {
 export type ToolContext = {
   settings: Settings;
   options: ToolOptions;
-  scope: BookmarkToolScope;
-  /** Bookmarks in the run's scope. */
+  scope: ToolRunScope;
+  /**
+   * Bookmarks in the run's scope; for a narrow scope (`search`, `selection`), every bookmark,
+   * with `only` naming the ones to look at.
+   */
   nodes: BookmarkTreeNode[];
+  /** With a narrow scope: the ids of the bookmarks the manager listed when the run started. */
+  only?: ReadonlySet<string>;
   /** The AI service of the tool's `aiFeature`; fails first when AI features are off. */
   aiSettings(): Promise<AISettings>;
   /** Saves a file once the privacy review allows it; `write` gets the nodes to write. */
@@ -101,6 +106,11 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
   actionKey(settings: Settings): string;
   /** Network tools ask for optional website access before the first scan. */
   needsHostAccess?: boolean;
+  /**
+   * Scopes beyond the folder and every bookmark that the card offers while the manager has them
+   * (a search, a selection); the scan reads `only` for them.
+   */
+  narrowScopes?: readonly NarrowToolScope[];
   /**
    * The scan runs as a background job of this kind (`services/job-coordinator.ts`): it keeps
    * going when the page closes, with pause, resume, and cancel; `scan` is then unused here.
@@ -365,76 +375,34 @@ function reportMetadataSaved(
       };
 }
 
-/**
- * The moves of reviewed plan items as bookmark changes, each only while the bookmark is still
- * where the plan found it, with the same address.
- */
-function getRuleMoveChanges(items: readonly RulePlanItem[]): BookmarkChange[] {
-  return items.flatMap((item) =>
-    item.move
-      ? [
-          {
-            kind: 'move' as const,
-            id: item.id,
-            title: item.title,
-            expect: { url: item.url, parentId: item.parentId },
-            to: { parentId: item.move.folderId },
-          },
-        ]
-      : [],
-  );
-}
-
-/**
- * Applies the rule changes the review kept: the tags first, as one metadata save with its own
- * undo, then the moves, as one bookmark change in the history. The two cannot be written at once,
- * so the report counts each, and Undo puts back both.
- */
-async function applyRulePlan(items: readonly RulePlanItem[]): Promise<ToolOutcome> {
-  const tagged = items.filter((item) => item.addTags.length > 0);
-  const tags = await saveReviewedBookmarkMetadata(
-    tagged.map((item) => ({ bookmarkId: item.id, url: item.url, tags: item.addTags })),
-    (item) => ({ tags: item.tags }),
-    { tagMode: 'append', summaryMode: 'replace', dedupeTags: true },
-  );
-  const moves = getRuleMoveChanges(items);
-  if (moves.length === 0) {
-    return reportRuleChanges(
-      { tagged: tags.saved, moved: 0, skipped: tags.skipped, failed: 0 },
-      {
-        undo: tags.undo,
-      },
-    );
-  }
-  const applied = await applyReviewedChanges(moves, { tool: 'tools_bookmarkRules' });
-  if (applied.background) {
+/** What a reviewed Smart Rules run reports: each part counted, and why moves did not happen. */
+function reportRuleRun(run: RuleRunResult): ToolOutcome {
+  if (run.background) {
     return {
-      ...reportBackgroundApply(applied),
-      description: t('toast_rulesBackgroundDesc', [String(tags.saved), String(applied.count)]),
+      ...reportBackgroundApply(run.background),
+      description: t('toast_rulesBackgroundDesc', [
+        String(run.tagged),
+        String(run.background.count),
+      ]),
     };
   }
-  const { result } = applied;
-  return reportRuleChanges(
-    {
-      tagged: tags.saved,
-      moved: result.applied,
-      skipped: tags.skipped + result.skipped,
-      failed: result.failed,
-    },
-    {
-      undo: async () => {
-        const undoneMoves = await result.undo();
-        const undoneTags = await tags.undo();
-        return {
-          ...undoneMoves,
-          restored: undoneMoves.restored + undoneTags.restored,
-          failed: undoneMoves.failed + undoneTags.failed,
-        };
-      },
-      ...(result.expiresAt !== undefined ? { expiresAt: result.expiresAt } : {}),
-      ...(result.recorded ? { historyId: result.recorded.entry.operationId } : {}),
-    },
-  );
+  const counts = {
+    tagged: run.tagged,
+    moved: run.moved,
+    skipped: run.skipped,
+    failed: run.failed,
+  };
+  const why = run.movesStopped
+    ? run.movesStopped.reason === 'noRecord'
+      ? t('toast_rulesNoRecordDesc')
+      : getErrorMessage(run.movesStopped.error)
+    : undefined;
+  const outcome = reportRuleChanges(counts, {
+    undo: run.undo,
+    ...(run.expiresAt !== undefined ? { expiresAt: run.expiresAt } : {}),
+    ...(run.historyId ? { historyId: run.historyId } : {}),
+  });
+  return why ? { ...outcome, description: `${outcome.description} ${why}` } : outcome;
 }
 
 function reportRuleChanges(
@@ -911,14 +879,22 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     descriptionKey: 'tools_bookmarkRulesDesc',
     actionKey: () => 'action_run',
     changesBookmarks: true,
-    async scan({ nodes }) {
-      const [rules, metadata] = await Promise.all([
+    narrowScopes: ['search', 'selection'],
+    // The whole tree, with the scope's bookmarks as `only`: a rule then reads every bookmark's
+    // full folder path, as Tag New Bookmarks and the editor's match count do, and a bookmark
+    // outside the scope is never planned (R16).
+    async scan({ nodes, scope, only }) {
+      const [rules, metadata, tree] = await Promise.all([
         bookmarkRulesValue.get(),
         bookmarkMetadataValue.get(),
+        fetchBookmarkTree(),
       ]);
-      return planBookmarkRules(rules, nodes, metadata);
+      const inScope =
+        only ??
+        (scope === 'all' ? undefined : new Set(flattenBookmarks(nodes).map(({ node }) => node.id)));
+      return planBookmarkRules(rules, tree, metadata, inScope);
     },
-    apply: (_items, picked) => applyRulePlan(picked),
+    apply: async (_items, picked) => reportRuleRun(await applyRulePlan(picked)),
   },
   statistics: {
     id: 'statistics',

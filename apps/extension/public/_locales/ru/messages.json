@@ -1749,6 +1749,14 @@
         "message": "Выберите область",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "Результаты поиска",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "Выбранные закладки",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "Выполняется...",
         "description": "Tool button label while the tool runs"
@@ -9338,7 +9346,7 @@
         "description": "Settings: heading of the smart rules list"
     },
     "rules_description": {
-        "message": "Каждое правило находит закладки по поисковому запросу и добавляет теги, перемещает их в папку или делает и то и другое. Правила ничего не меняют, пока вы не запустите «Умные правила» на панели «Инструменты» и не примените результаты проверки. Если закладку перемещают два правила, побеждает то, что выше. Хранится только на этом устройстве.",
+        "message": "Каждое правило находит закладки по поисковому запросу и добавляет теги, перемещает их в папку или делает и то и другое. Правила ничего не меняют, пока вы не запустите «Умные правила» на панели «Инструменты» и не примените результаты проверки или не включите «Отмечать новые закладки тегами» или «Перемещать новые закладки». Если закладку перемещают два правила, побеждает то, что выше. Хранится только на этом устройстве.",
         "description": "Settings: what smart rules are and where they run"
     },
     "rules_add": {
@@ -9360,6 +9368,10 @@
     "rules_templateTutorial": {
         "message": "Отмечать учебные материалы тегом learning",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+    },
+    "rules_templateReading": {
+        "message": "Перемещать Work / Reading в выбранную вами папку",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
     },
     "rules_empty": {
         "message": "Правил пока нет.",
@@ -9402,7 +9414,7 @@
         "description": "Rule editor title for an existing rule"
     },
     "rules_editorDescription": {
-        "message": "Правило находит закладки по поисковому запросу и определяет, что с ними сделать. Оно ничего не меняет, пока вы не запустите «Умные правила» на панели «Инструменты».",
+        "message": "Правило находит закладки по поисковому запросу и определяет, что с ними сделать. Оно ничего не меняет, пока вы не запустите «Умные правила» на панели «Инструменты», если не включено «Отмечать новые закладки тегами» или «Перемещать новые закладки».",
         "description": "Rule editor description"
     },
     "rules_name": {
@@ -9473,6 +9485,14 @@
         "message": "Оставьте невыбранным, чтобы только добавлять теги.",
         "description": "Rule editor: help under the folder field"
     },
+    "rules_autoMove": {
+        "message": "Перемещать новые закладки автоматически",
+        "description": "Rule editor: checkbox that lets this rule move new bookmarks to its folder without a review"
+    },
+    "rules_autoMoveHelp": {
+        "message": "Пока включено «Перемещать новые закладки», каждая новая закладка, которую находит это правило, перемещается в эту папку без проверки. Только в эту папку: если её удалят, переименуют или переместят, автоматические перемещения остановятся, пока вы снова не сохраните правило. Сначала выберите папку.",
+        "description": "Rule editor: help under the automatic move checkbox"
+    },
     "rules_enabled": {
         "message": "Включено",
         "description": "Rule editor: checkbox that turns the rule on"
@@ -9508,6 +9528,18 @@
     "rules_copyName": {
         "message": "$1 (копия)",
         "description": "Name of a duplicated rule; $1 is the original name"
+    },
+    "rules_autoMoveOn": {
+        "message": "Перемещает новые закладки автоматически",
+        "description": "Settings: note under a rule that moves new bookmarks automatically"
+    },
+    "rules_autoMovePaused": {
+        "message": "Автоматические перемещения остановлены: папку удалили, переименовали или переместили, либо она управляется организацией. Выберите папку снова и сохраните правило.",
+        "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_autoMoveTool": {
+        "message": "Умные правила, автоматически",
+        "description": "Bookmark history: what moved bookmarks on its own, after the change, as in Move 3 items (Smart Rules, automatically)"
     },
     "tools_bookmarkRulesDialogDesc": {
         "message": "Что изменят правила. Ничего не изменится, пока вы не примените изменения.",
@@ -9593,6 +9625,10 @@
         "message": "Ваша организация управляет этой закладкой или папкой назначения, поэтому закладка остаётся на месте.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "Не перемещена: в той папке другое правило переместило бы её снова, и каждый запуск перемещал бы её опять.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "Правила: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -9620,6 +9656,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "Добавлены теги: $1. Перемещается в фоне закладок: $2.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "Ничего не перемещено: история закладок не смогла записать перемещения, поэтому ни одно не выполнено.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "Включено правил: $count$",
@@ -9670,8 +9710,32 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Включённые правила добавляют свои теги к каждой закладке при её добавлении — из Bookmark Scout, браузера или синхронизации. Перемещения никогда не выполняются автоматически, а много закладок, добавленных сразу (при синхронизации или импорте), не затрагиваются.",
+        "message": "Включённые правила добавляют свои теги к каждой новой закладке, которую допускает «Источник новых закладок». Теги никогда не перемещают закладку: для этого есть «Перемещать новые закладки». Много закладок, добавленных сразу (при синхронизации или импорте), не затрагиваются.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "settings_bookmarkRulesAutoMove": {
+        "message": "Перемещать новые закладки",
+        "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
+    },
+    "settings_bookmarkRulesAutoMoveDesc": {
+        "message": "Правила, которым вы разрешили перемещать новые закладки автоматически, перемещают в свою папку каждую подходящую новую закладку, но только пока это выбранная вами папка. Закладки, сохранённые Bookmark Scout, остаются там, куда их положили, поэтому перемещаются только закладки, добавленные звёздочкой браузера, другим расширением или синхронизацией, и только если в «Источник новых закладок» выбрано «Откуда угодно». «Отмечать новые закладки тегами» эту функцию никогда не включает, а много закладок, добавленных сразу, не затрагиваются. Каждое перемещение видно в истории закладок и в списке «Изменено правилами», с отменой.",
+        "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "Источник новых закладок",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "На какие новые закладки действуют «Отмечать новые закладки тегами» и «Перемещать новые закладки». Браузер не сообщает, кто добавил закладку, поэтому вариант «Откуда угодно» одинаково обрабатывает звёздочку браузера, синхронизацию и другие расширения.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Сохранённые в Bookmark Scout",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "Откуда угодно",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "Сделать обложку из этого вида",
@@ -9718,8 +9782,8 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Теги, добавленные автоматически",
-        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks tagged lately"
+        "message": "Изменено правилами",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
         "message": "Очистить список",
@@ -9729,9 +9793,33 @@
         "message": "Добавлено: $1 · $2",
         "description": "Settings, Smart Rules: one automatic tagging; $1 is the tags added, $2 when"
     },
+    "rules_autoLogMoved": {
+        "message": "Перемещено в $1 · $2",
+        "description": "Settings, Smart Rules: one automatic move; $1 is the folder path, $2 when"
+    },
     "rules_autoLogUndoLabel": {
         "message": "Отменить теги, добавленные к «$1»",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic tagging; $1 is the bookmark title"
+    },
+    "rules_autoLogUndoMoveLabel": {
+        "message": "Вернуть «$1» на место",
+        "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
+    },
+    "rules_autoLogRun": {
+        "message": "Запуск умных правил",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "Добавлены теги: $1 · Перемещено: $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "Не показаны здесь, поэтому отмена оставит их теги: $1.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "Отменить теги, добавленные этим запуском",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
     },
     "rules_autoLogUndone": {
         "message": "Теги удалены",
@@ -9776,5 +9864,65 @@
                 "example": "2"
             }
         }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "Теги удалены из закладок: $count$. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_one": {
+        "message": "Теги удалены из $count$ закладки. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_few": {
+        "message": "Теги удалены из $count$ закладок. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (few)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_many": {
+        "message": "Теги удалены из $count$ закладок. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (many)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogMovedBack": {
+        "message": "Возвращено на место",
+        "description": "Toast title after undoing one automatic move"
+    },
+    "rules_autoLogNotMovedBack": {
+        "message": "Не возвращено на место",
+        "description": "Toast title when one automatic move could not be undone"
+    },
+    "rules_autoLogUndoDeleted": {
+        "message": "Закладка с тех пор удалена.",
+        "description": "Toast: an automatic move was not undone because the bookmark was deleted"
+    },
+    "rules_autoLogUndoChanged": {
+        "message": "Закладку с тех пор снова переместили, поэтому она остаётся на месте.",
+        "description": "Toast: an automatic move was not undone because the bookmark was moved again"
+    },
+    "rules_autoLogUndoParentMissing": {
+        "message": "Папки, в которой она была, больше нет, поэтому закладка остаётся на месте.",
+        "description": "Toast: an automatic move was not undone because the folder it came from is gone"
     }
 }

@@ -807,10 +807,38 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'a rule made in Settings tags and moves matching bookmarks after a review, and undo puts them back',
     ),
   ]),
-  bookmarkRulesAutoTag: tested('services/rule-auto-tag.ts', [
+  bookmarkRulesAutoTag: tested('services/rule-automation.ts', [
     unit(
-      'rule-auto-tag.test.ts',
-      'runs only while the setting is on, and leaves large batches alone',
+      'rule-automation.test.ts',
+      'runs each only while its own setting is on, and leaves large batches alone',
+    ),
+    e2e(
+      'bookmark-rules.spec.ts',
+      'with Tag New Bookmarks on and new bookmarks from anywhere, a bookmark added in the browser gets its rules tags and stays put, even when a rule may move new bookmarks',
+    ),
+  ]),
+  bookmarkRulesAutoMove: tested('services/rule-automation.ts', [
+    unit(
+      'rule-automation.test.ts',
+      'runs each only while its own setting is on, and leaves large batches alone',
+    ),
+    e2e(
+      'bookmark-rules.spec.ts',
+      'with Move New Bookmarks on, a rule set to move new bookmarks moves one added in the browser, logs it, and Undo puts it back',
+    ),
+  ]),
+  bookmarkRulesNewFrom: tested('services/rule-automation.ts', [
+    unit(
+      'rule-automation.test.ts',
+      'by default acts only on bookmarks saved through Bookmark Scout, never moving them',
+    ),
+    unit(
+      'rule-automation.test.ts',
+      'defaults to Bookmark Scout only, and in the background uses the stricter setting',
+    ),
+    e2e(
+      'bookmark-rules.spec.ts',
+      'with Tag New Bookmarks on and new bookmarks from anywhere, a bookmark added in the browser gets its rules tags and stays put, even when a rule may move new bookmarks',
     ),
   ]),
 

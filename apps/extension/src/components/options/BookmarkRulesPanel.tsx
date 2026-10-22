@@ -2,10 +2,12 @@
  * Smart Rules in Options: the rules (`bookmark-rules.ts`) in the order they run, each turned on
  * or off, edited, duplicated, deleted, or dragged to another place, and new ones from scratch or
  * from a template. A rule changes nothing here: Smart Rules in the Tools sidebar runs them, with a
- * review first.
+ * review first, and Tag New Bookmarks and Move New Bookmarks apply them to new bookmarks. A rule
+ * that moves new bookmarks automatically says so in the list, and says when it cannot (its folder
+ * changed), so an automatic move is never a surprise.
  */
-import { ChevronDown, Copy, Pencil, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { ChevronDown, Copy, FolderInput, Pencil, Plus, Trash2, TriangleAlert } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { BookmarkTreeNode } from '@/types';
 
 /** Each template's name, by its id in `[[templates]]` of config/rules/rules.toml. */
@@ -13,6 +15,7 @@ const TEMPLATE_NAME_KEYS: Record<BookmarkRuleTemplateId, MessageKey> = {
   github: 'rules_templateGithub',
   youtube: 'rules_templateYoutube',
   tutorial: 'rules_templateTutorial',
+  reading: 'rules_templateReading',
 };
 
 const RULE_DRAFT_ERROR_KEYS = {
@@ -41,6 +44,8 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
   }, [draft]);
 
   const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
+  // A rule with nothing to do cannot be turned on: a template that moves waits for its folder.
+  const actionable = hasRuleAction(value);
   // What is wrong with the search, as the search boxes say it: a rule never runs on part of one.
   const queryProblem = useMemo(() => {
     const [diagnostic] = parseSearchQuery(value.query).diagnostics;
@@ -128,15 +133,41 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
               />
             )}
           </Field>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="rule-enabled"
-              checked={value.enabled}
-              onCheckedChange={(checked) => setValue({ ...value, enabled: checked === true })}
-            />
-            <label htmlFor="rule-enabled" className="text-sm font-medium">
-              {t('rules_enabled')}
-            </label>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="rule-auto-move"
+                checked={value.autoMove && value.folderId !== ''}
+                disabled={value.folderId === ''}
+                aria-describedby="rule-auto-move-help"
+                onCheckedChange={(checked) => setValue({ ...value, autoMove: checked === true })}
+              />
+              <label htmlFor="rule-auto-move" className="text-sm font-medium">
+                {t('rules_autoMove')}
+              </label>
+            </div>
+            <p id="rule-auto-move-help" className="text-xs text-muted-foreground">
+              {t('rules_autoMoveHelp')}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="rule-enabled"
+                checked={value.enabled && actionable}
+                disabled={!actionable}
+                aria-describedby={actionable ? undefined : 'rule-enabled-help'}
+                onCheckedChange={(checked) => setValue({ ...value, enabled: checked === true })}
+              />
+              <label htmlFor="rule-enabled" className="text-sm font-medium">
+                {t('rules_enabled')}
+              </label>
+            </div>
+            {actionable ? null : (
+              <p id="rule-enabled-help" className="text-xs text-muted-foreground">
+                {t('rules_errorAction')}
+              </p>
+            )}
           </div>
           {error ? (
             <p role="alert" className="text-sm text-destructive">
@@ -160,17 +191,37 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
 export function BookmarkRulesPanel() {
   const { value: rules } = useStoredValue(bookmarkRulesValue);
   const [editing, setEditing] = useState<RuleDraft | null>(null);
+  const [tree, setTree] = useState<BookmarkTreeNode[]>();
+  const loadTree = useCallback(() => {
+    fetchBookmarkTree()
+      .then(setTree)
+      .catch(() => setTree(undefined));
+  }, []);
+  useEffect(loadTree, [loadTree]);
+  useBookmarkEvents(loadTree);
+  // Why each automatically moving rule cannot move now; unknown until the tree is read.
+  const autoMoveBlocks = useMemo(
+    () => (tree ? ruleAutoMoveBlocks(rules, tree) : undefined),
+    [rules, tree],
+  );
 
-  const addTemplate = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) =>
+  const addTemplate = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) => {
+    const name = t(TEMPLATE_NAME_KEYS[template.id]);
+    // A template that moves has no folder yet: the editor opens on it to ask for one.
+    if (template.move) {
+      setEditing(ruleDraftOfTemplate(template, name));
+      return;
+    }
     void saveBookmarkRule({
       id: createBookmarkRuleId(),
-      name: t(TEMPLATE_NAME_KEYS[template.id]),
+      name,
       // Templates start turned off: a rule acts only once the user chose it.
       enabled: false,
       query: template.query,
       syntaxVersion: SEARCH_SYNTAX_VERSION,
       addTags: [...template.add_tags],
     });
+  };
 
   const remove = async (rule: BookmarkRule) => {
     const index = rules.findIndex((entry) => entry.id === rule.id);
@@ -236,6 +287,25 @@ export function BookmarkRulesPanel() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{rule.name}</p>
                 <p className="truncate text-xs text-muted-foreground">{describeRule(rule)}</p>
+                {rule.autoMove ? (
+                  autoMoveBlocks?.get(rule.id) ? (
+                    <p
+                      data-testid="rule-auto-move-paused"
+                      className="flex items-center gap-1 text-xs text-warning"
+                    >
+                      <TriangleAlert className="size-3.5 shrink-0" aria-hidden />
+                      {t('rules_autoMovePaused')}
+                    </p>
+                  ) : (
+                    <p
+                      data-testid="rule-auto-move"
+                      className="flex items-center gap-1 text-xs text-muted-foreground"
+                    >
+                      <FolderInput className="size-3.5 shrink-0" aria-hidden />
+                      {t('rules_autoMoveOn')}
+                    </p>
+                  )
+                ) : null}
               </div>
               <Button
                 variant="ghost"
@@ -271,7 +341,7 @@ export function BookmarkRulesPanel() {
           )}
         />
       )}
-      <AutoTagLogList />
+      <RuleAutoLogList />
       <RuleEditorDialog draft={editing} onClose={() => setEditing(null)} />
     </OptionsPanel>
   );
