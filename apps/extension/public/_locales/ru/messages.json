@@ -808,7 +808,7 @@
         "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
     },
     "settings_linkOpenTargetDesc": {
-        "message": "Где открывается ссылка, по которой вы нажали в Bookmark Scout. Нажатие средней кнопкой и Cmd/Ctrl+нажатие работают так же, как в браузере.",
+        "message": "Где открывается ссылка, по которой вы щёлкнули в Bookmark Scout. Щелчок средней кнопкой и Cmd/Ctrl+щелчок работают так же, как в браузере.",
         "description": "Settings > Behavior: description of the Open links in setting"
     },
     "settings_linkOpenNewTab": {
@@ -2528,7 +2528,7 @@
         "description": "Dead links follow redirects description"
     },
     "settings_deadLinksOnDead": {
-        "message": "По умолчанию для подтверждённо неработающих ссылок",
+        "message": "По умолчанию для точно неработающих ссылок",
         "description": "Setting label: the repair action confirmed dead links start on"
     },
     "settings_deadLinksOnDeadDesc": {
@@ -3348,7 +3348,7 @@
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "toast_backupRestoredNeedsSetup": {
-        "message": "Ваши настройки, промпты, ИИ-сервисы с их базовыми URL и сохранённые поиски восстановлены. Не восстановлено, так как резервные копии никогда это не содержат: $1. Введите эти данные снова в разделе «Настройки > ИИ»; до тех пор у этих сервисов будет пометка «Требуется настройка».",
+        "message": "Ваши настройки, промпты, ИИ-сервисы с их базовыми URL и сохранённые поиски восстановлены. Не восстановлено, так как этого никогда нет в резервных копиях: $1. Введите эти данные снова в разделе «Настройки > ИИ»; до тех пор у этих сервисов будет пометка «Требуется настройка».",
         "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
     },
     "toast_backupServiceNeeds": {
@@ -4392,7 +4392,7 @@
         "description": "Button that turns on the browser's icon cache, asking for permission first"
     },
     "perm_aiFirefoxNote": {
-        "message": "В запросе Firefox сказано, что разработчик хочет собирать эти данные. Здесь это означает выбранную вами ИИ-компанию: данные идут прямо из браузера этой компании и никогда не попадают в Bookmark Scout.",
+        "message": "В запросе Firefox сказано, что разработчик хочет собирать эти данные. Здесь это означает выбранную вами ИИ-компанию: данные идут прямо из вашего браузера к этой компании и никогда не попадают в Bookmark Scout.",
         "description": "Firefox only: explains that the 'developer' in Firefox's data collection prompt is the AI company the user chose"
     },
     "perm_agentBridgeFirefoxNote": {
@@ -5764,7 +5764,7 @@
         "description": "Provider connection error: 403 from a remote provider"
     },
     "ai_connErrorNotFound": {
-        "message": "По этому адресу ничего не ответило. Проверьте базовый URL.",
+        "message": "По этому адресу нет ответа. Проверьте базовый URL.",
         "description": "Provider connection error: 404, wrong Base URL"
     },
     "ai_connErrorRateLimited": {
@@ -6900,7 +6900,7 @@
         "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
     },
     "settings_shortcutRecorderHint": {
-        "message": "Нажмите на поле сочетания клавиш и нажмите новое сочетание. Нажмите Esc для отмены.",
+        "message": "Выберите поле сочетания клавиш и нажмите новое сочетание. Для отмены нажмите Esc.",
         "description": "How to use the shortcut fields where the extension can set keys"
     },
     "settings_shortcutFieldLabel": {
@@ -7906,7 +7906,7 @@
         "description": "History detail: the bookmarks were read again after the change and are as it left them."
     },
     "history_verifyFailed": {
-        "message": "Проверено после изменения: элементов не в том состоянии, в каком их оставило изменение: $1.",
+        "message": "Проверено после изменения: элементов, отличающихся от результата изменения: $1.",
         "description": "History detail: $1 items did not read back as the change left them."
     },
     "history_verifyNotRun": {
@@ -8210,7 +8210,7 @@
         "description": "Setting description: openConfirmAbove"
     },
     "settings_searchHistoryMax": {
-        "message": "Хранить недавних запросов",
+        "message": "Число недавних запросов",
         "description": "Setting label: searchHistoryMax"
     },
     "settings_searchHistoryMaxDesc": {
@@ -9334,8 +9334,8 @@
         "description": "Smart Rules review: the rule folder no longer exists"
     },
     "tools_rulesBlocked_managed": {
-        "message": "Этой папкой управляет ваша организация, поэтому её нельзя переместить.",
-        "description": "Smart Rules review: the folder is managed by policy"
+        "message": "Ваша организация управляет этой закладкой или папкой назначения, поэтому закладка остаётся на месте.",
+        "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
     "tools_rulesMatchedBy": {
         "message": "Правила: $1",

@@ -792,7 +792,7 @@
         "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
     },
     "settings_linkOpenTargetDesc": {
-        "message": "Dove si apre un link quando lo fai clic in Bookmark Scout. Il clic centrale e Cmd/Ctrl+clic funzionano sempre come nel tuo browser.",
+        "message": "Dove si apre un link quando ci fai clic in Bookmark Scout. Il clic centrale e Cmd/Ctrl+clic funzionano sempre come nel tuo browser.",
         "description": "Settings > Behavior: description of the Open links in setting"
     },
     "settings_linkOpenNewTab": {
@@ -2464,11 +2464,11 @@
         "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
-        "message": "Attiva Controlla link non funzionanti",
+        "message": "Attiva il controllo dei link non funzionanti",
         "description": "Dead links enabled label"
     },
     "settings_deadLinksEnabledDesc": {
-        "message": "Consenti di controllare i preferiti con URL non raggiungibili",
+        "message": "Consenti di cercare URL non raggiungibili nei preferiti",
         "description": "Dead links enabled description"
     },
     "settings_deadLinksDefaultScope": {
@@ -3670,11 +3670,11 @@
         "description": "Search syntax help: what has:summary does"
     },
     "searchHelp_after": {
-        "message": "Aggiunti in un giorno o dopo",
+        "message": "Aggiunti in quella data o dopo",
         "description": "Search syntax help: what after:YYYY-MM-DD does"
     },
     "searchHelp_before": {
-        "message": "Aggiunti in un giorno o prima",
+        "message": "Aggiunti in quella data o prima",
         "description": "Search syntax help: what before:YYYY-MM-DD does"
     },
     "searchHelp_guide": {
@@ -5000,7 +5000,7 @@
         "description": "Toast title after a dead-link repair batch was undone"
     },
     "tools_deadLinkRepairUndoPartial": {
-        "message": "Alcune riparazioni non possono essere annullate",
+        "message": "Non è stato possibile annullare alcune riparazioni",
         "description": "Toast title when part of a dead-link repair batch could not be undone"
     },
     "tools_deadLinkRepairUndoneDesc": {
@@ -6464,7 +6464,7 @@
         "description": "Link after that line in Chrome and Edge, opening the steps to give quick save the browser's own bookmark keys; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
     },
     "newcomer_aiOffNotice": {
-        "message": "L'IA è disattivata: nulla di questo funziona finché non attivi Funzioni IA.",
+        "message": "L'IA è disattivata: qui non funziona nulla finché non attivi Funzioni IA.",
         "description": "Options notice above AI settings shown greyed out while AI Features (settings_aiEnabled) is off"
     },
     "newcomer_backUpSettings": {
@@ -6548,7 +6548,7 @@
         "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
     },
     "settings_managerMenuActionsDesc": {
-        "message": "Scegli quali comandi mostrano il menu contestuale e il menu ⋯, e in quale ordine all'interno di ogni gruppo.",
+        "message": "Scegli quali comandi mostrare nel menu contestuale e nel menu ⋯, e in quale ordine all'interno di ogni gruppo.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
     },
     "settings_managerMenuActionsKeep": {
@@ -7194,7 +7194,7 @@
         "description": "Title of the History dialog in the manager."
     },
     "history_description": {
-        "message": "Le modifiche ai tuoi preferiti: quelle fatte da Bookmark Scout e quelle rilevate da altre fonti. Conservata solo su questo dispositivo, a partire da questa versione; le modifiche fatte mentre l'estensione era disattivata compaiono in seguito come un'unica differenza.",
+        "message": "Le modifiche ai tuoi preferiti: quelle fatte da Bookmark Scout e quelle rilevate da altre fonti. La cronologia è conservata solo su questo dispositivo, a partire da questa versione; le modifiche fatte mentre l'estensione era disattivata compaiono in seguito come un'unica differenza.",
         "description": "Explanation under the History title."
     },
     "history_filterLabel": {
@@ -7906,7 +7906,7 @@
         "description": "Settings: more about the deadLinksFollowRedirects setting, in a toggletip"
     },
     "settings_metadataFetcherConcurrencyHelp": {
-        "message": "Quante pagine vengono lette contemporaneamente. Con un valore più alto si finisce prima, ma si carica di più i siti e la tua connessione.",
+        "message": "Quante pagine vengono lette contemporaneamente. Con un valore più alto si finisce prima, ma aumenta il carico sui siti e sulla tua connessione.",
         "description": "Settings: more about the metadataFetcherConcurrency setting, in a toggletip"
     },
     "settings_metadataFetcherRequestTimeoutMsHelp": {
@@ -8374,15 +8374,15 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "Aggiungi il tag sviluppo alle pagine GitHub",
+        "message": "Aggiungi il tag development alle pagine GitHub",
         "description": "Starter smart rule: GitHub pages get the tag development"
     },
     "rules_templateYoutube": {
-        "message": "Aggiungi il tag da guardare ai video YouTube",
+        "message": "Aggiungi il tag watch-later ai video YouTube",
         "description": "Starter smart rule: YouTube videos get the tag watch-later"
     },
     "rules_templateTutorial": {
-        "message": "Aggiungi il tag apprendimento ai tutorial",
+        "message": "Aggiungi il tag learning ai tutorial",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
     },
     "rules_empty": {
@@ -8574,8 +8574,8 @@
         "description": "Smart Rules review: the rule folder no longer exists"
     },
     "tools_rulesBlocked_managed": {
-        "message": "Questa cartella è gestita dalla tua organizzazione, quindi il preferito non può essere spostato.",
-        "description": "Smart Rules review: the folder is managed by policy"
+        "message": "La tua organizzazione gestisce questo preferito o la cartella di destinazione, quindi resta dove si trova.",
+        "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
     "tools_rulesMatchedBy": {
         "message": "Regole: $1",

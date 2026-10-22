@@ -1330,7 +1330,7 @@
         "description": "Bookmark row action that opens a link in a new tab"
     },
     "table_moveTop": {
-        "message": "Pindahkan ke atas sekali",
+        "message": "Pindahkan ke paling atas",
         "description": "Accessible label for moving a bookmark to the top of its folder"
     },
     "table_moveUp": {
@@ -1342,7 +1342,7 @@
         "description": "Accessible label for moving a bookmark down"
     },
     "table_moveBottom": {
-        "message": "Pindahkan ke bawah sekali",
+        "message": "Pindahkan ke paling bawah",
         "description": "Accessible label for moving a bookmark to the bottom of its folder"
     },
     "bookmarks_showFolders": {
@@ -2376,7 +2376,7 @@
         "description": "Duplicate cleaner ignore trailing slash description"
     },
     "settings_duplicatesKeepRule": {
-        "message": "Aturan Penyimpanan",
+        "message": "Bookmark yang Dipertahankan",
         "description": "Duplicate cleaner keep rule label"
     },
     "settings_duplicatesKeepRuleDesc": {
@@ -2540,7 +2540,7 @@
         "description": "Metadata fetcher enabled label"
     },
     "settings_metadataFetcherEnabledDesc": {
-        "message": "Izinkan pengambilan metadata bookmark yang tidak ada",
+        "message": "Izinkan pengambilan metadata bookmark yang belum ada",
         "description": "Metadata fetcher enabled description"
     },
     "settings_metadataFetcherDefaultScope": {
@@ -3464,7 +3464,7 @@
         "description": "Bookmark manager: a filter in use, shown as a chip under the toolbar; $1 is the filter, $2 its values"
     },
     "table_filterValueSeparator": {
-        "message": ",",
+        "message": ", ",
         "description": "Bookmark manager: what goes between the values of one filter chip"
     },
     "table_filterChipRemove": {
@@ -5114,7 +5114,7 @@
         "description": "Heading of the saved AI services list"
     },
     "options_aiServicesDescription": {
-        "message": "Simpan penyedia sebanyak yang Anda mau. Alat AI menggunakan layanan default. AI bawaan hanya menyarankan folder, jadi selama AI bawaan menjadi default, alat lainnya menggunakan layanan lain pertama yang aktif. Tarik layanan melalui pegangannya untuk mengubah urutan yang pertama.",
+        "message": "Simpan penyedia sebanyak yang Anda mau. Alat AI menggunakan layanan default. AI bawaan hanya menyarankan folder, jadi selama AI bawaan menjadi default, alat lainnya menggunakan layanan lain pertama yang aktif. Tarik layanan melalui pegangannya untuk mengubah layanan mana yang berada di urutan pertama.",
         "description": "Description of the AI services list"
     },
     "options_aiServiceAdd": {
@@ -5798,7 +5798,7 @@
         "description": "Ask AI approval line for a planned new folder. $1 is its name, $2 the folder it is created in."
     },
     "askAI_planMissing": {
-        "message": "Rencana ini sudah kedaluwarsa atau sudah diterapkan. Minta lagi untuk membuatnya sekali lagi.",
+        "message": "Rencana ini sudah kedaluwarsa atau sudah diterapkan. Minta lagi untuk membuat ulang rencananya.",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
     },
     "askAI_undoMissing": {
@@ -6876,7 +6876,7 @@
         "description": "Drag handle and menu button of a reorderable list item (settings lists, table columns). $1 is the item name."
     },
     "sortable_moveTop": {
-        "message": "Pindahkan ke atas sekali",
+        "message": "Pindahkan ke paling atas",
         "description": "Menu item of a reorderable list item's handle: moves it to the top of the list."
     },
     "sortable_moveUp": {
@@ -6888,7 +6888,7 @@
         "description": "Menu item of a reorderable list item's handle: moves it one place down."
     },
     "sortable_moveBottom": {
-        "message": "Pindahkan ke bawah sekali",
+        "message": "Pindahkan ke paling bawah",
         "description": "Menu item of a reorderable list item's handle: moves it to the bottom of the list."
     },
     "sortable_moved": {
@@ -8194,8 +8194,8 @@
         "description": "Smart Rules review: the rule folder no longer exists"
     },
     "tools_rulesBlocked_managed": {
-        "message": "Organisasi Anda mengelola folder ini, jadi folder ini tidak dapat dipindahkan.",
-        "description": "Smart Rules review: the folder is managed by policy"
+        "message": "Organisasi Anda mengelola bookmark ini atau folder tujuannya, jadi bookmark tetap di tempatnya.",
+        "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
     "tools_rulesMatchedBy": {
         "message": "Aturan: $1",
