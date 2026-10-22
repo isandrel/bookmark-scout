@@ -201,4 +201,9 @@ export const INDEXED_DATABASES = {
    * `config/jobs/scheduler.toml`'s retention.
    */
   backgroundJobs: { name: 'bookmark-scout-jobs', backup: 'exclude' },
+  /**
+   * Page text (`lib/page-text-store.ts`): the readable text of the pages the user indexed, for
+   * search; derived from the pages and downloaded again when needed, so never backed up.
+   */
+  pageText: { name: 'bookmark-scout-page-text', backup: 'exclude' },
 } as const satisfies Record<string, { name: string; backup: BackupPolicy }>;

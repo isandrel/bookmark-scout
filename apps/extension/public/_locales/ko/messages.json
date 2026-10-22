@@ -7913,6 +7913,210 @@
         "message": "큰 변경은 페이지를 닫아도 계속되며, 각 부분은 기록에서 실행 취소할 수 있습니다. 작은 변경은 바로 적용되며 알림에서 실행 취소할 수 있습니다.",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_pageText": {
+        "message": "페이지 본문 색인",
+        "description": "Tools sidebar: name of the Index Page Text tool"
+    },
+    "tools_pageTextDesc": {
+        "message": "북마크한 페이지의 본문을 이 기기에 보관해 검색이 페이지 안의 단어도 찾게 합니다",
+        "description": "Tools sidebar: what Index Page Text does"
+    },
+    "action_index": {
+        "message": "색인",
+        "description": "Button that runs Index Page Text"
+    },
+    "settings_pageTextEnabled": {
+        "message": "페이지 본문 색인 사용",
+        "description": "Settings: switch that turns Index Page Text on"
+    },
+    "settings_pageTextEnabledDesc": {
+        "message": "도구 사이드바에 페이지 본문 색인을 표시하고, 검색이 색인된 페이지 안도 찾게 합니다. 색인하는 페이지는 다운로드되며 본문은 이 기기에 남습니다.",
+        "description": "Settings: what turning Index Page Text on does"
+    },
+    "settings_pageTextDefaultScope": {
+        "message": "기본 범위",
+        "description": "Settings: default scope of Index Page Text"
+    },
+    "settings_pageTextDefaultScopeDesc": {
+        "message": "페이지 본문 색인이 기본으로 읽는 북마크",
+        "description": "Settings: description of the Index Page Text default scope"
+    },
+    "tools_pageTextDialogDesc": {
+        "message": "각 페이지에서 읽은 본문입니다. 저장한 것만 이 기기에 남습니다.",
+        "description": "Index Page Text review: description"
+    },
+    "tools_pageTextCategory_read": {
+        "message": "본문 있음 ($1)",
+        "description": "Index Page Text review tab: pages with readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_empty": {
+        "message": "본문 없음 ($1)",
+        "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_failed": {
+        "message": "실패 ($1)",
+        "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_pageTextCategory_current": {
+        "message": "이미 색인됨 ($1)",
+        "description": "Index Page Text review tab: pages indexed before from the same address; $1 is how many"
+    },
+    "tools_pageTextCategory_skipped": {
+        "message": "건너뜀 ($1)",
+        "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextActionSave": {
+        "message": "본문 저장",
+        "description": "Index Page Text review: action that keeps a page text"
+    },
+    "tools_pageTextSaveSelected": {
+        "message": "페이지 $count$개의 본문 저장",
+        "description": "Index Page Text review: button that saves the text left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextSaveSelected_one": {
+        "message": "페이지 $count$개의 본문 저장",
+        "description": "Index Page Text review: button that saves the text left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextNothing": {
+        "message": "이 범위에 웹 페이지가 없습니다.",
+        "description": "Index Page Text review: shown when the scope has no web pages"
+    },
+    "tools_pageTextOverLimit": {
+        "message": "색인이 가득 차서 북마크 $count$개를 제외했습니다.",
+        "description": "Index Page Text review: bookmarks left out because the index is full",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextOverLimit_one": {
+        "message": "색인이 가득 차서 북마크 $count$개를 제외했습니다.",
+        "description": "Index Page Text review: bookmarks left out because the index is full (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextSaved": {
+        "message": "페이지 본문 저장됨",
+        "description": "Toast title after saving page text"
+    },
+    "toast_pageTextSavedDesc": {
+        "message": "이제 본문으로 페이지 $count$개를 찾을 수 있습니다.",
+        "description": "Toast after saving page text; how many pages",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextSavedDesc_one": {
+        "message": "이제 본문으로 페이지 $count$개를 찾을 수 있습니다.",
+        "description": "Toast after saving page text; how many pages (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "search_reasonContent": {
+        "message": "페이지: $1",
+        "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
+    },
+    "searchHelp_content": {
+        "message": "색인된 페이지 본문에서",
+        "description": "Search syntax help: what content: does"
+    },
+    "searchHelp_hasContent": {
+        "message": "색인된 페이지 본문 있음",
+        "description": "Search syntax help: what has:content does"
+    },
+    "pageText_indexTitle": {
+        "message": "페이지 본문 색인",
+        "description": "Settings: heading of the page text index panel"
+    },
+    "pageText_indexSummary": {
+        "message": "페이지 $count$개 색인됨, 본문 $chars$자. 이 기기에 보관되며 밖으로 나가지 않습니다.",
+        "description": "Settings: how much page text is kept; $1 pages, $2 characters",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "chars": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "pageText_indexSummary_one": {
+        "message": "페이지 $count$개 색인됨, 본문 $chars$자. 이 기기에 보관되며 밖으로 나가지 않습니다.",
+        "description": "Settings: how much page text is kept; $1 pages, $2 characters (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "chars": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "pageText_indexLoading": {
+        "message": "색인을 읽는 중…",
+        "description": "Settings: shown while the page text index is read"
+    },
+    "pageText_clear": {
+        "message": "페이지 본문 삭제",
+        "description": "Settings: button that deletes the page text index"
+    },
+    "pageText_cleared": {
+        "message": "페이지 본문 삭제됨",
+        "description": "Toast title after deleting the page text index"
+    },
+    "pageText_clearedDesc": {
+        "message": "북마크, 태그, 기록은 바뀌지 않았습니다.",
+        "description": "Toast after deleting the page text index"
+    },
+    "settings_managerViewMode": {
+        "message": "관리자 보기",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "폴더와 검색 결과를 목록 또는 카드로 표시합니다. 이 기기에 저장됩니다.",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "목록",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "카드",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "관리자 보기",
+        "description": "Settings: heading of the section with Manager View"
+    },
     "tools_bookmarkRules": {
         "message": "스마트 규칙",
         "description": "Tools sidebar: name of the Smart Rules tool"
@@ -8212,25 +8416,5 @@
     "tools_rulesEdit": {
         "message": "규칙 편집",
         "description": "Smart Rules card: button that opens the rules in Settings"
-    },
-    "settings_managerViewMode": {
-        "message": "관리자 보기",
-        "description": "Settings and manager toolbar: how the manager shows a folder or search"
-    },
-    "settings_managerViewModeDesc": {
-        "message": "폴더와 검색 결과를 목록 또는 카드로 표시합니다. 이 기기에 저장됩니다.",
-        "description": "Settings: description of Manager View"
-    },
-    "settings_managerViewModeList": {
-        "message": "목록",
-        "description": "Manager View option and toolbar button: the table"
-    },
-    "settings_managerViewModeCards": {
-        "message": "카드",
-        "description": "Manager View option and toolbar button: a grid of cards"
-    },
-    "settings_sectionManagerView": {
-        "message": "관리자 보기",
-        "description": "Settings: heading of the section with Manager View"
     }
 }

@@ -2,7 +2,7 @@
 
 > **Published** at <https://bookmark-scout.com/privacy/> (live once the website is next deployed from `main`), with a translation for every other website language at `https://bookmark-scout.com/<locale>/privacy/` (English has no language prefix; the old `/en/privacy/` redirects to it). The website copy lives in `apps/website/messages/privacy/<locale>.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, every message file, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
 
-**Effective date:** October 21, 2026
+**Effective date:** October 22, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.3.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`
 
 This policy is also available in other languages. If a translation differs from the English version, the English version applies.
@@ -27,8 +27,9 @@ Bookmark Scout's use of information received through browser extension APIs adhe
 - **The title and URL of the active tab**, so you can save the page you are viewing into a folder.
 - **Site icons from your browser's own icon cache** (Chrome and Edge), to show next to bookmarks. No network request is made for them.
 - **Site icons from the bookmarked websites**, only when you run Refresh Site Icons (see below).
+- **The text of bookmarked pages**, only when you run Index Page Text (see below).
 
-The extension declares no content scripts and does not read the pages open in your tabs. After you press a quick save shortcut, it shows a small notification in that one tab, which reads nothing from the page. Only when you turn on Read page content does it download pages separately, as described below.
+The extension declares no content scripts and does not read the pages open in your tabs. After you press a quick save shortcut, it shows a small notification in that one tab, which reads nothing from the page. Only when you turn on Read page content does it download pages separately, as described below. It also downloads the bookmarked pages you run Index Page Text on, and keeps their text on this device.
 
 ## What the extension stores
 
@@ -44,6 +45,7 @@ Everything is kept in your browser's extension storage:
 - **AI activity**, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider (or to Chrome's built-in AI) and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. They also list each lookup a local AI agent made, with the name the agent gave. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.
 - **Tags, summaries, saved searches, recent folders, and recent searches** are kept in local storage on this device only. You can turn off recent searches in Settings.
 - **Site icons** you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.
+- **Page text** you save with Index Page Text is kept on this device only and used only by search. You can delete it at any time with Delete page text in Settings.
 - **Your last quick save** (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.
 - **The bookmark manager's undo history** (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes.
 - **The bookmark change history** (what changed in your bookmarks and when, whether Bookmark Scout made the change or it was seen from elsewhere: titles, URLs, folders, and the outcome of each change), and a copy of every bookmark's title, URL, and folder as last seen (to tell what changed outside Bookmark Scout), are kept on this device only, in the browser's IndexedDB, for a limited time. They are never synced and never in the backup file. Recording changes made elsewhere can be turned off in Settings. Also a copy of each item Bookmark Scout deletes, with what was inside it and its tags and summary, so it can be restored from the History; removed with its change.
@@ -76,7 +78,7 @@ If you turn on Allow local AI agents in the settings for developers (off by defa
 
 ### Dead link checks, title fetching, and site icons
 
-Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. Refresh Site Icons requests one bookmarked page for each website and then an icon file from that website's own domain, so bookmarks can show the site's icon. When you run one of these tools, the browser asks for your permission for the websites of the bookmarks in that run, or for all websites when there are more than 20, unless you allowed them before. Requests go directly to each website, without cookies, and the results stay in the extension. No third-party icon service is used. As with any visit, the website can see your IP address and that the page or icon was requested.
+Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. Refresh Site Icons requests one bookmarked page for each website and then an icon file from that website's own domain, so bookmarks can show the site's icon. When you run one of these tools, the browser asks for your permission for the websites of the bookmarks in that run, or for all websites when there are more than 20, unless you allowed them before. Requests go directly to each website, without cookies, and the results stay in the extension. No third-party icon service is used. As with any visit, the website can see your IP address and that the page or icon was requested. Index Page Text requests each bookmarked page in its run and keeps the readable text on this device, so search can find words inside the page; what it reads is never sent anywhere.
 
 ### Exports and backups
 
@@ -96,7 +98,7 @@ When you install Bookmark Scout, the browser asks for one thing: “Read and cha
 
 - “Read the icons of the websites you visit” (Chrome and Edge, `favicon`): when you click Show browser icons on Refresh Site Icons, or turn on Use the browser's icon cache in Settings.
 - “Read your browsing history” (Firefox: “Access browser tabs”, `tabs`): when you save the current page or ask for folder suggestions from the side panel. The toolbar popup and the quick save shortcut do not need it.
-- “Read and change your data on all example.com sites”, or “on a number of websites” (Firefox: “Access your data for sites in the example.com domain”): when you run Check Dead Links, Metadata Fetcher, or Refresh Site Icons, for the websites of the bookmarks in that run.
+- “Read and change your data on all example.com sites”, or “on a number of websites” (Firefox: “Access your data for sites in the example.com domain”): when you run Check Dead Links, Metadata Fetcher, or Refresh Site Icons, for the websites of the bookmarks in that run. Index Page Text asks the same way, for the websites of the bookmarks it reads.
 - “Read and change all your data on all websites” (Firefox: “Access your data for all websites”): when a run of those tools covers more than 20 sites, or when you turn on Read page content.
 - “Read and change your data on api.example.com”, with your AI provider's address in place of api.example.com (Firefox: “Access your data for api.example.com”): when you click Verify Service or Refresh Models in the AI settings.
 - “Communicate with cooperating native applications” (Firefox: “Exchange messages with programs other than Firefox”, `nativeMessaging`): when you turn on Allow local AI agents, to talk to the bookmark-scout-mcp program on your computer.

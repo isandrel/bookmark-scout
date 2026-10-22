@@ -48,6 +48,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
     privacyScannerEnabled: false,
     statisticsEnabled: false,
     bookmarkRulesEnabled: false,
+    pageTextEnabled: false,
   });
 
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
@@ -66,6 +67,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
     'Privacy Scanner',
     'Bookmark Statistics',
     'Smart Rules',
+    'Index Page Text',
   ]) {
     await expect(toolCard(page, title)).toHaveCount(0);
   }

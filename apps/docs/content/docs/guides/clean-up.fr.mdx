@@ -116,6 +116,23 @@ Bon à savoir :
 - Une étiquette qu'un favori a déjà, quelle que soit son écriture, n'est pas ajoutée de nouveau. Les dossiers ne sont jamais étiquetés ni déplacés.
 - **Annuler** dans le message qui suit l'application remet à la fois les déplacements et les étiquettes. Les déplacements forment une seule modification dans l'historique.
 - Les règles restent sur cet appareil et font partie de **Sauvegarder les paramètres**. Une règle restaurée sur un autre appareil ne déplace des favoris que si son dossier y existe ; sinon, ses déplacements sont bloqués jusqu'à ce que vous choisissiez de nouveau le dossier.
+## Chercher dans les pages [#search-inside-pages]
+
+**Indexer le texte des pages** conserve le texte lisible des pages en favori sur cet appareil, pour que la recherche trouve des mots présents uniquement dans une page. Il est désactivé tant que vous ne l'activez pas, et télécharge chaque page que vous indexez.
+
+<Steps>
+<Step>
+Activez **Activer Indexer le texte des pages** dans les [paramètres](/settings#index-page-text).
+</Step>
+<Step>
+Dans la barre d'outils du gestionnaire, choisissez la portée sur la carte **Indexer le texte des pages** et cliquez sur **Indexer**. Si on vous le demande, autorisez l'accès aux sites de cette portée.
+</Step>
+<Step>
+Vérifiez les pages par onglet : **Texte trouvé**, **Aucun texte**, **Échec**, **Déjà indexées** (auparavant, depuis la même adresse) et **Ignorées** (pas une page web, ou sur votre réseau local). Les pages avec du texte commencent sur **Enregistrer le texte** ; cliquez sur **Enregistrer** (par exemple **Enregistrer le texte de 12 pages**).
+</Step>
+</Steps>
+
+La recherche trouve ensuite ces favoris par leur texte dans la fenêtre pop-up, le panneau latéral et le gestionnaire. `content:` cherche uniquement dans le texte des pages, et `has:content` trouve les favoris qui en ont. Une page est relue quand l'adresse de son favori change. **Supprimer le texte des pages** dans les paramètres supprime l'index ; les favoris, les étiquettes et l'historique restent tels quels.
 
 ## Outils associés [#related-tools]
 

@@ -29,11 +29,13 @@ export const SEARCH_SYNTAX_HELP: readonly SearchSyntaxEntry[] = [
   { insert: 'folder:', example: 'folder:Work', labelKey: 'searchHelp_folder' },
   { insert: 'tag:', example: 'tag:reading', labelKey: 'searchHelp_tag' },
   { insert: 'summary:', example: 'summary:recipe', labelKey: 'searchHelp_summary' },
+  { insert: 'content:', example: 'content:recipe', labelKey: 'searchHelp_content' },
   { insert: 'is:bookmark', example: 'is:bookmark', labelKey: 'searchHelp_isBookmark' },
   { insert: 'is:folder', example: 'is:folder', labelKey: 'searchHelp_isFolder' },
   { insert: 'is:untagged', example: 'is:untagged', labelKey: 'searchHelp_isUntagged' },
   { insert: 'has:tags', example: 'has:tags', labelKey: 'searchHelp_hasTags' },
   { insert: 'has:summary', example: 'has:summary', labelKey: 'searchHelp_hasSummary' },
+  { insert: 'has:content', example: 'has:content', labelKey: 'searchHelp_hasContent' },
   { insert: 'after:', example: 'after:2026-01-31', labelKey: 'searchHelp_after' },
   { insert: 'before:', example: 'before:2026-01-31', labelKey: 'searchHelp_before' },
 ];

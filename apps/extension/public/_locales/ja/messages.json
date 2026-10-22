@@ -7913,6 +7913,210 @@
         "message": "大きな変更はページを閉じても続き、各部分は履歴から元に戻せます。小さな変更はすぐに適用され、通知から元に戻せます。",
         "description": "Settings: more about the jobsApplyInBackgroundAbove setting, in a toggletip"
     },
+    "tools_pageText": {
+        "message": "ページ本文の索引",
+        "description": "Tools sidebar: name of the Index Page Text tool"
+    },
+    "tools_pageTextDesc": {
+        "message": "ブックマークしたページの本文をこの端末に保存し、検索でページ内の単語も見つけられるようにします",
+        "description": "Tools sidebar: what Index Page Text does"
+    },
+    "action_index": {
+        "message": "索引を作成",
+        "description": "Button that runs Index Page Text"
+    },
+    "settings_pageTextEnabled": {
+        "message": "ページ本文の索引を有効にする",
+        "description": "Settings: switch that turns Index Page Text on"
+    },
+    "settings_pageTextEnabledDesc": {
+        "message": "ツールサイドバーにページ本文の索引を表示し、検索で索引済みページの中も探せるようにします。索引を作るページはダウンロードされ、本文はこの端末に保存されます。",
+        "description": "Settings: what turning Index Page Text on does"
+    },
+    "settings_pageTextDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Settings: default scope of Index Page Text"
+    },
+    "settings_pageTextDefaultScopeDesc": {
+        "message": "ページ本文の索引が既定で読むブックマーク",
+        "description": "Settings: description of the Index Page Text default scope"
+    },
+    "tools_pageTextDialogDesc": {
+        "message": "各ページから読み取った本文です。保存したものだけがこの端末に残ります。",
+        "description": "Index Page Text review: description"
+    },
+    "tools_pageTextCategory_read": {
+        "message": "本文あり ($1)",
+        "description": "Index Page Text review tab: pages with readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_empty": {
+        "message": "本文なし ($1)",
+        "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_failed": {
+        "message": "失敗 ($1)",
+        "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
+    },
+    "tools_pageTextCategory_current": {
+        "message": "索引済み ($1)",
+        "description": "Index Page Text review tab: pages indexed before from the same address; $1 is how many"
+    },
+    "tools_pageTextCategory_skipped": {
+        "message": "スキップ ($1)",
+        "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
+    },
+    "tools_pageTextActionSave": {
+        "message": "本文を保存",
+        "description": "Index Page Text review: action that keeps a page text"
+    },
+    "tools_pageTextSaveSelected": {
+        "message": "$count$ ページの本文を保存",
+        "description": "Index Page Text review: button that saves the text left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextSaveSelected_one": {
+        "message": "$count$ ページの本文を保存",
+        "description": "Index Page Text review: button that saves the text left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextNothing": {
+        "message": "この範囲にウェブページはありません。",
+        "description": "Index Page Text review: shown when the scope has no web pages"
+    },
+    "tools_pageTextOverLimit": {
+        "message": "索引がいっぱいのため、$count$ 件のブックマークを除外しました。",
+        "description": "Index Page Text review: bookmarks left out because the index is full",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_pageTextOverLimit_one": {
+        "message": "索引がいっぱいのため、$count$ 件のブックマークを除外しました。",
+        "description": "Index Page Text review: bookmarks left out because the index is full (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextSaved": {
+        "message": "ページ本文を保存しました",
+        "description": "Toast title after saving page text"
+    },
+    "toast_pageTextSavedDesc": {
+        "message": "本文から $count$ ページを検索できるようになりました。",
+        "description": "Toast after saving page text; how many pages",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextSavedDesc_one": {
+        "message": "本文から $count$ ページを検索できるようになりました。",
+        "description": "Toast after saving page text; how many pages (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "search_reasonContent": {
+        "message": "ページ: $1",
+        "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
+    },
+    "searchHelp_content": {
+        "message": "索引済みのページ本文内",
+        "description": "Search syntax help: what content: does"
+    },
+    "searchHelp_hasContent": {
+        "message": "索引済みのページ本文あり",
+        "description": "Search syntax help: what has:content does"
+    },
+    "pageText_indexTitle": {
+        "message": "ページ本文の索引",
+        "description": "Settings: heading of the page text index panel"
+    },
+    "pageText_indexSummary": {
+        "message": "$count$ ページを索引済み、本文 $chars$ 文字。この端末に保存され、外部に送られることはありません。",
+        "description": "Settings: how much page text is kept; $1 pages, $2 characters",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "chars": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "pageText_indexSummary_one": {
+        "message": "$count$ ページを索引済み、本文 $chars$ 文字。この端末に保存され、外部に送られることはありません。",
+        "description": "Settings: how much page text is kept; $1 pages, $2 characters (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            },
+            "chars": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "pageText_indexLoading": {
+        "message": "索引を読み込んでいます…",
+        "description": "Settings: shown while the page text index is read"
+    },
+    "pageText_clear": {
+        "message": "ページ本文を削除",
+        "description": "Settings: button that deletes the page text index"
+    },
+    "pageText_cleared": {
+        "message": "ページ本文を削除しました",
+        "description": "Toast title after deleting the page text index"
+    },
+    "pageText_clearedDesc": {
+        "message": "ブックマーク、タグ、履歴は変更されていません。",
+        "description": "Toast after deleting the page text index"
+    },
+    "settings_managerViewMode": {
+        "message": "マネージャーの表示",
+        "description": "Settings and manager toolbar: how the manager shows a folder or search"
+    },
+    "settings_managerViewModeDesc": {
+        "message": "フォルダや検索結果をリストで表示するか、カードで表示するかを選びます。この端末に保存されます。",
+        "description": "Settings: description of Manager View"
+    },
+    "settings_managerViewModeList": {
+        "message": "リスト",
+        "description": "Manager View option and toolbar button: the table"
+    },
+    "settings_managerViewModeCards": {
+        "message": "カード",
+        "description": "Manager View option and toolbar button: a grid of cards"
+    },
+    "settings_sectionManagerView": {
+        "message": "マネージャーの表示",
+        "description": "Settings: heading of the section with Manager View"
+    },
     "tools_bookmarkRules": {
         "message": "スマートルール",
         "description": "Tools sidebar: name of the Smart Rules tool"
@@ -8212,25 +8416,5 @@
     "tools_rulesEdit": {
         "message": "ルールを編集",
         "description": "Smart Rules card: button that opens the rules in Settings"
-    },
-    "settings_managerViewMode": {
-        "message": "マネージャーの表示",
-        "description": "Settings and manager toolbar: how the manager shows a folder or search"
-    },
-    "settings_managerViewModeDesc": {
-        "message": "フォルダや検索結果をリストで表示するか、カードで表示するかを選びます。この端末に保存されます。",
-        "description": "Settings: description of Manager View"
-    },
-    "settings_managerViewModeList": {
-        "message": "リスト",
-        "description": "Manager View option and toolbar button: the table"
-    },
-    "settings_managerViewModeCards": {
-        "message": "カード",
-        "description": "Manager View option and toolbar button: a grid of cards"
-    },
-    "settings_sectionManagerView": {
-        "message": "マネージャーの表示",
-        "description": "Settings: heading of the section with Manager View"
     }
 }

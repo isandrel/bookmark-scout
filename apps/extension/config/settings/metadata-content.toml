@@ -9,6 +9,13 @@ fetch_descriptions = true
 request_timeout_ms = { default = 8000, min = 1000, max = 60000, step = 500 }
 concurrency = { default = 4, min = 1, max = 20, step = 1 }
 
+[page_text]
+# Index Page Text keeps the readable text of the pages a run covers on this device, so search finds
+# words inside them (config/bookmarks/page-text.toml). Off until the user turns it on: it downloads
+# each page.
+enabled = false
+default_scope = "folder"
+
 [site_icons]
 # Refresh Site Icons downloads each website's own icon into local storage. It reuses the
 # Metadata Fetcher's request timeout and concurrency.

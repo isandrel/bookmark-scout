@@ -116,6 +116,23 @@ Good to know:
 - A tag a bookmark already has, in any spelling, is not added again. Folders are never tagged or moved.
 - **Undo** in the message after applying puts back both the moves and the tags. The moves are one change in the History.
 - Rules stay on this device and are part of **Back up settings**. A rule restored on another device moves bookmarks only if its folder exists there; otherwise its moves are blocked until you choose the folder again.
+## Search inside pages
+
+**Index Page Text** keeps the readable text of bookmarked pages on this device, so search finds words that are only inside a page. It is off until you turn it on, and it downloads each page you index.
+
+<Steps>
+<Step>
+Turn on **Enable Index Page Text** in [Settings](/settings#index-page-text).
+</Step>
+<Step>
+In the manager's Tools sidebar, choose the scope on the **Index Page Text** card and click **Index**. When asked, allow access to the sites in that scope.
+</Step>
+<Step>
+Review the pages by tab: **Text found**, **No text**, **Failed**, **Already indexed** (from the same address before), and **Skipped** (not a web page, or on your local network). Pages with text start on **Save text**; click **Save** (for example **Save text of 12 pages**).
+</Step>
+</Steps>
+
+Search then finds those bookmarks by their text in the popup, the side panel, and the manager. `content:` looks only in page text, and `has:content` finds the bookmarks that have it. A page is read again when its bookmark's address changes. **Delete page text** in Settings deletes the index; bookmarks, tags, and the History stay as they are.
 
 ## Related tools
 

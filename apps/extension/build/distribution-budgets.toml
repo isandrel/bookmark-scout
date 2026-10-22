@@ -139,19 +139,22 @@
 # storage and Settings editor, the tool and its review, and about 66 messages in 9 languages.
 # Firefox measured ZIP 1,796,032, 5,755,852 B uncompressed, 3,731,261 B of JavaScript, and
 # 1,463,517 B of locales on 8f9b86bf.
+# Raised on 2026-10-22 (uncompressed 5,766,000 to 5,800,000, locales 1,474,000 to 1,500,000) for
+# Index Page Text: its store, tool, review, search field, and 32 messages in 9 languages. Firefox
+# measured 5,790,968 B uncompressed and 1,490,147 B of locales on 6004c2c5.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_806_000
-raw_bytes = 5_766_000
+raw_bytes = 5_800_000
 
 [targets.edge]
 zip_bytes = 1_806_000
-raw_bytes = 5_766_000
+raw_bytes = 5_800_000
 
 [targets.firefox]
 zip_bytes = 1_806_000
-raw_bytes = 5_766_000
+raw_bytes = 5_800_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -160,6 +163,6 @@ raw_bytes = 5_766_000
 javascript = 3_741_000
 css = 85_000
 fonts = 143_000
-locales = 1_474_000
+locales = 1_500_000
 images = 320_000
 other = 29_000

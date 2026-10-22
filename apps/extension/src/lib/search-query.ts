@@ -23,6 +23,7 @@ const searchConfig = readConfig(
   z.strictObject({
     max_query_length: boundedNumber({ integer: true }),
     max_terms: boundedNumber({ integer: true }),
+    content_snippet_chars: z.number().int().positive(),
     weights: z.strictObject({
       title_exact: z.number().positive(),
       title_prefix: z.number().positive(),
@@ -32,12 +33,16 @@ const searchConfig = readConfig(
       domain: z.number().positive(),
       url: z.number().positive(),
       summary: z.number().positive(),
+      content: z.number().positive(),
     }),
   }),
 );
 
 /** How much a match counts, by where it was (`search-documents.ts`). */
 export const SEARCH_WEIGHTS = searchConfig.weights;
+
+/** Characters of page text a match in it shows (`search-documents.ts`). */
+export const SEARCH_CONTENT_SNIPPET_CHARS = searchConfig.content_snippet_chars;
 
 /** The version written with a saved query, raised when a query would read differently. */
 export const SEARCH_SYNTAX_VERSION = 1;
@@ -51,11 +56,12 @@ const FIELD_OPERATORS = {
   path: 'folder',
   tag: 'tag',
   summary: 'summary',
+  content: 'content',
 } as const;
 export type SearchField = (typeof FIELD_OPERATORS)[keyof typeof FIELD_OPERATORS];
 
 const IS_VALUES = ['bookmark', 'folder', 'untagged'] as const;
-const HAS_VALUES = ['summary', 'tags'] as const;
+const HAS_VALUES = ['summary', 'tags', 'content'] as const;
 const DATE_OPERATORS = ['after', 'before'] as const;
 
 export type SearchTerm =

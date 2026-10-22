@@ -5,11 +5,47 @@
  */
 import type { BookmarkTreeNode } from '@/types';
 
-/** Calls back with the local tags and summaries once read, then after each change. */
+/**
+ * The indexed page text search reads (`page-text-store.ts`): none while Index Page Text is off,
+ * so turning it off takes page text out of every search at once.
+ */
+let searchedPageTexts: SearchPageTexts = new Map();
+
+/**
+ * Calls back with the local tags and summaries once read, then after each change to them, to the
+ * indexed page text, or to whether Index Page Text is on.
+ */
 export function observeSearchMetadata(
   callback: (metadata: StoredBookmarkMetadataById) => void,
 ): () => void {
-  return bookmarkMetadataValue.observe(callback);
+  let metadata: StoredBookmarkMetadataById | undefined;
+  let pageTextOn: boolean | undefined;
+  let reading = 0;
+  const readPageTexts = async () => {
+    reading += 1;
+    const read = reading;
+    const pages = pageTextOn ? await getPageTexts() : new Map<string, PageTextRecord>();
+    if (read !== reading) return;
+    searchedPageTexts = new Map(
+      [...pages].map(([id, page]) => [id, { url: page.url, text: page.text }]),
+    );
+    if (metadata) callback(metadata);
+  };
+  const stopMetadata = bookmarkMetadataValue.observe((next) => {
+    metadata = next;
+    callback(next);
+  });
+  const stopSettings = settingsValue.observe((settings) => {
+    if (settings.pageTextEnabled === pageTextOn) return;
+    pageTextOn = settings.pageTextEnabled;
+    void readPageTexts();
+  });
+  const stopPageTexts = watchPageTexts(() => void readPageTexts());
+  return () => {
+    stopMetadata();
+    stopSettings();
+    stopPageTexts();
+  };
 }
 
 /** The last library searched and its documents, so typing reuses them (and their folded text). */
@@ -17,6 +53,7 @@ let searchedLibrary:
   | {
       nodes: readonly BookmarkTreeNode[];
       metadata: StoredBookmarkMetadataById;
+      pageTexts: SearchPageTexts;
       documents: readonly SearchDocument[];
     }
   | undefined;
@@ -25,8 +62,18 @@ function documentsOf(
   nodes: readonly BookmarkTreeNode[],
   metadata: StoredBookmarkMetadataById,
 ): readonly SearchDocument[] {
-  if (searchedLibrary?.nodes !== nodes || searchedLibrary.metadata !== metadata) {
-    searchedLibrary = { nodes, metadata, documents: buildSearchDocuments(nodes, metadata) };
+  const pageTexts = searchedPageTexts;
+  if (
+    searchedLibrary?.nodes !== nodes ||
+    searchedLibrary.metadata !== metadata ||
+    searchedLibrary.pageTexts !== pageTexts
+  ) {
+    searchedLibrary = {
+      nodes,
+      metadata,
+      pageTexts,
+      documents: buildSearchDocuments(nodes, metadata, pageTexts),
+    };
   }
   return searchedLibrary.documents;
 }
@@ -134,6 +181,7 @@ let preparing:
   | {
       nodes: readonly BookmarkTreeNode[];
       metadata: StoredBookmarkMetadataById;
+      pageTexts: SearchPageTexts;
       pending: Iterator<SearchDocument>;
       documents: SearchDocument[];
     }
@@ -149,14 +197,31 @@ export function prepareSearchDocuments(
   metadata: StoredBookmarkMetadataById,
   shouldYield: () => boolean,
 ): boolean {
-  if (searchedLibrary?.nodes === nodes && searchedLibrary.metadata === metadata) return true;
-  if (preparing?.nodes !== nodes || preparing.metadata !== metadata) {
-    preparing = { nodes, metadata, pending: searchDocumentsOf(nodes, metadata), documents: [] };
+  const pageTexts = searchedPageTexts;
+  if (
+    searchedLibrary?.nodes === nodes &&
+    searchedLibrary.metadata === metadata &&
+    searchedLibrary.pageTexts === pageTexts
+  ) {
+    return true;
+  }
+  if (
+    preparing?.nodes !== nodes ||
+    preparing.metadata !== metadata ||
+    preparing.pageTexts !== pageTexts
+  ) {
+    preparing = {
+      nodes,
+      metadata,
+      pageTexts,
+      pending: searchDocumentsOf(nodes, metadata, pageTexts),
+      documents: [],
+    };
   }
   while (!shouldYield()) {
     const next = preparing.pending.next();
     if (next.done) {
-      searchedLibrary = { nodes, metadata, documents: preparing.documents };
+      searchedLibrary = { nodes, metadata, pageTexts, documents: preparing.documents };
       preparing = undefined;
       return true;
     }

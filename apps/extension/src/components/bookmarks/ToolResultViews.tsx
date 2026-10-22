@@ -1173,3 +1173,84 @@ export function RulesResultsView({
     </div>
   );
 }
+
+/** Index Page Text's review tabs, by what reading the page found. */
+const PAGE_TEXT_CATEGORIES = ['read', 'empty', 'failed', 'current', 'skipped'] as const;
+
+const PAGE_TEXT_CATEGORY_LABEL_KEYS = {
+  read: 'tools_pageTextCategory_read',
+  empty: 'tools_pageTextCategory_empty',
+  failed: 'tools_pageTextCategory_failed',
+  current: 'tools_pageTextCategory_current',
+  skipped: 'tools_pageTextCategory_skipped',
+} as const satisfies Record<PageTextScanStatus, string>;
+
+type PageTextAction = (typeof REVIEW_DEFAULT_ACTIONS)['page_text'];
+const PAGE_TEXT_ACTIONS = ['save', 'skip'] as const satisfies readonly PageTextAction[];
+
+/**
+ * Index Page Text's review: each page by what reading it found, a page with text starting on Save
+ * (or Skip, as `[defaults] page_text` says); only the text left on Save is kept, on this device.
+ */
+export function PageTextResultsView({
+  result,
+  isSaving,
+  onSave,
+}: {
+  result: PageTextScanResult | null;
+  isSaving: boolean;
+  onSave: (items: PageTextScanItem[]) => void;
+}) {
+  const items = useMemo(() => result?.items ?? [], [result]);
+  const { actionOf, setAction, chosen } = useReviewChoices<PageTextScanItem, PageTextAction>(
+    items,
+    (item) => item.id,
+    (item) => (item.status === 'read' ? REVIEW_DEFAULT_ACTIONS.page_text : 'skip'),
+  );
+  const saved = chosen('save');
+
+  if (!items.length) return <ToolEmptyState message={t('tools_pageTextNothing')} />;
+  return (
+    <div className="space-y-4">
+      {result?.overLimit ? (
+        <p className="text-xs text-warning">
+          {tPlural('tools_pageTextOverLimit', result.overLimit)}
+        </p>
+      ) : null}
+      <ReviewList
+        items={items}
+        idOf={(item) => item.id}
+        categories={PAGE_TEXT_CATEGORIES}
+        categoryOf={(item) => item.status}
+        categoryLabel={(category, count) =>
+          t(PAGE_TEXT_CATEGORY_LABEL_KEYS[category], String(count))
+        }
+        actionsOf={(item) => (item.status === 'read' ? PAGE_TEXT_ACTIONS : (['skip'] as const))}
+        actionLabel={(action) =>
+          action === 'save' ? t('tools_pageTextActionSave') : t('tools_reviewActionSkip')
+        }
+        batchActions={PAGE_TEXT_ACTIONS}
+        actionOf={actionOf}
+        onAction={setAction}
+        titleOf={(item) => getBookmarkDisplayTitle(item.title)}
+        disabled={isSaving}
+        rowTestId="page-text-item"
+        renderDetails={(item) => (
+          <>
+            <p className="truncate text-xs text-muted-foreground">
+              <UrlLink href={item.url} />
+            </p>
+            {item.text ? <p className="line-clamp-2 text-xs">{item.text}</p> : null}
+          </>
+        )}
+      />
+      <ReviewFooter
+        label={tPlural('tools_pageTextSaveSelected', saved.length)}
+        busyLabel={t('action_saving')}
+        busy={isSaving}
+        disabled={saved.length === 0}
+        onConfirm={() => onSave(saved)}
+      />
+    </div>
+  );
+}
