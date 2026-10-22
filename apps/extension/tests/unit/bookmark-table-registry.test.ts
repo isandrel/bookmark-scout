@@ -64,6 +64,8 @@ describe('bookmark table column registry', () => {
       'dateAdded',
       'dateGroupModified',
       'unmodifiable',
+      'tags',
+      'summary',
       'actions',
     ]);
   });
@@ -77,6 +79,8 @@ describe('bookmark table column registry', () => {
       folderPath: false,
       dateGroupModified: false,
       unmodifiable: false,
+      tags: false,
+      summary: false,
     });
     // The checkbox stays first and the row menu last; hidden columns follow in registry order.
     expect(DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder).toEqual([
@@ -90,6 +94,8 @@ describe('bookmark table column registry', () => {
       'folderPath',
       'dateGroupModified',
       'unmodifiable',
+      'tags',
+      'summary',
       'actions',
     ]);
     // Every default column is one the View menu can show and hide.

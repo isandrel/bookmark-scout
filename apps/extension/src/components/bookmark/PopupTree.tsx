@@ -47,6 +47,19 @@ export type PopupTreeHandle = {
 /** Marks every rendered row's focusable element with its node id. */
 export const POPUP_TREE_ROW_ID_ATTRIBUTE = 'data-tree-row-id';
 
+/** A bookmark row's outer element (its fill and actions), which holds the link that takes focus. */
+const BOOKMARK_ROW_SELECTOR = '.bookmark-item';
+
+/** The hover card target for the bookmark row `element` is in; null for folders and separators. */
+function bookmarkRowTarget(element: EventTarget | null): HoverCardTarget | null {
+  const row =
+    element instanceof Element ? element.closest<HTMLElement>(BOOKMARK_ROW_SELECTOR) : null;
+  // Built here, not at module level: this module and use-popup-shortcuts.ts import each other.
+  const link = row?.querySelector<HTMLElement>(`[${POPUP_TREE_ROW_ATTRIBUTE}="bookmark"][href]`);
+  const id = link?.getAttribute(POPUP_TREE_ROW_ID_ATTRIBUTE);
+  return row && link && id ? { id, anchor: row, described: link } : null;
+}
+
 type PopupTreeProps = {
   roots: readonly BookmarkTreeNode[];
   expandedIds: readonly string[];
@@ -92,6 +105,23 @@ export function PopupTree({
   const treeRef = useRef<HTMLDivElement>(null);
   const [pendingFocusId, setPendingFocusId] = useState<string | null>(null);
 
+  // A bookmark's details on hover and keyboard focus (Show Details on Hover), from the whole tree,
+  // so a search result shows its folder too.
+  const { value: hoverDetails } = useSetting('showHoverDetails');
+  const hoverCard = useHoverCard(hoverDetails);
+  const { fullNode } = usePopupTree();
+  const resolveHoverBookmark = (id: string): HoverCardBookmark | undefined => {
+    const node = fullNode(id);
+    if (!node?.url) return undefined;
+    return {
+      id,
+      title: node.title,
+      url: node.url,
+      folderPath: folderPathOf(node.parentId, fullNode),
+      ...(node.dateAdded === undefined ? {} : { dateAdded: node.dateAdded }),
+    };
+  };
+
   // Focus a row asked for by the keyboard once the virtualizer has rendered it.
   useEffect(() => {
     if (pendingFocusId === null) return;
@@ -128,48 +158,68 @@ export function PopupTree({
   );
 
   return (
-    <div
-      ref={treeRef}
-      role="tree"
-      aria-label={t('popup_bookmarkTree')}
-      data-slot="popup-tree"
-      className="relative w-full"
-      style={{ height: virtualizer.getTotalSize() }}
-      onKeyDown={onKeyDown}
-      onFocus={(event) => {
-        const id = event.target.getAttribute(POPUP_TREE_ROW_ID_ATTRIBUTE);
-        focusedIndexRef.current = id === null ? null : (indexById.get(id) ?? null);
-      }}
-    >
-      {virtualizer.getVirtualItems().map((item) => {
-        const row = rows[item.index];
-        return (
-          <div
-            key={item.key}
-            data-index={item.index}
-            ref={virtualizer.measureElement}
-            // Rows jump to their place: the reduced-motion rule gives every transition a tiny
-            // duration, which would leave a moved row in its old place for a frame.
-            className="absolute top-0 left-0 w-full px-2 transition-none"
-            style={{
-              transform: `translateY(${item.start}px)`,
-              paddingLeft: `calc(0.5rem + ${(row.level - 1) * treeConfig.indent_px}px)`,
-            }}
-          >
-            {row.kind === 'folder' ? (
-              <FolderRow
-                row={row}
-                onToggle={() => setFolderExpanded(row.node.id, !row.expanded)}
-                expandedIds={expanded}
-              />
-            ) : row.kind === 'bookmark' ? (
-              <BookmarkRow row={row} />
-            ) : (
-              <NewFolderRow />
-            )}
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <div
+        ref={treeRef}
+        role="tree"
+        aria-label={t('popup_bookmarkTree')}
+        data-slot="popup-tree"
+        className="relative w-full"
+        style={{ height: virtualizer.getTotalSize() }}
+        onKeyDown={onKeyDown}
+        onFocus={(event) => {
+          const id = event.target.getAttribute(POPUP_TREE_ROW_ID_ATTRIBUTE);
+          focusedIndexRef.current = id === null ? null : (indexById.get(id) ?? null);
+          if (!hoverDetails) return;
+          // Keyboard focus only: a click focuses the row too, and opens it.
+          const target = event.target.matches(':focus-visible')
+            ? bookmarkRowTarget(event.target)
+            : null;
+          if (target) preloadBookmarkHoverCard();
+          hoverCard.controller.focus(target);
+        }}
+        onBlur={() => hoverCard.controller.focus(null)}
+        onPointerOver={(event) => {
+          if (!hoverDetails || event.pointerType === 'touch') return;
+          const target = bookmarkRowTarget(event.target);
+          if (target) preloadBookmarkHoverCard();
+          hoverCard.controller.hover(target);
+        }}
+        onPointerLeave={() => hoverCard.controller.hover(null)}
+        // A press opens, drags, or deletes the row; its card stays closed until the row is left.
+        onPointerDown={() => hoverCard.controller.dismiss()}
+      >
+        {virtualizer.getVirtualItems().map((item) => {
+          const row = rows[item.index];
+          return (
+            <div
+              key={item.key}
+              data-index={item.index}
+              ref={virtualizer.measureElement}
+              // Rows jump to their place: the reduced-motion rule gives every transition a tiny
+              // duration, which would leave a moved row in its old place for a frame.
+              className="absolute top-0 left-0 w-full px-2 transition-none"
+              style={{
+                transform: `translateY(${item.start}px)`,
+                paddingLeft: `calc(0.5rem + ${(row.level - 1) * treeConfig.indent_px}px)`,
+              }}
+            >
+              {row.kind === 'folder' ? (
+                <FolderRow
+                  row={row}
+                  onToggle={() => setFolderExpanded(row.node.id, !row.expanded)}
+                  expandedIds={expanded}
+                />
+              ) : row.kind === 'bookmark' ? (
+                <BookmarkRow row={row} />
+              ) : (
+                <NewFolderRow />
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <BookmarkHoverCard hoverCard={hoverCard} resolve={resolveHoverBookmark} />
+    </>
   );
 }

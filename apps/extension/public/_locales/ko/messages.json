@@ -871,6 +871,14 @@
         "message": "텍스트 자르기 전 최대 글자 수",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "포인터를 올리면 세부 정보 표시",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "북마크에 포인터를 올려 두거나 화살표 키로 이동하면 주소, 폴더, 태그, 요약을 카드로 보여 줍니다",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "알림 표시 시간",
         "description": "Toast duration setting label"

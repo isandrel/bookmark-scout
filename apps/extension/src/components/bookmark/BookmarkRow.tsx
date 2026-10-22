@@ -12,6 +12,8 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
   // A Firefox separator: a line, not a link to its `data:` address.
   const separator = isSeparatorNode(node);
   const searchReason = searchReasonLabel(node.searchMatchReasons);
+  // The hover card shows the whole title and address, so the plain tooltip would repeat it.
+  const { value: hoverDetails } = useSetting('showHoverDetails');
 
   return (
     // At least one icon-button tall; a larger site icon grows the row instead of touching the next.
@@ -29,7 +31,7 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
           [POPUP_TREE_ROW_ATTRIBUTE]: 'bookmark',
         }}
         // Long titles are cut off, so hovering shows the whole title and where the link goes.
-        title={separator ? undefined : bookmarkRowTooltip(node)}
+        title={separator || hoverDetails ? undefined : bookmarkRowTooltip(node)}
         target="_blank"
         rel="noopener noreferrer"
         onClick={(event) => {

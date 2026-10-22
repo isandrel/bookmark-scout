@@ -895,6 +895,14 @@
         "message": "Максимальное число символов, после которого текст сокращается",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "Показывать сведения при наведении",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "Если задержать указатель на закладке или перейти к ней стрелками, карточка покажет её адрес, папку, теги и краткое описание",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "Длительность уведомлений",
         "description": "Toast duration setting label"

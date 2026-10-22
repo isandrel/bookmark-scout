@@ -31,6 +31,43 @@ describe('bookmark table view parsing', () => {
     expect(new Set(columns.columnOrder)).toEqual(new Set(BOOKMARK_TABLE_COLUMN_IDS));
   });
 
+  it('puts columns a saved view does not know before the row menu, hidden', () => {
+    // A view saved before the Tags and Summary columns existed, in the user's own order.
+    const columns = parseBookmarkTableColumns({
+      columnVisibility: { type: true },
+      columnOrder: [
+        'select',
+        'url',
+        'title',
+        'type',
+        'id',
+        'parentId',
+        'folderPath',
+        'dateAdded',
+        'dateGroupModified',
+        'unmodifiable',
+        'actions',
+      ],
+    });
+
+    expect(columns.columnOrder).toEqual([
+      'select',
+      'url',
+      'title',
+      'type',
+      'id',
+      'parentId',
+      'folderPath',
+      'dateAdded',
+      'dateGroupModified',
+      'unmodifiable',
+      'tags',
+      'summary',
+      'actions',
+    ]);
+    expect(columns.columnVisibility).toMatchObject({ type: true, tags: false, summary: false });
+  });
+
   it('filters unknown and duplicate columns from a saved view', () => {
     const columns = parseBookmarkTableColumns({
       columnVisibility: { url: false, obsolete: false },

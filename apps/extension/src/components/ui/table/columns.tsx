@@ -337,6 +337,26 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     header: 'label',
     ...getManagerColumnLayout('unmodifiable'),
   },
+  // Tags and summary live in this device's stored metadata, not on the row, so these cells read
+  // them by id. The accessor (the id) only lists them in the View menu; they do not sort.
+  {
+    id: 'tags',
+    labelKey: 'bookmarks_metadataTags',
+    accessor: (row) => row.id,
+    header: 'label',
+    cell: ({ row }) => <BookmarkTagsCell item={row.original} />,
+    enableSorting: false,
+    ...getManagerColumnLayout('tags'),
+  },
+  {
+    id: 'summary',
+    labelKey: 'bookmarks_metadataSummary',
+    accessor: (row) => row.id,
+    header: 'label',
+    cell: ({ row }) => <BookmarkSummaryCell item={row.original} />,
+    enableSorting: false,
+    ...getManagerColumnLayout('summary'),
+  },
   {
     id: 'actions',
     cell: ({ row, table }, { actionHost }) => {

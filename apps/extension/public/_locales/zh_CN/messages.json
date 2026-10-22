@@ -871,6 +871,14 @@
         "message": "文本截断前的最大字符数",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "悬停时显示详细信息",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "将指针停在书签上，或用方向键移到书签，卡片会显示其网址、文件夹、标签和摘要",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "通知显示时长",
         "description": "Toast duration setting label"

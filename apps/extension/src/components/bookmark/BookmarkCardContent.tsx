@@ -63,38 +63,6 @@ export function BookmarkCardMedia({ item }: { item: Bookmark }) {
   );
 }
 
-/** A bookmark's tags as chips, up to `CARD_MAX_TAGS`, then one "+N" chip naming the rest. */
-function CardTags({ tags }: { tags: readonly string[] }) {
-  const shown = tags.slice(0, CARD_MAX_TAGS);
-  const hidden = tags.slice(CARD_MAX_TAGS);
-  const moreLabel = hidden.length
-    ? tPlural('bookmarks_cardMoreTagsLabel', hidden.length, [formatList(hidden)])
-    : '';
-  return (
-    <ul
-      aria-label={t('bookmarks_metadataTags')}
-      data-testid="bookmark-card-tags"
-      className="flex min-w-0 flex-wrap gap-1"
-    >
-      {shown.map((tag) => (
-        <li key={tag} className="min-w-0 max-w-full">
-          <Badge variant="outline" className="max-w-full px-2 font-normal" title={tag}>
-            <span className="truncate">{tag}</span>
-          </Badge>
-        </li>
-      ))}
-      {hidden.length ? (
-        <li>
-          <Badge variant="secondary" className="px-2 font-normal" title={moreLabel}>
-            <span aria-hidden="true">{t('bookmarks_cardMoreTags', String(hidden.length))}</span>
-            <span className="sr-only">{moreLabel}</span>
-          </Badge>
-        </li>
-      ) : null}
-    </ul>
-  );
-}
-
 type BookmarkCardDetailsProps = {
   item: Bookmark;
   /** For a folder card: how many items the folder holds directly. */
@@ -117,7 +85,7 @@ export function BookmarkCardDetails({ item, folderItemCount }: BookmarkCardDetai
   if (!tags.length && !summary) return null;
   return (
     <>
-      {tags.length ? <CardTags tags={tags} /> : null}
+      {tags.length ? <BookmarkTagChips tags={tags} max={CARD_MAX_TAGS} /> : null}
       {summary ? (
         // Cut to a few lines on screen; the whole summary stays in the page for screen readers.
         <p

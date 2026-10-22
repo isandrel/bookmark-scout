@@ -879,6 +879,14 @@
         "message": "Maximale Zeichenzahl, bevor Text gekürzt wird",
         "description": "Truncate length setting description"
     },
+    "settings_showHoverDetails": {
+        "message": "Details beim Darüberfahren anzeigen",
+        "description": "Setting label: whether resting the pointer on a bookmark in the popup or side panel shows its details in a card"
+    },
+    "settings_showHoverDetailsDesc": {
+        "message": "Ruht der Zeiger auf einem Lesezeichen oder erreichen Sie es mit den Pfeiltasten, zeigt eine Karte Adresse, Ordner, Tags und Zusammenfassung",
+        "description": "Setting description for Show Details on Hover"
+    },
     "settings_toastDuration": {
         "message": "Anzeigedauer von Benachrichtigungen",
         "description": "Toast duration setting label"

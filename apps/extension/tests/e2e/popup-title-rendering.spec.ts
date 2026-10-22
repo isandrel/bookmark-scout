@@ -62,11 +62,15 @@ test('bookmark and folder titles containing markup render as literal text', asyn
   await folderRow.click();
   const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'onerror' });
   await expect(bookmarkRow.getByText(BOOKMARK_PAYLOAD, { exact: true })).toBeVisible();
-  // The row's tooltip carries the title as text too, then the address.
-  await expect(bookmarkRow.locator('a')).toHaveAttribute(
-    'title',
-    `${BOOKMARK_PAYLOAD}\nhttps://e2e.invalid/payload`,
+  // The hover card carries the title as text too, then the address.
+  await bookmarkRow.hover();
+  const card = page.getByTestId('bookmark-hover-card');
+  await expect(card.getByTestId('bookmark-hover-card-title')).toHaveText(BOOKMARK_PAYLOAD);
+  await expect(card.getByTestId('bookmark-hover-card-url')).toHaveText(
+    'https://e2e.invalid/payload',
   );
+  await expect(card.locator('img[src="x"], style')).toHaveCount(0);
+  await page.mouse.move(2, 2);
   await expect(page.locator('[role="tree"] img[src="x"]')).toHaveCount(0);
   await expect(page.locator('[role="tree"] style')).toHaveCount(0);
   await expect(page.getByText('Tom & Jerry <b>not bold</b>', { exact: true })).toBeVisible();
@@ -77,7 +81,7 @@ test('bookmark and folder titles containing markup render as literal text', asyn
   const match = page.locator('.bookmark-item').filter({ hasText: 'onerror' });
   await expect(match).toBeVisible();
   await expect(match.locator('mark')).toHaveText(['style', 'style']);
-  await expect(match.locator('a[title]')).toHaveText(BOOKMARK_PAYLOAD);
+  await expect(match.getByRole('treeitem')).toHaveText(BOOKMARK_PAYLOAD);
 
   await search.fill('&');
   await expect(
