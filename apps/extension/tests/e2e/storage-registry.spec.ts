@@ -43,9 +43,16 @@ test('the service worker and extension pages share Web Locks', async ({
 }) => {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   // A lock the page holds keeps the service worker's request for the same name waiting.
-  await page.evaluate(() => {
-    void navigator.locks.request('sync:settings', () => new Promise(() => undefined));
-  });
+  // Resolves once the lock is granted, so the worker is asked only after the page holds it.
+  await page.evaluate(
+    () =>
+      new Promise<void>((granted) => {
+        void navigator.locks.request('sync:settings', () => {
+          granted();
+          return new Promise(() => undefined);
+        });
+      }),
+  );
   expect(
     await extensionWorker.evaluate(async () => {
       const held = await navigator.locks.query();
