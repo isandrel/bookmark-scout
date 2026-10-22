@@ -2431,6 +2431,10 @@
         "message": "Abfrageparameter, die nie entfernt werden",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "Beenden Sie einen Namen mit *, um jeden Namen zu erfassen, der so beginnt: utm_* erfasst utm_source und utm_name. Groß- und Kleinschreibung spielt keine Rolle.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "Zu entfernende Parameter",
         "description": "URL cleaner remove params label"
@@ -2438,6 +2442,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "Abfrageparameter, die aus URLs entfernt werden",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "Beenden Sie einen Namen mit *, um jeden Namen zu erfassen, der so beginnt: utm_* erfasst utm_source und utm_name. Groß- und Kleinschreibung spielt keine Rolle.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "Linkprüfung aktivieren",
@@ -2590,6 +2598,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "Parameternamen, die als sensibel markiert werden",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "Beenden Sie einen Namen mit *, um jeden Namen zu erfassen, der so beginnt: utm_* erfasst utm_source und utm_name. Groß- und Kleinschreibung spielt keine Rolle.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "E-Mail-Adressen erkennen",

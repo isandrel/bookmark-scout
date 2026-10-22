@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createParamNameMatcher } from '@/lib/param-name-patterns';
 import { cleanBookmarkUrl, previewCleanUrls } from '@/services/bookmark-tooling';
 
 const options = {
@@ -51,5 +52,28 @@ describe('URL cleaner', () => {
       options,
     ).previews;
     expect(preview.title).toBe('');
+  });
+});
+
+describe('query parameter name patterns', () => {
+  it('matches whole names, and every name a trailing * starts', () => {
+    const matches = createParamNameMatcher(['utm_*', 'fbclid']);
+    expect(['utm_source', 'UTM_Name', 'utm_', 'fbclid', 'FBCLID'].every(matches)).toBe(true);
+    expect(['utm', 'xutm_source', 'fbclid2', 'ref'].some(matches)).toBe(false);
+  });
+
+  it('removes a Reddit share link parameter by the default pattern, and a preserved name wins', () => {
+    const reddit = 'https://www.reddit.com/r/csMajors/comments/s2b1iy/x/?utm_name=iossmf';
+    expect(cleanBookmarkUrl(reddit, { ...options, removeParams: ['utm_*'] })).toEqual({
+      cleanedUrl: 'https://www.reddit.com/r/csMajors/comments/s2b1iy/x/',
+      removedParams: ['utm_name'],
+    });
+    expect(
+      cleanBookmarkUrl(`${reddit}&utm_source=x`, {
+        ...options,
+        removeParams: ['utm_*'],
+        preserveParams: ['utm_name'],
+      })?.cleanedUrl,
+    ).toBe(`${reddit}`);
   });
 });

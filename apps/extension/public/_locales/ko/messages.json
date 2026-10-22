@@ -2423,6 +2423,10 @@
         "message": "제거하지 않을 쿼리 매개변수",
         "description": "URL cleaner preserve params description"
     },
+    "settings_urlCleanerPreserveParamsHelp": {
+        "message": "이름 끝에 *를 붙이면 그 문자열로 시작하는 모든 이름과 일치합니다. utm_*는 utm_source와 utm_name과 일치합니다. 대소문자는 구분하지 않습니다.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
+    },
     "settings_urlCleanerRemoveParams": {
         "message": "제거할 매개변수",
         "description": "URL cleaner remove params label"
@@ -2430,6 +2434,10 @@
     "settings_urlCleanerRemoveParamsDesc": {
         "message": "URL에서 제거할 쿼리 매개변수",
         "description": "URL cleaner remove params description"
+    },
+    "settings_urlCleanerRemoveParamsHelp": {
+        "message": "이름 끝에 *를 붙이면 그 문자열로 시작하는 모든 이름과 일치합니다. utm_*는 utm_source와 utm_name과 일치합니다. 대소문자는 구분하지 않습니다.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_deadLinksEnabled": {
         "message": "깨진 링크 확인 사용",
@@ -2582,6 +2590,10 @@
     "settings_privacyScannerSensitiveParamsDesc": {
         "message": "민감한 정보로 표시할 매개변수 이름",
         "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerSensitiveParamsHelp": {
+        "message": "이름 끝에 *를 붙이면 그 문자열로 시작하는 모든 이름과 일치합니다. utm_*는 utm_source와 utm_name과 일치합니다. 대소문자는 구분하지 않습니다.",
+        "description": "Toggletip for a list of query parameter names: how a trailing * matches every name that starts with it"
     },
     "settings_privacyScannerEmailDetection": {
         "message": "이메일 감지",

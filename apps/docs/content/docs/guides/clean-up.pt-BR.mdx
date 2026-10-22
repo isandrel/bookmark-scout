@@ -59,8 +59,8 @@ Se um favorito tiver mudado depois da prévia, ele é ignorado e contado na noti
 
 As regras ficam na guia **Manutenção** das Configurações:
 
-- **Parâmetros removidos**: parâmetros a retirar. A lista padrão é `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src` e `si`.
-- **Parâmetros preservados**: parâmetros que nunca são removidos. Padrão: `id`, `page`, `q`, `p` e `lang`.
+- **Parâmetros removidos**: parâmetros a retirar. A lista padrão é <SettingDefault path="maintenance.url_cleaner.remove_params" />. Um nome que termina em `*` inclui todos os nomes que começam assim.
+- **Parâmetros preservados**: parâmetros que nunca são removidos. Padrão: <SettingDefault path="maintenance.url_cleaner.preserve_params" />.
 - **Remover parâmetros de consulta duplicados** (ativado por padrão) remove os parâmetros repetidos.
 - **Ordenar parâmetros de consulta** (ativado por padrão) coloca os parâmetros restantes em ordem alfabética.
 - **Remover fragmentos** (desativado por padrão) também remove partes como `#section`.

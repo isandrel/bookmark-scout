@@ -232,8 +232,8 @@ export function cleanBookmarkUrl(
     return null;
   }
 
-  const preserveParams = new Set(options.preserveParams.map((param) => param.toLowerCase()));
-  const removeParams = new Set(options.removeParams.map((param) => param.toLowerCase()));
+  const preserves = createParamNameMatcher(options.preserveParams);
+  const removes = createParamNameMatcher(options.removeParams);
   const hashIndex = originalUrl.indexOf('#');
   const beforeHash = hashIndex >= 0 ? originalUrl.slice(0, hashIndex) : originalUrl;
   const hash = hashIndex >= 0 ? originalUrl.slice(hashIndex) : '';
@@ -250,7 +250,7 @@ export function cleanBookmarkUrl(
     const key = decodeUrlComponent(separator >= 0 ? segment.slice(0, separator) : segment, true);
     const normalizedKey = key.toLowerCase();
 
-    if (!preserveParams.has(normalizedKey) && removeParams.has(normalizedKey)) {
+    if (!preserves(key) && removes(key)) {
       removedParams.push(key);
       continue;
     }

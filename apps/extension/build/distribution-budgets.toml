@@ -101,19 +101,22 @@
 # Raised on 2026-10-22 (uncompressed 5,590,000 to 5,602,000, locales 1,355,000 to 1,368,000) for
 # the dead-link review's group filter and batch selection, whose copy in 9 languages adds 7 KB to
 # the locales. Firefox measured 5,589,292 B uncompressed and 1,355,815 B of locales.
+# Uncompressed raised on 2026-10-22 (5,602,000 to 5,614,000) for parameter name patterns (the
+# shared matcher and the * help in 9 languages) on top of Duplicate Cleaner's keep choice (#775);
+# Firefox measured 5,603,857 B.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_757_000
-raw_bytes = 5_602_000
+raw_bytes = 5_614_000
 
 [targets.edge]
 zip_bytes = 1_757_000
-raw_bytes = 5_602_000
+raw_bytes = 5_614_000
 
 [targets.firefox]
 zip_bytes = 1_757_000
-raw_bytes = 5_602_000
+raw_bytes = 5_614_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
