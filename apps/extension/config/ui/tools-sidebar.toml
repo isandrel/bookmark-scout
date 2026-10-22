@@ -4,6 +4,10 @@
 # (export and import) follows them.
 sections = ["maintenance", "metadata", "security", "analytics", "ai"]
 
+# The tab the sidebar opens on when Tools Sidebar Layout is Tabs: "all", a section above, or
+# "data". A tab with nothing to show (its tools turned off) falls back to the first one that has.
+default_tab = "maintenance"
+
 # Tools in display order inside their section. Every tool in TOOL_DEFINITIONS once.
 tools = [
   "duplicates",

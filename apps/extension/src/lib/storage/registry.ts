@@ -144,6 +144,8 @@ export const DEVICE_SETTING_KEYS = [
   'agentBridgeDisabledActions',
   /** The History is kept on each device, and so is whether it records changes from elsewhere. */
   'historyRecordOutsideChanges',
+  /** How the Tools sidebar lists its tools, which suits one screen's size. */
+  'toolsSidebarLayout',
 ] as const;
 
 export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];
