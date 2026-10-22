@@ -25,6 +25,12 @@ export const jobCommandSchema = z.discriminatedUnion('type', [
       z.strictObject({ mode: z.literal('all') }),
       z.strictObject({ mode: z.literal('folder'), folderId: bookmarkId }),
     ]),
+    /**
+     * The sites the user chose to request (`getUrlSite`), for a kind that lets them choose
+     * (Index Page Text); absent: every site of the scope. Each site has a bookmark, so there are
+     * never more sites than items.
+     */
+    sites: z.array(urlSiteSchema).max(JOB_LIMITS.maxItems).optional(),
   }),
   z.strictObject({
     type: z.literal('apply'),

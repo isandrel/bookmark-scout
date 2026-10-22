@@ -76,13 +76,14 @@ function stubFetch(pages: Record<string, () => Response>) {
   return requests;
 }
 
-async function runToEnd(kind: JobKind) {
+async function runToEnd(kind: JobKind, sites?: string[]) {
   const response = await runJobCommand({
     type: 'start',
     commandId: crypto.randomUUID(),
     kind,
     source: 'manager',
     scope: { mode: 'folder', folderId: 'f' },
+    ...(sites ? { sites } : {}),
   });
   if (!response.ok || !response.job) throw new Error('not accepted');
   await whenJobsIdle();
@@ -251,6 +252,24 @@ describe('Index Page Text as a background job (S25-S27)', () => {
     ]);
     // The 401 page is never handed to the reader.
     expect(host.texts).toEqual([expect.stringContaining('SIGN-IN')]);
+  });
+
+  it('downloads only from the sites chosen before the run, frozen with the job, and lists the rest as not chosen (S03)', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    const requests = stubFetch({
+      'https://one.invalid/page': () => article('One'),
+      'https://two.invalid/page': () => article('Two'),
+    });
+    const { job, results, outcomes } = await runToEnd('pageText', ['two.invalid']);
+    expect(job?.options).toMatchObject({ sites: ['two.invalid'] });
+    expect(requests).toEqual(['https://two.invalid/page']);
+    expect(outcomes).toEqual(['skipped', 'succeeded', 'skipped', 'skipped']);
+    expect(results).toMatchObject([
+      { id: 'b1', status: 'notChosen' },
+      { id: 'b2', status: 'read' },
+      { id: 'b3', status: 'notChosen' },
+      { id: 'b4', status: 'skipped' },
+    ]);
   });
 
   it('pauses when the AI host page is lost, and reads the rest when resumed', async () => {

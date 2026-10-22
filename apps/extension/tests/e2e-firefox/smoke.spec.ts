@@ -882,9 +882,15 @@ async function startJobAndClosePage(
   folderId: string,
   tool: string,
   button = 'Scan',
+  /** The button that starts the run in the site choice, for a tool that asks for one first. */
+  startWithSites?: string,
 ) {
   await openTools(extension, folderId);
   await clickToolButton(extension, tool, button);
+  if (startWithSites) {
+    const choice = await extension.findByText('[role="dialog"]', 'Choose sites to read');
+    await choice.findElement(By.xpath(`.//button[normalize-space()="${startWithSites}"]`)).click();
+  }
   const dialog = await extension.findByText('[role="dialog"]', 'Allow access to websites?');
   await dialog.findElement(By.xpath('.//button[normalize-space()="Allow access"]')).click();
   // Index Page Text reads several pages at a time; the others are set to one.
@@ -976,7 +982,14 @@ test('Index Page Text runs as a background job that reads the text in the backgr
       // The test server is on this computer.
       readPageSkipPrivateHosts: false,
     });
-    await startJobAndClosePage(extension, server, folder.folderId, 'Index Page Text', 'Index');
+    await startJobAndClosePage(
+      extension,
+      server,
+      folder.folderId,
+      'Index Page Text',
+      'Index',
+      'Start with 1 site',
+    );
     await expect
       .poll(() => storedJobs(extension), { timeout: 15_000 })
       .toEqual([{ kind: 'pageText', state: 'succeeded', succeeded: 2 }]);

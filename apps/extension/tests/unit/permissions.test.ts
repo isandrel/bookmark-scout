@@ -11,10 +11,12 @@ import {
 } from '@/lib/permission-catalog';
 import { getSettingPermission } from '@/lib/settings-schema';
 import {
+  countUrlSites,
   getSiteAccessOrigins,
   getUrlSite,
   getUrlSites,
   SITE_ACCESS_MAX_SITES,
+  urlSiteSchema,
 } from '@/lib/site-access';
 import type { SupportedBrowser } from '@/lib/supported-browsers';
 import {
@@ -140,6 +142,29 @@ describe('website access for a run', () => {
       ]),
     ).toEqual(['example.com', 'bbc.co.uk', '192.168.1.10', 'localhost']);
     expect(getUrlSite('chrome://settings')).toBeNull();
+  });
+
+  it('counts the URLs of each site, most first, for a run whose sites the user chooses (S03)', () => {
+    expect(
+      countUrlSites([
+        'https://b.example.org/1',
+        'https://www.example.com/a',
+        'http://docs.example.com/b',
+        'https://a.example.net/',
+        'javascript:void(0)',
+      ]),
+    ).toEqual([
+      { site: 'example.com', count: 2 },
+      { site: 'example.net', count: 1 },
+      { site: 'example.org', count: 1 },
+    ]);
+    // A chosen site is a site as getUrlSite names it, never an address or a pattern.
+    for (const site of ['example.com', 'bbc.co.uk', '192.168.1.10', 'localhost', '[::1]']) {
+      expect(urlSiteSchema.safeParse(site).success).toBe(true);
+    }
+    for (const site of ['www.example.com', 'Example.com', '*.example.com', 'example.com/a', '']) {
+      expect(urlSiteSchema.safeParse(site).success).toBe(false);
+    }
   });
 
   it('asks for each site with its subdomains, and for all websites above the limit', () => {

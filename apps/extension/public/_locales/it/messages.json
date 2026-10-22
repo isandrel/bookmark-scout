@@ -8041,6 +8041,50 @@
         "message": "Saltate ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
     },
+    "tools_pageTextCategory_notChosen": {
+        "message": "Non scelti ($1)",
+        "description": "Index Page Text review tab: bookmarks on sites left out before the run, never requested; $1 is how many"
+    },
+    "tools_siteChoiceTitle": {
+        "message": "Scegli i siti da leggere",
+        "description": "Site choice before a run (Index Page Text): dialog title"
+    },
+    "tools_siteChoiceDesc": {
+        "message": "Le pagine vengono scaricate solo dai siti selezionati, e l'accesso viene chiesto solo per quei siti. I preferiti degli altri siti compaiono in Non scelti e non vengono mai richiesti.",
+        "description": "Site choice dialog: what choosing does; \"Not chosen\" is the review tab tools_pageTextCategory_notChosen"
+    },
+    "tools_siteChoiceFilter": {
+        "message": "Filtra i siti",
+        "description": "Site choice dialog: placeholder and label of the field that filters the sites by name"
+    },
+    "tools_siteChoiceSelectNone": {
+        "message": "Deseleziona tutto",
+        "description": "Site choice dialog: button that unchecks every site the filter shows"
+    },
+    "tools_siteChoiceChosen": {
+        "message": "$2 siti scelti su $1",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceChosen_one": {
+        "message": "$2 sito scelto su $1",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceNoMatch": {
+        "message": "Nessun sito corrisponde al filtro.",
+        "description": "Site choice dialog: shown when no site matches the filter"
+    },
+    "tools_siteChoiceShowMore": {
+        "message": "Mostra altri $1",
+        "description": "Site choice dialog: button that lists more sites; $1 is how many more"
+    },
+    "tools_siteChoiceStart": {
+        "message": "Avvia con $1 siti",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
+    "tools_siteChoiceStart_one": {
+        "message": "Avvia con $1 sito",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
     "tools_pageTextActionSave": {
         "message": "Salva il testo",
         "description": "Index Page Text review: action that keeps a page text"

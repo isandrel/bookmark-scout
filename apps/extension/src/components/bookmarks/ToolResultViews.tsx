@@ -1176,9 +1176,18 @@ export function RulesResultsView({
 
 /**
  * Index Page Text's review tabs, by what reading the page found. Sign-in pages have their own
- * tab and only Skip: what they show is not the bookmarked page.
+ * tab and only Skip: what they show is not the bookmarked page. Bookmarks on sites the user left
+ * out before the run are listed as not chosen; nothing was requested for them.
  */
-const PAGE_TEXT_CATEGORIES = ['read', 'empty', 'signIn', 'failed', 'current', 'skipped'] as const;
+const PAGE_TEXT_CATEGORIES = [
+  'read',
+  'empty',
+  'signIn',
+  'failed',
+  'current',
+  'notChosen',
+  'skipped',
+] as const;
 
 const PAGE_TEXT_CATEGORY_LABEL_KEYS = {
   read: 'tools_pageTextCategory_read',
@@ -1186,6 +1195,7 @@ const PAGE_TEXT_CATEGORY_LABEL_KEYS = {
   signIn: 'tools_pageTextCategory_signIn',
   failed: 'tools_pageTextCategory_failed',
   current: 'tools_pageTextCategory_current',
+  notChosen: 'tools_pageTextCategory_notChosen',
   skipped: 'tools_pageTextCategory_skipped',
 } as const satisfies Record<PageTextScanStatus, string>;
 

@@ -137,12 +137,16 @@ const siteIconOptionsSchema = z.strictObject({
   preferredSize: z.number().int().positive(),
   maxIconBytes: z.number().int().positive(),
 });
-const pageTextOptionsSchema = z.strictObject({ skipPrivateHosts: z.boolean() });
+const pageTextOptionsSchema = z.strictObject({
+  skipPrivateHosts: z.boolean(),
+  /** The sites the user chose before the run; the job requests no other site. */
+  sites: z.array(urlSiteSchema).optional(),
+});
 /** A bookmark of an Index Page Text run, and whether its page is to be read (`planPageTextScan`). */
 const pageTextInputSchema = z.strictObject({
   item: z.strictObject({
     ...linkTargetSchema.shape,
-    status: z.enum(['current', 'skipped']),
+    status: z.enum(['current', 'notChosen', 'skipped']),
   }),
   read: z.boolean(),
 });
@@ -282,7 +286,12 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
   pageText: {
     async prepare(command) {
       const { nodes, label } = await scopeNodes(command);
-      const options = (await toolOptions()).pageText;
+      // The sites chosen in the page are frozen with the job, so it honors them after the page
+      // closes; a bookmark added since on another site is not chosen either.
+      const options = {
+        ...(await toolOptions()).pageText,
+        ...(command.sites ? { sites: command.sites } : {}),
+      };
       const { items, overLimit, toRead } = await planPageTextScan(nodes, options);
       return {
         inputs: items.map((item) => ({ item, read: toRead.has(item) })),
@@ -299,7 +308,7 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
     },
     async run(input, options, signal, tools) {
       const { item, read } = pageTextInputSchema.parse(input);
-      // Indexed already, or a page that may not be read: nothing to download.
+      // Indexed already, a page that may not be read, or a site not chosen: nothing to download.
       if (!read) return { outcome: 'skipped', result: item };
       if (!tools.readText) throw new JobBlockedError('slice-setup');
       const result: PageTextScanItem = { ...item };

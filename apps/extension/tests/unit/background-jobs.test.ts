@@ -709,4 +709,22 @@ describe('who may send commands (J49, J50)', () => {
       }).success,
     ).toBe(false);
   });
+
+  it('takes the sites the user chose with a start, as site names only (S03)', () => {
+    const start = {
+      type: 'start',
+      commandId: crypto.randomUUID(),
+      kind: 'pageText',
+      source: 'manager',
+      scope: { mode: 'all' },
+    };
+    expect(jobCommandSchema.safeParse(start).success).toBe(true);
+    expect(
+      jobCommandSchema.safeParse({ ...start, sites: ['example.com', 'localhost'] }).success,
+    ).toBe(true);
+    expect(jobCommandSchema.safeParse({ ...start, sites: [] }).success).toBe(true);
+    for (const site of ['https://example.com/', '*.example.com', 'www.example.com']) {
+      expect(jobCommandSchema.safeParse({ ...start, sites: [site] }).success).toBe(false);
+    }
+  });
 });

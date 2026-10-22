@@ -10,7 +10,14 @@
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
-export type PageTextScanStatus = 'read' | 'empty' | 'signIn' | 'failed' | 'current' | 'skipped';
+export type PageTextScanStatus =
+  | 'read'
+  | 'empty'
+  | 'signIn'
+  | 'failed'
+  | 'current'
+  | 'notChosen'
+  | 'skipped';
 
 export type PageTextScanItem = {
   id: string;
@@ -31,6 +38,11 @@ export type PageTextScanResult = {
 export type PageTextScanOptions = {
   /** Skip pages on the local network (the Skip Local Network Pages setting). */
   skipPrivateHosts: boolean;
+  /**
+   * The sites the user chose to download pages from (`getUrlSite`); bookmarks on other sites are
+   * `notChosen` and never requested. Absent: every site of the run.
+   */
+  sites?: readonly string[];
 };
 
 /**
@@ -87,35 +99,67 @@ export async function readPageTextItem(
   if (reading.status === 'read') item.text = reading.text;
 }
 
+/** Whether a bookmark's page is indexed already, may not be read, or is one to download. */
+function pageTextNeed(
+  url: string,
+  indexed: PageTextRecord | undefined,
+  options: PageTextScanOptions,
+): 'current' | 'skipped' | 'read' {
+  if (isPageTextCurrent(indexed, url)) return 'current';
+  return isReadablePageUrl(url, options.skipPrivateHosts) ? 'read' : 'skipped';
+}
+
+/**
+ * The sites whose pages a run over `nodes` would download, with how many bookmarks each: what the
+ * user chooses from before the run starts. Pages indexed already and pages that may not be read
+ * are left out, since the run requests nothing for them.
+ */
+export async function listPageTextSites(
+  nodes: BookmarkTreeNode[],
+  options: PageTextScanOptions,
+): Promise<SiteCount[]> {
+  const indexed = await getPageTexts();
+  return countUrlSites(
+    flattenBookmarks(nodes).flatMap(({ node }) => {
+      const url = node.url ?? '';
+      return pageTextNeed(url, indexed.get(node.id), options) === 'read' ? [url] : [];
+    }),
+  );
+}
+
 /**
  * What a run over `nodes` covers: every bookmark, marked `current` when it is indexed from its
- * address already and `skipped` when it may not be read, with `toRead` the ones to download.
- * Bookmarks past the room the index has left are counted in `overLimit` only.
+ * address already, `skipped` when it may not be read, and `notChosen` when its site is not one
+ * of `options.sites`, with `toRead` the ones to download. Bookmarks past the room the index has
+ * left are counted in `overLimit` only.
  */
 export async function planPageTextScan(
   nodes: BookmarkTreeNode[],
   options: PageTextScanOptions,
 ): Promise<PageTextScanResult & { toRead: Set<PageTextScanItem> }> {
   const indexed = await getPageTexts();
+  const chosen = options.sites ? new Set(options.sites) : null;
   let room = Math.max(0, PAGE_TEXT_LIMITS.maxPages - indexed.size);
   let overLimit = 0;
   const items: PageTextScanItem[] = [];
   const toRead = new Set<PageTextScanItem>();
   for (const { node, pathLabel } of flattenBookmarks(nodes)) {
     const url = node.url ?? '';
+    const need = pageTextNeed(url, indexed.get(node.id), options);
     const item: PageTextScanItem = {
       id: node.id,
       title: node.title,
       url,
       folderPath: pathLabel,
-      status: 'skipped',
+      status: need === 'read' ? 'skipped' : need,
     };
-    if (isPageTextCurrent(indexed.get(node.id), url)) item.status = 'current';
-    else if (!isReadablePageUrl(url, options.skipPrivateHosts)) item.status = 'skipped';
-    else if (room === 0) {
-      overLimit += 1;
-      continue;
-    } else {
+    if (need === 'read' && chosen && !chosen.has(getUrlSite(url) ?? '')) {
+      item.status = 'notChosen';
+    } else if (need === 'read') {
+      if (room === 0) {
+        overLimit += 1;
+        continue;
+      }
       room -= 1;
       toRead.add(item);
     }

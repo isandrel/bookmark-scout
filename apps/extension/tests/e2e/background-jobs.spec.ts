@@ -16,6 +16,7 @@ import {
   seedMockCustomProvider,
 } from './ai-provider-mock';
 import { expect, launchExtension, test, toastRegion } from './fixtures';
+import { latestJob, storedJobs } from './job-helpers';
 import { managerUrl } from './manager-helpers';
 import { removeTempDir } from './temp-dirs';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
@@ -131,35 +132,6 @@ async function setDeadLinkSettings(worker: Worker, concurrency: number) {
     deadLinksRequestTimeoutMs: 60_000,
     deadLinksFollowRedirects: false,
     deadLinksDefaultScope: 'folder',
-  });
-}
-
-type StoredJob = {
-  id: string;
-  kind: string;
-  state: string;
-  total: number;
-  done: { succeeded: number; skipped: number; failed: number };
-  scope: { mode: string; rootIds: string[] };
-};
-
-/** The jobs as stored, read from an extension page or the worker. */
-async function storedJobs(target: Page | Worker): Promise<StoredJob[]> {
-  return target.evaluate(async () => {
-    const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open('bookmark-scout-jobs');
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    try {
-      return await new Promise<StoredJob[]>((resolve, reject) => {
-        const request = db.transaction('jobs').objectStore('jobs').getAll();
-        request.onsuccess = () => resolve(request.result as StoredJob[]);
-        request.onerror = () => reject(request.error);
-      });
-    } finally {
-      db.close();
-    }
   });
 }
 
@@ -298,11 +270,6 @@ test('pause stops new requests, and resume asks only for links not yet checked (
   });
 });
 
-/** The newest job of `kind` as stored. */
-async function latestJob(target: Page | Worker, kind: string) {
-  return (await storedJobs(target)).find((job) => job.kind === kind);
-}
-
 test('Metadata Fetcher keeps going with its page closed, and a later page applies its titles (J01, J05)', async ({
   context,
   extensionId,
@@ -412,6 +379,11 @@ test('Index Page Text keeps going with its page closed, and a later page saves t
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'Index Page Text')
     .getByRole('button', { name: 'Index', exact: true })
+    .click();
+  // The one site with a page to read; the bookmarklet is not a site.
+  await page
+    .getByRole('dialog', { name: 'Choose sites to read' })
+    .getByRole('button', { name: 'Start with 1 site' })
     .click();
   await expect.poll(() => site.held()).toBe(1);
   await page.close();

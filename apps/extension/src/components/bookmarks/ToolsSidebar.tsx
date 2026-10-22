@@ -78,10 +78,16 @@ function JobToolEntry({
   // The job this page started: its review opens once it finishes while the page is open, as a
   // scan did; closing the page first leaves the results for Review results.
   const [watching, setWatching] = useState<string | null>(null);
+  // The sites a run with a site choice lists, kept while the dialog closes.
+  const [siteChoice, setSiteChoice] = useState<{
+    scope: BookmarkToolScope;
+    sites: SiteCount[];
+  } | null>(null);
+  const [choosingSites, setChoosingSites] = useState(false);
   const { settings } = environment;
   const Controls = TOOL_CONTROLS[tool.id];
   const Icon = tool.icon;
-  const start = async (scope: BookmarkToolScope) => {
+  const start = async (scope: BookmarkToolScope, sites?: string[]) => {
     const folderId = environment.currentFolderId;
     const response = await sendJobCommand({
       type: 'start',
@@ -90,6 +96,7 @@ function JobToolEntry({
       kind: jobTool.kind,
       source: 'manager',
       scope: scope === 'folder' && folderId ? { mode: 'folder', folderId } : { mode: 'all' },
+      ...(sites ? { sites } : {}),
     }).catch(() => undefined);
     if (!response?.ok) toast.error({ title: t('jobs_commandFailed') });
     else setWatching(response.job?.id ?? null);
@@ -119,6 +126,23 @@ function JobToolEntry({
           }
           // Access only to the sites this run requests: the same nodes the job reads.
           const nodes = getScopedNodes(environment.folders, environment.currentFolderId, scope);
+          const { chooseSites } = jobTool;
+          if (chooseSites) {
+            // The user chooses the sites first; with none to download from, nothing is asked.
+            void chooseSites(nodes, getToolOptions(settings)).then(
+              (sites) => {
+                if (sites.length === 0) return start(scope, []);
+                setSiteChoice({ scope, sites });
+                setChoosingSites(true);
+              },
+              (error: unknown) =>
+                toast.error({
+                  title: t('jobs_commandFailed'),
+                  description: getErrorMessage(error),
+                }),
+            );
+            return;
+          }
           const urls = flattenBookmarks(nodes).flatMap(({ node }) => node.url ?? []);
           runWithAccess(() => start(scope), getUrlSites(urls));
         }}
@@ -143,6 +167,17 @@ function JobToolEntry({
         close={close}
         environment={environment}
       />
+      {siteChoice ? (
+        <SiteChoiceDialog
+          open={choosingSites}
+          sites={siteChoice.sites}
+          onCancel={() => setChoosingSites(false)}
+          onConfirm={(sites) => {
+            setChoosingSites(false);
+            runWithAccess(() => start(siteChoice.scope, sites), sites);
+          }}
+        />
+      ) : null}
     </>
   );
 }
