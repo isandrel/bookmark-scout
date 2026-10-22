@@ -1,10 +1,17 @@
 /**
- * What Smart Rules did on their own lately (`rule-automation.ts`): each bookmark Tag New
- * Bookmarks tagged, with the tags, and each bookmark Move New Bookmarks moved, with where from and
- * to, newest first and at most `[automatic] log_max`, so Settings can list them and undo one.
- * Tags live apart from the bookmarks, so the History of bookmark changes never shows them; moves
- * are in the History too (one record per batch), and this list is where either can be found and
- * taken back. Undoing a move is in `rule-automation.ts`, which writes bookmarks.
+ * What Smart Rules changed lately, for Settings to list and undo (Changed by rules), newest first
+ * and at most `[automatic] log_max` entries:
+ *
+ * - each bookmark Tag New Bookmarks tagged, with the tags (`tag`), and each bookmark Move New
+ *   Bookmarks moved, with where from and to (`move`), from `rule-automation.ts`;
+ * - each reviewed run from the Tools sidebar that added tags (`run`, `rule-run.ts`): the
+ *   bookmarks it tagged, grouped by the tags added, how many it moved, and its moves' Audit
+ *   History record (or the background task applying them), which links the two.
+ *
+ * Tags live apart from the bookmarks, so the History of bookmark changes never shows them: this
+ * list is their durable record, and its Undo takes them back where they still are. Moves are in
+ * the History too (one record per batch or run). Undoing an automatic move is in
+ * `rule-automation.ts`, which writes bookmarks; a run's moves are undone from the History.
  *
  * The storage key still says tags: it held only taggings before moves were added, and keeping it
  * keeps the list across the update. Entries stored then have no `kind` and read as taggings.
@@ -41,11 +48,35 @@ const moveEntrySchema = z.strictObject({
   at: z.number().finite(),
 });
 
-const ruleAutoEntrySchema = z.union([tagEntrySchema, moveEntrySchema]);
+const runEntrySchema = z.strictObject({
+  id: z.string().min(1),
+  kind: z.literal('run'),
+  /** The tags it added, each group to its bookmarks, by id. */
+  tagged: z
+    .array(
+      z.strictObject({
+        tags: z.array(z.string().min(1)).min(1),
+        bookmarkIds: z.array(z.string().min(1)).min(1),
+      }),
+    )
+    .min(1),
+  /** Bookmarks it tagged past `[runs] log_max_bookmarks`, not listed: Undo leaves their tags. */
+  omitted: z.number().int().nonnegative(),
+  /** How many bookmarks it moved, or handed to a background task to move. */
+  moved: z.number().int().nonnegative(),
+  /** Its moves' Audit History record. */
+  operationId: z.string().min(1).optional(),
+  /** The background task moving them, whose parts each have their own record. */
+  jobId: z.string().min(1).optional(),
+  at: z.number().finite(),
+});
+
+const ruleAutoEntrySchema = z.union([tagEntrySchema, moveEntrySchema, runEntrySchema]);
 
 export type RuleAutoEntry = z.infer<typeof ruleAutoEntrySchema>;
 export type RuleAutoTagEntry = Extract<RuleAutoEntry, { kind: 'tag' }>;
 export type RuleAutoMoveEntry = Extract<RuleAutoEntry, { kind: 'move' }>;
+export type RuleRunEntry = Extract<RuleAutoEntry, { kind: 'run' }>;
 
 /** Newest first. One malformed entry is dropped alone. */
 export const ruleAutoLogValue = defineStoredValue<RuleAutoEntry[]>(STORAGE_ITEMS.ruleAutoLog, {
@@ -56,16 +87,60 @@ export const ruleAutoLogValue = defineStoredValue<RuleAutoEntry[]>(STORAGE_ITEMS
 
 type NewEntry<T> = T extends RuleAutoEntry ? Omit<T, 'id' | 'at'> : never;
 
-/** Adds what one batch did, newest first, keeping the most recent `log_max`. */
-export function recordRuleAutoChanges(
+/**
+ * Adds what one batch or run did, newest first, keeping the most recent `log_max`. Resolves to
+ * the new entries' ids, in order.
+ */
+export async function recordRuleAutoChanges(
   entries: readonly NewEntry<RuleAutoEntry>[],
-): Promise<unknown> {
-  if (entries.length === 0) return Promise.resolve();
+): Promise<string[]> {
+  if (entries.length === 0) return [];
   const at = Date.now();
   const added = entries.map((entry) => ({ ...entry, id: crypto.randomUUID(), at }));
-  return ruleAutoLogValue.update((current) =>
+  await ruleAutoLogValue.update((current) =>
     [...added, ...current].slice(0, BOOKMARK_RULE_LIMITS.automatic.log_max),
   );
+  return added.map((entry) => entry.id);
+}
+
+/** A run that tagged bookmarks, as its entry: each set of tags with the bookmarks that got it. */
+export type RuleRunTagging = { bookmarkId: string; tags: readonly string[] };
+
+/**
+ * Records a reviewed run that added tags; resolves to its entry's id. Bookmarks past
+ * `[runs] log_max_bookmarks` are only counted. Nothing is recorded when it tagged none.
+ */
+export async function recordRuleRun({
+  tagged,
+  moved,
+  operationId,
+  jobId,
+}: {
+  tagged: readonly RuleRunTagging[];
+  moved: number;
+  operationId?: string;
+  jobId?: string;
+}): Promise<string | undefined> {
+  if (tagged.length === 0) return undefined;
+  const listed = tagged.slice(0, BOOKMARK_RULE_LIMITS.runs.log_max_bookmarks);
+  const groups = new Map<string, { tags: string[]; bookmarkIds: string[] }>();
+  for (const { bookmarkId, tags } of listed) {
+    const key = JSON.stringify(tags);
+    const group = groups.get(key) ?? { tags: [...tags], bookmarkIds: [] };
+    group.bookmarkIds.push(bookmarkId);
+    groups.set(key, group);
+  }
+  const [id] = await recordRuleAutoChanges([
+    {
+      kind: 'run',
+      tagged: [...groups.values()],
+      omitted: tagged.length - listed.length,
+      moved,
+      ...(operationId ? { operationId } : {}),
+      ...(jobId ? { jobId } : {}),
+    },
+  ]);
+  return id;
 }
 
 /** One entry, if it is still listed. */
@@ -84,19 +159,49 @@ export function dropRuleAutoEntry(entryId: string): Promise<unknown> {
  * removed.
  */
 export async function undoAutoTag(entry: RuleAutoTagEntry): Promise<number> {
-  const keys = new Set(entry.tags.map(tagKey));
-  let removed = 0;
+  const removed = await removeTags([{ tags: entry.tags, bookmarkIds: [entry.bookmarkId] }]);
+  await dropRuleAutoEntry(entry.id);
+  return removed.tags;
+}
+
+/**
+ * Takes back the tags a reviewed run added, where they still are, then drops the entry. Resolves
+ * to how many bookmarks lost tags. Its moves stay: they are undone from the History.
+ */
+export async function undoRuleRunTags(entry: RuleRunEntry): Promise<number> {
+  const removed = await removeTags(entry.tagged);
+  await dropRuleAutoEntry(entry.id);
+  return removed.bookmarks;
+}
+
+/**
+ * Removes each group's tags from its bookmarks, compared by `tagKey`; a tag removed or renamed
+ * since is left alone, and so are the bookmark's other tags. A bookmark left with no tags and no
+ * summary loses its entry. Counts the tags removed and the bookmarks that lost any.
+ */
+async function removeTags(
+  groups: readonly { tags: readonly string[]; bookmarkIds: readonly string[] }[],
+): Promise<{ tags: number; bookmarks: number }> {
+  const removed = { tags: 0, bookmarks: 0 };
   await bookmarkMetadataValue.update((current) => {
-    const existing = current[entry.bookmarkId];
-    if (!existing?.tags) return current;
-    const tags = existing.tags.filter((tag) => !keys.has(tagKey(tag)));
-    removed = existing.tags.length - tags.length;
+    removed.tags = 0;
+    removed.bookmarks = 0;
     const next = { ...current };
-    if (tags.length > 0 || existing.summary) next[entry.bookmarkId] = { ...existing, tags };
-    else delete next[entry.bookmarkId];
+    for (const group of groups) {
+      const keys = new Set(group.tags.map(tagKey));
+      for (const id of group.bookmarkIds) {
+        const existing = next[id];
+        if (!existing?.tags) continue;
+        const tags = existing.tags.filter((tag) => !keys.has(tagKey(tag)));
+        if (tags.length === existing.tags.length) continue;
+        removed.tags += existing.tags.length - tags.length;
+        removed.bookmarks += 1;
+        if (tags.length > 0 || existing.summary) next[id] = { ...existing, tags };
+        else delete next[id];
+      }
+    }
     return next;
   });
-  await dropRuleAutoEntry(entry.id);
   return removed;
 }
 

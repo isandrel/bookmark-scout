@@ -1717,6 +1717,14 @@
         "message": "Sélectionner la portée",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "Résultats de recherche",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "Favoris sélectionnés",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "Exécution…",
         "description": "Tool button label while the tool runs"
@@ -8609,6 +8617,10 @@
         "message": "Étiqueter les tutoriels en learning",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
     },
+    "rules_templateReading": {
+        "message": "Déplacer Work / Reading vers un dossier de votre choix",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
+    },
     "rules_empty": {
         "message": "Aucune règle pour l’instant.",
         "description": "Settings: shown when there are no smart rules"
@@ -8821,6 +8833,10 @@
         "message": "Votre organisation gère ce favori ou le dossier de destination, il reste donc à sa place.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "Non déplacé : dans ce dossier, une autre règle le déplacerait de nouveau, si bien que chaque exécution le déplacerait encore.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "Règles : $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8848,6 +8864,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "Étiquetés : $1. Déplacement de $2 favoris en arrière-plan.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "Rien n'a été déplacé : l'Historique des favoris n'a pas pu enregistrer les déplacements, donc aucun n'a été fait.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "$count$ règles activées",
@@ -8878,7 +8898,7 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Les règles actives ajoutent leurs étiquettes à chaque favori dès son ajout, depuis Bookmark Scout, le navigateur ou la synchronisation. L'étiquetage ne déplace jamais un favori ; c'est le rôle de Déplacer les nouveaux favoris. Les nombreux favoris ajoutés d'un coup (une synchronisation ou une importation) restent tels quels.",
+        "message": "Les règles actives ajoutent leurs étiquettes à chaque nouveau favori qu'autorise Nouveaux favoris de. L'étiquetage ne déplace jamais un favori ; c'est le rôle de Déplacer les nouveaux favoris. Les nombreux favoris ajoutés d'un coup (une synchronisation ou une importation) restent tels quels.",
         "description": "Settings: what Tag New Bookmarks does"
     },
     "settings_bookmarkRulesAutoMove": {
@@ -8886,8 +8906,24 @@
         "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
     },
     "settings_bookmarkRulesAutoMoveDesc": {
-        "message": "Les règles que vous autorisez à déplacer automatiquement les nouveaux favoris déplacent dans leur dossier chaque favori ajouté avec l'étoile du navigateur, une autre extension ou la synchronisation, uniquement tant que c'est le dossier que vous avez choisi. Étiqueter les nouveaux favoris n'active jamais cette option. Les favoris enregistrés par Bookmark Scout restent là où ils ont été placés, et les nombreux favoris ajoutés d'un coup restent tels quels. Chaque déplacement figure dans l'Historique des favoris et sous Modifiés automatiquement, avec Annuler.",
+        "message": "Les règles que vous autorisez à déplacer automatiquement les nouveaux favoris déplacent dans leur dossier chaque nouveau favori correspondant, uniquement tant que c'est le dossier que vous avez choisi. Les favoris enregistrés par Bookmark Scout restent là où ils ont été placés, donc cette option ne déplace que les favoris venant de l'étoile du navigateur, d'une autre extension ou de la synchronisation, et seulement si Nouveaux favoris de vaut Partout. Étiqueter les nouveaux favoris n'active jamais cette option, et les nombreux favoris ajoutés d'un coup restent tels quels. Chaque déplacement figure dans l'Historique des favoris et sous Modifiés par les règles, avec Annuler.",
         "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "Nouveaux favoris de",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "Les nouveaux favoris sur lesquels agissent Étiqueter les nouveaux favoris et Déplacer les nouveaux favoris. Le navigateur n'indique pas qui a ajouté un favori, donc Partout traite de la même façon l'étoile du navigateur, la synchronisation et les autres extensions.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Enregistrés avec Bookmark Scout",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "Partout",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "Utiliser cette vue comme couverture",
@@ -8934,7 +8970,7 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Modifiés automatiquement",
+        "message": "Modifiés par les règles",
         "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
@@ -8957,6 +8993,22 @@
         "message": "Remettre $1 à sa place",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
+    "rules_autoLogRun": {
+        "message": "Exécution des règles intelligentes",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "Étiquetés : $1 · Déplacés : $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "Non listés ici, donc Annuler conserve leurs étiquettes : $1.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "Annuler les étiquettes ajoutées par cette exécution",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
+    },
     "rules_autoLogUndone": {
         "message": "Étiquettes retirées",
         "description": "Toast title after undoing one automatic tagging"
@@ -8974,6 +9026,26 @@
     "rules_autoLogUndoneDesc_one": {
         "message": "$count$ étiquette retirée du favori.",
         "description": "Toast after undoing one automatic tagging; how many tags were removed (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "Étiquettes retirées de $count$ favoris. Annulez les déplacements de l'exécution dans l'Historique des favoris.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_one": {
+        "message": "Étiquettes retirées de $count$ favori. Annulez les déplacements de l'exécution dans l'Historique des favoris.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (one)",
         "placeholders": {
             "count": {
                 "content": "$1",

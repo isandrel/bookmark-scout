@@ -100,7 +100,10 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
       title={t('tools_export')}
       description={t('tools_exportDesc')}
       buttonLabel={t('action_export')}
-      onClick={handleExport}
+      // Export offers a folder or everything, nothing narrower.
+      onClick={(scope) => {
+        if (!isNarrowToolScope(scope)) void handleExport(scope);
+      }}
       disabled={folders.length === 0}
       isLoading={isExporting}
       scopeCapability="both"

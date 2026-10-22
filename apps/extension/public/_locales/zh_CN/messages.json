@@ -1709,6 +1709,14 @@
         "message": "选择范围",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "搜索结果",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "所选书签",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "正在运行…",
         "description": "Tool button label while the tool runs"
@@ -8257,6 +8265,10 @@
         "message": "为教程添加 learning 标签",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
     },
+    "rules_templateReading": {
+        "message": "将 Work / Reading 移到你选择的文件夹",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
+    },
     "rules_empty": {
         "message": "还没有规则。",
         "description": "Settings: shown when there are no smart rules"
@@ -8449,6 +8461,10 @@
         "message": "此书签或目标文件夹由你的组织管理，因此书签保持原位。",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "未移动：在该文件夹中另一条规则会再次移动它，每次运行都会继续移动它。",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "规则：$1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8477,6 +8493,10 @@
         "message": "已添加标签：$1。正在后台移动 $2 个书签。",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
     },
+    "toast_rulesNoRecordDesc": {
+        "message": "未移动任何书签：书签历史记录无法记录这些移动，因此没有进行移动。",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
     "tools_rulesOnCount": {
         "message": "已开启 $count$ 条规则",
         "description": "Smart Rules card: how many rules are turned on",
@@ -8496,7 +8516,7 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "已启用的规则会在每个书签添加时为其加上标签，无论书签来自 Bookmark Scout、浏览器还是同步。添加标签绝不会移动书签；移动需要开启“移动新书签”。一次添加的大量书签（同步或导入）会保持不变。",
+        "message": "已启用的规则会为“新书签来源”允许的每个新书签加上标签。添加标签绝不会移动书签；移动需要开启“移动新书签”。一次添加的大量书签（同步或导入）会保持不变。",
         "description": "Settings: what Tag New Bookmarks does"
     },
     "settings_bookmarkRulesAutoMove": {
@@ -8504,8 +8524,24 @@
         "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
     },
     "settings_bookmarkRulesAutoMoveDesc": {
-        "message": "设为自动移动新书签的规则会把通过浏览器星标、其他扩展或同步添加的每个书签移到其文件夹，但仅在该文件夹仍是你所选的文件夹时。开启“为新书签添加标签”绝不会开启此项。Bookmark Scout 保存的书签留在原处，一次添加的大量书签保持不变。每次移动都会记录在书签历史记录和“自动更改”中，并可撤消。",
+        "message": "设为自动移动新书签的规则会把匹配的每个新书签移到其文件夹，但仅在该文件夹仍是你所选的文件夹时。Bookmark Scout 保存的书签留在原处，因此此项只移动通过浏览器星标、其他扩展或同步添加的书签，并且仅在“新书签来源”为“任何来源”时。开启“为新书签添加标签”绝不会开启此项，一次添加的大量书签保持不变。每次移动都会记录在书签历史记录和“由规则更改”中，并可撤消。",
         "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "新书签来源",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "“为新书签添加标签”和“移动新书签”作用于哪些新书签。浏览器不会说明是谁添加了书签，因此“任何来源”会同样对待浏览器星标、同步和其他扩展。",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "用 Bookmark Scout 保存的",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "任何来源",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "用当前画面作为封面",
@@ -8552,7 +8588,7 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "自动更改",
+        "message": "由规则更改",
         "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
@@ -8575,6 +8611,22 @@
         "message": "将 $1 移回原处",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
+    "rules_autoLogRun": {
+        "message": "智能规则运行",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "已添加标签：$1 · 已移动：$2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "未在此列出，撤消时会保留其标签：$1 个。",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "撤消此次运行添加的标签",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
+    },
     "rules_autoLogUndone": {
         "message": "标签已移除",
         "description": "Toast title after undoing one automatic tagging"
@@ -8582,6 +8634,16 @@
     "rules_autoLogUndoneDesc": {
         "message": "已从书签移除 $count$ 个标签。",
         "description": "Toast after undoing one automatic tagging; how many tags were removed",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "已从 $count$ 个书签移除标签。请在书签历史记录中撤消此次运行的移动。",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
         "placeholders": {
             "count": {
                 "content": "$1",

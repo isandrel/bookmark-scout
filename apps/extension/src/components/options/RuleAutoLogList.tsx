@@ -1,7 +1,7 @@
 /**
- * Changed automatically: under Smart Rules in Settings, what Tag New Bookmarks and Move New
- * Bookmarks did lately (`rule-auto-log.ts`), newest first, each with Undo, and Clear list. Shown
- * once there is one.
+ * Changed by rules: under Smart Rules in Settings, what Tag New Bookmarks and Move New Bookmarks
+ * did lately, and what reviewed runs tagged (`rule-auto-log.ts`), newest first, each with Undo,
+ * and Clear list. Shown once there is one.
  */
 import { Undo2 } from 'lucide-react';
 
@@ -12,17 +12,39 @@ const MOVE_NOT_UNDONE_KEYS = {
   parentMissing: 'rules_autoLogUndoParentMissing',
 } as const satisfies Record<string, MessageKey>;
 
+function entryTitle(entry: RuleAutoEntry): string {
+  return entry.kind === 'run' ? t('rules_autoLogRun') : entry.title;
+}
+
 function describeEntry(entry: RuleAutoEntry): string {
-  return entry.kind === 'tag'
-    ? t('rules_autoLogTags', [formatList(entry.tags), formatDateTime(entry.at)])
-    : t('rules_autoLogMoved', [entry.to.path, formatDateTime(entry.at)]);
+  switch (entry.kind) {
+    case 'tag':
+      return t('rules_autoLogTags', [formatList(entry.tags), formatDateTime(entry.at)]);
+    case 'move':
+      return t('rules_autoLogMoved', [entry.to.path, formatDateTime(entry.at)]);
+    case 'run': {
+      const listed = entry.tagged.reduce((sum, group) => sum + group.bookmarkIds.length, 0);
+      const summary = t('rules_autoLogRunDesc', [
+        String(listed + entry.omitted),
+        String(entry.moved),
+        formatDateTime(entry.at),
+      ]);
+      return entry.omitted > 0
+        ? `${summary} ${t('rules_autoLogRunOmitted', String(entry.omitted))}`
+        : summary;
+    }
+  }
 }
 
 function undoLabel(entry: RuleAutoEntry): string {
-  const title = getBookmarkDisplayTitle(entry.title);
-  return entry.kind === 'tag'
-    ? t('rules_autoLogUndoLabel', title)
-    : t('rules_autoLogUndoMoveLabel', title);
+  switch (entry.kind) {
+    case 'tag':
+      return t('rules_autoLogUndoLabel', getBookmarkDisplayTitle(entry.title));
+    case 'move':
+      return t('rules_autoLogUndoMoveLabel', getBookmarkDisplayTitle(entry.title));
+    case 'run':
+      return t('rules_autoLogUndoRunLabel');
+  }
 }
 
 export function RuleAutoLogList() {
@@ -37,6 +59,11 @@ export function RuleAutoLogList() {
         toast.success({
           title: t('rules_autoLogUndone'),
           description: tPlural('rules_autoLogUndoneDesc', outcome.removed),
+        });
+      } else if (outcome.kind === 'run') {
+        toast.success({
+          title: t('rules_autoLogUndone'),
+          description: tPlural('rules_autoLogUndoneRunDesc', outcome.bookmarks),
         });
       } else if (outcome.result === 'moved') {
         toast.success({ title: t('rules_autoLogMovedBack') });
@@ -60,30 +87,35 @@ export function RuleAutoLogList() {
         </Button>
       </div>
       <ul className="max-h-64 divide-y overflow-y-auto rounded-md border">
-        {entries.map((entry) => (
-          <li
-            key={entry.id}
-            data-testid="rule-auto-entry"
-            data-kind={entry.kind}
-            className="flex items-center gap-2 px-3 py-2"
-          >
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm" title={entry.title}>
-                {getBookmarkDisplayTitle(entry.title)}
-              </p>
-              <p className="truncate text-xs text-muted-foreground">{describeEntry(entry)}</p>
-            </div>
-            <Button
-              size="sm"
-              variant="outline"
-              aria-label={undoLabel(entry)}
-              onClick={() => void undo(entry.id)}
+        {entries.map((entry) => {
+          const title = entryTitle(entry);
+          return (
+            <li
+              key={entry.id}
+              data-testid="rule-auto-entry"
+              data-kind={entry.kind}
+              className="flex items-center gap-2 px-3 py-2"
             >
-              <Undo2 />
-              {t('action_undo')}
-            </Button>
-          </li>
-        ))}
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm" title={title}>
+                  {entry.kind === 'run' ? title : getBookmarkDisplayTitle(title)}
+                </p>
+                <p className="truncate text-xs text-muted-foreground" title={describeEntry(entry)}>
+                  {describeEntry(entry)}
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                aria-label={undoLabel(entry)}
+                onClick={() => void undo(entry.id)}
+              >
+                <Undo2 />
+                {t('action_undo')}
+              </Button>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

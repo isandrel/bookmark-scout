@@ -9,8 +9,10 @@ import {
   type UndoOffer,
 } from '@/components/bookmarks/tools/tool-run';
 import { setLanguage } from '@/hooks/use-i18n';
+import { closeAuditDb } from '@/lib/bookmark-audit-store';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { bookmarkRulesValue } from '@/lib/bookmark-rules-storage';
+import { ruleAutoLogValue } from '@/lib/rule-auto-log';
 import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
@@ -19,6 +21,7 @@ import { getScopedNodes } from '@/services/bookmark-tooling';
 import { BOOKMARK_DELETION_UNDO_WINDOW_MS } from '@/services/bookmarks';
 import type { BookmarkTreeNode } from '@/types';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+import { auditRecords, resetAuditDatabase } from './audit-helpers';
 
 // The AI tests stub the AI client's model call: they check the run's contract, not live provider
 // compatibility. Failures use the SDK's real error classes, so they are described as users see them.
@@ -62,6 +65,7 @@ function deps(overrides: Partial<ToolRunDeps> = {}): ToolRunDeps {
     settings: () => settings,
     nodes: (scope) => getScopedNodes(tree, FOLDER, scope),
     freshNodes: async (scope) => getScopedNodes(await readTree(), FOLDER, scope),
+    listed: () => [],
     refresh: async () => {
       tree = await readTree();
     },
@@ -733,5 +737,181 @@ describe('Smart Rules', () => {
     await run.apply(plan);
     await expect(bookmarkMetadataValue.get()).resolves.toEqual({});
     expect(notices[0].outcome.variant).not.toBe('success');
+  });
+});
+
+describe('Smart Rules runs: scopes, safety, and their record', () => {
+  const TAG = 'development';
+
+  beforeEach(async () => {
+    await resetAuditDatabase();
+    bookmarks = installFakeBookmarks([
+      { id: FOLDER, title: 'Folder' },
+      { id: 'dest', parentId: FOLDER, title: 'Dest' },
+      { id: 'other', title: 'Other' },
+      { id: 'r1', parentId: FOLDER, title: 'Repo', url: 'https://github.com/acme/repo' },
+      { id: 'r2', parentId: FOLDER, title: 'Lib', url: 'https://github.com/acme/lib' },
+      { id: 'o1', parentId: 'other', title: 'Elsewhere', url: 'https://github.com/acme/else' },
+    ]);
+    tree = await readTree();
+    await bookmarkMetadataValue.set({});
+    await ruleAutoLogValue.set([]);
+    await bookmarkRulesValue.set([
+      {
+        id: 'gh',
+        name: 'GitHub',
+        enabled: true,
+        query: 'domain:github.com',
+        syntaxVersion: SEARCH_SYNTAX_VERSION,
+        addTags: [TAG],
+        moveTo: { folderId: 'dest', path: 'Folder / Dest' },
+      },
+    ]);
+  });
+
+  const reviewed = async (
+    scope: Parameters<ReturnType<typeof createToolRun>['run']>[0] = 'all',
+    listed: string[] = [],
+  ) => {
+    const run = createToolRun(TOOL_DEFINITIONS.bookmarkRules, deps({ listed: () => listed }));
+    await run.run(scope);
+    return { run, plan: run.getState().result ?? [] };
+  };
+  const tagsOf = async (id: string) => (await bookmarkMetadataValue.get())[id]?.tags;
+  const runEntry = async () => {
+    const [entry] = await ruleAutoLogValue.get();
+    return entry?.kind === 'run' ? entry : undefined;
+  };
+
+  it('plans only the search results or the selection it started with (R16)', async () => {
+    const search = await reviewed('search', ['r2', 'o1']);
+    expect(search.plan.map((item) => item.id).sort()).toEqual(['o1', 'r2']);
+    const selection = await reviewed('selection', ['r1']);
+    expect(selection.plan.map((item) => item.id)).toEqual(['r1']);
+    // Nothing listed, nothing planned: never the whole library.
+    expect((await reviewed('selection', [])).plan).toEqual([]);
+    // A rescan after applying looks at the same bookmarks, whatever the manager lists then.
+    await selection.run.apply(selection.plan);
+    expect(bookmarks.get('r2')?.parentId).toBe(FOLDER);
+    expect(await tagsOf('o1')).toBeUndefined();
+  });
+
+  it('records the tags durably with the moves, linked to their Audit History record (R21, R41)', async () => {
+    const { run, plan } = await reviewed();
+    await run.apply(plan);
+    expect(notices[0]?.outcome).toMatchObject({ title: 'Rules applied', variant: 'success' });
+    expect(['r1', 'r2', 'o1'].map((id) => bookmarks.get(id)?.parentId)).toEqual([
+      'dest',
+      'dest',
+      'dest',
+    ]);
+    const [record] = await auditRecords();
+    expect(record).toMatchObject({
+      state: 'verified_success',
+      source: 'tools',
+      label: { action: 'move', tool: 'tools_bookmarkRules' },
+      counts: { applied: 3 },
+    });
+    expect(notices[0]?.outcome.historyId).toBe(record?.id);
+    expect(await runEntry()).toMatchObject({
+      tagged: [{ tags: [TAG], bookmarkIds: ['r1', 'r2', 'o1'] }],
+      moved: 3,
+      operationId: record?.id,
+    });
+    // The toast's Undo takes back both parts and the entry with them.
+    await notices[0]?.undo?.run();
+    expect(bookmarks.get('r1')?.parentId).toBe(FOLDER);
+    expect(await tagsOf('r1')).toBeUndefined();
+    expect(await ruleAutoLogValue.get()).toEqual([]);
+  });
+
+  it('makes a tag it added searchable with tag: at once (R20)', async () => {
+    const { run, plan } = await reviewed('selection', ['r1']);
+    await run.apply(plan);
+    const { matchBookmarkTreeQuery } = await import('@/lib/bookmark-query-filter.lazy');
+    const matches = matchBookmarkTreeQuery(
+      await readTree(),
+      `tag:${TAG}`,
+      await bookmarkMetadataValue.get(),
+    );
+    expect(matches && [...matches.keys()]).toEqual(['r1']);
+  });
+
+  it('skips and reports a bookmark deleted after the review, and never brings it back (R24)', async () => {
+    const { run, plan } = await reviewed();
+    await fakeBrowser.bookmarks.remove('r2');
+    await run.apply(plan);
+    expect(notices[0]?.outcome).toMatchObject({
+      title: 'Some rule changes were not made',
+      description:
+        'Tagged: 2. Moved: 2. Skipped because they changed after the review: 1. Failed: 0.',
+      variant: 'destructive',
+    });
+    expect(bookmarks.get('r2')).toBeUndefined();
+    expect(await tagsOf('r2')).toBeUndefined();
+    expect((await runEntry())?.tagged).toEqual([{ tags: [TAG], bookmarkIds: ['r1', 'o1'] }]);
+  });
+
+  it('moves nothing without its Audit History record, tags, and says so (R25)', async () => {
+    const { run, plan } = await reviewed();
+    await closeAuditDb();
+    globalThis.indexedDB = {
+      open: () => {
+        throw new Error('storage unavailable');
+      },
+    } as unknown as IDBFactory;
+    await run.apply(plan);
+    expect(bookmarks.writes).toEqual([]);
+    expect(await tagsOf('r1')).toEqual([TAG]);
+    expect(notices[0]?.outcome).toMatchObject({
+      title: 'Some rule changes were not made',
+      description:
+        'Tagged: 3. Moved: 0. Skipped because they changed after the review: 0. Failed: 3. Nothing was moved: the Bookmark history could not record the moves, so none was made.',
+      variant: 'destructive',
+    });
+    expect(await runEntry()).toMatchObject({ moved: 0 });
+    expect((await runEntry())?.operationId).toBeUndefined();
+    // Undo takes back the tags that were added.
+    await notices[0]?.undo?.run();
+    expect(await bookmarkMetadataValue.get()).toEqual({});
+  });
+
+  it('reports exactly what a move that fails after the tags left, and Undo puts back both (R42)', async () => {
+    const { run, plan } = await reviewed();
+    bookmarks.fail.move.add('r2');
+    await run.apply(plan);
+    expect(notices[0]?.outcome).toMatchObject({
+      title: 'Some rule changes were not made',
+      description:
+        'Tagged: 3. Moved: 2. Skipped because they changed after the review: 0. Failed: 1.',
+      variant: 'destructive',
+    });
+    expect(bookmarks.get('r2')?.parentId).toBe(FOLDER);
+    const [record] = await auditRecords();
+    expect(record).toMatchObject({ state: 'partially_applied', counts: { applied: 2, failed: 1 } });
+    expect(await runEntry()).toMatchObject({ moved: 2, operationId: record?.id });
+    await notices[0]?.undo?.run();
+    expect(['r1', 'r2', 'o1'].map((id) => bookmarks.get(id)?.parentId)).toEqual([
+      FOLDER,
+      FOLDER,
+      'other',
+    ]);
+    expect(await bookmarkMetadataValue.get()).toEqual({});
+  });
+
+  it('says the moves failed when they could not start after the tags were saved (R42)', async () => {
+    // Above this many moves go to a background task, which does not answer here.
+    await saveSettings({ jobsApplyInBackgroundAbove: 1 });
+    settings = { ...settings, jobsApplyInBackgroundAbove: 1 };
+    const { run, plan } = await reviewed();
+    await run.apply(plan);
+    expect(bookmarks.writes).toEqual([]);
+    expect(await tagsOf('o1')).toEqual([TAG]);
+    expect(notices[0]?.outcome).toMatchObject({
+      title: 'Some rule changes were not made',
+      variant: 'destructive',
+    });
+    expect(notices[0]?.outcome.description).toMatch(/^Tagged: 3\. Moved: 0\. .*Failed: 3\. /);
+    expect(notices[0]?.undo).toBeDefined();
   });
 });

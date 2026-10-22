@@ -42,6 +42,31 @@ export function ruleDraftOf(rule: BookmarkRule): RuleDraft {
   };
 }
 
+/**
+ * Whether a draft does something: tags to add or a folder to move to. Until it does it cannot be
+ * saved or turned on, so a template that moves (`move = true`, no folder) waits for one.
+ */
+export function hasRuleAction(draft: Pick<RuleDraft, 'tags' | 'folderId'>): boolean {
+  return parseBookmarkTags(draft.tags).length > 0 || draft.folderId !== '';
+}
+
+/**
+ * The editor's draft for a template: its search and tags, turned off. A template that moves
+ * names no folder (ids differ on every profile), so the user picks one before it can save.
+ */
+export function ruleDraftOfTemplate(
+  template: (typeof BOOKMARK_RULE_TEMPLATES)[number],
+  name: string,
+): RuleDraft {
+  return {
+    ...EMPTY_RULE_DRAFT,
+    name,
+    query: template.query,
+    tags: template.add_tags.join(', '),
+    enabled: false,
+  };
+}
+
 /** Whether a rule's search reads without problems and asks for something. */
 export function isRuleQueryReadable(text: string): boolean {
   const { query, diagnostics } = parseSearchQuery(text);

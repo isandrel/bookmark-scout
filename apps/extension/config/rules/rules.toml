@@ -13,7 +13,9 @@ max_tags = 10
 tag_max_length = 50
 
 # Starter rules Settings offers, added turned off. Each id has a name in every locale
-# (TEMPLATE_NAME_KEYS in src/components/options/BookmarkRulesPanel.tsx).
+# (TEMPLATE_NAME_KEYS in src/components/options/BookmarkRulesPanel.tsx). A template adds tags
+# (`add_tags`), moves (`move = true`), or both. One that moves names no folder: folder ids differ
+# on every browser profile, so the editor opens on it and asks for the folder before it can save.
 [[templates]]
 id = "github"
 query = "domain:github.com"
@@ -29,6 +31,11 @@ id = "tutorial"
 query = "title:tutorial"
 add_tags = ["learning"]
 
+[[templates]]
+id = "reading"
+query = 'folder:"Work / Reading"'
+move = true
+
 [automatic]
 # Tag New Bookmarks and Move New Bookmarks (src/services/rule-automation.ts): bookmarks added
 # within this many milliseconds of each other are handled together, after the last one.
@@ -38,3 +45,9 @@ max_batch = 20
 # Most recent automatic changes (taggings and moves) kept for Settings, each with its Undo; older
 # ones are dropped.
 log_max = 50
+
+[runs]
+# A reviewed run (Smart Rules in the Tools sidebar) is one entry in the same list, naming each
+# bookmark it tagged so Undo there can take the tags back. Most bookmarks one entry names; tags a
+# larger run added to the rest stay listed only as a count, and stay on Undo.
+log_max_bookmarks = 5000

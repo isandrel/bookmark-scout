@@ -1673,6 +1673,14 @@
         "message": "範囲を選択",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "検索結果",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "選択したブックマーク",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "実行中...",
         "description": "Tool button label while the tool runs"
@@ -8581,6 +8589,10 @@
         "message": "チュートリアルに learning タグを付ける",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
     },
+    "rules_templateReading": {
+        "message": "Work / Reading を選んだフォルダに移動する",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
+    },
     "rules_empty": {
         "message": "まだルールはありません。",
         "description": "Settings: shown when there are no smart rules"
@@ -8793,6 +8805,10 @@
         "message": "このブックマークまたは移動先のフォルダは組織が管理しているため、移動しません。",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "移動しません: そのフォルダでは別のルールがまた移動させるため、実行のたびに移動し続けることになります。",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "ルール: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8820,6 +8836,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "タグ付け: $1 件。$2 件のブックマークをバックグラウンドで移動しています。",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "何も移動していません: ブックマークの履歴に移動を記録できなかったため、移動は行われませんでした。",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "$count$ 件のルールがオン",
@@ -8850,7 +8870,7 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "有効なルールが、Bookmark Scout、ブラウザ、同期のどこから追加されたかにかかわらず、追加された各ブックマークにタグを付けます。タグ付けでブックマークが移動することはありません。移動するには「新しいブックマークを移動する」が必要です。一度に多数追加されたブックマーク（同期やインポート）はそのままにします。",
+        "message": "有効なルールが、「対象とする新しいブックマーク」で許可された新しいブックマークにタグを付けます。タグ付けでブックマークが移動することはありません。移動するには「新しいブックマークを移動する」が必要です。一度に多数追加されたブックマーク（同期やインポート）はそのままにします。",
         "description": "Settings: what Tag New Bookmarks does"
     },
     "settings_bookmarkRulesAutoMove": {
@@ -8858,8 +8878,24 @@
         "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
     },
     "settings_bookmarkRulesAutoMoveDesc": {
-        "message": "新しいブックマークを自動で移動するように設定したルールは、ブラウザの星、他の拡張機能、同期で追加された各ブックマークを、選んだフォルダのままである間だけ、そのフォルダに移動します。「新しいブックマークにタグを付ける」をオンにしてもこれはオンになりません。Bookmark Scout で保存したブックマークは置いた場所のままで、一度に多数追加されたものはそのままにします。各移動は「ブックマークの履歴」と「自動で変更」に記録され、元に戻せます。",
+        "message": "新しいブックマークを自動で移動するように設定したルールは、一致した新しいブックマークを、選んだフォルダのままである間だけ、そのフォルダに移動します。Bookmark Scout で保存したブックマークは置いた場所のままなので、移動するのはブラウザの星、他の拡張機能、同期で追加されたブックマークだけで、「対象とする新しいブックマーク」が「すべて」のときに限ります。「新しいブックマークにタグを付ける」をオンにしてもこれはオンになりません。一度に多数追加されたものはそのままにします。各移動は「ブックマークの履歴」と「ルールによる変更」に記録され、元に戻せます。",
         "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "対象とする新しいブックマーク",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "「新しいブックマークにタグを付ける」と「新しいブックマークを移動する」が対象とする新しいブックマークです。ブラウザはブックマークを追加したのが誰かを伝えないため、「すべて」ではブラウザの星、同期、他の拡張機能を同じように扱います。",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Bookmark Scout で保存したもの",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "すべて",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "この画面をカバー画像にする",
@@ -8906,7 +8942,7 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "自動で変更",
+        "message": "ルールによる変更",
         "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
@@ -8929,6 +8965,22 @@
         "message": "$1 を元の場所に戻す",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
+    "rules_autoLogRun": {
+        "message": "スマートルールの実行",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "タグ付け: $1 件 · 移動: $2 件 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "ここに載っていないため、元に戻してもタグが残るもの: $1 件。",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "この実行で付けたタグを元に戻す",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
+    },
     "rules_autoLogUndone": {
         "message": "タグを削除しました",
         "description": "Toast title after undoing one automatic tagging"
@@ -8936,6 +8988,16 @@
     "rules_autoLogUndoneDesc": {
         "message": "ブックマークからタグを $count$ 個削除しました。",
         "description": "Toast after undoing one automatic tagging; how many tags were removed",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "$count$ 件のブックマークからタグを削除しました。実行による移動は「ブックマークの履歴」で元に戻してください。",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
         "placeholders": {
             "count": {
                 "content": "$1",

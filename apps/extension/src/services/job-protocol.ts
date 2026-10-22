@@ -39,6 +39,7 @@ export const jobCommandSchema = z.discriminatedUnion('type', [
     source: z.enum(JOB_SOURCES),
     /** Reviewed changes the user approved, applied in order and checked again before each. */
     tool: applyJobOptionsSchema.shape.tool,
+    requireRecord: applyJobOptionsSchema.shape.requireRecord,
     changes: z.array(storedBookmarkChangeSchema).min(1).max(JOB_LIMITS.maxItems),
   }),
   z.strictObject({ type: z.literal('pause'), jobId: id }),

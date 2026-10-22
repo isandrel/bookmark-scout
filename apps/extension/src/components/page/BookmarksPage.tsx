@@ -76,6 +76,25 @@ export default function BookmarksPage() {
   // Whether the table lists matches from every folder; the breadcrumb then says so.
   const [showsAllFolders, setShowsAllFolders] = useState(false);
   const tableRef = useRef<DataTableHandle<Bookmark>>(null);
+  // How many rows are selected, so the Tools sidebar can offer to run on them.
+  const [selectedCount, setSelectedCount] = useState(0);
+  const searching = searchQuery.trim() !== '';
+  // What the table lists, for tools that run on search results or the selection (Smart Rules):
+  // the bookmarks only, read from the table when a run starts.
+  const listing = useMemo<ManagerListing>(
+    () => ({
+      available: [
+        ...(searching ? (['search'] as const) : []),
+        ...(selectedCount > 0 ? (['selection'] as const) : []),
+      ],
+      ids: (scope) => {
+        const table = tableRef.current;
+        const rows = scope === 'search' ? table?.getShownRows() : table?.getSelectedRows();
+        return (rows ?? []).flatMap((row) => (row.type === ItemTypeEnum.Link ? [row.id] : []));
+      },
+    }),
+    [searching, selectedCount],
+  );
   const sidebars = useManagerSidebars();
   const leftSidebarCollapsed = !sidebars.folders.open;
   const rightSidebarCollapsed = !sidebars.tools.open;
@@ -503,6 +522,7 @@ export default function BookmarksPage() {
               onSearchQueryChange={setSearchQuery}
               revealRow={revealRow}
               onShowsAllBookmarksChange={setShowsAllFolders}
+              onSelectedCountChange={setSelectedCount}
               handleRef={tableRef}
               getRowProps={dragDrop.rowProps}
               renderFrame={(frame) => (
@@ -558,7 +578,11 @@ export default function BookmarksPage() {
         onKeyDown={drawerKeyDown(sidebars.tools, toolsToggleRef)}
       >
         <div className="h-full w-80 max-w-[85vw] overflow-y-auto">
-          <ToolsSidebar currentFolderId={currentFolder} currentFolderName={currentFolderName} />
+          <ToolsSidebar
+            currentFolderId={currentFolder}
+            currentFolderName={currentFolderName}
+            listing={listing}
+          />
         </div>
       </aside>
 

@@ -447,7 +447,7 @@ async function apply(command: JobCommand & { type: 'apply' }): Promise<JobRecord
     kind: 'applyChanges',
     source: command.source,
     scope: { mode: 'all', rootIds: [], label: '' },
-    options: { tool: command.tool },
+    options: { tool: command.tool, ...(command.requireRecord ? { requireRecord: true } : {}) },
     inputs: command.changes,
     now: Date.now(),
   });

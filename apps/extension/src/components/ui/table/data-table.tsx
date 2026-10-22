@@ -122,6 +122,8 @@ interface DataTableProps<TData extends RowData> {
   revealRow?: DataTableRevealRequest | null;
   /** Told whether the table lists matches from every folder instead of the folder shown. */
   onShowsAllBookmarksChange?: (showsAll: boolean) => void;
+  /** Told how many selected rows the filters show, as the footer counts them. */
+  onSelectedCountChange?: (count: number) => void;
 }
 
 /** Columns that already show a row's folder. */
@@ -134,6 +136,10 @@ const FOLDER_COLUMN_IDS = ['folderPath', 'parentId'];
 export type DataTableHandle<TData> = {
   /** The selected rows the filters show, in display order; else the focused row; else none. */
   getCommandRows: () => TData[];
+  /** The selected rows the filters show, in display order; none when nothing is selected. */
+  getSelectedRows: () => TData[];
+  /** Every row the filters show, on every page, in display order. */
+  getShownRows: () => TData[];
   /** Selects every selectable row the filters show, on every page. */
   selectAll: () => void;
   /** Clears the selection; false when nothing was selected. */
@@ -220,6 +226,7 @@ export function DataTable<TData extends RowData>({
   onSearchQueryChange,
   revealRow,
   onShowsAllBookmarksChange,
+  onSelectedCountChange,
 }: DataTableProps<TData>) {
   // Read before the first render when the page preloaded it, so the columns never move once shown.
   const [preloadedView] = React.useState(readPreloadedBookmarkTableView);
@@ -670,6 +677,10 @@ export function DataTable<TData extends RowData>({
   const { visible: visibleSelectedRows, hiddenCount: hiddenSelectedCount } =
     partitionSelectionByVisibility(selectedRows, shownRowIds, getRowId);
   const clearSelection = React.useCallback(() => setRowSelection({}), []);
+  const selectedCount = visibleSelectedRows.length;
+  React.useEffect(() => {
+    onSelectedCountChange?.(selectedCount);
+  }, [onSelectedCountChange, selectedCount]);
 
   // Clicks, the arrow keys, and the page's shortcuts change the selection through these. They
   // read the latest rows from a ref, so the handle stays one object.
@@ -815,6 +826,11 @@ export function DataTable<TData extends RowData>({
   React.useImperativeHandle(
     handleRef,
     (): DataTableHandle<TData> => ({
+      getSelectedRows: () => {
+        const { shownRows: rows, rowSelection: selection } = latestRef.current;
+        return rows.filter((row) => selection[row.id]).map((row) => row.original);
+      },
+      getShownRows: () => latestRef.current.shownRows.map((row) => row.original),
       getCommandRows: () => {
         const {
           shownRows: rows,

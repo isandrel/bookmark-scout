@@ -1,4 +1,4 @@
-import { Folder, Globe, type LucideIcon } from 'lucide-react';
+import { Folder, Globe, ListChecks, type LucideIcon, Search } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
 
 type ToolCardProps = {
@@ -8,12 +8,14 @@ type ToolCardProps = {
   title: string;
   description: string;
   buttonLabel: string;
-  onClick: (scope: BookmarkToolScope) => void;
+  onClick: (scope: ToolRunScope) => void;
   disabled?: boolean;
   isLoading?: boolean;
   scopeCapability: ToolScopeCapability;
   defaultScope: BookmarkToolScope;
   currentFolderName?: string;
+  /** What the manager lists now that the tool can run on instead (search results, selection). */
+  narrowScopes?: readonly NarrowToolScope[];
   /** Extra tool-specific controls rendered above the scope selector and action button. */
   controls?: React.ReactNode;
   /** Explains why the tool cannot run right now (for example, AI is turned off). */
@@ -42,27 +44,28 @@ export function ToolCard({
   scopeCapability,
   defaultScope,
   currentFolderName,
+  narrowScopes = [],
   controls,
   notice,
   footer,
 }: ToolCardProps) {
   const resolvedDefault = resolveScope(scopeCapability, defaultScope);
+  const scopes: ToolRunScope[] = [...SCOPE_BADGES[scopeCapability].scopes, ...narrowScopes];
   const [selection, setSelection] = useState<{
     defaultScope: BookmarkToolScope;
-    scope: BookmarkToolScope;
+    scope: ToolRunScope;
   } | null>(null);
   useEffect(() => {
-    setSelection((previous) =>
-      scopeCapability === 'both' && previous?.defaultScope === resolvedDefault ? previous : null,
-    );
-  }, [resolvedDefault, scopeCapability]);
+    setSelection((previous) => (previous?.defaultScope === resolvedDefault ? previous : null));
+  }, [resolvedDefault]);
+  // A pick the card no longer offers (the search was cleared) falls back to the default.
   const scope =
-    scopeCapability === 'both' && selection?.defaultScope === resolvedDefault
+    selection?.defaultScope === resolvedDefault && scopes.includes(selection.scope)
       ? selection.scope
       : resolvedDefault;
-  const showScopeSelector = scopeCapability === 'both';
+  const showScopeSelector = scopes.length > 1;
   // Shared by the options and the trigger, which shows the selected option's label.
-  const scopeLabels: Record<BookmarkToolScope, React.ReactNode> = {
+  const scopeLabels: Record<ToolRunScope, React.ReactNode> = {
     folder: (
       <div className="flex items-center gap-2">
         <Folder className="h-3 w-3" />
@@ -73,6 +76,18 @@ export function ToolCard({
       <div className="flex items-center gap-2">
         <Globe className="h-3 w-3" />
         <span>{t('settings_scopeAll')}</span>
+      </div>
+    ),
+    search: (
+      <div className="flex items-center gap-2">
+        <Search className="h-3 w-3" />
+        <span>{t('tools_scopeSearch')}</span>
+      </div>
+    ),
+    selection: (
+      <div className="flex items-center gap-2">
+        <ListChecks className="h-3 w-3" />
+        <span>{t('tools_scopeSelection')}</span>
       </div>
     ),
   };
@@ -95,7 +110,7 @@ export function ToolCard({
             value={scope}
             onValueChange={(value) => {
               if (value !== null) {
-                setSelection({ defaultScope: resolvedDefault, scope: value as BookmarkToolScope });
+                setSelection({ defaultScope: resolvedDefault, scope: value as ToolRunScope });
               }
             }}
             items={scopeLabels}
@@ -104,8 +119,11 @@ export function ToolCard({
               <SelectValue placeholder={t('tools_scopeSelect')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="folder">{scopeLabels.folder}</SelectItem>
-              <SelectItem value="all">{scopeLabels.all}</SelectItem>
+              {scopes.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {scopeLabels[option]}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         ) : null}

@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { closeAuditDb } from '@/lib/bookmark-audit-store';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { BOOKMARK_RULE_LIMITS, type BookmarkRule, ruleAutoMoveBlocks } from '@/lib/bookmark-rules';
 import { bookmarkRulesValue } from '@/lib/bookmark-rules-storage';
 import { ruleAutoLogValue } from '@/lib/rule-auto-log';
 import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
-import { saveSettings } from '@/lib/settings-storage';
+import { getSettings, saveSettings } from '@/lib/settings-storage';
 import { recordBookmarkWrites } from '@/services/bookmark-history';
 import {
   applyRulesToNewBookmarks,
@@ -19,8 +20,10 @@ import { auditRecords, resetAuditDatabase } from './audit-helpers';
 type RawNode = Browser.bookmarks.BookmarkTreeNode;
 
 const DEV_PATH = 'Bookmarks bar / Dev';
-const TAG_ONLY = { tag: true, move: false };
-const MOVE_ONLY = { tag: false, move: true };
+// From anywhere: these bookmarks are added the way the browser's star or sync adds them.
+const TAG_ONLY = { tag: true, move: false, from: 'any' } as const;
+const MOVE_ONLY = { tag: false, move: true, from: 'any' } as const;
+const BOTH = { tag: true, move: true, from: 'any' } as const;
 
 const rule = (overrides: Partial<BookmarkRule> = {}): BookmarkRule => ({
   id: 'gh',
@@ -134,7 +137,7 @@ describe('Move New Bookmarks', () => {
   });
 
   it('tags and moves when both are on', async () => {
-    expect(await applyRulesToNewBookmarks(added('a'), { tag: true, move: true })).toEqual({
+    expect(await applyRulesToNewBookmarks(added('a'), BOTH)).toEqual({
       tagged: 1,
       moved: 1,
     });
@@ -296,6 +299,8 @@ describe('new bookmarks in the background', () => {
     };
     const tags = async (id: string) => (await bookmarkMetadataValue.get())[id]?.tags;
 
+    // Bookmarks from anywhere, not only those Bookmark Scout saves (off by default, below).
+    await saveSettings({ bookmarkRulesNewFrom: 'any' });
     // Both off by default.
     const before = await add('Tool', 'https://github.com/acme/tool');
     await settle();
@@ -323,5 +328,96 @@ describe('new bookmarks in the background', () => {
     }
     await settle();
     expect(many.map((id) => bookmarks.get(id)?.parentId)).toEqual(many.map(() => 'inbox'));
+  });
+});
+
+describe('which new bookmarks (MAINTAINER R4)', () => {
+  const saveWithScout = async (title: string) =>
+    (
+      await recordBookmarkWrites({ action: 'add' }, (writer) =>
+        writer.create({ parentId: 'inbox', title, url: `https://github.com/acme/${title}` }),
+      )
+    ).result.id;
+
+  it('by default acts only on bookmarks saved through Bookmark Scout, never moving them', async () => {
+    const saved = await saveWithScout('saved');
+    // 'a' was added the way the browser's star or sync adds one: no Bookmark Scout save names it.
+    expect(
+      await applyRulesToNewBookmarks([...added('a'), ...added(saved)], {
+        tag: true,
+        move: true,
+        from: 'scout',
+      }),
+    ).toEqual({ tagged: 1, moved: 0 });
+    expect(await bookmarkMetadataValue.get()).toEqual({ [saved]: { tags: ['development'] } });
+    // The user chose where it went: Move New Bookmarks leaves it there.
+    expect(bookmarks.get(saved)?.parentId).toBe('inbox');
+    expect(bookmarks.get('a')?.parentId).toBe('inbox');
+  });
+
+  it('acts on bookmarks from anywhere only once the user picks Anywhere', async () => {
+    expect(await applyRulesToNewBookmarks(added('a'), BOTH)).toEqual({ tagged: 1, moved: 1 });
+  });
+
+  it('defaults to Bookmark Scout only, and in the background uses the stricter setting', async () => {
+    expect((await getSettings()).bookmarkRulesNewFrom).toBe('scout');
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    let created: ((id: string, node: RawNode) => void) | undefined;
+    vi.spyOn(fakeBrowser.bookmarks.onCreated, 'addListener').mockImplementation((listener) => {
+      created = listener;
+    });
+    for (const event of [
+      fakeBrowser.bookmarks.onImportBegan,
+      fakeBrowser.bookmarks.onImportEnded,
+    ]) {
+      vi.spyOn(event, 'addListener').mockImplementation(() => undefined);
+    }
+    registerRuleAutomation();
+    await saveSettings({ bookmarkRulesAutoTag: true });
+    const settle = () =>
+      vi.advanceTimersByTimeAsync(BOOKMARK_RULE_LIMITS.automatic.batch_window_ms);
+    const tags = async (id: string) => (await bookmarkMetadataValue.get())[id]?.tags;
+
+    // From the browser: observed only.
+    const star = await fakeBrowser.bookmarks.create({
+      parentId: 'inbox',
+      title: 'Star',
+      url: 'https://github.com/acme/star',
+    });
+    created?.(star.id, star);
+    // From Bookmark Scout: tagged.
+    const saved = await saveWithScout('scout');
+    const node = bookmarks.get(saved) as RawNode;
+    created?.(saved, node);
+    await settle();
+    await vi.waitFor(async () => expect(await tags(saved)).toEqual(['development']));
+    expect(await tags(star.id)).toBeUndefined();
+
+    // Added while Bookmark Scout only was set: Anywhere chosen before its batch ran is too late.
+    const late = await fakeBrowser.bookmarks.create({
+      parentId: 'inbox',
+      title: 'Late',
+      url: 'https://github.com/acme/late',
+    });
+    created?.(late.id, late);
+    await saveSettings({ bookmarkRulesNewFrom: 'any' });
+    await settle();
+    await vi.waitFor(() => Promise.resolve());
+    expect(await tags(late.id)).toBeUndefined();
+  });
+});
+
+describe('fail closed (R25)', () => {
+  it('moves nothing when the Audit History cannot record the moves, and still tags', async () => {
+    await closeAuditDb();
+    globalThis.indexedDB = {
+      open: () => {
+        throw new Error('storage unavailable');
+      },
+    } as unknown as IDBFactory;
+    expect(await applyRulesToNewBookmarks(added('a'), BOTH)).toEqual({ tagged: 1, moved: 0 });
+    expect(bookmarks.get('a')?.parentId).toBe('inbox');
+    expect(bookmarks.writes).toEqual([]);
+    expect((await ruleAutoLogValue.get()).map((entry) => entry.kind)).toEqual(['tag']);
   });
 });

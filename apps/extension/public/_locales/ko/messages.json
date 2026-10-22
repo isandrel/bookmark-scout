@@ -1709,6 +1709,14 @@
         "message": "범위 선택",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "검색 결과",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "선택한 북마크",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "실행 중...",
         "description": "Tool button label while the tool runs"
@@ -8581,6 +8589,10 @@
         "message": "튜토리얼에 learning 태그 추가",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
     },
+    "rules_templateReading": {
+        "message": "Work / Reading을 선택한 폴더로 이동",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
+    },
     "rules_empty": {
         "message": "아직 규칙이 없습니다.",
         "description": "Settings: shown when there are no smart rules"
@@ -8793,6 +8805,10 @@
         "message": "조직이 이 북마크 또는 이동할 폴더를 관리하므로 북마크는 그대로 있습니다.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "이동하지 않음: 그 폴더에서는 다른 규칙이 다시 옮기므로 실행할 때마다 계속 옮겨집니다.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "규칙: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8820,6 +8836,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "태그 추가: $1. 북마크 $2개를 백그라운드에서 이동하는 중입니다.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "아무것도 옮기지 않았습니다: 북마크 기록에 이동을 기록할 수 없어서 이동하지 않았습니다.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "켜진 규칙 $count$개",
@@ -8850,7 +8870,7 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "사용 중인 규칙이 Bookmark Scout, 브라우저, 동기화 중 어디서 추가되었든 각 북마크가 추가될 때 태그를 붙입니다. 태그를 붙여도 북마크는 옮겨지지 않으며, 옮기려면 새 북마크 이동이 필요합니다. 한꺼번에 추가된 많은 북마크(동기화나 가져오기)는 그대로 둡니다.",
+        "message": "사용 중인 규칙이 적용할 새 북마크에서 허용한 각 새 북마크에 태그를 붙입니다. 태그를 붙여도 북마크는 옮겨지지 않으며, 옮기려면 새 북마크 이동이 필요합니다. 한꺼번에 추가된 많은 북마크(동기화나 가져오기)는 그대로 둡니다.",
         "description": "Settings: what Tag New Bookmarks does"
     },
     "settings_bookmarkRulesAutoMove": {
@@ -8858,8 +8878,24 @@
         "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
     },
     "settings_bookmarkRulesAutoMoveDesc": {
-        "message": "새 북마크를 자동으로 옮기도록 설정한 규칙은 브라우저의 별표, 다른 확장 프로그램, 동기화로 추가된 각 북마크를 선택한 폴더가 그대로인 동안에만 그 폴더로 옮깁니다. 새 북마크에 태그 추가를 켜도 이 설정은 켜지지 않습니다. Bookmark Scout로 저장한 북마크는 놓인 자리에 그대로 두고, 한꺼번에 추가된 많은 북마크도 그대로 둡니다. 각 이동은 북마크 기록과 자동으로 변경됨에 남으며 실행 취소할 수 있습니다.",
+        "message": "새 북마크를 자동으로 옮기도록 설정한 규칙은 일치하는 각 새 북마크를 선택한 폴더가 그대로인 동안에만 그 폴더로 옮깁니다. Bookmark Scout로 저장한 북마크는 놓인 자리에 그대로 두므로, 이 설정은 브라우저의 별표, 다른 확장 프로그램, 동기화로 추가된 북마크만 옮기며 적용할 새 북마크가 모든 곳일 때만 작동합니다. 새 북마크에 태그 추가를 켜도 이 설정은 켜지지 않고, 한꺼번에 추가된 많은 북마크는 그대로 둡니다. 각 이동은 북마크 기록과 규칙으로 변경됨에 남으며 실행 취소할 수 있습니다.",
         "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "적용할 새 북마크",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "새 북마크에 태그 추가와 새 북마크 이동이 적용되는 새 북마크입니다. 브라우저는 누가 북마크를 추가했는지 알려 주지 않으므로, 모든 곳은 브라우저의 별표, 동기화, 다른 확장 프로그램을 똑같이 다룹니다.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Bookmark Scout로 저장한 북마크",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "모든 곳",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "이 화면을 표지로 사용",
@@ -8906,7 +8942,7 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "자동으로 변경됨",
+        "message": "규칙으로 변경됨",
         "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
@@ -8929,6 +8965,22 @@
         "message": "$1 원래 위치로 되돌리기",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
+    "rules_autoLogRun": {
+        "message": "스마트 규칙 실행",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "태그 추가: $1 · 이동: $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "여기에 표시되지 않아 실행 취소해도 태그가 남는 북마크: $1개.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "이 실행에서 추가한 태그 되돌리기",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
+    },
     "rules_autoLogUndone": {
         "message": "태그 삭제됨",
         "description": "Toast title after undoing one automatic tagging"
@@ -8936,6 +8988,16 @@
     "rules_autoLogUndoneDesc": {
         "message": "북마크에서 태그 $count$개를 삭제했습니다.",
         "description": "Toast after undoing one automatic tagging; how many tags were removed",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "북마크 $count$개에서 태그를 삭제했습니다. 실행에서 한 이동은 북마크 기록에서 되돌리세요.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
         "placeholders": {
             "count": {
                 "content": "$1",

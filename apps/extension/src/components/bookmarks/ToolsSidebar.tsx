@@ -35,6 +35,25 @@ type ToolEntryProps = {
   runWithAccess: (start: () => Promise<void>, sites: string[]) => void;
 };
 
+/** The addresses a run on `scope` reads: those of the same bookmarks its scan looks at. */
+function scopeUrls(environment: ToolEnvironment, scope: ToolRunScope): string[] {
+  const narrow = isNarrowToolScope(scope);
+  const nodes = getScopedNodes(
+    environment.folders,
+    environment.currentFolderId,
+    narrow ? 'all' : scope,
+  );
+  const only = narrow ? new Set(environment.listing?.ids(scope) ?? []) : undefined;
+  return flattenBookmarks(nodes).flatMap(({ node }) =>
+    node.url && (!only || only.has(node.id)) ? [node.url] : [],
+  );
+}
+
+/** The narrow scopes `tool` offers that the manager has now. */
+function availableNarrowScopes(tool: ToolDefinition, environment: ToolEnvironment) {
+  return tool.narrowScopes?.filter((scope) => environment.listing?.available.includes(scope));
+}
+
 /**
  * Whether an AI tool can start: off while the setting is off or, in Firefox, while data sharing
  * for AI is not allowed; on but without a usable default service, the notice says to finish the
@@ -120,6 +139,8 @@ function JobToolEntry({
         description={t(tool.descriptionKey)}
         buttonLabel={t(tool.actionKey(settings))}
         onClick={(scope) => {
+          // A background job runs on a folder or everything; its card offers nothing narrower.
+          if (isNarrowToolScope(scope)) return;
           if (!tool.needsHostAccess) {
             void start(scope);
             return;
@@ -143,8 +164,7 @@ function JobToolEntry({
             );
             return;
           }
-          const urls = flattenBookmarks(nodes).flatMap(({ node }) => node.url ?? []);
-          runWithAccess(() => start(scope), getUrlSites(urls));
+          runWithAccess(() => start(scope), getUrlSites(scopeUrls(environment, scope)));
         }}
         disabled={aiGate.blocked}
         notice={aiGate.notice}
@@ -209,11 +229,10 @@ function ScanToolEntry({ tool, environment, currentFolderName, runWithAccess }: 
         onClick={(scope) => {
           if (tool.needsHostAccess) {
             // Access only to the sites this run requests: the same nodes the scan reads.
-            const nodes = getScopedNodes(environment.folders, environment.currentFolderId, scope);
-            const urls = flattenBookmarks(nodes).flatMap(({ node }) => node.url ?? []);
-            runWithAccess(() => run(scope), getUrlSites(urls));
+            runWithAccess(() => run(scope), getUrlSites(scopeUrls(environment, scope)));
           } else void run(scope);
         }}
+        narrowScopes={availableNarrowScopes(tool, environment)}
         disabled={aiGate.blocked}
         notice={aiGate.notice}
         scopeCapability={getToolScopeCapability(tool.id)}
@@ -237,6 +256,8 @@ function ScanToolEntry({ tool, environment, currentFolderName, runWithAccess }: 
 interface ToolsSidebarProps {
   currentFolderId: string | null;
   currentFolderName?: string;
+  /** What the manager lists now (its search results, its selection), for narrow scopes. */
+  listing?: ManagerListing;
 }
 
 // Memoized: the page re-renders on every keystroke of the title search (it is in the address).
@@ -244,6 +265,7 @@ interface ToolsSidebarProps {
 export const ToolsSidebar = memo(function ToolsSidebar({
   currentFolderId,
   currentFolderName,
+  listing,
 }: ToolsSidebarProps) {
   useLanguageRevision();
   const { folders, refresh } = useBookmarks();
@@ -256,6 +278,7 @@ export const ToolsSidebar = memo(function ToolsSidebar({
     currentFolderId,
     refresh,
     saveFile: exportPrivacyReview.reviewBeforeExport,
+    ...(listing ? { listing } : {}),
   };
   const showData = settings.dataShowExport || settings.dataShowImport;
   // Tabs for the sections that have tools to show, then Data, after All.

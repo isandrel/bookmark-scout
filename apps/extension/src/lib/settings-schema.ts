@@ -264,6 +264,12 @@ export const quickSaveFolderStrategySchema = z.enum(['best_match', 'last_used', 
 export type QuickSaveFolderStrategy = z.infer<typeof quickSaveFolderStrategySchema>;
 const aiContextFormatSchema = z.enum(['markdown', 'xml']);
 const mergeModeSchema = z.enum(['append', 'replace']);
+/**
+ * Which new bookmarks Tag New Bookmarks and Move New Bookmarks act on: those saved through
+ * Bookmark Scout, or any new bookmark (the browser's star, sync, other extensions too).
+ */
+export const ruleNewBookmarkSourceSchema = z.enum(['scout', 'any']);
+export type RuleNewBookmarkSource = z.infer<typeof ruleNewBookmarkSourceSchema>;
 const tagStyleSchema = z.enum(['kebab-case', 'snake_case', 'lowercase']);
 const duplicateMatchStrategySchema = z.enum([
   'exact_url',
@@ -1074,6 +1080,16 @@ const fields = {
     'maintenance.bookmark_rules.auto_move',
     'bookmarkRulesAutoMove',
   ),
+  bookmarkRulesNewFrom: enumField(
+    'maintenance.bookmark_rules.new_from',
+    'bookmarkRulesNewFrom',
+    ruleNewBookmarkSourceSchema,
+    (value) =>
+      ({
+        scout: t('settings_bookmarkRulesNewFromScout'),
+        any: t('settings_bookmarkRulesNewFromAny'),
+      })[value],
+  ),
   pageTextEnabled: switchField('metadata_content.page_text.enabled', 'pageTextEnabled'),
   pageTextDefaultScope: scopeField(
     'metadata_content.page_text',
@@ -1502,7 +1518,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'bookmarkRules',
         labelKey: 'tools_bookmarkRules',
         toggle: 'bookmarkRulesEnabled',
-        fields: ['bookmarkRulesDefaultScope', 'bookmarkRulesAutoTag', 'bookmarkRulesAutoMove'],
+        fields: [
+          'bookmarkRulesDefaultScope',
+          'bookmarkRulesAutoTag',
+          'bookmarkRulesAutoMove',
+          'bookmarkRulesNewFrom',
+        ],
         panel: 'bookmarkRules',
       },
       {

@@ -1717,6 +1717,14 @@
         "message": "Select scope",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "Search results",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "Selected bookmarks",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "Running...",
         "description": "Tool button label while the tool runs"
@@ -8609,6 +8617,10 @@
         "message": "Tag tutorials as learning",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
     },
+    "rules_templateReading": {
+        "message": "Move Work / Reading to a folder you choose",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
+    },
     "rules_empty": {
         "message": "No rules yet.",
         "description": "Settings: shown when there are no smart rules"
@@ -8821,6 +8833,10 @@
         "message": "Your organization manages this bookmark or the folder it would move to, so it stays where it is.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "Not moved: in that folder another rule would move it again, so each run would move it once more.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "Rules: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -8848,6 +8864,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "Tagged: $1. Moving $2 bookmarks in the background.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "Nothing was moved: the Bookmark history could not record the moves, so none was made.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "$count$ rules turned on",
@@ -8878,7 +8898,7 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Enabled rules add their tags to each bookmark as it is added, whether from Bookmark Scout, the browser, or sync. Tagging never moves a bookmark; that takes Move New Bookmarks. Many bookmarks added at once (a sync or an import) are left alone.",
+        "message": "Enabled rules add their tags to each new bookmark that New Bookmarks From allows. Tagging never moves a bookmark; that takes Move New Bookmarks. Many bookmarks added at once (a sync or an import) are left alone.",
         "description": "Settings: what Tag New Bookmarks does"
     },
     "settings_bookmarkRulesAutoMove": {
@@ -8886,8 +8906,24 @@
         "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
     },
     "settings_bookmarkRulesAutoMoveDesc": {
-        "message": "Rules you set to move new bookmarks automatically move each bookmark added with the browser's star, another extension, or sync to their folder, only while it is the folder you chose. Tag New Bookmarks never turns this on. Bookmarks Bookmark Scout saves stay where they were put, and many added at once are left alone. Each move is in the Bookmark history and under Changed automatically, with Undo.",
+        "message": "Rules you set to move new bookmarks automatically move each new bookmark they match to their folder, only while it is the folder you chose. Bookmarks Bookmark Scout saves stay where they were put, so this moves only bookmarks from the browser's star, another extension, or sync, and only when New Bookmarks From is Anywhere. Tag New Bookmarks never turns this on, and many bookmarks added at once are left alone. Each move is in the Bookmark history and under Changed by rules, with Undo.",
         "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "New Bookmarks From",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "Which new bookmarks Tag New Bookmarks and Move New Bookmarks act on. The browser does not say who added a bookmark, so Anywhere treats the browser's star, sync, and other extensions alike.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Saved with Bookmark Scout",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "Anywhere",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "Use this view as the cover",
@@ -8934,7 +8970,7 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Changed automatically",
+        "message": "Changed by rules",
         "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
@@ -8957,6 +8993,22 @@
         "message": "Move $1 back",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
     },
+    "rules_autoLogRun": {
+        "message": "Smart Rules run",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "Tagged: $1 · Moved: $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "Not listed here, so Undo leaves their tags: $1.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "Undo the tags this run added",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
+    },
     "rules_autoLogUndone": {
         "message": "Tags removed",
         "description": "Toast title after undoing one automatic tagging"
@@ -8974,6 +9026,26 @@
     "rules_autoLogUndoneDesc_one": {
         "message": "$count$ tag removed from the bookmark.",
         "description": "Toast after undoing one automatic tagging; how many tags were removed (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "Tags removed from $count$ bookmarks. Undo the run's moves in the Bookmark history.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_one": {
+        "message": "Tags removed from $count$ bookmark. Undo the run's moves in the Bookmark history.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (one)",
         "placeholders": {
             "count": {
                 "content": "$1",

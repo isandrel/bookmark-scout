@@ -4,12 +4,18 @@ import {
   countRuleMatches,
   describeRule,
   EMPTY_RULE_DRAFT,
+  hasRuleAction,
   isRuleQueryReadable,
   ruleDraftOf,
+  ruleDraftOfTemplate,
   ruleFolderPath,
   ruleFromDraft,
 } from '@/lib/bookmark-rule-draft';
-import { bookmarkRuleSchema, ruleAutoMoveBlocks } from '@/lib/bookmark-rules';
+import {
+  BOOKMARK_RULE_TEMPLATES,
+  bookmarkRuleSchema,
+  ruleAutoMoveBlocks,
+} from '@/lib/bookmark-rules';
 import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -86,6 +92,26 @@ describe('smart rule drafts', () => {
     expect('autoMove' in old).toBe(false);
     expect(ruleDraftOf(old).autoMove).toBe(false);
     expect(ruleAutoMoveBlocks([old], tree)).toEqual(new Map());
+  });
+
+  it('opens a moving template turned off, and saves it only once a folder is chosen (R19)', () => {
+    const template = BOOKMARK_RULE_TEMPLATES.find((entry) => entry.id === 'reading');
+    if (!template) throw new Error('no reading template');
+    const opened = ruleDraftOfTemplate(template, 'Reading');
+    expect(opened).toMatchObject({ name: 'Reading', tags: '', folderId: '', enabled: false });
+    expect(opened.id).toBeUndefined();
+    // Nothing to do yet: it cannot be turned on or saved.
+    expect(hasRuleAction(opened)).toBe(false);
+    expect(ruleFromDraft({ ...opened, enabled: true }, 'r', tree)).toEqual({ error: 'action' });
+    const chosen = { ...opened, folderId: 'dev' };
+    expect(hasRuleAction(chosen)).toBe(true);
+    expect(ruleFromDraft(chosen, 'r', tree)).toMatchObject({
+      rule: { enabled: false, addTags: [], moveTo: { folderId: 'dev' } },
+    });
+    // A tagging template opens with its tags, so it has something to do at once.
+    const tagging = BOOKMARK_RULE_TEMPLATES.find((entry) => entry.id === 'github');
+    if (!tagging) throw new Error('no github template');
+    expect(hasRuleAction(ruleDraftOfTemplate(tagging, 'GitHub'))).toBe(true);
   });
 
   it('says why a draft cannot be saved, name first', () => {

@@ -15,16 +15,21 @@
  * Runs in the background, whose bookmark listener is added synchronously at start, so it works
  * with every page closed.
  *
- * - **Which bookmarks:** the browser does not say who added a bookmark, so tags go to bookmarks
- *   from the browser's star, other extensions, sync, and Bookmark Scout alike. Moves leave out
- *   bookmarks a page of Bookmark Scout put where the user chose (quick save, the manager, Undo:
- *   the undo history names them), and one moved again before its batch ran. Bookmarks added
- *   together are handled in one batch, and a batch larger than `max_batch` (a sync or an import)
- *   is left alone, as are bookmarks the browser imports. A bookmark added while a setting was off
- *   is never handled by it, even when it is turned on before the batch runs.
+ * - **Which bookmarks** (`bookmarkRulesNewFrom`, a device setting): the browser does not say who
+ *   added a bookmark. Bookmark Scout knows only its own saves, which its undo history names. So
+ *   by default (`scout`, maintainer decision R4: changes from elsewhere are only observed until
+ *   the user opts in) rules act only on bookmarks saved through Bookmark Scout; with `any`, also
+ *   on those from the browser's star, other extensions, and sync, all treated alike, never named.
+ *   Moves always leave out bookmarks a page of Bookmark Scout put where the user chose (quick
+ *   save, the manager, Undo: the undo history names them), and one moved again before its batch
+ *   ran, so Move New Bookmarks acts only with `any`. Bookmarks added together are handled in
+ *   one batch, and a batch larger than `max_batch` (a sync or an import) is left alone, as are
+ *   bookmarks the browser imports. A bookmark is handled only as the settings were both when it
+ *   was added and when its batch runs, whichever allows less.
  * - **Traceable:** each tagging and move is listed in Settings with its Undo (`rule-auto-log.ts`);
  *   each batch's moves are one change in the History and the Audit History, from Bookmark Scout
- *   itself, labeled as Smart Rules moving automatically.
+ *   itself, labeled as Smart Rules moving automatically. No move happens without that record
+ *   (`requireRecord`, R25): when it cannot be stored, the batch moves nothing.
  * - **No loops:** tags are stored apart from the bookmarks and cause no bookmark event, a move
  *   causes no new-bookmark event, and a tag the bookmark already has is not added again.
  *
@@ -38,8 +43,8 @@ const { batch_window_ms: BATCH_WINDOW_MS, max_batch: MAX_BATCH } = BOOKMARK_RULE
 /** The History's name for what moved bookmarks: Smart Rules on their own. */
 export const RULE_AUTO_MOVE_TOOL = 'rules_autoMoveTool' satisfies MessageKey;
 
-/** Which automatic changes are on. */
-export type RuleAutomation = { tag: boolean; move: boolean };
+/** Which automatic changes are on, and for which new bookmarks. */
+export type RuleAutomation = { tag: boolean; move: boolean; from: RuleNewBookmarkSource };
 
 /** A new bookmark, and the folder it was added to. */
 export type NewBookmark = { id: string; parentId: string };
@@ -91,16 +96,28 @@ async function moveNewBookmarks(
     return [{ item, to: rule.moveTo }];
   });
   if (moves.length === 0) return 0;
-  const result = await applyBookmarkChanges(
-    moves.map(({ item, to }) => ({
-      kind: 'move' as const,
-      id: item.id,
-      title: item.title,
-      expect: { parentId: item.parentId },
-      to: { parentId: to.folderId },
-    })),
-    { tool: RULE_AUTO_MOVE_TOOL, origin: { source: 'background', actor: 'system' } },
-  );
+  let result: BookmarkChangesResult;
+  try {
+    result = await applyBookmarkChanges(
+      moves.map(({ item, to }) => ({
+        kind: 'move' as const,
+        id: item.id,
+        title: item.title,
+        expect: { parentId: item.parentId },
+        to: { parentId: to.folderId },
+      })),
+      {
+        tool: RULE_AUTO_MOVE_TOOL,
+        origin: { source: 'background', actor: 'system' },
+        requireRecord: true,
+      },
+    );
+  } catch (error) {
+    if (!(error instanceof AuditStoreError)) throw error;
+    // Fail closed: no move nobody reviewed happens without a record to find and undo it by.
+    console.warn('[Rules] New bookmarks not moved: the Audit History is unavailable.');
+    return 0;
+  }
   const entry = result.recorded?.entry;
   const paths = new Map(moves.map(({ to }) => [to.folderId, to.path]));
   await recordRuleAutoChanges(
@@ -122,16 +139,29 @@ async function moveNewBookmarks(
   return result.applied;
 }
 
+/** The new bookmarks `from` lets rules act on: with `scout`, those Bookmark Scout saved. */
+async function fromAllowedSources(
+  added: readonly NewBookmark[],
+  from: RuleNewBookmarkSource,
+): Promise<readonly NewBookmark[]> {
+  if (from === 'any' || added.length === 0) return added;
+  const saved = await bookmarkIdsInHistory({ created: true });
+  return added.filter(({ id }) => saved.has(id));
+}
+
 /**
- * Applies the enabled rules to `added` bookmarks that are still bookmarks: their tags when `on.tag`,
- * their automatic moves when `on.move`. Returns how many were tagged and moved.
+ * Applies the enabled rules to the `added` bookmarks `on.from` allows that are still
+ * bookmarks: their tags when `on.tag`, their automatic moves when `on.move`. Returns how many
+ * were tagged and moved.
  */
 export async function applyRulesToNewBookmarks(
-  added: readonly NewBookmark[],
+  newBookmarks: readonly NewBookmark[],
   on: RuleAutomation,
 ): Promise<RuleAutomationResult> {
   const none = { tagged: 0, moved: 0 };
-  if (added.length === 0 || (!on.tag && !on.move)) return none;
+  if (!on.tag && !on.move) return none;
+  const added = await fromAllowedSources(newBookmarks, on.from);
+  if (added.length === 0) return none;
   const rules = (await bookmarkRulesValue.get()).filter((rule) => rule.enabled);
   const acting = rules.filter(
     (rule) => (on.tag && rule.addTags.length > 0) || (on.move && rule.autoMove),
@@ -152,6 +182,8 @@ export async function applyRulesToNewBookmarks(
 /** What undoing one automatic change did. */
 export type RuleAutoUndoOutcome =
   | { kind: 'tag'; removed: number }
+  /** How many bookmarks a reviewed run's tags were taken from. */
+  | { kind: 'run'; bookmarks: number }
   | { kind: 'move'; result: 'moved' | 'deleted' | 'changed' | 'parentMissing' };
 
 async function undoAutoMove(entry: RuleAutoMoveEntry): Promise<RuleAutoUndoOutcome> {
@@ -181,9 +213,10 @@ async function undoAutoMove(entry: RuleAutoMoveEntry): Promise<RuleAutoUndoOutco
 }
 
 /**
- * Takes back one entry of the automatic changes list and drops it: a tagging's tags, or a move,
- * put back where the bookmark was when it is still in the rule's folder and its earlier folder
- * still exists. A bookmark moved or deleted since is left alone. Undefined when the entry is gone.
+ * Takes back one entry of the rules log and drops it: a tagging's tags; a reviewed run's tags
+ * (its moves are undone from the History); or a move, put back where the bookmark was when it is
+ * still in the rule's folder and its earlier folder still exists. A bookmark moved or deleted
+ * since is left alone. Undefined when the entry is gone.
  */
 export async function undoRuleAutoChange(
   entryId: string,
@@ -191,6 +224,7 @@ export async function undoRuleAutoChange(
   const entry = await getRuleAutoEntry(entryId);
   if (!entry) return undefined;
   if (entry.kind === 'tag') return { kind: 'tag', removed: await undoAutoTag(entry) };
+  if (entry.kind === 'run') return { kind: 'run', bookmarks: await undoRuleRunTags(entry) };
   try {
     return await undoAutoMove(entry);
   } finally {
@@ -210,6 +244,7 @@ async function automationNow(): Promise<RuleAutomation> {
   return {
     tag: settings.bookmarkRulesEnabled && settings.bookmarkRulesAutoTag,
     move: settings.bookmarkRulesEnabled && settings.bookmarkRulesAutoMove,
+    from: settings.bookmarkRulesNewFrom,
   };
 }
 
@@ -220,22 +255,22 @@ async function runBatch(): Promise<void> {
   if (batch.length > MAX_BATCH) return;
   const states = await Promise.all(batch.map(async (item) => ({ item, on: await item.on })));
   const now = await automationNow();
-  // Each only for bookmarks added while it was on, and only while it still is.
-  const pick = (kind: keyof RuleAutomation) =>
-    now[kind] ? states.filter(({ on }) => on[kind]).map(({ item }) => item) : [];
-  const tagOnly = pick('tag');
-  const moveToo = pick('move');
-  const tagIds = new Set(tagOnly.map(({ id }) => id));
-  const moveIds = new Set(moveToo.map(({ id }) => id));
-  const both = batch.filter(({ id }) => tagIds.has(id) && moveIds.has(id));
-  // One plan per combination, so a bookmark is only handled by what was on when it was added.
-  for (const [items, on] of [
-    [both, { tag: true, move: true }],
-    [tagOnly.filter(({ id }) => !moveIds.has(id)), { tag: true, move: false }],
-    [moveToo.filter(({ id }) => !tagIds.has(id)), { tag: false, move: true }],
-  ] as const) {
-    await applyRulesToNewBookmarks(items, on);
+  // Each bookmark as the settings were when it was added and are now, whichever allows less; one
+  // plan per combination, so a bookmark is only handled by what was on for it.
+  const groups = new Map<string, { on: RuleAutomation; items: NewBookmark[] }>();
+  for (const { item, on } of states) {
+    const allowed: RuleAutomation = {
+      tag: now.tag && on.tag,
+      move: now.move && on.move,
+      from: now.from === 'any' && on.from === 'any' ? 'any' : 'scout',
+    };
+    if (!allowed.tag && !allowed.move) continue;
+    const key = JSON.stringify(allowed);
+    const group = groups.get(key) ?? { on: allowed, items: [] };
+    group.items.push({ id: item.id, parentId: item.parentId });
+    groups.set(key, group);
   }
+  for (const { on, items } of groups.values()) await applyRulesToNewBookmarks(items, on);
 }
 
 /** Starts Tag New Bookmarks and Move New Bookmarks. Call synchronously at background start. */

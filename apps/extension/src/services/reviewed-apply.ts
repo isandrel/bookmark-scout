@@ -24,12 +24,15 @@ function toStoredChange(change: BookmarkChange): StoredBookmarkChange {
 
 export async function applyReviewedChanges(
   changes: readonly BookmarkChange[],
-  { tool }: { tool: string },
+  { tool, requireRecord = false }: { tool: string; requireRecord?: boolean },
 ): Promise<ReviewedApply> {
   const { jobsApplyInBackgroundAbove } = await getSettings();
   const storable = changes.every((change) => change.check === undefined);
   if (changes.length <= jobsApplyInBackgroundAbove || !storable) {
-    return { background: false, result: await applyBookmarkChanges(changes, { tool }) };
+    return {
+      background: false,
+      result: await applyBookmarkChanges(changes, { tool, requireRecord }),
+    };
   }
   const response = await sendJobCommand({
     type: 'apply',
@@ -37,6 +40,7 @@ export async function applyReviewedChanges(
     commandId: crypto.randomUUID(),
     source: 'manager',
     tool,
+    ...(requireRecord ? { requireRecord } : {}),
     changes: changes.map(toStoredChange),
   });
   if (!response.ok || !response.job) throw new Error(t('jobs_commandFailed'));

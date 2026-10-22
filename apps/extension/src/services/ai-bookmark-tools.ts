@@ -159,6 +159,8 @@ export function selectAIContextBookmarks(
 /** What saving reviewed AI suggestions did. */
 export type ReviewedMetadataSaveResult = {
   saved: number;
+  /** The bookmarks saved, by id, in the order given. */
+  savedIds: string[];
   /** Suggestions for bookmarks deleted or pointed at another URL since the scan. */
   skipped: number;
   /** Puts back the tags and summaries the save replaced, once. */
@@ -187,7 +189,12 @@ export async function saveReviewedBookmarkMetadata<
           options,
         )
       : { undo: async () => ({ restored: 0, failed: 0 }) };
-  return { saved: current.length, skipped: reviewed.length - current.length, undo };
+  return {
+    saved: current.length,
+    savedIds: current.map((item) => item.bookmarkId),
+    skipped: reviewed.length - current.length,
+    undo,
+  };
 }
 
 export async function suggestBookmarkTags(

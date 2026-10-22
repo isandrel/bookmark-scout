@@ -1749,6 +1749,14 @@
         "message": "Выберите область",
         "description": "Placeholder for a tool scope selector"
     },
+    "tools_scopeSearch": {
+        "message": "Результаты поиска",
+        "description": "Tools sidebar scope picker: run on the bookmarks the manager search lists now"
+    },
+    "tools_scopeSelection": {
+        "message": "Выбранные закладки",
+        "description": "Tools sidebar scope picker: run on the bookmarks selected in the manager"
+    },
     "tools_running": {
         "message": "Выполняется...",
         "description": "Tool button label while the tool runs"
@@ -9361,6 +9369,10 @@
         "message": "Отмечать учебные материалы тегом learning",
         "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
     },
+    "rules_templateReading": {
+        "message": "Перемещать Work / Reading в выбранную вами папку",
+        "description": "Smart Rules template name: moves bookmarks in the folder Work / Reading to a folder the user picks (keep \"Work / Reading\" as is)"
+    },
     "rules_empty": {
         "message": "Правил пока нет.",
         "description": "Settings: shown when there are no smart rules"
@@ -9613,6 +9625,10 @@
         "message": "Ваша организация управляет этой закладкой или папкой назначения, поэтому закладка остаётся на месте.",
         "description": "Smart Rules review: the bookmark or the folder it would move to is managed by policy"
     },
+    "tools_rulesBlocked_unstable": {
+        "message": "Не перемещена: в той папке другое правило переместило бы её снова, и каждый запуск перемещал бы её опять.",
+        "description": "Smart Rules review: a move left out because another rule would move the bookmark again from its new folder"
+    },
     "tools_rulesMatchedBy": {
         "message": "Правила: $1",
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
@@ -9640,6 +9656,10 @@
     "toast_rulesBackgroundDesc": {
         "message": "Добавлены теги: $1. Перемещается в фоне закладок: $2.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "toast_rulesNoRecordDesc": {
+        "message": "Ничего не перемещено: история закладок не смогла записать перемещения, поэтому ни одно не выполнено.",
+        "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
     },
     "tools_rulesOnCount": {
         "message": "Включено правил: $count$",
@@ -9690,7 +9710,7 @@
         "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
     },
     "settings_bookmarkRulesAutoTagDesc": {
-        "message": "Включённые правила добавляют свои теги к каждой закладке при её добавлении — из Bookmark Scout, браузера или синхронизации. Теги никогда не перемещают закладку: для этого есть «Перемещать новые закладки». Много закладок, добавленных сразу (при синхронизации или импорте), не затрагиваются.",
+        "message": "Включённые правила добавляют свои теги к каждой новой закладке, которую допускает «Источник новых закладок». Теги никогда не перемещают закладку: для этого есть «Перемещать новые закладки». Много закладок, добавленных сразу (при синхронизации или импорте), не затрагиваются.",
         "description": "Settings: what Tag New Bookmarks does"
     },
     "settings_bookmarkRulesAutoMove": {
@@ -9698,8 +9718,24 @@
         "description": "Settings: switch that lets Smart Rules marked for it move new bookmarks to their folder; separate from Tag New Bookmarks"
     },
     "settings_bookmarkRulesAutoMoveDesc": {
-        "message": "Правила, которым вы разрешили перемещать новые закладки автоматически, перемещают в свою папку каждую закладку, добавленную звёздочкой браузера, другим расширением или синхронизацией, но только пока это выбранная вами папка. «Отмечать новые закладки тегами» эту функцию никогда не включает. Закладки, сохранённые Bookmark Scout, остаются там, куда их положили, а много закладок, добавленных сразу, не затрагиваются. Каждое перемещение видно в истории закладок и в списке «Изменено автоматически», с отменой.",
+        "message": "Правила, которым вы разрешили перемещать новые закладки автоматически, перемещают в свою папку каждую подходящую новую закладку, но только пока это выбранная вами папка. Закладки, сохранённые Bookmark Scout, остаются там, куда их положили, поэтому перемещаются только закладки, добавленные звёздочкой браузера, другим расширением или синхронизацией, и только если в «Источник новых закладок» выбрано «Откуда угодно». «Отмечать новые закладки тегами» эту функцию никогда не включает, а много закладок, добавленных сразу, не затрагиваются. Каждое перемещение видно в истории закладок и в списке «Изменено правилами», с отменой.",
         "description": "Settings: what Move New Bookmarks does"
+    },
+    "settings_bookmarkRulesNewFrom": {
+        "message": "Источник новых закладок",
+        "description": "Setting label: which new bookmarks Tag New Bookmarks and Move New Bookmarks act on"
+    },
+    "settings_bookmarkRulesNewFromDesc": {
+        "message": "На какие новые закладки действуют «Отмечать новые закладки тегами» и «Перемещать новые закладки». Браузер не сообщает, кто добавил закладку, поэтому вариант «Откуда угодно» одинаково обрабатывает звёздочку браузера, синхронизацию и другие расширения.",
+        "description": "Setting description for New Bookmarks From"
+    },
+    "settings_bookmarkRulesNewFromScout": {
+        "message": "Сохранённые в Bookmark Scout",
+        "description": "New Bookmarks From option: only bookmarks saved with Bookmark Scout"
+    },
+    "settings_bookmarkRulesNewFromAny": {
+        "message": "Откуда угодно",
+        "description": "New Bookmarks From option: any new bookmark (the browser's star, sync, other extensions)"
     },
     "covers_captureButton": {
         "message": "Сделать обложку из этого вида",
@@ -9746,7 +9782,7 @@
         "description": "Toast: the picture could not be made into a cover"
     },
     "rules_autoLogTitle": {
-        "message": "Изменено автоматически",
+        "message": "Изменено правилами",
         "description": "Settings, Smart Rules: heading of the list of bookmarks Tag New Bookmarks and Move New Bookmarks tagged or moved lately"
     },
     "rules_autoLogClear": {
@@ -9768,6 +9804,22 @@
     "rules_autoLogUndoMoveLabel": {
         "message": "Вернуть «$1» на место",
         "description": "Settings, Smart Rules: accessible name of the Undo button of one automatic move; $1 is the bookmark title"
+    },
+    "rules_autoLogRun": {
+        "message": "Запуск умных правил",
+        "description": "Settings, Smart Rules list of changes: title of an entry for a reviewed run started from the Tools sidebar"
+    },
+    "rules_autoLogRunDesc": {
+        "message": "Добавлены теги: $1 · Перемещено: $2 · $3",
+        "description": "Settings, Smart Rules list of changes: a reviewed run; $1 bookmarks tagged, $2 bookmarks moved, $3 when"
+    },
+    "rules_autoLogRunOmitted": {
+        "message": "Не показаны здесь, поэтому отмена оставит их теги: $1.",
+        "description": "Settings, Smart Rules list of changes: how many bookmarks a large run tagged that the entry does not list, whose tags Undo keeps"
+    },
+    "rules_autoLogUndoRunLabel": {
+        "message": "Отменить теги, добавленные этим запуском",
+        "description": "Accessible name of Undo on a reviewed run entry: takes back its tags (its moves are undone in the Bookmark history)"
     },
     "rules_autoLogUndone": {
         "message": "Теги удалены",
@@ -9806,6 +9858,46 @@
     "rules_autoLogUndoneDesc_many": {
         "message": "Из закладки удалено $count$ тегов.",
         "description": "Toast after undoing one automatic tagging; how many tags were removed (many)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc": {
+        "message": "Теги удалены из закладок: $count$. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_one": {
+        "message": "Теги удалены из $count$ закладки. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (one)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_few": {
+        "message": "Теги удалены из $count$ закладок. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (few)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_autoLogUndoneRunDesc_many": {
+        "message": "Теги удалены из $count$ закладок. Перемещения этого запуска отмените в истории закладок.",
+        "description": "Toast after undoing a reviewed run's tags from Settings; how many bookmarks lost tags (many)",
         "placeholders": {
             "count": {
                 "content": "$1",

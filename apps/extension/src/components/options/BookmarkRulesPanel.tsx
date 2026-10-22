@@ -15,6 +15,7 @@ const TEMPLATE_NAME_KEYS: Record<BookmarkRuleTemplateId, MessageKey> = {
   github: 'rules_templateGithub',
   youtube: 'rules_templateYoutube',
   tutorial: 'rules_templateTutorial',
+  reading: 'rules_templateReading',
 };
 
 const RULE_DRAFT_ERROR_KEYS = {
@@ -43,6 +44,8 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
   }, [draft]);
 
   const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
+  // A rule with nothing to do cannot be turned on: a template that moves waits for its folder.
+  const actionable = hasRuleAction(value);
   // What is wrong with the search, as the search boxes say it: a rule never runs on part of one.
   const queryProblem = useMemo(() => {
     const [diagnostic] = parseSearchQuery(value.query).diagnostics;
@@ -147,15 +150,24 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
               {t('rules_autoMoveHelp')}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="rule-enabled"
-              checked={value.enabled}
-              onCheckedChange={(checked) => setValue({ ...value, enabled: checked === true })}
-            />
-            <label htmlFor="rule-enabled" className="text-sm font-medium">
-              {t('rules_enabled')}
-            </label>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="rule-enabled"
+                checked={value.enabled && actionable}
+                disabled={!actionable}
+                aria-describedby={actionable ? undefined : 'rule-enabled-help'}
+                onCheckedChange={(checked) => setValue({ ...value, enabled: checked === true })}
+              />
+              <label htmlFor="rule-enabled" className="text-sm font-medium">
+                {t('rules_enabled')}
+              </label>
+            </div>
+            {actionable ? null : (
+              <p id="rule-enabled-help" className="text-xs text-muted-foreground">
+                {t('rules_errorAction')}
+              </p>
+            )}
           </div>
           {error ? (
             <p role="alert" className="text-sm text-destructive">
@@ -193,16 +205,23 @@ export function BookmarkRulesPanel() {
     [rules, tree],
   );
 
-  const addTemplate = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) =>
+  const addTemplate = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) => {
+    const name = t(TEMPLATE_NAME_KEYS[template.id]);
+    // A template that moves has no folder yet: the editor opens on it to ask for one.
+    if (template.move) {
+      setEditing(ruleDraftOfTemplate(template, name));
+      return;
+    }
     void saveBookmarkRule({
       id: createBookmarkRuleId(),
-      name: t(TEMPLATE_NAME_KEYS[template.id]),
+      name,
       // Templates start turned off: a rule acts only once the user chose it.
       enabled: false,
       query: template.query,
       syntaxVersion: SEARCH_SYNTAX_VERSION,
       addTags: [...template.add_tags],
     });
+  };
 
   const remove = async (rule: BookmarkRule) => {
     const index = rules.findIndex((entry) => entry.id === rule.id);

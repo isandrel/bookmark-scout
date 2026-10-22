@@ -86,10 +86,11 @@ export const STORAGE_ITEMS = {
   /** Local: rules name folder ids local to this device, and their searches can reveal bookmarks. */
   bookmarkRules: { area: 'local', name: 'rules.list', v: 1, backup: 'include' },
   /**
-   * Local: the bookmarks Smart Rules tagged or moved on their own lately (Tag New Bookmarks, Move
-   * New Bookmarks), with the tags or the folders and their titles, for the list and Undo in
-   * Settings; bookmark and folder ids belong to this device, and the titles can be private. The
-   * name is from when it held only taggings, kept so the list survives the update.
+   * Local: what Smart Rules changed lately: bookmarks tagged or moved on their own (Tag New
+   * Bookmarks, Move New Bookmarks), with the tags or the folders and their titles, and the
+   * bookmarks reviewed runs tagged, by id, for the list and Undo in Settings; bookmark and folder
+   * ids belong to this device, and the titles can be private. The name is from when it held only
+   * taggings, kept so the list survives the update.
    */
   ruleAutoLog: { area: 'local', name: 'rules.auto-tag-log', v: 1, backup: 'exclude' },
   /** Local: downloaded icons are large and can be downloaded again. */
@@ -148,6 +149,8 @@ export const DEVICE_SETTING_KEYS = [
   'bookmarkRulesAutoTag',
   /** And so is moving new bookmarks with them, to folders that exist on this device only. */
   'bookmarkRulesAutoMove',
+  /** And which new bookmarks both act on, as part of the same choice. */
+  'bookmarkRulesNewFrom',
   /** Recording AI requests is a debugging choice for one device; the log stays on it too. */
   'aiActivityRecording',
   /** Whether Ask AI adds the provider's web search, chosen where the chat runs. */

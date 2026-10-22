@@ -270,10 +270,10 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
     unsureAfterStop: 'uncertain-write',
     async runBatch(inputs, options, part) {
       const changes = inputs.map((input) => storedBookmarkChangeSchema.parse(input));
-      const { tool } = applyJobOptionsSchema.parse(options);
+      const { tool, requireRecord } = applyJobOptionsSchema.parse(options);
       // The same writer as a change applied in the page: each change is checked against the
       // live bookmark first, so one already made, or changed since the review, is skipped.
-      const result = await applyBookmarkChanges(changes, { tool, part });
+      const result = await applyBookmarkChanges(changes, { tool, part, requireRecord });
       const issues = new Map(result.issues.map((issue) => [issue.id, issue.reason]));
       return changes.map((change) => {
         const reason = issues.get(change.id);

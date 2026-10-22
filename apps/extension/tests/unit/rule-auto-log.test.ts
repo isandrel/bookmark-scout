@@ -4,9 +4,12 @@ import { BOOKMARK_RULE_LIMITS } from '@/lib/bookmark-rules';
 import {
   clearRuleAutoLog,
   type RuleAutoTagEntry,
+  type RuleRunEntry,
   recordRuleAutoChanges,
+  recordRuleRun,
   ruleAutoLogValue,
   undoAutoTag,
+  undoRuleRunTags,
 } from '@/lib/rule-auto-log';
 import { STORAGE_ITEMS, seedStored } from './storage-helpers';
 
@@ -77,5 +80,70 @@ describe('automatic changes list', () => {
     await clearRuleAutoLog();
     expect(await ruleAutoLogValue.get()).toEqual([]);
     expect(await bookmarkMetadataValue.get()).toEqual({ b: { tags: ['dev'] } });
+  });
+
+  it('records a reviewed run durably: its tags by bookmark id, its moves by their record', async () => {
+    const id = await recordRuleRun({
+      tagged: [
+        { bookmarkId: 'a', tags: ['dev'] },
+        { bookmarkId: 'b', tags: ['dev'] },
+        { bookmarkId: 'c', tags: ['dev', 'code'] },
+      ],
+      moved: 2,
+      operationId: 'op-1',
+    });
+    expect(await ruleAutoLogValue.get()).toEqual([
+      {
+        id,
+        kind: 'run',
+        tagged: [
+          { tags: ['dev'], bookmarkIds: ['a', 'b'] },
+          { tags: ['dev', 'code'], bookmarkIds: ['c'] },
+        ],
+        omitted: 0,
+        moved: 2,
+        operationId: 'op-1',
+        at: expect.any(Number),
+      },
+    ]);
+    // A run that tagged nothing leaves no entry: its moves are in the History alone.
+    expect(await recordRuleRun({ tagged: [], moved: 3 })).toBeUndefined();
+    expect(await ruleAutoLogValue.get()).toHaveLength(1);
+  });
+
+  it('lists at most the configured number of bookmarks of one run, counting the rest', async () => {
+    const max = BOOKMARK_RULE_LIMITS.runs.log_max_bookmarks;
+    await recordRuleRun({
+      tagged: Array.from({ length: max + 2 }, (_, n) => ({ bookmarkId: `b${n}`, tags: ['dev'] })),
+      moved: 0,
+    });
+    const [entry] = await ruleAutoLogValue.get();
+    expect(entry).toMatchObject({ kind: 'run', omitted: 2 });
+    expect((entry as RuleRunEntry).tagged[0]?.bookmarkIds).toHaveLength(max);
+  });
+
+  it("undoes a run's tags where they still are, keeping every other tag, and drops it", async () => {
+    await bookmarkMetadataValue.set({
+      a: { tags: ['mine', 'dev'] },
+      b: { tags: ['Dev'], summary: 'kept' },
+      c: { tags: ['mine'] },
+    });
+    await recordRuleRun({
+      tagged: [
+        { bookmarkId: 'a', tags: ['dev'] },
+        { bookmarkId: 'b', tags: ['dev'] },
+        // Its tag was removed by hand since: nothing to take back.
+        { bookmarkId: 'c', tags: ['dev'] },
+      ],
+      moved: 0,
+    });
+    const [entry] = await ruleAutoLogValue.get();
+    expect(await undoRuleRunTags(entry as RuleRunEntry)).toBe(2);
+    expect(await bookmarkMetadataValue.get()).toEqual({
+      a: { tags: ['mine'] },
+      b: { summary: 'kept' },
+      c: { tags: ['mine'] },
+    });
+    expect(await ruleAutoLogValue.get()).toEqual([]);
   });
 });

@@ -224,19 +224,22 @@ export async function unpackBookmarkHistoryEntry(
 /**
  * Every bookmark and folder id the undo and redo history names: items Bookmark Scout added, put
  * back, moved, or edited in this session, so code acting on new bookmarks can leave alone the
- * ones a page of the extension just put where the user chose.
+ * ones a page of the extension just put where the user chose. With `created`, only items it
+ * added (saved or made) that are still undoable: the bookmarks saved through Bookmark Scout.
  */
-export async function bookmarkIdsInHistory(): Promise<Set<string>> {
+export async function bookmarkIdsInHistory({ created = false } = {}): Promise<Set<string>> {
   const history = await bookmarkHistoryValue.get();
   const ids = new Set<string>();
   const addNode = (node: RecoverableBookmarkNode) => {
     if (node.id) ids.add(node.id);
     for (const child of node.children ?? []) addNode(child);
   };
-  for (const stored of [...history.undo, ...history.redo]) {
+  for (const stored of created ? history.undo : [...history.undo, ...history.redo]) {
     const entry = await unpackBookmarkHistoryEntry(stored).catch(() => undefined);
     for (const op of entry?.operations ?? []) {
-      if (op.kind === 'create' || op.kind === 'remove') addNode(op.node);
+      if (op.kind === 'create') addNode(op.node);
+      else if (created) continue;
+      else if (op.kind === 'remove') addNode(op.node);
       else ids.add(op.id);
     }
   }

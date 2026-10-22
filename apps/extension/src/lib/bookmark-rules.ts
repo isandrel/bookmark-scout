@@ -9,6 +9,14 @@
  * conflict to review. Tags from every matching rule are added once each, compared by `tagKey`,
  * and a tag the bookmark already has is not added again. Folders are never moved or tagged.
  *
+ * Runs settle instead of moving bookmarks back and forth (R33): a bookmark already in a folder a
+ * matching rule names stays there, and a move is made only when, in its new folder and with its
+ * new tags, no rule would move the bookmark again (else it is blocked as `unstable`). So a second
+ * run right after the first moves nothing.
+ *
+ * Rules plan bookmarks by id (R37): two bookmarks of one address in different folders are planned
+ * apart, each by what its own folder and tags make it match.
+ *
  * A rule can also move new bookmarks without a review (`autoMove`, `rule-automation.ts`), but only
  * to the exact folder it was saved with: `ruleAutoMoveBlocks` stops it when that folder is gone,
  * managed, or no longer at the path the rule names, and never looks for another by its path.
@@ -25,17 +33,24 @@ const rulesConfig = readConfig(
     max_tags: z.number().int().positive(),
     tag_max_length: z.number().int().positive(),
     templates: z.array(
-      z.strictObject({
-        id: z.string().min(1),
-        query: z.string().min(1),
-        add_tags: z.array(z.string().min(1)).min(1),
-      }),
+      z
+        .strictObject({
+          id: z.string().min(1),
+          query: z.string().min(1),
+          add_tags: z.array(z.string().min(1)).default([]),
+          /** Moves to a folder the user picks: the template has none, so the editor asks. */
+          move: z.boolean().default(false),
+        })
+        .refine((template) => template.add_tags.length > 0 || template.move, {
+          message: 'A template needs tags to add or a move',
+        }),
     ),
     automatic: z.strictObject({
       batch_window_ms: z.number().int().positive(),
       max_batch: z.number().int().positive(),
       log_max: z.number().int().positive(),
     }),
+    runs: z.strictObject({ log_max_bookmarks: z.number().int().positive() }),
   }),
 );
 
@@ -114,8 +129,11 @@ export function parseBookmarkRules(value: unknown): BookmarkRule[] {
   return rules;
 }
 
-/** Why a rule's move cannot happen. */
-export type RuleMoveBlock = 'missingFolder' | 'managed';
+/**
+ * Why a rule's move cannot happen: its folder is gone or managed, or `unstable`, when in that
+ * folder another rule would move the bookmark again, so runs would move it back and forth.
+ */
+export type RuleMoveBlock = 'missingFolder' | 'managed' | 'unstable';
 
 export type RuleMove = { ruleId: string; folderId: string; path: string };
 
@@ -230,14 +248,16 @@ export function planBookmarkRules(
     rule,
     match: compileSearchQuery(parseSearchQuery(rule.query).query),
   }));
-  const items: RulePlanItem[] = [];
-  for (const document of buildSearchDocuments(tree, metadata)) {
-    if (document.kind !== 'bookmark' || !document.url) continue;
-    if (only && !only.has(document.id)) continue;
+  const documents = buildSearchDocuments(tree, metadata);
+  // The folder names a bookmark has inside each folder, as its document would say them.
+  const namesInside = new Map<string, readonly string[]>();
+  for (const document of documents) {
+    if (document.kind === 'folder')
+      namesInside.set(document.id, [...document.folders, document.title]);
+  }
+  /** What the rules want for `document`: what each adds, and the folders they would move it to. */
+  const evaluate = (document: SearchDocument) => {
     const matching = compiled.filter(({ match }) => match(document));
-    if (matching.length === 0) continue;
-    const node = index.nodes.get(document.id);
-    const parentId = node?.parentId ?? '';
     const has = new Set(document.tags.map(tagKey));
     const addTags: string[] = [];
     const moves: RuleMove[] = [];
@@ -250,13 +270,45 @@ export function planBookmarkRules(
       }
       if (rule.moveTo) moves.push(resolveMove(index, paths, { ruleId: rule.id, ...rule.moveTo }));
     }
-    const [first, ...later] = moves;
-    const conflicts = later.filter((move) => move.folderId !== first?.folderId);
-    const blocked = first
-      ? isManaged(index, node)
-        ? 'managed'
-        : moveTarget(index, first.folderId)
-      : undefined;
+    return { matching, addTags, moves };
+  };
+  /**
+   * Whether, once moved to `folderId` with its new tags, the bookmark stays: no rule would move it
+   * on. A move that fails this is never made, so running the rules again never moves a bookmark
+   * back and forth between folders, or around a ring of them.
+   */
+  const staysIn = (document: SearchDocument, folderId: string, addTags: readonly string[]) => {
+    const folders = namesInside.get(folderId) ?? [];
+    const moved: SearchDocument = {
+      ...document,
+      folders,
+      folderPath: folders.join(FOLDER_PATH_SEPARATOR),
+      tags: [...document.tags, ...addTags],
+    };
+    const { moves } = evaluate(moved);
+    return moves.length === 0 || moves.some((move) => move.folderId === folderId);
+  };
+  const items: RulePlanItem[] = [];
+  for (const document of documents) {
+    if (document.kind !== 'bookmark' || !document.url) continue;
+    if (only && !only.has(document.id)) continue;
+    const { matching, addTags, moves } = evaluate(document);
+    if (matching.length === 0) continue;
+    const node = index.nodes.get(document.id);
+    const parentId = node?.parentId ?? '';
+    // Already in a folder a matching rule names: it stays, and other folders are conflicts.
+    const stays = moves.some((move) => move.folderId === parentId);
+    const [first] = moves;
+    const conflicts = moves.filter((move) =>
+      stays ? move.folderId !== parentId : move !== first && move.folderId !== first?.folderId,
+    );
+    const blocked =
+      first && !stays
+        ? isManaged(index, node)
+          ? 'managed'
+          : (moveTarget(index, first.folderId) ??
+            (staysIn(document, first.folderId, addTags) ? undefined : 'unstable'))
+        : undefined;
     items.push({
       id: document.id,
       title: document.title,
@@ -265,7 +317,7 @@ export function planBookmarkRules(
       folderPath: document.folderPath,
       ruleIds: matching.map(({ rule }) => rule.id),
       addTags,
-      ...(first && !blocked && first.folderId !== parentId ? { move: first } : {}),
+      ...(first && !stays && !blocked ? { move: first } : {}),
       conflicts,
       ...(blocked ? { blocked } : {}),
     });
