@@ -55,6 +55,8 @@ export type LibraryFolder = {
 
 export type ActionLibrary = {
   tree: BookmarkTreeNode[];
+  /** The stored tags and summaries, by bookmark id. */
+  metadata: StoredBookmarkMetadataById;
   bookmarks: LibraryBookmark[];
   /** In tree order, parents before their children. */
   folders: LibraryFolder[];
@@ -121,6 +123,7 @@ export function indexActionLibrary(
   for (const node of tree) visit(node, undefined);
   return {
     tree,
+    metadata,
     bookmarks,
     folders,
     bookmarkById: new Map(bookmarks.map((bookmark) => [bookmark.node.id, bookmark])),

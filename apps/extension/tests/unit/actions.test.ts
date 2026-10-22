@@ -110,6 +110,34 @@ describe('searchBookmarks', () => {
     ]);
   });
 
+  it('keeps a query word on its own, and needs every term of filterQuery', async () => {
+    await bookmarkMetadataValue.set({ b3: { tags: ['CI'] }, b1: { tags: ['design'] } });
+    const refs = async (input: object) =>
+      ((await run('searchBookmarks', input)).results as { ref: string }[]).map((hit) => hit.ref);
+
+    // `query` finds a bookmark matching any one of its words, as it always has.
+    expect(await refs({ query: 'ownership pipelines' })).toEqual(['b:b2', 'b:b3']);
+    // `filterQuery` reads the search boxes' language: every term, operators, exclusions.
+    expect(await refs({ filterQuery: 'ownership pipelines' })).toEqual([]);
+    expect(await refs({ filterQuery: 'tag:ci' })).toEqual(['b:b3']);
+    expect(await refs({ filterQuery: 'folder:Work -tag:design' })).toEqual(['b:b3']);
+    expect(await refs({ filterQuery: 'domain:example.com after:2026-02-01' })).toEqual(['b:b4']);
+    expect(await refs({ filterQuery: 'is:untagged "handbook copy"' })).toEqual(['b:b4']);
+    // Both together: the words rank what the filter lets through.
+    expect(await refs({ query: 'handbook', filterQuery: 'folder:Docs' })).toEqual(['b:b4', 'b:b1']);
+  });
+
+  it('says which part of filterQuery it could not read', async () => {
+    expect(await run('searchBookmarks', { filterQuery: 'after:2026-02-30 foo:bar' })).toMatchObject(
+      {
+        error: {
+          code: 'invalid_input',
+          message: expect.stringMatching(/invalid date "2026-02-30".*unknown operator "foo:"/),
+        },
+      },
+    );
+  });
+
   it('pages long results with a cursor and a note on how to narrow them', async () => {
     const many = Array.from({ length: actionLimits.max_results + 5 }, (_, index) => ({
       id: `m${index}`,
