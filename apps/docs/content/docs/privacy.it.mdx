@@ -1,0 +1,80 @@
+---
+title: Privacy
+description: Cosa legge Bookmark Scout, cosa archivia e quando i dati escono dal browser. Un riepilogo dell'informativa sulla privacy.
+---
+
+Questo è un riepilogo. Fa fede l'<SiteLink to="privacy">informativa sulla privacy</SiteLink> completa sul sito web, in vigore dal <PrivacyEffectiveDate />.
+
+## In breve [#in-short]
+
+- **Nessun account e nessun server.** Bookmark Scout funziona all'interno del browser. Lo sviluppatore non riceve nulla dall'estensione.
+- **Nessuna telemetria.** Nell'estensione non ci sono analisi statistiche, segnalazioni di arresti anomali o pubblicità.
+- **L'IA resta disattivata finché non la attivi**, e da quel momento le richieste vanno direttamente dal browser al provider che hai scelto. In Firefox, attivarla chiede anche il tuo consenso alla condivisione di quei dati. Con l'IA integrata di Chrome, i suggerimenti di cartelle restano sul tuo computer.
+- **Agenti IA locali solo se li consenti.** Con **Consenti agli agenti IA locali** attivo (disattivato per impostazione predefinita), gli agenti IA sul tuo computer, come Claude Code, possono consultare i tuoi preferiti tramite il programma bookmark-scout-mcp; li modificano solo con **Consenti modifiche** attivo, e ogni modifica avviene dopo la tua approvazione.
+- **Autorizzazioni quando servono.** All'installazione l'estensione chiede solo ciò senza cui non può funzionare; l'accesso alle schede, il menu contestuale, la cache delle icone del browser e l'accesso ai siti web vengono chiesti la prima volta che usi la funzione. Vedi [Autorizzazioni](/permissions).
+
+## Cosa legge l'estensione [#what-the-extension-reads]
+
+- I tuoi preferiti, per mostrarli, cercarli, modificarli, spostarli, eliminarli, importarli ed esportarli.
+- Il titolo e l'URL della scheda attiva, quando salvi la pagina che stai visitando (dal popup, dal riquadro laterale o con una scorciatoia di salvataggio rapido) o chiedi un suggerimento di cartella.
+- Le icone dei siti dalla cache delle icone del browser, in Chrome ed Edge, dopo che hai attivato **Usa la cache delle icone del browser**.
+- Le icone dei siti che scarichi con **Aggiorna icone dei siti**, da ciascun sito web salvato nei preferiti.
+- Il testo delle pagine salvate nei preferiti, quando esegui **Indicizza il testo delle pagine**, da ciascuna pagina dell'esecuzione.
+- L'intestazione delle pagine salvate nei preferiti e l'immagine di anteprima indicata da ciascuna, quando esegui **Recupera copertine**, da ciascuna pagina dell'esecuzione.
+
+Non legge il contenuto delle pagine che visiti. Dopo una scorciatoia di salvataggio rapido mostra la propria notifica in quella scheda, che non legge nulla dalla pagina.
+
+## Cosa archivia [#what-it-stores]
+
+| Dati | Dove | Sincronizzati |
+| --- | --- | --- |
+| Le impostazioni che hai cambiato rispetto al valore predefinito, incluso se l'IA è attiva; non il provider IA, il modello o la chiave API | Archivio sincronizzato del browser | Sì, tramite l'account del browser quando la sincronizzazione del browser è attiva |
+| Impostazioni del dispositivo: la cartella scelta per il salvataggio rapido, il limite di spazio per le icone, la registrazione dell'attività IA e la ricerca sul web di Chiedi all'IA | Archivio locale su questo dispositivo | No |
+| Impostazioni degli agenti IA locali (attivi o no, l'occultamento dei valori privati, le consultazioni disattivate) e un identificatore casuale per questo profilo del browser | Archivio locale su questo dispositivo | No |
+| Prompt personalizzati (**Prompt** in **Strumenti IA**): il nome, l'attività e il testo di ogni prompt, e quale prompt usa ogni attività; fino a 10 | Archivio sincronizzato del browser | Come le impostazioni |
+| Su di me (impostazioni **IA**): ciò che hai scritto su di te; fino a 1.000 caratteri | Archivio sincronizzato del browser | Come le impostazioni, e inviato al tuo provider IA con le richieste IA finché contiene testo |
+| Tabella dei preferiti nella gestione preferiti: colonne mostrate, il loro ordine e l'ordinamento | Archivio sincronizzato del browser | Come le impostazioni |
+| Larghezza delle colonne della tabella dei preferiti e dimensione della pagina | Archivio locale su questo dispositivo | No |
+| Servizi IA: nome, provider e modello di ciascun servizio | Archivio locale su questo dispositivo | No |
+| Impostazioni di connessione IA: chiave API, URL di base, intestazioni aggiuntive, campi specifici del provider | Archivio locale su questo dispositivo | No. Un file di backup contiene l'URL di base e i campi specifici del provider, mai la chiave API o le intestazioni aggiuntive |
+| Elenchi dei modelli recuperati dai tuoi servizi IA, conservati per 7 giorni | Archivio locale su questo dispositivo | No |
+| Attività IA, solo mentre **Registra le richieste** è attivo (disattivato per impostazione predefinita, per dispositivo): le ultime richieste IA con ciò che è stato inviato e ciò che è tornato, inclusi titoli dei preferiti, URL, percorsi delle cartelle e, con **Leggi il contenuto delle pagine** attivo, il testo delle pagine. Le chiavi API e le altre credenziali vengono rimosse prima dell'archiviazione; disattivare la registrazione la elimina | Archivio locale su questo dispositivo | No |
+| Tag, riassunti, ricerche salvate, regole intelligenti, cartelle recenti, ricerche recenti | Archivio locale su questo dispositivo | No |
+| Icone dei siti salvate con **Aggiorna icone dei siti**, fino a 4 MB per impostazione predefinita | Archivio locale su questo dispositivo | No |
+| Testo delle pagine salvato con **Indicizza il testo delle pagine** | IndexedDB su questo dispositivo | No |
+| Copertine salvate con **Recupera copertine** | IndexedDB su questo dispositivo | No |
+| L'ultimo salvataggio rapido (il titolo e l'URL della pagina e dove è finita), per **Annulla** e **Sposta in** | Archivio di sessione su questo dispositivo, cancellato alla chiusura del browser | No |
+| La cronologia di annullamento della gestione preferiti (i preferiti che vi hai modificato, con copie di quelli eliminati e dei relativi tag e riassunti), per annullare e ripetere | Archivio di sessione su questo dispositivo, cancellato alla chiusura del browser | No |
+| La cronologia delle modifiche ai preferiti: cosa è cambiato nei tuoi preferiti e quando, sia che la modifica l'abbia fatta Bookmark Scout sia che sia stata rilevata da altrove (titoli, URL, cartelle e l'esito di ogni modifica), conservata per un periodo limitato; e una copia del titolo, dell'URL e della cartella di ogni preferito com'erano l'ultima volta, per capire cosa è cambiato fuori da Bookmark Scout. Inoltre, una copia di ogni elemento eliminato da Bookmark Scout, con il suo contenuto e i relativi tag e riassunto, così che possa essere ripristinato dalla Cronologia; rimossa insieme alla sua modifica. Non inclusa nel file di backup | IndexedDB su questo dispositivo | No |
+| Attività in background (uno strumento come **Controlla link non funzionanti**, **Recupero metadati**, **Aggiorna icone dei siti** o **Riorganizzazione cartelle con IA** che continua dopo la chiusura della sua pagina): i preferiti che controlla (titoli, URL e cartelle) e ogni risultato, come il titolo e la descrizione di una pagina, l'icona di un sito, gli spostamenti suggeriti dal servizio IA o le modifiche revisionate che applica (quale preferito e il suo nuovo titolo, indirizzo o cartella), così l'attività può proseguire dopo un riavvio e puoi rivedere i risultati in seguito; conservate per un periodo limitato, o finché non elimini l'attività in **Attività in background**. Non incluse nel file di backup | IndexedDB su questo dispositivo | No |
+
+I risultati delle analisi della barra laterale Strumenti vengono conservati solo finché la relativa finestra di dialogo è aperta. Disinstallando l'estensione si rimuove ciò che ha archiviato; i preferiti restano nel browser.
+
+**Esegui il backup delle impostazioni** in fondo alle Impostazioni salva un file di backup con le impostazioni che hai cambiato, i prompt personalizzati, Su di me, i servizi IA (nome, provider, modello, URL di base e campi specifici del provider), le ricerche salvate, le regole intelligenti e le colonne e l'ordinamento della tabella. Non contiene mai chiavi API o intestazioni aggiuntive e non è crittografato. Vedi [Impostazioni](/settings).
+
+## Quando i dati escono dal browser [#when-data-leaves-your-browser]
+
+Solo quando usi una di queste funzioni, e solo verso la destinazione indicata:
+
+| Funzione | Destinazione | Cosa viene inviato |
+| --- | --- | --- |
+| Cartelle suggerite dall'IA, inclusa la scorciatoia di salvataggio rapido con IA | Il provider IA che hai configurato | Il titolo e l'URL della pagina corrente e i nomi delle tue cartelle. Con **Leggi il contenuto delle pagine** attivo, anche il testo principale della pagina |
+| Tag automatici, Riassunti dei contenuti, Riorganizzazione cartelle con IA | Il provider IA che hai configurato | Titoli, URL e percorsi delle cartelle dei preferiti nell'ambito. Con **Leggi il contenuto delle pagine** attivo, Tag automatici e Riassunti dei contenuti inviano anche il testo principale di ogni pagina; Riorganizzazione cartelle con IA non lo fa mai. Tag automatici invia anche i nomi dei tag che usi di più, a meno che **Invia i tag esistenti** non sia disattivato |
+| Chiedi all'IA | Il provider IA che hai configurato | I tuoi messaggi e la conversazione fino a quel momento, e ciò che l'IA consulta per rispondere: i preferiti corrispondenti (con le relative cartelle, date di aggiunta, tag e riassunti), i nomi delle cartelle, il titolo e l'URL della pagina corrente, se i link salvati nei preferiti che controlla funzionano ancora e, con **Leggi il contenuto delle pagine** attivo, il testo delle pagine che legge. Con la ricerca sul web attiva, il provider effettua anche ricerche sul web. La conversazione non viene salvata |
+| Controlla link non funzionanti, Recupero metadati, controlli dei link di Chiedi all'IA | Ciascun sito web salvato nei preferiti | Una richiesta della pagina, senza cookie, dopo che hai consentito l'accesso ai siti web |
+| Aggiorna icone dei siti | Ciascun sito web salvato nei preferiti | Una richiesta di una pagina salvata nei preferiti per sito e di un file di icona sul dominio di quel sito, senza cookie, dopo che hai consentito l'accesso ai siti web. Non viene usato alcun servizio di icone di terze parti |
+| Indicizza il testo delle pagine | Ciascuna pagina salvata nei preferiti inclusa nell'esecuzione | Una richiesta della pagina, senza cookie, dopo che hai consentito l'accesso ai siti web. Il suo testo leggibile resta su questo dispositivo |
+| Recupera copertine | Ciascuna pagina salvata nei preferiti inclusa nell'esecuzione, e l'immagine che indica | Una richiesta dell'intestazione della pagina e della sua immagine, senza cookie né l'indirizzo della pagina, solo sui siti che hai consentito. Una piccola copia resta su questo dispositivo |
+| Agenti IA locali, solo con **Consenti agli agenti IA locali** attivo (disattivato per impostazione predefinita) | Il programma bookmark-scout-mcp sul tuo computer e gli agenti IA che vi esegui | Ciò che un agente chiede: i preferiti corrispondenti (con le relative cartelle, date di aggiunta, tag e riassunti), i nomi delle cartelle, il titolo e l'URL della pagina corrente, se i link salvati nei preferiti funzionano ancora (dopo che hai consentito l'accesso ai siti web) e, con **Leggi il contenuto delle pagine** attivo, il testo di una pagina. I valori privati in titoli e URL sono nascosti, a meno che tu non disattivi questa opzione. Gli agenti possono inviare ciò che leggono al proprio provider IA. Ogni consultazione compare nell'attività IA mentre **Registra le richieste** è attivo |
+
+Ogni funzione IA che usa un provider invia anche il testo di **Su di me** (impostazioni **IA**) finché ne contiene; per impostazione predefinita è vuoto.
+
+Un provider che gira sul tuo computer, come Ollama, mantiene le richieste IA sulla tua macchina. Lo stesso vale per l'IA integrata di Chrome: esegue i suggerimenti di cartelle con il modello di Chrome sul tuo computer, senza chiave API, e Chrome scarica quel modello da Google una sola volta, quando glielo chiedi, senza nessuno dei tuoi dati. Le esportazioni dei preferiti, i file di **Pacchetto contesto IA** e il backup delle impostazioni vengono salvati come file sul tuo computer e non vengono caricati da nessuna parte. Un'esportazione JSON dei preferiti contiene anche i tag e il riassunto di ogni preferito; per le esportazioni dei preferiti e del contesto IA, una revisione della privacy può prima oscurare i valori sensibili. I dati esatti inviati da ciascuno strumento IA sono elencati in [Configurare gli strumenti IA](/guides/ai-tools#what-each-tool-sends), e ogni autorizzazione è spiegata in [Autorizzazioni](/permissions).
+
+## Questo sito di documentazione [#this-docs-site]
+
+La documentazione è un sito statico senza analisi statistiche, senza account e senza cookie propri. I caratteri sono forniti da questo sito, non da Google Fonts. L'informativa sulla privacy indica il fornitore dell'hosting.
+
+## Domande [#questions]
+
+Scrivi a <Contact role="privacy" /> per domande sulla privacy o richieste relative ai dati. Per segnalare un problema di sicurezza, scrivi a <Contact role="security" /> invece di aprire una segnalazione pubblica.

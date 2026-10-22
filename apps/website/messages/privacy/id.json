@@ -1,0 +1,268 @@
+{
+    "privacyPage": {
+        "meta": {
+            "title": "Kebijakan privasi",
+            "description": "Cara Bookmark Scout dan situs webnya menangani data Anda: tanpa akun, tanpa server, tanpa telemetri, dan AI opsional yang mengirim permintaan hanya ke penyedia pilihan Anda."
+        },
+        "title": "Kebijakan privasi",
+        "effective": "Berlaku sejak {date}",
+        "intro": "Kebijakan ini mencakup ekstensi browser Bookmark Scout untuk Chrome, Microsoft Edge, dan Firefox (versi 0.3.0 dan yang lebih baru), situs web ini, dan situs dokumentasi.",
+        "translationNote": "Kebijakan ini juga tersedia dalam bahasa lain. Jika terjemahan berbeda dari versi bahasa Inggris, versi bahasa Inggris yang berlaku.",
+        "glanceTitle": "Sekilas",
+        "glance": {
+            "noServer": {
+                "title": "Tanpa akun, tanpa server",
+                "body": "Ekstensi ini berjalan di dalam browser Anda. Tidak ada yang perlu didaftarkan dan tidak ada server Bookmark Scout yang menerima data Anda."
+            },
+            "noTelemetry": {
+                "title": "Kami tidak melacak aktivitas Anda",
+                "body": "Ekstensi ini tidak memiliki analitik, pelaporan error, maupun iklan."
+            },
+            "aiOptIn": {
+                "title": "AI nonaktif sampai Anda mengaktifkannya",
+                "body": "Saat Anda menggunakan fitur AI, permintaan dikirim dari browser Anda langsung ke penyedia pilihan Anda. Dengan AI bawaan Chrome, permintaan tetap berada di komputer Anda."
+            },
+            "developer": {
+                "title": "Developer tidak menerima apa pun",
+                "body": "Bookmark, setelan, dan kunci API Anda tidak pernah sampai ke developer."
+            },
+            "permissions": {
+                "title": "Browser hanya meminta satu hal",
+                "body": "Saat instalasi, Chrome dan Edge hanya meminta izin untuk “Membaca dan mengubah bookmark Anda” (Firefox: “Membaca dan mengubah markah”). Fitur lain baru meminta izin saat pertama kali Anda menggunakannya. <permissions>Apa yang diminta masing-masing dan mengapa</permissions>"
+            }
+        },
+        "tocLabel": "Di halaman ini",
+        "sections": {
+            "summary": {
+                "title": "Ringkasan",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout bekerja di dalam browser Anda. Ekstensi ini tidak memiliki akun, analitik, iklan, maupun server sendiri. Developer tidak menerima bookmark Anda atau data lain apa pun dari ekstensi. Data hanya keluar dari browser Anda saat Anda menggunakan fitur opsional yang memerlukan jaringan, dan data tersebut dikirim langsung ke layanan pilihan Anda. Satu-satunya pengecualian tanpa permintaan jaringan adalah akses untuk agen AI lokal (nonaktif secara default), yang meneruskan data bookmark ke agen AI yang Anda jalankan di komputer Anda sendiri."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Penggunaan informasi yang diterima Bookmark Scout melalui API ekstensi browser mematuhi Kebijakan Data Pengguna Chrome Web Store (Chrome Web Store User Data Policy), termasuk persyaratan Penggunaan Terbatas (Limited Use)."
+                    }
+                ]
+            },
+            "what-the-extension-reads": {
+                "title": "Apa yang dibaca ekstensi",
+                "blocks": [
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Bookmark Anda</strong>, untuk menampilkan, menelusuri, mengedit, memindahkan, menghapus, mengimpor, dan mengekspornya.",
+                            "<strong>Judul dan URL tab aktif</strong>, agar Anda dapat menyimpan halaman yang sedang Anda lihat ke dalam folder.",
+                            "<strong>Ikon situs dari cache ikon browser Anda sendiri</strong> (Chrome dan Edge), untuk ditampilkan di samping bookmark. Tidak ada permintaan jaringan yang dibuat untuk ikon ini.",
+                            "<strong>Ikon situs dari situs web yang di-bookmark</strong>, hanya saat Anda menjalankan Perbarui Ikon Situs (lihat di bawah).",
+                            "<strong>Teks halaman yang di-bookmark</strong>, hanya saat Anda menjalankan Indeks Teks Halaman (lihat di bawah).",
+                            "<strong>Gambar pratinjau halaman yang di-bookmark</strong>, hanya saat Anda menjalankan Ambil Sampul (lihat di bawah)."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Ekstensi ini tidak mendeklarasikan content script dan tidak membaca halaman yang terbuka di tab Anda. Setelah Anda menekan pintasan simpan cepat, ekstensi menampilkan notifikasi kecil di tab tersebut, yang tidak membaca apa pun dari halaman. Hanya jika Anda mengaktifkan Baca konten halaman, ekstensi mengunduh halaman secara terpisah, seperti dijelaskan di bawah. Ekstensi juga mengunduh halaman yang di-bookmark tempat Anda menjalankan Indeks Teks Halaman, dan menyimpan teksnya di perangkat ini. Ekstensi juga mengunduh bagian head dan gambar pratinjau halaman tempat Anda menjalankan Ambil Sampul, dan menyimpan salinan kecil gambar tersebut di perangkat ini."
+                    }
+                ]
+            },
+            "what-the-extension-stores": {
+                "title": "Apa yang disimpan ekstensi",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Semuanya disimpan di penyimpanan ekstensi browser Anda:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Setelan</strong> yang Anda ubah dari default-nya disimpan di penyimpanan sinkronisasi browser; setelan yang dibiarkan default tidak disimpan. Jika sinkronisasi browser aktif, browser Anda dapat menyalinnya ke perangkat Anda yang lain melalui akun browser Anda (misalnya Google, Mozilla, atau Microsoft). Setelan mencakup apakah AI aktif, tetapi tidak mencakup penyedia AI, model, atau kunci API Anda. (Versi 0.3.2 dan sebelumnya juga menyimpan penyedia AI dan model yang Anda pilih dalam setelan yang disinkronkan.)",
+                            "<strong>Beberapa setelan hanya disimpan di perangkat ini</strong>, di penyimpanan lokal: folder yang Anda pilih untuk simpan cepat, batas penyimpanan ikon situs, perekaman aktivitas AI, dan penelusuran web Tanya AI. Setelan untuk agen AI lokal juga diatur di setiap perangkat.",
+                            "<strong>Prompt kustom</strong> yang Anda tulis di bagian Prompt dalam setelan Alat AI (nama, tugas, dan teks setiap prompt, serta prompt mana yang digunakan setiap tugas; hingga 10) disimpan di penyimpanan sinkronisasi browser, sehingga disinkronkan melalui akun browser Anda seperti setelan. Saat alat AI menggunakan salah satu prompt Anda, teksnya dikirim ke penyedia AI Anda bersama permintaan.",
+                            "<strong>Tentang saya</strong>, beberapa kata tentang diri Anda yang dapat Anda tulis di setelan AI (kosong kecuali Anda menulisnya), disimpan di penyimpanan sinkronisasi browser, sehingga disinkronkan melalui akun browser Anda seperti setelan. Selama berisi teks, teks ini dikirim ke penyedia AI Anda bersama permintaan AI Anda (lihat di bawah).",
+                            "<strong>Tabel pengelola bookmark</strong>: kolom yang ditampilkan, urutannya, dan pengurutannya disinkronkan seperti setelan. Lebar kolom dan ukuran halaman tetap di perangkat ini.",
+                            "<strong>Layanan AI</strong> (nama, penyedia, dan model setiap layanan) beserta <strong>setelan koneksinya</strong> (kunci API, URL dasar, header tambahan, dan kolom khusus penyedia) disimpan di penyimpanan lokal hanya di perangkat ini. Data ini tidak disinkronkan. File cadangan berisi URL dasar dan kolom khusus penyedia setiap layanan, tetapi tidak pernah berisi kunci API atau header tambahannya. Jika browser mendukungnya (Chrome 140 dan yang lebih baru), penyimpanan lokal juga tertutup bagi skrip apa pun yang ditempatkan ekstensi di halaman web.",
+                            "<strong>Daftar model</strong> yang diambil dari layanan AI Anda (nama dan ID model) disimpan di penyimpanan lokal di perangkat ini selama 7 hari.",
+                            "<strong>Aktivitas AI</strong>, hanya jika Anda mengaktifkan Rekam permintaan di bagian Aktivitas AI dalam setelan AI (nonaktif secara default, diatur terpisah di setiap perangkat): permintaan AI terakhir, beserta apa yang dikirim ke penyedia Anda (atau ke AI bawaan Chrome) dan apa yang diterima kembali. Catatan ini berisi judul bookmark, URL, dan jalur folder, serta teks halaman jika Baca konten halaman aktif. Kunci API, header autentikasi, header tambahan Anda, dan kunci di dalam alamat web dihapus sebelum apa pun disimpan. Log tetap di penyimpanan lokal di perangkat ini, tidak pernah disinkronkan, dan dihapus saat Anda menonaktifkan perekaman. Log ini juga mencantumkan setiap pencarian yang dilakukan agen AI lokal, beserta nama yang diberikan agen.",
+                            "<strong>Tag, ringkasan, penelusuran tersimpan, folder terbaru, dan penelusuran terbaru</strong> disimpan di penyimpanan lokal hanya di perangkat ini. Anda dapat menonaktifkan penelusuran terbaru di Setelan.",
+                            "<strong>Ikon situs</strong> yang Anda simpan dengan Perbarui Ikon Situs disimpan di penyimpanan lokal hanya di perangkat ini, hingga batas ukuran yang dapat Anda ubah di Setelan. Anda dapat menghapusnya kapan saja dengan Hapus ikon tersimpan.",
+                            "<strong>Teks halaman</strong> yang Anda simpan dengan Indeks Teks Halaman hanya disimpan di perangkat ini dan hanya digunakan oleh penelusuran. Anda dapat menghapusnya kapan saja dengan Hapus teks halaman di Setelan.",
+                            "<strong>Sampul</strong> yang Anda simpan dengan Ambil Sampul adalah salinan kecil gambar pratinjau setiap halaman, hanya disimpan di perangkat ini dan hanya ditampilkan di kartu pengelola. Anda dapat menghapusnya kapan saja dengan Hapus sampul di Setelan.",
+                            "<strong>Simpan cepat terakhir Anda</strong> (judul dan URL halaman serta tempat halaman disimpan), untuk Urungkan dan Pindahkan ke, disimpan di penyimpanan sesi sampai browser ditutup.",
+                            "<strong>Histori urungkan pengelola bookmark</strong> (bookmark yang Anda ubah di sana, beserta salinan bookmark yang Anda hapus dan tag serta ringkasannya), untuk Urungkan dan Ulangi, disimpan di penyimpanan sesi sampai browser ditutup.",
+                            "<strong>Histori perubahan bookmark</strong> (apa yang berubah pada bookmark Anda dan kapan, baik perubahan yang dibuat Bookmark Scout maupun yang terdeteksi dari tempat lain: judul, URL, folder, dan hasil setiap perubahan), serta salinan judul, URL, dan folder setiap bookmark sebagaimana terakhir terlihat (untuk mengetahui apa yang berubah di luar Bookmark Scout), hanya disimpan di perangkat ini, di IndexedDB browser, untuk waktu terbatas. Data ini tidak pernah disinkronkan dan tidak pernah ada di file cadangan. Perekaman perubahan yang dibuat di tempat lain dapat dinonaktifkan di Setelan. Juga salinan setiap item yang dihapus Bookmark Scout, beserta isinya serta tag dan ringkasannya, agar dapat dipulihkan dari Histori; salinan ini dihapus bersama perubahannya.",
+                            "<strong>Tugas latar belakang</strong> (alat seperti Periksa Link Mati, Pengambil Metadata, Perbarui Ikon Situs, atau Penataan Ulang Folder dengan AI yang tetap berjalan setelah Anda menutup halamannya): bookmark yang diperiksanya (judul, URL, dan folder) dan setiap hasilnya, seperti judul dan deskripsi halaman, ikon situs, pemindahan yang disarankan layanan AI, atau perubahan yang sudah ditinjau yang diterapkannya (bookmark mana, serta judul, alamat, atau folder barunya), hanya disimpan di perangkat ini, di IndexedDB browser, agar tugas dapat berlanjut setelah browser dimulai ulang dan hasilnya dapat ditinjau kemudian. Data ini tidak pernah disinkronkan dan tidak pernah ada di file cadangan, dan dihapus setelah waktu terbatas atau saat Anda menghapus tugas di Tugas latar belakang."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Meng-uninstal ekstensi akan menghapus data yang disimpannya di browser ini. Bookmark Anda sendiri tetap ada di browser."
+                    }
+                ]
+            },
+            "when-data-leaves-your-browser": {
+                "title": "Kapan data keluar dari browser Anda",
+                "blocks": [
+                    {
+                        "type": "h3",
+                        "text": "Fitur AI opsional (nonaktif secara default)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Fitur AI hanya berjalan setelah Anda mengaktifkannya di Setelan dan memilih penyedia. Saat Anda menggunakan salah satunya, ekstensi mengirim data yang dibutuhkan fitur tersebut langsung dari browser Anda ke endpoint penyedia yang Anda konfigurasi:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Saran folder (di popup, di panel samping, atau saat Anda menekan pintasan simpan cepat AI): judul dan URL halaman saat ini, serta nama folder bookmark Anda.",
+                            "Tag Otomatis, Peringkas Konten, dan Penataan Ulang Folder dengan AI: judul, URL, dan jalur folder bookmark dalam cakupan yang Anda pilih.",
+                            "Tag Otomatis juga mengirim nama tag yang paling sering Anda gunakan (hingga 200, tanpa bookmark pemiliknya), agar AI memakainya kembali alih-alih membuat tag yang hampir sama, kecuali Anda menonaktifkan Kirim Tag yang Ada di setelan Alat AI.",
+                            "Hanya jika Anda mengaktifkan Baca konten halaman (nonaktif secara default): saran folder, Tag Otomatis, dan Peringkas Konten juga mengunduh setiap halaman melalui URL-nya, tanpa cookie Anda, dan mengirim teks utamanya. Halaman di jaringan lokal Anda tidak pernah diunduh. Penataan Ulang Folder dengan AI tidak pernah mengirim konten halaman.",
+                            "Tanya AI: pesan Anda dan percakapan sejauh ini, ditambah apa yang dicari AI untuk menjawab: bookmark yang cocok (judul, URL, jalur folder, tanggal ditambahkan, serta tag dan ringkasan tersimpan), nama folder Anda, judul dan URL halaman saat ini, apakah link yang di-bookmark yang diperiksanya masih berfungsi, dan, hanya jika Baca konten halaman aktif, teks halaman yang di-bookmark atau halaman saat ini yang dibacanya. Untuk memeriksa link, yang hanya dapat dilakukan setelah Anda mengizinkan akses ke situs web, Bookmark Scout meminta halaman tersebut dari browser Anda tanpa cookie. Jika Anda mengaktifkan penelusuran webnya (nonaktif secara default), penyedia juga menelusuri web. Percakapan tidak disimpan; percakapan berakhir saat Anda menutupnya.",
+                            "Tentang saya: jika Anda menulis sesuatu di Tentang saya dalam setelan AI (kosong secara default), setiap fitur AI dalam daftar ini mengirimkannya ke penyedia Anda bersama permintaannya."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Jika Anda juga mengaktifkan Rekomendasi Otomatis saat Dibuka (nonaktif secara default), saran folder dijalankan setiap kali Anda membuka popup atau panel samping."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Kunci API Anda dikirim ke penyedia tersebut untuk mengautentikasi permintaan. Penyedia menangani data berdasarkan ketentuan dan kebijakan privasinya sendiri, yang Anda setujui langsung dengan penyedia tersebut. Bookmark Scout tidak mengirim data ini ke tempat lain. Jika Anda mengarahkan ekstensi ke model yang berjalan di komputer Anda sendiri (misalnya Ollama), data tetap berada di perangkat Anda."
+                    },
+                    {
+                        "type": "p",
+                        "text": "<strong>AI bawaan Chrome</strong> (hanya Chrome): jika Anda menambahkan AI bawaan sebagai layanan AI, saran folder dijalankan pada model milik Chrome di komputer Anda, bukan pada penyedia. Judul dan URL halaman saat ini, nama folder yang paling cocok dengannya, dan, jika Baca konten halaman aktif, kutipan singkat teksnya hanya dikirim ke model tersebut dan tidak pernah keluar dari komputer Anda. Tidak ada kunci API yang digunakan. Chrome mengunduh model dari Google satu kali, saat Anda mengklik Unduh model di setelan AI; unduhan tersebut tidak membawa data Anda. Fitur AI lainnya tetap menggunakan penyedia yang Anda siapkan."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Agen AI lokal (nonaktif secara default)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Jika Anda mengaktifkan Izinkan agen AI lokal di setelan untuk developer (nonaktif secara default, diatur terpisah di setiap perangkat), agen AI yang Anda jalankan di komputer Anda sendiri, seperti Claude Code, Codex, atau Cursor, dapat mencari bookmark Anda melalui program bookmark-scout-mcp yang Anda instal di sana. Ekstensi meneruskan ke program tersebut apa yang diminta agen: bookmark yang cocok (judul, URL, jalur folder, tanggal ditambahkan, serta tag dan ringkasan tersimpan), nama folder Anda, judul dan URL halaman saat ini, apakah link yang di-bookmark masih berfungsi (hanya setelah Anda mengizinkan akses ke situs web), dan, hanya jika Baca konten halaman aktif, teks halaman yang di-bookmark atau halaman saat ini. Agen hanya dapat mengubah bookmark Anda jika Anda juga mengaktifkan Izinkan perubahan (nonaktif secara default), dan setiap perubahan tetap menunggu persetujuan Anda di jendela Bookmark Scout serta dapat diurungkan di pengelola bookmark. Anda dapat menonaktifkan setiap jenis pencarian atau perubahan. Kecuali Anda menonaktifkannya, nilai sensitif dalam judul dan alamat web (seperti token, alamat email, dan parameter yang dicantumkan Pemindai Privasi) diganti sebelum diteruskan. Program ini hanya berkomunikasi dengan agen di komputer Anda, tidak pernah melalui jaringan, dan berfungsi tanpa penyedia AI yang disiapkan di Bookmark Scout. Apa yang dilakukan agen terhadap apa yang dibacanya, termasuk mengirimkannya ke penyedia AI-nya sendiri, diatur oleh agen tersebut dan penyedianya."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Pemeriksaan link mati, pengambilan judul, dan ikon situs"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Periksa Link Mati dan Pengambil Metadata meminta halaman yang di-bookmark itu sendiri untuk melihat apakah halaman tersebut dapat dimuat dan apa judulnya. Perbarui Ikon Situs meminta satu halaman yang di-bookmark untuk setiap situs web, lalu file ikon dari domain situs web itu sendiri, agar bookmark dapat menampilkan ikon situs tersebut. Saat Anda menjalankan salah satu alat ini, browser meminta izin Anda untuk situs web dari bookmark dalam proses tersebut, atau untuk semua situs web jika jumlahnya lebih dari 20, kecuali Anda sudah mengizinkannya sebelumnya. Permintaan dikirim langsung ke setiap situs web, tanpa cookie, dan hasilnya tetap berada di ekstensi. Tidak ada layanan ikon pihak ketiga yang digunakan. Seperti kunjungan biasa, situs web dapat melihat alamat IP Anda dan bahwa halaman atau ikon tersebut diminta. Indeks Teks Halaman meminta setiap halaman yang di-bookmark dalam prosesnya dan menyimpan teks yang dapat dibaca di perangkat ini, agar penelusuran dapat menemukan kata di dalam halaman; apa yang dibacanya tidak pernah dikirim ke mana pun. Ambil Sampul meminta bagian head setiap halaman yang di-bookmark dalam prosesnya dan gambar pratinjau yang ditentukan halaman tersebut, hanya dari situs web halaman itu sendiri atau situs web yang Anda izinkan, tanpa cookie dan tanpa memberi tahu situs web gambar tersebut halaman mana yang Anda bookmark; alat ini menyimpan salinan kecil gambar di perangkat ini, dan menampilkan kartu tidak memerlukan permintaan apa pun."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Ekspor dan cadangan"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Ekspor bookmark dan ekspor konteks AI disimpan sebagai file di komputer Anda. Ekspor bookmark JSON juga berisi tag dan ringkasan setiap bookmark di dalamnya. Sebelum menyimpan, ekstensi dapat menampilkan tinjauan privasi yang memungkinkan Anda menyamarkan nilai sensitif."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Cadangkan setelan, di bagian bawah Setelan, menyimpan file cadangan (<code>bookmark-scout-backup.json</code>) berisi setelan yang Anda ubah, prompt kustom Anda, teks Tentang saya Anda, layanan AI Anda (nama, penyedia, model, URL dasar, dan kolom khusus penyedia), penelusuran tersimpan Anda, serta kolom dan pengurutan tabel bookmark. File ini tidak pernah berisi kunci API atau header tambahan; setelah pemulihan, Anda memasukkannya lagi di setelan AI. File ini tidak dienkripsi. Pulihkan setelan, di sebelahnya, memulihkan file tersebut."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Ekstensi ini tidak mengunggah file-file tersebut. File hanya berada di tempat Anda menyimpannya."
+                    }
+                ]
+            },
+            "what-the-developer-receives": {
+                "title": "Apa yang diterima developer",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Tidak ada. Ekstensi ini tidak mengirim data ke developer, dan tidak ada telemetri."
+                    }
+                ]
+            },
+            "permissions": {
+                "title": "Izin",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Saat Anda menginstal Bookmark Scout, browser hanya meminta satu hal: “Membaca dan mengubah bookmark Anda” di Chrome dan Edge, atau “Membaca dan mengubah markah” di Firefox (<code>bookmarks</code>). Izin lain yang diberikan saat instalasi tidak menampilkan prompt: <code>storage</code> untuk setelan, <code>activeTab</code> untuk membaca judul dan URL tab tempat Anda mengklik tombol toolbar atau menekan pintasan, <code>scripting</code> untuk menampilkan notifikasi simpan cepat di tab tersebut, <code>alarms</code> untuk melanjutkan tugas latar belakang setelah browser menghentikan proses latar belakang, <code>sidePanel</code> dan <code>offscreen</code> (yang menjalankan permintaan simpan cepat AI dan Penataan Ulang Folder dengan AI, serta membaca judul halaman untuk Pengambil Metadata, di halaman ekstensi tersembunyi) di Chrome dan Edge, dan <code>contextMenus</code> di Firefox, yang tidak mengizinkan ekstensi memintanya belakangan. Selebihnya bersifat opsional. Bookmark Scout menjelaskannya terlebih dahulu, dan browser hanya meminta izin saat Anda mengaktifkan atau menjalankan fitur yang memerlukannya:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "“Membaca ikon situs yang Anda kunjungi” (Chrome dan Edge, <code>favicon</code>): saat Anda mengklik Tampilkan ikon browser di Perbarui Ikon Situs, atau mengaktifkan Gunakan cache ikon browser di Setelan.",
+                            "“Membaca histori penjelajahan Anda” (Firefox: “Mengakses tab peramban”, <code>tabs</code>): saat Anda menyimpan halaman saat ini atau meminta saran folder dari panel samping. Popup toolbar dan pintasan simpan cepat tidak memerlukannya.",
+                            "“Membaca dan mengubah data Anda di semua situs example.com”, atau “di sejumlah situs” (Firefox: “Mengakses data Anda untuk situs di domain example.com”): saat Anda menjalankan Periksa Link Mati, Pengambil Metadata, atau Perbarui Ikon Situs, untuk situs web dari bookmark dalam proses tersebut. Indeks Teks Halaman meminta izin dengan cara yang sama, untuk situs web dari bookmark yang dibacanya. Ambil Sampul meminta izin dengan cara yang sama, untuk situs web dari bookmark yang dibacanya.",
+                            "“Membaca dan mengubah semua data Anda di semua situs” (Firefox: “Mengakses data Anda untuk semua situs web”): saat proses alat-alat tersebut mencakup lebih dari 20 situs, atau saat Anda mengaktifkan Baca konten halaman.",
+                            "“Membaca dan mengubah data Anda di api.example.com”, dengan alamat penyedia AI Anda sebagai pengganti api.example.com (Firefox: “Mengakses data Anda untuk api.example.com”): saat Anda mengklik Verifikasi Layanan atau Perbarui Model di setelan AI.",
+                            "“Berkomunikasi dengan aplikasi native yang bekerja sama” (Firefox: “Bertukar pesan dengan program selain Firefox”, <code>nativeMessaging</code>): saat Anda mengaktifkan Izinkan agen AI lokal, untuk berkomunikasi dengan program bookmark-scout-mcp di komputer Anda.",
+                            "Hanya di Firefox, prompt yang menyebut bahwa pengembang ingin mengumpulkan data, untuk apa yang dibagikan setiap fitur: saat Anda mengaktifkan AI (kunci API, bookmark, serta judul dan URL halaman saat ini), mengaktifkan Baca konten halaman (teks halaman), atau mengklik Verifikasi Layanan (kunci API Anda), semuanya dikirim ke penyedia AI Anda; dan saat Anda mengaktifkan Izinkan agen AI lokal, untuk data bookmark yang diterima program di komputer Anda. Di sini “pengembang” berarti penyedia AI Anda atau program di komputer Anda; Bookmark Scout tidak menerima apa pun.",
+                            "Menu klik kanan (Chrome dan Edge, <code>contextMenus</code>), saat Anda mengaktifkan Menu Klik Kanan di Setelan. Browser menambahkannya tanpa prompt."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Jika Anda menolak, fitur tersebut tetap nonaktif. Anda dapat mencabut izin di setelan ekstensi browser kapan saja, dan fitur yang memerlukannya akan nonaktif."
+                    },
+                    {
+                        "type": "p",
+                        "text": "<permissions>Halaman izin di dokumentasi</permissions> mencantumkan setiap izin dan alasan Bookmark Scout memerlukannya."
+                    }
+                ]
+            },
+            "websites": {
+                "title": "Situs web ini dan situs dokumentasi",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Situs web ini, bookmark-scout.com, adalah situs statis yang di-hosting di Cloudflare Pages. Cloudflare memproses permintaan untuk menayangkan situs, termasuk alamat IP Anda, berdasarkan <cloudflare>kebijakan privasi Cloudflare</cloudflare>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Situs web ini menghitung kunjungan dengan <umami>Umami Cloud</umami>, yang bekerja tanpa cookie. Umami mencatat alamat dan judul halaman, situs perujuk, browser, sistem operasi, jenis perangkat, ukuran layar, bahasa, dan perkiraan lokasi Anda (negara, wilayah, dan kota). Umami menggunakan alamat IP Anda untuk menentukan nilai-nilai ini tetapi tidak menyimpannya. Umami mengelompokkan tampilan halaman ke dalam sesi menggunakan hash yang salt-nya berubah setiap awal bulan, dan tidak melacak Anda di situs web lain. Detailnya ada di <umamiDocs>dokumentasi Umami</umamiDocs>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Situs dokumentasi, docs.bookmark-scout.com, juga di-hosting di Cloudflare Pages dan tidak memuat analitik apa pun."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Kedua situs tidak memiliki akun maupun iklan. Keduanya menyajikan font sendiri, sehingga browser Anda tidak menghubungi Google Fonts."
+                    }
+                ]
+            },
+            "children": {
+                "title": "Anak-anak",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout tidak ditujukan untuk anak-anak. Ekstensi ini tidak mengumpulkan informasi dari siapa pun, dan situs web hanya mengumpulkan statistik kunjungan anonim yang dijelaskan di atas."
+                    }
+                ]
+            },
+            "changes": {
+                "title": "Perubahan pada kebijakan ini",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Perubahan pada kebijakan ini akan dipublikasikan di halaman ini dengan tanggal berlaku yang baru dan dicatat dalam catatan rilis."
+                    }
+                ]
+            },
+            "contact": {
+                "title": "Kontak",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Untuk pertanyaan dan permintaan terkait privasi, kirim email ke <privacyEmailLink>{privacyEmail}</privacyEmailLink>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Untuk melaporkan kerentanan keamanan, kirim email ke <securityEmailLink>{securityEmail}</securityEmailLink> atau ikuti langkah-langkah di <securityPolicy>SECURITY.md</securityPolicy>. Mohon jangan melaporkan kerentanan di issue publik."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Kode sumbernya tersedia secara publik di <source>GitHub</source> dengan lisensi <license>{licenseName}</license>."
+                    }
+                ]
+            }
+        }
+    }
+}

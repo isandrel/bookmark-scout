@@ -134,7 +134,7 @@ POUR LES DÉVELOPPEURS
 MISE À JOUR DEPUIS UNE VERSION ANTÉRIEURE
 La version 0.3.3 enregistre ses données dans un nouveau format et ne convertit pas les anciennes données : les paramètres reviennent à leurs valeurs par défaut, les services d'IA et les clés API doivent être ajoutés à nouveau, et les prompts personnalisés, les recherches enregistrées, les étiquettes, les résumés et les icônes de site enregistrées sont effacés. Vos favoris eux-mêmes ne sont pas modifiés.
 
-Créé par un développeur indépendant : ni entreprise, ni publicité, ni compte. Disponible en 9 langues. Thèmes clair, sombre et système.
+Créé par un développeur indépendant : ni entreprise, ni publicité, ni compte. Disponible en 12 langues. Thèmes clair, sombre et système.
 
 Documentation : https://docs.bookmark-scout.com
 ```
@@ -198,7 +198,7 @@ POUR LES DÉVELOPPEURS
 MISE À JOUR DEPUIS UNE VERSION ANTÉRIEURE
 La version 0.3.3 enregistre ses données dans un nouveau format et ne convertit pas les anciennes données : les paramètres reviennent à leurs valeurs par défaut, les services d'IA et les clés API doivent être ajoutés à nouveau, et les prompts personnalisés, les recherches enregistrées, les étiquettes, les résumés et les icônes de site enregistrées sont effacés. Vos favoris eux-mêmes ne sont pas modifiés.
 
-Créé par un développeur indépendant : ni entreprise, ni publicité, ni compte. Disponible en 9 langues. Thèmes clair, sombre et système.
+Créé par un développeur indépendant : ni entreprise, ni publicité, ni compte. Disponible en 12 langues. Thèmes clair, sombre et système.
 ```
 
 ## What's new in 0.3.3

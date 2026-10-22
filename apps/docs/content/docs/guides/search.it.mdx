@@ -1,0 +1,108 @@
+---
+title: Ricerca e ricerche salvate
+description: Trova qualsiasi preferito per titolo, indirizzo, cartella, tag o riassunto dal popup, dal riquadro laterale o dalla gestione preferiti, restringi una ricerca con gli operatori e conserva combinazioni di filtri come ricerche salvate con un nome.
+---
+
+## Cercare dal popup o dal riquadro laterale [#search-from-the-popup-or-side-panel]
+
+<Steps>
+<Step>
+Fai clic sull'icona di Bookmark Scout nella barra degli strumenti. Puoi anche aprire Bookmark Scout nel riquadro laterale del browser (la barra laterale in Firefox), che resta aperto mentre navighi.
+</Step>
+<Step>
+Digita nella casella di ricerca in alto, che riporta **Digita una cartella per salvare questa pagina…** e cerca anche tra i preferiti (premi <Shortcut id="popup.focus_search" /> per raggiungerla). I risultati compaiono mentre digiti, all'interno delle rispettive cartelle, con ogni corrispondenza evidenziata. Ogni parola deve corrispondere, nel titolo, nell'indirizzo, nella cartella o nei tag e nel riassunto; vedi [Parole e operatori di ricerca](#search-words-and-operators).
+</Step>
+<Step>
+Restringi la corrispondenza con **Altre opzioni di ricerca**, il pulsante all'interno della casella di ricerca: **Maiuscole/minuscole**, **Parola intera** e **Ricerca con pattern avanzati (regex)**, che tratta la ricerca come un'espressione regolare. Il pulsante è evidenziato finché una di queste opzioni è attiva. Queste opzioni cercano solo nei titoli, esattamente come hai digitato, senza operatori.
+</Step>
+<Step>
+Fai clic su un preferito, oppure raggiungilo con i tasti freccia e premi `Enter`, per aprirlo in una nuova scheda.
+</Step>
+</Steps>
+
+Buono a sapersi:
+
+- La corrispondenza a parola intera considera come confini di parola gli spazi, la punteggiatura e i cambi di sistema di scrittura, quindi termini come `C++` e le parole giapponesi vengono trovati.
+- Un'espressione regolare non valida mostra un avviso e viene cercata come testo semplice.
+- Le cartelle permanenti, come la Barra dei preferiti, sono contenitori e non corrispondono mai per nome.
+- Quando ci sono più corrispondenze del limite di risultati, una nota indica quante ne vengono mostrate. Affina la ricerca oppure aumenta **Risultati massimi** nelle [Impostazioni](/settings).
+- Cancellando la ricerca (con il pulsante di cancellazione, o con `Esc` nella casella di ricerca) si riaprono le cartelle che avevi aperto prima.
+- Le ricerche recenti vengono ricordate su questo dispositivo. Fai clic sulla casella di ricerca vuota, o premi <Shortcut id="popup.recent_searches" /> al suo interno, per elencarle. Cancellale da quell'elenco oppure disattiva **Cronologia ricerche** nelle Impostazioni.
+
+## Parole e operatori di ricerca [#search-words-and-operators]
+
+Le caselle di ricerca del popup, del riquadro laterale e della gestione preferiti interpretano una ricerca nello stesso modo. Cercano solo tra i preferiti di questo browser e non inviano nulla da nessuna parte.
+
+- Ogni parola deve corrispondere, ciascuna in un punto qualsiasi: il titolo, l'indirizzo web, il percorso della cartella o i tag e il riassunto del preferito. `recipe soup` trova un preferito chiamato "Soup" in una cartella chiamata "Recipes".
+- Le virgolette tengono insieme le parole: `"tomato soup"`.
+- Un `-` davanti esclude ciò che corrisponde: `recipe -cake` o `-tag:archive`.
+- Una parola che indica una cartella trova la cartella. Nel popup, i suoi preferiti compaiono al suo interno; `folder:` elenca tutto ciò che contiene.
+- Il testo che non è un operatore viene cercato così come l'hai digitato, ad esempio `C++`, `10:30` o un indirizzo web. Lo stesso vale per un operatore che Bookmark Scout non conosce, come `foo:bar`. Un valore che non riesce a interpretare, come una data non valida, viene ignorato.
+
+| Ricerca | Trova |
+| --- | --- |
+| `title:react` | Titoli che contengono il testo; `title:"react hooks"` accetta più parole |
+| `url:github` | Indirizzi web che contengono il testo |
+| `domain:github.com` | Preferiti su quel sito, inclusi i suoi sottodomini |
+| `folder:Work` o `path:Work` | Tutto ciò che si trova in una cartella con esattamente quel nome, a qualsiasi profondità; `folder:"Work / Docs"` indica una cartella dentro un'altra |
+| `tag:reading` | Preferiti con esattamente quel tag |
+| `summary:recipe` | Riassunti che contengono il testo |
+| `content:recipe` | Il testo delle pagine che hai indicizzato con **Indicizza il testo delle pagine** |
+| `is:bookmark` o `is:folder` | Solo preferiti, o solo cartelle |
+| `is:untagged` | Preferiti senza tag |
+| `has:tags` o `has:summary` | Elementi con tag, o con un riassunto |
+| `has:content` | Preferiti il cui testo della pagina è indicizzato |
+| `after:2026-01-31` o `before:2026-01-31` | Elementi aggiunti in quel giorno o dopo, oppure in quel giorno o prima |
+
+I tag e i riassunti sono quelli che aggiungi in **Dettagli preferito** o che conservi dagli strumenti **Tag automatici** e **Riassunti dei contenuti**. Restano su questo dispositivo.
+
+Con **Indicizza il testo delle pagine** attivo, le parole semplici trovano anche il testo delle pagine che hai indicizzato, dopo titoli, indirizzi, tag e riassunti; un risultato del popup trovato in questo modo mostra le parole attorno alla corrispondenza. Vedi [Cercare all'interno delle pagine](/guides/clean-up#search-inside-pages).
+
+## Filtrare nella gestione preferiti [#filter-in-the-bookmarks-manager]
+
+La tabella della gestione preferiti ha filtri più precisi. In Chrome, apri la pagina dei preferiti del browser per raggiungerla; si apre sulla Barra dei preferiti.
+
+- **Cerca in titoli, indirizzi, cartelle e tag** interpreta [parole e operatori di ricerca](#search-words-and-operators) ed elenca le cartelle e i preferiti corrispondenti. Premi <Shortcut id="manager.focus_filter" /> per raggiungerla. Il pulsante **Sintassi di ricerca** alla sua estremità elenca gli operatori; scegline uno per aggiungerlo alla ricerca.
+- **Filtri** contiene tutti gli altri filtri: **Solo cartella corrente**, **Tipo**, **Dominio**, **Cartella**, che mantiene gli elementi delle cartelle che scegli, **Data di aggiunta** e **Filtra URL...**, che cerca solo nell'indirizzo web. Ogni filtro in uso compare come etichetta sotto la barra degli strumenti, e la sua **×** lo rimuove; **Ripristina** cancella tutti i filtri e la ricerca. Un problema nella ricerca, come una data non valida, viene spiegato sotto la barra degli strumenti.
+- **Solo cartella corrente** limita i filtri alla cartella in cui ti trovi. Quando è disattivato, i filtri cercano in tutti i preferiti, ogni risultato mostra la sua cartella sotto il titolo e il percorso in alto indica **Risultati da tutte le cartelle**.
+- Ordina per qualsiasi colonna dalla sua intestazione. Finché la tabella non è nell'ordine del browser, il testo accanto a **Ordine del browser** indica l'ordine attuale; fai clic su **Ordine del browser** per tornare indietro.
+- La tabella mostra **Titolo**, **URL** e **Data di aggiunta**, 50 righe per pagina. Attiva **Tipo**, **Percorso cartella** e le altre colonne in **Visualizza**, e scegli il numero di righe per pagina sotto la tabella. Per cambiare l'ordine delle colonne, trascina una colonna per la maniglia in **Visualizza**, oppure usa i pulsanti freccia accanto. Puoi anche trascinare l'intestazione di una colonna nella tabella in una nuova posizione, oppure spostarla a sinistra o a destra dal menu dell'intestazione.
+- I due pulsanti accanto a **Visualizza** passano dall'elenco a **Riquadri**, una griglia di riquadri con le stesse righe, gli stessi filtri, lo stesso ordinamento, la stessa selezione e gli stessi menu: Sinistra e Destra spostano di un riquadro, Su e Giù di una riga di riquadri, e un doppio clic apre una cartella o un link. La scelta viene conservata su questo dispositivo.
+- In una ricerca su più cartelle, il menu di una riga offre **Mostra nella cartella**: cancella i filtri e apre la cartella che contiene l'elemento, con l'elemento selezionato.
+
+## Link a una cartella o a una ricerca [#link-to-a-folder-or-a-search]
+
+L'indirizzo della gestione preferiti segue ciò che stai guardando, quindi i pulsanti **Indietro** e **Avanti** del browser scorrono tra cartelle e ricerche, e puoi salvare nei preferiti o condividere una vista.
+
+- `?id=` indica la cartella aperta, come nella gestione preferiti di Chrome: `chrome://bookmarks/?id=12` apre la cartella 12 in Chrome, e `edge://favorites/?id=12` in Edge. Anche i link da Chrome 154 a 156, che indicavano la Barra dei preferiti, Altri preferiti e Preferiti su dispositivi mobili con un ID lungo, aprono quelle cartelle. Senza `?id=`, la gestione preferiti si apre sulla Barra dei preferiti; **Preferiti** all'inizio del percorso della cartella mostra il livello principale.
+- `?q=` è la ricerca: `chrome://bookmarks/?q=react` apre la gestione preferiti cercando "react", e `?q=tag:reading` cercando il tag. Mentre digiti in **Cerca in titoli, indirizzi, cartelle e tag**, l'indirizzo si aggiorna, e una sequenza di digitazione corrisponde a un passo di **Indietro**. La ricerca prevale sulla cartella; la cartella si applica comunque quando **Solo cartella corrente** è selezionato.
+- **Copia link a questa cartella**, accanto al percorso della cartella nell'intestazione e nel menu della riga di una cartella, copia quell'indirizzo. In Firefox copia l'indirizzo della pagina della gestione preferiti. Chrome ed Edge continuano a mostrare l'indirizzo con cui hai aperto la gestione preferiti, anche quando passi da una cartella all'altra.
+- Il titolo della scheda indica la cartella, oppure la ricerca mentre stai cercando.
+
+## Salvare una ricerca [#save-a-search]
+
+Una ricerca salvata conserva con un nome i filtri, l'ordinamento e l'ambito della cartella correnti della gestione preferiti, così puoi riaprire la stessa vista in seguito.
+
+<Steps>
+<Step>
+Imposta almeno un filtro: titolo, URL, tipo, cartella, dominio o data di aggiunta.
+</Step>
+<Step>
+Fai clic su **Ricerche salvate** nella barra degli strumenti della tabella, oppure premi <Shortcut id="manager.open_saved_searches" />.
+</Step>
+<Step>
+Inserisci un nome in **Dai un nome a questa ricerca** e fai clic su **Salva**.
+</Step>
+</Steps>
+
+Per usarne una, apri **Ricerche salvate** e sceglila. I suoi filtri e il suo ordinamento sostituiscono quelli correnti e, se era limitata a una cartella, la gestione preferiti torna a quella cartella. Ogni voce si può rinominare o eliminare, e un'eliminazione si può annullare dal messaggio che segue. Trascina una voce per la maniglia per cambiarne l'ordine, oppure apri il menu della maniglia per spostarla da tastiera.
+
+Il testo della casella di ricerca viene salvato come l'hai digitato, operatori inclusi. Una ricerca salvata prima che la casella di ricerca interpretasse gli operatori cercava il suo testo solo in titoli e indirizzi. Ora si apre con quel testo tra virgolette quando contiene più parole o i due punti, così trova ancora tutti i preferiti che trovava prima.
+
+Una ricerca salvata archivia le definizioni dei filtri, mai copie dei preferiti, quindi i suoi risultati corrispondono sempre ai tuoi preferiti attuali. Se una cartella che indica è stata eliminata, quella cartella viene ignorata, gli altri filtri si applicano comunque e un messaggio indica quante cartelle sono state ignorate.
+
+Le ricerche salvate restano nell'archivio locale dell'estensione di questo browser e non vengono sincronizzate, perché i loro filtri possono rivelare cosa salvi nei preferiti e gli ID delle cartelle cambiano da un dispositivo all'altro. Puoi conservarne fino a 50.
+
+<Callout title="Firefox">
+In Firefox, apri la gestione preferiti con **Apri gestione preferiti** nel popup.
+</Callout>

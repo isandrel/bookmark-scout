@@ -1,0 +1,24 @@
+{
+  "title": "Документация Bookmark Scout",
+  "description": "Сохраняйте каждую страницу в нужную папку закладок с Bookmark Scout — расширением для браузера, которое также ищет, упорядочивает и очищает ваши закладки прямо в браузере.",
+  "pages": [
+    "---Начало работы---",
+    "index",
+    "first-save",
+    "installation",
+    "browser-support",
+    "---Руководства---",
+    "...guides",
+    "---Справочник---",
+    "features",
+    "settings",
+    "permissions",
+    "---О проекте---",
+    "privacy",
+    "faq",
+    "status",
+    "---Для разработчиков---",
+    "guides/local-agents",
+    "contributing"
+  ]
+}

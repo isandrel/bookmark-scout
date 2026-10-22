@@ -1,0 +1,24 @@
+{
+  "title": "Documentazione di Bookmark Scout",
+  "description": "Salva ogni pagina nella cartella dei preferiti giusta con Bookmark Scout, un'estensione del browser che ti aiuta anche a trovare, riordinare e ripulire i preferiti, direttamente nel browser.",
+  "pages": [
+    "---Per iniziare---",
+    "index",
+    "first-save",
+    "installation",
+    "browser-support",
+    "---Guide---",
+    "...guides",
+    "---Riferimento---",
+    "features",
+    "settings",
+    "permissions",
+    "---Informazioni---",
+    "privacy",
+    "faq",
+    "status",
+    "---Per sviluppatori---",
+    "guides/local-agents",
+    "contributing"
+  ]
+}

@@ -2,9 +2,12 @@ import type { Translations } from "fumadocs-ui/i18n";
 import { de } from "./copy/de";
 import { es } from "./copy/es";
 import { fr } from "./copy/fr";
+import { id } from "./copy/id";
+import { it } from "./copy/it";
 import { ja } from "./copy/ja";
 import { ko } from "./copy/ko";
 import { ptBR } from "./copy/pt-BR";
+import { ru } from "./copy/ru";
 import { zhCN } from "./copy/zh-CN";
 import { zhTW } from "./copy/zh-TW";
 
@@ -79,9 +82,12 @@ const en = {
     es: "Spanish",
     fr: "French",
     "pt-BR": "Brazilian Portuguese",
+    ru: "Russian",
+    id: "Indonesian",
     de: "German",
     ja: "Japanese",
     ko: "Korean",
+    it: "Italian",
     "zh-TW": "Traditional Chinese",
   } as Record<string, string>,
 
@@ -131,6 +137,9 @@ const TRANSLATIONS: Partial<Record<string, DocsCopy>> = {
   de: de,
   fr: fr,
   "pt-BR": ptBR,
+  ru: ru,
+  id: id,
+  it: it,
 };
 
 export function getCopy(locale: string): DocsCopy {

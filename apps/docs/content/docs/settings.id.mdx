@@ -1,0 +1,326 @@
+---
+title: Setelan
+description: Setiap setelan di halaman setelan Bookmark Scout, tab demi tab, dengan nilai default dan apa yang diubahnya.
+---
+
+Buka halaman setelan dari entri **Opsi** ekstensi, misalnya dengan mengklik kanan ikon toolbar di Chrome lalu memilih **Opsi**. Perubahan disimpan saat Anda membuatnya.
+
+## Menggunakan halaman setelan [#using-the-settings-page]
+
+- Halaman terbuka di **Dasar**, beberapa setelan yang paling sering diubah orang. Setiap tab lainnya tercantum di bawah **Lanjutan**, dan setiap setelan di **Dasar** juga ada di tabnya sendiri di sana: mengubahnya di salah satu tempat mengubah setelan yang sama.
+- **Telusuri setelan...** di bagian atas menemukan setelan di tab mana pun dan menyebutkan berapa banyak yang cocok.
+- Setiap tab dibagi menjadi beberapa bagian berjudul. Tombol aktif/nonaktif sebuah alat ada di sebelah judulnya; selama nonaktif, setelan lainnya dilipat. Setelan teknis, seperti batas waktu dan panjang nama file, ada di bawah **Setelan lanjutan**, yang tetap tertutup sampai Anda membukanya atau penelusuran menemukan sesuatu di dalamnya.
+- Setelan yang diubah ditandai **Diubah**, dengan tombol untuk meresetnya ke default. **Reset Semua** mereset setiap setelan.
+- **Cadangkan setelan** menyimpan file cadangan berisi setelan yang Anda ubah, prompt kustom, layanan AI (nama, penyedia, model, **URL Dasar**, dan kolom khusus penyedia; tidak pernah kunci API atau **JSON Header Tambahan**), penelusuran tersimpan, aturan pintar, serta kolom dan urutan tabel pengelola. **Pulihkan setelan** memulihkan cadangan, mengganti setiap bagian yang ada di file, atau menggabungkan file setelan biasa ke setelan Anda; setelah memulihkan cadangan, masukkan lagi kunci API dan header tambahan di [AI](#ai) untuk layanan yang ditandai **Perlu disiapkan**. Keduanya tidak menyentuh bookmark Anda. **Ekspor Bookmark** di sebelahnya membuka pengelola bookmark di alat ekspornya; lihat [Impor dan ekspor](/guides/import-export).
+- Setelan yang Anda ubah disimpan di penyimpanan sinkronisasi browser, jadi ikut ke perangkat lain saat sinkronisasi browser aktif. Beberapa setelan yang milik satu perangkat tetap di perangkat itu: folder yang dipilih untuk simpan cepat, **Batas Penyimpanan Ikon**, perekaman aktivitas AI, dan penelusuran web Tanya AI. Layanan AI, dengan kunci API, **URL Dasar**, dan **JSON Header Tambahan**-nya, juga tetap di perangkat ini. Lihat [Privasi](/privacy).
+
+## Dasar [#essentials]
+
+| Setelan | Juga ada di | Fungsinya |
+| --- | --- | --- |
+| **Folder Simpan Cepat** dan **Folder Tujuan** | [Penyimpanan & Penelusuran](#quick-save) | Tempat pintasan simpan cepat menyimpan halaman saat ini |
+| **Menu Klik Kanan** | [Penyimpanan & Penelusuran](#context-menu) | Menampilkan **Simpan bookmark ke...** saat Anda mengklik kanan link |
+| **Tema** dan **Bahasa** | [Tampilan](#language-theme-and-icons) | Tampilan Bookmark Scout dan bahasa yang dipakainya |
+| **Konfirmasi Sebelum Menghapus** | [Perilaku](#deleting) | Bertanya sebelum menghapus |
+| **Catat Perubahan dari Tempat Lain** | [Perilaku](#history-settings) | Mencantumkan perubahan bookmark yang dibuat di luar Bookmark Scout di Histori |
+
+Di bawahnya, **AI bersifat opsional** menyatakan bahwa Bookmark Scout berfungsi tanpa AI; **Siapkan AI** membuka tab [AI](#ai).
+
+<Screenshot name="settings" />
+
+## Penyimpanan & Penelusuran [#search]
+
+### Folder yang Cocok [#folder-matches]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Folder yang Cocok** | Aktif | Saat Anda menelusuri, cantumkan folder yang namanya cocok di atas hasil, untuk menyimpan halaman saat ini di sana |
+| **Maksimum Folder yang Cocok** | <SettingDefault path="search.folder_matches.max" /> | Berapa banyak folder cocok yang dicantumkan |
+| **Izinkan Salah Ketik** | Aktif | Kata penelusuran dengan 4 huruf atau lebih boleh cocok dengan nama folder yang berbeda satu huruf |
+
+### Penelusuran [#searching]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Jeda Penelusuran** | <SettingDefault path="search.search.debounce_ms" /> ms | Berapa lama menunggu setelah Anda berhenti mengetik sebelum popup menelusuri |
+| **Hasil Penelusuran Maks** | 20 hasil | Jumlah terbanyak hasil yang ditampilkan; catatan memberi tahu jika ada lebih banyak |
+| **Luaskan Folder saat Menelusuri** | Aktif | Buka folder yang berisi hasil yang cocok |
+| **Histori Penelusuran** | Aktif | Ingat penelusuran terbaru di perangkat ini |
+| **Penelusuran Terbaru yang Disimpan** | <SettingDefault path="search.search.history_max" /> | Berapa banyak penelusuran terbaru yang diingat |
+
+Lihat [Penelusuran dan penelusuran tersimpan](/guides/search).
+
+### Penyimpanan [#saving]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Folder Terbaru** | Aktif | Tampilkan folder yang baru-baru ini digunakan di popup dan menu klik kanan |
+| **Maks Folder Terbaru** | <SettingDefault path="search.saving.recent_folders_max" /> | Berapa banyak folder terbaru yang ditampilkan |
+| **Nama Folder Default** | Folder Baru | Nama awal folder baru |
+
+Lihat [Menyimpan dan mengatur](/guides/save-and-organize).
+
+### Pintasan Simpan Cepat [#quick-save]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Folder Simpan Cepat** | Paling cocok | Tempat <Shortcut id="commands.quick-save" /> menyimpan halaman saat ini: folder yang paling cocok dengannya, folder yang terakhir digunakan, atau folder pilihan. Pintasan AI selalu memakai saran AI |
+| **Folder Tujuan** | Belum dipilih | Folder untuk **Folder pilihan**. Jika folder itu dihapus, simpan cepat memakai folder yang terakhir digunakan |
+| **Folder Lain yang Ditawarkan** | <SettingDefault path="search.quick_save.alternatives" /> | Berapa banyak folder lain yang ditawarkan notifikasi simpan cepat sebagai tujuan pemindahan halaman |
+| **Durasi Notifikasi** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | Berapa lama notifikasi simpan cepat tetap tampil sebelum tertutup; mengarahkan pointer ke notifikasi membuatnya tetap terbuka |
+
+Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser Anda, dengan **Ubah pintasan**. Di Firefox Anda juga bisa mengetik tombol baru langsung di sana dan meresetnya ke default. Di Chrome dan Edge, bagian ini juga menjelaskan cara memberikan <Shortcut id="browser.bookmark_page" /> ke simpan cepat. Lihat [Menyimpan dengan pintasan keyboard](/guides/save-and-organize#quick-save) dan [Memakai tombol bookmark untuk simpan cepat](/guides/save-and-organize#ctrl-d).
+
+### Menu Klik Kanan [#context-menu]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Menu Klik Kanan** | Nonaktif | Tampilkan **Simpan bookmark ke...** saat Anda mengklik kanan link. Di Chrome dan Edge, mengaktifkannya menambahkan izin opsional menu klik kanan, tanpa permintaan izin |
+| **Sumber Nama Bookmark** | Teks link | Beri nama bookmark yang disimpan lewat klik kanan sesuai teks link, judul halaman, atau URL link |
+
+## Tampilan [#appearance]
+
+### Bahasa, tema, dan ikon [#language-theme-and-icons]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Bahasa** | Setelan browser | Bahasa <Languages of="extension" join="or" />, atau ikuti browser |
+| **Tema** | Sistem | Sistem, Terang, atau Gelap, diterapkan ke setiap halaman Bookmark Scout yang terbuka |
+| **Tampilkan Ikon Situs** | Aktif | Tampilkan ikon situs di sebelah bookmark di popup dan panel samping |
+| **Gunakan cache ikon browser** | Nonaktif | Chrome dan Edge: tampilkan juga ikon yang sudah ada di cache browser, untuk situs yang belum punya ikon tersimpan dari **Perbarui Ikon Situs**. Mengaktifkannya, di sini atau dengan **Tampilkan ikon browser** di kartu **Perbarui Ikon Situs**, meminta izin untuk membaca ikon situs. Tidak ditampilkan di Firefox, yang tidak punya cache ikon untuk ekstensi |
+| **Ukuran Ikon Situs** | 16px (Kecil) | 16, 24, atau 32 piksel |
+
+### Tanggal dan Waktu [#dates]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Format Tanggal** | Sesuai bahasa saya | Cara tanggal ditampilkan di mana saja: kolom tanggal pengelola, Histori, dan detail. **Pendek**, **Panjang**, atau **Tahun-bulan-hari** (2026-03-14); setiap pilihan menampilkan contoh |
+| **Format Waktu** | Sesuai bahasa saya | **12 jam** atau **24 jam**, atau sesuai cara bahasa Anda menampilkan waktu |
+
+### Alamat [#addresses]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Tampilkan Garis Miring di Akhir** | Nonaktif | Tampilkan `/` di akhir alamat, seperti `https://example.com/`, di pengelola, tinjauan, dan Histori. Link selalu membuka alamat yang persis sama |
+
+### Popup [#popup]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Lebar Popup** | <SettingDefault path="appearance.popup.width" /> px | Browser mengizinkan paling banyak 800 px |
+| **Tinggi Popup** | <SettingDefault path="appearance.popup.height" /> px | Browser mengizinkan paling banyak 600 px |
+| **Panjang Pemotongan** | <SettingDefault path="appearance.popup.truncate_length" /> karakter | Memendekkan judul halaman di header saran AI popup |
+
+### Notifikasi [#notifications]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Durasi Notifikasi** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Berapa lama pesan tetap terbuka. Pesan urungkan punya waktu 10 detiknya sendiri |
+| **Jeda Tooltip** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Berapa lama pointer berada di atas kontrol sebelum penjelasannya muncul |
+
+## Perilaku [#behavior]
+
+### Hierarki dan pengurutan [#tree-and-sorting]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Urutan** | Urutan Browser | **Urutan Browser** (seperti di bilah bookmark), **Tanggal Ditambahkan** (terbaru lebih dulu), **Abjad**, atau **Folder Dulu**. Juga urutan tabel pengelola sampai Anda mengurutkannya menurut kolom. Hanya mengubah cara Bookmark Scout menampilkan bookmark, tidak pernah urutan yang disimpan browser |
+| **Kelompokkan menurut Folder** | Aktif | Di popup dan panel samping, cantumkan subfolder sebelum bookmark di setiap tingkat |
+| **Tarik dan Lepas di Hierarki** | Aktif | Di popup dan panel samping, seret bookmark dan folder untuk memindahkannya, dan lepas link dari halaman web ke folder di panel samping untuk menyimpannya di sana. Nonaktifkan agar baris tidak berpindah tanpa sengaja; Anda tetap bisa memindahkannya di pengelola |
+
+### Link [#links]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Buka link di** | Tab baru | **Tab baru**, **Tab latar belakang baru**, atau **Tab saat ini**: tempat link terbuka saat Anda mengkliknya di Bookmark Scout. Klik tengah dan <Shortcut id="mouse.open_in_background" /> tetap bekerja seperti biasa di browser Anda |
+| **Tanya Sebelum Membuka Lebih dari** | <SettingDefault path="behavior.links.confirm_open_above" /> | Membuka lebih banyak bookmark dari jumlah ini sekaligus (Enter, **Buka semua**) akan bertanya dulu, seperti pengelola Chrome; folder dihitung dari bookmark yang langsung ada di dalamnya |
+
+### Bilah Samping Alat [#tools-sidebar]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Tampilan Pengelola** | Daftar | **Daftar** menampilkan tabel; **Kartu** menampilkan baris yang sama sebagai kisi kartu, dengan pemilihan, tombol, dan menu yang sama. Dua tombol di sebelah **Lihat** juga bisa mengalihkannya. Hanya disimpan di perangkat ini |
+| **Tata Letak Bilah Samping Alat** | Tab | **Tab** menampilkan satu bagian setiap kali, dengan **Semua** untuk semua alat; **Satu daftar** menampilkan setiap bagian, satu per satu berurutan. Hanya disimpan di perangkat ini |
+
+### Penghapusan [#deleting]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Konfirmasi Sebelum Menghapus** | Aktif | Bertanya sebelum menghapus. Setiap penghapusan bisa diurungkan selama 10 detik, apa pun pilihannya |
+
+### Histori Bookmark [#history-settings]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Catat Perubahan dari Tempat Lain** | Aktif | Cantumkan juga perubahan yang dibuat di pengelola bookmark browser sendiri, oleh ekstensi lain, atau oleh sinkronisasi browser di [Histori](/guides/save-and-organize#history), sebagai dari sumber yang tidak diketahui. Nonaktif menjedanya; saat diaktifkan lagi, apa yang berubah selama itu ditampilkan sebagai satu perbedaan. Hanya disimpan di perangkat ini |
+
+### Menu pengelola bookmark [#manager-menus]
+
+Pilih perintah yang ditampilkan menu klik kanan dan menu ⋯ pengelola, dan seret perintah dengan pegangannya untuk mengubah urutannya dalam grupnya. Pegangan itu juga tombol yang menunya memindahkan perintah ke paling atas, ke atas, ke bawah, atau ke paling bawah, jadi keyboard juga bisa dipakai. **Pulihkan default** mengembalikan menu lengkap. **Lihat Detail** atau **Salin ID Bookmark** selalu tetap ada, sehingga menu memiliki perintah untuk bookmark atau folder apa pun; jika tidak ada perintah yang Anda pertahankan yang berlaku, menu menampilkan **Tidak ada tindakan yang tersedia**.
+
+## AI [#ai]
+
+AI nonaktif secara default. Setelan ini hanya berpengaruh setelah Anda mengaktifkan **Fitur AI**; sebelum itu, setelan AI di sini dan di tab **Alat AI** berwarna abu-abu di bawah catatan yang menyatakannya. Anda tetap bisa mengubahnya. Sampai layanan default disiapkan, kotak **AI bersifat opsional** di bagian atas menjelaskan apa yang dilakukan AI, apa yang dibutuhkannya, berapa biayanya, dan apa yang dikirim, dengan link ke [Menyiapkan alat AI](/guides/ai-tools).
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Fitur AI** | Nonaktif | Aktifkan alat AI dan rekomendasi folder di popup. Di Firefox, mengaktifkannya meminta persetujuan Anda untuk berbagi kunci API, bookmark, serta judul dan URL halaman saat ini dengan penyedia AI Anda |
+| **Layanan AI** | Tidak ada | Penyedia yang Anda tambahkan, masing-masing dengan model dan kuncinya sendiri; alat AI memakai layanan default, kecuali **AI bawaan** yang hanya menyarankan folder: selama AI bawaan menjadi default, alat lain memakai layanan lain pertama yang aktif |
+
+Di bawahnya, panel penyedia berisi **Kunci API**, **URL Dasar**, **Model Kustom**, dan **JSON Header Tambahan**, dengan **Verifikasi Layanan** dan **Perbarui Model**. Batas folder dikirim ke penyedia sebagai instruksi, dan output-nya tidak diperiksa terhadap batas tersebut. Lihat [Menyiapkan alat AI](/guides/ai-tools).
+
+### Saran folder [#folder-suggestions]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Rekomendasi Otomatis saat Dibuka** | Nonaktif | Minta rekomendasi folder setiap kali popup dibuka |
+| **Rekomendasi Maks** | <SettingDefault path="ai.suggestions.max_recommendations" /> | Jumlah terbanyak rekomendasi folder yang diminta |
+
+### Baca konten halaman [#read-page-content]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Baca konten halaman** | Nonaktif | Kirim teks utama setiap halaman, bukan hanya judul dan URL-nya, ke rekomendasi folder, Tag Otomatis, dan Peringkas Konten. Meminta akses situs web saat diaktifkan |
+| **Lewati Halaman Jaringan Lokal** | Aktif | Jangan pernah membaca halaman di jaringan lokal Anda (seperti router atau intranet), agar kontennya tidak sampai ke perusahaan AI Anda |
+
+### Bahasa output AI [#ai-output-language]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Bahasa output AI** | Sama dengan ekstensi | Bahasa yang dipakai AI untuk menulis tag, ringkasan, dan nama folder baru: bahasa ekstensi sendiri, bahasa yang Anda pilih, atau **Sama dengan setiap halaman**, yaitu bahasa setiap halaman atau judul bookmark. Tanya AI menjawab dalam bahasa yang Anda pakai untuk menulis dan memakai bahasa ini hanya jika bahasa itu tidak jelas |
+
+### Tentang saya [#about-me]
+
+**Tentang saya** (kosong secara default) adalah beberapa kata tentang Anda, seperti "Saya guru; saya menyimpan materi pelajaran", hingga 1.000 karakter. Selama berisi teks, prompt bawaan setiap fitur AI mengirimkannya ke penyedia AI Anda, agar hasilnya lebih sesuai dengan Anda; prompt kustom hanya mengirimkannya jika memakai `{{aboutMe}}`. Isinya disinkronkan melalui akun browser Anda dan disimpan saat Anda meninggalkan kolom tersebut.
+
+### Tanya AI [#ask-ai]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Langkah Maks per Jawaban** | <SettingDefault path="ai.ask_ai.max_steps" /> | Berapa kali Tanya AI boleh memanggil model untuk satu jawaban: lebih sedikit membuatnya lebih murah, lebih banyak memungkinkannya mencari lebih jauh |
+
+### Yang boleh dilakukan Tanya AI [#ask-ai-actions]
+
+Setiap pencarian dan perubahan yang bisa dilakukan Tanya AI tercantum di sini, dan semuanya aktif secara default. Nonaktifkan salah satunya, maka Tanya AI sama sekali tidak ditawari fungsi itu. Menerapkan rencana perubahan selalu meminta persetujuan Anda dulu, apa pun pilihan Anda di sini.
+
+### Aktivitas AI [#ai-activity]
+
+**Rekam permintaan** (nonaktif secara default, hanya untuk perangkat ini) menyimpan 50 permintaan AI terakhir di perangkat ini, dengan kunci API dan header kredensial dihapus, agar Anda bisa melihat persis apa yang dikirim. Menonaktifkannya menghapus log tersebut. Lihat [Melihat apa yang dikirim](/guides/ai-tools#see-what-was-sent).
+
+## Alat AI [#ai-tools]
+
+**Prompt**, di bagian atas tab ini, adalah pustaka prompt: baca prompt bawaan setiap alat, atau tulis prompt Anda sendiri dengan placeholder seperti `{{language}}`. Lihat [Menulis prompt Anda sendiri](/guides/ai-tools#write-your-own-prompts).
+
+Setiap alat memiliki tombol **Aktifkan** (aktif secara default). Menonaktifkannya menyembunyikan alat itu dari bilah samping **Alat** di pengelola.
+
+| Alat | Setelan dan default |
+| --- | --- |
+| **Pengemas Konteks AI** | **Format Output** Markdown; **Sertakan Jalur Folder**, **Sertakan Tanggal**, **Sertakan Tag Tersimpan**, dan **Sertakan Ringkasan Tersimpan** aktif; **Item Maks** <SettingDefault path="ai_tools.context_packer.max_items" />; **Kedalaman Maks** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Panjang Kutipan** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **Tag Otomatis** | **Tag Minimum** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Tag Maksimum** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Gaya Tag** kebab-case; **Mode Penggabungan** Tambahkan; **Hapus Tag Duplikat** aktif; **Kirim Tag yang Ada** aktif |
+| **Peringkas Konten** | **Panjang Ringkasan** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Sertakan Petunjuk Domain** aktif; **Mode Penggabungan** Ganti |
+| **Penataan Ulang Folder dengan AI** | **Keyakinan Minimum** 55% (pemindahan di bawahnya dibuang); **Ukuran Batch** <SettingDefault path="ai_tools.reorganization.batch_size" /> bookmark per permintaan |
+
+Tag Otomatis dan Peringkas Konten selalu bekerja pada folder saat ini.
+
+### Penataan Ulang Folder dengan AI [#ai-folder-reorganization]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Kategori Maks** | Tanpa batas | Jumlah terbanyak folder tingkat atas yang boleh dibuat rencana penataan ulang |
+| **Item Min per Folder** dan **Item Maks per Folder** | 1 dan Tanpa batas | Target ukuran folder untuk rencana penataan ulang |
+
+## Pemeliharaan [#maintenance]
+
+| Alat | Setelan dan default |
+| --- | --- |
+| **Pembersih Duplikat** | **Strategi Pencocokan** URL yang dinormalkan; **Normalkan www**, **Abaikan Protokol**, dan **Abaikan Garis Miring di Akhir** aktif; **Aturan Penyimpanan** Terlama; **Grup Maks** <SettingDefault path="maintenance.duplicates.max_groups" />. Selalu memindai semua bookmark |
+| **Pembersih URL** | **Hapus Fragmen** nonaktif; **Urutkan Parameter Kueri** dan **Hapus Parameter Kueri Duplikat** aktif; daftar **Pertahankan Parameter** dan **Hapus Parameter** |
+| **Aturan Pintar** | Aturan Anda, dalam urutan dijalankannya: **Tambahkan aturan** atau **Mulai dari template**, lalu nama, penelusuran, tag, dan folder setiap aturan, diaktifkan atau dinonaktifkan; seret aturan untuk mengubah pemindahan mana yang menang. Template dimulai dalam keadaan nonaktif. Lihat [Memberi tag dan memindahkan dengan Aturan Pintar](/guides/clean-up#tag-and-move-with-smart-rules) **Beri Tag pada Bookmark Baru** nonaktif: jika aktif, aturan yang diaktifkan menambahkan tagnya ke setiap bookmark saat bookmark itu ditambahkan (pemindahan tidak pernah dilakukan otomatis). |
+| **Periksa Link Mati** | **Batas Waktu Permintaan** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> s; **Permintaan Bersamaan** <SettingDefault path="maintenance.dead_links.concurrency" />; **Jumlah Percobaan Ulang** <SettingDefault path="maintenance.dead_links.retry_count" />; **Ikuti Pengalihan** aktif; **Kode Status Berhasil** <SettingDefault path="maintenance.dead_links.success_statuses" />; **Default untuk link yang pasti mati**, **Default untuk link yang perlu diperiksa manual**, dan **Default untuk link yang dialihkan** Biarkan apa adanya |
+| **Tugas latar belakang** | **Terapkan di Latar Belakang Jika Lebih dari** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />: perubahan yang ditinjau untuk lebih banyak bookmark dari jumlah ini diterapkan di latar belakang, secara bertahap, dan terus berjalan saat Anda menutup halaman; setiap tahap adalah satu perubahan di [Histori](/guides/save-and-organize), dan diurungkan di sana |
+
+Alat dimulai pada **Semua Bookmark**, sehingga pemindaian dari folder tempat pengelola terbuka tidak melewatkan folder lainnya; ubah **Cakupan Default** sebuah alat agar dimulai pada folder yang terbuka. **Penataan Ulang Folder dengan AI** dimulai pada folder yang terbuka, karena rencana untuk setiap bookmark mengirim semuanya ke penyedia AI Anda. Di tingkat teratas pengelola, tempat tidak ada folder yang terbuka, setiap alat dimulai pada **Semua Bookmark**.
+
+Daftar seperti **Hapus Parameter** diedit sebagai chip: ketik nama lalu tekan Enter, atau pilih saran. **Kode Status Berhasil** adalah daftar centang berisi kode umum, dan Anda bisa menambahkan kode lain. Setiap daftar menampung hingga 20 entri, dan nama parameter hingga 32 karakter (huruf, angka, dan tanda baca URL), agar setelan muat di sinkronisasi browser. Daftar default ada di [Membersihkan duplikat dan URL pelacakan](/guides/clean-up#strip-tracking-parameters). Lihat juga [Menemukan dan memperbaiki link mati](/guides/dead-links).
+
+## Judul Halaman & Ikon [#metadata--content]
+
+### Pengambil Metadata [#metadata-fetcher]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Aktifkan Pengambil Metadata** | Aktif | Tampilkan **Pengambil Metadata** di bilah samping Alat |
+| **Timpa Judul** | Nonaktif | Tawarkan judul baru untuk bookmark yang sudah memiliki judul |
+| **Ambil Deskripsi** | Aktif | Tampilkan deskripsi halaman di tinjauan. Deskripsi tidak pernah disimpan |
+| **Batas Waktu Permintaan** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> s | Per halaman. Juga dipakai oleh **Perbarui Ikon Situs** |
+| **Permintaan Bersamaan** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | Jumlah halaman yang diminta sekaligus. Juga dipakai oleh **Perbarui Ikon Situs** |
+
+### Perbarui Ikon Situs [#refresh-site-icons]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Aktifkan Perbarui Ikon Situs** | Aktif | Tampilkan **Perbarui Ikon Situs** di bilah samping Alat |
+| **Cakupan Default** | Semua bookmark | Cakupan awal pembaruan ikon situs |
+| **Ukuran Ikon yang Diutamakan** | <SettingDefault path="metadata_content.site_icons.preferred_size" />px | Jika halaman mencantumkan beberapa ikon, unduh yang paling mendekati ukuran ini |
+| **Ukuran File Ikon Maksimum** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | File ikon yang lebih besar tidak diunduh atau disimpan |
+| **Batas Penyimpanan Ikon** | 4 MB | Total ukuran ikon tersimpan di perangkat ini; yang terlama dihapus lebih dulu |
+
+### Indeks Teks Halaman [#index-page-text]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Aktifkan Indeks Teks Halaman** | Nonaktif | Tampilkan **Indeks Teks Halaman** di bilah samping Alat, dan izinkan penelusuran melihat isi halaman yang sudah Anda indeks |
+| **Cakupan Default** | Folder saat ini | Bookmark yang dibaca alat saat dimulai |
+
+Di bawahnya, **Indeks teks halaman** menyebutkan berapa halaman yang sudah diindeks, dan **Hapus teks halaman** menghapus semuanya tanpa menyentuh bookmark, tag, atau Histori.
+
+### Ambil Sampul [#fetch-covers]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Aktifkan Ambil Sampul** | Nonaktif | Tampilkan **Ambil Sampul** di bilah samping Alat |
+| **Cakupan Default** | Folder saat ini | Bookmark yang dibaca alat saat dimulai |
+| **Lebar Sampul** | <SettingDefault path="metadata_content.covers.width_px" /> px | Lebar salinan yang disimpan untuk setiap sampul; gambar yang lebih besar diperkecil ke lebar ini |
+| **Ukuran Gambar Maks** | <SettingDefault path="metadata_content.covers.max_image_kb" /> KB | File gambar yang lebih besar dari ini tidak diunduh |
+| **Penyimpanan Sampul** | <SettingDefault path="metadata_content.covers.max_cache_mb" /> MB | Ruang yang boleh dipakai sampul di perangkat ini; yang terlama dihapus lebih dulu. Hanya disimpan di perangkat ini |
+
+Di bawahnya, **Sampul bookmark** menyebutkan berapa banyak sampul yang tersimpan beserta ukurannya, dan **Hapus sampul** menghapus semuanya tanpa menyentuh bookmark, tag, atau Histori.
+
+## Keamanan [#security]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Aktifkan Pemindai Privasi** | Aktif | Tampilkan **Pemindai Privasi** di bilah samping Alat. Alat ini selalu memindai semua bookmark |
+| **Pindai Judul** | Nonaktif | Periksa judul selain URL |
+| **Pindai Parameter Kueri** dan **Pindai Fragmen** | Aktif | Periksa bagian-bagian itu di setiap URL. Fragmen tanpa parameter (`#section`, `#inbox`) hanya ditandai jika berisi kunci atau token |
+| **Parameter Sensitif** | <SettingDefault path="security.privacy_scanner.sensitive_params" /> | Nama parameter yang ditandai |
+| **Deteksi Email** dan **Deteksi UUID** | Aktif | Tandai alamat email dan nilai yang mirip UUID |
+
+## Analitik [#analytics]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Aktifkan Statistik** | Aktif | Tampilkan **Statistik Bookmark** di bilah samping Alat |
+| **Sertakan Domain**, **Sertakan Folder**, **Sertakan Duplikat**, **Sertakan Protokol**, **Sertakan Rincian Kedalaman** | Aktif | Bagian-bagian laporan; bagian yang dinonaktifkan disembunyikan |
+| **Jumlah Entri Teratas** | <SettingDefault path="analytics.statistics.top_n" /> | Panjang daftar domain dan folder teratas |
+
+## Impor & Ekspor [#data]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Tampilkan Alat Ekspor** dan **Tampilkan Alat Impor** | Aktif | Tampilkan keduanya di bilah samping Alat |
+| **Format Ekspor Default** | HTML | Format yang dipilih saat alat ekspor dibuka |
+| **Awalan Nama File** | `bookmarks_` | Awal setiap nama file ekspor |
+| **Panjang Nama File Maks** | <SettingDefault path="data.export.filename_max_length" /> | Nama file terpanjang yang dibuat |
+| **Ukuran Indentasi JSON**, **Ukuran Indentasi HTML**, **Ukuran Indentasi Markdown** | <SettingDefault path="data.export.json_indent_size" />, <SettingDefault path="data.export.html_indent_spaces" />, <SettingDefault path="data.export.markdown_indent_spaces" /> | Jumlah spasi per tingkat di setiap format |
+| **Sertakan Tanggal** dan **Sertakan URL** | Aktif | Sertakan keduanya dalam ekspor |
+
+Lihat [Impor dan ekspor](/guides/import-export).
+
+## Untuk developer [#developers]
+
+### Agen AI lokal [#agent-bridge]
+
+**Izinkan agen AI lokal** (nonaktif secara default, hanya untuk perangkat ini) memungkinkan agen AI di komputer Anda, seperti Claude Code, Codex, atau Cursor, mencari bookmark Anda melalui program bookmark-scout-mcp, yang Anda instal dan daftarkan dengan `bookmark-scout-mcp install`. Fitur ini tidak memerlukan **Fitur AI**. Mengaktifkannya meminta browser Anda mengizinkan ekstensi berkomunikasi dengan program tersebut. **Izinkan perubahan** (nonaktif secara default) juga memungkinkan agen menyimpan halaman dan mengusulkan pemindahan, penggantian nama, penghapusan, dan folder baru; setiap perubahan membuka jendela Bookmark Scout tempat Anda menyetujui atau menolaknya, dan Anda bisa mengurungkannya di pengelola bookmark. Panel di bawah tombol menunjukkan apakah program sedang berjalan.
+
+**Sembunyikan nilai pribadi** (aktif secara default) mengganti parameter URL sensitif, token, dan alamat email di judul dan URL yang diterima agen, menggunakan daftar Pemindai Privasi. **Yang boleh dilakukan agen lokal** mencantumkan setiap pencarian, semuanya aktif secara default; pencarian yang Anda nonaktifkan sama sekali tidak ditawarkan ke agen.

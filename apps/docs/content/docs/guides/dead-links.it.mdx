@@ -1,0 +1,90 @@
+---
+title: Trovare e riparare i link non funzionanti
+description: Analizza i preferiti alla ricerca di link non funzionanti, scopri quali vanno controllati a mano e riparali eliminandoli, seguendo un reindirizzamento, usando una copia archiviata o modificando l'URL.
+---
+
+**Controlla link non funzionanti** si trova nella barra laterale **Strumenti** della gestione preferiti, in **Manutenzione**. Richiede ogni pagina salvata nei preferiti per verificare se si carica ancora.
+
+<Callout title="Firefox">
+In Firefox, apri la gestione preferiti con **Apri gestione preferiti** nel popup.
+</Callout>
+
+## Eseguire una scansione [#run-a-scan]
+
+<Steps>
+<Step>
+In **Controlla link non funzionanti**, scegli la cartella corrente o tutti i preferiti nel menu dell'ambito e fai clic su **Scansiona**.
+</Step>
+<Step>
+Bookmark Scout spiega a quali siti deve accedere: solo ai siti dei preferiti che analizzi, oppure a tutti i siti web quando sono più di 20. Fai clic su **Consenti l'accesso**, poi accetta la richiesta del browser. I siti che hai già consentito non vengono richiesti di nuovo. Se scegli **Non ora** o rifiuti, non viene analizzato nulla.
+</Step>
+<Step>
+Attendi i risultati. Un riepilogo in alto conta i link sicuramente non funzionanti, quelli da controllare a mano e quelli reindirizzati. I pulsanti sopra l'elenco indicano ciascun gruppo con il relativo numero; fai clic su uno per mostrare solo quei link. Ogni destinazione di reindirizzamento è un link che puoi aprire.
+</Step>
+</Steps>
+
+L'accesso ai siti web è facoltativo e non viene concesso all'installazione. Le richieste vengono inviate senza cookie, e puoi revocare l'accesso nelle impostazioni delle estensioni del browser. Un link che reindirizza a un sito esterno alla scansione non può essere seguito, quindi viene mostrato come **Da controllare** invece che come **Non funzionante**. Vedi [Autorizzazioni](/permissions).
+
+## Lasciarlo lavorare in background [#let-it-run-in-the-background]
+
+Il controllo viene eseguito in background. Puoi chiudere la gestione preferiti, il popup o il riquadro laterale, e continua finché il browser è aperto; se il browser arresta il processo in background dell'estensione o si riavvia, riprende dai link già controllati. Durante l'esecuzione, il popup e il riquadro laterale ne mostrano l'avanzamento in una riga, che apre **Attività in background** nella gestione preferiti.
+
+- **Pausa** interrompe le nuove richieste, e **Riprendi** controlla solo i link non ancora controllati. Un controllo in pausa resta in pausa dopo un riavvio.
+- Se l'accesso ai siti web viene revocato durante il controllo, questo si mette in pausa e lo segnala; **Riprendi** chiede di nuovo l'accesso.
+- **Annulla** interrompe il controllo e conserva i risultati ottenuti fino a quel momento. Non modifica alcun preferito.
+- **Controlla i risultati** apre i risultati in qualsiasi momento, e **Elimina** rimuove un controllo terminato. I controlli terminati vengono rimossi da soli dopo un po' di tempo.
+
+Le riparazioni non avvengono mai in background: le revisioni e le applichi come descritto più avanti.
+
+## Leggere i risultati [#read-the-results]
+
+| Risultato | Cosa significa |
+| --- | --- |
+| **Non funzionante** | Pagina non trovata (404 o 410), connessione rifiutata, host non trovato oppure reindirizzamenti in ciclo |
+| **Da controllare** | Spesso funziona ancora in un browser: accesso richiesto o negato (401, 403, 407), limite di richieste (429), il sito rifiuta i controlli automatici (405 o 501), errore del server (5xx), un altro errore HTTP o un timeout |
+| **Reindirizzato** | Il link funziona ma ora punta altrove; viene mostrata la destinazione |
+| **Saltato** | Non è un link web, ad esempio un bookmarklet |
+
+Un sito che risponde 429 o 503 e chiede di riprovare entro pochi secondi viene ricontrollato dopo quell'attesa, entro il **Numero di tentativi**; uno che chiede di attendere più a lungo viene elencato qui subito.
+
+Qualsiasi errore di una richiesta `HEAD` viene confermato con una `GET` prima di essere segnalato, perché alcuni server non supportano `HEAD`.
+
+<Callout type="info" title="Messaggi della console in Chrome">
+Chrome registra una riga "Failed to load resource" nella console per sviluppatori della pagina per ogni richiesta non riuscita. Le estensioni non possono nascondere queste righe; la scansione in sé non registra nulla.
+</Callout>
+
+## Riparare i link [#repair-links]
+
+<Steps>
+<Step>
+Fai clic su **Correggi o rimuovi i link**. Vengono elencati tutti i link non riusciti, scaduti o reindirizzati. Gli stessi pulsanti dei gruppi restringono l'elenco. Seleziona i link, o la casella sopra l'elenco per tutti i link mostrati, e scegli un'azione in **Imposta i selezionati su…** per applicarla a tutti in una volta; puoi comunque cambiarne uno qualsiasi in seguito. Ogni link parte dall'azione impostata per la sua categoria nelle [Impostazioni](/settings), cioè **Lascia invariato** a meno che non la cambi lì.
+</Step>
+<Step>
+Scegli un'azione per ciascuno:
+
+- **Lascia invariato** (predefinita, quindi non cambia nulla a meno che tu non scelga altro)
+- **Elimina preferito**
+- **Usa la destinazione del reindirizzamento**, proposta solo quando la scansione ha rilevato un reindirizzamento
+- **Usa la copia archiviata (Wayback Machine)**, che fa puntare il preferito a `https://web.archive.org/web/<original URL>`. Il link viene creato localmente e non controllato, quindi la pagina potrebbe non essere mai stata archiviata.
+- **Modifica URL**, che accetta solo un URL `http` o `https` valido e diverso da quello attuale
+</Step>
+<Step>
+Controlla il riepilogo di quanti preferiti verranno eliminati, avranno l'URL sostituito o verranno mantenuti, poi fai clic su **Applica**.
+</Step>
+</Steps>
+
+Non cambia nulla finché non applichi. Prima di ogni modifica il preferito viene riletto: uno eliminato o modificato dopo la scansione viene saltato ed elencato, così una scansione non aggiornata non sovrascrive mai una modifica più recente.
+
+**Annulla**, mostrato per 10 secondi nel messaggio o nella finestra dopo un'applicazione parziale, e <Shortcut id="manager.undo" /> nella gestione preferiti annullano le stesse riparazioni: ripristinano i preferiti eliminati e rimettono gli URL sostituiti, a meno che non siano stati modificati di nuovo nel frattempo.
+
+## Regolare la scansione [#tune-the-scan]
+
+Nella scheda **Manutenzione** delle [Impostazioni](/settings):
+
+| Impostazione | Predefinito |
+| --- | --- |
+| **Timeout della richiesta** | <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> secondi per richiesta |
+| **Richieste simultanee** | <SettingDefault path="maintenance.dead_links.concurrency" /> richieste alla volta |
+| **Numero di tentativi** | 1 tentativo |
+| **Segui i reindirizzamenti** | Attivo |
+| **Codici di stato validi** | 200, 201, 202, 204, 301, 302, 307, 308 |

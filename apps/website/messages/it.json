@@ -1,0 +1,313 @@
+{
+  "shortcutNotes": {
+    "mac": "{keys} su Mac",
+    "other": "{keys} su Windows e Linux",
+    "pair": "{primary} ({secondary})",
+    "click": "clic"
+  },
+  "metadata": {
+    "title": "Bookmark Scout – Salva i preferiti nella cartella giusta, in un attimo",
+    "description": "Estensione del browser che salva le pagine nella cartella dei preferiti giusta: digita il nome di una cartella, premi una scorciatoia o lascia che l'IA la suggerisca. Più ricerca e pulizia.",
+    "keywords": [
+      "estensione del browser",
+      "estensione Chrome",
+      "componente aggiuntivo Firefox",
+      "estensione Edge",
+      "salvare preferiti in una cartella",
+      "cercare cartelle dei preferiti",
+      "scorciatoia da tastiera per i preferiti",
+      "gestione preferiti",
+      "cercare nei preferiti",
+      "organizzare i preferiti",
+      "pulizia dei preferiti",
+      "preferiti duplicati",
+      "link non funzionanti",
+      "strumenti IA per i preferiti"
+    ]
+  },
+  "structuredData": {
+    "features": [
+      "Salva in una cartella digitandone il nome",
+      "Scorciatoia di salvataggio rapido con notifica nella pagina e annullamento",
+      "Suggerimenti di cartelle con IA, solo se attivata",
+      "Ricerca istantanea nei preferiti",
+      "Organizzazione tramite trascinamento",
+      "Supporto del riquadro laterale (la barra laterale in Firefox)",
+      "Ricerche salvate",
+      "Scorciatoie da tastiera",
+      "Annulla e ripeti nella gestione preferiti",
+      "Modalità scura",
+      "Gestione preferiti che funziona come quella di Chrome",
+      "Pulizia dei duplicati",
+      "Pulizia dei parametri di tracciamento",
+      "Controllo dei link non funzionanti con riparazioni controllate",
+      "Importazione ed esportazione dei preferiti",
+      "Controllo della privacy con oscuramento facoltativo prima delle esportazioni",
+      "Chat con IA, solo se attivata, che modifica i preferiti solo dopo la tua approvazione",
+      "Supporto multilingue"
+    ]
+  },
+  "nav": {
+    "features": "Funzioni",
+    "privacy": "Privacy",
+    "install": "Installa",
+    "docs": "Documentazione",
+    "github": "GitHub",
+    "menu": "Menu",
+    "skip": "Vai al contenuto",
+    "languages": "Lingua",
+    "home": "Home page di Bookmark Scout"
+  },
+  "languageSuggestion": {
+    "label": "Suggerimento della lingua",
+    "text": "Questa pagina è disponibile anche in italiano.",
+    "action": "Leggi in italiano",
+    "dismiss": "Chiudi"
+  },
+  "footer": {
+    "tagline": "Salva le pagine nella cartella giusta, poi ritrovale e riordinale, direttamente nel browser.",
+    "product": "Prodotto",
+    "project": "Progetto",
+    "contact": "Contatti",
+    "legal": "Note legali",
+    "features": "Funzioni",
+    "install": "Installa",
+    "docs": "Documentazione",
+    "releases": "Versioni",
+    "github": "Codice sorgente",
+    "contributing": "Come contribuire",
+    "license": "Licenza ({license})",
+    "support": "Assistenza",
+    "privacy": "Privacy",
+    "security": "Sicurezza",
+    "contactAddress": "{role}: {address}",
+    "privacyPolicy": "Informativa sulla privacy",
+    "securityTxt": "security.txt",
+    "madeBy": "Creato da {author}, uno sviluppatore indipendente: nessuna azienda, nessuna pubblicità, nessun account. Gratuito e open source.",
+    "helpCenter": "Centro assistenza"
+  },
+  "home": {
+    "hero": {
+      "title": "Salva ogni pagina nella cartella giusta, in pochi secondi.",
+      "description": "Digita parte del nome di una cartella, oppure premi {{SHORTCUT:commands.quick-save}} su qualsiasi pagina, e la pagina viene salvata nella cartella a cui appartiene. Se vuoi, anche l'IA può suggerire la cartella. Bookmark Scout trova e riordina anche i preferiti che hai già, direttamente nel browser. Nessun account, nessuna pubblicità e non tracciamo quello che fai.",
+      "download": "Scarica da GitHub",
+      "docs": "Leggi la documentazione",
+      "demoNote": "Questa demo usa un albero di cartelle inventato e non conserva nulla. L'estensione mostra le tue cartelle, all'interno del browser."
+    },
+    "demo": {
+      "label": "Provala: salva questa pagina in una cartella",
+      "pageLabel": "Pagina corrente",
+      "placeholder": "Digita parte del nome di una cartella",
+      "try": "Prova",
+      "clear": "Cancella",
+      "startHint": "Digita qualche lettera del nome di una cartella. Le cartelle corrispondenti compaiono qui, comprese quelle annidate.",
+      "matches": "Salva nella cartella",
+      "saveHere": "Salva qui",
+      "savedBadge": "Salvata",
+      "saved": "Salvata in {folder}.",
+      "alreadySaved": "Già in {folder}, quindi non è stata salvata due volte.",
+      "emptyTitle": "Nessuna cartella corrisponde a “{query}”.",
+      "emptyHint": "Prova con parte del nome di una cartella, o con un percorso come ai/llms. Una parola di 4 o più lettere può contenere un errore di battitura.",
+      "keys": "↑ ↓ per scegliere, Invio per salvare"
+    },
+    "tour": {
+      "title": "Cosa puoi farci",
+      "lede": "Screenshot reali della versione per Chrome. Seguono l'impostazione chiara o scura del tuo sistema.",
+      "tabsLabel": "Cosa fa Bookmark Scout",
+      "firefoxNote": "Firefox non consente di sostituire la sua pagina dei segnalibri, quindi in Firefox la gestione preferiti, con i suoi strumenti di pulizia, le ricerche salvate e l'importazione ed esportazione, si apre da un pulsante nel popup della barra degli strumenti.",
+      "save": {
+        "tab": "Salva",
+        "heading": "Salva nella cartella giusta",
+        "caption": "Il popup della barra degli strumenti: digita parte del nome di una cartella, o scegline una nell'albero, e salva la pagina con un clic.",
+        "alt": "Due popup: \"fin\" digitato nella casella di ricerca con la cartella Fine-tuning (AI / LLMs) selezionata sotto Salva nella cartella, e i suggerimenti dell'IA per un'altra pagina: una nuova cartella AI/LLMs/Inference e la cartella esistente AI/LLMs",
+        "points": [
+          "Digita parte del nome di una cartella, anche una annidata in profondità nell'albero, e salvaci la pagina corrente senza staccare le mani dalla tastiera",
+          "Digita un percorso come ai/llms e trova la cartella anche con un piccolo errore di battitura",
+          "Premi {{SHORTCUT:commands.quick-save}} su qualsiasi pagina per salvarla nella cartella che le corrisponde meglio; una piccola notifica nella pagina offre Annulla e altre cartelle",
+          "Una pagina già presente in quella cartella non viene salvata due volte, e le cartelle in cui hai salvato di recente compaiono per prime",
+          "Salva i link dal menu contestuale nelle cartelle recenti, dopo aver attivato il menu nelle Impostazioni (all'inizio è disattivato)",
+          "Con l'IA attiva, ricevi suggerimenti di cartelle per la pagina, oppure salva nel primo con {{SHORTCUT:commands.ai-quick-save}}"
+        ]
+      },
+      "organize": {
+        "tab": "Trova e organizza",
+        "heading": "Trova e organizza ciò che hai salvato",
+        "caption": "La gestione preferiti sostituisce la pagina Preferiti di Chrome e funziona allo stesso modo, con un albero delle cartelle, il percorso di navigazione e una tabella ordinabile.",
+        "alt": "La gestione preferiti di Bookmark Scout sulla cartella AI / LLMs / Fine-tuning, con l'albero delle cartelle (AI, Dev, Design, Tools, Reading list), una casella di ricerca e la tabella dei preferiti, ognuno con l'icona del suo sito",
+        "points": [
+          "Cerca in tutti i tuoi preferiti mentre digiti, per titolo, indirizzo, cartella o tag",
+          "Tieni aperti lo stesso albero e la stessa ricerca nel riquadro laterale del browser (la barra laterale in Firefox)",
+          "Salva una ricerca: mostrerà sempre i risultati aggiornati",
+          "Seleziona più righe con {{SHORTCUT:mouse.select_toggle}}, fai clic con il tasto destro per tagliare, copiare, incollare e aprire tutto, e trascina preferiti e cartelle dove devono stare",
+          "Annulla e ripeti le modifiche con {{SHORTCUT:manager.undo}} e {{SHORTCUT:manager.redo}}, anche dopo aver ricaricato la pagina",
+          "Importa i preferiti da un file dopo un'anteprima ed esportali in HTML, JSON, Markdown o CSV",
+          "Crea un link a una cartella o a una ricerca e muoviti ovunque con la tastiera"
+        ]
+      },
+      "cleanUp": {
+        "tab": "Pulizia",
+        "heading": "Riordina anni di link salvati",
+        "caption": "Pulizia duplicati mostra ogni gruppo e la copia che conserva prima di rimuovere qualsiasi cosa.",
+        "alt": "La finestra Pulizia duplicati che elenca due gruppi di preferiti duplicati, ciascuno con la copia da conservare contrassegnata, sopra un pulsante Rimuovi duplicati",
+        "points": [
+          "Controlla i gruppi di duplicati, poi rimuovi le copie in più",
+          "Rimuovi i codici di tracciamento dagli indirizzi web dopo un'anteprima",
+          "Trova i link non funzionanti e riparali: elimina, usa il reindirizzamento, punta a una copia archiviata o modifica l'URL",
+          "Recupera i titoli delle pagine e applica solo quelli che scegli",
+          "Scarica l'icona di ogni sito direttamente dal sito, così i preferiti la mostrano anche in Firefox",
+          "Annulla eliminazioni e pulizie dal messaggio che compare subito dopo",
+          "Visualizza nella Cronologia ogni modifica ai tuoi preferiti, anche quelle fatte fuori da Bookmark Scout, e recupera quelli eliminati, anche dopo un riavvio del browser"
+        ]
+      },
+      "ai": {
+        "tab": "IA (facoltativa)",
+        "heading": "IA facoltativa, dell'azienda che scegli tu",
+        "caption": "L'IA è disattivata finché non la attivi. Serve un account presso un'azienda di IA, che potrebbe addebitare una piccola somma a ogni utilizzo, oppure un programma di IA gratuito sul tuo computer. In Chrome, la sua IA integrata suggerisce cartelle gratuitamente.",
+        "alt": "La scheda IA delle Impostazioni: Funzioni IA è attiva e sotto Aggiungi servizio ci sono due servizi IA aggiunti dall'utente: un'azienda di IA nel cloud con la chiave nascosta, impostata come predefinita, e un modello sul computer",
+        "points": [
+          "Ricevi suggerimenti di cartelle per la pagina in cui ti trovi, oppure salva nel primo con {{SHORTCUT:commands.ai-quick-save}}",
+          "Chiedi all'IA dei tuoi preferiti: li cerca, controlla i link e propone spostamenti, ridenominazioni e nuove cartelle come un piano che non cambia nulla finché non lo approvi",
+          "Suggerimenti di tag e brevi riassunti che controlli prima di salvarli",
+          "Piani di riorganizzazione delle cartelle, mostrati in anteprima prima di spostare qualsiasi cosa, con annullamento"
+        ],
+        "providersTitle": "Funziona con",
+        "moreProviders": "e altri",
+        "developers": "<link>Per sviluppatori</link>: anche gli agenti IA sul tuo computer, come Claude Code, possono usare i tuoi preferiti."
+      }
+    },
+    "privacy": {
+      "title": "I tuoi preferiti restano nel browser.",
+      "policyLink": "Leggi l'informativa sulla privacy",
+      "diagram": {
+        "browser": "Il tuo browser",
+        "bookmarks": {
+          "name": "Preferiti",
+          "detail": "Cercati, spostati e riordinati qui"
+        },
+        "settings": {
+          "name": "Impostazioni",
+          "detail": "Sincronizzate dall'account del browser, se la sincronizzazione è attiva"
+        },
+        "keys": {
+          "name": "Tag, ricerche salvate e la tua chiave IA",
+          "detail": "Conservati solo su questo dispositivo"
+        },
+        "ai": {
+          "name": "L'azienda di IA che scegli",
+          "detail": "Solo quando l'IA è attiva. Con un programma di IA gratuito sul tuo computer, tutto resta lì."
+        },
+        "websites": {
+          "name": "I siti web che controlli",
+          "detail": "Solo quando controlli i link o recuperi titoli e icone dei siti, dopo averlo consentito"
+        },
+        "agents": {
+          "name": "Programmi di IA sul tuo computer",
+          "detail": "Solo se ne colleghi uno e lo consenti (per sviluppatori)"
+        },
+        "server": {
+          "name": "Server di Bookmark Scout",
+          "detail": "Non esiste. Nulla arriva allo sviluppatore."
+        },
+        "legend": "I percorsi tratteggiati sono facoltativi. Si aprono solo quando usi la funzione corrispondente."
+      },
+      "facts": {
+        "noServer": {
+          "title": "Nessun account, nessun server",
+          "body": "Non c'è nulla a cui iscriversi e Bookmark Scout non ha un proprio server. I tuoi preferiti vengono letti e modificati all'interno del browser."
+        },
+        "noTelemetry": {
+          "title": "Non tracciamo quello che fai",
+          "body": "L'estensione non invia nulla allo sviluppatore: nessuna analisi, nessuna pubblicità, nessun tracciamento."
+        },
+        "aiOptIn": {
+          "title": "L'IA è disattivata finché non la attivi",
+          "body": "A quel punto le richieste vanno direttamente dal browser all'azienda di IA che hai scelto, oppure restano sul tuo computer con un programma di IA locale gratuito. I programmi di IA sul tuo computer non ricevono nulla finché non lo consenti, e le loro modifiche attendono la tua approvazione."
+        },
+        "exports": {
+          "title": "Le esportazioni passano un controllo della privacy",
+          "body": "Prima che un file venga scaricato, un controllo segnala i dati privati, come indirizzi email e codici di accesso nei link, e può nasconderli nella copia che salvi."
+        }
+      }
+    },
+    "install": {
+      "title": "Aggiungilo al tuo browser",
+      "lede": "È gratuito e non serve creare un account.",
+      "desktopOnly": "Bookmark Scout funziona in un browser su computer, non su telefoni o tablet.",
+      "add": "Aggiungi a {browser} — gratis",
+      "permissions": "All'installazione, {browser} chiede una sola cosa: “Leggere e modificare i preferiti”. Le altre funzioni chiedono l'autorizzazione solo al primo utilizzo. <docs>Cosa chiede e perché</docs>",
+      "comingSoon": "<b>{browser}</b>: presto disponibile su {store}.",
+      "advanced": "Avanzate: installazione manuale",
+      "advancedLede": "Usala solo per provare Bookmark Scout in un browser il cui store non lo offre ancora. Lo scarichi da GitHub, e una copia installata in questo modo non si aggiorna da sola.",
+      "tabsLabel": "Browser",
+      "download": "Scarica da GitHub",
+      "chrome": {
+        "storeName": "Chrome Web Store",
+        "steps": {
+          "download": "Scarica <code>bookmark-scout-*-chrome.zip</code> dall'ultima versione ed estrailo.",
+          "open": "Apri <code>chrome://extensions</code> e attiva <b>Modalità sviluppatore</b> in alto a destra.",
+          "load": "Fai clic su <b>Carica estensione non pacchettizzata</b> e seleziona la cartella estratta."
+        },
+        "crx": "La versione include anche un file <code>.crx</code> firmato, che in alternativa puoi trascinare sulla pagina delle estensioni."
+      },
+      "edge": {
+        "storeName": "Edge Add-ons",
+        "steps": {
+          "download": "Scarica <code>bookmark-scout-*-edge.zip</code> dall'ultima versione ed estrailo.",
+          "open": "Apri <code>edge://extensions</code> e attiva <b>Modalità sviluppatore</b>.",
+          "load": "Fai clic su <b>Carica decompressa</b> e seleziona la cartella estratta."
+        }
+      },
+      "firefox": {
+        "storeName": "Firefox Add-ons",
+        "steps": {
+          "download": "Scarica <code>bookmark-scout-*-firefox.zip</code> dall'ultima versione ed estrailo.",
+          "open": "Apri <code>about:debugging#/runtime/this-firefox</code>.",
+          "load": "Fai clic su <b>Carica componente aggiuntivo temporaneo</b> e seleziona <code>manifest.json</code> nella cartella estratta."
+        },
+        "limits": "Firefox rimuove un componente aggiuntivo temporaneo al riavvio, quindi devi caricarlo di nuovo dopo ogni riavvio. In Firefox, la gestione preferiti e i suoi strumenti si aprono dal pulsante Apri gestione preferiti nel popup della barra degli strumenti."
+      }
+    },
+    "faq": {
+      "title": "Domande",
+      "items": {
+        "data": {
+          "q": "Bookmark Scout invia i miei preferiti da qualche parte?",
+          "a": "No. I tuoi preferiti vengono letti e modificati all'interno del browser e l'estensione non invia nulla allo sviluppatore. I dati lasciano il browser solo quando usi una funzione facoltativa: le richieste all'IA vanno all'azienda di IA che hai scelto; il controllo dei link e il recupero di titoli e icone dei siti contattano i siti web salvati, dopo che l'hai consentito; e i programmi di IA sul tuo computer che colleghi (una funzione per sviluppatori) ricevono ciò che consultano. Le impostazioni si sincronizzano tramite l'account del browser, se la sincronizzazione del browser è attiva. L'<privacy>informativa sulla privacy</privacy> contiene i dettagli."
+        },
+        "needAi": {
+          "q": "Devo per forza usare l'IA?",
+          "a": "No. L'IA è facoltativa. Salvataggio, ricerca, organizzazione e pulizia funzionano tutti senza, e l'IA resta disattivata finché non la attivi nelle Impostazioni. Per usare l'IA ti serve un account presso un'azienda di IA, che potrebbe addebitare una piccola somma a ogni utilizzo, oppure un programma di IA gratuito sul tuo computer."
+        },
+        "providers": {
+          "q": "Quali aziende di IA posso usare?",
+          "a": "Bookmark Scout funziona con {providers}. La maggior parte delle aziende di IA richiede un account e una chiave, e addebita una piccola somma per ogni utilizzo; Bookmark Scout invece non costa nulla. Ollama esegue l'IA gratuitamente sul tuo computer, se è abbastanza veloce, e lo stesso vale per l'IA integrata di Chrome, che suggerisce cartelle. La <aiGuide>guida all'IA</aiGuide> spiega come configurarla."
+        },
+        "changes": {
+          "q": "Modificherà i miei preferiti senza chiedere?",
+          "a": "No. Pulizia dei duplicati, pulizia degli URL, riparazione dei link non funzionanti, titoli recuperati, riorganizzazione con IA e importazioni mostrano tutte una revisione prima di scrivere qualsiasi cosa. Le funzioni IA mostrano le modifiche come un piano e attendono la tua approvazione. Per impostazione predefinita l'eliminazione chiede una conferma, e la gestione preferiti può annullare le modifiche con {{SHORTCUT:manager.undo}}."
+        },
+        "otherBrowsers": {
+          "q": "Funziona in Firefox ed Edge?",
+          "a": "Le versioni per Firefox ed Edge arriveranno presto nei rispettivi store di componenti aggiuntivi. Fino ad allora, puoi <install>installarlo manualmente</install> da GitHub; Firefox rimuove una copia installata in questo modo al riavvio. Inoltre Firefox non consente di sostituire la sua pagina dei segnalibri, quindi lì la gestione preferiti si apre da un pulsante nel popup della barra degli strumenti."
+        },
+        "stores": {
+          "q": "Perché non è ancora negli store dei browser?",
+          "a": "Le schede per Chrome Web Store, Edge Add-ons e Firefox Add-ons sono in preparazione, e ogni store esamina un'estensione prima di pubblicarla. Fino ad allora, installala da GitHub Releases."
+        },
+        "free": {
+          "q": "È gratuito?",
+          "a": "Sì. Bookmark Scout è gratuito e open source con licenza {license}, senza pubblicità e senza piani a pagamento. Se attivi l'IA, l'azienda di IA che usi potrebbe farti pagare."
+        },
+        "who": {
+          "q": "Chi sviluppa Bookmark Scout?",
+          "a": "Uno sviluppatore indipendente, non un'azienda. Non ci sono pubblicità, account o cose da comprare, e chiunque può leggere il codice sorgente su <source>GitHub</source>."
+        },
+        "help": {
+          "q": "Come posso ricevere assistenza?",
+          "a": "Inizia dalla <support>pagina di assistenza</support> o dalla <docs>documentazione</docs>. Per ricevere aiuto, scrivi a <email>{supportEmail}</email>. Puoi anche segnalare un problema pubblicamente su <github>GitHub</github>."
+        }
+      },
+      "moreProviders": "molti altri"
+    }
+  }
+}

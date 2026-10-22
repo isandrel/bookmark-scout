@@ -51,9 +51,12 @@ export const zhCN: DocsCopy = {
     es: "西班牙语",
     fr: "法语",
     "pt-BR": "巴西葡萄牙语",
+    ru: "俄语",
+    id: "印度尼西亚语",
     de: "德语",
     ja: "日语",
     ko: "韩语",
+    it: "意大利语",
     "zh-TW": "繁体中文",
   },
 

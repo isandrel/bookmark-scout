@@ -1,0 +1,73 @@
+---
+title: Autorizzazioni
+description: Ogni autorizzazione del browser che Bookmark Scout richiede, perché gli serve e l'accesso facoltativo ai siti web che richiede solo quando esegui uno strumento.
+---
+
+Queste sono le autorizzazioni dell'estensione compilata per ciascun browser. Bookmark Scout non dichiara script di contenuto e non legge mai le pagine che visiti; dopo una scorciatoia di salvataggio rapido si limita a mostrare la propria notifica in quella scheda. Al momento dell'installazione chiede solo ciò senza cui non può funzionare; tutto il resto viene chiesto quando attivi o esegui la funzione che ne ha bisogno.
+
+## Cosa ti chiederà il browser e perché [#what-your-browser-will-ask-and-why]
+
+Quando installi Bookmark Scout, il browser mostra una sola riga. Tutto il resto viene chiesto solo quando usi la funzione che ne ha bisogno, dopo una breve spiegazione in Bookmark Scout. Se rifiuti, resta disattivata solo quella funzione. La tabella riporta la formulazione italiana dei browser.
+
+| Il browser dice (Chrome ed Edge / Firefox) | Quando | Perché |
+| --- | --- | --- |
+| "Leggere e modificare i preferiti" / "Leggere e modificare i segnalibri" | All'installazione | Salvare, cercare e organizzare i preferiti |
+| "Leggere le icone dei siti web che visiti" (solo Chrome ed Edge) | Fai clic su **Mostra le icone del browser** in **Aggiorna icone dei siti**, oppure attivi **Usa la cache delle icone del browser** | Mostrare accanto ai preferiti le icone che il browser ha già salvato. Non viene scaricato nulla |
+| "Leggere la cronologia di navigazione" / "Accedere alle schede del browser" | Salvi la pagina corrente, o chiedi suggerimenti di cartelle, dal riquadro laterale | Sapere su quale pagina ti trovi. Il pulsante nella barra degli strumenti e la scorciatoia di salvataggio rapido non richiedono autorizzazioni, quindi la spiegazione li propone per primi |
+| "Leggere e modificare i tuoi dati su tutti i siti example.com", oppure "su diversi siti web" / "Accedere ai dati dei siti nel dominio example.com" | Esegui **Controlla link non funzionanti**, **Recupero metadati** o **Aggiorna icone dei siti** | Richiedere le pagine salvate nei preferiti di quell'esecuzione, solo sui rispettivi siti |
+| "Leggere e modificare tutti i tuoi dati su tutti i siti web" / "Accedere ai dati di tutti i siti web" | Un'esecuzione di uno strumento riguarda più di 20 siti, oppure attivi **Leggi il contenuto delle pagine** | Richiedere pagine su qualsiasi sito |
+| "Leggere e modificare i tuoi dati su api.example.com" / "Accedere ai dati di api.example.com" | Fai clic su **Verifica servizio** o **Aggiorna modelli** | Raggiungere l'indirizzo del tuo provider IA |
+| "Comunicare con applicazioni native di cooperazione" / "Scambiare messaggi con programmi diversi da Firefox" | Attivi **Consenti agli agenti IA locali** | Comunicare con il programma bookmark-scout-mcp sul tuo computer |
+| Solo Firefox: "Lo sviluppatore dichiara che l'estensione vuole raccogliere: informazioni di autenticazione, segnalibri, attività di navigazione" | Attivi **Funzioni IA** | La tua chiave API, i preferiti e i nomi delle cartelle, e il titolo e l'URL della pagina corrente vanno al tuo provider IA. "Lo sviluppatore" in questa richiesta è il provider IA che hai scelto; Bookmark Scout non riceve nulla |
+| Solo Firefox: la stessa richiesta con "contenuti dei siti web" | Attivi **Leggi il contenuto delle pagine** | Il testo delle pagine va al tuo provider IA |
+| Solo Firefox: la stessa richiesta con "informazioni di autenticazione" | Fai clic su **Verifica servizio** o **Aggiorna modelli** | La tua chiave API va al tuo provider IA |
+| Solo Firefox: la stessa richiesta con "segnalibri, attività di navigazione" | Attivi **Consenti agli agenti IA locali** | Ciò che gli agenti IA sul tuo computer possono consultare |
+
+Anche in Chrome ed Edge il menu contestuale (**Menu contestuale**) è facoltativo, ma non ha alcun avviso, quindi il browser lo aggiunge senza chiedere.
+
+## Concesse all'installazione [#granted-at-install]
+
+| Autorizzazione | Browser | Perché |
+| --- | --- | --- |
+| `bookmarks` | Tutti | Mostrare e cercare i preferiti, e crearli, modificarli, spostarli ed eliminarli quando agisci nel popup, nel riquadro laterale, nella gestione preferiti o nel menu contestuale |
+| `storage` | Tutti | Salvare le impostazioni e, solo su questo dispositivo, le impostazioni del provider IA, i tag, i riassunti, le ricerche salvate, le cartelle recenti, le ricerche recenti e le icone dei siti salvate con **Aggiorna icone dei siti** |
+| `activeTab` | Tutti | Quando fai clic sul pulsante nella barra degli strumenti o sul menu contestuale, o premi una scorciatoia di salvataggio rapido, leggere il titolo e l'URL di quella scheda, così puoi salvare la pagina che stai visitando. Nessun'altra scheda, nessuna cronologia |
+| `scripting` | Tutti | Dopo una scorciatoia di salvataggio rapido, mostrare la notifica solo in quella scheda. Non legge nulla dalla pagina |
+| `sidePanel` | Chrome, Edge | Fornire la vista nel riquadro laterale. Firefox dichiara invece la stessa pagina come barra laterale |
+| `offscreen` | Chrome, Edge | Eseguire in una pagina nascosta dell'estensione, che il browser chiude al termine del lavoro, la richiesta del salvataggio rapido con IA, la lettura delle pagine da parte di un agente IA locale, la lettura dei titoli delle pagine di **Recupero metadati** e le richieste di **Riorganizzazione cartelle con IA**. In Firefox lo fa direttamente la pagina in background |
+| `alarms` | Tutti | Riattivare il processo in background con un timer, così un'attività in background come **Controlla link non funzionanti** riprende dopo che il browser ha arrestato il processo in background. Non mostra alcuna richiesta |
+| `contextMenus` | Firefox | Firefox non consente alle estensioni di richiederla in un secondo momento. Il menu compare comunque solo dopo che hai attivato **Menu contestuale** |
+
+In Chrome ed Edge l'estensione sostituisce inoltre la pagina dei preferiti del browser con la gestione preferiti di Bookmark Scout. Si tratta di una sostituzione di pagina, non di un'autorizzazione. Firefox non la consente, quindi lì la gestione preferiti si apre da **Apri gestione preferiti** nel popup; vedi [Browser supportati](/browser-support).
+
+## Richieste quando servono [#asked-for-when-you-need-it]
+
+| Autorizzazione | Browser | Richiesta quando |
+| --- | --- | --- |
+| `tabs` | Tutti | Salvi la pagina corrente, o chiedi suggerimenti di cartelle, dal riquadro laterale. Prima compare una breve spiegazione che propone il popup della barra degli strumenti e la scorciatoia di salvataggio rapido, che non ne hanno mai bisogno |
+| `contextMenus` | Chrome, Edge | Attivi **Menu contestuale** nelle [Impostazioni](/settings#data). È disattivato per impostazione predefinita e Chrome lo concede senza alcuna richiesta |
+| `favicon` | Chrome, Edge | Fai clic su **Mostra le icone del browser** in **Aggiorna icone dei siti**, oppure attivi **Usa la cache delle icone del browser** nelle [Impostazioni](/settings#appearance), per mostrare le icone che il browser ha già salvato. Prima compare una breve spiegazione |
+| Consenso alla condivisione dei dati | Firefox | Ogni funzione chiede solo ciò che invia: **Funzioni IA** per la tua chiave API, i preferiti e il titolo e l'URL della pagina corrente; **Leggi il contenuto delle pagine** per il testo delle pagine; **Verifica servizio** per la tua chiave API. Una breve spiegazione precisa prima che i dati vanno al tuo provider IA, non a Bookmark Scout |
+| `nativeMessaging` | Tutti | Attivi **Consenti agli agenti IA locali** nelle [Impostazioni](/settings#agent-bridge), così l'estensione può comunicare con il programma bookmark-scout-mcp sul tuo computer. Prima compare una breve spiegazione; in Firefox la stessa richiesta chiede di condividere con esso i dati dei segnalibri |
+
+Se rifiuti, la funzione resta disattivata e non viene inviato nulla. Se in seguito revochi un'autorizzazione nelle impostazioni delle estensioni del browser, la funzione si disattiva; riattivandola, l'autorizzazione viene richiesta di nuovo.
+
+## Accesso facoltativo ai siti web [#optional-website-access]
+
+L'estensione dichiara anche l'accesso a `http://*/*` e `https://*/*`, ma nessuno di questi viene concesso all'installazione. Il browser te lo chiede nel momento in cui serve:
+
+- **Controlla link non funzionanti**, **Recupero metadati** e **Aggiorna icone dei siti** chiedono, quando li esegui, l'accesso solo ai siti dei preferiti di quell'esecuzione, ciascuno con i propri sottodomini. Un'esecuzione su più di 20 siti chiede invece l'accesso a tutti i siti web. I siti che hai già consentito non vengono richiesti di nuovo. Le richieste vengono inviate senza cookie, e per i titoli e i link alle icone viene letta solo l'intestazione della pagina. Se rifiuti, non viene analizzato nulla. Un link che reindirizza a un sito esterno all'esecuzione non può essere seguito, quindi **Controlla link non funzionanti** lo segna come **Da controllare** invece che non funzionante. Vedi [Trovare e riparare i link non funzionanti](/guides/dead-links) e [Aggiornare le icone dei siti](/guides/clean-up#refresh-site-icons).
+- **Indicizza il testo delle pagine** chiede allo stesso modo, per i siti dei preferiti che legge.
+- **Recupera copertine** chiede allo stesso modo, per i siti dei preferiti che legge; un'immagine su un altro sito viene scaricata solo se hai consentito anche quel sito.
+- **Leggi il contenuto delle pagine** nelle impostazioni IA chiede l'accesso a tutti i siti web quando lo attivi, così gli strumenti IA possono scaricare le pagine, senza cookie, e inviarne il testo principale al tuo provider IA. Le pagine della tua rete locale non vengono mai lette. Vedi [Leggi il contenuto delle pagine](/guides/ai-tools#read-page-content).
+- **Verifica servizio** e **Aggiorna modelli** nelle impostazioni IA chiedono l'accesso solo all'indirizzo di quel provider. Vedi [Configurare gli strumenti IA](/guides/ai-tools).
+
+Per revocare l'accesso, apri la pagina dell'estensione nel browser (ad esempio `chrome://extensions/`, poi **Dettagli** su Bookmark Scout, oppure **Permessi** in `about:addons` di Firefox) e modifica l'accesso ai siti o le autorizzazioni.
+
+## Cosa non viene richiesto [#what-is-not-requested]
+
+- Nessun accesso al contenuto delle pagine e nessuno script di contenuto dichiarato
+- Nessuna autorizzazione per cronologia, download o cookie
+- Nessun accesso agli host all'installazione
+
+Dove vanno i tuoi dati quando viene usata un'autorizzazione è spiegato in [Privacy](/privacy). La motivazione di ciascuna autorizzazione, così come è stata inviata agli store, si trova in <RepoLink file="store/permissions.md">`store/permissions.md`</RepoLink> nel repository.

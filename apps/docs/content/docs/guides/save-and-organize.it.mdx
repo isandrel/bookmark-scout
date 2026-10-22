@@ -1,0 +1,142 @@
+---
+title: Salvare e organizzare
+description: Salva la pagina corrente o un link in una cartella, crea cartelle, sposta elementi con il trascinamento, ordina l'albero ed elimina con la possibilità di annullare.
+---
+
+## Salvare la pagina che stai visitando [#save-the-page-you-are-on]
+
+<Steps>
+<Step>
+Apri la pagina che vuoi conservare e fai clic sull'icona di Bookmark Scout nella barra degli strumenti, oppure apri il riquadro laterale.
+</Step>
+<Step>
+Digita parte del nome di una cartella nella casella di ricerca. **Salva nella cartella** elenca le cartelle corrispondenti sopra i risultati, a partire dalla più pertinente, con le cartelle in cui si trovano.
+</Step>
+<Step>
+Premi `Enter` per salvare nella prima cartella, che è evidenziata, oppure fai clic su una cartella. Per scegliere un'altra cartella con la tastiera, premi `↓` per raggiungerla e poi `Enter`.
+</Step>
+</Steps>
+
+La riga sotto la casella di ricerca, **Pagina da salvare**, indica la pagina che verrà aggiunta. Quando la pagina è già nei preferiti, **Già salvata in** sotto di essa indica la cartella. Salvarla in un'altra cartella aggiunge un'altra copia, e il messaggio dopo il salvataggio lo segnala. Più parole trovano anche le cartelle che circondano una cartella (`ai agents`), e una parola di 4 o più lettere può contenere un errore di battitura.
+
+<Screenshot name="popup" />
+
+Altri modi per scegliere la cartella:
+
+- **Recenti**: il pannello **Recenti** elenca le cartelle in cui hai salvato di recente; fai clic su una per salvarvi la pagina.
+- **Sfoglia**: punta su una cartella nell'albero e fai clic su **Aggiungi la pagina corrente**, oppure raggiungila con i tasti freccia e premi `Enter`.
+
+Una pagina che è già nella cartella non viene salvata due volte; il messaggio indica che è già lì.
+
+Il popup della barra degli strumenti legge senza chiedere la pagina su cui l'hai aperto. Il riquadro laterale resta aperto mentre cambi scheda, quindi la prima volta che salvi da lì Bookmark Scout spiega il motivo e poi chiede l'accesso alle schede. Se rifiuti, non viene salvato nulla; l'icona nella barra degli strumenti e la scorciatoia di salvataggio rapido descritta più avanti funzionano comunque senza quell'accesso.
+
+Per modificare questi elenchi, usa le [Impostazioni](/settings): **Cartelle corrispondenti**, **Numero massimo di cartelle corrispondenti** e **Tollera errori di battitura** per **Salva nella cartella**, e **Cartelle recenti** e **Numero massimo di cartelle recenti** per il pannello **Recenti**.
+
+## Salvare con una scorciatoia da tastiera [#quick-save]
+
+Premi <Shortcut id="commands.quick-save" /> su qualsiasi pagina per salvarla senza aprire Bookmark Scout. Una piccola notifica nell'angolo superiore della pagina indica in quale cartella è finita, con **Annulla** e alcune altre cartelle in **Sposta in**. Si chiude da sola dopo qualche secondo; se ci passi sopra con il puntatore o la raggiungi con Tab resta aperta, e `Esc` la chiude. Non sottrae mai la tastiera alla pagina.
+
+<Screenshot name="quick-save" />
+
+La destinazione della pagina è **Cartella del salvataggio rapido** nelle [Impostazioni](/settings#quick-save):
+
+- **Migliore corrispondenza** (predefinita) confronta il titolo, il sito e l'indirizzo della pagina con i nomi delle tue cartelle, con le cartelle che le circondano e con i titoli e i siti dei preferiti già presenti in ciascuna cartella, tutto sul tuo dispositivo. Funziona anche con titoli in cinese, giapponese e coreano. **Sposta in** propone le cartelle successive più adatte.
+- **Ultima usata** salva nella cartella in cui hai salvato più di recente; **Sposta in** propone le altre cartelle recenti.
+- **Cartella scelta** salva sempre nella cartella che scegli in **Cartella in cui salvare**.
+
+Quando nessuna cartella corrisponde bene, o la cartella scelta è stata eliminata, la pagina finisce nell'ultima cartella usata, poi nella Barra dei preferiti, e la notifica lo segnala.
+
+Premi <Shortcut id="commands.ai-quick-save" /> per salvare invece la pagina nella cartella suggerita dall'IA. Usa lo stesso servizio IA, la stessa lettura delle pagine e lo stesso numero di suggerimenti dei suggerimenti IA del popup, e invia gli stessi dati (vedi [Configurare gli strumenti IA](/guides/ai-tools)). Durante l'attesa la notifica mostra **L'IA sta scegliendo una cartella...**, poi elenca gli altri suggerimenti in **Sposta in**; una cartella suggerita che non esiste ancora viene creata, e **Annulla** la rimuove di nuovo. Con l'IA disattivata o non configurata, non viene salvato nulla e la notifica offre **Apri le impostazioni IA**. Quando l'IA non riesce a scegliere una cartella, la notifica offre **Riprova**, che interpella di nuovo l'IA, e **Salva senza IA**, che salva la pagina nella cartella scelta da **Cartella del salvataggio rapido**. Se lasci la pagina prima che l'IA risponda, il risultato compare invece nel popup, sotto il titolo della pagina.
+
+Una pagina che hai già salvato nei preferiti non viene salvata di nuovo: la notifica indica dove si trova e propone di spostarla.
+
+**Annulla** e **Sposta in** agiscono solo sul tuo ultimo salvataggio rapido. Se fai un salvataggio rapido in un'altra scheda e poi premi **Annulla** nella notifica della prima scheda, questa indica che un salvataggio rapido più recente l'ha sostituito; in quel caso modifica il preferito nella gestione preferiti.
+
+Alcune pagine non consentono alle estensioni di mostrare nulla, come le pagine del browser stesso, lo store delle estensioni e il visualizzatore PDF, e alcune pagine nascondono ciò che viene disegnato sopra di esse. Lì l'icona nella barra degli strumenti mostra per un momento ✓ o ✗, e si apre il popup (dove il browser lo consente) con il titolo della pagina e gli stessi pulsanti.
+
+Per cambiare i tasti, apri **Scorciatoie da tastiera** nelle [Impostazioni](/settings#quick-save):
+
+- **Chrome ed Edge** gestiscono i tasti direttamente. **Cambia scorciatoie** apre `chrome://extensions/shortcuts` o `edge://extensions/shortcuts`, che elenca tutte le estensioni; cerca lì Bookmark Scout.
+- **Firefox** consente a Bookmark Scout di impostarli. Fai clic su un campo di scorciatoia e premi i nuovi tasti: tieni premuto `Command`, `Control` o `Option` (`Ctrl` o `Alt` su Windows e Linux), aggiungi `Shift` se vuoi e premi una lettera, un numero, un tasto funzione o un tasto freccia. I tasti funzione funzionano anche da soli. `Esc` annulla, `Tab` passa oltre senza registrare, e il pulsante di ripristino accanto a un campo riporta il valore predefinito. Una combinazione che Firefox non può usare viene spiegata sotto il campo. **Cambia scorciatoie** apre invece la pagina **Gestisci scorciatoie estensioni** di Firefox.
+
+Se un'altra estensione usa già un tasto, il browser lascia la scorciatoia non impostata e le Impostazioni mostrano **Non impostata**. Il popup e il riquadro laterale mostrano allora **Scorciatoia di salvataggio rapido non impostata** sopra i suggerimenti delle scorciatoie, con **Configurala**, che ti porta nel punto descritto sopra dove puoi impostarla. Chiudi la riga con il pulsante **Ignora** se non vuoi la scorciatoia; resta nascosta su quel dispositivo.
+
+### Usare il tasto dei preferiti per il salvataggio rapido [#ctrl-d]
+
+<Shortcut id="browser.bookmark_page" /> apre la finestra dei preferiti del browser, e nessun browser consente a un'estensione di usarlo come tasto predefinito, quindi il salvataggio rapido parte con <Shortcut id="commands.quick-save" />.
+
+- **Chrome ed Edge** ti consentono di assegnarlo tu stesso al salvataggio rapido. In **Scorciatoie da tastiera** nelle Impostazioni, <strong>Usa <Shortcut id="browser.bookmark_page" /> per il salvataggio rapido</strong> apre la pagina delle scorciatoie del browser: cerca Bookmark Scout, fai clic sulla matita accanto a **Salvataggio rapido della pagina corrente** e premi il tasto dei preferiti. Da quel momento quel tasto esegue il salvataggio rapido invece di aprire la finestra dei preferiti. Per riavere la finestra, cancella quella scorciatoia nella stessa pagina. Finché non lo fai, il popup e il riquadro laterale indicano i tasti attuali del salvataggio rapido, **Salvataggio rapido: premi <Shortcut id="commands.quick-save" /> su qualsiasi pagina**, con **Usa invece <Shortcut id="browser.bookmark_page" />**, che apre questi passaggi nelle Impostazioni; **Ignora** nasconde la riga su quel dispositivo. In Firefox la riga indica solo i tasti.
+- **Firefox** gestisce sempre da sé <Shortcut id="browser.bookmark_page" /> (aggiungi la pagina ai segnalibri) e <Shortcut id="browser.bookmark_all_tabs" /> (aggiungi tutte le schede ai segnalibri), anche quando un'estensione li imposta, quindi i campi delle scorciatoie li rifiutano entrambi.
+
+## Salvare un link con il menu contestuale [#save-a-link-with-the-right-click-menu]
+
+Prima attiva **Menu contestuale** nelle [Impostazioni](/settings#data); è disattivato per impostazione predefinita. Poi fai clic con il pulsante destro del mouse su un link in una pagina, scegli **Salva preferito in...** e poi una delle tue cartelle recenti o la Barra dei preferiti. **Origine del nome del preferito** nelle Impostazioni sceglie se il preferito prende il nome dal testo del link, dal titolo della pagina o dall'URL del link. Disattiva il menu con **Menu contestuale** (entrambi si trovano nella scheda **Dati**).
+
+## Creare cartelle [#create-folders]
+
+Passa il puntatore su una cartella nel popup o nel riquadro laterale e fai clic su **Aggiungi cartella**, poi digita il nome. Le nuove cartelle partono con il **Nome predefinito cartella** delle Impostazioni.
+
+## Spostare preferiti e cartelle [#move-bookmarks-and-folders]
+
+- **Trascinamento** nel popup o nel riquadro laterale. Rilasciare un elemento accanto a un altro in una cartella diversa lo sposta in quella cartella. Il riordino all'interno di una cartella funziona con l'ordinamento **Ordine del browser** (predefinito) e **Prima le cartelle**; con gli altri ordinamenti, un rilascio sposta l'elemento in un'altra cartella, e un suggerimento lo indica durante il trascinamento. Una cartella non può essere spostata in se stessa o in una delle sue sottocartelle. Nel riquadro laterale, rilascia un link da una pagina web su una cartella per salvarlo lì nei preferiti. **Trascinamento nell'albero** nelle Impostazioni disattiva entrambe le cose.
+- **Trascinamento** nella gestione preferiti, come in Chrome: trascina una riga, o una selezione di righe, su una riga di cartella o su una cartella nell'albero delle cartelle per spostarla lì; i bordi superiore e inferiore di una cartella nell'albero rilasciano invece accanto a essa. Passare con il puntatore su una cartella chiusa nell'albero durante un trascinamento la apre. Finché la tabella è nell'ordine del browser (vedi sotto), rilasciare tra le righe le riordina anche. Ogni rilascio è un passo di <Shortcut id="manager.undo" />.
+- **Link da altre pagine e app**: rilascia un link, o del testo con URL, sulla tabella della gestione preferiti o su una cartella del suo albero per salvarlo lì nei preferiti. Trascinare righe verso un'altra app o pagina porta con sé i loro URL.
+- **Più elementi insieme** nella gestione preferiti: seleziona le righe nella tabella, poi usa **Sposta nella cartella** e scegli la destinazione. Gli elementi vengono aggiunti alla fine di quella cartella.
+- **Riordinare** nella gestione preferiti: per impostazione predefinita la tabella mostra l'ordine del browser. Se l'hai ordinata per colonna o hai scelto un altro **Ordinamento**, il testo accanto a **Ordine del browser** indica quell'ordine; fai clic su **Ordine del browser** per tornare indietro. Poi trascina le righe, oppure usa i pulsanti **Sposta su**, **Sposta giù**, **Sposta in cima** e **Sposta in fondo** della riga. Richiedono che la tabella mostri una sola cartella, quindi cancella i filtri o seleziona **Solo cartella corrente**.
+
+Il riordino cambia l'ordine salvato nel browser. Il popup mostra quell'ordine con l'ordinamento **Ordine del browser** (predefinito) e **Prima le cartelle**; gli ordinamenti per data e alfabetico riordinano continuamente l'elenco.
+
+Il popup e il riquadro laterale si aggiornano da soli quando i preferiti cambiano altrove, ad esempio nella gestione preferiti o nell'interfaccia dei preferiti del browser.
+
+## Ordinare l'albero [#sort-the-tree]
+
+Scegli **Ordine del browser** (predefinito: l'ordine che vedi nella Barra dei preferiti), **Data di aggiunta** (prima i più recenti), **Alfabetico** (ordine naturale, quindi `2` viene prima di `10`) o **Prima le cartelle** con **Ordinamento** nelle Impostazioni. L'ordinamento cambia solo il modo in cui Bookmark Scout mostra l'albero, mai l'ordine salvato nel browser. La tabella della gestione preferiti usa lo stesso ordine finché non la ordini per colonna. **Raggruppa per cartelle** elenca le sottocartelle prima dei preferiti a ogni livello del popup e del riquadro laterale.
+
+## Modificare un preferito [#edit-a-bookmark]
+
+Nella gestione preferiti, apri il menu di una riga e scegli **Modifica** per cambiare il nome e l'URL di un preferito, o il nome di una cartella. **Visualizza dettagli** mostra il percorso completo, le date e l'ID, ed è il punto in cui aggiungi **Tag** e un **Riassunto**.
+
+Tag e riassunti sono archiviati solo nell'archivio locale dell'estensione di questo browser. Non vengono sincronizzati né sono ricercabili. Le esportazioni JSON dei preferiti li includono, e possono includerli anche le esportazioni del contesto IA; vedi [Importazione ed esportazione](/guides/import-export) e [Configurare gli strumenti IA](/guides/ai-tools).
+
+## Eliminare e annullare [#delete-and-undo]
+
+Elimina un preferito o una cartella dal popup, dal riquadro laterale o dal menu di una riga della gestione preferiti, oppure seleziona più righe nella gestione preferiti ed eliminale insieme.
+
+- **Conferma prima di eliminare** è attivo per impostazione predefinita e mostra una finestra che indica cosa verrà rimosso. Disattivalo nella scheda **Comportamento** delle Impostazioni per eliminare immediatamente.
+- Ogni eliminazione mostra **Annulla** per 10 secondi. Annulla ripristina l'elemento, tutto ciò che contiene e i relativi tag e riassunti salvati. Un elemento ripristinato viene ricreato, quindi riceve una nuova data di aggiunta.
+- Le cartelle permanenti, come la Barra dei preferiti, non possono essere modificate né eliminate.
+
+## Selezionare, annullare e ripetere nella gestione preferiti [#select-undo-and-redo-in-the-manager]
+
+La tabella della gestione preferiti funziona come la gestione preferiti di Chrome:
+
+- Fai clic su una riga per selezionarla, `Cmd`+clic (`Ctrl`+clic su Windows e Linux) per aggiungerne o rimuoverne una, e `Shift`+clic per selezionare un intervallo. Funzionano anche le caselle di controllo. <Shortcut id="manager.select_all" /> seleziona tutte le righe mostrate dai filtri, in tutte le pagine, e <Shortcut id="manager.clear_selection" /> cancella la selezione.
+- Fai doppio clic su una cartella per aprirla, o su un preferito per aprirlo in una scheda. Fai clic con il pulsante centrale su un preferito per aprirlo in una scheda in background.
+- <Shortcut id="manager.undo" /> annulla le modifiche della gestione preferiti una alla volta, a partire dalla più recente: modifiche, spostamenti, riordini ed eliminazioni. Annulla anche le pagine salvate, le cartelle create e gli elementi trascinati nel popup e nel riquadro laterale, e le modifiche che hai approvato da Chiedi all'IA o da un agente IA locale. Annulla inoltre, come un unico passo, ciò che ha modificato uno strumento della barra laterale **Strumenti** (**Pulizia duplicati**, **Pulizia URL**, le riparazioni di **Controlla link non funzionanti**, i titoli di **Recupero metadati** e **Riorganizzazione cartelle con IA**), lo stesso passo annullato da **Annulla** nel messaggio dello strumento. <Shortcut id="manager.redo" /> le ripete. Più elementi modificati insieme, come lo spostamento di una selezione, costituiscono un solo passo. Un'eliminazione molto grande viene conservata in forma compressa; una troppo grande anche così viene esclusa dalla cronologia, mantenendo le modifiche precedenti, e la sua notifica indica che solo il suo **Annulla** può recuperarla. Anche le eliminazioni nel popup e nel riquadro laterale, i salvataggi rapidi, i salvataggi dal menu contestuale e le importazioni sono passi, e ciascuno è elencato nella Cronologia con la sua provenienza.
+- Annulla non tocca ciò che nel frattempo è stato modificato in altro modo (nell'interfaccia dei preferiti del browser, in un'altra finestra o dalla sincronizzazione) e lo segnala.
+- La cronologia è condivisa da tutte le schede della gestione preferiti, sopravvive al ricaricamento della pagina e termina alla chiusura del browser. Conserva le ultime 100 modifiche.
+
+Anche l'albero delle cartelle a sinistra funziona come quello di Chrome: i tasti freccia lo percorrono e aprono e chiudono le cartelle, e `Enter` mostra una cartella nella tabella. Se Chrome conserva alcuni dei tuoi preferiti nel tuo Account Google e altri solo su questo dispositivo, l'albero li mostra in **Nel tuo account** e **Solo su questo dispositivo**, con la seconda sezione inizialmente chiusa.
+
+L'elenco completo dei tasti è in [Scorciatoie da tastiera](/guides/keyboard-shortcuts#bookmarks-manager).
+
+## Vedere cosa è cambiato [#history]
+
+Il pulsante **Cronologia preferiti** nell'intestazione della gestione preferiti apre un elenco di tutte le modifiche che Bookmark Scout ha fatto ai tuoi preferiti su questo dispositivo: modifiche, spostamenti, eliminazioni, importazioni, pulizie e i relativi annullamenti, dal più recente, raggruppati per giorno. Ogni modifica indica da dove proviene (la gestione preferiti, uno strumento, Chiedi all'IA, un agente locale), quanti elementi ha toccato e quando. Una modifica riuscita solo in parte, interrotta o che alla rilettura non risulta come previsto viene contrassegnata, così puoi trovarla in **Da verificare**.
+
+Apri una modifica per vedere ogni elemento che ha toccato: un elemento eliminato con la cartella e la posizione in cui si trovava, una modifica con il titolo o l'indirizzo esatto vecchio e nuovo, uno spostamento con la posizione di partenza e quella di arrivo. Dopo ogni modifica Bookmark Scout rilegge i preferiti e indica se sono come la modifica li ha lasciati. Finché la sessione del browser conserva la modifica, è disponibile anche **Annulla**; dopo il riavvio del browser la modifica resta nell'elenco, ma Annulla non è più disponibile. Gli elementi eliminati da una modifica vengono conservati come copia su questo dispositivo, quindi **Ripristina** li rimette dov'erano, con il loro contenuto e i relativi tag e riassunti, purché la cartella in cui si trovavano esista ancora. Un ripristino viene elencato come modifica a sé, e una modifica si può annullare o ripristinare una sola volta. I risultati degli strumenti rimandano alla relativa modifica con **Visualizza nella Cronologia**.
+
+Vengono elencate anche le modifiche fatte fuori da Bookmark Scout (nella gestione preferiti del browser, da un'altra estensione o dalla sincronizzazione del browser), come **Origine sconosciuta**: il browser non dice chi le ha fatte, quindi Bookmark Scout non tira mai a indovinare. Una raffica di modifiche, come una sincronizzazione, costituisce una sola voce. Le modifiche fatte mentre Bookmark Scout non osservava (con l'estensione disattivata, o con **Registra le modifiche fatte altrove** disattivato nelle Impostazioni) compaiono la volta successiva come un'unica voce **Rilevata dopo un'interruzione** con le differenze tra i due momenti; non è possibile sapere quando sia avvenuta ciascuna modifica né in quale ordine. Nessuno dei due tipi può essere annullato dalla Cronologia.
+
+La cronologia resta su questo dispositivo, non viene mai sincronizzata e non è inclusa nel backup delle impostazioni. Inizia con questa versione e non conosce le modifiche fatte mentre l'estensione era disattivata. Esportala come file JSON (contiene titoli e indirizzi dei preferiti) oppure cancellala; le modifiche che devono ancora essere verificate vengono mantenute.
+
+## Menu contestuali nella gestione preferiti [#right-click-menus-in-the-manager]
+
+Fai clic con il pulsante destro del mouse su una riga, o su una cartella nell'albero delle cartelle, per avere gli stessi comandi della gestione preferiti di Chrome. Un clic destro su una riga selezionata agisce sull'intera selezione; su qualsiasi altra riga, prima seleziona quella riga. Il tasto menu o <Shortcut id="browser.context_menu" /> lo apre da tastiera. Il pulsante ⋯ di una riga apre lo stesso menu per quella riga.
+
+- **Modifica** (un preferito) o **Rinomina** (una cartella), **Mostra nella cartella** (risultati di ricerca) e **Visualizza dettagli**.
+- **Taglia**, **Copia** e **Incolla**. Copia mette negli appunti gli URL dei preferiti, uno per riga (e come link, per le app che accettano testo formattato), così si possono incollare anche in altre app. Incolla nel menu di una riga incolla dopo quella riga nella cartella mostrata; nel menu di una cartella nell'albero, incolla in quella cartella. Gli elementi copiati vengono incollati come copie degli elementi così come sono al momento dell'incolla, incluso tutto il contenuto di una cartella copiata; gli elementi tagliati si spostano quando li incolli e fino ad allora restano dove sono. Ciò che tagli o copi si può incollare in qualsiasi scheda della gestione preferiti e dopo un ricaricamento, finché il browser non viene chiuso; gli elementi eliminati nel frattempo vengono ignorati, e gli elementi tagliati che non è stato possibile spostare (una cartella incollata in se stessa) restano tagliati. Aggiungi nuovo preferito completa un indirizzo digitato senza schema, come `example.com/path`, con `https://`. <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> e <Shortcut id="manager.paste" /> fanno lo stesso per la selezione, e incolla trasforma in preferiti anche gli URL copiati in un'altra app.
+- **Apri in una nuova scheda**, **Apri in una nuova finestra** e **Apri in finestra di navigazione in incognito** (InPrivate in Edge, una finestra anonima in Firefox, dove richiede che l'estensione sia consentita nelle finestre anonime). Per più elementi o per una cartella diventano **Apri tutti (12)** e aprono i preferiti della selezione e quelli contenuti direttamente nelle sue cartelle, non nelle sottocartelle. Più di 15 schede richiedono prima una conferma.
+- **Copia link a questa cartella** e **Copia ID preferito**, ed **Elimina**.
+
+Fai clic con il pulsante destro del mouse nello spazio vuoto della tabella, oppure apri **Organizza** (⋮) nell'intestazione, per **Aggiungi nuovo preferito** o **Aggiungi nuova cartella** alla fine della cartella mostrata, o per **Incolla**. **Organizza** contiene anche **Ordina per nome**, che riordina la cartella nel browser stesso: prima le cartelle, poi per nome, in ordine naturale (`2` prima di `10`). Come ogni modifica nella gestione preferiti, <Shortcut id="manager.undo" /> la annulla.

@@ -1,0 +1,326 @@
+---
+title: Impostazioni
+description: Ogni impostazione della pagina delle impostazioni di Bookmark Scout, scheda per scheda, con il valore predefinito e cosa cambia.
+---
+
+Apri la pagina delle impostazioni dalla voce **Opzioni** dell'estensione, ad esempio facendo clic con il pulsante destro del mouse sull'icona nella barra degli strumenti di Chrome e scegliendo **Opzioni**. Le modifiche vengono salvate mentre le fai.
+
+## Usare la pagina delle impostazioni [#using-the-settings-page]
+
+- La pagina si apre su **Essenziali**, le poche impostazioni che la maggior parte delle persone cambia. Tutte le altre schede sono elencate in **Avanzate**, e ogni impostazione di **Essenziali** si trova anche nella propria scheda lì: cambiarla in uno dei due punti cambia la stessa impostazione.
+- **Cerca nelle impostazioni...** in alto trova un'impostazione in qualsiasi scheda e indica quante corrispondenze ci sono.
+- Ogni scheda è divisa in sezioni con un titolo. L'interruttore di uno strumento si trova accanto alla sua intestazione; mentre è disattivato, le altre impostazioni dello strumento restano nascoste. Le impostazioni tecniche, come i timeout e la lunghezza dei nomi dei file, si trovano in **Impostazioni avanzate**, che resta chiusa finché non la apri o finché una ricerca non vi trova qualcosa.
+- Un'impostazione cambiata è contrassegnata come **Modificata**, con un pulsante per riportarla al valore predefinito. **Ripristina tutto** reimposta tutte le impostazioni.
+- **Esegui il backup delle impostazioni** salva un file di backup con le impostazioni che hai cambiato, i prompt personalizzati, i servizi IA (nome, provider, modello, **URL di base** e campi specifici del provider; mai le chiavi API o **Intestazioni aggiuntive (JSON)**), le ricerche salvate, le regole intelligenti e le colonne e l'ordinamento della tabella della gestione preferiti. **Ripristina le impostazioni** ripristina un backup, sostituendo ogni parte contenuta nel file, oppure unisce un semplice file di impostazioni alle tue impostazioni; dopo aver ripristinato un backup, inserisci di nuovo le chiavi API e le intestazioni aggiuntive in [IA](#ai) per i servizi contrassegnati come **Da configurare**. Nessuna delle due operazioni tocca i preferiti. **Esporta preferiti**, accanto a esse, apre la gestione preferiti sul suo strumento di esportazione; vedi [Importazione ed esportazione](/guides/import-export).
+- Le impostazioni che cambi vengono archiviate nell'archivio sincronizzato del browser, quindi ti seguono sugli altri dispositivi quando la sincronizzazione del browser è attiva. Alcune che riguardano un solo dispositivo restano lì: la cartella scelta per il salvataggio rapido, **Limite di spazio per le icone**, la registrazione dell'attività IA e la ricerca sul web di Chiedi all'IA. Anche i servizi IA, con le relative chiavi API, **URL di base** e **Intestazioni aggiuntive (JSON)**, restano su questo dispositivo. Vedi [Privacy](/privacy).
+
+## Essenziali [#essentials]
+
+| Impostazione | Anche in | Cosa fa |
+| --- | --- | --- |
+| **Cartella del salvataggio rapido** e **Cartella in cui salvare** | [Salvataggio e ricerca](#quick-save) | Dove la scorciatoia di salvataggio rapido salva la pagina corrente |
+| **Menu contestuale** | [Salvataggio e ricerca](#context-menu) | Mostra **Salva preferito in...** quando fai clic con il pulsante destro del mouse su un link |
+| **Tema** e **Lingua** | [Aspetto](#language-theme-and-icons) | L'aspetto di Bookmark Scout e la lingua che usa |
+| **Conferma prima di eliminare** | [Comportamento](#deleting) | Chiede conferma prima di eliminare |
+| **Registra le modifiche fatte altrove** | [Comportamento](#history-settings) | Elenca nella Cronologia le modifiche ai preferiti fatte fuori da Bookmark Scout |
+
+Sotto di esse, **L'IA è facoltativa** spiega che Bookmark Scout funziona senza IA; **Configura l'IA** apre la scheda [IA](#ai).
+
+<Screenshot name="settings" />
+
+## Salvataggio e ricerca [#search]
+
+### Cartelle corrispondenti [#folder-matches]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Cartelle corrispondenti** | Attivo | Durante la ricerca, elenca sopra i risultati le cartelle il cui nome corrisponde, per salvarvi la pagina corrente |
+| **Numero massimo di cartelle corrispondenti** | <SettingDefault path="search.folder_matches.max" /> | Quante cartelle corrispondenti elencare |
+| **Tollera errori di battitura** | Attivo | Una parola cercata di 4 o più lettere può corrispondere al nome di una cartella con un errore di battitura |
+
+### Ricerca [#searching]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Ritardo di ricerca** | <SettingDefault path="search.search.debounce_ms" /> ms | Quanto attendere, dopo che hai smesso di digitare, prima che il popup avvii la ricerca |
+| **Risultati massimi** | 20 risultati | Numero massimo di corrispondenze mostrate; una nota indica quando ce ne sono altre |
+| **Espandi le cartelle durante la ricerca** | Attivo | Apre le cartelle che contengono corrispondenze |
+| **Cronologia ricerche** | Attivo | Ricorda le ricerche recenti su questo dispositivo |
+| **Ricerche recenti da conservare** | <SettingDefault path="search.search.history_max" /> | Quante ricerche recenti ricordare |
+
+Vedi [Ricerca e ricerche salvate](/guides/search).
+
+### Salvataggio [#saving]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Cartelle recenti** | Attivo | Mostra le cartelle usate di recente nel popup e nel menu contestuale |
+| **Numero massimo di cartelle recenti** | <SettingDefault path="search.saving.recent_folders_max" /> | Quante cartelle recenti mostrare |
+| **Nome predefinito cartella** | Nuova cartella | Il nome iniziale di una nuova cartella |
+
+Vedi [Salvare e organizzare](/guides/save-and-organize).
+
+### Scorciatoie di salvataggio rapido [#quick-save]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Cartella del salvataggio rapido** | Migliore corrispondenza | Dove <Shortcut id="commands.quick-save" /> salva la pagina corrente: la cartella più adatta, l'ultima cartella usata o una cartella scelta. La scorciatoia con IA usa sempre il suggerimento dell'IA |
+| **Cartella in cui salvare** | Non scelta | La cartella per **Cartella scelta**. Se viene eliminata, il salvataggio rapido usa l'ultima cartella usata |
+| **Altre cartelle proposte** | <SettingDefault path="search.quick_save.alternatives" /> | In quante altre cartelle la notifica del salvataggio rapido propone di spostare la pagina |
+| **Durata della notifica** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | Quanto resta visibile la notifica del salvataggio rapido prima di chiudersi; se ci passi sopra con il puntatore, resta aperta |
+
+Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia nel tuo browser, con **Cambia scorciatoie**. In Firefox puoi anche digitare lì direttamente i nuovi tasti e ripristinare quelli predefiniti. In Chrome ed Edge spiega anche come assegnare al salvataggio rapido <Shortcut id="browser.bookmark_page" />. Vedi [Salvare con una scorciatoia da tastiera](/guides/save-and-organize#quick-save) e [Usare il tasto dei preferiti per il salvataggio rapido](/guides/save-and-organize#ctrl-d).
+
+### Menu contestuale [#context-menu]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Menu contestuale** | Disattivato | Mostra **Salva preferito in...** quando fai clic con il pulsante destro del mouse su un link. In Chrome ed Edge, attivarlo aggiunge l'autorizzazione facoltativa per il menu contestuale, senza alcuna richiesta |
+| **Origine del nome del preferito** | Testo del link | Assegna a un preferito salvato dal menu contestuale il testo del link, il titolo della pagina o l'URL del link |
+
+## Aspetto [#appearance]
+
+### Lingua, tema e icone [#language-theme-and-icons]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Lingua** | Impostazione del browser | <Languages of="extension" join="or" />, oppure la lingua del browser |
+| **Tema** | Sistema | Sistema, Chiaro o Scuro, applicato a ogni pagina di Bookmark Scout aperta |
+| **Mostra favicon** | Attivo | Mostra le icone dei siti accanto ai preferiti nel popup e nel riquadro laterale |
+| **Usa la cache delle icone del browser** | Disattivato | Chrome ed Edge: mostra anche le icone che il browser ha già in cache, per i siti che non ne hanno una salvata con **Aggiorna icone dei siti**. Attivarlo, qui o con **Mostra le icone del browser** nella scheda **Aggiorna icone dei siti**, chiede l'autorizzazione a leggere le icone dei siti. Non viene mostrato in Firefox, che non ha una cache delle icone per le estensioni |
+| **Dimensione favicon** | 16px (piccola) | 16, 24 o 32 pixel |
+
+### Date e ore [#dates]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Formato data** | Come nella mia lingua | Come vengono mostrate le date ovunque: nelle colonne delle date della gestione preferiti, nella Cronologia e nei dettagli. **Breve**, **Esteso** o **Anno-mese-giorno** (2026-03-14); ogni opzione mostra un esempio |
+| **Formato ora** | Come nella mia lingua | **12 ore** o **24 ore**, oppure come la tua lingua mostra le ore |
+
+### Indirizzi [#addresses]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Mostra la barra finale** | Disattivato | Mostra la `/` con cui terminano gli indirizzi, come `https://example.com/`, nella gestione preferiti, nelle revisioni e nella Cronologia. I link aprono sempre l'indirizzo esatto |
+
+### Popup [#popup]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Larghezza del popup** | <SettingDefault path="appearance.popup.width" /> px | I browser consentono al massimo 800 px |
+| **Altezza del popup** | <SettingDefault path="appearance.popup.height" /> px | I browser consentono al massimo 600 px |
+| **Lunghezza di troncamento** | <SettingDefault path="appearance.popup.truncate_length" /> caratteri | Accorcia il titolo della pagina nell'intestazione dei suggerimenti dell'IA nel popup |
+
+### Notifiche [#notifications]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Durata delle notifiche** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Quanto restano aperti i messaggi. I messaggi con Annulla mantengono la propria finestra di 10 secondi |
+| **Ritardo dei suggerimenti** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Quanto deve restare il puntatore su un controllo prima che compaia la sua spiegazione |
+
+## Comportamento [#behavior]
+
+### Albero e ordinamento [#tree-and-sorting]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Ordinamento** | Ordine del browser | **Ordine del browser** (come nella Barra dei preferiti), **Data di aggiunta** (prima i più recenti), **Alfabetico** o **Prima le cartelle**. È anche l'ordine della tabella della gestione preferiti finché non la ordini per colonna. Cambia solo il modo in cui Bookmark Scout mostra i preferiti, mai l'ordine salvato nel browser |
+| **Raggruppa per cartelle** | Attivo | Nel popup e nel riquadro laterale, elenca le sottocartelle prima dei preferiti a ogni livello |
+| **Trascinamento nell'albero** | Attivo | Nel popup e nel riquadro laterale, trascina preferiti e cartelle per spostarli, e rilascia i link da una pagina web su una cartella del riquadro laterale per salvarli lì. Disattivalo per evitare di spostare le righe per errore; puoi comunque spostarle nella gestione preferiti |
+
+### Link [#links]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Apri i link in** | Nuova scheda | **Nuova scheda**, **Nuova scheda in background** o **Scheda corrente**: dove si apre un link quando fai clic su di esso in Bookmark Scout. Il clic con il pulsante centrale e <Shortcut id="mouse.open_in_background" /> continuano a funzionare come nel tuo browser |
+| **Chiedi prima di aprirne più di** | <SettingDefault path="behavior.links.confirm_open_above" /> | Aprire contemporaneamente più preferiti di questo numero (Invio, **Apri tutti**) chiede prima conferma, come fa la gestione preferiti di Chrome; una cartella conta i preferiti che contiene direttamente |
+
+### Barra laterale Strumenti [#tools-sidebar]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Vista della gestione preferiti** | Elenco | **Elenco** mostra la tabella; **Riquadri** mostra le stesse righe come una griglia di riquadri, con la stessa selezione, gli stessi tasti e gli stessi menu. Anche i due pulsanti accanto a **Visualizza** cambiano vista. Conservata solo su questo dispositivo |
+| **Layout della barra laterale Strumenti** | Schede | **Schede** mostra una sezione alla volta, con **Tutti** per tutti gli strumenti; **Elenco unico** mostra tutte le sezioni, una dopo l'altra. Conservato solo su questo dispositivo |
+
+### Eliminazione [#deleting]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Conferma prima di eliminare** | Attivo | Chiede conferma prima di eliminare. In ogni caso, ogni eliminazione si può annullare per 10 secondi |
+
+### Cronologia preferiti [#history-settings]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Registra le modifiche fatte altrove** | Attivo | Elenca nella [Cronologia](/guides/save-and-organize#history) anche le modifiche fatte nella gestione preferiti del browser, da altre estensioni o dalla sincronizzazione del browser, come provenienti da un'origine sconosciuta. Disattivandolo, la registrazione si sospende; quando lo riattivi, ciò che è cambiato nel frattempo compare come un'unica differenza. Conservato solo su questo dispositivo |
+
+### Menu della gestione preferiti [#manager-menus]
+
+Scegli quali comandi mostrano il menu contestuale e il menu ⋯ della gestione preferiti, e trascina un comando per la maniglia per riordinarlo all'interno del suo gruppo. La maniglia è anche un pulsante il cui menu sposta il comando in cima, in alto, in basso o in fondo, quindi funziona anche con la tastiera. **Ripristina predefiniti** riporta il menu completo. **Visualizza dettagli** o **Copia ID preferito** resta sempre, così il menu ha un comando per qualsiasi preferito o cartella; quando nessuno dei comandi che hai mantenuto è applicabile, il menu mostra **Nessuna azione disponibile**.
+
+## IA [#ai]
+
+L'IA è disattivata per impostazione predefinita. Queste impostazioni contano solo dopo che hai attivato **Funzioni IA**; fino ad allora, le impostazioni IA qui e nella scheda **Strumenti IA** sono in grigio sotto una nota che lo segnala. Puoi comunque modificarle. Finché il servizio predefinito non è configurato, un riquadro **L'IA è facoltativa** in alto spiega cosa fa l'IA, cosa le serve, quanto può costare e cosa viene inviato, con un link a [Configurare gli strumenti IA](/guides/ai-tools).
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Funzioni IA** | Disattivato | Attiva gli strumenti IA e le cartelle suggerite nel popup. In Firefox, attivarle chiede il tuo consenso a condividere con il tuo provider IA la chiave API, i preferiti e il titolo e l'URL della pagina corrente |
+| **Servizi IA** | Nessuno | I provider che aggiungi, ciascuno con il proprio modello e la propria chiave; gli strumenti IA usano il servizio predefinito, tranne che **IA integrata** suggerisce solo cartelle: mentre è il servizio predefinito, gli altri strumenti usano il primo altro servizio attivo |
+
+Sotto di esse, il pannello del provider contiene **Chiave API**, **URL di base**, **Modello personalizzato** e **Intestazioni aggiuntive (JSON)**, con **Verifica servizio** e **Aggiorna modelli**. I limiti delle cartelle vengono inviati al provider come istruzioni, e il suo output non viene verificato rispetto a essi. Vedi [Configurare gli strumenti IA](/guides/ai-tools).
+
+### Suggerimenti di cartelle [#folder-suggestions]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Suggerisci all'apertura** | Disattivato | Chiede cartelle suggerite ogni volta che si apre il popup |
+| **Suggerimenti massimi** | <SettingDefault path="ai.suggestions.max_recommendations" /> | Numero massimo di cartelle suggerite da richiedere |
+
+### Leggi il contenuto delle pagine [#read-page-content]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Leggi il contenuto delle pagine** | Disattivato | Invia il testo principale di ogni pagina, non solo il titolo e l'URL, ai suggerimenti di cartelle, a Tag automatici e a Riassunti dei contenuti. Quando lo attivi, chiede l'accesso ai siti web |
+| **Salta le pagine della rete locale** | Attivo | Non legge mai le pagine della tua rete locale (come un router o una intranet), così il loro contenuto non raggiunge la tua azienda di IA |
+
+### Lingua delle risposte IA [#ai-output-language]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Lingua delle risposte IA** | Come l'estensione | La lingua in cui l'IA scrive tag, riassunti e nomi delle nuove cartelle: la lingua dell'estensione, una che scegli tu, oppure **Come ogni pagina**, la lingua di ciascuna pagina o di ciascun titolo di preferito. Chiedi all'IA risponde nella lingua in cui scrivi e usa questa solo quando non è chiara |
+
+### Su di me [#about-me]
+
+**Su di me** (vuoto per impostazione predefinita) è qualche parola su di te, ad esempio "Sono un insegnante; salvo materiale per le lezioni", fino a 1.000 caratteri. Finché contiene testo, i prompt integrati di ogni funzione IA lo inviano al tuo provider IA, così i risultati si adattano meglio a te; un prompt personalizzato lo invia solo se usa `{{aboutMe}}`. Si sincronizza tramite l'account del browser e viene salvato quando esci dal campo.
+
+### Chiedi all'IA [#ask-ai]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Passaggi massimi per risposta** | <SettingDefault path="ai.ask_ai.max_steps" /> | Quante volte Chiedi all'IA può chiamare il modello per una risposta: meno passaggi costano meno, più passaggi gli permettono di cercare più a fondo |
+
+### Cosa può fare Chiedi all'IA [#ask-ai-actions]
+
+Qui sono elencate tutte le consultazioni e le modifiche che Chiedi all'IA può fare, e sono tutte attive per impostazione predefinita. Se ne disattivi una, Chiedi all'IA non la riceve affatto. Applicare un piano di modifiche chiede sempre prima la tua conferma, qualunque cosa scegli qui.
+
+### Attività IA [#ai-activity]
+
+**Registra le richieste** (disattivato per impostazione predefinita, solo per questo dispositivo) conserva su questo dispositivo le ultime 50 richieste IA, con le chiavi API e le intestazioni delle credenziali rimosse, così puoi vedere esattamente cosa è stato inviato. Disattivandolo, il registro viene eliminato. Vedi [Vedere cosa è stato inviato](/guides/ai-tools#see-what-was-sent).
+
+## Strumenti IA [#ai-tools]
+
+**Prompt**, in cima a questa scheda, è la libreria dei prompt: leggi il prompt integrato di ogni strumento o scrivi i tuoi con segnaposto come `{{language}}`. Vedi [Scrivere i tuoi prompt](/guides/ai-tools#write-your-own-prompts).
+
+Ogni strumento ha un interruttore **Attiva** (attivo per impostazione predefinita). Disattivandone uno, lo si nasconde dalla barra laterale **Strumenti** della gestione preferiti.
+
+| Strumento | Impostazioni e valori predefiniti |
+| --- | --- |
+| **Pacchetto contesto IA** | **Formato di output** Markdown; **Includi percorsi delle cartelle**, **Includi date**, **Includi tag salvati** e **Includi riassunti salvati** attivi; **Elementi massimi** <SettingDefault path="ai_tools.context_packer.max_items" />; **Profondità massima** <SettingDefault path="ai_tools.context_packer.max_depth" />; **Lunghezza dell'estratto** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
+| **Tag automatici** | **Tag minimi** <SettingDefault path="ai_tools.auto_tagging.min_tags" />; **Tag massimi** <SettingDefault path="ai_tools.auto_tagging.max_tags" />; **Stile dei tag** kebab-case; **Modalità di unione** Aggiungi; **Rimuovi tag duplicati** attivo; **Invia i tag esistenti** attivo |
+| **Riassunti dei contenuti** | **Lunghezza del riassunto** <SettingDefault path="ai_tools.summarizer.summary_length" />; **Includi il dominio** attivo; **Modalità di unione** Sostituisci |
+| **Riorganizzazione cartelle con IA** | **Affidabilità minima** 55% (gli spostamenti al di sotto vengono scartati); **Dimensione del blocco** <SettingDefault path="ai_tools.reorganization.batch_size" /> preferiti per richiesta |
+
+Tag automatici e Riassunti dei contenuti lavorano sempre sulla cartella corrente.
+
+### Riorganizzazione cartelle con IA [#ai-folder-reorganization]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Categorie massime** | Nessun limite | Numero massimo di cartelle di primo livello che un piano di riorganizzazione può creare |
+| **Elementi minimi per cartella** e **Elementi massimi per cartella** | 1 e Nessun limite | Dimensioni obiettivo delle cartelle per i piani di riorganizzazione |
+
+## Manutenzione [#maintenance]
+
+| Strumento | Impostazioni e valori predefiniti |
+| --- | --- |
+| **Pulizia duplicati** | **Criterio di confronto** URL normalizzato; **Normalizza www**, **Ignora il protocollo** e **Ignora la barra finale** attivi; **Regola di conservazione** Il più vecchio; **Gruppi massimi** <SettingDefault path="maintenance.duplicates.max_groups" />. Analizza sempre tutti i preferiti |
+| **Pulizia URL** | **Rimuovi frammenti** disattivato; **Ordina i parametri di query** e **Elimina parametri di query duplicati** attivi; elenchi **Parametri da conservare** e **Parametri da rimuovere** |
+| **Regole intelligenti** | Le tue regole, nell'ordine in cui vengono eseguite: **Aggiungi regola** o **Inizia da un modello**, poi nome, ricerca, tag e cartella di ogni regola, attivata o disattivata; trascina una regola per cambiare quale spostamento prevale. I modelli partono disattivati. Vedi [Aggiungere tag e spostare con le Regole intelligenti](/guides/clean-up#tag-and-move-with-smart-rules) **Aggiungi tag ai nuovi preferiti** disattivato: quando è attivo, le regole attivate aggiungono i propri tag a ogni preferito nel momento in cui viene aggiunto (gli spostamenti non vengono mai fatti automaticamente). |
+| **Controlla link non funzionanti** | **Timeout della richiesta** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> s; **Richieste simultanee** <SettingDefault path="maintenance.dead_links.concurrency" />; **Numero di tentativi** <SettingDefault path="maintenance.dead_links.retry_count" />; **Segui i reindirizzamenti** attivo; **Codici di stato validi** <SettingDefault path="maintenance.dead_links.success_statuses" />; **Predefinito per i link non funzionanti confermati**, **Predefinito per i link da controllare manualmente** e **Predefinito per i link reindirizzati** Lascia invariato |
+| **Attività in background** | **Applica in background oltre** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />: le modifiche revisionate a un numero di preferiti superiore a questo vengono applicate in background, a blocchi, e proseguono anche se chiudi la pagina; ogni blocco è una modifica nella [Cronologia](/guides/save-and-organize), dove si può annullare |
+
+Gli strumenti partono da **Tutti i preferiti**, così un'analisi avviata dalla cartella su cui si apre la gestione preferiti non trascura le altre; cambia l'**Ambito predefinito** di uno strumento per farlo partire invece dalla cartella aperta. **Riorganizzazione cartelle con IA** parte dalla cartella aperta, perché un piano per tutti i preferiti li invierebbe tutti al tuo provider IA. Al livello principale della gestione preferiti, dove nessuna cartella è aperta, ogni strumento parte da **Tutti i preferiti**.
+
+Gli elenchi come **Parametri da rimuovere** si modificano come etichette: digita un nome e premi Invio, oppure scegli un suggerimento. **Codici di stato validi** è un elenco di caselle con i codici più comuni, e puoi aggiungerne altri. Ogni elenco contiene fino a 20 voci, e il nome di un parametro fino a 32 caratteri (lettere, cifre e punteggiatura degli URL), così le impostazioni rientrano nella sincronizzazione del browser. Gli elenchi predefiniti sono in [Ripulire duplicati e URL di tracciamento](/guides/clean-up#strip-tracking-parameters). Vedi anche [Trovare e riparare i link non funzionanti](/guides/dead-links).
+
+## Titoli e icone delle pagine [#metadata--content]
+
+### Recupero metadati [#metadata-fetcher]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Attiva Recupero metadati** | Attivo | Mostra **Recupero metadati** nella barra laterale Strumenti |
+| **Sovrascrivi i titoli** | Disattivato | Propone nuovi titoli anche per i preferiti che ne hanno già uno |
+| **Recupera le descrizioni** | Attivo | Mostra le descrizioni delle pagine nella revisione. Non vengono mai salvate |
+| **Timeout della richiesta** | <SettingDefault path="metadata_content.metadata_fetcher.request_timeout_ms" seconds /> s | Per pagina. Usato anche da **Aggiorna icone dei siti** |
+| **Richieste simultanee** | <SettingDefault path="metadata_content.metadata_fetcher.concurrency" /> | Pagine richieste contemporaneamente. Usato anche da **Aggiorna icone dei siti** |
+
+### Aggiorna icone dei siti [#refresh-site-icons]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Attiva Aggiorna icone dei siti** | Attivo | Mostra **Aggiorna icone dei siti** nella barra laterale Strumenti |
+| **Ambito predefinito** | Tutti i preferiti | L'ambito da cui parte l'aggiornamento delle icone dei siti |
+| **Dimensione preferita dell'icona** | <SettingDefault path="metadata_content.site_icons.preferred_size" />px | Quando una pagina indica più icone, scarica quella più vicina a questa dimensione |
+| **Dimensione massima del file icona** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | I file di icona più grandi non vengono scaricati né salvati |
+| **Limite di spazio per le icone** | 4 MB | Dimensione totale delle icone salvate su questo dispositivo; le più vecchie vengono rimosse per prime |
+
+### Indicizza il testo delle pagine [#index-page-text]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Attiva Indicizza il testo delle pagine** | Disattivato | Mostra **Indicizza il testo delle pagine** nella barra laterale Strumenti e consente alla ricerca di guardare all'interno delle pagine che hai indicizzato |
+| **Ambito predefinito** | Cartella corrente | I preferiti che lo strumento legge quando parte |
+
+Sotto, **Indice del testo delle pagine** indica quante pagine sono indicizzate, e **Elimina il testo delle pagine** le elimina tutte senza toccare preferiti, tag o Cronologia.
+
+### Recupera copertine [#fetch-covers]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Attiva Recupera copertine** | Disattivato | Mostra **Recupera copertine** nella barra laterale Strumenti |
+| **Ambito predefinito** | Cartella corrente | I preferiti che lo strumento legge quando parte |
+| **Larghezza della copertina** | <SettingDefault path="metadata_content.covers.width_px" /> px | Larghezza della copia conservata per ogni copertina; le immagini più grandi vengono ridotte a questa larghezza |
+| **Dimensione massima dell'immagine** | <SettingDefault path="metadata_content.covers.max_image_kb" /> KB | I file di immagine più grandi di questa dimensione non vengono scaricati |
+| **Spazio per le copertine** | <SettingDefault path="metadata_content.covers.max_cache_mb" /> MB | Lo spazio che le copertine possono occupare su questo dispositivo; le più vecchie vengono rimosse per prime. Conservato solo su questo dispositivo |
+
+Sotto, **Copertine dei preferiti** indica quante copertine sono archiviate e quanto spazio occupano, e **Elimina le copertine** le elimina tutte senza toccare preferiti, tag o Cronologia.
+
+## Sicurezza [#security]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Attiva Controllo privacy** | Attivo | Mostra **Controllo privacy** nella barra laterale Strumenti. Analizza sempre tutti i preferiti |
+| **Analizza i titoli** | Disattivato | Controlla i titoli oltre agli URL |
+| **Analizza i parametri di query** e **Analizza i frammenti** | Attivo | Controlla quelle parti di ogni URL. Un frammento senza parametri (`#section`, `#inbox`) viene segnalato solo quando contiene una chiave o un token |
+| **Parametri sensibili** | <SettingDefault path="security.privacy_scanner.sensitive_params" /> | Nomi dei parametri da segnalare |
+| **Rileva email** e **Rileva UUID** | Attivo | Segnala indirizzi email e valori simili a UUID |
+
+## Analisi [#analytics]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Attiva Statistiche** | Attivo | Mostra **Statistiche dei preferiti** nella barra laterale Strumenti |
+| **Includi domini**, **Includi cartelle**, **Includi duplicati**, **Includi protocolli**, **Includi dettaglio per livello** | Attivo | Sezioni del report; una sezione disattivata viene nascosta |
+| **Voci principali** | <SettingDefault path="analytics.statistics.top_n" /> | Lunghezza degli elenchi dei domini e delle cartelle principali |
+
+## Importa ed esporta [#data]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Mostra lo strumento di esportazione** e **Mostra lo strumento di importazione** | Attivo | Li mostra nella barra laterale Strumenti |
+| **Formato di esportazione predefinito** | HTML | Formato selezionato quando si apre lo strumento di esportazione |
+| **Prefisso del nome file** | `bookmarks_` | Inizio del nome di ogni file esportato |
+| **Lunghezza massima del nome file** | <SettingDefault path="data.export.filename_max_length" /> | Lunghezza massima del nome file generato |
+| **Rientro JSON**, **Rientro HTML**, **Rientro Markdown** | <SettingDefault path="data.export.json_indent_size" />, <SettingDefault path="data.export.html_indent_spaces" />, <SettingDefault path="data.export.markdown_indent_spaces" /> | Spazi per livello in ciascun formato |
+| **Includi date** e **Includi URL** | Attivo | Li include nelle esportazioni |
+
+Vedi [Importazione ed esportazione](/guides/import-export).
+
+## Per sviluppatori [#developers]
+
+### Agenti IA locali [#agent-bridge]
+
+**Consenti agli agenti IA locali** (disattivato per impostazione predefinita, solo per questo dispositivo) consente agli agenti IA sul tuo computer, come Claude Code, Codex o Cursor, di consultare i tuoi preferiti tramite il programma bookmark-scout-mcp, che installi e registri con `bookmark-scout-mcp install`. Non richiede **Funzioni IA**. Attivarlo chiede al browser di consentire all'estensione di comunicare con quel programma. **Consenti modifiche** (disattivato per impostazione predefinita) consente loro anche di salvare pagine e proporre spostamenti, ridenominazioni, eliminazioni e nuove cartelle; ogni modifica apre una finestra di Bookmark Scout in cui la approvi o la rifiuti, e puoi annullarla nella gestione preferiti. Il pannello sotto l'interruttore mostra se il programma è in esecuzione.
+
+**Nascondi i valori privati** (attivo per impostazione predefinita) sostituisce i parametri sensibili degli URL, i token e gli indirizzi email nei titoli e negli URL ricevuti dagli agenti, usando l'elenco del Controllo privacy. **Cosa possono fare gli agenti locali** elenca tutte le consultazioni, tutte attive per impostazione predefinita; una che disattivi non viene affatto offerta agli agenti.

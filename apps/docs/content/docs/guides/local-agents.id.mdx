@@ -1,0 +1,80 @@
+---
+title: Menggunakan dengan agen AI lokal
+description: Untuk developer. Izinkan agen AI di komputer Anda, seperti Claude Code, Codex, atau Cursor, menelusuri dan mengatur bookmark Anda melalui Bookmark Scout, dengan setiap perubahan disetujui di browser.
+---
+
+<Callout title="Untuk developer">
+Halaman ini ditujukan bagi orang yang sudah memakai asisten coding AI atau agen AI lain di komputernya. Penyiapannya memerlukan terminal. Anda tidak memerlukan semua ini untuk menyimpan, menemukan, atau membersihkan bookmark.
+</Callout>
+
+Agen AI yang berjalan di komputer Anda bisa bekerja dengan bookmark Anda melalui Bookmark Scout: menemukan bookmark, mencantumkan folder, memeriksa link, menyarankan folder untuk sebuah halaman, dan, jika Anda mengizinkannya, menyimpan halaman serta memindahkan, mengganti nama, atau menghapus bookmark. Agen berkomunikasi dengan program kecil, **bookmark-scout-mcp**, yang terhubung ke ekstensi melalui native messaging browser Anda. Tidak ada yang mendengarkan di jaringan, dan Bookmark Scout tidak punya server.
+
+<Callout type="warn" title="Apa yang bisa dilihat agen">
+Selama akses aktif, agen bisa membaca judul bookmark, URL, nama folder, tag dan ringkasan tersimpan, serta judul dan URL halaman saat ini; jika **Baca konten halaman** aktif, juga teks halaman. Agen mungkin mengirim apa yang dibacanya ke penyedia AI-nya sendiri. Nilai sensitif di judul dan URL disembunyikan secara default. Lihat [Privasi](/privacy).
+</Callout>
+
+## Menyiapkannya [#set-it-up]
+
+<Steps>
+<Step>
+Dapatkan **bookmark-scout-mcp**. Biner untuk Linux, macOS, dan Windows dilampirkan ke <RepoLink path="/releases">rilis GitHub</RepoLink> setelah sebuah rilis menyertakannya; taruh biner untuk sistem Anda di `PATH` sebagai `bookmark-scout-mcp`. Sampai saat itu, dengan [Bun](https://bun.sh) terinstal, build dari clone repositori: jalankan `bun install`, lalu `bun run --cwd packages/mcp-bridge compile`, yang menulis `packages/mcp-bridge/dist/bookmark-scout-mcp`.
+</Step>
+<Step>
+Daftarkan ke browser Anda:
+
+```sh
+bookmark-scout-mcp install
+```
+
+Perintah ini menulis manifest native messaging untuk setiap browser yang ditemukannya (Chrome, Edge, Chromium, Brave, Vivaldi, dan Firefox; di Windows juga nilai registri di bawah pengguna Anda), dan menampilkan cara menambahkannya ke agen Anda. Tambahkan `--browser chrome` untuk memilih browser, atau `--dry-run` untuk melihat apa yang akan ditulisnya.
+</Step>
+<Step>
+Di setelan Bookmark Scout, buka **Untuk developer** > **Agen AI lokal** lalu aktifkan **Izinkan agen AI lokal**. Browser Anda meminta izin agar ekstensi bisa berkomunikasi dengan program itu. Panel di bawah tombol lalu menampilkan **Siap**. Fitur AI tidak perlu diaktifkan.
+</Step>
+<Step>
+Tambahkan jembatan ke agen Anda (di bawah), lalu tanyakan tentang bookmark Anda.
+</Step>
+</Steps>
+
+## Menambahkannya ke agen Anda [#add-it-to-your-agent]
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex**, di `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor**: [tambahkan ke Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==), atau taruh ini di `~/.cursor/mcp.json`:
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install` menampilkan konfigurasi ini dengan jalur lengkap program. Jika lebih dari satu browser atau profil terhubung, agen memakai yang terakhir terhubung; tambahkan `--browser edge` atau `--profile <id>` setelah `serve` untuk memilih.
+
+## Mengizinkan agen mengubah bookmark [#let-agents-change-bookmarks]
+
+Agen hanya mencari sampai Anda juga mengaktifkan **Izinkan perubahan**. Setelah itu, agen bisa menyimpan halaman, mengusulkan pemindahan, penggantian nama, penghapusan, dan folder baru sebagai rencana, serta mengurungkan perubahannya sendiri. **Setiap perubahan menunggu Anda**: jendela Bookmark Scout terbuka dan menampilkan perubahan sebagaimana akan dilakukan, dengan nama yang diberikan agen. Tidak ada yang terjadi sampai Anda mengklik **Setujui**; **Tolak**, menutup jendela, atau lima menit tanpa jawaban tidak mengubah apa pun. Perubahan yang disetujui bisa diurungkan di pengelola bookmark dengan <Shortcut id="manager.undo" />.
+
+Di bawah **Yang boleh dilakukan agen lokal**, nonaktifkan pencarian atau perubahan apa pun yang tidak ingin Anda izinkan untuk dipakai agen. **Sembunyikan nilai pribadi** (aktif secara default) mengganti parameter URL sensitif, token, dan alamat email dalam apa yang diterima agen, menggunakan daftar Pemindai Privasi.
+
+Dengan **Rekam permintaan** aktif di bawah **Aktivitas AI**, setiap panggilan yang dibuat agen tercantum di sana beserta nama agennya.
+
+## Pemecahan masalah [#troubleshooting]
+
+- `bookmark-scout-mcp doctor` mencantumkan tempat program terdaftar, browser mana yang terhubung, dan cuplikan konfigurasi agen.
+- **Belum diinstal** di panel: jalankan `bookmark-scout-mcp install` lagi, lalu **Coba lagi**. Build pengembangan ekstensi memiliki id sendiri; tambahkan dengan `--extension-id <id>`.
+- Agen menyatakan tidak ada browser yang terhubung: biarkan browser terbuka dengan tombol aktif; alat `bridgeStatus` milik jembatan menyebutkan apa yang dilihatnya.
+- Untuk melihat apa yang dijalankan browser, setel `BOOKMARK_SCOUT_MCP_LOG` ke jalur file sebelum memulai browser; program menulis pesannya di sana.
+
+## Menghapusnya [#remove-it]
+
+Nonaktifkan **Izinkan agen AI lokal**, hapus server dari agen Anda (`claude mcp remove bookmark-scout`), dan jalankan `bookmark-scout-mcp uninstall` untuk menghapus manifest dan nilai registri yang ditulisnya.

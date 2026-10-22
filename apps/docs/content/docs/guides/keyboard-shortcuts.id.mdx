@@ -1,0 +1,85 @@
+---
+title: Pintasan keyboard
+description: Telusuri, berpindah antar-folder, simpan halaman saat ini, dan kelola tabel pengelola tanpa mouse.
+---
+
+Pintasan di popup dan panel samping tidak pernah memakai `Ctrl` atau `Cmd`, sehingga pintasan browser sendiri dengan tombol-tombol itu, seperti membuka tab baru atau kolom alamat, tetap berfungsi. Pengelola bookmark menggantikan pengelola milik browser, jadi pengelola ini juga mengambil pintasan `Cmd` pengelola tersebut (`Ctrl` di Windows dan Linux): pilih semua, salin, potong, tempel, urungkan, ulangi, dan buka di tab baru. Pintasan dijeda saat Anda mengetik di kolom teks (`Esc` di kotak penelusuran adalah pengecualian), saat metode input sedang menyusun teks, dan saat dialog atau menu terbuka.
+
+## Di halaman mana pun [#on-any-page]
+
+Pintasan ini berfungsi tanpa ada jendela Bookmark Scout yang terbuka. Browser Anda yang memilikinya, jadi Anda bisa mengubah atau menghapusnya di setelan pintasan browser; lihat [Menyimpan dengan pintasan keyboard](/guides/save-and-organize#quick-save). Di Chrome dan Edge, Anda juga bisa memberikan tombol bookmark browser, <Shortcut id="browser.bookmark_page" />, ke simpan cepat; lihat [Memakai tombol bookmark untuk simpan cepat](/guides/save-and-organize#ctrl-d).
+
+| Tombol | Tindakan |
+| --- | --- |
+| <Shortcut id="commands.quick-save" /> | Simpan cepat halaman saat ini ke folder dari **Folder Simpan Cepat** |
+| <Shortcut id="commands.ai-quick-save" /> | Simpan cepat halaman saat ini ke folder yang disarankan AI |
+
+Di notifikasi yang muncul setelahnya, `Tab` menjangkau **Urungkan** dan folder lainnya, dan `Esc` menutupnya.
+
+## Popup dan panel samping [#popup-and-side-panel]
+
+Arahkan pointer ke kotak penelusuran untuk melihat pengingat.
+
+| Tombol | Tindakan |
+| --- | --- |
+| <Shortcut id="popup.focus_search" /> | Fokus ke kotak penelusuran |
+| `Esc` di kotak penelusuran | Kosongkan penelusuran; tekan lagi untuk keluar dari kotak |
+| `↓` di kotak penelusuran | Pindah ke folder pertama |
+| `Enter` di kotak penelusuran | Simpan halaman saat ini ke folder pertama di bawah **Simpan ke folder**, yang disorot; jika tidak ada folder yang tercantum, simpan penelusuran ke penelusuran terbaru |
+| <Shortcut id="popup.recent_searches" /> di kotak penelusuran yang kosong | Tampilkan penelusuran terbaru; `↓` / `↑` memilih salah satu, `Enter` menelusurinya, `Tab` menjangkau **Hapus** |
+| `↓` / `↑`, `Home` / `End` | Berpindah antar-folder dan bookmark yang terlihat (`↑` di baris pertama kembali ke penelusuran) |
+| `→` / `←` | Buka atau tutup folder; pada folder yang terbuka, `→` pindah ke item pertamanya, dan `←` pindah ke folder induk |
+| `Enter` pada folder | Simpan halaman saat ini ke folder itu (halaman yang sudah tersimpan di sana tidak diduplikasi) |
+| `Enter` pada bookmark | Buka di tab baru |
+| `Space` pada folder | Buka atau tutup folder |
+
+## Pengelola bookmark [#bookmarks-manager]
+
+Tekan <Shortcut id="manager.show_help" />, atau klik tombol keyboard di header, untuk melihat daftar ini di pengelola. Tombol-tombolnya mengikuti pengelola bookmark Chrome.
+
+| Tombol | Tindakan |
+| --- | --- |
+| <Shortcut id="manager.focus_filter" /> | Fokus ke kotak penelusuran |
+| <Shortcut id="manager.parent_folder" /> | Buka folder induk |
+| `↓` / `↑`, `Home` / `End` | Berpindah antar-baris dan pilih baris; dengan `Shift`, perluas pilihan; dengan `Cmd` (`Ctrl` di Windows dan Linux), berpindah tanpa memilih |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | Pindah ke baris berikutnya atau sebelumnya |
+| `Space` | Pilih atau batalkan pilihan baris yang difokuskan |
+| <Shortcut id="manager.select_all" /> | Pilih setiap baris yang ditampilkan filter, di setiap halaman |
+| <Shortcut id="manager.clear_selection" /> | Hapus pilihan, atau tutup dialog atau menu |
+| <Shortcut id="manager.open" /> | Buka folder yang dipilih, atau bookmark yang dipilih di tab |
+| <Shortcut id="manager.open_in_new_tabs" /> | Buka pilihan di tab latar belakang baru |
+| <Shortcut id="manager.open_in_new_window" /> | Buka pilihan di jendela baru |
+| <Shortcut id="manager.rename" /> | Edit bookmark yang dipilih, atau ganti nama folder |
+| <Shortcut id="manager.delete" /> | Hapus pilihan |
+| <Shortcut id="manager.undo" /> | Urungkan perubahan terakhir |
+| <Shortcut id="manager.redo" /> | Ulangi |
+| <Shortcut id="manager.copy" /> | Salin pilihan; URL-nya masuk ke clipboard |
+| <Shortcut id="manager.cut" /> | Potong pilihan, untuk memindahkannya dengan tempel |
+| <Shortcut id="manager.paste" /> | Tempel setelah pilihan, atau di akhir folder; URL yang disalin di aplikasi lain menjadi bookmark |
+| <Shortcut id="manager.open_saved_searches" /> | Buka penelusuran tersimpan |
+| <Shortcut id="manager.show_help" /> | Tampilkan pintasan keyboard |
+| Tombol menu atau <Shortcut id="browser.context_menu" /> | Buka menu klik kanan untuk baris atau folder yang difokuskan |
+
+Dengan mouse, seperti di pengelola milik browser:
+
+| Gerakan | Tindakan |
+| --- | --- |
+| <Shortcut id="mouse.select_toggle" /> | Tambahkan baris ke pilihan, atau keluarkan dari pilihan |
+| <Shortcut id="mouse.select_range" /> | Pilih setiap baris dari baris yang terakhir diklik hingga baris ini |
+| <Shortcut id="mouse.open_in_background" /> | Buka link di tab latar belakang baru (fungsi browser sendiri) |
+
+Di hierarki folder di sebelah kiri, yang juga merupakan satu perhentian `Tab`:
+
+| Tombol | Tindakan |
+| --- | --- |
+| `↓` / `↑`, `Home` / `End` | Berpindah antar-folder yang ditampilkan |
+| `→` / `←` | Buka atau tutup folder; pada folder yang terbuka, `→` pindah ke subfolder pertamanya, dan pada folder yang tertutup, `←` pindah ke folder induk |
+| <Shortcut id="manager.open" />, atau `Space` | Tampilkan folder di tabel |
+| <Shortcut id="manager.rename" /> | Ganti nama folder |
+| <Shortcut id="manager.delete" /> | Hapus folder |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | Salin atau potong folder |
+| <Shortcut id="manager.paste" /> | Tempel ke dalam folder |
+
+Tabel adalah satu perhentian saat Anda menekan `Tab`; tombol panah berpindah antar-barisnya. Membuka lebih dari <SettingDefault path="behavior.links.confirm_open_above" /> tab sekaligus akan ditanyakan terlebih dahulu; folder membuka bookmark yang langsung ada di dalamnya. Di tabel, fokuskan tepi header kolom lalu tekan `←` atau `→` untuk mengubah ukuran kolom itu.
+
+Pintasan keyboard dicakup oleh pengujian otomatis Chromium dan Edge, bukan oleh pengujian Firefox.

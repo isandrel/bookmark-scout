@@ -134,7 +134,7 @@ FÜR ENTWICKLER
 UPDATE VON EINER FRÜHEREN VERSION
 Version 0.3.3 speichert ihre Daten in einem neuen Format und übernimmt ältere Daten nicht: Die Einstellungen werden auf die Standardwerte zurückgesetzt, KI-Dienste und API-Schlüssel müssen erneut hinzugefügt werden, und eigene Prompts, gespeicherte Suchen, Tags, Zusammenfassungen und gespeicherte Website-Symbole werden gelöscht. Ihre Lesezeichen selbst bleiben unverändert.
 
-Entwickelt von einem unabhängigen Entwickler: keine Firma, keine Werbung, kein Konto. In 9 Sprachen verfügbar. Helles, dunkles und System-Design.
+Entwickelt von einem unabhängigen Entwickler: keine Firma, keine Werbung, kein Konto. In 12 Sprachen verfügbar. Helles, dunkles und System-Design.
 
 Dokumentation: https://docs.bookmark-scout.com
 ```
@@ -198,7 +198,7 @@ FÜR ENTWICKLER
 UPDATE VON EINER FRÜHEREN VERSION
 Version 0.3.3 speichert ihre Daten in einem neuen Format und übernimmt ältere Daten nicht: Die Einstellungen werden auf die Standardwerte zurückgesetzt, KI-Dienste und API-Schlüssel müssen erneut hinzugefügt werden, und eigene Prompts, gespeicherte Suchen, Tags, Zusammenfassungen und gespeicherte Website-Symbole werden gelöscht. Ihre Lesezeichen selbst bleiben unverändert.
 
-Entwickelt von einem unabhängigen Entwickler: keine Firma, keine Werbung, kein Konto. In 9 Sprachen verfügbar. Helles, dunkles und System-Design.
+Entwickelt von einem unabhängigen Entwickler: keine Firma, keine Werbung, kein Konto. In 12 Sprachen verfügbar. Helles, dunkles und System-Design.
 ```
 
 ## What's new in 0.3.3

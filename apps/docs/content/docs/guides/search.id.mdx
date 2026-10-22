@@ -1,0 +1,108 @@
+---
+title: Penelusuran dan penelusuran tersimpan
+description: Temukan bookmark apa pun berdasarkan judul, alamat, folder, tag, atau ringkasan dari popup, panel samping, atau pengelola, persempit penelusuran dengan operator, dan simpan kombinasi filter sebagai penelusuran tersimpan yang diberi nama.
+---
+
+## Menelusuri dari popup atau panel samping [#search-from-the-popup-or-side-panel]
+
+<Steps>
+<Step>
+Klik ikon Bookmark Scout di toolbar. Anda juga bisa membuka Bookmark Scout di panel samping browser (bilah samping di Firefox), yang tetap terbuka saat Anda menjelajah.
+</Step>
+<Step>
+Ketik di kotak penelusuran di bagian atas, yang bertuliskan **Ketik nama folder untuk menyimpan halaman ini…** dan juga menelusuri bookmark Anda (tekan <Shortcut id="popup.focus_search" /> untuk langsung ke sana). Hasil muncul saat Anda mengetik, di dalam foldernya, dengan setiap kecocokan disorot. Setiap kata harus cocok, di judul, alamat, folder, atau tag dan ringkasan; lihat [Kata dan operator penelusuran](#search-words-and-operators).
+</Step>
+<Step>
+Persempit pencocokan dengan **Opsi penelusuran lainnya**, tombol di dalam kotak penelusuran: **Cocokkan Huruf Besar/Kecil**, **Cocokkan Seluruh Kata**, dan **Penelusuran pola lanjutan (regex)**, yang memperlakukan penelusuran sebagai regular expression. Tombol itu disorot selama salah satu opsi aktif. Opsi ini hanya menelusuri judul, persis seperti yang diketik, tanpa operator.
+</Step>
+<Step>
+Klik bookmark, atau pindah ke bookmark itu dengan tombol panah lalu tekan `Enter`, untuk membukanya di tab baru.
+</Step>
+</Steps>
+
+Perlu diketahui:
+
+- Pencocokan seluruh kata memperlakukan spasi, tanda baca, dan perubahan aksara sebagai batas kata, sehingga istilah seperti `C++` dan kata dalam bahasa Jepang tetap cocok.
+- Regular expression yang tidak valid menampilkan peringatan dan ditelusuri sebagai teks biasa.
+- Folder permanen seperti Bilah bookmark adalah wadah dan tidak pernah cocok berdasarkan nama.
+- Jika hasil yang cocok melebihi batas hasil, sebuah catatan menyebutkan berapa yang ditampilkan. Persempit penelusuran, atau naikkan **Hasil Penelusuran Maks** di [Setelan](/settings).
+- Mengosongkan penelusuran (tombol hapus, atau `Esc` di kotak penelusuran) mengembalikan folder yang sebelumnya Anda buka.
+- Penelusuran terbaru diingat di perangkat ini. Klik kotak penelusuran yang kosong, atau tekan <Shortcut id="popup.recent_searches" /> di dalamnya, untuk mencantumkannya. Hapus dari daftar itu, atau nonaktifkan **Histori Penelusuran** di Setelan.
+
+## Kata dan operator penelusuran [#search-words-and-operators]
+
+Kotak penelusuran di popup, panel samping, dan pengelola membaca penelusuran dengan cara yang sama. Kotak itu hanya menelusuri bookmark di browser ini, dan tidak mengirim apa pun ke mana pun.
+
+- Setiap kata harus cocok, masing-masing di mana saja: judul, alamat web, jalur folder, atau tag dan ringkasan bookmark. `recipe soup` menemukan bookmark bernama "Soup" di folder bernama "Recipes".
+- Tanda kutip menjaga kata tetap bersama: `"tomato soup"`.
+- Tanda `-` di depan mengecualikan yang cocok: `recipe -cake` atau `-tag:archive`.
+- Kata yang menyebutkan nama folder menemukan folder itu. Di popup, bookmark-nya ditampilkan di dalamnya; `folder:` mencantumkan semua isinya.
+- Teks yang bukan operator ditelusuri seperti yang diketik, seperti `C++`, `10:30`, atau alamat web. Begitu pula operator yang tidak dikenal Bookmark Scout, seperti `foo:bar`. Nilai yang tidak bisa dibacanya, seperti tanggal yang tidak valid, dilewati.
+
+| Penelusuran | Menemukan |
+| --- | --- |
+| `title:react` | Judul yang berisi teks itu; `title:"react hooks"` menerima beberapa kata |
+| `url:github` | Alamat web yang berisi teks itu |
+| `domain:github.com` | Bookmark di situs itu, termasuk subdomainnya |
+| `folder:Work` atau `path:Work` | Semua isi folder dengan nama persis itu, di kedalaman mana pun; `folder:"Work / Docs"` menyebut folder di dalam folder lain |
+| `tag:reading` | Bookmark dengan tag persis itu |
+| `summary:recipe` | Ringkasan yang berisi teks itu |
+| `content:recipe` | Teks halaman yang Anda indeks dengan **Indeks Teks Halaman** |
+| `is:bookmark` atau `is:folder` | Hanya bookmark, atau hanya folder |
+| `is:untagged` | Bookmark tanpa tag |
+| `has:tags` atau `has:summary` | Item yang memiliki tag, atau ringkasan |
+| `has:content` | Bookmark yang teks halamannya sudah diindeks |
+| `after:2026-01-31` atau `before:2026-01-31` | Item yang ditambahkan pada atau setelah hari itu, atau pada atau sebelum hari itu |
+
+Tag dan ringkasan adalah yang Anda tambahkan di **Detail Bookmark** atau pertahankan dari alat **Tag Otomatis** dan **Peringkas Konten**. Semuanya tetap di perangkat ini.
+
+Dengan **Indeks Teks Halaman** aktif, kata biasa juga cocok dengan teks halaman yang Anda indeks, setelah judul, alamat, tag, dan ringkasan; hasil popup yang ditemukan dengan cara itu menampilkan kata-kata di sekitar kecocokan. Lihat [Menelusuri isi halaman](/guides/clean-up#search-inside-pages).
+
+## Memfilter di pengelola bookmark [#filter-in-the-bookmarks-manager]
+
+Tabel di pengelola memiliki filter yang lebih presisi. Di Chrome, buka halaman bookmark browser untuk menjangkaunya; pengelola terbuka di bilah bookmark Anda.
+
+- **Telusuri judul, alamat, folder, dan tag** membaca [kata dan operator penelusuran](#search-words-and-operators) dan mencantumkan folder dan bookmark yang cocok. Tekan <Shortcut id="manager.focus_filter" /> untuk langsung ke sana. Tombol **Sintaksis penelusuran** di ujungnya mencantumkan operator; pilih salah satu untuk menambahkannya ke penelusuran.
+- **Filter** berisi semua filter lainnya: **Hanya folder saat ini**, **Jenis**, **Domain**, **Folder**, yang mempertahankan item dari folder yang Anda pilih, **Tanggal Ditambahkan**, dan **Filter URL...**, yang hanya mencocokkan alamat web. Setiap filter yang dipakai ditampilkan sebagai chip di bawah toolbar, dan tanda **×** di chip itu menghapusnya; **Reset** menghapus semua filter dan penelusuran. Masalah dalam penelusuran, seperti tanggal yang tidak valid, dijelaskan di bawah toolbar.
+- **Hanya folder saat ini** membatasi filter ke folder tempat Anda berada. Jika nonaktif, filter menelusuri semua bookmark, setiap hasil menampilkan foldernya di bawah judul, dan jalur di bagian atas bertuliskan **Hasil dari semua folder**.
+- Urutkan menurut kolom mana pun dari header-nya. Selama tabel tidak dalam urutan browser, teks di sebelah **Urutan browser** menyebutkan urutan yang sedang dipakai; klik **Urutan browser** untuk kembali.
+- Tabel menampilkan **Judul**, **URL**, dan **Tanggal Ditambahkan**, 50 baris per halaman. Aktifkan **Jenis**, **Jalur Folder**, dan kolom lainnya di bawah **Lihat**, dan pilih jumlah baris per halaman di bawah tabel. Untuk mengubah urutan kolom, seret kolom dengan pegangannya di bawah **Lihat**, atau gunakan tombol panah di sebelahnya. Anda juga bisa menyeret header kolom di tabel ke tempat baru, atau memindahkannya ke kiri atau kanan dari menu header.
+- Dua tombol di sebelah **Lihat** beralih antara daftar dan **Kartu**, kisi kartu dengan baris, filter, pengurutan, pemilihan, dan menu yang sama: Kiri dan Kanan berpindah satu kartu, Atas dan Bawah satu baris kartu, dan klik dua kali membuka folder atau link. Pilihan ini disimpan di perangkat ini.
+- Dalam penelusuran lintas folder, menu baris menawarkan **Tampilkan di folder**: tindakan ini menghapus filter dan membuka folder yang berisi item tersebut, dengan item itu terpilih.
+
+## Menautkan ke folder atau penelusuran [#link-to-a-folder-or-a-search]
+
+Alamat pengelola mengikuti apa yang Anda lihat, jadi tombol **Kembali** dan **Maju** browser berpindah antar-folder dan penelusuran, dan Anda bisa mem-bookmark atau membagikan sebuah tampilan.
+
+- `?id=` menyebutkan folder yang terbuka, seperti di pengelola Chrome sendiri: `chrome://bookmarks/?id=12` membuka folder 12 di Chrome, dan `edge://favorites/?id=12` di Edge. Link dari Chrome 154 hingga 156, yang menyebut Bilah bookmark, Bookmark lainnya, dan Bookmark seluler dengan ID panjang, juga membuka folder-folder itu. Tanpa `?id=`, pengelola terbuka di bilah bookmark; **Bookmark** di awal jalur folder menampilkan tingkat teratas.
+- `?q=` adalah penelusuran: `chrome://bookmarks/?q=react` membuka pengelola yang menelusuri "react", dan `?q=tag:reading` untuk tag tersebut. Saat Anda mengetik di **Telusuri judul, alamat, folder, dan tag**, alamat ikut berubah, dan satu rangkaian ketikan adalah satu langkah **Kembali**. Penelusuran lebih diutamakan daripada folder; folder tetap berlaku jika **Hanya folder saat ini** dicentang.
+- **Salin link ke folder ini**, di sebelah jalur folder di header dan di menu baris folder, menyalin alamat itu. Di Firefox, tindakan ini menyalin alamat halaman pengelola itu sendiri. Chrome dan Edge tetap menampilkan alamat yang Anda pakai untuk membuka pengelola, meskipun Anda berpindah antar-folder.
+- Judul tab menyebutkan folder, atau penelusuran selama Anda menelusuri.
+
+## Menyimpan penelusuran [#save-a-search]
+
+Penelusuran tersimpan menyimpan filter, pengurutan, dan cakupan folder pengelola saat ini dengan sebuah nama, agar Anda bisa membuka tampilan yang sama lagi nanti.
+
+<Steps>
+<Step>
+Setel setidaknya satu filter: judul, URL, jenis, folder, domain, atau tanggal ditambahkan.
+</Step>
+<Step>
+Klik **Penelusuran tersimpan** di toolbar tabel, atau tekan <Shortcut id="manager.open_saved_searches" />.
+</Step>
+<Step>
+Masukkan nama di **Beri nama penelusuran ini** lalu klik **Simpan**.
+</Step>
+</Steps>
+
+Untuk memakainya, buka **Penelusuran tersimpan** dan pilih penelusuran tersebut. Filter dan pengurutannya menggantikan yang sekarang, dan jika penelusuran itu dibatasi ke satu folder, pengelola kembali ke folder itu. Setiap entri bisa diganti namanya atau dihapus, dan penghapusan bisa diurungkan dari pesan yang muncul setelahnya. Seret entri dengan pegangannya untuk mengubah urutan, atau buka menu pegangan untuk memindahkannya dengan keyboard.
+
+Teks kotak penelusuran disimpan seperti yang diketik, termasuk operator. Penelusuran yang disimpan sebelum kotak penelusuran membaca operator hanya menemukan teksnya di judul dan alamat. Kini penelusuran seperti itu terbuka dengan teksnya diberi tanda kutip jika berisi beberapa kata atau titik dua, sehingga tetap menemukan setiap bookmark yang dulu ditemukannya.
+
+Penelusuran tersimpan menyimpan definisi filter, tidak pernah salinan bookmark, jadi hasilnya selalu sesuai dengan bookmark Anda saat ini. Jika folder yang disebutkannya sudah dihapus, folder itu dilewati, filter lainnya tetap berlaku, dan sebuah pesan menyebutkan berapa folder yang dilewati.
+
+Penelusuran tersimpan tetap berada di penyimpanan ekstensi lokal browser ini dan tidak disinkronkan, karena filternya bisa mengungkap apa yang Anda bookmark dan ID folder berbeda antarperangkat. Anda bisa menyimpan hingga 50.
+
+<Callout title="Firefox">
+Di Firefox, buka pengelola dengan **Buka pengelola bookmark** di popup.
+</Callout>

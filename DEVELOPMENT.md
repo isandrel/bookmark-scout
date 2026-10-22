@@ -130,7 +130,7 @@
 ### 🚧 Current Focus
 
 - [ ] 🧪 **Browser Coverage** — Grow the Firefox smoke suite toward the full suite (context menus, drag and drop, network and AI tools)
-- [ ] 🛒 **Store Distribution** — The Chrome Web Store listing is live. Listing copy in nine languages, permission justifications, privacy disclosures, the privacy policy, screenshots, and submission checklists for Firefox Add-ons and Edge Add-ons are in [`store/`](store/); those submissions are manual and await approval. The Firefox package has its permanent add-on ID and data collection declaration
+- [ ] 🛒 **Store Distribution** — The Chrome Web Store listing is live. Listing copy in twelve languages, permission justifications, privacy disclosures, the privacy policy, screenshots, and submission checklists for Firefox Add-ons and Edge Add-ons are in [`store/`](store/); those submissions are manual and await approval. The Firefox package has its permanent add-on ID and data collection declaration
 
 ---
 

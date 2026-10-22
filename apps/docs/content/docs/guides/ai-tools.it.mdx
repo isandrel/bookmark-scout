@@ -1,0 +1,200 @@
+---
+title: Configurare gli strumenti IA
+description: Attiva le funzioni IA facoltative, scegli un provider e un modello, aggiungi la tua chiave API e scopri esattamente quali dati dei preferiti invia ciascuno strumento IA.
+---
+
+Le funzioni IA sono **facoltative e disattivate per impostazione predefinita**, e Bookmark Scout funziona completamente anche senza. Bookmark Scout non ha un proprio servizio di IA. Per usare l'IA ti servono:
+
+- **Un account presso un'azienda di IA**, come OpenAI, Anthropic o Google. Nelle impostazioni questa azienda si chiama **provider**. La maggior parte dei provider fa pagare ogni utilizzo, di solito una piccola somma; controlla i prezzi prima di iniziare. Un programma di IA che gira sul tuo computer, come Ollama, non costa nulla ma richiede un computer piuttosto potente.
+- **Una chiave API**: un codice segreto, ottenuto dalla pagina del tuo account presso quell'azienda, che consente a Bookmark Scout di usare il tuo account. Tienila riservata, come una password.
+
+Scegli anche un **modello**: la versione dell'IA offerta dall'azienda, ad esempio una più veloce o una più intelligente. Quando l'IA è attiva, le richieste vanno direttamente dal browser al provider che hai scelto, con la tua chiave.
+
+Solo per i suggerimenti di cartelle, Chrome può fare a meno di account e chiave: vedi [IA gratuita su questo computer](#free-ai-on-this-computer).
+
+<Callout type="warn" title="Prima di attivare l'IA">
+Gli strumenti IA inviano al provider che configuri i titoli dei preferiti, gli URL e i nomi o i percorsi delle cartelle. Il provider tratta quei dati secondo i propri termini, e l'uso dell'API può avere un costo. Controlla ogni suggerimento prima di applicarlo.
+</Callout>
+
+## Attivare l'IA [#turn-on-ai]
+
+<Steps>
+<Step>
+Apri le impostazioni di Bookmark Scout (in Chrome, fai clic con il pulsante destro del mouse sull'icona nella barra degli strumenti e scegli **Opzioni**) e vai alla scheda **IA**. Finché non è configurato un servizio, un riquadro in alto, **L'IA è facoltativa**, riassume cosa fa l'IA, cosa le serve, quanto può costare e cosa viene inviato.
+</Step>
+<Step>
+Attiva **Funzioni IA**.
+</Step>
+<Step>
+In **Servizi IA**, fai clic su **Aggiungi servizio** e scegli un provider. Il selettore elenca i provider più noti in **In evidenza**, poi **Server locali** e **Personalizzati**; digita nella sua casella di ricerca per trovarne circa altri 200 in **Altri provider (models.dev)**. Poi scegli un **Modello IA**.
+</Step>
+<Step>
+Inserisci la tua **Chiave API** se il provider ne richiede una. Per i provider in evidenza, **Ottieni una chiave API da** apre la pagina del provider in cui crearne una dopo aver eseguito l'accesso. La chiave viene salvata quando esci dal campo e viene archiviata solo su questo dispositivo. Una chiave che non corrisponde al formato del provider viene rifiutata e non salvata.
+</Step>
+<Step>
+Facoltativo: fai clic su **Aggiorna modelli** per caricare l'elenco aggiornato dei modelli del provider, oppure su **Verifica servizio** per controllare che il provider sia raggiungibile, accetti la chiave e offra il modello scelto. Entrambi leggono l'elenco dei modelli del provider, cosa che non costa nulla; la verifica invia un breve prompt di prova solo ai provider senza elenco, come Azure OpenAI. La prima volta il browser chiede l'accesso all'indirizzo di quel provider. Un elenco aggiornato viene conservato per il selettore dei modelli finché non lo aggiorni di nuovo.
+</Step>
+</Steps>
+
+<Screenshot name="options-ai" />
+
+I pulsanti IA nel popup e nel riquadro laterale compaiono dopo che le Funzioni IA sono attive e il servizio predefinito è configurato (con la sua chiave, se il provider ne richiede una). Fino ad allora, il popup mostra **L'IA è attiva ma non ancora configurata** con **Completa la configurazione dell'IA**, che apre questa scheda, e gli strumenti IA nella gestione preferiti restano disattivati.
+
+Le impostazioni vengono salvate automaticamente. I servizi IA, con le relative chiavi API, **URL di base** e **Intestazioni aggiuntive (JSON)**, restano nell'archivio locale di questo browser e non vengono mai sincronizzati. Le altre impostazioni IA, ad esempio se l'IA è attiva, si sincronizzano tramite l'account del browser dove il browser lo supporta.
+
+## IA gratuita su questo computer [#free-ai-on-this-computer]
+
+In Chrome, Bookmark Scout può usare l'**IA integrata di Chrome**, un piccolo modello (Gemini Nano) che gira sul tuo computer: nessun account, nessuna chiave API, nessun costo, e nulla esce dal tuo computer. Suggerisce solo cartelle.
+
+<Steps>
+<Step>
+Nella scheda **IA**, fai clic su **Usa l'IA integrata** in **Gratis su questo computer**, in cima al riquadro **L'IA è facoltativa**. **IA integrata (su questo computer)** è anche la prima voce di **Aggiungi servizio**. Entrambe compaiono solo dove Chrome può eseguire il modello.
+</Step>
+<Step>
+Fai clic su **Scarica il modello**. Chrome lo scarica una sola volta: circa 4 GB su un computer con scheda grafica, 2,7 GB senza. Quando il servizio indica **Pronta**, il modello è su questo computer. Se chiudi le Impostazioni durante il download, Chrome continua a scaricare in background.
+</Step>
+<Step>
+Attiva **Funzioni IA** se è disattivato: aggiungere il servizio non attiva l'IA.
+</Step>
+</Steps>
+
+- L'IA integrata richiede Chrome 138 o versioni successive su macOS 13 o versioni successive, Windows 10 o 11, Linux o un Chromebook Plus, con 22 GB di spazio libero su disco e una scheda grafica con più di 4 GB di memoria, oppure 16 GB di memoria e 4 core del processore. Non devi controllarlo tu: **Verifica questo computer**, sotto il servizio (o nel riquadro **Gratis su questo computer**), mostra la versione di Chrome, il sistema operativo, la memoria e i core del processore, e indica ciò che un browser non può vedere (spazio libero su disco e memoria grafica). Quando Chrome dice che il modello non può funzionare qui ma nulla esclude il tuo computer, apre per te il flag di Chrome: impostalo su **Enabled BypassPerfRequirement**, riavvia Chrome e fai clic su **Verifica di nuovo**. Se la tua organizzazione l'ha disattivata, il servizio lo segnala. Firefox non ha un'IA integrata.
+- Suggerisce solo cartelle: nel popup e nel riquadro laterale, e per la scorciatoia di salvataggio rapido con IA. Chiedi all'IA, Tag automatici, Riassunti dei contenuti e Riorganizzazione cartelle con IA usano l'altro servizio attivo, o uno che aggiungi.
+- Legge il titolo e l'indirizzo della pagina, i nomi delle cartelle più adatte (un breve elenco scelto sul tuo dispositivo) e, con **Leggi il contenuto delle pagine** attivo, l'inizio del testo della pagina. Risponde solo con cartelle di quell'elenco.
+- Funziona meglio con inglese, giapponese, spagnolo, tedesco e francese. Quando il modello non riesce o impiega troppo tempo, i suggerimenti provengono invece da una semplice corrispondenza di parole sul tuo dispositivo.
+- Il popup e la scorciatoia di salvataggio rapido con IA non avviano mai il download: finché il modello non è pronto, il popup mostra **Scarica il modello di IA integrata nelle Impostazioni** al posto dei pulsanti IA, e il salvataggio rapido usa la migliore corrispondenza descritta sotto.
+- Il salvataggio rapido con IA mantiene il modello pronto per 5 minuti dopo un salvataggio, così il successivo è più veloce. Quando il modello non è pronto, non riesce o impiega troppo tempo, la pagina viene salvata nella cartella più adatta, come fa l'impostazione **Migliore corrispondenza**.
+- Con **Registra le richieste** attivo, ogni chiamata compare in **Attività IA** contrassegnata come **Sul dispositivo**.
+
+## Usare più di un servizio [#use-more-than-one-service]
+
+Salva tutti i servizi che vuoi, anche più di uno dello stesso provider: ad esempio un proxy di lavoro e uno di casa, ciascuno con la propria chiave, il proprio indirizzo e il proprio modello.
+
+- Ogni strumento IA usa il servizio **Predefinito**. Scegli **Imposta come predefinito** nel menu di un servizio oppure, quando sono attivi più servizi, scegline uno dalla freccia accanto al pulsante con le scintille nel popup.
+- **IA integrata** suggerisce solo cartelle: mentre è il servizio predefinito, gli altri strumenti IA usano il primo altro servizio attivo. Trascina un servizio per la maniglia nell'elenco per scegliere quale viene per primo.
+- Disattiva un servizio con il suo interruttore per nasconderlo dal popup senza eliminarlo.
+- **Duplica** copia un servizio, chiave inclusa. **Elimina** lo rimuove da questo dispositivo insieme alla sua chiave. L'IA integrata si può aggiungere una sola volta, quindi non ha **Duplica**.
+- **URL di base**, **Intestazioni aggiuntive (JSON)** e i campi specifici del provider, come l'organizzazione di OpenAI, si trovano in **Altre impostazioni**.
+
+## Provider [#providers]
+
+| Provider | Chiave API | Note |
+| --- | --- | --- |
+| IA integrata (su questo computer) | Nessuna | Solo Chrome, per i suggerimenti di cartelle; vedi [IA gratuita su questo computer](#free-ai-on-this-computer) |
+| OpenAI | Obbligatoria | **ID organizzazione** e **ID progetto** facoltativi |
+| Anthropic | Obbligatoria | |
+| Google | Obbligatoria | |
+| Groq | Obbligatoria | |
+| Mistral AI | Obbligatoria | |
+| DeepSeek | Obbligatoria | |
+| xAI | Obbligatoria | |
+| Azure OpenAI | Obbligatoria | Imposta **Nome della risorsa** (o un **URL di base**) e inserisci il nome del tuo deployment come **Modello personalizzato**. Azure non ha un elenco dei deployment, quindi **Aggiorna modelli** non viene mostrato. |
+| OpenRouter | Obbligatoria | |
+| Ollama (locale) | Facoltativa | Indirizzo predefinito `http://localhost:11434/api`; le richieste restano sulla tua macchina |
+| CLIProxyAPI | Di solito obbligatoria | Gira sulla tua macchina e risponde con i tuoi account Claude, Gemini o Codex. Indirizzo predefinito `http://localhost:8317/v1`; inserisci una delle chiavi in `api-keys` nel suo `config.yaml`, poi **Aggiorna modelli** per vedere i modelli offerti dai tuoi account. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Facoltativa | Elencati in **Server locali** con i rispettivi indirizzi `localhost` predefiniti: oMLX e vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp e LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Fai clic su **Aggiorna modelli** per vedere cosa ha caricato il server. |
+| Jan | Obbligatoria | Server API locale su `http://localhost:1337/v1`; inserisci la chiave dalle impostazioni del server API di Jan |
+| Provider personalizzato | Facoltativa | Qualsiasi endpoint compatibile con OpenAI, impostato con **URL di base** |
+| Provider personalizzato (compatibile con Anthropic) | Facoltativa | Qualsiasi endpoint che usa la Messages API di Anthropic, impostato con **URL di base** |
+| Circa altri 200 | Di solito obbligatoria | Elencati in **Altri provider (models.dev)**, ad esempio Together AI, Fireworks AI, Cerebras, DeepInfra e LM Studio. Non hanno un elenco dei modelli integrato: fai clic su **Aggiorna modelli** o inserisci un **Modello personalizzato**. |
+
+Il selettore **Provider** ha una casella di ricerca. I provider aggiuntivi provengono da una copia del catalogo aperto [models.dev](https://models.dev) inclusa nell'estensione, quindi sceglierne uno non invia nulla a models.dev; le richieste vanno solo al provider che scegli.
+
+**URL di base** sostituisce l'indirizzo del provider per ogni richiesta, ad esempio per usare un proxy. Deve iniziare con `http://` o `https://`. **Intestazioni aggiuntive (JSON)** aggiunge intestazioni a ogni richiesta, e **Modello personalizzato** imposta un ID di modello per i provider che accettano qualsiasi nome di modello.
+
+### Server locali [#local-servers]
+
+I server locali devono accettare le richieste dell'estensione:
+
+- **Ollama:** imposta `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` e riavvia Ollama. Senza questa impostazione, Ollama risponde 403 e la verifica indica che il server ha rifiutato l'estensione.
+- **LM Studio:** attiva **Enable CORS** nelle impostazioni del server, oppure avvialo con `lms server start --cors`.
+- **LocalAI:** imposta una chiave API; il suo controllo CSRF rifiuta le richieste senza chiave provenienti dal browser.
+- **text-generation-webui:** avvialo con `--api`.
+- **CLIProxyAPI:** accetta le richieste dell'estensione con la configurazione predefinita. Avvialo prima di fare clic su **Verifica servizio**; se non è in esecuzione, la verifica indica che non è riuscita a raggiungere `localhost:8317`.
+
+### Quando un controllo non riesce [#when-a-check-fails]
+
+Verifica e Aggiorna indicano la causa probabile: una chiave rifiutata (401, o 400 da Google e xAI), un URL di base errato (404), un provider che limita le richieste (429, il che significa comunque che la chiave funziona), un server che ha rifiutato l'origine dell'estensione, nessuna risposta entro 8 secondi, oppure un indirizzo che non fornisce un'API di provider.
+
+## Scrivere i tuoi prompt [#write-your-own-prompts]
+
+Ogni strumento IA parte da un prompt integrato. Per cambiare il comportamento di uno strumento, vai in **Impostazioni**, poi **Strumenti IA**, poi **Prompt**:
+
+1. Per leggere prima il prompt integrato di uno strumento, fai clic sull'icona a forma di occhio accanto. Fai clic su **Personalizza**, qui o nel visualizzatore, e si apre l'editor con il prompt integrato come punto di partenza.
+2. Modifica il testo. Fai clic su una variabile come `{{maxTags}}` per inserirla; lo strumento la compila in base alle tue impostazioni. **Anteprima con le impostazioni attuali** mostra il risultato. Oppure digita `{{` e scegline una dall'elenco, che mostra cos'è ogni segnaposto e il suo valore attuale. `{{today}}`, `{{language}}` e `{{aboutMe}}` funzionano in tutti gli strumenti, e `{{existingTags}}` in Tag automatici; un segnaposto senza nulla da inserire, come `{{aboutMe}}` mentre Su di me è vuoto, viene omesso insieme alla sua riga. Scrivi `\{{` per le parentesi graffe letterali. Un segnaposto che lo strumento non compila viene segnalato, con un suggerimento quando sembra un errore di battitura, e **Ripristina il prompt integrato** ricomincia da capo.
+3. Fai clic su **Salva prompt**. Il nuovo prompt diventa il prompt dello strumento.
+
+Conserva più prompt per strumento, fino a 10 in tutto, e passa dall'uno all'altro con il menu dello strumento; **Predefinito (integrato)** torna all'originale. I tuoi prompt si sincronizzano tra i tuoi dispositivi tramite l'account del browser, quindi ciascuno deve restare sotto i 7 KB. Bookmark Scout aggiunge dopo il tuo prompt le proprie regole sul formato dell'output, così i risultati vengono caricati anche se il tuo prompt chiede altro. Aggiunge anche una riga che richiede la lingua impostata in **Lingua delle risposte IA** (**Impostazioni**, poi **IA**); nel tuo prompt, `{{language}}` indica quella lingua.
+
+## Cosa invia ciascuno strumento [#what-each-tool-sends]
+
+| Strumento | Dove | Cosa invia al provider |
+| --- | --- | --- |
+| Cartelle suggerite | Popup, il pulsante con le scintille accanto alla casella di ricerca (mostrato solo quando l'IA è attiva) | Il titolo e l'URL della pagina corrente e i nomi delle cartelle dei preferiti. Con **Leggi il contenuto delle pagine** attivo, anche il testo principale della pagina. Con l'IA integrata, nulla esce dal tuo computer |
+| **Tag automatici** | Gestione preferiti, Strumenti, **IA** | Titoli, URL e percorsi delle cartelle dei preferiti nella cartella corrente e, con **Leggi il contenuto delle pagine** attivo, il testo principale di ogni pagina; con **Invia i tag esistenti** attivo (predefinito), anche i nomi dei tag che usi di più |
+| **Riassunti dei contenuti** | Gestione preferiti, Strumenti, **IA** | Titoli, URL e percorsi delle cartelle dei preferiti nella cartella corrente e, con **Leggi il contenuto delle pagine** attivo, il testo principale di ogni pagina |
+| **Riorganizzazione cartelle con IA** | Gestione preferiti, Strumenti, **IA** | Titoli, URL e percorsi delle cartelle dei preferiti nell'ambito che scegli |
+| **Chiedi all'IA** | Popup e riquadro laterale, il pulsante della chat accanto alla casella di ricerca (mostrato solo quando l'IA è attiva) | I tuoi messaggi e la conversazione fino a quel momento, e ciò che consulta: i preferiti corrispondenti (con le relative cartelle, date di aggiunta, tag e riassunti), i nomi delle cartelle, il titolo e l'URL della pagina corrente, se i link salvati nei preferiti che controlla funzionano ancora e, con **Leggi il contenuto delle pagine** attivo, il testo delle pagine che legge |
+| **Pacchetto contesto IA** | Gestione preferiti, Strumenti, **IA** | Nulla. Salva un file sul tuo computer e funziona anche con l'IA disattivata. |
+
+Ogni funzione IA che usa un provider invia anche il testo di **Su di me** (impostazioni **IA**) finché ne contiene; per impostazione predefinita è vuoto.
+
+Attiva **Suggerisci all'apertura** per richiedere le cartelle suggerite ogni volta che si apre il popup. Lascialo disattivato per inviare una richiesta solo quando fai clic sul pulsante.
+
+## Leggi il contenuto delle pagine [#read-page-content]
+
+Titoli e URL non sempre dicono di cosa parla una pagina. Attiva **Leggi il contenuto delle pagine** in **Impostazioni**, poi **IA**, e i suggerimenti di cartelle, **Tag automatici** e **Riassunti dei contenuti** inviano anche il testo principale di ogni pagina. Attivarlo chiede l'accesso ai siti web; se rifiuti, resta disattivato.
+
+- Bookmark Scout scarica ogni pagina da sé, senza i tuoi cookie, quindi ottieni la versione del sito per chi non ha eseguito l'accesso. Conserva il testo dell'articolo senza menu, script, immagini o indirizzi dei link.
+- Ogni pagina invia fino a circa 3.000 caratteri, e un'esecuzione di uno strumento legge fino a 40 pagine. I preferiti successivi in una cartella grande vengono inviati solo con titolo e URL, così come le pagine che non si caricano.
+- Le pagine della tua rete locale, come `localhost`, gli indirizzi IP privati e i nomi `.local`, non vengono mai lette, così le pagine della intranet non raggiungono un provider nel cloud.
+- Il testo delle pagine proviene dal web e potrebbe contenere istruzioni rivolte all'IA. Bookmark Scout dice al modello di trattarlo solo come dati, e tu controlli comunque ogni suggerimento prima che venga salvato.
+
+## Chiedi all'IA [#ask-ai]
+
+Fai clic sul pulsante della chat accanto alla casella di ricerca nel popup o nel riquadro laterale per fare domande sui tuoi preferiti, sulla pagina che stai visitando o su qualsiasi altra cosa. Usa il tuo servizio IA predefinito; cambia servizio dal menu nella sua intestazione.
+
+- Per rispondere, l'IA può cercare tra i tuoi preferiti (anche per cartella, tag, sito o data di aggiunta, oppure con gli [operatori di ricerca](/guides/search#search-words-and-operators)), elencare le tue cartelle, consultare tag e riassunti dei preferiti, trovare duplicati, suggerire cartelle per una pagina, controllare la pagina corrente e, con **Leggi il contenuto delle pagine** attivo, leggere una pagina salvata nei preferiti o la pagina che stai visitando, e nessun'altra pagina. Dopo che hai consentito l'accesso a tutti i siti web (per Controlla link non funzionanti su più di 20 siti, o per **Leggi il contenuto delle pagine**), può anche controllare se i link salvati nei preferiti funzionano ancora. Quando lo chiedi, può anche salvare una pagina, e spostare, rinominare o eliminare preferiti e creare cartelle: queste azioni le mostra prima come un piano, e non cambia nulla finché non lo approvi nella chat. Dopo aver letto una pagina web, chiede conferma anche prima di salvare. Ogni modifica è un passo che puoi annullare, anche con <Shortcut id="manager.undo" /> nella gestione preferiti. Ogni passaggio che compie compare nella chat.
+- Dopo alcune risposte, dei pulsanti subito sopra la casella del messaggio suggeriscono cosa fare dopo: salvare una pagina in una cartella suggerita, aprire o mostrare un preferito, oppure fare una domanda successiva o scegliere tra alcune opzioni o idee. Compaiono quando la risposta è completa, solo l'ultima risposta li ha, e si fanno da parte mentre digiti per tornare quando la casella è vuota. Non succede nulla finché non ne fai clic su uno, ciascuno funziona una sola volta, e un salvataggio si può annullare dalla sua notifica.
+- Un pulsante di salvataggio indica la cartella e, sotto, il titolo e il sito della pagina; puntaci sopra per vedere l'indirizzo completo. Propone solo la pagina che stai visitando, una pagina che l'IA ha trovato nei tuoi preferiti o ha letto, oppure un indirizzo che hai digitato, mai uno che compare solo nel testo di una pagina web. Dopo che la chat ha letto una pagina web o ha cercato sul web, fare clic sul pulsante chiede prima di approvare il salvataggio di quella pagina in quella cartella.
+- OpenAI, Anthropic, Google Gemini e xAI possono anche cercare sul web. Attiva la ricerca con il pulsante a forma di globo accanto alla casella del messaggio; resta disattivata finché non lo fai, e la ricerca viene eseguita dal provider.
+- La conversazione viene conservata solo finché la chat è aperta. **Nuova chat** la cancella, e chiudere il popup la termina.
+- Le istruzioni che segue sono il prompt **Chiedi all'IA** nella libreria dei prompt, quindi puoi visualizzarle o sostituirle come qualsiasi altro prompt.
+- **Cosa può fare Chiedi all'IA**, in **Impostazioni**, poi **IA**, elenca tutte le consultazioni e le modifiche che può fare. Se ne disattivi una, Chiedi all'IA non la riceve affatto. Applicare un piano di modifiche chiede sempre prima la tua conferma.
+- Per gli sviluppatori: gli agenti IA sul tuo computer, come Claude Code, possono usare le stesse consultazioni e modifiche; vedi [Usare con agenti IA locali](/guides/local-agents).
+
+## Vedere cosa è stato inviato [#see-what-was-sent]
+
+Per controllare esattamente cosa ha inviato uno strumento e cosa ha risposto il provider, vai in **Impostazioni**, poi **IA**, e attiva **Registra le richieste** in **Attività IA**. Ogni chiamata IA mostra quindi l'origine, l'indirizzo, lo stato e l'ora; aprine una per vedere le intestazioni della richiesta e il corpo della richiesta e della risposta, oppure copiala come JSON per una segnalazione di bug.
+
+La registrazione è disattivata per impostazione predefinita. Il registro resta su questo dispositivo e conserva solo le chiamate più recenti. Le chiavi API, le intestazioni il cui nome fa pensare a una credenziale (ad esempio quelle che contengono `key`, `token`, `secret`, `auth` o `cookie`) e ogni intestazione che imposti in **Intestazioni aggiuntive (JSON)** vengono sostituite con `[redacted]` prima di archiviare qualsiasi cosa, ma i titoli e gli URL dei preferiti nelle richieste vengono conservati, quindi disattiva la registrazione quando hai finito: così elimini anche il registro.
+
+## Salvare una pagina con una cartella suggerita [#save-a-page-with-a-folder-recommendation]
+
+Fai clic sul pulsante con le scintille nel popup. Scegliere una cartella esistente suggerita salva lì la pagina. Scegliere una nuova cartella suggerita apre **Controlla la nuova cartella** con il percorso completo e la pagina; **Crea cartella e salva** crea solo le cartelle mancanti e salva la pagina. Se la pagina è già in quella cartella non viene salvata due volte, e se un preferito usa già uno dei nomi di cartella del percorso, non viene creato nulla. **Annulla** non cambia nulla.
+
+## Suggerire tag e riassunti [#suggest-tags-and-summaries]
+
+Esegui **Tag automatici** o **Riassunti dei contenuti** con **Analizza**. Ogni suggerimento viene mostrato per la revisione e parte da **Salva**; imposta su **Salta** quelli che non vuoi (oppure selezionane diversi e usa **Imposta i selezionati su…**), poi fai clic su **Salva** (ad esempio **Salva 5 suggerimenti di tag**). Non viene salvato nulla prima del clic. **Modalità di unione** decide se i suggerimenti salvati vengono aggiunti a ciò che hai già o lo sostituiscono.
+
+I tag e i riassunti salvati si trovano nell'archivio locale di questo browser. Puoi anche modificarli a mano in **Dettagli preferito**. Non vengono sincronizzati né sono ricercabili. Un'esportazione JSON dei preferiti li include, e importare quel file li assegna ai preferiti che crea.
+
+Il numero e lo stile dei tag, la lunghezza dei riassunti e i limiti di riorganizzazione nelle Impostazioni vengono inviati al provider come istruzioni; l'output del provider non viene verificato rispetto a essi.
+
+## Riorganizzare le cartelle [#reorganize-folders]
+
+**Riorganizzazione cartelle con IA** chiede al provider in quale cartella va ogni preferito. Il piano si apre sempre prima come un elenco di spostamenti dei preferiti, con gli spostamenti verso nuove cartelle contrassegnati e conteggiati, e non cambia nulla finché non fai clic su **Applica modifiche**.
+
+L'analisi viene eseguita in background, una richiesta per ogni blocco di preferiti: continua anche dopo la chiusura della gestione preferiti, e il piano attende in **Controlla i risultati** finché non lo esamini. Se il servizio IA non riesce, viene disattivato o cambia, l'attività si mette in pausa e ne spiega il motivo, e non viene inviato altro finché non la riprendi. Se il browser si arresta mentre una risposta è in arrivo, l'attività chiede conferma prima di inviare di nuovo quella richiesta, perché potrebbe essere già stata addebitata.
+
+- **Applica modifiche** sposta i preferiti e crea le nuove cartelle indicate dal piano. Se nella stessa posizione esiste già una cartella con quel nome, viene usata quella.
+- Un preferito che hai spostato, a cui hai dato un nuovo URL o che hai eliminato dopo l'anteprima viene saltato e lasciato dov'è, così il piano non prevale mai su una modifica più recente. Quando viene applicata solo una parte del piano, il messaggio conta i preferiti spostati, le nuove cartelle e gli elementi saltati e non riusciti, e indica i preferiti saltati.
+- Fai clic su **Annulla** nel messaggio o nella revisione, oppure premi <Shortcut id="manager.undo" /> nella gestione preferiti, per riportare indietro i preferiti e rimuovere le nuove cartelle ancora vuote. Un preferito che hai spostato di nuovo nel frattempo resta dove l'hai messo.
+
+## Esportare il contesto per una chat con un'IA [#export-context-for-an-ai-chat]
+
+**Pacchetto contesto IA** esporta i preferiti selezionati in Markdown o XML da incollare in qualsiasi chat con un'IA. Può includere percorsi delle cartelle, date e i tuoi tag e riassunti salvati (**Includi tag salvati** e **Includi riassunti salvati**). Come le esportazioni dei preferiti, apre una revisione della privacy quando il file conterrebbe valori che potrebbero essere privati.
+
+<Callout title="Firefox">
+In Firefox, apri la gestione preferiti con **Apri gestione preferiti** nel popup della barra degli strumenti per usare gli strumenti IA della gestione preferiti. L'IA non è coperta dai test automatici per Firefox.
+</Callout>

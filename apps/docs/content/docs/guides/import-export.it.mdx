@@ -1,0 +1,61 @@
+---
+title: Importazione ed esportazione
+description: Esporta i preferiti in HTML, JSON, Markdown o CSV con una revisione della privacy, e importa file HTML o JSON dopo un'anteprima che mostra i duplicati.
+---
+
+Entrambi gli strumenti si trovano nella barra laterale **Strumenti** della gestione preferiti, in **Dati**.
+
+<Callout title="Firefox">
+In Firefox, apri la gestione preferiti con **Apri gestione preferiti** nel popup.
+</Callout>
+
+## Esportare i preferiti [#export-bookmarks]
+
+<Steps>
+<Step>
+In **Esporta preferiti**, scegli un **Formato**: **HTML (Chrome)**, **JSON**, **Markdown** o **CSV**.
+</Step>
+<Step>
+Scegli la cartella corrente o tutti i preferiti e fai clic su **Esporta**.
+</Step>
+<Step>
+Se il file contenesse valori che potrebbero essere privati, si apre prima una revisione. Scegli **Esporta l'originale**, **Esporta con dati oscurati** o **Annulla**.
+</Step>
+</Steps>
+
+La revisione cerca parametri di query sensibili, token nei frammenti degli URL, valori simili a email e a token, e nomi utente o password all'interno degli URL. Un'esportazione con dati oscurati sostituisce quei valori con `REDACTED` solo nel file scaricato; i tuoi preferiti non cambiano. Le esportazioni senza nulla di sensibile vengono scaricate direttamente.
+
+Dettagli del file:
+
+- I nomi dei file iniziano con **Prefisso del nome file** (predefinito `bookmarks_`) e conservano i nomi delle cartelle con caratteri non ASCII.
+- I file CSV iniziano con un byte order mark UTF-8. La colonna Folder unisce le cartelle con `/`, e scrive una `/` all'interno del nome di una cartella come `\/` e una barra rovesciata come `\\`.
+- I separatori, che esistono solo in Firefox, vengono scritti come separatori in HTML (`<HR>`) e JSON e tornano separatori quando importi quel file in Firefox. Markdown e CSV li omettono, e Chrome ed Edge, che non hanno separatori, li omettono in un'importazione; l'anteprima li conteggia.
+- **Includi date** e **Includi URL**, e le dimensioni del rientro per ogni formato, si trovano nella scheda **Dati** delle [Impostazioni](/settings).
+
+Un'esportazione JSON include i tag e il riassunto di ogni preferito, e importare quel file li assegna ai preferiti che crea, ma non a quelli che salta in quanto duplicati. Le esportazioni HTML, Markdown e CSV li omettono. Per passare i preferiti con i relativi tag e riassunti a uno strumento di IA, usa **Pacchetto contesto IA**; vedi [Configurare gli strumenti IA](/guides/ai-tools#export-context-for-an-ai-chat).
+
+## Importare i preferiti [#import-bookmarks]
+
+<Steps>
+<Step>
+In **Importa preferiti**, fai clic su **Importa** e scegli un file di preferiti HTML o JSON, ad esempio uno esportato da un browser. Puoi anche rilasciare il file sulla scheda **Importa preferiti**.
+</Step>
+<Step>
+Esamina l'**Anteprima dell'importazione**. Mostra la cartella di destinazione, quanti preferiti e cartelle verranno creati o saltati, e quali URL esistono già nella cartella di destinazione, altrove nei tuoi preferiti o in precedenza nello stesso file.
+</Step>
+<Step>
+Cambia **Importa in** se necessario. Inizialmente è la cartella aperta nella gestione preferiti.
+</Step>
+<Step>
+Scegli come gestire i **Duplicati**: salta i preferiti che esistono già in qualsiasi punto, salta solo quelli già presenti nella cartella di destinazione, oppure importa tutto.
+</Step>
+<Step>
+Fai clic su **Importa**. Un messaggio indica quanti elementi sono stati creati, saltati e non riusciti, con **Annulla** per 10 secondi. Annulla rimuove solo ciò che è ancora esattamente come l'ha creato l'importazione: un elemento importato che nel frattempo hai rinominato, spostato, a cui hai cambiato i tag o aggiunto contenuto resta, e il messaggio lo conta come mantenuto.
+</Step>
+</Steps>
+
+Non viene scritto nulla finché non fai clic su **Importa**. Se i tuoi preferiti cambiano mentre l'anteprima è aperta, l'anteprima viene aggiornata invece di essere applicata.
+
+## I file delle impostazioni sono separati [#settings-files-are-separate]
+
+I pulsanti **Esegui il backup delle impostazioni** e **Ripristina le impostazioni** in fondo alla pagina delle Impostazioni salvano e ripristinano un file di backup con le impostazioni di Bookmark Scout, i prompt personalizzati, i servizi IA (senza chiavi API) e le ricerche salvate. Non toccano preferiti, tag o riassunti. Vedi [Impostazioni](/settings) per sapere cosa contiene il backup. Puoi anche rilasciare un file di backup in qualsiasi punto della pagina delle Impostazioni per ripristinarlo.

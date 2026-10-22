@@ -1,0 +1,61 @@
+---
+title: Impor dan ekspor
+description: Ekspor bookmark sebagai HTML, JSON, Markdown, atau CSV dengan tinjauan privasi, dan impor file HTML atau JSON setelah pratinjau yang menampilkan duplikat.
+---
+
+Kedua alat ini ada di bilah samping **Alat** di pengelola bookmark, di bawah **Data**.
+
+<Callout title="Firefox">
+Di Firefox, buka pengelola dengan **Buka pengelola bookmark** di popup.
+</Callout>
+
+## Mengekspor bookmark [#export-bookmarks]
+
+<Steps>
+<Step>
+Di **Ekspor Bookmark**, pilih **Format**: **HTML (Chrome)**, **JSON**, **Markdown**, atau **CSV**.
+</Step>
+<Step>
+Pilih folder saat ini atau semua bookmark, lalu klik **Ekspor**.
+</Step>
+<Step>
+Jika file akan berisi nilai yang mungkin bersifat pribadi, tinjauan terbuka lebih dulu. Pilih **Ekspor asli**, **Ekspor yang disamarkan**, atau **Batal**.
+</Step>
+</Steps>
+
+Tinjauan ini mencari parameter kueri yang sensitif, token di fragmen URL, nilai yang mirip email dan token, serta nama pengguna atau sandi di dalam URL. Ekspor yang disamarkan mengganti nilai-nilai itu dengan `REDACTED` hanya di file yang diunduh; bookmark Anda tidak berubah. Ekspor tanpa data sensitif langsung diunduh.
+
+Detail file:
+
+- Nama file diawali dengan **Awalan Nama File** (default `bookmarks_`) dan mempertahankan nama folder non-ASCII.
+- File CSV diawali dengan byte order mark UTF-8. Kolom Folder menggabungkan folder dengan `/`, dan menulis `/` di dalam nama folder sebagai `\/` serta garis miring terbalik sebagai `\\`.
+- Pemisah, yang hanya ada di Firefox, ditulis sebagai pemisah di HTML (`<HR>`) dan JSON dan kembali menjadi pemisah saat Anda mengimpor file itu di Firefox. Markdown dan CSV tidak menyertakannya, dan Chrome serta Edge, yang tidak punya pemisah, tidak menyertakannya saat impor; pratinjau menghitungnya.
+- **Sertakan Tanggal** dan **Sertakan URL**, serta ukuran indentasi untuk setiap format, ada di tab **Data** di [Setelan](/settings).
+
+Ekspor JSON menyertakan tag dan ringkasan setiap bookmark, dan mengimpor file itu memberikannya ke bookmark yang dibuatnya, tetapi tidak ke bookmark yang dilewati sebagai duplikat. Ekspor HTML, Markdown, dan CSV tidak menyertakannya. Untuk menyerahkan bookmark beserta tag dan ringkasannya ke alat AI, gunakan **Pengemas Konteks AI**; lihat [Menyiapkan alat AI](/guides/ai-tools#export-context-for-an-ai-chat).
+
+## Mengimpor bookmark [#import-bookmarks]
+
+<Steps>
+<Step>
+Di **Impor Bookmark**, klik **Impor** lalu pilih file bookmark HTML atau JSON, seperti file yang diekspor dari browser. Anda juga bisa melepas file ke kartu **Impor Bookmark**.
+</Step>
+<Step>
+Tinjau **Pratinjau impor**. Pratinjau menampilkan folder tujuan, berapa bookmark dan folder yang akan dibuat atau dilewati, dan URL mana yang sudah ada di folder tujuan, di tempat lain di bookmark Anda, atau sebelumnya di file yang sama.
+</Step>
+<Step>
+Ubah **Impor ke** jika perlu. Awalnya berisi folder yang terbuka di pengelola.
+</Step>
+<Step>
+Pilih cara menangani **Duplikat**: lewati bookmark yang sudah ada di mana pun, lewati hanya yang sudah ada di folder tujuan, atau impor semuanya.
+</Step>
+<Step>
+Klik **Impor**. Sebuah pesan mencantumkan berapa item yang dibuat, dilewati, dan gagal, dengan **Urungkan** selama 10 detik. Urungkan hanya menghapus apa yang masih persis seperti hasil impor: item hasil impor yang sejak itu Anda ganti namanya, pindahkan, beri tag ulang, atau tambahi isinya tetap ada, dan pesannya menghitungnya sebagai dipertahankan.
+</Step>
+</Steps>
+
+Tidak ada yang ditulis sampai Anda mengklik **Impor**. Jika bookmark Anda berubah selama pratinjau terbuka, pratinjau diperbarui alih-alih diterapkan.
+
+## File setelan terpisah [#settings-files-are-separate]
+
+Tombol **Cadangkan setelan** dan **Pulihkan setelan** di bagian bawah halaman Setelan menyimpan dan memulihkan file cadangan berisi setelan Bookmark Scout, prompt kustom, layanan AI (tanpa kunci API), dan penelusuran tersimpan. Keduanya tidak menyentuh bookmark, tag, atau ringkasan. Lihat [Setelan](/settings) untuk isi cadangan. Anda juga bisa melepas file cadangan di mana saja di halaman Setelan untuk memulihkannya.

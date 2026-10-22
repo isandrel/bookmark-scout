@@ -147,27 +147,31 @@
 # page-image fetch and shrink, its review and Options panel, and 35 messages in 9 languages.
 # Firefox measured ZIP 1,811,768, 5,832,167 B uncompressed, 3,752,958 B of JavaScript, and
 # 1,518,381 B of locales on 76827720 (Index Page Text).
+# Raised on 2026-10-22 (ZIP to 1,955,000, uncompressed to 6,460,000, javascript to 3,795,000,
+# locales to 2,115,000) for three new languages: Russian, Indonesian, and Italian, each a full
+# messages.json (about 190 KB), and their react-day-picker calendar locales. Firefox measured ZIP
+# 1,944,179, 6,445,005 B uncompressed, 3,783,666 B of JavaScript, and 2,100,386 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_822_000
-raw_bytes = 5_842_000
+zip_bytes = 1_955_000
+raw_bytes = 6_460_000
 
 [targets.edge]
-zip_bytes = 1_822_000
-raw_bytes = 5_842_000
+zip_bytes = 1_955_000
+raw_bytes = 6_460_000
 
 [targets.firefox]
-zip_bytes = 1_822_000
-raw_bytes = 5_842_000
+zip_bytes = 1_955_000
+raw_bytes = 6_460_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_763_000
+javascript = 3_795_000
 css = 85_000
 fonts = 143_000
-locales = 1_528_000
+locales = 2_115_000
 images = 320_000
 other = 29_000

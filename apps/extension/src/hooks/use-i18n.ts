@@ -45,9 +45,12 @@ export const SUPPORTED_LOCALES = [
   'es',
   'fr',
   'pt_BR',
+  'ru',
+  'id',
   'de',
   'ja',
   'ko',
+  'it',
   'zh_TW',
 ] as const;
 
