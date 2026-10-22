@@ -43,7 +43,9 @@
 # Raised from 1185 on 2026-10-22 for the manager view setting and the filter query action in the
 # action registry the AI permission settings list (1,191).
 # Raised from 1200 on 2026-10-22 for the Index Page Text settings section and its panel (1,204).
-"options.html" = 1210
+# Raised from 1210 on 2026-10-22 for Smart Rules finding a restored rule's folder by its path,
+# which the rule editor in Options loads (1,211).
+"options.html" = 1212
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
