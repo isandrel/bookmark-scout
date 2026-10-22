@@ -706,6 +706,15 @@ const fields = {
     'agentBridgeDisabledActions',
   ),
   managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
+  toolsSidebarLayout: enumField(
+    'behavior.tools_sidebar.layout',
+    'toolsSidebarLayout',
+    z.enum(['tabs', 'list']),
+    (value) =>
+      ({ tabs: t('settings_toolsSidebarLayoutTabs'), list: t('settings_toolsSidebarLayoutList') })[
+        value
+      ],
+  ),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField(
     'ai_tools.reorganization.min_items_per_folder',
@@ -1243,6 +1252,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'links',
         labelKey: 'settings_sectionLinks',
         fields: ['linkOpenTarget', 'openConfirmAbove'],
+      },
+      {
+        id: 'toolsSidebar',
+        labelKey: 'settings_sectionToolsSidebar',
+        fields: ['toolsSidebarLayout'],
       },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       {

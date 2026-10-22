@@ -631,6 +631,26 @@
         "message": "Links",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "Tools-Leiste",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "Layout der Tools-Leiste",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "Tabs zeigen jeweils einen Bereich der Tools-Leiste im Manager; Eine Liste zeigt alle Bereiche nacheinander.",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "Tabs",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "Eine Liste",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "Löschen",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1052,6 +1072,14 @@
     "tools_title": {
         "message": "Tools",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "Alle",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "Tools anzeigen",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "Defekte Links prüfen",

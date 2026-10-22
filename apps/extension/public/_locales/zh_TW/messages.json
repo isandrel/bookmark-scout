@@ -623,6 +623,26 @@
         "message": "連結",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "工具側欄",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "工具側欄版面",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "「分頁」一次顯示管理員工具側欄的一個區段；「單一清單」依序顯示所有區段。",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "分頁",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "單一清單",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "刪除",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1044,6 +1064,14 @@
     "tools_title": {
         "message": "工具",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "全部",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "顯示工具",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "檢查失效連結",
