@@ -135,6 +135,10 @@
         "message": "Fokussierte Zeile aus- oder abwählen",
         "description": "Manager shortcuts help: Space selects or unselects the focused row"
     },
+    "shortcuts_preview": {
+        "message": "Vorschau des fokussierten Lesezeichens anzeigen",
+        "description": "Manager shortcuts help: p opens the preview of the focused bookmark (cover, folder, tags, and summary)"
+    },
     "shortcuts_showHelp": {
         "message": "Tastenkombinationen anzeigen",
         "description": "Keyboard shortcut description: ? opens this dialog"
@@ -1432,6 +1436,10 @@
     "bookmarks_viewDetails": {
         "message": "Details ansehen",
         "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_preview": {
+        "message": "Vorschau",
+        "description": "Bookmark manager action and the preview key's action: a dialog with a bookmark's cover, address, folder, tags, and summary"
     },
     "bookmarks_detailsTitle": {
         "message": "Lesezeichendetails",

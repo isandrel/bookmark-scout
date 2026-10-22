@@ -58,6 +58,9 @@ parent_folder = [{ key = "ArrowUp", alt = true }, { key = "Backspace" }]
 next_row = [{ key = "j" }]
 previous_row = [{ key = "k" }]
 open_saved_searches = [{ key = "s" }]
+# Preview the focused bookmark (its cover, folder, tags, and summary) in a dialog. Space is the grid's
+# select key, so preview takes a letter, as saved searches does
+preview = [{ key = "p" }]
 # The rows the filters show, on every page of the table
 select_all = [{ key = "a", mod = true }]
 clear_selection = [{ key = "Escape" }]

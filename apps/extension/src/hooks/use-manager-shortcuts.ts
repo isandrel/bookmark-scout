@@ -7,6 +7,7 @@
  * - nextRow / previousRow move to the next / previous row and select it, like the arrow keys
  *   (the arrow keys, Home, End, and Space are handled by the table's rows).
  * - selectAll, clearSelection, undo, and redo work anywhere but a text field.
+ * - preview opens the preview of the focused (or the one selected) bookmark, in either view.
  * - delete, rename, open, openInNewTabs, and openInNewWindow act on the selected rows, or the
  *   focused row when none is selected, and only while a row (or nothing) has focus, so Enter on
  *   a button still presses it. A focused folder in the tree answers them too, for that folder
@@ -38,12 +39,15 @@ function openSavedSearches(): boolean {
   return true;
 }
 
-/** Whether the key was pressed on a table row, the grid's frame, or with nothing focused. */
+/**
+ * Whether the key was pressed on a row (a table row or a card), the grid's frame, or with nothing
+ * focused.
+ */
 function isRowOrPageTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return true;
   return (
     target === document.body ||
-    target.matches('tr[data-row-id]') ||
+    target.matches('[data-row-id]') ||
     target.hasAttribute(GRID_FRAME_ATTRIBUTE)
   );
 }
@@ -63,6 +67,8 @@ export type ManagerRowCommands = {
   deleteRows: (rows: Bookmark[]) => void;
   renameRow: (row: Bookmark) => void;
   openRows: (rows: Bookmark[], target: BookmarkOpenTarget) => void;
+  /** Opens the preview of the one bookmark in `rows`; false when it has none to show. */
+  previewRows: (rows: Bookmark[]) => boolean;
   /** `repeat`: the key is held down (a repeated keydown). */
   undo: (repeat?: boolean) => void;
   redo: (repeat?: boolean) => void;
@@ -87,7 +93,8 @@ export type ManagerShortcutOptions = {
   };
 };
 
-const ROW_ACTIONS = new Set<string>(Object.keys(TREE_FOLDER_BINDINGS));
+/** Shortcuts that act on rows, so only while a row (or nothing) has focus. */
+const ROW_ACTIONS = new Set<string>([...Object.keys(TREE_FOLDER_BINDINGS), 'preview']);
 
 /** Runs a row command on `targets`; false when it does not apply to them. */
 function runRowCommand(
@@ -152,6 +159,8 @@ export function useManagerShortcuts(options: ManagerShortcutOptions) {
             return table.current?.moveFocus(action === 'nextRow' ? 1 : -1) ?? false;
           case 'openSavedSearches':
             return openSavedSearches();
+          case 'preview':
+            return commands.previewRows(rows());
           case 'selectAll':
             table.current?.selectAll();
             return Boolean(table.current);

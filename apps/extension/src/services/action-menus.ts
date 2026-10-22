@@ -9,6 +9,8 @@ import { z } from 'zod';
 /** What the manager's item menus can ask of the page. */
 export type ActionItemHost = {
   showDetails: (bookmark: Bookmark) => void;
+  /** Opens the bookmark's preview: its cover, folder, tags, and summary, with its actions. */
+  preview: (bookmark: Bookmark) => void;
   edit: (bookmark: Bookmark) => void;
   /** Starts the manager's delete flow: confirmation when enabled, then an undo toast. */
   requestDeletion: (items: Bookmark[]) => void;
@@ -65,7 +67,7 @@ export type ActionFolderMenu = {
   run: (host: ActionFolderHost) => void;
 };
 
-export type ActionMenuKind = 'item' | 'organize' | 'emptySpace';
+export type ActionMenuKind = 'item' | 'organize' | 'emptySpace' | 'preview';
 
 const sectionsSchema = z.array(z.array(z.string()).min(1)).min(1);
 
@@ -76,6 +78,7 @@ const menuConfig = readConfig(
       item: sectionsSchema,
       organize: sectionsSchema,
       empty_space: sectionsSchema,
+      preview: sectionsSchema,
     }),
     item_menu: z.strictObject({ keep_one_of: z.array(z.string()).min(1) }),
   }),
@@ -86,6 +89,7 @@ export const ACTION_MENUS: Readonly<Record<ActionMenuKind, readonly (readonly Ac
   item: checkMenu('item', menuConfig.menus.item),
   organize: checkMenu('organize', menuConfig.menus.organize),
   emptySpace: checkMenu('emptySpace', menuConfig.menus.empty_space),
+  preview: checkMenu('preview', menuConfig.menus.preview),
 };
 
 /**
@@ -103,7 +107,8 @@ function checkMenu(kind: ActionMenuKind, sections: string[][]): ActionId[][] {
     section.map((id) => {
       if (!isActionId(id)) throw new Error(`config/ui/actions.toml: unknown action "${id}"`);
       const action = getAction(id);
-      const binding = kind === 'item' ? action.itemMenu : action.folderMenu;
+      // The preview's buttons act on the bookmark shown, as an item menu does.
+      const binding = kind === 'item' || kind === 'preview' ? action.itemMenu : action.folderMenu;
       if (!binding) throw new Error(`config/ui/actions.toml: "${id}" has no ${kind} menu entry`);
       return id;
     }),
@@ -134,6 +139,17 @@ export function getItemMenuLabel(
 ): string {
   const action = getAction(id);
   return action.itemMenu?.label?.(items, host) ?? t(action.labelKey ?? 'error_unknown');
+}
+
+/**
+ * Runs an item-menu action on `items` from outside a menu (a key or a dialog's button), only
+ * where its menu would offer it; false when it does not apply to them.
+ */
+export function runItemMenuAction(id: ActionId, items: Bookmark[], host: ActionItemHost): boolean {
+  const menu = getAction(id).itemMenu;
+  if (!menu || !(menu.available?.(items, host) ?? true)) return false;
+  void menu.run(items, host);
+  return true;
 }
 
 /**

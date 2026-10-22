@@ -141,6 +141,7 @@ export type ActionIconName =
   | 'clipboardPaste'
   | 'copy'
   | 'externalLink'
+  | 'eye'
   | 'folderPlus'
   | 'folderSearch'
   | 'hash'

@@ -111,6 +111,7 @@ export default function BookmarksPage() {
     aside?.querySelector<HTMLElement>('[tabindex="0"], button, input')?.focus();
   }, [sidebarOverlay, sidebars.folders.open, sidebars.tools.open]);
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
+  const [previewBookmark, setPreviewBookmark] = useState<Bookmark | null>(null);
   const [editTarget, setEditTarget] = useState<BookmarkEditTarget | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
   // Labels built in memos below must be rebuilt when the language changes.
@@ -153,6 +154,7 @@ export default function BookmarksPage() {
     currentFolderId: currentFolder,
     searchQuery,
     showDetails: setSelectedBookmark,
+    preview: setPreviewBookmark,
     edit: setEditTarget,
     requestDeletion: deleteItems,
     showInFolder,
@@ -179,6 +181,7 @@ export default function BookmarksPage() {
       deleteRows: (rows) => deleteItems(rows),
       renameRow: (bookmark) => setEditTarget({ mode: 'edit', bookmark }),
       openRows,
+      previewRows: (rows) => runItemMenuAction('preview', rows, managerCommands.tableItemHost),
       undo: history.undo,
       redo: history.redo,
     },
@@ -557,6 +560,11 @@ export default function BookmarksPage() {
         bookmark={selectedBookmark}
         onClose={() => setSelectedBookmark(null)}
         onOpenFolder={navigateToFolder}
+      />
+      <BookmarkPreviewDialog
+        bookmark={previewBookmark}
+        host={managerCommands.tableItemHost}
+        onClose={() => setPreviewBookmark(null)}
       />
       <BookmarkEditDialog
         target={editTarget}
