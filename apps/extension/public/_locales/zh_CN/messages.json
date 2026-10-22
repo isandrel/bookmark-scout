@@ -3467,6 +3467,28 @@
         "message": "正则表达式无效。改为按纯文本搜索。",
         "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
     },
+    "search_reasonUrl": {
+        "message": "匹配网址",
+        "description": "Muted note after a popup search result whose title did not match, saying the query matched its URL"
+    },
+    "search_reasonSummary": {
+        "message": "匹配摘要",
+        "description": "Muted note after a popup search result whose title did not match, saying the query matched its local summary"
+    },
+    "search_reasonFolder": {
+        "message": "匹配文件夹路径",
+        "description": "Muted note after a popup search result whose title did not match, saying the query matched its folder path"
+    },
+    "search_reasonTag": {
+        "message": "标签：$TAG$",
+        "description": "Muted note after a popup search result whose title did not match, saying the query matched its tag; $TAG$ is the tag",
+        "placeholders": {
+            "tag": {
+                "content": "$1",
+                "example": "recipes"
+            }
+        }
+    },
     "ai_folderRecommendation": {
         "message": "AI 文件夹推荐",
         "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"

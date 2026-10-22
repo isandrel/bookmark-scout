@@ -93,27 +93,32 @@
 # Raised on 2026-10-21 (ZIP 1,740,000 to 1,750,000, javascript 3,660,000 to 3,670,000) for pausing a
 # background task whose website access was taken back (the check before each item, Resume asking
 # again, and its message in 9 languages). Firefox measured ZIP 1,740,830 and 3,660,551 B of JavaScript.
+# Raised on 2026-10-22 (ZIP 1,750,000 to 1,757,000, uncompressed 5,570,000 to 5,590,000, javascript
+# 3,670,000 to 3,682,000, other 27,000 to 28,000) for the popup and side panel search in the search
+# query language: the lazily loaded query filter, the match notes ("in URL", "tag: ...") in 9
+# languages, and main's growth from the query parser and its config (#769). Firefox measured ZIP
+# 1,747,414, 5,580,460 B uncompressed, 3,672,311 B of JavaScript, and 27,144 B of other files.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_750_000
-raw_bytes = 5_570_000
+zip_bytes = 1_757_000
+raw_bytes = 5_590_000
 
 [targets.edge]
-zip_bytes = 1_750_000
-raw_bytes = 5_570_000
+zip_bytes = 1_757_000
+raw_bytes = 5_590_000
 
 [targets.firefox]
-zip_bytes = 1_750_000
-raw_bytes = 5_570_000
+zip_bytes = 1_757_000
+raw_bytes = 5_590_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_670_000
+javascript = 3_682_000
 css = 84_000
 fonts = 143_000
 locales = 1_355_000
 images = 320_000
-other = 27_000
+other = 28_000

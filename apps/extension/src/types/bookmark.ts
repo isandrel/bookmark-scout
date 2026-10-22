@@ -30,10 +30,12 @@ export interface BookmarkTreeNode {
   type?: 'separator';
   /** Set when the browser forbids modifying this node, e.g. admin-managed bookmarks. */
   unmodifiable?: 'managed';
-  /** UI-only flag marking a node whose title matched the active search query. */
+  /** UI-only flag marking a node that matched the active search query. */
   isSearchMatch?: boolean;
   /** UI-only `[start, end)` offsets of search matches in `title`, rendered as highlights. */
   searchMatchRanges?: ReadonlyArray<readonly [start: number, end: number]>;
+  /** UI-only: every field the search query matched, for rows whose title did not. */
+  searchMatchReasons?: readonly SearchMatchReason[];
   /** Whether the folder is expanded in the UI */
   isOpen?: boolean;
   /** Whether this is a temporary node (e.g., new folder being created) */

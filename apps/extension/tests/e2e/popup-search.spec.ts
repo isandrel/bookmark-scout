@@ -41,6 +41,51 @@ test('expand all during a search keeps the filter and the result limit', async (
   await expect(page.getByText('Unrelated Link', { exact: true })).toHaveCount(0);
 });
 
+test('search finds bookmarks by address, tag, and summary, and says where each matched', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { ids } = await seedFolder(extensionWorker, 'E2E Unified Search', [
+    { title: 'Quarterly plan', url: 'https://docs.e2e.invalid/roadmap-q3' },
+    { title: 'Soup', url: 'https://food.e2e.invalid/soup' },
+    { title: 'Standup notes', url: 'https://e2e.invalid/standup' },
+  ]);
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [ids.Soup]: { tags: ['Dinner'] },
+    [ids['Standup notes']]: { summary: 'Daily sync for the platform team' },
+  });
+
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+  const reasons = page.locator('[data-slot="search-reason"]');
+
+  await search.fill('roadmap');
+  await expect(bookmarkRow(page, 'Quarterly plan')).toBeVisible();
+  await expect(page.locator('.bookmark-item')).toHaveCount(1);
+  await expect(reasons).toHaveText(['in URL']);
+
+  await search.fill('tag:dinner');
+  await expect(bookmarkRow(page, 'Soup')).toBeVisible();
+  await expect(page.locator('.bookmark-item')).toHaveCount(1);
+  await expect(reasons).toHaveText(['tag: Dinner']);
+
+  await search.fill('platform');
+  await expect(bookmarkRow(page, 'Standup notes')).toBeVisible();
+  await expect(reasons).toHaveText(['in summary']);
+
+  // Every word must match somewhere; a title match needs no note.
+  await search.fill('soup dinner');
+  await expect(page.locator('.bookmark-item')).toHaveCount(1);
+  await expect(bookmarkRow(page, 'Soup').locator('mark')).toHaveText('Soup');
+  await expect(reasons).toHaveCount(0);
+
+  // Match case searches titles only, as before.
+  await toggleSearchOption(page, 'Match case');
+  await search.fill('roadmap');
+  await expect(page.getByText('No bookmarks found')).toBeVisible();
+});
+
 test('permanent folder names and empty-title regexes do not return the whole tree', async ({
   extensionId,
   extensionWorker,

@@ -30,13 +30,14 @@ export type SearchDocument = {
 
 export type SearchMatchField = 'title' | 'url' | 'domain' | 'folder' | 'tag' | 'summary';
 
-export type SearchMatchReason = {
-  field: SearchMatchField;
-  /** For `tag`, which tag; otherwise unset. */
-  value?: string;
-  /** Highlights in that field's text, `[start, end)` in UTF-16 units. */
-  ranges: SearchMatchRange[];
-};
+/**
+ * Where a document matched; `ranges` are highlights in that field's text, `[start, end)` in UTF-16
+ * units.
+ */
+export type SearchMatchReason =
+  | { field: Exclude<SearchMatchField, 'tag'>; ranges: SearchMatchRange[] }
+  /** `value` is the tag, and `ranges` are in it. */
+  | { field: 'tag'; value: string; ranges: SearchMatchRange[] };
 
 export type SearchResult = {
   document: SearchDocument;
@@ -110,6 +111,46 @@ function foldedOf(document: SearchDocument): FoldedDocument {
   return folded;
 }
 
+/** A node's last document, with the metadata entry it was built from. */
+type BuiltDocument = { document: SearchDocument; own: StoredBookmarkMetadata | undefined };
+
+/**
+ * The document last built for each node. Tree updates replace only the nodes that changed
+ * (`bookmark-tree-changes.ts`), so after a save or a move the rest keep their documents and the
+ * text already folded for them.
+ */
+const builtDocuments = new WeakMap<BookmarkTreeNode, BuiltDocument>();
+
+function sameNames(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((name, index) => name === right[index]);
+}
+
+function documentOf(
+  node: BookmarkTreeNode,
+  folders: readonly string[],
+  own: StoredBookmarkMetadata | undefined,
+): SearchDocument {
+  const built = builtDocuments.get(node);
+  if (built && built.own === own && sameNames(built.document.folders, folders)) {
+    return built.document;
+  }
+  const isFolder = Boolean(node.children);
+  const document: SearchDocument = {
+    id: node.id,
+    kind: isFolder ? 'folder' : 'bookmark',
+    title: node.title,
+    ...(node.url ? { url: node.url } : {}),
+    host: isFolder ? '' : withoutWww(getUrlHostname(node.url)),
+    folders,
+    folderPath: folders.join(FOLDER_PATH_SEPARATOR),
+    ...(node.dateAdded !== undefined ? { dateAdded: node.dateAdded } : {}),
+    tags: own?.tags ?? [],
+    ...(own?.summary ? { summary: own.summary } : {}),
+  };
+  builtDocuments.set(node, { document, own });
+  return document;
+}
+
 /** Builds the documents for a tree, keyed to the local metadata by bookmark id. */
 export function buildSearchDocuments(
   roots: readonly BookmarkTreeNode[],
@@ -117,21 +158,8 @@ export function buildSearchDocuments(
 ): SearchDocument[] {
   const documents: SearchDocument[] = [];
   const visit = (node: BookmarkTreeNode, folders: readonly string[], container: boolean) => {
-    const isFolder = Boolean(node.children);
     if (!container && !isSeparatorNode(node)) {
-      const own = metadata[node.id];
-      documents.push({
-        id: node.id,
-        kind: isFolder ? 'folder' : 'bookmark',
-        title: node.title,
-        ...(node.url ? { url: node.url } : {}),
-        host: isFolder ? '' : withoutWww(getUrlHostname(node.url)),
-        folders,
-        folderPath: folders.join(FOLDER_PATH_SEPARATOR),
-        ...(node.dateAdded !== undefined ? { dateAdded: node.dateAdded } : {}),
-        tags: own?.tags ?? [],
-        ...(own?.summary ? { summary: own.summary } : {}),
-      });
+      documents.push(documentOf(node, folders, metadata[node.id]));
     }
     if (!node.children) return;
     const inside = container ? folders : [...folders, node.title];
@@ -309,19 +337,27 @@ function matchCompiled(
   return { document, score, reasons: mergeReasons(reasons) };
 }
 
+/** A query read once, to match documents one at a time: undefined for one that does not match. */
+export function compileSearchQuery(
+  query: SearchQuery,
+): (document: SearchDocument) => SearchResult | undefined {
+  const terms = query.terms.map(compileTerm);
+  return (document) => matchCompiled(document, terms);
+}
+
 /** One document against a query: undefined when it does not match. An empty query matches all. */
 export function matchSearchDocument(
   document: SearchDocument,
   query: SearchQuery,
 ): SearchResult | undefined {
-  return matchCompiled(document, query.terms.map(compileTerm));
+  return compileSearchQuery(query)(document);
 }
 
 /** One reason per field (and tag), with its ranges in order and overlaps joined. */
 function mergeReasons(reasons: readonly SearchMatchReason[]): SearchMatchReason[] {
   const byField = new Map<string, SearchMatchReason>();
   for (const reason of reasons) {
-    const key = `${reason.field}\u0000${reason.value ?? ''}`;
+    const key = reason.field === 'tag' ? `tag\u0000${reason.value}` : reason.field;
     const existing = byField.get(key);
     byField.set(
       key,
@@ -350,10 +386,10 @@ export function searchDocuments(
   documents: readonly SearchDocument[],
   query: SearchQuery,
 ): SearchResult[] {
-  const terms = query.terms.map(compileTerm);
+  const match = compileSearchQuery(query);
   const results: { result: SearchResult; order: number }[] = [];
   documents.forEach((document, order) => {
-    const result = matchCompiled(document, terms);
+    const result = match(document);
     if (result) results.push({ result, order });
   });
   results.sort((left, right) => right.result.score - left.result.score || left.order - right.order);

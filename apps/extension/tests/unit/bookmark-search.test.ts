@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
+import { filterBookmarkTreeByQuery } from '@/lib/bookmark-query-filter.lazy';
 import {
   countSearchMatches,
   filterBookmarkTree,
@@ -7,10 +9,12 @@ import {
   isSearchQueryValid,
   limitSearchResults,
   type SearchOptions,
+  usesTitleSearch,
 } from '@/lib/bookmark-search';
 import type { BookmarkTreeNode } from '@/types';
 
 const defaults: SearchOptions = { matchCase: false, wholeWord: false, useRegex: false };
+const noMetadata: StoredBookmarkMetadataById = {};
 
 const tree: BookmarkTreeNode[] = [
   {
@@ -111,6 +115,90 @@ describe('filterBookmarkTree', () => {
       [29, 34],
       [52, 57],
     ]);
+  });
+});
+
+describe('filterBookmarkTreeByQuery', () => {
+  const matchOf = (nodes: readonly BookmarkTreeNode[], id: string): BookmarkTreeNode | undefined =>
+    nodes.flatMap((node) => [node, ...(node.children ?? [])]).find((node) => node.id === id) ??
+    nodes.map((node) => matchOf(node.children ?? [], id)).find(Boolean);
+
+  it('matches addresses, tags, and summaries, and says where', () => {
+    const metadata: StoredBookmarkMetadataById = {
+      soup: { tags: ['Food'] },
+      jira: { summary: 'Sprint board for the team' },
+    };
+    const byAddress = filterBookmarkTreeByQuery(tree, 'db.example', metadata);
+    expect(ids(byAddress)).toEqual(['root', 'bar', 'work', 'recipe-db']);
+    expect(matchOf(byAddress, 'recipe-db')).toMatchObject({
+      isSearchMatch: true,
+      searchMatchRanges: [],
+      searchMatchReasons: [{ field: 'url', ranges: [[8, 18]] }],
+    });
+
+    const byTag = filterBookmarkTreeByQuery(tree, 'tag:food', metadata);
+    expect(countSearchMatches(byTag)).toBe(1);
+    expect(matchOf(byTag, 'soup')?.searchMatchReasons).toEqual([
+      { field: 'tag', value: 'Food', ranges: [[0, 4]] },
+    ]);
+
+    const bySummary = filterBookmarkTreeByQuery(tree, 'sprint', metadata);
+    expect(matchOf(bySummary, 'jira')?.searchMatchReasons).toEqual([
+      { field: 'summary', ranges: [[0, 6]] },
+    ]);
+  });
+
+  it('needs every word, each anywhere, and highlights the title part', () => {
+    const result = filterBookmarkTreeByQuery(tree, 'work jira', noMetadata);
+    expect(countSearchMatches(result)).toBe(1);
+    expect(matchOf(result, 'jira')).toMatchObject({
+      isSearchMatch: true,
+      searchMatchRanges: [[0, 4]],
+    });
+    expect(matchOf(result, 'work')?.isSearchMatch).toBeUndefined();
+  });
+
+  it('flags a folder, not everything in it, unless the query asks for folders', () => {
+    const plain = filterBookmarkTreeByQuery(tree, 'recipes', noMetadata);
+    expect(countSearchMatches(plain)).toBe(1);
+
+    const scoped = filterBookmarkTreeByQuery(tree, 'folder:recipes', noMetadata);
+    expect(countSearchMatches(scoped)).toBe(3);
+    expect(matchOf(scoped, 'recipes')?.isSearchMatch).toBeUndefined();
+    expect(matchOf(scoped, 'soup')?.isSearchMatch).toBe(true);
+  });
+
+  it('keeps the same containers as the title search', () => {
+    expect(usesTitleSearch(defaults)).toBe(false);
+    for (const query of ['bookmarks', 'bar', '"bookmarks bar"']) {
+      expect(ids(filterBookmarkTreeByQuery(tree, query, noMetadata))).toEqual([]);
+    }
+    expect(ids(filterBookmarkTreeByQuery(tree, 'recipe', noMetadata))).toEqual(
+      ids(filterBookmarkTree(tree, 'recipe', defaults)),
+    );
+  });
+
+  it('applies operators and exclusions', () => {
+    expect(ids(filterBookmarkTreeByQuery(tree, 'recipe -cake is:bookmark', noMetadata))).toEqual([
+      'root',
+      'bar',
+      'recipes',
+      'soup',
+      'work',
+      'recipe-db',
+    ]);
+  });
+
+  it('searches titles only, as typed, with Match case, Whole word, or regular expressions', () => {
+    for (const options of [
+      { ...defaults, matchCase: true },
+      { ...defaults, wholeWord: true },
+      { ...defaults, useRegex: true },
+    ]) {
+      expect(filterBookmarkTree(tree, 'db.example', options)).toEqual([]);
+      expect(filterBookmarkTree(tree, 'title:Jira', options)).toEqual([]);
+      expect(usesTitleSearch(options)).toBe(true);
+    }
   });
 });
 

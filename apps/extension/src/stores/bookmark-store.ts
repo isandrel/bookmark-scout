@@ -69,6 +69,8 @@ interface BookmarkState {
   query: string;
   debouncedQuery: string;
   searchOptions: SearchOptions;
+  /** The local tags and summaries the search matches, read once a search starts. */
+  bookmarkMetadata: StoredBookmarkMetadataById;
   expandFoldersOnSearch: boolean;
   expandedFolders: string[];
   /** Expansion the user had before searching; restored when the query is cleared. */
@@ -114,6 +116,34 @@ function replaceTree(data: BookmarkTreeNode[]): void {
   if (useBookmarkStore.getState().debouncedQuery) useBookmarkStore.getState().applyFilter();
 }
 
+type QueryFilter = typeof import('@/lib/bookmark-query-filter.lazy');
+
+/** The search query language filter, once it and the tags and summaries it matches are loaded. */
+let queryFilter: QueryFilter | undefined;
+let loadingQueryFilter = false;
+
+/**
+ * Loads the query filter on the first keystroke, so pages open without it and it is usually ready
+ * by the time the debounced search runs, then keeps the tags and summaries current, re-filtering
+ * when they change. A page nobody searches never reads them.
+ */
+function loadQueryFilter(): void {
+  if (loadingQueryFilter) return;
+  loadingQueryFilter = true;
+  import('@/lib/bookmark-query-filter.lazy')
+    .then((filter) => {
+      filter.observeSearchMetadata((bookmarkMetadata) => {
+        queryFilter = filter;
+        useBookmarkStore.setState({ bookmarkMetadata });
+        if (useBookmarkStore.getState().debouncedQuery) useBookmarkStore.getState().applyFilter();
+      });
+    })
+    .catch((error: unknown) => {
+      loadingQueryFilter = false;
+      bookmarkLogger.error({ error }, 'Failed to load the bookmark search');
+    });
+}
+
 // Reloads, event patches, and this page's own changes run one at a time, in order.
 const treeSync: BookmarkTreeSync = createBookmarkTreeSync({
   getTree: (): BookmarkTreeNode[] | undefined => {
@@ -148,6 +178,7 @@ export const useBookmarkStore = create<BookmarkState>()(
       query: '',
       debouncedQuery: '',
       searchOptions: { ...DEFAULT_SEARCH_OPTIONS },
+      bookmarkMetadata: {},
       expandFoldersOnSearch: defaultSettings.expandFoldersOnSearch,
       expandedFolders: [],
       preSearchExpandedFolders: null,
@@ -167,7 +198,10 @@ export const useBookmarkStore = create<BookmarkState>()(
       applyBookmarkEvents: (batch) => treeSync.applyBatch(batch),
 
       // Setters
-      setQuery: (query) => set({ query }),
+      setQuery: (query) => {
+        if (query && !usesTitleSearch(get().searchOptions)) loadQueryFilter();
+        set({ query });
+      },
       setDebouncedQuery: (debouncedQuery) => {
         set({ debouncedQuery });
         get().applyFilter();
@@ -370,6 +404,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           folders,
           debouncedQuery,
           searchOptions,
+          bookmarkMetadata,
           searchExpansion: expansionOverride,
           expandFoldersOnSearch,
           expandedFolders,
@@ -386,8 +421,17 @@ export const useBookmarkStore = create<BookmarkState>()(
           return;
         }
 
+        const titleSearch = usesTitleSearch(searchOptions);
+        if (!titleSearch && !queryFilter) {
+          // Keeps what is shown until the filter loads; loading re-applies the search.
+          loadQueryFilter();
+          return;
+        }
         const savedExpansion = preSearchExpandedFolders ?? expandedFolders;
-        const filtered = filterBookmarkTree(folders, debouncedQuery, searchOptions);
+        const filtered =
+          queryFilter && !titleSearch
+            ? queryFilter.filterBookmarkTreeByQuery(folders, debouncedQuery, bookmarkMetadata)
+            : filterBookmarkTree(folders, debouncedQuery, searchOptions);
         // Expand all / Collapse all apply to the search results without dropping the filter,
         // and win over the automatic expansion so they work while expandFoldersOnSearch is on.
         const searchExpansion =
