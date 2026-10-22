@@ -1,12 +1,16 @@
-import { test } from '../e2e/fixtures';
+import { z } from 'zod';
+import { expect, test } from '../e2e/fixtures';
+import { STORAGE_ITEMS, writeStored } from '../e2e/storage';
 import {
   closeMeasured,
   libraryNames,
   measureInteraction,
+  measureScroll,
   measureSettled,
   openMeasured,
   PerfReport,
   perfConfig,
+  readExtensionConfig,
   seedLibrary,
 } from './harness';
 
@@ -82,6 +86,70 @@ test('bookmarks manager: open, open a folder, filter, update after an outside ch
       { selector: 'tbody tr', text: title },
     );
     report.addInteraction('manager.outsideChange', updated);
+    await closeMeasured(page);
+  }
+
+  await report.write(testInfo);
+});
+
+/** The most rows a manager page shows (`page_sizes` in config/ui/manager-table.toml). */
+const MAX_PAGE_SIZE = Math.max(
+  ...readExtensionConfig(
+    'ui/manager-table',
+    z.looseObject({ page_sizes: z.array(z.number().int().positive()).min(1) }),
+  ).page_sizes,
+);
+
+/** A search every bookmark of the library matches: the site its addresses are on. */
+const CARDS_QUERY = `domain:${new URL(perfConfig.library.url_base).hostname}`;
+
+test('bookmarks manager: switch a full page of search results to cards, scroll, and back (V26)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+}, testInfo) => {
+  await seedLibrary(extensionWorker);
+  // The largest page the manager offers, the most cards it ever draws at once.
+  await writeStored(extensionWorker, STORAGE_ITEMS.tableLayout, { pageSize: MAX_PAGE_SIZE });
+  const report = new PerfReport();
+  // Every bookmark of the library is a result, so the page is full.
+  const url = `chrome-extension://${extensionId}/bookmarks.html?q=${encodeURIComponent(CARDS_QUERY)}`;
+
+  for (let run = 0; run < perfConfig.run.repeats; run++) {
+    const { page } = await openMeasured(context, url, ['tbody tr']);
+    // The search has run once a full page of results is on screen.
+    await page.waitForFunction(
+      (rows) => document.querySelectorAll('tbody tr').length >= rows,
+      MAX_PAGE_SIZE,
+      { timeout: 60_000 },
+    );
+    const toggle = page.getByRole('group', { name: 'Manager View' });
+
+    const toCards = await measureInteraction(
+      page,
+      () => toggle.getByRole('button', { name: 'Cards' }).click(),
+      { selector: '[data-slot="bookmark-card"]', minCount: MAX_PAGE_SIZE },
+    );
+    if (!report.addInteraction('manager.cards.toCards', toCards)) {
+      await closeMeasured(page);
+      break;
+    }
+    const cards = await page.locator('[data-slot="bookmark-card"]').count();
+    report.add('manager.cards.rendered', cards, 'cards');
+    expect(cards, 'the cards view draws one page, not the library').toBe(MAX_PAGE_SIZE);
+
+    const scrolled = await measureScroll(page);
+    expect(scrolled.distance, 'the cards scroll').toBeGreaterThan(0);
+    report.add('manager.cards.scroll.longFrames', scrolled.longFrames, 'frames');
+    report.add('manager.cards.scroll.worstFrame', scrolled.worstFrame);
+    report.add('manager.cards.scroll.p95Frame', scrolled.p95Frame);
+
+    const toList = await measureInteraction(
+      page,
+      () => toggle.getByRole('button', { name: 'List' }).click(),
+      { selector: 'tbody tr', minCount: MAX_PAGE_SIZE },
+    );
+    report.addInteraction('manager.cards.toList', toList);
     await closeMeasured(page);
   }
 

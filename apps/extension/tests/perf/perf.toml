@@ -32,12 +32,42 @@ pause_after_items = 2000
 # Requests at the same time (the Concurrency setting).
 concurrency = 8
 
+# Search in the query language (search.perf.spec.ts, U37): each query is put in the manager's
+# search box and timed until the results settle, as search.query.<name>; the popup runs them all
+# to measure the heap its search documents and caches keep (search.heapKiB).
+[search]
+queries = { phrase = 'title:"Page 15-3"', folder = 'folder:"Area 15" -title:7', or = '(title:"Page 15-3-" OR title:"Page 16-4-") is:bookmark', broad = "domain:example.com -title:5", dated = "domain:example.com url:/15/3/ after:2020-01-01", none = "title:nowhere" }
+
+# Search with indexed page text (search.perf.spec.ts, S36): `pages` bookmarks spread over the
+# library get `chars_per_page` characters of text each (at most max_chars_per_page in
+# config/bookmarks/page-text.toml), stored the way Index Page Text stores it. The text is `words`
+# in a fixed pseudo-random order; one page in `rare_every` also names `rare_word`. The queries are
+# timed as pageText.query.<name>.
+[page_text]
+pages = 10000
+chars_per_page = 3000
+words = ["amber", "basin", "cedar", "delta", "ember", "fjord", "grove", "hollow", "inlet", "juniper", "kelp", "lagoon", "meadow", "nectar", "orchard", "prairie", "quarry", "ridge", "summit", "tundra", "upland", "valley", "willow", "yarrow", "zephyr", "bramble", "canyon", "dune", "estuary", "glacier"]
+rare_word = "harbor"
+rare_every = 50
+queries = { rare = 'content:harbor', words = 'harbor', common = 'content:"meadow ridge"', none = 'content:nowhere' }
+
+# Smart Rules dry run (rules.perf.spec.ts, R17): these rules, turned on in this order, run from the
+# Tools sidebar over the whole library; `move_to` names a folder of the synthetic library.
+[rules]
+list = [
+  { query = "domain:example.com", add_tags = ["example"] },
+  { query = 'title:"-3-" OR title:"-7-"', add_tags = ["three-or-seven"] },
+  { query = 'folder:"Area 1"', move_to = "Area 2" },
+  { query = 'title:"Page 1-1"', move_to = "Area 3" },
+  { query = "is:bookmark -title:5 after:2020-01-01", add_tags = ["recent"] },
+]
+
 # Upper bounds for the median of each metric, in milliseconds. A metric without a budget is only
 # reported. Set at about 2.5x the first local baseline (2026-10-10, 19,500 bookmarks, 4x throttle),
 # since CI runners are slower; lower them as fixes land. popup.expandAll and popup.scroll.* are
 # from 2026-10-11, after the virtualized tree (before it, expand all froze the popup for over a
 # minute). options.search.keystroke (about 200-350 ms per key) has no budget until its fix lands.
-# popup.scroll.longFrames is a count of frames, not milliseconds.
+# Metrics ending in longFrames are counts of frames, and those ending in KiB are KiB of heap.
 [budgets_ms]
 "popup.open" = 1000
 "popup.search.results" = 800
@@ -64,3 +94,37 @@ concurrency = 8
 "jobs.managerOpenWhileRunning" = 2000
 "jobs.total" = 125000
 "jobs.reviewOpen" = 400
+# Search, Smart Rules, and cards, from 2026-10-22: the median of 15 local samples (three runs of
+# five) at about 2.5x. Measured: first query 622 ms, then phrase 243, folder 277, or 228, broad
+# 289, dated 194, none 148 ms; with 10,000 indexed pages, first query 959 ms, then rare 249, words
+# 356, common 218, none 235 ms; Smart Rules Run to the first review row 419 ms (19,500 items, 10
+# rows drawn), its scroll 3 long frames, worst 50 ms, p95 50 ms; List to Cards 85 ms, Cards to List
+# 42 ms, 100 cards drawn, their scroll 0 long frames, worst 33 ms, p95 17 ms.
+"search.firstQuery" = 1500
+"search.query.phrase" = 600
+"search.query.folder" = 700
+"search.query.or" = 600
+"search.query.broad" = 700
+"search.query.dated" = 500
+"search.query.none" = 400
+"pageText.firstQuery" = 2400
+"pageText.query.rare" = 600
+"pageText.query.words" = 900
+"pageText.query.common" = 550
+"pageText.query.none" = 600
+"rules.review" = 1000
+"rules.scroll.longFrames" = 15
+"rules.scroll.worstFrame" = 200
+"rules.scroll.p95Frame" = 125
+"manager.cards.toCards" = 250
+"manager.cards.toList" = 150
+"manager.cards.scroll.longFrames" = 10
+"manager.cards.scroll.worstFrame" = 100
+"manager.cards.scroll.p95Frame" = 50
+# Heap kept, in KiB, at about 1.5x the largest local sample, since the heap does not grow on a
+# slower runner. Measured medians: search documents and caches 12,855 KiB; with 10,000 pages of
+# 3,000 characters indexed 72,577 KiB, about 6 KiB a page (two bytes a character); the Smart Rules
+# plan and review 17,565 KiB (14,649 to 21,621).
+"search.heapKiB" = 20000
+"pageText.heapKiB" = 110000
+"rules.heapKiB" = 32000

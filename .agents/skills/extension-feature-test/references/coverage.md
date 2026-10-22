@@ -85,6 +85,15 @@ Not covered in Firefox: context-menu saves, the quick save action itself, drag a
 - **Popup logic:** AI folder suggestion normalization (percent confidences, malformed items, an empty list, existing or new checked against the tree, and duplicates), recent chip labels, the held match order, tree drops in a sorted view, and popup saves, new folders, and drops recorded in the undo history.
 - **Quick save notification:** the visibility check, the document binding, the counter-zoom, the language direction, and the failure actions.
 
+## Performance measurements
+
+`tests/perf` (`nx run extension:test:perf`, nightly `Performance` workflow, not a check) times the built Chrome extension on a 19,500-bookmark library with the CPU throttled, against the budgets in `perf.toml`.
+
+- **Pages and actions:** popup open, search, save, expand all and scroll; manager open, open a folder, filter, an outside change; Options open, search, stepper; Check Dead Links over the library (`jobs.perf.spec.ts`).
+- **Search** (`search.perf.spec.ts`, U37, S36): each `[search]` operator query in the manager until its results settle, the first query after opening, and the heap the popup's search keeps; the same with 10,000 pages of indexed text, checked to find the rare word's pages first.
+- **Smart Rules** (`rules.perf.spec.ts`, R17): five rules' dry run over the library from Run to the review's first row, the review drawing about ten rows of 19,500, the heap the plan keeps, and scrolling the review.
+- **Cards** (`manager.perf.spec.ts`, V26): a full page of 100 results switched to cards and back, cards drawn (one page), and scrolling the grid.
+
 ## CI jobs
 
 The Edge and Firefox jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs.
