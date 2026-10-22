@@ -155,25 +155,29 @@
 # 11 messages in 12 languages: Firefox measured 6,461,434 B.
 # Locales raised on 2026-10-22 (2,115,000 to 2,130,000) for the slow-pattern search warning and the
 # capture messages in 12 languages: 2,115,594 B measured.
+# Uncompressed raised on 2026-10-22 (6,475,000 to 6,490,000) and javascript (3,795,000 to 3,805,000)
+# for Index Page Text as a background job (its job adapter, the AI host page's text reader, and the
+# shared per-page reader) on top of #797-#799: Firefox measured 6,478,144 B uncompressed and
+# 3,794,943 B of JavaScript on the branch rebased onto b9f78f84.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_955_000
-raw_bytes = 6_475_000
+raw_bytes = 6_490_000
 
 [targets.edge]
 zip_bytes = 1_955_000
-raw_bytes = 6_475_000
+raw_bytes = 6_490_000
 
 [targets.firefox]
 zip_bytes = 1_955_000
-raw_bytes = 6_475_000
+raw_bytes = 6_490_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_795_000
+javascript = 3_805_000
 css = 85_000
 fonts = 143_000
 locales = 2_130_000
