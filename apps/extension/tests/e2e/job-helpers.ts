@@ -10,6 +10,7 @@ export type StoredJob = {
   scope: { mode: string; rootIds: string[] };
   /** What the job froze when it was accepted, such as the sites the user chose. */
   options: unknown;
+  createdAt: number;
 };
 
 /** The jobs as stored, in key order. */
@@ -32,7 +33,9 @@ export async function storedJobs(target: Page | Worker): Promise<StoredJob[]> {
   });
 }
 
-/** The newest job of `kind` as stored. */
+/** The newest job of `kind` as stored; jobs are keyed by random ids, so by when they were made. */
 export async function latestJob(target: Page | Worker, kind: string) {
-  return (await storedJobs(target)).find((job) => job.kind === kind);
+  return (await storedJobs(target))
+    .filter((job) => job.kind === kind)
+    .sort((a, b) => b.createdAt - a.createdAt)[0];
 }
