@@ -37,11 +37,24 @@ function rowIcon(page: Page, title: string) {
   return managerRow(page, title).locator('[data-icon-source]').first();
 }
 
-function summaryCount(page: Page, status: string) {
-  return page
+const CATEGORY_LABELS = {
+  updated: 'New icon',
+  unchanged: 'Same icon',
+  noIcon: 'No icon',
+  failed: 'Failed',
+} as const;
+
+/** The review's tab for sites with `status`, named with how many; a status with none has no tab. */
+async function expectCategoryCount(
+  page: Page,
+  status: keyof typeof CATEGORY_LABELS,
+  count: number,
+) {
+  const tab = page
     .getByRole('dialog', { name: 'Refresh Site Icons' })
-    .getByTestId('site-icons-summary')
-    .locator(`[data-status="${status}"] dd`);
+    .getByRole('radio', { name: new RegExp(`^${CATEGORY_LABELS[status]} \\(\\d+\\)$`) });
+  if (count === 0) await expect(tab).toHaveCount(0);
+  else await expect(tab).toHaveAccessibleName(`${CATEGORY_LABELS[status]} (${count})`);
 }
 
 type MockedResponse = { status?: number; contentType?: string; body?: string | Buffer } | 'abort';
@@ -113,15 +126,15 @@ test.describe('with website access granted', () => {
     await card.getByRole('button', { name: 'Refresh', exact: true }).click();
 
     const results = page.getByRole('dialog', { name: 'Refresh Site Icons' });
-    await expect(summaryCount(page, 'updated')).toHaveText('1');
-    await expect(summaryCount(page, 'unchanged')).toHaveText('0');
-    await expect(summaryCount(page, 'noIcon')).toHaveText('2');
-    await expect(summaryCount(page, 'failed')).toHaveText('1');
-    await expect(summaryCount(page, 'skipped')).toHaveText('1');
+    await expectCategoryCount(page, 'updated', 1);
+    await expectCategoryCount(page, 'unchanged', 0);
+    await expectCategoryCount(page, 'noIcon', 2);
+    await expectCategoryCount(page, 'failed', 1);
     await expect(
       results.getByText('1 bookmark is not a web link and was skipped.', { exact: true }),
     ).toBeVisible();
-    const originRow = (origin: string) => results.locator(`[data-origin="${origin}"]`);
+    const originRow = (origin: string) =>
+      results.getByTestId('site-icon-item').filter({ hasText: origin });
     await expect(originRow('https://icons-a.e2e.invalid')).toContainText(
       'Icon from https://icons-a.e2e.invalid/assets/icon-32.png',
     );
@@ -215,10 +228,10 @@ test.describe('with website access granted', () => {
       const card = toolCard(page, 'Refresh Site Icons');
       const results = page.getByRole('dialog', { name: 'Refresh Site Icons' });
       await card.getByRole('button', { name: 'Refresh', exact: true }).click();
-      await expect(summaryCount(page, 'updated')).toHaveText('2');
-      await expect(results.locator(`[data-origin="${fallbackOrigin}"]`)).toContainText(
-        `Icon from ${fallbackOrigin}/favicon.ico`,
-      );
+      await expectCategoryCount(page, 'updated', 2);
+      await expect(
+        results.getByTestId('site-icon-item').filter({ hasText: fallbackOrigin }),
+      ).toContainText(`Icon from ${fallbackOrigin}/favicon.ico`);
       await results.getByRole('button', { name: 'Save 2 icons' }).click();
       await expect(results).toHaveCount(0);
       const stored = await readSiteIcons(extensionWorker);
@@ -230,11 +243,11 @@ test.describe('with website access granted', () => {
       await expect(rowIcon(page, 'Fallback Page')).toHaveAttribute('src', PNG_DATA_URL);
 
       await card.getByRole('button', { name: 'Refresh', exact: true }).click();
-      await expect(summaryCount(page, 'unchanged')).toHaveText('2');
-      await expect(summaryCount(page, 'updated')).toHaveText('0');
-      await expect(results.locator(`[data-origin="${origin}"]`)).toContainText(
-        'Same icon as the one already saved',
-      );
+      await expectCategoryCount(page, 'unchanged', 2);
+      await expectCategoryCount(page, 'updated', 0);
+      await expect(
+        results.getByTestId('site-icon-item').filter({ hasText: origin }).first(),
+      ).toContainText('Same icon as the one already saved');
       const firstRun = [
         'GET 127.0.0.1/page',
         'GET 127.0.0.1/icon.png',

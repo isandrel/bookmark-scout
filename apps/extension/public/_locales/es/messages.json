@@ -1553,14 +1553,6 @@
         "message": "No se pudieron guardar los metadatos.",
         "description": "Error after saving bookmark metadata fails"
     },
-    "bookmarks_metadataSaveTags": {
-        "message": "Guardar etiquetas sugeridas",
-        "description": "Button that applies reviewed AI-generated tags"
-    },
-    "bookmarks_metadataSaveSummaries": {
-        "message": "Guardar resúmenes sugeridos",
-        "description": "Button that applies reviewed AI-generated summaries"
-    },
     "bookmarks_metadataGeneratedTagsSaved": {
         "message": "Se guardaron las etiquetas sugeridas que revisaste según tu configuración de combinación.",
         "description": "Toast description after applying generated tags"
@@ -4301,6 +4293,156 @@
         "message": "El valor parece un token de API o de acceso",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "tools_siteIconCategory_updated": {
+        "message": "Icono nuevo ($1)",
+        "description": "Refresh Site Icons review: tab of sites with a new icon; $1 is how many"
+    },
+    "tools_siteIconCategory_unchanged": {
+        "message": "Mismo icono ($1)",
+        "description": "Refresh Site Icons review: tab of sites whose icon is the one already saved; $1 is how many"
+    },
+    "tools_siteIconCategory_noIcon": {
+        "message": "Sin icono ($1)",
+        "description": "Refresh Site Icons review: tab of sites where no usable icon was found; $1 is how many"
+    },
+    "tools_siteIconCategory_failed": {
+        "message": "Con error ($1)",
+        "description": "Refresh Site Icons review: tab of sites that could not be reached; $1 is how many"
+    },
+    "tools_siteIconsActionSave": {
+        "message": "Guardar icono",
+        "description": "Refresh Site Icons review: action that saves the icon found for a site"
+    },
+    "tools_reviewActionSkip": {
+        "message": "Omitir",
+        "description": "Tool review: action that leaves an item as it is (does not save or apply it)"
+    },
+    "tools_aiMetadataCategory_suggestions": {
+        "message": "Sugerencias ($1)",
+        "description": "Auto-Tagging and Summarizer review: tab of every suggestion; $1 is how many"
+    },
+    "tools_aiMetadataActionSave": {
+        "message": "Guardar",
+        "description": "Auto-Tagging and Summarizer review: action that saves a suggestion"
+    },
+    "tools_aiMetadataSaveTags": {
+        "message": "Guardar $count$ sugerencias de etiquetas",
+        "description": "Button that saves the tag suggestions left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveTags_one": {
+        "message": "Guardar $count$ sugerencia de etiquetas",
+        "description": "Button that saves the tag suggestions left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveSummaries": {
+        "message": "Guardar $count$ resúmenes",
+        "description": "Button that saves the summaries left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveSummaries_one": {
+        "message": "Guardar $count$ resumen",
+        "description": "Button that saves the summaries left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_privacyCategory_high": {
+        "message": "Alto ($1)",
+        "description": "Privacy Scanner review: tab of high-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_medium": {
+        "message": "Medio ($1)",
+        "description": "Privacy Scanner review: tab of medium-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_low": {
+        "message": "Bajo ($1)",
+        "description": "Privacy Scanner review: tab of low-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyDeleteSelected": {
+        "message": "Eliminar $count$ marcadores",
+        "description": "Button that deletes the flagged bookmarks left on Delete",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_privacyDeleteSelected_one": {
+        "message": "Eliminar $count$ marcador",
+        "description": "Button that deletes the flagged bookmarks left on Delete (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyDeleted": {
+        "message": "Marcadores eliminados",
+        "description": "Privacy Scanner: title after deleting the flagged bookmarks"
+    },
+    "toast_privacyDeletedDesc": {
+        "message": "$count$ marcadores eliminados",
+        "description": "Privacy Scanner: how many bookmarks were deleted",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyDeletedDesc_one": {
+        "message": "$count$ marcador eliminado",
+        "description": "Privacy Scanner: how many bookmarks were deleted (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyPartial": {
+        "message": "Algunos marcadores no se eliminaron",
+        "description": "Privacy Scanner: title when some flagged bookmarks were not deleted"
+    },
+    "toast_privacyPartialDesc": {
+        "message": "Eliminados: $deleted$. Omitidos porque cambiaron después del análisis: $skipped$. Con error: $failed$.",
+        "description": "Privacy Scanner partial result counts",
+        "placeholders": {
+            "deleted": {
+                "content": "$1",
+                "example": "2"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "2"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "2"
+            }
+        }
+    },
     "export_privacyReviewTitle": {
         "message": "Revisa los datos privados antes de exportar",
         "description": "Title of the dialog shown before exporting data that may contain private values"
@@ -4924,26 +5066,6 @@
     "tools_siteIconsClear": {
         "message": "Borrar los iconos guardados",
         "description": "Button that deletes all saved site icons"
-    },
-    "tools_siteIconStatus_updated": {
-        "message": "Actualizado",
-        "description": "Site icon result status: a new or changed icon"
-    },
-    "tools_siteIconStatus_unchanged": {
-        "message": "Sin cambios",
-        "description": "Site icon result status: same icon as already saved"
-    },
-    "tools_siteIconStatus_noIcon": {
-        "message": "No se encontró ningún icono",
-        "description": "Site icon result status: no usable icon"
-    },
-    "tools_siteIconStatus_failed": {
-        "message": "Error",
-        "description": "Site icon result status: the site could not be reached"
-    },
-    "tools_siteIconStatus_skipped": {
-        "message": "Omitidos",
-        "description": "Site icon result count: bookmarks that are not web links"
     },
     "tools_siteIconsNewFrom": {
         "message": "Icono de $url$",

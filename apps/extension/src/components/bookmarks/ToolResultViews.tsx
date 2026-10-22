@@ -126,10 +126,6 @@ function describePrivacyFinding(finding: PrivacyFinding): string {
   }
 }
 
-function privacyFindingKey(finding: PrivacyFinding): string {
-  return 'param' in finding ? `${finding.kind}:${finding.param}` : finding.kind;
-}
-
 /** One reviewed bookmark: its title, optional badges, an optional control before it, details. */
 export function ToolResultRow({
   title,
@@ -473,15 +469,12 @@ export function UrlCleanerResultsView({
     () => [...new Set(previews.map((preview) => urlCleanerCategory(preview.reason)))],
     [previews],
   );
-  // Picks belong to the scan they were made in, so a new scan starts from the defaults.
-  const [picked, setPicked] = useState({
+  const { actionOf, setAction, chosen } = useReviewChoices<UrlCleanerPreview, UrlCleanerAction>(
     previews,
-    actions: {} as Record<string, UrlCleanerAction>,
-  });
-  const actions = picked.previews === previews ? picked.actions : {};
-  const actionOf = (preview: UrlCleanerPreview) =>
-    actions[preview.id] ?? REVIEW_DEFAULT_ACTIONS.url_cleaner;
-  const chosen = previews.filter((preview) => actionOf(preview) === 'clean');
+    (preview) => preview.id,
+    () => REVIEW_DEFAULT_ACTIONS.url_cleaner,
+  );
+  const cleaned = chosen('clean');
   return (
     <div className="space-y-4">
       {previews.length ? (
@@ -499,12 +492,7 @@ export function UrlCleanerResultsView({
           }
           batchActions={URL_CLEANER_ACTIONS}
           actionOf={actionOf}
-          onAction={(ids, action) =>
-            setPicked({
-              previews,
-              actions: { ...actions, ...Object.fromEntries(ids.map((id) => [id, action])) },
-            })
-          }
+          onAction={setAction}
           titleOf={(preview) => getBookmarkDisplayTitle(preview.title)}
           disabled={isApplying}
           rowTestId="url-cleaner-item"
@@ -529,11 +517,11 @@ export function UrlCleanerResultsView({
       )}
 
       <ReviewFooter
-        label={tPlural('tools_urlCleanerApplySelected', chosen.length)}
+        label={tPlural('tools_urlCleanerApplySelected', cleaned.length)}
         busyLabel={t('action_applying')}
         busy={isApplying}
-        disabled={chosen.length === 0}
-        onConfirm={() => onConfirm(chosen)}
+        disabled={cleaned.length === 0}
+        onConfirm={() => onConfirm(cleaned)}
         onCancel={onClose}
       />
     </div>
@@ -688,11 +676,12 @@ export function MetadataResultsView({
   onApply: (items: MetadataFetchResultItem[]) => void;
 }) {
   const items = useMemo(() => result?.items ?? [], [result]);
-  const [picked, setPicked] = useState({ items, actions: {} as Record<string, MetadataAction> });
-  const actions = picked.items === items ? picked.actions : {};
-  const actionOf = (item: MetadataFetchResultItem): MetadataAction =>
-    canApplyTitle(item) ? (actions[item.id] ?? REVIEW_DEFAULT_ACTIONS.metadata_fetcher) : 'skip';
-  const chosen = items.filter((item) => actionOf(item) === 'apply');
+  const { actionOf, setAction, chosen } = useReviewChoices<MetadataFetchResultItem, MetadataAction>(
+    items,
+    (item) => item.id,
+    (item) => (canApplyTitle(item) ? REVIEW_DEFAULT_ACTIONS.metadata_fetcher : 'skip'),
+  );
+  const applied = chosen('apply');
 
   if (!items.length) {
     return <ToolEmptyState message={t('state_noMetadataFound')} />;
@@ -718,12 +707,7 @@ export function MetadataResultsView({
         }
         batchActions={['apply', 'skip'] as const}
         actionOf={actionOf}
-        onAction={(ids, action) =>
-          setPicked({
-            items,
-            actions: { ...actions, ...Object.fromEntries(ids.map((id) => [id, action])) },
-          })
-        }
+        onAction={setAction}
         titleOf={(item) => getBookmarkDisplayTitle(item.title)}
         disabled={isApplying}
         rowTestId="metadata-item"
@@ -748,22 +732,32 @@ export function MetadataResultsView({
         )}
       />
       <ReviewFooter
-        label={tPlural('tools_metadataApplySelected', chosen.length)}
+        label={tPlural('tools_metadataApplySelected', applied.length)}
         busyLabel={t('action_applying')}
         busy={isApplying}
-        disabled={chosen.length === 0}
-        onConfirm={() => onApply(chosen)}
+        disabled={applied.length === 0}
+        onConfirm={() => onApply(applied)}
       />
     </div>
   );
 }
-const SITE_ICON_SUMMARY: Array<{ key: string; labelKey: string }> = [
-  { key: 'updated', labelKey: 'tools_siteIconStatus_updated' },
-  { key: 'unchanged', labelKey: 'tools_siteIconStatus_unchanged' },
-  { key: 'noIcon', labelKey: 'tools_siteIconStatus_noIcon' },
-  { key: 'failed', labelKey: 'tools_siteIconStatus_failed' },
-  { key: 'skipped', labelKey: 'tools_siteIconStatus_skipped' },
-];
+/** Refresh Site Icons' review tabs, in order, by what the refresh found for a site. */
+const SITE_ICON_CATEGORIES = ['updated', 'unchanged', 'noIcon', 'failed'] as const;
+
+const SITE_ICON_CATEGORY_LABEL_KEYS = {
+  updated: 'tools_siteIconCategory_updated',
+  unchanged: 'tools_siteIconCategory_unchanged',
+  noIcon: 'tools_siteIconCategory_noIcon',
+  failed: 'tools_siteIconCategory_failed',
+} as const satisfies Record<SiteIconResultItem['status'], string>;
+
+type SiteIconAction = (typeof REVIEW_DEFAULT_ACTIONS)['site_icons'];
+const SITE_ICON_ACTIONS = ['save', 'skip'] as const satisfies readonly SiteIconAction[];
+
+/** Whether the refresh found an icon the site can keep. */
+function canSaveSiteIcon(item: SiteIconResultItem): boolean {
+  return Boolean(item.icon) && (item.status === 'updated' || item.status === 'unchanged');
+}
 
 function describeSiteIcon(item: SiteIconResultItem): string {
   switch (item.status) {
@@ -781,6 +775,11 @@ function describeSiteIcon(item: SiteIconResultItem): string {
   }
 }
 
+/**
+ * Refresh Site Icons' review: each site by what the refresh found, an icon found starting on Save
+ * (or Skip, as `[defaults] site_icons` says), with batch actions; only the icons left on Save
+ * are kept.
+ */
 export function SiteIconResultsView({
   result,
   isSaving,
@@ -788,20 +787,15 @@ export function SiteIconResultsView({
 }: {
   result: SiteIconRefreshResult | null;
   isSaving: boolean;
-  onSave: () => void;
+  onSave: (items: SiteIconResultItem[]) => void;
 }) {
-  const counts = useMemo(() => {
-    const totals: Record<string, number> = {
-      updated: 0,
-      unchanged: 0,
-      noIcon: 0,
-      failed: 0,
-      skipped: result?.skippedBookmarks ?? 0,
-    };
-    for (const item of result?.items ?? []) totals[item.status] += 1;
-    return totals;
-  }, [result]);
-  const savable = counts.updated + counts.unchanged;
+  const items = useMemo(() => result?.items ?? [], [result]);
+  const { actionOf, setAction, chosen } = useReviewChoices<SiteIconResultItem, SiteIconAction>(
+    items,
+    (item) => item.origin,
+    (item) => (canSaveSiteIcon(item) ? REVIEW_DEFAULT_ACTIONS.site_icons : 'skip'),
+  );
+  const saved = chosen('save');
 
   if (!result || (result.items.length === 0 && result.skippedBookmarks === 0)) {
     return <ToolEmptyState message={t('state_noSiteIconsFound')} />;
@@ -809,101 +803,135 @@ export function SiteIconResultsView({
 
   return (
     <div className="space-y-4">
-      <dl data-testid="site-icons-summary" className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-        {SITE_ICON_SUMMARY.map(({ key, labelKey }) => (
-          <div key={key} data-status={key} className="rounded-lg border p-2">
-            <dt className="text-xs text-muted-foreground">{t(labelKey)}</dt>
-            <dd className="text-lg font-semibold">{counts[key]}</dd>
-          </div>
-        ))}
-      </dl>
       {result.skippedBookmarks > 0 ? (
         <p className="text-xs text-muted-foreground">
           {tPlural('tools_siteIconsSkippedDesc', result.skippedBookmarks)}
         </p>
       ) : null}
-      <div className="space-y-3">
-        {result.items.map((item) => (
-          <div
-            key={item.origin}
-            data-origin={item.origin}
-            className="flex gap-3 rounded-lg border p-3 text-sm"
-          >
-            {item.icon ? (
-              <img src={item.icon} alt="" width={32} height={32} className="size-8 shrink-0" />
-            ) : (
-              <div className="size-8 shrink-0 rounded-md bg-muted" aria-hidden="true" />
-            )}
-            <div className="min-w-0 flex-1 space-y-1">
-              <div className="flex items-center justify-between gap-2">
-                <UrlLink href={item.origin} className="break-all font-medium" />
-                <Badge
-                  variant={
-                    item.status === 'failed'
-                      ? 'destructive'
-                      : item.status === 'updated'
-                        ? 'default'
-                        : 'outline'
-                  }
-                >
-                  {t(`tools_siteIconStatus_${item.status}`)}
-                </Badge>
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {tPlural('tools_siteIconsBookmarkCount', item.bookmarkCount)}
-              </div>
-              <div className="break-all text-xs text-muted-foreground">
-                {describeSiteIcon(item)}
-              </div>
-              {item.keepsCachedIcon && (item.status === 'failed' || item.status === 'noIcon') ? (
-                <div className="text-xs text-muted-foreground">
-                  {t('tools_siteIconsKeptCached')}
-                </div>
-              ) : null}
-            </div>
-          </div>
-        ))}
-      </div>
-      {savable > 0 ? (
-        <ReviewFooter
-          label={tPlural('tools_siteIconsSave', savable)}
-          busyLabel={t('action_saving')}
-          busy={isSaving}
-          onConfirm={onSave}
-        />
-      ) : null}
+      <ReviewList
+        items={items}
+        idOf={(item) => item.origin}
+        categories={SITE_ICON_CATEGORIES}
+        categoryOf={(item) => item.status}
+        categoryLabel={(category, count) =>
+          t(SITE_ICON_CATEGORY_LABEL_KEYS[category], String(count))
+        }
+        actionsOf={(item) => (canSaveSiteIcon(item) ? SITE_ICON_ACTIONS : (['skip'] as const))}
+        actionLabel={(action) =>
+          action === 'save' ? t('tools_siteIconsActionSave') : t('tools_reviewActionSkip')
+        }
+        batchActions={SITE_ICON_ACTIONS}
+        actionOf={actionOf}
+        onAction={setAction}
+        titleOf={(item) => item.origin}
+        disabled={isSaving}
+        rowTestId="site-icon-item"
+        renderBadges={(item) =>
+          item.icon ? (
+            <img src={item.icon} alt="" width={16} height={16} className="size-4 shrink-0" />
+          ) : null
+        }
+        renderDetails={(item) => (
+          <>
+            <p className="truncate text-xs text-muted-foreground">
+              {[
+                tPlural('tools_siteIconsBookmarkCount', item.bookmarkCount),
+                describeSiteIcon(item),
+              ].join(' · ')}
+            </p>
+            {item.keepsCachedIcon && (item.status === 'failed' || item.status === 'noIcon') ? (
+              <p className="text-xs text-muted-foreground">{t('tools_siteIconsKeptCached')}</p>
+            ) : null}
+          </>
+        )}
+      />
+      <ReviewFooter
+        label={tPlural('tools_siteIconsSave', saved.length)}
+        busyLabel={t('action_saving')}
+        busy={isSaving}
+        disabled={saved.length === 0}
+        onConfirm={() => onSave(saved)}
+      />
     </div>
   );
 }
 
-export function PrivacyResultsView({ result }: { result: PrivacyScanResult | null }) {
-  return result?.items.length ? (
-    <div className="space-y-3">
-      {result.items.map((item) => (
-        <ToolResultRow
-          key={item.id}
-          title={getBookmarkDisplayTitle(item.title)}
-          badges={
-            <Badge variant={item.severity === 'high' ? 'destructive' : 'outline'}>
-              {t(`tools_privacySeverity_${item.severity}`)}
-            </Badge>
-          }
-        >
-          <ResultLine>
-            <UrlLink href={item.url} />
-          </ResultLine>
-          <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
-            {item.findings.map((finding) => (
-              <li key={`${item.id}-${privacyFindingKey(finding)}`}>
-                {describePrivacyFinding(finding)}
-              </li>
-            ))}
-          </ul>
-        </ToolResultRow>
-      ))}
+/** Privacy Scanner's review tabs, most severe first. */
+const PRIVACY_CATEGORIES = ['high', 'medium', 'low'] as const;
+
+const PRIVACY_CATEGORY_LABEL_KEYS = {
+  high: 'tools_privacyCategory_high',
+  medium: 'tools_privacyCategory_medium',
+  low: 'tools_privacyCategory_low',
+} as const satisfies Record<PrivacySeverity, string>;
+
+type PrivacyAction = (typeof REVIEW_DEFAULT_ACTIONS)['privacy_scanner'];
+const PRIVACY_ACTIONS = ['keep', 'delete'] as const satisfies readonly PrivacyAction[];
+
+/**
+ * Privacy Scanner's review: each flagged bookmark by how sensitive it is, starting on Keep as is
+ * (or Delete, as `[defaults] privacy_scanner` says), with batch actions; only the bookmarks left
+ * on Delete are deleted, with undo.
+ */
+export function PrivacyResultsView({
+  result,
+  isApplying,
+  onDelete,
+}: {
+  result: PrivacyScanResult | null;
+  isApplying: boolean;
+  onDelete: (items: PrivacyScanItem[]) => void;
+}) {
+  const items = useMemo(() => result?.items ?? [], [result]);
+  const { actionOf, setAction, chosen } = useReviewChoices<PrivacyScanItem, PrivacyAction>(
+    items,
+    (item) => item.id,
+    () => REVIEW_DEFAULT_ACTIONS.privacy_scanner,
+  );
+  const deleted = chosen('delete');
+
+  if (!items.length) return <ToolEmptyState message={t('state_noPrivacyIssuesFound')} />;
+
+  return (
+    <div className="space-y-4">
+      <ReviewList
+        items={items}
+        idOf={(item) => item.id}
+        categories={PRIVACY_CATEGORIES}
+        categoryOf={(item) => item.severity}
+        categoryLabel={(category, count) => t(PRIVACY_CATEGORY_LABEL_KEYS[category], String(count))}
+        actionsOf={() => PRIVACY_ACTIONS}
+        actionLabel={(action) => t(DEAD_LINK_REPAIR_CHOICE_LABEL_KEYS[action])}
+        batchActions={PRIVACY_ACTIONS}
+        actionOf={actionOf}
+        onAction={setAction}
+        titleOf={(item) => getBookmarkDisplayTitle(item.title)}
+        disabled={isApplying}
+        rowTestId="privacy-item"
+        renderBadges={(item) => (
+          <Badge variant={item.severity === 'high' ? 'destructive' : 'outline'}>
+            {t(`tools_privacySeverity_${item.severity}`)}
+          </Badge>
+        )}
+        renderDetails={(item) => (
+          <>
+            <p className="truncate text-xs text-muted-foreground">
+              <UrlLink href={item.url} />
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {item.findings.map(describePrivacyFinding).join(' · ')}
+            </p>
+          </>
+        )}
+      />
+      <ReviewFooter
+        label={tPlural('tools_privacyDeleteSelected', deleted.length)}
+        busyLabel={t('action_applying')}
+        busy={isApplying}
+        disabled={deleted.length === 0}
+        onConfirm={() => onDelete(deleted)}
+      />
     </div>
-  ) : (
-    <ToolEmptyState message={t('state_noPrivacyIssuesFound')} />
   );
 }
 
@@ -918,47 +946,83 @@ type AIMetadataSuggestion = {
 };
 
 /** Suggested tags (Auto-Tagging) or summaries (Summarizer), saved together after review. */
-export function AIMetadataResultsView({
+/** Auto-Tagging's and Summarizer's review has one tab: every suggestion. */
+const AI_METADATA_CATEGORIES = ['suggestions'] as const;
+
+type AIMetadataAction = (typeof REVIEW_DEFAULT_ACTIONS)['ai_metadata'];
+const AI_METADATA_ACTIONS = ['save', 'skip'] as const satisfies readonly AIMetadataAction[];
+
+/**
+ * Auto-Tagging's and Summarizer's review: each suggestion starting on Save (or Skip, as
+ * `[defaults] ai_metadata` says), with batch actions; only the suggestions left on Save are saved.
+ */
+export function AIMetadataResultsView<Item extends AIMetadataSuggestion>({
   items,
   saveLabel,
   isSaving,
   onSave,
 }: {
-  items: readonly AIMetadataSuggestion[];
-  saveLabel: string;
+  items: readonly Item[];
+  /** The save button's text for how many suggestions are left on Save. */
+  saveLabel: (count: number) => string;
   isSaving: boolean;
-  onSave: () => void;
+  onSave: (items: Item[]) => void;
 }) {
+  const { actionOf, setAction, chosen } = useReviewChoices<Item, AIMetadataAction>(
+    items,
+    (item) => item.bookmarkId,
+    () => REVIEW_DEFAULT_ACTIONS.ai_metadata,
+  );
+  const saved = chosen('save');
+
   if (!items.length) return <ToolEmptyState message={t('state_noAiResults')} />;
   return (
     <div className="space-y-4">
-      {items.map((item) => (
-        <ToolResultRow key={item.bookmarkId} title={getBookmarkDisplayTitle(item.title)}>
-          <ResultLine>
-            <UrlLink href={item.url} />
-          </ResultLine>
-          {item.tags ? (
-            <div className="flex flex-wrap gap-2">
-              {item.tags.map((tag) => (
-                <Badge key={`${item.bookmarkId}-${tag}`} variant="secondary">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          ) : null}
-          {item.summary !== undefined ? (
-            <div className="rounded-md bg-muted/40 p-2 text-sm">{item.summary}</div>
-          ) : null}
-          {item.reason !== undefined ? (
-            <div className="text-xs text-muted-foreground">{item.reason}</div>
-          ) : null}
-        </ToolResultRow>
-      ))}
+      <ReviewList
+        items={items}
+        idOf={(item) => item.bookmarkId}
+        categories={AI_METADATA_CATEGORIES}
+        categoryOf={() => 'suggestions'}
+        categoryLabel={(_category, count) =>
+          t('tools_aiMetadataCategory_suggestions', String(count))
+        }
+        actionsOf={() => AI_METADATA_ACTIONS}
+        actionLabel={(action) =>
+          action === 'save' ? t('tools_aiMetadataActionSave') : t('tools_reviewActionSkip')
+        }
+        batchActions={AI_METADATA_ACTIONS}
+        actionOf={actionOf}
+        onAction={setAction}
+        titleOf={(item) => getBookmarkDisplayTitle(item.title)}
+        disabled={isSaving}
+        rowTestId="ai-metadata-item"
+        renderDetails={(item) => (
+          <>
+            <p className="truncate text-xs text-muted-foreground">
+              <UrlLink href={item.url} />
+            </p>
+            {item.tags ? (
+              <div className="flex flex-wrap gap-1">
+                {item.tags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="font-normal">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+            {item.summary !== undefined ? <p className="text-xs">{item.summary}</p> : null}
+            {item.reason !== undefined ? (
+              <p className="text-xs text-muted-foreground">{item.reason}</p>
+            ) : null}
+          </>
+        )}
+      />
       <ReviewFooter
-        label={saveLabel}
+        label={saveLabel(saved.length)}
         busyLabel={t('action_saving')}
         busy={isSaving}
-        onConfirm={onSave}
+        disabled={saved.length === 0}
+        onConfirm={() => onSave(saved)}
       />
     </div>
   );

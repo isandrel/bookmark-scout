@@ -17,6 +17,9 @@ const reviewConfig = readConfig(
     defaults: z.strictObject({
       url_cleaner: z.enum(['clean', 'keep']),
       metadata_fetcher: z.enum(['apply', 'skip']),
+      site_icons: z.enum(['save', 'skip']),
+      ai_metadata: z.enum(['save', 'skip']),
+      privacy_scanner: z.enum(['keep', 'delete']),
     }),
   }),
 );
