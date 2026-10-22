@@ -37,7 +37,7 @@ O que conta como duplicata é definido na guia **Manutenção** das [Configuraç
 | **Ignorar protocolo** | Ativado | Trata as versões `http` e `https` como duplicatas |
 | **Ignorar barra final** | Ativado | Trata URLs com e sem `/` no final como duplicatas |
 | **Regra de manutenção** | Mais antigo | Mantém o favorito **Mais antigo**, o **Mais recente** ou o **Primeiro encontrado** de cada grupo |
-| **Máximo de grupos** | 500 | Número máximo de grupos retornados por uma verificação |
+| **Máximo de grupos** | <SettingDefault path="maintenance.duplicates.max_groups" /> | Número máximo de grupos retornados por uma verificação |
 
 Antes de remover qualquer coisa, cada grupo é verificado de novo. Se o favorito marcado como **Manter** tiver sido excluído ou agora apontar para outro lugar, o grupo inteiro fica intacto e a notificação informa quantos grupos foram ignorados. Com a correspondência **Somente título**, aparece um aviso quando um grupo contém URLs diferentes, porque remover essas cópias exclui páginas diferentes.
 
@@ -81,7 +81,7 @@ Clique em **Salvar** (por exemplo, **Salvar 12 ícones**) para guardá-los ou fe
 </Step>
 </Steps>
 
-Para cada site (origem) no escopo, a ferramenta solicita uma página salva nos favoritos sem cookies, lê somente o cabeçalho (head) dela e baixa o ícone indicado pela página com o tamanho mais próximo do **Tamanho preferido do ícone**, ou o `/favicon.ico` do site. Só são usados arquivos de ícone do próprio domínio do favorito, nunca um serviço de ícones de terceiros. Os arquivos maiores que o **Tamanho máximo do arquivo de ícone** (64 KB) ou que não são imagens são ignorados.
+Para cada site (origem) no escopo, a ferramenta solicita uma página salva nos favoritos sem cookies, lê somente o cabeçalho (head) dela e baixa o ícone indicado pela página com o tamanho mais próximo do **Tamanho preferido do ícone**, ou o `/favicon.ico` do site. Só são usados arquivos de ícone do próprio domínio do favorito, nunca um serviço de ícones de terceiros. Os arquivos maiores que o **Tamanho máximo do arquivo de ícone** (<SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB) ou que não são imagens são ignorados.
 
 A atualização roda em segundo plano: continua quando você fecha o gerenciador, e o cartão e **Tarefas em segundo plano** mostram o progresso, com **Pausar**, **Retomar** e **Cancelar**. Os resultados esperam em **Ver resultados**; nada é salvo até você clicar em **Salvar**.
 

@@ -37,7 +37,7 @@ Qué cuenta como duplicado se define en la pestaña **Mantenimiento** de la [Con
 | **Ignorar el protocolo** | Activado | Trata las versiones `http` y `https` como duplicados |
 | **Ignorar la barra final** | Activado | Trata como duplicados las URLs con y sin `/` final |
 | **Regla de conservación** | El más antiguo | Conserva **El más antiguo**, **El más reciente** o **El primero encontrado** de cada grupo |
-| **Máximo de grupos** | 500 | Máximo de grupos que devuelve un análisis |
+| **Máximo de grupos** | <SettingDefault path="maintenance.duplicates.max_groups" /> | Máximo de grupos que devuelve un análisis |
 
 Antes de quitar nada, cada grupo se vuelve a comprobar. Si el marcador marcado como **Conservar** se eliminó o ahora apunta a otro sitio, el grupo entero se deja intacto y el mensaje indica cuántos grupos se omitieron. Con la coincidencia **Solo el título**, aparece una advertencia cuando un grupo contiene URLs distintas, porque quitar esas copias elimina páginas diferentes.
 
@@ -81,7 +81,7 @@ Haz clic en **Guardar** (por ejemplo, **Guardar 12 iconos**) para conservarlos, 
 </Step>
 </Steps>
 
-Para cada sitio web (origen) del ámbito, la herramienta solicita una página guardada sin cookies, lee solo su encabezado y descarga el icono indicado por la página que más se acerque al **Tamaño de icono preferido**, o el `/favicon.ico` del sitio. Solo se usan archivos de icono del propio dominio del marcador, nunca un servicio de iconos de terceros. Se omiten los archivos que superan el **Tamaño máximo del archivo de icono** (64 KB) o que no son imágenes.
+Para cada sitio web (origen) del ámbito, la herramienta solicita una página guardada sin cookies, lee solo su encabezado y descarga el icono indicado por la página que más se acerque al **Tamaño de icono preferido**, o el `/favicon.ico` del sitio. Solo se usan archivos de icono del propio dominio del marcador, nunca un servicio de iconos de terceros. Se omiten los archivos que superan el **Tamaño máximo del archivo de icono** (<SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB) o que no son imágenes.
 
 La actualización se ejecuta en segundo plano: sigue cuando cierras el administrador, y su tarjeta y **Tareas en segundo plano** muestran su progreso, con **Pausar**, **Reanudar** y **Cancelar**. Sus resultados esperan en **Ver resultados**; no se guarda nada hasta que haces clic en **Guardar**.
 

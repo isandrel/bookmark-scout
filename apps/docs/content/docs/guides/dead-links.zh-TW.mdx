@@ -83,8 +83,8 @@ Bookmark Scout 會說明需要存取哪些網站：只有要掃描的書籤所�
 
 | 設定 | 預設值 |
 | --- | --- |
-| **要求逾時** | 每個要求 8 秒 |
-| **同時要求數** | 同時 4 個要求 |
+| **要求逾時** | 每個要求 <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒 |
+| **同時要求數** | 同時 <SettingDefault path="maintenance.dead_links.concurrency" /> 個要求 |
 | **重試次數** | 重試 1 次 |
 | **追蹤重新導向** | 開啟 |
 | **成功狀態碼** | 200, 201, 202, 204, 301, 302, 307, 308 |

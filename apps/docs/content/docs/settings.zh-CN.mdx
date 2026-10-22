@@ -205,7 +205,7 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | **AI 上下文打包** | **输出格式** Markdown；**包含文件夹路径**、**包含日期**、**包含已保存的标签**和**包含已保存的摘要**开启；**最大项数** <SettingDefault path="ai_tools.context_packer.max_items" />；**最大深度** <SettingDefault path="ai_tools.context_packer.max_depth" />；**摘录长度** <SettingDefault path="ai_tools.context_packer.excerpt_length" /> |
 | **自动标签** | **最少标签数** <SettingDefault path="ai_tools.auto_tagging.min_tags" />；**最多标签数** <SettingDefault path="ai_tools.auto_tagging.max_tags" />；**标签样式** kebab-case；**合并方式**追加；**移除重复标签**开启；**发送现有标签**开启 |
 | **内容摘要** | **摘要长度** <SettingDefault path="ai_tools.summarizer.summary_length" />；**包含域名提示**开启；**合并方式**替换 |
-| **AI 文件夹重组** | **最低置信度** 55%（低于此值的移动会被舍弃）；**批次大小**每次请求 100 个书签 |
+| **AI 文件夹重组** | **最低置信度** 55%（低于此值的移动会被舍弃）；**批次大小**每次请求 <SettingDefault path="ai_tools.reorganization.batch_size" /> 个书签 |
 
 自动标签和内容摘要始终作用于当前文件夹。
 
@@ -277,7 +277,7 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | **默认导出格式** | HTML | 打开导出工具时选中的格式 |
 | **文件名前缀** | `bookmarks_` | 每个导出文件名的开头 |
 | **文件名最大长度** | <SettingDefault path="data.export.filename_max_length" /> | 生成的文件名的最大长度 |
-| **JSON 缩进大小**、**HTML 缩进大小**、**Markdown 缩进大小** | <SettingDefault path="data.export.markdown_indent_spaces" />、4、2 | 各格式中每一层级缩进的空格数 |
+| **JSON 缩进大小**、**HTML 缩进大小**、**Markdown 缩进大小** | <SettingDefault path="data.export.json_indent_size" />、<SettingDefault path="data.export.html_indent_spaces" />、<SettingDefault path="data.export.markdown_indent_spaces" /> | 各格式中每一层级缩进的空格数 |
 | **包含日期**和**包含网址** | 开启 | 在导出文件中包含这些信息 |
 
 请参阅[导入和导出](/guides/import-export)。

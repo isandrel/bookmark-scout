@@ -37,7 +37,7 @@ What counts as a duplicate is set on the **Maintenance** tab of [Settings](/sett
 | **Ignore Protocol** | On | Treat `http` and `https` versions as duplicates |
 | **Ignore Trailing Slash** | On | Treat URLs with and without a trailing `/` as duplicates |
 | **Keep Rule** | Oldest | Keep the **Oldest**, the **Newest**, or the **First found** bookmark in each group |
-| **Max Groups** | 500 | Most groups returned by one scan |
+| **Max Groups** | <SettingDefault path="maintenance.duplicates.max_groups" /> | Most groups returned by one scan |
 
 Before removing anything, each group is checked again. If the bookmark marked **Keep** was deleted or now points elsewhere, the whole group is left untouched and the message says how many groups were skipped. With **Title only** matching, a warning appears when a group contains different URLs, because removing those copies deletes different pages.
 
@@ -81,7 +81,7 @@ Click **Save** (for example **Save 12 icons**) to keep them, or close the dialog
 </Step>
 </Steps>
 
-For each website (origin) in scope, the tool requests one bookmarked page without cookies, reads only its head, and downloads the icon the page lists that is closest to **Preferred Icon Size**, or the site's `/favicon.ico`. Only icon files on the bookmark's own domain are used, never a third-party icon service. Files over **Maximum Icon File Size** (64 KB) or that are not images are skipped.
+For each website (origin) in scope, the tool requests one bookmarked page without cookies, reads only its head, and downloads the icon the page lists that is closest to **Preferred Icon Size**, or the site's `/favicon.ico`. Only icon files on the bookmark's own domain are used, never a third-party icon service. Files over **Maximum Icon File Size** (<SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB) or that are not images are skipped.
 
 The refresh runs in the background: it keeps going after you close the manager, and its card and **Background tasks** show its progress, with **Pause**, **Resume**, and **Cancel**. Its results wait for **Review results**; nothing is saved until you click **Save**.
 
