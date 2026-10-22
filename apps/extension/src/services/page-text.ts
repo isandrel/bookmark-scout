@@ -30,29 +30,49 @@ export type PageTextScanOptions = {
   skipPrivateHosts: boolean;
 };
 
-async function readPage(url: string, skipPrivateHosts: boolean): Promise<string | undefined> {
-  const { html } = await fetchHtmlPage(url, {
+/**
+ * Turns a downloaded page into its readable text, at most `maxChars` long: `readHtmlText` where
+ * there is a DOM parser, the AI host page in a service worker.
+ */
+export type PageTextReader = (html: string, maxChars: number) => Promise<string | undefined>;
+
+/**
+ * Downloads one bookmark's page and keeps its readable text on `item`. Throws when the page
+ * cannot be downloaded or read, and {@link RequestAbortedError} when `signal` stopped it.
+ */
+export async function readPageTextItem(
+  item: PageTextScanItem,
+  options: PageTextScanOptions & { readText: PageTextReader; signal?: AbortSignal },
+): Promise<void> {
+  const { html } = await fetchHtmlPage(item.url, {
     timeoutMs: PAGE_TEXT_LIMITS.timeoutMs,
     maxBytes: PAGE_TEXT_LIMITS.maxBytes,
     until: 'end',
     // A redirect can lead to a local host; that page is not read either.
-    allowUrl: (next) => isReadablePageUrl(next, skipPrivateHosts),
+    allowUrl: (next) => isReadablePageUrl(next, options.skipPrivateHosts),
+    ...(options.signal ? { signal: options.signal } : {}),
   });
-  if (!html) return undefined;
-  const page = await extractPageText(parseFetchedHtml(html), PAGE_TEXT_LIMITS.maxCharsPerPage);
-  return page?.text.trim() || undefined;
+  const text = html
+    ? (await options.readText(html, PAGE_TEXT_LIMITS.maxCharsPerPage))?.trim()
+    : undefined;
+  item.status = text ? 'read' : 'empty';
+  if (text) item.text = text;
 }
 
-/** Reads the pages of `nodes` that are not indexed from their current address yet. */
-export async function scanPageTexts(
+/**
+ * What a run over `nodes` covers: every bookmark, marked `current` when it is indexed from its
+ * address already and `skipped` when it may not be read, with `toRead` the ones to download.
+ * Bookmarks past the room the index has left are counted in `overLimit` only.
+ */
+export async function planPageTextScan(
   nodes: BookmarkTreeNode[],
   options: PageTextScanOptions,
-): Promise<PageTextScanResult> {
+): Promise<PageTextScanResult & { toRead: Set<PageTextScanItem> }> {
   const indexed = await getPageTexts();
   let room = Math.max(0, PAGE_TEXT_LIMITS.maxPages - indexed.size);
   let overLimit = 0;
   const items: PageTextScanItem[] = [];
-  const toRead: PageTextScanItem[] = [];
+  const toRead = new Set<PageTextScanItem>();
   for (const { node, pathLabel } of flattenBookmarks(nodes)) {
     const url = node.url ?? '';
     const item: PageTextScanItem = {
@@ -69,15 +89,22 @@ export async function scanPageTexts(
       continue;
     } else {
       room -= 1;
-      toRead.push(item);
+      toRead.add(item);
     }
     items.push(item);
   }
-  await mapWithConcurrency(toRead, PAGE_TEXT_LIMITS.concurrency, async (item) => {
+  return { items, overLimit, toRead };
+}
+
+/** Reads the pages of `nodes` that are not indexed from their current address yet. */
+export async function scanPageTexts(
+  nodes: BookmarkTreeNode[],
+  options: PageTextScanOptions,
+): Promise<PageTextScanResult> {
+  const { items, overLimit, toRead } = await planPageTextScan(nodes, options);
+  await mapWithConcurrency([...toRead], PAGE_TEXT_LIMITS.concurrency, async (item) => {
     try {
-      const text = await readPage(item.url, options.skipPrivateHosts);
-      item.status = text ? 'read' : 'empty';
-      if (text) item.text = text;
+      await readPageTextItem(item, { ...options, readText: readHtmlText });
     } catch {
       item.status = 'failed';
     }

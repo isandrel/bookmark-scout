@@ -1,6 +1,6 @@
 ---
 name: extension-background-jobs
-description: Add or change a Bookmark Scout background job, a long tool (Check Dead Links, Metadata Fetcher, Refresh Site Icons, AI Folder Reorganization) that the background owns, so it keeps going after its page closes, pauses, resumes, cancels, and picks up after the worker stops or the browser restarts. Use when a tool should run in the background, when adding a job kind or adapter, when touching the job store, coordinator, job commands, the Background tasks UI, or their tests, or when a job hangs, repeats work, or sends a request twice.
+description: Add or change a Bookmark Scout background job, a long tool (Check Dead Links, Metadata Fetcher, Refresh Site Icons, Index Page Text, AI Folder Reorganization) that the background owns, so it keeps going after its page closes, pauses, resumes, cancels, and picks up after the worker stops or the browser restarts. Use when a tool should run in the background, when adding a job kind or adapter, when touching the job store, coordinator, job commands, the Background tasks UI, or their tests, or when a job hangs, repeats work, or sends a request twice.
 ---
 
 # Background jobs (Bookmark Scout extension)
@@ -29,7 +29,7 @@ Each step adds one entry; no step adds a special case.
    - `prepare` reads the scope with `scopeNodes`, and the settings and options now (they are frozen).
    - Each input is one item. Keep inputs small: store what every item shares once, in `options`.
    - `run` checks one item and validates its stored input and options with zod.
-   - Flags declare what a slice needs: `readsHtml` gives `tools.readHead`, and `ai` gives `tools.ai`.
+   - Flags declare what a slice needs: `readsHtml` gives `tools.readHead`, `readsText` gives `tools.readText` (a page's readable text, always read in the AI host page), and `ai` gives `tools.ai`.
    - A kind that requests websites lists each item's addresses in `siteUrls`. Access is checked before each item, so access taken back mid-run pauses the job (`site-access`, whose Resume asks again through `JOB_BLOCK_PERMISSIONS` in `job-view.ts`) instead of counting failures.
 3. **Per-item work:** split the tool's scan into a per-item function that takes an `AbortSignal` and throws `RequestAbortedError` when stopped. Examples: `checkDeadLink`, `fetchMetadataItem`, `refreshOrigin`. Keep the old whole-scan function as a loop over the per-item one, so there is one code path.
 4. **Tool definition:** add `job: { kind, result(job, results) }` to its `TOOL_DEFINITIONS` entry.
@@ -49,6 +49,7 @@ Each step adds one entry; no step adds a special case.
 - **Batching.** Reading work is saved in batches (`commit_batch_items`, `commit_batch_ms` in `config/jobs/scheduler.toml`; always flushed before a slice settles). Work with `unsureAfterStop` is saved item by item. Pages share one subscription to the store and read it at most every `refresh_ms` (`config/ui/jobs.toml`). Per-item commits and per-component reads made a 19,500-link job 3.4x slower; measure with `tests/perf/jobs.perf.spec.ts` (`nx run extension:test:perf`) before and after a change to the engine.
 - **Writes.** Scan jobs only read; nothing a job finds is applied without the review. Applying a review goes through `applyReviewedChanges`: up to the `jobsApplyInBackgroundAbove` setting it runs in the page as before, above it the page sends the stored changes (no `check`, which is code) to an `applyChanges` job. That job's `runBatch` applies one slice per call to `applyBookmarkChanges` (`part: { jobId, index, of }`): each part is one undo entry and one Audit History record linked by `jobId` and labelled "(part n of m)". Every change is checked against the live bookmark first, so on Resume after a stop (`uncertain-write`) a change already made is skipped, never repeated. Pause and cancel take effect between parts.
 - **DOM.** A service worker has no DOM parser. Firefox's background page has one. Otherwise HTML goes to the AI host page (`withAIHost`, `readHead`), which is opened once per slice.
+- **One background file.** The background is built as one file, so a dynamic `import()` in code it reaches is bundled into it. Page text (`readsText`) is therefore read in the AI host page in every browser, Firefox too, which keeps Readability out of `background.js`; `startup-code.spec.ts` fails when the page reader reaches it.
 - **Startup.** `registerJobs()` registers its listeners synchronously in the background's main function. Every wake reconciles first.
 - **Turns.** One slice runs at a time. Jobs take turns by slice, the one that waited longest first (`nextRunnable`), so a short job started during a long one runs between its slices instead of after it.
 

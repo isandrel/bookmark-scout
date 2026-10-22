@@ -10,9 +10,11 @@ import {
   prunePageTexts,
   savePageTexts,
 } from '@/lib/page-text-store';
+import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
 import { savePageTextResults, scanPageTexts } from '@/services/page-text';
+import { handleAIHostRequest } from '@/services/quick-save-ai-runner';
 import type { BookmarkTreeNode } from '@/types';
 
 const tree: BookmarkTreeNode[] = [
@@ -164,6 +166,25 @@ describe('Index Page Text runs', () => {
     });
     expect(items.find((item) => item.id === 'read')?.text).toContain('quokka');
     expect(fetch).toHaveBeenCalledTimes(3);
+  });
+
+  it('reads a page the background downloaded in the AI host page, cut to the limit it asks for', async () => {
+    const maxChars = 40;
+    const response = await handleAIHostRequest({
+      type: QUICK_SAVE_MESSAGE.hostReadText,
+      token: 'token',
+      html: ARTICLE,
+      maxChars,
+    });
+    expect(response).toMatchObject({ ok: true, text: expect.stringContaining('quokka') });
+    expect(response.ok && response.text?.length).toBeLessThanOrEqual(maxChars);
+    const empty = await handleAIHostRequest({
+      type: QUICK_SAVE_MESSAGE.hostReadText,
+      token: 'token',
+      html: '<html><body></body></html>',
+      maxChars,
+    });
+    expect(empty).toEqual({ ok: true });
   });
 
   it('saves only the pages left on Save, and drops text of bookmarks that are gone', async () => {

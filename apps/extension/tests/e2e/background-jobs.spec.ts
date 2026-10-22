@@ -45,9 +45,14 @@ const PNG = Buffer.from(
   'base64',
 );
 
+const ARTICLE = `<!doctype html><html><head><title>Field trip</title></head><body><article>
+<h1>Field trip</h1><p>On the island we finally saw a quokka resting under a peppermint tree.</p>
+<p>${'Plenty of other notes about the trip. '.repeat(20)}</p></article></body></html>`;
+
 /**
  * A real HTTP server whose links answer only when the test releases them: `/link/N` is a page
- * titled "Title N", `/icon-page` declares `/icon.png`, and `/icon.png` is a PNG.
+ * titled "Title N", `/icon-page` declares `/icon.png`, `/icon.png` is a PNG, and `/article` is
+ * a page with readable text.
  */
 async function startHeldSite(): Promise<HeldSite> {
   const requests: string[] = [];
@@ -61,6 +66,10 @@ async function startHeldSite(): Promise<HeldSite> {
       return;
     }
     res.writeHead(200, { 'content-type': 'text/html' });
+    if (path === '/article') {
+      res.end(ARTICLE);
+      return;
+    }
     const link = /^\/link\/(\d+)$/.exec(path);
     res.end(
       path === '/icon-page'
@@ -382,6 +391,51 @@ test('Refresh Site Icons keeps going with its page closed, and a later page save
   ).toBeVisible();
   await review.getByRole('button', { name: 'Save 1 icon' }).click();
   await expect(later).toContainText('1 icon saved');
+});
+
+test('Index Page Text keeps going with its page closed, and a later page saves the text (S25, S26, J01, J05)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'Page Text Folder', [
+    { title: 'Field notes', url: `${site.origin}/article` },
+    { title: 'Bookmarklet', url: 'javascript:void(0)' },
+  ]);
+  await setSettings(extensionWorker, {
+    pageTextEnabled: true,
+    pageTextDefaultScope: 'folder',
+    // The test site is on this computer.
+    readPageSkipPrivateHosts: false,
+  });
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Index Page Text')
+    .getByRole('button', { name: 'Index', exact: true })
+    .click();
+  await expect.poll(() => site.held()).toBe(1);
+  await page.close();
+
+  site.open();
+  await expect
+    .poll(async () => (await latestJob(extensionWorker, 'pageText'))?.state)
+    .toBe('succeeded');
+  expect(requestCounts(site)).toEqual({ 'GET /article': 1 });
+
+  const manager = await context.newPage();
+  await openTools(manager, extensionId, folderId);
+  const later = toolCard(manager, 'Index Page Text');
+  await later.getByTestId('job-status').getByRole('button', { name: 'Review results' }).click();
+  const review = manager.getByRole('dialog', { name: 'Index Page Text' });
+  await expect(
+    review.getByTestId('page-text-item').filter({ hasText: 'Field notes' }),
+  ).toContainText('quokka');
+  await review.getByRole('button', { name: 'Save text of 1 page' }).click();
+  await expect(review).toHaveCount(0);
+  await manager.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:quokka')}`);
+  await expect(manager.locator('tbody tr').filter({ hasText: 'Field notes' })).toBeVisible();
+  // Saving read nothing from the network again.
+  expect(site.requests).toHaveLength(1);
 });
 
 /** Moves every bookmark of a reorganization request into "<folder>/Sorted". */

@@ -8,6 +8,7 @@ const JOB_TITLE_KEYS: Record<ScanJobKind, MessageKey> = {
   deadLinks: 'tools_checkDeadLinks',
   metadataFetcher: 'tools_metadataFetcher',
   siteIcons: 'tools_siteIcons',
+  pageText: 'tools_pageText',
   reorganization: 'tools_aiReorganize',
 };
 

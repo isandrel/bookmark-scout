@@ -67,4 +67,10 @@ export const quickSaveHostRequestSchema = z.discriminatedUnion('type', [
     html: z.string().max(INPUT_LIMITS.chars.page_head),
     descriptions: z.boolean(),
   }),
+  z.strictObject({
+    type: z.literal(QUICK_SAVE_MESSAGE.hostReadText),
+    token: messageId,
+    html: z.string().max(INPUT_LIMITS.chars.page_html),
+    maxChars: z.number().int().positive(),
+  }),
 ]) satisfies z.ZodType<QuickSaveHostRequest>;

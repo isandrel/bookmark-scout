@@ -814,7 +814,10 @@ test('statistics and privacy scanner run without website access', async ({ exten
   await expect.poll(() => privacy.getText()).toContain('Sensitive query parameter: token');
 });
 
-/** A local server whose pages ("Page /1") answer only once the test opens the gate. */
+/**
+ * A local server whose pages ("Page /1", with a paragraph of readable text) answer only once the
+ * test opens the gate.
+ */
 async function startHeldServer() {
   const requests: string[] = [];
   const waiting: ServerResponse[] = [];
@@ -824,7 +827,10 @@ async function startHeldServer() {
     res.writeHead(200, { 'content-type': 'text/html' });
     // Only the page number goes into the HTML, never the raw request path.
     const page = Number(/^\/(\d+)$/.exec(path)?.[1] ?? 0);
-    res.end(`<head><title>Page /${page}</title></head>`);
+    res.end(
+      `<head><title>Page /${page}</title></head><body><article><h1>Page ${page}</h1>` +
+        `<p>${'Field notes about a quokka under a peppermint tree. '.repeat(12)}</p></article></body>`,
+    );
   };
   const paths = new Map<ServerResponse, string>();
   const server = createServer((req, res) => {
@@ -875,12 +881,14 @@ async function startJobAndClosePage(
   server: Awaited<ReturnType<typeof startHeldServer>>,
   folderId: string,
   tool: string,
+  button = 'Scan',
 ) {
   await openTools(extension, folderId);
-  await clickToolButton(extension, tool, 'Scan');
+  await clickToolButton(extension, tool, button);
   const dialog = await extension.findByText('[role="dialog"]', 'Allow access to websites?');
   await dialog.findElement(By.xpath('.//button[normalize-space()="Allow access"]')).click();
-  await expect.poll(() => server.requests.length).toBe(1);
+  // Index Page Text reads several pages at a time; the others are set to one.
+  await expect.poll(() => server.requests.length).toBeGreaterThan(0);
   // The manager closes; the background page carries on with the job.
   await extension.open('options.html');
   server.open();
@@ -948,6 +956,35 @@ test('Metadata Fetcher runs as a background job whose titles a later page applie
         { title: 'Page /1', url: `${server.origin}/1` },
         { title: 'Page /2', url: `${server.origin}/2` },
       ]);
+  } finally {
+    server.close();
+  }
+});
+
+test('Index Page Text runs as a background job that reads the text in the background page frame (S25)', async ({
+  extension,
+}) => {
+  const server = await startHeldServer();
+  try {
+    const folder = await seedFolder(extension, 'E2E Firefox Page Text', [
+      { title: 'Notes 1', url: `${server.origin}/1` },
+      { title: 'Notes 2', url: `${server.origin}/2` },
+    ]);
+    await setSettings(extension, {
+      pageTextEnabled: true,
+      pageTextDefaultScope: 'folder',
+      // The test server is on this computer.
+      readPageSkipPrivateHosts: false,
+    });
+    await startJobAndClosePage(extension, server, folder.folderId, 'Index Page Text', 'Index');
+    await expect
+      .poll(() => storedJobs(extension), { timeout: 15_000 })
+      .toEqual([{ kind: 'pageText', state: 'succeeded', succeeded: 2 }]);
+
+    await openTools(extension, folder.folderId);
+    await clickToolButton(extension, 'Index Page Text', 'Review results');
+    const results = await extension.findByText('[role="dialog"]', 'Notes 2');
+    expect(await results.getText()).toContain('quokka');
   } finally {
     server.close();
   }
