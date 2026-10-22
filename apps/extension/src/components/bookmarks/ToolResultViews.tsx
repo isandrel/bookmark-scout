@@ -1169,6 +1169,11 @@ export function RulesResultsView({
         busy={isApplying}
         disabled={applied.length === 0}
         onConfirm={() => onApply(applied)}
+      />
+    </div>
+  );
+}
+
 /** Index Page Text's review tabs, by what reading the page found. */
 const PAGE_TEXT_CATEGORIES = ['read', 'empty', 'failed', 'current', 'skipped'] as const;
 

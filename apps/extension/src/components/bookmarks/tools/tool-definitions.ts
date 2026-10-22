@@ -16,8 +16,8 @@ import {
   ShieldAlert,
   Sparkles,
   Tags,
-  Wand2,
   TextSearch,
+  Wand2,
 } from 'lucide-react';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
