@@ -85,6 +85,43 @@ describe('planBookmarkRules', () => {
     expect(items.every((item) => item.addTags[0] === 'development')).toBe(true);
   });
 
+  it('compares punycode and Unicode domains in one form, whatever the case (R03)', () => {
+    const idnTree: BookmarkTreeNode[] = [
+      {
+        id: '0',
+        title: '',
+        children: [
+          {
+            id: '1',
+            parentId: '0',
+            title: 'Bookmarks bar',
+            children: [
+              link('root', '1', 'Bücher', 'https://xn--bcher-kva.example/'),
+              link('shop', '1', 'Shop', 'https://SHOP.BÜCHER.example/cart'),
+              link('lookalike', '1', 'Not it', 'https://notbücher.example/'),
+              link('suffix', '1', 'Not it either', 'https://bücher.example.evil.test/'),
+              link('broken', '1', 'Broken', 'http://exa mple.com/'),
+            ],
+          },
+        ],
+      },
+    ];
+    for (const query of [
+      'domain:bücher.example',
+      'domain:xn--bcher-kva.example',
+      'domain:BÜCHER.Example',
+    ]) {
+      const items = planBookmarkRules([rule({ query, addTags: ['books'] })], idnTree, {});
+      expect(ids(items), query).toEqual(['root', 'shop']);
+    }
+    const subdomain = planBookmarkRules(
+      [rule({ query: 'domain:shop.xn--bcher-kva.example', addTags: ['books'] })],
+      idnTree,
+      {},
+    );
+    expect(ids(subdomain)).toEqual(['shop']);
+  });
+
   it('tells the address from the folder path (R04, R05)', () => {
     expect(ids(plan([rule({ query: 'url:/api', addTags: ['a'] })]))).toEqual(['d1']);
     expect(ids(plan([rule({ query: 'folder:"Work / Docs"', addTags: ['a'] })]))).toEqual(['d1']);

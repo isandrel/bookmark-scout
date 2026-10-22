@@ -312,6 +312,54 @@ test('bookmark manager keeps the search in the address and links to its own page
     .toEqual([`${extension.url('bookmarks.html')}?id=${folder.folderId}`]);
 });
 
+test('an operator query finds tagged bookmarks by site in the popup and the manager (U38)', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Operators', [
+    { title: 'Operator Keep', url: 'https://keep.e2e.invalid/a' },
+    { title: 'Operator Other Site', url: 'https://skip.e2e.invalid/b' },
+    { title: 'Operator Untagged', url: 'https://keep.e2e.invalid/c' },
+  ]);
+  const metadata = STORAGE_ITEMS.bookmarkMetadata;
+  await extension.call(
+    async (browser, { key, v, data }) => {
+      await browser.storage.local.set({ [key]: { v, data } });
+    },
+    {
+      key: storageAreaKey(metadata),
+      v: metadata.v,
+      data: {
+        [folder.ids['Operator Keep'] as string]: { tags: ['Reading'] },
+        [folder.ids['Operator Other Site'] as string]: { tags: ['reading'] },
+      },
+    },
+  );
+  const query = 'tag:reading -domain:skip.e2e.invalid';
+  const texts = async (css: string) => {
+    const found: string[] = [];
+    for (const row of await extension.driver.findElements(By.css(css))) {
+      if (await row.isDisplayed()) found.push(await row.getText());
+    }
+    return found;
+  };
+
+  await extension.open('popup.html');
+  await (await extension.find('input.search-input')).sendKeys(query);
+  await extension.findByText('.bookmark-item', 'Operator Keep');
+  await expect
+    .poll(() => texts('.bookmark-item'))
+    .toEqual([expect.stringMatching(/^Operator Keep\b[\s\S]*tag: Reading/)]);
+
+  await extension.open(`bookmarks.html?q=${encodeURIComponent(query)}`);
+  await extension.findByText('tbody tr', 'Operator Keep');
+  await expect.poll(() => texts('tbody tr')).toEqual([expect.stringContaining('Operator Keep')]);
+  expect(
+    await extension.driver.executeScript<string>(
+      'return document.querySelector(\'input[placeholder="Search titles, addresses, folders, and tags"]\').value',
+    ),
+  ).toBe(query);
+});
+
 test('manager Delete and Ctrl/Cmd+Z use the undo history in session storage', async ({
   extension,
 }) => {

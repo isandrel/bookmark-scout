@@ -122,6 +122,30 @@ describe('the search query language', () => {
     expect(find('domain:EXAMPLE.COM', library)).toContain('docs');
   });
 
+  it('compares international domains in one form, Unicode or punycode, any case (U10)', () => {
+    const idn = buildSearchDocuments(
+      tree([
+        // The browser stores a bookmark's host in punycode; an imported one may keep Unicode.
+        bookmark('root', 'Bücher', 'https://xn--bcher-kva.example/'),
+        bookmark('shop', 'Shop', 'https://SHOP.bücher.example/cart'),
+        bookmark('lookalike', 'Not it', 'https://notbücher.example/'),
+        bookmark('suffix', 'Not it either', 'https://bücher.example.evil.test/'),
+      ]),
+      {},
+    );
+    for (const query of [
+      'domain:bücher.example',
+      'domain:xn--bcher-kva.example',
+      'domain:BÜCHER.EXAMPLE',
+      'domain:XN--BCHER-KVA.Example',
+      'domain:www.bücher.example',
+    ]) {
+      expect(find(query, idn).sort(), query).toEqual(['root', 'shop']);
+    }
+    expect(find('domain:shop.bücher.example', idn)).toEqual(['shop']);
+    expect(find('-domain:bücher.example', idn).sort()).toEqual(['lookalike', 'suffix']);
+  });
+
   it('reads addresses and unknown operators as text, and says so (U12, U13)', () => {
     expect(parseSearchQuery('https://host/x:y').query.terms).toEqual([
       { kind: 'text', value: 'https://host/x:y', phrase: false, negate: false },
