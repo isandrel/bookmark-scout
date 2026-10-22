@@ -48,9 +48,7 @@
 # Raised from 1212 on 2026-10-22 for the list of automatic Smart Rules taggings with Undo in Settings
 # (1,213).
 # Raised from 1215 on 2026-10-22 for the search reason wording shared with the manager (1,211).
-# Raised from 1220 on 2026-10-22 for Index Page Text as a background job: its job kind, review
-# result, and the AI host page message that reads page text (1,211).
-"options.html" = 1225
+"options.html" = 1220
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
