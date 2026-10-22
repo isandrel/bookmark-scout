@@ -3479,6 +3479,26 @@
         "message": "Domain",
         "description": "Title of the filter that groups links by site domain"
     },
+    "table_filters": {
+        "message": "Filter",
+        "description": "Bookmark manager: button that opens the table filters (current folder, type, domain, folder, date added, address), and the name of the list of filters in use"
+    },
+    "table_filtersInUse": {
+        "message": "Filter, $1 aktiv",
+        "description": "Bookmark manager: accessible name of the Filters button while filters are in use; $1 is how many"
+    },
+    "table_filterChip": {
+        "message": "$1: $2",
+        "description": "Bookmark manager: a filter in use, shown as a chip under the toolbar; $1 is the filter, $2 its values"
+    },
+    "table_filterValueSeparator": {
+        "message": ", ",
+        "description": "Bookmark manager: what goes between the values of one filter chip"
+    },
+    "table_filterChipRemove": {
+        "message": "Filter $1 entfernen",
+        "description": "Bookmark manager: accessible name of the button that removes a filter chip; $1 is the chip text"
+    },
     "table_browserOrder": {
         "message": "Browser-Reihenfolge",
         "description": "Toggle that shows the current folder in the browser bookmark order"
@@ -3596,6 +3616,102 @@
                 "example": "recipes"
             }
         }
+    },
+    "searchHelp_button": {
+        "message": "Suchsyntax",
+        "description": "Search syntax help: the button at the end of the manager search box, and the heading of its list"
+    },
+    "searchHelp_intro": {
+        "message": "Jedes Wort muss passen, im Titel, in der Adresse, im Ordner, in den Tags oder in der Zusammenfassung. Wählen Sie einen Operator, um ihn hinzuzufügen.",
+        "description": "Search syntax help: how plain words match, above the list of operators"
+    },
+    "searchHelp_phrase": {
+        "message": "Wörter zusammen",
+        "description": "Search syntax help: what quotes do (\"two words\")"
+    },
+    "searchHelp_exclude": {
+        "message": "Ausschließen",
+        "description": "Search syntax help: what a leading minus does (-word)"
+    },
+    "searchHelp_title": {
+        "message": "In Titeln",
+        "description": "Search syntax help: what title: does"
+    },
+    "searchHelp_url": {
+        "message": "In Adressen",
+        "description": "Search syntax help: what url: does"
+    },
+    "searchHelp_domain": {
+        "message": "Auf einer Website und ihren Subdomains",
+        "description": "Search syntax help: what domain: does"
+    },
+    "searchHelp_folder": {
+        "message": "In einem Ordner, in jeder Tiefe",
+        "description": "Search syntax help: what folder: does"
+    },
+    "searchHelp_tag": {
+        "message": "Mit einem Tag",
+        "description": "Search syntax help: what tag: does"
+    },
+    "searchHelp_summary": {
+        "message": "In Zusammenfassungen",
+        "description": "Search syntax help: what summary: does"
+    },
+    "searchHelp_isBookmark": {
+        "message": "Nur Lesezeichen",
+        "description": "Search syntax help: what is:bookmark does"
+    },
+    "searchHelp_isFolder": {
+        "message": "Nur Ordner",
+        "description": "Search syntax help: what is:folder does"
+    },
+    "searchHelp_isUntagged": {
+        "message": "Lesezeichen ohne Tags",
+        "description": "Search syntax help: what is:untagged does"
+    },
+    "searchHelp_hasTags": {
+        "message": "Mit beliebigem Tag",
+        "description": "Search syntax help: what has:tags does"
+    },
+    "searchHelp_hasSummary": {
+        "message": "Mit Zusammenfassung",
+        "description": "Search syntax help: what has:summary does"
+    },
+    "searchHelp_after": {
+        "message": "An oder nach einem Tag hinzugefügt",
+        "description": "Search syntax help: what after:YYYY-MM-DD does"
+    },
+    "searchHelp_before": {
+        "message": "An oder vor einem Tag hinzugefügt",
+        "description": "Search syntax help: what before:YYYY-MM-DD does"
+    },
+    "searchHelp_guide": {
+        "message": "Suchanleitung",
+        "description": "Search syntax help: link to the search guide in the docs"
+    },
+    "searchDiagnostic_unknownOperator": {
+        "message": "$1 ist kein Operator und wird als Text gesucht.",
+        "description": "Note under the manager search box; $1 is an operator it does not know, such as foo:"
+    },
+    "searchDiagnostic_unknownValue": {
+        "message": "$1 ist kein bekannter Wert und wird ausgelassen.",
+        "description": "Note under the manager search box; $1 is an is: or has: value it does not know"
+    },
+    "searchDiagnostic_invalidDate": {
+        "message": "$1 ist kein Datum im Format YYYY-MM-DD und wird ausgelassen.",
+        "description": "Note under the manager search box; $1 is what was typed after after: or before:. Keep YYYY-MM-DD as is: it is the format to type"
+    },
+    "searchDiagnostic_unclosedQuote": {
+        "message": "Ein Anführungszeichen ist nicht geschlossen, daher reicht die Wortgruppe bis zum Ende.",
+        "description": "Note under the manager search box when a quote mark is not closed"
+    },
+    "searchDiagnostic_tooLong": {
+        "message": "Nur die ersten $1 Zeichen werden gesucht.",
+        "description": "Note under the manager search box; $1 is the longest search read"
+    },
+    "searchDiagnostic_tooManyTerms": {
+        "message": "Nur die ersten $1 Begriffe werden gesucht.",
+        "description": "Note under the manager search box; $1 is how many terms are read"
     },
     "ai_folderRecommendation": {
         "message": "KI-Ordnervorschlag",
@@ -6522,14 +6638,6 @@
     "managerDefaults_search": {
         "message": "Titel, Adressen, Ordner und Tags durchsuchen",
         "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
-    },
-    "managerDefaults_moreFilters": {
-        "message": "Weitere Filter",
-        "description": "Bookmark manager: button that shows the less common filters (web address, folder)"
-    },
-    "managerDefaults_moreFiltersInUse": {
-        "message": "Setze diese Filter zurück, um sie auszublenden",
-        "description": "Bookmark manager: tooltip of the More filters button while one of those filters is in use"
     },
     "managerDefaults_folderFilter": {
         "message": "Ordner",

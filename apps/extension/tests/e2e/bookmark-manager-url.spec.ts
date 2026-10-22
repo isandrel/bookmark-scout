@@ -5,7 +5,7 @@
  */
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-import { setTablePageSize } from './manager-helpers';
+import { currentFolderOnly, setTablePageSize } from './manager-helpers';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -125,7 +125,7 @@ test('q wins over id, which keeps the folder for Current folder only', async ({
   await expect(breadcrumbCurrent(page)).toHaveText('Results from all folders');
   await expect(row(page, 'Shared Name Inner')).toBeVisible();
   await expect(row(page, 'Shared Name Outer')).toBeVisible();
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
   await expect(row(page, 'Shared Name Outer')).toHaveCount(0);
   await expect(row(page, 'Shared Name Inner')).toBeVisible();
   await expect(breadcrumbCurrent(page)).toHaveText('Inner');

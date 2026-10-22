@@ -1,7 +1,7 @@
 /**
  * What a new user sees in the bookmark manager before changing anything: it opens on the
  * bookmarks bar, shows Title, URL, and Date Added in the browser's order, 50 rows a page, one
- * search box that matches titles and addresses, the rarer filters behind "More filters", and a
+ * search box with syntax help, every other filter in the Filters menu, and a
  * plain item count. Every other column and filter stays one click away.
  */
 import type { Page } from '@playwright/test';
@@ -9,6 +9,7 @@ import { expect, test } from './fixtures';
 import {
   addressFilter,
   breadcrumbCurrent,
+  filterChips,
   managerSearch,
   managerUrl,
   managerRow as row,
@@ -157,7 +158,7 @@ test('names another Sort Order beside the Browser order button', async ({
   await expect(page.getByTestId('table-order-status')).toHaveText('Order: Date Added');
 });
 
-test('one search box matches titles and addresses; folder and address filters wait behind More filters', async ({
+test('one search box with syntax help; every other filter waits in the Filters menu, shown as chips', async ({
   extensionId,
   extensionWorker,
   page,
@@ -181,19 +182,29 @@ test('one search box matches titles and addresses; folder and address filters wa
   await expect(page).toHaveURL(/[?&]q=pasta/);
   await managerSearch(page).fill('');
 
-  const more = toolbar.getByRole('button', { name: 'More filters' });
-  await expect(more).toHaveAttribute('aria-expanded', 'false');
+  // The syntax help adds an operator to the query and gives the search box focus back.
+  await page.getByTestId('search-syntax-help').click();
+  await page.getByRole('button', { name: /^With a tag/ }).click();
+  await expect(managerSearch(page)).toHaveValue('tag:');
+  await expect(managerSearch(page)).toBeFocused();
+  // A problem in the query is said under the toolbar; the rest of the query still runs.
+  await managerSearch(page).fill('pasta after:2026-02-30');
+  await expect(
+    page.getByRole('status').filter({ hasText: '2026-02-30 is not a date' }),
+  ).toBeVisible();
+  await expect(page.locator('tbody tr')).toHaveCount(2);
+  await managerSearch(page).fill('');
+
   await (await addressFilter(page)).fill('school');
   await expect(page.locator('tbody tr')).toHaveCount(1);
   await expect(row(page, 'Timetable')).toBeVisible();
-  // A filter in use is never hidden: the button cannot close the row until it is cleared.
-  await expect(more).toHaveAttribute('aria-expanded', 'true');
-  await expect(more).toHaveAttribute('aria-disabled', 'true');
-  await expect(toolbar.getByRole('button', { name: 'Folder', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  // A filter in use is never hidden: its chip stays under the toolbar while the menu is closed.
+  await expect(filterChips(page)).toHaveText(['URL: school']);
 
   await toolbar.getByRole('button', { name: 'Reset', exact: true }).click();
-  await more.click();
-  await expect(toolbar.getByPlaceholder('Filter URLs...')).toHaveCount(0);
+  await expect(filterChips(page)).toHaveCount(0);
+  await expect(page.locator('tbody tr')).toHaveCount(3);
 });
 
 test('the Dates and Times settings change how the manager shows dates', async ({

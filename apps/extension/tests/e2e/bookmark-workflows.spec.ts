@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-import { addressFilter, showTableColumns } from './manager-helpers';
+import { addressFilter, currentFolderOnly, showTableColumns } from './manager-helpers';
 import { readSettings, setSettings } from './storage';
 import { showAllTools } from './tool-helpers';
 
@@ -543,13 +543,13 @@ test('manager filters globally across nested folders or only the selected folder
       .getByTitle(`${remote.writableRootTitle} / E2E Scope Remote`, { exact: true }),
   ).toBeVisible();
 
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Shared Target Local');
   await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
   await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
 
-  await page.getByRole('checkbox', { name: 'Current folder only' }).uncheck();
+  await (await currentFolderOnly(page)).uncheck();
   await expect(rows).toHaveCount(3);
   await page.getByRole('button', { name: 'Reset' }).click();
   await expect(rows).toHaveCount(2);
@@ -558,7 +558,7 @@ test('manager filters globally across nested folders or only the selected folder
   await (await addressFilter(page)).fill('remote-target');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Shared Target Remote');
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
   await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
   await expect(page.getByText('No results.', { exact: true })).toBeVisible();
 });

@@ -31,12 +31,27 @@ export function managerSearch(page: Page) {
   return page.getByRole('textbox', { name: 'Search titles, addresses, folders, and tags' });
 }
 
-/** The address filter behind "More filters", which this opens first when it is closed. */
+/** The toolbar's Filters menu, which this opens first when it is closed. */
+export async function tableFilters(page: Page): Promise<Locator> {
+  const panel = page.getByTestId('table-filters-panel');
+  if (!(await panel.isVisible())) await page.getByTestId('table-filters').click();
+  await expect(panel).toBeVisible();
+  return panel;
+}
+
+/** The address filter in the Filters menu. */
 export async function addressFilter(page: Page): Promise<Locator> {
-  const input = page.getByPlaceholder('Filter URLs...');
-  if (!(await input.isVisible())) await page.getByTestId('more-filters').click();
-  await expect(input).toBeVisible();
-  return input;
+  return (await tableFilters(page)).getByPlaceholder('Filter URLs...');
+}
+
+/** The Current folder only checkbox in the Filters menu. */
+export async function currentFolderOnly(page: Page): Promise<Locator> {
+  return (await tableFilters(page)).getByRole('checkbox', { name: 'Current folder only' });
+}
+
+/** The chips under the toolbar that name the filters in use. */
+export function filterChips(page: Page) {
+  return page.getByTestId('table-filter-chips').getByRole('listitem');
 }
 
 /**

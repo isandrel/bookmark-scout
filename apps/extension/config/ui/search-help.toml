@@ -1,0 +1,5 @@
+# The search box's syntax help (`SearchSyntaxHelp`), which lists the search query language's
+# operators (`src/lib/search-syntax-help.ts`).
+
+# The docs page its guide link opens, after the docs site's address.
+guide_path = "/guides/search#search-words-and-operators"

@@ -3471,6 +3471,26 @@
         "message": "도메인",
         "description": "Title of the filter that groups links by site domain"
     },
+    "table_filters": {
+        "message": "필터",
+        "description": "Bookmark manager: button that opens the table filters (current folder, type, domain, folder, date added, address), and the name of the list of filters in use"
+    },
+    "table_filtersInUse": {
+        "message": "필터, $1개 사용 중",
+        "description": "Bookmark manager: accessible name of the Filters button while filters are in use; $1 is how many"
+    },
+    "table_filterChip": {
+        "message": "$1: $2",
+        "description": "Bookmark manager: a filter in use, shown as a chip under the toolbar; $1 is the filter, $2 its values"
+    },
+    "table_filterValueSeparator": {
+        "message": ", ",
+        "description": "Bookmark manager: what goes between the values of one filter chip"
+    },
+    "table_filterChipRemove": {
+        "message": "필터 $1 제거",
+        "description": "Bookmark manager: accessible name of the button that removes a filter chip; $1 is the chip text"
+    },
     "table_browserOrder": {
         "message": "브라우저 순서",
         "description": "Toggle that shows the current folder in the browser bookmark order"
@@ -3588,6 +3608,102 @@
                 "example": "recipes"
             }
         }
+    },
+    "searchHelp_button": {
+        "message": "검색 구문",
+        "description": "Search syntax help: the button at the end of the manager search box, and the heading of its list"
+    },
+    "searchHelp_intro": {
+        "message": "모든 단어가 제목, 주소, 폴더, 태그, 요약 중 어딘가에 일치해야 합니다. 연산자를 고르면 검색에 추가됩니다.",
+        "description": "Search syntax help: how plain words match, above the list of operators"
+    },
+    "searchHelp_phrase": {
+        "message": "단어를 붙여서",
+        "description": "Search syntax help: what quotes do (\"two words\")"
+    },
+    "searchHelp_exclude": {
+        "message": "제외",
+        "description": "Search syntax help: what a leading minus does (-word)"
+    },
+    "searchHelp_title": {
+        "message": "제목에서",
+        "description": "Search syntax help: what title: does"
+    },
+    "searchHelp_url": {
+        "message": "주소에서",
+        "description": "Search syntax help: what url: does"
+    },
+    "searchHelp_domain": {
+        "message": "사이트와 하위 도메인",
+        "description": "Search syntax help: what domain: does"
+    },
+    "searchHelp_folder": {
+        "message": "폴더 안(깊이 상관없음)",
+        "description": "Search syntax help: what folder: does"
+    },
+    "searchHelp_tag": {
+        "message": "특정 태그",
+        "description": "Search syntax help: what tag: does"
+    },
+    "searchHelp_summary": {
+        "message": "요약에서",
+        "description": "Search syntax help: what summary: does"
+    },
+    "searchHelp_isBookmark": {
+        "message": "북마크만",
+        "description": "Search syntax help: what is:bookmark does"
+    },
+    "searchHelp_isFolder": {
+        "message": "폴더만",
+        "description": "Search syntax help: what is:folder does"
+    },
+    "searchHelp_isUntagged": {
+        "message": "태그 없는 북마크",
+        "description": "Search syntax help: what is:untagged does"
+    },
+    "searchHelp_hasTags": {
+        "message": "태그 있음",
+        "description": "Search syntax help: what has:tags does"
+    },
+    "searchHelp_hasSummary": {
+        "message": "요약 있음",
+        "description": "Search syntax help: what has:summary does"
+    },
+    "searchHelp_after": {
+        "message": "그날 또는 이후에 추가",
+        "description": "Search syntax help: what after:YYYY-MM-DD does"
+    },
+    "searchHelp_before": {
+        "message": "그날 또는 이전에 추가",
+        "description": "Search syntax help: what before:YYYY-MM-DD does"
+    },
+    "searchHelp_guide": {
+        "message": "검색 가이드",
+        "description": "Search syntax help: link to the search guide in the docs"
+    },
+    "searchDiagnostic_unknownOperator": {
+        "message": "$1은(는) 연산자가 아니어서 텍스트로 검색합니다.",
+        "description": "Note under the manager search box; $1 is an operator it does not know, such as foo:"
+    },
+    "searchDiagnostic_unknownValue": {
+        "message": "$1은(는) 알 수 없는 값이어서 제외합니다.",
+        "description": "Note under the manager search box; $1 is an is: or has: value it does not know"
+    },
+    "searchDiagnostic_invalidDate": {
+        "message": "$1은(는) YYYY-MM-DD 형식의 날짜가 아니어서 제외합니다.",
+        "description": "Note under the manager search box; $1 is what was typed after after: or before:. Keep YYYY-MM-DD as is: it is the format to type"
+    },
+    "searchDiagnostic_unclosedQuote": {
+        "message": "따옴표가 닫히지 않아 끝까지를 한 구문으로 봅니다.",
+        "description": "Note under the manager search box when a quote mark is not closed"
+    },
+    "searchDiagnostic_tooLong": {
+        "message": "처음 $1자만 검색합니다.",
+        "description": "Note under the manager search box; $1 is the longest search read"
+    },
+    "searchDiagnostic_tooManyTerms": {
+        "message": "처음 $1개 검색어만 사용합니다.",
+        "description": "Note under the manager search box; $1 is how many terms are read"
     },
     "ai_folderRecommendation": {
         "message": "AI 폴더 추천",
@@ -6514,14 +6630,6 @@
     "managerDefaults_search": {
         "message": "제목, 주소, 폴더, 태그 검색",
         "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
-    },
-    "managerDefaults_moreFilters": {
-        "message": "필터 더 보기",
-        "description": "Bookmark manager: button that shows the less common filters (web address, folder)"
-    },
-    "managerDefaults_moreFiltersInUse": {
-        "message": "숨기려면 이 필터를 지우세요",
-        "description": "Bookmark manager: tooltip of the More filters button while one of those filters is in use"
     },
     "managerDefaults_folderFilter": {
         "message": "폴더",

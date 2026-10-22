@@ -1,7 +1,7 @@
 import type { Page, Worker } from '@playwright/test';
 import { storageAreaKey } from '../../src/lib/storage/registry';
 import { expect, test, toastRegion } from './fixtures';
-import { addressFilter } from './manager-helpers';
+import { addressFilter, currentFolderOnly } from './manager-helpers';
 import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string };
@@ -149,7 +149,8 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
   await expect(page.getByPlaceholder('Search titles, addresses, folders, and tags')).toHaveValue(
     'Saved',
   );
-  await expect(page.getByPlaceholder('Filter URLs...')).toHaveValue('docs.e2e.invalid');
+  await expect(await addressFilter(page)).toHaveValue('docs.e2e.invalid');
+  await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Title, sorted descending' })).toBeVisible();
   await expect
     .poll(() => rowTitles(page))
@@ -323,7 +324,7 @@ test('a folder-scoped search reopens its folder, and stale folder IDs are skippe
   await page.goto(managerUrl(extensionId, work.folderId));
 
   await page.getByPlaceholder('Search titles, addresses, folders, and tags').fill('Scoped');
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
   await expect(rows(page)).toHaveCount(1);
   let menu = await openSavedSearches(page);
   await menu.getByLabel('Name for the current search').fill('Work only');
@@ -337,7 +338,7 @@ test('a folder-scoped search reopens its folder, and stale folder IDs are skippe
   menu = await openSavedSearches(page);
   await menu.getByRole('button', { name: 'Work only', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`id=${work.folderId}&q=Scoped$`));
-  await expect(page.getByRole('checkbox', { name: 'Current folder only' })).toBeChecked();
+  await expect(await currentFolderOnly(page)).toBeChecked();
   await expect(rows(page)).toHaveCount(1);
   await expect(row(page, 'Scoped Report')).toBeVisible();
 
@@ -361,7 +362,7 @@ test('a folder-scoped search reopens its folder, and stale folder IDs are skippe
   ).toBeVisible();
   // The scope is dropped, so the remaining folder filter searches all bookmarks.
   await expect(page).toHaveURL(new RegExp(`id=${work.folderId}&q=Scoped$`));
-  await expect(page.getByRole('checkbox', { name: 'Current folder only' })).not.toBeChecked();
+  await expect(await currentFolderOnly(page)).not.toBeChecked();
   await expect(rows(page)).toHaveCount(1);
   await expect(row(page, 'Scoped Recipe')).toBeVisible();
 
@@ -389,7 +390,7 @@ test('a folder-scoped search reopens its folder, and stale folder IDs are skippe
     ),
   ).toBeVisible();
   // The deleted folder's bookmark is gone, so only the other folder's link matches.
-  await expect(page.getByRole('checkbox', { name: 'Current folder only' })).not.toBeChecked();
+  await expect(await currentFolderOnly(page)).not.toBeChecked();
   await expect(rows(page)).toHaveCount(1);
   await expect(row(page, 'Scoped Recipe')).toBeVisible();
 });

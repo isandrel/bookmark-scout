@@ -1,6 +1,13 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-import { addressFilter, setTablePageSize, showTableColumns } from './manager-helpers';
+import {
+  addressFilter,
+  currentFolderOnly,
+  filterChips,
+  setTablePageSize,
+  showTableColumns,
+  tableFilters,
+} from './manager-helpers';
 import { OPEN_KEY } from './manager-keys';
 import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
@@ -304,9 +311,9 @@ test('date filter includes today and the calendar lays out and highlights days',
     { title: 'Dated Two', url: 'https://example.com/d2' },
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
 
-  await toolbar(page).getByRole('button', { name: 'Date Added' }).click();
+  await (await tableFilters(page)).getByRole('button', { name: 'Date Added' }).click();
   // The calendar's grid, not the bookmark table (also a grid).
   const grid = page.locator('[role="grid"]:not([data-testid="bookmark-grid"])').first();
   const weekdays = grid.locator('thead th');
@@ -341,21 +348,28 @@ test('filters, date picker, and fallbacks are localized in Japanese', async ({
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await expect(page.locator('tbody tr').first()).toContainText('無題');
 
-  await toolbar(page).getByRole('button', { name: '種類' }).click();
+  await page.getByRole('button', { name: 'フィルター', exact: true }).click();
+  await page.getByTestId('table-filters-panel').getByRole('button', { name: '種類' }).click();
   await page.getByRole('option', { name: /フォルダ/ }).click();
   await expect(page.getByRole('option', { name: 'フィルタを解除' })).toBeVisible();
   await page.getByPlaceholder('種類').fill('zzz-no-match');
   await expect(page.getByText('該当する項目がありません。')).toBeVisible();
   await page.keyboard.press('Escape');
 
-  await toolbar(page).getByRole('button', { name: '追加日' }).click();
+  await page.getByTestId('table-filters-panel').getByRole('button', { name: '追加日' }).click();
   // The calendar's grid, not the bookmark table (also a grid).
   const grid = page.locator('[role="grid"]:not([data-testid="bookmark-grid"])').first();
   await expect(grid.locator('thead th').first()).toHaveText('日');
   await expect(page.getByText(/\d{4}年\d{1,2}月/).first()).toBeVisible();
   await page.getByRole('button', { name: /今日/ }).first().click();
   await page.keyboard.press('Escape');
-  await expect(page.getByRole('button', { name: /追加日: \d{4}\/\d{2}\/\d{2}/ })).toBeVisible();
+  await expect(
+    page
+      .getByTestId('table-filters-panel')
+      .getByRole('button', { name: /^追加日: \d{4}\/\d{2}\/\d{2}/ }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(filterChips(page)).toHaveText([/^種類: フォルダ$/, /^追加日: \d{4}\/\d{2}\/\d{2}$/]);
 });
 
 test('moves are explained until browser order is on, and keep the current page', async ({
@@ -414,8 +428,7 @@ test('the folder filter keeps the last folder of a long path readable, with the 
     },
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
-  await toolbar(page).getByRole('button', { name: 'More filters' }).click();
-  await toolbar(page).getByRole('button', { name: 'Folder', exact: true }).click();
+  await (await tableFilters(page)).getByRole('button', { name: 'Folder', exact: true }).click();
 
   for (const leaf of ['Leaf One', 'Leaf Two']) {
     const option = page.getByRole('option').filter({ hasText: new RegExp(`/ ${leaf}$`) });
@@ -459,7 +472,7 @@ test('a search across folders names each match’s folder and says the results s
   );
 
   // Limited to the folder shown, the breadcrumb is the folder again and rows need no path.
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
   await expect(matches).toHaveCount(1);
   await expect(breadcrumbCurrent(page)).toHaveText('Work');
   await expect(paths).toHaveCount(0);
@@ -480,16 +493,16 @@ test('parent and domain facets list folders by path and group by registrable dom
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
 
-  // The folder filter waits behind "More filters".
+  // Every filter waits in the Filters menu.
   await expect(toolbar(page).getByRole('button', { name: 'Folder', exact: true })).toHaveCount(0);
-  await toolbar(page).getByRole('button', { name: 'More filters' }).click();
-  await toolbar(page).getByRole('button', { name: 'Folder', exact: true }).click();
+  const filters = await tableFilters(page);
+  await filters.getByRole('button', { name: 'Folder', exact: true }).click();
   const parentOptions = page.getByRole('option');
   await expect(parentOptions.filter({ hasText: /E2E Facets \/ Same \(#\d+\)$/ })).toHaveCount(2);
   await expect(parentOptions.filter({ hasText: 'BBC News' })).toHaveCount(0);
   await page.keyboard.press('Escape');
 
-  await toolbar(page).getByRole('button', { name: 'Domain' }).click();
+  await filters.getByRole('button', { name: 'Domain' }).click();
   const bbc = page.getByRole('option', { name: /^bbc\.co\.uk \d+$/ });
   await expect(bbc).toContainText('2');
   await expect(page.getByRole('option', { name: /^nhk\.or\.jp \d+$/ })).toBeVisible();
@@ -504,7 +517,14 @@ test('parent and domain facets list folders by path and group by registrable dom
   await (await addressFilter(page)).fill('sport');
   await expect(page.locator('tbody tr')).toHaveCount(1);
   await expect(row(page, 'BBC Sport')).toBeVisible();
-  await expect(toolbar(page).getByRole('button', { name: 'Domain' })).toContainText('bbc.co.uk');
+  await expect(filters.getByRole('button', { name: 'Domain' })).toContainText('bbc.co.uk');
+  // The filters in use show as chips under the toolbar, each removing its filter.
+  await page.keyboard.press('Escape');
+  await expect(filterChips(page)).toHaveText(['Domain: bbc.co.uk', 'URL: sport']);
+  await expect(page.getByTestId('table-filters')).toHaveAccessibleName('Filters, 2 in use');
+  await page.getByRole('button', { name: 'Remove filter URL: sport' }).click();
+  await expect(filterChips(page)).toHaveText(['Domain: bbc.co.uk']);
+  await expect(page.locator('tbody tr')).toHaveCount(2);
 });
 
 test('narrow windows keep view options and page jumps; collapsed sidebars leave tab order', async ({
@@ -609,7 +629,7 @@ test('edits trim titles and reject script URLs; untitled items and trimmed filte
     { title: 'Bookmarklet', url: 'javascript:void(0)' },
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
 
   await expect(row(page, 'Untitled')).toBeVisible();
   await openRowMenu(page, 'Bookmarklet');
