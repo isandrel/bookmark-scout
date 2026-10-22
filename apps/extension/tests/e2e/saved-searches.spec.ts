@@ -129,7 +129,7 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
       name: 'Docs pages',
       query: {
         filters: { title: 'Saved', url: 'docs.e2e.invalid' },
-        syntaxVersion: 1,
+        syntaxVersion: 2,
         sorting: [{ id: 'title', desc: true }],
       },
     },

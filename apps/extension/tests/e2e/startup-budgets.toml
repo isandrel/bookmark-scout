@@ -17,7 +17,9 @@
 # Raised from 425 on 2026-10-22 for the cover and page text settings the background reads (427).
 # Raised again the same day for Tag New Bookmarks, whose listener plans rules in the background,
 # which cannot load code later.
-"background.js" = 435
+# Raised from 435 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
+# editor's search notes (439).
+"background.js" = 445
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -48,7 +50,9 @@
 # Raised from 1212 on 2026-10-22 for the list of automatic Smart Rules taggings with Undo in Settings
 # (1,213).
 # Raised from 1215 on 2026-10-22 for the search reason wording shared with the manager (1,211).
-"options.html" = 1220
+# Raised from 1220 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
+# editor's search notes (1,221).
+"options.html" = 1230
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
@@ -66,7 +70,9 @@
 # content field (1,417).
 # Raised from 1425 on 2026-10-22 for the cards view drawing stored covers (1,426).
 # Raised from 1435 on 2026-10-22 for the Russian, Indonesian, and Italian calendar locales (1452).
-"bookmarks.html" = 1460
+# Raised from 1460 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
+# editor's search notes (1,463).
+"bookmarks.html" = 1470
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -74,7 +80,9 @@
 # Raised from 710 on 2026-10-21 for waiting out a short Retry-After in the link check the action
 # registry carries (711).
 # Raised from 720 on 2026-10-22 for the filter query action, which parses the search operators (722).
-"agent-approval.html" = 730
+# Raised from 730 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
+# editor's search notes (731).
+"agent-approval.html" = 740
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
 # Raised from 380 on 2026-10-21 for config/ai/agent-text.toml, which holds the answer schema text

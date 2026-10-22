@@ -42,15 +42,15 @@ export const BOOKMARK_RULE_LIMITS = rulesConfig;
 export const BOOKMARK_RULE_TEMPLATES = rulesConfig.templates;
 export type BookmarkRuleTemplateId = (typeof BOOKMARK_RULE_TEMPLATES)[number]['id'];
 
-/** A query a rule can run: read without a problem and with at least one term. */
-const ruleQuerySchema = z
-  .string()
-  .trim()
-  .min(1)
-  .refine((text) => {
-    const { query, diagnostics } = parseSearchQuery(text);
-    return diagnostics.length === 0 && query.terms.length > 0;
-  });
+/**
+ * A query a rule can run: read without a problem and with at least one term. A query past the
+ * limits in `config/bookmarks/search.toml` (terms, nesting, terms one OR joins) has a problem, so
+ * a rule never runs on part of its search.
+ */
+function isRunnableQuery(text: string): boolean {
+  const { query, diagnostics } = parseSearchQuery(text);
+  return diagnostics.length === 0 && query.terms.length > 0;
+}
 
 const tagSchema = z.string().trim().min(1).max(rulesConfig.tag_max_length);
 
@@ -59,9 +59,12 @@ export const bookmarkRuleSchema = z
     id: z.string().min(1).max(rulesConfig.id_max_length),
     name: z.string().trim().min(1).max(rulesConfig.name_max_length),
     enabled: z.boolean(),
-    /** IF: a search in the search query language of `syntaxVersion`. */
-    query: ruleQuerySchema,
-    syntaxVersion: z.literal(SEARCH_SYNTAX_VERSION),
+    /**
+     * IF: a search in the search query language of `syntaxVersion`. One saved in an older version
+     * is rewritten in the current one as it is read, finding the same bookmarks.
+     */
+    query: z.string().trim().min(1),
+    syntaxVersion: searchSyntaxVersionSchema,
     /** THEN: tags to add. */
     addTags: z.array(tagSchema).max(rulesConfig.max_tags),
     /**
@@ -70,6 +73,12 @@ export const bookmarkRuleSchema = z
      */
     moveTo: z.strictObject({ folderId: z.string().min(1), path: z.string() }).optional(),
   })
+  .transform((rule) => ({
+    ...rule,
+    query: upgradeSearchText(rule.query, rule.syntaxVersion),
+    syntaxVersion: SEARCH_SYNTAX_VERSION,
+  }))
+  .refine((rule) => isRunnableQuery(rule.query), { message: 'A rule needs a search it can run' })
   .refine((rule) => rule.addTags.length > 0 || rule.moveTo !== undefined, {
     message: 'A rule needs an action',
   });

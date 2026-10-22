@@ -103,10 +103,13 @@ function resultOf(text: string, query: SearchQuery, document: SearchDocument) {
   return result;
 }
 
-/** Whether a query names folders with `folder:`, so being in one is what it asks for. */
+/**
+ * Whether a query names folders with `folder:`, so being in one is what it asks for; in an OR or a
+ * group too, unless that excludes it.
+ */
 function asksForFolders(query: SearchQuery): boolean {
-  return query.terms.some(
-    (term) => term.kind === 'text' && term.field === 'folder' && !term.negate,
+  return [...searchQueryTerms(query.terms)].some(
+    ({ term, excludes }) => term.kind === 'text' && term.field === 'folder' && !excludes,
   );
 }
 
@@ -115,7 +118,7 @@ function asksForFolders(query: SearchQuery): boolean {
  * title, address, or summary), so more characters typed on it can only match fewer documents.
  * Exclusions, whole-name operators (`tag:`, `folder:`, `domain:`), and conditions do not.
  */
-function needsText(term: SearchTerm): term is SearchTerm & { kind: 'text' } {
+function needsText(term: SearchNode): term is SearchTerm & { kind: 'text' } {
   return (
     term.kind === 'text' &&
     !term.negate &&
@@ -128,7 +131,8 @@ function needsText(term: SearchTerm): term is SearchTerm & { kind: 'text' } {
 
 /**
  * Whether `next` can only match documents `previous` matched: typing on, it keeps every term of
- * `previous`, may lengthen the last one, and may add more (all terms must match).
+ * `previous`, may lengthen the last one, and may add more (all terms must match). Terms in an OR
+ * or a group are not compared, so typing on in one checks the whole library again.
  */
 function narrows(previous: SearchQuery, next: SearchQuery): boolean {
   const last = previous.terms.length - 1;

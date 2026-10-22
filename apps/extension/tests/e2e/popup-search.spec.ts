@@ -86,6 +86,51 @@ test('search finds bookmarks by address, tag, and summary, and says where each m
   await expect(page.getByText('No bookmarks found')).toBeVisible();
 });
 
+test('OR and parentheses find either term, say only the branch each result matched, and flag an unclosed group', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { ids } = await seedFolder(extensionWorker, 'E2E Search OR', [
+    { title: 'Soup', url: 'https://food.e2e.invalid/soup' },
+    { title: 'Salad', url: 'https://food.e2e.invalid/salad' },
+    { title: 'Cake', url: 'https://food.e2e.invalid/cake' },
+    { title: 'Notes', url: 'https://e2e.invalid/notes' },
+  ]);
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [ids.Soup]: { tags: ['Dinner'] },
+    [ids.Salad]: { tags: ['Lunch'] },
+    [ids.Cake]: { tags: ['Dinner', 'Archived'] },
+  });
+
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+  const reason = (title: string) => bookmarkRow(page, title).locator('[data-slot="search-reason"]');
+
+  await search.fill('(tag:dinner OR tag:lunch) -tag:archived');
+  await expect(page.locator('.bookmark-item')).toHaveCount(2);
+  // Each result names the branch it matched, never the other one.
+  await expect(reason('Soup')).toHaveText('tag: Dinner');
+  await expect(reason('Salad')).toHaveText('tag: Lunch');
+  await expect(page.getByTestId('search-query-problem')).toHaveCount(0);
+
+  await search.fill('soup OR salad');
+  await expect(page.locator('.bookmark-item')).toHaveCount(2);
+  await expect(bookmarkRow(page, 'Soup').locator('mark')).toHaveText('Soup');
+  await expect(bookmarkRow(page, 'Salad').locator('mark')).toHaveText('Salad');
+
+  // A lowercase or is a word to find, as before.
+  await search.fill('soup or salad');
+  await expect(page.getByText('No bookmarks found')).toBeVisible();
+
+  // An unclosed group says so, and still searches what it holds.
+  await search.fill('(soup OR salad');
+  await expect(page.getByTestId('search-query-problem')).toHaveText(
+    'A parenthesis is not closed, so the group runs to the end.',
+  );
+  await expect(page.locator('.bookmark-item')).toHaveCount(2);
+});
+
 test('permanent folder names and empty-title regexes do not return the whole tree', async ({
   extensionId,
   extensionWorker,

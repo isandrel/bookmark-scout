@@ -36,8 +36,10 @@ Los cuadros de búsqueda de la ventana emergente, el panel lateral y el administ
 - Cada palabra debe coincidir, cada una en cualquier lugar: el título, la dirección web, la ruta de la carpeta o las etiquetas y el resumen del marcador. `recetas sopa` encuentra un marcador llamado "Sopa" en una carpeta llamada "Recetas".
 - Las comillas mantienen juntas las palabras: `"sopa de tomate"`.
 - Un `-` delante excluye lo que coincide: `recetas -tarta` o `-tag:archivo`.
+- `OR` en mayúsculas, entre dos términos, encuentra cualquiera de los dos: `tag:react OR tag:vue`. Une más que el espacio, así que `domain:github.com tag:react OR tag:vue` encuentra páginas de GitHub con cualquiera de las dos etiquetas. Un `or` en minúsculas es una palabra más que buscar.
+- Los paréntesis agrupan términos: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Un `-` delante de un grupo excluye lo que coincide con el grupo: `-(tag:old OR tag:archive)`. Los paréntesis dentro de una palabra, como `f(x)`, se buscan como texto.
 - Una palabra que nombra una carpeta encuentra la carpeta. En la ventana emergente, sus marcadores aparecen dentro de ella; `folder:` muestra todo lo que contiene.
-- El texto que no es un operador se busca tal como se escribe, como `C++`, `10:30` o una dirección web. También un operador que Bookmark Scout no conoce, como `foo:bar`. Un valor que no puede leer, como una fecha no válida, se omite.
+- El texto que no es un operador se busca tal como se escribe, como `C++`, `10:30` o una dirección web. También un operador que Bookmark Scout no conoce, como `foo:bar`. Un valor que no puede leer, como una fecha no válida, se omite. Una nota bajo el cuadro de búsqueda avisa cuando un paréntesis no está cerrado o un `OR` no tiene nada a un lado. Los paréntesis anidados a mucha profundidad o una lista de `OR` muy larga se cortan, con una nota.
 
 | Búsqueda | Encuentra |
 | --- | --- |
@@ -53,6 +55,8 @@ Los cuadros de búsqueda de la ventana emergente, el panel lateral y el administ
 | `has:tags` o `has:summary` | Elementos con etiquetas, o con un resumen |
 | `has:content` | Marcadores cuyo texto de página está indexado |
 | `after:2026-01-31` o `before:2026-01-31` | Elementos añadidos ese día o después, o ese día o antes |
+| `tag:react OR tag:vue` | Marcadores que coinciden con cualquiera de los dos lados; `OR` va en mayúsculas |
+| `(tag:react OR tag:vue) -tag:old` | Términos agrupados entre paréntesis: con la etiqueta react o vue, y sin old |
 
 Las etiquetas y los resúmenes son los que añades en **Detalles del marcador** o conservas de las herramientas **Etiquetado automático** y **Generador de resúmenes**. Se quedan en este dispositivo.
 
@@ -98,7 +102,7 @@ Escribe un nombre en **Ponle nombre a esta búsqueda** y haz clic en **Guardar**
 
 Para usar una, abre **Búsquedas guardadas** y elígela. Sus filtros y su orden reemplazan a los actuales, y si estaba limitada a una carpeta, el administrador vuelve a esa carpeta. Cada entrada se puede renombrar o eliminar, y una eliminación se puede deshacer desde el mensaje que aparece a continuación. Arrastra una entrada por su asa para cambiar el orden, o abre el menú del asa para moverla con el teclado.
 
-El texto del cuadro de búsqueda se guarda tal como lo escribiste, con sus operadores. Una búsqueda guardada antes de que el cuadro de búsqueda leyera operadores encontraba su texto solo en títulos y direcciones. Ahora se abre con ese texto entre comillas cuando tiene varias palabras o dos puntos, así que sigue encontrando todos los marcadores que encontraba.
+El texto del cuadro de búsqueda se guarda tal como lo escribiste, con sus operadores. Una búsqueda guardada antes de que el cuadro de búsqueda leyera operadores encontraba su texto solo en títulos y direcciones. Ahora se abre con ese texto entre comillas cuando tiene varias palabras o dos puntos, así que sigue encontrando todos los marcadores que encontraba. Una búsqueda guardada antes de que se leyeran `OR` y los paréntesis se abre con ellos entre comillas, por el mismo motivo.
 
 Una búsqueda guardada almacena las definiciones de los filtros, nunca copias de los marcadores, así que sus resultados siempre corresponden a tus marcadores tal como están ahora. Si se eliminó una carpeta que menciona, esa carpeta se omite, los demás filtros se siguen aplicando y un mensaje indica cuántas carpetas se omitieron.
 

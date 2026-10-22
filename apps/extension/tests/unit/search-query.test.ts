@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { buildSearchDocuments, type SearchDocument, searchDocuments } from '@/lib/search-documents';
-import { parseSearchQuery, serializeSearchQuery } from '@/lib/search-query';
+import {
+  hasSearchOperators,
+  parseSearchQuery,
+  SEARCH_SYNTAX_VERSION,
+  type SearchNode,
+  searchQueryTerms,
+  serializeSearchQuery,
+  upgradeSearchText,
+} from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
+import { readConfigToml } from '../config-files';
 
 /** A tree with the root and one browser folder, as the browser returns it. */
 function tree(children: BookmarkTreeNode[]): BookmarkTreeNode[] {
@@ -175,7 +184,7 @@ describe('the search query language', () => {
     ]) {
       expect(parseSearchQuery(text)).toEqual({
         query: {
-          syntaxVersion: 1,
+          syntaxVersion: SEARCH_SYNTAX_VERSION,
           terms: [{ kind: 'text', value: text, phrase: false, negate: false }],
         },
         diagnostics: [],
@@ -288,5 +297,238 @@ describe('the search query language', () => {
       parseSearchQuery(Array.from({ length: 300 }, (_, index) => `w${index}`).join(' '))
         .diagnostics,
     ).toContainEqual(expect.objectContaining({ code: 'too-many-terms' }));
+  });
+});
+
+/** The configured limit, as `config/bookmarks/search.toml` writes it. */
+const limit = (name: string) =>
+  (readConfigToml('bookmarks/search.toml')[name] as { value: number }).value;
+
+const word = (value: string, negate = false): SearchNode => ({
+  kind: 'text',
+  value,
+  phrase: false,
+  negate,
+});
+
+/** Codes of a query's problems, in order. */
+const problems = (query: string) =>
+  parseSearchQuery(query).diagnostics.map((diagnostic) => diagnostic.code);
+
+describe('OR and parentheses (R07)', () => {
+  const tagged = buildSearchDocuments(
+    tree([
+      bookmark('react', 'React docs', 'https://github.com/facebook/react'),
+      bookmark('vue', 'Vue docs', 'https://github.com/vuejs/core'),
+      bookmark('old-vue', 'Vue 2', 'https://github.com/vuejs/vue'),
+      bookmark('svelte', 'Svelte', 'https://github.com/sveltejs/svelte'),
+      bookmark('react-site', 'React site', 'https://react.dev/'),
+      bookmark('orbit', 'Orbit for cats', 'https://orbit.test/'),
+    ]),
+    {
+      react: { tags: ['react'] },
+      vue: { tags: ['vue'] },
+      'old-vue': { tags: ['vue', 'archived'] },
+      svelte: { tags: ['svelte'] },
+      'react-site': { tags: ['react'] },
+    },
+  );
+
+  it('reads OR between terms, binding closer than the space', () => {
+    expect(parseSearchQuery('a OR b c').query.terms).toEqual([
+      { kind: 'any', branches: [word('a'), word('b')], negate: false },
+      word('c'),
+    ]);
+    expect(parseSearchQuery('a b OR c OR -d').query.terms).toEqual([
+      word('a'),
+      { kind: 'any', branches: [word('b'), word('c'), word('d', true)], negate: false },
+    ]);
+    expect(find('tag:react OR tag:vue', tagged)).toEqual(['react', 'vue', 'old-vue', 'react-site']);
+    expect(find('domain:github.com tag:react OR tag:vue', tagged)).toEqual([
+      'react',
+      'vue',
+      'old-vue',
+    ]);
+  });
+
+  it('groups with parentheses, nests them, and excludes a group with -( )', () => {
+    expect(find('domain:github.com (tag:react OR tag:vue) -tag:archived', tagged)).toEqual([
+      'react',
+      'vue',
+    ]);
+    expect(find('-(tag:react OR tag:vue)', tagged)).toEqual(['svelte', 'orbit']);
+    expect(find('(domain:react.dev OR (tag:vue -tag:archived))', tagged)).toEqual([
+      'vue',
+      'react-site',
+    ]);
+    // A group of one term is the term; two exclusions cancel out.
+    expect(parseSearchQuery('(a)').query.terms).toEqual([word('a')]);
+    expect(parseSearchQuery('-(-a)').query.terms).toEqual([word('a')]);
+    expect(parseSearchQuery('-(a b)').query.terms).toEqual([
+      { kind: 'all', nodes: [word('a'), word('b')], negate: true },
+    ]);
+    expect(parseSearchQuery('( a OR b ) c').query.terms).toEqual(
+      parseSearchQuery('(a OR b) c').query.terms,
+    );
+  });
+
+  it('keeps a lowercase or, quoted OR and parentheses, and parentheses inside a word as text', () => {
+    expect(parseSearchQuery('cats or dogs').query.terms).toEqual([
+      word('cats'),
+      word('or'),
+      word('dogs'),
+    ]);
+    expect(find('cats or', tagged)).toEqual(['orbit']);
+    expect(parseSearchQuery('"OR" "(draft)"').query.terms).toEqual([
+      { kind: 'text', value: 'OR', phrase: true, negate: false },
+      { kind: 'text', value: '(draft)', phrase: true, negate: false },
+    ]);
+    for (const text of ['f(x)', 'wiki/Foo_(bar)', 'a)b', 'title:(draft)', 'C++(1)']) {
+      const parsed = parseSearchQuery(text);
+      expect(parsed.diagnostics).toEqual([]);
+      expect(parsed.query.terms).toHaveLength(1);
+      expect(parsed.query.terms[0]).toMatchObject({ kind: 'text' });
+    }
+    // A word that ends a group keeps its own parentheses.
+    expect(parseSearchQuery('(f(x))').query.terms).toEqual([word('f(x)')]);
+  });
+
+  it('reports unbalanced and empty parentheses and a misplaced OR, never throwing', () => {
+    expect(problems('(a OR b')).toEqual(['unclosed-group']);
+    expect(parseSearchQuery('(a OR b').query.terms).toEqual([
+      { kind: 'any', branches: [word('a'), word('b')], negate: false },
+    ]);
+    expect(problems('a OR b)')).toEqual(['unopened-group']);
+    expect(problems('a ()')).toEqual(['empty-group']);
+    expect(problems('(')).toEqual(['unclosed-group']);
+    expect(problems(')')).toEqual(['unopened-group']);
+    expect(problems('OR a')).toEqual(['misplaced-or']);
+    expect(problems('a OR')).toEqual(['misplaced-or']);
+    expect(problems('a OR OR b')).toEqual(['misplaced-or']);
+    expect(problems('(a OR)')).toEqual(['misplaced-or']);
+    expect(parseSearchQuery('a OR OR b').query.terms).toEqual([
+      { kind: 'any', branches: [word('a'), word('b')], negate: false },
+    ]);
+    // A term left out says why on its own: no second note for the OR or the group.
+    expect(problems('after:2026-02-30 OR a')).toEqual(['invalid-date']);
+    expect(problems('(is:nothing)')).toEqual(['unknown-value']);
+    for (const text of ['((((', '))))', 'OR OR OR', '-(', '(-)', '(")")', ') OR (']) {
+      expect(() => searchDocuments(tagged, parseSearchQuery(text).query)).not.toThrow();
+    }
+  });
+
+  it('stops reading at the configured nesting depth and OR width, and says so', () => {
+    const depth = limit('max_group_depth');
+    const nested = (levels: number) => `${'('.repeat(levels)}a${')'.repeat(levels)}`;
+    expect(problems(nested(depth))).toEqual([]);
+    const deep = parseSearchQuery(`b ${nested(depth + 1)} c`);
+    expect(deep.diagnostics).toEqual([{ code: 'too-deep', limit: depth }]);
+    // What came before the limit stays; the rest is not searched.
+    expect(deep.query.terms).toEqual([word('b')]);
+
+    const branches = limit('max_or_branches');
+    const alternatives = (count: number) =>
+      Array.from({ length: count }, (_, index) => `w${index}`).join(' OR ');
+    expect(problems(alternatives(branches))).toEqual([]);
+    const wide = parseSearchQuery(`${alternatives(branches + 1)} z`);
+    expect(wide.diagnostics).toEqual([{ code: 'too-many-branches', limit: branches }]);
+    expect(wide.query.terms).toEqual([
+      {
+        kind: 'any',
+        branches: Array.from({ length: branches }, (_, index) => word(`w${index}`)),
+        negate: false,
+      },
+    ]);
+
+    // Terms count across groups and alternatives alike.
+    const terms = limit('max_terms');
+    const grouped = Array.from({ length: terms + 1 }, (_, index) => `(t${index})`).join(' ');
+    expect(problems(grouped)).toEqual(['too-many-terms']);
+  });
+
+  it('reports a term only for the OR branch that matched, and highlights each match', () => {
+    const [result] = searchDocuments(tagged, parseSearchQuery('svelte OR vue').query);
+    expect(result?.document.id).toBe('svelte');
+    // Every branch counts toward the rank, and only matching ones give reasons.
+    expect(result?.reasons.map((reason) => reason.field).sort()).toEqual(['tag', 'title', 'url']);
+    expect(JSON.stringify(result?.reasons)).not.toContain('vue');
+    const [both] = searchDocuments(tagged, parseSearchQuery('react OR docs').query);
+    expect(both?.document.id).toBe('react');
+    const title = both?.reasons.find((reason) => reason.field === 'title');
+    expect(title?.ranges).toEqual([
+      [0, 5],
+      [6, 10],
+    ]);
+    // An excluded group gives no reasons.
+    const [excluded] = searchDocuments(tagged, parseSearchQuery('svelte -(vue OR react)').query);
+    expect(excluded?.reasons.every((reason) => !JSON.stringify(reason).includes('vue'))).toBe(true);
+  });
+
+  it('matches the same way on every run, and ranks documents matching more branches higher', () => {
+    const query = parseSearchQuery('(react OR vue OR docs) -tag:archived').query;
+    const first = searchDocuments(tagged, query).map((result) => result.document.id);
+    expect(first).toEqual(['react', 'vue', 'react-site']);
+    for (let run = 0; run < 3; run += 1) {
+      expect(searchDocuments(tagged, query).map((result) => result.document.id)).toEqual(first);
+    }
+  });
+
+  it('writes groups and alternatives back so they read the same', () => {
+    for (const text of [
+      'a OR b c',
+      'domain:github.com (tag:react OR tag:vue) -tag:archived',
+      '-(a OR b) (c d) -(e f)',
+      '(a OR b) OR c',
+      '(a (b OR (c -d)))',
+      '"OR" or "(x)" f(x)',
+    ]) {
+      const { query } = parseSearchQuery(text);
+      expect(parseSearchQuery(serializeSearchQuery(query)).query).toEqual(query);
+    }
+    expect(serializeSearchQuery(parseSearchQuery('(a OR b) OR c').query)).toBe('(a OR b) OR c');
+  });
+
+  it('reads version 1 without OR or parentheses, and upgrades its text to read the same', () => {
+    expect(parseSearchQuery('cats OR (dogs)', 1).query).toEqual({
+      syntaxVersion: 1,
+      terms: [word('cats'), word('OR'), word('(dogs)')],
+    });
+    // Text that reads the same in both versions is kept as typed.
+    expect(upgradeSearchText('domain:github.com -tag:old f(x)', 1)).toBe(
+      'domain:github.com -tag:old f(x)',
+    );
+    expect(upgradeSearchText('a OR b', SEARCH_SYNTAX_VERSION)).toBe('a OR b');
+    for (const text of ['cats OR dogs', '(draft) -(old', 'title:x) y', '-( OR )']) {
+      const upgraded = upgradeSearchText(text, 1);
+      expect(upgraded).not.toBe(text);
+      const before = parseSearchQuery(text, 1);
+      const after = parseSearchQuery(upgraded);
+      expect(after.diagnostics).toEqual([]);
+      expect(searchDocuments(tagged, after.query)).toEqual(searchDocuments(tagged, before.query));
+      expect(
+        [...searchQueryTerms(after.query.terms)].map(({ term }) => ({ ...term, phrase: false })),
+      ).toEqual(
+        [...searchQueryTerms(before.query.terms)].map(({ term }) => ({ ...term, phrase: false })),
+      );
+    }
+  });
+
+  it('counts OR and parentheses as operators, so such a query never names a folder to save into', () => {
+    expect(hasSearchOperators(parseSearchQuery('soup OR stew').query)).toBe(true);
+    expect(hasSearchOperators(parseSearchQuery('(soup stew)').query)).toBe(true);
+    expect(hasSearchOperators(parseSearchQuery('soup or stew').query)).toBe(false);
+  });
+
+  it('lists every term with whether the groups around it exclude it', () => {
+    const terms = [...searchQueryTerms(parseSearchQuery('a -(b -c OR d) e').query.terms)];
+    expect(
+      terms.map(({ term, excludes }) => [term.kind === 'text' && term.value, excludes]),
+    ).toEqual([
+      ['a', false],
+      ['b', true],
+      ['c', false],
+      ['d', true],
+      ['e', false],
+    ]);
   });
 });

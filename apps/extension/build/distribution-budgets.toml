@@ -159,27 +159,32 @@
 # for Index Page Text as a background job (its job adapter, the AI host page's text reader, and the
 # shared per-page reader) on top of #797-#799: Firefox measured 6,478,144 B uncompressed and
 # 3,794,943 B of JavaScript on the branch rebased onto b9f78f84.
+# Raised on 2026-10-22 (ZIP 1,955,000 to 1,965,000, uncompressed 6,490,000 to 6,510,000, javascript
+# 3,805,000 to 3,815,000, locales 2,130,000 to 2,140,000) for OR and parentheses in search and Smart
+# Rules: the grouped parser and matcher, the syntax help entries, and 8 messages in 12 languages.
+# Firefox measured ZIP 1,959,861, 6,502,302 B uncompressed, 3,807,840 B of JavaScript, and
+# 2,133,114 B of locales on the branch rebased onto 55fcf0aa.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_955_000
-raw_bytes = 6_490_000
+zip_bytes = 1_965_000
+raw_bytes = 6_510_000
 
 [targets.edge]
-zip_bytes = 1_955_000
-raw_bytes = 6_490_000
+zip_bytes = 1_965_000
+raw_bytes = 6_510_000
 
 [targets.firefox]
-zip_bytes = 1_955_000
-raw_bytes = 6_490_000
+zip_bytes = 1_965_000
+raw_bytes = 6_510_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_805_000
+javascript = 3_815_000
 css = 85_000
 fonts = 143_000
-locales = 2_130_000
+locales = 2_140_000
 images = 320_000
 other = 29_000

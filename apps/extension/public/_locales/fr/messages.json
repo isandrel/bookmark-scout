@@ -3637,6 +3637,14 @@
         "message": "Exclure",
         "description": "Search syntax help: what a leading minus does (-word)"
     },
+    "searchHelp_or": {
+        "message": "L'un ou l'autre",
+        "description": "Search syntax help: what OR between two terms does (tag:react OR tag:vue): one of them is enough"
+    },
+    "searchHelp_group": {
+        "message": "Regrouper des termes",
+        "description": "Search syntax help: what parentheses do ((tag:react OR tag:vue) -tag:old): they group terms"
+    },
     "searchHelp_title": {
         "message": "Dans les titres",
         "description": "Search syntax help: what title: does"
@@ -3709,6 +3717,22 @@
         "message": "Des guillemets ne sont pas fermés ; la phrase va donc jusqu'à la fin.",
         "description": "Note under the manager search box when a quote mark is not closed"
     },
+    "searchDiagnostic_unclosedGroup": {
+        "message": "Une parenthèse n'est pas fermée ; le groupe va donc jusqu'à la fin.",
+        "description": "Note under the manager search box when an opening parenthesis ( is not closed"
+    },
+    "searchDiagnostic_unopenedGroup": {
+        "message": "Une parenthèse fermante n'a pas de parenthèse ouvrante et est donc ignorée.",
+        "description": "Note under the manager search box when a closing parenthesis ) has no opening one"
+    },
+    "searchDiagnostic_emptyGroup": {
+        "message": "Une paire de parenthèses est vide et est donc ignorée.",
+        "description": "Note under the manager search box when parentheses have nothing in them: ()"
+    },
+    "searchDiagnostic_misplacedOr": {
+        "message": "OR doit avoir un terme de chaque côté et est donc ignoré.",
+        "description": "Note under the manager search box when OR is first, last, or doubled. Keep OR as is: it is the word to type"
+    },
     "searchDiagnostic_tooLong": {
         "message": "Seuls les $1 premiers caractères sont recherchés.",
         "description": "Note under the manager search box; $1 is the longest search read"
@@ -3716,6 +3740,14 @@
     "searchDiagnostic_tooManyTerms": {
         "message": "Seuls les $1 premiers termes sont recherchés.",
         "description": "Note under the manager search box; $1 is how many terms are read"
+    },
+    "searchDiagnostic_tooDeep": {
+        "message": "Les parenthèses s'imbriquent sur $1 niveaux au plus ; le reste n'est pas recherché.",
+        "description": "Note under the manager search box; $1 is how deep parentheses may nest, such as 8"
+    },
+    "searchDiagnostic_tooManyBranches": {
+        "message": "Un OR relie au plus $1 termes ; le reste n'est pas recherché.",
+        "description": "Note under the manager search box; $1 is how many terms one OR may join, such as 16. Keep OR as is"
     },
     "ai_folderRecommendation": {
         "message": "Recommandation de dossier par IA",

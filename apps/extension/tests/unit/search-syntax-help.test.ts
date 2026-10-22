@@ -24,7 +24,7 @@ describe('search syntax help', () => {
       SEARCH_SYNTAX_HELP.length,
     );
     for (const entry of SEARCH_SYNTAX_HELP) {
-      expect(entry.example.startsWith(entry.insert)).toBe(true);
+      expect(entry.example.includes(entry.insert)).toBe(true);
       expect(parseSearchQuery(entry.example).diagnostics).toEqual([]);
     }
     expect(SEARCH_GUIDE_URL).toMatch(/\/guides\/search#search-words-and-operators$/);
@@ -43,6 +43,25 @@ describe('search syntax help', () => {
       'foo: is not an operator, so it is searched as text.',
       'is:nothing is not a known value, so it is left out.',
       '2026-02-30 is not a date in the form YYYY-MM-DD, so it is left out.',
+    ]);
+  });
+
+  it('says what is wrong with OR and parentheses (R07)', () => {
+    const describe = (query: string) =>
+      parseSearchQuery(query).diagnostics.map(describeSearchDiagnostic);
+    expect(describe('(a OR')).toEqual([
+      'OR needs a term on each side, so it is left out.',
+      'A parenthesis is not closed, so the group runs to the end.',
+    ]);
+    expect(describe('a) ()')).toEqual([
+      'A closing parenthesis has no opening one, so it is left out.',
+      'A pair of parentheses is empty, so it is left out.',
+    ]);
+    expect(describe('((((((((((((((((((((((((((((((((((a')).toEqual([
+      expect.stringMatching(/^Parentheses nest at most \d+ deep, so the rest is not searched\.$/),
+    ]);
+    expect(describe(Array.from({ length: 70 }, () => 'w').join(' OR '))).toEqual([
+      expect.stringMatching(/^One OR joins at most \d+ terms, so the rest is not searched\.$/),
     ]);
   });
 });

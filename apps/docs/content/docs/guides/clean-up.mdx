@@ -100,7 +100,7 @@ A smart rule finds bookmarks with a search, in the same words and [operators](/g
 In [Settings](/settings#maintenance), under **Smart Rules**, click **Add rule**, or **Start from a template** for a rule that tags GitHub pages, YouTube videos, or tutorials. Templates start turned off.
 </Step>
 <Step>
-Give the rule a name and a search, such as `domain:github.com` or `folder:Reading -tag:read`. The editor says how many bookmarks it matches now. Add tags, separated by commas, choose a folder to move them to, or both, and save.
+Give the rule a name and a search, such as `domain:github.com`, `folder:Reading -tag:read`, or `(domain:github.com OR domain:gitlab.com) -tag:archived`. The editor says how many bookmarks it matches now, or what is wrong with the search, such as a parenthesis that is not closed; a rule cannot be saved until its search reads. Add tags, separated by commas, choose a folder to move them to, or both, and save.
 </Step>
 <Step>
 In the manager's Tools sidebar, choose the scope on the **Smart Rules** card and click **Run**.
@@ -117,6 +117,7 @@ Good to know:
 - **Undo** in the message after applying puts back both the moves and the tags. The moves are one change in the History.
 - Rules stay on this device and are part of **Back up settings**. A rule restored on another device moves bookmarks only if its folder exists there; otherwise its moves are blocked until you choose the folder again. It finds that folder by its path when the folder has another id there, as long as only one folder has that path.
 - With **Tag New Bookmarks** on in Settings, enabled rules add their tags to each bookmark as it is added, from Bookmark Scout, the browser's star, another extension, or sync, since the browser does not say where a bookmark came from. Only tags are added; a rule's move waits for a run you review. Many bookmarks added at once (a sync or an import) are left alone, and so is a bookmark added while the setting was off. Each automatic tagging is listed under **Tagged automatically** in Settings, with an Undo that removes its tags.
+- A rule saved before searches read `OR` and parentheses keeps finding what it found: they are read as text, in quotes.
 
 ## Search inside pages
 

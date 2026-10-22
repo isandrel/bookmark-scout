@@ -264,11 +264,24 @@ type CompiledText = {
   /** For `folder:`, the folder names it lists, without case. */
   folders: readonly string[];
 };
-type CompiledTerm =
+/** A query's tree with each term worked out once: `all` and `any` as in `SearchNode`. */
+type CompiledNode =
   | CompiledText
-  | { kind: 'condition'; term: Exclude<SearchTerm, { kind: 'text' }> };
+  | { kind: 'condition'; term: Exclude<SearchTerm, { kind: 'text' }> }
+  | { kind: 'all'; nodes: CompiledNode[]; negate: boolean }
+  | { kind: 'any'; branches: CompiledNode[]; negate: boolean };
 
-function compileTerm(term: SearchTerm): CompiledTerm {
+function compileNode(node: SearchNode): CompiledNode {
+  if (node.kind === 'all') {
+    return { kind: 'all', nodes: node.nodes.map(compileNode), negate: node.negate };
+  }
+  if (node.kind === 'any') {
+    return { kind: 'any', branches: node.branches.map(compileNode), negate: node.negate };
+  }
+  return compileTerm(node);
+}
+
+function compileTerm(term: SearchTerm): CompiledNode {
   if (term.kind !== 'text') return { kind: 'condition', term };
   return {
     kind: 'text',
@@ -395,31 +408,71 @@ function holds(term: Exclude<SearchTerm, { kind: 'text' }>, document: SearchDocu
     : document.dateAdded < localDayStart(term.day, 1);
 }
 
-function matchCompiled(
-  document: SearchDocument,
-  terms: readonly CompiledTerm[],
-): SearchResult | undefined {
+const NO_MATCH: TermMatch = { matched: false, score: 0, reasons: [] };
+/** What an excluded node that does not match gives: a pass, with nothing to show for it. */
+const EXCLUDED: TermMatch = { matched: true, score: 0, reasons: [] };
+
+/** Whether a node excludes what it matches (`-word`, `-(…)`). */
+function excludes(node: CompiledNode): boolean {
+  return node.kind === 'text' || node.kind === 'condition' ? node.term.negate : node.negate;
+}
+
+/** Nodes that must all match: their scores add up, and the first that fails ends the check. */
+function matchAll(document: SearchDocument, nodes: readonly CompiledNode[]): TermMatch {
   let score = 0;
   const reasons: SearchMatchReason[] = [];
-  for (const compiled of terms) {
-    const match =
-      compiled.kind === 'text'
-        ? matchText(document, compiled)
-        : { matched: holds(compiled.term, document), score: 0, reasons: [] };
-    if (match.matched === compiled.term.negate) return undefined;
-    if (compiled.term.negate) continue;
+  for (const node of nodes) {
+    const match = matchNode(document, node);
+    if (!match.matched) return NO_MATCH;
     score += match.score;
     reasons.push(...match.reasons);
   }
-  return { document, score, reasons: mergeReasons(reasons) };
+  return { matched: true, score, reasons };
+}
+
+/**
+ * Alternatives, one of which must match. Every branch is checked, in order, so the score adds up
+ * the branches that match and the reasons are theirs only: a term in a branch that does not match
+ * is never a reason.
+ */
+function matchAny(document: SearchDocument, branches: readonly CompiledNode[]): TermMatch {
+  let matched = false;
+  let score = 0;
+  const reasons: SearchMatchReason[] = [];
+  for (const branch of branches) {
+    const match = matchNode(document, branch);
+    if (!match.matched) continue;
+    matched = true;
+    score += match.score;
+    reasons.push(...match.reasons);
+  }
+  return matched ? { matched, score, reasons } : NO_MATCH;
+}
+
+/** A node against a document, its exclusion applied: an excluded node never gives reasons. */
+function matchNode(document: SearchDocument, node: CompiledNode): TermMatch {
+  const match =
+    node.kind === 'text'
+      ? matchText(document, node)
+      : node.kind === 'condition'
+        ? { matched: holds(node.term, document), score: 0, reasons: [] }
+        : node.kind === 'all'
+          ? matchAll(document, node.nodes)
+          : matchAny(document, node.branches);
+  if (!excludes(node)) return match;
+  return match.matched ? NO_MATCH : EXCLUDED;
 }
 
 /** A query read once, to match documents one at a time: undefined for one that does not match. */
 export function compileSearchQuery(
   query: SearchQuery,
 ): (document: SearchDocument) => SearchResult | undefined {
-  const terms = query.terms.map(compileTerm);
-  return (document) => matchCompiled(document, terms);
+  const nodes = query.terms.map(compileNode);
+  return (document) => {
+    const match = matchAll(document, nodes);
+    if (!match.matched) return undefined;
+    return { document, score: match.score, reasons: mergeReasons(match.reasons) };
+  };
 }
 
 /** One document against a query: undefined when it does not match. An empty query matches all. */

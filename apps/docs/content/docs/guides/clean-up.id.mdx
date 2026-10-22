@@ -100,7 +100,7 @@ Aturan pintar menemukan bookmark dengan penelusuran, dengan kata dan [operator](
 Di [Setelan](/settings#maintenance), di bawah **Aturan Pintar**, klik **Tambahkan aturan**, atau **Mulai dari template** untuk aturan yang memberi tag pada halaman GitHub, video YouTube, atau tutorial. Template dimulai dalam keadaan nonaktif.
 </Step>
 <Step>
-Beri aturan sebuah nama dan penelusuran, seperti `domain:github.com` atau `folder:Reading -tag:read`. Editor menyebutkan berapa bookmark yang cocok saat ini. Tambahkan tag, dipisahkan koma, pilih folder tujuan pemindahan, atau keduanya, lalu simpan.
+Beri aturan sebuah nama dan penelusuran, seperti `domain:github.com`, `folder:Reading -tag:read`, atau `(domain:github.com OR domain:gitlab.com) -tag:archived`. Editor menyebutkan berapa bookmark yang cocok saat ini, atau apa yang salah pada penelusuran, seperti tanda kurung yang tidak ditutup; aturan baru bisa disimpan setelah penelusurannya bisa dibaca. Tambahkan tag, dipisahkan koma, pilih folder tujuan pemindahan, atau keduanya, lalu simpan.
 </Step>
 <Step>
 Di bilah samping Alat pengelola, pilih cakupan di kartu **Aturan Pintar** lalu klik **Jalankan**.
@@ -117,6 +117,7 @@ Perlu diketahui:
 - **Urungkan** di pesan setelah penerapan mengembalikan pemindahan maupun tag. Pemindahan itu menjadi satu perubahan di Histori.
 - Aturan tetap di perangkat ini dan termasuk dalam **Cadangkan setelan**. Aturan yang dipulihkan di perangkat lain hanya memindahkan bookmark jika foldernya ada di sana; jika tidak, pemindahannya diblokir sampai Anda memilih folder itu lagi. Aturan itu menemukan folder tersebut lewat jalurnya jika ID folder di sana berbeda, selama hanya satu folder yang memiliki jalur itu.
 - Dengan **Beri Tag pada Bookmark Baru** aktif di Setelan, aturan yang diaktifkan menambahkan tagnya ke setiap bookmark saat bookmark itu ditambahkan, dari Bookmark Scout, ikon bintang browser, ekstensi lain, atau sinkronisasi, karena browser tidak menyebutkan asal bookmark. Hanya tag yang ditambahkan; pemindahan oleh aturan menunggu proses yang Anda tinjau. Banyak bookmark yang ditambahkan sekaligus (sinkronisasi atau impor) dibiarkan, begitu pula bookmark yang ditambahkan saat setelan itu nonaktif. Setiap pemberian tag otomatis tercantum di setelan pada **Diberi tag otomatis**, dengan tombol urungkan yang menghapus tag tersebut.
+- Aturan yang disimpan sebelum penelusuran membaca `OR` dan tanda kurung tetap menemukan yang dulu ditemukannya: keduanya dibaca sebagai teks, dalam tanda kutip.
 ## Menelusuri isi halaman [#search-inside-pages]
 
 **Indeks Teks Halaman** menyimpan teks yang dapat dibaca dari halaman yang di-bookmark di perangkat ini, sehingga penelusuran menemukan kata yang hanya ada di dalam halaman. Alat ini nonaktif sampai Anda mengaktifkannya, dan mengunduh setiap halaman yang Anda indeks.

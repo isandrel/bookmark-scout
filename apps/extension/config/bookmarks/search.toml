@@ -6,6 +6,12 @@
 max_query_length = { value = 500, min = 50, max = 5000 }
 # Most terms a query keeps; later ones are ignored and the search says so.
 max_terms = { value = 32, min = 1, max = 256 }
+# Most parentheses a query nests: `(a (b OR c))` nests two deep. A deeper group and the rest of
+# the query are ignored and the search says so, so a pasted wall of brackets stays cheap to read.
+max_group_depth = { value = 8, min = 1, max = 32 }
+# Most terms one OR joins: `a OR b OR c` joins three, and a group in parentheses counts as one.
+# Later ones and the rest of the query are ignored and the search says so.
+max_or_branches = { value = 16, min = 2, max = 64 }
 # Characters of page text shown around a match in a page's indexed text (Index Page Text)
 content_snippet_chars = 80
 

@@ -3677,6 +3677,14 @@
         "message": "Исключить",
         "description": "Search syntax help: what a leading minus does (-word)"
     },
+    "searchHelp_or": {
+        "message": "Любое из условий",
+        "description": "Search syntax help: what OR between two terms does (tag:react OR tag:vue): one of them is enough"
+    },
+    "searchHelp_group": {
+        "message": "Сгруппировать условия",
+        "description": "Search syntax help: what parentheses do ((tag:react OR tag:vue) -tag:old): they group terms"
+    },
     "searchHelp_title": {
         "message": "В названиях",
         "description": "Search syntax help: what title: does"
@@ -3749,6 +3757,22 @@
         "message": "Кавычка не закрыта, поэтому фраза продолжается до конца.",
         "description": "Note under the manager search box when a quote mark is not closed"
     },
+    "searchDiagnostic_unclosedGroup": {
+        "message": "Скобка не закрыта, поэтому группа продолжается до конца.",
+        "description": "Note under the manager search box when an opening parenthesis ( is not closed"
+    },
+    "searchDiagnostic_unopenedGroup": {
+        "message": "У закрывающей скобки нет открывающей, поэтому она не учитывается.",
+        "description": "Note under the manager search box when a closing parenthesis ) has no opening one"
+    },
+    "searchDiagnostic_emptyGroup": {
+        "message": "Скобки пусты, поэтому они не учитываются.",
+        "description": "Note under the manager search box when parentheses have nothing in them: ()"
+    },
+    "searchDiagnostic_misplacedOr": {
+        "message": "У OR должно быть условие с каждой стороны, поэтому он не учитывается.",
+        "description": "Note under the manager search box when OR is first, last, or doubled. Keep OR as is: it is the word to type"
+    },
     "searchDiagnostic_tooLong": {
         "message": "Поиск ведётся только по первым символам: $1.",
         "description": "Note under the manager search box; $1 is the longest search read"
@@ -3756,6 +3780,14 @@
     "searchDiagnostic_tooManyTerms": {
         "message": "Поиск ведётся только по первым условиям: $1.",
         "description": "Note under the manager search box; $1 is how many terms are read"
+    },
+    "searchDiagnostic_tooDeep": {
+        "message": "Наибольшая вложенность скобок: $1. Остальное не учитывается в поиске.",
+        "description": "Note under the manager search box; $1 is how deep parentheses may nest, such as 8"
+    },
+    "searchDiagnostic_tooManyBranches": {
+        "message": "Наибольшее число условий в одном OR: $1. Остальное не учитывается в поиске.",
+        "description": "Note under the manager search box; $1 is how many terms one OR may join, such as 16. Keep OR as is"
     },
     "ai_folderRecommendation": {
         "message": "Рекомендация папки от ИИ",

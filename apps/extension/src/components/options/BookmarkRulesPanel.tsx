@@ -41,6 +41,11 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
   }, [draft]);
 
   const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
+  // What is wrong with the search, as the search boxes say it: a rule never runs on part of one.
+  const queryProblem = useMemo(() => {
+    const [diagnostic] = parseSearchQuery(value.query).diagnostics;
+    return diagnostic ? describeSearchDiagnostic(diagnostic) : undefined;
+  }, [value.query]);
   const matches = useMemo(
     () =>
       library && queryReadable
@@ -91,6 +96,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
             description={
               matches === undefined ? t('rules_queryHelp') : tPlural('rules_matchCount', matches)
             }
+            error={queryProblem}
           >
             {(control) => (
               <Input

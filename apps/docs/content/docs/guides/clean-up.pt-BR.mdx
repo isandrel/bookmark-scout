@@ -100,7 +100,7 @@ Uma regra inteligente encontra favoritos com uma pesquisa, com as mesmas palavra
 Em [Configurações](/settings#maintenance), em **Regras inteligentes**, clique em **Adicionar regra**, ou em **Começar com um modelo** para uma regra que marca páginas do GitHub, vídeos do YouTube ou tutoriais. Os modelos começam desativados.
 </Step>
 <Step>
-Dê à regra um nome e uma pesquisa, como `domain:github.com` ou `folder:Leitura -tag:lido`. O editor mostra com quantos favoritos ela corresponde agora. Adicione tags separadas por vírgulas, escolha uma pasta para onde movê-los, ou as duas coisas, e salve.
+Dê à regra um nome e uma pesquisa, como `domain:github.com`, `folder:Leitura -tag:lido` ou `(domain:github.com OR domain:gitlab.com) -tag:archived`. O editor mostra com quantos favoritos ela corresponde agora, ou o que há de errado na pesquisa, como um parêntese não fechado; a regra só pode ser salva quando a pesquisa puder ser lida. Adicione tags separadas por vírgulas, escolha uma pasta para onde movê-los, ou as duas coisas, e salve.
 </Step>
 <Step>
 Na barra de ferramentas do gerenciador, escolha o escopo no cartão **Regras inteligentes** e clique em **Executar**.
@@ -117,6 +117,7 @@ Bom saber:
 - **Desfazer** na mensagem depois de aplicar devolve tanto os movimentos quanto as tags. Os movimentos são uma única mudança no histórico.
 - As regras ficam neste dispositivo e fazem parte de **Fazer backup das configurações**. Uma regra restaurada em outro dispositivo só move favoritos se a pasta dela existir lá; se não, os movimentos ficam bloqueados até você escolher a pasta de novo. Ela encontra essa pasta pelo caminho quando a pasta tem outro identificador lá, desde que só uma pasta tenha esse caminho.
 - Com **Marcar favoritos novos** ativado nas configurações, as regras ativas adicionam suas tags a cada favorito quando ele é adicionado, pelo Bookmark Scout, pela estrela do navegador, por outra extensão ou pela sincronização, porque o navegador não diz de onde veio um favorito. Só tags são adicionadas; a movimentação de uma regra espera uma execução que você revisa. Muitos favoritos adicionados de uma vez (uma sincronização ou uma importação) ficam como estão, assim como um favorito adicionado enquanto a configuração estava desativada. Cada marcação automática aparece nas configurações em **Marcados automaticamente**, com um Desfazer que remove as tags dela.
+- Uma regra salva antes de as pesquisas lerem `OR` e parênteses continua encontrando o que encontrava: eles são lidos como texto, entre aspas.
 
 ## Pesquisar dentro das páginas [#search-inside-pages]
 
