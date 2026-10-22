@@ -165,6 +165,25 @@ export const bookmarkTableLayoutValue = defineStoredValue<BookmarkTableLayout>(
   },
 );
 
+/** Reads the view before the manager's first render (`mountExtensionPage`'s `preload`). */
+export function preloadBookmarkTableView(): Promise<unknown> {
+  return Promise.all([
+    preloadStoredValue(bookmarkTableViewValue),
+    preloadStoredValue(bookmarkTableLayoutValue),
+  ]);
+}
+
+/**
+ * The view as the page preloaded it, so the table opens with its columns, widths, and sort in
+ * place; undefined until both parts are read.
+ */
+export function readPreloadedBookmarkTableView(): BookmarkTableView | undefined {
+  const columns = getStoredValueStore(bookmarkTableViewValue).getSnapshot();
+  const layout = getStoredValueStore(bookmarkTableLayoutValue).getSnapshot();
+  if (columns.isLoading || layout.isLoading) return undefined;
+  return { ...columns.value, ...layout.value };
+}
+
 export async function getBookmarkTableView(): Promise<BookmarkTableView> {
   try {
     const [columns, layout] = await Promise.all([

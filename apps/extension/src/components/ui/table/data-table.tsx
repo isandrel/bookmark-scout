@@ -194,7 +194,10 @@ export function DataTable<TData extends RowData>({
   revealRow,
   onShowsAllBookmarksChange,
 }: DataTableProps<TData>) {
-  const [sorting, setSorting] = React.useState<SortingState>(DEFAULT_BOOKMARK_TABLE_VIEW.sorting);
+  // Read before the first render when the page preloaded it, so the columns never move once shown.
+  const [preloadedView] = React.useState(readPreloadedBookmarkTableView);
+  const initialView = preloadedView ?? DEFAULT_BOOKMARK_TABLE_VIEW;
+  const [sorting, setSorting] = React.useState<SortingState>(initialView.sorting);
   // Filters other than the title search, which the page keeps (`searchQuery`).
   const [otherColumnFilters, setOtherColumnFilters] = React.useState<ColumnFiltersState>([]);
   const columnFilters = React.useMemo<ColumnFiltersState>(
@@ -215,18 +218,20 @@ export function DataTable<TData extends RowData>({
     setOtherColumnFilters(filters.filter((filter) => filter.id !== SEARCH_COLUMN_ID));
   }, []);
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>(
-    DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility,
+    initialView.columnVisibility,
   );
-  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(
-    DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder,
-  );
+  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(initialView.columnOrder);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: initialPageIndex,
-    pageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize,
+    pageSize: initialView.pageSize,
   });
-  const [browserOrder, setBrowserOrder] = React.useState(DEFAULT_BOOKMARK_TABLE_VIEW.browserOrder);
-  const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({});
-  const [savedColumnSizing, setSavedColumnSizing] = React.useState<ColumnSizingState>({});
+  const [browserOrder, setBrowserOrder] = React.useState(initialView.browserOrder);
+  const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>(
+    initialView.columnSizing,
+  );
+  const [savedColumnSizing, setSavedColumnSizing] = React.useState<ColumnSizingState>(
+    initialView.columnSizing,
+  );
   const [columnResizing, setColumnResizing] =
     React.useState<columnResizingState>(IDLE_COLUMN_RESIZING);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
@@ -237,15 +242,18 @@ export function DataTable<TData extends RowData>({
   // A row to focus once it is rendered (on another page, or after Show in folder).
   const pendingFocusRowIdRef = React.useRef<string | null>(null);
   const [applyToCurrentFolder, setApplyToCurrentFolder] = React.useState(false);
-  const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(false);
+  const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(preloadedView !== undefined);
   // The view as last loaded or stored, so a change stores only the parts that changed.
-  const storedViewRef = React.useRef<BookmarkTableView | null>(null);
+  const storedViewRef = React.useRef<BookmarkTableView | null>(preloadedView ?? null);
   const tableFrameRef = React.useRef<HTMLDivElement>(null);
   const [tableWidth, setTableWidth] = React.useState<number>();
 
-  React.useEffect(() => {
+  // The fill columns' widths depend on the frame's width, so the frame stays invisible until it is
+  // measured: a first frame drawn at the default widths moved Date Added across the table.
+  React.useLayoutEffect(() => {
     const frame = tableFrameRef.current;
     if (!frame) return;
+    setTableWidth(frame.clientWidth);
     const observer = new ResizeObserver(([entry]) => setTableWidth(entry.contentRect.width));
     observer.observe(frame);
     return () => observer.disconnect();
@@ -256,6 +264,7 @@ export function DataTable<TData extends RowData>({
   );
 
   React.useEffect(() => {
+    if (preloadedView) return;
     let active = true;
     getBookmarkTableView().then((view) => {
       if (!active) return;
@@ -273,7 +282,7 @@ export function DataTable<TData extends RowData>({
     return () => {
       active = false;
     };
-  }, []);
+  }, [preloadedView]);
 
   React.useEffect(() => {
     const stored = storedViewRef.current;
@@ -906,6 +915,7 @@ export function DataTable<TData extends RowData>({
         <div
           ref={tableFrameRef}
           tabIndex={-1}
+          style={tableWidth === undefined ? { visibility: 'hidden' } : undefined}
           {...{ [GRID_FRAME_ATTRIBUTE]: '' }}
           className="rounded-md border bg-card outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
