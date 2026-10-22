@@ -118,12 +118,71 @@ export function getSearchMatchRanges(
 }
 
 /**
+ * Whether the search options ask for the title-only search they were made for. Match case, whole
+ * word, and regular expressions search titles as typed; otherwise the query is read in the search
+ * query language (`search-query.ts`) and matched against every field (`search-documents.ts`).
+ */
+export function usesTitleSearch(options: SearchOptions): boolean {
+  return options.matchCase || options.wholeWord || options.useRegex;
+}
+
+type NodeMatch = Pick<
+  BookmarkTreeNode,
+  'isSearchMatch' | 'searchMatchRanges' | 'searchMatchReasons'
+>;
+
+/**
  * Keep matching nodes and their ancestors. A matching folder keeps all of its children so its
  * contents stay browsable; matches deeper inside it are still highlighted and flagged.
  *
  * The invisible browser root and the permanent folders beneath it (Bookmarks bar, Other
  * bookmarks, ...) are containers only: their own titles never match, otherwise a query such as
- * `bar`, `other`, or the regex `^$` would return the entire tree.
+ * `bar`, `other`, or the regex `^$` would return the entire tree. `matchOf` is asked about every
+ * other node, with whether a folder above it already matched.
+ */
+export function filterTree(
+  nodes: readonly BookmarkTreeNode[],
+  matchOf: (node: BookmarkTreeNode, insideMatch: boolean) => NodeMatch | undefined,
+): BookmarkTreeNode[] {
+  const filterNodes = (
+    items: readonly BookmarkTreeNode[],
+    parentIsRoot: boolean,
+    insideMatch: boolean,
+  ): BookmarkTreeNode[] => {
+    const filtered: BookmarkTreeNode[] = [];
+
+    for (const node of items) {
+      const isRoot = isBookmarkTreeRoot(node);
+      const match = isRoot || parentIsRoot ? undefined : matchOf(node, insideMatch);
+
+      if (!node.children) {
+        if (match) filtered.push({ ...node, ...match });
+        continue;
+      }
+
+      const matchingChildren = filterNodes(node.children, isRoot, insideMatch || Boolean(match));
+      if (!match && matchingChildren.length === 0) continue;
+
+      const matchingById = new Map(matchingChildren.map((child) => [child.id, child]));
+      filtered.push({
+        ...node,
+        ...match,
+        children: match
+          ? node.children.map((child) => matchingById.get(child.id) ?? child)
+          : matchingChildren,
+      });
+    }
+
+    return filtered;
+  };
+
+  return filterNodes(nodes, false, false);
+}
+
+/**
+ * The tree filtered by titles, searched as typed with Match case, Whole word, or regular
+ * expressions (`usesTitleSearch`). Without them, `bookmark-query-filter.ts` reads the query in the
+ * search query language.
  */
 export function filterBookmarkTree(
   nodes: readonly BookmarkTreeNode[],
@@ -133,42 +192,11 @@ export function filterBookmarkTree(
   if (!query) return [...nodes];
 
   const search = compileSearch(query, options);
-  const filterNodes = (
-    items: readonly BookmarkTreeNode[],
-    parentIsRoot: boolean,
-  ): BookmarkTreeNode[] => {
-    const filtered: BookmarkTreeNode[] = [];
-
-    for (const node of items) {
-      const isRoot = isBookmarkTreeRoot(node);
-      const isContainer = isRoot || parentIsRoot;
-      const isMatch = !isContainer && search.test(node.title);
-      const matchFields = isMatch
-        ? { isSearchMatch: true, searchMatchRanges: search.ranges(node.title) }
-        : {};
-
-      if (!node.children) {
-        if (isMatch) filtered.push({ ...node, ...matchFields });
-        continue;
-      }
-
-      const matchingChildren = filterNodes(node.children, isRoot);
-      if (!isMatch && matchingChildren.length === 0) continue;
-
-      const matchingById = new Map(matchingChildren.map((child) => [child.id, child]));
-      filtered.push({
-        ...node,
-        ...matchFields,
-        children: isMatch
-          ? node.children.map((child) => matchingById.get(child.id) ?? child)
-          : matchingChildren,
-      });
-    }
-
-    return filtered;
-  };
-
-  return filterNodes(nodes, false);
+  return filterTree(nodes, (node) =>
+    search.test(node.title)
+      ? { isSearchMatch: true, searchMatchRanges: search.ranges(node.title) }
+      : undefined,
+  );
 }
 
 function containsSearchMatch(node: BookmarkTreeNode): boolean {

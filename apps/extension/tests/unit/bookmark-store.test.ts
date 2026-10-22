@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage, t } from '@/hooks/use-i18n';
+import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { getBookmarkDisplayTitle } from '@/lib/bookmark-tree';
 import { saveSettings } from '@/lib/settings-storage';
 import { bookmarkHistoryValue } from '@/services/bookmark-history';
@@ -295,6 +296,10 @@ describe('search expansion', () => {
     addNode(folder.id, 'Needle top', 'https://e.x/top');
     await useBookmarkStore.getState().fetchFolders();
     useBookmarkStore.getState().setDebouncedQuery('Needle');
+    // The search loads on its first use.
+    await vi.waitFor(() =>
+      expect(useBookmarkStore.getState().expandedFolders).toContain(folder.id),
+    );
   });
 
   it('collapses and expands every result folder while expandFoldersOnSearch is on', () => {
@@ -318,6 +323,20 @@ describe('search expansion', () => {
 
     setDebouncedQuery('');
     expect(useBookmarkStore.getState().searchExpansion).toBeNull();
+  });
+});
+
+describe('search by tags and summaries', () => {
+  it('re-filters when the tags change during a search', async () => {
+    const tagged = addNode(folder.id, 'Plain title', 'https://e.x/plain');
+    await useBookmarkStore.getState().fetchFolders();
+    useBookmarkStore.getState().setDebouncedQuery('tag:recipes');
+    const matches = () =>
+      JSON.stringify(useBookmarkStore.getState().filteredFolders).includes(tagged.id);
+    await vi.waitFor(() => expect(useBookmarkStore.getState().filteredFolders).toEqual([]));
+
+    await bookmarkMetadataValue.set({ [tagged.id]: { tags: ['Recipes'] } });
+    await vi.waitFor(() => expect(matches()).toBe(true));
   });
 });
 

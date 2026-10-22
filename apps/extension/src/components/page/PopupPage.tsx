@@ -563,10 +563,18 @@ function PopupPage() {
     [activeQuery, sortedFolders],
   );
   const isSearchLimited = totalSearchMatches > maxSearchResults;
-  // A regular expression is for finding bookmarks; folder matching reads the words typed.
+  // A regular expression is for finding bookmarks, and so is a query with operators (`tag:`,
+  // `is:folder`, ...); folder matching reads the words typed.
+  const findsFolders = useMemo(
+    () =>
+      Boolean(activeQuery) &&
+      !searchOptions.useRegex &&
+      (usesTitleSearch(searchOptions) || !hasSearchOperators(parseSearchQuery(activeQuery).query)),
+    [activeQuery, searchOptions],
+  );
   const folderMatches = useMemo(
     () =>
-      folderMatchesEnabled && activeQuery && !searchOptions.useRegex
+      folderMatchesEnabled && findsFolders
         ? findFolderMatches(folders, activeQuery, {
             limit: folderMatchesMax,
             allowTypos: folderMatchesTypos,
@@ -575,12 +583,12 @@ function PopupPage() {
         : [],
     [
       activeQuery,
+      findsFolders,
       folderMatchesEnabled,
       folderMatchesMax,
       folderMatchesTypos,
       folders,
       recentFolderIds,
-      searchOptions.useRegex,
     ],
   );
   // Enter in the search box saves into the first folder match; the hint bar names it.

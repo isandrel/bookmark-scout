@@ -5,12 +5,32 @@
 
 import { Trash2 } from 'lucide-react';
 
+/** The places a search can match besides the title, in the order a row names them. */
+const SEARCH_REASONS = [
+  ['tag', 'search_reasonTag'],
+  ['url', 'search_reasonUrl'],
+  ['domain', 'search_reasonUrl'],
+  ['summary', 'search_reasonSummary'],
+  ['folder', 'search_reasonFolder'],
+] as const satisfies readonly (readonly [SearchMatchField, MessageKey])[];
+
+/** Where a search result matched, for a row whose title did not. */
+function searchReasonLabel(reasons: readonly SearchMatchReason[] = []): string | undefined {
+  if (reasons.some((reason) => reason.field === 'title')) return undefined;
+  for (const [field, message] of SEARCH_REASONS) {
+    const reason = reasons.find((candidate) => candidate.field === field);
+    if (reason) return t(message, reason.field === 'tag' ? [reason.value] : undefined);
+  }
+  return undefined;
+}
+
 export function BookmarkRow({ row }: { row: PopupTreeRow }) {
   const { favicon, rowRef, draggingId, onDeleteBookmark } = usePopupTree();
   const { node } = row;
   const onLinkClick = useLinkClick();
   // A Firefox separator: a line, not a link to its `data:` address.
   const separator = isSeparatorNode(node);
+  const searchReason = searchReasonLabel(node.searchMatchReasons);
 
   return (
     // At least one icon-button tall; a larger site icon grows the row instead of touching the next.
@@ -64,6 +84,14 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
             {getBookmarkDisplayTitle(node.title)}
           </span>
         )}
+        {searchReason ? (
+          <span
+            data-slot="search-reason"
+            className="ml-2 max-w-1/2 shrink-0 truncate text-xs text-muted-foreground"
+          >
+            {searchReason}
+          </span>
+        ) : null}
       </a>
       {/* Overlays the row's end only while hovered or focused, like the folder actions. */}
       <div

@@ -69,6 +69,29 @@ test('typing words from a folder path lists the folder, and ArrowDown then Enter
   await expect(toastRegion(page).getByText(/Bookmark Added$/)).toBeVisible();
 });
 
+test('a query with operators finds bookmarks only, so Enter never saves into a folder', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await seedLibrary(extensionWorker);
+  const { deep } = await hooksFolders(extensionWorker);
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+
+  await search.fill('react hooks');
+  await expect(matches(page)).toHaveCount(1);
+  await search.fill('folder:react hooks');
+  await expect(matches(page)).toHaveCount(0);
+  await search.press('Enter');
+
+  // Enter without a folder match records the search instead.
+  await expect
+    .poll(() => readStored<string[]>(extensionWorker, STORAGE_ITEMS.searchHistory))
+    .toEqual(['folder:react hooks']);
+  expect(await childCount(extensionWorker, deep)).toBe(0);
+});
+
 test('folder matches put exact names first, forgive one typo, and rank recent folders higher', async ({
   extensionId,
   extensionWorker,

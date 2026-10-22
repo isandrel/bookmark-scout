@@ -222,6 +222,30 @@ describe('the search query language', () => {
     expect(find('gateway', documents)).toEqual(['exact', 'summary-only']);
   });
 
+  it('reuses the documents of nodes a tree update kept, and rebuilds what changed', () => {
+    const kept = bookmark('kept', 'Kept', 'https://kept.test/');
+    const tagged = bookmark('tagged', 'Tagged', 'https://tagged.test/');
+    const folder = { id: 'f', parentId: '1', title: 'Folder', children: [kept, tagged] };
+    const metadata = { tagged: { tags: ['one'] } };
+    const before = buildSearchDocuments(tree([folder]), metadata);
+
+    const renamed = { ...folder, children: [kept, tagged] };
+    const same = buildSearchDocuments(tree([renamed]), metadata);
+    expect(same[1]).toBe(before[1]);
+    expect(same[2]).toBe(before[2]);
+
+    const retagged = buildSearchDocuments(tree([renamed]), { tagged: { tags: ['two'] } });
+    expect(retagged[1]).toBe(before[1]);
+    expect(retagged[2]?.tags).toEqual(['two']);
+
+    const moved = buildSearchDocuments(
+      tree([{ ...folder, title: 'Renamed', children: [kept, tagged] }]),
+      metadata,
+    );
+    expect(moved[1]?.folderPath).toBe('Renamed');
+    expect(find('folder:renamed', moved)).toEqual(['kept', 'tagged']);
+  });
+
   it('keeps markup in titles as text (U36)', () => {
     const title = '<img src=x onerror=alert(1)>';
     const documents = buildSearchDocuments(tree([bookmark('x', title, 'https://x.test/')]), {});

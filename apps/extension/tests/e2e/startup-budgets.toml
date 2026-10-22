@@ -15,9 +15,11 @@
 "background.js" = 415
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
-# tasks, which reads the job store (970 on 2026-10-21).
-"popup.html" = 985
-"sidepanel.html" = 985
+# tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
+# which decides before Enter whether a query can save into a folder; the search itself loads on the
+# first keystroke (988 on 2026-10-21).
+"popup.html" = 995
+"sidepanel.html" = 995
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
