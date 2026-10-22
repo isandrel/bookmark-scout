@@ -137,6 +137,8 @@ export const DEVICE_SETTING_KEYS = [
   'siteIconsMaxCacheKb',
   /** How much of this device's storage bookmark covers may take. */
   'coversMaxCacheMb',
+  /** Smart Rules are kept on this device, so tagging new bookmarks with them is set here too. */
+  'bookmarkRulesAutoTag',
   /** Recording AI requests is a debugging choice for one device; the log stays on it too. */
   'aiActivityRecording',
   /** Whether Ask AI adds the provider's web search, chosen where the chat runs. */

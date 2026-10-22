@@ -15,6 +15,8 @@
 # Raised from 415 on 2026-10-22 for the settings the background reads growing with the search,
 # rules, and manager view settings (416).
 # Raised from 425 on 2026-10-22 for the cover and page text settings the background reads (427).
+# Raised again the same day for Tag New Bookmarks, whose listener plans rules in the background,
+# which cannot load code later.
 "background.js" = 435
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background

@@ -8628,5 +8628,13 @@
     "tools_rulesEdit": {
         "message": "Editar reglas",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "Etiquetar marcadores nuevos",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "Las reglas activas añaden sus etiquetas a cada marcador al añadirlo, ya sea desde Bookmark Scout, el navegador o la sincronización. Nunca se mueve nada automáticamente, y muchos marcadores añadidos a la vez (una sincronización o una importación) no se tocan.",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }

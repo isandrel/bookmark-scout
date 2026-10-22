@@ -807,6 +807,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'a rule made in Settings tags and moves matching bookmarks after a review, and undo puts them back',
     ),
   ]),
+  bookmarkRulesAutoTag: tested('services/rule-auto-tag.ts', [
+    unit(
+      'rule-auto-tag.test.ts',
+      'runs only while the setting is on, and leaves large batches alone',
+    ),
+  ]),
 
   // Index Page Text
   pageTextEnabled: tested(TOOL_TABLE, [

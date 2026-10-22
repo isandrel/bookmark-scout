@@ -27,6 +27,10 @@ const rulesConfig = readConfig(
         add_tags: z.array(z.string().min(1)).min(1),
       }),
     ),
+    auto_tag: z.strictObject({
+      batch_window_ms: z.number().int().positive(),
+      max_batch: z.number().int().positive(),
+    }),
   }),
 );
 
@@ -148,12 +152,14 @@ function moveTarget(index: TreeIndex, folderId: string): RuleMoveBlock | undefin
 /**
  * What `rules` (enabled ones, in order) would do to the bookmarks of `tree`, read only. Bookmarks
  * no rule matches are left out; ones they match but would not change are kept, so a run can say
- * they already follow the rules.
+ * they already follow the rules. With `only`, just those bookmarks are planned (the rest of the tree
+ * still gives their folder paths).
  */
 export function planBookmarkRules(
   rules: readonly BookmarkRule[],
   tree: readonly BookmarkTreeNode[],
   metadata: StoredBookmarkMetadataById,
+  only?: ReadonlySet<string>,
 ): RulePlanItem[] {
   const enabled = rules.filter((rule) => rule.enabled);
   if (enabled.length === 0) return [];
@@ -165,6 +171,7 @@ export function planBookmarkRules(
   const items: RulePlanItem[] = [];
   for (const document of buildSearchDocuments(tree, metadata)) {
     if (document.kind !== 'bookmark' || !document.url) continue;
+    if (only && !only.has(document.id)) continue;
     const matching = compiled.filter(({ match }) => match(document));
     if (matching.length === 0) continue;
     const node = index.nodes.get(document.id);

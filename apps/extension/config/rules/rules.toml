@@ -28,3 +28,10 @@ add_tags = ["watch-later"]
 id = "tutorial"
 query = "title:tutorial"
 add_tags = ["learning"]
+
+[auto_tag]
+# Tag New Bookmarks: bookmarks added within this many milliseconds of each other are handled
+# together, after the last one.
+batch_window_ms = 2000
+# A batch with more bookmarks than this (a sync, or an import from another program) is left alone.
+max_batch = 20

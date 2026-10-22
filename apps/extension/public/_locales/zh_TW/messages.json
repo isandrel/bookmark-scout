@@ -8254,5 +8254,13 @@
     "tools_rulesEdit": {
         "message": "編輯規則",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "為新書籤加上標籤",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "已啟用的規則會在每個書籤新增時為其加上標籤，無論書籤來自 Bookmark Scout、瀏覽器還是同步。絕不會自動移動書籤，一次新增的大量書籤 (同步或匯入) 會保持不變。",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }

@@ -8628,5 +8628,13 @@
     "tools_rulesEdit": {
         "message": "Modifier les règles",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "Étiqueter les nouveaux favoris",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "Les règles actives ajoutent leurs étiquettes à chaque favori dès son ajout, depuis Bookmark Scout, le navigateur ou la synchronisation. Rien n'est jamais déplacé automatiquement, et les nombreux favoris ajoutés d'un coup (une synchronisation ou une importation) restent tels quels.",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }

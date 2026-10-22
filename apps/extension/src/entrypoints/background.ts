@@ -16,6 +16,8 @@ export default defineBackground(() => {
   registerPromptCleanup();
   // Bookmark changes made outside Bookmark Scout, for the History; before the listeners below.
   registerBookmarkObserver();
+  // Smart Rules' tags for new bookmarks, while Tag New Bookmarks is on.
+  registerRuleAutoTag();
 
   browser.bookmarks.onRemoved.addListener((_id, removeInfo) => {
     const removedIds = subtreeIds(removeInfo.node);

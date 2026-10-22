@@ -8600,5 +8600,13 @@
     "tools_rulesEdit": {
         "message": "규칙 편집",
         "description": "Smart Rules card: button that opens the rules in Settings"
+    },
+    "settings_bookmarkRulesAutoTag": {
+        "message": "새 북마크에 태그 추가",
+        "description": "Settings: switch that makes Smart Rules tag new bookmarks as they are added"
+    },
+    "settings_bookmarkRulesAutoTagDesc": {
+        "message": "사용 중인 규칙이 Bookmark Scout, 브라우저, 동기화 중 어디서 추가되었든 각 북마크가 추가될 때 태그를 붙입니다. 자동으로 옮기지는 않으며, 한꺼번에 추가된 많은 북마크(동기화나 가져오기)는 그대로 둡니다.",
+        "description": "Settings: what Tag New Bookmarks does"
     }
 }
