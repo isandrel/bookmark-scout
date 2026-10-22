@@ -70,9 +70,11 @@ title = { size = 160, min_size = 120, fill = 3 }
 dateAdded = { size = 184, min_size = 100 }
 dateGroupModified = { size = 184, min_size = 100 }
 unmodifiable = { size = 130, min_size = 80 }
-# Tags keep a compact width; Summary also takes a share of any spare width, as Title and URL do
+# Tags keep a compact width; Summary also takes a share of any spare width, as Title and URL do.
+# With both on, every column still fits a 1400px window beside the folder tree (measured
+# 2026-10-22), so the pinned row menu never covers the end of a summary
 tags = { size = 200, min_size = 90 }
-summary = { size = 240, min_size = 120, fill = 2 }
+summary = { size = 160, min_size = 120, fill = 2 }
 # The four move buttons (24px each) and the row menu, side by side with the cell padding, so the
 # buttons shown on hover have their own room and never cover the columns before them
 actions = { fixed = 140 }
