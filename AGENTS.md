@@ -165,7 +165,11 @@ Use the smallest command set that exercises the code you changed.
 
 ### Nx cache
 
-Nx caches `lint`, `typecheck`, `test:unit`, the extension `build:*` targets, and the website and docs builds (`targetDefaults` in `nx.json`; outputs in each `project.json`, or the `"nx"` field of `apps/docs/package.json`). The cache is shared by every checkout and worktree of the repository (under `~/.nx`), and a hit restores only the declared outputs, so a cached target that writes files must list all of them in `outputs`, and anything else it reads (an environment variable, a file outside its project) in `inputs`. Pass `--skip-nx-cache` to force a run. `.nxignore` keeps the Nx daemon from watching agent worktrees under `.claude/`.
+Nx caches `lint`, `typecheck`, `test:unit`, the extension `build:*` targets, and the website and docs builds (`targetDefaults` in `nx.json`; outputs in each `project.json`, or the `"nx"` field of `apps/docs/package.json`). The cache is shared by every checkout and worktree of the repository (under `~/.nx`), and a hit restores only the declared outputs, so a cached target that writes files must list all of them in `outputs`, and anything else it reads (an environment variable, a file outside its project) in `inputs`. Pass `--skip-nx-cache` to force a run. `.nxignore` keeps the Nx daemon from watching agent worktrees under `.claude/`. `maxCacheSize` in `nx.json` caps the cache (3 GB); Nx drops the least recently used entries past it.
+
+### Local disk
+
+`bun run clean` lists the outputs a run regenerates (test results, coverage reports and builds) in this checkout and every agent worktree, with their size, and removes them with `--apply`; it never touches `apps/extension/dist`. It also reports the shared caches outside the repository (Nx, Bun, Playwright browsers, `~/.cache/bookmark-scout-*`) with the command that trims each. Worktrees share those caches already, and `bun install` in a new worktree clones files from Bun's cache, so do not symlink `node_modules` into worktrees: its links to the workspace packages are relative and would resolve to another checkout's sources.
 
 ## Verification policy
 
