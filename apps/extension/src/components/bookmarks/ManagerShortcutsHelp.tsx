@@ -25,6 +25,13 @@ const SHORTCUT_ROWS: readonly { bindings: readonly ShortcutBinding[]; label: Mes
   { bindings: [...manager.nextRow, ...manager.previousRow], label: 'shortcuts_nextPreviousRow' },
   { bindings: [{ key: ' ' }], label: 'shortcuts_toggleRow' },
   { bindings: manager.preview, label: 'shortcuts_preview' },
+  {
+    bindings: [
+      ...SHORTCUT_BINDINGS.managerPreview.previous,
+      ...SHORTCUT_BINDINGS.managerPreview.next,
+    ],
+    label: 'shortcuts_previewPreviousNext',
+  },
   { bindings: manager.selectAll, label: 'shortcuts_selectAll' },
   { bindings: manager.clearSelection, label: 'shortcuts_clearSelection' },
   { bindings: manager.open, label: 'shortcuts_open' },

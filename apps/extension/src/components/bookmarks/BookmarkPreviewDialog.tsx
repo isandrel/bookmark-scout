@@ -4,21 +4,33 @@
  * summary, then the buttons of `[menus] preview` in config/ui/actions.toml. Everything comes from
  * this device; nothing is fetched, so without a stored cover none is shown.
  *
+ * Previous and Next (and the preview's keys, `managerPreview` in config/ui/shortcuts.toml, unless
+ * a text field has focus) show the bookmark before or after it in `rows`, the table's page as
+ * shown, skipping folders and separators; they stop at either end, where their button is disabled
+ * but keeps focus. They sit at the top, so a preview of another height never moves them.
+ *
  * The dialog traps focus while open, Escape closes it, and closing gives focus back to the row or
- * card it shows, also when it was opened from a menu whose button is gone by then. A button closes
- * the preview first and runs its action once the preview is gone, so a dialog the action opens
- * (Edit) returns focus to that row as well.
+ * card it shows last, also when it was opened from a menu whose button is gone by then. A button
+ * closes the preview first and runs its action once the preview is gone, so a dialog the action
+ * opens (Edit) returns focus to that row as well.
  */
-import { Folder } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Folder } from 'lucide-react';
+import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
 
 type BookmarkPreviewDialogProps = {
   /** The bookmark shown; null closes the preview. */
   bookmark: Bookmark | null;
+  /** The rows Previous and Next step through, in display order. */
+  rows: readonly Bookmark[];
   /** What the buttons' actions ask of the page: the table's item host. */
   host: ActionItemHost;
+  /** Shows another bookmark of `rows` (Previous and Next). */
+  onShow: (bookmark: Bookmark) => void;
   onClose: () => void;
 };
+
+const { managerPreview } = SHORTCUT_BINDINGS;
 
 /** The row or card of the table that shows `rowId`, if it is on the page. */
 function findRowElement(rowId: string | undefined): HTMLElement | null {
@@ -26,7 +38,44 @@ function findRowElement(rowId: string | undefined): HTMLElement | null {
   return document.querySelector<HTMLElement>(`[data-row-id="${CSS.escape(rowId)}"]`);
 }
 
-export function BookmarkPreviewDialog({ bookmark, host, onClose }: BookmarkPreviewDialogProps) {
+type PreviewStepButtonProps = {
+  label: string;
+  bindings: readonly ShortcutBinding[];
+  /** The bookmark it shows; none at the end of the rows, where the button is disabled. */
+  target: Bookmark | undefined;
+  onShow: (bookmark: Bookmark) => void;
+  children: React.ReactNode;
+};
+
+/** Previous or Next: disabled at the end of the rows, but focusable, so focus stays on it there. */
+function PreviewStepButton({ label, bindings, target, onShow, children }: PreviewStepButtonProps) {
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="icon-sm"
+      className="data-disabled:pointer-events-none data-disabled:opacity-50"
+      aria-label={label}
+      aria-keyshortcuts={ariaKeyShortcuts(bindings)}
+      title={label}
+      disabled={!target}
+      focusableWhenDisabled
+      onClick={() => {
+        if (target) onShow(target);
+      }}
+    >
+      {children}
+    </Button>
+  );
+}
+
+export function BookmarkPreviewDialog({
+  bookmark,
+  rows,
+  host,
+  onShow,
+  onClose,
+}: BookmarkPreviewDialogProps) {
   // The last bookmark stays drawn while the dialog closes, so its content does not vanish first.
   const shownRef = useRef(bookmark);
   if (bookmark) shownRef.current = bookmark;
@@ -41,6 +90,17 @@ export function BookmarkPreviewDialog({ bookmark, host, onClose }: BookmarkPrevi
   const summary = metadata?.summary?.trim() ?? '';
   const sections = shown ? getItemMenuSections([shown], host, ACTION_MENUS.preview) : [];
   const [primaryAction] = sections.flat();
+  const neighbors: PreviewNeighbors = shown ? previewNeighbors(rows, shown.id) : {};
+  // Nothing to step to on a page with one bookmark.
+  const canStep = rows.filter(isPreviewableBookmark).length > 1;
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const step = findShortcut(event.nativeEvent, managerPreview, { allowWithOverlay: true });
+    const target = step ? neighbors[step] : undefined;
+    if (!target) return;
+    event.preventDefault();
+    onShow(target);
+  };
 
   const runAfterClose = (id: ActionId) => {
     if (!shown) return;
@@ -72,18 +132,42 @@ export function BookmarkPreviewDialog({ bookmark, host, onClose }: BookmarkPrevi
         // a menu opened the preview.
         finalFocus={() => findRowElement(shown?.id) ?? true}
         className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-xl"
+        // Before the controls inside: a disabled button keeps focus but swallows its keys.
+        onKeyDownCapture={handleKeyDown}
       >
         {shown ? (
           <>
             {/* Room on the right for the close button. */}
-            <DialogHeader className="min-w-0 pr-6">
-              <DialogTitle className="leading-snug [overflow-wrap:anywhere]">
-                {shown.title.trim() || t('popup_untitled')}
-              </DialogTitle>
-              <DialogDescription className="[overflow-wrap:anywhere]">
-                {shown.url ? <UrlLink href={shown.url} /> : null}
-              </DialogDescription>
-            </DialogHeader>
+            <div className="flex min-w-0 items-start gap-2 pr-6">
+              <DialogHeader className="min-w-0 flex-1">
+                <DialogTitle className="leading-snug [overflow-wrap:anywhere]">
+                  {shown.title.trim() || t('popup_untitled')}
+                </DialogTitle>
+                <DialogDescription className="[overflow-wrap:anywhere]">
+                  {shown.url ? <UrlLink href={shown.url} /> : null}
+                </DialogDescription>
+              </DialogHeader>
+              {canStep ? (
+                <div className="-mt-1.5 flex shrink-0 gap-1" data-testid="bookmark-preview-steps">
+                  <PreviewStepButton
+                    label={t('bookmarks_previewPrevious')}
+                    bindings={managerPreview.previous}
+                    target={neighbors.previous}
+                    onShow={onShow}
+                  >
+                    <ChevronLeft aria-hidden="true" />
+                  </PreviewStepButton>
+                  <PreviewStepButton
+                    label={t('bookmarks_previewNext')}
+                    bindings={managerPreview.next}
+                    target={neighbors.next}
+                    onShow={onShow}
+                  >
+                    <ChevronRight aria-hidden="true" />
+                  </PreviewStepButton>
+                </div>
+              ) : null}
+            </div>
             {shown.url ? <BookmarkCover bookmarkId={shown.id} url={shown.url} /> : null}
             <dl className="grid min-w-0 gap-3 text-sm">
               <div className="grid gap-1">

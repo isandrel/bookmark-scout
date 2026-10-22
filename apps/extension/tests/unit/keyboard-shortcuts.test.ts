@@ -200,6 +200,10 @@ describe('configured bindings', () => {
       shortcuts.manager.open_saved_searches,
     );
     expect(SHORTCUT_BINDINGS.manager.preview).toEqual(shortcuts.manager.preview);
+    expect(SHORTCUT_BINDINGS.managerPreview).toEqual({
+      previous: shortcuts.manager.preview_previous,
+      next: shortcuts.manager.preview_next,
+    });
     expect(SHORTCUT_BINDINGS.popup.focusSearch).toEqual(shortcuts.popup.focus_search);
   });
 
@@ -211,6 +215,22 @@ describe('configured bindings', () => {
     expect(findShortcut(keyEvent(backspace.key), SHORTCUT_BINDINGS.manager, options)).toBe(
       'parentFolder',
     );
+  });
+
+  it('step the open preview with its keys, but not from a text field or with modifiers', () => {
+    const { managerPreview } = SHORTCUT_BINDINGS;
+    const inPreview = { root: withOverlay, allowWithOverlay: true };
+    const [previous] = managerPreview.previous;
+    const [next] = managerPreview.next;
+    expect(findShortcut(keyEvent(previous.key), managerPreview, inPreview)).toBe('previous');
+    expect(findShortcut(keyEvent(next.key), managerPreview, inPreview)).toBe('next');
+    const typing = { target: element({ tagName: 'INPUT', type: 'text' }) };
+    expect(findShortcut(keyEvent(next.key, typing), managerPreview, inPreview)).toBeNull();
+    for (const held of [{ shiftKey: true }, { altKey: true }, { ctrlKey: true }]) {
+      expect(findShortcut(keyEvent(next.key, held), managerPreview, inPreview)).toBeNull();
+    }
+    // The manager's own shortcuts never take them: the grid's arrow keys stay the grid's.
+    expect(findShortcut(keyEvent(next.key), SHORTCUT_BINDINGS.manager, options)).toBeNull();
   });
 
   it('print as key caps and aria-keyshortcuts', () => {

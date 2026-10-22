@@ -2,7 +2,8 @@
  * A bookmark's preview in the manager's cards (Visual Cards V18): the preview key on a focused
  * card and the card's menu open it; it shows the stored cover, folder, tags, and summary without
  * any network request, keeps focus inside while open, closes with Escape, and gives focus back to
- * the card. Its buttons are the registry's actions.
+ * the card. Its buttons are the registry's actions. The arrow keys and its Previous and Next buttons
+ * step through the page's bookmarks, and closing returns to the card last shown.
  */
 import type { Page, Worker } from '@playwright/test';
 import { solidPng } from '../solid-png';
@@ -141,6 +142,70 @@ test('the preview key opens a card preview from this device that keeps focus, an
   await page.keyboard.press('ArrowLeft');
   await page.keyboard.press('p');
   await expect(page.getByTestId('bookmark-preview')).toHaveCount(0);
+});
+
+test('the arrow keys and Previous and Next step the preview through the bookmarks, past folders, and Escape returns to the last one', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Preview Steps', [
+    { title: 'Step One', url: 'https://one.e2e.invalid/step' },
+    { title: 'Step Folder', children: [] },
+    { title: 'Step Two', url: 'https://two.e2e.invalid/step' },
+    { title: 'Step Three', url: 'https://three.e2e.invalid/step' },
+  ]);
+  await setSettings(extensionWorker, { managerViewMode: 'cards' });
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await card(page, 'Step One').click();
+  await expect(card(page, 'Step One')).toBeFocused();
+  await page.keyboard.press('p');
+
+  const preview = page.getByTestId('bookmark-preview');
+  const shows = (title: string) => expect(page.getByRole('dialog', { name: title })).toBeVisible();
+  const previous = preview.getByRole('button', { name: 'Previous bookmark' });
+  const next = preview.getByRole('button', { name: 'Next bookmark' });
+  await shows('Step One');
+  // The first bookmark has nothing before it.
+  await expect(previous).toBeDisabled();
+  await expect(next).toBeEnabled();
+  await page.keyboard.press('ArrowLeft');
+  await shows('Step One');
+
+  // Right goes past the folder to the next bookmark, with its own address and buttons.
+  await page.keyboard.press('ArrowRight');
+  await shows('Step Two');
+  await expect(preview).toContainText('https://two.e2e.invalid/step');
+  await expect(previous).toBeEnabled();
+
+  // Next by pointer, to the last bookmark, where Next is disabled but keeps focus.
+  await next.click();
+  await shows('Step Three');
+  await expect(next).toBeDisabled();
+  await expect(next).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await shows('Step Three');
+
+  // Left from the disabled button, and Previous, go back, again past the folder.
+  await page.keyboard.press('ArrowLeft');
+  await shows('Step Two');
+  await previous.click();
+  await shows('Step One');
+  await page.keyboard.press('ArrowRight');
+  await shows('Step Two');
+
+  // Escape returns to the card last shown, which the manager now has focused and selected, so
+  // the preview key opens it again.
+  await page.keyboard.press('Escape');
+  await expect(preview).toBeHidden();
+  await expect(card(page, 'Step Two')).toBeFocused();
+  await expect(card(page, 'Step Two')).toHaveAttribute('aria-selected', 'true');
+  await expect(card(page, 'Step One')).toHaveAttribute('aria-selected', 'false');
+  await page.keyboard.press('p');
+  await shows('Step Two');
+  await page.keyboard.press('Escape');
+  await expect(preview).toBeHidden();
+  await expect(card(page, 'Step Two')).toBeFocused();
 });
 
 test("a card's menu opens its preview from the keyboard, and its buttons run the registry's actions", async ({

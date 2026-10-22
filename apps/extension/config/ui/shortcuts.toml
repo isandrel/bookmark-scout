@@ -61,6 +61,11 @@ open_saved_searches = [{ key = "s" }]
 # Preview the focused bookmark (its cover, folder, tags, and summary) in a dialog. Space is the grid's
 # select key, so preview takes a letter, as saved searches does
 preview = [{ key = "p" }]
+# Inside the open preview only (the one place these keys act while a dialog is open): the previous or
+# next bookmark of the table's page, skipping folders and separators and stopping at either end.
+# Not while typing in a text field
+preview_previous = [{ key = "ArrowLeft" }]
+preview_next = [{ key = "ArrowRight" }]
 # The rows the filters show, on every page of the table
 select_all = [{ key = "a", mod = true }]
 clear_selection = [{ key = "Escape" }]

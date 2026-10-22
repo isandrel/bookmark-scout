@@ -139,6 +139,10 @@
         "message": "Ver una vista previa del marcador enfocado",
         "description": "Manager shortcuts help: p opens the preview of the focused bookmark (cover, folder, tags, and summary)"
     },
+    "shortcuts_previewPreviousNext": {
+        "message": "En la vista previa, mostrar el marcador anterior o el siguiente",
+        "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
     "shortcuts_showHelp": {
         "message": "Mostrar combinaciones de teclas",
         "description": "Keyboard shortcut description: ? opens this dialog"
@@ -1440,6 +1444,14 @@
     "bookmarks_preview": {
         "message": "Vista previa",
         "description": "Bookmark manager action and the preview key's action: a dialog with a bookmark's cover, address, folder, tags, and summary"
+    },
+    "bookmarks_previewPrevious": {
+        "message": "Marcador anterior",
+        "description": "Bookmark preview: button (and the left arrow key) that shows the previous bookmark of the page, skipping folders"
+    },
+    "bookmarks_previewNext": {
+        "message": "Marcador siguiente",
+        "description": "Bookmark preview: button (and the right arrow key) that shows the next bookmark of the page, skipping folders"
     },
     "bookmarks_detailsTitle": {
         "message": "Detalles del marcador",

@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { BookmarkActionMenuItems } from '@/components/ui/table/bookmark-row-menu';
 import { setLanguage } from '@/hooks/use-i18n';
-import { type Bookmark, ItemTypeEnum } from '@/lib/manager-bookmark';
+import { type Bookmark, ItemTypeEnum, previewNeighbors } from '@/lib/manager-bookmark';
 import { getSettingsFieldMeta } from '@/lib/settings-schema';
 import {
   ACTION_MENUS,
@@ -196,6 +196,22 @@ describe('bookmark action menus', () => {
     }
     expect(host.preview).toHaveBeenCalledTimes(1);
     expect(sections([folder]).flat()).not.toContain('preview');
+  });
+
+  it("steps a preview through the page's bookmarks, skipping folders and separators, and stops at the ends", () => {
+    const bookmark = (id: string): Bookmark => ({ ...link, id, url: `https://${id}.example/` });
+    const separator: Bookmark = { ...link, id: 'separator', type: ItemTypeEnum.Separator };
+    const noAddress: Bookmark = { ...link, id: 'no-address', url: undefined };
+    const [first, second, last] = [bookmark('first'), bookmark('second'), bookmark('last')];
+    const rows = [folder, first, separator, second, noAddress, folder, last, folder];
+    expect(previewNeighbors(rows, first.id)).toEqual({ previous: undefined, next: second });
+    expect(previewNeighbors(rows, second.id)).toEqual({ previous: first, next: last });
+    expect(previewNeighbors(rows, last.id)).toEqual({ previous: second, next: undefined });
+    // A bookmark no longer among the rows has nowhere to go.
+    expect(previewNeighbors(rows, 'gone')).toEqual({});
+    // Preview itself is offered on the same rows the steps land on.
+    expect(sections([separator]).flat()).not.toContain('preview');
+    expect(sections([noAddress]).flat()).not.toContain('preview');
   });
 
   it("offers the preview's buttons from config, where they apply to the bookmark shown", () => {

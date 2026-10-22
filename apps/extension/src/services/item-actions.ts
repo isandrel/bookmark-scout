@@ -45,10 +45,7 @@ export const ITEM_ACTIONS = {
     icon: 'eye',
     itemMenu: {
       // One bookmark with an address; folders and separators have nothing to preview.
-      available: (items) => {
-        const item = single(items);
-        return Boolean(item?.url) && !isFolderItem(item);
-      },
+      available: (items) => isPreviewableBookmark(single(items)),
       run: (items, host) => host.preview(items[0]),
     },
   }),
