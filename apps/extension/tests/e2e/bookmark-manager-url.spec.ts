@@ -6,6 +6,7 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { currentFolderOnly, setTablePageSize } from './manager-helpers';
+import { STORAGE_ITEMS, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -109,6 +110,54 @@ test('?q= searches every folder, and typing adds one history entry per burst', a
   // Clearing the filters clears the address too.
   await page.getByRole('button', { name: 'Reset', exact: true }).click();
   await expect.poll(() => search(page)).toBe(`?id=${seeded.folderId}`);
+});
+
+test('?q= with operators round-trips through the address, Back, Forward, and reload (U32)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Url Operators', [
+    { title: 'Operator Urgent', url: 'https://docs.e2e.invalid/urgent' },
+    { title: 'Operator Docs', url: 'https://docs.e2e.invalid/plain' },
+    { title: 'Operator Other', url: 'https://other.e2e.invalid/other' },
+  ]);
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [seeded.ids['Operator Urgent'] as string]: { tags: ['Urgent'] },
+  });
+  const queryParam = () => page.evaluate(() => new URL(window.location.href).searchParams.get('q'));
+  const titleOf = new Map(Object.entries(seeded.ids).map(([title, id]) => [id, title]));
+  const shown = () =>
+    page
+      .locator('tbody tr[data-row-id]')
+      .evaluateAll((rows) => rows.map((row) => row.getAttribute('data-row-id') ?? ''))
+      .then((ids) => ids.map((id) => titleOf.get(id) ?? id).sort());
+
+  await page.goto(managerUrl(extensionId, `?q=${encodeURIComponent('tag:urgent')}`));
+  await expect(titleFilter(page)).toHaveValue('tag:urgent');
+  await expect.poll(shown).toEqual(['Operator Urgent']);
+  await expect(page).toHaveTitle('Search "tag:urgent" - Bookmarks - Bookmark Scout');
+
+  // A query with a quoted phrase and an exclusion goes into the address as typed.
+  const second = 'folder:"E2E Url Operators" domain:docs.e2e.invalid -tag:urgent';
+  await titleFilter(page).fill(second);
+  await expect.poll(queryParam).toBe(second);
+  await expect.poll(shown).toEqual(['Operator Docs']);
+
+  await page.goBack();
+  await expect(titleFilter(page)).toHaveValue('tag:urgent');
+  await expect.poll(queryParam).toBe('tag:urgent');
+  await expect.poll(shown).toEqual(['Operator Urgent']);
+  await page.goForward();
+  await expect(titleFilter(page)).toHaveValue(second);
+  await expect.poll(shown).toEqual(['Operator Docs']);
+
+  // The address alone brings it back, as a link or bookmark would.
+  const link = page.url();
+  await page.goto(managerUrl(extensionId));
+  await page.goto(link);
+  await expect(titleFilter(page)).toHaveValue(second);
+  await expect.poll(shown).toEqual(['Operator Docs']);
 });
 
 test('q wins over id, which keeps the folder for Current folder only', async ({

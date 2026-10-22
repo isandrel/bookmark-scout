@@ -460,3 +460,63 @@ test('saved searches reorder from each handle menu, and the order is stored', as
     .poll(async () => (await readSavedSearches(extensionWorker)).local)
     .toEqual([expect.objectContaining({ id: 'two' }), expect.objectContaining({ id: 'one' })]);
 });
+
+test('a saved search with operators reopens with the same results and follows tag changes (U34)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Saved Operators', [
+    { title: 'Operator Keep', url: 'https://keep.e2e.invalid/a' },
+    { title: 'Operator Skip Domain', url: 'https://skip.e2e.invalid/b' },
+    { title: 'Operator Untagged', url: 'https://keep.e2e.invalid/c' },
+  ]);
+  const metadata = {
+    [seeded.ids['Operator Keep'] as string]: { tags: ['Reading'] },
+    [seeded.ids['Operator Skip Domain'] as string]: { tags: ['reading'] },
+  };
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, metadata);
+  const query = 'tag:reading -domain:skip.e2e.invalid';
+  const search = page.getByPlaceholder('Search titles, addresses, folders, and tags');
+
+  await page.goto(managerUrl(extensionId));
+  await search.fill(query);
+  await expect.poll(() => rowTitles(page)).toEqual([expect.stringContaining('Operator Keep')]);
+  let menu = await openSavedSearches(page);
+  await page.keyboard.type('Reading, not skip');
+  await page.keyboard.press('Enter');
+  await expect(
+    toastRegion(page).getByText('✓ Saved search "Reading, not skip"', { exact: true }),
+  ).toBeVisible();
+  // The query is stored as typed, with the syntax it was written in.
+  expect((await readSavedSearches(extensionWorker)).local).toEqual([
+    {
+      id: expect.any(String),
+      createdAt: expect.any(Number),
+      name: 'Reading, not skip',
+      query: { filters: { title: query }, syntaxVersion: 2, sorting: [] },
+    },
+  ]);
+  await page.keyboard.press('Escape');
+
+  await page.getByRole('button', { name: 'Reset', exact: true }).click();
+  await page.reload();
+  await expect(search).toHaveValue('');
+  menu = await openSavedSearches(page);
+  await menu.getByRole('button', { name: 'Reading, not skip', exact: true }).click();
+  await expect(search).toHaveValue(query);
+  await expect.poll(() => rowTitles(page)).toEqual([expect.stringContaining('Operator Keep')]);
+  await expect(page.locator('tbody tr')).toHaveCount(1);
+
+  // Tags change while it is open: the results follow.
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    ...metadata,
+    [seeded.ids['Operator Untagged'] as string]: { tags: ['READING'] },
+  });
+  await expect
+    .poll(async () => (await rowTitles(page)).sort())
+    .toEqual([
+      expect.stringContaining('Operator Keep'),
+      expect.stringContaining('Operator Untagged'),
+    ]);
+});
