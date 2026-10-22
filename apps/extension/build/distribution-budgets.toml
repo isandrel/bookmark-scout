@@ -182,27 +182,35 @@
 # https: and www. guesses, the Redirected and Unusable image tabs, and partial saves when storage
 # is full. Firefox measured ZIP 1,975,786, 6,576,506 B uncompressed, 3,829,040 B of JavaScript,
 # and 2,185,916 B of locales on the branch rebased onto 16629f38.
+# Raised on 2026-10-22 (ZIP 1,985,000 to 1,995,000, uncompressed 6,590,000 to 6,650,000, javascript
+# 3,835,000 to 3,850,000, locales 2,195,000 to 2,245,000) for Smart Rules moving new bookmarks and
+# its safety work: the auto-move opt-in and changes list, run scopes for search results and the
+# selection, the stable move plan, fail-closed moves, the reviewed run's durable record, the
+# moving template, and New Bookmarks From, with about 30 new and 7 reworded messages in 12
+# languages. Measured on feat/rules-safety rebased onto f47d6d37: Chrome / Edge / Firefox ZIP
+# 1,989,633 / 1,989,636 / 1,989,706, uncompressed 6,639,399 / 6,639,395 / 6,639,558 B, and
+# 3,842,899 B of JavaScript and 2,234,850 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_985_000
-raw_bytes = 6_590_000
+zip_bytes = 1_995_000
+raw_bytes = 6_650_000
 
 [targets.edge]
-zip_bytes = 1_985_000
-raw_bytes = 6_590_000
+zip_bytes = 1_995_000
+raw_bytes = 6_650_000
 
 [targets.firefox]
-zip_bytes = 1_985_000
-raw_bytes = 6_590_000
+zip_bytes = 1_995_000
+raw_bytes = 6_650_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_835_000
+javascript = 3_850_000
 css = 87_000
 fonts = 143_000
-locales = 2_195_000
+locales = 2_245_000
 images = 320_000
 other = 29_000
