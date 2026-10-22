@@ -266,6 +266,12 @@ const duplicateMatchStrategySchema = z.enum([
   'title_only',
 ]);
 const duplicateKeepRuleSchema = z.enum(['oldest', 'newest', 'first']);
+/** What the dead-link repair review starts a failed link and a redirect on. */
+const deadLinkFailureActionSchema = z.enum(['keep', 'delete', 'archive']);
+const deadLinkRedirectActionSchema = z.enum(['keep', 'redirect']);
+/** The repair choices' own labels, shared with the review. */
+const deadLinkActionLabel = (action: 'keep' | 'delete' | 'archive' | 'redirect') =>
+  t(DEAD_LINK_REPAIR_CHOICE_LABEL_KEYS[action]);
 const exportFormatSchema = z.enum(['html', 'json', 'markdown', 'csv']);
 
 /**
@@ -958,6 +964,24 @@ const fields = {
     'maintenance.dead_links.follow_redirects',
     'deadLinksFollowRedirects',
   ),
+  deadLinksOnDead: enumField(
+    'maintenance.dead_links.on_dead',
+    'deadLinksOnDead',
+    deadLinkFailureActionSchema,
+    deadLinkActionLabel,
+  ),
+  deadLinksOnCheck: enumField(
+    'maintenance.dead_links.on_check',
+    'deadLinksOnCheck',
+    deadLinkFailureActionSchema,
+    deadLinkActionLabel,
+  ),
+  deadLinksOnRedirect: enumField(
+    'maintenance.dead_links.on_redirect',
+    'deadLinksOnRedirect',
+    deadLinkRedirectActionSchema,
+    deadLinkActionLabel,
+  ),
   deadLinksSuccessStatuses: numberListField(
     'maintenance.dead_links.success_statuses',
     'deadLinksSuccessStatuses',
@@ -1393,7 +1417,13 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'deadLinks',
         labelKey: 'tools_checkDeadLinks',
         toggle: 'deadLinksEnabled',
-        fields: ['deadLinksDefaultScope', 'deadLinksFollowRedirects'],
+        fields: [
+          'deadLinksDefaultScope',
+          'deadLinksFollowRedirects',
+          'deadLinksOnDead',
+          'deadLinksOnCheck',
+          'deadLinksOnRedirect',
+        ],
         advanced: [
           'deadLinksRequestTimeoutMs',
           'deadLinksConcurrency',

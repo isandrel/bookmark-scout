@@ -205,6 +205,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`button`**: `default` is teal, `outline` is surface with a line, `ghost` has no fill, `destructive` is danger. Sizes are `sm` (28px), `default` (32px), and `lg` (36px); icon sizes are 24px and 28px. Do not override heights per call site.
 
+**`review-list`** (`ReviewList`, `src/components/bookmarks/review/ReviewList.tsx`): how a tool's review lists items it can change. Category tabs (`CategoryTabs`, a `SegmentedControl` with All and each category with items, each with its count) above a `muted` bar holding a checkbox that selects every item shown, the selected count, and **Set selected to…**, then one bordered row per item: a checkbox, the title on one line with its badges and the item's action menu at the end, and compact meta lines under it (the address, the folder and the reason). Each category starts on the action its tool's setting names. Rows are drawn only while on screen (TanStack Virtual, `config/ui/tool-review.toml`), so thousands of results scroll smoothly; the list scrolls inside the dialog and never sideways.
+
 **`checkbox`** (`Checkbox`): a 16px box with a 1px primary line, filled when checked. A partly selected group, such as the table's select-all, is indeterminate and shows a dash, never a check.
 
 **`radio`** (`RadioGroup`, `RadioGroupItem`): a 16px circle with a 1px primary line and an 8px primary dot when chosen, for picking one item in a list, such as the bookmark Duplicate Cleaner keeps in each group. A choice among a few short options is a `SegmentedControl` instead.

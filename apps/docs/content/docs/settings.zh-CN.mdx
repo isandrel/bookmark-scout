@@ -228,7 +228,7 @@ AI 默认关闭。只有在你开启 **AI 功能**后，这些设置才会生效
 | --- | --- |
 | **重复书签清理** | **匹配策略**规范化网址；**统一 www**、**忽略协议**和**忽略末尾斜杠**开启；**保留规则**最早的；**最大组数** <SettingDefault path="maintenance.duplicates.max_groups" />。始终扫描所有书签 |
 | **网址清理** | **移除片段**关闭；**排序查询参数**和**去除重复查询参数**开启；**保留的参数**和**移除的参数**列表 |
-| **检查失效链接** | **请求超时** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒；**并发数** <SettingDefault path="maintenance.dead_links.concurrency" />；**重试次数** <SettingDefault path="maintenance.dead_links.retry_count" />；**跟随重定向**开启；**成功状态码** 200、201、202、204、301、302、307、308 |
+| **检查失效链接** | **请求超时** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒；**并发数** <SettingDefault path="maintenance.dead_links.concurrency" />；**重试次数** <SettingDefault path="maintenance.dead_links.retry_count" />；**跟随重定向**开启；**成功状态码** <SettingDefault path="maintenance.dead_links.success_statuses" />；**确认失效链接的默认操作**、**需手动检查链接的默认操作**和**已重定向链接的默认操作** 保持不变 |
 | **后台任务** | **超过此数量时在后台应用** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />：涉及更多书签的已审阅更改会在后台分批应用，关闭页面后仍会继续；每一批都是[历史记录](/guides/save-and-organize)中的一项更改，可在那里撤消 |
 
 工具会从**所有书签**开始，这样即使从管理器打开时所在的文件夹开始扫描，也不会漏掉其他文件夹。如果想让工具从当前打开的文件夹开始，请更改它的**默认范围**。**AI 文件夹重组**从当前打开的文件夹开始，因为针对所有书签的方案会把它们全部发送给你的 AI 服务商。在管理器的顶层（没有打开任何文件夹），所有工具都从**所有书签**开始。

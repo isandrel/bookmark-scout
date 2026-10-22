@@ -228,7 +228,7 @@ AI に質問が調べたり変更したりできる操作がここに一覧表�
 | --- | --- |
 | **重複クリーナー** | **照合方法** 正規化したURL、**wwwを正規化**、**プロトコルを無視**、**末尾のスラッシュを無視** はオン、**保持ルール** 最も古いもの、**最大グループ数** <SettingDefault path="maintenance.duplicates.max_groups" />。常にすべてのブックマークをスキャンします |
 | **URLクリーナー** | **フラグメントを削除** オフ、**クエリパラメータを並べ替え** と **クエリパラメータの重複を削除** はオン、**保持するパラメータ** と **削除するパラメータ** のリスト |
-| **リンク切れチェック** | **リクエストのタイムアウト** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒、**同時実行数** <SettingDefault path="maintenance.dead_links.concurrency" />、**再試行回数** <SettingDefault path="maintenance.dead_links.retry_count" />、**リダイレクトをたどる** オン、**成功とみなすステータスコード** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **リンク切れチェック** | **リクエストのタイムアウト** <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒、**同時実行数** <SettingDefault path="maintenance.dead_links.concurrency" />、**再試行回数** <SettingDefault path="maintenance.dead_links.retry_count" />、**リダイレクトをたどる** オン、**成功とみなすステータスコード** <SettingDefault path="maintenance.dead_links.success_statuses" />、**リンク切れ確定の既定**・**手動で確認するリンクの既定**・**リダイレクトされたリンクの既定** そのまま残す |
 | **バックグラウンドのタスク** | **バックグラウンドで適用する件数** <SettingDefault path="maintenance.background_tasks.apply_in_background_above" />: これより多いブックマークへの確認済みの変更は、バックグラウンドで分割して適用され、ページを閉じても続きます。各部分は[履歴](/guides/save-and-organize)の 1 件の変更として表示され、そこで元に戻せます |
 
 ツールは **すべてのブックマーク** から始まります。マネージャーを開いたときのフォルダからスキャンしても、ほかのフォルダが漏れないようにするためです。開いているフォルダから始めたい場合は、ツールの **既定の範囲** を変更してください。**AIフォルダ整理** は開いているフォルダから始まります。すべてのブックマークを対象にしたプランでは、そのすべてが AI プロバイダーに送信されるためです。フォルダを開いていないマネージャーの最上位では、どのツールも **すべてのブックマーク** から始まります。
