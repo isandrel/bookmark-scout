@@ -4,7 +4,7 @@ import type { BrowserContext } from '@playwright/test';
 import { appRoot, readConfigToml } from '../config-files';
 import { expect, test } from './fixtures';
 import { readStored, STORAGE_ITEMS, seedAIServices, writeStored } from './storage';
-import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
+import { openTools, seedFolder, setSettings, showAllTools, toolCard } from './tool-helpers';
 
 test('[mocked provider contract] a custom prompt saved in Options is what auto-tagging sends', async ({
   context,
@@ -130,6 +130,7 @@ test('[mocked provider contract] auto-tagging asks for the AI output language: t
   const analyze = async () => {
     await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
     await page.getByTitle(ja.bookmarks_showTools.message).click();
+    await showAllTools(page);
     await toolCard(page, ja.tools_autoTagging.message)
       .getByRole('button', { name: ja.action_analyze.message })
       .click();

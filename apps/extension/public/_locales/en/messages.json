@@ -631,6 +631,26 @@
         "message": "Links",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "Tools Sidebar",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "Tools Sidebar Layout",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "Tabs show one section of the manager's Tools sidebar at a time; One list shows every section, one after another.",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "Tabs",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "One list",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "Deleting",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1052,6 +1072,14 @@
     "tools_title": {
         "message": "Tools",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "All",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "Show tools",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "Check Dead Links",
@@ -7304,6 +7332,18 @@
     "settings_sectionDates": {
         "message": "Dates and Times",
         "description": "Settings section heading: how dates and times show."
+    },
+    "settings_sectionAddresses": {
+        "message": "Addresses",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "Show Trailing Slash",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "Show the / that addresses end with, as in https://example.com/. Links always open the exact address.",
+        "description": "Setting description for Show Trailing Slash"
     },
     "settings_dateFormat": {
         "message": "Date Format",

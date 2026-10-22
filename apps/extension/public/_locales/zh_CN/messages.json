@@ -623,6 +623,26 @@
         "message": "链接",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "工具侧栏",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "工具侧栏布局",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "“标签页”每次显示管理器工具侧栏的一个分区；“单个列表”依次显示所有分区。",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "标签页",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "单个列表",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "删除",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1044,6 +1064,14 @@
     "tools_title": {
         "message": "工具",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "全部",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "显示工具",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "检查失效链接",
@@ -7086,6 +7114,18 @@
     "settings_sectionDates": {
         "message": "日期和时间",
         "description": "Settings section heading: how dates and times show."
+    },
+    "settings_sectionAddresses": {
+        "message": "网址",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "显示末尾斜杠",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "显示网址末尾的 /，例如 https://example.com/。链接始终打开确切的网址。",
+        "description": "Setting description for Show Trailing Slash"
     },
     "settings_dateFormat": {
         "message": "日期格式",

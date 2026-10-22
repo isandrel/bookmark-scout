@@ -59,7 +59,19 @@ export async function chooseExportFolder(page: Page, folderTitle: string) {
   await page.getByRole('option', { name: folderTitle, exact: true }).click();
 }
 
+/** Opens the manager on a folder with the Tools sidebar showing every tool (the All tab). */
 export async function openTools(page: Page, extensionId: string, folderId: string) {
   await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
   await page.getByTitle('Show tools').click();
+  await showAllTools(page);
+}
+
+/** Picks the Tools sidebar's All tab, the first one in every language. */
+export async function showAllTools(page: Page) {
+  await page.getByTestId('tools-tabs').getByRole('radio').first().click();
+}
+
+/** Picks a tab of the Tools sidebar (Tools Sidebar Layout is Tabs by default). */
+export async function showToolsTab(page: Page, name: string) {
+  await page.getByTestId('tools-tabs').getByRole('radio', { name, exact: true }).click();
 }

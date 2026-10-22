@@ -625,6 +625,7 @@ const fields = {
   showFavicons: switchField('appearance.theme_icons.show_favicons', 'showFavicons'),
   browserIconCache: switchField('appearance.theme_icons.browser_icon_cache', 'browserIconCache'),
   faviconSize: numberChoiceField('appearance.theme_icons.favicon_size', 'faviconSize'),
+  showTrailingSlash: switchField('appearance.addresses.show_trailing_slash', 'showTrailingSlash'),
 
   searchDebounceMs: numberField('search.search.debounce_ms', 'searchDelay', { unit: 'ms' }),
   maxSearchResults: numberChoiceField('search.search.max_results', 'maxResults'),
@@ -712,6 +713,15 @@ const fields = {
     'agentBridgeDisabledActions',
   ),
   managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
+  toolsSidebarLayout: enumField(
+    'behavior.tools_sidebar.layout',
+    'toolsSidebarLayout',
+    z.enum(['tabs', 'list']),
+    (value) =>
+      ({ tabs: t('settings_toolsSidebarLayoutTabs'), list: t('settings_toolsSidebarLayoutList') })[
+        value
+      ],
+  ),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField(
     'ai_tools.reorganization.min_items_per_folder',
@@ -1256,6 +1266,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
       },
       { id: 'dates', labelKey: 'settings_sectionDates', fields: ['dateFormat', 'timeFormat'] },
+      { id: 'addresses', labelKey: 'settings_sectionAddresses', fields: ['showTrailingSlash'] },
       {
         id: 'popup',
         labelKey: 'settings_sectionPopup',
@@ -1277,6 +1288,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'links',
         labelKey: 'settings_sectionLinks',
         fields: ['linkOpenTarget', 'openConfirmAbove'],
+      },
+      {
+        id: 'toolsSidebar',
+        labelKey: 'settings_sectionToolsSidebar',
+        fields: ['toolsSidebarLayout'],
       },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       {

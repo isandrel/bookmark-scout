@@ -631,6 +631,26 @@
         "message": "Enlaces",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "Barra de herramientas",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "Diseño de la barra de herramientas",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "Pestañas muestra una sección de la barra de herramientas del gestor a la vez; Una lista muestra todas las secciones seguidas.",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "Pestañas",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "Una lista",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "Eliminar",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1052,6 +1072,14 @@
     "tools_title": {
         "message": "Herramientas",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "Todo",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "Mostrar herramientas",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "Comprobar enlaces rotos",
@@ -7304,6 +7332,18 @@
     "settings_sectionDates": {
         "message": "Fechas y horas",
         "description": "Settings section heading: how dates and times show."
+    },
+    "settings_sectionAddresses": {
+        "message": "Direcciones",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "Mostrar barra final",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "Muestra la / con la que terminan las direcciones, como en https://example.com/. Los enlaces siempre abren la dirección exacta.",
+        "description": "Setting description for Show Trailing Slash"
     },
     "settings_dateFormat": {
         "message": "Formato de fecha",

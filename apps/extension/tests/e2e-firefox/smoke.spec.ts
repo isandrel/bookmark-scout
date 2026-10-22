@@ -74,6 +74,8 @@ async function openTools(extension: FirefoxExtension, folderId: string) {
   await extension.open(`bookmarks.html?id=${folderId}`);
   await (await extension.find('button[title="Show tools"]')).click();
   await extension.find('[data-testid="tools-sidebar"]');
+  // The sidebar opens on one tab (Tools Sidebar Layout is Tabs); the first tab shows every tool.
+  await (await extension.find('[data-testid="tools-tabs"] [role="radio"]')).click();
 }
 
 async function clickToolButton(extension: FirefoxExtension, tool: string, button: string) {

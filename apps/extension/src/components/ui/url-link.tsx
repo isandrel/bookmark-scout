@@ -29,6 +29,12 @@ export function useLinkClick(): (event: MouseEvent<HTMLAnchorElement>, url: stri
   };
 }
 
+/** Formats addresses the way the Show Trailing Slash setting says (`formatDisplayUrl`). */
+export function useDisplayUrl(): (url: string) => string {
+  const { value: showTrailingSlash } = useSetting('showTrailingSlash');
+  return (url) => formatDisplayUrl(url, showTrailingSlash);
+}
+
 type UrlLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & { href: string };
 
 /**
@@ -37,8 +43,9 @@ type UrlLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & { hr
  */
 export function UrlLink({ href, className, children, onClick, ...props }: UrlLinkProps) {
   const onLinkClick = useLinkClick();
+  const displayUrl = useDisplayUrl();
   if (!isOpenableUrl(href)) {
-    return <span className={className}>{children ?? href}</span>;
+    return <span className={className}>{children ?? displayUrl(href)}</span>;
   }
   return (
     <a
@@ -56,7 +63,7 @@ export function UrlLink({ href, className, children, onClick, ...props }: UrlLin
         if (!event.defaultPrevented) onLinkClick(event, href);
       }}
     >
-      {children ?? href}
+      {children ?? displayUrl(href)}
     </a>
   );
 }

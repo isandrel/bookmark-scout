@@ -631,6 +631,26 @@
         "message": "Links",
         "description": "Settings section heading: how clicked links open"
     },
+    "settings_sectionToolsSidebar": {
+        "message": "Barra de ferramentas",
+        "description": "Settings section title: the manager's Tools sidebar"
+    },
+    "settings_toolsSidebarLayout": {
+        "message": "Layout da barra de ferramentas",
+        "description": "Setting label: how the Tools sidebar lists its tools"
+    },
+    "settings_toolsSidebarLayoutDesc": {
+        "message": "Abas mostra uma seção da barra de ferramentas do gerenciador por vez; Uma lista mostra todas as seções em sequência.",
+        "description": "Setting description for Tools Sidebar Layout"
+    },
+    "settings_toolsSidebarLayoutTabs": {
+        "message": "Abas",
+        "description": "Tools Sidebar Layout option: one tab per section"
+    },
+    "settings_toolsSidebarLayoutList": {
+        "message": "Uma lista",
+        "description": "Tools Sidebar Layout option: every section in one list"
+    },
     "settings_sectionDeleting": {
         "message": "Excluir",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1052,6 +1072,14 @@
     "tools_title": {
         "message": "Ferramentas",
         "description": "Tools panel title"
+    },
+    "tools_tabAll": {
+        "message": "Tudo",
+        "description": "Tools sidebar: the tab that shows every tool"
+    },
+    "tools_tabsLabel": {
+        "message": "Mostrar ferramentas",
+        "description": "Tools sidebar: accessible name of the section tabs"
     },
     "tools_checkDeadLinks": {
         "message": "Verificar links quebrados",
@@ -7304,6 +7332,18 @@
     "settings_sectionDates": {
         "message": "Datas e horas",
         "description": "Settings section heading: how dates and times show."
+    },
+    "settings_sectionAddresses": {
+        "message": "Endereços",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "Mostrar barra final",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "Mostra a / no fim dos endereços, como em https://example.com/. Os links sempre abrem o endereço exato.",
+        "description": "Setting description for Show Trailing Slash"
     },
     "settings_dateFormat": {
         "message": "Formato de data",
