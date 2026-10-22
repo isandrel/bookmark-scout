@@ -52,7 +52,7 @@ jobs:
   flaky-tests:
     name: End-to-end failures in recent CI runs
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     permissions:
       contents: read
       actions: read
@@ -63,7 +63,7 @@ jobs:
       - name: Set up workspace
         uses: ./.github/actions/setup-workspace
 
-      # The tests that failed in the CI runs of the past week or so, ranked, with where each
+      # The tests that failed in the last 60 CI runs (about a week), ranked, with where each
       # stopped (.agents/skills/extension-feature-test/scripts/ci-flaky-tests.ts).
       - name: Rank failed tests
         env:
@@ -73,6 +73,6 @@ jobs:
             echo "### End-to-end tests that failed in recent CI runs"
             echo
             echo '```text'
-            bun .agents/skills/extension-feature-test/scripts/ci-flaky-tests.ts 100
+            bun .agents/skills/extension-feature-test/scripts/ci-flaky-tests.ts 60
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
