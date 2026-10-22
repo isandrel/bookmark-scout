@@ -4480,8 +4480,52 @@
         "description": "Dead link scan summary; $1 confirmed dead, $2 need a manual check, $3 redirected"
     },
     "tools_deadLinkReview": {
-        "message": "Reparaturen prüfen",
+        "message": "Links reparieren oder entfernen",
         "description": "Button that opens the reviewed dead-link repair dialog"
+    },
+    "tools_deadLinkGroupLabel": {
+        "message": "Ergebnisse anzeigen",
+        "description": "Accessible name of the dead link results filter"
+    },
+    "tools_deadLinkGroup_all": {
+        "message": "Alle ($1)",
+        "description": "Dead link results filter: every result; $1 is how many"
+    },
+    "tools_deadLinkGroup_dead": {
+        "message": "Sicher defekt ($1)",
+        "description": "Dead link results filter: the confirmed dead group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_check": {
+        "message": "Manuell prüfen ($1)",
+        "description": "Dead link results filter: the check manually group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_redirect": {
+        "message": "Weitergeleitet ($1)",
+        "description": "Dead link results filter: the redirected group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_ok": {
+        "message": "OK ($1)",
+        "description": "Dead link results filter: the reachable group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_skipped": {
+        "message": "Übersprungen ($1)",
+        "description": "Dead link results filter: the skipped (not a web address) group; $1 is how many results it has"
+    },
+    "tools_deadLinkSelectShown": {
+        "message": "Alle angezeigten auswählen",
+        "description": "Dead link repairs: checkbox that selects every link the filter shows"
+    },
+    "tools_deadLinkSelectItem": {
+        "message": "$1 auswählen",
+        "description": "Dead link repairs: checkbox for one link; $1 is its title"
+    },
+    "tools_deadLinkSelectedCount": {
+        "message": "$1 ausgewählt",
+        "description": "Dead link repairs: how many links are selected; $1 is the count"
+    },
+    "tools_deadLinkSetSelected": {
+        "message": "Auswahl festlegen auf …",
+        "description": "Dead link repairs: menu that sets one action on every selected link"
     },
     "tools_deadLinkRepairTitle": {
         "message": "Reparaturen defekter Links prüfen",

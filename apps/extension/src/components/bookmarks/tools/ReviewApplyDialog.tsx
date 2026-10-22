@@ -111,7 +111,7 @@ export function ReviewApplyDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-[60vh] space-y-3 overflow-y-auto pr-1">
+        <div className="max-h-[60vh] space-y-3 overflow-x-hidden overflow-y-auto pr-1">
           {outcome ? (
             <div
               role="alert"

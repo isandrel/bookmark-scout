@@ -4472,8 +4472,52 @@
         "description": "Dead link scan summary; $1 confirmed dead, $2 need a manual check, $3 redirected"
     },
     "tools_deadLinkReview": {
-        "message": "복구 검토",
+        "message": "링크 복구 또는 삭제",
         "description": "Button that opens the reviewed dead-link repair dialog"
+    },
+    "tools_deadLinkGroupLabel": {
+        "message": "결과 보기",
+        "description": "Accessible name of the dead link results filter"
+    },
+    "tools_deadLinkGroup_all": {
+        "message": "모두 ($1)",
+        "description": "Dead link results filter: every result; $1 is how many"
+    },
+    "tools_deadLinkGroup_dead": {
+        "message": "깨진 링크 확인됨 ($1)",
+        "description": "Dead link results filter: the confirmed dead group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_check": {
+        "message": "직접 확인 필요 ($1)",
+        "description": "Dead link results filter: the check manually group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_redirect": {
+        "message": "리디렉션 ($1)",
+        "description": "Dead link results filter: the redirected group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_ok": {
+        "message": "정상 ($1)",
+        "description": "Dead link results filter: the reachable group; $1 is how many results it has"
+    },
+    "tools_deadLinkGroup_skipped": {
+        "message": "건너뜀 ($1)",
+        "description": "Dead link results filter: the skipped (not a web address) group; $1 is how many results it has"
+    },
+    "tools_deadLinkSelectShown": {
+        "message": "표시된 항목 모두 선택",
+        "description": "Dead link repairs: checkbox that selects every link the filter shows"
+    },
+    "tools_deadLinkSelectItem": {
+        "message": "$1 선택",
+        "description": "Dead link repairs: checkbox for one link; $1 is its title"
+    },
+    "tools_deadLinkSelectedCount": {
+        "message": "$1개 선택됨",
+        "description": "Dead link repairs: how many links are selected; $1 is the count"
+    },
+    "tools_deadLinkSetSelected": {
+        "message": "선택 항목 설정…",
+        "description": "Dead link repairs: menu that sets one action on every selected link"
     },
     "tools_deadLinkRepairTitle": {
         "message": "깨진 링크 복구 검토",
