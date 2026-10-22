@@ -16,6 +16,8 @@ interface DataTableFacetedFilterProps<TData extends RowData, TValue> {
   options: FacetOption[];
   /** Item counts per option value, computed over the rows the filter applies to. */
   counts?: ReadonlyMap<string, number>;
+  /** Classes for the button that opens the list. */
+  className?: string;
 }
 
 /** The last option while something is selected: choosing it clears the filter. */
@@ -29,6 +31,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
   title,
   options,
   counts,
+  className,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const filterValue = column?.getFilterValue();
   const selectedValues = new Set<string>(Array.isArray(filterValue) ? filterValue : []);
@@ -42,7 +45,9 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
     <div className="grid gap-2">
       <Popover>
         <PopoverTrigger
-          render={<Button variant="outline" size="sm" className="h-8 border-dashed" />}
+          render={
+            <Button variant="outline" size="sm" className={cn('h-8 border-dashed', className)} />
+          }
         >
           <PlusCircle />
           {title}

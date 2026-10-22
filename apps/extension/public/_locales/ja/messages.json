@@ -3435,6 +3435,26 @@
         "message": "ドメイン",
         "description": "Title of the filter that groups links by site domain"
     },
+    "table_filters": {
+        "message": "フィルター",
+        "description": "Bookmark manager: button that opens the table filters (current folder, type, domain, folder, date added, address), and the name of the list of filters in use"
+    },
+    "table_filtersInUse": {
+        "message": "フィルター（$1 件使用中）",
+        "description": "Bookmark manager: accessible name of the Filters button while filters are in use; $1 is how many"
+    },
+    "table_filterChip": {
+        "message": "$1: $2",
+        "description": "Bookmark manager: a filter in use, shown as a chip under the toolbar; $1 is the filter, $2 its values"
+    },
+    "table_filterValueSeparator": {
+        "message": "、",
+        "description": "Bookmark manager: what goes between the values of one filter chip"
+    },
+    "table_filterChipRemove": {
+        "message": "フィルター「$1」を削除",
+        "description": "Bookmark manager: accessible name of the button that removes a filter chip; $1 is the chip text"
+    },
     "table_browserOrder": {
         "message": "ブラウザの順序",
         "description": "Toggle that shows the current folder in the browser bookmark order"
@@ -3552,6 +3572,102 @@
                 "example": "recipes"
             }
         }
+    },
+    "searchHelp_button": {
+        "message": "検索構文",
+        "description": "Search syntax help: the button at the end of the manager search box, and the heading of its list"
+    },
+    "searchHelp_intro": {
+        "message": "すべての単語が、タイトル、アドレス、フォルダ、タグ、要約のいずれかに一致する必要があります。演算子を選ぶと検索に追加されます。",
+        "description": "Search syntax help: how plain words match, above the list of operators"
+    },
+    "searchHelp_phrase": {
+        "message": "単語をひと続きで",
+        "description": "Search syntax help: what quotes do (\"two words\")"
+    },
+    "searchHelp_exclude": {
+        "message": "除外",
+        "description": "Search syntax help: what a leading minus does (-word)"
+    },
+    "searchHelp_title": {
+        "message": "タイトル内",
+        "description": "Search syntax help: what title: does"
+    },
+    "searchHelp_url": {
+        "message": "アドレス内",
+        "description": "Search syntax help: what url: does"
+    },
+    "searchHelp_domain": {
+        "message": "サイトとそのサブドメイン",
+        "description": "Search syntax help: what domain: does"
+    },
+    "searchHelp_folder": {
+        "message": "フォルダ内（階層を問わず）",
+        "description": "Search syntax help: what folder: does"
+    },
+    "searchHelp_tag": {
+        "message": "指定したタグ付き",
+        "description": "Search syntax help: what tag: does"
+    },
+    "searchHelp_summary": {
+        "message": "要約内",
+        "description": "Search syntax help: what summary: does"
+    },
+    "searchHelp_isBookmark": {
+        "message": "ブックマークのみ",
+        "description": "Search syntax help: what is:bookmark does"
+    },
+    "searchHelp_isFolder": {
+        "message": "フォルダのみ",
+        "description": "Search syntax help: what is:folder does"
+    },
+    "searchHelp_isUntagged": {
+        "message": "タグのないブックマーク",
+        "description": "Search syntax help: what is:untagged does"
+    },
+    "searchHelp_hasTags": {
+        "message": "タグあり",
+        "description": "Search syntax help: what has:tags does"
+    },
+    "searchHelp_hasSummary": {
+        "message": "要約あり",
+        "description": "Search syntax help: what has:summary does"
+    },
+    "searchHelp_after": {
+        "message": "その日以降に追加",
+        "description": "Search syntax help: what after:YYYY-MM-DD does"
+    },
+    "searchHelp_before": {
+        "message": "その日以前に追加",
+        "description": "Search syntax help: what before:YYYY-MM-DD does"
+    },
+    "searchHelp_guide": {
+        "message": "検索ガイド",
+        "description": "Search syntax help: link to the search guide in the docs"
+    },
+    "searchDiagnostic_unknownOperator": {
+        "message": "$1 は演算子ではないため、テキストとして検索します。",
+        "description": "Note under the manager search box; $1 is an operator it does not know, such as foo:"
+    },
+    "searchDiagnostic_unknownValue": {
+        "message": "$1 は既知の値ではないため、除外します。",
+        "description": "Note under the manager search box; $1 is an is: or has: value it does not know"
+    },
+    "searchDiagnostic_invalidDate": {
+        "message": "$1 は YYYY-MM-DD 形式の日付ではないため、除外します。",
+        "description": "Note under the manager search box; $1 is what was typed after after: or before:. Keep YYYY-MM-DD as is: it is the format to type"
+    },
+    "searchDiagnostic_unclosedQuote": {
+        "message": "引用符が閉じていないため、末尾までをひと続きとして扱います。",
+        "description": "Note under the manager search box when a quote mark is not closed"
+    },
+    "searchDiagnostic_tooLong": {
+        "message": "最初の $1 文字だけを検索します。",
+        "description": "Note under the manager search box; $1 is the longest search read"
+    },
+    "searchDiagnostic_tooManyTerms": {
+        "message": "最初の $1 個の語句だけを検索します。",
+        "description": "Note under the manager search box; $1 is how many terms are read"
     },
     "ai_folderRecommendation": {
         "message": "AI フォルダのおすすめ",
@@ -6514,14 +6630,6 @@
     "managerDefaults_search": {
         "message": "タイトル・アドレス・フォルダ・タグを検索",
         "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
-    },
-    "managerDefaults_moreFilters": {
-        "message": "その他の絞り込み",
-        "description": "Bookmark manager: button that shows the less common filters (web address, folder)"
-    },
-    "managerDefaults_moreFiltersInUse": {
-        "message": "非表示にするには、これらの絞り込みを解除してください",
-        "description": "Bookmark manager: tooltip of the More filters button while one of those filters is in use"
     },
     "managerDefaults_folderFilter": {
         "message": "フォルダ",

@@ -2,6 +2,17 @@ import { format } from 'date-fns';
 import { Calendar as CalendarIcon, X } from 'lucide-react';
 import type { DateRange } from 'react-day-picker';
 
+/** A date range as the filter shows it, such as "Sep 23, 2026" or "Sep 1 – Sep 23, 2026". */
+export function formatDateRangeLabel(value: DateRange): string {
+  const locale = getCalendarLocale();
+  // "PP" is the locale's medium date, e.g. "Sep 23, 2026" or "2026/09/23".
+  const formatDay = (date: Date) => format(date, 'PP', { locale });
+  if (!value.from) return value.to ? formatDay(value.to) : '';
+  return value.to && value.to.getTime() !== value.from.getTime()
+    ? t('table_dateRange', [formatDay(value.from), formatDay(value.to)])
+    : formatDay(value.from);
+}
+
 interface DataTableDateFilterProps {
   title: string;
   className?: string;
@@ -15,14 +26,7 @@ export function DataTableDateFilter({
   value,
   onChange,
 }: DataTableDateFilterProps) {
-  const locale = getCalendarLocale();
-  // "PP" is the locale's medium date, e.g. "Sep 23, 2026" or "2026/09/23".
-  const formatDay = (date: Date) => format(date, 'PP', { locale });
-  const label = value?.from
-    ? value.to && value.to.getTime() !== value.from.getTime()
-      ? t('table_dateRange', [formatDay(value.from), formatDay(value.to)])
-      : formatDay(value.from)
-    : title;
+  const label = value?.from ? formatDateRangeLabel(value) : title;
 
   return (
     <div className="flex items-center">

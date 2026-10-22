@@ -6,6 +6,7 @@
  */
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { currentFolderOnly } from './manager-helpers';
 import { DELETE_KEY, OPEN_KEY, RENAME_KEY } from './manager-keys';
 import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
@@ -163,7 +164,7 @@ test('Ctrl/Cmd+A selects every row the filters show, on every page', async ({
   await page
     .getByRole('textbox', { name: 'Search titles, addresses, folders, and tags' })
     .fill('All ');
-  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
+  await (await currentFolderOnly(page)).check();
   await page
     .locator('tbody tr')
     .first()

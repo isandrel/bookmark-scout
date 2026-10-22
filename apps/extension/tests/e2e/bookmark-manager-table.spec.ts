@@ -1,5 +1,6 @@
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { currentFolderOnly, tableFilters } from './manager-helpers';
 import { setSettings } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -65,7 +66,7 @@ test('manager toolbar stays compact and actions stay reachable with tools open',
 
   const toolbar = page.getByTestId('bookmark-table-toolbar');
   await expect(toolbar).toBeVisible();
-  await expect(page.getByRole('checkbox', { name: 'Current folder only' })).toBeVisible();
+  await expect(await currentFolderOnly(page)).toBeVisible();
   const toolbarBox = await toolbar.boundingBox();
   expect(toolbarBox?.height ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(90);
 
@@ -175,13 +176,16 @@ test('row menu edits, deletes, and undoes deletion of manager items', async ({
   await expect(row(page, 'Doomed Link')).toHaveCount(0);
 });
 
-test('current-folder help tooltip shows its full text', async ({ extensionId, page }) => {
+test('current-folder help shows its full text under the checkbox', async ({
+  extensionId,
+  page,
+}) => {
   await page.setViewportSize({ width: 1400, height: 900 });
   await page.goto(managerUrl(extensionId));
   const helpText = 'When unchecked, filters search all bookmarks.';
-  await page.getByTestId('bookmark-table-toolbar').getByRole('button', { name: helpText }).hover();
+  await expect(await currentFolderOnly(page)).toHaveAccessibleDescription(helpText);
 
-  const tooltip = page.locator('[data-base-ui-portal]').getByText(helpText).first();
+  const tooltip = (await tableFilters(page)).getByText(helpText);
   await expect(tooltip).toBeVisible();
   const clipped = await tooltip.evaluate(
     (element) =>
@@ -223,7 +227,7 @@ test('manager table uses Japanese labels', async ({ extensionId, extensionWorker
   await page.goto(managerUrl(extensionId, folder.folderId));
 
   await expect(page.getByPlaceholder('タイトル・アドレス・フォルダ・タグを検索')).toBeVisible();
-  await page.getByRole('button', { name: 'その他の絞り込み' }).click();
+  await page.getByRole('button', { name: 'フィルター', exact: true }).click();
   await expect(page.getByPlaceholder('URLで絞り込み...')).toBeVisible();
   await expect(page.getByRole('checkbox', { name: '現在のフォルダのみ' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'タイトル' })).toBeVisible();

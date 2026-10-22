@@ -98,8 +98,7 @@ test('tooltip delay setting controls when a tooltip opens', async ({
   extensionWorker,
   page,
 }) => {
-  const help = () =>
-    page.getByRole('button', { name: 'When unchecked, filters search all bookmarks.' });
+  const help = () => page.getByTestId('search-syntax-help');
   const tooltip = page.locator('[data-slot="tooltip"]');
 
   await setSettings(extensionWorker, { tooltipDelayMs: 2000 });

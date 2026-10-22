@@ -91,9 +91,12 @@ for (const width of [600, 420]) {
     // Header buttons and toolbar controls each keep their own room.
     await expectNoOverlapWithin(page, page.locator('header button'));
     const toolbar = page.getByTestId('bookmark-table-toolbar');
+    // The search syntax help sits inside the search box on purpose.
     await expectNoOverlapWithin(
       page,
-      toolbar.locator('input, button:not([role="checkbox"]), [role="checkbox"]'),
+      toolbar.locator(
+        'input, button:not([role="checkbox"]):not([data-testid="search-syntax-help"]), [role="checkbox"]',
+      ),
     );
 
     // The folder drawer opens over the table, and picking a folder closes it.
