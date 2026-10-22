@@ -14,7 +14,13 @@ import {
   managerUrl,
   managerRow as row,
 } from './manager-helpers';
-import { bookmarksBar, otherBookmarksTitle, seedFolder, setSettings } from './popup-helpers';
+import {
+  bookmarksBar,
+  openPopup,
+  otherBookmarksTitle,
+  seedFolder,
+  setSettings,
+} from './popup-helpers';
 
 test.use({ viewport: { width: 1400, height: 900 } });
 
@@ -205,6 +211,48 @@ test('one search box with syntax help; every other filter waits in the Filters m
   await toolbar.getByRole('button', { name: 'Reset', exact: true }).click();
   await expect(filterChips(page)).toHaveCount(0);
   await expect(page.locator('tbody tr')).toHaveCount(3);
+});
+
+test('a search of conditions alone lists what they match, in the manager and the popup', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Condition Search', [
+    { title: 'Kiwi link', url: 'https://kiwi.e2e.invalid/' },
+    { title: 'Mango link', url: 'https://mango.e2e.invalid/' },
+    { title: 'Fruit box', children: [] },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await expect(page.locator('tbody tr')).toHaveCount(3);
+  const titles = () => page.locator('tbody tr').filter({ hasText: /link|Fruit box/ });
+
+  // Before the fix, a query with no text term listed nothing, though every item matched.
+  await managerSearch(page).fill('is:bookmark');
+  await expect(titles()).toHaveCount(2);
+  await expect(row(page, 'Kiwi link')).toBeVisible();
+  await expect(row(page, 'Mango link')).toBeVisible();
+  await expect(page.getByText('No results.')).toHaveCount(0);
+
+  await managerSearch(page).fill('is:folder');
+  await expect(row(page, 'Fruit box')).toBeVisible();
+  await expect(row(page, 'Kiwi link')).toHaveCount(0);
+
+  // Everything here was added today, so it is after 2020 and none of it is before.
+  await managerSearch(page).fill('after:2020-01-01');
+  await expect(titles()).toHaveCount(3);
+  await managerSearch(page).fill('after:2020-01-01 is:bookmark -mango');
+  await expect(titles()).toHaveCount(1);
+  await expect(row(page, 'Kiwi link')).toBeVisible();
+  await managerSearch(page).fill('before:2020-01-01');
+  await expect(titles()).toHaveCount(0);
+
+  await openPopup(page, extensionId);
+  await page
+    .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
+    .fill('is:bookmark after:2020-01-01');
+  await expect(page.locator('.bookmark-item')).toHaveCount(2);
+  await expect(page.getByText('No bookmarks found')).toHaveCount(0);
 });
 
 test('the Dates and Times settings change how the manager shows dates', async ({

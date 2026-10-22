@@ -203,6 +203,50 @@ describe('filterBookmarkTreeByQuery', () => {
     expect(matchBookmarkTreeQuery(tree, 'is:nothing', metadata)).toBeUndefined();
   });
 
+  it('lists what a query of conditions or exclusions alone matches, with no reasons', () => {
+    const metadata: StoredBookmarkMetadataById = {
+      soup: { tags: ['Food'] },
+      jira: { summary: 'Sprint board' },
+    };
+    const day = (year: number, month: number, date: number) =>
+      new Date(year, month - 1, date).getTime();
+    const added: Record<string, number> = {
+      recipes: day(2019, 6, 1),
+      soup: day(2019, 6, 2),
+      'recipe-cake': day(2021, 3, 4),
+      baking: day(2022, 1, 1),
+      'recipe-db': day(2020, 1, 1),
+    };
+    const dated = (nodes: readonly BookmarkTreeNode[]): BookmarkTreeNode[] =>
+      nodes.map((node) => ({
+        ...node,
+        ...(added[node.id] === undefined ? {} : { dateAdded: added[node.id] }),
+        ...(node.children ? { children: dated(node.children) } : {}),
+      }));
+    const datedTree = dated(tree);
+    const matches = (text: string) => matchBookmarkTreeQuery(datedTree, text, metadata);
+    const sorted = (text: string) => [...(matches(text)?.keys() ?? [])].sort();
+
+    expect(sorted('is:bookmark')).toEqual(['jira', 'recipe-cake', 'recipe-db', 'soup']);
+    expect(sorted('is:folder')).toEqual(['baking', 'recipes', 'work']);
+    expect(sorted('is:untagged')).toEqual(['jira', 'recipe-cake', 'recipe-db']);
+    expect(sorted('has:tags')).toEqual(['soup']);
+    expect(sorted('has:summary')).toEqual(['jira']);
+    // Dates are local calendar days, both inclusive; an item without one never matches.
+    expect(sorted('after:2020-01-01')).toEqual(['baking', 'recipe-cake', 'recipe-db']);
+    expect(sorted('before:2019-12-31')).toEqual(['recipes', 'soup']);
+    expect(sorted('after:2020-01-01 is:bookmark')).toEqual(['recipe-cake', 'recipe-db']);
+    expect(sorted('-is:bookmark')).toEqual(['baking', 'recipes', 'work']);
+    // An exclusion alone lists everything it does not exclude, by folder path too.
+    expect(sorted('-recipe')).toEqual(['jira', 'work']);
+    expect(matches('is:bookmark')?.get('soup')).toEqual([]);
+
+    // The tree filter flags a condition match inside a folder the same query matches.
+    const filtered = filterBookmarkTreeByQuery(datedTree, 'before:2019-12-31', metadata);
+    expect(countSearchMatches(filtered)).toBe(2);
+    expect(matchOf(filtered, 'soup')?.isSearchMatch).toBe(true);
+  });
+
   it('typing on checks only what the last query found, and stays right when it widens', () => {
     const metadata: StoredBookmarkMetadataById = { soup: { tags: ['Food'] } };
     const sorted = (text: string) =>

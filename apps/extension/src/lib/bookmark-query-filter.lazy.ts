@@ -238,9 +238,15 @@ export function prepareSearchDocuments(
 /**
  * Whether a result matched only by its folder path, which a plain word naming a folder does for
  * everything in it. The folder is the match then, unless the query asks for folders (`folder:`).
+ * A result with no reasons at all matched by conditions (`is:`, `has:`, a date) or exclusions
+ * alone, which hold for the item itself, so it is a match of its own.
  */
 function matchesOnlyByFolder(query: SearchQuery, result: SearchResult): boolean {
-  return !asksForFolders(query) && result.reasons.every((reason) => reason.field === 'folder');
+  return (
+    !asksForFolders(query) &&
+    result.reasons.length > 0 &&
+    result.reasons.every((reason) => reason.field === 'folder')
+  );
 }
 
 /**
