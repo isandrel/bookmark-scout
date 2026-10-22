@@ -43,6 +43,28 @@ const perfConfigSchema = z.strictObject({
     pause_after_items: z.number().int().positive(),
     concurrency: z.number().int().positive(),
   }),
+  search: z.strictObject({
+    queries: z.record(z.string(), z.string().min(1)),
+  }),
+  page_text: z.strictObject({
+    pages: z.number().int().positive(),
+    chars_per_page: z.number().int().positive(),
+    words: z.array(z.string().min(1)).min(2),
+    rare_word: z.string().min(1),
+    rare_every: z.number().int().positive(),
+    queries: z.record(z.string(), z.string().min(1)),
+  }),
+  rules: z.strictObject({
+    list: z
+      .array(
+        z.strictObject({
+          query: z.string().min(1),
+          add_tags: z.array(z.string().min(1)).default([]),
+          move_to: z.string().min(1).optional(),
+        }),
+      )
+      .min(1),
+  }),
   /** Upper bounds for the median of each metric, in milliseconds; a metric without one is only reported. */
   budgets_ms: z.record(z.string(), z.number().positive()),
 });
@@ -50,6 +72,16 @@ const perfConfigSchema = z.strictObject({
 export const perfConfig = perfConfigSchema.parse(
   parse(readFileSync(path.join(directory, 'perf.toml'), 'utf8')),
 );
+
+/**
+ * One of the extension's config files (`config/<name>.toml`), parsed with `schema`, so a scenario
+ * sizes itself by the same values the extension reads.
+ */
+export function readExtensionConfig<T>(name: string, schema: z.ZodType<T>): T {
+  return schema.parse(
+    parse(readFileSync(path.resolve(directory, `../../config/${name}.toml`), 'utf8')),
+  );
+}
 
 /**
  * CI runners are already slower than the laptop the budgets were set on, so they get a lighter
@@ -252,6 +284,18 @@ export async function openMeasured(
     () => (window as unknown as { __bsPerf: Probe }).__bsPerf.firstSeen,
   );
   return { page, firstSeen };
+}
+
+/**
+ * The JavaScript heap in use, in KiB, after a full garbage collection, so what is left is what
+ * the page keeps. Every extension page shares one renderer, so close the others first.
+ */
+export async function measureHeap(page: Page): Promise<number> {
+  const cdp = sessions.get(page);
+  if (!cdp) throw new Error('Open the page with openMeasured to measure its heap');
+  await cdp.send('HeapProfiler.collectGarbage');
+  const { usedSize } = await cdp.send('Runtime.getHeapUsage');
+  return usedSize / 1024;
 }
 
 export type InteractionResult = {
