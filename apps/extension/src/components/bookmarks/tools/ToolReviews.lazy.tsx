@@ -52,6 +52,21 @@ function DeadLinksReview(props: ToolReviewProps<'deadLinks'>) {
   );
 }
 
+function BookmarkRulesReview(props: ToolReviewProps<'bookmarkRules'>) {
+  const { value: rules } = useStoredValue(bookmarkRulesValue);
+  const ruleNames = new Map(rules.map((rule) => [rule.id, rule.name]));
+  return (
+    <ReviewDialog {...props} description={t('tools_bookmarkRulesDialogDesc')}>
+      <RulesResultsView
+        items={props.state.result ?? []}
+        ruleNames={ruleNames}
+        isApplying={props.state.phase === 'applying'}
+        onApply={props.apply}
+      />
+    </ReviewDialog>
+  );
+}
+
 const TOOL_REVIEWS: {
   [Id in ToolId]?: (props: ToolReviewProps<Id>) => React.ReactNode;
 } = {
@@ -152,6 +167,7 @@ const TOOL_REVIEWS: {
       />
     </ReviewDialog>
   ),
+  bookmarkRules: (props) => <BookmarkRulesReview {...props} />,
   statistics: (props) => (
     <ReviewDialog {...props} description={t('tools_statisticsDialogDesc')}>
       <StatisticsResultsView result={props.state.result} />

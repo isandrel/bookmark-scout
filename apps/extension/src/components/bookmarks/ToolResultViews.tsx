@@ -1065,3 +1065,111 @@ function StatList({
     </div>
   );
 }
+
+/** Smart Rules' review tabs, by what the rules would do to a bookmark. */
+const RULE_CATEGORIES = ['change', 'conflict', 'blocked', 'satisfied'] as const;
+type RuleCategory = (typeof RULE_CATEGORIES)[number];
+
+const RULE_CATEGORY_LABEL_KEYS = {
+  change: 'tools_rulesCategory_change',
+  conflict: 'tools_rulesCategory_conflict',
+  blocked: 'tools_rulesCategory_blocked',
+  satisfied: 'tools_rulesCategory_satisfied',
+} as const satisfies Record<RuleCategory, string>;
+
+const RULE_BLOCK_KEYS = {
+  missingFolder: 'tools_rulesBlocked_missingFolder',
+  managed: 'tools_rulesBlocked_managed',
+} as const satisfies Record<RuleMoveBlock, string>;
+
+type RuleAction = (typeof REVIEW_DEFAULT_ACTIONS)['bookmark_rules'];
+const RULE_ACTIONS = ['apply', 'skip'] as const satisfies readonly RuleAction[];
+
+function ruleCategory(item: RulePlanItem): RuleCategory {
+  if (item.blocked) return 'blocked';
+  if (item.conflicts.length > 0) return 'conflict';
+  return changesBookmark(item) ? 'change' : 'satisfied';
+}
+
+/**
+ * Smart Rules' review: each bookmark the rules match, by what they would do, starting on Apply
+ * (or Skip, as `[defaults] bookmark_rules` says) when it changes something; one two rules would
+ * move to different folders starts on Skip. Only the bookmarks left on Apply change.
+ */
+export function RulesResultsView({
+  items,
+  ruleNames,
+  isApplying,
+  onApply,
+}: {
+  items: readonly RulePlanItem[];
+  /** Each rule's name, by id. */
+  ruleNames: ReadonlyMap<string, string>;
+  isApplying: boolean;
+  onApply: (items: RulePlanItem[]) => void;
+}) {
+  const { actionOf, setAction, chosen } = useReviewChoices<RulePlanItem, RuleAction>(
+    items,
+    (item) => item.id,
+    (item) => (ruleCategory(item) === 'change' ? REVIEW_DEFAULT_ACTIONS.bookmark_rules : 'skip'),
+  );
+  const applied = chosen('apply');
+
+  if (!items.length) return <ToolEmptyState message={t('tools_rulesNoRules')} />;
+  return (
+    <div className="space-y-4">
+      <ReviewList
+        items={items}
+        idOf={(item) => item.id}
+        categories={RULE_CATEGORIES}
+        categoryOf={ruleCategory}
+        categoryLabel={(category, count) => t(RULE_CATEGORY_LABEL_KEYS[category], String(count))}
+        actionsOf={(item) => (changesBookmark(item) ? RULE_ACTIONS : (['skip'] as const))}
+        actionLabel={(action) =>
+          action === 'apply' ? t('tools_rulesActionApply') : t('tools_reviewActionSkip')
+        }
+        batchActions={RULE_ACTIONS}
+        actionOf={actionOf}
+        onAction={setAction}
+        titleOf={(item) => getBookmarkDisplayTitle(item.title)}
+        disabled={isApplying}
+        rowTestId="rule-item"
+        renderDetails={(item) => (
+          <>
+            <p className="truncate text-xs text-muted-foreground">
+              <UrlLink href={item.url} />
+            </p>
+            {item.addTags.length > 0 ? (
+              <p className="text-xs">{t('tools_rulesAddTags', formatList(item.addTags))}</p>
+            ) : null}
+            {item.move ? <p className="text-xs">{t('tools_rulesMoveTo', item.move.path)}</p> : null}
+            {item.conflicts.map((conflict) => (
+              <p key={conflict.ruleId} className="text-xs text-warning">
+                {t('tools_rulesConflict', conflict.path)}
+              </p>
+            ))}
+            {item.blocked ? (
+              <p className="text-xs text-warning">{t(RULE_BLOCK_KEYS[item.blocked])}</p>
+            ) : null}
+            <p className="truncate text-xs text-muted-foreground">
+              {[
+                item.folderPath || t('tools_rootFolder'),
+                t(
+                  'tools_rulesMatchedBy',
+                  formatList(item.ruleIds.map((id) => ruleNames.get(id) ?? id)),
+                ),
+              ].join(t('format_separator'))}
+            </p>
+          </>
+        )}
+      />
+      <ReviewFooter
+        label={tPlural('tools_rulesApplySelected', applied.length)}
+        busyLabel={t('action_applying')}
+        busy={isApplying}
+        disabled={applied.length === 0}
+        onConfirm={() => onApply(applied)}
+      />
+    </div>
+  );
+}

@@ -104,7 +104,37 @@ function SiteIconCacheControls() {
   );
 }
 
+/** Options on Maintenance, at the smart rules list. */
+const RULES_OPTIONS_PATH = '/options.html?category=maintenance#bookmark-rules';
+
+/** The rules Smart Rules runs are kept in Options: how many are on, and a link there. */
+function BookmarkRulesControls() {
+  const { value: rules } = useStoredValue(bookmarkRulesValue);
+  const enabled = rules.filter((rule) => rule.enabled).length;
+  return (
+    <>
+      <span className="min-w-0 flex-auto text-xs text-muted-foreground">
+        {tPlural('tools_rulesOnCount', enabled)}
+      </span>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="ml-auto h-8 text-xs"
+        onClick={() =>
+          void browser.tabs.create({
+            url: browser.runtime.getURL(RULES_OPTIONS_PATH),
+            active: true,
+          })
+        }
+      >
+        {t('tools_rulesEdit')}
+      </Button>
+    </>
+  );
+}
+
 /** Tool-specific controls shown on a card above its scope selector. */
 export const TOOL_CONTROLS: Partial<Record<ToolId, () => React.ReactNode>> = {
   siteIcons: SiteIconCacheControls,
+  bookmarkRules: BookmarkRulesControls,
 };

@@ -8166,7 +8166,7 @@
         "description": "Smart Rules review: the rules that match a bookmark; $1 is the list of names"
     },
     "tools_rulesNoRules": {
-        "message": "켜진 규칙이 없습니다. 설정의 유지 관리에서 규칙을 추가하세요.",
+        "message": "켜진 규칙이 없습니다. 설정의 유지보수에서 규칙을 추가하세요.",
         "description": "Smart Rules review: shown when no rule is turned on"
     },
     "toast_rulesApplied": {
@@ -8188,6 +8188,30 @@
     "toast_rulesBackgroundDesc": {
         "message": "태그 추가: $1. 북마크 $2개를 백그라운드에서 이동하는 중입니다.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    },
+    "tools_rulesOnCount": {
+        "message": "켜진 규칙 $count$개",
+        "description": "Smart Rules card: how many rules are turned on",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesOnCount_one": {
+        "message": "켜진 규칙 $count$개",
+        "description": "Smart Rules card: how many rules are turned on (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesEdit": {
+        "message": "규칙 편집",
+        "description": "Smart Rules card: button that opens the rules in Settings"
     },
     "settings_managerViewMode": {
         "message": "관리자 보기",

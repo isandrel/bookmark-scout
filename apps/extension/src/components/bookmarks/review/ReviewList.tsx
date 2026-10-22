@@ -20,6 +20,7 @@ const reviewConfig = readConfig(
       site_icons: z.enum(['save', 'skip']),
       ai_metadata: z.enum(['save', 'skip']),
       privacy_scanner: z.enum(['keep', 'delete']),
+      bookmark_rules: z.enum(['apply', 'skip']),
     }),
   }),
 );

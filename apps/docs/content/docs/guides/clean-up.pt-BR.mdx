@@ -91,6 +91,32 @@ Os ícones salvos ficam no armazenamento local deste navegador, não são sincro
 No Firefox, abra o gerenciador com **Abrir gerenciador de favoritos** no pop-up da barra de ferramentas para executar a ferramenta. Depois que você salvar ícones lá, o pop-up e o painel lateral passam a mostrá-los.
 </Callout>
 
+## Adicionar tags e mover com Regras inteligentes [#tag-and-move-with-smart-rules]
+
+Uma regra inteligente encontra favoritos com uma pesquisa, com as mesmas palavras e [operadores](/guides/search#search-words-and-operators) das caixas de pesquisa, e adiciona tags a eles, move-os para uma pasta ou as duas coisas. As regras nunca agem sozinhas: cada execução é uma revisão que você aplica.
+
+<Steps>
+<Step>
+Em [Configurações](/settings#maintenance), em **Regras inteligentes**, clique em **Adicionar regra**, ou em **Começar com um modelo** para uma regra que marca páginas do GitHub, vídeos do YouTube ou tutoriais. Os modelos começam desativados.
+</Step>
+<Step>
+Dê à regra um nome e uma pesquisa, como `domain:github.com` ou `folder:Leitura -tag:lido`. O editor mostra com quantos favoritos ela corresponde agora. Adicione tags separadas por vírgulas, escolha uma pasta para onde movê-los, ou as duas coisas, e salve.
+</Step>
+<Step>
+Na barra de ferramentas do gerenciador, escolha o escopo no cartão **Regras inteligentes** e clique em **Executar**.
+</Step>
+<Step>
+Revise os favoritos por aba: **Mudanças**, **Conflitos** (duas regras o moveriam para pastas diferentes), **Bloqueados** (a pasta não existe mais ou é gerenciada) e **Já feito**. As mudanças começam em **Aplicar** e os conflitos em **Pular**; mude outros um por vez ou com **Definir seleção como…** e clique em **Aplicar** (por exemplo, **Aplicar 12 mudanças**).
+</Step>
+</Steps>
+
+Bom saber:
+
+- As regras são executadas na ordem da lista. Toda regra que corresponde adiciona suas tags; a primeira que move um favorito vence, e as pastas de regras posteriores aparecem como conflitos. Arraste uma regra para mudar a ordem.
+- Uma tag que o favorito já tem, escrita de qualquer forma, não é adicionada de novo. Pastas nunca recebem tags nem são movidas.
+- **Desfazer** na mensagem depois de aplicar devolve tanto os movimentos quanto as tags. Os movimentos são uma única mudança no histórico.
+- As regras ficam neste dispositivo e fazem parte de **Fazer backup das configurações**. Uma regra restaurada em outro dispositivo só move favoritos se a pasta dela existir lá; se não, os movimentos ficam bloqueados até você escolher a pasta de novo.
+
 ## Ferramentas relacionadas [#related-tools]
 
 - [Encontrar e corrigir links quebrados](/guides/dead-links) verifica se as páginas salvas nos favoritos ainda carregam.

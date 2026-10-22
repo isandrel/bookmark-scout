@@ -91,6 +91,32 @@ Gespeicherte Symbole werden im lokalen Speicher dieses Browsers abgelegt, nicht 
 Öffnen Sie in Firefox den Manager über **Lesezeichen-Manager öffnen** im Pop-up der Symbolleiste, um das Tool auszuführen. Nachdem Sie dort Symbole gespeichert haben, zeigen Pop-up und Seitenleiste sie an.
 </Callout>
 
+## Mit intelligenten Regeln taggen und verschieben [#tag-and-move-with-smart-rules]
+
+Eine intelligente Regel findet Lesezeichen mit einer Suche, mit denselben Wörtern und [Operatoren](/guides/search#search-words-and-operators) wie die Suchfelder, und fügt ihnen Tags hinzu, verschiebt sie in einen Ordner oder beides. Regeln handeln nie von selbst: Jede Ausführung ist eine Überprüfung, die Sie übernehmen.
+
+<Steps>
+<Step>
+Klicken Sie in den [Einstellungen](/settings#maintenance) unter **Intelligente Regeln** auf **Regel hinzufügen** oder auf **Mit einer Vorlage beginnen**, um eine Regel zu erhalten, die GitHub-Seiten, YouTube-Videos oder Tutorials markiert. Vorlagen sind zuerst ausgeschaltet.
+</Step>
+<Step>
+Geben Sie der Regel einen Namen und eine Suche, etwa `domain:github.com` oder `folder:Lesen -tag:gelesen`. Der Editor zeigt, wie viele Lesezeichen sie jetzt findet. Fügen Sie durch Kommas getrennte Tags hinzu, wählen Sie einen Zielordner oder beides, und speichern Sie.
+</Step>
+<Step>
+Wählen Sie in der Werkzeugleiste des Managers den Bereich auf der Karte **Intelligente Regeln** und klicken Sie auf **Ausführen**.
+</Step>
+<Step>
+Prüfen Sie die Lesezeichen nach Tab: **Änderungen**, **Konflikte** (zwei Regeln würden es in verschiedene Ordner verschieben), **Blockiert** (sein Ordner fehlt oder wird verwaltet) und **Schon erledigt**. Änderungen stehen zuerst auf **Übernehmen**, Konflikte auf **Überspringen**; ändern Sie andere einzeln oder mit **Auswahl festlegen auf …** und klicken Sie dann auf **Übernehmen** (zum Beispiel **12 Änderungen übernehmen**).
+</Step>
+</Steps>
+
+Gut zu wissen:
+
+- Regeln laufen in der Reihenfolge der Liste. Jede passende Regel fügt ihre Tags hinzu; die erste, die ein Lesezeichen verschiebt, gewinnt, und Ordner späterer Regeln erscheinen als Konflikte. Ziehen Sie eine Regel, um die Reihenfolge zu ändern.
+- Ein Tag, das ein Lesezeichen schon hat, wird in keiner Schreibweise erneut hinzugefügt. Ordner werden nie getaggt oder verschoben.
+- **Rückgängig** in der Meldung nach dem Übernehmen stellt Verschiebungen und Tags wieder her. Die Verschiebungen sind eine Änderung im Verlauf.
+- Regeln bleiben auf diesem Gerät und sind Teil von **Einstellungen sichern**. Eine auf einem anderen Gerät wiederhergestellte Regel verschiebt Lesezeichen nur, wenn ihr Ordner dort existiert; sonst sind ihre Verschiebungen blockiert, bis Sie den Ordner erneut wählen.
+
 ## Verwandte Tools [#related-tools]
 
 - [Defekte Links finden und reparieren](/guides/dead-links) prüft, ob gespeicherte Seiten noch laden.

@@ -7931,6 +7931,20 @@
         "message": "已加上標籤：$1。正在背景移動 $2 個書籤。",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
     },
+    "tools_rulesOnCount": {
+        "message": "已開啟 $count$ 條規則",
+        "description": "Smart Rules card: how many rules are turned on",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesEdit": {
+        "message": "編輯規則",
+        "description": "Smart Rules card: button that opens the rules in Settings"
+    },
     "settings_managerViewMode": {
         "message": "管理員檢視",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"

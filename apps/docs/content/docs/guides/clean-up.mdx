@@ -91,6 +91,32 @@ Saved icons are stored in this browser's local storage, not synced, and show in 
 In Firefox, open the manager with **Open bookmark manager** in the toolbar popup to run the tool. After you save icons there, the popup and side panel show them.
 </Callout>
 
+## Tag and move with Smart Rules
+
+A smart rule finds bookmarks with a search, in the same words and [operators](/guides/search#search-words-and-operators) as the search boxes, and adds tags to them, moves them to a folder, or both. Rules never act on their own: each run is a review you apply.
+
+<Steps>
+<Step>
+In [Settings](/settings#maintenance), under **Smart Rules**, click **Add rule**, or **Start from a template** for a rule that tags GitHub pages, YouTube videos, or tutorials. Templates start turned off.
+</Step>
+<Step>
+Give the rule a name and a search, such as `domain:github.com` or `folder:Reading -tag:read`. The editor says how many bookmarks it matches now. Add tags, separated by commas, choose a folder to move them to, or both, and save.
+</Step>
+<Step>
+In the manager's Tools sidebar, choose the scope on the **Smart Rules** card and click **Run**.
+</Step>
+<Step>
+Review the bookmarks by tab: **Changes**, **Conflicts** (two rules would move it to different folders), **Blocked** (its folder is gone or managed), and **Already done**. Changes start on **Apply** and conflicts on **Skip**; set others one at a time or with **Set selected to…**, then click **Apply** (for example **Apply 12 changes**).
+</Step>
+</Steps>
+
+Good to know:
+
+- Rules run in list order. Every matching rule adds its tags; the first one that moves a bookmark wins, and folders later rules name show as conflicts. Drag a rule to change the order.
+- A tag a bookmark already has, in any spelling, is not added again. Folders are never tagged or moved.
+- **Undo** in the message after applying puts back both the moves and the tags. The moves are one change in the History.
+- Rules stay on this device and are part of **Back up settings**. A rule restored on another device moves bookmarks only if its folder exists there; otherwise its moves are blocked until you choose the folder again.
+
 ## Related tools
 
 - [Find and repair dead links](/guides/dead-links) checks whether bookmarked pages still load.

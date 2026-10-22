@@ -8217,6 +8217,30 @@
         "message": "Com tags: $1. Movendo $2 favoritos em segundo plano.",
         "description": "Toast when moves run in the background; $1 tagged, $2 moves"
     },
+    "tools_rulesOnCount": {
+        "message": "$count$ regras ativadas",
+        "description": "Smart Rules card: how many rules are turned on",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesOnCount_one": {
+        "message": "$count$ regra ativada",
+        "description": "Smart Rules card: how many rules are turned on (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_rulesEdit": {
+        "message": "Editar regras",
+        "description": "Smart Rules card: button that opens the rules in Settings"
+    },
     "settings_managerViewMode": {
         "message": "Visualização do gerenciador",
         "description": "Settings and manager toolbar: how the manager shows a folder or search"
