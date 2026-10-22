@@ -165,12 +165,14 @@ const lastSliceAt = new Map<string, number>();
  */
 async function nextRunnable(): Promise<JobRecord | undefined> {
   const jobs = await listJobs(Number.MAX_SAFE_INTEGER);
+  const runnable = jobs.filter(
+    (job) => job.state === 'queued' || (job.state === 'running' && job.ownerSession === SESSION),
+  );
+  // A job that can no longer run needs no turn; one resumed later starts as if new.
+  const ids = new Set(runnable.map((job) => job.id));
+  for (const id of lastSliceAt.keys()) if (!ids.has(id)) lastSliceAt.delete(id);
   const turn = (job: JobRecord) => lastSliceAt.get(job.id) ?? Number.NEGATIVE_INFINITY;
-  return jobs
-    .filter(
-      (job) => job.state === 'queued' || (job.state === 'running' && job.ownerSession === SESSION),
-    )
-    .sort((a, b) => turn(a) - turn(b) || a.createdAt - b.createdAt)[0];
+  return runnable.sort((a, b) => turn(a) - turn(b) || a.createdAt - b.createdAt)[0];
 }
 
 async function runLoop(): Promise<void> {
