@@ -224,3 +224,19 @@ kbd.bs-kbd {
   background: var(--bs-ribbon);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
 }
+
+/* Cyrillic: the bundled fonts have no Cyrillic glyphs, so Russian takes each system's UI font
+   rather than the Japanese font the default stack falls to next. The theme is inline, so the
+   utilities hold literal stacks: override them here. */
+html:lang(ru) body,
+html:lang(ru) .font-sans {
+  font-family:
+    var(--font-instrument), system-ui, -apple-system, "Segoe UI", Roboto,
+    "Noto Sans", sans-serif;
+}
+
+html:lang(ru) .font-display {
+  font-family:
+    var(--font-bricolage), var(--font-instrument), system-ui, -apple-system,
+    "Segoe UI", Roboto, "Noto Sans", sans-serif;
+}

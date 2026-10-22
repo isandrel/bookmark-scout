@@ -1,0 +1,160 @@
+---
+title: Membersihkan duplikat dan URL pelacakan
+description: Hapus bookmark duplikat setelah ditinjau, buang parameter pelacakan seperti utm_source dari URL bookmark dengan pratinjau lebih dulu, dan perbarui ikon situs yang tidak ada.
+---
+
+Kedua alat ini ada di bilah samping **Alat** di pengelola bookmark, di bawah **Pemeliharaan**. Di Chrome, buka halaman bookmark browser, lalu klik **Tampilkan alat** di header pengelola jika bilah samping tersembunyi.
+
+<Callout title="Firefox">
+Firefox tidak mengizinkan ekstensi mengganti halaman bookmark-nya sendiri, jadi buka pengelola di sana dengan **Buka pengelola bookmark** di popup toolbar, lalu buka bilah samping Alat.
+</Callout>
+
+## Menghapus bookmark duplikat [#remove-duplicate-bookmarks]
+
+<Steps>
+<Step>
+Di **Pembersih Duplikat**, klik **Pindai**. Alat ini selalu memeriksa semua bookmark.
+</Step>
+<Step>
+Tinjau grup-grupnya. Setiap grup menampilkan alamat yang sama dari bookmark-bookmark-nya satu kali, lalu setiap bookmark beserta folder dan tanggal ditambahkannya. Yang ditandai **Pertahankan** mengikuti **Aturan Penyimpanan** sampai Anda memilih yang lain dengan tombol radionya; setiap salinan lainnya memiliki kotak centang **Hapus**, yang awalnya dicentang. Hapus centang sebuah salinan, atau kotak centang grup, untuk membiarkannya.
+</Step>
+<Step>
+Klik **Hapus N duplikat** untuk menghapus salinan yang dicentang, atau **Batal** agar tidak ada yang berubah.
+</Step>
+<Step>
+Berubah pikiran? Klik **Urungkan** di pesan dalam 10 detik untuk memulihkan apa yang dihapus. Setelah itu, <Shortcut id="manager.undo" /> di pengelola bookmark juga memulihkannya.
+</Step>
+</Steps>
+
+<Screenshot name="duplicates" />
+
+Apa yang dihitung sebagai duplikat disetel di tab **Pemeliharaan** di [Setelan](/settings):
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Strategi Pencocokan** | URL yang dinormalkan | Bandingkan berdasarkan **URL persis**, **URL yang dinormalkan**, **Judul + URL**, atau **Judul saja** |
+| **Normalkan www** | Aktif | Perlakukan `www.example.com` dan `example.com` sebagai host yang sama |
+| **Abaikan Protokol** | Aktif | Perlakukan versi `http` dan `https` sebagai duplikat |
+| **Abaikan Garis Miring di Akhir** | Aktif | Perlakukan URL dengan dan tanpa `/` di akhir sebagai duplikat |
+| **Aturan Penyimpanan** | Terlama | Pertahankan bookmark **Terlama**, **Terbaru**, atau **Yang pertama ditemukan** di setiap grup |
+| **Grup Maks** | <SettingDefault path="maintenance.duplicates.max_groups" /> | Jumlah terbanyak grup yang dihasilkan satu pemindaian |
+
+Sebelum menghapus apa pun, setiap grup diperiksa lagi. Jika bookmark yang ditandai **Pertahankan** sudah dihapus atau kini mengarah ke tempat lain, seluruh grup dibiarkan dan pesannya menyebutkan berapa grup yang dilewati. Dengan pencocokan **Judul saja**, peringatan muncul saat sebuah grup berisi URL yang berbeda, karena menghapus salinan-salinan itu berarti menghapus halaman yang berbeda.
+
+## Membuang parameter pelacakan [#strip-tracking-parameters]
+
+<Steps>
+<Step>
+Di **Pembersih URL**, pilih folder saat ini atau semua bookmark di menu cakupan, lalu klik **Bersihkan**.
+</Step>
+<Step>
+Tinjau URL yang akan berubah, dikelompokkan menurut aturan yang membersihkannya (entri **Hapus Parameter** seperti `utm_*`, parameter berulang, atau fragmen). Setiap URL dimulai dengan **Bersihkan**; setel satu URL, atau setiap URL yang dipilih dengan **Setel yang dipilih ke…**, ke **Biarkan apa adanya** untuk membiarkannya.
+</Step>
+<Step>
+Klik **Bersihkan N URL** untuk memperbarui yang tetap pada **Bersihkan**, atau tutup dialog agar tidak ada yang berubah.
+</Step>
+</Steps>
+
+Jika sebuah bookmark berubah setelah pratinjau, bookmark itu dilewati dan dihitung di pesan. Klik **Urungkan** di pesan, atau tekan <Shortcut id="manager.undo" /> di pengelola bookmark, untuk mengembalikan URL lama; bookmark yang berubah lagi sejak itu dibiarkan apa adanya.
+
+Aturannya ada di tab **Pemeliharaan** di Setelan:
+
+- **Hapus Parameter**: parameter yang dibuang. Daftar default-nya adalah <SettingDefault path="maintenance.url_cleaner.remove_params" />. Nama yang diakhiri `*` cocok dengan setiap nama yang diawali dengan nama itu.
+- **Pertahankan Parameter**: parameter yang tidak pernah dihapus. Default: <SettingDefault path="maintenance.url_cleaner.preserve_params" />.
+- **Hapus Parameter Kueri Duplikat** (aktif secara default) menghapus parameter yang berulang.
+- **Urutkan Parameter Kueri** (aktif secara default) mengurutkan parameter yang tersisa menurut abjad.
+- **Hapus Fragmen** (nonaktif secara default) juga menghapus bagian seperti `#section`.
+
+## Memperbarui ikon situs [#refresh-site-icons]
+
+Bookmark menampilkan ikon bola dunia generik sampai Bookmark Scout memiliki ikon untuk situs itu. Di Chrome dan Edge, cara tercepat adalah **Tampilkan ikon browser** di kartu **Perbarui Ikon Situs**, atau **Gunakan cache ikon browser** di [Setelan](/settings#appearance): opsi ini menampilkan ikon yang sudah disimpan browser untuk situs yang Anda kunjungi, dan browser hanya meminta izin untuk membaca ikon situs. Untuk situs yang ikonnya tidak dimiliki browser, dan di Firefox, yang tidak memberi ekstensi cache ikon, **Perbarui Ikon Situs**, di bawah **Judul Halaman & Ikon** di bilah samping Alat, mengunduh ikon milik setiap situs.
+
+<Steps>
+<Step>
+Pilih folder saat ini atau semua bookmark di menu cakupan, lalu klik **Muat ulang**. Saat diminta, izinkan akses ke situs dalam cakupan itu (cakupan dengan lebih dari 20 situs meminta akses ke semua situs web); jika Anda menolak, tidak ada yang diminta.
+</Step>
+<Step>
+Tinjau situs per tab: **Ikon baru**, **Ikon sama**, **Tanpa ikon**, dan **Gagal**, masing-masing dengan jumlahnya, serta catatan berapa bookmark yang dilewati karena bukan link web. Setiap ikon yang ditemukan dimulai dengan **Simpan ikon**; setel salah satunya ke **Lewati**, atau pilih beberapa dan gunakan **Setel yang dipilih ke…**.
+</Step>
+<Step>
+Klik **Simpan** (misalnya **Simpan 12 ikon**) untuk menyimpan ikon yang tetap pada **Simpan ikon**, atau tutup dialog agar tidak ada yang disimpan.
+</Step>
+</Steps>
+
+Untuk setiap situs web (origin) dalam cakupan, alat ini meminta satu halaman yang di-bookmark tanpa cookie, hanya membaca bagian head-nya, dan mengunduh ikon yang dicantumkan halaman itu yang paling mendekati **Ukuran Ikon yang Diutamakan**, atau `/favicon.ico` situs itu. Hanya file ikon di domain bookmark itu sendiri yang dipakai, tidak pernah layanan ikon pihak ketiga. File yang melebihi **Ukuran File Ikon Maksimum** (<SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB) atau yang bukan gambar dilewati.
+
+Pembaruan berjalan di latar belakang: proses tetap berlanjut setelah Anda menutup pengelola, dan kartunya serta **Tugas latar belakang** menampilkan progresnya, dengan **Jeda**, **Lanjutkan**, dan **Batal**. Hasilnya menunggu di **Tinjau hasil**; tidak ada yang disimpan sampai Anda mengklik **Simpan**.
+
+Ikon yang disimpan berada di penyimpanan lokal browser ini, tidak disinkronkan, dan ditampilkan di popup, panel samping, dan pengelola. Ikon ini diutamakan daripada ikon di cache browser. Kartu menampilkan berapa banyak yang tersimpan; **Hapus ikon tersimpan** menghapus semuanya. Jika totalnya mencapai **Batas Penyimpanan Ikon** (4 MB), ikon terlama dihapus lebih dulu. Situs yang gagal pada pembaruan berikutnya tetap memakai ikon yang disimpan sebelumnya.
+
+<Callout title="Firefox">
+Di Firefox, buka pengelola dengan **Buka pengelola bookmark** di popup toolbar untuk menjalankan alat ini. Setelah Anda menyimpan ikon di sana, popup dan panel samping menampilkannya.
+</Callout>
+
+## Memberi tag dan memindahkan dengan Aturan Pintar [#tag-and-move-with-smart-rules]
+
+Aturan pintar menemukan bookmark dengan penelusuran, dengan kata dan [operator](/guides/search#search-words-and-operators) yang sama seperti kotak penelusuran, lalu menambahkan tag, memindahkannya ke folder, atau keduanya. Aturan tidak pernah bertindak sendiri: setiap kali dijalankan, hasilnya berupa tinjauan yang Anda terapkan.
+
+<Steps>
+<Step>
+Di [Setelan](/settings#maintenance), di bawah **Aturan Pintar**, klik **Tambahkan aturan**, atau **Mulai dari template** untuk aturan yang memberi tag pada halaman GitHub, video YouTube, atau tutorial. Template dimulai dalam keadaan nonaktif.
+</Step>
+<Step>
+Beri aturan sebuah nama dan penelusuran, seperti `domain:github.com` atau `folder:Reading -tag:read`. Editor menyebutkan berapa bookmark yang cocok saat ini. Tambahkan tag, dipisahkan koma, pilih folder tujuan pemindahan, atau keduanya, lalu simpan.
+</Step>
+<Step>
+Di bilah samping Alat pengelola, pilih cakupan di kartu **Aturan Pintar** lalu klik **Jalankan**.
+</Step>
+<Step>
+Tinjau bookmark per tab: **Perubahan**, **Konflik** (dua aturan akan memindahkannya ke folder yang berbeda), **Diblokir** (foldernya sudah tidak ada atau dikelola), dan **Sudah sesuai**. Perubahan dimulai dengan **Terapkan** dan konflik dengan **Lewati**; setel yang lain satu per satu atau dengan **Setel yang dipilih ke…**, lalu klik **Terapkan** (misalnya **Terapkan 12 perubahan**).
+</Step>
+</Steps>
+
+Perlu diketahui:
+
+- Aturan berjalan sesuai urutan daftar. Setiap aturan yang cocok menambahkan tagnya; aturan pertama yang memindahkan bookmark menang, dan folder yang disebutkan aturan berikutnya ditampilkan sebagai konflik. Seret aturan untuk mengubah urutan.
+- Tag yang sudah dimiliki bookmark, dengan ejaan apa pun, tidak ditambahkan lagi. Folder tidak pernah diberi tag atau dipindahkan.
+- **Urungkan** di pesan setelah penerapan mengembalikan pemindahan maupun tag. Pemindahan itu menjadi satu perubahan di Histori.
+- Aturan tetap di perangkat ini dan termasuk dalam **Cadangkan setelan**. Aturan yang dipulihkan di perangkat lain hanya memindahkan bookmark jika foldernya ada di sana; jika tidak, pemindahannya diblokir sampai Anda memilih folder itu lagi.
+- Dengan **Beri Tag pada Bookmark Baru** aktif di Setelan, aturan yang diaktifkan menambahkan tagnya ke setiap bookmark saat bookmark itu ditambahkan, dari Bookmark Scout, ikon bintang browser, ekstensi lain, atau sinkronisasi, karena browser tidak menyebutkan asal bookmark. Hanya tag yang ditambahkan; pemindahan oleh aturan menunggu proses yang Anda tinjau. Banyak bookmark yang ditambahkan sekaligus (sinkronisasi atau impor) dibiarkan, begitu pula bookmark yang ditambahkan saat setelan itu nonaktif.
+## Menelusuri isi halaman [#search-inside-pages]
+
+**Indeks Teks Halaman** menyimpan teks yang dapat dibaca dari halaman yang di-bookmark di perangkat ini, sehingga penelusuran menemukan kata yang hanya ada di dalam halaman. Alat ini nonaktif sampai Anda mengaktifkannya, dan mengunduh setiap halaman yang Anda indeks.
+
+<Steps>
+<Step>
+Nyalakan tombol **Aktifkan Indeks Teks Halaman** di [Setelan](/settings#index-page-text).
+</Step>
+<Step>
+Di bilah samping Alat pengelola, pilih cakupan di kartu **Indeks Teks Halaman** lalu klik **Indeks**. Saat diminta, izinkan akses ke situs dalam cakupan itu.
+</Step>
+<Step>
+Tinjau halaman per tab: **Teks ditemukan**, **Tanpa teks**, **Gagal**, **Sudah diindeks** (dari alamat yang sama sebelumnya), dan **Dilewati** (bukan halaman web, atau ada di jaringan lokal Anda). Halaman yang berisi teks dimulai dengan **Simpan teks**; klik **Simpan** (misalnya **Simpan teks dari 12 halaman**).
+</Step>
+</Steps>
+
+Setelah itu, penelusuran menemukan bookmark tersebut berdasarkan teksnya di popup, panel samping, dan pengelola. `content:` hanya mencari di teks halaman, dan `has:content` menemukan bookmark yang memilikinya. Halaman dibaca lagi saat alamat bookmark-nya berubah. **Hapus teks halaman** di Setelan menghapus indeks; bookmark, tag, dan Histori tetap apa adanya.
+
+## Menampilkan sampul di kartu [#show-covers-on-cards]
+
+**Ambil Sampul** menyimpan salinan kecil gambar pratinjau yang disebutkan halaman untuk dirinya sendiri (gambar kartu Open Graph atau Twitter), sehingga **Kartu** di pengelola menampilkannya. Alat ini nonaktif sampai Anda mengaktifkannya. Menampilkan kartu tidak pernah mengunduh apa pun: kartu tanpa sampul tersimpan tetap menampilkan ikon situsnya.
+
+<Steps>
+<Step>
+Nyalakan tombol **Aktifkan Ambil Sampul** di [Setelan](/settings#fetch-covers).
+</Step>
+<Step>
+Di bilah samping Alat pengelola, pilih cakupan di kartu **Ambil Sampul** lalu klik **Ambil**. Saat diminta, izinkan akses ke situs dalam cakupan itu.
+</Step>
+<Step>
+Tinjau halaman per tab: **Sampul ditemukan** (dengan gambarnya), **Tanpa sampul**, **Di situs lain** (gambarnya ada di situs yang tidak Anda izinkan), **Gagal**, **Sudah diambil**, dan **Dilewati**. Sampul yang ditemukan dimulai dengan **Simpan sampul**; klik **Simpan** (misalnya **Simpan 12 sampul**).
+</Step>
+</Steps>
+
+Alihkan pengelola ke **Kartu** dengan tombol di sebelah **Lihat** untuk melihatnya. Sampul terikat pada alamat asalnya, jadi bookmark yang dipindahkan ke alamat lain menampilkan ikonnya sampai Anda mengambil lagi. Sampul hanya disimpan di perangkat ini, tidak pernah di cadangan atau ekspor; **Hapus sampul** di Setelan menghapusnya, dan bookmark, tag, serta Histori tetap apa adanya.
+
+## Alat terkait [#related-tools]
+
+- [Menemukan dan memperbaiki link mati](/guides/dead-links) memeriksa apakah halaman yang di-bookmark masih bisa dimuat.
+- **Pemindai Privasi** (di bawah **Keamanan**) menandai URL yang berisi token, alamat email, UUID, atau parameter sensitif (dan judul, jika **Pindai Judul** aktif). Tinjauannya mengelompokkan URL tersebut sebagai **Tinggi**, **Sedang**, dan **Rendah**; masing-masing dimulai dengan **Biarkan apa adanya**, dan yang Anda setel ke **Hapus bookmark** (satu per satu, atau dengan **Setel yang dipilih ke…**) dihapus saat Anda mengklik **Hapus**, dengan urungkan. Link biasa di dalam halaman dan alamat aplikasi seperti `#inbox` Gmail tidak ditandai.
+- **Pengambil Metadata** (di bawah **Judul Halaman & Ikon**) menyarankan judul halaman dari halaman aktif dan hanya menerapkan yang Anda pilih. Alat ini memakai akses situs web yang sama dengan pemeriksaan link mati. Alat ini juga berjalan di latar belakang, dan judulnya menunggu di **Tinjau hasil**.

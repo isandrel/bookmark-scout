@@ -1,0 +1,123 @@
+---
+title: Instal
+description: Tambahkan Bookmark Scout ke Chrome dari Chrome Web Store. Versi Firefox dan Edge segera hadir di store masing-masing.
+---
+
+Bookmark Scout gratis, tanpa akun, dan tanpa iklan. Ekstensi ini berjalan di browser komputer, bukan di ponsel atau tablet.
+
+## Tambahkan ke Chrome [#add-it-to-chrome]
+
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
+
+Di halaman store, klik **Tambahkan ke Chrome**, lalu **Tambahkan ekstensi**. Chrome hanya meminta satu hal: membaca dan mengubah bookmark Anda. Fitur lain meminta izin tambahan hanya saat pertama kali Anda memakainya, disertai alasannya; lihat [Izin](/permissions).
+</Step>
+<Step>
+Sematkan ikonnya: klik tombol **Ekstensi** berbentuk kepingan puzzle di sebelah kanan toolbar, lalu ikon pin di sebelah Bookmark Scout.
+</Step>
+<Step>
+Simpan halaman pertama Anda: lihat [Penyimpanan pertama Anda](/first-save).
+</Step>
+</Steps>
+
+Begitu Anda menambahkannya, halaman berjudul **Bookmark Scout siap digunakan** terbuka di tab baru dengan langkah awal yang sama: sematkan ikon, simpan halaman, dan tombol pintasan simpan cepat Anda (atau **Siapkan** jika ekstensi lain sudah memakainya). Di Chrome dan Edge, halaman itu juga menawarkan untuk memberikan <Shortcut id="browser.bookmark_page" /> ke simpan cepat. Halaman ini hanya terbuka sekali, saat Anda pertama kali menginstal Bookmark Scout, tidak pernah setelah update. **Baca panduan** di halaman itu membuka [Menyimpan dan mengatur](/guides/save-and-organize), dan **Buka setelan** membuka [Setelan](/settings).
+
+Salinan dari store diperbarui dengan sendirinya.
+
+## Firefox dan Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+Sampai tersedia di store, Anda bisa menginstal Bookmark Scout secara manual dari GitHub, seperti dijelaskan [di bawah](#install-from-a-github-release). Caranya memerlukan beberapa langkah tambahan, dan di Firefox Anda harus mengulanginya setiap kali browser dimulai ulang.
+
+## Setelah menginstal [#after-installing]
+
+- Klik ikon Bookmark Scout di halaman mana pun untuk menyimpannya atau menelusuri bookmark Anda. Mulailah dengan [Penyimpanan pertama Anda](/first-save).
+- Tekan <Shortcut id="commands.quick-save" /> di halaman mana pun untuk menyimpannya tanpa membuka apa pun. Lihat [Menyimpan dengan pintasan keyboard](/guides/save-and-organize#quick-save).
+- Di Chrome, Bookmark Scout mengganti halaman bookmark browser dengan pengelola bookmark miliknya sendiri. Buka seperti biasa, misalnya dengan <Shortcut id="browser.open_bookmarks_manager" />, atau dengan **Buka pengelola bookmark** di popup. Bilah samping **Alat** di dalamnya berisi alat pembersihan.
+- Setelan terbuka di tab: klik kanan ikon toolbar lalu pilih **Opsi**. Lihat [Setelan](/settings).
+
+## Memperbarui [#updating]
+
+Salinan yang diinstal dari store diperbarui dengan sendirinya, dan update tetap mempertahankan setelan Anda. Satu update sebelumnya, ke versi 0.3.3, adalah pengecualian: update itu sekali mereset data tersimpan milik Bookmark Scout sendiri, tetapi tidak pernah bookmark Anda; lihat [FAQ](/faq#my-settings-are-gone-after-an-update).
+
+Untuk menyimpan salinan setelan, prompt kustom, layanan AI, dan penelusuran tersimpan Anda kapan saja, gunakan **Cadangkan setelan** di bagian bawah [Setelan](/settings).
+
+## Lanjutan: instal secara manual dari GitHub [#install-from-a-github-release]
+
+Gunakan cara ini hanya jika store browser Anda belum menyediakan Bookmark Scout, atau untuk menguji sebuah rilis. Salinan yang diinstal dengan cara ini tidak diperbarui dengan sendirinya: untuk memperbaruinya, unduh rilis yang lebih baru dan ulangi langkah-langkahnya.
+
+Setiap <RepoLink path="/releases">rilis GitHub</RepoLink> memiliki satu unduhan per browser:
+
+| Browser | File |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` atau `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
+
+Unduh dari <ReleaseLink />, lalu ikuti langkah-langkah untuk browser Anda.
+
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
+
+<Steps>
+<Step>
+Unduh `bookmark-scout-<version>-chrome.crx` atau `bookmark-scout-<version>-chrome.zip`. Jika Anda memakai ZIP, ekstrak ke folder yang akan Anda simpan terus, karena Chrome memuat ekstensi dari folder itu.
+</Step>
+<Step>
+Buka `chrome://extensions/` dan aktifkan **Mode developer** (kanan atas).
+</Step>
+<Step>
+Seret file CRX ke halaman itu, atau klik **Muat yang belum dibuka** dan pilih folder hasil ekstrak.
+</Step>
+<Step>
+Sematkan Bookmark Scout ke toolbar dari menu Ekstensi berbentuk kepingan puzzle.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Edge" id="edge">
+
+<Steps>
+<Step>
+Unduh `bookmark-scout-<version>-edge.zip` dan ekstrak ke folder yang akan Anda simpan terus.
+</Step>
+<Step>
+Buka `edge://extensions/` dan aktifkan **Mode pengembang**.
+</Step>
+<Step>
+Klik **Muat yang tidak dikemas** dan pilih folder hasil ekstrak.
+</Step>
+<Step>
+Tampilkan Bookmark Scout di toolbar dari menu Ekstensi berbentuk kepingan puzzle (ikon mata di sebelahnya).
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox" id="firefox">
+
+<Steps>
+<Step>
+Unduh `bookmark-scout-<version>-firefox.zip` dan ekstrak.
+</Step>
+<Step>
+Buka `about:debugging#/runtime/this-firefox`.
+</Step>
+<Step>
+Klik **Muat Pengaya Sementara** dan pilih file `manifest.json` hasil ekstrak.
+</Step>
+</Steps>
+
+<Callout type="warn" title="Batasan Firefox">
+Firefox menghapus pengaya sementara saat dimulai ulang, jadi Anda harus memuatnya lagi setiap kali Firefox dimulai ulang. Halaman **Bookmark Scout siap digunakan** tidak terbuka untuk pengaya sementara. Firefox juga tidak bisa mengganti halaman bookmark-nya, jadi buka pengelola bookmark (dengan Alat, penelusuran tersimpan, serta impor dan ekspor) dari **Buka pengelola bookmark** di popup. Lihat [Dukungan browser](/browser-support).
+</Callout>
+
+</Tab>
+</Tabs>
+
+## Membangun dari kode sumber [#building-from-source]
+
+Untuk mengerjakan Bookmark Scout, bangun sendiri: ikuti [Kontribusi dan pengembangan](/contributing#build-from-source).

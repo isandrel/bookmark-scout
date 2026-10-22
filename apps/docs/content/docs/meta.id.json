@@ -1,0 +1,24 @@
+{
+  "title": "Dokumentasi Bookmark Scout",
+  "description": "Simpan setiap halaman ke folder bookmark yang tepat dengan Bookmark Scout, ekstensi browser yang juga menemukan, merapikan, dan membersihkan bookmark Anda di dalam browser.",
+  "pages": [
+    "---Memulai---",
+    "index",
+    "first-save",
+    "installation",
+    "browser-support",
+    "---Panduan---",
+    "...guides",
+    "---Referensi---",
+    "features",
+    "settings",
+    "permissions",
+    "---Tentang---",
+    "privacy",
+    "faq",
+    "status",
+    "---Untuk developer---",
+    "guides/local-agents",
+    "contributing"
+  ]
+}

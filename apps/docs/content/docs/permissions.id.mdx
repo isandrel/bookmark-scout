@@ -1,0 +1,73 @@
+---
+title: Izin
+description: Setiap izin browser yang diminta Bookmark Scout, alasan ekstensi memerlukannya, dan akses situs web opsional yang hanya diminta saat Anda menjalankan alat.
+---
+
+Berikut izin yang ada di ekstensi hasil build untuk setiap browser. Bookmark Scout tidak mendeklarasikan content script dan tidak pernah membaca halaman yang Anda kunjungi; setelah pintasan simpan cepat, ekstensi ini hanya menampilkan notifikasinya sendiri di tab itu. Saat instalasi, ekstensi hanya meminta izin yang mutlak diperlukannya; izin lainnya diminta saat Anda mengaktifkan atau menjalankan fitur yang memerlukannya.
+
+## Yang akan diminta browser Anda, dan alasannya [#what-your-browser-will-ask-and-why]
+
+Saat Anda menginstal Bookmark Scout, browser menampilkan satu baris. Izin lainnya hanya diminta saat Anda memakai fitur yang memerlukannya, setelah penjelasan singkat di Bookmark Scout. Jika Anda menolak, hanya fitur itu yang tetap nonaktif. Tabel ini mengutip kata-kata browser dalam bahasa Indonesia.
+
+| Kata browser (Chrome dan Edge / Firefox) | Kapan | Alasan |
+| --- | --- | --- |
+| "Membaca dan mengubah bookmark Anda" / "Membaca dan mengubah markah" | Saat instalasi | Menyimpan, menelusuri, dan mengatur bookmark Anda |
+| "Membaca ikon situs yang Anda kunjungi" (hanya Chrome dan Edge) | Anda mengklik **Tampilkan ikon browser** di **Perbarui Ikon Situs**, atau mengaktifkan **Gunakan cache ikon browser** | Menampilkan ikon yang sudah disimpan browser Anda di sebelah bookmark. Tidak ada yang diunduh |
+| "Membaca histori penjelajahan Anda" / "Mengakses tab peramban" | Anda menyimpan halaman saat ini, atau meminta saran folder, dari panel samping | Melihat halaman mana yang sedang Anda buka. Tombol toolbar dan pintasan simpan cepat tidak memerlukan izin, jadi penjelasannya menyarankan keduanya lebih dulu |
+| "Membaca dan mengubah data Anda di semua situs example.com", atau "di sejumlah situs" / "Mengakses data Anda untuk situs di domain example.com" | Anda menjalankan **Periksa Link Mati**, **Pengambil Metadata**, atau **Perbarui Ikon Situs** | Meminta halaman yang di-bookmark dalam proses tersebut, hanya di situsnya masing-masing |
+| "Membaca dan mengubah semua data Anda di semua situs" / "Mengakses data Anda untuk semua situs web" | Proses sebuah alat mencakup lebih dari 20 situs, atau Anda mengaktifkan **Baca konten halaman** | Meminta halaman di situs mana pun |
+| "Membaca dan mengubah data Anda di api.example.com" / "Mengakses data Anda untuk api.example.com" | Anda mengklik **Verifikasi Layanan** atau **Perbarui Model** | Menghubungi alamat penyedia AI Anda |
+| "Berkomunikasi dengan aplikasi native yang bekerja sama" / "Bertukar pesan dengan program selain Firefox" | Anda mengaktifkan **Izinkan agen AI lokal** | Berkomunikasi dengan program bookmark-scout-mcp di komputer Anda |
+| Hanya Firefox: "Pengembang mengatakan ekstensi ini ingin mengumpulkan: informasi autentikasi, markah, aktivitas penjelajahan" | Anda mengaktifkan **Fitur AI** | Kunci API, bookmark dan nama folder, serta judul dan URL halaman saat ini dikirim ke penyedia AI Anda. "Pengembang" dalam permintaan ini adalah penyedia AI yang Anda pilih; Bookmark Scout tidak menerima apa pun |
+| Hanya Firefox: permintaan yang sama dengan "konten situs web" | Anda mengaktifkan **Baca konten halaman** | Teks halaman dikirim ke penyedia AI Anda |
+| Hanya Firefox: permintaan yang sama dengan "informasi autentikasi" | Anda mengklik **Verifikasi Layanan** atau **Perbarui Model** | Kunci API Anda dikirim ke penyedia AI Anda |
+| Hanya Firefox: permintaan yang sama dengan "markah, aktivitas penjelajahan" | Anda mengaktifkan **Izinkan agen AI lokal** | Apa yang bisa dicari agen AI di komputer Anda |
+
+Menu klik kanan (**Menu Klik Kanan**) juga opsional di Chrome dan Edge, tetapi tidak memiliki peringatan, jadi browser menambahkannya tanpa bertanya.
+
+## Diberikan saat instalasi [#granted-at-install]
+
+| Izin | Browser | Alasan |
+| --- | --- | --- |
+| `bookmarks` | Semua | Menampilkan dan menelusuri bookmark Anda, serta membuat, mengedit, memindahkan, dan menghapusnya saat Anda bertindak di popup, panel samping, pengelola, atau menu klik kanan |
+| `storage` | Semua | Menyimpan setelan Anda, dan hanya di perangkat ini, setelan penyedia AI, tag, ringkasan, penelusuran tersimpan, folder terbaru, penelusuran terbaru, dan ikon situs yang disimpan dengan **Perbarui Ikon Situs** |
+| `activeTab` | Semua | Saat Anda mengklik tombol toolbar atau menu klik kanan, atau menekan pintasan simpan cepat, membaca judul dan URL tab itu, agar Anda bisa menyimpan halaman yang sedang dibuka. Tidak ada tab lain, tidak ada histori |
+| `scripting` | Semua | Setelah pintasan simpan cepat, menampilkan notifikasi hanya di tab itu. Tidak membaca apa pun dari halaman |
+| `sidePanel` | Chrome, Edge | Menyediakan tampilan panel samping. Firefox mendeklarasikan halaman yang sama sebagai bilah samping |
+| `offscreen` | Chrome, Edge | Menjalankan permintaan simpan cepat AI, pembacaan halaman oleh agen AI lokal, pembacaan judul halaman oleh **Pengambil Metadata**, dan permintaan **Penataan Ulang Folder dengan AI** di halaman ekstensi tersembunyi, yang ditutup browser saat pekerjaan selesai. Halaman latar belakang Firefox melakukannya sendiri |
+| `alarms` | Semua | Membangunkan latar belakang dengan timer, agar tugas latar belakang seperti **Periksa Link Mati** berlanjut setelah browser menghentikan latar belakang. Tidak menampilkan permintaan izin |
+| `contextMenus` | Firefox | Firefox tidak mengizinkan ekstensi memintanya nanti. Menu tetap hanya muncul setelah Anda mengaktifkan **Menu Klik Kanan** |
+
+Di Chrome dan Edge, ekstensi ini juga mengganti halaman bookmark browser dengan pengelola Bookmark Scout. Itu adalah penggantian halaman, bukan izin. Firefox tidak mengizinkannya, jadi di sana pengelola dibuka dari **Buka pengelola bookmark** di popup; lihat [Dukungan browser](/browser-support).
+
+## Diminta saat Anda memerlukannya [#asked-for-when-you-need-it]
+
+| Izin | Browser | Diminta saat |
+| --- | --- | --- |
+| `tabs` | Semua | Anda menyimpan halaman saat ini, atau meminta saran folder, dari panel samping. Penjelasan singkat muncul lebih dulu dan menawarkan popup toolbar dan pintasan simpan cepat, yang tidak pernah memerlukan izin ini |
+| `contextMenus` | Chrome, Edge | Anda mengaktifkan **Menu Klik Kanan** di [Setelan](/settings#data). Nonaktif secara default, dan Chrome memberikannya tanpa permintaan izin |
+| `favicon` | Chrome, Edge | Anda mengklik **Tampilkan ikon browser** di **Perbarui Ikon Situs**, atau mengaktifkan **Gunakan cache ikon browser** di [Setelan](/settings#appearance), untuk menampilkan ikon yang sudah disimpan browser. Penjelasan singkat muncul lebih dulu |
+| Persetujuan berbagi data | Firefox | Setiap fitur hanya meminta apa yang dikirimnya: **Fitur AI** untuk kunci API, bookmark, serta judul dan URL halaman saat ini; **Baca konten halaman** untuk teks halaman; **Verifikasi Layanan** untuk kunci API. Penjelasan singkat lebih dulu menyatakan bahwa data dikirim ke penyedia AI Anda, bukan ke Bookmark Scout |
+| `nativeMessaging` | Semua | Anda mengaktifkan **Izinkan agen AI lokal** di [Setelan](/settings#agent-bridge), agar ekstensi bisa berkomunikasi dengan program bookmark-scout-mcp di komputer Anda. Penjelasan singkat muncul lebih dulu; di Firefox, permintaan yang sama meminta izin untuk berbagi data bookmark dengan program itu |
+
+Jika Anda menolak, fitur tetap nonaktif dan tidak ada yang dikirim. Jika nanti Anda mencabut izin di setelan ekstensi browser, fitur tersebut menjadi nonaktif; mengaktifkannya lagi akan meminta izin lagi.
+
+## Akses situs web opsional [#optional-website-access]
+
+Ekstensi ini juga mendeklarasikan akses ke `http://*/*` dan `https://*/*`, tetapi tidak ada yang diberikan saat instalasi. Browser meminta izin Anda pada saat Anda memerlukannya:
+
+- **Periksa Link Mati**, **Pengambil Metadata**, dan **Perbarui Ikon Situs** meminta, saat Anda menjalankannya, akses hanya ke situs bookmark dalam proses tersebut, masing-masing beserta subdomainnya. Proses yang mencakup lebih dari 20 situs meminta akses ke semua situs web. Situs yang sebelumnya sudah Anda izinkan tidak diminta lagi. Permintaan dikirim tanpa cookie, dan hanya bagian head halaman yang dibaca untuk judul dan link ikon. Jika Anda menolak, tidak ada yang dipindai. Link yang dialihkan ke situs di luar proses tidak bisa diikuti, jadi **Periksa Link Mati** menandainya **Periksa manual**, bukan mati. Lihat [Menemukan dan memperbaiki link mati](/guides/dead-links) dan [Memperbarui ikon situs](/guides/clean-up#refresh-site-icons).
+- **Indeks Teks Halaman** meminta dengan cara yang sama, untuk situs bookmark yang dibacanya.
+- **Ambil Sampul** meminta dengan cara yang sama, untuk situs bookmark yang dibacanya; gambar di situs lain hanya diunduh jika Anda juga mengizinkan situs itu.
+- **Baca konten halaman** di setelan AI meminta akses ke semua situs web saat Anda mengaktifkannya, agar alat AI bisa mengunduh halaman, tanpa cookie, dan mengirim teks utamanya ke penyedia AI Anda. Halaman di jaringan lokal Anda tidak pernah dibaca. Lihat [Baca konten halaman](/guides/ai-tools#read-page-content).
+- **Verifikasi Layanan** dan **Perbarui Model** di setelan AI hanya meminta akses ke alamat penyedia tersebut. Lihat [Menyiapkan alat AI](/guides/ai-tools).
+
+Untuk mencabut akses, buka halaman browser untuk ekstensi ini (misalnya `chrome://extensions/`, lalu **Detail** di Bookmark Scout, atau **Izin** di `about:addons` Firefox) dan ubah akses situs atau izinnya.
+
+## Yang tidak diminta [#what-is-not-requested]
+
+- Tidak ada akses ke konten halaman, dan tidak ada content script yang dideklarasikan
+- Tidak ada izin histori, unduhan, atau cookie
+- Tidak ada akses host saat instalasi
+
+Ke mana data Anda pergi saat izin digunakan dijelaskan di [Privasi](/privacy). Alasan setiap izin, seperti yang diajukan ke store, ada di <RepoLink file="store/permissions.md">`store/permissions.md`</RepoLink> repositori.

@@ -1,0 +1,123 @@
+---
+title: Installazione
+description: Aggiungi Bookmark Scout a Chrome dal Chrome Web Store. Le versioni per Firefox ed Edge arriveranno presto nei rispettivi store.
+---
+
+Bookmark Scout è gratuito, senza account e senza pubblicità. Funziona nel browser di un computer, non su telefoni o tablet.
+
+## Aggiungerlo a Chrome [#add-it-to-chrome]
+
+<Steps>
+<Step>
+<StoreListing browser="chrome" />
+
+Nella scheda dello store, fai clic su **Aggiungi a Chrome**, poi su **Aggiungi estensione**. Chrome chiede una sola cosa: leggere e modificare i preferiti. Le altre funzioni chiedono altre autorizzazioni solo la prima volta che le usi, spiegando il motivo; vedi [Autorizzazioni](/permissions).
+</Step>
+<Step>
+Fissa l'icona: fai clic sul pulsante **Estensioni** (il pezzo di puzzle) a destra nella barra degli strumenti, poi sulla puntina accanto a Bookmark Scout.
+</Step>
+<Step>
+Salva la tua prima pagina: vedi [Il tuo primo salvataggio](/first-save).
+</Step>
+</Steps>
+
+Subito dopo l'aggiunta, si apre in una nuova scheda una pagina intitolata **Bookmark Scout è pronto** con gli stessi primi passaggi: fissare l'icona, salvare una pagina e i tasti della scorciatoia di salvataggio rapido (oppure **Configurala** quando un'altra estensione li usa già). In Chrome ed Edge, propone anche di assegnare al salvataggio rapido <Shortcut id="browser.bookmark_page" />. Si apre una sola volta, alla prima installazione di Bookmark Scout, mai dopo un aggiornamento. **Leggi la guida** apre [Salvare e organizzare](/guides/save-and-organize) e **Apri le impostazioni** apre [Impostazioni](/settings).
+
+Una copia installata dallo store si aggiorna da sola.
+
+## Firefox ed Edge [#firefox-and-edge]
+
+<StoreListing browser="firefox" />
+
+<StoreListing browser="edge" />
+
+Finché uno store non lo elenca, puoi installare Bookmark Scout a mano da GitHub, come descritto [più avanti](#install-from-a-github-release). Richiede qualche passaggio in più e in Firefox va ripetuto dopo ogni riavvio.
+
+## Dopo l'installazione [#after-installing]
+
+- Fai clic sull'icona di Bookmark Scout su qualsiasi pagina per salvarla o per cercare tra i preferiti. Inizia da [Il tuo primo salvataggio](/first-save).
+- Premi <Shortcut id="commands.quick-save" /> su qualsiasi pagina per salvarla senza aprire nulla. Vedi [Salvare con una scorciatoia da tastiera](/guides/save-and-organize#quick-save).
+- In Chrome, Bookmark Scout sostituisce la pagina dei preferiti del browser con la propria gestione preferiti. Aprila come prima, ad esempio con <Shortcut id="browser.open_bookmarks_manager" />, oppure con **Apri gestione preferiti** nel popup. La sua barra laterale **Strumenti** contiene gli strumenti di pulizia.
+- Le impostazioni si aprono in una scheda: fai clic con il pulsante destro del mouse sull'icona nella barra degli strumenti e scegli **Opzioni**. Vedi [Impostazioni](/settings).
+
+## Aggiornamenti [#updating]
+
+Una copia installata da uno store si aggiorna da sola e gli aggiornamenti conservano le impostazioni. Un aggiornamento passato, alla versione 0.3.3, è stato un'eccezione: ha reimpostato una volta i dati salvati da Bookmark Scout, ma mai i tuoi preferiti; vedi [le domande frequenti](/faq#my-settings-are-gone-after-an-update).
+
+Per conservare in qualsiasi momento una copia di impostazioni, prompt personalizzati, servizi IA e ricerche salvate, usa **Esegui il backup delle impostazioni** in fondo alle [Impostazioni](/settings).
+
+## Avanzate: installare a mano da GitHub [#install-from-a-github-release]
+
+Usa questo metodo solo se lo store del tuo browser non elenca ancora Bookmark Scout, o per provare una release. Una copia installata in questo modo non si aggiorna da sola: per aggiornarla, scarica la release più recente e ripeti i passaggi.
+
+Ogni <RepoLink path="/releases">release su GitHub</RepoLink> ha un download per ciascun browser:
+
+| Browser | File |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` o `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
+
+Scaricalo da <ReleaseLink />, poi segui i passaggi per il tuo browser.
+
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
+
+<Steps>
+<Step>
+Scarica `bookmark-scout-<version>-chrome.crx` o `bookmark-scout-<version>-chrome.zip`. Se usi lo ZIP, estrailo in una cartella che conserverai, perché Chrome carica l'estensione da quella cartella.
+</Step>
+<Step>
+Apri `chrome://extensions/` e attiva **Modalità sviluppatore** (in alto a destra).
+</Step>
+<Step>
+Trascina il file CRX sulla pagina, oppure fai clic su **Carica estensione non pacchettizzata** e seleziona la cartella estratta.
+</Step>
+<Step>
+Fissa Bookmark Scout alla barra degli strumenti dal menu Estensioni (il pezzo di puzzle).
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Edge" id="edge">
+
+<Steps>
+<Step>
+Scarica `bookmark-scout-<version>-edge.zip` ed estrailo in una cartella che conserverai.
+</Step>
+<Step>
+Apri `edge://extensions/` e attiva **Modalità sviluppatore**.
+</Step>
+<Step>
+Fai clic su **Carica decompressa** e seleziona la cartella estratta.
+</Step>
+<Step>
+Mostra Bookmark Scout nella barra degli strumenti dal menu Estensioni (il pezzo di puzzle), con l'icona a forma di occhio accanto all'estensione.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox" id="firefox">
+
+<Steps>
+<Step>
+Scarica `bookmark-scout-<version>-firefox.zip` ed estrailo.
+</Step>
+<Step>
+Apri `about:debugging#/runtime/this-firefox`.
+</Step>
+<Step>
+Fai clic su **Carica componente aggiuntivo temporaneo** e seleziona il file `manifest.json` estratto.
+</Step>
+</Steps>
+
+<Callout type="warn" title="Limiti di Firefox">
+Firefox rimuove i componenti aggiuntivi temporanei al riavvio, quindi devi caricarlo di nuovo dopo ogni riavvio. La pagina **Bookmark Scout è pronto** non si apre per un componente aggiuntivo temporaneo. Inoltre Firefox non può sostituire la propria pagina dei segnalibri, quindi apri la gestione preferiti (con Strumenti, ricerche salvate, importazione ed esportazione) da **Apri gestione preferiti** nel popup. Vedi [Browser supportati](/browser-support).
+</Callout>
+
+</Tab>
+</Tabs>
+
+## Compilare dal codice sorgente [#building-from-source]
+
+Per lavorare su Bookmark Scout, compilalo tu stesso: segui [Contribuire e sviluppare](/contributing#build-from-source).

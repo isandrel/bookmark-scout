@@ -1,0 +1,105 @@
+---
+title: FAQ dan pemecahan masalah
+description: Jawaban atas pertanyaan umum tentang Bookmark Scout, dan solusi untuk masalah yang paling sering dialami orang.
+---
+
+## Pertanyaan [#questions]
+
+### Apakah Bookmark Scout gratis? [#is-bookmark-scout-free]
+
+Ya. Ekstensi ini gratis dan open source di bawah lisensi <License />, tanpa iklan, tanpa akun, dan tanpa paket berbayar. Fitur AI opsional adalah satu-satunya yang bisa memerlukan biaya: fitur ini memakai akun Anda sendiri di perusahaan AI, yang mungkin mengenakan biaya untuk setiap penggunaan. AI bawaan Chrome, yang menyarankan folder di komputer Anda, gratis.
+
+### Apakah saya harus memakai AI? [#do-i-need-to-use-ai]
+
+Tidak. AI bersifat opsional. Menyimpan, menelusuri, mengatur, membersihkan, serta impor dan ekspor semuanya berfungsi tanpa AI, dan AI tetap nonaktif sampai Anda mengaktifkannya di [Setelan](/settings#ai). Untuk memakainya, Anda memerlukan akun di perusahaan AI, seperti OpenAI, Anthropic, atau Google, dan kunci dari akun itu (kunci API) yang memungkinkan Bookmark Scout memakainya. Sebagian besar perusahaan ini mengenakan biaya untuk setiap penggunaan, biasanya dalam jumlah kecil; program AI yang berjalan di komputer Anda sendiri, seperti Ollama, tidak memerlukan biaya tetapi butuh komputer yang cukup bertenaga. Di Chrome, AI bawaannya bisa menyarankan folder secara gratis, tanpa akun atau kunci, di komputer yang mampu menjalankannya. Judul dan alamat bookmark yang diproses alat AI dikirim ke perusahaan yang Anda pilih. Lihat [Menyiapkan alat AI](/guides/ai-tools).
+
+### Apakah ekstensi ini mengirim bookmark saya ke suatu tempat? [#does-it-send-my-bookmarks-anywhere]
+
+Tidak ke developer: tidak ada server Bookmark Scout. Data hanya keluar dari browser Anda saat Anda memakai alat AI yang Anda aktifkan (data dikirim ke penyedia Anda), menjalankan pemeriksaan link mati atau pengambilan judul (situs web yang di-bookmark diminta), atau mengizinkan agen AI lokal mencari bookmark Anda (agen mendapatkan apa yang dimintanya melalui program di komputer Anda). Lihat [Privasi](/privacy).
+
+### Apakah ekstensi ini akan mengubah bookmark saya tanpa bertanya? [#will-it-change-my-bookmarks-without-asking]
+
+Tidak. Pembersihan duplikat, pembersihan URL, perbaikan link mati, judul yang diambil, penataan ulang dengan AI, dan impor semuanya menampilkan tinjauan sebelum ada yang ditulis. **Tanya AI** dan agen AI lokal menampilkan perubahannya sebagai rencana dan menunggu persetujuan Anda. Penghapusan meminta konfirmasi secara default, penghapusan, pembersihan, dan impor bisa diurungkan dari pesannya, dan pengelola bookmark mengurungkan perubahannya dengan <Shortcut id="manager.undo" />.
+
+### Store browser mana yang menyediakannya? [#which-browser-stores-list-it]
+
+<StoreAvailability />
+
+Setiap store meninjau ekstensi sebelum menampilkannya. Jika store browser Anda belum menyediakannya, Anda bisa [menginstalnya secara manual](/installation#install-from-a-github-release) (lanjutan).
+
+### Apakah berfungsi di Firefox? [#does-it-work-in-firefox]
+
+Belum tersedia di Firefox Add-ons: versi Firefox segera hadir. Sampai saat itu, ekstensi ini bisa [diinstal secara manual](/installation#firefox) sebagai pengaya sementara, yang dihapus Firefox saat dimulai ulang. Setelah diinstal, ekstensi ini berfungsi dengan beberapa perbedaan: Firefox tidak mengizinkan ekstensi mengganti halaman bookmark-nya, jadi buka pengelola Bookmark Scout, dengan alat pembersihan, impor dan ekspor, serta penelusuran tersimpan, dari **Buka pengelola bookmark** di popup, dan cache ikon browser tidak tersedia. Lihat [Dukungan browser](/browser-support).
+
+### Apakah berfungsi di Microsoft Edge? [#does-it-work-in-microsoft-edge]
+
+Belum tersedia di Microsoft Edge Add-ons: versi Edge segera hadir. Sampai saat itu, ekstensi ini bisa [diinstal secara manual](/installation#edge), dan kemudian berfungsi hampir sama seperti di Chrome. Lihat [Dukungan browser](/browser-support).
+
+### Apakah berfungsi di ponsel saya? [#does-it-work-on-my-phone]
+
+Tidak. Bookmark Scout adalah ekstensi untuk browser di komputer. Browser ponsel dan tablet tidak menjalankannya.
+
+### Mengapa tidak ada Safari? [#why-not-safari]
+
+Safari Web Extensions tidak mengimplementasikan API `bookmarks` yang menjadi dasar Bookmark Scout.
+
+## Pemecahan masalah [#troubleshooting]
+
+### Di mana pengelola bookmark? [#where-is-the-bookmarks-manager]
+
+Di Chrome, buka halaman bookmark browser sendiri, misalnya dengan <Shortcut id="browser.open_bookmarks_manager" />. Bookmark Scout menggantinya dengan pengelolanya. Jika bilah samping **Alat** tersembunyi, klik **Tampilkan alat** di header pengelola.
+
+### Bookmark Scout hilang dari Firefox [#bookmark-scout-disappeared-from-firefox]
+
+Firefox menghapus pengaya sementara saat dimulai ulang. Muat lagi dari `about:debugging#/runtime/this-firefox`, seperti di [Instal](/installation).
+
+### Ikon situs tidak muncul [#site-icons-are-missing]
+
+Pastikan **Tampilkan Ikon Situs** aktif di [Setelan](/settings#appearance). Chrome dan Edge menampilkan ikon yang ada di cache untuk setiap situs, jadi situs yang belum Anda kunjungi baru-baru ini menampilkan ikon bola dunia generik. Firefox tidak punya API ikon untuk ekstensi. Di browser mana pun, [Perbarui Ikon Situs](/guides/clean-up#refresh-site-icons) mengunduh ikon milik setiap situs dan menyimpannya di perangkat ini.
+
+### Kunci API saya tidak tersimpan [#my-api-key-was-not-saved]
+
+Kunci yang tidak terlihat seperti kunci untuk perusahaan AI yang dipilih (penyedia layanan) ditolak dan tidak disimpan, dan sebuah pesan memberitahukannya. Pastikan penyedia layanan adalah perusahaan yang memberi Anda kunci itu. Lihat [Menyiapkan alat AI](/guides/ai-tools#turn-on-ai).
+
+### AI menulis tag atau ringkasan dalam bahasa yang salah [#ai-writes-tags-or-summaries-in-the-wrong-language]
+
+AI menulis tag, ringkasan, dan nama folder baru dalam bahasa yang disetel di **Bahasa output AI** di [Setelan](/settings#ai-output-language): secara default, bahasa yang dipakai Bookmark Scout sendiri. Pilih bahasa lain di sana, atau **Sama dengan setiap halaman** untuk mengikuti bahasa setiap halaman. Tanya AI menjawab dalam bahasa yang Anda pakai untuk menulis.
+
+### Pemeriksaan link mati menyatakan situs yang berfungsi perlu diperiksa manual [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+Situs yang meminta Anda login, membatasi jumlah permintaan, memblokir pemeriksaan otomatis, atau mengalami error server dicantumkan di bawah **Periksa manual**, karena situs seperti itu sering masih berfungsi di browser. Buka link-nya untuk memastikan. Hanya halaman yang tidak ditemukan, ditolak, host yang tidak dikenal, dan pengalihan berulang yang dihitung sebagai **Pasti mati**. Lihat [Menemukan dan memperbaiki link mati](/guides/dead-links#read-the-results).
+
+### Konsol menampilkan "Failed to load resource" saat pemindaian [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome mencatat satu baris untuk setiap permintaan yang gagal di konsol developer halaman. Ekstensi tidak bisa menyembunyikan baris ini, dan baris itu tidak berarti ada yang salah dengan pemindaian.
+
+### Pengurutan ulang di pengelola tidak terlihat di popup [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+Popup menampilkan urutan yang disimpan browser dengan pengurutan **Urutan Browser** (default) dan **Folder Dulu**. Pengurutan **Tanggal Ditambahkan** dan **Abjad** terus mengurutkan ulang daftar. Ubah **Urutan** di [Setelan](/settings#behavior).
+
+### Penelusuran menyatakan ada lebih banyak hasil daripada yang ditampilkan [#search-says-there-are-more-matches-than-it-shows]
+
+Hasil berhenti di **Hasil Penelusuran Maks** (20 secara default). Persempit penelusuran, atau naikkan batasnya di [Setelan](/settings#search).
+
+### Tag, ringkasan, atau penelusuran tersimpan saya tidak ada di komputer lain [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+Semuanya hanya disimpan di perangkat tempat Anda membuatnya dan tidak disinkronkan. Untuk memindahkannya, ekspor bookmark Anda sebagai JSON, yang membawa tag dan ringkasan ke bookmark yang dibuat saat file itu diimpor, dan simpan cadangan dengan **Cadangkan setelan** di bagian bawah [Setelan](/settings), yang mencakup penelusuran tersimpan. Setelan memang disinkronkan, melalui akun browser Anda, saat sinkronisasi browser aktif.
+
+### Saya tidak sengaja menghapus sesuatu [#i-deleted-something-by-mistake]
+
+Klik **Urungkan** di pesan dalam 10 detik. Tindakan ini memulihkan item, semua isinya, serta tag dan ringkasannya yang tersimpan; item yang dipulihkan mendapat tanggal ditambahkan yang baru. Di pengelola bookmark, <Shortcut id="manager.undo" /> juga mengurungkan penghapusan yang dilakukan di sana, atau oleh Tanya AI atau agen AI lokal, sampai browser ditutup. Lihat [Memilih, mengurungkan, dan mengulangi di pengelola](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+
+### Pintasan simpan cepat tidak melakukan apa-apa [#the-quick-save-shortcut-does-nothing]
+
+Jika ekstensi lain sudah memakai <Shortcut id="commands.quick-save" /> atau <Shortcut id="commands.ai-quick-save" />, browser membiarkan pintasan Bookmark Scout tanpa tombol, dan popup menampilkan **Pintasan simpan cepat belum disetel**. Klik **Siapkan**, atau buka **Pintasan keyboard** di bawah **Penyimpanan & Penelusuran** di [Setelan](/settings#quick-save), lalu pilih tombol lain. Di halaman tempat ekstensi tidak bisa menampilkan apa pun, seperti halaman browser sendiri, ikon toolbar menampilkan hasilnya sebagai pengganti notifikasi. Lihat [Menyimpan dengan pintasan keyboard](/guides/save-and-organize#quick-save).
+
+### Setelan saya hilang setelah update [#my-settings-are-gone-after-an-update]
+
+Update biasanya mempertahankan setelan Anda. Satu update, ke versi 0.3.3, memindahkan data tersimpan Bookmark Scout ke format baru dan menghapus data lama alih-alih mengonversinya. Setelah update itu, setelan kembali ke default, layanan AI dan kunci API-nya perlu ditambahkan lagi, dan prompt kustom, penelusuran tersimpan, penelusuran dan folder terbaru, tag dan ringkasan, serta ikon situs tersimpan hilang. Bookmark Anda sendiri tidak tersentuh. Jika Anda menyimpan setelan dengan **Cadangkan setelan** (saat itu bernama **Ekspor**) di bagian bawah [Setelan](/settings) sebelum update, buka file itu dengan **Pulihkan setelan**.
+
+## Dapatkan bantuan [#get-help]
+
+- <SiteLink to="support">Halaman dukungan</SiteLink> di situs web.
+- Laporkan bug atau minta fitur di <RepoLink path="/issues">GitHub</RepoLink>.
+- Kirim email ke <Contact role="support" />.
+- Laporkan masalah keamanan secara pribadi ke <Contact role="security" />, bukan di issue publik.

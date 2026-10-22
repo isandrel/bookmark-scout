@@ -4,9 +4,12 @@
   <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
   <strong lang="fr">Français</strong> ·
   <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../ru/README.md" lang="ru" hreflang="ru">Русский</a> ·
+  <a href="../id/README.md" lang="id" hreflang="id">Bahasa Indonesia</a> ·
   <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
   <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="../it/README.md" lang="it" hreflang="it">Italiano</a> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 
@@ -50,7 +53,7 @@
 - ✨ **Des suggestions de l'IA, si vous le souhaitez.** Laissez l'IA choisir le dossier à votre place, avec votre propre compte d'IA ou un modèle d'IA gratuit sur votre ordinateur, comme celui intégré à Chrome. L'IA reste désactivée tant que vous ne l'activez pas.
 - 🔒 **Conçu pour protéger votre vie privée.** Aucun compte, aucune publicité, aucun suivi, et rien n'est envoyé au développeur. L'enregistrement et la recherche fonctionnent même hors connexion.
 
-🌍 Disponible en English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文.
+🌍 Disponible en English · 简体中文 · Español · Français · Português (Brasil) · Русский · Bahasa Indonesia · Deutsch · 日本語 · 한국어 · Italiano · 繁體中文.
 
 ## 📦 Installation
 

@@ -4,9 +4,12 @@
   <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
   <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../ru/README.md" lang="ru" hreflang="ru">Русский</a> ·
+  <a href="../id/README.md" lang="id" hreflang="id">Bahasa Indonesia</a> ·
   <strong lang="de">Deutsch</strong> ·
   <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="../it/README.md" lang="it" hreflang="it">Italiano</a> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 
@@ -50,7 +53,7 @@
 - ✨ **Optionale KI-Vorschläge.** Lassen Sie KI den Ordner für Sie auswählen, mit Ihrem eigenen KI-Konto oder einem kostenlosen KI-Modell auf Ihrem Computer, etwa dem in Chrome integrierten. KI bleibt aus, bis Sie sie aktivieren.
 - 🔒 **Von Grund auf privat.** Kein Konto, keine Werbung, kein Tracking, und nichts geht an den Entwickler. Speichern und Suchen funktionieren sogar offline.
 
-🌍 Verfügbar auf English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文.
+🌍 Verfügbar auf English · 简体中文 · Español · Français · Português (Brasil) · Русский · Bahasa Indonesia · Deutsch · 日本語 · 한국어 · Italiano · 繁體中文.
 
 ## 📦 Installieren
 

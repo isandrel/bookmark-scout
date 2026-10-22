@@ -1,0 +1,105 @@
+---
+title: Domande frequenti e risoluzione dei problemi
+description: Risposte alle domande più comuni su Bookmark Scout e soluzioni ai problemi che si incontrano più spesso.
+---
+
+## Domande [#questions]
+
+### Bookmark Scout è gratuito? [#is-bookmark-scout-free]
+
+Sì. È gratuito e open source con licenza <License />, senza pubblicità, senza account e senza piani a pagamento. Le funzioni IA facoltative sono l'unica cosa che può costare: usano il tuo account presso un'azienda di IA, che può far pagare ogni utilizzo. L'IA integrata di Chrome, che suggerisce cartelle sul tuo computer, è gratuita.
+
+### Devo per forza usare l'IA? [#do-i-need-to-use-ai]
+
+No. L'IA è facoltativa. Salvataggio, ricerca, organizzazione, pulizia, importazione ed esportazione funzionano tutti senza, e resta disattivata finché non la attivi nelle [Impostazioni](/settings#ai). Per usarla ti serve un account presso un'azienda di IA, come OpenAI, Anthropic o Google, e una chiave di quell'account (una chiave API) che consente a Bookmark Scout di usarlo. La maggior parte di queste aziende fa pagare ogni utilizzo, di solito una piccola somma; un programma di IA che gira sul tuo computer, come Ollama, non costa nulla ma richiede un computer piuttosto potente. In Chrome, l'IA integrata può suggerire cartelle gratuitamente, senza account né chiave, sui computer in grado di eseguirla. I titoli e gli indirizzi dei preferiti su cui lavora uno strumento IA vengono inviati all'azienda che hai scelto. Vedi [Configurare gli strumenti IA](/guides/ai-tools).
+
+### Invia i miei preferiti da qualche parte? [#does-it-send-my-bookmarks-anywhere]
+
+Non allo sviluppatore: non esiste un server di Bookmark Scout. I dati escono dal browser solo quando usi uno strumento IA che hai attivato (vanno al tuo provider), esegui un controllo dei link non funzionanti o un recupero dei titoli (vengono richiesti i siti web salvati nei preferiti), oppure consenti agli agenti IA locali di consultare i tuoi preferiti (ricevono ciò che chiedono tramite un programma sul tuo computer). Vedi [Privacy](/privacy).
+
+### Modificherà i miei preferiti senza chiedere? [#will-it-change-my-bookmarks-without-asking]
+
+No. La pulizia dei duplicati, la pulizia degli URL, le riparazioni dei link non funzionanti, i titoli recuperati, la riorganizzazione con IA e le importazioni mostrano tutti una revisione prima di scrivere qualsiasi cosa. **Chiedi all'IA** e gli agenti IA locali mostrano le modifiche come un piano e attendono la tua approvazione. Per impostazione predefinita l'eliminazione chiede conferma; eliminazioni, pulizie e importazioni si possono annullare dal relativo messaggio, e la gestione preferiti annulla le proprie modifiche con <Shortcut id="manager.undo" />.
+
+### In quali store del browser è disponibile? [#which-browser-stores-list-it]
+
+<StoreAvailability />
+
+Ogni store esamina un'estensione prima di pubblicarla. Se lo store del tuo browser non la elenca ancora, puoi [installarla a mano](/installation#install-from-a-github-release) (procedura avanzata).
+
+### Funziona in Firefox? [#does-it-work-in-firefox]
+
+Non ancora da Firefox Add-ons: la versione per Firefox arriverà presto. Nel frattempo, può essere [installata a mano](/installation#firefox) come componente aggiuntivo temporaneo, che Firefox rimuove al riavvio. Una volta installata, funziona con qualche differenza: Firefox non consente alle estensioni di sostituire la sua pagina dei segnalibri, quindi apri la gestione preferiti di Bookmark Scout, con gli strumenti di pulizia, l'importazione e l'esportazione e le ricerche salvate, da **Apri gestione preferiti** nel popup; inoltre la cache delle icone del browser non è disponibile. Vedi [Browser supportati](/browser-support).
+
+### Funziona in Microsoft Edge? [#does-it-work-in-microsoft-edge]
+
+Non ancora da Microsoft Edge Add-ons: la versione per Edge arriverà presto. Nel frattempo, può essere [installata a mano](/installation#edge) e funziona in modo molto simile a Chrome. Vedi [Browser supportati](/browser-support).
+
+### Funziona sul mio telefono? [#does-it-work-on-my-phone]
+
+No. Bookmark Scout è un'estensione per i browser di un computer. I browser di telefoni e tablet non la eseguono.
+
+### Perché non Safari? [#why-not-safari]
+
+Le Safari Web Extensions non implementano l'API `bookmarks` su cui si basa Bookmark Scout.
+
+## Risoluzione dei problemi [#troubleshooting]
+
+### Dov'è la gestione preferiti? [#where-is-the-bookmarks-manager]
+
+In Chrome, apri la pagina dei preferiti del browser, ad esempio con <Shortcut id="browser.open_bookmarks_manager" />. Bookmark Scout la sostituisce con la propria gestione preferiti. Se la barra laterale **Strumenti** è nascosta, fai clic su **Mostra strumenti** nell'intestazione della gestione preferiti.
+
+### Bookmark Scout è sparito da Firefox [#bookmark-scout-disappeared-from-firefox]
+
+Firefox rimuove i componenti aggiuntivi temporanei al riavvio. Caricalo di nuovo da `about:debugging#/runtime/this-firefox`, come in [Installazione](/installation).
+
+### Mancano le icone dei siti [#site-icons-are-missing]
+
+Controlla che **Mostra favicon** sia attivo nelle [Impostazioni](/settings#appearance). Chrome ed Edge mostrano l'icona che hanno in cache per ciascun sito, quindi i siti che non hai visitato di recente mostrano un globo generico. Firefox non offre alle estensioni un'API per le icone. In qualsiasi browser, [Aggiorna icone dei siti](/guides/clean-up#refresh-site-icons) scarica l'icona di ciascun sito e la conserva su questo dispositivo.
+
+### La mia chiave API non è stata salvata [#my-api-key-was-not-saved]
+
+Una chiave che non sembra una chiave dell'azienda di IA scelta (il provider del servizio) viene rifiutata e non salvata, e un messaggio lo segnala. Controlla che il provider del servizio sia l'azienda che ti ha fornito la chiave. Vedi [Configurare gli strumenti IA](/guides/ai-tools#turn-on-ai).
+
+### L'IA scrive tag o riassunti nella lingua sbagliata [#ai-writes-tags-or-summaries-in-the-wrong-language]
+
+L'IA scrive tag, riassunti e nomi delle nuove cartelle nella lingua impostata in **Lingua delle risposte IA** nelle [Impostazioni](/settings#ai-output-language): per impostazione predefinita, la lingua usata da Bookmark Scout. Scegli lì un'altra lingua, oppure **Come ogni pagina** per seguire la lingua di ciascuna pagina. Chiedi all'IA risponde nella lingua in cui scrivi.
+
+### Il controllo dei link dice che un sito funzionante va controllato a mano [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+I siti che chiedono di accedere, limitano la frequenza delle richieste, bloccano i controlli automatici o hanno un errore del server sono elencati in **Da controllare**, perché spesso funzionano ancora in un browser. Apri il link per verificarlo. Solo le pagine non trovate, le connessioni rifiutate, gli host sconosciuti e i cicli di reindirizzamento contano come **Non funzionante**. Vedi [Trovare e riparare i link non funzionanti](/guides/dead-links#read-the-results).
+
+### La console mostra "Failed to load resource" durante una scansione [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome registra una riga per ogni richiesta non riuscita nella console per sviluppatori della pagina. Le estensioni non possono nascondere queste righe, che non indicano alcun problema nella scansione.
+
+### Il riordino nella gestione preferiti non compare nel popup [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+Il popup mostra l'ordine salvato nel browser con l'ordinamento **Ordine del browser** (quello predefinito) e **Prima le cartelle**. Gli ordinamenti **Data di aggiunta** e **Alfabetico** riordinano continuamente l'elenco. Cambia **Ordinamento** nelle [Impostazioni](/settings#behavior).
+
+### La ricerca dice che ci sono più risultati di quelli mostrati [#search-says-there-are-more-matches-than-it-shows]
+
+I risultati si fermano a **Risultati massimi** (20 per impostazione predefinita). Affina la ricerca o aumenta il limite nelle [Impostazioni](/settings#search).
+
+### I miei tag, riassunti o ricerche salvate mancano su un altro computer [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+Sono archiviati solo sul dispositivo in cui li hai creati e non vengono sincronizzati. Per trasferirli, esporta i preferiti in JSON, che porta tag e riassunti nei preferiti creati dalla sua importazione, e salva un backup con **Esegui il backup delle impostazioni** in fondo alle [Impostazioni](/settings), che include le ricerche salvate. Le impostazioni invece si sincronizzano, tramite l'account del browser, quando la sincronizzazione del browser è attiva.
+
+### Ho eliminato qualcosa per errore [#i-deleted-something-by-mistake]
+
+Fai clic su **Annulla** nel messaggio entro 10 secondi. Ripristina l'elemento, tutto ciò che contiene e i relativi tag e riassunti salvati; un elemento ripristinato riceve una nuova data di aggiunta. Nella gestione preferiti, anche <Shortcut id="manager.undo" /> annulla un'eliminazione fatta lì, oppure da Chiedi all'IA o da un agente IA locale, finché il browser non viene chiuso. Vedi [Selezionare, annullare e ripetere nella gestione preferiti](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+
+### La scorciatoia di salvataggio rapido non fa nulla [#the-quick-save-shortcut-does-nothing]
+
+Se un'altra estensione usa già <Shortcut id="commands.quick-save" /> o <Shortcut id="commands.ai-quick-save" />, il browser lascia senza tasti la scorciatoia di Bookmark Scout e il popup mostra **Scorciatoia di salvataggio rapido non impostata**. Fai clic su **Configurala**, oppure apri **Scorciatoie da tastiera** in **Salvataggio e ricerca** nelle [Impostazioni](/settings#quick-save), e scegli altri tasti. Sulle pagine in cui le estensioni non possono mostrare nulla, come le pagine del browser stesso, l'icona nella barra degli strumenti mostra il risultato al posto di una notifica. Vedi [Salvare con una scorciatoia da tastiera](/guides/save-and-organize#quick-save).
+
+### Le mie impostazioni sono sparite dopo un aggiornamento [#my-settings-are-gone-after-an-update]
+
+Di solito gli aggiornamenti conservano le impostazioni. Un aggiornamento, alla versione 0.3.3, ha spostato i dati salvati da Bookmark Scout in un nuovo formato e ha rimosso i vecchi dati invece di convertirli. Dopo quell'aggiornamento, le impostazioni tornano ai valori predefiniti, i servizi IA e le relative chiavi API vanno aggiunti di nuovo, e prompt personalizzati, ricerche salvate, ricerche e cartelle recenti, tag e riassunti e icone dei siti salvate non ci sono più. I preferiti invece non vengono toccati. Se prima dell'aggiornamento hai salvato le impostazioni con **Esegui il backup delle impostazioni** (allora chiamato **Esporta**) in fondo alle [Impostazioni](/settings), apri quel file con **Ripristina le impostazioni**.
+
+## Ottenere assistenza [#get-help]
+
+- La <SiteLink to="support">pagina di assistenza</SiteLink> sul sito web.
+- Segnala un bug o richiedi una funzione su <RepoLink path="/issues">GitHub</RepoLink>.
+- Scrivi a <Contact role="support" />.
+- Segnala un problema di sicurezza in privato a <Contact role="security" />, non in una segnalazione pubblica.

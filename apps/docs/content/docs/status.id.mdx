@@ -1,0 +1,76 @@
+---
+title: Status proyek
+description: Apa yang dilakukan Bookmark Scout saat ini, apa yang masih sebagian, dan apa yang direncanakan, selalu selaras dengan kodenya.
+---
+
+Halaman ini merangkum status repositori saat ini agar dokumen roadmap tidak menyimpang dari implementasinya.
+
+## Sudah diimplementasikan [#implemented]
+
+- Ekstensi browser yang dibangun dengan WXT, React, TypeScript, Zustand, komponen shadcn/ui di atas primitif Base UI, dan API bookmark browser
+- Chrome sebagai target utama dengan target build Firefox dan Edge
+- Penelusuran bookmark berdasarkan judul, alamat, folder, tag, dan ringkasan, dengan operator seperti `tag:`, `domain:`, `folder:`, dan `after:`, di popup, panel samping, dan pengelola; di popup, pemfilteran folder, pengaturan dengan seret dan lepas, tambah cepat, pembuatan folder, dan kontrol luaskan/ciutkan, dengan hierarki tervirtualisasi yang tetap responsif pada koleksi besar dan diperbarui dari event bookmark alih-alih dimuat ulang
+- Menyimpan ke folder yang ditemukan dengan mengetik sebagian nama atau jalurnya, dengan hasil yang diperingkat, toleransi satu salah ketik, dan folder terbaru lebih dulu
+- Pintasan simpan cepat (<Shortcut id="commands.quick-save" /> ke folder yang paling cocok, terakhir digunakan, atau dipilih; <Shortcut id="commands.ai-quick-save" /> ke saran AI pertama) dengan notifikasi di halaman yang menawarkan Urungkan, Pindahkan ke, Coba lagi, dan Simpan tanpa AI; badge toolbar dan popup di halaman yang tidak bisa menampilkannya; penyiapan pintasan di Setelan, termasuk perekam tombol di Firefox, panduan untuk <Shortcut id="browser.bookmark_page" /> di Chrome dan Edge, dan pemberitahuan saat browser membiarkan pintasan tanpa tombol
+- Penghapusan dari popup, panel samping, dan pengelola dengan dialog konfirmasi (aktif secara default, opsional di Setelan) dan Urungkan selama 10 detik yang memulihkan subhierarki beserta tag dan ringkasannya yang tersimpan
+- Histori Bookmark di pengelola: setiap perubahan, oleh Bookmark Scout atau dibuat di tempat lain (ekstensi lain, pengelola browser, sinkronisasi), dicatat di perangkat ini beserta item-itemnya dan pemeriksaan baca ulang; Urungkan dan Ulangi selama sesi masih menyimpan perubahan, Pulihkan item yang dihapus dari salinan pemulihan tersimpan setelah browser dimulai ulang, dan perubahan yang dibuat saat ekstensi nonaktif ditampilkan sebagai satu perbedaan
+- Entrypoint panel samping (panel samping di Chrome dan Edge, bilah samping di Firefox)
+- Halaman sambutan yang terbuka sekali setelah instalasi baru, tidak pernah setelah update
+- Pintasan keyboard di popup dan panel samping untuk penelusuran, navigasi hierarki, dan menyimpan halaman saat ini, yang tidak mengganggu pintasan browser sendiri; di pengelola, tombol-tombol pengelola bookmark Chrome, termasuk pilih semua, salin, potong, tempel, urungkan, ulangi, dan buka di tab, dengan dialog bantuan <Shortcut id="manager.show_help" />. Setiap pintasan didefinisikan sekali di `apps/extension/config/ui/shortcuts.toml`, yang menjadi sumber teks tombol di dokumentasi, situs web, dan README. Pintasan dijeda saat mengetik atau saat dialog terbuka
+- Penggantian halaman bookmark kustom dengan hierarki folder, breadcrumb, tabel bookmark, dan bilah samping alat, yang bekerja seperti pengelola Chrome: alamat `?id=` dan `?q=` (termasuk link folder Chrome), pemilihan baris, menu klik kanan dan ⋯ yang dibangun dari satu registri tindakan bookmark dan bisa disesuaikan di Setelan, potong, salin, dan tempel antar-tab pengelola, buka semua di tab, jendela baru, atau jendela samaran, urutkan menurut nama, tambahkan bookmark atau folder, seret dan lepas baris, folder, dan link, hierarki folder ARIA dengan tombol Chrome serta bagian akun dan perangkat yang terpisah, panel laci di jendela sempit, dan histori urungkan dan ulangi untuk 100 perubahan terakhir di penyimpanan sesi
+- Penelusuran tersimpan (tampilan pintar) di pengelola yang hanya menyimpan filter, pengurutan, dan cakupan folder di penyimpanan lokal dan mengevaluasinya terhadap hierarki bookmark langsung, dengan melewati folder yang dihapus
+- Pengurutan yang dapat dikonfigurasi: urutan browser (default), tanggal ditambahkan, abjad alami, dan folder lebih dulu, tanpa mengubah urutan bookmark yang tersimpan
+- Halaman setelan yang terbuka di **Dasar** (beberapa setelan yang paling sering diubah orang), dengan sebelas kategori lagi di bawah **Lanjutan** (Penyimpanan & Penelusuran, Tampilan, Perilaku, AI, Alat AI, Pemeliharaan, Judul Halaman & Ikon, Keamanan, Analitik, Impor & Ekspor, dan Untuk developer), penelusuran setelan, editor daftar dan segmen, serta Setelan lanjutan yang dilipat
+- Setelan disimpan sebagai pengganti nilai default: setelan yang disinkronkan di `chrome.storage.sync`, setelan perangkat di penyimpanan lokal, nilai tersimpan dalam envelope berversi yang divalidasi dengan zod, dan penulisan dari beberapa halaman diserialkan dengan Web Locks. Format baru menggantikan data tersimpan lama tanpa mengonversinya
+- File cadangan setelan (setelan yang diubah, prompt kustom, layanan AI tanpa kunci, penelusuran tersimpan, kolom dan pengurutan pengelola) dan pemulihannya
+- Penyedia AI dari konfigurasi: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, server lokal, sekitar 200 lainnya dari katalog models.dev, serta endpoint kustom yang kompatibel dengan OpenAI dan Anthropic
+- AI bawaan Chrome (Gemini Nano melalui Prompt API) sebagai layanan gratis di komputer pengguna untuk saran folder dan simpan cepat AI, dengan cadangan pencocokan kata dan pemeriksaan perangkat di Setelan
+- Rekomendasi folder dari AI, termasuk pembuatan jalur folder baru yang disarankan setelah ditinjau, yang menyimpan halaman saat ini di sana
+- Pengemasan konteks AI dengan tag dan ringkasan tersimpan, saran tag, ringkasan, dan penataan ulang folder (selalu dipratinjau sebelum diterapkan), masing-masing bisa diurungkan
+- Pustaka prompt dengan daftar placeholder di editor (`{{today}}`, `{{language}}`, `{{aboutMe}}`, `{{existingTags}}`), setelan bahasa output AI, teks Tentang saya untuk setiap prompt bawaan, dan nama tag yang sudah ada untuk Tag Otomatis (bisa dinonaktifkan)
+- Tanya AI di popup dan panel samping, dengan alat baca dari registri tindakan bookmark (penelusuran berdasarkan kata, folder, tag, situs, atau tanggal, folder, tag dan ringkasan, duplikat, saran folder, pemeriksaan link, dan pembacaan halaman), alat tulis yang menyimpan halaman atau menerapkan rencana pemindahan, penggantian nama, penghapusan, dan folder baru hanya setelah disetujui, dengan urungkan, tombol saran di atas kotak pesan untuk jawaban terbaru, dan **Yang boleh dilakukan Tanya AI** di Setelan
+- Agen AI lokal melalui server MCP dan host native messaging `bookmark-scout-mcp` (`packages/mcp-bridge`): nonaktif secara default per perangkat, pencarian dengan nilai pribadi disembunyikan, dan perubahan hanya dengan **Izinkan perubahan**, masing-masing disetujui di jendela Bookmark Scout
+- Alat pemeliharaan bookmark untuk pembersihan duplikat, pembersihan URL, pemindaian link mati dengan hasil pasti mati dan perlu diperiksa manual ditambah perbaikan yang ditinjau (hapus, target pengalihan, salinan Wayback Machine, atau URL yang diedit, dengan urungkan), pengambilan metadata (judul yang ditinjau diterapkan; deskripsi hanya untuk pratinjau), pemindaian privasi, dan statistik
+- Perbarui Ikon Situs: mengunduh satu ikon per situs web dari situs yang di-bookmark itu sendiri (tidak pernah dari layanan ikon pihak ketiga) setelah akses situs web opsional, menyimpan ikon yang ditinjau di penyimpanan lokal dengan batas ukuran, dan menampilkannya di popup, panel samping, dan pengelola lebih dulu daripada cache ikon browser; ikon tersimpan bisa dihapus
+- Tinjauan privasi dengan penyamaran opsional sebelum ekspor bookmark dan ekspor konteks AI
+- Impor bookmark dari HTML atau JSON, dengan pratinjau folder tujuan, jumlah, dan duplikat, pilihan penanganan duplikat, dan urungkan
+- Ekspor bookmark ke HTML, JSON (dengan tag dan ringkasan setiap bookmark), Markdown, atau CSV
+- Alur penyimpanan link dari menu konteks klik kanan
+- Ekstensi dan situs pemasaran dalam bahasa <Languages of="extension" />
+- Situs dokumentasi Fumadocs
+- Unit test dan pengujian E2E Chromium tanpa pengawasan untuk popup, pengelola, setelan, pemeliharaan, laporan, impor/ekspor, simpan cepat, alat jaringan dengan rute tiruan dan server lokal, alat AI dengan penyedia tiruan, dan alur pengguna lintas tampilan
+- Rangkaian Playwright yang sama di Microsoft Edge terhadap build Edge (`nx run extension:test:e2e:edge`), dan rangkaian smoke test Firefox berisi 18 pengujian terhadap build Firefox (`nx run extension:test:e2e:firefox`): penelusuran dan pembuatan folder di popup, ikon situs tersimpan di popup, halaman panel samping, membuka pengelola dari popup dan panel samping, pemuatan pengelola, pemfilteran, alamat, urungkan, tombol hierarki folder, menu klik kanan, dan seret dan lepas, pemberitahuan pintasan simpan cepat dan perekam tombol, persetujuan data AI, akses situs web per situs saat alat dijalankan, penyimpanan setelan, ekspor dan impor JSON bolak-balik, serta laporan statistik dan privasi
+- Pengujian end-to-end jembatan yang menjalankan biner `bookmark-scout-mcp` hasil kompilasi sebagai host native browser pengujian di Linux dan macOS (`nx run extension:test:e2e:bridge`)
+- Pengukuran performa latensi dan scroll pada koleksi besar (`nx run extension:test:perf`), dijalankan setiap hari dan saat diminta, serta rangkaian AI langsung terhadap penyedia sungguhan (`nx run extension:test:live`), dijalankan saat diminta
+- Matriks setelan ke perilaku (`apps/extension/tests/settings-matrix.ts`) yang memetakan setiap setelan ke kode yang membacanya dan pengujian yang mengubahnya
+
+## Apa yang diuji di setiap browser [#what-is-tested-in-each-browser]
+
+Chrome adalah target utama. Edge berbasis Chromium dan menjalankan rangkaian end-to-end yang sama; Firefox memakai build Manifest V2.
+
+- **Chrome (Chromium)**: unit test dan pengujian end-to-end untuk popup, panel samping, pengelola, setelan, alat pemeliharaan, laporan, impor dan ekspor, pintasan keyboard, simpan cepat, penelusuran tersimpan, penyimpanan dari menu konteks, seret dan lepas, alat jaringan, alat AI terhadap penyedia tiruan, dan alur yang melintasi beberapa di antaranya. Pengujian jembatan menjalankan program `bookmark-scout-mcp` dengan ekstensi di Chromium di Linux dan macOS.
+- **Edge**: rangkaian end-to-end yang sama berjalan terhadap build Edge.
+- **Firefox**: rangkaian smoke test mencakup penelusuran dan pembuatan folder di popup, halaman panel samping yang dimuat di tab, membuka pengelola dari popup dan panel samping, halaman pengelola dengan alamatnya, `Delete` dan urungkan, tombol hierarki folder, menu klik kanan, dan seret dan lepas (dari event seret yang di-script), pemberitahuan pintasan simpan cepat dan perekam tombol, persetujuan berbagi data AI, permintaan proses alat hanya untuk situs bookmark-nya, penyimpanan setelan, ekspor dan impor JSON bolak-balik, laporan statistik dan privasi, serta ikon situs tersimpan di popup. Menyimpan dari menu klik kanan di halaman, pintasan keyboard lainnya, seret dan lepas di popup, notifikasi simpan cepat itu sendiri, agen AI lokal, serta alat jaringan dan AI (termasuk **Perbarui Ikon Situs** itu sendiri) tidak dicakup.
+
+Rangkaian Edge dan rangkaian smoke test Firefox adalah pemeriksaan CI wajib, seperti rangkaian Chromium. Penyedia AI sungguhan dan situs web aktif diperiksa secara manual, bukan oleh pengujian otomatis.
+
+## Sebagian [#partial]
+
+- Tag dan ringkasan bookmark: dapat diedit di Detail Bookmark dan disimpan dari saran AI yang ditinjau, tetapi hanya disimpan di penyimpanan ekstensi lokal. Keduanya tidak disinkronkan; setiap kotak penelusuran menemukan bookmark berdasarkan keduanya, ekspor bookmark JSON menyertakannya, dan mengimpor file seperti itu memulihkannya pada bookmark yang dibuatnya.
+- Batas alat AI (jumlah dan gaya tag, panjang ringkasan, batas folder penataan ulang) dikirim ke penyedia sebagai instruksi; output-nya tidak diperiksa terhadap batas tersebut. Kompatibilitas dengan penyedia sungguhan diverifikasi secara manual.
+- Cakupan runtime Firefox berupa rangkaian smoke test, bukan rangkaian lengkap. Playwright tidak bisa membuka halaman `moz-extension://`, jadi pengujian Firefox mengendalikan Firefox standar melalui geckodriver (Selenium) dan menginstal build sebagai pengaya sementara dengan ID pengaya aslinya, sehingga menguji manifest yang diterima Firefox Add-ons. Pengujian ini tidak mencakup penyimpanan dari menu konteks (pengujian Chromium memicu `contextMenus.onClicked` dari service worker; build Firefox memakai halaman latar belakang MV2 yang tidak bisa di-script oleh harness), seret dan lepas di popup (seret dan lepas di pengelola dicakup dengan event seret yang di-script), pintasan keyboard selain `Delete`, urungkan, dan tombol hierarki folder di pengelola, alat jaringan, alat AI, agen AI lokal, atau locale.
+- Perbedaan API Firefox: cache ikon browser tidak tersedia karena Firefox tidak punya layanan `_favicon`, jadi bookmark menampilkan ikon generik kecuali **Perbarui Ikon Situs** sudah menyimpannya; pengelola dan bilah samping Alat terbuka dari **Buka pengelola bookmark** di popup karena Firefox tidak bisa mengganti halaman bookmark; halaman panel samping dideklarasikan sebagai bilah samping Firefox, dan pengujian memuat halaman itu di tab karena otomatisasi tidak bisa membuka bilah samping itu sendiri.
+- Empat setelan cakupan alat bersifat tetap: Tag Otomatis dan Peringkas Konten selalu memakai folder saat ini; Pembersih Duplikat dan Pemindai Privasi selalu memindai semua bookmark.
+
+## Direncanakan [#planned]
+
+- Cakupan runtime Firefox yang lebih luas: penyimpanan dari menu konteks, seret dan lepas di popup, pintasan keyboard, alat jaringan, alat AI, dan locale
+- Pengajuan ke Firefox Add-ons dan Edge Add-ons (halaman Chrome Web Store sudah aktif). Materi halaman store dan daftar periksa pengajuan ada di <RepoLink tree="store">folder `store/`</RepoLink> repositori; pengajuan dilakukan secara manual dan memerlukan persetujuan rilis. Paket Firefox sudah memiliki ID pengaya permanen dan deklarasi pengumpulan data
+- Distribusi `bookmark-scout-mcp`: biner di rilis GitHub, paket npm, dan entri registri MCP. Sampai saat itu, build atau jalankan dari repositori
+- Baris popup dan notifikasi simpan cepat mengambil perintahnya dari registri tindakan bookmark, seperti yang dilakukan menu pengelola dan alat AI
+
+## Aturan dokumentasi [#documentation-rules]
+
+- Perbarui dokumentasi saat status fitur, cara instalasi, dukungan browser, ekspektasi privasi, atau konfigurasi berubah.
+- Fitur AI bersifat opt-in dan mungkin mengirim data bookmark ke penyedia yang dipilih.
+- CI menjalankan unit test ekstensi, rangkaian end-to-end Chromium, rangkaian Edge, dan rangkaian smoke test Firefox sebagai pemeriksaan wajib, serta pengujian end-to-end jembatan saat jembatan atau ekstensi berubah, tanpa penyiapan manual. Penyedia AI sungguhan diperiksa oleh rangkaian langsung yang dijalankan saat diminta, bukan pada pull request. Build yang lolos bukan berarti cakupan runtime.

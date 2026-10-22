@@ -1,0 +1,160 @@
+---
+title: Ripulire duplicati e URL di tracciamento
+description: Rimuovi i preferiti duplicati dopo una revisione, elimina dagli URL dei preferiti i parametri di tracciamento come utm_source dopo un'anteprima e aggiorna le icone dei siti mancanti.
+---
+
+Entrambi gli strumenti si trovano nella barra laterale **Strumenti** della gestione preferiti, in **Manutenzione**. In Chrome, apri la pagina dei preferiti del browser, poi fai clic su **Mostra strumenti** nell'intestazione della gestione preferiti se la barra laterale è nascosta.
+
+<Callout title="Firefox">
+Firefox non consente alle estensioni di sostituire la propria pagina dei segnalibri, quindi lì apri la gestione preferiti con **Apri gestione preferiti** nel popup della barra degli strumenti, poi apri la barra laterale Strumenti.
+</Callout>
+
+## Rimuovere i preferiti duplicati [#remove-duplicate-bookmarks]
+
+<Steps>
+<Step>
+In **Pulizia duplicati**, fai clic su **Scansiona**. Controlla sempre tutti i preferiti.
+</Step>
+<Step>
+Esamina i gruppi. Ogni gruppo mostra una volta l'indirizzo condiviso dai suoi preferiti, poi ogni preferito con la sua cartella e la data di aggiunta. Quello contrassegnato come **Conserva** segue la **Regola di conservazione** finché non ne scegli un altro con il relativo pulsante di opzione; ogni altra copia ha una casella **Rimuovi**, inizialmente selezionata. Deseleziona una copia, o la casella di un gruppo, per lasciarla com'è.
+</Step>
+<Step>
+Fai clic su **Rimuovi N duplicati** per eliminare le copie selezionate, oppure su **Annulla** per non cambiare nulla.
+</Step>
+<Step>
+Hai cambiato idea? Fai clic su **Annulla** nel messaggio entro 10 secondi per ripristinare ciò che è stato rimosso. In seguito, anche <Shortcut id="manager.undo" /> nella gestione preferiti lo ripristina.
+</Step>
+</Steps>
+
+<Screenshot name="duplicates" />
+
+Cosa conta come duplicato si imposta nella scheda **Manutenzione** delle [Impostazioni](/settings):
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Criterio di confronto** | URL normalizzato | Confronta per **URL esatto**, **URL normalizzato**, **Titolo + URL** o **Solo titolo** |
+| **Normalizza www** | Attivo | Considera `www.example.com` ed `example.com` come lo stesso host |
+| **Ignora il protocollo** | Attivo | Considera duplicate le versioni `http` e `https` |
+| **Ignora la barra finale** | Attivo | Considera duplicati gli URL con e senza la `/` finale |
+| **Regola di conservazione** | Il più vecchio | Conserva in ogni gruppo il preferito **Il più vecchio**, **Il più recente** o **Il primo trovato** |
+| **Gruppi massimi** | <SettingDefault path="maintenance.duplicates.max_groups" /> | Numero massimo di gruppi restituiti da una scansione |
+
+Prima di rimuovere qualsiasi cosa, ogni gruppo viene ricontrollato. Se il preferito contrassegnato come **Conserva** è stato eliminato o ora punta altrove, l'intero gruppo viene lasciato intatto e il messaggio indica quanti gruppi sono stati saltati. Con il confronto **Solo titolo**, compare un avviso quando un gruppo contiene URL diversi, perché rimuovere quelle copie elimina pagine diverse.
+
+## Rimuovere i parametri di tracciamento [#strip-tracking-parameters]
+
+<Steps>
+<Step>
+In **Pulizia URL**, scegli la cartella corrente o tutti i preferiti nel menu dell'ambito e fai clic su **Pulisci**.
+</Step>
+<Step>
+Esamina gli URL che cambierebbero, raggruppati per la regola che li pulisce (una voce di **Parametri da rimuovere** come `utm_*`, un parametro ripetuto o un frammento). Ognuno parte da **Pulisci**; impostane uno, oppure tutti quelli selezionati con **Imposta i selezionati su…**, su **Lascia invariato** per lasciarlo com'è.
+</Step>
+<Step>
+Fai clic su **Pulisci N URL** per aggiornare quelli rimasti su **Pulisci**, oppure chiudi la finestra per non cambiare nulla.
+</Step>
+</Steps>
+
+Se un preferito è cambiato dopo l'anteprima, viene saltato e conteggiato nel messaggio. Fai clic su **Annulla** nel messaggio, oppure premi <Shortcut id="manager.undo" /> nella gestione preferiti, per ripristinare i vecchi URL; un preferito modificato di nuovo nel frattempo resta com'è.
+
+Le regole si trovano nella scheda **Manutenzione** delle Impostazioni:
+
+- **Parametri da rimuovere**: i parametri da eliminare. L'elenco predefinito è <SettingDefault path="maintenance.url_cleaner.remove_params" />. Un nome che termina con `*` corrisponde a tutti i nomi che iniziano così.
+- **Parametri da conservare**: i parametri che non vengono mai rimossi. Predefinito: <SettingDefault path="maintenance.url_cleaner.preserve_params" />.
+- **Elimina parametri di query duplicati** (attivo per impostazione predefinita) rimuove i parametri ripetuti.
+- **Ordina i parametri di query** (attivo per impostazione predefinita) ordina alfabeticamente i parametri rimanenti.
+- **Rimuovi frammenti** (disattivato per impostazione predefinita) rimuove anche parti come `#section`.
+
+## Aggiornare le icone dei siti [#refresh-site-icons]
+
+I preferiti mostrano un globo generico finché Bookmark Scout non ha un'icona per il sito. In Chrome ed Edge, il modo più rapido è **Mostra le icone del browser** nella scheda **Aggiorna icone dei siti**, oppure **Usa la cache delle icone del browser** nelle [Impostazioni](/settings#appearance): mostra le icone che il browser ha già salvato per i siti che visiti, e il browser chiede solo di leggere le icone dei siti. Per i siti di cui il browser non ha un'icona, e in Firefox, che non offre alle estensioni una cache delle icone, **Aggiorna icone dei siti**, in **Titoli e icone delle pagine** nella barra laterale Strumenti, scarica l'icona di ciascun sito.
+
+<Steps>
+<Step>
+Scegli la cartella corrente o tutti i preferiti nel menu dell'ambito e fai clic su **Aggiorna**. Quando richiesto, consenti l'accesso ai siti di quell'ambito (un ambito con più di 20 siti chiede l'accesso a tutti i siti web); se rifiuti, non viene richiesto nulla.
+</Step>
+<Step>
+Esamina i siti per scheda: **Nuova icona**, **Stessa icona**, **Nessuna icona** e **Non riusciti**, ciascuna con il relativo numero, e una nota su quanti preferiti sono stati saltati perché non sono link web. Ogni icona trovata parte da **Salva icona**; impostane una su **Salta**, oppure selezionane diverse e usa **Imposta i selezionati su…**.
+</Step>
+<Step>
+Fai clic su **Salva** (ad esempio **Salva 12 icone**) per conservare le icone rimaste su **Salva icona**, oppure chiudi la finestra per non conservare nulla.
+</Step>
+</Steps>
+
+Per ogni sito web (origine) nell'ambito, lo strumento richiede una pagina salvata nei preferiti senza cookie, ne legge solo l'intestazione e scarica l'icona indicata dalla pagina più vicina a **Dimensione preferita dell'icona**, oppure il file `/favicon.ico` del sito. Vengono usati solo file di icona sul dominio del preferito stesso, mai un servizio di icone di terze parti. I file oltre la **Dimensione massima del file icona** (<SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB) o che non sono immagini vengono saltati.
+
+L'aggiornamento viene eseguito in background: continua anche dopo la chiusura della gestione preferiti, e la sua scheda e **Attività in background** ne mostrano l'avanzamento, con **Pausa**, **Riprendi** e **Annulla**. I risultati attendono **Controlla i risultati**; non viene salvato nulla finché non fai clic su **Salva**.
+
+Le icone salvate vengono archiviate nell'archivio locale di questo browser, non vengono sincronizzate e compaiono nel popup, nel riquadro laterale e nella gestione preferiti. Hanno la priorità sull'icona in cache del browser. La scheda mostra quante ne sono salvate; **Cancella le icone salvate** le elimina tutte. Quando il totale raggiunge il **Limite di spazio per le icone** (4 MB), vengono rimosse per prime le icone più vecchie. Un sito per cui un aggiornamento successivo non riesce mantiene l'icona salvata in precedenza.
+
+<Callout title="Firefox">
+In Firefox, apri la gestione preferiti con **Apri gestione preferiti** nel popup della barra degli strumenti per eseguire lo strumento. Dopo che vi hai salvato le icone, il popup e il riquadro laterale le mostrano.
+</Callout>
+
+## Aggiungere tag e spostare con le Regole intelligenti [#tag-and-move-with-smart-rules]
+
+Una regola intelligente trova i preferiti con una ricerca, con le stesse parole e gli stessi [operatori](/guides/search#search-words-and-operators) delle caselle di ricerca, e aggiunge loro dei tag, li sposta in una cartella o entrambe le cose. Le regole non agiscono mai da sole: ogni esecuzione è una revisione che applichi tu.
+
+<Steps>
+<Step>
+Nelle [Impostazioni](/settings#maintenance), in **Regole intelligenti**, fai clic su **Aggiungi regola**, oppure su **Inizia da un modello** per una regola che aggiunge tag alle pagine di GitHub, ai video di YouTube o ai tutorial. I modelli partono disattivati.
+</Step>
+<Step>
+Dai alla regola un nome e una ricerca, come `domain:github.com` o `folder:Reading -tag:read`. L'editor indica quanti preferiti corrispondono in quel momento. Aggiungi tag separati da virgole, scegli una cartella in cui spostarli, o entrambe le cose, e salva.
+</Step>
+<Step>
+Nella barra laterale Strumenti della gestione preferiti, scegli l'ambito nella scheda **Regole intelligenti** e fai clic su **Esegui**.
+</Step>
+<Step>
+Esamina i preferiti per scheda: **Modifiche**, **Conflitti** (due regole lo sposterebbero in cartelle diverse), **Bloccati** (la sua cartella non esiste più o è gestita) e **Già a posto**. Le modifiche partono da **Applica** e i conflitti da **Salta**; imposta gli altri uno alla volta o con **Imposta i selezionati su…**, poi fai clic su **Applica** (ad esempio **Applica 12 modifiche**).
+</Step>
+</Steps>
+
+Buono a sapersi:
+
+- Le regole vengono eseguite nell'ordine dell'elenco. Ogni regola corrispondente aggiunge i propri tag; vince la prima che sposta un preferito, e le cartelle indicate dalle regole successive compaiono come conflitti. Trascina una regola per cambiarne l'ordine.
+- Un tag che un preferito ha già, scritto in qualsiasi modo, non viene aggiunto di nuovo. Le cartelle non ricevono mai tag né vengono spostate.
+- **Annulla** nel messaggio dopo l'applicazione ripristina sia gli spostamenti sia i tag. Gli spostamenti sono una sola modifica nella Cronologia.
+- Le regole restano su questo dispositivo e fanno parte di **Esegui il backup delle impostazioni**. Una regola ripristinata su un altro dispositivo sposta i preferiti solo se la sua cartella esiste lì; altrimenti i suoi spostamenti restano bloccati finché non scegli di nuovo la cartella.
+- Con **Aggiungi tag ai nuovi preferiti** attivo nelle Impostazioni, le regole attivate aggiungono i propri tag a ogni preferito nel momento in cui viene aggiunto, da Bookmark Scout, dalla stella del browser, da un'altra estensione o dalla sincronizzazione, poiché il browser non dice da dove proviene un preferito. Vengono aggiunti solo i tag; lo spostamento di una regola attende un'esecuzione che revisioni tu. Molti preferiti aggiunti insieme (una sincronizzazione o un'importazione) vengono lasciati stare, così come un preferito aggiunto mentre l'impostazione era disattivata.
+## Cercare all'interno delle pagine [#search-inside-pages]
+
+**Indicizza il testo delle pagine** conserva su questo dispositivo il testo leggibile delle pagine salvate nei preferiti, così la ricerca trova parole che si trovano solo all'interno di una pagina. È disattivato finché non lo attivi, e scarica ogni pagina che indicizzi.
+
+<Steps>
+<Step>
+Attiva **Attiva Indicizza il testo delle pagine** nelle [Impostazioni](/settings#index-page-text).
+</Step>
+<Step>
+Nella barra laterale Strumenti della gestione preferiti, scegli l'ambito nella scheda **Indicizza il testo delle pagine** e fai clic su **Indicizza**. Quando richiesto, consenti l'accesso ai siti di quell'ambito.
+</Step>
+<Step>
+Esamina le pagine per scheda: **Testo trovato**, **Nessun testo**, **Non riuscite**, **Già indicizzate** (dallo stesso indirizzo in precedenza) e **Saltate** (non è una pagina web, o si trova nella tua rete locale). Le pagine con testo partono da **Salva il testo**; fai clic su **Salva** (ad esempio **Salva il testo di 12 pagine**).
+</Step>
+</Steps>
+
+La ricerca trova quindi quei preferiti in base al loro testo nel popup, nel riquadro laterale e nella gestione preferiti. `content:` cerca solo nel testo delle pagine, e `has:content` trova i preferiti che ce l'hanno. Una pagina viene letta di nuovo quando cambia l'indirizzo del suo preferito. **Elimina il testo delle pagine** nelle Impostazioni elimina l'indice; preferiti, tag e Cronologia restano come sono.
+
+## Mostrare le copertine nei riquadri [#show-covers-on-cards]
+
+**Recupera copertine** conserva una piccola copia dell'immagine di anteprima che una pagina indica per sé (la sua immagine Open Graph o Twitter card), così i **Riquadri** della gestione preferiti la mostrano. È disattivato finché non lo attivi. Mostrare i riquadri non scarica mai nulla: un riquadro senza una copertina archiviata mantiene l'icona del sito.
+
+<Steps>
+<Step>
+Attiva **Attiva Recupera copertine** nelle [Impostazioni](/settings#fetch-covers).
+</Step>
+<Step>
+Nella barra laterale Strumenti della gestione preferiti, scegli l'ambito nella scheda **Recupera copertine** e fai clic su **Recupera**. Quando richiesto, consenti l'accesso ai siti di quell'ambito.
+</Step>
+<Step>
+Esamina le pagine per scheda: **Copertina trovata** (con l'immagine), **Nessuna copertina**, **Su un altro sito** (l'immagine si trova su un sito che non hai consentito), **Non riuscite**, **Già recuperate** e **Saltate**. Le copertine trovate partono da **Salva copertina**; fai clic su **Salva** (ad esempio **Salva 12 copertine**).
+</Step>
+</Steps>
+
+Passa la gestione preferiti a **Riquadri** con il pulsante accanto a **Visualizza** per vederle. Una copertina appartiene all'indirizzo da cui proviene, quindi un preferito spostato a un altro indirizzo mostra la sua icona finché non recuperi di nuovo. Le copertine vengono conservate solo su questo dispositivo, mai nei backup o nelle esportazioni; **Elimina le copertine** nelle Impostazioni le rimuove, e preferiti, tag e Cronologia restano come sono.
+
+## Strumenti correlati [#related-tools]
+
+- [Trovare e riparare i link non funzionanti](/guides/dead-links) controlla se le pagine salvate nei preferiti si caricano ancora.
+- **Controllo privacy** (in **Sicurezza**) segnala gli URL che contengono token, indirizzi email, UUID o parametri sensibili (e i titoli, se **Analizza i titoli** è attivo). La sua revisione li raggruppa come **Alta**, **Media** e **Bassa**; ognuno parte da **Lascia invariato**, e quelli che imposti su **Elimina preferito** (uno alla volta, o con **Imposta i selezionati su…**) vengono eliminati quando fai clic su **Elimina**, con annullamento. I normali link interni alla pagina e gli indirizzi delle app come `#inbox` di Gmail non vengono segnalati.
+- **Recupero metadati** (in **Titoli e icone delle pagine**) suggerisce i titoli delle pagine a partire dalle pagine online e applica solo quelli che selezioni. Usa lo stesso accesso ai siti web del controllo dei link non funzionanti. Anche questo viene eseguito in background, e i suoi titoli attendono **Controlla i risultati**.

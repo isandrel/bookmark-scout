@@ -135,6 +135,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 - Instrument Sans for body and UI.
 - JetBrains Mono for URLs and commands only, because they are code-like content. Never for labels or data captions.
 - Japanese and Korean fall back to Hiragino Sans, Apple SD Gothic Neo, or Noto Sans. Headings use `word-break: keep-all` (Korean) and `line-break: strict` (Japanese) so words do not split.
+- Russian has no Cyrillic in the bundled fonts, so `html:lang(ru)` in `app/globals.css` uses the system UI fonts (San Francisco, Segoe UI, Roboto) before the Japanese fallback; the docs site does the same in `src/app/global.css`.
 - All fonts are self-hosted by `next/font` at build time. No runtime font requests.
 
 ### Hierarchy

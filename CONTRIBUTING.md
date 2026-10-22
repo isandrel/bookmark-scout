@@ -4,9 +4,12 @@
   <a href="i18n/es/CONTRIBUTING.md" lang="es" hreflang="es">Español</a> ·
   <a href="i18n/fr/CONTRIBUTING.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="i18n/pt-BR/CONTRIBUTING.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="i18n/ru/CONTRIBUTING.md" lang="ru" hreflang="ru">Русский</a> ·
+  <a href="i18n/id/CONTRIBUTING.md" lang="id" hreflang="id">Bahasa Indonesia</a> ·
   <a href="i18n/de/CONTRIBUTING.md" lang="de" hreflang="de">Deutsch</a> ·
   <a href="i18n/ja/CONTRIBUTING.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="i18n/ko/CONTRIBUTING.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="i18n/it/CONTRIBUTING.md" lang="it" hreflang="it">Italiano</a> ·
   <a href="i18n/zh-TW/CONTRIBUTING.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 

@@ -1,0 +1,90 @@
+---
+title: Kontribusi dan pengembangan
+description: Siapkan monorepo Bookmark Scout, bangun ekstensi dari kode sumber, jalankan pengujian, dan buka pull request.
+---
+
+Kontribusi sangat diterima: laporan bug, perbaikan, terjemahan, dan dokumentasi. Panduan lengkapnya ada di <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>; halaman ini membahas perintah yang Anda perlukan.
+
+## Repositori [#the-repository]
+
+Monorepo Bun dan Nx dengan tiga aplikasi dan dua paket:
+
+| Jalur | Isi |
+| --- | --- |
+| `apps/extension` | Ekstensi browser: WXT, React, TypeScript, Zustand, dan shadcn/ui di atas Base UI |
+| `apps/website` | Situs pemasaran: Next.js, dilokalkan dengan `next-intl` |
+| `apps/docs` | Situs ini: Next.js, Fumadocs, dan MDX di `content/docs` |
+| `packages/config` | Nilai proyek dan situs yang dibaca dari `config/project.toml` dan `config/web.toml` |
+| `packages/mcp-bridge` | `bookmark-scout-mcp`, server MCP dan host native messaging untuk [agen AI lokal](/guides/local-agents) |
+
+## Penyiapan [#set-up]
+
+Anda memerlukan [Bun](https://bun.sh) dan Chrome, Edge, atau Firefox. Fork <RepoLink>repositori</RepoLink> di GitHub, clone fork Anda, lalu jalankan di foldernya:
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev` menjalankan ekstensi di Chrome dengan live reload. Gunakan `bun run dev:edge` atau `bun run dev:firefox` untuk browser lainnya.
+
+## Membangun dari kode sumber [#build-from-source]
+
+```bash
+bun run build
+```
+
+Perintah ini membangun ketiga target browser ke `apps/extension/dist/`:
+
+| Browser | Folder |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+Muat folder untuk browser Anda sebagai ekstensi yang belum dikemas, dengan cara yang sama seperti rilis yang diunduh di [Instal](/installation): **Muat yang belum dibuka** di Chrome (**Muat yang tidak dikemas** di Edge), atau **Muat Pengaya Sementara** dengan `manifest.json` folder itu di Firefox. Untuk membangun satu browser saja, jalankan `bunx nx run extension:build:chrome`, `extension:build:edge`, atau `extension:build:firefox`.
+
+## Pengujian [#test]
+
+```bash
+bun run test
+```
+
+Perintah ini membangun target Chrome, menginstal Chromium Playwright, dan menjalankan unit test serta pengujian end-to-end Chromium secara headless. Alat jaringan dan alat AI berjalan terhadap server lokal dan penyedia tiruan; pengujian berjudul `[mocked provider contract]` memeriksa sisi Bookmark Scout dari kontrak penyedia, bukan kompatibilitas dengan penyedia sungguhan.
+
+| Perubahan | Jalankan |
+| --- | --- |
+| Kode sumber ekstensi | `bunx nx run extension:lint` |
+| Service, hook, dan logika lainnya | `bun run test:unit` |
+| Popup, setelan, pengelola, alat, impor dan ekspor | `bun run test:e2e` |
+| Perilaku di Edge | `bunx nx run extension:test:e2e:edge` |
+| Perilaku di Firefox | `bunx nx run extension:test:e2e:firefox` (rangkaian smoke test) |
+| Agen AI lokal atau `packages/mcp-bridge` | `bun test packages/mcp-bridge` dan `bunx nx run extension:test:e2e:bridge` (Linux dan macOS) |
+| Kecepatan pada koleksi besar | `bunx nx run extension:test:perf`, sebelum dan sesudah perubahan |
+| Fitur AI terhadap penyedia sungguhan | `bunx nx run extension:test:live`, dengan variabel `BS_LIVE_AI_*` sudah diatur; tanpa variabel itu pengujian dilewati |
+| Manifest, penyedia, atau integrasi browser | `bunx nx run extension:build:chrome` ditambah setiap target browser yang terdampak |
+| Situs web | `bunx nx run website:build` |
+| Dokumentasi | `bunx nx run docs:build`, lalu `bunx nx run docs:verify` |
+| Perubahan lintas aplikasi | `bun run lint` dan `bun run build:all` |
+
+CI menjalankan lint, ketiga build ekstensi, unit test dan pengujian end-to-end Chromium, rangkaian Edge, dan rangkaian smoke test Firefox sebagai pemeriksaan wajib di setiap pull request, serta pengujian jembatan saat ekstensi atau jembatan berubah. Rangkaian performa berjalan setiap hari dan rangkaian AI langsung hanya saat diminta. Build yang lolos bukan cakupan pengujian: sebutkan pengujian mana yang Anda jalankan.
+
+## Mengerjakan dokumentasi [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+Halaman adalah file MDX di `apps/docs/content/docs`, diurutkan oleh file `meta.json` di sebelahnya. Link ke situs web, repositori, rilis, dan alamat kontak berasal dari konfigurasi melalui komponen kecil seperti `<Contact role="support" />` dan `<ReleaseLink />`, sehingga halaman tidak pernah menuliskannya secara langsung. `bunx nx run docs:verify` memeriksa ekspor statis setelah build.
+
+## Terjemahan [#translations]
+
+Teks ekstensi yang terlihat oleh pengguna ada di `apps/extension/public/_locales/<locale>/messages.json`, dan teks situs web di `apps/website/messages/<locale>.json`. Ubah semua bahasa bersamaan; unit test dan pemeriksaan build situs web gagal jika ada key yang hilang. Untuk menambahkan bahasa, ikuti "Localization" di `apps/extension/AGENTS.md`.
+
+## Pull request [#pull-requests]
+
+- Buat branch dari `main` dan batasi setiap pull request pada satu perubahan.
+- Tulis commit sebagai [Conventional Commits](https://www.conventionalcommits.org/) dengan awalan [Gitmoji](https://gitmoji.dev/), misalnya `🐛 fix(popup): keep focus after deleting a folder`.
+- Perbarui dokumentasi saat perubahan memengaruhi apa yang dilihat pengguna, dukungan browser, privasi, atau setelan. [Status proyek](/status) mencantumkan apa yang sudah diimplementasikan, sebagian, dan direncanakan.
+
+Laporkan masalah keamanan secara pribadi ke <Contact role="security" />, bukan di issue publik. Bookmark Scout dilisensikan di bawah <License />.

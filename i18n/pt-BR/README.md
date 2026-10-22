@@ -4,9 +4,12 @@
   <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
   <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <strong lang="pt-BR">Português (Brasil)</strong> ·
+  <a href="../ru/README.md" lang="ru" hreflang="ru">Русский</a> ·
+  <a href="../id/README.md" lang="id" hreflang="id">Bahasa Indonesia</a> ·
   <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
   <a href="../ja/README.md" lang="ja" hreflang="ja">日本語</a> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="../it/README.md" lang="it" hreflang="it">Italiano</a> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 
@@ -50,7 +53,7 @@
 - ✨ **Sugestões opcionais da IA.** Deixe a IA escolher a pasta para você, usando sua própria conta de IA ou um modelo de IA gratuito no seu computador, como o que vem integrado ao Chrome. A IA fica desativada até você ativá-la.
 - 🔒 **Privacidade desde o início.** Sem conta, sem anúncios, sem rastreamento, e nada vai para o desenvolvedor. Salvar e pesquisar funcionam até sem internet.
 
-🌍 Disponível em English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文.
+🌍 Disponível em English · 简体中文 · Español · Français · Português (Brasil) · Русский · Bahasa Indonesia · Deutsch · 日本語 · 한국어 · Italiano · 繁體中文.
 
 ## 📦 Instalação
 

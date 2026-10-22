@@ -136,7 +136,7 @@ FOR DEVELOPERS
 UPDATING FROM AN EARLIER VERSION
 Version 0.3.3 stores its data in a new format and does not convert older data: settings return to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, tags, summaries, and saved site icons are cleared. Your bookmarks themselves are not touched.
 
-Made by an independent developer: no company, no ads, no account. Available in 9 languages. Light, dark, and system themes.
+Made by an independent developer: no company, no ads, no account. Available in 12 languages. Light, dark, and system themes.
 
 Documentation: https://docs.bookmark-scout.com
 ```
@@ -202,7 +202,7 @@ FOR DEVELOPERS
 UPDATING FROM AN EARLIER VERSION
 Version 0.3.3 stores its data in a new format and does not convert older data: settings return to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, tags, summaries, and saved site icons are cleared. Your bookmarks themselves are not touched.
 
-Made by an independent developer: no company, no ads, no account. Available in 9 languages. Light, dark, and system themes.
+Made by an independent developer: no company, no ads, no account. Available in 12 languages. Light, dark, and system themes.
 ```
 
 ## What's new in 0.3.3

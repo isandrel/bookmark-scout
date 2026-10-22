@@ -100,7 +100,8 @@ describe('on-demand locale loading', () => {
     ['en-GB', 'en'],
     ['fr-FR', 'fr'],
     ['zh-HK', 'zh_TW'],
-    ['ru-RU', 'en'],
+    ['ru-RU', 'ru'],
+    ['pl-PL', 'en'],
     // Konkani is not Korean: the browser falls back to the default locale.
     ['kok', 'en'],
   ])('resolves the browser UI language %s to the %s messages', (uiLanguage, locale) => {
@@ -135,9 +136,12 @@ describe('on-demand locale loading', () => {
       'Español',
       'Français',
       'Português (Brasil)',
+      'Русский',
+      'Bahasa Indonesia',
       'Deutsch',
       '日本語',
       '한국어',
+      'Italiano',
       '繁體中文',
     ]);
     expect(fetchFile).not.toHaveBeenCalled();

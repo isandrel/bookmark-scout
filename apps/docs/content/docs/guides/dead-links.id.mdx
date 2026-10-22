@@ -1,0 +1,90 @@
+---
+title: Menemukan dan memperbaiki link mati
+description: Pindai bookmark untuk menemukan link mati, lihat mana yang perlu diperiksa manual, dan perbaiki dengan menghapus, mengikuti pengalihan, memakai salinan arsip, atau mengedit URL.
+---
+
+**Periksa Link Mati** ada di bilah samping **Alat** di pengelola bookmark, di bawah **Pemeliharaan**. Alat ini meminta setiap halaman yang di-bookmark untuk melihat apakah halaman itu masih bisa dimuat.
+
+<Callout title="Firefox">
+Di Firefox, buka pengelola dengan **Buka pengelola bookmark** di popup.
+</Callout>
+
+## Menjalankan pemindaian [#run-a-scan]
+
+<Steps>
+<Step>
+Di **Periksa Link Mati**, pilih folder saat ini atau semua bookmark di menu cakupan, lalu klik **Pindai**.
+</Step>
+<Step>
+Bookmark Scout menjelaskan situs mana yang diperlukannya: hanya situs bookmark yang Anda pindai, atau semua situs web jika jumlahnya lebih dari 20. Klik **Izinkan akses**, lalu terima permintaan izin browser. Situs yang sebelumnya sudah Anda izinkan tidak diminta lagi. Jika Anda memilih **Lain kali** atau menolak, tidak ada yang dipindai.
+</Step>
+<Step>
+Tunggu hasilnya. Ringkasan di bagian atas menghitung link yang pasti mati, perlu diperiksa manual, atau dialihkan. Tombol di atas daftar menyebutkan setiap grup beserta jumlahnya; klik salah satunya untuk hanya menampilkan link tersebut. Setiap tujuan pengalihan adalah link yang bisa Anda buka.
+</Step>
+</Steps>
+
+Akses situs web bersifat opsional dan tidak diberikan saat instalasi. Permintaan dikirim tanpa cookie, dan Anda bisa mencabut akses di setelan ekstensi browser. Link yang dialihkan ke situs di luar pemindaian tidak bisa diikuti, jadi ditampilkan sebagai **Periksa manual**, bukan **Pasti mati**. Lihat [Izin](/permissions).
+
+## Membiarkannya berjalan di latar belakang [#let-it-run-in-the-background]
+
+Pemeriksaan berjalan di latar belakang. Anda bisa menutup pengelola, popup, atau panel samping, dan pemeriksaan tetap berjalan selama browser terbuka; jika browser menghentikan latar belakang ekstensi atau dimulai ulang, pemeriksaan dilanjutkan dari link yang sudah diperiksa. Selama berjalan, popup dan panel samping menampilkan progresnya dalam satu baris, yang membuka **Tugas latar belakang** di pengelola.
+
+- **Jeda** menghentikan permintaan baru, dan **Lanjutkan** hanya memeriksa link yang belum diperiksa. Pemeriksaan yang dijeda tetap dijeda setelah browser dimulai ulang.
+- Jika akses situs web dicabut saat pemeriksaan berjalan, pemeriksaan dijeda dan memberitahukannya; **Lanjutkan** meminta akses lagi.
+- **Batal** menghentikan pemeriksaan dan menyimpan hasil sejauh ini. Tidak ada bookmark yang diubah.
+- **Tinjau hasil** membuka hasil kapan saja, dan **Hapus** menghapus pemeriksaan yang sudah selesai. Pemeriksaan yang selesai dihapus sendiri setelah beberapa waktu.
+
+Perbaikan tidak pernah dilakukan di latar belakang: Anda meninjau dan menerapkannya seperti di bawah ini.
+
+## Membaca hasil [#read-the-results]
+
+| Hasil | Artinya |
+| --- | --- |
+| **Pasti mati** | Halaman tidak ditemukan (404 atau 410), koneksi ditolak, host tidak ditemukan, atau pengalihan berputar-putar |
+| **Periksa manual** | Sering masih berfungsi di browser: perlu login atau akses ditolak (401, 403, 407), dibatasi jumlah permintaannya (429), situs menolak pemeriksaan otomatis (405 atau 501), error server (5xx), error HTTP lain, atau waktu habis |
+| **Dialihkan** | Link berfungsi tetapi sekarang mengarah ke tempat lain; tujuannya ditampilkan |
+| **Dilewati** | Bukan link web, seperti bookmarklet |
+
+Situs yang menjawab 429 atau 503 dan meminta untuk ditanya lagi dalam beberapa detik akan diperiksa lagi setelah jeda itu, dalam batas **Jumlah Percobaan Ulang**; situs yang meminta waktu lebih lama langsung dicantumkan di sini.
+
+Setiap error dari permintaan `HEAD` dikonfirmasi dengan `GET` sebelum dilaporkan, karena beberapa server tidak mendukung `HEAD`.
+
+<Callout type="info" title="Pesan konsol di Chrome">
+Chrome mencatat satu baris "Failed to load resource" di konsol developer halaman untuk setiap permintaan yang gagal. Ekstensi tidak bisa menyembunyikan baris ini; pemindaian itu sendiri tidak mencatat apa pun.
+</Callout>
+
+## Memperbaiki link [#repair-links]
+
+<Steps>
+<Step>
+Klik **Perbaiki atau hapus link**. Setiap link yang gagal, kehabisan waktu, atau dialihkan dicantumkan. Tombol grup yang sama mempersempit daftar. Centang link, atau kotak di atas daftar untuk setiap link yang ditampilkan, lalu pilih tindakan di **Setel yang dipilih ke…** untuk menerapkannya ke semua sekaligus; Anda tetap bisa mengubah masing-masing setelahnya. Setiap link dimulai dengan tindakan yang disetel untuk kategorinya di [Setelan](/settings), yaitu **Biarkan apa adanya** kecuali Anda mengubahnya di sana.
+</Step>
+<Step>
+Pilih tindakan untuk masing-masing:
+
+- **Biarkan apa adanya** (default, jadi tidak ada yang berubah kecuali Anda memilih yang lain)
+- **Hapus bookmark**
+- **Gunakan tujuan pengalihan**, hanya ditawarkan jika pemindaian melihat pengalihan
+- **Gunakan salinan arsip (Wayback Machine)**, yang mengarahkan bookmark ke `https://web.archive.org/web/<original URL>`. Link dibuat secara lokal dan tidak diperiksa, jadi halaman itu mungkin tidak pernah diarsipkan.
+- **Edit URL**, yang hanya menerima URL `http` atau `https` yang valid dan berbeda dari URL saat ini
+</Step>
+<Step>
+Periksa ringkasan berapa bookmark yang akan dihapus, diganti URL-nya, atau dipertahankan, lalu klik **Terapkan**.
+</Step>
+</Steps>
+
+Tidak ada yang berubah sampai Anda menerapkannya. Sebelum setiap perubahan, bookmark dibaca lagi: bookmark yang dihapus atau diedit sejak pemindaian dilewati dan dicantumkan, sehingga pemindaian yang sudah usang tidak pernah menimpa pengeditan yang lebih baru.
+
+**Urungkan**, yang ditampilkan selama 10 detik di pesan atau di dialog setelah penerapan sebagian, dan <Shortcut id="manager.undo" /> di pengelola bookmark mengurungkan perbaikan yang sama: keduanya memulihkan bookmark yang dihapus dan mengembalikan URL yang diganti kecuali URL itu sudah diedit lagi sejak itu.
+
+## Menyesuaikan pemindaian [#tune-the-scan]
+
+Di tab **Pemeliharaan** di [Setelan](/settings):
+
+| Setelan | Default |
+| --- | --- |
+| **Batas Waktu Permintaan** | <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> detik per permintaan |
+| **Permintaan Bersamaan** | <SettingDefault path="maintenance.dead_links.concurrency" /> permintaan sekaligus |
+| **Jumlah Percobaan Ulang** | 1 kali percobaan ulang |
+| **Ikuti Pengalihan** | Aktif |
+| **Kode Status Berhasil** | 200, 201, 202, 204, 301, 302, 307, 308 |

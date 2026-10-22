@@ -1,0 +1,111 @@
+{
+    "supportPage": {
+        "meta": {
+            "title": "Dukungan",
+            "description": "Dapatkan bantuan untuk Bookmark Scout: jawaban atas masalah umum, cara melaporkan bug, dan alamat email untuk dukungan, privasi, dan keamanan."
+        },
+        "title": "Dukungan",
+        "intro": "Sebagian besar jawaban ada di dokumentasi dan FAQ. Untuk hal lainnya, kirimi kami email. Jika ada yang rusak, Anda juga dapat melaporkannya secara publik di GitHub.",
+        "sections": {
+            "start-here": {
+                "title": "Mulai di sini",
+                "items": {
+                    "docs": {
+                        "title": "Baca dokumentasi",
+                        "body": "Cara instalasi untuk setiap browser, panduan fitur, dan penjelasan setiap setelan."
+                    },
+                    "faq": {
+                        "title": "Lihat FAQ",
+                        "body": "Jawaban singkat tentang ke mana data Anda dikirim, apakah Anda memerlukan AI, dan apa yang berfungsi di Firefox."
+                    }
+                }
+            },
+            "common-problems": {
+                "title": "Masalah umum",
+                "items": {
+                    "firefoxRestart": {
+                        "q": "Bookmark Scout hilang saat saya memulai ulang Firefox",
+                        "a": [
+                            "Versi Firefox segera hadir di Firefox Add-ons. Sampai saat itu, Bookmark Scout yang diinstal secara manual berjalan di Firefox sebagai pengaya sementara, dan Firefox menghapus pengaya sementara saat dimulai ulang.",
+                            "Muat lagi setelah memulai ulang: buka <code>about:debugging#/runtime/this-firefox</code>, klik Muat Pengaya Sementara, lalu pilih file <code>manifest.json</code> di folder hasil ekstrak."
+                        ]
+                    },
+                    "firefoxManager": {
+                        "q": "Saya tidak dapat menemukan pengelola bookmark di Firefox",
+                        "a": [
+                            "Firefox tidak mengizinkan ekstensi mengganti halaman bookmark-nya, jadi pengelola Bookmark Scout tidak terbuka dari menu bookmark Firefox sendiri.",
+                            "Klik Buka pengelola bookmark (ikon buku) di bagian atas popup toolbar. Pengelola terbuka di tab baru, dengan bilah samping Alat, penelusuran tersimpan, serta impor dan ekspor."
+                        ]
+                    },
+                    "firefoxIcons": {
+                        "q": "Ikon situs tidak muncul di Firefox",
+                        "a": [
+                            "Bookmark Scout menampilkan ikon yang di-cache oleh browser itu sendiri, yang dibagikan Chrome dan Edge kepada ekstensi tetapi tidak oleh Firefox. Karena alasan yang sama, situs yang belum Anda kunjungi baru-baru ini dapat menampilkan ikon bola dunia umum di Chrome dan Edge.",
+                            "Jalankan Perbarui Ikon Situs di bilah samping Alat pengelola untuk mengunduh ikon asli setiap situs. Ikon tersimpan tetap di perangkat ini. Di Firefox, buka pengelola dengan Buka pengelola bookmark di popup toolbar."
+                        ]
+                    },
+                    "quickSave": {
+                        "q": "Pintasan simpan cepat tidak melakukan apa pun",
+                        "a": [
+                            "Jika ekstensi lain sudah menggunakan {{SHORTCUT:commands.quick-save}} atau {{SHORTCUT:commands.ai-quick-save}}, browser membiarkan pintasan Bookmark Scout tanpa tombol, dan popup menampilkan Pintasan simpan cepat belum disetel. Klik Siapkan, atau buka Setelan, lalu Penyimpanan & Penelusuran, lalu Pintasan keyboard, dan pilih tombol lain.",
+                            "Beberapa halaman, seperti halaman bawaan browser dan toko ekstensi, tidak mengizinkan ekstensi menampilkan apa pun di dalamnya. Di halaman tersebut, ikon toolbar menunjukkan apakah halaman sudah disimpan, dan popup menawarkan Urungkan."
+                        ]
+                    },
+                    "dataReset": {
+                        "q": "Setelan saya hilang setelah pembaruan",
+                        "a": [
+                            "Salah satu pembaruan memindahkan data tersimpan Bookmark Scout ke format baru dan menghapus data lama alih-alih mengonversinya. Setelan kembali ke default, layanan AI dan kunci API perlu ditambahkan lagi, serta prompt kustom, penelusuran tersimpan, tag, ringkasan, dan ikon situs tersimpan sudah terhapus. Bookmark Anda tidak diubah.",
+                            "Jika Anda menyimpan setelan dengan Cadangkan setelan di bagian bawah Setelan sebelum memperbarui, gunakan Pulihkan setelan di sana untuk mengembalikannya."
+                        ]
+                    },
+                    "websiteAccess": {
+                        "q": "Periksa Link Mati, Pengambil Metadata, atau Perbarui Ikon Situs tidak memindai apa pun",
+                        "a": [
+                            "Alat-alat ini memerlukan akses ke situs web, yang tidak diberikan kepada Bookmark Scout saat instalasi. Browser akan meminta izin saat pertama kali Anda menjalankannya, dan jika Anda menolak, tidak ada yang dipindai.",
+                            "Jalankan alat lagi dan izinkan akses saat browser meminta."
+                        ]
+                    },
+                    "aiSetup": {
+                        "q": "Fitur AI tidak ada atau tidak merespons",
+                        "a": [
+                            "AI bersifat opsional dan nonaktif secara default. Untuk menggunakannya, aktifkan di Setelan pada bagian AI, pilih perusahaan AI Anda, lalu tempel kunci dari akun Anda di sana; panduan AI di dokumentasi menunjukkan tempat menemukannya. Program AI gratis di komputer Anda sendiri, seperti Ollama, tidak memerlukan kunci.",
+                            "Klik Verifikasi Layanan untuk menguji koneksi. Pertama kali, browser akan meminta akses ke situs penyedia tersebut; izinkan agar ekstensi dapat menjangkau penyedia."
+                        ]
+                    }
+                }
+            },
+            "report-a-bug": {
+                "title": "Laporkan bug",
+                "body": "Kirim detailnya melalui email ke {supportEmail}. Jika Anda memiliki akun GitHub, Anda dapat membuka issue publik sebagai gantinya, tempat siapa pun dapat mengikuti perbaikannya; telusuri issue yang sudah ada terlebih dahulu, siapa tahu seseorang sudah melaporkannya.",
+                "emailButton": "Email dukungan",
+                "button": "Buka issue di GitHub",
+                "includeTitle": "Laporan yang berguna mencakup",
+                "include": {
+                    "browser": "Browser Anda dan versinya (Chrome, Edge, atau Firefox).",
+                    "version": "Versi Bookmark Scout, yang ditampilkan di halaman ekstensi browser Anda.",
+                    "steps": "Langkah-langkah yang menyebabkan masalah, dimulai dari tempat Anda membuka Bookmark Scout: popup, panel samping, atau pengelola.",
+                    "result": "Apa yang Anda harapkan dan apa yang terjadi, termasuk pesan error apa pun.",
+                    "screenshot": "Screenshot jika membantu, dengan bookmark pribadi disembunyikan."
+                },
+                "privacyNote": "Issue GitHub bersifat publik. Jangan pernah menempelkan kunci API, dan jangan sertakan judul atau URL bookmark yang tidak ingin Anda tunjukkan kepada orang lain."
+            },
+            "email": {
+                "title": "Email",
+                "channels": {
+                    "support": {
+                        "title": "Bantuan terkait ekstensi",
+                        "body": "Pertanyaan tentang menginstal atau menggunakan Bookmark Scout yang tidak ingin Anda tanyakan secara publik."
+                    },
+                    "privacy": {
+                        "title": "Pertanyaan dan permintaan terkait privasi",
+                        "body": "Pertanyaan tentang cara data Anda ditangani. <privacyPolicy>Kebijakan privasi</privacyPolicy> menjelaskan apa yang dilakukan ekstensi dan situs web terhadap data."
+                    },
+                    "security": {
+                        "title": "Kerentanan keamanan",
+                        "body": "Laporkan kerentanan di sini secara pribadi, bukan di issue publik. Lihat <securityPolicy>SECURITY.md</securityPolicy> dan <securityTxt>security.txt</securityTxt>."
+                    }
+                }
+            }
+        }
+    }
+}

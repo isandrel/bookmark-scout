@@ -1,0 +1,90 @@
+---
+title: Участие в разработке
+description: Настройте монорепозиторий Bookmark Scout, соберите расширение из исходного кода, запустите тесты и откройте pull request.
+---
+
+Мы рады любому вкладу: сообщениям об ошибках, исправлениям, переводам и документации. Полные правила — в <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>; на этой странице собраны нужные команды.
+
+## Репозиторий [#the-repository]
+
+Монорепозиторий на Bun и Nx с тремя приложениями и двумя пакетами:
+
+| Путь | Что это |
+| --- | --- |
+| `apps/extension` | Расширение для браузера: WXT, React, TypeScript, Zustand и shadcn/ui на Base UI |
+| `apps/website` | Сайт продукта: Next.js, локализация через `next-intl` |
+| `apps/docs` | Этот сайт: Next.js, Fumadocs и MDX в `content/docs` |
+| `packages/config` | Значения проекта и сайта, которые читаются из `config/project.toml` и `config/web.toml` |
+| `packages/mcp-bridge` | `bookmark-scout-mcp` — MCP-сервер и хост обмена сообщениями с нативными приложениями для [локальных ИИ-агентов](/guides/local-agents) |
+
+## Настройка [#set-up]
+
+Вам понадобятся [Bun](https://bun.sh) и Chrome, Edge или Firefox. Сделайте форк <RepoLink>репозитория</RepoLink> на GitHub, клонируйте свой форк и в его папке выполните:
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev` запускает расширение в Chrome с автоматической перезагрузкой. Для других браузеров используйте `bun run dev:edge` или `bun run dev:firefox`.
+
+## Сборка из исходного кода [#build-from-source]
+
+```bash
+bun run build
+```
+
+Эта команда собирает расширение для всех трёх браузеров в `apps/extension/dist/`:
+
+| Браузер | Папка |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+Загрузите папку для своего браузера как распакованное расширение — так же, как скачанный выпуск в разделе [Установка](/installation): **Загрузить распакованное расширение** в Chrome и Edge или **Загрузить временное дополнение** с файлом `manifest.json` из папки в Firefox. Чтобы собрать расширение для одного браузера, выполните `bunx nx run extension:build:chrome`, `extension:build:edge` или `extension:build:firefox`.
+
+## Тестирование [#test]
+
+```bash
+bun run test
+```
+
+Эта команда собирает версию для Chrome, устанавливает Chromium для Playwright и запускает модульные тесты и сквозные тесты Chromium без окна браузера (headless). Сетевые инструменты и инструменты ИИ работают с локальными серверами и подменёнными провайдерами; тесты с пометкой `[mocked provider contract]` проверяют сторону Bookmark Scout в контракте с провайдером, а не совместимость с реальными провайдерами.
+
+| Что изменено | Что запустить |
+| --- | --- |
+| Исходный код расширения | `bunx nx run extension:lint` |
+| Сервисы, хуки и другая логика | `bun run test:unit` |
+| Всплывающее окно, настройки, диспетчер, инструменты, импорт и экспорт | `bun run test:e2e` |
+| Поведение в Edge | `bunx nx run extension:test:e2e:edge` |
+| Поведение в Firefox | `bunx nx run extension:test:e2e:firefox` (смоук-набор) |
+| Локальные ИИ-агенты или `packages/mcp-bridge` | `bun test packages/mcp-bridge` и `bunx nx run extension:test:e2e:bridge` (Linux и macOS) |
+| Скорость на большой коллекции | `bunx nx run extension:test:perf` до и после изменения |
+| Функции ИИ с реальным провайдером | `bunx nx run extension:test:live` с заданными переменными `BS_LIVE_AI_*`; без них набор пропускается |
+| Манифест, провайдер или интеграция с браузером | `bunx nx run extension:build:chrome` плюс сборка для каждого затронутого браузера |
+| Сайт | `bunx nx run website:build` |
+| Документация | `bunx nx run docs:build`, затем `bunx nx run docs:verify` |
+| Изменения в нескольких приложениях | `bun run lint` и `bun run build:all` |
+
+CI выполняет lint, три сборки расширения, модульные и сквозные тесты Chromium, набор для Edge и смоук-набор Firefox как обязательные проверки в каждом pull request, а тесты моста — когда меняется расширение или мост. Набор тестов производительности выполняется ежедневно, а набор live-тестов ИИ — только по запросу. Успешная сборка — это не покрытие тестами: укажите, какие тесты вы запускали.
+
+## Работа с документацией [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+Страницы — это файлы MDX в `apps/docs/content/docs`, порядок которых задают файлы `meta.json` рядом с ними. Ссылки на сайт, репозиторий, выпуски и контактные адреса берутся из конфигурации через небольшие компоненты, например `<Contact role="support" />` и `<ReleaseLink />`, поэтому на страницах они никогда не прописываются вручную. `bunx nx run docs:verify` проверяет статический экспорт после сборки.
+
+## Переводы [#translations]
+
+Текст расширения для пользователей находится в `apps/extension/public/_locales/<locale>/messages.json`, а текст сайта — в `apps/website/messages/<locale>.json`. Меняйте все языки одновременно; модульные тесты и проверка сборки сайта завершаются ошибкой, если не хватает ключа. Чтобы добавить язык, следуйте разделу «Localization» в `apps/extension/AGENTS.md`.
+
+## Pull request [#pull-requests]
+
+- Создавайте ветку от `main` и ограничивайте каждый pull request одним изменением.
+- Оформляйте коммиты по [Conventional Commits](https://www.conventionalcommits.org/) с префиксом [Gitmoji](https://gitmoji.dev/), например `🐛 fix(popup): keep focus after deleting a folder`.
+- Обновляйте документацию, когда изменение затрагивает то, что видят пользователи, поддержку браузеров, конфиденциальность или настройки. На странице [Состояние проекта](/status) перечислено, что реализовано, что реализовано частично и что запланировано.
+
+О проблемах безопасности сообщайте конфиденциально на <Contact role="security" />, а не в публичном issue. Bookmark Scout распространяется по лицензии <License />.

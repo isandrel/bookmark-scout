@@ -1,0 +1,85 @@
+---
+title: Scorciatoie da tastiera
+description: Cerca, spostati tra le cartelle, salva la pagina corrente e usa la tabella della gestione preferiti senza il mouse.
+---
+
+Le scorciatoie nel popup e nel riquadro laterale non usano mai `Ctrl` o `Cmd`, quindi le scorciatoie del browser con quei tasti, come aprire una nuova scheda o la barra degli indirizzi, continuano a funzionare. La gestione preferiti sostituisce quella del browser, quindi ne adotta anche le scorciatoie con `Cmd` (`Ctrl` su Windows e Linux): seleziona tutto, copia, taglia, incolla, annulla, ripeti e apri in nuove schede. Le scorciatoie sono sospese mentre digiti in un campo di testo (`Esc` nella casella di ricerca è l'eccezione), mentre un metodo di immissione sta componendo il testo e mentre è aperta una finestra di dialogo o un menu.
+
+## Su qualsiasi pagina [#on-any-page]
+
+Queste funzionano senza alcuna finestra di Bookmark Scout aperta. Le gestisce il browser, quindi puoi cambiarle o rimuoverle nelle sue impostazioni delle scorciatoie; vedi [Salvare con una scorciatoia da tastiera](/guides/save-and-organize#quick-save). In Chrome ed Edge puoi anche assegnare al salvataggio rapido il tasto dei preferiti del browser, <Shortcut id="browser.bookmark_page" />; vedi [Usare il tasto dei preferiti per il salvataggio rapido](/guides/save-and-organize#ctrl-d).
+
+| Tasto | Azione |
+| --- | --- |
+| <Shortcut id="commands.quick-save" /> | Salvataggio rapido della pagina corrente nella cartella indicata da **Cartella del salvataggio rapido** |
+| <Shortcut id="commands.ai-quick-save" /> | Salvataggio rapido della pagina corrente nella cartella suggerita dall'IA |
+
+Nella notifica che segue, `Tab` raggiunge **Annulla** e le altre cartelle, e `Esc` la chiude.
+
+## Popup e riquadro laterale [#popup-and-side-panel]
+
+Passa il puntatore sulla casella di ricerca per un promemoria.
+
+| Tasto | Azione |
+| --- | --- |
+| <Shortcut id="popup.focus_search" /> | Porta lo stato attivo sulla casella di ricerca |
+| `Esc` nella casella di ricerca | Cancella la ricerca; premi di nuovo per uscire dalla casella |
+| `↓` nella casella di ricerca | Passa alla prima cartella |
+| `Enter` nella casella di ricerca | Salva la pagina corrente nella prima cartella in **Salva nella cartella**, che è evidenziata; se non è elencata alcuna cartella, conserva la ricerca tra le ricerche recenti |
+| <Shortcut id="popup.recent_searches" /> nella casella di ricerca vuota | Mostra le ricerche recenti; `↓` / `↑` ne scelgono una, `Enter` la esegue, `Tab` raggiunge **Cancella** |
+| `↓` / `↑`, `Home` / `End` | Spostati tra le cartelle e i preferiti visibili (`↑` sulla prima riga torna alla ricerca) |
+| `→` / `←` | Apri o chiudi una cartella; su una cartella aperta `→` passa al suo primo elemento, e `←` passa alla cartella superiore |
+| `Enter` su una cartella | Salva la pagina corrente in quella cartella (una pagina già salvata lì non viene duplicata) |
+| `Enter` su un preferito | Aprilo in una nuova scheda |
+| `Space` su una cartella | Aprila o chiudila |
+
+## Gestione preferiti [#bookmarks-manager]
+
+Premi <Shortcut id="manager.show_help" />, oppure fai clic sul pulsante della tastiera nell'intestazione, per vedere questo elenco nella gestione preferiti. I tasti seguono quelli della gestione preferiti di Chrome.
+
+| Tasto | Azione |
+| --- | --- |
+| <Shortcut id="manager.focus_filter" /> | Porta lo stato attivo sulla casella di ricerca |
+| <Shortcut id="manager.parent_folder" /> | Vai alla cartella superiore |
+| `↓` / `↑`, `Home` / `End` | Spostati tra le righe e seleziona la riga; con `Shift`, estendi la selezione; con `Cmd` (`Ctrl` su Windows e Linux), spostati senza selezionare |
+| <Shortcut id="manager.next_row" />, <Shortcut id="manager.previous_row" /> | Passa alla riga successiva o precedente |
+| `Space` | Seleziona o deseleziona la riga attiva |
+| <Shortcut id="manager.select_all" /> | Seleziona tutte le righe mostrate dai filtri, in tutte le pagine |
+| <Shortcut id="manager.clear_selection" /> | Cancella la selezione, oppure chiudi una finestra di dialogo o un menu |
+| <Shortcut id="manager.open" /> | Apri la cartella selezionata, oppure i preferiti selezionati in schede |
+| <Shortcut id="manager.open_in_new_tabs" /> | Apri la selezione in nuove schede in background |
+| <Shortcut id="manager.open_in_new_window" /> | Apri la selezione in una nuova finestra |
+| <Shortcut id="manager.rename" /> | Modifica il preferito selezionato, oppure rinomina la cartella |
+| <Shortcut id="manager.delete" /> | Elimina la selezione |
+| <Shortcut id="manager.undo" /> | Annulla l'ultima modifica |
+| <Shortcut id="manager.redo" /> | Ripeti |
+| <Shortcut id="manager.copy" /> | Copia la selezione; i suoi URL vanno negli appunti |
+| <Shortcut id="manager.cut" /> | Taglia la selezione, per spostarla con incolla |
+| <Shortcut id="manager.paste" /> | Incolla dopo la selezione, o alla fine della cartella; gli URL copiati in un'altra app diventano preferiti |
+| <Shortcut id="manager.open_saved_searches" /> | Apri le ricerche salvate |
+| <Shortcut id="manager.show_help" /> | Mostra le scorciatoie da tastiera |
+| Tasto menu o <Shortcut id="browser.context_menu" /> | Apri il menu contestuale per la riga o la cartella attiva |
+
+Con il mouse, come nella gestione preferiti del browser:
+
+| Gesto | Azione |
+| --- | --- |
+| <Shortcut id="mouse.select_toggle" /> | Aggiungi una riga alla selezione o toglila |
+| <Shortcut id="mouse.select_range" /> | Seleziona tutte le righe dall'ultima su cui hai fatto clic fino a questa |
+| <Shortcut id="mouse.open_in_background" /> | Apri un link in una nuova scheda in background (funzione del browser) |
+
+Nell'albero delle cartelle a sinistra, che è anch'esso una sola fermata di `Tab`:
+
+| Tasto | Azione |
+| --- | --- |
+| `↓` / `↑`, `Home` / `End` | Spostati tra le cartelle mostrate |
+| `→` / `←` | Apri o chiudi una cartella; su una cartella aperta `→` passa alla sua prima sottocartella, e su una chiusa `←` passa alla cartella superiore |
+| <Shortcut id="manager.open" />, oppure `Space` | Mostra la cartella nella tabella |
+| <Shortcut id="manager.rename" /> | Rinomina la cartella |
+| <Shortcut id="manager.delete" /> | Elimina la cartella |
+| <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> | Copia o taglia la cartella |
+| <Shortcut id="manager.paste" /> | Incolla nella cartella |
+
+La tabella è una sola fermata quando premi `Tab`; i tasti freccia si spostano tra le sue righe. Aprire più di <SettingDefault path="behavior.links.confirm_open_above" /> schede contemporaneamente chiede prima conferma; una cartella apre i preferiti che contiene direttamente. Nella tabella, porta lo stato attivo sul bordo dell'intestazione di una colonna e premi `←` o `→` per ridimensionare quella colonna.
+
+Le scorciatoie da tastiera sono coperte dai test automatici per Chromium ed Edge, non da quelli per Firefox.

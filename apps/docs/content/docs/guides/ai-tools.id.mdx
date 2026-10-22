@@ -1,0 +1,200 @@
+---
+title: Menyiapkan alat AI
+description: Aktifkan fitur AI opsional, pilih penyedia dan model, tambahkan kunci API Anda, dan ketahui persis data bookmark apa yang dikirim setiap alat AI.
+---
+
+Fitur AI bersifat **opsional dan nonaktif secara default**, dan Bookmark Scout berfungsi sepenuhnya tanpa fitur ini. Bookmark Scout tidak punya layanan AI sendiri. Untuk memakai AI, Anda memerlukan:
+
+- **Akun di perusahaan AI**, seperti OpenAI, Anthropic, atau Google. Setelan menyebut perusahaan ini **penyedia**. Sebagian besar penyedia mengenakan biaya untuk setiap penggunaan, biasanya dalam jumlah kecil; periksa harganya sebelum Anda mulai. Program AI yang berjalan di komputer Anda sendiri, seperti Ollama, tidak memerlukan biaya tetapi butuh komputer yang cukup bertenaga.
+- **Kunci API**: kode rahasia dari halaman akun Anda di perusahaan itu yang memungkinkan Bookmark Scout memakai akun Anda. Jaga kerahasiaannya, seperti sandi.
+
+Anda juga memilih **model**: versi AI yang ditawarkan perusahaan, seperti yang lebih cepat atau yang lebih cerdas. Saat AI aktif, permintaan langsung dikirim dari browser Anda ke penyedia yang Anda pilih, dengan kunci Anda.
+
+Khusus untuk saran folder, Chrome bisa bekerja tanpa akun atau kunci: lihat [AI gratis di komputer ini](#free-ai-on-this-computer).
+
+<Callout type="warn" title="Sebelum Anda mengaktifkan AI">
+Alat AI mengirim judul bookmark, URL, dan nama atau jalur folder ke penyedia yang Anda konfigurasi. Penyedia menangani data itu sesuai ketentuannya sendiri, dan penggunaan API mungkin memerlukan biaya. Tinjau setiap saran sebelum Anda menerapkannya.
+</Callout>
+
+## Mengaktifkan AI [#turn-on-ai]
+
+<Steps>
+<Step>
+Buka setelan Bookmark Scout (di Chrome, klik kanan ikon toolbar lalu pilih **Opsi**) dan buka tab **AI**. Sampai sebuah layanan disiapkan, kotak di bagian atas, **AI bersifat opsional**, merangkum apa yang dilakukan AI, apa yang dibutuhkannya, berapa biayanya, dan apa yang dikirim.
+</Step>
+<Step>
+Aktifkan **Fitur AI**.
+</Step>
+<Step>
+Di bawah **Layanan AI**, klik **Tambahkan layanan** lalu pilih penyedia. Pemilih mencantumkan penyedia terkenal di bawah **Unggulan**, lalu **Server lokal** dan **Kustom**; ketik di kotak penelusurannya untuk menemukan sekitar 200 penyedia lain di bawah **Penyedia lainnya (models.dev)**. Lalu pilih **Model AI**.
+</Step>
+<Step>
+Masukkan **Kunci API** Anda jika penyedia memerlukannya. Untuk penyedia unggulan, **Dapatkan kunci API dari** penyedia membuka halaman tempat Anda membuat kunci setelah login. Kunci disimpan saat Anda meninggalkan kolom, dan hanya disimpan di perangkat ini. Kunci yang tidak sesuai dengan format penyedia ditolak dan tidak disimpan.
+</Step>
+<Step>
+Opsional: klik **Perbarui Model** untuk memuat daftar model penyedia saat ini, atau **Verifikasi Layanan** untuk memeriksa bahwa penyedia bisa dijangkau, menerima kunci, dan menawarkan model yang dipilih. Keduanya membaca daftar model penyedia, yang tidak dikenai biaya; Verifikasi hanya mengirim prompt uji singkat ke penyedia yang tidak punya daftar, seperti Azure OpenAI. Browser meminta akses ke alamat penyedia tersebut pada kali pertama. Daftar yang diperbarui disimpan untuk pemilih model sampai Anda memperbaruinya lagi.
+</Step>
+</Steps>
+
+<Screenshot name="options-ai" />
+
+Tombol AI di popup dan panel samping muncul setelah Fitur AI aktif dan layanan default sudah disiapkan (dengan kuncinya, jika penyedia memerlukannya). Sebelum itu, popup menampilkan **AI aktif tetapi belum disiapkan** dengan **Selesaikan penyiapan AI**, yang membuka tab ini, dan alat AI di pengelola bookmark tetap nonaktif.
+
+Setelan tersimpan otomatis. Layanan AI, dengan kunci API, **URL Dasar**, dan **JSON Header Tambahan**-nya, tetap di penyimpanan lokal browser ini dan tidak pernah disinkronkan. Setelan AI lainnya, seperti apakah AI aktif, disinkronkan melalui akun browser Anda jika browser mendukungnya.
+
+## AI gratis di komputer ini [#free-ai-on-this-computer]
+
+Di Chrome, Bookmark Scout bisa memakai **AI bawaan Chrome**, model kecil (Gemini Nano) yang berjalan di komputer Anda: tanpa akun, tanpa kunci API, tanpa biaya, dan tidak ada yang keluar dari komputer Anda. AI ini hanya menyarankan folder.
+
+<Steps>
+<Step>
+Di tab **AI**, klik **Gunakan AI bawaan** di bawah **Gratis di komputer ini**, di bagian atas kotak **AI bersifat opsional**. **AI bawaan (di komputer ini)** juga berada paling atas di **Tambahkan layanan**. Keduanya hanya muncul jika Chrome bisa menjalankan model tersebut.
+</Step>
+<Step>
+Klik **Unduh model**. Chrome mengunduhnya satu kali: sekitar 4 GB di komputer dengan kartu grafis, 2,7 GB tanpa kartu grafis. Saat layanan menampilkan **Siap**, model sudah ada di komputer ini. Jika Anda menutup Setelan selama pengunduhan, Chrome tetap mengunduh di latar belakang.
+</Step>
+<Step>
+Aktifkan **Fitur AI** jika masih nonaktif: menambahkan layanan tidak mengaktifkan AI.
+</Step>
+</Steps>
+
+- AI bawaan memerlukan Chrome 138 atau yang lebih baru di macOS 13 atau yang lebih baru, Windows 10 atau 11, Linux, atau Chromebook Plus, dengan ruang disk kosong 22 GB dan kartu grafis dengan memori lebih dari 4 GB, atau memori 16 GB dan 4 inti prosesor. Anda tidak perlu memeriksanya sendiri: **Periksa komputer ini**, di bawah layanan (atau di kotak **Gratis di komputer ini**), menampilkan versi Chrome, sistem operasi, memori, dan jumlah inti prosesor Anda, serta menyebutkan apa yang tidak bisa dilihat browser (ruang disk kosong dan memori grafis). Jika Chrome menyatakan model tidak bisa berjalan di sini tetapi tidak ada yang mengecualikan komputer Anda, tombol ini membukakan flag Chrome untuk Anda: setel ke **Enabled BypassPerfRequirement**, mulai ulang Chrome, lalu klik **Periksa lagi**. Jika organisasi Anda menonaktifkannya, layanan akan memberitahukannya. Firefox tidak punya AI bawaan.
+- AI ini hanya menyarankan folder: di popup dan panel samping, serta untuk pintasan simpan cepat AI. Tanya AI, Tag Otomatis, Peringkas Konten, dan Penataan Ulang Folder dengan AI memakai layanan Anda yang lain yang aktif, atau yang Anda tambahkan.
+- AI ini membaca judul dan alamat halaman, nama folder yang paling cocok dengannya (daftar pendek yang dipilih di perangkat Anda), dan jika **Baca konten halaman** aktif, bagian awal teks halaman. AI ini hanya menjawab dengan folder dari daftar itu.
+- AI ini berfungsi paling baik dengan bahasa Inggris, Jepang, Spanyol, Jerman, dan Prancis. Jika model gagal atau terlalu lama, saran berasal dari pencocokan kata biasa di perangkat Anda.
+- Popup dan pintasan simpan cepat AI tidak pernah memulai pengunduhan: sampai model siap, popup menampilkan **Unduh model AI bawaan di Setelan** sebagai pengganti tombol AI, dan simpan cepat memakai folder yang paling cocok seperti di bawah.
+- Simpan cepat AI menjaga model tetap siap selama 5 menit setelah penyimpanan, sehingga penyimpanan berikutnya lebih cepat. Jika model belum siap, gagal, atau terlalu lama, halaman disimpan ke folder yang paling cocok dengannya, seperti setelan **Paling cocok**.
+- Dengan **Rekam permintaan** aktif, setiap panggilan muncul di **Aktivitas AI** dengan tanda **Di perangkat**.
+
+## Menggunakan lebih dari satu layanan [#use-more-than-one-service]
+
+Simpan layanan sebanyak yang Anda mau, bahkan beberapa dari penyedia yang sama: misalnya proxy kantor dan proxy rumah, masing-masing dengan kunci, alamat, dan modelnya sendiri.
+
+- Setiap alat AI memakai layanan **Default**. Pilih **Jadikan default** di menu layanan, atau, jika lebih dari satu layanan aktif, pilih salah satunya dari tanda panah di sebelah tombol kilau di popup.
+- **AI bawaan** hanya menyarankan folder: selama AI bawaan menjadi default, alat AI lainnya memakai layanan lain pertama yang aktif. Seret layanan dengan pegangannya di daftar untuk memilih mana yang berada paling atas.
+- Nonaktifkan layanan dengan tombolnya untuk menyembunyikannya dari popup tanpa menghapusnya.
+- **Duplikat** menyalin layanan, termasuk kuncinya. **Hapus** menghapus layanan dan kuncinya dari perangkat ini. AI bawaan hanya bisa ditambahkan satu kali, jadi tidak memiliki **Duplikat**.
+- **URL Dasar**, **JSON Header Tambahan**, dan kolom khusus penyedia seperti organisasi OpenAI ada di bawah **Setelan lainnya**.
+
+## Penyedia [#providers]
+
+| Penyedia | Kunci API | Catatan |
+| --- | --- | --- |
+| AI bawaan (di komputer ini) | Tidak ada | Hanya Chrome, untuk saran folder; lihat [AI gratis di komputer ini](#free-ai-on-this-computer) |
+| OpenAI | Wajib | **ID Organisasi** dan **ID Project** opsional |
+| Anthropic | Wajib | |
+| Google | Wajib | |
+| Groq | Wajib | |
+| Mistral AI | Wajib | |
+| DeepSeek | Wajib | |
+| xAI | Wajib | |
+| Azure OpenAI | Wajib | Setel **Nama resource** (atau **URL Dasar**) dan masukkan nama deployment Anda sebagai **Model Kustom**. Azure tidak punya daftar deployment, jadi **Perbarui Model** tidak ditampilkan. |
+| OpenRouter | Wajib | |
+| Ollama (Local) | Opsional | Alamat default `http://localhost:11434/api`; permintaan tetap di mesin Anda |
+| CLIProxyAPI | Biasanya wajib | Berjalan di mesin Anda dan menjawab dengan akun Claude, Gemini, atau Codex Anda sendiri. Alamat default `http://localhost:8317/v1`; masukkan salah satu kunci di bawah `api-keys` di `config.yaml`-nya, lalu **Perbarui Model** untuk melihat model yang ditawarkan akun Anda. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Opsional | Tercantum di bawah **Server lokal** dengan alamat `localhost` default-nya: oMLX dan vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp dan LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Klik **Perbarui Model** untuk melihat apa yang sudah dimuat server. |
+| Jan | Wajib | Server API lokal di `http://localhost:1337/v1`; masukkan kunci dari setelan server API Jan |
+| Custom Provider | Opsional | Endpoint apa pun yang kompatibel dengan OpenAI, disetel dengan **URL Dasar** |
+| Custom Provider (Anthropic-compatible) | Opsional | Endpoint apa pun yang memakai Anthropic Messages API, disetel dengan **URL Dasar** |
+| Sekitar 200 lainnya | Biasanya wajib | Tercantum di bawah **Penyedia lainnya (models.dev)**, misalnya Together AI, Fireworks AI, Cerebras, DeepInfra, dan LM Studio. Penyedia ini tidak punya daftar model bawaan: klik **Perbarui Model** atau masukkan **Model Kustom**. |
+
+Pemilih **Penyedia** memiliki kotak penelusuran. Penyedia tambahan berasal dari salinan katalog terbuka [models.dev](https://models.dev) yang disertakan dalam ekstensi, jadi memilih salah satunya tidak mengirim apa pun ke models.dev; permintaan hanya dikirim ke penyedia yang Anda pilih.
+
+**URL Dasar** menggantikan alamat penyedia untuk setiap permintaan, misalnya untuk memakai proxy. Nilainya harus diawali `http://` atau `https://`. **JSON Header Tambahan** menambahkan header ke setiap permintaan, dan **Model Kustom** menyetel ID model untuk penyedia yang menerima nama model apa pun.
+
+### Server lokal [#local-servers]
+
+Server lokal harus menerima permintaan dari ekstensi:
+
+- **Ollama:** setel `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` lalu mulai ulang Ollama. Tanpa itu, Ollama menjawab 403 dan Verifikasi menyatakan server menolak ekstensi.
+- **LM Studio:** aktifkan **Enable CORS** di setelan server, atau jalankan dengan `lms server start --cors`.
+- **LocalAI:** setel kunci API; pemeriksaan CSRF-nya menolak permintaan tanpa kunci dari browser.
+- **text-generation-webui:** jalankan dengan `--api`.
+- **CLIProxyAPI:** menerima permintaan ekstensi dengan konfigurasi default-nya. Jalankan sebelum Anda mengklik **Verifikasi Layanan**; jika tidak berjalan, Verifikasi menyatakan tidak bisa menjangkau `localhost:8317`.
+
+### Jika pemeriksaan gagal [#when-a-check-fails]
+
+Verifikasi dan Perbarui menyebutkan kemungkinan penyebabnya: kunci ditolak (401, atau 400 dari Google dan xAI), URL Dasar salah (404), penyedia membatasi jumlah permintaan (429, yang tetap berarti kuncinya berfungsi), server menolak origin ekstensi, tidak ada jawaban dalam 8 detik, atau alamat yang tidak menyediakan API penyedia.
+
+## Menulis prompt Anda sendiri [#write-your-own-prompts]
+
+Setiap alat AI dimulai dengan prompt bawaan. Untuk mengubah perilaku alat, buka **Setelan**, lalu **Alat AI**, lalu **Prompt**:
+
+1. Untuk membaca prompt bawaan alat terlebih dahulu, klik ikon mata di sebelahnya. Klik **Sesuaikan**, di sini atau di penampil, dan editor terbuka dengan prompt bawaan sebagai titik awal.
+2. Edit teksnya. Klik variabel seperti `{{maxTags}}` untuk menyisipkannya; alat mengisinya dari setelan Anda. **Pratinjau dengan setelan saat ini** menampilkan hasilnya. Atau ketik `{{` dan pilih salah satu dari daftar, yang menampilkan arti setiap placeholder dan nilainya saat ini. `{{today}}`, `{{language}}`, dan `{{aboutMe}}` berfungsi di setiap alat, dan `{{existingTags}}` di Tag Otomatis; placeholder yang tidak punya isi, seperti `{{aboutMe}}` selama Tentang saya kosong, dihilangkan beserta barisnya. Tulis `\{{` untuk kurung kurawal literal. Placeholder yang tidak diisi oleh alat ditandai, dengan saran jika terlihat seperti salah ketik, dan **Reset ke prompt bawaan** memulai dari awal.
+3. Klik **Simpan prompt**. Prompt baru menjadi prompt alat tersebut.
+
+Simpan beberapa prompt per alat, hingga total 10, dan beralih di antaranya dengan menu alat; **Default (bawaan)** kembali ke yang asli. Prompt Anda disinkronkan ke perangkat Anda melalui akun browser, jadi setiap prompt harus di bawah 7 KB. Bookmark Scout menambahkan aturan format output-nya sendiri setelah prompt Anda, sehingga hasil tetap bisa dimuat meskipun prompt Anda meminta hal lain. Bookmark Scout juga menambahkan baris yang meminta bahasa yang disetel di **Bahasa output AI** (**Setelan**, lalu **AI**); dalam prompt Anda sendiri, `{{language}}` menyebutkan bahasa itu.
+
+## Apa yang dikirim setiap alat [#what-each-tool-sends]
+
+| Alat | Tempat | Dikirim ke penyedia |
+| --- | --- | --- |
+| Rekomendasi folder | Popup, tombol kilau di sebelah kotak penelusuran (hanya ditampilkan saat AI aktif) | Judul dan URL halaman saat ini, dan nama folder bookmark Anda. Jika **Baca konten halaman** aktif, juga teks utama halaman. Dengan AI bawaan, tidak ada yang keluar dari komputer Anda |
+| **Tag Otomatis** | Pengelola, Alat, **AI** | Judul, URL, dan jalur folder bookmark di folder saat ini, dan jika **Baca konten halaman** aktif, teks utama setiap halaman; jika **Kirim Tag yang Ada** aktif (default), juga nama tag yang paling sering Anda pakai |
+| **Peringkas Konten** | Pengelola, Alat, **AI** | Judul, URL, dan jalur folder bookmark di folder saat ini, dan jika **Baca konten halaman** aktif, teks utama setiap halaman |
+| **Penataan Ulang Folder dengan AI** | Pengelola, Alat, **AI** | Judul, URL, dan jalur folder bookmark dalam cakupan yang Anda pilih |
+| **Tanya AI** | Popup dan panel samping, tombol chat di sebelah kotak penelusuran (hanya ditampilkan saat AI aktif) | Pesan Anda dan percakapan sejauh ini, serta apa yang dicarinya: bookmark yang cocok (dengan folder, tanggal ditambahkan, tag, dan ringkasannya), nama folder, judul dan URL halaman saat ini, apakah link yang di-bookmark yang diperiksanya masih berfungsi, dan jika **Baca konten halaman** aktif, teks halaman yang dibacanya |
+| **Pengemas Konteks AI** | Pengelola, Alat, **AI** | Tidak ada. Alat ini menyimpan file di komputer Anda dan berfungsi meskipun AI nonaktif. |
+
+Setiap fitur AI yang memakai penyedia juga mengirim teks **Tentang saya** Anda (setelan **AI**) selama berisi teks; kolom itu kosong secara default.
+
+Aktifkan **Rekomendasi Otomatis saat Dibuka** untuk meminta rekomendasi folder setiap kali popup dibuka. Biarkan nonaktif agar permintaan hanya dikirim saat Anda mengklik tombolnya.
+
+## Baca konten halaman [#read-page-content]
+
+Judul dan URL tidak selalu menjelaskan isi halaman. Aktifkan **Baca konten halaman** di **Setelan**, lalu **AI**, maka rekomendasi folder, **Tag Otomatis**, dan **Peringkas Konten** juga mengirim teks utama setiap halaman. Mengaktifkannya meminta akses ke situs web; jika Anda menolak, opsi ini tetap nonaktif.
+
+- Bookmark Scout mengunduh sendiri setiap halaman, tanpa cookie Anda, sehingga Anda mendapatkan versi situs dalam keadaan tidak login. Bookmark Scout menyimpan teks artikel tanpa menu, script, gambar, atau alamat link.
+- Setiap halaman mengirim hingga sekitar 3.000 karakter, dan satu kali proses alat membaca hingga 40 halaman. Bookmark berikutnya di folder yang besar dikirim hanya dengan judul dan URL-nya, begitu pula halaman yang tidak bisa dimuat.
+- Halaman di jaringan lokal Anda, seperti `localhost`, alamat IP pribadi, dan nama `.local`, tidak pernah dibaca, sehingga halaman intranet tidak sampai ke penyedia cloud.
+- Teks halaman berasal dari web dan bisa berisi instruksi yang ditujukan ke AI. Bookmark Scout memberi tahu model agar memperlakukannya hanya sebagai data, dan Anda tetap meninjau setiap saran sebelum disimpan.
+
+## Tanya AI [#ask-ai]
+
+Klik tombol chat di sebelah kotak penelusuran di popup atau panel samping untuk bertanya tentang bookmark Anda, halaman yang sedang Anda buka, atau hal lainnya. Fitur ini memakai layanan AI default Anda; ganti layanan dari menu di header-nya.
+
+- Untuk menjawab, AI bisa menelusuri bookmark Anda (juga berdasarkan folder, tag, situs, atau tanggal ditambahkan, atau dengan [operator penelusuran](/guides/search#search-words-and-operators)), mencantumkan folder Anda, mencari tag dan ringkasan bookmark, menemukan duplikat, menyarankan folder untuk sebuah halaman, memeriksa halaman saat ini, dan, jika **Baca konten halaman** aktif, membaca halaman yang di-bookmark atau halaman yang sedang Anda buka, dan tidak ada halaman lain. Setelah Anda mengizinkan akses ke semua situs web (untuk Periksa Link Mati pada lebih dari 20 situs, atau untuk **Baca konten halaman**), AI juga bisa memeriksa apakah link yang di-bookmark masih berfungsi. Saat Anda memintanya, AI juga bisa menyimpan halaman, serta memindahkan, mengganti nama, atau menghapus bookmark dan membuat folder: semua itu ditampilkan lebih dulu sebagai rencana, dan tidak ada yang berubah sampai Anda menyetujuinya di chat. Setelah membaca halaman web, AI juga bertanya sebelum menyimpan. Setiap perubahan adalah satu langkah yang bisa Anda urungkan, juga dengan <Shortcut id="manager.undo" /> di pengelola bookmark. Setiap langkah yang diambilnya muncul di chat.
+- Setelah beberapa jawaban, tombol tepat di atas kotak pesan menyarankan langkah berikutnya: menyimpan halaman ke folder yang disarankan, membuka atau menampilkan bookmark, atau mengajukan pertanyaan lanjutan atau memilih salah satu dari beberapa opsi atau ide. Tombol ini muncul setelah jawaban selesai, hanya jawaban terbaru yang memilikinya, dan tombol ini menyingkir saat Anda mengetik lalu kembali saat kotak kosong. Tidak ada yang terjadi sampai Anda mengklik salah satunya, masing-masing hanya berfungsi sekali, dan penyimpanan bisa diurungkan dari notifikasinya.
+- Tombol simpan menyebutkan folder dan, di bawahnya, judul dan situs halaman; arahkan pointer ke tombol itu untuk melihat alamat lengkapnya. Tombol ini hanya menawarkan halaman yang sedang Anda buka, halaman yang ditemukan atau dibaca AI di bookmark Anda, atau alamat yang Anda ketik, tidak pernah alamat yang hanya muncul di teks halaman web. Setelah chat membaca halaman web atau menelusuri web, mengklik tombol itu terlebih dahulu meminta Anda menyetujui penyimpanan halaman itu ke folder tersebut.
+- OpenAI, Anthropic, Google Gemini, dan xAI juga bisa menelusuri web. Aktifkan dengan tombol bola dunia di sebelah kotak pesan; fitur ini tetap nonaktif sampai Anda mengaktifkannya, dan penyedia sendiri yang menjalankan penelusuran.
+- Percakapan hanya disimpan selama chat terbuka. **Chat baru** menghapusnya, dan menutup popup mengakhirinya.
+- Instruksi yang diikutinya adalah prompt **Tanya AI** di pustaka prompt, jadi Anda bisa melihat atau menggantinya seperti prompt lainnya.
+- **Yang boleh dilakukan Tanya AI**, di **Setelan**, lalu **AI**, mencantumkan setiap pencarian dan perubahan yang bisa dilakukannya. Nonaktifkan salah satunya, maka Tanya AI sama sekali tidak ditawari fungsi itu. Menerapkan rencana perubahan selalu meminta persetujuan Anda terlebih dahulu.
+- Untuk developer: agen AI di komputer Anda, seperti Claude Code, bisa memakai pencarian dan perubahan yang sama; lihat [Menggunakan dengan agen AI lokal](/guides/local-agents).
+
+## Melihat apa yang dikirim [#see-what-was-sent]
+
+Untuk memeriksa persis apa yang dikirim alat dan apa jawaban penyedia, buka **Setelan**, lalu **AI**, dan aktifkan **Rekam permintaan** di bawah **Aktivitas AI**. Setiap panggilan AI kemudian menampilkan sumber, alamat, status, dan waktunya; buka salah satunya untuk melihat header permintaan serta isi permintaan dan respons, atau salin sebagai JSON untuk laporan bug.
+
+Perekaman nonaktif secara default. Log tetap di perangkat ini dan hanya menyimpan panggilan terbaru. Kunci API, header yang namanya menunjukkan kredensial (seperti yang mengandung `key`, `token`, `secret`, `auth`, atau `cookie`), dan setiap header yang Anda setel di **JSON Header Tambahan** diganti dengan `[redacted]` sebelum apa pun disimpan, tetapi judul bookmark dan URL dalam permintaan tetap disimpan, jadi nonaktifkan perekaman setelah selesai: tindakan itu juga menghapus log.
+
+## Menyimpan halaman dengan rekomendasi folder [#save-a-page-with-a-folder-recommendation]
+
+Klik tombol kilau di popup. Memilih folder yang sudah ada dari saran menyimpan halaman di sana. Memilih folder baru dari saran membuka **Tinjau folder baru** dengan jalur lengkap dan halamannya; **Buat Folder dan Simpan** hanya membuat folder yang belum ada lalu menyimpan halaman. Jika halaman sudah ada di folder itu, halaman tidak disimpan dua kali, dan jika sebuah bookmark sudah memakai salah satu nama folder di jalur itu, tidak ada yang dibuat. **Batal** tidak mengubah apa pun.
+
+## Menyarankan tag dan ringkasan [#suggest-tags-and-summaries]
+
+Jalankan **Tag Otomatis** atau **Peringkas Konten** dengan **Analisis**. Setiap saran ditampilkan untuk ditinjau dan dimulai dengan **Simpan**; setel yang tidak Anda inginkan ke **Lewati** (atau pilih beberapa dan gunakan **Setel yang dipilih ke…**), lalu klik **Simpan** (misalnya **Simpan 5 saran tag**). Tidak ada yang disimpan sebelum Anda mengkliknya. **Mode Penggabungan** menentukan apakah saran yang disimpan ditambahkan ke yang sudah ada atau menggantikannya.
+
+Tag dan ringkasan yang disimpan berada di penyimpanan lokal browser ini. Anda juga bisa mengeditnya secara manual di **Detail Bookmark**. Keduanya tidak disinkronkan dan tidak bisa ditelusuri. Ekspor bookmark JSON menyertakannya, dan mengimpor file itu memberikannya ke bookmark yang dibuatnya.
+
+Jumlah dan gaya tag, panjang ringkasan, dan batas penataan ulang di Setelan dikirim ke penyedia sebagai instruksi; output penyedia tidak diperiksa terhadap batas tersebut.
+
+## Menata ulang folder [#reorganize-folders]
+
+**Penataan Ulang Folder dengan AI** menanyakan kepada penyedia folder mana yang cocok untuk setiap bookmark. Rencananya selalu terbuka lebih dulu sebagai daftar pemindahan bookmark, dengan pemindahan ke folder baru ditandai dan dihitung, dan tidak ada yang berubah sampai Anda mengklik **Terapkan Perubahan**.
+
+Analisis berjalan di latar belakang, satu permintaan untuk setiap kelompok bookmark: analisis tetap berjalan setelah Anda menutup pengelola, dan rencananya menunggu di **Tinjau hasil** sampai Anda melihatnya. Jika layanan AI gagal, dinonaktifkan, atau berubah, tugas dijeda dan menyebutkan alasannya, dan tidak ada lagi yang dikirim sampai Anda melanjutkannya. Jika browser berhenti saat jawaban sedang dalam perjalanan, tugas bertanya sebelum mengirim permintaan itu lagi, karena permintaan itu mungkin sudah dikenai biaya.
+
+- **Terapkan Perubahan** memindahkan bookmark dan membuat folder baru yang disebutkan rencana. Jika folder dengan nama itu sudah ada di tempat yang sama, folder itulah yang dipakai.
+- Bookmark yang Anda pindahkan, beri URL baru, atau hapus setelah pratinjau dilewati dan dibiarkan di tempatnya, sehingga rencana tidak pernah menimpa perubahan yang lebih baru. Jika hanya sebagian rencana yang diterapkan, pesannya menghitung bookmark yang dipindahkan, folder baru, serta item yang dilewati dan gagal, dan menyebutkan bookmark yang dilewati.
+- Klik **Urungkan** di pesan atau di tinjauan, atau tekan <Shortcut id="manager.undo" /> di pengelola bookmark, untuk memindahkan bookmark kembali dan menghapus folder baru yang masih kosong. Bookmark yang Anda pindahkan lagi sementara itu tetap di tempat Anda menaruhnya.
+
+## Mengekspor konteks untuk chat AI [#export-context-for-an-ai-chat]
+
+**Pengemas Konteks AI** mengekspor bookmark yang dipilih sebagai Markdown atau XML yang bisa Anda tempel ke chat AI mana pun. Ekspor ini bisa menyertakan jalur folder, tanggal, serta tag dan ringkasan tersimpan Anda (**Sertakan Tag Tersimpan** dan **Sertakan Ringkasan Tersimpan**). Seperti ekspor bookmark, alat ini membuka tinjauan privasi jika file akan berisi nilai yang mungkin bersifat pribadi.
+
+<Callout title="Firefox">
+Di Firefox, buka pengelola dengan **Buka pengelola bookmark** di popup toolbar untuk memakai alat AI di pengelola. AI tidak dicakup oleh pengujian otomatis Firefox.
+</Callout>

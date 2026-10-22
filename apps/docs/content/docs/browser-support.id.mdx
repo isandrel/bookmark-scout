@@ -1,0 +1,38 @@
+---
+title: Dukungan browser
+description: Apa yang berfungsi di Chrome, Microsoft Edge, dan Firefox, di mana mendapatkannya untuk masing-masing browser, dan mengapa Safari tidak didukung.
+---
+
+Bookmark Scout berfungsi paling baik di Chrome, tempat ekstensi ini tersedia dari Chrome Web Store. Edge memiliki fitur yang sama, kecuali yang disebutkan di bawah. Firefox memiliki fitur yang sedikit lebih sedikit, karena Firefox membatasi apa yang bisa dilakukan ekstensi dengan bookmark. Ketiganya berjalan di komputer; ponsel dan tablet tidak didukung.
+
+## Tempat mendapatkannya [#where-to-get-it]
+
+<StoreAvailability />
+
+Jika store belum menyediakan Bookmark Scout, Anda bisa [menginstalnya secara manual](/installation#install-from-a-github-release). Materi untuk halaman store disiapkan di <RepoLink tree="store">folder `store/`</RepoLink> repositori, dan setiap store meninjau ekstensi sebelum menampilkannya.
+
+## Apa yang berfungsi di mana [#feature-matrix]
+
+Tabel ini berasal dari manifest ekstensi hasil build untuk setiap browser dan pemeriksaan browser di kodenya.
+
+| Fitur | Chrome | Edge | Firefox |
+| --- | --- | --- | --- |
+| Popup toolbar dengan penelusuran dan penyimpanan | Ya | Ya | Ya |
+| Pintasan simpan cepat dengan notifikasi di halaman | Ya. Ubah tombolnya di `chrome://extensions/shortcuts`, tempat Anda juga bisa memberikan <Shortcut id="browser.bookmark_page" /> ke simpan cepat | Ya. Ubah tombolnya di `edge://extensions/shortcuts`, termasuk <Shortcut id="browser.bookmark_page" /> | Ya. Ubah tombolnya di Setelan Bookmark Scout atau di **Kelola Pintasan Ekstensi** Firefox. Firefox mempertahankan <Shortcut id="browser.bookmark_page" /> dan <Shortcut id="browser.bookmark_all_tabs" /> untuk dirinya sendiri |
+| Panel samping | Ya | Ya | Ya, di bilah samping Firefox: pilih Bookmark Scout di bilah samping |
+| Pengelola bookmark dan bilah samping Alat | Mengganti halaman bookmark browser, dan terbuka dari **Buka pengelola bookmark** di popup dan panel samping | Terbuka dari **Buka pengelola bookmark**. Belum diperiksa apakah Edge juga menerapkan penggantian ini ke halaman Favorit-nya. | Terbuka dari **Buka pengelola bookmark** di popup. Firefox tidak bisa mengganti halaman bookmark-nya. |
+| Penelusuran tersimpan, alat pemeliharaan, impor dan ekspor, statistik, alat AI di pengelola | Ya | Ya | Ya, di pengelola. Pengujian otomatis mencakup impor dan ekspor serta laporan; alat lainnya diperiksa secara manual. |
+| Halaman setelan | Ya | Ya | Ya |
+| Tanya AI dan alat AI lainnya | Ya | Ya | Ya, setelah Anda setuju untuk berbagi data dengan penyedia AI Anda |
+| AI bawaan, gratis di komputer Anda, untuk saran folder | Ya, Chrome 138 atau yang lebih baru di komputer yang mampu menjalankan model Chrome | Hanya jika Edge menawarkan AI bawaan yang sama; belum diperiksa | Tidak: Firefox tidak punya AI bawaan |
+| Agen AI lokal melalui `bookmark-scout-mcp` (untuk developer) | Ya | Ya | Ya; `bookmark-scout-mcp install` juga mendaftarkannya ke Firefox. Tidak dicakup pengujian otomatis |
+| Buka di jendela samaran dari pengelola | Ya | Ya, sebagai jendela InPrivate | Ya, sebagai jendela pribadi, jika ekstensi diizinkan di jendela pribadi |
+| Menu klik kanan untuk menyimpan link | Ya, setelah Anda mengaktifkan **Menu Klik Kanan** (meminta izin) | Sama | Ya, setelah Anda mengaktifkan **Menu Klik Kanan** |
+| Ikon situs di sebelah bookmark | Ikon yang disimpan dengan **Perbarui Ikon Situs**, dan dari cache ikon browser setelah Anda mengaktifkan **Gunakan cache ikon browser** | Sama | Hanya ikon yang disimpan dengan **Perbarui Ikon Situs**, yang berjalan di pengelola. Firefox tidak punya API favicon untuk ekstensi, jadi bookmark lain menampilkan ikon generik. |
+| Akses situs web opsional untuk pemeriksaan link mati, pengambilan judul, dan pembaruan ikon situs | Diminta saat Anda menjalankan alatnya | Sama | Sama |
+
+Seberapa banyak setiap browser dicakup oleh pengujian otomatis ada di [Status proyek](/status#what-is-tested-in-each-browser).
+
+## Safari [#safari]
+
+Safari tidak didukung. Safari Web Extensions tidak mengimplementasikan API `bookmarks`, yang menjadi dasar setiap bagian Bookmark Scout.

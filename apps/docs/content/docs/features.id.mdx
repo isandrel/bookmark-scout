@@ -1,0 +1,97 @@
+---
+title: Fitur
+description: Semua yang dilakukan Bookmark Scout saat ini, per bagian, dengan link ke panduan untuk setiap tugas.
+---
+
+Daftar referensi tentang apa yang tersedia sekarang. Untuk petunjuk langkah demi langkah, ikuti panduan yang ditautkan di setiap bagian. Apa yang masih sebagian atau direncanakan ada di [Status proyek](/status), dan apa yang berfungsi di setiap browser ada di [Dukungan browser](/browser-support).
+
+## Tempat berjalannya [#where-it-runs]
+
+| Tampilan | Apa itu |
+| --- | --- |
+| Popup | Tombol toolbar: penelusuran, hierarki folder, penyimpanan, dan rekomendasi folder dari AI |
+| Panel samping | Tampilan yang sama di panel samping browser (bilah samping di Firefox), yang tetap terbuka saat Anda menjelajah |
+| Pengelola bookmark | Mengganti halaman bookmark browser di Chrome dan Edge: hierarki folder, breadcrumb, tabel bookmark, dan bilah samping **Alat**. Di jendela yang sempit, hierarki folder dan **Alat** terbuka di atas tabel; jalur folder yang dalam melipat folder-folder tengahnya ke dalam menu **…** |
+| Setelan | Halaman setelan ekstensi: **Dasar** lebih dulu, lalu sebelas tab lagi di bawah **Lanjutan**. Lihat [Setelan](/settings) |
+| Halaman mana pun | <Shortcut id="commands.quick-save" /> dan <Shortcut id="commands.ai-quick-save" /> menyimpan cepat halaman yang sedang Anda buka, dengan notifikasi di halaman |
+| Menu klik kanan | **Simpan bookmark ke...** di link mana pun, setelah Anda mengaktifkan **Menu Klik Kanan** |
+
+## Temukan [#find]
+
+- Telusuri judul dan URL sambil mengetik, dengan opsi cocokkan huruf besar/kecil, seluruh kata, dan penelusuran pola (regular expression) di bawah **Opsi penelusuran lainnya**, serta hasil yang cocok disorot. Folder yang cocok terbuka otomatis.
+- Penelusuran terbaru di perangkat ini, yang bisa Anda hapus atau nonaktifkan.
+- Filter tabel di pengelola untuk judul, URL, jenis, folder, domain, dan tanggal ditambahkan, dengan pengurutan menurut kolom mana pun.
+- Penelusuran tersimpan: kumpulan filter bernama yang dievaluasi terhadap bookmark Anda setiap kali Anda membukanya. Hingga 50, disimpan di perangkat ini.
+
+Panduan: [Penelusuran dan penelusuran tersimpan](/guides/search).
+
+## Simpan dan atur [#save-and-organize]
+
+- Simpan halaman saat ini ke folder mana pun, tidak pernah dua kali ke folder yang sama, dengan panel **Terbaru** berisi folder yang pernah Anda pakai.
+- Ketik sebagian nama folder, atau jalur seperti `work/react`, lalu simpan ke salah satu folder cocok yang tercantum di atas hasil.
+- Simpan cepat dengan <Shortcut id="commands.quick-save" /> di halaman mana pun, ke folder yang paling cocok dengan halaman (diperingkat di perangkat Anda), folder yang terakhir digunakan, atau folder yang Anda pilih; <Shortcut id="commands.ai-quick-save" /> menyimpan ke saran AI pertama. Notifikasi di halaman menawarkan **Urungkan** dan folder lain di bawah **Pindahkan ke**. Di Chrome dan Edge, Anda bisa memberikan <Shortcut id="browser.bookmark_page" /> ke simpan cepat.
+- Simpan link dari menu klik kanan ke folder terbaru atau ke Bilah bookmark.
+- Buat folder, seret dan lepas bookmark dan folder, serta pindahkan beberapa sekaligus di pengelola.
+- Tampilkan bookmark dalam urutan browser sendiri (default), menurut tanggal ditambahkan, dalam urutan abjad alami, atau folder lebih dulu, tanpa mengubah urutan yang disimpan browser.
+- Edit nama dan URL, serta tambahkan tag dan ringkasan di **Detail Bookmark**.
+- Hapus dengan konfirmasi opsional dan urungkan selama 10 detik yang memulihkan semua isi folder.
+- Di pengelola, ubah ukuran kolom tabel dengan menyeret atau dengan tombol panah; **Reset tampilan** memulihkan tata letak.
+- Alamat pengelola menyebutkan folder atau penelusuran (`?id=`, `?q=`), jadi **Kembali**, **Maju**, dan link yang di-bookmark berfungsi, link folder Chrome sendiri terbuka, dan **Salin link ke folder ini** menyalin salah satunya.
+- Saat Chrome menyimpan bookmark di Akun Google Anda sekaligus hanya di perangkat ini, hierarki folder pengelola menampilkannya dalam dua bagian, seperti Chrome.
+- **Buka link di** menentukan apakah link yang diklik terbuka di tab baru, tab latar belakang, atau tab saat ini.
+
+Panduan: [Menyimpan dan mengatur](/guides/save-and-organize).
+
+## Bersihkan [#clean-up]
+
+- **Pembersih Duplikat**: menemukan duplikat dengan pencocokan yang bisa dikonfigurasi, dan menghapus salinan berlebih setelah tinjauan, dengan urungkan.
+- **Pembersih URL**: membuang parameter pelacakan seperti `utm_source` setelah pratinjau.
+- **Aturan Pintar**: aturan yang Anda tulis sebagai penelusuran, seperti `domain:github.com`, yang menambahkan tag dan memindahkan bookmark ke folder setelah tinjauan, dengan urungkan. Lihat [Memberi tag dan memindahkan dengan Aturan Pintar](/guides/clean-up#tag-and-move-with-smart-rules).
+- **Periksa Link Mati**: memisahkan link yang pasti mati dari yang perlu diperiksa manual, dan memperbaikinya dengan menghapus, mengikuti pengalihan, memakai link Wayback Machine, atau mengedit URL, dengan urungkan. Alat ini berjalan di latar belakang, jadi tetap bekerja setelah Anda menutup pengelola, dan bisa dijeda, dilanjutkan, atau dibatalkan di bawah **Tugas latar belakang**.
+- **Pengambil Metadata**: menyarankan judul dari halaman aktif, hanya dengan membaca bagian head halaman, dan menerapkan yang Anda pilih. Deskripsi ditampilkan untuk ditinjau dan tidak pernah disimpan. Alat ini berjalan di latar belakang, seperti **Periksa Link Mati**.
+- **Perbarui Ikon Situs**: mengunduh ikon milik setiap situs web, setelah tinjauan, sehingga bookmark menampilkannya meskipun browser tidak menyimpannya di cache, dan juga di Firefox. Ikon tetap di perangkat ini dan bisa dihapus. Alat ini berjalan di latar belakang, seperti **Periksa Link Mati**.
+- **Indeks Teks Halaman** (nonaktif sampai Anda mengaktifkannya): menyimpan teks yang dapat dibaca dari halaman yang Anda pilih di perangkat ini, setelah tinjauan, sehingga penelusuran menemukan kata di dalamnya, dengan `content:` dan `has:content`. Lihat [Menelusuri isi halaman](/guides/clean-up#search-inside-pages).
+- **Ambil Sampul** (nonaktif sampai Anda mengaktifkannya): menyimpan salinan kecil gambar pratinjau yang disebutkan setiap halaman untuk dirinya sendiri di perangkat ini, setelah tinjauan, dan **Kartu** di pengelola menampilkannya. Lihat [Menampilkan sampul di kartu](/guides/clean-up#show-covers-on-cards).
+- **Pemindai Privasi**: menandai URL, dan secara opsional judul, yang berisi token, parameter sensitif, alamat email, atau UUID.
+- **Statistik Bookmark**: domain dan folder teratas, protokol, duplikat, dan seberapa dalam folder Anda, untuk satu folder atau semua bookmark.
+
+Panduan: [Membersihkan duplikat dan URL pelacakan](/guides/clean-up) dan [Menemukan dan memperbaiki link mati](/guides/dead-links).
+
+## Impor dan ekspor [#import-and-export]
+
+- Ekspor ke HTML, JSON, Markdown, atau CSV, dengan tinjauan privasi yang bisa menyamarkan nilai sensitif dari file.
+- Impor HTML atau JSON setelah pratinjau folder tujuan, jumlah, dan duplikat, dengan urungkan.
+- Ekspor JSON mempertahankan tag dan ringkasan setiap bookmark, dan mengimpor file seperti itu memulihkannya.
+- Cadangkan setelan ekstensi, prompt kustom, layanan AI (tanpa kunci API), penelusuran tersimpan, dan kolom tabel pengelola ke file JSON, lalu pulihkan.
+
+Panduan: [Impor dan ekspor](/guides/import-export).
+
+## Alat AI (opsional) [#ai-tools-optional]
+
+Nonaktif secara default. Gunakan kunci Anda sendiri untuk OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter, atau sekitar 200 penyedia lain dari katalog models.dev, atau gunakan Ollama, CLIProxyAPI, atau endpoint apa pun yang kompatibel dengan OpenAI. Di Chrome, **AI bawaan** menyarankan folder secara gratis dengan model milik Chrome sendiri, di komputer Anda dan tanpa kunci.
+
+- Rekomendasi folder di popup, termasuk jalur folder baru yang ditinjau, dan pintasan simpan cepat <Shortcut id="commands.ai-quick-save" />.
+- **Tanya AI** di popup dan panel samping: menjawab pertanyaan dengan menelusuri bookmark, folder, tag, dan ringkasan Anda, menemukan duplikat, dan memeriksa link; menyimpan halaman dan mengusulkan pemindahan, penggantian nama, penghapusan, dan folder baru sebagai rencana yang tidak mengubah apa pun sampai Anda menyetujuinya, dengan setiap perubahan bisa diurungkan; dan mengakhiri jawaban dengan tombol untuk langkah berikutnya. **Yang boleh dilakukan Tanya AI** di Setelan menonaktifkan pencarian atau perubahan apa pun.
+- **Tag Otomatis** dan **Peringkas Konten** untuk folder saat ini, disimpan hanya setelah Anda meninjaunya, dengan urungkan.
+- **Penataan Ulang Folder dengan AI**, dipratinjau sebelum ada yang dipindahkan, dengan urungkan.
+- **Pengemas Konteks AI**, yang mengekspor bookmark sebagai Markdown atau XML untuk chat AI dan berfungsi meskipun AI nonaktif.
+- **Bahasa output AI** menentukan bahasa tag, ringkasan, dan nama folder baru; **Tentang saya** memberi tahu setiap fitur AI sedikit tentang Anda; dan pustaka prompt memungkinkan Anda menulis ulang prompt setiap alat, dengan daftar placeholder seperti `{{today}}` dan `{{existingTags}}`.
+
+Tag dan ringkasan tetap di perangkat ini. Keduanya tidak disinkronkan dan tidak bisa ditelusuri di popup, tetapi Tanya AI bisa mencarinya dan ekspor bookmark JSON menyertakannya. Panduan: [Menyiapkan alat AI](/guides/ai-tools).
+
+## Agen AI lokal (opsional) [#local-ai-agents-optional]
+
+Nonaktif secara default, di setiap perangkat. Dengan **Izinkan agen AI lokal** aktif, agen AI di komputer Anda, seperti Claude Code, Codex, atau Cursor, memakai fitur pencarian Bookmark Scout melalui program `bookmark-scout-mcp`, server MCP yang terhubung ke ekstensi melalui native messaging browser. Dengan **Izinkan perubahan** juga aktif, agen bisa menyimpan halaman dan mengusulkan perubahan, yang masing-masing menunggu persetujuan Anda di jendela Bookmark Scout dan bisa diurungkan di pengelola. Nilai pribadi di judul dan URL disembunyikan dari agen secara default.
+
+Panduan: [Menggunakan dengan agen AI lokal](/guides/local-agents).
+
+## Keyboard dan bahasa [#keyboard-and-language]
+
+- Pintasan simpan cepat di halaman mana pun, yang bisa Anda ubah di setelan pintasan browser, atau di Firefox langsung di Setelan Bookmark Scout.
+- Pintasan di popup dan panel samping yang tidak pernah memakai `Ctrl` atau `Cmd`, dan di pengelola tombol-tombol pengelola bookmark Chrome (pilih semua, urungkan, ulangi, buka di tab), dengan dialog bantuan <Shortcut id="manager.show_help" /> di sana. Lihat [Pintasan keyboard](/guides/keyboard-shortcuts).
+- Pemilihan di pengelola seperti di Chrome: klik, `Cmd`+klik (`Ctrl`+klik di Windows dan Linux), `Shift`+klik, dan <Shortcut id="manager.select_all" />; tombol panah berpindah di tabel dan hierarki folder, yang dibacakan pembaca layar sebagai pohon.
+- Urungkan dan ulangi untuk pengeditan, pemindahan, dan penghapusan di pengelola dengan <Shortcut id="manager.undo" /> dan <Shortcut id="manager.redo" />, selama sesi browser.
+- Menu klik kanan pada baris dan folder pengelola: potong, salin, dan tempel, buka semua di tab, jendela baru, atau jendela samaran, ganti nama, dan hapus; ditambah **Urutkan menurut nama** serta **Tambahkan bookmark baru** atau **Tambahkan folder baru**. **Menu pengelola bookmark** di Setelan menentukan perintah mana yang ditampilkan, dan dalam urutan apa.
+- Seret dan lepas di pengelola seperti di Chrome: ke folder di tabel atau hierarki, di antara baris dalam urutan browser, dan link dari halaman lain; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" />, dan <Shortcut id="manager.paste" /> menyalin, memindahkan, dan menempel.
+- Tema sistem, terang, atau gelap.
+- Antarmuka dalam bahasa <Languages of="extension" />.

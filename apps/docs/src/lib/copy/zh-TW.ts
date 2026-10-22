@@ -53,9 +53,12 @@ export const zhTW: DocsCopy = {
     es: "西班牙文",
     fr: "法文",
     "pt-BR": "巴西葡萄牙文",
+    ru: "俄文",
+    id: "印尼文",
     de: "德文",
     ja: "日文",
     ko: "韓文",
+    it: "義大利文",
     "zh-TW": "繁體中文",
   },
 

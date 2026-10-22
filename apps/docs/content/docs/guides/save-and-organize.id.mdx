@@ -1,0 +1,142 @@
+---
+title: Menyimpan dan mengatur
+description: Simpan halaman saat ini atau link ke dalam folder, buat folder, pindahkan item dengan seret dan lepas, urutkan hierarki, dan hapus dengan opsi urungkan.
+---
+
+## Menyimpan halaman yang sedang dibuka [#save-the-page-you-are-on]
+
+<Steps>
+<Step>
+Buka halaman yang ingin Anda simpan lalu klik ikon Bookmark Scout di toolbar, atau buka panel samping.
+</Step>
+<Step>
+Ketik sebagian nama folder di kotak penelusuran. **Simpan ke folder** mencantumkan folder yang cocok di atas hasil, yang paling cocok lebih dulu, beserta folder tempatnya berada.
+</Step>
+<Step>
+Tekan `Enter` untuk menyimpan ke folder pertama, yang disorot, atau klik sebuah folder. Untuk memilih folder lain dengan keyboard, tekan `↓` untuk berpindah ke folder itu lalu `Enter`.
+</Step>
+</Steps>
+
+Baris di bawah kotak penelusuran, **Halaman yang akan disimpan**, menyebutkan halaman yang akan ditambahkan. Jika halaman sudah di-bookmark, **Sudah disimpan di** di bawahnya menyebutkan foldernya. Menyimpannya ke folder lain menambahkan salinan lain, dan pesan setelah penyimpanan memberitahukannya. Beberapa kata juga cocok dengan folder di sekitar sebuah folder (`ai agents`), dan kata dengan 4 huruf atau lebih boleh mengandung satu salah ketik.
+
+<Screenshot name="popup" />
+
+Cara lain untuk memilih folder:
+
+- **Terbaru**: panel **Terbaru** mencantumkan folder yang baru-baru ini Anda pakai untuk menyimpan; klik salah satunya untuk menyimpan halaman di sana.
+- **Jelajahi**: arahkan pointer ke folder di hierarki lalu klik **Tambahkan halaman ini**, atau pindah ke folder itu dengan tombol panah lalu tekan `Enter`.
+
+Halaman yang sudah ada di folder tidak disimpan dua kali; pesannya menyatakan bahwa halaman itu sudah ada di sana.
+
+Popup toolbar membaca halaman tempat Anda mengkliknya tanpa bertanya. Panel samping tetap terbuka saat Anda berpindah tab, jadi saat pertama kali Anda menyimpan dari panel samping, Bookmark Scout menjelaskan lalu meminta akses ke tab Anda. Jika Anda menolak, tidak ada yang disimpan; ikon toolbar dan pintasan simpan cepat di bawah tetap berfungsi tanpa akses itu.
+
+Untuk mengubah daftar ini, gunakan [Setelan](/settings): **Folder yang Cocok**, **Maksimum Folder yang Cocok**, dan **Izinkan Salah Ketik** untuk **Simpan ke folder**, serta **Folder Terbaru** dan **Maks Folder Terbaru** untuk panel **Terbaru**.
+
+## Menyimpan dengan pintasan keyboard [#quick-save]
+
+Tekan <Shortcut id="commands.quick-save" /> di halaman mana pun untuk menyimpannya tanpa membuka Bookmark Scout. Notifikasi kecil di sudut atas halaman menyebutkan folder tujuannya, dengan **Urungkan** dan beberapa folder lain di bawah **Pindahkan ke**. Notifikasi menutup sendiri setelah beberapa detik; mengarahkan pointer ke notifikasi atau berpindah ke sana dengan Tab membuatnya tetap terbuka, dan `Esc` menutupnya. Notifikasi tidak pernah mengambil alih keyboard dari halaman.
+
+<Screenshot name="quick-save" />
+
+Tujuan halaman ditentukan oleh **Folder Simpan Cepat** di [Setelan](/settings#quick-save):
+
+- **Paling cocok** (default) membandingkan judul, situs, dan alamat halaman dengan nama folder Anda, folder di sekitarnya, serta judul dan situs bookmark yang sudah ada di setiap folder, semuanya di perangkat Anda. Judul berbahasa Tionghoa, Jepang, dan Korea juga bisa. **Pindahkan ke** menawarkan folder terbaik berikutnya.
+- **Terakhir digunakan** menyimpan ke folder yang terakhir Anda pakai untuk menyimpan; **Pindahkan ke** menawarkan folder terbaru Anda yang lain.
+- **Folder pilihan** selalu menyimpan ke folder yang Anda pilih di **Folder Tujuan**.
+
+Jika tidak ada folder yang cukup cocok, atau folder pilihan sudah dihapus, halaman disimpan ke folder yang terakhir Anda gunakan, lalu ke bilah bookmark, dan notifikasi memberitahukannya.
+
+Tekan <Shortcut id="commands.ai-quick-save" /> untuk menyimpan halaman ke folder yang disarankan AI. Pintasan ini memakai layanan AI, pembacaan halaman, dan jumlah saran yang sama dengan saran AI di popup, dan mengirim data yang sama (lihat [Menyiapkan alat AI](/guides/ai-tools)). Notifikasi menampilkan **Memilih folder dengan AI...** selama menunggu, lalu mencantumkan saran lainnya di bawah **Pindahkan ke**; folder yang disarankan tetapi belum ada akan dibuat, dan **Urungkan** menghapusnya lagi. Jika AI nonaktif atau belum disiapkan, tidak ada yang disimpan dan notifikasi menawarkan **Buka setelan AI**. Jika AI tidak bisa memilih folder, notifikasi menawarkan **Coba lagi**, yang meminta AI lagi, dan **Simpan tanpa AI**, yang menyimpan halaman ke folder yang dipilih oleh **Folder Simpan Cepat**. Jika Anda meninggalkan halaman sebelum AI menjawab, hasilnya ditampilkan di popup, di bawah judul halaman.
+
+Halaman yang sudah Anda bookmark tidak disimpan lagi: notifikasi menyebutkan lokasinya dan menawarkan untuk memindahkannya.
+
+**Urungkan** dan **Pindahkan ke** hanya berlaku untuk simpan cepat terakhir Anda. Jika Anda melakukan simpan cepat di tab lain lalu menekan **Urungkan** di notifikasi tab pertama, notifikasi menyatakan bahwa simpan cepat yang lebih baru telah menggantikannya; ubah bookmark itu di pengelola bookmark.
+
+Beberapa halaman tidak mengizinkan ekstensi menampilkan apa pun, seperti halaman browser sendiri, store ekstensi, dan penampil PDF, dan beberapa halaman menyembunyikan apa yang digambar di atasnya. Di sana ikon toolbar menampilkan ✓ atau ✗ sejenak, dan popup terbuka (jika browser mengizinkannya) dengan judul halaman dan tombol yang sama.
+
+Untuk mengubah tombolnya, buka **Pintasan keyboard** di [Setelan](/settings#quick-save):
+
+- **Chrome dan Edge** menyimpan sendiri pengaturan tombolnya. **Ubah pintasan** membuka `chrome://extensions/shortcuts` atau `edge://extensions/shortcuts`, yang mencantumkan setiap ekstensi; cari Bookmark Scout di sana.
+- **Firefox** mengizinkan Bookmark Scout menyetelnya. Klik kolom pintasan lalu tekan tombol baru: tahan `Command`, `Control`, atau `Option` (`Ctrl` atau `Alt` di Windows dan Linux), tambahkan `Shift` jika mau, lalu tekan huruf, angka, tombol fungsi, atau tombol panah. Tombol fungsi juga bisa dipakai sendiri. `Esc` membatalkan, `Tab` berpindah tanpa merekam, dan tombol reset di sebelah kolom memulihkan default. Kombinasi yang tidak bisa dipakai Firefox dijelaskan di bawah kolom. **Ubah pintasan** membuka halaman **Kelola Pintasan Ekstensi** Firefox.
+
+Jika ekstensi lain sudah memakai suatu tombol, browser membiarkan pintasan tidak disetel dan Setelan menampilkan **Belum disetel**. Popup dan panel samping lalu menampilkan **Pintasan simpan cepat belum disetel** di atas petunjuk pintasan, dengan **Siapkan**, yang membawa Anda ke tempat di atas untuk menyetelnya. Tutup baris itu dengan tombol **Tutup** jika Anda tidak menginginkan pintasan tersebut; baris itu tetap tersembunyi di perangkat tersebut.
+
+### Memakai tombol bookmark untuk simpan cepat [#ctrl-d]
+
+<Shortcut id="browser.bookmark_page" /> membuka dialog bookmark milik browser, dan tidak ada browser yang mengizinkan ekstensi mengambilnya sebagai tombol default, jadi simpan cepat dimulai dengan <Shortcut id="commands.quick-save" />.
+
+- **Chrome dan Edge** mengizinkan Anda memberikannya sendiri ke simpan cepat. Di bawah **Pintasan keyboard** di Setelan, **Gunakan <Shortcut id="browser.bookmark_page" /> untuk simpan cepat** membuka halaman pintasan browser: cari Bookmark Scout, klik ikon pensil di sebelah **Simpan cepat halaman ini**, lalu tekan tombol bookmark. Sejak itu, tombol tersebut menyimpan dengan simpan cepat, bukan membuka dialog bookmark (atau favorit). Untuk mengembalikan dialog, hapus pintasan itu di halaman yang sama. Sebelum Anda melakukannya, popup dan panel samping menyebutkan tombol simpan cepat saat ini, **Simpan cepat: tekan <Shortcut id="commands.quick-save" /> di halaman mana pun**, dengan **Gunakan <Shortcut id="browser.bookmark_page" /> sebagai gantinya**, yang membuka langkah-langkah ini di Setelan; **Tutup** menyembunyikan baris itu di perangkat tersebut. Di Firefox, baris itu hanya menyebutkan tombolnya.
+- **Firefox** selalu menangani sendiri <Shortcut id="browser.bookmark_page" /> (bookmark halaman ini) dan <Shortcut id="browser.bookmark_all_tabs" /> (bookmark semua tab), meskipun ekstensi menyetelnya, jadi kolom pintasan menolak keduanya.
+
+## Menyimpan link dengan menu klik kanan [#save-a-link-with-the-right-click-menu]
+
+Pertama, aktifkan **Menu Klik Kanan** di [Setelan](/settings#data); menu ini nonaktif secara default. Lalu klik kanan link mana pun di halaman dan pilih **Simpan bookmark ke...**, lalu pilih salah satu folder terbaru Anda atau Bilah bookmark. **Sumber Nama Bookmark** di Setelan menentukan apakah bookmark diberi nama sesuai teks link, judul halaman, atau URL link. Nonaktifkan menu dengan **Menu Klik Kanan** (keduanya ada di tab **Data**).
+
+## Membuat folder [#create-folders]
+
+Arahkan pointer ke folder di popup atau panel samping lalu klik **Tambahkan folder**, kemudian ketik namanya. Folder baru diawali dengan **Nama Folder Default** dari Setelan.
+
+## Memindahkan bookmark dan folder [#move-bookmarks-and-folders]
+
+- **Seret dan lepas** di popup atau panel samping. Melepas di samping item di folder lain memindahkannya ke folder itu. Mengubah urutan di dalam folder berfungsi dengan pengurutan **Urutan Browser** (default) dan **Folder Dulu**; dengan pengurutan lain, melepas item memindahkannya ke folder lain, dan sebuah petunjuk memberitahukannya saat Anda menyeret. Folder tidak bisa dipindahkan ke dalam dirinya sendiri atau salah satu subfoldernya. Di panel samping, lepas link dari halaman web ke sebuah folder untuk mem-bookmark-nya di sana. **Tarik dan Lepas di Hierarki** di Setelan menonaktifkan keduanya.
+- **Seret dan lepas** di pengelola, seperti di Chrome: seret baris, atau beberapa baris yang dipilih, ke baris folder atau folder di hierarki folder untuk memindahkannya ke sana; tepi atas dan bawah folder di hierarki menaruh item di sampingnya. Mengarahkan pointer ke folder yang tertutup di hierarki selama menyeret akan membukanya. Selama tabel dalam urutan browser (lihat di bawah), melepas di antara baris juga mengubah urutan. Setiap pelepasan adalah satu langkah <Shortcut id="manager.undo" />.
+- **Link dari halaman dan aplikasi lain**: lepas link, atau teks berisi URL, ke tabel pengelola atau folder di hierarkinya untuk mem-bookmark-nya di sana. Menyeret baris keluar ke aplikasi atau halaman lain membawa URL-nya.
+- **Beberapa sekaligus** di pengelola: pilih baris di tabel, lalu gunakan **Pindahkan ke folder** dan pilih tujuannya. Item ditambahkan di akhir folder tersebut.
+- **Ubah urutan** di pengelola: tabel menampilkan urutan browser secara default. Jika Anda mengurutkan menurut kolom atau memilih **Urutan** lain, teks di sebelah **Urutan browser** menyebutkan urutan itu; klik **Urutan browser** untuk kembali. Lalu seret baris, atau gunakan tombol **Pindahkan ke atas**, **Pindahkan ke bawah**, **Pindahkan ke atas sekali**, dan **Pindahkan ke bawah sekali** di baris. Tombol-tombol ini memerlukan tabel yang menampilkan satu folder, jadi hapus filter atau centang **Hanya folder saat ini**.
+
+Mengubah urutan mengubah urutan yang disimpan browser. Popup menampilkan urutan itu dengan pengurutan **Urutan Browser** (default) dan **Folder Dulu**; pengurutan berdasarkan tanggal dan abjad terus mengurutkan ulang daftar.
+
+Popup dan panel samping diperbarui sendiri saat bookmark berubah di tempat lain, seperti di pengelola atau di UI bookmark browser sendiri.
+
+## Mengurutkan hierarki [#sort-the-tree]
+
+Pilih **Urutan Browser** (default: urutan yang Anda lihat di bilah bookmark), **Tanggal Ditambahkan** (terbaru lebih dulu), **Abjad** (urutan alami, jadi `2` sebelum `10`), atau **Folder Dulu** dengan **Urutan** di Setelan. Pengurutan hanya mengubah cara Bookmark Scout menampilkan hierarki, tidak pernah urutan yang disimpan browser. Tabel pengelola memakai urutan yang sama sampai Anda mengurutkannya menurut kolom. **Kelompokkan menurut Folder** mencantumkan subfolder sebelum bookmark di setiap tingkat popup dan panel samping.
+
+## Mengedit bookmark [#edit-a-bookmark]
+
+Di pengelola, buka menu baris lalu pilih **Edit** untuk mengubah nama dan URL bookmark, atau nama folder. **Lihat Detail** menampilkan jalur lengkap, tanggal, dan ID, dan di situlah Anda menambahkan **Tag** dan **Ringkasan**.
+
+Tag dan ringkasan hanya disimpan di penyimpanan ekstensi lokal browser ini. Keduanya tidak disinkronkan dan tidak bisa ditelusuri. Ekspor bookmark JSON menyertakannya, dan ekspor konteks AI juga bisa; lihat [Impor dan ekspor](/guides/import-export) dan [Menyiapkan alat AI](/guides/ai-tools).
+
+## Menghapus dan mengurungkan [#delete-and-undo]
+
+Hapus bookmark atau folder dari popup, panel samping, atau menu baris di pengelola, atau pilih beberapa baris di pengelola dan hapus sekaligus.
+
+- **Konfirmasi Sebelum Menghapus** aktif secara default dan menampilkan dialog yang menyebutkan apa yang akan dihapus. Nonaktifkan di tab **Perilaku** di Setelan untuk langsung menghapus.
+- Setiap penghapusan menampilkan **Urungkan** selama 10 detik. Urungkan memulihkan item, semua isinya, serta tag dan ringkasannya yang tersimpan. Item yang dipulihkan dibuat ulang, jadi mendapat tanggal ditambahkan yang baru.
+- Folder permanen seperti Bilah bookmark tidak bisa diedit atau dihapus.
+
+## Memilih, mengurungkan, dan mengulangi di pengelola [#select-undo-and-redo-in-the-manager]
+
+Tabel di pengelola bekerja seperti pengelola bookmark Chrome:
+
+- Klik baris untuk memilihnya, `Cmd`+klik (`Ctrl`+klik di Windows dan Linux) untuk menambahkan atau menghapus satu baris, dan `Shift`+klik untuk memilih rentang. Kotak centang juga bisa dipakai. <Shortcut id="manager.select_all" /> memilih setiap baris yang ditampilkan filter, di setiap halaman, dan <Shortcut id="manager.clear_selection" /> menghapus pilihan.
+- Klik dua kali folder untuk membukanya, atau bookmark untuk membukanya di tab. Klik tengah bookmark untuk membukanya di tab latar belakang.
+- <Shortcut id="manager.undo" /> mengurungkan perubahan di pengelola satu per satu, mulai dari yang terbaru: pengeditan, pemindahan, pengubahan urutan, dan penghapusan. Pintasan ini juga mengurungkan halaman yang disimpan, folder yang dibuat, dan item yang diseret di popup dan panel samping, serta perubahan yang Anda setujui dari Tanya AI atau agen AI lokal. Pintasan ini juga mengurungkan apa yang diubah oleh alat di bilah samping **Alat** (**Pembersih Duplikat**, **Pembersih URL**, perbaikan **Periksa Link Mati**, judul dari **Pengambil Metadata**, dan **Penataan Ulang Folder dengan AI**) sebagai satu langkah, langkah yang sama dengan yang diurungkan **Urungkan** di pesan alat tersebut. <Shortcut id="manager.redo" /> mengulanginya. Beberapa item yang diubah bersamaan, seperti pemindahan sekumpulan pilihan, adalah satu langkah. Penghapusan yang sangat besar disimpan dalam bentuk terkompresi; yang tetap terlalu besar tidak dimasukkan ke histori, sedangkan perubahan sebelumnya tetap disimpan, dan notifikasinya menyatakan bahwa hanya **Urungkan** miliknya yang bisa mengembalikannya. Penghapusan di popup dan panel samping, simpan cepat, penyimpanan dari menu klik kanan, dan impor juga merupakan langkah, dan masing-masing tercantum di Histori beserta asalnya.
+- Urungkan tidak menyentuh apa pun yang telah diubah dengan cara lain sejak itu (di UI bookmark browser sendiri, jendela lain, atau oleh sinkronisasi) dan memberitahukannya.
+- Histori ini dipakai bersama oleh setiap tab pengelola, tetap ada saat halaman dimuat ulang, dan berakhir saat browser ditutup. Histori menyimpan 100 perubahan terakhir.
+
+Hierarki folder di sebelah kiri juga bekerja seperti di Chrome: tombol panah berpindah di dalamnya serta membuka dan menutup folder, dan `Enter` menampilkan folder di tabel. Jika Chrome menyimpan sebagian bookmark Anda di Akun Google dan sebagian lainnya hanya di perangkat ini, hierarki menampilkannya di bawah **Di akun Anda** dan **Hanya di perangkat ini**, dengan bagian kedua tertutup pada awalnya.
+
+Daftar lengkap tombol ada di [Pintasan keyboard](/guides/keyboard-shortcuts#bookmarks-manager).
+
+## Melihat apa yang berubah [#history]
+
+Tombol **Histori bookmark** di header pengelola membuka daftar setiap perubahan yang dibuat Bookmark Scout pada bookmark Anda di perangkat ini: pengeditan, pemindahan, penghapusan, impor, pembersihan, dan pengurungannya, yang terbaru lebih dulu di bawah judul per hari. Setiap perubahan menyebutkan asalnya (pengelola, alat, Tanya AI, agen lokal), berapa item yang disentuhnya, dan kapan. Perubahan yang hanya sebagian berhasil, terputus, atau tidak terbaca kembali sesuai harapan ditandai agar Anda bisa menemukannya di bawah **Perlu perhatian**.
+
+Buka sebuah perubahan untuk melihat setiap item yang disentuhnya: item yang dihapus beserta folder dan posisinya dulu, pengeditan dengan judul atau alamat persis yang lama dan baru, pemindahan dengan lokasi asal dan tujuannya. Setelah setiap perubahan, Bookmark Scout membaca bookmark lagi dan menyatakan apakah bookmark itu sesuai dengan hasil perubahan. Selama sesi browser masih menyimpan perubahan itu, **Urungkan** juga tersedia; setelah browser dimulai ulang, perubahan tetap tercantum, tetapi Urungkan tidak tersedia lagi. Item yang dihapus oleh sebuah perubahan disimpan sebagai salinan di perangkat ini, jadi **Pulihkan** mengembalikannya ke tempat semula, beserta isinya serta tag dan ringkasannya, selama folder tempatnya berada masih ada. Pemulihan tercantum sebagai perubahan tersendiri, dan sebuah perubahan hanya bisa diurungkan atau dipulihkan satu kali. Hasil alat menautkan ke perubahannya dengan **Lihat di Histori**.
+
+Perubahan yang dibuat di luar Bookmark Scout (di pengelola bookmark browser sendiri, oleh ekstensi lain, atau oleh sinkronisasi browser) juga tercantum, sebagai **Sumber tidak diketahui**: browser tidak menyebutkan siapa yang membuatnya, jadi Bookmark Scout tidak pernah menebak. Sekumpulan perubahan seperti itu, seperti sinkronisasi, menjadi satu entri. Perubahan yang dibuat saat Bookmark Scout tidak memantau (ekstensi dinonaktifkan, atau **Catat Perubahan dari Tempat Lain** nonaktif di Setelan) ditampilkan pada kesempatan berikutnya sebagai satu entri **Terdeteksi setelah jeda** berisi perbedaannya, di antara dua waktu tersebut; kapan setiap perubahan terjadi dan dalam urutan apa tidak bisa diketahui. Kedua jenis ini tidak bisa diurungkan dari Histori.
+
+Histori tetap di perangkat ini, tidak pernah disinkronkan, dan tidak termasuk dalam cadangan setelan. Histori dimulai dengan versi ini dan tidak mengetahui perubahan yang dibuat saat ekstensi nonaktif. Ekspor sebagai file JSON (berisi judul dan alamat bookmark), atau hapus; perubahan yang masih perlu ditinjau tetap disimpan.
+
+## Menu klik kanan di pengelola [#right-click-menus-in-the-manager]
+
+Klik kanan baris, atau folder di hierarki folder, untuk perintah yang sama dengan pengelola bookmark Chrome. Klik kanan pada baris yang dipilih berlaku untuk seluruh pilihan; pada baris lain, baris itu dipilih terlebih dahulu. Tombol menu atau <Shortcut id="browser.context_menu" /> membukanya dari keyboard. Tombol ⋯ pada baris membuka menu yang sama untuk baris itu.
+
+- **Edit** (bookmark) atau **Ganti nama** (folder), **Tampilkan di folder** (hasil penelusuran), dan **Lihat Detail**.
+- **Potong**, **Salin**, dan **Tempel**. Salin menaruh URL bookmark di clipboard, satu per baris (dan sebagai link, untuk aplikasi yang menerima teks berformat), sehingga bisa ditempel di aplikasi lain juga. Tempel di menu baris menempel setelah baris itu di folder yang ditampilkan; di menu folder di hierarki, tindakan ini menempel ke dalam folder itu. Item yang disalin ditempel sebagai salinan item sebagaimana adanya saat Anda menempel, termasuk semua isi folder yang disalin; item yang dipotong berpindah saat Anda menempelnya, dan tetap di tempatnya sampai saat itu. Apa yang Anda potong atau salin bisa ditempel di tab pengelola mana pun dan setelah dimuat ulang, sampai browser ditutup; item yang dihapus sejak itu dilewati, dan item yang dipotong tetapi tidak bisa dipindahkan (folder yang ditempel ke dalam dirinya sendiri) tetap dalam keadaan terpotong. Tambahkan bookmark baru melengkapi alamat yang diketik tanpa skema, seperti `example.com/path`, menjadi `https://`. <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" />, dan <Shortcut id="manager.paste" /> melakukan hal yang sama untuk pilihan, dan tempel juga mengubah URL yang disalin di aplikasi lain menjadi bookmark.
+- **Buka di tab baru**, **Buka di jendela baru**, dan **Buka di jendela samaran** (InPrivate di Edge, jendela pribadi di Firefox, yang memerlukan ekstensi diizinkan di jendela pribadi). Untuk beberapa item atau folder, perintahnya menjadi **Buka semua (12)** dan membuka bookmark dalam pilihan serta yang langsung ada di dalam foldernya, bukan di subfolder. Lebih dari 15 tab akan ditanyakan terlebih dahulu.
+- **Salin link ke folder ini** dan **Salin ID Bookmark**, serta **Hapus**.
+
+Klik kanan ruang kosong di tabel, atau buka **Atur** (⋮) di header, untuk **Tambahkan bookmark baru** atau **Tambahkan folder baru** di akhir folder yang ditampilkan, atau untuk **Tempel**. **Atur** juga memiliki **Urutkan menurut nama**, yang mengubah urutan folder di browser itu sendiri: folder lebih dulu, lalu menurut nama, dalam urutan alami (`2` sebelum `10`). Seperti setiap perubahan di pengelola, <Shortcut id="manager.undo" /> mengurungkannya.

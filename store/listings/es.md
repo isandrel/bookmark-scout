@@ -134,7 +134,7 @@ PARA DESARROLLADORES
 ACTUALIZACIÓN DESDE UNA VERSIÓN ANTERIOR
 La versión 0.3.3 guarda sus datos en un formato nuevo y no convierte los datos anteriores: la configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y las claves de API, y se borran los prompts personalizados, las búsquedas guardadas, las etiquetas, los resúmenes y los iconos de sitios guardados. Tus marcadores no se modifican.
 
-Creado por un desarrollador independiente: sin empresa, sin anuncios y sin cuenta. Disponible en 9 idiomas. Temas claro, oscuro y del sistema.
+Creado por un desarrollador independiente: sin empresa, sin anuncios y sin cuenta. Disponible en 12 idiomas. Temas claro, oscuro y del sistema.
 
 Documentación: https://docs.bookmark-scout.com
 ```
@@ -198,7 +198,7 @@ PARA DESARROLLADORES
 ACTUALIZACIÓN DESDE UNA VERSIÓN ANTERIOR
 La versión 0.3.3 guarda sus datos en un formato nuevo y no convierte los datos anteriores: la configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y las claves de API, y se borran los prompts personalizados, las búsquedas guardadas, las etiquetas, los resúmenes y los iconos de sitios guardados. Tus marcadores no se modifican.
 
-Creado por un desarrollador independiente: sin empresa, sin anuncios y sin cuenta. Disponible en 9 idiomas. Temas claro, oscuro y del sistema.
+Creado por un desarrollador independiente: sin empresa, sin anuncios y sin cuenta. Disponible en 12 idiomas. Temas claro, oscuro y del sistema.
 ```
 
 ## What's new in 0.3.3

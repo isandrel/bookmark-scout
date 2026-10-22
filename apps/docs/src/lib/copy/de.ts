@@ -59,9 +59,12 @@ export const de: DocsCopy = {
     es: "Spanisch",
     fr: "Französisch",
     "pt-BR": "brasilianisches Portugiesisch",
+    ru: "Russisch",
+    id: "Indonesisch",
     de: "Deutsch",
     ja: "Japanisch",
     ko: "Koreanisch",
+    it: "Italienisch",
     "zh-TW": "traditionelles Chinesisch",
   },
 

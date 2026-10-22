@@ -32,12 +32,12 @@ file = "LICENSE"
 # setting. The rule is most speakers first, with English first as the source language: a new
 # language goes in by its speaker count, at the same place in both lists. Approximate total
 # speakers (Ethnologue-style 2025 estimates): English ~1.5B; Mandarin (Simplified Chinese) ~1.2B;
-# Spanish ~560M; French ~310M; Portuguese ~265M; German ~135M; Japanese ~125M; Korean ~82M;
-# Traditional Chinese readers (Taiwan and Hong Kong) ~30M.
+# Spanish ~560M; French ~310M; Portuguese ~265M; Russian ~255M; Indonesian ~250M; German ~135M;
+# Japanese ~125M; Korean ~82M; Italian ~68M; Traditional Chinese readers (Taiwan and Hong Kong) ~30M.
 [locales]
 default   = "en"
-supported = ["en", "zh-CN", "es", "fr", "pt-BR", "de", "ja", "ko", "zh-TW"]
-extension = ["en", "zh-CN", "es", "fr", "pt-BR", "de", "ja", "ko", "zh-TW"]
+supported = ["en", "zh-CN", "es", "fr", "pt-BR", "ru", "id", "de", "ja", "ko", "it", "zh-TW"]
+extension = ["en", "zh-CN", "es", "fr", "pt-BR", "ru", "id", "de", "ja", "ko", "it", "zh-TW"]
 
 # Each language's own name, for language switchers.
 [locales.names]
@@ -46,9 +46,12 @@ en = "English"
 es = "Español"
 fr = "Français"
 "pt-BR" = "Português (Brasil)"
+ru = "Русский"
+id = "Bahasa Indonesia"
 de = "Deutsch"
 ja = "日本語"
 ko = "한국어"
+it = "Italiano"
 "zh-TW" = "繁體中文"
 
 # Open Graph locale codes.
@@ -58,9 +61,12 @@ en = "en_US"
 es = "es_ES"
 fr = "fr_FR"
 "pt-BR" = "pt_BR"
+ru = "ru_RU"
+id = "id_ID"
 de = "de_DE"
 ja = "ja_JP"
 ko = "ko_KR"
+it = "it_IT"
 "zh-TW" = "zh_TW"
 
 [browsers]

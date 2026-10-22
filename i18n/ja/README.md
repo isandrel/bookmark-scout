@@ -4,9 +4,12 @@
   <a href="../es/README.md" lang="es" hreflang="es">Español</a> ·
   <a href="../fr/README.md" lang="fr" hreflang="fr">Français</a> ·
   <a href="../pt-BR/README.md" lang="pt-BR" hreflang="pt-BR">Português (Brasil)</a> ·
+  <a href="../ru/README.md" lang="ru" hreflang="ru">Русский</a> ·
+  <a href="../id/README.md" lang="id" hreflang="id">Bahasa Indonesia</a> ·
   <a href="../de/README.md" lang="de" hreflang="de">Deutsch</a> ·
   <strong lang="ja">日本語</strong> ·
   <a href="../ko/README.md" lang="ko" hreflang="ko">한국어</a> ·
+  <a href="../it/README.md" lang="it" hreflang="it">Italiano</a> ·
   <a href="../zh-TW/README.md" lang="zh-TW" hreflang="zh-TW">繁體中文</a>
 </p>
 
@@ -50,7 +53,7 @@
 - ✨ **AI の提案は任意。** 自分の AI アカウント、または Chrome に組み込まれた AI など自分のパソコンで動く無料の AI モデルを使って、AI にフォルダを選ばせることもできます。AI は自分でオンにするまでオフのままです。
 - 🔒 **プライバシーを重視した設計。** アカウント、広告、トラッキングはなく、開発者には何も届きません。保存と検索はオフラインでも使えます。
 
-🌍 対応言語: English · 简体中文 · Español · Français · Português (Brasil) · Deutsch · 日本語 · 한국어 · 繁體中文
+🌍 対応言語: English · 简体中文 · Español · Français · Português (Brasil) · Русский · Bahasa Indonesia · Deutsch · 日本語 · 한국어 · Italiano · 繁體中文
 
 ## 📦 インストール
 

@@ -1,0 +1,111 @@
+{
+    "supportPage": {
+        "meta": {
+            "title": "Assistenza",
+            "description": "Ricevi aiuto per Bookmark Scout: risposte ai problemi più comuni, come segnalare un bug e a quali indirizzi scrivere per assistenza, privacy e sicurezza."
+        },
+        "title": "Assistenza",
+        "intro": "La maggior parte delle risposte si trova nella documentazione e nelle domande frequenti. Per tutto il resto, scrivici un'email. Se qualcosa non funziona, puoi anche segnalarlo pubblicamente su GitHub.",
+        "sections": {
+            "start-here": {
+                "title": "Inizia da qui",
+                "items": {
+                    "docs": {
+                        "title": "Leggi la documentazione",
+                        "body": "Installazione per ogni browser, guide alle funzioni e la spiegazione di ogni impostazione."
+                    },
+                    "faq": {
+                        "title": "Consulta le domande frequenti",
+                        "body": "Risposte brevi su dove vanno i tuoi dati, se ti serve l'IA e cosa funziona in Firefox."
+                    }
+                }
+            },
+            "common-problems": {
+                "title": "Problemi comuni",
+                "items": {
+                    "firefoxRestart": {
+                        "q": "Bookmark Scout scompare quando riavvio Firefox",
+                        "a": [
+                            "La versione per Firefox arriverà presto su Firefox Add-ons. Fino ad allora, Bookmark Scout installato manualmente funziona in Firefox come componente aggiuntivo temporaneo, e Firefox rimuove i componenti aggiuntivi temporanei al riavvio.",
+                            "Caricalo di nuovo dopo un riavvio: apri <code>about:debugging#/runtime/this-firefox</code>, fai clic su Carica componente aggiuntivo temporaneo e seleziona il file <code>manifest.json</code> nella cartella estratta."
+                        ]
+                    },
+                    "firefoxManager": {
+                        "q": "Non trovo la gestione preferiti in Firefox",
+                        "a": [
+                            "Firefox non consente alle estensioni di sostituire la sua pagina dei segnalibri, quindi la gestione preferiti di Bookmark Scout non si apre dal menu dei segnalibri di Firefox.",
+                            "Fai clic su Apri gestione preferiti (l'icona dei libri) in alto nel popup della barra degli strumenti. La gestione preferiti si apre in una nuova scheda, con la barra laterale Strumenti, le ricerche salvate e l'importazione ed esportazione."
+                        ]
+                    },
+                    "firefoxIcons": {
+                        "q": "In Firefox mancano le icone dei siti",
+                        "a": [
+                            "Bookmark Scout mostra le icone memorizzate nella cache del browser, che Chrome ed Edge condividono con le estensioni e Firefox no. Per lo stesso motivo, in Chrome ed Edge i siti che non hai visitato di recente possono mostrare un globo generico.",
+                            "Esegui Aggiorna icone dei siti nella barra laterale Strumenti della gestione preferiti per scaricare l'icona di ogni sito. Le icone salvate restano su questo dispositivo. In Firefox, apri la gestione preferiti con Apri gestione preferiti nel popup della barra degli strumenti."
+                        ]
+                    },
+                    "quickSave": {
+                        "q": "La scorciatoia di salvataggio rapido non fa nulla",
+                        "a": [
+                            "Se un'altra estensione usa già {{SHORTCUT:commands.quick-save}} o {{SHORTCUT:commands.ai-quick-save}}, il browser lascia la scorciatoia di Bookmark Scout senza tasti e il popup mostra Scorciatoia di salvataggio rapido non impostata. Fai clic su Configurala, oppure apri Impostazioni, poi Salvataggio e ricerca, poi Scorciatoie da tastiera, e scegli altri tasti.",
+                            "Alcune pagine, come le pagine del browser stesso e lo store delle estensioni, non consentono alle estensioni di mostrarvi nulla. Lì l'icona nella barra degli strumenti indica se la pagina è stata salvata, e il popup offre Annulla."
+                        ]
+                    },
+                    "dataReset": {
+                        "q": "Dopo un aggiornamento le mie impostazioni sono sparite",
+                        "a": [
+                            "Un aggiornamento ha spostato i dati salvati di Bookmark Scout in un nuovo formato e ha rimosso i dati precedenti invece di convertirli. Le impostazioni sono tornate ai valori predefiniti, i servizi IA e le chiavi API vanno aggiunti di nuovo, e prompt personalizzati, ricerche salvate, tag, riassunti e icone dei siti salvate non ci sono più. I tuoi preferiti non sono stati toccati.",
+                            "Se prima dell'aggiornamento hai salvato le impostazioni con Esegui il backup delle impostazioni, in fondo alle Impostazioni, usa Ripristina le impostazioni nello stesso punto per recuperarle."
+                        ]
+                    },
+                    "websiteAccess": {
+                        "q": "Controlla link non funzionanti, Recupero metadati o Aggiorna icone dei siti non hanno analizzato nulla",
+                        "a": [
+                            "Questi strumenti richiedono l'accesso ai siti web, che Bookmark Scout non ottiene all'installazione. Il browser lo chiede la prima volta che li esegui e, se rifiuti, non viene analizzato nulla.",
+                            "Esegui di nuovo lo strumento e consenti l'accesso quando il browser lo chiede."
+                        ]
+                    },
+                    "aiSetup": {
+                        "q": "Le funzioni IA mancano o non rispondono",
+                        "a": [
+                            "L'IA è facoltativa e disattivata per impostazione predefinita. Per usarla, attivala nelle Impostazioni alla voce IA, scegli la tua azienda di IA e incolla lì la chiave del tuo account; la guida all'IA nella documentazione spiega dove trovarla. Un programma di IA gratuito sul tuo computer, come Ollama, non richiede alcuna chiave.",
+                            "Fai clic su Verifica servizio per provare la connessione. La prima volta, il browser chiede l'accesso al sito di quel provider; consentilo, così l'estensione può raggiungere il provider."
+                        ]
+                    }
+                }
+            },
+            "report-a-bug": {
+                "title": "Segnala un bug",
+                "body": "Invia i dettagli via email a {supportEmail}. Se hai un account GitHub, puoi invece aprire una segnalazione pubblica, dove chiunque può seguire la correzione; cerca prima tra le segnalazioni esistenti, nel caso qualcuno l'abbia già fatta.",
+                "emailButton": "Scrivi all'assistenza",
+                "button": "Apri una segnalazione su GitHub",
+                "includeTitle": "Una segnalazione utile include",
+                "include": {
+                    "browser": "Il tuo browser e la sua versione (Chrome, Edge o Firefox).",
+                    "version": "La versione di Bookmark Scout, indicata nella pagina delle estensioni del browser.",
+                    "steps": "I passaggi che portano al problema, a partire da dove hai aperto Bookmark Scout: il popup, il riquadro laterale o la gestione preferiti.",
+                    "result": "Cosa ti aspettavi e cosa è successo invece, compreso qualsiasi messaggio di errore.",
+                    "screenshot": "Uno screenshot, se aiuta, con i preferiti privati nascosti."
+                },
+                "privacyNote": "Le segnalazioni su GitHub sono pubbliche. Non incollare mai una chiave API e ometti i titoli o gli URL dei preferiti che non vuoi far vedere ad altri."
+            },
+            "email": {
+                "title": "Email",
+                "channels": {
+                    "support": {
+                        "title": "Aiuto con l'estensione",
+                        "body": "Domande sull'installazione o sull'uso di Bookmark Scout che preferisci non pubblicare."
+                    },
+                    "privacy": {
+                        "title": "Domande e richieste sulla privacy",
+                        "body": "Domande su come vengono trattati i tuoi dati. L'<privacyPolicy>informativa sulla privacy</privacyPolicy> spiega cosa fanno con i dati l'estensione e i siti web."
+                    },
+                    "security": {
+                        "title": "Vulnerabilità di sicurezza",
+                        "body": "Segnala qui le vulnerabilità in privato, non in una segnalazione pubblica. Consulta <securityPolicy>SECURITY.md</securityPolicy> e <securityTxt>security.txt</securityTxt>."
+                    }
+                }
+            }
+        }
+    }
+}

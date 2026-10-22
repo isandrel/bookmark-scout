@@ -1,0 +1,38 @@
+---
+title: Browser supportati
+description: Cosa funziona in Chrome, Microsoft Edge e Firefox, dove trovarlo per ciascuno e perché Safari non è supportato.
+---
+
+Bookmark Scout funziona al meglio in Chrome, dove è disponibile nel Chrome Web Store. Edge ha le stesse funzioni, salvo dove indicato più avanti. Firefox ne ha qualcuna in meno, perché consente alle estensioni di fare meno cose con i segnalibri. Tutti e tre funzionano su un computer; telefoni e tablet non sono supportati.
+
+## Dove trovarlo [#where-to-get-it]
+
+<StoreAvailability />
+
+Dove uno store non elenca ancora Bookmark Scout, puoi [installarlo a mano](/installation#install-from-a-github-release). Il materiale per le schede degli store è preparato nella <RepoLink tree="store">cartella `store/`</RepoLink> del repository, e ogni store esamina un'estensione prima di pubblicarla.
+
+## Cosa funziona e dove [#feature-matrix]
+
+Questa tabella deriva dai manifest dell'estensione compilata per ciascun browser e dai controlli sul browser presenti nel suo codice.
+
+| Funzione | Chrome | Edge | Firefox |
+| --- | --- | --- | --- |
+| Popup della barra degli strumenti con ricerca e salvataggio | Sì | Sì | Sì |
+| Scorciatoie di salvataggio rapido con una notifica nella pagina | Sì. Cambia i tasti in `chrome://extensions/shortcuts`, dove puoi anche assegnare al salvataggio rapido <Shortcut id="browser.bookmark_page" /> | Sì. Cambia i tasti in `edge://extensions/shortcuts`, anche <Shortcut id="browser.bookmark_page" /> | Sì. Cambia i tasti nelle Impostazioni di Bookmark Scout o in **Gestisci scorciatoie estensioni** di Firefox. Firefox riserva per sé <Shortcut id="browser.bookmark_page" /> e <Shortcut id="browser.bookmark_all_tabs" /> |
+| Riquadro laterale | Sì | Sì | Sì, nella barra laterale di Firefox: scegli Bookmark Scout nella barra laterale |
+| Gestione preferiti e barra laterale Strumenti | Sostituisce la pagina dei preferiti del browser e si apre da **Apri gestione preferiti** nel popup e nel riquadro laterale | Si apre da **Apri gestione preferiti**. Non è stato verificato se Edge applica la sostituzione anche alla sua pagina Preferiti. | Si apre da **Apri gestione preferiti** nel popup. Firefox non può sostituire la propria pagina dei segnalibri. |
+| Ricerche salvate, strumenti di manutenzione, importazione ed esportazione, statistiche, strumenti IA della gestione preferiti | Sì | Sì | Sì, nella gestione preferiti. I test automatici coprono importazione, esportazione e report; gli altri strumenti sono verificati a mano. |
+| Pagina delle impostazioni | Sì | Sì | Sì |
+| Chiedi all'IA e gli altri strumenti IA | Sì | Sì | Sì, dopo che hai accettato di condividere i dati con il tuo provider IA |
+| IA integrata, gratuita sul tuo computer, per i suggerimenti di cartelle | Sì, Chrome 138 o versioni successive su un computer in grado di eseguire il modello di Chrome | Solo se Edge offre la stessa IA integrata; non verificato | No: Firefox non ha un'IA integrata |
+| Agenti IA locali tramite `bookmark-scout-mcp` (per sviluppatori) | Sì | Sì | Sì; `bookmark-scout-mcp install` lo registra anche in Firefox. Non coperto dai test automatici |
+| Apertura in una finestra di navigazione in incognito dalla gestione preferiti | Sì | Sì, come finestra InPrivate | Sì, come finestra anonima, quando l'estensione è consentita nelle finestre anonime |
+| Menu contestuale per salvare i link | Sì, dopo aver attivato **Menu contestuale** (chiede l'autorizzazione) | Uguale | Sì, dopo aver attivato **Menu contestuale** |
+| Icone dei siti accanto ai preferiti | Icone salvate con **Aggiorna icone dei siti** e, dopo aver attivato **Usa la cache delle icone del browser**, dalla cache delle icone del browser | Uguale | Solo le icone salvate con **Aggiorna icone dei siti**, che si esegue nella gestione preferiti. Firefox non offre alle estensioni un'API per le favicon, quindi gli altri preferiti mostrano un'icona generica. |
+| Accesso facoltativo ai siti web per il controllo dei link non funzionanti, il recupero dei titoli e l'aggiornamento delle icone dei siti | Richiesto quando esegui lo strumento | Uguale | Uguale |
+
+La copertura dei test automatici per ciascun browser è descritta in [Stato del progetto](/status#what-is-tested-in-each-browser).
+
+## Safari [#safari]
+
+Safari non è supportato. Le Safari Web Extensions non implementano l'API `bookmarks`, da cui dipende ogni parte di Bookmark Scout.

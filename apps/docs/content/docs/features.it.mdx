@@ -1,0 +1,97 @@
+---
+title: Funzioni
+description: Tutto ciò che Bookmark Scout fa oggi, per area, con i link alla guida per ciascuna attività.
+---
+
+Un elenco di riferimento di ciò che è disponibile ora. Per le istruzioni passo passo, segui la guida indicata in ogni sezione. Ciò che è parziale o pianificato è in [Stato del progetto](/status), e ciò che funziona in ciascun browser è in [Browser supportati](/browser-support).
+
+## Dove funziona [#where-it-runs]
+
+| Superficie | Che cos'è |
+| --- | --- |
+| Popup | Il pulsante nella barra degli strumenti: ricerca, albero delle cartelle, salvataggio e cartelle suggerite dall'IA |
+| Riquadro laterale | La stessa vista nel riquadro laterale del browser (la barra laterale in Firefox), che resta aperta mentre navighi |
+| Gestione preferiti | Sostituisce la pagina dei preferiti del browser in Chrome ed Edge: albero delle cartelle, percorso di navigazione, una tabella dei preferiti e la barra laterale **Strumenti**. In una finestra stretta, l'albero delle cartelle e **Strumenti** si aprono sopra la tabella; un percorso di cartelle profondo raccoglie le cartelle intermedie in un menu **…** |
+| Impostazioni | La pagina delle impostazioni dell'estensione: prima **Essenziali**, poi altre undici schede in **Avanzate**. Vedi [Impostazioni](/settings) |
+| Qualsiasi pagina | <Shortcut id="commands.quick-save" /> e <Shortcut id="commands.ai-quick-save" /> salvano rapidamente la pagina che stai visitando, con una notifica nella pagina |
+| Menu contestuale | **Salva preferito in...** su qualsiasi link, dopo aver attivato **Menu contestuale** |
+
+## Trovare [#find]
+
+- Cerca nei titoli e negli URL mentre digiti, con le opzioni maiuscole/minuscole, parola intera e ricerca per modello (espressione regolare) in **Altre opzioni di ricerca**, e con le corrispondenze evidenziate. Le cartelle corrispondenti si aprono automaticamente.
+- Ricerche recenti su questo dispositivo, che puoi cancellare o disattivare.
+- Filtri della tabella nella gestione preferiti per titolo, URL, tipo, cartella, dominio e data di aggiunta, con ordinamento per qualsiasi colonna.
+- Ricerche salvate: insiemi di filtri con un nome, valutati sui tuoi preferiti ogni volta che li apri. Fino a 50, conservati su questo dispositivo.
+
+Guida: [Ricerca e ricerche salvate](/guides/search).
+
+## Salvare e organizzare [#save-and-organize]
+
+- Salva la pagina corrente in qualsiasi cartella, mai due volte nella stessa cartella, con un pannello **Recenti** delle cartelle che hai usato.
+- Digita parte del nome di una cartella, o un percorso come `work/react`, e salva in una delle cartelle corrispondenti elencate sopra i risultati.
+- Salvataggio rapido con <Shortcut id="commands.quick-save" /> su qualsiasi pagina, nella cartella più adatta alla pagina (classificata sul tuo dispositivo), nell'ultima cartella usata o in una cartella che scegli tu; <Shortcut id="commands.ai-quick-save" /> salva nel primo suggerimento dell'IA. Una notifica nella pagina offre **Annulla** e altre cartelle in **Sposta in**. In Chrome ed Edge puoi assegnare al salvataggio rapido <Shortcut id="browser.bookmark_page" />.
+- Salva i link dal menu contestuale in una cartella recente o nella Barra dei preferiti.
+- Crea cartelle, trascina preferiti e cartelle e spostane diversi insieme nella gestione preferiti.
+- Mostra i preferiti nell'ordine del browser (quello predefinito), per data di aggiunta, in ordine alfabetico naturale o con le cartelle per prime, senza cambiare l'ordine salvato nel browser.
+- Modifica nomi e URL e aggiungi tag e un riassunto in **Dettagli preferito**.
+- Elimina con una conferma facoltativa e un annullamento di 10 secondi che ripristina tutto il contenuto di una cartella.
+- Nella gestione preferiti, ridimensiona le colonne della tabella trascinandole o con i tasti freccia; **Ripristina vista** riporta il layout iniziale.
+- L'indirizzo della gestione preferiti indica la cartella o la ricerca (`?id=`, `?q=`), quindi **Indietro**, **Avanti** e i link salvati nei preferiti funzionano, i link alle cartelle di Chrome si aprono e **Copia link a questa cartella** ne copia uno.
+- Quando Chrome conserva i preferiti sia nel tuo Account Google sia solo su questo dispositivo, l'albero delle cartelle della gestione preferiti li mostra in due sezioni, come fa Chrome.
+- **Apri i link in** sceglie se i link su cui fai clic si aprono in una nuova scheda, in una scheda in background o nella scheda corrente.
+
+Guida: [Salvare e organizzare](/guides/save-and-organize).
+
+## Ripulire [#clean-up]
+
+- **Pulizia duplicati**: trova i duplicati con criteri di corrispondenza configurabili e rimuove le copie in più dopo una revisione, con annullamento.
+- **Pulizia URL**: rimuove i parametri di tracciamento come `utm_source` dopo un'anteprima.
+- **Regole intelligenti**: regole che scrivi come ricerche, ad esempio `domain:github.com`, che aggiungono tag e spostano i preferiti in una cartella dopo una revisione, con annullamento. Vedi [Aggiungere tag e spostare con le Regole intelligenti](/guides/clean-up#tag-and-move-with-smart-rules).
+- **Controlla link non funzionanti**: separa i link sicuramente non funzionanti da quelli da controllare a mano, e li ripara eliminandoli, seguendo un reindirizzamento, usando un link della Wayback Machine o modificando l'URL, con annullamento. Viene eseguito in background, quindi continua anche dopo la chiusura della gestione preferiti, e può essere messo in pausa, ripreso o annullato in **Attività in background**.
+- **Recupero metadati**: suggerisce i titoli a partire dalle pagine online, leggendo solo l'intestazione della pagina, e applica quelli che selezioni. Le descrizioni vengono mostrate per la revisione e mai salvate. Viene eseguito in background, come **Controlla link non funzionanti**.
+- **Aggiorna icone dei siti**: scarica l'icona di ciascun sito web, dopo una revisione, così i preferiti la mostrano anche quando il browser non ne ha una in cache, e anche in Firefox. Le icone restano su questo dispositivo e si possono cancellare. Viene eseguito in background, come **Controlla link non funzionanti**.
+- **Indicizza il testo delle pagine** (disattivato finché non lo attivi): conserva su questo dispositivo il testo leggibile delle pagine che scegli, dopo una revisione, così la ricerca trova le parole al loro interno, con `content:` e `has:content`. Vedi [Cercare all'interno delle pagine](/guides/clean-up#search-inside-pages).
+- **Recupera copertine** (disattivato finché non lo attivi): conserva su questo dispositivo una piccola copia dell'immagine di anteprima indicata da ciascuna pagina, dopo una revisione, e i **Riquadri** della gestione preferiti la mostrano. Vedi [Mostrare le copertine nei riquadri](/guides/clean-up#show-covers-on-cards).
+- **Controllo privacy**: segnala gli URL, e facoltativamente i titoli, che contengono token, parametri sensibili, indirizzi email o UUID.
+- **Statistiche dei preferiti**: domini e cartelle principali, protocolli, duplicati e profondità delle cartelle, per una cartella o per tutti i preferiti.
+
+Guide: [Ripulire duplicati e URL di tracciamento](/guides/clean-up) e [Trovare e riparare i link non funzionanti](/guides/dead-links).
+
+## Importazione ed esportazione [#import-and-export]
+
+- Esporta in HTML, JSON, Markdown o CSV, con una revisione della privacy che può oscurare i valori sensibili nel file.
+- Importa file HTML o JSON dopo un'anteprima della cartella di destinazione, dei conteggi e dei duplicati, con annullamento.
+- Le esportazioni JSON conservano i tag e il riassunto di ogni preferito, e l'importazione di un file del genere li ripristina.
+- Esegui il backup in un file JSON delle impostazioni dell'estensione, dei prompt personalizzati, dei servizi IA (senza chiavi API), delle ricerche salvate e delle colonne della tabella della gestione preferiti, e ripristinali.
+
+Guida: [Importazione ed esportazione](/guides/import-export).
+
+## Strumenti IA (facoltativi) [#ai-tools-optional]
+
+Disattivati per impostazione predefinita. Usa la tua chiave per OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter o circa altri 200 provider del catalogo models.dev, oppure usa Ollama, CLIProxyAPI o qualsiasi endpoint compatibile con OpenAI. In Chrome, **IA integrata** suggerisce cartelle gratuitamente con il modello di Chrome, sul tuo computer e senza chiave.
+
+- Cartelle suggerite nel popup, incluso un nuovo percorso di cartella da rivedere, e la scorciatoia di salvataggio rapido <Shortcut id="commands.ai-quick-save" />.
+- **Chiedi all'IA** nel popup e nel riquadro laterale: risponde alle domande cercando tra preferiti, cartelle, tag e riassunti, trovando i duplicati e controllando i link; salva le pagine e propone spostamenti, ridenominazioni, eliminazioni e nuove cartelle come un piano che non modifica nulla finché non lo approvi, con ogni modifica annullabile; e conclude le risposte con pulsanti per i passaggi successivi. **Cosa può fare Chiedi all'IA** nelle Impostazioni disattiva qualsiasi consultazione o modifica.
+- **Tag automatici** e **Riassunti dei contenuti** per la cartella corrente, salvati solo dopo la tua revisione, con annullamento.
+- **Riorganizzazione cartelle con IA**, con anteprima prima di qualsiasi spostamento, con annullamento.
+- **Pacchetto contesto IA**, che esporta i preferiti in Markdown o XML per una chat con un'IA e funziona anche con l'IA disattivata.
+- **Lingua delle risposte IA** sceglie la lingua di tag, riassunti e nomi delle nuove cartelle; **Su di me** dice a ogni funzione IA qualcosa di te; e la libreria dei prompt ti consente di riscrivere il prompt di ogni strumento, con un elenco di segnaposto come `{{today}}` e `{{existingTags}}`.
+
+Tag e riassunti restano su questo dispositivo. Non vengono sincronizzati né sono ricercabili nel popup, ma Chiedi all'IA può consultarli e le esportazioni JSON dei preferiti li includono. Guida: [Configurare gli strumenti IA](/guides/ai-tools).
+
+## Agenti IA locali (facoltativi) [#local-ai-agents-optional]
+
+Disattivati per impostazione predefinita, su ciascun dispositivo. Con **Consenti agli agenti IA locali** attivo, gli agenti IA sul tuo computer, come Claude Code, Codex o Cursor, usano le funzioni di consultazione di Bookmark Scout tramite il programma `bookmark-scout-mcp`, un server MCP che raggiunge l'estensione tramite la messaggistica nativa del browser. Con anche **Consenti modifiche** attivo, possono salvare pagine e proporre modifiche, ognuna delle quali attende la tua approvazione in una finestra di Bookmark Scout e può essere annullata nella gestione preferiti. Per impostazione predefinita, i valori privati in titoli e URL sono nascosti agli agenti.
+
+Guida: [Usare con agenti IA locali](/guides/local-agents).
+
+## Tastiera e lingua [#keyboard-and-language]
+
+- Scorciatoie di salvataggio rapido su qualsiasi pagina, che puoi cambiare nelle impostazioni delle scorciatoie del browser oppure, in Firefox, direttamente nelle Impostazioni di Bookmark Scout.
+- Scorciatoie nel popup e nel riquadro laterale che non usano mai `Ctrl` o `Cmd`, e nella gestione preferiti i tasti della gestione preferiti di Chrome (seleziona tutto, annulla, ripeti, apri in schede), con una finestra di aiuto <Shortcut id="manager.show_help" />. Vedi [Scorciatoie da tastiera](/guides/keyboard-shortcuts).
+- Selezione nella gestione preferiti come in Chrome: clic, `Cmd`+clic (`Ctrl`+clic su Windows e Linux), `Shift`+clic e <Shortcut id="manager.select_all" />; i tasti freccia si spostano nella tabella e nell'albero delle cartelle, che gli screen reader annunciano come albero.
+- Annullamento e ripetizione delle modifiche, degli spostamenti e delle eliminazioni della gestione preferiti con <Shortcut id="manager.undo" /> e <Shortcut id="manager.redo" />, per l'intera sessione del browser.
+- Menu contestuali sulle righe e sulle cartelle della gestione preferiti: taglia, copia e incolla, apri tutto in schede, in una nuova finestra o in una finestra di navigazione in incognito, rinomina ed elimina; più **Ordina per nome** e **Aggiungi nuovo preferito** o **Aggiungi nuova cartella**. **Menu della gestione preferiti** nelle Impostazioni sceglie quali comandi mostrano e in che ordine.
+- Trascinamento nella gestione preferiti come in Chrome: sulle cartelle nella tabella o nell'albero, tra le righe nell'ordine del browser, e link trascinati da altre pagine; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> e <Shortcut id="manager.paste" /> copiano, spostano e incollano.
+- Tema di sistema, chiaro o scuro.
+- Interfaccia in <Languages of="extension" />.
