@@ -1469,6 +1469,42 @@
         "message": "Следующая закладка",
         "description": "Bookmark preview: button (and the right arrow key) that shows the next bookmark of the page, skipping folders"
     },
+    "bookmarks_cardFolderItems": {
+        "message": "Элементов: $1",
+        "description": "Bookmark manager card of a folder (Manager View: Cards): how many items the folder holds directly; $1 is the count"
+    },
+    "bookmarks_cardFolderItems_one": {
+        "message": "$1 элемент",
+        "description": "Bookmark manager card of a folder (Manager View: Cards): how many items the folder holds directly; $1 is the count"
+    },
+    "bookmarks_cardFolderItems_few": {
+        "message": "$1 элемента",
+        "description": "Bookmark manager card of a folder (Manager View: Cards): how many items the folder holds directly; $1 is the count"
+    },
+    "bookmarks_cardFolderItems_many": {
+        "message": "$1 элементов",
+        "description": "Bookmark manager card of a folder (Manager View: Cards): how many items the folder holds directly; $1 is the count"
+    },
+    "bookmarks_cardMoreTags": {
+        "message": "+$1",
+        "description": "Bookmark manager card: the chip after the tags shown, counting the tags left out; $1 is how many"
+    },
+    "bookmarks_cardMoreTagsLabel": {
+        "message": "Ещё тегов: $1 ($2)",
+        "description": "Bookmark manager card: what screen readers and the tooltip say for the \"+N\" tag chip; $1 is how many tags are left out, $2 lists them"
+    },
+    "bookmarks_cardMoreTagsLabel_one": {
+        "message": "Ещё $1 тег: $2",
+        "description": "Bookmark manager card: what screen readers and the tooltip say for the \"+N\" tag chip; $1 is how many tags are left out, $2 lists them"
+    },
+    "bookmarks_cardMoreTagsLabel_few": {
+        "message": "Ещё $1 тега: $2",
+        "description": "Bookmark manager card: what screen readers and the tooltip say for the \"+N\" tag chip; $1 is how many tags are left out, $2 lists them"
+    },
+    "bookmarks_cardMoreTagsLabel_many": {
+        "message": "Ещё $1 тегов: $2",
+        "description": "Bookmark manager card: what screen readers and the tooltip say for the \"+N\" tag chip; $1 is how many tags are left out, $2 lists them"
+    },
     "bookmarks_detailsTitle": {
         "message": "Сведения о закладке",
         "description": "Bookmark details dialog title"

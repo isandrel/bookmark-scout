@@ -30,6 +30,19 @@ facet_badges_max = 2
 # many cards in a row as this allows
 card_min_width_px = 224
 
+# What a card shows under its address. Tags show as chips, at most `card_max_tags` of them, then a
+# "+N" chip for the rest; the summary is cut to `card_summary_lines` lines (the whole text stays in
+# the page for screen readers)
+card_max_tags = 3
+card_summary_lines = 2
+
+# Covers show at this width-to-height ratio (the Open Graph image ratio), on a card and in the
+# preview. A card keeps that room whether or not a cover is stored, so it never changes height when
+# its cover loads; without one, the room shows the site icon (or the folder icon on a folder card)
+# at `card_placeholder_icon_px`
+cover_aspect_ratio = 1.91
+card_placeholder_icon_px = 32
+
 # Column widths in pixels, by column id (src/components/ui/table/columns.tsx). `size` is the
 # starting width and `min_size` the narrowest a user can resize it to; a `fixed` column never
 # resizes. `hide_below_width` hides the column while the table is narrower than that, in pixels.

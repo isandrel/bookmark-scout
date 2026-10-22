@@ -11,6 +11,7 @@ import {
   isCoverCurrent,
   pruneCovers,
   saveCovers,
+  showCoverImage,
 } from '@/lib/cover-store';
 import {
   captureTabCover,
@@ -113,6 +114,57 @@ describe('stored covers', () => {
     expect([...(await getCoverInfos()).keys()]).toEqual(['a']);
     await clearCovers();
     expect(await getCoverSummary()).toEqual({ covers: 0, bytes: 0 });
+  });
+});
+
+describe('a cover shown on a card (Visual Cards V27)', () => {
+  const image = new Blob([new Uint8Array([1, 2, 3])], { type: 'image/png' });
+  let made: string[];
+  let revoked: string[];
+
+  beforeEach(() => {
+    made = [];
+    revoked = [];
+    vi.spyOn(URL, 'createObjectURL').mockImplementation(() => {
+      const url = `blob:cover-${made.length + 1}`;
+      made.push(url);
+      return url;
+    });
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation((url) => {
+      revoked.push(url);
+    });
+  });
+  afterEach(() => vi.restoreAllMocks());
+
+  it('revokes its image when the card goes away', async () => {
+    const show = vi.fn();
+    const stop = showCoverImage(async () => image, show);
+    await vi.waitFor(() => expect(show).toHaveBeenCalledWith('blob:cover-1'));
+    stop();
+    expect(revoked).toEqual(['blob:cover-1']);
+  });
+
+  it('makes no image for a read still running when the card goes away', async () => {
+    let finish: (blob: Blob) => void = () => {};
+    const show = vi.fn();
+    const stop = showCoverImage(() => new Promise<Blob>((resolve) => (finish = resolve)), show);
+    stop();
+    finish(image);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(show).not.toHaveBeenCalled();
+    expect(made).toEqual([]);
+  });
+
+  it('shows nothing without a cover or when the read fails', async () => {
+    const none = vi.fn();
+    showCoverImage(async () => undefined, none);
+    const failed = vi.fn();
+    showCoverImage(async () => Promise.reject(new Error('quota')), failed);
+    await vi.waitFor(() => {
+      expect(none).toHaveBeenCalledWith(undefined);
+      expect(failed).toHaveBeenCalledWith(undefined);
+    });
+    expect(made).toEqual([]);
   });
 });
 

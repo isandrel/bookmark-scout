@@ -1,6 +1,6 @@
 /**
  * Tunables of the bookmark manager table, from config/ui/manager-table.toml: page sizes, column
- * widths, and the save delay, date filter, and filter badge limits.
+ * widths, the save delay, date filter, and filter badge limits, and what the cards view shows.
  */
 import { z } from 'zod';
 import { boundedNumber } from '@/lib/config/bounded';
@@ -31,6 +31,10 @@ const managerTableConfig = readConfig(
       date_filter_months: boundedNumber({ integer: true }),
       facet_badges_max: z.number().int().nonnegative(),
       card_min_width_px: z.number().int().positive(),
+      card_max_tags: z.number().int().positive(),
+      card_summary_lines: z.number().int().positive(),
+      cover_aspect_ratio: z.number().positive(),
+      card_placeholder_icon_px: pixels,
       columns: z.record(z.string(), columnLayoutSchema),
     })
     .refine((config) => config.page_sizes.includes(config.default_page_size), {
@@ -68,6 +72,18 @@ export const FACET_BADGES_MAX = managerTableConfig.facet_badges_max;
 
 /** The narrowest card of the cards view, in pixels. */
 export const CARD_MIN_WIDTH_PX = managerTableConfig.card_min_width_px;
+
+/** Tag chips a card shows before a "+N" chip for the rest. */
+export const CARD_MAX_TAGS = managerTableConfig.card_max_tags;
+
+/** Lines of a bookmark's summary a card shows. */
+export const CARD_SUMMARY_LINES = managerTableConfig.card_summary_lines;
+
+/** Width over height of a cover, and of the room a card keeps for it. */
+export const COVER_ASPECT_RATIO = managerTableConfig.cover_aspect_ratio;
+
+/** The site or folder icon in a card's room for a cover while it has none, in pixels. */
+export const CARD_PLACEHOLDER_ICON_PX = managerTableConfig.card_placeholder_icon_px;
 
 /** Column ids that have a layout in the config. */
 export const CONFIGURED_COLUMN_IDS: readonly string[] = Object.keys(managerTableConfig.columns);

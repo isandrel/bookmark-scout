@@ -193,10 +193,12 @@ export function DataTableToolbar<TData extends RowData>({
   return (
     // The view controls go to their own line when the search needs the room, so nothing overlaps
     // in a narrow window. Filters live in one menu; the ones in use show as chips below.
-    <div className="grid gap-2" data-testid="bookmark-table-toolbar">
+    <div className="grid grid-cols-1 gap-2" data-testid="bookmark-table-toolbar">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex min-w-0 flex-[1_1_32rem] items-center gap-2">
-          <div className="relative min-w-48 max-w-xl flex-1">
+        {/* With large text in a narrow window, Filters goes under the search box, which never
+            grows past the row. */}
+        <div className="flex min-w-0 flex-[1_1_32rem] flex-wrap items-center gap-2">
+          <div className="relative min-w-[min(12rem,100%)] max-w-xl flex-1">
             <Search
               aria-hidden="true"
               className="pointer-events-none absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground"
