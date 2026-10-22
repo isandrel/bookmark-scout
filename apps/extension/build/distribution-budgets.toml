@@ -104,6 +104,8 @@
 # Uncompressed raised on 2026-10-22 (5,602,000 to 5,614,000) for parameter name patterns (the
 # shared matcher and the * help in 9 languages) on top of Duplicate Cleaner's keep choice (#775);
 # Firefox measured 5,603,857 B.
+# Locales raised on 2026-10-22 (1,368,000 to 1,382,000) for the Tools sidebar tabs and their
+# layout setting in 9 languages; Firefox measured 1,371,070 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -125,6 +127,6 @@ raw_bytes = 5_614_000
 javascript = 3_682_000
 css = 84_000
 fonts = 143_000
-locales = 1_368_000
+locales = 1_382_000
 images = 320_000
 other = 28_000
