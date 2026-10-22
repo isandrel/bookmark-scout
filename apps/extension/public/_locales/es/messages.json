@@ -2959,9 +2959,41 @@
         "message": "Aplicando...",
         "description": "Button label while changes are applied"
     },
-    "action_removeDuplicates": {
-        "message": "Quitar duplicados",
-        "description": "Remove duplicates button label"
+    "tools_duplicatesHint": {
+        "message": "Elige el marcador que se conserva en cada grupo. Las copias marcadas se quitan.",
+        "description": "Duplicate Cleaner review: how to choose what to keep and remove"
+    },
+    "tools_duplicatesSelectAll": {
+        "message": "Seleccionar todas las copias sobrantes",
+        "description": "Duplicate Cleaner review: checkbox that checks every copy that is not kept"
+    },
+    "tools_duplicatesSelectGroup": {
+        "message": "Quitar las copias sobrantes de $1",
+        "description": "Duplicate Cleaner review: checkbox for one group; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepLabel": {
+        "message": "Marcador que se conserva para $1",
+        "description": "Duplicate Cleaner review: name of one group's keep choice; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepItem": {
+        "message": "Conservar $1",
+        "description": "Duplicate Cleaner review: radio that keeps this bookmark; $1 is its title"
+    },
+    "tools_duplicatesRemoveItem": {
+        "message": "Quitar $1",
+        "description": "Duplicate Cleaner review: checkbox that removes this copy; $1 is its title"
+    },
+    "tools_duplicatesRemove": {
+        "message": "Quitar",
+        "description": "Duplicate Cleaner review: visible label of the checkbox that removes a copy"
+    },
+    "tools_duplicatesRemoveSelected": {
+        "message": "Quitar $1 duplicados",
+        "description": "Duplicate Cleaner review: button that removes the checked copies; $1 is how many"
+    },
+    "tools_duplicatesRemoveSelected_one": {
+        "message": "Quitar $1 duplicado",
+        "description": "Duplicate Cleaner review: button that removes the checked copies (singular); $1 is how many"
     },
     "stats_totalBookmarks": {
         "message": "Marcadores",

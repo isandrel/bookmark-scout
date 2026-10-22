@@ -209,6 +209,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`checkbox`** (`Checkbox`): a 16px box with a 1px primary line, filled when checked. A partly selected group, such as the table's select-all, is indeterminate and shows a dash, never a check.
 
+**`radio`** (`RadioGroup`, `RadioGroupItem`): a 16px circle with a 1px primary line and an 8px primary dot when chosen, for picking one item in a list, such as the bookmark Duplicate Cleaner keeps in each group. A choice among a few short options is a `SegmentedControl` instead.
+
 **`badge`**: counts and states in a table or result. Neutral badges are `sunken`; semantic badges use their wash with their text color.
 
 **`notice`**: warnings and errors inside dialogs and tool results: an icon, one or two sentences, and an optional action, on the semantic wash with a 1px semantic line.

@@ -113,7 +113,7 @@ export const TOOL_REVIEWS: {
           result={result}
           isRemoving={phase === 'applying'}
           onClose={props.close}
-          onConfirm={() => props.apply()}
+          onConfirm={(groups) => props.apply(groups)}
           notice={notice?.message}
           onUndo={notice?.canUndo ? props.undo : undefined}
         />

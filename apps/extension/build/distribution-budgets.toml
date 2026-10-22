@@ -101,28 +101,30 @@
 # Raised on 2026-10-22 (uncompressed 5,590,000 to 5,602,000, locales 1,355,000 to 1,368,000) for
 # the dead-link review's group filter and batch selection, whose copy in 9 languages adds 7 KB to
 # the locales. Firefox measured 5,589,292 B uncompressed and 1,355,815 B of locales.
-# Uncompressed raised on 2026-10-22 (5,602,000 to 5,614,000) for the shared review list (ReviewList,
-# CategoryTabs, and the dead-link default actions with their settings copy in 9 languages);
-# Firefox measured 5,602,952 B.
+# Raised on 2026-10-22 (ZIP 1,757,000 to 1,767,000, uncompressed 5,602,000 to 5,614,000, javascript
+# 3,682,000 to 3,694,000) for the shared review list (ReviewList, CategoryTabs, TanStack Virtual in
+# the repair review's chunk, and the dead-link default actions with their settings copy in 9
+# languages) on top of Duplicate Cleaner's keep choice (#775). Firefox measured ZIP 1,757,492,
+# 5,602,952 B uncompressed, and 3,684,724 B of JavaScript.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_757_000
+zip_bytes = 1_767_000
 raw_bytes = 5_614_000
 
 [targets.edge]
-zip_bytes = 1_757_000
+zip_bytes = 1_767_000
 raw_bytes = 5_614_000
 
 [targets.firefox]
-zip_bytes = 1_757_000
+zip_bytes = 1_767_000
 raw_bytes = 5_614_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_682_000
+javascript = 3_694_000
 css = 84_000
 fonts = 143_000
 locales = 1_368_000
