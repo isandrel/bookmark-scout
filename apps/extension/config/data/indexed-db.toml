@@ -1,0 +1,7 @@
+# Saving derived data (page text, covers) to IndexedDB. Read by src/lib/storage/indexed-batches.ts.
+
+# Records written in one transaction. When this device's storage for the extension is full, the
+# transaction that hit the limit is rolled back as a whole and the save stops there, so what the
+# earlier transactions wrote is kept and at most this many fewer records than could fit are lost.
+# Smaller is closer to "everything that fits"; larger is faster on a big save.
+save_batch_size = { value = 50, min = 1, max = 1000 }

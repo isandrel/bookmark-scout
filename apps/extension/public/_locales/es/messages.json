@@ -8061,6 +8061,10 @@
         "message": "Página de inicio de sesión ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "Redirigidas ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "Con error ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -8185,6 +8189,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "Parte del texto de las páginas no se guardó",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "Guardadas: $saved$. Sin guardar porque el almacenamiento de la extensión en este dispositivo está lleno: $notSaved$. Libera espacio en disco o elimina el texto de páginas en Configuración y vuelve a indexar.",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -8377,9 +8399,17 @@
         "message": "Sin portada ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "Imagen no utilizable ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "En otro sitio ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "Redirigidas ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "Con error ($1)",
@@ -8425,6 +8455,14 @@
         "message": "La imagen está en $1, al que esta ejecución no tiene acceso.",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "Esta dirección redirige a otra, que no se abre, así que nunca se contacta con un sitio que no hayas permitido. Guarda como marcador la dirección a la que lleva y vuelve a ejecutar la herramienta.",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
+    "tools_readFromAddress": {
+        "message": "Leída desde $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Portadas guardadas",
         "description": "Toast title after saving covers"
@@ -8445,6 +8483,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "Algunas portadas no se guardaron",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "Guardadas: $saved$. Sin guardar porque el almacenamiento de la extensión en este dispositivo está lleno: $notSaved$. Libera espacio en disco o elimina las portadas en Configuración y vuelve a obtenerlas.",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

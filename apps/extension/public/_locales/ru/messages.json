@@ -8641,6 +8641,10 @@
         "message": "Страница входа ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "Перенаправление ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "Ошибка ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -8841,6 +8845,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "Часть текста страниц не сохранена",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "Сохранено: $saved$. Не сохранено, потому что хранилище расширения на этом устройстве заполнено: $notSaved$. Освободите место на диске или удалите текст страниц в настройках, затем проиндексируйте снова.",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -9061,9 +9083,17 @@
         "message": "Нет обложки ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "Непригодное изображение ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "На другом сайте ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "Перенаправление ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "Ошибка ($1)",
@@ -9129,6 +9159,14 @@
         "message": "Изображение находится на $1, а у этого запуска нет доступа к нему.",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "Этот адрес перенаправляет на другой, который не открывается, поэтому сайт, к которому вы не дали доступ, никогда не запрашивается. Добавьте в закладки адрес, на который он ведёт, и запустите инструмент снова.",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
+    "tools_readFromAddress": {
+        "message": "Прочитано с адреса $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Обложки сохранены",
         "description": "Toast title after saving covers"
@@ -9169,6 +9207,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "Часть обложек не сохранена",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "Сохранено: $saved$. Не сохранено, потому что хранилище расширения на этом устройстве заполнено: $notSaved$. Освободите место на диске или удалите обложки в настройках, затем загрузите их снова.",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

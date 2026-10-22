@@ -2,6 +2,11 @@ import { DOMParser as LinkedomParser, parseHTML } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
+  TOOL_DEFINITIONS,
+  type ToolApplyContext,
+} from '@/components/bookmarks/tools/tool-definitions';
+import { setLanguage } from '@/hooks/use-i18n';
+import {
   clearPageTexts,
   getPageTextSummary,
   getPageTexts,
@@ -14,6 +19,8 @@ import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { pageTextReadingSchema } from '@/lib/quick-save-validation';
 import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
+import { saveSettings } from '@/lib/settings-storage';
+import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
 import {
   listPageTextSites,
   readPageTextHtml,
@@ -23,6 +30,7 @@ import {
 } from '@/services/page-text';
 import { handleAIHostRequest } from '@/services/quick-save-ai-runner';
 import type { BookmarkTreeNode } from '@/types';
+import { runOutOfStorageAfter } from './indexeddb-quota';
 
 const tree: BookmarkTreeNode[] = [
   {
@@ -108,6 +116,30 @@ describe('page text store', () => {
       pages: 1,
       chars: PAGE_TEXT_LIMITS.maxCharsPerPage,
     });
+  });
+
+  it('keeps the pages saved before storage ran out, and says how many were not saved', async () => {
+    await savePageTexts([{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'kept' }]);
+    const pages = Array.from({ length: INDEXED_SAVE_BATCH_SIZE * 2 + 3 }, (_, index) => ({
+      bookmarkId: `p${index}`,
+      url: `https://notes.example/${index}`,
+      text: `page ${index}`,
+    }));
+    // Storage runs out in the second batch, which is rolled back as a whole.
+    const full = runOutOfStorageAfter(INDEXED_SAVE_BATCH_SIZE + 1);
+    try {
+      expect(await savePageTexts(pages)).toEqual({
+        saved: INDEXED_SAVE_BATCH_SIZE,
+        notSaved: pages.length - INDEXED_SAVE_BATCH_SIZE,
+      });
+    } finally {
+      full.mockRestore();
+    }
+    const stored = await getPageTexts();
+    expect(stored.size).toBe(INDEXED_SAVE_BATCH_SIZE + 1);
+    expect(stored.has('kept')).toBe(true);
+    expect(stored.has(`p${INDEXED_SAVE_BATCH_SIZE - 1}`)).toBe(true);
+    expect(stored.has(`p${INDEXED_SAVE_BATCH_SIZE}`)).toBe(false);
   });
 
   it('drops the text of bookmarks that are gone, and clears everything', async () => {
@@ -257,6 +289,65 @@ describe('Index Page Text runs', () => {
     ]);
   });
 
+  it('lists a page that redirects as redirected, without requesting where it leads', async () => {
+    const requested: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string, init?: RequestInit) => {
+        requested.push(input);
+        expect(init?.redirect).toBe('manual');
+        if (input === 'https://moved.example/') {
+          return new Response(null, { status: 302, headers: { location: 'http://192.168.1.1/' } });
+        }
+        if (input === 'https://elsewhere.example/') {
+          return new Response(null, {
+            status: 301,
+            headers: { location: 'https://other-site.example/' },
+          });
+        }
+        return new Response(ARTICLE, { status: 200, headers: { 'content-type': 'text/html' } });
+      }),
+    );
+    // The run has access to no other site than the bookmarks' own.
+    vi.spyOn(fakeBrowser.permissions, 'contains').mockResolvedValue(false);
+    const { items } = await scanPageTexts(
+      folder([
+        { id: 'moved', parentId: 'f', title: 'Moved', url: 'https://moved.example/' },
+        { id: 'elsewhere', parentId: 'f', title: 'Away', url: 'https://elsewhere.example/' },
+      ]),
+      { skipPrivateHosts: true },
+    );
+    expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
+      moved: 'redirected',
+      elsewhere: 'redirected',
+    });
+    expect(requested).toEqual(['https://moved.example/', 'https://elsewhere.example/']);
+  });
+
+  it('reads the https: address of a page whose redirect the browser hides, and says so', async () => {
+    const requested: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        requested.push(input);
+        if (input.startsWith('http:')) {
+          // What Chrome and Firefox return to an extension for `redirect: 'manual'`.
+          const opaque = new Response(null, { status: 200 });
+          Object.defineProperty(opaque, 'type', { value: 'opaqueredirect' });
+          Object.defineProperty(opaque, 'status', { value: 0 });
+          return opaque;
+        }
+        return new Response(ARTICLE, { status: 200, headers: { 'content-type': 'text/html' } });
+      }),
+    );
+    const { items } = await scanPageTexts(
+      folder([{ id: 'old', parentId: 'f', title: 'Old link', url: 'http://trip.example/notes' }]),
+      { skipPrivateHosts: true },
+    );
+    expect(items[0]).toMatchObject({ status: 'read', readFrom: 'https://trip.example/notes' });
+    expect(requested).toEqual(['http://trip.example/notes', 'https://trip.example/notes']);
+  });
+
   it('reads a page the background downloaded in the AI host page, cut to the limit it asks for', async () => {
     const maxChars = 40;
     const response = await handleAIHostRequest({
@@ -323,6 +414,40 @@ describe('Index Page Text runs', () => {
     ]);
     expect(saved).toBe(1);
     expect([...(await getPageTexts()).keys()]).toEqual(['read']);
+  });
+
+  it('reports a save cut short by full storage as partial, never as saved', async () => {
+    await saveSettings({ language: 'en' });
+    setLanguage('en');
+    vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockResolvedValue([
+      { id: '0', title: '', syncing: false, children: [] },
+    ]);
+    const picked = ['a', 'b'].map((id) => ({
+      id,
+      title: id,
+      url: `https://${id}.example/`,
+      folderPath: '',
+      status: 'read' as const,
+      text: id,
+    }));
+    const full = runOutOfStorageAfter(0);
+    let outcome: Awaited<ReturnType<NonNullable<typeof TOOL_DEFINITIONS.pageText.apply>>>;
+    try {
+      outcome = await TOOL_DEFINITIONS.pageText.apply?.(
+        { items: picked, overLimit: 0 },
+        picked,
+        {} as ToolApplyContext,
+      );
+    } finally {
+      full.mockRestore();
+    }
+    expect(outcome).toEqual({
+      title: 'Some page text was not saved',
+      description:
+        "Saved: 0. Not saved because this device's storage for the extension is full: 2. " +
+        'Free up disk space or delete page text in Settings, then index again.',
+      variant: 'destructive',
+    });
   });
 });
 

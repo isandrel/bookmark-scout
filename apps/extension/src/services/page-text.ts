@@ -10,10 +10,15 @@
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
+/**
+ * `redirected`: the page sends to another address, which is not requested (`fetchHtmlPage`), so
+ * a redirect never reaches the local network or a site the run has no access to.
+ */
 export type PageTextScanStatus =
   | 'read'
   | 'empty'
   | 'signIn'
+  | 'redirected'
   | 'failed'
   | 'current'
   | 'notChosen'
@@ -24,6 +29,8 @@ export type PageTextScanItem = {
   title: string;
   url: string;
   folderPath: string;
+  /** The address the page was read from, when its own redirected there (`HtmlPage.readFrom`). */
+  readFrom?: string;
   status: PageTextScanStatus;
   /** The page's readable text, for `read` items. */
   text?: string;
@@ -83,14 +90,20 @@ export async function readPageTextItem(
   item: PageTextScanItem,
   options: PageTextScanOptions & { readText: PageTextReader; signal?: AbortSignal },
 ): Promise<void> {
-  const { html, status } = await fetchHtmlPage(item.url, {
+  const { html, status, stopped, readFrom } = await fetchHtmlPage(item.url, {
     timeoutMs: PAGE_TEXT_LIMITS.timeoutMs,
     maxBytes: PAGE_TEXT_LIMITS.maxBytes,
     until: 'end',
-    // A redirect can lead to a local host; that page is not read either.
-    allowUrl: (next) => isReadablePageUrl(next, options.skipPrivateHosts),
+    // Each address, a redirect's target too, is checked before it is requested: never the local
+    // network (when skipped) or a site the run has no access to.
+    allowUrl: (next) => mayRequestFrom(next, item.url, options.skipPrivateHosts),
     ...(options.signal ? { signal: options.signal } : {}),
   });
+  if (stopped) {
+    item.status = 'redirected';
+    return;
+  }
+  if (readFrom) item.readFrom = readFrom;
   let reading: PageTextReading = { status: 'empty' };
   // An answer such as 401 is a sign-in page whatever it shows.
   if (PAGE_TEXT_SIGN_IN.httpStatuses.has(status)) reading = { status: 'signIn' };
@@ -184,11 +197,14 @@ export async function scanPageTexts(
   return { items, overLimit };
 }
 
-/** Saves the text of the pages the review kept, and drops text of bookmarks that are gone. */
+/**
+ * Saves the text of the pages the review kept, and drops text of bookmarks that are gone.
+ * `notSaved` counts pages left out because this device's storage for the extension is full.
+ */
 export async function savePageTextResults(
   items: readonly PageTextScanItem[],
-): Promise<{ saved: number }> {
-  const saved = await savePageTexts(
+): Promise<PageTextSaveResult> {
+  const result = await savePageTexts(
     items.flatMap((item) =>
       item.status === 'read' && item.text
         ? [{ bookmarkId: item.id, url: item.url, text: item.text }]
@@ -196,7 +212,7 @@ export async function savePageTextResults(
     ),
   );
   await prunePageTexts(await fetchBookmarkIds());
-  return { saved };
+  return result;
 }
 
 /** Why the current tab's text was not indexed. */

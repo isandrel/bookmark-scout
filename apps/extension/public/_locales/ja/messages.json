@@ -8033,6 +8033,10 @@
         "message": "ログインページ ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "リダイレクト ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "失敗 ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -8157,6 +8161,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "一部のページ本文を保存できませんでした",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "保存済み: $saved$。このデバイスの拡張機能用ストレージがいっぱいのため未保存: $notSaved$。ディスクの空き容量を増やすか、設定でページ本文を削除してから、もう一度インデックスを作成してください。",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -8349,9 +8371,17 @@
         "message": "カバーなし ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "使えない画像 ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "別のサイト ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "リダイレクト ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "失敗 ($1)",
@@ -8397,6 +8427,14 @@
         "message": "画像は $1 にあり、この実行ではアクセスできません。",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "このアドレスは別のアドレスへリダイレクトしますが、その先は開かないため、許可していないサイトに接続することはありません。リダイレクト先のアドレスをブックマークしてから、もう一度ツールを実行してください。",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
+    "tools_readFromAddress": {
+        "message": "$1 から読み取り",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "カバー画像を保存しました",
         "description": "Toast title after saving covers"
@@ -8417,6 +8455,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "一部のカバー画像を保存できませんでした",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "保存済み: $saved$。このデバイスの拡張機能用ストレージがいっぱいのため未保存: $notSaved$。ディスクの空き容量を増やすか、設定でカバー画像を削除してから、もう一度取得してください。",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

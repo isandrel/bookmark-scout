@@ -13,6 +13,8 @@ const httpConfig = readConfig(
     class_size: z.number().int().positive(),
     class_label_suffix: z.string().min(1),
     null_body: z.array(status),
+    redirect: z.array(status).min(1),
+    opaque: status,
     named: z.strictObject({ bad_request: status, forbidden: status }),
   }),
 );
@@ -23,16 +25,24 @@ export const HTTP_STATUS = {
   serverErrorMin: httpConfig.server_error_min,
   badRequest: httpConfig.named.bad_request,
   forbidden: httpConfig.named.forbidden,
+  /** What fetch reports for a response it hides, such as a redirect it did not follow. */
+  opaque: httpConfig.opaque,
 } as const;
 
 /** Any status a response can have. */
 export const httpStatusCodeSchema = status.min(HTTP_STATUS.min).max(HTTP_STATUS.max);
 
 const NULL_BODY_STATUSES: ReadonlySet<number> = new Set(httpConfig.null_body);
+const REDIRECT_STATUSES: ReadonlySet<number> = new Set(httpConfig.redirect);
 
 /** Whether `status` is a client or server error (4xx or 5xx). */
 export function isHttpErrorStatus(status: number): boolean {
   return status >= httpConfig.error_min;
+}
+
+/** Whether `status` sends the request on to the address in the Location header. */
+export function isRedirectStatus(status: number): boolean {
+  return REDIRECT_STATUSES.has(status);
 }
 
 /** Whether a response with `status` has no body. */

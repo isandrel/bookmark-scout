@@ -8061,6 +8061,10 @@
         "message": "Page de connexion ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "Redirigées ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "Échec ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -8185,6 +8189,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "Une partie du texte des pages n'a pas été enregistrée",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "Enregistrées : $saved$. Non enregistrées, car l'espace de stockage de l'extension sur cet appareil est plein : $notSaved$. Libérez de l'espace disque ou supprimez le texte des pages dans les Paramètres, puis indexez à nouveau.",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -8377,9 +8399,17 @@
         "message": "Aucune couverture ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "Image inutilisable ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "Sur un autre site ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "Redirigées ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "Échec ($1)",
@@ -8425,6 +8455,14 @@
         "message": "L'image est sur $1, auquel cette exécution n'a pas accès.",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "Cette adresse redirige vers une autre, qui n'est pas ouverte : un site que vous n'avez pas autorisé n'est donc jamais contacté. Ajoutez aux favoris l'adresse vers laquelle elle mène, puis relancez l'outil.",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
+    "tools_readFromAddress": {
+        "message": "Lue depuis $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Couvertures enregistrées",
         "description": "Toast title after saving covers"
@@ -8445,6 +8483,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "Certaines couvertures n'ont pas été enregistrées",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "Enregistrées : $saved$. Non enregistrées, car l'espace de stockage de l'extension sur cet appareil est plein : $notSaved$. Libérez de l'espace disque ou supprimez les couvertures dans les Paramètres, puis relancez la récupération.",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

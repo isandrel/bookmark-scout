@@ -213,6 +213,59 @@ test.describe('with website access granted', () => {
     await expect(review.getByTestId('page-text-item')).toHaveText([/Beta/, /Delta/, /Epsilon/]);
   });
 
+  test('a page that redirects is listed as redirected, and where it leads is never requested; an http: page is read from its https: address (S06)', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const seeded = await seedFolder(extensionWorker, 'E2E Page Text Redirect', [
+      { title: 'Trip notes', url: 'https://trip.e2e.invalid/notes' },
+      { title: 'Moved page', url: 'https://moved.e2e.invalid/' },
+      { title: 'Old link', url: 'http://old.e2e.invalid/notes' },
+    ]);
+    // The browser hides this redirect's target; its https: address is the likely one, tried first.
+    const oldRequests: string[] = [];
+    await page.context().route('http://old.e2e.invalid/**', (route) => {
+      oldRequests.push(route.request().url());
+      return route.fulfill({ status: 301, headers: { location: 'https://old.e2e.invalid/notes' } });
+    });
+    // Every request the browser sends to the redirect's target, from any page or the worker.
+    const leaked: string[] = [];
+    await page.context().route('http://192.168.77.1/**', (route) => {
+      leaked.push(route.request().url());
+      return route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE });
+    });
+    await page
+      .context()
+      .route('https://*.e2e.invalid/**', (route) =>
+        route.request().url().startsWith('https://moved.')
+          ? route.fulfill({ status: 302, headers: { location: 'http://192.168.77.1/admin' } })
+          : route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE }),
+      );
+    await setSettings(extensionWorker, { pageTextEnabled: true });
+    await openTools(page, extensionId, seeded.folderId);
+    await toolCard(page, 'Index Page Text')
+      .getByRole('button', { name: 'Index', exact: true })
+      .click();
+    // Every page is on one site, which starts chosen.
+    await page
+      .getByRole('dialog', { name: 'Choose sites to read' })
+      .getByRole('button', { name: 'Start with 1 site' })
+      .click();
+    const review = page.getByRole('dialog', { name: 'Index Page Text' });
+    await expect(review.getByRole('radio', { name: 'Text found (2)' })).toBeVisible();
+    await expect(
+      review.getByTestId('page-text-item').filter({ hasText: 'Old link' }),
+    ).toContainText('Read from https://old.e2e.invalid/notes');
+    expect(oldRequests).toEqual(['http://old.e2e.invalid/notes']);
+    await review.getByRole('radio', { name: 'Redirected (1)' }).click();
+    const moved = review.getByTestId('page-text-item').filter({ hasText: 'Moved page' });
+    await expect(moved).toContainText(
+      'This address redirects to another one, which is not opened, so a site you have not allowed is never contacted. Bookmark the address it leads to, then run the tool again.',
+    );
+    expect(leaked).toEqual([]);
+  });
+
   test("the popup indexes the current tab's text only after its preview is saved (S17)", async ({
     extensionId,
     extensionWorker,

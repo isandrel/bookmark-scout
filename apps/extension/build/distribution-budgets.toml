@@ -177,27 +177,32 @@
 # Raised on 2026-10-22 (uncompressed 6,550,000 to 6,565,000, css 85,000 to 87,000) for tags, a
 # summary, folder item counts, and a fixed cover room on manager cards. Firefox measured
 # 6,553,562 B uncompressed and 85,257 B of CSS on the branch rebased onto 21b6f5a3.
+# Raised on 2026-10-22 (ZIP 1,975,000 to 1,985,000, uncompressed 6,565,000 to 6,590,000, javascript
+# 3,825,000 to 3,835,000, locales 2,172,000 to 2,195,000) for checking every redirect hop, the
+# https: and www. guesses, the Redirected and Unusable image tabs, and partial saves when storage
+# is full. Firefox measured ZIP 1,975,786, 6,576,506 B uncompressed, 3,829,040 B of JavaScript,
+# and 2,185,916 B of locales on the branch rebased onto 16629f38.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 1_975_000
-raw_bytes = 6_565_000
+zip_bytes = 1_985_000
+raw_bytes = 6_590_000
 
 [targets.edge]
-zip_bytes = 1_975_000
-raw_bytes = 6_565_000
+zip_bytes = 1_985_000
+raw_bytes = 6_590_000
 
 [targets.firefox]
-zip_bytes = 1_975_000
-raw_bytes = 6_565_000
+zip_bytes = 1_985_000
+raw_bytes = 6_590_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_825_000
+javascript = 3_835_000
 css = 87_000
 fonts = 143_000
-locales = 2_172_000
+locales = 2_195_000
 images = 320_000
 other = 29_000

@@ -40,11 +40,19 @@ export function IndexTabTextButton({ url }: { url: string }) {
   const save = async () => {
     if (!page) return;
     try {
-      const saved = await savePageTexts(page.pages);
-      toast.success({
-        title: t('toast_pageTextSaved'),
-        description: tPlural('toast_pageTextSavedDesc', saved),
-      });
+      const { saved, notSaved } = await savePageTexts(page.pages);
+      if (notSaved > 0) {
+        // Storage is full: never reported as saved.
+        toast.error({
+          title: t('toast_pageTextPartial'),
+          description: t('toast_pageTextPartialDesc', [String(saved), String(notSaved)]),
+        });
+      } else {
+        toast.success({
+          title: t('toast_pageTextSaved'),
+          description: tPlural('toast_pageTextSavedDesc', saved),
+        });
+      }
     } catch (error) {
       toast.error({ title: t('pageText_tabFailed'), description: getErrorMessage(error) });
     }

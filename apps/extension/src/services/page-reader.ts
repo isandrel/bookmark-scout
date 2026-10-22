@@ -49,6 +49,23 @@ export function isReadablePageUrl(url: string, skipPrivateHosts: boolean): boole
   return !skipPrivateHosts || !isPrivateHost(new URL(url).hostname);
 }
 
+/**
+ * Whether `url` may be requested by a read that started at `fromUrl` (a redirect's target, or an
+ * image a page names): a readable address (`isReadablePageUrl`) on the same site, or on a site
+ * the user gave website access to.
+ */
+export async function mayRequestFrom(
+  url: string,
+  fromUrl: string,
+  skipPrivateHosts: boolean,
+  hasAccess: (site: string) => Promise<boolean> = hasWebSiteAccess,
+): Promise<boolean> {
+  if (!isReadablePageUrl(url, skipPrivateHosts)) return false;
+  const site = getUrlSite(url);
+  if (!site) return false;
+  return site === getUrlSite(fromUrl) || hasAccess(site);
+}
+
 /** The readable text of a parsed page, or undefined when it has none. */
 export async function extractPageText(
   doc: Document,

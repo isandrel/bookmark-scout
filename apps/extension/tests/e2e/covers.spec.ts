@@ -11,6 +11,8 @@ import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 const STORY = `<!doctype html><html><head><title>Story</title>
 <meta property="og:image" content="/images/cover.png"></head><body><p>Story</p></body></html>`;
 const PLAIN = '<!doctype html><html><head><title>Plain</title></head><body></body></html>';
+const headNaming = (image: string) =>
+  `<!doctype html><html><head><meta property="og:image" content="${image}"></head></html>`;
 
 test.describe('with website access granted', () => {
   test.use({ grantWebHostAccess: true });
@@ -83,6 +85,70 @@ test.describe('with website access granted', () => {
       seeded.folderId,
     );
     expect(bookmarks).toHaveLength(3);
+  });
+
+  test('an unusable image and a redirecting page get their own tabs, and the redirect is never followed (V24, V25)', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const seeded = await seedFolder(extensionWorker, 'E2E Covers Problems', [
+      { title: 'Story page', url: 'https://news.e2e.invalid/story' },
+      { title: 'Wrong type', url: 'https://wrongtype.e2e.invalid/' },
+      { title: 'Broken image', url: 'https://broken.e2e.invalid/' },
+      { title: 'Moved page', url: 'https://moved.e2e.invalid/' },
+    ]);
+    const leaked: string[] = [];
+    await page.context().route('http://10.0.0.77/**', (route) => {
+      leaked.push(route.request().url());
+      return route.fulfill({ status: 200, contentType: 'text/html', body: STORY });
+    });
+    await page.context().route('https://*.e2e.invalid/**', async (route) => {
+      const url = new URL(route.request().url());
+      if (url.hostname === 'moved.e2e.invalid') {
+        return route.fulfill({ status: 302, headers: { location: 'http://10.0.0.77/' } });
+      }
+      if (url.pathname === '/images/cover.png') {
+        return route.fulfill({ status: 200, contentType: 'image/png', body: solidPng(1200, 630) });
+      }
+      // An error page where the image should be, and a PNG the browser cannot decode.
+      if (url.pathname === '/images/missing.png') {
+        return route.fulfill({ status: 200, contentType: 'text/html', body: PLAIN });
+      }
+      if (url.pathname === '/images/broken.png') {
+        const broken = Buffer.concat([solidPng(1200, 630).subarray(0, 40), Buffer.alloc(200, 7)]);
+        return route.fulfill({ status: 200, contentType: 'image/png', body: broken });
+      }
+      if (url.hostname === 'wrongtype.e2e.invalid') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'text/html',
+          body: headNaming('/images/missing.png'),
+        });
+      }
+      if (url.hostname === 'broken.e2e.invalid') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'text/html',
+          body: headNaming('/images/broken.png'),
+        });
+      }
+      return route.fulfill({ status: 200, contentType: 'text/html', body: STORY });
+    });
+    await setSettings(extensionWorker, { coversEnabled: true });
+    await openTools(page, extensionId, seeded.folderId);
+    await toolCard(page, 'Fetch Covers')
+      .getByRole('button', { name: 'Fetch', exact: true })
+      .click();
+    const review = page.getByRole('dialog', { name: 'Fetch Covers' });
+    await expect(review.getByRole('radio', { name: 'Cover found (1)' })).toBeVisible();
+    await review.getByRole('radio', { name: 'Unusable image (2)' }).click();
+    await expect(review.getByTestId('cover-item')).toHaveText([/Wrong type/, /Broken image/]);
+    await review.getByRole('radio', { name: 'Redirected (1)' }).click();
+    await expect(review.getByTestId('cover-item').filter({ hasText: 'Moved page' })).toContainText(
+      'This address redirects to another one, which is not opened, so a site you have not allowed is never contacted. Bookmark the address it leads to, then run the tool again.',
+    );
+    expect(leaked).toEqual([]);
   });
 });
 

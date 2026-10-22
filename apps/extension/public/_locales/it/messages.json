@@ -8061,6 +8061,10 @@
         "message": "Pagina di accesso ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "Reindirizzate ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "Non riuscite ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -8185,6 +8189,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "Parte del testo delle pagine non è stata salvata",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "Salvate: $saved$. Non salvate perché lo spazio di archiviazione dell'estensione su questo dispositivo è pieno: $notSaved$. Libera spazio su disco o elimina il testo delle pagine nelle Impostazioni, poi indicizza di nuovo.",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -8377,9 +8399,17 @@
         "message": "Nessuna copertina ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "Immagine non utilizzabile ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "Su un altro sito ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "Reindirizzate ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "Non riuscite ($1)",
@@ -8425,6 +8455,14 @@
         "message": "L'immagine è su $1, a cui questa esecuzione non ha accesso.",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "Questo indirizzo reindirizza a un altro, che non viene aperto, quindi un sito che non hai consentito non viene mai contattato. Aggiungi ai preferiti l'indirizzo a cui porta, poi esegui di nuovo lo strumento.",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
+    "tools_readFromAddress": {
+        "message": "Letta da $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Copertine salvate",
         "description": "Toast title after saving covers"
@@ -8445,6 +8483,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "Alcune copertine non sono state salvate",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "Salvate: $saved$. Non salvate perché lo spazio di archiviazione dell'estensione su questo dispositivo è pieno: $notSaved$. Libera spazio su disco o elimina le copertine nelle Impostazioni, poi recuperale di nuovo.",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

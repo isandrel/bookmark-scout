@@ -7771,6 +7771,10 @@
         "message": "Halaman masuk ($1)",
         "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
+    "tools_pageTextCategory_redirected": {
+        "message": "Dialihkan ($1)",
+        "description": "Index Page Text review tab: pages that redirect to another address, which is not requested; $1 is how many"
+    },
     "tools_pageTextCategory_failed": {
         "message": "Gagal ($1)",
         "description": "Index Page Text review tab: pages that could not be downloaded; $1 is how many"
@@ -7857,6 +7861,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_pageTextPartial": {
+        "message": "Sebagian teks halaman tidak tersimpan",
+        "description": "Toast title when page text could not all be saved because storage is full"
+    },
+    "toast_pageTextPartialDesc": {
+        "message": "Tersimpan: $saved$. Tidak tersimpan karena penyimpanan ekstensi di perangkat ini penuh: $notSaved$. Kosongkan ruang disk atau hapus teks halaman di Setelan, lalu indeks lagi.",
+        "description": "Toast when page text could not all be saved because storage is full; how many pages were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }
@@ -8035,9 +8057,17 @@
         "message": "Tanpa sampul ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
+    "tools_coversCategory_unusable": {
+        "message": "Gambar tidak dapat dipakai ($1)",
+        "description": "Fetch Covers review tab: pages whose named image is not a supported image, is too large, or cannot be decoded; $1 is how many"
+    },
     "tools_coversCategory_elsewhere": {
         "message": "Di situs lain ($1)",
         "description": "Fetch Covers review tab: pages whose image is on a site the run has no access to; $1 is how many"
+    },
+    "tools_coversCategory_redirected": {
+        "message": "Dialihkan ($1)",
+        "description": "Fetch Covers review tab: pages that redirect to another address, which is not requested; $1 is how many"
     },
     "tools_coversCategory_failed": {
         "message": "Gagal ($1)",
@@ -8073,6 +8103,14 @@
         "message": "Gambar ini ada di $1, yang tidak dapat diakses oleh proses ini.",
         "description": "Fetch Covers review: why an image was not downloaded; $1 is the site it is on"
     },
+    "tools_redirectNotFollowedReason": {
+        "message": "Alamat ini mengalihkan ke alamat lain, yang tidak dibuka, sehingga situs yang belum Anda izinkan tidak pernah dihubungi. Tandai alamat tujuannya sebagai bookmark, lalu jalankan alat ini lagi.",
+        "description": "Note under a redirected page in the Index Page Text and Fetch Covers reviews: why it was not read and what to do"
+    },
+    "tools_readFromAddress": {
+        "message": "Dibaca dari $1",
+        "description": "Note under a page in the Index Page Text and Fetch Covers reviews that redirected and was read from the likely address it leads to instead; $1 is that address"
+    },
     "toast_coversSaved": {
         "message": "Sampul disimpan",
         "description": "Toast title after saving covers"
@@ -8083,6 +8121,24 @@
         "placeholders": {
             "count": {
                 "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_coversPartial": {
+        "message": "Sebagian sampul tidak tersimpan",
+        "description": "Toast title when covers could not all be saved because storage is full"
+    },
+    "toast_coversPartialDesc": {
+        "message": "Tersimpan: $saved$. Tidak tersimpan karena penyimpanan ekstensi di perangkat ini penuh: $notSaved$. Kosongkan ruang disk atau hapus sampul di Setelan, lalu ambil lagi.",
+        "description": "Toast when covers could not all be saved because storage is full; how many covers were saved and how many were not",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "notSaved": {
+                "content": "$2",
                 "example": "2"
             }
         }

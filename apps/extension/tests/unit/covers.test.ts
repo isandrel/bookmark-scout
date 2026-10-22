@@ -2,6 +2,11 @@ import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
+  TOOL_DEFINITIONS,
+  type ToolApplyContext,
+} from '@/components/bookmarks/tools/tool-definitions';
+import { setLanguage } from '@/hooks/use-i18n';
+import {
   COVER_LIMITS,
   type CoverImage,
   clearCovers,
@@ -13,13 +18,11 @@ import {
   saveCovers,
   showCoverImage,
 } from '@/lib/cover-store';
-import {
-  captureTabCover,
-  findCoverUrls,
-  mayFetchCover,
-  saveCoverResults,
-  scanCovers,
-} from '@/services/covers';
+import { saveSettings } from '@/lib/settings-storage';
+import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
+import { captureTabCover, findCoverUrls, saveCoverResults, scanCovers } from '@/services/covers';
+import { mayRequestFrom } from '@/services/page-reader';
+import { runOutOfStorageAfter } from './indexeddb-quota';
 
 const PAGE = 'https://news.example.com/story/1';
 
@@ -50,22 +53,22 @@ describe('where a cover may be downloaded from', () => {
   const noAccess = async () => false;
 
   it('allows the site of the page, including its other subdomains', async () => {
-    expect(await mayFetchCover('https://img.example.com/a.jpg', PAGE, true, noAccess)).toBe(true);
+    expect(await mayRequestFrom('https://img.example.com/a.jpg', PAGE, true, noAccess)).toBe(true);
   });
 
   it('refuses another site unless the user gave access to it', async () => {
     const image = 'https://cdn.example.net/a.jpg';
-    expect(await mayFetchCover(image, PAGE, true, noAccess)).toBe(false);
-    expect(await mayFetchCover(image, PAGE, true, async (site) => site === 'example.net')).toBe(
+    expect(await mayRequestFrom(image, PAGE, true, noAccess)).toBe(false);
+    expect(await mayRequestFrom(image, PAGE, true, async (site) => site === 'example.net')).toBe(
       true,
     );
   });
 
   it('refuses the local network while Skip Local Network Pages is on, and other schemes', async () => {
     const granted = async () => true;
-    expect(await mayFetchCover('http://192.168.1.4/a.jpg', PAGE, true, granted)).toBe(false);
-    expect(await mayFetchCover('http://192.168.1.4/a.jpg', PAGE, false, granted)).toBe(true);
-    expect(await mayFetchCover('file:///etc/a.jpg', PAGE, false, granted)).toBe(false);
+    expect(await mayRequestFrom('http://192.168.1.4/a.jpg', PAGE, true, granted)).toBe(false);
+    expect(await mayRequestFrom('http://192.168.1.4/a.jpg', PAGE, false, granted)).toBe(true);
+    expect(await mayRequestFrom('file:///etc/a.jpg', PAGE, false, granted)).toBe(false);
   });
 });
 
@@ -100,12 +103,36 @@ describe('stored covers', () => {
       vi.setSystemTime(1000);
       await saveCovers([cover('old', 60)], 100);
       vi.setSystemTime(2000);
-      expect(await saveCovers([cover('new', 60)], 100)).toBe(1);
+      expect(await saveCovers([cover('new', 60)], 100)).toEqual({ saved: 1, notSaved: 0 });
     } finally {
       vi.useRealTimers();
     }
     expect([...(await getCoverInfos()).keys()]).toEqual(['new']);
     expect(await getCoverSummary()).toEqual({ covers: 1, bytes: 60 });
+  });
+
+  it('keep the covers stored before storage ran out, each with its image, and count the rest', async () => {
+    await saveCovers([cover('kept', 5)], 1_000_000);
+    const covers = Array.from({ length: INDEXED_SAVE_BATCH_SIZE + 2 }, (_, index) =>
+      cover(`c${index}`, 3),
+    );
+    // Two writes a cover (its info and its image): storage runs out inside the second batch.
+    const full = runOutOfStorageAfter(INDEXED_SAVE_BATCH_SIZE * 2 + 1);
+    try {
+      expect(await saveCovers(covers, 1_000_000)).toEqual({
+        saved: INDEXED_SAVE_BATCH_SIZE,
+        notSaved: 2,
+      });
+    } finally {
+      full.mockRestore();
+    }
+    const infos = await getCoverInfos();
+    expect(infos.size).toBe(INDEXED_SAVE_BATCH_SIZE + 1);
+    expect(infos.has(`c${INDEXED_SAVE_BATCH_SIZE}`)).toBe(false);
+    // No info is left without its image.
+    for (const id of infos.keys()) {
+      expect(await getCoverImage(id, `https://site.example/${id}`)).toBeDefined();
+    }
   });
 
   it('drop covers of bookmarks that are gone, and clear without touching anything else', async () => {
@@ -211,6 +238,13 @@ describe('Fetch Covers runs', () => {
         const html = (body: string) =>
           new Response(body, { status: 200, headers: { 'content-type': 'text/html' } });
         if (url.hostname === 'down.example') throw new TypeError('Failed to fetch');
+        if (url.pathname.endsWith('.html.png')) {
+          // An error page served where the page said its image is.
+          return new Response('<html>Not found</html>', {
+            status: 200,
+            headers: { 'content-type': 'text/html' },
+          });
+        }
         if (url.pathname.endsWith('.png')) {
           const size = url.pathname.includes('huge') ? 5000 : PNG.byteLength;
           return new Response(size === PNG.byteLength ? PNG : new Uint8Array(size), {
@@ -228,6 +262,7 @@ describe('Fetch Covers runs', () => {
         if (url.hostname === 'cdn.example') return html(head('https://cdn.other.net/a.png'));
         if (url.hostname === 'huge.example') return html(head('/huge.png'));
         if (url.hostname === 'svg.example') return html(head('/logo.svg'));
+        if (url.hostname === 'wrongtype.example') return html(head('/error.html.png'));
         if (url.hostname === 'tiny.example') return html(head('/tiny.png'));
         return html(head('/cover.png'));
       }),
@@ -255,6 +290,7 @@ describe('Fetch Covers runs', () => {
             node('elsewhere', 'https://cdn.example/'),
             node('huge', 'https://huge.example/'),
             node('svg', 'https://svg.example/'),
+            node('wrongtype', 'https://wrongtype.example/'),
             node('down', 'https://down.example/'),
             node('kept', 'https://kept.example/'),
             node('local', 'http://192.168.1.1/'),
@@ -268,8 +304,9 @@ describe('Fetch Covers runs', () => {
       found: 'found',
       none: 'none',
       elsewhere: 'elsewhere',
-      huge: 'none',
-      svg: 'none',
+      huge: 'unusable',
+      svg: 'unusable',
+      wrongtype: 'unusable',
       down: 'failed',
       kept: 'current',
       local: 'skipped',
@@ -303,6 +340,120 @@ describe('Fetch Covers runs', () => {
     expect(items[0]?.status).toBe('found');
   });
 
+  it('lists an image the browser cannot decode as unusable, and still tries the next one', async () => {
+    let decodes = 0;
+    vi.stubGlobal('createImageBitmap', async () => {
+      decodes += 1;
+      throw new DOMException('The source image could not be decoded.', 'InvalidStateError');
+    });
+    const { items } = await scanCovers([node('broken', 'https://news.example/story')], OPTIONS);
+    expect(items[0]?.status).toBe('unusable');
+    expect(items[0]?.cover).toBeUndefined();
+    expect(decodes).toBe(1);
+
+    // A broken first image does not hide a good second one.
+    let calls = 0;
+    vi.stubGlobal('createImageBitmap', async () => {
+      calls += 1;
+      if (calls === 1) throw new DOMException('broken', 'InvalidStateError');
+      return { ...decoded, close: () => undefined };
+    });
+    const inner = vi.mocked(fetch).getMockImplementation();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string, init?: RequestInit) =>
+        new URL(input).hostname === 'two.example' && new URL(input).pathname === '/'
+          ? new Response(
+              '<html><head><meta property="og:image" content="/a.png">' +
+                '<meta name="twitter:image" content="/b.png"></head></html>',
+              { status: 200, headers: { 'content-type': 'text/html' } },
+            )
+          : (inner?.(input, init) as Promise<Response>),
+      ),
+    );
+    const second = await scanCovers([node('two', 'https://two.example/')], OPTIONS);
+    expect(second.items[0]?.status).toBe('found');
+  });
+
+  it('lists a page that redirects as redirected, without requesting where it leads', async () => {
+    const requested: string[] = [];
+    const inner = vi.mocked(fetch).getMockImplementation();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string, init?: RequestInit) => {
+        requested.push(input);
+        if (input === 'https://local.example/') {
+          return new Response(null, { status: 302, headers: { location: 'http://10.0.0.2/' } });
+        }
+        if (input === 'https://away.example/') {
+          return new Response(null, {
+            status: 307,
+            headers: { location: 'https://cdn.other.net/' },
+          });
+        }
+        // Its likely target, the www. address, redirects too, so it is a wrong guess.
+        if (input === 'https://hidden.example/' || input === 'https://www.hidden.example/') {
+          // What Chrome and Firefox return to an extension for `redirect: 'manual'`.
+          const opaque = new Response(null, { status: 200 });
+          Object.defineProperty(opaque, 'type', { value: 'opaqueredirect' });
+          Object.defineProperty(opaque, 'status', { value: 0 });
+          return opaque;
+        }
+        return inner?.(input, init) as Promise<Response>;
+      }),
+    );
+    const { items } = await scanCovers(
+      [
+        node('local', 'https://local.example/'),
+        node('away', 'https://away.example/'),
+        node('hidden', 'https://hidden.example/'),
+      ],
+      OPTIONS,
+    );
+    expect(items.map((item) => item.status)).toEqual(['redirected', 'redirected', 'redirected']);
+    expect(requested.sort()).toEqual([
+      'https://away.example/',
+      'https://hidden.example/',
+      'https://local.example/',
+      'https://www.hidden.example/',
+    ]);
+  });
+
+  it('reports a save cut short by full storage as partial, never as saved', async () => {
+    await saveSettings({ language: 'en' });
+    setLanguage('en');
+    vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockResolvedValue([
+      { id: '0', title: '', syncing: false, children: [] },
+    ]);
+    const picked = [
+      {
+        id: 'a',
+        title: 'A',
+        url: 'https://site.example/a',
+        folderPath: '',
+        status: 'found' as const,
+        cover: cover('a', 7),
+      },
+    ];
+    const full = runOutOfStorageAfter(0);
+    let outcome: Awaited<ReturnType<NonNullable<typeof TOOL_DEFINITIONS.covers.apply>>>;
+    try {
+      outcome = await TOOL_DEFINITIONS.covers.apply?.({ items: picked }, picked, {
+        options: { covers: { maxCacheBytes: 1000 } },
+      } as ToolApplyContext);
+    } finally {
+      full.mockRestore();
+    }
+    expect(outcome).toEqual({
+      title: 'Some covers were not saved',
+      description:
+        "Saved: 0. Not saved because this device's storage for the extension is full: 1. " +
+        'Free up disk space or delete covers in Settings, then fetch again.',
+      variant: 'destructive',
+    });
+    expect(await getCoverSummary()).toEqual({ covers: 0, bytes: 0 });
+  });
+
   it('leaves out an image too small to be a cover', async () => {
     decoded = { width: COVER_LIMITS.minWidthPx - 1, height: 10 };
     const { items } = await scanCovers([node('tiny', 'https://tiny.example/')], OPTIONS);
@@ -321,7 +472,7 @@ describe('Fetch Covers runs', () => {
         ],
       },
     ]);
-    const { saved } = await saveCoverResults(
+    const { saved, notSaved } = await saveCoverResults(
       [
         {
           id: 'a',
@@ -335,7 +486,7 @@ describe('Fetch Covers runs', () => {
       ],
       1000,
     );
-    expect(saved).toBe(1);
+    expect([saved, notSaved]).toEqual([1, 0]);
     expect([...(await getCoverInfos()).keys()]).toEqual(['a']);
   });
 });

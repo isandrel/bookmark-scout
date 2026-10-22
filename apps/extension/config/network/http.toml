@@ -12,6 +12,11 @@ class_size = 100
 class_label_suffix = "xx"
 # Statuses whose response has no body, so a Response is rebuilt without one.
 null_body = [101, 204, 205, 304]
+# Statuses that send the request on to the address in their Location header.
+redirect = [301, 302, 303, 307, 308]
+# The status fetch gives a response it hides from the caller, such as a redirect not followed
+# (an opaque redirect), and that a page refused before any request reports.
+opaque = 0
 
 # Statuses the code tells apart by name.
 [named]
