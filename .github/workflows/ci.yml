@@ -189,7 +189,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: changes
     if: ${{ !cancelled() && fromJSON(needs.changes.outputs.scopes).extension }}
-    timeout-minutes: 15
+    # The browser and its system packages install before the tests; a slow package mirror once took
+    # 10 of 15 minutes and cancelled a shard that was passing (2026-10-22).
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -267,7 +269,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: changes
     if: ${{ !cancelled() && fromJSON(needs.changes.outputs.scopes).extension }}
-    timeout-minutes: 15
+    # The browser and its system packages install before the tests; a slow package mirror once took
+    # 10 of 15 minutes and cancelled a shard that was passing (2026-10-22).
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -325,7 +329,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: changes
     if: ${{ !cancelled() && fromJSON(needs.changes.outputs.scopes).extension }}
-    timeout-minutes: 15
+    # The browser and its system packages install before the tests; a slow package mirror once took
+    # 10 of 15 minutes and cancelled a shard that was passing (2026-10-22).
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v7
