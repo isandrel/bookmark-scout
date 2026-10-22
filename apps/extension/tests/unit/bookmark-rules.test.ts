@@ -137,6 +137,35 @@ describe('planBookmarkRules', () => {
     expect(repo && changesBookmark(repo)).toBe(false);
   });
 
+  it('finds the folder of a restored rule by its path when its id is not here, unless two match (R39)', () => {
+    const restored = plan([
+      rule({
+        query: 'repo',
+        moveTo: { folderId: 'other-profile', path: 'Bookmarks bar / Library' },
+      }),
+    ]);
+    expect(restored[0]?.move).toMatchObject({
+      folderId: 'library',
+      path: 'Bookmarks bar / Library',
+    });
+    const twin: BookmarkTreeNode = {
+      id: 'library2',
+      parentId: 'work',
+      title: 'Library',
+      children: [],
+    };
+    const work = tree[0]?.children?.[0]?.children?.[0];
+    work?.children?.push(twin);
+    try {
+      const ambiguous = plan([
+        rule({ query: 'repo', moveTo: { folderId: 'other-profile', path: 'Library' } }),
+      ]);
+      expect(ambiguous[0]?.blocked).toBe('missingFolder');
+    } finally {
+      work?.children?.pop();
+    }
+  });
+
   it('never moves into a missing or managed folder, or out of a managed one (R13)', () => {
     const missing = plan([rule({ query: 'repo', moveTo: { folderId: 'gone', path: 'Gone' } })]);
     expect(missing[0]).toMatchObject({ id: 'gh', blocked: 'missingFolder' });

@@ -149,6 +149,42 @@ function moveTarget(index: TreeIndex, folderId: string): RuleMoveBlock | undefin
   return isManaged(index, folder) ? 'managed' : undefined;
 }
 
+/** Each folder's path as the rule editor writes it, to its ids (more than one when names repeat). */
+function indexFolderPaths(tree: readonly BookmarkTreeNode[]): Map<string, string[]> {
+  const paths = new Map<string, string[]>();
+  const visit = (nodes: readonly BookmarkTreeNode[], parents: string[]) => {
+    for (const node of nodes) {
+      if (node.url !== undefined || !node.children) continue;
+      const isRoot = isBookmarkTreeRoot(node);
+      const path = isRoot ? parents : [...parents, getBookmarkDisplayTitle(node.title)];
+      if (!isRoot) {
+        const key = path.join(FOLDER_PATH_SEPARATOR);
+        paths.set(key, [...(paths.get(key) ?? []), node.id]);
+      }
+      visit(node.children, path);
+    }
+  };
+  visit(tree, []);
+  return paths;
+}
+
+/**
+ * A rule's move with its folder found in this tree: by id, or, when that id is not a folder here
+ * (a rule restored from a backup of another browser profile, or a folder deleted and made again),
+ * by the path the rule names, when exactly one folder has it. The review shows the path, so a
+ * move to a folder found this way is still approved before it happens.
+ */
+function resolveMove(
+  index: TreeIndex,
+  paths: () => Map<string, string[]>,
+  move: RuleMove,
+): RuleMove {
+  const folder = index.nodes.get(move.folderId);
+  if (folder && folder.url === undefined) return move;
+  const found = paths().get(move.path) ?? [];
+  return found.length === 1 ? { ...move, folderId: found[0] as string } : move;
+}
+
 /**
  * What `rules` (enabled ones, in order) would do to the bookmarks of `tree`, read only. Bookmarks
  * no rule matches are left out; ones they match but would not change are kept, so a run can say
@@ -164,6 +200,11 @@ export function planBookmarkRules(
   const enabled = rules.filter((rule) => rule.enabled);
   if (enabled.length === 0) return [];
   const index = indexTree(tree);
+  let folderPaths: Map<string, string[]> | undefined;
+  const paths = () => {
+    folderPaths ??= indexFolderPaths(tree);
+    return folderPaths;
+  };
   const compiled = enabled.map((rule) => ({
     rule,
     match: compileSearchQuery(parseSearchQuery(rule.query).query),
@@ -186,7 +227,7 @@ export function planBookmarkRules(
         has.add(key);
         addTags.push(tag.trim());
       }
-      if (rule.moveTo) moves.push({ ruleId: rule.id, ...rule.moveTo });
+      if (rule.moveTo) moves.push(resolveMove(index, paths, { ruleId: rule.id, ...rule.moveTo }));
     }
     const [first, ...later] = moves;
     const conflicts = later.filter((move) => move.folderId !== first?.folderId);
