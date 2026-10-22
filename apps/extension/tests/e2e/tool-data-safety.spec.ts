@@ -217,7 +217,7 @@ test('URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmar
   await extensionWorker.evaluate(async (id) => {
     await chrome.bookmarks.update(id, { url: 'https://e2e.invalid/e?utm_source=kept-by-user' });
   }, folder.ids['Edited Later']);
-  await preview.getByRole('button', { name: 'Apply Changes' }).click();
+  await preview.getByRole('button', { name: /^Clean \d+ URLs?$/ }).click();
 
   await expect(
     toastRegion(page).getByText('× Some URLs were not cleaned', { exact: true }),

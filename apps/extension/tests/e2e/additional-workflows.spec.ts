@@ -369,7 +369,7 @@ test('URL cleaner honors preserved parameters and fragment settings', async ({
   const preview = page.getByRole('dialog', { name: 'URL Cleaner' });
   await expect(preview.getByText('1 bookmark can be cleaned')).toBeVisible();
   await expect(preview).toContainText('https://e2e.invalid/page?utm_source=e2e#keep');
-  await preview.getByRole('button', { name: 'Apply Changes' }).click();
+  await preview.getByRole('button', { name: /^Clean \d+ URLs?$/ }).click();
 
   await expect
     .poll(() =>
@@ -410,7 +410,7 @@ test('metadata fetcher previews mocked page metadata without changing bookmarks'
   await expect(results).toContainText('Page title: Suggested Fixture Title');
   await expect(results).toContainText('Title kept: "Overwrite Titles" is off');
   await expect(results.getByText('Suggested title:', { exact: false })).toHaveCount(0);
-  await expect(results.getByRole('checkbox')).toHaveCount(0);
+  await expect(results.getByRole('button', { name: 'Apply 0 titles' })).toBeDisabled();
   await expect(results).toContainText('Fixture summary');
   const titles = await extensionWorker.evaluate(async (id) => {
     const children = await chrome.bookmarks.getChildren(id);

@@ -710,7 +710,7 @@ test('previews and applies duplicate and URL cleanup tools', async ({
   const cleaner = page.getByRole('dialog', { name: 'URL Cleaner' });
   await expect(cleaner).toContainText('Tracked Link');
   await expect(cleaner).toContainText('utm_source=e2e');
-  await cleaner.getByRole('button', { name: 'Apply Changes' }).click();
+  await cleaner.getByRole('button', { name: /^Clean \d+ URLs?$/ }).click();
 
   await expect
     .poll(() =>

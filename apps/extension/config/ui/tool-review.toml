@@ -5,3 +5,9 @@
 row_estimate_px = 72
 # Rows drawn above and below the ones on screen
 overscan_rows = 6
+
+# What a tool's review starts each item on until the user picks another: URL Cleaner "clean" or
+# "keep"; Metadata Fetcher "apply" or "skip" for the titles it can change (the rest are skipped).
+[defaults]
+url_cleaner = "clean"
+metadata_fetcher = "apply"

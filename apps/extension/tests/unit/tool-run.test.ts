@@ -241,7 +241,7 @@ describe('URL cleaner', () => {
     expect(run.getState().result?.previews).toHaveLength(3);
     await fakeBrowser.bookmarks.update('2', { url: 'https://e2e.invalid/edited' });
 
-    await run.apply();
+    await run.apply(run.getState().result?.previews ?? []);
     expect(bookmarks.get('1')?.url).toBe('https://e2e.invalid/a');
     expect(bookmarks.get('2')?.url).toBe('https://e2e.invalid/edited');
     expect(run.getState()).toMatchObject({ phase: 'done', open: false });
@@ -269,7 +269,7 @@ describe('URL cleaner', () => {
     await run.run('all');
     await fakeBrowser.bookmarks.update('1', { url: 'https://e2e.invalid/edited' });
 
-    await run.apply();
+    await run.apply(run.getState().result?.previews ?? []);
     expect(notices[0].undo).toBeUndefined();
   });
 });

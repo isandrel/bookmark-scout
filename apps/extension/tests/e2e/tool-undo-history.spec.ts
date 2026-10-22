@@ -66,7 +66,7 @@ test("a URL Cleaner toast's Undo and Ctrl/Cmd+Z share one history entry", async 
   await toolCard(page, 'URL Cleaner').getByRole('button', { name: 'Clean' }).click();
   const preview = page.getByRole('dialog', { name: 'URL Cleaner' });
   await expect(preview.getByText('1 bookmark can be cleaned')).toBeVisible();
-  await preview.getByRole('button', { name: 'Apply Changes' }).click();
+  await preview.getByRole('button', { name: /^Clean \d+ URLs?$/ }).click();
   await expect.poll(urls).toEqual(['https://e2e.invalid/t']);
 
   await toastRegion(page).getByRole('button', { name: 'Undo', exact: true }).click();
