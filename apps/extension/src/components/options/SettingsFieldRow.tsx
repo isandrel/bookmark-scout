@@ -658,9 +658,11 @@ export function SettingsFieldRow({
               aria-labelledby={labelId}
               aria-describedby={describedBy}
               aria-invalid={Boolean(invalid)}
-              className="w-full sm:w-[220px]"
+              // Grows with a long choice, such as a date format with its sample, as the segmented
+              // controls do; the value starts at the left edge like every other field.
+              className="w-full sm:w-auto sm:min-w-[220px] sm:max-w-[320px]"
             >
-              <SelectValue />
+              <SelectValue className="min-w-0 truncate text-left" />
             </SelectTrigger>
             <SelectContent>
               {options.map((option) => (
