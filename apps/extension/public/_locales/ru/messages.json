@@ -135,6 +135,10 @@
         "message": "Выбрать строку в фокусе или снять с неё выбор",
         "description": "Manager shortcuts help: Space selects or unselects the focused row"
     },
+    "shortcuts_preview": {
+        "message": "Предпросмотр закладки в фокусе",
+        "description": "Manager shortcuts help: p opens the preview of the focused bookmark (cover, folder, tags, and summary)"
+    },
     "shortcuts_showHelp": {
         "message": "Показать быстрые клавиши",
         "description": "Keyboard shortcut description: ? opens this dialog"
@@ -1448,6 +1452,10 @@
     "bookmarks_viewDetails": {
         "message": "Подробности",
         "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_preview": {
+        "message": "Предпросмотр",
+        "description": "Bookmark manager action and the preview key's action: a dialog with a bookmark's cover, address, folder, tags, and summary"
     },
     "bookmarks_detailsTitle": {
         "message": "Сведения о закладке",

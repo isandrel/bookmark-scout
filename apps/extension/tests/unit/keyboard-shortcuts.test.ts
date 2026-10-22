@@ -199,6 +199,7 @@ describe('configured bindings', () => {
     expect(SHORTCUT_BINDINGS.manager.openSavedSearches).toEqual(
       shortcuts.manager.open_saved_searches,
     );
+    expect(SHORTCUT_BINDINGS.manager.preview).toEqual(shortcuts.manager.preview);
     expect(SHORTCUT_BINDINGS.popup.focusSearch).toEqual(shortcuts.popup.focus_search);
   });
 

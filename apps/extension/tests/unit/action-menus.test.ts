@@ -13,6 +13,7 @@ import {
   getItemMenuLabel,
   getItemMenuSections,
   ITEM_MENU_KEEP_ONE_OF,
+  runItemMenuAction,
 } from '@/services/action-menus';
 import { ACTION_IDS, type ActionId, getAction } from '@/services/actions';
 import enMessages from '../../public/_locales/en/messages.json';
@@ -44,12 +45,18 @@ describe('bookmark action menus', () => {
 
   it('take their items, order, and sections from config/ui/actions.toml', () => {
     const config = readConfigToml('ui/actions.toml') as {
-      menus: { item: string[][]; organize: string[][]; empty_space: string[][] };
+      menus: {
+        item: string[][];
+        organize: string[][];
+        empty_space: string[][];
+        preview: string[][];
+      };
     };
     expect(ACTION_MENUS).toEqual({
       item: config.menus.item,
       organize: config.menus.organize,
       emptySpace: config.menus.empty_space,
+      preview: config.menus.preview,
     });
   });
 
@@ -81,7 +88,7 @@ describe('bookmark action menus', () => {
 
   it('offers a link the configured item menu, by section', () => {
     expect(sections([link])).toEqual([
-      ['edit', 'viewDetails'],
+      ['preview', 'edit', 'viewDetails'],
       ['cut', 'copy', 'copyId'],
       ['openInNewTab', 'openInNewWindow', 'openInPrivateWindow'],
       ['delete'],
@@ -173,9 +180,33 @@ describe('bookmark action menus', () => {
   it('offers Show in folder only on search results from another folder', () => {
     expect(sections([link])[0]).not.toContain('showInFolder');
     const host = createItemHost({ isOutsideOpenFolder: () => true });
-    expect(sections([link], host)[0]).toEqual(['showInFolder', 'edit', 'viewDetails']);
+    expect(sections([link], host)[0]).toEqual(['preview', 'showInFolder', 'edit', 'viewDetails']);
     void getAction('showInFolder').itemMenu?.run([link], host);
     expect(host.showInFolder).toHaveBeenCalledWith(link);
+  });
+
+  it('previews one bookmark, from a menu, a key, or nowhere for folders and selections', () => {
+    const host = createItemHost();
+    expect(runItemMenuAction('preview', [link], host)).toBe(true);
+    expect(host.preview).toHaveBeenCalledWith(link);
+    // The preview key on a folder, several rows, or nothing does nothing, as the menu offers none.
+    const second: Bookmark = { ...link, id: 'link-2', url: 'https://example.org/' };
+    for (const items of [[folder], [link, second], []]) {
+      expect(runItemMenuAction('preview', items, host)).toBe(false);
+    }
+    expect(host.preview).toHaveBeenCalledTimes(1);
+    expect(sections([folder]).flat()).not.toContain('preview');
+  });
+
+  it("offers the preview's buttons from config, where they apply to the bookmark shown", () => {
+    const host = createItemHost();
+    expect(getItemMenuSections([link], host, ACTION_MENUS.preview)).toEqual(ACTION_MENUS.preview);
+    expect(getItemMenuLabel('openInNewTab', [link], host)).toBe('Open in new tab');
+    // A managed bookmark cannot be edited, so its preview has no Edit.
+    const managed: Bookmark = { ...link, unmodifiable: 'managed' };
+    expect(getItemMenuSections([managed], host, ACTION_MENUS.preview).flat()).not.toContain('edit');
+    expect(runItemMenuAction('copy', [link], host)).toBe(true);
+    expect(host.copy).toHaveBeenCalledWith([link]);
   });
 
   it('enables the folder menus by what the folder shown allows', () => {

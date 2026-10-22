@@ -93,6 +93,7 @@ test('right-click acts on the selection, or selects the row clicked', async ({
   await row(page, 'Menu B').click({ button: 'right', position: { x: 200, y: 10 } });
   await expect(row(page, 'Menu B')).toHaveAttribute('aria-selected', 'true');
   expect(await menuItemNames(page)).toEqual([
+    'Preview',
     'Edit',
     'View Details',
     'Cut',

@@ -7,7 +7,7 @@
 [menus]
 # A row's ⋯ menu, the right-click menu on rows (acting on the selection), and on tree folders
 item = [
-  ["showInFolder", "edit", "viewDetails"],
+  ["preview", "showInFolder", "edit", "viewDetails"],
   ["cut", "copy", "paste", "copyFolderLink", "copyId"],
   ["openInNewTab", "openInNewWindow", "openInPrivateWindow"],
   ["delete"],
@@ -16,6 +16,9 @@ item = [
 organize = [["sortByName"], ["addBookmark", "addFolder"]]
 # The right-click menu on the table's empty space, on the folder shown
 empty_space = [["addBookmark", "addFolder"], ["paste"]]
+# The buttons of a bookmark's preview (opened from the item menu or the manager's preview key), on
+# the bookmark it shows. Open is the manager's Open: a new tab in front, as Enter does.
+preview = [["openInNewTab"], ["copy", "edit"]]
 
 [item_menu]
 # Options > Behavior > Bookmark manager menus keeps at least one of these shown, so the item menu

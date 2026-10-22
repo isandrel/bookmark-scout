@@ -25,6 +25,7 @@ export const folder: Bookmark = {
 export function createItemHost(overrides: Partial<ActionItemHost> = {}): ActionItemHost {
   return {
     showDetails: vi.fn(),
+    preview: vi.fn(),
     edit: vi.fn(),
     requestDeletion: vi.fn(),
     reportError: vi.fn(),

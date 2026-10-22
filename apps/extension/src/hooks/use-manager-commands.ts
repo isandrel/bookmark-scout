@@ -17,6 +17,7 @@ export type ManagerCommandOptions = {
   /** The title search; sorting waits until it is cleared, as in Chrome. */
   searchQuery: string;
   showDetails: (bookmark: Bookmark) => void;
+  preview: (bookmark: Bookmark) => void;
   edit: (target: BookmarkEditTarget) => void;
   requestDeletion: (items: Bookmark[]) => void;
   showInFolder: (bookmark: Bookmark) => void;
@@ -161,6 +162,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
 
     const base = {
       showDetails: (bookmark: Bookmark) => latest.current.showDetails(bookmark),
+      preview: (bookmark: Bookmark) => latest.current.preview(bookmark),
       edit: (bookmark: Bookmark) => latest.current.edit({ mode: 'edit', bookmark }),
       requestDeletion: (items: Bookmark[]) => latest.current.requestDeletion(items),
       reportError: (titleKey: string, error: unknown) =>

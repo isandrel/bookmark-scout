@@ -135,6 +135,10 @@
         "message": "포커스된 행 선택 또는 선택 해제",
         "description": "Manager shortcuts help: Space selects or unselects the focused row"
     },
+    "shortcuts_preview": {
+        "message": "포커스된 북마크 미리 보기",
+        "description": "Manager shortcuts help: p opens the preview of the focused bookmark (cover, folder, tags, and summary)"
+    },
     "shortcuts_showHelp": {
         "message": "키보드 단축키 보기",
         "description": "Keyboard shortcut description: ? opens this dialog"
@@ -1424,6 +1428,10 @@
     "bookmarks_viewDetails": {
         "message": "세부정보 보기",
         "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_preview": {
+        "message": "미리 보기",
+        "description": "Bookmark manager action and the preview key's action: a dialog with a bookmark's cover, address, folder, tags, and summary"
     },
     "bookmarks_detailsTitle": {
         "message": "북마크 세부정보",

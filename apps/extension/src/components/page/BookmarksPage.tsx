@@ -111,6 +111,7 @@ export default function BookmarksPage() {
     aside?.querySelector<HTMLElement>('[tabindex="0"], button, input')?.focus();
   }, [sidebarOverlay, sidebars.folders.open, sidebars.tools.open]);
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
+  const [previewBookmark, setPreviewBookmark] = useState<Bookmark | null>(null);
   const [editTarget, setEditTarget] = useState<BookmarkEditTarget | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
   // Labels built in memos below must be rebuilt when the language changes.
@@ -153,6 +154,7 @@ export default function BookmarksPage() {
     currentFolderId: currentFolder,
     searchQuery,
     showDetails: setSelectedBookmark,
+    preview: setPreviewBookmark,
     edit: setEditTarget,
     requestDeletion: deleteItems,
     showInFolder,
@@ -179,6 +181,7 @@ export default function BookmarksPage() {
       deleteRows: (rows) => deleteItems(rows),
       renameRow: (bookmark) => setEditTarget({ mode: 'edit', bookmark }),
       openRows,
+      previewRows: (rows) => runItemMenuAction('preview', rows, managerCommands.tableItemHost),
       undo: history.undo,
       redo: history.redo,
     },
@@ -193,9 +196,9 @@ export default function BookmarksPage() {
       }),
     [managerCommands],
   );
-  // A right click on a row acts on the selection when the row is in it, else on that row.
+  // A right click on a row or card acts on the selection when it is in it, else on that one.
   const resolveRowMenuItems = useCallback((target: EventTarget | null) => {
-    const row = target instanceof Element ? target.closest<HTMLElement>('tr[data-row-id]') : null;
+    const row = target instanceof Element ? target.closest<HTMLElement>('[data-row-id]') : null;
     const rowId = row?.dataset.rowId;
     return rowId ? (tableRef.current?.targetRowsAt(rowId) ?? []) : [];
   }, []);
@@ -557,6 +560,11 @@ export default function BookmarksPage() {
         bookmark={selectedBookmark}
         onClose={() => setSelectedBookmark(null)}
         onOpenFolder={navigateToFolder}
+      />
+      <BookmarkPreviewDialog
+        bookmark={previewBookmark}
+        host={managerCommands.tableItemHost}
+        onClose={() => setPreviewBookmark(null)}
       />
       <BookmarkEditDialog
         target={editTarget}

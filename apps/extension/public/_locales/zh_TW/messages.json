@@ -135,6 +135,10 @@
         "message": "選取或取消選取目前的列",
         "description": "Manager shortcuts help: Space selects or unselects the focused row"
     },
+    "shortcuts_preview": {
+        "message": "預覽目前的書籤",
+        "description": "Manager shortcuts help: p opens the preview of the focused bookmark (cover, folder, tags, and summary)"
+    },
     "shortcuts_showHelp": {
         "message": "顯示鍵盤快速鍵",
         "description": "Keyboard shortcut description: ? opens this dialog"
@@ -1424,6 +1428,10 @@
     "bookmarks_viewDetails": {
         "message": "查看詳細資料",
         "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_preview": {
+        "message": "預覽",
+        "description": "Bookmark manager action and the preview key's action: a dialog with a bookmark's cover, address, folder, tags, and summary"
     },
     "bookmarks_detailsTitle": {
         "message": "書籤詳細資料",

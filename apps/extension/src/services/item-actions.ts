@@ -38,6 +38,20 @@ const PRIVATE_WINDOW_LABELS: Record<
 const privateWindowLabel = PRIVATE_WINDOW_LABELS[browserProfile().privateWindow];
 
 export const ITEM_ACTIONS = {
+  preview: defineMenuAction({
+    risk: 'read',
+    targets: ['bookmark'],
+    labelKey: 'bookmarks_preview',
+    icon: 'eye',
+    itemMenu: {
+      // One bookmark with an address; folders and separators have nothing to preview.
+      available: (items) => {
+        const item = single(items);
+        return Boolean(item?.url) && !isFolderItem(item);
+      },
+      run: (items, host) => host.preview(items[0]),
+    },
+  }),
   showInFolder: defineMenuAction({
     risk: 'read',
     targets: ['bookmark', 'folder'],
