@@ -190,6 +190,8 @@
 # languages. Measured on feat/rules-safety rebased onto f47d6d37: Chrome / Edge / Firefox ZIP
 # 1,989,633 / 1,989,636 / 1,989,706, uncompressed 6,639,399 / 6,639,395 / 6,639,558 B, and
 # 3,842,899 B of JavaScript and 2,234,850 B of locales.
+# CSS raised on 2026-10-22 (87,000 to 89,000) for the Cyrillic and Greek font faces and the Smart Rules
+# automatic moves UI: 87,077 B measured on the branch rebased onto 00a6a602.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -209,7 +211,7 @@ raw_bytes = 6_650_000
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
 javascript = 3_850_000
-css = 87_000
+css = 89_000
 fonts = 143_000
 locales = 2_245_000
 images = 320_000
