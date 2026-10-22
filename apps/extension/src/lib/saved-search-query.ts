@@ -2,6 +2,11 @@
  * The query a saved search keeps: the manager table's filters, sort, and folder scope. A saved
  * search stores only this definition, never bookmarks, so opening it filters the live bookmark
  * tree and its results follow every later change.
+ *
+ * `filters.title` is the search box, in the search query language (`search-query.ts`) of the
+ * `syntaxVersion` saved with it. A search saved before the language has no version: its text was
+ * found as typed in the title or address, so it reads as one phrase (`legacyTitleSearch`), which
+ * still finds every bookmark it found.
  */
 
 import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
@@ -48,6 +53,8 @@ const filtersSchema = z.object({
 
 export const savedSearchQuerySchema = z.object({
   filters: filtersSchema,
+  // The search query language version `filters.title` was saved in; absent before it existed.
+  syntaxVersion: z.literal(SEARCH_SYNTAX_VERSION).optional(),
   sorting: z
     .array(z.object({ id: z.string(), desc: z.boolean() }))
     .max(SORTING_MAX_LENGTH)
@@ -69,6 +76,8 @@ export type SavedSearchFilters = {
 
 export type SavedSearchQuery = {
   filters: SavedSearchFilters;
+  /** The search query language version of `filters.title`; set whenever it is. */
+  syntaxVersion?: typeof SEARCH_SYNTAX_VERSION;
   sorting: Array<{ id: string; desc: boolean }>;
   /** Present when the search is limited to one folder; null is the top level. */
   folderId?: string | null;
@@ -91,7 +100,7 @@ const uniqueSorted = (values: string[]) => [...new Set(values)].sort();
 
 const textCodec: FilterCodec = {
   toStored: (value) => {
-    const text = typeof value === 'string' ? value.trim() : '';
+    const text = titleSearchText(value).trim();
     return text ? text.slice(0, SAVED_SEARCH_TEXT_MAX_LENGTH) : undefined;
   },
   toTable: (value: string) => value,
@@ -147,12 +156,39 @@ function normalizeSorting(sorting: readonly { id: string; desc: boolean }[]) {
     .map(({ id, desc }) => ({ id, desc }));
 }
 
-/** Rebuilds a query in canonical key and value order. */
+/**
+ * The search box text of a search saved before the search query language, which matched the text
+ * as typed in the title or address. A single plain word reads the same; anything else (several
+ * words, a dash, a colon, quotes) becomes one phrase, matched as typed in any field, so no
+ * bookmark it found goes missing.
+ */
+export function legacyTitleSearch(text: string): string {
+  const { query, diagnostics } = parseSearchQuery(text);
+  const [term] = query.terms;
+  const plainWord =
+    diagnostics.length === 0 &&
+    query.terms.length === 1 &&
+    term?.kind === 'text' &&
+    !term.field &&
+    !term.negate &&
+    !term.phrase &&
+    term.value === text;
+  // The language has no escape for a quote, so quotes inside the phrase are dropped.
+  return plainWord ? text : `"${text.replaceAll('"', '')}"`;
+}
+
+/**
+ * Rebuilds a query in canonical key and value order, reading a search box text saved before the
+ * search query language as `legacyTitleSearch` does.
+ */
 function normalizeQuery(query: SavedSearchQuery): SavedSearchQuery {
   const filters: SavedSearchFilters = {};
   for (const id of FILTER_IDS) {
-    const value = query.filters[id];
+    let value = query.filters[id];
     if (value === undefined) continue;
+    if (id === 'title' && query.syntaxVersion === undefined) {
+      value = legacyTitleSearch(value as string);
+    }
     const normalized = Array.isArray(value) ? uniqueSorted(value) : value;
     Object.assign(filters, { [id]: normalized });
   }
@@ -165,6 +201,7 @@ function normalizeQuery(query: SavedSearchQuery): SavedSearchQuery {
   }
   return {
     filters,
+    ...(filters.title !== undefined ? { syntaxVersion: SEARCH_SYNTAX_VERSION } : {}),
     sorting: normalizeSorting(query.sorting),
     ...(query.folderId !== undefined ? { folderId: query.folderId } : {}),
   };
@@ -194,6 +231,7 @@ export function captureSavedSearchQuery(state: ManagerQueryState): SavedSearchQu
   }
   return normalizeQuery({
     filters,
+    ...(filters.title !== undefined ? { syntaxVersion: SEARCH_SYNTAX_VERSION } : {}),
     sorting: state.sorting,
     ...(state.currentFolderOnly ? { folderId: state.currentFolderId } : {}),
   });

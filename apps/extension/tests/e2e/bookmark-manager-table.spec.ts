@@ -74,7 +74,7 @@ test('manager toolbar stays compact and actions stay reachable with tools open',
   // Wait for the sidebar width transition to settle.
   await page.waitForTimeout(400);
 
-  const search = page.getByPlaceholder('Search titles and addresses');
+  const search = page.getByPlaceholder('Search titles, addresses, folders, and tags');
   expect((await search.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(120);
 
   const menuButton = row(page, 'Layout Link').getByRole('button', { name: 'Open menu' });
@@ -222,7 +222,7 @@ test('manager table uses Japanese labels', async ({ extensionId, extensionWorker
   ]);
   await page.goto(managerUrl(extensionId, folder.folderId));
 
-  await expect(page.getByPlaceholder('タイトルとアドレスを検索')).toBeVisible();
+  await expect(page.getByPlaceholder('タイトル・アドレス・フォルダ・タグを検索')).toBeVisible();
   await page.getByRole('button', { name: 'その他の絞り込み' }).click();
   await expect(page.getByPlaceholder('URLで絞り込み...')).toBeVisible();
   await expect(page.getByRole('checkbox', { name: '現在のフォルダのみ' })).toBeVisible();

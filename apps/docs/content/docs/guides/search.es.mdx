@@ -1,6 +1,6 @@
 ---
 title: Búsqueda y búsquedas guardadas
-description: Encuentra cualquier marcador por título o URL desde la ventana emergente o el panel lateral, filtra la tabla del administrador y guarda combinaciones de filtros como búsquedas guardadas con nombre.
+description: Encuentra cualquier marcador por título, dirección, carpeta, etiqueta o resumen desde la ventana emergente, el panel lateral o el administrador, acota una búsqueda con operadores y guarda combinaciones de filtros como búsquedas guardadas con nombre.
 ---
 
 ## Buscar desde la ventana emergente o el panel lateral [#search-from-the-popup-or-side-panel]
@@ -10,10 +10,10 @@ description: Encuentra cualquier marcador por título o URL desde la ventana eme
 Haz clic en el icono de Bookmark Scout en la barra de herramientas. También puedes abrir Bookmark Scout en el panel lateral del navegador (la barra lateral en Firefox), que sigue abierto mientras navegas.
 </Step>
 <Step>
-Escribe en el cuadro de búsqueda de arriba, que dice **Escribe una carpeta para guardar esta página…** y también busca en tus marcadores (pulsa <Shortcut id="popup.focus_search" /> para ir allí). Los resultados aparecen mientras escribes, dentro de sus carpetas, con cada coincidencia resaltada.
+Escribe en el cuadro de búsqueda de arriba, que dice **Escribe una carpeta para guardar esta página…** y también busca en tus marcadores (pulsa <Shortcut id="popup.focus_search" /> para ir allí). Los resultados aparecen mientras escribes, dentro de sus carpetas, con cada coincidencia resaltada. Cada palabra debe coincidir, en el título, la dirección, la carpeta o las etiquetas y el resumen; consulta [Palabras y operadores de búsqueda](#search-words-and-operators).
 </Step>
 <Step>
-Acota la búsqueda con **Más opciones de búsqueda**, el botón del cuadro de búsqueda: **Distinguir mayúsculas y minúsculas**, **Solo palabras completas** y **Búsqueda avanzada por patrón (regex)**, que trata la búsqueda como una expresión regular. El botón se resalta mientras alguna de ellas está activada.
+Acota la búsqueda con **Más opciones de búsqueda**, el botón del cuadro de búsqueda: **Distinguir mayúsculas y minúsculas**, **Solo palabras completas** y **Búsqueda avanzada por patrón (regex)**, que trata la búsqueda como una expresión regular. El botón se resalta mientras alguna de ellas está activada. Estas opciones buscan solo en los títulos, tal como escribes, sin operadores.
 </Step>
 <Step>
 Haz clic en un marcador, o desplázate hasta él con las teclas de flecha y pulsa `Enter`, para abrirlo en una pestaña nueva.
@@ -29,11 +29,36 @@ Conviene saber:
 - Al borrar la búsqueda (con el botón para borrar, o con `Esc` en el cuadro de búsqueda), se vuelven a abrir las carpetas que tenías abiertas antes.
 - Las búsquedas recientes se recuerdan en este dispositivo. Haz clic en el cuadro de búsqueda vacío, o pulsa <Shortcut id="popup.recent_searches" /> en él, para verlas. Bórralas desde esa lista o desactiva **Historial de búsqueda** en la configuración.
 
+## Palabras y operadores de búsqueda [#search-words-and-operators]
+
+Los cuadros de búsqueda de la ventana emergente, el panel lateral y el administrador leen una búsqueda de la misma manera. Solo buscan en los marcadores de este navegador y no envían nada a ningún sitio.
+
+- Cada palabra debe coincidir, cada una en cualquier lugar: el título, la dirección web, la ruta de la carpeta o las etiquetas y el resumen del marcador. `recetas sopa` encuentra un marcador llamado "Sopa" en una carpeta llamada "Recetas".
+- Las comillas mantienen juntas las palabras: `"sopa de tomate"`.
+- Un `-` delante excluye lo que coincide: `recetas -tarta` o `-tag:archivo`.
+- Una palabra que nombra una carpeta encuentra la carpeta. En la ventana emergente, sus marcadores aparecen dentro de ella; `folder:` muestra todo lo que contiene.
+- El texto que no es un operador se busca tal como se escribe, como `C++`, `10:30` o una dirección web. También un operador que Bookmark Scout no conoce, como `foo:bar`. Un valor que no puede leer, como una fecha no válida, se omite.
+
+| Búsqueda | Encuentra |
+| --- | --- |
+| `title:react` | Títulos que contienen el texto; `title:"react hooks"` admite varias palabras |
+| `url:github` | Direcciones web que contienen el texto |
+| `domain:github.com` | Marcadores de ese sitio, incluidos sus subdominios |
+| `folder:Trabajo` o `path:Trabajo` | Todo lo que hay en una carpeta con ese nombre exacto, a cualquier profundidad; `folder:"Trabajo / Documentos"` nombra una carpeta dentro de otra |
+| `tag:lectura` | Marcadores con esa etiqueta exacta |
+| `summary:receta` | Resúmenes que contienen el texto |
+| `is:bookmark` o `is:folder` | Solo marcadores, o solo carpetas |
+| `is:untagged` | Marcadores sin etiquetas |
+| `has:tags` o `has:summary` | Elementos con etiquetas, o con un resumen |
+| `after:2026-01-31` o `before:2026-01-31` | Elementos añadidos ese día o después, o ese día o antes |
+
+Las etiquetas y los resúmenes son los que añades en **Detalles del marcador** o conservas de las herramientas **Etiquetado automático** y **Generador de resúmenes**. Se quedan en este dispositivo.
+
 ## Filtrar en el administrador de marcadores [#filter-in-the-bookmarks-manager]
 
 La tabla del administrador tiene filtros más precisos. En Chrome, abre la página de marcadores del navegador para llegar a ella; se abre en tu barra de marcadores.
 
-- **Buscar títulos y direcciones** busca texto en el título o en la dirección web de un marcador. Pulsa <Shortcut id="manager.focus_filter" /> para ir directamente a ese cuadro.
+- **Buscar títulos, direcciones, carpetas y etiquetas** lee [palabras y operadores de búsqueda](#search-words-and-operators) y muestra las carpetas y los marcadores que coinciden. Pulsa <Shortcut id="manager.focus_filter" /> para ir directamente a ese cuadro.
 - **Tipo**, **Dominio** y **Fecha de creación** acotan aún más las filas. **Más filtros** añade **Filtrar URLs...**, que busca solo en la dirección web, y **Carpeta**, que deja solo los elementos de las carpetas que elijas.
 - **Solo la carpeta actual** limita los filtros a la carpeta en la que estás. Cuando está desactivado, los filtros buscan en todos los marcadores, cada resultado muestra su carpeta debajo del título y la ruta de arriba dice **Resultados de todas las carpetas**.
 - Ordena por cualquier columna desde su encabezado. Mientras la tabla no esté en el orden del navegador, el texto junto a **Orden del navegador** indica el orden actual; haz clic en **Orden del navegador** para volver.
@@ -45,7 +70,7 @@ La tabla del administrador tiene filtros más precisos. En Chrome, abre la pági
 La dirección del administrador sigue lo que estás viendo, así que **Atrás** y **Adelante** del navegador recorren las carpetas y las búsquedas, y puedes guardar una vista en marcadores o compartirla.
 
 - `?id=` indica la carpeta abierta, como en el administrador propio de Chrome: `chrome://bookmarks/?id=12` abre la carpeta 12 en Chrome, y `edge://favorites/?id=12` en Edge. Los enlaces de Chrome 154 a 156, que identificaban la Barra de marcadores, Otros marcadores y Marcadores del móvil con un ID largo, también abren esas carpetas. Sin `?id=`, el administrador se abre en la barra de marcadores; **Marcadores**, al principio de la ruta de la carpeta, muestra el nivel superior.
-- `?q=` es la búsqueda: `chrome://bookmarks/?q=react` abre el administrador buscando "react" en los títulos y las direcciones. Mientras escribes en **Buscar títulos y direcciones**, la dirección se actualiza, y una racha de escritura cuenta como un solo paso de **Atrás**. La búsqueda tiene prioridad sobre la carpeta; la carpeta sigue aplicándose cuando **Solo la carpeta actual** está marcado.
+- `?q=` es la búsqueda: `chrome://bookmarks/?q=react` abre el administrador buscando "react", y `?q=tag:reading` buscando la etiqueta. Mientras escribes en **Buscar títulos, direcciones, carpetas y etiquetas**, la dirección se actualiza, y una racha de escritura cuenta como un solo paso de **Atrás**. La búsqueda tiene prioridad sobre la carpeta; la carpeta sigue aplicándose cuando **Solo la carpeta actual** está marcado.
 - **Copiar enlace a esta carpeta**, junto a la ruta de la carpeta en el encabezado y en el menú de una fila de carpeta, copia esa dirección. En Firefox copia la dirección de la propia página del administrador. Chrome y Edge siguen mostrando la dirección con la que abriste el administrador, aunque te muevas entre carpetas.
 - El título de la pestaña indica la carpeta o, mientras buscas, la búsqueda.
 
@@ -66,6 +91,8 @@ Escribe un nombre en **Ponle nombre a esta búsqueda** y haz clic en **Guardar**
 </Steps>
 
 Para usar una, abre **Búsquedas guardadas** y elígela. Sus filtros y su orden reemplazan a los actuales, y si estaba limitada a una carpeta, el administrador vuelve a esa carpeta. Cada entrada se puede renombrar o eliminar, y una eliminación se puede deshacer desde el mensaje que aparece a continuación. Arrastra una entrada por su asa para cambiar el orden, o abre el menú del asa para moverla con el teclado.
+
+El texto del cuadro de búsqueda se guarda tal como lo escribiste, con sus operadores. Una búsqueda guardada antes de que el cuadro de búsqueda leyera operadores encontraba su texto solo en títulos y direcciones. Ahora se abre con ese texto entre comillas cuando tiene varias palabras o dos puntos, así que sigue encontrando todos los marcadores que encontraba.
 
 Una búsqueda guardada almacena las definiciones de los filtros, nunca copias de los marcadores, así que sus resultados siempre corresponden a tus marcadores tal como están ahora. Si se eliminó una carpeta que menciona, esa carpeta se omite, los demás filtros se siguen aplicando y un mensaje indica cuántas carpetas se omitieron.
 

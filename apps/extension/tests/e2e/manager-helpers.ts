@@ -26,9 +26,9 @@ export async function setTablePageSize(target: StorageTarget, pageSize: number) 
   await writeStored(target, STORAGE_ITEMS.tableLayout, { pageSize });
 }
 
-/** The manager's search box, which matches titles and addresses. */
+/** The manager's search box, which reads the search query language. */
 export function managerSearch(page: Page) {
-  return page.getByRole('textbox', { name: 'Search titles and addresses' });
+  return page.getByRole('textbox', { name: 'Search titles, addresses, folders, and tags' });
 }
 
 /** The address filter behind "More filters", which this opens first when it is closed. */

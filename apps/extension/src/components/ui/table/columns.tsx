@@ -117,6 +117,26 @@ function includesQuery(value: unknown, ...texts: (string | undefined)[]) {
   return !query || texts.some((text) => text?.toLowerCase().includes(query));
 }
 
+/**
+ * The search box's filter on the Title column: what was typed, and what the search query language
+ * (`use-search-matches.ts`) found for it, matched by row id.
+ */
+export type TitleSearchFilter = { text: string; matches: SearchMatches };
+
+/** The text of the Title column's filter, which saved searches also set as plain text. */
+export function titleSearchText(value: unknown): string {
+  if (typeof value === 'string') return value;
+  return (value as Partial<TitleSearchFilter> | undefined)?.text ?? '';
+}
+
+function matchesTitleSearch(rowId: string, value: unknown): boolean {
+  const matches = (value as Partial<TitleSearchFilter> | undefined)?.matches;
+  if (matches === undefined || matches === 'all') return true;
+  // Nothing is listed until the query filter has read the query, so all bookmarks never flash.
+  if (matches === 'pending') return false;
+  return matches.has(rowId);
+}
+
 function textFilter(row: { getValue: (id: string) => unknown }, id: string, value: unknown) {
   return includesQuery(value, String(row.getValue(id) ?? ''));
 }
@@ -287,8 +307,8 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         </div>
       );
     },
-    // The search box: it matches the title or the address, as the browser's own manager does.
-    filterFn: (row, _id, value) => includesQuery(value, row.original.title, row.original.url),
+    // The search box, in the search query language: title, address, site, folder, tags, summary.
+    filterFn: (row, _id, value) => matchesTitleSearch(row.original.id, value),
     // Title shares the room the other columns leave with URL until the user sizes it
     // (`fillWeight`); `size` is the narrowest it fills to, and `minSize` keeps a resized Title
     // readable.

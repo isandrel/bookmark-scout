@@ -6280,7 +6280,7 @@
         "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
-        "message": "搜索标题和网址",
+        "message": "搜索标题、网址、文件夹和标签",
         "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
     },
     "managerDefaults_moreFilters": {

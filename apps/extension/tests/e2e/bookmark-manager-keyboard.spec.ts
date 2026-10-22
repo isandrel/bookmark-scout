@@ -160,7 +160,9 @@ test('Ctrl/Cmd+A selects every row the filters show, on every page', async ({
   await expect(page.getByTestId('bulk-actions')).toHaveCount(0);
 
   // With a search, only the matches are selected.
-  await page.getByRole('textbox', { name: 'Search titles and addresses' }).fill('All ');
+  await page
+    .getByRole('textbox', { name: 'Search titles, addresses, folders, and tags' })
+    .fill('All ');
   await page.getByRole('checkbox', { name: 'Current folder only' }).check();
   await page
     .locator('tbody tr')
@@ -169,7 +171,7 @@ test('Ctrl/Cmd+A selects every row the filters show, on every page', async ({
   await page.keyboard.press('ControlOrMeta+a');
   await expect(page.getByTestId('bulk-actions')).toContainText('23 selected');
   // In the title filter, Ctrl/Cmd+A selects its text instead.
-  await page.getByRole('textbox', { name: 'Search titles and addresses' }).focus();
+  await page.getByRole('textbox', { name: 'Search titles, addresses, folders, and tags' }).focus();
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('bulk-actions')).toContainText('23 selected');
 });

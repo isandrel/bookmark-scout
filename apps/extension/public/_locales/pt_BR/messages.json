@@ -6486,7 +6486,7 @@
         "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
-        "message": "Pesquisar títulos e endereços",
+        "message": "Pesquisar títulos, endereços, pastas e tags",
         "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
     },
     "managerDefaults_moreFilters": {

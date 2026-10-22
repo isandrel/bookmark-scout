@@ -135,7 +135,7 @@
         "caption": "The manager replaces Chrome's Bookmarks page and works like it, with a folder tree, breadcrumbs, and a sortable table.",
         "alt": "The Bookmark Scout manager on the AI / LLMs / Fine-tuning folder, with the folder tree (AI, Dev, Design, Tools, Reading list), one search box, and the bookmark table, each bookmark with its site's icon",
         "points": [
-          "Search all your bookmarks as you type",
+          "Search all your bookmarks as you type, by title, address, folder, or tag",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search, and it always shows the current results",
           "Select several rows with {{SHORTCUT:mouse.select_toggle}}, right-click for cut, copy, paste, and open all, and drag bookmarks and folders where they belong",

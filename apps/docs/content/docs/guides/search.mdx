@@ -1,6 +1,6 @@
 ---
 title: Search and saved searches
-description: Find any bookmark by title or URL from the popup or side panel, filter the manager's table, and keep filter combinations as named saved searches.
+description: Find any bookmark by title, address, folder, tag, or summary from the popup, side panel, or manager, narrow a search with operators, and keep filter combinations as named saved searches.
 ---
 
 ## Search from the popup or side panel
@@ -10,10 +10,10 @@ description: Find any bookmark by title or URL from the popup or side panel, fil
 Click the Bookmark Scout icon in the toolbar. You can also open Bookmark Scout in the browser's side panel (the sidebar in Firefox), which stays open while you browse.
 </Step>
 <Step>
-Type in the search box at the top, which reads **Type a folder name to save this page…** and searches your bookmarks too (press <Shortcut id="popup.focus_search" /> to jump there). Results appear as you type, inside their folders, with each match highlighted.
+Type in the search box at the top, which reads **Type a folder name to save this page…** and searches your bookmarks too (press <Shortcut id="popup.focus_search" /> to jump there). Results appear as you type, inside their folders, with each match highlighted. Every word must match, in the title, the address, the folder, or the tags and summary; see [Search words and operators](#search-words-and-operators).
 </Step>
 <Step>
-Narrow the match with **More search options**, the button inside the search box: **Match Case**, **Match Whole Word**, and **Advanced pattern search (regex)**, which treats the search as a regular expression. The button is highlighted while any of them is on.
+Narrow the match with **More search options**, the button inside the search box: **Match Case**, **Match Whole Word**, and **Advanced pattern search (regex)**, which treats the search as a regular expression. The button is highlighted while any of them is on. These options search titles only, as typed, without operators.
 </Step>
 <Step>
 Click a bookmark, or move to it with the arrow keys and press `Enter`, to open it in a new tab.
@@ -29,11 +29,36 @@ Good to know:
 - Clearing the search (the clear button, or `Esc` in the search box) restores the folders you had open before.
 - Recent searches are remembered on this device. Click the empty search box, or press <Shortcut id="popup.recent_searches" /> in it, to list them. Clear them from that list, or turn off **Search History** in Settings.
 
+## Search words and operators
+
+The search boxes in the popup, side panel, and manager read a search the same way. They search only the bookmarks in this browser, and send nothing anywhere.
+
+- Every word must match, each anywhere: the title, the web address, the folder path, or the bookmark's tags and summary. `recipe soup` finds a bookmark named "Soup" in a folder named "Recipes".
+- Quotes keep words together: `"tomato soup"`.
+- A `-` in front leaves out what matches: `recipe -cake` or `-tag:archive`.
+- A word that names a folder finds the folder. In the popup, its bookmarks show inside it; `folder:` lists everything in it.
+- Text that is not an operator is searched as typed, such as `C++`, `10:30`, or a web address. So is an operator Bookmark Scout does not know, such as `foo:bar`. A value it cannot read, such as an invalid date, is skipped.
+
+| Search | Finds |
+| --- | --- |
+| `title:react` | Titles that contain the text; `title:"react hooks"` takes several words |
+| `url:github` | Web addresses that contain the text |
+| `domain:github.com` | Bookmarks on that site, including its subdomains |
+| `folder:Work` or `path:Work` | Everything in a folder with that exact name, at any depth; `folder:"Work / Docs"` names a folder inside another |
+| `tag:reading` | Bookmarks with that exact tag |
+| `summary:recipe` | Summaries that contain the text |
+| `is:bookmark` or `is:folder` | Only bookmarks, or only folders |
+| `is:untagged` | Bookmarks without tags |
+| `has:tags` or `has:summary` | Items with tags, or with a summary |
+| `after:2026-01-31` or `before:2026-01-31` | Items added on or after that day, or on or before it |
+
+Tags and summaries are the ones you add in **Bookmark Details** or keep from the **Auto-Tagging** and **Content Summarizer** tools. They stay on this device.
+
 ## Filter in the bookmarks manager
 
 The manager's table has more precise filters. In Chrome, open the browser's bookmarks page to reach it; it opens on your bookmarks bar.
 
-- **Search titles and addresses** matches text in a bookmark's title or its web address. Press <Shortcut id="manager.focus_filter" /> to jump to it.
+- **Search titles, addresses, folders, and tags** reads [search words and operators](#search-words-and-operators) and lists the folders and bookmarks that match. Press <Shortcut id="manager.focus_filter" /> to jump to it.
 - **Type**, **Domain**, and **Date Added** narrow the rows further. **More filters** adds **Filter URLs...**, which matches the web address only, and **Folder**, which keeps the items of the folders you pick.
 - **Current folder only** limits the filters to the folder you are in. When it is off, filters search all bookmarks, each result shows its folder under its title, and the path at the top says **Results from all folders**.
 - Sort by any column from its header. While the table is not in the browser's order, the text beside **Browser order** names the order it is in; click **Browser order** to go back.
@@ -45,7 +70,7 @@ The manager's table has more precise filters. In Chrome, open the browser's book
 The manager's address follows what you look at, so browser **Back** and **Forward** step through folders and searches, and you can bookmark or share a view.
 
 - `?id=` names the open folder, as in Chrome's own manager: `chrome://bookmarks/?id=12` opens folder 12 in Chrome, and `edge://favorites/?id=12` in Edge. Links from Chrome 154 to 156, which named the Bookmarks bar, Other bookmarks, and Mobile bookmarks by a long ID, open those folders too. Without `?id=`, the manager opens on the bookmarks bar; **Bookmarks** at the start of the folder path shows the top level.
-- `?q=` is the search: `chrome://bookmarks/?q=react` opens the manager searching titles and addresses for "react". While you type in **Search titles and addresses**, the address follows, and one burst of typing is one **Back** step. A search wins over the folder; the folder still applies when **Current folder only** is checked.
+- `?q=` is the search: `chrome://bookmarks/?q=react` opens the manager searching for "react", and `?q=tag:reading` for the tag. While you type in **Search titles, addresses, folders, and tags**, the address follows, and one burst of typing is one **Back** step. A search wins over the folder; the folder still applies when **Current folder only** is checked.
 - **Copy link to this folder**, next to the folder path in the header and in a folder row's menu, copies that address. In Firefox it copies the manager page's own address. Chrome and Edge keep showing the address you opened the manager with, even as you move between folders.
 - The tab title names the folder, or the search while you search.
 
@@ -66,6 +91,8 @@ Enter a name in **Name this search** and click **Save**.
 </Steps>
 
 To use one, open **Saved searches** and choose it. Its filters and sort replace the current ones, and if it was limited to one folder, the manager returns to that folder. Each entry can be renamed or deleted, and a deletion can be undone from the message that follows. Drag an entry by its handle to change the order, or open the handle's menu to move it from the keyboard.
+
+The search box text is saved as typed, operators included. A search saved before the search box read operators found its text in titles and addresses only. It now opens with that text in quotes where it has several words or a colon, so it still finds every bookmark it found.
 
 A saved search stores the filter definitions, never copies of bookmarks, so its results always match your bookmarks as they are now. If a folder it names was deleted, that folder is skipped, the other filters still apply, and a message says how many folders were skipped.
 

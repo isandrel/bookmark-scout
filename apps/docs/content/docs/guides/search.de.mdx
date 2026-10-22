@@ -1,6 +1,6 @@
 ---
 title: Suche und gespeicherte Suchen
-description: Finden Sie jedes Lesezeichen nach Titel oder URL im Pop-up oder in der Seitenleiste, filtern Sie die Tabelle des Managers, und speichern Sie Filterkombinationen als benannte Suchen.
+description: Finden Sie jedes Lesezeichen nach Titel, Adresse, Ordner, Tag oder Zusammenfassung im Pop-up, in der Seitenleiste oder im Manager, grenzen Sie eine Suche mit Operatoren ein, und speichern Sie Filterkombinationen als benannte Suchen.
 ---
 
 ## Im Pop-up oder in der Seitenleiste suchen [#search-from-the-popup-or-side-panel]
@@ -10,10 +10,10 @@ description: Finden Sie jedes Lesezeichen nach Titel oder URL im Pop-up oder in 
 Klicken Sie in der Symbolleiste auf das Bookmark-Scout-Symbol. Sie können Bookmark Scout auch in der Seitenleiste des Browsers (in Firefox in der Sidebar) öffnen, die beim Surfen geöffnet bleibt.
 </Step>
 <Step>
-Tippen Sie in das Suchfeld oben, in dem **Ordnernamen eingeben, um diese Seite zu speichern…** steht und das auch Ihre Lesezeichen durchsucht (drücken Sie <Shortcut id="popup.focus_search" />, um dorthin zu springen). Die Ergebnisse erscheinen schon beim Tippen, in ihren Ordnern und mit hervorgehobenem Treffer.
+Tippen Sie in das Suchfeld oben, in dem **Ordnernamen eingeben, um diese Seite zu speichern…** steht und das auch Ihre Lesezeichen durchsucht (drücken Sie <Shortcut id="popup.focus_search" />, um dorthin zu springen). Die Ergebnisse erscheinen schon beim Tippen, in ihren Ordnern und mit hervorgehobenem Treffer. Jedes Wort muss passen, im Titel, in der Adresse, im Ordner oder in den Tags und der Zusammenfassung; siehe [Suchwörter und Operatoren](#search-words-and-operators).
 </Step>
 <Step>
-Grenzen Sie die Suche mit **Weitere Suchoptionen** ein, der Schaltfläche im Suchfeld: **Groß-/Kleinschreibung beachten**, **Nur ganzes Wort** und **Erweiterte Mustersuche (Regex)**, die die Suche als regulären Ausdruck behandelt. Die Schaltfläche ist hervorgehoben, solange eine dieser Optionen aktiv ist.
+Grenzen Sie die Suche mit **Weitere Suchoptionen** ein, der Schaltfläche im Suchfeld: **Groß-/Kleinschreibung beachten**, **Nur ganzes Wort** und **Erweiterte Mustersuche (Regex)**, die die Suche als regulären Ausdruck behandelt. Die Schaltfläche ist hervorgehoben, solange eine dieser Optionen aktiv ist. Diese Optionen durchsuchen nur Titel, wie eingegeben, ohne Operatoren.
 </Step>
 <Step>
 Klicken Sie auf ein Lesezeichen, oder wechseln Sie mit den Pfeiltasten dorthin und drücken Sie `Enter`, um es in einem neuen Tab zu öffnen.
@@ -29,11 +29,36 @@ Gut zu wissen:
 - Wenn Sie die Suche löschen (mit der Schaltfläche zum Löschen oder mit `Esc` im Suchfeld), werden die Ordner wieder geöffnet, die vorher geöffnet waren.
 - Letzte Suchen werden auf diesem Gerät gespeichert. Klicken Sie in das leere Suchfeld oder drücken Sie darin <Shortcut id="popup.recent_searches" />, um sie aufzulisten. Löschen Sie sie in dieser Liste, oder deaktivieren Sie **Suchverlauf** in den Einstellungen.
 
+## Suchwörter und Operatoren [#search-words-and-operators]
+
+Die Suchfelder im Pop-up, in der Seitenleiste und im Manager lesen eine Suche auf dieselbe Weise. Sie durchsuchen nur die Lesezeichen in diesem Browser und senden nichts.
+
+- Jedes Wort muss passen, jedes an beliebiger Stelle: im Titel, in der Webadresse, im Ordnerpfad oder in den Tags und der Zusammenfassung des Lesezeichens. `rezepte suppe` findet ein Lesezeichen namens „Suppe“ in einem Ordner namens „Rezepte“.
+- Anführungszeichen halten Wörter zusammen: `"rote linsen"`.
+- Ein `-` davor schließt aus, was passt: `rezepte -kuchen` oder `-tag:archiv`.
+- Ein Wort, das einen Ordner nennt, findet den Ordner. Im Pop-up erscheinen seine Lesezeichen darin; `folder:` listet alles darin auf.
+- Text, der kein Operator ist, wird wie eingegeben gesucht, etwa `C++`, `10:30` oder eine Webadresse. Ebenso ein Operator, den Bookmark Scout nicht kennt, etwa `foo:bar`. Ein Wert, den es nicht lesen kann, etwa ein ungültiges Datum, wird übersprungen.
+
+| Suche | Findet |
+| --- | --- |
+| `title:react` | Titel, die den Text enthalten; `title:"react hooks"` nimmt mehrere Wörter |
+| `url:github` | Webadressen, die den Text enthalten |
+| `domain:github.com` | Lesezeichen auf dieser Website, einschließlich ihrer Subdomains |
+| `folder:Arbeit` oder `path:Arbeit` | Alles in einem Ordner mit genau diesem Namen, in jeder Tiefe; `folder:"Arbeit / Dokumente"` nennt einen Ordner in einem anderen |
+| `tag:lesen` | Lesezeichen mit genau diesem Tag |
+| `summary:rezept` | Zusammenfassungen, die den Text enthalten |
+| `is:bookmark` oder `is:folder` | Nur Lesezeichen oder nur Ordner |
+| `is:untagged` | Lesezeichen ohne Tags |
+| `has:tags` oder `has:summary` | Einträge mit Tags oder mit einer Zusammenfassung |
+| `after:2026-01-31` oder `before:2026-01-31` | Einträge, die an oder nach diesem Tag hinzugefügt wurden, oder an oder vor ihm |
+
+Tags und Zusammenfassungen sind die, die Sie in **Lesezeichendetails** hinzufügen oder aus den Werkzeugen **Automatische Tags** und **Inhaltszusammenfassung** übernehmen. Sie bleiben auf diesem Gerät.
+
 ## Im Lesezeichen-Manager filtern [#filter-in-the-bookmarks-manager]
 
 Die Tabelle des Managers bietet genauere Filter. Öffnen Sie in Chrome die Lesezeichenseite des Browsers, um dorthin zu gelangen; der Manager öffnet sich mit Ihrer Lesezeichenleiste.
 
-- **Titel und Adressen durchsuchen** findet Text im Titel oder in der Webadresse eines Lesezeichens. Drücken Sie <Shortcut id="manager.focus_filter" />, um direkt dorthin zu springen.
+- **Titel, Adressen, Ordner und Tags durchsuchen** liest [Suchwörter und Operatoren](#search-words-and-operators) und listet die passenden Ordner und Lesezeichen auf. Drücken Sie <Shortcut id="manager.focus_filter" />, um direkt dorthin zu springen.
 - **Typ**, **Domain** und **Hinzugefügt am** grenzen die Zeilen weiter ein. **Weitere Filter** fügt **URLs filtern...** hinzu, das nur die Webadresse durchsucht, und **Ordner**, das nur die Elemente der ausgewählten Ordner behält.
 - **Nur aktueller Ordner** beschränkt die Filter auf den Ordner, in dem Sie sich befinden. Ist die Option deaktiviert, durchsuchen die Filter alle Lesezeichen, jedes Ergebnis zeigt seinen Ordner unter dem Titel, und der Pfad oben lautet **Ergebnisse aus allen Ordnern**.
 - Sortieren Sie nach einer beliebigen Spalte über deren Kopfzeile. Solange die Tabelle nicht in der Reihenfolge des Browsers steht, nennt der Text neben **Browser-Reihenfolge** die aktuelle Reihenfolge; klicken Sie auf **Browser-Reihenfolge**, um zurückzukehren.
@@ -45,7 +70,7 @@ Die Tabelle des Managers bietet genauere Filter. Öffnen Sie in Chrome die Lesez
 Die Adresse des Managers folgt dem, was Sie gerade ansehen, sodass **Zurück** und **Vorwärts** im Browser durch Ordner und Suchen blättern und Sie eine Ansicht als Lesezeichen speichern oder teilen können.
 
 - `?id=` benennt den geöffneten Ordner, wie im eigenen Manager von Chrome: `chrome://bookmarks/?id=12` öffnet Ordner 12 in Chrome und `edge://favorites/?id=12` in Edge. Links aus Chrome 154 bis 156, die die Lesezeichenleiste, „Weitere Lesezeichen“ und „Mobile Lesezeichen“ mit einer langen ID benannten, öffnen diese Ordner ebenfalls. Ohne `?id=` öffnet sich der Manager mit der Lesezeichenleiste; **Lesezeichen** am Anfang des Ordnerpfads zeigt die oberste Ebene.
-- `?q=` ist die Suche: `chrome://bookmarks/?q=react` öffnet den Manager mit einer Suche nach „react“ in Titeln und Adressen. Während Sie in **Titel und Adressen durchsuchen** tippen, folgt die Adresse, und eine zusammenhängende Eingabe zählt als ein Schritt mit **Zurück**. Eine Suche hat Vorrang vor dem Ordner; der Ordner gilt weiterhin, wenn **Nur aktueller Ordner** aktiviert ist.
+- `?q=` ist die Suche: `chrome://bookmarks/?q=react` öffnet den Manager mit einer Suche nach „react“, und `?q=tag:reading` mit einer Suche nach dem Tag. Während Sie in **Titel, Adressen, Ordner und Tags durchsuchen** tippen, folgt die Adresse, und eine zusammenhängende Eingabe zählt als ein Schritt mit **Zurück**. Eine Suche hat Vorrang vor dem Ordner; der Ordner gilt weiterhin, wenn **Nur aktueller Ordner** aktiviert ist.
 - **Link zu diesem Ordner kopieren**, neben dem Ordnerpfad in der Kopfzeile und im Menü einer Ordnerzeile, kopiert diese Adresse. In Firefox kopiert die Funktion die eigene Adresse der Managerseite. Chrome und Edge zeigen weiterhin die Adresse an, mit der Sie den Manager geöffnet haben, auch wenn Sie zwischen Ordnern wechseln.
 - Der Tab-Titel nennt den Ordner, oder während einer Suche die Suche.
 
@@ -66,6 +91,8 @@ Geben Sie unter **Suche benennen** einen Namen ein und klicken Sie auf **Speiche
 </Steps>
 
 Um eine gespeicherte Suche zu verwenden, öffnen Sie **Gespeicherte Suchen** und wählen sie aus. Ihre Filter und ihre Sortierung ersetzen die aktuellen, und wenn sie auf einen Ordner beschränkt war, kehrt der Manager zu diesem Ordner zurück. Jeder Eintrag lässt sich umbenennen oder löschen, und ein Löschen kann über die anschließende Benachrichtigung rückgängig gemacht werden. Ziehen Sie einen Eintrag am Griff, um die Reihenfolge zu ändern, oder verschieben Sie ihn über das Menü des Griffs mit der Tastatur.
+
+Der Text im Suchfeld wird wie eingegeben gespeichert, mit seinen Operatoren. Eine Suche, die gespeichert wurde, bevor das Suchfeld Operatoren las, fand ihren Text nur in Titeln und Adressen. Sie öffnet sich jetzt mit diesem Text in Anführungszeichen, wenn er mehrere Wörter oder einen Doppelpunkt enthält, und findet so weiterhin jedes Lesezeichen, das sie gefunden hat.
 
 Eine gespeicherte Suche speichert die Filterdefinitionen, nie Kopien von Lesezeichen, sodass ihre Ergebnisse immer Ihren aktuellen Lesezeichen entsprechen. Wurde ein darin genannter Ordner gelöscht, wird dieser Ordner übersprungen, die übrigen Filter gelten weiterhin, und eine Benachrichtigung zeigt an, wie viele Ordner übersprungen wurden.
 

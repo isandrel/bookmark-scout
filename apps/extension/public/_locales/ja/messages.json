@@ -6478,7 +6478,7 @@
         "description": "Options > For developers: line under the tab title"
     },
     "managerDefaults_search": {
-        "message": "タイトルとアドレスを検索",
+        "message": "タイトル・アドレス・フォルダ・タグを検索",
         "description": "Bookmark manager: placeholder and label of the search box, which matches titles and web addresses"
     },
     "managerDefaults_moreFilters": {
