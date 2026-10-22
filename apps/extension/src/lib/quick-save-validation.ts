@@ -71,6 +71,15 @@ export const quickSaveHostRequestSchema = z.discriminatedUnion('type', [
     type: z.literal(QUICK_SAVE_MESSAGE.hostReadText),
     token: messageId,
     html: z.string().max(INPUT_LIMITS.chars.page_html),
-    maxChars: z.number().int().positive(),
+    maxChars: z.number().int().positive().max(PAGE_TEXT_LIMITS.maxCharsPerPage),
   }),
 ]) satisfies z.ZodType<QuickSaveHostRequest>;
+
+/** What the AI host page answers to `hostReadText`: text no longer than the index keeps. */
+export const pageTextReadingSchema = z.discriminatedUnion('status', [
+  z.strictObject({
+    status: z.literal('read'),
+    text: z.string().min(1).max(PAGE_TEXT_LIMITS.maxCharsPerPage),
+  }),
+  z.strictObject({ status: z.enum(['empty', 'signIn']) }),
+]) satisfies z.ZodType<PageTextReading>;

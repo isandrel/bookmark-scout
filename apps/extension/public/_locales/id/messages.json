@@ -7720,7 +7720,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Tampilkan Indeks Teks Halaman di bilah samping Alat, dan izinkan penelusuran mencari di dalam halaman yang diindeks. Alat ini mengunduh setiap halaman yang Anda indeks; teksnya tetap di perangkat ini.",
+        "message": "Tampilkan Indeks Teks Halaman di bilah samping Alat, dan izinkan penelusuran mencari di dalam halaman yang diindeks. Alat ini mengunduh setiap halaman yang Anda indeks; teksnya tetap di perangkat ini. Tombol Indeks teks halaman ini di popup membaca halaman yang sedang Anda lihat hanya saat Anda mengkliknya, dan menampilkan teksnya sebelum disimpan.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -7742,6 +7742,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Tanpa teks ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "Halaman masuk ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "Gagal ($1)",
@@ -7842,6 +7846,50 @@
     "pageText_clearedDesc": {
         "message": "Bookmark, tag, dan Histori tidak diubah.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "Indeks teks halaman ini",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "Indeks teks halaman ini?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "Ini adalah teks yang ditampilkan tab sekarang, seperti yang Anda lihat, termasuk di situs tempat Anda sudah masuk. Sebelum menyimpannya, pastikan tidak ada yang bersifat pribadi, seperti detail akun atau pesan. Teks ini hanya disimpan di perangkat ini dan hanya dipakai oleh pencarian.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "Buang",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "Tidak ada teks yang diindeks",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "Tab berubah saat teksnya sedang dibaca. Buka halaman bookmark tersebut, lalu coba lagi.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "Halaman di jendela pribadi tidak pernah dibaca.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "Browser tidak mengizinkan pembacaan tab ini. Buka popup toolbar di halaman tersebut, lalu coba lagi.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "Halaman ini tidak menampilkan teks yang dapat dibaca.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "Ini tampaknya halaman masuk, jadi teksnya tidak diindeks. Masuk, buka halaman bookmark tersebut, lalu coba lagi.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "Indeks teks halaman sudah penuh. Gunakan Hapus teks halaman di Setelan untuk mengosongkan ruang.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "Tampilan Pengelola",

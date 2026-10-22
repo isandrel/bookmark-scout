@@ -131,11 +131,13 @@ Turn on **Enable Index Page Text** in [Settings](/settings#index-page-text).
 In the manager's Tools sidebar, choose the scope on the **Index Page Text** card and click **Index**. When asked, allow access to the sites in that scope. Indexing runs in the background: it keeps going after you close the manager, and its card and **Background tasks** show its progress, with **Pause**, **Resume**, and **Cancel**; the pages then wait for **Review results**.
 </Step>
 <Step>
-Review the pages by tab: **Text found**, **No text**, **Failed**, **Already indexed** (from the same address before), and **Skipped** (not a web page, or on your local network). Pages with text start on **Save text**; click **Save** (for example **Save text of 12 pages**).
+Review the pages by tab: **Text found**, **No text**, **Sign-in page** (the page asked you to sign in instead of showing its content; its text is never saved), **Failed**, **Already indexed** (from the same address before), and **Skipped** (not a web page, or on your local network). Pages with text start on **Save text**; click **Save** (for example **Save text of 12 pages**).
 </Step>
 </Steps>
 
 Search then finds those bookmarks by their text in the popup, the side panel, and the manager. `content:` looks only in page text, and `has:content` finds the bookmarks that have it. A page is read again when its bookmark's address changes. **Delete page text** in Settings deletes the index; bookmarks, tags, and the History stay as they are.
+
+Indexing downloads pages without your cookies, so a page you can read only when signed in shows its sign-in page instead and lands under **Sign-in page**. To index what you see on such a page, open it: when it is bookmarked and Index Page Text is on, the button on the popup line that says where the page is saved, **Index this page's text**, reads the text the tab shows and shows it with a reminder to check it for anything private. It is kept only when you click **Save text**. Text is read only from the toolbar popup, never in a private window, never from a sign-in page, and only while the tab shows the bookmarked page before and after reading it; if the tab moves to another page in between, nothing is kept.
 
 ## Show covers on cards
 

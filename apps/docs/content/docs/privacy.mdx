@@ -19,10 +19,10 @@ This is a summary. The full <SiteLink to="privacy">privacy policy</SiteLink> on 
 - The title and URL of the active tab, when you save the page you are on (from the popup, the side panel, or a quick save shortcut) or ask for a folder suggestion.
 - Site icons from the browser's own icon cache, in Chrome and Edge, once you turn on **Use the browser's icon cache**.
 - Site icons you download with **Refresh Site Icons**, from each bookmarked website.
-- The text of bookmarked pages, when you run **Index Page Text**, from each page in the run.
+- The text of bookmarked pages, when you run **Index Page Text**, from each page in the run. Or the text of the tab you are viewing, as you see it, when you click **Index this page's text** in the popup.
 - The head of bookmarked pages and the preview image each one names, when you run **Fetch Covers**, from each page in the run. Or a picture of the tab you are viewing, when you click **Use this view as the cover** in the popup.
 
-It does not read the content of the pages you visit. After a quick save shortcut it shows its own notification in that tab, which reads nothing from the page.
+It does not read the content of the pages you visit, except the text of the tab you are viewing when you click **Index this page's text** in the popup, which you see before it is kept. After a quick save shortcut it shows its own notification in that tab, which reads nothing from the page.
 
 ## What it stores
 
@@ -41,7 +41,7 @@ It does not read the content of the pages you visit. After a quick save shortcut
 | AI activity, only while **Record requests** is on (off by default, per device): the last AI requests with what was sent and what came back, including bookmark titles, URLs, folder paths, and with **Read page content** on, page text. API keys and other credentials are removed before storing; turning recording off deletes it | Local storage on this device | No |
 | Tags, summaries, saved searches, smart rules, the list of automatic taggings, recent folders, recent searches | Local storage on this device | No |
 | Site icons saved with **Refresh Site Icons**, up to 4 MB by default | Local storage on this device | No |
-| Page text saved with **Index Page Text** | IndexedDB on this device | No |
+| Page text saved with **Index Page Text** or **Index this page's text** | IndexedDB on this device | No |
 | Covers saved with **Fetch Covers** | IndexedDB on this device | No |
 | The last quick save (the page's title and URL, and where it went), for **Undo** and **Move to** | Session storage on this device, cleared when the browser closes | No |
 | The manager's undo history (the bookmarks you changed there, with copies of deleted ones and their tags and summaries), for undo and redo | Session storage on this device, cleared when the browser closes | No |

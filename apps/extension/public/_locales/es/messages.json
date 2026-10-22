@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Muestra Indexar texto de páginas en la barra de herramientas y deja que la búsqueda mire dentro de las páginas indexadas. Descarga cada página que indexas; el texto se queda en este dispositivo.",
+        "message": "Muestra Indexar texto de páginas en la barra de herramientas y deja que la búsqueda mire dentro de las páginas indexadas. Descarga cada página que indexas; el texto se queda en este dispositivo. El botón Indexar el texto de esta página de la ventana emergente lee la página que estás viendo solo cuando haces clic en él y muestra el texto antes de guardarlo.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8024,6 +8024,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Sin texto ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "Página de inicio de sesión ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "Con error ($1)",
@@ -8168,6 +8172,50 @@
     "pageText_clearedDesc": {
         "message": "No se cambiaron los marcadores, las etiquetas ni el historial.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "Indexar el texto de esta página",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "¿Indexar el texto de esta página?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "Este es el texto que muestra la pestaña ahora, tal como lo ves, también en sitios en los que has iniciado sesión. Antes de guardarlo, comprueba que no contiene nada privado, como datos de tu cuenta o mensajes. Solo se guarda en este dispositivo y solo lo usa la búsqueda.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "Descartar",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "No se indexó ningún texto",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "La pestaña cambió mientras se leía su texto. Abre la página del marcador e inténtalo de nuevo.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "Nunca se leen páginas en ventanas privadas.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "El navegador no permitió leer esta pestaña. Abre la ventana emergente de la barra de herramientas en la página e inténtalo de nuevo.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "Esta página no muestra texto legible.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "Parece una página de inicio de sesión, así que su texto no se indexa. Inicia sesión, abre la página del marcador e inténtalo de nuevo.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "El índice de texto de páginas está lleno. Usa Eliminar texto de páginas en Configuración para hacer sitio.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "Vista del administrador",

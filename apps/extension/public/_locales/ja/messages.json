@@ -7974,7 +7974,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "ツールサイドバーにページ本文の索引を表示し、検索で索引済みページの中も探せるようにします。索引を作るページはダウンロードされ、本文はこの端末に保存されます。",
+        "message": "ツールサイドバーにページ本文の索引を表示し、検索で索引済みページの中も探せるようにします。索引を作るページはダウンロードされ、本文はこの端末に保存されます。ポップアップの「このページの本文を索引に追加」ボタンは、クリックしたときだけ表示中のページを読み取り、保存する前に本文を表示します。",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -7996,6 +7996,10 @@
     "tools_pageTextCategory_empty": {
         "message": "本文なし ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "ログインページ ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "失敗 ($1)",
@@ -8140,6 +8144,50 @@
     "pageText_clearedDesc": {
         "message": "ブックマーク、タグ、履歴は変更されていません。",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "このページの本文を索引に追加",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "このページの本文を索引に追加しますか？",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "タブに今表示されている本文で、ログインしているサイトでもあなたが見ているとおりの内容です。保存する前に、アカウント情報やメッセージなどの個人的な内容が含まれていないか確認してください。この端末にのみ保存され、検索だけに使われます。",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "破棄",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "本文を索引に追加しませんでした",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "本文の読み取り中にタブが変わりました。ブックマークのページを開いてもう一度お試しください。",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "プライベートウィンドウのページは読み取りません。",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "ブラウザがこのタブの読み取りを許可しませんでした。そのページでツールバーのポップアップを開いて、もう一度お試しください。",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "このページには読み取れる本文がありません。",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "ログインページのようなので、本文は索引に追加しません。ログインしてブックマークのページを開き、もう一度お試しください。",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "ページ本文の索引がいっぱいです。設定の「ページ本文を削除」で空きを作ってください。",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "マネージャーの表示",

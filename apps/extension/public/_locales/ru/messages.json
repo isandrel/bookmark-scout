@@ -8566,7 +8566,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Показывать «Индексацию текста страниц» на панели «Инструменты» и искать внутри проиндексированных страниц. Каждая индексируемая страница загружается; текст остаётся на этом устройстве.",
+        "message": "Показывать «Индексацию текста страниц» на панели «Инструменты» и искать внутри проиндексированных страниц. Каждая индексируемая страница загружается; текст остаётся на этом устройстве. Кнопка «Проиндексировать текст этой страницы» во всплывающем окне читает открытую страницу, только когда вы её нажимаете, и показывает текст до сохранения.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8588,6 +8588,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Нет текста ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "Страница входа ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "Ошибка ($1)",
@@ -8820,6 +8824,50 @@
     "pageText_clearedDesc": {
         "message": "Закладки, теги и история не изменились.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "Проиндексировать текст этой страницы",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "Проиндексировать текст этой страницы?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "Это текст, который вкладка показывает сейчас, в том виде, в каком вы его видите, в том числе на сайтах, где вы вошли в аккаунт. Перед сохранением убедитесь, что в нём нет ничего личного, например данных аккаунта или сообщений. Текст хранится только на этом устройстве и используется только для поиска.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "Отменить",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "Текст не проиндексирован",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "Вкладка изменилась, пока читался её текст. Откройте страницу закладки и попробуйте снова.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "Страницы в приватных окнах никогда не читаются.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "Браузер не разрешил прочитать эту вкладку. Откройте всплывающее окно расширения на этой странице и попробуйте снова.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "На этой странице нет читаемого текста.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "Похоже, это страница входа, поэтому её текст не индексируется. Войдите в аккаунт, откройте страницу закладки и попробуйте снова.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "Индекс текста страниц заполнен. Чтобы освободить место, нажмите «Удалить текст страниц» в настройках.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "Вид диспетчера",

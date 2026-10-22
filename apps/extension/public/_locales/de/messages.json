@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Seitentext indexieren in der Werkzeugleiste anzeigen und die Suche in indexierten Seiten suchen lassen. Jede indexierte Seite wird heruntergeladen; der Text bleibt auf diesem Gerät.",
+        "message": "Seitentext indexieren in der Werkzeugleiste anzeigen und die Suche in indexierten Seiten suchen lassen. Jede indexierte Seite wird heruntergeladen; der Text bleibt auf diesem Gerät. Die Schaltfläche „Text dieser Seite indexieren“ im Pop-up liest die angezeigte Seite nur, wenn Sie darauf klicken, und zeigt den Text, bevor er behalten wird.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8024,6 +8024,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Kein Text ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "Anmeldeseite ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "Fehlgeschlagen ($1)",
@@ -8168,6 +8172,50 @@
     "pageText_clearedDesc": {
         "message": "Lesezeichen, Tags und der Verlauf wurden nicht geändert.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "Text dieser Seite indexieren",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "Text dieser Seite indexieren?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "Das ist der Text, den der Tab gerade zeigt, so wie Sie ihn sehen, auch auf Websites, bei denen Sie angemeldet sind. Prüfen Sie vor dem Speichern, dass er nichts Privates enthält, etwa Kontodaten oder Nachrichten. Er bleibt nur auf diesem Gerät und wird nur von der Suche verwendet.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "Verwerfen",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "Kein Text indexiert",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "Der Tab hat sich geändert, während sein Text gelesen wurde. Öffnen Sie die Seite des Lesezeichens und versuchen Sie es erneut.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "Seiten in privaten Fenstern werden nie gelesen.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "Der Browser hat das Lesen dieses Tabs nicht erlaubt. Öffnen Sie das Pop-up in der Symbolleiste auf der Seite und versuchen Sie es erneut.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "Diese Seite zeigt keinen lesbaren Text.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "Das sieht nach einer Anmeldeseite aus, daher wird ihr Text nicht indexiert. Melden Sie sich an, öffnen Sie die Seite des Lesezeichens und versuchen Sie es erneut.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "Der Seitentext-Index ist voll. Mit „Seitentext löschen“ in den Einstellungen schaffen Sie Platz.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "Manageransicht",

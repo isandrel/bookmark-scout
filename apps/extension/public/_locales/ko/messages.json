@@ -7974,7 +7974,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "도구 사이드바에 페이지 본문 색인을 표시하고, 검색이 색인된 페이지 안도 찾게 합니다. 색인하는 페이지는 다운로드되며 본문은 이 기기에 남습니다.",
+        "message": "도구 사이드바에 페이지 본문 색인을 표시하고, 검색이 색인된 페이지 안도 찾게 합니다. 색인하는 페이지는 다운로드되며 본문은 이 기기에 남습니다. 팝업의 '이 페이지 본문 색인' 버튼은 클릭할 때만 보고 있는 페이지를 읽고, 보관하기 전에 본문을 보여 줍니다.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -7996,6 +7996,10 @@
     "tools_pageTextCategory_empty": {
         "message": "본문 없음 ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "로그인 페이지 ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "실패 ($1)",
@@ -8140,6 +8144,50 @@
     "pageText_clearedDesc": {
         "message": "북마크, 태그, 기록은 바뀌지 않았습니다.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "이 페이지 본문 색인",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "이 페이지 본문을 색인할까요?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "탭에 지금 보이는 본문으로, 로그인한 사이트에서도 보이는 그대로입니다. 저장하기 전에 계정 정보나 메시지 같은 개인적인 내용이 없는지 확인하세요. 이 기기에만 보관되며 검색에만 사용됩니다.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "버리기",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "본문을 색인하지 않음",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "본문을 읽는 동안 탭이 바뀌었습니다. 북마크한 페이지를 열고 다시 시도하세요.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "시크릿 창의 페이지는 읽지 않습니다.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "브라우저가 이 탭을 읽도록 허용하지 않았습니다. 해당 페이지에서 툴바 팝업을 열고 다시 시도하세요.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "이 페이지에는 읽을 수 있는 본문이 없습니다.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "로그인 페이지로 보여 본문을 색인하지 않습니다. 로그인한 뒤 북마크한 페이지를 열고 다시 시도하세요.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "페이지 본문 색인이 가득 찼습니다. 설정에서 '페이지 본문 삭제'로 공간을 확보하세요.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "관리자 보기",

@@ -8,8 +8,23 @@ max_chars_per_page = 3000
 max_pages = 10000
 # Downloading one page
 timeout_ms = 10000
+# Bytes of one downloaded page, and characters of the current tab's page that Index this page's
+# text reads in the popup
 max_bytes = 2000000
 # Pages downloaded at a time
 concurrency = 4
 # Raised when the kept text would read differently, so pages are indexed again
 extractor_version = 1
+
+# Sign-in pages: a page that asks for a sign-in instead of showing what was bookmarked is listed
+# on its own in the review and never saved as the page's text (src/services/page-text.ts).
+[sign_in]
+# Fields that ask for a password; a page with one of them in its main content may be a sign-in page
+fields = ['input[type="password" i]', 'input[autocomplete~="current-password" i]']
+# A field inside one of these is a box beside the content (a site header's sign-in), not the page
+outside = ["header", "nav", "footer", "aside"]
+# ...and it is a sign-in page only when its readable text is shorter than this: an article with a
+# sign-in box, or with a newsletter form, keeps its text
+max_text_chars = 1000
+# Answers that mean the page needs a sign-in (Unauthorized, Forbidden); their pages are not read
+http_statuses = [401, 403]

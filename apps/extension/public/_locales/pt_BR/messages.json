@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Mostra Indexar texto das páginas na barra de ferramentas e deixa a pesquisa olhar dentro das páginas indexadas. Cada página indexada é baixada; o texto fica neste dispositivo.",
+        "message": "Mostra Indexar texto das páginas na barra de ferramentas e deixa a pesquisa olhar dentro das páginas indexadas. Cada página indexada é baixada; o texto fica neste dispositivo. O botão Indexar o texto desta página do pop-up só lê a página que você está vendo quando você clica nele e mostra o texto antes de guardá-lo.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8024,6 +8024,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Sem texto ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "Página de login ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "Com falha ($1)",
@@ -8168,6 +8172,50 @@
     "pageText_clearedDesc": {
         "message": "Favoritos, tags e histórico não foram alterados.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "Indexar o texto desta página",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "Indexar o texto desta página?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "Este é o texto que a guia mostra agora, como você o vê, inclusive em sites em que você está conectado. Antes de salvar, confira se não há nada privado, como dados da conta ou mensagens. Fica guardado só neste dispositivo e é usado só pela pesquisa.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "Descartar",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "Nenhum texto indexado",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "A guia mudou enquanto o texto era lido. Abra a página do favorito e tente de novo.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "Páginas em janelas privadas nunca são lidas.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "O navegador não permitiu ler esta guia. Abra o pop-up da barra de ferramentas na página e tente de novo.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "Esta página não mostra texto legível.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "Isto parece uma página de login, então o texto não é indexado. Faça login, abra a página do favorito e tente de novo.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "O índice de texto das páginas está cheio. Use Excluir texto das páginas nas Configurações para liberar espaço.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "Visualização do gerenciador",

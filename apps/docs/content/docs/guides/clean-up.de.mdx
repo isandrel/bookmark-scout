@@ -131,11 +131,13 @@ Schalten Sie **Seitentext indexieren aktivieren** in den [Einstellungen](/settin
 Wählen Sie in der Werkzeugleiste des Managers den Bereich auf der Karte **Seitentext indexieren** und klicken Sie auf **Indexieren**. Erlauben Sie auf Nachfrage den Zugriff auf die Websites dieses Bereichs. Das Indexieren läuft im Hintergrund: Es läuft weiter, wenn Sie die Verwaltung schließen, und seine Karte sowie **Hintergrundaufgaben** zeigen den Fortschritt, mit **Anhalten**, **Fortsetzen** und **Abbrechen**; die Seiten warten dann unter **Ergebnisse ansehen**.
 </Step>
 <Step>
-Prüfen Sie die Seiten nach Tab: **Text gefunden**, **Kein Text**, **Fehlgeschlagen**, **Schon indexiert** (vorher von derselben Adresse) und **Übersprungen** (keine Webseite oder im lokalen Netzwerk). Seiten mit Text stehen zuerst auf **Text speichern**; klicken Sie auf **Speichern** (zum Beispiel **Text von 12 Seiten speichern**).
+Prüfen Sie die Seiten nach Tab: **Text gefunden**, **Kein Text**, **Anmeldeseite** (die Seite verlangte eine Anmeldung, statt ihren Inhalt zu zeigen; ihr Text wird nie gespeichert), **Fehlgeschlagen**, **Schon indexiert** (vorher von derselben Adresse) und **Übersprungen** (keine Webseite oder im lokalen Netzwerk). Seiten mit Text stehen zuerst auf **Text speichern**; klicken Sie auf **Speichern** (zum Beispiel **Text von 12 Seiten speichern**).
 </Step>
 </Steps>
 
 Danach findet die Suche diese Lesezeichen über ihren Text im Pop-up, in der Seitenleiste und im Manager. `content:` sucht nur im Seitentext, und `has:content` findet die Lesezeichen, die welchen haben. Eine Seite wird erneut gelesen, wenn sich die Adresse ihres Lesezeichens ändert. **Seitentext löschen** in den Einstellungen löscht den Index; Lesezeichen, Tags und der Verlauf bleiben unverändert.
+
+Beim Indexieren werden Seiten ohne Ihre Cookies heruntergeladen, daher zeigt eine Seite, die Sie nur angemeldet lesen können, stattdessen ihre Anmeldeseite und landet unter **Anmeldeseite**. Um zu indexieren, was Sie auf einer solchen Seite sehen, öffnen Sie sie: Ist sie als Lesezeichen gespeichert und Seitentext indexieren aktiv, liest die Schaltfläche **Text dieser Seite indexieren** in der Pop-up-Zeile, die sagt, wo die Seite gespeichert ist, den Text, den der Tab zeigt, und zeigt ihn mit dem Hinweis, ihn auf Privates zu prüfen. Er wird nur behalten, wenn Sie auf **Text speichern** klicken. Text wird nur aus dem Pop-up in der Symbolleiste gelesen, nie in privaten Fenstern, nie von einer Anmeldeseite und nur, solange der Tab vor und nach dem Lesen die Seite des Lesezeichens zeigt; wechselt der Tab dazwischen zu einer anderen Seite, wird nichts behalten.
 
 ## Titelbilder auf Karten zeigen [#show-covers-on-cards]
 

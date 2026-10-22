@@ -51,7 +51,7 @@ export function CaptureCoverButton({ url }: { url: string }) {
       <Button
         variant="ghost"
         size="icon"
-        className="ml-auto size-5 shrink-0"
+        className="size-5 shrink-0"
         aria-label={t('covers_captureButton')}
         title={t('covers_captureButton')}
         disabled={busy}

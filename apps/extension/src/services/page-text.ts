@@ -3,11 +3,14 @@
  * leaves it for the review to save into the page text index (`page-text-store.ts`). Pages are read
  * the way AI page reading reads them (no cookies, Readability, the same private-host rule), but
  * the text stays on this device and is used only by search. A page already indexed from the same
- * address is not downloaded again.
+ * address is not downloaded again. A page that asks for a sign-in instead of showing its content
+ * is listed as `signIn` and its text is never kept. The page the user is viewing can also be
+ * indexed from its tab, as it is shown to them (`readTabPageText`), after a preview.
  */
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
-export type PageTextScanStatus = 'read' | 'empty' | 'failed' | 'current' | 'skipped';
+export type PageTextScanStatus = 'read' | 'empty' | 'signIn' | 'failed' | 'current' | 'skipped';
 
 export type PageTextScanItem = {
   id: string;
@@ -31,10 +34,34 @@ export type PageTextScanOptions = {
 };
 
 /**
- * Turns a downloaded page into its readable text, at most `maxChars` long: `readHtmlText` where
- * there is a DOM parser, the AI host page in a service worker.
+ * Reads a downloaded page, its text at most `maxChars` long: `readPageTextHtml` where there is a
+ * DOM parser, the AI host page (which runs the same function) in the background.
  */
-export type PageTextReader = (html: string, maxChars: number) => Promise<string | undefined>;
+export type PageTextReader = (html: string, maxChars: number) => Promise<PageTextReading>;
+
+/** Whether `doc` asks for a password in its main content, not in a box beside it. */
+function hasSignInField(doc: Document): boolean {
+  const { fieldSelector, outsideSelector } = PAGE_TEXT_SIGN_IN;
+  return [...doc.querySelectorAll(fieldSelector)].some(
+    (field) => !outsideSelector || !field.closest(outsideSelector),
+  );
+}
+
+/**
+ * Reads a page for Index Page Text, where there is a DOM parser: its readable text cut to
+ * `maxChars`, or `signIn` for a sign-in page (a password field in its main content and less text
+ * than `[sign_in] max_text_chars`), whose text is never kept. The one reader for every path: the
+ * AI host page for a background run, a run in the page, and the current tab.
+ */
+export async function readPageTextHtml(html: string, maxChars: number): Promise<PageTextReading> {
+  const doc = parseFetchedHtml(html);
+  const asksForPassword = hasSignInField(doc);
+  // Read past `maxChars` when it is shorter, so the sign-in check sees as much text as it needs.
+  const page = await extractPageText(doc, Math.max(maxChars, PAGE_TEXT_SIGN_IN.maxTextChars));
+  const text = page?.text.trim() ?? '';
+  if (asksForPassword && text.length < PAGE_TEXT_SIGN_IN.maxTextChars) return { status: 'signIn' };
+  return text ? { status: 'read', text: text.slice(0, maxChars).trim() } : { status: 'empty' };
+}
 
 /**
  * Downloads one bookmark's page and keeps its readable text on `item`. Throws when the page
@@ -44,7 +71,7 @@ export async function readPageTextItem(
   item: PageTextScanItem,
   options: PageTextScanOptions & { readText: PageTextReader; signal?: AbortSignal },
 ): Promise<void> {
-  const { html } = await fetchHtmlPage(item.url, {
+  const { html, status } = await fetchHtmlPage(item.url, {
     timeoutMs: PAGE_TEXT_LIMITS.timeoutMs,
     maxBytes: PAGE_TEXT_LIMITS.maxBytes,
     until: 'end',
@@ -52,11 +79,12 @@ export async function readPageTextItem(
     allowUrl: (next) => isReadablePageUrl(next, options.skipPrivateHosts),
     ...(options.signal ? { signal: options.signal } : {}),
   });
-  const text = html
-    ? (await options.readText(html, PAGE_TEXT_LIMITS.maxCharsPerPage))?.trim()
-    : undefined;
-  item.status = text ? 'read' : 'empty';
-  if (text) item.text = text;
+  let reading: PageTextReading = { status: 'empty' };
+  // An answer such as 401 is a sign-in page whatever it shows.
+  if (PAGE_TEXT_SIGN_IN.httpStatuses.has(status)) reading = { status: 'signIn' };
+  else if (html) reading = await options.readText(html, PAGE_TEXT_LIMITS.maxCharsPerPage);
+  item.status = reading.status;
+  if (reading.status === 'read') item.text = reading.text;
 }
 
 /**
@@ -104,7 +132,7 @@ export async function scanPageTexts(
   const { items, overLimit, toRead } = await planPageTextScan(nodes, options);
   await mapWithConcurrency([...toRead], PAGE_TEXT_LIMITS.concurrency, async (item) => {
     try {
-      await readPageTextItem(item, { ...options, readText: readHtmlText });
+      await readPageTextItem(item, { ...options, readText: readPageTextHtml });
     } catch {
       item.status = 'failed';
     }
@@ -125,4 +153,66 @@ export async function savePageTextResults(
   );
   await prunePageTexts(await fetchBookmarkIds());
   return { saved };
+}
+
+/** Why the current tab's text was not indexed. */
+export type TabPageTextError = ActiveTabError | 'empty' | 'signIn' | 'full';
+
+/** The current tab's readable text, for every bookmark of its address. */
+export type TabPageText = {
+  text: string;
+  pages: Pick<PageTextRecord, 'bookmarkId' | 'url' | 'text'>[];
+};
+
+/**
+ * Runs in the tab (`scripting.executeScript`), so it uses nothing from outside itself: the
+ * document as it is shown now, at most `maxChars` long, without what was typed into its fields.
+ */
+function snapshotShownPage(maxChars: number): { url: string; html: string } {
+  const copy = document.documentElement.cloneNode(true) as HTMLElement;
+  for (const field of copy.querySelectorAll('input, textarea, select')) {
+    field.removeAttribute('value');
+    if (field.localName !== 'input') field.replaceChildren();
+  }
+  return { url: location.href, html: copy.outerHTML.slice(0, maxChars) };
+}
+
+const shownPageSchema = z.strictObject({
+  url: z.string(),
+  html: z.string().max(PAGE_TEXT_LIMITS.maxBytes),
+});
+
+/**
+ * Reads the text of the page the active tab shows, as the user sees it (signed in, too), for the
+ * bookmarks of `url`: only after a click, only while the tab shows `url` before and after the
+ * read, never in a private window (`withActiveTabAt`), never from a sign-in page, and not past
+ * `max_pages`. Nothing is stored; save the previewed text with `savePageTexts`.
+ */
+export async function readTabPageText(
+  url: string,
+): Promise<{ page: TabPageText } | { error: TabPageTextError }> {
+  const shown = await withActiveTabAt(url, async (tab) => {
+    const [injection] = await browser.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: snapshotShownPage,
+      args: [PAGE_TEXT_LIMITS.maxBytes],
+    });
+    return shownPageSchema.parse(injection?.result);
+  });
+  if ('error' in shown) return shown;
+  // The document read is the bookmarked one, not one the tab moved to in between.
+  if (shown.value.url !== url) return { error: 'changed' };
+  const reading = await readPageTextHtml(shown.value.html, PAGE_TEXT_LIMITS.maxCharsPerPage);
+  if (reading.status !== 'read') return { error: reading.status };
+  const bookmarks = (await findBookmarksByUrl(url)).filter((node) => node.url === url);
+  if (bookmarks.length === 0) return { error: 'changed' };
+  const indexed = await getPageTexts();
+  const added = bookmarks.filter((node) => !indexed.has(node.id)).length;
+  if (indexed.size + added > PAGE_TEXT_LIMITS.maxPages) return { error: 'full' };
+  return {
+    page: {
+      text: reading.text,
+      pages: bookmarks.map((node) => ({ bookmarkId: node.id, url, text: reading.text })),
+    },
+  };
 }

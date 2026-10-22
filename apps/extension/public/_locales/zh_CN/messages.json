@@ -7736,7 +7736,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "在工具侧边栏中显示“索引网页正文”，并让搜索查找已索引网页的内容。每个要索引的网页都会被下载；正文只保存在此设备上。",
+        "message": "在工具侧边栏中显示“索引网页正文”，并让搜索查找已索引网页的内容。每个要索引的网页都会被下载；正文只保存在此设备上。弹出窗口中的“索引此网页的正文”按钮只在你点击时读取你正在查看的网页，并在保存前先显示正文。",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -7758,6 +7758,10 @@
     "tools_pageTextCategory_empty": {
         "message": "无正文 ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "登录页面 ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "失败 ($1)",
@@ -7858,6 +7862,50 @@
     "pageText_clearedDesc": {
         "message": "书签、标签和历史记录都没有改变。",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "索引此网页的正文",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "索引此网页的正文？",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "这是标签页当前显示的正文，与你看到的一致，包括你已登录的网站。保存前请确认其中没有账号信息或消息等私密内容。它只保存在此设备上，仅供搜索使用。",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "舍弃",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "未索引正文",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "读取正文时标签页已变化。请打开该书签的网页后重试。",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "绝不会读取隐私窗口中的网页。",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "浏览器不允许读取此标签页。请在该网页上打开工具栏弹出窗口后重试。",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "此网页没有可读的正文。",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "这看起来是登录页面，因此不会索引其正文。请登录并打开该书签的网页后重试。",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "网页正文索引已满。请在设置中使用“删除网页正文”腾出空间。",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "管理器视图",

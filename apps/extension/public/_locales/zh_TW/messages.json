@@ -7736,7 +7736,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "在工具側邊欄中顯示「索引網頁內文」，並讓搜尋查找已索引網頁的內容。每個要索引的網頁都會被下載；內文只會保存在這部裝置上。",
+        "message": "在工具側邊欄中顯示「索引網頁內文」，並讓搜尋查找已索引網頁的內容。每個要索引的網頁都會被下載；內文只會保存在這部裝置上。彈出式視窗中的「索引此網頁的內文」按鈕只在你按一下時讀取你正在查看的網頁，並在保留前先顯示內文。",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -7758,6 +7758,10 @@
     "tools_pageTextCategory_empty": {
         "message": "沒有內文 ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "登入頁面 ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "失敗 ($1)",
@@ -7858,6 +7862,50 @@
     "pageText_clearedDesc": {
         "message": "書籤、標籤和記錄都沒有變更。",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "索引此網頁的內文",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "索引此網頁的內文？",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "這是分頁目前顯示的內文，與你看到的一致，包括你已登入的網站。儲存前請確認其中沒有帳戶資料或訊息等私人內容。它只會保存在這部裝置上，僅供搜尋使用。",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "捨棄",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "未索引內文",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "讀取內文時分頁已變更。請開啟該書籤的網頁後再試一次。",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "絕不會讀取無痕視窗中的網頁。",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "瀏覽器不允許讀取這個分頁。請在該網頁上開啟工具列彈出式視窗後再試一次。",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "這個網頁沒有可讀的內文。",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "這看起來是登入頁面，因此不會索引其內文。請登入並開啟該書籤的網頁後再試一次。",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "網頁內文索引已滿。請在設定中使用「刪除網頁內文」騰出空間。",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "管理員檢視",

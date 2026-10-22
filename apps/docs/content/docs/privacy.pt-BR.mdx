@@ -19,10 +19,10 @@ Este é um resumo. A <SiteLink to="privacy">política de privacidade</SiteLink> 
 - O título e o URL da guia ativa, quando você salva a página em que está (pelo pop-up, pelo painel lateral ou por um atalho de salvamento rápido) ou pede uma sugestão de pasta.
 - Os ícones dos sites no cache de ícones do próprio navegador, no Chrome e no Edge, depois que você ativa **Usar o cache de ícones do navegador**.
 - Os ícones dos sites que você baixa com **Atualizar ícones dos sites**, de cada site salvo nos favoritos.
-- O texto das páginas dos favoritos, quando você executa **Indexar texto das páginas**, de cada página da execução.
+- O texto das páginas dos favoritos, quando você executa **Indexar texto das páginas**, de cada página da execução. Ou o texto da guia que você está vendo, como você o vê, quando você clica em **Indexar o texto desta página** no pop-up.
 - O cabeçalho das páginas dos favoritos e a imagem de prévia que cada uma indica, quando você executa **Buscar capas**, de cada página da execução. Ou uma imagem da guia que você está vendo, quando clica em **Usar esta visualização como capa** no pop-up.
 
-Ela não lê o conteúdo das páginas que você visita. Depois de um atalho de salvamento rápido, ela mostra a própria notificação nessa guia, que não lê nada da página.
+Ela não lê o conteúdo das páginas que você visita, exceto o texto da guia que você está vendo quando você clica em **Indexar o texto desta página** no pop-up, que você vê antes de ser guardado. Depois de um atalho de salvamento rápido, ela mostra a própria notificação nessa guia, que não lê nada da página.
 
 ## O que ela armazena [#what-it-stores]
 
@@ -41,7 +41,7 @@ Ela não lê o conteúdo das páginas que você visita. Depois de um atalho de s
 | Atividade de IA, somente enquanto **Registrar solicitações** está ativado (desativado por padrão, por dispositivo): as últimas solicitações de IA com o que foi enviado e o que voltou, incluindo títulos, URLs e caminhos de pasta dos favoritos e, com **Ler conteúdo da página** ativado, o texto das páginas. Chaves de API e outras credenciais são removidas antes de armazenar; desativar o registro o apaga | Armazenamento local neste dispositivo | Não |
 | Tags, resumos, pesquisas salvas, regras inteligentes, a lista de marcações automáticas, pastas recentes, pesquisas recentes | Armazenamento local neste dispositivo | Não |
 | Ícones dos sites salvos com **Atualizar ícones dos sites**, até 4 MB por padrão | Armazenamento local neste dispositivo | Não |
-| Texto das páginas salvo com **Indexar texto das páginas** | IndexedDB neste dispositivo | Não |
+| Texto das páginas salvo com **Indexar texto das páginas** ou **Indexar o texto desta página** | IndexedDB neste dispositivo | Não |
 | Capas salvas com **Buscar capas** | IndexedDB neste dispositivo | Não |
 | O último salvamento rápido (o título e o URL da página, e onde ela foi salva), para **Desfazer** e **Mover para** | Armazenamento da sessão neste dispositivo, apagado quando o navegador fecha | Não |
 | O histórico de desfazer do gerenciador (os favoritos que você alterou nele, com cópias dos excluídos e as tags e os resumos deles), para desfazer e refazer | Armazenamento da sessão neste dispositivo, apagado quando o navegador fecha | Não |

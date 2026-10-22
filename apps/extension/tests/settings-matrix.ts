@@ -819,13 +819,17 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     toolFlags,
     e2e(
       'page-text.spec.ts',
-      'indexed page text is searchable after the review saves it, and Options deletes it',
+      'indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it (S12)',
+    ),
+    e2e(
+      'page-text.spec.ts',
+      "the popup indexes the current tab's text only after its preview is saved (S17)",
     ),
   ]),
   pageTextDefaultScope: tested(TOOL_TABLE, [
     e2e(
       'page-text.spec.ts',
-      'indexed page text is searchable after the review saves it, and Options deletes it',
+      'indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it (S12)',
     ),
   ]),
 

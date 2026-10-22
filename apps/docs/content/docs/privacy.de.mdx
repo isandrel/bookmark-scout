@@ -19,10 +19,10 @@ Dies ist eine Zusammenfassung. Maßgeblich ist die vollständige <SiteLink to="p
 - Titel und URL des aktiven Tabs, wenn Sie die aktuelle Seite speichern (über das Pop-up, die Seitenleiste oder ein Tastenkürzel zum Schnellspeichern) oder einen Ordnervorschlag anfordern.
 - Website-Symbole aus dem eigenen Symbol-Cache des Browsers, in Chrome und Edge, sobald Sie **Symbol-Cache des Browsers verwenden** aktivieren.
 - Website-Symbole, die Sie mit **Website-Symbole aktualisieren** herunterladen, von der jeweiligen gespeicherten Website.
-- Der Text gespeicherter Seiten, wenn Sie **Seitentext indexieren** ausführen, von jeder Seite des Laufs.
+- Der Text gespeicherter Seiten, wenn Sie **Seitentext indexieren** ausführen, von jeder Seite des Laufs. Oder der Text des Tabs, den Sie gerade ansehen, so wie Sie ihn sehen, wenn Sie im Pop-up auf **Text dieser Seite indexieren** klicken.
 - Der Kopf gespeicherter Seiten und das Vorschaubild, das jede angibt, wenn Sie **Titelbilder laden** ausführen, von jeder Seite des Laufs. Oder ein Bild des Tabs, den Sie gerade ansehen, wenn Sie im Pop-up auf **Diese Ansicht als Titelbild verwenden** klicken.
 
-Sie liest nicht den Inhalt der Seiten, die Sie besuchen. Nach einem Tastenkürzel zum Schnellspeichern zeigt sie in diesem Tab ihre eigene Benachrichtigung an, die nichts aus der Seite liest.
+Sie liest nicht den Inhalt der Seiten, die Sie besuchen, außer dem Text des Tabs, den Sie gerade ansehen, wenn Sie im Pop-up auf **Text dieser Seite indexieren** klicken; Sie sehen ihn, bevor er behalten wird. Nach einem Tastenkürzel zum Schnellspeichern zeigt sie in diesem Tab ihre eigene Benachrichtigung an, die nichts aus der Seite liest.
 
 ## Was sie speichert [#what-it-stores]
 
@@ -41,7 +41,7 @@ Sie liest nicht den Inhalt der Seiten, die Sie besuchen. Nach einem Tastenkürze
 | KI-Aktivität, nur solange **Anfragen aufzeichnen** aktiviert ist (standardmäßig deaktiviert, pro Gerät): die letzten KI-Anfragen mit dem, was gesendet wurde und was zurückkam, einschließlich Lesezeichentiteln, URLs, Ordnerpfaden und bei aktiviertem **Seiteninhalt lesen** Seitentext. API-Schlüssel und andere Zugangsdaten werden vor dem Speichern entfernt; das Deaktivieren der Aufzeichnung löscht sie | Lokaler Speicher auf diesem Gerät | Nein |
 | Tags, Zusammenfassungen, gespeicherte Suchen, intelligente Regeln, die Liste automatischer Tags, letzte Ordner, letzte Suchen | Lokaler Speicher auf diesem Gerät | Nein |
 | Mit **Website-Symbole aktualisieren** gespeicherte Website-Symbole, standardmäßig bis zu 4 MB | Lokaler Speicher auf diesem Gerät | Nein |
-| Mit **Seitentext indexieren** gespeicherter Seitentext | IndexedDB auf diesem Gerät | Nein |
+| Mit **Seitentext indexieren** oder **Text dieser Seite indexieren** gespeicherter Seitentext | IndexedDB auf diesem Gerät | Nein |
 | Mit **Titelbilder laden** gespeicherte Titelbilder | IndexedDB auf diesem Gerät | Nein |
 | Das letzte Schnellspeichern (Titel und URL der Seite und wohin sie gespeichert wurde), für **Rückgängig** und **Verschieben nach** | Sitzungsspeicher auf diesem Gerät, wird beim Schließen des Browsers geleert | Nein |
 | Der Rückgängig-Verlauf des Managers (die Lesezeichen, die Sie dort geändert haben, mit Kopien gelöschter Lesezeichen samt ihren Tags und Zusammenfassungen), zum Rückgängigmachen und Wiederholen | Sitzungsspeicher auf diesem Gerät, wird beim Schließen des Browsers geleert | Nein |

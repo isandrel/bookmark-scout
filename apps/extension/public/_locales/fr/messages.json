@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Afficher Indexer le texte des pages dans la barre d'outils et laisser la recherche regarder dans les pages indexées. Chaque page indexée est téléchargée ; le texte reste sur cet appareil.",
+        "message": "Afficher Indexer le texte des pages dans la barre d'outils et laisser la recherche regarder dans les pages indexées. Chaque page indexée est téléchargée ; le texte reste sur cet appareil. Le bouton Indexer le texte de cette page de la fenêtre pop-up ne lit la page que vous consultez que lorsque vous cliquez dessus, et montre le texte avant de le conserver.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8024,6 +8024,10 @@
     "tools_pageTextCategory_empty": {
         "message": "Aucun texte ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "Page de connexion ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "Échec ($1)",
@@ -8168,6 +8172,50 @@
     "pageText_clearedDesc": {
         "message": "Les favoris, les étiquettes et l'historique n'ont pas été modifiés.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "Indexer le texte de cette page",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "Indexer le texte de cette page ?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "Voici le texte que l'onglet affiche maintenant, tel que vous le voyez, y compris sur les sites où vous êtes connecté. Avant de l'enregistrer, vérifiez qu'il ne contient rien de privé, comme des informations de compte ou des messages. Il est conservé sur cet appareil uniquement et sert seulement à la recherche.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "Abandonner",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "Aucun texte indexé",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "L'onglet a changé pendant la lecture de son texte. Ouvrez la page du favori et réessayez.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "Les pages des fenêtres privées ne sont jamais lues.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "Le navigateur n'a pas autorisé la lecture de cet onglet. Ouvrez la fenêtre pop-up de la barre d'outils sur la page et réessayez.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "Cette page n'affiche aucun texte lisible.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "Cela ressemble à une page de connexion, son texte n'est donc pas indexé. Connectez-vous, ouvrez la page du favori et réessayez.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "L'index du texte des pages est plein. Utilisez Supprimer le texte des pages dans les Paramètres pour faire de la place.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "Vue du gestionnaire",

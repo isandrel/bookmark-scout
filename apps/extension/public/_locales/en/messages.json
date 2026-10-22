@@ -8002,7 +8002,7 @@
         "description": "Settings: switch that turns Index Page Text on"
     },
     "settings_pageTextEnabledDesc": {
-        "message": "Show Index Page Text in the Tools sidebar, and let search look inside indexed pages. It downloads each page you index; the text stays on this device.",
+        "message": "Show Index Page Text in the Tools sidebar, and let search look inside indexed pages. It downloads each page you index; the text stays on this device. The popup's Index this page's text button reads the page you are viewing only when you click it, and shows the text before keeping it.",
         "description": "Settings: what turning Index Page Text on does"
     },
     "settings_pageTextDefaultScope": {
@@ -8024,6 +8024,10 @@
     "tools_pageTextCategory_empty": {
         "message": "No text ($1)",
         "description": "Index Page Text review tab: pages without readable text; $1 is how many"
+    },
+    "tools_pageTextCategory_signIn": {
+        "message": "Sign-in page ($1)",
+        "description": "Index Page Text review tab: pages that ask for a sign-in instead of showing their content; their text is never saved; $1 is how many"
     },
     "tools_pageTextCategory_failed": {
         "message": "Failed ($1)",
@@ -8168,6 +8172,50 @@
     "pageText_clearedDesc": {
         "message": "Bookmarks, tags, and the History were not changed.",
         "description": "Toast after deleting the page text index"
+    },
+    "pageText_tabButton": {
+        "message": "Index this page's text",
+        "description": "Popup: button on the line saying where the current page is saved; reads the text the tab shows to index it"
+    },
+    "pageText_tabTitle": {
+        "message": "Index this page's text?",
+        "description": "Popup: title of the dialog showing the text read from the tab before it is saved"
+    },
+    "pageText_tabWarning": {
+        "message": "This is the text the tab shows now, as you see it, also on sites you are signed in to. Before you save it, check that it holds nothing private, such as account details or messages. It is kept on this device only and used only by search.",
+        "description": "Popup: privacy warning above the text read from the tab, before it is saved"
+    },
+    "pageText_tabDiscard": {
+        "message": "Discard",
+        "description": "Popup: button that throws the text read from the tab away"
+    },
+    "pageText_tabFailed": {
+        "message": "No text indexed",
+        "description": "Toast title when the text of the tab was not indexed"
+    },
+    "pageText_tabChanged": {
+        "message": "The tab changed while its text was read. Open the bookmarked page and try again.",
+        "description": "Toast: the tab showed another page before or while its text was read"
+    },
+    "pageText_tabPrivate": {
+        "message": "Pages in private windows are never read.",
+        "description": "Toast: pages in private windows are never read"
+    },
+    "pageText_tabDenied": {
+        "message": "The browser did not allow reading this tab. Open the toolbar popup on the page and try again.",
+        "description": "Toast: the browser did not allow reading the tab"
+    },
+    "pageText_tabEmpty": {
+        "message": "This page shows no readable text.",
+        "description": "Toast: the page in the tab has no readable text"
+    },
+    "pageText_tabSignIn": {
+        "message": "This looks like a sign-in page, so its text is not indexed. Sign in, open the bookmarked page, and try again.",
+        "description": "Toast: the tab shows a sign-in page, whose text is never indexed"
+    },
+    "pageText_tabFull": {
+        "message": "The page text index is full. Use Delete page text in Settings to make room.",
+        "description": "Toast: the page text index has no room for another page"
     },
     "settings_managerViewMode": {
         "message": "Manager View",

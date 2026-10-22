@@ -180,14 +180,20 @@ export type QuickSaveHostRequest =
       maxChars: number;
     };
 
+/**
+ * What reading a page for Index Page Text found: its readable text, no text, or a page that asks
+ * for a sign-in instead of showing its content, whose text is never kept.
+ */
+export type PageTextReading = { status: 'read'; text: string } | { status: 'empty' | 'signIn' };
+
 export type QuickSaveHostResponse =
   | {
       ok: true;
       object?: unknown;
       page?: { title?: string; text: string } | null;
       head?: { title?: string; description?: string };
-      /** The page's readable text, for `hostReadText`; absent when it has none. */
-      text?: string;
+      /** What reading the page found, for `hostReadText`. */
+      reading?: PageTextReading;
     }
   | {
       ok: false;

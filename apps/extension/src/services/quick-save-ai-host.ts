@@ -110,8 +110,8 @@ export type AIHostSession = {
   readPage: (url: string) => Promise<{ title?: string; text: string } | null>;
   /** Reads a fetched page's `<head>`, which a service worker cannot parse itself. */
   readHead: (html: string, descriptions: boolean) => Promise<HtmlHead>;
-  /** Reads the readable text of a downloaded page, which a service worker cannot parse itself. */
-  readText: (html: string, maxChars: number) => Promise<string | undefined>;
+  /** Reads a downloaded page for Index Page Text, which a service worker cannot parse itself. */
+  readText: (html: string, maxChars: number) => Promise<PageTextReading>;
   generate: <Name extends AIHostSchemaName>(
     request: AIHostGenerateRequest<Name>,
   ) => Promise<AIHostSchemaOutputs[Name]>;
@@ -167,7 +167,8 @@ export async function withAIHost<T>(
           html,
           maxChars,
         });
-        return response.ok ? response.text : undefined;
+        // A page the host failed to read has no text; an answer of another shape is a bug.
+        return response.ok ? pageTextReadingSchema.parse(response.reading) : { status: 'empty' };
       },
       generate: async <Name extends AIHostSchemaName>({
         schema,
