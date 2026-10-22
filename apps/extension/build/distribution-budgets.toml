@@ -151,19 +151,21 @@
 # locales to 2,115,000) for three new languages: Russian, Indonesian, and Italian, each a full
 # messages.json (about 190 KB), and their react-day-picker calendar locales. Firefox measured ZIP
 # 1,944,179, 6,445,005 B uncompressed, 3,783,666 B of JavaScript, and 2,100,386 B of locales.
+# Uncompressed raised on 2026-10-22 (6,460,000 to 6,475,000) for Use this view as the cover and its
+# 11 messages in 12 languages: Firefox measured 6,461,434 B.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_955_000
-raw_bytes = 6_460_000
+raw_bytes = 6_475_000
 
 [targets.edge]
 zip_bytes = 1_955_000
-raw_bytes = 6_460_000
+raw_bytes = 6_475_000
 
 [targets.firefox]
 zip_bytes = 1_955_000
-raw_bytes = 6_460_000
+raw_bytes = 6_475_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:

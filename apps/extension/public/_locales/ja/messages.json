@@ -8608,5 +8608,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "有効なルールが、Bookmark Scout、ブラウザ、同期のどこから追加されたかにかかわらず、追加された各ブックマークにタグを付けます。自動で移動することはなく、一度に多数追加されたブックマーク（同期やインポート）はそのままにします。",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "この画面をカバー画像にする",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "この画面をカバー画像にしますか？",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "タブに今表示されている内容です。保存する前に、アカウント情報やメッセージなどの個人的な内容が写っていないか確認してください。この端末にのみ保存されます。",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "破棄",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "カバー画像を保存しました",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "マネージャーのカードにこのブックマークのカバー画像として表示されます。",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "カバー画像を撮影しませんでした",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "撮影前にタブが変わりました。ブックマークのページを開いてもう一度お試しください。",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "プライベートウィンドウのページは撮影しません。",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "ブラウザがこのタブの撮影を許可しませんでした。そのページでツールバーのポップアップを開いて、もう一度お試しください。",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "この画像はカバー画像として使用できませんでした。",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

@@ -57,7 +57,7 @@
                             "<strong>Site icons from your browser's own icon cache</strong> (Chrome and Edge), to show next to bookmarks. No network request is made for them.",
                             "<strong>Site icons from the bookmarked websites</strong>, only when you run Refresh Site Icons (see below).",
                             "<strong>The text of bookmarked pages</strong>, only when you run Index Page Text (see below).",
-                            "<strong>The preview image of bookmarked pages</strong>, only when you run Fetch Covers (see below)."
+                            "<strong>The preview image of bookmarked pages</strong>, only when you run Fetch Covers (see below). A picture of the tab you are viewing is taken only when you click Use this view as the cover in the popup."
                         ]
                     },
                     {
@@ -87,7 +87,7 @@
                             "<strong>Tags, summaries, saved searches, recent folders, and recent searches</strong> are kept in local storage on this device only. You can turn off recent searches in Settings.",
                             "<strong>Site icons</strong> you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.",
                             "<strong>Page text</strong> you save with Index Page Text is kept on this device only and used only by search. You can delete it at any time with Delete page text in Settings.",
-                            "<strong>Covers</strong> you save with Fetch Covers are small copies of each page's preview image, kept on this device only and shown only on the manager's cards. You can delete them at any time with Delete covers in Settings.",
+                            "<strong>Covers</strong> you save with Fetch Covers are small copies of each page's preview image, kept on this device only and shown only on the manager's cards. You can delete them at any time with Delete covers in Settings. A cover can also be a picture of the tab you were viewing, taken only when you click Use this view as the cover in the popup and kept only after you have seen it.",
                             "<strong>Your last quick save</strong> (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.",
                             "<strong>The bookmark manager's undo history</strong> (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes.",
                             "<strong>The bookmark change history</strong> (what changed in your bookmarks and when, whether Bookmark Scout made the change or it was seen from elsewhere: titles, URLs, folders, and the outcome of each change), and a copy of every bookmark's title, URL, and folder as last seen (to tell what changed outside Bookmark Scout), are kept on this device only, in the browser's IndexedDB, for a limited time. They are never synced and never in the backup file. Recording changes made elsewhere can be turned off in Settings. Also a copy of each item Bookmark Scout deletes, with what was inside it and its tags and summary, so it can be restored from the History; removed with its change.",

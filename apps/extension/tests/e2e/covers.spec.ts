@@ -85,3 +85,68 @@ test.describe('with website access granted', () => {
     expect(bookmarks).toHaveLength(3);
   });
 });
+
+test('the popup turns what the tab shows into a cover only after its preview is saved', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const url = 'https://e2e.invalid/captured-story';
+  const seeded = await seedFolder(extensionWorker, 'E2E Capture', [
+    { title: 'Captured story', url },
+  ]);
+  await setSettings(extensionWorker, { coversEnabled: true, coversWidthPx: 320 });
+  // Pages open as tabs here: the current tab and its picture are stubbed, as the popup would see
+  // them through activeTab.
+  const picture = `data:image/png;base64,${solidPng(1280, 800).toString('base64')}`;
+  await page.addInitScript(
+    ({ pageUrl, png }) => {
+      chrome.tabs.query = (async () => [
+        {
+          id: 99,
+          index: 0,
+          windowId: 1,
+          active: true,
+          incognito: false,
+          title: 'Captured story',
+          url: pageUrl,
+        },
+      ]) as unknown as typeof chrome.tabs.query;
+      chrome.tabs.captureVisibleTab = (async () =>
+        png) as unknown as typeof chrome.tabs.captureVisibleTab;
+    },
+    { pageUrl: url, png: picture },
+  );
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await page.getByRole('button', { name: 'Use this view as the cover' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Use this view as the cover?' });
+  await expect(dialog.getByTestId('capture-cover-preview')).toHaveAttribute('src', /^data:image\//);
+  const stored = () =>
+    extensionWorker.evaluate(async () => {
+      // Opening a database that does not exist would create it empty, without its stores.
+      const names = (await indexedDB.databases()).map((db) => db.name);
+      if (!names.includes('bookmark-scout-covers')) return 0;
+      return new Promise<number>((resolve) => {
+        const open = indexedDB.open('bookmark-scout-covers');
+        open.onsuccess = () => {
+          const db = open.result;
+          if (!db.objectStoreNames.contains('info')) return resolve(0);
+          const count = db.transaction('info').objectStore('info').count();
+          count.onsuccess = () => resolve(count.result);
+        };
+      });
+    });
+
+  // Discarding keeps nothing.
+  await dialog.getByRole('button', { name: 'Discard' }).click();
+  await expect(dialog).toHaveCount(0);
+  expect(await stored()).toBe(0);
+
+  await page.getByRole('button', { name: 'Use this view as the cover' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Save cover' }).click();
+  await expect.poll(stored).toBe(1);
+
+  await setSettings(extensionWorker, { managerViewMode: 'cards' });
+  await page.goto(`${managerUrl(extensionId)}?id=${seeded.folderId}`);
+  await expect(page.getByTestId('bookmark-cover')).toHaveAttribute('src', /^blob:/);
+});

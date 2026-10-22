@@ -8246,5 +8246,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "Aturan yang aktif menambahkan tag-nya ke setiap bookmark saat bookmark ditambahkan, baik dari Bookmark Scout, browser, maupun sinkronisasi. Pemindahan tidak pernah dilakukan secara otomatis, dan banyak bookmark yang ditambahkan sekaligus (dari sinkronisasi atau impor) dibiarkan apa adanya.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "Gunakan tampilan ini sebagai sampul",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "Gunakan tampilan ini sebagai sampul?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "Inilah yang ditampilkan tab sekarang. Sebelum menyimpannya, pastikan tidak ada yang bersifat pribadi, seperti detail akun atau pesan. Gambar ini hanya disimpan di perangkat ini.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "Buang",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "Sampul disimpan",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "Kartu di pengelola menampilkannya untuk bookmark ini.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "Tidak ada sampul yang diambil",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "Tab berubah sebelum gambar diambil. Buka halaman bookmark tersebut, lalu coba lagi.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "Halaman di jendela pribadi tidak pernah diambil gambarnya.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "Browser tidak mengizinkan pengambilan gambar tab ini. Buka popup toolbar di halaman tersebut, lalu coba lagi.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "Gambar tidak dapat digunakan sebagai sampul.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

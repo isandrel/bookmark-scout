@@ -8636,5 +8636,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "Enabled rules add their tags to each bookmark as it is added, whether from Bookmark Scout, the browser, or sync. Moves are never made automatically, and many bookmarks added at once (a sync or an import) are left alone.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "Use this view as the cover",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "Use this view as the cover?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "This is what the tab shows now. Before you save it, check that it shows nothing private, such as account details or messages. It is kept on this device only.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "Discard",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "Cover saved",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "The manager's cards show it for this bookmark.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "No cover taken",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "The tab changed before the picture was taken. Open the bookmarked page and try again.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "Pages in private windows are never pictured.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "The browser did not allow a picture of this tab. Open the toolbar popup on the page and try again.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "The picture could not be used as a cover.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

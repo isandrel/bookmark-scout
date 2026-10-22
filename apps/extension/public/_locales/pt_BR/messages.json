@@ -8636,5 +8636,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "As regras ativas adicionam suas tags a cada favorito quando ele é adicionado, pelo Bookmark Scout, pelo navegador ou pela sincronização. Nada é movido automaticamente, e muitos favoritos adicionados de uma vez (uma sincronização ou uma importação) ficam como estão.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "Usar esta visualização como capa",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "Usar esta visualização como capa?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "Isto é o que a guia mostra agora. Antes de salvar, confira se não aparece nada privado, como dados da conta ou mensagens. Fica guardado só neste dispositivo.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "Descartar",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "Capa salva",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "Os cartões do gerenciador a mostram para este favorito.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "Nenhuma capa tirada",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "A guia mudou antes da imagem ser tirada. Abra a página do favorito e tente de novo.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "Páginas em janelas privadas nunca são capturadas.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "O navegador não permitiu tirar uma imagem desta guia. Abra o pop-up da barra de ferramentas na página e tente de novo.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "Não foi possível usar a imagem como capa.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

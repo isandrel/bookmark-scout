@@ -9416,5 +9416,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "Включённые правила добавляют свои теги к каждой закладке при её добавлении — из Bookmark Scout, браузера или синхронизации. Перемещения никогда не выполняются автоматически, а много закладок, добавленных сразу (при синхронизации или импорте), не затрагиваются.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "Сделать обложку из этого вида",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "Сделать обложку из этого вида?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "Так вкладка выглядит сейчас. Перед сохранением убедитесь, что на снимке нет ничего личного, например данных аккаунта или сообщений. Снимок хранится только на этом устройстве.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "Отменить",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "Обложка сохранена",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "Карточки в диспетчере показывают её для этой закладки.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "Обложка не создана",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "Вкладка изменилась до снимка. Откройте страницу закладки и попробуйте снова.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "Страницы в приватных окнах никогда не снимаются.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "Браузер не разрешил сделать снимок этой вкладки. Откройте всплывающее окно расширения на этой странице и попробуйте снова.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "Снимок не удалось использовать как обложку.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }

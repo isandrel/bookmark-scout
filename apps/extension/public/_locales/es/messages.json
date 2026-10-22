@@ -8636,5 +8636,49 @@
     "settings_bookmarkRulesAutoTagDesc": {
         "message": "Las reglas activas añaden sus etiquetas a cada marcador al añadirlo, ya sea desde Bookmark Scout, el navegador o la sincronización. Nunca se mueve nada automáticamente, y muchos marcadores añadidos a la vez (una sincronización o una importación) no se tocan.",
         "description": "Settings: what Tag New Bookmarks does"
+    },
+    "covers_captureButton": {
+        "message": "Usar esta vista como portada",
+        "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_captureTitle": {
+        "message": "¿Usar esta vista como portada?",
+        "description": "Popup: title of the dialog showing the picture of the tab before it is saved as a cover"
+    },
+    "covers_captureWarning": {
+        "message": "Esto es lo que muestra la pestaña ahora. Antes de guardarlo, comprueba que no muestra nada privado, como datos de tu cuenta o mensajes. Solo se guarda en este dispositivo.",
+        "description": "Popup: privacy warning under the picture of the tab, before it is saved"
+    },
+    "covers_captureDiscard": {
+        "message": "Descartar",
+        "description": "Popup: button that throws the picture of the tab away"
+    },
+    "covers_captureSaved": {
+        "message": "Portada guardada",
+        "description": "Toast title after saving the picture of the tab as a cover"
+    },
+    "covers_captureSavedDesc": {
+        "message": "Las tarjetas del administrador la muestran para este marcador.",
+        "description": "Toast after saving the picture of the tab as a cover"
+    },
+    "covers_captureFailed": {
+        "message": "No se tomó ninguna portada",
+        "description": "Toast title when no picture of the tab was taken"
+    },
+    "covers_captureChanged": {
+        "message": "La pestaña cambió antes de tomar la imagen. Abre la página del marcador e inténtalo de nuevo.",
+        "description": "Toast: the tab changed before the picture was taken"
+    },
+    "covers_capturePrivate": {
+        "message": "Nunca se toman imágenes de páginas en ventanas privadas.",
+        "description": "Toast: private windows are never pictured"
+    },
+    "covers_captureDenied": {
+        "message": "El navegador no permitió tomar una imagen de esta pestaña. Abre la ventana emergente de la barra de herramientas en la página e inténtalo de nuevo.",
+        "description": "Toast: the browser did not allow a picture of the tab"
+    },
+    "covers_captureUnreadable": {
+        "message": "No se pudo usar la imagen como portada.",
+        "description": "Toast: the picture could not be made into a cover"
     }
 }
