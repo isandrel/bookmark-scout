@@ -134,7 +134,8 @@ test.describe('startup code', () => {
         (sum, file) => sum + statSync(path.join(extensionPath, file)).size,
         0,
       );
-      expect(Math.round(bytes / 1024), `${entry} startup KiB`).toBeLessThanOrEqual(budget);
+      // Soft, so one run lists every entry over its budget, not only the first one.
+      expect.soft(Math.round(bytes / 1024), `${entry} startup KiB`).toBeLessThanOrEqual(budget);
     }
   });
 });
