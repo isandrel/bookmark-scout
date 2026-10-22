@@ -261,9 +261,7 @@ export async function captureTabCover(
   }
   const after = await activeTab();
   if (after?.id !== tab.id || after.url !== url) return { error: 'changed' };
-  const image = await shrinkImage(dataUrlBytes(dataUrl), 'image/png', widthPx).catch(
-    () => undefined,
-  );
+  const image = await shrinkImage(dataUrlBytes(dataUrl), MIME.png, widthPx).catch(() => undefined);
   if (!image) return { error: 'unreadable' };
   const bookmarks = (await findBookmarksByUrl(url)).filter((node) => node.url === url);
   if (bookmarks.length === 0) return { error: 'changed' };
