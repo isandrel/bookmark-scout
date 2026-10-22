@@ -110,6 +110,8 @@ export type AIHostSession = {
   readPage: (url: string) => Promise<{ title?: string; text: string } | null>;
   /** Reads a fetched page's `<head>`, which a service worker cannot parse itself. */
   readHead: (html: string, descriptions: boolean) => Promise<HtmlHead>;
+  /** Reads the readable text of a downloaded page, which a service worker cannot parse itself. */
+  readText: (html: string, maxChars: number) => Promise<string | undefined>;
   generate: <Name extends AIHostSchemaName>(
     request: AIHostGenerateRequest<Name>,
   ) => Promise<AIHostSchemaOutputs[Name]>;
@@ -157,6 +159,15 @@ export async function withAIHost<T>(
           descriptions,
         });
         return response.ok ? (response.head ?? {}) : {};
+      },
+      readText: async (html, maxChars) => {
+        const response = await askHost({
+          type: QUICK_SAVE_MESSAGE.hostReadText,
+          token,
+          html,
+          maxChars,
+        });
+        return response.ok ? response.text : undefined;
       },
       generate: async <Name extends AIHostSchemaName>({
         schema,

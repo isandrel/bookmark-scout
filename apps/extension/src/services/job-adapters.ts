@@ -12,6 +12,8 @@ export type JobRun = { outcome: ItemOutcome; result: unknown };
 export type JobTools = {
   /** Reads a fetched page's `<head>`; a service worker has no DOM parser of its own. */
   readHead(html: string, descriptions: boolean): Promise<HtmlHead>;
+  /** Reads a downloaded page's readable text in the AI host page, for a kind with `readsText`. */
+  readText?: PageTextReader;
   /** The AI host page with the job's AI service, for a kind with `ai`. */
   ai?: AIHostSession;
 };
@@ -67,6 +69,11 @@ type JobAdapterBase = {
   unsureAfterStop?: JobBlockCode;
   /** Whether items read HTML, so the slice needs `JobTools.readHead`. */
   readsHtml?: boolean;
+  /**
+   * Whether items read a page's text, so the slice opens the AI host page for `JobTools.readText`
+   * in every browser: the text reader (Readability) stays out of the background's code.
+   */
+  readsText?: boolean;
   /**
    * The web addresses an item requests. Website access is checked before each item, so access
    * taken back while the job runs pauses it (`site-access`) instead of reading as failures.
@@ -129,6 +136,15 @@ const siteIconOptionsSchema = z.strictObject({
   ...requestOptions,
   preferredSize: z.number().int().positive(),
   maxIconBytes: z.number().int().positive(),
+});
+const pageTextOptionsSchema = z.strictObject({ skipPrivateHosts: z.boolean() });
+/** A bookmark of an Index Page Text run, and whether its page is to be read (`planPageTextScan`). */
+const pageTextInputSchema = z.strictObject({
+  item: z.strictObject({
+    ...linkTargetSchema.shape,
+    status: z.enum(['current', 'skipped']),
+  }),
+  read: z.boolean(),
 });
 const originGroupSchema = z.strictObject({
   origin: z.string(),
@@ -261,6 +277,43 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
         if (!reason) return { outcome: 'succeeded', result };
         return { outcome: reason === 'failed' ? 'failed' : 'skipped', result };
       });
+    },
+  },
+  pageText: {
+    async prepare(command) {
+      const { nodes, label } = await scopeNodes(command);
+      const options = (await toolOptions()).pageText;
+      const { items, overLimit, toRead } = await planPageTextScan(nodes, options);
+      return {
+        inputs: items.map((item) => ({ item, read: toRead.has(item) })),
+        options,
+        label,
+        summary: { overLimit },
+      };
+    },
+    concurrency: () => PAGE_TEXT_LIMITS.concurrency,
+    readsText: true,
+    siteUrls: (input) => {
+      const { item, read } = pageTextInputSchema.parse(input);
+      return read ? [item.url] : [];
+    },
+    async run(input, options, signal, tools) {
+      const { item, read } = pageTextInputSchema.parse(input);
+      // Indexed already, or a page that may not be read: nothing to download.
+      if (!read) return { outcome: 'skipped', result: item };
+      if (!tools.readText) throw new JobBlockedError('slice-setup');
+      const result: PageTextScanItem = { ...item };
+      try {
+        await readPageTextItem(result, {
+          ...pageTextOptionsSchema.parse(options),
+          readText: tools.readText,
+          signal,
+        });
+      } catch (error) {
+        if (error instanceof RequestAbortedError || error instanceof JobBlockedError) throw error;
+        return { outcome: 'failed', result: { ...result, status: 'failed' } };
+      }
+      return { outcome: 'succeeded', result };
     },
   },
   siteIcons: {

@@ -5,6 +5,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { INPUT_LIMITS } from '@/lib/input-limits';
 import type { JobKind } from '@/lib/job-store';
 import { closeJobDb, getJob, getJobItems } from '@/lib/job-store';
+import { PAGE_TEXT_LIMITS } from '@/lib/page-text-store';
 import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { quickSaveHostRequestSchema } from '@/lib/quick-save-validation';
 import { METADATA_MAX_BYTES } from '@/services/bookmark-network-tools';
@@ -20,6 +21,7 @@ import { installFakePermissions } from '../fake-permissions';
 // stand in for that page and count what it was asked.
 const host = vi.hoisted(() => ({
   heads: [] as string[],
+  texts: [] as string[],
   open: 0,
   lostAfter: Number.POSITIVE_INFINITY,
 }));
@@ -27,7 +29,10 @@ vi.mock('@/services/quick-save-ai-host', () => ({
   withAIHost: async (
     _settings: unknown,
     _options: unknown,
-    work: (session: { readHead: (html: string) => Promise<{ title: string }> }) => Promise<unknown>,
+    work: (session: {
+      readHead: (html: string) => Promise<{ title: string }>;
+      readText: (html: string) => Promise<string>;
+    }) => Promise<unknown>,
   ) => {
     host.open += 1;
     return work({
@@ -36,6 +41,11 @@ vi.mock('@/services/quick-save-ai-host', () => ({
         if (host.heads.length >= host.lostAfter) throw new Error('The host page closed');
         host.heads.push(html);
         return { title: 'Read by the host page' };
+      },
+      readText: async (html) => {
+        if (host.texts.length >= host.lostAfter) throw new Error('The host page closed');
+        host.texts.push(html);
+        return 'Text read by the host page';
       },
     });
   },
@@ -87,6 +97,7 @@ beforeEach(async () => {
   // Started from a page, which asked for the bookmarks' sites first.
   installFakePermissions({ origins: [...WEB_ORIGINS] });
   host.heads = [];
+  host.texts = [];
   host.open = 0;
   host.lostAfter = Number.POSITIVE_INFINITY;
   installFakeBookmarks([
@@ -183,6 +194,72 @@ describe('Refresh Site Icons as a background job', () => {
       { origin: 'https://two.invalid', status: 'noIcon' },
       { origin: 'https://down.invalid', status: 'failed' },
     ]);
+  });
+});
+
+describe('Index Page Text as a background job (S25-S27)', () => {
+  const article = (words: string) =>
+    new Response(
+      `<html><head><title>T</title></head><body><article><h1>Heading</h1><p>${words}</p></article></body></html>`,
+      { headers: { 'content-type': 'text/html' } },
+    );
+
+  // The text reader stays out of the background's code, so even a background page with a DOM
+  // parser (Firefox) reads text in the AI host page.
+  it("keeps each page's text, read in the AI host page, skips non-web links, and counts unreachable pages as not read", async () => {
+    vi.stubGlobal('DOMParser', LinkedomParser);
+    stubFetch({
+      'https://one.invalid/page': () => article('Words inside the first page. '.repeat(20)),
+      'https://two.invalid/page': () => new Response('Not here', { status: 404 }),
+    });
+    const { job, results, outcomes } = await runToEnd('pageText');
+    expect(job).toMatchObject({ summary: { overLimit: 0 } });
+    expect(outcomes).toEqual(['succeeded', 'succeeded', 'failed', 'skipped']);
+    expect(results).toMatchObject([
+      { id: 'b1', status: 'read', text: 'Text read by the host page' },
+      { id: 'b2', status: 'empty' },
+      { id: 'b3', status: 'failed' },
+      { id: 'b4', status: 'skipped' },
+    ]);
+    // Only the page that loaded is read; one host page for the slice.
+    expect(host.texts).toEqual([expect.stringContaining('Words inside the first page.')]);
+    expect(host.open).toBe(1);
+  });
+
+  it('pauses when the AI host page is lost, and reads the rest when resumed', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    stubFetch({
+      'https://one.invalid/page': () => article('One'),
+      'https://two.invalid/page': () => article('Two'),
+    });
+    host.lostAfter = 1;
+    const { job, results, outcomes } = await runToEnd('pageText');
+    expect(job).toMatchObject({ state: 'paused', lastError: { code: 'slice-setup' } });
+    expect(outcomes.slice(0, 2)).toEqual(['succeeded', undefined]);
+    expect(results[0]).toMatchObject({ status: 'read', text: 'Text read by the host page' });
+
+    host.lostAfter = Number.POSITIVE_INFINITY;
+    if (!job) throw new Error('no job');
+    await runJobCommand({ type: 'resume', jobId: job.id });
+    await whenJobsIdle();
+    const items = await getJobItems(job.id);
+    expect(items.slice(0, 2).map((item) => item.outcome)).toEqual(['succeeded', 'succeeded']);
+    expect(host.texts).toHaveLength(2);
+  });
+});
+
+describe('the AI host page reading a page', () => {
+  it('accepts a page as long as Index Page Text downloads, and no longer', () => {
+    expect(INPUT_LIMITS.chars.page_html).toBe(PAGE_TEXT_LIMITS.maxBytes);
+    const request = (length: number) => ({
+      type: QUICK_SAVE_MESSAGE.hostReadText,
+      token: 'token',
+      html: 'x'.repeat(length),
+      maxChars: PAGE_TEXT_LIMITS.maxCharsPerPage,
+    });
+    const max = PAGE_TEXT_LIMITS.maxBytes;
+    expect(quickSaveHostRequestSchema.safeParse(request(max)).success).toBe(true);
+    expect(quickSaveHostRequestSchema.safeParse(request(max + 1)).success).toBe(false);
   });
 });
 

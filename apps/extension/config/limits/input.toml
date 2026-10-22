@@ -23,6 +23,9 @@ document_token = 100
 # A page's <head> the background hands the AI host page to read; the same as head_max_bytes
 # in config/network/html.toml, which a unit test checks.
 page_head = 524288
+# A whole page the background hands the AI host page to read for Index Page Text; the same as
+# max_bytes in config/bookmarks/page-text.toml, which a unit test checks.
+page_html = 2000000
 # The text on the toolbar button's badge, which the browser fits in about four characters.
 action_badge = 4
 

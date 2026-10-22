@@ -49,6 +49,7 @@ export const SCAN_JOB_KINDS = [
   'deadLinks',
   'metadataFetcher',
   'siteIcons',
+  'pageText',
   'reorganization',
 ] as const;
 export const JOB_KINDS = [

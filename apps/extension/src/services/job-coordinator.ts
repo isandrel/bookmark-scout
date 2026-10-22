@@ -29,7 +29,8 @@ const JOB_ALARM = 'bookmark-scout:jobs';
  * Runs `work` with what a slice of `adapter`'s items needs, open for the slice. An AI kind gets
  * the AI host page with the feature's current service, only while AI is on, set up, and still
  * the service the job started with. For HTML, Firefox's background page parses it itself; a
- * service worker has no DOM parser, so it asks the AI host page. Throws `JobBlockedError` when
+ * service worker has no DOM parser, so it asks the AI host page. A page's readable text is always
+ * read there, so the text reader is never part of the background. Throws `JobBlockedError` when
  * the user has to act first.
  */
 async function withJobTools(
@@ -48,24 +49,28 @@ async function withJobTools(
       throw new JobBlockedError('ai-service-changed');
     }
     return withAIHost(service, { locale, source: adapter.ai.source }, (host) =>
-      work({ readHead: hostReadHead(host.readHead), ai: host }),
+      work({ ...hostReaders(host), ai: host }),
     );
   }
-  if (!adapter.readsHtml || typeof DOMParser === 'function') {
+  if (!adapter.readsText && (!adapter.readsHtml || typeof DOMParser === 'function')) {
     return work({ readHead: async (html, descriptions) => readHtmlHead(html, descriptions) });
   }
-  return withAIHost(null, { locale }, (host) => work({ readHead: hostReadHead(host.readHead) }));
+  return withAIHost(null, { locale }, (host) => work(hostReaders(host)));
 }
 
 /**
- * The host page's head reader, whose failure (the page closed or gone) pauses the job instead of
+ * The host page's readers, whose failure (the page closed or gone) pauses the job instead of
  * counting the page being read as unreadable.
  */
-function hostReadHead(readHead: JobTools['readHead']): JobTools['readHead'] {
-  return (html, descriptions) =>
-    Promise.resolve(readHead(html, descriptions)).catch((error: unknown) => {
-      throw new JobBlockedError('slice-setup', error instanceof Error ? error.name : 'Error');
-    });
+function hostReaders(host: AIHostSession): Pick<JobTools, 'readHead' | 'readText'> {
+  const blocked = (error: unknown): never => {
+    throw new JobBlockedError('slice-setup', error instanceof Error ? error.name : 'Error');
+  };
+  return {
+    readHead: (html, descriptions) =>
+      Promise.resolve(host.readHead(html, descriptions)).catch(blocked),
+    readText: (html, maxChars) => Promise.resolve(host.readText(html, maxChars)).catch(blocked),
+  };
 }
 
 /** The job running in this background, with what stops its work in flight. */

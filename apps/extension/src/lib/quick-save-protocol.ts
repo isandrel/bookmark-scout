@@ -8,10 +8,14 @@
 export const QUICK_SAVE_MESSAGE = {
   /** The notification or the popup asks the background to act on the last quick save. */
   action: 'quick-save/action',
-  /** The background asks the AI host page for folder suggestions, page text, or a page head. */
+  /**
+   * The background asks the AI host page for folder suggestions, page text, a page head, or the
+   * readable text of a page it downloaded.
+   */
   hostGenerate: 'quick-save/ai-host-generate',
   hostReadPage: 'quick-save/ai-host-read-page',
   hostReadHead: 'quick-save/ai-host-read-head',
+  hostReadText: 'quick-save/ai-host-read-text',
   /** The AI host page asks the background to send one provider request for it. */
   hostFetch: 'quick-save/ai-host-fetch',
   /** The AI host page reports a call to the built-in model for the AI activity log. */
@@ -167,6 +171,13 @@ export type QuickSaveHostRequest =
       /** A page's `<head>` the background fetched; a service worker has no DOM parser. */
       html: string;
       descriptions: boolean;
+    }
+  | {
+      type: typeof QUICK_SAVE_MESSAGE.hostReadText;
+      token: string;
+      /** A whole page the background downloaded for Index Page Text. */
+      html: string;
+      maxChars: number;
     };
 
 export type QuickSaveHostResponse =
@@ -175,6 +186,8 @@ export type QuickSaveHostResponse =
       object?: unknown;
       page?: { title?: string; text: string } | null;
       head?: { title?: string; description?: string };
+      /** The page's readable text, for `hostReadText`; absent when it has none. */
+      text?: string;
     }
   | {
       ok: false;

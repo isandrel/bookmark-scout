@@ -18,6 +18,7 @@ export const INPUT_LIMITS = readConfig(
       message_source: positive,
       document_token: positive,
       page_head: positive,
+      page_html: positive,
       action_badge: positive,
     }),
     counts: z.strictObject({

@@ -33,7 +33,9 @@ export function managerSearch(page: Page) {
 
 /** The toolbar's Filters menu, which this opens first when it is closed. */
 export async function tableFilters(page: Page): Promise<Locator> {
-  const panel = page.getByTestId('table-filters-panel');
+  // A panel still closing (a click outside it, such as Reset) is visible during its exit
+  // animation; only an open one counts, or the menu would be gone before it is used.
+  const panel = page.locator('[data-testid="table-filters-panel"][data-open]');
   if (!(await panel.isVisible())) await page.getByTestId('table-filters').click();
   await expect(panel).toBeVisible();
   return panel;

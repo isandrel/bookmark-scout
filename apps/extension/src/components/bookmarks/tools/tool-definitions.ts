@@ -802,6 +802,14 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     descriptionKey: 'tools_pageTextDesc',
     actionKey: () => 'action_index',
     needsHostAccess: true,
+    job: {
+      kind: 'pageText',
+      // The adapter stores the count left out when it accepts the job.
+      result: (job, results) => ({
+        ...pageTextJobSummarySchema.parse(job.summary),
+        items: results as PageTextScanItem[],
+      }),
+    },
     scan: ({ nodes, options }) => scanPageTexts(nodes, options.pageText),
     async apply(_result, picked) {
       const { saved } = await savePageTextResults(picked);
@@ -897,6 +905,7 @@ const siteIconJobSummarySchema = z.strictObject({
   scannedBookmarks: z.number().int().nonnegative(),
   skippedBookmarks: z.number().int().nonnegative(),
 });
+const pageTextJobSummarySchema = z.strictObject({ overLimit: z.number().int().nonnegative() });
 
 /** Lists every id of `ids` exactly once, in any order. */
 const listsEachOnce = (ids: readonly string[]) => (list: readonly string[]) =>
