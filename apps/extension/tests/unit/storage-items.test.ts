@@ -42,6 +42,7 @@ import { readStoredData, storedEntry } from './storage-helpers';
 /** Every single (non-collection) item's stored value; a new registry item must be added here. */
 const values: Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>> = {
   settings: settingsOverrideValues.sync,
+  settingsLists: settingsOverrideValues.lists,
   deviceSettings: settingsOverrideValues.device,
   tableView: bookmarkTableViewValue,
   tableLayout: bookmarkTableLayoutValue,
