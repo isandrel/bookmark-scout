@@ -1,7 +1,8 @@
 /**
  * Locators and gestures for the bookmark manager page, shared by specs that drive it.
  */
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page, Worker } from '@playwright/test';
+import { solidPng } from '../solid-png';
 import { expect } from './fixtures';
 import { STORAGE_ITEMS, type StorageTarget, writeStored } from './storage';
 
@@ -97,4 +98,47 @@ export async function dragOnto(source: Locator, target: Locator, fraction: numbe
     sourcePosition: { x: 200, y: 10 },
     targetPosition: { x: Math.min(200, box.width / 2), y: box.height * fraction },
   });
+}
+
+/** Stores a cover for the bookmark as Fetch Covers would, in the extension's covers database. */
+export async function seedCover(
+  worker: Worker,
+  bookmarkId: string,
+  url: string,
+  size: { width: number; height: number } = { width: 600, height: 314 },
+) {
+  const png = solidPng(size.width, size.height).toString('base64');
+  await worker.evaluate(
+    async ({ id, address, data, width, height }) => {
+      const bytes = Uint8Array.from(atob(data), (char) => char.charCodeAt(0));
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const open = indexedDB.open('bookmark-scout-covers', 1);
+        open.onupgradeneeded = () => {
+          open.result.createObjectStore('info', { keyPath: 'bookmarkId' });
+          open.result.createObjectStore('images', { keyPath: 'bookmarkId' });
+        };
+        open.onsuccess = () => resolve(open.result);
+        open.onerror = () => reject(open.error);
+      });
+      await new Promise<void>((resolve, reject) => {
+        const transaction = db.transaction(['info', 'images'], 'readwrite');
+        transaction.objectStore('info').put({
+          bookmarkId: id,
+          url: address,
+          width,
+          height,
+          bytes: bytes.byteLength,
+          savedAt: Date.now(),
+          version: 1,
+        });
+        transaction
+          .objectStore('images')
+          .put({ bookmarkId: id, type: 'image/png', data: bytes.buffer });
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error);
+      });
+      db.close();
+    },
+    { id: bookmarkId, address: url, data: png, ...size },
+  );
 }

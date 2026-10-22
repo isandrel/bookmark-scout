@@ -6,6 +6,7 @@ import {
   buildManagerFolderTree,
   canMoveWithinFolder,
   collapseFolderPath,
+  countFolderItems,
   flattenManagerTree,
   getManagerFolderAncestors,
   getMoveTargetFolders,
@@ -78,6 +79,13 @@ describe('resolveManagerFolder', () => {
 });
 
 describe('folder helpers', () => {
+  it('counts what each folder holds directly, for its card', () => {
+    const counts = countFolderItems(items);
+    expect(Object.fromEntries(counts)).toEqual({ '0': 2, '1': 3, '10': 2, '2': 1 });
+    // An empty folder has no entry.
+    expect(counts.get('11')).toBeUndefined();
+  });
+
   it('lists folders only, with full paths disambiguated by ID', () => {
     expect(buildFolderOptions(items, 'Untitled')).toEqual([
       { value: '1', label: 'Bar' },

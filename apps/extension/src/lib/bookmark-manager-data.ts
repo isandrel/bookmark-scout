@@ -38,6 +38,19 @@ export function getManagerItemsById<T extends ManagerItem>(
   return byId as ReadonlyMap<string, T>;
 }
 
+/**
+ * How many items each folder holds directly (bookmarks, folders, and separators), by folder ID,
+ * as opening it would list them. A folder with nothing inside has no entry.
+ */
+export function countFolderItems(items: readonly ManagerItem[]): ReadonlyMap<string, number> {
+  const counts = new Map<string, number>();
+  for (const item of items) {
+    if (item.parentId !== undefined)
+      counts.set(item.parentId, (counts.get(item.parentId) ?? 0) + 1);
+  }
+  return counts;
+}
+
 export type FolderResolution = {
   /** The folder to show; null is the manager root. */
   folderId: string | null;

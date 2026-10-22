@@ -1,23 +1,31 @@
 import { Globe } from 'lucide-react';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 type SiteIconProps = {
   url: string;
   /** Displayed size in CSS pixels. */
   size?: number;
   className?: string;
+  /** Shown instead of the generic globe when there is no icon to show. */
+  fallback?: ReactNode;
 };
 
 /**
  * A bookmark's site icon: the icon saved by Refresh Site Icons, then the browser's icon cache,
- * then a generic globe (also used when an image fails to load). The image is requested at twice
- * the displayed size for high-density screens.
+ * then `fallback` or a generic globe (also used when an image fails to load). The image is
+ * requested at twice the displayed size for high-density screens.
  */
-export function SiteIcon({ url, size = defaultSettings.faviconSize, className }: SiteIconProps) {
+export function SiteIcon({
+  url,
+  size = defaultSettings.faviconSize,
+  className,
+  fallback,
+}: SiteIconProps) {
   const src = useSiteIconUrl(url, size * 2);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
   if (!src || failedSrc === src) {
+    if (fallback !== undefined) return fallback;
     return (
       <Globe
         aria-hidden="true"

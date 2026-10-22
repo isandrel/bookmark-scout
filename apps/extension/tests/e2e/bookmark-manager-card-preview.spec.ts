@@ -5,52 +5,13 @@
  * the card. Its buttons are the registry's actions. The arrow keys and its Previous and Next buttons
  * step through the page's bookmarks, and closing returns to the card last shown.
  */
-import type { Page, Worker } from '@playwright/test';
-import { solidPng } from '../solid-png';
+import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { managerUrl, waitForNoOverlay } from './manager-helpers';
+import { managerUrl, seedCover, waitForNoOverlay } from './manager-helpers';
 import { STORAGE_ITEMS, setSettings, writeStored } from './storage';
 import { seedFolder } from './tool-helpers';
 
 test.use({ viewport: { width: 1400, height: 900 } });
-
-/** Stores a cover for the bookmark as Fetch Covers would, in the extension's covers database. */
-async function seedCover(worker: Worker, bookmarkId: string, url: string) {
-  const png = solidPng(600, 314).toString('base64');
-  await worker.evaluate(
-    async ({ id, address, data }) => {
-      const bytes = Uint8Array.from(atob(data), (char) => char.charCodeAt(0));
-      const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const open = indexedDB.open('bookmark-scout-covers', 1);
-        open.onupgradeneeded = () => {
-          open.result.createObjectStore('info', { keyPath: 'bookmarkId' });
-          open.result.createObjectStore('images', { keyPath: 'bookmarkId' });
-        };
-        open.onsuccess = () => resolve(open.result);
-        open.onerror = () => reject(open.error);
-      });
-      await new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction(['info', 'images'], 'readwrite');
-        transaction.objectStore('info').put({
-          bookmarkId: id,
-          url: address,
-          width: 600,
-          height: 314,
-          bytes: bytes.byteLength,
-          savedAt: Date.now(),
-          version: 1,
-        });
-        transaction
-          .objectStore('images')
-          .put({ bookmarkId: id, type: 'image/png', data: bytes.buffer });
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(transaction.error);
-      });
-      db.close();
-    },
-    { id: bookmarkId, address: url, data: png },
-  );
-}
 
 const cardsOf = (page: Page) => page.getByTestId('bookmark-cards');
 const card = (page: Page, title: string) =>

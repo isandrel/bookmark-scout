@@ -174,26 +174,29 @@
 # languages). Firefox measured ZIP 1,967,984, 6,540,875 B uncompressed, 3,816,702 B of JavaScript,
 # and 2,162,961 B of locales, against main (bc6de66e) at 1,964,341, 6,525,732, 3,812,162, and
 # 2,152,390.
+# Raised on 2026-10-22 (uncompressed 6,550,000 to 6,565,000, css 85,000 to 87,000) for tags, a
+# summary, folder item counts, and a fixed cover room on manager cards. Firefox measured
+# 6,553,562 B uncompressed and 85,257 B of CSS on the branch rebased onto 21b6f5a3.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 1_975_000
-raw_bytes = 6_550_000
+raw_bytes = 6_565_000
 
 [targets.edge]
 zip_bytes = 1_975_000
-raw_bytes = 6_550_000
+raw_bytes = 6_565_000
 
 [targets.firefox]
 zip_bytes = 1_975_000
-raw_bytes = 6_550_000
+raw_bytes = 6_565_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
 javascript = 3_825_000
-css = 85_000
+css = 87_000
 fonts = 143_000
 locales = 2_172_000
 images = 320_000

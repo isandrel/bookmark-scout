@@ -269,6 +269,18 @@ test('a separator shows as a separator in the manager and the popup, never as a 
   await extension.findByText('tbody tr', 'Separator');
   expect(await extension.countVisible('a[href^="data:"]')).toBe(0);
 
+  // In the cards view too (Visual Cards V09): a separator card, with no address, link, or room
+  // for a cover, between the two bookmark cards.
+  await (await extension.find('button[aria-label="Cards"]')).click();
+  const cards = '[data-testid="bookmark-cards"] [data-slot="bookmark-card"]';
+  await expect.poll(() => extension.countVisible(cards)).toBe(3);
+  const separator = await extension.findByText(cards, 'Separator');
+  expect(await separator.findElements(By.css('a, [data-testid="bookmark-card-media"]'))).toEqual(
+    [],
+  );
+  expect(await extension.countVisible(`${cards} [data-testid="bookmark-card-media"]`)).toBe(2);
+  expect(await extension.countVisible('a[href^="data:"]')).toBe(0);
+
   await extension.open('popup.html');
   await (await extension.findByText('.folder-item', folder.rootTitle)).click();
   await (await extension.findByText('.folder-item', 'E2E Firefox Separators')).click();

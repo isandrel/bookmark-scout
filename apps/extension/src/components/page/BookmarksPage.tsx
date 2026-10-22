@@ -224,6 +224,8 @@ export default function BookmarksPage() {
     () => sortBookmarkItems(allData, sortOrder, sortAccessors),
     [allData, sortOrder, sortAccessors],
   );
+  // What each folder card counts.
+  const folderItemCounts = useMemo(() => countFolderItems(allData), [allData]);
   // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the label.
   const dataOrder = useMemo(
     () => ({ browserOrder: sortOrder === 'browser', label: getSortOrderLabel(sortOrder) }),
@@ -523,9 +525,13 @@ export default function BookmarksPage() {
                   ? 'is-folder bg-muted/50 hover:bg-muted/70'
                   : 'hover:bg-muted/50'
               }
-              cardMedia={(row: Bookmark) =>
-                row.url ? <BookmarkCover bookmarkId={row.id} url={row.url} /> : null
-              }
+              cardMedia={(row: Bookmark) => <BookmarkCardMedia item={row} />}
+              cardDetails={(row: Bookmark) => (
+                <BookmarkCardDetails
+                  item={row}
+                  folderItemCount={folderItemCounts.get(row.id) ?? 0}
+                />
+              )}
               onRowOpen={(row: Bookmark) => openRows([row], 'tabs')}
               onRowOpenInBackground={(row: Bookmark) => {
                 if (row.type !== ItemTypeEnum.Folder) openRows([row], 'background-tabs');

@@ -157,6 +157,32 @@ export async function getCoverImage(bookmarkId: string, url: string): Promise<Bl
   return image ? new Blob([image.data], { type: image.type }) : undefined;
 }
 
+/**
+ * Reads a cover with `load` and gives `show` an object URL for it (undefined without one, or
+ * when the read fails). The returned function stops it for a card that is gone: a read still
+ * running is ignored when it ends, so no URL is made for it, and a URL already made is revoked.
+ */
+export function showCoverImage(
+  load: () => Promise<Blob | undefined>,
+  show: (src: string | undefined) => void,
+): () => void {
+  let objectUrl: string | undefined;
+  let stopped = false;
+  load()
+    .then((image) => {
+      if (stopped) return;
+      objectUrl = image ? URL.createObjectURL(image) : undefined;
+      show(objectUrl);
+    })
+    .catch(() => {
+      if (!stopped) show(undefined);
+    });
+  return () => {
+    stopped = true;
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+  };
+}
+
 async function deleteCovers(db: IDBPDatabase<CoverDb>, ids: readonly string[]): Promise<void> {
   if (ids.length === 0) return;
   const transaction = db.transaction(['info', 'images'], 'readwrite');

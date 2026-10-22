@@ -1409,6 +1409,26 @@
         "message": "次のブックマーク",
         "description": "Bookmark preview: button (and the right arrow key) that shows the next bookmark of the page, skipping folders"
     },
+    "bookmarks_cardFolderItems": {
+        "message": "$1 件",
+        "description": "Bookmark manager card of a folder (Manager View: Cards): how many items the folder holds directly; $1 is the count"
+    },
+    "bookmarks_cardFolderItems_one": {
+        "message": "$1 件",
+        "description": "Bookmark manager card of a folder (Manager View: Cards): how many items the folder holds directly; $1 is the count"
+    },
+    "bookmarks_cardMoreTags": {
+        "message": "+$1",
+        "description": "Bookmark manager card: the chip after the tags shown, counting the tags left out; $1 is how many"
+    },
+    "bookmarks_cardMoreTagsLabel": {
+        "message": "ほかのタグ $1 件: $2",
+        "description": "Bookmark manager card: what screen readers and the tooltip say for the \"+N\" tag chip; $1 is how many tags are left out, $2 lists them"
+    },
+    "bookmarks_cardMoreTagsLabel_one": {
+        "message": "ほかのタグ $1 件: $2",
+        "description": "Bookmark manager card: what screen readers and the tooltip say for the \"+N\" tag chip; $1 is how many tags are left out, $2 lists them"
+    },
     "bookmarks_detailsTitle": {
         "message": "ブックマークの詳細",
         "description": "Bookmark details dialog title"

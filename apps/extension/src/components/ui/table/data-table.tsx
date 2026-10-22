@@ -96,8 +96,10 @@ interface DataTableProps<TData extends RowData> {
   /** Middle-click: open a bookmark in a background tab. */
   onRowOpenInBackground?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
-  /** Drawn at the top of a row's card in the cards view, such as a stored cover. */
+  /** Drawn at the top of a row's card in the cards view: the room for a cover. */
   cardMedia?: (row: TData) => React.ReactNode;
+  /** Drawn under a card's address in the cards view, such as tags and a summary. */
+  cardDetails?: (row: TData) => React.ReactNode;
   /** Receives the table's selection commands, for the page's keyboard shortcuts. */
   handleRef?: React.Ref<DataTableHandle<TData>>;
   /** Wraps the table's frame, for example in a right-click menu. */
@@ -207,6 +209,7 @@ export function DataTable<TData extends RowData>({
   onRowOpenInBackground,
   rowClassName,
   cardMedia,
+  cardDetails,
   handleRef,
   renderFrame,
   getRowProps,
@@ -1047,13 +1050,14 @@ export function DataTable<TData extends RowData>({
                                   {cellOf(STICKY_COLUMN_ID)}
                                 </div>
                               </div>
-                              {/* biome-ignore lint/a11y/useSemanticElements lint/a11y/useFocusableInteractive: a card's cell; the card takes focus, as a table row does. */}
+                              {/* biome-ignore lint/a11y/useSemanticElements: a card's cell; the card takes focus, as a table row does. */}
                               <div
                                 role="gridcell"
                                 tabIndex={-1}
-                                className="min-w-0 truncate pl-6 text-xs text-muted-foreground"
+                                className="flex min-w-0 flex-col gap-1.5 pl-6 text-xs text-muted-foreground"
                               >
-                                {cellOf('url')}
+                                <div className="min-w-0 truncate empty:hidden">{cellOf('url')}</div>
+                                {cardDetails?.(row.original)}
                               </div>
                             </div>
                           );
