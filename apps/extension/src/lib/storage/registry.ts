@@ -47,6 +47,11 @@ export const STORAGE_ITEMS = {
    * choices follow them to every device. Device settings (`DEVICE_SETTING_KEYS`) are left out.
    */
   settings: { area: 'sync', name: 'settings', v: 1, backup: 'include' },
+  /**
+   * Synced: the changed settings that are lists (parameter names, menu actions, status codes),
+   * kept apart so the settings item and this one each stay within the 8,192-byte sync quota.
+   */
+  settingsLists: { area: 'sync', name: 'settings.lists', v: 1, backup: 'include' },
   /** Local: the changed settings that belong to this device only (`DEVICE_SETTING_KEYS`). */
   deviceSettings: { area: 'local', name: 'settings', v: 1, backup: 'include' },
   /** Synced: the manager table's columns (shown, order) and sort, so the layout follows the user. */
