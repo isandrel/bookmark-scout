@@ -26,6 +26,7 @@
     "build:docs": "nx run docs:build",
     "graph": "nx graph",
     "generate:markdown": "bun run scripts/generate-markdown.ts",
+    "clean": "bun run scripts/clean-local.ts",
     "generate:readme": "bun run scripts/generate-markdown.ts",
     "prepare": "husky"
   },

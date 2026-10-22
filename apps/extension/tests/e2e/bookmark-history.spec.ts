@@ -3,8 +3,8 @@
  * shows as one verified record with its items, and the record is still there after the browser
  * restarts with the same profile, when the session's undo history is gone.
  */
-import { type BrowserContext, chromium, type Page, type Worker } from '@playwright/test';
-import { expect, test, toastRegion } from './fixtures';
+import type { BrowserContext, Page, Worker } from '@playwright/test';
+import { expect, launchExtension, test, toastRegion } from './fixtures';
 import { managerUrl, managerRow as row } from './manager-helpers';
 import { childTitles, seedFolder } from './popup-helpers';
 import { setSettings } from './storage';
@@ -12,19 +12,6 @@ import { removeTempDir } from './temp-dirs';
 import { childrenOf, openTools, toolCard } from './tool-helpers';
 
 test.use({ viewport: { width: 1400, height: 900 } });
-
-async function launch(userDataDir: string, extensionPath: string, channel: string) {
-  const context = await chromium.launchPersistentContext(userDataDir, {
-    channel,
-    headless: true,
-    reducedMotion: 'reduce',
-    viewport: { width: 1400, height: 900 },
-    args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
-  });
-  let [worker] = context.serviceWorkers();
-  worker ??= await context.waitForEvent('serviceworker');
-  return { context, worker, extensionId: new URL(worker.url()).host };
-}
 
 async function openHistory(page: Page) {
   await page.getByRole('button', { name: 'Bookmark history' }).click();
@@ -48,7 +35,11 @@ test('a manager deletion is one verified record that survives a browser restart 
   try {
     let worker: Worker;
     let extensionId: string;
-    ({ context, worker, extensionId } = await launch(userDataDir, extensionPath, extensionBrowser));
+    ({ context, worker, extensionId } = await launchExtension(
+      userDataDir,
+      extensionPath,
+      extensionBrowser,
+    ));
     await setSettings(worker, { confirmBeforeDelete: false, sortOrder: 'browser' });
     const seeded = await seedFolder(worker, 'History Folder', [
       { title: 'Keep me', url: 'https://e2e.invalid/keep?b=2&a=1' },
@@ -86,7 +77,11 @@ test('a manager deletion is one verified record that survives a browser restart 
     await context.close();
 
     // A restart ends the session (and its undo history) but not the record.
-    ({ context, worker, extensionId } = await launch(userDataDir, extensionPath, extensionBrowser));
+    ({ context, worker, extensionId } = await launchExtension(
+      userDataDir,
+      extensionPath,
+      extensionBrowser,
+    ));
     const after = await context.newPage();
     await after.goto(managerUrl(extensionId, seeded.folderId));
     const reopened = await openHistory(after);
