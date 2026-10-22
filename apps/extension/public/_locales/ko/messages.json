@@ -2927,9 +2927,41 @@
         "message": "적용 중...",
         "description": "Button label while changes are applied"
     },
-    "action_removeDuplicates": {
-        "message": "중복 제거",
-        "description": "Remove duplicates button label"
+    "tools_duplicatesHint": {
+        "message": "각 그룹에서 남길 북마크를 고르세요. 체크한 사본은 제거됩니다.",
+        "description": "Duplicate Cleaner review: how to choose what to keep and remove"
+    },
+    "tools_duplicatesSelectAll": {
+        "message": "모든 추가 사본 선택",
+        "description": "Duplicate Cleaner review: checkbox that checks every copy that is not kept"
+    },
+    "tools_duplicatesSelectGroup": {
+        "message": "$1의 추가 사본 제거",
+        "description": "Duplicate Cleaner review: checkbox for one group; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepLabel": {
+        "message": "$1에서 남길 북마크",
+        "description": "Duplicate Cleaner review: name of one group's keep choice; $1 is the address the group shares"
+    },
+    "tools_duplicatesKeepItem": {
+        "message": "$1 유지",
+        "description": "Duplicate Cleaner review: radio that keeps this bookmark; $1 is its title"
+    },
+    "tools_duplicatesRemoveItem": {
+        "message": "$1 제거",
+        "description": "Duplicate Cleaner review: checkbox that removes this copy; $1 is its title"
+    },
+    "tools_duplicatesRemove": {
+        "message": "제거",
+        "description": "Duplicate Cleaner review: visible label of the checkbox that removes a copy"
+    },
+    "tools_duplicatesRemoveSelected": {
+        "message": "중복 $1개 제거",
+        "description": "Duplicate Cleaner review: button that removes the checked copies; $1 is how many"
+    },
+    "tools_duplicatesRemoveSelected_one": {
+        "message": "중복 $1개 제거",
+        "description": "Duplicate Cleaner review: button that removes the checked copies (singular); $1 is how many"
     },
     "stats_totalBookmarks": {
         "message": "북마크",

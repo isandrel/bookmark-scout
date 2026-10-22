@@ -83,6 +83,11 @@ beforeEach(async () => {
   notices = [];
 });
 
+/** Every group as the scan found it: its first bookmark kept, every other one removed. */
+function everyGroup(run: { getState: () => { result: DuplicateScanResult | null } }) {
+  return run.getState().result?.groups ?? [];
+}
+
 describe('duplicates', () => {
   beforeEach(async () => {
     seed([
@@ -100,8 +105,7 @@ describe('duplicates', () => {
     await run.run('folder');
     expect(run.getState()).toMatchObject({ phase: 'review', open: true });
     expect(run.getState().result?.groups).toHaveLength(1);
-
-    await run.apply();
+    await run.apply(everyGroup(run));
     expect(titles()).toEqual(['A1', 'B1']);
     expect(run.getState()).toMatchObject({ phase: 'done', open: false });
     const [removal] = notices;
@@ -131,7 +135,7 @@ describe('duplicates', () => {
     const run = createToolRun(TOOL_DEFINITIONS.duplicates, deps());
     await run.run('folder');
     await fakeBrowser.bookmarks.update('a2', { url: 'https://e2e.invalid/edited' });
-    await run.apply();
+    await run.apply(everyGroup(run));
     const undoToast = { dismiss: vi.fn() };
     notices[0].undo?.attach(undoToast);
 
@@ -152,7 +156,7 @@ describe('duplicates', () => {
       const run = createToolRun(TOOL_DEFINITIONS.duplicates, deps());
       await run.run('folder');
       await fakeBrowser.bookmarks.update('a2', { url: 'https://e2e.invalid/edited' });
-      await run.apply();
+      await run.apply(everyGroup(run));
       expect(run.getState().notice).toMatchObject({ canUndo: true });
       return run;
     };
@@ -193,8 +197,7 @@ describe('duplicates', () => {
     const run = createToolRun(TOOL_DEFINITIONS.duplicates, deps());
     await run.run('folder');
     await fakeBrowser.bookmarks.update('a2', { url: 'https://e2e.invalid/edited' });
-
-    await run.apply();
+    await run.apply(everyGroup(run));
     expect(titles()).toEqual(['A1', 'A2', 'B1']);
     const state = run.getState();
     expect(state).toMatchObject({ phase: 'review', open: true, notice: { canUndo: true } });
@@ -218,8 +221,7 @@ describe('duplicates', () => {
     const run = createToolRun(TOOL_DEFINITIONS.duplicates, deps());
     await run.run('folder');
     await fakeBrowser.bookmarks.update('a1', { url: 'https://e2e.invalid/moved' });
-
-    await run.apply();
+    await run.apply(everyGroup(run));
     expect(run.getState().notice).toMatchObject({ canUndo: false });
     expect(notices[0].undo).toBeUndefined();
   });
