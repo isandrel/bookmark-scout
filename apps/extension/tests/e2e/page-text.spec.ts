@@ -1,11 +1,14 @@
 /**
  * Index Page Text: off until turned on, then a run reads the pages of its scope, lists sign-in
  * pages on their own and never saves them, the review keeps the text only when saved, search
- * finds words only the page has, and Options deletes the index. The popup indexes the current
- * tab's text only after its preview is saved, and never when the tab moved on while it was read.
+ * finds words only the page has, and Options deletes the index. Before a run the user chooses its
+ * sites: only those are asked for website access and requested, and the rest are listed as not
+ * chosen. The popup indexes the current tab's text only after its preview is saved, and never when
+ * the tab moved on while it was read.
  */
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { latestJob } from './job-helpers';
 import { managerUrl } from './manager-helpers';
 import { openPopup } from './popup-helpers';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
@@ -16,6 +19,16 @@ const ARTICLE = `<!doctype html><html><head><title>Field trip</title></head><bod
 const SIGN_IN = `<!doctype html><html><head><title>Sign in</title></head><body><main>
 <h1>Sign in to keep reading</h1><form><input name="user"><input type="password" name="pw">
 <button>Sign in</button></form></main></body></html>`;
+
+/** Six bookmarks on five sites, two on the first: what the site choice lists before a run. */
+const SITE_CHOICE_BOOKMARKS = [
+  { title: 'Alpha one', url: 'https://www.s03-alpha.invalid/1' },
+  { title: 'Alpha two', url: 'https://docs.s03-alpha.invalid/2' },
+  { title: 'Beta', url: 'https://s03-beta.invalid/' },
+  { title: 'Gamma', url: 'https://s03-gamma.invalid/' },
+  { title: 'Delta', url: 'https://s03-delta.invalid/' },
+  { title: 'Epsilon', url: 'https://s03-epsilon.invalid/' },
+];
 
 /** How many pages the page text index keeps, read in the background. */
 const indexedCount = (worker: Worker) =>
@@ -67,6 +80,11 @@ test.describe('with website access granted', () => {
     await toolCard(page, 'Index Page Text')
       .getByRole('button', { name: 'Index', exact: true })
       .click();
+    // Every page is on one site, which starts chosen.
+    await page
+      .getByRole('dialog', { name: 'Choose sites to read' })
+      .getByRole('button', { name: 'Start with 1 site' })
+      .click();
     const review = page.getByRole('dialog', { name: 'Index Page Text' });
     await expect(review.getByRole('radio', { name: 'Text found (1)' })).toBeVisible();
     await expect(review.getByRole('radio', { name: 'Failed (1)' })).toBeVisible();
@@ -114,6 +132,85 @@ test.describe('with website access granted', () => {
     await expect(panel).toContainText('0 pages indexed');
     await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:quokka')}`);
     await expect(page.locator('tbody tr').filter({ hasText: 'Trip notes' })).toHaveCount(0);
+  });
+
+  test('with 2 of 5 sites chosen, only they are requested, the job keeps the choice after its page closes, and the rest are listed as not chosen (S03)', async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const { folderId } = await seedFolder(
+      extensionWorker,
+      'E2E Site Choice',
+      SITE_CHOICE_BOOKMARKS,
+    );
+    await setSettings(extensionWorker, { pageTextEnabled: true, pageTextDefaultScope: 'folder' });
+    // Each page is held until the page that started the run has closed.
+    const requested: string[] = [];
+    let release = () => {};
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await context.route('https://*.invalid/**', async (route) => {
+      requested.push(new URL(route.request().url()).hostname);
+      await held;
+      await route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE });
+    });
+
+    try {
+      await openTools(page, extensionId, folderId);
+      await toolCard(page, 'Index Page Text')
+        .getByRole('button', { name: 'Index', exact: true })
+        .click();
+      const choice = page.getByRole('dialog', { name: 'Choose sites to read' });
+      // Each site once, with its bookmarks, most first; all start chosen.
+      const rows = choice.getByTestId('site-choice-row');
+      await expect(rows).toHaveText([
+        /^s03-alpha\.invalid2 bookmarks$/,
+        /^s03-beta\.invalid1 bookmark$/,
+        /^s03-delta\.invalid1 bookmark$/,
+        /^s03-epsilon\.invalid1 bookmark$/,
+        /^s03-gamma\.invalid1 bookmark$/,
+      ]);
+      await expect(choice.getByText('5 of 5 sites chosen', { exact: true })).toBeVisible();
+      await choice.getByRole('button', { name: 'Select none' }).click();
+      await expect(choice.getByRole('button', { name: 'Start with 0 sites' })).toBeDisabled();
+      // By keyboard: a site's checkbox toggles with Space.
+      await choice.getByRole('checkbox', { name: /s03-alpha\.invalid/ }).press('Space');
+      await choice.getByRole('checkbox', { name: /s03-gamma\.invalid/ }).press('Space');
+      await expect(choice.getByText('2 of 5 sites chosen', { exact: true })).toBeVisible();
+      await choice.getByRole('button', { name: 'Start with 2 sites' }).click();
+      await expect(choice).toHaveCount(0);
+
+      await expect.poll(() => requested.length).toBeGreaterThan(0);
+      await page.close();
+      release();
+      await expect
+        .poll(async () => (await latestJob(extensionWorker, 'pageText'))?.state)
+        .toBe('succeeded');
+      const job = await latestJob(extensionWorker, 'pageText');
+      expect(job?.options).toMatchObject({ sites: ['s03-alpha.invalid', 's03-gamma.invalid'] });
+      // Only the chosen sites were requested, each page once.
+      expect(requested.sort()).toEqual([
+        'docs.s03-alpha.invalid',
+        's03-gamma.invalid',
+        'www.s03-alpha.invalid',
+      ]);
+    } finally {
+      release();
+    }
+
+    const manager = await context.newPage();
+    await openTools(manager, extensionId, folderId);
+    await toolCard(manager, 'Index Page Text')
+      .getByTestId('job-status')
+      .getByRole('button', { name: 'Review results' })
+      .click();
+    const review = manager.getByRole('dialog', { name: 'Index Page Text' });
+    await expect(review.getByRole('radio', { name: 'Text found (3)' })).toBeVisible();
+    await review.getByRole('radio', { name: 'Not chosen (3)' }).click();
+    await expect(review.getByTestId('page-text-item')).toHaveText([/Beta/, /Delta/, /Epsilon/]);
   });
 
   test("the popup indexes the current tab's text only after its preview is saved (S17)", async ({
@@ -200,6 +297,78 @@ test.describe('with website access granted', () => {
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(await indexedCount(extensionWorker)).toBe(0);
   });
+});
+
+test('website access is asked for the chosen sites only, and nothing is requested when it is declined (S03)', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'E2E Site Access', SITE_CHOICE_BOOKMARKS);
+  await setSettings(extensionWorker, { pageTextEnabled: true, pageTextDefaultScope: 'folder' });
+  const requested: string[] = [];
+  await context.route('https://*.invalid/**', async (route) => {
+    requested.push(route.request().url());
+    await route.abort('failed');
+  });
+  // The real browser prompt cannot be answered headlessly; record it and decline.
+  await page.addInitScript(() => {
+    const calls: unknown[] = [];
+    (window as unknown as { permissionRequests: unknown[] }).permissionRequests = calls;
+    Object.defineProperty(chrome.permissions, 'request', {
+      configurable: true,
+      value: (request: unknown) => {
+        calls.push(request);
+        return Promise.resolve(false);
+      },
+    });
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Index Page Text')
+    .getByRole('button', { name: 'Index', exact: true })
+    .click();
+  const choice = page.getByRole('dialog', { name: 'Choose sites to read' });
+  for (const site of ['s03-beta.invalid', 's03-delta.invalid', 's03-epsilon.invalid']) {
+    await choice.getByTestId('site-choice-row').filter({ hasText: site }).click();
+  }
+  // At a narrow window the list still fits without scrolling sideways.
+  await page.setViewportSize({ width: 420, height: 800 });
+  await expect
+    .poll(() =>
+      choice.evaluate(
+        (dialog) =>
+          dialog.scrollWidth <= dialog.clientWidth &&
+          dialog.getBoundingClientRect().right <= window.innerWidth,
+      ),
+    )
+    .toBe(true);
+  await choice.getByRole('button', { name: 'Start with 2 sites' }).click();
+
+  const prompt = page.getByRole('dialog', { name: 'Allow access to websites?' });
+  await expect(prompt).toContainText('s03-alpha.invalid');
+  await expect(prompt).toContainText('s03-gamma.invalid');
+  await expect(prompt).not.toContainText('s03-beta.invalid');
+  await prompt.getByRole('button', { name: 'Allow access' }).click();
+  await expect(
+    toastRegion(page).getByText('× Website access not granted', { exact: true }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { permissionRequests: unknown[] }).permissionRequests,
+    ),
+  ).toEqual([
+    {
+      origins: [
+        'http://*.s03-alpha.invalid/*',
+        'https://*.s03-alpha.invalid/*',
+        'http://*.s03-gamma.invalid/*',
+        'https://*.s03-gamma.invalid/*',
+      ],
+    },
+  ]);
+  expect(requested).toEqual([]);
 });
 
 /**

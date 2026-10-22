@@ -7775,6 +7775,42 @@
         "message": "已略過 ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
     },
+    "tools_pageTextCategory_notChosen": {
+        "message": "未選擇 ($1)",
+        "description": "Index Page Text review tab: bookmarks on sites left out before the run, never requested; $1 is how many"
+    },
+    "tools_siteChoiceTitle": {
+        "message": "選擇要讀取的網站",
+        "description": "Site choice before a run (Index Page Text): dialog title"
+    },
+    "tools_siteChoiceDesc": {
+        "message": "只從你勾選的網站下載網頁，也只要求存取這些網站。其他網站上的書籤列在「未選擇」中，絕不會被要求。",
+        "description": "Site choice dialog: what choosing does; \"Not chosen\" is the review tab tools_pageTextCategory_notChosen"
+    },
+    "tools_siteChoiceFilter": {
+        "message": "篩選網站",
+        "description": "Site choice dialog: placeholder and label of the field that filters the sites by name"
+    },
+    "tools_siteChoiceSelectNone": {
+        "message": "全部取消選取",
+        "description": "Site choice dialog: button that unchecks every site the filter shows"
+    },
+    "tools_siteChoiceChosen": {
+        "message": "已選取 $2 / $1 個網站",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceNoMatch": {
+        "message": "沒有符合篩選條件的網站。",
+        "description": "Site choice dialog: shown when no site matches the filter"
+    },
+    "tools_siteChoiceShowMore": {
+        "message": "再顯示 $1 個",
+        "description": "Site choice dialog: button that lists more sites; $1 is how many more"
+    },
+    "tools_siteChoiceStart": {
+        "message": "開始（$1 個網站）",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
     "tools_pageTextActionSave": {
         "message": "儲存內文",
         "description": "Index Page Text review: action that keeps a page text"

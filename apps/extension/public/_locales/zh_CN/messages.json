@@ -7775,6 +7775,42 @@
         "message": "已跳过 ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
     },
+    "tools_pageTextCategory_notChosen": {
+        "message": "未选择 ($1)",
+        "description": "Index Page Text review tab: bookmarks on sites left out before the run, never requested; $1 is how many"
+    },
+    "tools_siteChoiceTitle": {
+        "message": "选择要读取的网站",
+        "description": "Site choice before a run (Index Page Text): dialog title"
+    },
+    "tools_siteChoiceDesc": {
+        "message": "只从你勾选的网站下载网页，也只请求访问这些网站。其他网站上的书签列在“未选择”中，绝不会被请求。",
+        "description": "Site choice dialog: what choosing does; \"Not chosen\" is the review tab tools_pageTextCategory_notChosen"
+    },
+    "tools_siteChoiceFilter": {
+        "message": "筛选网站",
+        "description": "Site choice dialog: placeholder and label of the field that filters the sites by name"
+    },
+    "tools_siteChoiceSelectNone": {
+        "message": "全不选",
+        "description": "Site choice dialog: button that unchecks every site the filter shows"
+    },
+    "tools_siteChoiceChosen": {
+        "message": "已选择 $2 / $1 个网站",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceNoMatch": {
+        "message": "没有与筛选条件匹配的网站。",
+        "description": "Site choice dialog: shown when no site matches the filter"
+    },
+    "tools_siteChoiceShowMore": {
+        "message": "再显示 $1 个",
+        "description": "Site choice dialog: button that lists more sites; $1 is how many more"
+    },
+    "tools_siteChoiceStart": {
+        "message": "开始（$1 个网站）",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
     "tools_pageTextActionSave": {
         "message": "保存正文",
         "description": "Index Page Text review: action that keeps a page text"

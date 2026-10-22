@@ -106,8 +106,16 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
    * going when the page closes, with pause, resume, and cancel; `scan` is then unused here.
    * `result` turns the job's saved results into what the review shows, and the review keeps
    * them after an apply instead of scanning again.
+   *
+   * With `chooseSites`, the user chooses the sites a run requests before it starts: the card lists
+   * the sites it returns (those the run would download from, with their bookmark counts), asks
+   * website access for the chosen ones only, and starts the job with them (`sites`).
    */
-  job?: { kind: ScanJobKind; result(job: JobRecord, results: unknown[]): Result };
+  job?: {
+    kind: ScanJobKind;
+    result(job: JobRecord, results: unknown[]): Result;
+    chooseSites?(nodes: BookmarkTreeNode[], options: ToolOptions): Promise<SiteCount[]>;
+  };
   /**
    * The AI feature the tool is (`AI_FEATURES`), which picks its AI service. Disabled, with a
    * notice, while AI features are off or that service is not set up.
@@ -809,6 +817,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         ...pageTextJobSummarySchema.parse(job.summary),
         items: results as PageTextScanItem[],
       }),
+      chooseSites: (nodes, options) => listPageTextSites(nodes, options.pageText),
     },
     scan: ({ nodes, options }) => scanPageTexts(nodes, options.pageText),
     async apply(_result, picked) {

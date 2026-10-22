@@ -7759,6 +7759,42 @@
         "message": "Dilewati ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
     },
+    "tools_pageTextCategory_notChosen": {
+        "message": "Tidak dipilih ($1)",
+        "description": "Index Page Text review tab: bookmarks on sites left out before the run, never requested; $1 is how many"
+    },
+    "tools_siteChoiceTitle": {
+        "message": "Pilih situs yang dibaca",
+        "description": "Site choice before a run (Index Page Text): dialog title"
+    },
+    "tools_siteChoiceDesc": {
+        "message": "Halaman hanya diunduh dari situs yang Anda centang, dan akses hanya diminta untuk situs tersebut. Bookmark di situs lain tercantum sebagai Tidak dipilih dan tidak pernah diminta.",
+        "description": "Site choice dialog: what choosing does; \"Not chosen\" is the review tab tools_pageTextCategory_notChosen"
+    },
+    "tools_siteChoiceFilter": {
+        "message": "Saring situs",
+        "description": "Site choice dialog: placeholder and label of the field that filters the sites by name"
+    },
+    "tools_siteChoiceSelectNone": {
+        "message": "Jangan pilih apa pun",
+        "description": "Site choice dialog: button that unchecks every site the filter shows"
+    },
+    "tools_siteChoiceChosen": {
+        "message": "$2 dari $1 situs dipilih",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceNoMatch": {
+        "message": "Tidak ada situs yang cocok dengan saringan.",
+        "description": "Site choice dialog: shown when no site matches the filter"
+    },
+    "tools_siteChoiceShowMore": {
+        "message": "Tampilkan $1 lagi",
+        "description": "Site choice dialog: button that lists more sites; $1 is how many more"
+    },
+    "tools_siteChoiceStart": {
+        "message": "Mulai dengan $1 situs",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
     "tools_pageTextActionSave": {
         "message": "Simpan teks",
         "description": "Index Page Text review: action that keeps a page text"

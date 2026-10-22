@@ -15,6 +15,7 @@ import { pageTextReadingSchema } from '@/lib/quick-save-validation';
 import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
 import {
+  listPageTextSites,
   readPageTextHtml,
   readTabPageText,
   savePageTextResults,
@@ -188,6 +189,72 @@ describe('Index Page Text runs', () => {
     // A sign-in page keeps no text, so it can never be saved as the page.
     expect(items.find((item) => item.id === 'login')?.text).toBeUndefined();
     expect(fetch).toHaveBeenCalledTimes(5);
+  });
+
+  it('lists the sites a run would download from, and reads only the chosen ones (S03)', async () => {
+    await savePageTexts([{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'old' }]);
+    const nodes = folder([
+      { id: 'a1', parentId: 'f', title: 'A one', url: 'https://www.alpha.example/1' },
+      { id: 'a2', parentId: 'f', title: 'A two', url: 'https://docs.alpha.example/2' },
+      { id: 'b1', parentId: 'f', title: 'B one', url: 'https://beta.example/1' },
+      { id: 'c1', parentId: 'f', title: 'C one', url: 'https://gamma.example/1' },
+      { id: 'd1', parentId: 'f', title: 'D one', url: 'https://delta.example/1' },
+      { id: 'e1', parentId: 'f', title: 'E one', url: 'https://epsilon.example/1' },
+      { id: 'kept', parentId: 'f', title: 'Kept', url: 'https://kept.example/' },
+      { id: 'local', parentId: 'f', title: 'Router', url: 'http://192.168.1.1/' },
+      { id: 'js', parentId: 'f', title: 'Script', url: 'javascript:void(0)' },
+    ]);
+    // Pages indexed already and pages that may not be read are not sites to choose.
+    expect(await listPageTextSites(nodes, { skipPrivateHosts: true })).toEqual([
+      { site: 'alpha.example', count: 2 },
+      { site: 'beta.example', count: 1 },
+      { site: 'delta.example', count: 1 },
+      { site: 'epsilon.example', count: 1 },
+      { site: 'gamma.example', count: 1 },
+    ]);
+
+    const { items } = await scanPageTexts(nodes, {
+      skipPrivateHosts: true,
+      sites: ['alpha.example', 'gamma.example'],
+    });
+    expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
+      a1: 'read',
+      a2: 'read',
+      b1: 'notChosen',
+      c1: 'read',
+      d1: 'notChosen',
+      e1: 'notChosen',
+      kept: 'current',
+      local: 'skipped',
+      js: 'skipped',
+    });
+    // Only the chosen sites were requested.
+    const requested = vi.mocked(fetch).mock.calls.map(([url]) => new URL(String(url)).hostname);
+    expect(requested.sort()).toEqual(['docs.alpha.example', 'gamma.example', 'www.alpha.example']);
+  });
+
+  it('leaves room in a nearly full index for the chosen sites only (S03)', async () => {
+    const limits = PAGE_TEXT_LIMITS as { maxPages: number };
+    const maxPages = limits.maxPages;
+    let result: Awaited<ReturnType<typeof scanPageTexts>>;
+    try {
+      limits.maxPages = 1;
+      result = await scanPageTexts(
+        folder([
+          { id: 'b1', parentId: 'f', title: 'B one', url: 'https://beta.example/1' },
+          { id: 'c1', parentId: 'f', title: 'C one', url: 'https://gamma.example/1' },
+        ]),
+        { skipPrivateHosts: true, sites: ['gamma.example'] },
+      );
+    } finally {
+      limits.maxPages = maxPages;
+    }
+    const { items, overLimit } = result;
+    expect(overLimit).toBe(0);
+    expect(items.map((item) => [item.id, item.status])).toEqual([
+      ['b1', 'notChosen'],
+      ['c1', 'read'],
+    ]);
   });
 
   it('reads a page the background downloaded in the AI host page, cut to the limit it asks for', async () => {

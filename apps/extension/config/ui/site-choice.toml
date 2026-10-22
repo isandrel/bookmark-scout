@@ -1,0 +1,12 @@
+# The list of sites a tool run lets the user choose from before it starts (Index Page Text): each
+# site its run would download from, with how many bookmarks it has. Only the chosen sites are
+# asked for website access and requested. Read by
+# src/components/bookmarks/tools/SiteChoiceDialog.tsx.
+
+# Whether each site starts checked, so the run covers its whole scope unless the user leaves sites
+# out
+checked_by_default = true
+# A field that filters the list by site name shows once there are more sites than this
+filter_above = 8
+# Sites listed at first and added by each Show more, so a scope with thousands of sites opens fast
+page_size = 100

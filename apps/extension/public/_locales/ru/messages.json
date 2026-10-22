@@ -8605,6 +8605,66 @@
         "message": "Пропущено ($1)",
         "description": "Index Page Text review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
     },
+    "tools_pageTextCategory_notChosen": {
+        "message": "Не выбрано ($1)",
+        "description": "Index Page Text review tab: bookmarks on sites left out before the run, never requested; $1 is how many"
+    },
+    "tools_siteChoiceTitle": {
+        "message": "Выберите сайты для чтения",
+        "description": "Site choice before a run (Index Page Text): dialog title"
+    },
+    "tools_siteChoiceDesc": {
+        "message": "Страницы скачиваются только с отмеченных сайтов, и доступ запрашивается только к ним. Закладки на других сайтах попадают во вкладку «Не выбрано» и никогда не запрашиваются.",
+        "description": "Site choice dialog: what choosing does; \"Not chosen\" is the review tab tools_pageTextCategory_notChosen"
+    },
+    "tools_siteChoiceFilter": {
+        "message": "Фильтр сайтов",
+        "description": "Site choice dialog: placeholder and label of the field that filters the sites by name"
+    },
+    "tools_siteChoiceSelectNone": {
+        "message": "Снять все",
+        "description": "Site choice dialog: button that unchecks every site the filter shows"
+    },
+    "tools_siteChoiceChosen": {
+        "message": "Выбрано сайтов: $2 из $1",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceChosen_one": {
+        "message": "Выбрано сайтов: $2 из $1",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceChosen_few": {
+        "message": "Выбрано сайтов: $2 из $1",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceChosen_many": {
+        "message": "Выбрано сайтов: $2 из $1",
+        "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
+    },
+    "tools_siteChoiceNoMatch": {
+        "message": "Нет сайтов, подходящих под фильтр.",
+        "description": "Site choice dialog: shown when no site matches the filter"
+    },
+    "tools_siteChoiceShowMore": {
+        "message": "Показать ещё $1",
+        "description": "Site choice dialog: button that lists more sites; $1 is how many more"
+    },
+    "tools_siteChoiceStart": {
+        "message": "Начать (сайтов: $1)",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
+    "tools_siteChoiceStart_one": {
+        "message": "Начать (сайтов: $1)",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
+    "tools_siteChoiceStart_few": {
+        "message": "Начать (сайтов: $1)",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
+    "tools_siteChoiceStart_many": {
+        "message": "Начать (сайтов: $1)",
+        "description": "Site choice dialog: button that starts the run with the checked sites; $1 is how many"
+    },
     "tools_pageTextActionSave": {
         "message": "Сохранить текст",
         "description": "Index Page Text review: action that keeps a page text"

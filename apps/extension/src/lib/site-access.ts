@@ -54,6 +54,29 @@ export function getUrlSites(urls: Iterable<string>): string[] {
   return [...sites];
 }
 
+/** A site and how many of the counted URLs are on it. */
+export type SiteCount = { site: string; count: number };
+
+/**
+ * The sites of the web URLs among `urls` with how many URLs each has, most first, then by name:
+ * what a run that lets the user choose its sites lists before it starts.
+ */
+export function countUrlSites(urls: Iterable<string>): SiteCount[] {
+  const counts = new Map<string, number>();
+  for (const url of urls) {
+    const site = getUrlSite(url);
+    if (site) counts.set(site, (counts.get(site) ?? 0) + 1);
+  }
+  return [...counts]
+    .map(([site, count]) => ({ site, count }))
+    .sort((a, b) => b.count - a.count || a.site.localeCompare(b.site));
+}
+
+/** A site as `getUrlSite` names it, such as one the user chose for a run. */
+export const urlSiteSchema = z
+  .string()
+  .refine((site) => getUrlSite(`https://${site}/`) === site, 'Not a site name');
+
 /**
  * The host patterns that grant `sites` (from `getUrlSites`), or null when there are more than
  * the configured limit and the run should ask for all websites.
