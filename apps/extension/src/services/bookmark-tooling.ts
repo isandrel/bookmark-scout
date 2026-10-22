@@ -27,6 +27,15 @@ export type DuplicateScanResult = {
   match: DuplicateMatchOptions;
 };
 
+/**
+ * Why a URL is cleaned, for its review category: the Remove Parameters entry its first removed
+ * parameter matched, a parameter repeated with the same value, or only its fragment.
+ */
+export type UrlCleanerReason =
+  | { kind: 'pattern'; pattern: string }
+  | { kind: 'duplicate' }
+  | { kind: 'fragment' };
+
 export type UrlCleanerPreview = {
   id: string;
   title: string;
@@ -34,6 +43,7 @@ export type UrlCleanerPreview = {
   originalUrl: string;
   cleanedUrl: string;
   removedParams: string[];
+  reason: UrlCleanerReason;
 };
 
 export type UrlCleanerResult = {
@@ -227,13 +237,13 @@ export function scanDuplicateBookmarks(
 export function cleanBookmarkUrl(
   originalUrl: string,
   options: UrlCleanerOptions,
-): { cleanedUrl: string; removedParams: string[] } | null {
+): { cleanedUrl: string; removedParams: string[]; reason: UrlCleanerReason } | null {
   if (!isWebUrl(originalUrl)) {
     return null;
   }
 
   const preserves = createParamNameMatcher(options.preserveParams);
-  const removes = createParamNameMatcher(options.removeParams);
+  const removedBy = createParamNamePatternFinder(options.removeParams);
   const hashIndex = originalUrl.indexOf('#');
   const beforeHash = hashIndex >= 0 ? originalUrl.slice(0, hashIndex) : originalUrl;
   const hash = hashIndex >= 0 ? originalUrl.slice(hashIndex) : '';
@@ -242,6 +252,7 @@ export function cleanBookmarkUrl(
   const segments = queryIndex >= 0 ? beforeHash.slice(queryIndex + 1).split('&') : [];
 
   const removedParams: string[] = [];
+  let reason: UrlCleanerReason | undefined;
   const kept: Array<{ key: string; segment: string }> = [];
   const seen = new Set<string>();
   for (const segment of segments) {
@@ -250,14 +261,17 @@ export function cleanBookmarkUrl(
     const key = decodeUrlComponent(separator >= 0 ? segment.slice(0, separator) : segment, true);
     const normalizedKey = key.toLowerCase();
 
-    if (!preserves(key) && removes(key)) {
+    const pattern = preserves(key) ? undefined : removedBy(key);
+    if (pattern !== undefined) {
       removedParams.push(key);
+      reason ??= { kind: 'pattern', pattern };
       continue;
     }
     if (options.dedupeQueryParams) {
       const signature = `${normalizedKey}\u0000${separator >= 0 ? segment.slice(separator) : ''}`;
       if (seen.has(signature)) {
         removedParams.push(key);
+        reason ??= { kind: 'duplicate' };
         continue;
       }
       seen.add(signature);
@@ -275,7 +289,9 @@ export function cleanBookmarkUrl(
     : kept;
   const query = ordered.map((entry) => entry.segment).join('&');
   const cleanedUrl = `${base}${query ? `?${query}` : ''}${removesHash ? '' : hash}`;
-  return cleanedUrl === originalUrl ? null : { cleanedUrl, removedParams };
+  return cleanedUrl === originalUrl
+    ? null
+    : { cleanedUrl, removedParams, reason: reason ?? { kind: 'fragment' } };
 }
 
 export function previewCleanUrls(
@@ -299,6 +315,7 @@ export function previewCleanUrls(
         originalUrl,
         cleanedUrl: cleaned.cleanedUrl,
         removedParams: cleaned.removedParams,
+        reason: cleaned.reason,
       } satisfies UrlCleanerPreview,
     ];
   });

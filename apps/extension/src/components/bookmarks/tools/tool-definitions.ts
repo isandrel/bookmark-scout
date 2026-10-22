@@ -154,6 +154,8 @@ type PickedItems = {
   metadataFetcher: MetadataFetchResultItem[];
   /** The groups to remove from, each with the bookmark to keep first and then the copies. */
   duplicates: DuplicateGroup[];
+  /** The URLs to clean, left on Clean in the review. */
+  urlCleaner: UrlCleanerPreview[];
 };
 
 /** What the review passes to `apply`: the items the user picked, where a tool lets them pick. */
@@ -544,8 +546,8 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     actionKey: () => 'action_clean',
     changesBookmarks: true,
     scan: ({ nodes, options }) => previewCleanUrls(nodes, options.urlCleaner),
-    async apply(result) {
-      const applied = await applyReviewedChanges(getUrlCleanerChanges(result.previews), {
+    async apply(_result, previews) {
+      const applied = await applyReviewedChanges(getUrlCleanerChanges(previews), {
         tool: 'tools_cleanUrls',
       });
       if (applied.background) return reportBackgroundApply(applied);

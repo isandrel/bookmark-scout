@@ -74,9 +74,6 @@ function JobToolEntry({
   // scan did; closing the page first leaves the results for Review results.
   const [watching, setWatching] = useState<string | null>(null);
   const { settings } = environment;
-  const Review = TOOL_REVIEWS[tool.id] as
-    | ((props: ToolReviewProps<ToolId>) => React.ReactNode)
-    | undefined;
   const Controls = TOOL_CONTROLS[tool.id];
   const Icon = tool.icon;
   const start = async (scope: BookmarkToolScope) => {
@@ -133,16 +130,14 @@ function JobToolEntry({
           ) : null
         }
       />
-      {Review ? (
-        <Review
-          tool={tool as ToolDefinitions[ToolId]}
-          state={state as ToolRunState<ToolResults[ToolId]>}
-          apply={apply as (selection: ToolSelections[ToolId]) => Promise<void>}
-          undo={undo}
-          close={close}
-          environment={environment}
-        />
-      ) : null}
+      <ToolReview
+        tool={tool as ToolDefinitions[ToolId]}
+        state={state as ToolRunState<ToolResults[ToolId]>}
+        apply={apply as (selection: ToolSelections[ToolId]) => Promise<void>}
+        undo={undo}
+        close={close}
+        environment={environment}
+      />
     </>
   );
 }
@@ -161,9 +156,6 @@ function ScanToolEntry({ tool, environment, currentFolderName, runWithAccess }: 
   const { state, run, apply, undo, close } = useToolRun(tool, environment);
   const { settings } = environment;
   const aiGate = useToolAIGate(tool);
-  const Review = TOOL_REVIEWS[tool.id] as
-    | ((props: ToolReviewProps<ToolId>) => React.ReactNode)
-    | undefined;
   const Controls = TOOL_CONTROLS[tool.id];
   const Icon = tool.icon;
 
@@ -190,16 +182,14 @@ function ScanToolEntry({ tool, environment, currentFolderName, runWithAccess }: 
         isLoading={state.phase === 'scanning'}
         controls={Controls ? <Controls /> : undefined}
       />
-      {Review ? (
-        <Review
-          tool={tool as ToolDefinitions[ToolId]}
-          state={state as ToolRunState<ToolResults[ToolId]>}
-          apply={apply as (selection: ToolSelections[ToolId]) => Promise<void>}
-          undo={undo}
-          close={close}
-          environment={environment}
-        />
-      ) : null}
+      <ToolReview
+        tool={tool as ToolDefinitions[ToolId]}
+        state={state as ToolRunState<ToolResults[ToolId]>}
+        apply={apply as (selection: ToolSelections[ToolId]) => Promise<void>}
+        undo={undo}
+        close={close}
+        environment={environment}
+      />
     </>
   );
 }

@@ -551,10 +551,6 @@
         "message": "실행 취소",
         "description": "Undo deletion button label"
     },
-    "action_applyChanges": {
-        "message": "변경 사항 적용",
-        "description": "Apply previewed changes button label"
-    },
     "action_resetAll": {
         "message": "전체 초기화",
         "description": "Reset all settings button label"
@@ -3855,16 +3851,6 @@
         "message": "건너뜀",
         "description": "Dead link status badge"
     },
-    "tools_metadataApplyItem": {
-        "message": "$title$에 제안된 제목 적용",
-        "description": "Accessible label for the checkbox that selects a title suggestion",
-        "placeholders": {
-            "title": {
-                "content": "$1",
-                "example": "Example"
-            }
-        }
-    },
     "tools_metadataApplySelected": {
         "message": "제목 $count$개 적용",
         "description": "Button that applies selected title suggestions",
@@ -4550,6 +4536,54 @@
     "review_categoryAll": {
         "message": "모두 ($1)",
         "description": "Review list: the tab that shows every item; $1 is how many"
+    },
+    "review_categoryNamed": {
+        "message": "$1 ($2)",
+        "description": "Review list: a tab named after what its items share; $1 is that name, $2 how many"
+    },
+    "tools_urlCleanerCategoryDuplicate": {
+        "message": "반복된 매개변수 ($1)",
+        "description": "URL Cleaner review: the tab of URLs cleaned of a parameter repeated with the same value; $1 is how many"
+    },
+    "tools_urlCleanerCategoryFragment": {
+        "message": "프래그먼트만 ($1)",
+        "description": "URL Cleaner review: the tab of URLs that lose only their fragment; $1 is how many"
+    },
+    "tools_urlCleanerActionClean": {
+        "message": "정리",
+        "description": "URL Cleaner review: the action that cleans a URL"
+    },
+    "tools_urlCleanerApplySelected": {
+        "message": "URL $1개 정리",
+        "description": "URL Cleaner review: button that cleans the URLs left on Clean; $1 is how many"
+    },
+    "tools_urlCleanerApplySelected_one": {
+        "message": "URL $1개 정리",
+        "description": "URL Cleaner review: button that cleans the URLs left on Clean (singular); $1 is how many"
+    },
+    "tools_metadataCategory_title": {
+        "message": "새 제목 ($1)",
+        "description": "Metadata Fetcher review: tab of bookmarks with a new page title; $1 is how many"
+    },
+    "tools_metadataCategory_same": {
+        "message": "변경 없음 ($1)",
+        "description": "Metadata Fetcher review: tab of bookmarks whose title stays; $1 is how many"
+    },
+    "tools_metadataCategory_failed": {
+        "message": "읽을 수 없음 ($1)",
+        "description": "Metadata Fetcher review: tab of pages that could not be read; $1 is how many"
+    },
+    "tools_metadataCategory_notHtml": {
+        "message": "웹 페이지 아님 ($1)",
+        "description": "Metadata Fetcher review: tab of addresses that are files, not web pages; $1 is how many"
+    },
+    "tools_metadataCategory_skipped": {
+        "message": "건너뜀 ($1)",
+        "description": "Metadata Fetcher review: tab of bookmarks not checked; $1 is how many"
+    },
+    "tools_metadataActionApply": {
+        "message": "페이지 제목 사용",
+        "description": "Metadata Fetcher review: the action that gives the bookmark the page title"
     },
     "tools_deadLinkGroup_dead": {
         "message": "깨진 링크 확인됨 ($1)",
