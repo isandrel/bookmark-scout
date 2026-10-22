@@ -1545,14 +1545,6 @@
         "message": "無法儲存中繼資料。",
         "description": "Error after saving bookmark metadata fails"
     },
-    "bookmarks_metadataSaveTags": {
-        "message": "儲存建議的標籤",
-        "description": "Button that applies reviewed AI-generated tags"
-    },
-    "bookmarks_metadataSaveSummaries": {
-        "message": "儲存建議的摘要",
-        "description": "Button that applies reviewed AI-generated summaries"
-    },
     "bookmarks_metadataGeneratedTagsSaved": {
         "message": "已依照合併設定儲存經過確認的標籤建議。",
         "description": "Toast description after applying generated tags"
@@ -4173,6 +4165,116 @@
         "message": "值看起來像 API 或存取權杖",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "tools_siteIconCategory_updated": {
+        "message": "新圖示 ($1)",
+        "description": "Refresh Site Icons review: tab of sites with a new icon; $1 is how many"
+    },
+    "tools_siteIconCategory_unchanged": {
+        "message": "圖示相同 ($1)",
+        "description": "Refresh Site Icons review: tab of sites whose icon is the one already saved; $1 is how many"
+    },
+    "tools_siteIconCategory_noIcon": {
+        "message": "沒有圖示 ($1)",
+        "description": "Refresh Site Icons review: tab of sites where no usable icon was found; $1 is how many"
+    },
+    "tools_siteIconCategory_failed": {
+        "message": "失敗 ($1)",
+        "description": "Refresh Site Icons review: tab of sites that could not be reached; $1 is how many"
+    },
+    "tools_siteIconsActionSave": {
+        "message": "儲存圖示",
+        "description": "Refresh Site Icons review: action that saves the icon found for a site"
+    },
+    "tools_reviewActionSkip": {
+        "message": "略過",
+        "description": "Tool review: action that leaves an item as it is (does not save or apply it)"
+    },
+    "tools_aiMetadataCategory_suggestions": {
+        "message": "建議 ($1)",
+        "description": "Auto-Tagging and Summarizer review: tab of every suggestion; $1 is how many"
+    },
+    "tools_aiMetadataActionSave": {
+        "message": "儲存",
+        "description": "Auto-Tagging and Summarizer review: action that saves a suggestion"
+    },
+    "tools_aiMetadataSaveTags": {
+        "message": "儲存 $count$ 則標籤建議",
+        "description": "Button that saves the tag suggestions left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveSummaries": {
+        "message": "儲存 $count$ 則摘要",
+        "description": "Button that saves the summaries left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_privacyCategory_high": {
+        "message": "高 ($1)",
+        "description": "Privacy Scanner review: tab of high-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_medium": {
+        "message": "中 ($1)",
+        "description": "Privacy Scanner review: tab of medium-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_low": {
+        "message": "低 ($1)",
+        "description": "Privacy Scanner review: tab of low-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyDeleteSelected": {
+        "message": "刪除 $count$ 個書籤",
+        "description": "Button that deletes the flagged bookmarks left on Delete",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyDeleted": {
+        "message": "已刪除書籤",
+        "description": "Privacy Scanner: title after deleting the flagged bookmarks"
+    },
+    "toast_privacyDeletedDesc": {
+        "message": "已刪除 $count$ 個書籤",
+        "description": "Privacy Scanner: how many bookmarks were deleted",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyPartial": {
+        "message": "部分書籤未刪除",
+        "description": "Privacy Scanner: title when some flagged bookmarks were not deleted"
+    },
+    "toast_privacyPartialDesc": {
+        "message": "已刪除：$deleted$。因掃描後有變更而略過：$skipped$。失敗：$failed$。",
+        "description": "Privacy Scanner partial result counts",
+        "placeholders": {
+            "deleted": {
+                "content": "$1",
+                "example": "2"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "2"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "2"
+            }
+        }
+    },
     "export_privacyReviewTitle": {
         "message": "匯出前確認私人資料",
         "description": "Title of the dialog shown before exporting data that may contain private values"
@@ -4758,26 +4860,6 @@
     "tools_siteIconsClear": {
         "message": "清除已儲存的圖示",
         "description": "Button that deletes all saved site icons"
-    },
-    "tools_siteIconStatus_updated": {
-        "message": "已更新",
-        "description": "Site icon result status: a new or changed icon"
-    },
-    "tools_siteIconStatus_unchanged": {
-        "message": "未變更",
-        "description": "Site icon result status: same icon as already saved"
-    },
-    "tools_siteIconStatus_noIcon": {
-        "message": "找不到圖示",
-        "description": "Site icon result status: no usable icon"
-    },
-    "tools_siteIconStatus_failed": {
-        "message": "失敗",
-        "description": "Site icon result status: the site could not be reached"
-    },
-    "tools_siteIconStatus_skipped": {
-        "message": "已略過",
-        "description": "Site icon result count: bookmarks that are not web links"
     },
     "tools_siteIconsNewFrom": {
         "message": "圖示來源：$url$",

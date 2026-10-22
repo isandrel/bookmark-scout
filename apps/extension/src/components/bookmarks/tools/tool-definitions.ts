@@ -156,6 +156,13 @@ type PickedItems = {
   duplicates: DuplicateGroup[];
   /** The URLs to clean, left on Clean in the review. */
   urlCleaner: UrlCleanerPreview[];
+  /** The sites whose icons to save, left on Save in the review. */
+  siteIcons: SiteIconResultItem[];
+  /** The suggestions to save, left on Save in the review. */
+  autoTagging: AutoTaggingResultItem[];
+  summarizer: SummarizerResultItem[];
+  /** The flagged bookmarks to delete, left on Delete in the review. */
+  privacyScanner: PrivacyScanItem[];
 };
 
 /** What the review passes to `apply`: the items the user picked, where a tool lets them pick. */
@@ -369,8 +376,8 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     async scan({ nodes, options, aiSettings }) {
       return suggestBookmarkTags(nodes, await aiSettings(), options.autoTagging);
     },
-    async apply(items, _selection, { settings }) {
-      const saved = await saveReviewedBookmarkMetadata(items, (item) => ({ tags: item.tags }), {
+    async apply(_items, picked, { settings }) {
+      const saved = await saveReviewedBookmarkMetadata(picked, (item) => ({ tags: item.tags }), {
         tagMode: settings.autoTaggingMergeMode,
         summaryMode: 'replace',
         dedupeTags: settings.autoTaggingDedupeTags,
@@ -392,9 +399,9 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     async scan({ nodes, options, aiSettings }) {
       return summarizeBookmarksWithAI(nodes, await aiSettings(), options.summarizer);
     },
-    async apply(items, _selection, { settings }) {
+    async apply(_items, picked, { settings }) {
       const saved = await saveReviewedBookmarkMetadata(
-        items,
+        picked,
         (item) => ({ summary: item.summary }),
         { tagMode: 'replace', summaryMode: settings.summarizerMergeMode, dedupeTags: true },
       );
@@ -651,8 +658,9 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
       );
       return refreshSiteIcons(nodes, options.siteIcons, cachedIcons);
     },
-    async apply(result, _selection, { settings }) {
-      const { saved, evicted } = await saveSiteIcons(getSavableSiteIcons(result), {
+    async apply(result, picked, { settings }) {
+      const icons = getSavableSiteIcons({ ...result, items: picked });
+      const { saved, evicted } = await saveSiteIcons(icons, {
         maxCacheBytes: settings.siteIconsMaxCacheKb * BYTES_PER_KB,
       });
       return {
@@ -674,7 +682,25 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     titleKey: 'tools_privacyScanner',
     descriptionKey: 'tools_privacyScannerDesc',
     actionKey: () => 'action_scan',
+    changesBookmarks: true,
     scan: ({ nodes, options }) => scanBookmarkPrivacy(nodes, options.privacyScanner),
+    async apply(_result, picked) {
+      const applied = await applyReviewedChanges(getPrivacyRemovals(picked), {
+        tool: 'tools_privacyScanner',
+      });
+      if (applied.background) return reportBackgroundApply(applied);
+      const changes = applied.result;
+      return reportChanges(
+        changes,
+        {
+          appliedTitle: 'toast_privacyDeleted',
+          appliedDescription: 'toast_privacyDeletedDesc',
+          partialTitle: 'toast_privacyPartial',
+          partialDescription: 'toast_privacyPartialDesc',
+        },
+        changes,
+      );
+    },
   },
   statistics: {
     id: 'statistics',

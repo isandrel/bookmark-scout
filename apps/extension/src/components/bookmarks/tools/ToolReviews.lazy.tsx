@@ -59,9 +59,9 @@ const TOOL_REVIEWS: {
     <ReviewDialog {...props} description={t('tools_autoTaggingDialogDesc')}>
       <AIMetadataResultsView
         items={props.state.result ?? []}
-        saveLabel={t('bookmarks_metadataSaveTags')}
+        saveLabel={(count) => tPlural('tools_aiMetadataSaveTags', count)}
         isSaving={props.state.phase === 'applying'}
-        onSave={() => props.apply()}
+        onSave={props.apply}
       />
     </ReviewDialog>
   ),
@@ -69,9 +69,9 @@ const TOOL_REVIEWS: {
     <ReviewDialog {...props} description={t('tools_summarizerDialogDesc')}>
       <AIMetadataResultsView
         items={props.state.result ?? []}
-        saveLabel={t('bookmarks_metadataSaveSummaries')}
+        saveLabel={(count) => tPlural('tools_aiMetadataSaveSummaries', count)}
         isSaving={props.state.phase === 'applying'}
-        onSave={() => props.apply()}
+        onSave={props.apply}
       />
     </ReviewDialog>
   ),
@@ -139,13 +139,17 @@ const TOOL_REVIEWS: {
       <SiteIconResultsView
         result={props.state.result}
         isSaving={props.state.phase === 'applying'}
-        onSave={() => props.apply()}
+        onSave={props.apply}
       />
     </ReviewDialog>
   ),
   privacyScanner: (props) => (
     <ReviewDialog {...props} description={t('tools_privacyDialogDesc')}>
-      <PrivacyResultsView result={props.state.result} />
+      <PrivacyResultsView
+        result={props.state.result}
+        isApplying={props.state.phase === 'applying'}
+        onDelete={props.apply}
+      />
     </ReviewDialog>
   ),
   statistics: (props) => (

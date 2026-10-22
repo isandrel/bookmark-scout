@@ -1509,14 +1509,6 @@
         "message": "メタデータを保存できませんでした。",
         "description": "Error after saving bookmark metadata fails"
     },
-    "bookmarks_metadataSaveTags": {
-        "message": "提案タグを保存",
-        "description": "Button that applies reviewed AI-generated tags"
-    },
-    "bookmarks_metadataSaveSummaries": {
-        "message": "提案要約を保存",
-        "description": "Button that applies reviewed AI-generated summaries"
-    },
     "bookmarks_metadataGeneratedTagsSaved": {
         "message": "確認済みのタグ候補をマージ設定に従って保存しました。",
         "description": "Toast description after applying generated tags"
@@ -4257,6 +4249,156 @@
         "message": "APIトークンまたはアクセストークンと思われる値があります",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "tools_siteIconCategory_updated": {
+        "message": "新しいアイコン ($1)",
+        "description": "Refresh Site Icons review: tab of sites with a new icon; $1 is how many"
+    },
+    "tools_siteIconCategory_unchanged": {
+        "message": "同じアイコン ($1)",
+        "description": "Refresh Site Icons review: tab of sites whose icon is the one already saved; $1 is how many"
+    },
+    "tools_siteIconCategory_noIcon": {
+        "message": "アイコンなし ($1)",
+        "description": "Refresh Site Icons review: tab of sites where no usable icon was found; $1 is how many"
+    },
+    "tools_siteIconCategory_failed": {
+        "message": "失敗 ($1)",
+        "description": "Refresh Site Icons review: tab of sites that could not be reached; $1 is how many"
+    },
+    "tools_siteIconsActionSave": {
+        "message": "アイコンを保存",
+        "description": "Refresh Site Icons review: action that saves the icon found for a site"
+    },
+    "tools_reviewActionSkip": {
+        "message": "スキップ",
+        "description": "Tool review: action that leaves an item as it is (does not save or apply it)"
+    },
+    "tools_aiMetadataCategory_suggestions": {
+        "message": "提案 ($1)",
+        "description": "Auto-Tagging and Summarizer review: tab of every suggestion; $1 is how many"
+    },
+    "tools_aiMetadataActionSave": {
+        "message": "保存",
+        "description": "Auto-Tagging and Summarizer review: action that saves a suggestion"
+    },
+    "tools_aiMetadataSaveTags": {
+        "message": "タグの提案 $count$ 件を保存",
+        "description": "Button that saves the tag suggestions left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveTags_one": {
+        "message": "タグの提案 $count$ 件を保存",
+        "description": "Button that saves the tag suggestions left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveSummaries": {
+        "message": "要約 $count$ 件を保存",
+        "description": "Button that saves the summaries left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveSummaries_one": {
+        "message": "要約 $count$ 件を保存",
+        "description": "Button that saves the summaries left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_privacyCategory_high": {
+        "message": "高 ($1)",
+        "description": "Privacy Scanner review: tab of high-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_medium": {
+        "message": "中 ($1)",
+        "description": "Privacy Scanner review: tab of medium-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_low": {
+        "message": "低 ($1)",
+        "description": "Privacy Scanner review: tab of low-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyDeleteSelected": {
+        "message": "ブックマーク $count$ 件を削除",
+        "description": "Button that deletes the flagged bookmarks left on Delete",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_privacyDeleteSelected_one": {
+        "message": "ブックマーク $count$ 件を削除",
+        "description": "Button that deletes the flagged bookmarks left on Delete (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyDeleted": {
+        "message": "ブックマークを削除しました",
+        "description": "Privacy Scanner: title after deleting the flagged bookmarks"
+    },
+    "toast_privacyDeletedDesc": {
+        "message": "ブックマーク $count$ 件を削除しました",
+        "description": "Privacy Scanner: how many bookmarks were deleted",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyDeletedDesc_one": {
+        "message": "ブックマーク $count$ 件を削除しました",
+        "description": "Privacy Scanner: how many bookmarks were deleted (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyPartial": {
+        "message": "一部のブックマークは削除されませんでした",
+        "description": "Privacy Scanner: title when some flagged bookmarks were not deleted"
+    },
+    "toast_privacyPartialDesc": {
+        "message": "削除: $deleted$ 件。スキャン後に変更されたためスキップ: $skipped$ 件。失敗: $failed$ 件。",
+        "description": "Privacy Scanner partial result counts",
+        "placeholders": {
+            "deleted": {
+                "content": "$1",
+                "example": "2"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "2"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "2"
+            }
+        }
+    },
     "export_privacyReviewTitle": {
         "message": "エクスポート前に個人データを確認",
         "description": "Title of the dialog shown before exporting data that may contain private values"
@@ -4880,26 +5022,6 @@
     "tools_siteIconsClear": {
         "message": "保存したアイコンを消去",
         "description": "Button that deletes all saved site icons"
-    },
-    "tools_siteIconStatus_updated": {
-        "message": "更新",
-        "description": "Site icon result status: a new or changed icon"
-    },
-    "tools_siteIconStatus_unchanged": {
-        "message": "変更なし",
-        "description": "Site icon result status: same icon as already saved"
-    },
-    "tools_siteIconStatus_noIcon": {
-        "message": "アイコンなし",
-        "description": "Site icon result status: no usable icon"
-    },
-    "tools_siteIconStatus_failed": {
-        "message": "失敗",
-        "description": "Site icon result status: the site could not be reached"
-    },
-    "tools_siteIconStatus_skipped": {
-        "message": "スキップ",
-        "description": "Site icon result count: bookmarks that are not web links"
     },
     "tools_siteIconsNewFrom": {
         "message": "アイコンの取得元: $url$",

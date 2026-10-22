@@ -402,7 +402,7 @@ describe('AI tools', () => {
       expect.objectContaining({ bookmarkId: '1', tags: ['research'] }),
     ]);
 
-    await run.apply();
+    await run.apply(run.getState().result ?? []);
     await expect(bookmarkMetadataValue.get()).resolves.toEqual({ '1': { tags: ['research'] } });
     expect(notices[0].outcome).toMatchObject({ title: 'Metadata saved.', variant: 'success' });
     expect(run.getState()).toMatchObject({ phase: 'done', open: false, result: null });
@@ -432,7 +432,7 @@ describe('AI tools', () => {
     });
     const run = createToolRun(TOOL_DEFINITIONS.autoTagging, deps());
     await run.run('folder');
-    await run.apply();
+    await run.apply(run.getState().result ?? []);
     await bookmarkMetadataValue.update((current) => ({ ...current, '2': { tags: ['mine'] } }));
 
     await notices[0].undo?.run();
@@ -470,7 +470,7 @@ describe('AI tools', () => {
     await fakeBrowser.bookmarks.remove('2');
     await fakeBrowser.bookmarks.update('3', { url: 'https://e2e.invalid/elsewhere' });
 
-    await run.apply();
+    await run.apply(run.getState().result ?? []);
     await expect(bookmarkMetadataValue.get()).resolves.toEqual({ '1': { summary: 'About 1' } });
     expect(notices[0].outcome).toMatchObject({
       title: 'Some suggestions were not saved',

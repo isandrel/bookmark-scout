@@ -25,9 +25,7 @@ test('privacy scanner rates credentials and tokens high and ignores anchors, ass
   await toolCard(page, 'Privacy Scanner').getByRole('button', { name: 'Scan' }).click();
   const dialog = page.getByRole('dialog', { name: 'Privacy Scanner' });
   const row = (title: string) =>
-    dialog
-      .locator('[data-slot="tool-result-row"]')
-      .filter({ has: page.getByText(title, { exact: true }) });
+    dialog.getByTestId('privacy-item').filter({ has: page.getByText(title, { exact: true }) });
   await expect(row('Basic Auth')).toContainText('High');
   await expect(row('Basic Auth')).toContainText('Username and password embedded in URL');
   await expect(row('Basic Auth')).not.toContainText('Email address detected');
@@ -42,6 +40,28 @@ test('privacy scanner rates credentials and tokens high and ignores anchors, ass
   await expect(dialog.getByText('Retina Logo', { exact: true })).toHaveCount(0);
   await expect(dialog.getByText('SPA Route', { exact: true })).toHaveCount(0);
   await expect(dialog.getByText('SK Slug', { exact: true })).toHaveCount(0);
+
+  // Flagged bookmarks start on Keep as is; one set to Delete is deleted, the rest stay.
+  await expect(dialog.getByRole('radio', { name: /^High \(\d+\)$/ })).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Delete 0 bookmarks' })).toBeDisabled();
+  await dialog.getByRole('combobox', { name: 'Action for Basic Auth' }).click();
+  await page.getByRole('option', { name: 'Delete bookmark' }).click();
+  await dialog.getByRole('button', { name: 'Delete 1 bookmark' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(
+        async (id) => (await chrome.bookmarks.getChildren(id)).map((node) => node.title),
+        folder.folderId,
+      ),
+    )
+    .not.toContain('Basic Auth');
+  expect(
+    await extensionWorker.evaluate(
+      async (id) => (await chrome.bookmarks.getChildren(id)).length,
+      folder.folderId,
+    ),
+  ).toBe(7);
 });
 
 test('statistics count folders inside the scope and show the depth breakdown only when enabled', async ({

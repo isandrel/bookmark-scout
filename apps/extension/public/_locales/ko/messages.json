@@ -1545,14 +1545,6 @@
         "message": "메타데이터를 저장하지 못했습니다.",
         "description": "Error after saving bookmark metadata fails"
     },
-    "bookmarks_metadataSaveTags": {
-        "message": "추천 태그 저장",
-        "description": "Button that applies reviewed AI-generated tags"
-    },
-    "bookmarks_metadataSaveSummaries": {
-        "message": "추천 요약 저장",
-        "description": "Button that applies reviewed AI-generated summaries"
-    },
     "bookmarks_metadataGeneratedTagsSaved": {
         "message": "검토한 태그 추천을 병합 설정에 따라 저장했습니다.",
         "description": "Toast description after applying generated tags"
@@ -4293,6 +4285,156 @@
         "message": "API 또는 액세스 토큰으로 보이는 값이 있습니다",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "tools_siteIconCategory_updated": {
+        "message": "새 아이콘 ($1)",
+        "description": "Refresh Site Icons review: tab of sites with a new icon; $1 is how many"
+    },
+    "tools_siteIconCategory_unchanged": {
+        "message": "같은 아이콘 ($1)",
+        "description": "Refresh Site Icons review: tab of sites whose icon is the one already saved; $1 is how many"
+    },
+    "tools_siteIconCategory_noIcon": {
+        "message": "아이콘 없음 ($1)",
+        "description": "Refresh Site Icons review: tab of sites where no usable icon was found; $1 is how many"
+    },
+    "tools_siteIconCategory_failed": {
+        "message": "실패 ($1)",
+        "description": "Refresh Site Icons review: tab of sites that could not be reached; $1 is how many"
+    },
+    "tools_siteIconsActionSave": {
+        "message": "아이콘 저장",
+        "description": "Refresh Site Icons review: action that saves the icon found for a site"
+    },
+    "tools_reviewActionSkip": {
+        "message": "건너뛰기",
+        "description": "Tool review: action that leaves an item as it is (does not save or apply it)"
+    },
+    "tools_aiMetadataCategory_suggestions": {
+        "message": "제안 ($1)",
+        "description": "Auto-Tagging and Summarizer review: tab of every suggestion; $1 is how many"
+    },
+    "tools_aiMetadataActionSave": {
+        "message": "저장",
+        "description": "Auto-Tagging and Summarizer review: action that saves a suggestion"
+    },
+    "tools_aiMetadataSaveTags": {
+        "message": "태그 제안 $count$개 저장",
+        "description": "Button that saves the tag suggestions left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveTags_one": {
+        "message": "태그 제안 $count$개 저장",
+        "description": "Button that saves the tag suggestions left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveSummaries": {
+        "message": "요약 $count$개 저장",
+        "description": "Button that saves the summaries left on Save",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_aiMetadataSaveSummaries_one": {
+        "message": "요약 $count$개 저장",
+        "description": "Button that saves the summaries left on Save (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_privacyCategory_high": {
+        "message": "높음 ($1)",
+        "description": "Privacy Scanner review: tab of high-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_medium": {
+        "message": "보통 ($1)",
+        "description": "Privacy Scanner review: tab of medium-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyCategory_low": {
+        "message": "낮음 ($1)",
+        "description": "Privacy Scanner review: tab of low-risk bookmarks; $1 is how many"
+    },
+    "tools_privacyDeleteSelected": {
+        "message": "북마크 $count$개 삭제",
+        "description": "Button that deletes the flagged bookmarks left on Delete",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_privacyDeleteSelected_one": {
+        "message": "북마크 $count$개 삭제",
+        "description": "Button that deletes the flagged bookmarks left on Delete (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyDeleted": {
+        "message": "북마크 삭제됨",
+        "description": "Privacy Scanner: title after deleting the flagged bookmarks"
+    },
+    "toast_privacyDeletedDesc": {
+        "message": "북마크 $count$개 삭제됨",
+        "description": "Privacy Scanner: how many bookmarks were deleted",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyDeletedDesc_one": {
+        "message": "북마크 $count$개 삭제됨",
+        "description": "Privacy Scanner: how many bookmarks were deleted (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_privacyPartial": {
+        "message": "일부 북마크가 삭제되지 않았습니다",
+        "description": "Privacy Scanner: title when some flagged bookmarks were not deleted"
+    },
+    "toast_privacyPartialDesc": {
+        "message": "삭제됨: $deleted$. 검사 후 변경되어 건너뜀: $skipped$. 실패: $failed$.",
+        "description": "Privacy Scanner partial result counts",
+        "placeholders": {
+            "deleted": {
+                "content": "$1",
+                "example": "2"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "2"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "2"
+            }
+        }
+    },
     "export_privacyReviewTitle": {
         "message": "내보내기 전에 개인 데이터 검토",
         "description": "Title of the dialog shown before exporting data that may contain private values"
@@ -4916,26 +5058,6 @@
     "tools_siteIconsClear": {
         "message": "저장된 아이콘 지우기",
         "description": "Button that deletes all saved site icons"
-    },
-    "tools_siteIconStatus_updated": {
-        "message": "업데이트됨",
-        "description": "Site icon result status: a new or changed icon"
-    },
-    "tools_siteIconStatus_unchanged": {
-        "message": "변경 없음",
-        "description": "Site icon result status: same icon as already saved"
-    },
-    "tools_siteIconStatus_noIcon": {
-        "message": "아이콘 없음",
-        "description": "Site icon result status: no usable icon"
-    },
-    "tools_siteIconStatus_failed": {
-        "message": "실패",
-        "description": "Site icon result status: the site could not be reached"
-    },
-    "tools_siteIconStatus_skipped": {
-        "message": "건너뜀",
-        "description": "Site icon result count: bookmarks that are not web links"
     },
     "tools_siteIconsNewFrom": {
         "message": "아이콘 출처: $url$",

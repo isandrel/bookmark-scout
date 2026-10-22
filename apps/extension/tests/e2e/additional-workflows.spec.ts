@@ -247,6 +247,11 @@ test('[mocked provider contract] auto-tagging previews route-mocked provider tag
   await expect(preview).toContainText('Route-mocked provider reason');
   await expect(preview).not.toContainText('Provider Rewritten Title');
   await expect(preview).not.toContainText('Hallucinated Bookmark');
+  // Each suggestion starts on Save; one set to Skip is left out of the save.
+  await expect(preview.getByRole('button', { name: 'Save 1 tag suggestion' })).toBeEnabled();
+  await preview.getByRole('combobox', { name: 'Action for Tagged Fixture' }).click();
+  await page.getByRole('option', { name: 'Skip' }).click();
+  await expect(preview.getByRole('button', { name: 'Save 0 tag suggestions' })).toBeDisabled();
 
   expect(providerRequests).toHaveLength(1);
   expect(providerRequests[0].authorization).toBe('Bearer synthetic-e2e-key');

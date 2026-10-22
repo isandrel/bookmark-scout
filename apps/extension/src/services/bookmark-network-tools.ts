@@ -193,6 +193,16 @@ export type PrivacyScanResult = {
   items: PrivacyScanItem[];
 };
 
+/** Deletes the flagged bookmarks the review left on Delete, each only while its address is the same. */
+export function getPrivacyRemovals(items: readonly PrivacyScanItem[]): BookmarkChange[] {
+  return items.map((item) => ({
+    kind: 'remove',
+    id: item.id,
+    title: item.title,
+    expect: { url: item.url },
+  }));
+}
+
 export type DeadLinkOptions = {
   requestTimeoutMs: number;
   concurrency: number;
