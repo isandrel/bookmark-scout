@@ -80,7 +80,7 @@ git push origin --delete <type>/<topic>          # skip if GitHub already delete
 
 Then free what the runs left on this machine (all git-ignored, none of it the maintainer's):
 
-- `apps/extension/test-results/` and `playwright-report/` in a worktree you keep: each E2E run leaves traces, screenshots, and the per-test browser profiles and worker temp folders (`tests/e2e/temp-dirs.ts` puts them under the output folder) there. `rm -rf apps/extension/test-results apps/extension/playwright-report`.
+- `bun run clean` lists what a run regenerates (test results, coverage reports and builds) in this checkout and every worktree, and removes it with `--apply`; it also reports the shared caches with how to trim each. The items below are what it does not cover.
 - Release zips `wxt zip` wrote for the size check: `rm -f apps/extension/dist/bookmark-scout-v*.zip` (in the main checkout only the zips; never `dist/chrome-mv3`).
 - Test browsers a killed or timed-out run left running: `pgrep -fl "Chrome for Testing|chrome-headless-shell|geckodriver|marionette"`, then stop only those test processes, never the maintainer's own Chrome or Firefox.
 - `~/.cache/bookmark-scout-<topic>/` scratch (helper scripts, logs, PR bodies) once the topic's last PR merged. Keep `~/.cache/selenium` (the cached geckodriver) and the ref backups `cleanup-branches.sh` writes.

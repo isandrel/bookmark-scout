@@ -8,21 +8,14 @@
  */
 import { createServer, type Server, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import {
-  type BrowserContext,
-  chromium,
-  type Locator,
-  type Page,
-  type Route,
-  type Worker,
-} from '@playwright/test';
+import type { BrowserContext, Locator, Page, Route, Worker } from '@playwright/test';
 import {
   MOCK_PROVIDER_BASE_URL,
   MOCK_PROVIDER_CORS_HEADERS,
   mockChatCompletionBody,
   seedMockCustomProvider,
 } from './ai-provider-mock';
-import { expect, test, toastRegion } from './fixtures';
+import { expect, launchExtension, test, toastRegion } from './fixtures';
 import { managerUrl } from './manager-helpers';
 import { removeTempDir } from './temp-dirs';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
@@ -577,19 +570,6 @@ test('reviewed changes above the Apply in the Background Above setting are appli
   await expect(history.getByTestId('history-record-label').first()).toContainText('(part 1 of 1)');
 });
 
-async function launch(userDataDir: string, extensionPath: string, channel: string) {
-  const context = await chromium.launchPersistentContext(userDataDir, {
-    channel,
-    headless: true,
-    reducedMotion: 'reduce',
-    viewport: { width: 1400, height: 900 },
-    args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
-  });
-  let [worker] = context.serviceWorkers();
-  worker ??= await context.waitForEvent('serviceworker');
-  return { context, worker, extensionId: new URL(worker.url()).host };
-}
-
 /** Stops the extension's background worker, as the browser does when it is idle. */
 async function stopWorker(page: Page, extensionId: string) {
   const session = await page.context().newCDPSession(page);
@@ -612,7 +592,11 @@ test('a stopped worker picks up from saved results, and a paused job stays pause
   try {
     let worker: Worker;
     let extensionId: string;
-    ({ context, worker, extensionId } = await launch(userDataDir, extensionPath, extensionBrowser));
+    ({ context, worker, extensionId } = await launchExtension(
+      userDataDir,
+      extensionPath,
+      extensionBrowser,
+    ));
     const { folderId } = await seedFolder(worker, 'Restart Folder', links(site));
     await setDeadLinkSettings(worker, 1);
     const page = await context.newPage();
@@ -663,7 +647,11 @@ test('a stopped worker picks up from saved results, and a paused job stays pause
     await context.close();
 
     site.requests.length = 0;
-    ({ context, worker, extensionId } = await launch(userDataDir, extensionPath, extensionBrowser));
+    ({ context, worker, extensionId } = await launchExtension(
+      userDataDir,
+      extensionPath,
+      extensionBrowser,
+    ));
     const after = await context.newPage();
     await openTools(after, extensionId, folderId);
     await expect(deadLinksStatus(after)).toHaveAttribute('data-job-state', 'paused');
