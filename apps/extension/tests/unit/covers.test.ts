@@ -1,6 +1,8 @@
 import { DOMParser as LinkedomParser } from 'linkedom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
+  COVER_LIMITS,
   type CoverImage,
   clearCovers,
   getCoverImage,
@@ -10,7 +12,7 @@ import {
   pruneCovers,
   saveCovers,
 } from '@/lib/cover-store';
-import { findCoverUrls, mayFetchCover } from '@/services/covers';
+import { findCoverUrls, mayFetchCover, saveCoverResults, scanCovers } from '@/services/covers';
 
 const PAGE = 'https://news.example.com/story/1';
 
@@ -105,5 +107,154 @@ describe('stored covers', () => {
     expect([...(await getCoverInfos()).keys()]).toEqual(['a']);
     await clearCovers();
     expect(await getCoverSummary()).toEqual({ covers: 0, bytes: 0 });
+  });
+});
+
+/** The first bytes of a PNG, enough for the type check; decoding is stubbed below. */
+const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]);
+const OPTIONS = {
+  widthPx: 320,
+  maxImageBytes: 1000,
+  skipPrivateHosts: true,
+  maxCacheBytes: 1_000_000,
+};
+
+const head = (image: string) =>
+  `<html><head><meta property="og:image" content="${image}"></head><body></body></html>`;
+
+describe('Fetch Covers runs', () => {
+  let decoded: { width: number; height: number };
+
+  beforeEach(async () => {
+    await clearCovers();
+    decoded = { width: 1200, height: 630 };
+    vi.stubGlobal('DOMParser', LinkedomParser);
+    vi.stubGlobal('createImageBitmap', async () => ({ ...decoded, close: () => undefined }));
+    vi.stubGlobal(
+      'OffscreenCanvas',
+      class {
+        constructor(
+          readonly width: number,
+          readonly height: number,
+        ) {}
+        getContext() {
+          return { drawImage: () => undefined };
+        }
+        async convertToBlob({ type }: { type: string }) {
+          return new Blob([new Uint8Array(42)], { type });
+        }
+      },
+    );
+    vi.spyOn(fakeBrowser.permissions, 'contains').mockResolvedValue(false);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        const url = new URL(input);
+        const html = (body: string) =>
+          new Response(body, { status: 200, headers: { 'content-type': 'text/html' } });
+        if (url.hostname === 'down.example') throw new TypeError('Failed to fetch');
+        if (url.pathname.endsWith('.png')) {
+          const size = url.pathname.includes('huge') ? 5000 : PNG.byteLength;
+          return new Response(size === PNG.byteLength ? PNG : new Uint8Array(size), {
+            status: 200,
+            headers: { 'content-type': 'image/png', 'content-length': String(size) },
+          });
+        }
+        if (url.pathname.endsWith('.svg')) {
+          return new Response('<svg xmlns="http://www.w3.org/2000/svg"></svg>', {
+            status: 200,
+            headers: { 'content-type': 'image/svg+xml' },
+          });
+        }
+        if (url.hostname === 'plain.example') return html('<html><head></head></html>');
+        if (url.hostname === 'cdn.example') return html(head('https://cdn.other.net/a.png'));
+        if (url.hostname === 'huge.example') return html(head('/huge.png'));
+        if (url.hostname === 'svg.example') return html(head('/logo.svg'));
+        if (url.hostname === 'tiny.example') return html(head('/tiny.png'));
+        return html(head('/cover.png'));
+      }),
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  const node = (id: string, url: string) => ({ id, parentId: 'f', title: id, url });
+
+  it('keeps a shrunk copy of a same-site image and sorts every other page', async () => {
+    await saveCovers([cover('kept', 5, 'https://kept.example/')], 1000);
+    const { items } = await scanCovers(
+      [
+        {
+          id: 'f',
+          parentId: '1',
+          title: 'Folder',
+          children: [
+            node('found', 'https://news.example/story'),
+            node('none', 'https://plain.example/'),
+            node('elsewhere', 'https://cdn.example/'),
+            node('huge', 'https://huge.example/'),
+            node('svg', 'https://svg.example/'),
+            node('down', 'https://down.example/'),
+            node('kept', 'https://kept.example/'),
+            node('local', 'http://192.168.1.1/'),
+          ],
+        },
+      ],
+      OPTIONS,
+    );
+    const status = Object.fromEntries(items.map((item) => [item.id, item.status]));
+    expect(status).toEqual({
+      found: 'found',
+      none: 'none',
+      elsewhere: 'elsewhere',
+      huge: 'none',
+      svg: 'none',
+      down: 'failed',
+      kept: 'current',
+      local: 'skipped',
+    });
+    const found = items.find((item) => item.id === 'found');
+    expect(found?.cover).toMatchObject({ width: 320, height: 168, type: COVER_LIMITS.outputType });
+    expect(found?.preview).toMatch(/^data:image\//);
+    expect(items.find((item) => item.id === 'elsewhere')?.imageSite).toBe('other.net');
+  });
+
+  it('leaves out an image too small to be a cover', async () => {
+    decoded = { width: COVER_LIMITS.minWidthPx - 1, height: 10 };
+    const { items } = await scanCovers([node('tiny', 'https://tiny.example/')], OPTIONS);
+    expect(items[0]?.status).toBe('none');
+  });
+
+  it('stores only the covers left on Save, and drops those of bookmarks that are gone', async () => {
+    await saveCovers([cover('gone', 5)], 1000);
+    vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockResolvedValue([
+      {
+        id: '0',
+        title: '',
+        syncing: false,
+        children: [
+          { id: 'a', parentId: '0', title: 'A', url: 'https://site.example/a', syncing: false },
+        ],
+      },
+    ]);
+    const { saved } = await saveCoverResults(
+      [
+        {
+          id: 'a',
+          title: 'A',
+          url: 'https://site.example/a',
+          folderPath: '',
+          status: 'found',
+          cover: cover('a', 7),
+        },
+        { id: 'b', title: 'B', url: 'https://site.example/b', folderPath: '', status: 'none' },
+      ],
+      1000,
+    );
+    expect(saved).toBe(1);
+    expect([...(await getCoverInfos()).keys()]).toEqual(['a']);
   });
 });
