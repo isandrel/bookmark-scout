@@ -1,0 +1,6 @@
+# The bookmark manager's search box (`src/hooks/use-search-matches.ts`).
+
+# Load the search and build its documents while the page is idle after it opens, a slice at a
+# time, so the first search is as fast as the next ones. Off, they are built when the search box
+# gets focus or on the first search.
+prepare_when_idle = true

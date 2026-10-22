@@ -5,17 +5,27 @@
  * without it.
  */
 import { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
+
+const searchConfig = readConfig(
+  'ui/manager-search',
+  z.strictObject({ prepare_when_idle: z.boolean() }),
+);
 
 type QueryFilter = typeof import('@/lib/bookmark-query-filter.lazy');
 
 const loadQueryFilter = () => import('@/lib/bookmark-query-filter.lazy');
 
-/** Starts loading the query filter before the first search, such as when the search box is focused. */
+/** The pages' `useSearchMatches`, told to get ready for a search. */
+const preloadListeners = new Set<() => void>();
+
+/**
+ * Gets ready for the first search before it is typed, such as when the search box gets focus:
+ * loads the query filter and the tags and summaries, and builds the search documents.
+ */
 export function preloadSearchMatches(): void {
-  loadQueryFilter().catch(() => {
-    // Searching loads it again and logs the error then.
-  });
+  for (const listener of preloadListeners) listener();
 }
 
 /**
@@ -41,6 +51,36 @@ export function useSearchMatches(tree: readonly BookmarkTreeNode[], query: strin
   useEffect(() => {
     if (hasQuery) setRequested(true);
   }, [hasQuery]);
+
+  useEffect(() => {
+    const listener = () => setRequested(true);
+    preloadListeners.add(listener);
+    return () => {
+      preloadListeners.delete(listener);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!searchConfig.prepare_when_idle) return;
+    const handle = requestIdleCallback(() => setRequested(true));
+    return () => cancelIdleCallback(handle);
+  }, []);
+
+  // Builds the documents once loaded, in idle slices, so the first keystroke only matches them.
+  useEffect(() => {
+    if (!loaded || tree.length === 0) return;
+    let handle = 0;
+    const prepare = (deadline: IdleDeadline) => {
+      const ready = loaded.filter.prepareSearchDocuments(
+        tree,
+        loaded.metadata,
+        () => deadline.timeRemaining() <= 0,
+      );
+      if (!ready) handle = requestIdleCallback(prepare);
+    };
+    handle = requestIdleCallback(prepare);
+    return () => cancelIdleCallback(handle);
+  }, [loaded, tree]);
 
   useEffect(() => {
     if (!requested) return;
