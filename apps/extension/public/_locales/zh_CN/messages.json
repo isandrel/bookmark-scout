@@ -7051,6 +7051,18 @@
         "message": "日期和时间",
         "description": "Settings section heading: how dates and times show."
     },
+    "settings_sectionAddresses": {
+        "message": "网址",
+        "description": "Settings section title: how addresses show"
+    },
+    "settings_showTrailingSlash": {
+        "message": "显示末尾斜杠",
+        "description": "Setting label: whether addresses show the / they end with"
+    },
+    "settings_showTrailingSlashDesc": {
+        "message": "显示网址末尾的 /，例如 https://example.com/。链接始终打开确切的网址。",
+        "description": "Setting description for Show Trailing Slash"
+    },
     "settings_dateFormat": {
         "message": "日期格式",
         "description": "Setting label: date format."

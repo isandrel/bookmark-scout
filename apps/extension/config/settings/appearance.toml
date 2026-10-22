@@ -24,6 +24,11 @@ favicon_size = { default = 16, options = [
 date_format = "auto"
 time_format = "auto"
 
+[addresses]
+# Whether addresses show the "/" they end with ("https://example.com/" rather than
+# "https://example.com"). Links always open the exact address.
+show_trailing_slash = false
+
 [popup]
 # Popup window size in pixels. Chrome and Edge cap extension popups at 800x600, so larger stored
 # values snap to the limit (clamp) instead of resetting. src/entrypoints/popup/index.html opens at

@@ -298,6 +298,7 @@ export function DuplicateResultsView({
   onUndo?: () => void;
 }) {
   const groups = useMemo(() => result?.groups ?? [], [result]);
+  const displayUrl = useDisplayUrl();
   // Picks belong to the groups they were made in, so a new scan starts from its first bookmarks.
   const [picked, setPicked] = useState({ groups, keepers: {} as Record<string, string> });
   const keepers = picked.groups === groups ? picked.keepers : {};
@@ -392,7 +393,7 @@ export function DuplicateResultsView({
                   />
                   <Badge variant="secondary">{group.items.length}</Badge>
                   <code className="min-w-0 truncate text-xs text-muted-foreground">
-                    {group.label}
+                    {displayUrl(group.label)}
                   </code>
                   {mixed ? (
                     <Badge variant="outline">{t('tools_duplicatesDifferentUrls')}</Badge>
