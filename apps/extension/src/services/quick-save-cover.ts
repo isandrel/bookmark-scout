@@ -51,9 +51,9 @@ export function quickSaveCoverKinds(
   { url, incognito, current }: { url: string; incognito: boolean; current: CoverInfo | undefined },
 ): readonly CoverKind[] {
   if (!rules.enabled || incognito || !isBrowseCaptureUrl(url, rules.neverSites)) return [];
-  if (isCoverCurrent(current, url) && (rules.existing === 'keep' || isKeptCover(current.source))) {
-    return [];
-  }
+  // A chosen cover stays whatever version made it; any other current one with `keep`.
+  if (isKeptCoverOf(current, url)) return [];
+  if (isCoverCurrent(current, url) && rules.existing === 'keep') return [];
   return coverPreferenceKinds(rules.preference);
 }
 
@@ -137,6 +137,12 @@ async function pageImageOfTab(
   return null;
 }
 
+/**
+ * The cover quick save stored: where it came from, and the cover of the same address it replaced
+ * (When the Bookmark Already Has a Cover set to replace), as stored, for Remove cover to put back.
+ */
+export type QuickSaveCoverSaved = { source: CoverSource; replaced?: StoredCoverRecord };
+
 /** A cover quick save is getting for the page it saves. */
 export type QuickSaveCover = {
   /**
@@ -146,9 +152,12 @@ export type QuickSaveCover = {
   ready: Promise<void>;
   /**
    * Gets and stores the cover for `bookmarkId` while `stillWanted` says the bookmark is still
-   * the one saved; the stored cover's source, or null when none was kept.
+   * the one saved; what was stored, or null when none was kept.
    */
-  save: (bookmarkId: string, stillWanted: () => Promise<boolean>) => Promise<CoverSource | null>;
+  save: (
+    bookmarkId: string,
+    stillWanted: () => Promise<boolean>,
+  ) => Promise<QuickSaveCoverSaved | null>;
 };
 
 /**
@@ -216,11 +225,14 @@ export function startQuickSaveCover(
           // Undone, or replaced by a newer quick save, while the cover was made.
           if (!(await stillWanted())) return null;
           const source: CoverSource = kind === 'page' ? 'page' : 'quickSave';
-          const { saved } = await saveCovers(
+          const { saved, replaced } = await saveCovers(
             [{ bookmarkId, url: target.url, source, ...cover }],
             settings.coversMaxCacheMb * BYTES_PER_MB,
+            { keepReplaced: true },
           );
-          return saved > 0 ? source : null;
+          if (saved === 0) return null;
+          const [previous] = replaced;
+          return previous ? { source, replaced: previous } : { source };
         }
       } catch (error) {
         bookmarkLogger.error({ error }, 'Quick save cover failed');
@@ -232,13 +244,17 @@ export function startQuickSaveCover(
 
 /**
  * Removes the cover quick save stored for `bookmarkId` from `url` (Remove cover in the
- * notification), unless it has been replaced since by a cover from another source.
+ * notification), unless it has been replaced since by a cover from another source, and puts back
+ * the cover it had replaced (`replaced`), so Remove cover leaves the bookmark as it was.
  */
 export async function removeQuickSaveCover(
   bookmarkId: string,
   url: string,
   source: CoverSource,
+  replaced?: StoredCoverRecord,
 ): Promise<void> {
   const info = await getCoverInfo(bookmarkId, url);
-  if (info?.source === source) await takeCovers([bookmarkId]);
+  if (info?.source !== source) return;
+  await takeCovers([bookmarkId]);
+  if (replaced) await putBackCovers([replaced]);
 }

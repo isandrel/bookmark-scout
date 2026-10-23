@@ -9195,6 +9195,26 @@
         "message": "'표지 출처'가 '스크린샷만'이므로 페이지 이미지는 사용하지 않으며 어떤 페이지도 읽지 않았습니다. 가져오려면 설정에서 다른 표지 출처를 선택하세요.",
         "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
+    "tools_coversOverLimit": {
+        "message": "한 번에 보관할 수 있는 만큼 표지를 찾았기 때문에 북마크 $count$개는 읽지 않았습니다. 이것들을 저장한 뒤 나머지를 다시 가져오세요.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversOverLimit_one": {
+        "message": "한 번에 보관할 수 있는 만큼 표지를 찾았기 때문에 북마크 $count$개는 읽지 않았습니다. 이것들을 저장한 뒤 나머지를 다시 가져오세요.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
     "tools_coversCategory_skipped": {
         "message": "건너뜀 ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"

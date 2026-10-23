@@ -8905,6 +8905,16 @@
         "message": "「封面來源」為「僅截圖」，因此不使用網頁圖片，也沒有讀取任何網頁。要取得網頁圖片，請在設定中選擇其他封面來源。",
         "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
+    "tools_coversOverLimit": {
+        "message": "本次已找到單次執行可保留的封面數量，因此有 $count$ 個書籤未讀取。請先儲存這些封面，再次取得其餘封面。",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
     "tools_coversCategory_skipped": {
         "message": "已略過 ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"

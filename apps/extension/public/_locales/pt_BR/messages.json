@@ -9259,6 +9259,26 @@
         "message": "Origem da capa está em Só captura, então imagens de página não são usadas e nenhuma página foi lida. Escolha outra Origem da capa nas Configurações para buscá-las.",
         "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
+    "tools_coversOverLimit": {
+        "message": "$count$ favoritos não foram lidos: esta execução encontrou tantas capas quanto uma execução guarda. Salve estas e depois busque de novo o restante.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversOverLimit_one": {
+        "message": "$count$ favorito não foi lido: esta execução encontrou tantas capas quanto uma execução guarda. Salve estas e depois busque de novo o restante.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
     "tools_coversCategory_skipped": {
         "message": "Ignoradas ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"

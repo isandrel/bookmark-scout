@@ -8,7 +8,13 @@ import {
   quickSaveCoverSourceSchema,
   resolveQuickSaveCoverPreference,
 } from '@/lib/cover-preferences';
-import { type CoverInfo, clearCovers, getCoverInfos, saveCovers } from '@/lib/cover-store';
+import {
+  type CoverInfo,
+  clearCovers,
+  getCoverImage,
+  getCoverInfos,
+  saveCovers,
+} from '@/lib/cover-store';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import {
@@ -128,6 +134,8 @@ describe('which covers quick save tries', () => {
       'screenshot',
     ]);
     expect(kinds({}, { current: info('page', { version: 0 }) })).toEqual(['page', 'screenshot']);
+    // A chosen cover stays chosen whatever version made it (media review 14).
+    expect(kinds({ existing: 'replace' }, { current: info('tab', { version: 0 }) })).toEqual([]);
   });
 });
 
@@ -218,7 +226,7 @@ describe('a quick save cover', () => {
 
   it("Page image first keeps the page's own image, at the cover quality", async () => {
     const cover = startQuickSaveCover(settings({ coversQuality: 0.6 }), tab(), PICTURE_WAIT);
-    expect(await cover?.save('b1', wanted)).toBe('page');
+    expect((await cover?.save('b1', wanted))?.source).toBe('page');
     expect(await stored()).toEqual([{ bookmarkId: 'b1', source: 'page', width: 320 }]);
     expect(quality).toBe(0.6);
     expect(fetch).toHaveBeenCalledWith('https://news.example.com/cover.png', expect.anything());
@@ -230,7 +238,7 @@ describe('a quick save cover', () => {
     // Taken when the shortcut is pressed: ready, which the notification waits for, follows it.
     await cover?.ready;
     expect(capture).toHaveBeenCalledWith(1, { format: 'png' });
-    expect(await cover?.save('b1', wanted)).toBe('quickSave');
+    expect((await cover?.save('b1', wanted))?.source).toBe('quickSave');
     expect(await stored()).toEqual([{ bookmarkId: 'b1', source: 'quickSave', width: 320 }]);
   });
 
@@ -250,7 +258,7 @@ describe('a quick save cover', () => {
       tab(),
       PICTURE_WAIT,
     );
-    expect(await allowed?.save('b1', wanted)).toBe('page');
+    expect((await allowed?.save('b1', wanted))?.source).toBe('page');
   });
 
   it('Screenshot first and Screenshot only keep the picture; Page image only takes none', async () => {
@@ -266,7 +274,7 @@ describe('a quick save cover', () => {
         tab(),
         PICTURE_WAIT,
       );
-      expect(await cover?.save('b1', wanted), preference).toBe(source);
+      expect((await cover?.save('b1', wanted))?.source, preference).toBe(source);
       expect(capture.mock.calls.length, preference).toBe(preference === 'page_only' ? 0 : 1);
     }
   });
@@ -337,9 +345,9 @@ describe('a quick save cover', () => {
     expect(await stored()).toEqual([{ bookmarkId: 'b1', source: 'page', width: 100 }]);
 
     const replace = settings({ quickSaveCoverExisting: 'replace' });
-    expect(await startQuickSaveCover(replace, tab(), PICTURE_WAIT)?.save('b1', wanted)).toBe(
-      'page',
-    );
+    expect(
+      (await startQuickSaveCover(replace, tab(), PICTURE_WAIT)?.save('b1', wanted))?.source,
+    ).toBe('page');
     expect(await stored()).toEqual([{ bookmarkId: 'b1', source: 'page', width: 320 }]);
 
     await existing('tab');
@@ -353,9 +361,36 @@ describe('a quick save cover', () => {
     expect(await stored()).toEqual([]);
   });
 
+  it('Remove cover puts back the cover quick save replaced, as it was (media review 10)', async () => {
+    await saveCovers(
+      [
+        {
+          bookmarkId: 'b1',
+          url: URL_SAVED,
+          source: 'browse',
+          width: 100,
+          height: 60,
+          type: 'image/png',
+          data: new Uint8Array([1, 2, 3, 4, 5]).buffer,
+        },
+      ],
+      1_000_000,
+    );
+    const before = await getCoverInfos();
+    const replace = settings({ quickSaveCoverExisting: 'replace' });
+    const saved = await startQuickSaveCover(replace, tab(), PICTURE_WAIT)?.save('b1', wanted);
+    expect(saved?.source).toBe('page');
+    expect(saved?.replaced?.info).toEqual(before.get('b1'));
+    expect(await stored()).toEqual([{ bookmarkId: 'b1', source: 'page', width: 320 }]);
+
+    await removeQuickSaveCover('b1', URL_SAVED, 'page', saved?.replaced);
+    expect(await getCoverInfos()).toEqual(before);
+    expect((await getCoverImage('b1', URL_SAVED))?.size).toBe(5);
+  });
+
   it('Remove cover removes only the cover quick save stored', async () => {
     const cover = startQuickSaveCover(settings(), tab(), PICTURE_WAIT);
-    expect(await cover?.save('b1', wanted)).toBe('page');
+    expect((await cover?.save('b1', wanted))?.source).toBe('page');
     await removeQuickSaveCover('b1', URL_SAVED, 'quickSave');
     expect(await stored()).toHaveLength(1);
     await removeQuickSaveCover('b1', URL_SAVED, 'page');

@@ -159,6 +159,65 @@ test.describe('with website access granted', () => {
     );
     expect(leaked).toEqual([]);
   });
+
+  test('a cover picked while the review is open is kept when the review is saved over it (media review 2)', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const url = 'https://picked.e2e.invalid/story';
+    const seeded = await seedFolder(extensionWorker, 'E2E Covers Picked', [
+      { title: 'Story page', url },
+    ]);
+    await page.context().route('https://*.e2e.invalid/**', async (route) => {
+      if (route.request().url().endsWith('/images/cover.png')) {
+        return route.fulfill({ status: 200, contentType: 'image/png', body: solidPng(1200, 630) });
+      }
+      return route.fulfill({ status: 200, contentType: 'text/html', body: STORY });
+    });
+    await setSettings(extensionWorker, { coversEnabled: true, coversWidthPx: 320 });
+    await openTools(page, extensionId, seeded.folderId);
+    await toolCard(page, 'Fetch Covers')
+      .getByRole('button', { name: 'Fetch', exact: true })
+      .click();
+    const review = page.getByRole('dialog', { name: 'Fetch Covers' });
+    await expect(review.getByRole('radio', { name: 'Cover found (1)' })).toBeVisible();
+    // The found image is drawn from the bytes the run keeps.
+    await expect(review.getByTestId('cover-review-image')).toHaveAttribute('src', /^blob:/);
+
+    // Meanwhile the user picks the view of the page as its cover (Use this view as the cover).
+    const id = seeded.ids['Story page'] ?? '';
+    await seedCover(extensionWorker, id, url, undefined, { source: 'tab' });
+    await review.getByRole('button', { name: 'Save 1 cover' }).click();
+    await expect(review).toHaveCount(0);
+    expect(await readCoverInfos(extensionWorker)).toEqual([
+      expect.objectContaining({ bookmarkId: id, source: 'tab', width: 600 }),
+    ]);
+  });
+});
+
+test('deleting a bookmark deletes its cover and leaves the others (media review 4)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Covers Deleted', [
+    { title: 'Gone page', url: 'https://gone.e2e.invalid/' },
+    { title: 'Kept page', url: 'https://kept.e2e.invalid/' },
+  ]);
+  const goneId = seeded.ids['Gone page'] ?? '';
+  const keptId = seeded.ids['Kept page'] ?? '';
+  await seedCover(extensionWorker, goneId, 'https://gone.e2e.invalid/');
+  await seedCover(extensionWorker, keptId, 'https://kept.e2e.invalid/');
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+  await expect(page.getByTestId('covers-store')).toContainText('2 covers');
+
+  // Deleted however it is deleted: the background hears the browser's removal.
+  await extensionWorker.evaluate((id) => chrome.bookmarks.remove(id), goneId);
+  await expect
+    .poll(async () => (await readCoverInfos(extensionWorker)).map((info) => info.bookmarkId))
+    .toEqual([keptId]);
+  await expect(page.getByTestId('covers-store')).toContainText('1 cover');
 });
 
 test('the popup turns what the tab shows into a cover only after its preview is saved', async ({

@@ -35,18 +35,21 @@ export type CoverScanItem = {
   /** The address the page was read from, when its own redirected there (`HtmlPage.readFrom`). */
   readFrom?: string;
   status: CoverScanStatus;
-  /** For `found`: the shrunk image to store, and a data URL of it for the review. */
+  /**
+   * For `found`: the shrunk image to store. The review draws it from these bytes only while its
+   * row is on screen (`CoverReviewImage`), so a run holds each image once.
+   */
   cover?: CoverImage;
-  preview?: string;
   /** For `elsewhere`: the site the page's image is on, which the run has no access to. */
   imageSite?: string;
 };
 
 /**
  * `pageImagesOff`: Cover Source takes no page images (Screenshot only), so no page was read; the
- * review says so.
+ * review says so. `overLimit`: bookmarks left out unread because the run had found
+ * `max_found_per_run` covers (config/bookmarks/covers.toml); the next run reads them.
  */
-export type CoverScanResult = { items: CoverScanItem[]; pageImagesOff?: true };
+export type CoverScanResult = { items: CoverScanItem[]; pageImagesOff?: true; overLimit?: number };
 
 /** How a stored copy is drawn: its width, and the WebP quality (Cover Image Quality). */
 export type CoverImageOptions = { widthPx: number; quality: number };
@@ -260,7 +263,6 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
     item.status = 'found';
     item.imageSite = undefined;
     item.cover = { bookmarkId: item.id, url: item.url, source: 'page', ...image };
-    item.preview = toDataUrl(new Uint8Array(image.data), image.type);
     return;
   }
 }
@@ -269,7 +271,8 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
  * Fetches a cover for each web bookmark of `nodes` that has none from its current address, or
  * whose cover is a picture of the tab that Cover Source ranks below the page's own image; never
  * over a cover the user chose (`kept`). With `only` (Fetch Cover on chosen bookmarks, a narrow
- * scope), just those bookmarks are listed and read.
+ * scope), just those bookmarks are listed and read. Once the run has found `max_found_per_run`
+ * covers it reads no more pages: the rest are left out and counted in `overLimit`.
  */
 export async function scanCovers(
   nodes: BookmarkTreeNode[],
@@ -292,7 +295,8 @@ export async function scanCovers(
       status: 'skipped',
     };
     const current = stored.get(node.id);
-    if (isCoverCurrent(current, url) && isKeptCover(current.source)) {
+    // Whatever version made it: a chosen cover is never fetched over.
+    if (isKeptCoverOf(current, url)) {
       item.status = 'kept';
     } else if (
       isCoverCurrent(current, url) &&
@@ -302,16 +306,33 @@ export async function scanCovers(
     } else if (pageImages && isReadablePageUrl(url, options.skipPrivateHosts)) toFetch.push(item);
     items.push(item);
   }
+  let found = 0;
+  const leftOut = new Set<CoverScanItem>();
   await mapWithConcurrency(toFetch, COVER_LIMITS.concurrency, async (item) => {
+    if (found >= COVER_LIMITS.maxFoundPerRun) {
+      leftOut.add(item);
+      return;
+    }
     try {
       await fetchCover(item, options);
     } catch {
       item.status = 'failed';
       item.cover = undefined;
-      item.preview = undefined;
+    }
+    if (item.status !== 'found') return;
+    // Pages read at the same time can find more than the cap; those covers are not kept.
+    if (found >= COVER_LIMITS.maxFoundPerRun) {
+      item.cover = undefined;
+      leftOut.add(item);
+    } else {
+      found += 1;
     }
   });
-  return { items, ...(pageImages ? {} : { pageImagesOff: true as const }) };
+  return {
+    items: leftOut.size > 0 ? items.filter((item) => !leftOut.has(item)) : items,
+    ...(pageImages ? {} : { pageImagesOff: true as const }),
+    ...(leftOut.size > 0 ? { overLimit: leftOut.size } : {}),
+  };
 }
 
 /**

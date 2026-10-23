@@ -8881,6 +8881,16 @@
         "message": "Sumber Sampul adalah Hanya tangkapan layar, jadi gambar halaman tidak dipakai dan tidak ada halaman yang dibaca. Pilih Sumber Sampul lain di Pengaturan untuk mengambilnya.",
         "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
+    "tools_coversOverLimit": {
+        "message": "$count$ bookmark tidak dibaca: proses ini sudah menemukan sampul sebanyak yang disimpan satu proses. Simpan yang ini, lalu ambil lagi untuk sisanya.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
     "tools_coversCategory_skipped": {
         "message": "Dilewati ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
