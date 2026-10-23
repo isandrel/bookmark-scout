@@ -4,15 +4,14 @@ Listing copy, permission justifications, privacy disclosures, the privacy policy
 
 > **Nothing here has been submitted to any store.** Submission is a manual step that requires explicit release approval from the maintainer. See the checklists.
 
-Prepared on 2026-10-01 against extension version `0.2.0` (`apps/extension/package.json`). Re-check every claim against the code and docs when the version changes.
+Prepared on 2026-10-01 against extension version `0.2.0`; the permissions, privacy disclosures, and checklists were last re-checked on 2026-10-23 against `0.3.4` (`apps/extension/package.json`). Re-check every claim against the code and docs when the version changes.
 
 ## Contents
 
 | File | Purpose |
 | --- | --- |
 | [`listings/en.md`](listings/en.md) | English name, summaries, full descriptions, categories, and search terms for each store |
-| [`listings/ja.md`](listings/ja.md) | Japanese listing copy |
-| [`listings/ko.md`](listings/ko.md) | Korean listing copy |
+| `listings/<locale>.md` | The same listing copy in each other extension language ([`zh_CN`](listings/zh_CN.md), [`es`](listings/es.md), [`fr`](listings/fr.md), [`pt_BR`](listings/pt_BR.md), [`ru`](listings/ru.md), [`id`](listings/id.md), [`de`](listings/de.md), [`ja`](listings/ja.md), [`ko`](listings/ko.md), [`it`](listings/it.md), [`zh_TW`](listings/zh_TW.md)), in the order of `[locales] extension` in `config/project.toml` |
 | [`permissions.md`](permissions.md) | Permission-by-permission justification from the built manifests, the Chrome single-purpose statement, and linter results |
 | [`privacy-disclosures.md`](privacy-disclosures.md) | Data inventory and the answers for each store's privacy questions |
 | [`privacy-policy.md`](privacy-policy.md) | Privacy policy text, published at <https://bookmark-scout.com/privacy/> (other languages at `/<locale>/privacy/`) |
@@ -42,7 +41,7 @@ The material lives at the repository root, not under `apps/extension/`:
 
 ## What each browser build actually contains
 
-Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:build:chrome|firefox|edge` on 2026-10-01.
+Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:build:chrome|firefox|edge` on 2026-10-01; the permission rows were re-checked against the 0.3.4 builds on 2026-10-23.
 
 | Surface | Chrome (MV3) | Edge (MV3) | Firefox (MV2) |
 | --- | --- | --- | --- |
@@ -54,15 +53,15 @@ Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:
 | Context menu save | After the user turns on Right-Click Menu (off by default; asks for the optional `contextMenus`) | Same | After the user turns on Right-Click Menu (`contextMenus` is granted at install; Firefox cannot make it optional) |
 | Site icons (favicons) | Icons saved by Refresh Site Icons, and the `_favicon` cache once the user turns on Use the browser's icon cache (optional `favicon`) | Same | Only icons saved by Refresh Site Icons, which runs in the manager. The `favicon` permission is Chromium-only. |
 | Optional website access | `optional_host_permissions` | `optional_host_permissions` | `optional_permissions` (added by the WXT hook) |
-| Other optional permissions | `tabs` (side panel saves), `favicon`, `contextMenus` | Same | `tabs`; AI data collection consent (`data_collection_permissions`, optional) |
+| Other optional permissions | `tabs` (side panel saves), `favicon`, `contextMenus`, `nativeMessaging` (local AI agents), `<all_urls>` (Capture Covers While Browsing) | Same | `tabs`, `nativeMessaging`, `<all_urls>`; data collection consent for AI features and local AI agents (`data_collection_permissions`, optional) |
 
-The Firefox listing still describes a smaller feature set: it covers the manager's editing features (right-click menus, cut, copy, and paste, drag and drop, undo), which the Firefox smoke suite tests, but not its maintenance, network, and AI tools, Ask AI, or local AI agents, which have not been checked by hand in Firefox (see the AMO checklist).
+The Firefox listing still describes a smaller feature set: it covers the manager's editing features (right-click menus, cut, copy, and paste, drag and drop, undo), which the Firefox smoke suite tests, but not its maintenance, network, and AI tools, Ask AI, or local AI agents. The smoke suite now runs the background tools, covers, the bookmark preview, and Smart Rules against local stubs too, but AI folder suggestions, Ask AI, local AI agents, and real providers have not been checked by hand in Firefox (see the AMO checklist).
 
 ## Test coverage behind the claims
 
 - Chromium: unit tests and Playwright E2E tests cover popup, manager, settings, maintenance, reports, import/export, network tools (route-mocked and a real local server), and AI tools against mocked providers.
 - Edge: the same Playwright E2E suite runs against the Edge build (`nx run extension:test:e2e:edge`).
-- Firefox: a smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, opening the manager from the popup and side panel, manager loading, the search in the manager's address, Delete and undo, the folder tree keys, the manager's right-click menu (copy and paste), drag and drop in the manager, recording quick save keys in Settings, a settings save, AI data collection consent, a tool run's request for only its bookmarks' sites, a JSON export and import round trip, and the statistics and privacy reports. The link context menu, the quick save shortcut itself, and network and AI tools are not covered there.
+- Firefox: a smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, opening the manager from the popup and side panel, manager loading, the search in the manager's address, Delete and undo, the folder tree keys, the manager's right-click menu (copy and paste), drag and drop in the manager, recording quick save keys in Settings, a settings save, AI data collection consent, a tool run's request for only its bookmarks' sites, a JSON export and import round trip, the statistics and privacy reports, separators, search operators, Check Dead Links, Metadata Fetcher, Index Page Text, and AI Folder Reorganization as background tasks, Fetch Covers, Use this view as the cover, Capture Covers While Browsing, the bookmark preview, and a Smart Rule run from the Tools sidebar. The link right-click menu, the quick save shortcut itself, AI folder suggestions, and Ask AI are not covered there.
 - The Edge and Firefox CI jobs are required checks for merging into `main`.
 - Real AI providers and live network behavior are checked by hand, not by automated tests.
 

@@ -26,7 +26,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 - [ ] Side panel opens from Chrome's side panel menu. Saving the current page there explains tab access, then Chrome asks "Read your browsing history"; declining saves nothing.
 - [ ] `chrome://bookmarks` opens the Bookmark Scout manager; the Tools sidebar opens.
 - [ ] Check Dead Links asks for website access on first run, and declining scans nothing.
-- [ ] Right-click a link: no save menu until Context Menu is turned on in Settings; turning it on adds the menu without a prompt.
+- [ ] Right-click a link: no save menu until Right-Click Menu is turned on in Settings; turning it on adds the menu without a prompt.
 - [ ] Turning on Use the browser's icon cache asks to read site icons; icons from the cache appear only after allowing it.
 - [ ] Options: AI is off by default; AI tools in the Tools sidebar say to turn on AI.
 
@@ -46,7 +46,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 All answers are in [`../privacy-disclosures.md`](../privacy-disclosures.md) and [`../permissions.md`](../permissions.md).
 
 - [ ] Single purpose description pasted.
-- [ ] One justification per permission: `bookmarks`, `storage`, `activeTab`, `sidePanel`, the optional `tabs`, `favicon`, and `contextMenus`, and the optional host permissions.
+- [ ] One justification per permission the Chrome manifest declares, pasted from its block under [Per-permission justification](../permissions.md#per-permission-justification): every entry of the Chrome column of its built manifests table (`permissions`, `optional_permissions`, and optional host access, `<all_urls>` included). The dashboard asks for each one it finds in the uploaded package; a permission with no block there means `permissions.md` is behind the manifest.
 - [ ] Remote code: "No".
 - [ ] Data usage categories chosen by the maintainer (suggested: Authentication information, Web history, Website content).
 - [ ] The three certifications checked.
@@ -54,10 +54,10 @@ All answers are in [`../privacy-disclosures.md`](../privacy-disclosures.md) and 
 
 ## 5. Reviewer notes ("Test instructions")
 
-No test account or login is needed. The dashboard field (Additional instructions) takes at most 500 characters, so this is the short form; the permission details are in [`../permissions.md`](../permissions.md). In the dashboard since 2026-10-18:
+No test account or login is needed. The dashboard field (Additional instructions) takes at most 500 characters, so this is the short form; the permission details are in [`../permissions.md`](../permissions.md). Paste at the next submission (469 characters); it replaces the text entered on 2026-10-18, which did not name `<all_urls>`. Record the date here once it is in the dashboard:
 
 ```text
-No login needed. Popup: toolbar icon. Manager: chrome://bookmarks (Tools, top right). Alt+Shift+S quick-saves the current page. AI is off by default; test it free with Chrome's built-in AI (Settings > AI, where Chrome supports it), a local Ollama server, or your own key. The developer collects no data. With AI on, bookmark titles and URLs go from the browser straight to the provider the user chose. Optional permissions are asked only when needed. Source: github.com/isandrel/bookmark-scout
+No login needed. Popup: toolbar icon. Manager: chrome://bookmarks (Tools, top right). Alt+Shift+S quick-saves the page. AI is off by default; test it free with Chrome's built-in AI (Settings > AI), Ollama, or your own key. Nothing goes to the developer; with AI on, titles and URLs go straight to the user's provider. Optional permissions are asked only when used; <all_urls> only for opt-in Capture Covers While Browsing (pictures of bookmarked pages, kept on device).
 ```
 
 ## 6. Account and distribution

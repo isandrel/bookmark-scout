@@ -3372,7 +3372,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "オフにすると、キーなしでサービスを使えます。キーを自分で付け加えるプロキシやゲートウェイ、自前や社内のエンドポイント、キー不要の無料枠があるプロバイダー向けです。リクエストはキーを一切付けずに送られます。",
+        "message": "オフにすると、キーなしでサービスを使えます。キーを自分で付け加えるプロキシやゲートウェイ、自前や社内のエンドポイント、キー不要の無料枠があるプロバイダー向けです。キーを入力しない限り、リクエストはキーなしで送られます。",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {

@@ -32,7 +32,7 @@ bunx nx run extension:build:firefox
 bunx addons-linter@latest --output json apps/extension/dist/firefox-mv2 > ~/.cache/bookmark-scout-amo/lint.json
 ```
 
-Summarize the JSON with a short script; the table output truncates columns. Target zero errors. Expected warnings that need reviewer notes rather than fixes: `DANGEROUS_EVAL` (Zod's JIT capability probe) and `UNSAFE_VAR_ASSIGNMENT` (React DOM).
+Summarize the JSON with a short script; the table output truncates columns. Target zero errors. Expected warnings that need reviewer notes rather than fixes: `DANGEROUS_EVAL` (Zod's JIT capability probe) and `UNSAFE_VAR_ASSIGNMENT` (React DOM, Mozilla Readability on its own parsed copy of a page, and the Markdown parser behind Ask AI); `store/permissions.md` (Linter results) lists each with its chunk, so a new warning or chunk stands out. Chunk names follow the modules Rolldown groups, so they change between releases.
 
 ## Sources ZIP and reproducible builds
 

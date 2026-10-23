@@ -3408,7 +3408,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "關閉後即可在沒有金鑰的情況下使用此服務：適用於會自行加入金鑰的代理或閘道、自行架設或公司內部的端點，以及提供免金鑰免費方案的供應商。此時請求完全不帶金鑰送出。",
+        "message": "關閉後即可在沒有金鑰的情況下使用此服務：適用於會自行加入金鑰的代理或閘道、自行架設或公司內部的端點，以及提供免金鑰免費方案的供應商。此時請求不帶金鑰送出，除非你填寫了金鑰。",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {

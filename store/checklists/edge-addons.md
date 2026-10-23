@@ -24,7 +24,7 @@ The full Chromium E2E suite runs against the Edge build as the required `Edge E2
 - [ ] Popup: search, folder tree, save the current page, delete and Undo.
 - [ ] Side panel opens.
 - [ ] Bookmark icons from the browser cache render after turning on Use the browser's icon cache and allowing it (optional `favicon`).
-- [ ] Right-click a link: the save menu appears after turning on Context Menu in Settings.
+- [ ] Right-click a link: the save menu appears after turning on Right-Click Menu in Settings.
 - [ ] Saving the current page from the side panel asks for tab access; declining saves nothing.
 - [ ] Check Dead Links asks for website access on first run (if the manager is reachable).
 - [ ] Options: AI is off by default.
@@ -59,7 +59,7 @@ No account or login is required. Click the toolbar icon to open the popup. The e
 
 AI features are off by default and need the reviewer's own provider API key (Settings > AI); a local Ollama server works without a key. All other features work without AI.
 
-At install the extension asks only for bookmarks, storage, activeTab, and sidePanel. Everything else is optional and requested when the user turns on or runs the feature that needs it: tabs when saving the current page from the side panel (the toolbar popup uses activeTab), contextMenus when the user turns on Context Menu in Settings (off by default), favicon when the user turns on "Use the browser's icon cache", and website access (http/https) when the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons, turns on Read page content, or clicks Verify Service for an AI provider (that origin only).
+At install the extension asks only for bookmarks; storage, activeTab, sidePanel, scripting (the quick save notification in the tab a shortcut was pressed in), offscreen (a hidden page that parses HTML and builds AI requests for background work), and alarms (picking up background tasks) show no prompt. Everything else is optional and requested when the user turns on or runs the feature that needs it: tabs when saving the current page from the side panel (the toolbar popup uses activeTab), contextMenus when the user turns on Right-Click Menu in Settings (off by default), favicon when the user turns on "Use the browser's icon cache", website access (http/https) when the user runs Check Dead Links, Metadata Fetcher, Refresh Site Icons, Index Page Text, or Fetch Covers, turns on Read page content, or clicks Verify Service for an AI provider (that origin only), and <all_urls> only for Capture Covers While Browsing (off by default), which keeps pictures of bookmarked pages on the device.
 
 nativeMessaging is optional and requested only when the user turns on "Allow local AI agents" (Settings > For developers, off by default). It lets AI agents the user runs on the same computer look up bookmarks through the open-source bookmark-scout-mcp program the user installs separately (packages/mcp-bridge in the repository); it never opens a network port and sends nothing to the developer. Every change an agent asks for waits for the user's approval in an extension window.
 

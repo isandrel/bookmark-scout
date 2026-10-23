@@ -3416,7 +3416,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "Désactivez cette option pour utiliser le service sans clé : via un proxy ou une passerelle qui ajoute la clé elle-même, un point de terminaison auto-hébergé ou d'entreprise, ou un fournisseur dont l'offre gratuite ne demande pas de clé. Les requêtes partent alors sans aucune clé.",
+        "message": "Désactivez cette option pour utiliser le service sans clé : via un proxy ou une passerelle qui ajoute la clé elle-même, un point de terminaison auto-hébergé ou d'entreprise, ou un fournisseur dont l'offre gratuite ne demande pas de clé. Les requêtes partent alors sans clé, sauf si vous en saisissez une.",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {
