@@ -7643,6 +7643,18 @@
         "message": "Проверено после импорта: не совпало записей — $1.",
         "description": "History record fact: the read-back of a backup restore found differences"
     },
+    "history_verifyFailedData_one": {
+        "message": "Проверено после импорта: $1 запись не совпала с записанным.",
+        "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "history_verifyFailedData_few": {
+        "message": "Проверено после импорта: $1 записи не совпали с записанным.",
+        "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "history_verifyFailedData_many": {
+        "message": "Проверено после импорта: $1 записей не совпали с записанным.",
+        "description": "History record fact: the read-back of a backup restore found differences"
+    },
     "backup_errorTooLarge": {
         "message": "Это больше, чем браузер может сохранить.",
         "description": "Restore settings: a part would pass the browser's storage quota"
