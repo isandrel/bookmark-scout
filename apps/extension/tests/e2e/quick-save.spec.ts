@@ -244,6 +244,38 @@ test.describe('quick save in the page', () => {
       .toEqual(['folderRecommendation 200']);
   });
 
+  test('[mocked provider contract] AI quick save reads a local network page only with Skip Local Network Pages off', async ({
+    context,
+    extensionWorker,
+  }) => {
+    // The stub site is on 127.0.0.1, a local network page. The page is read in the AI host page
+    // (an offscreen document), which cannot read settings itself.
+    const dev = await seedFolder(extensionWorker, 'Dev', []);
+    await setSettings(extensionWorker, { aiEnabled: true, aiReadPageContent: true });
+    await seedAIServices(extensionWorker, [
+      { provider: 'custom', model: 'e2e-model', credentials: { baseUrl: `${server.origin}/v1` } },
+    ]);
+    server.ai.recommendations = [
+      { type: 'existing', folderPath: `${dev.barTitle}/Dev`, parentPath: '' },
+    ];
+    const pageTextOf = (prompt: string | undefined) =>
+      (JSON.parse(prompt ?? '{}') as { pageText?: string }).pageText;
+    const page = await context.newPage();
+
+    await openArticle(page, 'Skipped-local-page');
+    await pressShortcut(extensionWorker, page, 'ai-quick-save');
+    expect((await finishedRecord(extensionWorker)).status).toBe('saved');
+    expect(server.ai.prompts).toHaveLength(1);
+    expect(pageTextOf(server.ai.prompts[0])).toBeUndefined();
+
+    await setSettings(extensionWorker, { readPageSkipPrivateHosts: false });
+    await openArticle(page, 'Read-local-page');
+    await pressShortcut(extensionWorker, page, 'ai-quick-save');
+    expect((await finishedRecord(extensionWorker)).status).toBe('saved');
+    expect(server.ai.prompts).toHaveLength(2);
+    expect(pageTextOf(server.ai.prompts[1])).toContain('An article.');
+  });
+
   test('AI quick save with AI off offers the AI settings and saves nothing', async ({
     context,
     extensionWorker,

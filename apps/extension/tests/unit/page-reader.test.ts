@@ -1,6 +1,7 @@
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import {
   addPageText,
   extractPageText,
@@ -8,6 +9,7 @@ import {
   isReadablePageUrl,
   readPagesText,
 } from '@/services/page-reader';
+import { handleAIHostRequest } from '@/services/quick-save-ai-runner';
 import { readConfigToml } from '../config-files';
 
 const MAX_PAGES_PER_RUN = readConfigToml('ai/page-reading.toml').max_pages_per_run as number;
@@ -146,6 +148,38 @@ describe('readPagesText', () => {
     );
     const pages = await readPagesText(urls);
     expect(pages.size).toBe(MAX_PAGES_PER_RUN);
+  });
+});
+
+describe('reading a page in the AI host page', () => {
+  const readLocal = (skipPrivateHosts: boolean) =>
+    handleAIHostRequest({
+      type: QUICK_SAVE_MESSAGE.hostReadPage,
+      token: 'token',
+      url: 'http://192.168.1.10/notes',
+      skipPrivateHosts,
+    });
+
+  it('follows the Skip Local Network Pages value it is sent and never reads storage', async () => {
+    // Chrome gives the offscreen document only the runtime API: any storage read fails there.
+    const storageReads = [
+      vi.spyOn(fakeBrowser.storage.sync, 'get').mockRejectedValue(new Error('no storage')),
+      vi.spyOn(fakeBrowser.storage.local, 'get').mockRejectedValue(new Error('no storage')),
+    ];
+    const fetchMock = vi.fn(
+      async () => new Response(ARTICLE, { status: 200, headers: { 'content-type': 'text/html' } }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    expect(await readLocal(true)).toEqual({ ok: true, page: null });
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    expect(await readLocal(false)).toMatchObject({
+      ok: true,
+      page: { title: 'Rust ownership explained' },
+    });
+    expect(fetchMock).toHaveBeenCalledOnce();
+    for (const read of storageReads) expect(read).not.toHaveBeenCalled();
   });
 });
 

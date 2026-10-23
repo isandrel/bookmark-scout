@@ -45,9 +45,16 @@ export type QuickSaveServer = {
   origin: string;
   /**
    * The stub AI provider: the suggestions it answers with, how long it waits first, and its HTTP
-   * status (400 fails at once; the AI SDK retries 5xx with backoff).
+   * status (400 fails at once; the AI SDK retries 5xx with backoff). `prompts` holds the user
+   * message of each request it got.
    */
-  ai: { recommendations: Recommendation[]; delayMs: number; status: number; requests: number };
+  ai: {
+    recommendations: Recommendation[];
+    delayMs: number;
+    status: number;
+    requests: number;
+    prompts: string[];
+  };
   close: () => Promise<void>;
 };
 
@@ -57,7 +64,13 @@ export type QuickSaveServer = {
  * notification on pages that style themselves in the way.
  */
 export async function startQuickSaveServer(): Promise<QuickSaveServer> {
-  const ai = { recommendations: [] as Recommendation[], delayMs: 0, status: 200, requests: 0 };
+  const ai = {
+    recommendations: [] as Recommendation[],
+    delayMs: 0,
+    status: 200,
+    requests: 0,
+    prompts: [] as string[],
+  };
   const server: Server = createServer((req: IncomingMessage, res: ServerResponse) => {
     const cors = {
       'access-control-allow-origin': '*',
@@ -70,6 +83,17 @@ export async function startQuickSaveServer(): Promise<QuickSaveServer> {
     }
     if (req.url?.startsWith('/v1/')) {
       ai.requests += 1;
+      let body = '';
+      req.on('data', (chunk: Buffer) => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        const messages = (
+          JSON.parse(body || '{}') as { messages?: { role: string; content: unknown }[] }
+        ).messages;
+        const user = messages?.find((message) => message.role === 'user')?.content;
+        ai.prompts.push(typeof user === 'string' ? user : JSON.stringify(user ?? ''));
+      });
       const content = JSON.stringify({
         recommendations: ai.recommendations.map((rec) => ({
           confidence: 0.9,

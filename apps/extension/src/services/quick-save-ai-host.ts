@@ -151,7 +151,14 @@ export async function withAIHost<T>(
       readPage: async (url) => {
         // The host reads public http and https pages only.
         if (!/^https?:/i.test(url)) return null;
-        const response = await askHost({ type: QUICK_SAVE_MESSAGE.hostReadPage, token, url });
+        // The host page cannot read storage (Chrome gives it only runtime), so the setting goes along.
+        const { readPageSkipPrivateHosts } = await getSettings();
+        const response = await askHost({
+          type: QUICK_SAVE_MESSAGE.hostReadPage,
+          token,
+          url,
+          skipPrivateHosts: readPageSkipPrivateHosts,
+        });
         return response.ok ? (response.page ?? null) : null;
       },
       readHead: async (html, descriptions) => {

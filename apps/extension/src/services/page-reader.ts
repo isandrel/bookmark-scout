@@ -88,17 +88,22 @@ export async function extractPageBlocks(
   return extractReadableBlocks(doc, options);
 }
 
-/** Downloads and reads one page; undefined when it cannot or may not be read. */
-export async function readPageText(url: string): Promise<PageText | undefined> {
-  const { readPageSkipPrivateHosts } = await getSettings();
-  if (!isReadablePageUrl(url, readPageSkipPrivateHosts)) return undefined;
+/**
+ * Downloads and reads one page; undefined when it cannot or may not be read. The caller passes
+ * the Skip Local Network Pages setting: the AI host page that also runs this cannot read storage.
+ */
+export async function readPageText(
+  url: string,
+  skipPrivateHosts: boolean,
+): Promise<PageText | undefined> {
+  if (!isReadablePageUrl(url, skipPrivateHosts)) return undefined;
   try {
     const { html } = await fetchHtmlPage(url, {
       timeoutMs: config.timeout_ms,
       maxBytes: config.max_bytes,
       until: 'end',
       // A redirect can lead to a local host; that page is not read either.
-      allowUrl: (next) => isReadablePageUrl(next, readPageSkipPrivateHosts),
+      allowUrl: (next) => isReadablePageUrl(next, skipPrivateHosts),
     });
     if (!html) return undefined;
     return await extractPageText(parseFetchedHtml(html));
@@ -135,7 +140,7 @@ export async function readPagesText(urls: string[]): Promise<Map<string, PageTex
   ].slice(0, config.max_pages_per_run);
   const pages = await mapWithConcurrency(unique, config.concurrency, async (url) => ({
     url,
-    page: await readPageText(url),
+    page: await readPageText(url, readPageSkipPrivateHosts),
   }));
   return new Map(
     pages.flatMap(({ url, page }) => (page ? [[url, page] as [string, PageText]] : [])),
