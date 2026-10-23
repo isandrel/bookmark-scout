@@ -1,7 +1,8 @@
 /**
  * Every item the extension keeps in extension storage, in one registry. A key that is not listed
  * here is removed when the extension is installed or updated (`storage/cleanup.ts`), so anything
- * stored must be listed first.
+ * stored must be listed first. An old item a registered migration still reads
+ * (`storage/migrations/`) is kept until that migration is removed.
  *
  * Keys are `<area>:<domain>.<name>` in kebab-case (`local:search.history`); a collection stores one
  * item per id under `<area>:<domain>.<name>/<id>`. Each value is stored as `{ v, data }`, where `v`
@@ -12,8 +13,8 @@
  *
  * Which area:
  * - `sync`: small values the user expects on every device (the browser vendor syncs them when the
- *   user has browser sync on). 8,192 bytes per item and 102,400 in total, so large or per-device
- *   data never goes here, and neither do credentials.
+ *   user has browser sync on). Limited by `SYNC_QUOTA` (8,192 bytes per item, 102,400 in total),
+ *   so large or per-device data never goes here, and neither do credentials.
  * - `local`: this device only; credentials, caches, logs, and anything naming local bookmark ids.
  * - `session`: in memory until the browser closes.
  *
@@ -24,6 +25,24 @@
  */
 
 export type StorageAreaName = 'local' | 'sync' | 'session';
+
+/**
+ * Chrome's limits on `storage.sync`, a protocol constant rather than a tunable: a write past them
+ * fails. Firefox's are the same or looser. Tests size every synced item against them.
+ * [chrome.storage.sync](https://developer.chrome.com/docs/extensions/reference/api/storage#property-sync)
+ */
+export const SYNC_QUOTA = {
+  /** `QUOTA_BYTES_PER_ITEM`: one item's key plus its value's JSON, in UTF-8 bytes. */
+  bytesPerItem: 8_192,
+  /** `QUOTA_BYTES`: every item together, measured the same way. */
+  bytes: 102_400,
+  /** `MAX_ITEMS`. */
+  maxItems: 512,
+  /** `MAX_WRITE_OPERATIONS_PER_MINUTE`: each `set`, `remove`, or `clear` call is one. */
+  writesPerMinute: 120,
+  /** `MAX_WRITE_OPERATIONS_PER_HOUR`. */
+  writesPerHour: 1_800,
+} as const;
 
 export type BackupPolicy = 'include' | 'exclude' | 'secret';
 
@@ -48,10 +67,23 @@ export const STORAGE_ITEMS = {
    */
   settings: { area: 'sync', name: 'settings', v: 1, backup: 'include' },
   /**
-   * Synced: the changed settings that are lists (parameter names, menu actions, status codes),
-   * kept apart so the settings item and this one each stay within the 8,192-byte sync quota.
+   * Synced: each changed setting that is a list (parameter names, menu actions, status codes) in
+   * an item of its own, under its setting key, so every list has the whole per-item quota and
+   * changing one writes only its item. Which settings are lists comes from the settings schema
+   * (`SETTING_KEYS_BY_SCOPE.lists`), so a new list setting gets its item with no entry here.
    */
-  settingsLists: { area: 'sync', name: 'settings.lists', v: 1, backup: 'include' },
+  settingsList: {
+    area: 'sync',
+    name: 'settings.list',
+    v: 1,
+    backup: 'include',
+    collection: true,
+  },
+  /**
+   * Local: the ids of the storage migrations (`storage/migrations/`) that have run on this
+   * device, so each runs once here; device state, so not backed up.
+   */
+  storageMigrations: { area: 'local', name: 'storage.migrations', v: 1, backup: 'exclude' },
   /** Local: the changed settings that belong to this device only (`DEVICE_SETTING_KEYS`). */
   deviceSettings: { area: 'local', name: 'settings', v: 1, backup: 'include' },
   /** Synced: the manager table's columns (shown, order) and sort, so the layout follows the user. */
@@ -204,13 +236,6 @@ export const DEVICE_SETTING_KEYS = [
   'managerStartFolderId',
   /** Whether the manager's sidebars reopen as they were, which suits one screen. */
   'managerSidebarsStart',
-  /**
-   * The Organize, empty-space, and preview menus as the user arranged them: the synced lists item
-   * has no room left for them (the item menu, older, syncs).
-   */
-  'managerOrganizeMenu',
-  'managerEmptySpaceMenu',
-  'managerPreviewMenu',
   /** What a new table view, a card, and the preview show suit one screen, as Manager View does. */
   'managerDefaultColumns',
   'managerDefaultPageSize',
@@ -222,15 +247,12 @@ export const DEVICE_SETTING_KEYS = [
   'previewFields',
   /**
    * The popup and side panel's layout suits one screen as well: their parts and toolbar buttons,
-   * row height, the hover card's details, and which row commands are buttons or in ⋯. (Synced, these
-   * lists would not fit beside the others in `settings.lists`' 8,192-byte quota.)
+   * row height, and the hover card's details. (Their row menus, like every menu, sync.)
    */
   'popupSections',
   'popupToolbarButtons',
   'treeDensity',
   'hoverCardFields',
-  'popupBookmarkMenu',
-  'popupFolderMenu',
   /** Keys typed on this device's keyboard, with its platform's modifiers (Cmd or Ctrl). */
   'pageShortcutOverrides',
 ] as const;

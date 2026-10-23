@@ -14,6 +14,7 @@ import {
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { MAX_PROMPT_BYTES } from '@/lib/prompt-library-storage';
 import { saveSettings } from '@/lib/settings-storage';
+import { SYNC_QUOTA } from '@/lib/storage/registry';
 import {
   AI_ACTIVITY_ACTION_METHOD,
   AI_ACTIVITY_ON_DEVICE_METHOD,
@@ -50,7 +51,7 @@ describe('AI runtime config', () => {
     expect(MAX_PROMPT_BYTES).toBe(
       (readConfigToml('ai/prompt-library.toml').prompt_max_bytes as { value: number }).value,
     );
-    expect(MAX_PROMPT_BYTES).toBeLessThanOrEqual(8192);
+    expect(MAX_PROMPT_BYTES).toBeLessThanOrEqual(SYNC_QUOTA.bytesPerItem);
   });
 });
 

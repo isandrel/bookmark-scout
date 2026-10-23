@@ -8,6 +8,8 @@
 export default defineBackground(() => {
   // Data from older releases is not migrated: keys this release does not register are removed.
   registerStorageCleanup();
+  // Except settings an earlier release stored elsewhere, which move to where they belong now.
+  registerStorageMigrations();
   // A first install (never an update) opens the welcome page.
   registerWelcomePage();
   void restrictLocalStorageAccess();

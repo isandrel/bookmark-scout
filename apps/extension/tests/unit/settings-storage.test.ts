@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
-import { syncItemBytes } from '@/lib/prompt-library-storage';
+import { ABOUT_ME_MAX_LENGTH } from '@/lib/about-me-storage';
+import { INPUT_LIMITS } from '@/lib/input-limits';
+import { MAX_PROMPT_BYTES, MAX_PROMPTS, syncItemBytes } from '@/lib/prompt-library-storage';
 import {
   coerceSelectValue,
   commitNumberSetting,
@@ -32,17 +34,30 @@ import {
   sanitizeSettings,
   saveSettings,
   saveValidSettings,
+  settingsOverrideValues,
   settingsValue,
   undoResetSettings,
   validateSettingsUpdate,
 } from '@/lib/settings-storage';
-import { DEVICE_SETTING_KEYS, storageAreaKey } from '@/lib/storage/registry';
-import { toStoredEnvelope } from '@/lib/storage/stored-value';
+import { MIGRATIONS } from '@/lib/storage/migrations';
+import {
+  DEVICE_SETTING_KEYS,
+  type StorageItem,
+  SYNC_QUOTA,
+  storageAreaKey,
+} from '@/lib/storage/registry';
+import { NewerStoredValueError, toStoredEnvelope } from '@/lib/storage/stored-value';
+import { PROMPT_TASK_IDS } from '@/services/prompt-config';
 import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 /** What sync storage holds for settings. */
 async function readStored() {
   return (await readStoredData(STORAGE_ITEMS.settings)) as Record<string, unknown> | undefined;
+}
+
+/** What the list setting `key`'s synced item holds. */
+async function readList(key: string) {
+  return readStoredData(STORAGE_ITEMS.settingsList, key);
 }
 
 /** What this device's storage holds for settings. */
@@ -53,6 +68,7 @@ async function readStoredOnDevice() {
 }
 
 beforeEach(() => {
+  vi.restoreAllMocks();
   fakeBrowser.reset();
   setLanguage('en');
 });
@@ -157,25 +173,69 @@ describe('settings persistence', () => {
     expect((await getSettings()).quickSaveFixedFolder).toBe('42');
   });
 
-  it('keeps list settings in their own synced item, and moves lists an earlier release stored', async () => {
+  it('keeps each list setting in its own synced item, and writes only the list that changed', async () => {
     await saveSettings({ urlCleanerRemoveParams: ['utm_*'], theme: 'dark' });
     expect(await readStored()).toEqual({ theme: 'dark' });
-    expect(await readStoredData(STORAGE_ITEMS.settingsLists)).toEqual({
-      urlCleanerRemoveParams: ['utm_*'],
-    });
+    expect(await readList('urlCleanerRemoveParams')).toEqual(['utm_*']);
     expect(getSettingScope('urlCleanerRemoveParams')).toBe('lists');
     expect(getSettingScope('agentBridgeDisabledActions')).toBe('device');
 
-    // Lists an earlier release kept in the settings item still count, and the next save moves them.
-    await seedStored(STORAGE_ITEMS.settingsLists, {});
-    await seedStored(STORAGE_ITEMS.settings, { theme: 'dark', managerMenuActions: ['open'] });
-    expect((await getSettings()).managerMenuActions).toEqual(['open']);
-    await saveSettings({ showFavicons: false });
-    expect(await readStored()).toEqual({ theme: 'dark', showFavicons: false });
-    expect(await readStoredData(STORAGE_ITEMS.settingsLists)).toEqual({
+    const set = vi.spyOn(fakeBrowser.storage.sync, 'set');
+    const remove = vi.spyOn(fakeBrowser.storage.sync, 'remove');
+    await saveSettings({ managerMenuActions: ['open'] });
+    expect(set.mock.calls.map(([items]) => Object.keys(items))).toEqual([
+      [storageAreaKey(STORAGE_ITEMS.settingsList, 'managerMenuActions')],
+    ]);
+    expect(remove).not.toHaveBeenCalled();
+
+    // Back at its default, a list's item is removed, and only its item.
+    set.mockClear();
+    await saveSettings({ urlCleanerRemoveParams: defaultSettings.urlCleanerRemoveParams });
+    expect(set).not.toHaveBeenCalled();
+    expect(remove.mock.calls).toEqual([
+      [[storageAreaKey(STORAGE_ITEMS.settingsList, 'urlCleanerRemoveParams')]],
+    ]);
+    expect(await readList('urlCleanerRemoveParams')).toBeUndefined();
+    expect(await getSettings()).toMatchObject({ theme: 'dark', managerMenuActions: ['open'] });
+  });
+
+  it('reads every list item at once and follows a list another device changed', async () => {
+    await seedStored(STORAGE_ITEMS.settingsList, ['utm_*'], 'urlCleanerRemoveParams');
+    await seedStored(STORAGE_ITEMS.settingsList, ['open'], 'managerMenuActions');
+    // An invalid list reads as its default alone; one a newer release added is left alone.
+    await seedStored(STORAGE_ITEMS.settingsList, ['not a status'], 'deadLinksSuccessStatuses');
+    await seedStored(STORAGE_ITEMS.settingsList, ['x'], 'listFromANewerRelease');
+    const get = vi.spyOn(fakeBrowser.storage.sync, 'get');
+    expect(await settingsOverrideValues.lists.get()).toEqual({
+      urlCleanerRemoveParams: ['utm_*'],
       managerMenuActions: ['open'],
+      deadLinksSuccessStatuses: ['not a status'],
     });
-    expect((await getSettings()).managerMenuActions).toEqual(['open']);
+    expect(get).toHaveBeenCalledOnce();
+    expect(await getSettings()).toMatchObject({
+      urlCleanerRemoveParams: ['utm_*'],
+      managerMenuActions: ['open'],
+      deadLinksSuccessStatuses: defaultSettings.deadLinksSuccessStatuses,
+    });
+
+    const seen: Settings[] = [];
+    const stop = settingsValue.observe((settings) => seen.push(settings));
+    await vi.waitFor(() => expect(seen).toHaveLength(1));
+    await seedStored(STORAGE_ITEMS.settingsList, ['edit'], 'managerMenuActions');
+    await vi.waitFor(() => expect(seen.at(-1)?.managerMenuActions).toEqual(['edit']));
+    stop();
+    await saveSettings({ theme: 'dark' });
+    expect(await readList('listFromANewerRelease')).toEqual(['x']);
+  });
+
+  it('refuses to change a list a newer release stored, and writes nothing', async () => {
+    const key = storageAreaKey(STORAGE_ITEMS.settingsList, 'managerMenuActions');
+    await fakeBrowser.storage.sync.set({ [key]: { v: 99, data: ['open'] } });
+    await expect(saveSettings({ managerMenuActions: ['edit'], theme: 'dark' })).rejects.toThrow(
+      NewerStoredValueError,
+    );
+    expect(await readStored()).toBeUndefined();
+    expect((await fakeBrowser.storage.sync.get(key))[key]).toEqual({ v: 99, data: ['open'] });
   });
 
   it('keeps settings a newer release stored when it saves its own', async () => {
@@ -250,46 +310,123 @@ describe('settings persistence', () => {
     );
     stop();
   });
+});
 
-  it('caps each synced settings item within the 8,192-byte sync quota at its largest', () => {
-    // Every synced setting at its largest stored form: lists full of the longest names, text at
-    // its maximum length in the costliest character (Chrome stores `<` as 6 bytes), numbers at
-    // their longest form, and each choice at its longest option.
-    const meta = getSettingsFieldMeta();
-    const bounds: Partial<Record<keyof Settings, NumberSetting>> = SETTING_NUMBER_BOUNDS;
-    const longestOf = <T>(values: T[]) =>
-      values.reduce((a, b) => (JSON.stringify(b).length > JSON.stringify(a).length ? b : a));
-    const largest = Object.fromEntries(
-      [...SETTING_KEYS_BY_SCOPE.sync, ...SETTING_KEYS_BY_SCOPE.lists].map((key) => {
-        const field = meta[key];
-        const fallback = defaultSettings[key];
-        if (field.list && field.options) {
-          // A checklist holds each of its choices at most once: all of them is its largest.
-          return [key, field.options.map((option) => option.value)];
-        }
-        if (field.list) {
-          expect(field.maxItems, `${key} has no item limit`).toBeGreaterThan(0);
-          const item = field.list === 'string' ? 'x'.repeat(field.maxLength ?? 0) : 599;
-          return [key, Array.from({ length: field.maxItems ?? 0 }, () => item)];
-        }
-        if (typeof fallback === 'string') {
-          const options = field.options?.map((option) => String(option.value)) ?? [];
-          expect(field.maxLength ?? options.length, `${key} has no length limit`).toBeGreaterThan(
-            0,
-          );
-          return [key, options.length > 0 ? longestOf(options) : '<'.repeat(field.maxLength ?? 0)];
-        }
-        if (typeof fallback === 'number') {
-          const range = bounds[key];
-          if (!range) return [key, longestOf((field.options ?? []).map((option) => option.value))];
-          // -1 (no limit) is a value only where the setting allows it.
-          const candidates = [range.min, range.max, ...(range.unlimited ? [-1] : [])];
-          if (!range.integer) candidates.push(range.min + (range.max - range.min) / 3);
-          return [key, longestOf(candidates)];
-        }
-        return [key, false];
-      }),
-    );
+/**
+ * Every synced setting at its largest stored form: lists full of the longest names, text at its
+ * maximum length in the costliest character (Chrome stores `<` as 6 bytes), numbers at their
+ * longest form, and each choice at its longest option.
+ */
+function largestSyncedSettings(): Record<string, unknown> {
+  const meta = getSettingsFieldMeta();
+  const bounds: Partial<Record<keyof Settings, NumberSetting>> = SETTING_NUMBER_BOUNDS;
+  const longestOf = <T>(values: T[]) =>
+    values.reduce((a, b) => (JSON.stringify(b).length > JSON.stringify(a).length ? b : a));
+  return Object.fromEntries(
+    [...SETTING_KEYS_BY_SCOPE.sync, ...SETTING_KEYS_BY_SCOPE.lists].map((key) => {
+      const field = meta[key];
+      const fallback = defaultSettings[key];
+      if (field.list && field.options) {
+        // A checklist holds each of its choices at most once: all of them is its largest.
+        return [key, field.options.map((option) => option.value)];
+      }
+      if (field.list) {
+        expect(field.maxItems, `${key} has no item limit`).toBeGreaterThan(0);
+        const item = field.list === 'string' ? 'x'.repeat(field.maxLength ?? 0) : 599;
+        return [key, Array.from({ length: field.maxItems ?? 0 }, () => item)];
+      }
+      if (typeof fallback === 'string') {
+        const options = field.options?.map((option) => String(option.value)) ?? [];
+        expect(field.maxLength ?? options.length, `${key} has no length limit`).toBeGreaterThan(0);
+        return [key, options.length > 0 ? longestOf(options) : '<'.repeat(field.maxLength ?? 0)];
+      }
+      if (typeof fallback === 'number') {
+        const range = bounds[key];
+        if (!range) return [key, longestOf((field.options ?? []).map((option) => option.value))];
+        // -1 (no limit) is a value only where the setting allows it.
+        const candidates = [range.min, range.max, ...(range.unlimited ? [-1] : [])];
+        if (!range.integer) candidates.push(range.min + (range.max - range.min) / 3);
+        return [key, longestOf(candidates)];
+      }
+      return [key, false];
+    }),
+  );
+}
+
+/** Bytes `item` (or its entry `id`) takes in sync storage holding `data`. */
+const storedBytes = (item: StorageItem, data: unknown, id?: string) =>
+  syncItemBytes(storageAreaKey(item, id), toStoredEnvelope(item, data));
+
+/**
+ * Every synced item at its largest, by name, and how many of it there can be. A new synced item
+ * fails here until it has a size: its own measure, or the per-item quota when it has none.
+ */
+function largestSyncItems(): { name: string; bytes: number; count: number }[] {
+  const largest = largestSyncedSettings();
+  const promptIndex = {
+    ids: Array.from({ length: MAX_PROMPTS }, () => 'x'.repeat(INPUT_LIMITS.ids.prompt)),
+    active: Object.fromEntries(
+      PROMPT_TASK_IDS.map((task) => [task, 'x'.repeat(INPUT_LIMITS.ids.prompt)]),
+    ),
+  };
+  const sizes: Record<string, () => { name: string; bytes: number; count: number }[]> = {
+    settings: () => [
+      {
+        name: 'settings',
+        bytes: storedBytes(
+          STORAGE_ITEMS.settings,
+          Object.fromEntries(SETTING_KEYS_BY_SCOPE.sync.map((key) => [key, largest[key]])),
+        ),
+        count: 1,
+      },
+    ],
+    settingsList: () =>
+      SETTING_KEYS_BY_SCOPE.lists.map((key) => ({
+        name: `settings.list/${key}`,
+        bytes: storedBytes(STORAGE_ITEMS.settingsList, largest[key], key),
+        count: 1,
+      })),
+    // Columns and sort have no byte limit of their own: counted at the whole per-item quota.
+    tableView: () => [{ name: 'manager.table-view', bytes: SYNC_QUOTA.bytesPerItem, count: 1 }],
+    promptIndex: () => [
+      {
+        name: 'prompts.index',
+        bytes: storedBytes(STORAGE_ITEMS.promptIndex, promptIndex),
+        count: 1,
+      },
+    ],
+    aboutMe: () => [
+      {
+        name: 'ai.about-me',
+        bytes: storedBytes(STORAGE_ITEMS.aboutMe, '<'.repeat(ABOUT_ME_MAX_LENGTH)),
+        count: 1,
+      },
+    ],
+    // `customPromptBytes` refuses a prompt past MAX_PROMPT_BYTES, key and envelope included.
+    prompt: () => [{ name: 'prompts.prompt/<id>', bytes: MAX_PROMPT_BYTES, count: MAX_PROMPTS }],
+  };
+  const synced = (Object.entries(STORAGE_ITEMS) as [string, StorageItem][]).filter(
+    ([, item]) => item.area === 'sync',
+  );
+  // An old item a migration still reads stays while the migration is registered.
+  const legacy = MIGRATIONS.flatMap(({ legacy: item }) =>
+    item?.item.area === 'sync'
+      ? [{ name: item.key, bytes: SYNC_QUOTA.bytesPerItem, count: 1 }]
+      : [],
+  );
+  return [
+    ...synced.flatMap(([id]) => {
+      const size = sizes[id];
+      if (!size) throw new Error(`${id} syncs but has no largest size in this test`);
+      return size();
+    }),
+    ...legacy,
+  ];
+}
+
+describe('sync quota', () => {
+  it('keeps the settings item and each list item within the per-item quota at their largest', () => {
+    const largest = largestSyncedSettings();
     expect(settingsSchema.safeParse({ ...defaultSettings, ...largest }).success).toBe(true);
     // A name takes one byte a character: the characters that take more are not allowed.
     for (const name of ['a"b', 'a<b', 'a\\b', 'äb', 'a b']) {
@@ -297,18 +434,38 @@ describe('settings persistence', () => {
         false,
       );
     }
-
-    // Each synced item holds its own scope's settings and has its own quota.
-    for (const [scope, item] of [
-      ['sync', STORAGE_ITEMS.settings],
-      ['lists', STORAGE_ITEMS.settingsLists],
-    ] as const) {
-      const stored = Object.fromEntries(
-        SETTING_KEYS_BY_SCOPE[scope].map((key) => [key, largest[key]]),
-      );
-      const bytes = syncItemBytes(storageAreaKey(item), toStoredEnvelope(item, stored));
-      expect(bytes, item.name).toBeLessThanOrEqual(8192);
+    const settingsItems = largestSyncItems().filter(({ name }) => name.startsWith('settings'));
+    expect(settingsItems).toHaveLength(1 + SETTING_KEYS_BY_SCOPE.lists.length);
+    for (const { name, bytes } of settingsItems) {
+      expect(bytes, name).toBeLessThanOrEqual(SYNC_QUOTA.bytesPerItem);
     }
+  });
+
+  it('keeps every synced item together within the total quota and the item limit', () => {
+    // Room left for what the browser counts that the measures here do not (its own bookkeeping
+    // per item), and for a setting added without lowering another limit to make room.
+    const BYTES_MARGIN = 1_024;
+    // Room for synced items added before this test is updated, and for collections to grow.
+    const ITEMS_MARGIN = 64;
+    const items = largestSyncItems();
+    const total = items.reduce((sum, { bytes, count }) => sum + bytes * count, 0);
+    const count = items.reduce((sum, item) => sum + item.count, 0);
+    const biggest = [...items]
+      .sort((a, b) => b.bytes * b.count - a.bytes * a.count)
+      .slice(0, 8)
+      .map(
+        ({ name, bytes, count: n }) => `${name}: ${bytes * n}${n > 1 ? ` (${n} × ${bytes})` : ''}`,
+      )
+      .join(', ');
+    expect(
+      total,
+      `synced items at their largest take ${total} bytes, over ${SYNC_QUOTA.bytes} less ${BYTES_MARGIN}; ` +
+        `lower the limits of the biggest: ${biggest}`,
+    ).toBeLessThanOrEqual(SYNC_QUOTA.bytes - BYTES_MARGIN);
+    expect(
+      count,
+      `${count} synced items at most, over ${SYNC_QUOTA.maxItems} less ${ITEMS_MARGIN}`,
+    ).toBeLessThanOrEqual(SYNC_QUOTA.maxItems - ITEMS_MARGIN);
   });
 });
 

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { setLanguage } from '@/hooks/use-i18n';
 import type { StorageItem } from '@/lib/storage/registry';
 import {
+  defineStoredCollection,
   defineStoredValue,
   getStoredValueStore,
   NewerStoredValueError,
@@ -256,6 +257,82 @@ describe('writes from several pages', () => {
     slowReads();
     await Promise.all(['a', 'b', 'c'].map((item) => counter.update(addItem(item))));
     expect(await stored()).toEqual({ v: 2, data: { count: 3, items: ['a', 'b', 'c'] } });
+  });
+});
+
+describe('stored record', () => {
+  /** A collection whose entries 'a', 'b', and 'c' are read and written as one record. */
+  const LISTS: StorageItem = {
+    area: 'sync',
+    name: 'test.list',
+    v: 1,
+    backup: 'exclude',
+    collection: true,
+  };
+  const lists = defineStoredCollection<number | null>(LISTS, {
+    parse: (raw) => (typeof raw === 'number' ? raw : null),
+    empty: null,
+    isEmpty: (value) => value === null,
+  });
+  const record = lists.record(['a', 'b', 'c']);
+  const syncKeys = async () => Object.keys(await fakeBrowser.storage.sync.get()).sort();
+
+  it('reads every entry in one call and leaves out empty or missing ones', async () => {
+    await fakeBrowser.storage.sync.set({
+      'test.list/a': { v: 1, data: 1 },
+      'test.list/b': { v: 1, data: 'not a number' },
+      'test.list/other': { v: 1, data: 9 },
+    });
+    const get = vi.spyOn(fakeBrowser.storage.sync, 'get');
+    expect(await record.get()).toEqual({ a: 1 });
+    expect(get).toHaveBeenCalledOnce();
+    expect(lists.record(['a', 'b', 'c'])).toBe(record);
+  });
+
+  it('writes only the entries that changed, under each entry’s lock', async () => {
+    await record.update(() => ({ a: 1, b: 2 }));
+    const names: string[] = [];
+    vi.stubGlobal('navigator', {
+      locks: {
+        request: async (name: string, task: () => Promise<unknown>) => {
+          names.push(name);
+          return task();
+        },
+      },
+    });
+    const set = vi.spyOn(fakeBrowser.storage.sync, 'set');
+    const remove = vi.spyOn(fakeBrowser.storage.sync, 'remove');
+    expect(await record.update((current) => ({ a: current.a, c: 3 }))).toEqual({ a: 1, c: 3 });
+    expect(names).toEqual(['sync:test.list/a', 'sync:test.list/b', 'sync:test.list/c']);
+    expect(set.mock.calls).toEqual([[{ 'test.list/c': { v: 1, data: 3 } }]]);
+    expect(remove.mock.calls).toEqual([[['test.list/b']]]);
+    expect(await syncKeys()).toEqual(['test.list/a', 'test.list/c']);
+  });
+
+  it('refuses to change an entry a newer release stored, and writes nothing', async () => {
+    await fakeBrowser.storage.sync.set({ 'test.list/a': { v: 2, data: 1 } });
+    await expect(record.update(() => ({ a: 5, b: 2 }))).rejects.toThrow(NewerStoredValueError);
+    expect(await syncKeys()).toEqual(['test.list/a']);
+    // Leaving it as it is still writes the others.
+    await record.update((current) => ({ ...current, b: 2 }));
+    expect(await fakeBrowser.storage.sync.get()).toEqual({
+      'test.list/a': { v: 2, data: 1 },
+      'test.list/b': { v: 1, data: 2 },
+    });
+  });
+
+  it('follows changes to any entry, from this page at once and from others through storage', async () => {
+    const seen: Record<string, number | null>[] = [];
+    const stop = record.observe((value) => seen.push(value));
+    await vi.waitFor(() => expect(seen).toEqual([{}]));
+    await record.update(() => ({ b: 2 }));
+    expect(seen.at(-1)).toEqual({ b: 2 });
+    await fakeBrowser.storage.sync.set({
+      'test.list/a': { v: 1, data: 1 },
+      'test.list/c': { v: 1, data: 3 },
+    });
+    await vi.waitFor(() => expect(seen.at(-1)).toEqual({ a: 1, b: 2, c: 3 }));
+    stop();
   });
 });
 

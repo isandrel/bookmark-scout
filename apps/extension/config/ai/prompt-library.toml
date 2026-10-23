@@ -7,9 +7,10 @@
 # 6,100 since 2026-10-22, for the synced list settings item. Prompts saved larger are kept, and
 # only editing one past the limit is refused.
 prompt_max_bytes = { value = 6100, min = 1, max = 8192 }
-# Most custom prompts in all. Browser sync allows 102,400 bytes in all: this many prompts at the
-# largest size, plus the settings, list settings, table view, prompt index, and "About me" items
-# at 8,192 each, must fit; tests/unit/prompt-library.test.ts checks it.
+# Most custom prompts in all. Browser sync allows 102,400 bytes and 512 items in all: this many
+# prompts at the largest size, plus every other synced item at its largest (settings, each list
+# setting, table view, prompt index, and "About me"), must fit; tests/unit/settings-storage.test.ts
+# checks it ("sync quota").
 max_prompts = 10
 # A saved prompt that the prompt index does not list is removed once it is older than this:
 # younger ones may be arriving from another device before their index does

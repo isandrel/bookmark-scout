@@ -1,0 +1,206 @@
+/**
+ * The move of every synced list setting to an item of its own
+ * (`src/lib/storage/migrations/2026-10-sync-list-shards.ts`); deleted with it.
+ */
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { setLanguage } from '@/hooks/use-i18n';
+import { defaultSettings } from '@/lib/settings-schema';
+import {
+  getSettings,
+  registerStorageMigrations,
+  runStorageMigrations,
+  saveSettings,
+  settingsOverrideValues,
+} from '@/lib/settings-storage';
+import { syncListShards } from '@/lib/storage/migrations/2026-10-sync-list-shards';
+import { storageKey } from '@/lib/storage/registry';
+import { exportBackup, restoreBackup } from '@/services/backup';
+import { readStoredData, readStoredRaw, STORAGE_ITEMS, seedStored } from '../storage-helpers';
+
+// biome-ignore lint/style/noNonNullAssertion: this migration reads an old item.
+const OLD_ITEM = syncListShards.legacy!.item;
+
+/** The shared lists item as builds after 0.3.4 stored it, with entries to drop. */
+const OLD_LISTS = {
+  urlCleanerRemoveParams: ['utm_*'],
+  managerMenuActions: ['edit'],
+  askAiDisabledActions: ['deleteBookmarks'],
+  // Not valid: dropped alone.
+  deadLinksSuccessStatuses: ['not a status'],
+  // Not a setting this release knows.
+  listFromAnOldBuild: ['x'],
+};
+
+/** The lists 0.3.4 kept in the settings item, with a scalar setting. */
+const SETTINGS_0_3_4 = {
+  theme: 'dark',
+  askAiDisabledActions: ['checkLinks'],
+  privacyScannerSensitiveParams: ['secret'],
+};
+
+/** Menus this device kept, and a setting that stays on it. */
+const DEVICE_MENUS = {
+  managerOrganizeMenu: ['addFolder', 'sortByName'],
+  managerEmptySpaceMenu: ['paste'],
+  managerPreviewMenu: ['edit'],
+  popupBookmarkMenu: ['delete'],
+  popupFolderMenu: ['addFolder'],
+  managerCardSize: 'small',
+};
+
+const listItems = () => settingsOverrideValues.lists.get();
+const completed = () => readStoredData(STORAGE_ITEMS.storageMigrations);
+
+async function seedEarlierReleases() {
+  await seedStored(STORAGE_ITEMS.settings, SETTINGS_0_3_4);
+  await seedStored(OLD_ITEM, OLD_LISTS);
+  await seedStored(STORAGE_ITEMS.deviceSettings, DEVICE_MENUS);
+}
+
+beforeEach(() => {
+  vi.restoreAllMocks();
+  fakeBrowser.reset();
+  setLanguage('en');
+});
+
+describe('each list setting in its own item', () => {
+  it('reads the lists where earlier releases kept them until it has run', async () => {
+    await seedEarlierReleases();
+    expect(await getSettings()).toMatchObject({
+      theme: 'dark',
+      urlCleanerRemoveParams: ['utm_*'],
+      // The shared lists item wins over the settings item.
+      askAiDisabledActions: ['deleteBookmarks'],
+      privacyScannerSensitiveParams: ['secret'],
+      managerOrganizeMenu: ['addFolder', 'sortByName'],
+      deadLinksSuccessStatuses: defaultSettings.deadLinksSuccessStatuses,
+    });
+  });
+
+  it('moves every list to its item in one sync write, keeping the old places', async () => {
+    await seedEarlierReleases();
+    // A list item another device wrote wins over the old places.
+    await seedStored(STORAGE_ITEMS.settingsList, ['rename'], 'popupFolderMenu');
+    const oldRaw = await readStoredRaw(OLD_ITEM);
+    const set = vi.spyOn(fakeBrowser.storage.sync, 'set');
+
+    await runStorageMigrations();
+    expect(set).toHaveBeenCalledOnce();
+    expect(await listItems()).toEqual({
+      urlCleanerRemoveParams: ['utm_*'],
+      managerMenuActions: ['edit'],
+      askAiDisabledActions: ['deleteBookmarks'],
+      privacyScannerSensitiveParams: ['secret'],
+      managerOrganizeMenu: ['addFolder', 'sortByName'],
+      managerEmptySpaceMenu: ['paste'],
+      managerPreviewMenu: ['edit'],
+      popupBookmarkMenu: ['delete'],
+      popupFolderMenu: ['rename'],
+    });
+    // Devices still on an earlier release keep reading the old places, which are never written.
+    expect(await readStoredRaw(OLD_ITEM)).toEqual(oldRaw);
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual(SETTINGS_0_3_4);
+    // This device's menus moved to sync; what stays on it stays.
+    expect(await readStoredData(STORAGE_ITEMS.deviceSettings)).toEqual({
+      managerCardSize: 'small',
+    });
+    expect(await completed()).toEqual([syncListShards.id]);
+
+    // Once run, it reads and writes nothing more, and a list set back to its default stays so.
+    set.mockClear();
+    await runStorageMigrations();
+    expect(set).not.toHaveBeenCalled();
+    await saveSettings({ urlCleanerRemoveParams: defaultSettings.urlCleanerRemoveParams });
+    expect((await getSettings()).urlCleanerRemoveParams).toEqual(
+      defaultSettings.urlCleanerRemoveParams,
+    );
+    expect(await readStoredRaw(OLD_ITEM)).toEqual(oldRaw);
+  });
+
+  it('keeps reading the old places and tries again at the next start when a write fails', async () => {
+    await seedEarlierReleases();
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    vi.spyOn(fakeBrowser.storage.sync, 'set').mockRejectedValueOnce(
+      new Error('QUOTA_BYTES quota exceeded'),
+    );
+    await runStorageMigrations();
+    expect(error).toHaveBeenCalled();
+    expect(await completed()).toBeUndefined();
+    expect(await listItems()).toEqual({});
+    expect(await readStoredData(STORAGE_ITEMS.deviceSettings)).toEqual(DEVICE_MENUS);
+    expect((await getSettings()).urlCleanerRemoveParams).toEqual(['utm_*']);
+
+    await runStorageMigrations();
+    expect(await completed()).toEqual([syncListShards.id]);
+    expect((await listItems()).urlCleanerRemoveParams).toEqual(['utm_*']);
+  });
+
+  it('ends with the same lists when two runs overlap', async () => {
+    await seedEarlierReleases();
+    await Promise.all([runStorageMigrations(), runStorageMigrations(), getSettings()]);
+    expect(Object.keys(await listItems()).sort()).toEqual([
+      'askAiDisabledActions',
+      'managerEmptySpaceMenu',
+      'managerMenuActions',
+      'managerOrganizeMenu',
+      'managerPreviewMenu',
+      'popupBookmarkMenu',
+      'popupFolderMenu',
+      'privacyScannerSensitiveParams',
+      'urlCleanerRemoveParams',
+    ]);
+  });
+
+  it('runs at start, after an update, and when sync delivers an old item later', async () => {
+    // A new device: nothing to move yet, so it is not recorded as run.
+    registerStorageMigrations();
+    await vi.waitFor(async () =>
+      expect(await readStoredRaw(STORAGE_ITEMS.storageMigrations)).toBeUndefined(),
+    );
+    await seedStored(OLD_ITEM, { urlCleanerRemoveParams: ['utm_*'] });
+    await vi.waitFor(async () => expect(await completed()).toEqual([syncListShards.id]));
+    expect((await listItems()).urlCleanerRemoveParams).toEqual(['utm_*']);
+
+    await seedStored(STORAGE_ITEMS.storageMigrations, []);
+    await seedStored(STORAGE_ITEMS.deviceSettings, { popupBookmarkMenu: ['delete'] });
+    await fakeBrowser.runtime.onInstalled.trigger({
+      reason: 'update',
+      previousVersion: '0.3.4',
+    } as Browser.runtime.InstalledDetails);
+    await vi.waitFor(async () => expect((await listItems()).popupBookmarkMenu).toEqual(['delete']));
+  });
+
+  it('restores the lists of a backup file from before each list had its own item', async () => {
+    const file = JSON.parse(await exportBackup());
+    file.items[storageKey(STORAGE_ITEMS.settings)] = {
+      v: 1,
+      data: { language: 'en', ...SETTINGS_0_3_4 },
+    };
+    file.items[storageKey(OLD_ITEM)] = { v: 1, data: OLD_LISTS };
+    file.items[storageKey(STORAGE_ITEMS.deviceSettings)] = {
+      v: 1,
+      data: { quickSaveFixedFolder: '42', popupBookmarkMenu: ['delete'] },
+    };
+    await saveSettings({ managerOrganizeMenu: ['paste'] });
+    // So the old places are not read on this device.
+    await seedStored(STORAGE_ITEMS.storageMigrations, [syncListShards.id]);
+
+    await restoreBackup(JSON.stringify(file));
+    expect(await getSettings()).toMatchObject({
+      theme: 'dark',
+      quickSaveFixedFolder: '42',
+      urlCleanerRemoveParams: ['utm_*'],
+      askAiDisabledActions: ['deleteBookmarks'],
+      privacyScannerSensitiveParams: ['secret'],
+      popupBookmarkMenu: ['delete'],
+      deadLinksSuccessStatuses: defaultSettings.deadLinksSuccessStatuses,
+      managerOrganizeMenu: defaultSettings.managerOrganizeMenu,
+    });
+    expect(await readStoredData(STORAGE_ITEMS.settingsList, 'popupBookmarkMenu')).toEqual([
+      'delete',
+    ]);
+    // The old item in a file is not restored.
+    expect(await readStoredRaw(OLD_ITEM)).toBeUndefined();
+  });
+});

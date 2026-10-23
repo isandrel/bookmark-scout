@@ -33,8 +33,8 @@ confirm_open_above = { default = 15, min = 2, max = 200, step = 1 }
 # table's empty space, and `preview` the buttons of a bookmark's preview. An item menu stored by
 # an older release has no "-": it keeps that file's sections, with the actions it lists in its
 # order. Each holds at most its menu's actions (`max_items`), each id and its "-" at most
-# `max_length` long (tests/unit/action-menus.test.ts checks both against the menus). The item menu
-# syncs; the other three are kept on this device only, as the synced lists item is full.
+# `max_length` long (tests/unit/action-menus.test.ts checks both against the menus). All four
+# sync, each in its own synced item.
 actions = { default = [], max_items = 16, max_length = 20 }
 organize = { default = [], max_items = 4, max_length = 12 }
 empty_space = { default = [], max_items = 4, max_length = 12 }
@@ -43,7 +43,7 @@ preview = { default = [], max_items = 4, max_length = 13 }
 [popup_menus]
 # The popup and side panel tree's row actions, for bookmark rows and folder rows: the actions
 # shown, in order, as action ids from popup_bookmark and popup_folder in config/ui/actions.toml.
-# Empty means that file's menu. Edited in Options > Behavior; kept on this device.
+# Empty means that file's menu. Edited in Options > Behavior; synced, like the manager's menus.
 bookmark = { default = [], max_items = 16, max_length = 20 }
 folder = { default = [], max_items = 16, max_length = 20 }
 

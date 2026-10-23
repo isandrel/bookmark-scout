@@ -81,11 +81,11 @@ describe('popup row actions', () => {
     }
   });
 
-  it('store the user menus on this device, starting from the configured menus', () => {
+  it('sync the user menus, like the manager menus, starting from the configured menus', () => {
     expect(defaultSettings.popupBookmarkMenu).toEqual([]);
     expect(defaultSettings.popupFolderMenu).toEqual([]);
-    expect(getSettingScope('popupBookmarkMenu')).toBe('device');
-    expect(getSettingScope('popupFolderMenu')).toBe('device');
+    expect(getSettingScope('popupBookmarkMenu')).toBe('lists');
+    expect(getSettingScope('popupFolderMenu')).toBe('lists');
   });
 
   it('show today’s buttons by default: Delete on a bookmark, four on a folder, the rest in ⋯', () => {

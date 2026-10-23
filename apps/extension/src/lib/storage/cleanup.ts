@@ -2,6 +2,7 @@
  * Storage housekeeping the background runs: removing keys the registry does not list, and keeping
  * the local area (which holds API keys) away from content scripts.
  */
+import { isMigrationLegacyKey } from './migrations';
 import { isRegisteredKey, type StorageAreaName } from './registry';
 
 const AREAS: readonly StorageAreaName[] = ['sync', 'local', 'session'];
@@ -26,7 +27,8 @@ async function storedKeys(area: KeyListingArea): Promise<string[]> {
 
 /**
  * Removes every key in every area that `STORAGE_ITEMS` does not list: data from older releases,
- * which this release neither reads nor migrates. Resolves to the removed keys per area.
+ * which this release neither reads nor migrates. An old item a registered migration still reads
+ * is kept, and goes once the migration is removed. Resolves to the removed keys per area.
  */
 export async function removeUnregisteredKeys(): Promise<
   Partial<Record<StorageAreaName, string[]>>
@@ -35,7 +37,9 @@ export async function removeUnregisteredKeys(): Promise<
   for (const name of AREAS) {
     const area = browser.storage[name] as KeyListingArea | undefined;
     if (!area) continue;
-    const stale = (await storedKeys(area)).filter((key) => !isRegisteredKey(name, key));
+    const stale = (await storedKeys(area)).filter(
+      (key) => !isRegisteredKey(name, key) && !isMigrationLegacyKey(name, key),
+    );
     if (stale.length === 0) continue;
     await area.remove(stale);
     removed[name] = stale;

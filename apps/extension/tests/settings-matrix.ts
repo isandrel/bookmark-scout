@@ -42,7 +42,8 @@ const POPUP = 'components/page/PopupPage.tsx';
 const MANAGER = 'components/page/BookmarksPage.tsx';
 const MENUS = 'services/action-menus.ts';
 const TABLE_DEFAULTS = 'hooks/use-bookmark-table-view-defaults.ts';
-const MENUS_NOTE = 'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).';
+const MENUS_NOTE =
+  'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel); each menu syncs.';
 const POPUP_CUSTOMIZE = 'popup-customize.spec.ts';
 
 // Shared test references.
@@ -619,7 +620,7 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
         'a popup row ⋯ menu lists the configured actions and hiding one in Options removes it',
       ),
     ],
-    'Edited in Options > Behavior > Popup menus (PopupMenusPanel); kept on this device.',
+    'Edited in Options > Behavior > Popup menus (PopupMenusPanel); synced, like every menu.',
   ),
   popupFolderMenu: tested(
     'services/popup-row-actions.ts',
@@ -633,7 +634,7 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
         'a popup row ⋯ menu lists the configured actions and hiding one in Options removes it',
       ),
     ],
-    'Edited in Options > Behavior > Popup menus (PopupMenusPanel); kept on this device.',
+    'Edited in Options > Behavior > Popup menus (PopupMenusPanel); synced, like every menu.',
   ),
   popupExpandOnOpen: tested(POPUP, [
     unit(

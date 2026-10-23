@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { ABOUT_ME_MAX_LENGTH, aboutMeValue } from '@/lib/about-me-storage';
 import { syncItemBytes } from '@/lib/prompt-library-storage';
-import { storageAreaKey } from '@/lib/storage/registry';
+import { SYNC_QUOTA, storageAreaKey } from '@/lib/storage/registry';
 import { toStoredEnvelope } from '@/lib/storage/stored-value';
 import { readStoredRaw, STORAGE_ITEMS } from './storage-helpers';
 
@@ -17,7 +17,7 @@ describe('About me', () => {
       storageAreaKey(STORAGE_ITEMS.aboutMe),
       toStoredEnvelope(STORAGE_ITEMS.aboutMe, '<'.repeat(ABOUT_ME_MAX_LENGTH)),
     );
-    expect(bytes).toBeLessThanOrEqual(8192);
+    expect(bytes).toBeLessThanOrEqual(SYNC_QUOTA.bytesPerItem);
   });
 
   it('stores the text and removes the item when it is cleared', async () => {
