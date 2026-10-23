@@ -266,9 +266,11 @@ export async function applyRulePlan(
   items: readonly RulePlanItem[],
   plan: readonly RulePlanItem[] = items,
 ): Promise<RuleRunResult> {
-  await recordRuleConflicts(plan).catch((error: unknown) => {
-    console.warn('[Rules] Conflicts not recorded:', error);
-  });
+  await fetchBookmarkTree()
+    .then((tree) => recordRuleConflicts(plan, tree))
+    .catch((error: unknown) => {
+      console.warn('[Rules] Conflicts not recorded:', error);
+    });
   const changing = items.filter(changesBookmark);
   const { jobsApplyInBackgroundAbove } = await getSettings();
   if (changing.length > jobsApplyInBackgroundAbove) return startRuleRunJob(changing);
