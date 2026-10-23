@@ -64,4 +64,11 @@ describe('search syntax help', () => {
       expect.stringMatching(/^One OR joins at most \d+ terms, so the rest is not searched\.$/),
     ]);
   });
+
+  it('writes limits as numbers in the page language', () => {
+    setLanguage('de');
+    expect(describeSearchDiagnostic({ code: 'too-long', limit: 5000 })).toBe(
+      'Nur die ersten 5.000 Zeichen werden gesucht.',
+    );
+  });
 });

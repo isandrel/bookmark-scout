@@ -25,12 +25,12 @@ function describeEntry(entry: RuleAutoEntry): string {
     case 'run': {
       const listed = entry.tagged.reduce((sum, group) => sum + group.bookmarkIds.length, 0);
       const summary = t('rules_autoLogRunDesc', [
-        String(listed + entry.omitted),
-        String(entry.moved),
+        formatCount(listed + entry.omitted),
+        formatCount(entry.moved),
         formatDateTime(entry.at),
       ]);
       return entry.omitted > 0
-        ? `${summary} ${t('rules_autoLogRunOmitted', String(entry.omitted))}`
+        ? `${summary} ${t('rules_autoLogRunOmitted', formatCount(entry.omitted))}`
         : summary;
     }
   }

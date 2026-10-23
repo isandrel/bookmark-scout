@@ -80,12 +80,12 @@ export function describeSearchDiagnostic(diagnostic: SearchQueryDiagnostic): str
     case 'misplaced-or':
       return t('searchDiagnostic_misplacedOr');
     case 'too-long':
-      return t('searchDiagnostic_tooLong', String(diagnostic.limit));
+      return t('searchDiagnostic_tooLong', formatCount(diagnostic.limit));
     case 'too-many-terms':
-      return t('searchDiagnostic_tooManyTerms', String(diagnostic.limit));
+      return t('searchDiagnostic_tooManyTerms', formatCount(diagnostic.limit));
     case 'too-deep':
-      return t('searchDiagnostic_tooDeep', String(diagnostic.limit));
+      return t('searchDiagnostic_tooDeep', formatCount(diagnostic.limit));
     case 'too-many-branches':
-      return t('searchDiagnostic_tooManyBranches', String(diagnostic.limit));
+      return t('searchDiagnostic_tooManyBranches', formatCount(diagnostic.limit));
   }
 }
