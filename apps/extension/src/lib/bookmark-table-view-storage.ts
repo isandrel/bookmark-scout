@@ -30,19 +30,25 @@ export const HIDEABLE_COLUMN_IDS: readonly string[] = SAVED_COLUMNS.filter(
 
 /**
  * A new view's column order: columns that cannot be hidden (the checkbox, the row menu) keep their
- * registry place, and the other places take the configured default columns first, then the rest
- * in registry order.
+ * registry place, and the other places take the configured leading columns first (hidden until
+ * the user shows them), then the default columns, then the rest in registry order.
  */
 const DEFAULT_COLUMN_ORDER: readonly string[] = (() => {
-  const hideableInOrder = [
-    ...DEFAULT_MANAGER_COLUMN_IDS,
-    ...HIDEABLE_COLUMN_IDS.filter((id) => !DEFAULT_MANAGER_COLUMN_IDS.includes(id)),
-  ];
+  const placed = [...LEADING_MANAGER_COLUMN_IDS, ...DEFAULT_MANAGER_COLUMN_IDS];
+  const hideableInOrder = [...placed, ...HIDEABLE_COLUMN_IDS.filter((id) => !placed.includes(id))];
   let next = 0;
   return BOOKMARK_TABLE_COLUMN_IDS.map((id) =>
     HIDEABLE_COLUMN_IDS.includes(id) ? (hideableInOrder[next++] ?? id) : id,
   );
 })();
+
+/** Columns that stay before every column the user may hide, such as the checkbox. */
+const LEADING_FIXED_COLUMN_IDS: ReadonlySet<string> = new Set(
+  DEFAULT_COLUMN_ORDER.slice(
+    0,
+    DEFAULT_COLUMN_ORDER.findIndex((id) => HIDEABLE_COLUMN_IDS.includes(id)),
+  ),
+);
 
 /** Columns that stay after every column the user may hide, such as the row menu. */
 const TRAILING_COLUMN_IDS: ReadonlySet<string> = (() => {
@@ -125,10 +131,24 @@ export function parseBookmarkTableColumns(value: unknown): BookmarkTableColumns 
     return true;
   });
   // Columns the saved view does not know join it in registry order, before the row menu (and any
-  // other column fixed at the end), so they never land after it.
+  // other column fixed at the end), so they never land after it; a leading column (the Cover
+  // thumbnail) joins right after the checkbox instead, where a new view has it.
   const missing = BOOKMARK_TABLE_COLUMN_IDS.filter((id) => !seenColumns.has(id));
+  const hasFixedStart = columnOrder.some((id) => LEADING_FIXED_COLUMN_IDS.has(id));
+  const leading = hasFixedStart
+    ? missing.filter((id) => LEADING_MANAGER_COLUMN_IDS.includes(id))
+    : [];
   const end = columnOrder.findIndex((id) => TRAILING_COLUMN_IDS.has(id));
-  columnOrder.splice(end < 0 ? columnOrder.length : end, 0, ...missing);
+  columnOrder.splice(
+    end < 0 ? columnOrder.length : end,
+    0,
+    ...missing.filter((id) => !leading.includes(id)),
+  );
+  const lastFixed = columnOrder.reduce(
+    (last, id, index) => (LEADING_FIXED_COLUMN_IDS.has(id) ? index : last),
+    -1,
+  );
+  columnOrder.splice(lastFixed + 1, 0, ...leading);
 
   const columnVisibility = { ...DEFAULT_COLUMNS.columnVisibility };
   for (const [id, visible] of Object.entries(parsed.data.columnVisibility)) {

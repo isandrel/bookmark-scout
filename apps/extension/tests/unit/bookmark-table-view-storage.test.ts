@@ -50,8 +50,10 @@ describe('bookmark table view parsing', () => {
       ],
     });
 
+    // The Cover thumbnail joins right after the checkbox, as in a new view.
     expect(columns.columnOrder).toEqual([
       'select',
+      'cover',
       'url',
       'title',
       'type',
@@ -65,7 +67,28 @@ describe('bookmark table view parsing', () => {
       'summary',
       'actions',
     ]);
-    expect(columns.columnVisibility).toMatchObject({ type: true, tags: false, summary: false });
+    expect(columns.columnVisibility).toMatchObject({
+      type: true,
+      cover: false,
+      tags: false,
+      summary: false,
+    });
+  });
+
+  it('keeps the Cover column where the user moved it, shown or hidden as they left it', () => {
+    const columns = parseBookmarkTableColumns({
+      columnVisibility: { cover: true },
+      columnOrder: ['select', 'title', 'cover', 'url', 'actions'],
+    });
+    expect(columns.columnOrder.slice(0, 4)).toEqual(['select', 'title', 'cover', 'url']);
+    expect(columns.columnVisibility.cover).toBe(true);
+  });
+
+  it('puts a leading column with the other new ones when the saved view lacks the checkbox', () => {
+    const columns = parseBookmarkTableColumns({ columnOrder: ['title', 'url'] });
+    expect(columns.columnOrder.slice(0, 2)).toEqual(['title', 'url']);
+    expect(columns.columnOrder.indexOf('cover')).toBeGreaterThan(1);
+    expect(new Set(columns.columnOrder)).toEqual(new Set(BOOKMARK_TABLE_COLUMN_IDS));
   });
 
   it('filters unknown and duplicate columns from a saved view', () => {

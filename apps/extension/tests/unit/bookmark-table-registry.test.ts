@@ -5,10 +5,15 @@ import {
   BOOKMARK_COLUMNS,
   type BookmarkColumn,
   createColumns,
+  findBookmarkColumn,
   getBookmarkColumnLabel,
 } from '@/components/ui/table/columns';
 import { DataTable } from '@/components/ui/table/data-table';
-import { DEFAULT_MANAGER_COLUMN_IDS } from '@/components/ui/table/table-config';
+import {
+  DEFAULT_MANAGER_COLUMN_IDS,
+  getManagerColumnLayout,
+  LEADING_MANAGER_COLUMN_IDS,
+} from '@/components/ui/table/table-config';
 import { setLanguage } from '@/hooks/use-i18n';
 import {
   BOOKMARK_TABLE_COLUMN_IDS,
@@ -55,6 +60,7 @@ describe('bookmark table column registry', () => {
   it('keeps the saved table view contract', () => {
     expect(BOOKMARK_TABLE_COLUMN_IDS).toEqual([
       'select',
+      'cover',
       'type',
       'id',
       'parentId',
@@ -73,6 +79,7 @@ describe('bookmark table column registry', () => {
   it('shows Title, URL, and Date Added in a new view, in that order, and keeps the rest', () => {
     expect(DEFAULT_MANAGER_COLUMN_IDS).toEqual(['title', 'url', 'dateAdded']);
     expect(DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility).toEqual({
+      cover: false,
       type: false,
       id: false,
       parentId: false,
@@ -82,9 +89,11 @@ describe('bookmark table column registry', () => {
       tags: false,
       summary: false,
     });
-    // The checkbox stays first and the row menu last; hidden columns follow in registry order.
+    // The checkbox stays first and the row menu last; the Cover thumbnail, hidden, waits right
+    // after the checkbox (`leading_columns`), and the other hidden columns follow in registry order.
     expect(DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder).toEqual([
       'select',
+      'cover',
       'title',
       'url',
       'dateAdded',
@@ -110,14 +119,51 @@ describe('bookmark table column registry', () => {
       columnOrder: ['select', 'type', 'folderPath', 'url', 'title', 'dateAdded', 'actions'],
     });
     expect(saved.columnVisibility).toMatchObject({ type: true, folderPath: true, id: false });
-    expect(saved.columnOrder.slice(0, 6)).toEqual([
+    // The Cover column, new to this view, joins hidden right after the checkbox.
+    expect(saved.columnVisibility.cover).toBe(false);
+    expect(saved.columnOrder.slice(0, 7)).toEqual([
       'select',
+      'cover',
       'type',
       'folderPath',
       'url',
       'title',
       'dateAdded',
     ]);
+  });
+
+  it('offers the Cover column in the View menu, hidden at first, unsorted, and only in the list', () => {
+    expect(LEADING_MANAGER_COLUMN_IDS).toEqual(['cover']);
+    expect(HIDEABLE_COLUMN_IDS).toContain('cover');
+    expect(DEFAULT_MANAGER_COLUMN_IDS).not.toContain('cover');
+    const cover = findBookmarkColumn('cover');
+    expect(cover).toMatchObject({ labelKey: 'table_columnCover', enableSorting: false });
+    expect(cover?.size).toEqual(getManagerColumnLayout('cover').size);
+    expect(getBookmarkColumnLabel('cover')).toBe('Cover');
+    // The header is an icon, with the column's name for screen readers and as its tooltip.
+    const [coverDef] = createColumns({ actionHost: createItemHost() }, [cover as BookmarkColumn]);
+    const header = renderToStaticMarkup(
+      createElement(coverDef.header as () => ReturnType<typeof createElement>),
+    );
+    expect(header).toContain('title="Cover"');
+    expect(header).toContain('<span class="sr-only">Cover</span>');
+  });
+
+  it('draws no cover in the list before one is read, and none for folders', () => {
+    // Server rendering runs no effects, so no cover is read: rows show nothing until one loads.
+    const markup = renderToStaticMarkup(
+      createElement(DataTable<Bookmark>, {
+        columns: createColumns({ actionHost: createItemHost() }),
+        data: [link, folder],
+        browserOrderData: [link, folder],
+        allData: [link, folder],
+        getRowId: (row: Bookmark) => row.id,
+        facetOptions: { parentId: [], domain: [] },
+        searchQuery: '',
+        onSearchQueryChange: () => undefined,
+      }),
+    );
+    expect(markup).not.toContain('bookmark-cover-thumbnail');
   });
 
   it('names every column with an existing message', () => {

@@ -21,6 +21,7 @@ const hoverCardConfig = readConfig(
     summary_max_height_px: z.number().int().positive(),
     max_tags: z.number().int().positive(),
     cover_width_px: z.number().int().positive(),
+    cover_preview_max_width_px: z.number().int().positive(),
   }),
 );
 
@@ -40,6 +41,8 @@ export const HOVER_CARD_SUMMARY_MAX_HEIGHT_PX = hoverCardConfig.summary_max_heig
 export const HOVER_CARD_MAX_TAGS = hoverCardConfig.max_tags;
 /** Width of the stored cover's thumbnail, in pixels. */
 export const HOVER_CARD_COVER_WIDTH_PX = hoverCardConfig.cover_width_px;
+/** The widest the Cover column's larger cover shows, in pixels (never wider than stored). */
+export const COVER_PREVIEW_MAX_WIDTH_PX = hoverCardConfig.cover_preview_max_width_px;
 
 /** What a card is about: a bookmark, and the element it is drawn against. */
 export type HoverCardTarget = {

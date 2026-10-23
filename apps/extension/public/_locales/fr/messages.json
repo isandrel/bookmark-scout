@@ -1265,6 +1265,14 @@
         "message": "Non modifiable",
         "description": "Bookmark table column header"
     },
+    "table_columnCover": {
+        "message": "Couverture",
+        "description": "Bookmark table column header (shown as an image icon) and its name in the View menu: the stored cover thumbnail"
+    },
+    "table_coverOf": {
+        "message": "Couverture de « $1 »",
+        "description": "Accessible name of a cover thumbnail in the manager list's Cover column, which opens the bookmark's preview; $1 is the bookmark title"
+    },
     "table_typeFolder": {
         "message": "Dossier",
         "description": "Bookmark item type label"

@@ -81,7 +81,9 @@
 # last run's conflicts with their Review links (1,258).
 # Raised from 1265 on 2026-10-22 for Capture Covers While Browsing's settings in Options: Cover
 # Source, the limits shown while it is on, and the private window note (1,267).
-"options.html" = 1275
+# Raised from 1275 on 2026-10-22 for the manager list's Cover column defaults in the settings
+# config on top of the quick save cover settings (1,276).
+"options.html" = 1285
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),

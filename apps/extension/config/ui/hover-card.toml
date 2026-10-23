@@ -24,3 +24,8 @@ max_tags = 8
 # The stored cover's thumbnail beside the title, in pixels wide (at the cover ratio of
 # config/ui/manager-table.toml); without a stored cover the room is not kept
 cover_width_px = 96
+
+# The manager list's Cover column shows its thumbnail's cover larger in a card of its own, opened
+# and closed like this card (`open_delay_ms`, `close_delay_ms`): the cover at most this many
+# pixels wide, never wider than the stored image, then the title and where the cover came from
+cover_preview_max_width_px = 480

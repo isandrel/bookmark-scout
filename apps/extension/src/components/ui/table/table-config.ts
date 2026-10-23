@@ -1,6 +1,7 @@
 /**
  * Tunables of the bookmark manager table, from config/ui/manager-table.toml: page sizes, column
- * widths, the save delay, date filter, and filter badge limits, and what the cards view shows.
+ * widths, the save delay, date filter, and filter badge limits, what the cards view shows, and the
+ * Cover column's thumbnail.
  */
 import { z } from 'zod';
 import { boundedNumber } from '@/lib/config/bounded';
@@ -26,6 +27,7 @@ const managerTableConfig = readConfig(
       page_sizes: z.array(pixels).min(1),
       default_page_size: pixels,
       default_columns: z.array(z.string().min(1)).min(1),
+      leading_columns: z.array(z.string().min(1)),
       column_sizing_save_delay_ms: z.number().int().nonnegative(),
       removed_row_focus_wait_ms: z.number().int().nonnegative(),
       date_filter_months: boundedNumber({ integer: true }),
@@ -37,11 +39,16 @@ const managerTableConfig = readConfig(
       card_placeholder_icon_px: pixels,
       column_max_tags: z.number().int().positive(),
       summary_column_lines: z.number().int().positive(),
+      cover_thumbnail_height_px: pixels,
       columns: z.record(z.string(), columnLayoutSchema),
     })
     .refine((config) => config.page_sizes.includes(config.default_page_size), {
       message: 'default_page_size must be one of page_sizes',
-    }),
+    })
+    .refine(
+      (config) => config.leading_columns.every((id) => !config.default_columns.includes(id)),
+      { message: 'leading_columns are hidden at first, so none may be in default_columns' },
+    ),
 );
 
 /** Rows per page the table offers. */
@@ -51,6 +58,9 @@ export const DEFAULT_MANAGER_PAGE_SIZE = managerTableConfig.default_page_size;
 
 /** Column ids a new table view shows, in order; the saved view's defaults are built from them. */
 export const DEFAULT_MANAGER_COLUMN_IDS: readonly string[] = managerTableConfig.default_columns;
+
+/** Hidden column ids placed right after the checkbox, before the default ones, once shown. */
+export const LEADING_MANAGER_COLUMN_IDS: readonly string[] = managerTableConfig.leading_columns;
 
 /** A page size the table offers, for validating a saved view. */
 export const managerPageSizeSchema = z
@@ -92,6 +102,12 @@ export const COLUMN_MAX_TAGS = managerTableConfig.column_max_tags;
 
 /** Lines of a bookmark's summary the Summary column shows. */
 export const SUMMARY_COLUMN_LINES = managerTableConfig.summary_column_lines;
+
+/** The Cover column's thumbnail: its height in pixels, and its width at the cover ratio. */
+export const COVER_THUMBNAIL_SIZE_PX = {
+  height: managerTableConfig.cover_thumbnail_height_px,
+  width: Math.round(managerTableConfig.cover_thumbnail_height_px * COVER_ASPECT_RATIO),
+} as const;
 
 /** Column ids that have a layout in the config. */
 export const CONFIGURED_COLUMN_IDS: readonly string[] = Object.keys(managerTableConfig.columns);
