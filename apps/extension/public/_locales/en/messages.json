@@ -547,6 +547,10 @@
         "message": "The file holds your settings, prompts, AI services, and saved searches. API keys are never included.",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "The file holds your settings, prompts, AI services, saved searches, and covers ($1). API keys are never included.",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "Export failed",
         "description": "Toast title for settings export error"
@@ -630,6 +634,18 @@
     "settings_importExportDesc": {
         "message": "Export and import bookmarks from the Tools sidebar",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "Backup",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "Include Covers in Backups",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "Whether Back up settings also saves your covers in the file. While covers are stored it asks each time, with this answer checked first, and says how much they add. Covers never sync, so a backup is how they reach another computer.",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Saving",
@@ -3478,6 +3494,10 @@
     "toast_backupServiceNeeds": {
         "message": "$2 for “$1”",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "Covers restored: $1. Kept as they were: $2. Without a bookmark here: $3. Left out: $4.",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "Needs setup",
@@ -6679,6 +6699,78 @@
         "message": "Restore settings",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "The file holds your settings, prompts, AI services (without API keys), and saved searches. It stays where you save it.",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "Include covers",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "Covers: $1, adding about $2 to the file. Covers never sync, so a backup is how they reach another computer.",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "Left out, past the backup's limits (the oldest first): $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "Save backup",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "Restore backup",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1 holds covers. Settings, prompts, AI services, and saved searches are restored either way; check what restoring the covers would do on this device.",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "Restore covers",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "Covers in the file: $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "With a bookmark of the same address here: $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "Without a bookmark of that address here: $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "Bookmarks getting a cover: $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "Covers replaced by a newer one: $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "Covers kept (picked with Use this view as the cover, or newer than the file’s): $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "Skipped (unreadable, or past the backup's limits): $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "Removed afterwards to stay within Cover Storage, the oldest first: $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "A restore cannot be undone: a cover it replaces is gone.",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "Restore",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "Search bookmarks",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9210,7 +9302,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "$count$ covers, $size$. Kept on this device; they never leave it.",
+        "message": "$count$ covers, $size$. Kept on this device; only a backup you save with covers holds a copy.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9224,7 +9316,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "$count$ cover, $size$. Kept on this device; it never leaves it.",
+        "message": "$count$ cover, $size$. Kept on this device; only a backup you save with covers holds a copy.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {

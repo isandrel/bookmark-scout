@@ -18,3 +18,11 @@ filename_max_length = { default = 50, min = 10, max = 100, step = 5 }
 json_indent_size = { default = 2, min = 1, max = 8, step = 1 }
 html_indent_spaces = { default = 4, min = 1, max = 8, step = 1 }
 markdown_indent_spaces = { default = 2, min = 1, max = 8, step = 1 }
+
+[backup]
+# Include covers: whether Back up settings puts the covers of this device's bookmarks in the backup
+# file (config/bookmarks/cover-backup.toml). The default for the checkbox the export dialog shows
+# when covers are stored, next to how much they add to the file. On, because the backup is how
+# covers reach a new computer (they never sync) and the dialog says the size before saving; turn
+# it off for small settings-only files.
+include_covers = true

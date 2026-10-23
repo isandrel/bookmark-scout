@@ -145,6 +145,35 @@ function checkCoverSize({ width, height }: ImageSize): 'small' | 'unusable' | un
   return width < COVER_LIMITS.minWidthPx ? 'small' : undefined;
 }
 
+/**
+ * The type and size a cover file from outside this device (a backup) states, when it can be one:
+ * a kept image type by its first bytes, a readable header, and a picture neither too small nor
+ * past `max_pixels`; undefined otherwise. Its pixels are checked by `decodesAsCover`.
+ */
+export function readCoverFile(bytes: Uint8Array): (ImageSize & { type: string }) | undefined {
+  const type = sniffImageType(bytes);
+  if (!type || !COVER_LIMITS.types.has(type)) return undefined;
+  const size = readImageSize(bytes, type);
+  return size && !checkCoverSize(size) ? { ...size, type } : undefined;
+}
+
+/**
+ * Whether the browser decodes a cover file to a picture that can be a cover: the decoded size is
+ * checked again, as a header can state less than the picture holds.
+ */
+export async function decodesAsCover(bytes: Uint8Array, type: string): Promise<boolean> {
+  try {
+    const bitmap = await createImageBitmap(new Blob([bytes as BlobPart], { type }));
+    try {
+      return checkCoverSize(bitmap) === undefined;
+    } finally {
+      bitmap.close();
+    }
+  } catch {
+    return false;
+  }
+}
+
 export type ShrunkImage = { data: ArrayBuffer; type: string; width: number; height: number };
 
 /**
@@ -308,8 +337,7 @@ export type TabCoverError = ActiveTabError | 'unreadable';
 export type TabCover = { covers: CoverImage[]; preview: string };
 
 function dataUrlBytes(dataUrl: string): Uint8Array {
-  const binary = atob(dataUrl.slice(dataUrl.indexOf(',') + 1));
-  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return base64ToBytes(dataUrl.slice(dataUrl.indexOf(',') + 1));
 }
 
 /**

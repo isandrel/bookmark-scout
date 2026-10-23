@@ -326,12 +326,7 @@ export function isImageContentType(contentType: string | null): boolean {
 }
 
 export function toDataUrl(bytes: Uint8Array, mimeType: string): string {
-  let binary = '';
-  const chunkSize = 0x8000;
-  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
-  }
-  return `data:${mimeType};base64,${btoa(binary)}`;
+  return `data:${mimeType};base64,${bytesToBase64(bytes)}`;
 }
 
 /** Reads at most `maxBytes`; null when the body is longer, and the download is stopped. */

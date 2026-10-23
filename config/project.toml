@@ -101,7 +101,7 @@ support  = "support@bookmark-scout.com"
 
 # Dates shown on legal pages (ISO 8601). Update when the policy text changes.
 [legal]
-privacy_effective_date = "2026-10-22"
+privacy_effective_date = "2026-10-23"
 
 # Root Markdown documents generated from templates/ by `bun run generate:markdown`. Each name is
 # a file at the root without `.md`. A document has every language in `[locales] supported`

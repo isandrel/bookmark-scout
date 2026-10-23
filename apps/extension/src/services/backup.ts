@@ -10,8 +10,21 @@
  * the secret fields it left out (`AI_SECRET_FIELDS`: the API key and the extra headers, which
  * often carry a key). A restore keeps this device's secrets, and marks a service that still lacks
  * one as needing setup and reports it, so the user knows what to enter again.
+ *
+ * Covers are kept in IndexedDB, not as a stored item: when the user includes them, the file also
+ * holds a `covers` section, one cover per address, which a restore puts back only after the user
+ * reviewed it (`getBackupCovers`, `reviewBackupCovers`, `restoreBackupCovers`). That code loads
+ * on first use (`cover-backup.lazy.ts`), so Settings opens without it.
  */
 import { z } from 'zod';
+import type {
+  BackupCovers,
+  CoverBackupEstimate,
+  CoverRestoreOutcome,
+  CoverRestorePlan,
+} from './cover-backup.lazy';
+
+const loadCoverBackup = () => import('./cover-backup.lazy');
 
 /** Marks a file as a backup, so a plain settings export is still told apart. */
 const BACKUP_FORMAT = 'bookmark-scout-backup';
@@ -33,7 +46,18 @@ const backupFileSchema = z.object({
   items: z.record(z.string(), z.object({ v: z.number().int().positive(), data: z.unknown() })),
   /** By service id. Absent in files from releases before endpoints were kept. */
   aiEndpoints: z.record(z.string(), aiEndpointSchema).optional(),
+  /** Covers, when Include covers was checked; entries are read one by one (`readBackupCovers`). */
+  covers: z.array(z.unknown()).optional(),
 });
+
+/** A backup file, read and checked by `readBackupFile`. */
+export type BackupFile = z.infer<typeof backupFileSchema>;
+
+/** What a backup holds besides the stored items. */
+export type BackupExportOptions = {
+  /** Include covers (the setting `backupIncludeCovers` is its default in the export dialog). */
+  includeCovers?: boolean;
+};
 
 /** An AI service a restore could not fully set up, and the secret fields it still needs. */
 export type ServiceNeedingSetup = { name: string; fields: AISecretField[] };
@@ -131,8 +155,11 @@ const isCollection = (
   source: StoredValue<unknown> | StoredCollection<unknown>,
 ): source is StoredCollection<unknown> => 'entry' in source;
 
-/** The backup file's JSON. */
-export async function exportBackup(now = new Date()): Promise<string> {
+/** The backup file's JSON; covers only when `includeCovers` (no `covers` section otherwise). */
+export async function exportBackup(
+  now = new Date(),
+  { includeCovers = false }: BackupExportOptions = {},
+): Promise<string> {
   const items: Record<string, Envelope> = {};
   for (const id of getBackupItemIds()) {
     const source = backupSource(id);
@@ -147,6 +174,7 @@ export async function exportBackup(now = new Date()): Promise<string> {
       items[source.key] = toStoredEnvelope(source.item, await source.get());
     }
   }
+  const covers = includeCovers ? await (await loadCoverBackup()).exportBackupCovers() : [];
   return JSON.stringify(
     {
       format: BACKUP_FORMAT,
@@ -154,20 +182,61 @@ export async function exportBackup(now = new Date()): Promise<string> {
       exportedAt: now.toISOString(),
       items,
       aiEndpoints: await exportAIEndpoints(),
+      ...(covers.length > 0 ? { covers } : {}),
     },
     null,
     2,
   );
 }
 
+function parseJson(json: string): unknown {
+  try {
+    return JSON.parse(json);
+  } catch {
+    return undefined;
+  }
+}
+
+const isMarkedBackup = (parsed: unknown) =>
+  isPlainObject(parsed) && parsed.format === BACKUP_FORMAT;
+
 /** Whether `json` is a backup file rather than another JSON file, such as a settings export. */
 export function isBackupFile(json: string): boolean {
-  try {
-    const parsed: unknown = JSON.parse(json);
-    return isPlainObject(parsed) && parsed.format === BACKUP_FORMAT;
-  } catch {
-    return false;
-  }
+  return isMarkedBackup(parseJson(json));
+}
+
+/**
+ * Reads a file the user chose, parsing it once (a backup with covers can be large): null for JSON
+ * that is no backup, such as a settings export; throws `error_invalidBackupFile` for a backup this
+ * release cannot read.
+ */
+export function readBackupFile(json: string): BackupFile | null {
+  const parsed = parseJson(json);
+  if (!isMarkedBackup(parsed)) return null;
+  const file = backupFileSchema.safeParse(parsed);
+  if (!file.success) throw new Error(t('error_invalidBackupFile'));
+  return file.data;
+}
+
+/** The covers a backup file holds, checked entry by entry; undefined when it holds none. */
+export async function getBackupCovers(file: BackupFile): Promise<BackupCovers | undefined> {
+  if (!file.covers || file.covers.length === 0) return undefined;
+  return (await loadCoverBackup()).readBackupCovers(file.covers);
+}
+
+/** What Include covers would add to a backup made now (`estimateCoverBackup`). */
+export async function estimateBackupCovers(): Promise<CoverBackupEstimate> {
+  return (await loadCoverBackup()).estimateCoverBackup();
+}
+
+/** The review of restoring a backup's covers on this device now (`previewCoverRestore`). */
+export async function reviewBackupCovers(covers: BackupCovers): Promise<CoverRestorePlan> {
+  return (await loadCoverBackup()).previewCoverRestore(covers);
+}
+
+/** Restores a backup's covers after the review (`applyCoverRestore`). */
+export async function restoreBackupCovers(covers: BackupCovers): Promise<CoverRestoreOutcome> {
+  return (await loadCoverBackup()).applyCoverRestore(covers);
 }
 
 /**
@@ -177,14 +246,11 @@ export function isBackupFile(json: string): boolean {
  * back up. Collection entries are written first and removed last, so an index never lists an
  * entry that is not stored. Then the AI services get their endpoints back (`restoreAIEndpoints`).
  * Resolves to the registry ids restored and the AI services that need a secret entered again.
+ * Covers are restored separately, after their review (`restoreBackupCovers`).
  */
-export async function restoreBackup(json: string): Promise<BackupRestoreOutcome> {
-  let parsed: z.infer<typeof backupFileSchema>;
-  try {
-    parsed = backupFileSchema.parse(JSON.parse(json));
-  } catch {
-    throw new Error(t('error_invalidBackupFile'));
-  }
+export async function restoreBackup(file: string | BackupFile): Promise<BackupRestoreOutcome> {
+  const parsed = typeof file === 'string' ? readBackupFile(file) : file;
+  if (!parsed) throw new Error(t('error_invalidBackupFile'));
   const ids = getBackupItemIds();
   const sources = ids.map((id) => [id, backupSource(id)] as const);
   const restored = new Set<StorageItemId>();

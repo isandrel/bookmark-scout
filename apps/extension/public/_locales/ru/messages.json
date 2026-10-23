@@ -563,6 +563,10 @@
         "message": "В файле есть ваши настройки, промпты, ИИ-сервисы и сохранённые поиски. API-ключи в него никогда не попадают.",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "В файле есть ваши настройки, промпты, ИИ-сервисы, сохранённые поиски и обложки ($1). API-ключи в него никогда не попадают.",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "Не удалось экспортировать",
         "description": "Toast title for settings export error"
@@ -646,6 +650,18 @@
     "settings_importExportDesc": {
         "message": "Экспорт и импорт закладок на панели «Инструменты»",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "Резервная копия",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "Включать обложки в резервные копии",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "Сохраняет ли «Создать резервную копию» в файл и ваши обложки. Пока обложки хранятся, вопрос задаётся каждый раз, с этим ответом, отмеченным заранее, и с указанием, сколько они добавят. Обложки не синхронизируются, поэтому перенести их на другой компьютер можно только резервной копией.",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Сохранение",
@@ -3518,6 +3534,10 @@
     "toast_backupServiceNeeds": {
         "message": "$2 для «$1»",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "Обложек восстановлено: $1. Оставлено как было: $2. Без закладки здесь: $3. Не вошло: $4.",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "Требуется настройка",
@@ -7203,6 +7223,78 @@
         "message": "Восстановить настройки",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "В файле есть ваши настройки, промпты, ИИ-сервисы (без API-ключей) и сохранённые поиски. Он остаётся там, куда вы его сохраните.",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "Включить обложки",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "Обложек: $1, файл станет больше примерно на $2. Обложки не синхронизируются, поэтому перенести их на другой компьютер можно только резервной копией.",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "Не вошли из-за ограничений резервной копии (сначала самые старые): $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "Сохранить копию",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "Восстановить резервную копию",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "В $1 есть обложки. Настройки, промпты, ИИ-сервисы и сохранённые поиски восстанавливаются в любом случае; проверьте, что сделает восстановление обложек на этом устройстве.",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "Восстановить обложки",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "Обложек в файле: $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "Есть закладка с тем же адресом здесь: $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "Нет закладки с таким адресом здесь: $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "Закладок получат обложку: $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "Обложек заменится более новыми: $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "Обложек останется (выбранные через «Сделать обложку из этого вида» или новее, чем в файле): $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "Пропущено (не читаются или выходят за ограничения копии): $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "Будет удалено затем, чтобы уложиться в хранилище обложек, сначала самые старые: $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "Восстановление нельзя отменить: заменённая обложка теряется.",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "Восстановить",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "Искать закладки",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9950,7 +10042,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "Обложек: $count$, $size$. Хранятся на этом устройстве и никогда его не покидают.",
+        "message": "Обложек: $count$, $size$. Хранятся на этом устройстве; копия есть только в резервной копии с обложками, которую вы сохраните.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9964,7 +10056,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "$count$ обложка, $size$. Хранится на этом устройстве и никогда его не покидает.",
+        "message": "$count$ обложка, $size$. Хранится на этом устройстве; копия есть только в резервной копии с обложками, которую вы сохраните.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {
@@ -9978,7 +10070,7 @@
         }
     },
     "covers_storeSummary_few": {
-        "message": "$count$ обложки, $size$. Хранятся на этом устройстве и никогда его не покидают.",
+        "message": "$count$ обложки, $size$. Хранятся на этом устройстве; копия есть только в резервной копии с обложками, которую вы сохраните.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9992,7 +10084,7 @@
         }
     },
     "covers_storeSummary_many": {
-        "message": "$count$ обложек, $size$. Хранятся на этом устройстве и никогда его не покидают.",
+        "message": "$count$ обложек, $size$. Хранятся на этом устройстве; копия есть только в резервной копии с обложками, которую вы сохраните.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {

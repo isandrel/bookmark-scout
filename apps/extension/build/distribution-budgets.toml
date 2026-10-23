@@ -278,27 +278,33 @@
 # messages in 12 languages) on top of the shortcut remapping. Measured on
 # feat/context-menu-tools-toast rebased on main: uncompressed 7,160,018 / 7,160,014 / 7,160,177 B
 # (Chrome / Edge / Firefox), 91,625 B of CSS, and 2,577,058 B of locales.
+# Raised on 2026-10-23 (ZIP 2,128,000 to 2,145,000, uncompressed 7,175,000 to 7,215,000, javascript
+# 4,020,000 to 4,035,000, locales 2,590,000 to 2,620,000) for covers in the settings backup (the
+# cover backup service and the export and restore dialogs in Options, and 23 new messages in 12
+# languages). Measured on feat/covers-backup from main 519c35af: ZIP 2,134,056 / 2,134,171 /
+# 2,134,164, uncompressed 7,202,977 / 7,202,973 / 7,203,136 B (Chrome / Edge / Firefox),
+# 4,023,919 B of JavaScript, and 2,610,578 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_128_000
-raw_bytes = 7_175_000
+zip_bytes = 2_145_000
+raw_bytes = 7_215_000
 
 [targets.edge]
-zip_bytes = 2_128_000
-raw_bytes = 7_175_000
+zip_bytes = 2_145_000
+raw_bytes = 7_215_000
 
 [targets.firefox]
-zip_bytes = 2_128_000
-raw_bytes = 7_175_000
+zip_bytes = 2_145_000
+raw_bytes = 7_215_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 4_020_000
+javascript = 4_035_000
 css = 92_000
 fonts = 143_000
-locales = 2_590_000
+locales = 2_620_000
 images = 320_000
 other = 29_000

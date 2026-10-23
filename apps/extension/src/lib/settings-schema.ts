@@ -1657,6 +1657,7 @@ const fields = {
 
   dataShowExport: switchField('data.tools.show_export', 'dataShowExport'),
   dataShowImport: switchField('data.tools.show_import', 'dataShowImport'),
+  backupIncludeCovers: switchField('data.backup.include_covers', 'backupIncludeCovers'),
   dataDefaultExportFormat: enumField(
     'data.export.default_format',
     'dataDefaultExportFormat',
@@ -2136,6 +2137,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'exportMarkdownIndentSpaces',
         ],
       },
+      { id: 'backup', labelKey: 'settings_sectionBackup', fields: ['backupIncludeCovers'] },
     ]),
     // Local agents need a program installed from a terminal and bring their own model, so they
     // sit apart from AI (and work with AI off).

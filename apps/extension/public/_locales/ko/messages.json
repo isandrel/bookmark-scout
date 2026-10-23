@@ -539,6 +539,10 @@
         "message": "파일에는 설정, 프롬프트, AI 서비스, 저장한 검색이 들어 있습니다. API 키는 포함되지 않습니다.",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "파일에는 설정, 프롬프트, AI 서비스, 저장한 검색, 표지($1개)가 들어 있습니다. API 키는 포함되지 않습니다.",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "내보내기 실패",
         "description": "Toast title for settings export error"
@@ -622,6 +626,18 @@
     "settings_importExportDesc": {
         "message": "도구 사이드바에서 북마크를 내보내고 가져옵니다",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "백업",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "백업에 표지 포함",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "설정 백업이 표지도 파일에 저장할지 여부입니다. 표지가 저장되어 있는 동안에는 매번 묻고, 이 값을 처음 선택된 상태로 보여 주며 늘어나는 크기도 알려 줍니다. 표지는 동기화되지 않으므로 다른 컴퓨터로 옮기려면 백업을 사용하세요.",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "저장",
@@ -3470,6 +3486,10 @@
     "toast_backupServiceNeeds": {
         "message": "\"$1\"의 $2",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "복원한 표지: $1. 그대로 둔 표지: $2. 여기에 북마크가 없음: $3. 제외됨: $4.",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "설정 필요",
@@ -6671,6 +6691,78 @@
         "message": "설정 복원",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "파일에는 설정, 프롬프트, AI 서비스(API 키 제외), 저장한 검색이 들어 있습니다. 파일은 저장한 위치에만 남습니다.",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "표지 포함",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "표지: $1개, 파일이 약 $2 커집니다. 표지는 동기화되지 않으므로 다른 컴퓨터로 옮기려면 백업을 사용하세요.",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "백업 한도를 넘어 제외됨(오래된 것부터): $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "백업 저장",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "백업 복원",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1에 표지가 들어 있습니다. 설정, 프롬프트, AI 서비스, 저장한 검색은 어느 경우든 복원됩니다. 표지를 복원하면 이 기기에서 어떻게 되는지 확인하세요.",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "표지 복원",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "파일의 표지: $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "같은 주소의 북마크가 여기에 있음: $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "그 주소의 북마크가 여기에 없음: $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "표지를 받는 북마크: $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "더 새로운 표지로 바뀌는 표지: $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "유지되는 표지(이 화면을 표지로 사용으로 고른 것 또는 파일보다 새로운 것): $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "건너뜀(읽을 수 없거나 백업 한도 초과): $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "표지 저장 공간에 맞추려고 나중에 오래된 것부터 삭제: $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "복원은 되돌릴 수 없습니다. 바뀐 표지는 사라집니다.",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "복원",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "북마크 검색",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9174,7 +9266,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "표지 $count$개, $size$. 이 기기에 보관되며 밖으로 나가지 않습니다.",
+        "message": "표지 $count$개, $size$. 이 기기에 보관되며, 표지를 포함해 저장한 백업에만 사본이 들어갑니다.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9188,7 +9280,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "표지 $count$개, $size$. 이 기기에 보관되며 밖으로 나가지 않습니다.",
+        "message": "표지 $count$개, $size$. 이 기기에 보관되며, 표지를 포함해 저장한 백업에만 사본이 들어갑니다.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {
