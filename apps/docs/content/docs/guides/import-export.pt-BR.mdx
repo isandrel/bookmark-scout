@@ -59,3 +59,12 @@ Nada é gravado até você clicar em **Importar**. Se os seus favoritos mudarem 
 ## Os arquivos de configurações são separados [#settings-files-are-separate]
 
 Os botões **Fazer backup das configurações** e **Restaurar configurações** na parte de baixo da página de Configurações salvam e restauram um backup das configurações do Bookmark Scout, dos prompts personalizados, dos serviços de IA (sem chaves de API) e das pesquisas salvas. Eles não mexem nos favoritos, nas tags nem nos resumos. Veja em [Configurações](/settings) o que o backup inclui. Você também pode soltar um arquivo de backup em qualquer lugar da página de Configurações para restaurá-lo.
+
+### Capas em um backup [#covers-in-a-backup]
+
+As capas nunca são sincronizadas e as exportações de favoritos não as incluem, então um backup é o jeito de levá-las para outro computador.
+
+- Enquanto houver capas guardadas, **Fazer backup das configurações** pergunta se deve **Incluir capas** e informa quantas são e quanto, mais ou menos, acrescentam ao arquivo. A caixa já vem marcada; **Incluir capas nos backups** nas [Configurações](/settings#data) muda isso. O arquivo contém uma capa por endereço, as mais recentes primeiro, até os limites do backup.
+- Restaurar um backup com capas mostra primeiro uma revisão: quantas capas o arquivo contém, quantas correspondem a um favorito com o mesmo endereço neste dispositivo e quantas não, e quantos favoritos receberiam uma capa, teriam a sua substituída ou manteriam a própria. Desmarque **Restaurar capas** para restaurar só o resto do backup.
+- Uma capa que você escolheu com **Usar esta visualização como capa** só é substituída por uma capa escolhida mais recente do arquivo, e qualquer outra só por uma mais recente. O **Armazenamento de capas** continua valendo, então acima dele as capas mais antigas são removidas.
+- A restauração não pode ser desfeita. As capas ficam no arquivo onde quer que você o salve; nada é enviado.

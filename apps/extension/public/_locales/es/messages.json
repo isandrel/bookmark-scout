@@ -547,6 +547,10 @@
         "message": "El archivo contiene tu configuración, prompts, servicios de IA y búsquedas guardadas. Nunca incluye claves de API.",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "El archivo contiene tus ajustes, prompts, servicios de IA, búsquedas guardadas y portadas ($1). Nunca incluye claves de API.",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "Error al exportar",
         "description": "Toast title for settings export error"
@@ -630,6 +634,18 @@
     "settings_importExportDesc": {
         "message": "Exporta e importa marcadores desde la barra lateral Herramientas",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "Copia de seguridad",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "Incluir portadas en las copias de seguridad",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "Si «Hacer copia de los ajustes» guarda también tus portadas en el archivo. Mientras haya portadas guardadas lo pregunta cada vez, con esta respuesta marcada de inicio, e indica cuánto añaden. Las portadas nunca se sincronizan; una copia de seguridad es la forma de llevarlas a otro ordenador.",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Guardar",
@@ -3478,6 +3494,10 @@
     "toast_backupServiceNeeds": {
         "message": "$2 de «$1»",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "Portadas restauradas: $1. Conservadas tal cual: $2. Sin marcador aquí: $3. Omitidas: $4.",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "Falta configurar",
@@ -6679,6 +6699,78 @@
         "message": "Restaurar ajustes",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "El archivo contiene tus ajustes, prompts, servicios de IA (sin claves de API) y búsquedas guardadas. Se queda donde lo guardes.",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "Incluir portadas",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "Portadas: $1, que añaden unos $2 al archivo. Las portadas nunca se sincronizan; una copia de seguridad es la forma de llevarlas a otro ordenador.",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "Omitidas por superar los límites de la copia (las más antiguas primero): $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "Guardar copia",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "Restaurar copia de seguridad",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1 contiene portadas. Los ajustes, prompts, servicios de IA y búsquedas guardadas se restauran en cualquier caso; revisa qué haría restaurar las portadas en este dispositivo.",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "Restaurar portadas",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "Portadas en el archivo: $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "Con un marcador de la misma dirección aquí: $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "Sin un marcador de esa dirección aquí: $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "Marcadores que reciben portada: $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "Portadas sustituidas por una más reciente: $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "Portadas que se conservan (elegidas con «Usar esta vista como portada» o más recientes que las del archivo): $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "Omitidas (ilegibles o por superar los límites de la copia): $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "Eliminadas después para no superar el Almacenamiento de portadas, las más antiguas primero: $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "La restauración no se puede deshacer: una portada sustituida se pierde.",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "Restaurar",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "Buscar marcadores",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9210,7 +9302,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "$count$ portadas, $size$. Se guardan en este dispositivo y nunca salen de él.",
+        "message": "$count$ portadas, $size$. Se guardan en este dispositivo; solo una copia de seguridad con portadas que tú guardes contiene una copia.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9224,7 +9316,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "$count$ portada, $size$. Se guarda en este dispositivo y nunca sale de él.",
+        "message": "$count$ portada, $size$. Se guarda en este dispositivo; solo una copia de seguridad con portadas que tú guardes contiene una copia.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {

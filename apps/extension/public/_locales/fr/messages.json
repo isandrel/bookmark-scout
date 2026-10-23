@@ -547,6 +547,10 @@
         "message": "Le fichier contient vos paramètres, prompts, services d'IA et recherches enregistrées. Les clés API n'y figurent jamais.",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "Le fichier contient vos paramètres, prompts, services d'IA, recherches enregistrées et couvertures ($1). Les clés API n'y figurent jamais.",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "Échec de l'exportation",
         "description": "Toast title for settings export error"
@@ -630,6 +634,18 @@
     "settings_importExportDesc": {
         "message": "Exportez et importez des favoris depuis la barre latérale Outils",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "Sauvegarde",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "Inclure les couvertures dans les sauvegardes",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "Indique si « Sauvegarder les paramètres » enregistre aussi vos couvertures dans le fichier. Tant que des couvertures sont stockées, la question est posée à chaque fois, avec cette réponse cochée d'avance, et la taille ajoutée est indiquée. Les couvertures ne sont jamais synchronisées : une sauvegarde est le moyen de les emporter sur un autre ordinateur.",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Enregistrement",
@@ -3478,6 +3494,10 @@
     "toast_backupServiceNeeds": {
         "message": "$2 de « $1 »",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "Couvertures restaurées : $1. Conservées telles quelles : $2. Sans favori ici : $3. Laissées de côté : $4.",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "À configurer",
@@ -6679,6 +6699,78 @@
         "message": "Restaurer les paramètres",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "Le fichier contient vos paramètres, prompts, services d'IA (sans clés API) et recherches enregistrées. Il reste là où vous l'enregistrez.",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "Inclure les couvertures",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "Couvertures : $1, soit environ $2 de plus dans le fichier. Les couvertures ne sont jamais synchronisées : une sauvegarde est le moyen de les emporter sur un autre ordinateur.",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "Laissées de côté, au-delà des limites de la sauvegarde (les plus anciennes d'abord) : $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "Enregistrer la sauvegarde",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "Restaurer la sauvegarde",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1 contient des couvertures. Les paramètres, prompts, services d'IA et recherches enregistrées sont restaurés dans tous les cas ; vérifiez ce que la restauration des couvertures ferait sur cet appareil.",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "Restaurer les couvertures",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "Couvertures dans le fichier : $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "Avec un favori de la même adresse ici : $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "Sans favori de cette adresse ici : $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "Favoris qui reçoivent une couverture : $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "Couvertures remplacées par une plus récente : $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "Couvertures conservées (choisies avec « Utiliser cette vue comme couverture » ou plus récentes que celles du fichier) : $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "Ignorées (illisibles ou au-delà des limites de la sauvegarde) : $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "Supprimées ensuite pour respecter le Stockage des couvertures, les plus anciennes d'abord : $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "Une restauration ne peut pas être annulée : une couverture remplacée est perdue.",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "Restaurer",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "Rechercher des favoris",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9210,7 +9302,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "$count$ couvertures, $size$. Conservées sur cet appareil ; elles n'en sortent jamais.",
+        "message": "$count$ couvertures, $size$. Conservées sur cet appareil ; seule une sauvegarde avec couvertures que vous enregistrez en contient une copie.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9224,7 +9316,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "$count$ couverture, $size$. Conservée sur cet appareil ; elle n'en sort jamais.",
+        "message": "$count$ couverture, $size$. Conservée sur cet appareil ; seule une sauvegarde avec couvertures que vous enregistrez en contient une copie.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {

@@ -59,3 +59,12 @@ Tidak ada yang ditulis sampai Anda mengklik **Impor**. Jika bookmark Anda beruba
 ## File setelan terpisah [#settings-files-are-separate]
 
 Tombol **Cadangkan setelan** dan **Pulihkan setelan** di bagian bawah halaman Setelan menyimpan dan memulihkan file cadangan berisi setelan Bookmark Scout, prompt kustom, layanan AI (tanpa kunci API), dan penelusuran tersimpan. Keduanya tidak menyentuh bookmark, tag, atau ringkasan. Lihat [Setelan](/settings) untuk isi cadangan. Anda juga bisa melepas file cadangan di mana saja di halaman Setelan untuk memulihkannya.
+
+### Sampul dalam cadangan [#covers-in-a-backup]
+
+Sampul tidak pernah disinkronkan dan ekspor bookmark tidak memuatnya, jadi cadangan adalah cara membawanya ke komputer lain.
+
+- Selama ada sampul tersimpan, **Cadangkan setelan** menanyakan apakah **Sertakan sampul**, serta menyebutkan jumlahnya dan kira-kira berapa besar tambahannya pada file. Kotaknya sudah dicentang; **Sertakan Sampul dalam Cadangan** di [Setelan](/settings#data) mengubahnya. File berisi satu sampul per alamat, yang terbaru lebih dulu, sampai batas cadangan.
+- Memulihkan cadangan yang berisi sampul menampilkan tinjauan lebih dulu: berapa sampul dalam file, berapa yang cocok dengan bookmark beralamat sama di perangkat ini dan berapa yang tidak, serta berapa bookmark yang akan mendapat sampul, sampulnya diganti, atau mempertahankan sampulnya sendiri. Hapus centang **Pulihkan sampul** untuk memulihkan sisa cadangan saja.
+- Sampul yang Anda pilih dengan **Gunakan tampilan ini sebagai sampul** hanya diganti oleh sampul pilihan yang lebih baru dari file, dan sampul lain hanya oleh yang lebih baru. **Penyimpanan Sampul** tetap berlaku, jadi sampul terlama dihapus jika melewatinya.
+- Pemulihan tidak dapat dibatalkan. Sampul tetap ada di file di mana pun Anda menyimpannya; tidak ada yang dikirim.

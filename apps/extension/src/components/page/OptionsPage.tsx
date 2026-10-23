@@ -28,6 +28,7 @@ import {
 import type React from 'react';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
+import type { BackupCovers, CoverBackupEstimate } from '@/services/cover-backup.lazy';
 
 /** Essentials or a settings category: the tabs on the left. */
 function isSettingsTab(key: string): boolean {
@@ -238,15 +239,74 @@ const OptionsPage: React.FC = () => {
     }
   };
 
-  const handleExport = async () => {
+  // Back up settings asks about covers only while some are stored (`BackupExportDialog`).
+  const [coverEstimate, setCoverEstimate] = useState<CoverBackupEstimate | null>(null);
+
+  const saveBackup = async (includeCovers: boolean) => {
     try {
-      downloadExport(await exportBackup(), optionsConfig.backup_filename, jsonFormat.mimeType);
+      const covers = includeCovers ? (coverEstimate?.covers ?? 0) : 0;
+      downloadExport(
+        await exportBackup(undefined, { includeCovers }),
+        optionsConfig.backup_filename,
+        jsonFormat.mimeType,
+      );
       toast.success({
         title: t('toast_backupExported'),
-        description: t('toast_backupExportedDescription'),
+        description:
+          covers > 0
+            ? t('toast_backupExportedCoversDescription', String(covers))
+            : t('toast_backupExportedDescription'),
       });
     } catch (error) {
       toast.error({ title: t('toast_exportFailed'), description: getErrorMessage(error) });
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      const estimate = await estimateBackupCovers();
+      if (estimate.covers > 0) setCoverEstimate(estimate);
+      else await saveBackup(false);
+    } catch (error) {
+      toast.error({ title: t('toast_exportFailed'), description: getErrorMessage(error) });
+    }
+  };
+
+  // A backup with covers waits for its review (`CoverRestoreDialog`) before anything is restored.
+  const [pendingRestore, setPendingRestore] = useState<{
+    file: BackupFile;
+    covers: BackupCovers;
+    review: CoverRestoreReview;
+  } | null>(null);
+
+  const finishRestore = async (file: BackupFile, covers: BackupCovers | undefined) => {
+    try {
+      const { needsSetup } = await restoreBackup(file);
+      const coverOutcome = covers ? await restoreBackupCovers(covers) : undefined;
+      const description =
+        needsSetup.length === 0
+          ? t('toast_backupRestoredDescription')
+          : t('toast_backupRestoredNeedsSetup', describeServicesNeedingSetup(needsSetup));
+      toast.success({
+        title: t('toast_backupRestored'),
+        description: coverOutcome
+          ? `${description} ${t('toast_backupCoversRestored', [
+              String(coverOutcome.restored),
+              String(coverOutcome.kept),
+              String(coverOutcome.unmatched),
+              String(coverOutcome.skipped + coverOutcome.notStored),
+            ])}`
+          : description,
+        // Long enough to read which services need what, and what became of the covers.
+        ...(needsSetup.length > 0 || coverOutcome
+          ? { duration: optionsConfig.restore_notice_duration_ms }
+          : {}),
+      });
+    } catch (error) {
+      toast.error({
+        title: t('toast_importFailed'),
+        description: getErrorMessage(error, 'error_invalidSettingsFile'),
+      });
     }
   };
 
@@ -254,17 +314,15 @@ const OptionsPage: React.FC = () => {
     try {
       const content = await file.text();
       // A backup restores everything it holds; any other JSON is read as a settings file.
-      if (isBackupFile(content)) {
-        const { needsSetup } = await restoreBackup(content);
-        toast.success({
-          title: t('toast_backupRestored'),
-          description:
-            needsSetup.length === 0
-              ? t('toast_backupRestoredDescription')
-              : t('toast_backupRestoredNeedsSetup', describeServicesNeedingSetup(needsSetup)),
-          // Long enough to read which services need what.
-          ...(needsSetup.length > 0 ? { duration: optionsConfig.restore_notice_duration_ms } : {}),
-        });
+      const backup = readBackupFile(content);
+      if (backup) {
+        const covers = await getBackupCovers(backup);
+        if (!covers) {
+          await finishRestore(backup, undefined);
+          return;
+        }
+        const plan = await reviewBackupCovers(covers);
+        setPendingRestore({ file: backup, covers, review: { fileName: file.name, plan } });
         return;
       }
       const changed = await importSettings(content);
@@ -835,6 +893,24 @@ const OptionsPage: React.FC = () => {
         description={t('settings_resetAllDescription')}
         confirmLabel={t('action_resetAll')}
         onConfirm={() => void handleReset()}
+      />
+      <BackupExportDialog
+        estimate={coverEstimate}
+        defaultIncludeCovers={settings.backupIncludeCovers}
+        onCancel={() => setCoverEstimate(null)}
+        onSave={(includeCovers) => void saveBackup(includeCovers)}
+      />
+      <CoverRestoreDialog
+        review={pendingRestore?.review ?? null}
+        onCancel={() => setPendingRestore(null)}
+        onRestore={(restoreCovers) => {
+          if (pendingRestore) {
+            void finishRestore(
+              pendingRestore.file,
+              restoreCovers ? pendingRestore.covers : undefined,
+            );
+          }
+        }}
       />
       <Toaster />
     </div>

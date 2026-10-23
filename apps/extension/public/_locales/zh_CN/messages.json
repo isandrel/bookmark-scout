@@ -539,6 +539,10 @@
         "message": "文件包含你的设置、提示词、AI 服务和已保存的搜索。API 密钥永远不会包含在内。",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "文件包含你的设置、提示词、AI 服务、已保存的搜索和封面（$1 个）。API 密钥永远不会包含在内。",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "导出失败",
         "description": "Toast title for settings export error"
@@ -622,6 +626,18 @@
     "settings_importExportDesc": {
         "message": "从工具侧边栏导出和导入书签",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "备份",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "在备份中包含封面",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "“备份设置”是否同时把封面保存到文件中。存有封面时每次都会询问，并预先勾选此处的选择，同时显示会增加多少大小。封面不会同步，要把它们带到另一台电脑，只能通过备份。",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "保存",
@@ -3470,6 +3486,10 @@
     "toast_backupServiceNeeds": {
         "message": "“$1”的$2",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "已恢复封面：$1。保持原样：$2。此处没有书签：$3。未包含：$4。",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "需要设置",
@@ -6433,6 +6453,78 @@
         "message": "恢复设置",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "文件包含你的设置、提示词、AI 服务（不含 API 密钥）和已保存的搜索。文件只保存在你选择的位置。",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "包含封面",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "封面：$1 个，文件约增加 $2。封面不会同步，要把它们带到另一台电脑，只能通过备份。",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "超出备份上限而未包含（从最旧的开始）：$1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "保存备份",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "恢复备份",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1 包含封面。设置、提示词、AI 服务和已保存的搜索无论如何都会恢复；请查看恢复封面会对此设备做什么。",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "恢复封面",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "文件中的封面：$1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "此处有相同地址的书签：$1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "此处没有该地址的书签：$1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "将获得封面的书签：$1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "将被更新的封面替换：$1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "保留的封面（用“用当前画面作为封面”选择的，或比文件中更新的）：$1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "已跳过（无法读取或超出备份上限）：$1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "之后为不超出封面存储空间而删除（从最旧的开始）：$1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "恢复无法撤销：被替换的封面将丢失。",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "恢复",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "搜索书签",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -8864,7 +8956,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "$count$ 个封面，$size$。保存在此设备上，绝不会离开此设备。",
+        "message": "$count$ 个封面，$size$。保存在此设备上；只有你保存的包含封面的备份中才有副本。",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {

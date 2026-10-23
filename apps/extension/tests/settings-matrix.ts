@@ -739,6 +739,20 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   exportMarkdownIndentSpaces: tested(DATA_TOOLS, [exportUnit]),
   exportIncludeDates: tested(DATA_TOOLS, [exportPreferences, exportUnit]),
   exportIncludeUrls: tested(DATA_TOOLS, [exportPreferences]),
+  backupIncludeCovers: tested(
+    'components/page/OptionsPage.tsx',
+    [
+      e2e(
+        'backup-covers.spec.ts',
+        'a backup with covers restores them by address on matching bookmarks after a review, keeping a picked cover',
+      ),
+      e2e(
+        'backup-covers.spec.ts',
+        'a backup without covers has no covers section, and restoring it asks nothing',
+      ),
+    ],
+    'The default of Include covers in the Back up settings dialog (BackupExportDialog).',
+  ),
 
   // Context menu
   contextMenuEnabled: tested('services/context-menu.ts', [

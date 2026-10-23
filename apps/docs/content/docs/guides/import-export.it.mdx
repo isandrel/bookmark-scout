@@ -59,3 +59,12 @@ Non viene scritto nulla finché non fai clic su **Importa**. Se i tuoi preferiti
 ## I file delle impostazioni sono separati [#settings-files-are-separate]
 
 I pulsanti **Esegui il backup delle impostazioni** e **Ripristina le impostazioni** in fondo alla pagina delle Impostazioni salvano e ripristinano un file di backup con le impostazioni di Bookmark Scout, i prompt personalizzati, i servizi IA (senza chiavi API) e le ricerche salvate. Non toccano preferiti, tag o riassunti. Vedi [Impostazioni](/settings) per sapere cosa contiene il backup. Puoi anche rilasciare un file di backup in qualsiasi punto della pagina delle Impostazioni per ripristinarlo.
+
+### Copertine in un backup [#covers-in-a-backup]
+
+Le copertine non vengono mai sincronizzate e le esportazioni dei preferiti non le contengono, quindi un backup è il modo per portarle su un altro computer.
+
+- Finché ci sono copertine salvate, **Esegui il backup delle impostazioni** chiede se **Includi le copertine**, e indica quante sono e circa quanto aggiungono al file. La casella è già selezionata; **Includi le copertine nei backup** nelle [Impostazioni](/settings#data) lo cambia. Il file contiene una copertina per indirizzo, prima le più recenti, entro i limiti del backup.
+- Il ripristino di un backup con copertine mostra prima un riepilogo: quante copertine contiene il file, quante corrispondono a un preferito con lo stesso indirizzo su questo dispositivo e quante no, e quanti preferiti riceverebbero una copertina, se la vedrebbero sostituire o terrebbero la propria. Togli la selezione da **Ripristina le copertine** per ripristinare solo il resto del backup.
+- Una copertina scelta con **Usa questa vista come copertina** viene sostituita solo da una copertina scelta più recente del file, e qualsiasi altra solo da una più recente. Lo **Spazio per le copertine** resta valido, quindi oltre quel limite vengono rimosse le copertine più vecchie.
+- Il ripristino non si può annullare. Le copertine restano nel file ovunque tu lo salvi; non viene inviato nulla.

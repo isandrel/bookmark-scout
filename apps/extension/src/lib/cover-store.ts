@@ -4,7 +4,8 @@
  * bookmark id in IndexedDB on this device only, for the manager's cards. It is derived data:
  * deleting it never touches a bookmark, a tag, or the History. A cover belongs to the address it
  * was fetched from, so a bookmark moved to another address shows none until it is fetched again,
- * and the oldest covers go first when the total passes the Cover Storage setting.
+ * and the oldest covers go first when the total passes the Cover Storage setting. They never sync;
+ * the backup file can hold them, by address (`services/cover-backup.lazy.ts`).
  */
 import { type DBSchema, type IDBPDatabase, openDB } from 'idb';
 import { z } from 'zod';
@@ -73,9 +74,17 @@ const coverInfoSchema = z.strictObject({
 
 type StoredImage = { bookmarkId: string; type: string; data: ArrayBuffer };
 
+/** A cover's info as kept: a cover saved before sources were recorded has none. */
+type StoredInfo = Omit<CoverInfo, 'source'> & { source?: CoverSource };
+
+/** A cover's info as written: no source for one saved before sources were recorded. */
+function toStoredInfo({ source, ...info }: CoverInfo): StoredInfo {
+  return source === UNKNOWN_COVER_SOURCE ? info : { ...info, source };
+}
+
 interface CoverDb extends DBSchema {
   /** Small records read to list, count, and check covers. */
-  info: { key: string; value: CoverInfo };
+  info: { key: string; value: StoredInfo };
   /** The image files, read one at a time when a card shows. */
   images: { key: string; value: StoredImage };
 }
@@ -208,6 +217,30 @@ async function deleteCovers(db: IDBPDatabase<CoverDb>, ids: readonly string[]): 
   await transaction.done;
 }
 
+/**
+ * The covers to remove so the rest fit in `maxBytes`: the oldest first, by `savedAt`. Also used to
+ * preview a restore before anything is written.
+ */
+export function coversOverLimit(
+  infos: Iterable<Pick<CoverInfo, 'bookmarkId' | 'bytes' | 'savedAt'>>,
+  maxBytes: number,
+): Set<string> {
+  let total = 0;
+  const over = new Set<string>();
+  for (const info of [...infos].sort((a, b) => b.savedAt - a.savedAt)) {
+    total += info.bytes;
+    if (total > maxBytes) over.add(info.bookmarkId);
+  }
+  return over;
+}
+
+/** Removes the oldest covers until the rest fit in `maxBytes`; resolves to the ids removed. */
+async function evictOldest(db: IDBPDatabase<CoverDb>, maxBytes: number): Promise<Set<string>> {
+  const evicted = coversOverLimit((await getCoverInfos()).values(), maxBytes);
+  await deleteCovers(db, [...evicted]);
+  return evicted;
+}
+
 /** How many covers a save kept, and how many it left out because storage was full. */
 export type CoverSaveResult = { saved: number; notSaved: number };
 
@@ -245,16 +278,8 @@ export async function saveCovers(
     );
   });
   if (written === 0) return { saved: 0, notSaved: notWritten };
-  const infos = [...(await getCoverInfos()).values()].sort((a, b) => b.savedAt - a.savedAt);
-  let total = 0;
-  const evicted: string[] = [];
-  for (const info of infos) {
-    total += info.bytes;
-    if (total > maxBytes) evicted.push(info.bookmarkId);
-  }
-  await deleteCovers(db, evicted);
+  const gone = await evictOldest(db, maxBytes);
   announceChange();
-  const gone = new Set(evicted);
   return {
     saved: covers.slice(0, written).filter((cover) => !gone.has(cover.bookmarkId)).length,
     notSaved: notWritten,
@@ -271,7 +296,10 @@ export async function pruneCovers(keepIds: ReadonlySet<string>): Promise<number>
 }
 
 /** A stored cover exactly as kept (its info record and image), to put back after a removal. */
-export type StoredCoverRecord = { info: CoverInfo; image: StoredImage };
+export type StoredCoverRecord = { info: StoredInfo; image: StoredImage };
+
+/** A stored cover's info, read and checked, and its image: what a backup holds of it. */
+export type CoverRecord = { info: CoverInfo; image: StoredImage };
 
 /**
  * Deletes the covers of `bookmarkIds` and returns them as they were stored (a cover saved before
@@ -312,6 +340,52 @@ export async function putBackCovers(records: readonly StoredCoverRecord[]): Prom
   await transaction.done;
   if (restored > 0) announceChange();
   return restored;
+}
+
+/**
+ * The stored covers of `bookmarkIds` as kept (info and image), for the backup file; ids without
+ * a cover, or whose info does not parse, are skipped.
+ */
+export async function readCoverRecords(bookmarkIds: readonly string[]): Promise<CoverRecord[]> {
+  const transaction = (await openCoverDb()).transaction(['info', 'images'], 'readonly');
+  const records: CoverRecord[] = [];
+  for (const id of bookmarkIds) {
+    const info = coverInfoSchema.safeParse(await transaction.objectStore('info').get(id));
+    const image = await transaction.objectStore('images').get(id);
+    if (info.success && image) records.push({ info: info.data, image });
+  }
+  await transaction.done;
+  return records;
+}
+
+/**
+ * Stores covers from a backup as they were saved (source, date, and version), replacing each
+ * bookmark's current one, then removes the oldest until all fit in `maxBytes`, as `saveCovers`
+ * does. A cover saved before sources were recorded is written without one, as it was. `saved`
+ * counts the covers kept, `notSaved` those left out because this device's storage is full.
+ */
+export async function restoreCoverRecords(
+  records: readonly CoverRecord[],
+  maxBytes: number,
+): Promise<CoverSaveResult> {
+  if (records.length === 0) return { saved: 0, notSaved: 0 };
+  const db = await openCoverDb();
+  const { written, notWritten } = await saveInBatches(records, (batch) => {
+    const transaction = db.transaction(['info', 'images'], 'readwrite');
+    return commitIndexedWrites(transaction, () =>
+      batch.flatMap(({ info, image }) => [
+        transaction.objectStore('info').put(toStoredInfo(info)),
+        transaction.objectStore('images').put(image),
+      ]),
+    );
+  });
+  if (written === 0) return { saved: 0, notSaved: notWritten };
+  const gone = await evictOldest(db, maxBytes);
+  announceChange();
+  return {
+    saved: records.slice(0, written).filter(({ info }) => !gone.has(info.bookmarkId)).length,
+    notSaved: notWritten,
+  };
 }
 
 /** Deletes every cover; bookmarks, tags, and the History are not touched. */

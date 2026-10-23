@@ -59,3 +59,12 @@ Nothing is written until you click **Import**. If your bookmarks change while th
 ## Settings files are separate
 
 The **Back up settings** and **Restore settings** buttons at the bottom of the Settings page save and restore a backup file of Bookmark Scout's settings, custom prompts, AI services (without API keys), and saved searches. They do not touch bookmarks, tags, or summaries. See [Settings](/settings) for what the backup holds. You can also drop a backup file anywhere on the Settings page to restore it.
+
+### Covers in a backup [#covers-in-a-backup]
+
+Covers never sync, and bookmark exports do not hold them, so a backup is how they reach another computer.
+
+- While covers are stored, **Back up settings** asks whether to **Include covers**, and says how many and about how much they add to the file. The box starts checked; **Include Covers in Backups** in [Settings](/settings#data) changes that. The file holds one cover per address, newest first, up to the backup's limits.
+- Restoring a backup that holds covers first shows a review: how many covers the file holds, how many match a bookmark with the same address on this device and how many do not, and how many bookmarks would get a cover, have theirs replaced, or keep their own. Uncheck **Restore covers** to restore only the rest of the backup.
+- A cover you picked with **Use this view as the cover** is replaced only by a newer picked cover from the file, and any other cover only by a newer one. **Cover Storage** still applies, so the oldest covers are removed past it.
+- A restore cannot be undone. The covers stay in the file wherever you save it; nothing is sent anywhere.

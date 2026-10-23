@@ -547,6 +547,10 @@
         "message": "Die Datei enthält Ihre Einstellungen, Prompts, KI-Dienste und gespeicherten Suchen. API-Schlüssel sind nie enthalten.",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "Die Datei enthält Ihre Einstellungen, Prompts, KI-Dienste, gespeicherten Suchen und Titelbilder ($1). API-Schlüssel sind nie enthalten.",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "Export fehlgeschlagen",
         "description": "Toast title for settings export error"
@@ -630,6 +634,18 @@
     "settings_importExportDesc": {
         "message": "Lesezeichen über die Tools-Seitenleiste exportieren und importieren",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "Sicherung",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "Titelbilder in Sicherungen aufnehmen",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "Ob „Einstellungen sichern“ auch Ihre Titelbilder in die Datei schreibt. Solange Titelbilder gespeichert sind, fragt es jedes Mal nach, mit dieser Antwort vorausgewählt, und nennt, wie viel sie hinzufügen. Titelbilder werden nie synchronisiert; mit einer Sicherung kommen sie auf einen anderen Computer.",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Speichern",
@@ -3478,6 +3494,10 @@
     "toast_backupServiceNeeds": {
         "message": "$2 für „$1“",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "Titelbilder wiederhergestellt: $1. Unverändert behalten: $2. Ohne Lesezeichen hier: $3. Weggelassen: $4.",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "Einrichtung nötig",
@@ -6679,6 +6699,78 @@
         "message": "Einstellungen wiederherstellen",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "Die Datei enthält Ihre Einstellungen, Prompts, KI-Dienste (ohne API-Schlüssel) und gespeicherten Suchen. Sie bleibt dort, wo Sie sie speichern.",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "Titelbilder einschließen",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "Titelbilder: $1, die Datei wird etwa $2 größer. Titelbilder werden nie synchronisiert; mit einer Sicherung kommen sie auf einen anderen Computer.",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "Weggelassen, über den Grenzen der Sicherung (die ältesten zuerst): $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "Sicherung speichern",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "Sicherung wiederherstellen",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1 enthält Titelbilder. Einstellungen, Prompts, KI-Dienste und gespeicherte Suchen werden in jedem Fall wiederhergestellt; prüfen Sie, was das Wiederherstellen der Titelbilder auf diesem Gerät bewirken würde.",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "Titelbilder wiederherstellen",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "Titelbilder in der Datei: $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "Mit einem Lesezeichen derselben Adresse hier: $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "Ohne Lesezeichen dieser Adresse hier: $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "Lesezeichen, die ein Titelbild erhalten: $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "Durch ein neueres ersetzte Titelbilder: $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "Behaltene Titelbilder (mit „Diese Ansicht als Titelbild verwenden“ gewählt oder neuer als in der Datei): $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "Übersprungen (nicht lesbar oder über den Grenzen der Sicherung): $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "Danach entfernt, um im Speicher für Titelbilder zu bleiben, die ältesten zuerst: $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "Das Wiederherstellen lässt sich nicht rückgängig machen: Ein ersetztes Titelbild ist verloren.",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "Wiederherstellen",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "Lesezeichen durchsuchen",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9210,7 +9302,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "$count$ Titelbilder, $size$. Auf diesem Gerät gespeichert; sie verlassen es nie.",
+        "message": "$count$ Titelbilder, $size$. Auf diesem Gerät gespeichert; nur eine Sicherung mit Titelbildern, die Sie speichern, enthält eine Kopie.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9224,7 +9316,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "$count$ Titelbild, $size$. Auf diesem Gerät gespeichert; es verlässt es nie.",
+        "message": "$count$ Titelbild, $size$. Auf diesem Gerät gespeichert; nur eine Sicherung mit Titelbildern, die Sie speichern, enthält eine Kopie.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {

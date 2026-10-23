@@ -547,6 +547,10 @@
         "message": "Il file contiene impostazioni, prompt, servizi IA e ricerche salvate. Le chiavi API non sono mai incluse.",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "Il file contiene impostazioni, prompt, servizi IA, ricerche salvate e copertine ($1). Le chiavi API non sono mai incluse.",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "Esportazione non riuscita",
         "description": "Toast title for settings export error"
@@ -630,6 +634,18 @@
     "settings_importExportDesc": {
         "message": "Esporta e importa i preferiti dalla barra laterale Strumenti",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "Backup",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "Includi le copertine nei backup",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "Se \"Esegui il backup delle impostazioni\" salva anche le copertine nel file. Finché ci sono copertine salvate lo chiede ogni volta, con questa risposta già selezionata, e indica quanto aggiungono. Le copertine non vengono mai sincronizzate: un backup è il modo per portarle su un altro computer.",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Salvataggio",
@@ -3478,6 +3494,10 @@
     "toast_backupServiceNeeds": {
         "message": "$2 per “$1”",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "Copertine ripristinate: $1. Mantenute com'erano: $2. Senza preferito qui: $3. Escluse: $4.",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "Da configurare",
@@ -6679,6 +6699,78 @@
         "message": "Ripristina le impostazioni",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "Il file contiene impostazioni, prompt, servizi IA (senza chiavi API) e ricerche salvate. Resta dove lo salvi.",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "Includi le copertine",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "Copertine: $1, circa $2 in più nel file. Le copertine non vengono mai sincronizzate: un backup è il modo per portarle su un altro computer.",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "Escluse perché oltre i limiti del backup (prima le più vecchie): $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "Salva il backup",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "Ripristina il backup",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1 contiene copertine. Impostazioni, prompt, servizi IA e ricerche salvate vengono ripristinati in ogni caso; controlla cosa farebbe il ripristino delle copertine su questo dispositivo.",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "Ripristina le copertine",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "Copertine nel file: $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "Con un preferito dello stesso indirizzo qui: $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "Senza un preferito di quell'indirizzo qui: $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "Preferiti che ricevono una copertina: $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "Copertine sostituite da una più recente: $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "Copertine mantenute (scelte con \"Usa questa vista come copertina\" o più recenti di quelle del file): $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "Saltate (illeggibili o oltre i limiti del backup): $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "Rimosse dopo per restare nello Spazio per le copertine, prima le più vecchie: $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "Il ripristino non si può annullare: una copertina sostituita va persa.",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "Ripristina",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "Cercare nei preferiti",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9210,7 +9302,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "$count$ copertine, $size$. Conservate su questo dispositivo; non lo lasciano mai.",
+        "message": "$count$ copertine, $size$. Conservate su questo dispositivo; solo un backup con le copertine che salvi ne contiene una copia.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9224,7 +9316,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "$count$ copertina, $size$. Conservata su questo dispositivo; non lo lascia mai.",
+        "message": "$count$ copertina, $size$. Conservata su questo dispositivo; solo un backup con le copertine che salvi ne contiene una copia.",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {

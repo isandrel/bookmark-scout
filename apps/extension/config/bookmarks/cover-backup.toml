@@ -1,0 +1,18 @@
+# Covers in the backup file (src/services/cover-backup.lazy.ts): Back up settings in Settings
+# writes the covers of this device's bookmarks into the file, one per address, when Include covers
+# is checked (the Include Covers in Backups setting, config/settings/data.toml), and Restore
+# settings puts them back on the bookmarks with the same address on the device it restores to. Each image
+# is base64 in the one JSON file, which grows it by a third. These limits cap what a backup writes
+# and, since a backup file comes from outside, what a restore reads; an entry past one is left out
+# on its own, and the review and the export dialog count it.
+
+# Covers in one file. Written newest first, so the newest are kept when there are more.
+max_covers = { value = 50000, min = 100, max = 100000 }
+# Largest image in KB. A stored cover is a shrunk copy (the Cover Width and Cover Image Quality
+# settings), usually far below this; a bigger entry in a file is not read.
+max_image_kb = { value = 4096, min = 256, max = 16384 }
+# All images together, in MB. The default is the default Cover Storage (max_cache_mb in
+# config/settings/metadata-content.toml), so a full store at the default fits;
+# tests/unit/cover-backup.test.ts checks it. The ceiling keeps the whole file, a third larger in
+# base64, below the longest string a browser can read or write at once (about 512 MB in Chrome).
+max_total_mb = { value = 200, min = 10, max = 300 }

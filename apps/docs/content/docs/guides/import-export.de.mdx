@@ -59,3 +59,12 @@ Es wird nichts geschrieben, bevor Sie auf **Importieren** klicken. Ändern sich 
 ## Einstellungsdateien sind getrennt [#settings-files-are-separate]
 
 Die Schaltflächen **Einstellungen sichern** und **Einstellungen wiederherstellen** unten auf der Einstellungsseite speichern eine Sicherungsdatei mit den Einstellungen von Bookmark Scout, eigenen Prompts, KI-Diensten (ohne API-Schlüssel) und gespeicherten Suchen und stellen sie daraus wieder her. Lesezeichen, Tags und Zusammenfassungen bleiben davon unberührt. Was die Sicherung enthält, steht unter [Einstellungen](/settings). Sie können eine Sicherungsdatei auch an beliebiger Stelle auf der Einstellungsseite ablegen, um sie wiederherzustellen.
+
+### Titelbilder in einer Sicherung [#covers-in-a-backup]
+
+Titelbilder werden nie synchronisiert, und Lesezeichen-Exporte enthalten sie nicht; auf einen anderen Computer kommen sie mit einer Sicherung.
+
+- Solange Titelbilder gespeichert sind, fragt **Einstellungen sichern**, ob **Titelbilder einschließen** soll, und nennt, wie viele es sind und wie viel sie die Datei ungefähr vergrößern. Das Kästchen ist vorausgewählt; **Titelbilder in Sicherungen aufnehmen** in den [Einstellungen](/settings#data) ändert das. Die Datei enthält ein Titelbild pro Adresse, die neuesten zuerst, bis zu den Grenzen der Sicherung.
+- Beim Wiederherstellen einer Sicherung mit Titelbildern erscheint zuerst eine Übersicht: wie viele Titelbilder die Datei enthält, wie viele zu einem Lesezeichen mit derselben Adresse auf diesem Gerät passen und wie viele nicht, und wie viele Lesezeichen ein Titelbild erhalten, ihres ersetzt bekommen oder ihr eigenes behalten. Entfernen Sie das Häkchen bei **Titelbilder wiederherstellen**, um nur den Rest der Sicherung wiederherzustellen.
+- Ein mit **Diese Ansicht als Titelbild verwenden** gewähltes Titelbild ersetzt nur ein neueres, ebenfalls selbst gewähltes Titelbild aus der Datei, jedes andere nur ein neueres. **Speicher für Titelbilder** gilt weiter: Darüber hinaus werden die ältesten Titelbilder entfernt.
+- Das Wiederherstellen lässt sich nicht rückgängig machen. Die Titelbilder bleiben in der Datei, wo immer Sie sie speichern; nichts wird gesendet.

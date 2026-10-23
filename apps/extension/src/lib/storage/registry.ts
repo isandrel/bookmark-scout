@@ -268,9 +268,11 @@ export const THEME_CACHE_STORAGE_KEY = 'theme';
 
 /**
  * IndexedDB databases the extension keeps, next to the storage items above, for data too large
- * or too structured for extension storage. Device-local like `local`, never synced, and never in
- * the backup file. The install and update cleanup does not touch them; each owner versions its
- * own schema (IndexedDB's `version` and an upgrade step) and prunes by its own retention.
+ * or too structured for extension storage. Device-local like `local` and never synced. `backup`
+ * is the backup file's policy, as for stored items; `include` only for covers, which the backup
+ * holds when the user includes them (`services/cover-backup.lazy.ts`). The install and update
+ * cleanup does not touch them; each owner versions its own schema (IndexedDB's `version` and an
+ * upgrade step) and prunes by its own retention.
  */
 export const INDEXED_DATABASES = {
   /**
@@ -291,7 +293,9 @@ export const INDEXED_DATABASES = {
   pageText: { name: 'bookmark-scout-page-text', backup: 'exclude' },
   /**
    * Covers (`lib/cover-store.ts`): small copies of the preview images of the pages the user
-   * fetched covers for, shown on the manager's cards; fetched again when needed, so never backed up.
+   * fetched covers for, or pictures of the tab, shown on the manager's cards. In the backup file,
+   * by address, when the user includes them (`services/cover-backup.lazy.ts`): pictures the user
+   * chose cannot be fetched again.
    */
-  covers: { name: 'bookmark-scout-covers', backup: 'exclude' },
+  covers: { name: 'bookmark-scout-covers', backup: 'include' },
 } as const satisfies Record<string, { name: string; backup: BackupPolicy }>;

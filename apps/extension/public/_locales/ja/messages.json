@@ -523,6 +523,10 @@
         "message": "ファイルには設定、プロンプト、AI サービス、保存した検索が含まれます。API キーは含まれません。",
         "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
+    "toast_backupExportedCoversDescription": {
+        "message": "ファイルには設定、プロンプト、AI サービス、保存した検索、カバー画像（$1 件）が含まれます。API キーは含まれません。",
+        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
+    },
     "toast_exportFailed": {
         "message": "エクスポートに失敗しました",
         "description": "Toast title for settings export error"
@@ -606,6 +610,18 @@
     "settings_importExportDesc": {
         "message": "ツールサイドバーからブックマークをエクスポート・インポートします",
         "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionBackup": {
+        "message": "バックアップ",
+        "description": "Settings: section heading under Import & Export for the settings backup file"
+    },
+    "settings_backupIncludeCovers": {
+        "message": "バックアップにカバー画像を含める",
+        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
+    },
+    "settings_backupIncludeCoversDesc": {
+        "message": "「設定をバックアップ」でカバー画像もファイルに保存するかどうか。カバー画像が保存されている間は毎回確認し、ここでの選択を最初にチェックして、増えるサイズも表示します。カバー画像は同期されないため、別のパソコンへ移すにはバックアップを使います。",
+        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "保存",
@@ -3434,6 +3450,10 @@
     "toast_backupServiceNeeds": {
         "message": "「$1」の$2",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "toast_backupCoversRestored": {
+        "message": "復元したカバー画像: $1。そのまま残したもの: $2。ここにブックマークがないもの: $3。含めなかったもの: $4。",
+        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "要設定",
@@ -6671,6 +6691,78 @@
         "message": "設定を復元",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
+    "backup_exportDesc": {
+        "message": "ファイルには設定、プロンプト、AI サービス（API キーを除く）、保存した検索が含まれます。ファイルは保存した場所にだけ残ります。",
+        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
+    },
+    "backup_includeCovers": {
+        "message": "カバー画像を含める",
+        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
+    },
+    "backup_coversEstimate": {
+        "message": "カバー画像: $1 件、ファイルが約 $2 増えます。カバー画像は同期されないため、別のパソコンへ移すにはバックアップを使います。",
+        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
+    },
+    "backup_coversLeftOut": {
+        "message": "バックアップの上限を超えたため含めないもの（古い順）: $1",
+        "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
+    },
+    "backup_save": {
+        "message": "バックアップを保存",
+        "description": "Back up settings dialog: button that saves the backup file"
+    },
+    "backup_restoreTitle": {
+        "message": "バックアップを復元",
+        "description": "Title of the review shown before restoring a backup file that holds covers"
+    },
+    "backup_restoreDesc": {
+        "message": "$1 にはカバー画像が含まれています。設定、プロンプト、AI サービス、保存した検索はどちらの場合も復元されます。カバー画像を復元するとこの端末で何が起きるかを確認してください。",
+        "description": "Restore backup review: $1 is the file name"
+    },
+    "backup_restoreCovers": {
+        "message": "カバー画像を復元",
+        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    },
+    "backup_coversInFile": {
+        "message": "ファイル内のカバー画像: $1",
+        "description": "Restore backup review: how many covers the file holds"
+    },
+    "backup_coversMatched": {
+        "message": "同じアドレスのブックマークがここにあるもの: $1",
+        "description": "Restore backup review: how many of the file's covers have a bookmark of the same address on this device"
+    },
+    "backup_coversUnmatched": {
+        "message": "そのアドレスのブックマークがここにないもの: $1",
+        "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
+    },
+    "backup_coversAdded": {
+        "message": "カバー画像が付くブックマーク: $1",
+        "description": "Restore backup review: how many bookmarks get a cover they did not have"
+    },
+    "backup_coversReplaced": {
+        "message": "より新しいものに置き換わるカバー画像: $1",
+        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
+    },
+    "backup_coversKept": {
+        "message": "そのまま残るカバー画像（「この画面をカバー画像にする」で選んだもの、またはファイルより新しいもの）: $1",
+        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
+    },
+    "backup_coversSkipped": {
+        "message": "スキップ（読み取れない、またはバックアップの上限超過）: $1",
+        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
+    },
+    "backup_coversOverStorage": {
+        "message": "カバー画像の保存容量に収めるため、後で古い順に削除: $1",
+        "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
+    },
+    "backup_restoreNoUndo": {
+        "message": "復元は元に戻せません。置き換えられたカバー画像は失われます。",
+        "description": "Restore backup review: a restore has no undo"
+    },
+    "backup_restore": {
+        "message": "復元",
+        "description": "Restore backup review: button that restores the backup"
+    },
     "actionName_searchBookmarks": {
         "message": "ブックマークを検索",
         "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
@@ -9174,7 +9266,7 @@
         "description": "Settings: heading of the stored covers panel"
     },
     "covers_storeSummary": {
-        "message": "カバー画像 $count$ 件、$size$。この端末に保存され、外部に送られることはありません。",
+        "message": "カバー画像 $count$ 件、$size$。この端末に保存されます。コピーが含まれるのは、カバー画像を含めて保存したバックアップだけです。",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size",
         "placeholders": {
             "count": {
@@ -9188,7 +9280,7 @@
         }
     },
     "covers_storeSummary_one": {
-        "message": "カバー画像 $count$ 件、$size$。この端末に保存され、外部に送られることはありません。",
+        "message": "カバー画像 $count$ 件、$size$。この端末に保存されます。コピーが含まれるのは、カバー画像を含めて保存したバックアップだけです。",
         "description": "Settings: how many covers are stored; $1 covers, $2 their size (singular)",
         "placeholders": {
             "count": {
