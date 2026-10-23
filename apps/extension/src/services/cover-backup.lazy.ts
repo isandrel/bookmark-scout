@@ -217,7 +217,7 @@ function toBackupEntry(info: CoverInfo, type: string, data: string): BackupCover
   };
 }
 
-/** What Include covers adds to a backup: how many covers, about how many bytes, and left out. */
+/** What the Covers part adds to a backup: how many covers, about how many bytes, and left out. */
 export type CoverBackupEstimate = { covers: number; fileBytes: number; leftOut: number };
 
 /**

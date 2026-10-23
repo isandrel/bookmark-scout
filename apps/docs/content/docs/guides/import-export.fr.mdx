@@ -56,15 +56,41 @@ Cliquez sur **Importer**. Une notification indique le nombre d'éléments créé
 
 Rien n'est écrit tant que vous n'avez pas cliqué sur **Importer**. Si vos favoris changent pendant que l'aperçu est ouvert, l'aperçu est actualisé au lieu d'être appliqué.
 
-## Les fichiers de paramètres sont distincts [#settings-files-are-separate]
+## Sauvegarder et restaurer les paramètres [#back-up-and-restore-settings]
 
-Les boutons **Sauvegarder les paramètres** et **Restaurer les paramètres** situés en bas de la page des paramètres enregistrent et restaurent une sauvegarde des paramètres de Bookmark Scout, des prompts personnalisés, des services d'IA (sans clés API) et des recherches enregistrées. Ils ne touchent ni aux favoris, ni aux étiquettes et résumés. Le contenu de la sauvegarde est détaillé dans [Paramètres](/settings). Vous pouvez aussi déposer un fichier de sauvegarde n'importe où sur la page Paramètres pour le restaurer.
+Les boutons **Sauvegarder les paramètres** et **Restaurer les paramètres** situés en bas de la page des paramètres enregistrent et restaurent un fichier de sauvegarde des données propres à Bookmark Scout. Ils ne touchent jamais à vos favoris, étiquettes ou résumés ; exportez les favoris avec l'outil ci-dessus. Vous pouvez aussi déposer un fichier de sauvegarde n'importe où sur la page Paramètres pour le restaurer.
 
-### Couvertures dans une sauvegarde [#covers-in-a-backup]
+### Contenu d'une sauvegarde [#what-a-backup-holds]
 
-Les couvertures ne sont jamais synchronisées et les exports de favoris ne les contiennent pas : une sauvegarde est le moyen de les emporter sur un autre ordinateur.
+**Sauvegarder les paramètres** liste les parties d'une sauvegarde, chacune avec ce qu'elle contient, le nombre d'éléments et sa taille approximative. Sélectionnez celles que vous voulez, ou utilisez **Tout sélectionner** et **Ne rien sélectionner** :
 
-- Tant que des couvertures sont stockées, **Sauvegarder les paramètres** demande s'il faut **Inclure les couvertures**, et indique combien il y en a et environ combien elles ajoutent au fichier. La case est cochée d'avance ; **Inclure les couvertures dans les sauvegardes** dans les [Paramètres](/settings#data) change cela. Le fichier contient une couverture par adresse, les plus récentes d'abord, dans les limites de la sauvegarde.
-- La restauration d'une sauvegarde qui contient des couvertures affiche d'abord un récapitulatif : combien de couvertures contient le fichier, combien correspondent à un favori de même adresse sur cet appareil et combien non, et combien de favoris recevraient une couverture, verraient la leur remplacée ou garderaient la leur. Décochez **Restaurer les couvertures** pour ne restaurer que le reste de la sauvegarde.
 - Une couverture choisie avec **Utiliser cette vue comme couverture** passe en premier : elle n'est remplacée que par une couverture choisie plus récente du fichier, et une couverture choisie du fichier remplace une couverture qui ne l'a pas été ; sinon, la plus récente l'emporte. Une date future compte comme aujourd'hui. Le **Stockage des couvertures** s'applique toujours : au-delà, les couvertures les plus anciennes sont supprimées, les couvertures choisies en dernier.
-- Une restauration ne peut pas être annulée. Les couvertures restent dans le fichier, là où vous l'enregistrez ; rien n'est envoyé.
+- **Paramètres** : les paramètres que vous avez modifiés et qui se synchronisent, y compris les menus et les listes.
+- **Paramètres de cet ordinateur** : les paramètres conservés pour un seul ordinateur, comme la disposition, les barres latérales, les raccourcis clavier et le dossier d'enregistrement rapide. Non sélectionnés au départ, car ils sont adaptés à un écran et à un clavier précis.
+- **Recherches enregistrées et vue tableau**, **Prompts et À propos de moi**, **Règles intelligentes** et **Services d'IA** (nom, fournisseur, modèle, URL de base et champs propres au fournisseur).
+- **Couvertures**, signalées **Volumineux** : les images de couverture, par adresse. Les couvertures ne sont jamais synchronisées et les exports de favoris ne les contiennent pas : une sauvegarde est le moyen de les emporter sur un autre ordinateur.
+- **Clés des services d'IA** : les clés API et les en-têtes supplémentaires, jamais sélectionnés sauf si vous les sélectionnez. Les sélectionner affiche un avertissement : toute personne qui a le fichier peut utiliser les clés et engager des frais ; vous confirmez avant l'enregistrement.
+
+Les parties que vous enregistrez deviennent la sélection de la prochaine fois sur cet ordinateur (**Parties des nouvelles sauvegardes** dans les [Paramètres](/settings#data)). Le nom du fichier contient la date et les parties, par exemple `bookmark-scout-backup_2026-10-23_all.json`, et le fichier est enregistré sur votre ordinateur ; rien n'est envoyé nulle part.
+
+### Protection par mot de passe [#password-protection]
+
+- Quand **Clés des services d'IA** est sélectionné, **Protéger les clés API par un mot de passe** est activé au départ ; le désactiver vous demande de confirmer que les clés seront lisibles en clair.
+- **Protéger cette sauvegarde par un mot de passe** chiffre toutes les parties. **Protéger les nouvelles sauvegardes par un mot de passe** dans les paramètres l'active d'emblée.
+- Le mot de passe doit comporter au moins 12 caractères. Il n'est jamais stocké, et un mot de passe oublié ne peut pas être récupéré : personne ne peut ouvrir les parties protégées sans lui, pas même Bookmark Scout.
+- La liste des parties reste lisible : **Restaurer les paramètres** montre donc ce que contient le fichier avant de demander le mot de passe. Avec un mot de passe erroné, ou un fichier modifié après son enregistrement, rien n'est importé des parties protégées.
+
+### Restauration [#restoring]
+
+1. Cliquez sur **Restaurer les paramètres** et choisissez le fichier. Rien ne change encore.
+2. Chaque partie indique combien d'éléments le fichier contient et combien l'importation en ajouterait, en modifierait ou en laisserait tels quels. Une partie issue d'une version plus récente de Bookmark Scout est signalée comme non prise en charge et ignorée. Saisissez le mot de passe pour déverrouiller les parties protégées.
+3. Choisissez les parties à importer. **Paramètres de cet ordinateur** et **Clés des services d'IA** ne sont pas sélectionnés au départ ; les clés demandent à nouveau une confirmation.
+4. Pour chaque partie, choisissez **Fusionner** (ajoute et met à jour ce que contient le fichier, conserve ce qui n'existe que sur cet appareil) ou **Remplacer** (rend la partie identique au contenu du fichier en retirant ce qui n'existe que sur cet appareil ; vous confirmez d'abord).
+5. Avec Fusionner, les éléments modifiés à la fois ici et dans le fichier (prompts, Règles intelligentes, recherches enregistrées, services d'IA) sont listés : gardez le plus récent, utilisez celui du fichier ou gardez celui de cet appareil, pour tous ou un par un. Une couverture choisie avec **Utiliser cette vue comme couverture** n'est remplacée que par une couverture choisie plus récente du fichier.
+6. Cliquez sur **Importer**. Le résultat indique ce que chaque partie a ajouté, modifié, retiré, conservé et ignoré. Les services d'IA dont les clés n'étaient pas dans le fichier affichent **À configurer** jusqu'à ce que vous les saisissiez dans [IA](/settings#ai).
+
+### Annuler l'importation [#undo-import]
+
+Avant d'importer, Bookmark Scout conserve pendant 24 heures une copie de sécurité de ce que l'importation modifie. **Annuler l'importation**, dans le résultat et en bas des paramètres, remet tout en place, couvertures comprises. L'importation figure aussi dans l'**Historique des favoris** du gestionnaire (filtre **Sauvegardes**), avec chaque partie et ses chiffres, et **Annuler l'importation** y fait la même chose. Après 24 heures, ou dès que vous restaurez une autre sauvegarde, l'entrée reste, mais indique pourquoi l'annulation n'est plus proposée.
+
+Les anciens fichiers de sauvegarde, antérieurs aux parties, se restaurent toujours.

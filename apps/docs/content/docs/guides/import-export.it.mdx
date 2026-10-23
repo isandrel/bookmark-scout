@@ -56,15 +56,41 @@ Fai clic su **Importa**. Un messaggio indica quanti elementi sono stati creati, 
 
 Non viene scritto nulla finché non fai clic su **Importa**. Se i tuoi preferiti cambiano mentre l'anteprima è aperta, l'anteprima viene aggiornata invece di essere applicata.
 
-## I file delle impostazioni sono separati [#settings-files-are-separate]
+## Backup e ripristino delle impostazioni [#back-up-and-restore-settings]
 
-I pulsanti **Esegui il backup delle impostazioni** e **Ripristina le impostazioni** in fondo alla pagina delle Impostazioni salvano e ripristinano un file di backup con le impostazioni di Bookmark Scout, i prompt personalizzati, i servizi IA (senza chiavi API) e le ricerche salvate. Non toccano preferiti, tag o riassunti. Vedi [Impostazioni](/settings) per sapere cosa contiene il backup. Puoi anche rilasciare un file di backup in qualsiasi punto della pagina delle Impostazioni per ripristinarlo.
+I pulsanti **Esegui il backup delle impostazioni** e **Ripristina le impostazioni** in fondo alla pagina delle Impostazioni salvano e ripristinano un file di backup con i dati propri di Bookmark Scout. Non toccano mai preferiti, tag o riassunti; per esportare i preferiti usa lo strumento descritto sopra. Puoi anche rilasciare un file di backup in qualsiasi punto della pagina delle Impostazioni per ripristinarlo.
 
-### Copertine in un backup [#covers-in-a-backup]
+### Cosa contiene un backup [#what-a-backup-holds]
 
-Le copertine non vengono mai sincronizzate e le esportazioni dei preferiti non le contengono, quindi un backup è il modo per portarle su un altro computer.
+**Esegui il backup delle impostazioni** elenca le parti di un backup, ognuna con il suo contenuto, il numero di elementi e le dimensioni approssimative. Seleziona quelle che vuoi, oppure usa **Seleziona tutto** e **Deseleziona tutto**:
 
-- Finché ci sono copertine salvate, **Esegui il backup delle impostazioni** chiede se **Includi le copertine**, e indica quante sono e circa quanto aggiungono al file. La casella è già selezionata; **Includi le copertine nei backup** nelle [Impostazioni](/settings#data) lo cambia. Il file contiene una copertina per indirizzo, prima le più recenti, entro i limiti del backup.
-- Il ripristino di un backup con copertine mostra prima un riepilogo: quante copertine contiene il file, quante corrispondono a un preferito con lo stesso indirizzo su questo dispositivo e quante no, e quanti preferiti riceverebbero una copertina, se la vedrebbero sostituire o terrebbero la propria. Togli la selezione da **Ripristina le copertine** per ripristinare solo il resto del backup.
 - Una copertina scelta con **Usa questa vista come copertina** ha la precedenza: viene sostituita solo da una copertina scelta più recente del file, e una copertina scelta del file sostituisce una che non è stata scelta; altrimenti vince la più recente. Una data futura conta come oggi. Lo **Spazio per le copertine** resta valido, quindi oltre quel limite vengono rimosse le copertine più vecchie, quelle scelte per ultime.
-- Il ripristino non si può annullare. Le copertine restano nel file ovunque tu lo salvi; non viene inviato nulla.
+- **Impostazioni**: le impostazioni che hai modificato e che si sincronizzano, inclusi menu ed elenchi.
+- **Impostazioni di questo computer**: le impostazioni salvate per un solo computer, come layout, barre laterali, scorciatoie da tastiera e cartella del salvataggio rapido. All'inizio non sono selezionate, perché sono pensate per uno schermo e una tastiera specifici.
+- **Ricerche salvate e vista tabella**, **Prompt e Su di me**, **Regole intelligenti** e **Servizi IA** (nome, provider, modello, URL di base e campi specifici del provider).
+- **Copertine**, contrassegnate come **Grande**: le immagini di copertina, per indirizzo. Le copertine non vengono mai sincronizzate e le esportazioni dei preferiti non le contengono, quindi un backup è il modo per portarle su un altro computer.
+- **Chiavi dei servizi IA**: le chiavi API e le intestazioni aggiuntive, mai selezionate a meno che non le selezioni tu. Selezionarle mostra un avviso: chiunque abbia il file può usare le chiavi e generare addebiti; confermi prima di salvare.
+
+Le parti che salvi diventano la selezione della volta successiva su questo computer (**Parti dei nuovi backup** nelle [Impostazioni](/settings#data)). Il nome del file contiene la data e le parti, ad esempio `bookmark-scout-backup_2026-10-23_all.json`, e il file viene salvato sul tuo computer; non viene inviato nulla da nessuna parte.
+
+### Protezione con password [#password-protection]
+
+- Con **Chiavi dei servizi IA** selezionate, **Proteggi le chiavi API con una password** è attivo all'inizio; disattivarlo ti chiede di confermare che le chiavi saranno leggibili in chiaro.
+- **Proteggi questo backup con una password** cripta tutte le parti. **Proteggi i nuovi backup con una password** nelle Impostazioni lo fa partire attivo.
+- La password deve avere almeno 12 caratteri. Non viene mai salvata e una password dimenticata non si può recuperare: senza di essa nessuno può aprire le parti protette, nemmeno Bookmark Scout.
+- L'elenco delle parti resta leggibile, quindi **Ripristina le impostazioni** mostra cosa contiene il file prima di chiedere la password. Con una password sbagliata, o con un file modificato dopo il salvataggio, dalle parti protette non viene importato nulla.
+
+### Ripristino [#restoring]
+
+1. Fai clic su **Ripristina le impostazioni** e scegli il file. Per ora non cambia nulla.
+2. Ogni parte mostra quanti elementi ci sono nel file e quanti l'importazione ne aggiungerebbe, modificherebbe o lascerebbe com'erano. Una parte creata da una versione più recente di Bookmark Scout viene indicata come non supportata e saltata. Inserisci la password per sbloccare le parti protette.
+3. Scegli le parti da importare. **Impostazioni di questo computer** e **Chiavi dei servizi IA** all'inizio non sono selezionate; per le chiavi ti viene chiesta di nuovo una conferma.
+4. Per ogni parte, scegli **Unisci** (aggiunge e aggiorna ciò che ha il file, mantiene ciò che ha solo questo dispositivo) o **Sostituisci** (rende la parte identica a ciò che ha il file, rimuovendo ciò che ha solo questo dispositivo; prima confermi).
+5. Con Unisci, vengono elencati gli elementi modificati sia qui sia nel file (prompt, Regole intelligenti, ricerche salvate, servizi IA): mantieni il più recente, usa quello del file o mantieni quello di questo dispositivo, per tutti insieme o per ciascuno. Una copertina scelta con **Usa questa vista come copertina** viene sostituita solo da una copertina scelta più recente del file.
+6. Fai clic su **Importa**. Il risultato elenca cosa ogni parte ha aggiunto, modificato, rimosso, mantenuto e saltato. I servizi IA le cui chiavi non erano nel file mostrano **Da configurare** finché non le inserisci in [IA](/settings#ai).
+
+### Annulla importazione [#undo-import]
+
+Prima di importare, Bookmark Scout conserva per 24 ore una copia di sicurezza di ciò che l'importazione modifica. **Annulla importazione**, nel risultato e in fondo alle Impostazioni, rimette tutto com'era, copertine comprese. L'importazione compare anche nella **Cronologia preferiti** della gestione preferiti (filtro **Backup**), con ogni parte e i relativi conteggi, e lì **Annulla importazione** fa lo stesso. Dopo 24 ore, o appena ripristini un altro backup, la voce resta, ma indica perché l'annullamento non è più disponibile.
+
+I file di backup più vecchi, di prima delle parti, si possono ancora ripristinare.
