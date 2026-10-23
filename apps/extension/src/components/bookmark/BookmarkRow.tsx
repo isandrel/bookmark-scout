@@ -1,12 +1,10 @@
 /**
- * A bookmark row of the popup tree, with drag and drop and delete. Render it inside a
- * `PopupTreeProvider`.
+ * A bookmark row of the popup tree, with drag and drop and its action buttons
+ * (`PopupRowButtons`). Render it inside a `PopupTreeProvider`.
  */
 
-import { Trash2 } from 'lucide-react';
-
 export function BookmarkRow({ row }: { row: PopupTreeRow }) {
-  const { favicon, rowRef, draggingId, onDeleteBookmark } = usePopupTree();
+  const { favicon, rowRef, draggingId } = usePopupTree();
   const { node } = row;
   const onLinkClick = useLinkClick();
   // A Firefox separator: a line, not a link to its `data:` address.
@@ -20,7 +18,7 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
 
   return (
     // At least one icon-button tall; a larger site icon grows the row instead of touching the next.
-    <div className="group bookmark-item relative flex min-h-8 items-center rounded-md px-2 py-1 transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
+    <div className="group bookmark-item relative flex min-h-(--popup-tree-row) items-center rounded-md px-2 py-(--popup-tree-row-pad) transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
       <a
         ref={rowRef(node, 'bookmark')}
         href={separator ? undefined : node.url}
@@ -83,19 +81,10 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
       {/* Overlays the row's end only while hovered or focused, like the folder actions. */}
       <div
         data-slot="bookmark-actions"
-        className="pointer-events-none absolute inset-y-0.5 right-0.5 flex items-center rounded-r-sm bg-muted px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:bg-accent group-focus-within:opacity-100"
+        className="pointer-events-none absolute inset-y-0.5 right-0.5 flex items-center gap-0.5 rounded-r-sm bg-muted px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:bg-accent group-focus-within:opacity-100 [&>button]:pointer-events-auto"
       >
         {openable ? <LinkTargetIcon decorative className="mx-1" /> : null}
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          className="pointer-events-auto text-destructive-text hover:bg-destructive-wash hover:text-destructive-text"
-          onClick={() => onDeleteBookmark(node)}
-          title={t('popup_deleteBookmark')}
-          aria-label={t('popup_deleteBookmark')}
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </Button>
+        <PopupRowButtons kind="bookmark" node={node} />
       </div>
     </div>
   );

@@ -117,6 +117,17 @@ export const STORAGE_ITEMS = {
    * They describe this browser profile (shortcuts are not synced), so they stay on this device.
    */
   dismissedNotices: { area: 'local', name: 'ui.dismissed-notices', v: 1, backup: 'exclude' },
+  /**
+   * Local: the folders open in the popup and side panel when they last closed, for Expand on Open's
+   * "As last left". Folder ids belong to this browser, so it stays on this device, and it is
+   * written only while that choice is on.
+   */
+  popupExpandedFolders: {
+    area: 'local',
+    name: 'ui.popup-expanded-folders',
+    v: 1,
+    backup: 'exclude',
+  },
   /** Session: the last quick save, for Undo and Move; gone when the browser closes. */
   quickSave: { area: 'session', name: 'quick-save.last', v: 1, backup: 'exclude' },
   /**
@@ -204,6 +215,17 @@ export const DEVICE_SETTING_KEYS = [
   'cardMaxTags',
   'cardSummaryLines',
   'previewFields',
+  /**
+   * The popup and side panel's layout suits one screen as well: their parts and toolbar buttons,
+   * row height, the hover card's details, and which row commands are buttons or in ⋯. (Synced, these
+   * lists would not fit beside the others in `settings.lists`' 8,192-byte quota.)
+   */
+  'popupSections',
+  'popupToolbarButtons',
+  'treeDensity',
+  'hoverCardFields',
+  'popupBookmarkMenu',
+  'popupFolderMenu',
 ] as const;
 
 export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];

@@ -6,6 +6,12 @@ const DropdownMenu = DropdownMenuPrimitive.Root;
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
+/**
+ * Connects one `DropdownMenu` to triggers rendered elsewhere (`handle` on both), so a long list
+ * shares one menu instead of mounting one per row; each trigger passes its `payload`.
+ */
+const createDropdownMenuHandle = DropdownMenuPrimitive.createHandle;
+
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
@@ -138,6 +144,7 @@ const DropdownMenuSeparator = React.forwardRef<
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
 
 export {
+  createDropdownMenuHandle,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,

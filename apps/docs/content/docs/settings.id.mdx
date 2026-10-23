@@ -113,7 +113,14 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 | **Lebar Popup** | <SettingDefault path="appearance.popup.width" /> px | Browser mengizinkan paling banyak 800 px |
 | **Tinggi Popup** | <SettingDefault path="appearance.popup.height" /> px | Browser mengizinkan paling banyak 600 px |
 | **Panjang Pemotongan** | <SettingDefault path="appearance.popup.truncate_length" /> karakter | Memendekkan judul halaman di header saran AI popup |
+| **Kepadatan Pohon** | Nyaman | Baris **Nyaman** atau **Ringkas** di pohon popup dan panel samping. Hanya disimpan di perangkat ini |
 | **Tampilkan Detail saat Kursor di Atasnya** | Aktif | Saat kursor berhenti di atas bookmark di popup atau panel samping, atau Anda mencapainya dengan tombol panah, sebuah kartu menampilkan judul dan alamat lengkapnya, folder, tag, ringkasan, sampul yang tersimpan, dan tanggal ditambahkan. `Esc` menutup kartu. Jika nonaktif, baris menampilkan judul dan alamat dalam tooltip biasa |
+
+Di bawah tabel, tiga daftar mengatur popup dan panel samping. Centang item untuk menampilkannya, dan seret dari pegangannya untuk memindahkannya; pegangan itu juga tombol yang menunya memindahkan item ke paling atas, ke atas, ke bawah, atau ke paling bawah. **Pulihkan default** mengembalikan urutan biasa setiap daftar. Daftar ini hanya disimpan di perangkat ini.
+
+- **Bagian popup**: apa yang tampil di bawah kotak pencarian, dari atas ke bawah: halaman saat ini, tugas latar belakang, simpan cepat terakhir, folder terbaru, saran folder AI, folder yang cocok, bookmark, pemberitahuan, dan petunjuk tombol. Bookmark selalu ditampilkan; pindahkan bagian lain ke atas atau ke bawahnya.
+- **Tombol bilah alat**: tombol di samping kotak pencarian: **Luaskan semua** (saat Anda mencari), pengelola bookmark, tema, dan tombol AI (setelah AI disiapkan).
+- **Isi kartu detail**: apa yang ditampilkan kartu detail, berurutan: judul, alamat, sampul, tag, ringkasan, folder, dan tanggal ditambahkan. Selama judul, alamat, dan sampul ada di urutan pertama, ketiganya berbagi baris teratas kartu.
 
 ### Notifikasi [#notifications]
 
@@ -121,6 +128,7 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 | --- | --- | --- |
 | **Durasi Notifikasi** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Berapa lama pesan tetap terbuka. Pesan urungkan punya waktu 10 detiknya sendiri |
 | **Jeda Tooltip** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Berapa lama pointer berada di atas kontrol sebelum penjelasannya muncul |
+| **Jeda Kartu Detail** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> md | Berapa lama kursor berhenti di atas bookmark, atau fokus keyboard tetap di sana, sebelum kartu detailnya terbuka. Juga berlaku untuk ringkasan yang terpotong di pengelola |
 
 ## Perilaku [#behavior]
 
@@ -131,6 +139,7 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 | **Urutan** | Urutan Browser | **Urutan Browser** (seperti di bilah bookmark), **Tanggal Ditambahkan** (terbaru lebih dulu), **Abjad**, atau **Folder Dulu**. Juga urutan tabel pengelola sampai Anda mengurutkannya menurut kolom. Hanya mengubah cara Bookmark Scout menampilkan bookmark, tidak pernah urutan yang disimpan browser |
 | **Kelompokkan menurut Folder** | Aktif | Di popup dan panel samping, cantumkan subfolder sebelum bookmark di setiap tingkat |
 | **Tarik dan Lepas di Hierarki** | Aktif | Di popup dan panel samping, seret bookmark dan folder untuk memindahkannya, dan lepas link dari halaman web ke folder di panel samping untuk menyimpannya di sana. Nonaktifkan agar baris tidak berpindah tanpa sengaja; Anda tetap bisa memindahkannya di pengelola |
+| **Luaskan saat Dibuka** | Tidak ada | Folder mana yang terbuka saat popup atau panel samping dibuka: **Tidak ada**, **Bilah bookmark**, atau **Seperti terakhir kali**, yaitu folder yang terbuka saat terakhir Anda menutupnya, diingat di perangkat ini |
 
 ### Link [#links]
 
@@ -193,6 +202,10 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 ### Menu pengelola bookmark [#manager-menus]
 
 Atur setiap menu pengelola di tabnya sendiri: **Menu item** (klik kanan baris atau folder di hierarki, atau tombol ⋯ pada baris), **Menu Atur** (⋮ di header), **Menu ruang kosong** (klik kanan di bawah baris), dan **Tombol pratinjau** (di bawah pratinjau bookmark; yang pertama tombol utama). Hapus centang perintah untuk menyembunyikannya; perintah pindah ke **Disembunyikan**, dan mencentangnya lagi menambahkannya kembali di akhir. Seret perintah pada pegangannya untuk mengubah urutan, atau seret **Pemisah bagian** untuk memindahkan perintah dari satu bagian ke bagian lain; pegangannya juga tombol yang menunya memindahkan item ke paling atas, ke atas, ke bawah, atau ke paling bawah, jadi keyboard juga berfungsi. **Tambahkan pemisah bagian** menambahkan satu di akhir untuk Anda pindahkan ke atas, dan ✕-nya menghapusnya sehingga dua bagian bergabung. **Pulihkan default** hanya memulihkan menu itu. Setiap menu menyimpan setidaknya satu perintah, dan menu item menyimpan **Lihat Detail** atau **Salin ID Bookmark**, sehingga selalu ada perintah untuk bookmark atau folder apa pun; jika tidak ada perintah yang Anda simpan yang berlaku, menu menampilkan **Tidak ada tindakan yang tersedia**. Menu item disinkronkan bersama pengaturan lainnya; menu lainnya hanya disimpan di perangkat ini.
+
+### Tindakan bookmark dan folder di popup [#popup-menus]
+
+Pilih perintah yang ditawarkan bookmark dan folder di popup dan panel samping, dan seret perintah dari pegangannya untuk mengubah urutannya dalam grupnya, seperti menu pengelola. Perintah pertama sebuah baris adalah tombol yang muncul saat Anda menunjuk baris itu atau mencapainya dengan keyboard: **Hapus** pada bookmark, dan **Luaskan semua subfolder**, **Tambahkan halaman ini**, **Tambahkan folder**, dan **Hapus** pada folder. Sisanya, seperti **Buka di tab baru** dan **Buka di jendela baru**, ada di menu ⋯ baris, dan klik kanan pada baris (atau tombol menunya) menampilkan semuanya. Sembunyikan tombol agar perintah berikutnya menjadi tombol. **Pulihkan default** mengembalikan menu lengkap. **Buka di tab baru** atau **Hapus** selalu tetap ada untuk bookmark, dan **Tambahkan folder** atau **Buka semua** untuk folder. Hanya disimpan di perangkat ini.
 
 ## AI [#ai]
 

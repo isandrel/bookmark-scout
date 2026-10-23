@@ -1,0 +1,29 @@
+# Which bookmark actions the popup and side panel tree's rows offer, by section (menus put a
+# separator between sections), in order: a bookmark row's and a folder row's. Ids are entries of
+# the action registry's item actions (src/services/item-actions.ts) with a `popupMenu` entry; an
+# action appears only where it applies to the row. Read by src/services/popup-row-actions.ts,
+# which fails at load on an unknown id or one with no popup entry for that kind of row. (The
+# manager's menus are config/ui/actions.toml; the popup keeps its own file so it loads only the
+# item actions, not the whole registry, when it opens.)
+
+[menus]
+# The first actions of the user's menu (Options > Behavior > Popup menus) are buttons over the
+# row's end while it is hovered or focused, the rest are in its ⋯ menu, and right-clicking the row
+# lists them all.
+bookmark = [["delete"], ["openInNewTab", "openInNewWindow", "openInPrivateWindow"]]
+folder = [
+  ["expandSubfolders", "addBookmark", "addFolder", "delete"],
+  ["openInNewTab", "openInNewWindow", "openInPrivateWindow"],
+]
+
+[buttons]
+# How many of a row's first actions, as the user arranged the menu, are buttons on the row; an
+# action that does not apply to the row is left out, not replaced by a later one, so the same
+# command never turns up as a button on one row and in ⋯ on another
+bookmark = { value = 1, min = 0, max = 8 }
+folder = { value = 4, min = 0, max = 8 }
+
+[keep_one_of]
+# Options keeps at least one of these shown in each menu, so a row has a command left
+bookmark = ["openInNewTab", "delete"]
+folder = ["addFolder", "openInNewTab"]

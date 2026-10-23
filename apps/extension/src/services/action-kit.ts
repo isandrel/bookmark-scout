@@ -138,6 +138,8 @@ export type ActionAgentExposure = {
 export type ActionIconName =
   | 'appWindow'
   | 'bookmarkPlus'
+  | 'chevronsDown'
+  | 'chevronsUp'
   | 'clipboardPaste'
   | 'copy'
   | 'externalLink'
@@ -203,7 +205,8 @@ export type ActionApprovalPreview<Input> = {
 
 /**
  * One bookmark action. Every surface takes what it needs from the same entry: a call for agents
- * and buttons, `itemMenu` and `folderMenu` for the manager's menus (`action-menus.ts`).
+ * and buttons, `itemMenu` and `folderMenu` for the manager's menus, and `popupMenu` for the
+ * popup and side panel tree's rows (`action-menus.ts`).
  */
 export type ActionDefinition<Input = unknown, Output = unknown> = {
   risk: ActionRisk;
@@ -217,6 +220,7 @@ export type ActionDefinition<Input = unknown, Output = unknown> = {
   agent?: ActionAgentExposure;
   itemMenu?: ActionItemMenu;
   folderMenu?: ActionFolderMenu;
+  popupMenu?: ActionPopupMenu;
   /**
    * For a write that agents make through a plan (`proposeChanges`): checks the input against the
    * library now, and says what the user approves and what the items must still be when applied.
@@ -269,13 +273,6 @@ export const PERMISSION_HINTS: Partial<Record<PermissionFeature, string>> = {
 export function defineAction<Input, Output>(
   definition: ActionDefinition<Input, Output> & ActionCall<Input, Output>,
 ): ActionDefinition<Input, Output> & ActionCall<Input, Output> {
-  return definition;
-}
-
-/** An action only the menus offer, without a call. */
-export function defineMenuAction(
-  definition: ActionDefinition & { labelKey: MessageKey; icon: ActionIconName },
-): ActionDefinition & { labelKey: MessageKey; icon: ActionIconName } {
   return definition;
 }
 

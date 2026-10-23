@@ -6,6 +6,8 @@ import {
   AppWindow,
   ArrowDownAZ,
   BookmarkPlus,
+  ChevronsDown,
+  ChevronsUp,
   ClipboardPaste,
   Copy,
   ExternalLink,
@@ -27,6 +29,8 @@ import {
 export const ACTION_ICONS = {
   appWindow: AppWindow,
   bookmarkPlus: BookmarkPlus,
+  chevronsDown: ChevronsDown,
+  chevronsUp: ChevronsUp,
   clipboardPaste: ClipboardPaste,
   copy: Copy,
   externalLink: ExternalLink,

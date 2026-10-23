@@ -148,7 +148,7 @@ export function QuickSaveResultPanel() {
               }
             >
               <Folder aria-hidden="true" className="size-3 text-muted-foreground" />
-              <span className="max-w-[140px] truncate">{alternative.label}</span>
+              <span className="max-w-chip-alternative truncate">{alternative.label}</span>
             </Button>
           ))}
         </div>

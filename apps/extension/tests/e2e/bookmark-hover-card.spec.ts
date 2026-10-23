@@ -11,12 +11,15 @@ import { managerRow, managerUrl, seedCover } from './manager-helpers';
 import { bookmarkRow, openPopup, seedFolder } from './popup-helpers';
 import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
-const hoverConfig = readConfigToml('ui/hover-card.toml') as {
-  open_delay_ms: number;
-  close_delay_ms: number;
-};
+const hoverConfig = readConfigToml('ui/hover-card.toml') as { close_delay_ms: number };
+/** The Hover Card Delay setting's default, which these tests keep. */
+const OPEN_DELAY_MS = (
+  readConfigToml('settings/appearance.toml') as {
+    notifications: { hover_card_delay_ms: { default: number } };
+  }
+).notifications.hover_card_delay_ms.default;
 /** Long enough that a card due to open has opened: the open delay and a margin for a busy run. */
-const PAST_OPEN_DELAY_MS = hoverConfig.open_delay_ms * 2;
+const PAST_OPEN_DELAY_MS = OPEN_DELAY_MS * 2;
 
 const SUMMARY = [
   'A summary long enough to need more than two lines in a narrow column of the manager table.',
@@ -92,7 +95,7 @@ test('popup: resting on a bookmark shows its details after the delay, Escape clo
   await row.hover();
   await expect(card).toHaveCount(0);
   await expect(card).toBeVisible();
-  expect(Date.now() - startedAt).toBeGreaterThanOrEqual(hoverConfig.open_delay_ms);
+  expect(Date.now() - startedAt).toBeGreaterThanOrEqual(OPEN_DELAY_MS);
 
   await expect(card.getByTestId('bookmark-hover-card-title')).toHaveText('Hovercard release notes');
   await expect(card.getByTestId('bookmark-hover-card-url')).toHaveText(

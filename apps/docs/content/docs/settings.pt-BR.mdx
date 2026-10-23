@@ -113,7 +113,14 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 | **Largura do pop-up** | <SettingDefault path="appearance.popup.width" /> px | Os navegadores permitem no máximo 800 px |
 | **Altura do pop-up** | <SettingDefault path="appearance.popup.height" /> px | Os navegadores permitem no máximo 600 px |
 | **Limite de caracteres** | <SettingDefault path="appearance.popup.truncate_length" /> caracteres | Encurta o título da página no cabeçalho das sugestões de IA do pop-up |
+| **Densidade da árvore** | Confortável | Linhas **Confortáveis** ou **Compactas** na árvore do pop-up e do painel lateral. Salva apenas neste dispositivo |
 | **Mostrar detalhes ao passar o ponteiro** | Ativado | Ao deixar o ponteiro sobre um favorito no pop-up ou no painel lateral, ou chegar a ele com as setas, um cartão mostra o título e o endereço completos, a pasta, as tags, o resumo, a capa salva e a data de adição. `Esc` fecha o cartão. Desativado, a linha mostra o título e o endereço numa dica simples |
+
+Abaixo da tabela, três listas organizam o pop-up e o painel lateral. Marque um item para mostrá-lo e arraste-o pela alça para movê-lo; a alça também é um botão cujo menu move o item para o topo, para cima, para baixo ou para o fim. **Restaurar padrões** devolve a ordem habitual de cada lista. As listas são salvas apenas neste dispositivo.
+
+- **Partes do pop-up**: o que aparece abaixo da caixa de pesquisa, de cima para baixo: a página atual, as tarefas em segundo plano, o último salvamento rápido, as pastas recentes, as sugestões de pasta com IA, as pastas correspondentes, os favoritos, os avisos e as dicas de teclas. Os favoritos sempre aparecem; mova as partes para cima ou para baixo deles.
+- **Botões da barra**: os botões ao lado da caixa de pesquisa: **Expandir tudo** (durante uma pesquisa), o gerenciador de favoritos, o tema e os botões de IA (depois que a IA é configurada).
+- **Conteúdo do cartão de detalhes**: o que o cartão mostra, em ordem: título, endereço, capa, tags, resumo, pasta e data de adição. Enquanto o título, o endereço e a capa vêm primeiro, eles dividem a linha de cima do cartão.
 
 ### Notificações [#notifications]
 
@@ -121,6 +128,7 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 | --- | --- | --- |
 | **Duração das notificações** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
 | **Atraso das dicas** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Quanto tempo o ponteiro fica sobre um controle antes de a explicação aparecer |
+| **Atraso do cartão de detalhes** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Quanto tempo o ponteiro fica sobre um favorito, ou o foco do teclado permanece nele, antes que o cartão de detalhes abra. Também vale para os resumos cortados do gerenciador |
 
 ## Comportamento [#behavior]
 
@@ -131,6 +139,7 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 | **Ordem de classificação** | Ordem do navegador | **Ordem do navegador** (como na barra de favoritos), **Data de adição** (os mais recentes primeiro), **Ordem alfabética** ou **Pastas primeiro**. Também é a ordem da tabela do gerenciador até você classificá-la por uma coluna. Altera somente a forma como o Bookmark Scout mostra os favoritos, nunca a ordem armazenada no navegador |
 | **Agrupar por pastas** | Ativado | No pop-up e no painel lateral, lista as subpastas antes dos favoritos em cada nível |
 | **Arrastar e soltar na árvore** | Ativado | No pop-up e no painel lateral, arraste favoritos e pastas para movê-los, e solte links de uma página da web em uma pasta do painel lateral para salvá-los nela. Desative para não mover linhas por acidente; você ainda pode movê-las no gerenciador |
+| **Expandir ao abrir** | Nenhuma | Quais pastas ficam abertas quando o pop-up ou o painel lateral abre: **Nenhuma**, a **Barra de favoritos** ou **Como da última vez**, as pastas abertas quando você o fechou, lembradas neste dispositivo |
 
 ### Links [#links]
 
@@ -193,6 +202,10 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 ### Menus do gerenciador de favoritos [#manager-menus]
 
 Organize cada menu do gerenciador na sua própria guia: o **Menu de itens** (clique com o botão direito em uma linha ou em uma pasta da árvore, ou o botão ⋯ de uma linha), o **Menu Organizar** (⋮ no cabeçalho), o **Menu do espaço vazio** (clique com o botão direito abaixo das linhas) e os **Botões da pré-visualização** (abaixo da pré-visualização de um favorito; o primeiro é o principal). Desmarque um comando para ocultá-lo; ele vai para **Ocultos**, onde marcá-lo de novo o devolve ao final. Arraste um comando pela alça para reordená-lo, ou arraste um **Separador de seção** para passar comandos de uma seção para outra; a alça também é um botão cujo menu move o item para o topo, para cima, para baixo ou para o final, então o teclado também funciona. **Adicionar separador de seção** adiciona um no final para você subir, e o ✕ dele o remove, juntando duas seções. **Restaurar padrões** restaura só aquele menu. Todo menu mantém pelo menos um comando, e o menu de itens mantém **Ver detalhes** ou **Copiar ID do favorito**, para ter um comando para qualquer favorito ou pasta; se nenhum dos comandos mantidos se aplicar, o menu diz **Nenhuma ação disponível**. O menu de itens é sincronizado com as outras configurações; os outros menus ficam salvos só neste dispositivo.
+
+### Ações de favoritos e pastas no pop-up [#popup-menus]
+
+Escolha quais comandos um favorito e uma pasta oferecem no pop-up e no painel lateral, e arraste um comando pela alça para reordená-lo no grupo, como nos menus do gerenciador. Os primeiros comandos de uma linha são botões que aparecem quando você aponta para ela ou chega a ela pelo teclado: **Excluir** em um favorito, e **Expandir todas as subpastas**, **Adicionar página atual**, **Adicionar pasta** e **Excluir** em uma pasta. Os demais, como **Abrir em nova guia** e **Abrir em nova janela**, ficam no menu ⋯ da linha, e clicar com o botão direito em uma linha (ou usar a tecla de menu) lista todos. Oculte um botão para que o próximo comando vire um botão. **Restaurar padrões** devolve os menus completos. **Abrir em nova guia** ou **Excluir** sempre fica para favoritos, e **Adicionar pasta** ou **Abrir todos** para pastas. Salvo apenas neste dispositivo.
 
 ## IA [#ai]
 

@@ -6,3 +6,6 @@ indent_px = 12
 # Folders nested deeper than this many levels below the top indent no further and show their
 # depth instead, so deep folders keep room for their names in the sidebar
 max_indent_levels = 6
+
+# Room before the chevron of a top-level row, in pixels
+row_start_padding_px = 8

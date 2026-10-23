@@ -3,11 +3,13 @@ import { setLanguage } from '@/hooks/use-i18n';
 import {
   createHoverCardController,
   folderPathOf,
+  getHoverCardFields,
   HOVER_CARD_CLOSE_DELAY_MS,
-  HOVER_CARD_OPEN_DELAY_MS,
+  HOVER_CARD_FIELDS,
   type HoverCardTarget,
 } from '@/lib/hover-card';
 import { getHoverCardDetails, splitUrlAtHost } from '@/lib/hover-card-content';
+import { defaultSettings, SETTING_NUMBER_BOUNDS } from '@/lib/settings-schema';
 
 const OPEN = 600;
 const CLOSE = 150;
@@ -21,7 +23,7 @@ const row = (id: string): HoverCardTarget => ({
 function setup() {
   const changes: (string | null)[] = [];
   const controller = createHoverCardController({
-    openDelayMs: OPEN,
+    openDelayMs: () => OPEN,
     closeDelayMs: CLOSE,
     onChange: (target) => changes.push(target?.id ?? null),
   });
@@ -33,8 +35,23 @@ describe('hover card timing', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
-  it('reads its delays from config, slower to open than to close', () => {
-    expect(HOVER_CARD_OPEN_DELAY_MS).toBeGreaterThan(HOVER_CARD_CLOSE_DELAY_MS);
+  it('opens after the Hover Card Delay setting, by default slower to open than to close', () => {
+    expect(defaultSettings.hoverCardOpenDelayMs).toBeGreaterThan(HOVER_CARD_CLOSE_DELAY_MS);
+    expect(SETTING_NUMBER_BOUNDS.hoverCardOpenDelayMs).toMatchObject({ min: 0, max: 2000 });
+  });
+
+  it('reads the open delay each time a card is about to open', () => {
+    let delay = OPEN;
+    const changes: (string | null)[] = [];
+    const controller = createHoverCardController({
+      openDelayMs: () => delay,
+      closeDelayMs: CLOSE,
+      onChange: (target) => changes.push(target?.id ?? null),
+    });
+    delay = 0;
+    controller.hover(row('a'));
+    vi.advanceTimersByTime(0);
+    expect(changes).toEqual(['a']);
   });
 
   it('opens only after the pointer rests for the open delay', () => {
@@ -137,6 +154,20 @@ describe('hover card timing', () => {
     controller.cancel();
     vi.advanceTimersByTime(OPEN * 2);
     expect(changes).toEqual([]);
+  });
+});
+
+describe('hover card fields', () => {
+  it('shows every detail in the default order of the Hover Card Fields setting', () => {
+    expect(getHoverCardFields(defaultSettings.hoverCardFields)).toEqual([...HOVER_CARD_FIELDS]);
+  });
+
+  it('follows the order set, hides what the setting leaves out, and skips unknown ids', () => {
+    expect(getHoverCardFields(['summary', 'futureField', 'title', 'summary'])).toEqual([
+      'summary',
+      'title',
+    ]);
+    expect(getHoverCardFields([])).toEqual([]);
   });
 });
 

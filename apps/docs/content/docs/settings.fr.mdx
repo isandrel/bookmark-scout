@@ -113,7 +113,14 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 | **Largeur de la fenêtre pop-up** | <SettingDefault path="appearance.popup.width" /> px | Les navigateurs autorisent au maximum 800 px |
 | **Hauteur de la fenêtre pop-up** | <SettingDefault path="appearance.popup.height" /> px | Les navigateurs autorisent au maximum 600 px |
 | **Longueur de troncature** | <SettingDefault path="appearance.popup.truncate_length" /> caractères | Raccourcit le titre de la page dans l'en-tête des suggestions d'IA de la fenêtre pop-up |
+| **Densité de l'arborescence** | Confortable | Lignes **Confortables** ou **Compactes** dans l'arborescence de la fenêtre contextuelle et du panneau latéral. Enregistré sur cet appareil uniquement |
 | **Afficher les détails au survol** | Activé | Quand le pointeur reste sur un favori dans la fenêtre pop-up ou le panneau latéral, ou que vous l'atteignez avec les flèches, une carte affiche son titre et son adresse en entier, son dossier, ses étiquettes, son résumé, sa couverture enregistrée et sa date d'ajout. `Esc` ferme la carte. Désactivé, la ligne affiche le titre et l'adresse dans une simple infobulle |
+
+Sous le tableau, trois listes organisent la fenêtre contextuelle et le panneau latéral. Cochez un élément pour l'afficher et faites-le glisser par sa poignée pour le déplacer ; la poignée est aussi un bouton dont le menu déplace l'élément tout en haut, vers le haut, vers le bas ou tout en bas. **Rétablir les valeurs par défaut** rétablit l'ordre habituel de chaque liste. Les listes sont enregistrées sur cet appareil uniquement.
+
+- **Parties de la fenêtre contextuelle** : ce qui s'affiche sous le champ de recherche, de haut en bas : la page actuelle, les tâches en arrière-plan, le dernier enregistrement rapide, les dossiers récents, les suggestions de dossiers par IA, les dossiers correspondants, les favoris, les avis et l'aide des touches. Les favoris restent toujours affichés ; placez les parties au-dessus ou en dessous.
+- **Boutons de la barre d'outils** : les boutons à côté du champ de recherche : **Tout développer** (pendant une recherche), le gestionnaire de favoris, le thème et les boutons d'IA (une fois l'IA configurée).
+- **Contenu de la carte de détails** : ce qu'affiche la carte, dans l'ordre : titre, adresse, couverture, étiquettes, résumé, dossier et date d'ajout. Tant que le titre, l'adresse et la couverture viennent en premier, ils partagent la ligne du haut de la carte.
 
 ### Notifications [#notifications]
 
@@ -121,6 +128,7 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 | --- | --- | --- |
 | **Durée des notifications** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
 | **Délai des infobulles** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Temps pendant lequel le pointeur reste sur une commande avant que son explication s'affiche |
+| **Délai de la carte de détails** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Combien de temps le pointeur reste sur un favori, ou le focus clavier y reste, avant que sa carte de détails s'ouvre. Vaut aussi pour les résumés tronqués du gestionnaire |
 
 ## Comportement [#behavior]
 
@@ -131,6 +139,7 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 | **Ordre de tri** | Ordre du navigateur | **Ordre du navigateur** (comme dans la barre de favoris), **Date d'ajout** (les plus récents d'abord), **Alphabétique** ou **Dossiers en premier**. C'est aussi l'ordre du tableau du gestionnaire tant que vous ne le triez pas par une colonne. Change uniquement l'affichage des favoris dans Bookmark Scout, jamais l'ordre enregistré par le navigateur |
 | **Regrouper par dossiers** | Activé | Dans la fenêtre pop-up et le panneau latéral, liste les sous-dossiers avant les favoris à chaque niveau |
 | **Glisser-déposer dans l'arborescence** | Activé | Dans la fenêtre pop-up et le panneau latéral, faites glisser favoris et dossiers pour les déplacer, et déposez des liens d'une page web sur un dossier du panneau latéral pour les y enregistrer. Désactivez-le pour éviter de déplacer des lignes par accident ; vous pouvez toujours les déplacer dans le gestionnaire |
+| **Déplier à l'ouverture** | Aucun | Les dossiers dépliés à l'ouverture de la fenêtre contextuelle ou du panneau latéral : **Aucun**, la **Barre de favoris** ou **Comme la dernière fois**, les dossiers ouverts quand vous l'avez fermée, mémorisés sur cet appareil |
 
 ### Liens [#links]
 
@@ -193,6 +202,10 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 ### Menus du gestionnaire de favoris [#manager-menus]
 
 Organisez chaque menu du gestionnaire dans son propre onglet : le **Menu des éléments** (clic droit sur une ligne ou un dossier de l'arborescence, ou le bouton ⋯ d'une ligne), le **Menu Organiser** (⋮ dans l'en-tête), le **Menu de l'espace vide** (clic droit sous les lignes) et les **Boutons de l'aperçu** (sous l'aperçu d'un favori ; le premier est le bouton principal). Décochez une commande pour la masquer ; elle passe dans **Masquées**, où la cocher de nouveau la remet à la fin. Faites glisser une commande par sa poignée pour la réordonner, ou un **Séparateur de section** pour faire passer des commandes d'une section à l'autre ; la poignée est aussi un bouton dont le menu déplace l'élément en haut, vers le haut, vers le bas ou en bas, donc le clavier fonctionne aussi. **Ajouter un séparateur de section** en ajoute un à la fin, à remonter, et son ✕ le supprime en réunissant deux sections. **Rétablir les valeurs par défaut** ne rétablit que ce menu. Chaque menu garde au moins une commande, et le menu des éléments garde **Afficher les détails** ou **Copier l'ID du favori**, pour avoir une commande pour tout favori ou dossier ; si aucune des commandes gardées ne s'applique, le menu indique **Aucune action disponible**. Le menu des éléments se synchronise avec vos autres paramètres ; les autres menus sont conservés sur cet appareil uniquement.
+
+### Actions des favoris et des dossiers dans la fenêtre contextuelle [#popup-menus]
+
+Choisissez les commandes qu'offrent un favori et un dossier dans la fenêtre contextuelle et le panneau latéral, et faites glisser une commande par sa poignée pour la déplacer dans son groupe, comme pour les menus du gestionnaire. Les premières commandes d'une ligne sont des boutons qui apparaissent quand vous la pointez ou l'atteignez au clavier : **Supprimer** sur un favori, et **Développer tous les sous-dossiers**, **Ajouter la page actuelle**, **Ajouter un dossier** et **Supprimer** sur un dossier. Les autres, comme **Ouvrir dans un nouvel onglet** et **Ouvrir dans une nouvelle fenêtre**, sont dans le menu ⋯ de la ligne, et un clic droit sur une ligne (ou sa touche de menu) les liste toutes. Masquez un bouton pour que la commande suivante devienne un bouton. **Rétablir les valeurs par défaut** rétablit les menus complets. **Ouvrir dans un nouvel onglet** ou **Supprimer** reste toujours pour les favoris, et **Ajouter un dossier** ou **Tout ouvrir** pour les dossiers. Enregistré sur cet appareil uniquement.
 
 ## IA [#ai]
 

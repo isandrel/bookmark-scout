@@ -161,6 +161,21 @@
   --max-width-settings-control: 320px;
   --width-settings-slider: 240px;
   --min-width-menu: 8rem;
+  /*
+   * Named sizes for layout that reads them as Tailwind utilities instead of arbitrary values.
+   * The popup search box reserves room for its buttons (`pr-search-controls`) until it measures
+   * them; the manager tree keeps a chevron-wide slot on rows without one (`w-tree-chevron`).
+   */
+  --spacing-search-controls: 6.5rem;
+  --spacing-tree-chevron: 18px;
+  /*
+   * Where folder chips cut their text short: a folder name (`max-w-chip-title`), the folders
+   * above it that tell two names apart (`max-w-chip-context`), and a quick save's alternative
+   * folder (`max-w-chip-alternative`).
+   */
+  --container-chip-title: 120px;
+  --container-chip-context: 100px;
+  --container-chip-alternative: 140px;
 
   --animate-toast-progress: toast-progress var(--toast-duration, 4000ms) linear forwards;
 

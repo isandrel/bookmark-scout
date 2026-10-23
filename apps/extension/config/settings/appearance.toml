@@ -41,9 +41,53 @@ truncate_length = { default = 50, min = 20, max = 200, step = 10 }
 # shows its details (address, folder, tags, summary, cover, date added) in a card; the delays and
 # sizes are in config/ui/hover-card.toml. Off, the row keeps the browser's plain tooltip
 show_hover_details = true
+# The lists below and the tree density are the popup's layout, kept on this device
+# (DEVICE_SETTING_KEYS in src/lib/storage/registry.ts), since it suits one screen.
+# What the hover card shows, in order: ids from HOVER_CARD_FIELDS in src/lib/hover-card.ts. A
+# detail the list does not name is hidden
+hover_card_fields = { default = [
+  "title",
+  "address",
+  "cover",
+  "tags",
+  "summary",
+  "folder",
+  "dateAdded",
+], max_items = 12, max_length = 20 }
+# Row height of the popup and side panel tree: "comfortable" or "compact"; each one's metrics are
+# in config/ui/popup-tree-view.toml
+tree_density = "comfortable"
+# The popup and side panel's parts from top to bottom, below the search row: ids from
+# POPUP_SECTIONS in src/lib/popup-layout.ts. A part the list does not name is hidden, except the
+# bookmark tree, which always shows (at the end when the list leaves it out)
+sections = { default = [
+  "currentPage",
+  "activeJobs",
+  "quickSaveResult",
+  "recentFolders",
+  "aiSuggestions",
+  "folderMatches",
+  "tree",
+  "notices",
+  "hintBar",
+], max_items = 16, max_length = 20 }
+# The buttons beside the search box, in order: ids from POPUP_TOOLBAR_BUTTONS in
+# src/lib/popup-layout.ts. A button the list does not name is hidden; the AI buttons still show
+# only once AI is set up, and Expand all only while a search is typed
+toolbar_buttons = { default = [
+  "expandAll",
+  "openManager",
+  "theme",
+  "aiRecommend",
+  "askAI",
+  "serviceSwitcher",
+], max_items = 12, max_length = 20 }
 
 [notifications]
 # Duration in milliseconds before toast notifications auto-dismiss
 toast_duration_ms = { default = 4000, min = 2000, max = 10000, step = 500 }
 # Milliseconds the pointer rests on a control before its tooltip opens; every page shares it
 tooltip_delay_ms = { default = 200, min = 0, max = 2000, step = 100 }
+# Milliseconds the pointer rests on a bookmark, or keyboard focus stays on it, before its hover card
+# opens (Show Details on Hover, and the manager's cut-short summaries)
+hover_card_delay_ms = { default = 600, min = 0, max = 2000, step = 100 }

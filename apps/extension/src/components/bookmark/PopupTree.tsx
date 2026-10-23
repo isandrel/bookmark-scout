@@ -19,18 +19,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
-
-const treeConfig = readConfig(
-  'ui/popup-tree-view',
-  z.strictObject({
-    row_height_px: z.number().int().positive(),
-    overscan_rows: z.number().int().nonnegative(),
-    padding_px: z.number().int().nonnegative(),
-    indent_px: z.number().int().nonnegative(),
-  }),
-);
 
 /** Moves focus through rows by id, rendered or not. */
 export type PopupTreeHandle = {
@@ -49,6 +38,8 @@ export const POPUP_TREE_ROW_ID_ATTRIBUTE = 'data-tree-row-id';
 
 /** A bookmark row's outer element (its fill and actions), which holds the link that takes focus. */
 const BOOKMARK_ROW_SELECTOR = '.bookmark-item';
+/** Any row's outer element: a bookmark's or a folder's. */
+const ROW_SELECTOR = `${BOOKMARK_ROW_SELECTOR}, .folder-item`;
 
 /** The hover card target for the bookmark row `element` is in; null for folders and separators. */
 function bookmarkRowTarget(element: EventTarget | null): HoverCardTarget | null {
@@ -81,6 +72,9 @@ export function PopupTree({
   const expanded = useMemo(() => new Set(expandedIds), [expandedIds]);
   const rows = useMemo(() => flattenVisibleTree(roots, expanded), [roots, expanded]);
   const indexById = useMemo(() => new Map(rows.map((row, index) => [row.node.id, index])), [rows]);
+  // Tree Density: the rows size themselves from CSS variables; the list needs the numbers.
+  const { value: density } = useSetting('treeDensity');
+  const metrics = popupTreeDensity(density);
 
   // The focused row stays rendered while it scrolls out of view, so focus is never lost.
   const focusedIndexRef = useRef<number | null>(null);
@@ -94,10 +88,10 @@ export function PopupTree({
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => treeConfig.row_height_px,
-    overscan: treeConfig.overscan_rows,
-    paddingStart: treeConfig.padding_px,
-    paddingEnd: treeConfig.padding_px,
+    estimateSize: () => metrics.row_height_px,
+    overscan: POPUP_TREE_VIEW.overscan_rows,
+    paddingStart: POPUP_TREE_VIEW.padding_px,
+    paddingEnd: POPUP_TREE_VIEW.padding_px,
     getItemKey: (index) => rows[index].node.id,
     rangeExtractor,
   });
@@ -120,6 +114,22 @@ export function PopupTree({
       folderPath: folderPathOf(node.parentId, fullNode),
       ...(node.dateAdded === undefined ? {} : { dateAdded: node.dateAdded }),
     };
+  };
+
+  // A density change leaves every measured row the wrong height until it is measured again.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: re-measure when the density changes.
+  useEffect(() => virtualizer.measure(), [density, virtualizer]);
+
+  /** The row a right click is on, for the row menu. */
+  const resolveMenuRow = (target: EventTarget | null) => {
+    const rowElement = target instanceof Element ? target.closest(ROW_SELECTOR) : null;
+    const id = rowElement
+      ?.querySelector(`[${POPUP_TREE_ROW_ID_ATTRIBUTE}]`)
+      ?.getAttribute(POPUP_TREE_ROW_ID_ATTRIBUTE);
+    const index = id ? indexById.get(id) : undefined;
+    const row = index === undefined ? undefined : rows[index];
+    if (!row || row.kind === 'new-folder') return null;
+    return { kind: row.kind, node: row.node };
   };
 
   // Focus a row asked for by the keyboard once the virtualizer has rendered it.
@@ -158,14 +168,15 @@ export function PopupTree({
   );
 
   return (
-    <>
+    <PopupRowMenus resolveRow={resolveMenuRow}>
       <div
         ref={treeRef}
         role="tree"
         aria-label={t('popup_bookmarkTree')}
         data-slot="popup-tree"
+        data-density={density}
         className="relative w-full"
-        style={{ height: virtualizer.getTotalSize() }}
+        style={{ height: virtualizer.getTotalSize(), ...popupTreeDensityStyle(density) }}
         onKeyDown={onKeyDown}
         onFocus={(event) => {
           const id = event.target.getAttribute(POPUP_TREE_ROW_ID_ATTRIBUTE);
@@ -201,14 +212,13 @@ export function PopupTree({
               className="absolute top-0 left-0 w-full px-2 transition-none"
               style={{
                 transform: `translateY(${item.start}px)`,
-                paddingLeft: `calc(0.5rem + ${(row.level - 1) * treeConfig.indent_px}px)`,
+                paddingLeft: `calc(0.5rem + ${(row.level - 1) * metrics.indent_px}px)`,
               }}
             >
               {row.kind === 'folder' ? (
                 <FolderRow
                   row={row}
                   onToggle={() => setFolderExpanded(row.node.id, !row.expanded)}
-                  expandedIds={expanded}
                 />
               ) : row.kind === 'bookmark' ? (
                 <BookmarkRow row={row} />
@@ -220,6 +230,6 @@ export function PopupTree({
         })}
       </div>
       <BookmarkHoverCard hoverCard={hoverCard} resolve={resolveHoverBookmark} />
-    </>
+    </PopupRowMenus>
   );
 }

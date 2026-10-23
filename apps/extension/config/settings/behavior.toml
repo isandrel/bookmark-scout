@@ -9,6 +9,10 @@ group_by_folders = true
 # Drag bookmarks and folders in the popup and side panel tree, and drop links from web pages on a
 # side panel folder; off keeps the tree still for people who drag by accident while scrolling
 drag_and_drop = true
+# Which folders are open when the popup or side panel opens: "none" (every folder closed),
+# "bookmarks_bar" (the bookmarks bar open), or "last" (the folders open when it was last closed,
+# remembered on this device)
+expand_on_open = "none"
 
 [links]
 # Where a clicked link opens: "new_tab" (switch to it), "background_tab" (stay here), or
@@ -35,6 +39,13 @@ actions = { default = [], max_items = 16, max_length = 20 }
 organize = { default = [], max_items = 4, max_length = 12 }
 empty_space = { default = [], max_items = 4, max_length = 12 }
 preview = { default = [], max_items = 4, max_length = 13 }
+
+[popup_menus]
+# The popup and side panel tree's row actions, for bookmark rows and folder rows: the actions
+# shown, in order, as action ids from popup_bookmark and popup_folder in config/ui/actions.toml.
+# Empty means that file's menu. Edited in Options > Behavior; kept on this device.
+bookmark = { default = [], max_items = 16, max_length = 20 }
+folder = { default = [], max_items = 16, max_length = 20 }
 
 [manager_view]
 # How the manager shows a folder or search: "list" (the table) or "cards" (a grid of cards with the

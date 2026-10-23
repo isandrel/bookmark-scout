@@ -113,7 +113,14 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | **Popup Width** | <SettingDefault path="appearance.popup.width" /> px | Browsers allow at most 800 px |
 | **Popup Height** | <SettingDefault path="appearance.popup.height" /> px | Browsers allow at most 600 px |
 | **Truncate Length** | <SettingDefault path="appearance.popup.truncate_length" /> characters | Shortens the page title in the popup's AI suggestions header |
+| **Tree Density** | Comfortable | **Comfortable** or **Compact** rows in the popup and side panel tree. Kept on this device only |
 | **Show Details on Hover** | On | Resting the pointer on a bookmark in the popup or side panel, or moving to it with the arrow keys, shows a card with its whole title and address, folder, tags, summary, stored cover, and date added. `Esc` closes the card. Off, the row shows its title and address in a plain tooltip |
+
+Below the table, three lists arrange the popup and side panel. Check an item to show it, and drag it by its handle to move it; the handle is also a button whose menu moves the item to the top, up, down, or to the bottom. **Restore defaults** brings back each list's usual order. The lists are kept on this device only.
+
+- **Popup parts**: what shows below the search box, top to bottom: the current page, background tasks, the last quick save, recent folders, AI folder suggestions, folder matches, the bookmarks, notices, and key hints. The bookmarks always show; move parts above or below them.
+- **Toolbar buttons**: the buttons beside the search box: **Expand all** (while you search), the bookmark manager, the theme, and the AI buttons (once AI is set up).
+- **Hover card details**: what the hover card shows, in order: title, address, cover, tags, summary, folder, and date added. While the title, address, and cover come first, they share the card's top row.
 
 ### Notifications [#notifications]
 
@@ -121,6 +128,7 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | --- | --- | --- |
 | **Toast Duration** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | How long messages stay open. Undo messages keep their own 10-second window |
 | **Tooltip Delay** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | How long the pointer rests on a control before its explanation appears |
+| **Hover Card Delay** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | How long the pointer rests on a bookmark, or keyboard focus stays on it, before its hover card opens. Also the delay for the manager's cut-short summaries |
 
 ## Behavior [#behavior]
 
@@ -131,6 +139,7 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | **Sort Order** | Browser Order | **Browser Order** (as on the bookmarks bar), **Date Added** (newest first), **Alphabetical**, or **Folders First**. Also the manager table's order until you sort it by a column. Changes only how Bookmark Scout shows bookmarks, never the browser's stored order |
 | **Group by Folders** | On | In the popup and side panel, list subfolders before bookmarks at each level |
 | **Drag and Drop in the Tree** | On | In the popup and side panel, drag bookmarks and folders to move them, and drop links from a web page on a side panel folder to save them there. Turn it off to keep rows from moving by accident; you can still move them in the manager |
+| **Expand on Open** | None | Which folders are open when the popup or side panel opens: **None**, the **Bookmarks bar**, or **As last left**, the folders open when you last closed it, remembered on this device |
 
 ### Links [#links]
 
@@ -193,6 +202,10 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 ### Bookmark manager menus [#manager-menus]
 
 Arrange each of the manager's menus on its own tab: the **Item menu** (right-click a row or a folder in the tree, or a row's ⋯ button), the **Organize menu** (⋮ in the header), the **Empty space menu** (right-click below the rows), and the **Preview buttons** (under a bookmark's preview, the first one the main button). Uncheck a command to hide it; it moves to **Hidden**, where checking it again adds it back at the end. Drag a command by its handle to reorder it, or drag a **Section break** to move commands from one section to another; the handle is also a button whose menu moves the item to the top, up, down, or to the bottom, so the keyboard works too. **Add section break** adds one at the end for you to move up, and its ✕ removes it, joining two sections. **Restore defaults** brings back that menu alone. Every menu keeps at least one command, and the item menu keeps **View Details** or **Copy Bookmark ID**, so it has a command for any bookmark or folder; where none of the commands you kept applies, the menu says **No actions available**. The item menu syncs with your other settings; the other menus are kept on this device only.
+
+### Popup menus [#popup-menus]
+
+Choose which commands a bookmark and a folder offer in the popup and side panel, and drag a command by its handle to reorder it within its group, as with the manager's menus. A row's first commands are buttons that show while you point at it or move to it with the keyboard: **Delete** on a bookmark, and **Expand all subfolders**, **Add current page**, **Add folder**, and **Delete** on a folder. The rest, such as **Open in new tab** and **Open in new window**, are in the row's ⋯ menu, and right-clicking a row (or its menu key) lists them all. Hide a button to make the next command a button instead. **Restore defaults** brings back the full menus. **Open in new tab** or **Delete** always stays for bookmarks, and **Add folder** or **Open all** for folders. Kept on this device only.
 
 ## AI [#ai]
 
