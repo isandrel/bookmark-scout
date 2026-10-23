@@ -51,6 +51,13 @@ export type ApiPermission = keyof typeof API_PERMISSIONS;
 export const WEB_ORIGINS = ['http://*/*', 'https://*/*'] as const;
 
 /**
+ * Every page, as the browser's own match pattern. Chrome, Edge, and Firefox let
+ * `tabs.captureVisibleTab` run without a click only with this literal pattern granted; the
+ * http and https patterns above are not enough.
+ */
+export const ALL_URLS_ORIGINS = ['<all_urls>'] as const;
+
+/**
  * Firefox's built-in data collection consent categories this extension can ask for. Data counts
  * as collected when it leaves the browser, including to an AI provider the user picks.
  */
@@ -160,6 +167,21 @@ export const PERMISSION_FEATURES = {
       dataCollectionNoteKey: AI_DATA_COLLECTION_NOTE_KEY,
     },
     denied: { titleKey: 'tools_hostAccessDenied', descriptionKey: 'settings_hostAccessDeniedDesc' },
+  },
+  /**
+   * Capture Covers While Browsing: a picture of a bookmarked page in the active tab once it has
+   * loaded, with no click (`services/browse-covers.ts`). The picture stays on this device, so no
+   * data collection is asked for. The browser's prompt names all websites, which also covers what
+   * `webAccess` asks for.
+   */
+  browseCovers: {
+    origins: ALL_URLS_ORIGINS,
+    explanation: {
+      titleKey: 'permission_browseCoversTitle',
+      descriptionKey: 'permission_browseCoversDesc',
+      detailKey: 'permission_browseCoversDetail',
+    },
+    denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_browseCoversDenied' },
   },
   /** Every AI feature that sends bookmarks or the current page to the provider. */
   ai: {
@@ -273,6 +295,18 @@ export function getManifestApiPermissions(browser: SupportedBrowser): {
       .map(([name]) => name),
     optional: entries.filter(([, grants]) => grants[browser] === 'optional').map(([name]) => name),
   };
+}
+
+/**
+ * The manifest's optional host access: every origin pattern a feature asks for, each once, in
+ * the order the features list them. Nothing here is granted at install.
+ */
+export function getManifestOptionalOrigins(): string[] {
+  const origins = new Set<string>();
+  for (const definition of Object.values(PERMISSION_FEATURES) as PermissionFeatureDefinition[]) {
+    for (const origin of definition.origins ?? []) origins.add(origin);
+  }
+  return [...origins];
 }
 
 /**

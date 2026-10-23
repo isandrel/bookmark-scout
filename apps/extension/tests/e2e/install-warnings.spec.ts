@@ -37,7 +37,12 @@ async function readWarnings(worker: Worker) {
       bookmarksAlone: await withPermissions(['bookmarks']),
       optionalAlone,
       optionalHosts: optional_host_permissions,
-      allWebsites: await withPermissions([], optional_host_permissions),
+      allWebsites: await withPermissions(
+        [],
+        optional_host_permissions.filter((pattern: string) => pattern !== '<all_urls>'),
+      ),
+      // Capture Covers While Browsing asks for every page.
+      allUrls: await withPermissions([], ['<all_urls>']),
       oneSite: await withPermissions([], ['http://*.example.com/*', 'https://*.example.com/*']),
       // Distinct names: Chrome merges sites that differ only in their top-level domain.
       fourSites: await withPermissions(
@@ -56,8 +61,9 @@ test('installing asks only to read and change bookmarks', async ({ extensionWork
   expect(warnings.installedHosts).toEqual([]);
   expect(warnings.bookmarksAlone).toHaveLength(1);
   expect(warnings.install).toEqual(warnings.bookmarksAlone);
-  // Website access is optional only, for http and https.
-  expect(warnings.optionalHosts).toEqual(['http://*/*', 'https://*/*']);
+  // Website access is optional only: http and https for the tools, and every page
+  // (`<all_urls>`) for Capture Covers While Browsing.
+  expect(warnings.optionalHosts).toEqual(['http://*/*', 'https://*/*', '<all_urls>']);
 });
 
 test('each optional permission prompts with the wording the listings and docs quote', async ({
@@ -74,6 +80,7 @@ test('each optional permission prompts with the wording the listings and docs qu
     nativeMessaging: ['Communicate with cooperating native applications'],
   });
   expect(warnings.allWebsites).toEqual(['Read and change all your data on all websites']);
+  expect(warnings.allUrls).toEqual(['Read and change all your data on all websites']);
   // A tool run over a few bookmarked sites asks for just those (lib/site-access.ts).
   expect(warnings.oneSite).toEqual(['Read and change your data on all example.com sites']);
   expect(warnings.fourSites).toEqual(['Read and change your data on a number of websites']);

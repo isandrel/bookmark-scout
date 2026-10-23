@@ -216,27 +216,34 @@
 # 2,023,680 / 2,023,834, uncompressed 6,764,371 / 6,764,367 / 6,764,530 B (Chrome / Edge /
 # Firefox), 3,896,133 B of JavaScript, and 2,304,339 B of locales; the new limits are about 10 KB
 # above that.
+# Raised on 2026-10-22 (ZIP 2,035,000 to 2,048,000, uncompressed 6,775,000 to 6,830,000, javascript
+# 3,905,000 to 3,920,000, locales 2,315,000 to 2,355,000) for Capture Covers While Browsing (the
+# background capture, its settings and permission explanation), Cover Source, the cover source
+# line, and the placeholder tile, with 18 messages in 12 languages. Local builds of
+# feat/browse-covers on eac6341e measured ZIP 2,038,243 / 2,038,211 / 2,038,361, uncompressed
+# 6,819,738 / 6,819,734 / 6,819,897 B (Chrome / Edge / Firefox), 3,910,311 B of JavaScript, and
+# 2,345,288 B of locales; the new limits are about 10 KB above that.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_035_000
-raw_bytes = 6_775_000
+zip_bytes = 2_048_000
+raw_bytes = 6_830_000
 
 [targets.edge]
-zip_bytes = 2_035_000
-raw_bytes = 6_775_000
+zip_bytes = 2_048_000
+raw_bytes = 6_830_000
 
 [targets.firefox]
-zip_bytes = 2_035_000
-raw_bytes = 6_775_000
+zip_bytes = 2_048_000
+raw_bytes = 6_830_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_905_000
+javascript = 3_920_000
 css = 89_000
 fonts = 143_000
-locales = 2_315_000
+locales = 2_355_000
 images = 320_000
 other = 29_000

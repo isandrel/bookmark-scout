@@ -151,7 +151,7 @@ Il riquadro **Indice del testo delle pagine** nelle [Impostazioni](/settings#ind
 
 ## Mostrare le copertine nei riquadri [#show-covers-on-cards]
 
-**Recupera copertine** conserva una piccola copia dell'immagine di anteprima che una pagina indica per sé (la sua immagine Open Graph o Twitter card), così i **Riquadri** della gestione preferiti la mostrano. È disattivato finché non lo attivi. Mostrare i riquadri non scarica mai nulla: un riquadro senza una copertina archiviata mantiene l'icona del sito.
+**Recupera copertine** conserva una piccola copia dell'immagine di anteprima che una pagina indica per sé (la sua immagine Open Graph o Twitter card), così i **Riquadri** della gestione preferiti la mostrano. È disattivato finché non lo attivi. Mostrare i riquadri non scarica mai nulla: un riquadro senza una copertina archiviata mostra una tessera con l'icona e il nome del suo sito, su un colore scelto in base al sito, disegnata sul tuo computer.
 
 <Steps>
 <Step>
@@ -168,6 +168,17 @@ Esamina le pagine per scheda: **Copertina trovata** (con l'immagine), **Nessuna 
 Passa la gestione preferiti a **Riquadri** con il pulsante accanto a **Visualizza** per vederle. Una copertina appartiene all'indirizzo da cui proviene, quindi un preferito spostato a un altro indirizzo mostra la sua icona finché non recuperi di nuovo. Le copertine vengono conservate solo su questo dispositivo, mai nei backup o nelle esportazioni; **Elimina le copertine** nelle Impostazioni le rimuove, e preferiti, tag e Cronologia restano come sono.
 
 Puoi anche usare la pagina in cui ti trovi: se è nei preferiti e Recupera copertine è attivo, il pulsante **Usa questa vista come copertina** alla fine della riga del popup che indica dove è salvata la pagina acquisisce un'immagine della scheda e te la mostra con un promemoria per controllare che non contenga nulla di privato. Viene conservata solo quando fai clic su **Salva copertina**. Le immagini si acquisiscono solo dal popup della barra degli strumenti, mai nelle finestre private e solo finché la scheda mostra ancora la pagina del preferito.
+
+### Catturare le copertine durante la navigazione [#capture-covers-while-you-browse]
+
+Attiva **Cattura copertine durante la navigazione** sotto Recupera copertine nelle [Impostazioni](/settings#fetch-covers) per ottenere copertine senza scaricarle. Quando una pagina nei preferiti senza copertina finisce di caricarsi nella scheda che stai guardando, Bookmark Scout attende un momento, controlla che la scheda mostri ancora quella pagina e ne acquisisce uno screenshot come copertina del preferito. Attivarla chiede al browser l'accesso a tutte le pagine, perché è l'unico modo in cui i browser permettono a un'estensione di acquisire un'immagine di una scheda senza un clic; lo stesso accesso permette agli strumenti che leggono i siti web di funzionare senza chiedere di nuovo.
+
+- Non acquisisce mai un'immagine in una finestra privata, delle pagine proprie dell'estensione o del browser, di file locali o di una pagina che non hai salvato nei preferiti.
+- Uno screenshot mostra tutto ciò che la pagina mostrava, come la pagina di un account o dei messaggi. Aggiungi i siti che vuoi escludere a **Non catturare mai questi siti** (un sito include i suoi sottodomini) ed elimina qualsiasi copertina con **Elimina le copertine** nelle Impostazioni. Anche i siti in **Non leggere mai questi siti** non vengono mai catturati.
+- **Origine della copertina** decide quale copertina prevale quando sono possibili entrambe. Con **Prima l'immagine della pagina, poi lo screenshot** (l'impostazione predefinita), uno screenshot non sostituisce mai un'immagine salvata da Recupera copertine, e Recupera copertine sostituisce uno screenshot. **Prima lo screenshot** fa il contrario per gli screenshot acquisiti durante la navigazione, e **Solo immagine della pagina** non ne acquisisce nessuno.
+- Uno screenshot vecchio viene acquisito di nuovo alla tua visita successiva. Gli screenshot sono conservati solo su questo dispositivo, come ogni copertina, e non vengono mai inviati da nessuna parte. Disattiva l'impostazione per smettere; rimuovi l'accesso nelle impostazioni delle estensioni del browser.
+
+L'**Anteprima** del preferito e la sua scheda dei dettagli indicano da dove viene la copertina: l'immagine propria della pagina, un'immagine della tua scheda o una catturata durante la navigazione, con il giorno in cui è stata salvata.
 
 ## Strumenti correlati [#related-tools]
 

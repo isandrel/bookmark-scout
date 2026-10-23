@@ -1,0 +1,19 @@
+# The choices of Cover Source (Settings > Page Titles & Icons > Fetch Covers; default in
+# config/settings/metadata-content.toml), read by src/lib/cover-preferences.ts. Each lists the kinds
+# of cover it takes, best first: `page` is the preview image a page names for itself (Fetch
+# Covers), `screenshot` a picture of the tab (Capture Covers While Browsing). A new cover replaces
+# a bookmark's current one only when its kind comes earlier in the list, and a kind left out is
+# never taken automatically. Use this view as the cover is the user's own pick and is not limited.
+# Choices show in this order.
+
+[preferences.page_first]
+kinds = ["page", "screenshot"]
+label_key = "settings_coversSourcePageFirst"
+
+[preferences.screenshot_first]
+kinds = ["screenshot", "page"]
+label_key = "settings_coversSourceScreenshotFirst"
+
+[preferences.page_only]
+kinds = ["page"]
+label_key = "settings_coversSourcePageOnly"

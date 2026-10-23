@@ -17,6 +17,7 @@ const listSettingsConfig = readConfig(
       urlCleanerRemoveParams: z.array(z.string().min(1)),
       privacyScannerSensitiveParams: z.array(z.string().min(1)),
       pageTextExcludedSites: z.array(z.string().min(1)),
+      coversNeverCaptureSites: z.array(z.string().min(1)),
     }),
     status_codes: z.array(
       z.strictObject({ code: httpStatusCodeSchema, reason: z.string().min(1) }),
@@ -42,6 +43,7 @@ const TOKEN_PARSERS: Record<TokenListSetting, (raw: string) => string | undefine
   urlCleanerRemoveParams: queryParamToken,
   privacyScannerSensitiveParams: queryParamToken,
   pageTextExcludedSites: toSiteName,
+  coversNeverCaptureSites: toSiteName,
 };
 
 /** The checklist's codes by class (2xx, 3xx, 4xx), in configured order. */

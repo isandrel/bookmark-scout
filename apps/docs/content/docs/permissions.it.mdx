@@ -3,7 +3,7 @@ title: Autorizzazioni
 description: Ogni autorizzazione del browser che Bookmark Scout richiede, perché gli serve e l'accesso facoltativo ai siti web che richiede solo quando esegui uno strumento.
 ---
 
-Queste sono le autorizzazioni dell'estensione compilata per ciascun browser. Bookmark Scout non dichiara script di contenuto e legge una pagina che visiti solo quando lo chiedi: **Indicizza il testo di questa pagina** nel popup legge il testo che quella scheda mostra; dopo una scorciatoia di salvataggio rapido si limita a mostrare la propria notifica in quella scheda. Al momento dell'installazione chiede solo ciò senza cui non può funzionare; tutto il resto viene chiesto quando attivi o esegui la funzione che ne ha bisogno.
+Queste sono le autorizzazioni dell'estensione compilata per ciascun browser. Bookmark Scout non dichiara script di contenuto e legge una pagina che visiti solo quando lo chiedi: **Indicizza il testo di questa pagina** nel popup legge il testo che quella scheda mostra e, con **Cattura copertine durante la navigazione** attivo, acquisisce un'immagine di una pagina nei preferiti che apri, che resta su questo dispositivo; dopo una scorciatoia di salvataggio rapido si limita a mostrare la propria notifica in quella scheda. Al momento dell'installazione chiede solo ciò senza cui non può funzionare; tutto il resto viene chiesto quando attivi o esegui la funzione che ne ha bisogno.
 
 ## Cosa ti chiederà il browser e perché [#what-your-browser-will-ask-and-why]
 
@@ -16,6 +16,7 @@ Quando installi Bookmark Scout, il browser mostra una sola riga. Tutto il resto 
 | "Leggere la cronologia di navigazione" / "Accedere alle schede del browser" | Salvi la pagina corrente, o chiedi suggerimenti di cartelle, dal riquadro laterale | Sapere su quale pagina ti trovi. Il pulsante nella barra degli strumenti e la scorciatoia di salvataggio rapido non richiedono autorizzazioni, quindi la spiegazione li propone per primi |
 | "Leggere e modificare i tuoi dati su tutti i siti example.com", oppure "su diversi siti web" / "Accedere ai dati dei siti nel dominio example.com" | Esegui **Controlla link non funzionanti**, **Recupero metadati** o **Aggiorna icone dei siti** | Richiedere le pagine salvate nei preferiti di quell'esecuzione, solo sui rispettivi siti |
 | "Leggere e modificare tutti i tuoi dati su tutti i siti web" / "Accedere ai dati di tutti i siti web" | Un'esecuzione di uno strumento riguarda più di 20 siti, oppure attivi **Leggi il contenuto delle pagine** | Richiedere pagine su qualsiasi sito |
+| "Leggere e modificare tutti i tuoi dati su tutti i siti web" / "Accedere ai dati di tutti i siti web" | Attivi **Cattura copertine durante la navigazione** | Acquisire un'immagine di una pagina nei preferiti nella scheda che stai guardando quando si carica, senza un clic, cosa che i browser consentono solo con l'accesso a tutte le pagine. L'immagine resta su questo dispositivo, e lo stesso accesso permette agli strumenti per i siti web di funzionare senza chiedere |
 | "Leggere e modificare i tuoi dati su api.example.com" / "Accedere ai dati di api.example.com" | Fai clic su **Verifica servizio** o **Aggiorna modelli** | Raggiungere l'indirizzo del tuo provider IA |
 | "Comunicare con applicazioni native di cooperazione" / "Scambiare messaggi con programmi diversi da Firefox" | Attivi **Consenti agli agenti IA locali** | Comunicare con il programma bookmark-scout-mcp sul tuo computer |
 | Solo Firefox: "Lo sviluppatore dichiara che l'estensione vuole raccogliere: informazioni di autenticazione, segnalibri, attività di navigazione" | Attivi **Funzioni IA** | La tua chiave API, i preferiti e i nomi delle cartelle, e il titolo e l'URL della pagina corrente vanno al tuo provider IA. "Lo sviluppatore" in questa richiesta è il provider IA che hai scelto; Bookmark Scout non riceve nulla |
@@ -54,11 +55,12 @@ Se rifiuti, la funzione resta disattivata e non viene inviato nulla. Se in segui
 
 ## Accesso facoltativo ai siti web [#optional-website-access]
 
-L'estensione dichiara anche l'accesso a `http://*/*` e `https://*/*`, ma nessuno di questi viene concesso all'installazione. Il browser te lo chiede nel momento in cui serve:
+L'estensione dichiara anche l'accesso a `http://*/*`, `https://*/*` e `<all_urls>`, ma nessuno di questi viene concesso all'installazione. Il browser te lo chiede nel momento in cui serve:
 
 - **Controlla link non funzionanti**, **Recupero metadati** e **Aggiorna icone dei siti** chiedono, quando li esegui, l'accesso solo ai siti dei preferiti di quell'esecuzione, ciascuno con i propri sottodomini. Un'esecuzione su più di 20 siti chiede invece l'accesso a tutti i siti web. I siti che hai già consentito non vengono richiesti di nuovo. Le richieste vengono inviate senza cookie, e per i titoli e i link alle icone viene letta solo l'intestazione della pagina. Se rifiuti, non viene analizzato nulla. Un link che reindirizza a un sito esterno all'esecuzione non può essere seguito, quindi **Controlla link non funzionanti** lo segna come **Da controllare** invece che non funzionante. Vedi [Trovare e riparare i link non funzionanti](/guides/dead-links) e [Aggiornare le icone dei siti](/guides/clean-up#refresh-site-icons).
 - **Indicizza il testo delle pagine** chiede allo stesso modo, per i siti dei preferiti che legge.
 - **Recupera copertine** chiede allo stesso modo, per i siti dei preferiti che legge; un'immagine su un altro sito viene scaricata solo se hai consentito anche quel sito.
+- **Cattura copertine durante la navigazione** chiede l'accesso a tutte le pagine (`<all_urls>`) quando lo attivi: i browser permettono a un'estensione di acquisire un'immagine di una scheda senza un clic solo con questo accesso. Le immagini vengono acquisite solo da pagine nei preferiti nella scheda che stai guardando, mai nelle finestre private o di siti in **Non catturare mai questi siti**, e restano su questo dispositivo. Finché è concesso, gli strumenti qui sopra non chiedono più l'accesso ai loro siti. Vedi [Mostrare le copertine nei riquadri](/guides/clean-up#capture-covers-while-you-browse).
 - **Leggi il contenuto delle pagine** nelle impostazioni IA chiede l'accesso a tutti i siti web quando lo attivi, così gli strumenti IA possono scaricare le pagine, senza cookie, e inviarne il testo principale al tuo provider IA. Le pagine della tua rete locale non vengono mai lette. Vedi [Leggi il contenuto delle pagine](/guides/ai-tools#read-page-content).
 - **Verifica servizio** e **Aggiorna modelli** nelle impostazioni IA chiedono l'accesso solo all'indirizzo di quel provider. Vedi [Configurare gli strumenti IA](/guides/ai-tools).
 
@@ -66,7 +68,7 @@ Per revocare l'accesso, apri la pagina dell'estensione nel browser (ad esempio `
 
 ## Cosa non viene richiesto [#what-is-not-requested]
 
-- Nessun accesso al contenuto delle pagine e nessuno script di contenuto dichiarato
+- Nessuno script di contenuto dichiarato e nessun accesso al contenuto delle pagine oltre alle funzioni qui sopra che attivi
 - Nessuna autorizzazione per cronologia, download o cookie
 - Nessun accesso agli host all'installazione
 

@@ -135,6 +135,16 @@ const coversRun = e2e(
   'covers.spec.ts',
   'a fetched cover shows on its card after the review saves it, and Options deletes it, leaving bookmarks, tags, and the History unchanged (V32)',
 );
+const BROWSE_COVERS = 'services/browse-covers.ts';
+const BROWSE_COVERS_UNIT = 'browse-covers.test.ts';
+const browseCaptureRun = e2e(
+  'browse-covers.spec.ts',
+  'a bookmarked page that loads in the active tab gets a cover captured while browsing once it settles',
+);
+const browseCaptureSkips = e2e(
+  'browse-covers.spec.ts',
+  'no picture in a private window, of a site never captured, of a page without a bookmark, or of one left before it settles',
+);
 const siteIconsRefresh = e2e(
   'tool-site-icons.spec.ts',
   'site icon refresh dedupes origins, rejects oversized and non-image icons, and renders saved icons',
@@ -919,6 +929,38 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   coversMaxImageKb: tested(TOOL_OPTIONS, [coversRun]),
   coversMaxCacheMb: tested(TOOL_OPTIONS, [
     unit(COVERS_UNIT, 'remove the oldest past the storage limit'),
+  ]),
+  coversSourcePreference: tested(BROWSE_COVERS, [
+    unit(
+      BROWSE_COVERS_UNIT,
+      'a fetched page image is kept unless Cover Source puts screenshots first',
+    ),
+    unit(
+      BROWSE_COVERS_UNIT,
+      'keeps a fetched page image unless Cover Source puts screenshots first, and takes none with Page image only',
+    ),
+    unit(
+      COVERS_UNIT,
+      'fetches over a picture of the tab only when Cover Source ranks the page image first',
+    ),
+  ]),
+  coversBrowseCapture: tested(BROWSE_COVERS, [
+    unit(
+      BROWSE_COVERS_UNIT,
+      'is not taken while the setting is off, Fetch Covers is off, or the access is missing',
+    ),
+    e2e(
+      'browse-covers.spec.ts',
+      'Capture Covers While Browsing is off by default and pictures nothing',
+    ),
+    browseCaptureRun,
+  ]),
+  coversNeverCaptureSites: tested(BROWSE_COVERS, [
+    unit(
+      BROWSE_COVERS_UNIT,
+      'is not taken of a site on Never Capture These Sites, or a page with no bookmark of its address',
+    ),
+    browseCaptureSkips,
   ]),
 
   // Statistics

@@ -1,6 +1,7 @@
 /**
- * Bookmark covers: a small copy of the preview image each page names for itself, kept by bookmark
- * id in IndexedDB on this device only, for the manager's cards (Fetch Covers). It is derived data:
+ * Bookmark covers: a small copy of the preview image each page names for itself (Fetch Covers), or
+ * a picture of the tab (Use this view as the cover, Capture Covers While Browsing), kept by
+ * bookmark id in IndexedDB on this device only, for the manager's cards. It is derived data:
  * deleting it never touches a bookmark, a tag, or the History. A cover belongs to the address it
  * was fetched from, so a bookmark moved to another address shows none until it is fetched again,
  * and the oldest covers go first when the total passes the Cover Storage setting.
@@ -37,6 +38,14 @@ export const COVER_LIMITS = {
   version: coverConfig.version,
 } as const;
 
+/**
+ * Where a cover came from: the preview image the page names (`page`, Fetch Covers), a picture of
+ * the tab the user chose (`tab`, Use this view as the cover), or one taken when a bookmarked page
+ * loaded (`browse`, Capture Covers While Browsing).
+ */
+export const COVER_SOURCES = ['page', 'tab', 'browse'] as const;
+export type CoverSource = (typeof COVER_SOURCES)[number];
+
 /** What is known about a stored cover without reading its image. */
 export type CoverInfo = {
   bookmarkId: string;
@@ -47,10 +56,11 @@ export type CoverInfo = {
   bytes: number;
   savedAt: number;
   version: number;
+  source: CoverSource;
 };
 
 /** A cover to store: its info and the image file. */
-export type CoverImage = Pick<CoverInfo, 'bookmarkId' | 'url' | 'width' | 'height'> & {
+export type CoverImage = Pick<CoverInfo, 'bookmarkId' | 'url' | 'width' | 'height' | 'source'> & {
   type: string;
   data: ArrayBuffer;
 };
@@ -63,6 +73,7 @@ const coverInfoSchema = z.strictObject({
   bytes: z.number().int().nonnegative(),
   savedAt: z.number().finite(),
   version: z.number().int().positive(),
+  source: z.enum(COVER_SOURCES),
 });
 
 type StoredImage = { bookmarkId: string; type: string; data: ArrayBuffer };
@@ -148,6 +159,15 @@ export function isCoverCurrent(info: CoverInfo | undefined, url: string): info i
   return info !== undefined && info.url === url && info.version === COVER_LIMITS.version;
 }
 
+/** The info of a bookmark's cover of `url`, or undefined when it has none for that address. */
+export async function getCoverInfo(
+  bookmarkId: string,
+  url: string,
+): Promise<CoverInfo | undefined> {
+  const info = coverInfoSchema.safeParse(await (await openCoverDb()).get('info', bookmarkId));
+  return info.success && info.data.url === url ? info.data : undefined;
+}
+
 /** The cover image of a bookmark at `url`, or undefined when it has none for that address. */
 export async function getCoverImage(bookmarkId: string, url: string): Promise<Blob | undefined> {
   const db = await openCoverDb();
@@ -221,6 +241,7 @@ export async function saveCovers(
           bytes: cover.data.byteLength,
           savedAt,
           version: COVER_LIMITS.version,
+          source: cover.source,
         }),
         transaction
           .objectStore('images')

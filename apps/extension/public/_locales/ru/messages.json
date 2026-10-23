@@ -4469,6 +4469,22 @@
         "message": "Доступ для локальных ИИ-агентов остаётся выключенным. При включении браузер попросит разрешить расширению обмениваться данными с программой bookmark-scout-mcp.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_browseCoversTitle": {
+        "message": "Разрешить снимки страниц из закладок",
+        "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
+    },
+    "permission_browseCoversDesc": {
+        "message": "Чтобы делать снимок страницы из закладок при её загрузке без нажатия, Bookmark Scout нужен доступ ко всем страницам. Затем браузер спросит, разрешить ли доступ к вашим данным на всех сайтах.",
+        "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
+    },
+    "permission_browseCoversDetail": {
+        "message": "Снимки делаются только со страниц из закладок в открытой вкладке, никогда в приватных окнах, и хранятся на этом устройстве: ничего никуда не отправляется. Тот же доступ позволяет инструментам, которые читают сайты, работать без повторного запроса. Чтобы прекратить, выключите настройку; доступ удаляется в настройках расширений браузера.",
+        "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
+    },
+    "permission_browseCoversDenied": {
+        "message": "«Снимать обложки при просмотре» остаётся выключенным. При включении у браузера запрашивается доступ ко всем страницам.",
+        "description": "Toast text when access to all pages for Capture Covers While Browsing is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Ничего не отправлено. Браузер спрашивает разрешение, прежде чем расширение передаст ваш API-ключ провайдеру.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -9231,6 +9247,46 @@
         "message": "Сколько места сохранённые обложки могут занимать на этом устройстве; сначала удаляются самые старые",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversSourcePreference": {
+        "message": "Источник обложки",
+        "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
+    },
+    "settings_coversSourcePreferenceDesc": {
+        "message": "Какую обложку сохраняет закладка, когда доступны и собственное изображение страницы, и снимок вкладки. Снимок при просмотре заменяет изображение страницы только при варианте «Сначала снимок», а «Только изображение страницы» снимков не делает.",
+        "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
+    },
+    "settings_coversSourcePageFirst": {
+        "message": "Сначала изображение страницы, затем снимок",
+        "description": "Settings: Cover Source choice that keeps the page's own image and uses a screenshot only without one"
+    },
+    "settings_coversSourceScreenshotFirst": {
+        "message": "Сначала снимок",
+        "description": "Settings: Cover Source choice that prefers a screenshot of the tab over the page's own image"
+    },
+    "settings_coversSourcePageOnly": {
+        "message": "Только изображение страницы",
+        "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversBrowseCapture": {
+        "message": "Снимать обложки при просмотре",
+        "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
+    },
+    "settings_coversBrowseCaptureDesc": {
+        "message": "Когда страница из закладок без обложки или со старой обложкой загрузится в открытой вкладке, делается снимок вкладки, который становится её обложкой. Никогда в приватных окнах; снимки хранятся только на этом устройстве. При включении запрашивается доступ ко всем страницам.",
+        "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
+    },
+    "settings_coversBrowseCaptureHelp": {
+        "message": "После загрузки расширение немного ждёт и проверяет, что вкладка всё ещё показывает ту же страницу, поэтому на снимке всегда только эта страница из закладок. Страницы расширения и браузера, локальные файлы и сайты из списка «Никогда не снимать эти сайты» не снимаются. На снимке видно то, что было на экране, например страница аккаунта или сообщения: добавьте такие сайты в список или удалите обложки в настройках. Чтобы отозвать доступ, удалите его в настройках расширений браузера.",
+        "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversNeverCaptureSites": {
+        "message": "Никогда не снимать эти сайты",
+        "description": "Settings: list of sites whose pages are never pictured while browsing"
+    },
+    "settings_coversNeverCaptureSitesDesc": {
+        "message": "Страницы этих сайтов и их поддоменов никогда не снимаются при просмотре. Введите сайт, например example.com, или вставьте адрес. Сайты из списка «Никогда не читать эти сайты» тоже никогда не снимаются.",
+        "description": "Settings: what the Never Capture These Sites list does and how to add a site"
+    },
     "tools_coversDialogDesc": {
         "message": "Изображение для предпросмотра, которое указывает сама страница. Хранятся только сохранённые вами обложки, и только на этом устройстве.",
         "description": "Fetch Covers review: description"
@@ -10048,6 +10104,40 @@
     "covers_captureButton": {
         "message": "Сделать обложку из этого вида",
         "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_sourceLabel": {
+        "message": "Обложка",
+        "description": "Bookmark preview and hover card: label of the line saying where the stored cover came from"
+    },
+    "covers_sourcePage": {
+        "message": "Изображение для предпросмотра со страницы, сохранено $date$",
+        "description": "Bookmark preview and hover card: the cover is the preview image the page names for itself (Fetch Covers), and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceTab": {
+        "message": "Снимок вашей вкладки, сохранён $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab the user took with Use this view as the cover, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceBrowse": {
+        "message": "Снято при просмотре, сохранено $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
     },
     "covers_captureTitle": {
         "message": "Сделать обложку из этого вида?",

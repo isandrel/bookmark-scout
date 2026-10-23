@@ -2,7 +2,7 @@
 # The stored lists and their defaults are user settings (config/settings/*.toml); these are
 # only what Options suggests. Anything else can still be typed.
 
-# One-click suggestions shown under a list of query parameter names, keyed by setting.
+# One-click suggestions shown under a list of query parameter names or sites, keyed by setting.
 [suggestions]
 urlCleanerPreserveParams = [ "id", "page", "q", "p", "lang", "s", "query", "search", "sort", "tab", "v", "t" ]
 urlCleanerRemoveParams = [
@@ -17,6 +17,8 @@ privacyScannerSensitiveParams = [
 ]
 # Index Page Text's Never Read These Sites: nothing to suggest, every user's sites differ
 pageTextExcludedSites = []
+# Fetch Covers' Never Capture These Sites: the same, every user's private sites differ
+coversNeverCaptureSites = []
 
 # HTTP status codes the Success Status Codes checklist offers, grouped by class in this order.
 # The reason phrases are the protocol's own (RFC 9110), so they are not translated.

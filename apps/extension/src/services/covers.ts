@@ -50,6 +50,11 @@ export type CoverScanOptions = {
   skipPrivateHosts: boolean;
   /** Total size the stored covers may take; the oldest go first. */
   maxCacheBytes: number;
+  /**
+   * Cover Source: a current picture of the tab is fetched over only when the choice ranks the
+   * page's own image above it (Page image first, Page image only).
+   */
+  preference: CoverPreference;
 };
 
 /**
@@ -194,13 +199,16 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
     if (typeof image === 'string') continue;
     item.status = 'found';
     item.imageSite = undefined;
-    item.cover = { bookmarkId: item.id, url: item.url, ...image };
+    item.cover = { bookmarkId: item.id, url: item.url, source: 'page', ...image };
     item.preview = toDataUrl(new Uint8Array(image.data), image.type);
     return;
   }
 }
 
-/** Fetches a cover for each web bookmark of `nodes` that has none from its current address. */
+/**
+ * Fetches a cover for each web bookmark of `nodes` that has none from its current address, or
+ * whose cover is a picture of the tab that Cover Source ranks below the page's own image.
+ */
 export async function scanCovers(
   nodes: BookmarkTreeNode[],
   options: CoverScanOptions,
@@ -217,8 +225,13 @@ export async function scanCovers(
       folderPath: pathLabel,
       status: 'skipped',
     };
-    if (isCoverCurrent(stored.get(node.id), url)) item.status = 'current';
-    else if (isReadablePageUrl(url, options.skipPrivateHosts)) toFetch.push(item);
+    const current = stored.get(node.id);
+    if (
+      isCoverCurrent(current, url) &&
+      !replacesCover(options.preference, 'page', current.source)
+    ) {
+      item.status = 'current';
+    } else if (isReadablePageUrl(url, options.skipPrivateHosts)) toFetch.push(item);
     items.push(item);
   }
   await mapWithConcurrency(toFetch, COVER_LIMITS.concurrency, async (item) => {
@@ -261,6 +274,20 @@ function dataUrlBytes(dataUrl: string): Uint8Array {
 }
 
 /**
+ * A PNG picture of a tab (`tabs.captureVisibleTab`), shrunk and checked like any cover; null when
+ * it cannot be one (too small, too large, or not decodable).
+ */
+export async function shrinkTabPicture(
+  pngDataUrl: string,
+  widthPx: number,
+): Promise<ShrunkImage | null> {
+  const image = await shrinkImage(dataUrlBytes(pngDataUrl), MIME.png, widthPx).catch(
+    (): 'unusable' => 'unusable',
+  );
+  return typeof image === 'string' ? null : image;
+}
+
+/**
  * Takes a picture of what the active tab shows now, as a cover for the bookmarks of `url`, only
  * after a click (the toolbar popup's activeTab allows it) and only while that tab shows `url`
  * before and after the picture, so a picture is never kept for another page. Private windows are
@@ -275,15 +302,18 @@ export async function captureTabCover(
     browser.tabs.captureVisibleTab(tab.windowId, { format: 'png' }),
   );
   if ('error' in shot) return shot;
-  const image = await shrinkImage(dataUrlBytes(shot.value), MIME.png, widthPx).catch(
-    (): 'unusable' => 'unusable',
-  );
-  if (typeof image === 'string') return { error: 'unreadable' };
+  const image = await shrinkTabPicture(shot.value, widthPx);
+  if (!image) return { error: 'unreadable' };
   const bookmarks = (await findBookmarksByUrl(url)).filter((node) => node.url === url);
   if (bookmarks.length === 0) return { error: 'changed' };
   return {
     cover: {
-      covers: bookmarks.map((node) => ({ bookmarkId: node.id, url, ...image })),
+      covers: bookmarks.map((node) => ({
+        bookmarkId: node.id,
+        url,
+        source: 'tab' as const,
+        ...image,
+      })),
       preview: toDataUrl(new Uint8Array(image.data), image.type),
     },
   };

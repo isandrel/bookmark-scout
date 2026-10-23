@@ -152,7 +152,7 @@ The **Page text index** panel in [Settings](/settings#index-page-text) shows how
 
 ## Show covers on cards
 
-**Fetch Covers** keeps a small copy of the preview image a page names for itself (its Open Graph or Twitter card image), so the manager's **Cards** show it. It is off until you turn it on. Showing cards never downloads anything: a card without a stored cover keeps its site icon.
+**Fetch Covers** keeps a small copy of the preview image a page names for itself (its Open Graph or Twitter card image), so the manager's **Cards** show it. It is off until you turn it on. Showing cards never downloads anything: a card without a stored cover shows a tile with its site's icon and name, on a color picked from the site, drawn on your computer.
 
 <Steps>
 <Step>
@@ -169,6 +169,17 @@ Review the pages by tab: **Cover found** (with the picture), **No cover**, **Unu
 Switch the manager to **Cards** with the button beside **View** to see them. A cover belongs to the address it came from, so a bookmark moved to another address shows its icon until you fetch again. Covers are kept on this device only, never in backups or exports; **Delete covers** in Settings removes them, and bookmarks, tags, and the History stay as they are.
 
 You can also use the page you are on: when it is bookmarked and Fetch Covers is on, the button at the end of the popup line that says where the page is saved, **Use this view as the cover**, takes a picture of the tab and shows it with a reminder to check it for anything private. It is kept only when you click **Save cover**. Pictures are taken only from the toolbar popup, never of a private window, and only while the tab still shows the bookmarked page.
+
+### Capture covers while you browse
+
+Turn on **Capture Covers While Browsing** under Fetch Covers in [Settings](/settings#fetch-covers) to get covers without fetching. When a bookmarked page without a cover finishes loading in the tab you are viewing, Bookmark Scout waits a moment, checks that the tab still shows that page, and takes a screenshot of it as the bookmark's cover. Turning it on asks your browser for access to all pages, because that is the only way browsers let an extension take a picture of a tab without a click; the same access lets the tools that read websites run without asking again.
+
+- It never takes a picture in a private window, of the extension's or the browser's own pages, of local files, or of a page you have not bookmarked.
+- A screenshot shows whatever the page showed, such as an account page or messages. Add sites you want left alone to **Never Capture These Sites** (a site covers its subdomains; sites on **Never Read These Sites** are skipped too), and delete any cover with **Delete covers** in Settings.
+- **Cover Source** decides which cover wins when both are possible. With **Page image first, then screenshot** (the default), a screenshot never replaces an image Fetch Covers saved, and Fetch Covers replaces a screenshot. **Screenshot first** does the opposite for screenshots taken while browsing, and **Page image only** takes none.
+- An old screenshot is taken again on your next visit. Screenshots are kept on this device only, like every cover, and never sent anywhere. Turn the setting off to stop; remove the access in your browser's extension settings.
+
+The bookmark's **Preview** and its details card say where its cover came from: the page's own image, a picture of your tab, or one captured while browsing, with the day it was saved.
 
 ## Related tools
 

@@ -4145,6 +4145,22 @@
         "message": "本機 AI 代理的存取保持關閉。開啟時，瀏覽器會請你允許擴充功能與 bookmark-scout-mcp 程式通訊。",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_browseCoversTitle": {
+        "message": "允許擷取已加入書籤的網頁",
+        "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
+    },
+    "permission_browseCoversDesc": {
+        "message": "要在已加入書籤的網頁載入時自動擷取畫面（不需點擊），Bookmark Scout 需要存取所有網頁的權限。接著瀏覽器會詢問是否允許存取你在所有網站上的資料。",
+        "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
+    },
+    "permission_browseCoversDetail": {
+        "message": "只擷取你正在檢視的分頁中已加入書籤的網頁，絕不在無痕視窗中擷取，圖片保存在這部裝置上：不會傳送到任何地方。同一權限也讓讀取網站的工具不必再次詢問即可執行。關閉此設定即可停止；存取權可在瀏覽器的擴充功能設定中移除。",
+        "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
+    },
+    "permission_browseCoversDenied": {
+        "message": "「瀏覽時擷取封面」維持關閉。開啟時會向瀏覽器要求存取所有網頁的權限。",
+        "description": "Toast text when access to all pages for Capture Covers While Browsing is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "未傳送任何資料。擴充功能將 API 金鑰分享給供應商之前，瀏覽器會先詢問。",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -8205,6 +8221,46 @@
         "message": "封面在這部裝置上可占用的空間；最早儲存的會先被移除",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversSourcePreference": {
+        "message": "封面來源",
+        "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
+    },
+    "settings_coversSourcePreferenceDesc": {
+        "message": "當網頁本身的圖片和分頁截圖都可用時，書籤保留哪一種封面。瀏覽時擷取的截圖只有在選擇「截圖優先」時才會取代網頁圖片；選擇「僅網頁圖片」時不會擷取截圖。",
+        "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
+    },
+    "settings_coversSourcePageFirst": {
+        "message": "網頁圖片優先，其次截圖",
+        "description": "Settings: Cover Source choice that keeps the page's own image and uses a screenshot only without one"
+    },
+    "settings_coversSourceScreenshotFirst": {
+        "message": "截圖優先",
+        "description": "Settings: Cover Source choice that prefers a screenshot of the tab over the page's own image"
+    },
+    "settings_coversSourcePageOnly": {
+        "message": "僅網頁圖片",
+        "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversBrowseCapture": {
+        "message": "瀏覽時擷取封面",
+        "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
+    },
+    "settings_coversBrowseCaptureDesc": {
+        "message": "當沒有封面（或封面較舊）的已加入書籤網頁在你正在檢視的分頁中載入完成時，擷取該分頁的畫面作為封面。絕不在無痕視窗中擷取；圖片只保存在這部裝置上。開啟時會要求存取所有網頁的權限。",
+        "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
+    },
+    "settings_coversBrowseCaptureHelp": {
+        "message": "網頁載入後會稍候片刻，並確認分頁仍顯示該網頁，因此擷取的畫面一定只有該已加入書籤的網頁。絕不擷取擴充功能或瀏覽器本身的頁面、本機檔案，以及「永不擷取這些網站」中的網站。畫面會包含螢幕上顯示的內容，例如帳戶頁面或訊息：請將這類網站加入清單，或在設定中刪除封面。如要收回存取權，請在瀏覽器的擴充功能設定中移除。",
+        "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversNeverCaptureSites": {
+        "message": "永不擷取這些網站",
+        "description": "Settings: list of sites whose pages are never pictured while browsing"
+    },
+    "settings_coversNeverCaptureSitesDesc": {
+        "message": "瀏覽時絕不擷取這些網站及其子網域的網頁。輸入 example.com 這類網站，或貼上一個網址。「永不讀取這些網站」中的網站也不會擷取。",
+        "description": "Settings: what the Never Capture These Sites list does and how to add a site"
+    },
     "tools_coversDialogDesc": {
         "message": "每個網頁為自己指定的預覽圖。只有你儲存的封面才會留在這部裝置上。",
         "description": "Fetch Covers review: description"
@@ -8740,6 +8796,40 @@
     "covers_captureButton": {
         "message": "將目前畫面設為封面",
         "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_sourceLabel": {
+        "message": "封面",
+        "description": "Bookmark preview and hover card: label of the line saying where the stored cover came from"
+    },
+    "covers_sourcePage": {
+        "message": "網頁本身的預覽圖，儲存於 $date$",
+        "description": "Bookmark preview and hover card: the cover is the preview image the page names for itself (Fetch Covers), and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceTab": {
+        "message": "你的分頁畫面，儲存於 $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab the user took with Use this view as the cover, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceBrowse": {
+        "message": "瀏覽時擷取，儲存於 $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
     },
     "covers_captureTitle": {
         "message": "將目前畫面設為封面？",

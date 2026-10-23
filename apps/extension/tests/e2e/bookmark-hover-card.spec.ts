@@ -230,6 +230,8 @@ test('popup: the card reads in dark mode and fits the narrowest popup', async ({
     extensionWorker,
     ids['Hovercard release notes'] as string,
     'https://docs.hover.e2e.invalid/releases/2026/a-very-long-path-segment?tab=notes',
+    undefined,
+    { source: 'tab' },
   );
   await page.setViewportSize({ width: 300, height: 600 });
   await page.reload();
@@ -239,6 +241,10 @@ test('popup: the card reads in dark mode and fits the narrowest popup', async ({
   await expect(card).toBeVisible();
   // The stored cover shows as a thumbnail; nothing is fetched for it.
   await expect(card.getByTestId('bookmark-cover')).toBeVisible();
+  // With where it came from.
+  await expect(card.getByTestId('bookmark-hover-card-cover-source')).toContainText(
+    'Picture of your tab, saved ',
+  );
   await expectCardFits(page, card);
   const background = await card.evaluate((element) => getComputedStyle(element).backgroundColor);
   const dark = await page.evaluate(() => document.documentElement.classList.contains('dark'));

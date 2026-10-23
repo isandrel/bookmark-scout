@@ -152,7 +152,7 @@ El panel **Índice de texto de páginas** de [Configuración](/settings#index-pa
 
 ## Mostrar portadas en las tarjetas [#show-covers-on-cards]
 
-**Obtener portadas** guarda una copia pequeña de la imagen de vista previa que indica una página (su imagen de Open Graph o de tarjeta de Twitter), para que las **Tarjetas** del administrador la muestren. Está desactivado hasta que lo actives. Mostrar tarjetas nunca descarga nada: una tarjeta sin portada guardada conserva el icono del sitio.
+**Obtener portadas** guarda una copia pequeña de la imagen de vista previa que indica una página (su imagen de Open Graph o de tarjeta de Twitter), para que las **Tarjetas** del administrador la muestren. Está desactivado hasta que lo actives. Mostrar tarjetas nunca descarga nada: una tarjeta sin portada guardada muestra un recuadro con el icono y el nombre de su sitio, sobre un color elegido a partir del sitio, dibujado en tu equipo.
 
 <Steps>
 <Step>
@@ -169,6 +169,17 @@ Revisa las páginas por pestaña: **Con portada** (con la imagen), **Sin portada
 Cambia el administrador a **Tarjetas** con el botón junto a **Ver** para verlas. Una portada pertenece a la dirección de la que vino, así que un marcador con otra dirección muestra su icono hasta que vuelvas a obtenerla. Las portadas se guardan solo en este dispositivo, nunca en copias de seguridad ni exportaciones; **Eliminar portadas** en Configuración las quita, y los marcadores, las etiquetas y el historial no cambian.
 
 También puedes usar la página en la que estás: si está en marcadores y Obtener portadas está activado, el botón al final de la línea de la ventana emergente que indica dónde está guardada la página, **Usar esta vista como portada**, toma una imagen de la pestaña y te la muestra con un recordatorio para comprobar que no muestre nada privado. Solo se guarda cuando haces clic en **Guardar portada**. Las imágenes solo se toman desde la ventana emergente de la barra de herramientas, nunca de una ventana privada, y solo mientras la pestaña sigue mostrando la página del marcador.
+
+### Capturar portadas al navegar [#capture-covers-while-you-browse]
+
+Activa **Capturar portadas al navegar** en Obtener portadas, en [Configuración](/settings#fetch-covers), para tener portadas sin descargarlas. Cuando una página marcada sin portada termina de cargarse en la pestaña que estás viendo, Bookmark Scout espera un momento, comprueba que la pestaña sigue mostrando esa página y toma una captura de pantalla de ella como portada del marcador. Al activarlo, se pide a tu navegador acceso a todas las páginas, porque es la única forma en que los navegadores permiten que una extensión tome una imagen de una pestaña sin un clic; ese mismo acceso permite que las herramientas que leen sitios web se ejecuten sin volver a preguntar.
+
+- Nunca toma una imagen en una ventana privada, de las páginas propias de la extensión o del navegador, de archivos locales ni de una página que no tengas en marcadores.
+- Una captura muestra todo lo que mostraba la página, como una página de tu cuenta o tus mensajes. Añade los sitios que quieras dejar fuera a **Nunca capturar estos sitios** (un sitio incluye sus subdominios) y elimina cualquier portada con **Eliminar portadas** en Configuración. Los sitios de **No leer nunca estos sitios** tampoco se capturan nunca.
+- **Origen de la portada** decide qué portada gana cuando ambas son posibles. Con **Imagen de la página primero, luego captura** (el valor predeterminado), una captura nunca reemplaza una imagen que guardó Obtener portadas, y Obtener portadas reemplaza una captura. **Captura primero** hace lo contrario con las capturas tomadas al navegar, y **Solo imagen de la página** no toma ninguna.
+- Una captura antigua se vuelve a tomar en tu próxima visita. Las capturas se guardan solo en este dispositivo, como todas las portadas, y nunca se envían a ningún sitio. Desactiva el ajuste para dejar de capturar; quita el acceso en la configuración de extensiones de tu navegador.
+
+La **Vista previa** del marcador y su tarjeta de detalles indican de dónde viene su portada: la imagen propia de la página, una imagen de tu pestaña o una captura tomada al navegar, con el día en que se guardó.
 
 ## Herramientas relacionadas [#related-tools]
 

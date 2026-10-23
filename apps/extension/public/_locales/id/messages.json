@@ -4133,6 +4133,22 @@
         "message": "Akses untuk agen AI lokal tetap nonaktif. Mengaktifkannya akan meminta browser Anda mengizinkan ekstensi berkomunikasi dengan program bookmark-scout-mcp.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_browseCoversTitle": {
+        "message": "Izinkan gambar halaman yang di-bookmark",
+        "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
+    },
+    "permission_browseCoversDesc": {
+        "message": "Untuk mengambil gambar halaman yang di-bookmark saat dimuat, tanpa klik, Bookmark Scout memerlukan akses ke semua halaman. Browser Anda lalu meminta izin agar ekstensi dapat mengakses data Anda di semua situs web.",
+        "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
+    },
+    "permission_browseCoversDetail": {
+        "message": "Gambar hanya diambil dari halaman yang di-bookmark di tab yang sedang Anda lihat, tidak pernah di jendela pribadi, dan tetap di perangkat ini: tidak ada yang dikirim ke mana pun. Akses yang sama membuat alat yang membaca situs web berjalan tanpa meminta lagi. Nonaktifkan setelan untuk berhenti; hapus akses di setelan ekstensi browser Anda.",
+        "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
+    },
+    "permission_browseCoversDenied": {
+        "message": "Tangkap Sampul Saat Menjelajah tetap nonaktif. Mengaktifkannya meminta akses ke semua halaman dari browser Anda.",
+        "description": "Toast text when access to all pages for Capture Covers While Browsing is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Tidak ada yang dikirim. Browser Anda meminta izin sebelum ekstensi membagikan kunci API Anda kepada penyedia.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -8181,6 +8197,46 @@
         "message": "Ruang yang boleh digunakan sampul tersimpan di perangkat ini; yang terlama dihapus terlebih dahulu",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversSourcePreference": {
+        "message": "Sumber Sampul",
+        "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
+    },
+    "settings_coversSourcePreferenceDesc": {
+        "message": "Sampul mana yang disimpan bookmark jika gambar halaman itu sendiri dan tangkapan layar tab sama-sama tersedia. Tangkapan layar saat menjelajah hanya menggantikan gambar halaman jika Tangkapan layar dulu dipilih, dan Hanya gambar halaman tidak mengambil tangkapan layar.",
+        "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
+    },
+    "settings_coversSourcePageFirst": {
+        "message": "Gambar halaman dulu, lalu tangkapan layar",
+        "description": "Settings: Cover Source choice that keeps the page's own image and uses a screenshot only without one"
+    },
+    "settings_coversSourceScreenshotFirst": {
+        "message": "Tangkapan layar dulu",
+        "description": "Settings: Cover Source choice that prefers a screenshot of the tab over the page's own image"
+    },
+    "settings_coversSourcePageOnly": {
+        "message": "Hanya gambar halaman",
+        "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversBrowseCapture": {
+        "message": "Tangkap Sampul Saat Menjelajah",
+        "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
+    },
+    "settings_coversBrowseCaptureDesc": {
+        "message": "Saat halaman yang di-bookmark tanpa sampul, atau dengan sampul lama, selesai dimuat di tab yang sedang Anda lihat, gambar tab diambil sebagai sampulnya. Tidak pernah di jendela pribadi; gambar tetap di perangkat ini. Meminta akses ke semua halaman saat diaktifkan.",
+        "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
+    },
+    "settings_coversBrowseCaptureHelp": {
+        "message": "Ekstensi menunggu sebentar setelah halaman dimuat dan memeriksa bahwa tab masih menampilkannya, jadi gambar selalu hanya berisi halaman yang di-bookmark itu. Halaman ekstensi atau browser, file lokal, dan situs di Jangan Pernah Tangkap Situs Ini tidak pernah diambil gambarnya. Gambar menampilkan apa yang ada di layar, seperti halaman akun atau pesan: tambahkan situs seperti itu ke daftar, atau hapus sampul di Setelan. Untuk mencabut akses, hapus di setelan ekstensi browser Anda.",
+        "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversNeverCaptureSites": {
+        "message": "Jangan Pernah Tangkap Situs Ini",
+        "description": "Settings: list of sites whose pages are never pictured while browsing"
+    },
+    "settings_coversNeverCaptureSitesDesc": {
+        "message": "Halaman di situs ini dan subdomainnya tidak pernah diambil gambarnya saat menjelajah. Ketik situs seperti example.com, atau tempel alamat. Situs di Jangan Pernah Baca Situs Ini juga tidak pernah diambil gambarnya.",
+        "description": "Settings: what the Never Capture These Sites list does and how to add a site"
+    },
     "tools_coversDialogDesc": {
         "message": "Gambar pratinjau yang ditentukan setiap halaman untuk dirinya sendiri. Hanya sampul yang Anda simpan yang dipertahankan, di perangkat ini.",
         "description": "Fetch Covers review: description"
@@ -8716,6 +8772,40 @@
     "covers_captureButton": {
         "message": "Gunakan tampilan ini sebagai sampul",
         "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_sourceLabel": {
+        "message": "Sampul",
+        "description": "Bookmark preview and hover card: label of the line saying where the stored cover came from"
+    },
+    "covers_sourcePage": {
+        "message": "Gambar pratinjau dari halaman, disimpan $date$",
+        "description": "Bookmark preview and hover card: the cover is the preview image the page names for itself (Fetch Covers), and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceTab": {
+        "message": "Gambar tab Anda, disimpan $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab the user took with Use this view as the cover, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceBrowse": {
+        "message": "Ditangkap saat menjelajah, disimpan $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
     },
     "covers_captureTitle": {
         "message": "Gunakan tampilan ini sebagai sampul?",

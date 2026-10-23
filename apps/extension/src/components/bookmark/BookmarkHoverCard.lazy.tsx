@@ -1,13 +1,14 @@
 /**
  * The bookmark hover card itself, loaded on first use by `BookmarkHoverCard.tsx`: the title, the
  * address with its site in full ink, the folder, the stored tags and whole summary (scrolling past
- * `summary_max_height_px`), a thumbnail of the stored cover, and the date added. Everything comes
+ * `summary_max_height_px`), a thumbnail of the stored cover and where it came from, and the date
+ * added. Everything comes
  * from this device (the bookmark, `bookmarkMetadata`, and the cover store); nothing is fetched.
  *
  * The card never takes focus, so the search box or row keeps it; the row names the card's content
  * with `aria-describedby` (`useHoverCard`).
  */
-import { CalendarPlus, Folder } from 'lucide-react';
+import { CalendarPlus, Folder, ImageIcon } from 'lucide-react';
 import type { CSSProperties } from 'react';
 
 type BookmarkHoverCardPopupProps = {
@@ -66,6 +67,7 @@ function BookmarkHoverCardBody({ id, bookmark }: { id: string; bookmark: HoverCa
   const details = getHoverCardDetails(bookmark, metadata);
   const displayUrl = useDisplayUrl();
   const address = splitUrlAtHost(displayUrl(bookmark.url), bookmark.url);
+  const coverSource = useCoverSourceText(bookmark.id, bookmark.url);
 
   return (
     <div id={id} className="flex flex-col gap-2">
@@ -125,6 +127,15 @@ function BookmarkHoverCardBody({ id, bookmark }: { id: string; bookmark: HoverCa
               <span className="sr-only">{t('table_columnDateAdded')}</span>
             </dt>
             <dd>{formatDay(details.dateAdded)}</dd>
+          </div>
+        ) : null}
+        {coverSource ? (
+          <div className="flex min-w-0 items-start gap-1.5">
+            <dt className="mt-px shrink-0">
+              <ImageIcon aria-hidden="true" className="size-3.5" />
+              <span className="sr-only">{t('covers_sourceLabel')}</span>
+            </dt>
+            <dd data-testid="bookmark-hover-card-cover-source">{coverSource}</dd>
           </div>
         ) : null}
       </dl>

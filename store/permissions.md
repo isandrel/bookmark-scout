@@ -19,8 +19,8 @@ Every permission that a browser lets an extension ask for later is optional and 
 | --- | --- | --- | --- |
 | `manifest_version` | 3 | 3 | 2 |
 | `permissions` (granted at install) | `bookmarks`, `storage`, `activeTab`, `sidePanel`, `scripting`, `offscreen`, `alarms` | Same as Chrome | `bookmarks`, `storage`, `activeTab`, `scripting`, `alarms`, `contextMenus` |
-| `optional_permissions` | `tabs`, `favicon`, `contextMenus`, `nativeMessaging` | Same as Chrome | `tabs`, `nativeMessaging`, `http://*/*`, `https://*/*` |
-| Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*` | Same as Chrome | In `optional_permissions` (MV2) |
+| `optional_permissions` | `tabs`, `favicon`, `contextMenus`, `nativeMessaging` | Same as Chrome | `tabs`, `nativeMessaging`, `http://*/*`, `https://*/*`, `<all_urls>` |
+| Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*`, `<all_urls>` | Same as Chrome | In `optional_permissions` (MV2) |
 | Host permissions at install | None | None | None |
 | `chrome_url_overrides` | `bookmarks` → `bookmarks.html` | Same as Chrome | Absent |
 | Side panel or sidebar | `side_panel.default_path` | Same as Chrome | `sidebar_action.default_panel` |
@@ -46,6 +46,7 @@ Why the rest stay required: `bookmarks` is the product; `storage` holds settings
 | `contextMenus` | Chrome, Edge | The user turns on **Right-Click Menu** in Settings (off by default). No prompt: Chrome grants permissions without a warning silently. | The switch stays off; a toast explains | The menu is removed and the switch shows off |
 | `favicon` | Chrome, Edge | The user clicks **Show browser icons** on the Refresh Site Icons card, which offers it first as the milder way to real icons, or turns on **Use the browser's icon cache** in Settings (off by default). A dialog explains it first. | The switch stays off; bookmarks keep saved or generic icons | Icons fall back to saved or generic ones |
 | Sites of one tool run (`http://*.<site>/*`, `https://*.<site>/*` per site), or `http://*/*`, `https://*/*` | All | The user runs Check Dead Links, Metadata Fetcher, Refresh Site Icons, Index Page Text, or Fetch Covers: the request names only the sites of the bookmarks in that run (each registrable domain with its subdomains), or all websites when the run covers more than `max_sites_per_request` sites (20, `apps/extension/config/network/site-access.toml`). A dialog explains it first and lists the sites. Turning on Read page content asks for all websites. | Nothing is scanned, or the setting stays off | Tools ask again; page reading stops |
+| `<all_urls>` | All | The user turns on **Capture Covers While Browsing** in Settings > Page Titles & Icons > Fetch Covers (off by default). A dialog explains it first: pictures only of bookmarked pages in the active tab, never in private windows, kept on this device, and that the same access lets the website tools run without asking. | The switch stays off; a toast explains | Pictures stop and the switch shows off |
 | One provider origin | All | The user clicks Verify Service or Refresh Models | The check still runs if the provider allows CORS | Not applicable |
 | Data collection: `authenticationInfo`, `bookmarksInfo`, `browsingActivity` | Firefox | The user turns on **Enable AI**. A dialog explains first that "the developer" in Firefox's prompt is the AI provider the user chose | AI stays off | AI calls stop; the switch shows off |
 | Data collection: `websiteContent` (with all websites) | Firefox | The user turns on Read page content | The setting stays off | Page reading stops |
@@ -161,6 +162,14 @@ Not granted at install. Requested at click time in three cases. (1) When the use
 ```
 
 Code: `webAccess` and `pageReading` in `src/lib/permission-catalog.ts`, the per-run sites in `src/lib/site-access.ts`, `requestProviderHostAccess` in `src/services/ai-settings.ts`, `requestWithTimeout` in `src/services/bookmark-network-tools.ts` (`credentials: 'omit'`), `readPageText` in `src/services/page-reader.ts`.
+
+### Optional host access: `<all_urls>`
+
+```text
+Not granted at install. Requested only when the user turns on "Capture Covers While Browsing" in Settings (off by default), after a dialog that explains it. With it, when a bookmarked page finishes loading in the active tab of the focused window, the extension waits a moment, checks the tab still shows that page, and takes one picture of the visible tab with tabs.captureVisibleTab, which browsers allow without a click only with <all_urls>; the http and https patterns are not enough. The picture is shrunk and kept on this device as the bookmark's cover in the manager's cards; it is never sent anywhere. No picture is taken in private windows, of the extension's or the browser's own pages, of local files, of pages that are not bookmarked, or of sites the user lists under "Never Capture These Sites". The extension reads the address of pages that load in the active tab only to compare it with the bookmarks. Turning the setting off stops the pictures.
+```
+
+Code: `browseCovers` in `src/lib/permission-catalog.ts`, `src/services/browse-covers.ts`, `shrinkTabPicture` in `src/services/covers.ts`, and `src/lib/cover-store.ts`.
 
 ### Bookmarks page override (Chrome and Edge)
 

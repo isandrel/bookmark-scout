@@ -23,7 +23,10 @@
 # History record), New Bookmarks From, and the reviewed run's record in the rules log (447).
 # Raised from 455 on 2026-10-22 for a large reviewed Smart Rules run as a background task (its
 # tags and moves applied in parts, checked against the rule versions) and the run status (457).
-"background.js" = 465
+# Raised from 465 on 2026-10-22 for Capture Covers While Browsing: the tab listener, the cover
+# pipeline's image size checks and shrinking, the cover store, and the Cover Source table run in the
+# service worker, which cannot load code later (470; 457 before).
+"background.js" = 480
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -111,7 +114,8 @@
 # Raised from 720 on 2026-10-22 for the filter query action, which parses the search operators (722).
 # Raised from 730 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
 # editor's search notes (731).
-"agent-approval.html" = 740
+# Raised from 740 on 2026-10-22 for the Cover Source choices the settings schema reads (741).
+"agent-approval.html" = 750
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
 # Raised from 380 on 2026-10-21 for config/ai/agent-text.toml, which holds the answer schema text

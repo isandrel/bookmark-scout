@@ -284,6 +284,9 @@ Under it, **Page text index** says how many pages are indexed, how many are out 
 | --- | --- | --- |
 | **Enable Fetch Covers** | Off | Show **Fetch Covers** in the Tools sidebar |
 | **Default Scope** | Current folder | Bookmarks the tool reads when it starts |
+| **Cover Source** | Page image first, then screenshot | Which cover a bookmark keeps when both the page's own image and a screenshot of the tab are possible. **Page image first, then screenshot**: Fetch Covers replaces a screenshot, and a screenshot taken while browsing is only for bookmarks without the page's image. **Screenshot first**: a screenshot taken while browsing replaces the page's image. **Page image only**: no screenshots are taken while browsing. **Use this view as the cover** always keeps the picture you save |
+| **Capture Covers While Browsing** | Off | When a bookmarked page with no cover, or an old screenshot, finishes loading in the tab you are viewing, take a screenshot of the tab as its cover once the page has settled. Never in private windows, never of the extension's or the browser's own pages or local files. Turning it on asks for access to all pages. Kept on this device only |
+| **Never Capture These Sites** | None | Sites never pictured while browsing, each with its subdomains. Type a site such as `example.com`, or paste an address. Sites on **Never Read These Sites** are never pictured either |
 | **Cover Width** | <SettingDefault path="metadata_content.covers.width_px" /> px | Width of the copy kept for each cover; larger images are shrunk to it |
 | **Max Image Size** | <SettingDefault path="metadata_content.covers.max_image_kb" /> KB | Image files larger than this are not downloaded |
 | **Cover Storage** | <SettingDefault path="metadata_content.covers.max_cache_mb" /> MB | Room covers may take on this device; the oldest are removed first. Kept on this device only |

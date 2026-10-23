@@ -23,6 +23,7 @@ import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
 import { captureTabCover, findCoverUrls, saveCoverResults, scanCovers } from '@/services/covers';
 import { mayRequestFrom } from '@/services/page-reader';
 import { runOutOfStorageAfter } from './indexeddb-quota';
+import { PNG_SIGNATURE, pngHeader } from './png-header';
 
 const PAGE = 'https://news.example.com/story/1';
 
@@ -78,6 +79,7 @@ const cover = (bookmarkId: string, bytes: number, url = `https://site.example/${
     url,
     width: 4,
     height: 2,
+    source: 'page',
     type: 'image/webp',
     data: new Uint8Array(bytes).buffer,
   }) satisfies CoverImage;
@@ -195,30 +197,13 @@ describe('a cover shown on a card (Visual Cards V27)', () => {
   });
 });
 
-const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
-/**
- * The first bytes of a PNG: the signature and the IHDR chunk with the size, enough for the type
- * and size checks; decoding is stubbed below.
- */
-const pngHeader = (width: number, height: number) => {
-  const header = new Uint8Array(33);
-  const view = new DataView(header.buffer);
-  header.set(PNG_SIGNATURE);
-  view.setUint32(8, 13);
-  header.set(
-    [...'IHDR'].map((char) => char.charCodeAt(0)),
-    12,
-  );
-  view.setUint32(16, width);
-  view.setUint32(20, height);
-  return header;
-};
 const PNG = pngHeader(1200, 630);
 const OPTIONS = {
   widthPx: 320,
   maxImageBytes: 1000,
   skipPrivateHosts: true,
   maxCacheBytes: 1_000_000,
+  preference: 'page_first',
 };
 
 const head = (image: string) =>
@@ -336,9 +321,24 @@ describe('Fetch Covers runs', () => {
       local: 'skipped',
     });
     const found = items.find((item) => item.id === 'found');
-    expect(found?.cover).toMatchObject({ width: 320, height: 168, type: COVER_LIMITS.outputType });
+    expect(found?.cover).toMatchObject({
+      width: 320,
+      height: 168,
+      type: COVER_LIMITS.outputType,
+      source: 'page',
+    });
     expect(found?.preview).toMatch(/^data:image\//);
     expect(items.find((item) => item.id === 'elsewhere')?.imageSite).toBe('other.net');
+  });
+
+  it('fetches over a picture of the tab only when Cover Source ranks the page image first', async () => {
+    const url = 'https://news.example/story';
+    await saveCovers([{ ...cover('shot', 5, url), source: 'browse' }], 1000);
+    const statusWith = async (preference: string) =>
+      (await scanCovers([node('shot', url)], { ...OPTIONS, preference })).items[0]?.status;
+    expect(await statusWith('page_first')).toBe('found');
+    expect(await statusWith('page_only')).toBe('found');
+    expect(await statusWith('screenshot_first')).toBe('current');
   });
 
   it('never follows a redirect for an image, and tries the next one the page names', async () => {
@@ -586,10 +586,15 @@ describe('Use this view as the cover', () => {
     expect(capture).toHaveBeenCalledWith(1, { format: 'png' });
     if (!('cover' in result)) throw new Error(result.error);
     expect(
-      result.cover.covers.map((cover) => [cover.bookmarkId, cover.width, cover.height]),
+      result.cover.covers.map((cover) => [
+        cover.bookmarkId,
+        cover.width,
+        cover.height,
+        cover.source,
+      ]),
     ).toEqual([
-      ['b1', 320, 200],
-      ['b2', 320, 200],
+      ['b1', 320, 200, 'tab'],
+      ['b2', 320, 200, 'tab'],
     ]);
     expect(result.cover.preview).toMatch(/^data:image\//);
   });

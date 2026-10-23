@@ -4237,6 +4237,22 @@
         "message": "로컬 AI 에이전트 접근은 꺼진 상태로 유지됩니다. 켜면 브라우저가 확장 프로그램이 bookmark-scout-mcp 프로그램과 통신하도록 허용할지 묻습니다.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_browseCoversTitle": {
+        "message": "북마크한 페이지 캡처 허용",
+        "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
+    },
+    "permission_browseCoversDesc": {
+        "message": "클릭 없이 북마크한 페이지가 로드될 때 화면을 찍으려면 Bookmark Scout에 모든 페이지에 대한 접근 권한이 필요합니다. 그러면 브라우저가 모든 웹사이트의 데이터에 접근하도록 허용할지 묻습니다.",
+        "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
+    },
+    "permission_browseCoversDetail": {
+        "message": "이미지는 보고 있는 탭의 북마크한 페이지에서만 찍고, 비공개 창에서는 찍지 않으며, 이 기기에 보관됩니다. 어디에도 전송되지 않습니다. 같은 권한으로 웹사이트를 읽는 도구도 다시 묻지 않고 실행됩니다. 중지하려면 설정을 끄고, 접근 권한은 브라우저의 확장 프로그램 설정에서 제거하세요.",
+        "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
+    },
+    "permission_browseCoversDenied": {
+        "message": "탐색 중 표지 캡처가 꺼진 상태로 유지됩니다. 켜면 브라우저에 모든 페이지에 대한 접근 권한을 요청합니다.",
+        "description": "Toast text when access to all pages for Capture Covers While Browsing is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "아무것도 전송되지 않았습니다. 확장 프로그램이 API 키를 제공자와 공유하기 전에 브라우저가 확인합니다.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -8495,6 +8511,46 @@
         "message": "보관한 표지가 이 기기에서 차지할 수 있는 공간이며, 오래된 것부터 지웁니다",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversSourcePreference": {
+        "message": "표지 출처",
+        "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
+    },
+    "settings_coversSourcePreferenceDesc": {
+        "message": "페이지 자체 이미지와 탭 스크린샷을 모두 쓸 수 있을 때 북마크가 유지할 표지를 정합니다. 탐색 중 찍은 스크린샷은 '스크린샷 우선'일 때만 페이지 이미지를 대체하며, '페이지 이미지만'에서는 스크린샷을 찍지 않습니다.",
+        "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
+    },
+    "settings_coversSourcePageFirst": {
+        "message": "페이지 이미지 우선, 없으면 스크린샷",
+        "description": "Settings: Cover Source choice that keeps the page's own image and uses a screenshot only without one"
+    },
+    "settings_coversSourceScreenshotFirst": {
+        "message": "스크린샷 우선",
+        "description": "Settings: Cover Source choice that prefers a screenshot of the tab over the page's own image"
+    },
+    "settings_coversSourcePageOnly": {
+        "message": "페이지 이미지만",
+        "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversBrowseCapture": {
+        "message": "탐색 중 표지 캡처",
+        "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
+    },
+    "settings_coversBrowseCaptureDesc": {
+        "message": "표지가 없거나 오래된 북마크한 페이지가 보고 있는 탭에서 로드를 마치면 탭 화면을 찍어 표지로 사용합니다. 비공개 창에서는 찍지 않으며, 이미지는 이 기기에만 보관됩니다. 켤 때 모든 페이지에 대한 접근 권한을 요청합니다.",
+        "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
+    },
+    "settings_coversBrowseCaptureHelp": {
+        "message": "페이지가 로드된 뒤 잠시 기다렸다가 탭이 여전히 그 페이지를 표시하는지 확인하므로, 이미지는 항상 그 북마크한 페이지만 담습니다. 확장 프로그램이나 브라우저 자체 페이지, 로컬 파일, '캡처하지 않을 사이트'에 있는 사이트는 찍지 않습니다. 이미지에는 계정 페이지나 메시지처럼 화면에 보이던 내용이 담깁니다. 그런 사이트는 목록에 추가하거나 설정에서 표지를 삭제하세요. 접근 권한을 회수하려면 브라우저의 확장 프로그램 설정에서 제거하세요.",
+        "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversNeverCaptureSites": {
+        "message": "캡처하지 않을 사이트",
+        "description": "Settings: list of sites whose pages are never pictured while browsing"
+    },
+    "settings_coversNeverCaptureSitesDesc": {
+        "message": "이 사이트와 하위 도메인의 페이지는 탐색 중에 캡처하지 않습니다. example.com처럼 사이트를 입력하거나 주소를 붙여 넣으세요. '읽지 않을 사이트'에 있는 사이트도 캡처하지 않습니다.",
+        "description": "Settings: what the Never Capture These Sites list does and how to add a site"
+    },
     "tools_coversDialogDesc": {
         "message": "각 페이지가 스스로 지정한 미리 보기 이미지입니다. 저장한 표지만 이 기기에 남습니다.",
         "description": "Fetch Covers review: description"
@@ -9124,6 +9180,40 @@
     "covers_captureButton": {
         "message": "이 화면을 표지로 사용",
         "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_sourceLabel": {
+        "message": "표지",
+        "description": "Bookmark preview and hover card: label of the line saying where the stored cover came from"
+    },
+    "covers_sourcePage": {
+        "message": "페이지의 미리 보기 이미지, $date$에 저장",
+        "description": "Bookmark preview and hover card: the cover is the preview image the page names for itself (Fetch Covers), and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceTab": {
+        "message": "내 탭 화면, $date$에 저장",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab the user took with Use this view as the cover, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceBrowse": {
+        "message": "탐색 중 캡처, $date$에 저장",
+        "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
     },
     "covers_captureTitle": {
         "message": "이 화면을 표지로 사용할까요?",

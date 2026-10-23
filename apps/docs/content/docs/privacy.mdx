@@ -21,8 +21,9 @@ This is a summary. The full <SiteLink to="privacy">privacy policy</SiteLink> on 
 - Site icons you download with **Refresh Site Icons**, from each bookmarked website.
 - The text of bookmarked pages, when you run **Index Page Text**, from each page in the run. Or the text of the tab you are viewing, as you see it, when you click **Index this page's text** in the popup.
 - The head of bookmarked pages and the preview image each one names, when you run **Fetch Covers**, from each page in the run. Or a picture of the tab you are viewing, when you click **Use this view as the cover** in the popup.
+- A picture of a bookmarked page you open in the tab you are viewing, once it has loaded, while **Capture Covers While Browsing** is on (off by default); never in a private window or of a site on **Never Capture These Sites**. While it is on, the address of each page that loads in your active tab is compared with your bookmarks and not kept.
 
-It does not read the content of the pages you visit, except the text of the tab you are viewing when you click **Index this page's text** in the popup, which you see before it is kept. After a quick save shortcut it shows its own notification in that tab, which reads nothing from the page.
+It does not read the content of the pages you visit, except the text of the tab you are viewing when you click **Index this page's text** in the popup, which you see before it is kept, and the pictures **Capture Covers While Browsing** takes of bookmarked pages while it is on, which stay on this device. After a quick save shortcut it shows its own notification in that tab, which reads nothing from the page.
 
 ## What it stores
 
@@ -42,7 +43,7 @@ It does not read the content of the pages you visit, except the text of the tab 
 | Tags, summaries, saved searches, smart rules, the list of changes by Smart Rules (automatic tags and moves, and the bookmarks reviewed runs tagged), each rule's last run and the bookmarks it found rules disagreeing on, recent folders, recent searches | Local storage on this device | No |
 | Site icons saved with **Refresh Site Icons**, up to 4 MB by default | Local storage on this device | No |
 | Page text saved with **Index Page Text** or **Index this page's text**, with how it was read (downloaded, or from your tab), the address it was read from, a fingerprint of the text, and whether it was cut short; deleted with its bookmark, when you take back the extension's access to its website, or when you add its site to **Never Read These Sites** | IndexedDB on this device | No |
-| Covers saved with **Fetch Covers** | IndexedDB on this device | No |
+| Covers saved with **Fetch Covers**, **Use this view as the cover**, or **Capture Covers While Browsing**, each with where it came from | IndexedDB on this device | No |
 | The last quick save (the page's title and URL, and where it went), for **Undo** and **Move to** | Session storage on this device, cleared when the browser closes | No |
 | The manager's undo history (the bookmarks you changed there, with copies of deleted ones and their tags and summaries), for undo and redo | Session storage on this device, cleared when the browser closes | No |
 | The bookmark change history: what changed in your bookmarks and when, whether Bookmark Scout made the change or it was seen from elsewhere (titles, URLs, folders, and the outcome of each change), kept for a limited time; and a copy of every bookmark's title, URL, and folder as last seen, to tell what changed outside Bookmark Scout. Also a copy of each item Bookmark Scout deletes, with what was inside it and its tags and summary, so it can be restored from the History; removed with its change. Not in the backup file | IndexedDB on this device | No |

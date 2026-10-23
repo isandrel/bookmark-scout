@@ -51,6 +51,8 @@ export default defineBackground(() => {
   registerJobs();
   // Taking back a site's website access deletes the page text indexed from it.
   registerPageTextAccessCleanup();
+  // Capture Covers While Browsing, while the user has it on and allowed.
+  registerBrowseCovers();
 
   // A background worker may be started by any event, not only install or startup.
   void initializeContextMenu().catch((error) => {

@@ -5,8 +5,8 @@ import { getManifestCommands } from './src/lib/command-catalog';
 import {
   getFirefoxDataCollectionPermissions,
   getManifestApiPermissions,
+  getManifestOptionalOrigins,
   type SupportedBrowser,
-  WEB_ORIGINS,
 } from './src/lib/permission-catalog';
 
 /**
@@ -76,8 +76,9 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
     permissions: permissions as UserManifest['permissions'],
     optional_permissions: optional as UserManifest['optional_permissions'],
     // Requested at click time only, never at install: website access for the network tools and
-    // page reading, and per-origin access for the AI provider Verify Service check.
-    optional_host_permissions: [...WEB_ORIGINS],
+    // page reading, per-origin access for the AI provider Verify Service check, and every page
+    // (`<all_urls>`) for Capture Covers While Browsing.
+    optional_host_permissions: getManifestOptionalOrigins(),
     ...(browser === 'firefox'
       ? {
           browser_specific_settings: {
@@ -100,7 +101,7 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
 export function adaptManifestV2(manifest: Browser.runtime.Manifest): void {
   manifest.optional_permissions = [
     ...(manifest.optional_permissions ?? []),
-    ...WEB_ORIGINS,
+    ...getManifestOptionalOrigins(),
   ] as typeof manifest.optional_permissions;
   delete manifest.optional_host_permissions;
 }

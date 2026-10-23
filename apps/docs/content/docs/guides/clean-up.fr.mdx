@@ -152,7 +152,7 @@ Le panneau **Index du texte des pages** des [paramètres](/settings#index-page-t
 
 ## Afficher les couvertures sur les cartes [#show-covers-on-cards]
 
-**Récupérer les couvertures** conserve une petite copie de l'image d'aperçu qu'une page indique pour elle-même (son image Open Graph ou de carte Twitter), pour que les **Cartes** du gestionnaire l'affichent. Il est désactivé tant que vous ne l'activez pas. Afficher les cartes ne télécharge jamais rien : une carte sans couverture enregistrée garde l'icône du site.
+**Récupérer les couvertures** conserve une petite copie de l'image d'aperçu qu'une page indique pour elle-même (son image Open Graph ou de carte Twitter), pour que les **Cartes** du gestionnaire l'affichent. Il est désactivé tant que vous ne l'activez pas. Afficher les cartes ne télécharge jamais rien : une carte sans couverture enregistrée affiche une vignette avec l'icône et le nom de son site, sur une couleur tirée du site, dessinée sur votre ordinateur.
 
 <Steps>
 <Step>
@@ -169,6 +169,17 @@ Vérifiez les pages par onglet : **Couverture trouvée** (avec l'image), **Aucu
 Passez le gestionnaire en **Cartes** avec le bouton à côté de **Afficher** pour les voir. Une couverture appartient à l'adresse dont elle vient : un favori déplacé vers une autre adresse affiche son icône jusqu'à une nouvelle récupération. Les couvertures restent sur cet appareil uniquement, jamais dans les sauvegardes ni les exports ; **Supprimer les couvertures** dans les paramètres les retire, et les favoris, les étiquettes et l'historique restent tels quels.
 
 Vous pouvez aussi utiliser la page sur laquelle vous êtes : si elle est en favori et que Récupérer les couvertures est activé, le bouton au bout de la ligne de la fenêtre pop-up qui indique où la page est enregistrée, **Utiliser cette vue comme couverture**, capture l'onglet et vous montre l'image avec un rappel de vérifier qu'elle ne montre rien de privé. Elle n'est conservée que si vous cliquez sur **Enregistrer la couverture**. Les captures ne se font que depuis la fenêtre pop-up de la barre d'outils, jamais dans une fenêtre privée, et seulement tant que l'onglet affiche la page du favori.
+
+### Capturer les couvertures en naviguant [#capture-covers-while-you-browse]
+
+Activez **Capturer les couvertures en naviguant** sous Récupérer les couvertures dans les [paramètres](/settings#fetch-covers) pour obtenir des couvertures sans les télécharger. Quand une page en favori sans couverture finit de se charger dans l'onglet que vous consultez, Bookmark Scout attend un instant, vérifie que l'onglet affiche toujours cette page et en prend une capture d'écran comme couverture du favori. L'activer demande à votre navigateur l'accès à toutes les pages, car c'est la seule façon dont les navigateurs laissent une extension capturer un onglet sans clic ; ce même accès permet aux outils qui lisent les sites Web de s'exécuter sans redemander.
+
+- Il ne prend jamais de capture dans une fenêtre privée, des pages propres à l'extension ou au navigateur, de fichiers locaux, ni d'une page que vous n'avez pas mise en favori.
+- Une capture montre tout ce que la page affichait, comme une page de compte ou des messages. Ajoutez les sites à laisser de côté à **Ne jamais capturer ces sites** (un site inclut ses sous-domaines), et supprimez n'importe quelle couverture avec **Supprimer les couvertures** dans les paramètres. Les sites de **Ne jamais lire ces sites** ne sont jamais capturés non plus.
+- **Source de la couverture** décide quelle couverture l'emporte quand les deux sont possibles. Avec **Image de la page d'abord, puis capture** (par défaut), une capture ne remplace jamais une image enregistrée par Récupérer les couvertures, et Récupérer les couvertures remplace une capture. **Capture d'abord** fait l'inverse pour les captures prises en naviguant, et **Image de la page uniquement** n'en prend aucune.
+- Une ancienne capture est reprise à votre prochaine visite. Les captures sont conservées uniquement sur cet appareil, comme toutes les couvertures, et ne sont jamais envoyées nulle part. Désactivez le paramètre pour arrêter ; retirez l'accès dans les paramètres des extensions de votre navigateur.
+
+L'**Aperçu** du favori et sa carte de détails indiquent d'où vient sa couverture : l'image propre de la page, une capture de votre onglet ou une capture prise en naviguant, avec le jour où elle a été enregistrée.
 
 ## Outils associés [#related-tools]
 

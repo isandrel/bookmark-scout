@@ -29,8 +29,9 @@ type ExtensionFixtures = {
   /** Loads a copy whose manifest pre-grants the optional web host access the network tools request. */
   grantWebHostAccess: boolean;
   /**
-   * Optional API permissions (such as `tabs` or `contextMenus`) the loaded copy has from install,
-   * because headless tests cannot answer the browser's permission prompt.
+   * Optional API permissions (such as `tabs` or `contextMenus`) or optional host patterns (such as
+   * `<all_urls>`) the loaded copy has from install, because headless tests cannot answer the
+   * browser's permission prompt.
    */
   grantPermissions: readonly string[];
   /**
@@ -148,15 +149,24 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
         const manifestPath = path.join(directory, 'manifest.json');
         const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
         const optional: string[] = manifest.optional_permissions ?? [];
-        const notOptional = permissions.filter((permission) => !optional.includes(permission));
+        const optionalHosts: string[] = manifest.optional_host_permissions ?? [];
+        const notOptional = permissions.filter(
+          (permission) => !optional.includes(permission) && !optionalHosts.includes(permission),
+        );
         if (notOptional.length > 0) {
           throw new Error(`Not optional in this build: ${notOptional.join(', ')}`);
         }
-        manifest.permissions = [...manifest.permissions, ...permissions];
+        const apiPermissions = permissions.filter((permission) => optional.includes(permission));
+        manifest.permissions = [...manifest.permissions, ...apiPermissions];
         manifest.optional_permissions = optional.filter(
-          (permission) => !permissions.includes(permission),
+          (permission) => !apiPermissions.includes(permission),
         );
-        if (hosts) manifest.host_permissions = manifest.optional_host_permissions;
+        // Website access is the http and https patterns; `<all_urls>` only when named.
+        const grantedHosts = [
+          ...(hosts ? optionalHosts.filter((pattern) => pattern.includes('://')) : []),
+          ...permissions.filter((permission) => optionalHosts.includes(permission)),
+        ];
+        if (grantedHosts.length > 0) manifest.host_permissions = grantedHosts;
         writeFileSync(manifestPath, JSON.stringify(manifest));
         copies.set(key, directory);
         return directory;

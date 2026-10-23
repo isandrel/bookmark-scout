@@ -20,6 +20,9 @@ export function roundTo(value: number, decimals: number): number {
 
 const DECIMAL_BASE = 10;
 
+/** Degrees in a full turn, as of a hue on the color wheel. */
+export const DEGREES_PER_TURN = 360;
+
 /** A whole in percent: `fraction * PERCENT` is a percentage. */
 export const PERCENT = 100;
 

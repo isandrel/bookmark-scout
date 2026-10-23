@@ -1149,6 +1149,17 @@ const fields = {
   coversMaxCacheMb: numberField('metadata_content.covers.max_cache_mb', 'coversMaxCacheMb', {
     unit: 'mb',
   }),
+  coversSourcePreference: enumField(
+    'metadata_content.covers.source_preference',
+    'coversSourcePreference',
+    coverPreferenceSchema,
+    getCoverPreferenceLabel,
+  ),
+  coversBrowseCapture: switchField('metadata_content.covers.browse_capture', 'coversBrowseCapture'),
+  coversNeverCaptureSites: siteListField(
+    'metadata_content.covers.never_capture_sites',
+    'coversNeverCaptureSites',
+  ),
 
   privacyScannerEnabled: switchField('security.privacy_scanner.enabled', 'privacyScannerEnabled'),
   privacyScannerDefaultScope: scopeField(
@@ -1602,7 +1613,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'covers',
         labelKey: 'tools_covers',
         toggle: 'coversEnabled',
-        fields: ['coversDefaultScope'],
+        fields: [
+          'coversDefaultScope',
+          'coversSourcePreference',
+          'coversBrowseCapture',
+          'coversNeverCaptureSites',
+        ],
         advanced: ['coversWidthPx', 'coversMaxImageKb', 'coversMaxCacheMb'],
         panel: 'covers',
       },
@@ -1680,6 +1696,7 @@ export const SETTING_PERMISSIONS = {
   agentBridgeEnabled: 'agentBridge',
   browserIconCache: 'browserIcons',
   contextMenuEnabled: 'contextMenu',
+  coversBrowseCapture: 'browseCovers',
 } as const satisfies Partial<Record<keyof Settings, PermissionFeature>>;
 
 /** The permission feature a setting turns on, if any. */

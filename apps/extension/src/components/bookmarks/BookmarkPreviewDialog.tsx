@@ -1,7 +1,7 @@
 /**
  * A bookmark's preview in the manager, opened from its item menu (Preview) or with the manager's
- * preview key on a focused row or card: the stored cover, title, address, folder, tags, and
- * summary, then the buttons of `[menus] preview` in config/ui/actions.toml. Everything comes from
+ * preview key on a focused row or card: the stored cover, title, address, folder, tags, summary,
+ * and where the cover came from, then the buttons of `[menus] preview` in config/ui/actions.toml. Everything comes from
  * this device; nothing is fetched, so without a stored cover none is shown.
  *
  * Previous and Next (and the preview's keys, `managerPreview` in config/ui/shortcuts.toml, unless
@@ -86,6 +86,7 @@ export function BookmarkPreviewDialog({
   const { value: metadataById } = useStoredValue(bookmarkMetadataValue);
 
   const metadata = shown ? metadataById[shown.id] : undefined;
+  const coverSource = useCoverSourceText(shown?.id ?? '', shown?.url);
   const tags = metadata?.tags ?? [];
   const summary = metadata?.summary?.trim() ?? '';
   const sections = shown ? getItemMenuSections([shown], host, ACTION_MENUS.preview) : [];
@@ -212,6 +213,12 @@ export function BookmarkPreviewDialog({
                   >
                     {summary}
                   </dd>
+                </div>
+              ) : null}
+              {coverSource ? (
+                <div className="grid gap-1">
+                  <dt className="text-xs text-muted-foreground">{t('covers_sourceLabel')}</dt>
+                  <dd data-testid="bookmark-preview-cover-source">{coverSource}</dd>
                 </div>
               ) : null}
             </dl>

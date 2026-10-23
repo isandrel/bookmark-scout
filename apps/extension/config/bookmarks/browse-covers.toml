@@ -1,0 +1,14 @@
+# Capture Covers While Browsing (src/services/browse-covers.ts, Settings > Page Titles & Icons >
+# Fetch Covers): when a bookmarked page finishes loading in the active tab of the focused window,
+# the background takes a picture of the tab, shrinks it like any cover (config/bookmarks/covers.toml
+# and the Cover Width setting), and keeps it on this device. Never in private windows, never of the
+# extension's or the browser's own pages, and never of a site on Never Capture These Sites.
+
+# How long a page must stay in front after it finished loading before it is pictured, in ms, so a
+# page still drawing late content, or one the user leaves at once, is not taken
+settle_delay_ms = { value = 1500, min = 0, max = 10000 }
+# Least time between two pictures, in ms. Chrome refuses more than two captureVisibleTab calls a
+# second (MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND), so the bound stays above 500
+min_interval_ms = { value = 1000, min = 600, max = 60000 }
+# A bookmark whose cover is older than this many days gets a new picture on its next visit
+max_age_days = { value = 30, min = 1, max = 365 }

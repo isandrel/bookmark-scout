@@ -56,6 +56,9 @@ describe('permission catalog', () => {
     for (const browser of ['chrome', 'edge', 'firefox'] as const) {
       expect(request('currentTab', browser)).toEqual({ permissions: ['tabs'] });
       expect(request('webAccess', browser)).toEqual({ origins: [...WEB_ORIGINS] });
+      // The literal pattern captureVisibleTab needs without a click; nothing leaves the device,
+      // so Firefox asks for no data collection.
+      expect(request('browseCovers', browser)).toEqual({ origins: ['<all_urls>'] });
     }
     expect(request('browserIcons', 'chrome')).toEqual({ permissions: ['favicon'] });
   });
