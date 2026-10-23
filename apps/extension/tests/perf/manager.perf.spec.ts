@@ -1,3 +1,4 @@
+import type { Worker } from '@playwright/test';
 import { z } from 'zod';
 import { expect, test } from '../e2e/fixtures';
 import { STORAGE_ITEMS, writeStored } from '../e2e/storage';
@@ -150,6 +151,103 @@ test('bookmarks manager: switch a full page of search results to cards, scroll, 
       { selector: 'tbody tr', minCount: MAX_PAGE_SIZE },
     );
     report.addInteraction('manager.cards.toList', toList);
+    await closeMeasured(page);
+  }
+
+  await report.write(testInfo);
+});
+
+/**
+ * Stores a cover, as Fetch Covers would, for each of these bookmarks: one 960 by 503 WebP drawn in
+ * the service worker, the size Fetch Covers keeps by default.
+ */
+async function seedCovers(worker: Worker, ids: readonly string[]): Promise<void> {
+  await worker.evaluate(async (bookmarkIds) => {
+    const canvas = new OffscreenCanvas(960, 503);
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('No 2D context in the service worker');
+    const gradient = context.createLinearGradient(0, 0, 960, 503);
+    gradient.addColorStop(0, '#2b7a78');
+    gradient.addColorStop(1, '#3a506b');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, 960, 503);
+    const data = await (await canvas.convertToBlob({ type: 'image/webp' })).arrayBuffer();
+    const nodes = await chrome.bookmarks.get([...bookmarkIds]);
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const open = indexedDB.open('bookmark-scout-covers', 1);
+      open.onupgradeneeded = () => {
+        open.result.createObjectStore('info', { keyPath: 'bookmarkId' });
+        open.result.createObjectStore('images', { keyPath: 'bookmarkId' });
+      };
+      open.onsuccess = () => resolve(open.result);
+      open.onerror = () => reject(open.error);
+    });
+    await new Promise<void>((resolve, reject) => {
+      const transaction = db.transaction(['info', 'images'], 'readwrite');
+      for (const node of nodes) {
+        transaction.objectStore('info').put({
+          bookmarkId: node.id,
+          url: node.url,
+          width: 960,
+          height: 503,
+          bytes: data.byteLength,
+          savedAt: Date.now(),
+          version: 1,
+          source: 'page',
+        });
+        transaction
+          .objectStore('images')
+          .put({ bookmarkId: node.id, type: 'image/webp', data: data.slice(0) });
+      }
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+    });
+    db.close();
+  }, ids);
+}
+
+test('bookmarks manager: scroll a full page of the list with the Cover column shown', async ({
+  context,
+  extensionId,
+  extensionWorker,
+}, testInfo) => {
+  await seedLibrary(extensionWorker);
+  await writeStored(extensionWorker, STORAGE_ITEMS.tableLayout, { pageSize: MAX_PAGE_SIZE });
+  await writeStored(extensionWorker, STORAGE_ITEMS.tableView, {
+    columnVisibility: { cover: true },
+  });
+  const url = `chrome-extension://${extensionId}/bookmarks.html?q=${encodeURIComponent(CARDS_QUERY)}`;
+  const fullPage = (rows: number) => document.querySelectorAll('tbody tr').length >= rows;
+
+  // Every row of the page gets a stored cover, so each draws a thumbnail.
+  const setup = await context.newPage();
+  await setup.goto(url);
+  await setup.waitForFunction(fullPage, MAX_PAGE_SIZE, { timeout: 60_000 });
+  const ids = await setup.evaluate(() =>
+    [...document.querySelectorAll<HTMLElement>('tbody tr[data-row-id]')].map(
+      (row) => row.dataset.rowId ?? '',
+    ),
+  );
+  await setup.close();
+  await seedCovers(extensionWorker, ids);
+  const report = new PerfReport();
+
+  for (let run = 0; run < perfConfig.run.repeats; run++) {
+    const { page } = await openMeasured(context, url, ['tbody tr']);
+    await page.waitForFunction(fullPage, MAX_PAGE_SIZE, { timeout: 60_000 });
+    // The covers are read once their rows are drawn; the first screen of them shows first.
+    await expect(page.getByTestId('bookmark-cover-thumbnail').first()).toBeVisible({
+      timeout: 60_000,
+    });
+    const thumbnails = await page.getByTestId('bookmark-cover-thumbnail').count();
+    report.add('manager.list.covers.rendered', thumbnails, 'thumbnails');
+    expect(thumbnails, 'one thumbnail a row, for the page only').toBeLessThanOrEqual(MAX_PAGE_SIZE);
+
+    const scrolled = await measureScroll(page);
+    expect(scrolled.distance, 'the list scrolls').toBeGreaterThan(0);
+    report.add('manager.list.covers.scroll.longFrames', scrolled.longFrames, 'frames');
+    report.add('manager.list.covers.scroll.worstFrame', scrolled.worstFrame);
+    report.add('manager.list.covers.scroll.p95Frame', scrolled.p95Frame);
     await closeMeasured(page);
   }
 

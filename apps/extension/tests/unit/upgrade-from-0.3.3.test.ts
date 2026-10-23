@@ -298,8 +298,10 @@ describe('updating from 0.3.3', () => {
     await seed0_3_3Profile();
     const view = await bookmarkTableViewValue.get();
     expect(view.sorting).toEqual([{ id: 'title', desc: false }]);
-    expect(view.columnOrder.slice(0, 7)).toEqual([
+    // The Cover column, newer than 0.3.3, joins hidden right after the checkbox.
+    expect(view.columnOrder.slice(0, 8)).toEqual([
       'select',
+      'cover',
       'title',
       'url',
       'type',
@@ -307,7 +309,12 @@ describe('updating from 0.3.3', () => {
       'parentId',
       'folderPath',
     ]);
-    expect(view.columnVisibility).toMatchObject({ type: false, id: false, parentId: false });
+    expect(view.columnVisibility).toMatchObject({
+      type: false,
+      id: false,
+      parentId: false,
+      cover: false,
+    });
     expect(await bookmarkTableLayoutValue.get()).toEqual({
       pageSize: 20,
       columnSizing: { url: 320 },

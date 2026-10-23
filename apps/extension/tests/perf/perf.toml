@@ -121,6 +121,13 @@ list = [
 "manager.cards.scroll.longFrames" = 10
 "manager.cards.scroll.worstFrame" = 100
 "manager.cards.scroll.p95Frame" = 50
+# The list at the largest page size with the Cover column shown and a stored 960px cover on every
+# row, from 2026-10-22 at about 2.5x the local median of two runs of five: 23 long frames, worst
+# 100 ms, p95 83 ms. The same list without the column measured 21, 100, and 83, so the list's own
+# scrolling, not the thumbnails, is most of it.
+"manager.list.covers.scroll.longFrames" = 55
+"manager.list.covers.scroll.worstFrame" = 250
+"manager.list.covers.scroll.p95Frame" = 200
 # Heap kept, in KiB, at about 1.5x the largest local sample, since the heap does not grow on a
 # slower runner. Measured medians: search documents and caches 12,855 KiB; with 10,000 pages of
 # 3,000 characters indexed 72,577 KiB, about 6 KiB a page (two bytes a character); the Smart Rules

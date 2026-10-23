@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { BOOKMARK_COLUMNS } from '@/components/ui/table/columns';
 import {
   CONFIGURED_COLUMN_IDS,
+  COVER_ASPECT_RATIO,
+  COVER_THUMBNAIL_SIZE_PX,
   DEFAULT_MANAGER_COLUMN_IDS,
   DEFAULT_MANAGER_PAGE_SIZE,
   getManagerColumnLayout,
@@ -36,6 +38,20 @@ describe('manager table config', () => {
         DEFAULT_MANAGER_COLUMN_IDS.includes(id),
     );
     expect(shown).toEqual(toml.default_columns);
+  });
+
+  it('sizes the Cover thumbnail at the cover ratio to fit a 32px row and its fixed column', () => {
+    // Table cells are padded 4px above and below and 12px on each side (`TableCell`).
+    const rowPx = 32;
+    const cellPaddingPx = { block: 4, inline: 12 };
+    expect(COVER_THUMBNAIL_SIZE_PX.height).toBeLessThanOrEqual(rowPx - 2 * cellPaddingPx.block);
+    expect(COVER_THUMBNAIL_SIZE_PX.width).toBe(
+      Math.round(COVER_THUMBNAIL_SIZE_PX.height * COVER_ASPECT_RATIO),
+    );
+    const { size } = getManagerColumnLayout('cover');
+    expect('fixed' in size && size.fixed).toBeGreaterThanOrEqual(
+      COVER_THUMBNAIL_SIZE_PX.width + 2 * cellPaddingPx.inline,
+    );
   });
 
   it('opens a new view with a page of 50 rows, so most folders fit on one page', () => {

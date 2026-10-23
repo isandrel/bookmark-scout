@@ -17,7 +17,7 @@ keeps the JSON for 30 days; it is not a pull request check, because timings vary
 | Scenario | Metrics |
 | --- | --- |
 | `popup.perf.spec.ts` | `popup.open`, `popup.search.results`, `popup.search.keystroke`, `popup.save`, `popup.expandAll`, `popup.scroll.*` |
-| `manager.perf.spec.ts` | `manager.open`, `manager.openFolder`, `manager.filter.*`, `manager.outsideChange`; `manager.cards.toCards`, `manager.cards.toList`, `manager.cards.rendered`, `manager.cards.scroll.*` (V26): a full page of search results at the largest page size switched to cards, scrolled, and back |
+| `manager.perf.spec.ts` | `manager.open`, `manager.openFolder`, `manager.filter.*`, `manager.outsideChange`; `manager.cards.toCards`, `manager.cards.toList`, `manager.cards.rendered`, `manager.cards.scroll.*` (V26): a full page of search results at the largest page size switched to cards, scrolled, and back; `manager.list.covers.rendered`, `manager.list.covers.scroll.*`: the same page in the list with the Cover column shown and a stored cover on every row, scrolled |
 | `options.perf.spec.ts` | `options.open`, `options.search.*`, `options.stepper` |
 | `jobs.perf.spec.ts` | `jobs.accept`, `jobs.pause`, `jobs.managerOpenWhileRunning`, `jobs.total`, `jobs.linksPerSecond`, `jobs.reviewOpen`, `jobs.storageKiB`: Check Dead Links over the whole library against a local server that answers at once (`[jobs]` in `perf.toml`), so the cost per link is the extension's own |
 | `search.perf.spec.ts` | `search.firstQuery`, `search.query.<name>`, `search.heapKiB` (U37): the `[search]` queries in the manager's search box until the results settle, and the heap the popup's search keeps after running them; `pageText.*` (S36): the same with `[page_text]`'s corpus stored in the page text index |

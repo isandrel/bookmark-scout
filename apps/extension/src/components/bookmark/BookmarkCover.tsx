@@ -4,7 +4,7 @@
  * the bookmark's current address, the preview draws nothing, and a card keeps the same room
  * (`CoverFrame`) with its site icon in it, so the card never changes height when a cover loads.
  */
-import { type ReactNode, useEffect, useState, useSyncExternalStore } from 'react';
+import type { ReactNode } from 'react';
 
 const coverRatio = { aspectRatio: String(COVER_ASPECT_RATIO) };
 
@@ -43,14 +43,7 @@ type BookmarkCoverProps = {
 };
 
 export function BookmarkCover({ bookmarkId, url, fallback }: BookmarkCoverProps) {
-  const changes = useSyncExternalStore(watchCovers, getCoverChangeCount);
-  const [src, setSrc] = useState<string>();
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `changes` reloads the cover after a save or delete.
-  useEffect(
-    () => showCoverImage(() => getCoverImage(bookmarkId, url), setSrc),
-    [bookmarkId, url, changes],
-  );
+  const src = useCoverImage(bookmarkId, url);
 
   if (fallback !== undefined) return <CoverFrame cover={src}>{fallback}</CoverFrame>;
   if (!src) return null;

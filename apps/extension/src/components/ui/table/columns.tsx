@@ -14,7 +14,7 @@ import type {
   HeaderContext,
   SortFn,
 } from '@tanstack/react-table';
-import { Folder, Link, SeparatorHorizontal } from 'lucide-react';
+import { Folder, ImageIcon, Link, SeparatorHorizontal } from 'lucide-react';
 import type { ComponentType, MouseEvent, ReactNode } from 'react';
 import type { DateRange } from 'react-day-picker';
 
@@ -60,9 +60,13 @@ export function getBookmarkDomain(bookmark: Bookmark): string {
   return domain;
 }
 
-/** What column cells can use beyond the row: what the row's menu actions may ask the page. */
+/**
+ * What column cells can use beyond the row: what the row's menu actions may ask the page, and the
+ * page's card for the Cover column's larger cover (none where the page has no such card).
+ */
 export type BookmarkColumnContext = {
   actionHost: ActionItemHost;
+  coverPreview?: HoverCardController;
 };
 
 export type BookmarkCellContext = CellContext<BookmarkTableFeatures, Bookmark, unknown>;
@@ -170,6 +174,25 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     enableSorting: false,
     enableHiding: false,
     ...getManagerColumnLayout('select'),
+  },
+  // The stored cover as a thumbnail (`cover-cell.tsx`), from this device's cover store; the id
+  // accessor only lists it in the View menu. Hidden at first, and right after the checkbox once
+  // shown (`leading_columns`). Its header is an icon, as the column is only as wide as the image.
+  {
+    id: 'cover',
+    labelKey: 'table_columnCover',
+    accessor: (row) => row.id,
+    header: () => (
+      <span className="flex items-center" title={t('table_columnCover')}>
+        <ImageIcon aria-hidden="true" className="size-4" />
+        <span className="sr-only">{t('table_columnCover')}</span>
+      </span>
+    ),
+    cell: ({ row }, { actionHost, coverPreview }) => (
+      <BookmarkCoverCell item={row.original} host={actionHost} preview={coverPreview} />
+    ),
+    enableSorting: false,
+    ...getManagerColumnLayout('cover'),
   },
   {
     id: 'type',

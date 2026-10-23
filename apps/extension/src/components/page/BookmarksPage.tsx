@@ -212,12 +212,16 @@ export default function BookmarksPage() {
     clipboard: managerCommands.clipboardEvents,
   });
   const dragDrop = useManagerDragDrop({ allData, currentFolderId: currentFolder, table: tableRef });
+  // The Cover column shows a thumbnail's cover larger in a card of its own.
+  const coverPreview = useHoverCard(true);
+  const coverPreviewController = coverPreview.controller;
   const columns = useMemo(
     () =>
       createColumns({
         actionHost: managerCommands.tableItemHost,
+        coverPreview: coverPreviewController,
       }),
-    [managerCommands],
+    [managerCommands, coverPreviewController],
   );
   // A right click on a row or card acts on the selection when it is in it, else on that one.
   const resolveRowMenuItems = useCallback((target: EventTarget | null) => {
@@ -581,6 +585,7 @@ export default function BookmarksPage() {
             </HoverCardControllerContext.Provider>
           )}
           <BookmarkHoverCard hoverCard={hoverCard} resolve={resolveHoverBookmark} />
+          <CoverPreviewCard hoverCard={coverPreview} resolve={resolveHoverBookmark} />
         </div>
         <HistoryDialog folderLabels={folderLabels} />
         <TasksDialog open={tasksOpen} onOpenChange={setTasksOpen} />
