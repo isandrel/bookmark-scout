@@ -8444,7 +8444,7 @@
         "description": "Site choice dialog: what choosing does; \"Not chosen\" is the review tab tools_pageTextCategory_notChosen"
     },
     "tools_siteChoiceFilter": {
-        "message": "Saring situs",
+        "message": "Filter situs",
         "description": "Site choice dialog: placeholder and label of the field that filters the sites by name"
     },
     "tools_siteChoiceSelectNone": {
@@ -8456,7 +8456,7 @@
         "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
     },
     "tools_siteChoiceNoMatch": {
-        "message": "Tidak ada situs yang cocok dengan saringan.",
+        "message": "Tidak ada situs yang cocok dengan filter.",
         "description": "Site choice dialog: shown when no site matches the filter"
     },
     "tools_siteChoiceShowMore": {
