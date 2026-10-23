@@ -5,10 +5,56 @@ import * as React from 'react';
 
 const ToastProvider = ToastPrimitives.Provider;
 
+type SwipeDirection = NonNullable<ToastPrimitives.Root.Props['swipeDirection']>;
+
+/**
+ * Where each Toast Position setting puts the stack (`viewport`), which edge a toast slides in
+ * from and out to (`motion`), and which way it is swiped away: toward the nearer side, or toward
+ * the edge for a centered stack.
+ */
+export const TOAST_POSITION_STYLES: Record<
+  ToastPosition,
+  { viewport: string; motion: string; swipe: SwipeDirection }
+> = {
+  'bottom-right': {
+    viewport: 'bottom-0 right-0',
+    motion: 'slide-in-from-bottom-full data-ending-style:slide-out-to-right-full',
+    swipe: 'right',
+  },
+  'bottom-left': {
+    viewport: 'bottom-0 left-0',
+    motion: 'slide-in-from-bottom-full data-ending-style:slide-out-to-left-full',
+    swipe: 'left',
+  },
+  'bottom-center': {
+    viewport: 'bottom-0 left-1/2 -translate-x-1/2',
+    motion: 'slide-in-from-bottom-full data-ending-style:slide-out-to-bottom-full',
+    swipe: 'down',
+  },
+  'top-right': {
+    viewport: 'top-0 right-0',
+    motion: 'slide-in-from-top-full data-ending-style:slide-out-to-right-full',
+    swipe: 'right',
+  },
+  'top-left': {
+    viewport: 'top-0 left-0',
+    motion: 'slide-in-from-top-full data-ending-style:slide-out-to-left-full',
+    swipe: 'left',
+  },
+  'top-center': {
+    viewport: 'top-0 left-1/2 -translate-x-1/2',
+    motion: 'slide-in-from-top-full data-ending-style:slide-out-to-top-full',
+    swipe: 'up',
+  },
+};
+
 const ToastViewport = React.forwardRef<
   HTMLOListElement,
-  Omit<ToastPrimitives.Viewport.Props, 'className'> & { className?: string }
->(({ className, ...props }, ref) => (
+  Omit<ToastPrimitives.Viewport.Props, 'className'> & {
+    className?: string;
+    position?: ToastPosition;
+  }
+>(({ className, position = defaultSettings.toastPosition, ...props }, ref) => (
   <ToastPrimitives.Portal>
     <ToastPrimitives.Viewport
       ref={ref as React.Ref<HTMLDivElement>}
@@ -18,9 +64,11 @@ const ToastViewport = React.forwardRef<
         // a small popup. The viewport itself takes no clicks (each toast does): its padding, the
         // gaps between toasts, and the empty viewport would otherwise be a strip over the bottom
         // of every page that swallows clicks on what is under it. Empty, it has no size at all.
-        'pointer-events-none fixed bottom-0 right-0 z-[100] flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 empty:p-0 md:max-w-[320px]',
+        'pointer-events-none fixed z-[100] flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 empty:p-0 md:max-w-[320px]',
+        TOAST_POSITION_STYLES[position].viewport,
         className,
       )}
+      data-position={position}
       {...props}
     />
   </ToastPrimitives.Portal>
@@ -29,8 +77,9 @@ ToastViewport.displayName = 'ToastViewport';
 
 const toastVariants = cva(
   // Base UI moves a toast while it is swiped and resets it when a swipe is cancelled, so only the
-  // release (ending) position needs a class.
-  'group pointer-events-auto relative flex w-full shrink-0 flex-col overflow-hidden rounded-lg border shadow-lg transition-all data-swiping:transition-none data-ending-style:data-[swipe-direction=right]:translate-x-[var(--toast-swipe-movement-x)] animate-in data-ending-style:animate-out data-ending-style:fade-out-80 data-ending-style:slide-out-to-right-full slide-in-from-bottom-full duration-300 data-ending-style:duration-(--toast-exit-duration)',
+  // release (ending) position needs a class. Where it slides in from and out to follows the Toast
+  // Position setting (TOAST_POSITION_STYLES).
+  'group pointer-events-auto relative flex w-full shrink-0 flex-col overflow-hidden rounded-lg border shadow-lg transition-all data-swiping:transition-none data-ending-style:data-[swipe-direction=left]:translate-x-[var(--toast-swipe-movement-x)] data-ending-style:data-[swipe-direction=right]:translate-x-[var(--toast-swipe-movement-x)] data-ending-style:data-[swipe-direction=up]:translate-y-[var(--toast-swipe-movement-y)] data-ending-style:data-[swipe-direction=down]:translate-y-[var(--toast-swipe-movement-y)] animate-in data-ending-style:animate-out data-ending-style:fade-out-80 duration-300 data-ending-style:duration-(--toast-exit-duration)',
   {
     variants: {
       variant: {
@@ -51,33 +100,53 @@ const ToastCloseContext = React.createContext<() => void>(() => {});
 const Toast = React.forwardRef<
   HTMLLIElement,
   Omit<ToastPrimitives.Root.Props, 'className'> &
-    VariantProps<typeof toastVariants> & { className?: string; duration?: number }
->(({ className, variant, duration = defaultSettings.toastDurationMs, toast, ...props }, ref) => {
-  const { close } = ToastPrimitives.useToastManager();
-  const closeToast = React.useCallback(() => close(toast.id), [close, toast.id]);
-  return (
-    <ToastCloseContext.Provider value={closeToast}>
-      <ToastPrimitives.Root
-        ref={ref as React.Ref<HTMLDivElement>}
-        toast={toast}
-        render={<li />}
-        // Keeps Radix's semantics: a status entry inside the live region, not a dialog.
-        role="status"
-        aria-live="off"
-        aria-atomic
-        swipeDirection="right"
-        className={cn(toastVariants({ variant }), className)}
-        style={
-          {
-            '--toast-duration': `${duration}ms`,
-            '--toast-exit-duration': `${TOAST_REMOVE_DELAY_MS}ms`,
-          } as React.CSSProperties
-        }
-        {...props}
-      />
-    </ToastCloseContext.Provider>
-  );
-});
+    VariantProps<typeof toastVariants> & {
+      className?: string;
+      duration?: number;
+      position?: ToastPosition;
+    }
+>(
+  (
+    {
+      className,
+      variant,
+      duration = defaultSettings.toastDurationMs,
+      position = defaultSettings.toastPosition,
+      toast,
+      ...props
+    },
+    ref,
+  ) => {
+    const { close } = ToastPrimitives.useToastManager();
+    const closeToast = React.useCallback(() => close(toast.id), [close, toast.id]);
+    return (
+      <ToastCloseContext.Provider value={closeToast}>
+        <ToastPrimitives.Root
+          ref={ref as React.Ref<HTMLDivElement>}
+          toast={toast}
+          render={<li />}
+          // Keeps Radix's semantics: a status entry inside the live region, not a dialog.
+          role="status"
+          aria-live="off"
+          aria-atomic
+          swipeDirection={TOAST_POSITION_STYLES[position].swipe}
+          className={cn(
+            toastVariants({ variant }),
+            TOAST_POSITION_STYLES[position].motion,
+            className,
+          )}
+          style={
+            {
+              '--toast-duration': `${duration}ms`,
+              '--toast-exit-duration': `${TOAST_REMOVE_DELAY_MS}ms`,
+            } as React.CSSProperties
+          }
+          {...props}
+        />
+      </ToastCloseContext.Provider>
+    );
+  },
+);
 Toast.displayName = 'Toast';
 
 // Radix's action also dismissed its toast; Base UI's Toast.Action does not, so it closes the toast

@@ -675,6 +675,22 @@
         "message": "Una lista",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Pestaña inicial",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "La pestaña con la que se abre la barra lateral Herramientas. Una pestaña sin herramientas que mostrar abre la primera que tenga alguna. Se guarda en este dispositivo.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Herramientas de la barra lateral",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "Las herramientas que muestra la barra lateral Herramientas, en este orden dentro de sus secciones. Ocultar aquí una herramienta la deja activada, así que su trabajo automático continúa. Se guarda en este dispositivo.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Eliminar",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2016,7 +2032,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Añade \"Guardar marcador en...\" al menú que aparece al hacer clic derecho en un enlace. Está desactivado hasta que lo actives.",
+        "message": "Añade \"Guardar marcador en...\" al menú que aparece al hacer clic derecho en el navegador. Está desactivado hasta que lo actives.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2026,6 +2042,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "Qué se usa como título del marcador al guardarlo con el clic derecho. Con Texto del enlace se usa el texto del enlace en Firefox o el texto seleccionado en Chrome; si no hay, el título de la página.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Mostrar el menú en",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Dónde aparece el menú al hacer clic derecho. En una página o en texto seleccionado, guarda la propia página, con el texto seleccionado o el título de la página como nombre.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Enlaces",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Páginas",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Texto seleccionado",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Opciones del menú",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "Lo que ofrece el menú, en este orden. Marca una opción para mostrarla y arrástrala por su asa para moverla.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Carpetas recientes en el menú",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "Cuántas carpetas recientes muestra el menú del clic derecho. La ventana emergente tiene su propio Máximo de carpetas recientes.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Texto del enlace",
@@ -3278,14 +3330,6 @@
     "contextMenu_recentFolders": {
         "message": "Carpetas recientes",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "Sugerencias de la IA",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Carpetas predeterminadas",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "Sin límite",
@@ -8200,6 +8244,38 @@
     "settings_tooltipDelayDesc": {
         "message": "Cuánto tiempo descansa el puntero sobre un control antes de que aparezca su explicación",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Posición de las notificaciones",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Dónde aparecen mensajes como Deshacer en cada página de Bookmark Scout",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "Abajo a la derecha",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "Abajo a la izquierda",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "Abajo en el centro",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "Arriba a la derecha",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "Arriba a la izquierda",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "Arriba en el centro",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "No se pudieron guardar las tareas en segundo plano en este dispositivo.",

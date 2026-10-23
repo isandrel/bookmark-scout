@@ -675,6 +675,22 @@
         "message": "One list",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Start Tab",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "The tab the Tools sidebar opens on. A tab with no tools to show opens the first one that has some. Kept on this device.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Sidebar tools",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "The tools the Tools sidebar shows, in order within their sections. Hiding a tool here keeps it turned on, so its automatic work goes on. Kept on this device.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Deleting",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2016,7 +2032,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Add \"Save bookmark to...\" to the right-click menu on links. Off until you turn it on.",
+        "message": "Add \"Save bookmark to...\" to the browser's right-click menu. Off until you turn it on.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2026,6 +2042,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "What to use as the bookmark title when saving via right-click. Link text uses the link's text in Firefox, or the selected text in Chrome; otherwise the page title.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Show Menu On",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Where right-clicking shows the menu. On a page or on selected text, it saves the page itself, named after the selected text or the page title.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Links",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Pages",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Selected text",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Menu entries",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "What the menu offers, in order. Check an entry to show it, and drag it by its handle to move it.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Recent Folders in Menu",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "How many recent folders the right-click menu lists. The popup has its own Recent Folders Max.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Link text",
@@ -3278,14 +3330,6 @@
     "contextMenu_recentFolders": {
         "message": "Recent Folders",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "AI Suggestions",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Default Folders",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "No limit",
@@ -8200,6 +8244,38 @@
     "settings_tooltipDelayDesc": {
         "message": "How long the pointer rests on a control before its explanation appears",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Toast Position",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Where messages such as Undo appear on every Bookmark Scout page",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "Bottom right",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "Bottom left",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "Bottom center",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "Top right",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "Top left",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "Top center",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "Background tasks could not be saved on this device.",

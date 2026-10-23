@@ -10,16 +10,23 @@ export function Toaster() {
   const { settings } = useSettings();
 
   const toastDuration = settings?.toastDurationMs ?? defaultSettings.toastDurationMs;
+  const position = settings?.toastPosition ?? defaultSettings.toastPosition;
 
   // Undo toasts are never dropped, so the stack has no limit.
   return (
     <ToastProvider timeout={toastDuration} limit={Number.POSITIVE_INFINITY}>
-      <ToastStack toastDuration={toastDuration} />
+      <ToastStack toastDuration={toastDuration} position={position} />
     </ToastProvider>
   );
 }
 
-function ToastStack({ toastDuration }: { toastDuration: number }) {
+function ToastStack({
+  toastDuration,
+  position,
+}: {
+  toastDuration: number;
+  position: ToastPosition;
+}) {
   const { toasts: requested } = useToast();
   const { toasts, add, close, update } = ToastPrimitives.useToastManager<ToastData>();
   const viewportRef = useRef<HTMLOListElement>(null);
@@ -75,7 +82,11 @@ function ToastStack({ toastDuration }: { toastDuration: number }) {
   const newestId = toasts.find((toast) => toast.transitionStatus !== 'ending')?.id;
 
   return (
-    <ToastViewport ref={viewportRef} aria-label={t('toast_regionLabel', VIEWPORT_HOTKEY)}>
+    <ToastViewport
+      ref={viewportRef}
+      position={position}
+      aria-label={t('toast_regionLabel', VIEWPORT_HOTKEY)}
+    >
       {[...toasts].reverse().map((toast) => {
         const { action, variant } = toast.data ?? {};
         const duration = toast.timeout ?? toastDuration;
@@ -88,6 +99,7 @@ function ToastStack({ toastDuration }: { toastDuration: number }) {
             toast={toast}
             variant={variant}
             duration={duration}
+            position={position}
             data-compact={compact ? '' : undefined}
           >
             {compact ? (

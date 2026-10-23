@@ -290,20 +290,22 @@ export const ToolsSidebar = memo(function ToolsSidebar({
     tools: getSectionTools(settings, section.id),
   })).filter((section) => section.tools.length > 0);
   const tabs: { id: ToolSidebarTab; label: string }[] = [
-    { id: 'all', label: t('tools_tabAll') },
-    ...sections.map((section) => ({ id: section.id, label: t(section.titleKey) })),
-    ...(showData ? [{ id: 'data' as const, label: t('tools_category_data') }] : []),
+    { id: 'all', label: getToolSidebarTabLabel('all') },
+    ...sections.map((section) => ({ id: section.id, label: getToolSidebarTabLabel(section.id) })),
+    ...(showData ? [{ id: 'data' as const, label: getToolSidebarTabLabel('data') }] : []),
   ];
-  // A link to a card (the manager's address ends in its id) opens on the card's tab.
-  const [pickedTab, setPickedTab] = useState<ToolSidebarTab>(
-    () => HASH_TABS[window.location.hash.slice(1)] ?? TOOL_SIDEBAR_DEFAULT_TAB,
+  // A link to a card (the manager's address ends in its id) opens on the card's tab; otherwise the
+  // Start Tab setting, until a tab is picked.
+  const [pickedTab, setPickedTab] = useState<ToolSidebarTab | null>(
+    () => HASH_TABS[window.location.hash.slice(1)] ?? null,
   );
+  const openTab = pickedTab ?? settings.toolsSidebarDefaultTab;
   const useTabs = settings.toolsSidebarLayout === 'tabs';
   // A tab whose tools were all turned off falls back to the first tab after All.
   const tab = !useTabs
     ? 'all'
-    : tabs.some((entry) => entry.id === pickedTab)
-      ? pickedTab
+    : tabs.some((entry) => entry.id === openTab)
+      ? openTab
       : (tabs[1]?.id ?? 'all');
   const shows = (id: ToolSidebarTab) => tab === 'all' || tab === id;
   const tabsLabelId = useId();

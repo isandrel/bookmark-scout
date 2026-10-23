@@ -19,7 +19,7 @@ description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab 
 | Einstellung | Auch unter | Wirkung |
 | --- | --- | --- |
 | **Ordner für Schnellspeichern** und **Zielordner** | [Speichern & Suche](#quick-save) | Wo das Tastenkürzel zum Schnellspeichern die aktuelle Seite speichert |
-| **Rechtsklickmenü** | [Speichern & Suche](#context-menu) | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen |
+| **Rechtsklickmenü** | [Speichern & Suche](#context-menu) | **Lesezeichen speichern in...** im Rechtsklickmenü des Browsers anzeigen, bei Links, sofern Sie nicht mehr auswählen |
 | **Design** und **Sprache** | [Darstellung](#language-theme-and-icons) | Wie Bookmark Scout aussieht und welche Sprache es verwendet |
 | **Vor dem Löschen bestätigen** | [Verhalten](#deleting) | Vor dem Löschen nachfragen |
 | **Änderungen von anderswo aufzeichnen** | [Verhalten](#history-settings) | Lesezeichenänderungen außerhalb von Bookmark Scout im Verlauf aufführen |
@@ -54,7 +54,7 @@ Siehe [Suche und gespeicherte Suchen](/guides/search).
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Letzte Ordner** | An | Zuletzt verwendete Ordner im Pop-up und im Rechtsklickmenü anzeigen |
+| **Letzte Ordner** | An | Zuletzt verwendete Ordner im Pop-up anzeigen; das Rechtsklickmenü hat seine eigene Einstellung **Letzte Ordner im Menü** |
 | **Max. letzte Ordner** | <SettingDefault path="search.saving.recent_folders_max" /> | Wie viele zuletzt verwendete Ordner angezeigt werden |
 | **Standardname für Ordner** | Neuer Ordner | Der Name, mit dem ein neuer Ordner beginnt |
 
@@ -78,8 +78,12 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Rechtsklickmenü** | Aus | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen. In Chrome und Edge fügt das Aktivieren die optionale Berechtigung für das Rechtsklickmenü ohne Nachfrage hinzu |
+| **Rechtsklickmenü** | Aus | **Lesezeichen speichern in...** im Rechtsklickmenü des Browsers anzeigen. In Chrome und Edge fügt das Aktivieren die optionale Berechtigung für das Rechtsklickmenü ohne Nachfrage hinzu |
+| **Menü anzeigen bei** | Links | Wo ein Rechtsklick das Menü zeigt: **Links** (speichert den Link), **Seiten** (speichert die geöffnete Seite) und **Markierter Text** (speichert die Seite, mit der Benennung **Linktext** nach dem markierten Text benannt). Keine davon braucht eine weitere Berechtigung |
 | **Quelle für Lesezeichennamen** | Linktext | Ein per Rechtsklick gespeichertes Lesezeichen nach dem Linktext, dem Seitentitel oder der Link-URL benennen |
+| **Letzte Ordner im Menü** | <SettingDefault path="search.context_menu.recent_max" /> | Wie viele zuletzt verwendete Ordner das Menü zeigt, unabhängig von **Max. letzte Ordner** im Pop-up |
+
+**Menüeinträge** legt fest, was das Menü anbietet, in dieser Reihenfolge: **Letzte Ordner** (ein Untermenü) und **Lesezeichenleiste**. Haken Sie einen Eintrag an, um ihn anzuzeigen, und ziehen Sie ihn am Griff (oder nutzen Sie das Menü des Griffs), um ihn zu verschieben; **Standard wiederherstellen** zeigt wieder beide in der ursprünglichen Reihenfolge.
 
 ## Darstellung [#appearance]
 
@@ -129,6 +133,7 @@ Unter der Tabelle ordnen drei Listen das Pop-up und die Seitenleiste. Haken Sie 
 | **Anzeigedauer von Benachrichtigungen** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
 | **Verzögerung für Tooltips** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Wie lange der Zeiger auf einem Bedienelement ruht, bevor die Erklärung erscheint |
 | **Verzögerung der Detailkarte** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Wie lange der Zeiger auf einem Lesezeichen ruht oder der Tastaturfokus darauf bleibt, bevor seine Detailkarte erscheint. Gilt auch für gekürzte Zusammenfassungen in der Verwaltung |
+| **Position der Benachrichtigungen** | Unten rechts | Wo Meldungen wie **Rückgängig** auf jeder Bookmark-Scout-Seite erscheinen: in einer unteren oder oberen Ecke oder mittig am unteren oder oberen Rand |
 
 ## Verhalten [#behavior]
 
@@ -155,6 +160,9 @@ Unter der Tabelle ordnen drei Listen das Pop-up und die Seitenleiste. Haken Sie 
 | --- | --- | --- |
 | **Manageransicht** | Liste | **Liste** zeigt die Tabelle; **Karten** zeigt dieselben Zeilen als Raster aus Karten, mit derselben Auswahl, denselben Tasten und Menüs. Auch die zwei Schaltflächen neben **Ansehen** schalten um. Nur auf diesem Gerät gespeichert |
 | **Layout der Tools-Leiste** | Tabs | **Tabs** zeigt jeweils einen Bereich, **Alle** zeigt jedes Tool; **Eine Liste** zeigt alle Bereiche nacheinander. Nur auf diesem Gerät gespeichert |
+| **Start-Tab** | Wartung | Der Tab, mit dem sich die Tools-Leiste öffnet, solange sie **Tabs** zeigt: **Alle**, ein Bereich oder **Daten**. Ein Tab ohne anzuzeigende Tools öffnet den ersten, der welche hat. Nur auf diesem Gerät gespeichert |
+
+**Tools in der Leiste** legt fest, welche Tools die Tools-Leiste zeigt und in welcher Reihenfolge innerhalb jedes Bereichs: Entfernen Sie den Haken bei einem Tool, um seine Karte auszublenden, und ziehen Sie es am Griff (oder nutzen Sie das Menü des Griffs), um es zu verschieben. Ein ausgeblendetes Tool bleibt eingeschaltet, sodass **Intelligente Regeln**, **Seitentext indexieren** und **Titelbilder laden** ihre automatische Arbeit fortsetzen; ausgeschaltet wird ein Tool mit seinem eigenen Schalter. **Standard wiederherstellen** zeigt wieder alle Tools in der ursprünglichen Reihenfolge. Nur auf diesem Gerät gespeichert.
 
 ### Lesezeichenverwaltung [#manager-view]
 

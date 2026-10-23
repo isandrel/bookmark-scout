@@ -65,6 +65,46 @@ test('toast duration setting controls how long popup toasts stay open', async ({
   await expect(toast).toBeVisible();
 });
 
+test('toast position setting moves popup toasts to the chosen corner', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { barTitle } = await seedPopupFolder(extensionWorker, 'E2E Toast Corner', []);
+  await seedPopupFolder(extensionWorker, 'E2E Toast Top', []);
+  await openPopup(page, extensionId);
+  await folderRow(page, barTitle).click();
+  const viewport = toastRegion(page);
+  const addTo = async (title: string) => {
+    const row = folderRow(page, title);
+    await row.hover();
+    await row.getByRole('button', { name: 'Add current page' }).click();
+    await page.mouse.move(0, 0);
+  };
+  /** Where the newest toast is, as the halves of the window it sits in. */
+  const toastCorner = async () => {
+    const box = await toastRegion(page).getByRole('status').last().boundingBox();
+    const size = page.viewportSize();
+    if (!box || !size) return null;
+    const vertical = box.y + box.height / 2 < size.height / 2 ? 'top' : 'bottom';
+    const horizontal = box.x + box.width / 2 < size.width / 2 ? 'left' : 'right';
+    return `${vertical}-${horizontal}`;
+  };
+
+  // The default: bottom right.
+  await addTo('E2E Toast Corner');
+  await expect(toastRegion(page).getByText('Bookmark Added')).toBeVisible();
+  await expect(viewport).toHaveAttribute('data-position', 'bottom-right');
+  await expect.poll(toastCorner).toBe('bottom-right');
+
+  // Applies live, without reopening the popup.
+  await setSettings(extensionWorker, { toastPosition: 'top-left' });
+  await expect(viewport).toHaveAttribute('data-position', 'top-left');
+  await addTo('E2E Toast Top');
+  await expect(toastRegion(page).getByText('Bookmark Added')).toBeVisible();
+  await expect.poll(toastCorner).toBe('top-left');
+});
+
 test('search delay setting controls when the popup filters results', async ({
   extensionId,
   extensionWorker,

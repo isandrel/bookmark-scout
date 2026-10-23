@@ -6,7 +6,13 @@ import type { Page } from '@playwright/test';
 import { readConfigToml } from '../config-files';
 import { expect, test, toastRegion } from './fixtures';
 import { bookmarkRow, folderRow, openPopup, seedFolder, toggleSearchOption } from './popup-helpers';
-import { replaceSettings, STORAGE_ITEMS, seedAIServices, writeStored } from './storage';
+import {
+  replaceSettings,
+  STORAGE_ITEMS,
+  seedAIServices,
+  setSettings,
+  writeStored,
+} from './storage';
 
 // The harness opens the popup as a tab, which gets no activeTab, so saving the current page
 // reads it through the optional tabs permission.
@@ -166,6 +172,38 @@ test('recent folder chips name the parents of folders with the same title', asyn
       ),
     )
     .toBe(1);
+});
+
+test('Recent Folders Max limits the popup chips, and Recent Folders hides them', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, { language: 'en', recentFoldersMax: 2 });
+  const folders = await seedFolder(extensionWorker, 'E2E Recent Max', [
+    { title: 'Recent One', children: [] },
+    { title: 'Recent Two', children: [] },
+    { title: 'Recent Three', children: [] },
+  ]);
+  await writeStored(
+    extensionWorker,
+    STORAGE_ITEMS.recentFolders,
+    ['Recent One', 'Recent Two', 'Recent Three'].map((title, index) => ({
+      id: folders.ids[title],
+      title,
+      lastUsed: 3 - index,
+    })),
+  );
+
+  await openPopup(page, extensionId);
+  const chips = page.locator('[data-slot="recent-folder"]');
+  await expect(chips).toHaveCount(2);
+  await expect(chips).toHaveText(['Recent One', 'Recent Two']);
+
+  await setSettings(extensionWorker, { recentFoldersMax: 3 });
+  await expect(chips).toHaveCount(3);
+  await setSettings(extensionWorker, { recentFoldersEnabled: false });
+  await expect(chips).toHaveCount(0);
 });
 
 test('folder matches keep their order after a save while the pointer is over them', async ({

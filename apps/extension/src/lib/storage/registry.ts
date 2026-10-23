@@ -190,8 +190,13 @@ export const DEVICE_SETTING_KEYS = [
   'agentBridgeDisabledActions',
   /** The History is kept on each device, and so is whether it records changes from elsewhere. */
   'historyRecordOutsideChanges',
-  /** How the Tools sidebar lists its tools, which suits one screen's size. */
+  /**
+   * How the Tools sidebar lists its tools, which suits one screen's size, and with it the tab it
+   * opens on and the tools it shows.
+   */
   'toolsSidebarLayout',
+  'toolsSidebarDefaultTab',
+  'toolsSidebarOrder',
   /** Whether the manager shows a list or cards, which suits one screen's size too. */
   'managerViewMode',
   /** The manager's start folder: the last one, or a chosen one, is a folder of this device. */

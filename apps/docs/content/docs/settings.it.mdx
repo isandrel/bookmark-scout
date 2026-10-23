@@ -19,7 +19,7 @@ Apri la pagina delle impostazioni dalla voce **Opzioni** dell'estensione, ad ese
 | Impostazione | Anche in | Cosa fa |
 | --- | --- | --- |
 | **Cartella del salvataggio rapido** e **Cartella in cui salvare** | [Salvataggio e ricerca](#quick-save) | Dove la scorciatoia di salvataggio rapido salva la pagina corrente |
-| **Menu contestuale** | [Salvataggio e ricerca](#context-menu) | Mostra **Salva preferito in...** quando fai clic con il pulsante destro del mouse su un link |
+| **Menu contestuale** | [Salvataggio e ricerca](#context-menu) | Mostra **Salva preferito in...** nel menu contestuale del browser, sui link a meno che tu non ne scelga altri |
 | **Tema** e **Lingua** | [Aspetto](#language-theme-and-icons) | L'aspetto di Bookmark Scout e la lingua che usa |
 | **Conferma prima di eliminare** | [Comportamento](#deleting) | Chiede conferma prima di eliminare |
 | **Registra le modifiche fatte altrove** | [Comportamento](#history-settings) | Elenca nella Cronologia le modifiche ai preferiti fatte fuori da Bookmark Scout |
@@ -54,7 +54,7 @@ Vedi [Ricerca e ricerche salvate](/guides/search).
 
 | Impostazione | Predefinito | Cosa fa |
 | --- | --- | --- |
-| **Cartelle recenti** | Attivo | Mostra le cartelle usate di recente nel popup e nel menu contestuale |
+| **Cartelle recenti** | Attivo | Mostra le cartelle usate di recente nel popup; il menu contestuale ha il suo **Cartelle recenti nel menu** |
 | **Numero massimo di cartelle recenti** | <SettingDefault path="search.saving.recent_folders_max" /> | Quante cartelle recenti mostrare |
 | **Nome predefinito cartella** | Nuova cartella | Il nome iniziale di una nuova cartella |
 
@@ -78,8 +78,12 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 
 | Impostazione | Predefinito | Cosa fa |
 | --- | --- | --- |
-| **Menu contestuale** | Disattivato | Mostra **Salva preferito in...** quando fai clic con il pulsante destro del mouse su un link. In Chrome ed Edge, attivarlo aggiunge l'autorizzazione facoltativa per il menu contestuale, senza alcuna richiesta |
+| **Menu contestuale** | Disattivato | Mostra **Salva preferito in...** nel menu contestuale del browser. In Chrome ed Edge, attivarlo aggiunge l'autorizzazione facoltativa per il menu contestuale, senza alcuna richiesta |
+| **Mostra il menu su** | Link | Dove il clic destro mostra il menu: **Link** (salva il link), **Pagine** (salva la pagina aperta) e **Testo selezionato** (salva la pagina, con il nome del testo selezionato se usi **Testo del link**). Nessuno richiede altre autorizzazioni |
 | **Origine del nome del preferito** | Testo del link | Assegna a un preferito salvato dal menu contestuale il testo del link, il titolo della pagina o l'URL del link |
+| **Cartelle recenti nel menu** | <SettingDefault path="search.context_menu.recent_max" /> | Quante cartelle recenti elenca il menu, indipendentemente dal **Numero massimo di cartelle recenti** del popup |
+
+**Voci del menu** sceglie cosa offre il menu, in ordine: **Cartelle recenti** (un sottomenu) e **Barra dei preferiti**. Seleziona una voce per mostrarla e trascinala dalla maniglia (o usa il menu della maniglia) per spostarla; **Ripristina predefiniti** le mostra di nuovo entrambe nell’ordine iniziale.
 
 ## Aspetto [#appearance]
 
@@ -129,6 +133,7 @@ Sotto la tabella, tre elenchi organizzano il popup e il riquadro laterale. Selez
 | **Durata delle notifiche** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Quanto restano aperti i messaggi. I messaggi con Annulla mantengono la propria finestra di 10 secondi |
 | **Ritardo dei suggerimenti** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Quanto deve restare il puntatore su un controllo prima che compaia la sua spiegazione |
 | **Ritardo della scheda dei dettagli** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Quanto a lungo il puntatore resta su un preferito, o il focus della tastiera rimane su di esso, prima che si apra la scheda dei dettagli. Vale anche per i riassunti troncati della gestione preferiti |
+| **Posizione delle notifiche** | In basso a destra | Dove compaiono messaggi come **Annulla** in ogni pagina di Bookmark Scout: in un angolo in basso o in alto, oppure al centro del bordo inferiore o superiore |
 
 ## Comportamento [#behavior]
 
@@ -155,6 +160,9 @@ Sotto la tabella, tre elenchi organizzano il popup e il riquadro laterale. Selez
 | --- | --- | --- |
 | **Vista della gestione preferiti** | Elenco | **Elenco** mostra la tabella; **Riquadri** mostra le stesse righe come una griglia di riquadri, con la stessa selezione, gli stessi tasti e gli stessi menu. Anche i due pulsanti accanto a **Visualizza** cambiano vista. Conservata solo su questo dispositivo |
 | **Layout della barra laterale Strumenti** | Schede | **Schede** mostra una sezione alla volta, con **Tutti** per tutti gli strumenti; **Elenco unico** mostra tutte le sezioni, una dopo l'altra. Conservato solo su questo dispositivo |
+| **Scheda iniziale** | Manutenzione | La scheda su cui si apre la barra laterale Strumenti quando mostra le **Schede**: **Tutti**, una sezione o **Dati**. Una scheda senza strumenti da mostrare apre la prima che ne ha. Conservato solo su questo dispositivo |
+
+**Strumenti della barra laterale** sceglie quali strumenti mostra la barra laterale Strumenti e il loro ordine all’interno di ogni sezione: deseleziona uno strumento per nasconderne la scheda e trascinalo dalla maniglia (o usa il menu della maniglia) per spostarlo. Uno strumento nascosto resta attivo, quindi **Regole intelligenti**, **Indicizza il testo delle pagine** e **Recupera copertine** continuano il loro lavoro automatico; ogni strumento si disattiva con il proprio interruttore. **Ripristina predefiniti** mostra di nuovo tutti gli strumenti nell’ordine iniziale. Conservato solo su questo dispositivo.
 
 ### Gestione preferiti [#manager-view]
 

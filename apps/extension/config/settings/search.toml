@@ -43,6 +43,16 @@ enabled = false
 # Source for bookmark title when saving via context menu
 # Options: "link_text" (text of the link), "page_title" (title of the page), "link_url" (URL of the link)
 bookmark_naming = "link_text"
+# Where the menu shows: "link" (on links), "page" (on the page itself), and "selection" (on
+# selected text), the browser contexts in config/ui/context-menu.toml. At least one; links only by
+# default, as before the setting existed
+contexts = { default = ["link"], max_items = 3, max_length = 9 }
+# The entries the menu shows, in order, as ids from `[[entries]]` in config/ui/context-menu.toml.
+# Empty means every entry, in that file's order; an entry the list does not name is hidden
+entries = { default = [], max_items = 2, max_length = 13 }
+# How many recent folders the menu lists. Separate from Recent Folders Max, which is the popup's;
+# at most the number of recent folders kept (src/lib/recent-folders-storage.ts)
+recent_max = { default = 5, min = 1, max = 10, step = 1, integer = true }
 
 [quick_save]
 # Where the quick save shortcut (Alt+Shift+S unless the user rebinds it) saves the current page:

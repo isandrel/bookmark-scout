@@ -667,6 +667,22 @@
         "message": "單一清單",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "初始分頁",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "工具側欄開啟時顯示的分頁。若該分頁沒有可顯示的工具，則開啟第一個有工具的分頁。儲存在此裝置上。",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "側欄工具",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "工具側欄顯示的工具，以及它們在各自區段內的順序。在這裡隱藏的工具仍保持開啟，其自動作業會繼續進行。儲存在此裝置上。",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "刪除",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2008,7 +2024,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "在連結的右鍵選單中加入「將書籤儲存至...」。預設為關閉，需自行開啟。",
+        "message": "在瀏覽器的右鍵選單中加入「將書籤儲存至...」。預設為關閉，需自行開啟。",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2018,6 +2034,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "透過右鍵選單儲存時，要用什麼作為書籤標題。「連結文字」在 Firefox 中使用連結的文字，在 Chrome 中則使用選取的文字；若都沒有，則使用網頁標題。",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "選單顯示位置",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "按右鍵時在哪裡顯示選單。在頁面或選取的文字上，會儲存頁面本身，並以選取的文字或頁面標題命名。",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "連結",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "頁面",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "選取的文字",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "選單項目",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "選單提供的項目及其順序。勾選項目即可顯示，拖曳其控點可移動位置。",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "選單中最近使用的資料夾數",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "右鍵選單列出的最近使用資料夾數量。彈出視窗有自己的「最近使用的資料夾上限」。",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "連結文字",
@@ -3270,14 +3322,6 @@
     "contextMenu_recentFolders": {
         "message": "最近使用的資料夾",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "AI 建議",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "預設資料夾",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "不限",
@@ -7942,6 +7986,38 @@
     "settings_tooltipDelayDesc": {
         "message": "指標停留在控制項上多久後顯示說明",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "通知位置",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "「復原」等訊息在 Bookmark Scout 各頁面中出現的位置",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "右下角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "左下角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "底部置中",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "右上角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "左上角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "頂部置中",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "無法在此裝置上儲存背景工作。",

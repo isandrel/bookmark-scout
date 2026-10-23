@@ -743,6 +743,18 @@ export function SettingsFieldRow({
             />
           );
         }
+        if (meta.list && meta.options) {
+          return (
+            <ChoiceListEditor
+              id={controlId}
+              labelledBy={labelId}
+              describedBy={describedBy}
+              value={value as string[]}
+              onChange={onChange}
+              options={meta.options}
+            />
+          );
+        }
         if (meta.list && isTokenListSetting(fieldKey)) {
           return (
             <TokenListEditor

@@ -675,6 +675,22 @@
         "message": "Elenco unico",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Scheda iniziale",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "La scheda su cui si apre la barra laterale Strumenti. Una scheda senza strumenti da mostrare apre la prima che ne ha. Salvata su questo dispositivo.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Strumenti della barra laterale",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "Gli strumenti mostrati dalla barra laterale Strumenti, in quest’ordine all’interno delle loro sezioni. Nascondere qui uno strumento lo lascia attivo, quindi il suo lavoro automatico continua. Salvato su questo dispositivo.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Eliminazione",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2016,7 +2032,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Aggiunge \"Salva preferito in...\" al menu contestuale dei link. Disattivato finché non lo attivi.",
+        "message": "Aggiunge \"Salva preferito in...\" al menu contestuale del browser. Disattivato finché non lo attivi.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2026,6 +2042,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "Cosa usare come titolo del preferito quando salvi con il clic destro. Testo del link usa il testo del link in Firefox o il testo selezionato in Chrome; altrimenti il titolo della pagina.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Mostra il menu su",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Dove il clic destro mostra il menu. Su una pagina o su un testo selezionato salva la pagina stessa, con il nome del testo selezionato o il titolo della pagina.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Link",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Pagine",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Testo selezionato",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Voci del menu",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "Cosa offre il menu, in quest’ordine. Seleziona una voce per mostrarla e trascinala dalla maniglia per spostarla.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Cartelle recenti nel menu",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "Quante cartelle recenti elenca il menu contestuale. Il popup ha il suo Numero massimo di cartelle recenti.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Testo del link",
@@ -3278,14 +3330,6 @@
     "contextMenu_recentFolders": {
         "message": "Cartelle recenti",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "Suggerimenti IA",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Cartelle predefinite",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "Nessun limite",
@@ -8200,6 +8244,38 @@
     "settings_tooltipDelayDesc": {
         "message": "Per quanto tempo il puntatore deve restare su un controllo prima che compaia la sua spiegazione",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Posizione delle notifiche",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Dove compaiono messaggi come Annulla in ogni pagina di Bookmark Scout",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "In basso a destra",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "In basso a sinistra",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "In basso al centro",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "In alto a destra",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "In alto a sinistra",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "In alto al centro",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "Non è stato possibile salvare le attività in background su questo dispositivo.",

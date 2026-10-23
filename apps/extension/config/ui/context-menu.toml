@@ -1,7 +1,40 @@
-# The browser's right-click menu on links (Settings > Behavior > Context Menu). Read by
-# src/services/context-menu.ts.
+# The browser's right-click menu (Settings > Saving & Search > Right-Click Menu). Read by
+# src/lib/context-menu-config.ts.
 
-# Order of the menu's groups, by provider id: a lower number comes first.
-[priority]
-recent_folders = 10
-bookmarks_bar = 100
+# Where the menu can show, in the order Options lists them. `id` is the browser's own context name
+# (also the value the Show Menu On setting stores), `label` the message key of its name in Options,
+# and `saves` what a click there saves: "link" (the address of the link right-clicked) or "page"
+# (the address of the page). A page saved from a selection is named after the selected text with
+# Link Text naming. None of them needs a permission beyond the menu's own: the page's address comes
+# with the click. Which ones show is `contexts` in `[context_menu]` of config/settings/search.toml.
+[[contexts]]
+id = "link"
+label = "settings_contextMenuContextLink"
+saves = "link"
+
+[[contexts]]
+id = "page"
+label = "settings_contextMenuContextPage"
+saves = "page"
+
+[[contexts]]
+id = "selection"
+label = "settings_contextMenuContextSelection"
+saves = "page"
+
+# What the menu offers, in the order it shows them until the user reorders them (Menu Entries).
+# `id` is the entry's id in that setting and in the menu's item ids, `label` the message key of its
+# name (the submenu's title, or the title of its one item), and `icon` goes before the name.
+# `submenu` puts the entry's folders in a submenu of their own; without it, its folders are items
+# of the menu itself.
+[[entries]]
+id = "recentFolders"
+label = "contextMenu_recentFolders"
+icon = "📁"
+submenu = true
+
+[[entries]]
+id = "bookmarksBar"
+label = "contextMenu_bookmarksBar"
+icon = "📚"
+submenu = false

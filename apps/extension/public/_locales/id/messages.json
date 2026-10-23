@@ -667,6 +667,22 @@
         "message": "Satu daftar",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Tab Awal",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "Tab yang dibuka saat bilah samping Alat terbuka. Tab tanpa alat untuk ditampilkan membuka tab pertama yang memilikinya. Disimpan di perangkat ini.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Alat di bilah samping",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "Alat yang ditampilkan bilah samping Alat, sesuai urutan di dalam bagiannya. Menyembunyikan alat di sini tetap membiarkannya aktif, sehingga pekerjaan otomatisnya terus berjalan. Disimpan di perangkat ini.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Penghapusan",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2000,7 +2016,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Tambahkan \"Simpan bookmark ke...\" ke menu klik kanan pada link. Nonaktif sampai Anda mengaktifkannya.",
+        "message": "Tambahkan \"Simpan bookmark ke...\" ke menu klik kanan browser. Nonaktif sampai Anda mengaktifkannya.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2010,6 +2026,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "Yang digunakan sebagai judul bookmark saat menyimpan lewat klik kanan. Teks link menggunakan teks link di Firefox, atau teks yang dipilih di Chrome; jika tidak ada, judul halaman.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Tampilkan Menu Pada",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Tempat menu muncul saat klik kanan. Pada halaman atau teks yang dipilih, menu menyimpan halaman itu sendiri, dengan nama dari teks yang dipilih atau judul halaman.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Link",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Halaman",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Teks yang dipilih",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Entri menu",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "Yang ditawarkan menu, sesuai urutan. Centang entri untuk menampilkannya, dan seret pegangannya untuk memindahkannya.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Folder Terbaru di Menu",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "Jumlah folder terbaru yang ditampilkan menu klik kanan. Popup memiliki Maks Folder Terbaru sendiri.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Teks link",
@@ -3258,14 +3310,6 @@
     "contextMenu_recentFolders": {
         "message": "Folder Terbaru",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "Saran AI",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Folder Default",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "Tanpa batas",
@@ -7918,6 +7962,38 @@
     "settings_tooltipDelayDesc": {
         "message": "Berapa lama kursor berada di atas kontrol sebelum penjelasannya muncul",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Posisi Notifikasi",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Tempat pesan seperti Urungkan muncul di setiap halaman Bookmark Scout",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "Kanan bawah",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "Kiri bawah",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "Tengah bawah",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "Kanan atas",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "Kiri atas",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "Tengah atas",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "Tugas latar belakang tidak dapat disimpan di perangkat ini.",

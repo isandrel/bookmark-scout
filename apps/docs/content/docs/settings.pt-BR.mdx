@@ -19,7 +19,7 @@ Abra a página de configurações pela opção **Opções** da extensão, por ex
 | Configuração | Também em | O que faz |
 | --- | --- | --- |
 | **Pasta de salvamento rápido** e **Pasta de destino** | [Salvar e pesquisar](#quick-save) | Onde o atalho de salvamento rápido salva a página atual |
-| **Menu do botão direito** | [Salvar e pesquisar](#context-menu) | Mostra **Salvar favorito em...** quando você clica com o botão direito do mouse em um link |
+| **Menu do botão direito** | [Salvar e pesquisar](#context-menu) | Mostra **Salvar favorito em...** no menu de clique com o botão direito do navegador, nos links, a menos que você escolha mais |
 | **Tema** e **Idioma** | [Aparência](#language-theme-and-icons) | A aparência do Bookmark Scout e o idioma que ele usa |
 | **Confirmar antes de excluir** | [Comportamento](#deleting) | Pergunta antes de excluir |
 | **Registrar alterações feitas em outro lugar** | [Comportamento](#history-settings) | Lista no histórico as alterações feitas fora do Bookmark Scout |
@@ -54,7 +54,7 @@ Consulte [Pesquisa e pesquisas salvas](/guides/search).
 
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
-| **Pastas recentes** | Ativado | Mostra as pastas usadas recentemente no pop-up e no menu de clique com o botão direito |
+| **Pastas recentes** | Ativado | Mostra as pastas usadas recentemente no pop-up; o menu do botão direito tem o próprio **Pastas recentes no menu** |
 | **Máximo de pastas recentes** | <SettingDefault path="search.saving.recent_folders_max" /> | Quantas pastas recentes mostrar |
 | **Nome padrão da pasta** | Nova pasta | O nome inicial de uma nova pasta |
 
@@ -78,8 +78,12 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
-| **Menu do botão direito** | Desativado | Mostra **Salvar favorito em...** quando você clica com o botão direito do mouse em um link. No Chrome e no Edge, ao ativar, a permissão opcional do menu de clique com o botão direito é adicionada sem nenhum aviso |
+| **Menu do botão direito** | Desativado | Mostra **Salvar favorito em...** no menu de clique com o botão direito do navegador. No Chrome e no Edge, ao ativar, a permissão opcional do menu de clique com o botão direito é adicionada sem nenhum aviso |
+| **Mostrar o menu em** | Links | Onde o clique com o botão direito mostra o menu: **Links** (salva o link), **Páginas** (salva a página aberta) e **Texto selecionado** (salva a página, com o texto selecionado como nome na nomeação **Texto do link**). Nenhum precisa de outra permissão |
 | **Origem do nome do favorito** | Texto do link | Dá a um favorito salvo pelo menu de clique com o botão direito o nome do texto do link, do título da página ou do URL do link |
+| **Pastas recentes no menu** | <SettingDefault path="search.context_menu.recent_max" /> | Quantas pastas recentes o menu lista, à parte do **Máximo de pastas recentes** do pop-up |
+
+**Itens do menu** escolhe o que o menu oferece, nesta ordem: **Pastas recentes** (um submenu) e **Barra de favoritos**. Marque um item para mostrá-lo e arraste-o pela alça (ou use o menu da alça) para movê-lo; **Restaurar padrões** mostra os dois de novo na ordem inicial.
 
 ## Aparência [#appearance]
 
@@ -129,6 +133,7 @@ Abaixo da tabela, três listas organizam o pop-up e o painel lateral. Marque um 
 | **Duração das notificações** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
 | **Atraso das dicas** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Quanto tempo o ponteiro fica sobre um controle antes de a explicação aparecer |
 | **Atraso do cartão de detalhes** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Quanto tempo o ponteiro fica sobre um favorito, ou o foco do teclado permanece nele, antes que o cartão de detalhes abra. Também vale para os resumos cortados do gerenciador |
+| **Posição das notificações** | Inferior direito | Onde mensagens como **Desfazer** aparecem em cada página do Bookmark Scout: em um canto inferior ou superior, ou no meio da borda inferior ou superior |
 
 ## Comportamento [#behavior]
 
@@ -155,6 +160,9 @@ Abaixo da tabela, três listas organizam o pop-up e o painel lateral. Marque um 
 | --- | --- | --- |
 | **Visualização do gerenciador** | Lista | **Lista** mostra a tabela; **Cartões** mostra as mesmas linhas como uma grade de cartões, com a mesma seleção, teclas e menus. Os dois botões ao lado de **Ver** também alternam. Fica salvo somente neste dispositivo |
 | **Layout da barra lateral Ferramentas** | Abas | **Abas** mostra uma seção por vez, com **Tudo** para todas as ferramentas; **Uma lista** mostra todas as seções em sequência. Fica só neste dispositivo |
+| **Aba inicial** | Manutenção | A aba em que a barra lateral Ferramentas abre quando mostra **Abas**: **Tudo**, uma seção ou **Dados**. Uma aba sem ferramentas para mostrar abre a primeira que tiver alguma. Fica só neste dispositivo |
+
+**Ferramentas da barra lateral** escolhe quais ferramentas a barra lateral Ferramentas mostra e a ordem delas dentro de cada seção: desmarque uma ferramenta para ocultar o cartão dela e arraste-a pela alça (ou use o menu da alça) para movê-la. Uma ferramenta oculta continua ativada, então **Regras inteligentes**, **Indexar texto das páginas** e **Buscar capas** continuam o trabalho automático; cada ferramenta é desativada pelo próprio botão. **Restaurar padrões** mostra todas de novo na ordem inicial. Fica só neste dispositivo.
 
 ### Gerenciador de favoritos [#manager-view]
 

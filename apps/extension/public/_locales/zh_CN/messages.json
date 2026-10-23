@@ -667,6 +667,22 @@
         "message": "单个列表",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "初始标签页",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "工具侧栏打开时显示的标签页。若该标签页没有可显示的工具，则打开第一个有工具的标签页。保存在此设备上。",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "侧栏工具",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "工具侧栏显示的工具，以及它们在各自分区内的顺序。在这里隐藏的工具仍保持开启，其自动工作会继续进行。保存在此设备上。",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "删除",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2008,7 +2024,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "在链接的右键菜单中添加“将书签保存到…”。默认关闭，需要你手动开启。",
+        "message": "在浏览器的右键菜单中添加“将书签保存到…”。默认关闭，需要你手动开启。",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2018,6 +2034,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "通过右键菜单保存时用作书签标题的内容。“链接文字”在 Firefox 中使用链接的文字，在 Chrome 中使用选中的文字；没有时使用网页标题。",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "菜单显示位置",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "右键单击时在哪里显示菜单。在页面或选中的文字上，会保存页面本身，并以选中的文字或页面标题命名。",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "链接",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "页面",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "选中的文字",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "菜单项",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "菜单提供的项目及其顺序。勾选项目即可显示，拖动其手柄可移动位置。",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "菜单中的最近文件夹数",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "右键菜单列出的最近文件夹数量。弹出窗口有自己的“最近文件夹数量上限”。",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "链接文字",
@@ -3270,14 +3322,6 @@
     "contextMenu_recentFolders": {
         "message": "最近文件夹",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "AI 建议",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "默认文件夹",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "不限",
@@ -7942,6 +7986,38 @@
     "settings_tooltipDelayDesc": {
         "message": "指针停留在控件上多久后显示说明",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "通知位置",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "“撤销”等消息在 Bookmark Scout 各页面中出现的位置",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "右下角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "左下角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "底部居中",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "右上角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "左上角",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "顶部居中",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "无法在此设备上保存后台任务。",

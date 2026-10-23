@@ -168,9 +168,24 @@ const unlimitedPromptVariables = unit(
   'prompt-library.test.ts',
   'fills unlimited folder limits with a phrase, never -1, even in a custom prompt',
 );
-const recentFoldersMenu = unit(
-  'context-menu.test.ts',
-  'hides recent folders when the setting is disabled and restores them live',
+const recentFoldersPopup = e2e(
+  'popup-layout.spec.ts',
+  'Recent Folders Max limits the popup chips, and Recent Folders hides them',
+);
+const CONTEXT_MENU = 'services/context-menu.ts';
+const CONTEXT_MENU_UNIT = 'context-menu.test.ts';
+const CONTEXT_MENU_E2E = 'context-menu-save.spec.ts';
+const contextMenuOptions = e2e(
+  CONTEXT_MENU_E2E,
+  'Options sets Show Menu On and Menu Entries, and the menu follows',
+);
+const contextMenuArranged = e2e(
+  CONTEXT_MENU_E2E,
+  'Menu Entries orders and hides the entries, and Show Menu On sets where every item shows',
+);
+const toolsSidebarArranged = e2e(
+  'tool-settings.spec.ts',
+  'Sidebar Tools hides and reorders tools, and Start Tab picks the tab the sidebar opens on',
 );
 const networkRealServer = e2e(
   'tool-network.spec.ts',
@@ -347,21 +362,8 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ),
   ]),
   defaultNewFolderName: tested(POPUP, [popupDisplay]),
-  recentFoldersMax: tested(
-    'services/context-menu.ts',
-    [
-      unit(
-        'context-menu.test.ts',
-        'shows recent folders limited by the recent-folders max setting',
-      ),
-    ],
-    'The popup Recent Folders panel also reads it; only the context menu limit is asserted.',
-  ),
-  recentFoldersEnabled: tested(
-    'services/context-menu.ts',
-    [recentFoldersMenu],
-    'The popup Recent Folders panel also reads it; only the context menu toggle is asserted.',
-  ),
+  recentFoldersMax: tested(POPUP, [recentFoldersPopup]),
+  recentFoldersEnabled: tested(POPUP, [recentFoldersPopup]),
 
   // Advanced
   popupWidth: tested('hooks/use-popup-size.ts', [popupDisplay]),
@@ -437,6 +439,13 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     [e2e(SETTINGS_E2E, 'toast duration setting controls how long popup toasts stay open')],
     'Undo toasts keep their own fixed undo window.',
   ),
+  toastPosition: tested('components/ui/toaster.tsx', [
+    e2e(SETTINGS_E2E, 'toast position setting moves popup toasts to the chosen corner'),
+    unit(
+      'toast-stack.test.ts',
+      'places and moves toasts for every Toast Position choice, swiped toward their side',
+    ),
+  ]),
 
   // AI
   aiEnabled: tested(POPUP, [
@@ -544,6 +553,18 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'the Tools sidebar shows one section a tab, and One list shows them all',
     ),
   ]),
+  toolsSidebarDefaultTab: tested('components/bookmarks/ToolsSidebar.tsx', [toolsSidebarArranged]),
+  toolsSidebarOrder: tested(
+    TOOL_TABLE,
+    [
+      toolsSidebarArranged,
+      unit(
+        'tools-sidebar.test.ts',
+        'shows the tools Sidebar Tools lists, in its order inside their own sections',
+      ),
+    ],
+    'Edited in Options > Behavior > Tools Sidebar (ToolsSidebarOrderPanel).',
+  ),
   managerMenuActions: tested(
     MENUS,
     [
@@ -733,6 +754,45 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'permission-requests.spec.ts',
       'turning on Context Menu asks for the permission, builds the menu, and a revoke turns it off',
     ),
+  ]),
+  contextMenuContexts: tested(CONTEXT_MENU, [
+    contextMenuOptions,
+    unit(
+      CONTEXT_MENU_UNIT,
+      'shows every item on the contexts Show Menu On lists, links only by default',
+    ),
+    unit(
+      CONTEXT_MENU_UNIT,
+      'saves the page from a page or selection click, named after the selection',
+    ),
+    contextMenuArranged,
+    e2e(
+      CONTEXT_MENU_E2E,
+      'on pages and selections the menu saves the page, named after the selection',
+    ),
+  ]),
+  contextMenuEntries: tested(
+    CONTEXT_MENU,
+    [
+      contextMenuOptions,
+      unit(
+        CONTEXT_MENU_UNIT,
+        'shows the entries in the order Menu Entries lists them, and only those',
+      ),
+      unit(
+        CONTEXT_MENU_UNIT,
+        'hides recent folders when Menu Entries leaves them out and restores them live',
+      ),
+      contextMenuArranged,
+    ],
+    'Edited in Options > Saving & Search > Right-Click Menu (ContextMenuEntriesPanel).',
+  ),
+  contextMenuRecentMax: tested(CONTEXT_MENU, [
+    unit(
+      CONTEXT_MENU_UNIT,
+      'shows recent folders limited by Recent Folders in Menu, not the popup max',
+    ),
+    e2e(CONTEXT_MENU_E2E, 'renaming, deleting, or hiding recent folders rebuilds the menu'),
   ]),
   contextMenuBookmarkNaming: tested('services/context-menu.ts', [
     unit(SETTINGS_UNIT, 'names bookmarks from the page title or the link URL when selected'),

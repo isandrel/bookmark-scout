@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { setSettings } from './storage';
+import { readSettings, setSettings } from './storage';
 import { showAllTools, showToolsTab } from './tool-helpers';
 
 async function seedFolder(worker: Worker, title: string) {
@@ -292,7 +292,7 @@ test('the Tools sidebar shows one section a tab, and One list shows them all', a
   const sidebar = page.getByTestId('tools-sidebar');
   const tabs = sidebar.getByTestId('tools-tabs').getByRole('radio');
   await expect(tabs.first()).toHaveText('All');
-  // It opens on Maintenance (default_tab), with the other sections hidden.
+  // It opens on Maintenance (the Start Tab default), with the other sections hidden.
   await expect(sidebar.getByTestId('tools-tabs').getByRole('radio', { checked: true })).toHaveText(
     'Maintenance',
   );
@@ -310,4 +310,56 @@ test('the Tools sidebar shows one section a tab, and One list shows them all', a
   await expect(sidebar.getByTestId('tools-tabs')).toHaveCount(0);
   await expect(toolCard(page, 'Metadata Fetcher')).toBeVisible();
   await expect(toolCard(page, 'Duplicate Cleaner')).toBeVisible();
+});
+
+test('Sidebar Tools hides and reorders tools, and Start Tab picks the tab the sidebar opens on', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E Tool Order');
+  await setSettings(extensionWorker, { language: 'en', toolsSidebarDefaultTab: 'metadata' });
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
+  await page.getByTitle('Show tools').click();
+  const sidebar = page.getByTestId('tools-sidebar');
+  // It opens on the Start Tab instead of Maintenance.
+  await expect(sidebar.getByTestId('tools-tabs').getByRole('radio', { checked: true })).toHaveText(
+    'Page Titles & Icons',
+  );
+  await expect(toolCard(page, 'Metadata Fetcher')).toBeVisible();
+  await expect(toolCard(page, 'Duplicate Cleaner')).toBeHidden();
+  await showToolsTab(page, 'Maintenance');
+  // The tab's tool titles, in order; the other sections are hidden.
+  const maintenanceTitles = () => sidebar.getByRole('heading', { level: 4 }).allTextContents();
+  const before = await maintenanceTitles();
+  expect(before.slice(0, 2)).toEqual(['Duplicate Cleaner', 'Check Dead Links']);
+
+  // Options: hide URL Cleaner and move Check Dead Links to the top; the manager follows at once.
+  const options = await context.newPage();
+  await options.goto(`chrome-extension://${extensionId}/options.html`);
+  await options.getByRole('tab', { name: 'Behavior', exact: true }).click();
+  const panel = options.getByTestId('tools-sidebar-order');
+  await panel.getByRole('checkbox', { name: 'URL Cleaner' }).click();
+  await panel.getByRole('button', { name: 'Reorder Check Dead Links' }).first().click();
+  await options.getByRole('menuitem', { name: 'Move to top' }).click();
+  await expect
+    .poll(async () => {
+      const stored = (await readSettings(extensionWorker)).toolsSidebarOrder as string[];
+      return stored?.slice(0, 3);
+    })
+    .toEqual(['deadLinks', 'duplicates', 'bookmarkRules']);
+  await expect(toolCard(page, 'URL Cleaner')).toHaveCount(0);
+  await expect
+    .poll(async () => (await maintenanceTitles()).slice(0, 2))
+    .toEqual(['Check Dead Links', 'Duplicate Cleaner']);
+  // Hidden here, the tool itself stays on.
+  expect((await readSettings(extensionWorker)).urlCleanerEnabled).toBeUndefined();
+
+  // Restore defaults brings every tool back in the configured order.
+  await panel.getByRole('button', { name: 'Restore defaults' }).click();
+  await expect(toolCard(page, 'URL Cleaner')).toBeVisible();
+  await expect
+    .poll(async () => (await maintenanceTitles()).slice(0, 2))
+    .toEqual(before.slice(0, 2));
 });

@@ -10,8 +10,8 @@ import { readStored, STORAGE_ITEMS, writeStored } from './storage';
  */
 
 const ROOT_ID = 'bookmark-scout::root';
-const RECENT_CATEGORY_ID = 'bookmark-scout::category::recent';
-const BOOKMARKS_BAR_ITEM_ID = 'bookmark-scout::static::1';
+const RECENT_CATEGORY_ID = 'bookmark-scout::category::recentFolders';
+const BOOKMARKS_BAR_ITEM_ID = 'bookmark-scout::bookmarksBar::1';
 const PAGE_URL = 'https://e2e.invalid/article';
 
 type MenuEntry = { id: string; title?: string; parentId?: string; contexts?: string[] };
@@ -26,7 +26,7 @@ type ClickData = {
   pageUrl?: string;
 };
 
-const recentId = (folderId: string) => `bookmark-scout::recent::${folderId}`;
+const recentId = (folderId: string) => `bookmark-scout::recentFolders::${folderId}`;
 
 /**
  * Mirror every item the background registers so tests can read the menu, which Chrome has no API
@@ -181,7 +181,7 @@ test.describe('context menu save', () => {
       .toEqual([`${BOOKMARKS_BAR_ITEM_ID}: 📚 Bookmarks Bar`]);
     const root = (await menuEntries(extensionWorker)).find((entry) => entry.id === ROOT_ID);
     expect(root?.title).toBe('Save bookmark to...');
-    // Every item is offered only on links; the click handler needs a link URL.
+    // Every item is offered only on links by default (Show Menu On).
     for (const entry of await menuEntries(extensionWorker)) {
       expect(entry.contexts, entry.id).toEqual(['link']);
     }
@@ -414,16 +414,110 @@ test.describe('context menu save', () => {
       ]);
     expect(await isRegistered(extensionWorker, recentId(doomedChildId))).toBe(false);
 
-    await setSettings(extensionWorker, { recentFoldersMax: 1 });
+    await setSettings(extensionWorker, { contextMenuRecentMax: 1 });
     await expect
       .poll(() => menuChildren(extensionWorker, RECENT_CATEGORY_ID))
       .toEqual([`${recentId(kept.folderId)}: E2E Menu Kept`]);
 
-    await setSettings(extensionWorker, { recentFoldersEnabled: false });
+    await setSettings(extensionWorker, { contextMenuEntries: ['bookmarksBar'] });
     await expect
       .poll(() => menuChildren(extensionWorker, ROOT_ID))
       .toEqual([`${BOOKMARKS_BAR_ITEM_ID}: 📚 Bookmarks Bar`]);
     expect(await isRegistered(extensionWorker, RECENT_CATEGORY_ID)).toBe(false);
     expect(await isRegistered(extensionWorker, recentId(kept.folderId))).toBe(false);
+  });
+
+  test('Menu Entries orders and hides the entries, and Show Menu On sets where every item shows', async ({
+    extensionWorker,
+  }) => {
+    const target = await seedFolder(extensionWorker, 'E2E Menu Entries', []);
+    await recordMenu(extensionWorker);
+    await seedRecentFolders(extensionWorker, [{ id: target.folderId, title: 'E2E Menu Entries' }]);
+    await expect
+      .poll(() => menuChildren(extensionWorker, ROOT_ID))
+      .toEqual([
+        `${RECENT_CATEGORY_ID}: 📁 Recent Folders`,
+        `${BOOKMARKS_BAR_ITEM_ID}: 📚 Bookmarks Bar`,
+      ]);
+
+    await setSettings(extensionWorker, { contextMenuEntries: ['bookmarksBar', 'recentFolders'] });
+    await expect
+      .poll(() => menuChildren(extensionWorker, ROOT_ID))
+      .toEqual([
+        `${BOOKMARKS_BAR_ITEM_ID}: 📚 Bookmarks Bar`,
+        `${RECENT_CATEGORY_ID}: 📁 Recent Folders`,
+      ]);
+
+    await setSettings(extensionWorker, { contextMenuEntries: ['recentFolders'] });
+    await expect
+      .poll(() => menuChildren(extensionWorker, ROOT_ID))
+      .toEqual([`${RECENT_CATEGORY_ID}: 📁 Recent Folders`]);
+    expect(await isRegistered(extensionWorker, BOOKMARKS_BAR_ITEM_ID)).toBe(false);
+
+    await setSettings(extensionWorker, { contextMenuContexts: ['link', 'page', 'selection'] });
+    await expect
+      .poll(
+        async () => (await menuEntries(extensionWorker)).find((e) => e.id === ROOT_ID)?.contexts,
+      )
+      .toEqual(['link', 'page', 'selection']);
+    for (const entry of await menuEntries(extensionWorker)) {
+      expect(entry.contexts, entry.id).toEqual(['link', 'page', 'selection']);
+    }
+    // Chrome registered them: the items exist with those contexts.
+    expect(await isRegistered(extensionWorker, recentId(target.folderId))).toBe(true);
+  });
+
+  test('on pages and selections the menu saves the page, named after the selection', async ({
+    extensionWorker,
+  }) => {
+    const target = await seedFolder(extensionWorker, 'E2E Menu Page', []);
+    const menuItemId = recentId(target.folderId);
+    await seedRecentFolders(extensionWorker, [{ id: target.folderId, title: 'E2E Menu Page' }]);
+    await setSettings(extensionWorker, { contextMenuContexts: ['page', 'selection'] });
+    await expect.poll(() => isRegistered(extensionWorker, menuItemId)).toBe(true);
+
+    // A click on the page: the page, named after its title.
+    await clickMenuItem(extensionWorker, { menuItemId });
+    await expect.poll(() => savedIn(extensionWorker, target.folderId)).toHaveLength(1);
+    // A click on selected text: the page, named after the selection.
+    await clickMenuItem(extensionWorker, { menuItemId, selectionText: '  Quoted line  ' });
+    await expect.poll(() => savedIn(extensionWorker, target.folderId)).toHaveLength(2);
+    expect(await savedIn(extensionWorker, target.folderId)).toEqual([
+      { title: 'E2E Article Page', url: PAGE_URL, index: 0 },
+      { title: 'Quoted line', url: PAGE_URL, index: 1 },
+    ]);
+  });
+
+  test('Options sets Show Menu On and Menu Entries, and the menu follows', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    await recordMenu(extensionWorker);
+    await expect
+      .poll(() => menuChildren(extensionWorker, ROOT_ID))
+      .toEqual([`${BOOKMARKS_BAR_ITEM_ID}: 📚 Bookmarks Bar`]);
+
+    await page.goto(`chrome-extension://${extensionId}/options.html`);
+    await page.getByRole('tab', { name: 'Saving & Search', exact: true }).click();
+    const contexts = page.locator('[data-setting="contextMenuContexts"]');
+    // Links is the only one checked, so it cannot be cleared.
+    await expect(contexts.getByRole('checkbox', { name: 'Links' })).toBeDisabled();
+    await contexts.getByRole('checkbox', { name: 'Pages' }).click();
+    await expect
+      .poll(
+        async () => (await menuEntries(extensionWorker)).find((e) => e.id === ROOT_ID)?.contexts,
+      )
+      .toEqual(['link', 'page']);
+
+    const entries = page.getByTestId('context-menu-entries');
+    await entries.getByRole('checkbox', { name: 'Bookmarks Bar' }).click();
+    await expect
+      .poll(() => menuChildren(extensionWorker, ROOT_ID))
+      .toEqual(['bookmark-scout::empty: No folders available']);
+    await entries.getByRole('button', { name: 'Restore defaults' }).click();
+    await expect
+      .poll(() => menuChildren(extensionWorker, ROOT_ID))
+      .toEqual([`${BOOKMARKS_BAR_ITEM_ID}: 📚 Bookmarks Bar`]);
   });
 });
