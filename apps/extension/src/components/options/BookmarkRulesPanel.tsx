@@ -38,6 +38,7 @@ const RULE_DRAFT_ERROR_KEYS = {
 
 function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose: () => void }) {
   const [value, setValue] = useState<RuleDraft>(EMPTY_RULE_DRAFT);
+  const [tagDraft, setTagDraft] = useState('');
   const [library, setLibrary] = useState<{
     tree: BookmarkTreeNode[];
     metadata: StoredBookmarkMetadataById;
@@ -49,6 +50,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
   useEffect(() => {
     if (!draft) return;
     setValue(draft);
+    setTagDraft('');
     setError(undefined);
     setSample('');
     Promise.all([fetchBookmarkTree(), bookmarkMetadataValue.get()])
@@ -56,9 +58,16 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
       .catch(() => setLibrary(undefined));
   }, [draft]);
 
+  // A tag still being typed counts, as if Enter had been pressed, so Save never drops it.
+  const typed: RuleDraft = {
+    ...value,
+    tags: addTokens(parseBookmarkTags(value.tags), parseBookmarkTags(tagDraft), {
+      keyOf: tagKey,
+    }).join(', '),
+  };
   const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
   // A rule with nothing to do cannot be turned on: a template that moves waits for its folder.
-  const actionable = hasRuleAction(value);
+  const actionable = hasRuleAction(typed);
   // What is wrong with the search, as the search boxes say it: a rule never runs on part of one.
   const queryProblem = useMemo(() => {
     const [diagnostic] = parseSearchQuery(value.query).diagnostics;
@@ -78,7 +87,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
 
   const save = async () => {
     if (!draft) return;
-    const result = ruleFromDraft(value, draft.id ?? createBookmarkRuleId(), library?.tree);
+    const result = ruleFromDraft(typed, draft.id ?? createBookmarkRuleId(), library?.tree);
     if ('error' in result) {
       setError(t(RULE_DRAFT_ERROR_KEYS[result.error]));
       return;
@@ -169,11 +178,19 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
           </div>
           <Field id="rule-tags" label={t('rules_addTags')} description={t('rules_addTagsHelp')}>
             {(control) => (
-              <Input
-                {...control}
-                value={value.tags}
-                onChange={(event) => setValue({ ...value, tags: event.target.value })}
-                autoComplete="off"
+              <TokenInput
+                id={control.id}
+                labelledBy={control['aria-labelledby']}
+                describedBy={control['aria-describedby']}
+                value={parseBookmarkTags(value.tags)}
+                onChange={(tags) => setValue({ ...value, tags: tags.join(', ') })}
+                parse={parseBookmarkTags}
+                separator={TAG_SEPARATOR_PATTERN}
+                keyOf={tagKey}
+                maxItems={BOOKMARK_RULE_LIMITS.max_tags}
+                maxLength={BOOKMARK_RULE_LIMITS.tag_max_length}
+                draft={tagDraft}
+                onDraftChange={setTagDraft}
               />
             )}
           </Field>

@@ -1562,11 +1562,11 @@
         "description": "Bookmark metadata tags label"
     },
     "bookmarks_metadataTagsPlaceholder": {
-        "message": "recherche, outils, lecture",
+        "message": "Tapez une étiquette, puis appuyez sur Entrée",
         "description": "Bookmark metadata tags input placeholder"
     },
     "bookmarks_metadataTagsHelp": {
-        "message": "Séparez les étiquettes par des virgules. Les étiquettes en double sont supprimées à l'enregistrement.",
+        "message": "Appuyez sur Entrée ou tapez une virgule pour ajouter chaque étiquette. Les étiquettes en double sont supprimées à l'enregistrement.",
         "description": "Bookmark metadata tags input help"
     },
     "bookmarks_metadataSummary": {
@@ -8834,7 +8834,7 @@
         "description": "Rule editor: tags field"
     },
     "rules_addTagsHelp": {
-        "message": "Séparez les étiquettes par des virgules. Une étiquette qu'un favori a déjà n'est pas ajoutée de nouveau.",
+        "message": "Appuyez sur Entrée ou tapez une virgule pour ajouter chaque étiquette. Une étiquette qu'un favori a déjà n'est pas ajoutée de nouveau.",
         "description": "Rule editor: help under the tags field"
     },
     "rules_moveTo": {

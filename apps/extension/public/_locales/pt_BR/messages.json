@@ -1562,11 +1562,11 @@
         "description": "Bookmark metadata tags label"
     },
     "bookmarks_metadataTagsPlaceholder": {
-        "message": "pesquisa, ferramentas, leitura",
+        "message": "Digite uma tag e pressione Enter",
         "description": "Bookmark metadata tags input placeholder"
     },
     "bookmarks_metadataTagsHelp": {
-        "message": "Separe as tags com vírgulas. Tags duplicadas são removidas ao salvar.",
+        "message": "Pressione Enter ou digite uma vírgula para adicionar cada tag. Tags duplicadas são removidas ao salvar.",
         "description": "Bookmark metadata tags input help"
     },
     "bookmarks_metadataSummary": {
@@ -8834,7 +8834,7 @@
         "description": "Rule editor: tags field"
     },
     "rules_addTagsHelp": {
-        "message": "Separe as tags com vírgulas. Uma tag que o favorito já tem não é adicionada de novo.",
+        "message": "Pressione Enter ou digite uma vírgula para adicionar cada tag. Uma tag que o favorito já tem não é adicionada de novo.",
         "description": "Rule editor: help under the tags field"
     },
     "rules_moveTo": {

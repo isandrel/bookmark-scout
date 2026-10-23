@@ -1562,11 +1562,11 @@
         "description": "Bookmark metadata tags label"
     },
     "bookmarks_metadataTagsPlaceholder": {
-        "message": "ricerca, strumenti, lettura",
+        "message": "Digita un tag, poi premi Invio",
         "description": "Bookmark metadata tags input placeholder"
     },
     "bookmarks_metadataTagsHelp": {
-        "message": "Separa i tag con virgole. I tag duplicati vengono rimossi al salvataggio.",
+        "message": "Premi Invio o digita una virgola per aggiungere ogni tag. I tag duplicati vengono rimossi al salvataggio.",
         "description": "Bookmark metadata tags input help"
     },
     "bookmarks_metadataSummary": {
@@ -8834,7 +8834,7 @@
         "description": "Rule editor: tags field"
     },
     "rules_addTagsHelp": {
-        "message": "Separa i tag con virgole. Un tag che un preferito ha già non viene aggiunto di nuovo.",
+        "message": "Premi Invio o digita una virgola per aggiungere ogni tag. Un tag che un preferito ha già non viene aggiunto di nuovo.",
         "description": "Rule editor: help under the tags field"
     },
     "rules_moveTo": {

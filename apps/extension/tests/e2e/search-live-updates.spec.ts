@@ -137,7 +137,7 @@ test('tags edited on another page update open searches in the manager and popup 
   await editor.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
   dialog = await openDetails(editor, 'Tagged Later');
-  await dialog.getByTestId('bookmark-metadata-tags').fill('work');
+  await dialog.getByRole('button', { name: 'Remove Urgent' }).click();
   await dialog.getByRole('button', { name: 'Save Metadata' }).click();
   await expect(dialog.getByText('Metadata saved.')).toBeVisible();
   await expect.poll(() => managerRowIds(page)).toEqual([]);
