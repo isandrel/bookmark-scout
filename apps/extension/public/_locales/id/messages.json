@@ -7535,6 +7535,46 @@
         "message": "Berapa lama notifikasi simpan cepat ditampilkan sebelum tertutup; mengarahkan kursor ke notifikasi akan membuatnya tetap terbuka",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "Simpan Sampul dengan Simpan Cepat",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "Setelah simpan cepat, simpan juga sampul untuk bookmark: gambar pratinjau milik halaman atau gambar tab, sesuai Sumber Sampul Simpan Cepat. Nonaktif secara default; hanya berfungsi saat Ambil Sampul juga aktif; sampul tetap di perangkat ini.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "Gambar diambil saat Anda menekan pintasan, tanpa ditinjau, dan menampilkan apa pun yang ditampilkan halaman, seperti halaman akun atau pesan. Gambar tidak pernah diambil di jendela pribadi atau dari situs di Jangan Pernah Tangkap Situs Ini atau Jangan Pernah Baca Situs Ini, dan tidak pernah dikirim ke mana pun. Gambar milik halaman hanya diunduh dari situs halaman itu atau situs yang Anda beri akses. Di notifikasi, Hapus sampul menghapus sampul dan mempertahankan bookmark; Urungkan menghapus keduanya.",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "Sumber Sampul Simpan Cepat",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "Sampul mana yang disimpan simpan cepat: pilihan yang sama dengan Sumber Sampul, atau pilihan khusus simpan cepat",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "Sama dengan Sumber Sampul",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "Jika Bookmark Sudah Punya Sampul",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "Apakah simpan cepat mempertahankan sampul yang sudah dimiliki bookmark atau menggantinya. Sampul yang Anda pilih dengan Gunakan tampilan ini sebagai sampul tidak pernah diganti",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "Pertahankan",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "Ganti",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "Langkah Maks per Jawaban",
         "description": "Setting label: askAiMaxSteps"
@@ -8185,6 +8225,14 @@
         "message": "Lebar salinan yang disimpan untuk setiap sampul; gambar yang lebih besar diperkecil ke ukuran ini",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "Kualitas Gambar Sampul",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "Kualitas salinan yang disimpan untuk tiap sampul; lebih rendah membuat berkas lebih kecil. Berlaku untuk sampul yang disimpan mulai sekarang",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "Ukuran Gambar Maks",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8206,7 +8254,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Sampul mana yang disimpan bookmark jika gambar halaman itu sendiri dan tangkapan layar tab sama-sama tersedia. Tangkapan layar saat menjelajah hanya menggantikan gambar halaman jika Tangkapan layar dulu dipilih, dan Hanya gambar halaman tidak mengambil tangkapan layar. Sampul yang Anda pilih dengan Gunakan tampilan ini sebagai sampul tidak pernah diganti secara otomatis.",
+        "message": "Sampul mana yang disimpan bookmark jika gambar halaman itu sendiri dan tangkapan layar tab sama-sama tersedia. Tangkapan layar saat menjelajah hanya menggantikan gambar halaman jika Tangkapan layar dulu dipilih, dan Hanya gambar halaman tidak mengambil tangkapan layar. Sampul yang Anda pilih dengan Gunakan tampilan ini sebagai sampul tidak pernah diganti secara otomatis. Hanya tangkapan layar tidak pernah memakai gambar halaman.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8220,6 +8268,10 @@
     "settings_coversSourcePageOnly": {
         "message": "Hanya gambar halaman",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "Hanya tangkapan layar",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "Tangkap Sampul Saat Menjelajah",
@@ -8274,7 +8326,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "Halaman di situs ini dan subdomainnya tidak pernah diambil gambarnya saat menjelajah. Ketik situs seperti example.com, atau tempel alamat. Situs di Jangan Pernah Baca Situs Ini juga tidak pernah diambil gambarnya.",
+        "message": "Halaman di situs ini dan subdomainnya tidak pernah diambil gambarnya saat menjelajah. Ketik situs seperti example.com, atau tempel alamat. Situs di Jangan Pernah Baca Situs Ini juga tidak pernah diambil gambarnya. Simpan cepat juga tidak menyimpan sampulnya.",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8316,6 +8368,10 @@
     "tools_coversKeptReason": {
         "message": "Anda memilih sampul ini dengan Gunakan tampilan ini sebagai sampul, jadi sampul ini dipertahankan. Hapus dulu untuk mengambil yang lain.",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "Sumber Sampul adalah Hanya tangkapan layar, jadi gambar halaman tidak dipakai dan tidak ada halaman yang dibaca. Pilih Sumber Sampul lain di Pengaturan untuk mengambilnya.",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "Dilewati ($1)",
@@ -8848,6 +8904,16 @@
     "covers_sourceBrowse": {
         "message": "Ditangkap saat menjelajah, disimpan $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "Gambar dari simpan cepat, disimpan $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

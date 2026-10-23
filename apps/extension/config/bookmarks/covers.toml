@@ -10,9 +10,9 @@ types = ["image/png", "image/jpeg", "image/webp", "image/gif"]
 # Images larger than this, decoded, are refused (width times height), so a small file that
 # decodes to a huge picture cannot exhaust memory.
 max_pixels = 40000000
-# The stored copy: WebP at this quality (0 to 1), or PNG where the browser cannot write WebP.
+# The stored copy: WebP, or PNG where the browser cannot write WebP. Its quality is the Cover Image
+# Quality setting (config/settings/metadata-content.toml).
 output_type = "image/webp"
-output_quality = 0.8
 # Images narrower than this are not covers (a tracking pixel or a small logo).
 min_width_px = 64
 # Downloading the page's head and the image

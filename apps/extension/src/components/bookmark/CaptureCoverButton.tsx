@@ -24,7 +24,10 @@ export function CaptureCoverButton({ url }: { url: string }) {
   const capture = async () => {
     setBusy(true);
     try {
-      const result = await captureTabCover(url, settings.coversWidthPx);
+      const result = await captureTabCover(url, {
+        widthPx: settings.coversWidthPx,
+        quality: settings.coversQuality,
+      });
       if ('error' in result) {
         toast.error({ title: t('covers_captureFailed'), description: t(ERROR_KEYS[result.error]) });
       } else {

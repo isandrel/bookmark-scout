@@ -7559,6 +7559,46 @@
         "message": "快速保存通知自动关闭前显示多久；指针悬停时保持打开",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "快速保存时保存封面",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "快速保存后，同时为书签保存一张封面：网页自带的预览图片或标签页的截图，按“快速保存封面来源”决定。默认关闭，且仅在启用获取封面时有效；封面只保存在此设备上。",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "截图在你按下快捷键时拍摄，不经预览，会包含网页显示的任何内容，例如账户页面或消息。私密窗口中、“永不捕获这些网站”或“从不读取这些网站”中的网站都不会拍摄，截图也绝不会发送到任何地方。网页自带的图片只会从该网页的网站或你已授予访问权限的网站下载。在通知中，“移除封面”会删除封面并保留书签；“撤销”会两者都移除。",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "快速保存封面来源",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "快速保存保留哪种封面：与“封面来源”相同，或仅用于快速保存的选择",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "与封面来源相同",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "书签已有封面时",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "快速保存是保留书签已有的封面，还是替换它。用“用当前画面作为封面”选定的封面永远不会被替换",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "保留",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "替换",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "每个回答的最多步数",
         "description": "Setting label: askAiMaxSteps"
@@ -8209,6 +8249,14 @@
         "message": "每个封面所保存副本的宽度；更大的图片会缩小到此宽度",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "封面图片质量",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "每张封面所保存副本的质量；越低文件越小。仅对今后保存的封面生效",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "最大图片大小",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8230,7 +8278,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "当网页自带的图片和标签页截图都可用时，书签保留哪一种封面。浏览时截取的截图只有在选择“截图优先”时才会替换网页图片；选择“仅网页图片”时不会截图。用“用当前画面作为封面”选定的封面不会被自动替换。",
+        "message": "当网页自带的图片和标签页截图都可用时，书签保留哪一种封面。浏览时截取的截图只有在选择“截图优先”时才会替换网页图片；选择“仅网页图片”时不会截图。用“用当前画面作为封面”选定的封面不会被自动替换。选择“仅截图”时从不使用网页图片。",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8244,6 +8292,10 @@
     "settings_coversSourcePageOnly": {
         "message": "仅网页图片",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "仅截图",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "浏览时捕获封面",
@@ -8298,7 +8350,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "浏览时绝不截取这些网站及其子域名的网页。输入 example.com 这样的网站，或粘贴一个地址。“从不读取这些网站”中的网站也不会截取。",
+        "message": "浏览时绝不截取这些网站及其子域名的网页。输入 example.com 这样的网站，或粘贴一个地址。“从不读取这些网站”中的网站也不会截取。快速保存也不会为它们保存封面。",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8340,6 +8392,10 @@
     "tools_coversKeptReason": {
         "message": "此封面是你用“用当前画面作为封面”选定的，因此保留。要获取其他封面，请先移除它。",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "“封面来源”为“仅截图”，因此不使用网页图片，也没有读取任何网页。要获取网页图片，请在设置中选择其他封面来源。",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "已跳过 ($1)",
@@ -8872,6 +8928,16 @@
     "covers_sourceBrowse": {
         "message": "浏览时捕获，保存于 $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "快速保存时截取，保存于 $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

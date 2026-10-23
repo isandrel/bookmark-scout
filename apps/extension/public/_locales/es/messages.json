@@ -7817,6 +7817,46 @@
         "message": "Cuánto dura la notificación del guardado rápido antes de cerrarse; señalarla la mantiene abierta",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "Guardar una portada con el guardado rápido",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "Tras un guardado rápido, guarda también una portada para el marcador: la imagen de vista previa de la propia página o una captura de la pestaña, según Origen de la portada del guardado rápido. Desactivado de forma predeterminada; solo funciona con Obtener portadas también activado; la portada se queda en este dispositivo.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "La captura se toma al pulsar el atajo, sin revisión, y muestra lo que muestre la página, como una página de cuenta o mensajes. Nunca se toma en ventanas privadas ni de sitios de Nunca capturar estos sitios o No leer nunca estos sitios, y nunca se envía a ningún sitio. La imagen propia de la página solo se descarga desde el sitio de la página o desde un sitio al que diste acceso. En la notificación, Quitar portada borra la portada y conserva el marcador; Deshacer quita ambos.",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "Origen de la portada del guardado rápido",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "Qué portada guarda el guardado rápido: la misma opción que Origen de la portada, o una solo para el guardado rápido",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "Igual que Origen de la portada",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "Si el marcador ya tiene portada",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "Si el guardado rápido conserva la portada que ya tiene el marcador o la reemplaza. Una portada elegida con Usar esta vista como portada nunca se reemplaza",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "Conservarla",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "Reemplazarla",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "Pasos máximos por respuesta",
         "description": "Setting label: askAiMaxSteps"
@@ -8535,6 +8575,14 @@
         "message": "Ancho de la copia que se guarda de cada portada; las imágenes más grandes se reducen a él",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "Calidad de imagen de la portada",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "Calidad de la copia guardada de cada portada; más baja da archivos más pequeños. Se aplica a las portadas guardadas a partir de ahora",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "Tamaño máximo de imagen",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8556,7 +8604,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Qué portada conserva un marcador cuando son posibles tanto la imagen propia de la página como una captura de la pestaña. Una captura tomada al navegar solo reemplaza la imagen de la página con Captura primero, y Solo imagen de la página no toma capturas. Una portada elegida con Usar esta vista como portada nunca se reemplaza automáticamente.",
+        "message": "Qué portada conserva un marcador cuando son posibles tanto la imagen propia de la página como una captura de la pestaña. Una captura tomada al navegar solo reemplaza la imagen de la página con Captura primero, y Solo imagen de la página no toma capturas. Una portada elegida con Usar esta vista como portada nunca se reemplaza automáticamente. Solo captura nunca usa la imagen de la página.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8570,6 +8618,10 @@
     "settings_coversSourcePageOnly": {
         "message": "Solo imagen de la página",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "Solo captura",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "Capturar portadas al navegar",
@@ -8624,7 +8676,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "Las páginas de estos sitios y sus subdominios nunca se capturan al navegar. Escribe un sitio como example.com o pega una dirección. Los sitios de No leer nunca estos sitios tampoco se capturan nunca.",
+        "message": "Las páginas de estos sitios y sus subdominios nunca se capturan al navegar. Escribe un sitio como example.com o pega una dirección. Los sitios de No leer nunca estos sitios tampoco se capturan nunca. El guardado rápido tampoco guarda portadas de ellos.",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8666,6 +8718,10 @@
     "tools_coversKeptReason": {
         "message": "Elegiste esta portada con Usar esta vista como portada, así que se conserva. Quítala primero para obtener otra.",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "Origen de la portada es Solo captura, así que no se usan imágenes de página y no se leyó ninguna página. Elige otro Origen de la portada en Ajustes para obtenerlas.",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "Omitidas ($1)",
@@ -9292,6 +9348,16 @@
     "covers_sourceBrowse": {
         "message": "Capturada al navegar, guardada el $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "Captura del guardado rápido, guardada el $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

@@ -7817,6 +7817,46 @@
         "message": "Per quanto tempo resta visibile la notifica del salvataggio rapido prima di chiudersi; passandoci sopra con il puntatore resta aperta",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "Salva una copertina con il salvataggio rapido",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "Dopo un salvataggio rapido, tiene anche una copertina per il segnalibro: l'immagine di anteprima della pagina o un'immagine della scheda, come dice Origine della copertina del salvataggio rapido. Disattivato per impostazione predefinita; funziona solo con Recupera copertine anch'esso attivo; la copertina resta su questo dispositivo.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "L'immagine viene catturata quando premi la scorciatoia, senza revisione, e mostra ciò che mostra la pagina, come una pagina dell'account o dei messaggi. Non viene mai catturata nelle finestre private né dai siti in Non catturare mai questi siti o Non leggere mai questi siti, e non viene mai inviata da nessuna parte. L'immagine della pagina viene scaricata solo dal sito della pagina o da un sito a cui hai dato accesso. Nella notifica, Rimuovi copertina elimina la copertina e mantiene il segnalibro; Annulla rimuove entrambi.",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "Origine della copertina del salvataggio rapido",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "Quale copertina tiene il salvataggio rapido: la stessa scelta di Origine della copertina, o una solo per il salvataggio rapido",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "Come Origine della copertina",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "Se il segnalibro ha già una copertina",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "Se il salvataggio rapido tiene la copertina che il segnalibro ha già o la sostituisce. Una copertina scelta con Usa questa vista come copertina non viene mai sostituita",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "Tienila",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "Sostituiscila",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "Passaggi massimi per risposta",
         "description": "Setting label: askAiMaxSteps"
@@ -8535,6 +8575,14 @@
         "message": "Larghezza della copia conservata per ogni copertina; le immagini più grandi vengono ridotte a questa larghezza",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "Qualità dell'immagine di copertina",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "Qualità della copia tenuta per ogni copertina; più bassa dà file più piccoli. Vale per le copertine salvate da ora in poi",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "Dimensione massima dell'immagine",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8556,7 +8604,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Quale copertina tiene un segnalibro quando sono possibili sia l'immagine della pagina sia uno screenshot della scheda. Uno screenshot catturato durante la navigazione sostituisce l'immagine della pagina solo con Prima lo screenshot, e Solo immagine della pagina non cattura screenshot. Una copertina scelta con Usa questa vista come copertina non viene mai sostituita automaticamente.",
+        "message": "Quale copertina tiene un segnalibro quando sono possibili sia l'immagine della pagina sia uno screenshot della scheda. Uno screenshot catturato durante la navigazione sostituisce l'immagine della pagina solo con Prima lo screenshot, e Solo immagine della pagina non cattura screenshot. Una copertina scelta con Usa questa vista come copertina non viene mai sostituita automaticamente. Solo screenshot non usa mai l'immagine della pagina.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8570,6 +8618,10 @@
     "settings_coversSourcePageOnly": {
         "message": "Solo immagine della pagina",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "Solo screenshot",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "Cattura copertine durante la navigazione",
@@ -8624,7 +8676,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "Le pagine di questi siti e dei loro sottodomini non vengono mai catturate durante la navigazione. Digita un sito come example.com o incolla un indirizzo. Anche i siti in Non leggere mai questi siti non vengono mai catturati.",
+        "message": "Le pagine di questi siti e dei loro sottodomini non vengono mai catturate durante la navigazione. Digita un sito come example.com o incolla un indirizzo. Anche i siti in Non leggere mai questi siti non vengono mai catturati. Nemmeno il salvataggio rapido ne tiene la copertina.",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8666,6 +8718,10 @@
     "tools_coversKeptReason": {
         "message": "Hai scelto questa copertina con Usa questa vista come copertina, quindi viene mantenuta. Rimuovila prima per recuperarne un'altra.",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "Origine della copertina è Solo screenshot, quindi le immagini delle pagine non vengono usate e nessuna pagina è stata letta. Scegli un'altra Origine della copertina nelle Impostazioni per recuperarle.",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "Saltate ($1)",
@@ -9292,6 +9348,16 @@
     "covers_sourceBrowse": {
         "message": "Catturata durante la navigazione, salvata il $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "Catturata dal salvataggio rapido, salvata il $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

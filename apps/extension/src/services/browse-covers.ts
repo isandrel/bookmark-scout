@@ -40,6 +40,8 @@ export type BrowseCaptureSettings = CapturePace & {
   neverSites: readonly string[];
   /** Cover Width. */
   widthPx: number;
+  /** Cover Image Quality. */
+  quality: number;
   /** Cover Storage, in bytes. */
   maxCacheBytes: number;
   /** Cover Source. */
@@ -200,6 +202,7 @@ async function readBrowseCaptureSettings(): Promise<BrowseCaptureSettings | null
   return {
     neverSites: [...settings.coversNeverCaptureSites, ...settings.pageTextExcludedSites],
     widthPx: settings.coversWidthPx,
+    quality: settings.coversQuality,
     maxCacheBytes: settings.coversMaxCacheMb * BYTES_PER_MB,
     preference: settings.coversSourcePreference,
     maxAgeMs: retakeAgeMs(settings.coversBrowseMaxAgeDays),
@@ -232,7 +235,7 @@ export async function captureBrowsedPage(candidate: CaptureCandidate): Promise<b
   const shot = await browser.tabs.captureVisibleTab(candidate.windowId, { format: 'png' });
   // The tab moved on while the picture was taken: it may show another page, so it is not kept.
   if (!(await isShowing(candidate, privateAllowed))) return true;
-  const image = await shrinkTabPicture(shot, settings.widthPx);
+  const image = await shrinkTabPicture(shot, settings);
   if (!image) return true;
   await saveCovers(
     due.map((bookmarkId) => ({ bookmarkId, url, source: 'browse' as const, ...image })),

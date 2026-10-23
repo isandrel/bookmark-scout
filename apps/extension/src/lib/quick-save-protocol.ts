@@ -35,6 +35,8 @@ export type QuickSaveTheme = 'light' | 'dark' | 'system';
 /** Buttons the notification can show; each is also an action message the background answers. */
 export const QUICK_SAVE_TOAST_ACTIONS = [
   'undo',
+  // Removes the cover Save a Cover With Quick Save stored, keeping the bookmark.
+  'removeCover',
   'openAISettings',
   'retry',
   'saveWithoutAI',
@@ -81,7 +83,15 @@ export type QuickSaveToastView = {
  * token from an earlier `render`), and the address it was saved from. Either one differing means
  * the tab has moved on, and the result goes to the popup instead.
  */
-export type QuickSaveToastBinding = { document?: string; url?: string };
+export type QuickSaveToastBinding = {
+  document?: string;
+  url?: string;
+  /**
+   * Only update this quick save's notification while it is on screen; never draw a new one (a
+   * cover saved after the notification was closed).
+   */
+  onlyIfShown?: boolean;
+};
 
 /** What `render` did: whether the notification is on screen, and this document's token. */
 export type QuickSaveRenderResult = { shown: boolean; document: string };

@@ -39,6 +39,7 @@ const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool
   }),
   covers: (settings) => ({
     widthPx: settings.coversWidthPx,
+    quality: settings.coversQuality,
     maxImageBytes: settings.coversMaxImageKb * BYTES_PER_KB,
     skipPrivateHosts: settings.readPageSkipPrivateHosts,
     maxCacheBytes: settings.coversMaxCacheMb * BYTES_PER_MB,

@@ -136,6 +136,13 @@ const coversRun = e2e(
   'a fetched cover shows on its card after the review saves it, and Options deletes it, leaving bookmarks, tags, and the History unchanged (V32)',
 );
 const BROWSE_COVERS = 'services/browse-covers.ts';
+const QUICK_SAVE_COVER = 'services/quick-save-cover.ts';
+const QUICK_SAVE_COVER_UNIT = 'quick-save-cover.test.ts';
+const QUICK_SAVE_COVER_E2E = 'quick-save-cover.spec.ts';
+const quickSaveCoverRun = e2e(
+  QUICK_SAVE_COVER_E2E,
+  "quick save keeps the page's own image as the new bookmark's cover, and Remove cover in the notification deletes it",
+);
 const BROWSE_COVERS_UNIT = 'browse-covers.test.ts';
 const browseCaptureRun = e2e(
   'browse-covers.spec.ts',
@@ -565,6 +572,38 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'the last used and chosen folder strategies decide where quick save goes',
     ),
   ]),
+  quickSaveCover: tested(QUICK_SAVE_COVER, [
+    unit(
+      'quick-save.test.ts',
+      'keeps none while Save a Cover With Quick Save or Fetch Covers is off',
+    ),
+    unit(QUICK_SAVE_COVER_UNIT, 'none while the setting or Fetch Covers is off'),
+    quickSaveCoverRun,
+    e2e(
+      QUICK_SAVE_COVER_E2E,
+      'quick save keeps no cover with Save a Cover With Quick Save off, Fetch Covers off, or a cover source it cannot meet',
+    ),
+  ]),
+  quickSaveCoverSource: tested(QUICK_SAVE_COVER, [
+    unit(
+      QUICK_SAVE_COVER_UNIT,
+      'Same as Cover Source follows Cover Source; any other choice is quick save only',
+    ),
+    unit(
+      QUICK_SAVE_COVER_UNIT,
+      'Screenshot first and Screenshot only keep the picture; Page image only takes none',
+    ),
+    e2e(
+      QUICK_SAVE_COVER_E2E,
+      'quick save keeps no cover with Save a Cover With Quick Save off, Fetch Covers off, or a cover source it cannot meet',
+    ),
+  ]),
+  quickSaveCoverExisting: tested(QUICK_SAVE_COVER, [
+    unit(
+      QUICK_SAVE_COVER_UNIT,
+      'keeps the cover the bookmark has, replaces it when told, and never one the user chose',
+    ),
+  ]),
 
   // AI context packer
   aiContextPackerEnabled: tested(TOOL_TABLE, [toolFlags]),
@@ -927,6 +966,13 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   coversDefaultScope: tested(TOOL_TABLE, [coversRun]),
   coversWidthPx: tested(TOOL_OPTIONS, [coversRun]),
   coversMaxImageKb: tested(TOOL_OPTIONS, [coversRun]),
+  coversQuality: tested(TOOL_OPTIONS, [
+    unit(COVERS_UNIT, 'writes each cover at the Cover Image Quality'),
+    unit(
+      QUICK_SAVE_COVER_UNIT,
+      "Page image first keeps the page's own image, at the cover quality",
+    ),
+  ]),
   coversMaxCacheMb: tested(TOOL_OPTIONS, [
     unit(COVERS_UNIT, 'remove the oldest past the storage limit'),
   ]),
@@ -942,6 +988,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     unit(
       COVERS_UNIT,
       'fetches over a picture of the tab only when Cover Source ranks the page image first',
+    ),
+    unit(
+      COVERS_UNIT,
+      'reads no page with Screenshot only, and the result says page images are off',
     ),
   ]),
   coversBrowseCapture: tested(BROWSE_COVERS, [

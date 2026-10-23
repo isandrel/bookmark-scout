@@ -7797,6 +7797,46 @@
         "message": "빠른 저장 알림이 닫히기 전까지 표시되는 시간. 포인터를 올려 두면 계속 열려 있습니다",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "빠른 저장 시 표지 저장",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "빠른 저장 후 북마크의 표지도 저장합니다. '빠른 저장 표지 출처'에 따라 페이지 자체 미리보기 이미지나 탭의 그림을 사용합니다. 기본값은 꺼짐이며, 표지 가져오기도 켜져 있을 때만 작동하고, 표지는 이 기기에만 저장됩니다.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "그림은 단축키를 누를 때 검토 없이 찍히며, 계정 페이지나 메시지처럼 페이지에 보이던 내용이 그대로 담깁니다. 시크릿 창이나 '캡처하지 않을 사이트', '읽지 않을 사이트'의 사이트에서는 찍지 않으며, 어디에도 전송하지 않습니다. 페이지 자체 이미지는 그 페이지의 사이트나 접근을 허용한 사이트에서만 내려받습니다. 알림에서 '표지 제거'는 표지만 지우고 북마크는 남기며, '실행 취소'는 둘 다 제거합니다.",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "빠른 저장 표지 출처",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "빠른 저장이 유지할 표지: '표지 출처'와 같은 선택 또는 빠른 저장 전용 선택",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "표지 출처와 같음",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "북마크에 이미 표지가 있을 때",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "빠른 저장이 북마크에 이미 있는 표지를 유지할지 대체할지 정합니다. '이 화면을 표지로 사용'으로 고른 표지는 대체하지 않습니다",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "유지",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "대체",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "답변당 최대 단계",
         "description": "Setting label: askAiMaxSteps"
@@ -8499,6 +8539,14 @@
         "message": "각 표지로 보관하는 복사본의 너비이며, 더 큰 이미지는 이 너비로 줄어듭니다",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "표지 이미지 품질",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "각 표지로 보관하는 사본의 품질입니다. 낮을수록 파일이 작아집니다. 지금부터 저장하는 표지에 적용됩니다",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "최대 이미지 크기",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8520,7 +8568,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "페이지 자체 이미지와 탭 스크린샷을 모두 쓸 수 있을 때 북마크가 유지할 표지를 정합니다. 탐색 중 찍은 스크린샷은 '스크린샷 우선'일 때만 페이지 이미지를 대체하며, '페이지 이미지만'에서는 스크린샷을 찍지 않습니다. '이 화면을 표지로 사용'으로 고른 표지는 자동으로 대체되지 않습니다.",
+        "message": "페이지 자체 이미지와 탭 스크린샷을 모두 쓸 수 있을 때 북마크가 유지할 표지를 정합니다. 탐색 중 찍은 스크린샷은 '스크린샷 우선'일 때만 페이지 이미지를 대체하며, '페이지 이미지만'에서는 스크린샷을 찍지 않습니다. '이 화면을 표지로 사용'으로 고른 표지는 자동으로 대체되지 않습니다. '스크린샷만'은 페이지 이미지를 사용하지 않습니다.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8534,6 +8582,10 @@
     "settings_coversSourcePageOnly": {
         "message": "페이지 이미지만",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "스크린샷만",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "탐색 중 표지 캡처",
@@ -8588,7 +8640,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "이 사이트와 하위 도메인의 페이지는 탐색 중에 캡처하지 않습니다. example.com처럼 사이트를 입력하거나 주소를 붙여 넣으세요. '읽지 않을 사이트'에 있는 사이트도 캡처하지 않습니다.",
+        "message": "이 사이트와 하위 도메인의 페이지는 탐색 중에 캡처하지 않습니다. example.com처럼 사이트를 입력하거나 주소를 붙여 넣으세요. '읽지 않을 사이트'에 있는 사이트도 캡처하지 않습니다. 빠른 저장도 이 사이트의 표지를 저장하지 않습니다.",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8630,6 +8682,10 @@
     "tools_coversKeptReason": {
         "message": "이 표지는 '이 화면을 표지로 사용'으로 고른 것이므로 유지됩니다. 다른 표지를 가져오려면 먼저 제거하세요.",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "'표지 출처'가 '스크린샷만'이므로 페이지 이미지는 사용하지 않으며 어떤 페이지도 읽지 않았습니다. 가져오려면 설정에서 다른 표지 출처를 선택하세요.",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "건너뜀 ($1)",
@@ -9256,6 +9312,16 @@
     "covers_sourceBrowse": {
         "message": "탐색 중 캡처, $date$에 저장",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "빠른 저장 시 캡처, $date$에 저장",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

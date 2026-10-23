@@ -7817,6 +7817,46 @@
         "message": "How long the quick save notification stays before it closes; pointing at it keeps it open",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "Save a Cover With Quick Save",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "After a quick save, also keep a cover for the bookmark: the page's own preview image or a picture of the tab, as Quick Save Cover Source says. Off by default, and works only while Fetch Covers is also on; the cover stays on this device.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "The picture is taken when you press the shortcut, without a review, and shows whatever the page shows, such as an account page or messages. It is never taken in private windows or of sites on Never Capture These Sites or Never Read These Sites, and it is never sent anywhere. The page's own image is downloaded only from the page's site or a site you gave access to. In the notification, Remove cover deletes the cover and keeps the bookmark; Undo removes both.",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "Quick Save Cover Source",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "Which cover quick save keeps: the same choice as Cover Source, or one for quick save only",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "Same as Cover Source",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "When the Bookmark Already Has a Cover",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "Whether quick save keeps a cover the bookmark already has or replaces it. A cover you chose with Use this view as the cover is never replaced",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "Keep it",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "Replace it",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "Most Steps per Answer",
         "description": "Setting label: askAiMaxSteps"
@@ -8535,6 +8575,14 @@
         "message": "Width of the copy kept for each cover; larger images are shrunk to it",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "Cover Image Quality",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "Quality of the copy kept for each cover; lower makes smaller files. Applies to covers saved from now on",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "Max Image Size",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8556,7 +8604,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Which cover a bookmark keeps when both the page's own image and a screenshot of the tab are possible. A screenshot taken while browsing replaces the page's image only with Screenshot first, and Page image only takes no screenshots. A cover you chose with Use this view as the cover is never replaced automatically.",
+        "message": "Which cover a bookmark keeps when both the page's own image and a screenshot of the tab are possible. A screenshot taken while browsing replaces the page's image only with Screenshot first, and Page image only takes no screenshots. A cover you chose with Use this view as the cover is never replaced automatically. Screenshot only never uses the page's image.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8570,6 +8618,10 @@
     "settings_coversSourcePageOnly": {
         "message": "Page image only",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "Screenshot only",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "Capture Covers While Browsing",
@@ -8624,7 +8676,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "Pages on these sites and their subdomains are never pictured while browsing. Type a site such as example.com, or paste an address. Sites on Never Read These Sites are never pictured either.",
+        "message": "Pages on these sites and their subdomains are never pictured while browsing. Type a site such as example.com, or paste an address. Sites on Never Read These Sites are never pictured either. Quick save keeps no cover of them either.",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8666,6 +8718,10 @@
     "tools_coversKeptReason": {
         "message": "You chose this cover with Use this view as the cover, so it is kept. Remove it first to fetch another.",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "Cover Source is Screenshot only, so page images are not used and no page was read. Choose another Cover Source in Settings to fetch them.",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "Skipped ($1)",
@@ -9292,6 +9348,16 @@
     "covers_sourceBrowse": {
         "message": "Captured while browsing, saved $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "Picture taken by quick save, saved $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

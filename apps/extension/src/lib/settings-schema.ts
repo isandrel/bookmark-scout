@@ -262,6 +262,9 @@ const toolScopeSchema = z.enum(['folder', 'all']);
 const contextMenuNamingSchema = z.enum(['link_text', 'page_title', 'link_url']);
 export const quickSaveFolderStrategySchema = z.enum(['best_match', 'last_used', 'fixed']);
 export type QuickSaveFolderStrategy = z.infer<typeof quickSaveFolderStrategySchema>;
+/** When the Bookmark Already Has a Cover, for Save a Cover With Quick Save. */
+export const quickSaveCoverExistingSchema = z.enum(['keep', 'replace']);
+export type QuickSaveCoverExisting = z.infer<typeof quickSaveCoverExistingSchema>;
 const aiContextFormatSchema = z.enum(['markdown', 'xml']);
 const mergeModeSchema = z.enum(['append', 'replace']);
 /**
@@ -830,6 +833,23 @@ const fields = {
       })[value],
   ),
   quickSaveFixedFolder: folderField('search.quick_save.fixed_folder', 'quickSaveFixedFolder'),
+  quickSaveCover: switchField('search.quick_save.cover', 'quickSaveCover'),
+  quickSaveCoverSource: enumField(
+    'search.quick_save.cover_source',
+    'quickSaveCoverSource',
+    quickSaveCoverSourceSchema,
+    getQuickSaveCoverSourceLabel,
+  ),
+  quickSaveCoverExisting: enumField(
+    'search.quick_save.cover_existing',
+    'quickSaveCoverExisting',
+    quickSaveCoverExistingSchema,
+    (value) =>
+      ({
+        keep: t('settings_quickSaveCoverExistingKeep'),
+        replace: t('settings_quickSaveCoverExistingReplace'),
+      })[value],
+  ),
 
   aiContextPackerEnabled: switchField('ai_tools.context_packer.enabled', 'aiContextPackerEnabled'),
   aiContextPackerDefaultScope: scopeField(
@@ -1147,6 +1167,10 @@ const fields = {
   coversMaxImageKb: numberField('metadata_content.covers.max_image_kb', 'coversMaxImageKb', {
     unit: 'kb',
   }),
+  coversQuality: numberField('metadata_content.covers.quality', 'coversQuality', {
+    control: 'slider',
+    percent: true,
+  }),
   coversMaxCacheMb: numberField('metadata_content.covers.max_cache_mb', 'coversMaxCacheMb', {
     unit: 'mb',
   }),
@@ -1385,6 +1409,9 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'quickSaveFixedFolder',
           'quickSaveAlternatives',
           'quickSaveNotificationMs',
+          'quickSaveCover',
+          'quickSaveCoverSource',
+          'quickSaveCoverExisting',
         ],
         panel: 'shortcuts',
       },
@@ -1643,7 +1670,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'coversBrowseMaxAgeDays',
           'coversNeverCaptureSites',
         ],
-        advanced: ['coversWidthPx', 'coversMaxImageKb', 'coversMaxCacheMb'],
+        advanced: ['coversWidthPx', 'coversQuality', 'coversMaxImageKb', 'coversMaxCacheMb'],
         panel: 'covers',
       },
     ]),
@@ -1732,6 +1759,8 @@ export const SETTING_SHOWN_WHEN = {
   coversBrowseSettleMs: 'coversBrowseCapture',
   coversBrowseIntervalMs: 'coversBrowseCapture',
   coversBrowseMaxAgeDays: 'coversBrowseCapture',
+  quickSaveCoverSource: 'quickSaveCover',
+  quickSaveCoverExisting: 'quickSaveCover',
 } as const satisfies Partial<Record<keyof Settings, keyof Settings>>;
 
 /** Whether `key` shows with these values: always, unless the setting it depends on is off. */

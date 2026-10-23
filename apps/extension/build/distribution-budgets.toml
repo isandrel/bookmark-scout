@@ -233,19 +233,26 @@
 # manager's item menus and the preview (the selection run of Fetch Covers, the kept-cover review
 # tab, remove with Undo) and their messages in 12 languages. Firefox measured ZIP 2,047,978,
 # 6,862,363 B uncompressed, 3,918,252 B of JavaScript, and 2,379,549 B of locales.
+# Raised on 2026-10-22 (ZIP 2,060,000 to 2,070,000, uncompressed 6,880,000 to 6,925,000, locales
+# 2,395,000 to 2,430,000) for Save a Cover With Quick Save (the quick save cover service, Remove
+# cover in the notification, Quick Save Cover Source, When the Bookmark Already Has a Cover), the
+# Screenshot only choice, and Cover Image Quality, with 15 new and 2 extended messages in 12
+# languages. Local builds of feat/quick-save-cover on 95b6b7b3 measured ZIP 2,059,865 / 2,059,759 /
+# 2,059,882, uncompressed 6,912,135 / 6,912,131 / 6,912,294 B (Chrome / Edge / Firefox), 3,929,657 B
+# of JavaScript, and 2,417,677 B of locales; JavaScript stayed within its limit.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_060_000
-raw_bytes = 6_880_000
+zip_bytes = 2_070_000
+raw_bytes = 6_925_000
 
 [targets.edge]
-zip_bytes = 2_060_000
-raw_bytes = 6_880_000
+zip_bytes = 2_070_000
+raw_bytes = 6_925_000
 
 [targets.firefox]
-zip_bytes = 2_060_000
-raw_bytes = 6_880_000
+zip_bytes = 2_070_000
+raw_bytes = 6_925_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
@@ -254,6 +261,6 @@ raw_bytes = 6_880_000
 javascript = 3_935_000
 css = 89_000
 fonts = 143_000
-locales = 2_395_000
+locales = 2_430_000
 images = 320_000
 other = 29_000

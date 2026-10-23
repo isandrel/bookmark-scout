@@ -83,8 +83,9 @@ const replacementsFor = (
   ],
   [/<Shortcut\s+id="([^"]+)"\s*\/>/g, (id) => shortcutMarkdown(id, locale)],
   [
-    /<SettingDefault\s+path="([^"]+)"(\s+seconds)?\s*\/>/g,
-    (path, seconds) => settingDefaultText(path, locale, Boolean(seconds)),
+    /<SettingDefault\s+path="([^"]+)"(\s+seconds)?(\s+percent)?\s*\/>/g,
+    (path, seconds, percent) =>
+      settingDefaultText(path, locale, Boolean(seconds), Boolean(percent)),
   ],
   [/<License\s*\/>/g, () => `[${license.name}](${license.url})`],
   [

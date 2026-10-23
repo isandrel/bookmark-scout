@@ -20,11 +20,13 @@ export const INPUT_LIMITS = readConfig(
       page_head: positive,
       page_html: positive,
       action_badge: positive,
+      cover_meta: positive,
     }),
     counts: z.strictObject({
       audit_error_codes: positive,
       alternative_index: positive,
       request_headers: positive,
+      cover_metas: positive,
     }),
     ids: z.strictObject({
       document_token_bytes: positive,

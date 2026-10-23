@@ -7817,6 +7817,46 @@
         "message": "Quanto tempo a notificação do salvamento rápido fica antes de fechar; apontar para ela a mantém aberta",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "Salvar uma capa com o salvamento rápido",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "Depois de um salvamento rápido, guarda também uma capa para o favorito: a imagem de prévia da própria página ou uma captura da guia, conforme Origem da capa do salvamento rápido. Desativado por padrão; só funciona com Buscar capas também ativado; a capa fica neste dispositivo.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "A captura é feita quando você pressiona o atalho, sem revisão, e mostra o que a página mostrar, como uma página de conta ou mensagens. Nunca é feita em janelas privadas nem de sites em Nunca capturar estes sites ou Nunca ler estes sites, e nunca é enviada a lugar nenhum. A imagem da própria página só é baixada do site da página ou de um site ao qual você deu acesso. Na notificação, Remover capa apaga a capa e mantém o favorito; Desfazer remove os dois.",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "Origem da capa do salvamento rápido",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "Qual capa o salvamento rápido guarda: a mesma opção de Origem da capa, ou uma só para o salvamento rápido",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "Igual a Origem da capa",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "Se o favorito já tiver capa",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "Se o salvamento rápido mantém a capa que o favorito já tem ou a substitui. Uma capa escolhida com Usar esta visualização como capa nunca é substituída",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "Manter",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "Substituir",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "Máximo de etapas por resposta",
         "description": "Setting label: askAiMaxSteps"
@@ -8535,6 +8575,14 @@
         "message": "Largura da cópia guardada de cada capa; imagens maiores são reduzidas a ela",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "Qualidade da imagem da capa",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "Qualidade da cópia guardada de cada capa; mais baixa gera arquivos menores. Vale para as capas salvas daqui em diante",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "Tamanho máximo da imagem",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8556,7 +8604,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Qual capa um favorito mantém quando tanto a imagem da própria página quanto uma captura da guia são possíveis. Uma captura feita ao navegar só substitui a imagem da página com Captura primeiro, e Só imagem da página não faz capturas. Uma capa escolhida com Usar esta visualização como capa nunca é substituída automaticamente.",
+        "message": "Qual capa um favorito mantém quando tanto a imagem da própria página quanto uma captura da guia são possíveis. Uma captura feita ao navegar só substitui a imagem da página com Captura primeiro, e Só imagem da página não faz capturas. Uma capa escolhida com Usar esta visualização como capa nunca é substituída automaticamente. Só captura nunca usa a imagem da página.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8570,6 +8618,10 @@
     "settings_coversSourcePageOnly": {
         "message": "Só imagem da página",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "Só captura",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "Capturar capas ao navegar",
@@ -8624,7 +8676,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "Páginas destes sites e de seus subdomínios nunca são capturadas ao navegar. Digite um site como example.com ou cole um endereço. Os sites em Nunca ler estes sites também nunca são capturados.",
+        "message": "Páginas destes sites e de seus subdomínios nunca são capturadas ao navegar. Digite um site como example.com ou cole um endereço. Os sites em Nunca ler estes sites também nunca são capturados. O salvamento rápido também não guarda capas deles.",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8666,6 +8718,10 @@
     "tools_coversKeptReason": {
         "message": "Você escolheu esta capa com Usar esta visualização como capa, então ela é mantida. Remova-a primeiro para buscar outra.",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "Origem da capa está em Só captura, então imagens de página não são usadas e nenhuma página foi lida. Escolha outra Origem da capa nas Configurações para buscá-las.",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "Ignoradas ($1)",
@@ -9292,6 +9348,16 @@
     "covers_sourceBrowse": {
         "message": "Capturada ao navegar, salva em $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "Captura do salvamento rápido, salva em $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",
