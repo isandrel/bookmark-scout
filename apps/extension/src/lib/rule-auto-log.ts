@@ -6,7 +6,9 @@
  *   Bookmarks moved, with where from and to (`move`), from `rule-automation.ts`;
  * - each reviewed run from the Tools sidebar that added tags (`run`, `rule-run.ts`): the
  *   bookmarks it tagged, grouped by the tags added, how many it moved, and its moves' Audit
- *   History record (or the background task applying them), which links the two.
+ *   History record, which links the two. A large run is applied by a background task in parts
+ *   (`jobId`); each part adds to the run's one entry (`recordRuleRunPart`), its tags before it
+ *   saves them.
  *
  * Tags live apart from the bookmarks, so the History of bookmark changes never shows them: this
  * list is their durable record, and its Undo takes them back where they still are. Moves are in
@@ -51,15 +53,16 @@ const moveEntrySchema = z.strictObject({
 const runEntrySchema = z.strictObject({
   id: z.string().min(1),
   kind: z.literal('run'),
-  /** The tags it added, each group to its bookmarks, by id. */
-  tagged: z
-    .array(
-      z.strictObject({
-        tags: z.array(z.string().min(1)).min(1),
-        bookmarkIds: z.array(z.string().min(1)).min(1),
-      }),
-    )
-    .min(1),
+  /**
+   * The tags it added, each group to its bookmarks, by id. Empty only for a run applied by a
+   * background task that has moved bookmarks but not tagged any yet.
+   */
+  tagged: z.array(
+    z.strictObject({
+      tags: z.array(z.string().min(1)).min(1),
+      bookmarkIds: z.array(z.string().min(1)).min(1),
+    }),
+  ),
   /** Bookmarks it tagged past `[runs] log_max_bookmarks`, not listed: Undo leaves their tags. */
   omitted: z.number().int().nonnegative(),
   /** How many bookmarks it moved, or handed to a background task to move. */
@@ -114,33 +117,79 @@ export async function recordRuleRun({
   tagged,
   moved,
   operationId,
-  jobId,
 }: {
   tagged: readonly RuleRunTagging[];
   moved: number;
   operationId?: string;
-  jobId?: string;
 }): Promise<string | undefined> {
   if (tagged.length === 0) return undefined;
   const listed = tagged.slice(0, BOOKMARK_RULE_LIMITS.runs.log_max_bookmarks);
-  const groups = new Map<string, { tags: string[]; bookmarkIds: string[] }>();
-  for (const { bookmarkId, tags } of listed) {
-    const key = JSON.stringify(tags);
-    const group = groups.get(key) ?? { tags: [...tags], bookmarkIds: [] };
-    group.bookmarkIds.push(bookmarkId);
-    groups.set(key, group);
-  }
   const [id] = await recordRuleAutoChanges([
     {
       kind: 'run',
-      tagged: [...groups.values()],
+      tagged: groupTagged([], listed),
       omitted: tagged.length - listed.length,
       moved,
       ...(operationId ? { operationId } : {}),
-      ...(jobId ? { jobId } : {}),
     },
   ]);
   return id;
+}
+
+/** `tagged` as entry groups, each set of tags with its bookmarks, in the order first seen. */
+function groupTagged(
+  groups: readonly { tags: string[]; bookmarkIds: string[] }[],
+  tagged: readonly RuleRunTagging[],
+): { tags: string[]; bookmarkIds: string[] }[] {
+  const byTags = new Map(
+    groups.map((group) => [
+      JSON.stringify(group.tags),
+      { ...group, bookmarkIds: [...group.bookmarkIds] },
+    ]),
+  );
+  for (const { bookmarkId, tags } of tagged) {
+    const key = JSON.stringify(tags);
+    const group = byTags.get(key) ?? { tags: [...tags], bookmarkIds: [] };
+    if (!group.bookmarkIds.includes(bookmarkId)) group.bookmarkIds.push(bookmarkId);
+    byTags.set(key, group);
+  }
+  return [...byTags.values()];
+}
+
+/**
+ * Adds what one part of a background task applying a reviewed run did (`jobId`) to that run's
+ * entry, creating it at the top when it is not listed (the first part, or after Clear list). The
+ * tags are recorded before they are saved, so a stopped worker never leaves tags it added without
+ * the record that takes them back; Undo removes a tag only where it is. Bookmarks past
+ * `[runs] log_max_bookmarks` are only counted.
+ */
+export async function recordRuleRunPart(
+  jobId: string,
+  { tagged = [], moved = 0 }: { tagged?: readonly RuleRunTagging[]; moved?: number },
+): Promise<void> {
+  if (tagged.length === 0 && moved === 0) return;
+  const max = BOOKMARK_RULE_LIMITS.runs.log_max_bookmarks;
+  await ruleAutoLogValue.update((current) => {
+    const index = current.findIndex((entry) => entry.kind === 'run' && entry.jobId === jobId);
+    const existing = index === -1 ? undefined : (current[index] as RuleRunEntry);
+    const listed = existing
+      ? existing.tagged.reduce((sum, group) => sum + group.bookmarkIds.length, 0)
+      : 0;
+    const room = Math.max(0, max - listed);
+    const entry: RuleRunEntry = {
+      id: existing?.id ?? crypto.randomUUID(),
+      kind: 'run',
+      tagged: groupTagged(existing?.tagged ?? [], tagged.slice(0, room)),
+      omitted: (existing?.omitted ?? 0) + Math.max(0, tagged.length - room),
+      moved: (existing?.moved ?? 0) + moved,
+      jobId,
+      at: existing?.at ?? Date.now(),
+    };
+    if (!existing) {
+      return [entry, ...current].slice(0, BOOKMARK_RULE_LIMITS.automatic.log_max);
+    }
+    return current.map((item, position) => (position === index ? entry : item));
+  });
 }
 
 /** One entry, if it is still listed. */

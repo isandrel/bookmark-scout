@@ -12,13 +12,18 @@ const JOB_TITLE_KEYS: Record<ScanJobKind, MessageKey> = {
   reorganization: 'tools_aiReorganize',
 };
 
-/** The tool whose reviewed changes an `applyChanges` job applies (its title key). */
-function appliedTool(job: Pick<JobRecord, 'options'>): string {
-  return applyJobOptionsSchema.parse(job.options).tool;
+/** Whether a job applies reviewed changes, rather than scanning. */
+function isApplyJob(job: Pick<JobRecord, 'kind'>): boolean {
+  return (APPLY_JOB_KINDS as readonly string[]).includes(job.kind);
+}
+
+/** The tool whose reviewed changes an apply job applies (its title key). */
+function appliedTool(job: Pick<JobRecord, 'kind' | 'options'>): string {
+  return job.kind === 'applyRules' ? RULE_RUN_TOOL : applyJobOptionsSchema.parse(job.options).tool;
 }
 
 export function jobTitle(job: Pick<JobRecord, 'kind' | 'options'>): string {
-  return job.kind === 'applyChanges'
+  return job.kind === 'applyChanges' || job.kind === 'applyRules'
     ? t('jobs_applyTitle', t(appliedTool(job)))
     : t(JOB_TITLE_KEYS[job.kind]);
 }
@@ -26,12 +31,16 @@ export function jobTitle(job: Pick<JobRecord, 'kind' | 'options'>): string {
 /** What one kind of job counts: links checked, or changes applied. */
 export function jobCountsLabel(job: Pick<JobRecord, 'kind' | 'done'>): string {
   const counts = [job.done.succeeded, job.done.skipped, job.done.failed].map(formatCount);
-  return t(job.kind === 'applyChanges' ? 'jobs_countsApply' : 'jobs_counts', counts);
+  return t(isApplyJob(job) ? 'jobs_countsApply' : 'jobs_counts', counts);
 }
 
-/** What a stopped job kept: scan results, or the changes already made. */
+/**
+ * What a stopped job kept: scan results, or the changes already made (a Smart Rules run's tags
+ * are undone from Settings, its moves from the History).
+ */
 export function jobCancelledNote(job: Pick<JobRecord, 'kind'>): string {
-  return t(job.kind === 'applyChanges' ? 'jobs_cancelledApplyNote' : 'jobs_cancelledNote');
+  if (job.kind === 'applyRules') return t('jobs_cancelledRulesNote');
+  return t(isApplyJob(job) ? 'jobs_cancelledApplyNote' : 'jobs_cancelledNote');
 }
 
 const STATE_KEYS: Record<JobState, MessageKey> = {
@@ -52,7 +61,7 @@ export function jobStateLabel(state: JobState): string {
 
 /** Where the job runs: all bookmarks, the folder it was started on, or how many changes. */
 export function jobScopeLabel(job: Pick<JobRecord, 'kind' | 'scope' | 'total'>): string {
-  if (job.kind === 'applyChanges') return tPlural('jobs_applyScope', job.total);
+  if (isApplyJob(job)) return tPlural('jobs_applyScope', job.total);
   return job.scope.mode === 'all' ? t('settings_scopeAll') : job.scope.label;
 }
 
@@ -85,6 +94,7 @@ const JOB_BLOCK_KEYS: Record<JobBlockCode, MessageKey> = {
   'uncertain-write': 'jobs_uncertainWrite',
   'site-access': 'jobs_blockedSiteAccess',
   'slice-setup': 'jobs_errorSetup',
+  'rules-off': 'jobs_blockedRulesOff',
 };
 
 /** What Resume asks the browser for first, where the reason a job paused is a missing permission. */

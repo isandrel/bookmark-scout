@@ -7905,6 +7905,10 @@
         "message": "Paused: website access was taken back. Resume asks for it again.",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "Paused: Smart Rules was turned off in Settings. Turn it on and resume, or cancel.",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "Paused: the AI service is not ready ($1). Fix it in Settings, then resume.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7952,6 +7956,10 @@
     "jobs_cancelledApplyNote": {
         "message": "Stopped. The changes made so far stay; undo them from History.",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "Stopped. The changes made so far stay: undo the moves from History and the tags under Changed by rules in Settings.",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "Applying in the background",
@@ -8805,6 +8813,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "Test with an address or title",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "Type a web address or a title to see whether this search matches it. Nothing is saved or sent.",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "Matches this search",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "Does not match this search",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "Add tags",
         "description": "Rule editor: tags field"
@@ -8872,6 +8896,50 @@
     "rules_autoMovePaused": {
         "message": "Automatic moves stopped: its folder was deleted, renamed, or moved, or is managed. Choose the folder again and save the rule.",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "Last run $1: tagged $2, moved $3, left out $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "Conflicts in the last run",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "In the run on $1, rules would have moved these bookmarks to different folders, so they stayed where they were. Review one to choose its folder.",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "Folders the rules named: $1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "Review",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "Review $1 in the bookmark manager",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "And $count$ more",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_conflictsMore_one": {
+        "message": "And $count$ more",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "Smart Rules, automatically",
@@ -8969,13 +9037,49 @@
         "message": "Tagged: $1. Moved: $2. Skipped because they changed after the review: $3. Failed: $4.",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "Tagged: $1. Moving $2 bookmarks in the background.",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "$count$ bookmarks are tagged and moved in parts. Follow them under Background tasks; undo the moves from History and the tags under Changed by rules in Settings.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesBackgroundJobDesc_one": {
+        "message": "$count$ bookmark is tagged and moved in parts. Follow it under Background tasks; undo the move from History and the tags under Changed by rules in Settings.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "Nothing was moved: the Bookmark history could not record the moves, so none was made.",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "$count$ were skipped because a rule that matched them was edited, turned off, or deleted after the review.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesRuleChangedDesc_one": {
+        "message": "$count$ was skipped because a rule that matched it was edited, turned off, or deleted after the review.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "$count$ rules turned on",

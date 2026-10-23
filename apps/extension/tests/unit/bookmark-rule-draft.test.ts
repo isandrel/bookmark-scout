@@ -10,6 +10,7 @@ import {
   ruleDraftOfTemplate,
   ruleFolderPath,
   ruleFromDraft,
+  ruleMatchesSample,
 } from '@/lib/bookmark-rule-draft';
 import {
   BOOKMARK_RULE_TEMPLATES,
@@ -141,5 +142,28 @@ describe('smart rule drafts', () => {
     expect(describeRule(result.rule)).toBe(`${query}: add tags dev and code`);
     expect(isRuleQueryReadable('(domain:github.com OR tag:x')).toBe(false);
     expect(ruleFromDraft({ ...draft, query: 'a OR' }, 'x', tree)).toEqual({ error: 'query' });
+  });
+});
+
+describe('testing a sample in the editor (PROMPT R3)', () => {
+  it('reads an address as an address and anything else as a title, with no folder or tags', () => {
+    expect(ruleMatchesSample('domain:github.com', 'https://github.com/acme/repo')).toBe(true);
+    expect(ruleMatchesSample('domain:github.com', 'gist.github.com/x')).toBe(true);
+    expect(ruleMatchesSample('domain:github.com', 'https://github.com.evil.test/')).toBe(false);
+    expect(ruleMatchesSample('domain:github.com', 'mygithub.com')).toBe(false);
+    expect(ruleMatchesSample('domain:youtube.com url:/watch', 'youtube.com/watch?v=1')).toBe(true);
+    expect(ruleMatchesSample('domain:youtube.com url:/watch', 'youtube.com/shorts/1')).toBe(false);
+    expect(ruleMatchesSample('title:tutorial', 'A React Tutorial')).toBe(true);
+    expect(ruleMatchesSample('title:tutorial', 'https://example.com/tutorial')).toBe(false);
+    expect(ruleMatchesSample('tutorial -title:video', 'Tutorial video')).toBe(false);
+    // A sample has no folder and no tags.
+    expect(ruleMatchesSample('folder:Work', 'Work notes')).toBe(false);
+    expect(ruleMatchesSample('-tag:read', 'Anything')).toBe(true);
+  });
+
+  it('says nothing while the search cannot run or the sample is empty', () => {
+    expect(ruleMatchesSample('domain:github.com', '   ')).toBeUndefined();
+    expect(ruleMatchesSample('(domain:github.com', 'https://github.com/')).toBeUndefined();
+    expect(ruleMatchesSample('', 'https://github.com/')).toBeUndefined();
   });
 });

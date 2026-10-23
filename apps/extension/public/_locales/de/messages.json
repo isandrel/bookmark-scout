@@ -7905,6 +7905,10 @@
         "message": "Angehalten: Der Zugriff auf Websites wurde entzogen. Beim Fortsetzen wird erneut danach gefragt.",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "Angehalten: Intelligente Regeln wurden in den Einstellungen ausgeschaltet. Schalten Sie sie ein und setzen Sie fort, oder brechen Sie ab.",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "Angehalten: Der KI-Dienst ist nicht bereit ($1). Beheben Sie das in den Einstellungen und setzen Sie dann fort.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7952,6 +7956,10 @@
     "jobs_cancelledApplyNote": {
         "message": "Beendet. Die bisherigen Änderungen bleiben; machen Sie sie im Verlauf rückgängig.",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "Beendet. Die bisherigen Änderungen bleiben: Machen Sie die Verschiebungen im Verlauf rückgängig und die Tags unter „Von Regeln geändert“ in den Einstellungen.",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "Wird im Hintergrund übernommen",
@@ -8805,6 +8813,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "Mit einer Adresse oder einem Titel testen",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "Geben Sie eine Webadresse oder einen Titel ein, um zu sehen, ob diese Suche passt. Nichts wird gespeichert oder gesendet.",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "Passt zu dieser Suche",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "Passt nicht zu dieser Suche",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "Tags hinzufügen",
         "description": "Rule editor: tags field"
@@ -8872,6 +8896,50 @@
     "rules_autoMovePaused": {
         "message": "Automatische Verschiebungen gestoppt: Der Ordner wurde gelöscht, umbenannt oder verschoben oder wird verwaltet. Wählen Sie den Ordner erneut und speichern Sie die Regel.",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "Letzter Lauf $1: mit Tags versehen $2, verschoben $3, ausgelassen $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "Konflikte im letzten Lauf",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "Beim Lauf am $1 hätten Regeln diese Lesezeichen in verschiedene Ordner verschoben, daher blieben sie, wo sie waren. Prüfen Sie eines, um seinen Ordner zu wählen.",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "Ordner aus den Regeln: $1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "Prüfen",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "„$1“ im Lesezeichen-Manager prüfen",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "Und $count$ weitere",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_conflictsMore_one": {
+        "message": "Und $count$ weiteres",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "Intelligente Regeln, automatisch",
@@ -8969,13 +9037,49 @@
         "message": "Mit Tags versehen: $1. Verschoben: $2. Übersprungen, weil sie sich nach der Prüfung geändert haben: $3. Fehlgeschlagen: $4.",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "Mit Tags versehen: $1. $2 Lesezeichen werden im Hintergrund verschoben.",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "$count$ Lesezeichen werden in Teilen mit Tags versehen und verschoben. Verfolgen Sie sie unter Hintergrundaufgaben; machen Sie die Verschiebungen im Verlauf rückgängig und die Tags unter „Von Regeln geändert“ in den Einstellungen.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesBackgroundJobDesc_one": {
+        "message": "$count$ Lesezeichen wird mit Tags versehen und verschoben. Verfolgen Sie es unter Hintergrundaufgaben; machen Sie die Verschiebung im Verlauf rückgängig und die Tags unter „Von Regeln geändert“ in den Einstellungen.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "Nichts wurde verschoben: Der Lesezeichen-Verlauf konnte die Verschiebungen nicht aufzeichnen, daher wurde keine ausgeführt.",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "$count$ wurden übersprungen, weil eine passende Regel nach der Prüfung bearbeitet, ausgeschaltet oder gelöscht wurde.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesRuleChangedDesc_one": {
+        "message": "$count$ wurde übersprungen, weil eine passende Regel nach der Prüfung bearbeitet, ausgeschaltet oder gelöscht wurde.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "$count$ Regeln eingeschaltet",

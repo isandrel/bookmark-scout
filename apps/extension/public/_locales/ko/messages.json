@@ -7885,6 +7885,10 @@
         "message": "일시 중지됨: 웹사이트 접근 권한이 해제되었습니다. 다시 시작하면 권한을 다시 요청합니다.",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "일시 중지됨: 설정에서 스마트 규칙이 꺼졌습니다. 켠 다음 다시 시작하거나 취소하세요.",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "일시 중지됨: AI 서비스가 준비되지 않았습니다($1). 설정에서 고친 뒤 다시 시작하세요.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7928,6 +7932,10 @@
     "jobs_cancelledApplyNote": {
         "message": "중지되었습니다. 지금까지의 변경은 남아 있으며, 기록에서 실행 취소할 수 있습니다.",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "중지되었습니다. 지금까지의 변경은 남아 있습니다. 이동은 기록에서, 태그는 설정의 규칙으로 변경됨에서 실행 취소하세요.",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "백그라운드에서 적용 중",
@@ -8769,6 +8777,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "주소나 제목으로 테스트",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "웹 주소나 제목을 입력하면 이 검색과 일치하는지 확인할 수 있습니다. 아무것도 저장하거나 보내지 않습니다.",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "이 검색과 일치합니다",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "이 검색과 일치하지 않습니다",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "태그 추가",
         "description": "Rule editor: tags field"
@@ -8836,6 +8860,50 @@
     "rules_autoMovePaused": {
         "message": "자동 이동이 멈췄습니다. 폴더가 삭제되었거나 이름이 바뀌었거나 옮겨졌거나 관리되는 폴더입니다. 폴더를 다시 선택하고 규칙을 저장하세요.",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "마지막 실행 $1: 태그 추가 $2, 이동 $3, 제외 $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "마지막 실행의 충돌",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "$1 실행에서 규칙들이 이 북마크를 서로 다른 폴더로 옮기려 해서 원래 위치에 두었습니다. 검토해서 폴더를 선택하세요.",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "규칙이 지정한 폴더: $1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "검토",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "북마크 관리자에서 $1 검토",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "외 $count$개",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_conflictsMore_one": {
+        "message": "외 $count$개",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "스마트 규칙, 자동",
@@ -8933,13 +9001,49 @@
         "message": "태그 추가: $1. 이동: $2. 검토 후 변경되어 건너뜀: $3. 실패: $4.",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "태그 추가: $1. 북마크 $2개를 백그라운드에서 이동하는 중입니다.",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "북마크 $count$개에 태그를 추가하고 나누어 이동하고 있습니다. 백그라운드 작업에서 확인하세요. 이동은 기록에서, 태그는 설정의 규칙으로 변경됨에서 실행 취소할 수 있습니다.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesBackgroundJobDesc_one": {
+        "message": "북마크 $count$개에 태그를 추가하고 나누어 이동하고 있습니다. 백그라운드 작업에서 확인하세요. 이동은 기록에서, 태그는 설정의 규칙으로 변경됨에서 실행 취소할 수 있습니다.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "아무것도 옮기지 않았습니다: 북마크 기록에 이동을 기록할 수 없어서 이동하지 않았습니다.",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "검토 후 일치하는 규칙이 수정, 해제 또는 삭제되어 $count$개를 건너뛰었습니다.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesRuleChangedDesc_one": {
+        "message": "검토 후 일치하는 규칙이 수정, 해제 또는 삭제되어 $count$개를 건너뛰었습니다.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "켜진 규칙 $count$개",

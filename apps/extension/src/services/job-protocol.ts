@@ -47,6 +47,16 @@ export const jobCommandSchema = z.discriminatedUnion('type', [
     requireRecord: applyJobOptionsSchema.shape.requireRecord,
     changes: z.array(storedBookmarkChangeSchema).min(1).max(JOB_LIMITS.maxItems),
   }),
+  z.strictObject({
+    type: z.literal('applyRules'),
+    /** Made once by the page when the user applies, so a resend returns the same job. */
+    commandId: id,
+    source: z.enum(JOB_SOURCES),
+    /** The version of each rule the review matched, by id. */
+    rules: ruleRunJobOptionsSchema.shape.rules,
+    /** The reviewed bookmarks the user approved, applied in order and checked again before each. */
+    items: z.array(ruleRunInputSchema).min(1).max(JOB_LIMITS.maxItems),
+  }),
   z.strictObject({ type: z.literal('pause'), jobId: id }),
   z.strictObject({ type: z.literal('resume'), jobId: id }),
   z.strictObject({ type: z.literal('cancel'), jobId: id }),

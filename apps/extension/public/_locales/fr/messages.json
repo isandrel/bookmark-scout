@@ -7905,6 +7905,10 @@
         "message": "En pause : l’accès aux sites web a été retiré. Reprendre le redemande.",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "En pause : les Règles intelligentes ont été désactivées dans les Paramètres. Réactivez-les et reprenez, ou annulez.",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "En pause : le service d'IA n'est pas prêt ($1). Corrigez-le dans les Paramètres, puis reprenez.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7952,6 +7956,10 @@
     "jobs_cancelledApplyNote": {
         "message": "Arrêté. Les modifications déjà faites restent ; annulez-les depuis l'Historique.",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "Arrêté. Les modifications déjà faites restent : annulez les déplacements depuis l'Historique et les étiquettes dans Modifiés par les règles, dans les Paramètres.",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "Application en arrière-plan",
@@ -8805,6 +8813,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "Tester avec une adresse ou un titre",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "Saisissez une adresse web ou un titre pour voir si cette recherche le trouve. Rien n'est enregistré ni envoyé.",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "Correspond à cette recherche",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "Ne correspond pas à cette recherche",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "Ajouter des étiquettes",
         "description": "Rule editor: tags field"
@@ -8872,6 +8896,50 @@
     "rules_autoMovePaused": {
         "message": "Déplacements automatiques arrêtés : son dossier a été supprimé, renommé ou déplacé, ou il est géré. Choisissez de nouveau le dossier et enregistrez la règle.",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "Dernière exécution $1 : étiquetés $2, déplacés $3, laissés de côté $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "Conflits lors de la dernière exécution",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "Lors de l'exécution du $1, des règles auraient déplacé ces favoris vers des dossiers différents ; ils sont donc restés où ils étaient. Vérifiez-en un pour choisir son dossier.",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "Dossiers des règles : $1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "Vérifier",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "Vérifier « $1 » dans le gestionnaire de favoris",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "Et $count$ de plus",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_conflictsMore_one": {
+        "message": "Et $count$ de plus",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "Règles intelligentes, automatiquement",
@@ -8969,13 +9037,49 @@
         "message": "Étiquetés : $1. Déplacés : $2. Ignorés, car modifiés après la vérification : $3. Échecs : $4.",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "Étiquetés : $1. Déplacement de $2 favoris en arrière-plan.",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "$count$ favoris sont étiquetés et déplacés par parties. Suivez-les dans Tâches en arrière-plan ; annulez les déplacements depuis l'Historique et les étiquettes dans Modifiés par les règles, dans les Paramètres.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesBackgroundJobDesc_one": {
+        "message": "$count$ favori est étiqueté et déplacé. Suivez-le dans Tâches en arrière-plan ; annulez le déplacement depuis l'Historique et les étiquettes dans Modifiés par les règles, dans les Paramètres.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "Rien n'a été déplacé : l'Historique des favoris n'a pas pu enregistrer les déplacements, donc aucun n'a été fait.",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "$count$ ont été ignorés, car une règle qui les concernait a été modifiée, désactivée ou supprimée après la vérification.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesRuleChangedDesc_one": {
+        "message": "$count$ a été ignoré, car une règle qui le concernait a été modifiée, désactivée ou supprimée après la vérification.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "$count$ règles activées",

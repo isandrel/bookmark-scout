@@ -21,7 +21,9 @@
 # editor's search notes (439).
 # Raised from 445 on 2026-10-22 for Smart Rules moving new bookmarks (fail closed without an Audit
 # History record), New Bookmarks From, and the reviewed run's record in the rules log (447).
-"background.js" = 455
+# Raised from 455 on 2026-10-22 for a large reviewed Smart Rules run as a background task (its
+# tags and moves applied in parts, checked against the rule versions) and the run status (457).
+"background.js" = 465
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -35,14 +37,17 @@
 # Sign-in Details or Secrets setting in the settings schema, on main at 00a6a602 (1,031).
 # Raised from 1035 on 2026-10-22 for the hover card's first-use loader and the manager's Tags and
 # Summary columns (1,036).
-"popup.html" = 1045
+# Raised from 1045 on 2026-10-22 for the Smart Rules run job's command and input schemas, which the
+# job store and commands the popup's Background tasks line reads carry (1,046).
+"popup.html" = 1055
 # Raised from 995 on 2026-10-22 with the popup, for the same settings schema growth (996).
 # Raised from 1005 on 2026-10-22 with the popup, for the same button (1,010).
 # Raised from 1020 on 2026-10-22 for Index this page's text on the current page line (1,024).
 # Raised from 1030 on 2026-10-22 with the popup, for the same notice and setting (1,031).
 # Raised from 1035 on 2026-10-22 for the hover card's first-use loader and the manager's Tags and
 # Summary columns (1,036).
-"sidepanel.html" = 1045
+# Raised from 1045 on 2026-10-22 with the popup, for the same job schemas (1,046).
+"sidepanel.html" = 1055
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
@@ -67,7 +72,9 @@
 # template, and New Bookmarks From (1,233).
 # Raised from 1240 on 2026-10-22 for page text coverage, Retry failed, and the secrets setting in
 # Options with Smart Rules automatic moves (1,247).
-"options.html" = 1255
+# Raised from 1255 on 2026-10-22 for the rule editor's sample test, each rule's last run, and the
+# last run's conflicts with their Review links (1,258).
+"options.html" = 1265
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
@@ -92,7 +99,9 @@
 # reviewed run's fail-closed apply and record (1,483).
 # Raised from 1490 on 2026-10-22 for the hover card's first-use loader and the manager's Tags and
 # Summary columns (1,491).
-"bookmarks.html" = 1500
+# Raised from 1500 on 2026-10-22 for the Smart Rules run status and stale-review checks on top of
+# the Index Page Text gaps (1,501).
+"bookmarks.html" = 1510
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -116,4 +125,6 @@
 # the config modules it reads (607).
 # Raised from 620 on 2026-10-22 for the cover store's config and the megabyte format every page's
 # shared modules carry (622).
-"welcome.html" = 630
+# Raised from 630 on 2026-10-22 for the Smart Rules run status and stale-review checks on top of
+# the Index Page Text gaps (631).
+"welcome.html" = 640

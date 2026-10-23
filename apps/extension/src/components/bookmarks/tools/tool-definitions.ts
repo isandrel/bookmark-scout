@@ -380,10 +380,7 @@ function reportRuleRun(run: RuleRunResult): ToolOutcome {
   if (run.background) {
     return {
       ...reportBackgroundApply(run.background),
-      description: t('toast_rulesBackgroundDesc', [
-        String(run.tagged),
-        String(run.background.count),
-      ]),
+      description: tPlural('toast_rulesBackgroundJobDesc', run.background.count),
     };
   }
   const counts = {
@@ -392,17 +389,24 @@ function reportRuleRun(run: RuleRunResult): ToolOutcome {
     skipped: run.skipped,
     failed: run.failed,
   };
-  const why = run.movesStopped
-    ? run.movesStopped.reason === 'noRecord'
-      ? t('toast_rulesNoRecordDesc')
-      : getErrorMessage(run.movesStopped.error)
-    : undefined;
+  const why = [
+    ...(run.ruleChanged > 0 ? [tPlural('toast_rulesRuleChangedDesc', run.ruleChanged)] : []),
+    ...(run.movesStopped
+      ? [
+          run.movesStopped.reason === 'noRecord'
+            ? t('toast_rulesNoRecordDesc')
+            : getErrorMessage(run.movesStopped.error),
+        ]
+      : []),
+  ];
   const outcome = reportRuleChanges(counts, {
     undo: run.undo,
     ...(run.expiresAt !== undefined ? { expiresAt: run.expiresAt } : {}),
     ...(run.historyId ? { historyId: run.historyId } : {}),
   });
-  return why ? { ...outcome, description: `${outcome.description} ${why}` } : outcome;
+  return why.length > 0
+    ? { ...outcome, description: [outcome.description, ...why].join(' ') }
+    : outcome;
 }
 
 function reportRuleChanges(
@@ -895,7 +899,8 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         (scope === 'all' ? undefined : new Set(flattenBookmarks(nodes).map(({ node }) => node.id)));
       return planBookmarkRules(rules, tree, metadata, inScope);
     },
-    apply: async (_items, picked) => reportRuleRun(await applyRulePlan(picked)),
+    // The whole review goes too: Settings lists the conflicts it found.
+    apply: async (items, picked) => reportRuleRun(await applyRulePlan(picked, items)),
   },
   statistics: {
     id: 'statistics',

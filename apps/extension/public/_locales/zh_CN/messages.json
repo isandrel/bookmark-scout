@@ -7647,6 +7647,10 @@
         "message": "已暂停：网站访问权限已被收回。继续时会重新请求。",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "已暂停：智能规则已在设置中关闭。请将其打开后继续，或取消。",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "已暂停：AI 服务尚未就绪（$1）。请在设置中修正后再继续。",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7690,6 +7694,10 @@
     "jobs_cancelledApplyNote": {
         "message": "已停止。已做出的更改会保留；可在历史记录中撤消。",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "已停止。已做出的更改会保留：可在历史记录中撤消移动，在设置的“由规则更改”中撤消标签。",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "正在后台应用",
@@ -8435,6 +8443,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "用网址或标题测试",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "输入网址或标题，查看此搜索是否匹配。不会保存或发送任何内容。",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "与此搜索匹配",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "与此搜索不匹配",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "添加标签",
         "description": "Rule editor: tags field"
@@ -8502,6 +8526,40 @@
     "rules_autoMovePaused": {
         "message": "自动移动已停止：其文件夹已被删除、重命名或移动，或者受管理。请重新选择文件夹并保存规则。",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "上次运行 $1：添加标签 $2，移动 $3，未处理 $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "上次运行中的冲突",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "在 $1 的运行中，规则会把这些书签移到不同的文件夹，因此它们留在原处。请审阅以选择文件夹。",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "规则指定的文件夹：$1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "审阅",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "在书签管理器中审阅“$1”",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "另有 $count$ 个",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "智能规则，自动",
@@ -8589,13 +8647,29 @@
         "message": "已添加标签：$1。已移动：$2。因审阅后有改动而跳过：$3。失败：$4。",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "已添加标签：$1。正在后台移动 $2 个书签。",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "正在分批为 $count$ 个书签添加标签并移动。可在后台任务中查看进度；可在历史记录中撤消移动，在设置的“由规则更改”中撤消标签。",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "未移动任何书签：书签历史记录无法记录这些移动，因此没有进行移动。",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "有 $count$ 个因匹配的规则在审阅后被编辑、关闭或删除而跳过。",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "已开启 $count$ 条规则",

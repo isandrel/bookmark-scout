@@ -199,7 +199,7 @@ export function ReviewFooter({
           {t('action_cancel')}
         </Button>
       ) : null}
-      <Button onClick={onConfirm} disabled={disabled || busy}>
+      <Button data-testid="review-confirm" onClick={onConfirm} disabled={disabled || busy}>
         {busy ? busyLabel : label}
       </Button>
     </div>

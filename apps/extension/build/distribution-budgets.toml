@@ -208,27 +208,35 @@
 # 615cc17e measured ZIP 2,013,623 / 2,013,587 / 2,013,626, uncompressed 6,719,269 / 6,719,265 /
 # 6,719,428 B (Chrome / Edge / Firefox), 3,879,142 B of JavaScript, and 2,275,984 B of locales;
 # the new limits are about 10 KB above that.
+# Raised on 2026-10-22 (ZIP 2,025,000 to 2,035,000, uncompressed 6,730,000 to 6,775,000,
+# javascript 3,890,000 to 3,905,000, locales 2,286,000 to 2,315,000) for the Smart Rules gaps (a
+# large reviewed run as a background task, rule versions checked on apply, the editor's sample test,
+# each rule's last run, and the last run's conflicts) and their 15 messages in 12 languages, on top
+# of the Index Page Text gaps. Local builds of feat/rules-run-gaps on main measured ZIP 2,023,743 /
+# 2,023,680 / 2,023,834, uncompressed 6,764,371 / 6,764,367 / 6,764,530 B (Chrome / Edge /
+# Firefox), 3,896,133 B of JavaScript, and 2,304,339 B of locales; the new limits are about 10 KB
+# above that.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_025_000
-raw_bytes = 6_730_000
+zip_bytes = 2_035_000
+raw_bytes = 6_775_000
 
 [targets.edge]
-zip_bytes = 2_025_000
-raw_bytes = 6_730_000
+zip_bytes = 2_035_000
+raw_bytes = 6_775_000
 
 [targets.firefox]
-zip_bytes = 2_025_000
-raw_bytes = 6_730_000
+zip_bytes = 2_035_000
+raw_bytes = 6_775_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_890_000
+javascript = 3_905_000
 css = 89_000
 fonts = 143_000
-locales = 2_286_000
+locales = 2_315_000
 images = 320_000
 other = 29_000

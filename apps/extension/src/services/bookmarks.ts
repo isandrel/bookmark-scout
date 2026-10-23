@@ -949,6 +949,9 @@ export const MANAGER_EXPORT_HASH = 'export-bookmarks';
 /** Hash that opens the manager's Background tasks, which the popup links to. */
 export const MANAGER_TASKS_HASH = 'tasks';
 
+/** Hash that opens the manager's Tools sidebar on the tab with Smart Rules. */
+export const MANAGER_RULES_HASH = 'smart-rules';
+
 /** Opens the manager on its Background tasks (`MANAGER_TASKS_HASH`). */
 export async function openBackgroundTasks(): Promise<void> {
   await browser.tabs.create({

@@ -3,7 +3,7 @@
  * changes nothing until applied, then applied (tags and a move) and undone; and new bookmarks
  * tagged and moved without a review, each only with its own opt-in.
  */
-import type { Worker } from '@playwright/test';
+import type { Locator, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, showAllTools, toolCard } from './tool-helpers';
@@ -426,4 +426,117 @@ test('a run on the search results changes only them, as one History record, with
   await expect(entry).toHaveCount(0);
   // Its move stays: that is undone from the History.
   expect(await parentOf(extensionWorker, ids.Repo as string)).toBe(ids.Dest);
+});
+
+/** Text cut off sideways inside `scope`: what a narrow window must not do. */
+async function clippedText(scope: Locator) {
+  return scope.evaluate((node) =>
+    [node, ...node.querySelectorAll('button, p, span, label, h2, h4, a')]
+      // Text only screen readers get is 1px wide on purpose; truncated meta lines are allowed.
+      .filter(
+        (element) =>
+          element.clientWidth > 1 &&
+          !element.classList.contains('truncate') &&
+          element.scrollWidth > element.clientWidth + 1,
+      )
+      .map((element) => element.textContent),
+  );
+}
+
+test('the rule editor tests a sample and the review applies in dark theme at 420px; Settings shows the last run and its conflicts with a Review link (R40, PROMPT R3, R5)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Narrow Rules', [
+    { title: 'Repo', url: 'https://github.com/org/repo' },
+    { title: 'Lib', url: 'https://github.com/org/lib' },
+    { title: 'Dest', children: [] },
+    { title: 'Libraries', children: [] },
+  ]);
+  const ids = seeded.ids as Record<string, string>;
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkRules, [
+    {
+      id: 'gh',
+      name: 'GitHub',
+      enabled: true,
+      query: 'domain:github.com',
+      syntaxVersion: 2,
+      addTags: ['code'],
+      moveTo: { folderId: ids.Dest, path: 'E2E Narrow Rules / Dest' },
+    },
+    {
+      id: 'lib',
+      name: 'Libraries',
+      enabled: true,
+      query: 'title:lib',
+      syntaxVersion: 2,
+      addTags: [],
+      moveTo: { folderId: ids.Libraries, path: 'E2E Narrow Rules / Libraries' },
+    },
+  ]);
+  await setSettings(extensionWorker, { theme: 'dark', bookmarkRulesDefaultScope: 'folder' });
+  await page.setViewportSize({ width: 420, height: 800 });
+
+  // The editor, dark and narrow: the sample test says whether the search matches, locally.
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  await expect(page.locator('html')).toHaveClass(/\bdark\b/);
+  const panel = page.getByTestId('bookmark-rules');
+  await panel.getByRole('button', { name: 'Edit GitHub' }).click();
+  const editor = page.getByRole('dialog', { name: 'Edit rule' });
+  const sample = editor.getByRole('textbox', { name: 'Test with an address or title' });
+  const result = editor.getByTestId('rule-sample-result');
+  await expect(result).toHaveText(
+    'Type a web address or a title to see whether this search matches it. Nothing is saved or sent.',
+  );
+  await sample.fill('https://gist.github.com/x');
+  await expect(result).toHaveText('Matches this search');
+  await expect(result).toHaveAttribute('role', 'status');
+  await sample.fill('github.com.evil.test/x');
+  await expect(result).toHaveText('Does not match this search');
+  await expect.poll(() => clippedText(editor)).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  );
+  await page.screenshot({ path: test.info().outputPath('rule-editor-dark-420.png') });
+  await editor.getByRole('button', { name: 'Cancel' }).click();
+  await expect(editor).toHaveCount(0);
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toHaveLength(2);
+
+  // The review, dark and narrow: Lib is a conflict (two folders), Repo a change.
+  await openTools(page, extensionId, seeded.folderId);
+  await toolCard(page, 'Smart Rules').getByRole('button', { name: 'Run', exact: true }).click();
+  const review = page.getByRole('dialog', { name: 'Smart Rules' });
+  await expect(review.getByRole('radio', { name: 'Changes (1)' })).toBeVisible();
+  await expect(review.getByRole('radio', { name: 'Conflicts (1)' })).toBeVisible();
+  await expect.poll(() => clippedText(review)).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('rule-review-dark-420.png') });
+  await review.getByRole('button', { name: 'Apply 1 change' }).click();
+  await expect(review).toHaveCount(0);
+  await expect.poll(() => parentOf(extensionWorker, ids.Repo as string)).toBe(ids.Dest);
+  expect(await parentOf(extensionWorker, ids.Lib as string)).toBe(seeded.folderId);
+
+  // Settings: each rule's last run, and the conflict with a link to review it where it is.
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const rule = (name: string) => panel.getByTestId('bookmark-rule').filter({ hasText: name });
+  await expect(rule('GitHub').getByTestId('rule-last-run')).toHaveText(
+    /^Last run .+: tagged 1, moved 1, left out 0$/,
+  );
+  await expect(rule('Libraries').getByTestId('rule-last-run')).toHaveCount(0);
+  const conflict = page.getByTestId('rule-conflict');
+  await expect(conflict).toHaveCount(1);
+  await expect(conflict).toContainText('Lib');
+  await expect(conflict).toContainText(
+    'Folders the rules named: E2E Narrow Rules / Dest and E2E Narrow Rules / Libraries',
+  );
+  const link = conflict.getByRole('link', { name: 'Review Lib in the bookmark manager' });
+  const href = await link.getAttribute('href');
+  expect(href).toBe(
+    `chrome-extension://${extensionId}/bookmarks.html?id=${seeded.folderId}#smart-rules`,
+  );
+  await expect.poll(() => clippedText(page.getByTestId('rule-conflicts'))).toEqual([]);
+
+  // The link opens the manager on that folder with the Tools sidebar on Smart Rules.
+  await page.goto(href as string);
+  await expect(toolCard(page, 'Smart Rules')).toBeVisible();
 });

@@ -100,6 +100,50 @@ export function countRuleMatches(
   return planBookmarkRules([probe], tree, metadata).length;
 }
 
+/** A scheme such as `https://`, which makes a sample an address. */
+const SCHEME = /^[a-z][a-z\d+.-]*:\/\//i;
+/** A host with a dot and maybe a path, such as `github.com/acme`, read as an `https://` address. */
+const BARE_ADDRESS = /^[^\s/:]+\.[^\s/:]+(\/\S*)?$/;
+
+/**
+ * Whether a sample address or title matches a rule's search (the editor's test field), worked out
+ * here and nowhere else: nothing is saved or sent. An address (with a scheme, or a host such as
+ * `github.com/acme`) is read as a bookmark with that address and no title, anything else as a
+ * bookmark with that title, in no folder and without tags. Undefined while the search cannot run
+ * or the sample is empty.
+ */
+export function ruleMatchesSample(query: string, sample: string): boolean | undefined {
+  const text = sample.trim();
+  if (!text || !isRuleQueryReadable(query)) return undefined;
+  const address = SCHEME.test(text) ? text : BARE_ADDRESS.test(text) ? `https://${text}` : '';
+  const isAddress = address !== '' && URL.canParse(address);
+  // Inside one folder below a root, as a bookmark is: the root's own folders are not documents.
+  const tree: BookmarkTreeNode[] = [
+    {
+      id: 'root',
+      title: '',
+      children: [
+        {
+          id: 'folder',
+          parentId: 'root',
+          title: '',
+          children: [
+            {
+              id: 'sample',
+              parentId: 'folder',
+              title: isAddress ? '' : text,
+              ...(isAddress ? { url: address } : {}),
+            },
+          ],
+        },
+      ],
+    },
+  ];
+  const [document] = buildSearchDocuments(tree, {});
+  const match = compileSearchQuery(parseSearchQuery(query.trim()).query);
+  return document !== undefined && match(document) !== undefined;
+}
+
 /**
  * The rule a draft saves as, with `id` for a new one and the folder's path read from `tree`; or
  * why it cannot be saved.

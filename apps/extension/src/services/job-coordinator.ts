@@ -456,6 +456,22 @@ async function apply(command: JobCommand & { type: 'apply' }): Promise<JobRecord
   return job;
 }
 
+/** Accepts a reviewed Smart Rules run the user approved, to apply in parts (`applyRules`). */
+async function applyRules(command: JobCommand & { type: 'applyRules' }): Promise<JobRecord> {
+  const { job } = await acceptJob({
+    commandId: command.commandId,
+    kind: 'applyRules',
+    source: command.source,
+    scope: { mode: 'all', rootIds: [], label: '' },
+    options: { rules: command.rules },
+    inputs: command.items,
+    now: Date.now(),
+  });
+  await reschedule();
+  kick();
+  return job;
+}
+
 async function pause(jobId: string): Promise<JobRecord | undefined> {
   const queued = await transitionJob(jobId, ['queued'], 'paused');
   if (queued) return queued;
@@ -505,6 +521,7 @@ export async function runJobCommand(command: JobCommand): Promise<JobCommandResp
   try {
     if (command.type === 'start') return { ok: true, job: await start(command) };
     if (command.type === 'apply') return { ok: true, job: await apply(command) };
+    if (command.type === 'applyRules') return { ok: true, job: await applyRules(command) };
     if (command.type === 'delete') {
       await deleteJob(command.jobId);
       return { ok: true, job: null };

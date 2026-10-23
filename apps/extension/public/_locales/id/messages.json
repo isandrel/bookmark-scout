@@ -7623,6 +7623,10 @@
         "message": "Dijeda: akses situs web dicabut. Lanjutkan akan memintanya lagi.",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "Dijeda: Aturan Pintar dimatikan di Setelan. Nyalakan lalu lanjutkan, atau batalkan.",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "Dijeda: layanan AI belum siap ($1). Perbaiki di Setelan, lalu lanjutkan.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7666,6 +7670,10 @@
     "jobs_cancelledApplyNote": {
         "message": "Dihentikan. Perubahan yang sudah dibuat tetap ada; urungkan dari Histori.",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "Dihentikan. Perubahan yang sudah dibuat tetap ada: urungkan pemindahan dari Histori dan tag di Diubah oleh aturan pada Setelan.",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "Menerapkan di latar belakang",
@@ -8411,6 +8419,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "Uji dengan alamat atau judul",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "Ketik alamat web atau judul untuk melihat apakah pencarian ini cocok. Tidak ada yang disimpan atau dikirim.",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "Cocok dengan pencarian ini",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "Tidak cocok dengan pencarian ini",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "Tambahkan tag",
         "description": "Rule editor: tags field"
@@ -8478,6 +8502,40 @@
     "rules_autoMovePaused": {
         "message": "Pemindahan otomatis berhenti: foldernya dihapus, diganti namanya, dipindahkan, atau dikelola. Pilih foldernya lagi dan simpan aturan.",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "Terakhir dijalankan $1: diberi tag $2, dipindahkan $3, dilewati $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "Konflik pada proses terakhir",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "Pada proses $1, aturan akan memindahkan bookmark ini ke folder yang berbeda, jadi bookmark tetap di tempatnya. Tinjau salah satunya untuk memilih foldernya.",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "Folder dari aturan: $1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "Tinjau",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "Tinjau $1 di pengelola bookmark",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "Dan $count$ lainnya",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "Aturan Pintar, otomatis",
@@ -8565,13 +8623,29 @@
         "message": "Diberi tag: $1. Dipindahkan: $2. Dilewati karena berubah setelah ditinjau: $3. Gagal: $4.",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "Diberi tag: $1. Memindahkan $2 bookmark di latar belakang.",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "$count$ bookmark diberi tag dan dipindahkan secara bertahap. Pantau di Tugas latar belakang; urungkan pemindahan dari Histori dan tag di Diubah oleh aturan pada Setelan.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "Tidak ada yang dipindahkan: Histori bookmark tidak dapat mencatat pemindahan, jadi tidak ada yang dilakukan.",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "$count$ dilewati karena aturan yang cocok dengannya diedit, dimatikan, atau dihapus setelah ditinjau.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "$count$ aturan aktif",
