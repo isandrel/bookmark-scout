@@ -807,8 +807,11 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
       chooseSites: (nodes, options) => listPageTextSites(nodes, options.pageText),
     },
     scan: ({ nodes, options }) => scanPageTexts(nodes, options.pageText),
-    async apply(_result, picked) {
-      return reportDerivedSave(await savePageTextResults(picked), {
+    async apply(result, picked) {
+      const saved = await savePageTextResults(picked);
+      // The run's results keep no text once reviewed: saved text is in the index now.
+      await dropReviewedPageText(new Set(result.items.map((item) => item.id)));
+      return reportDerivedSave(saved, {
         title: 'toast_pageTextSaved',
         description: 'toast_pageTextSavedDesc',
         partialTitle: 'toast_pageTextPartial',

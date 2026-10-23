@@ -338,11 +338,25 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
       const { item, read } = pageTextInputSchema.parse(input);
       // Indexed already, a page that may not be read, or a site not chosen: nothing to download.
       if (!read) return { outcome: 'skipped', result: item };
+      // Never Read These Sites as it is now, not only as the job froze it: a site added during the
+      // run is not downloaded either.
+      const frozen = pageTextOptionsSchema.parse(options);
+      const excludedSites = [
+        ...(frozen.excludedSites ?? []),
+        ...(await getSettings()).pageTextExcludedSites,
+      ];
+      if (isUrlOnSites(item.url, excludedSites)) {
+        return {
+          outcome: 'skipped',
+          result: { ...item, status: 'skipped', skipReason: 'excludedSite' },
+        };
+      }
       if (!tools.readText) throw new JobBlockedError('slice-setup');
       const result: PageTextScanItem = { ...item };
       try {
         await readPageTextItem(result, {
-          ...pageTextOptionsSchema.parse(options),
+          ...frozen,
+          excludedSites,
           readText: tools.readText,
           signal,
         });

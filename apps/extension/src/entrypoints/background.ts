@@ -26,9 +26,14 @@ export default defineBackground(() => {
     void removeStoredBookmarkMetadata(removedIds).catch((error) => {
       console.error('[Background] Failed to remove bookmark metadata:', error);
     });
-    // Indexed page text belongs to the bookmark; a restored one gets a new id and is read again.
-    void removePageTexts(removedIds).catch((error) => {
+    // Indexed page text belongs to the bookmark, and so does the text runs saved for its review;
+    // a restored one gets a new id and is read again.
+    void forgetDeletedPageTexts(removedIds).catch((error) => {
       console.error('[Background] Failed to remove page text:', error);
+    });
+    // So is a cover; a restored bookmark gets a new id and a new cover.
+    void removeCovers(removedIds).catch((error) => {
+      console.error('[Background] Failed to remove covers:', error);
     });
     // Recent-folder storage changes rebuild the context menu.
     void removeRecentFolders(removedIds).catch((error) => {
