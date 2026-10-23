@@ -1,3 +1,4 @@
+import { openDB } from 'idb';
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
@@ -20,6 +21,7 @@ import {
 } from '@/lib/cover-store';
 import { saveSettings } from '@/lib/settings-storage';
 import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
+import { INDEXED_DATABASES } from '@/lib/storage/registry';
 import { captureTabCover, findCoverUrls, saveCoverResults, scanCovers } from '@/services/covers';
 import { mayRequestFrom } from '@/services/page-reader';
 import { runOutOfStorageAfter } from './indexeddb-quota';
@@ -87,6 +89,27 @@ const cover = (bookmarkId: string, bytes: number, url = `https://site.example/${
 describe('stored covers', () => {
   beforeEach(async () => {
     await clearCovers();
+  });
+
+  it('keep showing a cover saved before sources were recorded, as of an unknown source', async () => {
+    // Written as the release before sources stored it: no `source` field.
+    const db = await openDB(INDEXED_DATABASES.covers.name);
+    await db.put('info', {
+      bookmarkId: 'old',
+      url: 'https://site.example/old',
+      width: 4,
+      height: 2,
+      bytes: 3,
+      savedAt: 1,
+      version: COVER_LIMITS.version,
+    });
+    await db.put('images', { bookmarkId: 'old', type: 'image/webp', data: new ArrayBuffer(3) });
+    db.close();
+    const info = (await getCoverInfos()).get('old');
+    expect(info?.source).toBe('unknown');
+    expect(isCoverCurrent(info, 'https://site.example/old')).toBe(true);
+    expect((await getCoverImage('old', 'https://site.example/old'))?.size).toBe(3);
+    expect(await getCoverSummary()).toEqual({ covers: 1, bytes: 3 });
   });
 
   it('belong to the address they were fetched from', async () => {
@@ -329,6 +352,15 @@ describe('Fetch Covers runs', () => {
     });
     expect(found?.preview).toMatch(/^data:image\//);
     expect(items.find((item) => item.id === 'elsewhere')?.imageSite).toBe('other.net');
+  });
+
+  it('never fetches over a cover chosen with Use this view as the cover', async () => {
+    const url = 'https://news.example/story';
+    await saveCovers([{ ...cover('chosen', 5, url), source: 'tab' }], 1000);
+    for (const preference of ['page_first', 'page_only', 'screenshot_first']) {
+      const { items } = await scanCovers([node('chosen', url)], { ...OPTIONS, preference });
+      expect(items[0]?.status).toBe('current');
+    }
   });
 
   it('fetches over a picture of the tab only when Cover Source ranks the page image first', async () => {

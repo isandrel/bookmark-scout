@@ -955,6 +955,33 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ),
     browseCaptureRun,
   ]),
+  coversBrowseCapturePrivate: tested(BROWSE_COVERS, [
+    unit(
+      BROWSE_COVERS_UNIT,
+      'takes a private window only with Also Capture in Private Windows on and the browser allowing the extension there',
+    ),
+  ]),
+  coversBrowseSettleMs: tested(BROWSE_COVERS, [
+    unit(
+      BROWSE_COVERS_UNIT,
+      'waits for the page to settle, and longer while the last picture is recent',
+    ),
+    browseCaptureRun,
+  ]),
+  coversBrowseIntervalMs: tested(BROWSE_COVERS, [
+    unit(BROWSE_COVERS_UNIT, 'takes one picture at a time, with only the latest page waiting'),
+    unit(
+      BROWSE_COVERS_UNIT,
+      'keeps the Time Between Pictures floor above the browser limit of two pictures a second',
+    ),
+  ]),
+  coversBrowseMaxAgeDays: tested(BROWSE_COVERS, [
+    unit(
+      BROWSE_COVERS_UNIT,
+      'never retakes a picture taken while browsing with Retake Screenshots Older Than at 0',
+    ),
+    unit(BROWSE_COVERS_UNIT, 'replaces a cover older than the maximum age'),
+  ]),
   coversNeverCaptureSites: tested(BROWSE_COVERS, [
     unit(
       BROWSE_COVERS_UNIT,

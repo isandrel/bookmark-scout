@@ -38,11 +38,16 @@ export function useCoverInfo(bookmarkId: string, url: string | undefined): Cover
   return info;
 }
 
-/** Where the bookmark's cover came from and the day it was saved, or undefined without one. */
+/**
+ * Where the bookmark's cover came from and the day it was saved; undefined without a cover, or for
+ * one saved before sources were recorded.
+ */
 export function useCoverSourceText(
   bookmarkId: string,
   url: string | undefined,
 ): string | undefined {
   const info = useCoverInfo(bookmarkId, url);
-  return info ? t(COVER_SOURCE_KEYS[info.source], formatDay(info.savedAt)) : undefined;
+  // A cover saved before sources were recorded shows no source line.
+  if (!info || info.source === UNKNOWN_COVER_SOURCE) return undefined;
+  return t(COVER_SOURCE_KEYS[info.source], formatDay(info.savedAt));
 }

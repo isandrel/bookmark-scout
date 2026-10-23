@@ -4254,7 +4254,7 @@
         "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
     },
     "permission_browseCoversDetail": {
-        "message": "Le immagini vengono prese solo dalle pagine salvate nella scheda che stai guardando, mai nelle finestre private, e restano su questo dispositivo: non viene inviato nulla. Lo stesso accesso permette agli strumenti che leggono i siti web di funzionare senza chiedere di nuovo. Disattiva l'impostazione per smettere; rimuovi l'accesso nelle impostazioni delle estensioni del browser.",
+        "message": "Le immagini vengono prese solo dalle pagine salvate nella scheda che stai guardando, non nelle finestre private a meno che non lo attivi, e restano su questo dispositivo: non viene inviato nulla. Lo stesso accesso permette agli strumenti che leggono i siti web di funzionare senza chiedere di nuovo. Disattiva l'impostazione per smettere; rimuovi l'accesso nelle impostazioni delle estensioni del browser.",
         "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
     },
     "permission_browseCoversDenied": {
@@ -6346,6 +6346,10 @@
     "unit_mb": {
         "message": "MB",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "giorni",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8552,7 +8556,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Quale copertina tiene un segnalibro quando sono possibili sia l'immagine della pagina sia uno screenshot della scheda. Uno screenshot catturato durante la navigazione sostituisce l'immagine della pagina solo con Prima lo screenshot, e Solo immagine della pagina non cattura screenshot.",
+        "message": "Quale copertina tiene un segnalibro quando sono possibili sia l'immagine della pagina sia uno screenshot della scheda. Uno screenshot catturato durante la navigazione sostituisce l'immagine della pagina solo con Prima lo screenshot, e Solo immagine della pagina non cattura screenshot. Una copertina scelta con Usa questa vista come copertina non viene mai sostituita automaticamente.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8572,12 +8576,48 @@
         "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
     },
     "settings_coversBrowseCaptureDesc": {
-        "message": "Quando una pagina salvata senza copertina, o con una vecchia, finisce di caricarsi nella scheda che stai guardando, un'immagine della scheda diventa la sua copertina. Mai nelle finestre private; le immagini restano su questo dispositivo. Quando la attivi viene chiesto l'accesso a tutte le pagine.",
+        "message": "Quando una pagina salvata senza copertina, o con una vecchia catturata durante la navigazione, finisce di caricarsi nella scheda che stai guardando, un'immagine della scheda diventa la sua copertina. Non nelle finestre private, a meno che non attivi anche quello; le immagini restano su questo dispositivo. Quando la attivi viene chiesto l'accesso a tutte le pagine.",
         "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
     },
     "settings_coversBrowseCaptureHelp": {
         "message": "Dopo il caricamento attende un momento e controlla che la scheda mostri ancora la pagina, quindi un'immagine riguarda sempre e solo quella pagina salvata. Non cattura mai le pagine dell'estensione o del browser, i file locali né i siti in Non catturare mai questi siti. Un'immagine mostra ciò che era sullo schermo, come una pagina dell'account o dei messaggi: aggiungi questi siti all'elenco o elimina le copertine nelle Impostazioni. Per revocare l'accesso, rimuovilo nelle impostazioni delle estensioni del browser.",
         "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Cattura anche nelle finestre private",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Cattura immagini delle pagine salvate anche nelle finestre private, se il browser consente a Bookmark Scout di funzionare lì. Restano su questo dispositivo.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Finché è disattivata, le finestre private non vengono mai catturate. Il browser deve anche consentire all'estensione di funzionare lì: attiva il permesso per la navigazione in incognito o privata nella pagina di Bookmark Scout delle impostazioni delle estensioni del browser.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Attesa prima della cattura",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Quanto deve restare in primo piano una pagina salvata dopo il caricamento prima che venga catturata",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Intervallo tra le catture",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "Il tempo minimo tra due catture. Non può scendere sotto ciò che i browser consentono.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Ricattura gli screenshot più vecchi di",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Un'immagine catturata durante la navigazione più vecchia di così viene ricatturata alla visita successiva. 0 non la ricattura mai; una copertina scelta con Usa questa vista come copertina non viene mai ricatturata.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
     },
     "settings_coversNeverCaptureSites": {
         "message": "Non catturare mai questi siti",
@@ -9250,6 +9290,10 @@
                 "example": "Oct 22, 2026"
             }
         }
+    },
+    "covers_privateAccessNote": {
+        "message": "Il browser non consente a Bookmark Scout di funzionare nelle finestre private, quindi vengono saltate. Per consentirlo, apri la pagina di Bookmark Scout nelle impostazioni delle estensioni del browser e attiva il permesso per la navigazione in incognito o privata.",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
     "covers_captureTitle": {
         "message": "Usare questa vista come copertina?",

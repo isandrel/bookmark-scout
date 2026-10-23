@@ -4254,7 +4254,7 @@
         "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
     },
     "permission_browseCoversDetail": {
-        "message": "Les images ne sont prises que des pages en favori dans l'onglet affiché, jamais dans les fenêtres privées, et restent sur cet appareil : rien n'est envoyé nulle part. Le même accès permet aux outils qui lisent les sites Web de fonctionner sans redemander. Désactivez le paramètre pour arrêter ; retirez l'accès dans les paramètres des extensions de votre navigateur.",
+        "message": "Les images ne sont prises que des pages en favori dans l'onglet affiché, pas dans les fenêtres privées sauf si vous l'activez, et restent sur cet appareil : rien n'est envoyé nulle part. Le même accès permet aux outils qui lisent les sites Web de fonctionner sans redemander. Désactivez le paramètre pour arrêter ; retirez l'accès dans les paramètres des extensions de votre navigateur.",
         "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
     },
     "permission_browseCoversDenied": {
@@ -6346,6 +6346,10 @@
     "unit_mb": {
         "message": "Mo",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "jours",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8552,7 +8556,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Quelle couverture un favori garde quand l'image propre à la page et une capture de l'onglet sont toutes deux possibles. Une capture prise en naviguant ne remplace l'image de la page qu'avec Capture d'abord, et Image de la page uniquement ne prend aucune capture.",
+        "message": "Quelle couverture un favori garde quand l'image propre à la page et une capture de l'onglet sont toutes deux possibles. Une capture prise en naviguant ne remplace l'image de la page qu'avec Capture d'abord, et Image de la page uniquement ne prend aucune capture. Une couverture choisie avec Utiliser cette vue comme couverture n'est jamais remplacée automatiquement.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8572,12 +8576,48 @@
         "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
     },
     "settings_coversBrowseCaptureDesc": {
-        "message": "Quand une page en favori sans couverture, ou avec une ancienne, finit de se charger dans l'onglet affiché, une image de l'onglet devient sa couverture. Jamais dans les fenêtres privées ; les images restent sur cet appareil. L'accès à toutes les pages est demandé à l'activation.",
+        "message": "Quand une page en favori sans couverture, ou avec une ancienne capturée en naviguant, finit de se charger dans l'onglet affiché, une image de l'onglet devient sa couverture. Pas dans les fenêtres privées, sauf si vous l'activez aussi ; les images restent sur cet appareil. L'accès à toutes les pages est demandé à l'activation.",
         "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
     },
     "settings_coversBrowseCaptureHelp": {
         "message": "Après le chargement, l'extension attend un instant et vérifie que l'onglet affiche toujours la page : une image ne montre donc que cette page en favori. Elle ne capture jamais les pages de l'extension ou du navigateur, les fichiers locaux, ni les sites de Ne jamais capturer ces sites. Une image montre ce qui était à l'écran, comme une page de compte ou des messages : ajoutez ces sites à la liste ou supprimez des couvertures dans les Paramètres. Pour retirer l'accès, supprimez-le dans les paramètres des extensions de votre navigateur.",
         "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Capturer aussi dans les fenêtres privées",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Prendre aussi des images des pages en favori dans les fenêtres privées, si votre navigateur laisse Bookmark Scout y fonctionner. Elles restent sur cet appareil.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Tant que ce paramètre est désactivé, les fenêtres privées ne sont jamais capturées. Votre navigateur doit aussi laisser l'extension y fonctionner : activez l'autorisation en navigation privée sur la page de Bookmark Scout dans les paramètres des extensions de votre navigateur.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Attente avant la capture",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Durée pendant laquelle une page en favori doit rester affichée après son chargement avant d'être capturée",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Délai entre deux captures",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "Le délai minimal entre deux captures. Il ne peut pas descendre sous ce que les navigateurs autorisent.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Reprendre les captures plus anciennes que",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Une image prise en naviguant plus ancienne est reprise à la visite suivante. 0 ne la reprend jamais ; une couverture choisie avec Utiliser cette vue comme couverture n'est jamais reprise.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
     },
     "settings_coversNeverCaptureSites": {
         "message": "Ne jamais capturer ces sites",
@@ -9250,6 +9290,10 @@
                 "example": "Oct 22, 2026"
             }
         }
+    },
+    "covers_privateAccessNote": {
+        "message": "Votre navigateur ne laisse pas Bookmark Scout fonctionner dans les fenêtres privées : elles sont donc ignorées. Pour l'autoriser, ouvrez la page de Bookmark Scout dans les paramètres des extensions de votre navigateur et activez l'autorisation en navigation privée.",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
     "covers_captureTitle": {
         "message": "Utiliser cette vue comme couverture ?",

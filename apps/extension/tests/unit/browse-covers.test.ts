@@ -9,16 +9,19 @@ import {
   getCoverInfos,
   saveCovers,
 } from '@/lib/cover-store';
+import { defaultSettings, getSettingsFieldMeta, settingsSchema } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
-import { MS_PER_DAY } from '@/lib/units';
+import { MS_PER_DAY, MS_PER_SECOND } from '@/lib/units';
 import {
-  BROWSE_COVER_LIMITS,
+  BROWSER_MIN_CAPTURE_INTERVAL_MS,
   type CaptureCandidate,
   captureBrowsedPage,
   createCaptureQueue,
   isBrowseCaptureUrl,
+  mayCapturePrivate,
   needsBrowseCover,
   nextCaptureDelay,
+  retakeAgeMs,
 } from '@/services/browse-covers';
 import { installFakePermissions } from '../fake-permissions';
 import { pngDataUrl } from './png-header';
@@ -78,12 +81,26 @@ describe('which bookmarks get a new picture', () => {
     expect(needs(info({ version: COVER_LIMITS.version + 1 }))).toBe(true);
   });
 
-  it('one whose picture of the tab is older than the maximum age', () => {
-    for (const source of ['tab', 'browse'] as const) {
-      expect(needs(info({ source }))).toBe(false);
-      expect(needs(info({ source, savedAt: NOW - maxAge }))).toBe(false);
-      expect(needs(info({ source, savedAt: NOW - maxAge - 1 }))).toBe(true);
+  it('one whose picture taken while browsing is older than the maximum age', () => {
+    expect(needs(info({ source: 'browse' }))).toBe(false);
+    expect(needs(info({ source: 'browse', savedAt: NOW - maxAge }))).toBe(false);
+    expect(needs(info({ source: 'browse', savedAt: NOW - maxAge - 1 }))).toBe(true);
+  });
+
+  it('never one the user chose with Use this view as the cover, whatever its age or Cover Source', () => {
+    const chosen = info({ source: 'tab', savedAt: NOW - maxAge * 10 });
+    for (const preference of ['page_first', 'screenshot_first', 'page_only'] as const) {
+      expect(needs(chosen, preference)).toBe(false);
     }
+    // Only its own address counts: a bookmark moved elsewhere has no cover there.
+    expect(needs(chosen, 'page_first', 'https://news.example.com/moved')).toBe(true);
+  });
+
+  it('a cover saved before sources were recorded is replaced as a fetched page image', () => {
+    const legacy = info({ source: 'unknown', savedAt: NOW - maxAge - 1 });
+    expect(needs(legacy)).toBe(false);
+    expect(needs(legacy, 'screenshot_first')).toBe(true);
+    expect(needs(legacy, 'page_only')).toBe(false);
   });
 
   it('a fetched page image is kept unless Cover Source puts screenshots first', () => {
@@ -98,9 +115,17 @@ describe('which bookmarks get a new picture', () => {
     expect(needs(old, 'page_only')).toBe(false);
   });
 
-  it('reads the maximum age from its config in days', () => {
-    expect(BROWSE_COVER_LIMITS.maxAgeMs % MS_PER_DAY).toBe(0);
-    expect(BROWSE_COVER_LIMITS.maxAgeMs).toBeGreaterThan(0);
+  it('never retakes a picture taken while browsing with Retake Screenshots Older Than at 0', () => {
+    expect(retakeAgeMs(0)).toBeNull();
+    expect(retakeAgeMs(30)).toBe(30 * MS_PER_DAY);
+    const ancient = info({ source: 'browse', savedAt: 0 });
+    expect(
+      needsBrowseCover(ancient, PAGE, { now: NOW, maxAgeMs: null, preference: 'page_first' }),
+    ).toBe(false);
+    // A bookmark without a cover still gets one.
+    expect(
+      needsBrowseCover(undefined, PAGE, { now: NOW, maxAgeMs: null, preference: 'page_first' }),
+    ).toBe(true);
   });
 });
 
@@ -113,9 +138,13 @@ describe('when pictures are taken', () => {
     expect(nextCaptureDelay(10_000, 9_000, limits)).toBe(3000);
   });
 
-  it('keeps the configured interval above the browser limit of two pictures a second', () => {
-    expect(BROWSE_COVER_LIMITS.minIntervalMs).toBeGreaterThan(500);
-    expect(BROWSE_COVER_LIMITS.settleDelayMs).toBeGreaterThanOrEqual(0);
+  it('keeps the Time Between Pictures floor above the browser limit of two pictures a second', () => {
+    // Chrome's MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND = 2.
+    expect(BROWSER_MIN_CAPTURE_INTERVAL_MS).toBe(MS_PER_SECOND / 2);
+    const { min = 0 } = getSettingsFieldMeta().coversBrowseIntervalMs;
+    expect(min).toBeGreaterThan(BROWSER_MIN_CAPTURE_INTERVAL_MS);
+    expect(defaultSettings.coversBrowseIntervalMs).toBeGreaterThanOrEqual(min);
+    expect(settingsSchema.shape.coversBrowseIntervalMs.safeParse(min - 1).success).toBe(false);
   });
 
   describe('the queue', () => {
@@ -132,7 +161,7 @@ describe('when pictures are taken', () => {
       const taken: number[] = [];
       let finish: (() => void) | undefined;
       const queue = createCaptureQueue({
-        ...limits,
+        pace: () => limits,
         capture: (candidate) =>
           new Promise<boolean>((resolve) => {
             taken.push(candidate.tabId);
@@ -162,7 +191,7 @@ describe('when pictures are taken', () => {
     it('does not count a page that needed no picture toward the interval, and cancel drops the waiting one', async () => {
       const taken: number[] = [];
       const queue = createCaptureQueue({
-        ...limits,
+        pace: () => limits,
         capture: async (candidate) => {
           taken.push(candidate.tabId);
           return false;
@@ -183,7 +212,7 @@ describe('when pictures are taken', () => {
       const taken: number[] = [];
       vi.spyOn(console, 'error').mockImplementation(() => undefined);
       const queue = createCaptureQueue({
-        ...limits,
+        pace: () => limits,
         capture: async (candidate) => {
           taken.push(candidate.tabId);
           throw new Error('capture failed');
@@ -198,6 +227,8 @@ describe('when pictures are taken', () => {
     });
   });
 });
+
+const DEFAULT_MAX_AGE_MS = defaultSettings.coversBrowseMaxAgeDays * MS_PER_DAY;
 
 describe('a picture of a bookmarked page that loaded', () => {
   type Tab = Browser.tabs.Tab;
@@ -233,6 +264,7 @@ describe('a picture of a bookmarked page that loaded', () => {
       coversNeverCaptureSites: [],
       coversSourcePreference: 'page_first',
       pageTextExcludedSites: [],
+      coversBrowseCapturePrivate: false,
     });
     vi.stubGlobal('createImageBitmap', async () => ({
       width: 1600,
@@ -330,15 +362,35 @@ describe('a picture of a bookmarked page that loaded', () => {
     expect((await stored()).map((cover) => cover.source)).toEqual(['browse', 'browse']);
   });
 
-  it('replaces a cover older than the maximum age', async () => {
+  it('never replaces a cover chosen with Use this view as the cover, even an old one', async () => {
     const now = Date.now();
-    vi.spyOn(Date, 'now').mockReturnValue(now - BROWSE_COVER_LIMITS.maxAgeMs - 1);
+    vi.spyOn(Date, 'now').mockReturnValue(now - DEFAULT_MAX_AGE_MS * 2);
     const image = { width: 4, height: 2, type: 'image/webp', data: new ArrayBuffer(3) };
     await saveCovers(
       ['b1', 'b2'].map((bookmarkId) => ({
         bookmarkId,
         url: PAGE,
         source: 'tab' as const,
+        ...image,
+      })),
+      1_000_000,
+    );
+    vi.spyOn(Date, 'now').mockReturnValue(now);
+    await saveSettings({ coversSourcePreference: 'screenshot_first' });
+    expect(await captureBrowsedPage(candidate)).toBe(false);
+    expect(capture).not.toHaveBeenCalled();
+    expect((await stored()).map((cover) => cover.source)).toEqual(['tab', 'tab']);
+  });
+
+  it('replaces a cover older than the maximum age', async () => {
+    const now = Date.now();
+    vi.spyOn(Date, 'now').mockReturnValue(now - DEFAULT_MAX_AGE_MS - 1);
+    const image = { width: 4, height: 2, type: 'image/webp', data: new ArrayBuffer(3) };
+    await saveCovers(
+      ['b1', 'b2'].map((bookmarkId) => ({
+        bookmarkId,
+        url: PAGE,
+        source: 'browse' as const,
         ...image,
       })),
       1_000_000,
@@ -395,6 +447,27 @@ describe('a picture of a bookmarked page that loaded', () => {
     vi.spyOn(fakeBrowser.tabs, 'get').mockRejectedValue(new Error('No tab with id: 7'));
     expect(await captureBrowsedPage(candidate)).toBe(false);
     expect(capture).not.toHaveBeenCalled();
+  });
+
+  it('takes a private window only with Also Capture in Private Windows on and the browser allowing the extension there', async () => {
+    expect(mayCapturePrivate(false, true)).toBe(false);
+    expect(mayCapturePrivate(true, false)).toBe(false);
+    expect(mayCapturePrivate(true, true)).toBe(true);
+    let allowed = false;
+    (fakeBrowser.extension as unknown as Record<string, unknown>).isAllowedIncognitoAccess =
+      async () => allowed;
+    vi.spyOn(fakeBrowser.tabs, 'get').mockResolvedValue(tab({ incognito: true }));
+    vi.spyOn(fakeBrowser.windows, 'get').mockResolvedValue(focusedWindow({ incognito: true }));
+    // Off by default.
+    expect(await captureBrowsedPage(candidate)).toBe(false);
+    // On, but the browser does not let the extension run in private windows: still skipped.
+    await saveSettings({ coversBrowseCapturePrivate: true });
+    expect(await captureBrowsedPage(candidate)).toBe(false);
+    expect(capture).not.toHaveBeenCalled();
+    // On and allowed there.
+    allowed = true;
+    expect(await captureBrowsedPage(candidate)).toBe(true);
+    expect((await stored()).map((cover) => cover.source)).toEqual(['browse', 'browse']);
   });
 
   it('is dropped when the tab showed another page by the time the picture was taken', async () => {

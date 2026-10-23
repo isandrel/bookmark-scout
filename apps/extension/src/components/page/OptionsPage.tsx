@@ -362,14 +362,16 @@ const OptionsPage: React.FC = () => {
   };
 
   const renderSettingsField = (fieldKey: keyof Settings) => (
-    <SettingsFieldRow
-      key={`${fieldKey}-${formVersion}`}
-      fieldKey={fieldKey}
-      value={shownValues[fieldKey]}
-      error={fieldErrors[fieldKey]}
-      onChange={(value) => changeSettingsField(fieldKey, value)}
-      onInputError={(message) => setInputError(fieldKey, message)}
-    />
+    <Fragment key={`${fieldKey}-${formVersion}`}>
+      <SettingsFieldRow
+        fieldKey={fieldKey}
+        value={shownValues[fieldKey]}
+        error={fieldErrors[fieldKey]}
+        onChange={(value) => changeSettingsField(fieldKey, value)}
+        onInputError={(message) => setInputError(fieldKey, message)}
+      />
+      {isPrivateWindowSetting(fieldKey) ? <PrivateWindowAccessNote /> : null}
+    </Fragment>
   );
 
   /**
@@ -383,6 +385,8 @@ const OptionsPage: React.FC = () => {
     const groups = getSettingsFieldGroups();
     const renderedGroups = new Set<string>();
     return fields.flatMap((fieldKey) => {
+      // Settings under an on/off setting show only while it is on.
+      if (!isSettingShownWith(fieldKey, shownValues)) return [];
       const group = groups.find((candidate) => candidate.fields.includes(fieldKey));
       if (!group) return [renderSettingsField(fieldKey)];
       if (renderedGroups.has(group.id)) return [];

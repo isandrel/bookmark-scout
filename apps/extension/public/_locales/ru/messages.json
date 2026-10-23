@@ -4478,7 +4478,7 @@
         "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
     },
     "permission_browseCoversDetail": {
-        "message": "Снимки делаются только со страниц из закладок в открытой вкладке, никогда в приватных окнах, и хранятся на этом устройстве: ничего никуда не отправляется. Тот же доступ позволяет инструментам, которые читают сайты, работать без повторного запроса. Чтобы прекратить, выключите настройку; доступ удаляется в настройках расширений браузера.",
+        "message": "Снимки делаются только со страниц из закладок в открытой вкладке, в приватных окнах — только если вы это включите, и хранятся на этом устройстве: ничего никуда не отправляется. Тот же доступ позволяет инструментам, которые читают сайты, работать без повторного запроса. Чтобы прекратить, выключите настройку; доступ удаляется в настройках расширений браузера.",
         "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
     },
     "permission_browseCoversDenied": {
@@ -6871,6 +6871,10 @@
         "message": "МБ",
         "description": "Unit: megabytes"
     },
+    "unit_days": {
+        "message": "дн.",
+        "description": "Unit after a number of days in Settings"
+    },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
         "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
@@ -9252,7 +9256,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Какую обложку сохраняет закладка, когда доступны и собственное изображение страницы, и снимок вкладки. Снимок при просмотре заменяет изображение страницы только при варианте «Сначала снимок», а «Только изображение страницы» снимков не делает.",
+        "message": "Какую обложку сохраняет закладка, когда доступны и собственное изображение страницы, и снимок вкладки. Снимок при просмотре заменяет изображение страницы только при варианте «Сначала снимок», а «Только изображение страницы» снимков не делает. Обложка, выбранная кнопкой «Сделать обложку из этого вида», никогда не заменяется автоматически.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -9272,12 +9276,48 @@
         "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
     },
     "settings_coversBrowseCaptureDesc": {
-        "message": "Когда страница из закладок без обложки или со старой обложкой загрузится в открытой вкладке, делается снимок вкладки, который становится её обложкой. Никогда в приватных окнах; снимки хранятся только на этом устройстве. При включении запрашивается доступ ко всем страницам.",
+        "message": "Когда страница из закладок без обложки или со старым снимком, сделанным при просмотре, загрузится в открытой вкладке, делается снимок вкладки, который становится её обложкой. В приватных окнах — только если вы включите и это; снимки хранятся только на этом устройстве. При включении запрашивается доступ ко всем страницам.",
         "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
     },
     "settings_coversBrowseCaptureHelp": {
         "message": "После загрузки расширение немного ждёт и проверяет, что вкладка всё ещё показывает ту же страницу, поэтому на снимке всегда только эта страница из закладок. Страницы расширения и браузера, локальные файлы и сайты из списка «Никогда не снимать эти сайты» не снимаются. На снимке видно то, что было на экране, например страница аккаунта или сообщения: добавьте такие сайты в список или удалите обложки в настройках. Чтобы отозвать доступ, удалите его в настройках расширений браузера.",
         "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Снимать и в приватных окнах",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Снимать страницы из закладок и в приватных окнах, если браузер разрешает Bookmark Scout работать в них. Снимки остаются на этом устройстве.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Пока настройка выключена, приватные окна никогда не снимаются. Браузер также должен разрешить расширению работать в них: включите работу в режиме инкогнито (в приватных окнах) на странице Bookmark Scout в настройках расширений браузера.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Задержка перед снимком",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Сколько страница из закладок должна оставаться на экране после загрузки, прежде чем будет сделан снимок",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Интервал между снимками",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "Наименьшее время между двумя снимками. Оно не может быть меньше, чем позволяют браузеры.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Переснимать снимки старше",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Снимок, сделанный при просмотре и старше этого срока, делается заново при следующем посещении. 0 — никогда не переснимать; обложка, выбранная кнопкой «Сделать обложку из этого вида», никогда не переснимается.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
     },
     "settings_coversNeverCaptureSites": {
         "message": "Никогда не снимать эти сайты",
@@ -10138,6 +10178,10 @@
                 "example": "Oct 22, 2026"
             }
         }
+    },
+    "covers_privateAccessNote": {
+        "message": "Браузер не разрешает Bookmark Scout работать в приватных окнах, поэтому они пропускаются. Чтобы разрешить, откройте страницу Bookmark Scout в настройках расширений браузера и включите работу в режиме инкогнито (в приватных окнах).",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
     "covers_captureTitle": {
         "message": "Сделать обложку из этого вида?",

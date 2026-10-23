@@ -4210,7 +4210,7 @@
         "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
     },
     "permission_browseCoversDetail": {
-        "message": "画像は表示中のタブにあるブックマーク済みのページだけを撮り、プライベートウィンドウでは撮らず、この端末に保存されます。どこにも送信されません。同じアクセス権により、Web サイトを読み込むツールも再確認なしで動作します。撮影をやめるには設定をオフにし、アクセス権はブラウザの拡張機能の設定で削除してください。",
+        "message": "画像は表示中のタブにあるブックマーク済みのページだけを撮り、プライベートウィンドウでは設定をオンにしない限り撮らず、この端末に保存されます。どこにも送信されません。同じアクセス権により、Web サイトを読み込むツールも再確認なしで動作します。撮影をやめるには設定をオフにし、アクセス権はブラウザの拡張機能の設定で削除してください。",
         "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
     },
     "permission_browseCoversDenied": {
@@ -6302,6 +6302,10 @@
     "unit_mb": {
         "message": "MB",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "日",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8516,7 +8520,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "ページ自身の画像とタブのスクリーンショットのどちらも使えるとき、ブックマークに残すカバー画像を選びます。閲覧中に撮ったスクリーンショットは「スクリーンショットを優先」のときだけページの画像を置き換え、「ページの画像のみ」ではスクリーンショットを撮りません。",
+        "message": "ページ自身の画像とタブのスクリーンショットのどちらも使えるとき、ブックマークに残すカバー画像を選びます。閲覧中に撮ったスクリーンショットは「スクリーンショットを優先」のときだけページの画像を置き換え、「ページの画像のみ」ではスクリーンショットを撮りません。「この画面をカバー画像にする」で選んだカバー画像は自動で置き換えられません。",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8536,12 +8540,48 @@
         "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
     },
     "settings_coversBrowseCaptureDesc": {
-        "message": "カバー画像のない（または古い）ブックマーク済みのページが表示中のタブで読み込みを終えると、タブの画像を撮ってカバー画像にします。プライベートウィンドウでは撮りません。画像はこの端末にのみ保存されます。オンにするとすべてのページへのアクセスを求めます。",
+        "message": "カバー画像のない（または閲覧中に撮った古いカバー画像の）ブックマーク済みのページが表示中のタブで読み込みを終えると、タブの画像を撮ってカバー画像にします。プライベートウィンドウでは、その設定もオンにしない限り撮りません。画像はこの端末にのみ保存されます。オンにするとすべてのページへのアクセスを求めます。",
         "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
     },
     "settings_coversBrowseCaptureHelp": {
         "message": "ページの読み込み後に少し待ち、タブがまだそのページを表示しているか確認するため、画像はそのブックマーク済みのページだけを写します。拡張機能やブラウザ自身のページ、ローカルファイル、「撮影しないサイト」にあるサイトは撮りません。画像には画面に表示されていたもの（アカウントページやメッセージなど）が写ります。そのようなサイトはリストに追加するか、設定でカバー画像を削除してください。アクセス権を取り消すには、ブラウザの拡張機能の設定で削除してください。",
         "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "プライベートウィンドウでも撮影",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "ブラウザがプライベートウィンドウでの Bookmark Scout の実行を許可している場合、そこでもブックマーク済みページを撮影します。画像はこの端末に保存されます。",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "オフの間は、プライベートウィンドウを撮影しません。ブラウザでも拡張機能の実行を許可する必要があります。ブラウザの拡張機能の設定にある Bookmark Scout のページで、シークレットモード（プライベートウィンドウ）での実行を許可してください。",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "撮影までの待ち時間",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "ブックマーク済みのページが読み込み後に前面にあり続けてから撮影するまでの時間",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "撮影の間隔",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "2 回の撮影の最短間隔です。ブラウザが許す範囲より短くはできません。",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "次より古いスクリーンショットを撮り直す",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "閲覧中に撮った画像がこれより古いと、次に開いたときに撮り直します。0 にすると撮り直しません。「この画面をカバー画像にする」で選んだカバー画像は撮り直しません。",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
     },
     "settings_coversNeverCaptureSites": {
         "message": "撮影しないサイト",
@@ -9214,6 +9254,10 @@
                 "example": "Oct 22, 2026"
             }
         }
+    },
+    "covers_privateAccessNote": {
+        "message": "ブラウザがプライベートウィンドウでの Bookmark Scout の実行を許可していないため、スキップします。許可するには、ブラウザの拡張機能の設定で Bookmark Scout のページを開き、シークレットモード（プライベートウィンドウ）での実行をオンにしてください。",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
     "covers_captureTitle": {
         "message": "この画面をカバー画像にしますか？",

@@ -4154,7 +4154,7 @@
         "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
     },
     "permission_browseCoversDetail": {
-        "message": "只截取你正在查看的标签页中已加入书签的网页，绝不在无痕窗口中截取，图片保存在此设备上：不会发送到任何地方。同一权限也让读取网站的工具无需再次询问即可运行。关闭此设置即可停止；访问权限可在浏览器的扩展程序设置中移除。",
+        "message": "只截取你正在查看的标签页中已加入书签的网页，除非你开启相应设置，否则不在无痕窗口中截取，图片保存在此设备上：不会发送到任何地方。同一权限也让读取网站的工具无需再次询问即可运行。关闭此设置即可停止；访问权限可在浏览器的扩展程序设置中移除。",
         "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
     },
     "permission_browseCoversDenied": {
@@ -6100,6 +6100,10 @@
     "unit_mb": {
         "message": "MB",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "天",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8226,7 +8230,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "当网页自带的图片和标签页截图都可用时，书签保留哪一种封面。浏览时截取的截图只有在选择“截图优先”时才会替换网页图片；选择“仅网页图片”时不会截图。",
+        "message": "当网页自带的图片和标签页截图都可用时，书签保留哪一种封面。浏览时截取的截图只有在选择“截图优先”时才会替换网页图片；选择“仅网页图片”时不会截图。用“用当前画面作为封面”选定的封面不会被自动替换。",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8246,12 +8250,48 @@
         "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
     },
     "settings_coversBrowseCaptureDesc": {
-        "message": "当没有封面（或封面较旧）的已加入书签网页在你正在查看的标签页中加载完成时，截取该标签页的画面作为封面。绝不在无痕窗口中截取；图片只保存在此设备上。开启时会请求访问所有网页的权限。",
+        "message": "当没有封面（或浏览时截取的封面较旧）的已加入书签网页在你正在查看的标签页中加载完成时，截取该标签页的画面作为封面。除非你也开启相应设置，否则不在无痕窗口中截取；图片只保存在此设备上。开启时会请求访问所有网页的权限。",
         "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
     },
     "settings_coversBrowseCaptureHelp": {
         "message": "网页加载后会稍等片刻，并确认标签页仍显示该网页，因此截图始终只包含该已加入书签的网页。绝不截取扩展程序或浏览器自身的页面、本地文件，以及“永不捕获这些网站”中的网站。截图会包含屏幕上显示的内容，例如账号页面或消息：请将这类网站加入列表，或在设置中删除封面。如需收回访问权限，请在浏览器的扩展程序设置中移除。",
         "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "也在无痕窗口中捕获",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "如果浏览器允许 Bookmark Scout 在无痕窗口中运行，也在其中截取已加入书签的网页。图片保存在此设备上。",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "关闭时，绝不截取无痕窗口。浏览器还必须允许扩展程序在其中运行：在浏览器扩展程序设置的 Bookmark Scout 页面中开启无痕模式（隐私窗口）下运行。",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "捕获前等待",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "已加入书签的网页加载后需保持在前台多久才截取",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "截图间隔",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "两次截图之间的最短时间，不能低于浏览器允许的限度。",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "重新截取早于此时间的截图",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "浏览时截取的图片超过此时间后，下次访问时重新截取。0 表示从不重新截取；用“用当前画面作为封面”选定的封面从不重新截取。",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
     },
     "settings_coversNeverCaptureSites": {
         "message": "永不捕获这些网站",
@@ -8830,6 +8870,10 @@
                 "example": "Oct 22, 2026"
             }
         }
+    },
+    "covers_privateAccessNote": {
+        "message": "浏览器不允许 Bookmark Scout 在无痕窗口中运行，因此会跳过它们。如需允许，请在浏览器的扩展程序设置中打开 Bookmark Scout 页面，开启无痕模式（隐私窗口）下运行。",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
     "covers_captureTitle": {
         "message": "用当前画面作为封面？",

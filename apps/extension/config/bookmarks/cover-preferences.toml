@@ -6,6 +6,10 @@
 # never taken automatically. Use this view as the cover is the user's own pick and is not limited.
 # Choices show in this order.
 
+# Covers no automatic cover ever replaces, whatever their age or the choice: `tab` is a picture the
+# user took with Use this view as the cover, which only another such picture replaces.
+never_replaced = ["tab"]
+
 [preferences.page_first]
 kinds = ["page", "screenshot"]
 label_key = "settings_coversSourcePageFirst"

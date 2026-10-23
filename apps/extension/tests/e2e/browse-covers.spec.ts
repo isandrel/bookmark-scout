@@ -12,12 +12,13 @@ import { managerUrl, readCoverInfos } from './manager-helpers';
 import { readSettings, setSettings } from './storage';
 import { seedFolder } from './tool-helpers';
 
+/** Wait Before Capturing's default, from its setting's config. */
 const settleDelayMs = (
-  readConfigToml('bookmarks/browse-covers.toml').settle_delay_ms as {
-    value: number;
-  }
-).value;
-/** Long enough for a page's picture to have been taken if it were going to be. */
+  (readConfigToml('settings/metadata-content.toml').covers as Record<string, unknown>)
+    .browse_settle_ms as { default: number }
+).default;
+/** A longer wait set in one test, to see the setting take effect. */
+const LONGER_SETTLE_MS = 3_000;
 const AFTER_SETTLE_MS = settleDelayMs + 2_000;
 
 const pageHtml = (title: string) =>
@@ -75,6 +76,8 @@ test('Capture Covers While Browsing is off by default and pictures nothing', asy
   await page.bringToFront();
   const toggle = page.getByRole('switch', { name: 'Capture Covers While Browsing' });
   await expect(toggle).toHaveAttribute('aria-checked', 'false');
+  // Its limits show only while it is on.
+  await expect(page.locator('[data-setting="coversBrowseSettleMs"]')).toHaveCount(0);
   await toggle.click();
   const explanation = page.getByRole('dialog', { name: 'Allow pictures of bookmarked pages' });
   await expect(explanation).toContainText('nothing is sent anywhere');
@@ -116,15 +119,33 @@ test.describe('with access to all pages', () => {
       .poll(async () => (await readSettings(extensionWorker)).coversBrowseCapture)
       .toBe(true);
     await expect.poll(() => listening(extensionWorker)).toBe(true);
+    // Its limits show now, with a note while the browser keeps the extension out of private
+    // windows (a test profile does).
+    for (const key of [
+      'coversBrowseCapturePrivate',
+      'coversBrowseSettleMs',
+      'coversBrowseIntervalMs',
+      'coversBrowseMaxAgeDays',
+    ]) {
+      await expect(page.locator(`[data-setting="${key}"]`).first()).toBeVisible();
+    }
+    await expect(page.getByTestId('private-window-access-note')).toBeVisible();
 
+    // A longer Wait Before Capturing applies to the next page.
+    await setSettings(extensionWorker, { coversBrowseSettleMs: LONGER_SETTLE_MS });
+    await expect
+      .poll(async () => (await readSettings(extensionWorker)).coversBrowseSettleMs)
+      .toBe(LONGER_SETTLE_MS);
     const startedAt = Date.now();
     await browseTo(context, url);
     await expect
-      .poll(() => readCoverInfos(extensionWorker), { timeout: AFTER_SETTLE_MS + 10_000 })
+      .poll(() => readCoverInfos(extensionWorker), {
+        timeout: AFTER_SETTLE_MS + LONGER_SETTLE_MS + 10_000,
+      })
       .toEqual([expect.objectContaining({ bookmarkId, url, width: 320, source: 'browse' })]);
-    // Not before the page had settled.
+    // Not before the page had settled for the time set.
     const [cover] = await readCoverInfos(extensionWorker);
-    expect((cover?.savedAt ?? 0) - startedAt).toBeGreaterThanOrEqual(settleDelayMs);
+    expect((cover?.savedAt ?? 0) - startedAt).toBeGreaterThanOrEqual(LONGER_SETTLE_MS);
 
     // The card shows it, and the preview says where it came from.
     await setSettings(extensionWorker, { managerViewMode: 'cards' });

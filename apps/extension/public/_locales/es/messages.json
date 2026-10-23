@@ -4254,7 +4254,7 @@
         "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
     },
     "permission_browseCoversDetail": {
-        "message": "Solo se toman imágenes de páginas guardadas en la pestaña que estás viendo, nunca en ventanas privadas, y se quedan en este dispositivo: no se envía nada a ningún sitio. El mismo acceso permite que las herramientas que leen sitios web funcionen sin volver a preguntar. Desactiva la opción para dejar de capturar; quita el acceso en la configuración de extensiones del navegador.",
+        "message": "Solo se toman imágenes de páginas guardadas en la pestaña que estás viendo, no en ventanas privadas salvo que lo actives, y se quedan en este dispositivo: no se envía nada a ningún sitio. El mismo acceso permite que las herramientas que leen sitios web funcionen sin volver a preguntar. Desactiva la opción para dejar de capturar; quita el acceso en la configuración de extensiones del navegador.",
         "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
     },
     "permission_browseCoversDenied": {
@@ -6346,6 +6346,10 @@
     "unit_mb": {
         "message": "MB",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "días",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8552,7 +8556,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Qué portada conserva un marcador cuando son posibles tanto la imagen propia de la página como una captura de la pestaña. Una captura tomada al navegar solo reemplaza la imagen de la página con Captura primero, y Solo imagen de la página no toma capturas.",
+        "message": "Qué portada conserva un marcador cuando son posibles tanto la imagen propia de la página como una captura de la pestaña. Una captura tomada al navegar solo reemplaza la imagen de la página con Captura primero, y Solo imagen de la página no toma capturas. Una portada elegida con Usar esta vista como portada nunca se reemplaza automáticamente.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8572,12 +8576,48 @@
         "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
     },
     "settings_coversBrowseCaptureDesc": {
-        "message": "Cuando una página guardada en marcadores sin portada, o con una antigua, termina de cargarse en la pestaña que estás viendo, se toma una imagen de la pestaña como su portada. Nunca en ventanas privadas; las imágenes se quedan en este dispositivo. Al activarlo se pide acceso a todas las páginas.",
+        "message": "Cuando una página guardada en marcadores sin portada, o con una antigua capturada al navegar, termina de cargarse en la pestaña que estás viendo, se toma una imagen de la pestaña como su portada. No en ventanas privadas, salvo que también lo actives; las imágenes se quedan en este dispositivo. Al activarlo se pide acceso a todas las páginas.",
         "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
     },
     "settings_coversBrowseCaptureHelp": {
         "message": "Espera un momento después de que la página se cargue y comprueba que la pestaña aún la muestra, así que una imagen siempre es solo de esa página guardada. Nunca captura páginas de la extensión o del navegador, archivos locales ni sitios de Nunca capturar estos sitios. Una imagen muestra lo que había en la pantalla, como una página de tu cuenta o mensajes: añade esos sitios a la lista o elimina portadas en Configuración. Para retirar el acceso, quítalo en la configuración de extensiones del navegador.",
         "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Capturar también en ventanas privadas",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Toma también imágenes de páginas guardadas en ventanas privadas, si el navegador deja que Bookmark Scout se ejecute en ellas. Se quedan en este dispositivo.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Mientras esté desactivado, nunca se capturan ventanas privadas. El navegador también debe dejar que la extensión se ejecute ahí: activa el permiso de incógnito o de ventanas privadas en la página de Bookmark Scout de la configuración de extensiones del navegador.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Espera antes de capturar",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Cuánto tiempo debe quedarse delante una página guardada después de cargarse antes de tomar su imagen",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Tiempo entre capturas",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "El tiempo mínimo entre dos capturas. No puede bajar de lo que permiten los navegadores.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Volver a capturar si tiene más de",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Una imagen tomada al navegar que sea más antigua se vuelve a tomar en la siguiente visita. 0 no la vuelve a tomar nunca; una portada elegida con Usar esta vista como portada nunca se vuelve a tomar.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
     },
     "settings_coversNeverCaptureSites": {
         "message": "Nunca capturar estos sitios",
@@ -9250,6 +9290,10 @@
                 "example": "Oct 22, 2026"
             }
         }
+    },
+    "covers_privateAccessNote": {
+        "message": "El navegador no deja que Bookmark Scout se ejecute en ventanas privadas, así que se omiten. Para permitirlo, abre la página de Bookmark Scout en la configuración de extensiones del navegador y activa el permiso de incógnito o de ventanas privadas.",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
     "covers_captureTitle": {
         "message": "¿Usar esta vista como portada?",

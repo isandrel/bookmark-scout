@@ -4254,7 +4254,7 @@
         "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
     },
     "permission_browseCoversDetail": {
-        "message": "Bilder werden nur von Seiten mit Lesezeichen im angezeigten Tab aufgenommen, nie in privaten Fenstern, und bleiben auf diesem Gerät: Nichts wird irgendwohin gesendet. Mit demselben Zugriff laufen auch die Tools, die Websites abrufen, ohne erneute Nachfrage. Schalten Sie die Einstellung aus, um aufzuhören; den Zugriff entfernen Sie in den Erweiterungseinstellungen Ihres Browsers.",
+        "message": "Bilder werden nur von Seiten mit Lesezeichen im angezeigten Tab aufgenommen, nicht in privaten Fenstern, außer Sie schalten das ein, und bleiben auf diesem Gerät: Nichts wird irgendwohin gesendet. Mit demselben Zugriff laufen auch die Tools, die Websites abrufen, ohne erneute Nachfrage. Schalten Sie die Einstellung aus, um aufzuhören; den Zugriff entfernen Sie in den Erweiterungseinstellungen Ihres Browsers.",
         "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
     },
     "permission_browseCoversDenied": {
@@ -6346,6 +6346,10 @@
     "unit_mb": {
         "message": "MB",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "Tage",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8552,7 +8556,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Welches Titelbild ein Lesezeichen behält, wenn sowohl das eigene Bild der Seite als auch ein Screenshot des Tabs möglich sind. Ein beim Surfen aufgenommener Screenshot ersetzt das Bild der Seite nur mit „Screenshot zuerst“, und „Nur Seitenbild“ nimmt keine Screenshots auf.",
+        "message": "Welches Titelbild ein Lesezeichen behält, wenn sowohl das eigene Bild der Seite als auch ein Screenshot des Tabs möglich sind. Ein beim Surfen aufgenommener Screenshot ersetzt das Bild der Seite nur mit „Screenshot zuerst“, und „Nur Seitenbild“ nimmt keine Screenshots auf. Ein mit „Diese Ansicht als Titelbild verwenden“ gewähltes Titelbild wird nie automatisch ersetzt.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8572,12 +8576,48 @@
         "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
     },
     "settings_coversBrowseCaptureDesc": {
-        "message": "Wenn eine Seite mit Lesezeichen ohne Titelbild oder mit einem alten im angezeigten Tab fertig geladen ist, wird ein Bild des Tabs als ihr Titelbild aufgenommen. Nie in privaten Fenstern; die Bilder bleiben auf diesem Gerät. Beim Einschalten wird Zugriff auf alle Seiten angefragt.",
+        "message": "Wenn eine Seite mit Lesezeichen ohne Titelbild oder mit einem alten, beim Surfen aufgenommenen im angezeigten Tab fertig geladen ist, wird ein Bild des Tabs als ihr Titelbild aufgenommen. Nicht in privaten Fenstern, außer Sie schalten das auch ein; die Bilder bleiben auf diesem Gerät. Beim Einschalten wird Zugriff auf alle Seiten angefragt.",
         "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
     },
     "settings_coversBrowseCaptureHelp": {
         "message": "Nach dem Laden wird kurz gewartet und geprüft, ob der Tab die Seite noch zeigt, sodass ein Bild immer nur diese Seite mit Lesezeichen zeigt. Seiten der Erweiterung oder des Browsers, lokale Dateien und Websites unter „Diese Websites nie aufnehmen“ werden nie aufgenommen. Ein Bild zeigt, was auf dem Bildschirm war, etwa eine Kontoseite oder Nachrichten: Fügen Sie solche Websites der Liste hinzu oder löschen Sie Titelbilder in den Einstellungen. Den Zugriff entziehen Sie in den Erweiterungseinstellungen Ihres Browsers.",
         "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Auch in privaten Fenstern aufnehmen",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Auch in privaten Fenstern Bilder von Seiten mit Lesezeichen aufnehmen, sofern Ihr Browser Bookmark Scout dort ausführen lässt. Sie bleiben auf diesem Gerät.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Solange dies aus ist, werden private Fenster nie aufgenommen. Ihr Browser muss die Erweiterung dort außerdem ausführen lassen: Schalten Sie auf der Seite von Bookmark Scout in den Erweiterungseinstellungen Ihres Browsers die Ausführung im Inkognito- bzw. privaten Modus ein.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Wartezeit vor der Aufnahme",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Wie lange eine Seite mit Lesezeichen nach dem Laden im Vordergrund bleiben muss, bevor ihr Bild aufgenommen wird",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Abstand zwischen Aufnahmen",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "Die kürzeste Zeit zwischen zwei Aufnahmen. Sie kann nicht unter das sinken, was Browser erlauben.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Screenshots erneuern, die älter sind als",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Ein beim Surfen aufgenommenes Bild, das älter ist, wird beim nächsten Besuch neu aufgenommen. 0 nimmt es nie neu auf; ein mit „Diese Ansicht als Titelbild verwenden“ gewähltes Titelbild wird nie neu aufgenommen.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
     },
     "settings_coversNeverCaptureSites": {
         "message": "Diese Websites nie aufnehmen",
@@ -9250,6 +9290,10 @@
                 "example": "Oct 22, 2026"
             }
         }
+    },
+    "covers_privateAccessNote": {
+        "message": "Ihr Browser lässt Bookmark Scout nicht in privaten Fenstern laufen, daher werden sie übersprungen. Um es zu erlauben, öffnen Sie die Seite von Bookmark Scout in den Erweiterungseinstellungen Ihres Browsers und schalten Sie die Ausführung im Inkognito- bzw. privaten Modus ein.",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
     },
     "covers_captureTitle": {
         "message": "Diese Ansicht als Titelbild verwenden?",

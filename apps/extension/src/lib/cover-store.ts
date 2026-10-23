@@ -38,14 +38,6 @@ export const COVER_LIMITS = {
   version: coverConfig.version,
 } as const;
 
-/**
- * Where a cover came from: the preview image the page names (`page`, Fetch Covers), a picture of
- * the tab the user chose (`tab`, Use this view as the cover), or one taken when a bookmarked page
- * loaded (`browse`, Capture Covers While Browsing).
- */
-export const COVER_SOURCES = ['page', 'tab', 'browse'] as const;
-export type CoverSource = (typeof COVER_SOURCES)[number];
-
 /** What is known about a stored cover without reading its image. */
 export type CoverInfo = {
   bookmarkId: string;
@@ -56,11 +48,12 @@ export type CoverInfo = {
   bytes: number;
   savedAt: number;
   version: number;
-  source: CoverSource;
+  source: StoredCoverSource;
 };
 
 /** A cover to store: its info and the image file. */
-export type CoverImage = Pick<CoverInfo, 'bookmarkId' | 'url' | 'width' | 'height' | 'source'> & {
+export type CoverImage = Pick<CoverInfo, 'bookmarkId' | 'url' | 'width' | 'height'> & {
+  source: CoverSource;
   type: string;
   data: ArrayBuffer;
 };
@@ -73,7 +66,11 @@ const coverInfoSchema = z.strictObject({
   bytes: z.number().int().nonnegative(),
   savedAt: z.number().finite(),
   version: z.number().int().positive(),
-  source: z.enum(COVER_SOURCES),
+  // Absent in covers saved before sources were recorded.
+  source: z
+    .enum(COVER_SOURCES)
+    .optional()
+    .transform((source): StoredCoverSource => source ?? UNKNOWN_COVER_SOURCE),
 });
 
 type StoredImage = { bookmarkId: string; type: string; data: ArrayBuffer };
