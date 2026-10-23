@@ -300,6 +300,9 @@
 # on fix/media-review-035 from main bfb2bf53: ZIP 2,145,657 / 2,145,702 / 2,145,783, uncompressed
 # 7,238,938 / 7,238,934 / 7,239,097 B (Chrome / Edge / Firefox), 4,044,436 B of JavaScript, and
 # 2,625,795 B of locales.
+# Locales set on 2026-10-23 to 2,645,000 when the copy review and the media review met on main:
+# fix/media-review-035 rebased on fbfef7a4 measured 2,632,868 B of locales (all three browsers),
+# ZIP 2,146,399 / 2,146,499 / 2,146,553 B and 4,044,545 B of JavaScript (Chrome / Edge / Firefox).
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
