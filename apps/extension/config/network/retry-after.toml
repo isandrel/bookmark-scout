@@ -1,0 +1,7 @@
+# Busy sites. A site that answers with one of `statuses` and a Retry-After of at most `max_ms` is
+# asked again after that wait (src/services/bookmark-network-tools.ts, `busyRetryWait`): Check Dead
+# Links counts it against its Retry Count setting, and Index Page Text against `busy_retries` in
+# config/bookmarks/page-text.toml. A longer wait, an unreadable one, or none at all is reported at
+# once, so a tool never waits on one site for long.
+statuses = [429, 503]
+max_ms = { value = 10_000, min = 0, max = 20_000 }

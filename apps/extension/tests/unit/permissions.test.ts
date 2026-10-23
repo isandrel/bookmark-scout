@@ -15,7 +15,9 @@ import {
   getSiteAccessOrigins,
   getUrlSite,
   getUrlSites,
+  isUrlOnSites,
   SITE_ACCESS_MAX_SITES,
+  toSiteName,
   urlSiteSchema,
 } from '@/lib/site-access';
 import type { SupportedBrowser } from '@/lib/supported-browsers';
@@ -197,6 +199,30 @@ describe('website access for a run', () => {
     await expect(hasSiteAccess('webAccess', [])).resolves.toBe(true);
     await expect(requestSiteAccess('webAccess', [])).resolves.toBe(true);
     expect(fakeBrowser.permissions.request).not.toHaveBeenCalled();
+  });
+});
+
+describe('lists of sites the user types (Never Read These Sites)', () => {
+  it('keeps the host of a typed site or a pasted address, lowercase, without www.', () => {
+    expect(toSiteName('Example.COM')).toBe('example.com');
+    expect(toSiteName(' www.example.com. ')).toBe('example.com');
+    expect(toSiteName('https://news.example.com/story?id=1#top')).toBe('news.example.com');
+    expect(toSiteName('bücher.example')).toBe('xn--bcher-kva.example');
+    expect(toSiteName('localhost')).toBe('localhost');
+    for (const raw of ['', '  ', 'not a site', 'file:///etc/passwd', 'https://', '[::1]']) {
+      expect(toSiteName(raw), raw).toBeUndefined();
+    }
+  });
+
+  it('matches a site and its subdomains, and nothing else', () => {
+    const sites = ['example.com'];
+    expect(isUrlOnSites('https://example.com/a', sites)).toBe(true);
+    expect(isUrlOnSites('http://www.example.com/a', sites)).toBe(true);
+    expect(isUrlOnSites('https://news.example.com/a', sites)).toBe(true);
+    expect(isUrlOnSites('https://notexample.com/a', sites)).toBe(false);
+    expect(isUrlOnSites('https://example.com.evil.test/a', sites)).toBe(false);
+    expect(isUrlOnSites('javascript:void(0)', sites)).toBe(false);
+    expect(isUrlOnSites('https://example.com/a', [])).toBe(false);
   });
 });
 

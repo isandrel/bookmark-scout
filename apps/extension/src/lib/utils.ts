@@ -22,3 +22,9 @@ export function truncateText(text: string, maxChars: number): string {
 export function isSameJson(left: unknown, right: unknown): boolean {
   return JSON.stringify(left) === JSON.stringify(right);
 }
+
+/** The SHA-256 digest of `text` (as UTF-8), in lowercase hex: a fingerprint that names no secret. */
+export async function sha256Hex(text: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(digest)].map(byteToHex).join('');
+}

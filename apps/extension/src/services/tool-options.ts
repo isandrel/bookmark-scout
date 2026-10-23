@@ -35,6 +35,7 @@ const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool
     skipPrivateHosts: settings.readPageSkipPrivateHosts,
     skipSecretUrls: settings.pageTextSkipSecretUrls,
     sensitiveParams: settings.privacyScannerSensitiveParams,
+    excludedSites: settings.pageTextExcludedSites,
   }),
   covers: (settings) => ({
     widthPx: settings.coversWidthPx,

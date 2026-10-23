@@ -122,3 +122,36 @@ export function isUrlInOrigin(url: string, pattern: string): boolean {
   const domain = host.slice(ANY_SUBDOMAIN.length);
   return parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`);
 }
+
+/** A host name as a list of sites keeps it: lowercase labels of letters, digits, and hyphens. */
+const SITE_NAME_PATTERN = /^[a-z0-9-]+(?:\.[a-z0-9-]+)*$/;
+/** An address that names its scheme, as opposed to a bare host name. */
+const SCHEME_PREFIX = /^[a-z][a-z0-9+.-]*:\/\//i;
+
+/**
+ * A site the user typed or pasted (a host name, or an address on it) as a list of sites keeps it:
+ * its host in lowercase, without `www.` or a trailing dot, in its ASCII form; undefined when it
+ * names no host. Index Page Text's never-read sites are stored this way.
+ */
+export function toSiteName(raw: string): string | undefined {
+  const text = raw.trim();
+  if (!text) return undefined;
+  let hostname: string;
+  try {
+    hostname = new URL(SCHEME_PREFIX.test(text) ? text : `https://${text}`).hostname;
+  } catch {
+    return undefined;
+  }
+  const name = withoutWww(hostname.toLowerCase().replace(/\.$/, ''));
+  return SITE_NAME_PATTERN.test(name) ? name : undefined;
+}
+
+/**
+ * Whether `url` is on one of `sites` (from `toSiteName`) or a subdomain of one, as in
+ * `news.example.com` on `example.com`.
+ */
+export function isUrlOnSites(url: string, sites: readonly string[]): boolean {
+  if (sites.length === 0) return false;
+  const host = withoutWww(getUrlHostname(url));
+  return host !== '' && sites.some((site) => hostnameMatchesDomain(host, site));
+}

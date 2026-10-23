@@ -4,6 +4,7 @@
  * restarts with the same profile, when the session's undo history is gone.
  */
 import type { BrowserContext, Page, Worker } from '@playwright/test';
+import { waitForAuditBaseline } from './audit-helpers';
 import { expect, launchExtension, test, toastRegion } from './fixtures';
 import { managerUrl, managerRow as row } from './manager-helpers';
 import { childTitles, seedFolder } from './popup-helpers';
@@ -222,35 +223,13 @@ test('a Duplicate Cleaner result opens its record in History, with the removed c
   await page.screenshot({ path: test.info().outputPath('history-duplicates.png') });
 });
 
-/** Waits until the background has taken its first baseline of the bookmarks. */
-async function waitForBaseline(worker: Worker) {
-  await expect
-    .poll(() =>
-      worker.evaluate(
-        () =>
-          new Promise<boolean>((resolve) => {
-            const open = indexedDB.open('bookmark-scout-audit');
-            open.onsuccess = () => {
-              const db = open.result;
-              if (!db.objectStoreNames.contains('meta')) return resolve(false);
-              const read = db.transaction('meta').objectStore('meta').get('observer');
-              read.onsuccess = () => resolve(read.result !== undefined);
-              read.onerror = () => resolve(false);
-            };
-            open.onerror = () => resolve(false);
-          }),
-      ),
-    )
-    .toBe(true);
-}
-
 test('a change made outside Bookmark Scout shows as from an unknown source, its own changes do not (X01, X07, H22)', async ({
   extensionId,
   extensionWorker,
   page,
 }) => {
   await setSettings(extensionWorker, { confirmBeforeDelete: false, sortOrder: 'browser' });
-  await waitForBaseline(extensionWorker);
+  await waitForAuditBaseline(extensionWorker);
   // Seeded through the browser API: itself a change from elsewhere, in the same burst.
   const seeded = await seedFolder(extensionWorker, 'History Outside', [
     { title: 'Mine to delete', url: 'https://e2e.invalid/mine' },
@@ -302,7 +281,7 @@ test('changes made while recording was paused show as one difference after a gap
   extensionWorker,
   page,
 }) => {
-  await waitForBaseline(extensionWorker);
+  await waitForAuditBaseline(extensionWorker);
   const seeded = await seedFolder(extensionWorker, 'History Gap', [
     { title: 'Before the gap', url: 'https://e2e.invalid/gap' },
   ]);

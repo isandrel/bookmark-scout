@@ -14,6 +14,7 @@ const ERROR_KEYS = {
   empty: 'pageText_tabEmpty',
   signIn: 'pageText_tabSignIn',
   full: 'pageText_tabFull',
+  excluded: 'pageText_tabExcluded',
 } as const satisfies Record<TabPageTextError, MessageKey>;
 
 export function IndexTabTextButton({ url }: { url: string }) {
@@ -40,7 +41,7 @@ export function IndexTabTextButton({ url }: { url: string }) {
   const save = async () => {
     if (!page) return;
     try {
-      const { saved, notSaved } = await savePageTexts(page.pages);
+      const { saved, notSaved } = await savePageTexts(page.pages, 'tab');
       if (notSaved > 0) {
         // Storage is full: never reported as saved.
         toast.error({

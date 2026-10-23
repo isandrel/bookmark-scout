@@ -7,11 +7,12 @@
  * the tab moved on while it was read.
  */
 import type { Page, Worker } from '@playwright/test';
+import { libraryState, settledLibraryState, waitForAuditBaseline } from './audit-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { latestJob } from './job-helpers';
 import { managerSearch, managerUrl } from './manager-helpers';
 import { openPopup } from './popup-helpers';
-import { readSettings } from './storage';
+import { readSettings, STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 const ARTICLE = `<!doctype html><html><head><title>Field trip</title></head><body><article>
@@ -48,21 +49,34 @@ const indexedCount = (worker: Worker) =>
     });
   });
 
-/** Stores page text records the way Index Page Text saves them, from the background. */
-function seedPageTexts(worker: Worker, pages: { bookmarkId: string; url: string; text: string }[]) {
+/**
+ * Stores page text records the way Index Page Text saves them, from the background: downloaded,
+ * from the bookmark's own address, uncut (the fingerprint is a placeholder of the right shape).
+ */
+function seedPageTexts(
+  worker: Worker,
+  pages: { bookmarkId: string; url: string; text: string; source?: 'download' | 'tab' }[],
+) {
   return worker.evaluate(async (records) => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const open = indexedDB.open('bookmark-scout-page-text', 1);
-      open.onupgradeneeded = () =>
-        open.result.createObjectStore('pages', { keyPath: 'bookmarkId' });
+      // The database version that keeps provenance; an index not made yet is made as it is.
+      const open = indexedDB.open('bookmark-scout-page-text', 2);
+      open.onupgradeneeded = () => {
+        if (!open.result.objectStoreNames.contains('pages')) {
+          open.result.createObjectStore('pages', { keyPath: 'bookmarkId' });
+        }
+      };
       open.onsuccess = () => resolve(open.result);
       open.onerror = () => reject(open.error);
     });
     const transaction = db.transaction('pages', 'readwrite');
-    for (const record of records) {
-      transaction
-        .objectStore('pages')
-        .put({ ...record, indexedAt: Date.now(), extractorVersion: 2 });
+    for (const { source = 'download', ...record } of records) {
+      transaction.objectStore('pages').put({
+        ...record,
+        indexedAt: Date.now(),
+        extractorVersion: 2,
+        provenance: { source, readFrom: record.url, fingerprint: '0'.repeat(64), truncated: false },
+      });
     }
     await new Promise((resolve, reject) => {
       transaction.oncomplete = resolve;
@@ -79,11 +93,12 @@ function seedPageTexts(worker: Worker, pages: { bookmarkId: string; url: string;
 test.describe('with website access granted', () => {
   test.use({ grantWebHostAccess: true });
 
-  test('indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it (S12)', async ({
+  test('indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it, leaving bookmarks, tags, and the History unchanged (S12, S30, S48)', async ({
     extensionId,
     extensionWorker,
     page,
   }) => {
+    await waitForAuditBaseline(extensionWorker);
     const seeded = await seedFolder(extensionWorker, 'E2E Page Text', [
       { title: 'Trip notes', url: 'https://trip.e2e.invalid/notes' },
       { title: 'Broken page', url: 'https://down.e2e.invalid/' },
@@ -100,6 +115,12 @@ test.describe('with website access granted', () => {
       const status = url.startsWith('https://locked.') ? 401 : 200;
       return route.fulfill({ status, contentType: 'text/html', body: ARTICLE });
     });
+    const tripId = seeded.ids['Trip notes'] ?? '';
+    await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+      [tripId]: { tags: ['travel'] },
+    });
+    // What reading pages, searching them, and deleting their text must leave as it is.
+    const before = await settledLibraryState(extensionWorker, seeded.folderId);
 
     // Off until the user turns it on.
     await openTools(page, extensionId, seeded.folderId);
@@ -140,9 +161,12 @@ test.describe('with website access granted', () => {
     await page
       .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
       .fill('quokka');
+    // The match says the text was downloaded.
     const hit = page.locator('.bookmark-item').filter({ hasText: 'Trip notes' });
-    await expect(hit).toContainText('page:');
+    await expect(hit).toContainText('downloaded page:');
     await expect(hit).toContainText('quokka');
+    // Indexing and searching wrote nothing to the bookmarks, their tags, or the History.
+    expect(await libraryState(extensionWorker, seeded.folderId)).toEqual(before);
 
     // Turned off, search leaves page text out without deleting it; turned on, it is back.
     await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:quokka')}`);
@@ -161,6 +185,8 @@ test.describe('with website access granted', () => {
     await expect(panel).toContainText('0 pages indexed');
     await page.goto(`${managerUrl(extensionId)}?q=${encodeURIComponent('content:quokka')}`);
     await expect(page.locator('tbody tr').filter({ hasText: 'Trip notes' })).toHaveCount(0);
+    expect(await indexedCount(extensionWorker)).toBe(0);
+    expect(await libraryState(extensionWorker, seeded.folderId)).toEqual(before);
   });
 
   test('with 2 of 5 sites chosen, only they are requested, the job keeps the choice after its page closes, and the rest are listed as not chosen (S03)', async ({
@@ -331,8 +357,9 @@ test.describe('with website access granted', () => {
     await page
       .getByRole('combobox', { name: 'Search bookmarks, or type a folder name' })
       .fill('peppermint');
+    // The match says the text came from the tab.
     await expect(page.locator('.bookmark-item').filter({ hasText: 'Members story' })).toContainText(
-      'page:',
+      'page from your tab:',
     );
   });
 
@@ -427,6 +454,7 @@ test.describe('with website access granted', () => {
       /^Indexed: 2 of \d+ bookmarks that can be indexed$/,
       /^Out of date: 0 /,
       'Failed in the last run: 1',
+      /^Last indexed: \S/,
     ]);
     const before = requested.length;
     flakyAnswers = true;
@@ -440,7 +468,85 @@ test.describe('with website access granted', () => {
     // Only the failed page was requested again.
     expect(requested.slice(before)).toEqual(['https://flaky.e2e.invalid/']);
     expect((await latestJob(extensionWorker, 'pageText'))?.total).toBe(1);
-    await expect(coverage.getByRole('listitem').last()).toHaveText('Failed in the last run: 0');
+    await expect(coverage.getByRole('listitem').nth(2)).toHaveText('Failed in the last run: 0');
+  });
+
+  test('Never Read These Sites in Options deletes the text indexed from a site and keeps runs off it, and Refresh outdated reads only out-of-date pages (S1, S2.4)', async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const { folderId, ids } = await seedFolder(extensionWorker, 'E2E Page Text Sites', [
+      { title: 'Current page', url: 'https://current-s1.e2e.invalid/' },
+      { title: 'Moved page', url: 'https://moved-s1.e2e.invalid/new' },
+      { title: 'Private wiki', url: 'https://wiki.private-s1.invalid/home' },
+    ]);
+    const id = (title: string) => ids[title] ?? '';
+    await setSettings(extensionWorker, { pageTextEnabled: true, pageTextDefaultScope: 'folder' });
+    await seedPageTexts(extensionWorker, [
+      { bookmarkId: id('Current page'), url: 'https://current-s1.e2e.invalid/', text: 'current' },
+      // Read at the address the bookmark had before: out of date.
+      { bookmarkId: id('Moved page'), url: 'https://moved-s1.e2e.invalid/old', text: 'moved' },
+      { bookmarkId: id('Private wiki'), url: 'https://wiki.private-s1.invalid/home', text: 'wiki' },
+    ]);
+    const requested: string[] = [];
+    await context.route(/^https:\/\/[^/]*\.invalid\//, (route) => {
+      requested.push(route.request().url());
+      return route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE });
+    });
+
+    await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
+    const coverage = page.getByTestId('page-text-coverage');
+    await expect(coverage.getByRole('listitem').first()).toHaveText(
+      /^Indexed: 2 of \d+ bookmarks that can be indexed$/,
+    );
+    await expect(coverage.getByRole('listitem').nth(1)).toHaveText(/^Out of date: 1 /);
+    await expect(coverage.getByRole('listitem').last()).toHaveText(/^Last indexed: \S/);
+
+    // Typing a whole address keeps its site; the text indexed from it is deleted.
+    const sites = page.locator('[data-setting="pageTextExcludedSites"]');
+    await sites.getByRole('textbox').fill('https://www.private-s1.invalid/anything');
+    await sites.getByRole('textbox').press('Enter');
+    await expect(sites.locator('[data-slot="list-chip"]')).toHaveText(['private-s1.invalid']);
+    await expect
+      .poll(async () => (await readSettings(extensionWorker)).pageTextExcludedSites)
+      .toEqual(['private-s1.invalid']);
+    await expect.poll(() => indexedCount(extensionWorker)).toBe(2);
+    await expect(coverage.getByRole('listitem').first()).toHaveText(
+      /^Indexed: 1 of \d+ bookmarks that can be indexed$/,
+    );
+
+    // Refresh outdated reads the out-of-date page only.
+    await page
+      .getByTestId('page-text-index')
+      .getByRole('button', { name: 'Refresh outdated' })
+      .click();
+    await expect(
+      toastRegion(page).getByText('✓ Reading 1 out-of-date page again', { exact: true }),
+    ).toBeVisible();
+    await expect
+      .poll(async () => (await latestJob(extensionWorker, 'pageText'))?.state)
+      .toBe('succeeded');
+    expect(requested).toEqual(['https://moved-s1.e2e.invalid/new']);
+    expect((await latestJob(extensionWorker, 'pageText'))?.total).toBe(1);
+
+    // A run over the folder never requests the site, and says why.
+    requested.length = 0;
+    await openTools(page, extensionId, folderId);
+    await toolCard(page, 'Index Page Text')
+      .getByRole('button', { name: 'Index', exact: true })
+      .click();
+    await page
+      .getByRole('dialog', { name: 'Choose sites to read' })
+      .getByRole('button', { name: 'Start with 1 site' })
+      .click();
+    const review = page.getByRole('dialog', { name: 'Index Page Text' });
+    await review.getByRole('radio', { name: 'Skipped (1)' }).click();
+    await expect(
+      review.getByTestId('page-text-item').filter({ hasText: 'Private wiki' }),
+    ).toContainText('Not downloaded: the site is listed in Never Read These Sites in Settings.');
+    expect(requested).toEqual(['https://moved-s1.e2e.invalid/new']);
   });
 
   test('addresses with sign-in details or a token are skipped unrequested until Skip Addresses with Sign-in Details or Secrets is turned off in Options', async ({

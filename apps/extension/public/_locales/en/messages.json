@@ -8069,6 +8069,14 @@
         "message": "Never download an address that holds a user name and password, or a parameter listed in the Privacy Scanner's Sensitive Parameters (such as a token), which the site would receive. Turned off, those bookmarks are read like any other.",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "Never Read These Sites",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "Index Page Text never downloads pages on these sites or their subdomains (example.com covers news.example.com), and Index this page's text never reads them. Adding a site deletes the text already indexed from it. Type a site or paste an address.",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "The text read from each page. Only what you save is kept, on this device.",
         "description": "Index Page Text review: description"
@@ -8112,6 +8120,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "Not downloaded: the address holds a parameter listed in the Privacy Scanner's Sensitive Parameters, such as a token, which the site would receive.",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "Not downloaded: the site is listed in Never Read These Sites in Settings.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Not chosen ($1)",
@@ -8251,6 +8263,14 @@
         "message": "page: $1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "downloaded page: $1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "page from your tab: $1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "In indexed page text",
         "description": "Search syntax help: what content: does"
@@ -8323,6 +8343,14 @@
         "message": "Failed in the last run: $1",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "Last indexed: $1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "Last indexed: never",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "Retry failed",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -8338,6 +8366,18 @@
     "pageText_retryStartedDesc": {
         "message": "It runs in the background. When it finishes, save the text from Review results on the Index Page Text card in the bookmark manager's Tools.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "Refresh outdated",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "Reading $1 out-of-date pages again",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
+    },
+    "pageText_refreshStarted_one": {
+        "message": "Reading $1 out-of-date page again",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages (singular)"
     },
     "pageText_accessNote": {
         "message": "Taking back website access to a site deletes the text indexed from it.",
@@ -8386,6 +8426,10 @@
     "pageText_tabFull": {
         "message": "The page text index is full. Use Delete page text in Settings to make room.",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "This site is listed in Never Read These Sites in Settings, so its pages are never read.",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "Manager View",

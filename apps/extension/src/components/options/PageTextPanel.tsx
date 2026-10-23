@@ -1,10 +1,11 @@
 /**
  * Index Page Text in Options: how many pages' text the index keeps on this device, how much of
- * the library it covers (indexed of the bookmarks that can be, out of date, and failed in the last
- * run), **Retry failed**, which starts a run on just those bookmarks, and a button that deletes
- * the index. Deleting it never touches a bookmark, a tag, or the History.
+ * the library it covers (indexed of the bookmarks that can be, out of date, failed in the last
+ * run, and when text was last indexed), **Retry failed** and **Refresh outdated**, which start a
+ * run on just those bookmarks, and a button that deletes the index. Deleting it never touches a
+ * bookmark, a tag, or the History.
  */
-import { RotateCcw, Trash2 } from 'lucide-react';
+import { RefreshCw, RotateCcw, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 export function PageTextPanel() {
@@ -43,8 +44,9 @@ export function PageTextPanel() {
     }
   };
 
-  // The failed pages only, through the same job and the same website access as a run from Tools.
-  const retry = (failed: readonly PageTextScanItem[]) => {
+  // Just those pages, through the same job and the same website access as a run from Tools.
+  const runOn = (pages: readonly PageTextTarget[], started: MessageKey) => {
+    const sites = getUrlSites(pages.map((item) => item.url));
     const start = async () => {
       setRetrying(true);
       try {
@@ -54,25 +56,27 @@ export function PageTextPanel() {
           kind: 'pageText',
           source: 'options',
           scope: { mode: 'all' },
-          sites: getUrlSites(failed.map((item) => item.url)),
-          bookmarkIds: failed.map((item) => item.id),
+          sites,
+          bookmarkIds: pages.map((item) => item.id),
         }).catch(() => undefined);
         if (!response?.ok) {
           toast.error({ title: t('jobs_commandFailed') });
           return;
         }
         toast.success({
-          title: tPlural('pageText_retryStarted', failed.length),
+          title: tPlural(started, pages.length),
           description: t('pageText_retryStartedDesc'),
         });
       } finally {
         setRetrying(false);
       }
     };
-    void hostAccess.run(start, getUrlSites(failed.map((item) => item.url)));
+    void hostAccess.run(start, sites);
   };
 
   const failed = coverage?.failed ?? [];
+  const outdated = coverage?.outdated ?? [];
+  const busy = running || retrying;
   return (
     <OptionsPanel
       id="page-text-index"
@@ -88,11 +92,20 @@ export function PageTextPanel() {
           <Button
             variant="outline"
             size="sm"
-            disabled={failed.length === 0 || running || retrying}
-            onClick={() => retry(failed)}
+            disabled={failed.length === 0 || busy}
+            onClick={() => runOn(failed, 'pageText_retryStarted')}
           >
             <RotateCcw />
             {t('pageText_retryFailed')}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={outdated.length === 0 || busy}
+            onClick={() => runOn(outdated, 'pageText_refreshStarted')}
+          >
+            <RefreshCw />
+            {t('pageText_refreshOutdated')}
           </Button>
           <Button
             variant="outline"
@@ -114,8 +127,13 @@ export function PageTextPanel() {
               formatCount(coverage.eligible),
             ])}
           </li>
-          <li>{t('pageText_coverageStale', formatCount(coverage.stale))}</li>
+          <li>{t('pageText_coverageStale', formatCount(outdated.length))}</li>
           <li>{t('pageText_coverageFailed', formatCount(failed.length))}</li>
+          <li>
+            {coverage.lastIndexedAt === undefined
+              ? t('pageText_coverageNeverIndexed')
+              : t('pageText_coverageLastIndexed', formatDateTime(coverage.lastIndexedAt))}
+          </li>
         </ul>
       ) : null}
       <p className="text-xs text-muted-foreground">{t('pageText_accessNote')}</p>

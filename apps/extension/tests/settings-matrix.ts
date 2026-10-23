@@ -133,7 +133,7 @@ const SITE_ICONS_UNIT = 'site-icons.test.ts';
 const COVERS_UNIT = 'covers.test.ts';
 const coversRun = e2e(
   'covers.spec.ts',
-  'a fetched cover shows on its card after the review saves it, and Options deletes it',
+  'a fetched cover shows on its card after the review saves it, and Options deletes it, leaving bookmarks, tags, and the History unchanged (V32)',
 );
 const siteIconsRefresh = e2e(
   'tool-site-icons.spec.ts',
@@ -863,11 +863,22 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     toolFlags,
     e2e(
       'page-text.spec.ts',
-      'indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it (S12)',
+      'indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it, leaving bookmarks, tags, and the History unchanged (S12, S30, S48)',
     ),
     e2e(
       'page-text.spec.ts',
       "the popup indexes the current tab's text only after its preview is saved (S17)",
+    ),
+  ]),
+  pageTextExcludedSites: tested(TOOL_OPTIONS, [
+    unit(
+      'background-job-adapters.test.ts',
+      'never requests a page on a site never to read or its subdomains, and says why',
+    ),
+    unit('page-text.test.ts', 'never reads a page on a site in Never Read These Sites (S1)'),
+    e2e(
+      'page-text.spec.ts',
+      'Never Read These Sites in Options deletes the text indexed from a site and keeps runs off it, and Refresh outdated reads only out-of-date pages (S1, S2.4)',
     ),
   ]),
   pageTextSkipSecretUrls: tested(TOOL_OPTIONS, [
@@ -887,7 +898,7 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   pageTextDefaultScope: tested(TOOL_TABLE, [
     e2e(
       'page-text.spec.ts',
-      'indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it (S12)',
+      'indexed page text is searchable after the review saves it, sign-in pages are not saved, and Options deletes it, leaving bookmarks, tags, and the History unchanged (S12, S30, S48)',
     ),
   ]),
 

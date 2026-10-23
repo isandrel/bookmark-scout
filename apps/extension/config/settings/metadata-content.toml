@@ -19,6 +19,10 @@ default_scope = "folder"
 # Privacy Scanner's Sensitive Parameters (such as a token), which the site would receive; such a
 # bookmark is listed as skipped with the reason. Turned off, those addresses are read like any other.
 skip_secret_urls = true
+# Sites whose pages are never read, each with its subdomains (example.com covers
+# news.example.com), entered in Options. Adding a site deletes the text indexed from it. Synced
+# like the other settings, so each entry is a short host name.
+excluded_sites = { default = [], max_items = 30, max_length = 100 }
 
 [site_icons]
 # Refresh Site Icons downloads each website's own icon into local storage. It reuses the

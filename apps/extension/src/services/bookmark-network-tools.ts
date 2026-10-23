@@ -65,19 +65,43 @@ const deadLinkConfig = readConfig(
       rate_limited: z.array(httpStatusCodeSchema),
       method_rejected: z.array(httpStatusCodeSchema),
     }),
-    retry_after: z.strictObject({
-      statuses: z.array(httpStatusCodeSchema),
-      max_ms: boundedNumber({ integer: true }),
-    }),
   }),
 );
 
-/** Busy statuses whose Retry-After a check waits for, up to `RETRY_AFTER_MAX_MS`. */
-const RETRY_AFTER_STATUSES: ReadonlySet<number> = new Set(deadLinkConfig.retry_after.statuses);
-const RETRY_AFTER_MAX_MS = deadLinkConfig.retry_after.max_ms;
+const retryAfterConfig = readConfig(
+  'network/retry-after',
+  z.strictObject({
+    statuses: z.array(httpStatusCodeSchema),
+    max_ms: boundedNumber({ integer: true }),
+  }),
+);
+
+/** Busy statuses whose Retry-After a tool waits for, up to `RETRY_AFTER_MAX_MS`. */
+const RETRY_AFTER_STATUSES: ReadonlySet<number> = new Set(retryAfterConfig.statuses);
+const RETRY_AFTER_MAX_MS = retryAfterConfig.max_ms;
+
+/** Whether `status` says the site is busy for now (`statuses` in `config/network/retry-after.toml`). */
+export function isBusyStatus(status: number): boolean {
+  return RETRY_AFTER_STATUSES.has(status);
+}
+
+/**
+ * How long to wait before asking a busy site again, in ms: its Retry-After when `status` is a busy
+ * one and the wait is readable and at most `max_ms` (`config/network/retry-after.toml`); undefined
+ * when the tool should report the answer now instead. Check Dead Links and Index Page Text share it.
+ */
+export function busyRetryWait(
+  status: number,
+  retryAfter: string | null,
+  now: number,
+): number | undefined {
+  if (!isBusyStatus(status)) return undefined;
+  const wait = parseRetryAfter(retryAfter, now);
+  return wait !== undefined && wait <= RETRY_AFTER_MAX_MS ? wait : undefined;
+}
 
 /** Waits `ms`, or throws {@link RequestAbortedError} as soon as `signal` stops the check. */
-function waitUnlessStopped(ms: number, signal?: AbortSignal): Promise<void> {
+export function waitUnlessStopped(ms: number, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) {
       reject(new RequestAbortedError());
@@ -385,10 +409,8 @@ export async function checkDeadLink(
       } else {
         status = 'error';
         // A busy site that says when to come back, soon enough, is asked again then.
-        const wait = RETRY_AFTER_STATUSES.has(response.status)
-          ? parseRetryAfter(response.retryAfter, Date.now())
-          : undefined;
-        if (attempt < options.retryCount && wait !== undefined && wait <= RETRY_AFTER_MAX_MS) {
+        const wait = busyRetryWait(response.status, response.retryAfter, Date.now());
+        if (attempt < options.retryCount && wait !== undefined) {
           await waitUnlessStopped(wait, signal);
           continue;
         }
@@ -786,6 +808,8 @@ export type HtmlPage = {
   stopped?: PageStop;
   /** Set when the page was read from another address than the one asked for (`url`). */
   readFrom?: string;
+  /** The answer's Retry-After header, when it has one (a busy site says when to ask again). */
+  retryAfter?: string;
 };
 
 export type FetchHtmlPageOptions = {
@@ -864,7 +888,13 @@ async function readPage(
   url: string,
   options: FetchHtmlPageOptions,
 ): Promise<HtmlPage> {
-  const page = { status: response.status, ok: response.ok, url: response.url || url };
+  const retryAfter = response.headers.get('retry-after');
+  const page = {
+    status: response.status,
+    ok: response.ok,
+    url: response.url || url,
+    ...(retryAfter ? { retryAfter } : {}),
+  };
   const contentType = response.headers.get('content-type');
   if (!response.ok || !isHtmlContentType(contentType)) return { ...page, html: null };
   const stopAt = options.until === 'head' ? HEAD_END_PATTERN : undefined;

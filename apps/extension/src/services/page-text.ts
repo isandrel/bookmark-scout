@@ -9,8 +9,10 @@
  *
  * Bookmarks of one address share one download in a run (`sameAs`), and each keeps its own text.
  * An address with a user name and password, or a query parameter the Privacy Scanner names as
- * sensitive, is never requested. Taking back a site's website access deletes its text
- * (`registerPageTextAccessCleanup`).
+ * sensitive, is never requested, and neither is a page on a site the user chose never to read
+ * (Never Read These Sites). Taking back a site's website access, or adding it to those sites,
+ * deletes its text (`registerPageTextAccessCleanup`). A busy site that names a short Retry-After
+ * is asked again after it, a few times (`busy_retries`), and is then listed as failed.
  */
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
@@ -42,6 +44,8 @@ export type PageTextScanItem = {
   status: PageTextScanStatus;
   /** The page's readable text, for `read` items. */
   text?: string;
+  /** For `read` items: the page had more readable text than the index keeps. */
+  truncated?: boolean;
   /** Why a `skipped` page is never requested, when its address may hold a secret. */
   skipReason?: PageTextSkipReason;
   /**
@@ -54,9 +58,10 @@ export type PageTextScanItem = {
 /**
  * Why a page is never requested although it is a web page: its address carries a user name and
  * password (`credentials`), or a query parameter named in the Privacy Scanner's sensitive
- * parameters (`sensitiveParam`), such as a token, which the site would receive.
+ * parameters (`sensitiveParam`), such as a token, which the site would receive, or it is on a site
+ * the user chose never to read (`excludedSite`).
  */
-export type PageTextSkipReason = 'credentials' | 'sensitiveParam';
+export type PageTextSkipReason = 'credentials' | 'sensitiveParam' | 'excludedSite';
 
 export type PageTextScanResult = {
   items: PageTextScanItem[];
@@ -79,6 +84,8 @@ export type PageTextScanOptions = {
   skipSecretUrls: boolean;
   /** Query parameter names that count as secrets (the Privacy Scanner's sensitive parameters). */
   sensitiveParams: readonly string[];
+  /** Sites whose pages are never read, with their subdomains (Never Read These Sites). */
+  excludedSites: readonly string[];
 };
 
 /**
@@ -104,19 +111,28 @@ function hasSignInField(doc: Document): boolean {
 export async function readPageTextHtml(html: string, maxChars: number): Promise<PageTextReading> {
   const doc = parseFetchedHtml(html);
   const asksForPassword = hasSignInField(doc);
-  // Read past `maxChars` when it is shorter, so the sign-in check sees as much text as it needs.
+  // Read past `maxChars` when it is shorter, so the sign-in check sees as much text as it needs,
+  // and one character past it, so a page with more text than is kept says so.
   const blocks = await extractPageBlocks(doc, {
     ...PAGE_TEXT_EXTRACTION,
-    maxChars: Math.max(maxChars, PAGE_TEXT_SIGN_IN.maxTextChars),
+    maxChars: Math.max(maxChars + 1, PAGE_TEXT_SIGN_IN.maxTextChars),
   });
   const text = blocks?.trim() ?? '';
   if (asksForPassword && text.length < PAGE_TEXT_SIGN_IN.maxTextChars) return { status: 'signIn' };
-  return text ? { status: 'read', text: text.slice(0, maxChars).trim() } : { status: 'empty' };
+  if (!text) return { status: 'empty' };
+  return {
+    status: 'read',
+    text: text.slice(0, maxChars).trim(),
+    truncated: text.length > maxChars,
+  };
 }
 
 /**
- * Downloads one bookmark's page and keeps its readable text on `item`. Throws when the page
- * cannot be downloaded or read, and {@link RequestAbortedError} when `signal` stopped it.
+ * Downloads one bookmark's page and keeps its readable text on `item`. A busy site that names a
+ * short Retry-After (`busyRetryWait`, shared with Check Dead Links) is asked again after it, at
+ * most `busy_retries` times, and is then listed as failed. Throws when the page cannot be
+ * downloaded or read, and {@link RequestAbortedError} when `signal` stopped it, also while
+ * waiting out a Retry-After.
  */
 export async function readPageTextItem(
   item: PageTextScanItem,
@@ -125,15 +141,27 @@ export async function readPageTextItem(
     signal?: AbortSignal;
   },
 ): Promise<void> {
-  const { html, status, ok, stopped, readFrom } = await fetchHtmlPage(item.url, {
-    timeoutMs: PAGE_TEXT_LIMITS.timeoutMs,
-    maxBytes: PAGE_TEXT_LIMITS.maxBytes,
-    until: 'end',
-    // Each address, a redirect's target too, is checked before it is requested: never the local
-    // network (when skipped) or a site the run has no access to.
-    allowUrl: (next) => mayRequestFrom(next, item.url, options.skipPrivateHosts),
-    ...(options.signal ? { signal: options.signal } : {}),
-  });
+  const download = () =>
+    fetchHtmlPage(item.url, {
+      timeoutMs: PAGE_TEXT_LIMITS.timeoutMs,
+      maxBytes: PAGE_TEXT_LIMITS.maxBytes,
+      until: 'end',
+      // Each address, a redirect's target too, is checked before it is requested: never the
+      // local network (when skipped) or a site the run has no access to.
+      allowUrl: (next) => mayRequestFrom(next, item.url, options.skipPrivateHosts),
+      ...(options.signal ? { signal: options.signal } : {}),
+    });
+  let page = await download();
+  for (let retry = 0; isBusyStatus(page.status); retry += 1) {
+    const wait = busyRetryWait(page.status, page.retryAfter ?? null, Date.now());
+    if (retry >= PAGE_TEXT_LIMITS.busyRetries || wait === undefined) {
+      item.status = 'failed';
+      return;
+    }
+    await waitUnlessStopped(wait, options.signal);
+    page = await download();
+  }
+  const { html, status, ok, stopped, readFrom } = page;
   if (stopped) {
     item.status = 'redirected';
     return;
@@ -149,7 +177,10 @@ export async function readPageTextItem(
     return;
   }
   item.status = reading.status;
-  if (reading.status === 'read') item.text = reading.text;
+  if (reading.status === 'read') {
+    item.text = reading.text;
+    item.truncated = reading.truncated;
+  }
 }
 
 /** Why `url` must not be requested although it is a web page, if it must not (`PageTextSkipReason`). */
@@ -181,6 +212,10 @@ export function pageTextNeed(
   options: PageTextScanOptions,
   isSensitiveParam: (name: string) => boolean,
 ): PageTextNeed {
+  // A site the user chose never to read is skipped even when its text is indexed (until it is
+  // deleted), so coverage never counts it.
+  if (isUrlOnSites(url, options.excludedSites))
+    return { status: 'skipped', reason: 'excludedSite' };
   if (isPageTextCurrent(indexed, url)) return { status: 'current' };
   if (!isReadablePageUrl(url, options.skipPrivateHosts)) return { status: 'skipped' };
   const reason = options.skipSecretUrls ? pageTextPrivacyReason(url, isSensitiveParam) : undefined;
@@ -240,11 +275,14 @@ export async function planPageTextScan(
     if (need.status === 'read' && chosen && !chosen.has(getUrlSite(url) ?? '')) {
       item.status = 'notChosen';
     } else if (need.status === 'read') {
-      if (room === 0) {
-        overLimit += 1;
-        continue;
+      // Text read again for a bookmark that has some takes no more room.
+      if (!indexed.has(node.id)) {
+        if (room === 0) {
+          overLimit += 1;
+          continue;
+        }
+        room -= 1;
       }
-      room -= 1;
       const first = firstOfUrl.get(url);
       if (first) {
         item.sameAs = first.id;
@@ -285,8 +323,16 @@ export function sharePageTextReads(items: readonly PageTextScanItem[]): PageText
     if (!item.sameAs) return [item];
     const read = byId.get(item.sameAs);
     if (!read) return [];
-    const { status, text, readFrom } = read;
-    return [{ ...item, status, ...(text ? { text } : {}), ...(readFrom ? { readFrom } : {}) }];
+    const { status, text, truncated, readFrom } = read;
+    return [
+      {
+        ...item,
+        status,
+        ...(text ? { text } : {}),
+        ...(truncated !== undefined ? { truncated } : {}),
+        ...(readFrom ? { readFrom } : {}),
+      },
+    ];
   });
 }
 
@@ -306,25 +352,41 @@ export async function fetchBookmarkUrls(): Promise<Map<string, string>> {
 export async function savePageTextResults(
   items: readonly PageTextScanItem[],
 ): Promise<PageTextSaveResult> {
-  const urls = await fetchBookmarkUrls();
+  const [urls, { pageTextExcludedSites }] = await Promise.all([fetchBookmarkUrls(), getSettings()]);
   const result = await savePageTexts(
     items.flatMap((item) =>
-      item.status === 'read' && item.text && urls.get(item.id) === item.url
-        ? [{ bookmarkId: item.id, url: item.url, text: item.text }]
+      item.status === 'read' &&
+      item.text &&
+      urls.get(item.id) === item.url &&
+      // A site the user chose never to read since the run read it keeps nothing.
+      !isUrlOnSites(item.url, pageTextExcludedSites)
+        ? [
+            {
+              bookmarkId: item.id,
+              url: item.url,
+              text: item.text,
+              ...(item.readFrom ? { readFrom: item.readFrom } : {}),
+              ...(item.truncated !== undefined ? { truncated: item.truncated } : {}),
+            },
+          ]
         : [],
     ),
+    'download',
   );
   await prunePageTexts(new Set(urls.keys()));
   return result;
 }
 
-/** Why the current tab's text was not indexed. */
-export type TabPageTextError = ActiveTabError | 'empty' | 'signIn' | 'full';
+/**
+ * Why the current tab's text was not indexed; `excluded`: the page is on a site the user chose
+ * never to read.
+ */
+export type TabPageTextError = ActiveTabError | 'empty' | 'signIn' | 'full' | 'excluded';
 
-/** The current tab's readable text, for every bookmark of its address. */
+/** The current tab's readable text, for every bookmark of its address; save with source `tab`. */
 export type TabPageText = {
   text: string;
-  pages: Pick<PageTextRecord, 'bookmarkId' | 'url' | 'text'>[];
+  pages: PageTextInput[];
 };
 
 /**
@@ -348,12 +410,14 @@ const shownPageSchema = z.strictObject({
 /**
  * Reads the text of the page the active tab shows, as the user sees it (signed in, too), for the
  * bookmarks of `url`: only after a click, only while the tab shows `url` before and after the
- * read, never in a private window (`withActiveTabAt`), never from a sign-in page, and not past
- * `max_pages`. Nothing is stored; save the previewed text with `savePageTexts`.
+ * read, never in a private window (`withActiveTabAt`), never from a sign-in page, never from a
+ * site the user chose never to read, and not past `max_pages`. Nothing is stored; save the
+ * previewed text with `savePageTexts(pages, 'tab')`.
  */
 export async function readTabPageText(
   url: string,
 ): Promise<{ page: TabPageText } | { error: TabPageTextError }> {
+  if (isUrlOnSites(url, (await getSettings()).pageTextExcludedSites)) return { error: 'excluded' };
   const shown = await withActiveTabAt(url, async (tab) => {
     const [injection] = await browser.scripting.executeScript({
       target: { tabId: tab.id },
@@ -375,7 +439,12 @@ export async function readTabPageText(
   return {
     page: {
       text: reading.text,
-      pages: bookmarks.map((node) => ({ bookmarkId: node.id, url, text: reading.text })),
+      pages: bookmarks.map((node) => ({
+        bookmarkId: node.id,
+        url,
+        text: reading.text,
+        truncated: reading.truncated,
+      })),
     },
   };
 }

@@ -8069,6 +8069,14 @@
         "message": "No descargar nunca una dirección que contenga un nombre de usuario y una contraseña, o un parámetro de la lista Parámetros sensibles del Escáner de privacidad (como un token), que el sitio recibiría. Desactivado, esos marcadores se leen como cualquier otro.",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "No leer nunca estos sitios",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "Indexar texto de páginas nunca descarga páginas de estos sitios ni de sus subdominios (example.com incluye news.example.com), e Indexar el texto de esta página nunca las lee. Al añadir un sitio se elimina el texto ya indexado de él. Escribe un sitio o pega una dirección.",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "El texto leído de cada página. Solo se guarda lo que guardes, en este dispositivo.",
         "description": "Index Page Text review: description"
@@ -8112,6 +8120,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "No se descargó: la dirección contiene un parámetro de la lista de parámetros sensibles del Escáner de privacidad, como un token, que el sitio recibiría.",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "No se descargó: el sitio está en No leer nunca estos sitios, en Configuración.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "No elegidos ($1)",
@@ -8251,6 +8263,14 @@
         "message": "página: $1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "página descargada: $1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "página de tu pestaña: $1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "En el texto indexado de la página",
         "description": "Search syntax help: what content: does"
@@ -8323,6 +8343,14 @@
         "message": "Con error en la última ejecución: $1",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "Última indexación: $1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "Última indexación: nunca",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "Reintentar los fallidos",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -8338,6 +8366,18 @@
     "pageText_retryStartedDesc": {
         "message": "Se ejecuta en segundo plano. Cuando termine, guarda el texto desde Ver resultados en la tarjeta Indexar texto de páginas de las Herramientas del gestor de marcadores.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "Actualizar los desactualizados",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "Leyendo de nuevo $1 páginas desactualizadas",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
+    },
+    "pageText_refreshStarted_one": {
+        "message": "Leyendo de nuevo $1 página desactualizada",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages (singular)"
     },
     "pageText_accessNote": {
         "message": "Al retirar el acceso a un sitio web, se elimina el texto indexado de ese sitio.",
@@ -8386,6 +8426,10 @@
     "pageText_tabFull": {
         "message": "El índice de texto de páginas está lleno. Usa Eliminar texto de páginas en Configuración para hacer sitio.",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "Este sitio está en No leer nunca estos sitios, en Configuración, así que sus páginas nunca se leen.",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "Vista del administrador",

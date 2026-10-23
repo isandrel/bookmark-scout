@@ -182,9 +182,12 @@ export type QuickSaveHostRequest =
 
 /**
  * What reading a page for Index Page Text found: its readable text, no text, or a page that asks
- * for a sign-in instead of showing its content, whose text is never kept.
+ * for a sign-in instead of showing its content, whose text is never kept. `truncated`: the page
+ * had more readable text than was asked for.
  */
-export type PageTextReading = { status: 'read'; text: string } | { status: 'empty' | 'signIn' };
+export type PageTextReading =
+  | { status: 'read'; text: string; truncated: boolean }
+  | { status: 'empty' | 'signIn' };
 
 export type QuickSaveHostResponse =
   | {

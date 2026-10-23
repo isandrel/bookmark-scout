@@ -37,13 +37,8 @@ export class JobBlockedError extends Error {
  * the job keeps it, and stops when the service changed, so the rest is never sent elsewhere.
  */
 export async function aiDestination(settings: AISettings): Promise<string> {
-  const text = JSON.stringify([settings.provider, settings.model, settings.baseUrl ?? null]);
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return [...new Uint8Array(digest)]
-    .map((byte) => byte.toString(HEX_RADIX).padStart(2, '0'))
-    .join('');
+  return sha256Hex(JSON.stringify([settings.provider, settings.model, settings.baseUrl ?? null]));
 }
-const HEX_RADIX = 16;
 
 export type JobStart = JobCommand & { type: 'start' };
 
@@ -147,6 +142,7 @@ const pageTextOptionsSchema = z.strictObject({
    */
   skipSecretUrls: z.boolean().optional(),
   sensitiveParams: z.array(z.string()).optional(),
+  excludedSites: z.array(z.string()).optional(),
 });
 /** A bookmark of an Index Page Text run, and whether its page is to be read (`planPageTextScan`). */
 const pageTextInputSchema = z.strictObject({
@@ -340,7 +336,8 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
         if (error instanceof RequestAbortedError || error instanceof JobBlockedError) throw error;
         return { outcome: 'failed', result: { ...result, status: 'failed' } };
       }
-      return { outcome: 'succeeded', result };
+      // A busy site still busy after its retries (`busy_retries`) could not be read either.
+      return { outcome: result.status === 'failed' ? 'failed' : 'succeeded', result };
     },
   },
   siteIcons: {
