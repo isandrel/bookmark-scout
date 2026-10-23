@@ -26,7 +26,9 @@
 # Raised from 465 on 2026-10-22 for Capture Covers While Browsing: the tab listener, the cover
 # pipeline's image size checks and shrinking, the cover store, and the Cover Source table run in the
 # service worker, which cannot load code later (470; 457 before).
-"background.js" = 480
+# Raised from 480 on 2026-10-22 for config tables bundled into the background (job view, approvals,
+# context menu priorities) on top of the quick save cover background code (482).
+"background.js" = 490
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,

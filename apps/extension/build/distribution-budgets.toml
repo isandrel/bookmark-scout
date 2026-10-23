@@ -247,19 +247,23 @@
 # background and the shared page chunk, so each value counts twice. Firefox measured ZIP 2,062,175,
 # 6,921,120 B uncompressed, and 3,937,297 B of JavaScript on refactor/config-cleanup rebased onto
 # 1e3c06b6, against main at 2,059,961, 6,912,668, and 3,929,657.
+# Raised on 2026-10-23 (uncompressed 6,925,000 to 6,940,000) for the config cleanup (tunables, size
+# tokens and approval and job tables moved into config, bundled into the background and the shared
+# page chunk) on top of the quick save cover and list Cover column changes. Measured on
+# refactor/config-cleanup rebased on main: 6,927,466 / 6,927,462 / 6,927,625 B (Chrome / Edge / Firefox).
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 2_070_000
-raw_bytes = 6_925_000
+raw_bytes = 6_940_000
 
 [targets.edge]
 zip_bytes = 2_070_000
-raw_bytes = 6_925_000
+raw_bytes = 6_940_000
 
 [targets.firefox]
 zip_bytes = 2_070_000
-raw_bytes = 6_925_000
+raw_bytes = 6_940_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
