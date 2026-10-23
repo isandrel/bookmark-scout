@@ -815,6 +815,26 @@
         "message": "Aktueller Tab",
         "description": "Open links in option: replace the page in the current tab"
     },
+    "settings_showLinkTarget": {
+        "message": "Zeigen, wo Links geöffnet werden",
+        "description": "Settings > Behavior > Links: label of the switch that shows an icon for where a clicked link opens"
+    },
+    "settings_showLinkTargetDesc": {
+        "message": "Ein kleines Symbol nach Links und in der Lesezeichenzeile unter dem Zeiger zeigt, ob ein Klick einen neuen Tab, einen Tab im Hintergrund oder diesen Tab öffnet",
+        "description": "Settings > Behavior > Links: description of the Show Where Links Open switch"
+    },
+    "link_opensInNewTab": {
+        "message": "Wird in einem neuen Tab geöffnet",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New tab"
+    },
+    "link_opensInBackgroundTab": {
+        "message": "Wird in einem Tab im Hintergrund geöffnet",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New background tab"
+    },
+    "link_opensInThisTab": {
+        "message": "Wird in diesem Tab geöffnet",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is Current tab: the click replaces the page shown"
+    },
     "settings_sortDate": {
         "message": "Hinzufügedatum",
         "description": "Date sort option"

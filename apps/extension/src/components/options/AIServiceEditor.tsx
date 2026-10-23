@@ -8,7 +8,6 @@ import {
   ChevronRight,
   CircleAlert,
   CircleCheck,
-  ExternalLink,
   Eye,
   EyeOff,
   RefreshCw,
@@ -467,7 +466,6 @@ export function AIServiceEditor({
               className="inline-flex items-center gap-1 text-primary underline-offset-4"
             >
               {t('options_providerDocs')}
-              <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
             </UrlLink>
           )}
         </div>
@@ -528,7 +526,6 @@ export function AIServiceEditor({
             className="-mt-2 inline-flex items-center gap-1 justify-self-start text-sm text-primary sm:col-start-2"
           >
             {t('aiOnboard_getKey', providerName)}
-            <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
           </UrlLink>
         )}
       </div>

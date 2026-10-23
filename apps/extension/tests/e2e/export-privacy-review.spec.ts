@@ -53,7 +53,8 @@ test('bookmark export lists sensitive fields and downloads the original on reque
       { exact: true },
     ),
   ).toBeVisible();
-  await expect(dialog.getByText(SECRET_URL, { exact: true })).toBeVisible();
+  // The link's name also says where it opens (the link target icon).
+  await expect(dialog.getByRole('link', { name: SECRET_URL })).toBeVisible();
   await expect(dialog.getByText('Sensitive query parameter: token', { exact: true })).toBeVisible();
   await expect(
     dialog.getByText('Email-like value in parameter: user', { exact: true }),

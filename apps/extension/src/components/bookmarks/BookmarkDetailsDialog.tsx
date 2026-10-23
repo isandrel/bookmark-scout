@@ -256,6 +256,7 @@ function BookmarkDetailsContent({
             onClick={(event) => onLinkClick(event, bookmarkUrl)}
           >
             {t('bookmarks_detailsOpenLink')}
+            <LinkTargetIcon />
           </a>
         ) : null}
         {!bookmarkUrl ? (

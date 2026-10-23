@@ -807,6 +807,26 @@
         "message": "目前分頁",
         "description": "Open links in option: replace the page in the current tab"
     },
+    "settings_showLinkTarget": {
+        "message": "顯示連結開啟位置",
+        "description": "Settings > Behavior > Links: label of the switch that shows an icon for where a clicked link opens"
+    },
+    "settings_showLinkTargetDesc": {
+        "message": "在連結後方以及游標所指的書籤列上顯示小圖示，表示點選後會在新分頁、背景分頁還是目前分頁中開啟",
+        "description": "Settings > Behavior > Links: description of the Show Where Links Open switch"
+    },
+    "link_opensInNewTab": {
+        "message": "在新分頁中開啟",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New tab"
+    },
+    "link_opensInBackgroundTab": {
+        "message": "在背景分頁中開啟",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New background tab"
+    },
+    "link_opensInThisTab": {
+        "message": "在目前分頁中開啟",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is Current tab: the click replaces the page shown"
+    },
     "settings_sortDate": {
         "message": "新增日期",
         "description": "Date sort option"

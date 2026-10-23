@@ -815,6 +815,26 @@
         "message": "Guia atual",
         "description": "Open links in option: replace the page in the current tab"
     },
+    "settings_showLinkTarget": {
+        "message": "Mostrar onde os links abrem",
+        "description": "Settings > Behavior > Links: label of the switch that shows an icon for where a clicked link opens"
+    },
+    "settings_showLinkTargetDesc": {
+        "message": "Mostra um pequeno ícone depois dos links, e na linha do favorito para a qual você aponta, indicando se um clique abre uma nova guia, uma guia em segundo plano ou esta guia",
+        "description": "Settings > Behavior > Links: description of the Show Where Links Open switch"
+    },
+    "link_opensInNewTab": {
+        "message": "Abre em uma nova guia",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New tab"
+    },
+    "link_opensInBackgroundTab": {
+        "message": "Abre em uma guia em segundo plano",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New background tab"
+    },
+    "link_opensInThisTab": {
+        "message": "Abre nesta guia",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is Current tab: the click replaces the page shown"
+    },
     "settings_sortDate": {
         "message": "Data de adição",
         "description": "Date sort option"

@@ -807,6 +807,26 @@
         "message": "현재 탭",
         "description": "Open links in option: replace the page in the current tab"
     },
+    "settings_showLinkTarget": {
+        "message": "링크 열기 위치 표시",
+        "description": "Settings > Behavior > Links: label of the switch that shows an icon for where a clicked link opens"
+    },
+    "settings_showLinkTargetDesc": {
+        "message": "링크 뒤와 포인터를 올린 북마크 행에 작은 아이콘을 표시해, 클릭하면 새 탭, 백그라운드 탭, 이 탭 중 어디에서 열리는지 알려 줍니다",
+        "description": "Settings > Behavior > Links: description of the Show Where Links Open switch"
+    },
+    "link_opensInNewTab": {
+        "message": "새 탭에서 열림",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New tab"
+    },
+    "link_opensInBackgroundTab": {
+        "message": "백그라운드 탭에서 열림",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New background tab"
+    },
+    "link_opensInThisTab": {
+        "message": "이 탭에서 열림",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is Current tab: the click replaces the page shown"
+    },
     "settings_sortDate": {
         "message": "추가일 순",
         "description": "Date sort option"

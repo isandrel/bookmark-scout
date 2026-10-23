@@ -139,7 +139,12 @@ test.describe('with website access granted', () => {
       'Too many redirects (or the redirect target could not be reached)',
     );
     await expect(row('Refused')).toContainText('Could not connect to the site');
-    await expect(row('Moved')).toContainText(`Redirects to ${site.origin}/plain on the same site`);
+    // The target is a link, whose text also says where it opens (the link target icon).
+    await expect(row('Moved')).toContainText(/Redirects to .+ on the same site/);
+    await expect(row('Moved').locator('[data-slot="dead-link-redirect"]')).toHaveAttribute(
+      'href',
+      `${site.origin}/plain`,
+    );
     await expect(row('Moved')).not.toContainText('HTTP 0');
     await expect(row('Bookmarklet')).toContainText('Not a web link; skipped');
     await expect(results).not.toContainText('Failed to fetch');

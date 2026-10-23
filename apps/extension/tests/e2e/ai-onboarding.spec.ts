@@ -78,7 +78,7 @@ test('Add service lists well-known providers first, the catalog by search, and a
 
   // The key field links to where OpenAI hands out keys.
   const keyLink = page.getByTestId('ai-provider-key-link');
-  await expect(keyLink).toHaveText('Get an API key from OpenAI');
+  await expect(keyLink).toHaveAccessibleName(/^Get an API key from OpenAI ?Opens in a new tab$/);
   await expect(keyLink).toHaveAttribute('href', 'https://platform.openai.com/api-keys');
 });
 

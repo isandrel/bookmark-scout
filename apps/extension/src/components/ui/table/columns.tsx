@@ -237,7 +237,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       return (
         <div className="flex min-w-0 items-center gap-2">
           <AddressIcon url={rowUrl} />
-          <UrlLink href={rowUrl} className="block min-w-0 truncate" title={rowUrl} />
+          <UrlLink href={rowUrl} truncate title={rowUrl} />
         </div>
       );
     },

@@ -14,6 +14,9 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
   const searchReason = searchReasonLabel(node.searchMatchReasons);
   // The hover card shows the whole title and address, so the plain tooltip would repeat it.
   const { value: hoverDetails } = useSetting('showHoverDetails');
+  // Where a click on the row goes; the icon for it shows with the row's hover actions.
+  const linkTarget = useLinkTarget();
+  const openable = !separator && isOpenableUrl(node.url);
 
   return (
     // At least one icon-button tall; a larger site icon grows the row instead of touching the next.
@@ -23,6 +26,7 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
         href={separator ? undefined : node.url}
         role="treeitem"
         aria-label={separator ? t('table_typeSeparator') : undefined}
+        aria-description={openable ? linkTarget?.label : undefined}
         aria-level={row.level}
         aria-posinset={row.posInSet}
         aria-setsize={row.setSize}
@@ -81,6 +85,7 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
         data-slot="bookmark-actions"
         className="pointer-events-none absolute inset-y-0.5 right-0.5 flex items-center rounded-r-sm bg-muted px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:bg-accent group-focus-within:opacity-100"
       >
+        {openable ? <LinkTargetIcon decorative className="mx-1" /> : null}
         <Button
           variant="ghost"
           size="icon-xs"
