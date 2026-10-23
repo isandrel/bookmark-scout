@@ -34,6 +34,9 @@
       "Drag and drop organization",
       "Side panel support (the sidebar in Firefox)",
       "Saved searches",
+      "Search inside saved pages, on your device (opt-in)",
+      "Smart Rules that tag and move bookmarks after a review",
+      "Card view with page covers (opt-in)",
       "Keyboard shortcuts",
       "Undo and redo in the bookmarks manager",
       "Dark mode",
@@ -135,9 +138,10 @@
         "caption": "The manager replaces Chrome's Bookmarks page and works like it, with a folder tree, breadcrumbs, and a sortable table.",
         "alt": "The Bookmark Scout manager on the AI / LLMs / Fine-tuning folder, with the folder tree (AI, Dev, Design, Tools, Reading list), one search box, and the bookmark table, each bookmark with its site's icon",
         "points": [
-          "Search all your bookmarks as you type, by title, address, folder, or tag",
+          "Search all your bookmarks as you type, by title, address, folder, tag, or summary, and, if you turn it on, by words inside the saved pages",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search, and it always shows the current results",
+          "Show your bookmarks as cards, with a picture of each page if you turn that on, kept on your computer",
           "Select several rows with {{SHORTCUT:mouse.select_toggle}}, right-click for cut, copy, paste, and open all, and drag bookmarks and folders where they belong",
           "Undo and redo changes with {{SHORTCUT:manager.undo}} and {{SHORTCUT:manager.redo}}, even after a reload",
           "Import bookmarks from a file after a preview, and export them as HTML, JSON, Markdown, or CSV",
@@ -154,6 +158,7 @@
           "Remove tracking codes from web addresses after a preview",
           "Find dead links and repair them: delete, use the redirect, point to an archived copy, or edit the URL",
           "Fetch page titles and apply only the ones you pick",
+          "Write rules, such as every page from one site, that add tags and move the matching bookmarks into a folder after a review, or tag new bookmarks as you save them",
           "Download each site's own icon, so bookmarks show it even in Firefox",
           "Undo deletions and cleanups from the message that follows",
           "See every change to your bookmarks in the History, even ones made outside Bookmark Scout, and get deleted ones back, even after the browser restarts"
@@ -189,7 +194,7 @@
           "detail": "Synced by your browser account if sync is on"
         },
         "keys": {
-          "name": "Tags, saved searches, and your AI key",
+          "name": "Tags, saved searches, page text and pictures, and your AI key",
           "detail": "Kept on this device only"
         },
         "ai": {
@@ -198,7 +203,7 @@
         },
         "websites": {
           "name": "Websites you check",
-          "detail": "Only when you check links or fetch titles and site icons, after you allow it"
+          "detail": "Only when you check links, fetch titles, icons, or page pictures, or read page text for search, after you allow it"
         },
         "agents": {
           "name": "AI programs on your computer",
@@ -272,7 +277,7 @@
       "items": {
         "data": {
           "q": "Does Bookmark Scout send my bookmarks anywhere?",
-          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the AI company you chose; checking links and fetching titles and site icons contact the bookmarked websites, after you allow it; and AI programs on your own computer that you connect (a feature for developers) get what they look up. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
+          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the AI company you chose; checking links, fetching titles, site icons, and page pictures, and reading page text for search contact the bookmarked websites, after you allow it; and AI programs on your own computer that you connect (a feature for developers) get what they look up. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
         },
         "needAi": {
           "q": "Do I need to use AI?",
@@ -284,7 +289,7 @@
         },
         "changes": {
           "q": "Will it change my bookmarks without asking?",
-          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. AI features show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with {{SHORTCUT:manager.undo}}."
+          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, rule runs, and imports all show a review before anything is written. AI features show their changes as a plan and wait for your approval. Your own rules change new bookmarks by themselves only if you turn that on. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "Does it work in Firefox and Edge?",

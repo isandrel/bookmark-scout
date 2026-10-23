@@ -15,11 +15,11 @@ No. AI is optional. Saving, search, organizing, cleanup, and import and export a
 
 ### Does it send my bookmarks anywhere?
 
-Not to the developer: there is no Bookmark Scout server. Data leaves your browser only when you use an AI tool you turned on (it goes to your provider), run a dead link check or title fetch (the bookmarked websites are requested), or let local AI agents look up your bookmarks (they get what they ask for through a program on your computer). See [Privacy](/privacy).
+Not to the developer: there is no Bookmark Scout server. Data leaves your browser only when you use an AI tool you turned on (it goes to your provider), run a dead link check, title fetch, site icon refresh, page text index, or cover fetch (the bookmarked websites are requested), or let local AI agents look up your bookmarks (they get what they ask for through a program on your computer). See [Privacy](/privacy).
 
 ### Will it change my bookmarks without asking?
 
-No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. **Ask AI** and local AI agents show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, deletions, cleanups, and imports can be undone from their message, and the bookmarks manager undoes its changes with <Shortcut id="manager.undo" />.
+No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. **Ask AI** and local AI agents show their changes as a plan and wait for your approval. Smart Rules show a review before each run, and change new bookmarks on their own only if you turn on **Tag New Bookmarks** or **Move New Bookmarks**. Deleting asks for confirmation by default, deletions, cleanups, and imports can be undone from their message, and the bookmarks manager undoes its changes with <Shortcut id="manager.undo" />.
 
 ### Which browser stores list it?
 
@@ -79,7 +79,7 @@ The popup shows the browser's saved order with the **Browser Order** sort (the d
 
 ### Search says there are more matches than it shows
 
-Results stop at **Max Search Results** (20 by default). Refine the search, or raise the limit in [Settings](/settings#search).
+Results stop at **Max Search Results** (<SettingDefault path="search.search.max_results" /> by default). Refine the search, or raise the limit in [Settings](/settings#search).
 
 ### My tags, summaries, or saved searches are missing on another computer
 

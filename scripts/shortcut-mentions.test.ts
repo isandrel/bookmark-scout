@@ -70,11 +70,11 @@ describe("shortcuts are never typed by hand", () => {
 });
 
 /**
- * A mouse gesture typed by hand ("Ctrl+click", "Cmd/Ctrl-click", "Strg-Klick"), in any language
- * the docs and website use: gestures are `mouse.*` shortcuts too.
+ * A mouse gesture typed by hand ("Ctrl+click", "`Cmd`+click", "Cmd/Ctrl-click", "Strg-Klick"), in
+ * any language the docs and website use: gestures are `mouse.*` shortcuts too.
  */
 const MOUSE_LITERAL =
-	/\b(?:Ctrl|Cmd|Command|Strg|Shift|Mayús|Option|Alt)(?:\/(?:Ctrl|Cmd|Strg))?\s?[+-]\s?(?:click|clic|clique|klick|クリック|클릭|点击|點選|點擊)|\b(?:Cmd\/Ctrl|Ctrl\/Cmd|Cmd\/Strg)\b/gi;
+	/\b(?:Ctrl|Cmd|Command|Strg|Shift|Mayús|Option|Alt)`?(?:\/(?:Ctrl|Cmd|Strg)`?)?\s?[+-]\s?(?:click|clic|clique|klick|klik|щелч[а-яё]*|クリック|클릭|点击|點選|點擊)|\b(?:Cmd\/Ctrl|Ctrl\/Cmd|Cmd\/Strg)\b/gi;
 
 describe("mouse gestures are never typed by hand", () => {
 	test.each([

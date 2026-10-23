@@ -18,10 +18,12 @@ A reference list of what ships now. For step-by-step instructions, follow the gu
 
 ## Find
 
-- Search titles and URLs as you type, with match case, whole word, and pattern search (regular expression) options under **More search options**, and highlighted matches. Matching folders open automatically.
+- Search titles, addresses, folders, tags, and summaries as you type, in the popup, the side panel, and the manager, with highlighted matches. Operators such as `tag:`, `domain:`, and `after:` narrow a search, `OR` finds either of two terms, and parentheses group them; **Search syntax** in the manager lists them. In the popup, matching folders open automatically, and **More search options** adds match case, whole word, and pattern search (regular expression) for titles.
 - Recent searches on this device, which you can clear or turn off.
-- Table filters in the manager for title, URL, type, folder, domain, and date added, with sorting by any column.
+- **Filters** in the manager for type, domain, folder, date added, and web address, each shown as a chip you can remove, with sorting by any column. A row or card the search found by its address, tags, summary, or page text says where it matched.
 - Saved searches: named filter sets that are evaluated against your bookmarks each time you open them. Up to 50, kept on this device.
+- With **Index Page Text** on, search also finds words inside the pages you indexed: `content:` looks only in page text, and `has:content` finds the bookmarks that have it. See [Search inside pages](/guides/clean-up#search-inside-pages).
+- In the manager, **Cards** show each bookmark with its cover, tags, and summary, and the list can add **Tags** and **Summary** columns; **Preview** (<Shortcut id="manager.preview" />) shows a bookmark's details. In the popup and side panel, resting the pointer on a bookmark shows its details in a card (**Show Details on Hover**).
 
 Guide: [Search and saved searches](/guides/search).
 
@@ -46,16 +48,16 @@ Guide: [Save and organize](/guides/save-and-organize).
 
 - **Duplicate Cleaner**: finds duplicates with configurable matching, and removes the extra copies after a review, with undo.
 - **URL Cleaner**: strips tracking parameters such as `utm_source` after a preview.
-- **Smart Rules**: rules you write as searches, such as `domain:github.com`, that add tags and move bookmarks to a folder after a review, with undo. See [Tag and move with Smart Rules](/guides/clean-up#tag-and-move-with-smart-rules).
+- **Smart Rules**: rules you write as searches, such as `domain:github.com`, that add tags and move bookmarks to a folder after a review, with undo; **Test with an address or title** shows whether a rule matches before you run it. Large runs are applied in the background, and Settings shows each rule's last run and its conflicts. If you turn them on, **Tag New Bookmarks** tags new bookmarks as they are added, and **Move New Bookmarks** moves them to the folder of a rule you set to move new bookmarks automatically. See [Tag and move with Smart Rules](/guides/clean-up#tag-and-move-with-smart-rules).
 - **Check Dead Links**: separates confirmed dead links from ones that need a manual check, and repairs them by deleting, following a redirect, using a Wayback Machine link, or editing the URL, with undo. It runs in the background, so it keeps going after you close the manager, and can be paused, resumed, or cancelled under **Background tasks**.
 - **Metadata Fetcher**: suggests titles from the live pages, reading only the page head, and applies the ones you select. Descriptions are shown for review and never saved. It runs in the background, like **Check Dead Links**.
 - **Refresh Site Icons**: downloads each website's own icon, after a review, so bookmarks show it even when the browser has none cached, and in Firefox. Icons stay on this device and can be cleared. It runs in the background, like **Check Dead Links**.
-- **Index Page Text** (off until you turn it on): keeps the readable text of the pages you choose on this device, after a review, so search finds words inside them, with `content:` and `has:content`. See [Search inside pages](/guides/clean-up#search-inside-pages).
-- **Fetch Covers** (off until you turn it on): keeps a small copy of the preview image each page names for itself on this device, after a review, and the manager's **Cards** and the list's **Cover** column show it. **Capture Covers While Browsing** (off until you turn it on) takes a screenshot of a bookmarked page as its cover when you open it. See [Show covers on cards](/guides/clean-up#show-covers-on-cards).
+- **Index Page Text** (off until you turn it on): keeps the readable text of the pages you choose on this device, after a review, so search finds words inside them, with `content:` and `has:content`. It runs in the background, reads only the sites you choose, lists sign-in pages apart, and asks a busy site again later; **Retry failed** and **Refresh outdated** in Settings read pages again, and the popup's **Index this page's text** keeps the text of the tab you are viewing. See [Search inside pages](/guides/clean-up#search-inside-pages).
+- **Fetch Covers** (off until you turn it on): keeps a small copy of the preview image each page names for itself on this device, after a review, and the manager's **Cards** and the list's **Cover** column show it. **Capture Covers While Browsing** (off until you turn it on) takes a screenshot of a bookmarked page as its cover when you open it. **Cover Source** chooses which of the two wins, or uses only one; **Use this view as the cover** in the popup keeps a picture of the tab you are viewing, and **Save a Cover With Quick Save** (off by default) keeps a cover when you quick save. A bookmark's menu offers **Fetch cover** and **Remove cover**, and a card without a cover shows a tile with its site's icon and name. See [Show covers on cards](/guides/clean-up#show-covers-on-cards).
 - **Privacy Scanner**: flags URLs, and optionally titles, that contain tokens, sensitive parameters, email addresses, or UUIDs.
 - **Bookmark Statistics**: top domains and folders, protocols, duplicates, and how deep your folders go, for a folder or all bookmarks.
 
-Guides: [Clean up duplicates and tracking URLs](/guides/clean-up) and [Find and repair dead links](/guides/dead-links).
+Guides: [Clean up and enrich bookmarks](/guides/clean-up) and [Find and repair dead links](/guides/dead-links).
 
 ## Import and export
 
@@ -89,7 +91,7 @@ Guide: [Use with local AI agents](/guides/local-agents).
 
 - Quick save shortcuts on any page, which you can change in the browser's shortcut settings, or in Firefox right in Bookmark Scout's Settings.
 - Shortcuts in the popup and side panel that never use `Ctrl` or `Cmd`, and in the manager the keys of Chrome's bookmark manager (select all, undo, redo, open in tabs), with a <Shortcut id="manager.show_help" /> help dialog there. See [Keyboard shortcuts](/guides/keyboard-shortcuts).
-- Selection in the manager like Chrome's: click, `Cmd`+click (`Ctrl`+click on Windows and Linux), `Shift`+click, and <Shortcut id="manager.select_all" />; the arrow keys move through the table and the folder tree, which screen readers hear as a tree.
+- Selection in the manager like Chrome's: click, <Shortcut id="mouse.select_toggle" />, <Shortcut id="mouse.select_range" />, and <Shortcut id="manager.select_all" />; the arrow keys move through the table and the folder tree, which screen readers hear as a tree.
 - Undo and redo of the manager's edits, moves, and deletions with <Shortcut id="manager.undo" /> and <Shortcut id="manager.redo" />, for the whole browser session.
 - Right-click menus on the manager's rows and folders: cut, copy, and paste, open all in tabs, a new window, or an incognito window, rename, and delete; plus **Sort by name** and **Add new bookmark** or **folder**. **Bookmark manager menus** in Settings chooses which commands they show, and in what order.
 - Drag and drop in the manager like Chrome's: onto folders in the table or tree, between rows in browser order, and links in from other pages; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" />, and <Shortcut id="manager.paste" /> copy, move, and paste.

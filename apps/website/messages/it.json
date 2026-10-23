@@ -34,6 +34,9 @@
       "Organizzazione tramite trascinamento",
       "Supporto del riquadro laterale (la barra laterale in Firefox)",
       "Ricerche salvate",
+      "Ricerca all'interno delle pagine salvate, sul tuo dispositivo (facoltativa)",
+      "Regole intelligenti che aggiungono tag e spostano i preferiti dopo una revisione",
+      "Vista a riquadri con le copertine delle pagine (facoltativa)",
       "Scorciatoie da tastiera",
       "Annulla e ripeti nella gestione preferiti",
       "Modalità scura",
@@ -135,9 +138,10 @@
         "caption": "La gestione preferiti sostituisce la pagina Preferiti di Chrome e funziona allo stesso modo, con un albero delle cartelle, il percorso di navigazione e una tabella ordinabile.",
         "alt": "La gestione preferiti di Bookmark Scout sulla cartella AI / LLMs / Fine-tuning, con l'albero delle cartelle (AI, Dev, Design, Tools, Reading list), una casella di ricerca e la tabella dei preferiti, ognuno con l'icona del suo sito",
         "points": [
-          "Cerca in tutti i tuoi preferiti mentre digiti, per titolo, indirizzo, cartella o tag",
+          "Cerca in tutti i tuoi preferiti mentre digiti, per titolo, indirizzo, cartella, tag o riassunto e, se lo attivi, per le parole all'interno delle pagine salvate",
           "Tieni aperti lo stesso albero e la stessa ricerca nel riquadro laterale del browser (la barra laterale in Firefox)",
           "Salva una ricerca: mostrerà sempre i risultati aggiornati",
+          "Mostra i tuoi preferiti come riquadri, con un'immagine di ogni pagina se lo attivi, conservata sul tuo computer",
           "Seleziona più righe con {{SHORTCUT:mouse.select_toggle}}, fai clic con il tasto destro per tagliare, copiare, incollare e aprire tutto, e trascina preferiti e cartelle dove devono stare",
           "Annulla e ripeti le modifiche con {{SHORTCUT:manager.undo}} e {{SHORTCUT:manager.redo}}, anche dopo aver ricaricato la pagina",
           "Importa i preferiti da un file dopo un'anteprima ed esportali in HTML, JSON, Markdown o CSV",
@@ -154,6 +158,7 @@
           "Rimuovi i codici di tracciamento dagli indirizzi web dopo un'anteprima",
           "Trova i link non funzionanti e riparali: elimina, usa il reindirizzamento, punta a una copia archiviata o modifica l'URL",
           "Recupera i titoli delle pagine e applica solo quelli che scegli",
+          "Scrivi regole, ad esempio per tutte le pagine di un sito, che aggiungono tag e spostano i preferiti corrispondenti in una cartella dopo una revisione, oppure aggiungono tag ai nuovi preferiti mentre li salvi",
           "Scarica l'icona di ogni sito direttamente dal sito, così i preferiti la mostrano anche in Firefox",
           "Annulla eliminazioni e pulizie dal messaggio che compare subito dopo",
           "Visualizza nella Cronologia ogni modifica ai tuoi preferiti, anche quelle fatte fuori da Bookmark Scout, e recupera quelli eliminati, anche dopo un riavvio del browser"
@@ -189,7 +194,7 @@
           "detail": "Sincronizzate dall'account del browser, se la sincronizzazione è attiva"
         },
         "keys": {
-          "name": "Tag, ricerche salvate e la tua chiave IA",
+          "name": "Tag, ricerche salvate, testo e immagini delle pagine, e la tua chiave IA",
           "detail": "Conservati solo su questo dispositivo"
         },
         "ai": {
@@ -198,7 +203,7 @@
         },
         "websites": {
           "name": "I siti web che controlli",
-          "detail": "Solo quando controlli i link o recuperi titoli e icone dei siti, dopo averlo consentito"
+          "detail": "Solo quando controlli i link, recuperi titoli, icone o immagini delle pagine, o leggi il testo delle pagine per la ricerca, dopo averlo consentito"
         },
         "agents": {
           "name": "Programmi di IA sul tuo computer",
@@ -272,7 +277,7 @@
       "items": {
         "data": {
           "q": "Bookmark Scout invia i miei preferiti da qualche parte?",
-          "a": "No. I tuoi preferiti vengono letti e modificati all'interno del browser e l'estensione non invia nulla allo sviluppatore. I dati lasciano il browser solo quando usi una funzione facoltativa: le richieste all'IA vanno all'azienda di IA che hai scelto; il controllo dei link e il recupero di titoli e icone dei siti contattano i siti web salvati, dopo che l'hai consentito; e i programmi di IA sul tuo computer che colleghi (una funzione per sviluppatori) ricevono ciò che consultano. Le impostazioni si sincronizzano tramite l'account del browser, se la sincronizzazione del browser è attiva. L'<privacy>informativa sulla privacy</privacy> contiene i dettagli."
+          "a": "No. I tuoi preferiti vengono letti e modificati all'interno del browser e l'estensione non invia nulla allo sviluppatore. I dati lasciano il browser solo quando usi una funzione facoltativa: le richieste all'IA vanno all'azienda di IA che hai scelto; il controllo dei link, il recupero di titoli, icone dei siti e immagini delle pagine, e la lettura del testo delle pagine per la ricerca contattano i siti web salvati, dopo che l'hai consentito; e i programmi di IA sul tuo computer che colleghi (una funzione per sviluppatori) ricevono ciò che consultano. Le impostazioni si sincronizzano tramite l'account del browser, se la sincronizzazione del browser è attiva. L'<privacy>informativa sulla privacy</privacy> contiene i dettagli."
         },
         "needAi": {
           "q": "Devo per forza usare l'IA?",
@@ -284,7 +289,7 @@
         },
         "changes": {
           "q": "Modificherà i miei preferiti senza chiedere?",
-          "a": "No. Pulizia dei duplicati, pulizia degli URL, riparazione dei link non funzionanti, titoli recuperati, riorganizzazione con IA e importazioni mostrano tutte una revisione prima di scrivere qualsiasi cosa. Le funzioni IA mostrano le modifiche come un piano e attendono la tua approvazione. Per impostazione predefinita l'eliminazione chiede una conferma, e la gestione preferiti può annullare le modifiche con {{SHORTCUT:manager.undo}}."
+          "a": "No. Pulizia dei duplicati, pulizia degli URL, riparazione dei link non funzionanti, titoli recuperati, riorganizzazione con IA, esecuzioni delle regole e importazioni mostrano tutte una revisione prima di scrivere qualsiasi cosa. Le funzioni IA mostrano le modifiche come un piano e attendono la tua approvazione. Le tue regole modificano da sole i nuovi preferiti solo se lo attivi. Per impostazione predefinita l'eliminazione chiede una conferma, e la gestione preferiti può annullare le modifiche con {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "Funziona in Firefox ed Edge?",

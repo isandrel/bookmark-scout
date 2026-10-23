@@ -1,4 +1,4 @@
-{# source: 755c10623769 #}
+{# source: e22425e92aee #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -35,8 +35,8 @@
 
 - 📁 **Simpan ke folder yang tepat dengan mengetik namanya.** Ketik beberapa huruf, bahkan untuk folder yang terselip jauh di dalam folder lain, lalu tekan Enter. Salah ketik kecil tetap cocok.
 - ⚡ **Simpan dengan satu pintasan.** Tekan {{ shortcuts["commands.quick-save"].both }} di halaman mana pun. Pesan kecil menunjukkan ke mana halaman disimpan, dengan **Urungkan** dan folder lain untuk memindahkannya.
-- 🔎 **Temukan apa pun yang sudah Anda simpan.** Telusuri semua bookmark sambil mengetik, dari toolbar, panel samping, atau pengelola bookmark satu halaman penuh.
-- 🧹 **Rapikan bookmark bertahun-tahun.** Hapus duplikat, temukan link yang sudah tidak berfungsi, dan buang kode pelacakan dari alamat web. Anda melihat setiap perubahan sebelum terjadi, dan bisa mengurungkannya.
+- 🔎 **Temukan apa pun yang sudah Anda simpan.** Telusuri semua bookmark sambil mengetik, dari toolbar, panel samping, atau pengelola bookmark satu halaman penuh, yang juga bisa menampilkan bookmark Anda sebagai kartu dengan gambar setiap halaman. Jika Anda mengaktifkannya, penelusuran juga menemukan kata di dalam halaman yang Anda simpan.
+- 🧹 **Rapikan bookmark bertahun-tahun.** Hapus duplikat, temukan link yang sudah tidak berfungsi, buang kode pelacakan dari alamat web, dan buat aturan Anda sendiri yang menambahkan tag dan memindahkan bookmark ke folder. Perapian dan aturan menunjukkan setiap perubahan kepada Anda sebelum terjadi, dan Anda bisa mengurungkannya.
 - 🕘 **Lihat setiap perubahan, dan kembalikan bookmark yang terhapus.** Histori mencantumkan setiap perubahan pada bookmark Anda, termasuk yang dibuat di luar Bookmark Scout, dan mengembalikan yang dihapus, bahkan setelah browser dimulai ulang. Semuanya tetap di komputer Anda.
 - ✨ **Saran AI opsional.** Biarkan AI memilihkan folder untuk Anda, dengan akun AI Anda sendiri atau model AI gratis di komputer Anda sendiri, seperti yang sudah ada di Chrome. AI tetap nonaktif sampai Anda mengaktifkannya.
 - 🔒 **Privat sejak dirancang.** Tanpa akun, tanpa iklan, tanpa pelacakan, dan tidak ada yang dikirim ke developer. Menyimpan dan menelusuri bahkan berfungsi saat offline.
