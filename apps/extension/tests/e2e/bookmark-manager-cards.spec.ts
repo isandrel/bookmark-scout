@@ -715,3 +715,54 @@ test.describe('opening from a card', () => {
     await expect.poll(added).toEqual(['https://open.e2e.invalid/']);
   });
 });
+
+test('a card keeps its checkbox, site icon, and menu beside the first line of a two-line title', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Card Align', [
+    { title: 'Short', url: 'https://short.e2e.invalid/' },
+    {
+      title: 'A title long enough to wrap onto a second line inside one card of the grid',
+      url: 'https://long.e2e.invalid/',
+    },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await page
+    .getByRole('group', { name: 'Manager View' })
+    .getByRole('button', { name: 'Cards' })
+    .click();
+  const cards = page.locator('[data-slot="bookmark-card"]');
+  await expect(cards).toHaveCount(2);
+
+  // Each part's vertical center against the center of the title's first line.
+  const offsets = (title: string) =>
+    cards.filter({ hasText: title }).evaluate((card) => {
+      const center = (element: Element | null) => {
+        if (!element) throw new Error('missing part');
+        const box = element.getBoundingClientRect();
+        return box.top + box.height / 2;
+      };
+      const titleText = card.querySelector('[role="gridcell"] span[title]');
+      if (!titleText) throw new Error('missing title');
+      const lineHeight = Number.parseFloat(getComputedStyle(titleText).lineHeight);
+      const firstLine = titleText.getBoundingClientRect().top + lineHeight / 2;
+      return {
+        lines: Math.round(titleText.getBoundingClientRect().height / lineHeight),
+        checkbox: center(card.querySelector('[role="checkbox"]')) - firstLine,
+        icon: center(titleText.parentElement?.previousElementSibling ?? null) - firstLine,
+        menu: center(card.querySelector('button[aria-label="Open menu"]')) - firstLine,
+      };
+    });
+
+  const short = await offsets('Short');
+  const long = await offsets('A title long enough');
+  expect(short.lines).toBe(1);
+  expect(long.lines).toBe(2);
+  for (const result of [short, long]) {
+    for (const part of ['checkbox', 'icon', 'menu'] as const) {
+      expect(Math.abs(result[part]), part).toBeLessThanOrEqual(1.5);
+    }
+  }
+});
