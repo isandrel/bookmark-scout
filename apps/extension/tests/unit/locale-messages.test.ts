@@ -229,6 +229,14 @@ describe('plural message variants', () => {
     expect(formatBundledMessage(byLocale.en.messages.tools_urlCleanerDialogDesc_one, '1')).toBe(
       '1 bookmark can be cleaned',
     );
+    expect(formatBundledMessage(byLocale.en.messages.history_itemInside_one, '1')).toBe(
+      '1 item inside',
+    );
+    // The coverage line picks its form by the bookmarks that can be indexed ($1) and shows the
+    // formatted counts ($2 and $3).
+    expect(
+      formatBundledMessage(byLocale.en.messages.pageText_coverageIndexed_one, ['1', '0', '1']),
+    ).toBe('Indexed: 0 of 1 bookmark that can be indexed');
   });
 });
 

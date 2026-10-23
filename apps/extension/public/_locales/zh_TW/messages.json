@@ -8610,8 +8610,8 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "已索引：可索引的 $2 個書籤中的 $1 個",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "已索引：可索引的 $3 個書籤中的 $2 個",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
     },
     "pageText_coverageStale": {
         "message": "已過期：$1 個（讀取自以前的網址或由舊版本讀取；下次執行時會重新讀取）",

@@ -118,7 +118,7 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
   const clearHistory = async () => {
     try {
       const { removed, kept } = await clearAuditHistory();
-      toast.success({ title: t('history_cleared', [String(removed), String(kept)]) });
+      toast.success({ title: tPlural('history_cleared', removed, [String(kept)]) });
     } catch (error) {
       toast.error({ title: t('history_unavailable'), description: getErrorMessage(error) });
     }
@@ -196,7 +196,7 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
           ) : (
             <>
               {state.corrupt > 0 ? (
-                <Notice tone="warning">{t('history_corrupt', String(state.corrupt))}</Notice>
+                <Notice tone="warning">{tPlural('history_corrupt', state.corrupt)}</Notice>
               ) : null}
               {groups.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-12 text-center">
@@ -431,8 +431,7 @@ function HistoryRecordDetails({
       if (outcome.alreadyUndone) toast({ title: t('qaManager_alreadyUndone') });
       else if (outcome.parentMissing > 0) {
         toast.error({
-          title: t('history_restoredPartial', [
-            String(outcome.restored),
+          title: tPlural('history_restoredPartial', outcome.restored, [
             String(outcome.parentMissing),
           ]),
         });
@@ -520,7 +519,7 @@ function HistoryRecordDetails({
               ) : verification?.status === 'failed' ? (
                 <span className="inline-flex items-center gap-1.5 text-warning">
                   <CircleAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  {t('history_verifyFailed', String(verification.mismatchCount ?? 0))}
+                  {tPlural('history_verifyFailed', verification.mismatchCount ?? 0)}
                 </span>
               ) : (
                 t('history_verifyNotRun')
@@ -632,7 +631,7 @@ function HistoryRecordDetails({
           ) : null}
           {details.omitted > 0 ? (
             <p className="text-xs text-muted-foreground">
-              {t('history_omitted', String(details.omitted))}
+              {tPlural('history_omitted', details.omitted)}
             </p>
           ) : null}
         </>
@@ -782,9 +781,7 @@ function HistoryItemRow({
           <BeforeAfter before={item.before?.url ?? ''} after={item.after?.url ?? ''} mono />
         ) : null}
         {item.descendants ? (
-          <p className="text-muted-foreground">
-            {t('history_itemInside', String(item.descendants))}
-          </p>
+          <p className="text-muted-foreground">{tPlural('history_itemInside', item.descendants)}</p>
         ) : null}
         {reason ? <p className="text-warning">{reason}</p> : null}
       </div>

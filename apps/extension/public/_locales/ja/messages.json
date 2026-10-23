@@ -8900,8 +8900,8 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "インデックス済み: インデックス可能なブックマーク $2 件中 $1 件",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "インデックス済み: インデックス可能なブックマーク $3 件中 $2 件",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
     },
     "pageText_coverageStale": {
         "message": "古い: $1 件 (以前のアドレスまたは古いバージョンで読み込んだもの。次回の実行で読み込み直します)",

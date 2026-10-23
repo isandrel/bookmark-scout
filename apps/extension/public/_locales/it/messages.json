@@ -7857,6 +7857,10 @@
         "message": "$1 record rimossi. $2 conservati perché ancora da verificare.",
         "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
     },
+    "history_cleared_one": {
+        "message": "$1 record rimosso. $2 conservati perché ancora da verificare.",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
     "history_loading": {
         "message": "Caricamento…",
         "description": "Shown while History records load."
@@ -7867,6 +7871,10 @@
     },
     "history_corrupt": {
         "message": "$1 record non possono essere letti e non vengono mostrati.",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_corrupt_one": {
+        "message": "$1 record non può essere letto e non viene mostrato.",
         "description": "Notice when stored History records could not be read. $1 is how many."
     },
     "history_empty": {
@@ -7993,6 +8001,10 @@
         "message": "Verificato dopo la modifica: $1 elementi non sono come li ha lasciati.",
         "description": "History detail: $1 items did not read back as the change left them."
     },
+    "history_verifyFailed_one": {
+        "message": "Verificato dopo la modifica: $1 elemento non è come l'ha lasciato.",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
     "history_verifyNotRun": {
         "message": "Non verificato: non è stato modificato nulla.",
         "description": "History detail: nothing was changed, so nothing was checked."
@@ -8033,6 +8045,10 @@
         "message": "Altri $1 elementi non sono stati conservati in questo record.",
         "description": "History detail: $1 items of a very large change were not kept in its record."
     },
+    "history_omitted_one": {
+        "message": "$1 altro elemento non è stato conservato in questo record.",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
     "history_folderGone": {
         "message": "una cartella che non esiste più (id $1)",
         "description": "History: a folder that no longer exists. $1 is its old id."
@@ -8055,6 +8071,10 @@
     },
     "history_itemInside": {
         "message": "$1 elementi contenuti",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_itemInside_one": {
+        "message": "$1 elemento contenuto",
         "description": "History item: a deleted or added folder held $1 items at every depth."
     },
     "history_changeCreate": {
@@ -8199,6 +8219,10 @@
     },
     "history_restoredPartial": {
         "message": "$1 elementi ripristinati; $2 non sono potuti tornare perché la loro cartella non esiste più.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "history_restoredPartial_one": {
+        "message": "$1 elemento ripristinato; $2 non sono potuti tornare perché la loro cartella non esiste più.",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
     },
     "settings_sectionDates": {
@@ -8928,8 +8952,12 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "Indicizzati: $1 di $2 segnalibri indicizzabili",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "Indicizzati: $2 di $3 segnalibri indicizzabili",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
+    },
+    "pageText_coverageIndexed_one": {
+        "message": "Indicizzati: $2 di $3 segnalibro indicizzabile",
+        "description": "Page text coverage when one bookmark can be indexed (or the language's singular form). $2 indexed, $3 can be indexed."
     },
     "pageText_coverageStale": {
         "message": "Non aggiornati: $1 (letti a un indirizzo precedente o da una versione precedente; l'esecuzione successiva li rilegge)",

@@ -8586,8 +8586,8 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "Terindeks: $1 dari $2 bookmark yang dapat diindeks",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "Terindeks: $2 dari $3 bookmark yang dapat diindeks",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
     },
     "pageText_coverageStale": {
         "message": "Usang: $1 (dibaca dari alamat sebelumnya atau oleh versi lama; proses berikutnya membacanya lagi)",

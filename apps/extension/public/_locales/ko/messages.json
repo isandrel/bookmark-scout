@@ -8900,8 +8900,8 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "색인됨: 색인할 수 있는 북마크 $2개 중 $1개",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "색인됨: 색인할 수 있는 북마크 $3개 중 $2개",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
     },
     "pageText_coverageStale": {
         "message": "오래됨: $1개 (이전 주소나 이전 버전에서 읽음, 다음 실행 때 다시 읽음)",
