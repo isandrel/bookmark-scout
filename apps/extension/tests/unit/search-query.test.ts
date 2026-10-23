@@ -102,6 +102,43 @@ describe('the search query language', () => {
     expect(find('path:tools', library)).toEqual(['hooks']);
   });
 
+  it('finds a folder whose name has a slash in it, as one name or in a path', () => {
+    const documents = buildSearchDocuments(
+      tree([
+        {
+          id: 'cicd',
+          parentId: '1',
+          title: 'CI/CD',
+          children: [
+            bookmark('pipelines', 'Pipelines', 'https://b.example/'),
+            {
+              id: 'deploy',
+              parentId: 'cicd',
+              title: 'Deploy',
+              children: [bookmark('rollout', 'Rollout', 'https://c.example/')],
+            },
+          ],
+        },
+        {
+          id: 'ci',
+          parentId: '1',
+          title: 'CI',
+          children: [bookmark('lint', 'Lint', 'https://d.example/')],
+        },
+      ]),
+      {},
+    );
+    expect(find('folder:CI/CD', documents)).toEqual(['pipelines', 'deploy', 'rollout']);
+    expect(find('folder:"CI/CD"', documents)).toEqual(['pipelines', 'deploy', 'rollout']);
+    expect(find('folder:"CI/CD / Deploy"', documents)).toEqual(['rollout']);
+    // A slash still separates folder names where no folder has it in its name.
+    expect(find('folder:"Work/AI"', library)).toEqual(['tools', 'hooks']);
+    expect(find('folder:CI', documents)).toEqual(['lint']);
+    // The highlight covers the whole name in the path.
+    const [result] = searchDocuments(documents, parseSearchQuery('folder:CI/CD').query);
+    expect(result?.reasons).toEqual([{ field: 'folder', ranges: [[0, 5]] }]);
+  });
+
   it('keeps a phrase together, and plain words apart but all required (U06, U07)', () => {
     expect(find('title:"system design"', library)).toEqual(['design']);
     expect(find('system design', library).sort()).toEqual(['design', 'split']);

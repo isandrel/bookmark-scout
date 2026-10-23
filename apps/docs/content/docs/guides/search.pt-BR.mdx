@@ -39,7 +39,7 @@ As caixas de pesquisa do pop-up, do painel lateral e do gerenciador leem uma pes
 - Um `-` na frente deixa de fora o que corresponde: `receitas -bolo` ou `-tag:arquivo`.
 - `OR` em maiúsculas, entre dois termos, encontra qualquer um dos dois: `tag:react OR tag:vue`. Ele se liga mais forte que o espaço, então `domain:github.com tag:react OR tag:vue` encontra páginas do GitHub com qualquer uma das duas tags. Um `or` em minúsculas é só mais uma palavra a procurar.
 - Parênteses agrupam termos: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Um `-` na frente de um grupo deixa de fora o que o grupo encontra: `-(tag:old OR tag:archive)`. Parênteses dentro de uma palavra, como `f(x)`, são pesquisados como texto.
-- Uma palavra que nomeia uma pasta encontra a pasta. No pop-up, os favoritos dela aparecem dentro dela; `folder:` lista tudo o que há nela.
+- Uma palavra que nomeia uma pasta encontra a pasta. No pop-up, os favoritos dela aparecem dentro dela; `folder:` lista tudo o que há nela. Quando outros termos deixam a pasta de fora, como `work is:bookmark`, os favoritos dela que correspondem são encontrados no lugar.
 - Texto que não é um operador é pesquisado como digitado, como `C++`, `10:30` ou um endereço da web. O mesmo vale para um operador que o Bookmark Scout não conhece, como `foo:bar`. Um valor que ele não consegue ler, como uma data inválida, é ignorado. Uma nota abaixo da caixa de pesquisa avisa quando um parêntese não foi fechado ou um `OR` não tem nada de um lado. Parênteses aninhados fundo demais ou uma lista de `OR` longa demais são cortados, com uma nota.
 
 | Pesquisa | Encontra |
@@ -47,7 +47,7 @@ As caixas de pesquisa do pop-up, do painel lateral e do gerenciador leem uma pes
 | `title:react` | Títulos que contêm o texto; `title:"react hooks"` aceita várias palavras |
 | `url:github` | Endereços da web que contêm o texto |
 | `domain:github.com` | Favoritos desse site, incluindo seus subdomínios |
-| `folder:Trabalho` ou `path:Trabalho` | Tudo em uma pasta com exatamente esse nome, em qualquer nível; `folder:"Trabalho / Docs"` nomeia uma pasta dentro de outra |
+| `folder:Trabalho` ou `path:Trabalho` | Tudo em uma pasta com exatamente esse nome, em qualquer nível; `folder:"Trabalho / Docs"` nomeia uma pasta dentro de outra; um nome com barra, como `folder:CI/CD`, também é encontrado |
 | `tag:leitura` | Favoritos com exatamente essa tag |
 | `summary:receita` | Resumos que contêm o texto |
 | `content:receita` | O texto das páginas que você indexou com **Indexar texto das páginas** |

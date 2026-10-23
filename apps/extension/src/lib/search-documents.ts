@@ -293,8 +293,12 @@ type CompiledText = {
   contentNeedle: string;
   tagKey: string;
   domain: string;
-  /** For `folder:`, the folder names it lists, without case. */
-  folders: readonly string[];
+  /**
+   * For `folder:`, the ways to read it as folder names, without case: split at each `/`, split
+   * only at a spaced ` / ` (as paths are shown), and the whole value as one name, so a folder
+   * named `CI/CD` is found too. The item matches when any of them names folders it is in.
+   */
+  folders: readonly (readonly string[])[];
 };
 /** A query's tree with each term worked out once: `all` and `any` as in `SearchNode`. */
 type CompiledNode =
@@ -322,14 +326,22 @@ function compileTerm(term: SearchTerm): CompiledNode {
     contentNeedle: term.value.toLowerCase().replace(/\s+/gu, ' '),
     tagKey: tagKey(term.value),
     domain: term.field === 'domain' ? domainOf(term.value) : '',
-    folders:
-      term.field === 'folder'
-        ? term.value
-            .split(FOLDER_PATH_SEPARATOR.trim())
-            .map((name) => name.trim().toLowerCase())
-            .filter(Boolean)
-        : [],
+    folders: term.field === 'folder' ? folderReadings(term.value) : [],
   };
+}
+
+/** The ways a `folder:` value can name folders (`CompiledText.folders`), each once. */
+function folderReadings(value: string): (readonly string[])[] {
+  const namesOf = (parts: readonly string[]) =>
+    parts.map((name) => name.trim().toLowerCase()).filter(Boolean);
+  const readings = [
+    namesOf(value.split(FOLDER_PATH_SEPARATOR.trim())),
+    namesOf(value.split(FOLDER_PATH_SEPARATOR)),
+    namesOf([value]),
+  ].filter((names) => names.length > 0);
+  return readings.filter(
+    (names, index) => readings.findIndex((other) => sameNames(other, names)) === index,
+  );
 }
 
 type TermMatch = { matched: boolean; score: number; reasons: SearchMatchReason[] };
@@ -373,7 +385,7 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
   if (wants('folder') && document.folders.length > 0) {
     const ranges =
       term.field === 'folder'
-        ? matchFolderNames(document, folded, compiled.folders)
+        ? matchFolderReadings(document, folded, compiled.folders)
         : folded.folderPath.text.includes(needle)
           ? findAll(folded.folderPath, needle)
           : [];
@@ -426,6 +438,19 @@ function matchFolderNames(
       const from = before ? before.length + FOLDER_PATH_SEPARATOR.length : 0;
       return [[from, from + names.length]];
     }
+  }
+  return [];
+}
+
+/** `matchFolderNames` for the first reading of a `folder:` value that matches. */
+function matchFolderReadings(
+  document: SearchDocument,
+  folded: FoldedDocument,
+  readings: readonly (readonly string[])[],
+): SearchMatchRange[] {
+  for (const wanted of readings) {
+    const ranges = matchFolderNames(document, folded, wanted);
+    if (ranges.length > 0) return ranges;
   }
   return [];
 }

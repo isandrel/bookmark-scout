@@ -39,7 +39,7 @@ Die Suchfelder im Pop-up, in der Seitenleiste und im Manager lesen eine Suche au
 - Ein `-` davor schließt aus, was passt: `rezepte -kuchen` oder `-tag:archiv`.
 - `OR` in Großbuchstaben zwischen zwei Begriffen findet einen von beiden: `tag:react OR tag:vue`. Es bindet stärker als das Leerzeichen, daher findet `domain:github.com tag:react OR tag:vue` GitHub-Seiten mit einem der beiden Tags. Ein kleingeschriebenes `or` ist ein gewöhnliches Suchwort.
 - Klammern gruppieren Begriffe: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Ein `-` vor einer Gruppe schließt aus, was die Gruppe findet: `-(tag:old OR tag:archive)`. Klammern innerhalb eines Worts, etwa `f(x)`, werden als Text gesucht.
-- Ein Wort, das einen Ordner nennt, findet den Ordner. Im Pop-up erscheinen seine Lesezeichen darin; `folder:` listet alles darin auf.
+- Ein Wort, das einen Ordner nennt, findet den Ordner. Im Pop-up erscheinen seine Lesezeichen darin; `folder:` listet alles darin auf. Lassen andere Begriffe den Ordner weg, wie `work is:bookmark`, werden stattdessen die passenden Lesezeichen darin gefunden.
 - Text, der kein Operator ist, wird wie eingegeben gesucht, etwa `C++`, `10:30` oder eine Webadresse. Ebenso ein Operator, den Bookmark Scout nicht kennt, etwa `foo:bar`. Ein Wert, den es nicht lesen kann, etwa ein ungültiges Datum, wird übersprungen. Ein Hinweis unter dem Suchfeld meldet eine nicht geschlossene Klammer oder ein `OR`, dem auf einer Seite ein Begriff fehlt. Sehr tief verschachtelte Klammern oder eine sehr lange `OR`-Liste werden gekürzt, mit einem Hinweis.
 
 | Suche | Findet |
@@ -47,7 +47,7 @@ Die Suchfelder im Pop-up, in der Seitenleiste und im Manager lesen eine Suche au
 | `title:react` | Titel, die den Text enthalten; `title:"react hooks"` nimmt mehrere Wörter |
 | `url:github` | Webadressen, die den Text enthalten |
 | `domain:github.com` | Lesezeichen auf dieser Website, einschließlich ihrer Subdomains |
-| `folder:Arbeit` oder `path:Arbeit` | Alles in einem Ordner mit genau diesem Namen, in jeder Tiefe; `folder:"Arbeit / Dokumente"` nennt einen Ordner in einem anderen |
+| `folder:Arbeit` oder `path:Arbeit` | Alles in einem Ordner mit genau diesem Namen, in jeder Tiefe; `folder:"Arbeit / Dokumente"` nennt einen Ordner in einem anderen; ein Name mit Schrägstrich wie `folder:CI/CD` wird ebenfalls gefunden |
 | `tag:lesen` | Lesezeichen mit genau diesem Tag |
 | `summary:rezept` | Zusammenfassungen, die den Text enthalten |
 | `content:rezept` | Der Text der Seiten, die Sie mit **Seitentext indexieren** indexiert haben |

@@ -39,7 +39,7 @@ The search boxes in the popup, side panel, and manager read a search the same wa
 - A `-` in front leaves out what matches: `recipe -cake` or `-tag:archive`.
 - `OR` in capitals, between two terms, finds either one: `tag:react OR tag:vue`. It binds closer than the space, so `domain:github.com tag:react OR tag:vue` finds GitHub pages with either tag. A lowercase `or` is a word to find, as before.
 - Parentheses group terms: `domain:github.com (tag:react OR tag:vue) -tag:archived`. A `-` in front of a group leaves out what the group matches: `-(tag:old OR tag:archive)`. Parentheses inside a word, such as `f(x)`, are searched as text.
-- A word that names a folder finds the folder. In the popup, its bookmarks show inside it; `folder:` lists everything in it.
+- A word that names a folder finds the folder. In the popup, its bookmarks show inside it; `folder:` lists everything in it. When other terms leave the folder out, as `work is:bookmark` does, the bookmarks in it that match are found instead.
 - Text that is not an operator is searched as typed, such as `C++`, `10:30`, or a web address. So is an operator Bookmark Scout does not know, such as `foo:bar`. A value it cannot read, such as an invalid date, is skipped. A note under the search box says when a parenthesis is not closed or an `OR` has nothing on one side. Parentheses nested very deep, or a very long `OR` list, are cut short, with a note.
 
 | Search | Finds |
@@ -47,7 +47,7 @@ The search boxes in the popup, side panel, and manager read a search the same wa
 | `title:react` | Titles that contain the text; `title:"react hooks"` takes several words |
 | `url:github` | Web addresses that contain the text |
 | `domain:github.com` | Bookmarks on that site, including its subdomains |
-| `folder:Work` or `path:Work` | Everything in a folder with that exact name, at any depth; `folder:"Work / Docs"` names a folder inside another |
+| `folder:Work` or `path:Work` | Everything in a folder with that exact name, at any depth; `folder:"Work / Docs"` names a folder inside another; a name with a slash, such as `folder:CI/CD`, is found too |
 | `tag:reading` | Bookmarks with that exact tag |
 | `summary:recipe` | Summaries that contain the text |
 | `content:recipe` | The text of pages you indexed with **Index Page Text** |
