@@ -1554,11 +1554,11 @@
         "description": "Bookmark metadata tags label"
     },
     "bookmarks_metadataTagsPlaceholder": {
-        "message": "研究, 工具, 閱讀",
+        "message": "輸入標籤，然後按 Enter 鍵",
         "description": "Bookmark metadata tags input placeholder"
     },
     "bookmarks_metadataTagsHelp": {
-        "message": "使用半形逗號分隔標籤。儲存時會移除重複的標籤。",
+        "message": "按 Enter 鍵或輸入逗號即可加入標籤。儲存時會移除重複的標籤。",
         "description": "Bookmark metadata tags input help"
     },
     "bookmarks_metadataSummary": {
@@ -8464,7 +8464,7 @@
         "description": "Rule editor: tags field"
     },
     "rules_addTagsHelp": {
-        "message": "用逗號分隔標籤。書籤已有的標籤不會重複加上。",
+        "message": "按 Enter 鍵或輸入逗號即可加入標籤。書籤已有的標籤不會重複加上。",
         "description": "Rule editor: help under the tags field"
     },
     "rules_moveTo": {

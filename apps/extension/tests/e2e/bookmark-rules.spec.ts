@@ -52,6 +52,8 @@ test('a rule made in Settings tags and moves matching bookmarks after a review, 
   await editor.getByRole('textbox', { name: 'Bookmarks that match' }).fill('domain:github.com');
   await expect(editor).toContainText('Matches 2 bookmarks now');
   await editor.getByRole('textbox', { name: 'Add tags' }).fill('dev, Code');
+  await editor.getByRole('textbox', { name: 'Add tags' }).blur();
+  await expect(editor.locator('[data-slot="list-chip"]')).toHaveText(['dev', 'Code']);
   await editor.getByRole('combobox', { name: 'Move to folder' }).click();
   await page.getByRole('combobox', { name: 'Search...' }).fill('E2E Rules / Library');
   await page.getByRole('option', { name: /E2E Rules \/ Library$/ }).click();

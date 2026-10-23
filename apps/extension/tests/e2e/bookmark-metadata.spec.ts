@@ -60,13 +60,19 @@ test('saves, edits, and clears bookmark tags and summaries without AI', async ({
 
   let dialog = await openDetails(page, extensionId, seeded.sourceId, title);
   const tags = dialog.getByTestId('bookmark-metadata-tags');
+  const chips = () => dialog.locator('[data-slot="list-chip"]');
   const summary = dialog.getByTestId('bookmark-metadata-summary');
   await expect(tags).toBeEnabled();
-  await tags.fill('research, Research,  tools ');
+  // Each comma adds a chip; a repeat in another case is dropped, and the typed rest stays a draft.
+  await tags.fill('research, Research, ');
+  await expect(chips()).toHaveText(['research']);
+  await expect(tags).toHaveValue('');
+  await tags.fill(' tools ');
   await summary.fill('A private summary.');
   await dialog.getByRole('button', { name: 'Save Metadata' }).click();
   await expect(dialog.getByText('Metadata saved.')).toBeVisible();
-  await expect(tags).toHaveValue('research, tools');
+  await expect(chips()).toHaveText(['research', 'tools']);
+  await expect(tags).toHaveValue('');
 
   expect((await readMetadata(extensionWorker))[bookmarkId]).toEqual({
     tags: ['research', 'tools'],
@@ -81,14 +87,21 @@ test('saves, edits, and clears bookmark tags and summaries without AI', async ({
     { id: bookmarkId, parentId: seeded.targetId },
   );
   dialog = await openDetails(page, extensionId, seeded.targetId, title);
-  await expect(dialog.getByTestId('bookmark-metadata-tags')).toHaveValue('research, tools');
+  await expect(chips()).toHaveText(['research', 'tools']);
   await expect(dialog.getByTestId('bookmark-metadata-summary')).toHaveValue('A private summary.');
+
+  // Backspace in the empty box removes the last chip.
+  await dialog.getByTestId('bookmark-metadata-tags').focus();
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await expect(chips()).toHaveCount(0);
 
   // Japanese and Korean keyboards type their own commas; each separates tags too.
   await dialog.getByTestId('bookmark-metadata-tags').fill('reading、読書，독서');
+  await page.keyboard.press('Enter');
   await dialog.getByRole('button', { name: 'Save Metadata' }).click();
   await expect(dialog.getByText('Metadata saved.')).toBeVisible();
-  await expect(dialog.getByTestId('bookmark-metadata-tags')).toHaveValue('reading, 読書, 독서');
+  await expect(chips()).toHaveText(['reading', '読書', '독서']);
   expect((await readMetadata(extensionWorker))[bookmarkId]).toEqual({
     tags: ['reading', '読書', '독서'],
     summary: 'A private summary.',
@@ -96,7 +109,7 @@ test('saves, edits, and clears bookmark tags and summaries without AI', async ({
 
   await dialog.getByRole('button', { name: 'Clear Metadata' }).click();
   await expect(dialog.getByText('Metadata cleared.')).toBeVisible();
-  await expect(dialog.getByTestId('bookmark-metadata-tags')).toHaveValue('');
+  await expect(chips()).toHaveCount(0);
   await expect(dialog.getByTestId('bookmark-metadata-summary')).toHaveValue('');
   expect(await readMetadata(extensionWorker)).not.toHaveProperty(bookmarkId);
 });

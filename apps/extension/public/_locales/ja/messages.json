@@ -1518,11 +1518,11 @@
         "description": "Bookmark metadata tags label"
     },
     "bookmarks_metadataTagsPlaceholder": {
-        "message": "調査, ツール, 読書",
+        "message": "タグを入力して Enter キーを押します",
         "description": "Bookmark metadata tags input placeholder"
     },
     "bookmarks_metadataTagsHelp": {
-        "message": "タグはカンマで区切ります。保存時に重複を削除します。",
+        "message": "Enter キーを押すか、カンマを入力するとタグが追加されます。保存時に重複を削除します。",
         "description": "Bookmark metadata tags input help"
     },
     "bookmarks_metadataSummary": {
@@ -8798,7 +8798,7 @@
         "description": "Rule editor: tags field"
     },
     "rules_addTagsHelp": {
-        "message": "タグはカンマで区切ります。ブックマークにすでにあるタグは追加されません。",
+        "message": "Enter キーを押すか、カンマを入力するとタグが追加されます。ブックマークにすでにあるタグは追加されません。",
         "description": "Rule editor: help under the tags field"
     },
     "rules_moveTo": {

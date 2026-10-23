@@ -1562,11 +1562,11 @@
         "description": "Bookmark metadata tags label"
     },
     "bookmarks_metadataTagsPlaceholder": {
-        "message": "research, tools, reading",
-        "description": "Bookmark metadata tags input placeholder"
+        "message": "Type a tag, then press Enter",
+        "description": "Placeholder of the box that adds a tag in Bookmark Details and a Smart Rule"
     },
     "bookmarks_metadataTagsHelp": {
-        "message": "Separate tags with commas. Duplicate tags are removed when saved.",
+        "message": "Press Enter or type a comma to add each tag. Duplicate tags are removed when saved.",
         "description": "Bookmark metadata tags input help"
     },
     "bookmarks_metadataSummary": {
@@ -8834,7 +8834,7 @@
         "description": "Rule editor: tags field"
     },
     "rules_addTagsHelp": {
-        "message": "Separate tags with commas. A tag a bookmark already has is not added again.",
+        "message": "Press Enter or type a comma to add each tag. A tag a bookmark already has is not added again.",
         "description": "Rule editor: help under the tags field"
     },
     "rules_moveTo": {

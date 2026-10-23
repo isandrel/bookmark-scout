@@ -38,6 +38,7 @@ const RULE_DRAFT_ERROR_KEYS = {
 
 function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose: () => void }) {
   const [value, setValue] = useState<RuleDraft>(EMPTY_RULE_DRAFT);
+  const [tagDraft, setTagDraft] = useState('');
   const [library, setLibrary] = useState<{
     tree: BookmarkTreeNode[];
     metadata: StoredBookmarkMetadataById;
@@ -169,11 +170,19 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
           </div>
           <Field id="rule-tags" label={t('rules_addTags')} description={t('rules_addTagsHelp')}>
             {(control) => (
-              <Input
-                {...control}
-                value={value.tags}
-                onChange={(event) => setValue({ ...value, tags: event.target.value })}
-                autoComplete="off"
+              <TokenInput
+                id={control.id}
+                labelledBy={control['aria-labelledby']}
+                describedBy={control['aria-describedby']}
+                value={parseBookmarkTags(value.tags)}
+                onChange={(tags) => setValue({ ...value, tags: tags.join(', ') })}
+                parse={parseBookmarkTags}
+                separator={TAG_SEPARATOR_PATTERN}
+                keyOf={tagKey}
+                maxItems={BOOKMARK_RULE_LIMITS.max_tags}
+                maxLength={BOOKMARK_RULE_LIMITS.tag_max_length}
+                draft={tagDraft}
+                onDraftChange={setTagDraft}
               />
             )}
           </Field>

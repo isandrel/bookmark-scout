@@ -43,7 +43,8 @@ function BookmarkDetailsContent({
   const [folderPath, setFolderPath] = useState<string[] | null>(null);
   const [pathError, setPathError] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
-  const [tagsText, setTagsText] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagDraft, setTagDraft] = useState('');
   const [summary, setSummary] = useState('');
   const [metadataLoading, setMetadataLoading] = useState(true);
   const [metadataSaving, setMetadataSaving] = useState(false);
@@ -69,7 +70,8 @@ function BookmarkDetailsContent({
     getStoredBookmarkMetadata([bookmark.id])
       .then((metadata) => {
         if (!active) return;
-        setTagsText(formatListSetting(metadata[bookmark.id]?.tags ?? []));
+        setTags(metadata[bookmark.id]?.tags ?? []);
+        setTagDraft('');
         setSummary(metadata[bookmark.id]?.summary ?? '');
       })
       .catch(() => {
@@ -98,10 +100,12 @@ function BookmarkDetailsContent({
     setMetadataSaving(true);
     setMetadataStatus('');
     try {
-      const tags = parseBookmarkTags(tagsText);
-      await saveBookmarkMetadata(bookmark.id, { tags, summary });
+      // A tag still being typed is saved too.
+      const typed = addTokens(tags, parseBookmarkTags(tagDraft), { keyOf: tagKey });
+      await saveBookmarkMetadata(bookmark.id, { tags: typed, summary });
       const stored = await getStoredBookmarkMetadata([bookmark.id]);
-      setTagsText(formatListSetting(stored[bookmark.id]?.tags ?? []));
+      setTags(stored[bookmark.id]?.tags ?? []);
+      setTagDraft('');
       setSummary(stored[bookmark.id]?.summary ?? '');
       setMetadataStatus(t('bookmarks_metadataSaved'));
     } catch {
@@ -116,7 +120,8 @@ function BookmarkDetailsContent({
     setMetadataStatus('');
     try {
       await removeStoredBookmarkMetadata([bookmark.id]);
-      setTagsText('');
+      setTags([]);
+      setTagDraft('');
       setSummary('');
       setMetadataStatus(t('bookmarks_metadataCleared'));
     } catch {
@@ -169,15 +174,23 @@ function BookmarkDetailsContent({
           </div>
           <div className="space-y-2">
             <Label htmlFor={`bookmark-tags-${bookmark.id}`}>{t('bookmarks_metadataTags')}</Label>
-            <Input
+            <TokenInput
               id={`bookmark-tags-${bookmark.id}`}
               data-testid="bookmark-metadata-tags"
-              value={tagsText}
-              onChange={(event) => setTagsText(event.target.value)}
+              value={tags}
+              onChange={setTags}
+              parse={parseBookmarkTags}
+              separator={TAG_SEPARATOR_PATTERN}
+              keyOf={tagKey}
+              draft={tagDraft}
+              onDraftChange={setTagDraft}
               placeholder={t('bookmarks_metadataTagsPlaceholder')}
+              describedBy={`bookmark-tags-help-${bookmark.id}`}
               disabled={metadataLoading || metadataSaving}
             />
-            <p className="text-xs text-muted-foreground">{t('bookmarks_metadataTagsHelp')}</p>
+            <p id={`bookmark-tags-help-${bookmark.id}`} className="text-xs text-muted-foreground">
+              {t('bookmarks_metadataTagsHelp')}
+            </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor={`bookmark-summary-${bookmark.id}`}>
@@ -212,7 +225,9 @@ function BookmarkDetailsContent({
               variant="outline"
               size="sm"
               onClick={clearMetadata}
-              disabled={metadataLoading || metadataSaving || (!tagsText && !summary)}
+              disabled={
+                metadataLoading || metadataSaving || (tags.length === 0 && !tagDraft && !summary)
+              }
             >
               {t('bookmarks_metadataClear')}
             </Button>

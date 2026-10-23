@@ -1594,11 +1594,11 @@
         "description": "Bookmark metadata tags label"
     },
     "bookmarks_metadataTagsPlaceholder": {
-        "message": "исследования, инструменты, чтение",
+        "message": "Введите тег и нажмите Enter",
         "description": "Bookmark metadata tags input placeholder"
     },
     "bookmarks_metadataTagsHelp": {
-        "message": "Разделяйте теги запятыми. Повторяющиеся теги удаляются при сохранении.",
+        "message": "Нажмите Enter или введите запятую, чтобы добавить тег. Повторяющиеся теги удаляются при сохранении.",
         "description": "Bookmark metadata tags input help"
     },
     "bookmarks_metadataSummary": {
@@ -9622,7 +9622,7 @@
         "description": "Rule editor: tags field"
     },
     "rules_addTagsHelp": {
-        "message": "Разделяйте теги запятыми. Тег, который у закладки уже есть, повторно не добавляется.",
+        "message": "Нажмите Enter или введите запятую, чтобы добавить тег. Тег, который у закладки уже есть, повторно не добавляется.",
         "description": "Rule editor: help under the tags field"
     },
     "rules_moveTo": {

@@ -4,9 +4,10 @@
  * checklist of the common codes plus any other code.
  */
 
-import { Plus, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useId, useState } from 'react';
 import { z } from 'zod';
+import { TokenChip, TokenInput } from '@/components/ui/token-input';
 
 const listSettingsConfig = readConfig(
   'ui/list-settings',
@@ -60,25 +61,6 @@ const STATUS_GROUP_LABEL_KEYS: Readonly<Record<string, string>> = {
   '4xx': 'settings_statusGroup4xx',
 };
 
-function Chip({ label, onRemove }: { label: string; onRemove: () => void }) {
-  return (
-    <span
-      data-slot="list-chip"
-      className="inline-flex h-7 items-center gap-1 rounded-full border bg-muted/50 pl-2.5 pr-1 font-mono text-xs"
-    >
-      {label}
-      <button
-        type="button"
-        onClick={onRemove}
-        aria-label={t('settings_listRemove', label)}
-        className="flex size-5 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        <X aria-hidden="true" className="size-3" />
-      </button>
-    </span>
-  );
-}
-
 type EditorProps<T> = {
   id: string;
   labelledBy: string;
@@ -109,53 +91,25 @@ export function TokenListEditor({
       ? listSettingsConfig.suggestions[fieldKey].filter((name) => !value.includes(name))
       : [];
 
-  const add = (raw: string) => {
-    const parse = TOKEN_PARSERS[fieldKey];
-    const added = [...new Set(parseListTokens(raw).flatMap((token) => parse(token) ?? []))]
-      .filter(
-        (name) => !value.includes(name) && (maxLength === undefined || name.length <= maxLength),
-      )
-      .slice(0, room);
-    if (added.length > 0) onChange([...value, ...added]);
-    setDraft('');
-  };
-
   return (
     <div className="space-y-2">
-      <div className="flex min-h-9 flex-wrap items-center gap-1.5 rounded-md border border-input bg-card p-1.5 focus-within:ring-2 focus-within:ring-ring">
-        {value.map((name) => (
-          <Chip
-            key={name}
-            label={name}
-            onRemove={() => onChange(value.filter((item) => item !== name))}
-          />
-        ))}
-        <input
-          id={id}
-          value={draft}
-          aria-labelledby={labelledBy}
-          aria-describedby={describedBy}
-          placeholder={t('settings_listAddPlaceholder')}
-          maxLength={maxLength}
-          disabled={room === 0}
-          onChange={(event) => {
-            const next = event.target.value;
-            // A typed or pasted separator commits what came before it.
-            if (/[\s,]/.test(next)) add(next);
-            else setDraft(next);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault();
-              add(draft);
-            } else if (event.key === 'Backspace' && draft === '' && value.length > 0) {
-              onChange(value.slice(0, -1));
-            }
-          }}
-          onBlur={() => add(draft)}
-          className="h-7 min-w-32 flex-1 bg-transparent px-1 text-sm outline-none placeholder:text-muted-foreground"
-        />
-      </div>
+      <TokenInput
+        id={id}
+        value={value}
+        onChange={onChange}
+        parse={(raw) =>
+          parseListTokens(raw).flatMap((token) => TOKEN_PARSERS[fieldKey](token) ?? [])
+        }
+        separator={/[\s,]/}
+        maxItems={maxItems}
+        maxLength={maxLength}
+        placeholder={t('settings_listAddPlaceholder')}
+        labelledBy={labelledBy}
+        describedBy={describedBy}
+        draft={draft}
+        onDraftChange={setDraft}
+        mono
+      />
       {suggestions.length > 0 && (
         <fieldset
           aria-labelledby={suggestionsId}
@@ -261,7 +215,7 @@ export function StatusCodeEditor({
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
           {others.map((code) => (
-            <Chip
+            <TokenChip
               key={code}
               label={String(code)}
               onRemove={() => {
