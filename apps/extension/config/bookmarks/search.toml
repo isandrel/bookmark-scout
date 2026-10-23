@@ -1,5 +1,6 @@
-# The search query every search box shares: what a query may hold and how a match ranks. Read by
-# src/lib/search-query.ts (limits) and src/lib/search-documents.ts (weights).
+# The search query every search box, Smart Rules, and the AI tools' bookmark search share: what a
+# query may hold, and what a match scores. Read by src/lib/search-query.ts (limits) and
+# src/lib/search-documents.ts (weights).
 
 # Longest query read, in characters; the rest is ignored and the search says so. A pasted page
 # of text would otherwise be thousands of terms to check against every bookmark.
@@ -15,9 +16,12 @@ max_or_branches = { value = 16, min = 2, max = 64 }
 # Characters of page text shown around a match in a page's indexed text (Index Page Text)
 content_snippet_chars = 80
 
-# How much a term counts toward a result's rank, by where it matched. A term that matches in
-# several places counts its best one. Results rank by the sum over the query's terms; equal sums
-# keep the library's own order. A starting point, not a measured optimum.
+# How much a term counts toward a match's score, by where it matched. A term that matches in
+# several places counts its best one; a match scores the sum over the query's terms, and an OR the
+# sum over its sides that match. The search boxes list matches in the library's own order and do
+# not use the score; the AI tools' bookmark search (searchBookmarks with filterQuery,
+# src/services/read-actions.ts) adds it to its own ranking. A starting point, not a measured
+# optimum.
 [weights]
 # The whole title is the term.
 title_exact = 100

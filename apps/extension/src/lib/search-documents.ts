@@ -572,21 +572,3 @@ function joinRanges(ranges: readonly SearchMatchRange[]): SearchMatchRange[] {
   }
   return joined;
 }
-
-/**
- * The documents matching a query, best first. Equal scores keep the documents' own order (the
- * library's), and an empty query keeps every document in that order.
- */
-export function searchDocuments(
-  documents: readonly SearchDocument[],
-  query: SearchQuery,
-): SearchResult[] {
-  const match = compileSearchQuery(query);
-  const results: { result: SearchResult; order: number }[] = [];
-  documents.forEach((document, order) => {
-    const result = match(document);
-    if (result) results.push({ result, order });
-  });
-  results.sort((left, right) => right.result.score - left.result.score || left.order - right.order);
-  return results.map(({ result }) => result);
-}

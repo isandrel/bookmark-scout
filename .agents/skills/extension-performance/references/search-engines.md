@@ -7,7 +7,7 @@ Decision (2026-10-22): **keep the built-in search** (`src/lib/search-query.ts`, 
 `apps/extension/tests/bench/search-engines.bench.ts`, run with `bun run --cwd apps/extension bench:search` (Vitest with the unit tests' plugins, through `tests/bench/vitest.config.ts`, never part of the unit run). MiniSearch and FlexSearch are `devDependencies` of the extension workspace only; no `src/` file imports them, so the built packages and the size budgets are unchanged.
 
 - Library: the performance suite's `[library]` in `tests/perf/perf.toml` (30 areas, 50 topics each, 13 pages each: 19,500 bookmarks in 1,530 folders, 21,030 items), built in memory with the names `seedLibrary` gives it, no tags or summaries.
-- Built-in: `buildSearchDocuments` plus `foldSearchDocument` for each document (what `prepareSearchDocuments` does while idle before the first keystroke), then `searchDocuments(parseSearchQuery(text).query)`.
+- Built-in: `buildSearchDocuments` plus `foldSearchDocument` for each document (what `prepareSearchDocuments` does while idle before the first keystroke), then `searchDocuments(parseSearchQuery(text).query)` (`apps/extension/tests/search-results.ts`, a test helper: the pages match one document at a time with `compileSearchQuery` and keep the library's order).
 - MiniSearch 7.2.0: fields `title`, `url`, `folderPath`, `host`; `prefix: true`, `combineWith: 'AND'`.
 - FlexSearch 0.8.212: `Document` over the same fields, `tokenize: 'forward'`, `merge: true`, limit above the library size.
 - Build: median of 5 builds, each on a fresh copy of the tree (the built-in search caches a document per node object). Query: median of 30 runs. Heap: `heapUsed` kept by the built index after a full collection.

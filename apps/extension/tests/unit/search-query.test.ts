@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildSearchDocuments, type SearchDocument, searchDocuments } from '@/lib/search-documents';
+import { buildSearchDocuments, type SearchDocument } from '@/lib/search-documents';
 import {
   hasSearchOperators,
   parseSearchQuery,
@@ -11,6 +11,7 @@ import {
 } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
 import { readConfigToml } from '../config-files';
+import { searchDocuments } from '../search-results';
 
 /** A tree with the root and one browser folder, as the browser returns it. */
 function tree(children: BookmarkTreeNode[]): BookmarkTreeNode[] {

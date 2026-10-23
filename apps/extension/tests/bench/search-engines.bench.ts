@@ -15,9 +15,10 @@ import { Document } from 'flexsearch';
 import MiniSearch from 'minisearch';
 import { parse } from 'smol-toml';
 import { expect, it } from 'vitest';
-import { buildSearchDocuments, foldSearchDocument, searchDocuments } from '@/lib/search-documents';
+import { buildSearchDocuments, foldSearchDocument } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
+import { searchDocuments } from '../search-results';
 
 const BUILD_RUNS = 5;
 const QUERY_RUNS = 30;
