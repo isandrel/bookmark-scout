@@ -71,7 +71,7 @@ They check what the repository's own tests and builds do not, or check it earlie
 | --- | --- |
 | `validate-extension.ts` | Keys, placeholders, `Intl.PluralRules` forms, `extDescription` of 132 characters or fewer, and format. It also counts messages left identical to English. |
 | `validate-website.ts` | Keys, array lengths, ICU arguments, tags, URLs, and structural values |
-| `validate-docs.ts` | Components, links, code, and the English heading id on every heading |
+| `validate-docs.ts` | Components, links, code, and the English heading id on every heading. Search examples and key names listed in its `LOCALIZABLE_CODE` may be localized (operators, minus signs, and quotes kept), and `GRAMMAR_PROPS` (`<Languages join capitalize>`) may differ; add a new localized example there |
 
 `check-cjk-bold.ts` finds bold that CommonMark will not render.
 

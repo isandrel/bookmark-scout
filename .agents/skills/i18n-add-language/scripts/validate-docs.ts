@@ -37,9 +37,17 @@ const fences = (s: string) => [...s.matchAll(FENCE)].map((m) => m[0]).join('\n--
 const noFences = (s: string) => s.replace(FENCE, '');
 // A Callout title is human text, so its value may differ; every other prop must match.
 const normalizeProps = (props: string) => props.replace(/\btitle="[^"]*"/g, 'title=*');
+// Props that follow the page language's grammar, so a translation may add, drop, or change them:
+// how <Languages /> joins its list ("or") and whether it capitalizes the names (German nouns).
+const GRAMMAR_PROPS: Record<string, readonly string[]> = { Languages: ['join', 'capitalize'] };
+const dropGrammarProps = (name: string, props: string) =>
+  (GRAMMAR_PROPS[name] ?? []).reduce(
+    (rest, prop) => rest.replace(new RegExp(`\\s*\\b${prop}(?:=(?:"[^"]*"|\\{[^}]*\\}))?`, 'g'), ''),
+    props,
+  );
 const jsx = (s: string) =>
   [...noFences(s).matchAll(/<\/?([A-Z][A-Za-z0-9.]*)((?:\s+[^<>]*?)?)\s*\/?>/g)]
-    .map((m) => `${m[1]}${normalizeProps(m[2].replace(/\s+/g, ' ').trim())}`)
+    .map((m) => `${m[1]}${normalizeProps(dropGrammarProps(m[1], m[2]).replace(/\s+/g, ' ').trim())}`)
     .sort()
     .join('\n');
 const links = (s: string) =>
@@ -47,8 +55,58 @@ const links = (s: string) =>
     .map((m) => m[1] ?? m[2])
     .sort()
     .join('\n');
-const inlineCode = (s: string) =>
-  [...noFences(s).matchAll(/`([^`\n]+)`/g)].map((m) => m[1]).sort().join('\n');
+const inlineCode = (s: string) => [...noFences(s).matchAll(/`([^`\n]+)`/g)].map((m) => m[1]);
+
+// Inline code a translation may localize; every other `code` span stays as in English.
+// - Search examples: the words become the page language's (`folder:Arbeit`, `レシピ スープ`), but
+//   operators (`folder:`), minus signs, quotes, and slashes stay, so the shape must match.
+// - Key names: the language's own keyboard labels (German `Umschalt`, `Pos1`), or plain text.
+// A new localized example or key name in an English page goes in this list.
+const LOCALIZABLE_CODE = {
+  examples: [
+    'recipe soup',
+    '"tomato soup"',
+    'recipe -cake',
+    '-tag:archive',
+    'folder:Work',
+    'path:Work',
+    'folder:"Work / Docs"',
+    'tag:reading',
+    'summary:recipe',
+    'content:recipe',
+    'folder:Reading -tag:read',
+  ],
+  keys: ['Shift', 'Home', 'End', 'Space'],
+} as const;
+const EXAMPLES = new Set<string>(LOCALIZABLE_CODE.examples);
+const KEYS = new Set<string>(LOCALIZABLE_CODE.keys);
+// Words become `·`; operator names before a colon and the punctuation between words stay. A
+// quoted phrase may have another number of words ("sopa de tomate").
+const shape = (code: string) =>
+  code
+    .replace(/\b([a-z]+:)|[\p{L}\p{N}][\p{L}\p{N}\p{M}._'-]*/gu, (_word, op) => op ?? '·')
+    .replace(/"[· ]+"/g, '"·"');
+
+/** The English spans the translation lacks and the spans it adds, after the allowed changes. */
+function codeDiff(en: string[], tr: string[]): { missing: string[]; extra: string[] } {
+  const extra = [...tr];
+  const take = (match: (code: string) => boolean) => {
+    const i = extra.findIndex(match);
+    if (i >= 0) extra.splice(i, 1);
+    return i >= 0;
+  };
+  const unmatched = en.filter((code) => !take((t) => t === code));
+  const missing = unmatched.filter((code) => {
+    if (EXAMPLES.has(code)) return !take((t) => shape(t) === shape(code));
+    // A key name may be another single label, or plain text.
+    if (KEYS.has(code)) {
+      take((t) => shape(t) === '·');
+      return false;
+    }
+    return true;
+  });
+  return { missing, extra };
+}
 const headings = (s: string) =>
   [...noFences(strip(s)).matchAll(/^(#{2,6})\s+(.+)$/gm)].map((m) => ({ level: m[1], text: m[2] }));
 
@@ -79,7 +137,13 @@ for (const rel of english) {
   if (fences(en) !== fences(tr)) problems.push(`${rel}: fenced code blocks must be identical`);
   if (jsx(en) !== jsx(tr)) problems.push(`${rel}: MDX components or their props differ`);
   if (links(en) !== links(tr)) problems.push(`${rel}: link targets differ`);
-  if (inlineCode(en) !== inlineCode(tr)) problems.push(`${rel}: inline code differs (keep \`code\` spans unchanged)`);
+  const code = codeDiff(inlineCode(en), inlineCode(tr));
+  if (code.missing.length || code.extra.length) {
+    problems.push(
+      `${rel}: inline code differs (keep \`code\` spans unchanged; see LOCALIZABLE_CODE): ` +
+        [...code.missing.map((c) => `-${c}`), ...code.extra.map((c) => `+${c}`)].join(', '),
+    );
+  }
 
   // Other pages link to headings by their English id, so each translated heading keeps it.
   const eh = headings(en);
