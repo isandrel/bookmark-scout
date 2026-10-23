@@ -6766,8 +6766,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "无法导入 $1：$2。之前的内容已导入；“撤消导入”可将其恢复。",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "无法导入“$1”，已恢复原样：$2。之前的内容已导入；“撤消导入”可将其恢复。",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "新增 $1 · 更改 $2 · 删除 $3 · 保留 $4 · 跳过 $5",
@@ -6872,6 +6872,18 @@
     "history_verifyFailedData": {
         "message": "导入后已检查：有 $1 项与写入时不一致。",
         "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "backup_errorTooLarge": {
+        "message": "超出了浏览器能为它保存的大小。",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "无法导入“$1”：$2 未做任何更改。",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "所选文件夹会按此处的文件夹路径匹配：找到 $1 个，$2 个在此处没有该文件夹（保持不变）。",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "此处有相同地址的书签：$1",

@@ -700,6 +700,66 @@ test('options saves a setting to sync storage and keeps it after reload', async 
     .toBe('false');
 });
 
+test('a password-protected settings backup saves and restores with Web Crypto in Firefox', async ({
+  extension,
+}, testInfo) => {
+  await setSettings(extension, { language: 'en', theme: 'dark' });
+  await extension.open('options.html');
+  await extension.find('[role="tab"]');
+  await extension.driver
+    .findElement(By.xpath('//button[normalize-space()="Back up settings"]'))
+    .click();
+  await extension.find('[data-testid="backup-export-dialog"] [data-testid="backup-part-meta"]');
+  await (await extension.find('[data-testid="backup-protection"] [role="checkbox"]')).click();
+  const password = 'firefox backup password';
+  for (const field of await extension.driver.findElements(
+    By.css('[data-testid="backup-password-fields"] input'),
+  )) {
+    await field.sendKeys(password);
+  }
+  await extension.driver
+    .findElement(By.xpath('//*[@role="dialog"]//button[normalize-space()="Save backup"]'))
+    .click();
+  let saved = '';
+  await expect
+    .poll(() => {
+      saved = readdirSync(extension.downloadDirectory).find((name) => name.endsWith('.json')) ?? '';
+      return saved;
+    })
+    .toMatch(/^bookmark-scout-backup_\d{4}-\d{2}-\d{2}_.+_protected\.json$/);
+  const raw = readFileSync(path.join(extension.downloadDirectory, saved), 'utf8');
+  expect(JSON.parse(raw).sections).toEqual({});
+  expect(raw).not.toContain('dark');
+
+  await setSettings(extension, { theme: 'light' });
+  const file = testInfo.outputPath('protected-backup.json');
+  writeFileSync(file, raw);
+  await extension.driver
+    .findElement(By.css('input[type="file"][aria-label="Restore settings"]'))
+    .sendKeys(file);
+  await (await extension.find('[data-testid="backup-unlock"] input')).sendKeys(password);
+  await extension.driver
+    .findElement(By.xpath('//*[@data-testid="backup-unlock"]//button[normalize-space()="Unlock"]'))
+    .click();
+  const importButton = await extension.driver.wait(
+    async () => {
+      if ((await extension.driver.findElements(By.css('[data-testid="backup-unlock"]'))).length) {
+        return false;
+      }
+      const [button] = await extension.driver.findElements(
+        By.xpath('//*[@role="dialog"]//button[starts-with(normalize-space(), "Import (")]'),
+      );
+      return button && (await button.isEnabled()) ? button : false;
+    },
+    20_000,
+    'The protected parts did not unlock',
+  );
+  // The Backup exported notice may still cover the dialog's corner; the test is not about pointing.
+  await extension.driver.executeScript('arguments[0].click()', importButton);
+  await extension.find('[data-testid="backup-import-result"]');
+  await expect.poll(async () => (await readSettings(extension)).theme).toBe('dark');
+});
+
 test('AI waits for data collection consent, and there is no browser icon cache setting', async ({
   extension,
 }) => {

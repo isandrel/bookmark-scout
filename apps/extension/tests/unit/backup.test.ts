@@ -79,7 +79,7 @@ async function seedUserData() {
 
 describe('backup file', () => {
   it('holds only the parts selected, with a manifest, and never the keys unless selected', async () => {
-    installFakeBookmarks([]);
+    installFakeBookmarks([{ id: '42', title: 'Work' }]);
     await seedUserData();
     const built = await makeBackupFile(
       { categories: ['prompts', 'settings'], protection: 'none' },
@@ -116,11 +116,16 @@ describe('backup file', () => {
     ]);
     expect(everything).not.toContain('sk-synthetic-secret');
     expect(everything).toContain('quickSaveFixedFolder');
+    // A folder setting travels with its folder's path.
+    expect(JSON.parse(everything).sections.deviceSettings.folderPaths).toEqual({
+      quickSaveFixedFolder: 'Work',
+    });
     expect(await save(['aiServiceKeys'])).toContain('sk-synthetic-secret');
     await expect(save([])).rejects.toThrow('Select at least one part.');
   });
 
   it('reviews a file without changing anything, then restores everything on a fresh install', async () => {
+    installFakeBookmarks([{ id: '42', title: 'Work' }]);
     const { service } = await seedUserData();
     const json = await save([
       'settings',
@@ -132,11 +137,16 @@ describe('backup file', () => {
     ]);
     fakeBrowser.reset();
     await saveSettings({ language: 'en' });
+    // Another computer: the same folder under another id.
+    installFakeBookmarks([{ id: '99', title: 'Work' }]);
 
     const opened = await openBackup(json);
     if (!opened) throw new Error('not a backup');
     const reviews = await reviewBackupImport(opened);
     expect(reviews.settings).toMatchObject({ count: 2, added: 1, changed: 0, unchanged: 1 });
+    expect(reviews.deviceSettings.notes).toEqual([
+      { key: 'backup_folderSettingsByPath', values: ['1', '0'] },
+    ]);
     expect(reviews.views).toMatchObject({ count: 2, added: 2 });
     expect(reviews.rules).toMatchObject({ count: 1, added: 1, removed: 0 });
     // Nothing changed yet.
@@ -154,7 +164,7 @@ describe('backup file', () => {
     expect(outcome.failed).toBeUndefined();
     expect(outcome.outcomes.aiServices.needsSetup).toEqual([{ name: 'Work', fields: ['apiKey'] }]);
     expect(Object.values(outcome.outcomes).every((part) => part.mismatches === 0)).toBe(true);
-    expect(await getSettings()).toMatchObject({ theme: 'dark', quickSaveFixedFolder: '42' });
+    expect(await getSettings()).toMatchObject({ theme: 'dark', quickSaveFixedFolder: '99' });
     expect((await getBookmarkTableView()).sorting).toEqual([{ id: 'title', desc: true }]);
     const library = await getPromptLibrary();
     expect(library.prompts.map((prompt) => prompt.name)).toEqual(['Mine']);
@@ -375,6 +385,80 @@ describe('backup file', () => {
     );
     expect(outcome.outcomes.settings).toMatchObject({ added: 1 });
     expect((await getSettings()).theme).toBe('dark');
+  });
+
+  it('restores a folder setting only where a folder of its path exists, never by a bare id', async () => {
+    installFakeBookmarks([{ id: '42', title: 'Work' }]);
+    await saveSettings({ quickSaveFixedFolder: '42', managerStartFolderId: '42' });
+    const json = await save(['deviceSettings']);
+    fakeBrowser.reset();
+    await saveSettings({ language: 'en' });
+    // Here, folder 42 is another folder, and no folder has the path Work.
+    installFakeBookmarks([{ id: '42', title: 'Private' }]);
+    const opened = await openBackup(json);
+    if (!opened) throw new Error('not a backup');
+    expect((await reviewBackupImport(opened)).deviceSettings.notes).toEqual([
+      { key: 'backup_folderSettingsByPath', values: ['0', '2'] },
+    ]);
+    await restoreParts(json, { deviceSettings: 'merge' });
+    expect(await getSettings()).toMatchObject({
+      quickSaveFixedFolder: defaultSettings.quickSaveFixedFolder,
+      managerStartFolderId: defaultSettings.managerStartFolderId,
+    });
+
+    // A format 1 file names no paths: its folder ids are not restored.
+    await restoreParts(
+      formatOneFile({
+        [storageKey(STORAGE_ITEMS.deviceSettings)]: { v: 1, data: { quickSaveFixedFolder: '42' } },
+      }),
+      { deviceSettings: 'merge' },
+    );
+    expect((await getSettings()).quickSaveFixedFolder).toBe(defaultSettings.quickSaveFixedFolder);
+  });
+
+  it('checks every part before writing anything, so an entry too large for storage changes nothing', async () => {
+    await saveSettings({ theme: 'dark' });
+    await saveCustomPrompt({ task: 'auto_tagging', name: 'Small', system: 'x' });
+    const file = JSON.parse(await save(['settings', 'prompts']));
+    // Edited by hand: a prompt far past the browser's per-item sync quota, and a list setting
+    // longer than the setting allows.
+    const prompts = file.sections.prompts.items;
+    const key = Object.keys(prompts).find((name) => name.includes('prompts.prompt/')) ?? '';
+    prompts[key].data.system = 'x'.repeat(20_000);
+    file.sections.settings.items[storageKey(STORAGE_ITEMS.settingsList, 'urlCleanerRemoveParams')] =
+      {
+        v: 1,
+        data: Array.from({ length: 5_000 }, (_, index) => `p${index}`),
+      };
+    await saveSettings({ theme: 'light' });
+    const opened = await openBackup(JSON.stringify(file));
+    if (!opened) throw new Error('not a backup');
+    expect((await reviewBackupImport(opened)).settings.skipped).toBe(1);
+    await expect(
+      restoreParts(JSON.stringify(file), { settings: 'merge', prompts: 'merge' }),
+    ).rejects.toThrow(
+      'Prompts and About me cannot be imported: It is larger than the browser can store for it. Nothing was changed.',
+    );
+    expect((await getSettings()).theme).toBe('light');
+    expect((await getPromptLibrary()).prompts.map((prompt) => prompt.system)).toEqual(['x']);
+  });
+
+  it('puts a part back as it was when it fails partway', async () => {
+    await saveSettings({ theme: 'dark', urlCleanerRemoveParams: ['utm_*'] });
+    const json = await save(['settings']);
+    await saveSettings({ theme: 'light', urlCleanerRemoveParams: ['ref'] });
+    // The list items fail to write after the settings item was written.
+    const set = fakeBrowser.storage.sync.set.bind(fakeBrowser.storage.sync);
+    vi.spyOn(fakeBrowser.storage.sync, 'set').mockImplementation(async (items) => {
+      if (Object.keys(items).some((name) => name.startsWith('settings.list/'))) {
+        throw new Error('QUOTA_BYTES_PER_ITEM quota exceeded');
+      }
+      return set(items);
+    });
+    const outcome = await restoreParts(json, { settings: 'merge' });
+    expect(outcome.failed).toMatchObject({ id: 'settings' });
+    vi.restoreAllMocks();
+    expect(await getSettings()).toMatchObject({ theme: 'light', urlCleanerRemoveParams: ['ref'] });
   });
 
   it('remembers nothing secret: the Parts in New Backups setting has no keys part', async () => {

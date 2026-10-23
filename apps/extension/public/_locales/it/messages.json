@@ -7012,8 +7012,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "Impossibile importare $1: $2. Le parti precedenti sono state importate; Annulla importazione le ripristina.",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "Impossibile importare $1, rimesso com’era: $2. Le parti precedenti sono state importate; “Annulla importazione” le ripristina.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "Aggiunti $1 · Modificati $2 · Rimossi $3 · Mantenuti $4 · Saltati $5",
@@ -7122,6 +7122,18 @@
     "history_verifyFailedData_one": {
         "message": "Verificato dopo l’importazione: $1 voce non si rilegge come scritta.",
         "description": "History record fact: the read-back of a backup restore found one entry that differs."
+    },
+    "backup_errorTooLarge": {
+        "message": "È più grande di quanto il browser possa memorizzare.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "Impossibile importare $1: $2 Non è stato cambiato nulla.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "Le cartelle scelte vengono trovate qui in base al percorso: $1 trovate, $2 senza quella cartella qui (restano come sono).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "Con un preferito dello stesso indirizzo qui: $1",

@@ -16,6 +16,7 @@ import {
 } from '@/lib/settings-storage';
 import { syncListShards } from '@/lib/storage/migrations/2026-10-sync-list-shards';
 import { storageKey } from '@/lib/storage/registry';
+import { installFakeBookmarks } from '../../fake-bookmarks';
 import { formatOneFile, restoreParts, stubManifestVersion } from '../backup-helpers';
 import { readStoredData, readStoredRaw, STORAGE_ITEMS, seedStored } from '../storage-helpers';
 
@@ -286,6 +287,7 @@ describe('each list setting in its own item', () => {
 
   it('restores the lists of a backup file from before each list had its own item', async () => {
     stubManifestVersion();
+    installFakeBookmarks([]);
     const file = formatOneFile({
       [storageKey(STORAGE_ITEMS.settings)]: { v: 1, data: { language: 'en', ...SETTINGS_0_3_4 } },
       [storageKey(OLD_ITEM)]: { v: 1, data: OLD_LISTS },
@@ -302,7 +304,6 @@ describe('each list setting in its own item', () => {
     await restoreParts(file, { settings: 'replace', deviceSettings: 'merge' });
     expect(await getSettings()).toMatchObject({
       theme: 'dark',
-      quickSaveFixedFolder: '42',
       urlCleanerRemoveParams: ['utm_*'],
       askAiDisabledActions: ['deleteBookmarks'],
       privacyScannerSensitiveParams: ['secret'],

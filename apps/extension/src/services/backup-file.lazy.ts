@@ -416,6 +416,15 @@ export async function applyBackup(
       ]),
     ),
   );
+  // Everything is checked before anything is written: a part that cannot be stored whole (a
+  // file edited to hold an oversized list) stops the import here, with nothing changed.
+  for (const id of ids) {
+    try {
+      await getCategoryHandler(id).check?.(opened.sections[id], choices[id]);
+    } catch (error) {
+      throw new Error(t('backup_errorPartTooLarge', [partName(id), getErrorMessage(error)]));
+    }
+  }
   let operationId: string;
   try {
     operationId = await beginAuditOperation({
@@ -428,8 +437,8 @@ export async function applyBackup(
     console.error('Importing a backup without a History record:', error);
     operationId = crypto.randomUUID();
   }
+  const snapshots: Record<string, unknown> = {};
   try {
-    const snapshots: Record<string, unknown> = {};
     for (const id of ids) {
       snapshots[id] = await getCategoryHandler(id).snapshot(opened.sections[id], choices[id]);
     }
@@ -446,6 +455,10 @@ export async function applyBackup(
     try {
       outcomes[id] = await getCategoryHandler(id).apply(opened.sections[id], choices[id], context);
     } catch (error) {
+      // Each part is all or nothing: one that failed partway is put back from its safety copy.
+      await getCategoryHandler(id)
+        .undo(snapshots[id])
+        .catch((undoError: unknown) => console.error('Could not put a part back:', id, undoError));
       failed = { id, message: getErrorMessage(error) };
       break;
     }
@@ -554,3 +567,8 @@ export async function undoImportFromSnapshot(
 }
 
 export type { ConflictChoice, PartChoice, PartEstimate, PartOutcome, PartReview };
+
+/** A part's name, or its id for one this release does not know. */
+function partName(id: string): string {
+  return getBackupCategory(id) ? getBackupCategoryLabel(id) : id;
+}

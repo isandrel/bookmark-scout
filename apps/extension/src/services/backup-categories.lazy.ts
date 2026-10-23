@@ -121,6 +121,11 @@ export type CategoryHandler<S = unknown> = {
   estimate(): Promise<PartEstimate>;
   count(section: S): number;
   review(section: S, context: ImportContext): Promise<PartReview>;
+  /**
+   * Checks, before anything is written, that importing the part as chosen can be stored whole
+   * (each synced item within the browser's per-item quota); throws `BackupTooLargeError` if not.
+   */
+  check?(section: S, choice: PartChoice): Promise<void>;
   apply(section: S, choice: PartChoice, context: ImportContext): Promise<PartOutcome>;
   /** What the part holds now that `apply` may change, structured-cloneable, for Undo import. */
   snapshot(section: S, choice: PartChoice): Promise<unknown>;
@@ -139,6 +144,27 @@ export type ImportContext = {
 
 type Entries = Map<string, unknown>;
 
+/** Importing a part would make a synced item larger than the browser stores. */
+export class BackupTooLargeError extends Error {
+  constructor() {
+    super(t('backup_errorTooLarge'));
+    this.name = 'BackupTooLargeError';
+  }
+}
+
+/**
+ * Throws `BackupTooLargeError` when `data` stored as `item` (under `key`) would pass the
+ * per-item sync quota: a file edited by hand can hold values no setting allows at that size, and
+ * a write past the quota fails halfway through a restore.
+ */
+function assertFitsStorage(item: StorageItem, key: StorageKey, data: unknown): void {
+  if (item.area !== 'sync') return;
+  const name = key.slice(item.area.length + 1);
+  if (syncItemBytes(name, toStoredEnvelope(item, data)) > SYNC_QUOTA.bytesPerItem) {
+    throw new BackupTooLargeError();
+  }
+}
+
 /** One stored item of a part, seen as entries by key. */
 type ItemPart = {
   readonly item: StorageItemId;
@@ -148,8 +174,15 @@ type ItemPart = {
   fromFile(items: FileItems): { entries: Entries; skipped: number };
   /** The file's items for `entries`. */
   toFile(entries: Entries): FileItems;
-  /** Stores the entries `change` makes from this device's current ones, under the item's lock. */
+  /**
+   * Stores the entries `change` makes from this device's current ones, under the item's lock;
+   * throws `BackupTooLargeError`, writing nothing, when they would not fit the storage quota.
+   */
   write(change: (device: Entries) => Entries): Promise<void>;
+  /** Throws `BackupTooLargeError` when `entries` would not fit the storage quota. */
+  assertFits(entries: Entries): void;
+  /** For stored settings: their scope, whose folder settings are matched by path on import. */
+  settingsScope?: SettingScope;
   /** The item's stored keys and values, as stored, for Undo import. */
   snapshot(): Promise<Record<string, unknown>>;
   restore(snapshot: Record<string, unknown>): Promise<void>;
@@ -178,9 +211,11 @@ function valueItem<T>(
     /** Whether a file entry may be imported; others are skipped. */
     accept?(key: string, value: unknown): boolean;
   },
-  options: Pick<ItemPart, 'uncounted' | 'named' | 'max'> = {},
+  options: Pick<ItemPart, 'uncounted' | 'named' | 'max' | 'settingsScope'> = {},
 ): ItemPart {
   const accept = shape.accept ?? (() => true);
+  const assertFits = (entries: Entries) =>
+    assertFitsStorage(source.item, source.key, shape.fromEntries(entries, source.empty));
   return {
     item: id,
     ...options,
@@ -202,10 +237,13 @@ function valueItem<T>(
     toFile: (entries) => ({
       [source.key]: toStoredEnvelope(source.item, shape.fromEntries(entries, source.empty)),
     }),
+    assertFits,
     write: async (change) => {
-      await source.update((current) =>
-        shape.fromEntries(change(shape.toEntries(current)), current),
-      );
+      await source.update((current) => {
+        const next = change(shape.toEntries(current));
+        assertFits(next);
+        return shape.fromEntries(next, current);
+      });
     },
     snapshot: async () => ({ [source.key]: await storage.getItem(source.key) }),
     restore: async (snapshot) => {
@@ -226,6 +264,11 @@ function collectionItem<T>(
 ): ItemPart {
   const prefix = storageKey(source.item, '');
   const kept = (value: T) => value !== null && value !== undefined;
+  const assertEntriesFit = (entries: Entries) => {
+    for (const [entryId, value] of entries) {
+      assertFitsStorage(source.item, storageKey(source.item, entryId), value);
+    }
+  };
   const readEntries = async (): Promise<Entries> => {
     const ids = await source.listIds();
     const values = await source.getMany(ids);
@@ -258,10 +301,12 @@ function collectionItem<T>(
           toStoredEnvelope(source.item, value),
         ]),
       ),
+    assertFits: assertEntriesFit,
     async write(change) {
       const ids = await source.listIds();
       const device = await readEntries();
       const next = change(device);
+      assertEntriesFit(next);
       const all = [...new Set([...ids, ...next.keys()])];
       await source.record(all).update(() => Object.fromEntries(next) as Record<string, T>);
     },
@@ -332,11 +377,52 @@ function overridesItem(
   source: StoredValue<Record<string, unknown>>,
   scope: SettingScope,
 ) {
-  return valueItem(id, source, {
-    toEntries: (value) => new Map(Object.entries(value)),
-    fromEntries: (entries) => Object.fromEntries(entries),
-    accept: (key, value) => isValidSetting(key, value, scope),
-  });
+  return valueItem(
+    id,
+    source,
+    {
+      toEntries: (value) => new Map(Object.entries(value)),
+      fromEntries: (entries) => Object.fromEntries(entries),
+      accept: (key, value) => isValidSetting(key, value, scope),
+    },
+    { settingsScope: scope },
+  );
+}
+
+/**
+ * The settings that hold a bookmark folder's id (a `folder` field in the settings schema, such
+ * as the quick save folder). Folder ids differ on every device and can name another folder
+ * there, so a backup carries each with its folder's path, and a restore keeps one only where a
+ * folder of that path exists here, set to that folder's id.
+ */
+function folderSettingKeys(): Set<string> {
+  const meta = getSettingsFieldMeta();
+  return new Set(
+    (Object.keys(meta) as (keyof Settings)[]).filter((key) => meta[key].type === 'folder'),
+  );
+}
+
+/** Every folder here with its path, as the backup names folders. */
+async function folderPathsHere(): Promise<{ id: string; path: string }[]> {
+  return extractFolderPaths(await fetchBookmarkTree());
+}
+
+/** The folder settings `parts` hold in `items`, with each one's value, by item key. */
+function folderSettingsIn(parts: readonly ItemPart[], items: FileItems) {
+  const keys = folderSettingKeys();
+  const found: { itemKey: string; key: string; value: string }[] = [];
+  for (const part of parts) {
+    if (!part.settingsScope) continue;
+    const itemKey = storageKey(STORAGE_ITEMS[part.item]);
+    const data = items[itemKey]?.data;
+    if (!isPlainObject(data)) continue;
+    for (const [key, value] of Object.entries(data)) {
+      if (keys.has(key) && typeof value === 'string' && value !== '') {
+        found.push({ itemKey, key, value });
+      }
+    }
+  }
+  return found;
 }
 
 function isValidSetting(key: string, value: unknown, scope: SettingScope): boolean {
@@ -534,13 +620,71 @@ function planEntries(
 }
 
 /** File data of a part made of stored items. */
-const itemsSectionSchema = z.object({ items: fileItemsSchema });
+const itemsSectionSchema = z.object({
+  items: fileItemsSchema,
+  /** The path of the folder each folder setting names, by setting key. */
+  folderPaths: z.record(z.string(), z.string()).optional(),
+});
 type ItemsSection = z.infer<typeof itemsSectionSchema>;
 
 async function exportItems(parts: readonly ItemPart[]): Promise<ItemsSection> {
   const items: FileItems = {};
   for (const part of parts) Object.assign(items, part.toFile(await part.read()));
-  return { items };
+  const folders = folderSettingsIn(parts, items);
+  if (folders.length === 0) return { items };
+  const paths = new Map((await folderPathsHere()).map(({ id, path }) => [id, path]));
+  const folderPaths = Object.fromEntries(
+    folders.flatMap(({ key, value }) => {
+      const path = paths.get(value);
+      return path === undefined ? [] : [[key, path]];
+    }),
+  );
+  return { items, folderPaths };
+}
+
+/**
+ * The file's items with each folder setting set to the id of the folder of its path here, or
+ * left out (counted) where no single folder has that path, or the file names none (files from
+ * before folder paths were kept).
+ */
+async function resolveFolderSettings(
+  parts: readonly ItemPart[],
+  section: ItemsSection,
+): Promise<{ section: ItemsSection; matched: number; missing: number }> {
+  const folders = folderSettingsIn(parts, section.items);
+  if (folders.length === 0) return { section, matched: 0, missing: 0 };
+  const here = await folderPathsHere();
+  const items: FileItems = { ...section.items };
+  let matched = 0;
+  let missing = 0;
+  for (const { itemKey, key, value } of folders) {
+    const path = section.folderPaths?.[key];
+    const candidates = path === undefined ? [] : here.filter((folder) => folder.path === path);
+    const folder = candidates.find((candidate) => candidate.id === value) ?? candidates[0];
+    const data = { ...(items[itemKey].data as Record<string, unknown>) };
+    if (folder && (candidates.length === 1 || folder.id === value)) {
+      data[key] = folder.id;
+      matched += 1;
+    } else {
+      delete data[key];
+      missing += 1;
+    }
+    items[itemKey] = { ...items[itemKey], data };
+  }
+  return { section: { ...section, items }, matched, missing };
+}
+
+const folderNote = (matched: number, missing: number): BackupNote[] =>
+  matched + missing > 0
+    ? [{ key: 'backup_folderSettingsByPath', values: [String(matched), String(missing)] }]
+    : [];
+
+/** Throws `BackupTooLargeError` when importing `section` as chosen would not fit storage. */
+async function checkItems(parts: readonly ItemPart[], section: ItemsSection, choice: PartChoice) {
+  for (const part of parts) {
+    const { entries } = part.fromFile(section.items);
+    part.assertFits(planEntries(part, await part.read(), entries, choice).next);
+  }
 }
 
 function countEntries(parts: readonly ItemPart[], items: FileItems): number {
@@ -656,9 +800,18 @@ function itemsHandler(category: string): CategoryHandler<ItemsSection> {
       return { count: countEntries(parts(), section.items), bytes: jsonBytes(section) };
     },
     count: (section) => countEntries(parts(), section.items),
-    review: (section) => reviewItems(parts(), section),
+    review: async (section) => {
+      const resolved = await resolveFolderSettings(parts(), section);
+      const review = await reviewItems(parts(), resolved.section);
+      review.notes.push(...folderNote(resolved.matched, resolved.missing));
+      return review;
+    },
+    check: async (section, choice) =>
+      checkItems(parts(), (await resolveFolderSettings(parts(), section)).section, choice),
     apply: async (section, choice) => {
-      const { applied: _applied, ...outcome } = await applyItems(parts(), section, choice);
+      const resolved = await resolveFolderSettings(parts(), section);
+      const { applied: _applied, ...outcome } = await applyItems(parts(), resolved.section, choice);
+      outcome.notes.push(...folderNote(resolved.matched, resolved.missing));
       return outcome;
     },
     snapshot: () => snapshotItems(parts()),

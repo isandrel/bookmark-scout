@@ -7012,8 +7012,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "No se pudo importar $1: $2. Las partes anteriores se importaron; Deshacer importación las devuelve a como estaban.",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "No se pudo importar $1 y se dejó como estaba: $2. Las partes anteriores se importaron; «Deshacer importación» las restaura.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "Añadidos $1 · Cambiados $2 · Quitados $3 · Conservados $4 · Omitidos $5",
@@ -7122,6 +7122,18 @@
     "history_verifyFailedData_one": {
         "message": "Comprobado tras la importación: $1 entrada no se lee tal como se escribió.",
         "description": "History record fact: the read-back of a backup restore found one entry that differs."
+    },
+    "backup_errorTooLarge": {
+        "message": "Es más grande de lo que el navegador puede guardar para ello.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "No se puede importar $1: $2 No se cambió nada.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "Las carpetas elegidas se buscan por su ruta aquí: $1 encontradas, $2 sin esa carpeta aquí (se quedan como están).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "Con un marcador de la misma dirección aquí: $1",

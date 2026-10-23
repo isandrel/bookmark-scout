@@ -7004,8 +7004,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "$1 항목을 가져오지 못했습니다: $2. 그 전의 항목은 가져왔으며, 가져오기 실행 취소로 되돌릴 수 있습니다.",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "$1 항목을 가져오지 못해 원래대로 되돌렸습니다: $2. 앞의 항목은 가져왔으며, 가져오기 실행 취소로 되돌릴 수 있습니다.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "추가 $1 · 변경 $2 · 삭제 $3 · 유지 $4 · 건너뜀 $5",
@@ -7110,6 +7110,18 @@
     "history_verifyFailedData": {
         "message": "가져온 후 확인함: $1개 항목이 기록한 대로 읽히지 않습니다.",
         "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "backup_errorTooLarge": {
+        "message": "브라우저가 저장할 수 있는 크기보다 큽니다.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "$1 항목을 가져올 수 없습니다: $2 아무것도 바뀌지 않았습니다.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "선택한 폴더는 여기서 폴더 경로로 찾습니다: $1개 찾음, $2개는 여기에 그 폴더가 없음(그대로 둠).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "같은 주소의 북마크가 여기에 있음: $1",

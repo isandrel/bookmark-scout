@@ -7012,8 +7012,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "$1 konnte nicht importiert werden: $2. Die Teile davor wurden importiert; „Import rückgängig machen“ setzt sie zurück.",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "$1 konnte nicht importiert werden und wurde zurückgesetzt: $2. Die Teile davor wurden importiert; „Import rückgängig machen“ stellt sie wieder her.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "Hinzugefügt $1 · Geändert $2 · Entfernt $3 · Behalten $4 · Übersprungen $5",
@@ -7122,6 +7122,18 @@
     "history_verifyFailedData_one": {
         "message": "Nach dem Import geprüft: $1 Eintrag ist nicht so gespeichert wie vorgesehen.",
         "description": "History record fact: the read-back of a backup restore found one entry that differs."
+    },
+    "backup_errorTooLarge": {
+        "message": "Er ist größer, als der Browser dafür speichern kann.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "$1 kann nicht importiert werden: $2 Es wurde nichts geändert.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "Ordner-Einstellungen werden hier über den Ordnerpfad zugeordnet: $1 gefunden, $2 ohne diesen Ordner hier (bleiben wie sie sind).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "Mit einem Lesezeichen derselben Adresse hier: $1",

@@ -7536,8 +7536,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "Не удалось импортировать «$1»: $2. Части перед ней импортированы; «Отменить импорт» вернёт их как было.",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "Не удалось импортировать «$1», он возвращён как был: $2. Предыдущие части импортированы; «Отменить импорт» вернёт их.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "Добавлено: $1 · Изменено: $2 · Удалено: $3 · Оставлено: $4 · Пропущено: $5",
@@ -7642,6 +7642,18 @@
     "history_verifyFailedData": {
         "message": "Проверено после импорта: не совпало записей — $1.",
         "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "backup_errorTooLarge": {
+        "message": "Это больше, чем браузер может сохранить.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "Нельзя импортировать «$1»: $2 Ничего не изменено.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "Выбранные папки сопоставляются по пути: найдено — $1, без такой папки здесь — $2 (остаются как есть).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "Есть закладка с тем же адресом здесь: $1",

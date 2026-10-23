@@ -6750,8 +6750,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "$1 tidak dapat diimpor: $2. Bagian sebelumnya sudah diimpor; Urungkan impor mengembalikannya.",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "$1 tidak bisa diimpor dan dikembalikan seperti semula: $2. Bagian sebelumnya sudah diimpor; Batalkan impor mengembalikannya.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "Ditambahkan $1 · Diubah $2 · Dihapus $3 · Dipertahankan $4 · Dilewati $5",
@@ -6856,6 +6856,18 @@
     "history_verifyFailedData": {
         "message": "Diperiksa setelah impor: $1 entri tidak terbaca sesuai yang ditulis.",
         "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "backup_errorTooLarge": {
+        "message": "Ukurannya melebihi yang bisa disimpan browser.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "$1 tidak bisa diimpor: $2 Tidak ada yang diubah.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "Pilihan folder dicocokkan berdasarkan jalur folder di sini: $1 ditemukan, $2 tanpa folder itu di sini (dibiarkan seperti semula).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "Ada bookmark dengan alamat yang sama di sini: $1",

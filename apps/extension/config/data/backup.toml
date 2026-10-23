@@ -13,7 +13,10 @@
 # - label, description: message keys, in every locale.
 # - slug: the part's name in the file name, kebab-case ASCII.
 # - device_specific: suits one computer (screen, keyboard, folders of this profile), so it is not
-#   selected by default, like VS Code's machine settings; the dialogs say why.
+#   selected by default, like VS Code's machine settings; the dialogs say why. Wherever a
+#   setting names a bookmark folder (a `folder` field in the settings schema, such as the quick save folder), the file
+#   carries the folder's path, and a restore keeps the setting only where a folder of that path
+#   exists, set to its id there: folder ids differ on every device.
 # - secret: credentials. Never selected by default and never remembered; selecting it shows a
 #   warning that needs a confirm, and password protection starts on.
 # - large: can make the file large; the dialogs mark it.

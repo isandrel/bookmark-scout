@@ -6766,8 +6766,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "無法匯入 $1：$2。之前的內容已匯入；「復原匯入」可將其放回。",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "無法匯入「$1」，已還原為原狀：$2。之前的內容已匯入；「復原匯入」可將其還原。",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "新增 $1 · 變更 $2 · 移除 $3 · 保留 $4 · 略過 $5",
@@ -6872,6 +6872,18 @@
     "history_verifyFailedData": {
         "message": "匯入後已檢查：有 $1 項與寫入時不一致。",
         "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "backup_errorTooLarge": {
+        "message": "超出瀏覽器能為它儲存的大小。",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "無法匯入「$1」：$2 未做任何變更。",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "所選資料夾會依此處的資料夾路徑比對：找到 $1 個，$2 個在此處沒有該資料夾（保持不變）。",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "這裡有相同網址的書籤：$1",

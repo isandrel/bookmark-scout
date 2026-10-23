@@ -7004,8 +7004,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "$1 をインポートできませんでした: $2。それより前の項目はインポートされています。「インポートを元に戻す」で元に戻せます。",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "$1 をインポートできなかったため元に戻しました: $2。それより前の項目はインポート済みです。「インポートを元に戻す」で戻せます。",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "追加 $1 · 変更 $2 · 削除 $3 · 維持 $4 · スキップ $5",
@@ -7110,6 +7110,18 @@
     "history_verifyFailedData": {
         "message": "インポート後に確認済み: $1 件が書いたとおりに読み取れません。",
         "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "backup_errorTooLarge": {
+        "message": "ブラウザーが保存できるサイズを超えています。",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "$1 をインポートできません: $2 何も変更していません。",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "選んだフォルダはここでフォルダのパスで照合します: $1 件見つかりました、$2 件はここにそのフォルダがありません (そのままにします)。",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "同じアドレスのブックマークがここにあるもの: $1",

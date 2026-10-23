@@ -7012,8 +7012,8 @@
         "description": "Restore settings dialog: result heading"
     },
     "backup_importPartFailed": {
-        "message": "$1 could not be imported: $2. The parts before it were imported; Undo import puts them back.",
-        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+        "message": "$1 could not be imported and was put back as it was: $2. The parts before it were imported; Undo import puts them back.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
     },
     "backup_outcomeCounts": {
         "message": "Added $1 · Changed $2 · Removed $3 · Kept $4 · Skipped $5",
@@ -7122,6 +7122,18 @@
     "history_verifyFailedData_one": {
         "message": "Checked after the import: $1 entry did not read back as written.",
         "description": "History record fact: the read-back of a backup restore found one entry that differs."
+    },
+    "backup_errorTooLarge": {
+        "message": "It is larger than the browser can store for it.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "$1 cannot be imported: $2 Nothing was changed.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "Folder choices are matched by folder path here: $1 found, $2 without that folder here (left as they are).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "With a bookmark of the same address here: $1",
