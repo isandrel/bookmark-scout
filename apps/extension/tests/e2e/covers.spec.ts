@@ -4,8 +4,10 @@
  * downloading anything again, and Options deletes them.
  */
 import { solidPng } from '../solid-png';
+import { libraryState, settledLibraryState, waitForAuditBaseline } from './audit-helpers';
 import { expect, test } from './fixtures';
 import { managerUrl } from './manager-helpers';
+import { STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 const STORY = `<!doctype html><html><head><title>Story</title>
@@ -17,11 +19,12 @@ const headNaming = (image: string) =>
 test.describe('with website access granted', () => {
   test.use({ grantWebHostAccess: true });
 
-  test('a fetched cover shows on its card after the review saves it, and Options deletes it', async ({
+  test('a fetched cover shows on its card after the review saves it, and Options deletes it, leaving bookmarks, tags, and the History unchanged (V32)', async ({
     extensionId,
     extensionWorker,
     page,
   }) => {
+    await waitForAuditBaseline(extensionWorker);
     const seeded = await seedFolder(extensionWorker, 'E2E Covers', [
       { title: 'Story page', url: 'https://news.e2e.invalid/story' },
       { title: 'Plain page', url: 'https://plain.e2e.invalid/' },
@@ -38,6 +41,11 @@ test.describe('with website access granted', () => {
       const body = url.startsWith('https://news.') ? STORY : PLAIN;
       return route.fulfill({ status: 200, contentType: 'text/html', body });
     });
+    await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+      [seeded.ids['Story page'] ?? '']: { tags: ['news'] },
+    });
+    // What fetching covers, showing them, and deleting them must leave as it is.
+    const before = await settledLibraryState(extensionWorker, seeded.folderId);
 
     // Off until the user turns it on.
     await openTools(page, extensionId, seeded.folderId);
@@ -85,6 +93,7 @@ test.describe('with website access granted', () => {
       seeded.folderId,
     );
     expect(bookmarks).toHaveLength(3);
+    expect(await libraryState(extensionWorker, seeded.folderId)).toEqual(before);
   });
 
   test('an unusable image and a redirecting page get their own tabs, and the redirect is never followed (V24, V25)', async ({

@@ -1,6 +1,7 @@
 /**
  * Where a search result matched, in words, for a result whose title did not match: the popup and
- * side panel rows and the manager's table and cards say it the same way ("in URL", "tag: work").
+ * side panel rows and the manager's table and cards say it the same way ("in URL", "tag: work",
+ * "downloaded page: ...").
  */
 
 /** The places a search can match besides the title, in the order a row names them. */
@@ -13,6 +14,15 @@ const SEARCH_REASONS = [
   ['folder', 'search_reasonFolder'],
 ] as const satisfies readonly (readonly [SearchMatchField, MessageKey])[];
 
+/**
+ * Page text says how it was captured: downloaded by Index Page Text, or read from the user's tab.
+ * Text indexed before that was kept says only `search_reasonContent`.
+ */
+const CONTENT_SOURCE_KEYS = {
+  download: 'search_reasonContentDownload',
+  tab: 'search_reasonContentTab',
+} as const satisfies Record<PageTextSource, MessageKey>;
+
 /** Where a search result matched, for a row whose title did not. */
 export function searchReasonLabel(reasons: readonly SearchMatchReason[] = []): string | undefined {
   if (reasons.some((reason) => reason.field === 'title')) return undefined;
@@ -20,7 +30,9 @@ export function searchReasonLabel(reasons: readonly SearchMatchReason[] = []): s
     const reason = reasons.find((candidate) => candidate.field === field);
     if (!reason) continue;
     if (reason.field === 'tag') return t(message, [reason.value]);
-    if (reason.field === 'content') return t(message, [reason.snippet]);
+    if (reason.field === 'content') {
+      return t(reason.source ? CONTENT_SOURCE_KEYS[reason.source] : message, [reason.snippet]);
+    }
     return t(message);
   }
   return undefined;

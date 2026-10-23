@@ -649,7 +649,10 @@ test.describe('opening from a card', () => {
         .getByTestId('bookmark-cards')
         .locator('[data-slot="bookmark-card"]')
         .filter({ hasText: title });
-    /** The address of every tab, read from the browser, that is not the manager. */
+    /**
+     * The address of every tab, read from the browser, that is not the manager. A tab opened in
+     * the background has no address for a moment, so checks on addresses poll.
+     */
     const opened = () =>
       extensionWorker.evaluate(async (manager) => {
         const tabs = await chrome.tabs.query({});
@@ -672,8 +675,10 @@ test.describe('opening from a card', () => {
     await card('Open Card').focus();
     await page.keyboard.press('ControlOrMeta+Enter');
     await expect.poll(async () => (await opened()).length).toBe(before.length + 3);
-    expect(await added()).toEqual(['https://open.e2e.invalid/']);
-    expect((await opened()).filter((url) => url === 'https://open.e2e.invalid/')).toHaveLength(3);
+    await expect.poll(added).toEqual(['https://open.e2e.invalid/']);
+    await expect
+      .poll(async () => (await opened()).filter((url) => url === 'https://open.e2e.invalid/'))
+      .toHaveLength(3);
     await page.bringToFront();
 
     // A bookmarklet or a data: address opens from no card and no row, by any gesture, alone or
@@ -698,7 +703,7 @@ test.describe('opening from a card', () => {
     };
     await refused(card);
     await expect.poll(async () => (await opened()).length).toBe(before.length + 4);
-    expect(await added()).toEqual(['https://open.e2e.invalid/']);
+    await expect.poll(added).toEqual(['https://open.e2e.invalid/']);
 
     await page
       .getByRole('group', { name: 'Manager View' })
@@ -707,6 +712,6 @@ test.describe('opening from a card', () => {
     const row = (title: string) => page.locator('tbody tr').filter({ hasText: title });
     await refused(row, { x: 200, y: 10 });
     await expect.poll(async () => (await opened()).length).toBe(before.length + 5);
-    expect(await added()).toEqual(['https://open.e2e.invalid/']);
+    await expect.poll(added).toEqual(['https://open.e2e.invalid/']);
   });
 });

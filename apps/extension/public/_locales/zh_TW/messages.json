@@ -7803,6 +7803,14 @@
         "message": "絕不下載包含使用者名稱和密碼、或包含隱私掃描工具「敏感參數」所列參數 (例如權杖) 的網址，因為網站會收到這些內容。關閉後，這些書籤會像其他書籤一樣被讀取。",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "永不讀取這些網站",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "「索引網頁內文」從不下載這些網站及其子網域的網頁（example.com 包含 news.example.com），「索引此網頁的內文」也從不讀取它們。新增網站會刪除已從該網站索引的內文。請輸入網站或貼上網址。",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "從每個網頁讀取的內文。只有你儲存的內容才會留在這部裝置上。",
         "description": "Index Page Text review: description"
@@ -7846,6 +7854,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "未下載：該網址包含隱私掃描工具的敏感參數清單中的參數（例如權杖），網站會收到它。",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "未下載：該網站在設定的「永不讀取這些網站」中。",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "未選擇 ($1)",
@@ -7947,6 +7959,14 @@
         "message": "網頁：$1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "已下載的網頁：$1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "來自你的分頁的網頁：$1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "在已索引的網頁內文中",
         "description": "Search syntax help: what content: does"
@@ -8005,6 +8025,14 @@
         "message": "上次執行失敗：$1 個",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "上次索引：$1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "上次索引：從未",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "重試失敗項目",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -8016,6 +8044,14 @@
     "pageText_retryStartedDesc": {
         "message": "它會在背景執行。完成後，請在書籤管理員「工具」中的「索引網頁內文」卡片上透過「檢視結果」儲存文字。",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "重新整理已過期項目",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "正在重新讀取 $1 個已過期的頁面",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
     },
     "pageText_accessNote": {
         "message": "撤銷對某個網站的存取權會刪除從該網站索引的文字。",
@@ -8064,6 +8100,10 @@
     "pageText_tabFull": {
         "message": "網頁內文索引已滿。請在設定中使用「刪除網頁內文」騰出空間。",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "該網站在設定的「永不讀取這些網站」中，因此從不讀取其網頁。",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "管理員檢視",

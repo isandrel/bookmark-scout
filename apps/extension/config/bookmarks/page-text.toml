@@ -13,6 +13,10 @@ timeout_ms = 10000
 max_bytes = 2000000
 # Pages downloaded at a time
 concurrency = 4
+# A busy site (an answer such as 429 Too Many Requests that names a short Retry-After,
+# config/network/retry-after.toml) is asked again after that wait at most this many times; then
+# the page is listed as failed, for Retry failed in Options
+busy_retries = { value = 2, min = 0, max = 5 }
 # Raised when the kept text would read differently, so pages are indexed again. 2: plain text,
 # one block per line ([text]), instead of Markdown
 extractor_version = 2

@@ -15,6 +15,8 @@ privacyScannerSensitiveParams = [
   "apikey", "key", "secret", "client_secret", "password", "pwd", "code", "session", "sessionid",
   "sid", "jwt", "sig", "signature", "otp",
 ]
+# Index Page Text's Never Read These Sites: nothing to suggest, every user's sites differ
+pageTextExcludedSites = []
 
 # HTTP status codes the Success Status Codes checklist offers, grouped by class in this order.
 # The reason phrases are the protocol's own (RFC 9110), so they are not translated.

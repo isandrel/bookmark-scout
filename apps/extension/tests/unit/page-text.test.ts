@@ -1,3 +1,5 @@
+import { IDBFactory } from 'fake-indexeddb';
+import { openDB } from 'idb';
 import { DOMParser as LinkedomParser, parseHTML } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
@@ -19,10 +21,14 @@ import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { pageTextReadingSchema } from '@/lib/quick-save-validation';
 import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
+import { searchReasonLabel } from '@/lib/search-reasons';
 import { saveSettings } from '@/lib/settings-storage';
 import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
+import { INDEXED_DATABASES } from '@/lib/storage/registry';
+import { sha256Hex } from '@/lib/utils';
 import {
   listPageTextSites,
+  pageTextNeed,
   readPageTextHtml,
   readTabPageText,
   savePageTextResults,
@@ -101,13 +107,16 @@ describe('page text store', () => {
   });
 
   it('keeps each page cut to the limit, current only at the address it was read from', async () => {
-    await savePageTexts([
-      {
-        bookmarkId: 'a',
-        url: 'https://notes.example/a',
-        text: 'x'.repeat(PAGE_TEXT_LIMITS.maxCharsPerPage + 50),
-      },
-    ]);
+    await savePageTexts(
+      [
+        {
+          bookmarkId: 'a',
+          url: 'https://notes.example/a',
+          text: 'x'.repeat(PAGE_TEXT_LIMITS.maxCharsPerPage + 50),
+        },
+      ],
+      'download',
+    );
     const pages = await getPageTexts();
     expect(pages.get('a')?.text).toHaveLength(PAGE_TEXT_LIMITS.maxCharsPerPage);
     expect(isPageTextCurrent(pages.get('a'), 'https://notes.example/a')).toBe(true);
@@ -119,7 +128,10 @@ describe('page text store', () => {
   });
 
   it('keeps the pages saved before storage ran out, and says how many were not saved', async () => {
-    await savePageTexts([{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'kept' }]);
+    await savePageTexts(
+      [{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'kept' }],
+      'download',
+    );
     const pages = Array.from({ length: INDEXED_SAVE_BATCH_SIZE * 2 + 3 }, (_, index) => ({
       bookmarkId: `p${index}`,
       url: `https://notes.example/${index}`,
@@ -128,7 +140,7 @@ describe('page text store', () => {
     // Storage runs out in the second batch, which is rolled back as a whole.
     const full = runOutOfStorageAfter(INDEXED_SAVE_BATCH_SIZE + 1);
     try {
-      expect(await savePageTexts(pages)).toEqual({
+      expect(await savePageTexts(pages, 'download')).toEqual({
         saved: INDEXED_SAVE_BATCH_SIZE,
         notSaved: pages.length - INDEXED_SAVE_BATCH_SIZE,
       });
@@ -143,10 +155,13 @@ describe('page text store', () => {
   });
 
   it('drops the text of bookmarks that are gone, and clears everything', async () => {
-    await savePageTexts([
-      { bookmarkId: 'a', url: 'https://notes.example/a', text: 'one' },
-      { bookmarkId: 'gone', url: 'https://gone.example/', text: 'two' },
-    ]);
+    await savePageTexts(
+      [
+        { bookmarkId: 'a', url: 'https://notes.example/a', text: 'one' },
+        { bookmarkId: 'gone', url: 'https://gone.example/', text: 'two' },
+      ],
+      'download',
+    );
     expect(await prunePageTexts(new Set(['a']))).toBe(1);
     expect([...(await getPageTexts()).keys()]).toEqual(['a']);
     await clearPageTexts();
@@ -192,7 +207,10 @@ describe('Index Page Text runs', () => {
   });
 
   it('reads each page once, sorting what it found, and skips pages it cannot read', async () => {
-    await savePageTexts([{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'old' }]);
+    await savePageTexts(
+      [{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'old' }],
+      'download',
+    );
     const { items, overLimit } = await scanPageTexts(
       folder([
         { id: 'read', parentId: 'f', title: 'Trip', url: 'https://trip.example/' },
@@ -204,7 +222,7 @@ describe('Index Page Text runs', () => {
         { id: 'local', parentId: 'f', title: 'Router', url: 'http://192.168.1.1/' },
         { id: 'js', parentId: 'f', title: 'Script', url: 'javascript:void(0)' },
       ]),
-      { skipPrivateHosts: true, sensitiveParams: [] },
+      { skipPrivateHosts: true, sensitiveParams: [], excludedSites: [] },
     );
     expect(overLimit).toBe(0);
     expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
@@ -224,7 +242,10 @@ describe('Index Page Text runs', () => {
   });
 
   it('lists the sites a run would download from, and reads only the chosen ones (S03)', async () => {
-    await savePageTexts([{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'old' }]);
+    await savePageTexts(
+      [{ bookmarkId: 'kept', url: 'https://kept.example/', text: 'old' }],
+      'download',
+    );
     const nodes = folder([
       { id: 'a1', parentId: 'f', title: 'A one', url: 'https://www.alpha.example/1' },
       { id: 'a2', parentId: 'f', title: 'A two', url: 'https://docs.alpha.example/2' },
@@ -237,19 +258,24 @@ describe('Index Page Text runs', () => {
       { id: 'js', parentId: 'f', title: 'Script', url: 'javascript:void(0)' },
     ]);
     // Pages indexed already and pages that may not be read are not sites to choose.
-    expect(await listPageTextSites(nodes, { skipPrivateHosts: true, sensitiveParams: [] })).toEqual(
-      [
-        { site: 'alpha.example', count: 2 },
-        { site: 'beta.example', count: 1 },
-        { site: 'delta.example', count: 1 },
-        { site: 'epsilon.example', count: 1 },
-        { site: 'gamma.example', count: 1 },
-      ],
-    );
+    expect(
+      await listPageTextSites(nodes, {
+        skipPrivateHosts: true,
+        sensitiveParams: [],
+        excludedSites: [],
+      }),
+    ).toEqual([
+      { site: 'alpha.example', count: 2 },
+      { site: 'beta.example', count: 1 },
+      { site: 'delta.example', count: 1 },
+      { site: 'epsilon.example', count: 1 },
+      { site: 'gamma.example', count: 1 },
+    ]);
 
     const { items } = await scanPageTexts(nodes, {
       skipPrivateHosts: true,
       sensitiveParams: [],
+      excludedSites: [],
       sites: ['alpha.example', 'gamma.example'],
     });
     expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
@@ -279,7 +305,12 @@ describe('Index Page Text runs', () => {
           { id: 'b1', parentId: 'f', title: 'B one', url: 'https://beta.example/1' },
           { id: 'c1', parentId: 'f', title: 'C one', url: 'https://gamma.example/1' },
         ]),
-        { skipPrivateHosts: true, sensitiveParams: [], sites: ['gamma.example'] },
+        {
+          skipPrivateHosts: true,
+          sensitiveParams: [],
+          excludedSites: [],
+          sites: ['gamma.example'],
+        },
       );
     } finally {
       limits.maxPages = maxPages;
@@ -318,7 +349,7 @@ describe('Index Page Text runs', () => {
         { id: 'moved', parentId: 'f', title: 'Moved', url: 'https://moved.example/' },
         { id: 'elsewhere', parentId: 'f', title: 'Away', url: 'https://elsewhere.example/' },
       ]),
-      { skipPrivateHosts: true, sensitiveParams: [] },
+      { skipPrivateHosts: true, sensitiveParams: [], excludedSites: [] },
     );
     expect(Object.fromEntries(items.map((item) => [item.id, item.status]))).toEqual({
       moved: 'redirected',
@@ -345,7 +376,7 @@ describe('Index Page Text runs', () => {
     );
     const { items } = await scanPageTexts(
       folder([{ id: 'old', parentId: 'f', title: 'Old link', url: 'http://trip.example/notes' }]),
-      { skipPrivateHosts: true, sensitiveParams: [] },
+      { skipPrivateHosts: true, sensitiveParams: [], excludedSites: [] },
     );
     expect(items[0]).toMatchObject({ status: 'read', readFrom: 'https://trip.example/notes' });
     expect(requested).toEqual(['http://trip.example/notes', 'https://trip.example/notes']);
@@ -381,7 +412,10 @@ describe('Index Page Text runs', () => {
   });
 
   it('saves only the pages left on Save, and drops text of bookmarks that are gone', async () => {
-    await savePageTexts([{ bookmarkId: 'gone', url: 'https://gone.example/', text: 'old' }]);
+    await savePageTexts(
+      [{ bookmarkId: 'gone', url: 'https://gone.example/', text: 'old' }],
+      'download',
+    );
     vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockResolvedValue([
       {
         id: '0',
@@ -621,5 +655,223 @@ describe("Index this page's text from the current tab (S17, S18)", () => {
 
     vi.spyOn(fakeBrowser.scripting, 'executeScript').mockRejectedValue(new Error('no access'));
     expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'denied' });
+  });
+
+  it('never reads a page on a site in Never Read These Sites (S1)', async () => {
+    vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab()]);
+    await saveSettings({ pageTextExcludedSites: ['news.example'] });
+    try {
+      expect(await readTabPageText(URL_SAVED)).toEqual({ error: 'excluded' });
+      expect(fakeBrowser.scripting.executeScript).not.toHaveBeenCalled();
+    } finally {
+      await saveSettings({ pageTextExcludedSites: [] });
+    }
+    const result = await readTabPageText(URL_SAVED);
+    if (!('page' in result)) throw new Error(result.error);
+    expect(result.page.pages[0]).toMatchObject({ truncated: false });
+  });
+});
+
+describe('where page text came from (PROMPT S2.5)', () => {
+  beforeEach(async () => {
+    await clearPageTexts();
+    await saveSettings({ language: 'en' });
+    setLanguage('en');
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('keeps how the text was captured, the address it was read from, its fingerprint, and whether it was cut', async () => {
+    const long = 'y'.repeat(PAGE_TEXT_LIMITS.maxCharsPerPage + 1);
+    await savePageTexts(
+      [
+        {
+          bookmarkId: 'a',
+          url: 'http://notes.example/a',
+          readFrom: 'https://notes.example/a',
+          text: 'short',
+        },
+        { bookmarkId: 'long', url: 'https://long.example/', text: long },
+      ],
+      'download',
+    );
+    await savePageTexts(
+      [{ bookmarkId: 't', url: 'https://tab.example/', text: 'seen', truncated: true }],
+      'tab',
+    );
+    const pages = await getPageTexts();
+    expect(pages.get('a')?.provenance).toEqual({
+      source: 'download',
+      readFrom: 'https://notes.example/a',
+      fingerprint: await sha256Hex('short'),
+      truncated: false,
+    });
+    // Cut to the limit here, so marked cut; the fingerprint is of the text kept.
+    expect(pages.get('long')?.provenance).toMatchObject({
+      readFrom: 'https://long.example/',
+      truncated: true,
+      fingerprint: await sha256Hex(long.slice(0, PAGE_TEXT_LIMITS.maxCharsPerPage)),
+    });
+    // Cut by the reader already.
+    expect(pages.get('t')?.provenance).toMatchObject({ source: 'tab', truncated: true });
+  });
+
+  it('says whether the reader had more text than it kept', async () => {
+    vi.stubGlobal('DOMParser', LinkedomParser);
+    expect(await readPageTextHtml(ARTICLE, 40)).toMatchObject({ status: 'read', truncated: true });
+    expect(await readPageTextHtml(ARTICLE, PAGE_TEXT_LIMITS.maxCharsPerPage)).toMatchObject({
+      status: 'read',
+      truncated: false,
+    });
+  });
+
+  it('saves a run with source download and the address each page was read from', async () => {
+    vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockResolvedValue([
+      {
+        id: '0',
+        title: '',
+        syncing: false,
+        children: [
+          { id: 'r', parentId: '0', title: 'Trip', url: 'http://trip.example/', syncing: false },
+        ],
+      },
+    ]);
+    await savePageTextResults([
+      {
+        id: 'r',
+        title: 'Trip',
+        url: 'http://trip.example/',
+        readFrom: 'https://trip.example/',
+        folderPath: '',
+        status: 'read',
+        text: 'quokka',
+        truncated: true,
+      },
+    ]);
+    expect((await getPageTexts()).get('r')?.provenance).toMatchObject({
+      source: 'download',
+      readFrom: 'https://trip.example/',
+      truncated: true,
+    });
+  });
+
+  it('counts a record from an older extractor as out of date, so it is read again', async () => {
+    const url = 'https://notes.example/a';
+    await savePageTexts([{ bookmarkId: 'a', url, text: 'old' }], 'download');
+    const current = (await getPageTexts()).get('a');
+    expect(isPageTextCurrent(current, url)).toBe(true);
+    const older = current && {
+      ...current,
+      extractorVersion: PAGE_TEXT_LIMITS.extractorVersion - 1,
+    };
+    expect(isPageTextCurrent(older, url)).toBe(false);
+    const options = {
+      skipPrivateHosts: true,
+      skipSecretUrls: true,
+      sensitiveParams: [],
+      excludedSites: [],
+    };
+    expect(pageTextNeed(url, older, options, () => false)).toEqual({ status: 'read' });
+    expect(pageTextNeed(url, current, options, () => false)).toEqual({ status: 'current' });
+  });
+
+  it('keeps records saved before provenance (database version 1), searchable and out of date', async () => {
+    globalThis.indexedDB = new IDBFactory();
+    const url = 'https://notes.example/a';
+    const legacy = await openDB(INDEXED_DATABASES.pageText.name, 1, {
+      upgrade(db) {
+        db.createObjectStore('pages', { keyPath: 'bookmarkId' });
+      },
+    });
+    await legacy.put('pages', {
+      bookmarkId: 'a',
+      url,
+      text: 'A quokka from before.',
+      indexedAt: 1,
+      extractorVersion: PAGE_TEXT_LIMITS.extractorVersion,
+    });
+    legacy.close();
+    vi.resetModules();
+    const store = await import('@/lib/page-text-store');
+    const record = (await store.getPageTexts()).get('a');
+    expect(record).toMatchObject({ text: 'A quokka from before.' });
+    expect(record?.provenance).toBeUndefined();
+    expect(store.isPageTextCurrent(record, url)).toBe(false);
+    const upgraded = await openDB(INDEXED_DATABASES.pageText.name);
+    expect(upgraded.version).toBe(2);
+    upgraded.close();
+    // Search still finds it, saying only "page".
+    const [result] = searchDocuments(
+      buildSearchDocuments(tree, {}, new Map([['a', { url, text: record?.text ?? '' }]])),
+      parseSearchQuery('quokka').query,
+    );
+    expect(searchReasonLabel(result?.reasons)).toBe('page: A quokka from before.');
+  });
+
+  it('says in search results where the text came from', () => {
+    const texts = new Map([
+      [
+        'a',
+        {
+          url: 'https://notes.example/a',
+          text: 'A quokka by the river.',
+          source: 'download' as const,
+        },
+      ],
+      [
+        'b',
+        { url: 'https://food.example/b', text: 'A quokka in the kitchen.', source: 'tab' as const },
+      ],
+    ]);
+    const results = searchDocuments(
+      buildSearchDocuments(tree, {}, texts),
+      parseSearchQuery('quokka').query,
+    );
+    const labels = Object.fromEntries(
+      results.map((result) => [result.document.id, searchReasonLabel(result.reasons)]),
+    );
+    expect(labels).toEqual({
+      a: 'downloaded page: A quokka by the river.',
+      b: 'page from your tab: A quokka in the kitchen.',
+    });
+  });
+});
+
+describe('content: with code terms, quotes, and negation (S33)', () => {
+  const texts = new Map([
+    [
+      'a',
+      {
+        url: 'https://notes.example/a',
+        text: 'Templates in C++ and the GPT-6 notes.\nA “smart quote” here.',
+      },
+    ],
+    ['b', { url: 'https://food.example/b', text: 'C is not C plus plus. GPT 6 spaced out.' }],
+  ]);
+  const ids = (query: string) => {
+    const { query: parsed, diagnostics } = parseSearchQuery(query);
+    expect(diagnostics).toEqual([]);
+    return searchDocuments(buildSearchDocuments(tree, {}, texts), parsed)
+      .map((result) => result.document.id)
+      .sort();
+  };
+
+  it('finds code terms with punctuation as written', () => {
+    expect(ids('content:C++')).toEqual(['a']);
+    expect(ids('content:GPT-6')).toEqual(['a']);
+    expect(ids('content:"GPT 6"')).toEqual(['b']);
+  });
+
+  it('finds a phrase with curly quotes in the page, in straight or curly quotes in the query', () => {
+    expect(ids('content:"“smart quote”"')).toEqual(['a']);
+    expect(ids('content:“smart')).toEqual(['a']);
+  });
+
+  it('excludes with -content:, which keeps bookmarks without page text', () => {
+    expect(ids('-content:C++')).toEqual(['b', 'moved']);
+    expect(ids('-content:"GPT 6" has:content')).toEqual(['a']);
   });
 });

@@ -7803,6 +7803,14 @@
         "message": "绝不下载包含用户名和密码、或包含隐私扫描“敏感参数”中所列参数（例如令牌）的地址，因为网站会收到这些内容。关闭后，这些书签会像其他书签一样被读取。",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "从不读取这些网站",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "“索引网页正文”从不下载这些网站及其子域名的网页（example.com 包括 news.example.com），“索引此网页的正文”也从不读取它们。添加网站会删除已从该网站索引的正文。请输入网站或粘贴地址。",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "从每个网页读取的正文。只有你保存的内容才会保留在此设备上。",
         "description": "Index Page Text review: description"
@@ -7846,6 +7854,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "未下载：该地址包含隐私扫描的敏感参数列表中的参数（例如令牌），网站会收到它。",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "未下载：该网站在设置的“从不读取这些网站”中。",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "未选择 ($1)",
@@ -7947,6 +7959,14 @@
         "message": "网页：$1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "已下载的网页：$1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "来自你的标签页的网页：$1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "在已索引的网页正文中",
         "description": "Search syntax help: what content: does"
@@ -8005,6 +8025,14 @@
         "message": "上次运行失败：$1 个",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "上次索引：$1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "上次索引：从未",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "重试失败项",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -8016,6 +8044,14 @@
     "pageText_retryStartedDesc": {
         "message": "它在后台运行。完成后，请在书签管理器“工具”中的“索引网页正文”卡片上通过“查看结果”保存文本。",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "刷新已过期项",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "正在重新读取 $1 个已过期的页面",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
     },
     "pageText_accessNote": {
         "message": "撤销对某个网站的访问权限会删除从该网站索引的文本。",
@@ -8064,6 +8100,10 @@
     "pageText_tabFull": {
         "message": "网页正文索引已满。请在设置中使用“删除网页正文”腾出空间。",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "该网站在设置的“从不读取这些网站”中，因此从不读取其网页。",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "管理器视图",

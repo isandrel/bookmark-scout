@@ -39,15 +39,23 @@ function searchScore(bookmark: LibraryBookmark, words: readonly string[]): numbe
   );
 }
 
+/** What `matchFilterQuery` found, and whether the query asked for page text it cannot see. */
+type FilterQueryMatches = {
+  results: ReadonlyMap<string, SearchResult>;
+  asksForPageText: boolean;
+};
+
 /**
  * The bookmarks a query in the search query language (`search-query.ts`) matches, by id, the way
  * the extension's search boxes match it; an error naming what could not be read. Unlike `query`,
  * whose words each find bookmarks on their own, every term must match.
+ *
+ * Page text is left out on purpose: the text of indexed pages stays on this device and search is
+ * its only use, while AI tools send what they find to an AI provider or a local agent, and
+ * whether a page holds a word is part of its text. So `content:` and `has:content` match no
+ * bookmark here, and the result says so (`page_text_note`) instead of an unexplained empty list.
  */
-function matchFilterQuery(
-  library: ActionLibrary,
-  text: string,
-): ReadonlyMap<string, SearchResult> | ActionError {
+function matchFilterQuery(library: ActionLibrary, text: string): FilterQueryMatches | ActionError {
   const { query, diagnostics } = parseSearchQuery(text);
   if (diagnostics.length > 0) {
     return actionError(
@@ -63,7 +71,7 @@ function matchFilterQuery(
     const result = match(document);
     if (result) results.set(document.id, result);
   }
-  return results;
+  return { results, asksForPageText: searchesPageText(query) };
 }
 
 function describeDiagnostic(diagnostic: SearchQueryDiagnostic): string {
@@ -182,7 +190,7 @@ const searchBookmarks = defineAction({
       }
       const own = new Set((bookmark.metadata.tags ?? []).map((tag) => tag.toLowerCase()));
       if (!tags.every((tag) => own.has(tag))) return [];
-      const queried = filtered?.get(bookmark.node.id);
+      const queried = filtered?.results.get(bookmark.node.id);
       if (filtered && !queried) return [];
       const score = searchScore(bookmark, words);
       if (words.length > 0 && score === 0) return [];
@@ -194,9 +202,19 @@ const searchBookmarks = defineAction({
     if (isActionError(page)) return page;
     const summaryChars =
       input.responseFormat === 'detailed' ? actionLimits.summary_chars : undefined;
+    const paging = pagingFields(
+      page,
+      page.items.length,
+      'Narrow it with folder, domain, tags, or dates.',
+    );
+    const notes = [
+      ...(filtered?.asksForPageText ? [agentText('search_bookmarks.page_text_note')] : []),
+      ...(paging.note ? [paging.note] : []),
+    ];
     return {
       results: page.items.map(({ bookmark }) => toActionBookmark(bookmark, { summaryChars })),
-      ...pagingFields(page, page.items.length, 'Narrow it with folder, domain, tags, or dates.'),
+      ...paging,
+      ...(notes.length > 0 ? { note: notes.join(' ') } : {}),
     };
   },
 });

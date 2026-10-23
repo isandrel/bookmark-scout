@@ -31,6 +31,11 @@ export type SearchDocument = {
    * block (a paragraph, heading, or list item) per line, so a match never spans two of them.
    */
   content?: string;
+  /**
+   * How `content` was captured (`PageTextProvenance`), so a result says where its text came
+   * from; absent for text indexed before that was kept.
+   */
+  contentSource?: PageTextSource;
 };
 
 export type SearchMatchField =
@@ -50,8 +55,11 @@ export type SearchMatchReason =
   | { field: Exclude<SearchMatchField, 'tag' | 'content'>; ranges: SearchMatchRange[] }
   /** `value` is the tag, and `ranges` are in it. */
   | { field: 'tag'; value: string; ranges: SearchMatchRange[] }
-  /** `snippet` is the page text around the first match, as plain text. */
-  | { field: 'content'; snippet: string; ranges: SearchMatchRange[] };
+  /**
+   * `snippet` is the page text around the first match, as plain text; `source`, how that text
+   * was captured, when known.
+   */
+  | { field: 'content'; snippet: string; ranges: SearchMatchRange[]; source?: PageTextSource };
 
 export type SearchResult = {
   document: SearchDocument;
@@ -132,10 +140,14 @@ type BuiltDocument = {
   document: SearchDocument;
   own: StoredBookmarkMetadata | undefined;
   content: string | undefined;
+  contentSource: PageTextSource | undefined;
 };
 
-/** Indexed page text by bookmark id, with the address it was read from. */
-export type SearchPageTexts = ReadonlyMap<string, { url: string; text: string }>;
+/** One bookmark's indexed page text: the address it was read for, and how it was captured. */
+export type SearchPageText = { url: string; text: string; source?: PageTextSource };
+
+/** Indexed page text by bookmark id. */
+export type SearchPageTexts = ReadonlyMap<string, SearchPageText>;
 
 const NO_PAGE_TEXTS: SearchPageTexts = new Map();
 
@@ -154,15 +166,17 @@ function documentOf(
   node: BookmarkTreeNode,
   folders: readonly string[],
   own: StoredBookmarkMetadata | undefined,
-  page: { url: string; text: string } | undefined,
+  page: SearchPageText | undefined,
 ): SearchDocument {
   // Text read from another address is not this bookmark's page any more.
   const content = page && page.url === node.url && page.text ? page.text : undefined;
+  const contentSource = content ? page?.source : undefined;
   const built = builtDocuments.get(node);
   if (
     built &&
     built.own === own &&
     built.content === content &&
+    built.contentSource === contentSource &&
     sameNames(built.document.folders, folders)
   ) {
     return built.document;
@@ -180,8 +194,9 @@ function documentOf(
     tags: own?.tags ?? [],
     ...(own?.summary ? { summary: own.summary } : {}),
     ...(content ? { content } : {}),
+    ...(contentSource ? { contentSource } : {}),
   };
-  builtDocuments.set(node, { document, own, content });
+  builtDocuments.set(node, { document, own, content, contentSource });
   return document;
 }
 
@@ -378,8 +393,14 @@ function matchText(document: SearchDocument, compiled: CompiledText): TermMatch 
   const { contentNeedle } = compiled;
   if (wants('content') && document.content && folded.content?.text.includes(contentNeedle)) {
     const ranges = findAll(folded.content, contentNeedle);
+    const { contentSource: source } = document;
     add(
-      { field: 'content', snippet: snippetAround(document.content, ranges[0]), ranges },
+      {
+        field: 'content',
+        snippet: snippetAround(document.content, ranges[0]),
+        ranges,
+        ...(source ? { source } : {}),
+      },
       SEARCH_WEIGHTS.content,
     );
   }

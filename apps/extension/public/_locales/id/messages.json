@@ -7779,6 +7779,14 @@
         "message": "Jangan pernah mengunduh alamat yang memuat nama pengguna dan kata sandi, atau parameter yang tercantum di Parameter Sensitif Pemindai Privasi (misalnya token), yang akan diterima situs. Jika dinonaktifkan, bookmark tersebut dibaca seperti yang lain.",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "Jangan Pernah Baca Situs Ini",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "Indeks Teks Halaman tidak pernah mengunduh halaman di situs ini atau subdomainnya (example.com mencakup news.example.com), dan Indeks teks halaman ini tidak pernah membacanya. Menambahkan situs akan menghapus teks yang sudah diindeks darinya. Ketik situs atau tempel alamat.",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Teks yang dibaca dari setiap halaman. Hanya yang Anda simpan yang dipertahankan, di perangkat ini.",
         "description": "Index Page Text review: description"
@@ -7822,6 +7830,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "Tidak diunduh: alamatnya memuat parameter yang tercantum di parameter sensitif Pemindai Privasi, misalnya token, yang akan diterima situs.",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "Tidak diunduh: situs ini ada di Jangan Pernah Baca Situs Ini di Setelan.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Tidak dipilih ($1)",
@@ -7923,6 +7935,14 @@
         "message": "halaman: $1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "halaman yang diunduh: $1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "halaman dari tab Anda: $1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "Di teks halaman yang diindeks",
         "description": "Search syntax help: what content: does"
@@ -7981,6 +8001,14 @@
         "message": "Gagal pada proses terakhir: $1",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "Terakhir diindeks: $1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "Terakhir diindeks: belum pernah",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "Coba lagi yang gagal",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -7992,6 +8020,14 @@
     "pageText_retryStartedDesc": {
         "message": "Ini berjalan di latar belakang. Setelah selesai, simpan teksnya dari Tinjau hasil pada kartu Indeks Teks Halaman di Alat pengelola bookmark.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "Segarkan yang usang",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "Membaca ulang $1 halaman usang",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
     },
     "pageText_accessNote": {
         "message": "Mencabut akses ke sebuah situs akan menghapus teks yang diindeks dari situs itu.",
@@ -8040,6 +8076,10 @@
     "pageText_tabFull": {
         "message": "Indeks teks halaman sudah penuh. Gunakan Hapus teks halaman di Setelan untuk mengosongkan ruang.",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "Situs ini ada di Jangan Pernah Baca Situs Ini di Setelan, jadi halamannya tidak pernah dibaca.",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "Tampilan Pengelola",

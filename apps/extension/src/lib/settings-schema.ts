@@ -487,6 +487,35 @@ function nameListField(path: string, stem: string): FieldDefinition<z.ZodType<st
   };
 }
 
+/**
+ * A list of site names as `toSiteName` keeps them (host names, one byte a character), each at most
+ * `max_length` long, at most `max_items` of them.
+ */
+function siteListField(path: string, stem: string): FieldDefinition<z.ZodType<string[]>> {
+  const config = configValue(path, listSettingSchema);
+  const maxLength = config.max_length;
+  if (maxLength === undefined) throw new Error(`settings.${path} needs max_length`);
+  const schema = z
+    .array(
+      z
+        .string()
+        .max(maxLength)
+        .refine((name) => toSiteName(name) === name, 'Not a site name'),
+    )
+    .max(config.max_items);
+  return {
+    section: sectionOf(path),
+    schema: schema.default(schema.parse(config.default)),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'text',
+      list: 'string',
+      maxItems: config.max_items,
+      maxLength,
+    }),
+  };
+}
+
 /** A list of numbers that each pass `item`, at least one and at most `max_items`. */
 function numberListField(
   path: string,
@@ -1101,6 +1130,10 @@ const fields = {
     'metadata_content.page_text.skip_secret_urls',
     'pageTextSkipSecretUrls',
   ),
+  pageTextExcludedSites: siteListField(
+    'metadata_content.page_text.excluded_sites',
+    'pageTextExcludedSites',
+  ),
 
   coversEnabled: switchField('metadata_content.covers.enabled', 'coversEnabled'),
   coversDefaultScope: scopeField(
@@ -1561,7 +1594,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'pageText',
         labelKey: 'tools_pageText',
         toggle: 'pageTextEnabled',
-        fields: ['pageTextDefaultScope', 'pageTextSkipSecretUrls'],
+        fields: ['pageTextDefaultScope', 'pageTextSkipSecretUrls', 'pageTextExcludedSites'],
         panel: 'pageText',
       },
       {

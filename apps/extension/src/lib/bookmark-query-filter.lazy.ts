@@ -27,7 +27,14 @@ export function observeSearchMetadata(
     const pages = pageTextOn ? await getPageTexts() : new Map<string, PageTextRecord>();
     if (read !== reading) return;
     searchedPageTexts = new Map(
-      [...pages].map(([id, page]) => [id, { url: page.url, text: page.text }]),
+      [...pages].map(([id, page]) => [
+        id,
+        {
+          url: page.url,
+          text: page.text,
+          ...(page.provenance ? { source: page.provenance.source } : {}),
+        },
+      ]),
     );
     if (metadata) callback(metadata);
   };

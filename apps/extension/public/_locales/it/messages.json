@@ -8069,6 +8069,14 @@
         "message": "Non scaricare mai un indirizzo che contiene un nome utente e una password, o un parametro presente in Parametri sensibili del Controllo privacy (come un token), che il sito riceverebbe. Se disattivato, quei segnalibri vengono letti come gli altri.",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "Non leggere mai questi siti",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "Indicizza il testo delle pagine non scarica mai le pagine di questi siti o dei loro sottodomini (example.com comprende news.example.com) e Indicizza il testo di questa pagina non le legge mai. Aggiungere un sito elimina il testo già indicizzato da esso. Digita un sito o incolla un indirizzo.",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Il testo letto da ogni pagina. Viene conservato solo ciò che salvi, su questo dispositivo.",
         "description": "Index Page Text review: description"
@@ -8112,6 +8120,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "Non scaricata: l'indirizzo contiene un parametro presente tra i parametri sensibili del Controllo privacy, come un token, che il sito riceverebbe.",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "Non scaricata: il sito è in Non leggere mai questi siti nelle Impostazioni.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Non scelti ($1)",
@@ -8251,6 +8263,14 @@
         "message": "pagina: $1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "pagina scaricata: $1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "pagina dalla tua scheda: $1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "Nel testo indicizzato delle pagine",
         "description": "Search syntax help: what content: does"
@@ -8323,6 +8343,14 @@
         "message": "Non riusciti nell'ultima esecuzione: $1",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "Ultima indicizzazione: $1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "Ultima indicizzazione: mai",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "Riprova quelli non riusciti",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -8338,6 +8366,18 @@
     "pageText_retryStartedDesc": {
         "message": "Viene eseguito in background. Al termine, salva il testo da Controlla i risultati nella scheda Indicizza il testo delle pagine negli Strumenti del gestore dei segnalibri.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "Aggiorna quelli non aggiornati",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "Rilettura di $1 pagine non aggiornate",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
+    },
+    "pageText_refreshStarted_one": {
+        "message": "Rilettura di $1 pagina non aggiornata",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages (singular)"
     },
     "pageText_accessNote": {
         "message": "Revocare l'accesso a un sito elimina il testo indicizzato da quel sito.",
@@ -8386,6 +8426,10 @@
     "pageText_tabFull": {
         "message": "L'indice del testo delle pagine è pieno. Usa Elimina il testo delle pagine nelle Impostazioni per fare spazio.",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "Questo sito è in Non leggere mai questi siti nelle Impostazioni, quindi le sue pagine non vengono mai lette.",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "Vista della gestione preferiti",

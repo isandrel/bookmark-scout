@@ -8649,6 +8649,14 @@
         "message": "Никогда не загружать адрес, содержащий имя пользователя и пароль или параметр из списка «Конфиденциальные параметры» проверки конфиденциальности (например, токен), который получил бы сайт. Если выключено, такие закладки читаются как любые другие.",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "Никогда не читать эти сайты",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "«Индексация текста страниц» никогда не загружает страницы этих сайтов и их поддоменов (example.com включает news.example.com), а «Проиндексировать текст этой страницы» никогда их не читает. Добавление сайта удаляет уже проиндексированный с него текст. Введите сайт или вставьте адрес.",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Текст, прочитанный с каждой страницы. Хранится только то, что вы сохраните, и только на этом устройстве.",
         "description": "Index Page Text review: description"
@@ -8692,6 +8700,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "Не загружено: адрес содержит параметр из списка конфиденциальных параметров проверки конфиденциальности, например токен, который получил бы сайт.",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "Не загружено: сайт есть в списке «Никогда не читать эти сайты» в настройках.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Не выбрано ($1)",
@@ -8907,6 +8919,14 @@
         "message": "страница: $1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "загруженная страница: $1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "страница из вашей вкладки: $1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "В проиндексированном тексте страниц",
         "description": "Search syntax help: what content: does"
@@ -9007,6 +9027,14 @@
         "message": "Не удалось при последнем запуске: $1",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "Последняя индексация: $1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "Последняя индексация: никогда",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "Повторить неудавшиеся",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -9030,6 +9058,26 @@
     "pageText_retryStartedDesc": {
         "message": "Это выполняется в фоне. Когда закончится, сохраните текст через «Просмотреть результаты» на карточке «Индексация текста страниц» в инструментах менеджера закладок.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "Обновить устаревшие",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "Повторное чтение устаревших страниц: $1",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
+    },
+    "pageText_refreshStarted_one": {
+        "message": "Повторно читается $1 устаревшая страница",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages (singular)"
+    },
+    "pageText_refreshStarted_few": {
+        "message": "Повторно читаются $1 устаревшие страницы",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages (few form)"
+    },
+    "pageText_refreshStarted_many": {
+        "message": "Повторно читается $1 устаревших страниц",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages (many form)"
     },
     "pageText_accessNote": {
         "message": "Если отозвать доступ к сайту, текст, проиндексированный с него, удаляется.",
@@ -9078,6 +9126,10 @@
     "pageText_tabFull": {
         "message": "Индекс текста страниц заполнен. Чтобы освободить место, нажмите «Удалить текст страниц» в настройках.",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "Этот сайт есть в списке «Никогда не читать эти сайты» в настройках, поэтому его страницы не читаются.",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "Вид диспетчера",

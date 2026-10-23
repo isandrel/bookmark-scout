@@ -9,10 +9,3 @@ auth = [401, 403, 407]
 rate_limited = [429]
 method_rejected = [405, 501]
 
-# A site that says it is busy with one of these statuses and asks to be asked again after a
-# Retry-After of at most `max_ms` is asked again after that wait, counted against the Retry Count
-# setting. A longer wait, an unreadable one, or none at all is reported at once, so a check never
-# waits on one site for long.
-[retry_after]
-statuses = [429, 503]
-max_ms = { value = 10_000, min = 0, max = 20_000 }

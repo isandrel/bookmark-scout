@@ -8041,6 +8041,14 @@
         "message": "사용자 이름과 비밀번호, 또는 개인정보 스캐너의 민감한 매개변수에 있는 매개변수(예: 토큰)가 든 주소는 사이트가 받게 되므로 다운로드하지 않습니다. 끄면 그런 북마크도 다른 북마크처럼 읽습니다.",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "읽지 않을 사이트",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "'페이지 본문 색인'은 이 사이트와 하위 도메인(example.com이면 news.example.com도 포함)의 페이지를 다운로드하지 않고, '이 페이지 본문 색인'도 읽지 않습니다. 사이트를 추가하면 그 사이트에서 이미 색인한 본문이 삭제됩니다. 사이트를 입력하거나 주소를 붙여 넣으세요.",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "각 페이지에서 읽은 본문입니다. 저장한 것만 이 기기에 남습니다.",
         "description": "Index Page Text review: description"
@@ -8084,6 +8092,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "다운로드하지 않음: 주소에 개인정보 스캐너의 민감한 매개변수 목록에 있는 매개변수(예: 토큰)가 들어 있어 사이트가 받게 됩니다.",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "다운로드하지 않음: 이 사이트는 설정의 '읽지 않을 사이트'에 있습니다.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "선택 안 함 ($1)",
@@ -8223,6 +8235,14 @@
         "message": "페이지: $1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "다운로드한 페이지: $1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "탭에서 읽은 페이지: $1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "색인된 페이지 본문에서",
         "description": "Search syntax help: what content: does"
@@ -8295,6 +8315,14 @@
         "message": "지난 실행에서 실패: $1개",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "마지막 색인: $1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "마지막 색인: 없음",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "실패한 항목 다시 시도",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -8306,6 +8334,14 @@
     "pageText_retryStartedDesc": {
         "message": "백그라운드에서 실행됩니다. 끝나면 북마크 관리자 도구의 페이지 본문 색인 카드에서 결과 보기를 열어 텍스트를 저장하세요.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "오래된 항목 새로 고침",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "오래된 페이지 $1개를 다시 읽는 중",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
     },
     "pageText_accessNote": {
         "message": "사이트에 대한 웹사이트 액세스를 거두면 그 사이트에서 색인한 텍스트가 삭제됩니다.",
@@ -8354,6 +8390,10 @@
     "pageText_tabFull": {
         "message": "페이지 본문 색인이 가득 찼습니다. 설정에서 '페이지 본문 삭제'로 공간을 확보하세요.",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "이 사이트는 설정의 '읽지 않을 사이트'에 있어 페이지를 읽지 않습니다.",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "관리자 보기",

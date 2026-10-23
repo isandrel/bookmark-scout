@@ -3,9 +3,15 @@
  * Text), by bookmark id, in IndexedDB on this device only. It is derived data: deleting it never
  * touches a bookmark, a tag, or the History, and a page is indexed again when its address changes
  * or the extractor's version goes up (`config/bookmarks/page-text.toml`).
+ *
+ * Each record says where its text came from (`PageTextProvenance`): downloaded by a run or read
+ * from the user's tab, the address it was read from, a fingerprint of the text, and whether the
+ * page had more text than is kept. Records saved before that was kept (database version 1) are
+ * still read and searched, and count as out of date, so the next run indexes them again.
  */
 import { type DBSchema, type IDBPDatabase, openDB } from 'idb';
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const pageTextConfig = readConfig(
   'bookmarks/page-text',
@@ -15,6 +21,7 @@ const pageTextConfig = readConfig(
     timeout_ms: z.number().int().positive(),
     max_bytes: z.number().int().positive(),
     concurrency: z.number().int().positive(),
+    busy_retries: boundedNumber({ integer: true }),
     extractor_version: z.number().int().positive(),
     text: z.strictObject({
       drop: z.array(z.string().min(1)).min(1),
@@ -35,6 +42,7 @@ export const PAGE_TEXT_LIMITS = {
   timeoutMs: pageTextConfig.timeout_ms,
   maxBytes: pageTextConfig.max_bytes,
   concurrency: pageTextConfig.concurrency,
+  busyRetries: pageTextConfig.busy_retries,
   extractorVersion: pageTextConfig.extractor_version,
 } as const;
 
@@ -55,15 +63,38 @@ export const PAGE_TEXT_SIGN_IN = {
   httpStatuses: new Set<number>(pageTextConfig.sign_in.http_statuses),
 } as const;
 
+/** How a page's text was captured: downloaded by Index Page Text, or read from the user's tab. */
+export type PageTextSource = 'download' | 'tab';
+
+/** Where an indexed page's text came from, kept with it. */
+export type PageTextProvenance = {
+  source: PageTextSource;
+  /** The address the text was read from: the bookmark's own, or the one a download read instead. */
+  readFrom: string;
+  /** SHA-256 of the kept text (`sha256Hex`), so a later read can tell whether the text changed. */
+  fingerprint: string;
+  /** Whether the page had more readable text than `max_chars_per_page` keeps. */
+  truncated: boolean;
+};
+
 /** One indexed page: what the bookmark's address showed when it was read. */
 export type PageTextRecord = {
   bookmarkId: string;
-  /** The address it was read from; a bookmark at another address needs indexing again. */
+  /** The bookmark's address when it was read; a bookmark at another address needs indexing again. */
   url: string;
   text: string;
   indexedAt: number;
   extractorVersion: number;
+  /** Absent on a record saved before provenance was kept, which counts as out of date. */
+  provenance?: PageTextProvenance;
 };
+
+const pageTextProvenanceSchema = z.strictObject({
+  source: z.enum(['download', 'tab']),
+  readFrom: z.string().min(1),
+  fingerprint: z.string().regex(/^[0-9a-f]{64}$/),
+  truncated: z.boolean(),
+}) satisfies z.ZodType<PageTextProvenance>;
 
 const pageTextRecordSchema = z.strictObject({
   bookmarkId: z.string().min(1),
@@ -71,13 +102,20 @@ const pageTextRecordSchema = z.strictObject({
   text: z.string(),
   indexedAt: z.number().finite(),
   extractorVersion: z.number().int().positive(),
-});
+  provenance: pageTextProvenanceSchema.optional(),
+}) satisfies z.ZodType<PageTextRecord>;
 
 interface PageTextDb extends DBSchema {
   pages: { key: string; value: PageTextRecord };
 }
 
-const PAGE_TEXT_DB_VERSION = 1;
+/**
+ * The database's versions, each with what it changed; it opens at the last one. 2: records carry
+ * `provenance`. The store is unchanged, so version 1 records are kept as they are and read as out
+ * of date (no provenance) until the next run indexes them again.
+ */
+const PAGE_TEXT_DB_VERSIONS = { pages: 1, provenance: 2 } as const;
+const PAGE_TEXT_DB_VERSION = Math.max(...Object.values(PAGE_TEXT_DB_VERSIONS));
 
 /** Broadcast after every change, so open pages read the index again. */
 export const PAGE_TEXT_CHANNEL = 'bookmark-scout-page-text';
@@ -86,8 +124,10 @@ let database: Promise<IDBPDatabase<PageTextDb>> | undefined;
 
 function openPageTextDb(): Promise<IDBPDatabase<PageTextDb>> {
   database ??= openDB<PageTextDb>(INDEXED_DATABASES.pageText.name, PAGE_TEXT_DB_VERSION, {
-    upgrade(db) {
-      db.createObjectStore('pages', { keyPath: 'bookmarkId' });
+    upgrade(db, oldVersion) {
+      if (oldVersion < PAGE_TEXT_DB_VERSIONS.pages) {
+        db.createObjectStore('pages', { keyPath: 'bookmarkId' });
+      }
     },
   });
   return database;
@@ -110,44 +150,68 @@ export async function getPageTexts(): Promise<Map<string, PageTextRecord>> {
   return pages;
 }
 
-/** Whether `bookmark` has text indexed from its current address by the current extractor. */
+/**
+ * Whether `bookmark` has text indexed from its current address by the current extractor, with its
+ * provenance: a record from an older extractor or from before provenance was kept is out of date.
+ */
 export function isPageTextCurrent(
   record: PageTextRecord | undefined,
   url: string,
-): record is PageTextRecord {
+): record is PageTextRecord & { provenance: PageTextProvenance } {
   return (
     record !== undefined &&
     record.url === url &&
-    record.extractorVersion === PAGE_TEXT_LIMITS.extractorVersion
+    record.extractorVersion === PAGE_TEXT_LIMITS.extractorVersion &&
+    record.provenance !== undefined
   );
 }
 
 /** How many pages a save kept, and how many it left out because storage was full. */
 export type PageTextSaveResult = { saved: number; notSaved: number };
 
+/** A page's text to save, read from `readFrom` (the bookmark's own address when absent). */
+export type PageTextInput = Pick<PageTextRecord, 'bookmarkId' | 'url' | 'text'> & {
+  readFrom?: string;
+  /** Whether the reader already cut the text short (`PageTextReading`). */
+  truncated?: boolean;
+};
+
 /**
- * Saves pages' text, each cut to `max_chars_per_page`. When this device's storage for the
- * extension runs out, the pages saved before it are kept and the rest are counted in `notSaved`
- * (`saveInBatches`), so the caller can say so instead of reporting a full save.
+ * Saves pages' text, each cut to `max_chars_per_page`, with where it came from (`source`). When
+ * this device's storage for the extension runs out, the pages saved before it are kept and the
+ * rest are counted in `notSaved` (`saveInBatches`), so the caller can say so instead of reporting
+ * a full save.
  */
 export async function savePageTexts(
-  pages: readonly Pick<PageTextRecord, 'bookmarkId' | 'url' | 'text'>[],
+  pages: readonly PageTextInput[],
+  source: PageTextSource,
 ): Promise<PageTextSaveResult> {
   if (pages.length === 0) return { saved: 0, notSaved: 0 };
-  const db = await openPageTextDb();
   const indexedAt = Date.now();
-  const { written, notWritten } = await saveInBatches(pages, (batch) => {
+  // Worked out before any transaction: an await on other work would end it.
+  const records = await Promise.all(
+    pages.map(async (page): Promise<PageTextRecord> => {
+      const text = page.text.slice(0, PAGE_TEXT_LIMITS.maxCharsPerPage);
+      return {
+        bookmarkId: page.bookmarkId,
+        url: page.url,
+        text,
+        indexedAt,
+        extractorVersion: PAGE_TEXT_LIMITS.extractorVersion,
+        provenance: {
+          source,
+          readFrom: page.readFrom ?? page.url,
+          fingerprint: await sha256Hex(text),
+          truncated: page.truncated === true || text.length < page.text.length,
+        },
+      };
+    }),
+  );
+  const db = await openPageTextDb();
+  const { written, notWritten } = await saveInBatches(records, (batch) => {
     const transaction = db.transaction('pages', 'readwrite');
     return commitIndexedWrites(transaction, () =>
-      batch.map((page) =>
-        transaction.store.put({
-          bookmarkId: page.bookmarkId,
-          url: page.url,
-          text: page.text.slice(0, PAGE_TEXT_LIMITS.maxCharsPerPage),
-          indexedAt,
-          extractorVersion: PAGE_TEXT_LIMITS.extractorVersion,
-        }),
-      ),
+      batch.map((record) => transaction.store.put(record)),
     );
   });
   if (written > 0) announceChange();

@@ -1208,6 +1208,7 @@ const PAGE_TEXT_CATEGORY_LABEL_KEYS = {
 const PAGE_TEXT_SKIP_REASON_KEYS = {
   credentials: 'tools_pageTextSkipCredentials',
   sensitiveParam: 'tools_pageTextSkipSensitiveParam',
+  excludedSite: 'tools_pageTextSkipExcludedSite',
 } as const satisfies Record<PageTextSkipReason, MessageKey>;
 
 type PageTextAction = (typeof REVIEW_DEFAULT_ACTIONS)['page_text'];

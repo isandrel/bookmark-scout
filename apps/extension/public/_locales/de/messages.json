@@ -8069,6 +8069,14 @@
         "message": "Nie eine Adresse herunterladen, die einen Benutzernamen und ein Passwort oder einen Parameter aus den sensiblen Parametern der Datenschutzprüfung (etwa ein Token) enthält, den die Website erhalten würde. Ausgeschaltet werden diese Lesezeichen wie alle anderen gelesen.",
         "description": "Settings: what Skip Addresses with Sign-in Details or Secrets does"
     },
+    "settings_pageTextExcludedSites": {
+        "message": "Diese Websites nie lesen",
+        "description": "Settings: list of sites Index Page Text never reads"
+    },
+    "settings_pageTextExcludedSitesDesc": {
+        "message": "„Seitentext indexieren“ lädt nie Seiten dieser Websites oder ihrer Subdomains herunter (example.com umfasst news.example.com), und „Text dieser Seite indexieren“ liest sie nie. Wenn Sie eine Website hinzufügen, wird der bereits von ihr indexierte Text gelöscht. Geben Sie eine Website ein oder fügen Sie eine Adresse ein.",
+        "description": "Settings: what Never Read These Sites does"
+    },
     "tools_pageTextDialogDesc": {
         "message": "Der aus jeder Seite gelesene Text. Nur was Sie speichern, wird behalten, auf diesem Gerät.",
         "description": "Index Page Text review: description"
@@ -8112,6 +8120,10 @@
     "tools_pageTextSkipSensitiveParam": {
         "message": "Nicht heruntergeladen: Die Adresse enthält einen Parameter aus den sensiblen Parametern der Datenschutzprüfung, etwa ein Token, den die Website erhalten würde.",
         "description": "Note under a skipped bookmark in the Index Page Text review: its address holds a query parameter named in the Privacy Scanner's sensitive parameters setting, so it is never requested"
+    },
+    "tools_pageTextSkipExcludedSite": {
+        "message": "Nicht heruntergeladen: Die Website steht in den Einstellungen unter „Diese Websites nie lesen“.",
+        "description": "Note under a skipped bookmark in the Index Page Text review: its site is in Never Read These Sites, so it is never requested"
     },
     "tools_pageTextCategory_notChosen": {
         "message": "Nicht ausgewählt ($1)",
@@ -8251,6 +8263,14 @@
         "message": "Seite: $1",
         "description": "Muted note after a popup search result found in its indexed page text; $1 is the text around the match"
     },
+    "search_reasonContentDownload": {
+        "message": "heruntergeladene Seite: $1",
+        "description": "Muted note after a search result found in page text Index Page Text downloaded; $1 is the text around the match"
+    },
+    "search_reasonContentTab": {
+        "message": "Seite aus Ihrem Tab: $1",
+        "description": "Muted note after a search result found in page text read from the user's tab with Index this page's text; $1 is the text around the match"
+    },
     "searchHelp_content": {
         "message": "Im indexierten Seitentext",
         "description": "Search syntax help: what content: does"
@@ -8323,6 +8343,14 @@
         "message": "Im letzten Lauf fehlgeschlagen: $1",
         "description": "Settings, page text index: bookmarks the last Index Page Text run could not read; $1 is how many"
     },
+    "pageText_coverageLastIndexed": {
+        "message": "Zuletzt indexiert: $1",
+        "description": "Settings, page text index: when page text was last indexed; $1 is the date and time"
+    },
+    "pageText_coverageNeverIndexed": {
+        "message": "Zuletzt indexiert: nie",
+        "description": "Settings, page text index: no page text is indexed yet"
+    },
     "pageText_retryFailed": {
         "message": "Fehlgeschlagene wiederholen",
         "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks that failed in the last run"
@@ -8338,6 +8366,18 @@
     "pageText_retryStartedDesc": {
         "message": "Das läuft im Hintergrund. Wenn es fertig ist, speichern Sie den Text über „Ergebnisse ansehen“ auf der Karte „Seitentext indexieren“ in den Tools der Lesezeichenverwaltung.",
         "description": "Toast after Retry failed starts a run: where to review and save the text"
+    },
+    "pageText_refreshOutdated": {
+        "message": "Veraltete aktualisieren",
+        "description": "Settings, page text index: button that runs Index Page Text again on the bookmarks whose text is out of date"
+    },
+    "pageText_refreshStarted": {
+        "message": "$1 veraltete Seiten werden erneut gelesen",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages"
+    },
+    "pageText_refreshStarted_one": {
+        "message": "$1 veraltete Seite wird erneut gelesen",
+        "description": "Toast title after Refresh outdated starts a run; $1 is how many pages (singular)"
     },
     "pageText_accessNote": {
         "message": "Wenn Sie den Websitezugriff für eine Website zurücknehmen, wird der von ihr indexierte Text gelöscht.",
@@ -8386,6 +8426,10 @@
     "pageText_tabFull": {
         "message": "Der Seitentext-Index ist voll. Mit „Seitentext löschen“ in den Einstellungen schaffen Sie Platz.",
         "description": "Toast: the page text index has no room for another page"
+    },
+    "pageText_tabExcluded": {
+        "message": "Diese Website steht in den Einstellungen unter „Diese Websites nie lesen“, daher werden ihre Seiten nie gelesen.",
+        "description": "Toast: the page is on a site in Never Read These Sites, so its text is not read"
     },
     "settings_managerViewMode": {
         "message": "Manageransicht",

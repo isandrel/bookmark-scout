@@ -1,7 +1,7 @@
 /**
  * Editors for list settings, so nobody has to type a comma-separated list: query parameter names
- * as removable chips with one-click suggestions, and HTTP status codes as a checklist of the
- * common codes plus any other code.
+ * and site names as removable chips with one-click suggestions, and HTTP status codes as a
+ * checklist of the common codes plus any other code.
  */
 
 import { Plus, X } from 'lucide-react';
@@ -15,6 +15,7 @@ const listSettingsConfig = readConfig(
       urlCleanerPreserveParams: z.array(z.string().min(1)),
       urlCleanerRemoveParams: z.array(z.string().min(1)),
       privacyScannerSensitiveParams: z.array(z.string().min(1)),
+      pageTextExcludedSites: z.array(z.string().min(1)),
     }),
     status_codes: z.array(
       z.strictObject({ code: httpStatusCodeSchema, reason: z.string().min(1) }),
@@ -28,6 +29,19 @@ export type TokenListSetting = keyof typeof listSettingsConfig.suggestions;
 export function isTokenListSetting(fieldKey: string): fieldKey is TokenListSetting {
   return fieldKey in listSettingsConfig.suggestions;
 }
+
+const queryParamToken = (raw: string) => (isQueryParamName(raw) ? raw : undefined);
+
+/**
+ * How each list reads what was typed: the entry it keeps, or undefined to drop it. A site list
+ * takes a host name or a whole address and keeps the site (`toSiteName`).
+ */
+const TOKEN_PARSERS: Record<TokenListSetting, (raw: string) => string | undefined> = {
+  urlCleanerPreserveParams: queryParamToken,
+  urlCleanerRemoveParams: queryParamToken,
+  privacyScannerSensitiveParams: queryParamToken,
+  pageTextExcludedSites: toSiteName,
+};
 
 /** The checklist's codes by class (2xx, 3xx, 4xx), in configured order. */
 const STATUS_GROUPS = [
@@ -96,12 +110,10 @@ export function TokenListEditor({
       : [];
 
   const add = (raw: string) => {
-    const added = parseListTokens(raw)
+    const parse = TOKEN_PARSERS[fieldKey];
+    const added = [...new Set(parseListTokens(raw).flatMap((token) => parse(token) ?? []))]
       .filter(
-        (name) =>
-          !value.includes(name) &&
-          isQueryParamName(name) &&
-          (maxLength === undefined || name.length <= maxLength),
+        (name) => !value.includes(name) && (maxLength === undefined || name.length <= maxLength),
       )
       .slice(0, room);
     if (added.length > 0) onChange([...value, ...added]);

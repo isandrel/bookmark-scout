@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
+import { clearPageTexts, savePageTexts } from '@/lib/page-text-store';
 import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import type { ActionContext } from '@/services/action-kit';
@@ -125,6 +126,50 @@ describe('searchBookmarks', () => {
     expect(await refs({ filterQuery: 'is:untagged "handbook copy"' })).toEqual(['b:b4']);
     // Both together: the words rank what the filter lets through.
     expect(await refs({ query: 'handbook', filterQuery: 'folder:Docs' })).toEqual(['b:b4', 'b:b1']);
+  });
+
+  it('leaves indexed page text out, and says so when filterQuery asks for it (S47)', async () => {
+    // Page text indexed on this device, with Index Page Text on: still not for AI tools.
+    await saveSettings({ pageTextEnabled: true });
+    await savePageTexts(
+      [
+        {
+          bookmarkId: 'b2',
+          url: 'https://doc.rust-lang.org/book/ownership',
+          text: 'borrow checker',
+        },
+      ],
+      'download',
+    );
+    try {
+      const search = (input: object) =>
+        run('searchBookmarks', input) as Promise<{ results: { ref: string }[]; note?: string }>;
+      const note = expect.stringContaining('Page text search is not available to AI tools');
+
+      const content = await search({ filterQuery: 'content:borrow' });
+      expect(content.results).toEqual([]);
+      expect(content.note).toEqual(note);
+      const has = await search({ filterQuery: 'has:content' });
+      expect(has.results).toEqual([]);
+      expect(has.note).toEqual(note);
+      // An exclusion matches every bookmark, and says why.
+      const excluded = await search({ filterQuery: 'folder:Rust -content:borrow' });
+      expect(excluded.results.map((hit) => hit.ref)).toEqual(['b:b2']);
+      expect(excluded.note).toEqual(note);
+      // Plain words never reach page text either, and need no note.
+      const plain = await search({ filterQuery: 'borrow' });
+      expect(plain.results).toEqual([]);
+      expect(plain.note).toBeUndefined();
+      // Local agents get the same answer as Ask AI.
+      const agent = (await run(
+        'searchBookmarks',
+        { filterQuery: 'content:borrow' },
+        { client: { kind: 'external', name: 'Test agent' } },
+      )) as { results: unknown[]; note?: string };
+      expect(agent).toMatchObject({ results: [], note });
+    } finally {
+      await clearPageTexts();
+    }
   });
 
   it('says which part of filterQuery it could not read', async () => {

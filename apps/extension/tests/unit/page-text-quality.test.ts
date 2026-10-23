@@ -46,6 +46,7 @@ const OPTIONS = {
   skipPrivateHosts: true,
   skipSecretUrls: true,
   sensitiveParams: ['token', 'session*'],
+  excludedSites: [],
 };
 const MAX = PAGE_TEXT_LIMITS.maxCharsPerPage;
 const HTML_TYPE = { headers: { 'content-type': 'text/html' } };
@@ -102,7 +103,7 @@ describe('text kept as blocks (S34)', () => {
       page('<div>alpha beta</div><div>gamma <span>delta</span></div>'),
       MAX,
     );
-    expect(reading).toEqual({ status: 'read', text: 'alpha beta\ngamma delta' });
+    expect(reading).toEqual({ status: 'read', text: 'alpha beta\ngamma delta', truncated: false });
   });
 
   it('never matches a phrase across two paragraphs, and shows the paragraph a match is in', async () => {
@@ -367,7 +368,7 @@ describe('addresses that may hold a secret', () => {
 describe('bookmarks restored or edited during a run (S23, S24)', () => {
   it('reads a restored bookmark with a new id again, and drops the old id when saving (S23)', async () => {
     const url = 'https://notes.example/a';
-    await savePageTexts([{ bookmarkId: 'old', url, text: 'old text' }]);
+    await savePageTexts([{ bookmarkId: 'old', url, text: 'old text' }], 'download');
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => new Response(page('<p>Fresh text.</p>'), HTML_TYPE)),
@@ -383,10 +384,13 @@ describe('bookmarks restored or edited during a run (S23, S24)', () => {
   });
 
   it('removes the text of deleted bookmarks', async () => {
-    await savePageTexts([
-      { bookmarkId: 'a', url: 'https://a.example/', text: 'a' },
-      { bookmarkId: 'b', url: 'https://b.example/', text: 'b' },
-    ]);
+    await savePageTexts(
+      [
+        { bookmarkId: 'a', url: 'https://a.example/', text: 'a' },
+        { bookmarkId: 'b', url: 'https://b.example/', text: 'b' },
+      ],
+      'download',
+    );
     expect(await removePageTexts(['a', 'missing'])).toBe(1);
     expect([...(await getPageTexts()).keys()]).toEqual(['b']);
   });
@@ -417,7 +421,10 @@ describe('bookmarks restored or edited during a run (S23, S24)', () => {
 
 describe('a corrupt record (S29)', () => {
   it('is ignored: the bookmark is read again and nothing else breaks', async () => {
-    await savePageTexts([{ bookmarkId: 'good', url: 'https://good.example/', text: 'good' }]);
+    await savePageTexts(
+      [{ bookmarkId: 'good', url: 'https://good.example/', text: 'good' }],
+      'download',
+    );
     const db = await openDB(INDEXED_DATABASES.pageText.name);
     await db.put('pages', { bookmarkId: 'bad', url: 42, text: null });
     db.close();
@@ -499,7 +506,7 @@ describe('website access taken back (S46)', () => {
   });
 
   it("deletes a site's text when its access is removed, and keeps what other access still covers", async () => {
-    await savePageTexts(PAGES);
+    await savePageTexts(PAGES, 'download');
     // One site removed, and no other access to it.
     expect(
       await purgePageTextsWithoutAccess(
@@ -519,7 +526,7 @@ describe('website access taken back (S46)', () => {
   });
 
   it('runs when the browser reports access removed, in Chrome and Firefox alike', async () => {
-    await savePageTexts(PAGES);
+    await savePageTexts(PAGES, 'download');
     const permissions = installFakePermissions({
       origins: ['http://*.alpha.example/*', 'https://*.alpha.example/*', 'https://*/*'],
     });
@@ -556,7 +563,10 @@ describe('the search notice while Index Page Text is off (S47)', () => {
 describe('AI page reading and Index Page Text stay apart (S49)', () => {
   it('AI page reading off reads nothing, even with the index on and text indexed', async () => {
     await saveSettings({ pageTextEnabled: true, aiReadPageContent: false });
-    await savePageTexts([{ bookmarkId: 'a', url: 'https://a.example/', text: 'indexed' }]);
+    await savePageTexts(
+      [{ bookmarkId: 'a', url: 'https://a.example/', text: 'indexed' }],
+      'download',
+    );
     const fetch = vi.fn();
     vi.stubGlobal('fetch', fetch);
     const items = [{ url: 'https://a.example/' }];

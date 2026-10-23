@@ -6,19 +6,30 @@ import { TOOL_DEFINITIONS } from '@/components/bookmarks/tools/tool-definitions'
 import { INPUT_LIMITS } from '@/lib/input-limits';
 import type { JobKind } from '@/lib/job-store';
 import { closeJobDb, getJob, getJobItems } from '@/lib/job-store';
-import { clearPageTexts, PAGE_TEXT_LIMITS, savePageTexts } from '@/lib/page-text-store';
+import {
+  clearPageTexts,
+  getPageTexts,
+  PAGE_TEXT_LIMITS,
+  savePageTexts,
+} from '@/lib/page-text-store';
 import type { PageTextReading } from '@/lib/quick-save-protocol';
 import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { pageTextReadingSchema, quickSaveHostRequestSchema } from '@/lib/quick-save-validation';
 import { saveSettings } from '@/lib/settings-storage';
+import { getUrlSites } from '@/lib/site-access';
 import { METADATA_MAX_BYTES } from '@/services/bookmark-network-tools';
 import {
   resetJobCoordinatorForTests,
   runJobCommand,
   whenJobsIdle,
 } from '@/services/job-coordinator';
-import type { PageTextScanResult } from '@/services/page-text';
-import { getPageTextCoverage } from '@/services/page-text-coverage';
+import type { PageTextScanItem, PageTextScanResult } from '@/services/page-text';
+import { savePageTextResults } from '@/services/page-text';
+import {
+  getPageTextCoverage,
+  purgePageTextsOfSites,
+  registerPageTextAccessCleanup,
+} from '@/services/page-text-coverage';
 import { installFakeBookmarks } from '../fake-bookmarks';
 import { installFakePermissions } from '../fake-permissions';
 
@@ -52,7 +63,7 @@ vi.mock('@/services/quick-save-ai-host', () => ({
         host.texts.push(html);
         // The host page tells sign-in pages apart (`readPageTextHtml`); here, by a marker.
         if (html.includes('SIGN-IN')) return { status: 'signIn' };
-        return { status: 'read', text: 'Text read by the host page' };
+        return { status: 'read', text: 'Text read by the host page', truncated: false };
       },
     });
   },
@@ -96,6 +107,8 @@ async function runToEnd(kind: JobKind, sites?: string[]) {
   return { job, results: items.map((item) => item.result), outcomes: items.map((i) => i.outcome) };
 }
 
+let permissions: ReturnType<typeof installFakePermissions>;
+
 beforeEach(async () => {
   fakeBrowser.reset();
   vi.restoreAllMocks();
@@ -103,7 +116,7 @@ beforeEach(async () => {
   globalThis.indexedDB = new IDBFactory();
   resetJobCoordinatorForTests();
   // Started from a page, which asked for the bookmarks' sites first.
-  installFakePermissions({ origins: [...WEB_ORIGINS] });
+  permissions = installFakePermissions({ origins: [...WEB_ORIGINS] });
   host.heads = [];
   host.texts = [];
   host.open = 0;
@@ -366,12 +379,19 @@ describe('Index Page Text as a background job (S25-S27)', () => {
     });
     await runToEnd('pageText');
     // One page saved; another kept from an earlier address of its bookmark.
-    await savePageTexts([
-      { bookmarkId: 'b1', url: 'https://one.invalid/page', text: 'one' },
-      { bookmarkId: 'b2', url: 'https://two.invalid/old', text: 'two' },
-    ]);
+    await savePageTexts(
+      [
+        { bookmarkId: 'b1', url: 'https://one.invalid/page', text: 'one' },
+        { bookmarkId: 'b2', url: 'https://two.invalid/old', text: 'two' },
+      ],
+      'download',
+    );
     const coverage = await getPageTextCoverage();
-    expect(coverage).toMatchObject({ eligible: 3, indexed: 1, stale: 1 });
+    expect(coverage).toMatchObject({
+      eligible: 3,
+      indexed: 1,
+      outdated: [{ id: 'b2', url: 'https://two.invalid/page' }],
+    });
     expect(coverage.failed.map((item) => item.id)).toEqual(['b3']);
 
     const requests = stubFetch({ 'https://down.invalid/page': () => article('Back') });
@@ -393,6 +413,293 @@ describe('Index Page Text as a background job (S25-S27)', () => {
   });
 });
 
+describe('Index Page Text and busy sites (S13)', () => {
+  beforeEach(async () => {
+    await saveSettings({ pageTextEnabled: true });
+    await clearPageTexts();
+  });
+
+  const article = () =>
+    new Response('<html><body><article><p>Back again.</p></article></body></html>', {
+      headers: { 'content-type': 'text/html' },
+    });
+  const busy = (status: number, retryAfter?: string) => () =>
+    new Response('Busy', { status, headers: retryAfter ? { 'Retry-After': retryAfter } : {} });
+
+  it('asks a busy site again after its Retry-After, at most busy_retries times, then lists the page as failed', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    const answers: Record<string, (() => Response)[]> = {
+      // Busy once, then the page: read on the second request.
+      'https://one.invalid/page': [busy(429, '0'), article],
+      // Busy every time: failed after the first request and every retry.
+      'https://two.invalid/page': [busy(503, '0')],
+      // A wait longer than `max_ms`, or none: failed at once, never asked again.
+      'https://down.invalid/page': [busy(429, '3600')],
+    };
+    const requests: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        const url = String(input);
+        requests.push(url);
+        const queue = answers[url] ?? [];
+        const answer = queue.length > 1 ? queue.shift() : queue[0];
+        if (!answer) throw new TypeError('Failed to fetch');
+        return answer();
+      }),
+    );
+    const { job, results, outcomes } = await runToEnd('pageText');
+    expect(outcomes).toEqual(['succeeded', 'failed', 'failed', 'skipped']);
+    expect(results).toMatchObject([
+      { id: 'b1', status: 'read' },
+      { id: 'b2', status: 'failed' },
+      { id: 'b3', status: 'failed' },
+      { id: 'b4', status: 'skipped' },
+    ]);
+    const count = (url: string) => requests.filter((request) => request === url).length;
+    expect(count('https://one.invalid/page')).toBe(2);
+    expect(count('https://two.invalid/page')).toBe(1 + PAGE_TEXT_LIMITS.busyRetries);
+    expect(count('https://down.invalid/page')).toBe(1);
+    // The busy pages are what Retry failed in Options reads again.
+    expect(job).toMatchObject({ state: 'partial', done: { failed: 2 } });
+    expect((await getPageTextCoverage()).failed.map((item) => item.id)).toEqual(['b2', 'b3']);
+  });
+
+  it('a page without a Retry-After, or a busy status the config does not list, is not asked again', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    const requests = stubFetch({
+      'https://one.invalid/page': busy(503),
+      'https://two.invalid/page': busy(500, '0'),
+    });
+    const { results } = await runToEnd('pageText');
+    expect(results.slice(0, 2)).toMatchObject([
+      { id: 'b1', status: 'failed' },
+      { id: 'b2', status: 'empty' },
+    ]);
+    expect(requests.filter((url) => url.startsWith('https://one.')).length).toBe(1);
+    expect(requests.filter((url) => url.startsWith('https://two.')).length).toBe(1);
+  });
+
+  it('pauses while waiting out a Retry-After, and reads the page on Resume without counting it', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      { id: 'w1', parentId: 'f', title: 'Waiting', url: 'https://one.invalid/page' },
+    ]);
+    let waiting = true;
+    const requests: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        requests.push(String(input));
+        return waiting ? busy(429, '5')() : article();
+      }),
+    );
+    const response = await runJobCommand({
+      type: 'start',
+      commandId: crypto.randomUUID(),
+      kind: 'pageText',
+      source: 'manager',
+      scope: { mode: 'folder', folderId: 'f' },
+    });
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    const jobId = response.job.id;
+    await vi.waitFor(() => expect(requests).toHaveLength(1));
+    await runJobCommand({ type: 'pause', jobId });
+    await whenJobsIdle();
+    expect(await getJob(jobId)).toMatchObject({
+      state: 'paused',
+      done: { succeeded: 0, failed: 0 },
+    });
+    waiting = false;
+    await runJobCommand({ type: 'resume', jobId });
+    await whenJobsIdle();
+    expect((await getJobItems(jobId)).map((item) => item.result)).toMatchObject([
+      { id: 'w1', status: 'read' },
+    ]);
+    expect(requests).toHaveLength(2);
+  });
+});
+
+describe('Index Page Text and website access taken back mid-run (S05)', () => {
+  beforeEach(async () => {
+    await saveSettings({ pageTextEnabled: true });
+    await clearPageTexts();
+  });
+
+  it('pauses with site-access and requests nothing more, then reads the rest once access is back', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      ...Array.from({ length: 8 }, (_, index) => ({
+        id: `p${index + 1}`,
+        parentId: 'f',
+        title: `Page ${index + 1}`,
+        url: `https://site${index + 1}.invalid/page`,
+      })),
+    ]);
+    const requests: string[] = [];
+    const waiting: (() => void)[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: string, init?: RequestInit) => {
+        requests.push(String(input));
+        return new Promise<Response>((resolve, reject) => {
+          waiting.push(() =>
+            resolve(
+              new Response('<html><body><p>Text.</p></body></html>', {
+                headers: { 'content-type': 'text/html' },
+              }),
+            ),
+          );
+          init?.signal?.addEventListener('abort', () =>
+            reject(new DOMException('Aborted', 'AbortError')),
+          );
+        });
+      }),
+    );
+    const releaseAll = () => {
+      for (const release of waiting.splice(0)) release();
+    };
+    const response = await runJobCommand({
+      type: 'start',
+      commandId: crypto.randomUUID(),
+      kind: 'pageText',
+      source: 'manager',
+      scope: { mode: 'folder', folderId: 'f' },
+    });
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    const jobId = response.job.id;
+    await vi.waitFor(() => expect(waiting.length).toBeGreaterThan(0));
+    const inFlight = requests.length;
+    permissions.revoke({ origins: [...WEB_ORIGINS] });
+    // The pages already downloading end; no other site is requested without access.
+    releaseAll();
+    await vi.waitFor(async () => expect((await getJob(jobId))?.state).toBe('paused'));
+    await whenJobsIdle();
+    const paused = await getJob(jobId);
+    expect(paused?.lastError?.code).toBe('site-access');
+    expect(paused?.done.failed).toBe(0);
+    expect(requests).toHaveLength(inFlight);
+
+    permissions.grant({ origins: [...WEB_ORIGINS] });
+    await runJobCommand({ type: 'resume', jobId });
+    await vi.waitFor(async () => {
+      releaseAll();
+      expect((await getJob(jobId))?.state).toBe('succeeded');
+    });
+    expect((await getJob(jobId))?.done.succeeded).toBe(8);
+    // Each page was requested once in all.
+    expect(new Set(requests).size).toBe(8);
+    expect(requests).toHaveLength(8);
+  });
+});
+
+describe('Never Read These Sites, Refresh outdated, and last indexed (S1, S2.4)', () => {
+  beforeEach(async () => {
+    await saveSettings({ pageTextEnabled: true });
+    await clearPageTexts();
+  });
+
+  const article = () =>
+    new Response('<html><body><article><p>Words.</p></article></body></html>', {
+      headers: { 'content-type': 'text/html' },
+    });
+
+  it('never requests a page on a site never to read or its subdomains, and says why', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      { id: 'x1', parentId: 'f', title: 'Excluded', url: 'https://one.invalid/page' },
+      { id: 'x2', parentId: 'f', title: 'Subdomain', url: 'https://news.one.invalid/page' },
+      { id: 'k1', parentId: 'f', title: 'Kept', url: 'https://two.invalid/page' },
+    ]);
+    await saveSettings({ pageTextExcludedSites: ['one.invalid'] });
+    const requests = stubFetch({ 'https://two.invalid/page': article });
+    const { job, results } = await runToEnd('pageText');
+    expect(job?.options).toMatchObject({ excludedSites: ['one.invalid'] });
+    expect(results).toMatchObject([
+      { id: 'x1', status: 'skipped', skipReason: 'excludedSite' },
+      { id: 'x2', status: 'skipped', skipReason: 'excludedSite' },
+      { id: 'k1', status: 'read' },
+    ]);
+    expect(requests).toEqual(['https://two.invalid/page']);
+    // Not counted as a bookmark the index could cover.
+    expect((await getPageTextCoverage()).eligible).toBe(1);
+  });
+
+  it('lists outdated bookmarks for Refresh outdated, which reads only them, and says when text was last indexed', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    expect((await getPageTextCoverage()).lastIndexedAt).toBeUndefined();
+    const before = Date.now();
+    await savePageTexts(
+      [
+        // Current.
+        { bookmarkId: 'b1', url: 'https://one.invalid/page', text: 'one' },
+        // Read at the address the bookmark had before.
+        { bookmarkId: 'b2', url: 'https://two.invalid/old', text: 'two' },
+      ],
+      'download',
+    );
+    const coverage = await getPageTextCoverage();
+    expect(coverage.outdated).toEqual([{ id: 'b2', url: 'https://two.invalid/page' }]);
+    expect(coverage.lastIndexedAt).toBeGreaterThanOrEqual(before);
+
+    // What Options sends for Refresh outdated: those bookmarks and their sites only.
+    const requests = stubFetch({ 'https://two.invalid/page': article });
+    const response = await runJobCommand({
+      type: 'start',
+      commandId: crypto.randomUUID(),
+      kind: 'pageText',
+      source: 'options',
+      scope: { mode: 'all' },
+      sites: getUrlSites(coverage.outdated.map((item) => item.url)),
+      bookmarkIds: coverage.outdated.map((item) => item.id),
+    });
+    if (!response.ok || !response.job) throw new Error('not accepted');
+    await whenJobsIdle();
+    expect(requests).toEqual(['https://two.invalid/page']);
+    const items = await getJobItems(response.job.id);
+    await savePageTextResults(items.map((item) => item.result as PageTextScanItem));
+    expect((await getPageTextCoverage()).outdated).toEqual([]);
+  });
+
+  it('refreshes a page indexed full while the index has no room for new pages', async () => {
+    vi.stubGlobal('DOMParser', undefined);
+    await savePageTexts(
+      [{ bookmarkId: 'b2', url: 'https://two.invalid/old', text: 'two' }],
+      'download',
+    );
+    const limits = PAGE_TEXT_LIMITS as { maxPages: number };
+    const maxPages = limits.maxPages;
+    limits.maxPages = 1;
+    try {
+      const requests = stubFetch({ 'https://two.invalid/page': article });
+      const { job, results } = await runToEnd('pageText', ['two.invalid']);
+      expect(job).toMatchObject({ summary: { overLimit: 0 } });
+      expect(results).toContainEqual(expect.objectContaining({ id: 'b2', status: 'read' }));
+      expect(requests).toEqual(['https://two.invalid/page']);
+    } finally {
+      limits.maxPages = maxPages;
+    }
+  });
+
+  it('deletes the text indexed from a site once it is added, here or on another device', async () => {
+    await savePageTexts(
+      [
+        { bookmarkId: 'b1', url: 'https://one.invalid/page', text: 'one' },
+        { bookmarkId: 'b2', url: 'https://news.two.invalid/page', text: 'two' },
+      ],
+      'download',
+    );
+    registerPageTextAccessCleanup();
+    await saveSettings({ pageTextExcludedSites: ['two.invalid'] });
+    await vi.waitFor(async () => expect([...(await getPageTexts()).keys()]).toEqual(['b1']));
+    expect(await purgePageTextsOfSites(['one.invalid'])).toBe(1);
+    expect((await getPageTexts()).size).toBe(0);
+  });
+});
+
 describe('the AI host page reading a page', () => {
   it('accepts a page as long as Index Page Text downloads, and no longer', () => {
     expect(INPUT_LIMITS.chars.page_html).toBe(PAGE_TEXT_LIMITS.maxBytes);
@@ -411,7 +718,11 @@ describe('the AI host page reading a page', () => {
   });
 
   it('answers with text no longer than the index keeps, or a status without text', () => {
-    const text = (length: number) => ({ status: 'read', text: 'x'.repeat(length) });
+    const text = (length: number) => ({
+      status: 'read',
+      text: 'x'.repeat(length),
+      truncated: false,
+    });
     expect(pageTextReadingSchema.safeParse(text(PAGE_TEXT_LIMITS.maxCharsPerPage)).success).toBe(
       true,
     );
@@ -419,6 +730,8 @@ describe('the AI host page reading a page', () => {
       pageTextReadingSchema.safeParse(text(PAGE_TEXT_LIMITS.maxCharsPerPage + 1)).success,
     ).toBe(false);
     expect(pageTextReadingSchema.safeParse(text(0)).success).toBe(false);
+    // Read text says whether the page had more.
+    expect(pageTextReadingSchema.safeParse({ status: 'read', text: 'x' }).success).toBe(false);
     expect(pageTextReadingSchema.safeParse({ status: 'signIn' }).success).toBe(true);
     // A sign-in page never carries text.
     expect(pageTextReadingSchema.safeParse({ status: 'signIn', text: 'x' }).success).toBe(false);
