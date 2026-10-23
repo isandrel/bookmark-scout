@@ -99,7 +99,9 @@
 # reviewed run's fail-closed apply and record (1,483).
 # Raised from 1490 on 2026-10-22 for the hover card's first-use loader and the manager's Tags and
 # Summary columns (1,491).
-"bookmarks.html" = 1500
+# Raised from 1500 on 2026-10-22 for the Smart Rules run status and stale-review checks on top of
+# the Index Page Text gaps (1,501).
+"bookmarks.html" = 1510
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -123,4 +125,6 @@
 # the config modules it reads (607).
 # Raised from 620 on 2026-10-22 for the cover store's config and the megabyte format every page's
 # shared modules carry (622).
-"welcome.html" = 630
+# Raised from 630 on 2026-10-22 for the Smart Rules run status and stale-review checks on top of
+# the Index Page Text gaps (631).
+"welcome.html" = 640
