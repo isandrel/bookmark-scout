@@ -187,7 +187,6 @@ async function runLoop(): Promise<void> {
   }
 }
 
-/** One slice of a job: up to the slice's items or time, then saved and released or finished. */
 /**
  * Saves a slice's results: in batches (`commit_batch_items`, `commit_batch_ms`) for reading
  * work, which a stopped worker only has to check again; one at a time for work that cannot be
@@ -219,6 +218,7 @@ function commitBuffer(job: JobRecord, run: ActiveRun, batched: boolean) {
   };
 }
 
+/** One slice of a job: up to the slice's items or time, then saved and released or finished. */
 async function runSlice(waiting: JobRecord): Promise<void> {
   lastSliceAt.set(waiting.id, Date.now());
   const job = await claimJob(waiting.id, SESSION);

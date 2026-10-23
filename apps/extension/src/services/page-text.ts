@@ -10,8 +10,9 @@
  * Bookmarks of one address share one download in a run (`sameAs`), and each keeps its own text.
  * An address with a user name and password, or a query parameter the Privacy Scanner names as
  * sensitive, is never requested, and neither is a page on a site the user chose never to read
- * (Never Read These Sites). Taking back a site's website access, or adding it to those sites,
- * deletes its text (`registerPageTextAccessCleanup`). A busy site that names a short Retry-After
+ * (Never Read These Sites), nor the address a download would read instead (`readFrom`). Taking
+ * back a site's website access, or adding it to those sites, deletes its text, from the index and
+ * from the saved results of runs (`registerPageTextAccessCleanup`). A busy site that names a short Retry-After
  * is asked again after it, a few times (`busy_retries`), and is then listed as failed.
  */
 import { z } from 'zod';
@@ -136,7 +137,7 @@ export async function readPageTextHtml(html: string, maxChars: number): Promise<
  */
 export async function readPageTextItem(
   item: PageTextScanItem,
-  options: Pick<PageTextScanOptions, 'skipPrivateHosts'> & {
+  options: Pick<PageTextScanOptions, 'skipPrivateHosts' | 'excludedSites'> & {
     readText: PageTextReader;
     signal?: AbortSignal;
   },
@@ -146,9 +147,12 @@ export async function readPageTextItem(
       timeoutMs: PAGE_TEXT_LIMITS.timeoutMs,
       maxBytes: PAGE_TEXT_LIMITS.maxBytes,
       until: 'end',
-      // Each address, a redirect's target too, is checked before it is requested: never the
-      // local network (when skipped) or a site the run has no access to.
-      allowUrl: (next) => mayRequestFrom(next, item.url, options.skipPrivateHosts),
+      // Each address, a redirect's target and the `https:` or `www.` address read instead too,
+      // is checked before it is requested: never a site the user chose never to read, the local
+      // network (when skipped), or a site the run has no access to.
+      allowUrl: async (next) =>
+        !isUrlOnSites(next, options.excludedSites) &&
+        (await mayRequestFrom(next, item.url, options.skipPrivateHosts)),
       ...(options.signal ? { signal: options.signal } : {}),
     });
   let page = await download();
@@ -343,23 +347,43 @@ export async function fetchBookmarkUrls(): Promise<Map<string, string>> {
   );
 }
 
+/** The addresses a run's result was read from: the bookmark's own, and the one read instead. */
+export function pageTextAddresses(item: Pick<PageTextScanItem, 'url' | 'readFrom'>): string[] {
+  return item.readFrom ? [item.url, item.readFrom] : [item.url];
+}
+
 /**
  * Saves the text of the pages the review kept, and drops text of bookmarks that are gone. A page
  * whose bookmark moved to another address since it was read is not saved: the text is not that
- * address's. `notSaved` counts pages left out because this device's storage for the extension is
- * full.
+ * address's. Neither is a page read from a site the user chose never to read, or whose website
+ * access was taken back, since the run read it. `notSaved` counts pages left out because this
+ * device's storage for the extension is full.
  */
 export async function savePageTextResults(
   items: readonly PageTextScanItem[],
 ): Promise<PageTextSaveResult> {
   const [urls, { pageTextExcludedSites }] = await Promise.all([fetchBookmarkUrls(), getSettings()]);
+  const access = new Map<string, Promise<boolean>>();
+  const allowed = async (url: string) => {
+    const site = getUrlSite(url);
+    if (!site) return false;
+    let check = access.get(site);
+    if (!check) {
+      check = hasWebSiteAccess(site);
+      access.set(site, check);
+    }
+    return check;
+  };
+  const keep = new Set<PageTextScanItem>();
+  for (const item of items) {
+    if (item.status !== 'read' || !item.text || urls.get(item.id) !== item.url) continue;
+    const addresses = pageTextAddresses(item);
+    if (addresses.some((url) => isUrlOnSites(url, pageTextExcludedSites))) continue;
+    if ((await Promise.all(addresses.map(allowed))).every(Boolean)) keep.add(item);
+  }
   const result = await savePageTexts(
     items.flatMap((item) =>
-      item.status === 'read' &&
-      item.text &&
-      urls.get(item.id) === item.url &&
-      // A site the user chose never to read since the run read it keeps nothing.
-      !isUrlOnSites(item.url, pageTextExcludedSites)
+      keep.has(item) && item.text
         ? [
             {
               bookmarkId: item.id,
@@ -391,13 +415,18 @@ export type TabPageText = {
 
 /**
  * Runs in the tab (`scripting.executeScript`), so it uses nothing from outside itself: the
- * document as it is shown now, at most `maxChars` long, without what was typed into its fields.
+ * document as it is shown now, at most `maxChars` long, without what was typed into its fields
+ * or its editable areas.
  */
 function snapshotShownPage(maxChars: number): { url: string; html: string } {
   const copy = document.documentElement.cloneNode(true) as HTMLElement;
   for (const field of copy.querySelectorAll('input, textarea, select')) {
     field.removeAttribute('value');
     if (field.localName !== 'input') field.replaceChildren();
+  }
+  // A rich text editor's draft (a comment, a message) is typed text too, not the page's.
+  for (const editor of copy.querySelectorAll('[contenteditable]:not([contenteditable="false"])')) {
+    editor.replaceChildren();
   }
   return { url: location.href, html: copy.outerHTML.slice(0, maxChars) };
 }

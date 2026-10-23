@@ -8,18 +8,28 @@ import {
 } from '@/components/bookmarks/tools/tool-definitions';
 import { setLanguage } from '@/hooks/use-i18n';
 import {
+  COVER_CHANNEL,
   COVER_LIMITS,
   type CoverImage,
   clearCovers,
+  coversOverLimit,
+  fromPortableCover,
+  getCoverChangeCount,
   getCoverImage,
   getCoverInfos,
+  getCoverRevision,
   getCoverSummary,
   isCoverCurrent,
+  isKeptCoverOf,
   pruneCovers,
   putBackCovers,
+  removeCovers,
+  restoreCoverRecords,
   saveCovers,
   showCoverImage,
   takeCovers,
+  toPortableCover,
+  watchCovers,
 } from '@/lib/cover-store';
 import { saveSettings } from '@/lib/settings-storage';
 import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
@@ -152,7 +162,11 @@ describe('stored covers', () => {
       vi.setSystemTime(1000);
       await saveCovers([cover('old', 60)], 100);
       vi.setSystemTime(2000);
-      expect(await saveCovers([cover('new', 60)], 100)).toEqual({ saved: 1, notSaved: 0 });
+      expect(await saveCovers([cover('new', 60)], 100)).toEqual({
+        saved: 1,
+        notSaved: 0,
+        replaced: [],
+      });
     } finally {
       vi.useRealTimers();
     }
@@ -171,6 +185,7 @@ describe('stored covers', () => {
       expect(await saveCovers(covers, 1_000_000)).toEqual({
         saved: INDEXED_SAVE_BATCH_SIZE,
         notSaved: 2,
+        replaced: [],
       });
     } finally {
       full.mockRestore();
@@ -190,6 +205,144 @@ describe('stored covers', () => {
     expect([...(await getCoverInfos()).keys()]).toEqual(['a']);
     await clearCovers();
     expect(await getCoverSummary()).toEqual({ covers: 0, bytes: 0 });
+  });
+
+  it('of deleted bookmarks are deleted with them, info and image (media review 4)', async () => {
+    await saveCovers([cover('a', 5), cover('b', 5), cover('c', 5)], 1000);
+    expect(await removeCovers(['a', 'c', 'never-had-one'])).toBe(2);
+    expect([...(await getCoverInfos()).keys()]).toEqual(['b']);
+    expect(await getCoverImage('a', 'https://site.example/a')).toBeUndefined();
+    expect(await removeCovers([])).toBe(0);
+  });
+
+  it('a cover found automatically never replaces one the user chose for that address, checked when it is written (media review 2)', async () => {
+    const url = 'https://site.example/a';
+    await saveCovers([{ ...cover('a', 7, url), source: 'tab' }], 1000);
+    // A review, a picture while browsing, and quick save that all checked before the pick.
+    for (const source of ['page', 'browse', 'quickSave'] as const) {
+      expect(await saveCovers([{ ...cover('a', 9, url), source }], 1000)).toEqual({
+        saved: 0,
+        notSaved: 0,
+        replaced: [],
+      });
+    }
+    expect((await getCoverInfos()).get('a')?.source).toBe('tab');
+    expect((await getCoverImage('a', url))?.size).toBe(7);
+    // The user's own new pick replaces it, and an automatic cover of another address may.
+    expect((await saveCovers([{ ...cover('a', 8, url), source: 'tab' }], 1000)).saved).toBe(1);
+    const moved = 'https://site.example/moved';
+    expect((await saveCovers([{ ...cover('a', 4, moved), source: 'page' }], 1000)).saved).toBe(1);
+    expect((await getCoverInfos()).get('a')).toMatchObject({ url: moved, source: 'page' });
+  });
+
+  it('a chosen cover stays chosen whatever version made it (media review 14)', async () => {
+    const url = 'https://site.example/a';
+    await saveCovers([{ ...cover('a', 3, url), source: 'tab' }], 1000);
+    const [record] = await takeCovers(['a']);
+    if (!record) throw new Error('no cover');
+    // Stored by a release that made covers another way (`version` in config/bookmarks/covers.toml).
+    const info = { ...record.info, source: 'tab' as const, version: COVER_LIMITS.version + 1 };
+    await restoreCoverRecords([{ info, image: record.image }], 1000);
+    const stored = (await getCoverInfos()).get('a');
+    expect(isCoverCurrent(stored, url)).toBe(false);
+    expect(isKeptCoverOf(stored, url)).toBe(true);
+    expect(isKeptCoverOf(stored, 'https://site.example/other')).toBe(false);
+    expect((await saveCovers([{ ...cover('a', 9, url), source: 'page' }], 1000)).saved).toBe(0);
+  });
+
+  it('past the storage limit go oldest first, and covers the user chose last (media review 3)', async () => {
+    const infos = [
+      { bookmarkId: 'picked-old', bytes: 40, savedAt: 1, source: 'tab' as const },
+      { bookmarkId: 'page-new', bytes: 40, savedAt: 3, source: 'page' as const },
+      { bookmarkId: 'browse-mid', bytes: 40, savedAt: 2, source: 'browse' as const },
+    ];
+    expect(coversOverLimit(infos, 80)).toEqual(new Set(['browse-mid']));
+    expect(coversOverLimit(infos, 40)).toEqual(new Set(['browse-mid', 'page-new']));
+    // Only chosen covers left: the oldest of them go first.
+    const picked = [
+      { bookmarkId: 'p1', bytes: 40, savedAt: 1, source: 'tab' as const },
+      { bookmarkId: 'p2', bytes: 40, savedAt: 2, source: 'tab' as const },
+    ];
+    expect(coversOverLimit(picked, 40)).toEqual(new Set(['p1']));
+
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(1000);
+      await saveCovers([{ ...cover('picked', 60), source: 'tab' }], 100);
+      vi.setSystemTime(2000);
+      await saveCovers([cover('newer', 30)], 100);
+      vi.setSystemTime(3000);
+      await saveCovers([cover('newest', 30)], 100);
+    } finally {
+      vi.useRealTimers();
+    }
+    expect([...(await getCoverInfos()).keys()].sort()).toEqual(['newest', 'picked']);
+  });
+
+  it('a save says which cover of the same address it replaced, as stored, to put back (media review 10)', async () => {
+    const url = 'https://site.example/a';
+    await saveCovers([{ ...cover('a', 6, url), source: 'browse' }], 1000);
+    const before = await takeCovers(['a']);
+    await putBackCovers(before);
+    const { saved, replaced } = await saveCovers(
+      [{ ...cover('a', 9, url), source: 'quickSave' }, cover('b', 2)],
+      1000,
+      { keepReplaced: true },
+    );
+    expect(saved).toBe(2);
+    expect(replaced).toHaveLength(1);
+    expect(replaced[0]?.info).toEqual(before[0]?.info);
+    // Kept as JSON (the last quick save) and read back, it is the same cover.
+    const [first] = replaced;
+    if (!first) throw new Error('no replaced cover');
+    const portable = JSON.parse(JSON.stringify(toPortableCover(first)));
+    const back = fromPortableCover(portable);
+    expect(back?.info).toEqual(first.info);
+    expect(new Uint8Array(back?.image.data ?? new ArrayBuffer(0))).toEqual(
+      new Uint8Array(first.image.data),
+    );
+    expect(fromPortableCover({ ...portable, data: 'AAAA' })).toBeUndefined();
+    // Without `keepReplaced` nothing is read back.
+    expect((await saveCovers([cover('a', 3, url)], 1000)).replaced).toEqual([]);
+  });
+});
+
+describe('cover changes heard by open pages (media review 13)', () => {
+  beforeEach(async () => {
+    await clearCovers();
+  });
+
+  it('name the bookmarks whose cover changed, so a card reloads only its own', async () => {
+    const stop = watchCovers(() => undefined);
+    try {
+      await saveCovers([cover('a', 5), cover('b', 5)], 1000);
+      const a = getCoverRevision('a');
+      const b = getCoverRevision('b');
+      const all = getCoverChangeCount();
+      await saveCovers([cover('a', 6)], 1000);
+      expect(getCoverRevision('a')).toBe(a + 1);
+      expect(getCoverRevision('b')).toBe(b);
+      expect(getCoverChangeCount()).toBe(all + 1);
+      await removeCovers(['b']);
+      expect(getCoverRevision('a')).toBe(a + 1);
+      expect(getCoverRevision('b')).toBe(b + 1);
+      // Delete covers changes every cover.
+      await clearCovers();
+      expect(getCoverRevision('a')).toBe(a + 2);
+      expect(getCoverRevision('untouched')).toBeGreaterThan(0);
+
+      // Another page's message: its ids, or every cover for one that names none.
+      const other = new BroadcastChannel(COVER_CHANNEL);
+      const before = { a: getCoverRevision('a'), b: getCoverRevision('b') };
+      other.postMessage({ ids: ['b'] });
+      await vi.waitFor(() => expect(getCoverRevision('b')).toBe(before.b + 1));
+      expect(getCoverRevision('a')).toBe(before.a);
+      other.postMessage('changed');
+      await vi.waitFor(() => expect(getCoverRevision('a')).toBe(before.a + 1));
+      other.close();
+    } finally {
+      stop();
+    }
   });
 });
 
@@ -375,8 +528,30 @@ describe('Fetch Covers runs', () => {
       type: COVER_LIMITS.outputType,
       source: 'page',
     });
-    expect(found?.preview).toMatch(/^data:image\//);
+    // The run keeps each image once: the review draws it from these bytes, not from a copy.
+    expect(found).not.toHaveProperty('preview');
+    expect(found?.cover?.data.byteLength).toBeGreaterThan(0);
     expect(items.find((item) => item.id === 'elsewhere')?.imageSite).toBe('other.net');
+  });
+
+  it('stops reading pages once it has found max_found_per_run covers, and counts the rest (media review 1)', async () => {
+    const limits = COVER_LIMITS as { maxFoundPerRun: number };
+    const cap = limits.maxFoundPerRun;
+    limits.maxFoundPerRun = 2;
+    try {
+      const nodes = Array.from({ length: 6 }, (_, index) =>
+        node(`p${index}`, `https://p${index}.example/`),
+      );
+      const result = await scanCovers(nodes, OPTIONS);
+      expect(result.items.filter((item) => item.status === 'found')).toHaveLength(2);
+      expect(result.items.every((item) => item.status !== 'found' || item.cover)).toBe(true);
+      expect(result.overLimit).toBe(4);
+      expect(result.items.length + (result.overLimit ?? 0)).toBe(6);
+      // Under the cap nothing is left out.
+      expect((await scanCovers(nodes.slice(0, 2), OPTIONS)).overLimit).toBeUndefined();
+    } finally {
+      limits.maxFoundPerRun = cap;
+    }
   });
 
   it('never fetches over a cover chosen with Use this view as the cover, and says it is kept', async () => {
@@ -386,6 +561,13 @@ describe('Fetch Covers runs', () => {
       const { items } = await scanCovers([node('chosen', url)], { ...OPTIONS, preference });
       expect(items[0]?.status).toBe('kept');
     }
+    // Also when covers are now made another way (media review 14).
+    const [record] = await takeCovers(['chosen']);
+    if (!record) throw new Error('no cover');
+    const info = { ...record.info, source: 'tab' as const, version: COVER_LIMITS.version + 1 };
+    await restoreCoverRecords([{ info, image: record.image }], 1000);
+    const { items } = await scanCovers([node('chosen', url)], OPTIONS);
+    expect(items[0]?.status).toBe('kept');
     expect(vi.mocked(fetch)).not.toHaveBeenCalled();
   });
 

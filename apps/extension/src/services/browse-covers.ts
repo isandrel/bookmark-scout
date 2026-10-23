@@ -80,10 +80,10 @@ export function isBrowseCaptureUrl(
  * Whether a bookmark at `url` gets a new picture under Cover Source `preference`: it has no cover
  * of that address made the current way; or its cover is the page's own image (or one saved before
  * sources were recorded) and the preference ranks pictures of the tab above it (Screenshot first);
- * or its cover is a picture taken while browsing, saved more than `maxAgeMs` before `now` (null:
- * never retaken). Never a
- * cover the user chose with Use this view as the cover, and none at all with a choice that takes
- * no pictures (Page image only).
+ * or its cover is a picture taken while browsing (`browse`), saved more than `maxAgeMs` before
+ * `now` (null: never retaken), as Retake Screenshots Older Than says; a picture quick save took is
+ * not retaken. Never a cover the user chose with Use this view as the cover, whatever version made
+ * it, and none at all with a choice that takes no pictures (Page image only).
  */
 export function needsBrowseCover(
   info: CoverInfo | undefined,
@@ -95,10 +95,10 @@ export function needsBrowseCover(
   }: { now: number; maxAgeMs: number | null; preference: CoverPreference },
 ): boolean {
   if (!acceptsCoverKind(preference, 'screenshot')) return false;
+  if (isKeptCoverOf(info, url)) return false;
   if (!isCoverCurrent(info, url)) return true;
-  if (isKeptCover(info.source)) return false;
   if (!isScreenshotCover(info.source)) return replacesCover(preference, 'screenshot', info.source);
-  return maxAgeMs !== null && now - info.savedAt > maxAgeMs;
+  return info.source === 'browse' && maxAgeMs !== null && now - info.savedAt > maxAgeMs;
 }
 
 /**

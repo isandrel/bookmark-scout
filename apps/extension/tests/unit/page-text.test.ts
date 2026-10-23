@@ -36,6 +36,7 @@ import {
 } from '@/services/page-text';
 import { handleAIHostRequest } from '@/services/quick-save-ai-runner';
 import type { BookmarkTreeNode } from '@/types';
+import { installFakePermissions } from '../fake-permissions';
 import { runOutOfStorageAfter } from './indexeddb-quota';
 
 const tree: BookmarkTreeNode[] = [
@@ -186,6 +187,8 @@ describe('Index Page Text runs', () => {
 
   beforeEach(async () => {
     await clearPageTexts();
+    // Website access to every site: a review saves only text from sites still allowed.
+    installFakePermissions({ origins: ['https://*/*', 'http://*/*'] });
     vi.stubGlobal('DOMParser', LinkedomParser);
     vi.stubGlobal(
       'fetch',
@@ -453,6 +456,71 @@ describe('Index Page Text runs', () => {
     expect([...(await getPageTexts()).keys()]).toEqual(['read']);
   });
 
+  it('saves no text from a site whose access was taken back, or on Never Read These Sites by the address read from, since the run (media review 5, 8)', async () => {
+    const pages = [
+      { id: 'kept', url: 'https://kept.example/' },
+      { id: 'revoked', url: 'https://revoked.example/' },
+      { id: 'never', url: 'http://short.example/', readFrom: 'https://never.example/' },
+    ];
+    vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockResolvedValue([
+      {
+        id: '0',
+        title: '',
+        syncing: false,
+        children: pages.map(({ id, url }) => ({
+          id,
+          parentId: '0',
+          title: id,
+          url,
+          syncing: false,
+        })),
+      },
+    ]);
+    installFakePermissions({
+      origins: ['kept', 'short', 'never'].flatMap((site) => [
+        `http://*.${site}.example/*`,
+        `https://*.${site}.example/*`,
+      ]),
+    });
+    await saveSettings({ pageTextExcludedSites: ['never.example'] });
+    const { saved } = await savePageTextResults(
+      pages.map((page) => ({
+        ...page,
+        title: page.id,
+        folderPath: '',
+        status: 'read',
+        text: 'quokka',
+      })),
+    );
+    expect(saved).toBe(1);
+    expect([...(await getPageTexts()).keys()]).toEqual(['kept']);
+    await saveSettings({ pageTextExcludedSites: [] });
+  });
+
+  it('never follows a redirect to a site on Never Read These Sites (media review 8)', async () => {
+    const requested: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        requested.push(input);
+        if (input === 'https://away.example/') {
+          return new Response(null, {
+            status: 301,
+            headers: { location: 'https://never.example/' },
+          });
+        }
+        return new Response(ARTICLE, { status: 200, headers: { 'content-type': 'text/html' } });
+      }),
+    );
+    // With access to every site, only Never Read These Sites keeps the redirect from being read.
+    const { items } = await scanPageTexts(
+      folder([{ id: 'away', parentId: 'f', title: 'Away', url: 'https://away.example/' }]),
+      { skipPrivateHosts: true, sensitiveParams: [], excludedSites: ['never.example'] },
+    );
+    expect(items[0]?.status).toBe('redirected');
+    expect(requested).toEqual(['https://away.example/']);
+  });
+
   it('reports a save cut short by full storage as partial, never as saved', async () => {
     await saveSettings({ language: 'en' });
     setLanguage('en');
@@ -564,6 +632,9 @@ describe("Index this page's text from the current tab (S17, S18)", () => {
   <h1>Story</h1><p>Only signed-in readers see that the quokka story continues here.</p>
   <p>${'More of the story for subscribers. '.repeat(10)}</p>
   <form><input name="comment" value="typed-secret"><textarea>draft-secret</textarea></form>
+  <div contenteditable="true"><p>editor-draft-secret</p></div>
+  <div contenteditable><p>plain-editor-secret</p></div>
+  <div contenteditable="false"><p>Read-only part of the story.</p></div>
   </article></body></html>`;
   const tab = (overrides: Partial<Tab> = {}) =>
     ({ id: 7, windowId: 1, url: URL_SAVED, incognito: false, ...overrides }) as Tab;
@@ -613,6 +684,10 @@ describe("Index this page's text from the current tab (S17, S18)", () => {
     // What was typed into the page's fields never leaves the tab.
     expect(snapshots[0]?.html).not.toContain('typed-secret');
     expect(snapshots[0]?.html).not.toContain('draft-secret');
+    // Nor what was typed into a rich text editor (media review 9); a part marked not editable stays.
+    expect(snapshots[0]?.html).not.toContain('editor-draft-secret');
+    expect(snapshots[0]?.html).not.toContain('plain-editor-secret');
+    expect(snapshots[0]?.html).toContain('Read-only part of the story.');
     // Nothing is kept before the preview is saved.
     expect((await getPageTexts()).size).toBe(0);
   });
@@ -675,6 +750,8 @@ describe("Index this page's text from the current tab (S17, S18)", () => {
 describe('where page text came from (PROMPT S2.5)', () => {
   beforeEach(async () => {
     await clearPageTexts();
+    // Website access to every site: a review saves only text from sites still allowed.
+    installFakePermissions({ origins: ['https://*/*', 'http://*/*'] });
     await saveSettings({ language: 'en' });
     setLanguage('en');
   });

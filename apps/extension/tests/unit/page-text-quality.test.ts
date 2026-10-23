@@ -35,6 +35,7 @@ import {
   scanPageTexts,
 } from '@/services/page-text';
 import {
+  purgePageTextsOfSites,
   purgePageTextsWithoutAccess,
   registerPageTextAccessCleanup,
 } from '@/services/page-text-coverage';
@@ -73,6 +74,8 @@ const statuses = (items: readonly PageTextScanItem[]) =>
 
 beforeEach(async () => {
   await clearPageTexts();
+  // Website access to every site: a review saves only text from sites still allowed.
+  installFakePermissions({ origins: ['https://*/*', 'http://*/*'] });
   vi.stubGlobal('DOMParser', LinkedomParser);
 });
 
@@ -523,6 +526,38 @@ describe('website access taken back (S46)', () => {
       ),
     ).toBe(1);
     expect([...(await getPageTexts()).keys()]).toEqual(['b']);
+  });
+
+  it('matches the address the text was read from too (media review 8)', async () => {
+    await savePageTexts(
+      [
+        {
+          bookmarkId: 'r',
+          url: 'http://short.example/a',
+          text: 'r',
+          readFrom: 'https://long.example/a',
+        },
+        { bookmarkId: 's', url: 'http://short.example/b', text: 's' },
+      ],
+      'download',
+    );
+    expect(await purgePageTextsWithoutAccess(['https://*.long.example/*'], async () => false)).toBe(
+      1,
+    );
+    expect([...(await getPageTexts()).keys()]).toEqual(['s']);
+    await savePageTexts(
+      [
+        {
+          bookmarkId: 'r',
+          url: 'http://short.example/a',
+          text: 'r',
+          readFrom: 'https://long.example/a',
+        },
+      ],
+      'download',
+    );
+    expect(await purgePageTextsOfSites(['long.example'])).toBe(1);
+    expect([...(await getPageTexts()).keys()]).toEqual(['s']);
   });
 
   it('runs when the browser reports access removed, in Chrome and Firefox alike', async () => {

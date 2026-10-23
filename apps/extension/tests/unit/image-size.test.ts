@@ -29,9 +29,47 @@ describe('image sizes read from the header, without decoding (covers V2)', () =>
     });
   });
 
-  it('reads a GIF from its logical screen', () => {
-    const gif = bytes(ascii('GIF89a'), le16(640), le16(480), [0, 0, 0]);
+  /** A GIF image descriptor: `2C`, left, top, width, height, and its flags. */
+  const gifFrame = (left: number, top: number, width: number, height: number) => [
+    0x2c,
+    ...le16(left),
+    ...le16(top),
+    ...le16(width),
+    ...le16(height),
+    0,
+  ];
+
+  it('reads a GIF from its logical screen when its first frame fits in it', () => {
+    const gif = bytes(ascii('GIF89a'), le16(640), le16(480), [0, 0, 0], gifFrame(0, 0, 640, 480));
     expect(readImageSize(gif, MIME.gif)).toEqual({ width: 640, height: 480 });
+  });
+
+  it('reads a GIF whose first frame is larger than its logical screen as the frame (covers V2)', () => {
+    // A tiny stated screen with a huge frame: decoders draw the whole frame, so the size check
+    // must see it. The frame comes after a global color table (flag 0x80, 2^(1+1) colors) and a
+    // graphic control extension with its sub-blocks.
+    const gif = bytes(
+      ascii('GIF89a'),
+      le16(1),
+      le16(1),
+      [0x81, 0, 0],
+      new Array(3 * 4).fill(0),
+      [0x21, 0xf9, 4, 0, 0, 0, 0, 0],
+      [0x21, 0xfe, 2, 0x41, 0x42, 3, 0x43, 0x44, 0x45, 0],
+      gifFrame(10, 20, 9000, 9000),
+    );
+    expect(readImageSize(gif, MIME.gif)).toEqual({ width: 9010, height: 9020 });
+  });
+
+  it('reads nothing from a GIF without a frame, or with an unknown block before it', () => {
+    expect(readImageSize(bytes(ascii('GIF89a'), le16(640), le16(480), [0, 0, 0]), MIME.gif)).toBe(
+      undefined,
+    );
+    const unknown = bytes(ascii('GIF89a'), le16(64), le16(64), [0, 0, 0], [0x99]);
+    expect(readImageSize(unknown, MIME.gif)).toBeUndefined();
+    // A frame descriptor cut short.
+    const cut = bytes(ascii('GIF89a'), le16(64), le16(64), [0, 0, 0], [0x2c, 0, 0, 0]);
+    expect(readImageSize(cut, MIME.gif)).toBeUndefined();
   });
 
   it('reads lossy, lossless, and extended WebP', () => {

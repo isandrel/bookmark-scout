@@ -9259,6 +9259,26 @@
         "message": "Origine della copertina è Solo screenshot, quindi le immagini delle pagine non vengono usate e nessuna pagina è stata letta. Scegli un'altra Origine della copertina nelle Impostazioni per recuperarle.",
         "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
+    "tools_coversOverLimit": {
+        "message": "$count$ preferiti non sono stati letti: questa esecuzione ha trovato tante copertine quante ne tiene un'esecuzione. Salva queste, poi recupera di nuovo il resto.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversOverLimit_one": {
+        "message": "$count$ preferito non è stato letto: questa esecuzione ha trovato tante copertine quante ne tiene un'esecuzione. Salva queste, poi recupera di nuovo il resto.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
     "tools_coversCategory_skipped": {
         "message": "Saltate ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"

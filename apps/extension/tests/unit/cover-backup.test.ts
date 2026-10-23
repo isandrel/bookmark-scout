@@ -199,7 +199,7 @@ describe('covers in the backup file', () => {
     expect(await previewCoverRestore(covers)).toMatchObject({ added: 0, replaced: 0, kept: 3 });
   });
 
-  it('never replace a picked cover unless the file has a newer picked one; otherwise newer wins', () => {
+  it('rank a picked cover first: never replaced unless by a newer picked one, and replacing any other (media review 11)', () => {
     const at = (source: CoverInfo['source'], day: number) => ({ source, savedAt: day * DAY });
     expect(importedCoverWins(at('page', 5), at('tab', 1))).toBe(false);
     expect(importedCoverWins(at('browse', 5), at('tab', 1))).toBe(false);
@@ -207,7 +207,9 @@ describe('covers in the backup file', () => {
     expect(importedCoverWins(at('tab', 1), at('tab', 5))).toBe(false);
     expect(importedCoverWins(at('page', 5), at('browse', 1))).toBe(true);
     expect(importedCoverWins(at('page', 1), at('browse', 5))).toBe(false);
-    expect(importedCoverWins(at('tab', 1), at('page', 5))).toBe(false);
+    // A picked cover in the file wins over one that was not picked, however much newer.
+    expect(importedCoverWins(at('tab', 1), at('page', 5))).toBe(true);
+    expect(importedCoverWins(at('tab', 1), at('quickSave', 9))).toBe(true);
     expect(importedCoverWins(at('page', 1), at('page', 1))).toBe(false);
 
     const file = readBackupCovers([
@@ -240,6 +242,25 @@ describe('covers in the backup file', () => {
     );
     expect(plan).toMatchObject({ matched: 4, unmatched: 0, added: 1, replaced: 1, kept: 2 });
     expect(plan.writes.map((write) => write.bookmarkId)).toEqual(['n', 'm']);
+  });
+
+  it('read a date in the future as now, so it neither outranks later covers nor outlasts them (media review 11)', () => {
+    const now = Date.now();
+    const file = readBackupCovers([
+      entry('https://site.example/future', { savedAt: new Date(now + 400 * DAY).toISOString() }),
+      entry('https://site.example/past', { savedAt: new Date(2 * DAY).toISOString() }),
+    ]);
+    const byUrl = new Map(file.covers.map((cover) => [cover.url, cover.savedAt]));
+    expect(byUrl.get('https://site.example/future')).toBeGreaterThanOrEqual(now);
+    expect(byUrl.get('https://site.example/future')).toBeLessThanOrEqual(Date.now());
+    expect(byUrl.get('https://site.example/past')).toBe(2 * DAY);
+    // A cover saved here after the restore is newer than the file's.
+    expect(
+      importedCoverWins(
+        { source: 'page', savedAt: byUrl.get('https://site.example/future') ?? 0 },
+        { source: 'page', savedAt: Date.now() + 1 },
+      ),
+    ).toBe(false);
   });
 
   it('count the covers Cover Storage would remove afterwards, the oldest first', () => {

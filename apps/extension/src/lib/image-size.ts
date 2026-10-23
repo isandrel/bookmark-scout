@@ -14,9 +14,28 @@ const PNG_WIDTH_OFFSET = 16;
 const PNG_HEIGHT_OFFSET = 20;
 const PNG_IHDR = 'IHDR';
 
-/** GIF: the six-byte signature, then the logical screen's width and height (little-endian). */
+/**
+ * GIF: the six-byte signature, then the logical screen descriptor (width and height, little-endian,
+ * then a flags byte whose top bit says a global color table of 3 * 2^(n + 1) bytes follows, n
+ * being its low three bits), then blocks: extensions (`21`, a label, then sub-blocks each led by
+ * its length, ended by a zero length) and images (`2C`: left, top, width, and height). A frame
+ * may be larger than the logical screen, and decoders draw all of it, so the size counts both.
+ */
 const GIF_WIDTH_OFFSET = 6;
 const GIF_HEIGHT_OFFSET = 8;
+const GIF_SCREEN_FLAGS_OFFSET = 10;
+const GIF_SCREEN_END = 13;
+const GIF_COLOR_TABLE_FLAG = 0x80;
+const GIF_COLOR_TABLE_SIZE_MASK = 0x07;
+const GIF_COLOR_BYTES = 3;
+const GIF_EXTENSION = 0x21;
+const GIF_IMAGE = 0x2c;
+const GIF_IMAGE_LEFT_OFFSET = 1;
+const GIF_IMAGE_TOP_OFFSET = 3;
+const GIF_IMAGE_WIDTH_OFFSET = 5;
+const GIF_IMAGE_HEIGHT_OFFSET = 7;
+/** An extension's introducer and label come before its sub-blocks. */
+const GIF_EXTENSION_HEADER = 2;
 
 /** WebP: `RIFF`, the file size, `WEBP`, then the first chunk's name, its size, and its data. */
 const WEBP_CHUNK_NAME_OFFSET = 12;
@@ -75,11 +94,45 @@ function pngSize(view: DataView): ImageSize | undefined {
   return { width: view.getUint32(PNG_WIDTH_OFFSET), height: view.getUint32(PNG_HEIGHT_OFFSET) };
 }
 
-function gifSize(view: DataView): ImageSize {
-  return {
+/** The bytes a GIF color table takes, from the flags byte before it; 0 without one. */
+function gifColorTableBytes(flags: number): number {
+  if (!(flags & GIF_COLOR_TABLE_FLAG)) return 0;
+  return GIF_COLOR_BYTES * 2 ** ((flags & GIF_COLOR_TABLE_SIZE_MASK) + 1);
+}
+
+/**
+ * A GIF's size: the larger of its logical screen and its first frame (with the frame's offset),
+ * so a file that states a small screen but holds a huge frame is not let through; undefined when
+ * no frame follows.
+ */
+function gifSize(view: DataView): ImageSize | undefined {
+  const screen = {
     width: view.getUint16(GIF_WIDTH_OFFSET, true),
     height: view.getUint16(GIF_HEIGHT_OFFSET, true),
   };
+  let offset = GIF_SCREEN_END + gifColorTableBytes(view.getUint8(GIF_SCREEN_FLAGS_OFFSET));
+  while (offset < view.byteLength) {
+    const block = view.getUint8(offset);
+    if (block === GIF_IMAGE) {
+      const left = view.getUint16(offset + GIF_IMAGE_LEFT_OFFSET, true);
+      const top = view.getUint16(offset + GIF_IMAGE_TOP_OFFSET, true);
+      return {
+        width: Math.max(screen.width, left + view.getUint16(offset + GIF_IMAGE_WIDTH_OFFSET, true)),
+        height: Math.max(
+          screen.height,
+          top + view.getUint16(offset + GIF_IMAGE_HEIGHT_OFFSET, true),
+        ),
+      };
+    }
+    if (block !== GIF_EXTENSION) return undefined;
+    offset += GIF_EXTENSION_HEADER;
+    // Each sub-block is its length byte and that many bytes; a zero length ends the extension.
+    for (let length = view.getUint8(offset); length > 0; length = view.getUint8(offset)) {
+      offset += length + 1;
+    }
+    offset += 1;
+  }
+  return undefined;
 }
 
 function webpSize(view: DataView): ImageSize | undefined {

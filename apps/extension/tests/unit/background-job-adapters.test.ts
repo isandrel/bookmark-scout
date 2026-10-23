@@ -2,7 +2,10 @@ import { IDBFactory } from 'fake-indexeddb';
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { TOOL_DEFINITIONS } from '@/components/bookmarks/tools/tool-definitions';
+import {
+  TOOL_DEFINITIONS,
+  type ToolApplyContext,
+} from '@/components/bookmarks/tools/tool-definitions';
 import { INPUT_LIMITS } from '@/lib/input-limits';
 import type { JobKind } from '@/lib/job-store';
 import { closeJobDb, getJob, getJobItems } from '@/lib/job-store';
@@ -18,6 +21,7 @@ import { pageTextReadingSchema, quickSaveHostRequestSchema } from '@/lib/quick-s
 import { saveSettings } from '@/lib/settings-storage';
 import { getUrlSites } from '@/lib/site-access';
 import { METADATA_MAX_BYTES } from '@/services/bookmark-network-tools';
+import { JOB_ADAPTERS } from '@/services/job-adapters';
 import {
   resetJobCoordinatorForTests,
   runJobCommand,
@@ -26,8 +30,10 @@ import {
 import type { PageTextScanItem, PageTextScanResult } from '@/services/page-text';
 import { savePageTextResults } from '@/services/page-text';
 import {
+  forgetDeletedPageTexts,
   getPageTextCoverage,
   purgePageTextsOfSites,
+  purgePageTextsWithoutAccess,
   registerPageTextAccessCleanup,
 } from '@/services/page-text-coverage';
 import { installFakeBookmarks } from '../fake-bookmarks';
@@ -697,6 +703,103 @@ describe('Never Read These Sites, Refresh outdated, and last indexed (S1, S2.4)'
     await vi.waitFor(async () => expect([...(await getPageTexts()).keys()]).toEqual(['b1']));
     expect(await purgePageTextsOfSites(['one.invalid'])).toBe(1);
     expect((await getPageTexts()).size).toBe(0);
+  });
+});
+
+describe('page text kept in saved results of runs (media review 5, 6)', () => {
+  beforeEach(async () => {
+    await saveSettings({ pageTextEnabled: true });
+    await clearPageTexts();
+    vi.stubGlobal('DOMParser', undefined);
+    installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      { id: 'b1', parentId: 'f', title: 'One', url: 'https://one.invalid/page' },
+      { id: 'b2', parentId: 'f', title: 'Two', url: 'https://two.invalid/page' },
+    ]);
+    const article = () =>
+      new Response('<html><body><article><p>Words.</p></article></body></html>', {
+        headers: { 'content-type': 'text/html' },
+      });
+    stubFetch({ 'https://one.invalid/page': article, 'https://two.invalid/page': article });
+  });
+
+  /** Each result's bookmark and whether it still holds text, read from the job store. */
+  const texts = async (jobId: string) =>
+    (await getJobItems(jobId)).map((item) => {
+      const result = item.result as PageTextScanItem;
+      return [result.id, result.status, result.text !== undefined] as const;
+    });
+
+  it('drops the text of every result once the review is saved, saved or skipped', async () => {
+    const { job, results } = await runToEnd('pageText');
+    if (!job) throw new Error('no job');
+    expect(await texts(job.id)).toEqual([
+      ['b1', 'read', true],
+      ['b2', 'read', true],
+    ]);
+    const shown = TOOL_DEFINITIONS.pageText.job?.result(job, results) as PageTextScanResult;
+    // Only the first page is left on Save.
+    await TOOL_DEFINITIONS.pageText.apply?.(
+      shown,
+      shown.items.filter((item) => item.id === 'b1'),
+      {} as ToolApplyContext,
+    );
+    expect([...(await getPageTexts()).keys()]).toEqual(['b1']);
+    expect(await texts(job.id)).toEqual([
+      ['b1', 'read', false],
+      ['b2', 'read', false],
+    ]);
+  });
+
+  it("drops a deleted bookmark's text from runs in any state, one pass for a burst", async () => {
+    const { job } = await runToEnd('pageText');
+    if (!job) throw new Error('no job');
+    await Promise.all([forgetDeletedPageTexts(['b1']), forgetDeletedPageTexts(['gone'])]);
+    await vi.waitFor(async () =>
+      expect(await texts(job.id)).toEqual([
+        ['b1', 'read', false],
+        ['b2', 'read', true],
+      ]),
+    );
+  });
+
+  it('drops text of a site whose access is taken back, or that is added to Never Read These Sites', async () => {
+    const { job } = await runToEnd('pageText');
+    if (!job) throw new Error('no job');
+    await purgePageTextsWithoutAccess(['https://*.one.invalid/*'], async () => false);
+    expect(await texts(job.id)).toEqual([
+      ['b1', 'read', false],
+      ['b2', 'read', true],
+    ]);
+    // Still allowed another way: kept.
+    await purgePageTextsWithoutAccess(['https://*.two.invalid/*'], async () => true);
+    expect((await texts(job.id))[1]).toEqual(['b2', 'read', true]);
+    await purgePageTextsOfSites(['two.invalid']);
+    expect((await texts(job.id))[1]).toEqual(['b2', 'read', false]);
+  });
+
+  it('never downloads a page on a site added to Never Read These Sites after the run started', async () => {
+    const requests = stubFetch({});
+    await saveSettings({ pageTextExcludedSites: ['one.invalid'] });
+    const item = {
+      id: 'b1',
+      title: 'One',
+      url: 'https://one.invalid/page',
+      folderPath: 'Folder',
+      status: 'skipped' as const,
+    };
+    // As the job froze it before the site was added: no list at all.
+    const outcome = await JOB_ADAPTERS.pageText.run?.(
+      { item, read: true },
+      { skipPrivateHosts: true },
+      new AbortController().signal,
+      { readText: async () => ({ status: 'read', text: 'never', truncated: false }) },
+    );
+    expect(outcome).toEqual({
+      outcome: 'skipped',
+      result: { ...item, status: 'skipped', skipReason: 'excludedSite' },
+    });
+    expect(requests).toEqual([]);
   });
 });
 

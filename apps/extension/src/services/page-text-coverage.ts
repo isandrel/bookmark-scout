@@ -1,8 +1,10 @@
 /**
  * Index Page Text beyond a run: how much of the library the index covers (Options), and deleting
- * the text of sites whose website access is taken back or that the user chose never to read (the
- * background). Apart from `page-text.ts`, which the popup loads to index the current tab, so this
- * code stays out of it.
+ * page text that must not be kept (the background): of deleted bookmarks, of sites whose website
+ * access is taken back, and of sites the user chose never to read. Text is deleted from the index
+ * and from the saved results of runs (the job store), which also drop their text once a review is
+ * saved (`dropReviewedPageText`). Apart from `page-text.ts`, which the popup loads to index the
+ * current tab, so this code stays out of it.
  */
 import { z } from 'zod';
 
@@ -50,6 +52,66 @@ export type PageTextCoverage = {
   lastIndexedAt?: number;
 };
 
+/**
+ * Removes the text from saved Index Page Text results that `drop` picks (only finished runs with
+ * `finishedOnly`); the rest of each result stays, so the run still says what it found. Resolves
+ * to how many results lost their text.
+ */
+async function dropPageTextFromRuns(
+  drop: (item: PageTextScanItem) => boolean,
+  options?: { finishedOnly: boolean },
+): Promise<number> {
+  return rewriteJobResults(
+    'pageText',
+    (result) => {
+      const item = pageTextScanItemSchema.safeParse(result);
+      if (!item.success || item.data.text === undefined || !drop(item.data)) return undefined;
+      // The stored result as it is, without its text: fields this release does not know stay.
+      const { text: _text, ...rest } = result as Record<string, unknown>;
+      return rest;
+    },
+    options,
+  );
+}
+
+/**
+ * Once a review of a finished run is saved, its results keep no text: what the user kept is in
+ * the index, and what they skipped is not kept anywhere. `reviewed` are the review's bookmarks.
+ */
+export async function dropReviewedPageText(reviewed: ReadonlySet<string>): Promise<number> {
+  return dropPageTextFromRuns((item) => reviewed.has(item.id), { finishedOnly: true });
+}
+
+/** Bookmarks deleted whose text is still to be dropped from saved results. */
+let deletedQueue = new Set<string>();
+let droppingDeleted = false;
+
+/**
+ * Deletes the text of the bookmarks `ids` just deleted (the background, on every removal): from
+ * the index at once, and from saved results of runs, one pass over them for every burst of
+ * removals (a removal that comes during a pass joins the next). Resolves once the index is done.
+ */
+export async function forgetDeletedPageTexts(ids: readonly string[]): Promise<number> {
+  for (const id of ids) deletedQueue.add(id);
+  if (!droppingDeleted) {
+    droppingDeleted = true;
+    void (async () => {
+      try {
+        while (deletedQueue.size > 0) {
+          const batch = deletedQueue;
+          deletedQueue = new Set();
+          await dropPageTextFromRuns((item) => batch.has(item.id));
+        }
+      } catch (error) {
+        console.error('[PageText] Failed to delete text of deleted bookmarks from runs:', error);
+      } finally {
+        droppingDeleted = false;
+      }
+    })();
+  }
+  return removePageTexts(ids);
+}
+
 /** Results of the newest Index Page Text run, once it has finished; none otherwise. */
 async function lastPageTextRun(): Promise<PageTextScanItem[]> {
   const job = (await listJobs()).find((candidate) => candidate.kind === 'pageText');
@@ -91,36 +153,74 @@ export async function getPageTextCoverage(): Promise<PageTextCoverage> {
   return coverage;
 }
 
+/** Every address saved Index Page Text results were read from, of runs in any state. */
+async function pageTextRunAddresses(): Promise<string[]> {
+  const jobs = (await listJobs(Number.POSITIVE_INFINITY)).filter((job) => job.kind === 'pageText');
+  const addresses: string[] = [];
+  for (const job of jobs) {
+    for (const result of await readJobResults(job.id)) {
+      const item = pageTextScanItemSchema.safeParse(result);
+      if (item.success && item.data.text !== undefined) {
+        addresses.push(...pageTextAddresses(item.data));
+      }
+    }
+  }
+  return addresses;
+}
+
 /**
- * Deletes the text of indexed pages that `removedOrigins` (host patterns whose website access was
- * just taken back) covered, unless the extension can still reach the page's site another way
- * (all websites, or the site on its own): text is kept only from sites the user still allows.
- * Returns how many pages' text was deleted.
+ * Deletes the text of indexed pages, and of saved results of runs, that `removedOrigins` (host
+ * patterns whose website access was just taken back) covered, by the bookmark's address or the
+ * one its text was read from, unless the extension can still reach that site another way (all
+ * websites, or the site on its own): text is kept only from sites the user still allows. Returns
+ * how many pages' text was deleted from the index.
  */
 export async function purgePageTextsWithoutAccess(
   removedOrigins: readonly string[],
   hasAccess: (site: string) => Promise<boolean> = hasWebSiteAccess,
 ): Promise<number> {
   if (removedOrigins.length === 0) return 0;
-  const access = new Map<string, Promise<boolean>>();
-  const gone: string[] = [];
-  for (const page of (await getPageTexts()).values()) {
-    if (!removedOrigins.some((origin) => isUrlInOrigin(page.url, origin))) continue;
-    const site = getUrlSite(page.url);
-    if (site && !access.has(site)) access.set(site, hasAccess(site));
-    if (!site || !(await access.get(site))) gone.push(page.bookmarkId);
+  const pages = [...(await getPageTexts()).values()];
+  const addresses = [
+    ...pages.flatMap((page) => [page.url, ...(page.provenance ? [page.provenance.readFrom] : [])]),
+    ...(await pageTextRunAddresses()),
+  ];
+  // Which sites lost access, asked once a site, so the checks below can stay synchronous.
+  const lost = new Set<string>();
+  const asked = new Set<string>();
+  for (const url of addresses) {
+    if (!removedOrigins.some((origin) => isUrlInOrigin(url, origin))) continue;
+    const site = getUrlSite(url) ?? '';
+    if (asked.has(site)) continue;
+    asked.add(site);
+    if (!site || !(await hasAccess(site))) lost.add(site);
   }
-  return removePageTexts(gone);
+  if (lost.size === 0) return 0;
+  const isLost = (url: string) =>
+    removedOrigins.some((origin) => isUrlInOrigin(url, origin)) && lost.has(getUrlSite(url) ?? '');
+  await dropPageTextFromRuns((item) => pageTextAddresses(item).some(isLost));
+  return removePageTexts(
+    pages.flatMap((page) =>
+      isLost(page.url) || (page.provenance && isLost(page.provenance.readFrom))
+        ? [page.bookmarkId]
+        : [],
+    ),
+  );
 }
 
 /**
- * Deletes the text of indexed pages on `sites` (Never Read These Sites) or their subdomains;
- * returns how many pages' text was deleted.
+ * Deletes the text of indexed pages, and of saved results of runs, on `sites` (Never Read These
+ * Sites) or their subdomains, by the bookmark's address or the one its text was read from;
+ * returns how many pages' text was deleted from the index.
  */
 export async function purgePageTextsOfSites(sites: readonly string[]): Promise<number> {
   if (sites.length === 0) return 0;
+  const onSites = (url: string) => isUrlOnSites(url, sites);
+  await dropPageTextFromRuns((item) => pageTextAddresses(item).some(onSites));
   const gone = [...(await getPageTexts()).values()].flatMap((page) =>
-    isUrlOnSites(page.url, sites) ? [page.bookmarkId] : [],
+    onSites(page.url) || (page.provenance && onSites(page.provenance.readFrom))
+      ? [page.bookmarkId]
+      : [],
   );
   return removePageTexts(gone);
 }

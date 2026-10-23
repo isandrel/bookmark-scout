@@ -19,6 +19,11 @@ popup_result_max_age_ms = { value = 300000, min = 1000, max = 3_600_000 }
 # the notification is never in it; the notification waits at most this long for it. A picture that
 # takes longer is not kept.
 cover_picture_wait_ms = { value = 1500, min = 100, max = 10_000 }
+# When quick save replaces a bookmark's cover (When the Bookmark Already Has a Cover: Replace), the
+# last quick save keeps the replaced cover in session storage, so Remove cover can put it back. A
+# cover larger than this many KB (a stored cover is a shrunk copy, usually far smaller) is not kept,
+# and Remove cover then leaves the bookmark without one.
+replaced_cover_max_kb = { value = 512, min = 64, max = 2048 }
 # Badge text and background per result. Colors are the DESIGN.md success and danger tokens.
 badge_success_text = "✓"
 badge_failure_text = "✗"

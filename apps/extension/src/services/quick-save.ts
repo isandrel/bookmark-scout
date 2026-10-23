@@ -6,7 +6,8 @@
  * where it went and offers Undo and other folders; on pages the extension cannot draw in, the
  * toolbar badge shows the result and the popup shows the notification instead.
  * With Save a Cover With Quick Save and Fetch Covers on, the saved bookmark also gets a cover
- * (`quick-save-cover.ts`) after the save, and the notification offers Remove cover.
+ * (`quick-save-cover.ts`) after the save, and the notification offers Remove cover, which puts
+ * back the cover it replaced (kept on the record, at most `replaced_cover_max_kb`).
  *
  * The last quick save is kept in session storage, so Undo and Move still work after the service
  * worker restarts. Background only: `registerQuickSave` adds the listeners.
@@ -28,8 +29,12 @@ const quickSaveConfig = readConfig(
     badge_success_color: z.string().regex(/^#[0-9a-f]{6}$/i),
     badge_failure_color: z.string().regex(/^#[0-9a-f]{6}$/i),
     cover_picture_wait_ms: boundedNumber({ integer: true }),
+    replaced_cover_max_kb: boundedNumber({ integer: true }),
   }),
 );
+
+/** The largest cover a quick save replaced that its record keeps for Remove cover to put back. */
+const REPLACED_COVER_MAX_BYTES = quickSaveConfig.replaced_cover_max_kb * BYTES_PER_KB;
 
 /** How long the popup offers the last quick save that could not be shown in its page. */
 export const QUICK_SAVE_POPUP_MAX_AGE_MS = quickSaveConfig.popup_result_max_age_ms;
@@ -92,8 +97,18 @@ const recordSchema = z.strictObject({
     }),
   ]),
   alternatives: z.array(alternativeSchema),
-  /** The cover Save a Cover With Quick Save stored for the bookmark, which Remove cover removes. */
-  cover: z.strictObject({ source: z.enum(COVER_SOURCES) }).optional(),
+  /**
+   * The cover Save a Cover With Quick Save stored for the bookmark, which Remove cover removes,
+   * and the cover of the same address it replaced, which Remove cover puts back.
+   */
+  cover: z
+    .strictObject({
+      source: z.enum(COVER_SOURCES),
+      replaced: portableCoverSchema
+        .extend({ data: z.string().max(base64Length(REPLACED_COVER_MAX_BYTES)) })
+        .optional(),
+    })
+    .optional(),
   fallback: z.enum(['noMatch', 'fixedMissing']).optional(),
   failure: failureSchema.optional(),
   /** A localized reason to show under the title. */
@@ -730,8 +745,14 @@ async function attachCover(record: QuickSaveRecord, cover: QuickSaveCover): Prom
   const { bookmarkId } = record;
   if (!bookmarkId || (record.status !== 'saved' && record.status !== 'duplicate')) return;
   try {
-    const source = await cover.save(bookmarkId, () => isStillSaved(record));
-    if (!source) return;
+    const saved = await cover.save(bookmarkId, () => isStillSaved(record));
+    if (!saved) return;
+    const { source, replaced } = saved;
+    // A replaced cover too large to keep on the record is not put back by Remove cover.
+    const kept =
+      replaced && replaced.image.data.byteLength <= REPLACED_COVER_MAX_BYTES
+        ? { replaced: toPortableCover(replaced) }
+        : {};
     const attached: { record?: QuickSaveRecord } = {};
     await quickSaveRecordValue.update((current) => {
       if (
@@ -741,7 +762,7 @@ async function attachCover(record: QuickSaveRecord, cover: QuickSaveCover): Prom
       ) {
         return current;
       }
-      attached.record = { ...current, cover: { source } };
+      attached.record = { ...current, cover: { source, ...kept } };
       return attached.record;
     });
     const updated = attached.record;
@@ -1001,7 +1022,9 @@ export async function handleQuickSaveAction(
       let next: QuickSaveRecord = { ...record, cover: undefined };
       try {
         if (record.cover && record.bookmarkId) {
-          await removeQuickSaveCover(record.bookmarkId, record.page.url, record.cover.source);
+          const { source, replaced } = record.cover;
+          const previous = replaced ? fromPortableCover(replaced) : undefined;
+          await removeQuickSaveCover(record.bookmarkId, record.page.url, source, previous);
         }
       } catch (error) {
         next = { ...record, error: getErrorMessage(error) };

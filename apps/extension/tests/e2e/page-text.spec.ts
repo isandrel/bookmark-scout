@@ -90,6 +90,60 @@ function seedPageTexts(
   }, pages);
 }
 
+/** Whether each result of a run still holds page text, by bookmark title, read from the job store. */
+function runTexts(worker: Worker, jobId: string) {
+  return worker.evaluate(async (id) => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const open = indexedDB.open('bookmark-scout-jobs');
+      open.onsuccess = () => resolve(open.result);
+      open.onerror = () => reject(open.error);
+    });
+    try {
+      const items = await new Promise<{ result: { title: string; text?: string } | null }[]>(
+        (resolve, reject) => {
+          const request = db
+            .transaction('items')
+            .objectStore('items')
+            .getAll(IDBKeyRange.bound([id, 0], [id, Number.MAX_SAFE_INTEGER]));
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        },
+      );
+      return Object.fromEntries(
+        items.flatMap(({ result }) => (result ? [[result.title, result.text !== undefined]] : [])),
+      );
+    } finally {
+      db.close();
+    }
+  }, jobId);
+}
+
+/**
+ * Takes back one site's website access as Chrome reports it. This build declares website access as
+ * required, which cannot be removed, so the browser's report is dispatched from the worker, and the
+ * access check answers as it then would, in the worker and in `pages`.
+ */
+async function revokeSite(worker: Worker, pages: Page[], site: string) {
+  const fakeCheck = (removed: string) => {
+    const contains = chrome.permissions.contains.bind(chrome.permissions);
+    Object.defineProperty(chrome.permissions, 'contains', {
+      configurable: true,
+      value: async (request: chrome.permissions.Permissions) =>
+        !request.origins?.some((origin) => origin.includes(removed)) && contains(request),
+    });
+  };
+  for (const page of pages) await page.evaluate(fakeCheck, site);
+  await worker.evaluate(fakeCheck, site);
+  await worker.evaluate((removed) => {
+    const origins = [`http://*.${removed}/*`, `https://*.${removed}/*`];
+    (
+      chrome.permissions.onRemoved as unknown as {
+        dispatch: (permissions: chrome.permissions.Permissions) => void;
+      }
+    ).dispatch({ origins, permissions: [] });
+  }, site);
+}
+
 test.describe('with website access granted', () => {
   test.use({ grantWebHostAccess: true });
 
@@ -608,6 +662,61 @@ test.describe('with website access granted', () => {
     ]);
     expect((await latestJob(extensionWorker, 'pageText'))?.options).toMatchObject({
       skipSecretUrls: false,
+    });
+  });
+
+  test("a run's page text is dropped from its saved results when a bookmark is deleted, a site loses access, and once the review is saved (media review 5)", async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const seeded = await seedFolder(extensionWorker, 'E2E Run Text', [
+      { title: 'Alpha', url: 'https://alpha-r5.invalid/' },
+      { title: 'Beta', url: 'https://beta-r5.invalid/' },
+      { title: 'Gamma', url: 'https://gamma-r5.invalid/' },
+    ]);
+    await setSettings(extensionWorker, { pageTextEnabled: true });
+    await context.route('https://*.invalid/**', (route) =>
+      route.fulfill({ status: 200, contentType: 'text/html', body: ARTICLE }),
+    );
+    await openTools(page, extensionId, seeded.folderId);
+    await toolCard(page, 'Index Page Text')
+      .getByRole('button', { name: 'Index', exact: true })
+      .click();
+    await page
+      .getByRole('dialog', { name: 'Choose sites to read' })
+      .getByRole('button', { name: 'Start with 3 sites' })
+      .click();
+    const review = page.getByRole('dialog', { name: 'Index Page Text' });
+    await expect(review.getByRole('radio', { name: 'Text found (3)' })).toBeVisible();
+    const job = await latestJob(extensionWorker, 'pageText');
+    if (!job) throw new Error('no job');
+    expect(await runTexts(extensionWorker, job.id)).toEqual({
+      Alpha: true,
+      Beta: true,
+      Gamma: true,
+    });
+
+    // A deleted bookmark's text goes, from the run too.
+    await extensionWorker.evaluate((id) => chrome.bookmarks.remove(id), seeded.ids.Alpha ?? '');
+    await expect
+      .poll(() => runTexts(extensionWorker, job.id))
+      .toEqual({ Alpha: false, Beta: true, Gamma: true });
+    // So does the text of a site whose access is taken back.
+    await revokeSite(extensionWorker, [page], 'beta-r5.invalid');
+    await expect
+      .poll(() => runTexts(extensionWorker, job.id))
+      .toEqual({ Alpha: false, Beta: false, Gamma: true });
+
+    // The review still lists all three: saving keeps only Gamma's, and the run keeps no text.
+    await review.getByRole('button', { name: 'Save text of 3 pages' }).click();
+    await expect(review).toHaveCount(0);
+    await expect.poll(() => indexedCount(extensionWorker)).toBe(1);
+    expect(await runTexts(extensionWorker, job.id)).toEqual({
+      Alpha: false,
+      Beta: false,
+      Gamma: false,
     });
   });
 

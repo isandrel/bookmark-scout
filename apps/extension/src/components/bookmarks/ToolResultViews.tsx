@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const HTTP_FAILURE_LABEL_KEYS: Partial<Record<DeadLinkCategory, string>> = {
   notFound: 'tools_deadLinkCategory_notFound',
@@ -1329,6 +1329,32 @@ type CoverAction = (typeof REVIEW_DEFAULT_ACTIONS)['covers'];
 const COVER_ACTIONS = ['save', 'skip'] as const satisfies readonly CoverAction[];
 
 /**
+ * A found cover, drawn from the bytes the run keeps to store: its object URL is made only while
+ * its row is on screen (the review list draws only those) and revoked when the row goes.
+ */
+function CoverReviewImage({ cover }: { cover: CoverImage }) {
+  const [src, setSrc] = useState<string>();
+  useEffect(
+    () =>
+      showCoverImage(
+        async () => new Blob([cover.data], { type: cover.type }),
+        (next) => setSrc(next),
+      ),
+    [cover],
+  );
+  return (
+    <img
+      data-testid="cover-review-image"
+      src={src}
+      alt=""
+      width={cover.width}
+      height={cover.height}
+      className="mt-1 h-auto max-h-24 w-auto max-w-40 rounded border object-cover"
+    />
+  );
+}
+
+/**
  * Fetch Covers' review: each page by what its head named, a found cover shown small and starting
  * on Save (or Skip, as `[defaults] covers` says); only covers left on Save are stored.
  */
@@ -1355,6 +1381,11 @@ export function CoverResultsView({
       {result?.pageImagesOff ? (
         <p data-testid="covers-page-images-off" className="text-sm text-muted-foreground">
           {t('tools_coversPageImagesOff')}
+        </p>
+      ) : null}
+      {result?.overLimit ? (
+        <p data-testid="covers-over-limit" className="text-xs text-warning">
+          {tPlural('tools_coversOverLimit', result.overLimit)}
         </p>
       ) : null}
       <ReviewList
@@ -1388,15 +1419,7 @@ export function CoverResultsView({
                 {t('tools_coversElsewhereReason', item.imageSite)}
               </p>
             ) : null}
-            {item.preview && item.cover ? (
-              <img
-                src={item.preview}
-                alt=""
-                width={item.cover.width}
-                height={item.cover.height}
-                className="mt-1 h-auto max-h-24 w-auto max-w-40 rounded border object-cover"
-              />
-            ) : null}
+            {item.cover ? <CoverReviewImage cover={item.cover} /> : null}
           </>
         )}
       />

@@ -293,27 +293,37 @@
 # Locales raised on 2026-10-23 (2,620,000 to 2,635,000) for the 0.3.5 copy review: plural forms for
 # the History counts and the page text coverage line (Russian needs three each) and the renamed
 # Page Details tab in 12 languages. fix/copy-review-035 measured 2,626,598 B of locales.
+# Raised on 2026-10-23 (ZIP 2,145,000 to 2,150,000, uncompressed 7,240,000 to 7,250,000, javascript
+# 4,045,000 to 4,050,000, locales 2,620,000 to 2,632,000) for the 0.3.5 media review fixes (covers
+# kept by source, deleted with their bookmark, and reloaded one at a time; page text dropped from
+# background task results; the Fetch Covers run cap with its review note in 12 languages). Measured
+# on fix/media-review-035 from main bfb2bf53: ZIP 2,145,657 / 2,145,702 / 2,145,783, uncompressed
+# 7,238,938 / 7,238,934 / 7,239,097 B (Chrome / Edge / Firefox), 4,044,436 B of JavaScript, and
+# 2,625,795 B of locales.
+# Locales set on 2026-10-23 to 2,645,000 when the copy review and the media review met on main:
+# fix/media-review-035 rebased on fbfef7a4 measured 2,632,868 B of locales (all three browsers),
+# ZIP 2,146,399 / 2,146,499 / 2,146,553 B and 4,044,545 B of JavaScript (Chrome / Edge / Firefox).
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_145_000
-raw_bytes = 7_240_000
+zip_bytes = 2_150_000
+raw_bytes = 7_250_000
 
 [targets.edge]
-zip_bytes = 2_145_000
-raw_bytes = 7_240_000
+zip_bytes = 2_150_000
+raw_bytes = 7_250_000
 
 [targets.firefox]
-zip_bytes = 2_145_000
-raw_bytes = 7_240_000
+zip_bytes = 2_150_000
+raw_bytes = 7_250_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 4_045_000
+javascript = 4_050_000
 css = 92_000
 fonts = 143_000
-locales = 2_635_000
+locales = 2_645_000
 images = 320_000
 other = 29_500

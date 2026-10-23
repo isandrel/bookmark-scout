@@ -385,6 +385,41 @@ export async function readJobResults(jobId: string): Promise<unknown[]> {
   }
 }
 
+/**
+ * Rewrites saved results of every job of `kind` (only finished ones with `finishedOnly`): each
+ * done item's result goes through `rewrite`, which returns the result to keep instead, or
+ * undefined to leave it as it is. For data a result must stop holding, such as page text whose
+ * bookmark was deleted. Each job is rewritten in one transaction, so a commit of the same job
+ * waits for it; pending items and the job's counters are not touched. Resolves to how many
+ * results changed.
+ */
+export async function rewriteJobResults(
+  kind: JobKind,
+  rewrite: (result: unknown) => unknown,
+  { finishedOnly = false }: { finishedOnly?: boolean } = {},
+): Promise<number> {
+  const db = await openJobDb();
+  const jobs = (await db.getAll('jobs')).flatMap((value) => {
+    const job = parseJob(value);
+    return job?.kind === kind && (!finishedOnly || FINISHED_JOB_STATES.has(job.state)) ? [job] : [];
+  });
+  let changed = 0;
+  for (const job of jobs) {
+    const tx = db.transaction('items', 'readwrite');
+    const range = IDBKeyRange.bound([job.id, 0], [job.id, Number.MAX_SAFE_INTEGER]);
+    for (let cursor = await tx.store.openCursor(range); cursor; cursor = await cursor.continue()) {
+      const item = jobItemSchema.safeParse(cursor.value);
+      if (!item.success || item.data.state !== 'done') continue;
+      const next = rewrite(item.data.result);
+      if (next === undefined) continue;
+      await cursor.update({ ...item.data, result: next });
+      changed += 1;
+    }
+    await tx.done;
+  }
+  return changed;
+}
+
 /** A page of a job's items in order, from `from`. */
 export async function getJobItems(
   jobId: string,

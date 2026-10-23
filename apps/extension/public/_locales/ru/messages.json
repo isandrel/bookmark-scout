@@ -10015,6 +10015,46 @@
         "message": "«Источник обложки» — «Только снимок», поэтому изображения страниц не используются и ни одна страница не загружалась. Чтобы загрузить их, выберите другой источник обложки в настройках.",
         "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
+    "tools_coversOverLimit": {
+        "message": "Закладок не прочитано, так как за один запуск найдено столько обложек, сколько он хранит: $count$. Сохраните эти, затем загрузите остальные снова.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversOverLimit_one": {
+        "message": "$count$ закладка не прочитана: за один запуск найдено столько обложек, сколько он хранит. Сохраните эти, затем загрузите остальные снова.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversOverLimit_few": {
+        "message": "$count$ закладки не прочитаны: за один запуск найдено столько обложек, сколько он хранит. Сохраните эти, затем загрузите остальные снова.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps (few)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversOverLimit_many": {
+        "message": "$count$ закладок не прочитано: за один запуск найдено столько обложек, сколько он хранит. Сохраните эти, затем загрузите остальные снова.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps (many)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
     "tools_coversCategory_skipped": {
         "message": "Пропущено ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"

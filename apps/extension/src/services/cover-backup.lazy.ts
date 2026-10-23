@@ -7,13 +7,16 @@
  * (`safeNormalizeUrl`), and stored there under each bookmark of that address as that bookmark
  * spells it, since the cover store matches addresses exactly.
  *
- * A restore never replaces a cover the user picked (Use this view as the cover, `isKeptCover`)
- * unless the file's cover was also picked and is newer; any other cover is replaced only by a
- * newer one, so restoring a backup onto the device that made it changes nothing. The file comes
- * from outside: each entry is checked on its own against `config/bookmarks/cover-backup.toml`'s
- * caps and the cover checks (`config/bookmarks/covers.toml`: type by its first bytes, the size its
- * header states, and the decoded size), and one that fails is left out alone. Cover Storage
- * still applies after a restore, removing the oldest covers first.
+ * A cover the user picked (Use this view as the cover, `isKeptCover`) ranks above any other: a
+ * restore never replaces a picked cover unless the file's cover was also picked and is newer, and a
+ * picked cover in the file replaces one that was not picked; otherwise the newer cover wins, so
+ * restoring a backup onto the device that made it changes nothing. A date in the future is read
+ * as now, so a file cannot make its covers outrank later ones or outlast them in Cover Storage.
+ * The file comes from outside: each entry is checked on its own against
+ * `config/bookmarks/cover-backup.toml`'s caps and the cover checks (`config/bookmarks/covers.toml`:
+ * type by its first bytes, the size its header states, and the decoded size), and one that fails
+ * is left out alone. Cover Storage still applies after a restore, removing the oldest covers first
+ * and picked ones last.
  */
 import { z } from 'zod';
 import { boundedNumber } from '@/lib/config/bounded';
@@ -88,12 +91,12 @@ function isBetterCover(next: CoverStanding, current: CoverStanding): boolean {
 }
 
 /**
- * Whether a cover from a backup replaces the cover a bookmark has: a picked cover only by another
- * picked one that is newer; any other cover by a newer one.
+ * Whether a cover from a backup replaces the cover a bookmark has, ranked as `isBetterCover`: a
+ * picked cover only by another picked one that is newer; any other cover by a picked one, or by
+ * a newer one.
  */
 export function importedCoverWins(imported: CoverStanding, existing: CoverStanding): boolean {
-  if (isKeptCover(existing.source) && !isKeptCover(imported.source)) return false;
-  return imported.savedAt > existing.savedAt;
+  return isBetterCover(imported, existing);
 }
 
 /** A file entry as a cover to store, or undefined when it fails a check. */
@@ -119,7 +122,8 @@ function readBackupCover(raw: unknown): BackupCover | undefined {
     url: entry.data.url,
     key: coverUrlKey(entry.data.url),
     source: entry.data.source,
-    savedAt: Date.parse(entry.data.savedAt),
+    // Never later than now: see the header.
+    savedAt: Math.min(Date.parse(entry.data.savedAt), Date.now()),
     version: entry.data.version,
     type: file.type,
     width: file.width,
@@ -321,6 +325,7 @@ export function planCoverRestore(
         bookmarkId,
         bytes: cover.data.byteLength,
         savedAt: cover.savedAt,
+        source: cover.source,
       })),
     ],
     maxCacheBytes,

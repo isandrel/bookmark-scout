@@ -1,7 +1,7 @@
 /**
  * What a bookmark's stored cover is, for the places that show it with its details (the manager's
  * preview and the hover card): where it came from and when it was saved. Read from this device
- * only, and read again after any cover is saved or deleted on any page.
+ * only, and read again after its cover is saved or deleted on any page (`getCoverRevision`).
  */
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
@@ -15,7 +15,7 @@ const COVER_SOURCE_KEYS = {
 
 /** The info of the bookmark's cover of `url`, or undefined while it has none (or it is loading). */
 export function useCoverInfo(bookmarkId: string, url: string | undefined): CoverInfo | undefined {
-  const changes = useSyncExternalStore(watchCovers, getCoverChangeCount);
+  const changes = useSyncExternalStore(watchCovers, () => getCoverRevision(bookmarkId));
   const [info, setInfo] = useState<CoverInfo>();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: `changes` reads the info again after a save or delete.

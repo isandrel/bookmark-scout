@@ -87,6 +87,13 @@ describe('which bookmarks get a new picture', () => {
     expect(needs(info({ source: 'browse', savedAt: NOW - maxAge - 1 }))).toBe(true);
   });
 
+  it('only a picture taken while browsing is retaken by age, never one quick save took (media review 12)', () => {
+    const ancient = { savedAt: NOW - maxAge * 10 };
+    expect(needs(info({ source: 'quickSave', ...ancient }))).toBe(false);
+    expect(needs(info({ source: 'quickSave', ...ancient }), 'screenshot_first')).toBe(false);
+    expect(needs(info({ source: 'browse', ...ancient }))).toBe(true);
+  });
+
   it('never one the user chose with Use this view as the cover, whatever its age or Cover Source', () => {
     const chosen = info({ source: 'tab', savedAt: NOW - maxAge * 10 });
     for (const preference of ['page_first', 'screenshot_first', 'page_only'] as const) {
@@ -94,6 +101,8 @@ describe('which bookmarks get a new picture', () => {
     }
     // Only its own address counts: a bookmark moved elsewhere has no cover there.
     expect(needs(chosen, 'page_first', 'https://news.example.com/moved')).toBe(true);
+    // Made another way (a newer `version`), it is still the user's choice (media review 14).
+    expect(needs({ ...chosen, version: COVER_LIMITS.version + 1 }, 'screenshot_first')).toBe(false);
   });
 
   it('a cover saved before sources were recorded is replaced as a fetched page image', () => {

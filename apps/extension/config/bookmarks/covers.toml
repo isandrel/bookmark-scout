@@ -20,5 +20,10 @@ timeout_ms = 10000
 max_page_bytes = 512000
 # Pages read at a time
 concurrency = 4
+# Covers one Fetch Covers run finds before it stops reading pages: the review holds each found
+# image in the page until it is saved, so a run over a large library keeps at most this many (about
+# 30 KB each at the default Cover Width). The bookmarks not read are counted in the review, and the
+# next run reads them, since the saved ones then have a cover.
+max_found_per_run = { value = 1000, min = 50, max = 10000 }
 # Raised when stored covers would come out differently, so pages are fetched again
 version = 1

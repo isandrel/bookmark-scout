@@ -9259,6 +9259,26 @@
         "message": "„Titelbildquelle“ ist „Nur Screenshot“, daher werden keine Seitenbilder verwendet und keine Seite wurde gelesen. Wählen Sie in den Einstellungen eine andere Titelbildquelle, um sie zu laden.",
         "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
+    "tools_coversOverLimit": {
+        "message": "$count$ Lesezeichen wurden nicht gelesen: Dieser Durchlauf hat so viele Titelbilder gefunden, wie ein Durchlauf behält. Speichern Sie diese und laden Sie danach erneut für den Rest.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_coversOverLimit_one": {
+        "message": "$count$ Lesezeichen wurde nicht gelesen: Dieser Durchlauf hat so viele Titelbilder gefunden, wie ein Durchlauf behält. Speichern Sie diese und laden Sie danach erneut für den Rest.",
+        "description": "Fetch Covers review: bookmarks not read because the run found as many covers as one run keeps (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
     "tools_coversCategory_skipped": {
         "message": "Übersprungen ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
