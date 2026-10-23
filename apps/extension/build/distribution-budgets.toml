@@ -306,25 +306,30 @@
 # Locales raised on 2026-10-23 (2,620,000 to 2,630,000) for the Smart Rules errors from the 0.3.5
 # review (page text in a rule's search, a full rules list) in 12 languages. Measured on
 # fix/search-review-035: 2,623,014 B of locales in each browser.
+# Raised on 2026-10-23 (uncompressed 7,250,000 to 7,265,000, javascript 4,050,000 to 4,060,000)
+# when the search and Smart Rules review fixes met the media fixes on main: fix/search-review-035
+# rebased on eb96ad6d measured uncompressed 7,252,205 / 7,252,201 / 7,252,364 B (Chrome / Edge /
+# Firefox), ZIP 2,148,169 / 2,148,227 / 2,148,308 B, 4,047,375 B of JavaScript and 2,636,123 B of
+# locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 2_150_000
-raw_bytes = 7_250_000
+raw_bytes = 7_265_000
 
 [targets.edge]
 zip_bytes = 2_150_000
-raw_bytes = 7_250_000
+raw_bytes = 7_265_000
 
 [targets.firefox]
 zip_bytes = 2_150_000
-raw_bytes = 7_250_000
+raw_bytes = 7_265_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 4_050_000
+javascript = 4_060_000
 css = 92_000
 fonts = 143_000
 locales = 2_645_000
