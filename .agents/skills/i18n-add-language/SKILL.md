@@ -50,7 +50,7 @@ Split it into pull requests that each pass CI on their own:
    - Copy pages to `apps/docs/content/docs/**/<page>.<TAG>.mdx` and `meta.<TAG>.json`.
    - Copy the UI copy to `apps/docs/src/lib/copy/<TAG>.ts`, then import it into `TRANSLATIONS` in `apps/docs/src/lib/copy.ts`.
    - Copy the README and CONTRIBUTING templates to `templates/i18n/<TAG>/README.md` and `CONTRIBUTING.md`, then run `bun run generate:markdown` and `bun test scripts`. The Markdown rules are in "Generated Markdown" of `DEVELOPMENT.md`.
-4. **Store dashboards (maintainer).** The Chrome Web Store adds a listing language for each `_locales` folder in the uploaded package; Edge needs each language's description and images entered by hand. Paste from `store/listings/<FOLDER>.md` after the release that contains the folder. See `extension-cws-submission`.
+4. **Store dashboards (maintainer).** The Chrome Web Store adds a listing language for each `_locales` folder in the uploaded package; Edge needs each language's description and images entered by hand. Paste from `store/listings/<FOLDER>.md` after the release that contains the folder. See `references/chrome-web-store.md` in `extension-store-release`.
 
 Fix the English source before translating. A stale English claim (the docs once said Firefox could not open the manager) gets copied into every language, and then needs fixing in nine places.
 

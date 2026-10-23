@@ -397,9 +397,9 @@ Each app keeps its design file next to its `AGENTS.md`: `apps/extension/DESIGN.m
 
 Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Rules go in `AGENTS.md` files and workflows in skills; never add vendor-specific instruction files such as `CLAUDE.md`, `.cursorrules`, or `GEMINI.md`. Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
 
-Current skills: `feature-delivery`, `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `extension-bookmark-actions`, `extension-stored-data`, `extension-performance`, `extension-background-jobs`, `mcp-bridge-change`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
+Current skills: `feature-delivery`, `extension-feature-test`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `extension-bookmark-actions`, `extension-stored-data`, `extension-performance`, `extension-background-jobs`, `mcp-bridge-change`, `website-docs-delivery`, `extension-store-release`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
 
-Update a skill when a session teaches a lesson that future agents would otherwise relearn. `scripts/skills-index.test.ts` fails when the list above and `.agents/skills/` differ, or a skill's front matter does not name its folder.
+Update a skill when a session teaches a lesson that future agents would otherwise relearn. `scripts/skills-index.test.ts` fails when the list above and `.agents/skills/` differ, or a skill's front matter does not parse, name its folder, or give a description.
 
 ## When to add or update nested AGENTS.md files
 

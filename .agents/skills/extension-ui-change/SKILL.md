@@ -16,7 +16,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
    ```bash
    rg -o "\b(text|bg|border|ring|fill|stroke|from|to|via)-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-[0-9]{2,3}" apps/extension/src
    ```
-5. **New copy goes into `en`, `ja`, and `ko`** in the same change; `tests/unit/locale-messages.test.ts` enforces key and placeholder parity.
+5. **New copy goes into every locale** (`[locales] extension` in `config/project.toml`) in the same change; `tests/unit/locale-messages.test.ts` enforces key and placeholder parity.
 6. **Visual check:** screenshots of every touched surface in light, dark, and a narrow width (see "Visual checks" below), then lint, unit, the three builds, and `bunx nx run extension:test:e2e`.
 
 ## Gotchas
@@ -52,6 +52,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 - When making settings apply live, find every read-once site: `getSettings()` in one-shot effects, module-level constants, and background startup. Guard the hook's initial async read so it cannot overwrite a newer value the storage watcher already delivered. Panels that watch storage from another tab keep text the user is still typing. `<html lang>` follows the language.
 - A language change re-renders the page and does not remount it. Remounting closed the Tools sidebar and reset open forms. Memos that depend on `t()` carry a `biome-ignore lint/correctness/useExhaustiveDependencies` comment explaining the language dependency, and a `React.memo` component that shows text calls `useLanguageRevision()` (as `FolderTree.tsx` and `ToolsSidebar.tsx` do), or it keeps the old language (CI caught it on PR #621).
 - Tests that waited for a "saved" message read storage with `expect.poll` instead.
+- **Save commits what is still being typed.** A field that keeps a draft until Enter, a separator, or blur (`TokenInput` for tags and list settings) must have its draft counted by the form's Save, not only by `onBlur`: a click on Save does not always blur the field first, and a typed tag was dropped on Save until the form folded the draft in (PR #821, caught by the Firefox smoke run). Keep the draft in the form (`draft` and `onDraftChange`), and test Save straight after typing.
 
 ## Visual checks
 
@@ -80,4 +81,4 @@ The quick save notification (`src/entrypoints/quick-save-toast/toast.ts`) is dra
 
 ## Planning a redesign from references
 
-Use the `feature-research-planning` skill. Specific to UI work: read reference repositories with `gh api repos/<owner>/<repo>/contents/<path>` (decode the base64 `content`) rather than web fetching, and inventory the current surfaces with a read-only subagent in parallel. The inventory alone found real bugs (animations silently off, two drifted token files) before any design work. `DESIGN.md` follows the Stitch DESIGN.md format: nine sections, YAML tokens referenced as `{colors.x}`.
+Use the `feature-research-planning` skill, and inventory the current surfaces with a read-only subagent in parallel. The inventory alone found real bugs (animations silently off, two drifted token files) before any design work. `DESIGN.md` follows the Stitch DESIGN.md format: nine sections, YAML tokens referenced as `{colors.x}`.

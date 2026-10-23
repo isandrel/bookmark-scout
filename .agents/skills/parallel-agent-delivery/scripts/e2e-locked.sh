@@ -9,7 +9,9 @@
 #        zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> built chromium|bridge [Playwright args...]
 # Logs use XDG_CACHE_HOME (or ~/.cache); the lock is shared per user under /tmp regardless of
 # each run's cache directory. Every browser suite on the machine must use this wrapper.
-# The exit code is the test run's. A lock left by a dead process is taken over.
+# The exit code is the test run's. A lock left by a dead process is taken over. Nx runs with
+# --output-style=static so the log holds Playwright's own output and summary; without it Nx prints
+# only its task summary and a "full log:" path.
 cache_root=${XDG_CACHE_HOME:-$HOME/.cache}
 lock=/tmp/bookmark-scout-e2e-${UID}.lock
 logs=$cache_root/bookmark-scout-e2e-logs
@@ -38,13 +40,13 @@ cd $wt || exit 1
 export NX_DAEMON=false PW_WORKERS=${PW_WORKERS:-2} NO_COLOR=1
 case $mode in
   full)
-    bunx nx run extension:test:e2e --skip-nx-cache 2>&1 | tee $log; rc=${pipestatus[1]} ;;
+    bunx nx run extension:test:e2e --skip-nx-cache --output-style=static 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   specs)
-    bunx nx run extension:build:chrome > /dev/null || exit 1
+    bunx nx run extension:build:chrome --output-style=static > /dev/null || exit 1
     cd apps/extension
     bunx playwright test --config playwright.config.ts --project=chromium --reporter=line "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   firefox)
-    SE_OFFLINE=true bunx nx run extension:test:e2e:firefox --skip-nx-cache -- "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
+    SE_OFFLINE=true bunx nx run extension:test:e2e:firefox --skip-nx-cache --output-style=static -- "$@" 2>&1 | tee $log; rc=${pipestatus[1]} ;;
   built)
     # The caller has built the extension (and native host for bridge) and installed Chromium.
     # Avoid reinstalling host packages on managed runners without root access.

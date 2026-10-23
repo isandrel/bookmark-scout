@@ -1,3 +1,4 @@
+import { YAML } from "bun";
 import { describe, expect, it } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -23,7 +24,12 @@ describe("agent skills", () => {
   it.each(folders)("%s/SKILL.md names its folder and says when to use it", (folder) => {
     const text = readFileSync(join(skillsDir, folder, "SKILL.md"), "utf8");
     const frontMatter = /^---\n([\s\S]*?)\n---/.exec(text)?.[1] ?? "";
-    expect(/^name:\s*(.+)$/m.exec(frontMatter)?.[1]?.trim()).toBe(folder);
-    expect(/^description:\s*\S/m.test(frontMatter)).toBe(true);
+    const parsed = YAML.parse(frontMatter) as { name?: unknown; description?: unknown };
+    expect(parsed.name).toBe(folder);
+    // Agents read the parsed value, so YAML must not cut it short: in a plain scalar, " #" starts
+    // a comment and ": " a mapping, which once left a description ending mid-sentence.
+    const written = /^description:\s*(.+)$/m.exec(frontMatter)?.[1]?.trim();
+    expect(typeof parsed.description).toBe("string");
+    expect(parsed.description).toBe(written);
   });
 });

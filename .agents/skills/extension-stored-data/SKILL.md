@@ -1,6 +1,6 @@
 ---
 name: extension-stored-data
-description: Add, change, or remove anything the Bookmark Scout extension keeps in browser storage - a stored item or collection, a user setting (synced or per device), a dismissed notice, cross-tab session state, a cache - with the storage registry, zod parsing, the { v, data } envelope, Web Locks, backup policy, old-key cleanup, sync quota limits, the settings matrix, and the matching privacy disclosures. Use when touching src/lib/storage/, settings-schema.ts, settings-storage.ts, any *-storage.ts module, config/settings/*.toml, backup.ts, or when the user asks for a new setting, wants something remembered, synced, backed up, or reset.
+description: Add, change, or remove anything the Bookmark Scout extension keeps in browser storage - a stored item or collection, a user setting (synced or per device), a dismissed notice, cross-tab session state, a cache - with the storage registry, zod parsing, the { v, data } envelope, Web Locks, backup policy, old-key cleanup, sync quota limits, the settings matrix, and the matching privacy disclosures. Use when touching src/lib/storage/, settings-schema.ts, settings-storage.ts, any *-storage.ts module, config/settings/*.toml, backup.ts, or when the user asks for a new setting, asks to make a fixed behavior (a default view, an order, a menu, a limit) configurable or customizable, or wants something remembered, synced, backed up, or reset.
 ---
 
 # Extension stored data
@@ -27,6 +27,16 @@ Every stored value is an entry in `STORAGE_ITEMS` (`apps/extension/src/lib/stora
 4. **The total sync budget** is tested in `tests/unit/prompt-library.test.ts`: the number of non-collection sync items times 8,192 plus the prompt budget must stay under 102,400. A new synced item fails it; lower `max_prompts` or `prompt_max_bytes` in the same PR, or keep the value in `settings`.
 5. **Consumers:** map the setting to its consumer and test titles in `tests/settings-matrix.ts`, flip it in a test and assert the behavior changes, and make it apply live (see "Settings UX" in `extension-ui-change`).
 6. **Removing a setting** touches the schema, the TOML, locale keys, the settings matrix, E2E seeds, and the docs settings pages in every language; a stale "AI Provider/AI Model" row survived one PR that way (PRs #614, #620).
+
+## Turn a fixed behavior into a setting
+
+The maintainer reviews for "configurable, extensible, customizable, maintainable" (root `AGENTS.md`) and often asks for a sweep ("what else can be configurable: the default view, the column order, the right-click menu and its order"). For each candidate:
+
+1. **Setting, config, or code.** A value users will reasonably want different becomes a setting with today's behavior as its default. A value that guards a browser or provider limit stays in an app config file and becomes the setting's floor, checked by a test: Chrome allows two `captureVisibleTab` calls a second, so `browser_min_interval_ms` in `config/bookmarks/browse-covers.toml` bounds the user's Time Between Pictures (`tests/unit/browse-covers.test.ts`), at the maintainer's request. Only protocol constants stay in code.
+2. **Shape.** Choices are enum ids, never display text; an order or a fallback chain (cover sources, menu actions, columns) is a list of ids the user can reorder, with the current order as the default; on/off groups go in a checklist. Defaults and bounds go in the `config/settings/<tab>.toml` table of the Options section that shows it, with a comment saying what it does and why the default (`{ default, min, max, step, integer }` for numbers, `max_items` and `max_length` for lists).
+3. **Field and placement.** Add it to `settings-schema.ts` in that section's `category(...)`; technical values most people never change go in the section's `advanced` list (the closed "Advanced settings" fold). Labels are `settings_<stem>`, `settings_<stem>Desc`, and optionally `settings_<stem>Help`, in every locale.
+4. **Read it live** where the fixed value was read, and follow "Add a setting" above (size limits, device scope, the settings matrix, a test that flips it).
+5. **Docs** name the setting in the settings page of every language with `<SettingDefault path="..." />`, never a typed default (`scripts/setting-defaults-docs.test.ts`), and the guide for the feature says it can be changed.
 
 ## Traps
 

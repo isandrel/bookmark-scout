@@ -1,6 +1,6 @@
 ---
 name: feature-delivery
-description: Deliver one Bookmark Scout feature or fix end to end as a single agent, from a clean worktree to a merged pull request and a cleaned-up checkout. Covers the worktree and branch, the order of work (config, code, messages, tests, docs, disclosures), verification, commit and PR with auto-merge, merging one PR at a time, and removing the branch and worktree right after the merge. Use whenever you start, continue, or finish a change that will become a PR, including when the user says "continue", "auto complete", or "ship it"; for several agents at once, use parallel-agent-delivery instead.
+description: Deliver one Bookmark Scout feature or fix end to end as a single agent, from a clean worktree to a merged pull request and a cleaned-up checkout. Covers the worktree and branch, the order of work (config, code, messages, tests, docs, disclosures), verification, commit and PR with auto-merge, merging one PR at a time, and removing the branch and worktree right after the merge. Use whenever you start, continue, or finish a change that will become a PR, including when the user says "continue", "auto complete", or "ship it"; for several agents or several stacked branches at once, also read parallel-agent-delivery.
 ---
 
 # Feature delivery (one agent, end to end)
@@ -54,10 +54,10 @@ bunx nx run-many -t lint typecheck test:unit build:chrome build:firefox build:ed
 
 ## 4. Commit, PR, merge
 
-- **Commits.** Use Conventional Commits with the emoji prefix (`✨ feat(extension): ...`), with no attribution lines. Stage only intended files, and check `git status` for stray folders first.
-- **Push and open the PR.** Push right after the first commit. Open the PR with a summary, the privacy impact, the tests, and the exact verification. Then run `gh pr merge <n> --squash --auto`.
+- **Commits.** Messages follow `config/commits.toml` (`✨ feat(extension): ...`, checked by the `commit-msg` hook), with no attribution lines. Stage only intended files, and check `git status` for stray folders first.
+- **Push and open the PR.** Push right after the first commit. Open the PR from `.github/pull_request_template.md` with a summary, the privacy impact, the tests, and the exact verification. Then run `gh pr merge <n> --squash --auto`.
 - **One PR at a time.** Only the next PR in line is updated (`repo-maintenance`).
-  - When a PR goes DIRTY, merge `origin/main` into it and resolve: keep both sides' locale keys, take the higher budget with a dated reason, and union the docs rows.
+  - When a PR goes DIRTY, merge `origin/main` into it and resolve: keep both sides' locale keys (`parallel-agent-delivery/scripts/merge-locales.ts`), take `main`'s budget values and re-measure (`extension-performance`, "Startup size budgets"), and union the docs rows.
   - Re-verify, then push. Never force-push a branch that has a PR.
 - **CI failures.** Read the failed job's log (`gh api repos/<o>/<r>/actions/jobs/<id>/logs --allow-escape-sequences`). Fix the cause, or rerun only a known flake. CodeQL findings block the merge even in tests.
 

@@ -1,6 +1,6 @@
 ---
 name: feature-research-planning
-description: Plan a new Bookmark Scout capability, redesign, or large refactor research-first - map the current code, research current libraries, docs, and comparable products online, then present options with a recommended default and a phased PR plan before writing code. Use whenever the user asks to "plan first", "search online", "see what we can adopt", optimize UI/UX from references, add support for a new kind of provider or integration, or review the codebase for improvements, even if they do not say "plan".
+description: Plan a new Bookmark Scout capability, redesign, or large refactor research-first - map the current code, research current libraries, docs, comparable products, and user feedback online, then present options with a recommended default and a phased PR plan before writing code. Use whenever the user asks to "plan first", "search online", "see what we can adopt", optimize UI/UX from references, find out what users say about a feature on Reddit, forums, or store reviews, add support for a new kind of provider or integration, or review the codebase for improvements, even if they do not say "plan".
 ---
 
 # Feature research and planning
@@ -17,6 +17,17 @@ Start two background subagents at once and write nothing until both report:
 For parity with a browser's own feature (the bookmark manager, shortcuts), read the browser's source as the spec, for example Chromium's `chrome/browser/resources/bookmarks/` and Firefox's `places` strings. A commit's release lives on Chromium's `refs/branch-heads/<n>` (the GitHub mirror has `main` only), matched against the release schedule. Test platform limits with a throwaway Playwright experiment before planning around them: one found that an overridden page's address bar never follows `pushState`, which reshaped the manager-address plan.
 
 For a reference product, have the research return a pattern table ("Pattern | What it means for us") and map each pattern onto this repository's data model. That table produced named AI services, local-server presets, and a default-service switcher.
+
+### What users say (Reddit, forums, store reviews)
+
+When the user asks what people want, or to "search Reddit", collect real feedback: threads about the feature in Reddit and other forums, rival products' public feature-request boards, and store reviews. Quote a few short lines with links and vote counts, and say which findings change the plan; on covers, one thread asked for page images rather than whole-page screenshots and another for exporting thumbnails, and both became options.
+
+Reddit refuses the agent's own web search and fetch, the built-in browser, and anonymous requests to its JSON endpoints. With the user's explicit permission, read it through their own Chrome over the DevTools protocol:
+
+1. The user turns on remote debugging (`chrome://inspect/#remote-debugging` in current Chrome). Chrome then asks them to allow **each new connection**, so probing first and reading later meant a second approval that nobody saw; open one connection and do everything in it.
+2. Write the addresses to a JSON file: `old.reddit.com` search (`/search.json?q=<terms>&limit=25`), then each promising thread's `.json` (`/r/<sub>/comments/<id>/.json?sort=top`).
+3. Run `bun .agents/skills/feature-research-planning/scripts/read-pages-cdp.ts <urls.json> ~/.cache/bookmark-scout-<topic>/pages.json --reddit` (options in its header). It reads the port and browser path from Chrome's `DevToolsActivePort`, opens one background tab, reads each page, closes the tab, and prints search results or each thread's post and top comments; `--from <pages.json> --reddit` prints a saved run again. A JSON-viewer extension in that Chrome may add text around the JSON; the script keeps only the JSON.
+4. Touch nothing else in that browser: no sign-in, no posting or voting, no other tabs.
 
 ## 2. Present options, recommend one
 

@@ -1,17 +1,17 @@
 ---
 name: extension-exploratory-qa
-description: Hands-on exploratory QA of the built Bookmark Scout extension in a disposable Playwright Chromium profile, driving the popup, side panel, bookmarks manager, Tools sidebar, and options pages and reviewing screenshots to find bugs. Use when asked to "really try" or "test more" the extension, to find what is broken, or when Computer Use and browser-extension tools cannot interact with extension pages. Finds and reports bugs; it does not fix them.
+description: Hands-on checks of the Bookmark Scout extension in a real browser - exploratory QA of the built extension in a disposable Playwright Chromium profile (driving the popup, side panel, bookmarks manager, Tools sidebar, and options pages and reviewing screenshots to find bugs), and read-only looks at the extension installed in the user's own browser when they ask for one. Use when asked to "really try" or "test more" the extension, to find what is broken, to look at it in the user's browser, when the user says their browser still shows the old UI or a shortcut does nothing, or when Computer Use and browser-extension tools cannot interact with extension pages. Finds and reports bugs; it does not fix them.
 ---
 
 # Extension exploratory QA
 
-Drive the real built extension like a user, in a throwaway profile, and report confirmed bugs. Then turn findings into regression tests under `apps/extension/tests/` (unit with Vitest, E2E with the Playwright fixtures in `apps/extension/tests/e2e/fixtures.ts`).
+Drive the real built extension like a user, in a throwaway profile, and report confirmed bugs. Then turn findings into regression tests under `apps/extension/tests/` (unit with Vitest, E2E with the Playwright fixtures in `apps/extension/tests/e2e/fixtures.ts`; the `extension-feature-test` skill).
 
-## Why this route
+## Which browser
 
-- Computer Use grants browsers read-only access (screenshots only).
-- Browser-extension automation (Claude in Chrome and similar) cannot open `chrome://` or `chrome-extension://` pages, the toolbar popup, or the side panel.
-- A dev build must never be loaded into the user's real profile; the extension edits bookmarks and settings.
+- **A disposable profile (default).** "Setup" and "Rules" below use one. It is the only route that can click, type, and change data.
+- **The user's installed browser, read-only, only on request** (see "The user's own browser"). Computer Use grants browsers a read tier (screenshots only, no clicks or typing), and browser-extension automation (Claude in Chrome and similar) cannot open `chrome://` or `chrome-extension://` pages, the toolbar popup, or the side panel. Do not work around either limit.
+- **Never load a dev build into the user's real profile**; the extension edits bookmarks and settings.
 
 ## Setup
 
@@ -54,13 +54,21 @@ Extension pages: `popup.html` (420×600), `sidepanel.html` (400×900), `bookmark
 - **Update cleanup:** to see what an update does to stored data, copy the build, seed keys in a persistent profile, raise `version` in the copy's `manifest.json`, and relaunch the same `RUN`.
 - **Firefox:** Playwright cannot open `moz-extension://` pages. Put a temporary `tests/e2e-firefox/zz-qa-*.spec.ts` in your QA worktree and use its Selenium fixtures; delete it with the worktree.
 
-## Store and marketing screenshots
+Store and marketing screenshots use this runner with their own capture script: "Screenshots and promo art" in `extension-store-release`.
 
-The procedure lives in `store/README.md` ("How they were made"). Traps:
-- A fresh profile shows generic globe icons, because the browser's favicon cache is empty. Run Refresh Site Icons first in a copy of the build with optional website access pre-granted.
-- Stub `tabs.query` so the popup's "current tab" is a public page, not the extension page.
-- Keep the app theme on `system` and switch with `page.emulateMedia({ colorScheme })`.
-- Export 1280×800 24-bit RGB PNGs without alpha (Chrome rejects alpha): `magick mogrify -format png -alpha off -type TrueColor -define png:color-type=2 *.png` (ImageMagick 7.1.2-33 and later fail without `-format png`). Use one image set for every store and copy the same file names to `store/screenshots/`, `apps/website/public/screenshots/`, and `apps/docs/public/screenshots/`.
+## The user's own browser
+
+Only when the user asks, and read-only by default:
+
+1. Read the current Computer Use tool documentation and take a fresh screenshot before interacting. Confirm the browser window and extension identity rather than relying on saved element indices or an old extension id.
+2. If the user expects the latest code, check that the installed extension's unpacked source path is this checkout's current build output. Rebuild or reload only when the request authorizes it, and confirm the reload in the visible UI; a build alone does not update the installed copy.
+3. Look only: open views, inspect controls, search, or change a temporary UI-only filter. Never create, edit, delete, import, export, reorganize, scan, or send user data to an external service in the live profile without explicit, scoped authorization; use a disposable profile for those flows.
+4. If a tool refuses a `chrome-extension://` page and forbids workarounds, stop that route. Do not reach the same page through another browser surface, native UI, raw CDP, terminal automation, or an indirect URL. Report the restriction and what stays unverified.
+5. Report what was visibly observed, which build and profile were involved, and what was not tested, without reproducing private bookmarks or settings values.
+
+**"My browser still shows the old UI."** Usually the build is stale, not the code. The browser loads the main checkout's `apps/extension/dist/chrome-mv3` exactly as last built, and `dist/chrome-mv3-dev` only updates while `bun run dev` runs. Also check which branch the main checkout is on: another agent session once switched it to a docs branch, so a rebuild there would show the wrong code. Fix, with the user's go-ahead: in the main checkout, `git branch --show-current` (switch to `main` if needed), `git pull --ff-only`, `bun install --frozen-lockfile && bunx nx run extension:build:chrome`, reload the extension in `chrome://extensions`, then reopen the popup and any open extension pages.
+
+**"The shortcut does nothing."** Check `chrome://extensions/shortcuts` first: the command most likely shows "Not set". Chrome assigns an extension's suggested keys only at the first install of that extension id, and skips any key the browser or another extension already uses, so a profile that removed and re-added the same unpacked build gets none. Fresh profiles and upgrades from a build without commands both got the defaults. The fix is to set the key on that page; it is not a code bug.
 
 ## Scaling out
 

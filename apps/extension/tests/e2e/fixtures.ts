@@ -62,9 +62,14 @@ const welcomeOpensOnInstall = readConfigToml('ui/welcome.toml').open_on_install 
 const WELCOME_WAIT_MS = 10_000;
 const WELCOME_POLL_MS = 25;
 
-/** Waits for the welcome page the install opened, then closes it. */
+/**
+ * Waits for the welcome page the install opened, then closes it. The wait starts once the
+ * extension's service worker runs: a cold browser start on a macOS runner once took the whole
+ * wait before the extension could open anything.
+ */
 async function closeWelcomePage(context: BrowserContext): Promise<void> {
   const isWelcome = (page: Page) => page.url().endsWith(WELCOME_PAGE);
+  if (context.serviceWorkers().length === 0) await context.waitForEvent('serviceworker');
   const deadline = Date.now() + WELCOME_WAIT_MS;
   while (!context.pages().some(isWelcome)) {
     if (Date.now() > deadline) throw new Error(`The extension did not open ${WELCOME_PAGE}`);
