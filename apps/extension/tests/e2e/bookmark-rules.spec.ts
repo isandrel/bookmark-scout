@@ -4,6 +4,7 @@
  * tagged and moved without a review, each only with its own opt-in.
  */
 import type { Locator, Worker } from '@playwright/test';
+import { readConfigToml } from '../config-files';
 import { expect, test, toastRegion } from './fixtures';
 import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, showAllTools, toolCard } from './tool-helpers';
@@ -24,6 +25,8 @@ async function tagsOf(worker: Worker, id: string) {
 }
 
 test.use({ viewport: { width: 1400, height: 900 } });
+
+const { max_rules: maxRules } = readConfigToml('rules/rules.toml') as { max_rules: number };
 
 test('a rule made in Settings tags and moves matching bookmarks after a review, and undo puts them back', async ({
   extensionId,
@@ -550,4 +553,41 @@ test('the rule editor tests a sample and the review applies in dark theme at 420
   // The link opens the manager on that folder with the Tools sidebar on Smart Rules.
   await page.goto(href as string);
   await expect(toolCard(page, 'Smart Rules')).toBeVisible();
+});
+
+test('a full rules list says so instead of dropping the new rule', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await writeStored(
+    extensionWorker,
+    STORAGE_ITEMS.bookmarkRules,
+    Array.from({ length: maxRules }, (_, n) => ({
+      id: `r${n}`,
+      name: `Rule ${n}`,
+      enabled: false,
+      query: `title:r${n}`,
+      syntaxVersion: 2,
+      addTags: ['x'],
+    })),
+  );
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const panel = page.getByTestId('bookmark-rules');
+  await expect(panel.getByTestId('bookmark-rule')).toHaveCount(maxRules);
+  const full = `You have ${maxRules} rules, the most you can keep. Delete one to add another.`;
+
+  await panel.getByRole('button', { name: 'Add rule' }).click();
+  await expect(toastRegion(page).getByText(full, { exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'New rule' })).toHaveCount(0);
+  await panel.getByRole('button', { name: 'Start from a template' }).click();
+  await page.getByRole('menuitem').first().click();
+  const stored = () => readStored<unknown[]>(extensionWorker, STORAGE_ITEMS.bookmarkRules);
+  expect(await stored()).toHaveLength(maxRules);
+
+  // With one deleted, a rule can be added again.
+  await panel.getByRole('button', { name: 'Delete Rule 0' }).click();
+  await expect.poll(async () => (await stored())?.length).toBe(maxRules - 1);
+  await panel.getByRole('button', { name: 'Add rule' }).click();
+  await expect(page.getByRole('dialog', { name: 'New rule' })).toBeVisible();
 });

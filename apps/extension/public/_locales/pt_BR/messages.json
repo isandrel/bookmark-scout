@@ -9621,6 +9621,10 @@
         "message": "Não foi possível salvar a regra.",
         "description": "Rule editor error: storage failed"
     },
+    "rules_errorLimit": {
+        "message": "Você tem $1 regras, o máximo permitido. Exclua uma para adicionar outra.",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
+    },
     "rules_deleted": {
         "message": "Regra \"$1\" excluída",
         "description": "Toast after deleting a rule; $1 is its name"

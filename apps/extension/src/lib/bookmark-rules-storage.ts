@@ -16,12 +16,19 @@ export function createBookmarkRuleId(): string {
   return crypto.randomUUID();
 }
 
-/** Adds `rule`, or replaces the rule with its id where it is, keeping the order. */
+/** A new rule past `max_rules` (`config/rules/rules.toml`), which would be dropped when read. */
+export class BookmarkRuleLimitError extends Error {}
+
+/**
+ * Adds `rule`, or replaces the rule with its id where it is, keeping the order. Rejects with
+ * `BookmarkRuleLimitError`, writing nothing, when a new rule would be one past the limit.
+ */
 export function saveBookmarkRule(rule: BookmarkRule): Promise<BookmarkRule[]> {
   return bookmarkRulesValue.update((current) => {
     const index = current.findIndex((entry) => entry.id === rule.id);
-    if (index === -1) return [...current, rule].slice(0, MAX_BOOKMARK_RULES);
-    return current.map((entry) => (entry.id === rule.id ? rule : entry));
+    if (index !== -1) return current.map((entry) => (entry.id === rule.id ? rule : entry));
+    if (current.length >= MAX_BOOKMARK_RULES) throw new BookmarkRuleLimitError();
+    return [...current, rule];
   });
 }
 
