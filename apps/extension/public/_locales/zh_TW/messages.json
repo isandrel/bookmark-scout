@@ -7559,6 +7559,46 @@
         "message": "快速儲存通知自動關閉前顯示多久；指標停留時保持開啟",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "快速儲存時儲存封面",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "快速儲存後，同時為書籤儲存一張封面：網頁本身的預覽圖片或分頁的截圖，依「快速儲存封面來源」決定。僅在啟用取得封面時有效；封面只會保存在此裝置上。",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "截圖會在你按下快捷鍵時擷取，不經檢視，並包含網頁顯示的任何內容，例如帳戶頁面或訊息。私密視窗中，以及「永不擷取這些網站」或「永不讀取這些網站」中的網站都不會擷取，截圖也絕不會傳送到任何地方。網頁本身的圖片只會從該網頁的網站或你已授予存取權的網站下載。在通知中，「移除封面」會刪除封面並保留書籤；「復原」會兩者都移除。",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "快速儲存封面來源",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "快速儲存保留哪種封面：與「封面來源」相同，或僅用於快速儲存的選擇",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "與封面來源相同",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "書籤已有封面時",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "快速儲存要保留書籤已有的封面，還是取代它。用「將目前畫面設為封面」選定的封面永遠不會被取代",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "保留",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "取代",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "每個回答的最多步驟",
         "description": "Setting label: askAiMaxSteps"
@@ -8209,6 +8249,14 @@
         "message": "每個封面所保存副本的寬度；較大的圖片會縮小到此寬度",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "封面圖片品質",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "每張封面所保存副本的品質；越低檔案越小。僅適用於今後儲存的封面",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "圖片大小上限",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8230,7 +8278,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "當網頁本身的圖片和分頁截圖都可用時，書籤保留哪一種封面。瀏覽時擷取的截圖只有在選擇「截圖優先」時才會取代網頁圖片；選擇「僅網頁圖片」時不會擷取截圖。用「將目前畫面設為封面」選定的封面不會被自動取代。",
+        "message": "當網頁本身的圖片和分頁截圖都可用時，書籤保留哪一種封面。瀏覽時擷取的截圖只有在選擇「截圖優先」時才會取代網頁圖片；選擇「僅網頁圖片」時不會擷取截圖。用「將目前畫面設為封面」選定的封面不會被自動取代。選擇「僅截圖」時從不使用網頁圖片。",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8244,6 +8292,10 @@
     "settings_coversSourcePageOnly": {
         "message": "僅網頁圖片",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "僅截圖",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "瀏覽時擷取封面",
@@ -8298,7 +8350,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "瀏覽時絕不擷取這些網站及其子網域的網頁。輸入 example.com 這類網站，或貼上一個網址。「永不讀取這些網站」中的網站也不會擷取。",
+        "message": "瀏覽時絕不擷取這些網站及其子網域的網頁。輸入 example.com 這類網站，或貼上一個網址。「永不讀取這些網站」中的網站也不會擷取。快速儲存也不會為它們儲存封面。",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8340,6 +8392,10 @@
     "tools_coversKeptReason": {
         "message": "此封面是你用「將目前畫面設為封面」選定的，因此保留。要取得其他封面，請先移除它。",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "「封面來源」為「僅截圖」，因此不使用網頁圖片，也沒有讀取任何網頁。要取得網頁圖片，請在設定中選擇其他封面來源。",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "已略過 ($1)",
@@ -8872,6 +8928,16 @@
     "covers_sourceBrowse": {
         "message": "瀏覽時擷取，儲存於 $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "快速儲存時擷取，儲存於 $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

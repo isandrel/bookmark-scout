@@ -10,6 +10,7 @@ const COVER_SOURCE_KEYS = {
   page: 'covers_sourcePage',
   tab: 'covers_sourceTab',
   browse: 'covers_sourceBrowse',
+  quickSave: 'covers_sourceQuickSave',
 } as const satisfies Record<CoverSource, MessageKey>;
 
 /** The info of the bookmark's cover of `url`, or undefined while it has none (or it is loading). */

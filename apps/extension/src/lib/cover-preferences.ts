@@ -8,11 +8,12 @@
 import { z } from 'zod';
 
 /**
- * Where a cover came from: the preview image the page names (`page`, Fetch Covers), a picture of
- * the tab the user chose (`tab`, Use this view as the cover), or one taken when a bookmarked page
- * loaded (`browse`, Capture Covers While Browsing).
+ * Where a cover came from: the preview image the page names (`page`, Fetch Covers, or quick save),
+ * a picture of the tab the user chose (`tab`, Use this view as the cover), one taken when a
+ * bookmarked page loaded (`browse`, Capture Covers While Browsing), or one quick save took
+ * (`quickSave`, Save a Cover With Quick Save).
  */
-export const COVER_SOURCES = ['page', 'tab', 'browse'] as const;
+export const COVER_SOURCES = ['page', 'tab', 'browse', 'quickSave'] as const;
 export type CoverSource = (typeof COVER_SOURCES)[number];
 
 /**
@@ -25,7 +26,7 @@ export type StoredCoverSource = CoverSource | typeof UNKNOWN_COVER_SOURCE;
 
 /** The kinds of cover: the page's own image, or a picture of the tab. */
 const COVER_KINDS = ['page', 'screenshot'] as const;
-type CoverKind = (typeof COVER_KINDS)[number];
+export type CoverKind = (typeof COVER_KINDS)[number];
 
 /**
  * Which kind each stored source is. A cover saved before sources were recorded counts as a page's
@@ -35,6 +36,7 @@ const COVER_SOURCE_KINDS = {
   page: 'page',
   tab: 'screenshot',
   browse: 'screenshot',
+  quickSave: 'screenshot',
   unknown: 'page',
 } as const satisfies Record<StoredCoverSource, CoverKind>;
 
@@ -77,6 +79,38 @@ function preferenceEntry(preference: CoverPreference) {
 /** The choice's name, in the current language. */
 export function getCoverPreferenceLabel(preference: CoverPreference): string {
   return t(preferenceEntry(preference).label_key);
+}
+
+/** The kinds of cover `preference` takes automatically, best first. */
+export function coverPreferenceKinds(preference: CoverPreference): readonly CoverKind[] {
+  return preferenceEntry(preference).kinds;
+}
+
+/**
+ * Quick Save Cover Source: `same` follows Cover Source; any other value is one of its choices, for
+ * quick save only.
+ */
+export const SAME_COVER_SOURCE = 'same';
+export const quickSaveCoverSourceSchema = z.enum([
+  SAME_COVER_SOURCE,
+  firstPreference,
+  ...otherPreferences,
+]);
+export type QuickSaveCoverSource = z.infer<typeof quickSaveCoverSourceSchema>;
+
+/** The Cover Source choice quick save follows. */
+export function resolveQuickSaveCoverPreference(
+  choice: QuickSaveCoverSource,
+  coverSource: CoverPreference,
+): CoverPreference {
+  return choice === SAME_COVER_SOURCE ? coverSource : choice;
+}
+
+/** A Quick Save Cover Source choice's name, in the current language. */
+export function getQuickSaveCoverSourceLabel(choice: QuickSaveCoverSource): string {
+  return choice === SAME_COVER_SOURCE
+    ? t('settings_quickSaveCoverSourceSame')
+    : getCoverPreferenceLabel(choice);
 }
 
 /** Where `kind` stands in the choice's list; past the end when it is not taken. */

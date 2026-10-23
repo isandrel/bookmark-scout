@@ -28,6 +28,8 @@ page_head = 524288
 page_html = 2000000
 # The text on the toolbar button's badge, which the browser fits in about four characters.
 action_badge = 4
+# A preview image address a page names in a meta tag, read by quick save from the tab.
+cover_meta = 4096
 
 # Most items.
 [counts]
@@ -35,6 +37,8 @@ audit_error_codes = 20
 # The highest position of an alternative folder a quick save toast can pick.
 alternative_index = 50
 request_headers = 100
+# Meta tags naming a preview image that quick save reads from a page.
+cover_metas = 20
 
 # Lengths of the ids the extension makes.
 [ids]

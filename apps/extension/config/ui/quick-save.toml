@@ -15,6 +15,10 @@ visible_tolerance_px = { value = 2, min = 0, max = 64 }
 # quick save with Undo for this long after it happened.
 badge_clear_ms = { value = 4000, min = 500, max = 60_000 }
 popup_result_max_age_ms = { value = 300000, min = 1000, max = 3_600_000 }
+# Save a Cover With Quick Save takes its picture of the tab before the notification is drawn, so
+# the notification is never in it; the notification waits at most this long for it. A picture that
+# takes longer is not kept.
+cover_picture_wait_ms = { value = 1500, min = 100, max = 10_000 }
 # Badge text and background per result. Colors are the DESIGN.md success and danger tokens.
 badge_success_text = "✓"
 badge_failure_text = "✗"

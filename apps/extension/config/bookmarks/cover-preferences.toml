@@ -6,6 +6,9 @@
 # never taken automatically. Use this view as the cover is the user's own pick and is not limited.
 # Choices show in this order.
 
+# Quick save follows the Quick Save Cover Source setting (config/settings/search.toml), which is
+# "same" (this setting) or one of these choices.
+
 # Covers no automatic cover ever replaces, whatever their age or the choice: `tab` is a picture the
 # user took with Use this view as the cover, which only another such picture replaces.
 never_replaced = ["tab"]
@@ -21,3 +24,8 @@ label_key = "settings_coversSourceScreenshotFirst"
 [preferences.page_only]
 kinds = ["page"]
 label_key = "settings_coversSourcePageOnly"
+
+# Fetch Covers downloads no page images with this choice; its review says so.
+[preferences.screenshot_only]
+kinds = ["screenshot"]
+label_key = "settings_coversSourceScreenshotOnly"

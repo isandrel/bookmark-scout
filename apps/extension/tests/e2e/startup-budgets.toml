@@ -129,7 +129,9 @@
 # Raised from 390 on 2026-10-22 for the Russian, Indonesian, and Italian calendar locales (391).
 # Raised from 400 on 2026-10-22 for the AI host page reading a page's text and sign-in check with
 # redirect guesses (401).
-"ai-host.html" = 410
+# Raised from 410 on 2026-10-22 for the quick save cover settings, Cover Source choices, and Cover
+# Image Quality in the settings schema every page loads (412).
+"ai-host.html" = 420
 # The welcome page opened once after install (516 on 2026-10-14).
 # Raised from 580 on 2026-10-21 for the tooltip provider every page now mounts at its root and
 # the config modules it reads (607).

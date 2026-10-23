@@ -59,3 +59,14 @@ alternatives = { default = 3, min = 0, max = 8, step = 1 }
 # Milliseconds before the quick save notification closes on its own; hovering or focusing it
 # pauses the countdown, and "Saving…" stays until the save finishes
 notification_ms = { default = 8000, min = 2000, max = 60000, step = 1000 }
+# Save a Cover With Quick Save: after a quick save, keep a cover for the bookmark, the page's own
+# preview image or a picture of the tab (src/services/quick-save-cover.ts). On by default, but it
+# acts only while Fetch Covers is on (metadata_content.covers.enabled, off by default), never in
+# private windows, and never on sites on Never Capture These Sites or Never Read These Sites.
+cover = true
+# Quick Save Cover Source: "same" follows Cover Source (metadata_content.covers.source_preference);
+# otherwise one of the choices in config/bookmarks/cover-preferences.toml, for quick save only.
+cover_source = "same"
+# When the Bookmark Already Has a Cover: "keep" leaves a cover it has, "replace" puts the new one
+# in its place. Neither ever replaces a cover chosen with Use this view as the cover.
+cover_existing = "keep"

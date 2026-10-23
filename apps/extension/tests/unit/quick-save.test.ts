@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
+import { clearCovers, getCoverInfos } from '@/lib/cover-store';
 import { quickSaveActionSchema } from '@/lib/quick-save-validation';
 import { addRecentFolder } from '@/lib/recent-folders-storage';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
@@ -19,6 +20,7 @@ import {
 import { chooseQuickSaveTarget } from '@/services/quick-save-target';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 import { auditRecords, resetAuditDatabase } from './audit-helpers';
+import { pngDataUrl } from './png-header';
 import { readStoredData, STORAGE_ITEMS } from './storage-helpers';
 
 let bookmarks: FakeBookmarks;
@@ -610,5 +612,101 @@ describe('quick saves in the History', () => {
       state: 'verified_success',
     });
     expect(undo).toMatchObject({ source: 'quick_save', label: { action: 'delete' } });
+  });
+});
+
+describe('Save a Cover With Quick Save', () => {
+  const PAGE_URL = 'https://react.dev/learn';
+  const self = () => ({ id: fakeBrowser.runtime.id, tab: tab('', '') });
+  const coverIds = async () => [...(await getCoverInfos()).values()].map((info) => info.bookmarkId);
+
+  beforeEach(async () => {
+    await clearCovers();
+    vi.stubGlobal('createImageBitmap', async () => ({
+      width: 1600,
+      height: 1000,
+      close: () => undefined,
+    }));
+    vi.stubGlobal(
+      'OffscreenCanvas',
+      class {
+        constructor(
+          readonly width: number,
+          readonly height: number,
+        ) {}
+        getContext() {
+          return { drawImage: () => undefined };
+        }
+        async convertToBlob({ type }: { type: string }) {
+          return new Blob([new Uint8Array(9)], { type });
+        }
+      },
+    );
+    vi.spyOn(fakeBrowser.tabs, 'get').mockResolvedValue(tab(PAGE_URL, 'Quick Start'));
+    (fakeBrowser.tabs as unknown as Record<string, unknown>).captureVisibleTab = vi.fn(async () =>
+      pngDataUrl(1600, 1000),
+    );
+    // The page names no image; the notification cannot be drawn here, so the popup shows it.
+    vi.spyOn(fakeBrowser.scripting, 'executeScript').mockResolvedValue([
+      { frameId: 0, result: { url: PAGE_URL, metas: [] } },
+    ] as never);
+  });
+
+  afterEach(() => vi.unstubAllGlobals());
+
+  /** Runs a quick save and waits until its cover is noted on it. */
+  const saveWithCover = async () => {
+    const record = await runQuickSave('quick-save', tab(PAGE_URL, 'Quick Start'));
+    await vi.waitFor(async () => expect((await quickSaveRecordValue.get())?.cover).toBeDefined());
+    return record;
+  };
+
+  it('keeps a picture of the tab for the new bookmark and offers Remove cover beside Undo', async () => {
+    await saveSettings({ coversEnabled: true });
+    const record = await saveWithCover();
+    const stored = await quickSaveRecordValue.get();
+    expect(stored?.cover).toEqual({ source: 'quickSave' });
+    expect(await coverIds()).toEqual([record.bookmarkId]);
+    expect(quickSaveActions(stored as QuickSaveRecord).map(({ id }) => id)).toEqual([
+      'undo',
+      'removeCover',
+    ]);
+    expect(
+      buildQuickSaveView(stored as QuickSaveRecord, settings()).actions.map(({ label }) => label),
+    ).toEqual(['Undo', 'Remove cover']);
+  });
+
+  it('keeps none while Save a Cover With Quick Save or Fetch Covers is off', async () => {
+    await runQuickSave('quick-save', tab(PAGE_URL, 'Quick Start'));
+    await saveSettings({ coversEnabled: true, quickSaveCover: false });
+    await runQuickSave('quick-save', tab('https://react.dev/reference', 'Reference'));
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(await coverIds()).toEqual([]);
+    expect(fakeBrowser.tabs.captureVisibleTab).not.toHaveBeenCalled();
+  });
+
+  it('Undo removes the bookmark and the cover it got', async () => {
+    await saveSettings({ coversEnabled: true });
+    const record = await saveWithCover();
+    const response = await handleQuickSaveAction(
+      { type: 'quick-save/action', id: record.id, action: 'undo' },
+      self(),
+    );
+    expect(response?.view?.title).toBe('Bookmark removed');
+    expect(bookmarks.get(record.bookmarkId ?? '')).toBeUndefined();
+    expect(await coverIds()).toEqual([]);
+  });
+
+  it('Remove cover removes only the cover, and Undo is still offered', async () => {
+    await saveSettings({ coversEnabled: true });
+    const record = await saveWithCover();
+    const response = await handleQuickSaveAction(
+      { type: 'quick-save/action', id: record.id, action: 'removeCover' },
+      self(),
+    );
+    expect(response?.view?.actions.map(({ id }) => id)).toEqual(['undo']);
+    expect(bookmarks.get(record.bookmarkId ?? '')).toBeDefined();
+    expect(await coverIds()).toEqual([]);
+    expect((await quickSaveRecordValue.get())?.cover).toBeUndefined();
   });
 });

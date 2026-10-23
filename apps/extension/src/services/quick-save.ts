@@ -5,6 +5,8 @@
  * (`quick-save-ai-host.ts`). A notification in the page (`entrypoints/quick-save-toast`) says
  * where it went and offers Undo and other folders; on pages the extension cannot draw in, the
  * toolbar badge shows the result and the popup shows the notification instead.
+ * With Save a Cover With Quick Save and Fetch Covers on, the saved bookmark also gets a cover
+ * (`quick-save-cover.ts`) after the save, and the notification offers Remove cover.
  *
  * The last quick save is kept in session storage, so Undo and Move still work after the service
  * worker restarts. Background only: `registerQuickSave` adds the listeners.
@@ -25,6 +27,7 @@ const quickSaveConfig = readConfig(
     badge_failure_text: z.string().min(1).max(INPUT_LIMITS.chars.action_badge),
     badge_success_color: z.string().regex(/^#[0-9a-f]{6}$/i),
     badge_failure_color: z.string().regex(/^#[0-9a-f]{6}$/i),
+    cover_picture_wait_ms: boundedNumber({ integer: true }),
   }),
 );
 
@@ -89,6 +92,8 @@ const recordSchema = z.strictObject({
     }),
   ]),
   alternatives: z.array(alternativeSchema),
+  /** The cover Save a Cover With Quick Save stored for the bookmark, which Remove cover removes. */
+  cover: z.strictObject({ source: z.enum(COVER_SOURCES) }).optional(),
   fallback: z.enum(['noMatch', 'fixedMissing']).optional(),
   failure: failureSchema.optional(),
   /** A localized reason to show under the title. */
@@ -159,13 +164,17 @@ const FAILURE_TITLES: Record<z.infer<typeof failureSchema>, MessageKey> = {
 };
 
 /**
- * The buttons for `record`: Undo after a save; after a failed AI quick save of a page, Retry (or
- * Open AI settings when AI is not set up) and Save without AI, which uses the Quick save setting.
+ * The buttons for `record`: Undo after a save, and Remove cover once quick save stored a cover;
+ * after a failed AI quick save of a page, Retry (or Open AI settings when AI is not set up) and
+ * Save without AI, which uses the Quick save setting.
  */
 export function quickSaveActions(record: QuickSaveRecord): QuickSaveToastView['actions'] {
+  const removeCover: QuickSaveToastView['actions'] =
+    record.cover && record.bookmarkId ? [{ id: 'removeCover', label: t('menu_removeCover') }] : [];
   if (record.status === 'saved' && record.bookmarkId) {
-    return [{ id: 'undo', label: t('action_undo') }];
+    return [{ id: 'undo', label: t('action_undo') }, ...removeCover];
   }
+  if (record.status === 'duplicate') return removeCover;
   if (record.status !== 'failed' || record.mode !== 'ai' || !record.page.url) return [];
   return [
     record.failure === 'aiUnavailable'
@@ -334,9 +343,15 @@ async function showInToolbar(record: QuickSaveRecord): Promise<void> {
 
 /**
  * Shows `record` in its page, or in the toolbar when the page cannot show it, has hidden it, or
- * the tab has moved on to another page since the quick save began.
+ * the tab has moved on to another page since the quick save began. With `cover`, the page shows
+ * it only once the picture of the tab is taken, so the notification is never in it.
  */
-async function deliver(record: QuickSaveRecord, settings: Settings): Promise<QuickSaveRecord> {
+async function deliver(
+  record: QuickSaveRecord,
+  settings: Settings,
+  cover?: QuickSaveCover | null,
+): Promise<QuickSaveRecord> {
+  await cover?.ready;
   let shown = record;
   if (record.delivery === 'page' && record.tabId !== undefined) {
     const documentToken = await showInTab(record.tabId, buildQuickSaveView(record, settings), {
@@ -560,6 +575,7 @@ async function saveWithAI(
   base: QuickSaveRecord,
   page: QuickSavePage,
   settings: Settings,
+  cover: QuickSaveCover | null,
 ): Promise<QuickSaveRecord> {
   const ai = await getQuickSaveAISettings(settings);
   if (!ai.ok) {
@@ -571,7 +587,7 @@ async function saveWithAI(
     };
   }
   // "Saving…" while the AI call runs.
-  const saving = await deliver(base, settings);
+  const saving = await deliver(base, settings, cover);
   const tree = await fetchBookmarkTree();
   const existing = await findExisting(page.url, indexWritableFolders(tree));
   const readPage = settings.aiReadPageContent && (await hasPermission('pageReading'));
@@ -655,8 +671,13 @@ export async function runQuickSave(
     origin: { kind: 'created' },
     alternatives: [],
   };
+  // The picture of the tab, when one may become the cover, is taken now, before any notification.
+  const cover = startQuickSaveCover(settings, activeTab, {
+    pictureWaitMs: quickSaveConfig.cover_picture_wait_ms,
+    picture: true,
+  });
   await storeRecord(base, true);
-  return completeQuickSave(base, settings, { toolbar: true });
+  return completeQuickSave(base, settings, { toolbar: true, cover });
 }
 
 /**
@@ -666,21 +687,84 @@ export async function runQuickSave(
 async function completeQuickSave(
   base: QuickSaveRecord,
   settings: Settings,
-  { toolbar }: { toolbar: boolean },
+  { toolbar, cover }: { toolbar: boolean; cover: QuickSaveCover | null },
 ): Promise<QuickSaveRecord> {
   const page = base.page.url ? base.page : null;
   let record: QuickSaveRecord;
   try {
     if (!page) record = { ...base, status: 'failed', failure: 'noPage' };
-    else if (base.mode === 'ai') record = await saveWithAI(base, page, settings);
+    else if (base.mode === 'ai') record = await saveWithAI(base, page, settings, cover);
     else record = await saveLocally(base, page, settings);
   } catch (error) {
     record = { ...base, status: 'failed', failure: 'saveFailed', error: getErrorMessage(error) };
   }
   // A newer quick save replaced this one while it ran: its notification wins.
   if (!(await storeRecord(record))) return record;
-  if (!toolbar && record.delivery === 'popup') return record;
-  return deliver(record, await readSettingsInAppLanguage());
+  const shown =
+    !toolbar && record.delivery === 'popup'
+      ? record
+      : await deliver(record, await readSettingsInAppLanguage(), cover);
+  // After the save and its notification, never before: neither waits for the cover.
+  if (cover) void attachCover(shown, cover);
+  return shown;
+}
+
+/** Whether `record` is still the last quick save, with the same bookmark saved. */
+async function isStillSaved(record: QuickSaveRecord): Promise<boolean> {
+  const current = await quickSaveRecordValue.get();
+  return (
+    current?.id === record.id &&
+    current.bookmarkId === record.bookmarkId &&
+    (current.status === 'saved' || current.status === 'duplicate')
+  );
+}
+
+/**
+ * Gets the bookmark's cover (`quick-save-cover.ts`), notes it on the quick save, and shows Remove
+ * cover in the notification while it is still on screen; the popup follows the stored record.
+ */
+async function attachCover(record: QuickSaveRecord, cover: QuickSaveCover): Promise<void> {
+  const { bookmarkId } = record;
+  if (!bookmarkId || (record.status !== 'saved' && record.status !== 'duplicate')) return;
+  try {
+    const source = await cover.save(bookmarkId, () => isStillSaved(record));
+    if (!source) return;
+    const attached: { record?: QuickSaveRecord } = {};
+    await quickSaveRecordValue.update((current) => {
+      if (
+        current?.id !== record.id ||
+        current.bookmarkId !== bookmarkId ||
+        (current.status !== 'saved' && current.status !== 'duplicate')
+      ) {
+        return current;
+      }
+      attached.record = { ...current, cover: { source } };
+      return attached.record;
+    });
+    const updated = attached.record;
+    if (!updated) {
+      // Undone while the cover was stored: a removed bookmark keeps no cover.
+      const exists = await browser.bookmarks.get(bookmarkId).then(
+        () => true,
+        () => false,
+      );
+      if (!exists) await takeCovers([bookmarkId]);
+      return;
+    }
+    if (updated.delivery === 'page' && updated.tabId !== undefined) {
+      await showInTab(
+        updated.tabId,
+        buildQuickSaveView(updated, await readSettingsInAppLanguage()),
+        {
+          ...(updated.documentToken ? { document: updated.documentToken } : {}),
+          ...(updated.page.url ? { url: updated.page.url } : {}),
+          onlyIfShown: true,
+        },
+      );
+    }
+  } catch (error) {
+    bookmarkLogger.error({ error }, 'Quick save cover failed');
+  }
 }
 
 /**
@@ -708,9 +792,18 @@ async function redoQuickSave(
     alternatives: [],
   };
   if (!(await storeRecord(base))) return record;
+  // The notification may be on screen now, so a cover can only be the page's own image.
+  const tab =
+    record.tabId === undefined
+      ? undefined
+      : await browser.tabs.get(record.tabId).catch(() => undefined);
+  const cover = startQuickSaveCover(settings, tab, {
+    pictureWaitMs: quickSaveConfig.cover_picture_wait_ms,
+    picture: false,
+  });
   // The popup that asked shows the result itself; a page gets it drawn, or the badge and popup
   // when it has moved on meanwhile.
-  return completeQuickSave(base, settings, { toolbar: record.delivery === 'page' });
+  return completeQuickSave(base, settings, { toolbar: record.delivery === 'page', cover });
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -746,10 +839,15 @@ export async function undoQuickSave(record: QuickSaveRecord): Promise<QuickSaveR
       },
       { source: 'quick_save', required: true },
     );
+    // A removed bookmark keeps no cover, such as the one Save a Cover With Quick Save stored.
+    await takeCovers([bookmarkId]).catch((error: unknown) => {
+      bookmarkLogger.error({ error }, 'Failed to remove the quick save cover');
+    });
     return {
       ...record,
       status: 'removed',
       bookmarkId: undefined,
+      cover: undefined,
       createdFolderIds: [],
       alternatives: [],
       error: undefined,
@@ -890,6 +988,18 @@ export async function handleQuickSaveAction(
           action.action === 'move'
             ? await moveQuickSave(record, action.index)
             : await undoQuickSave(record);
+      } catch (error) {
+        next = { ...record, error: getErrorMessage(error) };
+      }
+      await storeRecord(next);
+      return { view: buildQuickSaveView(next, settings) };
+    }
+    case 'removeCover': {
+      let next: QuickSaveRecord = { ...record, cover: undefined };
+      try {
+        if (record.cover && record.bookmarkId) {
+          await removeQuickSaveCover(record.bookmarkId, record.page.url, record.cover.source);
+        }
       } catch (error) {
         next = { ...record, error: getErrorMessage(error) };
       }

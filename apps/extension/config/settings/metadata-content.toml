@@ -47,6 +47,10 @@ default_scope = "folder"
 width_px = { default = 960, min = 160, max = 1920, step = 40, integer = true }
 # Largest image file that is downloaded, in KB
 max_image_kb = { default = 2048, min = 128, max = 8192, step = 128, integer = true }
+# Cover Image Quality: the WebP quality every stored cover is written at (Fetch Covers, Use this
+# view as the cover, Capture Covers While Browsing, quick save), shown as a percentage. Lower makes
+# smaller files; it applies to covers saved from then on.
+quality = { default = 0.8, min = 0.5, max = 1, step = 0.05 }
 # Total size of all stored covers on this device, in MB; the oldest are removed first
 max_cache_mb = { default = 200, min = 10, max = 1000, step = 10, integer = true }
 # Cover Source: which kind of cover a bookmark keeps when both its page's own image and a picture of

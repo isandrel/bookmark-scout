@@ -410,6 +410,9 @@ export function createQuickSaveToast(send: QuickSaveToastSend) {
     if (!isBoundPage(binding, { document: documentToken, url: location.href })) {
       return { shown: false, document: documentToken };
     }
+    if (binding?.onlyIfShown && mounted?.view?.id !== view.id) {
+      return { shown: false, document: documentToken };
+    }
     // A new quick save replaces the one on screen; the same one updates in place, so the live
     // region announces the change.
     if (mounted?.view && mounted.view.id !== view.id) dismiss(false);

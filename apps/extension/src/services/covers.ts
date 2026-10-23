@@ -42,11 +42,16 @@ export type CoverScanItem = {
   imageSite?: string;
 };
 
-export type CoverScanResult = { items: CoverScanItem[] };
+/**
+ * `pageImagesOff`: Cover Source takes no page images (Screenshot only), so no page was read; the
+ * review says so.
+ */
+export type CoverScanResult = { items: CoverScanItem[]; pageImagesOff?: true };
 
-export type CoverScanOptions = {
-  /** Width of the stored copy; larger images are shrunk to it. */
-  widthPx: number;
+/** How a stored copy is drawn: its width, and the WebP quality (Cover Image Quality). */
+export type CoverImageOptions = { widthPx: number; quality: number };
+
+export type CoverScanOptions = CoverImageOptions & {
   /** Image files larger than this are not downloaded. */
   maxImageBytes: number;
   /** Skip pages and images on the local network (the Skip Local Network Pages setting). */
@@ -66,6 +71,23 @@ export type CoverScanOptions = {
  */
 export function findCoverUrls(html: string, pageUrl: string): string[] {
   const doc = parseFetchedHtml(html);
+  return coverUrlsFromMetas(
+    [...doc.querySelectorAll('meta')].map((meta) => ({
+      key: meta.getAttribute('property') ?? meta.getAttribute('name') ?? '',
+      content: meta.getAttribute('content') ?? '',
+    })),
+    pageUrl,
+  );
+}
+
+/** A page's `meta` element: its `property` (or `name`) and its `content`. */
+export type PageMeta = { key: string; content: string };
+
+/**
+ * The preview image URLs `metas` name, in the configured order, resolved against the page's
+ * address; only http(s) URLs. `findCoverUrls` for a fetched page, and quick save for the tab.
+ */
+export function coverUrlsFromMetas(metas: readonly PageMeta[], pageUrl: string): string[] {
   const urls: string[] = [];
   const add = (value: string | null) => {
     if (!value?.trim()) return;
@@ -77,11 +99,9 @@ export function findCoverUrls(html: string, pageUrl: string): string[] {
       // Not a URL; the next candidate is tried.
     }
   };
-  const metas = [...doc.querySelectorAll('meta')];
   for (const name of COVER_LIMITS.metaNames) {
     for (const meta of metas) {
-      const key = (meta.getAttribute('property') ?? meta.getAttribute('name') ?? '').toLowerCase();
-      if (key === name) add(meta.getAttribute('content'));
+      if (meta.key.toLowerCase() === name) add(meta.content);
     }
   }
   return urls;
@@ -94,7 +114,10 @@ type Download = { bytes: Uint8Array; type: string } | 'unusable' | null;
  * Downloads one image under the byte cap: `unusable` when it is not a kept image type or too
  * large, null when the request failed or the site answered with an error.
  */
-async function downloadImage(imageUrl: string, options: CoverScanOptions): Promise<Download> {
+async function downloadImage(
+  imageUrl: string,
+  options: Pick<CoverScanOptions, 'maxImageBytes'>,
+): Promise<Download> {
   return requestWithTimeout(
     imageUrl,
     // The bookmarked address is not sent to the image's site, and a redirect is never followed:
@@ -122,11 +145,11 @@ function checkCoverSize({ width, height }: ImageSize): 'small' | 'unusable' | un
   return width < COVER_LIMITS.minWidthPx ? 'small' : undefined;
 }
 
-type ShrunkImage = { data: ArrayBuffer; type: string; width: number; height: number };
+export type ShrunkImage = { data: ArrayBuffer; type: string; width: number; height: number };
 
 /**
- * Decodes an image and draws it again at most `widthPx` wide, so the stored copy is a plain
- * picture the extension made. The size the file's header states is checked before it is decoded,
+ * Decodes an image and draws it again at most `widthPx` wide, at `quality`, so the stored copy is
+ * a plain picture the extension made. The size the file's header states is checked before it is decoded,
  * since a small file can decode to a picture of gigabytes, and the decoded picture is checked
  * again: `small` for a picture too small to be a cover, `unusable` for one too large or a
  * header that cannot be read. Throws when the browser cannot decode it.
@@ -134,7 +157,7 @@ type ShrunkImage = { data: ArrayBuffer; type: string; width: number; height: num
 async function shrinkImage(
   bytes: Uint8Array,
   type: string,
-  widthPx: number,
+  { widthPx, quality }: CoverImageOptions,
 ): Promise<ShrunkImage | 'small' | 'unusable'> {
   const declared = readImageSize(bytes, type);
   if (!declared) return 'unusable';
@@ -152,12 +175,27 @@ async function shrinkImage(
     canvas.getContext('2d')?.drawImage(bitmap, 0, 0, outWidth, outHeight);
     const blob = await canvas.convertToBlob({
       type: COVER_LIMITS.outputType,
-      quality: COVER_LIMITS.outputQuality,
+      quality,
     });
     return { data: await blob.arrayBuffer(), type: blob.type, width: outWidth, height: outHeight };
   } finally {
     bitmap.close();
   }
+}
+
+/**
+ * Downloads the image at `imageUrl` and shrinks it into a cover: `unusable` for a file that is no
+ * kept image (or cannot be decoded), `small` for a picture too small to be a cover, null when the
+ * request failed or was redirected. The caller checks the site may be asked first.
+ */
+export async function takeImage(
+  imageUrl: string,
+  options: CoverImageOptions & Pick<CoverScanOptions, 'maxImageBytes'>,
+): Promise<ShrunkImage | 'small' | 'unusable' | null> {
+  const download = await downloadImage(imageUrl, options).catch(() => null);
+  if (!download || download === 'unusable') return download;
+  // A file the browser cannot decode is no cover, whatever its first bytes say.
+  return shrinkImage(download.bytes, download.type, options).catch((): 'unusable' => 'unusable');
 }
 
 async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promise<void> {
@@ -186,20 +224,10 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
       item.imageSite ??= getUrlSite(imageUrl) ?? undefined;
       continue;
     }
-    // A redirect or a failed request leaves this image out; the next one named is tried.
-    const download = await downloadImage(imageUrl, options).catch(() => null);
+    const image = await takeImage(imageUrl, options);
     // Unusable only while nothing else is known about the page's images.
-    const markUnusable = () => {
-      if (item.status === 'none') item.status = 'unusable';
-    };
-    if (download === 'unusable') markUnusable();
-    if (!download || download === 'unusable') continue;
-    // A file the browser cannot decode is no cover, whatever its first bytes say.
-    const image = await shrinkImage(download.bytes, download.type, options.widthPx).catch(
-      (): 'unusable' => 'unusable',
-    );
-    if (image === 'unusable') markUnusable();
-    if (typeof image === 'string') continue;
+    if (image === 'unusable' && item.status === 'none') item.status = 'unusable';
+    if (image === null || typeof image === 'string') continue;
     item.status = 'found';
     item.imageSite = undefined;
     item.cover = { bookmarkId: item.id, url: item.url, source: 'page', ...image };
@@ -220,6 +248,8 @@ export async function scanCovers(
   only?: ReadonlySet<string>,
 ): Promise<CoverScanResult> {
   const stored = await getCoverInfos();
+  // Screenshot only: no page is read, and the review says page images are not used.
+  const pageImages = acceptsCoverKind(options.preference, 'page');
   const items: CoverScanItem[] = [];
   const toFetch: CoverScanItem[] = [];
   for (const { node, pathLabel } of flattenBookmarks(nodes)) {
@@ -240,7 +270,7 @@ export async function scanCovers(
       !replacesCover(options.preference, 'page', current.source)
     ) {
       item.status = 'current';
-    } else if (isReadablePageUrl(url, options.skipPrivateHosts)) toFetch.push(item);
+    } else if (pageImages && isReadablePageUrl(url, options.skipPrivateHosts)) toFetch.push(item);
     items.push(item);
   }
   await mapWithConcurrency(toFetch, COVER_LIMITS.concurrency, async (item) => {
@@ -252,7 +282,7 @@ export async function scanCovers(
       item.preview = undefined;
     }
   });
-  return { items };
+  return { items, ...(pageImages ? {} : { pageImagesOff: true as const }) };
 }
 
 /**
@@ -288,9 +318,9 @@ function dataUrlBytes(dataUrl: string): Uint8Array {
  */
 export async function shrinkTabPicture(
   pngDataUrl: string,
-  widthPx: number,
+  options: CoverImageOptions,
 ): Promise<ShrunkImage | null> {
-  const image = await shrinkImage(dataUrlBytes(pngDataUrl), MIME.png, widthPx).catch(
+  const image = await shrinkImage(dataUrlBytes(pngDataUrl), MIME.png, options).catch(
     (): 'unusable' => 'unusable',
   );
   return typeof image === 'string' ? null : image;
@@ -305,13 +335,13 @@ export async function shrinkTabPicture(
  */
 export async function captureTabCover(
   url: string,
-  widthPx: number,
+  options: CoverImageOptions,
 ): Promise<{ cover: TabCover } | { error: TabCoverError }> {
   const shot = await withActiveTabAt(url, (tab) =>
     browser.tabs.captureVisibleTab(tab.windowId, { format: 'png' }),
   );
   if ('error' in shot) return shot;
-  const image = await shrinkTabPicture(shot.value, widthPx);
+  const image = await shrinkTabPicture(shot.value, options);
   if (!image) return { error: 'unreadable' };
   const bookmarks = (await findBookmarksByUrl(url)).filter((node) => node.url === url);
   if (bookmarks.length === 0) return { error: 'changed' };

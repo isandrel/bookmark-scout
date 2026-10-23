@@ -1352,6 +1352,11 @@ export function CoverResultsView({
   if (!items.length) return <ToolEmptyState message={t('tools_coversNothing')} />;
   return (
     <div className="space-y-4">
+      {result?.pageImagesOff ? (
+        <p data-testid="covers-page-images-off" className="text-sm text-muted-foreground">
+          {t('tools_coversPageImagesOff')}
+        </p>
+      ) : null}
       <ReviewList
         items={items}
         idOf={(item) => item.id}

@@ -247,6 +247,7 @@ describe('a cover shown on a card (Visual Cards V27)', () => {
 const PNG = pngHeader(1200, 630);
 const OPTIONS = {
   widthPx: 320,
+  quality: 0.8,
   maxImageBytes: 1000,
   skipPrivateHosts: true,
   maxCacheBytes: 1_000_000,
@@ -415,6 +416,36 @@ describe('Fetch Covers runs', () => {
     expect(await statusWith('page_first')).toBe('found');
     expect(await statusWith('page_only')).toBe('found');
     expect(await statusWith('screenshot_first')).toBe('current');
+  });
+
+  it('reads no page with Screenshot only, and the result says page images are off', async () => {
+    const url = 'https://news.example/story';
+    const result = await scanCovers([node('shot', url)], {
+      ...OPTIONS,
+      preference: 'screenshot_only',
+    });
+    expect(result.pageImagesOff).toBe(true);
+    expect(result.items.map((item) => item.status)).toEqual(['skipped']);
+    expect(fetch).not.toHaveBeenCalled();
+    expect((await scanCovers([node('shot', url)], OPTIONS)).pageImagesOff).toBeUndefined();
+  });
+
+  it('writes each cover at the Cover Image Quality', async () => {
+    const qualities: number[] = [];
+    vi.stubGlobal(
+      'OffscreenCanvas',
+      class {
+        getContext() {
+          return { drawImage: () => undefined };
+        }
+        async convertToBlob(options: { type: string; quality: number }) {
+          qualities.push(options.quality);
+          return new Blob([new Uint8Array(42)], { type: options.type });
+        }
+      },
+    );
+    await scanCovers([node('a', 'https://news.example/a')], { ...OPTIONS, quality: 0.55 });
+    expect(qualities).toEqual([0.55]);
   });
 
   it('never follows a redirect for an image, and tries the next one the page names', async () => {
@@ -617,6 +648,7 @@ describe('Fetch Covers runs', () => {
 describe('Use this view as the cover', () => {
   const URL_SAVED = 'https://news.example.com/story';
   const PNG_DATA_URL = `data:image/png;base64,${btoa(String.fromCharCode(...PNG))}`;
+  const IMAGE = { widthPx: 320, quality: 0.8 };
   type Tab = Browser.tabs.Tab;
   const tab = (overrides: Partial<Tab> = {}) =>
     ({ id: 7, windowId: 1, url: URL_SAVED, incognito: false, ...overrides }) as Tab;
@@ -658,7 +690,7 @@ describe('Use this view as the cover', () => {
     const capture = vi
       .spyOn(fakeBrowser.tabs, 'captureVisibleTab')
       .mockResolvedValue(PNG_DATA_URL as never);
-    const result = await captureTabCover(URL_SAVED, 320);
+    const result = await captureTabCover(URL_SAVED, IMAGE);
     expect(capture).toHaveBeenCalledWith(1, { format: 'png' });
     if (!('cover' in result)) throw new Error(result.error);
     expect(
@@ -678,9 +710,9 @@ describe('Use this view as the cover', () => {
   it('takes no picture of another page, or of a private window', async () => {
     const capture = vi.spyOn(fakeBrowser.tabs, 'captureVisibleTab');
     vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab({ url: 'https://other.example/' })]);
-    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'changed' });
+    expect(await captureTabCover(URL_SAVED, IMAGE)).toEqual({ error: 'changed' });
     vi.spyOn(fakeBrowser.tabs, 'query').mockResolvedValue([tab({ incognito: true })]);
-    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'private' });
+    expect(await captureTabCover(URL_SAVED, IMAGE)).toEqual({ error: 'private' });
     expect(capture).not.toHaveBeenCalled();
   });
 
@@ -690,9 +722,9 @@ describe('Use this view as the cover', () => {
       .mockResolvedValueOnce([tab()])
       .mockResolvedValueOnce([tab({ url: 'https://other.example/' })]);
     vi.spyOn(fakeBrowser.tabs, 'captureVisibleTab').mockResolvedValue(PNG_DATA_URL as never);
-    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'changed' });
+    expect(await captureTabCover(URL_SAVED, IMAGE)).toEqual({ error: 'changed' });
     query.mockResolvedValue([tab()]);
     vi.spyOn(fakeBrowser.tabs, 'captureVisibleTab').mockRejectedValue(new Error('no access'));
-    expect(await captureTabCover(URL_SAVED, 320)).toEqual({ error: 'denied' });
+    expect(await captureTabCover(URL_SAVED, IMAGE)).toEqual({ error: 'denied' });
   });
 });

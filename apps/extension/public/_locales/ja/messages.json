@@ -7797,6 +7797,46 @@
         "message": "クイック保存の通知が閉じるまでの時間。ポインタを合わせている間は開いたままです",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "クイック保存でカバー画像も保存",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "クイック保存のあと、ブックマークのカバー画像も保存します。「クイック保存のカバー画像のソース」に従い、ページ自身のプレビュー画像かタブの画像を使います。カバー画像の取得が有効なときだけ動作し、カバー画像はこのデバイスにだけ保存されます。",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "画像はショートカットを押したときに確認なしで撮影され、アカウントのページやメッセージなど、ページに表示されていたものがそのまま写ります。プライベートウィンドウや、「撮影しないサイト」「読み込まないサイト」のサイトでは撮影せず、どこにも送信しません。ページ自身の画像は、そのページのサイトか、アクセスを許可したサイトからだけダウンロードします。通知の「カバー画像を削除」はカバー画像だけを削除してブックマークを残し、「元に戻す」は両方を削除します。",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "クイック保存のカバー画像のソース",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "クイック保存で残すカバー画像。「カバー画像のソース」と同じにするか、クイック保存専用の設定にします",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "「カバー画像のソース」と同じ",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "ブックマークにカバー画像があるとき",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "ブックマークにすでにあるカバー画像を、クイック保存で残すか置き換えるかを選びます。「この画面をカバー画像にする」で選んだカバー画像は置き換えません",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "残す",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "置き換える",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "1 回の回答の最大ステップ数",
         "description": "Setting label: askAiMaxSteps"
@@ -8499,6 +8539,14 @@
         "message": "各カバー画像として保存するコピーの幅。これより大きい画像は縮小されます",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "カバー画像の画質",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "各カバー画像として保存するコピーの画質。低いほどファイルが小さくなります。これから保存するカバー画像に適用されます",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "画像の最大サイズ",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8520,7 +8568,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "ページ自身の画像とタブのスクリーンショットのどちらも使えるとき、ブックマークに残すカバー画像を選びます。閲覧中に撮ったスクリーンショットは「スクリーンショットを優先」のときだけページの画像を置き換え、「ページの画像のみ」ではスクリーンショットを撮りません。「この画面をカバー画像にする」で選んだカバー画像は自動で置き換えられません。",
+        "message": "ページ自身の画像とタブのスクリーンショットのどちらも使えるとき、ブックマークに残すカバー画像を選びます。閲覧中に撮ったスクリーンショットは「スクリーンショットを優先」のときだけページの画像を置き換え、「ページの画像のみ」ではスクリーンショットを撮りません。「この画面をカバー画像にする」で選んだカバー画像は自動で置き換えられません。「スクリーンショットのみ」ではページの画像を使いません。",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8534,6 +8582,10 @@
     "settings_coversSourcePageOnly": {
         "message": "ページの画像のみ",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "スクリーンショットのみ",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "閲覧中にカバー画像を撮影",
@@ -8588,7 +8640,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "これらのサイトとそのサブドメインのページは、閲覧中に撮影しません。example.com のようにサイトを入力するか、アドレスを貼り付けてください。「読み込まないサイト」にあるサイトも撮影しません。",
+        "message": "これらのサイトとそのサブドメインのページは、閲覧中に撮影しません。example.com のようにサイトを入力するか、アドレスを貼り付けてください。「読み込まないサイト」にあるサイトも撮影しません。クイック保存でもカバー画像を保存しません。",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8630,6 +8682,10 @@
     "tools_coversKeptReason": {
         "message": "このカバー画像は「この画面をカバー画像にする」で選んだため、そのまま残します。別の画像を取得するには、先に削除してください。",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "「カバー画像のソース」が「スクリーンショットのみ」のため、ページの画像は使わず、ページも読み込んでいません。取得するには、設定で別のカバー画像のソースを選んでください。",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "スキップ ($1)",
@@ -9256,6 +9312,16 @@
     "covers_sourceBrowse": {
         "message": "閲覧中に撮影（$date$ に保存）",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "クイック保存で撮影（$date$ に保存）",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",

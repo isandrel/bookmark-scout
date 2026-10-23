@@ -7817,6 +7817,46 @@
         "message": "Wie lange die Schnellspeichern-Benachrichtigung bleibt; zeigt der Zeiger darauf, bleibt sie offen",
         "description": "Setting description: quickSaveNotification"
     },
+    "settings_quickSaveCover": {
+        "message": "Beim Schnellspeichern ein Titelbild speichern",
+        "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
+    },
+    "settings_quickSaveCoverDesc": {
+        "message": "Nach dem Schnellspeichern auch ein Titelbild für das Lesezeichen behalten: das eigene Vorschaubild der Seite oder ein Bild des Tabs, wie „Titelbildquelle beim Schnellspeichern“ es bestimmt. Wirkt nur, solange „Titelbilder laden“ aktiviert ist; das Titelbild bleibt auf diesem Gerät.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+    },
+    "settings_quickSaveCoverHelp": {
+        "message": "Das Bild wird beim Drücken des Tastenkürzels aufgenommen, ohne Prüfung, und zeigt alles, was die Seite zeigt, etwa eine Kontoseite oder Nachrichten. Es wird nie in privaten Fenstern aufgenommen und nie von Websites unter „Diese Websites nie aufnehmen“ oder „Diese Websites nie lesen“, und es wird nirgendwohin gesendet. Das eigene Bild der Seite wird nur von der Website der Seite oder einer Website geladen, für die Sie Zugriff erteilt haben. In der Benachrichtigung löscht „Titelbild entfernen“ das Titelbild und behält das Lesezeichen; „Rückgängig“ entfernt beides.",
+        "description": "Settings: toggletip of Save a Cover With Quick Save: the picture is taken without a review and can show private things, where it is never taken, that it is never sent, where the page image is downloaded from, and how to remove the cover"
+    },
+    "settings_quickSaveCoverSource": {
+        "message": "Titelbildquelle beim Schnellspeichern",
+        "description": "Setting label: select of which kind of cover quick save keeps; it can follow Cover Source or pick its own choice"
+    },
+    "settings_quickSaveCoverSourceDesc": {
+        "message": "Welches Titelbild das Schnellspeichern behält: dieselbe Wahl wie „Titelbildquelle“ oder eine nur für das Schnellspeichern",
+        "description": "Setting description for settings_quickSaveCoverSource"
+    },
+    "settings_quickSaveCoverSourceSame": {
+        "message": "Wie Titelbildquelle",
+        "description": "Quick Save Cover Source option: follow the Cover Source setting"
+    },
+    "settings_quickSaveCoverExisting": {
+        "message": "Wenn das Lesezeichen schon ein Titelbild hat",
+        "description": "Setting label: select of what quick save does when the bookmark already has a cover"
+    },
+    "settings_quickSaveCoverExistingDesc": {
+        "message": "Ob das Schnellspeichern ein vorhandenes Titelbild des Lesezeichens behält oder ersetzt. Ein mit „Diese Ansicht als Titelbild verwenden“ gewähltes Titelbild wird nie ersetzt",
+        "description": "Setting description for settings_quickSaveCoverExisting"
+    },
+    "settings_quickSaveCoverExistingKeep": {
+        "message": "Behalten",
+        "description": "When the Bookmark Already Has a Cover option: keep the cover it has"
+    },
+    "settings_quickSaveCoverExistingReplace": {
+        "message": "Ersetzen",
+        "description": "When the Bookmark Already Has a Cover option: replace the cover with the new one"
+    },
     "settings_askAiMaxSteps": {
         "message": "Höchstens Schritte pro Antwort",
         "description": "Setting label: askAiMaxSteps"
@@ -8535,6 +8575,14 @@
         "message": "Breite der Kopie jedes Titelbilds; größere Bilder werden darauf verkleinert",
         "description": "Settings: description of the cover width"
     },
+    "settings_coversQuality": {
+        "message": "Bildqualität der Titelbilder",
+        "description": "Settings: quality of the stored copy of each cover, shown as a percentage"
+    },
+    "settings_coversQualityDesc": {
+        "message": "Qualität der gespeicherten Kopie jedes Titelbilds; niedriger ergibt kleinere Dateien. Gilt für Titelbilder, die ab jetzt gespeichert werden",
+        "description": "Settings: description of Cover Image Quality"
+    },
     "settings_coversMaxImageKb": {
         "message": "Maximale Bildgröße",
         "description": "Settings: largest image file Fetch Covers downloads"
@@ -8556,7 +8604,7 @@
         "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
     },
     "settings_coversSourcePreferenceDesc": {
-        "message": "Welches Titelbild ein Lesezeichen behält, wenn sowohl das eigene Bild der Seite als auch ein Screenshot des Tabs möglich sind. Ein beim Surfen aufgenommener Screenshot ersetzt das Bild der Seite nur mit „Screenshot zuerst“, und „Nur Seitenbild“ nimmt keine Screenshots auf. Ein mit „Diese Ansicht als Titelbild verwenden“ gewähltes Titelbild wird nie automatisch ersetzt.",
+        "message": "Welches Titelbild ein Lesezeichen behält, wenn sowohl das eigene Bild der Seite als auch ein Screenshot des Tabs möglich sind. Ein beim Surfen aufgenommener Screenshot ersetzt das Bild der Seite nur mit „Screenshot zuerst“, und „Nur Seitenbild“ nimmt keine Screenshots auf. Ein mit „Diese Ansicht als Titelbild verwenden“ gewähltes Titelbild wird nie automatisch ersetzt. „Nur Screenshot“ verwendet nie das Bild der Seite.",
         "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
     },
     "settings_coversSourcePageFirst": {
@@ -8570,6 +8618,10 @@
     "settings_coversSourcePageOnly": {
         "message": "Nur Seitenbild",
         "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversSourceScreenshotOnly": {
+        "message": "Nur Screenshot",
+        "description": "Settings: Cover Source choice that keeps only screenshots of the tab and never uses the page's own image"
     },
     "settings_coversBrowseCapture": {
         "message": "Titelbilder beim Surfen aufnehmen",
@@ -8624,7 +8676,7 @@
         "description": "Settings: list of sites whose pages are never pictured while browsing"
     },
     "settings_coversNeverCaptureSitesDesc": {
-        "message": "Seiten dieser Websites und ihrer Subdomains werden beim Surfen nie aufgenommen. Geben Sie eine Website wie example.com ein oder fügen Sie eine Adresse ein. Websites unter „Diese Websites nie lesen“ werden ebenfalls nie aufgenommen.",
+        "message": "Seiten dieser Websites und ihrer Subdomains werden beim Surfen nie aufgenommen. Geben Sie eine Website wie example.com ein oder fügen Sie eine Adresse ein. Websites unter „Diese Websites nie lesen“ werden ebenfalls nie aufgenommen. Auch das Schnellspeichern behält für sie kein Titelbild.",
         "description": "Settings: what the Never Capture These Sites list does and how to add a site"
     },
     "tools_coversDialogDesc": {
@@ -8666,6 +8718,10 @@
     "tools_coversKeptReason": {
         "message": "Sie haben dieses Titelbild mit „Diese Ansicht als Titelbild verwenden“ gewählt, daher bleibt es erhalten. Entfernen Sie es zuerst, um ein anderes zu laden.",
         "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
+    "tools_coversPageImagesOff": {
+        "message": "„Titelbildquelle“ ist „Nur Screenshot“, daher werden keine Seitenbilder verwendet und keine Seite wurde gelesen. Wählen Sie in den Einstellungen eine andere Titelbildquelle, um sie zu laden.",
+        "description": "Fetch Covers review: note shown when Cover Source is Screenshot only, so no page was read and no page image is used"
     },
     "tools_coversCategory_skipped": {
         "message": "Übersprungen ($1)",
@@ -9292,6 +9348,16 @@
     "covers_sourceBrowse": {
         "message": "Beim Surfen aufgenommen, gespeichert am $date$",
         "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceQuickSave": {
+        "message": "Beim Schnellspeichern aufgenommen, gespeichert am $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab taken by Save a Cover With Quick Save, and the day it was saved",
         "placeholders": {
             "date": {
                 "content": "$1",
