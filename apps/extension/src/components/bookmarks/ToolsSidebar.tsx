@@ -331,7 +331,8 @@ export const ToolsSidebar = memo(function ToolsSidebar({
                   aria-labelledby={tabsLabelId}
                   value={tab}
                   options={tabs.map((entry) => ({ value: entry.id, label: entry.label }))}
-                  className="h-auto w-full flex-wrap"
+                  wrap
+                  className="w-full"
                   onValueChange={(value) => setPickedTab(value as ToolSidebarTab)}
                 />
               </div>

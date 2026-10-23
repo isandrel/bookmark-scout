@@ -57,7 +57,8 @@ export function CategoryTabs<Item, Category extends string>({
             .filter((key) => counts.has(key))
             .map((key) => ({ value: key, label: categoryLabel(key, counts.get(key) ?? 0) })),
         ]}
-        className="h-auto flex-wrap self-start"
+        wrap
+        className="self-start"
         onValueChange={(next) => onValueChange(next as CategoryFilter<Category>)}
       />
     </>
