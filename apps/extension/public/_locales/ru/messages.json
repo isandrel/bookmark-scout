@@ -10469,6 +10469,10 @@
         "message": "Не удаётся разобрать этот запрос. Проверьте операторы и даты.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "Умные правила не могут искать в тексте страниц. Уберите content: и has:content из запроса.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "Добавьте тег или выберите папку.",
         "description": "Rule editor error: the rule does nothing"

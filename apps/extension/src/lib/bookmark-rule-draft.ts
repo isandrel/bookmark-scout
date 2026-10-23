@@ -27,8 +27,11 @@ export const EMPTY_RULE_DRAFT: RuleDraft = {
   enabled: true,
 };
 
-/** Why a draft is not a rule, in the order the editor reports them. */
-export type RuleDraftError = 'name' | 'query' | 'action' | 'invalid';
+/**
+ * Why a draft is not a rule, in the order the editor reports them: `pageText` for a search that
+ * looks in page text, which rules cannot (`isRunnableRuleQuery`).
+ */
+export type RuleDraftError = 'name' | 'query' | 'pageText' | 'action' | 'invalid';
 
 export function ruleDraftOf(rule: BookmarkRule): RuleDraft {
   return {
@@ -67,10 +70,9 @@ export function ruleDraftOfTemplate(
   };
 }
 
-/** Whether a rule's search reads without problems and asks for something. */
-export function isRuleQueryReadable(text: string): boolean {
-  const { query, diagnostics } = parseSearchQuery(text);
-  return query.terms.length > 0 && diagnostics.length === 0;
+/** Whether a rule's search looks in page text (`content:`, `has:content`), which rules cannot. */
+export function ruleQueryUsesPageText(text: string): boolean {
+  return searchesPageText(parseSearchQuery(text).query);
 }
 
 /** The folder path a rule names, as the tree shows it now. */
@@ -114,7 +116,7 @@ const BARE_ADDRESS = /^[^\s/:]+\.[^\s/:]+(\/\S*)?$/;
  */
 export function ruleMatchesSample(query: string, sample: string): boolean | undefined {
   const text = sample.trim();
-  if (!text || !isRuleQueryReadable(query)) return undefined;
+  if (!text || !isRunnableRuleQuery(query)) return undefined;
   const address = SCHEME.test(text) ? text : BARE_ADDRESS.test(text) ? `https://${text}` : '';
   const isAddress = address !== '' && URL.canParse(address);
   // Inside one folder below a root, as a bookmark is: the root's own folders are not documents.
@@ -168,7 +170,9 @@ export function ruleFromDraft(
   });
   if (parsed.success) return { rule: parsed.data };
   if (!draft.name.trim()) return { error: 'name' };
-  if (!isRuleQueryReadable(draft.query)) return { error: 'query' };
+  if (!isRunnableRuleQuery(draft.query)) {
+    return { error: ruleQueryUsesPageText(draft.query) ? 'pageText' : 'query' };
+  }
   if (tags.length === 0 && !draft.folderId) return { error: 'action' };
   return { error: 'invalid' };
 }

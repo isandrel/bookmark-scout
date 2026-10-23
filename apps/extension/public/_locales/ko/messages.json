@@ -9541,6 +9541,10 @@
         "message": "이 검색을 읽을 수 없습니다. 연산자와 날짜를 확인하세요.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "스마트 규칙은 페이지 텍스트를 검색할 수 없습니다. 검색에서 content:와 has:content를 지우세요.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "태그를 추가하거나 폴더를 선택하세요.",
         "description": "Rule editor error: the rule does nothing"

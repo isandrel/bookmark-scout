@@ -9605,6 +9605,10 @@
         "message": "No se puede leer esta búsqueda. Revisa sus operadores y fechas.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "Las reglas inteligentes no pueden buscar en el texto de las páginas. Quita content: y has:content de la búsqueda.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "Añade una etiqueta o elige una carpeta.",
         "description": "Rule editor error: the rule does nothing"

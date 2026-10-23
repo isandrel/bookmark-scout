@@ -9605,6 +9605,10 @@
         "message": "Questa ricerca non può essere interpretata. Controlla gli operatori e le date.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "Le regole intelligenti non possono cercare nel testo delle pagine. Rimuovi content: e has:content dalla ricerca.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "Aggiungi un tag o scegli una cartella.",
         "description": "Rule editor error: the rule does nothing"

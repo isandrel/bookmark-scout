@@ -5,7 +5,6 @@ import {
   describeRule,
   EMPTY_RULE_DRAFT,
   hasRuleAction,
-  isRuleQueryReadable,
   ruleDraftOf,
   ruleDraftOfTemplate,
   ruleFolderPath,
@@ -15,6 +14,8 @@ import {
 import {
   BOOKMARK_RULE_TEMPLATES,
   bookmarkRuleSchema,
+  isRunnableRuleQuery,
+  parseBookmarkRules,
   ruleAutoMoveBlocks,
 } from '@/lib/bookmark-rules';
 import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
@@ -122,9 +123,30 @@ describe('smart rule drafts', () => {
   });
 
   it('reads a search only when it asks for something without problems', () => {
-    expect(isRuleQueryReadable('domain:github.com')).toBe(true);
-    expect(isRuleQueryReadable('')).toBe(false);
-    expect(isRuleQueryReadable('frobnicate:x')).toBe(false);
+    expect(isRunnableRuleQuery('domain:github.com')).toBe(true);
+    expect(isRunnableRuleQuery('')).toBe(false);
+    expect(isRunnableRuleQuery('frobnicate:x')).toBe(false);
+  });
+
+  it('refuses a search that looks in page text, which rules never see (0.3.5 review)', () => {
+    for (const query of [
+      'content:recipe',
+      'has:content',
+      '-has:content',
+      'tag:x (content:a OR y)',
+    ]) {
+      expect(isRunnableRuleQuery(query), query).toBe(false);
+      expect(ruleFromDraft({ ...draft, query }, 'x', tree), query).toEqual({ error: 'pageText' });
+      expect(ruleMatchesSample(query, 'https://github.com/'), query).toBeUndefined();
+    }
+    // A stored rule with such a search never runs: `-has:content` would match every bookmark.
+    const stored = { id: 'r', name: 'Index', enabled: true, query: '-has:content' };
+    expect(
+      parseBookmarkRules([{ ...stored, syntaxVersion: SEARCH_SYNTAX_VERSION, addTags: ['x'] }]),
+    ).toEqual([]);
+    // Words that only look alike are still text.
+    expect(isRunnableRuleQuery('content')).toBe(true);
+    expect(isRunnableRuleQuery('has:summary')).toBe(true);
   });
 
   it('counts the bookmarks a search finds now', () => {
@@ -140,7 +162,7 @@ describe('smart rule drafts', () => {
     if (!('rule' in result)) throw new Error('not saved');
     expect(result.rule.query).toBe(query);
     expect(describeRule(result.rule)).toBe(`${query}: add tags dev and code`);
-    expect(isRuleQueryReadable('(domain:github.com OR tag:x')).toBe(false);
+    expect(isRunnableRuleQuery('(domain:github.com OR tag:x')).toBe(false);
     expect(ruleFromDraft({ ...draft, query: 'a OR' }, 'x', tree)).toEqual({ error: 'query' });
   });
 });

@@ -36,6 +36,7 @@ const templateName = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) =>
 const RULE_DRAFT_ERROR_KEYS = {
   name: 'rules_errorName',
   query: 'rules_errorQuery',
+  pageText: 'rules_errorPageText',
   action: 'rules_errorAction',
   invalid: 'rules_errorInvalid',
 } as const satisfies Record<RuleDraftError, MessageKey>;
@@ -69,13 +70,15 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
       keyOf: tagKey,
     }).join(', '),
   };
-  const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
+  const queryReadable = useMemo(() => isRunnableRuleQuery(value.query), [value.query]);
   // A rule with nothing to do cannot be turned on: a template that moves waits for its folder.
   const actionable = hasRuleAction(typed);
-  // What is wrong with the search, as the search boxes say it: a rule never runs on part of one.
+  // What is wrong with the search, as the search boxes say it: a rule never runs on part of one,
+  // nor on page text, which rules do not see.
   const queryProblem = useMemo(() => {
     const [diagnostic] = parseSearchQuery(value.query).diagnostics;
-    return diagnostic ? describeSearchDiagnostic(diagnostic) : undefined;
+    if (diagnostic) return describeSearchDiagnostic(diagnostic);
+    return ruleQueryUsesPageText(value.query) ? t('rules_errorPageText') : undefined;
   }, [value.query]);
   const sampleMatches = useMemo(
     () => ruleMatchesSample(value.query, sample),

@@ -133,6 +133,15 @@ test('a rule with OR and an excluded term is refused while unbalanced, then revi
     editor.getByText('This search cannot be read. Check its operators and dates.'),
   ).toBeVisible();
   expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toBeFalsy();
+  // Rules never see page text, so a search for it is refused rather than matching everything.
+  const pageTextError =
+    "Smart rules can't search page text. Remove content: and has:content from the search.";
+  await query.fill('domain:github.com -has:content');
+  await expect(editor.getByText(pageTextError)).toBeVisible();
+  await editor.getByRole('button', { name: 'Save' }).click();
+  // The search field and the save error both say it.
+  await expect(editor.getByRole('alert').filter({ hasText: pageTextError })).toHaveCount(2);
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toBeFalsy();
 
   await query.fill('(domain:github.com OR domain:gitlab.com) -title:gist');
   await expect(editor).toContainText('Matches 2 bookmarks now');

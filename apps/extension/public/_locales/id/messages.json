@@ -9173,6 +9173,10 @@
         "message": "Penelusuran ini tidak dapat dibaca. Periksa operator dan tanggalnya.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "Aturan pintar tidak dapat menelusuri teks halaman. Hapus content: dan has:content dari penelusuran.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "Tambahkan tag atau pilih folder.",
         "description": "Rule editor error: the rule does nothing"

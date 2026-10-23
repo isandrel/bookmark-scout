@@ -9541,6 +9541,10 @@
         "message": "この検索は読み取れません。演算子と日付を確認してください。",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "スマートルールではページのテキストを検索できません。検索から content: と has:content を削除してください。",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "タグを追加するか、フォルダを選んでください。",
         "description": "Rule editor error: the rule does nothing"
