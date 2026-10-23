@@ -13,6 +13,7 @@ import {
   isSearchQueryValid,
   isSlowRegex,
   limitSearchResults,
+  REGEX_SEARCH,
   type SearchOptions,
   usesTitleSearch,
 } from '@/lib/bookmark-search';
@@ -400,6 +401,59 @@ describe('slow regular expressions', () => {
     for (const pattern of ['a+b*', '(ab)+', '(a|b)*', '[(a+)]+', '\\(a+\\)+', '(a{2})+', 'docs?']) {
       expect(isSlowRegex(pattern), pattern).toBe(false);
     }
+  });
+
+  // Built from parts, as below: code scanning would otherwise report this data as slow regexes.
+  const pattern = (...parts: string[]) => parts.join('');
+
+  it('flags a repeated group whose alternatives can match the same text (U19)', () => {
+    for (const slow of [
+      pattern('(a|a', 'a)+$'),
+      pattern('(a|a', '?)+'),
+      pattern('(\\w|', '\\d)+'),
+      pattern('(x', '|)+'),
+      pattern('(?:a|a', 'b)*c'),
+      pattern('(a|a', 'a){2,}'),
+      pattern('(?<n>a|a', 'a)+'),
+      pattern('(.|', 'a)+'),
+      pattern('(a?b', '|b)+'),
+      pattern('(A|', 'a)+'),
+    ]) {
+      expect(isSlowRegex(slow), slow).toBe(true);
+    }
+    // Alternatives that never start alike, a bounded repeat, or no repeat at all are kept.
+    for (const fine of [
+      '(a|b)*',
+      '(\\d|x)+',
+      '(?:foo|bar)+',
+      '(ab|cd)+',
+      'rea(d|ct)',
+      pattern('(a|a', 'a){2}'),
+      '([|]|x)+',
+    ]) {
+      expect(isSlowRegex(fine), fine).toBe(false);
+    }
+  });
+
+  it('searches a pattern longer than the limit as plain text (U19)', () => {
+    const longest = 'a'.repeat(REGEX_SEARCH.maxPatternLength);
+    expect(isSlowRegex(longest)).toBe(false);
+    expect(getSearchRegexProblem(`${longest}b`, regex)).toBe('slow');
+    // As plain text, the long query still finds the title that contains it.
+    expect(getSearchMatchRanges(`x${longest}b`, `${longest}b`, regex)).toEqual([
+      [1, REGEX_SEARCH.maxPatternLength + 2],
+    ]);
+  });
+
+  it('never runs overlapping alternatives against an almost matching title (U19)', () => {
+    const slow = pattern('(a|a', 'a)+$');
+    expect(getSearchRegexProblem(slow, regex)).toBe('slow');
+    // Run as a regular expression, this title would take minutes; as plain text it is instant.
+    const started = performance.now();
+    expect(getSearchMatchRanges(`${'a'.repeat(40)}!`, slow, regex)).toEqual([]);
+    expect(isSearchQueryValid(slow, regex)).toBe(false);
+    // A complexity bound only, about 50x a local run, not a speed check.
+    expect(performance.now() - started).toBeLessThan(500);
   });
 
   it('searches a slow pattern as plain text and says why', () => {

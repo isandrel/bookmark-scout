@@ -1,8 +1,8 @@
 import type { AnchorHTMLAttributes, MouseEvent } from 'react';
 
-/** Whether a URL can be opened in a tab from an extension page (bookmarklets cannot). */
+/** Whether a URL can be opened in a tab from an extension page (`isOpenableBookmarkUrl`). */
 export function isOpenableUrl(url: string | undefined): url is string {
-  if (!url || isScriptUrl(url)) return false;
+  if (!isOpenableBookmarkUrl(url)) return false;
   try {
     new URL(url);
     return true;

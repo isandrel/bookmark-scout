@@ -338,3 +338,88 @@ test('theme toggle follows the system theme and AI button hides when AI is off',
   await expect(page.getByRole('button', { name: 'AI folder recommendation' })).toBeVisible();
   await expect(folderRow(page, await otherBookmarksTitle(extensionWorker))).toBeVisible();
 });
+
+test('search results are a tree whose rows tell a screen reader their level and place among the shown rows (U38)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Aria Search', [
+    { title: 'Aria Match One', url: 'https://e2e.invalid/one' },
+    { title: 'Aria Hay', url: 'https://e2e.invalid/hay' },
+    {
+      title: 'Aria Inner',
+      children: [
+        { title: 'Aria Hay Deep', url: 'https://e2e.invalid/hay-deep' },
+        { title: 'Aria Match Deep', url: 'https://e2e.invalid/deep' },
+      ],
+    },
+    { title: 'Aria Match Two', url: 'https://e2e.invalid/two' },
+  ]);
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks, or type a folder name' });
+  const tree = page.getByRole('tree', { name: 'Bookmarks' });
+  const titleOf = new Map([
+    [seeded.barId, seeded.barTitle],
+    [seeded.folderId, 'E2E Aria Search'],
+    ...Object.entries(seeded.ids).map(([title, id]) => [id, title] as const),
+  ]);
+  /** Every row the tree shows, in order, as a screen reader is told about it. */
+  const rows = async () =>
+    (
+      await tree.locator('[role="treeitem"]').evaluateAll((items) =>
+        items.map((item) => ({
+          id: item.getAttribute('data-tree-row-id') ?? '',
+          level: Number(item.getAttribute('aria-level')),
+          position: Number(item.getAttribute('aria-posinset')),
+          of: Number(item.getAttribute('aria-setsize')),
+          expanded: item.getAttribute('aria-expanded'),
+        })),
+      )
+    ).map(({ id, ...row }) => ({ name: titleOf.get(id) ?? id, ...row }));
+
+  await search.fill('Aria Match');
+  await expect(bookmarkRow(page, 'Aria Match Deep')).toBeVisible();
+  // Positions count only the rows the search keeps: the non-matching siblings are not in the set.
+  await expect.poll(rows).toEqual([
+    { name: seeded.barTitle, level: 1, position: 1, of: 1, expanded: 'true' },
+    { name: 'E2E Aria Search', level: 2, position: 1, of: 1, expanded: 'true' },
+    // Folders come first, as without a search.
+    { name: 'Aria Inner', level: 3, position: 1, of: 3, expanded: 'true' },
+    { name: 'Aria Match Deep', level: 4, position: 1, of: 1, expanded: null },
+    { name: 'Aria Match One', level: 3, position: 2, of: 3, expanded: null },
+    { name: 'Aria Match Two', level: 3, position: 3, of: 3, expanded: null },
+  ]);
+  await expect(page.getByText('Aria Hay', { exact: true })).toHaveCount(0);
+
+  // A narrower search renumbers the set.
+  await search.fill('"Aria Match T"');
+  await expect.poll(rows).toEqual([
+    { name: seeded.barTitle, level: 1, position: 1, of: 1, expanded: 'true' },
+    { name: 'E2E Aria Search', level: 2, position: 1, of: 1, expanded: 'true' },
+    { name: 'Aria Match Two', level: 3, position: 1, of: 1, expanded: null },
+  ]);
+
+  // The keys move through the same rows: Down from the box enters the tree at its first row.
+  await search.fill('Aria Match');
+  await expect(bookmarkRow(page, 'Aria Match Deep')).toBeVisible();
+  await search.press('ArrowDown');
+  const focused = () =>
+    page.evaluate(() => {
+      const item = document.activeElement;
+      return {
+        role: item?.getAttribute('role'),
+        level: item?.getAttribute('aria-level'),
+        position: item?.getAttribute('aria-posinset'),
+        of: item?.getAttribute('aria-setsize'),
+      };
+    });
+  await expect.poll(focused).toEqual({ role: 'treeitem', level: '1', position: '1', of: '1' });
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await expect.poll(focused).toEqual({ role: 'treeitem', level: '3', position: '1', of: '3' });
+  await page.keyboard.press('ArrowDown');
+  await expect.poll(focused).toEqual({ role: 'treeitem', level: '4', position: '1', of: '1' });
+  await page.keyboard.press('ArrowDown');
+  await expect.poll(focused).toEqual({ role: 'treeitem', level: '3', position: '2', of: '3' });
+});

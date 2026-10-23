@@ -3645,7 +3645,7 @@
     },
     "search_slowRegex": {
         "message": "This pattern could take too long on some titles. Searching as plain text instead.",
-        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+        "description": "Warning shown when the regex search option is on and the pattern could freeze the page: it repeats a repeating group, repeats alternatives that can match the same text, or is very long"
     },
     "search_reasonUrl": {
         "message": "in URL",

@@ -1,0 +1,7 @@
+# Regular expression search (the Advanced pattern search option). Read by
+# src/lib/bookmark-search.ts.
+
+# Longest pattern used as a regular expression, in characters. A longer one is searched as plain
+# text and the search says so: a long pattern is costly to check for slow shapes and to run
+# against every title, and a real title pattern is far shorter.
+max_pattern_length = 200

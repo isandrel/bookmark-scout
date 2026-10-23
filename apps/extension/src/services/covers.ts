@@ -5,13 +5,14 @@
  * bytes, decoded, shrunk, and re-encoded, so what is stored is a plain picture, never the file the
  * site sent. Nothing is stored until the review saves it (`cover-store.ts`).
  */
+import type { ImageSize } from '@/lib/image-size';
 import type { BookmarkTreeNode } from '@/types';
 
 /**
  * `unusable`: the page names an image, but none could be kept: a file that is not an image of a
- * kept type (by its Content-Type or its first bytes), larger than the byte cap, or one the
- * browser cannot decode. `redirected`: the page sends to another address, which is not
- * requested (`fetchHtmlPage`).
+ * kept type (by its Content-Type or its first bytes), larger than the byte cap, one whose header
+ * states more than `max_pixels` (or cannot be read), or one the browser cannot decode.
+ * `redirected`: the page sends to another address, which is not requested (`fetchHtmlPage`).
  */
 export type CoverScanStatus =
   | 'found'
@@ -105,18 +106,37 @@ async function downloadImage(imageUrl: string, options: CoverScanOptions): Promi
 }
 
 /**
+ * Whether a picture of this size can be a cover: `small` when narrower than `min_width_px` (a
+ * logo or a tracking pixel), `unusable` past `max_pixels`.
+ */
+function checkCoverSize({ width, height }: ImageSize): 'small' | 'unusable' | undefined {
+  if (width * height > COVER_LIMITS.maxPixels) return 'unusable';
+  return width < COVER_LIMITS.minWidthPx ? 'small' : undefined;
+}
+
+type ShrunkImage = { data: ArrayBuffer; type: string; width: number; height: number };
+
+/**
  * Decodes an image and draws it again at most `widthPx` wide, so the stored copy is a plain
- * picture the extension made. Undefined for images too small or too large to be covers.
+ * picture the extension made. The size the file's header states is checked before it is decoded,
+ * since a small file can decode to a picture of gigabytes, and the decoded picture is checked
+ * again: `small` for a picture too small to be a cover, `unusable` for one too large or a
+ * header that cannot be read. Throws when the browser cannot decode it.
  */
 async function shrinkImage(
   bytes: Uint8Array,
   type: string,
   widthPx: number,
-): Promise<{ data: ArrayBuffer; type: string; width: number; height: number } | undefined> {
+): Promise<ShrunkImage | 'small' | 'unusable'> {
+  const declared = readImageSize(bytes, type);
+  if (!declared) return 'unusable';
+  const declaredProblem = checkCoverSize(declared);
+  if (declaredProblem) return declaredProblem;
   const bitmap = await createImageBitmap(new Blob([bytes as BlobPart], { type }));
   try {
     const { width, height } = bitmap;
-    if (width < COVER_LIMITS.minWidthPx || width * height > COVER_LIMITS.maxPixels) return;
+    const problem = checkCoverSize(bitmap);
+    if (problem) return problem;
     const scale = Math.min(1, widthPx / width);
     const outWidth = Math.max(1, Math.round(width * scale));
     const outHeight = Math.max(1, Math.round(height * scale));
@@ -168,10 +188,10 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
     if (!download || download === 'unusable') continue;
     // A file the browser cannot decode is no cover, whatever its first bytes say.
     const image = await shrinkImage(download.bytes, download.type, options.widthPx).catch(
-      () => null,
+      (): 'unusable' => 'unusable',
     );
-    if (image === null) markUnusable();
-    if (!image) continue;
+    if (image === 'unusable') markUnusable();
+    if (typeof image === 'string') continue;
     item.status = 'found';
     item.imageSite = undefined;
     item.cover = { bookmarkId: item.id, url: item.url, ...image };
@@ -256,9 +276,9 @@ export async function captureTabCover(
   );
   if ('error' in shot) return shot;
   const image = await shrinkImage(dataUrlBytes(shot.value), MIME.png, widthPx).catch(
-    () => undefined,
+    (): 'unusable' => 'unusable',
   );
-  if (!image) return { error: 'unreadable' };
+  if (typeof image === 'string') return { error: 'unreadable' };
   const bookmarks = (await findBookmarksByUrl(url)).filter((node) => node.url === url);
   if (bookmarks.length === 0) return { error: 'changed' };
   return {

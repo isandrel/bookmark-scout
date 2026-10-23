@@ -45,9 +45,9 @@ export function isModifiableBookmark(bookmark: Bookmark): boolean {
   return !bookmark.isRootFolder && !bookmark.unmodifiable;
 }
 
-/** Whether the manager can open this item in a tab (bookmarklets cannot be opened from here). */
+/** Whether the manager can open this item in a tab (`isOpenableBookmarkUrl`). */
 export function isOpenableBookmark(bookmark: Bookmark): boolean {
-  return bookmark.type === ItemTypeEnum.Link && Boolean(bookmark.url) && !isScriptUrl(bookmark.url);
+  return bookmark.type === ItemTypeEnum.Link && isOpenableBookmarkUrl(bookmark.url);
 }
 
 /** Whether the manager can preview this item: a bookmark with an address, not a folder or a separator. */

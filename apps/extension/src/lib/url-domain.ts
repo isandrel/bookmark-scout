@@ -113,6 +113,18 @@ export function isScriptUrl(url: string | undefined): boolean {
   return SCRIPT_URL_SCHEMES.has(getScheme(normalizeForScheme(url)));
 }
 
+/**
+ * Schemes a bookmark keeps but the extension never opens in a tab, from any list, card, menu, or
+ * key: script URLs, and `data:`, which Firefox refuses to open from an extension and Chrome opens
+ * as a page of no site, where an HTML document can run script.
+ */
+const UNOPENABLE_URL_SCHEMES: ReadonlySet<string> = new Set([...SCRIPT_URL_SCHEMES, 'data']);
+
+/** Whether the extension opens this bookmark address in a tab (`UNOPENABLE_URL_SCHEMES`). */
+export function isOpenableBookmarkUrl(url: string | undefined): url is string {
+  return Boolean(url) && !UNOPENABLE_URL_SCHEMES.has(getScheme(normalizeForScheme(url ?? '')));
+}
+
 // A scheme the user typed: `https://`, or one without slashes such as `mailto:` or `data:`.
 const TYPED_SCHEME = /^[a-z][a-z\d+.-]*:\/\//i;
 const OPAQUE_SCHEMES = new Set([

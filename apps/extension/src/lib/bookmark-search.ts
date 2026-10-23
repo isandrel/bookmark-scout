@@ -1,4 +1,13 @@
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
+
+const regexConfig = readConfig(
+  'bookmarks/search-regex',
+  z.strictObject({ max_pattern_length: z.number().int().positive() }),
+);
+
+/** Limits of the regular expression search option. */
+export const REGEX_SEARCH = { maxPatternLength: regexConfig.max_pattern_length } as const;
 
 export type SearchOptions = {
   matchCase: boolean;
@@ -39,13 +48,154 @@ function unboundedQuantifierAt(source: string, index: number): boolean {
   return char === '{' && /^\{\d+,\}/.test(source.slice(index));
 }
 
+/** The index just past the `)` or `]` that closes the group or class opened at `start`. */
+function closingIndex(source: string, start: number): number {
+  let depth = 0;
+  let inClass = false;
+  for (let index = start; index < source.length; index += 1) {
+    const char = source[index];
+    if (char === '\\') index += 1;
+    else if (inClass) {
+      inClass = char !== ']';
+      if (!inClass && depth === 0) return index + 1;
+    } else if (char === '[') inClass = true;
+    else if (char === '(') depth += 1;
+    else if (char === ')') {
+      depth -= 1;
+      if (depth === 0) return index + 1;
+    }
+  }
+  return source.length;
+}
+
+/** What follows an escape's backslash: `d`, `p{L}`, `u{1F600}`, `k<name>`, or a digit run. */
+const ESCAPE_BODY =
+  /^(?:[pP]\{[^}]*\}|u\{[^}]*\}|u[\da-fA-F]{4}|x[\da-fA-F]{2}|c[a-zA-Z]|k<[^>]*>|\d+|.)/su;
+const QUANTIFIER = /^(?:[*+?]|\{\d+(?:,\d*)?\})\??/;
+const LOOKAROUND = /^\((?:\?[=!]|\?<[=!])/;
+const GROUP_PREFIX = /^\?(?::|<[^>=!]+>)/;
+
 /**
- * Whether a user pattern repeats a group that itself repeats without bound, such as `(a+)+` or
- * `(\w*)*`: on a title that almost matches, the engine tries every way to split it, which can
- * freeze the page for minutes. Such a pattern is searched as plain text instead.
+ * One item of a pattern: a single-character matcher (`char`, which can be tried on a character),
+ * a group or back-reference (`group`, which can match anything), or a zero-width assertion.
+ */
+type PatternToken = { source: string; kind: 'char' | 'group' | 'assertion'; optional: boolean };
+
+function tokenizePattern(source: string): PatternToken[] {
+  const tokens: PatternToken[] = [];
+  let index = 0;
+  while (index < source.length) {
+    const char = source[index];
+    let end: number;
+    let kind: PatternToken['kind'] = 'char';
+    if (char === '\\') {
+      const body = ESCAPE_BODY.exec(source.slice(index + 1))?.[0] ?? '';
+      end = index + 1 + body.length;
+      if (body === 'b' || body === 'B') kind = 'assertion';
+      else if (/^(?:\d|k<)/.test(body)) kind = 'group';
+    } else if (char === '[' || char === '(') {
+      end = closingIndex(source, index);
+      if (char === '(') kind = LOOKAROUND.test(source.slice(index)) ? 'assertion' : 'group';
+    } else {
+      end = index + String.fromCodePoint(source.codePointAt(index) ?? 0).length;
+      if (char === '^' || char === '$') kind = 'assertion';
+    }
+    const quantifier = QUANTIFIER.exec(source.slice(end))?.[0] ?? '';
+    tokens.push({
+      source: source.slice(index, end),
+      kind,
+      optional: /^(?:[*?]|\{0[,}])/.test(quantifier),
+    });
+    index = end + quantifier.length;
+  }
+  return tokens;
+}
+
+/** The alternatives of a group's body, split at its own `|`, not at those of nested groups. */
+function splitAlternatives(body: string): string[] {
+  const alternatives: string[] = [];
+  let start = 0;
+  for (let index = 0; index < body.length; index += 1) {
+    const char = body[index];
+    if (char === '\\') index += 1;
+    else if (char === '[' || char === '(') index = closingIndex(body, index) - 1;
+    else if (char === '|') {
+      alternatives.push(body.slice(start, index));
+      start = index + 1;
+    }
+  }
+  alternatives.push(body.slice(start));
+  return alternatives;
+}
+
+/** The items an alternative can start with, and whether it can match nothing at all. */
+function leadingTokens(alternative: string): { tokens: PatternToken[]; canBeEmpty: boolean } {
+  const tokens: PatternToken[] = [];
+  for (const token of tokenizePattern(alternative)) {
+    if (token.kind === 'assertion') continue;
+    tokens.push(token);
+    if (!token.optional) return { tokens, canBeEmpty: false };
+  }
+  return { tokens, canBeEmpty: true };
+}
+
+/**
+ * Characters to try two single-character matchers on, besides those written in the pattern:
+ * enough of each kind (letters, digits, space, punctuation, other scripts) that `\w` and `\d`
+ * share one and `\d` and `x` share none.
+ */
+const OVERLAP_PROBES = [
+  ...' !"#$%&\'()*+,-./0123456789:;<=>?@',
+  ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+  ...'\t\n éßйΩ中あア한',
+];
+
+/** Whether two leading items could match the same character (always so for groups). */
+function tokensOverlap(left: PatternToken, right: PatternToken): boolean {
+  if (left.kind === 'group' || right.kind === 'group') return true;
+  let leftRegex: RegExp;
+  let rightRegex: RegExp;
+  try {
+    leftRegex = new RegExp(`^(?:${left.source})$`, 'iu');
+    rightRegex = new RegExp(`^(?:${right.source})$`, 'iu');
+  } catch {
+    return true;
+  }
+  const probes = new Set([...OVERLAP_PROBES, ...left.source, ...right.source]);
+  return [...probes].some((char) => leftRegex.test(char) && rightRegex.test(char));
+}
+
+/**
+ * Whether a group's alternatives can match the same text, as `a|aa` (both start with `a`) and
+ * `a|a?` (the second can match nothing) do. Repeated, such a group splits a long title in
+ * exponentially many ways. Judged by each alternative's first character, so a pair that differs
+ * later (`ab|ac`) is flagged too: a false alarm only searches the pattern as plain text.
+ */
+function hasOverlappingAlternatives(body: string): boolean {
+  const alternatives = splitAlternatives(body.replace(GROUP_PREFIX, '')).map(leadingTokens);
+  if (alternatives.length < 2) return false;
+  if (alternatives.some((alternative) => alternative.canBeEmpty)) return true;
+  return alternatives.some((left, leftIndex) =>
+    alternatives
+      .slice(leftIndex + 1)
+      .some((right) =>
+        left.tokens.some((leftToken) =>
+          right.tokens.some((rightToken) => tokensOverlap(leftToken, rightToken)),
+        ),
+      ),
+  );
+}
+
+/**
+ * Whether a user pattern could take minutes on a title that almost matches, so it is searched as
+ * plain text instead: it is longer than `max_pattern_length` in
+ * `config/bookmarks/search-regex.toml`, or it repeats without bound a group that itself repeats
+ * without bound (`(a+)+`, `(\w*)*`) or whose alternatives can match the same text (`(a|aa)+`,
+ * `(a|a?)+`). The engine then tries every way to split the title, which can freeze the page.
  */
 export function isSlowRegex(source: string): boolean {
-  const groups: boolean[] = [];
+  if (source.length > REGEX_SEARCH.maxPatternLength) return true;
+  const groups: { start: number; repeatsInside: boolean }[] = [];
   let inClass = false;
   for (let index = 0; index < source.length; index += 1) {
     const char = source[index];
@@ -58,13 +208,19 @@ export function isSlowRegex(source: string): boolean {
       continue;
     }
     if (char === '[') inClass = true;
-    else if (char === '(') groups.push(false);
+    else if (char === '(') groups.push({ start: index, repeatsInside: false });
     else if (char === ')') {
-      const repeatsInside = groups.pop() ?? false;
-      if (repeatsInside && unboundedQuantifierAt(source, index + 1)) return true;
-      if (repeatsInside && groups.length > 0) groups[groups.length - 1] = true;
-    } else if (unboundedQuantifierAt(source, index) && groups.length > 0) {
-      groups[groups.length - 1] = true;
+      const group = groups.pop();
+      const repeatsInside = group?.repeatsInside ?? false;
+      if (group && unboundedQuantifierAt(source, index + 1)) {
+        if (repeatsInside) return true;
+        if (hasOverlappingAlternatives(source.slice(group.start + 1, index))) return true;
+      }
+      const parent = groups.at(-1);
+      if (repeatsInside && parent) parent.repeatsInside = true;
+    } else {
+      const parent = groups.at(-1);
+      if (parent && unboundedQuantifierAt(source, index)) parent.repeatsInside = true;
     }
   }
   return false;

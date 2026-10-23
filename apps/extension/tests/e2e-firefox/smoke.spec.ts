@@ -1359,3 +1359,160 @@ test('Fetch Covers keeps a copy Firefox drew of a page image, and the cards show
     server.closeAllConnections();
   }
 });
+
+/** The stored covers, as their info and image type, read from the covers database. */
+function storedCovers(extension: FirefoxExtension) {
+  return extension.call(
+    async () =>
+      // Opening a database that does not exist would create it empty, without its stores.
+      !(await indexedDB.databases()).some((db) => db.name === 'bookmark-scout-covers')
+        ? []
+        : new Promise<{ bookmarkId: string; width: number; height: number; type: string }[]>(
+            (resolve) => {
+              const open = indexedDB.open('bookmark-scout-covers');
+              open.onsuccess = () => {
+                const db = open.result;
+                if (!db.objectStoreNames.contains('info')) {
+                  db.close();
+                  return resolve([]);
+                }
+                const read = db.transaction(['info', 'images']);
+                const infos = read.objectStore('info').getAll();
+                const images = read.objectStore('images').getAll();
+                read.oncomplete = () => {
+                  db.close();
+                  resolve(
+                    (infos.result as { bookmarkId: string; width: number; height: number }[]).map(
+                      ({ bookmarkId, width, height }, index) => ({
+                        bookmarkId,
+                        width,
+                        height,
+                        type: (images.result[index] as { type: string } | undefined)?.type ?? '',
+                      }),
+                    ),
+                  );
+                };
+              };
+            },
+          ),
+    undefined,
+  );
+}
+
+test('Use this view as the cover: Firefox refuses a picture without activeTab, and keeps the one it drew only once saved (V30, V35)', async ({
+  extension,
+}) => {
+  const url = 'https://e2e.invalid/captured-story';
+  const folder = await seedFolder(extension, 'E2E Firefox Capture', [
+    { title: 'Captured story', url },
+  ]);
+  await setSettings(extension, { coversEnabled: true, coversWidthPx: 320 });
+  await extension.open('popup.html');
+  await extension.find('input.search-input');
+  // The popup opens as a tab here, so the current tab is stubbed to the bookmarked page as the
+  // toolbar popup would see it, and the popup reads it again as it does when its window is focused.
+  const stubTab = (picture: string | null) =>
+    extension.driver.executeAsyncScript(
+      `const [pageUrl, png, done] = arguments;
+       browser.tabs.getCurrent().then((tab) => {
+         browser.tabs.query = async () => [{
+           id: tab.id, index: 0, windowId: tab.windowId, active: true, incognito: false,
+           title: 'Captured story', url: pageUrl,
+         }];
+         if (png) browser.tabs.captureVisibleTab = async () => png;
+         window.dispatchEvent(new Event('focus'));
+         done();
+       });`,
+      url,
+      picture,
+    );
+  const capture = '[data-testid="capture-cover"]';
+
+  // Firefox's own captureVisibleTab: without the activeTab a toolbar click gives, it refuses.
+  await stubTab(null);
+  await clickCentered(extension, capture);
+  await extension.findByText(
+    '[role="status"]',
+    'The browser did not allow a picture of this tab. Open the toolbar popup on the page and try again.',
+  );
+  expect(await storedCovers(extension)).toEqual([]);
+
+  // A picture of the tab, which Firefox decodes, shrinks, and draws again.
+  await stubTab(`data:image/png;base64,${solidPng(1280, 800).toString('base64')}`);
+  await clickCentered(extension, capture);
+  let dialog = await extension.findByText('[role="dialog"]', 'Use this view as the cover?');
+  const preview = await dialog.findElement(By.css('[data-testid="capture-cover-preview"]'));
+  expect(await preview.getAttribute('src')).toMatch(/^data:image\/(webp|png);base64,/);
+  // Escape closes it from the keyboard, and nothing is kept.
+  await extension.driver.actions().sendKeys(Key.ESCAPE).perform();
+  await expect.poll(() => extension.countVisible('[role="dialog"]')).toBe(0);
+  expect(await storedCovers(extension)).toEqual([]);
+
+  await clickCentered(extension, capture);
+  dialog = await extension.findByText('[role="dialog"]', 'Use this view as the cover?');
+  await dialog.findElement(By.xpath('.//button[normalize-space()="Save cover"]')).click();
+  await expect
+    .poll(() => storedCovers(extension))
+    .toEqual([
+      {
+        bookmarkId: folder.ids['Captured story'],
+        width: 320,
+        height: 200,
+        type: expect.stringMatching(/^image\/(webp|png)$/),
+      },
+    ]);
+});
+
+test('the bookmark preview opens from a card with its key, steps with the arrows, and Escape gives focus back (V35)', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Preview', [
+    { title: 'Card One', url: 'https://one.e2e.invalid/a' },
+    { title: 'Card Two', url: 'https://two.e2e.invalid/b' },
+    { title: 'Card Three', url: 'https://three.e2e.invalid/c' },
+  ]);
+  const { driver } = extension;
+  await extension.open(`bookmarks.html?id=${folder.folderId}`);
+  await (await extension.find('button[title="Cards"]')).click();
+  const card = (title: string) => `[data-slot="bookmark-card"][data-row-id="${folder.ids[title]}"]`;
+  const focusedRow = () =>
+    driver.executeScript<string | null>(
+      'return document.activeElement?.getAttribute("data-row-id") ?? null',
+    );
+  /** The open preview's accessible name and whether keyboard focus is inside it. */
+  const previewState = () =>
+    driver.executeScript<{ role: string | null; name: string; focusInside: boolean } | null>(
+      `const dialog = [...document.querySelectorAll('[data-testid="bookmark-preview"]')]
+         .find((element) => element.checkVisibility());
+       if (!dialog) return null;
+       const label = document.getElementById(dialog.getAttribute('aria-labelledby') ?? '');
+       return {
+         role: dialog.getAttribute('role'),
+         name: label?.textContent?.trim() ?? '',
+         focusInside: dialog.contains(document.activeElement),
+       };`,
+    );
+
+  await clickCentered(extension, card('Card One'));
+  await driver.actions().sendKeys(Key.ARROW_RIGHT).perform();
+  await expect.poll(focusedRow).toBe(folder.ids['Card Two']);
+  await driver.actions().sendKeys('p').perform();
+  await expect.poll(previewState).toEqual({ role: 'dialog', name: 'Card Two', focusInside: true });
+  const dialog = await extension.find('[data-testid="bookmark-preview"]');
+  expect(await dialog.getText()).toContain('https://two.e2e.invalid/b');
+
+  // Tab keeps focus inside, and the arrow key steps to the next bookmark.
+  for (let step = 0; step < 6; step += 1) {
+    await driver.actions().sendKeys(Key.TAB).perform();
+    await expect.poll(async () => (await previewState())?.focusInside).toBe(true);
+  }
+  await driver.actions().sendKeys(Key.ARROW_RIGHT).perform();
+  await expect
+    .poll(previewState)
+    .toEqual({ role: 'dialog', name: 'Card Three', focusInside: true });
+
+  // Escape closes it and gives focus to the card last shown.
+  await driver.actions().sendKeys(Key.ESCAPE).perform();
+  await expect.poll(previewState).toBeNull();
+  await expect.poll(focusedRow).toBe(folder.ids['Card Three']);
+});

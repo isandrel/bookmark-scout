@@ -195,8 +195,25 @@ describe('a cover shown on a card (Visual Cards V27)', () => {
   });
 });
 
-/** The first bytes of a PNG, enough for the type check; decoding is stubbed below. */
-const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]);
+const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+/**
+ * The first bytes of a PNG: the signature and the IHDR chunk with the size, enough for the type
+ * and size checks; decoding is stubbed below.
+ */
+const pngHeader = (width: number, height: number) => {
+  const header = new Uint8Array(33);
+  const view = new DataView(header.buffer);
+  header.set(PNG_SIGNATURE);
+  view.setUint32(8, 13);
+  header.set(
+    [...'IHDR'].map((char) => char.charCodeAt(0)),
+    12,
+  );
+  view.setUint32(16, width);
+  view.setUint32(20, height);
+  return header;
+};
+const PNG = pngHeader(1200, 630);
 const OPTIONS = {
   widthPx: 320,
   maxImageBytes: 1000,
@@ -237,6 +254,8 @@ describe('Fetch Covers runs', () => {
         const url = new URL(input);
         const html = (body: string) =>
           new Response(body, { status: 200, headers: { 'content-type': 'text/html' } });
+        const image = (body: Uint8Array) =>
+          new Response(body as BodyInit, { status: 200, headers: { 'content-type': 'image/png' } });
         if (url.hostname === 'down.example') throw new TypeError('Failed to fetch');
         if (url.pathname.endsWith('.html.png')) {
           // An error page served where the page said its image is.
@@ -245,6 +264,9 @@ describe('Fetch Covers runs', () => {
             headers: { 'content-type': 'text/html' },
           });
         }
+        // Small files that state a picture past `max_pixels`, or no size at all.
+        if (url.pathname === '/bomb.png') return image(pngHeader(40_000, 40_000));
+        if (url.pathname === '/headless.png') return image(new Uint8Array(PNG_SIGNATURE));
         if (url.pathname.endsWith('.png')) {
           const size = url.pathname.includes('huge') ? 5000 : PNG.byteLength;
           return new Response(size === PNG.byteLength ? PNG : new Uint8Array(size), {
@@ -264,6 +286,8 @@ describe('Fetch Covers runs', () => {
         if (url.hostname === 'svg.example') return html(head('/logo.svg'));
         if (url.hostname === 'wrongtype.example') return html(head('/error.html.png'));
         if (url.hostname === 'tiny.example') return html(head('/tiny.png'));
+        if (url.hostname === 'bomb.example') return html(head('/bomb.png'));
+        if (url.hostname === 'headless.example') return html(head('/headless.png'));
         return html(head('/cover.png'));
       }),
     );
@@ -452,6 +476,29 @@ describe('Fetch Covers runs', () => {
       variant: 'destructive',
     });
     expect(await getCoverSummary()).toEqual({ covers: 0, bytes: 0 });
+  });
+
+  it('refuses an image whose header states a huge picture or no size, before decoding it (V2)', async () => {
+    let decodes = 0;
+    vi.stubGlobal('createImageBitmap', async () => {
+      decodes += 1;
+      return { ...decoded, close: () => undefined };
+    });
+    expect(40_000 * 40_000).toBeGreaterThan(COVER_LIMITS.maxPixels);
+    const { items } = await scanCovers(
+      [node('bomb', 'https://bomb.example/'), node('headless', 'https://headless.example/')],
+      OPTIONS,
+    );
+    expect(items.map((item) => [item.id, item.status])).toEqual([
+      ['bomb', 'unusable'],
+      ['headless', 'unusable'],
+    ]);
+    expect(decodes).toBe(0);
+    // A header that states a cover size is decoded, and the decoded size is checked again.
+    decoded = { width: 40_000, height: 40_000 };
+    const checked = await scanCovers([node('lying', 'https://news.example/story')], OPTIONS);
+    expect(checked.items[0]?.status).toBe('unusable');
+    expect(decodes).toBe(1);
   });
 
   it('leaves out an image too small to be a cover', async () => {

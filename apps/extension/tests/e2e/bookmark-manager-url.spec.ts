@@ -180,6 +180,89 @@ test('q wins over id, which keeps the folder for Current folder only', async ({
   await expect(breadcrumbCurrent(page)).toHaveText('Inner');
 });
 
+test('Current folder only ANDs the folder with an operator query from ?q=, and Show in folder leaves both (U32)', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Url Scope', [
+    {
+      title: 'Scope Box',
+      children: [
+        { title: 'Scope AI Here', url: 'https://here.e2e.invalid/ai' },
+        { title: 'Scope Plain Here', url: 'https://here.e2e.invalid/plain' },
+      ],
+    },
+    {
+      title: 'Scope Away',
+      children: [{ title: 'Scope AI Away', url: 'https://away.e2e.invalid/ai' }],
+    },
+  ]);
+  const ids = seeded.ids as Record<string, string>;
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [ids['Scope AI Here'] as string]: { tags: ['ai'] },
+    [ids['Scope AI Away'] as string]: { tags: ['AI', 'later'] },
+  });
+  const titleOf = new Map(Object.entries(ids).map(([title, id]) => [id, title]));
+  const shown = () =>
+    page
+      .locator('tbody tr[data-row-id]')
+      .evaluateAll((rows) => rows.map((row) => row.getAttribute('data-row-id') ?? ''))
+      .then((rowIds) => rowIds.map((id) => titleOf.get(id) ?? id).sort());
+  const params = () =>
+    page.evaluate(() => Object.fromEntries(new URL(window.location.href).searchParams));
+  const box = ids['Scope Box'] as string;
+
+  // The folder and the query come from the address; the query alone searches every folder.
+  await page.goto(managerUrl(extensionId, `?id=${box}&q=${encodeURIComponent('tag:ai')}`));
+  await expect(titleFilter(page)).toHaveValue('tag:ai');
+  await expect.poll(shown).toEqual(['Scope AI Away', 'Scope AI Here']);
+  await expect(breadcrumbCurrent(page)).toHaveText('Results from all folders');
+
+  // Both at once: the open folder's rows that match the query, nothing from another folder, and
+  // no row of the folder that does not match.
+  await (await currentFolderOnly(page)).check();
+  await page.keyboard.press('Escape');
+  await expect.poll(shown).toEqual(['Scope AI Here']);
+  await expect(breadcrumbCurrent(page)).toHaveText('Scope Box');
+  expect(await params()).toEqual({ id: box, q: 'tag:ai' });
+  // A row in the open folder is already in its folder.
+  await row(page, 'Scope AI Here').getByRole('button', { name: 'Open menu' }).click();
+  await expect(page.getByRole('menuitem', { name: 'Edit' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Show in folder' })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+
+  // Another operator in the same box narrows the folder's rows further, still from the address.
+  await titleFilter(page).fill('tag:ai -domain:here.e2e.invalid');
+  await expect.poll(params).toEqual({ id: box, q: 'tag:ai -domain:here.e2e.invalid' });
+  await expect.poll(shown).toEqual([]);
+  await titleFilter(page).fill('tag:ai');
+  await expect.poll(shown).toEqual(['Scope AI Here']);
+
+  // Every folder again, then Show in folder on the other folder's result.
+  await (await currentFolderOnly(page)).uncheck();
+  await page.keyboard.press('Escape');
+  await expect.poll(shown).toEqual(['Scope AI Away', 'Scope AI Here']);
+  await row(page, 'Scope AI Away').getByRole('button', { name: 'Open menu' }).click();
+  await page.getByRole('menuitem', { name: 'Show in folder' }).click();
+  await expect(breadcrumbCurrent(page)).toHaveText('Scope Away');
+  await expect(titleFilter(page)).toHaveValue('');
+  await expect.poll(params).toEqual({ id: ids['Scope Away'] });
+  await expect(row(page, 'Scope AI Away')).toHaveAttribute('data-state', 'selected');
+
+  // Back returns to the search in its folder, and the address alone brings it back after a reload.
+  await page.goBack();
+  await expect(titleFilter(page)).toHaveValue('tag:ai');
+  await expect.poll(params).toEqual({ id: box, q: 'tag:ai' });
+  await expect.poll(shown).toEqual(['Scope AI Away', 'Scope AI Here']);
+  await page.reload();
+  await expect(titleFilter(page)).toHaveValue('tag:ai');
+  await expect.poll(shown).toEqual(['Scope AI Away', 'Scope AI Here']);
+  await (await currentFolderOnly(page)).check();
+  await page.keyboard.press('Escape');
+  await expect.poll(shown).toEqual(['Scope AI Here']);
+});
+
 test("Chrome's folder UUID links open the matching folder", async ({
   extensionId,
   extensionWorker,

@@ -23,7 +23,7 @@ Click a bookmark, or move to it with the arrow keys and press `Enter`, to open i
 Good to know:
 
 - Whole-word matching treats spaces, punctuation, and changes of script as word boundaries, so terms such as `C++` and Japanese words match.
-- An invalid regular expression shows a warning and is searched as plain text.
+- An invalid regular expression, a very long one, or one whose repeated parts could match the same text many ways (and so could freeze the page) shows a warning and is searched as plain text.
 - Permanent folders such as the Bookmarks Bar are containers and never match by name.
 - When there are more matches than the result limit, a note says how many are shown. Refine the search, or raise **Max Search Results** in [Settings](/settings).
 - Clearing the search (the clear button, or `Esc` in the search box) restores the folders you had open before.

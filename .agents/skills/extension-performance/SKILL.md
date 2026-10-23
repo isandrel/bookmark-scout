@@ -67,6 +67,7 @@ Implementation boundaries already guarded by tests:
 - **React Compiler** (October 2026): scroll p95 improved (50 to 33 ms) but 9 Chromium E2E tests failed that pass without it. `t()` reads module-level language state, so cached text stayed in the old language after a switch; TanStack Table mutates its table object in place, so sorting, facet labels, and column widths stopped redrawing. Retry only after a hook-based `t` and `'use no memo'` on the table components, or in annotation mode on specific components. Its setup: `@rolldown/plugin-babel` with the compiler preset; `@babel/core` 8 rewrote about 3,000 lines of `bun.lock` against 9 on 7, so check the lockfile diff of any build-tool major.
 - **Base UI tuning for long lists:** `batch: true` does not batch `getAnimations()`, and `BASE_UI_ANIMATIONS_DISABLED` is an internal test switch. The fix was a flat virtualized list (`extension-ui-change`, Base UI notes).
 - A rejected trial that added dependencies must revert `package.json` and `bun.lock` and reinstall before its worktree is reused.
+- **A search library** (MiniSearch, FlexSearch; October 2026): benchmarked against the built-in search on the 19,500-bookmark library and not adopted. The script (`bun run --cwd apps/extension bench:search`), its numbers, and the reasons are in [references/search-engines.md](references/search-engines.md); both stay dev dependencies only.
 
 ## Open
 
