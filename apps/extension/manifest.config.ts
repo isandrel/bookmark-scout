@@ -6,8 +6,8 @@ import {
   getFirefoxDataCollectionPermissions,
   getManifestApiPermissions,
   getManifestOptionalOrigins,
-  type SupportedBrowser,
 } from './src/lib/permission-catalog';
+import type { SupportedBrowser } from './src/lib/supported-browsers';
 
 /**
  * The manifest for each browser build, as a pure function so `tests/unit/manifest-config.test.ts`

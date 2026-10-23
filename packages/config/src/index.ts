@@ -23,6 +23,12 @@ export {
 	type ScreenshotPair,
 	SOCIAL_SCREENSHOT,
 } from "./screenshots";
+export {
+	PROVIDERS_CONFIG_DIR,
+	type ProviderAddressPart,
+	readProviderAddress,
+	readProviderAddresses,
+} from "./provider-addresses";
 export { readSettingDefault, type SettingDefault, SETTINGS_CONFIG_DIR } from "./setting-defaults";
 export { readShortcutConfig, SHORTCUT_CONFIG_FILE } from "./shortcut-file";
 export * from "./shortcuts";

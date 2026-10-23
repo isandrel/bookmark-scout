@@ -7,6 +7,9 @@ head_max_bytes = 524288
 # Characters of the previous chunk kept when looking for the end of the <head>, so a closing tag
 # split across two chunks is still found
 stop_pattern_overlap_chars = 16
+# Bytes at the start of a page searched for a <meta charset> when the server names no charset. HTML
+# requires it within the first 1024 bytes; twice that tolerates sloppy pages.
+charset_sniff_bytes = { value = 2048, min = 1024, max = 65536 }
 # A read that checks each address before requesting it (Index Page Text, Fetch Covers, AI page
 # reading) follows at most this many redirects whose target it can read, then stops and reports
 # the page as redirected. Browsers hide the target of a redirect from extensions, so there such a

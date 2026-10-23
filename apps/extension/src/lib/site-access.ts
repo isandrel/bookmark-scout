@@ -11,16 +11,21 @@
  * that host only, since it has no subdomains.
  */
 import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const config = readConfig(
   'network/site-access',
   z.strictObject({
     max_sites_per_request: z.number().int().positive(),
+    listed_sites: boundedNumber({ integer: true }),
   }),
 );
 
 /** Sites above which a run asks for all websites instead. */
 export const SITE_ACCESS_MAX_SITES = config.max_sites_per_request;
+
+/** Sites the permission explanation lists by name; the rest are counted. */
+export const SITE_ACCESS_LISTED_SITES = config.listed_sites;
 
 /** The web schemes a site is granted for; the manifest declares both as optional. */
 const SITE_SCHEMES = ['http', 'https'] as const;

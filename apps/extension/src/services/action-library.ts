@@ -137,7 +137,7 @@ export async function loadActionLibrary(): Promise<ActionLibrary> {
 }
 
 function isoDate(time: number | undefined): string | undefined {
-  return time ? new Date(time).toISOString().slice(0, 10) : undefined;
+  return time ? toIsoDate(time) : undefined;
 }
 
 /** A bookmark as tools return it; `summaryChars` adds its saved summary, cut to that length. */

@@ -30,7 +30,7 @@ ToastViewport.displayName = 'ToastViewport';
 const toastVariants = cva(
   // Base UI moves a toast while it is swiped and resets it when a swipe is cancelled, so only the
   // release (ending) position needs a class.
-  'group pointer-events-auto relative flex w-full shrink-0 flex-col overflow-hidden rounded-lg border shadow-lg transition-all data-swiping:transition-none data-ending-style:data-[swipe-direction=right]:translate-x-[var(--toast-swipe-movement-x)] animate-in data-ending-style:animate-out data-ending-style:fade-out-80 data-ending-style:slide-out-to-right-full slide-in-from-bottom-full duration-300 data-ending-style:duration-500',
+  'group pointer-events-auto relative flex w-full shrink-0 flex-col overflow-hidden rounded-lg border shadow-lg transition-all data-swiping:transition-none data-ending-style:data-[swipe-direction=right]:translate-x-[var(--toast-swipe-movement-x)] animate-in data-ending-style:animate-out data-ending-style:fade-out-80 data-ending-style:slide-out-to-right-full slide-in-from-bottom-full duration-300 data-ending-style:duration-(--toast-exit-duration)',
   {
     variants: {
       variant: {
@@ -67,7 +67,12 @@ const Toast = React.forwardRef<
         aria-atomic
         swipeDirection="right"
         className={cn(toastVariants({ variant }), className)}
-        style={{ '--toast-duration': `${duration}ms` } as React.CSSProperties}
+        style={
+          {
+            '--toast-duration': `${duration}ms`,
+            '--toast-exit-duration': `${TOAST_REMOVE_DELAY_MS}ms`,
+          } as React.CSSProperties
+        }
         {...props}
       />
     </ToastCloseContext.Provider>

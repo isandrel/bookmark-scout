@@ -170,7 +170,7 @@ export function DeadLinkRepairDialogContent({
       onClose={onClose}
       title={t('tools_deadLinkRepairTitle')}
       description={t('tools_deadLinkRepairDesc')}
-      className="max-h-[85vh] overflow-hidden sm:max-w-3xl"
+      className="max-h-dialog overflow-hidden sm:max-w-3xl"
       onApply={apply}
       applyLabel={tPlural('tools_deadLinkRepairApply', actionable)}
       applyingLabel={t('action_applying')}

@@ -123,7 +123,7 @@ function PromptEditorDialog({
 
   return (
     <Dialog open={editor !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-dialog-tall max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {editor?.id ? t('prompt_editTitle') : t('prompt_newTitle')}
@@ -168,7 +168,6 @@ function PromptEditorDialog({
                   onValueChange={setSystem}
                   variables={task?.variables ?? []}
                   values={values}
-                  rows={14}
                   spellCheck={false}
                   aria-describedby="prompt-text-hint prompt-text-size"
                   className="w-full resize-y rounded-md border border-input bg-card px-3 py-2 font-mono text-xs leading-relaxed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -250,7 +249,7 @@ function BuiltInPromptDialog({
   const data = usePromptData(taskId ?? undefined);
   return (
     <Dialog open={taskId !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-dialog-tall max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {t('prompt_builtInTitle')}

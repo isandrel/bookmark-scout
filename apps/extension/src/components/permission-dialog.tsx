@@ -1,6 +1,3 @@
-/** Sites listed by name in the dialog; the rest are counted. */
-const LISTED_SITES = 5;
-
 export type PermissionDialogProps = {
   feature: PermissionFeature;
   open: boolean;
@@ -24,7 +21,9 @@ const EXPLANATION_EXTRAS: Partial<Record<PermissionFeature, () => React.ReactNod
 /** What the browser will ask for when access is narrowed to a run's sites. */
 function siteAccessLine(sites: readonly string[] | 'all'): string {
   if (sites === 'all') return t('perm_siteAccessAll', String(SITE_ACCESS_MAX_SITES));
-  return tPlural('perm_siteAccessSome', sites.length, [formatListPreview(sites, LISTED_SITES)]);
+  return tPlural('perm_siteAccessSome', sites.length, [
+    formatListPreview(sites, SITE_ACCESS_LISTED_SITES),
+  ]);
 }
 
 /**

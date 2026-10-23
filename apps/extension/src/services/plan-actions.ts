@@ -281,6 +281,26 @@ function planLabel(plan: ActionPlan): BookmarkHistoryLabel {
     : { action: labels.many, count };
 }
 
+const quoted = (title: string) => getBookmarkDisplayTitle(title);
+
+type PlanLine = ActionPlan['preview'][number];
+
+/** The line each kind of planned change shows in its approval, in the user's language. */
+const PLAN_LINES: Record<PlanLine['kind'], (line: PlanLine) => string> = {
+  move: (line) => t('askAI_planMove', [quoted(line.title), line.from ?? '', line.to ?? '']),
+  rename: (line) => t('askAI_planRename', [quoted(line.title), line.to ?? '']),
+  delete: (line) =>
+    line.contains
+      ? t('askAI_planDeleteFolder', [quoted(line.title), line.from ?? '', String(line.contains)])
+      : t('askAI_planDelete', [quoted(line.title), line.from ?? '']),
+  createFolder: (line) => t('askAI_planCreateFolder', [line.title, line.to ?? '']),
+};
+
+/** A stored plan as its approval lists it: titles and paths, never the model's words. */
+export function describePlanPreview(plan: ActionPlan): string[] {
+  return plan.preview.map((line) => PLAN_LINES[line.kind](line));
+}
+
 const applyChanges = defineAction({
   risk: 'destructive',
   labelKey: 'actionName_applyChanges',
@@ -296,6 +316,16 @@ const applyChanges = defineAction({
     failed: z.array(z.string()),
   }),
   describe: () => t('askAI_toolApply'),
+  approvalPreview: {
+    stored: {
+      id: (input) => (typeof input.planId === 'string' && input.planId ? input.planId : undefined),
+      async load(id) {
+        const plan = await getActionPlan(id);
+        return plan ? { lines: describePlanPreview(plan), summary: plan.summary } : null;
+      },
+      missingKey: 'askAI_planMissing',
+    },
+  },
   async precheck(input, context) {
     const plan = await applicablePlan(input.planId, context.client);
     return isActionError(plan) ? plan : undefined;

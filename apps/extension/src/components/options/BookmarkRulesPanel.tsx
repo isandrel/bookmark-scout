@@ -105,7 +105,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
 
   return (
     <Dialog open={draft !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto">
+      <DialogContent className="max-h-dialog-tall max-w-xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{draft?.id ? t('rules_editTitle') : t('rules_newTitle')}</DialogTitle>
           <DialogDescription>{t('rules_editorDescription')}</DialogDescription>
@@ -134,7 +134,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
                 {...control}
                 value={value.query}
                 onChange={(event) => setValue({ ...value, query: event.target.value })}
-                placeholder="domain:github.com"
+                placeholder={BOOKMARK_RULE_EDITOR_EXAMPLES.query_placeholder}
                 autoComplete="off"
                 spellCheck={false}
               />
@@ -148,7 +148,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
                   aria-describedby="rule-sample-result"
                   value={sample}
                   onChange={(event) => setSample(event.target.value)}
-                  placeholder="https://github.com/acme/repo"
+                  placeholder={BOOKMARK_RULE_EDITOR_EXAMPLES.sample_placeholder}
                   autoComplete="off"
                   spellCheck={false}
                 />

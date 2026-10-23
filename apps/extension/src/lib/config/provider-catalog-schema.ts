@@ -3,13 +3,12 @@
  * (scripts/sync-provider-catalog.ts) validates with it before writing, and the extension
  * validates the bundled file with it on first use, so data fetched from the network reaches
  * neither the file system nor the provider picker unchecked. Pure zod so the Bun script can use
- * it.
+ * it; its limits are `config/ai/provider-catalog.toml`, which each caller reads and passes in.
  */
 import { z } from 'zod';
 
 /** Lowercase letters, digits, `.`, `_`, `-`: safe as an object key and as a file name. */
 export const CATALOG_ID_PATTERN = /^[a-z0-9][a-z0-9._-]{0,63}$/;
-const MAX_NAME_LENGTH = 80;
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 export const catalogIdSchema = z
@@ -28,35 +27,48 @@ const isSafeUrl = (value: string) => {
   }
 };
 
-/** The longest address the catalog may list, the length browsers and servers widely accept. */
-const MAX_CATALOG_URL_LENGTH = 2048;
+/** Where the catalog's limits are, under config/. */
+export const PROVIDER_CATALOG_LIMITS_PATH = 'ai/provider-catalog';
 
-const catalogUrlSchema = z
-  .string()
-  .max(MAX_CATALOG_URL_LENGTH)
-  .refine(isSafeUrl, 'Expected an https or local URL');
+export const providerCatalogLimitsSchema = z.strictObject({
+  max_name_length: z.number().int().positive(),
+  max_url_length: z.number().int().positive(),
+});
 
-export const catalogProviderSchema = z.strictObject({
-  // No control characters: the name is shown in the provider picker.
-  name: z
+export type ProviderCatalogLimits = z.infer<typeof providerCatalogLimitsSchema>;
+
+/** The schemas of one catalog entry and of the whole file, within `limits`. */
+export function createProviderCatalogSchemas(limits: ProviderCatalogLimits) {
+  const catalogUrlSchema = z
     .string()
-    .min(1)
-    .max(MAX_NAME_LENGTH)
-    .regex(/^[^\p{Cc}]+$/u),
-  base_url: catalogUrlSchema,
-  doc: catalogUrlSchema.optional(),
-  protocol: z.enum(['openai', 'anthropic']),
-  requires_api_key: z.boolean(),
-  /** Omitted when the provider has an OpenAI- or Anthropic-style model list. */
-  model_list: z.literal('none').optional(),
-});
+    .max(limits.max_url_length)
+    .refine(isSafeUrl, 'Expected an https or local URL');
 
-export const providerCatalogSchema = z.strictObject({
-  source: z.string().min(1),
-  /** Provider ids with a logo in public/provider-logos/. */
-  logos: z.array(catalogIdSchema),
-  providers: z.record(catalogIdSchema, catalogProviderSchema),
-});
+  const catalogProviderSchema = z.strictObject({
+    // No control characters: the name is shown in the provider picker.
+    name: z
+      .string()
+      .min(1)
+      .max(limits.max_name_length)
+      .regex(/^[^\p{Cc}]+$/u),
+    base_url: catalogUrlSchema,
+    doc: catalogUrlSchema.optional(),
+    protocol: z.enum(['openai', 'anthropic']),
+    requires_api_key: z.boolean(),
+    /** Omitted when the provider has an OpenAI- or Anthropic-style model list. */
+    model_list: z.literal('none').optional(),
+  });
 
-export type CatalogProvider = z.infer<typeof catalogProviderSchema>;
-export type ProviderCatalog = z.infer<typeof providerCatalogSchema>;
+  const providerCatalogSchema = z.strictObject({
+    source: z.string().min(1),
+    /** Provider ids with a logo in public/provider-logos/. */
+    logos: z.array(catalogIdSchema),
+    providers: z.record(catalogIdSchema, catalogProviderSchema),
+  });
+
+  return { catalogProviderSchema, providerCatalogSchema };
+}
+
+type ProviderCatalogSchemas = ReturnType<typeof createProviderCatalogSchemas>;
+export type CatalogProvider = z.infer<ProviderCatalogSchemas['catalogProviderSchema']>;
+export type ProviderCatalog = z.infer<ProviderCatalogSchemas['providerCatalogSchema']>;

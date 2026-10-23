@@ -77,7 +77,7 @@ function ListSettingInput({
       aria-labelledby={labelledBy}
       aria-describedby={describedBy}
       aria-invalid={invalid}
-      className="w-full sm:w-[220px]"
+      className="w-full sm:w-settings-control"
       placeholder={placeholder}
     />
   );
@@ -173,7 +173,7 @@ function NumberStepper({
   return (
     // In a settings row the stepper and its unit fill the same column width as a select, so
     // steppers, selects, and inputs on one page start at the same position, unit or not.
-    <div className={cn('flex items-center gap-2', !inline && 'w-full sm:w-[220px]')}>
+    <div className={cn('flex items-center gap-2', !inline && 'w-full sm:w-settings-control')}>
       <NumberField.Root
         id={id}
         disabled={disabled}
@@ -606,7 +606,7 @@ export function SettingsFieldRow({
               aria-labelledby={labelId}
               aria-describedby={describedBy}
               aria-invalid={Boolean(invalid)}
-              className="w-full sm:w-[220px]"
+              className="w-full sm:w-settings-control"
               value={String(value)}
               options={options.map((option) => ({
                 value: String(option.value),
@@ -633,7 +633,7 @@ export function SettingsFieldRow({
               id={controlId}
               aria-labelledby={labelId}
               aria-describedby={describedBy}
-              className="w-full sm:w-auto sm:min-w-[220px]"
+              className="w-full sm:w-auto sm:min-w-settings-control"
               value={String(value)}
               options={choices}
               onValueChange={(next) => {
@@ -660,7 +660,7 @@ export function SettingsFieldRow({
               aria-invalid={Boolean(invalid)}
               // Grows with a long choice, such as a date format with its sample, as the segmented
               // controls do; the value starts at the left edge like every other field.
-              className="w-full sm:w-auto sm:min-w-[220px] sm:max-w-[320px]"
+              className="w-full sm:w-auto sm:min-w-settings-control sm:max-w-settings-control"
             >
               <SelectValue className="min-w-0 truncate text-left" />
             </SelectTrigger>
@@ -698,7 +698,7 @@ export function SettingsFieldRow({
               ? formatPercent(numeric)
               : `${numeric}${meta.unit ?? ''}`;
         return (
-          <div className="flex w-full items-center gap-3 sm:w-[240px]">
+          <div className="flex w-full items-center gap-3 sm:w-settings-slider">
             <Slider
               id={controlId}
               value={[position]}
@@ -779,7 +779,7 @@ export function SettingsFieldRow({
             aria-labelledby={labelId}
             aria-describedby={describedBy}
             aria-invalid={Boolean(invalid)}
-            className="w-full sm:w-[220px]"
+            className="w-full sm:w-settings-control"
             placeholder={meta.label}
           />
         );

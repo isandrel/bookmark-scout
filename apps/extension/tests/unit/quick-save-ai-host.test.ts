@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { aiActivityValue } from '@/lib/ai-activity-storage';
+import { INPUT_LIMITS } from '@/lib/input-limits';
 import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { saveSettings } from '@/lib/settings-storage';
 import type { AISettings } from '@/services/ai-client';
@@ -12,6 +13,7 @@ import {
   recordAIHostActivity,
   withAIHost,
 } from '@/services/quick-save-ai-host';
+import { readConfigToml } from '../config-files';
 
 const settings: AISettings = {
   enabled: true,
@@ -204,5 +206,14 @@ describe("the built-in model's warm AI host page", () => {
       responseBody: '{"folders":["1"]}',
       durationMs: 12,
     });
+  });
+});
+
+describe('folder answer limits', () => {
+  it('accepts as many folder ids as the largest shortlist the config allows', () => {
+    const builtIn = readConfigToml('ai/built-in.toml') as {
+      folders: { candidates: { max: number } };
+    };
+    expect(INPUT_LIMITS.counts.host_choices).toBe(builtIn.folders.candidates.max);
   });
 });

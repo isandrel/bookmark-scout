@@ -141,7 +141,7 @@ export function BookmarkPreviewDialog({
         // Back to the row or card shown; the default (the element focused before) is gone when
         // a menu opened the preview.
         finalFocus={() => findRowElement(shown?.id) ?? true}
-        className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-xl"
+        className="max-h-dialog-screen overflow-y-auto sm:max-w-xl"
         // Before the controls inside: a disabled button keeps focus but swallows its keys.
         onKeyDownCapture={handleKeyDown}
       >

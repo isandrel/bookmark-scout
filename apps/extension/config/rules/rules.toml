@@ -12,28 +12,39 @@ max_tags = 10
 # Longest tag a rule adds, in characters
 tag_max_length = 50
 
+# Examples the rule editor shows in its empty Search and Test fields: a search and an address it
+# matches. They are search syntax and an address, the same in every language.
+[editor]
+query_placeholder = "domain:github.com"
+sample_placeholder = "https://github.com/acme/repo"
+
 # Starter rules Settings offers, added turned off. Each id has a name in every locale
 # (TEMPLATE_NAME_KEYS in src/components/options/BookmarkRulesPanel.tsx). A template adds tags
-# (`add_tags`), moves (`move = true`), or both. One that moves names no folder: folder ids differ
-# on every browser profile, so the editor opens on it and asks for the folder before it can save.
+# (`add_tags`), moves (`move = true`), or both, and lists both keys. One that moves names no
+# folder: folder ids differ on every browser profile, so the editor opens on it and asks for the
+# folder before it can save.
 [[templates]]
 id = "github"
 query = "domain:github.com"
 add_tags = ["development"]
+move = false
 
 [[templates]]
 id = "youtube"
 query = "domain:youtube.com url:/watch"
 add_tags = ["watch-later"]
+move = false
 
 [[templates]]
 id = "tutorial"
 query = "title:tutorial"
 add_tags = ["learning"]
+move = false
 
 [[templates]]
 id = "reading"
 query = 'folder:"Work / Reading"'
+add_tags = []
 move = true
 
 [automatic]

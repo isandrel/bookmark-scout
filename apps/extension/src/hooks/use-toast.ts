@@ -14,7 +14,8 @@ const toastConfig = readConfig(
 // whole undo window, however many arrive at once. They leave only when their own timer ends or
 // they are dismissed. An informational toast replaces the previous informational one. The
 // Toaster keeps a long stack compact.
-const TOAST_REMOVE_DELAY = toastConfig.remove_delay_ms;
+/** How long a dismissed toast stays mounted, which is also how long its exit animation runs. */
+export const TOAST_REMOVE_DELAY_MS = toastConfig.remove_delay_ms;
 
 /**
  * A bookmark or folder title as a toast quotes it: "Untitled" when blank, and cut at the
@@ -83,7 +84,7 @@ const addToRemoveQueue = (toastId: string) => {
       type: 'REMOVE_TOAST',
       toastId: toastId,
     });
-  }, TOAST_REMOVE_DELAY);
+  }, TOAST_REMOVE_DELAY_MS);
 
   toastTimeouts.set(toastId, timeout);
 };

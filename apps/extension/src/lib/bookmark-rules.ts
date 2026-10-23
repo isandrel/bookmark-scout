@@ -37,14 +37,18 @@ const rulesConfig = readConfig(
         .strictObject({
           id: z.string().min(1),
           query: z.string().min(1),
-          add_tags: z.array(z.string().min(1)).default([]),
+          add_tags: z.array(z.string().min(1)),
           /** Moves to a folder the user picks: the template has none, so the editor asks. */
-          move: z.boolean().default(false),
+          move: z.boolean(),
         })
         .refine((template) => template.add_tags.length > 0 || template.move, {
           message: 'A template needs tags to add or a move',
         }),
     ),
+    editor: z.strictObject({
+      query_placeholder: z.string().min(1),
+      sample_placeholder: z.url(),
+    }),
     automatic: z.strictObject({
       batch_window_ms: z.number().int().positive(),
       max_batch: z.number().int().positive(),
@@ -62,6 +66,9 @@ export const BOOKMARK_RULE_LIMITS = rulesConfig;
 
 /** Starter rules Settings offers (`[[templates]]`), each added turned off. */
 export const BOOKMARK_RULE_TEMPLATES = rulesConfig.templates;
+
+/** The examples the rule editor shows in its empty Search and Test fields. */
+export const BOOKMARK_RULE_EDITOR_EXAMPLES = rulesConfig.editor;
 export type BookmarkRuleTemplateId = (typeof BOOKMARK_RULE_TEMPLATES)[number]['id'];
 
 /**

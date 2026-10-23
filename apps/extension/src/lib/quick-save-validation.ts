@@ -8,9 +8,6 @@ import { z } from 'zod';
 
 const messageId = z.string().min(1).max(INPUT_LIMITS.chars.message_id);
 
-/** The most ids a `folderIds` answer may choose from: the shortlist's largest allowed size. */
-const MAX_HOST_CHOICES = 100;
-
 export const quickSaveHostActivitySchema = z.strictObject({
   type: z.literal(QUICK_SAVE_MESSAGE.hostActivity),
   token: messageId,
@@ -38,7 +35,7 @@ export const quickSaveHostFetchSchema = z.strictObject({
   type: z.literal(QUICK_SAVE_MESSAGE.hostFetch),
   token: messageId,
   url: z.url({ protocol: /^https?$/ }),
-  method: z.string().min(1).max(10),
+  method: z.string().min(1).max(INPUT_LIMITS.chars.request_method),
   headers: z.array(z.tuple([z.string(), z.string()])).max(INPUT_LIMITS.counts.request_headers),
   body: z.string().optional(),
 }) satisfies z.ZodType<QuickSaveHostFetchMessage>;
@@ -49,10 +46,10 @@ export const quickSaveHostRequestSchema = z.discriminatedUnion('type', [
     token: messageId,
     settings: z.record(z.string(), z.unknown()),
     source: z.string().min(1).max(INPUT_LIMITS.chars.message_source),
-    locale: z.string().min(2).max(10),
+    locale: z.string().min(2).max(INPUT_LIMITS.chars.locale_tag),
     schema: z.enum(AI_HOST_SCHEMA_NAMES),
-    choices: z.array(messageId).min(1).max(MAX_HOST_CHOICES).optional(),
-    maxChoices: z.number().int().min(1).max(MAX_HOST_CHOICES).optional(),
+    choices: z.array(messageId).min(1).max(INPUT_LIMITS.counts.host_choices).optional(),
+    maxChoices: z.number().int().min(1).max(INPUT_LIMITS.counts.host_choices).optional(),
     system: z.string(),
     prompt: z.string(),
   }),

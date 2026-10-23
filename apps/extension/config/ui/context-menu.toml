@@ -1,0 +1,7 @@
+# The browser's right-click menu on links (Settings > Behavior > Context Menu). Read by
+# src/services/context-menu.ts.
+
+# Order of the menu's groups, by provider id: a lower number comes first.
+[priority]
+recent_folders = 10
+bookmarks_bar = 100

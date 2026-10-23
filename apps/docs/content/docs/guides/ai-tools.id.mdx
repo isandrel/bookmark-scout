@@ -90,10 +90,10 @@ Simpan layanan sebanyak yang Anda mau, bahkan beberapa dari penyedia yang sama: 
 | xAI | Wajib | |
 | Azure OpenAI | Wajib | Setel **Nama resource** (atau **URL Dasar**) dan masukkan nama deployment Anda sebagai **Model Kustom**. Azure tidak punya daftar deployment, jadi **Perbarui Model** tidak ditampilkan. |
 | OpenRouter | Wajib | |
-| Ollama (Local) | Opsional | Alamat default `http://localhost:11434/api`; permintaan tetap di mesin Anda |
-| CLIProxyAPI | Biasanya wajib | Berjalan di mesin Anda dan menjawab dengan akun Claude, Gemini, atau Codex Anda sendiri. Alamat default `http://localhost:8317/v1`; masukkan salah satu kunci di bawah `api-keys` di `config.yaml`-nya, lalu **Perbarui Model** untuk melihat model yang ditawarkan akun Anda. |
-| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Opsional | Tercantum di bawah **Server lokal** dengan alamat `localhost` default-nya: oMLX dan vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp dan LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Klik **Perbarui Model** untuk melihat apa yang sudah dimuat server. |
-| Jan | Wajib | Server API lokal di `http://localhost:1337/v1`; masukkan kunci dari setelan server API Jan |
+| Ollama (Local) | Opsional | Alamat default <ProviderAddress id="ollama" />; permintaan tetap di mesin Anda |
+| CLIProxyAPI | Biasanya wajib | Berjalan di mesin Anda dan menjawab dengan akun Claude, Gemini, atau Codex Anda sendiri. Alamat default <ProviderAddress id="cliproxyapi" />; masukkan salah satu kunci di bawah `api-keys` di `config.yaml`-nya, lalu **Perbarui Model** untuk melihat model yang ditawarkan akun Anda. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Opsional | Tercantum di bawah **Server lokal** dengan alamat default-nya: oMLX <ProviderAddress id="omlx" />, LM Studio <ProviderAddress id="lmstudio" />, llama.cpp <ProviderAddress id="llamacpp" />, vLLM <ProviderAddress id="vllm" />, LocalAI <ProviderAddress id="localai" />, KoboldCpp <ProviderAddress id="koboldcpp" />, text-generation-webui <ProviderAddress id="textgen" />. Klik **Perbarui Model** untuk melihat apa yang sudah dimuat server. |
+| Jan | Wajib | Server API lokal di <ProviderAddress id="jan" />; masukkan kunci dari setelan server API Jan |
 | Custom Provider | Opsional | Endpoint apa pun yang kompatibel dengan OpenAI, disetel dengan **URL Dasar** |
 | Custom Provider (Anthropic-compatible) | Opsional | Endpoint apa pun yang memakai Anthropic Messages API, disetel dengan **URL Dasar** |
 | Sekitar 200 lainnya | Biasanya wajib | Tercantum di bawah **Penyedia lainnya (models.dev)**, misalnya Together AI, Fireworks AI, Cerebras, DeepInfra, dan LM Studio. Penyedia ini tidak punya daftar model bawaan: klik **Perbarui Model** atau masukkan **Model Kustom**. |
@@ -110,7 +110,7 @@ Server lokal harus menerima permintaan dari ekstensi:
 - **LM Studio:** aktifkan **Enable CORS** di setelan server, atau jalankan dengan `lms server start --cors`.
 - **LocalAI:** setel kunci API; pemeriksaan CSRF-nya menolak permintaan tanpa kunci dari browser.
 - **text-generation-webui:** jalankan dengan `--api`.
-- **CLIProxyAPI:** menerima permintaan ekstensi dengan konfigurasi default-nya. Jalankan sebelum Anda mengklik **Verifikasi Layanan**; jika tidak berjalan, Verifikasi menyatakan tidak bisa menjangkau `localhost:8317`.
+- **CLIProxyAPI:** menerima permintaan ekstensi dengan konfigurasi default-nya. Jalankan sebelum Anda mengklik **Verifikasi Layanan**; jika tidak berjalan, Verifikasi menyatakan tidak bisa menjangkau <ProviderAddress id="cliproxyapi" part="host" />.
 
 ### Jika pemeriksaan gagal [#when-a-check-fails]
 

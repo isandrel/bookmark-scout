@@ -7,6 +7,7 @@ const htmlConfig = readConfig(
   z.strictObject({
     head_max_bytes: z.number().int().positive(),
     stop_pattern_overlap_chars: z.number().int().positive(),
+    charset_sniff_bytes: boundedNumber({ integer: true }),
     max_redirects: boundedNumber({ integer: true }),
     redirect_guesses: boundedNumber({ integer: true }),
   }),
@@ -465,12 +466,10 @@ export async function scanDeadLinks(
 }
 
 const CHARSET_PATTERN = /charset\s*=\s*["']?([A-Za-z0-9_\-:.]+)/i;
-/** HTML requires a `<meta charset>` within the first 1024 bytes; twice that tolerates sloppy pages. */
-const CHARSET_SNIFF_BYTES = 2048;
 
 /** Decodes a page using the Content-Type charset, then a `<meta>` charset, then UTF-8. */
 function decodeHtml(bytes: ArrayBuffer, contentType: string | null): string {
-  const sniffed = new TextDecoder('latin1').decode(bytes.slice(0, CHARSET_SNIFF_BYTES));
+  const sniffed = new TextDecoder('latin1').decode(bytes.slice(0, htmlConfig.charset_sniff_bytes));
   const charset =
     contentType?.match(CHARSET_PATTERN)?.[1] ??
     sniffed.match(/<meta[^>]+charset\s*=\s*["']?([A-Za-z0-9_\-:.]+)/i)?.[1];

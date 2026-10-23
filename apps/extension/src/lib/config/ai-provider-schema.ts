@@ -69,6 +69,18 @@ export const aiProviderFileSchema = z.strictObject({
     .optional(),
   base_url: z.url().optional(),
   /**
+   * The default endpoint built from the Resource name field (`resourceName` in `extra_fields`),
+   * which takes its place encoded for a host name, such as Azure's
+   * `https://{resourceName}.openai.azure.com/openai/v1`. A Base URL the user enters wins.
+   */
+  resource_url_template: z
+    .string()
+    .regex(
+      /^https:\/\/[^/]*\{resourceName\}/,
+      'must be an https URL with {resourceName} in its host',
+    )
+    .optional(),
+  /**
    * The provider's page where a signed-in user creates an API key, shown as "Get a key" next to
    * the key field. Only for providers that need a key; https only.
    */
@@ -109,6 +121,13 @@ export const aiProviderFilesSchema = z
           code: 'custom',
           path: [id, 'provider_kind'],
           message: 'the built-in model has no key, Base URL, or model list',
+        });
+      }
+      if (provider.resource_url_template && !provider.extra_fields?.includes('resourceName')) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [id, 'resource_url_template'],
+          message: 'a resource URL needs the resourceName field in extra_fields',
         });
       }
       const other = seen.get(provider.order);

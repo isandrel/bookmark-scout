@@ -151,7 +151,8 @@ export function requestProviderHostAccess(baseUrl: string | undefined): Promise<
 
 /**
  * The endpoint a provider request will reach: the configured Base URL, else the provider's default
- * from config/ai/providers/ or the catalog. Azure builds its default from the resource name.
+ * from config/ai/providers/ or the catalog. A provider with a `resource_url_template` (Azure)
+ * builds its default from the Resource name field.
  */
 export function getProviderEndpoint(
   provider: AIProvider,
@@ -161,8 +162,6 @@ export function getProviderEndpoint(
   const configured = baseUrl?.trim();
   if (configured) return configured;
   const resourceName = options?.resourceName?.trim();
-  if (provider === 'azure' && resourceName) {
-    return `https://${encodeURIComponent(resourceName)}.openai.azure.com/openai/v1`;
-  }
-  return getProviderBaseUrl(provider);
+  const resourceUrl = resourceName ? getProviderResourceUrl(provider, resourceName) : undefined;
+  return resourceUrl ?? getProviderBaseUrl(provider);
 }

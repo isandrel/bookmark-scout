@@ -7,6 +7,18 @@
  * A grant or revoke rebuilds it, and the click listener is added once the API appears.
  */
 
+import { z } from 'zod';
+
+const contextMenuConfig = readConfig(
+  'ui/context-menu',
+  z.strictObject({
+    priority: z.strictObject({
+      recent_folders: z.number().int(),
+      bookmarks_bar: z.number().int(),
+    }),
+  }),
+);
+
 // Type for bookmark naming setting
 export type BookmarkNamingSource = 'link_text' | 'page_title' | 'link_url';
 
@@ -412,7 +424,7 @@ function watchContextMenuStorage(): void {
  */
 export const recentFoldersProvider: ContextMenuProvider = {
   id: 'recent-folders',
-  priority: 10,
+  priority: contextMenuConfig.priority.recent_folders,
 
   async getItems(): Promise<ContextMenuItem[]> {
     try {
@@ -440,7 +452,7 @@ export const recentFoldersProvider: ContextMenuProvider = {
  */
 export const bookmarksBarProvider: ContextMenuProvider = {
   id: 'bookmarks-bar',
-  priority: 100, // Lower priority = appears last
+  priority: contextMenuConfig.priority.bookmarks_bar,
 
   async getItems(): Promise<ContextMenuItem[]> {
     const folderId = await getBookmarksBarId();

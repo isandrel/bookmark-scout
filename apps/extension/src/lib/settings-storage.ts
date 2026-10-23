@@ -22,7 +22,13 @@ export class SettingsValidationError extends Error {
   }
 }
 
-const MAX_VALIDATION_PASSES = 20;
+/**
+ * Each pass of `validateSettingsUpdate` that does not finish reverts at least one field, and a field
+ * is reverted at most twice (to its current value, then to its default), so this many passes always
+ * reach a valid result or a pass that reverts nothing.
+ */
+const REVERTS_PER_FIELD = 2;
+const MAX_VALIDATION_PASSES = REVERTS_PER_FIELD * Object.keys(settingsSchema.shape).length + 1;
 
 const relatedSettingKeys: Partial<Record<keyof Settings, keyof Settings>> = {
   autoTaggingMinTags: 'autoTaggingMaxTags',

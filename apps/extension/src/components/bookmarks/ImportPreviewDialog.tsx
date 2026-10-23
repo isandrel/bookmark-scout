@@ -174,7 +174,7 @@ export function ImportPreviewDialog({
       onClose={onClose}
       title={t('tools_importPreviewTitle')}
       description={t('tools_importPreviewDesc', source?.fileName ?? '')}
-      className="max-h-[85vh] overflow-hidden sm:max-w-2xl"
+      className="max-h-dialog overflow-hidden sm:max-w-2xl"
       onApply={apply}
       applyLabel={t('action_import')}
       applyingLabel={t('tools_importing')}

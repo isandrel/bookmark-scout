@@ -240,6 +240,13 @@
 # languages. Local builds of feat/quick-save-cover on 95b6b7b3 measured ZIP 2,059,865 / 2,059,759 /
 # 2,059,882, uncompressed 6,912,135 / 6,912,131 / 6,912,294 B (Chrome / Edge / Firefox), 3,929,657 B
 # of JavaScript, and 2,417,677 B of locales; JavaScript stayed within its limit.
+# JavaScript raised on 2026-10-22 (3,935,000 to 3,947,000) for moving tunables and special cases
+# into config and data (the provider catalog limits, the prompt editor, History dialog, context menu,
+# and breadcrumb settings, the rule editor examples, approval previews on the action entries, and
+# the quick save notification palette built from data). The config tree is bundled into the
+# background and the shared page chunk, so each value counts twice. Firefox measured ZIP 2,062,175,
+# 6,921,120 B uncompressed, and 3,937,297 B of JavaScript on refactor/config-cleanup rebased onto
+# 1e3c06b6, against main at 2,059,961, 6,912,668, and 3,929,657.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -258,7 +265,7 @@ raw_bytes = 6_925_000
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_935_000
+javascript = 3_947_000
 css = 89_000
 fonts = 143_000
 locales = 2_430_000

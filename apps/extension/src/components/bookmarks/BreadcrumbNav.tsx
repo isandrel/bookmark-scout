@@ -13,7 +13,11 @@ import { z } from 'zod';
 
 const breadcrumbConfig = readConfig(
   'ui/manager-breadcrumb',
-  z.strictObject({ max_folders: z.number().int().min(2) }),
+  z.strictObject({
+    max_folders: z.number().int().min(2),
+    current_max_width_px: z.number().int().positive(),
+    ancestor_max_width_px: z.number().int().positive(),
+  }),
 );
 
 type BreadcrumbNavProps = {
@@ -70,7 +74,8 @@ export function BreadcrumbNav({
       <Segment key={item.id} className={isLast ? 'shrink-0' : 'min-w-12 shrink'}>
         {isLast ? (
           <span
-            className="max-w-[200px] truncate px-2 py-1 font-medium text-foreground"
+            className="truncate px-2 py-1 font-medium text-foreground"
+            style={{ maxWidth: breadcrumbConfig.current_max_width_px }}
             aria-current="page"
           >
             {title}
@@ -80,7 +85,8 @@ export function BreadcrumbNav({
             type="button"
             onClick={() => onNavigate(item.id)}
             title={title}
-            className={cn('min-w-0 max-w-[150px] truncate', SEGMENT_BUTTON_CLASS)}
+            className={cn('min-w-0 truncate', SEGMENT_BUTTON_CLASS)}
+            style={{ maxWidth: breadcrumbConfig.ancestor_max_width_px }}
           >
             {title}
           </button>

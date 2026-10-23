@@ -8,6 +8,8 @@ requires_api_key = true
 supports_custom_model = true
 model_list = "none"
 extra_fields = ["resourceName", "apiVersion"]
+# The endpoint without a Base URL, from the Resource name field.
+resource_url_template = "https://{resourceName}.openai.azure.com/openai/v1"
 logo = "azure"
 
 [[models]]

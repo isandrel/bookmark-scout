@@ -49,7 +49,7 @@ export function FolderSettingSelect({
   return (
     <SearchableSelect
       {...triggerProps}
-      className="w-full sm:w-[220px]"
+      className="w-full sm:w-settings-control"
       value={value}
       options={options}
       onValueChange={onChange}

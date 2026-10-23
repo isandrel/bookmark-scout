@@ -3,9 +3,10 @@ import { useEffect } from 'react';
 /**
  * The icon URL for a bookmark (see `getSiteIconUrl`): a saved site icon for its origin first,
  * then the browser's icon cache while that setting is on and its permission granted, else null.
- * Reads the shared in-memory cache, never storage.
+ * Reads the shared in-memory cache, never storage. `size` is the size to request in pixels
+ * (`SiteIcon` asks for twice the size it draws, for high-density screens).
  */
-export function useSiteIconUrl(pageUrl: string, size = 16): string | null {
+export function useSiteIconUrl(pageUrl: string, size: number): string | null {
   useEffect(() => {
     ensureSiteIconsLoaded();
   }, []);

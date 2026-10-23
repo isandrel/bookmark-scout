@@ -4,3 +4,8 @@
 # Folders the path shows, the open one included. A longer path shows its first folder, a "…"
 # menu with the folders in between, and its last folders
 max_folders = 4
+
+# Widest a folder name in the path may be, in CSS pixels, before it is cut short with "…": the
+# open folder's, then each folder before it (which also shrink first when the header is narrow).
+current_max_width_px = 200
+ancestor_max_width_px = 150

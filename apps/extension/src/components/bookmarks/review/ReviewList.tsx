@@ -194,7 +194,7 @@ function ReviewRows<Item>({
     <div
       ref={scrollRef}
       data-slot="review-scroll"
-      className="max-h-[50vh] min-h-0 overflow-x-hidden overflow-y-auto"
+      className="max-h-dialog-list-short min-h-0 overflow-x-hidden overflow-y-auto"
     >
       <ul className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
         {virtualizer.getVirtualItems().map((row) => (

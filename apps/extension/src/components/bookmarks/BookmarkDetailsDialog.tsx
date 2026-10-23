@@ -300,7 +300,7 @@ export function BookmarkDetailsDialog({
       <DialogContent
         ref={popupRef}
         initialFocus={popupRef}
-        className="max-h-[85vh] overflow-y-auto"
+        className="max-h-dialog overflow-y-auto"
       >
         <DialogHeader>
           <DialogTitle>{t('bookmarks_detailsTitle')}</DialogTitle>
