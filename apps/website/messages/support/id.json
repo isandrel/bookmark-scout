@@ -40,7 +40,7 @@
                     "firefoxIcons": {
                         "q": "Ikon situs tidak muncul di Firefox",
                         "a": [
-                            "Bookmark Scout menampilkan ikon yang di-cache oleh browser itu sendiri, yang dibagikan Chrome dan Edge kepada ekstensi tetapi tidak oleh Firefox. Karena alasan yang sama, situs yang belum Anda kunjungi baru-baru ini dapat menampilkan ikon bola dunia umum di Chrome dan Edge.",
+                            "Bookmark Scout menampilkan ikon yang disimpan oleh Perbarui Ikon Situs. Di Chrome dan Edge, Bookmark Scout juga dapat menampilkan ikon yang disimpan browser untuk situs yang Anda kunjungi: aktifkan Gunakan cache ikon browser di Setelan, lalu Tampilan (nonaktif secara default). Firefox tidak membagikan ikonnya kepada ekstensi, jadi di sana bookmark menampilkan ikon bola dunia umum sampai Perbarui Ikon Situs menyimpan ikon situsnya.",
                             "Jalankan Perbarui Ikon Situs di bilah samping Alat pengelola untuk mengunduh ikon asli setiap situs. Ikon tersimpan tetap di perangkat ini. Di Firefox, buka pengelola dengan Buka pengelola bookmark di popup toolbar."
                         ]
                     },
@@ -59,7 +59,7 @@
                         ]
                     },
                     "websiteAccess": {
-                        "q": "Periksa Link Mati, Pengambil Metadata, atau Perbarui Ikon Situs tidak memindai apa pun",
+                        "q": "Periksa Link Mati, Pengambil Metadata, Perbarui Ikon Situs, Indeks Teks Halaman, atau Ambil Sampul tidak memindai apa pun",
                         "a": [
                             "Alat-alat ini memerlukan akses ke situs web, yang tidak diberikan kepada Bookmark Scout saat instalasi. Browser akan meminta izin saat pertama kali Anda menjalankannya, dan jika Anda menolak, tidak ada yang dipindai.",
                             "Jalankan alat lagi dan izinkan akses saat browser meminta."

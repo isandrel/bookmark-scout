@@ -40,7 +40,7 @@
                     "firefoxIcons": {
                         "q": "Os ícones dos sites não aparecem no Firefox",
                         "a": [
-                            "O Bookmark Scout mostra os ícones que o próprio navegador guarda em cache, que o Chrome e o Edge compartilham com as extensões e o Firefox não. Pelo mesmo motivo, sites que você não visitou recentemente podem mostrar um globo genérico no Chrome e no Edge.",
+                            "O Bookmark Scout mostra os ícones salvos por Atualizar ícones dos sites. No Chrome e no Edge, ele também pode mostrar os ícones que o navegador guarda dos sites que você visita: ative Usar o cache de ícones do navegador em Configurações, depois Aparência (fica desativado por padrão). O Firefox não compartilha seus ícones com extensões, então nele um favorito mostra um globo genérico até que Atualizar ícones dos sites salve o ícone do site.",
                             "Execute Atualizar ícones dos sites na barra lateral de ferramentas do gerenciador para baixar o ícone de cada site. Os ícones salvos ficam neste dispositivo. No Firefox, abra o gerenciador com Abrir gerenciador de favoritos no pop-up da barra de ferramentas."
                         ]
                     },
@@ -59,7 +59,7 @@
                         ]
                     },
                     "websiteAccess": {
-                        "q": "Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites não verificou nada",
+                        "q": "Verificar links quebrados, Buscador de metadados, Atualizar ícones dos sites, Indexar texto das páginas ou Buscar capas não verificou nada",
                         "a": [
                             "Essas ferramentas precisam de acesso aos sites, que o Bookmark Scout não recebe na instalação. O navegador pede permissão na primeira vez que você as executa e, se você recusar, nada é verificado.",
                             "Execute a ferramenta novamente e permita o acesso quando o navegador pedir."

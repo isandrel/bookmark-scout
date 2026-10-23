@@ -40,7 +40,7 @@
                     "firefoxIcons": {
                         "q": "In Firefox mancano le icone dei siti",
                         "a": [
-                            "Bookmark Scout mostra le icone memorizzate nella cache del browser, che Chrome ed Edge condividono con le estensioni e Firefox no. Per lo stesso motivo, in Chrome ed Edge i siti che non hai visitato di recente possono mostrare un globo generico.",
+                            "Bookmark Scout mostra le icone salvate da Aggiorna icone dei siti. In Chrome ed Edge può mostrare anche le icone che il browser conserva per i siti che visiti: attiva Usa la cache delle icone del browser in Impostazioni, poi Aspetto (è disattivata per impostazione predefinita). Firefox non condivide le sue icone con le estensioni, quindi lì un preferito mostra un globo generico finché Aggiorna icone dei siti non salva l'icona del suo sito.",
                             "Esegui Aggiorna icone dei siti nella barra laterale Strumenti della gestione preferiti per scaricare l'icona di ogni sito. Le icone salvate restano su questo dispositivo. In Firefox, apri la gestione preferiti con Apri gestione preferiti nel popup della barra degli strumenti."
                         ]
                     },
@@ -59,7 +59,7 @@
                         ]
                     },
                     "websiteAccess": {
-                        "q": "Controlla link non funzionanti, Recupero metadati o Aggiorna icone dei siti non hanno analizzato nulla",
+                        "q": "Controlla link non funzionanti, Recupero metadati, Aggiorna icone dei siti, Indicizza il testo delle pagine o Recupera copertine non hanno analizzato nulla",
                         "a": [
                             "Questi strumenti richiedono l'accesso ai siti web, che Bookmark Scout non ottiene all'installazione. Il browser lo chiede la prima volta che li esegui e, se rifiuti, non viene analizzato nulla.",
                             "Esegui di nuovo lo strumento e consenti l'accesso quando il browser lo chiede."
