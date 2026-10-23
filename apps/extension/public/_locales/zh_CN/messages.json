@@ -1698,7 +1698,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "页面标题与图标",
+        "message": "页面详情",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2160,11 +2160,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "页面标题与图标",
+        "message": "页面详情",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "修正页面标题和网站图标的工具设置",
+        "message": "从网页读取标题、网站图标、正文和封面的工具设置",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

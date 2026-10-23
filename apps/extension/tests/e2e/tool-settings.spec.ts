@@ -325,7 +325,7 @@ test('Sidebar Tools hides and reorders tools, and Start Tab picks the tab the si
   const sidebar = page.getByTestId('tools-sidebar');
   // It opens on the Start Tab instead of Maintenance.
   await expect(sidebar.getByTestId('tools-tabs').getByRole('radio', { checked: true })).toHaveText(
-    'Page Titles & Icons',
+    'Page Details',
   );
   await expect(toolCard(page, 'Metadata Fetcher')).toBeVisible();
   await expect(toolCard(page, 'Duplicate Cleaner')).toBeHidden();

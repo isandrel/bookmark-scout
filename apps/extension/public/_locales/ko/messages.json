@@ -1698,7 +1698,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "페이지 제목 및 아이콘",
+        "message": "페이지 세부 정보",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2160,11 +2160,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "페이지 제목 및 아이콘",
+        "message": "페이지 세부 정보",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "페이지 제목과 사이트 아이콘을 고치는 도구의 설정입니다",
+        "message": "페이지에서 제목, 사이트 아이콘, 본문, 표지를 읽어 오는 도구의 설정입니다",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

@@ -1706,7 +1706,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Seitentitel und Symbole",
+        "message": "Seitendetails",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2168,11 +2168,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Seitentitel und Symbole",
+        "message": "Seitendetails",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Einstellungen für die Tools, die Seitentitel und Website-Symbole korrigieren",
+        "message": "Einstellungen für die Tools, die aus Seiten Titel, Website-Symbole, Text und Titelbilder holen",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

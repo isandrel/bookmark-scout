@@ -1662,7 +1662,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "ページのタイトルとアイコン",
+        "message": "ページの詳細",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2124,11 +2124,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "ページのタイトルとアイコン",
+        "message": "ページの詳細",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "ページのタイトルとサイトのアイコンを直すツールの設定です",
+        "message": "ページからタイトル、サイトアイコン、本文、カバー画像を読み取るツールの設定です",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

@@ -1698,7 +1698,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "頁面標題與圖示",
+        "message": "頁面詳細資料",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2160,11 +2160,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "頁面標題與圖示",
+        "message": "頁面詳細資料",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "修正頁面標題和網站圖示的工具設定",
+        "message": "從網頁讀取標題、網站圖示、內文和封面的工具設定",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

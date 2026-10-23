@@ -1690,7 +1690,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Judul Halaman & Ikon",
+        "message": "Detail Halaman",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2152,11 +2152,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Judul Halaman & Ikon",
+        "message": "Detail Halaman",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Setelan untuk alat yang memperbaiki judul halaman dan ikon situs",
+        "message": "Setelan untuk alat yang membaca halaman untuk judul, ikon situs, teks, dan sampul",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

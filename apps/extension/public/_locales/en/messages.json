@@ -1706,7 +1706,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Page Titles & Icons",
+        "message": "Page Details",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2168,11 +2168,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Page Titles & Icons",
+        "message": "Page Details",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Settings for the tools that fix page titles and site icons",
+        "message": "Settings for the tools that read pages for titles, site icons, text, and covers",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

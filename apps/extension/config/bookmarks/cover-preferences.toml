@@ -1,4 +1,4 @@
-# The choices of Cover Source (Settings > Page Titles & Icons > Fetch Covers; default in
+# The choices of Cover Source (Settings > Page Details > Fetch Covers; default in
 # config/settings/metadata-content.toml), read by src/lib/cover-preferences.ts. Each lists the kinds
 # of cover it takes, best first: `page` is the preview image a page names for itself (Fetch
 # Covers), `screenshot` a picture of the tab (Capture Covers While Browsing). A new cover replaces

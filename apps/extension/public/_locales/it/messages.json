@@ -1706,7 +1706,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Titoli e icone delle pagine",
+        "message": "Dettagli delle pagine",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2168,11 +2168,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Titoli e icone delle pagine",
+        "message": "Dettagli delle pagine",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Impostazioni degli strumenti che correggono i titoli delle pagine e le icone dei siti",
+        "message": "Impostazioni degli strumenti che leggono le pagine per titoli, icone dei siti, testo e copertine",
         "description": "Metadata settings tab description"
     },
     "settings_security": {

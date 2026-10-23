@@ -1738,7 +1738,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Названия и значки страниц",
+        "message": "Данные страниц",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2200,11 +2200,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Названия и значки страниц",
+        "message": "Данные страниц",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Настройки инструментов, исправляющих названия страниц и значки сайтов",
+        "message": "Настройки инструментов, которые читают страницы: названия, значки сайтов, текст и обложки",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
