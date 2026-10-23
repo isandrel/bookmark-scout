@@ -651,3 +651,35 @@ test('a rule with a folder cannot be saved before the folder path is read', asyn
     )) ?? [];
   expect(rule?.moveTo?.path).toMatch(/E2E Rule Path \/ Target$/);
 });
+
+test('the rule tags box adds a pasted list whole, and waits for an input method to finish', async ({
+  extensionId,
+  page,
+}) => {
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  await page.getByTestId('bookmark-rules').getByRole('button', { name: 'Add rule' }).click();
+  const editor = page.getByRole('dialog', { name: 'New rule' });
+  const tags = editor.getByRole('textbox', { name: 'Add tags' });
+  const chips = editor.locator('[data-slot="list-chip"]');
+
+  // Longer than one tag may be, as a whole: the box once cut the paste at that length.
+  const pasted = ['reading-list', 'research-notes', 'machine-learning', 'web-development'];
+  await tags.focus();
+  await page.keyboard.insertText(`${pasted.join(', ')},`);
+  await expect(chips).toHaveText(pasted);
+  await expect(tags).toHaveValue('');
+
+  // The DevTools protocol drives an input method (Chromium and Edge both have it).
+  const session = await page.context().newCDPSession(page);
+  // A Japanese input method shows its comma before the text is committed: no tag yet.
+  await session.send('Input.imeSetComposition', {
+    text: '読書、',
+    selectionStart: 3,
+    selectionEnd: 3,
+  });
+  await expect(tags).toHaveValue('読書、');
+  await expect(chips).toHaveText(pasted);
+  await session.send('Input.insertText', { text: '読書、' });
+  await expect(chips).toHaveText([...pasted, '読書']);
+  await expect(tags).toHaveValue('');
+});
