@@ -303,6 +303,9 @@
 # Locales set on 2026-10-23 to 2,645,000 when the copy review and the media review met on main:
 # fix/media-review-035 rebased on fbfef7a4 measured 2,632,868 B of locales (all three browsers),
 # ZIP 2,146,399 / 2,146,499 / 2,146,553 B and 4,044,545 B of JavaScript (Chrome / Edge / Firefox).
+# Locales raised on 2026-10-23 (2,620,000 to 2,630,000) for the Smart Rules errors from the 0.3.5
+# review (page text in a rule's search, a full rules list) in 12 languages. Measured on
+# fix/search-review-035: 2,623,014 B of locales in each browser.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
