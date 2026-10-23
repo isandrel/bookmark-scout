@@ -3,10 +3,10 @@
  * same selection, keys, menus, and opening, kept on this device.
  */
 import { readFile } from 'node:fs/promises';
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { managerSearch, managerUrl, seedCover, waitForNoOverlay } from './manager-helpers';
-import { DELETE_KEY } from './manager-keys';
+import { DELETE_KEY, OPEN_KEY } from './manager-keys';
 import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 import { childrenOf, chooseExportFolder, openTools, seedFolder, toolCard } from './tool-helpers';
 
@@ -626,4 +626,87 @@ test('exporting from the cards view gives the same file as from the list, with n
   expect(fromCards).toBe(fromList);
   expect(fromCards).toContain('Export Inner');
   expect(fromCards).not.toMatch(/blob:|data:image|cover/i);
+});
+
+test.describe('opening from a card', () => {
+  // The tabs' addresses are read back from the browser, which shows them only with `tabs`.
+  test.use({ grantPermissions: ['tabs'] });
+
+  test('a card opens its bookmark by double click, Enter, and Ctrl/Cmd+Enter, and opens no script or data: address, as the list (V16)', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const seeded = await seedFolder(extensionWorker, 'E2E Cards Open', [
+      { title: 'Open Card', url: 'https://open.e2e.invalid/' },
+      { title: 'Script Card', url: 'javascript:void(0)' },
+      { title: 'Page Data Card', url: 'data:text/html,<p>page</p>' },
+    ]);
+    await setSettings(extensionWorker, { managerViewMode: 'cards' });
+    await page.goto(managerUrl(extensionId, seeded.folderId));
+    const card = (title: string) =>
+      page
+        .getByTestId('bookmark-cards')
+        .locator('[data-slot="bookmark-card"]')
+        .filter({ hasText: title });
+    /** The address of every tab, read from the browser, that is not the manager. */
+    const opened = () =>
+      extensionWorker.evaluate(async (manager) => {
+        const tabs = await chrome.tabs.query({});
+        return tabs
+          .map((tab) => tab.pendingUrl || tab.url || '')
+          .filter((url) => !url.startsWith(manager))
+          .sort();
+      }, `chrome-extension://${extensionId}/`);
+    const before = await opened();
+    const added = async () => [...new Set((await opened()).filter((url) => !before.includes(url)))];
+
+    // A double click opens a tab in front, Enter (Cmd+O on a Mac) too, Ctrl/Cmd+Enter in the back.
+    await card('Open Card').dblclick();
+    await expect.poll(async () => (await opened()).length).toBe(before.length + 1);
+    await page.bringToFront();
+    await card('Open Card').click();
+    await page.keyboard.press(OPEN_KEY);
+    await expect.poll(async () => (await opened()).length).toBe(before.length + 2);
+    await page.bringToFront();
+    await card('Open Card').focus();
+    await page.keyboard.press('ControlOrMeta+Enter');
+    await expect.poll(async () => (await opened()).length).toBe(before.length + 3);
+    expect(await added()).toEqual(['https://open.e2e.invalid/']);
+    expect((await opened()).filter((url) => url === 'https://open.e2e.invalid/')).toHaveLength(3);
+    await page.bringToFront();
+
+    // A bookmarklet or a data: address opens from no card and no row, by any gesture, alone or
+    // selected with a bookmark that opens; the tab of that one shows the gestures were done.
+    // A row is clicked on its title, never on its address link or checkbox.
+    const refused = async (
+      target: (title: string) => Locator,
+      position?: { x: number; y: number },
+    ) => {
+      for (const title of ['Script Card', 'Page Data Card']) {
+        await target(title).dblclick({ position });
+        await target(title).click({ position });
+        await page.keyboard.press(OPEN_KEY);
+        await page.keyboard.press('ControlOrMeta+Enter');
+      }
+      await target('Open Card').click({ position });
+      for (const title of ['Script Card', 'Page Data Card']) {
+        await target(title).click({ position, modifiers: ['ControlOrMeta'] });
+      }
+      await expect(page.getByText('3 of 3 selected', { exact: true })).toBeVisible();
+      await page.keyboard.press('ControlOrMeta+Enter');
+    };
+    await refused(card);
+    await expect.poll(async () => (await opened()).length).toBe(before.length + 4);
+    expect(await added()).toEqual(['https://open.e2e.invalid/']);
+
+    await page
+      .getByRole('group', { name: 'Manager View' })
+      .getByRole('button', { name: 'List' })
+      .click();
+    const row = (title: string) => page.locator('tbody tr').filter({ hasText: title });
+    await refused(row, { x: 200, y: 10 });
+    await expect.poll(async () => (await opened()).length).toBe(before.length + 5);
+    expect(await added()).toEqual(['https://open.e2e.invalid/']);
+  });
 });

@@ -403,7 +403,7 @@ export function getOpenableUrls(
   items: readonly (ManagerItem & { url?: string })[],
 ): string[] {
   const openable = (item: ManagerItem & { url?: string }) =>
-    item.type === ItemTypeEnum.Link && Boolean(item.url) && !isScriptUrl(item.url);
+    item.type === ItemTypeEnum.Link && isOpenableBookmarkUrl(item.url);
   return rows.flatMap((row) => {
     if (row.type !== ItemTypeEnum.Folder) return openable(row) ? [row.url as string] : [];
     return items

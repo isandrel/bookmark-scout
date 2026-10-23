@@ -3629,7 +3629,7 @@
     },
     "search_slowRegex": {
         "message": "此模式在某些標題上可能耗時過長，已改為以純文字搜尋。",
-        "description": "Warning shown when the regex search option is on and the pattern repeats a repeating group, which could freeze the page"
+        "description": "Warning shown when the regex search option is on and the pattern could freeze the page: it repeats a repeating group, repeats alternatives that can match the same text, or is very long"
     },
     "search_reasonUrl": {
         "message": "符合網址",

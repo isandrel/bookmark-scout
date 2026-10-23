@@ -25,6 +25,7 @@ import {
   getRegistrableDomain,
   getUrlDomain,
   hostnameMatchesDomain,
+  isOpenableBookmarkUrl,
   isScriptUrl,
   withDefaultScheme,
 } from '@/lib/url-domain';
@@ -174,6 +175,27 @@ describe('url domains', () => {
     expect(isScriptUrl('java\tscript:alert(1)')).toBe(true);
     expect(isScriptUrl('https://example.com/javascript:')).toBe(false);
     expect(isScriptUrl(undefined)).toBe(false);
+  });
+
+  it('opens no script or data: address in a tab, however its scheme is written (V16)', () => {
+    for (const url of [
+      'javascript:void(0)',
+      ' VBScript:msgbox(1)',
+      'data:text/html,<p>page</p>',
+      'da\nta:text/plain,hello',
+      'DATA:image/png;base64,AAAA',
+      '',
+      undefined,
+    ]) {
+      expect(isOpenableBookmarkUrl(url), String(url)).toBe(false);
+    }
+    for (const url of [
+      'https://example.com/data:x',
+      'http://a.example/',
+      'mailto:me@example.com',
+    ]) {
+      expect(isOpenableBookmarkUrl(url), url).toBe(true);
+    }
   });
 });
 

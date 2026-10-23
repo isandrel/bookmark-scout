@@ -71,6 +71,8 @@ describe('getOpenableUrls', () => {
     item('x0', 'f', 1, 'https://first.example/'),
     item('js', 'f', 3, 'javascript:alert(1)'),
     item('b', 'root', 1, 'https://bookmark.example/'),
+    item('page', 'f', 4, 'data:text/html,<p>page</p>'),
+    item('text', 'root', 2, ' DATA:text/plain,hello'),
   ];
 
   it("opens a bookmark's URL and the bookmarks directly in a folder, in folder order", () => {
@@ -80,6 +82,10 @@ describe('getOpenableUrls', () => {
       'https://first.example/',
       'https://second.example/',
     ]);
+  });
+
+  it('never opens a script or data: address, picked alone or in its folder (V16)', () => {
+    expect(getOpenableUrls([items[5], items[7], items[8]], items)).toEqual([]);
   });
 });
 
