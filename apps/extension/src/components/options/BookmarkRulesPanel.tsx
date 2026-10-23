@@ -50,6 +50,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
   useEffect(() => {
     if (!draft) return;
     setValue(draft);
+    setTagDraft('');
     setError(undefined);
     setSample('');
     Promise.all([fetchBookmarkTree(), bookmarkMetadataValue.get()])
@@ -57,9 +58,16 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
       .catch(() => setLibrary(undefined));
   }, [draft]);
 
+  // A tag still being typed counts, as if Enter had been pressed, so Save never drops it.
+  const typed: RuleDraft = {
+    ...value,
+    tags: addTokens(parseBookmarkTags(value.tags), parseBookmarkTags(tagDraft), {
+      keyOf: tagKey,
+    }).join(', '),
+  };
   const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
   // A rule with nothing to do cannot be turned on: a template that moves waits for its folder.
-  const actionable = hasRuleAction(value);
+  const actionable = hasRuleAction(typed);
   // What is wrong with the search, as the search boxes say it: a rule never runs on part of one.
   const queryProblem = useMemo(() => {
     const [diagnostic] = parseSearchQuery(value.query).diagnostics;
@@ -79,7 +87,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
 
   const save = async () => {
     if (!draft) return;
-    const result = ruleFromDraft(value, draft.id ?? createBookmarkRuleId(), library?.tree);
+    const result = ruleFromDraft(typed, draft.id ?? createBookmarkRuleId(), library?.tree);
     if ('error' in result) {
       setError(t(RULE_DRAFT_ERROR_KEYS[result.error]));
       return;
