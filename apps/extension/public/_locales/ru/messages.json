@@ -559,14 +559,6 @@
         "message": "Резервная копия экспортирована",
         "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_backupExportedDescription": {
-        "message": "В файле есть ваши настройки, промпты, ИИ-сервисы и сохранённые поиски. API-ключи в него никогда не попадают.",
-        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
-    },
-    "toast_backupExportedCoversDescription": {
-        "message": "В файле есть ваши настройки, промпты, ИИ-сервисы, сохранённые поиски и обложки ($1). API-ключи в него никогда не попадают.",
-        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
-    },
     "toast_exportFailed": {
         "message": "Не удалось экспортировать",
         "description": "Toast title for settings export error"
@@ -654,14 +646,6 @@
     "settings_sectionBackup": {
         "message": "Резервная копия",
         "description": "Settings: section heading under Import & Export for the settings backup file"
-    },
-    "settings_backupIncludeCovers": {
-        "message": "Включать обложки в резервные копии",
-        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
-    },
-    "settings_backupIncludeCoversDesc": {
-        "message": "Сохраняет ли «Создать резервную копию» в файл и ваши обложки. Пока обложки хранятся, вопрос задаётся каждый раз, с этим ответом, отмеченным заранее, и с указанием, сколько они добавят. Обложки не синхронизируются, поэтому перенести их на другой компьютер можно только резервной копией.",
-        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Сохранение",
@@ -3531,25 +3515,9 @@
         "message": "Изменено настроек: $1 ($2)",
         "description": "Import toast listing changed settings"
     },
-    "toast_backupRestored": {
-        "message": "Резервная копия восстановлена",
-        "description": "Toast title after Import in Settings restored a backup file"
-    },
-    "toast_backupRestoredDescription": {
-        "message": "Ваши настройки, промпты, ИИ-сервисы и сохранённые поиски восстановлены. В резервных копиях нет API-ключей: добавьте недостающие в разделе «Настройки > ИИ».",
-        "description": "Toast description after a backup was restored; API keys are not in backups"
-    },
-    "toast_backupRestoredNeedsSetup": {
-        "message": "Ваши настройки, промпты, ИИ-сервисы с их базовыми URL и сохранённые поиски восстановлены. Не восстановлено, так как этого никогда нет в резервных копиях: $1. Введите эти данные снова в разделе «Настройки > ИИ»; до тех пор у этих сервисов будет пометка «Требуется настройка».",
-        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
-    },
     "toast_backupServiceNeeds": {
         "message": "$2 для «$1»",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
-    },
-    "toast_backupCoversRestored": {
-        "message": "Обложек восстановлено: $1. Оставлено как было: $2. Без закладки здесь: $3. Не вошло: $4.",
-        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "Требуется настройка",
@@ -7243,18 +7211,6 @@
         "message": "Восстановить настройки",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
-    "backup_exportDesc": {
-        "message": "В файле есть ваши настройки, промпты, ИИ-сервисы (без API-ключей) и сохранённые поиски. Он остаётся там, куда вы его сохраните.",
-        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
-    },
-    "backup_includeCovers": {
-        "message": "Включить обложки",
-        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
-    },
-    "backup_coversEstimate": {
-        "message": "Обложек: $1, файл станет больше примерно на $2. Обложки не синхронизируются, поэтому перенести их на другой компьютер можно только резервной копией.",
-        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
-    },
     "backup_coversLeftOut": {
         "message": "Не вошли из-за ограничений резервной копии (сначала самые старые): $1",
         "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
@@ -7263,21 +7219,429 @@
         "message": "Сохранить копию",
         "description": "Back up settings dialog: button that saves the backup file"
     },
-    "backup_restoreTitle": {
+    "backup_categorySettings": {
+        "message": "Настройки",
+        "description": "Backup part: the synced settings"
+    },
+    "backup_categorySettingsDesc": {
+        "message": "Изменённые вами настройки, которые синхронизируются с другими вашими устройствами, включая меню и списки.",
+        "description": "Backup part: what the Settings part holds"
+    },
+    "backup_categoryDeviceSettings": {
+        "message": "Настройки этого компьютера",
+        "description": "Backup part: the settings kept for one device"
+    },
+    "backup_categoryDeviceSettingsDesc": {
+        "message": "Настройки только для этого компьютера: макет, боковые панели, сочетания клавиш, папка для быстрого сохранения, автоматическая работа «Умных правил» и доступ для локальных ИИ-агентов.",
+        "description": "Backup part: what the device settings part holds"
+    },
+    "backup_categoryViews": {
+        "message": "Сохранённые поиски и вид таблицы",
+        "description": "Backup part: saved searches and the manager table's layout"
+    },
+    "backup_categoryViewsDesc": {
+        "message": "Сохранённые поиски диспетчера закладок, а также столбцы и сортировка таблицы.",
+        "description": "Backup part: what the views part holds"
+    },
+    "backup_categoryPrompts": {
+        "message": "Промпты и «Обо мне»",
+        "description": "Backup part: custom AI prompts and About me"
+    },
+    "backup_categoryPromptsDesc": {
+        "message": "Ваши промпты для ИИ, какой из них использует каждая задача, и ваш текст «Обо мне».",
+        "description": "Backup part: what the prompts part holds"
+    },
+    "backup_categoryRules": {
+        "message": "Умные правила",
+        "description": "Backup part: the Smart Rules"
+    },
+    "backup_categoryRulesDesc": {
+        "message": "Ваши «Умные правила» (их поиски, теги и папки), но не то, что они сделали.",
+        "description": "Backup part: what the Smart Rules part holds"
+    },
+    "backup_categoryAiServices": {
+        "message": "ИИ-сервисы",
+        "description": "Backup part: the AI services without their keys"
+    },
+    "backup_categoryAiServicesDesc": {
+        "message": "Название, провайдер, модель, базовый URL и поля провайдера каждого ИИ-сервиса, без API-ключей и дополнительных заголовков.",
+        "description": "Backup part: what the AI services part holds"
+    },
+    "backup_categoryAiServiceKeys": {
+        "message": "Ключи ИИ-сервисов",
+        "description": "Backup part: the API keys and extra headers of the AI services"
+    },
+    "backup_categoryAiServiceKeysDesc": {
+        "message": "API-ключи и дополнительные заголовки ваших ИИ-сервисов. Попадают в резервную копию, только если вы их выберете.",
+        "description": "Backup part: what the AI service keys part holds"
+    },
+    "backup_categoryCovers": {
+        "message": "Обложки",
+        "description": "Backup part: the bookmarks' cover pictures"
+    },
+    "backup_categoryCoversDesc": {
+        "message": "Обложки ваших закладок, по адресам. Обложки не синхронизируются, поэтому перенести их на другой компьютер можно только резервной копией.",
+        "description": "Backup part: what the covers part holds"
+    },
+    "backup_badgeDevice": {
+        "message": "Этот компьютер",
+        "description": "Backup dialogs: badge on a part that suits one computer"
+    },
+    "backup_badgeLarge": {
+        "message": "Большой объём",
+        "description": "Backup dialogs: badge on a part that can make the file large"
+    },
+    "backup_deviceNote": {
+        "message": "Сначала не выбрано: эти настройки подходят к экрану и клавиатуре этого компьютера.",
+        "description": "Backup dialogs: why the device settings part starts unselected"
+    },
+    "backup_exportIntro": {
+        "message": "Выберите, что войдёт в файл. Закладок в нём нет; экспортируйте их в диспетчере закладок.",
+        "description": "Back up settings dialog: introduction"
+    },
+    "backup_partsLabel": {
+        "message": "Части",
+        "description": "Backup dialogs: heading of the list of parts"
+    },
+    "backup_selectAll": {
+        "message": "Выбрать все",
+        "description": "Back up settings dialog: button that selects every part except the keys"
+    },
+    "backup_selectNone": {
+        "message": "Снять выбор",
+        "description": "Back up settings dialog: button that clears every part"
+    },
+    "backup_counting": {
+        "message": "Подсчёт…",
+        "description": "Backup dialogs: shown while a part's items are counted"
+    },
+    "backup_partMeta": {
+        "message": "Элементов: $1 · Около $2",
+        "description": "Back up settings dialog: a part's item count ($1) and size ($2, such as 3 KB)"
+    },
+    "backup_keysWarning": {
+        "message": "Любой, к кому попадёт этот файл, сможет пользоваться этими ключами, а платить за это будете вы. Храните файл в надёжном месте и защитите его паролем.",
+        "description": "Back up settings dialog: warning shown when the AI service keys are selected"
+    },
+    "backup_keysConfirm": {
+        "message": "Я понимаю; включить мои API-ключи",
+        "description": "Back up settings dialog: checkbox confirming the keys warning"
+    },
+    "backup_protectAll": {
+        "message": "Защитить эту копию паролем",
+        "description": "Back up settings dialog: checkbox that encrypts the whole file"
+    },
+    "backup_protectAllDesc": {
+        "message": "Шифрует всё содержимое файла. При восстановлении будет запрошен пароль; список частей в файле остаётся читаемым.",
+        "description": "Back up settings dialog: what protecting the whole backup does"
+    },
+    "backup_protectKeys": {
+        "message": "Защитить API-ключи паролем",
+        "description": "Back up settings dialog: checkbox that encrypts only the keys"
+    },
+    "backup_protectKeysDesc": {
+        "message": "Шифрует только ключи; остальное содержимое файла можно восстановить без пароля.",
+        "description": "Back up settings dialog: what protecting the keys does"
+    },
+    "backup_keysPlainWarning": {
+        "message": "Без пароля ключи сохраняются открытым текстом, и их может прочитать любой, кто откроет файл.",
+        "description": "Back up settings dialog: warning when the keys are saved without a password"
+    },
+    "backup_keysPlainConfirm": {
+        "message": "Сохранить ключи без пароля",
+        "description": "Back up settings dialog: checkbox confirming keys without a password"
+    },
+    "backup_password": {
+        "message": "Пароль",
+        "description": "Backup dialogs: password field label"
+    },
+    "backup_passwordConfirm": {
+        "message": "Повторите пароль",
+        "description": "Back up settings dialog: second password field label"
+    },
+    "backup_passwordHint": {
+        "message": "Минимум символов: $1; несколько не связанных между собой слов легко запомнить. Забытый пароль восстановить нельзя: без него никто не откроет защищённые части, даже Bookmark Scout.",
+        "description": "Back up settings dialog: password hint; $1 is the shortest length"
+    },
+    "backup_passwordTooShort": {
+        "message": "Слишком короткий пароль. Минимум символов: $1.",
+        "description": "Back up settings dialog: the password is too short; $1 is the shortest length"
+    },
+    "backup_passwordMismatch": {
+        "message": "Пароли не совпадают.",
+        "description": "Back up settings dialog: the two passwords differ"
+    },
+    "backup_staysLocal": {
+        "message": "Ничего никуда не отправляется: файл сохраняется на этом компьютере.",
+        "description": "Back up settings dialog: privacy note"
+    },
+    "backup_fileName": {
+        "message": "Имя файла: $1",
+        "description": "Back up settings dialog: the file name the backup gets"
+    },
+    "backup_errorNothingSelected": {
+        "message": "Выберите хотя бы одну часть.",
+        "description": "Backup dialogs: nothing is selected"
+    },
+    "backup_errorPasswordMissing": {
+        "message": "Введите пароль.",
+        "description": "Back up settings: password protection is on without a password"
+    },
+    "backup_errorPassword": {
+        "message": "Неверный пароль, или файл был изменён после сохранения. Из защищённых частей ничего не восстановлено.",
+        "description": "Restore settings: wrong password or changed file"
+    },
+    "backup_errorNewerFormat": {
+        "message": "Эта резервная копия создана более новой версией Bookmark Scout. Обновите расширение, чтобы восстановить её.",
+        "description": "Restore settings: the file's format is newer"
+    },
+    "backup_errorFileTooLarge": {
+        "message": "Файл больше допустимого размера резервной копии ($1).",
+        "description": "Restore settings: the file is too large; $1 is the limit, such as 420 MB"
+    },
+    "backup_exportedDesc": {
+        "message": "Сохранён файл $1. Части: $2.",
+        "description": "Toast after a backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_exportedProtectedDesc": {
+        "message": "Сохранён файл $1. Части: $2. Защищён паролем.",
+        "description": "Toast after a password-protected backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_importTitle": {
         "message": "Восстановить резервную копию",
-        "description": "Title of the review shown before restoring a backup file that holds covers"
+        "description": "Restore settings dialog: title"
     },
-    "backup_restoreDesc": {
-        "message": "В $1 есть обложки. Настройки, промпты, ИИ-сервисы и сохранённые поиски восстанавливаются в любом случае; проверьте, что сделает восстановление обложек на этом устройстве.",
-        "description": "Restore backup review: $1 is the file name"
+    "backup_importIntro": {
+        "message": "$1, сохранён $2. До импорта ничего не изменится.",
+        "description": "Restore settings dialog: $1 file name, $2 when the backup was saved"
     },
-    "backup_restoreCovers": {
-        "message": "Восстановить обложки",
-        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    "backup_importIntroUndated": {
+        "message": "$1. До импорта ничего не изменится.",
+        "description": "Restore settings dialog: $1 file name, for a file without a date"
     },
-    "backup_coversInFile": {
-        "message": "Обложек в файле: $1",
-        "description": "Restore backup review: how many covers the file holds"
+    "backup_lockedParts": {
+        "message": "Защищены паролем: $1",
+        "description": "Restore settings dialog: the parts that need the password"
+    },
+    "backup_unlock": {
+        "message": "Разблокировать",
+        "description": "Restore settings dialog: button that opens the protected parts"
+    },
+    "backup_unlockHint": {
+        "message": "Введите пароль, с которым была сохранена копия. Остальные части можно восстановить без него.",
+        "description": "Restore settings dialog: hint under the password field"
+    },
+    "backup_unknownParts": {
+        "message": "Не поддерживаются этой версией, поэтому пропущены: $1",
+        "description": "Restore settings dialog: parts from a newer version"
+    },
+    "backup_unreadableParts": {
+        "message": "Не удалось прочитать, поэтому пропущены: $1",
+        "description": "Restore settings dialog: parts that failed their checks"
+    },
+    "backup_nothingToImport": {
+        "message": "В этом файле нет ничего, что эта версия может восстановить.",
+        "description": "Restore settings dialog: no part can be imported"
+    },
+    "backup_importSafety": {
+        "message": "Страховая копия всего, что изменит импорт, хранится $1 ч: «Отменить импорт» вернёт всё как было.",
+        "description": "Restore settings dialog: about Undo import; $1 is hours"
+    },
+    "backup_importButton": {
+        "message": "Импортировать ($1)",
+        "description": "Restore settings dialog: import button; $1 is how many parts are selected"
+    },
+    "backup_undoImport": {
+        "message": "Отменить импорт",
+        "description": "Button that puts back what the last backup import changed"
+    },
+    "backup_replaceConfirmTitle": {
+        "message": "Заменить эти части?",
+        "description": "Restore settings: title of the confirmation before Replace"
+    },
+    "backup_replaceConfirm": {
+        "message": "«Заменить» приведёт $1 в точное соответствие с файлом: то, что есть только на этом устройстве, будет удалено. Какое-то время это можно вернуть через «Отменить импорт».",
+        "description": "Restore settings: confirmation before Replace; $1 is the list of parts"
+    },
+    "backup_reviewCounts": {
+        "message": "В файле: $1 · Добавится: $2 · Изменится: $3 · Уже совпадает: $4",
+        "description": "Restore settings dialog: what importing a part would do"
+    },
+    "backup_reviewSkipped": {
+        "message": "Нельзя импортировать (некорректные или из более новой версии): $1",
+        "description": "Restore settings dialog: entries that will be skipped"
+    },
+    "backup_keysImportWarning": {
+        "message": "Это API-ключи. Они заменят ключи этого устройства для тех же сервисов, и ими может пользоваться любой, у кого есть этот файл.",
+        "description": "Restore settings dialog: warning when the keys part is selected"
+    },
+    "backup_keysImportConfirm": {
+        "message": "Импортировать API-ключи",
+        "description": "Restore settings dialog: checkbox confirming the keys import"
+    },
+    "backup_strategyLabel": {
+        "message": "Способ",
+        "description": "Restore settings dialog: label of the Merge or Replace choice"
+    },
+    "backup_strategyMerge": {
+        "message": "Объединить",
+        "description": "Restore settings: import strategy that adds and updates"
+    },
+    "backup_strategyReplace": {
+        "message": "Заменить",
+        "description": "Restore settings: import strategy that makes a part exactly the file's"
+    },
+    "backup_strategyMergeDesc": {
+        "message": "Добавляет и обновляет то, что есть в файле; сохраняет то, что есть только на этом устройстве.",
+        "description": "Restore settings dialog: what Merge does"
+    },
+    "backup_strategyReplaceDesc": {
+        "message": "Делает эту часть точно такой, как в файле.",
+        "description": "Restore settings dialog: what Replace does"
+    },
+    "backup_replaceRemoves": {
+        "message": "Будет удалено элементов, которые есть только на этом устройстве: $1.",
+        "description": "Restore settings dialog: what Replace removes"
+    },
+    "backup_conflicts": {
+        "message": "Изменено и здесь, и в файле: $1",
+        "description": "Restore settings dialog: number of conflicts"
+    },
+    "backup_conflictNewer": {
+        "message": "Оставить более новое",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictFile": {
+        "message": "Взять из файла",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictDevice": {
+        "message": "Оставить с этого устройства",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictsEach": {
+        "message": "Выбрать для каждого",
+        "description": "Restore settings dialog: button that lists each conflict"
+    },
+    "backup_conflictsMore": {
+        "message": "Ещё: $1 — для них действует выбор выше.",
+        "description": "Restore settings dialog: conflicts not listed"
+    },
+    "backup_conflictTimes": {
+        "message": "Здесь: $1 · В файле: $2",
+        "description": "Restore settings dialog: when each side of a conflict changed"
+    },
+    "backup_importDone": {
+        "message": "Импорт завершён.",
+        "description": "Restore settings dialog: result heading"
+    },
+    "backup_importPartFailed": {
+        "message": "Не удалось импортировать «$1»: $2. Части перед ней импортированы; «Отменить импорт» вернёт их как было.",
+        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+    },
+    "backup_outcomeCounts": {
+        "message": "Добавлено: $1 · Изменено: $2 · Удалено: $3 · Оставлено: $4 · Пропущено: $5",
+        "description": "Restore settings dialog: what importing a part did"
+    },
+    "backup_needsSetup": {
+        "message": "Введите их снова в разделе «Настройки > ИИ»; до этого у этих сервисов будет отметка «Требуется настройка»: $1.",
+        "description": "Restore settings dialog: AI services missing a secret"
+    },
+    "backup_outcomeMismatch": {
+        "message": "Элементов, не совпавших с импортированным при проверке: $1. Проверьте их или нажмите «Отменить импорт».",
+        "description": "Restore settings dialog: read-back found differences"
+    },
+    "backup_inHistory": {
+        "message": "Импорт записан в разделе «История закладок» диспетчера закладок.",
+        "description": "Restore settings dialog: where the import is recorded"
+    },
+    "backup_undone": {
+        "message": "Импорт отменён",
+        "description": "Toast after Undo import"
+    },
+    "backup_undoFailed": {
+        "message": "Не удалось отменить импорт",
+        "description": "Toast when Undo import cannot run"
+    },
+    "backup_undoMismatch": {
+        "message": "Элементов, не совпавших с прежним состоянием при проверке: $1.",
+        "description": "Toast after Undo import found differences"
+    },
+    "backup_undoUnavailableUndone": {
+        "message": "Этот импорт уже отменён.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_undoUnavailableExpired": {
+        "message": "Отменить больше нельзя: страховая копия хранится $1 ч.",
+        "description": "Why Undo import is not offered; $1 is hours"
+    },
+    "backup_undoUnavailableReplaced": {
+        "message": "Отменить больше нельзя: более поздний импорт заменил его страховую копию.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_keysForMissingServices": {
+        "message": "Ключи для сервисов, которых на этом устройстве не будет, пропущены: $1",
+        "description": "Restore settings dialog: keys without their service"
+    },
+    "history_backupImported": {
+        "message": "Импорт резервной копии",
+        "description": "History: a backup restore record"
+    },
+    "history_dataPartCounts": {
+        "message": "$1 · Добавлено: $2 · Изменено: $3 · Удалено: $4 · Пропущено: $5",
+        "description": "History: what a restored backup part did; $1 is Merge or Replace"
+    },
+    "history_filterData": {
+        "message": "Резервные копии",
+        "description": "History filter: backup restores"
+    },
+    "history_factFile": {
+        "message": "Файл",
+        "description": "History record fact: the backup file's name"
+    },
+    "history_dataPartsLabel": {
+        "message": "Импортированные части",
+        "description": "History: label of a backup record's parts"
+    },
+    "settings_backupExportCategories": {
+        "message": "Части в новых резервных копиях",
+        "description": "Settings: which parts Back up settings starts with"
+    },
+    "settings_backupExportCategoriesDesc": {
+        "message": "Что уже выбрано при открытии «Создать резервную копию». Каждая сохранённая копия становится новым выбором на этом компьютере. Ключи ИИ-сервисов изначально никогда не выбраны.",
+        "description": "Settings: description of settings_backupExportCategories"
+    },
+    "settings_backupEncryptByDefault": {
+        "message": "Защищать новые резервные копии паролем",
+        "description": "Settings: whether a new backup starts password-protected"
+    },
+    "settings_backupEncryptByDefaultDesc": {
+        "message": "Отмечен ли изначально флажок «Защитить эту копию паролем». Забытый пароль восстановить нельзя.",
+        "description": "Settings: description of settings_backupEncryptByDefault"
+    },
+    "settings_backupEncryptSecrets": {
+        "message": "Защищать API-ключи паролем",
+        "description": "Settings: whether included API keys start password-protected"
+    },
+    "settings_backupEncryptSecretsDesc": {
+        "message": "Будут ли ключи ИИ-сервисов в резервной копии изначально защищены паролем. Если выключить это в диалоге, потребуется подтверждение.",
+        "description": "Settings: description of settings_backupEncryptSecrets"
+    },
+    "backup_partEmpty": {
+        "message": "Пока пусто",
+        "description": "Back up settings dialog: a part with no items"
+    },
+    "history_descriptionBackups": {
+        "message": "Здесь также видны восстановления из резервной копии настроек.",
+        "description": "History dialog: second sentence of the description"
+    },
+    "history_verifyPassedData": {
+        "message": "Проверено после импорта: всё записанное читается так, как было записано.",
+        "description": "History record fact: the read-back of a backup restore passed"
+    },
+    "history_verifyFailedData": {
+        "message": "Проверено после импорта: не совпало записей — $1.",
+        "description": "History record fact: the read-back of a backup restore found differences"
     },
     "backup_coversMatched": {
         "message": "Есть закладка с тем же адресом здесь: $1",
@@ -7287,33 +7651,9 @@
         "message": "Нет закладки с таким адресом здесь: $1",
         "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
     },
-    "backup_coversAdded": {
-        "message": "Закладок получат обложку: $1",
-        "description": "Restore backup review: how many bookmarks get a cover they did not have"
-    },
-    "backup_coversReplaced": {
-        "message": "Обложек заменится более новыми: $1",
-        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
-    },
-    "backup_coversKept": {
-        "message": "Обложек останется (выбранные через «Сделать обложку из этого вида» или новее, чем в файле): $1",
-        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
-    },
-    "backup_coversSkipped": {
-        "message": "Пропущено (не читаются или выходят за ограничения копии): $1",
-        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
-    },
     "backup_coversOverStorage": {
         "message": "Будет удалено затем, чтобы уложиться в хранилище обложек, сначала самые старые: $1",
         "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
-    },
-    "backup_restoreNoUndo": {
-        "message": "Восстановление нельзя отменить: заменённая обложка теряется.",
-        "description": "Restore backup review: a restore has no undo"
-    },
-    "backup_restore": {
-        "message": "Восстановить",
-        "description": "Restore backup review: button that restores the backup"
     },
     "actionName_searchBookmarks": {
         "message": "Искать закладки",

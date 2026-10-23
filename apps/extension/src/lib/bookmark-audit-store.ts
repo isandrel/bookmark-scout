@@ -1,6 +1,7 @@
 /**
  * The Bookmark Audit History's storage: one record per change Bookmark Scout made to bookmarks
- * (and, later, per change seen from elsewhere), kept on this device in IndexedDB so it outlives
+ * (and per change seen from elsewhere), and per change it made to its own data from a backup
+ * (`kind: 'data'`, a restore with its parts and counts), kept on this device in IndexedDB so it outlives
  * the browser session, unlike the Ctrl+Z history (`services/bookmark-history.ts`, session
  * storage). It is a local activity record, not a tamper-proof audit: it can be cleared, and it
  * knows nothing from before it started or from while the extension was off.
@@ -111,6 +112,39 @@ const countsSchema = z.object({
 });
 export type AuditCounts = z.infer<typeof countsSchema>;
 
+/**
+ * What a record changed: bookmarks (the default, and every record from before kinds existed), or
+ * the extension's own data (a backup restore). How History shows, filters, and undoes each kind is
+ * a table entry (`AUDIT_KIND_VIEWS` in `lib/audit-history-view.ts`).
+ */
+export const AUDIT_RECORD_KINDS = ['bookmarks', 'data'] as const;
+export type AuditRecordKind = (typeof AUDIT_RECORD_KINDS)[number];
+
+/** A record's kind; records without one are of bookmarks. */
+export const auditKindOf = (operation: Pick<AuditOperation, 'kind'>): AuditRecordKind =>
+  operation.kind ?? 'bookmarks';
+
+/** One part of a backup a restore imported, how, and what it did. */
+const dataPartSchema = z.object({
+  id: z.string().min(1).max(INPUT_LIMITS.chars.audit_part_id),
+  strategy: z.enum(['merge', 'replace']),
+  added: z.number().int().nonnegative(),
+  changed: z.number().int().nonnegative(),
+  removed: z.number().int().nonnegative(),
+  kept: z.number().int().nonnegative(),
+  skipped: z.number().int().nonnegative(),
+  /** The part did not finish: an error stopped it. */
+  failed: z.boolean().optional(),
+});
+export type AuditDataPart = z.infer<typeof dataPartSchema>;
+
+/** What a record of a backup restore holds: the file's name and each part. */
+const dataSchema = z.object({
+  fileName: z.string().max(INPUT_LIMITS.chars.audit_file_name).optional(),
+  parts: z.array(dataPartSchema).max(INPUT_LIMITS.counts.audit_parts),
+});
+export type AuditData = z.infer<typeof dataSchema>;
+
 export const auditOperationSchema = z.object({
   id: z.string().min(1),
   schemaVersion: z.literal(AUDIT_SCHEMA_VERSION),
@@ -150,6 +184,10 @@ export const auditOperationSchema = z.object({
    * changes happened at unknown times between this and `startedAt`.
    */
   observedSince: z.number().optional(),
+  /** What the record changed; absent for bookmarks. */
+  kind: z.enum(AUDIT_RECORD_KINDS).optional(),
+  /** A data record's parts and counts. */
+  data: dataSchema.optional(),
 });
 export type AuditOperation = z.infer<typeof auditOperationSchema>;
 

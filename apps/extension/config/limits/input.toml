@@ -16,6 +16,9 @@ agent_bridge_status_detail = 500
 audit_actor_label = 200
 audit_error_code = 64
 audit_reason = 64
+# The backup file's name and a backup part's id in a History record of an import.
+audit_file_name = 255
+audit_part_id = 64
 # Ids, feature names, and the page's token in quick save messages.
 message_id = 100
 message_source = 50
@@ -38,6 +41,8 @@ cover_meta = 4096
 # Most items.
 [counts]
 audit_error_codes = 20
+# Backup parts one History record of an import lists.
+audit_parts = 32
 # The highest position of an alternative folder a quick save toast can pick.
 alternative_index = 50
 request_headers = 100

@@ -46,35 +46,108 @@ export const AUDIT_SOURCE_LABEL_KEYS: Record<AuditSource, MessageKey> = {
   reconciliation: 'history_sourceReconciliation',
 };
 
+/** A backup part's name, or its id for a part this release does not know. */
+const partName = (id: string) => (getBackupCategory(id) ? getBackupCategoryLabel(id) : id);
+
+/**
+ * How History words each kind of record (`AUDIT_RECORD_KINDS`): what it did, and the line under
+ * it. A new kind of record is a new entry here (and in the dialog's `KIND_BODIES`).
+ */
+export const AUDIT_KIND_VIEWS: Record<
+  AuditRecordKind,
+  {
+    describe(operation: AuditOperation): string;
+    summary(operation: AuditOperation): string;
+    /** What the read-back checked, when it passed and when it found differences ($1). */
+    verifyPassedKey: MessageKey;
+    verifyFailedKey: MessageKey;
+  }
+> = {
+  bookmarks: {
+    verifyPassedKey: 'history_verifyPassed',
+    verifyFailedKey: 'history_verifyFailed',
+    describe: ({ label: { action, ...rest } }) =>
+      describeBookmarkHistoryLabel({
+        // Imports are additions; their own word comes with the import surface.
+        action: action === 'import' ? 'add' : action,
+        ...rest,
+        ...(rest.count === 0 ? { count: undefined } : {}),
+      }),
+    summary: (operation) => summarizeAuditCounts(operation.counts),
+  },
+  data: {
+    verifyPassedKey: 'history_verifyPassedData',
+    verifyFailedKey: 'history_verifyFailedData',
+    describe: () => t('history_backupImported'),
+    summary: (operation) =>
+      formatList((operation.data?.parts ?? []).map((part) => partName(part.id))),
+  },
+};
+
 /** What a record did, in the current language: `Delete 3 items`, or `Undone: Delete "News"`. */
 export function describeAuditOperation(operation: AuditOperation): string {
-  const { action, ...rest } = operation.label;
-  const what = describeBookmarkHistoryLabel({
-    // Imports are additions; their own word comes with the import surface.
-    action: action === 'import' ? 'add' : action,
-    ...rest,
-    ...(rest.count === 0 ? { count: undefined } : {}),
-  });
+  const what = AUDIT_KIND_VIEWS[auditKindOf(operation)].describe(operation);
   if (operation.replay === 'undo') return t('toast_undone', what);
   if (operation.replay === 'redo') return t('toast_redone', what);
   return what;
 }
 
-export const AUDIT_HISTORY_FILTERS = ['all', 'attention', 'extension', 'elsewhere'] as const;
-export type AuditHistoryFilter = (typeof AUDIT_HISTORY_FILTERS)[number];
+/** The line under a record's title: how many items, or a data record's parts. */
+export function summarizeAuditOperation(operation: AuditOperation): string {
+  return AUDIT_KIND_VIEWS[auditKindOf(operation)].summary(operation);
+}
 
-export const AUDIT_FILTER_LABEL_KEYS: Record<AuditHistoryFilter, MessageKey> = {
-  all: 'history_filterAll',
-  attention: 'history_filterAttention',
-  extension: 'history_filterExtension',
-  elsewhere: 'history_filterElsewhere',
-};
+/** A data record's part with its name and what it did, for the dialog. */
+export function describeAuditDataPart(part: AuditDataPart): { name: string; line: string } {
+  return {
+    name: partName(part.id),
+    line: t('history_dataPartCounts', [
+      t(part.strategy === 'replace' ? 'backup_strategyReplace' : 'backup_strategyMerge'),
+      formatCount(part.added),
+      formatCount(part.changed),
+      formatCount(part.removed),
+      formatCount(part.skipped),
+    ]),
+  };
+}
 
 const ELSEWHERE_SOURCES: readonly AuditSource[] = ['source_unknown', 'reconciliation'];
 
 /** Whether a record is of a change seen from elsewhere, which Bookmark Scout did not make. */
 export const isFromElsewhere = (operation: AuditOperation) =>
   ELSEWHERE_SOURCES.includes(operation.source);
+
+/**
+ * History's filters, in the order the bar shows them: each its label and which records it keeps.
+ * A new filter is a new entry.
+ */
+const AUDIT_FILTERS = {
+  all: { labelKey: 'history_filterAll', keeps: () => true },
+  attention: {
+    labelKey: 'history_filterAttention',
+    keeps: (operation: AuditOperation, now: number) => auditStatusView(operation, now).attention,
+  },
+  extension: {
+    labelKey: 'history_filterExtension',
+    keeps: (operation: AuditOperation) => !isFromElsewhere(operation),
+  },
+  elsewhere: { labelKey: 'history_filterElsewhere', keeps: isFromElsewhere },
+  data: {
+    labelKey: 'history_filterData',
+    keeps: (operation: AuditOperation) => auditKindOf(operation) === 'data',
+  },
+} as const satisfies Record<
+  string,
+  { labelKey: MessageKey; keeps: (operation: AuditOperation, now: number) => boolean }
+>;
+
+export type AuditHistoryFilter = keyof typeof AUDIT_FILTERS;
+
+export const AUDIT_HISTORY_FILTERS = Object.keys(AUDIT_FILTERS) as AuditHistoryFilter[];
+
+export const AUDIT_FILTER_LABEL_KEYS: Record<AuditHistoryFilter, MessageKey> = Object.fromEntries(
+  Object.entries(AUDIT_FILTERS).map(([id, filter]) => [id, filter.labelKey]),
+) as Record<AuditHistoryFilter, MessageKey>;
 
 /** The records a filter and a search (over what each did and where from) keep, in order. */
 export function filterAuditOperations(
@@ -84,12 +157,11 @@ export function filterAuditOperations(
   now = Date.now(),
 ): AuditOperation[] {
   const words = query.trim().toLocaleLowerCase();
+  const keeps: (operation: AuditOperation, now: number) => boolean = AUDIT_FILTERS[filter].keeps;
   return operations.filter((operation) => {
-    if (filter === 'attention' && !auditStatusView(operation, now).attention) return false;
-    if (filter === 'extension' && ELSEWHERE_SOURCES.includes(operation.source)) return false;
-    if (filter === 'elsewhere' && !ELSEWHERE_SOURCES.includes(operation.source)) return false;
+    if (!keeps(operation, now)) return false;
     if (!words) return true;
-    const text = `${describeAuditOperation(operation)} ${t(AUDIT_SOURCE_LABEL_KEYS[operation.source])}`;
+    const text = `${describeAuditOperation(operation)} ${summarizeAuditOperation(operation)} ${t(AUDIT_SOURCE_LABEL_KEYS[operation.source])}`;
     return text.toLocaleLowerCase().includes(words);
   });
 }

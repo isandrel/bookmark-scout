@@ -6,7 +6,12 @@ import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import { INDEXED_DATABASES } from '@/lib/storage/registry';
 import { BYTES_PER_MB } from '@/lib/units';
-import { exportBackup, getBackupCovers, readBackupFile, restoreBackup } from '@/services/backup';
+import {
+  makeBackupFile,
+  openBackup,
+  reviewBackupImport,
+  undoBackupImport,
+} from '@/services/backup';
 import {
   applyCoverRestore,
   type BackupCoverEntry,
@@ -20,6 +25,7 @@ import {
   selectBackupCovers,
 } from '@/services/cover-backup.lazy';
 import { installFakeBookmarks } from '../fake-bookmarks';
+import { resetBackupDatabases, restoreParts, stubManifestVersion } from './backup-helpers';
 import { pngHeader } from './png-header';
 
 const WIDTH = 320;
@@ -73,8 +79,10 @@ const address = (id: string, url: string): BookmarkAddress => ({ id, url, key: c
 beforeEach(async () => {
   fakeBrowser.reset();
   await clearCovers();
+  await resetBackupDatabases();
   await saveSettings({ language: 'en' });
   setLanguage('en');
+  stubManifestVersion();
   // The decoded picture is the size its header states.
   vi.stubGlobal('createImageBitmap', async () => ({
     width: WIDTH,
@@ -85,17 +93,18 @@ beforeEach(async () => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe('covers in the backup file', () => {
   it('are in the backup policy and fit a full Cover Storage at its default', () => {
-    expect(INDEXED_DATABASES.covers.backup).toBe('include');
+    expect(INDEXED_DATABASES.covers.backup).toBe('covers');
     expect(COVER_BACKUP_LIMITS.maxTotalBytes).toBeGreaterThanOrEqual(
       defaultSettings.coversMaxCacheMb * BYTES_PER_MB,
     );
   });
 
-  it('are written one per address, keyed by URL, with image, source, date, and size; none without Include covers', async () => {
+  it('are written one per address, keyed by URL, with image, source, date, and size; none without the Covers part', async () => {
     installFakeBookmarks([
       { id: 'a', title: 'A', url: 'https://site.example/a' },
       { id: 'a2', title: 'A again', url: 'https://site.example/a' },
@@ -115,14 +124,16 @@ describe('covers in the backup file', () => {
       BYTES_PER_MB,
     );
 
-    const without = JSON.parse(await exportBackup(new Date(0)));
-    expect(without).not.toHaveProperty('covers');
-    expect(
-      JSON.parse(await exportBackup(new Date(0), { includeCovers: false })),
-    ).not.toHaveProperty('covers');
+    const without = JSON.parse(
+      (await makeBackupFile({ categories: ['settings'], protection: 'none' }, new Date(0))).json,
+    );
+    expect(without.sections).not.toHaveProperty('covers');
 
-    const file = JSON.parse(await exportBackup(new Date(0), { includeCovers: true }));
-    expect(file.covers).toEqual([
+    const file = JSON.parse(
+      (await makeBackupFile({ categories: ['covers'], protection: 'none' }, new Date(0))).json,
+    );
+    expect(file.categories).toEqual([{ id: 'covers', count: 1, bytes: expect.any(Number) }]);
+    expect(file.sections.covers.covers).toEqual([
       {
         url: 'https://site.example/a',
         source: 'tab',
@@ -151,7 +162,10 @@ describe('covers in the backup file', () => {
       ],
       BYTES_PER_MB,
     );
-    const json = await exportBackup(new Date(0), { includeCovers: true });
+    const { json } = await makeBackupFile(
+      { categories: ['covers'], protection: 'none' },
+      new Date(0),
+    );
 
     // A new computer: other ids, an address spelled with another case, one bookmark missing.
     fakeBrowser.reset();
@@ -162,11 +176,9 @@ describe('covers in the backup file', () => {
       { id: '102', title: 'A in another folder', url: 'https://site.example/a' },
       { id: '103', title: 'Old', url: 'https://site.example/old' },
     ]);
-    const file = readBackupFile(json);
-    if (!file) throw new Error('not a backup');
-    await restoreBackup(file);
-    const covers = await getBackupCovers(file);
-    if (!covers) throw new Error('no covers');
+    const opened = await openBackup(json);
+    if (!opened) throw new Error('not a backup');
+    const covers = readBackupCovers((opened.sections.covers as { covers: unknown[] }).covers);
     expect(await previewCoverRestore(covers)).toMatchObject({
       inFile: 3,
       skipped: 0,
@@ -179,6 +191,9 @@ describe('covers in the backup file', () => {
 
     expect(await applyCoverRestore(covers)).toEqual({
       restored: 3,
+      added: 3,
+      removed: 0,
+      mismatches: 0,
       notStored: 0,
       kept: 0,
       unmatched: 1,
@@ -365,11 +380,76 @@ describe('covers in the backup file', () => {
     ]);
     expect(await applyCoverRestore(file)).toEqual({
       restored: 1,
+      added: 1,
+      removed: 0,
+      mismatches: 0,
       notStored: 0,
       kept: 0,
       unmatched: 0,
       skipped: 1,
     });
     expect((await getCoverInfos()).size).toBe(1);
+  });
+
+  it('Replace deletes covers the file lacks, and Undo import puts back every cover it changed', async () => {
+    installFakeBookmarks([
+      { id: 'a', title: 'A', url: 'https://site.example/a' },
+      { id: 'b', title: 'B', url: 'https://site.example/b' },
+      { id: 'c', title: 'C', url: 'https://site.example/c' },
+    ]);
+    const json = JSON.stringify({
+      format: 'bookmark-scout-backup',
+      formatVersion: 2,
+      categories: [{ id: 'covers' }],
+      sections: {
+        covers: {
+          covers: [
+            entry('https://site.example/a', { savedAt: new Date(20 * DAY).toISOString() }),
+            entry('https://site.example/b', { savedAt: new Date(1 * DAY).toISOString() }),
+          ],
+        },
+      },
+    });
+    await restoreCoverRecords(
+      [
+        // Older than the file's: replaced by Merge.
+        stored('a', 'https://site.example/a', 'page', 5 * DAY),
+        // Picked by the user: Merge keeps it, Replace does not.
+        stored('b', 'https://site.example/b', 'tab', 5 * DAY),
+        // Not in the file: Replace deletes it.
+        stored('c', 'https://site.example/c', 'page', 5 * DAY),
+      ],
+      BYTES_PER_MB,
+    );
+    const opened = await openBackup(json);
+    if (!opened) throw new Error('not a backup');
+    expect((await reviewBackupImport(opened)).covers).toMatchObject({
+      count: 2,
+      added: 0,
+      changed: 1,
+      unchanged: 1,
+      removed: 1,
+    });
+
+    const merged = await restoreParts(json, { covers: 'merge' });
+    expect(merged.outcomes.covers).toMatchObject({ added: 0, changed: 1, kept: 1, mismatches: 0 });
+    expect((await getCoverInfos()).get('a')?.savedAt).toBe(20 * DAY);
+    await undoBackupImport(merged.operationId);
+    expect((await getCoverInfos()).get('a')?.savedAt).toBe(5 * DAY);
+
+    const replaced = await restoreParts(json, { covers: 'replace' });
+    expect(replaced.outcomes.covers).toMatchObject({ changed: 2, removed: 1, mismatches: 0 });
+    const after = await getCoverInfos();
+    expect(after.has('c')).toBe(false);
+    expect(after.get('b')).toMatchObject({ source: 'page', savedAt: DAY });
+
+    expect(await undoBackupImport(replaced.operationId)).toMatchObject({
+      undone: true,
+      mismatches: 0,
+    });
+    const undone = await getCoverInfos();
+    expect([...undone.keys()].sort()).toEqual(['a', 'b', 'c']);
+    expect(undone.get('b')).toMatchObject({ source: 'tab', savedAt: 5 * DAY });
+    expect(undone.get('c')?.savedAt).toBe(5 * DAY);
   });
 });

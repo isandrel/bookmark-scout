@@ -1,22 +1,24 @@
 /**
  * Covers in the backup file, so they reach a new computer: covers stay on the device that made
- * them (`lib/cover-store.ts`) and never sync. Back up settings writes, when Include covers is
- * checked, one cover per address with its image in base64, where it came from, when it was saved,
- * and its size (`covers` in the file, `backup.ts`). Bookmark ids differ on another computer, so a
+ * them (`lib/cover-store.ts`) and never sync. Back up settings writes, when the Covers part is
+ * selected, one cover per address with its image in base64, where it came from, when it was saved,
+ * and its size (the `covers` part, `backup-categories.lazy.ts`). Bookmark ids differ on another computer, so a
  * cover is keyed by its bookmark's address, compared the way the browser parses addresses
  * (`safeNormalizeUrl`), and stored there under each bookmark of that address as that bookmark
  * spells it, since the cover store matches addresses exactly.
  *
  * A cover the user picked (Use this view as the cover, `isKeptCover`) ranks above any other: a
- * restore never replaces a picked cover unless the file's cover was also picked and is newer, and a
- * picked cover in the file replaces one that was not picked; otherwise the newer cover wins, so
- * restoring a backup onto the device that made it changes nothing. A date in the future is read
- * as now, so a file cannot make its covers outrank later ones or outlast them in Cover Storage.
- * The file comes from outside: each entry is checked on its own against
- * `config/bookmarks/cover-backup.toml`'s caps and the cover checks (`config/bookmarks/covers.toml`:
- * type by its first bytes, the size its header states, and the decoded size), and one that fails
- * is left out alone. Cover Storage still applies after a restore, removing the oldest covers first
- * and picked ones last.
+ * Merge restore never replaces a picked cover unless the file's cover was also picked and is
+ * newer, and a picked cover in the file replaces one that was not picked; otherwise the newer cover
+ * wins, so restoring a backup onto the device that made it changes nothing. A date in the future is
+ * read as now, so a file cannot make its covers outrank later ones or outlast them in Cover
+ * Storage. A Replace restore deletes this device's covers and stores the file's on every bookmark
+ * of their address. Undo import puts back the covers a restore replaced, removed, or pushed out of
+ * Cover Storage (`snapshotCoversFor`, `restoreCoverSnapshot`). The file comes from outside: each
+ * entry is checked on its own against `config/bookmarks/cover-backup.toml`'s caps and the cover
+ * checks (`config/bookmarks/covers.toml`: type by its first bytes, the size its header states, and
+ * the decoded size), and one that fails is left out alone. Cover Storage still applies after a
+ * restore, removing the oldest covers first and picked ones last.
  */
 import { z } from 'zod';
 import { boundedNumber } from '@/lib/config/bounded';
@@ -252,6 +254,9 @@ export async function exportBackupCovers(): Promise<BackupCoverEntry[]> {
   );
 }
 
+/** Merge keeps this device's better covers; Replace stores the file's over every one. */
+export type CoverRestoreStrategy = 'merge' | 'replace';
+
 /** A cover a restore writes: the bookmark, its own spelling of the address, and the cover. */
 export type CoverRestoreWrite = { bookmarkId: string; url: string; cover: BackupCover };
 
@@ -259,7 +264,9 @@ export type CoverRestoreWrite = { bookmarkId: string; url: string; cover: Backup
  * What restoring a file's covers would do, for the review: `matched` and `unmatched` count the
  * file's covers with and without a bookmark of their address here; `added`, `replaced`, and
  * `kept` count bookmarks (an address can have several); `overStorage` counts covers that would
- * not fit in Cover Storage afterwards (the oldest, this device's or the file's).
+ * not fit in Cover Storage afterwards (the oldest, this device's or the file's), and `evicted`
+ * names this device's among them; `removed` counts this device's covers the restore does not
+ * write over, which Replace deletes and Merge keeps.
  */
 export type CoverRestorePlan = {
   inFile: number;
@@ -270,18 +277,22 @@ export type CoverRestorePlan = {
   replaced: number;
   kept: number;
   overStorage: number;
+  removed: number;
+  evicted: string[];
   writes: CoverRestoreWrite[];
 };
 
 /**
  * Plans a restore of `file`'s covers onto `bookmarks`, given the covers stored now. A bookmark's
- * cover of another address is not shown, so it counts as none and is replaced.
+ * cover of another address is not shown, so it counts as none and is replaced. With Replace, every
+ * matched bookmark gets the file's cover and the rest of this device's covers are deleted.
  */
 export function planCoverRestore(
   file: BackupCovers,
   bookmarks: readonly BookmarkAddress[],
   stored: ReadonlyMap<string, CoverInfo>,
   maxCacheBytes: number,
+  strategy: CoverRestoreStrategy = 'merge',
 ): CoverRestorePlan {
   const byKey = new Map<string, BookmarkAddress[]>();
   for (const bookmark of bookmarks) {
@@ -296,6 +307,8 @@ export function planCoverRestore(
     replaced: 0,
     kept: 0,
     overStorage: 0,
+    removed: 0,
+    evicted: [],
     writes: [],
   };
   for (const cover of file.covers) {
@@ -308,7 +321,7 @@ export function planCoverRestore(
     for (const target of targets) {
       const existing = stored.get(target.id);
       const shown = existing?.url === target.url ? existing : undefined;
-      if (shown && !importedCoverWins(cover, shown)) {
+      if (shown && strategy === 'merge' && !importedCoverWins(cover, shown)) {
         plan.kept += 1;
         continue;
       }
@@ -318,9 +331,11 @@ export function planCoverRestore(
     }
   }
   const written = new Set(plan.writes.map((write) => write.bookmarkId));
-  plan.overStorage = coversOverLimit(
+  const others = [...stored.values()].filter((info) => !written.has(info.bookmarkId));
+  plan.removed = others.length;
+  const over = coversOverLimit(
     [
-      ...[...stored.values()].filter((info) => !written.has(info.bookmarkId)),
+      ...(strategy === 'merge' ? others : []),
       ...plan.writes.map(({ bookmarkId, cover }) => ({
         bookmarkId,
         bytes: cover.data.byteLength,
@@ -329,7 +344,9 @@ export function planCoverRestore(
       })),
     ],
     maxCacheBytes,
-  ).size;
+  );
+  plan.overStorage = over.size;
+  plan.evicted = others.filter((info) => over.has(info.bookmarkId)).map((info) => info.bookmarkId);
   return plan;
 }
 
@@ -338,12 +355,16 @@ async function coverStorageBytes(): Promise<number> {
 }
 
 /** The review of restoring `file`'s covers on this device now (`planCoverRestore`). */
-export async function previewCoverRestore(file: BackupCovers): Promise<CoverRestorePlan> {
+export async function previewCoverRestore(
+  file: BackupCovers,
+  strategy: CoverRestoreStrategy = 'merge',
+): Promise<CoverRestorePlan> {
   return planCoverRestore(
     file,
     await listBookmarkAddresses(),
     await getCoverInfos(),
     await coverStorageBytes(),
+    strategy,
   );
 }
 
@@ -355,6 +376,12 @@ export async function previewCoverRestore(file: BackupCovers): Promise<CoverRest
  */
 export type CoverRestoreOutcome = {
   restored: number;
+  /** This device's covers Replace deleted. */
+  removed: number;
+  /** Of `restored`, covers on bookmarks that had none. */
+  added: number;
+  /** Covers counted as restored that did not read back as written. */
+  mismatches: number;
   notStored: number;
   kept: number;
   unmatched: number;
@@ -363,17 +390,28 @@ export type CoverRestoreOutcome = {
 
 /**
  * Restores `file`'s covers, planned again against the bookmarks and covers stored now (a restore
- * of settings just before may have changed Cover Storage), after decoding each image once. There
- * is no undo, as for the rest of a backup restore.
+ * of settings just before may have changed Cover Storage), after decoding each image once. Replace
+ * first deletes this device's covers the file does not write over. Undo import puts back what it
+ * changed (`snapshotCoversFor`).
  */
-export async function applyCoverRestore(file: BackupCovers): Promise<CoverRestoreOutcome> {
+export async function applyCoverRestore(
+  file: BackupCovers,
+  strategy: CoverRestoreStrategy = 'merge',
+): Promise<CoverRestoreOutcome> {
   const maxCacheBytes = await coverStorageBytes();
+  const stored = await getCoverInfos();
   const plan = planCoverRestore(
     file,
     await listBookmarkAddresses(),
-    await getCoverInfos(),
+    stored,
     maxCacheBytes,
+    strategy,
   );
+  let removed = 0;
+  if (strategy === 'replace') {
+    const written = new Set(plan.writes.map((write) => write.bookmarkId));
+    removed = (await takeCovers([...stored.keys()].filter((id) => !written.has(id)))).length;
+  }
   const covers = [...new Set(plan.writes.map((write) => write.cover))];
   const decodes = await mapWithConcurrency(covers, COVER_LIMITS.concurrency, (cover) =>
     decodesAsCover(cover.data, cover.type),
@@ -396,11 +434,68 @@ export async function applyCoverRestore(file: BackupCovers): Promise<CoverRestor
     })),
     maxCacheBytes,
   );
+  // Read back: each cover counted as restored is stored on its bookmark as the file had it.
+  const after = await getCoverInfos();
+  const present = writes.filter(
+    ({ bookmarkId, cover }) => after.get(bookmarkId)?.savedAt === cover.savedAt,
+  ).length;
+  const hadCover = new Set(stored.keys());
+  const added = writes.filter(
+    ({ bookmarkId, cover }) =>
+      !hadCover.has(bookmarkId) && after.get(bookmarkId)?.savedAt === cover.savedAt,
+  ).length;
   return {
     restored: saved,
+    added: Math.min(added, saved),
+    removed,
+    mismatches: Math.max(0, saved - present),
     notStored: writes.length - saved,
     kept: plan.kept,
     unmatched: plan.unmatched,
     skipped: plan.skipped + unreadable.size,
   };
+}
+
+/**
+ * What a restore of `file`'s covers would change, copied before it runs, for Undo import: the
+ * bookmarks it writes a cover on, and this device's covers it replaces, deletes (Replace), or
+ * pushes out of Cover Storage, exactly as stored.
+ */
+export type CoverSnapshot = { written: string[]; records: StoredCoverRecord[] };
+
+export async function snapshotCoversFor(
+  file: BackupCovers,
+  strategy: CoverRestoreStrategy,
+): Promise<CoverSnapshot> {
+  const stored = await getCoverInfos();
+  const plan = planCoverRestore(
+    file,
+    await listBookmarkAddresses(),
+    stored,
+    await coverStorageBytes(),
+    strategy,
+  );
+  const written = [...new Set(plan.writes.map((write) => write.bookmarkId))];
+  const changed = new Set([
+    ...written.filter((id) => stored.has(id)),
+    ...(strategy === 'replace' ? stored.keys() : plan.evicted),
+  ]);
+  return { written, records: await copyCovers([...changed]) };
+}
+
+/**
+ * Undoes a covers restore: removes the covers it wrote and puts back the ones it changed.
+ * Resolves to how many did not read back as the snapshot has them.
+ */
+export async function restoreCoverSnapshot(snapshot: CoverSnapshot): Promise<number> {
+  await takeCovers(snapshot.written);
+  await takeCovers(snapshot.records.map((record) => record.info.bookmarkId));
+  await putBackCovers(snapshot.records);
+  const after = await getCoverInfos();
+  const putBack = new Set(snapshot.records.map((record) => record.info.bookmarkId));
+  const missing = snapshot.records.filter(
+    (record) => after.get(record.info.bookmarkId)?.savedAt !== record.info.savedAt,
+  ).length;
+  const leftOver = snapshot.written.filter((id) => !putBack.has(id) && after.has(id)).length;
+  return missing + leftOver;
 }

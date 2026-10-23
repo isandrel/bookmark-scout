@@ -2,7 +2,9 @@
  * Storage migrations: moving settings an earlier release stored in another place or shape into
  * where this release keeps them. The background runs every registered migration at each start
  * and on install or update (`registerStorageMigrations` in `lib/settings-storage.ts`), the backup
- * restore converts older files with them (`upgradeBackupItems`), and settings read through them
+ * restore converts older files with them (`upgradeBackupFile`, which runs the backup file
+ * converters in `BACKUP_FILE_CONVERTERS` and, for files from before list settings had items of
+ * their own, `upgradeBackupItems`), and settings read through them
  * on a device where they have not run yet, so a user never sees a moved setting reset meanwhile.
  *
  * Each migration is one module in this folder that owns everything about the old layout: the old
@@ -33,6 +35,7 @@ import {
 } from '@/lib/settings-schema';
 import { STORAGE_ITEMS, type StorageAreaName, type StorageKey, storageKey } from '../registry';
 import type { StoredValue } from '../stored-value';
+import { backupParts } from './2026-10-backup-parts';
 import { contextMenuRecentMax } from './2026-10-context-menu-recent-max';
 import { syncListShards } from './2026-10-sync-list-shards';
 
@@ -204,6 +207,39 @@ export function upgradeBackupItems(items: Record<string, Envelope>): Record<stri
       STORAGE_ITEMS.settingsList.v,
       value,
     );
+  }
+  return upgraded;
+}
+
+/**
+ * Turns a backup file of format `from` into format `to`, the next one. Unlike a storage
+ * migration, a converter is never removed: a file saved today may be restored years later. It may
+ * call `upgradeItems` (`upgradeBackupItems`) on stored items the file holds.
+ */
+export type BackupFileConverter = {
+  readonly id: string;
+  readonly from: number;
+  readonly to: number;
+  convert(
+    file: unknown,
+    upgradeItems: (items: Record<string, Envelope>) => Record<string, Envelope>,
+  ): unknown;
+};
+
+/** Every backup file converter, oldest format first. */
+export const BACKUP_FILE_CONVERTERS: readonly BackupFileConverter[] = [backupParts];
+
+/**
+ * A backup file of format `version` as format `current`, through each converter in turn; throws
+ * `error_invalidBackupFile` when no converter goes from a format on the way.
+ */
+export function upgradeBackupFile(file: unknown, version: number, current: number): unknown {
+  let upgraded = file;
+  for (let at = version; at < current; ) {
+    const converter = BACKUP_FILE_CONVERTERS.find(({ from }) => from === at);
+    if (!converter) throw new Error(t('error_invalidBackupFile'));
+    upgraded = converter.convert(upgraded, upgradeBackupItems);
+    at = converter.to;
   }
   return upgraded;
 }

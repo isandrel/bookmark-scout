@@ -143,3 +143,10 @@ const ISO_DATE_LENGTH = 'YYYY-MM-DD'.length;
 export function toIsoDate(date: Date | number): string {
   return new Date(date).toISOString().slice(0, ISO_DATE_LENGTH);
 }
+
+/** The local date as YYYY-MM-DD, for file names: the day the user sees, not the UTC one. */
+export function toLocalIsoDate(date: Date | number): string {
+  const day = new Date(date);
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+}

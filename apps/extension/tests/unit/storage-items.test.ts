@@ -9,6 +9,7 @@ import {
   saveStoredAIProviderConfig,
 } from '@/lib/ai-provider-storage';
 import { aiServicesValue } from '@/lib/ai-services-storage';
+import { BACKUP_CATEGORIES } from '@/lib/backup-config';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import {
   bookmarkTableLayoutValue,
@@ -98,7 +99,8 @@ describe('storage registry', () => {
   });
 
   it('never syncs a secret', () => {
-    const secrets = items.filter(([, item]) => item.backup === 'secret');
+    const secretParts = BACKUP_CATEGORIES.filter((part) => part.secret).map(({ id }) => id);
+    const secrets = items.filter(([, item]) => secretParts.includes(item.backup));
     expect(secrets.map(([id]) => id)).toContain('aiCredentials');
     for (const [, item] of secrets) expect(item.area).not.toBe('sync');
   });

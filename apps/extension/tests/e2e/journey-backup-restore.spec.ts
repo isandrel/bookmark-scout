@@ -1,10 +1,17 @@
 /**
  * Journey: the user changes synced and device settings in Options, adds a custom prompt, saves a
- * search in the manager, and tags a bookmark; exports a backup; loses all extension storage; and
- * imports the backup. Everything the backup holds comes back, and the API key never enters it.
+ * search in the manager, and tags a bookmark; exports a backup with this computer's settings too;
+ * loses all extension storage; and imports the backup with them. Everything the backup holds comes
+ * back, and the API key never enters it.
  */
-import { readFile } from 'node:fs/promises';
 import type { Page } from '@playwright/test';
+import {
+  importParts,
+  openBackupDialog,
+  openRestore,
+  partCheckbox,
+  saveBackup,
+} from './backup-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { managerRow, managerUrl, waitForNoOverlay } from './manager-helpers';
 import { openOptionsTab } from './options-helpers';
@@ -115,12 +122,11 @@ test('a backup made after changes in Options and the manager restores them, with
     .poll(() => readStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata))
     .toEqual({ [docs.ids['Backup Alpha Docs']]: { tags: ['journey-tag'] } });
 
-  // Export from Options.
-  const downloadPromise = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Back up settings' }).click();
-  const download = await downloadPromise;
+  // Export from Options, with this computer's settings, which start unselected.
+  const dialog = await openBackupDialog(page);
+  await partCheckbox(dialog, 'deviceSettings').check();
+  const { raw } = await saveBackup(page, dialog);
   await expect(toastRegion(page).getByText('✓ Backup exported', { exact: true })).toBeVisible();
-  const raw = await readFile(await download.path(), 'utf8');
   expect(raw).not.toContain(API_KEY);
   // Tags are keyed by this device's bookmark ids, so the backup leaves them out by design
   // (`backup: 'exclude'` in the storage registry); bookmark exports carry them instead.
@@ -136,12 +142,10 @@ test('a backup made after changes in Options and the manager restores them, with
   expect(await readSettings(extensionWorker)).toEqual({ language: 'en' });
   expect(await readStored(extensionWorker, STORAGE_ITEMS.aiServices)).toBeUndefined();
 
-  await page.getByLabel('Restore settings', { exact: true }).setInputFiles({
-    name: 'bookmark-scout-backup.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(raw),
-  });
-  await expect(toastRegion(page).getByText('✓ Backup restored', { exact: true })).toBeVisible();
+  const review = await openRestore(page, raw);
+  await partCheckbox(review, 'deviceSettings').check();
+  await importParts(review);
+  await review.getByRole('button', { name: 'Close' }).first().click();
 
   // Ground truth: both settings scopes, the prompt, the saved search, and the service are back.
   await expect

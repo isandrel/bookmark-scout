@@ -3,7 +3,9 @@
  * Audit History (`lib/bookmark-audit-store.ts`), newest first under day headings. A row says what
  * changed, from where, how many items, and when; only a result that needs a look (partial,
  * interrupted, not done) carries a status chip. It opens to the facts, the read-back, Undo while
- * the session still has it, and the items, each with what it was before and after. Opened by the
+ * the session still has it, and the items, each with what it was before and after. A restore of a
+ * backup (a `data` record) opens to its parts and what each did, with Undo import while its
+ * safety copy is kept (the same Undo import as in Settings). Opened by the
  * header's History button or a result's View in History (`useAuditHistoryView`), which opens that
  * record. Loaded on first open (`HistoryDialog.tsx`), so the manager does not start with it.
  */
@@ -13,6 +15,7 @@ import {
   ChevronRight,
   CircleAlert,
   CircleCheck,
+  DatabaseBackup,
   Download,
   FileInput,
   History,
@@ -46,6 +49,12 @@ const ACTION_ICONS: Record<AuditOperation['label']['action'], LucideIcon> = {
   sort: ArrowDownAZ,
   change: Layers,
   import: FileInput,
+};
+
+/** The icon of a record of a kind other than bookmarks, whose icon is its action's. */
+const KIND_ICONS: Record<AuditRecordKind, LucideIcon | undefined> = {
+  bookmarks: undefined,
+  data: DatabaseBackup,
 };
 
 /** The icon of an item row, by its change. */
@@ -132,7 +141,9 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
       >
         <DialogHeader className="space-y-1 border-b px-5 pt-5 pb-4">
           <DialogTitle>{t('history_title')}</DialogTitle>
-          <DialogDescription>{t('history_description')}</DialogDescription>
+          <DialogDescription>
+            {t('history_description')} {t('history_descriptionBackups')}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-2 border-b px-5 py-3">
@@ -317,7 +328,7 @@ function HistoryRecord({
       ? Undo2
       : operation.replay === 'redo'
         ? Redo2
-        : ACTION_ICONS[operation.label.action];
+        : (KIND_ICONS[auditKindOf(operation)] ?? ACTION_ICONS[operation.label.action]);
   return (
     <li
       data-testid="history-record"
@@ -361,8 +372,7 @@ function HistoryRecord({
             ) : null}
           </span>
           <span className="block truncate text-xs text-muted-foreground">
-            {t(AUDIT_SOURCE_LABEL_KEYS[operation.source])} ·{' '}
-            {summarizeAuditCounts(operation.counts)}
+            {t(AUDIT_SOURCE_LABEL_KEYS[operation.source])} · {summarizeAuditOperation(operation)}
           </span>
         </span>
         <time
@@ -395,13 +405,204 @@ function HistoryRecord({
   );
 }
 
-function HistoryRecordDetails({
+type RecordBodyProps = Omit<HistoryRecordProps, 'expanded' | 'focused' | 'onToggle'>;
+
+/** What an opened record shows under its facts, by kind (`AUDIT_RECORD_KINDS`). */
+const KIND_BODIES: Record<AuditRecordKind, (props: RecordBodyProps) => ReactNode> = {
+  bookmarks: BookmarkRecordBody,
+  data: DataRecordBody,
+};
+
+function HistoryRecordDetails(props: RecordBodyProps) {
+  const Body = KIND_BODIES[auditKindOf(props.operation)];
+  return (
+    <>
+      <RecordFacts operation={props.operation} />
+      <Body {...props} />
+    </>
+  );
+}
+
+/** The record's facts: where from, when, its counts, and the read-back. */
+function RecordFacts({ operation }: { operation: AuditOperation }) {
+  const { verification } = operation;
+  const view = AUDIT_KIND_VIEWS[auditKindOf(operation)];
+  const elsewhere = isFromElsewhere(operation);
+  const facts: { label: string; value: ReactNode }[] = [
+    { label: t('history_factSource'), value: t(AUDIT_SOURCE_LABEL_KEYS[operation.source]) },
+    ...(operation.data?.fileName
+      ? [{ label: t('history_factFile'), value: operation.data.fileName }]
+      : []),
+    ...(operation.actorLabel
+      ? [{ label: t('history_factAgentName'), value: operation.actorLabel }]
+      : []),
+    ...(operation.observedSince !== undefined
+      ? [
+          {
+            label: t('history_factObservedSince'),
+            value: t('history_between', [
+              formatDateTime(operation.observedSince),
+              formatDateTime(operation.startedAt),
+            ]),
+          },
+        ]
+      : [
+          { label: t('history_factStarted'), value: formatDateTime(operation.startedAt) },
+          ...(operation.finishedAt
+            ? [{ label: t('history_factFinished'), value: formatDateTime(operation.finishedAt) }]
+            : []),
+        ]),
+    // A change seen from elsewhere was neither planned nor checked by Bookmark Scout.
+    ...(elsewhere
+      ? []
+      : [
+          {
+            label: t('history_factResult'),
+            value: t('history_factCounts', [
+              String(operation.counts.planned),
+              String(operation.counts.applied),
+              String(operation.counts.skipped),
+              String(operation.counts.failed),
+            ]),
+          },
+          {
+            label: t('history_factCheck'),
+            value:
+              verification?.status === 'passed' ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <CircleCheck className="h-3.5 w-3.5 shrink-0 text-success" aria-hidden="true" />
+                  {t(view.verifyPassedKey)}
+                </span>
+              ) : verification?.status === 'failed' ? (
+                <span className="inline-flex items-center gap-1.5 text-warning">
+                  <CircleAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  {tPlural(view.verifyFailedKey, verification.mismatchCount ?? 0)}
+                </span>
+              ) : (
+                t('history_verifyNotRun')
+              ),
+          },
+        ]),
+  ];
+  return (
+    <dl
+      className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-xs"
+      data-testid="history-record-facts"
+    >
+      {facts.map((fact) => (
+        <div key={fact.label} className="contents">
+          <dt className="text-muted-foreground">{fact.label}</dt>
+          <dd className="min-w-0 break-words">{fact.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** The links between a record and its undo. */
+function RecordLinks({
+  operation,
+  onShowRecord,
+}: Pick<RecordBodyProps, 'operation' | 'onShowRecord'>) {
+  return (
+    <>
+      {operation.relatedOperationId ? (
+        <RecordLink onClick={() => onShowRecord(operation.relatedOperationId ?? '')}>
+          {t('history_showOriginal')}
+        </RecordLink>
+      ) : null}
+      {operation.undo ? (
+        <RecordLink onClick={() => onShowRecord(operation.undo?.operationId ?? '')}>
+          {t('history_showUndo')}
+        </RecordLink>
+      ) : null}
+    </>
+  );
+}
+
+/**
+ * A backup restore: Undo import while its safety copy is kept (or why not), and each part with
+ * how it was imported and what it did.
+ */
+function DataRecordBody({ operation, onShowRecord }: RecordBodyProps) {
+  const [availability, setAvailability] = useState<
+    Awaited<ReturnType<typeof getBackupUndoAvailability>> | 'loading'
+  >('loading');
+  const [undoing, setUndoing] = useState(false);
+  useEffect(() => {
+    let current = true;
+    if (operation.replay || operation.state === 'failed') return;
+    void getBackupUndoAvailability(operation).then(
+      (value) => {
+        if (current) setAvailability(value);
+      },
+      () => {
+        if (current) setAvailability({ available: false, reason: 'expired' });
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [operation]);
+  const undo = async () => {
+    setUndoing(true);
+    try {
+      await runBackupUndo(operation.id);
+    } finally {
+      setUndoing(false);
+    }
+  };
+  const canHaveUndo = !operation.replay && operation.state !== 'failed';
+  return (
+    <>
+      <div className="flex flex-wrap items-center gap-2">
+        {canHaveUndo && availability !== 'loading' ? (
+          availability.available ? (
+            <Button size="sm" variant="outline" disabled={undoing} onClick={() => void undo()}>
+              <Undo2 />
+              {t('backup_undoImport')}
+            </Button>
+          ) : operation.undo ? null : (
+            <p className="text-xs text-muted-foreground" data-testid="history-undo-unavailable">
+              {describeBackupUndoUnavailable(availability.reason)}
+            </p>
+          )
+        ) : null}
+        <RecordLinks operation={operation} onShowRecord={onShowRecord} />
+      </div>
+      <ul
+        className="divide-y rounded-md border bg-card"
+        data-testid="history-data-parts"
+        aria-label={t('history_dataPartsLabel')}
+      >
+        {(operation.data?.parts ?? []).map((part) => {
+          const { name, line } = describeAuditDataPart(part);
+          return (
+            <li key={part.id} className="px-3 py-2 text-xs" data-testid="history-data-part">
+              <div className="flex items-center gap-2">
+                <span className="min-w-0 flex-1 truncate text-sm">{name}</span>
+                {part.failed ? (
+                  <span className="shrink-0 font-medium text-warning">
+                    {t('history_outcomeFailed')}
+                  </span>
+                ) : null}
+              </div>
+              <p className="text-muted-foreground tabular-nums">{line}</p>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+}
+
+function BookmarkRecordBody({
   operation,
   undoable,
   redoable,
   onShowRecord,
   folderLabels,
-}: Omit<HistoryRecordProps, 'expanded' | 'focused' | 'onToggle'>) {
+}: RecordBodyProps) {
   const [details, setDetails] = useState<AuditDetails | 'missing' | 'corrupt' | 'loading'>(
     'loading',
   );
@@ -472,77 +673,12 @@ function HistoryRecordDetails({
     }
   };
 
-  const { verification } = operation;
   const elsewhere = isFromElsewhere(operation);
-  const facts: { label: string; value: ReactNode }[] = [
-    { label: t('history_factSource'), value: t(AUDIT_SOURCE_LABEL_KEYS[operation.source]) },
-    ...(operation.actorLabel
-      ? [{ label: t('history_factAgentName'), value: operation.actorLabel }]
-      : []),
-    ...(operation.observedSince !== undefined
-      ? [
-          {
-            label: t('history_factObservedSince'),
-            value: t('history_between', [
-              formatDateTime(operation.observedSince),
-              formatDateTime(operation.startedAt),
-            ]),
-          },
-        ]
-      : [
-          { label: t('history_factStarted'), value: formatDateTime(operation.startedAt) },
-          ...(operation.finishedAt
-            ? [{ label: t('history_factFinished'), value: formatDateTime(operation.finishedAt) }]
-            : []),
-        ]),
-    // A change seen from elsewhere was neither planned nor checked by Bookmark Scout.
-    ...(elsewhere
-      ? []
-      : [
-          {
-            label: t('history_factResult'),
-            value: t('history_factCounts', [
-              String(operation.counts.planned),
-              String(operation.counts.applied),
-              String(operation.counts.skipped),
-              String(operation.counts.failed),
-            ]),
-          },
-          {
-            label: t('history_factCheck'),
-            value:
-              verification?.status === 'passed' ? (
-                <span className="inline-flex items-center gap-1.5">
-                  <CircleCheck className="h-3.5 w-3.5 shrink-0 text-success" aria-hidden="true" />
-                  {t('history_verifyPassed')}
-                </span>
-              ) : verification?.status === 'failed' ? (
-                <span className="inline-flex items-center gap-1.5 text-warning">
-                  <CircleAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  {tPlural('history_verifyFailed', verification.mismatchCount ?? 0)}
-                </span>
-              ) : (
-                t('history_verifyNotRun')
-              ),
-          },
-        ]),
-  ];
   const canHaveUndo =
     !elsewhere && !operation.replay && operation.state !== 'failed' && !operation.undo;
 
   return (
     <>
-      <dl
-        className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1 text-xs"
-        data-testid="history-record-facts"
-      >
-        {facts.map((fact) => (
-          <div key={fact.label} className="contents">
-            <dt className="text-muted-foreground">{fact.label}</dt>
-            <dd className="min-w-0 break-words">{fact.value}</dd>
-          </div>
-        ))}
-      </dl>
       <RestoreConfirm
         open={confirmRestore}
         count={recoverable}
@@ -595,16 +731,7 @@ function HistoryRecordDetails({
             {t('history_noUndoElsewhere')}
           </p>
         ) : null}
-        {operation.relatedOperationId ? (
-          <RecordLink onClick={() => onShowRecord(operation.relatedOperationId ?? '')}>
-            {t('history_showOriginal')}
-          </RecordLink>
-        ) : null}
-        {operation.undo ? (
-          <RecordLink onClick={() => onShowRecord(operation.undo?.operationId ?? '')}>
-            {t('history_showUndo')}
-          </RecordLink>
-        ) : null}
+        <RecordLinks operation={operation} onShowRecord={onShowRecord} />
       </div>
 
       {details === 'loading' ? (

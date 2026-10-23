@@ -535,14 +535,6 @@
         "message": "Cadangan diekspor",
         "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_backupExportedDescription": {
-        "message": "File ini berisi setelan, prompt, layanan AI, dan penelusuran tersimpan Anda. Kunci API tidak pernah disertakan.",
-        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
-    },
-    "toast_backupExportedCoversDescription": {
-        "message": "File ini berisi setelan, prompt, layanan AI, penelusuran tersimpan, dan sampul ($1) Anda. Kunci API tidak pernah disertakan.",
-        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
-    },
     "toast_exportFailed": {
         "message": "Ekspor gagal",
         "description": "Toast title for settings export error"
@@ -630,14 +622,6 @@
     "settings_sectionBackup": {
         "message": "Cadangan",
         "description": "Settings: section heading under Import & Export for the settings backup file"
-    },
-    "settings_backupIncludeCovers": {
-        "message": "Sertakan Sampul dalam Cadangan",
-        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
-    },
-    "settings_backupIncludeCoversDesc": {
-        "message": "Apakah Cadangkan setelan juga menyimpan sampul Anda di file. Selama ada sampul tersimpan, ini ditanyakan setiap kali, dengan jawaban ini sudah dicentang, beserta tambahan ukurannya. Sampul tidak pernah disinkronkan, jadi cadangan adalah cara membawanya ke komputer lain.",
-        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Penyimpanan",
@@ -3471,25 +3455,9 @@
         "message": "$1 setelan diubah: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_backupRestored": {
-        "message": "Cadangan dipulihkan",
-        "description": "Toast title after Import in Settings restored a backup file"
-    },
-    "toast_backupRestoredDescription": {
-        "message": "Setelan, prompt, layanan AI, dan penelusuran tersimpan Anda telah dipulihkan. Cadangan tidak berisi kunci API: tambahkan yang belum ada di Setelan > AI.",
-        "description": "Toast description after a backup was restored; API keys are not in backups"
-    },
-    "toast_backupRestoredNeedsSetup": {
-        "message": "Setelan, prompt, layanan AI beserta URL Dasar-nya, dan penelusuran tersimpan Anda telah dipulihkan. Tidak dipulihkan, karena cadangan tidak pernah menyimpannya: $1. Masukkan lagi di Setelan > AI; sampai saat itu, layanan tersebut menampilkan Perlu disiapkan.",
-        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
-    },
     "toast_backupServiceNeeds": {
         "message": "$2 untuk “$1”",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
-    },
-    "toast_backupCoversRestored": {
-        "message": "Sampul dipulihkan: $1. Dipertahankan apa adanya: $2. Tanpa bookmark di sini: $3. Tidak disertakan: $4.",
-        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "Perlu disiapkan",
@@ -6457,18 +6425,6 @@
         "message": "Pulihkan setelan",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
-    "backup_exportDesc": {
-        "message": "File ini berisi setelan, prompt, layanan AI (tanpa kunci API), dan penelusuran tersimpan Anda. File tetap di tempat Anda menyimpannya.",
-        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
-    },
-    "backup_includeCovers": {
-        "message": "Sertakan sampul",
-        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
-    },
-    "backup_coversEstimate": {
-        "message": "Sampul: $1, menambah sekitar $2 ke file. Sampul tidak pernah disinkronkan, jadi cadangan adalah cara membawanya ke komputer lain.",
-        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
-    },
     "backup_coversLeftOut": {
         "message": "Tidak disertakan karena melewati batas cadangan (yang terlama lebih dulu): $1",
         "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
@@ -6477,21 +6433,429 @@
         "message": "Simpan cadangan",
         "description": "Back up settings dialog: button that saves the backup file"
     },
-    "backup_restoreTitle": {
+    "backup_categorySettings": {
+        "message": "Setelan",
+        "description": "Backup part: the synced settings"
+    },
+    "backup_categorySettingsDesc": {
+        "message": "Setelan yang Anda ubah dan disinkronkan ke perangkat Anda yang lain, termasuk menu dan daftar.",
+        "description": "Backup part: what the Settings part holds"
+    },
+    "backup_categoryDeviceSettings": {
+        "message": "Setelan komputer ini",
+        "description": "Backup part: the settings kept for one device"
+    },
+    "backup_categoryDeviceSettingsDesc": {
+        "message": "Setelan yang hanya disimpan untuk komputer ini: tata letak, bilah samping, tombol keyboard, folder simpan cepat, otomatisasi Aturan Pintar, dan akses untuk agen AI lokal.",
+        "description": "Backup part: what the device settings part holds"
+    },
+    "backup_categoryViews": {
+        "message": "Penelusuran tersimpan dan tampilan tabel",
+        "description": "Backup part: saved searches and the manager table's layout"
+    },
+    "backup_categoryViewsDesc": {
+        "message": "Penelusuran tersimpan di pengelola bookmark, serta kolom dan urutan tabel.",
+        "description": "Backup part: what the views part holds"
+    },
+    "backup_categoryPrompts": {
+        "message": "Prompt dan Tentang saya",
+        "description": "Backup part: custom AI prompts and About me"
+    },
+    "backup_categoryPromptsDesc": {
+        "message": "Prompt AI kustom Anda, prompt mana yang dipakai setiap tugas, dan teks Tentang saya Anda.",
+        "description": "Backup part: what the prompts part holds"
+    },
+    "backup_categoryRules": {
+        "message": "Aturan Pintar",
+        "description": "Backup part: the Smart Rules"
+    },
+    "backup_categoryRulesDesc": {
+        "message": "Aturan Pintar Anda (penelusuran, tag, dan foldernya), bukan apa yang telah dilakukannya.",
+        "description": "Backup part: what the Smart Rules part holds"
+    },
+    "backup_categoryAiServices": {
+        "message": "Layanan AI",
+        "description": "Backup part: the AI services without their keys"
+    },
+    "backup_categoryAiServicesDesc": {
+        "message": "Nama, penyedia, model, URL Dasar, dan kolom penyedia setiap layanan AI, tanpa kunci API atau header tambahan.",
+        "description": "Backup part: what the AI services part holds"
+    },
+    "backup_categoryAiServiceKeys": {
+        "message": "Kunci layanan AI",
+        "description": "Backup part: the API keys and extra headers of the AI services"
+    },
+    "backup_categoryAiServiceKeysDesc": {
+        "message": "Kunci API dan header tambahan layanan AI Anda. Tidak pernah masuk ke cadangan kecuali Anda memilihnya.",
+        "description": "Backup part: what the AI service keys part holds"
+    },
+    "backup_categoryCovers": {
+        "message": "Sampul",
+        "description": "Backup part: the bookmarks' cover pictures"
+    },
+    "backup_categoryCoversDesc": {
+        "message": "Gambar sampul bookmark Anda, berdasarkan alamat. Sampul tidak pernah disinkronkan, jadi cadangan adalah cara membawanya ke komputer lain.",
+        "description": "Backup part: what the covers part holds"
+    },
+    "backup_badgeDevice": {
+        "message": "Komputer ini",
+        "description": "Backup dialogs: badge on a part that suits one computer"
+    },
+    "backup_badgeLarge": {
+        "message": "Besar",
+        "description": "Backup dialogs: badge on a part that can make the file large"
+    },
+    "backup_deviceNote": {
+        "message": "Tidak dipilih di awal: setelan ini disesuaikan dengan layar dan keyboard komputer ini.",
+        "description": "Backup dialogs: why the device settings part starts unselected"
+    },
+    "backup_exportIntro": {
+        "message": "Pilih apa yang masuk ke file. Bookmark tidak termasuk; ekspor bookmark di pengelola bookmark.",
+        "description": "Back up settings dialog: introduction"
+    },
+    "backup_partsLabel": {
+        "message": "Bagian",
+        "description": "Backup dialogs: heading of the list of parts"
+    },
+    "backup_selectAll": {
+        "message": "Pilih semua",
+        "description": "Back up settings dialog: button that selects every part except the keys"
+    },
+    "backup_selectNone": {
+        "message": "Kosongkan pilihan",
+        "description": "Back up settings dialog: button that clears every part"
+    },
+    "backup_counting": {
+        "message": "Menghitung…",
+        "description": "Backup dialogs: shown while a part's items are counted"
+    },
+    "backup_partMeta": {
+        "message": "Item: $1 · Sekitar $2",
+        "description": "Back up settings dialog: a part's item count ($1) and size ($2, such as 3 KB)"
+    },
+    "backup_keysWarning": {
+        "message": "Siapa pun yang mendapatkan file ini dapat menggunakan kunci ini dan menimbulkan tagihan di akun Anda. Simpan file di tempat yang aman, dan lindungi dengan kata sandi.",
+        "description": "Back up settings dialog: warning shown when the AI service keys are selected"
+    },
+    "backup_keysConfirm": {
+        "message": "Saya mengerti; sertakan kunci API saya",
+        "description": "Back up settings dialog: checkbox confirming the keys warning"
+    },
+    "backup_protectAll": {
+        "message": "Lindungi cadangan ini dengan kata sandi",
+        "description": "Back up settings dialog: checkbox that encrypts the whole file"
+    },
+    "backup_protectAllDesc": {
+        "message": "Mengenkripsi seluruh isi file. Memulihkannya akan meminta kata sandi; daftar bagian di dalamnya tetap dapat dibaca.",
+        "description": "Back up settings dialog: what protecting the whole backup does"
+    },
+    "backup_protectKeys": {
+        "message": "Lindungi kunci API dengan kata sandi",
+        "description": "Back up settings dialog: checkbox that encrypts only the keys"
+    },
+    "backup_protectKeysDesc": {
+        "message": "Hanya mengenkripsi kunci; bagian lain file dapat dipulihkan tanpa kata sandi.",
+        "description": "Back up settings dialog: what protecting the keys does"
+    },
+    "backup_keysPlainWarning": {
+        "message": "Tanpa kata sandi, kunci disimpan sebagai teks biasa yang dapat dibaca siapa pun yang membuka file.",
+        "description": "Back up settings dialog: warning when the keys are saved without a password"
+    },
+    "backup_keysPlainConfirm": {
+        "message": "Simpan kunci tanpa kata sandi",
+        "description": "Back up settings dialog: checkbox confirming keys without a password"
+    },
+    "backup_password": {
+        "message": "Kata sandi",
+        "description": "Backup dialogs: password field label"
+    },
+    "backup_passwordConfirm": {
+        "message": "Ulangi kata sandi",
+        "description": "Back up settings dialog: second password field label"
+    },
+    "backup_passwordHint": {
+        "message": "Minimal $1 karakter; beberapa kata yang tidak saling berhubungan mudah diingat. Kata sandi yang terlupa tidak dapat dipulihkan: tanpanya, tidak ada yang dapat membuka bagian yang dilindungi, bahkan Bookmark Scout.",
+        "description": "Back up settings dialog: password hint; $1 is the shortest length"
+    },
+    "backup_passwordTooShort": {
+        "message": "Gunakan minimal $1 karakter.",
+        "description": "Back up settings dialog: the password is too short; $1 is the shortest length"
+    },
+    "backup_passwordMismatch": {
+        "message": "Kata sandi tidak cocok.",
+        "description": "Back up settings dialog: the two passwords differ"
+    },
+    "backup_staysLocal": {
+        "message": "Tidak ada yang dikirim ke mana pun: file disimpan di komputer ini.",
+        "description": "Back up settings dialog: privacy note"
+    },
+    "backup_fileName": {
+        "message": "Nama file: $1",
+        "description": "Back up settings dialog: the file name the backup gets"
+    },
+    "backup_errorNothingSelected": {
+        "message": "Pilih minimal satu bagian.",
+        "description": "Backup dialogs: nothing is selected"
+    },
+    "backup_errorPasswordMissing": {
+        "message": "Masukkan kata sandi.",
+        "description": "Back up settings: password protection is on without a password"
+    },
+    "backup_errorPassword": {
+        "message": "Kata sandi salah, atau file diubah setelah disimpan. Tidak ada yang dipulihkan dari bagian yang dilindungi.",
+        "description": "Restore settings: wrong password or changed file"
+    },
+    "backup_errorNewerFormat": {
+        "message": "Cadangan ini dibuat oleh versi Bookmark Scout yang lebih baru. Perbarui ekstensi untuk memulihkannya.",
+        "description": "Restore settings: the file's format is newer"
+    },
+    "backup_errorFileTooLarge": {
+        "message": "File melebihi ukuran maksimal cadangan ($1).",
+        "description": "Restore settings: the file is too large; $1 is the limit, such as 420 MB"
+    },
+    "backup_exportedDesc": {
+        "message": "$1 disimpan berisi: $2.",
+        "description": "Toast after a backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_exportedProtectedDesc": {
+        "message": "$1 disimpan berisi: $2. Dilindungi dengan kata sandi.",
+        "description": "Toast after a password-protected backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_importTitle": {
         "message": "Pulihkan cadangan",
-        "description": "Title of the review shown before restoring a backup file that holds covers"
+        "description": "Restore settings dialog: title"
     },
-    "backup_restoreDesc": {
-        "message": "$1 berisi sampul. Setelan, prompt, layanan AI, dan penelusuran tersimpan tetap dipulihkan; periksa apa yang terjadi di perangkat ini jika sampulnya dipulihkan.",
-        "description": "Restore backup review: $1 is the file name"
+    "backup_importIntro": {
+        "message": "$1, disimpan $2. Tidak ada yang berubah sampai Anda mengimpor.",
+        "description": "Restore settings dialog: $1 file name, $2 when the backup was saved"
     },
-    "backup_restoreCovers": {
-        "message": "Pulihkan sampul",
-        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    "backup_importIntroUndated": {
+        "message": "$1. Tidak ada yang berubah sampai Anda mengimpor.",
+        "description": "Restore settings dialog: $1 file name, for a file without a date"
     },
-    "backup_coversInFile": {
-        "message": "Sampul dalam file: $1",
-        "description": "Restore backup review: how many covers the file holds"
+    "backup_lockedParts": {
+        "message": "Dilindungi kata sandi: $1",
+        "description": "Restore settings dialog: the parts that need the password"
+    },
+    "backup_unlock": {
+        "message": "Buka kunci",
+        "description": "Restore settings dialog: button that opens the protected parts"
+    },
+    "backup_unlockHint": {
+        "message": "Masukkan kata sandi yang digunakan saat cadangan disimpan. Bagian lain dapat dipulihkan tanpanya.",
+        "description": "Restore settings dialog: hint under the password field"
+    },
+    "backup_unknownParts": {
+        "message": "Tidak didukung versi ini, jadi dilewati: $1",
+        "description": "Restore settings dialog: parts from a newer version"
+    },
+    "backup_unreadableParts": {
+        "message": "Tidak dapat dibaca, jadi dilewati: $1",
+        "description": "Restore settings dialog: parts that failed their checks"
+    },
+    "backup_nothingToImport": {
+        "message": "File ini tidak berisi apa pun yang dapat dipulihkan versi ini.",
+        "description": "Restore settings dialog: no part can be imported"
+    },
+    "backup_importSafety": {
+        "message": "Salinan pengaman dari apa yang diubah impor disimpan selama $1 jam: Urungkan impor mengembalikannya.",
+        "description": "Restore settings dialog: about Undo import; $1 is hours"
+    },
+    "backup_importButton": {
+        "message": "Impor ($1)",
+        "description": "Restore settings dialog: import button; $1 is how many parts are selected"
+    },
+    "backup_undoImport": {
+        "message": "Urungkan impor",
+        "description": "Button that puts back what the last backup import changed"
+    },
+    "backup_replaceConfirmTitle": {
+        "message": "Ganti bagian ini?",
+        "description": "Restore settings: title of the confirmation before Replace"
+    },
+    "backup_replaceConfirm": {
+        "message": "Ganti membuat $1 berisi persis seperti di file: yang hanya ada di perangkat ini akan dihapus. Urungkan impor dapat mengembalikannya untuk sementara waktu.",
+        "description": "Restore settings: confirmation before Replace; $1 is the list of parts"
+    },
+    "backup_reviewCounts": {
+        "message": "Di file: $1 · Menambah $2 · Mengubah $3 · Sama di sini: $4",
+        "description": "Restore settings dialog: what importing a part would do"
+    },
+    "backup_reviewSkipped": {
+        "message": "Tidak dapat diimpor (tidak valid, atau dari versi yang lebih baru): $1",
+        "description": "Restore settings dialog: entries that will be skipped"
+    },
+    "backup_keysImportWarning": {
+        "message": "Ini adalah kunci API. Kunci ini menggantikan kunci perangkat ini untuk layanan yang sama, dan siapa pun yang memiliki file ini dapat menggunakannya.",
+        "description": "Restore settings dialog: warning when the keys part is selected"
+    },
+    "backup_keysImportConfirm": {
+        "message": "Impor kunci API",
+        "description": "Restore settings dialog: checkbox confirming the keys import"
+    },
+    "backup_strategyLabel": {
+        "message": "Cara",
+        "description": "Restore settings dialog: label of the Merge or Replace choice"
+    },
+    "backup_strategyMerge": {
+        "message": "Gabungkan",
+        "description": "Restore settings: import strategy that adds and updates"
+    },
+    "backup_strategyReplace": {
+        "message": "Ganti",
+        "description": "Restore settings: import strategy that makes a part exactly the file's"
+    },
+    "backup_strategyMergeDesc": {
+        "message": "Menambahkan dan memperbarui apa yang ada di file; mempertahankan yang hanya ada di perangkat ini.",
+        "description": "Restore settings dialog: what Merge does"
+    },
+    "backup_strategyReplaceDesc": {
+        "message": "Membuat bagian ini sama persis dengan isi file.",
+        "description": "Restore settings dialog: what Replace does"
+    },
+    "backup_replaceRemoves": {
+        "message": "Menghapus $1 item yang hanya ada di perangkat ini.",
+        "description": "Restore settings dialog: what Replace removes"
+    },
+    "backup_conflicts": {
+        "message": "Diubah di sini dan juga di file: $1",
+        "description": "Restore settings dialog: number of conflicts"
+    },
+    "backup_conflictNewer": {
+        "message": "Pertahankan yang lebih baru",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictFile": {
+        "message": "Gunakan dari file",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictDevice": {
+        "message": "Pertahankan milik perangkat ini",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictsEach": {
+        "message": "Pilih satu per satu",
+        "description": "Restore settings dialog: button that lists each conflict"
+    },
+    "backup_conflictsMore": {
+        "message": "Dan $1 lainnya, yang mengikuti pilihan di atas.",
+        "description": "Restore settings dialog: conflicts not listed"
+    },
+    "backup_conflictTimes": {
+        "message": "Di sini: $1 · Di file: $2",
+        "description": "Restore settings dialog: when each side of a conflict changed"
+    },
+    "backup_importDone": {
+        "message": "Impor selesai.",
+        "description": "Restore settings dialog: result heading"
+    },
+    "backup_importPartFailed": {
+        "message": "$1 tidak dapat diimpor: $2. Bagian sebelumnya sudah diimpor; Urungkan impor mengembalikannya.",
+        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+    },
+    "backup_outcomeCounts": {
+        "message": "Ditambahkan $1 · Diubah $2 · Dihapus $3 · Dipertahankan $4 · Dilewati $5",
+        "description": "Restore settings dialog: what importing a part did"
+    },
+    "backup_needsSetup": {
+        "message": "Masukkan lagi di Setelan > AI; sampai saat itu, layanan tersebut menampilkan Perlu disiapkan: $1.",
+        "description": "Restore settings dialog: AI services missing a secret"
+    },
+    "backup_outcomeMismatch": {
+        "message": "$1 item tidak terbaca kembali sesuai yang diimpor. Periksa item tersebut, atau gunakan Urungkan impor.",
+        "description": "Restore settings dialog: read-back found differences"
+    },
+    "backup_inHistory": {
+        "message": "Impor ini tercatat di Histori bookmark di pengelola bookmark.",
+        "description": "Restore settings dialog: where the import is recorded"
+    },
+    "backup_undone": {
+        "message": "Impor diurungkan",
+        "description": "Toast after Undo import"
+    },
+    "backup_undoFailed": {
+        "message": "Tidak dapat mengurungkan impor",
+        "description": "Toast when Undo import cannot run"
+    },
+    "backup_undoMismatch": {
+        "message": "$1 item tidak terbaca kembali seperti sebelumnya.",
+        "description": "Toast after Undo import found differences"
+    },
+    "backup_undoUnavailableUndone": {
+        "message": "Impor ini sudah diurungkan.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_undoUnavailableExpired": {
+        "message": "Urungkan tidak tersedia lagi: salinan pengaman hanya disimpan selama $1 jam.",
+        "description": "Why Undo import is not offered; $1 is hours"
+    },
+    "backup_undoUnavailableReplaced": {
+        "message": "Urungkan tidak tersedia lagi: impor berikutnya telah menggantikan salinan pengamannya.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_keysForMissingServices": {
+        "message": "Kunci untuk layanan yang tidak akan ada di perangkat ini, dilewati: $1",
+        "description": "Restore settings dialog: keys without their service"
+    },
+    "history_backupImported": {
+        "message": "Cadangan diimpor",
+        "description": "History: a backup restore record"
+    },
+    "history_dataPartCounts": {
+        "message": "$1 · Ditambahkan $2 · Diubah $3 · Dihapus $4 · Dilewati $5",
+        "description": "History: what a restored backup part did; $1 is Merge or Replace"
+    },
+    "history_filterData": {
+        "message": "Cadangan",
+        "description": "History filter: backup restores"
+    },
+    "history_factFile": {
+        "message": "File",
+        "description": "History record fact: the backup file's name"
+    },
+    "history_dataPartsLabel": {
+        "message": "Bagian yang diimpor",
+        "description": "History: label of a backup record's parts"
+    },
+    "settings_backupExportCategories": {
+        "message": "Bagian dalam Cadangan Baru",
+        "description": "Settings: which parts Back up settings starts with"
+    },
+    "settings_backupExportCategoriesDesc": {
+        "message": "Apa yang sudah dipilih saat Cadangkan setelan dibuka. Setiap cadangan yang Anda simpan menjadi pilihan baru di komputer ini. Kunci layanan AI tidak pernah dipilih di awal.",
+        "description": "Settings: description of settings_backupExportCategories"
+    },
+    "settings_backupEncryptByDefault": {
+        "message": "Lindungi Cadangan Baru dengan Kata Sandi",
+        "description": "Settings: whether a new backup starts password-protected"
+    },
+    "settings_backupEncryptByDefaultDesc": {
+        "message": "Apakah Lindungi cadangan ini dengan kata sandi sudah dicentang di awal. Kata sandi yang terlupa tidak dapat dipulihkan.",
+        "description": "Settings: description of settings_backupEncryptByDefault"
+    },
+    "settings_backupEncryptSecrets": {
+        "message": "Lindungi Kunci API dengan Kata Sandi",
+        "description": "Settings: whether included API keys start password-protected"
+    },
+    "settings_backupEncryptSecretsDesc": {
+        "message": "Apakah cadangan yang menyertakan kunci layanan AI langsung melindungi kunci tersebut dengan kata sandi. Menonaktifkannya di dialog akan meminta konfirmasi Anda.",
+        "description": "Settings: description of settings_backupEncryptSecrets"
+    },
+    "backup_partEmpty": {
+        "message": "Masih kosong",
+        "description": "Back up settings dialog: a part with no items"
+    },
+    "history_descriptionBackups": {
+        "message": "Pemulihan cadangan setelan juga tercantum.",
+        "description": "History dialog: second sentence of the description"
+    },
+    "history_verifyPassedData": {
+        "message": "Diperiksa setelah impor: semua yang ditulis terbaca sesuai yang ditulis.",
+        "description": "History record fact: the read-back of a backup restore passed"
+    },
+    "history_verifyFailedData": {
+        "message": "Diperiksa setelah impor: $1 entri tidak terbaca sesuai yang ditulis.",
+        "description": "History record fact: the read-back of a backup restore found differences"
     },
     "backup_coversMatched": {
         "message": "Ada bookmark dengan alamat yang sama di sini: $1",
@@ -6501,33 +6865,9 @@
         "message": "Tidak ada bookmark dengan alamat itu di sini: $1",
         "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
     },
-    "backup_coversAdded": {
-        "message": "Bookmark yang mendapat sampul: $1",
-        "description": "Restore backup review: how many bookmarks get a cover they did not have"
-    },
-    "backup_coversReplaced": {
-        "message": "Sampul yang diganti dengan yang lebih baru: $1",
-        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
-    },
-    "backup_coversKept": {
-        "message": "Sampul yang dipertahankan (dipilih dengan Gunakan tampilan ini sebagai sampul, atau lebih baru dari yang di file): $1",
-        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
-    },
-    "backup_coversSkipped": {
-        "message": "Dilewati (tidak terbaca atau melewati batas cadangan): $1",
-        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
-    },
     "backup_coversOverStorage": {
         "message": "Dihapus setelahnya agar tetap dalam Penyimpanan Sampul, yang terlama lebih dulu: $1",
         "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
-    },
-    "backup_restoreNoUndo": {
-        "message": "Pemulihan tidak dapat dibatalkan: sampul yang diganti akan hilang.",
-        "description": "Restore backup review: a restore has no undo"
-    },
-    "backup_restore": {
-        "message": "Pulihkan",
-        "description": "Restore backup review: button that restores the backup"
     },
     "actionName_searchBookmarks": {
         "message": "Telusuri bookmark",

@@ -535,14 +535,6 @@
         "message": "백업을 내보냈습니다",
         "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_backupExportedDescription": {
-        "message": "파일에는 설정, 프롬프트, AI 서비스, 저장한 검색이 들어 있습니다. API 키는 포함되지 않습니다.",
-        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
-    },
-    "toast_backupExportedCoversDescription": {
-        "message": "파일에는 설정, 프롬프트, AI 서비스, 저장한 검색, 표지($1개)가 들어 있습니다. API 키는 포함되지 않습니다.",
-        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
-    },
     "toast_exportFailed": {
         "message": "내보내기 실패",
         "description": "Toast title for settings export error"
@@ -630,14 +622,6 @@
     "settings_sectionBackup": {
         "message": "백업",
         "description": "Settings: section heading under Import & Export for the settings backup file"
-    },
-    "settings_backupIncludeCovers": {
-        "message": "백업에 표지 포함",
-        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
-    },
-    "settings_backupIncludeCoversDesc": {
-        "message": "설정 백업이 표지도 파일에 저장할지 여부입니다. 표지가 저장되어 있는 동안에는 매번 묻고, 이 값을 처음 선택된 상태로 보여 주며 늘어나는 크기도 알려 줍니다. 표지는 동기화되지 않으므로 다른 컴퓨터로 옮기려면 백업을 사용하세요.",
-        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "저장",
@@ -3483,25 +3467,9 @@
         "message": "설정 $1개를 변경했습니다: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_backupRestored": {
-        "message": "백업을 복원했습니다",
-        "description": "Toast title after Import in Settings restored a backup file"
-    },
-    "toast_backupRestoredDescription": {
-        "message": "설정, 프롬프트, AI 서비스, 저장한 검색을 복원했습니다. 백업에는 API 키가 없으므로, 없는 키는 설정 > AI에서 추가하세요.",
-        "description": "Toast description after a backup was restored; API keys are not in backups"
-    },
-    "toast_backupRestoredNeedsSetup": {
-        "message": "설정, 프롬프트, 기본 URL을 포함한 AI 서비스, 저장한 검색을 복원했습니다. 백업에는 포함되지 않아 복원되지 않은 항목: $1. 설정 > AI에서 다시 입력하세요. 그때까지 해당 서비스에는 \"설정 필요\"가 표시됩니다.",
-        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
-    },
     "toast_backupServiceNeeds": {
         "message": "\"$1\"의 $2",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
-    },
-    "toast_backupCoversRestored": {
-        "message": "복원한 표지: $1. 그대로 둔 표지: $2. 여기에 북마크가 없음: $3. 제외됨: $4.",
-        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "설정 필요",
@@ -6711,18 +6679,6 @@
         "message": "설정 복원",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
-    "backup_exportDesc": {
-        "message": "파일에는 설정, 프롬프트, AI 서비스(API 키 제외), 저장한 검색이 들어 있습니다. 파일은 저장한 위치에만 남습니다.",
-        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
-    },
-    "backup_includeCovers": {
-        "message": "표지 포함",
-        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
-    },
-    "backup_coversEstimate": {
-        "message": "표지: $1개, 파일이 약 $2 커집니다. 표지는 동기화되지 않으므로 다른 컴퓨터로 옮기려면 백업을 사용하세요.",
-        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
-    },
     "backup_coversLeftOut": {
         "message": "백업 한도를 넘어 제외됨(오래된 것부터): $1",
         "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
@@ -6731,21 +6687,429 @@
         "message": "백업 저장",
         "description": "Back up settings dialog: button that saves the backup file"
     },
-    "backup_restoreTitle": {
+    "backup_categorySettings": {
+        "message": "설정",
+        "description": "Backup part: the synced settings"
+    },
+    "backup_categorySettingsDesc": {
+        "message": "변경한 설정 중 다른 기기와 동기화되는 설정입니다. 메뉴와 목록도 포함됩니다.",
+        "description": "Backup part: what the Settings part holds"
+    },
+    "backup_categoryDeviceSettings": {
+        "message": "이 컴퓨터의 설정",
+        "description": "Backup part: the settings kept for one device"
+    },
+    "backup_categoryDeviceSettingsDesc": {
+        "message": "이 컴퓨터에만 저장되는 설정입니다: 레이아웃, 사이드바, 키보드 키, 빠른 저장 폴더, 스마트 규칙 자동화, 로컬 AI 에이전트 접근.",
+        "description": "Backup part: what the device settings part holds"
+    },
+    "backup_categoryViews": {
+        "message": "저장된 검색과 표 보기",
+        "description": "Backup part: saved searches and the manager table's layout"
+    },
+    "backup_categoryViewsDesc": {
+        "message": "북마크 관리자의 저장된 검색과 표의 열 및 정렬입니다.",
+        "description": "Backup part: what the views part holds"
+    },
+    "backup_categoryPrompts": {
+        "message": "프롬프트와 내 소개",
+        "description": "Backup part: custom AI prompts and About me"
+    },
+    "backup_categoryPromptsDesc": {
+        "message": "사용자 지정 AI 프롬프트, 각 작업에 쓰는 프롬프트, 내 소개 텍스트입니다.",
+        "description": "Backup part: what the prompts part holds"
+    },
+    "backup_categoryRules": {
+        "message": "스마트 규칙",
+        "description": "Backup part: the Smart Rules"
+    },
+    "backup_categoryRulesDesc": {
+        "message": "스마트 규칙(검색, 태그, 폴더)입니다. 규칙이 실행한 결과는 포함되지 않습니다.",
+        "description": "Backup part: what the Smart Rules part holds"
+    },
+    "backup_categoryAiServices": {
+        "message": "AI 서비스",
+        "description": "Backup part: the AI services without their keys"
+    },
+    "backup_categoryAiServicesDesc": {
+        "message": "각 AI 서비스의 이름, 제공자, 모델, 기본 URL, 제공자 필드입니다. API 키와 추가 헤더는 제외됩니다.",
+        "description": "Backup part: what the AI services part holds"
+    },
+    "backup_categoryAiServiceKeys": {
+        "message": "AI 서비스 키",
+        "description": "Backup part: the API keys and extra headers of the AI services"
+    },
+    "backup_categoryAiServiceKeysDesc": {
+        "message": "AI 서비스의 API 키와 추가 헤더입니다. 직접 선택하지 않으면 백업에 절대 포함되지 않습니다.",
+        "description": "Backup part: what the AI service keys part holds"
+    },
+    "backup_categoryCovers": {
+        "message": "표지",
+        "description": "Backup part: the bookmarks' cover pictures"
+    },
+    "backup_categoryCoversDesc": {
+        "message": "북마크의 표지 그림을 주소별로 담습니다. 표지는 동기화되지 않으므로 다른 컴퓨터로 옮기려면 백업을 사용하세요.",
+        "description": "Backup part: what the covers part holds"
+    },
+    "backup_badgeDevice": {
+        "message": "이 컴퓨터",
+        "description": "Backup dialogs: badge on a part that suits one computer"
+    },
+    "backup_badgeLarge": {
+        "message": "큰 용량",
+        "description": "Backup dialogs: badge on a part that can make the file large"
+    },
+    "backup_deviceNote": {
+        "message": "처음에는 선택되지 않음: 이 컴퓨터의 화면과 키보드에 맞춘 설정입니다.",
+        "description": "Backup dialogs: why the device settings part starts unselected"
+    },
+    "backup_exportIntro": {
+        "message": "파일에 넣을 항목을 고르세요. 북마크는 포함되지 않으니 북마크 관리자에서 내보내세요.",
+        "description": "Back up settings dialog: introduction"
+    },
+    "backup_partsLabel": {
+        "message": "항목",
+        "description": "Backup dialogs: heading of the list of parts"
+    },
+    "backup_selectAll": {
+        "message": "모두 선택",
+        "description": "Back up settings dialog: button that selects every part except the keys"
+    },
+    "backup_selectNone": {
+        "message": "모두 해제",
+        "description": "Back up settings dialog: button that clears every part"
+    },
+    "backup_counting": {
+        "message": "세는 중…",
+        "description": "Backup dialogs: shown while a part's items are counted"
+    },
+    "backup_partMeta": {
+        "message": "$1개 · 약 $2",
+        "description": "Back up settings dialog: a part's item count ($1) and size ($2, such as 3 KB)"
+    },
+    "backup_keysWarning": {
+        "message": "이 파일을 얻은 사람은 누구나 이 키를 사용해 계정에 요금을 발생시킬 수 있습니다. 파일을 안전한 곳에 보관하고 비밀번호로 보호하세요.",
+        "description": "Back up settings dialog: warning shown when the AI service keys are selected"
+    },
+    "backup_keysConfirm": {
+        "message": "이해했습니다. API 키를 포함합니다",
+        "description": "Back up settings dialog: checkbox confirming the keys warning"
+    },
+    "backup_protectAll": {
+        "message": "이 백업을 비밀번호로 보호",
+        "description": "Back up settings dialog: checkbox that encrypts the whole file"
+    },
+    "backup_protectAllDesc": {
+        "message": "파일의 모든 내용을 암호화합니다. 복원할 때 비밀번호를 묻습니다. 파일에 든 항목 목록은 그대로 읽을 수 있습니다.",
+        "description": "Back up settings dialog: what protecting the whole backup does"
+    },
+    "backup_protectKeys": {
+        "message": "API 키를 비밀번호로 보호",
+        "description": "Back up settings dialog: checkbox that encrypts only the keys"
+    },
+    "backup_protectKeysDesc": {
+        "message": "키만 암호화합니다. 파일의 나머지는 비밀번호 없이 복원할 수 있습니다.",
+        "description": "Back up settings dialog: what protecting the keys does"
+    },
+    "backup_keysPlainWarning": {
+        "message": "비밀번호가 없으면 키가 일반 텍스트로 저장되어 파일을 여는 누구나 읽을 수 있습니다.",
+        "description": "Back up settings dialog: warning when the keys are saved without a password"
+    },
+    "backup_keysPlainConfirm": {
+        "message": "비밀번호 없이 키 저장",
+        "description": "Back up settings dialog: checkbox confirming keys without a password"
+    },
+    "backup_password": {
+        "message": "비밀번호",
+        "description": "Backup dialogs: password field label"
+    },
+    "backup_passwordConfirm": {
+        "message": "비밀번호 확인",
+        "description": "Back up settings dialog: second password field label"
+    },
+    "backup_passwordHint": {
+        "message": "$1자 이상. 서로 관련 없는 단어 몇 개를 이으면 기억하기 쉽습니다. 잊어버린 비밀번호는 복구할 수 없습니다. 비밀번호가 없으면 Bookmark Scout를 포함해 누구도 보호된 항목을 열 수 없습니다.",
+        "description": "Back up settings dialog: password hint; $1 is the shortest length"
+    },
+    "backup_passwordTooShort": {
+        "message": "$1자 이상 입력하세요.",
+        "description": "Back up settings dialog: the password is too short; $1 is the shortest length"
+    },
+    "backup_passwordMismatch": {
+        "message": "비밀번호가 일치하지 않습니다.",
+        "description": "Back up settings dialog: the two passwords differ"
+    },
+    "backup_staysLocal": {
+        "message": "아무것도 전송되지 않습니다. 파일은 이 컴퓨터에 저장됩니다.",
+        "description": "Back up settings dialog: privacy note"
+    },
+    "backup_fileName": {
+        "message": "파일 이름: $1",
+        "description": "Back up settings dialog: the file name the backup gets"
+    },
+    "backup_errorNothingSelected": {
+        "message": "항목을 하나 이상 선택하세요.",
+        "description": "Backup dialogs: nothing is selected"
+    },
+    "backup_errorPasswordMissing": {
+        "message": "비밀번호를 입력하세요.",
+        "description": "Back up settings: password protection is on without a password"
+    },
+    "backup_errorPassword": {
+        "message": "비밀번호가 틀렸거나 저장 후 파일이 변경되었습니다. 보호된 항목은 하나도 복원되지 않았습니다.",
+        "description": "Restore settings: wrong password or changed file"
+    },
+    "backup_errorNewerFormat": {
+        "message": "이 백업은 더 새로운 버전의 Bookmark Scout로 만들어졌습니다. 복원하려면 확장 프로그램을 업데이트하세요.",
+        "description": "Restore settings: the file's format is newer"
+    },
+    "backup_errorFileTooLarge": {
+        "message": "파일이 백업 최대 크기($1)보다 큽니다.",
+        "description": "Restore settings: the file is too large; $1 is the limit, such as 420 MB"
+    },
+    "backup_exportedDesc": {
+        "message": "$1 저장됨. 포함 항목: $2.",
+        "description": "Toast after a backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_exportedProtectedDesc": {
+        "message": "$1 저장됨. 포함 항목: $2. 비밀번호로 보호됨.",
+        "description": "Toast after a password-protected backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_importTitle": {
         "message": "백업 복원",
-        "description": "Title of the review shown before restoring a backup file that holds covers"
+        "description": "Restore settings dialog: title"
     },
-    "backup_restoreDesc": {
-        "message": "$1에 표지가 들어 있습니다. 설정, 프롬프트, AI 서비스, 저장한 검색은 어느 경우든 복원됩니다. 표지를 복원하면 이 기기에서 어떻게 되는지 확인하세요.",
-        "description": "Restore backup review: $1 is the file name"
+    "backup_importIntro": {
+        "message": "$1, $2에 저장됨. 가져오기 전에는 아무것도 바뀌지 않습니다.",
+        "description": "Restore settings dialog: $1 file name, $2 when the backup was saved"
     },
-    "backup_restoreCovers": {
-        "message": "표지 복원",
-        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    "backup_importIntroUndated": {
+        "message": "$1. 가져오기 전에는 아무것도 바뀌지 않습니다.",
+        "description": "Restore settings dialog: $1 file name, for a file without a date"
     },
-    "backup_coversInFile": {
-        "message": "파일의 표지: $1",
-        "description": "Restore backup review: how many covers the file holds"
+    "backup_lockedParts": {
+        "message": "비밀번호로 보호됨: $1",
+        "description": "Restore settings dialog: the parts that need the password"
+    },
+    "backup_unlock": {
+        "message": "잠금 해제",
+        "description": "Restore settings dialog: button that opens the protected parts"
+    },
+    "backup_unlockHint": {
+        "message": "백업을 저장할 때 쓴 비밀번호를 입력하세요. 다른 항목은 비밀번호 없이 복원할 수 있습니다.",
+        "description": "Restore settings dialog: hint under the password field"
+    },
+    "backup_unknownParts": {
+        "message": "이 버전에서 지원하지 않아 건너뜀: $1",
+        "description": "Restore settings dialog: parts from a newer version"
+    },
+    "backup_unreadableParts": {
+        "message": "읽을 수 없어 건너뜀: $1",
+        "description": "Restore settings dialog: parts that failed their checks"
+    },
+    "backup_nothingToImport": {
+        "message": "이 파일에는 이 버전에서 복원할 수 있는 내용이 없습니다.",
+        "description": "Restore settings dialog: no part can be imported"
+    },
+    "backup_importSafety": {
+        "message": "가져오기로 바뀌는 내용의 안전 사본이 $1시간 동안 보관됩니다. 가져오기 실행 취소로 되돌릴 수 있습니다.",
+        "description": "Restore settings dialog: about Undo import; $1 is hours"
+    },
+    "backup_importButton": {
+        "message": "가져오기 ($1)",
+        "description": "Restore settings dialog: import button; $1 is how many parts are selected"
+    },
+    "backup_undoImport": {
+        "message": "가져오기 실행 취소",
+        "description": "Button that puts back what the last backup import changed"
+    },
+    "backup_replaceConfirmTitle": {
+        "message": "이 항목을 교체할까요?",
+        "description": "Restore settings: title of the confirmation before Replace"
+    },
+    "backup_replaceConfirm": {
+        "message": "교체하면 $1 항목이 파일과 똑같아지고, 이 기기에만 있는 내용은 삭제됩니다. 한동안은 가져오기 실행 취소로 되돌릴 수 있습니다.",
+        "description": "Restore settings: confirmation before Replace; $1 is the list of parts"
+    },
+    "backup_reviewCounts": {
+        "message": "파일에 있음: $1 · 추가 $2 · 변경 $3 · 여기와 같음: $4",
+        "description": "Restore settings dialog: what importing a part would do"
+    },
+    "backup_reviewSkipped": {
+        "message": "가져올 수 없음(유효하지 않거나 더 새로운 버전): $1",
+        "description": "Restore settings dialog: entries that will be skipped"
+    },
+    "backup_keysImportWarning": {
+        "message": "API 키입니다. 같은 서비스에 대한 이 기기의 키를 대체하며, 이 파일을 가진 사람은 누구나 이 키를 사용할 수 있습니다.",
+        "description": "Restore settings dialog: warning when the keys part is selected"
+    },
+    "backup_keysImportConfirm": {
+        "message": "API 키 가져오기",
+        "description": "Restore settings dialog: checkbox confirming the keys import"
+    },
+    "backup_strategyLabel": {
+        "message": "방식",
+        "description": "Restore settings dialog: label of the Merge or Replace choice"
+    },
+    "backup_strategyMerge": {
+        "message": "병합",
+        "description": "Restore settings: import strategy that adds and updates"
+    },
+    "backup_strategyReplace": {
+        "message": "교체",
+        "description": "Restore settings: import strategy that makes a part exactly the file's"
+    },
+    "backup_strategyMergeDesc": {
+        "message": "파일의 내용을 추가하고 업데이트합니다. 이 기기에만 있는 내용은 유지합니다.",
+        "description": "Restore settings dialog: what Merge does"
+    },
+    "backup_strategyReplaceDesc": {
+        "message": "이 항목을 파일 내용과 똑같이 만듭니다.",
+        "description": "Restore settings dialog: what Replace does"
+    },
+    "backup_replaceRemoves": {
+        "message": "이 기기에만 있는 $1개를 삭제합니다.",
+        "description": "Restore settings dialog: what Replace removes"
+    },
+    "backup_conflicts": {
+        "message": "여기와 파일 양쪽에서 변경됨: $1",
+        "description": "Restore settings dialog: number of conflicts"
+    },
+    "backup_conflictNewer": {
+        "message": "더 새로운 것 유지",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictFile": {
+        "message": "파일의 것 사용",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictDevice": {
+        "message": "이 기기의 것 유지",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictsEach": {
+        "message": "하나씩 선택",
+        "description": "Restore settings dialog: button that lists each conflict"
+    },
+    "backup_conflictsMore": {
+        "message": "그 외 $1개는 위의 선택을 따릅니다.",
+        "description": "Restore settings dialog: conflicts not listed"
+    },
+    "backup_conflictTimes": {
+        "message": "여기: $1 · 파일: $2",
+        "description": "Restore settings dialog: when each side of a conflict changed"
+    },
+    "backup_importDone": {
+        "message": "가져오기를 마쳤습니다.",
+        "description": "Restore settings dialog: result heading"
+    },
+    "backup_importPartFailed": {
+        "message": "$1 항목을 가져오지 못했습니다: $2. 그 전의 항목은 가져왔으며, 가져오기 실행 취소로 되돌릴 수 있습니다.",
+        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+    },
+    "backup_outcomeCounts": {
+        "message": "추가 $1 · 변경 $2 · 삭제 $3 · 유지 $4 · 건너뜀 $5",
+        "description": "Restore settings dialog: what importing a part did"
+    },
+    "backup_needsSetup": {
+        "message": "설정 > AI에서 다시 입력하세요. 그전까지 해당 서비스에는 설정 필요가 표시됩니다: $1.",
+        "description": "Restore settings dialog: AI services missing a secret"
+    },
+    "backup_outcomeMismatch": {
+        "message": "$1개가 가져온 내용과 다르게 읽혔습니다. 확인하거나 가져오기 실행 취소를 사용하세요.",
+        "description": "Restore settings dialog: read-back found differences"
+    },
+    "backup_inHistory": {
+        "message": "이 가져오기는 북마크 관리자의 북마크 기록에 남습니다.",
+        "description": "Restore settings dialog: where the import is recorded"
+    },
+    "backup_undone": {
+        "message": "가져오기 실행 취소됨",
+        "description": "Toast after Undo import"
+    },
+    "backup_undoFailed": {
+        "message": "가져오기를 실행 취소하지 못했습니다",
+        "description": "Toast when Undo import cannot run"
+    },
+    "backup_undoMismatch": {
+        "message": "$1개가 이전 상태와 다르게 읽혔습니다.",
+        "description": "Toast after Undo import found differences"
+    },
+    "backup_undoUnavailableUndone": {
+        "message": "이 가져오기는 이미 실행 취소되었습니다.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_undoUnavailableExpired": {
+        "message": "더 이상 실행 취소할 수 없습니다. 안전 사본은 $1시간 동안만 보관됩니다.",
+        "description": "Why Undo import is not offered; $1 is hours"
+    },
+    "backup_undoUnavailableReplaced": {
+        "message": "더 이상 실행 취소할 수 없습니다. 이후의 가져오기가 안전 사본을 대체했습니다.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_keysForMissingServices": {
+        "message": "이 기기에 없을 서비스의 키, 건너뜀: $1",
+        "description": "Restore settings dialog: keys without their service"
+    },
+    "history_backupImported": {
+        "message": "백업 가져옴",
+        "description": "History: a backup restore record"
+    },
+    "history_dataPartCounts": {
+        "message": "$1 · 추가 $2 · 변경 $3 · 삭제 $4 · 건너뜀 $5",
+        "description": "History: what a restored backup part did; $1 is Merge or Replace"
+    },
+    "history_filterData": {
+        "message": "백업",
+        "description": "History filter: backup restores"
+    },
+    "history_factFile": {
+        "message": "파일",
+        "description": "History record fact: the backup file's name"
+    },
+    "history_dataPartsLabel": {
+        "message": "가져온 항목",
+        "description": "History: label of a backup record's parts"
+    },
+    "settings_backupExportCategories": {
+        "message": "새 백업에 포함할 항목",
+        "description": "Settings: which parts Back up settings starts with"
+    },
+    "settings_backupExportCategoriesDesc": {
+        "message": "설정 백업을 열 때 미리 선택되는 항목입니다. 백업을 저장할 때마다 그 선택이 이 컴퓨터의 새 기본값이 됩니다. AI 서비스 키는 처음에 선택되지 않습니다.",
+        "description": "Settings: description of settings_backupExportCategories"
+    },
+    "settings_backupEncryptByDefault": {
+        "message": "새 백업을 비밀번호로 보호",
+        "description": "Settings: whether a new backup starts password-protected"
+    },
+    "settings_backupEncryptByDefaultDesc": {
+        "message": "이 백업을 비밀번호로 보호가 처음부터 선택되어 있는지 여부입니다. 잊어버린 비밀번호는 복구할 수 없습니다.",
+        "description": "Settings: description of settings_backupEncryptByDefault"
+    },
+    "settings_backupEncryptSecrets": {
+        "message": "API 키를 비밀번호로 보호",
+        "description": "Settings: whether included API keys start password-protected"
+    },
+    "settings_backupEncryptSecretsDesc": {
+        "message": "AI 서비스 키를 포함한 백업에서 키가 처음부터 비밀번호로 보호되는지 여부입니다. 대화 상자에서 끄면 확인을 요청합니다.",
+        "description": "Settings: description of settings_backupEncryptSecrets"
+    },
+    "backup_partEmpty": {
+        "message": "아직 비어 있음",
+        "description": "Back up settings dialog: a part with no items"
+    },
+    "history_descriptionBackups": {
+        "message": "설정 백업 복원도 함께 표시됩니다.",
+        "description": "History dialog: second sentence of the description"
+    },
+    "history_verifyPassedData": {
+        "message": "가져온 후 확인함: 기록한 내용이 모두 그대로 읽힙니다.",
+        "description": "History record fact: the read-back of a backup restore passed"
+    },
+    "history_verifyFailedData": {
+        "message": "가져온 후 확인함: $1개 항목이 기록한 대로 읽히지 않습니다.",
+        "description": "History record fact: the read-back of a backup restore found differences"
     },
     "backup_coversMatched": {
         "message": "같은 주소의 북마크가 여기에 있음: $1",
@@ -6755,33 +7119,9 @@
         "message": "그 주소의 북마크가 여기에 없음: $1",
         "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
     },
-    "backup_coversAdded": {
-        "message": "표지를 받는 북마크: $1",
-        "description": "Restore backup review: how many bookmarks get a cover they did not have"
-    },
-    "backup_coversReplaced": {
-        "message": "더 새로운 표지로 바뀌는 표지: $1",
-        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
-    },
-    "backup_coversKept": {
-        "message": "유지되는 표지(이 화면을 표지로 사용으로 고른 것 또는 파일보다 새로운 것): $1",
-        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
-    },
-    "backup_coversSkipped": {
-        "message": "건너뜀(읽을 수 없거나 백업 한도 초과): $1",
-        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
-    },
     "backup_coversOverStorage": {
         "message": "표지 저장 공간에 맞추려고 나중에 오래된 것부터 삭제: $1",
         "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
-    },
-    "backup_restoreNoUndo": {
-        "message": "복원은 되돌릴 수 없습니다. 바뀐 표지는 사라집니다.",
-        "description": "Restore backup review: a restore has no undo"
-    },
-    "backup_restore": {
-        "message": "복원",
-        "description": "Restore backup review: button that restores the backup"
     },
     "actionName_searchBookmarks": {
         "message": "북마크 검색",

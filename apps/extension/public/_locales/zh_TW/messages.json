@@ -535,14 +535,6 @@
         "message": "已匯出備份",
         "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_backupExportedDescription": {
-        "message": "檔案包含你的設定、提示詞、AI 服務和已儲存的搜尋。API 金鑰一律不會包含在內。",
-        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
-    },
-    "toast_backupExportedCoversDescription": {
-        "message": "檔案包含你的設定、提示詞、AI 服務、已儲存的搜尋和封面（$1 個）。API 金鑰一律不會包含在內。",
-        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
-    },
     "toast_exportFailed": {
         "message": "匯出失敗",
         "description": "Toast title for settings export error"
@@ -630,14 +622,6 @@
     "settings_sectionBackup": {
         "message": "備份",
         "description": "Settings: section heading under Import & Export for the settings backup file"
-    },
-    "settings_backupIncludeCovers": {
-        "message": "在備份中包含封面",
-        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
-    },
-    "settings_backupIncludeCoversDesc": {
-        "message": "「備份設定」是否也把封面存進檔案。存有封面時每次都會詢問，並預先勾選這裡的選擇，同時顯示會增加多少大小。封面不會同步，要把它們帶到另一台電腦，只能透過備份。",
-        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "儲存",
@@ -3483,25 +3467,9 @@
         "message": "已變更 $1 項設定：$2",
         "description": "Import toast listing changed settings"
     },
-    "toast_backupRestored": {
-        "message": "已還原備份",
-        "description": "Toast title after Import in Settings restored a backup file"
-    },
-    "toast_backupRestoredDescription": {
-        "message": "已還原你的設定、提示詞、AI 服務和已儲存的搜尋。備份中沒有 API 金鑰：缺少的金鑰請在「設定 > AI」中新增。",
-        "description": "Toast description after a backup was restored; API keys are not in backups"
-    },
-    "toast_backupRestoredNeedsSetup": {
-        "message": "已還原你的設定、提示詞、AI 服務（含基礎網址）和已儲存的搜尋。備份從不包含以下內容，因此未還原：$1。請在「設定 > AI」中重新輸入；在此之前這些服務會顯示「需要設定」。",
-        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
-    },
     "toast_backupServiceNeeds": {
         "message": "「$1」的$2",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
-    },
-    "toast_backupCoversRestored": {
-        "message": "已還原封面：$1。維持原樣：$2。這裡沒有書籤：$3。未包含：$4。",
-        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "需要設定",
@@ -6473,18 +6441,6 @@
         "message": "還原設定",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
-    "backup_exportDesc": {
-        "message": "檔案包含你的設定、提示詞、AI 服務（不含 API 金鑰）和已儲存的搜尋。檔案只會留在你儲存的位置。",
-        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
-    },
-    "backup_includeCovers": {
-        "message": "包含封面",
-        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
-    },
-    "backup_coversEstimate": {
-        "message": "封面：$1 個，檔案約增加 $2。封面不會同步，要把它們帶到另一台電腦，只能透過備份。",
-        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
-    },
     "backup_coversLeftOut": {
         "message": "超出備份上限而未包含（從最舊的開始）：$1",
         "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
@@ -6493,21 +6449,429 @@
         "message": "儲存備份",
         "description": "Back up settings dialog: button that saves the backup file"
     },
-    "backup_restoreTitle": {
+    "backup_categorySettings": {
+        "message": "設定",
+        "description": "Backup part: the synced settings"
+    },
+    "backup_categorySettingsDesc": {
+        "message": "你變更過並會同步到其他裝置的設定，包括選單和清單。",
+        "description": "Backup part: what the Settings part holds"
+    },
+    "backup_categoryDeviceSettings": {
+        "message": "這台電腦的設定",
+        "description": "Backup part: the settings kept for one device"
+    },
+    "backup_categoryDeviceSettingsDesc": {
+        "message": "只為這台電腦保存的設定：版面、側欄、鍵盤按鍵、快速儲存資料夾、智慧規則自動執行，以及本機 AI 代理的存取權。",
+        "description": "Backup part: what the device settings part holds"
+    },
+    "backup_categoryViews": {
+        "message": "已儲存的搜尋和表格檢視",
+        "description": "Backup part: saved searches and the manager table's layout"
+    },
+    "backup_categoryViewsDesc": {
+        "message": "書籤管理員中已儲存的搜尋，以及表格的欄位和排序。",
+        "description": "Backup part: what the views part holds"
+    },
+    "backup_categoryPrompts": {
+        "message": "提示詞和「關於我」",
+        "description": "Backup part: custom AI prompts and About me"
+    },
+    "backup_categoryPromptsDesc": {
+        "message": "你的自訂 AI 提示詞、每項工作使用的提示詞，以及你的「關於我」文字。",
+        "description": "Backup part: what the prompts part holds"
+    },
+    "backup_categoryRules": {
+        "message": "智慧規則",
+        "description": "Backup part: the Smart Rules"
+    },
+    "backup_categoryRulesDesc": {
+        "message": "你的智慧規則（其搜尋、標籤和資料夾），不含它們執行過的動作。",
+        "description": "Backup part: what the Smart Rules part holds"
+    },
+    "backup_categoryAiServices": {
+        "message": "AI 服務",
+        "description": "Backup part: the AI services without their keys"
+    },
+    "backup_categoryAiServicesDesc": {
+        "message": "每個 AI 服務的名稱、供應商、模型、基礎網址和供應商欄位，不含 API 金鑰和額外標頭。",
+        "description": "Backup part: what the AI services part holds"
+    },
+    "backup_categoryAiServiceKeys": {
+        "message": "AI 服務金鑰",
+        "description": "Backup part: the API keys and extra headers of the AI services"
+    },
+    "backup_categoryAiServiceKeysDesc": {
+        "message": "你的 AI 服務的 API 金鑰和額外標頭。除非你選取，否則絕不會放進備份。",
+        "description": "Backup part: what the AI service keys part holds"
+    },
+    "backup_categoryCovers": {
+        "message": "封面",
+        "description": "Backup part: the bookmarks' cover pictures"
+    },
+    "backup_categoryCoversDesc": {
+        "message": "書籤的封面圖片，依網址保存。封面不會同步，要把它們帶到另一台電腦，只能透過備份。",
+        "description": "Backup part: what the covers part holds"
+    },
+    "backup_badgeDevice": {
+        "message": "這台電腦",
+        "description": "Backup dialogs: badge on a part that suits one computer"
+    },
+    "backup_badgeLarge": {
+        "message": "較大",
+        "description": "Backup dialogs: badge on a part that can make the file large"
+    },
+    "backup_deviceNote": {
+        "message": "預設不選取：這些設定適合這台電腦的螢幕和鍵盤。",
+        "description": "Backup dialogs: why the device settings part starts unselected"
+    },
+    "backup_exportIntro": {
+        "message": "選擇要放進檔案的內容。書籤不包含在內；請在書籤管理員中匯出書籤。",
+        "description": "Back up settings dialog: introduction"
+    },
+    "backup_partsLabel": {
+        "message": "內容",
+        "description": "Backup dialogs: heading of the list of parts"
+    },
+    "backup_selectAll": {
+        "message": "全選",
+        "description": "Back up settings dialog: button that selects every part except the keys"
+    },
+    "backup_selectNone": {
+        "message": "全部取消",
+        "description": "Back up settings dialog: button that clears every part"
+    },
+    "backup_counting": {
+        "message": "正在計算…",
+        "description": "Backup dialogs: shown while a part's items are counted"
+    },
+    "backup_partMeta": {
+        "message": "項目：$1 · 約 $2",
+        "description": "Back up settings dialog: a part's item count ($1) and size ($2, such as 3 KB)"
+    },
+    "backup_keysWarning": {
+        "message": "任何拿到這個檔案的人都能使用這些金鑰，並在你的帳戶上產生費用。請把檔案存放在安全的地方，並用密碼保護。",
+        "description": "Back up settings dialog: warning shown when the AI service keys are selected"
+    },
+    "backup_keysConfirm": {
+        "message": "我了解風險，包含我的 API 金鑰",
+        "description": "Back up settings dialog: checkbox confirming the keys warning"
+    },
+    "backup_protectAll": {
+        "message": "用密碼保護這份備份",
+        "description": "Back up settings dialog: checkbox that encrypts the whole file"
+    },
+    "backup_protectAllDesc": {
+        "message": "加密檔案中的所有內容。還原時需要輸入密碼；檔案包含哪些內容的清單仍可讀取。",
+        "description": "Back up settings dialog: what protecting the whole backup does"
+    },
+    "backup_protectKeys": {
+        "message": "用密碼保護 API 金鑰",
+        "description": "Back up settings dialog: checkbox that encrypts only the keys"
+    },
+    "backup_protectKeysDesc": {
+        "message": "只加密金鑰；檔案的其餘部分不需要密碼即可還原。",
+        "description": "Back up settings dialog: what protecting the keys does"
+    },
+    "backup_keysPlainWarning": {
+        "message": "不設密碼時，金鑰會以純文字儲存，任何開啟檔案的人都能讀取。",
+        "description": "Back up settings dialog: warning when the keys are saved without a password"
+    },
+    "backup_keysPlainConfirm": {
+        "message": "不設密碼儲存金鑰",
+        "description": "Back up settings dialog: checkbox confirming keys without a password"
+    },
+    "backup_password": {
+        "message": "密碼",
+        "description": "Backup dialogs: password field label"
+    },
+    "backup_passwordConfirm": {
+        "message": "再次輸入密碼",
+        "description": "Back up settings dialog: second password field label"
+    },
+    "backup_passwordHint": {
+        "message": "至少 $1 個字元；幾個互不相關的詞很容易記住。忘記的密碼無法找回：沒有密碼，任何人都無法開啟受保護的內容，Bookmark Scout 也不能。",
+        "description": "Back up settings dialog: password hint; $1 is the shortest length"
+    },
+    "backup_passwordTooShort": {
+        "message": "請至少使用 $1 個字元。",
+        "description": "Back up settings dialog: the password is too short; $1 is the shortest length"
+    },
+    "backup_passwordMismatch": {
+        "message": "兩次輸入的密碼不一致。",
+        "description": "Back up settings dialog: the two passwords differ"
+    },
+    "backup_staysLocal": {
+        "message": "不會傳送到任何地方：檔案儲存在這台電腦上。",
+        "description": "Back up settings dialog: privacy note"
+    },
+    "backup_fileName": {
+        "message": "檔案名稱：$1",
+        "description": "Back up settings dialog: the file name the backup gets"
+    },
+    "backup_errorNothingSelected": {
+        "message": "請至少選取一項內容。",
+        "description": "Backup dialogs: nothing is selected"
+    },
+    "backup_errorPasswordMissing": {
+        "message": "請輸入密碼。",
+        "description": "Back up settings: password protection is on without a password"
+    },
+    "backup_errorPassword": {
+        "message": "密碼錯誤，或檔案在儲存後遭到變更。受保護的內容均未還原。",
+        "description": "Restore settings: wrong password or changed file"
+    },
+    "backup_errorNewerFormat": {
+        "message": "這份備份由較新版本的 Bookmark Scout 建立。請更新擴充功能後再還原。",
+        "description": "Restore settings: the file's format is newer"
+    },
+    "backup_errorFileTooLarge": {
+        "message": "檔案超出了備份的大小上限（$1）。",
+        "description": "Restore settings: the file is too large; $1 is the limit, such as 420 MB"
+    },
+    "backup_exportedDesc": {
+        "message": "已儲存 $1，包含：$2。",
+        "description": "Toast after a backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_exportedProtectedDesc": {
+        "message": "已儲存 $1，包含：$2。已用密碼保護。",
+        "description": "Toast after a password-protected backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_importTitle": {
         "message": "還原備份",
-        "description": "Title of the review shown before restoring a backup file that holds covers"
+        "description": "Restore settings dialog: title"
     },
-    "backup_restoreDesc": {
-        "message": "$1 包含封面。設定、提示詞、AI 服務和已儲存的搜尋無論如何都會還原；請檢查還原封面會對這部裝置做什麼。",
-        "description": "Restore backup review: $1 is the file name"
+    "backup_importIntro": {
+        "message": "$1，儲存於 $2。匯入之前不會有任何變更。",
+        "description": "Restore settings dialog: $1 file name, $2 when the backup was saved"
     },
-    "backup_restoreCovers": {
-        "message": "還原封面",
-        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    "backup_importIntroUndated": {
+        "message": "$1。匯入之前不會有任何變更。",
+        "description": "Restore settings dialog: $1 file name, for a file without a date"
     },
-    "backup_coversInFile": {
-        "message": "檔案中的封面：$1",
-        "description": "Restore backup review: how many covers the file holds"
+    "backup_lockedParts": {
+        "message": "受密碼保護：$1",
+        "description": "Restore settings dialog: the parts that need the password"
+    },
+    "backup_unlock": {
+        "message": "解鎖",
+        "description": "Restore settings dialog: button that opens the protected parts"
+    },
+    "backup_unlockHint": {
+        "message": "輸入儲存備份時設定的密碼。其他內容不需要密碼即可還原。",
+        "description": "Restore settings dialog: hint under the password field"
+    },
+    "backup_unknownParts": {
+        "message": "這個版本不支援，已略過：$1",
+        "description": "Restore settings dialog: parts from a newer version"
+    },
+    "backup_unreadableParts": {
+        "message": "無法讀取，已略過：$1",
+        "description": "Restore settings dialog: parts that failed their checks"
+    },
+    "backup_nothingToImport": {
+        "message": "這個檔案中沒有這個版本可以還原的內容。",
+        "description": "Restore settings dialog: no part can be imported"
+    },
+    "backup_importSafety": {
+        "message": "匯入所變更內容的安全副本會保留 $1 小時：「復原匯入」可以將其放回。",
+        "description": "Restore settings dialog: about Undo import; $1 is hours"
+    },
+    "backup_importButton": {
+        "message": "匯入（$1）",
+        "description": "Restore settings dialog: import button; $1 is how many parts are selected"
+    },
+    "backup_undoImport": {
+        "message": "復原匯入",
+        "description": "Button that puts back what the last backup import changed"
+    },
+    "backup_replaceConfirmTitle": {
+        "message": "取代這些內容？",
+        "description": "Restore settings: title of the confirmation before Replace"
+    },
+    "backup_replaceConfirm": {
+        "message": "取代會讓 $1 與檔案中的完全一致：只有這部裝置上有的內容會被移除。「復原匯入」可在一段時間內將其放回。",
+        "description": "Restore settings: confirmation before Replace; $1 is the list of parts"
+    },
+    "backup_reviewCounts": {
+        "message": "檔案中：$1 · 新增 $2 · 變更 $3 · 與這裡相同：$4",
+        "description": "Restore settings dialog: what importing a part would do"
+    },
+    "backup_reviewSkipped": {
+        "message": "無法匯入（無效或來自較新版本）：$1",
+        "description": "Restore settings dialog: entries that will be skipped"
+    },
+    "backup_keysImportWarning": {
+        "message": "這些是 API 金鑰。它們會取代這部裝置上相同服務的金鑰，而且任何擁有這個檔案的人都能使用它們。",
+        "description": "Restore settings dialog: warning when the keys part is selected"
+    },
+    "backup_keysImportConfirm": {
+        "message": "匯入 API 金鑰",
+        "description": "Restore settings dialog: checkbox confirming the keys import"
+    },
+    "backup_strategyLabel": {
+        "message": "方式",
+        "description": "Restore settings dialog: label of the Merge or Replace choice"
+    },
+    "backup_strategyMerge": {
+        "message": "合併",
+        "description": "Restore settings: import strategy that adds and updates"
+    },
+    "backup_strategyReplace": {
+        "message": "取代",
+        "description": "Restore settings: import strategy that makes a part exactly the file's"
+    },
+    "backup_strategyMergeDesc": {
+        "message": "新增並更新檔案中的內容；保留只有這部裝置上有的內容。",
+        "description": "Restore settings dialog: what Merge does"
+    },
+    "backup_strategyReplaceDesc": {
+        "message": "讓這項內容與檔案中的完全一致。",
+        "description": "Restore settings dialog: what Replace does"
+    },
+    "backup_replaceRemoves": {
+        "message": "移除只有這部裝置上有的 $1 項。",
+        "description": "Restore settings dialog: what Replace removes"
+    },
+    "backup_conflicts": {
+        "message": "在這裡和檔案中都有變更：$1",
+        "description": "Restore settings dialog: number of conflicts"
+    },
+    "backup_conflictNewer": {
+        "message": "保留較新的",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictFile": {
+        "message": "使用檔案中的",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictDevice": {
+        "message": "保留這部裝置的",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictsEach": {
+        "message": "逐一選擇",
+        "description": "Restore settings dialog: button that lists each conflict"
+    },
+    "backup_conflictsMore": {
+        "message": "另有 $1 項，依上方的選擇處理。",
+        "description": "Restore settings dialog: conflicts not listed"
+    },
+    "backup_conflictTimes": {
+        "message": "這裡：$1 · 檔案中：$2",
+        "description": "Restore settings dialog: when each side of a conflict changed"
+    },
+    "backup_importDone": {
+        "message": "匯入完成。",
+        "description": "Restore settings dialog: result heading"
+    },
+    "backup_importPartFailed": {
+        "message": "無法匯入 $1：$2。之前的內容已匯入；「復原匯入」可將其放回。",
+        "description": "Restore settings dialog: a part failed; $1 part, $2 reason"
+    },
+    "backup_outcomeCounts": {
+        "message": "新增 $1 · 變更 $2 · 移除 $3 · 保留 $4 · 略過 $5",
+        "description": "Restore settings dialog: what importing a part did"
+    },
+    "backup_needsSetup": {
+        "message": "請在「設定 > AI」中重新輸入；在此之前，這些服務會顯示「需要設定」：$1。",
+        "description": "Restore settings dialog: AI services missing a secret"
+    },
+    "backup_outcomeMismatch": {
+        "message": "有 $1 項讀回的內容與匯入的不一致。請檢查它們，或使用「復原匯入」。",
+        "description": "Restore settings dialog: read-back found differences"
+    },
+    "backup_inHistory": {
+        "message": "這次匯入已記錄在書籤管理員的「書籤記錄」中。",
+        "description": "Restore settings dialog: where the import is recorded"
+    },
+    "backup_undone": {
+        "message": "已復原匯入",
+        "description": "Toast after Undo import"
+    },
+    "backup_undoFailed": {
+        "message": "無法復原匯入",
+        "description": "Toast when Undo import cannot run"
+    },
+    "backup_undoMismatch": {
+        "message": "有 $1 項讀回的內容與之前不一致。",
+        "description": "Toast after Undo import found differences"
+    },
+    "backup_undoUnavailableUndone": {
+        "message": "這次匯入已經復原。",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_undoUnavailableExpired": {
+        "message": "無法再復原：安全副本只保留 $1 小時。",
+        "description": "Why Undo import is not offered; $1 is hours"
+    },
+    "backup_undoUnavailableReplaced": {
+        "message": "無法再復原：之後的匯入取代了它的安全副本。",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_keysForMissingServices": {
+        "message": "這部裝置上沒有對應服務的金鑰，已略過：$1",
+        "description": "Restore settings dialog: keys without their service"
+    },
+    "history_backupImported": {
+        "message": "已匯入備份",
+        "description": "History: a backup restore record"
+    },
+    "history_dataPartCounts": {
+        "message": "$1 · 新增 $2 · 變更 $3 · 移除 $4 · 略過 $5",
+        "description": "History: what a restored backup part did; $1 is Merge or Replace"
+    },
+    "history_filterData": {
+        "message": "備份",
+        "description": "History filter: backup restores"
+    },
+    "history_factFile": {
+        "message": "檔案",
+        "description": "History record fact: the backup file's name"
+    },
+    "history_dataPartsLabel": {
+        "message": "已匯入的內容",
+        "description": "History: label of a backup record's parts"
+    },
+    "settings_backupExportCategories": {
+        "message": "新備份包含的內容",
+        "description": "Settings: which parts Back up settings starts with"
+    },
+    "settings_backupExportCategoriesDesc": {
+        "message": "「備份設定」預設選取的內容。每次儲存備份後，所選內容會成為這台電腦上的新預設選擇。AI 服務金鑰預設一律不選取。",
+        "description": "Settings: description of settings_backupExportCategories"
+    },
+    "settings_backupEncryptByDefault": {
+        "message": "用密碼保護新備份",
+        "description": "Settings: whether a new backup starts password-protected"
+    },
+    "settings_backupEncryptByDefaultDesc": {
+        "message": "「用密碼保護這份備份」是否預設勾選。忘記的密碼無法找回。",
+        "description": "Settings: description of settings_backupEncryptByDefault"
+    },
+    "settings_backupEncryptSecrets": {
+        "message": "用密碼保護 API 金鑰",
+        "description": "Settings: whether included API keys start password-protected"
+    },
+    "settings_backupEncryptSecretsDesc": {
+        "message": "包含 AI 服務金鑰的備份是否預設用密碼保護這些金鑰。在對話方塊中關閉時會要求你確認。",
+        "description": "Settings: description of settings_backupEncryptSecrets"
+    },
+    "backup_partEmpty": {
+        "message": "尚無內容",
+        "description": "Back up settings dialog: a part with no items"
+    },
+    "history_descriptionBackups": {
+        "message": "還原設定備份的紀錄也會列在這裡。",
+        "description": "History dialog: second sentence of the description"
+    },
+    "history_verifyPassedData": {
+        "message": "匯入後已檢查：寫入的內容皆與寫入時一致。",
+        "description": "History record fact: the read-back of a backup restore passed"
+    },
+    "history_verifyFailedData": {
+        "message": "匯入後已檢查：有 $1 項與寫入時不一致。",
+        "description": "History record fact: the read-back of a backup restore found differences"
     },
     "backup_coversMatched": {
         "message": "這裡有相同網址的書籤：$1",
@@ -6517,33 +6881,9 @@
         "message": "這裡沒有該網址的書籤：$1",
         "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
     },
-    "backup_coversAdded": {
-        "message": "將取得封面的書籤：$1",
-        "description": "Restore backup review: how many bookmarks get a cover they did not have"
-    },
-    "backup_coversReplaced": {
-        "message": "將被較新封面取代：$1",
-        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
-    },
-    "backup_coversKept": {
-        "message": "保留的封面（以「將目前畫面設為封面」選擇的，或比檔案中較新的）：$1",
-        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
-    },
-    "backup_coversSkipped": {
-        "message": "已略過（無法讀取或超出備份上限）：$1",
-        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
-    },
     "backup_coversOverStorage": {
         "message": "之後為了不超出封面儲存空間而刪除（從最舊的開始）：$1",
         "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
-    },
-    "backup_restoreNoUndo": {
-        "message": "還原後無法撤銷：被取代的封面會遺失。",
-        "description": "Restore backup review: a restore has no undo"
-    },
-    "backup_restore": {
-        "message": "還原",
-        "description": "Restore backup review: button that restores the backup"
     },
     "actionName_searchBookmarks": {
         "message": "搜尋書籤",
