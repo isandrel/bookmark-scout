@@ -578,7 +578,8 @@ test('a full rules list says so instead of dropping the new rule', async ({
   const full = `You have ${maxRules} rules, the most you can keep. Delete one to add another.`;
 
   await panel.getByRole('button', { name: 'Add rule' }).click();
-  await expect(toastRegion(page).getByText(full, { exact: true })).toBeVisible();
+  // A failure toast puts × before its title.
+  await expect(toastRegion(page).getByText(`× ${full}`, { exact: true })).toBeVisible();
   await expect(page.getByRole('dialog', { name: 'New rule' })).toHaveCount(0);
   await panel.getByRole('button', { name: 'Start from a template' }).click();
   await page.getByRole('menuitem').first().click();
