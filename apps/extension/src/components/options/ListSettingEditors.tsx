@@ -1,7 +1,7 @@
 /**
  * Editors for list settings, so nobody has to type a comma-separated list: query parameter names
- * and site names as removable chips with one-click suggestions, and HTTP status codes as a
- * checklist of the common codes plus any other code.
+ * and site names as removable chips with one-click suggestions, HTTP status codes as a checklist
+ * of the common codes plus any other code, and a list of fixed choices as a plain checklist.
  */
 
 import { Plus } from 'lucide-react';
@@ -256,6 +256,54 @@ export function StatusCodeEditor({
           </p>
         )}
       </div>
+    </fieldset>
+  );
+}
+
+/**
+ * Some of a setting's fixed choices (`options` of its field meta, such as where the right-click
+ * menu shows), as one checkbox each in their order. The last one cannot be cleared: the setting
+ * needs at least one.
+ */
+export function ChoiceListEditor({
+  id,
+  labelledBy,
+  describedBy,
+  value,
+  onChange,
+  options,
+}: EditorProps<string> & { options: NonNullable<SettingsFieldMeta['options']> }) {
+  const choices = options.map((option) => String(option.value));
+  const toggle = (choice: string, on: boolean) =>
+    onChange(choices.filter((other) => (other === choice ? on : value.includes(other))));
+  return (
+    <fieldset
+      id={id}
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
+      className="m-0 flex min-w-0 flex-wrap gap-x-4 gap-y-1 border-0 p-0"
+    >
+      {options.map((option) => {
+        const choice = String(option.value);
+        const checked = value.includes(choice);
+        const controlId = `${id}-${choice}`;
+        return (
+          <label
+            key={choice}
+            htmlFor={controlId}
+            data-choice={choice}
+            className="flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-sm hover:bg-muted/50"
+          >
+            <Checkbox
+              id={controlId}
+              checked={checked}
+              disabled={checked && value.length === 1}
+              onCheckedChange={(next) => toggle(choice, next === true)}
+            />
+            {option.label}
+          </label>
+        );
+      })}
     </fieldset>
   );
 }

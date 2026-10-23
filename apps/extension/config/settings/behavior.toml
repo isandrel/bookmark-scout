@@ -107,6 +107,14 @@ fields = { default = [
 # How the manager's Tools sidebar lists its tools: "tabs" (one tab per section, plus All, opening
 # on default_tab in config/ui/tools-sidebar.toml) or "list" (every section, one after another)
 layout = "tabs"
+# The tab the sidebar opens on with the Tabs layout: "all", a section of `sections` in
+# config/ui/tools-sidebar.toml, or "data". A tab with nothing to show (its tools hidden or turned
+# off) falls back to the first one that has. Kept on this device only, like the layout
+default_tab = "maintenance"
+# The tools the sidebar shows, in order inside their sections, as tool ids. Empty means every tool,
+# in the order of `tools` in config/ui/tools-sidebar.toml; a tool the list does not name is hidden,
+# without turning the tool itself off. Kept on this device only, like the layout
+order = { default = [], max_items = 14, max_length = 15 }
 
 [deleting]
 # Show confirmation dialog before deleting items

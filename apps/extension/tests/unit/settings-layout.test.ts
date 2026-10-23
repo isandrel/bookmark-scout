@@ -37,6 +37,8 @@ const EDITED_ELSEWHERE = new Set([
   'popupToolbarButtons',
   'hoverCardFields',
   'pageShortcutOverrides',
+  'toolsSidebarOrder',
+  'contextMenuEntries',
 ]);
 
 describe('Options layout', () => {

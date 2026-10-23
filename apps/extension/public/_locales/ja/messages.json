@@ -651,6 +651,22 @@
         "message": "一覧",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "最初に開くタブ",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "ツールサイドバーを開いたときに表示するタブです。表示するツールがないタブの場合は、ツールがある最初のタブを開きます。この端末に保存されます。",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "サイドバーのツール",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "ツールサイドバーに表示するツールと、各セクション内での順序です。ここで非表示にしたツールはオンのままなので、自動の処理は続きます。この端末に保存されます。",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "削除",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -1972,7 +1988,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "リンクの右クリックメニューに「ブックマークの保存先...」を追加します。オンにするまではオフです。",
+        "message": "ブラウザーの右クリックメニューに「ブックマークの保存先...」を追加します。オンにするまではオフです。",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -1982,6 +1998,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "右クリックで保存するときのブックマークのタイトル。「リンクテキスト」は Firefox ではリンクの文字列、Chrome では選択中のテキストを使い、ない場合はページのタイトルを使います。",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "メニューを表示する場所",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "右クリックでメニューを表示する場所です。ページや選択したテキストでは、そのページ自体を保存し、選択したテキストまたはページのタイトルを名前にします。",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "リンク",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "ページ",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "選択したテキスト",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "メニューの項目",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "メニューに表示する項目とその順序です。チェックした項目が表示され、ハンドルをドラッグすると移動できます。",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "メニューの最近のフォルダ数",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "右クリックメニューに表示する最近のフォルダの数です。ポップアップには別の「最近のフォルダ最大数」があります。",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "リンクテキスト",
@@ -3234,14 +3286,6 @@
     "contextMenu_recentFolders": {
         "message": "最近のフォルダ",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "AIの提案",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "既定のフォルダ",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "制限なし",
@@ -8180,6 +8224,38 @@
     "settings_tooltipDelayDesc": {
         "message": "ポインタを操作部品の上に置いてから説明が表示されるまでの時間",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "通知の表示位置",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "「元に戻す」などのメッセージを Bookmark Scout の各ページのどこに表示するか",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "右下",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "左下",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "中央下",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "右上",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "左上",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "中央上",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "バックグラウンドのタスクをこのデバイスに保存できませんでした。",

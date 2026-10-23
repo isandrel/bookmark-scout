@@ -448,6 +448,10 @@ const OptionsPage: React.FC = () => {
         return matchesOnly ? null : <PopupMenusPanel />;
       case 'popupLayout':
         return matchesOnly ? null : <PopupLayoutPanel />;
+      case 'toolsSidebarOrder':
+        return matchesOnly ? null : <ToolsSidebarOrderPanel />;
+      case 'contextMenuEntries':
+        return matchesOnly ? null : <ContextMenuEntriesPanel />;
       case 'askAiActions':
         return matchesOnly ? null : <AskAIActionsPanel />;
       case 'agentBridge':

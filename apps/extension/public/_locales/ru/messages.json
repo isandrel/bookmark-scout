@@ -691,6 +691,22 @@
         "message": "Один список",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Начальная вкладка",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "Вкладка, с которой открывается панель «Инструменты». Если на вкладке нечего показать, открывается первая вкладка с инструментами. Хранится на этом устройстве.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Инструменты на панели",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "Инструменты, которые показывает панель «Инструменты», в порядке внутри их разделов. Скрытый здесь инструмент остается включенным, и его автоматическая работа продолжается. Хранится на этом устройстве.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Удаление",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2048,7 +2064,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Добавить пункт «Сохранить закладку в...» в контекстное меню ссылок. Выключено, пока вы его не включите.",
+        "message": "Добавить пункт «Сохранить закладку в...» в контекстное меню браузера. Выключено, пока вы его не включите.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2058,6 +2074,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "Что использовать как название закладки при сохранении через контекстное меню. «Текст ссылки» — это текст ссылки в Firefox или выделенный текст в Chrome; если его нет, используется название страницы.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Где показывать меню",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Где правый щелчок показывает меню. На странице или на выделенном тексте оно сохраняет саму страницу и называет ее выделенным текстом или заголовком страницы.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Ссылки",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Страницы",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Выделенный текст",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Пункты меню",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "Что предлагает меню и в каком порядке. Отметьте пункт, чтобы показать его, и перетащите за маркер, чтобы переместить.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Недавние папки в меню",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "Сколько недавних папок показывает контекстное меню. У всплывающего окна свой «Максимум недавних папок».",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Текст ссылки",
@@ -3318,14 +3370,6 @@
     "contextMenu_recentFolders": {
         "message": "Недавние папки",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "Подсказки ИИ",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Папки по умолчанию",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "Без ограничений",
@@ -8764,6 +8808,38 @@
     "settings_tooltipDelayDesc": {
         "message": "Сколько указатель должен задержаться на элементе управления, прежде чем появится пояснение",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Положение уведомлений",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Где появляются сообщения, например «Отменить», на каждой странице Bookmark Scout",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "Внизу справа",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "Внизу слева",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "Внизу по центру",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "Вверху справа",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "Вверху слева",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "Вверху по центру",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "Не удалось сохранить фоновые задачи на этом устройстве.",

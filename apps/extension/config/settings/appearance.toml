@@ -91,3 +91,7 @@ tooltip_delay_ms = { default = 200, min = 0, max = 2000, step = 100 }
 # Milliseconds the pointer rests on a bookmark, or keyboard focus stays on it, before its hover card
 # opens (Show Details on Hover, and the manager's cut-short summaries)
 hover_card_delay_ms = { default = 600, min = 0, max = 2000, step = 100 }
+# Where messages (toasts) show on every Bookmark Scout page: "bottom-right", "bottom-left",
+# "bottom-center", "top-right", "top-left", or "top-center" (TOAST_POSITION_STYLES in
+# src/components/ui/toast.tsx)
+toast_position = "bottom-right"

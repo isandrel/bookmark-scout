@@ -122,6 +122,8 @@ describe('settings config layout', () => {
     shownIn.set('popupToolbarButtons', 'appearance.popup');
     shownIn.set('hoverCardFields', 'appearance.popup');
     shownIn.set('pageShortcutOverrides', 'behavior.page_shortcuts');
+    shownIn.set('toolsSidebarOrder', 'behavior.tools_sidebar');
+    shownIn.set('contextMenuEntries', 'search.context_menu');
     // A tool limited to one scope has no setting to show and no default in its config.
     const fixedScopes = Object.entries(TOOL_SCOPE_CAPABILITIES)
       .filter(([, capability]) => capability !== 'both')

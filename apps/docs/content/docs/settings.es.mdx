@@ -19,7 +19,7 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 | Ajuste | También en | Qué hace |
 | --- | --- | --- |
 | **Carpeta de guardado rápido** y **Carpeta de destino** | [Guardar y buscar](#quick-save) | Dónde guarda la página actual el atajo de guardado rápido |
-| **Menú del clic derecho** | [Guardar y buscar](#context-menu) | Muestra **Guardar marcador en...** cuando haces clic con el botón derecho en un enlace |
+| **Menú del clic derecho** | [Guardar y buscar](#context-menu) | Muestra **Guardar marcador en...** en el menú del clic derecho del navegador, en los enlaces salvo que elijas más |
 | **Tema** e **Idioma** | [Aspecto](#language-theme-and-icons) | Cómo se ve Bookmark Scout y qué idioma usa |
 | **Confirmar antes de eliminar** | [Comportamiento](#deleting) | Pregunta antes de eliminar |
 | **Registrar cambios hechos en otro lugar** | [Comportamiento](#history-settings) | Muestra en el historial los cambios hechos fuera de Bookmark Scout |
@@ -54,7 +54,7 @@ Consulta [Búsqueda y búsquedas guardadas](/guides/search).
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Carpetas recientes** | Activado | Muestra las carpetas usadas recientemente en la ventana emergente y en el menú contextual |
+| **Carpetas recientes** | Activado | Muestra las carpetas usadas recientemente en la ventana emergente; el menú del clic derecho tiene su propio ajuste **Carpetas recientes en el menú** |
 | **Máximo de carpetas recientes** | <SettingDefault path="search.saving.recent_folders_max" /> | Cuántas carpetas recientes se muestran |
 | **Nombre de carpeta predeterminado** | Nueva carpeta | El nombre con el que empieza una carpeta nueva |
 
@@ -78,8 +78,12 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Menú del clic derecho** | Desactivado | Muestra **Guardar marcador en...** cuando haces clic con el botón derecho en un enlace. En Chrome y Edge, al activarlo se añade el permiso opcional del menú del clic derecho, sin preguntar |
+| **Menú del clic derecho** | Desactivado | Muestra **Guardar marcador en...** en el menú del clic derecho del navegador. En Chrome y Edge, al activarlo se añade el permiso opcional del menú del clic derecho, sin preguntar |
+| **Mostrar el menú en** | Enlaces | Dónde aparece el menú al hacer clic derecho: **Enlaces** (guarda el enlace), **Páginas** (guarda la página en la que estás) y **Texto seleccionado** (guarda la página, con el texto seleccionado como nombre si usas **Texto del enlace**). Ninguno necesita otro permiso |
 | **Origen del nombre del marcador** | Texto del enlace | Pone a un marcador guardado desde el menú contextual el nombre del texto del enlace, del título de la página o de la URL del enlace |
+| **Carpetas recientes en el menú** | <SettingDefault path="search.context_menu.recent_max" /> | Cuántas carpetas recientes muestra el menú, aparte del **Máximo de carpetas recientes** de la ventana emergente |
+
+**Opciones del menú** elige lo que ofrece el menú, en orden: **Carpetas recientes** (un submenú) y **Barra de marcadores**. Marca una opción para mostrarla y arrástrala por su asa (o usa el menú del asa) para moverla; **Restablecer valores predeterminados** vuelve a mostrar ambas en su orden inicial.
 
 ## Aspecto [#appearance]
 
@@ -129,6 +133,7 @@ Debajo de la tabla, tres listas organizan la ventana emergente y el panel latera
 | **Duración de las notificaciones** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
 | **Retraso de las sugerencias** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Cuánto tiempo descansa el puntero sobre un control antes de que aparezca su explicación |
 | **Retraso de la tarjeta de detalles** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Cuánto tiempo descansa el puntero sobre un marcador, o el foco del teclado sigue en él, antes de que se abra su tarjeta de detalles. También vale para los resúmenes recortados del administrador |
+| **Posición de las notificaciones** | Abajo a la derecha | Dónde aparecen mensajes como **Deshacer** en cada página de Bookmark Scout: en una esquina inferior o superior, o en el centro del borde inferior o superior |
 
 ## Comportamiento [#behavior]
 
@@ -155,6 +160,9 @@ Debajo de la tabla, tres listas organizan la ventana emergente y el panel latera
 | --- | --- | --- |
 | **Vista del administrador** | Lista | **Lista** muestra la tabla; **Tarjetas** muestra las mismas filas como una cuadrícula de tarjetas, con la misma selección, teclas y menús. Los dos botones junto a **Ver** también cambian la vista. Solo se guarda en este dispositivo |
 | **Diseño de la barra lateral Herramientas** | Pestañas | **Pestañas** muestra una sección a la vez, con **Todo** para todas las herramientas; **Una lista** muestra todas las secciones seguidas. Se guarda solo en este dispositivo |
+| **Pestaña inicial** | Mantenimiento | La pestaña con la que se abre la barra lateral Herramientas cuando muestra **Pestañas**: **Todo**, una sección o **Datos**. Una pestaña sin herramientas que mostrar abre la primera que tenga alguna. Se guarda solo en este dispositivo |
+
+**Herramientas de la barra lateral** elige qué herramientas muestra la barra lateral Herramientas y su orden dentro de cada sección: desmarca una herramienta para ocultar su tarjeta y arrástrala por su asa (o usa el menú del asa) para moverla. Una herramienta oculta sigue activada, así que **Reglas inteligentes**, **Indexar texto de páginas** y **Obtener portadas** siguen con su trabajo automático; cada herramienta se desactiva con su propio interruptor. **Restablecer valores predeterminados** vuelve a mostrar todas en su orden inicial. Se guarda solo en este dispositivo.
 
 ### Administrador de marcadores [#manager-view]
 

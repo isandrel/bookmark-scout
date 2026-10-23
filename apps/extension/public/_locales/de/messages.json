@@ -675,6 +675,22 @@
         "message": "Eine Liste",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Start-Tab",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "Der Tab, mit dem sich die Tools-Leiste öffnet. Ein Tab ohne anzuzeigende Tools öffnet den ersten, der welche hat. Wird auf diesem Gerät gespeichert.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Tools in der Leiste",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "Die Tools, die die Tools-Leiste zeigt, in dieser Reihenfolge innerhalb ihrer Bereiche. Ein hier ausgeblendetes Tool bleibt eingeschaltet, seine automatische Arbeit läuft also weiter. Wird auf diesem Gerät gespeichert.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Löschen",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2016,7 +2032,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "„Lesezeichen speichern in...“ zum Rechtsklickmenü für Links hinzufügen. Standardmäßig deaktiviert.",
+        "message": "„Lesezeichen speichern in...“ zum Rechtsklickmenü des Browsers hinzufügen. Standardmäßig deaktiviert.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2026,6 +2042,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "Was beim Speichern per Rechtsklick als Lesezeichentitel verwendet wird. „Linktext“ verwendet in Firefox den Text des Links, in Chrome den markierten Text, sonst den Seitentitel.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Menü anzeigen bei",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Wo ein Rechtsklick das Menü zeigt. Auf einer Seite oder bei markiertem Text speichert es die Seite selbst, benannt nach dem markierten Text oder dem Seitentitel.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Links",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Seiten",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Markierter Text",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Menüeinträge",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "Was das Menü anbietet, in dieser Reihenfolge. Haken Sie einen Eintrag an, um ihn anzuzeigen, und ziehen Sie ihn am Griff, um ihn zu verschieben.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Letzte Ordner im Menü",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "Wie viele zuletzt verwendete Ordner das Rechtsklickmenü zeigt. Das Pop-up hat seine eigene Einstellung „Max. letzte Ordner“.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Linktext",
@@ -3278,14 +3330,6 @@
     "contextMenu_recentFolders": {
         "message": "Letzte Ordner",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "KI-Vorschläge",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Standardordner",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "Unbegrenzt",
@@ -8200,6 +8244,38 @@
     "settings_tooltipDelayDesc": {
         "message": "Wie lange der Zeiger auf einem Bedienelement ruht, bevor die Erklärung erscheint",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Position der Benachrichtigungen",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Wo Meldungen wie „Rückgängig“ auf jeder Bookmark-Scout-Seite erscheinen",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "Unten rechts",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "Unten links",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "Unten mittig",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "Oben rechts",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "Oben links",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "Oben mittig",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "Hintergrundaufgaben konnten auf diesem Gerät nicht gespeichert werden.",

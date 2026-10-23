@@ -263,6 +263,10 @@ describe('settings persistence', () => {
       [...SETTING_KEYS_BY_SCOPE.sync, ...SETTING_KEYS_BY_SCOPE.lists].map((key) => {
         const field = meta[key];
         const fallback = defaultSettings[key];
+        if (field.list && field.options) {
+          // A checklist holds each of its choices at most once: all of them is its largest.
+          return [key, field.options.map((option) => option.value)];
+        }
         if (field.list) {
           expect(field.maxItems, `${key} has no item limit`).toBeGreaterThan(0);
           const item = field.list === 'string' ? 'x'.repeat(field.maxLength ?? 0) : 599;

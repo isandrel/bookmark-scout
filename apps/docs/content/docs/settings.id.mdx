@@ -19,7 +19,7 @@ Buka halaman setelan dari entri **Opsi** ekstensi, misalnya dengan mengklik kana
 | Setelan | Juga ada di | Fungsinya |
 | --- | --- | --- |
 | **Folder Simpan Cepat** dan **Folder Tujuan** | [Penyimpanan & Penelusuran](#quick-save) | Tempat pintasan simpan cepat menyimpan halaman saat ini |
-| **Menu Klik Kanan** | [Penyimpanan & Penelusuran](#context-menu) | Menampilkan **Simpan bookmark ke...** saat Anda mengklik kanan link |
+| **Menu Klik Kanan** | [Penyimpanan & Penelusuran](#context-menu) | Menampilkan **Simpan bookmark ke...** di menu klik kanan browser, pada link kecuali Anda memilih lebih banyak |
 | **Tema** dan **Bahasa** | [Tampilan](#language-theme-and-icons) | Tampilan Bookmark Scout dan bahasa yang dipakainya |
 | **Konfirmasi Sebelum Menghapus** | [Perilaku](#deleting) | Bertanya sebelum menghapus |
 | **Catat Perubahan dari Tempat Lain** | [Perilaku](#history-settings) | Mencantumkan perubahan bookmark yang dibuat di luar Bookmark Scout di Histori |
@@ -54,7 +54,7 @@ Lihat [Penelusuran dan penelusuran tersimpan](/guides/search).
 
 | Setelan | Default | Fungsinya |
 | --- | --- | --- |
-| **Folder Terbaru** | Aktif | Tampilkan folder yang baru-baru ini digunakan di popup dan menu klik kanan |
+| **Folder Terbaru** | Aktif | Tampilkan folder yang baru-baru ini digunakan di popup; menu klik kanan memiliki **Folder Terbaru di Menu** sendiri |
 | **Maks Folder Terbaru** | <SettingDefault path="search.saving.recent_folders_max" /> | Berapa banyak folder terbaru yang ditampilkan |
 | **Nama Folder Default** | Folder Baru | Nama awal folder baru |
 
@@ -78,8 +78,12 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 
 | Setelan | Default | Fungsinya |
 | --- | --- | --- |
-| **Menu Klik Kanan** | Nonaktif | Tampilkan **Simpan bookmark ke...** saat Anda mengklik kanan link. Di Chrome dan Edge, mengaktifkannya menambahkan izin opsional menu klik kanan, tanpa permintaan izin |
+| **Menu Klik Kanan** | Nonaktif | Tampilkan **Simpan bookmark ke...** di menu klik kanan browser. Di Chrome dan Edge, mengaktifkannya menambahkan izin opsional menu klik kanan, tanpa permintaan izin |
+| **Tampilkan Menu Pada** | Link | Tempat menu muncul saat klik kanan: **Link** (menyimpan link), **Halaman** (menyimpan halaman yang sedang dibuka), dan **Teks yang dipilih** (menyimpan halaman, dengan nama dari teks yang dipilih saat penamaan **Teks link**). Tidak ada yang memerlukan izin lain |
 | **Sumber Nama Bookmark** | Teks link | Beri nama bookmark yang disimpan lewat klik kanan sesuai teks link, judul halaman, atau URL link |
+| **Folder Terbaru di Menu** | <SettingDefault path="search.context_menu.recent_max" /> | Jumlah folder terbaru yang ditampilkan menu, terpisah dari **Maks Folder Terbaru** di popup |
+
+**Entri menu** memilih apa yang ditawarkan menu, sesuai urutan: **Folder Terbaru** (submenu) dan **Bilah bookmark**. Centang entri untuk menampilkannya dan seret pegangannya (atau gunakan menu pegangan) untuk memindahkannya; **Pulihkan default** menampilkan keduanya lagi dalam urutan awal.
 
 ## Tampilan [#appearance]
 
@@ -129,6 +133,7 @@ Di bawah tabel, tiga daftar mengatur popup dan panel samping. Centang item untuk
 | **Durasi Notifikasi** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Berapa lama pesan tetap terbuka. Pesan urungkan punya waktu 10 detiknya sendiri |
 | **Jeda Tooltip** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Berapa lama pointer berada di atas kontrol sebelum penjelasannya muncul |
 | **Jeda Kartu Detail** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> md | Berapa lama kursor berhenti di atas bookmark, atau fokus keyboard tetap di sana, sebelum kartu detailnya terbuka. Juga berlaku untuk ringkasan yang terpotong di pengelola |
+| **Posisi Notifikasi** | Kanan bawah | Tempat pesan seperti **Urungkan** muncul di setiap halaman Bookmark Scout: di sudut bawah atau atas, atau di tengah tepi bawah atau atas |
 
 ## Perilaku [#behavior]
 
@@ -155,6 +160,9 @@ Di bawah tabel, tiga daftar mengatur popup dan panel samping. Centang item untuk
 | --- | --- | --- |
 | **Tampilan Pengelola** | Daftar | **Daftar** menampilkan tabel; **Kartu** menampilkan baris yang sama sebagai kisi kartu, dengan pemilihan, tombol, dan menu yang sama. Dua tombol di sebelah **Lihat** juga bisa mengalihkannya. Hanya disimpan di perangkat ini |
 | **Tata Letak Bilah Samping Alat** | Tab | **Tab** menampilkan satu bagian setiap kali, dengan **Semua** untuk semua alat; **Satu daftar** menampilkan setiap bagian, satu per satu berurutan. Hanya disimpan di perangkat ini |
+| **Tab Awal** | Pemeliharaan | Tab yang dibuka bilah samping Alat saat menampilkan **Tab**: **Semua**, satu bagian, atau **Data**. Tab tanpa alat untuk ditampilkan membuka tab pertama yang memilikinya. Hanya disimpan di perangkat ini |
+
+**Alat di bilah samping** memilih alat yang ditampilkan bilah samping Alat dan urutannya di dalam setiap bagian: hapus centang alat untuk menyembunyikan kartunya, dan seret pegangannya (atau gunakan menu pegangan) untuk memindahkannya. Alat yang disembunyikan tetap aktif, sehingga **Aturan Pintar**, **Indeks Teks Halaman**, dan **Ambil Sampul** tetap menjalankan pekerjaan otomatisnya; setiap alat dinonaktifkan dengan sakelarnya sendiri. **Pulihkan default** menampilkan semua alat lagi dalam urutan awal. Hanya disimpan di perangkat ini.
 
 ### Pengelola bookmark [#manager-view]
 

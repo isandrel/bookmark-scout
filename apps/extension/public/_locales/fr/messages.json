@@ -675,6 +675,22 @@
         "message": "Une liste",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Onglet de départ",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "L’onglet sur lequel s’ouvre la barre latérale Outils. Un onglet sans outil à afficher ouvre le premier qui en a. Enregistré sur cet appareil.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Outils de la barre latérale",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "Les outils affichés dans la barre latérale Outils, dans cet ordre au sein de leurs sections. Masquer un outil ici le laisse activé : son travail automatique continue. Enregistré sur cet appareil.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Suppression",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2016,7 +2032,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Ajoute « Enregistrer le favori dans… » au menu contextuel des liens (clic droit). Désactivé tant que vous ne l'activez pas.",
+        "message": "Ajoute « Enregistrer le favori dans… » au menu du clic droit du navigateur. Désactivé tant que vous ne l'activez pas.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2026,6 +2042,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "Ce qui sert de titre au favori lors d'un enregistrement par clic droit. « Texte du lien » utilise le texte du lien dans Firefox, ou le texte sélectionné dans Chrome ; sinon, le titre de la page.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Afficher le menu sur",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Où le clic droit affiche le menu. Sur une page ou sur du texte sélectionné, il enregistre la page elle-même, nommée d’après le texte sélectionné ou le titre de la page.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Liens",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Pages",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Texte sélectionné",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Entrées du menu",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "Ce que propose le menu, dans cet ordre. Cochez une entrée pour l’afficher et faites-la glisser par sa poignée pour la déplacer.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Dossiers récents dans le menu",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "Nombre de dossiers récents listés dans le menu du clic droit. La fenêtre contextuelle a son propre Nombre maximal de dossiers récents.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Texte du lien",
@@ -3278,14 +3330,6 @@
     "contextMenu_recentFolders": {
         "message": "Dossiers récents",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "Suggestions de l'IA",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Dossiers par défaut",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "Aucune limite",
@@ -8200,6 +8244,38 @@
     "settings_tooltipDelayDesc": {
         "message": "Temps pendant lequel le pointeur reste sur une commande avant que son explication s'affiche",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Position des notifications",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Où les messages comme Annuler apparaissent sur chaque page de Bookmark Scout",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "En bas à droite",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "En bas à gauche",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "En bas au centre",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "En haut à droite",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "En haut à gauche",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "En haut au centre",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "Impossible d'enregistrer les tâches en arrière-plan sur cet appareil.",

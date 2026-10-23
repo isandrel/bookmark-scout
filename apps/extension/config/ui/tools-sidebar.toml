@@ -1,14 +1,12 @@
-# The manager's Tools sidebar. Read by src/components/bookmarks/tools/tool-definitions.ts.
+# The manager's Tools sidebar. Read by src/lib/tools-sidebar-config.ts.
 
 # Sections in display order: cleaning up first, AI last. Every section once. The Data section
 # (export and import) follows them.
 sections = ["maintenance", "metadata", "security", "analytics", "ai"]
 
-# The tab the sidebar opens on when Tools Sidebar Layout is Tabs: "all", a section above, or
-# "data". A tab with nothing to show (its tools turned off) falls back to the first one that has.
-default_tab = "maintenance"
-
-# Tools in display order inside their section. Every tool in TOOL_DEFINITIONS once.
+# Tools in display order inside their section. Every tool in TOOL_DEFINITIONS once. The tab the
+# sidebar opens on, and which tools it shows in what order, are settings (`[tools_sidebar]` in
+# config/settings/behavior.toml); this is the order until the user changes it.
 tools = [
   "duplicates",
   "deadLinks",

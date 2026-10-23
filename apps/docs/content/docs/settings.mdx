@@ -19,7 +19,7 @@ Open the settings page from the extension's **Options** entry, for example by ri
 | Setting | Also on | What it does |
 | --- | --- | --- |
 | **Quick Save Folder** and **Folder to Save To** | [Saving & Search](#quick-save) | Where the quick save shortcut saves the current page |
-| **Right-Click Menu** | [Saving & Search](#context-menu) | Show **Save bookmark to...** when you right-click a link |
+| **Right-Click Menu** | [Saving & Search](#context-menu) | Show **Save bookmark to...** in the browser's right-click menu, on links unless you choose more |
 | **Theme** and **Language** | [Appearance](#language-theme-and-icons) | How Bookmark Scout looks and which language it uses |
 | **Confirm Before Delete** | [Behavior](#deleting) | Ask before deleting |
 | **Record Changes Made Elsewhere** | [Behavior](#history-settings) | List bookmark changes made outside Bookmark Scout in the History |
@@ -54,7 +54,7 @@ See [Search and saved searches](/guides/search).
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| **Recent Folders** | On | Show recently used folders in the popup and the right-click menu |
+| **Recent Folders** | On | Show recently used folders in the popup; the right-click menu has its own **Recent Folders in Menu** |
 | **Recent Folders Max** | <SettingDefault path="search.saving.recent_folders_max" /> | How many recent folders to show |
 | **Default Folder Name** | New Folder | The name a new folder starts with |
 
@@ -78,8 +78,12 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| **Right-Click Menu** | Off | Show **Save bookmark to...** when you right-click a link. In Chrome and Edge, turning it on adds the optional right-click menu permission, without a prompt |
+| **Right-Click Menu** | Off | Show **Save bookmark to...** in the browser's right-click menu. In Chrome and Edge, turning it on adds the optional right-click menu permission, without a prompt |
+| **Show Menu On** | Links | Where right-clicking shows the menu: **Links** (saves the link), **Pages** (saves the page you are on), and **Selected text** (saves the page, named after the selected text with **Link text** naming). None of them needs another permission |
 | **Bookmark Name Source** | Link text | Name a right-click save after the link text, the page title, or the link URL |
+| **Recent Folders in Menu** | <SettingDefault path="search.context_menu.recent_max" /> | How many recent folders the menu lists, apart from the popup's **Recent Folders Max** |
+
+**Menu entries** chooses what the menu offers, in order: **Recent Folders** (a submenu) and **Bookmarks Bar**. Check an entry to show it and drag it by its handle (or use the handle's menu) to move it; **Restore defaults** shows both again in their first order.
 
 ## Appearance [#appearance]
 
@@ -129,6 +133,7 @@ Below the table, three lists arrange the popup and side panel. Check an item to 
 | **Toast Duration** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | How long messages stay open. Undo messages keep their own 10-second window |
 | **Tooltip Delay** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | How long the pointer rests on a control before its explanation appears |
 | **Hover Card Delay** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | How long the pointer rests on a bookmark, or keyboard focus stays on it, before its hover card opens. Also the delay for the manager's cut-short summaries |
+| **Toast Position** | Bottom right | Where messages such as **Undo** appear on every Bookmark Scout page: a bottom or top corner, or the middle of the bottom or top edge |
 
 ## Behavior [#behavior]
 
@@ -155,6 +160,9 @@ Below the table, three lists arrange the popup and side panel. Check an item to 
 | --- | --- | --- |
 | **Manager View** | List | **List** shows the table; **Cards** shows the same rows as a grid of cards, with the same selection, keys, and menus. The two buttons beside **View** switch too. Kept on this device only |
 | **Tools Sidebar Layout** | Tabs | **Tabs** shows one section at a time, with **All** for every tool; **One list** shows every section, one after another. Kept on this device only |
+| **Start Tab** | Maintenance | The tab the Tools sidebar opens on while it shows **Tabs**: **All**, one section, or **Data**. A tab with no tools to show opens the first one that has some. Kept on this device only |
+
+**Sidebar tools** chooses which tools the Tools sidebar shows, and their order inside each section: uncheck a tool to hide its card, and drag it by its handle (or use the handle's menu) to move it. A hidden tool stays on, so **Smart Rules**, **Index Page Text**, and **Fetch Covers** keep doing their automatic work; each tool's own switch turns it off. **Restore defaults** shows every tool again in its first order. Kept on this device only.
 
 ### Bookmark manager [#manager-view]
 

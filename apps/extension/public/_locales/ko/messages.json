@@ -667,6 +667,22 @@
         "message": "한 목록",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "시작 탭",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "도구 사이드바가 열릴 때 보여 줄 탭입니다. 표시할 도구가 없는 탭이면 도구가 있는 첫 번째 탭을 엽니다. 이 기기에 저장됩니다.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "사이드바 도구",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "도구 사이드바에 표시할 도구와 각 섹션 안에서의 순서입니다. 여기서 숨긴 도구는 켜진 상태로 남으므로 자동 작업은 계속됩니다. 이 기기에 저장됩니다.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "삭제",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2008,7 +2024,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "링크의 마우스 오른쪽 버튼 메뉴에 '북마크 저장 위치...'를 추가합니다. 켜기 전까지는 꺼져 있습니다.",
+        "message": "브라우저의 마우스 오른쪽 버튼 메뉴에 '북마크 저장 위치...'를 추가합니다. 켜기 전까지는 꺼져 있습니다.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2018,6 +2034,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "마우스 오른쪽 버튼으로 저장할 때 사용할 북마크 제목입니다. '링크 텍스트'는 Firefox에서는 링크 문구, Chrome에서는 선택한 텍스트를 사용하며, 없으면 페이지 제목을 사용합니다.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "메뉴를 표시할 곳",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "마우스 오른쪽 버튼을 눌렀을 때 메뉴가 나타나는 곳입니다. 페이지나 선택한 텍스트에서는 페이지 자체를 저장하며, 선택한 텍스트나 페이지 제목을 이름으로 씁니다.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "링크",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "페이지",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "선택한 텍스트",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "메뉴 항목",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "메뉴에 표시할 항목과 순서입니다. 항목을 체크하면 표시되고, 손잡이를 끌어 옮길 수 있습니다.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "메뉴의 최근 폴더 수",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "마우스 오른쪽 버튼 메뉴에 표시할 최근 폴더 수입니다. 팝업에는 별도의 최근 폴더 최대 수가 있습니다.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "링크 텍스트",
@@ -3270,14 +3322,6 @@
     "contextMenu_recentFolders": {
         "message": "최근 폴더",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "AI 추천",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "기본 폴더",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "제한 없음",
@@ -8180,6 +8224,38 @@
     "settings_tooltipDelayDesc": {
         "message": "컨트롤 위에 포인터를 올려 두고 설명이 나타날 때까지의 시간",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "알림 위치",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "실행 취소 같은 메시지가 Bookmark Scout의 모든 페이지에서 나타나는 위치",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "오른쪽 아래",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "왼쪽 아래",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "가운데 아래",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "오른쪽 위",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "왼쪽 위",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "가운데 위",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "이 기기에 백그라운드 작업을 저장하지 못했습니다.",

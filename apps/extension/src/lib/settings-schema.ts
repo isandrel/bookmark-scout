@@ -69,6 +69,10 @@ export type SettingsPanelId =
   | 'popupMenus'
   /** Appearance > Popup: its parts, toolbar buttons, and hover card details, each in order. */
   | 'popupLayout'
+  /** Behavior > Tools Sidebar: which tools it shows, in order. */
+  | 'toolsSidebarOrder'
+  /** Saving & Search > Right-Click Menu: which entries the menu shows, in order. */
+  | 'contextMenuEntries'
   | 'askAiActions'
   | 'agentBridge'
   /** Maintenance: the smart rules, their own local item (src/lib/bookmark-rules-storage.ts). */
@@ -275,6 +279,62 @@ export type ManagerCardField = (typeof MANAGER_CARD_FIELDS)[number];
 /** What a bookmark's preview can show under its title and address (`previewFields`). */
 export const PREVIEW_FIELDS = ['cover', 'folder', 'tags', 'summary', 'coverSource'] as const;
 export type PreviewField = (typeof PREVIEW_FIELDS)[number];
+
+/**
+ * Each Tools sidebar section's title; their order is `sections` in config/ui/tools-sidebar.toml.
+ * Here, not with the tools, because the tab the sidebar opens on is a setting.
+ */
+export const TOOL_SECTION_TITLES = {
+  maintenance: 'tools_category_maintenance',
+  metadata: 'tools_category_metadata',
+  security: 'tools_category_security',
+  analytics: 'tools_category_analytics',
+  ai: 'tools_category_ai',
+} as const;
+
+export type ToolSectionId = keyof typeof TOOL_SECTION_TITLES;
+
+/**
+ * The tabs of the Tools sidebar, each with its title key: every section (All), one section, or
+ * the Data section (export and import).
+ */
+const TOOL_SIDEBAR_TAB_TITLES = {
+  all: 'tools_tabAll',
+  ...TOOL_SECTION_TITLES,
+  data: 'tools_category_data',
+} as const;
+
+/** A tab of the sidebar: every section, one section, or the data section (export and import). */
+export type ToolSidebarTab = keyof typeof TOOL_SIDEBAR_TAB_TITLES;
+
+export const toolSidebarTabSchema = z.enum(
+  Object.keys(TOOL_SIDEBAR_TAB_TITLES) as [ToolSidebarTab, ...ToolSidebarTab[]],
+);
+
+/** A tab's name, in the sidebar and in Options. */
+export function getToolSidebarTabLabel(tab: ToolSidebarTab): string {
+  return t(TOOL_SIDEBAR_TAB_TITLES[tab]);
+}
+
+/** Where toasts show: each has its place and motion in `TOAST_POSITION_STYLES` (toast.tsx). */
+export const TOAST_POSITIONS = [
+  'bottom-right',
+  'bottom-left',
+  'bottom-center',
+  'top-right',
+  'top-left',
+  'top-center',
+] as const;
+export type ToastPosition = (typeof TOAST_POSITIONS)[number];
+
+const TOAST_POSITION_LABEL_KEYS = {
+  'bottom-right': 'settings_toastPositionBottomRight',
+  'bottom-left': 'settings_toastPositionBottomLeft',
+  'bottom-center': 'settings_toastPositionBottomCenter',
+  'top-right': 'settings_toastPositionTopRight',
+  'top-left': 'settings_toastPositionTopLeft',
+  'top-center': 'settings_toastPositionTopCenter',
+} as const satisfies Record<ToastPosition, string>;
 
 /** The order the manager shows a folder in: its own, or the popup's when set to follow it. */
 export function resolveManagerSortOrder(manager: ManagerSortOrder, popup: SortOrder): SortOrder {
@@ -614,6 +674,41 @@ function shortcutOverridesField(
   };
 }
 
+/**
+ * A checklist: some of `choices` (stored by id), each once, at least one. Its config is a list
+ * setting whose `max_items` is the number of choices and `max_length` the longest id.
+ */
+function choiceListField<T extends string>(
+  path: string,
+  stem: string,
+  choices: readonly [T, ...T[]],
+  label: (value: T) => string,
+): FieldDefinition<z.ZodType<T[]>> {
+  const config = configValue(path, listSettingSchema);
+  const maxLength = config.max_length;
+  if (maxLength === undefined) throw new Error(`settings.${path} needs max_length`);
+  if (config.max_items !== choices.length || choices.some((id) => id.length > maxLength)) {
+    throw new Error(`settings.${path} must hold each of its ${choices.length} choices once`);
+  }
+  const schema = z
+    .array(z.enum(choices))
+    .min(1)
+    .max(config.max_items)
+    .refine((list) => new Set(list).size === list.length, 'each choice once');
+  return {
+    section: sectionOf(path),
+    schema: schema.default(schema.parse(config.default)),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'text',
+      list: 'string',
+      maxItems: config.max_items,
+      maxLength,
+      options: choices.map((value) => ({ value, label: label(value) })),
+    }),
+  };
+}
+
 /** A list of query parameter names, each at most `max_length` long, at most `max_items` of them. */
 function nameListField(path: string, stem: string): FieldDefinition<z.ZodType<string[]>> {
   const config = configValue(path, listSettingSchema);
@@ -911,6 +1006,12 @@ const fields = {
     'hoverCardDelay',
     { unit: 'ms' },
   ),
+  toastPosition: enumField(
+    'appearance.notifications.toast_position',
+    'toastPosition',
+    z.enum(TOAST_POSITIONS),
+    (value) => t(TOAST_POSITION_LABEL_KEYS[value]),
+  ),
   openConfirmAbove: numberField('behavior.links.confirm_open_above', 'openConfirmAbove'),
   searchHistoryMax: numberField('search.search.history_max', 'searchHistoryMax'),
   quickSaveAlternatives: numberField('search.quick_save.alternatives', 'quickSaveAlternatives'),
@@ -1056,6 +1157,13 @@ const fields = {
         value
       ],
   ),
+  toolsSidebarDefaultTab: enumField(
+    'behavior.tools_sidebar.default_tab',
+    'toolsSidebarDefaultTab',
+    toolSidebarTabSchema,
+    getToolSidebarTabLabel,
+  ),
+  toolsSidebarOrder: idListField('behavior.tools_sidebar.order', 'toolsSidebarOrder'),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField(
     'ai_tools.reorganization.min_items_per_folder',
@@ -1095,6 +1203,14 @@ const fields = {
         link_url: t('settings_namingLinkUrl'),
       })[value],
   ),
+  contextMenuContexts: choiceListField(
+    'search.context_menu.contexts',
+    'contextMenuContexts',
+    CONTEXT_MENU_CONTEXT_IDS,
+    getContextMenuContextLabel,
+  ),
+  contextMenuEntries: idListField('search.context_menu.entries', 'contextMenuEntries'),
+  contextMenuRecentMax: numberField('search.context_menu.recent_max', 'contextMenuRecentMax'),
 
   quickSaveFolderStrategy: enumField(
     'search.quick_save.folder_strategy',
@@ -1694,7 +1810,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'contextMenu',
         labelKey: 'settings_contextMenuEnabled',
         toggle: 'contextMenuEnabled',
-        fields: ['contextMenuBookmarkNaming'],
+        fields: ['contextMenuContexts', 'contextMenuBookmarkNaming', 'contextMenuRecentMax'],
+        panel: 'contextMenuEntries',
       },
     ]),
     appearance: category('settings_appearance', 'settings_appearanceDesc', [
@@ -1714,7 +1831,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'notifications',
         labelKey: 'settings_sectionNotifications',
-        fields: ['toastDurationMs', 'tooltipDelayMs', 'hoverCardOpenDelayMs'],
+        fields: ['toastDurationMs', 'tooltipDelayMs', 'hoverCardOpenDelayMs', 'toastPosition'],
       },
     ]),
     behavior: category('settings_behavior', 'settings_behaviorDesc', [
@@ -1755,7 +1872,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'toolsSidebar',
         labelKey: 'settings_sectionToolsSidebar',
-        fields: ['toolsSidebarLayout'],
+        fields: ['toolsSidebarLayout', 'toolsSidebarDefaultTab'],
+        panel: 'toolsSidebarOrder',
       },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
       {
@@ -2060,6 +2178,8 @@ export const SETTING_SHOWN_WHEN = {
   quickSaveCoverExisting: 'quickSaveCover',
   // The folder to start on, only while Start Folder says to use a chosen one.
   managerStartFolderId: { key: 'managerStartFolder', equals: 'chosen' },
+  // The tab the Tools sidebar opens on, only while it shows tabs.
+  toolsSidebarDefaultTab: { key: 'toolsSidebarLayout', equals: 'tabs' },
 } as const satisfies Partial<Record<keyof Settings, ShownWhen>>;
 
 /** What a setting shows with: another setting on, or another setting at one value. */

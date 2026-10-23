@@ -19,7 +19,7 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 | Paramètre | Aussi dans | Effet |
 | --- | --- | --- |
 | **Dossier d'enregistrement rapide** et **Dossier de destination** | [Enregistrement et recherche](#quick-save) | Où le raccourci d'enregistrement rapide enregistre la page actuelle |
-| **Menu du clic droit** | [Enregistrement et recherche](#context-menu) | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien |
+| **Menu du clic droit** | [Enregistrement et recherche](#context-menu) | Affiche **Enregistrer le favori dans…** dans le menu du clic droit du navigateur, sur les liens sauf si vous en choisissez davantage |
 | **Thème** et **Langue** | [Apparence](#language-theme-and-icons) | L'apparence de Bookmark Scout et la langue qu'il utilise |
 | **Confirmer avant de supprimer** | [Comportement](#deleting) | Demande confirmation avant de supprimer |
 | **Enregistrer les modifications faites ailleurs** | [Comportement](#history-settings) | Liste dans l'historique les modifications faites hors de Bookmark Scout |
@@ -54,7 +54,7 @@ Consultez [Recherche et recherches enregistrées](/guides/search).
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Dossiers récents** | Activé | Affiche les dossiers récemment utilisés dans la fenêtre pop-up et le menu contextuel |
+| **Dossiers récents** | Activé | Affiche les dossiers récemment utilisés dans la fenêtre pop-up ; le menu du clic droit a son propre réglage **Dossiers récents dans le menu** |
 | **Nombre maximal de dossiers récents** | <SettingDefault path="search.saving.recent_folders_max" /> | Nombre de dossiers récents à afficher |
 | **Nom de dossier par défaut** | Nouveau dossier | Le nom initial d'un nouveau dossier |
 
@@ -78,8 +78,12 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Menu du clic droit** | Désactivé | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien. Dans Chrome et Edge, l'activation ajoute l'autorisation facultative du menu contextuel, sans demande de confirmation |
+| **Menu du clic droit** | Désactivé | Affiche **Enregistrer le favori dans…** dans le menu du clic droit du navigateur. Dans Chrome et Edge, l'activation ajoute l'autorisation facultative du menu contextuel, sans demande de confirmation |
+| **Afficher le menu sur** | Liens | Où le clic droit affiche le menu : **Liens** (enregistre le lien), **Pages** (enregistre la page ouverte) et **Texte sélectionné** (enregistre la page, nommée d’après le texte sélectionné avec le nommage **Texte du lien**). Aucun ne demande d’autre autorisation |
 | **Source du nom du favori** | Texte du lien | Nomme un favori enregistré par clic droit d'après le texte du lien, le titre de la page ou l'URL du lien |
+| **Dossiers récents dans le menu** | <SettingDefault path="search.context_menu.recent_max" /> | Nombre de dossiers récents listés dans le menu, indépendamment du **Nombre maximal de dossiers récents** de la fenêtre pop-up |
+
+**Entrées du menu** choisit ce que propose le menu, dans l’ordre : **Dossiers récents** (un sous-menu) et **Barre de favoris**. Cochez une entrée pour l’afficher et faites-la glisser par sa poignée (ou utilisez le menu de la poignée) pour la déplacer ; **Rétablir les valeurs par défaut** les affiche de nouveau toutes les deux dans leur ordre initial.
 
 ## Apparence [#appearance]
 
@@ -129,6 +133,7 @@ Sous le tableau, trois listes organisent la fenêtre contextuelle et le panneau 
 | **Durée des notifications** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
 | **Délai des infobulles** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Temps pendant lequel le pointeur reste sur une commande avant que son explication s'affiche |
 | **Délai de la carte de détails** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Combien de temps le pointeur reste sur un favori, ou le focus clavier y reste, avant que sa carte de détails s'ouvre. Vaut aussi pour les résumés tronqués du gestionnaire |
+| **Position des notifications** | En bas à droite | Où les messages comme **Annuler** apparaissent sur chaque page de Bookmark Scout : dans un coin inférieur ou supérieur, ou au milieu du bord inférieur ou supérieur |
 
 ## Comportement [#behavior]
 
@@ -155,6 +160,9 @@ Sous le tableau, trois listes organisent la fenêtre contextuelle et le panneau 
 | --- | --- | --- |
 | **Vue du gestionnaire** | Liste | **Liste** affiche le tableau ; **Cartes** affiche les mêmes lignes sous forme de grille de cartes, avec la même sélection, les mêmes touches et les mêmes menus. Les deux boutons à côté de **Afficher** permettent aussi de changer. Conservé sur cet appareil uniquement |
 | **Disposition de la barre latérale Outils** | Onglets | **Onglets** affiche une section à la fois, avec **Tout** pour tous les outils ; **Une liste** affiche toutes les sections à la suite. Conservé uniquement sur cet appareil |
+| **Onglet de départ** | Maintenance | L’onglet sur lequel s’ouvre la barre latérale Outils lorsqu’elle affiche des **Onglets** : **Tout**, une section ou **Données**. Un onglet sans outil à afficher ouvre le premier qui en a. Conservé uniquement sur cet appareil |
+
+**Outils de la barre latérale** choisit les outils affichés dans la barre latérale Outils et leur ordre au sein de chaque section : décochez un outil pour masquer sa carte et faites-le glisser par sa poignée (ou utilisez le menu de la poignée) pour le déplacer. Un outil masqué reste activé : **Règles intelligentes**, **Indexer le texte des pages** et **Récupérer les couvertures** poursuivent leur travail automatique ; chaque outil se désactive avec son propre interrupteur. **Rétablir les valeurs par défaut** affiche de nouveau tous les outils dans leur ordre initial. Conservé uniquement sur cet appareil.
 
 ### Gestionnaire de favoris [#manager-view]
 

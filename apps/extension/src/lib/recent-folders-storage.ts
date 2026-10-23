@@ -2,8 +2,14 @@
  * Folders where bookmarks were recently added, for quick access, in the local storage area.
  */
 
-/** Upper bound of the recentFoldersMax setting; readers apply the user's own limit. */
-export const RECENT_FOLDERS_STORAGE_LIMIT = SETTING_NUMBER_BOUNDS.recentFoldersMax.max;
+/**
+ * The most either list of recent folders can show (the popup's Recent Folders Max and the
+ * right-click menu's Recent Folders in Menu); readers apply the user's own limit.
+ */
+export const RECENT_FOLDERS_STORAGE_LIMIT = Math.max(
+  SETTING_NUMBER_BOUNDS.recentFoldersMax.max,
+  SETTING_NUMBER_BOUNDS.contextMenuRecentMax.max,
+);
 
 export interface RecentFolder {
   id: string;

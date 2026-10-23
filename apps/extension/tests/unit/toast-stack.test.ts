@@ -96,3 +96,20 @@ describe('undo toast stack', () => {
     expect(state.toasts.map((toast) => toast.id)).toEqual(['delete-4', 'delete-3', 'delete-2']);
   });
 });
+
+describe('toast position', () => {
+  it('places and moves toasts for every Toast Position choice, swiped toward their side', async () => {
+    const { TOAST_POSITION_STYLES } = await import('@/components/ui/toast');
+    const { getSettingsFieldMeta, defaultSettings } = await import('@/lib/settings-schema');
+    const choices = getSettingsFieldMeta().toastPosition.options?.map((option) => option.value);
+    expect(choices).toEqual(Object.keys(TOAST_POSITION_STYLES));
+    expect(defaultSettings.toastPosition).toBe('bottom-right');
+    for (const [position, style] of Object.entries(TOAST_POSITION_STYLES)) {
+      const [edge, side] = position.split('-');
+      expect(style.viewport, position).toContain(`${edge}-0`);
+      expect(style.motion, position).toContain(`slide-in-from-${edge}-full`);
+      const away = side === 'center' ? { top: 'up', bottom: 'down' }[edge] : side;
+      expect(style.swipe, position).toBe(away);
+    }
+  });
+});

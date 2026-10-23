@@ -23,17 +23,6 @@ import {
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
-/** Each sidebar section's title; their order is `sections` in config/ui/tools-sidebar.toml. */
-const TOOL_SECTION_TITLES = {
-  maintenance: 'tools_category_maintenance',
-  metadata: 'tools_category_metadata',
-  security: 'tools_category_security',
-  analytics: 'tools_category_analytics',
-  ai: 'tools_category_ai',
-} as const;
-
-export type ToolSectionId = keyof typeof TOOL_SECTION_TITLES;
-
 /** One line under an outcome, keyed by the item it is about (a bookmark id). */
 export type ToolOutcomeNote = { id: string; text: string };
 
@@ -923,50 +912,23 @@ const siteIconJobSummarySchema = z.strictObject({
 });
 const pageTextJobSummarySchema = z.strictObject({ overLimit: z.number().int().nonnegative() });
 
-/** Lists every id of `ids` exactly once, in any order. */
-const listsEachOnce = (ids: readonly string[]) => (list: readonly string[]) =>
-  list.length === ids.length &&
-  new Set(list).size === list.length &&
-  ids.every((id) => list.includes(id));
-
-const sidebarConfig = readConfig(
-  'ui/tools-sidebar',
-  z.strictObject({
-    sections: z
-      .array(z.string())
-      .refine(listsEachOnce(Object.keys(TOOL_SECTION_TITLES)), 'must list every section once'),
-    tools: z
-      .array(z.string())
-      .refine(listsEachOnce(Object.keys(TOOL_DEFINITIONS)), 'must list every tool once'),
-    top_level_scope: z.enum(['folder', 'all']),
-    export_scope: z.enum(['folder', 'all']),
-    default_tab: z
-      .string()
-      .refine(
-        (tab) => ['all', 'data', ...Object.keys(TOOL_SECTION_TITLES)].includes(tab),
-        'must be "all", "data", or a section',
-      ),
-  }),
-);
-
-/** A tab of the sidebar: every section, one section, or the data section (export and import). */
-export type ToolSidebarTab = 'all' | ToolSectionId | 'data';
-
-/** The tab the sidebar opens on (`default_tab`). */
-export const TOOL_SIDEBAR_DEFAULT_TAB = sidebarConfig.default_tab as ToolSidebarTab;
+/** The layout config, read once in `lib/tools-sidebar-config.ts`. */
+const sidebarConfig = TOOLS_SIDEBAR_CONFIG;
 
 /** The scope the export card starts on in a folder (`export_scope`). */
 export const EXPORT_DEFAULT_SCOPE: BookmarkToolScope = sidebarConfig.export_scope;
 
 /** Sidebar sections in display order; the data section (export and import) follows them. */
-export const TOOL_SECTIONS: ReadonlyArray<{ id: ToolSectionId; titleKey: string }> = (
-  sidebarConfig.sections as ToolSectionId[]
-).map((id) => ({ id, titleKey: TOOL_SECTION_TITLES[id] }));
+export const TOOL_SECTIONS: ReadonlyArray<{ id: ToolSectionId; titleKey: string }> =
+  sidebarConfig.sections.map((id) => ({ id, titleKey: TOOL_SECTION_TITLES[id] }));
 
-/** Every tool in display order (config/ui/tools-sidebar.toml). */
-const TOOL_ORDER = (sidebarConfig.tools as ToolId[]).map(
-  (id) => TOOL_DEFINITIONS[id] as ToolDefinition,
-);
+/**
+ * The tools the sidebar shows, in order, as stored in `toolsSidebarOrder`
+ * (`getToolsSidebarOrderIds`). Turned-off tools are left in.
+ */
+export function getToolsSidebarOrder(stored: readonly string[]): ToolDefinition[] {
+  return getToolsSidebarOrderIds(stored).map((id) => TOOL_DEFINITIONS[id] as ToolDefinition);
+}
 
 /**
  * The scope a card starts on: at the manager's top level, where no folder is open, the configured
@@ -988,7 +950,12 @@ export function getToolDefaultScope(
   return getToolStartScope(settings[tool.scopeSetting], currentFolderId);
 }
 
-/** The enabled tools in a section, in the configured order. */
+/**
+ * The tools a section shows: those turned on and not hidden in Tools Sidebar, in its order
+ * (`toolsSidebarOrder`). A tool stays in its own section wherever the list puts it.
+ */
 export function getSectionTools(settings: Settings, section: ToolSectionId): ToolDefinition[] {
-  return TOOL_ORDER.filter((tool) => tool.section === section && settings[tool.enabledSetting]);
+  return getToolsSidebarOrder(settings.toolsSidebarOrder).filter(
+    (tool) => tool.section === section && settings[tool.enabledSetting],
+  );
 }

@@ -675,6 +675,22 @@
         "message": "Uma lista",
         "description": "Tools Sidebar Layout option: every section in one list"
     },
+    "settings_toolsSidebarDefaultTab": {
+        "message": "Aba inicial",
+        "description": "Setting label: the tab the Tools sidebar opens on"
+    },
+    "settings_toolsSidebarDefaultTabDesc": {
+        "message": "A aba em que a barra lateral Ferramentas abre. Uma aba sem ferramentas para mostrar abre a primeira que tiver alguma. Fica salvo neste dispositivo.",
+        "description": "Setting description for Start Tab"
+    },
+    "settings_toolsSidebarOrder": {
+        "message": "Ferramentas da barra lateral",
+        "description": "Options > Tools Sidebar: panel title for which tools the sidebar shows, in order"
+    },
+    "settings_toolsSidebarOrderDesc": {
+        "message": "As ferramentas que a barra lateral Ferramentas mostra, nesta ordem dentro de suas seções. Ocultar uma ferramenta aqui a mantém ativada, então seu trabalho automático continua. Fica salvo neste dispositivo.",
+        "description": "Options > Tools Sidebar: description of the sidebar tools panel"
+    },
     "settings_sectionDeleting": {
         "message": "Excluir",
         "description": "Settings section heading: deleting bookmarks and folders"
@@ -2016,7 +2032,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Adiciona “Salvar favorito em...” ao menu de clique com o botão direito nos links. Fica desativado até você ativar.",
+        "message": "Adiciona “Salvar favorito em...” ao menu de clique com o botão direito do navegador. Fica desativado até você ativar.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -2026,6 +2042,42 @@
     "settings_contextMenuNamingDesc": {
         "message": "O que usar como título do favorito ao salvar pelo clique com o botão direito. “Texto do link” usa o texto do link no Firefox ou o texto selecionado no Chrome; se não houver, usa o título da página.",
         "description": "Context menu bookmark naming setting description"
+    },
+    "settings_contextMenuContexts": {
+        "message": "Mostrar o menu em",
+        "description": "Setting label: where the right-click menu shows (links, pages, selected text)"
+    },
+    "settings_contextMenuContextsDesc": {
+        "message": "Onde o clique com o botão direito mostra o menu. Em uma página ou em um texto selecionado, ele salva a própria página, com o texto selecionado ou o título da página como nome.",
+        "description": "Setting description for Show Menu On"
+    },
+    "settings_contextMenuContextLink": {
+        "message": "Links",
+        "description": "Show Menu On choice: on links (saves the link)"
+    },
+    "settings_contextMenuContextPage": {
+        "message": "Páginas",
+        "description": "Show Menu On choice: on the page itself (saves the page)"
+    },
+    "settings_contextMenuContextSelection": {
+        "message": "Texto selecionado",
+        "description": "Show Menu On choice: on selected text (saves the page, named after the selection)"
+    },
+    "settings_contextMenuEntries": {
+        "message": "Itens do menu",
+        "description": "Options > Right-Click Menu: panel title for the entries the menu shows"
+    },
+    "settings_contextMenuEntriesDesc": {
+        "message": "O que o menu oferece, nesta ordem. Marque um item para mostrá-lo e arraste-o pela alça para movê-lo.",
+        "description": "Options > Right-Click Menu: description of the menu entries panel"
+    },
+    "settings_contextMenuRecentMax": {
+        "message": "Pastas recentes no menu",
+        "description": "Setting label: how many recent folders the right-click menu lists"
+    },
+    "settings_contextMenuRecentMaxDesc": {
+        "message": "Quantas pastas recentes o menu do botão direito lista. O pop-up tem seu próprio Máximo de pastas recentes.",
+        "description": "Setting description for Recent Folders in Menu"
     },
     "settings_namingLinkText": {
         "message": "Texto do link",
@@ -3278,14 +3330,6 @@
     "contextMenu_recentFolders": {
         "message": "Pastas recentes",
         "description": "Context menu recent folders submenu"
-    },
-    "contextMenu_aiSuggestions": {
-        "message": "Sugestões da IA",
-        "description": "Context menu AI suggestions submenu"
-    },
-    "contextMenu_defaultFolders": {
-        "message": "Pastas padrão",
-        "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
         "message": "Sem limite",
@@ -8200,6 +8244,38 @@
     "settings_tooltipDelayDesc": {
         "message": "Quanto tempo o ponteiro fica sobre um controle antes de a explicação aparecer",
         "description": "Setting description: tooltipDelay"
+    },
+    "settings_toastPosition": {
+        "message": "Posição das notificações",
+        "description": "Setting label: where toast notifications show"
+    },
+    "settings_toastPositionDesc": {
+        "message": "Onde mensagens como Desfazer aparecem em cada página do Bookmark Scout",
+        "description": "Setting description for Toast Position"
+    },
+    "settings_toastPositionBottomRight": {
+        "message": "Inferior direito",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomLeft": {
+        "message": "Inferior esquerdo",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionBottomCenter": {
+        "message": "Inferior central",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopRight": {
+        "message": "Superior direito",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopLeft": {
+        "message": "Superior esquerdo",
+        "description": "Toast Position option"
+    },
+    "settings_toastPositionTopCenter": {
+        "message": "Superior central",
+        "description": "Toast Position option"
     },
     "error_jobStore": {
         "message": "Não foi possível salvar as tarefas em segundo plano neste dispositivo.",
