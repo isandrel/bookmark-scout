@@ -265,27 +265,35 @@
 # feat/popup-customize rebased on main: ZIP 2,103,741 / 2,103,716 / 2,103,862, uncompressed
 # 7,086,250 / 7,086,246 / 7,086,409 B (Chrome / Edge / Firefox), 3,988,941 B of JavaScript, 90,449 B
 # of CSS, and 2,530,357 B of locales.
+# Raised on 2026-10-23 (ZIP 2,115,000 to 2,128,000, uncompressed 7,100,000 to 7,145,000, javascript
+# 3,995,000 to 4,020,000, locales 2,545,000 to 2,565,000) for changing the manager and popup
+# shortcut keys in Options (the key recorder panel, loaded on first use, the remap rules the
+# manager and popup read, and the overrides setting in the settings schema every page loads; 17 new
+# messages in 12 languages). Measured on feat/page-shortcut-remap rebased on main (9dd20ae2):
+# ZIP 2,114,835 / 2,114,802 / 2,114,950, uncompressed 7,125,806 / 7,125,802 / 7,125,965 B (Chrome /
+# Edge / Firefox), 4,005,794 B of JavaScript, and 2,552,663 B of locales, against main at 2,103,862,
+# 7,086,409, 3,988,941, and 2,530,357 (Firefox).
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_115_000
-raw_bytes = 7_100_000
+zip_bytes = 2_128_000
+raw_bytes = 7_145_000
 
 [targets.edge]
-zip_bytes = 2_115_000
-raw_bytes = 7_100_000
+zip_bytes = 2_128_000
+raw_bytes = 7_145_000
 
 [targets.firefox]
-zip_bytes = 2_115_000
-raw_bytes = 7_100_000
+zip_bytes = 2_128_000
+raw_bytes = 7_145_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_995_000
+javascript = 4_020_000
 css = 91_000
 fonts = 143_000
-locales = 2_545_000
+locales = 2_565_000
 images = 320_000
 other = 29_000

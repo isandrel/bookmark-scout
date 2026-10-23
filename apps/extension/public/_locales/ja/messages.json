@@ -43,13 +43,17 @@
         "message": "最近の検索を表示",
         "description": "Popup shortcut action: show recent searches"
     },
+    "shortcuts_recentSearches": {
+        "message": "空の検索ボックスで最近の検索を表示",
+        "description": "Options: the popup shortcut that shows recent searches from the empty search box"
+    },
     "shortcuts_title": {
         "message": "キーボードショートカット",
         "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
     },
     "shortcuts_buttonTitle": {
-        "message": "キーボードショートカット (?)",
-        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+        "message": "キーボードショートカット ($1)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog; $1 is the key that opens it too"
     },
     "shortcuts_pausedWhileTyping": {
         "message": "入力欄で入力している間や、ダイアログやメニューが開いている間はショートカットは無効です。",
@@ -62,6 +66,14 @@
     "shortcuts_nextPreviousRow": {
         "message": "次または前の行に移動",
         "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_nextRow": {
+        "message": "次の行に移動",
+        "description": "Options: the manager shortcut that moves to the next row"
+    },
+    "shortcuts_previousRow": {
+        "message": "前の行に移動",
+        "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
         "message": "フィルタで表示中の行をすべて選択",
@@ -126,6 +138,14 @@
     "shortcuts_previewPreviousNext": {
         "message": "プレビューで前または次のブックマークを表示",
         "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
+    "shortcuts_previewPrevious": {
+        "message": "プレビューで前のブックマークを表示",
+        "description": "Options: the manager shortcut that shows the previous bookmark in an open preview"
+    },
+    "shortcuts_previewNext": {
+        "message": "プレビューで次のブックマークを表示",
+        "description": "Options: the manager shortcut that shows the next bookmark in an open preview"
     },
     "shortcuts_showHelp": {
         "message": "キーボードショートカットを表示",
@@ -6690,6 +6710,54 @@
     "settings_managerMenus": {
         "message": "ブックマークマネージャーのメニュー",
         "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_pageShortcuts": {
+        "message": "マネージャーとポップアップのショートカット",
+        "description": "Options panel title: change the keyboard shortcuts that work inside the bookmark manager, popup, and side panel"
+    },
+    "settings_pageShortcutsDesc": {
+        "message": "ブックマークマネージャー、ポップアップ、サイドパネルの中で使えるキーです。［変更］をクリックして新しいキーを押してください。Esc でキャンセルします。この端末にだけ保存されます。",
+        "description": "Description of the manager and popup shortcuts panel; Change and Esc name the button and the key"
+    },
+    "settings_pageShortcutsManager": {
+        "message": "ブックマークマネージャー",
+        "description": "Heading of the bookmark manager shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutsPopup": {
+        "message": "ポップアップとサイドパネル",
+        "description": "Heading of the popup and side panel shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutChange": {
+        "message": "変更",
+        "description": "Button that starts recording new keys for one in-page shortcut"
+    },
+    "settings_pageShortcutChangeLabel": {
+        "message": "「$1」のキーを変更",
+        "description": "Accessible name of the Change button; $1 is what the shortcut does"
+    },
+    "settings_pageShortcutResetAll": {
+        "message": "すべてのショートカットをリセット",
+        "description": "Button that gives every manager and popup shortcut its default keys back"
+    },
+    "settings_pageShortcutNoModifier": {
+        "message": "ポップアップとサイドパネルでは $1 のショートカットをブラウザーに任せています。$1 を使わないキーを選んでください。",
+        "description": "Error when recording a popup shortcut with Ctrl or Cmd; $1 is that key (Ctrl, or ⌘ on a Mac)"
+    },
+    "settings_pageShortcutNeedsNamedKey": {
+        "message": "このショートカットは検索ボックスで入力中に働くため、文字を入力しないキー（矢印キーやファンクションキーなど）が必要です。",
+        "description": "Error when recording a key that types text for a shortcut that works while typing in the search box"
+    },
+    "settings_pageShortcutReserved": {
+        "message": "$1 はブラウザーかリスト内の移動で使われています。別のキーを選んでください。",
+        "description": "Error when recording keys the browser, the system, or list navigation keeps; $1 is the keys"
+    },
+    "settings_pageShortcutControlOnMac": {
+        "message": "Control はこれらのショートカットには使えません。Command、Option、Shift を使ってください。",
+        "description": "Error on a Mac when recording keys with the Control key, which these shortcuts never match"
+    },
+    "settings_pageShortcutMetaKey": {
+        "message": "Windows キー（Super キー）はこれらのショートカットには使えません。Ctrl、Alt、Shift を使ってください。",
+        "description": "Error on Windows and Linux when recording keys with the Windows (Super) key, which these shortcuts never match"
     },
     "settings_managerMenusDesc": {
         "message": "各メニューに表示するコマンド、その順序、どのセクションに置くかを選びます。コマンドやセクションの区切りをハンドルでドラッグするか、ハンドルのメニューを使って移動します。",

@@ -59,13 +59,17 @@
         "message": "mostra le ricerche recenti",
         "description": "Popup shortcut action: show recent searches"
     },
+    "shortcuts_recentSearches": {
+        "message": "Mostra le ricerche recenti dalla casella di ricerca vuota",
+        "description": "Options: the popup shortcut that shows recent searches from the empty search box"
+    },
     "shortcuts_title": {
         "message": "Scorciatoie da tastiera",
         "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
     },
     "shortcuts_buttonTitle": {
-        "message": "Scorciatoie da tastiera (?)",
-        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+        "message": "Scorciatoie da tastiera ($1)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog; $1 is the key that opens it too"
     },
     "shortcuts_pausedWhileTyping": {
         "message": "Le scorciatoie sono sospese mentre scrivi in un campo o quando è aperta una finestra di dialogo o un menu.",
@@ -78,6 +82,14 @@
     "shortcuts_nextPreviousRow": {
         "message": "Passa alla riga successiva o precedente",
         "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_nextRow": {
+        "message": "Passa alla riga successiva",
+        "description": "Options: the manager shortcut that moves to the next row"
+    },
+    "shortcuts_previousRow": {
+        "message": "Passa alla riga precedente",
+        "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
         "message": "Seleziona tutte le righe mostrate dai filtri",
@@ -142,6 +154,14 @@
     "shortcuts_previewPreviousNext": {
         "message": "Nell'anteprima, mostra il preferito precedente o successivo",
         "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
+    "shortcuts_previewPrevious": {
+        "message": "Nell'anteprima, mostra il preferito precedente",
+        "description": "Options: the manager shortcut that shows the previous bookmark in an open preview"
+    },
+    "shortcuts_previewNext": {
+        "message": "Nell'anteprima, mostra il preferito successivo",
+        "description": "Options: the manager shortcut that shows the next bookmark in an open preview"
     },
     "shortcuts_showHelp": {
         "message": "Mostra le scorciatoie da tastiera",
@@ -6698,6 +6718,54 @@
     "settings_managerMenus": {
         "message": "Menu della gestione preferiti",
         "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_pageShortcuts": {
+        "message": "Scorciatoie della gestione preferiti e del popup",
+        "description": "Options panel title: change the keyboard shortcuts that work inside the bookmark manager, popup, and side panel"
+    },
+    "settings_pageShortcutsDesc": {
+        "message": "Tasti che funzionano nella gestione preferiti, nel popup e nel riquadro laterale. Fai clic su Cambia e premi i nuovi tasti, oppure Esc per annullare. Salvate solo su questo dispositivo.",
+        "description": "Description of the manager and popup shortcuts panel; Change and Esc name the button and the key"
+    },
+    "settings_pageShortcutsManager": {
+        "message": "Gestione preferiti",
+        "description": "Heading of the bookmark manager shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutsPopup": {
+        "message": "Popup e riquadro laterale",
+        "description": "Heading of the popup and side panel shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutChange": {
+        "message": "Cambia",
+        "description": "Button that starts recording new keys for one in-page shortcut"
+    },
+    "settings_pageShortcutChangeLabel": {
+        "message": "Cambia i tasti per “$1”",
+        "description": "Accessible name of the Change button; $1 is what the shortcut does"
+    },
+    "settings_pageShortcutResetAll": {
+        "message": "Ripristina tutte le scorciatoie",
+        "description": "Button that gives every manager and popup shortcut its default keys back"
+    },
+    "settings_pageShortcutNoModifier": {
+        "message": "Il popup e il riquadro laterale lasciano al browser le scorciatoie con $1. Scegli tasti senza $1.",
+        "description": "Error when recording a popup shortcut with Ctrl or Cmd; $1 is that key (Ctrl, or ⌘ on a Mac)"
+    },
+    "settings_pageShortcutNeedsNamedKey": {
+        "message": "Questa scorciatoia funziona mentre scrivi nella casella di ricerca, quindi serve un tasto che non scriva nulla, come una freccia o un tasto funzione.",
+        "description": "Error when recording a key that types text for a shortcut that works while typing in the search box"
+    },
+    "settings_pageShortcutReserved": {
+        "message": "$1 appartiene al browser o allo spostamento negli elenchi. Scegli altri tasti.",
+        "description": "Error when recording keys the browser, the system, or list navigation keeps; $1 is the keys"
+    },
+    "settings_pageShortcutControlOnMac": {
+        "message": "Control non può far parte di queste scorciatoie. Usa Command, Option o Maiusc.",
+        "description": "Error on a Mac when recording keys with the Control key, which these shortcuts never match"
+    },
+    "settings_pageShortcutMetaKey": {
+        "message": "Il tasto Windows o Super non può far parte di queste scorciatoie. Usa Ctrl, Alt o Maiusc.",
+        "description": "Error on Windows and Linux when recording keys with the Windows (Super) key, which these shortcuts never match"
     },
     "settings_managerMenusDesc": {
         "message": "Scegli quali comandi mostra ogni menu, in quale ordine e in quale sezione. Trascina un comando o un separatore di sezione dalla sua maniglia, oppure usa il menu della maniglia, per spostarlo.",

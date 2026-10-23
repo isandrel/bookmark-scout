@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
+import { POPUP_SEARCH_INPUT_BINDINGS, popupShortcutsHint } from '@/hooks/use-popup-shortcuts';
 import {
-  POPUP_SEARCH_HISTORY_BINDINGS,
-  POPUP_SEARCH_INPUT_BINDINGS,
-  popupShortcutsHint,
-} from '@/hooks/use-popup-shortcuts';
-import { SHORTCUT_BINDINGS, shortcutKeyCaps, TREE_KEY_BINDINGS } from '@/lib/keyboard-shortcuts';
+  getPageShortcutBindings,
+  SHORTCUT_BINDINGS,
+  shortcutKeyCaps,
+  TREE_KEY_BINDINGS,
+} from '@/lib/keyboard-shortcuts';
 import { saveSettings } from '@/lib/settings-storage';
 
 const caps = (bindings: readonly { key: string; alt?: boolean }[]) =>
@@ -35,7 +36,7 @@ describe('popup shortcuts tooltip', () => {
       ...caps(TREE_KEY_BINDINGS.collapse),
       ...caps(TREE_KEY_BINDINGS.activate),
       ...caps(POPUP_SEARCH_INPUT_BINDINGS.escape),
-      ...caps(POPUP_SEARCH_HISTORY_BINDINGS.open),
+      ...caps(SHORTCUT_BINDINGS.popupSearchHistory.open),
     ];
     for (const key of keys) expect(hint).toContain(key);
     expect(hint).toBe(
@@ -55,5 +56,19 @@ describe('popup shortcuts tooltip', () => {
     expect(popupShortcutsHint()).toBe(
       'ショートカット: / で検索、↓ ↑ でフォルダとブックマークを移動、→ ← でフォルダを開閉、↵ で現在のページをフォーカス中のフォルダに保存、Esc で検索をクリア、Alt+↓ で最近の検索を表示',
     );
+  });
+});
+
+describe('popup shortcuts tooltip with changed keys', () => {
+  it('names the keys the user gave the search shortcuts instead of the configured ones', () => {
+    vi.stubGlobal('navigator', { platform: 'Win32' });
+    const page = getPageShortcutBindings({
+      'popup.focus_search': [{ key: 'f', alt: true }],
+      'popup.recent_searches': [{ key: 'F8' }],
+    });
+    const hint = popupShortcutsHint(page);
+    expect(hint).toContain('Alt+F search');
+    expect(hint).toContain('F8 show recent searches');
+    expect(hint).not.toContain('/ search');
   });
 });

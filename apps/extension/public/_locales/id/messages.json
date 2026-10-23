@@ -59,13 +59,17 @@
         "message": "tampilkan penelusuran terbaru",
         "description": "Popup shortcut action: show recent searches"
     },
+    "shortcuts_recentSearches": {
+        "message": "Tampilkan penelusuran terbaru dari kotak penelusuran kosong",
+        "description": "Options: the popup shortcut that shows recent searches from the empty search box"
+    },
     "shortcuts_title": {
         "message": "Pintasan keyboard",
         "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
     },
     "shortcuts_buttonTitle": {
-        "message": "Pintasan keyboard (?)",
-        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+        "message": "Pintasan keyboard ($1)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog; $1 is the key that opens it too"
     },
     "shortcuts_pausedWhileTyping": {
         "message": "Pintasan dijeda saat Anda mengetik di kolom atau saat dialog atau menu terbuka.",
@@ -78,6 +82,14 @@
     "shortcuts_nextPreviousRow": {
         "message": "Pindah ke baris berikutnya atau sebelumnya",
         "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_nextRow": {
+        "message": "Pindah ke baris berikutnya",
+        "description": "Options: the manager shortcut that moves to the next row"
+    },
+    "shortcuts_previousRow": {
+        "message": "Pindah ke baris sebelumnya",
+        "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
         "message": "Pilih semua baris yang ditampilkan filter",
@@ -142,6 +154,14 @@
     "shortcuts_previewPreviousNext": {
         "message": "Di pratinjau, tampilkan bookmark sebelumnya atau berikutnya",
         "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
+    "shortcuts_previewPrevious": {
+        "message": "Di pratinjau, tampilkan bookmark sebelumnya",
+        "description": "Options: the manager shortcut that shows the previous bookmark in an open preview"
+    },
+    "shortcuts_previewNext": {
+        "message": "Di pratinjau, tampilkan bookmark berikutnya",
+        "description": "Options: the manager shortcut that shows the next bookmark in an open preview"
     },
     "shortcuts_showHelp": {
         "message": "Tampilkan pintasan keyboard",
@@ -6436,6 +6456,54 @@
     "settings_managerMenus": {
         "message": "Menu pengelola bookmark",
         "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_pageShortcuts": {
+        "message": "Pintasan pengelola dan popup",
+        "description": "Options panel title: change the keyboard shortcuts that work inside the bookmark manager, popup, and side panel"
+    },
+    "settings_pageShortcutsDesc": {
+        "message": "Tombol yang berfungsi di pengelola bookmark, popup, dan panel samping. Klik Ubah lalu tekan tombol baru, atau Esc untuk membatalkan. Hanya disimpan di perangkat ini.",
+        "description": "Description of the manager and popup shortcuts panel; Change and Esc name the button and the key"
+    },
+    "settings_pageShortcutsManager": {
+        "message": "Pengelola bookmark",
+        "description": "Heading of the bookmark manager shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutsPopup": {
+        "message": "Popup dan panel samping",
+        "description": "Heading of the popup and side panel shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutChange": {
+        "message": "Ubah",
+        "description": "Button that starts recording new keys for one in-page shortcut"
+    },
+    "settings_pageShortcutChangeLabel": {
+        "message": "Ubah tombol untuk “$1”",
+        "description": "Accessible name of the Change button; $1 is what the shortcut does"
+    },
+    "settings_pageShortcutResetAll": {
+        "message": "Reset semua pintasan",
+        "description": "Button that gives every manager and popup shortcut its default keys back"
+    },
+    "settings_pageShortcutNoModifier": {
+        "message": "Popup dan panel samping membiarkan pintasan $1 untuk browser. Pilih tombol tanpa $1.",
+        "description": "Error when recording a popup shortcut with Ctrl or Cmd; $1 is that key (Ctrl, or ⌘ on a Mac)"
+    },
+    "settings_pageShortcutNeedsNamedKey": {
+        "message": "Pintasan ini bekerja saat Anda mengetik di kotak penelusuran, jadi perlu tombol yang tidak mengetik apa pun, seperti tombol panah atau tombol fungsi.",
+        "description": "Error when recording a key that types text for a shortcut that works while typing in the search box"
+    },
+    "settings_pageShortcutReserved": {
+        "message": "$1 dipakai oleh browser atau untuk berpindah dalam daftar. Pilih tombol lain.",
+        "description": "Error when recording keys the browser, the system, or list navigation keeps; $1 is the keys"
+    },
+    "settings_pageShortcutControlOnMac": {
+        "message": "Control tidak bisa menjadi bagian dari pintasan ini. Gunakan Command, Option, atau Shift.",
+        "description": "Error on a Mac when recording keys with the Control key, which these shortcuts never match"
+    },
+    "settings_pageShortcutMetaKey": {
+        "message": "Tombol Windows atau Super tidak bisa menjadi bagian dari pintasan ini. Gunakan Ctrl, Alt, atau Shift.",
+        "description": "Error on Windows and Linux when recording keys with the Windows (Super) key, which these shortcuts never match"
     },
     "settings_managerMenusDesc": {
         "message": "Pilih perintah yang ditampilkan setiap menu, urutannya, dan bagiannya. Seret perintah atau pemisah bagian pada pegangannya, atau gunakan menu pegangan, untuk memindahkannya.",

@@ -226,6 +226,8 @@ export const DEVICE_SETTING_KEYS = [
   'hoverCardFields',
   'popupBookmarkMenu',
   'popupFolderMenu',
+  /** Keys typed on this device's keyboard, with its platform's modifiers (Cmd or Ctrl). */
+  'pageShortcutOverrides',
 ] as const;
 
 export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];

@@ -1,0 +1,96 @@
+# Changing the in-page shortcuts of config/ui/shortcuts.toml ([manager] and [popup]) in Options >
+# Behavior > Manager and popup shortcuts, read by src/lib/shortcut-remap.ts. The keys the user
+# picks are the `pageShortcutOverrides` setting (config/settings/behavior.toml). The browser's
+# commands ([commands]) are not here: the browser owns their keys, and Options links to its
+# shortcut page for them.
+
+# Shortcuts listed for reference that cannot change: the manager acts on the browser's copy, cut,
+# and paste events, not on these keys. Their keys still count as taken.
+fixed = ["manager.copy", "manager.cut", "manager.paste"]
+
+# The sections whose shortcuts may use Ctrl (Cmd on a Mac). The popup and side panel never do, so
+# the browser's own shortcuts keep working there.
+mod_sections = ["manager"]
+
+# Shortcuts that act while the user types in a text field (the empty search box), so they need a
+# key that types nothing: an arrow, function, or other named key.
+while_typing = ["popup.recent_searches"]
+
+# No key may do two shortcuts that can act at the same time: those of one section, unless a
+# shortcut is put in its own group here. The preview's keys act only inside the open preview,
+# where the manager's other shortcuts pause, so a key may do one thing in each.
+[groups]
+"manager.preview_previous" = "manager_preview"
+"manager.preview_next" = "manager_preview"
+
+# Keys no shortcut may take (unless they are among its own configured keys, which Reset brings
+# back), in the format of config/ui/shortcuts.toml (`mod` is Ctrl, or Cmd on a Mac).
+[reserved]
+# The keys of the standard patterns every tree, table, list, and dialog answers (TREE_KEY_BINDINGS
+# in src/lib/keyboard-shortcuts.ts), and Tab, which moves focus.
+patterns = [
+  { key = "ArrowUp" },
+  { key = "ArrowDown" },
+  { key = "ArrowLeft" },
+  { key = "ArrowRight" },
+  { key = "Home" },
+  { key = "End" },
+  { key = "Enter" },
+  { key = " " },
+  { key = "Tab" },
+  { key = "Escape" },
+]
+# The browser's own keys that a page cannot take or should never take: new tab or window, close,
+# quit, reload, the address bar, find, print, save, history, downloads, bookmark this page,
+# reopen a closed tab, the bookmarks bar and manager, switching tabs, zoom, back and forward,
+# full screen, and the developer tools.
+browser = [
+  { key = "t", mod = true },
+  { key = "n", mod = true },
+  { key = "w", mod = true },
+  { key = "q", mod = true },
+  { key = "r", mod = true },
+  { key = "l", mod = true },
+  { key = "f", mod = true },
+  { key = "g", mod = true },
+  { key = "p", mod = true },
+  { key = "s", mod = true },
+  { key = "h", mod = true },
+  { key = "j", mod = true },
+  { key = "d", mod = true },
+  { key = "m", mod = true },
+  { key = "t", mod = true, shift = true },
+  { key = "n", mod = true, shift = true },
+  { key = "w", mod = true, shift = true },
+  { key = "b", mod = true, shift = true },
+  { key = "o", mod = true, shift = true },
+  { key = "d", mod = true, shift = true },
+  { key = "Delete", mod = true, shift = true },
+  { key = "Tab", mod = true },
+  { key = "Tab", mod = true, shift = true },
+  { key = "PageUp", mod = true },
+  { key = "PageDown", mod = true },
+  { key = "1", mod = true },
+  { key = "2", mod = true },
+  { key = "3", mod = true },
+  { key = "4", mod = true },
+  { key = "5", mod = true },
+  { key = "6", mod = true },
+  { key = "7", mod = true },
+  { key = "8", mod = true },
+  { key = "9", mod = true },
+  { key = "0", mod = true },
+  { key = "=", mod = true },
+  { key = "-", mod = true },
+  { key = "ArrowLeft", alt = true },
+  { key = "ArrowRight", alt = true },
+  { key = "Home", alt = true },
+  { key = "F4", alt = true },
+  { key = "F1" },
+  { key = "F3" },
+  { key = "F5" },
+  { key = "F6" },
+  { key = "F7" },
+  { key = "F11" },
+  { key = "F12" },
+]

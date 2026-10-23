@@ -1,7 +1,7 @@
 /**
  * Keyboard shortcuts help for the bookmark manager: a header button and the dialog it opens.
  * `?` opens the same dialog through `useManagerShortcuts`. Rows are drawn from the binding
- * tables, so the help always names the configured keys.
+ * tables with the user's changes (`usePageShortcuts`), so the help names the keys that work.
  */
 
 import { Keyboard } from 'lucide-react';
@@ -11,10 +11,15 @@ type ManagerShortcutsHelpProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-const { manager } = SHORTCUT_BINDINGS;
-
 /** One row per action; a row lists each binding that triggers it. */
-const SHORTCUT_ROWS: readonly { bindings: readonly ShortcutBinding[]; label: MessageKey }[] = [
+const shortcutRows = ({
+  manager,
+  managerPreview,
+  managerClipboard,
+}: PageShortcutBindings): readonly {
+  bindings: readonly ShortcutBinding[];
+  label: MessageKey;
+}[] => [
   { bindings: manager.focusFilter, label: 'managerDefaults_focusSearch' },
   { bindings: manager.parentFolder, label: 'shortcuts_parentFolder' },
   // The table's rows follow the grid keyboard pattern; these keys are not configurable.
@@ -26,10 +31,7 @@ const SHORTCUT_ROWS: readonly { bindings: readonly ShortcutBinding[]; label: Mes
   { bindings: [{ key: ' ' }], label: 'shortcuts_toggleRow' },
   { bindings: manager.preview, label: 'shortcuts_preview' },
   {
-    bindings: [
-      ...SHORTCUT_BINDINGS.managerPreview.previous,
-      ...SHORTCUT_BINDINGS.managerPreview.next,
-    ],
+    bindings: [...managerPreview.previous, ...managerPreview.next],
     label: 'shortcuts_previewPreviousNext',
   },
   { bindings: manager.selectAll, label: 'shortcuts_selectAll' },
@@ -42,16 +44,17 @@ const SHORTCUT_ROWS: readonly { bindings: readonly ShortcutBinding[]; label: Mes
   { bindings: manager.undo, label: 'shortcuts_undo' },
   { bindings: manager.redo, label: 'shortcuts_redo' },
   // The browser's own copy, cut, and paste keys, read from its clipboard events.
-  { bindings: SHORTCUT_BINDINGS.managerClipboard.copy, label: 'shortcuts_copy' },
-  { bindings: SHORTCUT_BINDINGS.managerClipboard.cut, label: 'shortcuts_cut' },
-  { bindings: SHORTCUT_BINDINGS.managerClipboard.paste, label: 'shortcuts_paste' },
+  { bindings: managerClipboard.copy, label: 'shortcuts_copy' },
+  { bindings: managerClipboard.cut, label: 'shortcuts_cut' },
+  { bindings: managerClipboard.paste, label: 'shortcuts_paste' },
   { bindings: manager.openSavedSearches, label: 'shortcuts_openSavedSearches' },
   { bindings: manager.showHelp, label: 'shortcuts_showHelp' },
   // Escape closes any dialog or menu; not configurable.
   { bindings: [{ key: 'Escape' }], label: 'shortcuts_closeDialog' },
 ];
 
-function KeyCombo({ binding }: { binding: ShortcutBinding }) {
+/** One binding as key caps joined by +, as the shortcuts help and Options show it. */
+export function KeyCombo({ binding }: { binding: ShortcutBinding }) {
   return (
     <span className="inline-flex items-center gap-1">
       {shortcutKeyCaps(binding).map((key, index) => (
@@ -65,6 +68,9 @@ function KeyCombo({ binding }: { binding: ShortcutBinding }) {
 }
 
 export function ManagerShortcutsHelp({ open, onOpenChange }: ManagerShortcutsHelpProps) {
+  const bindings = usePageShortcuts();
+  const { showHelp } = bindings.manager;
+  const helpKeys = showHelp.map((binding) => shortcutKeyCaps(binding).join('+')).join(' ');
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger
@@ -74,8 +80,8 @@ export function ManagerShortcutsHelp({ open, onOpenChange }: ManagerShortcutsHel
             size="icon"
             className="ml-auto hidden shrink-0 sm:inline-flex"
             aria-label={t('shortcuts_title')}
-            aria-keyshortcuts={ariaKeyShortcuts(manager.showHelp)}
-            title={t('shortcuts_buttonTitle')}
+            aria-keyshortcuts={ariaKeyShortcuts(showHelp)}
+            title={t('shortcuts_buttonTitle', helpKeys)}
           />
         }
       >
@@ -88,10 +94,10 @@ export function ManagerShortcutsHelp({ open, onOpenChange }: ManagerShortcutsHel
           <DialogDescription>{t('shortcuts_pausedWhileTyping')}</DialogDescription>
         </DialogHeader>
         <dl className="grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-2 text-sm">
-          {SHORTCUT_ROWS.map(({ bindings, label }) => (
+          {shortcutRows(bindings).map(({ bindings: rowBindings, label }) => (
             <div key={label} className="contents">
               <dt className="flex flex-wrap items-center gap-1.5">
-                {bindings.map((binding, index) => (
+                {rowBindings.map((binding, index) => (
                   <span
                     key={ariaKeyShortcuts([binding])}
                     className="inline-flex items-center gap-1.5"

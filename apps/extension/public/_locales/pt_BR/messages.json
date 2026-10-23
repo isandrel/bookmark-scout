@@ -59,13 +59,17 @@
         "message": "mostrar pesquisas recentes",
         "description": "Popup shortcut action: show recent searches"
     },
+    "shortcuts_recentSearches": {
+        "message": "Mostrar pesquisas recentes na caixa de pesquisa vazia",
+        "description": "Options: the popup shortcut that shows recent searches from the empty search box"
+    },
     "shortcuts_title": {
         "message": "Atalhos de teclado",
         "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
     },
     "shortcuts_buttonTitle": {
-        "message": "Atalhos de teclado (?)",
-        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+        "message": "Atalhos de teclado ($1)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog; $1 is the key that opens it too"
     },
     "shortcuts_pausedWhileTyping": {
         "message": "Os atalhos ficam pausados enquanto você digita em um campo ou enquanto uma caixa de diálogo ou menu está aberto.",
@@ -78,6 +82,14 @@
     "shortcuts_nextPreviousRow": {
         "message": "Ir para a linha seguinte ou anterior",
         "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_nextRow": {
+        "message": "Ir para a linha seguinte",
+        "description": "Options: the manager shortcut that moves to the next row"
+    },
+    "shortcuts_previousRow": {
+        "message": "Ir para a linha anterior",
+        "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
         "message": "Selecionar todas as linhas exibidas pelos filtros",
@@ -142,6 +154,14 @@
     "shortcuts_previewPreviousNext": {
         "message": "Na pré-visualização, mostrar o favorito anterior ou o próximo",
         "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
+    "shortcuts_previewPrevious": {
+        "message": "Na pré-visualização, mostrar o favorito anterior",
+        "description": "Options: the manager shortcut that shows the previous bookmark in an open preview"
+    },
+    "shortcuts_previewNext": {
+        "message": "Na pré-visualização, mostrar o próximo favorito",
+        "description": "Options: the manager shortcut that shows the next bookmark in an open preview"
     },
     "shortcuts_showHelp": {
         "message": "Mostrar atalhos de teclado",
@@ -6698,6 +6718,54 @@
     "settings_managerMenus": {
         "message": "Menus do gerenciador de favoritos",
         "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_pageShortcuts": {
+        "message": "Atalhos do gerenciador e do pop-up",
+        "description": "Options panel title: change the keyboard shortcuts that work inside the bookmark manager, popup, and side panel"
+    },
+    "settings_pageShortcutsDesc": {
+        "message": "Teclas que funcionam no gerenciador de favoritos, no pop-up e no painel lateral. Clique em Alterar e pressione as novas teclas, ou Esc para cancelar. Salvos só neste dispositivo.",
+        "description": "Description of the manager and popup shortcuts panel; Change and Esc name the button and the key"
+    },
+    "settings_pageShortcutsManager": {
+        "message": "Gerenciador de favoritos",
+        "description": "Heading of the bookmark manager shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutsPopup": {
+        "message": "Pop-up e painel lateral",
+        "description": "Heading of the popup and side panel shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutChange": {
+        "message": "Alterar",
+        "description": "Button that starts recording new keys for one in-page shortcut"
+    },
+    "settings_pageShortcutChangeLabel": {
+        "message": "Alterar as teclas de “$1”",
+        "description": "Accessible name of the Change button; $1 is what the shortcut does"
+    },
+    "settings_pageShortcutResetAll": {
+        "message": "Redefinir todos os atalhos",
+        "description": "Button that gives every manager and popup shortcut its default keys back"
+    },
+    "settings_pageShortcutNoModifier": {
+        "message": "O pop-up e o painel lateral deixam os atalhos com $1 para o navegador. Escolha teclas sem $1.",
+        "description": "Error when recording a popup shortcut with Ctrl or Cmd; $1 is that key (Ctrl, or ⌘ on a Mac)"
+    },
+    "settings_pageShortcutNeedsNamedKey": {
+        "message": "Este atalho funciona enquanto você digita na caixa de pesquisa, então precisa de uma tecla que não digite nada, como uma seta ou uma tecla de função.",
+        "description": "Error when recording a key that types text for a shortcut that works while typing in the search box"
+    },
+    "settings_pageShortcutReserved": {
+        "message": "$1 pertence ao navegador ou à navegação em listas. Escolha outras teclas.",
+        "description": "Error when recording keys the browser, the system, or list navigation keeps; $1 is the keys"
+    },
+    "settings_pageShortcutControlOnMac": {
+        "message": "Control não pode fazer parte desses atalhos. Use Command, Option ou Shift.",
+        "description": "Error on a Mac when recording keys with the Control key, which these shortcuts never match"
+    },
+    "settings_pageShortcutMetaKey": {
+        "message": "A tecla Windows ou Super não pode fazer parte desses atalhos. Use Ctrl, Alt ou Shift.",
+        "description": "Error on Windows and Linux when recording keys with the Windows (Super) key, which these shortcuts never match"
     },
     "settings_managerMenusDesc": {
         "message": "Escolha quais comandos cada menu mostra, em que ordem e em qual seção. Arraste um comando ou um separador de seção pela alça, ou use o menu da alça, para movê-lo.",

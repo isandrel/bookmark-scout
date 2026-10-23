@@ -118,3 +118,13 @@ confirm = true
 # nothing from elsewhere is recorded, and turning it on again records what changed meanwhile as
 # one difference. Kept on this device only, like the History itself.
 record_outside_changes = true
+
+[page_shortcuts]
+# Keys the user gave the in-page shortcuts of config/ui/shortcuts.toml ([manager] and [popup]) in
+# place of the configured ones, by shortcut id ("manager.undo"), in Options > Behavior > Manager
+# and popup shortcuts. Starts empty: every shortcut has its configured keys. Each entry holds at
+# most max_bindings key combinations, each key name (`KeyboardEvent.key`, "ArrowUp") at most
+# max_key_length characters, and each id at most max_id_length. Which shortcuts can change and
+# which keys they may take is config/ui/shortcut-remap.toml. Kept on this device only: keyboards
+# and platforms differ, as the browser's own command shortcuts do.
+overrides = { default = {}, max_bindings = 4, max_key_length = 24, max_id_length = 40 }

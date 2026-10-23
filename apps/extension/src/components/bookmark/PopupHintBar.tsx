@@ -1,26 +1,30 @@
 import type { RefObject } from 'react';
 
-type Hint = { bindings: readonly ShortcutBinding[]; label: MessageKey };
+type Hint = {
+  bindings: (page: PageShortcutBindings) => readonly ShortcutBinding[];
+  label: MessageKey;
+};
 
 /**
  * The keys of `use-popup-shortcuts.ts`, drawn from its binding tables so the hints always name
- * the keys that work: the configured search key and the standard tree keys.
+ * the keys that work: the search key (as the user set it, `usePageShortcuts`) and the standard
+ * tree keys.
  */
 const SEARCH_HINT: Hint = {
-  bindings: SHORTCUT_BINDINGS.popup.focusSearch.slice(0, 1),
+  bindings: (page) => page.popup.focusSearch.slice(0, 1),
   label: 'popup_hintSearch',
 };
 const MOVE_HINT: Hint = {
-  bindings: [...TREE_KEY_BINDINGS.previous, ...TREE_KEY_BINDINGS.next],
+  bindings: () => [...TREE_KEY_BINDINGS.previous, ...TREE_KEY_BINDINGS.next],
   label: 'popup_hintMove',
 };
 const EXPAND_HINT: Hint = {
-  bindings: [...TREE_KEY_BINDINGS.collapse, ...TREE_KEY_BINDINGS.expand],
+  bindings: () => [...TREE_KEY_BINDINGS.collapse, ...TREE_KEY_BINDINGS.expand],
   label: 'popup_hintExpand',
 };
-const ENTER_HINT: Hint = { bindings: TREE_KEY_BINDINGS.activate, label: 'popup_hintEnter' };
+const ENTER_HINT: Hint = { bindings: () => TREE_KEY_BINDINGS.activate, label: 'popup_hintEnter' };
 const SAVE_TO_MATCH_HINT: Hint = {
-  bindings: POPUP_SEARCH_INPUT_BINDINGS.saveToFirstMatch,
+  bindings: () => POPUP_SEARCH_INPUT_BINDINGS.saveToFirstMatch,
   label: 'qaPopup_hintSaveTo',
 };
 
@@ -39,6 +43,7 @@ type PopupHintBarProps = {
 /** Popup and side panel footer that names the tree's keyboard shortcuts. */
 export function PopupHintBar({ searchInputRef, firstMatchTitle, saveToHintId }: PopupHintBarProps) {
   const focus = usePopupEnterFocus(searchInputRef);
+  const pageShortcuts = usePageShortcuts();
   const savesToMatch = focus === 'search' && firstMatchTitle !== undefined;
   const hints = savesToMatch ? SAVE_TO_MATCH_HINTS : HINTS;
   const label = (hint: Hint) => {
@@ -48,7 +53,7 @@ export function PopupHintBar({ searchInputRef, firstMatchTitle, saveToHintId }: 
   return (
     <section
       aria-label={t('popup_hintLabel')}
-      title={popupShortcutsHint()}
+      title={popupShortcutsHint(pageShortcuts)}
       data-testid="popup-hint-bar"
       className="flex h-7 shrink-0 items-center gap-2.5 overflow-hidden border-t px-3 text-xs text-muted-foreground"
     >
@@ -64,9 +69,12 @@ export function PopupHintBar({ searchInputRef, firstMatchTitle, saveToHintId }: 
             index === hints.length - 1 && 'max-[360px]:hidden',
           )}
         >
-          {hint.bindings.flatMap(shortcutKeyCaps).map((key) => (
-            <Kbd key={key}>{key}</Kbd>
-          ))}
+          {hint
+            .bindings(pageShortcuts)
+            .flatMap(shortcutKeyCaps)
+            .map((key) => (
+              <Kbd key={key}>{key}</Kbd>
+            ))}
           <span className="min-w-0 truncate">{label(hint)}</span>
         </span>
       ))}

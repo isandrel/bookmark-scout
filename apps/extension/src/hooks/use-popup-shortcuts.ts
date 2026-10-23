@@ -1,8 +1,8 @@
 /**
  * Keyboard shortcuts for the popup and side panel.
  *
- * - focusSearch (`SHORTCUT_BINDINGS.popup`, `/` by default) focuses the search box; Escape in
- *   it clears the query, then leaves the box.
+ * - focusSearch (`popup.focus_search`, `/` unless the user changed it in Options) focuses the
+ *   search box; Escape in it clears the query, then leaves the box.
  * - ArrowDown in the search box moves into the tree; ArrowUp on the first row moves back.
  *   Alt+ArrowDown opens the recent searches instead.
  * - Enter in the search box saves the current page into the first Save to folder row, the
@@ -46,22 +46,16 @@ export const POPUP_SEARCH_INPUT_BINDINGS = {
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
 /**
- * Opens the recent searches from the empty search box (`recent_searches` in
- * config/ui/shortcuts.toml), so a plain ArrowDown always reaches the tree. Once open, ArrowUp and
- * ArrowDown move through them.
+ * What the popup's shortcuts tooltip lists, in order. Keys always come from the bindings (the
+ * page's, `usePageShortcuts`, and the ones above), so the tooltip follows any change to them;
+ * adding a shortcut means one entry here and one action message. Recent searches open from the
+ * empty search box (`recent_searches`), so a plain ArrowDown always reaches the tree; once open,
+ * ArrowUp and ArrowDown move through them.
  */
-export const POPUP_SEARCH_HISTORY_BINDINGS = SHORTCUT_BINDINGS.popupSearchHistory;
-
-/**
- * What the popup's shortcuts tooltip lists, in order. Keys always come from the bindings above
- * (and config/ui/shortcuts.toml), so the tooltip follows any change to them; adding a shortcut
- * means one entry here and one action message.
- */
-const POPUP_SHORTCUT_HINTS: readonly {
-  bindings: readonly ShortcutBinding[];
-  actionKey: MessageKey;
-}[] = [
-  { bindings: SHORTCUT_BINDINGS.popup.focusSearch, actionKey: 'shortcuts_popupHintSearch' },
+const popupShortcutHints = (
+  page: PageShortcutBindings,
+): readonly { bindings: readonly ShortcutBinding[]; actionKey: MessageKey }[] => [
+  { bindings: page.popup.focusSearch, actionKey: 'shortcuts_popupHintSearch' },
   {
     bindings: [...TREE_KEY_BINDINGS.next, ...TREE_KEY_BINDINGS.previous],
     actionKey: 'shortcuts_popupHintMove',
@@ -72,12 +66,12 @@ const POPUP_SHORTCUT_HINTS: readonly {
   },
   { bindings: TREE_KEY_BINDINGS.activate, actionKey: 'shortcuts_popupHintSave' },
   { bindings: POPUP_SEARCH_INPUT_BINDINGS.escape, actionKey: 'shortcuts_popupHintClear' },
-  { bindings: POPUP_SEARCH_HISTORY_BINDINGS.open, actionKey: 'shortcuts_popupHintRecent' },
+  { bindings: page.popupSearchHistory.open, actionKey: 'shortcuts_popupHintRecent' },
 ];
 
 /** The popup's shortcuts tooltip, with every key printed the way this platform labels it. */
-export function popupShortcutsHint(): string {
-  const items = POPUP_SHORTCUT_HINTS.map(({ bindings, actionKey }) =>
+export function popupShortcutsHint(page: PageShortcutBindings = SHORTCUT_BINDINGS): string {
+  const items = popupShortcutHints(page).map(({ bindings, actionKey }) =>
     t('shortcuts_hintItem', [
       bindings.map((binding) => shortcutKeyCaps(binding).join('+')).join(' '),
       t(actionKey),
@@ -151,6 +145,7 @@ export function usePopupShortcuts({
   onApplyQuery,
   onSaveToFolder,
 }: PopupShortcutOptions) {
+  const { popup } = usePageShortcuts();
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const input = searchInputRef.current;
@@ -175,7 +170,7 @@ export function usePopupShortcuts({
         return;
       }
 
-      if (findShortcut(event, SHORTCUT_BINDINGS.popup) === 'focusSearch') {
+      if (findShortcut(event, popup) === 'focusSearch') {
         event.preventDefault();
         input.focus();
         input.select();
@@ -184,7 +179,7 @@ export function usePopupShortcuts({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [searchInputRef, treeRef, onClearQuery, onApplyQuery, onSaveToFolder]);
+  }, [searchInputRef, treeRef, onClearQuery, onApplyQuery, onSaveToFolder, popup]);
 }
 
 /** Where the keyboard is, for what Enter does: the search box, a folder row that saves, or other. */

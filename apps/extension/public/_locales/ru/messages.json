@@ -59,13 +59,17 @@
         "message": "показать недавние запросы",
         "description": "Popup shortcut action: show recent searches"
     },
+    "shortcuts_recentSearches": {
+        "message": "Показать недавние запросы в пустом поле поиска",
+        "description": "Options: the popup shortcut that shows recent searches from the empty search box"
+    },
     "shortcuts_title": {
         "message": "Быстрые клавиши",
         "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
     },
     "shortcuts_buttonTitle": {
-        "message": "Быстрые клавиши (?)",
-        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+        "message": "Быстрые клавиши ($1)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog; $1 is the key that opens it too"
     },
     "shortcuts_pausedWhileTyping": {
         "message": "Быстрые клавиши не работают, пока вы вводите текст в поле или открыто диалоговое окно или меню.",
@@ -78,6 +82,14 @@
     "shortcuts_nextPreviousRow": {
         "message": "Перейти к следующей или предыдущей строке",
         "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_nextRow": {
+        "message": "Перейти к следующей строке",
+        "description": "Options: the manager shortcut that moves to the next row"
+    },
+    "shortcuts_previousRow": {
+        "message": "Перейти к предыдущей строке",
+        "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
         "message": "Выбрать все строки, видимые с текущими фильтрами",
@@ -142,6 +154,14 @@
     "shortcuts_previewPreviousNext": {
         "message": "В предпросмотре показать предыдущую или следующую закладку",
         "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
+    "shortcuts_previewPrevious": {
+        "message": "В предпросмотре показать предыдущую закладку",
+        "description": "Options: the manager shortcut that shows the previous bookmark in an open preview"
+    },
+    "shortcuts_previewNext": {
+        "message": "В предпросмотре показать следующую закладку",
+        "description": "Options: the manager shortcut that shows the next bookmark in an open preview"
     },
     "shortcuts_showHelp": {
         "message": "Показать быстрые клавиши",
@@ -7222,6 +7242,54 @@
     "settings_managerMenus": {
         "message": "Меню диспетчера закладок",
         "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_pageShortcuts": {
+        "message": "Быстрые клавиши диспетчера и всплывающего окна",
+        "description": "Options panel title: change the keyboard shortcuts that work inside the bookmark manager, popup, and side panel"
+    },
+    "settings_pageShortcutsDesc": {
+        "message": "Клавиши, которые работают в диспетчере закладок, всплывающем окне и боковой панели. Нажмите «Изменить» и затем новые клавиши или Esc для отмены. Хранятся только на этом устройстве.",
+        "description": "Description of the manager and popup shortcuts panel; Change and Esc name the button and the key"
+    },
+    "settings_pageShortcutsManager": {
+        "message": "Диспетчер закладок",
+        "description": "Heading of the bookmark manager shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutsPopup": {
+        "message": "Всплывающее окно и боковая панель",
+        "description": "Heading of the popup and side panel shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutChange": {
+        "message": "Изменить",
+        "description": "Button that starts recording new keys for one in-page shortcut"
+    },
+    "settings_pageShortcutChangeLabel": {
+        "message": "Изменить клавиши для «$1»",
+        "description": "Accessible name of the Change button; $1 is what the shortcut does"
+    },
+    "settings_pageShortcutResetAll": {
+        "message": "Сбросить все сочетания",
+        "description": "Button that gives every manager and popup shortcut its default keys back"
+    },
+    "settings_pageShortcutNoModifier": {
+        "message": "Всплывающее окно и боковая панель оставляют сочетания с $1 браузеру. Выберите клавиши без $1.",
+        "description": "Error when recording a popup shortcut with Ctrl or Cmd; $1 is that key (Ctrl, or ⌘ on a Mac)"
+    },
+    "settings_pageShortcutNeedsNamedKey": {
+        "message": "Это сочетание работает, пока вы печатаете в поле поиска, поэтому нужна клавиша, которая ничего не печатает, например стрелка или функциональная клавиша.",
+        "description": "Error when recording a key that types text for a shortcut that works while typing in the search box"
+    },
+    "settings_pageShortcutReserved": {
+        "message": "$1 занято браузером или перемещением по спискам. Выберите другие клавиши.",
+        "description": "Error when recording keys the browser, the system, or list navigation keeps; $1 is the keys"
+    },
+    "settings_pageShortcutControlOnMac": {
+        "message": "Control нельзя использовать в этих сочетаниях. Используйте Command, Option или Shift.",
+        "description": "Error on a Mac when recording keys with the Control key, which these shortcuts never match"
+    },
+    "settings_pageShortcutMetaKey": {
+        "message": "Клавишу Windows (Super) нельзя использовать в этих сочетаниях. Используйте Ctrl, Alt или Shift.",
+        "description": "Error on Windows and Linux when recording keys with the Windows (Super) key, which these shortcuts never match"
     },
     "settings_managerMenusDesc": {
         "message": "Выберите, какие команды показывает каждое меню, в каком порядке и в каком разделе. Чтобы переместить команду или разделитель раздела, перетащите его за маркер или воспользуйтесь меню маркера.",

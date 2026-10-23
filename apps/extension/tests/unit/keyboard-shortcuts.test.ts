@@ -255,7 +255,7 @@ describe('configured bindings', () => {
       ['⌥', '↑'],
       ['⌫'],
     ]);
-    expect(shortcutKeyCaps({ key: 'k', alt: true, shift: true })).toEqual(['⌥', '⇧', 'k']);
+    expect(shortcutKeyCaps({ key: 'k', alt: true, shift: true })).toEqual(['⌥', '⇧', 'K']);
     expect(shortcutKeyCaps({ key: 'Escape' })).toEqual(['Esc']);
     expect(ariaKeyShortcuts(SHORTCUT_BINDINGS.manager.parentFolder)).toBe('Alt+ArrowUp Backspace');
   });

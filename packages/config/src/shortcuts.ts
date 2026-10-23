@@ -207,9 +207,9 @@ export function bindingModifiers(entry: KeyBinding, apple: boolean): string[] {
 	return apple ? [...alt, ...shift, "Meta"] : ["Control", ...alt, ...shift];
 }
 
-/** The key as printed: a letter typed with Ctrl or Cmd shows in capitals, as on the keycap. */
+/** The key as printed: a letter typed with Ctrl, Cmd, or Alt shows in capitals, as on the keycap. */
 function bindingKeyName(entry: KeyBinding): string {
-	return entry.mod && entry.key.length === 1 ? entry.key.toUpperCase() : entry.key;
+	return (entry.mod || entry.alt) && entry.key.length === 1 ? entry.key.toUpperCase() : entry.key;
 }
 
 /** The keys to press for a binding, modifiers first: `['Alt', '↑']`, or `['⌥', '↑']` on a Mac. */

@@ -224,6 +224,7 @@ export function BookmarkSearch({
   describedBy,
 }: BookmarkSearchProps) {
   const { resolvedTheme, setTheme } = useTheme();
+  const pageShortcuts = usePageShortcuts();
   const rowRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
@@ -297,7 +298,7 @@ export function BookmarkSearch({
       const opensHistory =
         !query &&
         searchHistory.length > 0 &&
-        findShortcut(e.nativeEvent, POPUP_SEARCH_HISTORY_BINDINGS, { allowWhileTyping: true });
+        findShortcut(e.nativeEvent, pageShortcuts.popupSearchHistory, { allowWhileTyping: true });
       if (opensHistory) {
         e.preventDefault();
         setHistoryRequested(true);
@@ -434,8 +435,8 @@ export function BookmarkSearch({
             type="text"
             placeholder={placeholder}
             aria-label={t('newcomer_searchLabel')}
-            aria-keyshortcuts={ariaKeyShortcuts(SHORTCUT_BINDINGS.popup.focusSearch)}
-            title={popupShortcutsHint()}
+            aria-keyshortcuts={ariaKeyShortcuts(pageShortcuts.popup.focusSearch)}
+            title={popupShortcutsHint(pageShortcuts)}
             role="combobox"
             aria-expanded={showHistory}
             aria-controls={showHistory ? historyListId : undefined}
@@ -531,7 +532,7 @@ export function BookmarkSearch({
               // The search box takes focus on open, so the hint shows once focus moves away. A
               // narrow box keeps its room for the placeholder.
               <Kbd aria-hidden="true" className="mr-1 @max-[15rem]:hidden">
-                {shortcutKeyCaps(SHORTCUT_BINDINGS.popup.focusSearch[0]).join('+')}
+                {shortcutKeyCaps(pageShortcuts.popup.focusSearch[0]).join('+')}
               </Kbd>
             )}
             <div ref={optionsRef} className="flex items-center gap-0.5">

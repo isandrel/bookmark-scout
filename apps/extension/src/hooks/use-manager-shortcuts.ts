@@ -1,6 +1,6 @@
 /**
- * Keyboard shortcuts for the bookmark manager page, bound in config/ui/shortcuts.toml
- * (`SHORTCUT_BINDINGS.manager`), with Chrome's manager as the model:
+ * Keyboard shortcuts for the bookmark manager page, bound in config/ui/shortcuts.toml with the
+ * keys the user changed in Options (`usePageShortcuts`), with Chrome's manager as the model:
  *
  * - focusFilter focuses the title filter; showHelp opens the shortcuts help; openSavedSearches
  *   opens the saved searches menu; parentFolder goes to the parent folder.
@@ -53,14 +53,16 @@ function isRowOrPageTarget(target: EventTarget | null): boolean {
 }
 
 /** The row shortcuts a focused folder in the tree answers too, after Chrome's tree. */
-const TREE_FOLDER_BINDINGS = {
-  delete: SHORTCUT_BINDINGS.manager.delete,
-  rename: SHORTCUT_BINDINGS.manager.rename,
-  open: SHORTCUT_BINDINGS.manager.open,
-  openInNewTabs: SHORTCUT_BINDINGS.manager.openInNewTabs,
-  openInNewWindow: SHORTCUT_BINDINGS.manager.openInNewWindow,
-};
-type TreeFolderAction = keyof typeof TREE_FOLDER_BINDINGS;
+function treeFolderBindings({ manager }: PageShortcutBindings) {
+  return {
+    delete: manager.delete,
+    rename: manager.rename,
+    open: manager.open,
+    openInNewTabs: manager.openInNewTabs,
+    openInNewWindow: manager.openInNewWindow,
+  };
+}
+type TreeFolderAction = keyof ReturnType<typeof treeFolderBindings>;
 
 /** What the row shortcuts do; the page owns dialogs, deletion, and opening. */
 export type ManagerRowCommands = {
@@ -94,7 +96,10 @@ export type ManagerShortcutOptions = {
 };
 
 /** Shortcuts that act on rows, so only while a row (or nothing) has focus. */
-const ROW_ACTIONS = new Set<string>([...Object.keys(TREE_FOLDER_BINDINGS), 'preview']);
+const ROW_ACTIONS = new Set<string>([
+  ...Object.keys(treeFolderBindings(SHORTCUT_BINDINGS)),
+  'preview',
+]);
 
 /** Runs a row command on `targets`; false when it does not apply to them. */
 function runRowCommand(
@@ -129,13 +134,16 @@ function runRowCommand(
 
 export function useManagerShortcuts(options: ManagerShortcutOptions) {
   const [helpOpen, setHelpOpen] = useState(false);
-  // The listener is registered once and reads the latest state from here.
-  const latest = useRef(options);
-  latest.current = options;
+  const bindings = usePageShortcuts();
+  // The listener is registered once and reads the latest state and keys from here.
+  const latest = useRef({ ...options, bindings });
+  latest.current = { ...options, bindings };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const action = findShortcut(event, SHORTCUT_BINDINGS.manager, { allowModifiers: true });
+      const action = findShortcut(event, latest.current.bindings.manager, {
+        allowModifiers: true,
+      });
       if (!action) return;
       if (ROW_ACTIONS.has(action) && !isRowOrPageTarget(event.target)) return;
       const { currentFolderId, items, onNavigate, table, commands } = latest.current;
@@ -217,9 +225,9 @@ export function useManagerShortcuts(options: ManagerShortcutOptions) {
    * True when the key ran a command, so the tree leaves it alone.
    */
   const handleTreeFolderKey = useCallback((event: KeyboardEvent, folderId: string): boolean => {
-    const action = findShortcut(event, TREE_FOLDER_BINDINGS, { allowModifiers: true });
+    const { items, commands, bindings: keys } = latest.current;
+    const action = findShortcut(event, treeFolderBindings(keys), { allowModifiers: true });
     if (!action) return false;
-    const { items, commands } = latest.current;
     const folder = getManagerItemsById(items).get(folderId);
     return folder ? runRowCommand(action, [folder], commands) : false;
   }, []);

@@ -130,7 +130,9 @@
 # placeholder in the manager on top of the link and tag changes (1,514).
 # Raised from 1525 on 2026-10-22 for the manager customization settings (menus, table defaults,
 # cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (1,535).
-"bookmarks.html" = 1545
+# Raised from 1545 on 2026-10-23 for the keys the user gave the manager shortcuts in Options, which
+# the manager reads and checks before its first key (the remap rules; 1,550).
+"bookmarks.html" = 1560
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

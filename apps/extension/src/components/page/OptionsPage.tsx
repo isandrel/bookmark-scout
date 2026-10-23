@@ -436,6 +436,8 @@ const OptionsPage: React.FC = () => {
         return matchesOnly ? null : <ShortcutsPanel />;
       case 'managerMenus':
         return matchesOnly ? null : <ManagerMenusPanel />;
+      case 'pageShortcuts':
+        return matchesOnly ? null : <PageShortcutsPanel />;
       case 'managerColumns':
         return matchesOnly ? null : <ManagerColumnsPanel />;
       case 'managerCardFields':
