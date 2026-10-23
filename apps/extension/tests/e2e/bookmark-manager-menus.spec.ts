@@ -346,6 +346,10 @@ test('Settings > manager menus reorder by dragging a command by its handle', asy
   const second = before[1] ?? '';
   const handle = panel.getByRole('button', { name: `Reorder ${second}` });
   const target = labelOf(first);
+  // The target row is centred, so the drag stays clear of the window edges, where the page scrolls
+  // itself under the pointer: scrolled just into view, it sat at the top on Linux runners and the
+  // drop missed it.
+  await target.evaluate((row) => row.scrollIntoView({ block: 'center' }));
   // A real pointer drag: press on the handle, nudge to start the drag, then move in steps. Each
   // position is read right before it is used: on a slow runner the page could still shift
   // between reading a box and moving to it, and the drag then started or ended off target.
@@ -358,6 +362,12 @@ test('Settings > manager menus reorder by dragging a command by its handle', asy
   if (!box) throw new Error('no target');
   await page.mouse.move(box.x + box.width / 2, box.y + 4, { steps: 12 });
   await expect(target).toHaveAttribute('data-drop-edge', 'top');
+  // One more move over the same edge, then two frames, so the drop happens after the browser has
+  // handled the last dragover there: on slow runners the drop line showed but the drop was lost.
+  await page.mouse.move(box.x + box.width / 2 + 1, box.y + 4);
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+  );
   await page.mouse.up();
   await expect.poll(order).toEqual([second, first, ...before.slice(2)]);
   // The new order is the setting, so it is there after a reload.
