@@ -132,7 +132,30 @@ export default function BookmarksPage() {
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const preview = useBookmarkPreview(tableRef);
   const [editTarget, setEditTarget] = useState<BookmarkEditTarget | null>(null);
-  const { value: sortOrder } = useSetting('sortOrder');
+  // The manager's own order, or the popup's (Manager Order).
+  const { value: popupSortOrder } = useSetting('sortOrder');
+  const { value: managerSortOrder } = useSetting('managerSortOrder');
+  const sortOrder = resolveManagerSortOrder(managerSortOrder, popupSortOrder);
+  // What a card shows, how wide it is at least, and its tag and summary limits (Options > Cards).
+  const { value: storedCardFields } = useSetting('managerCardFields');
+  const { value: cardSize } = useSetting('managerCardSize');
+  const { value: cardMaxTags } = useSetting('cardMaxTags');
+  const { value: cardSummaryLines } = useSetting('cardSummaryLines');
+  const cardFields = useMemo(() => getManagerCardFields(storedCardFields), [storedCardFields]);
+  const cardLimits = useMemo<BookmarkCardLimits>(
+    () => ({ maxTags: cardMaxTags, summaryLines: cardSummaryLines }),
+    [cardMaxTags, cardSummaryLines],
+  );
+  const renderCardField = useCallback(
+    (row: Bookmark, field: string) =>
+      // The address is the row's own cell, which the table draws.
+      field === 'url' ? undefined : (
+        <BookmarkCardField item={row} field={field as ManagerCardField} limits={cardLimits} />
+      ),
+    [cardLimits],
+  );
+  // A sidebar being dragged follows the pointer at once, without its width animation.
+  const [resizingSidebar, setResizingSidebar] = useState(false);
   // Labels built in memos below must be rebuilt when the language changes.
   const { value: language } = useSetting('language');
   const deletion = useBookmarkDeletion({ onChanged: refresh, recordHistory: true });
@@ -376,17 +399,25 @@ export default function BookmarksPage() {
       <aside
         ref={foldersAsideRef}
         className={cn(
-          'shrink-0 overflow-hidden border-r transition-all duration-200',
+          'relative shrink-0 overflow-hidden border-r transition-all duration-200',
+          resizingSidebar && 'transition-none',
           sidebarOverlay && 'fixed inset-y-0 left-0 z-40 bg-background shadow-lg',
-          leftSidebarCollapsed ? 'w-0 border-r-0' : 'w-64 max-w-[85vw]',
+          leftSidebarCollapsed && 'border-r-0',
         )}
+        style={{
+          width: leftSidebarCollapsed ? 0 : sidebars.folders.width,
+          maxWidth: MANAGER_SIDEBAR_MAX_WIDTH,
+        }}
         inert={leftSidebarCollapsed}
         aria-hidden={leftSidebarCollapsed || undefined}
         data-testid="folder-sidebar"
         data-overlay={sidebarOverlay || undefined}
         onKeyDown={drawerKeyDown(sidebars.folders, foldersToggleRef)}
       >
-        <div className="h-full w-64 max-w-[85vw] overflow-y-auto">
+        <div
+          className="h-full overflow-y-auto"
+          style={{ width: sidebars.folders.width, maxWidth: MANAGER_SIDEBAR_MAX_WIDTH }}
+        >
           <div className="flex h-14 items-center border-b px-4">
             <h2 className="text-sm font-semibold">{t('bookmarks_root')}</h2>
           </div>
@@ -404,6 +435,15 @@ export default function BookmarksPage() {
             />
           </ItemContextMenu>
         </div>
+        {!leftSidebarCollapsed && (
+          <SidebarResizeHandle
+            id="folders"
+            sidebar={sidebars.folders}
+            edge="right"
+            label={t('bookmarks_resizeFolders')}
+            onResizingChange={setResizingSidebar}
+          />
+        )}
       </aside>
 
       {/* Main Content */}
@@ -570,7 +610,9 @@ export default function BookmarksPage() {
                     ? 'is-folder bg-muted/50 hover:bg-muted/70'
                     : 'hover:bg-muted/50'
                 }
-                cardMedia={(row: Bookmark) => <BookmarkCardMedia item={row} />}
+                cardFields={cardFields}
+                renderCardField={renderCardField}
+                cardMinWidth={CARD_MIN_WIDTH_PX[cardSize]}
                 cardDetails={(row: Bookmark) => (
                   <BookmarkCardDetails
                     item={row}
@@ -595,23 +637,40 @@ export default function BookmarksPage() {
       <aside
         ref={toolsAsideRef}
         className={cn(
-          'shrink-0 overflow-hidden border-l transition-all duration-200',
+          'relative shrink-0 overflow-hidden border-l transition-all duration-200',
+          resizingSidebar && 'transition-none',
           sidebarOverlay && 'fixed inset-y-0 right-0 z-40 bg-background shadow-lg',
-          rightSidebarCollapsed ? 'w-0 border-l-0' : 'w-80 max-w-[85vw]',
+          rightSidebarCollapsed && 'border-l-0',
         )}
+        style={{
+          width: rightSidebarCollapsed ? 0 : sidebars.tools.width,
+          maxWidth: MANAGER_SIDEBAR_MAX_WIDTH,
+        }}
         inert={rightSidebarCollapsed}
         aria-hidden={rightSidebarCollapsed || undefined}
         data-testid="tools-sidebar"
         data-overlay={sidebarOverlay || undefined}
         onKeyDown={drawerKeyDown(sidebars.tools, toolsToggleRef)}
       >
-        <div className="h-full w-80 max-w-[85vw] overflow-y-auto">
+        <div
+          className="h-full overflow-y-auto"
+          style={{ width: sidebars.tools.width, maxWidth: MANAGER_SIDEBAR_MAX_WIDTH }}
+        >
           <ToolsSidebar
             currentFolderId={currentFolder}
             currentFolderName={currentFolderName}
             listing={listing}
           />
         </div>
+        {!rightSidebarCollapsed && (
+          <SidebarResizeHandle
+            id="tools"
+            sidebar={sidebars.tools}
+            edge="left"
+            label={t('bookmarks_resizeTools')}
+            onResizingChange={setResizingSidebar}
+          />
+        )}
       </aside>
 
       <BookmarkDetailsDialog

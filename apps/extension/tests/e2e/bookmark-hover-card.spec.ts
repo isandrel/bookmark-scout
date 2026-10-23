@@ -286,18 +286,21 @@ test('manager: Tags and Summary columns from View show stored values, and a cut 
   await page.keyboard.press('Escape');
   await expect(page.getByRole('columnheader', { name: 'Tags' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'Summary' })).toBeVisible();
-  // Kept with the synced view, and before the row menu.
+  // Kept with the synced view (only the parts changed; the order still follows the defaults),
+  // and before the row menu.
   await expect
     .poll(async () => {
       const view = (await readStored(extensionWorker, STORAGE_ITEMS.tableView)) as {
         columnVisibility: Record<string, boolean>;
-        columnOrder: string[];
       };
-      const order = view.columnOrder;
+      const headers = await page
+        .locator('thead th')
+        .evaluateAll((cells) => cells.map((cell) => cell.textContent?.trim() ?? ''));
       return {
         tags: view.columnVisibility.tags,
         summary: view.columnVisibility.summary,
-        beforeMenu: order.indexOf('summary') < order.indexOf('actions'),
+        beforeMenu:
+          headers.indexOf('Summary') >= 0 && headers.indexOf('Summary') < headers.length - 1,
       };
     })
     .toEqual({ tags: true, summary: true, beforeMenu: true });

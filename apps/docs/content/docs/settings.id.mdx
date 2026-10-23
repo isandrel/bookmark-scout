@@ -147,6 +147,37 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 | **Tampilan Pengelola** | Daftar | **Daftar** menampilkan tabel; **Kartu** menampilkan baris yang sama sebagai kisi kartu, dengan pemilihan, tombol, dan menu yang sama. Dua tombol di sebelah **Lihat** juga bisa mengalihkannya. Hanya disimpan di perangkat ini |
 | **Tata Letak Bilah Samping Alat** | Tab | **Tab** menampilkan satu bagian setiap kali, dengan **Semua** untuk semua alat; **Satu daftar** menampilkan setiap bagian, satu per satu berurutan. Hanya disimpan di perangkat ini |
 
+### Pengelola bookmark [#manager-view]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Urutan Pengelola** | Sama dengan Urutan | Urutan pengelola menampilkan folder sampai Anda mengurutkan tabel menurut kolom: **Sama dengan Urutan** mengikuti **Urutan** di atas, atau pilih salah satu urutannya khusus untuk pengelola. Popup dan panel samping tetap memakai **Urutan** |
+| **Folder Awal** | Bilah bookmark | Folder yang dibuka pengelola saat Anda membukanya tanpa folder: **Bilah bookmark**, **Folder terakhir dibuka** di perangkat ini, atau **Folder pilihan saya** (**Folder untuk Memulai**). Folder yang sudah tidak ada membuka bilah bookmark. Alamat yang menyebut folder tetap membuka folder itu. Hanya disimpan di perangkat ini |
+| **Bilah Samping saat Dibuka** | Default | **Default** membuka bilah samping folder dan membiarkan bilah samping Alat tertutup; **Seperti terakhir** membuka masing-masing seperti saat terakhir Anda memakai pengelola di perangkat ini. Bagaimanapun, seret tepi dalam bilah samping untuk mengubah lebarnya (atau fokuskan tepinya dan gunakan tombol panah, `Shift` untuk langkah lebih besar, `Home` dan `End`); lebarnya disimpan di perangkat ini |
+
+### Tabel pengelola [#manager-table]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Baris per Halaman Default** | <SettingDefault path="behavior.manager_table.page_size" /> | Baris per halaman pada tampilan tabel baru atau yang direset. Hanya disimpan di perangkat ini |
+| **Pengurutan Default** | Urutan folder | Cara tampilan tabel baru atau yang direset diurutkan: urutan folder (**Urutan Pengelola**), **Urutan browser**, atau menurut judul, URL, atau tanggal ditambahkan. Hanya disimpan di perangkat ini |
+
+**Kolom default** memilih kolom yang ditampilkan tampilan tabel baru atau yang direset, sesuai urutan: centang kolom untuk menampilkannya dan seret pada pegangannya (atau gunakan menu pegangan) untuk memindahkannya. Default ini berlaku untuk setiap bagian tampilan yang belum Anda ubah di pengelola (kolom, pengurutan, dan baris per halaman), juga saat Anda mengubahnya nanti, dan untuk seluruh tampilan setelah direset. Bagian yang Anda ubah di pengelola, seperti kolom yang Anda tampilkan dari **Lihat** atau baris per halaman di bawah tabel, tetap seperti yang Anda atur. **Reset tampilan tabel** melupakan semua perubahan pada tampilan, seperti **Lihat** > **Reset tampilan** di pengelola, dan **Reset lebar kolom** hanya melupakan lebar yang Anda seret. Hanya disimpan di perangkat ini.
+
+### Kartu [#manager-cards]
+
+| Setelan | Default | Fungsinya |
+| --- | --- | --- |
+| **Ukuran Kartu** | Sedang | Lebar terkecil setiap kartu pada tampilan kartu: **Kecil**, **Sedang**, atau **Besar**. Satu baris memuat sebanyak mungkin kartu. Hanya disimpan di perangkat ini |
+| **Tag per Kartu** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Kartu menampilkan sebanyak ini tag, lalu **+N** untuk sisanya. Hanya disimpan di perangkat ini |
+| **Baris Ringkasan** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Baris ringkasan bookmark yang ditampilkan kartu; pembaca layar tetap membacakan seluruhnya. Hanya disimpan di perangkat ini |
+
+**Isi kartu** memilih yang ditampilkan setiap kartu di bawah judulnya, sesuai urutan: sampul, URL, jalur folder, tag, dan ringkasan (semuanya kecuali jalur folder pada awalnya). Sampul di urutan pertama tetap di atas judul. Kartu folder selalu menyebutkan jumlah item di dalamnya. Hanya disimpan di perangkat ini.
+
+### Pratinjau [#manager-preview]
+
+**Isi pratinjau** memilih yang ditampilkan pratinjau bookmark di bawah judul dan alamatnya, sesuai urutan: sampul, jalur folder, tag, ringkasan, dan asal sampul (dengan **Ambil sampul** dan **Hapus sampul**). Hanya disimpan di perangkat ini.
+
 ### Penghapusan [#deleting]
 
 | Setelan | Default | Fungsinya |
@@ -161,7 +192,7 @@ Di bawahnya, **Pintasan keyboard** menampilkan tombol setiap pintasan di browser
 
 ### Menu pengelola bookmark [#manager-menus]
 
-Pilih perintah yang ditampilkan menu klik kanan dan menu ⋯ pengelola, dan seret perintah dengan pegangannya untuk mengubah urutannya dalam grupnya. Pegangan itu juga tombol yang menunya memindahkan perintah ke paling atas, ke atas, ke bawah, atau ke paling bawah, jadi keyboard juga bisa dipakai. **Pulihkan default** mengembalikan menu lengkap. **Lihat Detail** atau **Salin ID Bookmark** selalu tetap ada, sehingga menu memiliki perintah untuk bookmark atau folder apa pun; jika tidak ada perintah yang Anda pertahankan yang berlaku, menu menampilkan **Tidak ada tindakan yang tersedia**.
+Atur setiap menu pengelola di tabnya sendiri: **Menu item** (klik kanan baris atau folder di hierarki, atau tombol ⋯ pada baris), **Menu Atur** (⋮ di header), **Menu ruang kosong** (klik kanan di bawah baris), dan **Tombol pratinjau** (di bawah pratinjau bookmark; yang pertama tombol utama). Hapus centang perintah untuk menyembunyikannya; perintah pindah ke **Disembunyikan**, dan mencentangnya lagi menambahkannya kembali di akhir. Seret perintah pada pegangannya untuk mengubah urutan, atau seret **Pemisah bagian** untuk memindahkan perintah dari satu bagian ke bagian lain; pegangannya juga tombol yang menunya memindahkan item ke paling atas, ke atas, ke bawah, atau ke paling bawah, jadi keyboard juga berfungsi. **Tambahkan pemisah bagian** menambahkan satu di akhir untuk Anda pindahkan ke atas, dan ✕-nya menghapusnya sehingga dua bagian bergabung. **Pulihkan default** hanya memulihkan menu itu. Setiap menu menyimpan setidaknya satu perintah, dan menu item menyimpan **Lihat Detail** atau **Salin ID Bookmark**, sehingga selalu ada perintah untuk bookmark atau folder apa pun; jika tidak ada perintah yang Anda simpan yang berlaku, menu menampilkan **Tidak ada tindakan yang tersedia**. Menu item disinkronkan bersama pengaturan lainnya; menu lainnya hanya disimpan di perangkat ini.
 
 ## AI [#ai]
 

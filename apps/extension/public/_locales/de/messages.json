@@ -6684,16 +6684,260 @@
         "description": "Name of the bookmark action that offers suggestion buttons under an answer"
     },
     "settings_managerMenuActions": {
-        "message": "Menüs der Lesezeichenverwaltung",
-        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+        "message": "Elementmenü",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the menu on rows and tree folders (right-click and the ⋯ button)"
     },
     "settings_managerMenuActionsDesc": {
-        "message": "Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs zeigen und in welcher Reihenfolge innerhalb jeder Gruppe.",
-        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+        "message": "Rechtsklick auf eine Zeile oder einen Ordner im Baum, oder Klick auf die ⋯-Schaltfläche einer Zeile.",
+        "description": "Options > Behavior > Bookmark manager menus: where the item menu opens"
     },
     "settings_managerMenuActionsKeep": {
         "message": "Mindestens einer der Befehle $1 bleibt sichtbar, damit das Menü für jedes Lesezeichen und jeden Ordner einen Befehl hat.",
         "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
+    },
+    "settings_managerMenus": {
+        "message": "Menüs der Lesezeichenverwaltung",
+        "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_managerMenusDesc": {
+        "message": "Wählen Sie, welche Befehle jedes Menü zeigt, in welcher Reihenfolge und in welchem Abschnitt. Ziehen Sie einen Befehl oder eine Abschnittstrennung am Griff, oder nutzen Sie das Menü des Griffs, um ihn zu verschieben.",
+        "description": "Options > Behavior: description of the bookmark manager menus panel"
+    },
+    "settings_managerMenuKeepOne": {
+        "message": "Mindestens ein Befehl bleibt sichtbar.",
+        "description": "Options > Behavior > Bookmark manager menus: after a menu's description; the last shown command cannot be hidden"
+    },
+    "settings_managerOrganizeMenu": {
+        "message": "Menü „Organisieren“",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the header's ⋮ Organize menu"
+    },
+    "settings_managerOrganizeMenuDesc": {
+        "message": "Die ⋮-Schaltfläche in der Kopfzeile der Verwaltung, für den angezeigten Ordner.",
+        "description": "Options > Behavior > Bookmark manager menus: where the Organize menu opens"
+    },
+    "settings_managerEmptySpaceMenu": {
+        "message": "Menü für leeren Bereich",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the right-click menu on the table's empty space"
+    },
+    "settings_managerEmptySpaceMenuDesc": {
+        "message": "Rechtsklick in den leeren Bereich unter den Zeilen, für den angezeigten Ordner.",
+        "description": "Options > Behavior > Bookmark manager menus: where the empty space menu opens"
+    },
+    "settings_managerPreviewMenu": {
+        "message": "Schaltflächen der Vorschau",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the buttons under a bookmark's preview"
+    },
+    "settings_managerPreviewMenuDesc": {
+        "message": "Die Schaltflächen unter der Vorschau eines Lesezeichens; die erste ist die Hauptschaltfläche.",
+        "description": "Options > Behavior > Bookmark manager menus: what the preview buttons are"
+    },
+    "settings_menuSectionBreak": {
+        "message": "Abschnittstrennung",
+        "description": "Options > Behavior > Bookmark manager menus: a line between two sections of a menu, which the user can move or remove"
+    },
+    "settings_menuAddSectionBreak": {
+        "message": "Abschnittstrennung hinzufügen",
+        "description": "Options > Behavior > Bookmark manager menus: button that adds a section break at the end of the menu"
+    },
+    "settings_menuRemoveSectionBreak": {
+        "message": "Abschnittstrennung entfernen",
+        "description": "Options > Behavior > Bookmark manager menus: button that removes a section break, joining its two sections"
+    },
+    "settings_menuHidden": {
+        "message": "Ausgeblendet",
+        "description": "Options > Behavior > Bookmark manager menus: heading of the commands the menu does not show; check one to show it again"
+    },
+    "settings_managerSortOrder": {
+        "message": "Sortierung der Verwaltung",
+        "description": "Setting label: the order the bookmark manager shows a folder in"
+    },
+    "settings_managerSortOrderDesc": {
+        "message": "Die Reihenfolge, in der die Verwaltung einen Ordner zeigt, bis Sie die Tabelle nach einer Spalte sortieren.",
+        "description": "Settings: description of Manager Sort Order"
+    },
+    "settings_managerSortOrderSame": {
+        "message": "Wie Sortierung",
+        "description": "Settings: Manager Sort Order option that follows Sort Order in Tree and sorting"
+    },
+    "settings_managerStartFolder": {
+        "message": "Startordner",
+        "description": "Setting label: the folder the bookmark manager opens on"
+    },
+    "settings_managerStartFolderDesc": {
+        "message": "Der Ordner, mit dem sich die Verwaltung öffnet, wenn Sie sie ohne Ordner öffnen. Nur auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Start Folder"
+    },
+    "settings_managerStartFolderBar": {
+        "message": "Lesezeichenleiste",
+        "description": "Settings: Start Folder option, the browser's bookmarks bar"
+    },
+    "settings_managerStartFolderLast": {
+        "message": "Zuletzt geöffneter Ordner",
+        "description": "Settings: Start Folder option, the folder the manager showed last on this device"
+    },
+    "settings_managerStartFolderChosen": {
+        "message": "Ein gewählter Ordner",
+        "description": "Settings: Start Folder option, a folder picked in the next setting"
+    },
+    "settings_managerStartFolderId": {
+        "message": "Ordner beim Start",
+        "description": "Setting label: the folder the manager opens on when Start Folder is 'A folder I choose'"
+    },
+    "settings_managerStartFolderIdDesc": {
+        "message": "Wird dieser Ordner gelöscht, öffnet sich die Verwaltung mit der Lesezeichenleiste.",
+        "description": "Settings: description of Folder to Start On"
+    },
+    "settings_managerSidebarsStart": {
+        "message": "Seitenleisten beim Öffnen",
+        "description": "Setting label: whether the manager's folder and Tools sidebars open as by default or as last left"
+    },
+    "settings_managerSidebarsStartDesc": {
+        "message": "Öffnen Sie die Ordner- und die Tools-Leiste wie standardmäßig oder so, wie Sie sie verlassen haben. Ihre Breite bleibt in beiden Fällen erhalten. Nur auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Sidebars on Open"
+    },
+    "settings_managerSidebarsStartDefault": {
+        "message": "Standard",
+        "description": "Settings: Sidebars on Open option, the folder sidebar open and the Tools sidebar closed"
+    },
+    "settings_managerSidebarsStartRemember": {
+        "message": "Wie zuletzt",
+        "description": "Settings: Sidebars on Open option, each sidebar open or closed as it was last"
+    },
+    "settings_sectionManagerTable": {
+        "message": "Tabelle der Verwaltung",
+        "description": "Settings: heading of the section with the defaults of the bookmark manager's table"
+    },
+    "settings_managerDefaultColumns": {
+        "message": "Standardspalten",
+        "description": "Options > Behavior > Manager table: panel title for the columns a new or reset table view shows"
+    },
+    "settings_managerDefaultColumnsDesc": {
+        "message": "Die Spalten, die eine neue oder zurückgesetzte Tabellenansicht zeigt, in ihrer Reihenfolge. Wird auf diesem Gerät gespeichert.",
+        "description": "Options > Behavior > Manager table: description of the default columns panel"
+    },
+    "settings_managerTableDefaultsNote": {
+        "message": "Diese Standards gelten für jeden Teil der Ansicht, den Sie in der Verwaltung nicht geändert haben (Spalten, Sortierung und Zeilen pro Seite), und nach „Tabellenansicht zurücksetzen“ für die ganze Ansicht.",
+        "description": "Options > Behavior > Manager table: how the defaults relate to the view the user changed in the manager"
+    },
+    "settings_managerResetTableView": {
+        "message": "Tabellenansicht zurücksetzen",
+        "description": "Options > Behavior > Manager table: button that forgets every change made to the manager's table view, as View > Reset view does"
+    },
+    "settings_managerResetColumnWidths": {
+        "message": "Spaltenbreiten zurücksetzen",
+        "description": "Options > Behavior > Manager table: button that forgets the column widths set on this device"
+    },
+    "settings_managerDefaultPageSize": {
+        "message": "Standardzeilen pro Seite",
+        "description": "Setting label: rows per page of a new or reset manager table view"
+    },
+    "settings_managerDefaultPageSizeDesc": {
+        "message": "Zeilen pro Seite einer neuen oder zurückgesetzten Tabellenansicht. Wird auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Default Rows per Page"
+    },
+    "settings_managerDefaultSort": {
+        "message": "Standardsortierung",
+        "description": "Setting label: how a new or reset manager table view is sorted"
+    },
+    "settings_managerDefaultSortDesc": {
+        "message": "Wie eine neue oder zurückgesetzte Tabellenansicht sortiert ist. Wird auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Default Sort"
+    },
+    "settings_managerDefaultSortNone": {
+        "message": "Ordnerreihenfolge (Sortierung der Verwaltung)",
+        "description": "Settings: Default Sort option that keeps the manager's order for the folder"
+    },
+    "settings_managerDefaultSortBrowser": {
+        "message": "Browser-Reihenfolge",
+        "description": "Settings: Default Sort option that turns on Browser order"
+    },
+    "settings_managerDefaultSortTitleAsc": {
+        "message": "Titel, A bis Z",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortTitleDesc": {
+        "message": "Titel, Z bis A",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortUrlAsc": {
+        "message": "URL, A bis Z",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortNewest": {
+        "message": "Hinzugefügt am, neueste zuerst",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortOldest": {
+        "message": "Hinzugefügt am, älteste zuerst",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_sectionManagerCards": {
+        "message": "Karten",
+        "description": "Settings: heading of the section with what the manager's cards view shows"
+    },
+    "settings_managerCardFields": {
+        "message": "Karteninhalt",
+        "description": "Options > Behavior > Cards: panel title for what each card shows"
+    },
+    "settings_managerCardFieldsDesc": {
+        "message": "Was jede Karte unter ihrem Titel zeigt, in dieser Reihenfolge. Ein Titelbild an erster Stelle bleibt über dem Titel. Wird auf diesem Gerät gespeichert.",
+        "description": "Options > Behavior > Cards: description of the card details panel"
+    },
+    "settings_managerCardSize": {
+        "message": "Kartengröße",
+        "description": "Setting label: how wide the manager's cards are at least"
+    },
+    "settings_managerCardSizeDesc": {
+        "message": "Die geringste Breite einer Karte; die Kartenansicht setzt so viele in eine Reihe, wie Platz haben. Wird auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Card Size"
+    },
+    "settings_managerCardSizeSmall": {
+        "message": "Klein",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeMedium": {
+        "message": "Mittel",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeLarge": {
+        "message": "Groß",
+        "description": "Settings: Card Size option"
+    },
+    "settings_cardMaxTags": {
+        "message": "Tags pro Karte",
+        "description": "Setting label: how many tag chips a card shows"
+    },
+    "settings_cardMaxTagsDesc": {
+        "message": "Eine Karte zeigt so viele Tags, danach +N für den Rest. Wird auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Tags per Card"
+    },
+    "settings_cardSummaryLines": {
+        "message": "Zeilen der Zusammenfassung",
+        "description": "Setting label: how many lines of a summary a card shows"
+    },
+    "settings_cardSummaryLinesDesc": {
+        "message": "Zeilen der Zusammenfassung eines Lesezeichens, die eine Karte zeigt; die ganze Zusammenfassung bleibt für Screenreader verfügbar. Wird auf diesem Gerät gespeichert.",
+        "description": "Settings: description of Summary Lines"
+    },
+    "settings_previewFields": {
+        "message": "Inhalt der Vorschau",
+        "description": "Options > Behavior: panel title for what a bookmark's preview shows"
+    },
+    "settings_previewFieldsDesc": {
+        "message": "Was die Vorschau eines Lesezeichens unter Titel und Adresse zeigt, in dieser Reihenfolge. Wird auf diesem Gerät gespeichert.",
+        "description": "Options > Behavior: description of the preview details panel"
+    },
+    "settings_previewFieldCoverSource": {
+        "message": "Herkunft des Titelbilds",
+        "description": "Options > Behavior > Preview details: the line saying where the stored cover came from, with Fetch cover and Remove cover"
+    },
+    "bookmarks_resizeFolders": {
+        "message": "Größe der Ordnerleiste ändern",
+        "description": "Bookmark manager: name of the handle that resizes the folder sidebar by dragging or with the arrow keys"
+    },
+    "bookmarks_resizeTools": {
+        "message": "Größe der Tools-Leiste ändern",
+        "description": "Bookmark manager: name of the handle that resizes the Tools sidebar by dragging or with the arrow keys"
     },
     "settings_askAiDisabledActions": {
         "message": "Was „KI fragen“ tun darf",

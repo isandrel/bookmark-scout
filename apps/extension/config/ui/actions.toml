@@ -20,8 +20,9 @@ empty_space = [["addBookmark", "addFolder"], ["paste"]]
 # the bookmark it shows. Open is the manager's Open: a new tab in front, as Enter does.
 preview = [["openInNewTab"], ["copy", "edit"]]
 
-[item_menu]
-# Options > Behavior > Bookmark manager menus keeps at least one of these shown, so the item menu
-# always has a command for any one bookmark or folder. Each must be available for any single item
-# (tests/unit/action-menus.test.ts checks it).
-keep_one_of = ["viewDetails", "copyId"]
+[keep_one_of]
+# Options > Behavior > Bookmark manager menus keeps at least one of these shown in the menu they
+# are listed for, so the item menu always has a command for any one bookmark or folder. Each must be
+# available for any single item (tests/unit/action-menus.test.ts checks it). Every menu also keeps
+# at least one action of any kind.
+item = ["viewDetails", "copyId"]

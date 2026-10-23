@@ -2,7 +2,8 @@
  * The manager's command menus, after Chrome's: right-click on rows (the selection's item actions,
  * or the folder actions on empty space), right-click on folders in the tree, and the header's
  * Organize menu. The items are bookmark actions from the registry (`services/actions.ts`), in the
- * order and sections `config/ui/actions.toml` gives each menu (`services/action-menus.ts`).
+ * order and sections `config/ui/actions.toml` gives each menu (`services/action-menus.ts`), as the
+ * user arranged them in Options.
  */
 
 import { MoreVertical } from 'lucide-react';
@@ -15,7 +16,18 @@ function FolderActionMenuItems({
   menu: 'organize' | 'emptySpace';
   host: ActionFolderHost;
 }) {
-  return ACTION_MENUS[menu].map((section, index) => (
+  const sections = useManagerMenu(menu);
+  // The user's menu (Options) may hide every command; say so instead of opening an empty menu.
+  if (sections.length === 0) {
+    return (
+      <DropdownMenuGroup>
+        <DropdownMenuItem disabled data-testid="no-menu-actions">
+          {t('menu_noActions')}
+        </DropdownMenuItem>
+      </DropdownMenuGroup>
+    );
+  }
+  return sections.map((section, index) => (
     <DropdownMenuGroup key={section.join()}>
       {index > 0 && <DropdownMenuSeparator />}
       {section.map((id) => {

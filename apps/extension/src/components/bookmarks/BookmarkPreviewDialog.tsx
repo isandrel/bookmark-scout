@@ -1,9 +1,10 @@
 /**
  * A bookmark's preview in the manager, opened from its item menu (Preview) or with the manager's
- * preview key on a focused row or card: the stored cover, title, address, folder, tags, summary,
- * and where the cover came from (with Fetch cover and Remove cover beside it), then the buttons of `[menus]
- * preview` in config/ui/actions.toml. Everything comes from this device; nothing is fetched, so
- * without a stored cover none is shown.
+ * preview key on a focused row or card: its title and address, then the details Options > Behavior >
+ * Preview shows, in its order (the stored cover, folder, tags, summary, and where the cover came
+ * from, with Fetch cover and Remove cover beside it), then the buttons of `[menus] preview` in
+ * config/ui/actions.toml as the user arranged them. Everything comes from this device; nothing is
+ * fetched, so without a stored cover none is shown.
  *
  * Previous and Next (and the preview's keys, `managerPreview` in config/ui/shortcuts.toml, unless
  * a text field has focus) show the bookmark before or after it in `rows`, the table's page as
@@ -98,7 +99,11 @@ export function BookmarkPreviewDialog({
     : [];
   const tags = metadata?.tags ?? [];
   const summary = metadata?.summary?.trim() ?? '';
-  const sections = shown ? getItemMenuSections([shown], host, ACTION_MENUS.preview) : [];
+  const previewMenu = useManagerMenu('preview');
+  // Which details show, in what order (Options > Behavior > Preview).
+  const { value: storedFields } = useSetting('previewFields');
+  const fields = getPreviewFields(storedFields);
+  const sections = shown ? getItemMenuSections([shown], host, previewMenu) : [];
   const [primaryAction] = sections.flat();
   const neighbors: PreviewNeighbors = shown ? previewNeighbors(rows, shown.id) : {};
   // Nothing to step to on a page with one bookmark.
@@ -178,105 +183,141 @@ export function BookmarkPreviewDialog({
                 </div>
               ) : null}
             </div>
-            {shown.url ? <BookmarkCover bookmarkId={shown.id} url={shown.url} /> : null}
-            <dl className="grid min-w-0 gap-3 text-sm">
-              <div className="grid gap-1">
-                <dt className="text-xs text-muted-foreground">
-                  {t('bookmarks_detailsFolderPath')}
-                </dt>
-                <dd
-                  className="flex min-w-0 items-start gap-2"
-                  data-testid="bookmark-preview-folder"
-                >
-                  <Folder
-                    aria-hidden="true"
-                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
-                  />
-                  <span className="min-w-0 [overflow-wrap:anywhere]">{shown.folderPath}</span>
-                </dd>
-              </div>
-              {tags.length > 0 ? (
-                <div className="grid gap-1">
-                  <dt className="text-xs text-muted-foreground">{t('bookmarks_metadataTags')}</dt>
-                  <dd>
-                    <ul className="flex flex-wrap gap-1.5" data-testid="bookmark-preview-tags">
-                      {tags.map((tag) => (
-                        <li key={tag}>
-                          <Badge variant="outline" className="font-normal">
-                            {tag}
-                          </Badge>
-                        </li>
-                      ))}
-                    </ul>
-                  </dd>
-                </div>
-              ) : null}
-              {summary ? (
-                <div className="grid gap-1">
-                  <dt className="text-xs text-muted-foreground">
-                    {t('bookmarks_metadataSummary')}
-                  </dt>
-                  <dd
-                    className="whitespace-pre-line [overflow-wrap:anywhere]"
-                    data-testid="bookmark-preview-summary"
-                  >
-                    {summary}
-                  </dd>
-                </div>
-              ) : null}
-              {coverSource || coverActions.length > 0 ? (
-                <div className="grid gap-1">
-                  <dt className="text-xs text-muted-foreground">{t('covers_sourceLabel')}</dt>
-                  <dd className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                    {coverSource ? (
-                      <span data-testid="bookmark-preview-cover-source">{coverSource}</span>
-                    ) : null}
-                    {/* The cover's own commands, so a cover can be fetched or removed here. */}
-                    <span className="flex flex-wrap gap-1">
-                      {coverActions.map((id) => {
-                        const { icon } = getAction(id);
-                        const Icon = icon ? ACTION_ICONS[icon] : undefined;
-                        return (
-                          <Button
-                            key={id}
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            data-action={id}
-                            onClick={() => runItemMenuAction(id, [shown], host)}
-                          >
-                            {Icon ? <Icon aria-hidden="true" className="h-4 w-4" /> : null}
-                            {getItemMenuLabel(id, [shown], host)}
-                          </Button>
-                        );
-                      })}
-                    </span>
-                  </dd>
-                </div>
-              ) : null}
-            </dl>
-            <DialogFooter className="flex-row flex-wrap gap-2 sm:justify-start sm:space-x-0">
-              {sections.flat().map((id) => {
-                const action = getAction(id);
-                const Icon = action.icon ? ACTION_ICONS[action.icon] : undefined;
-                return (
-                  <Button
-                    key={id}
-                    type="button"
-                    size="sm"
-                    variant={id === primaryAction ? 'default' : 'outline'}
-                    data-action={id}
-                    onClick={() => runAfterClose(id)}
-                  >
-                    {Icon && <Icon aria-hidden="true" className="h-4 w-4" />}
-                    {getItemMenuLabel(id, [shown], host)}
-                  </Button>
-                );
+            {/* The details Options > Behavior > Preview shows, in its order. */}
+            <div className="grid min-w-0 gap-3 text-sm">
+              {fields.map((field) => {
+                switch (field) {
+                  case 'cover':
+                    return shown.url ? (
+                      <BookmarkCover key={field} bookmarkId={shown.id} url={shown.url} />
+                    ) : null;
+                  case 'folder':
+                    return (
+                      <PreviewDetail key={field} label={t('bookmarks_detailsFolderPath')}>
+                        <span
+                          className="flex min-w-0 items-start gap-2"
+                          data-testid="bookmark-preview-folder"
+                        >
+                          <Folder
+                            aria-hidden="true"
+                            className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
+                          />
+                          <span className="min-w-0 [overflow-wrap:anywhere]">
+                            {shown.folderPath}
+                          </span>
+                        </span>
+                      </PreviewDetail>
+                    );
+                  case 'tags':
+                    return tags.length > 0 ? (
+                      <PreviewDetail key={field} label={t('bookmarks_metadataTags')}>
+                        <ul className="flex flex-wrap gap-1.5" data-testid="bookmark-preview-tags">
+                          {tags.map((tag) => (
+                            <li key={tag}>
+                              <Badge variant="outline" className="font-normal">
+                                {tag}
+                              </Badge>
+                            </li>
+                          ))}
+                        </ul>
+                      </PreviewDetail>
+                    ) : null;
+                  case 'summary':
+                    return summary ? (
+                      <PreviewDetail key={field} label={t('bookmarks_metadataSummary')}>
+                        <span
+                          className="block whitespace-pre-line [overflow-wrap:anywhere]"
+                          data-testid="bookmark-preview-summary"
+                        >
+                          {summary}
+                        </span>
+                      </PreviewDetail>
+                    ) : null;
+                  case 'coverSource':
+                    return coverSource || coverActions.length > 0 ? (
+                      <PreviewDetail
+                        key={field}
+                        label={t('covers_sourceLabel')}
+                        className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1"
+                      >
+                        {coverSource ? (
+                          <span data-testid="bookmark-preview-cover-source">{coverSource}</span>
+                        ) : null}
+                        {/* The cover's own commands, so a cover can be fetched or removed here. */}
+                        <span className="flex flex-wrap gap-1">
+                          {coverActions.map((id) => {
+                            const { icon } = getAction(id);
+                            const Icon = icon ? ACTION_ICONS[icon] : undefined;
+                            return (
+                              <Button
+                                key={id}
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                data-action={id}
+                                onClick={() => runItemMenuAction(id, [shown], host)}
+                              >
+                                {Icon ? <Icon aria-hidden="true" className="h-4 w-4" /> : null}
+                                {getItemMenuLabel(id, [shown], host)}
+                              </Button>
+                            );
+                          })}
+                        </span>
+                      </PreviewDetail>
+                    ) : null;
+                  default:
+                    return null;
+                }
               })}
+            </div>
+            <DialogFooter className="flex-row flex-wrap items-center gap-2 sm:justify-start sm:space-x-0">
+              {sections.map((section, index) => (
+                // A gap between the sections the preview's buttons are arranged in.
+                <span key={section.join()} className="contents">
+                  {index > 0 ? (
+                    <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-border" />
+                  ) : null}
+                  {section.map((id) => {
+                    const action = getAction(id);
+                    const Icon = action.icon ? ACTION_ICONS[action.icon] : undefined;
+                    return (
+                      <Button
+                        key={id}
+                        type="button"
+                        size="sm"
+                        variant={id === primaryAction ? 'default' : 'outline'}
+                        data-action={id}
+                        onClick={() => runAfterClose(id)}
+                      >
+                        {Icon && <Icon aria-hidden="true" className="h-4 w-4" />}
+                        {getItemMenuLabel(id, [shown], host)}
+                      </Button>
+                    );
+                  })}
+                </span>
+              ))}
             </DialogFooter>
           </>
         ) : null}
       </DialogContent>
     </Dialog>
+  );
+}
+
+/** One detail of the preview: its name, then its value. */
+function PreviewDetail({
+  label,
+  className,
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <dl className="grid gap-1">
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className={className}>{children}</dd>
+    </dl>
   );
 }

@@ -147,6 +147,37 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | **Manager View** | List | **List** shows the table; **Cards** shows the same rows as a grid of cards, with the same selection, keys, and menus. The two buttons beside **View** switch too. Kept on this device only |
 | **Tools Sidebar Layout** | Tabs | **Tabs** shows one section at a time, with **All** for every tool; **One list** shows every section, one after another. Kept on this device only |
 
+### Bookmark manager [#manager-view]
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Manager Order** | Same as Sort Order | The order the manager shows a folder in until you sort the table by a column: **Same as Sort Order** follows **Sort Order** above, or pick one of its orders for the manager alone. The popup and side panel keep **Sort Order** |
+| **Start Folder** | Bookmarks bar | The folder the manager opens on when you open it without a folder: the **Bookmarks bar**, the **Last opened folder** on this device, or **A folder I choose** (**Folder to Start On**). A folder that is gone opens the bookmarks bar. An address that names a folder still opens it. Kept on this device only |
+| **Sidebars on Open** | Default | **Default** opens the folder sidebar and keeps the Tools sidebar closed; **As I left them** opens each as it was when you last used the manager on this device. Either way, drag a sidebar's inner edge to resize it (or focus the edge and use the arrow keys, `Shift` for bigger steps, `Home`, and `End`); the width is kept on this device |
+
+### Manager table [#manager-table]
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Default Rows per Page** | <SettingDefault path="behavior.manager_table.page_size" /> | Rows per page of a new or reset table view. Kept on this device only |
+| **Default Sort** | Folder order | How a new or reset table view is sorted: the folder's order (**Manager Order**), **Browser order**, or by title, URL, or date added. Kept on this device only |
+
+**Default columns** chooses the columns a new or reset table view shows, in order: check a column to show it and drag it by its handle (or use the handle's menu) to move it. These defaults apply to each part of the view you have not changed in the manager (its columns, sort, and rows per page), also when you change them later, and to the whole view after a reset. A part you changed in the manager, such as a column you showed from **View** or the rows per page under the table, stays as you set it. **Reset table view** forgets every change made to the view, as **View** > **Reset view** in the manager does, and **Reset column widths** forgets only the widths you dragged. Kept on this device only.
+
+### Cards [#manager-cards]
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Card Size** | Medium | How wide each card of the cards view is at least: **Small**, **Medium**, or **Large**. A row fits as many cards as there is room for. Kept on this device only |
+| **Tags per Card** | <SettingDefault path="behavior.manager_cards.max_tags" /> | A card shows this many tags, then a **+N** chip for the rest. Kept on this device only |
+| **Summary Lines** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Lines of a bookmark's summary a card shows; screen readers still read all of it. Kept on this device only |
+
+**Card details** chooses what each card shows under its title, in order: the cover, the URL, the folder path, the tags, and the summary (all but the folder path at first). A cover listed first stays above the title. A folder's card always says how many items it holds. Kept on this device only.
+
+### Preview [#manager-preview]
+
+**Preview details** chooses what a bookmark's preview shows under its title and address, in order: the cover, the folder path, the tags, the summary, and where the cover came from (with **Fetch cover** and **Remove cover**). Kept on this device only.
+
 ### Deleting [#deleting]
 
 | Setting | Default | What it does |
@@ -161,7 +192,7 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 
 ### Bookmark manager menus [#manager-menus]
 
-Choose which commands the manager's right-click and ⋯ menus show, and drag a command by its handle to reorder it within its group. The handle is also a button whose menu moves the command to the top, up, down, or to the bottom, so the keyboard works too. **Restore defaults** brings back the full menu. **View Details** or **Copy Bookmark ID** always stays, so the menu has a command for any bookmark or folder; where none of the commands you kept applies, the menu says **No actions available**.
+Arrange each of the manager's menus on its own tab: the **Item menu** (right-click a row or a folder in the tree, or a row's ⋯ button), the **Organize menu** (⋮ in the header), the **Empty space menu** (right-click below the rows), and the **Preview buttons** (under a bookmark's preview, the first one the main button). Uncheck a command to hide it; it moves to **Hidden**, where checking it again adds it back at the end. Drag a command by its handle to reorder it, or drag a **Section break** to move commands from one section to another; the handle is also a button whose menu moves the item to the top, up, down, or to the bottom, so the keyboard works too. **Add section break** adds one at the end for you to move up, and its ✕ removes it, joining two sections. **Restore defaults** brings back that menu alone. Every menu keeps at least one command, and the item menu keeps **View Details** or **Copy Bookmark ID**, so it has a command for any bookmark or folder; where none of the commands you kept applies, the menu says **No actions available**. The item menu syncs with your other settings; the other menus are kept on this device only.
 
 ## AI [#ai]
 

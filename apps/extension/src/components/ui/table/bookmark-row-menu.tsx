@@ -35,7 +35,7 @@ export function BookmarkRowMenu({ bookmark, host }: BookmarkRowMenuProps) {
 type BookmarkActionMenuItemsProps = {
   items: Bookmark[];
   host: ActionItemHost;
-  /** The menu's sections of action ids; the configured item menu by default. */
+  /** The menu's sections of action ids; the item menu as the user arranged it by default. */
   sections?: readonly (readonly ActionId[])[];
 };
 
@@ -44,7 +44,7 @@ type BookmarkActionMenuItemsProps = {
  * the destructive color. Used inside a dropdown (⋯) or a right-click menu.
  */
 export function BookmarkActionMenuItems({ items, host, sections }: BookmarkActionMenuItemsProps) {
-  const { value: visible } = useSetting('managerMenuActions');
+  const itemMenu = useManagerMenu('item');
   // Menu items live inside a clickable row; keep clicks from reaching it.
   const renderItem = (id: ActionId) => {
     const action = getAction(id);
@@ -69,7 +69,7 @@ export function BookmarkActionMenuItems({ items, host, sections }: BookmarkActio
     );
   };
 
-  const available = getItemMenuSections(items, host, sections ?? customizeItemMenu(visible));
+  const available = getItemMenuSections(items, host, sections ?? itemMenu);
   // The user's menu (Options) may hide every command that applies here; say so instead of
   // opening an empty menu.
   if (available.length === 0) {

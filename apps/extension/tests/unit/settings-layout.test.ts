@@ -20,10 +20,16 @@ type SettingKey = keyof typeof defaultSettings;
 const EDITED_ELSEWHERE = new Set([
   'aiActivityRecording',
   'askAiWebSearch',
-  // Edited in their Options panels (ManagerMenusPanel, AskAIActionsPanel).
+  // Edited in their Options panels (ManagerMenusPanel, ManagerViewPanels, AskAIActionsPanel).
   'askAiDisabledActions',
   'agentBridgeDisabledActions',
   'managerMenuActions',
+  'managerOrganizeMenu',
+  'managerEmptySpaceMenu',
+  'managerPreviewMenu',
+  'managerDefaultColumns',
+  'managerCardFields',
+  'previewFields',
 ]);
 
 describe('Options layout', () => {

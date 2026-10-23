@@ -6438,16 +6438,260 @@
         "description": "Name of the bookmark action that offers suggestion buttons under an answer"
     },
     "settings_managerMenuActions": {
-        "message": "书签管理器菜单",
-        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+        "message": "项目菜单",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the menu on rows and tree folders (right-click and the ⋯ button)"
     },
     "settings_managerMenuActionsDesc": {
-        "message": "选择右键菜单和 ⋯ 菜单显示哪些命令，以及每组中的顺序。",
-        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+        "message": "右键点击行或树中的文件夹，或点击行的 ⋯ 按钮。",
+        "description": "Options > Behavior > Bookmark manager menus: where the item menu opens"
     },
     "settings_managerMenuActionsKeep": {
         "message": "“$1”中至少有一项始终显示，这样菜单对任何书签或文件夹都有可用的命令。",
         "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
+    },
+    "settings_managerMenus": {
+        "message": "书签管理器菜单",
+        "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_managerMenusDesc": {
+        "message": "选择每个菜单显示哪些命令、顺序如何、位于哪个分组。按住手柄拖动命令或分组分隔线，或使用手柄的菜单，即可移动它。",
+        "description": "Options > Behavior: description of the bookmark manager menus panel"
+    },
+    "settings_managerMenuKeepOne": {
+        "message": "至少保留一个命令。",
+        "description": "Options > Behavior > Bookmark manager menus: after a menu's description; the last shown command cannot be hidden"
+    },
+    "settings_managerOrganizeMenu": {
+        "message": "整理菜单",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the header's ⋮ Organize menu"
+    },
+    "settings_managerOrganizeMenuDesc": {
+        "message": "管理器标题栏中的 ⋮ 按钮，作用于当前显示的文件夹。",
+        "description": "Options > Behavior > Bookmark manager menus: where the Organize menu opens"
+    },
+    "settings_managerEmptySpaceMenu": {
+        "message": "空白处菜单",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the right-click menu on the table's empty space"
+    },
+    "settings_managerEmptySpaceMenuDesc": {
+        "message": "右键点击行下方的空白处，作用于当前显示的文件夹。",
+        "description": "Options > Behavior > Bookmark manager menus: where the empty space menu opens"
+    },
+    "settings_managerPreviewMenu": {
+        "message": "预览按钮",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the buttons under a bookmark's preview"
+    },
+    "settings_managerPreviewMenuDesc": {
+        "message": "书签预览下方的按钮；第一个是主按钮。",
+        "description": "Options > Behavior > Bookmark manager menus: what the preview buttons are"
+    },
+    "settings_menuSectionBreak": {
+        "message": "分组分隔线",
+        "description": "Options > Behavior > Bookmark manager menus: a line between two sections of a menu, which the user can move or remove"
+    },
+    "settings_menuAddSectionBreak": {
+        "message": "添加分组分隔线",
+        "description": "Options > Behavior > Bookmark manager menus: button that adds a section break at the end of the menu"
+    },
+    "settings_menuRemoveSectionBreak": {
+        "message": "移除分组分隔线",
+        "description": "Options > Behavior > Bookmark manager menus: button that removes a section break, joining its two sections"
+    },
+    "settings_menuHidden": {
+        "message": "已隐藏",
+        "description": "Options > Behavior > Bookmark manager menus: heading of the commands the menu does not show; check one to show it again"
+    },
+    "settings_managerSortOrder": {
+        "message": "管理器排序方式",
+        "description": "Setting label: the order the bookmark manager shows a folder in"
+    },
+    "settings_managerSortOrderDesc": {
+        "message": "在你按列排序表格之前，管理器显示文件夹的顺序。",
+        "description": "Settings: description of Manager Sort Order"
+    },
+    "settings_managerSortOrderSame": {
+        "message": "与排序方式相同",
+        "description": "Settings: Manager Sort Order option that follows Sort Order in Tree and sorting"
+    },
+    "settings_managerStartFolder": {
+        "message": "起始文件夹",
+        "description": "Setting label: the folder the bookmark manager opens on"
+    },
+    "settings_managerStartFolderDesc": {
+        "message": "不指定文件夹打开管理器时显示的文件夹。仅保存在此设备上。",
+        "description": "Settings: description of Start Folder"
+    },
+    "settings_managerStartFolderBar": {
+        "message": "书签栏",
+        "description": "Settings: Start Folder option, the browser's bookmarks bar"
+    },
+    "settings_managerStartFolderLast": {
+        "message": "上次打开的文件夹",
+        "description": "Settings: Start Folder option, the folder the manager showed last on this device"
+    },
+    "settings_managerStartFolderChosen": {
+        "message": "我选择的文件夹",
+        "description": "Settings: Start Folder option, a folder picked in the next setting"
+    },
+    "settings_managerStartFolderId": {
+        "message": "起始文件夹位置",
+        "description": "Setting label: the folder the manager opens on when Start Folder is 'A folder I choose'"
+    },
+    "settings_managerStartFolderIdDesc": {
+        "message": "如果此文件夹被删除，管理器会打开书签栏。",
+        "description": "Settings: description of Folder to Start On"
+    },
+    "settings_managerSidebarsStart": {
+        "message": "打开时的侧栏",
+        "description": "Setting label: whether the manager's folder and Tools sidebars open as by default or as last left"
+    },
+    "settings_managerSidebarsStartDesc": {
+        "message": "按默认方式打开文件夹侧栏和工具侧栏，或保持你离开时的样子。无论哪种，侧栏宽度都会保留。仅保存在此设备上。",
+        "description": "Settings: description of Sidebars on Open"
+    },
+    "settings_managerSidebarsStartDefault": {
+        "message": "默认",
+        "description": "Settings: Sidebars on Open option, the folder sidebar open and the Tools sidebar closed"
+    },
+    "settings_managerSidebarsStartRemember": {
+        "message": "保持上次的样子",
+        "description": "Settings: Sidebars on Open option, each sidebar open or closed as it was last"
+    },
+    "settings_sectionManagerTable": {
+        "message": "管理器表格",
+        "description": "Settings: heading of the section with the defaults of the bookmark manager's table"
+    },
+    "settings_managerDefaultColumns": {
+        "message": "默认列",
+        "description": "Options > Behavior > Manager table: panel title for the columns a new or reset table view shows"
+    },
+    "settings_managerDefaultColumnsDesc": {
+        "message": "新的或重置后的表格视图显示的列及其顺序。保存在此设备上。",
+        "description": "Options > Behavior > Manager table: description of the default columns panel"
+    },
+    "settings_managerTableDefaultsNote": {
+        "message": "这些默认值适用于你未在管理器中更改过的视图部分（列、排序和每页行数），并在“重置表格视图”后适用于整个视图。",
+        "description": "Options > Behavior > Manager table: how the defaults relate to the view the user changed in the manager"
+    },
+    "settings_managerResetTableView": {
+        "message": "重置表格视图",
+        "description": "Options > Behavior > Manager table: button that forgets every change made to the manager's table view, as View > Reset view does"
+    },
+    "settings_managerResetColumnWidths": {
+        "message": "重置列宽",
+        "description": "Options > Behavior > Manager table: button that forgets the column widths set on this device"
+    },
+    "settings_managerDefaultPageSize": {
+        "message": "默认每页行数",
+        "description": "Setting label: rows per page of a new or reset manager table view"
+    },
+    "settings_managerDefaultPageSizeDesc": {
+        "message": "新的或重置后的表格视图的每页行数。保存在此设备上。",
+        "description": "Settings: description of Default Rows per Page"
+    },
+    "settings_managerDefaultSort": {
+        "message": "默认排序",
+        "description": "Setting label: how a new or reset manager table view is sorted"
+    },
+    "settings_managerDefaultSortDesc": {
+        "message": "新的或重置后的表格视图的排序方式。保存在此设备上。",
+        "description": "Settings: description of Default Sort"
+    },
+    "settings_managerDefaultSortNone": {
+        "message": "文件夹顺序（管理器排序方式）",
+        "description": "Settings: Default Sort option that keeps the manager's order for the folder"
+    },
+    "settings_managerDefaultSortBrowser": {
+        "message": "浏览器顺序",
+        "description": "Settings: Default Sort option that turns on Browser order"
+    },
+    "settings_managerDefaultSortTitleAsc": {
+        "message": "标题，A 到 Z",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortTitleDesc": {
+        "message": "标题，Z 到 A",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortUrlAsc": {
+        "message": "网址，A 到 Z",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortNewest": {
+        "message": "添加日期，最新的在前",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortOldest": {
+        "message": "添加日期，最早的在前",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_sectionManagerCards": {
+        "message": "卡片",
+        "description": "Settings: heading of the section with what the manager's cards view shows"
+    },
+    "settings_managerCardFields": {
+        "message": "卡片内容",
+        "description": "Options > Behavior > Cards: panel title for what each card shows"
+    },
+    "settings_managerCardFieldsDesc": {
+        "message": "每张卡片在标题下方显示的内容及其顺序。排在第一位的封面会显示在标题上方。保存在此设备上。",
+        "description": "Options > Behavior > Cards: description of the card details panel"
+    },
+    "settings_managerCardSize": {
+        "message": "卡片大小",
+        "description": "Setting label: how wide the manager's cards are at least"
+    },
+    "settings_managerCardSizeDesc": {
+        "message": "卡片的最小宽度；卡片视图每行会放下尽可能多的卡片。保存在此设备上。",
+        "description": "Settings: description of Card Size"
+    },
+    "settings_managerCardSizeSmall": {
+        "message": "小",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeMedium": {
+        "message": "中",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeLarge": {
+        "message": "大",
+        "description": "Settings: Card Size option"
+    },
+    "settings_cardMaxTags": {
+        "message": "每张卡片的标签数",
+        "description": "Setting label: how many tag chips a card shows"
+    },
+    "settings_cardMaxTagsDesc": {
+        "message": "卡片显示这么多个标签，其余的显示为 +N。保存在此设备上。",
+        "description": "Settings: description of Tags per Card"
+    },
+    "settings_cardSummaryLines": {
+        "message": "摘要行数",
+        "description": "Setting label: how many lines of a summary a card shows"
+    },
+    "settings_cardSummaryLinesDesc": {
+        "message": "卡片显示的书签摘要行数；屏幕阅读器仍可读取完整摘要。保存在此设备上。",
+        "description": "Settings: description of Summary Lines"
+    },
+    "settings_previewFields": {
+        "message": "预览内容",
+        "description": "Options > Behavior: panel title for what a bookmark's preview shows"
+    },
+    "settings_previewFieldsDesc": {
+        "message": "书签预览在标题和网址下方显示的内容及其顺序。保存在此设备上。",
+        "description": "Options > Behavior: description of the preview details panel"
+    },
+    "settings_previewFieldCoverSource": {
+        "message": "封面来源",
+        "description": "Options > Behavior > Preview details: the line saying where the stored cover came from, with Fetch cover and Remove cover"
+    },
+    "bookmarks_resizeFolders": {
+        "message": "调整文件夹侧栏大小",
+        "description": "Bookmark manager: name of the handle that resizes the folder sidebar by dragging or with the arrow keys"
+    },
+    "bookmarks_resizeTools": {
+        "message": "调整工具侧栏大小",
+        "description": "Bookmark manager: name of the handle that resizes the Tools sidebar by dragging or with the arrow keys"
     },
     "settings_askAiDisabledActions": {
         "message": "询问 AI 可以执行的操作",

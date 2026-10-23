@@ -110,6 +110,12 @@ describe('settings config layout', () => {
     shownIn.set('askAiDisabledActions', 'ai.ask_ai');
     shownIn.set('agentBridgeDisabledActions', 'developers.agent_bridge');
     shownIn.set('managerMenuActions', 'behavior.manager_menus');
+    shownIn.set('managerOrganizeMenu', 'behavior.manager_menus');
+    shownIn.set('managerEmptySpaceMenu', 'behavior.manager_menus');
+    shownIn.set('managerPreviewMenu', 'behavior.manager_menus');
+    shownIn.set('managerDefaultColumns', 'behavior.manager_table');
+    shownIn.set('managerCardFields', 'behavior.manager_cards');
+    shownIn.set('previewFields', 'behavior.manager_preview');
     // A tool limited to one scope has no setting to show and no default in its config.
     const fixedScopes = Object.entries(TOOL_SCOPE_CAPABILITIES)
       .filter(([, capability]) => capability !== 'both')

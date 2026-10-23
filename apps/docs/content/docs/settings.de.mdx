@@ -147,6 +147,37 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | **Manageransicht** | Liste | **Liste** zeigt die Tabelle; **Karten** zeigt dieselben Zeilen als Raster aus Karten, mit derselben Auswahl, denselben Tasten und Menüs. Auch die zwei Schaltflächen neben **Ansehen** schalten um. Nur auf diesem Gerät gespeichert |
 | **Layout der Tools-Leiste** | Tabs | **Tabs** zeigt jeweils einen Bereich, **Alle** zeigt jedes Tool; **Eine Liste** zeigt alle Bereiche nacheinander. Nur auf diesem Gerät gespeichert |
 
+### Lesezeichenverwaltung [#manager-view]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Sortierung der Verwaltung** | Wie Sortierung | Die Reihenfolge, in der die Verwaltung einen Ordner zeigt, bis Sie die Tabelle nach einer Spalte sortieren: **Wie Sortierung** folgt **Sortierung** weiter oben, oder wählen Sie eine ihrer Reihenfolgen nur für die Verwaltung. Popup und Seitenleiste behalten **Sortierung** |
+| **Startordner** | Lesezeichenleiste | Der Ordner, mit dem sich die Verwaltung öffnet, wenn Sie sie ohne Ordner öffnen: die **Lesezeichenleiste**, der **Zuletzt geöffnete Ordner** auf diesem Gerät oder **Ein gewählter Ordner** (**Ordner beim Start**). Ein Ordner, den es nicht mehr gibt, öffnet die Lesezeichenleiste. Eine Adresse, die einen Ordner nennt, öffnet weiterhin diesen. Nur auf diesem Gerät gespeichert |
+| **Seitenleisten beim Öffnen** | Standard | **Standard** öffnet die Ordnerleiste und lässt die Tools-Leiste geschlossen; **Wie zuletzt** öffnet jede so, wie sie war, als Sie die Verwaltung auf diesem Gerät zuletzt benutzt haben. In beiden Fällen ziehen Sie den inneren Rand einer Seitenleiste, um ihre Breite zu ändern (oder fokussieren den Rand und nutzen die Pfeiltasten, `Umschalt` für größere Schritte, `Pos1` und `Ende`); die Breite wird auf diesem Gerät gespeichert |
+
+### Tabelle der Verwaltung [#manager-table]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Standardzeilen pro Seite** | <SettingDefault path="behavior.manager_table.page_size" /> | Zeilen pro Seite einer neuen oder zurückgesetzten Tabellenansicht. Nur auf diesem Gerät gespeichert |
+| **Standardsortierung** | Ordnerreihenfolge | Wie eine neue oder zurückgesetzte Tabellenansicht sortiert ist: in der Ordnerreihenfolge (**Sortierung der Verwaltung**), in **Browser-Reihenfolge** oder nach Titel, URL oder Hinzugefügt am. Nur auf diesem Gerät gespeichert |
+
+**Standardspalten** wählt die Spalten, die eine neue oder zurückgesetzte Tabellenansicht zeigt, in ihrer Reihenfolge: Haken Sie eine Spalte an, um sie zu zeigen, und ziehen Sie sie am Griff (oder nutzen Sie das Menü des Griffs), um sie zu verschieben. Diese Standards gelten für jeden Teil der Ansicht, den Sie in der Verwaltung nicht geändert haben (Spalten, Sortierung und Zeilen pro Seite), auch wenn Sie sie später ändern, und nach einem Zurücksetzen für die ganze Ansicht. Was Sie in der Verwaltung geändert haben, etwa eine unter **Ansehen** eingeblendete Spalte oder die Zeilen pro Seite unter der Tabelle, bleibt, wie Sie es eingestellt haben. **Tabellenansicht zurücksetzen** vergisst alle Änderungen an der Ansicht, wie **Ansehen** > **Ansicht zurücksetzen** in der Verwaltung, und **Spaltenbreiten zurücksetzen** vergisst nur die gezogenen Breiten. Nur auf diesem Gerät gespeichert.
+
+### Karten [#manager-cards]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Kartengröße** | Mittel | Die geringste Breite jeder Karte der Kartenansicht: **Klein**, **Mittel** oder **Groß**. Eine Reihe fasst so viele Karten, wie Platz haben. Nur auf diesem Gerät gespeichert |
+| **Tags pro Karte** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Eine Karte zeigt so viele Tags, danach **+N** für den Rest. Nur auf diesem Gerät gespeichert |
+| **Zeilen der Zusammenfassung** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Zeilen der Zusammenfassung eines Lesezeichens, die eine Karte zeigt; Screenreader lesen die ganze Zusammenfassung. Nur auf diesem Gerät gespeichert |
+
+**Karteninhalt** wählt, was jede Karte unter ihrem Titel zeigt, in dieser Reihenfolge: das Titelbild, die URL, den Ordnerpfad, die Tags und die Zusammenfassung (anfangs alles außer dem Ordnerpfad). Ein Titelbild an erster Stelle bleibt über dem Titel. Die Karte eines Ordners nennt immer, wie viele Elemente er enthält. Nur auf diesem Gerät gespeichert.
+
+### Vorschau [#manager-preview]
+
+**Inhalt der Vorschau** wählt, was die Vorschau eines Lesezeichens unter Titel und Adresse zeigt, in dieser Reihenfolge: das Titelbild, den Ordnerpfad, die Tags, die Zusammenfassung und die Herkunft des Titelbilds (mit **Titelbild laden** und **Titelbild entfernen**). Nur auf diesem Gerät gespeichert.
+
 ### Löschen [#deleting]
 
 | Einstellung | Standard | Wirkung |
@@ -161,7 +192,7 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 
 ### Menüs der Lesezeichenverwaltung [#manager-menus]
 
-Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs der Verwaltung zeigen, und ziehen Sie einen Befehl am Griff, um ihn innerhalb seiner Gruppe zu verschieben. Der Griff ist auch eine Schaltfläche, deren Menü den Befehl ganz nach oben, nach oben, nach unten oder ganz nach unten verschiebt, sodass es auch mit der Tastatur geht. **Standard wiederherstellen** bringt das vollständige Menü zurück. **Details ansehen** oder **Lesezeichen-ID kopieren** bleibt immer erhalten, damit das Menü für jedes Lesezeichen und jeden Ordner einen Befehl hat; wo keiner der behaltenen Befehle passt, zeigt das Menü **Keine Aktionen verfügbar**.
+Ordnen Sie jedes Menü der Verwaltung auf seinem eigenen Tab: das **Elementmenü** (Rechtsklick auf eine Zeile oder einen Ordner im Baum, oder die ⋯-Schaltfläche einer Zeile), das **Menü „Organisieren“** (⋮ in der Kopfzeile), das **Menü für leeren Bereich** (Rechtsklick unter den Zeilen) und die **Schaltflächen der Vorschau** (unter der Vorschau eines Lesezeichens; die erste ist die Hauptschaltfläche). Entfernen Sie den Haken bei einem Befehl, um ihn auszublenden; er wandert unter **Ausgeblendet**, wo ein erneuter Haken ihn am Ende wieder einfügt. Ziehen Sie einen Befehl am Griff, um ihn neu anzuordnen, oder eine **Abschnittstrennung**, um Befehle in einen anderen Abschnitt zu verschieben; der Griff ist auch eine Schaltfläche, deren Menü das Element nach ganz oben, nach oben, nach unten oder nach ganz unten verschiebt, sodass auch die Tastatur funktioniert. **Abschnittstrennung hinzufügen** fügt eine am Ende ein, die Sie nach oben schieben, und ihr ✕ entfernt sie und verbindet zwei Abschnitte. **Standard wiederherstellen** stellt nur dieses Menü wieder her. Jedes Menü behält mindestens einen Befehl, und das Elementmenü behält **Details ansehen** oder **Lesezeichen-ID kopieren**, damit es für jedes Lesezeichen und jeden Ordner einen Befehl hat; trifft keiner der behaltenen Befehle zu, zeigt das Menü **Keine Aktionen verfügbar**. Das Elementmenü wird mit Ihren übrigen Einstellungen synchronisiert; die anderen Menüs werden nur auf diesem Gerät gespeichert.
 
 ## KI [#ai]
 

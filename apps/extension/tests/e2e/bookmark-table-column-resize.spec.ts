@@ -164,7 +164,7 @@ test('resize handles work from the keyboard and long text truncates within the c
   expect(await savedSorting(extensionWorker)).toEqual([]);
 
   // Title, URL, and Date Added resize; the checkbox and row-menu columns stay fixed.
-  await expect(page.getByRole('separator')).toHaveCount(3);
+  await expect(page.getByTestId('bookmark-grid').getByRole('separator')).toHaveCount(3);
 });
 
 test('narrow tables still hide Folder Path and URL so Title stays visible', async ({

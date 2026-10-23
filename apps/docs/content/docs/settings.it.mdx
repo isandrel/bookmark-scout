@@ -147,6 +147,37 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 | **Vista della gestione preferiti** | Elenco | **Elenco** mostra la tabella; **Riquadri** mostra le stesse righe come una griglia di riquadri, con la stessa selezione, gli stessi tasti e gli stessi menu. Anche i due pulsanti accanto a **Visualizza** cambiano vista. Conservata solo su questo dispositivo |
 | **Layout della barra laterale Strumenti** | Schede | **Schede** mostra una sezione alla volta, con **Tutti** per tutti gli strumenti; **Elenco unico** mostra tutte le sezioni, una dopo l'altra. Conservato solo su questo dispositivo |
 
+### Gestione preferiti [#manager-view]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Ordinamento della gestione** | Come Ordinamento | L'ordine in cui la gestione preferiti mostra una cartella finché non ordini la tabella per una colonna: **Come Ordinamento** segue **Ordinamento** qui sopra, oppure scegli uno dei suoi ordini solo per la gestione. Il popup e il pannello laterale continuano a usare **Ordinamento** |
+| **Cartella iniziale** | Barra dei preferiti | La cartella su cui si apre la gestione preferiti quando la apri senza una cartella: la **Barra dei preferiti**, l'**Ultima cartella aperta** su questo dispositivo o **Una cartella che scelgo** (**Cartella di apertura**). Una cartella che non esiste più apre la barra dei preferiti. Un indirizzo che indica una cartella la apre comunque. Salvata solo su questo dispositivo |
+| **Barre laterali all'apertura** | Predefinito | **Predefinito** apre la barra laterale delle cartelle e lascia chiusa quella degli Strumenti; **Come le ho lasciate** apre ciascuna come era l'ultima volta che hai usato la gestione preferiti su questo dispositivo. In entrambi i casi trascina il bordo interno di una barra laterale per ridimensionarla (oppure metti a fuoco il bordo e usa le frecce, `Maiusc` per passi più grandi, `Home` e `Fine`); la larghezza resta salvata su questo dispositivo |
+
+### Tabella della gestione preferiti [#manager-table]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Righe per pagina predefinite** | <SettingDefault path="behavior.manager_table.page_size" /> | Righe per pagina di una vista tabella nuova o ripristinata. Salvata solo su questo dispositivo |
+| **Ordinamento predefinito** | Ordine della cartella | Come viene ordinata una vista tabella nuova o ripristinata: l'ordine della cartella (**Ordinamento della gestione**), **Ordine del browser**, oppure per titolo, URL o data di aggiunta. Salvato solo su questo dispositivo |
+
+**Colonne predefinite** sceglie le colonne che mostra una vista tabella nuova o ripristinata, in ordine: seleziona una colonna per mostrarla e trascinala dalla maniglia (o usa il menu della maniglia) per spostarla. Questi valori valgono per ogni parte della vista che non hai cambiato nella gestione preferiti (colonne, ordinamento e righe per pagina), anche quando li cambi in seguito, e per tutta la vista dopo un ripristino. Ciò che hai cambiato nella gestione preferiti, come una colonna mostrata da **Visualizza** o le righe per pagina sotto la tabella, resta come l'hai impostato. **Ripristina vista tabella** dimentica tutte le modifiche alla vista, come **Visualizza** > **Ripristina vista** nella gestione preferiti, e **Ripristina larghezza colonne** dimentica solo le larghezze che hai trascinato. Salvato solo su questo dispositivo.
+
+### Riquadri [#manager-cards]
+
+| Impostazione | Predefinito | Cosa fa |
+| --- | --- | --- |
+| **Dimensione dei riquadri** | Medio | La larghezza minima di ogni riquadro della vista a riquadri: **Piccolo**, **Medio** o **Grande**. Ogni riga ne contiene quanti ne entrano. Salvata solo su questo dispositivo |
+| **Tag per riquadro** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Un riquadro mostra questo numero di tag e poi **+N** per gli altri. Salvato solo su questo dispositivo |
+| **Righe del riassunto** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Righe del riassunto di un preferito mostrate da un riquadro; gli screen reader leggono tutto il riassunto. Salvato solo su questo dispositivo |
+
+**Contenuto dei riquadri** sceglie cosa mostra ogni riquadro sotto il titolo, in ordine: la copertina, l'URL, il percorso della cartella, i tag e il riassunto (tutto tranne il percorso della cartella all'inizio). Una copertina messa per prima resta sopra il titolo. Il riquadro di una cartella indica sempre quanti elementi contiene. Salvato solo su questo dispositivo.
+
+### Anteprima [#manager-preview]
+
+**Contenuto dell'anteprima** sceglie cosa mostra l'anteprima di un preferito sotto il titolo e l'indirizzo, in ordine: la copertina, il percorso della cartella, i tag, il riassunto e la provenienza della copertina (con **Recupera copertina** e **Rimuovi copertina**). Salvato solo su questo dispositivo.
+
 ### Eliminazione [#deleting]
 
 | Impostazione | Predefinito | Cosa fa |
@@ -161,7 +192,7 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 
 ### Menu della gestione preferiti [#manager-menus]
 
-Scegli quali comandi mostrano il menu contestuale e il menu ⋯ della gestione preferiti, e trascina un comando per la maniglia per riordinarlo all'interno del suo gruppo. La maniglia è anche un pulsante il cui menu sposta il comando in cima, in alto, in basso o in fondo, quindi funziona anche con la tastiera. **Ripristina predefiniti** riporta il menu completo. **Visualizza dettagli** o **Copia ID preferito** resta sempre, così il menu ha un comando per qualsiasi preferito o cartella; quando nessuno dei comandi che hai mantenuto è applicabile, il menu mostra **Nessuna azione disponibile**.
+Organizza ogni menu della gestione preferiti nella sua scheda: il **Menu degli elementi** (clic destro su una riga o su una cartella dell'albero, o il pulsante ⋯ di una riga), il **Menu Organizza** (⋮ nell'intestazione), il **Menu dello spazio vuoto** (clic destro sotto le righe) e i **Pulsanti dell'anteprima** (sotto l'anteprima di un preferito; il primo è quello principale). Deseleziona un comando per nasconderlo; passa in **Nascosti**, dove selezionandolo di nuovo torna alla fine. Trascina un comando dalla maniglia per riordinarlo, oppure trascina un **Separatore di sezione** per spostare comandi da una sezione all'altra; la maniglia è anche un pulsante il cui menu sposta l'elemento in cima, su, giù o in fondo, quindi funziona anche la tastiera. **Aggiungi separatore di sezione** ne aggiunge uno alla fine da spostare in su, e la sua ✕ lo rimuove unendo due sezioni. **Ripristina predefiniti** ripristina solo quel menu. Ogni menu conserva almeno un comando, e il menu degli elementi conserva **Visualizza dettagli** o **Copia ID preferito**, così ha sempre un comando per qualsiasi preferito o cartella; se nessuno dei comandi conservati si applica, il menu indica **Nessuna azione disponibile**. Il menu degli elementi si sincronizza con le altre impostazioni; gli altri menu restano salvati solo su questo dispositivo.
 
 ## IA [#ai]
 

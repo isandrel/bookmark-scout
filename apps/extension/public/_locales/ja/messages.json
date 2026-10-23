@@ -4796,7 +4796,7 @@
         "description": "Tooltip of the saved searches toolbar button; names its keyboard shortcut"
     },
     "savedSearches_description": {
-        "message": "現在のフィルター、並べ替え、フォルダの範囲を保存します。ブックマーク自体は保存しないため、結果は常に現在のブックマークに基づきます。このデバイスにのみ保存されます。",
+        "message": "現在のフィルター、並べ替え、フォルダの範囲を保存します。ブックマーク自体は保存しないため、結果は常に現在のブックマークに基づきます。この端末にのみ保存されます。",
         "description": "Explanation at the top of the saved searches menu"
     },
     "savedSearches_nameLabel": {
@@ -5304,7 +5304,7 @@
         "description": "Site icons enabled label"
     },
     "settings_siteIconsEnabledDesc": {
-        "message": "各Webサイトのアイコンをダウンロードするツールを表示します。保存したアイコンはこのデバイスにのみ保存されます。",
+        "message": "各Webサイトのアイコンをダウンロードするツールを表示します。保存したアイコンはこの端末にのみ保存されます。",
         "description": "Site icons enabled description"
     },
     "settings_siteIconsDefaultScope": {
@@ -6676,16 +6676,260 @@
         "description": "Name of the bookmark action that offers suggestion buttons under an answer"
     },
     "settings_managerMenuActions": {
-        "message": "ブックマークマネージャーのメニュー",
-        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+        "message": "項目メニュー",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the menu on rows and tree folders (right-click and the ⋯ button)"
     },
     "settings_managerMenuActionsDesc": {
-        "message": "右クリックメニューと ⋯ メニューに表示するコマンドと、各グループ内の順序を選びます。",
-        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+        "message": "行やツリーのフォルダを右クリックするか、行の ⋯ ボタンをクリックすると開きます。",
+        "description": "Options > Behavior > Bookmark manager menus: where the item menu opens"
     },
     "settings_managerMenuActionsKeep": {
         "message": "「$1」のうち少なくとも 1 つは常に表示されるため、どのブックマークやフォルダにもメニューのコマンドが必ずあります。",
         "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
+    },
+    "settings_managerMenus": {
+        "message": "ブックマークマネージャーのメニュー",
+        "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_managerMenusDesc": {
+        "message": "各メニューに表示するコマンド、その順序、どのセクションに置くかを選びます。コマンドやセクションの区切りをハンドルでドラッグするか、ハンドルのメニューを使って移動します。",
+        "description": "Options > Behavior: description of the bookmark manager menus panel"
+    },
+    "settings_managerMenuKeepOne": {
+        "message": "少なくとも 1 つのコマンドは表示されたままになります。",
+        "description": "Options > Behavior > Bookmark manager menus: after a menu's description; the last shown command cannot be hidden"
+    },
+    "settings_managerOrganizeMenu": {
+        "message": "整理メニュー",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the header's ⋮ Organize menu"
+    },
+    "settings_managerOrganizeMenuDesc": {
+        "message": "マネージャーのヘッダーにある ⋮ ボタン。表示中のフォルダに対して使います。",
+        "description": "Options > Behavior > Bookmark manager menus: where the Organize menu opens"
+    },
+    "settings_managerEmptySpaceMenu": {
+        "message": "空白部分のメニュー",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the right-click menu on the table's empty space"
+    },
+    "settings_managerEmptySpaceMenuDesc": {
+        "message": "行の下の空白部分を右クリックすると開きます。表示中のフォルダに対して使います。",
+        "description": "Options > Behavior > Bookmark manager menus: where the empty space menu opens"
+    },
+    "settings_managerPreviewMenu": {
+        "message": "プレビューのボタン",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the buttons under a bookmark's preview"
+    },
+    "settings_managerPreviewMenuDesc": {
+        "message": "ブックマークのプレビューの下にあるボタン。最初のボタンがメインのボタンです。",
+        "description": "Options > Behavior > Bookmark manager menus: what the preview buttons are"
+    },
+    "settings_menuSectionBreak": {
+        "message": "セクションの区切り",
+        "description": "Options > Behavior > Bookmark manager menus: a line between two sections of a menu, which the user can move or remove"
+    },
+    "settings_menuAddSectionBreak": {
+        "message": "セクションの区切りを追加",
+        "description": "Options > Behavior > Bookmark manager menus: button that adds a section break at the end of the menu"
+    },
+    "settings_menuRemoveSectionBreak": {
+        "message": "セクションの区切りを削除",
+        "description": "Options > Behavior > Bookmark manager menus: button that removes a section break, joining its two sections"
+    },
+    "settings_menuHidden": {
+        "message": "非表示",
+        "description": "Options > Behavior > Bookmark manager menus: heading of the commands the menu does not show; check one to show it again"
+    },
+    "settings_managerSortOrder": {
+        "message": "マネージャーの並び順",
+        "description": "Setting label: the order the bookmark manager shows a folder in"
+    },
+    "settings_managerSortOrderDesc": {
+        "message": "表を列で並べ替えるまで、マネージャーがフォルダを表示する順序です。",
+        "description": "Settings: description of Manager Sort Order"
+    },
+    "settings_managerSortOrderSame": {
+        "message": "並び順と同じ",
+        "description": "Settings: Manager Sort Order option that follows Sort Order in Tree and sorting"
+    },
+    "settings_managerStartFolder": {
+        "message": "開始フォルダ",
+        "description": "Setting label: the folder the bookmark manager opens on"
+    },
+    "settings_managerStartFolderDesc": {
+        "message": "フォルダを指定せずにマネージャーを開いたときに表示するフォルダです。この端末にのみ保存されます。",
+        "description": "Settings: description of Start Folder"
+    },
+    "settings_managerStartFolderBar": {
+        "message": "ブックマークバー",
+        "description": "Settings: Start Folder option, the browser's bookmarks bar"
+    },
+    "settings_managerStartFolderLast": {
+        "message": "最後に開いたフォルダ",
+        "description": "Settings: Start Folder option, the folder the manager showed last on this device"
+    },
+    "settings_managerStartFolderChosen": {
+        "message": "選んだフォルダ",
+        "description": "Settings: Start Folder option, a folder picked in the next setting"
+    },
+    "settings_managerStartFolderId": {
+        "message": "開始するフォルダ",
+        "description": "Setting label: the folder the manager opens on when Start Folder is 'A folder I choose'"
+    },
+    "settings_managerStartFolderIdDesc": {
+        "message": "このフォルダが削除された場合は、ブックマークバーを開きます。",
+        "description": "Settings: description of Folder to Start On"
+    },
+    "settings_managerSidebarsStart": {
+        "message": "開いたときのサイドバー",
+        "description": "Setting label: whether the manager's folder and Tools sidebars open as by default or as last left"
+    },
+    "settings_managerSidebarsStartDesc": {
+        "message": "フォルダとツールのサイドバーを既定の状態で開くか、前回の状態で開きます。幅はどちらでも保持されます。この端末にのみ保存されます。",
+        "description": "Settings: description of Sidebars on Open"
+    },
+    "settings_managerSidebarsStartDefault": {
+        "message": "既定",
+        "description": "Settings: Sidebars on Open option, the folder sidebar open and the Tools sidebar closed"
+    },
+    "settings_managerSidebarsStartRemember": {
+        "message": "前回の状態",
+        "description": "Settings: Sidebars on Open option, each sidebar open or closed as it was last"
+    },
+    "settings_sectionManagerTable": {
+        "message": "マネージャーの表",
+        "description": "Settings: heading of the section with the defaults of the bookmark manager's table"
+    },
+    "settings_managerDefaultColumns": {
+        "message": "既定の列",
+        "description": "Options > Behavior > Manager table: panel title for the columns a new or reset table view shows"
+    },
+    "settings_managerDefaultColumnsDesc": {
+        "message": "新しい表やリセットした表に表示する列とその順序です。この端末に保存されます。",
+        "description": "Options > Behavior > Manager table: description of the default columns panel"
+    },
+    "settings_managerTableDefaultsNote": {
+        "message": "これらの既定値は、マネージャーで変更していない表示の部分（列、並べ替え、1 ページの行数）に適用され、「表の表示をリセット」の後は表示全体に適用されます。",
+        "description": "Options > Behavior > Manager table: how the defaults relate to the view the user changed in the manager"
+    },
+    "settings_managerResetTableView": {
+        "message": "表の表示をリセット",
+        "description": "Options > Behavior > Manager table: button that forgets every change made to the manager's table view, as View > Reset view does"
+    },
+    "settings_managerResetColumnWidths": {
+        "message": "列の幅をリセット",
+        "description": "Options > Behavior > Manager table: button that forgets the column widths set on this device"
+    },
+    "settings_managerDefaultPageSize": {
+        "message": "既定の1ページの行数",
+        "description": "Setting label: rows per page of a new or reset manager table view"
+    },
+    "settings_managerDefaultPageSizeDesc": {
+        "message": "新しい表やリセットした表の 1 ページの行数です。この端末に保存されます。",
+        "description": "Settings: description of Default Rows per Page"
+    },
+    "settings_managerDefaultSort": {
+        "message": "既定の並べ替え",
+        "description": "Setting label: how a new or reset manager table view is sorted"
+    },
+    "settings_managerDefaultSortDesc": {
+        "message": "新しい表やリセットした表の並べ替え方です。この端末に保存されます。",
+        "description": "Settings: description of Default Sort"
+    },
+    "settings_managerDefaultSortNone": {
+        "message": "フォルダの順序（マネージャーの並び順）",
+        "description": "Settings: Default Sort option that keeps the manager's order for the folder"
+    },
+    "settings_managerDefaultSortBrowser": {
+        "message": "ブラウザの順序",
+        "description": "Settings: Default Sort option that turns on Browser order"
+    },
+    "settings_managerDefaultSortTitleAsc": {
+        "message": "タイトル（A→Z）",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortTitleDesc": {
+        "message": "タイトル（Z→A）",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortUrlAsc": {
+        "message": "URL（A→Z）",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortNewest": {
+        "message": "追加日（新しい順）",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortOldest": {
+        "message": "追加日（古い順）",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_sectionManagerCards": {
+        "message": "カード",
+        "description": "Settings: heading of the section with what the manager's cards view shows"
+    },
+    "settings_managerCardFields": {
+        "message": "カードの内容",
+        "description": "Options > Behavior > Cards: panel title for what each card shows"
+    },
+    "settings_managerCardFieldsDesc": {
+        "message": "各カードのタイトルの下に表示する内容とその順序です。先頭のカバー画像はタイトルの上に表示されます。この端末に保存されます。",
+        "description": "Options > Behavior > Cards: description of the card details panel"
+    },
+    "settings_managerCardSize": {
+        "message": "カードのサイズ",
+        "description": "Setting label: how wide the manager's cards are at least"
+    },
+    "settings_managerCardSizeDesc": {
+        "message": "カードの最小の幅です。カード表示では 1 行に収まるだけカードを並べます。この端末に保存されます。",
+        "description": "Settings: description of Card Size"
+    },
+    "settings_managerCardSizeSmall": {
+        "message": "小",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeMedium": {
+        "message": "中",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeLarge": {
+        "message": "大",
+        "description": "Settings: Card Size option"
+    },
+    "settings_cardMaxTags": {
+        "message": "カードのタグ数",
+        "description": "Setting label: how many tag chips a card shows"
+    },
+    "settings_cardMaxTagsDesc": {
+        "message": "カードにはこの数までタグを表示し、残りは +N で示します。この端末に保存されます。",
+        "description": "Settings: description of Tags per Card"
+    },
+    "settings_cardSummaryLines": {
+        "message": "要約の行数",
+        "description": "Setting label: how many lines of a summary a card shows"
+    },
+    "settings_cardSummaryLinesDesc": {
+        "message": "カードに表示するブックマークの要約の行数です。スクリーンリーダーは要約全体を読み上げられます。この端末に保存されます。",
+        "description": "Settings: description of Summary Lines"
+    },
+    "settings_previewFields": {
+        "message": "プレビューの内容",
+        "description": "Options > Behavior: panel title for what a bookmark's preview shows"
+    },
+    "settings_previewFieldsDesc": {
+        "message": "ブックマークのプレビューでタイトルと URL の下に表示する内容とその順序です。この端末に保存されます。",
+        "description": "Options > Behavior: description of the preview details panel"
+    },
+    "settings_previewFieldCoverSource": {
+        "message": "カバー画像の取得元",
+        "description": "Options > Behavior > Preview details: the line saying where the stored cover came from, with Fetch cover and Remove cover"
+    },
+    "bookmarks_resizeFolders": {
+        "message": "フォルダのサイドバーのサイズを変更",
+        "description": "Bookmark manager: name of the handle that resizes the folder sidebar by dragging or with the arrow keys"
+    },
+    "bookmarks_resizeTools": {
+        "message": "ツールのサイドバーのサイズを変更",
+        "description": "Bookmark manager: name of the handle that resizes the Tools sidebar by dragging or with the arrow keys"
     },
     "settings_askAiDisabledActions": {
         "message": "AI に質問でできること",
@@ -7326,7 +7570,7 @@
         "description": "Title of the History dialog in the manager."
     },
     "history_description": {
-        "message": "ブックマークの変更: Bookmark Scout が行ったものと、ほかで行われたことを検出したもの。このバージョンから、このデバイスにのみ保存されます。拡張機能がオフの間の変更は、後で 1 つの差分として表示されます。",
+        "message": "ブックマークの変更: Bookmark Scout が行ったものと、ほかで行われたことを検出したもの。このバージョンから、この端末にのみ保存されます。拡張機能がオフの間の変更は、後で 1 つの差分として表示されます。",
         "description": "Explanation under the History title."
     },
     "history_filterLabel": {

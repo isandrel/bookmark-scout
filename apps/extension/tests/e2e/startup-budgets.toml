@@ -45,7 +45,9 @@
 # Raised from 1045 on 2026-10-22 for the Smart Rules run job's command and input schemas, which the
 # job store and commands the popup's Background tasks line reads carry (1,046).
 # Raised from 1055 on 2026-10-22 for the browse capture settings in the settings schema (1,056).
-"popup.html" = 1065
+# Raised from 1065 on 2026-10-22 for the manager customization settings (menus, table defaults,
+# cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (1,070).
+"popup.html" = 1080
 # Raised from 995 on 2026-10-22 with the popup, for the same settings schema growth (996).
 # Raised from 1005 on 2026-10-22 with the popup, for the same button (1,010).
 # Raised from 1020 on 2026-10-22 for Index this page's text on the current page line (1,024).
@@ -54,7 +56,9 @@
 # Summary columns (1,036).
 # Raised from 1045 on 2026-10-22 with the popup, for the same job schemas (1,046).
 # Raised from 1055 on 2026-10-22 for the browse capture settings in the settings schema (1,056).
-"sidepanel.html" = 1065
+# Raised from 1065 on 2026-10-22 for the manager customization settings (menus, table defaults,
+# cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (1,070).
+"sidepanel.html" = 1080
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
@@ -85,7 +89,9 @@
 # Source, the limits shown while it is on, and the private window note (1,267).
 # Raised from 1275 on 2026-10-22 for the manager list's Cover column defaults in the settings
 # config on top of the quick save cover settings (1,276).
-"options.html" = 1285
+# Raised from 1285 on 2026-10-22 for the manager customization settings (menus, table defaults,
+# cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (1,292).
+"options.html" = 1300
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
@@ -114,7 +120,9 @@
 # the Index Page Text gaps (1,501).
 # Raised from 1510 on 2026-10-22 for cover actions (Fetch cover, Remove cover) and the cover
 # placeholder in the manager on top of the link and tag changes (1,514).
-"bookmarks.html" = 1525
+# Raised from 1525 on 2026-10-22 for the manager customization settings (menus, table defaults,
+# cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (1,535).
+"bookmarks.html" = 1545
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -125,7 +133,9 @@
 # Raised from 730 on 2026-10-22 for OR and parentheses in the search parser and the Smart Rules
 # editor's search notes (731).
 # Raised from 740 on 2026-10-22 for the Cover Source choices the settings schema reads (741).
-"agent-approval.html" = 750
+# Raised from 750 on 2026-10-22 for the manager customization settings (menus, table defaults,
+# cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (753).
+"agent-approval.html" = 760
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
 # Raised from 380 on 2026-10-21 for config/ai/agent-text.toml, which holds the answer schema text
@@ -135,7 +145,9 @@
 # redirect guesses (401).
 # Raised from 410 on 2026-10-22 for the quick save cover settings, Cover Source choices, and Cover
 # Image Quality in the settings schema every page loads (412).
-"ai-host.html" = 420
+# Raised from 420 on 2026-10-22 for the manager customization settings (menus, table defaults,
+# cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (421).
+"ai-host.html" = 430
 # The welcome page opened once after install (516 on 2026-10-14).
 # Raised from 580 on 2026-10-21 for the tooltip provider every page now mounts at its root and
 # the config modules it reads (607).
@@ -143,4 +155,6 @@
 # shared modules carry (622).
 # Raised from 630 on 2026-10-22 for the Smart Rules run status and stale-review checks on top of
 # the Index Page Text gaps (631).
-"welcome.html" = 640
+# Raised from 640 on 2026-10-22 for the manager customization settings (menus, table defaults,
+# cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (644).
+"welcome.html" = 655

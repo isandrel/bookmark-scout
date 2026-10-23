@@ -147,6 +147,37 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 | **Vue du gestionnaire** | Liste | **Liste** affiche le tableau ; **Cartes** affiche les mêmes lignes sous forme de grille de cartes, avec la même sélection, les mêmes touches et les mêmes menus. Les deux boutons à côté de **Afficher** permettent aussi de changer. Conservé sur cet appareil uniquement |
 | **Disposition de la barre latérale Outils** | Onglets | **Onglets** affiche une section à la fois, avec **Tout** pour tous les outils ; **Une liste** affiche toutes les sections à la suite. Conservé uniquement sur cet appareil |
 
+### Gestionnaire de favoris [#manager-view]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Ordre du gestionnaire** | Comme l'ordre de tri | L'ordre dans lequel le gestionnaire affiche un dossier tant que vous ne triez pas le tableau par une colonne : **Comme l'ordre de tri** suit **Ordre de tri** ci-dessus, ou choisissez l'un de ses ordres pour le gestionnaire seul. La fenêtre et le panneau latéral gardent **Ordre de tri** |
+| **Dossier de départ** | Barre de favoris | Le dossier sur lequel s'ouvre le gestionnaire quand vous l'ouvrez sans dossier : la **Barre de favoris**, le **Dernier dossier ouvert** sur cet appareil ou **Un dossier de mon choix** (**Dossier d'ouverture**). Un dossier qui n'existe plus ouvre la barre de favoris. Une adresse qui nomme un dossier l'ouvre toujours. Conservé sur cet appareil uniquement |
+| **Barres latérales à l'ouverture** | Par défaut | **Par défaut** ouvre la barre des dossiers et laisse celle des Outils fermée ; **Comme je les ai laissées** ouvre chacune comme lors de votre dernière utilisation du gestionnaire sur cet appareil. Dans les deux cas, faites glisser le bord intérieur d'une barre latérale pour la redimensionner (ou placez le focus sur le bord et utilisez les flèches, `Maj` pour de plus grands pas, `Début` et `Fin`) ; la largeur est conservée sur cet appareil |
+
+### Tableau du gestionnaire [#manager-table]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Lignes par page par défaut** | <SettingDefault path="behavior.manager_table.page_size" /> | Lignes par page d'une vue de tableau nouvelle ou réinitialisée. Conservé sur cet appareil uniquement |
+| **Tri par défaut** | Ordre du dossier | Comment une vue de tableau nouvelle ou réinitialisée est triée : l'ordre du dossier (**Ordre du gestionnaire**), **Ordre du navigateur**, ou par titre, URL ou date d'ajout. Conservé sur cet appareil uniquement |
+
+**Colonnes par défaut** choisit les colonnes qu'affiche une vue de tableau nouvelle ou réinitialisée, dans l'ordre : cochez une colonne pour l'afficher et faites-la glisser par sa poignée (ou utilisez le menu de la poignée) pour la déplacer. Ces valeurs s'appliquent à chaque partie de la vue que vous n'avez pas modifiée dans le gestionnaire (ses colonnes, son tri et ses lignes par page), y compris quand vous les changez plus tard, et à toute la vue après une réinitialisation. Ce que vous avez modifié dans le gestionnaire, comme une colonne affichée depuis **Afficher** ou les lignes par page sous le tableau, reste tel quel. **Réinitialiser la vue du tableau** oublie toutes les modifications de la vue, comme **Afficher** > **Réinitialiser l'affichage** dans le gestionnaire, et **Réinitialiser la largeur des colonnes** n'oublie que les largeurs que vous avez fait glisser. Conservé sur cet appareil uniquement.
+
+### Cartes [#manager-cards]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Taille des cartes** | Moyenne | La largeur minimale de chaque carte de la vue en cartes : **Petite**, **Moyenne** ou **Grande**. Chaque ligne en place autant que la place le permet. Conservé sur cet appareil uniquement |
+| **Étiquettes par carte** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Une carte affiche ce nombre d'étiquettes, puis **+N** pour les autres. Conservé sur cet appareil uniquement |
+| **Lignes du résumé** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Lignes du résumé d'un favori qu'affiche une carte ; les lecteurs d'écran lisent tout le résumé. Conservé sur cet appareil uniquement |
+
+**Contenu des cartes** choisit ce qu'affiche chaque carte sous son titre, dans l'ordre : la couverture, l'URL, le chemin du dossier, les étiquettes et le résumé (tout sauf le chemin du dossier au départ). Une couverture placée en premier reste au-dessus du titre. La carte d'un dossier indique toujours combien d'éléments il contient. Conservé sur cet appareil uniquement.
+
+### Aperçu [#manager-preview]
+
+**Contenu de l'aperçu** choisit ce qu'affiche l'aperçu d'un favori sous son titre et son adresse, dans l'ordre : la couverture, le chemin du dossier, les étiquettes, le résumé et la provenance de la couverture (avec **Récupérer la couverture** et **Supprimer la couverture**). Conservé sur cet appareil uniquement.
+
 ### Suppression [#deleting]
 
 | Paramètre | Valeur par défaut | Effet |
@@ -161,7 +192,7 @@ En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque rac
 
 ### Menus du gestionnaire de favoris [#manager-menus]
 
-Choisissez les commandes affichées par les menus contextuels et ⋯ du gestionnaire, et faites glisser une commande par sa poignée pour la réorganiser dans son groupe. La poignée est aussi un bouton dont le menu la place en haut, la monte, la descend ou la place en bas, ce qui fonctionne aussi au clavier. **Rétablir les valeurs par défaut** rétablit le menu complet. **Afficher les détails** ou **Copier l'ID du favori** reste toujours présent, pour que le menu propose une commande pour n'importe quel favori ou dossier ; lorsqu'aucune des commandes que vous avez conservées ne s'applique, le menu indique **Aucune action disponible**.
+Organisez chaque menu du gestionnaire dans son propre onglet : le **Menu des éléments** (clic droit sur une ligne ou un dossier de l'arborescence, ou le bouton ⋯ d'une ligne), le **Menu Organiser** (⋮ dans l'en-tête), le **Menu de l'espace vide** (clic droit sous les lignes) et les **Boutons de l'aperçu** (sous l'aperçu d'un favori ; le premier est le bouton principal). Décochez une commande pour la masquer ; elle passe dans **Masquées**, où la cocher de nouveau la remet à la fin. Faites glisser une commande par sa poignée pour la réordonner, ou un **Séparateur de section** pour faire passer des commandes d'une section à l'autre ; la poignée est aussi un bouton dont le menu déplace l'élément en haut, vers le haut, vers le bas ou en bas, donc le clavier fonctionne aussi. **Ajouter un séparateur de section** en ajoute un à la fin, à remonter, et son ✕ le supprime en réunissant deux sections. **Rétablir les valeurs par défaut** ne rétablit que ce menu. Chaque menu garde au moins une commande, et le menu des éléments garde **Afficher les détails** ou **Copier l'ID du favori**, pour avoir une commande pour tout favori ou dossier ; si aucune des commandes gardées ne s'applique, le menu indique **Aucune action disponible**. Le menu des éléments se synchronise avec vos autres paramètres ; les autres menus sont conservés sur cet appareil uniquement.
 
 ## IA [#ai]
 

@@ -15,6 +15,7 @@ import { bookmarkMetadataValue, getTagVocabulary } from '@/lib/bookmark-metadata
 import {
   bookmarkTableLayoutValue,
   bookmarkTableViewValue,
+  resolveBookmarkTableView,
 } from '@/lib/bookmark-table-view-storage';
 import { dismissedNoticesValue } from '@/lib/dismissed-notices-storage';
 import { getPromptLibrary } from '@/lib/prompt-library-storage';
@@ -296,7 +297,8 @@ describe('updating from 0.3.3', () => {
 
   it("reads 0.3.3's manager view, saved searches, folders, tags, and notices back", async () => {
     await seed0_3_3Profile();
-    const view = await bookmarkTableViewValue.get();
+    // What 0.3.3 saved is the user's; the parts it did not save follow the Options defaults.
+    const view = resolveBookmarkTableView(await bookmarkTableViewValue.get(), {});
     expect(view.sorting).toEqual([{ id: 'title', desc: false }]);
     // The Cover column, newer than 0.3.3, joins hidden right after the checkbox.
     expect(view.columnOrder.slice(0, 8)).toEqual([
@@ -315,7 +317,7 @@ describe('updating from 0.3.3', () => {
       parentId: false,
       cover: false,
     });
-    expect(await bookmarkTableLayoutValue.get()).toEqual({
+    expect(resolveBookmarkTableView({}, await bookmarkTableLayoutValue.get())).toMatchObject({
       pageSize: 20,
       columnSizing: { url: 320 },
     });

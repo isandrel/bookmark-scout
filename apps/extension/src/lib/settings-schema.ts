@@ -57,6 +57,12 @@ export type SettingsPanelId =
   | 'aboutMe'
   | 'shortcuts'
   | 'managerMenus'
+  /** Behavior > Manager table: Default Columns, with Reset table view and Reset column widths. */
+  | 'managerColumns'
+  /** Behavior > Cards: what a card shows, in order. */
+  | 'managerCardFields'
+  /** Behavior > Preview: what a bookmark's preview shows, in order. */
+  | 'previewFields'
   | 'askAiActions'
   | 'agentBridge'
   /** Maintenance: the smart rules, their own local item (src/lib/bookmark-rules-storage.ts). */
@@ -240,6 +246,60 @@ export function getSortOrderLabel(order: SortOrder): string {
     alphabetical: t('settings_sortAlphabetical'),
     folders: t('settings_sortFolders'),
   }[order];
+}
+
+/** The manager's order for a folder: the popup's Sort Order, or one of its own. */
+export const managerSortOrderSchema = z.enum(['same_as_popup', ...sortOrderSchema.options]);
+export type ManagerSortOrder = z.infer<typeof managerSortOrderSchema>;
+
+/** The folder the manager opens on when its address names none. */
+export const managerStartFolderSchema = z.enum(['bookmarks_bar', 'last', 'chosen']);
+
+/** Whether the manager's sidebars open as configured or as they were last. */
+export const managerSidebarsStartSchema = z.enum(['default', 'remember']);
+
+/** Card Size: each maps to a narrowest card in config/ui/manager-table.toml. */
+export const managerCardSizeSchema = z.enum(['small', 'medium', 'large']);
+export type ManagerCardSize = z.infer<typeof managerCardSizeSchema>;
+
+/** What a card of the manager's cards view can show below its title (`managerCardFields`). */
+export const MANAGER_CARD_FIELDS = ['cover', 'url', 'folder', 'tags', 'summary'] as const;
+export type ManagerCardField = (typeof MANAGER_CARD_FIELDS)[number];
+
+/** What a bookmark's preview can show under its title and address (`previewFields`). */
+export const PREVIEW_FIELDS = ['cover', 'folder', 'tags', 'summary', 'coverSource'] as const;
+export type PreviewField = (typeof PREVIEW_FIELDS)[number];
+
+/** The order the manager shows a folder in: its own, or the popup's when set to follow it. */
+export function resolveManagerSortOrder(manager: ManagerSortOrder, popup: SortOrder): SortOrder {
+  return manager === 'same_as_popup' ? popup : manager;
+}
+
+/** The ids of `choices` that `stored` names, once each, in its order. */
+function knownIds<T extends string>(choices: readonly T[], stored: readonly string[]): T[] {
+  return [...new Set(stored)].filter((id): id is T => (choices as readonly string[]).includes(id));
+}
+
+/** What a card shows, in order, as stored in `managerCardFields`. */
+export function getManagerCardFields(stored: readonly string[]): ManagerCardField[] {
+  return knownIds(MANAGER_CARD_FIELDS, stored);
+}
+
+/** What a bookmark's preview shows, in order, as stored in `previewFields`. */
+export function getPreviewFields(stored: readonly string[]): PreviewField[] {
+  return knownIds(PREVIEW_FIELDS, stored);
+}
+
+/** The names of the fields cards and the preview show, for Options. */
+export function getManagerFieldLabel(field: ManagerCardField | PreviewField): string {
+  return {
+    cover: t('table_columnCover'),
+    url: t('table_columnUrl'),
+    folder: t('bookmarks_detailsFolderPath'),
+    tags: t('bookmarks_metadataTags'),
+    summary: t('bookmarks_metadataSummary'),
+    coverSource: t('settings_previewFieldCoverSource'),
+  }[field];
 }
 
 export const linkOpenTargetSchema = z.enum(['new_tab', 'background_tab', 'current_tab']);
@@ -448,15 +508,31 @@ export function isQueryParamName(name: string): boolean {
   return QUERY_PARAM_NAME_PATTERN.test(name);
 }
 
-/** Bookmark action ids (`services/actions.ts`): letters only, so a stored list stays small. */
-const ACTION_ID_PATTERN = /^[A-Za-z]+$/;
+/**
+ * Ids of bookmark actions (`services/actions.ts`), table columns, and card or preview fields:
+ * letters only, so a stored list stays small. Unknown ids are left out where the list is used.
+ */
+const ID_PATTERN = /^[A-Za-z]+$/;
 
-/** A list of action ids, each at most `max_length` long, at most `max_items` of them. */
-function actionIdListField(path: string, stem: string): FieldDefinition<z.ZodType<string[]>> {
+/**
+ * Marks the first action of each section of a menu the user arranged (`services/action-menus.ts`),
+ * so sections take no entries of their own in a synced list.
+ */
+export const MENU_SECTION_START = '-';
+
+/** A menu's entries: action ids, the first of each section marked by `MENU_SECTION_START`. */
+const MENU_ENTRY_PATTERN = /^-?[A-Za-z]+$/;
+
+/** A list of ids, each at most `max_length` long, at most `max_items` of them. */
+function idListField(
+  path: string,
+  stem: string,
+  pattern: RegExp = ID_PATTERN,
+): FieldDefinition<z.ZodType<string[]>> {
   const config = configValue(path, listSettingSchema);
   const maxLength = config.max_length;
   if (maxLength === undefined) throw new Error(`settings.${path} needs max_length`);
-  const schema = z.array(z.string().max(maxLength).regex(ACTION_ID_PATTERN)).max(config.max_items);
+  const schema = z.array(z.string().max(maxLength).regex(pattern)).max(config.max_items);
   return {
     section: sectionOf(path),
     schema: schema.default(schema.parse(config.default)),
@@ -536,6 +612,24 @@ function numberListField(
       type: 'text',
       list: 'number',
       maxItems: config.max_items,
+    }),
+  };
+}
+
+/** A number picked from `values` (offered as they are), its default at `path`. */
+function numberOptionsField(
+  path: string,
+  stem: string,
+  values: readonly number[],
+): FieldDefinition<z.ZodDefault<z.ZodNumber>> {
+  const schema = z.number().refine((value) => values.includes(value), 'must be one of the options');
+  return {
+    section: sectionOf(path),
+    schema: schema.default(configValue(path, schema)) as unknown as z.ZodDefault<z.ZodNumber>,
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'select',
+      options: values.map((value) => ({ value, label: String(value) })),
     }),
   };
 }
@@ -751,18 +845,37 @@ const fields = {
   ),
   aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
-  askAiDisabledActions: actionIdListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
+  askAiDisabledActions: idListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
   agentBridgeEnabled: switchField('developers.agent_bridge.enabled', 'agentBridgeEnabled'),
   agentBridgeWrites: switchField('developers.agent_bridge.writes', 'agentBridgeWrites'),
   agentBridgeRedactUrls: switchField(
     'developers.agent_bridge.redact_urls',
     'agentBridgeRedactUrls',
   ),
-  agentBridgeDisabledActions: actionIdListField(
+  agentBridgeDisabledActions: idListField(
     'developers.agent_bridge.disabled_actions',
     'agentBridgeDisabledActions',
   ),
-  managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
+  managerMenuActions: idListField(
+    'behavior.manager_menus.actions',
+    'managerMenuActions',
+    MENU_ENTRY_PATTERN,
+  ),
+  managerOrganizeMenu: idListField(
+    'behavior.manager_menus.organize',
+    'managerOrganizeMenu',
+    MENU_ENTRY_PATTERN,
+  ),
+  managerEmptySpaceMenu: idListField(
+    'behavior.manager_menus.empty_space',
+    'managerEmptySpaceMenu',
+    MENU_ENTRY_PATTERN,
+  ),
+  managerPreviewMenu: idListField(
+    'behavior.manager_menus.preview',
+    'managerPreviewMenu',
+    MENU_ENTRY_PATTERN,
+  ),
   managerViewMode: enumField(
     'behavior.manager_view.mode',
     'managerViewMode',
@@ -772,6 +885,65 @@ const fields = {
         value
       ],
   ),
+  managerSortOrder: enumField(
+    'behavior.manager_view.sort_order',
+    'managerSortOrder',
+    managerSortOrderSchema,
+    (value) =>
+      value === 'same_as_popup' ? t('settings_managerSortOrderSame') : getSortOrderLabel(value),
+  ),
+  managerStartFolder: enumField(
+    'behavior.manager_view.start_folder',
+    'managerStartFolder',
+    managerStartFolderSchema,
+    (value) =>
+      ({
+        bookmarks_bar: t('settings_managerStartFolderBar'),
+        last: t('settings_managerStartFolderLast'),
+        chosen: t('settings_managerStartFolderChosen'),
+      })[value],
+  ),
+  managerStartFolderId: folderField(
+    'behavior.manager_view.start_folder_id',
+    'managerStartFolderId',
+  ),
+  managerSidebarsStart: enumField(
+    'behavior.manager_view.sidebars_start',
+    'managerSidebarsStart',
+    managerSidebarsStartSchema,
+    (value) =>
+      ({
+        default: t('settings_managerSidebarsStartDefault'),
+        remember: t('settings_managerSidebarsStartRemember'),
+      })[value],
+  ),
+  managerDefaultColumns: idListField('behavior.manager_table.columns', 'managerDefaultColumns'),
+  managerDefaultPageSize: numberOptionsField(
+    'behavior.manager_table.page_size',
+    'managerDefaultPageSize',
+    MANAGER_PAGE_SIZES,
+  ),
+  managerDefaultSort: enumField(
+    'behavior.manager_table.sort',
+    'managerDefaultSort',
+    z.enum(MANAGER_SORT_CHOICE_IDS),
+    (value) => t((MANAGER_SORT_CHOICES[value]?.labelKey ?? 'error_unknown') as MessageKey),
+  ),
+  managerCardFields: idListField('behavior.manager_cards.fields', 'managerCardFields'),
+  managerCardSize: enumField(
+    'behavior.manager_cards.size',
+    'managerCardSize',
+    managerCardSizeSchema,
+    (value) =>
+      ({
+        small: t('settings_managerCardSizeSmall'),
+        medium: t('settings_managerCardSizeMedium'),
+        large: t('settings_managerCardSizeLarge'),
+      })[value],
+  ),
+  cardMaxTags: numberField('behavior.manager_cards.max_tags', 'cardMaxTags'),
+  cardSummaryLines: numberField('behavior.manager_cards.summary_lines', 'cardSummaryLines'),
+  previewFields: idListField('behavior.manager_preview.fields', 'previewFields'),
   toolsSidebarLayout: enumField(
     'behavior.tools_sidebar.layout',
     'toolsSidebarLayout',
@@ -1455,8 +1627,27 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'managerView',
         labelKey: 'settings_sectionManagerView',
-        fields: ['managerViewMode'],
+        fields: [
+          'managerViewMode',
+          'managerSortOrder',
+          'managerStartFolder',
+          'managerStartFolderId',
+          'managerSidebarsStart',
+        ],
       },
+      {
+        id: 'managerTable',
+        labelKey: 'settings_sectionManagerTable',
+        fields: ['managerDefaultPageSize', 'managerDefaultSort'],
+        panel: 'managerColumns',
+      },
+      {
+        id: 'managerCards',
+        labelKey: 'settings_sectionManagerCards',
+        fields: ['managerCardSize', 'cardMaxTags', 'cardSummaryLines'],
+        panel: 'managerCardFields',
+      },
+      { id: 'managerPreview', fields: [], panel: 'previewFields' },
       {
         id: 'toolsSidebar',
         labelKey: 'settings_sectionToolsSidebar',
@@ -1761,12 +1952,21 @@ export const SETTING_SHOWN_WHEN = {
   coversBrowseMaxAgeDays: 'coversBrowseCapture',
   quickSaveCoverSource: 'quickSaveCover',
   quickSaveCoverExisting: 'quickSaveCover',
-} as const satisfies Partial<Record<keyof Settings, keyof Settings>>;
+  // The folder to start on, only while Start Folder says to use a chosen one.
+  managerStartFolderId: { key: 'managerStartFolder', equals: 'chosen' },
+} as const satisfies Partial<Record<keyof Settings, ShownWhen>>;
 
-/** Whether `key` shows with these values: always, unless the setting it depends on is off. */
+/** What a setting shows with: another setting on, or another setting at one value. */
+type ShownWhen = keyof Settings | { key: keyof Settings; equals: string };
+
+/**
+ * Whether `key` shows with these values: always, unless the setting it depends on is off (or at
+ * another value).
+ */
 export function isSettingShownWith(key: keyof Settings, values: Settings): boolean {
-  const lead = (SETTING_SHOWN_WHEN as Partial<Record<keyof Settings, keyof Settings>>)[key];
-  return lead === undefined || values[lead] === true;
+  const lead = (SETTING_SHOWN_WHEN as Partial<Record<keyof Settings, ShownWhen>>)[key];
+  if (lead === undefined) return true;
+  return typeof lead === 'string' ? values[lead] === true : values[lead.key] === lead.equals;
 }
 
 /**

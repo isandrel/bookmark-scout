@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/table/columns';
 import { DataTable } from '@/components/ui/table/data-table';
 import {
-  DEFAULT_MANAGER_COLUMN_IDS,
   getManagerColumnLayout,
   LEADING_MANAGER_COLUMN_IDS,
 } from '@/components/ui/table/table-config';
@@ -22,6 +21,7 @@ import {
   parseBookmarkTableColumns,
 } from '@/lib/bookmark-table-view-storage';
 import { type Bookmark, ItemTypeEnum } from '@/lib/manager-bookmark';
+import { defaultSettings } from '@/lib/settings-schema';
 import enMessages from '../../public/_locales/en/messages.json';
 import { createItemHost } from './action-menu-helpers';
 
@@ -77,7 +77,7 @@ describe('bookmark table column registry', () => {
   });
 
   it('shows Title, URL, and Date Added in a new view, in that order, and keeps the rest', () => {
-    expect(DEFAULT_MANAGER_COLUMN_IDS).toEqual(['title', 'url', 'dateAdded']);
+    expect(defaultSettings.managerDefaultColumns).toEqual(['title', 'url', 'dateAdded']);
     expect(DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility).toEqual({
       cover: false,
       type: false,
@@ -108,9 +108,9 @@ describe('bookmark table column registry', () => {
       'actions',
     ]);
     // Every default column is one the View menu can show and hide.
-    expect(DEFAULT_MANAGER_COLUMN_IDS.filter((id) => !HIDEABLE_COLUMN_IDS.includes(id))).toEqual(
-      [],
-    );
+    expect(
+      defaultSettings.managerDefaultColumns.filter((id) => !HIDEABLE_COLUMN_IDS.includes(id)),
+    ).toEqual([]);
   });
 
   it('keeps a saved view as the user left it', () => {
@@ -135,7 +135,7 @@ describe('bookmark table column registry', () => {
   it('offers the Cover column in the View menu, hidden at first, unsorted, and only in the list', () => {
     expect(LEADING_MANAGER_COLUMN_IDS).toEqual(['cover']);
     expect(HIDEABLE_COLUMN_IDS).toContain('cover');
-    expect(DEFAULT_MANAGER_COLUMN_IDS).not.toContain('cover');
+    expect(defaultSettings.managerDefaultColumns).not.toContain('cover');
     const cover = findBookmarkColumn('cover');
     expect(cover).toMatchObject({ labelKey: 'table_columnCover', enableSorting: false });
     expect(cover?.size).toEqual(getManagerColumnLayout('cover').size);

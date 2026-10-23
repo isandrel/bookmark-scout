@@ -1,43 +1,101 @@
 import { describe, expect, it } from 'vitest';
 import { BOOKMARK_COLUMNS } from '@/components/ui/table/columns';
 import {
+  CARD_MIN_WIDTH_PX,
   CONFIGURED_COLUMN_IDS,
   COVER_ASPECT_RATIO,
   COVER_THUMBNAIL_SIZE_PX,
-  DEFAULT_MANAGER_COLUMN_IDS,
-  DEFAULT_MANAGER_PAGE_SIZE,
   getManagerColumnLayout,
   MANAGER_PAGE_SIZES,
+  MANAGER_SORT_CHOICES,
   managerPageSizeSchema,
 } from '@/components/ui/table/table-config';
-import { DEFAULT_BOOKMARK_TABLE_VIEW } from '@/lib/bookmark-table-view-storage';
-import { defaultSettings } from '@/lib/settings-schema';
+import {
+  DEFAULT_BOOKMARK_TABLE_VIEW,
+  HIDEABLE_COLUMN_IDS,
+  isSortableBookmarkColumn,
+} from '@/lib/bookmark-table-view-storage';
+import {
+  defaultSettings,
+  getSettingsFieldMeta,
+  MANAGER_CARD_FIELDS,
+  managerCardSizeSchema,
+  PREVIEW_FIELDS,
+} from '@/lib/settings-schema';
+import enMessages from '../../public/_locales/en/messages.json';
 import { readConfigToml } from '../config-files';
 
 describe('manager table config', () => {
   const toml = readConfigToml('ui/manager-table.toml') as {
     page_sizes: number[];
-    default_page_size: number;
-    default_columns: string[];
+    sort_choices: Record<string, { column?: string; desc?: boolean; browser_order?: boolean }>;
+  };
+  const behavior = readConfigToml('settings/behavior.toml') as {
+    manager_table: { columns: { default: string[] }; page_size: number; sort: string };
   };
 
   it('offers the page sizes from the config, including the default', () => {
     expect(MANAGER_PAGE_SIZES).toEqual(toml.page_sizes);
-    expect(DEFAULT_MANAGER_PAGE_SIZE).toBe(toml.default_page_size);
-    expect(MANAGER_PAGE_SIZES).toContain(DEFAULT_MANAGER_PAGE_SIZE);
-    expect(managerPageSizeSchema.safeParse(DEFAULT_MANAGER_PAGE_SIZE).success).toBe(true);
+    expect(defaultSettings.managerDefaultPageSize).toBe(behavior.manager_table.page_size);
+    expect(MANAGER_PAGE_SIZES).toContain(defaultSettings.managerDefaultPageSize);
+    expect(managerPageSizeSchema.safeParse(defaultSettings.managerDefaultPageSize).success).toBe(
+      true,
+    );
     expect(managerPageSizeSchema.safeParse(7).success).toBe(false);
+    // Default Rows per Page offers exactly these.
+    const options = getSettingsFieldMeta().managerDefaultPageSize.options?.map((o) => o.value);
+    expect(options).toEqual(toml.page_sizes);
   });
 
   it('keeps the saved view default in step with the config', () => {
-    expect(DEFAULT_BOOKMARK_TABLE_VIEW.pageSize).toBe(DEFAULT_MANAGER_PAGE_SIZE);
-    expect(DEFAULT_MANAGER_COLUMN_IDS).toEqual(toml.default_columns);
+    expect(DEFAULT_BOOKMARK_TABLE_VIEW.pageSize).toBe(behavior.manager_table.page_size);
+    expect(defaultSettings.managerDefaultColumns).toEqual(behavior.manager_table.columns.default);
     const shown = DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder.filter(
       (id) =>
         DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility[id] !== false &&
-        DEFAULT_MANAGER_COLUMN_IDS.includes(id),
+        HIDEABLE_COLUMN_IDS.includes(id),
     );
-    expect(shown).toEqual(toml.default_columns);
+    expect(shown).toEqual(behavior.manager_table.columns.default);
+    expect(defaultSettings.managerDefaultSort).toBe(behavior.manager_table.sort);
+    expect(DEFAULT_BOOKMARK_TABLE_VIEW).toMatchObject({ sorting: [], browserOrder: false });
+  });
+
+  it('offers default sorts by columns that sort, each with a name', () => {
+    expect(Object.keys(MANAGER_SORT_CHOICES)).toEqual(Object.keys(toml.sort_choices));
+    for (const [id, choice] of Object.entries(MANAGER_SORT_CHOICES)) {
+      for (const { id: column } of choice.sorting)
+        expect(isSortableBookmarkColumn(column), id).toBe(true);
+      expect(choice.labelKey in enMessages, id).toBe(true);
+    }
+    expect(MANAGER_SORT_CHOICES.dateAddedDesc).toMatchObject({
+      sorting: [{ id: 'dateAdded', desc: true }],
+      browserOrder: false,
+    });
+    expect(MANAGER_SORT_CHOICES.browser).toMatchObject({ sorting: [], browserOrder: true });
+  });
+
+  it('offers every default column, card detail, and preview detail the settings may hold', () => {
+    const meta = getSettingsFieldMeta();
+    const fits = (
+      key: 'managerDefaultColumns' | 'managerCardFields' | 'previewFields',
+      ids: readonly string[],
+    ) => {
+      expect(ids.length, key).toBeLessThanOrEqual(meta[key].maxItems ?? 0);
+      for (const id of ids) expect(id.length, id).toBeLessThanOrEqual(meta[key].maxLength ?? 0);
+    };
+    fits('managerDefaultColumns', HIDEABLE_COLUMN_IDS);
+    fits('managerCardFields', MANAGER_CARD_FIELDS);
+    fits('previewFields', PREVIEW_FIELDS);
+    expect(
+      defaultSettings.managerCardFields.every((id) =>
+        (MANAGER_CARD_FIELDS as readonly string[]).includes(id),
+      ),
+    ).toBe(true);
+    expect(defaultSettings.previewFields).toEqual([...PREVIEW_FIELDS]);
+    // Every Card Size has a width, and they grow from small to large.
+    expect(Object.keys(CARD_MIN_WIDTH_PX)).toEqual(managerCardSizeSchema.options);
+    expect(CARD_MIN_WIDTH_PX.small).toBeLessThan(CARD_MIN_WIDTH_PX.medium);
+    expect(CARD_MIN_WIDTH_PX.medium).toBeLessThan(CARD_MIN_WIDTH_PX.large);
   });
 
   it('sizes the Cover thumbnail at the cover ratio to fit a 32px row and its fixed column', () => {
@@ -55,7 +113,7 @@ describe('manager table config', () => {
   });
 
   it('opens a new view with a page of 50 rows, so most folders fit on one page', () => {
-    expect(DEFAULT_MANAGER_PAGE_SIZE).toBe(50);
+    expect(defaultSettings.managerDefaultPageSize).toBe(50);
   });
 
   it('lists the popup tree and the manager table in the browser order by default', () => {

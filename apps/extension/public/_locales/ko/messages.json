@@ -6676,16 +6676,260 @@
         "description": "Name of the bookmark action that offers suggestion buttons under an answer"
     },
     "settings_managerMenuActions": {
-        "message": "북마크 관리자 메뉴",
-        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+        "message": "항목 메뉴",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the menu on rows and tree folders (right-click and the ⋯ button)"
     },
     "settings_managerMenuActionsDesc": {
-        "message": "오른쪽 클릭 메뉴와 ⋯ 메뉴에 표시할 명령과 각 그룹 안의 순서를 고릅니다.",
-        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+        "message": "행이나 트리의 폴더를 오른쪽 클릭하거나 행의 ⋯ 버튼을 클릭하면 열립니다.",
+        "description": "Options > Behavior > Bookmark manager menus: where the item menu opens"
     },
     "settings_managerMenuActionsKeep": {
         "message": "$1 중 하나 이상은 항상 표시되므로 어떤 북마크나 폴더에도 메뉴에 명령이 있습니다.",
         "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
+    },
+    "settings_managerMenus": {
+        "message": "북마크 관리자 메뉴",
+        "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_managerMenusDesc": {
+        "message": "각 메뉴에 표시할 명령, 순서, 어느 구역에 둘지 고릅니다. 명령이나 구역 구분선을 핸들로 끌거나 핸들의 메뉴를 사용해 옮깁니다.",
+        "description": "Options > Behavior: description of the bookmark manager menus panel"
+    },
+    "settings_managerMenuKeepOne": {
+        "message": "적어도 하나의 명령은 계속 표시됩니다.",
+        "description": "Options > Behavior > Bookmark manager menus: after a menu's description; the last shown command cannot be hidden"
+    },
+    "settings_managerOrganizeMenu": {
+        "message": "정리 메뉴",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the header's ⋮ Organize menu"
+    },
+    "settings_managerOrganizeMenuDesc": {
+        "message": "관리자 헤더의 ⋮ 버튼으로, 표시 중인 폴더에 적용됩니다.",
+        "description": "Options > Behavior > Bookmark manager menus: where the Organize menu opens"
+    },
+    "settings_managerEmptySpaceMenu": {
+        "message": "빈 공간 메뉴",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the right-click menu on the table's empty space"
+    },
+    "settings_managerEmptySpaceMenuDesc": {
+        "message": "행 아래의 빈 공간을 오른쪽 클릭하면 열리며, 표시 중인 폴더에 적용됩니다.",
+        "description": "Options > Behavior > Bookmark manager menus: where the empty space menu opens"
+    },
+    "settings_managerPreviewMenu": {
+        "message": "미리 보기 버튼",
+        "description": "Options > Behavior > Bookmark manager menus: tab for the buttons under a bookmark's preview"
+    },
+    "settings_managerPreviewMenuDesc": {
+        "message": "북마크 미리 보기 아래의 버튼입니다. 첫 번째가 기본 버튼입니다.",
+        "description": "Options > Behavior > Bookmark manager menus: what the preview buttons are"
+    },
+    "settings_menuSectionBreak": {
+        "message": "구역 구분선",
+        "description": "Options > Behavior > Bookmark manager menus: a line between two sections of a menu, which the user can move or remove"
+    },
+    "settings_menuAddSectionBreak": {
+        "message": "구역 구분선 추가",
+        "description": "Options > Behavior > Bookmark manager menus: button that adds a section break at the end of the menu"
+    },
+    "settings_menuRemoveSectionBreak": {
+        "message": "구역 구분선 삭제",
+        "description": "Options > Behavior > Bookmark manager menus: button that removes a section break, joining its two sections"
+    },
+    "settings_menuHidden": {
+        "message": "숨김",
+        "description": "Options > Behavior > Bookmark manager menus: heading of the commands the menu does not show; check one to show it again"
+    },
+    "settings_managerSortOrder": {
+        "message": "관리자 정렬 순서",
+        "description": "Setting label: the order the bookmark manager shows a folder in"
+    },
+    "settings_managerSortOrderDesc": {
+        "message": "표를 열로 정렬하기 전까지 관리자가 폴더를 보여 주는 순서입니다.",
+        "description": "Settings: description of Manager Sort Order"
+    },
+    "settings_managerSortOrderSame": {
+        "message": "정렬 순서와 같게",
+        "description": "Settings: Manager Sort Order option that follows Sort Order in Tree and sorting"
+    },
+    "settings_managerStartFolder": {
+        "message": "시작 폴더",
+        "description": "Setting label: the folder the bookmark manager opens on"
+    },
+    "settings_managerStartFolderDesc": {
+        "message": "폴더를 지정하지 않고 관리자를 열 때 표시할 폴더입니다. 이 기기에만 저장됩니다.",
+        "description": "Settings: description of Start Folder"
+    },
+    "settings_managerStartFolderBar": {
+        "message": "북마크바",
+        "description": "Settings: Start Folder option, the browser's bookmarks bar"
+    },
+    "settings_managerStartFolderLast": {
+        "message": "마지막으로 연 폴더",
+        "description": "Settings: Start Folder option, the folder the manager showed last on this device"
+    },
+    "settings_managerStartFolderChosen": {
+        "message": "직접 고른 폴더",
+        "description": "Settings: Start Folder option, a folder picked in the next setting"
+    },
+    "settings_managerStartFolderId": {
+        "message": "시작할 폴더",
+        "description": "Setting label: the folder the manager opens on when Start Folder is 'A folder I choose'"
+    },
+    "settings_managerStartFolderIdDesc": {
+        "message": "이 폴더가 삭제되면 관리자는 북마크바를 엽니다.",
+        "description": "Settings: description of Folder to Start On"
+    },
+    "settings_managerSidebarsStart": {
+        "message": "열 때의 사이드바",
+        "description": "Setting label: whether the manager's folder and Tools sidebars open as by default or as last left"
+    },
+    "settings_managerSidebarsStartDesc": {
+        "message": "폴더 사이드바와 도구 사이드바를 기본 상태로 열거나 마지막에 둔 상태로 엽니다. 너비는 어느 쪽이든 유지됩니다. 이 기기에만 저장됩니다.",
+        "description": "Settings: description of Sidebars on Open"
+    },
+    "settings_managerSidebarsStartDefault": {
+        "message": "기본값",
+        "description": "Settings: Sidebars on Open option, the folder sidebar open and the Tools sidebar closed"
+    },
+    "settings_managerSidebarsStartRemember": {
+        "message": "마지막 상태대로",
+        "description": "Settings: Sidebars on Open option, each sidebar open or closed as it was last"
+    },
+    "settings_sectionManagerTable": {
+        "message": "관리자 표",
+        "description": "Settings: heading of the section with the defaults of the bookmark manager's table"
+    },
+    "settings_managerDefaultColumns": {
+        "message": "기본 열",
+        "description": "Options > Behavior > Manager table: panel title for the columns a new or reset table view shows"
+    },
+    "settings_managerDefaultColumnsDesc": {
+        "message": "새 표 보기나 초기화한 표 보기에 표시할 열과 그 순서입니다. 이 기기에 저장됩니다.",
+        "description": "Options > Behavior > Manager table: description of the default columns panel"
+    },
+    "settings_managerTableDefaultsNote": {
+        "message": "이 기본값은 관리자에서 바꾸지 않은 보기 부분(열, 정렬, 페이지당 행 수)에 적용되며, '표 보기 초기화' 후에는 보기 전체에 적용됩니다.",
+        "description": "Options > Behavior > Manager table: how the defaults relate to the view the user changed in the manager"
+    },
+    "settings_managerResetTableView": {
+        "message": "표 보기 초기화",
+        "description": "Options > Behavior > Manager table: button that forgets every change made to the manager's table view, as View > Reset view does"
+    },
+    "settings_managerResetColumnWidths": {
+        "message": "열 너비 초기화",
+        "description": "Options > Behavior > Manager table: button that forgets the column widths set on this device"
+    },
+    "settings_managerDefaultPageSize": {
+        "message": "기본 페이지당 행 수",
+        "description": "Setting label: rows per page of a new or reset manager table view"
+    },
+    "settings_managerDefaultPageSizeDesc": {
+        "message": "새 표 보기나 초기화한 표 보기의 페이지당 행 수입니다. 이 기기에 저장됩니다.",
+        "description": "Settings: description of Default Rows per Page"
+    },
+    "settings_managerDefaultSort": {
+        "message": "기본 정렬",
+        "description": "Setting label: how a new or reset manager table view is sorted"
+    },
+    "settings_managerDefaultSortDesc": {
+        "message": "새 표 보기나 초기화한 표 보기를 정렬하는 방식입니다. 이 기기에 저장됩니다.",
+        "description": "Settings: description of Default Sort"
+    },
+    "settings_managerDefaultSortNone": {
+        "message": "폴더 순서(관리자 정렬 순서)",
+        "description": "Settings: Default Sort option that keeps the manager's order for the folder"
+    },
+    "settings_managerDefaultSortBrowser": {
+        "message": "브라우저 순서",
+        "description": "Settings: Default Sort option that turns on Browser order"
+    },
+    "settings_managerDefaultSortTitleAsc": {
+        "message": "제목, A부터 Z",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortTitleDesc": {
+        "message": "제목, Z부터 A",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortUrlAsc": {
+        "message": "URL, A부터 Z",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortNewest": {
+        "message": "추가한 날짜, 최신순",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_managerDefaultSortOldest": {
+        "message": "추가한 날짜, 오래된 순",
+        "description": "Settings: Default Sort option"
+    },
+    "settings_sectionManagerCards": {
+        "message": "카드",
+        "description": "Settings: heading of the section with what the manager's cards view shows"
+    },
+    "settings_managerCardFields": {
+        "message": "카드 내용",
+        "description": "Options > Behavior > Cards: panel title for what each card shows"
+    },
+    "settings_managerCardFieldsDesc": {
+        "message": "각 카드의 제목 아래에 표시할 내용과 그 순서입니다. 맨 앞의 표지는 제목 위에 표시됩니다. 이 기기에 저장됩니다.",
+        "description": "Options > Behavior > Cards: description of the card details panel"
+    },
+    "settings_managerCardSize": {
+        "message": "카드 크기",
+        "description": "Setting label: how wide the manager's cards are at least"
+    },
+    "settings_managerCardSizeDesc": {
+        "message": "카드의 최소 너비입니다. 카드 보기는 한 줄에 들어가는 만큼 카드를 놓습니다. 이 기기에 저장됩니다.",
+        "description": "Settings: description of Card Size"
+    },
+    "settings_managerCardSizeSmall": {
+        "message": "작게",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeMedium": {
+        "message": "보통",
+        "description": "Settings: Card Size option"
+    },
+    "settings_managerCardSizeLarge": {
+        "message": "크게",
+        "description": "Settings: Card Size option"
+    },
+    "settings_cardMaxTags": {
+        "message": "카드당 태그 수",
+        "description": "Setting label: how many tag chips a card shows"
+    },
+    "settings_cardMaxTagsDesc": {
+        "message": "카드에 이만큼 태그를 표시하고 나머지는 +N으로 보여 줍니다. 이 기기에 저장됩니다.",
+        "description": "Settings: description of Tags per Card"
+    },
+    "settings_cardSummaryLines": {
+        "message": "요약 줄 수",
+        "description": "Setting label: how many lines of a summary a card shows"
+    },
+    "settings_cardSummaryLinesDesc": {
+        "message": "카드에 표시할 북마크 요약의 줄 수입니다. 화면 낭독기는 요약 전체를 읽을 수 있습니다. 이 기기에 저장됩니다.",
+        "description": "Settings: description of Summary Lines"
+    },
+    "settings_previewFields": {
+        "message": "미리 보기 내용",
+        "description": "Options > Behavior: panel title for what a bookmark's preview shows"
+    },
+    "settings_previewFieldsDesc": {
+        "message": "북마크 미리 보기에서 제목과 주소 아래에 표시할 내용과 그 순서입니다. 이 기기에 저장됩니다.",
+        "description": "Options > Behavior: description of the preview details panel"
+    },
+    "settings_previewFieldCoverSource": {
+        "message": "표지 출처",
+        "description": "Options > Behavior > Preview details: the line saying where the stored cover came from, with Fetch cover and Remove cover"
+    },
+    "bookmarks_resizeFolders": {
+        "message": "폴더 사이드바 크기 조정",
+        "description": "Bookmark manager: name of the handle that resizes the folder sidebar by dragging or with the arrow keys"
+    },
+    "bookmarks_resizeTools": {
+        "message": "도구 사이드바 크기 조정",
+        "description": "Bookmark manager: name of the handle that resizes the Tools sidebar by dragging or with the arrow keys"
     },
     "settings_askAiDisabledActions": {
         "message": "AI에게 묻기가 할 수 있는 일",

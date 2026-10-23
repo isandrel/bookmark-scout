@@ -147,6 +147,37 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | **Vista del administrador** | Lista | **Lista** muestra la tabla; **Tarjetas** muestra las mismas filas como una cuadrícula de tarjetas, con la misma selección, teclas y menús. Los dos botones junto a **Ver** también cambian la vista. Solo se guarda en este dispositivo |
 | **Diseño de la barra lateral Herramientas** | Pestañas | **Pestañas** muestra una sección a la vez, con **Todo** para todas las herramientas; **Una lista** muestra todas las secciones seguidas. Se guarda solo en este dispositivo |
 
+### Administrador de marcadores [#manager-view]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Orden del administrador** | Igual que Orden | El orden en que el administrador muestra una carpeta hasta que ordenas la tabla por una columna: **Igual que Orden** sigue a **Orden**, más arriba, o elige uno de sus órdenes solo para el administrador. La ventana emergente y el panel lateral siguen usando **Orden** |
+| **Carpeta inicial** | Barra de marcadores | La carpeta en la que se abre el administrador cuando lo abres sin una carpeta: la **Barra de marcadores**, la **Última carpeta abierta** en este dispositivo o **Una carpeta que elijo** (**Carpeta de inicio**). Si la carpeta ya no existe, se abre la barra de marcadores. Una dirección que nombra una carpeta sigue abriéndola. Solo se guarda en este dispositivo |
+| **Barras laterales al abrir** | Predeterminado | **Predeterminado** abre la barra lateral de carpetas y deja cerrada la de Herramientas; **Como las dejé** abre cada una como estaba la última vez que usaste el administrador en este dispositivo. En ambos casos, arrastra el borde interior de una barra lateral para cambiar su ancho (o enfoca el borde y usa las flechas, `Shift` para pasos más grandes, `Inicio` y `Fin`); el ancho se guarda en este dispositivo |
+
+### Tabla del administrador [#manager-table]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Filas por página predeterminadas** | <SettingDefault path="behavior.manager_table.page_size" /> | Filas por página de una vista de tabla nueva o restablecida. Solo se guarda en este dispositivo |
+| **Orden predeterminado** | Orden de la carpeta | Cómo se ordena una vista de tabla nueva o restablecida: el orden de la carpeta (**Orden del administrador**), **Orden del navegador**, o por título, URL o fecha de creación. Solo se guarda en este dispositivo |
+
+**Columnas predeterminadas** elige las columnas que muestra una vista de tabla nueva o restablecida, en orden: marca una columna para mostrarla y arrástrala por su asa (o usa el menú del asa) para moverla. Estos valores se aplican a cada parte de la vista que no hayas cambiado en el administrador (sus columnas, el orden y las filas por página), también cuando los cambias después, y a toda la vista tras restablecerla. Lo que cambiaste en el administrador, como una columna que mostraste desde **Ver** o las filas por página bajo la tabla, queda como lo dejaste. **Restablecer vista de tabla** olvida todos los cambios de la vista, como **Ver** > **Restablecer vista** en el administrador, y **Restablecer anchos de columna** olvida solo los anchos que arrastraste. Solo se guarda en este dispositivo.
+
+### Tarjetas [#manager-cards]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Tamaño de tarjeta** | Mediano | El ancho mínimo de cada tarjeta de la vista de tarjetas: **Pequeño**, **Mediano** o **Grande**. Cada fila coloca tantas tarjetas como quepan. Solo se guarda en este dispositivo |
+| **Etiquetas por tarjeta** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Una tarjeta muestra este número de etiquetas y luego **+N** para el resto. Solo se guarda en este dispositivo |
+| **Líneas del resumen** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Líneas del resumen de un marcador que muestra una tarjeta; los lectores de pantalla leen el resumen completo. Solo se guarda en este dispositivo |
+
+**Contenido de las tarjetas** elige lo que muestra cada tarjeta bajo su título, en orden: la portada, la URL, la ruta de la carpeta, las etiquetas y el resumen (todo menos la ruta de la carpeta al principio). Una portada en primer lugar queda sobre el título. La tarjeta de una carpeta siempre dice cuántos elementos tiene. Solo se guarda en este dispositivo.
+
+### Vista previa [#manager-preview]
+
+**Contenido de la vista previa** elige lo que muestra la vista previa de un marcador bajo su título y dirección, en orden: la portada, la ruta de la carpeta, las etiquetas, el resumen y de dónde viene la portada (con **Obtener portada** y **Quitar portada**). Solo se guarda en este dispositivo.
+
 ### Eliminar [#deleting]
 
 | Ajuste | Predeterminado | Qué hace |
@@ -161,7 +192,7 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 
 ### Menús del administrador de marcadores [#manager-menus]
 
-Elige qué comandos muestran los menús contextuales y ⋯ del administrador, y arrastra un comando por su asa para reordenarlo dentro de su grupo. El asa también es un botón cuyo menú lo mueve al principio, arriba, abajo o al final, así que también funciona con el teclado. **Restablecer valores predeterminados** recupera el menú completo. **Ver detalles** o **Copiar el ID del marcador** siempre se mantiene, para que el menú tenga un comando para cualquier marcador o carpeta; cuando no se aplica ninguno de los comandos que conservaste, el menú indica **No hay acciones disponibles**.
+Organiza cada menú del administrador en su propia pestaña: el **Menú de elementos** (clic derecho en una fila o en una carpeta del árbol, o el botón ⋯ de una fila), el **Menú Organizar** (⋮ en la cabecera), el **Menú del espacio vacío** (clic derecho bajo las filas) y los **Botones de la vista previa** (bajo la vista previa de un marcador; el primero es el principal). Desmarca un comando para ocultarlo; pasa a **Ocultos**, donde al marcarlo de nuevo vuelve al final. Arrastra un comando por su asa para reordenarlo, o arrastra un **Separador de sección** para pasar comandos de una sección a otra; el asa también es un botón cuyo menú mueve el elemento arriba del todo, arriba, abajo o al final, así que también funciona con el teclado. **Añadir separador de sección** añade uno al final para que lo subas, y su ✕ lo quita y une dos secciones. **Restablecer valores predeterminados** recupera solo ese menú. Cada menú conserva al menos un comando, y el menú de elementos conserva **Ver detalles** o **Copiar el ID del marcador**, así que siempre tiene un comando para cualquier marcador o carpeta; si ninguno de los comandos que dejaste se aplica, el menú dice **No hay acciones disponibles**. El menú de elementos se sincroniza con el resto de la configuración; los demás menús solo se guardan en este dispositivo.
 
 ## IA [#ai]
 

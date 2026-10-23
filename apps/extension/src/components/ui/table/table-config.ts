@@ -1,7 +1,8 @@
 /**
- * Tunables of the bookmark manager table, from config/ui/manager-table.toml: page sizes, column
- * widths, the save delay, date filter, and filter badge limits, what the cards view shows, and the
- * Cover column's thumbnail.
+ * Tunables of the bookmark manager table, from config/ui/manager-table.toml: page sizes, the sorts a
+ * new view can start with, column widths, the save delay, date filter, and filter badge limits, the
+ * cards' widths, and the Cover column's thumbnail. What a new view shows and what a card shows are
+ * settings (config/settings/behavior.toml).
  */
 import { z } from 'zod';
 import { boundedNumber } from '@/lib/config/bounded';
@@ -20,44 +21,65 @@ const columnLayoutSchema = z.union([
     .refine((layout) => layout.min_size <= layout.size, 'min_size must not exceed size'),
 ]);
 
+/** A sort a new table view can start with: by a column, the browser's order, or neither. */
+const sortChoiceSchema = z.union([
+  z.strictObject({ column: z.string().min(1), desc: z.boolean(), label: z.string().min(1) }),
+  z.strictObject({ browser_order: z.literal(true), label: z.string().min(1) }),
+  z.strictObject({ label: z.string().min(1) }),
+]);
+
+/** Each Card Size choice's narrowest card, in pixels. */
+const cardWidthsSchema = z.strictObject({ small: pixels, medium: pixels, large: pixels });
+
 const managerTableConfig = readConfig(
   'ui/manager-table',
   z
     .strictObject({
       page_sizes: z.array(pixels).min(1),
-      default_page_size: pixels,
-      default_columns: z.array(z.string().min(1)).min(1),
       leading_columns: z.array(z.string().min(1)),
       column_sizing_save_delay_ms: z.number().int().nonnegative(),
       removed_row_focus_wait_ms: z.number().int().nonnegative(),
       date_filter_months: boundedNumber({ integer: true }),
       facet_badges_max: z.number().int().nonnegative(),
-      card_min_width_px: z.number().int().positive(),
-      card_max_tags: z.number().int().positive(),
-      card_summary_lines: z.number().int().positive(),
+      card_min_width_px: cardWidthsSchema,
       cover_aspect_ratio: z.number().positive(),
       card_placeholder_icon_px: pixels,
       column_max_tags: z.number().int().positive(),
       summary_column_lines: z.number().int().positive(),
       cover_thumbnail_height_px: pixels,
+      sort_choices: z.record(z.string().regex(/^[A-Za-z]+$/), sortChoiceSchema),
       columns: z.record(z.string(), columnLayoutSchema),
     })
-    .refine((config) => config.page_sizes.includes(config.default_page_size), {
-      message: 'default_page_size must be one of page_sizes',
-    })
-    .refine(
-      (config) => config.leading_columns.every((id) => !config.default_columns.includes(id)),
-      { message: 'leading_columns are hidden at first, so none may be in default_columns' },
-    ),
+    .refine((config) => Object.keys(config.sort_choices).length > 0, {
+      message: 'sort_choices needs at least one choice',
+    }),
 );
 
-/** Rows per page the table offers. */
+/** Rows per page the table offers, and Default Rows per Page in Options. */
 export const MANAGER_PAGE_SIZES: readonly number[] = managerTableConfig.page_sizes;
 
-export const DEFAULT_MANAGER_PAGE_SIZE = managerTableConfig.default_page_size;
+/** How a new table view is sorted: by a column, in the browser's order, or in the folder's order. */
+export type ManagerSortChoice = {
+  /** The column sort; empty keeps the folder's order. */
+  sorting: Array<{ id: string; desc: boolean }>;
+  browserOrder: boolean;
+  /** The message key of its name in Options. */
+  labelKey: string;
+};
 
-/** Column ids a new table view shows, in order; the saved view's defaults are built from them. */
-export const DEFAULT_MANAGER_COLUMN_IDS: readonly string[] = managerTableConfig.default_columns;
+/** The sorts Default Sort offers, by id, in the config's order. */
+export const MANAGER_SORT_CHOICES: Readonly<Record<string, ManagerSortChoice>> = Object.fromEntries(
+  Object.entries(managerTableConfig.sort_choices).map(([id, choice]) => [
+    id,
+    {
+      sorting: 'column' in choice ? [{ id: choice.column, desc: choice.desc }] : [],
+      browserOrder: 'browser_order' in choice,
+      labelKey: choice.label,
+    },
+  ]),
+);
+
+export const MANAGER_SORT_CHOICE_IDS = Object.keys(MANAGER_SORT_CHOICES) as [string, ...string[]];
 
 /** Hidden column ids placed right after the checkbox, before the default ones, once shown. */
 export const LEADING_MANAGER_COLUMN_IDS: readonly string[] = managerTableConfig.leading_columns;
@@ -82,14 +104,9 @@ export const DATE_FILTER_MONTHS = managerTableConfig.date_filter_months;
 /** Selected options a filter button names before it shows a count instead. */
 export const FACET_BADGES_MAX = managerTableConfig.facet_badges_max;
 
-/** The narrowest card of the cards view, in pixels. */
-export const CARD_MIN_WIDTH_PX = managerTableConfig.card_min_width_px;
-
-/** Tag chips a card shows before a "+N" chip for the rest. */
-export const CARD_MAX_TAGS = managerTableConfig.card_max_tags;
-
-/** Lines of a bookmark's summary a card shows. */
-export const CARD_SUMMARY_LINES = managerTableConfig.card_summary_lines;
+/** The Card Size choices: the narrowest card of the cards view for each, in pixels. */
+export const CARD_MIN_WIDTH_PX: Readonly<Record<'small' | 'medium' | 'large', number>> =
+  managerTableConfig.card_min_width_px;
 
 /** Width over height of a cover, and of the room a card keeps for it. */
 export const COVER_ASPECT_RATIO = managerTableConfig.cover_aspect_ratio;
