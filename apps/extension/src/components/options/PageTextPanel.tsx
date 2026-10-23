@@ -122,7 +122,8 @@ export function PageTextPanel() {
       {coverage ? (
         <ul className="space-y-1 text-sm" data-testid="page-text-coverage">
           <li>
-            {t('pageText_coverageIndexed', [
+            {/* The form follows how many can be indexed; $2 and $3 are the counts formatted. */}
+            {tPlural('pageText_coverageIndexed', coverage.eligible, [
               formatCount(coverage.indexed),
               formatCount(coverage.eligible),
             ])}

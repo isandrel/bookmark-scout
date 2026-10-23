@@ -1738,7 +1738,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Названия и значки страниц",
+        "message": "Данные страниц",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2200,11 +2200,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Названия и значки страниц",
+        "message": "Данные страниц",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Настройки инструментов, исправляющих названия страниц и значки сайтов",
+        "message": "Настройки инструментов, которые читают страницы: названия, значки сайтов, текст и обложки",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -8397,6 +8397,18 @@
         "message": "Удалено записей: $1. Оставлено, так как требуют проверки: $2.",
         "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
     },
+    "history_cleared_one": {
+        "message": "Удалена $1 запись. Оставлено, так как требуют проверки: $2.",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
+    "history_cleared_few": {
+        "message": "Удалено $1 записи. Оставлено, так как требуют проверки: $2.",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
+    "history_cleared_many": {
+        "message": "Удалено $1 записей. Оставлено, так как требуют проверки: $2.",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
     "history_loading": {
         "message": "Загрузка…",
         "description": "Shown while History records load."
@@ -8407,6 +8419,18 @@
     },
     "history_corrupt": {
         "message": "Не удалось прочитать записи, поэтому они не показаны: $1.",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_corrupt_one": {
+        "message": "Не удалось прочитать $1 запись, поэтому она не показана.",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_corrupt_few": {
+        "message": "Не удалось прочитать $1 записи, поэтому они не показаны.",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_corrupt_many": {
+        "message": "Не удалось прочитать $1 записей, поэтому они не показаны.",
         "description": "Notice when stored History records could not be read. $1 is how many."
     },
     "history_empty": {
@@ -8533,6 +8557,18 @@
         "message": "Проверено после изменения: элементов, отличающихся от результата изменения: $1.",
         "description": "History detail: $1 items did not read back as the change left them."
     },
+    "history_verifyFailed_one": {
+        "message": "Проверено после изменения: $1 элемент отличается от результата изменения.",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
+    "history_verifyFailed_few": {
+        "message": "Проверено после изменения: $1 элемента отличаются от результата изменения.",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
+    "history_verifyFailed_many": {
+        "message": "Проверено после изменения: $1 элементов отличаются от результата изменения.",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
     "history_verifyNotRun": {
         "message": "Не проверялось: ничего не изменено.",
         "description": "History detail: nothing was changed, so nothing was checked."
@@ -8573,6 +8609,18 @@
         "message": "Ещё элементов, не сохранённых в этой записи: $1.",
         "description": "History detail: $1 items of a very large change were not kept in its record."
     },
+    "history_omitted_one": {
+        "message": "Ещё $1 элемент не сохранён в этой записи.",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
+    "history_omitted_few": {
+        "message": "Ещё $1 элемента не сохранены в этой записи.",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
+    "history_omitted_many": {
+        "message": "Ещё $1 элементов не сохранены в этой записи.",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
     "history_folderGone": {
         "message": "папка, которой больше нет (id $1)",
         "description": "History: a folder that no longer exists. $1 is its old id."
@@ -8595,6 +8643,18 @@
     },
     "history_itemInside": {
         "message": "Элементов внутри: $1",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_itemInside_one": {
+        "message": "$1 элемент внутри",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_itemInside_few": {
+        "message": "$1 элемента внутри",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_itemInside_many": {
+        "message": "$1 элементов внутри",
         "description": "History item: a deleted or added folder held $1 items at every depth."
     },
     "history_changeCreate": {
@@ -8763,6 +8823,18 @@
     },
     "history_restoredPartial": {
         "message": "Восстановлено элементов: $1; не удалось вернуть, так как их папки больше нет: $2.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "history_restoredPartial_one": {
+        "message": "Восстановлен $1 элемент; не удалось вернуть, так как их папки больше нет: $2.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "history_restoredPartial_few": {
+        "message": "Восстановлено $1 элемента; не удалось вернуть, так как их папки больше нет: $2.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "history_restoredPartial_many": {
+        "message": "Восстановлено $1 элементов; не удалось вернуть, так как их папки больше нет: $2.",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
     },
     "settings_sectionDates": {
@@ -9612,8 +9684,20 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "Проиндексировано: $1 из $2 закладок, доступных для индексации",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "Проиндексировано: $2 из $3 закладок, доступных для индексации",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
+    },
+    "pageText_coverageIndexed_one": {
+        "message": "Проиндексировано: $2 из $3 закладки, доступной для индексации",
+        "description": "Page text coverage when one bookmark can be indexed (or the language's singular form). $2 indexed, $3 can be indexed."
+    },
+    "pageText_coverageIndexed_few": {
+        "message": "Проиндексировано: $2 из $3 закладок, доступных для индексации",
+        "description": "Page text coverage when the count takes the few form. $2 indexed, $3 can be indexed."
+    },
+    "pageText_coverageIndexed_many": {
+        "message": "Проиндексировано: $2 из $3 закладок, доступных для индексации",
+        "description": "Page text coverage when the count takes the many form. $2 indexed, $3 can be indexed."
     },
     "pageText_coverageStale": {
         "message": "Устарело: $1 (прочитано по прежнему адресу или старой версией; при следующем запуске будет прочитано снова)",
@@ -10178,16 +10262,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "Отмечать страницы GitHub тегом development",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "Отмечать страницы GitHub тегом $1",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "Отмечать видео YouTube тегом watch-later",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "Отмечать видео YouTube тегом $1",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "Отмечать учебные материалы тегом learning",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "Отмечать учебные материалы тегом $1",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Перемещать Work / Reading в выбранную вами папку",

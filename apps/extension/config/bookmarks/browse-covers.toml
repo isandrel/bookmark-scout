@@ -1,4 +1,4 @@
-# Capture Covers While Browsing (src/services/browse-covers.ts, Settings > Page Titles & Icons >
+# Capture Covers While Browsing (src/services/browse-covers.ts, Settings > Page Details >
 # Fetch Covers): when a bookmarked page finishes loading in the active tab of the focused window,
 # the background takes a picture of the tab, shrinks it like any cover (config/bookmarks/covers.toml
 # and the Cover Width setting), and keeps it on this device. Its wait, interval, and retake age are

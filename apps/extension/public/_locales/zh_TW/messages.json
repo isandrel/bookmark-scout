@@ -1698,7 +1698,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "頁面標題與圖示",
+        "message": "頁面詳細資料",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2160,11 +2160,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "頁面標題與圖示",
+        "message": "頁面詳細資料",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "修正頁面標題和網站圖示的工具設定",
+        "message": "從網頁讀取標題、網站圖示、內文和封面的工具設定",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -8610,8 +8610,8 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "已索引：可索引的 $2 個書籤中的 $1 個",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "已索引：可索引的 $3 個書籤中的 $2 個",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
     },
     "pageText_coverageStale": {
         "message": "已過期：$1 個（讀取自以前的網址或由舊版本讀取；下次執行時會重新讀取）",
@@ -9050,16 +9050,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "為 GitHub 網頁加上 development 標籤",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "為 GitHub 網頁加上 $1 標籤",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "為 YouTube 影片加上 watch-later 標籤",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "為 YouTube 影片加上 $1 標籤",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "為教學加上 learning 標籤",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "為教學加上 $1 標籤",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "將 Work / Reading 移到你選擇的資料夾",

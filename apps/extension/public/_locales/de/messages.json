@@ -1706,7 +1706,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Seitentitel und Symbole",
+        "message": "Seitendetails",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2168,11 +2168,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Seitentitel und Symbole",
+        "message": "Seitendetails",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Einstellungen für die Tools, die Seitentitel und Website-Symbole korrigieren",
+        "message": "Einstellungen für die Tools, die aus Seiten Titel, Website-Symbole, Text und Titelbilder holen",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -7857,6 +7857,10 @@
         "message": "$1 Einträge entfernt. $2, die noch geprüft werden müssen, behalten.",
         "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
     },
+    "history_cleared_one": {
+        "message": "$1 Eintrag entfernt. $2, die noch geprüft werden müssen, behalten.",
+        "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
+    },
     "history_loading": {
         "message": "Wird geladen…",
         "description": "Shown while History records load."
@@ -7867,6 +7871,10 @@
     },
     "history_corrupt": {
         "message": "$1 Einträge konnten nicht gelesen werden und werden nicht angezeigt.",
+        "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_corrupt_one": {
+        "message": "$1 Eintrag konnte nicht gelesen werden und wird nicht angezeigt.",
         "description": "Notice when stored History records could not be read. $1 is how many."
     },
     "history_empty": {
@@ -7993,6 +8001,10 @@
         "message": "Nach der Änderung geprüft: $1 Elemente sind nicht so, wie die Änderung sie hinterlassen hat.",
         "description": "History detail: $1 items did not read back as the change left them."
     },
+    "history_verifyFailed_one": {
+        "message": "Nach der Änderung geprüft: $1 Element ist nicht so, wie die Änderung es hinterlassen hat.",
+        "description": "History detail: $1 items did not read back as the change left them."
+    },
     "history_verifyNotRun": {
         "message": "Nicht geprüft: Es wurde nichts geändert.",
         "description": "History detail: nothing was changed, so nothing was checked."
@@ -8033,6 +8045,10 @@
         "message": "$1 weitere Elemente wurden in diesem Eintrag nicht aufbewahrt.",
         "description": "History detail: $1 items of a very large change were not kept in its record."
     },
+    "history_omitted_one": {
+        "message": "$1 weiteres Element wurde in diesem Eintrag nicht aufbewahrt.",
+        "description": "History detail: $1 items of a very large change were not kept in its record."
+    },
     "history_folderGone": {
         "message": "ein Ordner, den es nicht mehr gibt (ID $1)",
         "description": "History: a folder that no longer exists. $1 is its old id."
@@ -8055,6 +8071,10 @@
     },
     "history_itemInside": {
         "message": "$1 Elemente darin",
+        "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_itemInside_one": {
+        "message": "$1 Element darin",
         "description": "History item: a deleted or added folder held $1 items at every depth."
     },
     "history_changeCreate": {
@@ -8199,6 +8219,10 @@
     },
     "history_restoredPartial": {
         "message": "$1 Elemente wiederhergestellt; $2 konnten nicht zurückkommen, weil es ihren Ordner nicht mehr gibt.",
+        "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "history_restoredPartial_one": {
+        "message": "$1 Element wiederhergestellt; $2 konnten nicht zurückkommen, weil es ihren Ordner nicht mehr gibt.",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
     },
     "settings_sectionDates": {
@@ -8928,8 +8952,12 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "Indexiert: $1 von $2 indexierbaren Lesezeichen",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "Indexiert: $2 von $3 indexierbaren Lesezeichen",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
+    },
+    "pageText_coverageIndexed_one": {
+        "message": "Indexiert: $2 von $3 indexierbaren Lesezeichen",
+        "description": "Page text coverage when one bookmark can be indexed (or the language's singular form). $2 indexed, $3 can be indexed."
     },
     "pageText_coverageStale": {
         "message": "Veraltet: $1 (unter einer früheren Adresse oder von einer älteren Version gelesen; der nächste Lauf liest sie erneut)",
@@ -9410,16 +9438,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "GitHub-Seiten als development markieren",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "GitHub-Seiten als $1 markieren",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "YouTube-Videos als watch-later markieren",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "YouTube-Videos als $1 markieren",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "Tutorials als learning markieren",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "Tutorials als $1 markieren",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Work / Reading in einen gewählten Ordner verschieben",

@@ -76,7 +76,7 @@
         "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
-        "message": "フィルタで表示中の行をすべて選択",
+        "message": "フィルターで表示中の行をすべて選択",
         "description": "Manager shortcuts help: select every row the filters show"
     },
     "shortcuts_clearSelection": {
@@ -1186,7 +1186,7 @@
         "description": "Checkbox label limiting table filters to the current folder"
     },
     "table_currentFolderOnlyHelp": {
-        "message": "オフの場合、フィルタはすべてのブックマークを対象にします。",
+        "message": "オフの場合、フィルターはすべてのブックマークを対象にします。",
         "description": "Help text for the current-folder-only filter checkbox"
     },
     "table_resetFilters": {
@@ -1662,7 +1662,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "ページのタイトルとアイコン",
+        "message": "ページの詳細",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2124,11 +2124,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "ページのタイトルとアイコン",
+        "message": "ページの詳細",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "ページのタイトルとサイトのアイコンを直すツールの設定です",
+        "message": "ページからタイトル、サイトアイコン、本文、カバー画像を読み取るツールの設定です",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -3588,7 +3588,7 @@
         "description": "Date filter button text for a range; $1 start date, $2 end date"
     },
     "table_clearDateFilter": {
-        "message": "日付フィルタを解除",
+        "message": "日付フィルターを解除",
         "description": "Button that clears the Date Added filter"
     },
     "table_filterSelectedCount": {
@@ -3600,7 +3600,7 @@
         "description": "Empty state inside a table filter popover"
     },
     "table_filterClear": {
-        "message": "フィルタを解除",
+        "message": "フィルターを解除",
         "description": "Filter popover item that clears the selected options"
     },
     "table_filterDomains": {
@@ -3644,7 +3644,7 @@
         "description": "Why the move buttons are disabled while a column is sorted"
     },
     "table_moveNeedsFolderView": {
-        "message": "移動するにはフィルタを解除するか「現在のフォルダのみ」をオンにしてください",
+        "message": "移動するにはフィルターを解除するか「現在のフォルダのみ」をオンにしてください",
         "description": "Why the move buttons are disabled while filtering across all bookmarks"
     },
     "toast_itemsDeleted": {
@@ -8900,8 +8900,8 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "インデックス済み: インデックス可能なブックマーク $2 件中 $1 件",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "インデックス済み: インデックス可能なブックマーク $3 件中 $2 件",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
     },
     "pageText_coverageStale": {
         "message": "古い: $1 件 (以前のアドレスまたは古いバージョンで読み込んだもの。次回の実行で読み込み直します)",
@@ -9156,11 +9156,11 @@
         "description": "Fetch Covers review: description"
     },
     "tools_coversCategory_found": {
-        "message": "カバーあり ($1)",
+        "message": "カバー画像あり ($1)",
         "description": "Fetch Covers review tab: pages with a cover found; $1 is how many"
     },
     "tools_coversCategory_none": {
-        "message": "カバーなし ($1)",
+        "message": "カバー画像なし ($1)",
         "description": "Fetch Covers review tab: pages that name no usable image; $1 is how many"
     },
     "tools_coversCategory_unusable": {
@@ -9200,11 +9200,11 @@
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
     },
     "tools_coversActionSave": {
-        "message": "カバーを保存",
+        "message": "カバー画像を保存",
         "description": "Fetch Covers review: action that keeps a cover"
     },
     "tools_coversSaveSelected": {
-        "message": "$count$ 件のカバーを保存",
+        "message": "$count$ 件のカバー画像を保存",
         "description": "Fetch Covers review: button that saves the covers left on Save",
         "placeholders": {
             "count": {
@@ -9214,7 +9214,7 @@
         }
     },
     "tools_coversSaveSelected_one": {
-        "message": "$count$ 件のカバーを保存",
+        "message": "$count$ 件のカバー画像を保存",
         "description": "Fetch Covers review: button that saves the covers left on Save (singular)",
         "placeholders": {
             "count": {
@@ -9374,16 +9374,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "GitHub のページに development タグを付ける",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "GitHub のページに $1 タグを付ける",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "YouTube の動画に watch-later タグを付ける",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "YouTube の動画に $1 タグを付ける",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "チュートリアルに learning タグを付ける",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "チュートリアルに $1 タグを付ける",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Work / Reading を選んだフォルダに移動する",
@@ -10034,7 +10034,7 @@
         "description": "Options > Appearance > Popup: heading of the list of what the hover card shows."
     },
     "settings_hoverCardFieldsDesc": {
-        "message": "詳細カードに表示する項目と順序を選びます。タイトル、アドレス、カバーが先頭にある間は、一番上の行に並びます。",
+        "message": "詳細カードに表示する項目と順序を選びます。タイトル、アドレス、カバー画像が先頭にある間は、一番上の行に並びます。",
         "description": "Description of the hover card details list."
     },
     "settings_hoverCardFieldTitle": {
@@ -10046,7 +10046,7 @@
         "description": "Hover card detail: the bookmark URL."
     },
     "settings_hoverCardFieldCover": {
-        "message": "カバー",
+        "message": "カバー画像",
         "description": "Hover card detail: the stored cover image and where it came from."
     },
     "settings_hoverCardFieldTags": {

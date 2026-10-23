@@ -29,6 +29,10 @@ const TEMPLATE_NAME_KEYS: Record<BookmarkRuleTemplateId, MessageKey> = {
   reading: 'rules_templateReading',
 };
 
+/** A template's name, with the tags it adds (`$1`) from config, so no message types a tag. */
+const templateName = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) =>
+  t(TEMPLATE_NAME_KEYS[template.id], formatList(template.add_tags));
+
 const RULE_DRAFT_ERROR_KEYS = {
   name: 'rules_errorName',
   query: 'rules_errorQuery',
@@ -293,7 +297,7 @@ export function BookmarkRulesPanel() {
   );
 
   const addTemplate = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) => {
-    const name = t(TEMPLATE_NAME_KEYS[template.id]);
+    const name = templateName(template);
     // A template that moves has no folder yet: the editor opens on it to ask for one.
     if (template.move) {
       setEditing(ruleDraftOfTemplate(template, name));
@@ -342,7 +346,7 @@ export function BookmarkRulesPanel() {
             <DropdownMenuContent align="end">
               {BOOKMARK_RULE_TEMPLATES.map((template) => (
                 <DropdownMenuItem key={template.id} onClick={() => addTemplate(template)}>
-                  {t(TEMPLATE_NAME_KEYS[template.id])}
+                  {templateName(template)}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>

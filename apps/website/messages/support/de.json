@@ -40,7 +40,7 @@
                     "firefoxIcons": {
                         "q": "In Firefox fehlen Website-Symbole",
                         "a": [
-                            "Bookmark Scout zeigt die vom Browser zwischengespeicherten Symbole an, die Chrome und Edge für Erweiterungen freigeben, Firefox aber nicht. Aus demselben Grund können Websites, die Sie länger nicht besucht haben, in Chrome und Edge ein allgemeines Globus-Symbol zeigen.",
+                            "Bookmark Scout zeigt die Symbole, die „Website-Symbole aktualisieren“ gespeichert hat. In Chrome und Edge kann es auch die Symbole zeigen, die der Browser für besuchte Websites speichert: Aktivieren Sie in den Einstellungen unter „Darstellung“ die Option „Symbol-Cache des Browsers verwenden“ (standardmäßig aus). Firefox gibt seine Symbole nicht an Erweiterungen weiter, daher zeigt ein Lesezeichen dort ein allgemeines Globus-Symbol, bis „Website-Symbole aktualisieren“ das Symbol seiner Website gespeichert hat.",
                             "Führen Sie in der Tools-Leiste des Managers „Website-Symbole aktualisieren“ aus, um das Symbol jeder Website herunterzuladen. Gespeicherte Symbole bleiben auf diesem Gerät. Öffnen Sie den Manager in Firefox über „Lesezeichen-Manager öffnen“ im Pop-up der Symbolleiste."
                         ]
                     },
@@ -59,7 +59,7 @@
                         ]
                     },
                     "websiteAccess": {
-                        "q": "„Defekte Links prüfen“, der Metadatenabruf oder „Website-Symbole aktualisieren“ hat nichts geprüft",
+                        "q": "„Defekte Links prüfen“, der Metadatenabruf, „Website-Symbole aktualisieren“, „Seitentext indexieren“ oder „Titelbilder laden“ hat nichts geprüft",
                         "a": [
                             "Diese Tools benötigen Zugriff auf Websites, den Bookmark Scout bei der Installation nicht erhält. Der Browser fragt beim ersten Ausführen nach; wenn Sie ablehnen, wird nichts geprüft.",
                             "Führen Sie das Tool erneut aus und erlauben Sie den Zugriff, wenn der Browser nachfragt."

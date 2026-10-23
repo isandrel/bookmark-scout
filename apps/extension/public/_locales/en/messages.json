@@ -1706,7 +1706,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Page Titles & Icons",
+        "message": "Page Details",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2168,11 +2168,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Page Titles & Icons",
+        "message": "Page Details",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Settings for the tools that fix page titles and site icons",
+        "message": "Settings for the tools that read pages for titles, site icons, text, and covers",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -7857,6 +7857,10 @@
         "message": "Removed $1 records. Kept $2 that still need review.",
         "description": "Toast after clearing the History. $1 removed records, $2 kept because they need review."
     },
+    "history_cleared_one": {
+        "message": "Removed $1 record. Kept $2 that still need review.",
+        "description": "Toast after clearing the History when one record was removed. $2 kept because they need review."
+    },
     "history_loading": {
         "message": "Loading…",
         "description": "Shown while History records load."
@@ -7868,6 +7872,10 @@
     "history_corrupt": {
         "message": "$1 records could not be read and are not shown.",
         "description": "Notice when stored History records could not be read. $1 is how many."
+    },
+    "history_corrupt_one": {
+        "message": "$1 record could not be read and is not shown.",
+        "description": "History: one stored record could not be read."
     },
     "history_empty": {
         "message": "No changes recorded yet.",
@@ -7993,6 +8001,10 @@
         "message": "Checked after the change: $1 items are not as it left them.",
         "description": "History detail: $1 items did not read back as the change left them."
     },
+    "history_verifyFailed_one": {
+        "message": "Checked after the change: $1 item is not as it left it.",
+        "description": "History: the read-back check found one item that differs."
+    },
     "history_verifyNotRun": {
         "message": "Not checked: nothing was changed.",
         "description": "History detail: nothing was changed, so nothing was checked."
@@ -8033,6 +8045,10 @@
         "message": "$1 more items were not kept in this record.",
         "description": "History detail: $1 items of a very large change were not kept in its record."
     },
+    "history_omitted_one": {
+        "message": "$1 more item was not kept in this record.",
+        "description": "History details: one more item was not stored in the record."
+    },
     "history_folderGone": {
         "message": "a folder that no longer exists (id $1)",
         "description": "History: a folder that no longer exists. $1 is its old id."
@@ -8056,6 +8072,10 @@
     "history_itemInside": {
         "message": "$1 items inside",
         "description": "History item: a deleted or added folder held $1 items at every depth."
+    },
+    "history_itemInside_one": {
+        "message": "$1 item inside",
+        "description": "History details: a folder with one item inside."
     },
     "history_changeCreate": {
         "message": "Added",
@@ -8200,6 +8220,10 @@
     "history_restoredPartial": {
         "message": "Restored $1 items; $2 could not come back because their folder no longer exists.",
         "description": "Toast after a partial restore. $1 restored, $2 left out because their folder no longer exists."
+    },
+    "history_restoredPartial_one": {
+        "message": "Restored $1 item; $2 could not come back because their folder no longer exists.",
+        "description": "Toast after a partial restore of one item. $2 is how many could not come back."
     },
     "settings_sectionDates": {
         "message": "Dates and Times",
@@ -8928,8 +8952,12 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "Indexed: $1 of $2 bookmarks that can be indexed",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "Indexed: $2 of $3 bookmarks that can be indexed",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
+    },
+    "pageText_coverageIndexed_one": {
+        "message": "Indexed: $2 of $3 bookmark that can be indexed",
+        "description": "Page text coverage when one bookmark can be indexed (or the language's singular form). $2 indexed, $3 can be indexed."
     },
     "pageText_coverageStale": {
         "message": "Out of date: $1 (read at an earlier address or by an older version; the next run reads them again)",
@@ -9410,16 +9438,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "Tag GitHub pages as development",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "Tag GitHub pages as $1",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "Tag YouTube videos to watch later",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "Tag YouTube videos as $1",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "Tag tutorials as learning",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "Tag tutorials as $1",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Move Work / Reading to a folder you choose",

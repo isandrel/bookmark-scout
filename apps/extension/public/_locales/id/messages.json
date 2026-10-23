@@ -1690,7 +1690,7 @@
         "description": "Maintenance tools category"
     },
     "tools_category_metadata": {
-        "message": "Judul Halaman & Ikon",
+        "message": "Detail Halaman",
         "description": "Metadata tools category"
     },
     "tools_category_security": {
@@ -2152,11 +2152,11 @@
         "description": "Maintenance settings tab description"
     },
     "settings_metadataContent": {
-        "message": "Judul Halaman & Ikon",
+        "message": "Detail Halaman",
         "description": "Metadata settings tab label"
     },
     "settings_metadataContentDesc": {
-        "message": "Setelan untuk alat yang memperbaiki judul halaman dan ikon situs",
+        "message": "Setelan untuk alat yang membaca halaman untuk judul, ikon situs, teks, dan sampul",
         "description": "Metadata settings tab description"
     },
     "settings_security": {
@@ -8444,7 +8444,7 @@
         "description": "Site choice dialog: what choosing does; \"Not chosen\" is the review tab tools_pageTextCategory_notChosen"
     },
     "tools_siteChoiceFilter": {
-        "message": "Saring situs",
+        "message": "Filter situs",
         "description": "Site choice dialog: placeholder and label of the field that filters the sites by name"
     },
     "tools_siteChoiceSelectNone": {
@@ -8456,7 +8456,7 @@
         "description": "Site choice dialog: how many sites are checked; $1 is how many sites are listed, $2 how many are checked"
     },
     "tools_siteChoiceNoMatch": {
-        "message": "Tidak ada situs yang cocok dengan saringan.",
+        "message": "Tidak ada situs yang cocok dengan filter.",
         "description": "Site choice dialog: shown when no site matches the filter"
     },
     "tools_siteChoiceShowMore": {
@@ -8586,8 +8586,8 @@
         "description": "Toast after deleting the page text index"
     },
     "pageText_coverageIndexed": {
-        "message": "Terindeks: $1 dari $2 bookmark yang dapat diindeks",
-        "description": "Settings, page text index: how many bookmarks are indexed; $1 indexed, $2 bookmarks whose page can be indexed"
+        "message": "Terindeks: $2 dari $3 bookmark yang dapat diindeks",
+        "description": "Page text coverage in Options. $2 is how many bookmarks are indexed, $3 how many can be indexed (the plural form follows it); $1 is that same count unformatted, not shown."
     },
     "pageText_coverageStale": {
         "message": "Usang: $1 (dibaca dari alamat sebelumnya atau oleh versi lama; proses berikutnya membacanya lagi)",
@@ -9026,16 +9026,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "Beri tag development pada halaman GitHub",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "Beri tag $1 pada halaman GitHub",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "Beri tag watch-later pada video YouTube",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "Beri tag $1 pada video YouTube",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "Beri tag learning pada tutorial",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "Beri tag $1 pada tutorial",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Pindahkan Work / Reading ke folder pilihan Anda",

@@ -40,7 +40,7 @@
                     "firefoxIcons": {
                         "q": "Les icônes de site sont absentes dans Firefox",
                         "a": [
-                            "Bookmark Scout affiche les icônes mises en cache par le navigateur, que Chrome et Edge partagent avec les extensions, contrairement à Firefox. Pour la même raison, les sites que vous n'avez pas consultés récemment peuvent s'afficher avec un globe générique dans Chrome et Edge.",
+                            "Bookmark Scout affiche les icônes enregistrées par Actualiser les icônes de site. Dans Chrome et Edge, il peut aussi afficher les icônes que le navigateur conserve pour les sites que vous visitez : activez Utiliser le cache d'icônes du navigateur dans Paramètres, puis Apparence (désactivé par défaut). Firefox ne partage pas ses icônes avec les extensions : un favori y affiche donc un globe générique jusqu'à ce qu'Actualiser les icônes de site enregistre l'icône de son site.",
                             "Lancez Actualiser les icônes de site dans la barre latérale Outils du gestionnaire pour télécharger l'icône propre à chaque site. Les icônes enregistrées restent sur cet appareil. Dans Firefox, ouvrez le gestionnaire avec Ouvrir le gestionnaire de favoris dans la fenêtre pop-up de la barre d'outils."
                         ]
                     },
@@ -59,7 +59,7 @@
                         ]
                     },
                     "websiteAccess": {
-                        "q": "Vérifier les liens morts, Récupération des métadonnées ou Actualiser les icônes de site n'a rien analysé",
+                        "q": "Vérifier les liens morts, Récupération des métadonnées, Actualiser les icônes de site, Indexer le texte des pages ou Récupérer les couvertures n'a rien analysé",
                         "a": [
                             "Ces outils ont besoin d'accéder aux sites Web, un accès que Bookmark Scout n'obtient pas à l'installation. Le navigateur le demande la première fois que vous les lancez ; si vous refusez, rien n'est analysé.",
                             "Relancez l'outil et autorisez l'accès lorsque le navigateur le demande."

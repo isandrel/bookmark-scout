@@ -351,7 +351,7 @@ test('filters, date picker, and fallbacks are localized in Japanese', async ({
   await page.getByRole('button', { name: 'フィルター', exact: true }).click();
   await page.getByTestId('table-filters-panel').getByRole('button', { name: '種類' }).click();
   await page.getByRole('option', { name: /フォルダ/ }).click();
-  await expect(page.getByRole('option', { name: 'フィルタを解除' })).toBeVisible();
+  await expect(page.getByRole('option', { name: 'フィルターを解除' })).toBeVisible();
   await page.getByPlaceholder('種類').fill('zzz-no-match');
   await expect(page.getByText('該当する項目がありません。')).toBeVisible();
   await page.keyboard.press('Escape');

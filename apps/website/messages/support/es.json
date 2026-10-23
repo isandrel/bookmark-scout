@@ -40,7 +40,7 @@
                     "firefoxIcons": {
                         "q": "Faltan los iconos de sitios en Firefox",
                         "a": [
-                            "Bookmark Scout muestra los iconos que el propio navegador guarda en caché, que Chrome y Edge comparten con las extensiones y Firefox no. Por el mismo motivo, los sitios que no has visitado recientemente pueden mostrar un globo genérico en Chrome y Edge.",
+                            "Bookmark Scout muestra los iconos que guardó Actualizar iconos de sitios. En Chrome y Edge también puede mostrar los iconos que el navegador guarda de los sitios que visitas: activa Usar la caché de iconos del navegador en Configuración, luego Aspecto (está desactivado de forma predeterminada). Firefox no comparte sus iconos con las extensiones, así que allí un marcador muestra un globo genérico hasta que Actualizar iconos de sitios guarde el icono de su sitio.",
                             "Ejecuta Actualizar iconos de sitios en la barra lateral de herramientas del administrador para descargar el icono propio de cada sitio. Los iconos guardados se quedan en este dispositivo. En Firefox, abre el administrador con Abrir el administrador de marcadores en la ventana emergente de la barra de herramientas."
                         ]
                     },
@@ -59,7 +59,7 @@
                         ]
                     },
                     "websiteAccess": {
-                        "q": "Comprobar enlaces rotos, Extractor de metadatos o Actualizar iconos de sitios no analizó nada",
+                        "q": "Comprobar enlaces rotos, Extractor de metadatos, Actualizar iconos de sitios, Indexar texto de páginas u Obtener portadas no analizó nada",
                         "a": [
                             "Estas herramientas necesitan acceso a los sitios web, que Bookmark Scout no recibe al instalarse. El navegador lo pide la primera vez que las ejecutas y, si lo rechazas, no se analiza nada.",
                             "Vuelve a ejecutar la herramienta y permite el acceso cuando el navegador lo pida."
