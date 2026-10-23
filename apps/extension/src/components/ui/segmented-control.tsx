@@ -35,12 +35,17 @@ export function fitsSegmentedControl(options: readonly SegmentOption[]): boolean
   );
 }
 
-/** A one-click choice among a few options: a radio group drawn as joined segments. */
+/**
+ * A one-click choice among a few options: a radio group drawn as joined segments. With `wrap`,
+ * segments keep their own width and flow onto more lines from the start, for a list of tabs that
+ * may not fit one line (stretching wrapped segments left each line spaced differently).
+ */
 export function SegmentedControl({
   id,
   value,
   options,
   disabled,
+  wrap = false,
   className,
   onValueChange,
   ...aria
@@ -49,6 +54,7 @@ export function SegmentedControl({
   value: string;
   options: readonly SegmentOption[];
   disabled?: boolean;
+  wrap?: boolean;
   className?: string;
   onValueChange: (value: string) => void;
   'aria-labelledby'?: string;
@@ -62,7 +68,8 @@ export function SegmentedControl({
       onValueChange={(next) => onValueChange(String(next))}
       data-slot="segmented-control"
       className={cn(
-        'inline-flex h-8 items-stretch gap-0.5 rounded-md border border-input bg-muted p-0.5 data-disabled:opacity-50',
+        'inline-flex items-stretch gap-0.5 rounded-md border border-input bg-muted p-0.5 data-disabled:opacity-50',
+        wrap ? 'flex-wrap justify-start' : 'h-8',
         className,
       )}
       {...aria}
@@ -71,7 +78,10 @@ export function SegmentedControl({
         <Radio.Root
           key={option.value}
           value={option.value}
-          className="flex flex-auto cursor-pointer items-center justify-center rounded-[5px] px-2.5 text-xs whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-card data-checked:font-medium data-checked:text-foreground data-checked:shadow-sm data-disabled:cursor-not-allowed"
+          className={cn(
+            'flex cursor-pointer items-center justify-center rounded-[5px] px-2.5 text-xs whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-card data-checked:font-medium data-checked:text-foreground data-checked:shadow-sm data-disabled:cursor-not-allowed',
+            wrap ? 'h-7 flex-none' : 'flex-auto',
+          )}
         >
           {option.label}
         </Radio.Root>
