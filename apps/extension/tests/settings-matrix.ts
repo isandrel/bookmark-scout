@@ -585,6 +585,7 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'shows the card details and preview details the settings list, in their order',
     ),
     cards,
+  ]),
   popupBookmarkMenu: tested(
     'services/popup-row-actions.ts',
     [
