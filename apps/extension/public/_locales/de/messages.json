@@ -7822,8 +7822,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "Nach dem Schnellspeichern auch ein Titelbild für das Lesezeichen behalten: das eigene Vorschaubild der Seite oder ein Bild des Tabs, wie „Titelbildquelle beim Schnellspeichern“ es bestimmt. Wirkt nur, solange „Titelbilder laden“ aktiviert ist; das Titelbild bleibt auf diesem Gerät.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "Nach dem Schnellspeichern auch ein Titelbild für das Lesezeichen behalten: das eigene Vorschaubild der Seite oder ein Bild des Tabs, wie „Titelbildquelle beim Schnellspeichern“ es bestimmt. Standardmäßig aus; wirkt nur, solange auch „Titelbilder laden“ aktiviert ist; das Titelbild bleibt auf diesem Gerät.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "Das Bild wird beim Drücken des Tastenkürzels aufgenommen, ohne Prüfung, und zeigt alles, was die Seite zeigt, etwa eine Kontoseite oder Nachrichten. Es wird nie in privaten Fenstern aufgenommen und nie von Websites unter „Diese Websites nie aufnehmen“ oder „Diese Websites nie lesen“, und es wird nirgendwohin gesendet. Das eigene Bild der Seite wird nur von der Website der Seite oder einer Website geladen, für die Sie Zugriff erteilt haben. In der Benachrichtigung löscht „Titelbild entfernen“ das Titelbild und behält das Lesezeichen; „Rückgängig“ entfernt beides.",

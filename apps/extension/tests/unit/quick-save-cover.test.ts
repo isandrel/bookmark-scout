@@ -56,11 +56,13 @@ describe('which covers quick save tries', () => {
   it('none while the setting or Fetch Covers is off', () => {
     const settings = (overrides: Partial<Settings>) =>
       quickSaveCoverRules({ ...defaultSettings, ...overrides }).enabled;
-    // On by default, but Fetch Covers is off by default, so a default install keeps none.
-    expect(defaultSettings.quickSaveCover).toBe(true);
+    // Both are off by default, so a default install keeps none; it takes both turned on.
+    expect(defaultSettings.quickSaveCover).toBe(false);
+    expect(defaultSettings.coversEnabled).toBe(false);
     expect(settings({})).toBe(false);
-    expect(settings({ coversEnabled: true })).toBe(true);
-    expect(settings({ coversEnabled: true, quickSaveCover: false })).toBe(false);
+    expect(settings({ coversEnabled: true })).toBe(false);
+    expect(settings({ quickSaveCover: true })).toBe(false);
+    expect(settings({ coversEnabled: true, quickSaveCover: true })).toBe(true);
     expect(kinds({ enabled: false })).toEqual([]);
   });
 
@@ -73,6 +75,7 @@ describe('which covers quick save tries', () => {
     const never = quickSaveCoverRules({
       ...defaultSettings,
       coversEnabled: true,
+      quickSaveCover: true,
       pageTextExcludedSites: ['news.example.com'],
     });
     expect(
@@ -141,6 +144,7 @@ describe('a quick save cover', () => {
   const settings = (overrides: Partial<Settings> = {}): Settings => ({
     ...defaultSettings,
     coversEnabled: true,
+    quickSaveCover: true,
     coversWidthPx: 320,
     ...overrides,
   });

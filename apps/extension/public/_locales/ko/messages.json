@@ -7802,8 +7802,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "빠른 저장 후 북마크의 표지도 저장합니다. '빠른 저장 표지 출처'에 따라 페이지 자체 미리보기 이미지나 탭의 그림을 사용합니다. 표지 가져오기가 켜져 있을 때만 작동하며, 표지는 이 기기에만 저장됩니다.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "빠른 저장 후 북마크의 표지도 저장합니다. '빠른 저장 표지 출처'에 따라 페이지 자체 미리보기 이미지나 탭의 그림을 사용합니다. 기본값은 꺼짐이며, 표지 가져오기도 켜져 있을 때만 작동하고, 표지는 이 기기에만 저장됩니다.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "그림은 단축키를 누를 때 검토 없이 찍히며, 계정 페이지나 메시지처럼 페이지에 보이던 내용이 그대로 담깁니다. 시크릿 창이나 '캡처하지 않을 사이트', '읽지 않을 사이트'의 사이트에서는 찍지 않으며, 어디에도 전송하지 않습니다. 페이지 자체 이미지는 그 페이지의 사이트나 접근을 허용한 사이트에서만 내려받습니다. 알림에서 '표지 제거'는 표지만 지우고 북마크는 남기며, '실행 취소'는 둘 다 제거합니다.",

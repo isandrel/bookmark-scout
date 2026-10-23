@@ -7564,8 +7564,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "快速儲存後，同時為書籤儲存一張封面：網頁本身的預覽圖片或分頁的截圖，依「快速儲存封面來源」決定。僅在啟用取得封面時有效；封面只會保存在此裝置上。",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "快速儲存後，同時為書籤儲存一張封面：網頁本身的預覽圖片或分頁的截圖，依「快速儲存封面來源」決定。預設關閉，且僅在啟用取得封面時有效；封面只會保存在此裝置上。",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "截圖會在你按下快捷鍵時擷取，不經檢視，並包含網頁顯示的任何內容，例如帳戶頁面或訊息。私密視窗中，以及「永不擷取這些網站」或「永不讀取這些網站」中的網站都不會擷取，截圖也絕不會傳送到任何地方。網頁本身的圖片只會從該網頁的網站或你已授予存取權的網站下載。在通知中，「移除封面」會刪除封面並保留書籤；「復原」會兩者都移除。",

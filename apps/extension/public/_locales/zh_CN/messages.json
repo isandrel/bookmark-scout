@@ -7564,8 +7564,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "快速保存后，同时为书签保存一张封面：网页自带的预览图片或标签页的截图，按“快速保存封面来源”决定。仅在启用获取封面时有效；封面只保存在此设备上。",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "快速保存后，同时为书签保存一张封面：网页自带的预览图片或标签页的截图，按“快速保存封面来源”决定。默认关闭，且仅在启用获取封面时有效；封面只保存在此设备上。",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "截图在你按下快捷键时拍摄，不经预览，会包含网页显示的任何内容，例如账户页面或消息。私密窗口中、“永不捕获这些网站”或“从不读取这些网站”中的网站都不会拍摄，截图也绝不会发送到任何地方。网页自带的图片只会从该网页的网站或你已授予访问权限的网站下载。在通知中，“移除封面”会删除封面并保留书签；“撤销”会两者都移除。",

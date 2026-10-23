@@ -7540,8 +7540,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "Setelah simpan cepat, simpan juga sampul untuk bookmark: gambar pratinjau milik halaman atau gambar tab, sesuai Sumber Sampul Simpan Cepat. Hanya berfungsi saat Ambil Sampul aktif; sampul tetap di perangkat ini.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "Setelah simpan cepat, simpan juga sampul untuk bookmark: gambar pratinjau milik halaman atau gambar tab, sesuai Sumber Sampul Simpan Cepat. Nonaktif secara default; hanya berfungsi saat Ambil Sampul juga aktif; sampul tetap di perangkat ini.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "Gambar diambil saat Anda menekan pintasan, tanpa ditinjau, dan menampilkan apa pun yang ditampilkan halaman, seperti halaman akun atau pesan. Gambar tidak pernah diambil di jendela pribadi atau dari situs di Jangan Pernah Tangkap Situs Ini atau Jangan Pernah Baca Situs Ini, dan tidak pernah dikirim ke mana pun. Gambar milik halaman hanya diunduh dari situs halaman itu atau situs yang Anda beri akses. Di notifikasi, Hapus sampul menghapus sampul dan mempertahankan bookmark; Urungkan menghapus keduanya.",

@@ -8386,8 +8386,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "После быстрого сохранения закладка также получает обложку: собственное изображение предпросмотра страницы или снимок вкладки, как указано в «Источнике обложки при быстром сохранении». Работает, только когда включена загрузка обложек; обложка остаётся на этом устройстве.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "После быстрого сохранения закладка также получает обложку: собственное изображение предпросмотра страницы или снимок вкладки, как указано в «Источнике обложки при быстром сохранении». По умолчанию выключено; работает, только когда включена и загрузка обложек; обложка остаётся на этом устройстве.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "Снимок делается при нажатии сочетания клавиш, без проверки, и показывает всё, что было на странице, например страницу аккаунта или сообщения. Он никогда не делается в приватных окнах и на сайтах из списков «Никогда не снимать эти сайты» и «Никогда не читать эти сайты» и никуда не отправляется. Собственное изображение страницы загружается только с сайта страницы или с сайта, к которому вы дали доступ. В уведомлении «Удалить обложку» удаляет обложку и оставляет закладку, а «Отменить» удаляет и то и другое.",

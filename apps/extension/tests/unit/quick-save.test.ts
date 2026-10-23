@@ -662,7 +662,7 @@ describe('Save a Cover With Quick Save', () => {
   };
 
   it('keeps a picture of the tab for the new bookmark and offers Remove cover beside Undo', async () => {
-    await saveSettings({ coversEnabled: true });
+    await saveSettings({ coversEnabled: true, quickSaveCover: true });
     const record = await saveWithCover();
     const stored = await quickSaveRecordValue.get();
     expect(stored?.cover).toEqual({ source: 'quickSave' });
@@ -686,7 +686,7 @@ describe('Save a Cover With Quick Save', () => {
   });
 
   it('Undo removes the bookmark and the cover it got', async () => {
-    await saveSettings({ coversEnabled: true });
+    await saveSettings({ coversEnabled: true, quickSaveCover: true });
     const record = await saveWithCover();
     const response = await handleQuickSaveAction(
       { type: 'quick-save/action', id: record.id, action: 'undo' },
@@ -698,7 +698,7 @@ describe('Save a Cover With Quick Save', () => {
   });
 
   it('Remove cover removes only the cover, and Undo is still offered', async () => {
-    await saveSettings({ coversEnabled: true });
+    await saveSettings({ coversEnabled: true, quickSaveCover: true });
     const record = await saveWithCover();
     const response = await handleQuickSaveAction(
       { type: 'quick-save/action', id: record.id, action: 'removeCover' },

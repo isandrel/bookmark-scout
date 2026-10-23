@@ -7822,8 +7822,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "Dopo un salvataggio rapido, tiene anche una copertina per il segnalibro: l'immagine di anteprima della pagina o un'immagine della scheda, come dice Origine della copertina del salvataggio rapido. Funziona solo con Recupera copertine attivo; la copertina resta su questo dispositivo.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "Dopo un salvataggio rapido, tiene anche una copertina per il segnalibro: l'immagine di anteprima della pagina o un'immagine della scheda, come dice Origine della copertina del salvataggio rapido. Disattivato per impostazione predefinita; funziona solo con Recupera copertine anch'esso attivo; la copertina resta su questo dispositivo.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "L'immagine viene catturata quando premi la scorciatoia, senza revisione, e mostra ciò che mostra la pagina, come una pagina dell'account o dei messaggi. Non viene mai catturata nelle finestre private né dai siti in Non catturare mai questi siti o Non leggere mai questi siti, e non viene mai inviata da nessuna parte. L'immagine della pagina viene scaricata solo dal sito della pagina o da un sito a cui hai dato accesso. Nella notifica, Rimuovi copertina elimina la copertina e mantiene il segnalibro; Annulla rimuove entrambi.",

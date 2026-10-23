@@ -7822,8 +7822,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "Tras un guardado rápido, guarda también una portada para el marcador: la imagen de vista previa de la propia página o una captura de la pestaña, según Origen de la portada del guardado rápido. Solo funciona con Obtener portadas activado; la portada se queda en este dispositivo.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "Tras un guardado rápido, guarda también una portada para el marcador: la imagen de vista previa de la propia página o una captura de la pestaña, según Origen de la portada del guardado rápido. Desactivado de forma predeterminada; solo funciona con Obtener portadas también activado; la portada se queda en este dispositivo.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "La captura se toma al pulsar el atajo, sin revisión, y muestra lo que muestre la página, como una página de cuenta o mensajes. Nunca se toma en ventanas privadas ni de sitios de Nunca capturar estos sitios o No leer nunca estos sitios, y nunca se envía a ningún sitio. La imagen propia de la página solo se descarga desde el sitio de la página o desde un sitio al que diste acceso. En la notificación, Quitar portada borra la portada y conserva el marcador; Deshacer quita ambos.",

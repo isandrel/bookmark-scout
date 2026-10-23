@@ -7822,8 +7822,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "Depois de um salvamento rápido, guarda também uma capa para o favorito: a imagem de prévia da própria página ou uma captura da guia, conforme Origem da capa do salvamento rápido. Só funciona com Buscar capas ativado; a capa fica neste dispositivo.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "Depois de um salvamento rápido, guarda também uma capa para o favorito: a imagem de prévia da própria página ou uma captura da guia, conforme Origem da capa do salvamento rápido. Desativado por padrão; só funciona com Buscar capas também ativado; a capa fica neste dispositivo.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "A captura é feita quando você pressiona o atalho, sem revisão, e mostra o que a página mostrar, como uma página de conta ou mensagens. Nunca é feita em janelas privadas nem de sites em Nunca capturar estes sites ou Nunca ler estes sites, e nunca é enviada a lugar nenhum. A imagem da própria página só é baixada do site da página ou de um site ao qual você deu acesso. Na notificação, Remover capa apaga a capa e mantém o favorito; Desfazer remove os dois.",

@@ -1,5 +1,5 @@
 /**
- * Save a Cover With Quick Save: with Fetch Covers on, a quick save keeps a cover for the new
+ * Save a Cover With Quick Save (off by default, like Fetch Covers): with both on, a quick save keeps a cover for the new
  * bookmark (the page's own image first by default, else a picture of the tab), the notification
  * offers Remove cover, and Undo removes the cover with the bookmark. Off, with Fetch Covers off, or
  * with a cover source the page cannot meet, it keeps none.
@@ -116,6 +116,7 @@ test("quick save keeps the page's own image as the new bookmark's cover, and Rem
     language: 'en',
     theme: 'light',
     coversEnabled: true,
+    quickSaveCover: true,
     coversWidthPx: 320,
     // The test site is on this computer, which Skip Local Network Pages would leave out.
     readPageSkipPrivateHosts: false,
@@ -156,6 +157,7 @@ test('quick save keeps a picture of the tab when the page names no image, and Un
     language: 'en',
     theme: 'light',
     coversEnabled: true,
+    quickSaveCover: true,
     coversWidthPx: 320,
   });
   const page = await openPage(context, '/plain/Story-without-an-image');
@@ -183,12 +185,21 @@ test('quick save keeps a picture of the tab when the page names no image, and Un
 
 test('quick save keeps no cover with Save a Cover With Quick Save off, Fetch Covers off, or a cover source it cannot meet', async ({
   context,
+  extensionId,
   extensionWorker,
+  page,
 }) => {
   await setSettings(extensionWorker, { language: 'en', theme: 'light' });
+  // A fresh profile has both off.
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=search`);
+  await expect(page.getByRole('switch', { name: 'Save a Cover With Quick Save' })).toHaveAttribute(
+    'aria-checked',
+    'false',
+  );
   const cases = [
-    // Fetch Covers is off by default, so a default install keeps none.
-    { path: '/image/Covers-off', settings: {} },
+    // Nothing changed: quick save stores no cover by default.
+    { path: '/image/Default-install', settings: {} },
+    { path: '/image/Covers-off', settings: { quickSaveCover: true } },
     { path: '/image/Setting-off', settings: { coversEnabled: true, quickSaveCover: false } },
     // Quick Save Cover Source of its own: Page image only takes no picture of a page without one.
     {

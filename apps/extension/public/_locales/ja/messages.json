@@ -7802,8 +7802,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "クイック保存のあと、ブックマークのカバー画像も保存します。「クイック保存のカバー画像のソース」に従い、ページ自身のプレビュー画像かタブの画像を使います。カバー画像の取得が有効なときだけ動作し、カバー画像はこのデバイスにだけ保存されます。",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "クイック保存のあと、ブックマークのカバー画像も保存します。「クイック保存のカバー画像のソース」に従い、ページ自身のプレビュー画像かタブの画像を使います。既定はオフで、カバー画像の取得も有効なときだけ動作し、カバー画像はこのデバイスにだけ保存されます。",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "画像はショートカットを押したときに確認なしで撮影され、アカウントのページやメッセージなど、ページに表示されていたものがそのまま写ります。プライベートウィンドウや、「撮影しないサイト」「読み込まないサイト」のサイトでは撮影せず、どこにも送信しません。ページ自身の画像は、そのページのサイトか、アクセスを許可したサイトからだけダウンロードします。通知の「カバー画像を削除」はカバー画像だけを削除してブックマークを残し、「元に戻す」は両方を削除します。",

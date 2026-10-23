@@ -7822,8 +7822,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "After a quick save, also keep a cover for the bookmark: the page's own preview image or a picture of the tab, as Quick Save Cover Source says. Works only while Fetch Covers is on; the cover stays on this device.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "After a quick save, also keep a cover for the bookmark: the page's own preview image or a picture of the tab, as Quick Save Cover Source says. Off by default, and works only while Fetch Covers is also on; the cover stays on this device.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "The picture is taken when you press the shortcut, without a review, and shows whatever the page shows, such as an account page or messages. It is never taken in private windows or of sites on Never Capture These Sites or Never Read These Sites, and it is never sent anywhere. The page's own image is downloaded only from the page's site or a site you gave access to. In the notification, Remove cover deletes the cover and keeps the bookmark; Undo removes both.",

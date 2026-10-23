@@ -7822,8 +7822,8 @@
         "description": "Setting label: switch that makes quick save also keep a cover for the saved bookmark"
     },
     "settings_quickSaveCoverDesc": {
-        "message": "Après un enregistrement rapide, garde aussi une couverture pour le favori : l'image d'aperçu de la page ou une capture de l'onglet, selon Source de la couverture de l'enregistrement rapide. Fonctionne seulement si Récupérer les couvertures est activé ; la couverture reste sur cet appareil.",
-        "description": "Setting description for settings_quickSaveCover: what it keeps, that it works only while Fetch Covers is on, and that the picture stays on the device"
+        "message": "Après un enregistrement rapide, garde aussi une couverture pour le favori : l'image d'aperçu de la page ou une capture de l'onglet, selon Source de la couverture de l'enregistrement rapide. Désactivé par défaut ; fonctionne seulement si Récupérer les couvertures est aussi activé ; la couverture reste sur cet appareil.",
+        "description": "Setting description for settings_quickSaveCover: what it keeps, that it is off by default and works only while Fetch Covers is also on, and that the picture stays on the device"
     },
     "settings_quickSaveCoverHelp": {
         "message": "La capture est prise quand vous appuyez sur le raccourci, sans vérification, et montre tout ce que la page affiche, comme une page de compte ou des messages. Elle n'est jamais prise dans une fenêtre privée ni sur les sites de Ne jamais capturer ces sites ou Ne jamais lire ces sites, et n'est jamais envoyée nulle part. L'image propre à la page n'est téléchargée que depuis le site de la page ou un site auquel vous avez donné accès. Dans la notification, Supprimer la couverture efface la couverture et garde le favori ; Annuler supprime les deux.",
