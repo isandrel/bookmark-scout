@@ -163,11 +163,32 @@ describe('hover card fields', () => {
   });
 
   it('follows the order set, hides what the setting leaves out, and skips unknown ids', () => {
-    expect(getHoverCardFields(['summary', 'futureField', 'title', 'summary'])).toEqual([
+    const hideRest = HOVER_CARD_FIELDS.filter((id) => !['summary', 'title'].includes(id)).map(
+      (id) => `!${id}`,
+    );
+    expect(
+      getHoverCardFields([
+        'summary',
+        'futureField',
+        'title',
+        'summary',
+        '!futureField',
+        ...hideRest,
+      ]),
+    ).toEqual(['summary', 'title']);
+    expect(getHoverCardFields(HOVER_CARD_FIELDS.map((id) => `!${id}`))).toEqual([]);
+    // A detail the list does not name was added since it was saved: it shows after the
+    // configured detail before it.
+    expect(getHoverCardFields(['summary', 'title'])).toEqual([
       'summary',
+      'folder',
+      'dateAdded',
       'title',
+      'address',
+      'cover',
+      'tags',
     ]);
-    expect(getHoverCardFields([])).toEqual([]);
+    expect(getHoverCardFields([])).toEqual([...HOVER_CARD_FIELDS]);
   });
 });
 

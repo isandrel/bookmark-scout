@@ -22,7 +22,8 @@ function OrderedSettingPanel({
 }) {
   const { value: stored, setValue } = useSetting(setting);
   const meta = getSettingsFieldMeta()[setting];
-  const save = (next: string[]) => void setValue(next).catch(() => undefined);
+  const save = (next: string[]) => void setValue(next).catch(notifySettingNotSaved);
+  const saveShown = (shown: string[]) => save(encodeShownIds(shown, choices));
   return (
     <OrderedChoicesPanel
       id={`popup-layout-${setting}`}
@@ -32,7 +33,7 @@ function OrderedSettingPanel({
       shown={shownOf(stored)}
       labelOf={(choice) => t(labelKeys[choice] ?? 'error_unknown')}
       isLocked={(choice) => required.includes(choice)}
-      onChange={save}
+      onChange={saveShown}
       onReset={() => save([...defaultSettings[setting]])}
       isDefault={isSameJson(stored, defaultSettings[setting])}
     />

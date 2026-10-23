@@ -341,19 +341,14 @@ export function resolveManagerSortOrder(manager: ManagerSortOrder, popup: SortOr
   return manager === 'same_as_popup' ? popup : manager;
 }
 
-/** The ids of `choices` that `stored` names, once each, in its order. */
-function knownIds<T extends string>(choices: readonly T[], stored: readonly string[]): T[] {
-  return [...new Set(stored)].filter((id): id is T => (choices as readonly string[]).includes(id));
-}
-
 /** What a card shows, in order, as stored in `managerCardFields`. */
 export function getManagerCardFields(stored: readonly string[]): ManagerCardField[] {
-  return knownIds(MANAGER_CARD_FIELDS, stored);
+  return readShownIds(stored, MANAGER_CARD_FIELDS);
 }
 
 /** What a bookmark's preview shows, in order, as stored in `previewFields`. */
 export function getPreviewFields(stored: readonly string[]): PreviewField[] {
-  return knownIds(PREVIEW_FIELDS, stored);
+  return readShownIds(stored, PREVIEW_FIELDS);
 }
 
 /** The names of the fields cards and the preview show, for Options. */
@@ -593,8 +588,17 @@ const ID_PATTERN = /^[A-Za-z]+$/;
  */
 export const MENU_SECTION_START = '-';
 
-/** A menu's entries: action ids, the first of each section marked by `MENU_SECTION_START`. */
-const MENU_ENTRY_PATTERN = /^-?[A-Za-z]+$/;
+/**
+ * Entries of a list of the ids a part of a page shows (`src/lib/shown-ids.ts`): ids, those the
+ * user hid marked by `HIDDEN_ID_MARK`.
+ */
+const SHOWN_ID_PATTERN = new RegExp(`^\\${HIDDEN_ID_MARK}?[A-Za-z]+$`);
+
+/**
+ * A menu's entries: action ids, the first of each section marked by `MENU_SECTION_START` and
+ * those the user hid by `HIDDEN_ID_MARK`.
+ */
+const MENU_ENTRY_PATTERN = new RegExp(`^[\\${MENU_SECTION_START}\\${HIDDEN_ID_MARK}]?[A-Za-z]+$`);
 
 /** A list of ids, each at most `max_length` long, at most `max_items` of them. */
 function idListField(
@@ -981,7 +985,11 @@ const fields = {
     unit: 'chars',
   }),
   showHoverDetails: switchField('appearance.popup.show_hover_details', 'showHoverDetails'),
-  hoverCardFields: idListField('appearance.popup.hover_card_fields', 'hoverCardFields'),
+  hoverCardFields: idListField(
+    'appearance.popup.hover_card_fields',
+    'hoverCardFields',
+    SHOWN_ID_PATTERN,
+  ),
   treeDensity: enumField(
     'appearance.popup.tree_density',
     'treeDensity',
@@ -992,8 +1000,12 @@ const fields = {
         compact: t('settings_treeDensityCompact'),
       })[value],
   ),
-  popupSections: idListField('appearance.popup.sections', 'popupSections'),
-  popupToolbarButtons: idListField('appearance.popup.toolbar_buttons', 'popupToolbarButtons'),
+  popupSections: idListField('appearance.popup.sections', 'popupSections', SHOWN_ID_PATTERN),
+  popupToolbarButtons: idListField(
+    'appearance.popup.toolbar_buttons',
+    'popupToolbarButtons',
+    SHOWN_ID_PATTERN,
+  ),
   toastDurationMs: numberField('appearance.notifications.toast_duration_ms', 'toastDuration', {
     unit: 'ms',
     display: IN_SECONDS,
@@ -1074,8 +1086,12 @@ const fields = {
     'managerPreviewMenu',
     MENU_ENTRY_PATTERN,
   ),
-  popupBookmarkMenu: idListField('behavior.popup_menus.bookmark', 'popupBookmarkMenu'),
-  popupFolderMenu: idListField('behavior.popup_menus.folder', 'popupFolderMenu'),
+  popupBookmarkMenu: idListField(
+    'behavior.popup_menus.bookmark',
+    'popupBookmarkMenu',
+    SHOWN_ID_PATTERN,
+  ),
+  popupFolderMenu: idListField('behavior.popup_menus.folder', 'popupFolderMenu', SHOWN_ID_PATTERN),
   managerViewMode: enumField(
     'behavior.manager_view.mode',
     'managerViewMode',
@@ -1129,7 +1145,11 @@ const fields = {
     z.enum(MANAGER_SORT_CHOICE_IDS),
     (value) => t((MANAGER_SORT_CHOICES[value]?.labelKey ?? 'error_unknown') as MessageKey),
   ),
-  managerCardFields: idListField('behavior.manager_cards.fields', 'managerCardFields'),
+  managerCardFields: idListField(
+    'behavior.manager_cards.fields',
+    'managerCardFields',
+    SHOWN_ID_PATTERN,
+  ),
   managerCardSize: enumField(
     'behavior.manager_cards.size',
     'managerCardSize',
@@ -1143,7 +1163,7 @@ const fields = {
   ),
   cardMaxTags: numberField('behavior.manager_cards.max_tags', 'cardMaxTags'),
   cardSummaryLines: numberField('behavior.manager_cards.summary_lines', 'cardSummaryLines'),
-  previewFields: idListField('behavior.manager_preview.fields', 'previewFields'),
+  previewFields: idListField('behavior.manager_preview.fields', 'previewFields', SHOWN_ID_PATTERN),
   pageShortcutOverrides: shortcutOverridesField(
     'behavior.page_shortcuts.overrides',
     'pageShortcuts',
@@ -1163,7 +1183,11 @@ const fields = {
     toolSidebarTabSchema,
     getToolSidebarTabLabel,
   ),
-  toolsSidebarOrder: idListField('behavior.tools_sidebar.order', 'toolsSidebarOrder'),
+  toolsSidebarOrder: idListField(
+    'behavior.tools_sidebar.order',
+    'toolsSidebarOrder',
+    SHOWN_ID_PATTERN,
+  ),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField(
     'ai_tools.reorganization.min_items_per_folder',
@@ -1209,7 +1233,11 @@ const fields = {
     CONTEXT_MENU_CONTEXT_IDS,
     getContextMenuContextLabel,
   ),
-  contextMenuEntries: idListField('search.context_menu.entries', 'contextMenuEntries'),
+  contextMenuEntries: idListField(
+    'search.context_menu.entries',
+    'contextMenuEntries',
+    SHOWN_ID_PATTERN,
+  ),
   contextMenuRecentMax: numberField('search.context_menu.recent_max', 'contextMenuRecentMax'),
 
   quickSaveFolderStrategy: enumField(

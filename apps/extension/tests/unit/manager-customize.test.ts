@@ -159,9 +159,13 @@ describe('cards and the preview', () => {
       'tags',
       'summary',
     ]);
-    expect(getManagerCardFields(['summary', 'folder', 'summary', 'nope'])).toEqual([
-      'summary',
+    expect(
+      getManagerCardFields(['summary', 'folder', 'summary', 'nope', '!cover', '!url', '!tags']),
+    ).toEqual(['summary', 'folder']);
+    // A detail the list does not name was added since it was saved: it shows, in its place.
+    expect(getManagerCardFields(['summary', '!cover', '!url', '!tags'])).toEqual([
       'folder',
+      'summary',
     ]);
     expect(getPreviewFields(defaultSettings.previewFields)).toEqual([
       'cover',
@@ -170,7 +174,13 @@ describe('cards and the preview', () => {
       'summary',
       'coverSource',
     ]);
-    expect(getPreviewFields(['tags', 'url', 'cover'])).toEqual(['tags', 'cover']);
+    expect(
+      getPreviewFields(['tags', 'url', 'cover', '!folder', '!summary', '!coverSource']),
+    ).toEqual(['tags', 'cover']);
+    expect(getPreviewFields(['tags', '!cover', '!folder', '!summary'])).toEqual([
+      'tags',
+      'coverSource',
+    ]);
   });
 
   it('cuts tags and the summary at the card limits, and names the folder', async () => {

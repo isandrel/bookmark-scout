@@ -134,12 +134,12 @@ export const POPUP_MENUS: Readonly<
 
 /**
  * A popup menu as the user arranged it: the configured sections, each keeping only the actions
- * the user shows, in the user's order. An empty setting is the configured menu; an action the
- * setting does not name is hidden.
+ * the user shows, in the user's order (`readShownIds`). An empty setting is the configured menu,
+ * and an action added since the setting was saved shows until the user hides it.
  */
-export function customizePopupMenu(kind: PopupMenuKind, visible: readonly string[]) {
+export function customizePopupMenu(kind: PopupMenuKind, stored: readonly string[]) {
   const { sections } = POPUP_MENUS[kind];
-  if (visible.length === 0) return sections.map((section) => [...section]);
+  const visible = readShownIds(stored, sections.flat());
   const order = new Map(visible.map((id, index) => [id, index]));
   return sections
     .map((section) =>

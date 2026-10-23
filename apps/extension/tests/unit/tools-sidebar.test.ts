@@ -16,6 +16,7 @@ import {
   type Settings,
   settingsSchema,
 } from '@/lib/settings-schema';
+import { encodeShownIds } from '@/lib/shown-ids';
 import { TOOL_ORDER_IDS } from '@/lib/tools-sidebar-config';
 import { getToolScopeCapability } from '@/services/tool-options';
 import { readConfigToml } from '../config-files';
@@ -54,9 +55,10 @@ describe('Tools sidebar order', () => {
     expect(getToolsSidebarOrder([]).map((tool) => tool.id)).toEqual(config.tools);
     expect(TOOL_ORDER_IDS).toEqual(config.tools);
 
+    const shown = ['summarizer', 'urlCleaner', 'duplicates', 'autoTagging', 'unknownTool'];
     const arranged = {
       ...settings,
-      toolsSidebarOrder: ['summarizer', 'urlCleaner', 'duplicates', 'autoTagging', 'unknownTool'],
+      toolsSidebarOrder: encodeShownIds(shown, TOOL_ORDER_IDS),
     } as Settings;
     expect(getSectionTools(arranged, 'maintenance').map((tool) => tool.id)).toEqual([
       'urlCleaner',
@@ -66,8 +68,13 @@ describe('Tools sidebar order', () => {
       'summarizer',
       'autoTagging',
     ]);
-    // A tool the list leaves out is hidden; a tool turned off stays hidden even when listed.
+    // A tool the list hides is hidden; a tool turned off stays hidden even when listed.
     expect(getSectionTools(arranged, 'metadata')).toEqual([]);
+    // A tool the list does not name was added since it was saved: it shows, in its place.
+    const before = { ...arranged, toolsSidebarOrder: shown } as Settings;
+    expect(getSectionTools(before, 'metadata').map((tool) => tool.id)).toEqual(
+      getSectionTools(settings, 'metadata').map((tool) => tool.id),
+    );
     const listedButOff = { ...arranged, urlCleanerEnabled: false } as Settings;
     expect(getSectionTools(listedButOff, 'maintenance').map((tool) => tool.id)).toEqual([
       'duplicates',
@@ -88,8 +95,9 @@ describe('Tools sidebar order', () => {
   it('holds every tool id in Sidebar Tools, and offers each tab as the Start Tab', () => {
     const meta = getSettingsFieldMeta();
     expect(meta.toolsSidebarOrder.maxItems).toBe(Object.keys(TOOL_DEFINITIONS).length);
+    // Each id, with the mark of a hidden one.
     const longest = Math.max(...Object.keys(TOOL_DEFINITIONS).map((id) => id.length));
-    expect(meta.toolsSidebarOrder.maxLength).toBe(longest);
+    expect(meta.toolsSidebarOrder.maxLength).toBe(longest + 1);
     expect(settingsSchema.shape.toolsSidebarOrder.safeParse(config.tools).success).toBe(true);
 
     const tabs = meta.toolsSidebarDefaultTab.options?.map((option) => option.value) ?? [];

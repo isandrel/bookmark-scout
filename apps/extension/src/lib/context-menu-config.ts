@@ -66,13 +66,9 @@ export const CONTEXT_MENU_CONTEXT_IDS = CONTEXT_MENU_CONTEXTS.map((context) => c
 ];
 export const CONTEXT_MENU_ENTRY_IDS = CONTEXT_MENU_ENTRIES.map((entry) => entry.id);
 
-/** The entries the menu shows, in order: every one when `stored` is empty, else those it names. */
+/** The entries the menu shows, in order (`readShownIds`): every one when `stored` is empty. */
 export function getContextMenuEntries(stored: readonly string[]): ContextMenuEntry[] {
-  if (stored.length === 0) return [...CONTEXT_MENU_ENTRIES];
-  return [...new Set(stored)].flatMap((id) => {
-    const entry = CONTEXT_MENU_ENTRIES.find((candidate) => candidate.id === id);
-    return entry ? [entry] : [];
-  });
+  return readShownIds(stored, CONTEXT_MENU_ENTRY_IDS).map((id) => byId(CONTEXT_MENU_ENTRIES, id));
 }
 
 /** The contexts of `stored` (Show Menu On), in Options order, each once. */

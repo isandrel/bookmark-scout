@@ -325,7 +325,7 @@ describe('context menu recent folders', () => {
   });
 
   it('hides recent folders when Menu Entries leaves them out and restores them live', async () => {
-    await seedSettings({ contextMenuEntries: ['bookmarksBar'] });
+    await seedSettings({ contextMenuEntries: ['bookmarksBar', '!recentFolders'] });
     vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
     await contextMenu.initializeContextMenu();
     expect(recentMenuIds()).toEqual([]);
@@ -419,11 +419,19 @@ describe('context menu entries and contexts', () => {
       ]),
     );
 
-    await setSettings({ contextMenuEntries: ['recentFolders'] });
+    // Hidden entries are marked; an entry the list does not name was added since, so it shows.
+    await setSettings({ contextMenuEntries: ['recentFolders', '!bookmarksBar'] });
     await vi.waitFor(() =>
       expect(rootChildren()).toEqual([`${RECENT_SUBMENU}: 📁 contextMenu_recentFolders`]),
     );
     expect(menus.has(MENU_ID)).toBe(false);
+    await setSettings({ contextMenuEntries: ['recentFolders'] });
+    await vi.waitFor(() =>
+      expect(rootChildren()).toEqual([
+        `${RECENT_SUBMENU}: 📁 contextMenu_recentFolders`,
+        `${MENU_ID}: 📚 contextMenu_bookmarksBar`,
+      ]),
+    );
   });
 
   it('shows every item on the contexts Show Menu On lists, links only by default', async () => {

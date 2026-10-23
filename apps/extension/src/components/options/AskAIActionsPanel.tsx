@@ -36,7 +36,7 @@ function AgentActionsPanel({
   const off = new Set(disabled);
   const toggle = (id: ActionId, allowed: boolean) => {
     const next = allowed ? disabled.filter((other) => other !== id) : [...disabled, id];
-    void setValue(next).catch(() => undefined);
+    void setValue(next).catch(notifySettingNotSaved);
   };
 
   return (
@@ -51,7 +51,7 @@ function AgentActionsPanel({
           variant="outline"
           size="sm"
           disabled={disabled.length === 0}
-          onClick={() => void setValue([]).catch(() => undefined)}
+          onClick={() => void setValue([]).catch(notifySettingNotSaved)}
         >
           {t('settings_actionsReset')}
         </Button>

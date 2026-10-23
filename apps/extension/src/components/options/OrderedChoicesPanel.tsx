@@ -1,5 +1,6 @@
 /**
- * An Options panel for a setting that lists ids in the user's order, where a missing id is hidden:
+ * An Options panel for a setting that lists ids in the user's order, the hidden ones marked
+ * (`src/lib/shown-ids.ts`):
  * a checkbox per choice to show or hide it, and a handle to reorder the shown ones within their
  * group (`SortableList`). The popup's parts, toolbar buttons, hover card details, and row menus use
  * it. Changes apply at once, like every setting.
@@ -19,7 +20,7 @@ type OrderedChoicesPanelProps = {
   iconOf?: (choice: string) => ComponentType<{ className?: string }> | undefined;
   /** A shown choice the user may not hide now, such as the bookmark tree or a menu's last command. */
   isLocked?: (choice: string, shown: ReadonlySet<string>) => boolean;
-  /** Saves the shown choices, in order. */
+  /** Saves the shown choices, in order; the caller marks the rest hidden (`encodeShownIds`). */
   onChange: (shown: string[]) => void;
   /** Restores the default; disabled while the setting is at it. */
   onReset: () => void;

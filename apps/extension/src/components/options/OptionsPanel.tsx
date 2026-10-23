@@ -14,6 +14,17 @@ type OptionsPanelProps = Omit<ComponentProps<'section'>, 'id' | 'title'> & {
   actionsLayout?: 'beside' | 'wrap';
 };
 
+/**
+ * Tells the user a change made in an Options panel was not saved, and why (such as the sync
+ * quota), instead of quietly showing the old value. Pass it to the save's `catch`.
+ */
+export function notifySettingNotSaved(error: unknown): void {
+  toast.error({
+    title: tPlural('settings_statusNotSaved', 1),
+    description: getErrorMessage(error),
+  });
+}
+
 /** A boxed section of an Options page with a heading, a description, and optional actions. */
 export function OptionsPanel({
   id,

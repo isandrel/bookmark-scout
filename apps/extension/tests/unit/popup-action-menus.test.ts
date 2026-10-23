@@ -124,7 +124,7 @@ describe('popup row actions', () => {
     const host = createPopupHost();
     const actions = getPopupRowActions(
       'bookmark',
-      ['openInNewWindow', 'openInNewTab', 'delete'],
+      ['openInNewWindow', 'openInNewTab', 'delete', '!openInPrivateWindow'],
       bookmark,
       host,
     );
@@ -132,11 +132,16 @@ describe('popup row actions', () => {
     expect(actions.all).toEqual([['delete'], ['openInNewWindow', 'openInNewTab']]);
     expect(actions.buttons).toEqual(['delete']);
     // Hiding Delete makes the next action the button.
-    expect(getPopupRowActions('bookmark', ['openInNewTab'], bookmark, host)).toEqual({
+    const onlyNewTab = ['openInNewTab', '!delete', '!openInNewWindow', '!openInPrivateWindow'];
+    expect(getPopupRowActions('bookmark', onlyNewTab, bookmark, host)).toEqual({
       buttons: ['openInNewTab'],
       more: [],
       all: [['openInNewTab']],
     });
+    // An action the setting does not name was added since it was saved: it shows, in its place.
+    expect(getPopupRowActions('bookmark', ['openInNewTab', '!delete'], bookmark, host).all).toEqual(
+      [['openInNewTab', 'openInNewWindow', 'openInPrivateWindow']],
+    );
   });
 
   it('run through the page host and word each action for the row', () => {
