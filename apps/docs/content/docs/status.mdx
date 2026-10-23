@@ -18,6 +18,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - A welcome page that opens once after a new install, never after an update
 - Keyboard shortcuts in the popup and side panel for search, tree navigation, and saving the current page, which leave the browser's own shortcuts alone; in the manager, Chrome's bookmark manager keys, including select all, copy, cut, paste, undo, redo, and open in tabs, with a <Shortcut id="manager.show_help" /> help dialog. Every shortcut is defined once in `apps/extension/config/ui/shortcuts.toml`, which the docs, website, and README render their key text from. They pause while typing or while a dialog is open
 - Custom bookmarks page override with folder tree, breadcrumbs, bookmark table, and tools sidebar, working like Chrome's manager: `?id=` and `?q=` addresses (including Chrome's folder links), row selection, right-click and ⋯ menus built from one bookmark action registry and customizable in Settings, cut, copy, and paste across manager tabs, open all in tabs, a new window, or an incognito window, sort by name, add bookmark or folder, drag and drop of rows, folders, and links, an ARIA folder tree with Chrome's keys and separate account and device sections, drawers in narrow windows, and an undo and redo history of the last 100 changes in session storage
+- Popup and side panel rows whose buttons, ⋯ menu, and right-click menu come from the same bookmark action registry; Settings chooses the actions, their order, and how many are buttons
 - Saved searches (smart views) in the manager that store only filters, sort, and folder scope in local storage and evaluate them against the live bookmark tree, skipping deleted folders
 - The manager's **Cards** view, with the list's rows, filters, sort, selection, keys, and menus: each card shows the stored cover, or a placeholder tile drawn from the site's icon and name, with tags, a summary, and a folder's item count; **Tags** and **Summary** columns in the list; a **Preview** dialog (<Shortcut id="manager.preview" />) that steps through the page with the arrow keys; and in the popup and side panel a details card on hover or keyboard focus
 - An icon after links, and on a hovered popup row, that shows whether a click opens a new tab, a background tab, or this tab (**Show Where Links Open**)
@@ -28,7 +29,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - Configurable browser-order (the default), date-added, natural alphabetical, and folders-first ordering without mutating stored bookmark order
 - Settings page that opens on **Essentials** (the few settings most people change), with eleven more categories under **Advanced** (Saving & Search, Appearance, Behavior, AI, AI Tools, Maintenance, Page Details, Security, Analytics, Import & Export, and For developers), a settings search, list and segment editors, and folded Advanced settings
 - Settings stored as overrides of the defaults: synced settings in `chrome.storage.sync`, device settings in local storage, stored values in a versioned envelope validated with zod, and writes from several pages serialized with Web Locks. The new format replaced older stored data without converting it
-- Settings backup file (changed settings, custom prompts, AI services without keys, saved searches, manager columns and sort) and restore
+- Settings backup file (changed settings, custom prompts, About me, AI services without keys, saved searches, Smart Rules, manager columns and sort, and covers when **Include covers** is checked, restored after a review) and restore
 - AI providers from config: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, local servers, about 200 more from the models.dev catalog, and custom OpenAI-compatible and Anthropic-compatible endpoints
 - Chrome's built-in AI (Gemini Nano through the Prompt API) as a free service on the user's computer for folder suggestions and AI quick save, with a word-match fallback and a device check in Settings
 - AI folder recommendations, including reviewed creation of a suggested new folder path that saves the current page there
@@ -41,7 +42,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - Privacy review with optional redaction before bookmark exports and AI context exports
 - Bookmark import from HTML or JSON, with a preview of the target folder, counts, and duplicates, a duplicate-handling choice, and undo
 - Bookmark export to HTML, JSON (with each bookmark's tags and summary), Markdown, or CSV
-- Right-click context menu save flow for links
+- Saving from the browser's right-click menu on links, on the page, or on selected text (where it shows is a setting; links by default)
 - Extension and marketing site in <Languages of="extension" />
 - Fumadocs documentation site
 - Unit tests and unattended Chromium E2E tests for popup, manager, settings, maintenance, reports, import/export, quick save, route-mocked and local-server network tools, mocked-provider AI tools, and user journeys across surfaces
@@ -73,7 +74,7 @@ The Edge suite and the Firefox smoke suite are required CI checks, like the Chro
 - Broader Firefox runtime coverage: context-menu saves, drag and drop in the popup, keyboard shortcuts, **Refresh Site Icons**, the other AI tools, and locales
 - Store submission to Firefox Add-ons and Edge Add-ons (the Chrome Web Store listing is live). Listing material and submission checklists are in the repository's <RepoLink tree="store">`store/` folder</RepoLink>; submission is manual and needs release approval. The Firefox package has its permanent add-on ID and data collection declaration
 - Distribution of `bookmark-scout-mcp`: binaries on GitHub releases, an npm package, and an MCP registry entry. Until then, build or run it from the repository
-- The popup rows and the quick save notification taking their commands from the bookmark action registry, as the manager's menus and AI tools do
+- The quick save notification taking its commands from the bookmark action registry, as the manager's menus, the popup rows, and AI tools do
 
 ## Documentation rules
 
