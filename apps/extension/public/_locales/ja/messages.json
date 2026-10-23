@@ -791,6 +791,26 @@
         "message": "現在のタブ",
         "description": "Open links in option: replace the page in the current tab"
     },
+    "settings_showLinkTarget": {
+        "message": "リンクを開く場所を表示",
+        "description": "Settings > Behavior > Links: label of the switch that shows an icon for where a clicked link opens"
+    },
+    "settings_showLinkTargetDesc": {
+        "message": "リンクの後ろと、ポインタを合わせたブックマークの行に小さなアイコンを表示し、クリックで新しいタブ、バックグラウンドのタブ、このタブのどれで開くかを示します",
+        "description": "Settings > Behavior > Links: description of the Show Where Links Open switch"
+    },
+    "link_opensInNewTab": {
+        "message": "新しいタブで開きます",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New tab"
+    },
+    "link_opensInBackgroundTab": {
+        "message": "バックグラウンドのタブで開きます",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New background tab"
+    },
+    "link_opensInThisTab": {
+        "message": "このタブで開きます",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is Current tab: the click replaces the page shown"
+    },
     "settings_sortDate": {
         "message": "追加日順",
         "description": "Date sort option"

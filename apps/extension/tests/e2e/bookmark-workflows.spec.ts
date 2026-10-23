@@ -623,7 +623,11 @@ test('opens full details for the selected manager item without changing it', asy
   const dialog = page.getByRole('dialog', { name: 'Bookmark Details' });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByTestId('bookmark-details-name')).toHaveText(title);
-  await expect(dialog.getByTestId('bookmark-details-url')).toHaveText(url);
+  await expect(dialog.getByTestId('bookmark-details-url').getByRole('link')).toHaveAttribute(
+    'href',
+    url,
+  );
+  await expect(dialog.getByTestId('bookmark-details-url')).toContainText(url);
   await expect(dialog.getByTestId('bookmark-details-path')).toContainText('E2E Details');
   await expect(dialog.getByTestId('bookmark-details-added').locator('time')).toHaveCount(1);
   await expect(dialog.getByTestId('bookmark-details-modified')).toHaveText('Not available');

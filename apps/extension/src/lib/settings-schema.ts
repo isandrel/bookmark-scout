@@ -693,6 +693,7 @@ const fields = {
         current_tab: t('settings_linkOpenCurrentTab'),
       })[value],
   ),
+  showLinkTarget: switchField('behavior.links.show_target', 'showLinkTarget'),
   confirmBeforeDelete: switchField('behavior.deleting.confirm', 'confirmDelete'),
   historyRecordOutsideChanges: switchField(
     'behavior.history.record_outside_changes',
@@ -1391,7 +1392,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'links',
         labelKey: 'settings_sectionLinks',
-        fields: ['linkOpenTarget', 'openConfirmAbove'],
+        fields: ['linkOpenTarget', 'showLinkTarget', 'openConfirmAbove'],
       },
       {
         id: 'managerView',

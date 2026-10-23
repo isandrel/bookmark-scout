@@ -815,6 +815,26 @@
         "message": "Pestaña actual",
         "description": "Open links in option: replace the page in the current tab"
     },
+    "settings_showLinkTarget": {
+        "message": "Mostrar dónde se abren los enlaces",
+        "description": "Settings > Behavior > Links: label of the switch that shows an icon for where a clicked link opens"
+    },
+    "settings_showLinkTargetDesc": {
+        "message": "Muestra un pequeño icono después de los enlaces, y en la fila del marcador que señalas, que indica si al hacer clic se abre una pestaña nueva, una pestaña en segundo plano o esta pestaña",
+        "description": "Settings > Behavior > Links: description of the Show Where Links Open switch"
+    },
+    "link_opensInNewTab": {
+        "message": "Se abre en una pestaña nueva",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New tab"
+    },
+    "link_opensInBackgroundTab": {
+        "message": "Se abre en una pestaña en segundo plano",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New background tab"
+    },
+    "link_opensInThisTab": {
+        "message": "Se abre en esta pestaña",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is Current tab: the click replaces the page shown"
+    },
     "settings_sortDate": {
         "message": "Fecha de creación",
         "description": "Date sort option"

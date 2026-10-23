@@ -11,7 +11,7 @@
  */
 
 import type { LucideIcon } from 'lucide-react';
-import { BookOpen, Coins, ExternalLink, KeyRound, Laptop, Send, Sparkles } from 'lucide-react';
+import { BookOpen, Coins, KeyRound, Laptop, Send, Sparkles } from 'lucide-react';
 import { z } from 'zod';
 
 const onboardingConfig = readConfig(
@@ -113,7 +113,6 @@ export function AIIntroPanel() {
       >
         <BookOpen aria-hidden="true" className="h-3.5 w-3.5" />
         {t('aiOnboard_guide')}
-        <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
       </UrlLink>
     </OptionsPanel>
   );

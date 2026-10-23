@@ -815,6 +815,26 @@
         "message": "Onglet actuel",
         "description": "Open links in option: replace the page in the current tab"
     },
+    "settings_showLinkTarget": {
+        "message": "Indiquer où s'ouvrent les liens",
+        "description": "Settings > Behavior > Links: label of the switch that shows an icon for where a clicked link opens"
+    },
+    "settings_showLinkTargetDesc": {
+        "message": "Affiche une petite icône après les liens, et sur la ligne du favori que vous pointez, pour indiquer si un clic ouvre un nouvel onglet, un onglet en arrière-plan ou cet onglet",
+        "description": "Settings > Behavior > Links: description of the Show Where Links Open switch"
+    },
+    "link_opensInNewTab": {
+        "message": "S'ouvre dans un nouvel onglet",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New tab"
+    },
+    "link_opensInBackgroundTab": {
+        "message": "S'ouvre dans un onglet en arrière-plan",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is New background tab"
+    },
+    "link_opensInThisTab": {
+        "message": "S'ouvre dans cet onglet",
+        "description": "Tooltip and screen-reader text of the icon after a link when Open links in is Current tab: the click replaces the page shown"
+    },
     "settings_sortDate": {
         "message": "Date d'ajout",
         "description": "Date sort option"

@@ -255,6 +255,16 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ],
     'Popup rows, tool results, and dialogs share the same click handler.',
   ),
+  showLinkTarget: tested(
+    'components/ui/url-link.tsx',
+    [
+      e2e(
+        'link-open-target.spec.ts',
+        'the link target icon follows Open links in, hides with Show Where Links Open off, and leaves truncated addresses whole',
+      ),
+    ],
+    'Links and popup rows share LinkTargetIcon.',
+  ),
   historyRecordOutsideChanges: tested('services/bookmark-observer.ts', [
     unit(
       'bookmark-observer.test.ts',
