@@ -8,12 +8,12 @@ import { describe, expect, it } from 'vitest';
 import {
   BACKUP_CATEGORIES,
   BACKUP_REMEMBERED_CATEGORY_IDS,
-  formatBackupFilename,
   getBackupCategory,
 } from '@/lib/backup-config';
 import { defaultSettings } from '@/lib/settings-schema';
 import { INDEXED_DATABASES, STORAGE_ITEMS, type StorageItem } from '@/lib/storage/registry';
 import { CATEGORY_HANDLERS, getItemsOfCategory } from '@/services/backup-categories.lazy';
+import { formatBackupFilename } from '@/services/backup-file.lazy';
 import { appRoot } from '../config-files';
 
 const en = JSON.parse(

@@ -138,12 +138,12 @@ describe('backup import in History', () => {
 
     const later = Date.now() + BACKUP_LIMITS.undoKeepMs;
     expect(
-      await backupFile.getBackupUndoAvailability(
+      await backupFile.checkUndoAvailability(
         { id: second.operationId, startedAt: Date.now() },
         later,
       ),
     ).toEqual({ available: false, reason: 'expired' });
-    expect(await backupFile.undoBackupImport(second.operationId, later)).toEqual({
+    expect(await backupFile.undoImportFromSnapshot(second.operationId, later)).toEqual({
       undone: false,
       reason: 'expired',
     });

@@ -7,8 +7,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { saveSettings } from '@/lib/settings-storage';
-import { BACKUP_FILE_CONVERTERS, upgradeBackupFile } from '@/lib/storage/migrations';
 import { backupParts } from '@/lib/storage/migrations/2026-10-backup-parts';
+import { BACKUP_FILE_CONVERTERS, upgradeBackupFile } from '@/lib/storage/migrations/backup-files';
 import { STORAGE_ITEMS, storageKey } from '@/lib/storage/registry';
 
 beforeEach(async () => {

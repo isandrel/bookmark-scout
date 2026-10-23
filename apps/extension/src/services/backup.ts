@@ -101,14 +101,14 @@ export async function importBackup(
  * result, the Undo import button, and History.
  */
 export async function undoBackupImport(operationId: string): Promise<BackupUndoOutcome> {
-  return (await loadBackupFile()).undoBackupImport(operationId);
+  return (await loadBackupFile()).undoImportFromSnapshot(operationId);
 }
 
 /** Whether Undo import can still undo the import `operation` recorded, and why not. */
 export async function getBackupUndoAvailability(
   operation: Pick<AuditOperation, 'id' | 'startedAt' | 'undo'>,
 ): Promise<{ available: true } | { available: false; reason: BackupUndoUnavailable }> {
-  return (await loadBackupFile()).getBackupUndoAvailability(operation);
+  return (await loadBackupFile()).checkUndoAvailability(operation);
 }
 
 /** Whether a part of an opened file can be imported: known here, unlocked, and readable. */

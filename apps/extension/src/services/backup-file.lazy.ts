@@ -24,7 +24,7 @@
  * record of kind `data` with each part's counts and read-back; Undo import is recorded as its undo.
  */
 import { z } from 'zod';
-import { upgradeBackupFile } from '@/lib/storage/migrations';
+import { upgradeBackupFile } from '@/lib/storage/migrations/backup-files';
 import {
   type ConflictChoice,
   getCategoryHandler,
@@ -99,6 +99,27 @@ export type BackupExportRequest = {
 };
 
 export type BuiltBackup = { json: string; filename: string; parts: ManifestPart[] };
+
+/** The file name for a backup of `ids` (`[file]` in `config/data/backup.toml`). */
+export function formatBackupFilename(
+  ids: readonly string[],
+  isProtected: boolean,
+  now: Date,
+): string {
+  const chosen = new Set(ids);
+  const plain = BACKUP_CATEGORIES.filter((category) => !category.secret);
+  const secret = BACKUP_CATEGORIES.filter((category) => category.secret && chosen.has(category.id));
+  const selected = plain.filter((category) => chosen.has(category.id));
+  let parts: string[];
+  if (selected.length === plain.length) parts = ['all'];
+  else if (selected.length > BACKUP_LIMITS.maxNamedParts) parts = [`${selected.length}-parts`];
+  else parts = selected.map((category) => category.slug);
+  parts.push(...secret.map((category) => category.slug));
+  return BACKUP_LIMITS.filenamePattern
+    .replace('{date}', toLocalIsoDate(now))
+    .replace('{parts}', parts.join('-'))
+    .replace('{protected}', isProtected ? BACKUP_LIMITS.protectedSuffix : '');
+}
 
 function isProtectedPart(id: string, protection: BackupProtection): boolean {
   if (protection === 'all') return true;
@@ -450,7 +471,7 @@ export type BackupUndoUnavailable = 'undone' | 'expired' | 'replaced';
  * Whether Undo import can still undo the import `operation` recorded: not once it was undone,
  * after `[undo] keep_hours`, or after a later import replaced its safety copy.
  */
-export async function getBackupUndoAvailability(
+export async function checkUndoAvailability(
   operation: Pick<AuditOperation, 'id' | 'startedAt' | 'undo'>,
   now = Date.now(),
 ): Promise<{ available: true } | { available: false; reason: BackupUndoUnavailable }> {
@@ -474,12 +495,12 @@ export type BackupUndoOutcome =
  * (linked to it, which is marked undone). The one path for the import result's Undo, the Undo
  * import button in Settings, and History's Undo.
  */
-export async function undoBackupImport(
+export async function undoImportFromSnapshot(
   operationId: string,
   now = Date.now(),
 ): Promise<BackupUndoOutcome> {
   const original = await getAuditOperation(operationId).catch(() => undefined);
-  const availability = await getBackupUndoAvailability(
+  const availability = await checkUndoAvailability(
     original ?? { id: operationId, startedAt: now },
     now,
   );

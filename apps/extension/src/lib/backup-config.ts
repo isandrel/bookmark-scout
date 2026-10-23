@@ -101,24 +101,3 @@ export const BACKUP_LIMITS = {
   maxConflictsListed: backupConfig.import.max_conflicts_listed,
   undoKeepMs: backupConfig.undo.keep_hours * MS_PER_HOUR,
 } as const;
-
-/** The file name for a backup of `ids` (`[file]` in `config/data/backup.toml`). */
-export function formatBackupFilename(
-  ids: readonly string[],
-  isProtected: boolean,
-  now: Date,
-): string {
-  const chosen = new Set(ids);
-  const plain = BACKUP_CATEGORIES.filter((category) => !category.secret);
-  const secret = BACKUP_CATEGORIES.filter((category) => category.secret && chosen.has(category.id));
-  const selected = plain.filter((category) => chosen.has(category.id));
-  let parts: string[];
-  if (selected.length === plain.length) parts = ['all'];
-  else if (selected.length > BACKUP_LIMITS.maxNamedParts) parts = [`${selected.length}-parts`];
-  else parts = selected.map((category) => category.slug);
-  parts.push(...secret.map((category) => category.slug));
-  return BACKUP_LIMITS.filenamePattern
-    .replace('{date}', toLocalIsoDate(now))
-    .replace('{parts}', parts.join('-'))
-    .replace('{protected}', isProtected ? BACKUP_LIMITS.protectedSuffix : '');
-}

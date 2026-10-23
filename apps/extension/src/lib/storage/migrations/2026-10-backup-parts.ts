@@ -10,7 +10,7 @@
  * A converter is never removed: a file saved today may be restored years later.
  */
 import { findStorageItem, INDEXED_DATABASES, STORAGE_ITEMS, type StorageItem } from '../registry';
-import type { BackupFileConverter } from './index';
+import type { BackupFileConverter } from './backup-files';
 
 type Envelope = { v: number; data: unknown };
 

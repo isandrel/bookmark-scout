@@ -23,6 +23,7 @@ import type {
   PartEstimate,
   PartReview,
 } from '@/services/backup';
+import { formatBackupFilename } from '@/services/backup-file.lazy';
 
 /** A size in a part's line: kilobytes under a megabyte, where "0 MB" would read as nothing. */
 const formatSize = (bytes: number) =>
