@@ -42,12 +42,13 @@ max_cache_kb = { default = 4096, min = 256, max = 8192, step = 256, integer = tr
 # downloads each page's head and its image.
 enabled = false
 default_scope = "folder"
-# Width of the stored copy in pixels; taller or wider images are shrunk to it
-width_px = { default = 480, min = 160, max = 960, step = 40, integer = true }
+# Width of the stored copy in pixels; taller or wider images are shrunk to it. 960 keeps a card
+# (about 340 CSS px) sharp on a 2x screen and the preview dialog close to it.
+width_px = { default = 960, min = 160, max = 1920, step = 40, integer = true }
 # Largest image file that is downloaded, in KB
 max_image_kb = { default = 2048, min = 128, max = 8192, step = 128, integer = true }
 # Total size of all stored covers on this device, in MB; the oldest are removed first
-max_cache_mb = { default = 50, min = 10, max = 500, step = 10, integer = true }
+max_cache_mb = { default = 200, min = 10, max = 1000, step = 10, integer = true }
 # Cover Source: which kind of cover a bookmark keeps when both its page's own image and a picture of
 # the tab can be had; one of the choices in config/bookmarks/cover-preferences.toml
 source_preference = "page_first"
