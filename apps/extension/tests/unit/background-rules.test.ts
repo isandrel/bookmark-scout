@@ -369,3 +369,91 @@ describe('a large reviewed Smart Rules run as a background task', { timeout: TES
     });
   });
 });
+
+describe('applying a reviewed run checks tags and summaries again', { timeout: TEST_MS }, () => {
+  // Tags what is not read yet, and moves it; the tag it adds does not stop it matching.
+  const UNREAD: BookmarkRule = {
+    ...RULE,
+    id: 'unread',
+    query: `domain:github.com -tag:read -tag:${TAG}`,
+  };
+  const markRead = (id: string) =>
+    metadataStorage.mergeStoredBookmarkMetadata(
+      { [id]: { tags: ['read'] } },
+      {
+        tagMode: 'append',
+        summaryMode: 'replace',
+        dedupeTags: true,
+      },
+    );
+
+  it('skips as changed a bookmark its rule no longer matches, when applied in the page', async () => {
+    await saveSettings({ jobsApplyInBackgroundAbove: COUNT });
+    await bookmarkRulesValue.set([UNREAD]);
+    const plan = await review();
+    expect(plan).toHaveLength(COUNT);
+    // Read after the review: the rule no longer matches it.
+    await markRead('b1');
+    const run = await applyRulePlan(plan);
+    expect(run.background).toBeUndefined();
+    expect(run).toMatchObject({ tagged: COUNT - 1, moved: COUNT - 1, skipped: 1, ruleChanged: 0 });
+    expect(await tagsOf('b1')).toEqual(['read']);
+    expect(bookmarks.childIds('from')).toEqual(['b1']);
+  });
+
+  it('skips it in a background task too, and a resumed part still applies what it had tagged', async () => {
+    await bookmarkRulesValue.set([UNREAD]);
+    const plan = await review();
+    const { job: accepted } = await acceptJob({
+      commandId: crypto.randomUUID(),
+      kind: 'applyRules',
+      source: 'manager',
+      scope: { mode: 'all', rootIds: [], label: '' },
+      options: { rules: { unread: ruleVersion(UNREAD) } },
+      inputs: plan.map(({ id, title, url, parentId, ruleIds, addTags, move }) => ({
+        id,
+        title,
+        url,
+        parentId,
+        ruleIds,
+        addTags,
+        ...(move ? { move } : {}),
+      })),
+      now: Date.now(),
+    });
+    const claimed = await claimJob(accepted.id, 'stopped-worker');
+    if (!claimed) throw new Error('not claimed');
+    const firstPart = Array.from({ length: SLICE }, (_, index) => index);
+    await markItemsInFlight(accepted.id, claimed.generation, firstPart, Date.now());
+    // The stopped worker tagged its part and moved nothing: with that tag the rule would no
+    // longer match, yet these are the run's own tags.
+    await bookmarkMetadataValue.set(
+      Object.fromEntries(ids.slice(0, SLICE).map((id) => [id, { tags: [TAG] }])),
+    );
+    // A bookmark of the next part is marked read after the review.
+    const read = ids[SLICE] as string;
+    await markRead(read);
+
+    resetJobCoordinatorForTests();
+    await runJobCommand({ type: 'pause', jobId: crypto.randomUUID() });
+    await whenJobsIdle();
+    await runJobCommand({ type: 'resume', jobId: accepted.id });
+    await whenJobsIdle();
+    expect(await getJob(accepted.id)).toMatchObject({
+      state: 'succeeded',
+      done: { succeeded: COUNT - 1, skipped: 1, failed: 0 },
+    });
+    const skipped = (await getJobItems(accepted.id, { limit: COUNT })).filter(
+      (item) => item.outcome === 'skipped',
+    );
+    expect(skipped.map((item) => item.result)).toEqual([
+      expect.objectContaining({ id: read, reason: 'changed' }),
+    ]);
+    expect(bookmarks.childIds('from')).toEqual([read]);
+    expect(await tagsOf(read)).toEqual(['read']);
+    for (const id of ids.filter((id) => id !== read)) {
+      expect(await tagsOf(id)).toEqual([TAG]);
+      expect(moveWrites(id)).toHaveLength(1);
+    }
+  });
+});
