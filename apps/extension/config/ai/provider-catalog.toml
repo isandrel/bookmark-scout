@@ -1,0 +1,9 @@
+# Limits on config/provider-catalog.json, the models.dev snapshot: scripts/sync-provider-catalog.ts
+# checks them before writing the file, and src/services/ai-models.ts when it first reads it
+# (schema in src/lib/config/provider-catalog-schema.ts).
+
+# Longest provider name, in characters, as the provider picker shows it.
+max_name_length = 80
+# Longest address (base URL or documentation page), in characters: the length browsers and
+# servers widely accept.
+max_url_length = 2048

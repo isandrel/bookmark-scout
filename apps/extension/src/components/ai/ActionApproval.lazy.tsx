@@ -1,8 +1,9 @@
 /**
  * Ask AI's approval of a bookmark change (`actionApproval` decides when one is needed). It shows
- * the change as Bookmark Scout will make it: for a plan, the plan stored by `proposeChanges`, not
- * the model's description of it. Titles and paths are shown as plain text. Loaded with the chat
- * (`AskAIPanel.lazy.tsx`), so it is left out of auto-imports like every `*.lazy.tsx` file.
+ * the change as Bookmark Scout will make it, as the action's `approvalPreview` describes it: for
+ * a plan, the plan stored by `proposeChanges`, not the model's description of it. Titles and
+ * paths are shown as plain text. Loaded with the chat (`AskAIPanel.lazy.tsx`), so it is left out of
+ * auto-imports like every `*.lazy.tsx` file.
  */
 import { ShieldAlert } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
@@ -15,60 +16,27 @@ type ApprovalProps = {
   onRespond: (approved: boolean) => void;
 };
 
-const quoted = (title: string) => getBookmarkDisplayTitle(title);
-
-type PlanLine = ActionPlan['preview'][number];
-
-/** The line each kind of planned change shows, in the user's language. */
-const PLAN_LINES: Record<PlanLine['kind'], (line: PlanLine) => string> = {
-  move: (line) => t('askAI_planMove', [quoted(line.title), line.from ?? '', line.to ?? '']),
-  rename: (line) => t('askAI_planRename', [quoted(line.title), line.to ?? '']),
-  delete: (line) =>
-    line.contains
-      ? t('askAI_planDeleteFolder', [quoted(line.title), line.from ?? '', String(line.contains)])
-      : t('askAI_planDelete', [quoted(line.title), line.from ?? '']),
-  createFolder: (line) => t('askAI_planCreateFolder', [line.title, line.to ?? '']),
-};
-
-function planLines(plan: ActionPlan): string[] {
-  return plan.preview.map((line) => PLAN_LINES[line.kind](line));
-}
-
-/** What a direct write (not a plan) would do, from its checked input. */
+/** What a call that names no stored record would do, from its unchecked input. */
 function directLines(toolName: string, input: Record<string, unknown>): string[] {
-  if (toolName === 'saveBookmark') {
-    const folder = [input.folder, input.newFolder].filter(Boolean).join(AI_FOLDER_PATH_SEPARATOR);
-    return [t('askAI_approvalSave', [String(input.title || input.url || ''), folder])];
-  }
-  return [describeActionCall(toolName, input) ?? toolName];
+  const lines = actionApprovalPreview(toolName)?.lines;
+  return lines ? lines(input) : [describeActionCall(toolName, input) ?? toolName];
 }
 
 /**
- * What the request is about, read from storage: the stored plan an apply names, or the history
- * entry an undo names, as the lines the user approves. undefined while it loads, null when it is
- * gone (expired, applied, or undone already), and none for a call that needs neither.
+ * What the request is about, read from storage: the stored record the call names (a plan, a
+ * history entry), as the lines the user approves. undefined while it loads, null when it is gone
+ * (expired, applied, or undone already), and none for a call that names no stored record.
  */
 function useStoredChangeLines(toolName: string, args: Record<string, unknown>) {
-  const planId = toolName === 'applyChanges' && typeof args.planId === 'string' ? args.planId : '';
-  const changeId = toolName === 'undoChange' && typeof args.change === 'string' ? args.change : '';
-  const [loaded, setLoaded] = useState<{ lines: string[]; summary?: string } | null | undefined>(
-    undefined,
-  );
+  const stored = actionApprovalPreview(toolName)?.stored;
+  const id = stored?.id(args) ?? '';
+  const [loaded, setLoaded] = useState<ActionApprovalLines | null | undefined>(undefined);
 
   useEffect(() => {
-    if (!planId && !changeId) return;
+    if (!stored || !id) return;
     let active = true;
-    const load = async () => {
-      if (planId) {
-        const plan = await getActionPlan(planId);
-        return plan ? { lines: planLines(plan), summary: plan.summary } : null;
-      }
-      const entry = await getUndoableBookmarkChange(changeId);
-      return entry
-        ? { lines: await describeBookmarkChangeUndo(entry), summary: t('askAI_approvalUndo') }
-        : null;
-    };
-    void load()
+    void stored
+      .load(id)
       .catch(() => null)
       .then((found) => {
         if (active) setLoaded(found);
@@ -76,11 +44,10 @@ function useStoredChangeLines(toolName: string, args: Record<string, unknown>) {
     return () => {
       active = false;
     };
-  }, [planId, changeId]);
+  }, [stored, id]);
 
-  if (!planId && !changeId) return undefined;
-  const missingKey: MessageKey = planId ? 'askAI_planMissing' : 'askAI_undoMissing';
-  return { loaded, missingKey };
+  if (!stored || !id) return undefined;
+  return { loaded, missingKey: stored.missingKey };
 }
 
 export function ActionApprovalRequest({ toolName, input, reason, onRespond }: ApprovalProps) {
@@ -92,8 +59,7 @@ export function ActionApprovalRequest({ toolName, input, reason, onRespond }: Ap
   const lines = stored ? (stored.loaded?.lines ?? []) : directLines(toolName, args);
   const summary = stored?.loaded?.summary;
   const missing = stored?.loaded === null;
-  // A save names the exact address too, which a title can hide.
-  const url = toolName === 'saveBookmark' && typeof args.url === 'string' ? args.url : '';
+  const url = actionApprovalPreview(toolName)?.url?.(args) ?? '';
   const respond = (approved: boolean) => {
     setAnswered(true);
     onRespond(approved);

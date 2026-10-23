@@ -27,6 +27,8 @@ import {
   Undo2,
 } from 'lucide-react';
 import { type ReactNode, useEffect, useId, useMemo, useState } from 'react';
+import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 const TONE_CLASSES: Record<AuditStatusView['tone'], string> = {
   success: 'border-success/40 bg-success-wash text-success',
@@ -54,8 +56,12 @@ const CHANGE_ICONS: Record<AuditItem['change'], LucideIcon> = {
   move: MoveRight,
 };
 
+const historyDialogConfig = readConfig(
+  'ui/history-dialog',
+  z.strictObject({ item_rows_per_page: boundedNumber({ integer: true }) }),
+);
 /** Rows shown at first in an opened record; the rest load on request. */
-const ROWS_PER_PAGE = 100;
+const ROWS_PER_PAGE = historyDialogConfig.item_rows_per_page;
 
 export type HistoryDialogProps = {
   /** Every folder's full path by id, disambiguated where two paths read the same. */
@@ -101,7 +107,7 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
         details: await getAuditDetails(operation.id).catch(() => 'corrupt' as const),
       })),
     );
-    const date = new Date().toISOString().slice(0, 10);
+    const date = toIsoDate(Date.now());
     downloadExport(
       buildAuditHistoryExport(records),
       `bookmark-scout-history-${date}.json`,
@@ -121,7 +127,7 @@ export function HistoryDialogContent({ folderLabels }: HistoryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(next) => (next ? undefined : closeHistory())}>
       <DialogContent
-        className="flex h-[min(760px,calc(100dvh-2rem))] flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl"
+        className="flex h-[min(760px,var(--max-height-dialog-screen))] flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl"
         data-testid="history-dialog"
       >
         <DialogHeader className="space-y-1 border-b px-5 pt-5 pb-4">

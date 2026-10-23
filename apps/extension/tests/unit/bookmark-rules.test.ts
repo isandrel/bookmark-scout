@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
+import { ruleMatchesSample } from '@/lib/bookmark-rule-draft';
 import {
+  BOOKMARK_RULE_EDITOR_EXAMPLES,
   BOOKMARK_RULE_TEMPLATES,
   type BookmarkRule,
   changesBookmark,
@@ -442,5 +444,12 @@ describe('templates (R19)', () => {
     ]);
     expect(items).toEqual([]);
     expect(ids(plan([rule({ query: 'folder:"Work / Docs"', addTags: ['a'] })]))).toEqual(['d1']);
+  });
+});
+
+describe('rule editor examples', () => {
+  it('shows a search and an address that search matches', () => {
+    const { query_placeholder, sample_placeholder } = BOOKMARK_RULE_EDITOR_EXAMPLES;
+    expect(ruleMatchesSample(query_placeholder, sample_placeholder)).toBe(true);
   });
 });

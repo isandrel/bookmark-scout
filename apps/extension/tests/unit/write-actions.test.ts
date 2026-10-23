@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { setLanguage } from '@/hooks/use-i18n';
+import { setLanguage, t } from '@/hooks/use-i18n';
 import { aiActivityValue } from '@/lib/ai-activity-storage';
 import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import type { ActionContext } from '@/services/action-kit';
-import { actionApproval, runAction } from '@/services/actions';
+import { actionApproval, actionApprovalPreview, runAction } from '@/services/actions';
 import { hasUntrustedContent } from '@/services/ai-agent.lazy';
 import { bookmarkHistoryValue, describeBookmarkHistoryLabel } from '@/services/bookmark-history';
 import { actionPlansValue } from '@/services/plan-actions';
@@ -284,5 +284,46 @@ describe('activity log', () => {
       url: 'action:saveBookmark',
       error: 'Bookmarks Bar/Company is managed by the browser.',
     });
+  });
+});
+
+describe('approval previews (actionApprovalPreview)', () => {
+  it('shows a save as its title, folder, and full address', () => {
+    const preview = actionApprovalPreview('saveBookmark');
+    const input = { url: 'https://e2e.invalid/new', title: 'New page', folder: 'Work' };
+    expect(preview?.lines?.(input)).toEqual([t('askAI_approvalSave', ['New page', 'Work'])]);
+    expect(preview?.url?.(input)).toBe('https://e2e.invalid/new');
+    expect(preview?.stored).toBeUndefined();
+  });
+
+  it('reads a plan an apply names from storage, and nothing once it is gone', async () => {
+    const plan = await run('proposeChanges', {
+      summary: 'Tidy up',
+      changes: [{ action: 'renameBookmark', input: { ref: 'b:b2', title: 'Meeting notes' } }],
+    });
+    const stored = actionApprovalPreview('applyChanges')?.stored;
+    const id = stored?.id({ planId: plan.planId });
+    expect(id).toBe(plan.planId);
+    expect(stored?.id({ planId: 3 })).toBeUndefined();
+    expect(await stored?.load(id ?? '')).toEqual({
+      lines: [t('askAI_planRename', ['Notes', 'Meeting notes'])],
+      summary: 'Tidy up',
+    });
+    expect(await stored?.load('missing')).toBeNull();
+    expect(stored?.missingKey).toBe('askAI_planMissing');
+  });
+
+  it('reads the change an undo names from the history', async () => {
+    const saved = await run('saveBookmark', { url: 'https://e2e.invalid/x', folder: 'Work' });
+    const stored = actionApprovalPreview('undoChange')?.stored;
+    const loaded = await stored?.load(String(saved.change));
+    expect(loaded?.summary).toBe(t('askAI_approvalUndo'));
+    expect(loaded?.lines.length).toBeGreaterThan(0);
+    expect(stored?.missingKey).toBe('askAI_undoMissing');
+  });
+
+  it('has none for other actions, which show their step text', () => {
+    expect(actionApprovalPreview('moveBookmarks')).toBeUndefined();
+    expect(actionApprovalPreview('notAnAction')).toBeUndefined();
   });
 });

@@ -49,7 +49,7 @@ export function TasksDialog({
         {jobs && jobs.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t('jobs_empty')}</p>
         ) : (
-          <ul className="max-h-[60vh] divide-y overflow-y-auto rounded-md border">
+          <ul className="max-h-dialog-list divide-y overflow-y-auto rounded-md border">
             {(jobs ?? []).map((job) => (
               <li key={job.id} className="p-3">
                 <JobStatus job={job} />

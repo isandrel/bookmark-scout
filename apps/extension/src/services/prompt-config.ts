@@ -405,7 +405,7 @@ export async function loadPromptData(
 
 /** Today's date in ISO form, which every model reads the same way. */
 export function formatToday(date = new Date()): string {
-  return date.toISOString().slice(0, 10);
+  return toIsoDate(date);
 }
 
 // ============================================================================

@@ -90,10 +90,10 @@ Salva tutti i servizi che vuoi, anche più di uno dello stesso provider: ad esem
 | xAI | Obbligatoria | |
 | Azure OpenAI | Obbligatoria | Imposta **Nome della risorsa** (o un **URL di base**) e inserisci il nome del tuo deployment come **Modello personalizzato**. Azure non ha un elenco dei deployment, quindi **Aggiorna modelli** non viene mostrato. |
 | OpenRouter | Obbligatoria | |
-| Ollama (locale) | Facoltativa | Indirizzo predefinito `http://localhost:11434/api`; le richieste restano sulla tua macchina |
-| CLIProxyAPI | Di solito obbligatoria | Gira sulla tua macchina e risponde con i tuoi account Claude, Gemini o Codex. Indirizzo predefinito `http://localhost:8317/v1`; inserisci una delle chiavi in `api-keys` nel suo `config.yaml`, poi **Aggiorna modelli** per vedere i modelli offerti dai tuoi account. |
-| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Facoltativa | Elencati in **Server locali** con i rispettivi indirizzi `localhost` predefiniti: oMLX e vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp e LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Fai clic su **Aggiorna modelli** per vedere cosa ha caricato il server. |
-| Jan | Obbligatoria | Server API locale su `http://localhost:1337/v1`; inserisci la chiave dalle impostazioni del server API di Jan |
+| Ollama (locale) | Facoltativa | Indirizzo predefinito <ProviderAddress id="ollama" />; le richieste restano sulla tua macchina |
+| CLIProxyAPI | Di solito obbligatoria | Gira sulla tua macchina e risponde con i tuoi account Claude, Gemini o Codex. Indirizzo predefinito <ProviderAddress id="cliproxyapi" />; inserisci una delle chiavi in `api-keys` nel suo `config.yaml`, poi **Aggiorna modelli** per vedere i modelli offerti dai tuoi account. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Facoltativa | Elencati in **Server locali** con i rispettivi indirizzi predefiniti: oMLX <ProviderAddress id="omlx" />, LM Studio <ProviderAddress id="lmstudio" />, llama.cpp <ProviderAddress id="llamacpp" />, vLLM <ProviderAddress id="vllm" />, LocalAI <ProviderAddress id="localai" />, KoboldCpp <ProviderAddress id="koboldcpp" />, text-generation-webui <ProviderAddress id="textgen" />. Fai clic su **Aggiorna modelli** per vedere cosa ha caricato il server. |
+| Jan | Obbligatoria | Server API locale su <ProviderAddress id="jan" />; inserisci la chiave dalle impostazioni del server API di Jan |
 | Provider personalizzato | Facoltativa | Qualsiasi endpoint compatibile con OpenAI, impostato con **URL di base** |
 | Provider personalizzato (compatibile con Anthropic) | Facoltativa | Qualsiasi endpoint che usa la Messages API di Anthropic, impostato con **URL di base** |
 | Circa altri 200 | Di solito obbligatoria | Elencati in **Altri provider (models.dev)**, ad esempio Together AI, Fireworks AI, Cerebras, DeepInfra e LM Studio. Non hanno un elenco dei modelli integrato: fai clic su **Aggiorna modelli** o inserisci un **Modello personalizzato**. |
@@ -110,7 +110,7 @@ I server locali devono accettare le richieste dell'estensione:
 - **LM Studio:** attiva **Enable CORS** nelle impostazioni del server, oppure avvialo con `lms server start --cors`.
 - **LocalAI:** imposta una chiave API; il suo controllo CSRF rifiuta le richieste senza chiave provenienti dal browser.
 - **text-generation-webui:** avvialo con `--api`.
-- **CLIProxyAPI:** accetta le richieste dell'estensione con la configurazione predefinita. Avvialo prima di fare clic su **Verifica servizio**; se non è in esecuzione, la verifica indica che non è riuscita a raggiungere `localhost:8317`.
+- **CLIProxyAPI:** accetta le richieste dell'estensione con la configurazione predefinita. Avvialo prima di fare clic su **Verifica servizio**; se non è in esecuzione, la verifica indica che non è riuscita a raggiungere <ProviderAddress id="cliproxyapi" part="host" />.
 
 ### Quando un controllo non riesce [#when-a-check-fails]
 

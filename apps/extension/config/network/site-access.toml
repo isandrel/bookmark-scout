@@ -6,3 +6,7 @@
 # the run asks for all websites instead: the browser's prompt then only says "a number of
 # websites", and a long list of sites is no easier to judge than one line.
 max_sites_per_request = 20
+
+# Sites the permission explanation names before the browser's prompt; the rest are counted
+# ("example.com, github.com, and 3 more").
+listed_sites = { value = 5, min = 1, max = 20 }

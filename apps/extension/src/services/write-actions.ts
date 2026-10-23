@@ -292,6 +292,13 @@ const saveBookmark = defineAction({
     ...changeOutput,
   }),
   describe: (input) => t('askAI_toolSave', input.title || input.url || ''),
+  approvalPreview: {
+    lines: (input) => {
+      const folder = [input.folder, input.newFolder].filter(Boolean).join(AI_FOLDER_PATH_SEPARATOR);
+      return [t('askAI_approvalSave', [String(input.title || input.url || ''), folder])];
+    },
+    url: (input) => (typeof input.url === 'string' ? input.url : undefined),
+  },
   async precheck(input) {
     const target = saveTarget(input, await loadActionLibrary());
     return isActionError(target) ? target : undefined;
@@ -356,6 +363,18 @@ const undoChange = defineAction({
     skipped: z.number().int().describe(agentText('undo_change.skipped')),
   }),
   describe: () => t('askAI_toolUndo'),
+  approvalPreview: {
+    stored: {
+      id: (input) => (typeof input.change === 'string' && input.change ? input.change : undefined),
+      async load(id) {
+        const entry = await getUndoableBookmarkChange(id);
+        return entry
+          ? { lines: await describeBookmarkChangeUndo(entry), summary: t('askAI_approvalUndo') }
+          : null;
+      },
+      missingKey: 'askAI_undoMissing',
+    },
+  },
   async precheck(input) {
     return (await getUndoableBookmarkChange(input.change)) ? undefined : changeGone(input.change);
   },

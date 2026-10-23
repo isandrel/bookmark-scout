@@ -90,10 +90,10 @@ AI 工具會將書籤標題、網址，以及資料夾名稱或路徑傳送給�
 | xAI | 必填 | |
 | Azure OpenAI | 必填 | 設定「**資源名稱**」(或「**基礎網址**」)，並將部署名稱輸入為「**自訂模型**」。Azure 沒有部署清單，因此不會顯示「**重新整理模型**」。 |
 | OpenRouter | 必填 | |
-| Ollama (本機) | 選填 | 預設位址為 `http://localhost:11434/api`；要求會留在你的電腦上 |
-| CLIProxyAPI | 通常必填 | 在你的電腦上執行，並使用你自己的 Claude、Gemini 或 Codex 帳戶回應。預設位址為 `http://localhost:8317/v1`；請輸入其 `config.yaml` 中 `api-keys` 下的其中一個金鑰，然後按一下「**重新整理模型**」查看你的帳戶提供的模型。 |
-| oMLX、LM Studio、llama.cpp server、vLLM、LocalAI、KoboldCpp、text-generation-webui | 選填 | 列在「**本機伺服器**」下，並附有預設的 `localhost` 位址：oMLX 和 vLLM 為 `:8000/v1`、LM Studio 為 `:1234/v1`、llama.cpp 和 LocalAI 為 `:8080/v1`、KoboldCpp 為 `:5001/v1`、text-generation-webui 為 `:5000/v1`。按一下「**重新整理模型**」即可查看伺服器已載入的模型。 |
-| Jan | 必填 | 本機 API 伺服器位於 `http://localhost:1337/v1`；請輸入 Jan API 伺服器設定中的金鑰 |
+| Ollama (本機) | 選填 | 預設位址為 <ProviderAddress id="ollama" />；要求會留在你的電腦上 |
+| CLIProxyAPI | 通常必填 | 在你的電腦上執行，並使用你自己的 Claude、Gemini 或 Codex 帳戶回應。預設位址為 <ProviderAddress id="cliproxyapi" />；請輸入其 `config.yaml` 中 `api-keys` 下的其中一個金鑰，然後按一下「**重新整理模型**」查看你的帳戶提供的模型。 |
+| oMLX、LM Studio、llama.cpp server、vLLM、LocalAI、KoboldCpp、text-generation-webui | 選填 | 列在「**本機伺服器**」下，並附有預設位址：oMLX 為 <ProviderAddress id="omlx" />、LM Studio 為 <ProviderAddress id="lmstudio" />、llama.cpp 為 <ProviderAddress id="llamacpp" />、vLLM 為 <ProviderAddress id="vllm" />、LocalAI 為 <ProviderAddress id="localai" />、KoboldCpp 為 <ProviderAddress id="koboldcpp" />、text-generation-webui 為 <ProviderAddress id="textgen" />。按一下「**重新整理模型**」即可查看伺服器已載入的模型。 |
+| Jan | 必填 | 本機 API 伺服器位於 <ProviderAddress id="jan" />；請輸入 Jan API 伺服器設定中的金鑰 |
 | 自訂供應商 | 選填 | 任何與 OpenAI 相容的端點，以「**基礎網址**」設定 |
 | 自訂供應商 (與 Anthropic 相容) | 選填 | 任何支援 Anthropic Messages API 的端點，以「**基礎網址**」設定 |
 | 其他約 200 個 | 通常必填 | 列在「**更多供應商 (models.dev)**」下，例如 Together AI、Fireworks AI、Cerebras、DeepInfra 和 LM Studio。這些供應商沒有內建的模型清單：請按一下「**重新整理模型**」或輸入「**自訂模型**」。 |
@@ -110,7 +110,7 @@ AI 工具會將書籤標題、網址，以及資料夾名稱或路徑傳送給�
 - **LM Studio**：在伺服器設定中開啟「**Enable CORS**」，或以 `lms server start --cors` 啟動。
 - **LocalAI**：設定 API 金鑰；其 CSRF 檢查會拒絕瀏覽器傳送的無金鑰要求。
 - **text-generation-webui**：以 `--api` 啟動。
-- **CLIProxyAPI**：依預設設定即可接受擴充功能的要求。請在按一下「**驗證服務**」前先啟動；如果它沒有在執行，驗證時會顯示無法連線至 `localhost:8317`。
+- **CLIProxyAPI**：依預設設定即可接受擴充功能的要求。請在按一下「**驗證服務**」前先啟動；如果它沒有在執行，驗證時會顯示無法連線至 <ProviderAddress id="cliproxyapi" part="host" />。
 
 ### 檢查失敗時 [#when-a-check-fails]
 

@@ -1,0 +1,8 @@
+# The prompt editor's text box (Options > AI Tools > Prompts). Read by
+# src/components/options/PromptTextArea.tsx.
+
+# Lines of text the box shows before it scrolls; it can be dragged taller.
+rows = { value = 14, min = 4, max = 40 }
+# Characters of a placeholder's current value shown beside it in the {{ list; longer values are
+# cut short.
+value_preview_chars = { value = 60, min = 10, max = 200 }

@@ -2,5 +2,6 @@
 # how long a quoted bookmark title may grow is the truncate_length setting (both in
 # config/settings/appearance.toml); this value is fixed.
 
-# Milliseconds a dismissed toast stays mounted so its exit animation can finish.
+# Milliseconds a dismissed toast stays mounted, and how long its exit animation runs
+# (src/components/ui/toast.tsx), so the animation always finishes.
 remove_delay_ms = 500

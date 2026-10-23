@@ -82,7 +82,7 @@ export function ManagerShortcutsHelp({ open, onOpenChange }: ManagerShortcutsHel
         <Keyboard className="h-4 w-4" />
       </DialogTrigger>
       {/* Many rows: wider than other dialogs, and it scrolls on short windows. */}
-      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-xl">
+      <DialogContent className="max-h-dialog-screen overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{t('shortcuts_title')}</DialogTitle>
           <DialogDescription>{t('shortcuts_pausedWhileTyping')}</DialogDescription>

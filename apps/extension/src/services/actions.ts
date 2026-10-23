@@ -190,6 +190,11 @@ export async function runAction(
   return result;
 }
 
+/** What the approval of a call shows beyond its `describe` line, or undefined (`approvalPreview`). */
+export function actionApprovalPreview(id: string): ActionApprovalPreview<unknown> | undefined {
+  return isActionId(id) ? getAction(id).approvalPreview : undefined;
+}
+
 /** What a call did, for the chat's steps, or undefined for an id that is not an action. */
 export function describeActionCall(id: string, input: unknown): string | undefined {
   if (!isActionId(id)) return undefined;

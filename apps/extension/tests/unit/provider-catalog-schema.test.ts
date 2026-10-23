@@ -2,10 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { aiProviderFileSchema } from '@/lib/config/ai-provider-schema';
 import {
   catalogIdSchema,
-  catalogProviderSchema,
-  providerCatalogSchema,
+  createProviderCatalogSchemas,
+  providerCatalogLimitsSchema,
 } from '@/lib/config/provider-catalog-schema';
 import providerCatalog from '../../config/provider-catalog.json';
+import { readConfigToml } from '../config-files';
+
+const limits = providerCatalogLimitsSchema.parse(readConfigToml('ai/provider-catalog.toml'));
+const { catalogProviderSchema, providerCatalogSchema } = createProviderCatalogSchemas(limits);
 
 const provider = {
   name: 'Example AI',
@@ -56,6 +60,18 @@ describe('provider catalog schema', () => {
   it('rejects unknown fields and control characters in names', () => {
     expect(catalogProviderSchema.safeParse({ ...provider, extra: 1 }).success).toBe(false);
     expect(catalogProviderSchema.safeParse({ ...provider, name: 'a\u0000b' }).success).toBe(false);
+  });
+
+  it('caps names and addresses at the configured lengths', () => {
+    const name = 'n'.repeat(limits.max_name_length);
+    expect(catalogProviderSchema.safeParse({ ...provider, name }).success).toBe(true);
+    expect(catalogProviderSchema.safeParse({ ...provider, name: `${name}n` }).success).toBe(false);
+    const base = 'https://api.example.com/';
+    const base_url = base + 'a'.repeat(limits.max_url_length - base.length);
+    expect(catalogProviderSchema.safeParse({ ...provider, base_url }).success).toBe(true);
+    expect(catalogProviderSchema.safeParse({ ...provider, base_url: `${base_url}a` }).success).toBe(
+      false,
+    );
   });
 });
 

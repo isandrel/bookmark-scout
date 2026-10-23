@@ -80,6 +80,13 @@ describe('AI provider endpoint validation', () => {
     expect(getProviderEndpoint('azure', undefined, { resourceName: 'my-resource' })).toBe(
       'https://my-resource.openai.azure.com/openai/v1',
     );
+    // The name is encoded for the host; a provider without a resource URL ignores it.
+    expect(getProviderEndpoint('azure', undefined, { resourceName: 'a/b' })).toBe(
+      'https://a%2Fb.openai.azure.com/openai/v1',
+    );
+    expect(getProviderEndpoint('openai', undefined, { resourceName: 'my-resource' })).toBe(
+      'https://api.openai.com/v1',
+    );
   });
 });
 

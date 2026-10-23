@@ -1,11 +1,16 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   counterZoom,
   isBoundPage,
   isToastOnScreen,
+  TOAST_FONT_FAMILIES,
+  TOAST_THEME,
   type ToastPlacement,
 } from '@/entrypoints/quick-save-toast/toast';
 import { languageDirection, SUPPORTED_LOCALES, toLanguageTag } from '@/hooks/use-i18n';
+import { appRoot } from '../config-files';
 
 /**
  * The decisions the quick save notification makes in the page, without a page: whether it is on
@@ -89,5 +94,63 @@ describe('languageDirection', () => {
     for (const locale of SUPPORTED_LOCALES) {
       expect(languageDirection(toLanguageTag(locale)), locale).toBe('ltr');
     }
+  });
+});
+
+/**
+ * The notification copies the theme's colors, shadow, and fonts because the page has none of the
+ * extension's CSS; these fail when a copy drifts from src/styles/theme.css.
+ */
+describe('the notification theme matches theme.css', () => {
+  const css = readFileSync(path.join(appRoot, 'src/styles/theme.css'), 'utf8');
+  /** The custom properties of the first rule with exactly this selector. */
+  const tokens = (selector: string) => {
+    const start = css.indexOf(`\n${selector} {`);
+    const body = css.slice(start, css.indexOf('}', start));
+    return Object.fromEntries(
+      [...body.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [name, value.trim()]),
+    );
+  };
+  /** `H S% L%` channels as a lowercase hex color. */
+  const hex = (channels: string) => {
+    const [h, s, l] = channels.split(/\s+/).map((part) => Number.parseFloat(part));
+    const a = (s / 100) * Math.min(l / 100, 1 - l / 100);
+    const channel = (n: number) => {
+      const k = (n + h / 30) % 12;
+      const value = l / 100 - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+      return Math.round(value * 255)
+        .toString(16)
+        .padStart(2, '0');
+    };
+    return `#${channel(0)}${channel(8)}${channel(4)}`;
+  };
+  const resolve = (value: string) => (/^[\d.]+ [\d.]+% [\d.]+%$/.test(value) ? hex(value) : value);
+
+  it.each([
+    ['light', ':root'],
+    ['dark', '.dark'],
+  ] as const)('in %s', (theme, selector) => {
+    const themed = tokens(selector);
+    for (const [name, entry] of Object.entries(TOAST_THEME)) {
+      expect(themed[entry.token], `--${entry.token}`).toBeDefined();
+      expect(entry[theme], `${name} (--${entry.token})`).toBe(resolve(themed[entry.token]));
+    }
+  });
+
+  it('lists the theme fonts a page can use, in their order', () => {
+    const stack = /\n\s*--font-sans:\s*([^;]+);/.exec(css)?.[1] ?? '';
+    const bundled = new Set(
+      [...css.matchAll(/@font-face\s*\{[^}]*font-family:\s*'([^']+)'/g)].map(
+        ([, family]) => family,
+      ),
+    );
+    const families = stack.split(',').map((family) => family.trim().replace(/^'|'$/g, ''));
+    // A bundled face is usable only as an installed copy, named without "Variable".
+    const usable = families.flatMap((family) => {
+      if (!bundled.has(family)) return [family];
+      return family.endsWith(' Variable') ? [family.slice(0, -' Variable'.length)] : [];
+    });
+    expect(usable.length).toBeGreaterThan(1);
+    expect(TOAST_FONT_FAMILIES.filter((family) => usable.includes(family))).toEqual(usable);
   });
 });

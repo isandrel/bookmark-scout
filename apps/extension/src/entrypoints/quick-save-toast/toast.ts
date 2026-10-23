@@ -63,28 +63,71 @@ const HOST_STYLES: Readonly<Record<string, string>> = {
 };
 
 /**
- * Brand tokens from apps/extension/DESIGN.md; the page has none of the extension's CSS. Light
- * values first, dark in the `[data-theme=dark]` rule.
+ * The notification's colors and shadow. The page has none of the extension's CSS, so each is a copy
+ * of a token in src/styles/theme.css (`token`, light value in `:root`, dark in `.dark`), named as
+ * in DESIGN.md; tests/unit/quick-save-toast.test.ts fails when a copy drifts from theme.css.
  */
+export const TOAST_THEME = {
+  surface: { token: 'card', light: '#ffffff', dark: '#132638' },
+  sunken: { token: 'muted', light: '#e9eef5', dark: '#0a1622' },
+  ink: { token: 'foreground', light: '#0f2135', dark: '#e8eff6' },
+  'ink-soft': { token: 'muted-foreground', light: '#4a5b70', dark: '#9fb2c6' },
+  line: { token: 'border', light: '#d6dfea', dark: '#23394f' },
+  teal: { token: 'primary', light: '#0b7a80', dark: '#3cc4c9' },
+  'teal-ink': { token: 'primary-foreground', light: '#ffffff', dark: '#04252a' },
+  'teal-wash': { token: 'accent', light: '#e1eff1', dark: '#143347' },
+  violet: { token: 'ai', light: '#5b3fd6', dark: '#a08bff' },
+  success: { token: 'success', light: '#1d7a4a', dark: '#5fd49a' },
+  danger: { token: 'destructive-text', light: '#b42318', dark: '#ff8f85' },
+  warning: { token: 'warning', light: '#8a5a00', dark: '#f0b44c' },
+  shadow: {
+    token: 'floating-shadow',
+    light: '0 8px 24px rgb(15 33 53 / 0.18)',
+    dark: '0 8px 24px rgb(0 0 0 / 0.45)',
+  },
+} as const;
+
+/**
+ * theme.css's `--font-sans` as a page can use it: the bundled faces only by the name an installed
+ * copy has (without "Variable"), and the system UI fonts before the generic family, since a page
+ * cannot load the extension's fonts. tests/unit/quick-save-toast.test.ts checks the order.
+ */
+export const TOAST_FONT_FAMILIES = [
+  'Instrument Sans',
+  'Hiragino Sans',
+  'Apple SD Gothic Neo',
+  'Noto Sans JP',
+  'Noto Sans KR',
+  'system-ui',
+  '-apple-system',
+  'Segoe UI',
+  'sans-serif',
+] as const;
+
+/** The CSS custom properties of one theme, `--surface: #ffffff; ...`. */
+function themeProperties(theme: 'light' | 'dark'): string {
+  return Object.entries(TOAST_THEME)
+    .map(([name, values]) => `--${name}: ${values[theme]};`)
+    .join(' ');
+}
+
+/** A family name as CSS writes it: generic families and keywords bare, others quoted. */
+const cssFamily = (family: string) => (/^[a-z-]+$/.test(family) ? family : `"${family}"`);
+
+/** Light values first, dark in the `[data-theme=dark]` rule. */
 const STYLES = `
 :host { all: initial; }
 .toast {
-  --surface: #ffffff; --sunken: #e9eef5; --ink: #0f2135; --ink-soft: #4a5b70; --line: #d6dfea;
-  --teal: #0b7a80; --teal-ink: #ffffff; --teal-wash: #e1eff1; --violet: #5b3fd6;
-  --success: #1d7a4a; --danger: #b42318; --warning: #8a5a00;
+  ${themeProperties('light')}
   box-sizing: border-box; position: relative; width: 100%; margin: 0; padding: 12px 12px 14px;
   overflow: hidden; display: flex; flex-direction: column; gap: 10px;
   background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(15, 33, 53, 0.18);
-  font: 400 14px/1.45 "Instrument Sans", "Hiragino Sans", "Apple SD Gothic Neo", "Noto Sans JP",
-    "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
+  box-shadow: var(--shadow);
+  font: 400 14px/1.45 ${TOAST_FONT_FAMILIES.map(cssFamily).join(', ')};
   text-align: start; letter-spacing: normal; text-transform: none;
 }
 .toast[data-theme="dark"] {
-  --surface: #132638; --sunken: #0a1622; --ink: #e8eff6; --ink-soft: #9fb2c6; --line: #23394f;
-  --teal: #3cc4c9; --teal-ink: #04252a; --teal-wash: #143347; --violet: #a08bff;
-  --success: #5fd49a; --danger: #ff8f85; --warning: #f0b44c;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  ${themeProperties('dark')}
 }
 .toast *, .toast *::before, .toast *::after { box-sizing: border-box; }
 .head { display: flex; align-items: flex-start; gap: 10px; }

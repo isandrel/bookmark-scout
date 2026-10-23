@@ -17,8 +17,9 @@ import { createConfigReader, loadAppConfig } from '../src/lib/config/loader';
 import {
   type CatalogProvider,
   catalogIdSchema,
-  catalogProviderSchema,
-  providerCatalogSchema,
+  createProviderCatalogSchemas,
+  PROVIDER_CATALOG_LIMITS_PATH,
+  providerCatalogLimitsSchema,
 } from '../src/lib/config/provider-catalog-schema';
 
 const SOURCE_URL = 'https://models.dev/api.json';
@@ -47,6 +48,19 @@ async function providerFileLogoIds(): Promise<string[]> {
   );
   return Object.values(providers).flatMap((provider) => (provider.logo ? [provider.logo] : []));
 }
+
+/** The catalog's schemas, within the limits the extension reads from the same config file. */
+async function catalogSchemas() {
+  const file = `${PROVIDER_CATALOG_LIMITS_PATH}.toml`;
+  const text = await readFile(path.join(CONFIG_DIR, file), 'utf8');
+  const limits = createConfigReader(loadAppConfig({ [file]: text })).read(
+    PROVIDER_CATALOG_LIMITS_PATH,
+    providerCatalogLimitsSchema,
+  );
+  return createProviderCatalogSchemas(limits);
+}
+
+const { catalogProviderSchema, providerCatalogSchema } = await catalogSchemas();
 
 /** AI SDK packages whose protocol the extension can speak against any base URL. */
 const PROTOCOL_BY_PACKAGE: Record<string, CatalogProtocol> = {

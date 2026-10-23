@@ -3,29 +3,40 @@
  * estimated. No React here.
  */
 
-/** The tool title each kind of scan job shows. */
-const JOB_TITLE_KEYS: Record<ScanJobKind, MessageKey> = {
-  deadLinks: 'tools_checkDeadLinks',
-  metadataFetcher: 'tools_metadataFetcher',
-  siteIcons: 'tools_siteIcons',
-  pageText: 'tools_pageText',
-  reorganization: 'tools_aiReorganize',
+/**
+ * How each kind of job reads, one entry per kind (`JOB_KINDS`): a scan shows its tool's title; a
+ * job that applies reviewed changes names the tool whose changes it applies (its title key, fixed
+ * or from the job's options) and says what a stopped one kept. Kept here rather than on
+ * `JOB_ADAPTERS`, which hold the background's work and must stay out of the pages' startup code.
+ */
+type ScanJobView = { titleKey: MessageKey };
+type ApplyJobView = { appliedTool: (options: unknown) => string; cancelledNoteKey: MessageKey };
+
+const JOB_VIEWS: Record<ScanJobKind, ScanJobView> &
+  Record<(typeof APPLY_JOB_KINDS)[number], ApplyJobView> = {
+  deadLinks: { titleKey: 'tools_checkDeadLinks' },
+  metadataFetcher: { titleKey: 'tools_metadataFetcher' },
+  siteIcons: { titleKey: 'tools_siteIcons' },
+  pageText: { titleKey: 'tools_pageText' },
+  reorganization: { titleKey: 'tools_aiReorganize' },
+  applyChanges: {
+    appliedTool: (options) => applyJobOptionsSchema.parse(options).tool,
+    cancelledNoteKey: 'jobs_cancelledApplyNote',
+  },
+  // A Smart Rules run's tags are undone from Settings, its moves from the History.
+  applyRules: { appliedTool: () => RULE_RUN_TOOL, cancelledNoteKey: 'jobs_cancelledRulesNote' },
 };
 
 /** Whether a job applies reviewed changes, rather than scanning. */
 function isApplyJob(job: Pick<JobRecord, 'kind'>): boolean {
-  return (APPLY_JOB_KINDS as readonly string[]).includes(job.kind);
-}
-
-/** The tool whose reviewed changes an apply job applies (its title key). */
-function appliedTool(job: Pick<JobRecord, 'kind' | 'options'>): string {
-  return job.kind === 'applyRules' ? RULE_RUN_TOOL : applyJobOptionsSchema.parse(job.options).tool;
+  return 'appliedTool' in JOB_VIEWS[job.kind];
 }
 
 export function jobTitle(job: Pick<JobRecord, 'kind' | 'options'>): string {
-  return job.kind === 'applyChanges' || job.kind === 'applyRules'
-    ? t('jobs_applyTitle', t(appliedTool(job)))
-    : t(JOB_TITLE_KEYS[job.kind]);
+  const view = JOB_VIEWS[job.kind];
+  return 'appliedTool' in view
+    ? t('jobs_applyTitle', t(view.appliedTool(job.options)))
+    : t(view.titleKey);
 }
 
 /** What one kind of job counts: links checked, or changes applied. */
@@ -34,13 +45,11 @@ export function jobCountsLabel(job: Pick<JobRecord, 'kind' | 'done'>): string {
   return t(isApplyJob(job) ? 'jobs_countsApply' : 'jobs_counts', counts);
 }
 
-/**
- * What a stopped job kept: scan results, or the changes already made (a Smart Rules run's tags
- * are undone from Settings, its moves from the History).
- */
+/** What a stopped job kept: scan results, or the changes already made. */
 export function jobCancelledNote(job: Pick<JobRecord, 'kind'>): string {
-  if (job.kind === 'applyRules') return t('jobs_cancelledRulesNote');
-  return t(isApplyJob(job) ? 'jobs_cancelledApplyNote' : 'jobs_cancelledNote');
+  const view = JOB_VIEWS[job.kind];
+  const key: MessageKey = 'cancelledNoteKey' in view ? view.cancelledNoteKey : 'jobs_cancelledNote';
+  return t(key);
 }
 
 const STATE_KEYS: Record<JobState, MessageKey> = {

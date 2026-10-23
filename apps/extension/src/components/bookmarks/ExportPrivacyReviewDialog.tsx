@@ -46,7 +46,7 @@ export function ExportPrivacyReviewDialog({
             {tPlural('export_privacyReviewDesc', items?.length ?? 0)}
           </DialogDescription>
         </DialogHeader>
-        <ul className="max-h-[50vh] space-y-2 overflow-y-auto pr-1">
+        <ul className="max-h-dialog-list-short space-y-2 overflow-y-auto pr-1">
           {items?.map((item) => (
             <li key={item.id} className="space-y-1 rounded-lg border p-3">
               <div className="text-sm font-medium break-words">

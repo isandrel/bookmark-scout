@@ -6,7 +6,12 @@ import {
   AI_PROVIDERS_CONFIG_PATH,
   aiProviderFilesSchema,
 } from '@/lib/config/ai-provider-schema';
-import { type ProviderCatalog, providerCatalogSchema } from '@/lib/config/provider-catalog-schema';
+import {
+  createProviderCatalogSchemas,
+  PROVIDER_CATALOG_LIMITS_PATH,
+  type ProviderCatalog,
+  providerCatalogLimitsSchema,
+} from '@/lib/config/provider-catalog-schema';
 import providerCatalog from '../../config/provider-catalog.json';
 
 export type AIModel = {
@@ -26,6 +31,8 @@ export type AIProviderConfig = {
   provider_kind?: AIProviderKind;
   requires_api_key?: boolean;
   base_url?: string;
+  /** The default endpoint from the Resource name field, with `{resourceName}` in its host. */
+  resource_url_template?: string;
   supports_custom_model?: boolean;
   /** Shape of the provider's model-list endpoint; `openai` when omitted. */
   model_list?: ModelListStyle;
@@ -60,6 +67,13 @@ const providerFiles = Object.entries(
 ).sort(([, left], [, right]) => left.order - right.order);
 
 const featuredProviderIds = new Set(providerFiles.map(([id]) => id));
+
+const { providerCatalogSchema } = createProviderCatalogSchemas(
+  readConfig(PROVIDER_CATALOG_LIMITS_PATH, providerCatalogLimitsSchema),
+);
+
+/** Where a provider's `resource_url_template` takes the Resource name field. */
+const RESOURCE_NAME_PLACEHOLDER = '{resourceName}';
 
 let catalog: ProviderCatalog | undefined;
 
@@ -178,6 +192,17 @@ export function providerSupportsFeature(provider: AIProvider, feature: AIFeature
 
 export function getProviderBaseUrl(provider: AIProvider): string | undefined {
   return getProviderConfig(provider)?.base_url;
+}
+
+/** The provider's endpoint for a resource name (Azure), or undefined when it builds none. */
+export function getProviderResourceUrl(
+  provider: AIProvider,
+  resourceName: string,
+): string | undefined {
+  return getProviderConfig(provider)?.resource_url_template?.replace(
+    RESOURCE_NAME_PLACEHOLDER,
+    encodeURIComponent(resourceName),
+  );
 }
 
 export function providerRequiresApiKey(provider: AIProvider): boolean {

@@ -1,5 +1,5 @@
-# Resizable columns in the bookmark manager table. Each column's default and minimum width is in
-# its definition in src/components/ui/table/columns.tsx.
+# Resizable columns in the bookmark manager table. Read by src/lib/bookmark-table-column-sizes.ts.
+# Each column's default and minimum width is in [columns] of config/ui/manager-table.toml.
 
 # Widest a resizable column may be dragged, in pixels.
 max_column_width = 1200

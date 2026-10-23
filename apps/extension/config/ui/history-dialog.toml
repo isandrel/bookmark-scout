@@ -1,0 +1,5 @@
+# The bookmark manager's History dialog (Bookmark Audit History, config/bookmarks/audit.toml).
+# Read by src/components/bookmarks/HistoryDialog.lazy.tsx.
+
+# Item rows an expanded record lists at first, and how many more each Show more adds.
+item_rows_per_page = { value = 100, min = 10, max = 2000 }

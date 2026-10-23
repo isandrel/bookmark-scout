@@ -15,7 +15,7 @@ export function ToolResultsDialog({
 }: ToolResultsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] overflow-hidden sm:max-w-3xl">
+      <DialogContent className="max-h-dialog overflow-hidden sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description ? <DialogDescription>{description}</DialogDescription> : null}

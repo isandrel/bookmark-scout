@@ -19,6 +19,10 @@ audit_reason = 64
 # Ids, feature names, and the page's token in quick save messages.
 message_id = 100
 message_source = 50
+# The HTTP method of a request the AI host page asks the background to make, and the language tag
+# of a generation request.
+request_method = 10
+locale_tag = 10
 document_token = 100
 # A page's <head> the background hands the AI host page to read; the same as head_max_bytes
 # in config/network/html.toml, which a unit test checks.
@@ -39,6 +43,9 @@ alternative_index = 50
 request_headers = 100
 # Meta tags naming a preview image that quick save reads from a page.
 cover_metas = 20
+# The most folder ids a quick save folder answer may choose from: the largest `candidates` shortlist
+# allowed in config/ai/built-in.toml, which a unit test checks.
+host_choices = 100
 
 # Lengths of the ids the extension makes.
 [ids]

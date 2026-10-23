@@ -1,4 +1,4 @@
-import { site } from "@bookmark-scout/config";
+import { readProviderAddress, site } from "@bookmark-scout/config";
 import { settingDefaultText } from "@/components/mdx/setting-default";
 import { getCopy } from "@/lib/copy";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
@@ -86,6 +86,11 @@ const replacementsFor = (
     /<SettingDefault\s+path="([^"]+)"(\s+seconds)?(\s+percent)?\s*\/>/g,
     (path, seconds, percent) =>
       settingDefaultText(path, locale, Boolean(seconds), Boolean(percent)),
+  ],
+  [
+    /<ProviderAddress\s+id="([\w-]+)"(?:\s+part="(url|host)")?\s*\/>/g,
+    (id, part) =>
+      `\`${readProviderAddress(id, part === "host" ? "host" : "url")}\``,
   ],
   [/<License\s*\/>/g, () => `[${license.name}](${license.url})`],
   [

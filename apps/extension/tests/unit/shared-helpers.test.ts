@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { formatKilobytes, getErrorMessage, setLanguage } from '@/hooks/use-i18n';
+import { toIsoDate } from '@/lib/date-formats';
 import { getSettingsFieldMeta } from '@/lib/settings-schema';
 import { BYTES_PER_KB, MS_PER_SECOND } from '@/lib/units';
 import { ELLIPSIS, isPlainObject, isSameJson, truncateText } from '@/lib/utils';
@@ -90,5 +91,13 @@ describe('truncateText', () => {
   it('cuts text longer than the limit and marks it with an ellipsis', () => {
     expect(truncateText('abcdef', 3)).toBe(`abc${ELLIPSIS}`);
     expect(truncateText('abc', 3)).toBe('abc');
+  });
+});
+
+describe('toIsoDate', () => {
+  it('gives the UTC calendar date of a Date or epoch milliseconds', () => {
+    const time = Date.UTC(2026, 9, 22, 23, 59);
+    expect(toIsoDate(time)).toBe('2026-10-22');
+    expect(toIsoDate(new Date(time))).toBe('2026-10-22');
   });
 });

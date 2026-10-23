@@ -10,8 +10,6 @@
 
 import type { SupportedBrowser } from './supported-browsers';
 
-export type { SupportedBrowser };
-
 /** `required` is granted at install; `optional` is asked for by a feature below. */
 type PermissionGrant = 'required' | 'optional';
 

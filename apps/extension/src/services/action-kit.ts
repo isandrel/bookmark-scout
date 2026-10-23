@@ -169,7 +169,36 @@ export type ActionCall<Input, Output> = {
   precheck?: (input: Input, context: ActionContext) => Promise<ActionError | undefined>;
   /** What a call did, in the user's language, such as the chat's step text. */
   describe: (input: Partial<Input>) => string;
+  /** What the approval of a call shows when `describe` is not enough (`ActionApproval.lazy.tsx`). */
+  approvalPreview?: ActionApprovalPreview<Input>;
   execute: (input: Input, context: ActionContext) => Promise<Output | ActionError>;
+};
+
+/** Lines an approval lists, under an optional summary, in the user's language. */
+export type ActionApprovalLines = { lines: string[]; summary?: string };
+
+/**
+ * What Ask AI's and the local agents' approval shows for a call, read from the call's unchecked
+ * input. Without one, it shows the call's `describe` line.
+ */
+export type ActionApprovalPreview<Input> = {
+  /**
+   * The stored record the call names (the plan an apply names, the history entry an undo names),
+   * read when the approval opens, so the user approves what Bookmark Scout will do, never the
+   * model's account of it.
+   */
+  stored?: {
+    /** The record's id in the input, or undefined when the input names none. */
+    id: (input: Partial<Input>) => string | undefined;
+    /** Its lines, or null when it is gone (expired, applied, or undone already). */
+    load: (id: string) => Promise<ActionApprovalLines | null>;
+    /** What the approval says when it is gone; it cannot be approved then. */
+    missingKey: MessageKey;
+  };
+  /** The lines for a call that names no stored record. */
+  lines?: (input: Partial<Input>) => string[];
+  /** An address shown in full under the lines, since a title can hide it. */
+  url?: (input: Partial<Input>) => string | undefined;
 };
 
 /**

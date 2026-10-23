@@ -90,10 +90,10 @@ description: Включите необязательные функции ИИ, 
 | xAI | Обязателен | |
 | Azure OpenAI | Обязателен | Задайте **Имя ресурса** (или **Базовый URL**) и введите имя развёртывания в поле **Своя модель**. У Azure нет списка развёртываний, поэтому кнопка **Обновить список моделей** не показывается. |
 | OpenRouter | Обязателен | |
-| Ollama (Local) | Необязателен | Адрес по умолчанию `http://localhost:11434/api`; запросы не покидают ваш компьютер |
-| CLIProxyAPI | Обычно обязателен | Работает на вашем компьютере и отвечает через ваши собственные аккаунты Claude, Gemini или Codex. Адрес по умолчанию `http://localhost:8317/v1`; введите один из ключей из `api-keys` в его `config.yaml`, затем нажмите **Обновить список моделей**, чтобы увидеть модели, доступные вашим аккаунтам. |
-| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Необязателен | Перечислены в группе **Локальные серверы** с адресами `localhost` по умолчанию: oMLX и vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp и LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Нажмите **Обновить список моделей**, чтобы увидеть, какие модели загружены на сервере. |
-| Jan | Обязателен | Локальный API-сервер по адресу `http://localhost:1337/v1`; введите ключ из настроек API-сервера Jan |
+| Ollama (Local) | Необязателен | Адрес по умолчанию <ProviderAddress id="ollama" />; запросы не покидают ваш компьютер |
+| CLIProxyAPI | Обычно обязателен | Работает на вашем компьютере и отвечает через ваши собственные аккаунты Claude, Gemini или Codex. Адрес по умолчанию <ProviderAddress id="cliproxyapi" />; введите один из ключей из `api-keys` в его `config.yaml`, затем нажмите **Обновить список моделей**, чтобы увидеть модели, доступные вашим аккаунтам. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Необязателен | Перечислены в группе **Локальные серверы** с адресами по умолчанию: oMLX <ProviderAddress id="omlx" />, LM Studio <ProviderAddress id="lmstudio" />, llama.cpp <ProviderAddress id="llamacpp" />, vLLM <ProviderAddress id="vllm" />, LocalAI <ProviderAddress id="localai" />, KoboldCpp <ProviderAddress id="koboldcpp" />, text-generation-webui <ProviderAddress id="textgen" />. Нажмите **Обновить список моделей**, чтобы увидеть, какие модели загружены на сервере. |
+| Jan | Обязателен | Локальный API-сервер по адресу <ProviderAddress id="jan" />; введите ключ из настроек API-сервера Jan |
 | Custom Provider | Необязателен | Любой OpenAI-совместимый сервис, задаётся через **Базовый URL** |
 | Custom Provider (Anthropic-compatible) | Необязателен | Любой сервис, поддерживающий Anthropic Messages API, задаётся через **Базовый URL** |
 | Ещё около 200 | Обычно обязателен | Перечислены в группе **Другие провайдеры (models.dev)**, например Together AI, Fireworks AI, Cerebras, DeepInfra и LM Studio. У них нет встроенного списка моделей: нажмите **Обновить список моделей** или введите **Своя модель**. |
@@ -110,7 +110,7 @@ description: Включите необязательные функции ИИ, 
 - **LM Studio:** включите **Enable CORS** в настройках сервера или запустите его командой `lms server start --cors`.
 - **LocalAI:** задайте API-ключ; его проверка CSRF отклоняет запросы из браузера без ключа.
 - **text-generation-webui:** запускайте его с `--api`.
-- **CLIProxyAPI:** с настройками по умолчанию принимает запросы расширения. Запустите его до того, как нажмёте **Проверить сервис**; если он не запущен, проверка сообщит, что не удалось подключиться к `localhost:8317`.
+- **CLIProxyAPI:** с настройками по умолчанию принимает запросы расширения. Запустите его до того, как нажмёте **Проверить сервис**; если он не запущен, проверка сообщит, что не удалось подключиться к <ProviderAddress id="cliproxyapi" part="host" />.
 
 ### Если проверка не прошла [#when-a-check-fails]
 

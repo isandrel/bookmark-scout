@@ -90,10 +90,10 @@ Enregistrez autant de services que vous le souhaitez, y compris plusieurs pour l
 | xAI | Obligatoire | |
 | Azure OpenAI | Obligatoire | Indiquez le **Nom de la ressource** (ou une **URL de base**) et saisissez le nom de votre déploiement comme **Modèle personnalisé**. Azure ne fournit pas de liste des déploiements : **Actualiser les modèles** n'est donc pas affiché. |
 | OpenRouter | Obligatoire | |
-| Ollama (local) | Facultative | Adresse par défaut `http://localhost:11434/api` ; les requêtes restent sur votre machine |
-| CLIProxyAPI | Généralement obligatoire | S'exécute sur votre machine et répond avec vos propres comptes Claude, Gemini ou Codex. Adresse par défaut `http://localhost:8317/v1` ; saisissez l'une des clés indiquées sous `api-keys` dans son fichier `config.yaml`, puis cliquez sur **Actualiser les modèles** pour voir les modèles proposés par vos comptes. |
-| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Facultative | Listés sous **Serveurs locaux** avec leurs adresses `localhost` par défaut : oMLX et vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp et LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Cliquez sur **Actualiser les modèles** pour voir ce que le serveur a chargé. |
-| Jan | Obligatoire | Serveur d'API local à l'adresse `http://localhost:1337/v1` ; saisissez la clé indiquée dans les paramètres du serveur d'API de Jan |
+| Ollama (local) | Facultative | Adresse par défaut <ProviderAddress id="ollama" /> ; les requêtes restent sur votre machine |
+| CLIProxyAPI | Généralement obligatoire | S'exécute sur votre machine et répond avec vos propres comptes Claude, Gemini ou Codex. Adresse par défaut <ProviderAddress id="cliproxyapi" /> ; saisissez l'une des clés indiquées sous `api-keys` dans son fichier `config.yaml`, puis cliquez sur **Actualiser les modèles** pour voir les modèles proposés par vos comptes. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Facultative | Listés sous **Serveurs locaux** avec leurs adresses par défaut : oMLX <ProviderAddress id="omlx" />, LM Studio <ProviderAddress id="lmstudio" />, llama.cpp <ProviderAddress id="llamacpp" />, vLLM <ProviderAddress id="vllm" />, LocalAI <ProviderAddress id="localai" />, KoboldCpp <ProviderAddress id="koboldcpp" />, text-generation-webui <ProviderAddress id="textgen" />. Cliquez sur **Actualiser les modèles** pour voir ce que le serveur a chargé. |
+| Jan | Obligatoire | Serveur d'API local à l'adresse <ProviderAddress id="jan" /> ; saisissez la clé indiquée dans les paramètres du serveur d'API de Jan |
 | Fournisseur personnalisé | Facultative | Tout point de terminaison compatible OpenAI, défini avec l'**URL de base** |
 | Fournisseur personnalisé (compatible Anthropic) | Facultative | Tout point de terminaison qui prend en charge l'API Messages d'Anthropic, défini avec l'**URL de base** |
 | Environ 200 autres | Généralement obligatoire | Listés sous **Autres fournisseurs (models.dev)**, par exemple Together AI, Fireworks AI, Cerebras, DeepInfra et LM Studio. Ils n'ont pas de liste de modèles intégrée : cliquez sur **Actualiser les modèles** ou saisissez un **Modèle personnalisé**. |
@@ -110,7 +110,7 @@ Les serveurs locaux doivent accepter les requêtes de l'extension :
 - **LM Studio :** activez **Enable CORS** dans les paramètres du serveur, ou démarrez-le avec `lms server start --cors`.
 - **LocalAI :** définissez une clé API ; sa protection CSRF rejette les requêtes sans clé provenant du navigateur.
 - **text-generation-webui :** démarrez-le avec `--api`.
-- **CLIProxyAPI :** accepte les requêtes de l'extension avec sa configuration par défaut. Démarrez-le avant de cliquer sur **Vérifier le service** ; s'il n'est pas en cours d'exécution, la vérification indique qu'elle n'a pas pu joindre `localhost:8317`.
+- **CLIProxyAPI :** accepte les requêtes de l'extension avec sa configuration par défaut. Démarrez-le avant de cliquer sur **Vérifier le service** ; s'il n'est pas en cours d'exécution, la vérification indique qu'elle n'a pas pu joindre <ProviderAddress id="cliproxyapi" part="host" />.
 
 ### En cas d'échec d'une vérification [#when-a-check-fails]
 

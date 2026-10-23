@@ -13,16 +13,23 @@ import {
   useRef,
   useState,
 } from 'react';
+import { z } from 'zod';
+import { boundedNumber } from '@/lib/config/bounded';
 
 /** `{{` and the name typed so far, right before the caret; `\{{` is literal braces. */
 const TYPED_PLACEHOLDER = /(?<!\\)\{\{(\w*)$/;
 
-/** Longest current value shown beside a placeholder in the list. */
-const VALUE_PREVIEW_LENGTH = 60;
+const editorConfig = readConfig(
+  'ui/prompt-editor',
+  z.strictObject({
+    rows: boundedNumber({ integer: true }),
+    value_preview_chars: boundedNumber({ integer: true }),
+  }),
+);
 
 type PromptTextAreaProps = Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
-  'value' | 'onChange' | 'ref'
+  'value' | 'onChange' | 'ref' | 'rows'
 > & {
   value: string;
   onValueChange: (value: string) => void;
@@ -37,7 +44,7 @@ function valuePreview(value: PromptVariables[string]): string {
   const text = Array.isArray(value) ? value.join(', ') : String(value ?? '');
   const line = text.replace(/\s+/g, ' ').trim();
   if (!line) return t('prompt_valueEmpty');
-  return t('prompt_valueNow', truncateText(line, VALUE_PREVIEW_LENGTH));
+  return t('prompt_valueNow', truncateText(line, editorConfig.value_preview_chars));
 }
 
 export function PromptTextArea({
@@ -97,6 +104,7 @@ export function PromptTextArea({
     <div className="space-y-1">
       <textarea
         {...props}
+        rows={editorConfig.rows}
         ref={textRef}
         value={value}
         aria-autocomplete="list"

@@ -16,6 +16,8 @@ export const INPUT_LIMITS = readConfig(
       audit_reason: positive,
       message_id: positive,
       message_source: positive,
+      request_method: positive,
+      locale_tag: positive,
       document_token: positive,
       page_head: positive,
       page_html: positive,
@@ -27,6 +29,7 @@ export const INPUT_LIMITS = readConfig(
       alternative_index: positive,
       request_headers: positive,
       cover_metas: positive,
+      host_choices: positive,
     }),
     ids: z.strictObject({
       document_token_bytes: positive,

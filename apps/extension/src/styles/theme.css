@@ -146,6 +146,22 @@
     'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-display: 'Bricolage Grotesque Variable', var(--font-sans);
 
+  /*
+   * Named size caps (DESIGN.md, spacing), used as `max-h-dialog`, `sm:w-settings-control`, and so
+   * on, so a cap several components share has one value. tests/unit/design-tokens.test.ts fails
+   * when one arbitrary size such as `max-h-[85vh]` is typed in two files.
+   */
+  --max-height-dialog: 85vh;
+  --max-height-dialog-tall: 90vh;
+  --max-height-dialog-screen: calc(100dvh - 2rem);
+  --max-height-dialog-list: 60vh;
+  --max-height-dialog-list-short: 50vh;
+  --width-settings-control: 220px;
+  --min-width-settings-control: var(--width-settings-control);
+  --max-width-settings-control: 320px;
+  --width-settings-slider: 240px;
+  --min-width-menu: 8rem;
+
   --animate-toast-progress: toast-progress var(--toast-duration, 4000ms) linear forwards;
 
   @keyframes toast-progress {
@@ -201,6 +217,8 @@
   /* A card's placeholder tile without a cover: the hue comes from the site (--cover-tile-hue). */
   --cover-tile-saturation: 50%;
   --cover-tile-lightness: 91%;
+  /* What floats over a web page: the quick save notification, which copies it (toast.ts). */
+  --floating-shadow: 0 8px 24px rgb(15 33 53 / 0.18);
 }
 
 .dark {
@@ -244,6 +262,7 @@
   --sidebar-ring: 182.1 56.6% 51.2%;
   --cover-tile-saturation: 32%;
   --cover-tile-lightness: 21%;
+  --floating-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
 }
 
 /* The popup and side panel sit on surface; the manager and options pages sit on paper. */

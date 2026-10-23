@@ -90,10 +90,10 @@ Save as many services as you like, even several of the same provider: for exampl
 | xAI | Required | |
 | Azure OpenAI | Required | Set **Resource name** (or a **Base URL**) and enter your deployment name as **Custom Model**. Azure has no deployment list, so **Refresh Models** is not shown. |
 | OpenRouter | Required | |
-| Ollama (Local) | Optional | Default address `http://localhost:11434/api`; requests stay on your machine |
-| CLIProxyAPI | Usually required | Runs on your machine and answers with your own Claude, Gemini, or Codex accounts. Default address `http://localhost:8317/v1`; enter one of the keys under `api-keys` in its `config.yaml`, then **Refresh Models** to see the models your accounts offer. |
-| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Optional | Listed under **Local servers** with their default `localhost` addresses: oMLX and vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp and LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Click **Refresh Models** to see what the server has loaded. |
-| Jan | Required | Local API server at `http://localhost:1337/v1`; enter the key from Jan's API server settings |
+| Ollama (Local) | Optional | Default address <ProviderAddress id="ollama" />; requests stay on your machine |
+| CLIProxyAPI | Usually required | Runs on your machine and answers with your own Claude, Gemini, or Codex accounts. Default address <ProviderAddress id="cliproxyapi" />; enter one of the keys under `api-keys` in its `config.yaml`, then **Refresh Models** to see the models your accounts offer. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Optional | Listed under **Local servers** with their default addresses: oMLX <ProviderAddress id="omlx" />, LM Studio <ProviderAddress id="lmstudio" />, llama.cpp <ProviderAddress id="llamacpp" />, vLLM <ProviderAddress id="vllm" />, LocalAI <ProviderAddress id="localai" />, KoboldCpp <ProviderAddress id="koboldcpp" />, text-generation-webui <ProviderAddress id="textgen" />. Click **Refresh Models** to see what the server has loaded. |
+| Jan | Required | Local API server at <ProviderAddress id="jan" />; enter the key from Jan's API server settings |
 | Custom Provider | Optional | Any OpenAI-compatible endpoint, set with **Base URL** |
 | Custom Provider (Anthropic-compatible) | Optional | Any endpoint that speaks the Anthropic Messages API, set with **Base URL** |
 | About 200 more | Usually required | Listed under **More providers (models.dev)**, for example Together AI, Fireworks AI, Cerebras, DeepInfra, and LM Studio. They have no built-in model list: click **Refresh Models** or enter a **Custom Model**. |
@@ -110,7 +110,7 @@ Local servers must accept requests from the extension:
 - **LM Studio:** turn on **Enable CORS** in the server settings, or start it with `lms server start --cors`.
 - **LocalAI:** set an API key; its CSRF check rejects keyless requests from the browser.
 - **text-generation-webui:** start it with `--api`.
-- **CLIProxyAPI:** accepts the extension's requests as configured by default. Start it before you click **Verify Service**; if it is not running, Verify says it could not reach `localhost:8317`.
+- **CLIProxyAPI:** accepts the extension's requests as configured by default. Start it before you click **Verify Service**; if it is not running, Verify says it could not reach <ProviderAddress id="cliproxyapi" part="host" />.
 
 ### When a check fails
 

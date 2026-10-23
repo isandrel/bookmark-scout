@@ -131,3 +131,15 @@ export function dateTimeFormatOptions(
   // The pinned locale orders the date; a time alone follows the language.
   return { ...(date.locale && kind !== 'time' ? { locale: date.locale } : {}), options };
 }
+
+/** Length of an ISO 8601 calendar date, `YYYY-MM-DD`. */
+const ISO_DATE_LENGTH = 'YYYY-MM-DD'.length;
+
+/**
+ * The UTC calendar date of `date` (a `Date` or epoch milliseconds) in ISO 8601 form, `2026-10-22`:
+ * for file names and for models, which read it the same way in every language. Dates people read
+ * go through `formatDay` instead.
+ */
+export function toIsoDate(date: Date | number): string {
+  return new Date(date).toISOString().slice(0, ISO_DATE_LENGTH);
+}

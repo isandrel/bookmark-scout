@@ -16,6 +16,7 @@ import {
   StoreAvailability,
   StoreListing,
 } from "@/components/mdx/links";
+import { ProviderAddress } from "@/components/mdx/provider-address";
 import { Screenshot } from "@/components/mdx/screenshot";
 import { SettingDefault } from "@/components/mdx/setting-default";
 import { Shortcut } from "@/components/mdx/shortcut";
@@ -33,6 +34,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Languages,
     License,
     PrivacyEffectiveDate,
+    ProviderAddress,
     ReleaseLink,
     RepoLink,
     Screenshot,

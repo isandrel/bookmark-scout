@@ -260,7 +260,8 @@ const NOT_INSTALLED = /not found|no such native application/i;
 
 function scheduleRetry(): void {
   const delays = bridgeConfig.reconnect_seconds;
-  const seconds = delays[Math.min(attempt, delays.length - 1)] ?? delays[0] ?? 60;
+  // The config keeps at least one delay; past the last attempt listed, its delay repeats.
+  const seconds = delays[Math.min(attempt, delays.length - 1)];
   attempt += 1;
   clearTimeout(retryTimer);
   retryTimer = setTimeout(() => void syncAgentBridge(), seconds * MS_PER_SECOND);
