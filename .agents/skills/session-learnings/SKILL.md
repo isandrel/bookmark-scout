@@ -54,6 +54,8 @@ Skip generic advice any engineer knows, one-off incidents unlikely to recur, and
 
 Prefer updating a skill over creating one; a new skill must have a distinct trigger. Add every new skill to the "Agent skills" list in the root `AGENTS.md`.
 
+When reviewing the whole set, merge two skills only where a reader would otherwise need both and their triggers overlap (October 2026: the live-browser check went into `extension-exploratory-qa`, the Chrome Web Store dashboard into `extension-store-release`). Keep the folder name that other files cite, move scripts and assets with `git mv`, and `rg` the whole repository for the old name: `store/README.md` and other skills pointed at a merged one.
+
 ## 5. Keep it portable and private
 
 The repository is public and skills must work for anyone who clones it.
@@ -78,8 +80,8 @@ Lessons go stale fast. Before writing one, confirm the file paths, script and ta
 ## 7. Write it
 
 - Phrase lessons as guidance with the reason, plus the concrete example that taught it ("PR #518 found..."), so a reader can judge edge cases.
-- Keep each `SKILL.md` under about 500 lines; move long reference material into `references/` and say when to read it.
-- The `description` front matter decides when the skill triggers. Name the user phrases and file areas it covers, and be generous.
+- Keep each `SKILL.md` under about 150 lines; move long reference material into `references/` and say when to read it.
+- The `description` front matter decides when the skill triggers. Name the user phrases and file areas it covers, and be generous. It is a plain YAML scalar: a ` #` starts a comment and a `: ` breaks it (`"merge PR #N"` once cut a description in half); `scripts/skills-index.test.ts` parses it and fails on either.
 - Apply edits with uniqueness-checked replacements (the Edit tool, or a script that asserts each anchor matches exactly once), so a stale anchor fails loudly instead of editing the wrong place.
 - Never propose vendor-specific instruction files (`CLAUDE.md` and similar); rules go in `AGENTS.md`, workflows in `.agents/skills/`.
 - This is a docs-only change. CI runs only Lint for it (see `.github/ci-scopes.toml`); no extension build or E2E is needed.

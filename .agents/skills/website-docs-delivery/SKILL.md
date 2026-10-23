@@ -16,14 +16,14 @@ bun install --frozen-lockfile
 bunx nx run website:lint
 bunx nx run website:verify
 bunx nx run website:test:e2e
-cd apps/docs && bun run types:check && bunx biome check src scripts
+bunx nx run docs:types:check
+bunx nx run docs:lint
 bunx nx run docs:build && bun run --cwd apps/docs verify
 ```
 
 - For type errors in website code, also run `bunx tsc --noEmit -p .` in `apps/website`.
 - Builds rewrite `apps/website/next-env.d.ts`; restore it with `git checkout apps/website/next-env.d.ts` before committing.
-- CI's `Website and Docs` job also runs the docs Biome lint (`bunx biome check src scripts` in `apps/docs`); run it locally first.
-- Run Biome from `apps/docs`; from the repo root it can pick up an unrelated Biome config further up the tree.
+- CI's `Website and Docs` job also runs the docs Biome lint (`docs:lint`); run it locally first. Run Biome through Nx or from `apps/docs`; from the repo root it can pick up an unrelated Biome config further up the tree.
 
 ## Visual review
 
@@ -50,7 +50,7 @@ Check Fumadocs built-ins before writing a feature by hand, in the current Fumado
 
 ## Keyboard shortcuts
 
-Keys come from `apps/extension/config/ui/shortcuts.toml`, never from the page text. In docs MDX write `<Shortcut id="manager.undo" />` (it prints the primary platform's keys (`[display] primary` in `shortcuts.toml`, the Mac) as `<kbd>` key caps and, where the other platform differs, labels both and names the other in plain parentheses at the same size, "⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)", worded by `shortcut.notes` in `src/lib/copy.ts` (a label per platform and a `pair` template); after hydration only the reader's platform shows, see `shortcut` in `apps/docs/DESIGN.md`; to screenshot each platform, override `navigator.platform` and `navigator.userAgentData` in an init script, since the user agent string alone does not change them); in website messages write `{{SHORTCUT:<id>}}` (both platforms, primary first, each labelled, the other in plain parentheses, worded by `shortcutNotes` in the website messages; never `<sub>` or `<small>`, which GitHub and browsers shrink and lower), or `{{SHORTCUT_MAC:<id>}}` and `{{SHORTCUT_OTHER:<id>}}` for one platform (`<id>#2` for a second way), filled at build time (`apps/website/i18n/request.ts`); in the Markdown templates (`templates/`, every language) write `{{ shortcuts["<id>"].both }}`, `.mac`, or `.other` (`shortcuts["<id>#2"]` for a second way), the same text in the template's language, from `scripts/generate-markdown.ts`. Store listings are pasted by hand: keep their keys equal to the config, Mac first, with both platforms labelled in that language's `shortcutNotes` wording, "⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)". Standard navigation keys (`↓`, `Enter`, `Space`, `Tab`, `Esc`) stay as code. `bun test scripts/shortcut-mentions.test.ts` catches hand-typed keys, unknown ids, a configured shortcut missing from `guides/keyboard-shortcuts*.mdx`, and a store listing or checklist line that names the Windows and Linux keys before the Mac ones or leaves out either label. A new shortcut needs a row there in every language.
+Keys come from `apps/extension/config/ui/shortcuts.toml`, never from the page text; the placeholders for each surface (`<Shortcut id="..." />` in docs MDX, `{{SHORTCUT:<id>}}` in website messages, `{{ shortcuts["<id>"].both }}` in the Markdown templates), the label and order rules, and what `scripts/shortcut-mentions.test.ts` checks are in the keyboard shortcuts paragraph of the root `AGENTS.md`. What it leaves out: in the docs, `<Shortcut>` labels both platforms in the exported HTML and shows only the reader's platform after hydration (`shortcut` in `apps/docs/DESIGN.md`), so to screenshot each platform override `navigator.platform` and `navigator.userAgentData` in an init script (the user agent string alone does not change them); website messages are filled at build time in `apps/website/i18n/request.ts`, with `<id>#2` for a second way; a new shortcut needs a row in `apps/docs/content/docs/guides/keyboard-shortcuts*.mdx` in every language; store listings are pasted by hand, so check them against the config.
 
 ## Known traps
 
