@@ -49,6 +49,14 @@ function toSections(entries: readonly MenuEntry[]): ActionId[][] {
   return sections.filter((section) => section.length > 0);
 }
 
+/** A menu that could not be saved says so, and why, instead of quietly showing the old order. */
+function notifyNotSaved(error: unknown): void {
+  toast.error({
+    title: tPlural('settings_statusNotSaved', 1),
+    description: getErrorMessage(error),
+  });
+}
+
 function actionLabel(id: ActionId): string {
   const action = getAction(id);
   return action.labelKey ? t(action.labelKey) : id;
@@ -75,7 +83,7 @@ function MenuEditor({ kind }: { kind: ActionMenuKind }) {
     const lastAction = next.reduce((last, entry, index) => (entry.action ? index : last), -1);
     const trailing = next.length - 1 - lastAction;
     setPendingBreaks((pending) => Math.min(pending, trailing));
-    void setValue(encodeMenu(toSections(next.slice(0, lastAction + 1)))).catch(() => undefined);
+    void setValue(encodeMenu(toSections(next.slice(0, lastAction + 1)))).catch(notifyNotSaved);
   };
   const byId = new Map(entries.map((entry) => [entry.id, entry]));
   const reorder = (ids: string[]) =>
@@ -117,7 +125,7 @@ function MenuEditor({ kind }: { kind: ActionMenuKind }) {
             disabled={stored.length === 0 && pendingBreaks === 0}
             onClick={() => {
               setPendingBreaks(0);
-              void setValue([]).catch(() => undefined);
+              void setValue([]).catch(notifyNotSaved);
             }}
           >
             {t('settings_actionsReset')}
