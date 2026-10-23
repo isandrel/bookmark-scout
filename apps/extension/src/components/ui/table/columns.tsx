@@ -290,8 +290,12 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         );
 
       return (
-        <div className="flex items-center gap-2 min-w-0">
-          {icon}
+        // In a card the title can take two lines; the icon stays beside the first, as the checkbox
+        // and menu do.
+        <div className="flex min-w-0 items-center gap-2 group-data-[slot=bookmark-card]:items-start">
+          <span className="flex shrink-0 items-center group-data-[slot=bookmark-card]:h-5">
+            {icon}
+          </span>
           <div className="flex min-w-0 flex-col">
             {title ? (
               <RowTitle title={title} />

@@ -1060,7 +1060,9 @@ export function DataTable<TData extends RowData>({
                               {cardMedia?.(row.original)}
                               {/* biome-ignore lint/a11y/useSemanticElements lint/a11y/useFocusableInteractive: a card's cell; the card takes focus, as a table row does. */}
                               <div role="gridcell" className="flex min-w-0 items-start gap-2">
-                                {cellOf('select')}
+                                <div className="flex h-5 shrink-0 items-center">
+                                  {cellOf('select')}
+                                </div>
                                 <div className="min-w-0 flex-1">{cellOf('title')}</div>
                                 <div className="-mt-1 -mr-1 shrink-0">
                                   {cellOf(STICKY_COLUMN_ID)}
