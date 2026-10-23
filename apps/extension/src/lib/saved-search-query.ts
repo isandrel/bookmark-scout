@@ -160,11 +160,15 @@ function normalizeSorting(sorting: readonly { id: string; desc: boolean }[]) {
     .map(({ id, desc }) => ({ id, desc }));
 }
 
+const QUOTE = '"';
+
 /**
  * The search box text of a search saved before the search query language, which matched the text
  * as typed in the title or address. A single plain word reads the same; anything else (several
  * words, a dash, a colon, quotes) becomes one phrase, matched as typed in any field, so no
- * bookmark it found goes missing.
+ * bookmark it found goes missing. A phrase that would not fit `text_max_length` with its quotes
+ * keeps its start: a shorter phrase finds every bookmark the whole one found, and the saved
+ * search stays readable when it is stored again.
  */
 export function legacyTitleSearch(text: string): string {
   const { query, diagnostics } = parseSearchQuery(text);
@@ -177,8 +181,14 @@ export function legacyTitleSearch(text: string): string {
     !term.negate &&
     !term.phrase &&
     term.value === text;
+  if (plainWord) return text;
   // The language has no escape for a quote, so quotes inside the phrase are dropped.
-  return plainWord ? text : `"${text.replaceAll('"', '')}"`;
+  const phrase = text.replaceAll(QUOTE, '');
+  const room = SAVED_SEARCH_TEXT_MAX_LENGTH - QUOTE.length * 2;
+  let kept = phrase.slice(0, room);
+  // Never end on half of a character written as two code units (an emoji).
+  if (kept.length < phrase.length && /[\uD800-\uDBFF]$/u.test(kept)) kept = kept.slice(0, -1);
+  return `${QUOTE}${kept}${QUOTE}`;
 }
 
 /**
