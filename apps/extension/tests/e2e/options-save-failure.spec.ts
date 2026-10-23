@@ -8,21 +8,26 @@ import { expect, test, toastRegion } from './fixtures';
 import { openOptionsTab } from './options-helpers';
 import { setSettings } from './storage';
 
-/** Makes the page's next write to `area` fail the way a full storage area does. */
-async function failNextWrite(page: Page, area: 'local' | 'sync', message: string) {
+/**
+ * Makes the page's writes to `area` fail the way a full storage area does, until the returned
+ * function puts the browser's write back. Other writes the page makes meanwhile fail too, so the
+ * failure cannot be taken by one of them first.
+ */
+async function failWrites(page: Page, area: 'local' | 'sync', message: string) {
   await page.evaluate(
     ({ areaName, error }) => {
-      const storageArea = chrome.storage[areaName];
-      const set = storageArea.set.bind(storageArea);
-      let failed = false;
-      storageArea.set = ((items: Record<string, unknown>) => {
-        if (failed) return set(items);
-        failed = true;
-        return Promise.reject(new Error(error));
-      }) as typeof storageArea.set;
+      const storageArea = chrome.storage[areaName] as { set: unknown };
+      Object.assign(globalThis, { e2eRealSet: storageArea.set });
+      storageArea.set = () => Promise.reject(new Error(error));
     },
     { areaName: area, error: message },
   );
+  return () =>
+    page.evaluate((areaName) => {
+      (chrome.storage[areaName] as { set: unknown }).set = (
+        globalThis as unknown as { e2eRealSet: unknown }
+      ).e2eRealSet;
+    }, area);
 }
 
 test('a list change the browser refuses to store says it was not saved, and why', async ({
@@ -34,18 +39,19 @@ test('a list change the browser refuses to store says it was not saved, and why'
   await openOptionsTab(page, extensionId, 'Appearance');
 
   // Popup parts are kept on this device.
-  await failNextWrite(page, 'local', 'E2E local storage is full');
+  let restore = await failWrites(page, 'local', 'E2E local storage is full');
   const parts = page.getByTestId('popup-layout-popupSections');
   await parts.getByRole('checkbox', { name: 'Key hints' }).click();
   const toasts = toastRegion(page);
-  await expect(toasts.getByText('1 setting not saved', { exact: true })).toBeVisible();
+  await expect(toasts.getByText('× 1 setting not saved', { exact: true }).first()).toBeVisible();
   await expect(toasts.getByText('E2E local storage is full', { exact: true })).toBeVisible();
   // Nothing changed: the part is still shown.
   await expect(parts.getByRole('checkbox', { name: 'Key hints' })).toBeChecked();
+  await restore();
 
   // The popup's row menus sync.
   await page.getByRole('tab', { name: 'Behavior', exact: true }).click();
-  await failNextWrite(page, 'sync', 'QUOTA_BYTES quota exceeded');
+  restore = await failWrites(page, 'sync', 'QUOTA_BYTES quota exceeded');
   await page
     .getByTestId('popup-menu-bookmark')
     .getByRole('checkbox', { name: 'Open in new window' })
@@ -54,4 +60,5 @@ test('a list change the browser refuses to store says it was not saved, and why'
   await expect(
     page.getByTestId('popup-menu-bookmark').getByRole('checkbox', { name: 'Open in new window' }),
   ).toBeChecked();
+  await restore();
 });
