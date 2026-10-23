@@ -447,17 +447,31 @@ export function shortcutPlaceholderText(config: ShortcutConfig, argument: string
 }
 
 /**
+ * How a filled placeholder is marked up: `keys` wraps one platform's keys (one way to press the
+ * shortcut, such as `⌥⇧S`), and `shortcut` wraps the whole filled text, labels included. The
+ * website wraps them in rich-text tags so they render as key caps; the README keeps plain text.
+ */
+export type ShortcutMarkup = { keys: (keys: string) => string; shortcut: (text: string) => string };
+
+export const PLAIN_SHORTCUT_MARKUP: ShortcutMarkup = { keys: (keys) => keys, shortcut: (text) => text };
+
+/**
  * One way to press a shortcut on both platforms, for `{{SHORTCUT:<id>}}`: the primary
  * platform's keys and, when they differ, the other platform's, each named, such as
  * `⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)`.
  */
-export function shortcutPlaceholderPair(config: ShortcutConfig, argument: string, notes: ShortcutNotes): string {
+export function shortcutPlaceholderPair(
+	config: ShortcutConfig,
+	argument: string,
+	notes: ShortcutNotes,
+	markup: ShortcutMarkup = PLAIN_SHORTCUT_MARKUP,
+): string {
 	const order = platformOrder(config);
 	const primary = withClickWord(shortcutPlaceholderText(config, argument, order[0]), notes);
 	const secondary = withClickWord(shortcutPlaceholderText(config, argument, order[1]), notes);
-	if (primary === secondary) return primary;
+	if (primary === secondary) return markup.shortcut(markup.keys(primary));
 	const { before, middle, after } = shortcutNoteText(notes, order);
-	return `${before}${primary}${middle}${secondary}${after}`;
+	return markup.shortcut(`${before}${markup.keys(primary)}${middle}${markup.keys(secondary)}${after}`);
 }
 
 /**
@@ -467,12 +481,22 @@ export function shortcutPlaceholderPair(config: ShortcutConfig, argument: string
  */
 export const SHORTCUT_PLACEHOLDER = /\{\{SHORTCUT(?:_(MAC|OTHER))?:([A-Za-z0-9_.#-]+)\}\}/g;
 
-/** Replaces every shortcut placeholder in `text`; throws for an unknown shortcut. */
-export function fillShortcutPlaceholders(text: string, config: ShortcutConfig, notes: ShortcutNotes): string {
+/**
+ * Replaces every shortcut placeholder in `text`, marked up by `markup` (plain text by default);
+ * throws for an unknown shortcut.
+ */
+export function fillShortcutPlaceholders(
+	text: string,
+	config: ShortcutConfig,
+	notes: ShortcutNotes,
+	markup: ShortcutMarkup = PLAIN_SHORTCUT_MARKUP,
+): string {
 	return text.replace(SHORTCUT_PLACEHOLDER, (_match, only: string | undefined, argument: string) => {
-		if (only === "MAC") return withClickWord(shortcutPlaceholderText(config, argument, "mac"), notes);
-		if (only === "OTHER") return withClickWord(shortcutPlaceholderText(config, argument, "other"), notes);
-		return shortcutPlaceholderPair(config, argument, notes);
+		if (only === "MAC" || only === "OTHER") {
+			const platform = only === "MAC" ? "mac" : "other";
+			return markup.shortcut(markup.keys(withClickWord(shortcutPlaceholderText(config, argument, platform), notes)));
+		}
+		return shortcutPlaceholderPair(config, argument, notes, markup);
 	});
 }
 

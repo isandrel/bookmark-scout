@@ -1,5 +1,6 @@
 import type { RichTranslationValues } from "next-intl";
 import type { ReactNode } from "react";
+import { shortcutTags } from "@/components/ShortcutKeys";
 
 /** Inline link style for long-form copy: teal text with an underline that firms up on hover. */
 export const PROSE_LINK_CLASS =
@@ -45,6 +46,7 @@ export function proseTags({
         ...emails,
         ...linkTags,
         ...emailTags,
+        ...shortcutTags,
         strong: (chunks: ReactNode) => <strong className="font-semibold text-ink">{chunks}</strong>,
         code: (chunks: ReactNode) => (
             <code className="rounded bg-sunken px-1.5 py-0.5 font-mono text-[0.85em]">{chunks}</code>

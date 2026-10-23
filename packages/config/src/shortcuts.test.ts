@@ -181,6 +181,17 @@ describe("fillShortcutPlaceholders", () => {
 		expect(() => fillShortcutPlaceholders("{{SHORTCUT_OTHER:manager.redo#3}}", config, format)).toThrow(/no way 3/);
 	});
 
+	it("marks up each platform's keys and the whole shortcut, labels outside the keys", () => {
+		const markup = { keys: (keys: string) => `<kbd>${keys}</kbd>`, shortcut: (text: string) => `<shortcut>${text}</shortcut>` };
+		expect(fillShortcutPlaceholders("Press {{SHORTCUT:commands.quick-save}} now", config, format, markup)).toBe(
+			"Press <shortcut><kbd>⌥⇧S</kbd> on Mac (<kbd>Alt+Shift+S</kbd> on Windows and Linux)</shortcut> now",
+		);
+		expect(fillShortcutPlaceholders("{{SHORTCUT:popup.focus_search}}", config, format, markup)).toBe("<shortcut><kbd>/</kbd></shortcut>");
+		expect(fillShortcutPlaceholders("{{SHORTCUT_OTHER:commands.quick-save}}", config, format, markup)).toBe(
+			"<shortcut><kbd>Alt+Shift+S</kbd></shortcut>",
+		);
+	});
+
 	it("stays fast on text full of unfinished placeholders", () => {
 		const text = "{{SHORTCUT:".repeat(20_000);
 		const start = performance.now();

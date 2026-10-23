@@ -1,5 +1,5 @@
 import { expect, test as base } from "@playwright/test";
-import { site } from "@bookmark-scout/config";
+import { readShortcutConfig, shortcutText, site } from "@bookmark-scout/config";
 import { LEGACY_DOCS_REDIRECTS } from "../../lib/content/docs-redirects";
 import { INDEXABLE_ROUTES } from "../../lib/content/routes";
 import { LANGUAGE_CHOICE_KEY } from "../../lib/language-preference";
@@ -132,6 +132,17 @@ test("hero demo saves the page to a folder found by name", async ({ page }) => {
     await expect(page.getByText("Saved to AI / LLMs / Fine-tuning.")).toBeVisible();
     await options.first().click();
     await expect(page.getByText("Already in AI / LLMs / Fine-tuning, so it was not saved twice.")).toBeVisible();
+});
+
+test("shortcuts in the copy are key caps from the shortcuts config, Mac first, both labelled", async ({ page }) => {
+    const keys = shortcutText(readShortcutConfig(), "commands.quick-save");
+    for (const locale of [DEFAULT_LOCALE, "ja"]) {
+        await page.goto(pagePath(locale));
+        const shortcut = page.locator("#hero-title ~ p .shortcut");
+        await expect(shortcut.locator("kbd.key-cap")).toHaveText([keys.mac[0], keys.other[0]]);
+        // The rich-text tags render as elements, never as visible markup.
+        await expect(page.locator("main")).not.toContainText("<kbd>");
+    }
 });
 
 test("tabs follow the ARIA tabs pattern", async ({ page, isMobile }) => {
