@@ -57,6 +57,8 @@ export type SettingsPanelId =
   | 'aboutMe'
   | 'shortcuts'
   | 'managerMenus'
+  /** Behavior > Manager and popup shortcuts: the in-page keys, with a recorder for each. */
+  | 'pageShortcuts'
   /** Behavior > Manager table: Default Columns, with Reset table view and Reset column widths. */
   | 'managerColumns'
   /** Behavior > Cards: what a card shows, in order. */
@@ -557,6 +559,61 @@ function idListField(
   };
 }
 
+/** One key combination, as config/ui/shortcuts.toml writes it: `KeyboardEvent.key` and modifiers. */
+export const shortcutBindingSchema = z.strictObject({
+  key: z.string().min(1),
+  alt: z.boolean().optional(),
+  shift: z.boolean().optional(),
+  mod: z.boolean().optional(),
+});
+type ShortcutBindingValue = z.infer<typeof shortcutBindingSchema>;
+
+/** A shortcut id of config/ui/shortcuts.toml: `manager.undo`. */
+const SHORTCUT_ID_PATTERN = /^[a-z]+\.[a-z_]+$/;
+
+/**
+ * The keys the user gave in-page shortcuts, by shortcut id (`src/lib/shortcut-remap.ts`), edited
+ * in its own Options panel. Its config holds the default (empty) and the size of each entry.
+ */
+function shortcutOverridesField(
+  path: string,
+  stem: string,
+): FieldDefinition<z.ZodType<Record<string, ShortcutBindingValue[]>>> {
+  const config = configValue(
+    path,
+    z.strictObject({
+      default: z.strictObject({}),
+      max_bindings: z.number().int().positive(),
+      max_key_length: z.number().int().positive(),
+      max_id_length: z.number().int().positive(),
+    }),
+  );
+  const id = z.string().max(config.max_id_length).regex(SHORTCUT_ID_PATTERN);
+  const bindings = z
+    .array(shortcutBindingSchema.extend({ key: z.string().min(1).max(config.max_key_length) }))
+    .min(1)
+    .max(config.max_bindings);
+  // Entry by entry, so one malformed entry is dropped alone. Which ids exist and which keys each
+  // may have is checked where the keys are used (`parsePageShortcutOverrides`), which keeps the
+  // shortcut tables out of every page that reads settings.
+  const schema = z.preprocess(
+    (raw) =>
+      isPlainObject(raw)
+        ? Object.fromEntries(
+            Object.entries(raw).filter(
+              ([key, value]) => id.safeParse(key).success && bindings.safeParse(value).success,
+            ),
+          )
+        : raw,
+    z.record(id, bindings),
+  );
+  return {
+    section: sectionOf(path),
+    schema: schema.default(config.default),
+    meta: () => ({ ...fieldLabels(stem), type: 'text' }),
+  };
+}
+
 /** A list of query parameter names, each at most `max_length` long, at most `max_items` of them. */
 function nameListField(path: string, stem: string): FieldDefinition<z.ZodType<string[]>> {
   const config = configValue(path, listSettingSchema);
@@ -986,6 +1043,10 @@ const fields = {
   cardMaxTags: numberField('behavior.manager_cards.max_tags', 'cardMaxTags'),
   cardSummaryLines: numberField('behavior.manager_cards.summary_lines', 'cardSummaryLines'),
   previewFields: idListField('behavior.manager_preview.fields', 'previewFields'),
+  pageShortcutOverrides: shortcutOverridesField(
+    'behavior.page_shortcuts.overrides',
+    'pageShortcuts',
+  ),
   toolsSidebarLayout: enumField(
     'behavior.tools_sidebar.layout',
     'toolsSidebarLayout',
@@ -1704,6 +1765,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       },
       { id: 'managerMenus', fields: [], panel: 'managerMenus' },
       { id: 'popupMenus', fields: [], panel: 'popupMenus' },
+      { id: 'pageShortcuts', fields: [], panel: 'pageShortcuts' },
     ]),
     ai: category('settings_ai', 'settings_aiDesc', [
       // What AI is and costs comes first, then the switch, then the services it turns on (provider

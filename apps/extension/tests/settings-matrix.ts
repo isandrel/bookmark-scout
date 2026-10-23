@@ -624,6 +624,24 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'Expand on Open opens the bookmarks bar, or the folders left open last time',
     ),
   ]),
+  pageShortcutOverrides: tested(
+    'hooks/use-page-shortcuts.ts',
+    [
+      unit(
+        'shortcut-remap.test.ts',
+        'puts the user keys in place of the configured ones, and only for that shortcut',
+      ),
+      e2e(
+        'page-shortcut-remap.spec.ts',
+        'a manager shortcut changed in Options works with its new key, the old one no longer does, and the help names it',
+      ),
+      e2e(
+        'page-shortcut-remap.spec.ts',
+        'a popup shortcut changed in Options focuses the search box with its new key',
+      ),
+    ],
+    'Edited in Options > Behavior > Manager and popup shortcuts (PageShortcutsPanel).',
+  ),
   askAiWebSearch: tested(
     'services/ai-agent.ts',
     [unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on")],

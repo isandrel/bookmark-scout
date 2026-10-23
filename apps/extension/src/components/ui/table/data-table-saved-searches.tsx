@@ -1,13 +1,13 @@
 /**
  * Saved searches menu in the manager toolbar: saves the current filters, sort, and folder scope
- * under a name, and opens, renames, or deletes saved searches. `s` opens it (see
- * `useManagerShortcuts`).
+ * under a name, and opens, renames, or deletes saved searches. Its shortcut (`s` unless changed in
+ * Options) opens it (see `useManagerShortcuts`).
  */
 
 import { BookmarkCheck, Check, Pencil, Trash2 } from 'lucide-react';
 import { type FormEvent, type KeyboardEvent, useRef, useState } from 'react';
 
-/** Marks the toolbar button the `s` shortcut clicks. */
+/** Marks the toolbar button the saved searches shortcut clicks. */
 export const SAVED_SEARCHES_TRIGGER_ATTRIBUTE = 'data-saved-searches-trigger';
 
 type DataTableSavedSearchesProps = {
@@ -32,6 +32,7 @@ function describeError(error: SavedSearchError): string {
 
 export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSavedSearchesProps) {
   const { searches, create, rename, remove, restore, reorder } = useSavedSearches();
+  const { manager } = usePageShortcuts();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
@@ -129,7 +130,7 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
             variant={activeId ? 'secondary' : 'outline'}
             size="sm"
             className="h-8 shrink-0"
-            aria-keyshortcuts="s"
+            aria-keyshortcuts={ariaKeyShortcuts(manager.openSavedSearches)}
             title={t('savedSearches_buttonTitle')}
             {...{ [SAVED_SEARCHES_TRIGGER_ATTRIBUTE]: '' }}
           />

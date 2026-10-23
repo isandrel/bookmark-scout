@@ -122,53 +122,110 @@ export function bindingsForPlatform(
   return configBindingsForPlatform(bindings, apple);
 }
 
-const managerConfig = shortcutsConfig.manager;
+/** The sections of config/ui/shortcuts.toml whose keys work inside the extension's pages. */
+export type PageShortcutSection = 'manager' | 'popup';
 
-/** Bindings per action, from config/ui/shortcuts.toml; the help dialog lists the same ones. */
-export const SHORTCUT_BINDINGS = {
-  manager: {
-    focusFilter: bindingsForPlatform(managerConfig.focus_filter),
-    showHelp: bindingsForPlatform(managerConfig.show_help),
-    parentFolder: bindingsForPlatform(managerConfig.parent_folder),
-    nextRow: bindingsForPlatform(managerConfig.next_row),
-    previousRow: bindingsForPlatform(managerConfig.previous_row),
-    openSavedSearches: bindingsForPlatform(managerConfig.open_saved_searches),
-    preview: bindingsForPlatform(managerConfig.preview),
-    selectAll: bindingsForPlatform(managerConfig.select_all),
-    clearSelection: bindingsForPlatform(managerConfig.clear_selection),
-    delete: bindingsForPlatform(managerConfig.delete),
-    rename: bindingsForPlatform(managerConfig.rename),
-    open: bindingsForPlatform(managerConfig.open),
-    openInNewTabs: bindingsForPlatform(managerConfig.open_in_new_tabs),
-    openInNewWindow: bindingsForPlatform(managerConfig.open_in_new_window),
-    undo: bindingsForPlatform(managerConfig.undo),
-    redo: bindingsForPlatform(managerConfig.redo),
-  },
-  /**
-   * Keys of the open bookmark preview, which act only inside it (the manager's other shortcuts
-   * pause while a dialog is open): the previous or next bookmark of the table's page.
-   */
-  managerPreview: {
-    previous: bindingsForPlatform(managerConfig.preview_previous),
-    next: bindingsForPlatform(managerConfig.preview_next),
-  },
-  /**
-   * The browser's copy, cut, and paste keys. The manager acts on clipboard events, not on these
-   * keys; they are listed so the shortcuts help names them.
-   */
-  managerClipboard: {
-    copy: bindingsForPlatform(managerConfig.copy),
-    cut: bindingsForPlatform(managerConfig.cut),
-    paste: bindingsForPlatform(managerConfig.paste),
-  },
-  popup: {
-    focusSearch: shortcutsConfig.popup.focus_search,
-  },
-  /** Opens the recent searches from the empty search box; once open, the arrows move in them. */
-  popupSearchHistory: {
-    open: shortcutsConfig.popup.recent_searches,
-  },
-} as const satisfies Record<string, Record<string, readonly ShortcutBinding[]>>;
+/**
+ * An in-page shortcut of config/ui/shortcuts.toml, by section and name: `manager.undo`, the id the
+ * docs' `<Shortcut id>` uses too.
+ */
+export type PageShortcutId =
+  | `manager.${keyof typeof shortcutsConfig.manager}`
+  | `popup.${keyof typeof shortcutsConfig.popup}`;
+
+const sectionEntries = (section: PageShortcutSection) =>
+  Object.entries(shortcutsConfig[section]).map(
+    ([name, bindings]): [string, readonly ConfiguredBinding[]] => [`${section}.${name}`, bindings],
+  );
+
+/** Each in-page shortcut's configured bindings (both platforms), in the file's order. */
+export const PAGE_SHORTCUT_DEFAULTS = Object.fromEntries([
+  ...sectionEntries('manager'),
+  ...sectionEntries('popup'),
+]) as Readonly<Record<PageShortcutId, readonly ConfiguredBinding[]>>;
+
+export const PAGE_SHORTCUT_IDS = Object.keys(PAGE_SHORTCUT_DEFAULTS) as PageShortcutId[];
+
+/** The section a shortcut belongs to, from its id. */
+export function pageShortcutSection(id: PageShortcutId): PageShortcutSection {
+  return id.startsWith('manager.') ? 'manager' : 'popup';
+}
+
+/**
+ * Keys the user gave in-page shortcuts on this device in place of the configured ones (the
+ * `pageShortcutOverrides` setting, checked by `src/lib/shortcut-remap.ts`). An override holds the
+ * bindings of this device's platform, so it has no `platform` field.
+ */
+export type PageShortcutOverrides = Partial<Record<PageShortcutId, readonly ShortcutBinding[]>>;
+
+/** The keys of one shortcut on this platform: the user's, or the configured ones. */
+export function getPageShortcutKeys(
+  id: PageShortcutId,
+  overrides: PageShortcutOverrides = {},
+  apple: boolean = isApplePlatform(),
+): readonly ShortcutBinding[] {
+  return overrides[id] ?? bindingsForPlatform(PAGE_SHORTCUT_DEFAULTS[id], apple);
+}
+
+/**
+ * Bindings per action, the configured ones with the user's changes (`usePageShortcuts` in pages);
+ * the help dialog, tooltips, and hint bar list the same ones.
+ */
+export function getPageShortcutBindings(
+  overrides: PageShortcutOverrides = {},
+  apple: boolean = isApplePlatform(),
+) {
+  const keys = (id: PageShortcutId) => getPageShortcutKeys(id, overrides, apple);
+  return {
+    manager: {
+      focusFilter: keys('manager.focus_filter'),
+      showHelp: keys('manager.show_help'),
+      parentFolder: keys('manager.parent_folder'),
+      nextRow: keys('manager.next_row'),
+      previousRow: keys('manager.previous_row'),
+      openSavedSearches: keys('manager.open_saved_searches'),
+      preview: keys('manager.preview'),
+      selectAll: keys('manager.select_all'),
+      clearSelection: keys('manager.clear_selection'),
+      delete: keys('manager.delete'),
+      rename: keys('manager.rename'),
+      open: keys('manager.open'),
+      openInNewTabs: keys('manager.open_in_new_tabs'),
+      openInNewWindow: keys('manager.open_in_new_window'),
+      undo: keys('manager.undo'),
+      redo: keys('manager.redo'),
+    },
+    /**
+     * Keys of the open bookmark preview, which act only inside it (the manager's other shortcuts
+     * pause while a dialog is open): the previous or next bookmark of the table's page.
+     */
+    managerPreview: {
+      previous: keys('manager.preview_previous'),
+      next: keys('manager.preview_next'),
+    },
+    /**
+     * The browser's copy, cut, and paste keys. The manager acts on clipboard events, not on these
+     * keys; they are listed so the shortcuts help names them.
+     */
+    managerClipboard: {
+      copy: keys('manager.copy'),
+      cut: keys('manager.cut'),
+      paste: keys('manager.paste'),
+    },
+    popup: {
+      focusSearch: keys('popup.focus_search'),
+    },
+    /** Opens the recent searches from the empty search box; once open, the arrows move in them. */
+    popupSearchHistory: {
+      open: keys('popup.recent_searches'),
+    },
+  } as const satisfies Record<string, Record<string, readonly ShortcutBinding[]>>;
+}
+
+export type PageShortcutBindings = ReturnType<typeof getPageShortcutBindings>;
+
+/** The configured bindings per action, without the user's changes. */
+export const SHORTCUT_BINDINGS: PageShortcutBindings = getPageShortcutBindings();
 
 /**
  * The keys each browser command suggests (`manifest.commands`), by command name, in the browser's
@@ -323,7 +380,16 @@ export function hasOpenOverlay(root?: OverlayRoot | null): boolean {
   return Array.from(doc.querySelectorAll(KEYBOARD_OVERLAY_SELECTOR)).some(isOpenOverlay);
 }
 
-const isPunctuationKey = (key: string) => key.length === 1 && !/[\p{L}\p{N}\s]/u.test(key);
+/** A printable key that is not a letter, digit, or space, whose Shift state depends on the layout. */
+export const isPunctuationKey = (key: string) => key.length === 1 && !/[\p{L}\p{N}\s]/u.test(key);
+
+/** A Latin letter or digit, which Ctrl, Cmd, and Alt match by its position (`code`) too. */
+const POSITIONAL_KEY = /^[a-z0-9]$/i;
+
+/** The `KeyboardEvent.code` of a letter or digit key: `KeyA`, `Digit1`. */
+export function positionalKeyCode(key: string): string {
+  return /^\d$/.test(key) ? `Digit${key}` : `Key${key.toUpperCase()}`;
+}
 
 /**
  * Exact key and modifier match. Ctrl and Cmd match only a binding with `mod` (Ctrl, or Cmd on
@@ -339,12 +405,12 @@ export function matchesShortcut(
   if (otherMod || mod !== (binding.mod ?? false)) return false;
   if (event.altKey !== (binding.alt ?? false)) return false;
   if (!isPunctuationKey(binding.key) && event.shiftKey !== (binding.shift ?? false)) return false;
-  if (binding.mod && /^[a-z]$/i.test(binding.key)) {
-    // With Ctrl or Cmd, `key` can be either case, or another script's letter; the key's position
-    // (`code`) is what the browser's own shortcuts use.
+  if ((binding.mod || binding.alt) && POSITIONAL_KEY.test(binding.key)) {
+    // With Ctrl, Cmd, or Alt, `key` can be either case, another script's letter, or the symbol
+    // Option types on a Mac; the key's position (`code`) is what the browser's own shortcuts use.
     return (
       event.key.toLowerCase() === binding.key.toLowerCase() ||
-      event.code === `Key${binding.key.toUpperCase()}`
+      event.code === positionalKeyCode(binding.key)
     );
   }
   // Letters compare exactly, so Shift+J (`J`) does not match `j`.

@@ -6,7 +6,7 @@
  * config/ui/actions.toml as the user arranged them. Everything comes from this device; nothing is
  * fetched, so without a stored cover none is shown.
  *
- * Previous and Next (and the preview's keys, `managerPreview` in config/ui/shortcuts.toml, unless
+ * Previous and Next (and the preview's keys, `managerPreview` from `usePageShortcuts`, unless
  * a text field has focus) show the bookmark before or after it in `rows`, the table's page as
  * shown, skipping folders and separators; they stop at either end, where their button is disabled
  * but keeps focus. They sit at the top, so a preview of another height never moves them.
@@ -31,8 +31,6 @@ type BookmarkPreviewDialogProps = {
   onShow: (bookmark: Bookmark) => void;
   onClose: () => void;
 };
-
-const { managerPreview } = SHORTCUT_BINDINGS;
 
 /** The item-menu actions on a bookmark's cover, offered beside it where they apply. */
 const COVER_ACTION_IDS = ['fetchCover', 'removeCover'] as const satisfies readonly ActionId[];
@@ -88,6 +86,7 @@ export function BookmarkPreviewDialog({
   // A button's action, run once the preview has closed.
   const pendingActionRef = useRef<(() => void) | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
+  const { managerPreview } = usePageShortcuts();
   const { value: metadataById } = useStoredValue(bookmarkMetadataValue);
 
   const metadata = shown ? metadataById[shown.id] : undefined;

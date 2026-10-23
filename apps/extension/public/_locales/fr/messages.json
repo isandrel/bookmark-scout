@@ -59,13 +59,17 @@
         "message": "afficher les recherches récentes",
         "description": "Popup shortcut action: show recent searches"
     },
+    "shortcuts_recentSearches": {
+        "message": "Afficher les recherches récentes depuis le champ de recherche vide",
+        "description": "Options: the popup shortcut that shows recent searches from the empty search box"
+    },
     "shortcuts_title": {
         "message": "Raccourcis clavier",
         "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
     },
     "shortcuts_buttonTitle": {
-        "message": "Raccourcis clavier (?)",
-        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+        "message": "Raccourcis clavier ($1)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog; $1 is the key that opens it too"
     },
     "shortcuts_pausedWhileTyping": {
         "message": "Les raccourcis sont suspendus pendant la saisie dans un champ ou lorsqu'une boîte de dialogue ou un menu est ouvert.",
@@ -78,6 +82,14 @@
     "shortcuts_nextPreviousRow": {
         "message": "Passer à la ligne suivante ou précédente",
         "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_nextRow": {
+        "message": "Passer à la ligne suivante",
+        "description": "Options: the manager shortcut that moves to the next row"
+    },
+    "shortcuts_previousRow": {
+        "message": "Passer à la ligne précédente",
+        "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
         "message": "Sélectionner toutes les lignes affichées par les filtres",
@@ -142,6 +154,14 @@
     "shortcuts_previewPreviousNext": {
         "message": "Dans un aperçu, afficher le favori précédent ou suivant",
         "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
+    "shortcuts_previewPrevious": {
+        "message": "Dans un aperçu, afficher le favori précédent",
+        "description": "Options: the manager shortcut that shows the previous bookmark in an open preview"
+    },
+    "shortcuts_previewNext": {
+        "message": "Dans un aperçu, afficher le favori suivant",
+        "description": "Options: the manager shortcut that shows the next bookmark in an open preview"
     },
     "shortcuts_showHelp": {
         "message": "Afficher les raccourcis clavier",
@@ -6698,6 +6718,54 @@
     "settings_managerMenus": {
         "message": "Menus du gestionnaire de favoris",
         "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_pageShortcuts": {
+        "message": "Raccourcis du gestionnaire et de la fenêtre pop-up",
+        "description": "Options panel title: change the keyboard shortcuts that work inside the bookmark manager, popup, and side panel"
+    },
+    "settings_pageShortcutsDesc": {
+        "message": "Touches qui fonctionnent dans le gestionnaire de favoris, la fenêtre pop-up et le panneau latéral. Cliquez sur Modifier et appuyez sur les nouvelles touches, ou sur Échap pour annuler. Enregistrés sur cet appareil uniquement.",
+        "description": "Description of the manager and popup shortcuts panel; Change and Esc name the button and the key"
+    },
+    "settings_pageShortcutsManager": {
+        "message": "Gestionnaire de favoris",
+        "description": "Heading of the bookmark manager shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutsPopup": {
+        "message": "Fenêtre pop-up et panneau latéral",
+        "description": "Heading of the popup and side panel shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutChange": {
+        "message": "Modifier",
+        "description": "Button that starts recording new keys for one in-page shortcut"
+    },
+    "settings_pageShortcutChangeLabel": {
+        "message": "Modifier les touches de « $1 »",
+        "description": "Accessible name of the Change button; $1 is what the shortcut does"
+    },
+    "settings_pageShortcutResetAll": {
+        "message": "Réinitialiser tous les raccourcis",
+        "description": "Button that gives every manager and popup shortcut its default keys back"
+    },
+    "settings_pageShortcutNoModifier": {
+        "message": "La fenêtre pop-up et le panneau latéral laissent les raccourcis avec $1 au navigateur. Choisissez des touches sans $1.",
+        "description": "Error when recording a popup shortcut with Ctrl or Cmd; $1 is that key (Ctrl, or ⌘ on a Mac)"
+    },
+    "settings_pageShortcutNeedsNamedKey": {
+        "message": "Ce raccourci fonctionne pendant la saisie dans le champ de recherche : il lui faut une touche qui n’écrit rien, comme une flèche ou une touche de fonction.",
+        "description": "Error when recording a key that types text for a shortcut that works while typing in the search box"
+    },
+    "settings_pageShortcutReserved": {
+        "message": "$1 appartient au navigateur ou au déplacement dans les listes. Choisissez d’autres touches.",
+        "description": "Error when recording keys the browser, the system, or list navigation keeps; $1 is the keys"
+    },
+    "settings_pageShortcutControlOnMac": {
+        "message": "Contrôle ne peut pas faire partie de ces raccourcis. Utilisez Commande, Option ou Maj.",
+        "description": "Error on a Mac when recording keys with the Control key, which these shortcuts never match"
+    },
+    "settings_pageShortcutMetaKey": {
+        "message": "La touche Windows ou Super ne peut pas faire partie de ces raccourcis. Utilisez Ctrl, Alt ou Maj.",
+        "description": "Error on Windows and Linux when recording keys with the Windows (Super) key, which these shortcuts never match"
     },
     "settings_managerMenusDesc": {
         "message": "Choisissez les commandes de chaque menu, leur ordre et leur section. Faites glisser une commande ou un séparateur de section par sa poignée, ou utilisez le menu de la poignée, pour le déplacer.",

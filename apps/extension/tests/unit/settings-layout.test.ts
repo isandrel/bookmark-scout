@@ -21,7 +21,7 @@ const EDITED_ELSEWHERE = new Set([
   'aiActivityRecording',
   'askAiWebSearch',
   // Edited in their Options panels (ManagerMenusPanel, ManagerViewPanels, AskAIActionsPanel,
-  // PopupMenusPanel, PopupLayoutPanel).
+  // PopupMenusPanel, PopupLayoutPanel, PageShortcutsPanel).
   'askAiDisabledActions',
   'agentBridgeDisabledActions',
   'managerMenuActions',
@@ -36,6 +36,7 @@ const EDITED_ELSEWHERE = new Set([
   'popupSections',
   'popupToolbarButtons',
   'hoverCardFields',
+  'pageShortcutOverrides',
 ]);
 
 describe('Options layout', () => {

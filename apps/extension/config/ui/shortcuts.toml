@@ -7,7 +7,9 @@
 # In [manager] and [popup], each action lists one or more bindings: `key` is the
 # KeyboardEvent.key value ("/", "j", "ArrowUp", "Backspace"), with optional `alt` and `shift`.
 # Shortcuts pause while typing, during IME composition, and while a dialog or menu is open. The
-# manager's shortcuts help and the popup's shortcuts tooltip list these same bindings.
+# manager's shortcuts help and the popup's shortcuts tooltip list these same bindings. Users can
+# give the [manager] and [popup] shortcuts other keys on their device in Options
+# (`pageShortcutOverrides`, rules in config/ui/shortcut-remap.toml); the docs show these defaults.
 #
 # The popup and side panel never use Ctrl or Cmd, so browser shortcuts keep working there. The
 # bookmark manager replaces the browser's own manager, so it also takes that manager's Ctrl

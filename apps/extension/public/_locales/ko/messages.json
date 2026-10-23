@@ -59,13 +59,17 @@
         "message": "최근 검색 보기",
         "description": "Popup shortcut action: show recent searches"
     },
+    "shortcuts_recentSearches": {
+        "message": "빈 검색창에서 최근 검색 보기",
+        "description": "Options: the popup shortcut that shows recent searches from the empty search box"
+    },
     "shortcuts_title": {
         "message": "키보드 단축키",
         "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
     },
     "shortcuts_buttonTitle": {
-        "message": "키보드 단축키 (?)",
-        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+        "message": "키보드 단축키 ($1)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog; $1 is the key that opens it too"
     },
     "shortcuts_pausedWhileTyping": {
         "message": "입력란에 입력하는 동안이나 대화상자 또는 메뉴가 열려 있는 동안에는 단축키가 동작하지 않습니다.",
@@ -78,6 +82,14 @@
     "shortcuts_nextPreviousRow": {
         "message": "다음 또는 이전 행으로 이동",
         "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_nextRow": {
+        "message": "다음 행으로 이동",
+        "description": "Options: the manager shortcut that moves to the next row"
+    },
+    "shortcuts_previousRow": {
+        "message": "이전 행으로 이동",
+        "description": "Options: the manager shortcut that moves to the previous row"
     },
     "shortcuts_selectAll": {
         "message": "필터에 표시된 모든 행 선택",
@@ -142,6 +154,14 @@
     "shortcuts_previewPreviousNext": {
         "message": "미리 보기에서 이전 또는 다음 북마크 표시",
         "description": "Manager shortcuts help: the left and right arrow keys in an open bookmark preview show the previous or next bookmark"
+    },
+    "shortcuts_previewPrevious": {
+        "message": "미리 보기에서 이전 북마크 표시",
+        "description": "Options: the manager shortcut that shows the previous bookmark in an open preview"
+    },
+    "shortcuts_previewNext": {
+        "message": "미리 보기에서 다음 북마크 표시",
+        "description": "Options: the manager shortcut that shows the next bookmark in an open preview"
     },
     "shortcuts_showHelp": {
         "message": "키보드 단축키 보기",
@@ -6690,6 +6710,54 @@
     "settings_managerMenus": {
         "message": "북마크 관리자 메뉴",
         "description": "Options > Behavior: panel title for arranging the bookmark manager's menus"
+    },
+    "settings_pageShortcuts": {
+        "message": "관리자 및 팝업 단축키",
+        "description": "Options panel title: change the keyboard shortcuts that work inside the bookmark manager, popup, and side panel"
+    },
+    "settings_pageShortcutsDesc": {
+        "message": "북마크 관리자, 팝업, 사이드 패널 안에서 쓰는 키입니다. 변경을 클릭하고 새 키를 누르세요. Esc를 누르면 취소됩니다. 이 기기에만 저장됩니다.",
+        "description": "Description of the manager and popup shortcuts panel; Change and Esc name the button and the key"
+    },
+    "settings_pageShortcutsManager": {
+        "message": "북마크 관리자",
+        "description": "Heading of the bookmark manager shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutsPopup": {
+        "message": "팝업 및 사이드 패널",
+        "description": "Heading of the popup and side panel shortcuts in the manager and popup shortcuts panel"
+    },
+    "settings_pageShortcutChange": {
+        "message": "변경",
+        "description": "Button that starts recording new keys for one in-page shortcut"
+    },
+    "settings_pageShortcutChangeLabel": {
+        "message": "\"$1\" 키 변경",
+        "description": "Accessible name of the Change button; $1 is what the shortcut does"
+    },
+    "settings_pageShortcutResetAll": {
+        "message": "모든 단축키 재설정",
+        "description": "Button that gives every manager and popup shortcut its default keys back"
+    },
+    "settings_pageShortcutNoModifier": {
+        "message": "팝업과 사이드 패널은 $1 단축키를 브라우저에 맡깁니다. $1 없이 키를 고르세요.",
+        "description": "Error when recording a popup shortcut with Ctrl or Cmd; $1 is that key (Ctrl, or ⌘ on a Mac)"
+    },
+    "settings_pageShortcutNeedsNamedKey": {
+        "message": "이 단축키는 검색창에 입력하는 동안 작동하므로 문자를 입력하지 않는 키(화살표 키나 기능 키 등)가 필요합니다.",
+        "description": "Error when recording a key that types text for a shortcut that works while typing in the search box"
+    },
+    "settings_pageShortcutReserved": {
+        "message": "$1은(는) 브라우저나 목록 이동에 쓰입니다. 다른 키를 고르세요.",
+        "description": "Error when recording keys the browser, the system, or list navigation keeps; $1 is the keys"
+    },
+    "settings_pageShortcutControlOnMac": {
+        "message": "Control은 이 단축키에 쓸 수 없습니다. Command, Option, Shift를 쓰세요.",
+        "description": "Error on a Mac when recording keys with the Control key, which these shortcuts never match"
+    },
+    "settings_pageShortcutMetaKey": {
+        "message": "Windows 키(Super 키)는 이 단축키에 쓸 수 없습니다. Ctrl, Alt, Shift를 쓰세요.",
+        "description": "Error on Windows and Linux when recording keys with the Windows (Super) key, which these shortcuts never match"
     },
     "settings_managerMenusDesc": {
         "message": "각 메뉴에 표시할 명령, 순서, 어느 구역에 둘지 고릅니다. 명령이나 구역 구분선을 핸들로 끌거나 핸들의 메뉴를 사용해 옮깁니다.",
