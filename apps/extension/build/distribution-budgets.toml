@@ -284,6 +284,8 @@
 # languages). Measured on feat/covers-backup from main 519c35af: ZIP 2,134,056 / 2,134,171 /
 # 2,134,164, uncompressed 7,202,977 / 7,202,973 / 7,203,136 B (Chrome / Edge / Firefox),
 # 4,023,919 B of JavaScript, and 2,610,578 B of locales.
+# Raised on 2026-10-23 (other 29,000 to 29,500) for the covers backup: the Firefox build's other files
+# (manifest and small assets) measured 29,080 B on feat/covers-backup.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -307,4 +309,4 @@ css = 92_000
 fonts = 143_000
 locales = 2_620_000
 images = 320_000
-other = 29_000
+other = 29_500
