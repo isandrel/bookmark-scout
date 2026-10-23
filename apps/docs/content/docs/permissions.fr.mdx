@@ -3,7 +3,7 @@ title: Autorisations
 description: Chaque autorisation de navigateur demandée par Bookmark Scout, la raison pour laquelle elle est nécessaire, et l'accès facultatif aux sites Web, demandé uniquement lorsque vous lancez un outil.
 ---
 
-Voici les autorisations de l'extension compilée pour chaque navigateur. Bookmark Scout ne déclare aucun script de contenu et ne lit une page que vous consultez que si vous le demandez : **Indexer le texte de cette page** dans la fenêtre pop-up lit le texte que cet onglet affiche ; après un raccourci d'enregistrement rapide, il se contente d'afficher sa propre notification dans cet onglet. À l'installation, il ne demande que ce dont il ne peut pas se passer ; tout le reste est demandé lorsque vous activez ou lancez la fonctionnalité qui en a besoin.
+Voici les autorisations de l'extension compilée pour chaque navigateur. Bookmark Scout ne déclare aucun script de contenu et ne lit une page que vous consultez que si vous le demandez : **Indexer le texte de cette page** dans la fenêtre pop-up lit le texte que cet onglet affiche, et avec **Capturer les couvertures en naviguant** activé, il capture une page en favori que vous ouvrez, et cette capture reste sur cet appareil ; après un raccourci d'enregistrement rapide, il se contente d'afficher sa propre notification dans cet onglet. À l'installation, il ne demande que ce dont il ne peut pas se passer ; tout le reste est demandé lorsque vous activez ou lancez la fonctionnalité qui en a besoin.
 
 ## Ce que votre navigateur va demander, et pourquoi [#what-your-browser-will-ask-and-why]
 
@@ -16,6 +16,7 @@ Lorsque vous installez Bookmark Scout, le navigateur affiche une seule ligne. To
 | « Consulter votre historique de navigation » / accéder aux onglets du navigateur | Vous enregistrez la page actuelle, ou demandez des suggestions de dossiers, depuis le panneau latéral | Savoir sur quelle page vous êtes. Le bouton de la barre d'outils et le raccourci d'enregistrement rapide ne nécessitent aucune autorisation : l'explication les propose donc en premier |
 | « Lire et modifier vos données sur tous les sites example.com », ou « sur certains sites Web » / accéder à vos données pour les sites du domaine example.com | Vous lancez **Vérifier les liens morts**, **Récupération des métadonnées** ou **Actualiser les icônes de site** | Demander les pages enregistrées en favoris concernées par cette exécution, sur leurs seuls sites |
 | « Lire et modifier toutes vos données sur tous les sites Web » / accéder à vos données pour tous les sites Web | Un outil est lancé sur plus de 20 sites, ou vous activez **Lire le contenu des pages** | Demander des pages sur n'importe quel site |
+| « Lire et modifier toutes vos données sur tous les sites Web » / accéder à vos données pour tous les sites Web | Vous activez **Capturer les couvertures en naviguant** | Capturer une page en favori dans l'onglet que vous consultez quand elle se charge, sans clic, ce que les navigateurs n'autorisent qu'avec l'accès à toutes les pages. La capture reste sur cet appareil, et le même accès permet aux outils de sites Web de s'exécuter sans demander |
 | « Lire et modifier vos données sur api.example.com » / accéder à vos données pour api.example.com | Vous cliquez sur **Vérifier le service** ou **Actualiser les modèles** | Joindre l'adresse de votre fournisseur d'IA |
 | « Communiquer avec les applications natives associées » / échanger des messages avec des programmes autres que Firefox | Vous activez **Autoriser les agents d'IA locaux** | Communiquer avec le programme bookmark-scout-mcp de votre ordinateur |
 | Firefox uniquement : le développeur indique que l'extension souhaite collecter des informations d'authentification, des favoris et l'activité de navigation | Vous activez les **Fonctionnalités d'IA** | Votre clé API, vos favoris et noms de dossiers, ainsi que le titre et l'URL de la page actuelle, sont envoyés à votre fournisseur d'IA. Le développeur mentionné dans cette demande est le fournisseur d'IA que vous avez choisi ; Bookmark Scout ne reçoit rien |
@@ -54,11 +55,12 @@ Si vous refusez, la fonctionnalité reste désactivée et rien n'est envoyé. Si
 
 ## Accès facultatif aux sites Web [#optional-website-access]
 
-L'extension déclare aussi un accès à `http://*/*` et à `https://*/*`, mais aucune partie de cet accès n'est accordée à l'installation. Le navigateur vous le demande au moment où vous en avez besoin :
+L'extension déclare aussi un accès à `http://*/*`, à `https://*/*` et à `<all_urls>`, mais aucune partie de cet accès n'est accordée à l'installation. Le navigateur vous le demande au moment où vous en avez besoin :
 
 - **Vérifier les liens morts**, **Récupération des métadonnées** et **Actualiser les icônes de site** demandent, lorsque vous les lancez, l'accès aux seuls sites des favoris concernés par cette exécution, chacun avec ses sous-domaines. Une exécution portant sur plus de 20 sites demande à la place l'accès à tous les sites Web. Les sites que vous avez déjà autorisés ne sont pas demandés à nouveau. Les requêtes sont envoyées sans cookies, et seul l'en-tête de la page est lu pour obtenir les titres et les liens des icônes. Si vous refusez, rien n'est analysé. Un lien qui redirige vers un site extérieur à l'exécution ne peut pas être suivi : **Vérifier les liens morts** le marque donc **À vérifier manuellement** au lieu de mort. Consultez [Trouver et réparer les liens morts](/guides/dead-links) et [Actualiser les icônes de site](/guides/clean-up#refresh-site-icons).
 - **Indexer le texte des pages** le demande de la même façon, pour les sites des favoris qu'il lit.
 - **Récupérer les couvertures** le demande de la même façon, pour les sites des favoris qu'il lit ; une image sur un autre site n'est téléchargée que si vous avez aussi autorisé ce site.
+- **Capturer les couvertures en naviguant** demande l'accès à toutes les pages (`<all_urls>`) lorsque vous l'activez : les navigateurs ne laissent une extension capturer un onglet sans clic qu'avec cet accès. Les captures ne sont prises que de pages en favori dans l'onglet que vous consultez, jamais des sites de **Ne jamais capturer ces sites**, pas dans les fenêtres privées sauf si vous activez **Capturer aussi dans les fenêtres privées** et autorisez l'extension à y fonctionner, et restent sur cet appareil. Tant qu'il est accordé, les outils ci-dessus ne demandent plus l'accès à leurs sites. Consultez [Afficher les couvertures sur les cartes](/guides/clean-up#capture-covers-while-you-browse).
 - **Lire le contenu des pages**, dans les paramètres d'IA, demande l'accès à tous les sites Web lors de son activation, pour que les outils d'IA puissent télécharger les pages, sans cookies, et envoyer leur texte principal à votre fournisseur d'IA. Les pages de votre réseau local ne sont jamais lues. Consultez [Lire le contenu des pages](/guides/ai-tools#read-page-content).
 - **Vérifier le service** et **Actualiser les modèles**, dans les paramètres d'IA, demandent l'accès à l'adresse de ce seul fournisseur. Consultez [Configurer les outils d'IA](/guides/ai-tools).
 
@@ -66,7 +68,7 @@ Pour retirer cet accès, ouvrez la page de l'extension dans le navigateur (par e
 
 ## Ce qui n'est pas demandé [#what-is-not-requested]
 
-- Aucun accès au contenu des pages, et aucun script de contenu déclaré
+- Aucun script de contenu déclaré, et aucun accès au contenu des pages au-delà des fonctionnalités ci-dessus que vous activez
 - Aucune autorisation d'accès à l'historique, aux téléchargements ou aux cookies
 - Aucun accès aux hôtes à l'installation
 

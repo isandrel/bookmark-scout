@@ -835,7 +835,9 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     descriptionKey: 'tools_coversDesc',
     actionKey: () => 'action_fetch',
     needsHostAccess: true,
-    scan: ({ nodes, options }) => scanCovers(nodes, options.covers),
+    // The manager's selection, and Fetch Cover on chosen bookmarks (`useCoverFetch`).
+    narrowScopes: ['selection'],
+    scan: ({ nodes, options, only }) => scanCovers(nodes, options.covers, only),
     async apply(_result, picked, { options }) {
       return reportDerivedSave(await saveCoverResults(picked, options.covers.maxCacheBytes), {
         title: 'toast_coversSaved',

@@ -100,16 +100,23 @@ export async function dragOnto(source: Locator, target: Locator, fraction: numbe
   });
 }
 
-/** Stores a cover for the bookmark as Fetch Covers would, in the extension's covers database. */
+/** Where a seeded cover came from and when it was saved, as the cover store records it. */
+type SeedCoverInfo = { source: 'page' | 'tab' | 'browse'; savedAt: number };
+
+/**
+ * Stores a cover for the bookmark in the extension's covers database, by default as Fetch Covers
+ * would (a page's preview image, saved now).
+ */
 export async function seedCover(
   worker: Worker,
   bookmarkId: string,
   url: string,
   size: { width: number; height: number } = { width: 600, height: 314 },
+  info: Partial<SeedCoverInfo> = {},
 ) {
   const png = solidPng(size.width, size.height).toString('base64');
   await worker.evaluate(
-    async ({ id, address, data, width, height }) => {
+    async ({ id, address, data, width, height, source, savedAt }) => {
       const bytes = Uint8Array.from(atob(data), (char) => char.charCodeAt(0));
       const db = await new Promise<IDBDatabase>((resolve, reject) => {
         const open = indexedDB.open('bookmark-scout-covers', 1);
@@ -128,8 +135,9 @@ export async function seedCover(
           width,
           height,
           bytes: bytes.byteLength,
-          savedAt: Date.now(),
+          savedAt: savedAt ?? Date.now(),
           version: 1,
+          source,
         });
         transaction
           .objectStore('images')
@@ -139,6 +147,48 @@ export async function seedCover(
       });
       db.close();
     },
-    { id: bookmarkId, address: url, data: png, ...size },
+    {
+      id: bookmarkId,
+      address: url,
+      data: png,
+      ...size,
+      source: info.source ?? 'page',
+      savedAt: info.savedAt ?? null,
+    },
   );
+}
+
+/** Every stored cover's record (`CoverInfo` in `src/lib/cover-store.ts`), by bookmark id order. */
+export async function readCoverInfos(
+  worker: Worker,
+): Promise<{ bookmarkId: string; url: string; width: number; source: string; savedAt: number }[]> {
+  return worker.evaluate(async () => {
+    // Opening a database that does not exist would create it empty, without its stores.
+    const names = (await indexedDB.databases()).map((db) => db.name);
+    if (!names.includes('bookmark-scout-covers')) return [];
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const open = indexedDB.open('bookmark-scout-covers');
+      open.onsuccess = () => resolve(open.result);
+      open.onerror = () => reject(open.error);
+    });
+    if (!db.objectStoreNames.contains('info')) {
+      db.close();
+      return [];
+    }
+    const records = await new Promise<
+      { bookmarkId: string; url: string; width: number; source: string; savedAt: number }[]
+    >((resolve, reject) => {
+      const request = db.transaction('info').objectStore('info').getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    db.close();
+    return records.map(({ bookmarkId, url, width, source, savedAt }) => ({
+      bookmarkId,
+      url,
+      width,
+      source,
+      savedAt,
+    }));
+  });
 }

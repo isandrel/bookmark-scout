@@ -151,7 +151,7 @@ Panel **Indeks teks halaman** di [Setelan](/settings#index-page-text) menampilka
 
 ## Menampilkan sampul di kartu [#show-covers-on-cards]
 
-**Ambil Sampul** menyimpan salinan kecil gambar pratinjau yang disebutkan halaman untuk dirinya sendiri (gambar kartu Open Graph atau Twitter), sehingga **Kartu** di pengelola menampilkannya. Alat ini nonaktif sampai Anda mengaktifkannya. Menampilkan kartu tidak pernah mengunduh apa pun: kartu tanpa sampul tersimpan tetap menampilkan ikon situsnya.
+**Ambil Sampul** menyimpan salinan kecil gambar pratinjau yang disebutkan halaman untuk dirinya sendiri (gambar kartu Open Graph atau Twitter), sehingga **Kartu** di pengelola menampilkannya. Alat ini nonaktif sampai Anda mengaktifkannya. Menampilkan kartu tidak pernah mengunduh apa pun: kartu tanpa sampul tersimpan menampilkan petak berisi ikon dan nama situsnya, dengan warna yang dipilih dari situs itu, yang digambar di komputer Anda.
 
 <Steps>
 <Step>
@@ -168,6 +168,19 @@ Tinjau halaman per tab: **Sampul ditemukan** (dengan gambarnya), **Tanpa sampul*
 Alihkan pengelola ke **Kartu** dengan tombol di sebelah **Lihat** untuk melihatnya. Sampul terikat pada alamat asalnya, jadi bookmark yang dipindahkan ke alamat lain menampilkan ikonnya sampai Anda mengambil lagi. Sampul hanya disimpan di perangkat ini, tidak pernah di cadangan atau ekspor; **Hapus sampul** di Setelan menghapusnya, dan bookmark, tag, serta Histori tetap apa adanya.
 
 Anda juga dapat menggunakan halaman yang sedang dibuka: jika halaman itu sudah di-bookmark dan Ambil Sampul aktif, tombol **Gunakan tampilan ini sebagai sampul** di ujung baris popup yang menyebutkan lokasi penyimpanan halaman akan mengambil gambar tab dan menampilkannya dengan pengingat untuk memeriksa apakah ada hal pribadi. Gambar hanya disimpan saat Anda mengklik **Simpan sampul**. Gambar hanya diambil dari popup toolbar, tidak pernah dari jendela pribadi, dan hanya selama tab masih menampilkan halaman yang di-bookmark.
+
+**Ambil sampul** di menu bookmark (klik kanan atau **⋯**, di daftar atau di kartu, juga untuk pilihan) atau di **Pratinjau**-nya menjalankan Ambil Sampul hanya pada bookmark tersebut, dengan tinjauan yang sama dan permintaan akses yang sama ke situsnya; sampul yang Anda simpan dengan **Gunakan tampilan ini sebagai sampul** tercantum di **Pilihan Anda** dan dipertahankan. Di kartu **Ambil Sampul**, **Bookmark yang dipilih** melakukan hal yang sama untuk pilihan di pengelola. **Hapus sampul** menghapus sampul bookmark (sampul setiap bookmark yang dipilih, untuk pilihan): kartu langsung menampilkan placeholder-nya, dan **Urungkan** di pesan mengembalikan sampul yang sama.
+
+### Menangkap sampul saat Anda menjelajah [#capture-covers-while-you-browse]
+
+Aktifkan **Tangkap Sampul Saat Menjelajah** di bawah Ambil Sampul di [Setelan](/settings#fetch-covers) untuk mendapatkan sampul tanpa mengambilnya. Saat halaman yang di-bookmark tanpa sampul selesai dimuat di tab yang sedang Anda lihat, Bookmark Scout menunggu sebentar, memeriksa bahwa tab masih menampilkan halaman itu, lalu mengambil tangkapan layarnya sebagai sampul bookmark. Mengaktifkannya membuat browser Anda meminta akses ke semua halaman, karena hanya dengan cara itu browser mengizinkan ekstensi mengambil gambar tab tanpa klik; akses yang sama membuat alat yang membaca situs web dapat berjalan tanpa bertanya lagi.
+
+- Fitur ini tidak mengambil gambar di jendela pribadi kecuali Anda juga mengaktifkan **Tangkap Juga di Jendela Pribadi** dan browser Anda mengizinkan Bookmark Scout berjalan di sana, dan tidak pernah mengambil gambar dari halaman milik ekstensi atau browser sendiri, dari file lokal, atau dari halaman yang tidak Anda bookmark.
+- Tangkapan layar menampilkan apa pun yang ditampilkan halaman, seperti halaman akun atau pesan. Tambahkan situs yang tidak ingin Anda sentuh ke **Jangan Pernah Tangkap Situs Ini** (sebuah situs mencakup subdomainnya), dan hapus sampul apa pun dengan **Hapus sampul** di Setelan. Situs di **Jangan Pernah Baca Situs Ini** juga tidak pernah diambil gambarnya.
+- **Sumber Sampul** menentukan sampul mana yang dipakai jika keduanya memungkinkan. Dengan **Gambar halaman dulu, lalu tangkapan layar** (default), tangkapan layar tidak pernah menggantikan gambar yang disimpan Ambil Sampul, dan Ambil Sampul menggantikan tangkapan layar. **Tangkapan layar dulu** melakukan kebalikannya untuk tangkapan layar yang diambil saat menjelajah, dan **Hanya gambar halaman** tidak mengambil tangkapan layar sama sekali. Sampul yang Anda simpan dengan **Gunakan tampilan ini sebagai sampul** tidak pernah diganti secara otomatis, baik oleh Ambil Sampul maupun tangkapan layar saat menjelajah; hanya gambar lain yang Anda simpan yang menggantinya.
+- Tangkapan layar yang diambil saat menjelajah diambil ulang pada kunjungan Anda berikutnya setelah usianya melebihi **Ambil Ulang Tangkapan Layar Lebih Lama dari** (0 berarti tidak pernah diambil ulang). **Tunggu Sebelum Menangkap** dan **Jeda Antar Gambar** mengatur berapa lama fitur ini menunggu. Tangkapan layar hanya disimpan di perangkat ini, seperti semua sampul, dan tidak pernah dikirim ke mana pun. Nonaktifkan setelan ini untuk berhenti; cabut aksesnya di setelan ekstensi browser Anda.
+
+**Pratinjau** bookmark dan kartu detailnya menyebutkan asal sampulnya: gambar halaman itu sendiri, gambar tab Anda, atau gambar yang ditangkap saat menjelajah, beserta tanggal penyimpanannya.
 
 ## Alat terkait [#related-tools]
 

@@ -5,8 +5,8 @@
  */
 import { solidPng } from '../solid-png';
 import { libraryState, settledLibraryState, waitForAuditBaseline } from './audit-helpers';
-import { expect, test } from './fixtures';
-import { managerUrl } from './manager-helpers';
+import { expect, test, toastRegion } from './fixtures';
+import { managerUrl, readCoverInfos, seedCover } from './manager-helpers';
 import { STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
@@ -224,4 +224,98 @@ test('the popup turns what the tab shows into a cover only after its preview is 
   await setSettings(extensionWorker, { managerViewMode: 'cards' });
   await page.goto(`${managerUrl(extensionId)}?id=${seeded.folderId}`);
   await expect(page.getByTestId('bookmark-cover')).toHaveAttribute('src', /^blob:/);
+});
+
+test.describe('Fetch cover from a card', () => {
+  test.use({ grantWebHostAccess: true });
+
+  test("a right-click Fetch cover on one card saves that bookmark's cover and leaves the others untouched", async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const seeded = await seedFolder(extensionWorker, 'E2E Fetch One', [
+      { title: 'Chosen story', url: 'https://chosen.e2e.invalid/story' },
+      { title: 'Other story', url: 'https://other.e2e.invalid/story' },
+      { title: 'Third story', url: 'https://third.e2e.invalid/story' },
+    ]);
+    const requested: string[] = [];
+    await context.route('https://*.e2e.invalid/**', async (route) => {
+      const url = new URL(route.request().url());
+      requested.push(url.hostname);
+      if (url.pathname === '/images/cover.png') {
+        return route.fulfill({ status: 200, contentType: 'image/png', body: solidPng(1200, 630) });
+      }
+      return route.fulfill({ status: 200, contentType: 'text/html', body: STORY });
+    });
+    // Off: no Fetch cover in the menu.
+    await setSettings(extensionWorker, { managerViewMode: 'cards' });
+    await page.goto(`${managerUrl(extensionId)}?id=${seeded.folderId}`);
+    const card = (title: string) =>
+      page.locator('[data-slot="bookmark-card"]').filter({ hasText: title });
+    await card('Chosen story').click({ button: 'right' });
+    await expect(page.getByRole('menuitem', { name: 'Edit' })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Fetch cover' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+
+    await setSettings(extensionWorker, { coversEnabled: true, coversWidthPx: 320 });
+    await card('Chosen story').click({ button: 'right' });
+    await page.getByRole('menuitem', { name: 'Fetch cover' }).click();
+    const review = page.getByRole('dialog', { name: 'Fetch Covers' });
+    await expect(review.getByTestId('cover-item')).toHaveCount(1);
+    await expect(review.getByTestId('cover-item')).toContainText('Chosen story');
+    await review.getByRole('button', { name: 'Save 1 cover' }).click();
+    await expect(review).toHaveCount(0);
+
+    await expect(card('Chosen story').getByTestId('bookmark-cover')).toHaveAttribute(
+      'src',
+      /^blob:/,
+    );
+    await expect(card('Other story').getByTestId('bookmark-card-placeholder')).toBeVisible();
+    await expect(card('Third story').getByTestId('bookmark-card-placeholder')).toBeVisible();
+    expect((await readCoverInfos(extensionWorker)).map((info) => info.bookmarkId)).toEqual([
+      seeded.ids['Chosen story'],
+    ]);
+    expect(new Set(requested)).toEqual(new Set(['chosen.e2e.invalid']));
+  });
+});
+
+test('Remove cover is offered only for a card with a cover, shows the placeholder at once, and Undo puts the same cover back', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Remove Cover', [
+    { title: 'Covered page', url: 'https://covered.e2e.invalid/a' },
+    { title: 'Bare page', url: 'https://bare.e2e.invalid/b' },
+  ]);
+  const coveredId = seeded.ids['Covered page'] as string;
+  await seedCover(extensionWorker, coveredId, 'https://covered.e2e.invalid/a', undefined, {
+    source: 'tab',
+    savedAt: Date.UTC(2026, 9, 1),
+  });
+  const [stored] = await readCoverInfos(extensionWorker);
+  await setSettings(extensionWorker, { managerViewMode: 'cards' });
+  await page.goto(`${managerUrl(extensionId)}?id=${seeded.folderId}`);
+  const card = (title: string) =>
+    page.locator('[data-slot="bookmark-card"]').filter({ hasText: title });
+  await expect(card('Covered page').getByTestId('bookmark-cover')).toHaveAttribute('src', /^blob:/);
+
+  await card('Bare page').click({ button: 'right' });
+  await expect(page.getByRole('menuitem', { name: 'Edit' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Remove cover' })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+
+  await card('Covered page').click({ button: 'right' });
+  await page.getByRole('menuitem', { name: 'Remove cover' }).click();
+  // No confirmation: the card shows its placeholder at once.
+  await expect(card('Covered page').getByTestId('bookmark-card-placeholder')).toBeVisible();
+  await expect(card('Covered page').getByTestId('bookmark-cover')).toHaveCount(0);
+  await expect.poll(() => readCoverInfos(extensionWorker)).toEqual([]);
+
+  await toastRegion(page).getByRole('button', { name: 'Undo' }).first().click();
+  await expect(card('Covered page').getByTestId('bookmark-cover')).toHaveAttribute('src', /^blob:/);
+  // The same cover: its source and date are as they were.
+  await expect.poll(() => readCoverInfos(extensionWorker)).toEqual([stored]);
 });

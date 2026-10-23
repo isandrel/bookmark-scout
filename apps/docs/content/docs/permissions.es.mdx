@@ -3,7 +3,7 @@ title: Permisos
 description: Cada permiso del navegador que pide Bookmark Scout, por qué lo necesita y el acceso opcional a sitios web que solo solicita cuando ejecutas una herramienta.
 ---
 
-Estos son los permisos de la extensión compilada para cada navegador. Bookmark Scout no declara scripts de contenido y solo lee una página que visitas cuando se lo pides: **Indexar el texto de esta página** en la ventana emergente lee el texto que muestra esa pestaña; después de un atajo de guardado rápido, solo muestra su propia notificación en esa pestaña. Al instalarse, solo pide lo que necesita para funcionar; todo lo demás se pide cuando activas o ejecutas la función que lo necesita.
+Estos son los permisos de la extensión compilada para cada navegador. Bookmark Scout no declara scripts de contenido y solo lee una página que visitas cuando se lo pides: **Indexar el texto de esta página** en la ventana emergente lee el texto que muestra esa pestaña y, con **Capturar portadas al navegar** activado, toma una imagen de una página marcada que abres, que se queda en este dispositivo; después de un atajo de guardado rápido, solo muestra su propia notificación en esa pestaña. Al instalarse, solo pide lo que necesita para funcionar; todo lo demás se pide cuando activas o ejecutas la función que lo necesita.
 
 ## Qué te pedirá el navegador y por qué [#what-your-browser-will-ask-and-why]
 
@@ -16,6 +16,7 @@ Al instalar Bookmark Scout, el navegador muestra una sola línea. Todo lo demás
 | «Leer tu historial de navegación» / acceso a las pestañas del navegador | Guardas la página actual, o pides sugerencias de carpetas, desde el panel lateral | Saber en qué página estás. El botón de la barra de herramientas y el atajo de guardado rápido no necesitan ningún permiso, así que la explicación los sugiere primero |
 | «Leer y modificar tus datos en todos los sitios de example.com», o «en una serie de sitios web» / acceso a tus datos de los sitios del dominio example.com | Ejecutas **Comprobar enlaces rotos**, **Extractor de metadatos** o **Actualizar iconos de sitios** | Solicitar las páginas de los marcadores de esa ejecución, solo en sus sitios |
 | «Leer y cambiar todos tus datos en todos los sitios web» / acceso a tus datos de todos los sitios web | Una ejecución de una herramienta abarca más de 20 sitios, o activas **Leer el contenido de la página** | Solicitar páginas de cualquier sitio |
+| «Leer y cambiar todos tus datos en todos los sitios web» / acceso a tus datos de todos los sitios web | Activas **Capturar portadas al navegar** | Tomar una imagen de una página marcada en la pestaña que estás viendo cuando se carga, sin un clic, algo que los navegadores solo permiten con acceso a todas las páginas. La imagen se queda en este dispositivo, y el mismo acceso permite que las herramientas de sitios web se ejecuten sin preguntar |
 | «Leer y modificar tus datos en api.example.com» / acceso a tus datos de api.example.com | Haces clic en **Verificar servicio** o **Actualizar modelos** | Llegar a la dirección de tu proveedor de IA |
 | «Comunicarse con aplicaciones nativas cooperativas» / intercambiar mensajes con programas distintos de Firefox | Activas **Permitir agentes de IA locales** | Comunicarse con el programa bookmark-scout-mcp de tu equipo |
 | Solo Firefox: un aviso que dice que el desarrollador quiere recopilar información de autenticación, marcadores y actividad de navegación | Activas **Funciones de IA** | Tu clave de API, tus marcadores y nombres de carpetas, y el título y la URL de la página actual van a tu proveedor de IA. El desarrollador del que habla este aviso es el proveedor de IA que elegiste; Bookmark Scout no recibe nada |
@@ -54,11 +55,12 @@ Si lo rechazas, la función sigue desactivada y no se envía nada. Si más adela
 
 ## Acceso opcional a sitios web [#optional-website-access]
 
-La extensión también declara acceso a `http://*/*` y `https://*/*`, pero nada de eso se concede al instalar. El navegador te lo pregunta en el momento en que lo necesitas:
+La extensión también declara acceso a `http://*/*`, `https://*/*` y `<all_urls>`, pero nada de eso se concede al instalar. El navegador te lo pregunta en el momento en que lo necesitas:
 
 - **Comprobar enlaces rotos**, **Extractor de metadatos** y **Actualizar iconos de sitios** piden, cuando los ejecutas, acceso solo a los sitios de los marcadores de esa ejecución, cada uno con sus subdominios. Una ejecución de más de 20 sitios pide en su lugar acceso a todos los sitios web. Los sitios que ya permitiste no se vuelven a pedir. Las solicitudes se envían sin cookies, y solo se lee el encabezado de la página para obtener títulos y enlaces de iconos. Si lo rechazas, no se analiza nada. Un enlace que redirige a un sitio fuera de la ejecución no se puede seguir, así que **Comprobar enlaces rotos** lo marca como **Comprobar a mano** en lugar de roto. Consulta [Encontrar y reparar enlaces rotos](/guides/dead-links) y [Actualizar iconos de sitios](/guides/clean-up#refresh-site-icons).
 - **Indexar texto de páginas** lo pide de la misma manera, para los sitios de los marcadores que lee.
 - **Obtener portadas** lo pide de la misma manera, para los sitios de los marcadores que lee; una imagen en otro sitio solo se descarga si también permitiste ese sitio.
+- **Capturar portadas al navegar** pide acceso a todas las páginas (`<all_urls>`) cuando lo activas: los navegadores solo permiten que una extensión tome una imagen de una pestaña sin un clic con ese acceso. Las imágenes solo se toman de páginas marcadas en la pestaña que estás viendo, nunca de sitios de **Nunca capturar estos sitios**, no en ventanas privadas salvo que actives **Capturar también en ventanas privadas** y permitas la extensión ahí, y se quedan en este dispositivo. Mientras esté concedido, las herramientas anteriores ya no piden acceso a sus sitios. Consulta [Mostrar portadas en las tarjetas](/guides/clean-up#capture-covers-while-you-browse).
 - **Leer el contenido de la página**, en los ajustes de IA, pide acceso a todos los sitios web cuando lo activas, para que las herramientas de IA puedan descargar páginas, sin cookies, y enviar su texto principal a tu proveedor de IA. Las páginas de tu red local nunca se leen. Consulta [Leer el contenido de la página](/guides/ai-tools#read-page-content).
 - **Verificar servicio** y **Actualizar modelos**, en los ajustes de IA, solo piden acceso a la dirección de ese proveedor. Consulta [Configurar las herramientas de IA](/guides/ai-tools).
 
@@ -66,7 +68,7 @@ Para retirar el acceso, abre la página de la extensión en el navegador (por ej
 
 ## Lo que no se solicita [#what-is-not-requested]
 
-- Ningún acceso al contenido de las páginas y ningún script de contenido declarado
+- Ningún script de contenido declarado, y ningún acceso al contenido de las páginas más allá de las funciones anteriores que actives
 - Ningún permiso de historial, descargas ni cookies
 - Ningún acceso a hosts al instalar
 

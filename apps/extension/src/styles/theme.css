@@ -198,6 +198,9 @@
   --sidebar-accent-foreground: 211.6 55.9% 13.3%;
   --sidebar-border: 213 32.3% 87.8%;
   --sidebar-ring: 183.1 84.2% 27.3%;
+  /* A card's placeholder tile without a cover: the hue comes from the site (--cover-tile-hue). */
+  --cover-tile-saturation: 50%;
+  --cover-tile-lightness: 91%;
 }
 
 .dark {
@@ -239,6 +242,8 @@
   --sidebar-accent-foreground: 210 43.8% 93.7%;
   --sidebar-border: 210 38.6% 22.4%;
   --sidebar-ring: 182.1 56.6% 51.2%;
+  --cover-tile-saturation: 32%;
+  --cover-tile-lightness: 21%;
 }
 
 /* The popup and side panel sit on surface; the manager and options pages sit on paper. */
@@ -543,6 +548,14 @@ tr[data-drop-zone='into'] > td {
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--border));
   border-radius: 5px;
+}
+
+/*
+ * A card's placeholder tile (`CoverPlaceholder`): a tone of the site's hue, set on the element as
+ * --cover-tile-hue; saturation and lightness follow the theme, so the site's name stays readable.
+ */
+@utility bg-cover-tile {
+  background-color: hsl(var(--cover-tile-hue) var(--cover-tile-saturation) var(--cover-tile-lightness));
 }
 
 @utility no-scrollbar {

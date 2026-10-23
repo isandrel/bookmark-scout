@@ -4469,6 +4469,22 @@
         "message": "Доступ для локальных ИИ-агентов остаётся выключенным. При включении браузер попросит разрешить расширению обмениваться данными с программой bookmark-scout-mcp.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_browseCoversTitle": {
+        "message": "Разрешить снимки страниц из закладок",
+        "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
+    },
+    "permission_browseCoversDesc": {
+        "message": "Чтобы делать снимок страницы из закладок при её загрузке без нажатия, Bookmark Scout нужен доступ ко всем страницам. Затем браузер спросит, разрешить ли доступ к вашим данным на всех сайтах.",
+        "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
+    },
+    "permission_browseCoversDetail": {
+        "message": "Снимки делаются только со страниц из закладок в открытой вкладке, в приватных окнах — только если вы это включите, и хранятся на этом устройстве: ничего никуда не отправляется. Тот же доступ позволяет инструментам, которые читают сайты, работать без повторного запроса. Чтобы прекратить, выключите настройку; доступ удаляется в настройках расширений браузера.",
+        "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
+    },
+    "permission_browseCoversDenied": {
+        "message": "«Снимать обложки при просмотре» остаётся выключенным. При включении у браузера запрашивается доступ ко всем страницам.",
+        "description": "Toast text when access to all pages for Capture Covers While Browsing is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Ничего не отправлено. Браузер спрашивает разрешение, прежде чем расширение передаст ваш API-ключ провайдеру.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -6855,6 +6871,10 @@
         "message": "МБ",
         "description": "Unit: megabytes"
     },
+    "unit_days": {
+        "message": "дн.",
+        "description": "Unit after a number of days in Settings"
+    },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
         "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
@@ -9231,6 +9251,82 @@
         "message": "Сколько места сохранённые обложки могут занимать на этом устройстве; сначала удаляются самые старые",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversSourcePreference": {
+        "message": "Источник обложки",
+        "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
+    },
+    "settings_coversSourcePreferenceDesc": {
+        "message": "Какую обложку сохраняет закладка, когда доступны и собственное изображение страницы, и снимок вкладки. Снимок при просмотре заменяет изображение страницы только при варианте «Сначала снимок», а «Только изображение страницы» снимков не делает. Обложка, выбранная кнопкой «Сделать обложку из этого вида», никогда не заменяется автоматически.",
+        "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
+    },
+    "settings_coversSourcePageFirst": {
+        "message": "Сначала изображение страницы, затем снимок",
+        "description": "Settings: Cover Source choice that keeps the page's own image and uses a screenshot only without one"
+    },
+    "settings_coversSourceScreenshotFirst": {
+        "message": "Сначала снимок",
+        "description": "Settings: Cover Source choice that prefers a screenshot of the tab over the page's own image"
+    },
+    "settings_coversSourcePageOnly": {
+        "message": "Только изображение страницы",
+        "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversBrowseCapture": {
+        "message": "Снимать обложки при просмотре",
+        "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
+    },
+    "settings_coversBrowseCaptureDesc": {
+        "message": "Когда страница из закладок без обложки или со старым снимком, сделанным при просмотре, загрузится в открытой вкладке, делается снимок вкладки, который становится её обложкой. В приватных окнах — только если вы включите и это; снимки хранятся только на этом устройстве. При включении запрашивается доступ ко всем страницам.",
+        "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
+    },
+    "settings_coversBrowseCaptureHelp": {
+        "message": "После загрузки расширение немного ждёт и проверяет, что вкладка всё ещё показывает ту же страницу, поэтому на снимке всегда только эта страница из закладок. Страницы расширения и браузера, локальные файлы и сайты из списка «Никогда не снимать эти сайты» не снимаются. На снимке видно то, что было на экране, например страница аккаунта или сообщения: добавьте такие сайты в список или удалите обложки в настройках. Чтобы отозвать доступ, удалите его в настройках расширений браузера.",
+        "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Снимать и в приватных окнах",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Снимать страницы из закладок и в приватных окнах, если браузер разрешает Bookmark Scout работать в них. Снимки остаются на этом устройстве.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Пока настройка выключена, приватные окна никогда не снимаются. Браузер также должен разрешить расширению работать в них: включите работу в режиме инкогнито (в приватных окнах) на странице Bookmark Scout в настройках расширений браузера.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Задержка перед снимком",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Сколько страница из закладок должна оставаться на экране после загрузки, прежде чем будет сделан снимок",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Интервал между снимками",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "Наименьшее время между двумя снимками. Оно не может быть меньше, чем позволяют браузеры.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Переснимать снимки старше",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Снимок, сделанный при просмотре и старше этого срока, делается заново при следующем посещении. 0 — никогда не переснимать; обложка, выбранная кнопкой «Сделать обложку из этого вида», никогда не переснимается.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
+    },
+    "settings_coversNeverCaptureSites": {
+        "message": "Никогда не снимать эти сайты",
+        "description": "Settings: list of sites whose pages are never pictured while browsing"
+    },
+    "settings_coversNeverCaptureSitesDesc": {
+        "message": "Страницы этих сайтов и их поддоменов никогда не снимаются при просмотре. Введите сайт, например example.com, или вставьте адрес. Сайты из списка «Никогда не читать эти сайты» тоже никогда не снимаются.",
+        "description": "Settings: what the Never Capture These Sites list does and how to add a site"
+    },
     "tools_coversDialogDesc": {
         "message": "Изображение для предпросмотра, которое указывает сама страница. Хранятся только сохранённые вами обложки, и только на этом устройстве.",
         "description": "Fetch Covers review: description"
@@ -9262,6 +9358,14 @@
     "tools_coversCategory_current": {
         "message": "Уже загружено ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_kept": {
+        "message": "Выбраны вами ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "Эта обложка выбрана кнопкой «Сделать обложку из этого вида», поэтому она сохраняется. Чтобы загрузить другую, сначала удалите её.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
     },
     "tools_coversCategory_skipped": {
         "message": "Пропущено ($1)",
@@ -10048,6 +10152,104 @@
     "covers_captureButton": {
         "message": "Сделать обложку из этого вида",
         "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_sourceLabel": {
+        "message": "Обложка",
+        "description": "Bookmark preview and hover card: label of the line saying where the stored cover came from"
+    },
+    "covers_sourcePage": {
+        "message": "Изображение для предпросмотра со страницы, сохранено $date$",
+        "description": "Bookmark preview and hover card: the cover is the preview image the page names for itself (Fetch Covers), and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceTab": {
+        "message": "Снимок вашей вкладки, сохранён $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab the user took with Use this view as the cover, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceBrowse": {
+        "message": "Снято при просмотре, сохранено $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_privateAccessNote": {
+        "message": "Браузер не разрешает Bookmark Scout работать в приватных окнах, поэтому они пропускаются. Чтобы разрешить, откройте страницу Bookmark Scout в настройках расширений браузера и включите работу в режиме инкогнито (в приватных окнах).",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "Загрузить обложку",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "Удалить обложку",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "Удалена $count$ обложка",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed_few": {
+        "message": "Удалено $count$ обложки",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removed_many": {
+        "message": "Удалено $count$ обложек",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "Удалено обложек: $count$",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "Закладки и их теги не изменились. Загрузка обложек или съёмка обложек при просмотре может дать им новую обложку.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "Обложка не удалена",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "Обложка не восстановлена",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "Сделать обложку из этого вида?",

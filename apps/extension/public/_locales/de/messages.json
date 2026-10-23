@@ -4245,6 +4245,22 @@
         "message": "Der Zugriff für lokale KI-Agenten bleibt aus. Beim Einschalten fragt Ihr Browser, ob die Erweiterung mit dem Programm bookmark-scout-mcp kommunizieren darf.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_browseCoversTitle": {
+        "message": "Bilder von Seiten mit Lesezeichen erlauben",
+        "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
+    },
+    "permission_browseCoversDesc": {
+        "message": "Um ohne Klick ein Bild einer Seite mit Lesezeichen aufzunehmen, sobald sie geladen ist, braucht Bookmark Scout Zugriff auf alle Seiten. Ihr Browser fragt dann, ob die Erweiterung auf Ihre Daten auf allen Websites zugreifen darf.",
+        "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
+    },
+    "permission_browseCoversDetail": {
+        "message": "Bilder werden nur von Seiten mit Lesezeichen im angezeigten Tab aufgenommen, nicht in privaten Fenstern, außer Sie schalten das ein, und bleiben auf diesem Gerät: Nichts wird irgendwohin gesendet. Mit demselben Zugriff laufen auch die Tools, die Websites abrufen, ohne erneute Nachfrage. Schalten Sie die Einstellung aus, um aufzuhören; den Zugriff entfernen Sie in den Erweiterungseinstellungen Ihres Browsers.",
+        "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
+    },
+    "permission_browseCoversDenied": {
+        "message": "„Titelbilder beim Surfen aufnehmen“ bleibt aus. Beim Einschalten wird Ihr Browser um Zugriff auf alle Seiten gebeten.",
+        "description": "Toast text when access to all pages for Capture Covers While Browsing is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Es wurde nichts gesendet. Ihr Browser fragt nach, bevor die Erweiterung Ihren API-Schlüssel an den Anbieter weitergibt.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -6330,6 +6346,10 @@
     "unit_mb": {
         "message": "MB",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "Tage",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8531,6 +8551,82 @@
         "message": "Platz, den gespeicherte Titelbilder auf diesem Gerät belegen dürfen; die ältesten werden zuerst entfernt",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversSourcePreference": {
+        "message": "Titelbildquelle",
+        "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
+    },
+    "settings_coversSourcePreferenceDesc": {
+        "message": "Welches Titelbild ein Lesezeichen behält, wenn sowohl das eigene Bild der Seite als auch ein Screenshot des Tabs möglich sind. Ein beim Surfen aufgenommener Screenshot ersetzt das Bild der Seite nur mit „Screenshot zuerst“, und „Nur Seitenbild“ nimmt keine Screenshots auf. Ein mit „Diese Ansicht als Titelbild verwenden“ gewähltes Titelbild wird nie automatisch ersetzt.",
+        "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
+    },
+    "settings_coversSourcePageFirst": {
+        "message": "Seitenbild zuerst, dann Screenshot",
+        "description": "Settings: Cover Source choice that keeps the page's own image and uses a screenshot only without one"
+    },
+    "settings_coversSourceScreenshotFirst": {
+        "message": "Screenshot zuerst",
+        "description": "Settings: Cover Source choice that prefers a screenshot of the tab over the page's own image"
+    },
+    "settings_coversSourcePageOnly": {
+        "message": "Nur Seitenbild",
+        "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversBrowseCapture": {
+        "message": "Titelbilder beim Surfen aufnehmen",
+        "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
+    },
+    "settings_coversBrowseCaptureDesc": {
+        "message": "Wenn eine Seite mit Lesezeichen ohne Titelbild oder mit einem alten, beim Surfen aufgenommenen im angezeigten Tab fertig geladen ist, wird ein Bild des Tabs als ihr Titelbild aufgenommen. Nicht in privaten Fenstern, außer Sie schalten das auch ein; die Bilder bleiben auf diesem Gerät. Beim Einschalten wird Zugriff auf alle Seiten angefragt.",
+        "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
+    },
+    "settings_coversBrowseCaptureHelp": {
+        "message": "Nach dem Laden wird kurz gewartet und geprüft, ob der Tab die Seite noch zeigt, sodass ein Bild immer nur diese Seite mit Lesezeichen zeigt. Seiten der Erweiterung oder des Browsers, lokale Dateien und Websites unter „Diese Websites nie aufnehmen“ werden nie aufgenommen. Ein Bild zeigt, was auf dem Bildschirm war, etwa eine Kontoseite oder Nachrichten: Fügen Sie solche Websites der Liste hinzu oder löschen Sie Titelbilder in den Einstellungen. Den Zugriff entziehen Sie in den Erweiterungseinstellungen Ihres Browsers.",
+        "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Auch in privaten Fenstern aufnehmen",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Auch in privaten Fenstern Bilder von Seiten mit Lesezeichen aufnehmen, sofern Ihr Browser Bookmark Scout dort ausführen lässt. Sie bleiben auf diesem Gerät.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Solange dies aus ist, werden private Fenster nie aufgenommen. Ihr Browser muss die Erweiterung dort außerdem ausführen lassen: Schalten Sie auf der Seite von Bookmark Scout in den Erweiterungseinstellungen Ihres Browsers die Ausführung im Inkognito- bzw. privaten Modus ein.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Wartezeit vor der Aufnahme",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Wie lange eine Seite mit Lesezeichen nach dem Laden im Vordergrund bleiben muss, bevor ihr Bild aufgenommen wird",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Abstand zwischen Aufnahmen",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "Die kürzeste Zeit zwischen zwei Aufnahmen. Sie kann nicht unter das sinken, was Browser erlauben.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Screenshots erneuern, die älter sind als",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Ein beim Surfen aufgenommenes Bild, das älter ist, wird beim nächsten Besuch neu aufgenommen. 0 nimmt es nie neu auf; ein mit „Diese Ansicht als Titelbild verwenden“ gewähltes Titelbild wird nie neu aufgenommen.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
+    },
+    "settings_coversNeverCaptureSites": {
+        "message": "Diese Websites nie aufnehmen",
+        "description": "Settings: list of sites whose pages are never pictured while browsing"
+    },
+    "settings_coversNeverCaptureSitesDesc": {
+        "message": "Seiten dieser Websites und ihrer Subdomains werden beim Surfen nie aufgenommen. Geben Sie eine Website wie example.com ein oder fügen Sie eine Adresse ein. Websites unter „Diese Websites nie lesen“ werden ebenfalls nie aufgenommen.",
+        "description": "Settings: what the Never Capture These Sites list does and how to add a site"
+    },
     "tools_coversDialogDesc": {
         "message": "Das Vorschaubild, das jede Seite für sich angibt. Nur die gespeicherten Titelbilder werden behalten, auf diesem Gerät.",
         "description": "Fetch Covers review: description"
@@ -8562,6 +8658,14 @@
     "tools_coversCategory_current": {
         "message": "Schon geladen ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_kept": {
+        "message": "Von Ihnen gewählt ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "Sie haben dieses Titelbild mit „Diese Ansicht als Titelbild verwenden“ gewählt, daher bleibt es erhalten. Entfernen Sie es zuerst, um ein anderes zu laden.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
     },
     "tools_coversCategory_skipped": {
         "message": "Übersprungen ($1)",
@@ -9160,6 +9264,84 @@
     "covers_captureButton": {
         "message": "Diese Ansicht als Titelbild verwenden",
         "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_sourceLabel": {
+        "message": "Titelbild",
+        "description": "Bookmark preview and hover card: label of the line saying where the stored cover came from"
+    },
+    "covers_sourcePage": {
+        "message": "Vorschaubild der Seite, gespeichert am $date$",
+        "description": "Bookmark preview and hover card: the cover is the preview image the page names for itself (Fetch Covers), and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceTab": {
+        "message": "Bild Ihres Tabs, gespeichert am $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab the user took with Use this view as the cover, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceBrowse": {
+        "message": "Beim Surfen aufgenommen, gespeichert am $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_privateAccessNote": {
+        "message": "Ihr Browser lässt Bookmark Scout nicht in privaten Fenstern laufen, daher werden sie übersprungen. Um es zu erlauben, öffnen Sie die Seite von Bookmark Scout in den Erweiterungseinstellungen Ihres Browsers und schalten Sie die Ausführung im Inkognito- bzw. privaten Modus ein.",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "Titelbild laden",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "Titelbild entfernen",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "$count$ Titelbild entfernt",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "$count$ Titelbilder entfernt",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "Lesezeichen und ihre Tags bleiben unverändert. Titelbilder laden oder Titelbilder beim Surfen aufnehmen kann ihnen ein neues Titelbild geben.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "Titelbild nicht entfernt",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "Titelbild nicht wiederhergestellt",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "Diese Ansicht als Titelbild verwenden?",

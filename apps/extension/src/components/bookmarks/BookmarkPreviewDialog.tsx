@@ -1,8 +1,9 @@
 /**
  * A bookmark's preview in the manager, opened from its item menu (Preview) or with the manager's
- * preview key on a focused row or card: the stored cover, title, address, folder, tags, and
- * summary, then the buttons of `[menus] preview` in config/ui/actions.toml. Everything comes from
- * this device; nothing is fetched, so without a stored cover none is shown.
+ * preview key on a focused row or card: the stored cover, title, address, folder, tags, summary,
+ * and where the cover came from (with Fetch cover and Remove cover beside it), then the buttons of `[menus]
+ * preview` in config/ui/actions.toml. Everything comes from this device; nothing is fetched, so
+ * without a stored cover none is shown.
  *
  * Previous and Next (and the preview's keys, `managerPreview` in config/ui/shortcuts.toml, unless
  * a text field has focus) show the bookmark before or after it in `rows`, the table's page as
@@ -31,6 +32,9 @@ type BookmarkPreviewDialogProps = {
 };
 
 const { managerPreview } = SHORTCUT_BINDINGS;
+
+/** The item-menu actions on a bookmark's cover, offered beside it where they apply. */
+const COVER_ACTION_IDS = ['fetchCover', 'removeCover'] as const satisfies readonly ActionId[];
 
 /** The row or card of the table that shows `rowId`, if it is on the page. */
 function findRowElement(rowId: string | undefined): HTMLElement | null {
@@ -86,6 +90,12 @@ export function BookmarkPreviewDialog({
   const { value: metadataById } = useStoredValue(bookmarkMetadataValue);
 
   const metadata = shown ? metadataById[shown.id] : undefined;
+  const coverInfo = useCoverInfo(shown?.id ?? '', shown?.url);
+  const coverSource = describeCoverSource(coverInfo);
+  // The cover's own commands, as the item menu offers them.
+  const coverActions = shown
+    ? COVER_ACTION_IDS.filter((id) => isItemMenuActionAvailable(id, [shown], host))
+    : [];
   const tags = metadata?.tags ?? [];
   const summary = metadata?.summary?.trim() ?? '';
   const sections = shown ? getItemMenuSections([shown], host, ACTION_MENUS.preview) : [];
@@ -211,6 +221,36 @@ export function BookmarkPreviewDialog({
                     data-testid="bookmark-preview-summary"
                   >
                     {summary}
+                  </dd>
+                </div>
+              ) : null}
+              {coverSource || coverActions.length > 0 ? (
+                <div className="grid gap-1">
+                  <dt className="text-xs text-muted-foreground">{t('covers_sourceLabel')}</dt>
+                  <dd className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                    {coverSource ? (
+                      <span data-testid="bookmark-preview-cover-source">{coverSource}</span>
+                    ) : null}
+                    {/* The cover's own commands, so a cover can be fetched or removed here. */}
+                    <span className="flex flex-wrap gap-1">
+                      {coverActions.map((id) => {
+                        const { icon } = getAction(id);
+                        const Icon = icon ? ACTION_ICONS[icon] : undefined;
+                        return (
+                          <Button
+                            key={id}
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            data-action={id}
+                            onClick={() => runItemMenuAction(id, [shown], host)}
+                          >
+                            {Icon ? <Icon aria-hidden="true" className="h-4 w-4" /> : null}
+                            {getItemMenuLabel(id, [shown], host)}
+                          </Button>
+                        );
+                      })}
+                    </span>
                   </dd>
                 </div>
               ) : null}

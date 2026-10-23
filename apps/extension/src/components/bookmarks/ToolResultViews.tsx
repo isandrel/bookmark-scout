@@ -1303,6 +1303,7 @@ function ReadFromNote({ url }: { url: string }) {
 /** Fetch Covers' review tabs, by what reading the page found. */
 const COVER_CATEGORIES = [
   'found',
+  'kept',
   'none',
   'unusable',
   'elsewhere',
@@ -1314,6 +1315,7 @@ const COVER_CATEGORIES = [
 
 const COVER_CATEGORY_LABEL_KEYS = {
   found: 'tools_coversCategory_found',
+  kept: 'tools_coversCategory_kept',
   none: 'tools_coversCategory_none',
   unusable: 'tools_coversCategory_unusable',
   elsewhere: 'tools_coversCategory_elsewhere',
@@ -1372,6 +1374,9 @@ export function CoverResultsView({
               <UrlLink href={item.url} />
             </p>
             {item.status === 'redirected' ? <RedirectNotFollowedNote /> : null}
+            {item.status === 'kept' ? (
+              <p className="text-xs text-muted-foreground">{t('tools_coversKeptReason')}</p>
+            ) : null}
             {item.readFrom ? <ReadFromNote url={item.readFrom} /> : null}
             {item.status === 'elsewhere' && item.imageSite ? (
               <p className="text-xs text-muted-foreground">

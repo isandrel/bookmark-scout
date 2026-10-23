@@ -145,6 +145,8 @@ export type ActionIconName =
   | 'folderPlus'
   | 'folderSearch'
   | 'hash'
+  | 'imageDown'
+  | 'imageOff'
   | 'info'
   | 'link'
   | 'pencil'

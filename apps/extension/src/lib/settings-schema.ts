@@ -331,6 +331,7 @@ const UNIT_MESSAGE_KEYS = {
   chars: 'unit_chars',
   kb: 'unit_kb',
   mb: 'unit_mb',
+  days: 'unit_days',
 } as const;
 
 type SettingUnit = keyof typeof UNIT_MESSAGE_KEYS;
@@ -1149,6 +1150,36 @@ const fields = {
   coversMaxCacheMb: numberField('metadata_content.covers.max_cache_mb', 'coversMaxCacheMb', {
     unit: 'mb',
   }),
+  coversSourcePreference: enumField(
+    'metadata_content.covers.source_preference',
+    'coversSourcePreference',
+    coverPreferenceSchema,
+    getCoverPreferenceLabel,
+  ),
+  coversBrowseCapture: switchField('metadata_content.covers.browse_capture', 'coversBrowseCapture'),
+  coversBrowseCapturePrivate: switchField(
+    'metadata_content.covers.browse_capture_private',
+    'coversBrowseCapturePrivate',
+  ),
+  coversBrowseSettleMs: numberField(
+    'metadata_content.covers.browse_settle_ms',
+    'coversBrowseSettleMs',
+    { unit: 'ms', display: IN_SECONDS },
+  ),
+  coversBrowseIntervalMs: numberField(
+    'metadata_content.covers.browse_min_interval_ms',
+    'coversBrowseIntervalMs',
+    { unit: 'ms', display: IN_SECONDS },
+  ),
+  coversBrowseMaxAgeDays: numberField(
+    'metadata_content.covers.browse_max_age_days',
+    'coversBrowseMaxAgeDays',
+    { unit: 'days' },
+  ),
+  coversNeverCaptureSites: siteListField(
+    'metadata_content.covers.never_capture_sites',
+    'coversNeverCaptureSites',
+  ),
 
   privacyScannerEnabled: switchField('security.privacy_scanner.enabled', 'privacyScannerEnabled'),
   privacyScannerDefaultScope: scopeField(
@@ -1602,7 +1633,16 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'covers',
         labelKey: 'tools_covers',
         toggle: 'coversEnabled',
-        fields: ['coversDefaultScope'],
+        fields: [
+          'coversDefaultScope',
+          'coversSourcePreference',
+          'coversBrowseCapture',
+          'coversBrowseCapturePrivate',
+          'coversBrowseSettleMs',
+          'coversBrowseIntervalMs',
+          'coversBrowseMaxAgeDays',
+          'coversNeverCaptureSites',
+        ],
         advanced: ['coversWidthPx', 'coversMaxImageKb', 'coversMaxCacheMb'],
         panel: 'covers',
       },
@@ -1680,7 +1720,37 @@ export const SETTING_PERMISSIONS = {
   agentBridgeEnabled: 'agentBridge',
   browserIconCache: 'browserIcons',
   contextMenuEnabled: 'contextMenu',
+  coversBrowseCapture: 'browseCovers',
 } as const satisfies Partial<Record<keyof Settings, PermissionFeature>>;
+
+/**
+ * Settings shown only while another on/off setting is on, such as the limits of Capture Covers
+ * While Browsing under it. They keep their values while hidden.
+ */
+export const SETTING_SHOWN_WHEN = {
+  coversBrowseCapturePrivate: 'coversBrowseCapture',
+  coversBrowseSettleMs: 'coversBrowseCapture',
+  coversBrowseIntervalMs: 'coversBrowseCapture',
+  coversBrowseMaxAgeDays: 'coversBrowseCapture',
+} as const satisfies Partial<Record<keyof Settings, keyof Settings>>;
+
+/** Whether `key` shows with these values: always, unless the setting it depends on is off. */
+export function isSettingShownWith(key: keyof Settings, values: Settings): boolean {
+  const lead = (SETTING_SHOWN_WHEN as Partial<Record<keyof Settings, keyof Settings>>)[key];
+  return lead === undefined || values[lead] === true;
+}
+
+/**
+ * Settings that work only where the browser lets the extension run in private windows (Allow in
+ * Incognito, Run in Private Windows); Options says so under them while it does not.
+ */
+const PRIVATE_WINDOW_SETTINGS: ReadonlySet<keyof Settings> = new Set([
+  'coversBrowseCapturePrivate',
+]);
+
+export function isPrivateWindowSetting(key: keyof Settings): boolean {
+  return PRIVATE_WINDOW_SETTINGS.has(key);
+}
 
 /** The permission feature a setting turns on, if any. */
 export function getSettingPermission(key: keyof Settings): PermissionFeature | undefined {

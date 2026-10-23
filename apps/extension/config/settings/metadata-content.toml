@@ -42,9 +42,37 @@ max_cache_kb = { default = 4096, min = 256, max = 8192, step = 256, integer = tr
 # downloads each page's head and its image.
 enabled = false
 default_scope = "folder"
-# Width of the stored copy in pixels; taller or wider images are shrunk to it
-width_px = { default = 480, min = 160, max = 960, step = 40, integer = true }
+# Width of the stored copy in pixels; taller or wider images are shrunk to it. 960 keeps a card
+# (about 340 CSS px) sharp on a 2x screen and the preview dialog close to it.
+width_px = { default = 960, min = 160, max = 1920, step = 40, integer = true }
 # Largest image file that is downloaded, in KB
 max_image_kb = { default = 2048, min = 128, max = 8192, step = 128, integer = true }
 # Total size of all stored covers on this device, in MB; the oldest are removed first
-max_cache_mb = { default = 50, min = 10, max = 500, step = 10, integer = true }
+max_cache_mb = { default = 200, min = 10, max = 1000, step = 10, integer = true }
+# Cover Source: which kind of cover a bookmark keeps when both its page's own image and a picture of
+# the tab can be had; one of the choices in config/bookmarks/cover-preferences.toml
+source_preference = "page_first"
+# Capture Covers While Browsing: when a bookmarked page without a cover (or with an old one)
+# finishes loading in the active tab of the focused window, take a picture of the tab as its cover
+# (config/bookmarks/browse-covers.toml). Off until the user turns it on; it needs access to all
+# pages (the optional `<all_urls>`), asked for when it is turned on. Pictures stay on this device.
+browse_capture = false
+# Capture Covers While Browsing's limits, shown under it while it is on. Also capture in private
+# windows: off by default; when on, only where the browser lets the extension run in private
+# windows (Allow in Incognito, Run in Private Windows), else they are still skipped
+browse_capture_private = false
+# How long a page must stay in front after it finished loading before it is pictured, in ms (shown
+# in seconds), so a page still drawing late content, or one the user leaves at once, is not taken
+browse_settle_ms = { default = 1500, min = 0, max = 10000, step = 500, integer = true }
+# Least time between two pictures, in ms (shown in seconds). Chrome refuses more than two
+# captureVisibleTab calls a second (MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND = 2), so the floor is
+# 500 ms plus a margin; tests/unit/browse-covers.test.ts fails if it drops to `browser_min_interval_ms`
+# in config/bookmarks/browse-covers.toml. Firefox has no such limit; the same floor applies there.
+browse_min_interval_ms = { default = 1000, min = 600, max = 60000, step = 100, integer = true }
+# A picture taken while browsing older than this many days is taken again on the next visit; 0 never
+# retakes one. A cover chosen with Use this view as the cover is never retaken
+browse_max_age_days = { default = 30, min = 0, max = 365, step = 1, integer = true }
+# Sites never pictured while browsing: each entry is a host and its subdomains (`example.com` also
+# covers `mail.example.com`). Smaller than Never Read These Sites, whose sites are skipped too, so
+# both lists fit the synced settings.lists item together
+never_capture_sites = { default = [], max_items = 20, max_length = 80 }

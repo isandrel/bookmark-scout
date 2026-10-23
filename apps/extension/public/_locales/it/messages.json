@@ -4245,6 +4245,22 @@
         "message": "L'accesso per gli agenti IA locali resta disattivato. Attivandolo, il browser ti chiede di consentire all'estensione di comunicare con il programma bookmark-scout-mcp.",
         "description": "Toast text when the native messaging permission for local AI agents is declined"
     },
+    "permission_browseCoversTitle": {
+        "message": "Consenti immagini delle pagine salvate",
+        "description": "Title of the dialog shown before turning on Capture Covers While Browsing, which asks for access to all pages"
+    },
+    "permission_browseCoversDesc": {
+        "message": "Per catturare un'immagine di una pagina salvata quando si carica, senza clic, Bookmark Scout ha bisogno dell'accesso a tutte le pagine. Il browser ti chiederà quindi di consentire l'accesso ai tuoi dati su tutti i siti web.",
+        "description": "Why Capture Covers While Browsing needs access to all pages, in the dialog shown before the browser's prompt"
+    },
+    "permission_browseCoversDetail": {
+        "message": "Le immagini vengono prese solo dalle pagine salvate nella scheda che stai guardando, non nelle finestre private a meno che non lo attivi, e restano su questo dispositivo: non viene inviato nulla. Lo stesso accesso permette agli strumenti che leggono i siti web di funzionare senza chiedere di nuovo. Disattiva l'impostazione per smettere; rimuovi l'accesso nelle impostazioni delle estensioni del browser.",
+        "description": "Privacy note in the dialog shown before turning on Capture Covers While Browsing: what is pictured, that nothing is sent, that the same access lets the website tools run without asking, and how to stop"
+    },
+    "permission_browseCoversDenied": {
+        "message": "Cattura copertine durante la navigazione resta disattivata. Attivarla chiede al browser l'accesso a tutte le pagine.",
+        "description": "Toast text when access to all pages for Capture Covers While Browsing is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Non è stato inviato nulla. Il browser chiede conferma prima che l'estensione condivida la tua chiave API con il provider.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -6330,6 +6346,10 @@
     "unit_mb": {
         "message": "MB",
         "description": "Unit: megabytes"
+    },
+    "unit_days": {
+        "message": "giorni",
+        "description": "Unit after a number of days in Settings"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
@@ -8531,6 +8551,82 @@
         "message": "Spazio che le copertine salvate possono occupare su questo dispositivo; le meno recenti vengono rimosse per prime",
         "description": "Settings: description of the cover storage limit"
     },
+    "settings_coversSourcePreference": {
+        "message": "Origine della copertina",
+        "description": "Settings: select of which kind of cover a bookmark keeps, the page's own image or a screenshot of the tab"
+    },
+    "settings_coversSourcePreferenceDesc": {
+        "message": "Quale copertina tiene un segnalibro quando sono possibili sia l'immagine della pagina sia uno screenshot della scheda. Uno screenshot catturato durante la navigazione sostituisce l'immagine della pagina solo con Prima lo screenshot, e Solo immagine della pagina non cattura screenshot. Una copertina scelta con Usa questa vista come copertina non viene mai sostituita automaticamente.",
+        "description": "Settings: what Cover Source decides; the option names in it are the select's choices"
+    },
+    "settings_coversSourcePageFirst": {
+        "message": "Prima l'immagine della pagina, poi lo screenshot",
+        "description": "Settings: Cover Source choice that keeps the page's own image and uses a screenshot only without one"
+    },
+    "settings_coversSourceScreenshotFirst": {
+        "message": "Prima lo screenshot",
+        "description": "Settings: Cover Source choice that prefers a screenshot of the tab over the page's own image"
+    },
+    "settings_coversSourcePageOnly": {
+        "message": "Solo immagine della pagina",
+        "description": "Settings: Cover Source choice that keeps only the page's own image and takes no screenshots while browsing"
+    },
+    "settings_coversBrowseCapture": {
+        "message": "Cattura copertine durante la navigazione",
+        "description": "Settings: switch that turns on taking a picture of a bookmarked page as its cover when it loads in the active tab"
+    },
+    "settings_coversBrowseCaptureDesc": {
+        "message": "Quando una pagina salvata senza copertina, o con una vecchia catturata durante la navigazione, finisce di caricarsi nella scheda che stai guardando, un'immagine della scheda diventa la sua copertina. Non nelle finestre private, a meno che non attivi anche quello; le immagini restano su questo dispositivo. Quando la attivi viene chiesto l'accesso a tutte le pagine.",
+        "description": "Settings: what Capture Covers While Browsing does, that it never runs in private windows, that pictures stay on the device, and that it asks for access to all pages"
+    },
+    "settings_coversBrowseCaptureHelp": {
+        "message": "Dopo il caricamento attende un momento e controlla che la scheda mostri ancora la pagina, quindi un'immagine riguarda sempre e solo quella pagina salvata. Non cattura mai le pagine dell'estensione o del browser, i file locali né i siti in Non catturare mai questi siti. Un'immagine mostra ciò che era sullo schermo, come una pagina dell'account o dei messaggi: aggiungi questi siti all'elenco o elimina le copertine nelle Impostazioni. Per revocare l'accesso, rimuovilo nelle impostazioni delle estensioni del browser.",
+        "description": "Settings: more about Capture Covers While Browsing in its toggletip: how it makes sure a picture is of the bookmarked page, what it never pictures, what a picture can show, and how to take back the access"
+    },
+    "settings_coversBrowseCapturePrivate": {
+        "message": "Cattura anche nelle finestre private",
+        "description": "Settings: switch under Capture Covers While Browsing that also takes pictures in private windows"
+    },
+    "settings_coversBrowseCapturePrivateDesc": {
+        "message": "Cattura immagini delle pagine salvate anche nelle finestre private, se il browser consente a Bookmark Scout di funzionare lì. Restano su questo dispositivo.",
+        "description": "Settings: what Also Capture in Private Windows does"
+    },
+    "settings_coversBrowseCapturePrivateHelp": {
+        "message": "Finché è disattivata, le finestre private non vengono mai catturate. Il browser deve anche consentire all'estensione di funzionare lì: attiva il permesso per la navigazione in incognito o privata nella pagina di Bookmark Scout delle impostazioni delle estensioni del browser.",
+        "description": "Settings: toggletip of Also Capture in Private Windows: off by default, and the browser's own setting that must also allow the extension in private windows"
+    },
+    "settings_coversBrowseSettleMs": {
+        "message": "Attesa prima della cattura",
+        "description": "Settings: how long a page waits in front before its picture is taken while browsing"
+    },
+    "settings_coversBrowseSettleMsDesc": {
+        "message": "Quanto deve restare in primo piano una pagina salvata dopo il caricamento prima che venga catturata",
+        "description": "Settings: description of Wait Before Capturing"
+    },
+    "settings_coversBrowseIntervalMs": {
+        "message": "Intervallo tra le catture",
+        "description": "Settings: least time between two pictures taken while browsing"
+    },
+    "settings_coversBrowseIntervalMsDesc": {
+        "message": "Il tempo minimo tra due catture. Non può scendere sotto ciò che i browser consentono.",
+        "description": "Settings: description of Time Between Pictures; its floor keeps captures under the browser's limit"
+    },
+    "settings_coversBrowseMaxAgeDays": {
+        "message": "Ricattura gli screenshot più vecchi di",
+        "description": "Settings: age after which a picture taken while browsing is taken again; 0 means never"
+    },
+    "settings_coversBrowseMaxAgeDaysDesc": {
+        "message": "Un'immagine catturata durante la navigazione più vecchia di così viene ricatturata alla visita successiva. 0 non la ricattura mai; una copertina scelta con Usa questa vista come copertina non viene mai ricatturata.",
+        "description": "Settings: description of Retake Screenshots Older Than: 0 never retakes, and a cover chosen with Use this view as the cover is never retaken"
+    },
+    "settings_coversNeverCaptureSites": {
+        "message": "Non catturare mai questi siti",
+        "description": "Settings: list of sites whose pages are never pictured while browsing"
+    },
+    "settings_coversNeverCaptureSitesDesc": {
+        "message": "Le pagine di questi siti e dei loro sottodomini non vengono mai catturate durante la navigazione. Digita un sito come example.com o incolla un indirizzo. Anche i siti in Non leggere mai questi siti non vengono mai catturati.",
+        "description": "Settings: what the Never Capture These Sites list does and how to add a site"
+    },
     "tools_coversDialogDesc": {
         "message": "L'immagine di anteprima indicata da ogni pagina. Vengono conservate solo le copertine che salvi, su questo dispositivo.",
         "description": "Fetch Covers review: description"
@@ -8562,6 +8658,14 @@
     "tools_coversCategory_current": {
         "message": "Già recuperate ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
+    },
+    "tools_coversCategory_kept": {
+        "message": "Scelte da te ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "Hai scelto questa copertina con Usa questa vista come copertina, quindi viene mantenuta. Rimuovila prima per recuperarne un'altra.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
     },
     "tools_coversCategory_skipped": {
         "message": "Saltate ($1)",
@@ -9160,6 +9264,84 @@
     "covers_captureButton": {
         "message": "Usa questa vista come copertina",
         "description": "Popup: button on the line saying where the current page is saved; takes a picture of the tab as its cover"
+    },
+    "covers_sourceLabel": {
+        "message": "Copertina",
+        "description": "Bookmark preview and hover card: label of the line saying where the stored cover came from"
+    },
+    "covers_sourcePage": {
+        "message": "Immagine di anteprima della pagina, salvata il $date$",
+        "description": "Bookmark preview and hover card: the cover is the preview image the page names for itself (Fetch Covers), and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceTab": {
+        "message": "Immagine della tua scheda, salvata il $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture of the tab the user took with Use this view as the cover, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_sourceBrowse": {
+        "message": "Catturata durante la navigazione, salvata il $date$",
+        "description": "Bookmark preview and hover card: the cover is a picture taken by Capture Covers While Browsing when the page loaded, and the day it was saved",
+        "placeholders": {
+            "date": {
+                "content": "$1",
+                "example": "Oct 22, 2026"
+            }
+        }
+    },
+    "covers_privateAccessNote": {
+        "message": "Il browser non consente a Bookmark Scout di funzionare nelle finestre private, quindi vengono saltate. Per consentirlo, apri la pagina di Bookmark Scout nelle impostazioni delle estensioni del browser e attiva il permesso per la navigazione in incognito o privata.",
+        "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "Recupera copertina",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "Rimuovi copertina",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "$count$ copertina rimossa",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "$count$ copertine rimosse",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "I segnalibri e i loro tag non cambiano. Recupera copertine o Cattura copertine durante la navigazione possono dar loro una nuova copertina.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "Copertina non rimossa",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "Copertina non ripristinata",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "Usare questa vista come copertina?",

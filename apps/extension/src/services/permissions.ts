@@ -140,3 +140,13 @@ export function watchPermissions(listener: () => void): () => void {
     events?.onRemoved?.removeListener(handler);
   };
 }
+
+/**
+ * Whether the browser lets the extension run in private windows (Chrome and Edge: Allow in
+ * Incognito; Firefox: Run in Private Windows). It is the user's choice on the browser's own
+ * extensions page, not a permission the extension can ask for; without it the extension never
+ * sees private windows' tabs.
+ */
+export async function isAllowedInPrivateWindows(): Promise<boolean> {
+  return browser.extension.isAllowedIncognitoAccess().catch(() => false);
+}

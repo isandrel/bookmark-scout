@@ -3,7 +3,7 @@ title: Berechtigungen
 description: Jede Browserberechtigung, die Bookmark Scout anfordert, wozu sie benötigt wird, und der optionale Zugriff auf Websites, der erst angefragt wird, wenn Sie ein Tool ausführen.
 ---
 
-Dies sind die Berechtigungen der für jeden Browser erstellten Erweiterung. Bookmark Scout deklariert keine Content-Skripte und liest eine besuchte Seite nur, wenn Sie es wünschen: **Text dieser Seite indexieren** im Pop-up liest den Text, den dieser Tab zeigt; nach einem Tastenkürzel zum Schnellspeichern zeigt die Erweiterung in diesem Tab nur ihre eigene Benachrichtigung an. Bei der Installation fragt sie nur nach dem, ohne das sie nicht funktioniert; alles andere wird erst angefragt, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt.
+Dies sind die Berechtigungen der für jeden Browser erstellten Erweiterung. Bookmark Scout deklariert keine Content-Skripte und liest eine besuchte Seite nur, wenn Sie es wünschen: **Text dieser Seite indexieren** im Pop-up liest den Text, den dieser Tab zeigt, und ist **Titelbilder beim Surfen aufnehmen** aktiviert, nimmt die Erweiterung ein Bild einer gespeicherten Seite auf, die Sie öffnen, das auf diesem Gerät bleibt; nach einem Tastenkürzel zum Schnellspeichern zeigt die Erweiterung in diesem Tab nur ihre eigene Benachrichtigung an. Bei der Installation fragt sie nur nach dem, ohne das sie nicht funktioniert; alles andere wird erst angefragt, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt.
 
 ## Was Ihr Browser fragt und warum [#what-your-browser-will-ask-and-why]
 
@@ -16,6 +16,7 @@ Bei der Installation zeigt der Browser eine Zeile an. Alles andere wird erst ang
 | „Browserverlauf lesen“ / Firefox: Zugriff auf Browsertabs | Sie speichern die aktuelle Seite aus der Seitenleiste oder fordern dort Ordnervorschläge an | Sehen, auf welcher Seite Sie sind. Die Schaltfläche in der Symbolleiste und das Tastenkürzel zum Schnellspeichern benötigen keine Berechtigung, daher schlägt die Erklärung sie zuerst vor |
 | „Eigene Daten auf alle example.com-Websites lesen und ändern“ oder „Eigene Daten auf verschiedenen Websites lesen und ändern“ / Firefox: Zugriff auf Ihre Daten für Websites der Domain example.com | Sie führen **Defekte Links prüfen**, **Metadatenabruf** oder **Website-Symbole aktualisieren** aus | Die gespeicherten Seiten dieses Durchlaufs anfragen, nur auf deren Websites |
 | „Alle deine Daten auf allen Websites lesen und ändern“ / Firefox: Zugriff auf Ihre Daten für alle Websites | Ein Durchlauf eines Tools umfasst mehr als 20 Websites, oder Sie aktivieren **Seiteninhalt lesen** | Seiten auf jeder beliebigen Website anfragen |
+| „Alle deine Daten auf allen Websites lesen und ändern“ / Firefox: Zugriff auf Ihre Daten für alle Websites | Sie aktivieren **Titelbilder beim Surfen aufnehmen** | Ohne Klick ein Bild einer gespeicherten Seite im Tab, den Sie gerade ansehen, aufnehmen, wenn sie lädt; Browser erlauben das nur mit Zugriff auf alle Seiten. Das Bild bleibt auf diesem Gerät, und derselbe Zugriff lässt die Website-Tools laufen, ohne zu fragen |
 | „Eigene Daten auf api.example.com lesen und ändern“ / Firefox: Zugriff auf Ihre Daten für api.example.com | Sie klicken auf **Dienst überprüfen** oder **Modelle aktualisieren** | Die Adresse Ihres KI-Anbieters erreichen |
 | „Mit zusammenarbeitenden nativen Anwendungen kommunizieren“ / Firefox: Nachrichten mit anderen Programmen als Firefox austauschen | Sie aktivieren **Lokale KI-Agenten zulassen** | Mit dem Programm bookmark-scout-mcp auf Ihrem Computer sprechen |
 | Nur Firefox: Der Entwickler gibt an, dass die Erweiterung Authentifizierungsinformationen, Lesezeichen und Browseraktivität erfassen möchte | Sie aktivieren **KI-Funktionen** | Ihr API-Schlüssel, Ihre Lesezeichen und Ordnernamen sowie Titel und URL der aktuellen Seite gehen an Ihren KI-Anbieter. Mit dem Entwickler ist in dieser Abfrage der von Ihnen gewählte KI-Anbieter gemeint; Bookmark Scout erhält nichts |
@@ -54,11 +55,12 @@ Wenn Sie ablehnen, bleibt die Funktion deaktiviert, und es wird nichts gesendet.
 
 ## Optionaler Zugriff auf Websites [#optional-website-access]
 
-Die Erweiterung deklariert außerdem Zugriff auf `http://*/*` und `https://*/*`, aber nichts davon wird bei der Installation gewährt. Der Browser fragt Sie in dem Moment, in dem der Zugriff benötigt wird:
+Die Erweiterung deklariert außerdem Zugriff auf `http://*/*`, `https://*/*` und `<all_urls>`, aber nichts davon wird bei der Installation gewährt. Der Browser fragt Sie in dem Moment, in dem der Zugriff benötigt wird:
 
 - **Defekte Links prüfen**, **Metadatenabruf** und **Website-Symbole aktualisieren** fragen beim Ausführen nur nach Zugriff auf die Websites der Lesezeichen in diesem Durchlauf, jeweils mit ihren Subdomains. Ein Durchlauf über mehr als 20 Websites fragt stattdessen nach allen Websites. Nach Websites, die Sie bereits erlaubt haben, wird nicht erneut gefragt. Anfragen werden ohne Cookies gesendet, und für Titel und Symbol-Links wird nur der Seitenkopf gelesen. Wenn Sie ablehnen, wird nichts geprüft. Ein Link, der auf eine Website außerhalb des Durchlaufs weiterleitet, kann nicht verfolgt werden, daher markiert **Defekte Links prüfen** ihn mit **Manuell prüfen** statt als defekt. Siehe [Defekte Links finden und reparieren](/guides/dead-links) und [Website-Symbole aktualisieren](/guides/clean-up#refresh-site-icons).
 - **Seitentext indexieren** fragt auf dieselbe Weise, für die Websites der Lesezeichen, die es liest.
 - **Titelbilder laden** fragt auf dieselbe Weise, für die Websites der Lesezeichen, die es liest; ein Bild auf einer anderen Website wird nur geladen, wenn Sie auch diese erlaubt haben.
+- **Titelbilder beim Surfen aufnehmen** fragt beim Einschalten nach Zugriff auf alle Seiten (`<all_urls>`): Nur damit erlauben Browser einer Erweiterung, ohne Klick ein Bild eines Tabs aufzunehmen. Bilder werden nur von gespeicherten Seiten im Tab aufgenommen, den Sie gerade ansehen, nie von Websites in **Diese Websites nie aufnehmen**, nicht in privaten Fenstern, außer Sie schalten **Auch in privaten Fenstern aufnehmen** ein und erlauben die Erweiterung dort, und bleiben auf diesem Gerät. Solange der Zugriff gewährt ist, fragen die Tools oben nicht mehr nach ihren Websites. Siehe [Titelbilder auf Karten zeigen](/guides/clean-up#capture-covers-while-you-browse).
 - **Seiteninhalt lesen** in den KI-Einstellungen fragt beim Aktivieren nach Zugriff auf alle Websites, damit KI-Tools Seiten ohne Cookies herunterladen und ihren Haupttext an Ihren KI-Anbieter senden können. Seiten in Ihrem lokalen Netzwerk werden nie gelesen. Siehe [Seiteninhalt lesen](/guides/ai-tools#read-page-content).
 - **Dienst überprüfen** und **Modelle aktualisieren** in den KI-Einstellungen fragen nur nach Zugriff auf die Adresse dieses einen Anbieters. Siehe [KI-Tools einrichten](/guides/ai-tools).
 
@@ -66,7 +68,7 @@ Um den Zugriff zu widerrufen, öffnen Sie die Seite der Erweiterung im Browser (
 
 ## Was nicht angefordert wird [#what-is-not-requested]
 
-- Kein Zugriff auf Seiteninhalte und keine deklarierten Content-Skripte
+- Keine deklarierten Content-Skripte und kein Zugriff auf Seiteninhalte über die oben genannten Funktionen hinaus, die Sie einschalten
 - Keine Berechtigungen für Verlauf, Downloads oder Cookies
 - Kein Host-Zugriff bei der Installation
 

@@ -16,6 +16,9 @@ const allModifiable = (items: readonly Bookmark[]) =>
   items.length > 0 && items.every((item) => isModifiableBookmark(item));
 const canOpen = (items: readonly Bookmark[], host: ActionItemHost) =>
   host.openableUrls(items).length > 0;
+/** A bookmark of a web page, which Fetch Covers can read. */
+const isWebBookmark = (item: Bookmark) =>
+  item.type === ItemTypeEnum.Link && item.url !== undefined && isWebUrl(item.url);
 
 /** "Open in new tab" for one bookmark, "Open all (3)" for several or a folder, as in Chrome. */
 function openLabel(one: MessageKey, many: MessageKey) {
@@ -170,6 +173,28 @@ export const ITEM_ACTIONS = {
       label: openLabel(privateWindowLabel.one, privateWindowLabel.many),
       available: (items, host) => host.privateWindowsAllowed && canOpen(items, host),
       run: (items, host) => host.open(items, 'private-window'),
+    },
+  }),
+  fetchCover: defineMenuAction({
+    risk: 'write',
+    targets: ['bookmark'],
+    labelKey: 'menu_fetchCover',
+    icon: 'imageDown',
+    itemMenu: {
+      // While Fetch Covers is on; for a selection, the web bookmarks in it.
+      available: (items, host) => host.canFetchCovers && items.some(isWebBookmark),
+      run: (items, host) => host.fetchCovers(items.filter(isWebBookmark)),
+    },
+  }),
+  removeCover: defineMenuAction({
+    risk: 'write',
+    targets: ['bookmark'],
+    labelKey: 'menu_removeCover',
+    icon: 'imageOff',
+    itemMenu: {
+      // Only where a stored cover shows; for a selection, removes each one's cover.
+      available: (items, host) => items.some((item) => host.hasCover(item)),
+      run: (items, host) => host.removeCovers(items.filter((item) => host.hasCover(item))),
     },
   }),
   delete: defineMenuAction({

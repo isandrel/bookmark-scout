@@ -3,7 +3,7 @@ title: Izin
 description: Setiap izin browser yang diminta Bookmark Scout, alasan ekstensi memerlukannya, dan akses situs web opsional yang hanya diminta saat Anda menjalankan alat.
 ---
 
-Berikut izin yang ada di ekstensi hasil build untuk setiap browser. Bookmark Scout tidak mendeklarasikan content script dan hanya membaca halaman yang Anda kunjungi saat Anda memintanya: **Indeks teks halaman ini** di popup membaca teks yang ditampilkan tab itu; setelah pintasan simpan cepat, ekstensi ini hanya menampilkan notifikasinya sendiri di tab itu. Saat instalasi, ekstensi hanya meminta izin yang mutlak diperlukannya; izin lainnya diminta saat Anda mengaktifkan atau menjalankan fitur yang memerlukannya.
+Berikut izin yang ada di ekstensi hasil build untuk setiap browser. Bookmark Scout tidak mendeklarasikan content script dan hanya membaca halaman yang Anda kunjungi saat Anda memintanya: **Indeks teks halaman ini** di popup membaca teks yang ditampilkan tab itu, dan saat **Tangkap Sampul Saat Menjelajah** aktif, ekstensi mengambil gambar halaman yang di-bookmark yang Anda buka, yang tetap berada di perangkat ini; setelah pintasan simpan cepat, ekstensi ini hanya menampilkan notifikasinya sendiri di tab itu. Saat instalasi, ekstensi hanya meminta izin yang mutlak diperlukannya; izin lainnya diminta saat Anda mengaktifkan atau menjalankan fitur yang memerlukannya.
 
 ## Yang akan diminta browser Anda, dan alasannya [#what-your-browser-will-ask-and-why]
 
@@ -16,6 +16,7 @@ Saat Anda menginstal Bookmark Scout, browser menampilkan satu baris. Izin lainny
 | "Membaca histori penjelajahan Anda" / "Mengakses tab peramban" | Anda menyimpan halaman saat ini, atau meminta saran folder, dari panel samping | Melihat halaman mana yang sedang Anda buka. Tombol toolbar dan pintasan simpan cepat tidak memerlukan izin, jadi penjelasannya menyarankan keduanya lebih dulu |
 | "Membaca dan mengubah data Anda di semua situs example.com", atau "di sejumlah situs" / "Mengakses data Anda untuk situs di domain example.com" | Anda menjalankan **Periksa Link Mati**, **Pengambil Metadata**, atau **Perbarui Ikon Situs** | Meminta halaman yang di-bookmark dalam proses tersebut, hanya di situsnya masing-masing |
 | "Membaca dan mengubah semua data Anda di semua situs" / "Mengakses data Anda untuk semua situs web" | Proses sebuah alat mencakup lebih dari 20 situs, atau Anda mengaktifkan **Baca konten halaman** | Meminta halaman di situs mana pun |
+| "Membaca dan mengubah semua data Anda di semua situs" / "Mengakses data Anda untuk semua situs web" | Anda mengaktifkan **Tangkap Sampul Saat Menjelajah** | Mengambil gambar halaman yang di-bookmark di tab yang sedang Anda lihat saat halaman itu dimuat, tanpa klik, yang hanya diizinkan browser dengan akses ke semua halaman. Gambar tetap berada di perangkat ini, dan akses yang sama membuat alat situs web dapat berjalan tanpa bertanya |
 | "Membaca dan mengubah data Anda di api.example.com" / "Mengakses data Anda untuk api.example.com" | Anda mengklik **Verifikasi Layanan** atau **Perbarui Model** | Menghubungi alamat penyedia AI Anda |
 | "Berkomunikasi dengan aplikasi native yang bekerja sama" / "Bertukar pesan dengan program selain Firefox" | Anda mengaktifkan **Izinkan agen AI lokal** | Berkomunikasi dengan program bookmark-scout-mcp di komputer Anda |
 | Hanya Firefox: "Pengembang mengatakan ekstensi ini ingin mengumpulkan: informasi autentikasi, markah, aktivitas penjelajahan" | Anda mengaktifkan **Fitur AI** | Kunci API, bookmark dan nama folder, serta judul dan URL halaman saat ini dikirim ke penyedia AI Anda. "Pengembang" dalam permintaan ini adalah penyedia AI yang Anda pilih; Bookmark Scout tidak menerima apa pun |
@@ -54,11 +55,12 @@ Jika Anda menolak, fitur tetap nonaktif dan tidak ada yang dikirim. Jika nanti A
 
 ## Akses situs web opsional [#optional-website-access]
 
-Ekstensi ini juga mendeklarasikan akses ke `http://*/*` dan `https://*/*`, tetapi tidak ada yang diberikan saat instalasi. Browser meminta izin Anda pada saat Anda memerlukannya:
+Ekstensi ini juga mendeklarasikan akses ke `http://*/*`, `https://*/*`, dan `<all_urls>`, tetapi tidak ada yang diberikan saat instalasi. Browser meminta izin Anda pada saat Anda memerlukannya:
 
 - **Periksa Link Mati**, **Pengambil Metadata**, dan **Perbarui Ikon Situs** meminta, saat Anda menjalankannya, akses hanya ke situs bookmark dalam proses tersebut, masing-masing beserta subdomainnya. Proses yang mencakup lebih dari 20 situs meminta akses ke semua situs web. Situs yang sebelumnya sudah Anda izinkan tidak diminta lagi. Permintaan dikirim tanpa cookie, dan hanya bagian head halaman yang dibaca untuk judul dan link ikon. Jika Anda menolak, tidak ada yang dipindai. Link yang dialihkan ke situs di luar proses tidak bisa diikuti, jadi **Periksa Link Mati** menandainya **Periksa manual**, bukan mati. Lihat [Menemukan dan memperbaiki link mati](/guides/dead-links) dan [Memperbarui ikon situs](/guides/clean-up#refresh-site-icons).
 - **Indeks Teks Halaman** meminta dengan cara yang sama, untuk situs bookmark yang dibacanya.
 - **Ambil Sampul** meminta dengan cara yang sama, untuk situs bookmark yang dibacanya; gambar di situs lain hanya diunduh jika Anda juga mengizinkan situs itu.
+- **Tangkap Sampul Saat Menjelajah** meminta akses ke semua halaman (`<all_urls>`) saat Anda mengaktifkannya: browser hanya mengizinkan ekstensi mengambil gambar tab tanpa klik dengan akses ini. Gambar hanya diambil dari halaman yang di-bookmark di tab yang sedang Anda lihat, tidak pernah dari situs di **Jangan Pernah Tangkap Situs Ini**, tidak di jendela pribadi kecuali Anda mengaktifkan **Tangkap Juga di Jendela Pribadi** dan mengizinkan ekstensi berjalan di sana, dan tetap berada di perangkat ini. Selama akses ini diberikan, alat-alat di atas tidak lagi meminta izin untuk situsnya. Lihat [Menampilkan sampul di kartu](/guides/clean-up#capture-covers-while-you-browse).
 - **Baca konten halaman** di setelan AI meminta akses ke semua situs web saat Anda mengaktifkannya, agar alat AI bisa mengunduh halaman, tanpa cookie, dan mengirim teks utamanya ke penyedia AI Anda. Halaman di jaringan lokal Anda tidak pernah dibaca. Lihat [Baca konten halaman](/guides/ai-tools#read-page-content).
 - **Verifikasi Layanan** dan **Perbarui Model** di setelan AI hanya meminta akses ke alamat penyedia tersebut. Lihat [Menyiapkan alat AI](/guides/ai-tools).
 
@@ -66,7 +68,7 @@ Untuk mencabut akses, buka halaman browser untuk ekstensi ini (misalnya `chrome:
 
 ## Yang tidak diminta [#what-is-not-requested]
 
-- Tidak ada akses ke konten halaman, dan tidak ada content script yang dideklarasikan
+- Tidak ada content script yang dideklarasikan, dan tidak ada akses ke konten halaman selain melalui fitur di atas yang Anda aktifkan
 - Tidak ada izin histori, unduhan, atau cookie
 - Tidak ada akses host saat instalasi
 

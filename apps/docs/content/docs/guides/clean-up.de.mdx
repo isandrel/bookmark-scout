@@ -152,7 +152,7 @@ Das Feld **Seitentext-Index** in den [Einstellungen](/settings#index-page-text) 
 
 ## Titelbilder auf Karten zeigen [#show-covers-on-cards]
 
-**Titelbilder laden** behält eine kleine Kopie des Vorschaubilds, das eine Seite für sich angibt (ihr Open-Graph- oder Twitter-Card-Bild), damit die **Karten** im Manager es zeigen. Es ist aus, bis Sie es einschalten. Das Anzeigen von Karten lädt nie etwas herunter: Eine Karte ohne gespeichertes Titelbild behält ihr Website-Symbol.
+**Titelbilder laden** behält eine kleine Kopie des Vorschaubilds, das eine Seite für sich angibt (ihr Open-Graph- oder Twitter-Card-Bild), damit die **Karten** im Manager es zeigen. Es ist aus, bis Sie es einschalten. Das Anzeigen von Karten lädt nie etwas herunter: Eine Karte ohne gespeichertes Titelbild zeigt eine Kachel mit dem Symbol und dem Namen ihrer Website auf einer aus der Website gewählten Farbe, gezeichnet auf Ihrem Computer.
 
 <Steps>
 <Step>
@@ -169,6 +169,19 @@ Prüfen Sie die Seiten nach Tab: **Titelbild gefunden** (mit dem Bild), **Kein T
 Schalten Sie den Manager mit der Schaltfläche neben **Ansehen** auf **Karten**, um sie zu sehen. Ein Titelbild gehört zu der Adresse, von der es stammt; ein Lesezeichen mit neuer Adresse zeigt sein Symbol, bis Sie erneut laden. Titelbilder bleiben nur auf diesem Gerät, nie in Sicherungen oder Exporten; **Titelbilder löschen** in den Einstellungen entfernt sie, und Lesezeichen, Tags und der Verlauf bleiben unverändert.
 
 Sie können auch die Seite verwenden, auf der Sie gerade sind: Ist sie als Lesezeichen gespeichert und Titelbilder laden aktiv, nimmt die Schaltfläche **Diese Ansicht als Titelbild verwenden** am Ende der Pop-up-Zeile, die sagt, wo die Seite gespeichert ist, ein Bild des Tabs auf und zeigt es mit dem Hinweis, es auf Privates zu prüfen. Es wird nur behalten, wenn Sie auf **Titelbild speichern** klicken. Aufnahmen gibt es nur aus dem Pop-up in der Symbolleiste, nie in privaten Fenstern und nur, solange der Tab noch die Seite des Lesezeichens zeigt.
+
+**Titelbild laden** im Menü eines Lesezeichens (Rechtsklick oder **⋯**, in der Liste oder auf Karten, auch für eine Auswahl) oder in seiner **Vorschau** führt Titelbilder laden nur für diese Lesezeichen aus, mit derselben Prüfung und derselben Anfrage nach Zugriff auf ihre Websites; ein mit **Diese Ansicht als Titelbild verwenden** gespeichertes Titelbild steht unter **Von Ihnen gewählt** und bleibt erhalten. Auf der Karte **Titelbilder laden** macht **Ausgewählte Lesezeichen** dasselbe für die Auswahl im Manager. **Titelbild entfernen** löscht das Titelbild eines Lesezeichens (bei einer Auswahl das jedes ausgewählten): Die Karte zeigt sofort ihren Platzhalter, und **Rückgängig** in der Meldung bringt dasselbe Titelbild zurück.
+
+### Titelbilder beim Surfen aufnehmen [#capture-covers-while-you-browse]
+
+Aktivieren Sie **Titelbilder beim Surfen aufnehmen** unter Titelbilder laden in den [Einstellungen](/settings#fetch-covers), um Titelbilder zu erhalten, ohne sie herunterzuladen. Wenn eine gespeicherte Seite ohne Titelbild im Tab, den Sie gerade ansehen, fertig geladen ist, wartet Bookmark Scout einen Moment, prüft, ob der Tab noch diese Seite zeigt, und nimmt einen Screenshot davon als Titelbild des Lesezeichens auf. Beim Einschalten bittet Bookmark Scout Ihren Browser um Zugriff auf alle Seiten, weil Browser einer Erweiterung nur so erlauben, ohne Klick ein Bild eines Tabs aufzunehmen; derselbe Zugriff lässt die Tools, die Websites lesen, laufen, ohne erneut zu fragen.
+
+- In einem privaten Fenster wird kein Bild aufgenommen, außer Sie schalten zusätzlich **Auch in privaten Fenstern aufnehmen** ein und Ihr Browser lässt Bookmark Scout dort ausführen, und nie eines von den eigenen Seiten der Erweiterung oder des Browsers, von lokalen Dateien oder von einer Seite, die Sie nicht als Lesezeichen gespeichert haben.
+- Ein Screenshot zeigt alles, was die Seite gezeigt hat, etwa eine Kontoseite oder Nachrichten. Fügen Sie Websites, die ausgespart bleiben sollen, zu **Diese Websites nie aufnehmen** hinzu (eine Website umfasst ihre Subdomains), und löschen Sie jedes Titelbild mit **Titelbilder löschen** in den Einstellungen. Websites unter „Diese Websites nie lesen“ werden ebenfalls nie aufgenommen.
+- **Titelbildquelle** entscheidet, welches Titelbild gewinnt, wenn beide möglich sind. Mit **Seitenbild zuerst, dann Screenshot** (Standard) ersetzt ein Screenshot nie ein Bild, das Titelbilder laden gespeichert hat, und Titelbilder laden ersetzt einen Screenshot. **Screenshot zuerst** macht es bei Screenshots, die beim Surfen aufgenommen werden, umgekehrt, und **Nur Seitenbild** nimmt keine auf. Ein mit **Diese Ansicht als Titelbild verwenden** gespeichertes Titelbild wird nie automatisch ersetzt, weder durch Titelbilder laden noch durch Screenshots beim Surfen; nur ein weiteres Bild, das Sie speichern, ersetzt es.
+- Ein beim Surfen aufgenommener Screenshot wird bei Ihrem nächsten Besuch neu aufgenommen, sobald er älter ist als der Wert von **Screenshots erneuern, die älter sind als** (0 nimmt nie einen neu auf). **Wartezeit vor der Aufnahme** und **Abstand zwischen Aufnahmen** legen fest, wie lange gewartet wird. Screenshots bleiben, wie jedes Titelbild, nur auf diesem Gerät und werden nie irgendwohin gesendet. Schalten Sie die Einstellung aus, um aufzuhören; den Zugriff entfernen Sie in den Erweiterungseinstellungen Ihres Browsers.
+
+Die **Vorschau** des Lesezeichens und seine Detailkarte nennen, woher sein Titelbild stammt: das eigene Bild der Seite, ein Bild Ihres Tabs oder eine Aufnahme beim Surfen, mit dem Tag, an dem es gespeichert wurde.
 
 ## Verwandte Tools [#related-tools]
 

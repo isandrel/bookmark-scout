@@ -47,7 +47,12 @@ describe('manifest config', () => {
         'contextMenus',
         'nativeMessaging',
       ]);
-      expect(manifest.optional_host_permissions).toEqual(['http://*/*', 'https://*/*']);
+      // `<all_urls>` only for Capture Covers While Browsing, asked for when it is turned on.
+      expect(manifest.optional_host_permissions).toEqual([
+        'http://*/*',
+        'https://*/*',
+        '<all_urls>',
+      ]);
     }
     // Firefox cannot make contextMenus optional and has no favicon or sidePanel permission.
     const firefox = createManifest({ browser: 'firefox' });
@@ -131,6 +136,7 @@ describe('manifest config', () => {
       'nativeMessaging',
       'http://*/*',
       'https://*/*',
+      '<all_urls>',
     ]);
     expect(manifest).not.toHaveProperty('optional_host_permissions');
   });

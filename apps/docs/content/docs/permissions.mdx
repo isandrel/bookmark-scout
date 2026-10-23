@@ -3,7 +3,7 @@ title: Permissions
 description: Each browser permission Bookmark Scout asks for, why it needs it, and the optional website access it requests only when you run a tool.
 ---
 
-These are the permissions in the built extension for each browser. Bookmark Scout declares no content scripts and reads a page you visit only when you ask: **Index this page's text** in the popup reads the text that tab shows; after a quick save shortcut it only shows its own notification in that tab. It asks at install only for what it cannot work without; everything else is asked for when you turn on or run the feature that needs it.
+These are the permissions in the built extension for each browser. Bookmark Scout declares no content scripts and reads a page you visit only when you ask: **Index this page's text** in the popup reads the text that tab shows, and with **Capture Covers While Browsing** on, it takes a picture of a bookmarked page you open, which stays on this device; after a quick save shortcut it only shows its own notification in that tab. It asks at install only for what it cannot work without; everything else is asked for when you turn on or run the feature that needs it.
 
 ## What your browser will ask, and why
 
@@ -16,6 +16,7 @@ When you install Bookmark Scout, the browser shows one line. Everything else is 
 | "Read your browsing history" / "Access browser tabs" | You save the current page, or ask for folder suggestions, from the side panel | See which page you are on. The toolbar button and the quick save shortcut need no permission, so the explanation suggests them first |
 | "Read and change your data on all example.com sites", or "on a number of websites" / "Access your data for sites in the example.com domain" | You run **Check Dead Links**, **Metadata Fetcher**, or **Refresh Site Icons** | Request the bookmarked pages of that run, on their sites only |
 | "Read and change all your data on all websites" / "Access your data for all websites" | A tool run covers more than 20 sites, or you turn on **Read page content** | Request pages on any site |
+| "Read and change all your data on all websites" / "Access your data for all websites" | You turn on **Capture Covers While Browsing** | Take a picture of a bookmarked page in the tab you are viewing when it loads, without a click, which browsers allow only with access to all pages. The picture stays on this device, and the same access lets the website tools run without asking |
 | "Read and change your data on api.example.com" / "Access your data for api.example.com" | You click **Verify Service** or **Refresh Models** | Reach your AI provider's address |
 | "Communicate with cooperating native applications" / "Exchange messages with programs other than Firefox" | You turn on **Allow local AI agents** | Talk to the bookmark-scout-mcp program on your computer |
 | Firefox only: "The developer says the extension wants to collect: authentication information, bookmarks, browsing activity" | You turn on **AI Features** | Your API key, bookmarks and folder names, and the current page's title and URL go to your AI provider. "The developer" in this prompt is the AI provider you chose; Bookmark Scout receives nothing |
@@ -54,11 +55,12 @@ If you decline, the feature stays off and nothing is sent. If you take a permiss
 
 ## Optional website access
 
-The extension also declares access to `http://*/*` and `https://*/*`, but none of it is granted at install. The browser asks you at the moment you need it:
+The extension also declares access to `http://*/*`, `https://*/*`, and `<all_urls>`, but none of it is granted at install. The browser asks you at the moment you need it:
 
 - **Check Dead Links**, **Metadata Fetcher**, and **Refresh Site Icons** ask, when you run them, for access to only the sites of the bookmarks in that run, each with its subdomains. A run over more than 20 sites asks for all websites instead. Sites you allowed before are not asked for again. Requests are sent without cookies, and only the page head is read for titles and icon links. If you decline, nothing is scanned. A link that redirects to a site outside the run cannot be followed, so **Check Dead Links** marks it **Check manually** instead of dead. See [Find and repair dead links](/guides/dead-links) and [Refresh site icons](/guides/clean-up#refresh-site-icons).
 - **Index Page Text** asks the same way, for the sites of the bookmarks it reads.
 - **Fetch Covers** asks the same way, for the sites of the bookmarks it reads; an image on another site is downloaded only if you allowed that site too.
+- **Capture Covers While Browsing** asks for access to all pages (`<all_urls>`) when you turn it on: browsers let an extension take a picture of a tab without a click only with it. Pictures are taken only of bookmarked pages in the tab you are viewing, never of sites on **Never Capture These Sites**, not in private windows unless you turn on **Also Capture in Private Windows** and allow the extension there, and stay on this device. While it is granted, the tools above no longer ask for their sites. See [Show covers on cards](/guides/clean-up#capture-covers-while-you-browse).
 - **Read page content** in the AI settings asks for access to all websites when you turn it on, so AI tools can download pages, without cookies, and send their main text to your AI provider. Pages on your local network are never read. See [Read page content](/guides/ai-tools#read-page-content).
 - **Verify Service** and **Refresh Models** in the AI settings ask for access to that one provider's address only. See [Set up AI tools](/guides/ai-tools).
 
@@ -66,7 +68,7 @@ To take access back, open the browser's page for the extension (for example `chr
 
 ## What is not requested
 
-- No access to page content, and no declared content scripts
+- No declared content scripts, and no access to page content beyond the features above you turn on
 - No history, downloads, or cookies permissions
 - No host access at install
 

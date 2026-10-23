@@ -1570,3 +1570,50 @@ test('a Smart Rule made in Settings is tested on a sample, then run from the Too
   await extension.open('options.html?category=maintenance');
   await extension.findByText('[data-testid="rule-last-run"]', 'tagged 1, moved 0, left out 0');
 });
+
+test('Capture Covers While Browsing asks Firefox for all pages, then pictures a bookmarked page that loads', async ({
+  extension,
+}) => {
+  const server = createServer((_req, res) => {
+    res.writeHead(200, { 'content-type': 'text/html' });
+    res.end('<title>Browsed</title><body style="background:#2a6f97"><h1>Browsed</h1></body>');
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}/story`;
+  try {
+    await seedFolder(extension, 'E2E Firefox Browse Covers', [{ title: 'Browsed', url }]);
+    await setSettings(extension, { language: 'en', coversEnabled: true, coversWidthPx: 320 });
+    await extension.open('options.html?category=metadataContent');
+    const toggle = '[data-setting="coversBrowseCapture"] [role="switch"]';
+    expect(await (await extension.find(toggle)).getAttribute('aria-checked')).toBe('false');
+    // The click is real user input, and optional permission prompts are off in this profile
+    // (fixtures.ts): Firefox grants `<all_urls>` from the explanation's button.
+    await clickCentered(extension, toggle);
+    const dialog = await extension.findByText(
+      '[role="dialog"]',
+      'Allow pictures of bookmarked pages',
+    );
+    await dialog.findElement(By.xpath('.//button[normalize-space()="Allow access"]')).click();
+    await expect
+      .poll(async () => (await extension.find(toggle)).getAttribute('aria-checked'))
+      .toBe('true');
+    expect(
+      await extension.call(
+        (browser) => browser.permissions.contains({ origins: ['<all_urls>'] }),
+        null,
+      ),
+    ).toBe(true);
+
+    // Options saves as it goes; the background follows once the setting is stored.
+    await expect.poll(async () => (await readSettings(extension)).coversBrowseCapture).toBe(true);
+    // Browsing to the bookmarked page in this tab; the API tab stays in the back meanwhile.
+    await extension.driver.get(url);
+    await extension.driver.sleep(4_000);
+    await expect
+      .poll(() => storedCovers(extension), { timeout: 15_000 })
+      .toEqual([expect.objectContaining({ width: 320 })]);
+  } finally {
+    server.close();
+    server.closeAllConnections();
+  }
+});

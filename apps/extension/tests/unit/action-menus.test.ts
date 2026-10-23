@@ -131,6 +131,34 @@ describe('bookmark action menus', () => {
     ]);
   });
 
+  it('offers Fetch cover for web bookmarks while Fetch Covers is on, and Remove cover only where a cover is stored', () => {
+    const second: Bookmark = { ...link, id: 'link-2', url: 'https://example.org/' };
+    const local: Bookmark = { ...link, id: 'link-3', url: 'file:///notes.html' };
+    // Off by default here: neither shows.
+    expect(sections([link]).flat()).not.toContain('fetchCover');
+    expect(sections([link]).flat()).not.toContain('removeCover');
+    const host = createItemHost({
+      canFetchCovers: true,
+      hasCover: (item) => item.id === 'link-2',
+    });
+    expect(sections([link], host).at(-1)).toEqual(['fetchCover', 'delete']);
+    expect(sections([second], host).at(-1)).toEqual(['fetchCover', 'removeCover', 'delete']);
+    // Never for a folder, or a page Fetch Covers cannot read.
+    expect(sections([folder], host).flat()).not.toContain('fetchCover');
+    expect(sections([local], host).flat()).not.toContain('fetchCover');
+    // A selection: each runs on exactly the bookmarks it applies to.
+    expect(runItemMenuAction('fetchCover', [link, local, second, folder], host)).toBe(true);
+    expect(host.fetchCovers).toHaveBeenCalledWith([link, second]);
+    expect(runItemMenuAction('removeCover', [link, second], host)).toBe(true);
+    expect(host.removeCovers).toHaveBeenCalledWith([second]);
+    expect(runItemMenuAction('removeCover', [link], host)).toBe(false);
+    // Fetch Covers turned off: no Fetch cover, however many bookmarks.
+    expect(sections([link, second], createItemHost({ hasCover: () => true })).at(-1)).toEqual([
+      'removeCover',
+      'delete',
+    ]);
+  });
+
   it('hide and reorder item-menu actions as the user arranged them', () => {
     expect(customizeItemMenu([])).toEqual(ACTION_MENUS.item);
     // Order follows the setting within each configured group; unnamed actions are hidden.

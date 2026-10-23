@@ -1,3 +1,4 @@
+import { openDB } from 'idb';
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
@@ -15,14 +16,18 @@ import {
   getCoverSummary,
   isCoverCurrent,
   pruneCovers,
+  putBackCovers,
   saveCovers,
   showCoverImage,
+  takeCovers,
 } from '@/lib/cover-store';
 import { saveSettings } from '@/lib/settings-storage';
 import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
+import { INDEXED_DATABASES } from '@/lib/storage/registry';
 import { captureTabCover, findCoverUrls, saveCoverResults, scanCovers } from '@/services/covers';
 import { mayRequestFrom } from '@/services/page-reader';
 import { runOutOfStorageAfter } from './indexeddb-quota';
+import { PNG_SIGNATURE, pngHeader } from './png-header';
 
 const PAGE = 'https://news.example.com/story/1';
 
@@ -78,6 +83,7 @@ const cover = (bookmarkId: string, bytes: number, url = `https://site.example/${
     url,
     width: 4,
     height: 2,
+    source: 'page',
     type: 'image/webp',
     data: new Uint8Array(bytes).buffer,
   }) satisfies CoverImage;
@@ -85,6 +91,49 @@ const cover = (bookmarkId: string, bytes: number, url = `https://site.example/${
 describe('stored covers', () => {
   beforeEach(async () => {
     await clearCovers();
+  });
+
+  it('come back exactly as they were after Remove cover is undone, unless a new one came since', async () => {
+    const image = { type: 'image/webp', data: new Uint8Array([1, 2, 3]).buffer };
+    await saveCovers(
+      [
+        { ...cover('a', 3), source: 'tab', ...image },
+        { ...cover('b', 3), source: 'browse', ...image },
+      ],
+      1000,
+    );
+    const before = await getCoverInfos();
+    const taken = await takeCovers(['a', 'b', 'none']);
+    expect(taken.map((record) => record.info.bookmarkId)).toEqual(['a', 'b']);
+    expect((await getCoverInfos()).size).toBe(0);
+    // A new cover for b arrived meanwhile: it is kept, and only a comes back.
+    await saveCovers([{ ...cover('b', 4), source: 'page' }], 1000);
+    expect(await putBackCovers(taken)).toBe(1);
+    const after = await getCoverInfos();
+    expect(after.get('a')).toEqual(before.get('a'));
+    expect(after.get('b')?.source).toBe('page');
+    expect((await getCoverImage('a', 'https://site.example/a'))?.size).toBe(3);
+  });
+
+  it('keep showing a cover saved before sources were recorded, as of an unknown source', async () => {
+    // Written as the release before sources stored it: no `source` field.
+    const db = await openDB(INDEXED_DATABASES.covers.name);
+    await db.put('info', {
+      bookmarkId: 'old',
+      url: 'https://site.example/old',
+      width: 4,
+      height: 2,
+      bytes: 3,
+      savedAt: 1,
+      version: COVER_LIMITS.version,
+    });
+    await db.put('images', { bookmarkId: 'old', type: 'image/webp', data: new ArrayBuffer(3) });
+    db.close();
+    const info = (await getCoverInfos()).get('old');
+    expect(info?.source).toBe('unknown');
+    expect(isCoverCurrent(info, 'https://site.example/old')).toBe(true);
+    expect((await getCoverImage('old', 'https://site.example/old'))?.size).toBe(3);
+    expect(await getCoverSummary()).toEqual({ covers: 1, bytes: 3 });
   });
 
   it('belong to the address they were fetched from', async () => {
@@ -195,30 +244,13 @@ describe('a cover shown on a card (Visual Cards V27)', () => {
   });
 });
 
-const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
-/**
- * The first bytes of a PNG: the signature and the IHDR chunk with the size, enough for the type
- * and size checks; decoding is stubbed below.
- */
-const pngHeader = (width: number, height: number) => {
-  const header = new Uint8Array(33);
-  const view = new DataView(header.buffer);
-  header.set(PNG_SIGNATURE);
-  view.setUint32(8, 13);
-  header.set(
-    [...'IHDR'].map((char) => char.charCodeAt(0)),
-    12,
-  );
-  view.setUint32(16, width);
-  view.setUint32(20, height);
-  return header;
-};
 const PNG = pngHeader(1200, 630);
 const OPTIONS = {
   widthPx: 320,
   maxImageBytes: 1000,
   skipPrivateHosts: true,
   maxCacheBytes: 1_000_000,
+  preference: 'page_first',
 };
 
 const head = (image: string) =>
@@ -336,9 +368,53 @@ describe('Fetch Covers runs', () => {
       local: 'skipped',
     });
     const found = items.find((item) => item.id === 'found');
-    expect(found?.cover).toMatchObject({ width: 320, height: 168, type: COVER_LIMITS.outputType });
+    expect(found?.cover).toMatchObject({
+      width: 320,
+      height: 168,
+      type: COVER_LIMITS.outputType,
+      source: 'page',
+    });
     expect(found?.preview).toMatch(/^data:image\//);
     expect(items.find((item) => item.id === 'elsewhere')?.imageSite).toBe('other.net');
+  });
+
+  it('never fetches over a cover chosen with Use this view as the cover, and says it is kept', async () => {
+    const url = 'https://news.example/story';
+    await saveCovers([{ ...cover('chosen', 5, url), source: 'tab' }], 1000);
+    for (const preference of ['page_first', 'page_only', 'screenshot_first']) {
+      const { items } = await scanCovers([node('chosen', url)], { ...OPTIONS, preference });
+      expect(items[0]?.status).toBe('kept');
+    }
+    expect(vi.mocked(fetch)).not.toHaveBeenCalled();
+  });
+
+  it('fetches only the chosen bookmarks with Fetch Cover, and lists nothing else', async () => {
+    const tree = [
+      {
+        id: 'f',
+        parentId: '1',
+        title: 'Folder',
+        children: [
+          node('chosen', 'https://news.example/story'),
+          node('other', 'https://plain.example/'),
+          node('also', 'https://kept.example/'),
+        ],
+      },
+    ];
+    const { items } = await scanCovers(tree, OPTIONS, new Set(['chosen']));
+    expect(items.map((item) => [item.id, item.status])).toEqual([['chosen', 'found']]);
+    const requested = vi.mocked(fetch).mock.calls.map(([input]) => new URL(String(input)).host);
+    expect(new Set(requested)).toEqual(new Set(['news.example']));
+  });
+
+  it('fetches over a picture of the tab only when Cover Source ranks the page image first', async () => {
+    const url = 'https://news.example/story';
+    await saveCovers([{ ...cover('shot', 5, url), source: 'browse' }], 1000);
+    const statusWith = async (preference: string) =>
+      (await scanCovers([node('shot', url)], { ...OPTIONS, preference })).items[0]?.status;
+    expect(await statusWith('page_first')).toBe('found');
+    expect(await statusWith('page_only')).toBe('found');
+    expect(await statusWith('screenshot_first')).toBe('current');
   });
 
   it('never follows a redirect for an image, and tries the next one the page names', async () => {
@@ -586,10 +662,15 @@ describe('Use this view as the cover', () => {
     expect(capture).toHaveBeenCalledWith(1, { format: 'png' });
     if (!('cover' in result)) throw new Error(result.error);
     expect(
-      result.cover.covers.map((cover) => [cover.bookmarkId, cover.width, cover.height]),
+      result.cover.covers.map((cover) => [
+        cover.bookmarkId,
+        cover.width,
+        cover.height,
+        cover.source,
+      ]),
     ).toEqual([
-      ['b1', 320, 200],
-      ['b2', 320, 200],
+      ['b1', 320, 200, 'tab'],
+      ['b2', 320, 200, 'tab'],
     ]);
     expect(result.cover.preview).toMatch(/^data:image\//);
   });

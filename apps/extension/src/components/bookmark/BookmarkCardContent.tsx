@@ -4,9 +4,10 @@
  * count or a bookmark's tags and summary. Everything comes from this device; nothing is fetched.
  *
  * The room for a cover keeps its size whether or not a cover is stored, so a card never changes
- * height when one loads. Without a cover it shows the site icon (the bookmark's first letter when
- * there is none) or the folder icon, small and centered, so a shared site icon never passes for a
- * page's own cover. Separators have no room for one.
+ * height when one loads. Without a cover a bookmark's room shows a placeholder tile drawn from its
+ * address (`lib/cover-placeholder.ts`): the site icon (the first letter when there is none) and the
+ * site's name on a tone of the site's own color, small and centered, so a shared site icon never
+ * passes for a page's own cover. A folder's shows the folder icon. Separators have no room for one.
  */
 import { Folder, Link } from 'lucide-react';
 import type { CSSProperties } from 'react';
@@ -37,29 +38,53 @@ export function BookmarkCardMedia({ item }: { item: Bookmark }) {
       </CoverFrame>
     );
   }
-  const initial = siteInitial(item);
   return (
     <BookmarkCover
       bookmarkId={item.id}
       url={item.url}
-      fallback={
-        <SiteIcon
-          url={item.url}
-          size={CARD_PLACEHOLDER_ICON_PX}
-          className="rounded-sm"
-          fallback={
-            <span
-              aria-hidden="true"
-              data-testid="bookmark-card-initial"
-              style={{ ...iconSize, fontSize: CARD_PLACEHOLDER_ICON_PX / 2 }}
-              className="grid place-items-center rounded-full border bg-card font-medium"
-            >
-              {initial}
-            </span>
-          }
-        />
-      }
+      fallback={<CoverPlaceholder item={item} url={item.url} />}
     />
+  );
+}
+
+/**
+ * A bookmark's room while it has no cover: its site icon and name on a tone of the site's color.
+ * Decorative: the card names the bookmark and its address already.
+ */
+function CoverPlaceholder({ item, url }: { item: Bookmark; url: string }) {
+  const site = coverPlaceholderSite(url);
+  const hue = coverPlaceholderHue(url);
+  return (
+    <div
+      aria-hidden="true"
+      data-testid="bookmark-card-placeholder"
+      data-hue={hue}
+      style={{ '--cover-tile-hue': hue } as CSSProperties}
+      className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-cover-tile px-3 text-foreground"
+    >
+      <SiteIcon
+        url={url}
+        size={CARD_PLACEHOLDER_ICON_PX}
+        className="rounded-sm"
+        fallback={
+          <span
+            data-testid="bookmark-card-initial"
+            style={{ ...iconSize, fontSize: CARD_PLACEHOLDER_ICON_PX / 2 }}
+            className="grid place-items-center rounded-full border bg-card font-medium"
+          >
+            {siteInitial(item)}
+          </span>
+        }
+      />
+      {site ? (
+        <span
+          data-testid="bookmark-card-site"
+          className="max-w-full truncate font-mono text-xs font-medium"
+        >
+          {site}
+        </span>
+      ) : null}
+    </div>
   );
 }
 

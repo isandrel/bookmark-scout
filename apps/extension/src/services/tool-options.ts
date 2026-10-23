@@ -42,6 +42,7 @@ const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool
     maxImageBytes: settings.coversMaxImageKb * BYTES_PER_KB,
     skipPrivateHosts: settings.readPageSkipPrivateHosts,
     maxCacheBytes: settings.coversMaxCacheMb * BYTES_PER_MB,
+    preference: settings.coversSourcePreference,
   }),
   aiContextPacker: (settings) => ({
     format: settings.aiContextPackerOutputFormat,

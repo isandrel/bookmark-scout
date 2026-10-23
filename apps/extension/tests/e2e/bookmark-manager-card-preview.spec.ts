@@ -57,6 +57,9 @@ test('the preview key opens a card preview from this device that keeps focus, an
   const dialog = page.getByRole('dialog', { name: 'Card Two' });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByTestId('bookmark-cover')).toHaveAttribute('src', /^blob:/);
+  await expect(dialog.getByTestId('bookmark-preview-cover-source')).toContainText(
+    'Preview image from the page, saved ',
+  );
   await expect(dialog).toContainText('https://two.e2e.invalid/b');
   await expect(dialog.getByTestId('bookmark-preview-folder')).toContainText('E2E Preview');
   await expect(dialog.getByTestId('bookmark-preview-tags').getByRole('listitem')).toHaveText([

@@ -167,6 +167,8 @@ export default function BookmarksPage() {
     },
     [navigateToFolder],
   );
+  // Fetch Cover from the item menus and the preview: Fetch Covers on the chosen bookmarks.
+  const coverFetch = useCoverFetch(currentFolder);
   const managerCommands = useManagerCommands({
     allData,
     folderItems: data,
@@ -179,6 +181,8 @@ export default function BookmarksPage() {
     showInFolder,
     copyFolderLink: (folderId) => void copyManagerFolderLink(folderId),
     open: openRows,
+    canFetchCovers: coverFetch.enabled,
+    fetchCovers: coverFetch.fetchCovers,
   });
   const allDataRef = useRef(allData);
   allDataRef.current = allData;
@@ -624,6 +628,7 @@ export default function BookmarksPage() {
       />
       <BookmarkDeleteDialog deletion={deletion} />
       <BookmarkOpenDialog opener={opener} />
+      {coverFetch.element}
       <Toaster />
     </div>
   );
