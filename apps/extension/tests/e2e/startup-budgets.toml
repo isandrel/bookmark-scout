@@ -108,7 +108,9 @@
 # Summary columns (1,491).
 # Raised from 1500 on 2026-10-22 for the Smart Rules run status and stale-review checks on top of
 # the Index Page Text gaps (1,501).
-"bookmarks.html" = 1510
+# Raised from 1510 on 2026-10-22 for cover actions (Fetch cover, Remove cover) and the cover
+# placeholder in the manager on top of the link and tag changes (1,514).
+"bookmarks.html" = 1525
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
