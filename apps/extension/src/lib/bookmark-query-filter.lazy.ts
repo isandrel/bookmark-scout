@@ -244,9 +244,9 @@ export function prepareSearchDocuments(
 
 /**
  * Whether a result matched only by its folder path, which a plain word naming a folder does for
- * everything in it. The folder is the match then, unless the query asks for folders (`folder:`).
- * A result with no reasons at all matched by conditions (`is:`, `has:`, a date) or exclusions
- * alone, which hold for the item itself, so it is a match of its own.
+ * everything in it, unless the query asks for folders (`folder:`). A result with no reasons at
+ * all matched by conditions (`is:`, `has:`, a date) or exclusions alone, which hold for the item
+ * itself, so it is a match of its own.
  */
 function matchesOnlyByFolder(query: SearchQuery, result: SearchResult): boolean {
   return (
@@ -254,6 +254,16 @@ function matchesOnlyByFolder(query: SearchQuery, result: SearchResult): boolean 
     result.reasons.length > 0 &&
     result.reasons.every((reason) => reason.field === 'folder')
   );
+}
+
+/**
+ * Whether a result is listed as a match of its own, in the popup's tree and the manager's list
+ * alike: one that matched only by its folder path is not when a folder it is in is a result too,
+ * since that folder is the match then. When the folder is not (`work is:bookmark` leaves the Work
+ * folder out), the items in it are the matches.
+ */
+function isOwnMatch(query: SearchQuery, result: SearchResult, insideMatch: boolean): boolean {
+  return !(insideMatch && matchesOnlyByFolder(query, result));
 }
 
 /**
@@ -272,7 +282,7 @@ export function filterBookmarkTreeByQuery(
     const result = results.get(node.id);
     if (!result) return undefined;
     // The contents of a matching folder show beneath it unflagged, as before.
-    if (insideMatch && matchesOnlyByFolder(query, result)) return undefined;
+    if (!isOwnMatch(query, result, insideMatch)) return undefined;
     const title = result.reasons.find((reason) => reason.field === 'title');
     return {
       isSearchMatch: true,
@@ -284,8 +294,8 @@ export function filterBookmarkTreeByQuery(
 
 /**
  * The bookmarks and folders a search box's query matches, with where each matched, for a flat list
- * such as the manager's table; undefined when the query has no terms, so it filters nothing. A folder a plain
- * word names is listed, not everything in it.
+ * such as the manager's table; undefined when the query has no terms, so it filters nothing. A
+ * folder a plain word names is listed, not everything in it (`isOwnMatch`).
  */
 export function matchBookmarkTreeQuery(
   nodes: readonly BookmarkTreeNode[],
@@ -294,9 +304,21 @@ export function matchBookmarkTreeQuery(
 ): ReadonlyMap<string, readonly SearchMatchReason[]> | undefined {
   const matched = matchQuery(nodes, text, metadata);
   if (!matched) return undefined;
+  const { query, results } = matched;
   const reasons = new Map<string, readonly SearchMatchReason[]>();
-  for (const [id, result] of matched.results) {
-    if (!matchesOnlyByFolder(matched.query, result)) reasons.set(id, result.reasons);
+  const byFolderOnly = [...results.values()].some((result) => matchesOnlyByFolder(query, result));
+  if (!byFolderOnly) {
+    for (const [id, result] of results) reasons.set(id, result.reasons);
+    return reasons;
   }
+  // Whether a folder above is a result needs the tree, walked in the order documents are built.
+  const visit = (items: readonly BookmarkTreeNode[], insideMatch: boolean) => {
+    for (const node of items) {
+      const result = results.get(node.id);
+      if (result && isOwnMatch(query, result, insideMatch)) reasons.set(node.id, result.reasons);
+      if (node.children) visit(node.children, insideMatch || Boolean(result));
+    }
+  };
+  visit(nodes, false);
   return reasons;
 }

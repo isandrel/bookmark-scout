@@ -248,6 +248,29 @@ describe('filterBookmarkTreeByQuery', () => {
     expect(matchOf(filtered, 'soup')?.isSearchMatch).toBe(true);
   });
 
+  it('lists the same matches in the manager as the popup flags, folder-only ones included', () => {
+    const flagged = (nodes: readonly BookmarkTreeNode[]): string[] =>
+      nodes.flatMap((node) => [
+        ...(node.isSearchMatch ? [node.id] : []),
+        ...flagged(node.children ?? []),
+      ]);
+    for (const [text, expected] of [
+      // The Work folder is no result here, so what is in it matched by its path is.
+      ['work is:bookmark', ['jira', 'recipe-db']],
+      ['recipe -cake is:bookmark', ['recipe-db', 'soup']],
+      // The folder is a result, so it is the match and what is in it is not.
+      ['recipes', ['recipes']],
+      ['work jira', ['jira']],
+      ['folder:recipes', ['baking', 'recipe-cake', 'soup']],
+    ] as const) {
+      const manager = [...(matchBookmarkTreeQuery(tree, text, noMetadata)?.keys() ?? [])].sort();
+      expect(manager, text).toEqual(expected);
+      expect(flagged(filterBookmarkTreeByQuery(tree, text, noMetadata)).sort(), text).toEqual(
+        manager,
+      );
+    }
+  });
+
   it('typing on checks only what the last query found, and stays right when it widens', () => {
     const metadata: StoredBookmarkMetadataById = { soup: { tags: ['Food'] } };
     const sorted = (text: string) =>
