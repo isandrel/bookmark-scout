@@ -77,6 +77,6 @@ browse_min_interval_ms = { default = 1000, min = 600, max = 60000, step = 100, i
 # retakes one. A cover chosen with Use this view as the cover is never retaken
 browse_max_age_days = { default = 30, min = 0, max = 365, step = 1, integer = true }
 # Sites never pictured while browsing: each entry is a host and its subdomains (`example.com` also
-# covers `mail.example.com`). Smaller than Never Read These Sites, whose sites are skipped too, so
-# both lists fit the synced settings.lists item together
+# covers `mail.example.com`). Smaller than Never Read These Sites, whose sites are skipped too;
+# synced, so capped to keep every synced item within the browser's sync quota
 never_capture_sites = { default = [], max_items = 20, max_length = 80 }

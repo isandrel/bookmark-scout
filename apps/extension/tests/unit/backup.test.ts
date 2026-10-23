@@ -7,8 +7,14 @@ import { getBookmarkTableView, updateBookmarkTableView } from '@/lib/bookmark-ta
 import { getPromptLibrary, saveCustomPrompt, setActivePrompt } from '@/lib/prompt-library-storage';
 import { createSavedSearch, getSavedSearches } from '@/lib/saved-searches-storage';
 import { addSearchHistoryEntry, getSearchHistory } from '@/lib/search-history-storage';
+import { defaultSettings } from '@/lib/settings-schema';
 import { getSettings, saveSettings } from '@/lib/settings-storage';
-import { STORAGE_ITEMS, type StorageItem, type StorageItemId } from '@/lib/storage/registry';
+import {
+  STORAGE_ITEMS,
+  type StorageItem,
+  type StorageItemId,
+  storageKey,
+} from '@/lib/storage/registry';
 import { exportBackup, getBackupItemIds, isBackupFile, restoreBackup } from '@/services/backup';
 import { seedStored } from './storage-helpers';
 
@@ -90,6 +96,22 @@ describe('backup file', () => {
     expect((await restoreBackup(JSON.stringify(json))).restored).not.toContain('settings');
     expect((await getPromptLibrary()).prompts).toEqual([]);
     expect((await getSettings()).theme).toBe('light');
+  });
+
+  it('holds each list setting as its own item and restores them, replacing lists it lacks', async () => {
+    await saveSettings({ urlCleanerRemoveParams: ['utm_*'], managerOrganizeMenu: ['addFolder'] });
+    const file = JSON.parse(await exportBackup());
+    const listKey = (key: string) => storageKey(STORAGE_ITEMS.settingsList, key);
+    expect(file.items[listKey('urlCleanerRemoveParams')]).toEqual({ v: 1, data: ['utm_*'] });
+    expect(file.items[listKey('managerOrganizeMenu')]).toEqual({ v: 1, data: ['addFolder'] });
+
+    await saveSettings({ urlCleanerRemoveParams: ['ref'], managerMenuActions: ['open'] });
+    expect((await restoreBackup(JSON.stringify(file))).restored).toContain('settingsList');
+    expect(await getSettings()).toMatchObject({
+      urlCleanerRemoveParams: ['utm_*'],
+      managerOrganizeMenu: ['addFolder'],
+      managerMenuActions: defaultSettings.managerMenuActions,
+    });
   });
 
   it('keeps AI service endpoints, never their keys or headers, and says what to enter again', async () => {

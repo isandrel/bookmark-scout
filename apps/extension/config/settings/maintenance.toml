@@ -36,7 +36,7 @@ remove_hash = false
 sort_query_params = true
 dedupe_query_params = true
 # Query parameter names kept and removed. Settings sync, so each list is capped to keep every
-# synced setting within the browser's 8 KB item quota.
+# synced item, and all of them together, within the browser's sync quota.
 preserve_params = { max_items = 20, max_length = 32, default = [ "id", "page", "q", "p", "lang" ] }
 # A name ending in * matches every name that starts with it (src/lib/param-name-patterns.ts).
 remove_params = { max_items = 20, max_length = 32, default = [

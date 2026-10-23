@@ -20,7 +20,7 @@ import {
 } from '@/lib/prompt-library-storage';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
-import { storageAreaKey } from '@/lib/storage/registry';
+import { SYNC_QUOTA, storageAreaKey } from '@/lib/storage/registry';
 import {
   buildPrompt,
   composePrompt,
@@ -281,8 +281,12 @@ describe('prompt library', () => {
       ['\u{1F600}', 2045],
     ];
     for (const [char, max] of browserMaxima) {
-      expect(syncItemBytes('k', { s: char.repeat(max) }), char).toBeLessThanOrEqual(8192);
-      expect(syncItemBytes('k', { s: char.repeat(max + 1) }), char).toBeGreaterThan(8192);
+      expect(syncItemBytes('k', { s: char.repeat(max) }), char).toBeLessThanOrEqual(
+        SYNC_QUOTA.bytesPerItem,
+      );
+      expect(syncItemBytes('k', { s: char.repeat(max + 1) }), char).toBeGreaterThan(
+        SYNC_QUOTA.bytesPerItem,
+      );
     }
   });
 
@@ -402,18 +406,6 @@ describe('placeholders that read storage', () => {
 
 describe('prompt library storage', () => {
   const draft = (name: string) => ({ task: 'auto_tagging' as const, name, system: 'Text' });
-
-  it('fits the most prompts at their largest, with the other synced items, in the sync quota', () => {
-    // Settings, list settings, table view, prompt index, and About me are capped at the 8,192-byte
-    // item quota.
-    const otherSyncedItems = Object.values(STORAGE_ITEMS).filter(
-      (item) => item.area === 'sync' && !('collection' in item),
-    );
-    expect(otherSyncedItems).toHaveLength(5);
-    expect(MAX_PROMPTS * MAX_PROMPT_BYTES + otherSyncedItems.length * 8192).toBeLessThanOrEqual(
-      102_400,
-    );
-  });
 
   it('refuses a prompt past the limit and stores nothing for it', async () => {
     for (let index = 0; index < MAX_PROMPTS; index += 1) await saveCustomPrompt(draft(`P${index}`));

@@ -26,6 +26,7 @@ import {
   removeUnregisteredKeys,
   restrictLocalStorageAccess,
 } from '@/lib/storage/cleanup';
+import { completedMigrationsValue } from '@/lib/storage/migrations';
 import {
   isRegisteredKey,
   STORAGE_ITEMS,
@@ -40,9 +41,8 @@ import { appRoot } from '../config-files';
 import { readStoredData, storedEntry } from './storage-helpers';
 
 /** Every single (non-collection) item's stored value; a new registry item must be added here. */
-const values: Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>> = {
+const values: Record<Exclude<StorageItemId, 'prompt' | 'settingsList'>, StoredValue<unknown>> = {
   settings: settingsOverrideValues.sync,
-  settingsLists: settingsOverrideValues.lists,
   deviceSettings: settingsOverrideValues.device,
   tableView: bookmarkTableViewValue,
   tableLayout: bookmarkTableLayoutValue,
@@ -58,7 +58,8 @@ const values: Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>> = {
   siteIcons: siteIconCacheValue,
   dismissedNotices: dismissedNoticesValue,
   quickSave: quickSaveRecordValue,
-} as Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>>;
+  storageMigrations: completedMigrationsValue,
+} as Record<Exclude<StorageItemId, 'prompt' | 'settingsList'>, StoredValue<unknown>>;
 
 const items = Object.entries(STORAGE_ITEMS) as [StorageItemId, StorageItem][];
 const registryFile = path.join(appRoot, 'src/lib/storage/registry.ts');

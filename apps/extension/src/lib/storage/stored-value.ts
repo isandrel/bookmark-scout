@@ -282,6 +282,27 @@ export type StoredCollection<T> = {
   getMany: (ids: readonly string[]) => Promise<Record<string, T>>;
   /** The id of every entry stored in the collection. */
   listIds: () => Promise<string[]>;
+  /** The entries `ids` as one value (one per id list on a page); see `StoredRecord`. */
+  record: (ids: readonly string[]) => StoredRecord<T>;
+};
+
+/**
+ * Fixed entries of a collection read and written as one value: the stored, non-empty ones by id.
+ * A read is one storage call, and a change writes only the entries that changed, in one call for
+ * the entries it stores and one for those it removes, while holding every entry's lock, so it
+ * never overwrites an entry another page changed in the meantime.
+ */
+export type StoredRecord<T> = ReadableStoredValue<Record<string, T>> & {
+  readonly ids: readonly string[];
+  /**
+   * Reads every entry under its lock, applies `change`, and stores the entries whose value
+   * changed (an empty or missing one is removed). Rejects with `NewerStoredValueError`, writing
+   * nothing, when an entry it would change was stored by a newer release. Resolves to the record
+   * now stored.
+   */
+  update: (
+    change: (current: Record<string, T>) => Record<string, T> | Promise<Record<string, T>>,
+  ) => Promise<Record<string, T>>;
 };
 
 /**
@@ -293,6 +314,7 @@ export function defineStoredCollection<T>(
   options: Omit<StoredValueOptions<T>, 'id'>,
 ): StoredCollection<T> {
   const entries = new Map<string, StoredValue<T>>();
+  const records = new Map<string, StoredRecord<T>>();
   const entry = (id: string) => {
     let value = entries.get(id);
     if (!value) {
@@ -319,7 +341,109 @@ export function defineStoredCollection<T>(
         .filter((key) => key.startsWith(areaPrefix) && key.length > areaPrefix.length)
         .map((key) => key.slice(areaPrefix.length));
     },
+    record(ids) {
+      const cacheKey = JSON.stringify(ids);
+      let value = records.get(cacheKey);
+      if (!value) {
+        value = defineStoredRecord(item, entry, ids, options.isEmpty);
+        records.set(cacheKey, value);
+      }
+      return value;
+    },
   };
+}
+
+function defineStoredRecord<T>(
+  item: StorageItem,
+  entry: (id: string) => StoredValue<T>,
+  ids: readonly string[],
+  isEmpty: ((value: T) => boolean) | undefined,
+): StoredRecord<T> {
+  const keys = ids.map((id) => entry(id).key);
+  const kept = (value: T) => !isEmpty?.(value);
+
+  /** Each entry's raw stored value, in one storage call. */
+  const readRaw = async () => (await storage.getItems(keys)).map(({ value }) => value as unknown);
+  const toRecord = (raws: unknown[]): Record<string, T> =>
+    Object.fromEntries(
+      ids.flatMap((id, index) => {
+        const value = entry(id).parseStored(raws[index] ?? null);
+        return kept(value) ? [[id, value]] : [];
+      }),
+    );
+  const get = async () => toRecord(await readRaw());
+
+  const watch = (callback: (value: Record<string, T>) => void) => {
+    // One write of several entries fires one change per entry: read them all once for it.
+    let queued = false;
+    let active = true;
+    const reread = () => {
+      if (queued) return;
+      queued = true;
+      queueMicrotask(() => {
+        queued = false;
+        // A read that fails leaves the last value; the next change reads again.
+        get().then(
+          (value) => {
+            if (active) callback(value);
+          },
+          () => undefined,
+        );
+      });
+    };
+    const stops = keys.map((key) => storage.watch(key, reread));
+    return () => {
+      active = false;
+      for (const stop of stops) stop();
+    };
+  };
+  const live = createLiveValue<Record<string, T>>({}, get, watch);
+
+  /** Takes each entry's lock, always in the same order, so two changes never deadlock. */
+  const withAllLocks = <R>(task: () => Promise<R>): Promise<R> =>
+    [...keys]
+      .sort()
+      .reduceRight<() => Promise<R>>((inner, key) => () => withKeyLock(key, inner), task)();
+
+  const record: StoredRecord<T> = {
+    ids,
+    get,
+    watch: (callback) => {
+      let loaded = false;
+      return observeLive(live, (value) => {
+        if (loaded) callback(value);
+        loaded = true;
+      });
+    },
+    observe: (callback) => observeLive(live, callback),
+    update: (change) =>
+      withAllLocks(async () => {
+        const raws = await readRaw();
+        const current = toRecord(raws);
+        const proposed = await change(current);
+        const writes: { key: StorageKey; value: unknown }[] = [];
+        const removals: StorageKey[] = [];
+        const next: Record<string, T> = {};
+        ids.forEach((id, index) => {
+          const stored = entry(id);
+          const value =
+            id in proposed ? stored.parseStored(toStoredEnvelope(item, proposed[id])) : undefined;
+          const nextValue = value !== undefined && kept(value) ? value : undefined;
+          if (nextValue !== undefined) next[id] = nextValue;
+          if (isSameJson(nextValue, current[id])) return;
+          const raw = raws[index];
+          if (isEnvelope(raw) && raw.v > item.v) throw new NewerStoredValueError(stored.key);
+          if (nextValue === undefined) removals.push(stored.key);
+          else writes.push({ key: stored.key, value: toStoredEnvelope(item, nextValue) });
+        });
+        if (writes.length > 0) await storage.setItems(writes);
+        if (removals.length > 0) await storage.removeItems(removals);
+        if (writes.length > 0 || removals.length > 0) live.publish(next);
+        return next;
+      }),
+  };
+  liveValues.set(record, live as LiveValue<unknown>);
+  return record;
 }
 
 /** Calls back with the live value once it is loaded, then after each change. */
@@ -341,11 +465,11 @@ function observeLive<T>(live: LiveValue<T>, callback: (value: T) => void): () =>
  * soon as any of them changes, from this page (before the storage event) or any other.
  */
 export function defineDerivedValue<S extends readonly unknown[], T>(
-  sources: { readonly [K in keyof S]: StoredValue<S[K]> },
+  sources: { readonly [K in keyof S]: ReadableStoredValue<S[K]> },
   combine: (values: S) => T,
   empty: T,
 ): ReadableStoredValue<T> {
-  const lives = (sources as readonly StoredValue<unknown>[]).map(liveValueOf);
+  const lives = (sources as readonly ReadableStoredValue<unknown>[]).map(liveValueOf);
   let snapshot: StoredSnapshot<T> = { value: empty, isLoading: true };
   let stops: (() => void)[] | undefined;
   const listeners = new Set<() => void>();
@@ -382,7 +506,7 @@ export function defineDerivedValue<S extends readonly unknown[], T>(
     get: async () =>
       combine(
         (await Promise.all(
-          (sources as readonly StoredValue<unknown>[]).map((source) => source.get()),
+          (sources as readonly ReadableStoredValue<unknown>[]).map((source) => source.get()),
         )) as unknown as S,
       ),
     watch(callback) {

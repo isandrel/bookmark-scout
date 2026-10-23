@@ -26,6 +26,8 @@ import type {
 
 const loadCoverBackup = () => import('./cover-backup.lazy');
 
+import { upgradeBackupItems } from '@/lib/storage/migrations';
+
 /** Marks a file as a backup, so a plain settings export is still told apart. */
 const BACKUP_FORMAT = 'bookmark-scout-backup';
 const BACKUP_FORMAT_VERSION = 1;
@@ -127,7 +129,7 @@ const BACKUP_ITEMS: Partial<
   Record<StorageItemId, StoredValue<unknown> | StoredCollection<unknown>>
 > = {
   settings: settingsOverrideValues.sync,
-  settingsLists: settingsOverrideValues.lists,
+  settingsList: settingsListItems,
   deviceSettings: settingsOverrideValues.device,
   tableView: bookmarkTableViewValue,
   promptIndex: promptLibraryIndexValue,
@@ -249,8 +251,10 @@ export async function restoreBackupCovers(covers: BackupCovers): Promise<CoverRe
  * Covers are restored separately, after their review (`restoreBackupCovers`).
  */
 export async function restoreBackup(file: string | BackupFile): Promise<BackupRestoreOutcome> {
-  const parsed = typeof file === 'string' ? readBackupFile(file) : file;
-  if (!parsed) throw new Error(t('error_invalidBackupFile'));
+  const read = typeof file === 'string' ? readBackupFile(file) : file;
+  if (!read) throw new Error(t('error_invalidBackupFile'));
+  // Settings an earlier release's file holds where they are no longer stored.
+  const parsed = { ...read, items: upgradeBackupItems(read.items) };
   const ids = getBackupItemIds();
   const sources = ids.map((id) => [id, backupSource(id)] as const);
   const restored = new Set<StorageItemId>();

@@ -1,11 +1,21 @@
 /**
  * Settings storage. Only settings that differ from their default are stored: synced ones in
- * `STORAGE_ITEMS.settings`, this device's own (`DEVICE_SETTING_KEYS`) in
- * `STORAGE_ITEMS.deviceSettings`. Saving a setting back to its default removes it. Invalid stored
+ * `STORAGE_ITEMS.settings`, except lists, each synced in its own item (`STORAGE_ITEMS.settingsList`),
+ * and this device's own (`DEVICE_SETTING_KEYS`) in `STORAGE_ITEMS.deviceSettings`. Saving a
+ * setting back to its default removes it. Invalid stored
  * or submitted fields are isolated so one bad value never blocks the rest.
  */
 
 import type { z } from 'zod';
+import {
+  completedMigrationsValue,
+  fillRecovered,
+  getLegacyValues,
+  MIGRATIONS,
+  pendingRecoveries,
+  type SettingsLayers,
+  type StoredOverrides,
+} from '@/lib/storage/migrations';
 
 /** Localized, human-readable validation messages keyed by setting. */
 export type SettingsFieldErrors = Partial<Record<keyof Settings, string>>;
@@ -114,8 +124,7 @@ export function sanitizeSettings(stored: unknown): Settings {
   return validateSettingsUpdate(defaultSettings, input).settings;
 }
 
-/** Settings that differ from the default, as stored, including keys a newer release added. */
-export type StoredOverrides = Record<string, unknown>;
+export type { StoredOverrides };
 
 const parseOverrides = (raw: unknown): StoredOverrides => (isPlainObject(raw) ? raw : {});
 
@@ -125,14 +134,22 @@ const overridesOptions = {
   isEmpty: (overrides: StoredOverrides) => Object.keys(overrides).length === 0,
 };
 
-/** What each scope stores; read settings through `settingsValue`, change them through `saveSettings`. */
-export const settingsOverrideValues: Record<SettingScope, StoredValue<StoredOverrides>> = {
-  sync: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.settings, overridesOptions),
-  lists: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.settingsLists, overridesOptions),
-  device: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.deviceSettings, overridesOptions),
-};
+/**
+ * Each changed list setting in its own synced item, keyed by setting. The value is kept as stored
+ * and checked when settings are composed, so a list a newer release widened is never rewritten.
+ */
+export const settingsListItems = defineStoredCollection<unknown>(STORAGE_ITEMS.settingsList, {
+  parse: (raw) => raw ?? null,
+  empty: null,
+  isEmpty: (value) => value === null,
+});
 
-type ScopedOverrides = Record<SettingScope, StoredOverrides>;
+/** What each scope stores; read settings through `settingsValue`, change them through `saveSettings`. */
+export const settingsOverrideValues = {
+  sync: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.settings, overridesOptions),
+  lists: settingsListItems.record(SETTING_KEYS_BY_SCOPE.lists),
+  device: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.deviceSettings, overridesOptions),
+} satisfies Record<SettingScope, ReadableStoredValue<StoredOverrides>>;
 
 /** The stored settings of `scope` in `overrides`. */
 function pickScope(overrides: StoredOverrides, scope: SettingScope): StoredOverrides {
@@ -144,18 +161,21 @@ function pickScope(overrides: StoredOverrides, scope: SettingScope): StoredOverr
 }
 
 /**
- * The lists scope as stored, with lists an earlier release kept in the settings item: they count
- * until the next save moves them (`changeSettings`), and the lists item wins over them.
+ * Valid settings from what each scope stores, with what migrations that have not run on this
+ * device find where an earlier release kept a setting; a key stored in the wrong scope is ignored.
  */
-function storedLists(stored: ScopedOverrides): StoredOverrides {
-  return { ...pickScope(stored.sync, 'lists'), ...stored.lists };
-}
-
-/** Valid settings from what each scope stores; a key stored in the wrong scope is ignored. */
-function composeSettings(stored: ScopedOverrides): Settings {
+function composeSettings(
+  layers: SettingsLayers,
+  completed: readonly string[],
+  legacyValues: readonly unknown[],
+): Settings {
+  const stored = fillRecovered(
+    layers,
+    pendingRecoveries(MIGRATIONS, layers, completed, legacyValues),
+  );
   return sanitizeSettings({
     ...pickScope(stored.sync, 'sync'),
-    ...pickScope(storedLists(stored), 'lists'),
+    ...pickScope(stored.lists, 'lists'),
     ...pickScope(stored.device, 'device'),
   });
 }
@@ -163,7 +183,8 @@ function composeSettings(stored: ScopedOverrides): Settings {
 /**
  * What a scope stores after a change from `before` to `after`: changed settings are stored, or
  * removed when back at their default; everything else stays as stored, so a setting another
- * release understands better (a newer option, a newer key) survives this release's writes.
+ * release understands better (a newer option, a newer key, or one an earlier release still reads
+ * there) survives this release's writes.
  */
 function nextOverrides(
   stored: StoredOverrides,
@@ -180,8 +201,18 @@ function nextOverrides(
   return next;
 }
 
+const legacyValues = MIGRATIONS.map(({ legacy }) => legacy).filter(
+  (legacy): legacy is NonNullable<typeof legacy> => legacy !== undefined,
+);
+
+/** Every migration's legacy value, in `MIGRATIONS` order, from the values read for each. */
+function byMigration(values: readonly unknown[]): unknown[] {
+  let next = 0;
+  return MIGRATIONS.map(({ legacy }) => (legacy ? values[next++] : undefined));
+}
+
 /**
- * Every setting, from both scopes. Every read or change also sets the language `t()` uses, so a
+ * Every setting, from every scope. Every read or change also sets the language `t()` uses, so a
  * page follows a language change made anywhere.
  */
 export const settingsValue = defineDerivedValue(
@@ -189,9 +220,15 @@ export const settingsValue = defineDerivedValue(
     settingsOverrideValues.sync,
     settingsOverrideValues.lists,
     settingsOverrideValues.device,
-  ] as const,
-  ([sync, lists, device]) => {
-    const settings = composeSettings({ sync, lists, device });
+    completedMigrationsValue,
+    ...legacyValues,
+  ] as readonly ReadableStoredValue<unknown>[],
+  ([sync, lists, device, completed, ...legacy]) => {
+    const settings = composeSettings(
+      { sync, lists, device } as SettingsLayers,
+      completed as string[],
+      byMigration(legacy),
+    );
     setLanguage(settings.language);
     setDateTimeFormat(settings.dateFormat, settings.timeFormat);
     return settings;
@@ -200,9 +237,60 @@ export const settingsValue = defineDerivedValue(
 );
 
 /**
- * Applies `change` to the current settings and stores the result in every scope, each under its
- * own lock (synced settings, synced lists, then this device's, in that order everywhere), moving
- * lists an earlier release kept in the settings item to the lists item. Nothing is stored when
+ * Takes this device's settings, the synced settings, then each list's item, under each one's
+ * lock, in that order everywhere, and stores what `store` returns for each. The innermost is
+ * written first: list items, then the settings item, then this device's, so a setting reaches
+ * its synced item before it leaves this device. Nothing is stored when `store` throws.
+ */
+async function updateLayers(store: (layers: SettingsLayers) => SettingsLayers): Promise<void> {
+  await settingsOverrideValues.device.update(async (device) => {
+    let nextDevice = device;
+    await settingsOverrideValues.sync.update(async (sync) => {
+      let nextSync = sync;
+      await settingsOverrideValues.lists.update((lists) => {
+        const next = store({ sync, lists, device });
+        nextSync = next.sync;
+        nextDevice = next.device;
+        return next.lists;
+      });
+      return nextSync;
+    });
+    return nextDevice;
+  });
+}
+
+/** Whether `key` is a list setting, which this release keeps in its own item. */
+const isListSetting = (key: string) => isSettingsKey(key) && getSettingScope(key) === 'lists';
+
+/** Whether a registered migration keeps `key` in the settings item for an earlier release. */
+const isKeptInSettingsItem = (key: string) =>
+  isSettingsKey(key) && MIGRATIONS.some((migration) => migration.keepsInSettingsItem?.(key));
+
+/**
+ * The settings item without the list settings an earlier release stored in it, except those a
+ * registered migration keeps there for devices still on that release, unless `dropKept`. Every
+ * other key, such as a newer release's, is left as stored.
+ */
+function withoutStrayLists(sync: StoredOverrides, dropKept: boolean): StoredOverrides {
+  return Object.fromEntries(
+    Object.entries(sync).filter(
+      ([key]) => !isListSetting(key) || (!dropKept && isKeptInSettingsItem(key)),
+    ),
+  );
+}
+
+/** Whether `error` is the browser refusing a write over the sync storage quota. */
+const isQuotaError = (error: unknown) =>
+  error instanceof Error && /QUOTA_BYTES|quota/i.test(error.message);
+
+let loggedDroppedKeptSettings = false;
+
+/**
+ * Applies `change` to the current settings and stores the result in every scope, writing only
+ * the settings that changed (a list change writes only that list's item). When a write is over
+ * the sync quota while the settings item still holds the lists a migration keeps there for an
+ * earlier release, it is tried once more without them: they already have their own items, and a
+ * device still on that release falls back to its defaults for them. Nothing is stored when
  * `change` throws. Resolves to the settings before and after.
  */
 async function changeSettings(
@@ -215,32 +303,80 @@ async function changeSettings(
   ) => StoredOverrides = (scope, stored, before, after) =>
     nextOverrides(stored, scope, before, after),
 ): Promise<{ before: Settings; after: Settings }> {
+  const completed = await completedMigrationsValue.get();
+  const legacy = await getLegacyValues(MIGRATIONS);
   let result: { before: Settings; after: Settings } | undefined;
-  await settingsOverrideValues.sync.update(async (sync) => {
-    let nextSync = sync;
-    await settingsOverrideValues.lists.update(async (lists) => {
-      let nextLists = lists;
-      await settingsOverrideValues.device.update((device) => {
-        const stored = { sync, lists, device };
-        const before = composeSettings(stored);
-        const after = change(before);
-        result = { before, after };
-        const listKeys = new Set(Object.keys(pickScope(sync, 'lists')));
-        const syncWithoutLists = Object.fromEntries(
-          Object.entries(sync).filter(([key]) => !listKeys.has(key)),
-        );
-        nextSync = storeScope('sync', syncWithoutLists, before, after);
-        nextLists = storeScope('lists', storedLists(stored), before, after);
-        return storeScope('device', device, before, after);
-      });
-      return nextLists;
+  let keptInSync = false;
+  const attempt = (dropKept: boolean) =>
+    updateLayers((layers) => {
+      const before = composeSettings(layers, completed, legacy);
+      const after = change(before);
+      // A retry starts from what the first attempt already stored; report the first `before`.
+      result = { before: result?.before ?? before, after };
+      keptInSync = Object.keys(withoutStrayLists(layers.sync, false)).some(isListSetting);
+      return {
+        sync: withoutStrayLists(storeScope('sync', layers.sync, before, after), dropKept),
+        lists: storeScope('lists', layers.lists, before, after),
+        device: storeScope('device', layers.device, before, after),
+      };
     });
-    return nextSync;
-  });
+  try {
+    await attempt(false);
+  } catch (error) {
+    if (!isQuotaError(error) || !keptInSync) throw error;
+    if (!loggedDroppedKeptSettings) {
+      loggedDroppedKeptSettings = true;
+      settingsLogger.warn(
+        { error },
+        'Settings did not fit the sync quota with the lists an earlier release reads there; saved without them',
+      );
+    }
+    await attempt(true);
+  }
   if (!result) throw new Error('Settings were not changed');
   return result;
 }
 
+/**
+ * Runs each registered migration that has not run on this device yet (`storage/migrations/`):
+ * what it finds goes where this release keeps it, in one write per item, and the device records
+ * it as run once it found something to move. A failed write (over the sync quota) is logged and
+ * left for the next start, and settings keep reading the old places meanwhile.
+ */
+export async function runStorageMigrations(): Promise<void> {
+  for (const [index, migration] of MIGRATIONS.entries()) {
+    if ((await completedMigrationsValue.get()).includes(migration.id)) continue;
+    try {
+      const legacy = (await getLegacyValues(MIGRATIONS))[index];
+      let moved = false;
+      await updateLayers((layers) => {
+        const recovered = migration.recover(layers, legacy);
+        moved = Object.keys(recovered.found).length > 0;
+        return fillRecovered(layers, [recovered]);
+      });
+      // Nothing to move may only mean sync has not delivered the old places yet.
+      if (moved)
+        await completedMigrationsValue.update((ids) => [...new Set([...ids, migration.id])]);
+    } catch (error) {
+      settingsLogger.error({ error, migration: migration.id }, 'Storage migration failed');
+    }
+  }
+}
+
+/**
+ * Background: runs the storage migrations now, after an install or update, and when browser sync
+ * delivers settings or an old item, one run at a time. Call once, synchronously, at startup.
+ */
+export function registerStorageMigrations(): void {
+  let queue = Promise.resolve();
+  const run = () => {
+    queue = queue.then(runStorageMigrations);
+  };
+  run();
+  browser.runtime.onInstalled.addListener(run);
+  settingsOverrideValues.sync.watch(run);
+  for (const legacy of legacyValues) legacy.watch(run);
+}
 /**
  * Get settings from sync storage; defaults when storage cannot be read.
  */

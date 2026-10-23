@@ -223,10 +223,9 @@ describe('bookmark action menus', () => {
       for (const entry of longest)
         expect(entry.length, entry).toBeLessThanOrEqual(field.maxLength ?? 0);
     }
-    // The item menu syncs; the synced lists item has no room for the others, kept per device.
-    expect(getSettingScope('managerMenuActions')).toBe('lists');
-    for (const kind of ['organize', 'emptySpace', 'preview'] as const) {
-      expect(getSettingScope(MENU_SETTING_KEYS[kind]), kind).toBe('device');
+    // Every menu syncs, each in its own synced list item.
+    for (const kind of ACTION_MENU_KINDS) {
+      expect(getSettingScope(MENU_SETTING_KEYS[kind]), kind).toBe('lists');
     }
   });
 

@@ -30,7 +30,9 @@
 # context menu priorities) on top of the quick save cover background code (482).
 # Raised from 490 on 2026-10-22 for the popup customization (row menus, layout lists, density,
 # hover card settings) on top of the manager customization (491).
-"background.js" = 500
+# Raised from 500 on 2026-10-23 for each synced list setting in its own item and the storage
+# migrations the background runs at every start, which it cannot load later (501).
+"background.js" = 510
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -165,7 +167,10 @@
 # Image Quality in the settings schema every page loads (412).
 # Raised from 420 on 2026-10-22 for the manager customization settings (menus, table defaults,
 # cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (421).
-"ai-host.html" = 430
+# Raised from 430 on 2026-10-23 for each synced list setting in its own item: the stored record
+# that reads and writes the list items, and the storage migrations registry with the list move,
+# which settings read through until it has run (433).
+"ai-host.html" = 440
 # The welcome page opened once after install (516 on 2026-10-14).
 # Raised from 580 on 2026-10-21 for the tooltip provider every page now mounts at its root and
 # the config modules it reads (607).
@@ -175,4 +180,5 @@
 # the Index Page Text gaps (631).
 # Raised from 640 on 2026-10-22 for the manager customization settings (menus, table defaults,
 # cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (644).
-"welcome.html" = 655
+# Raised from 655 on 2026-10-23 with ai-host, for the same list items and migrations registry (657).
+"welcome.html" = 665

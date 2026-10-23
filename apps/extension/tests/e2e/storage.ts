@@ -108,10 +108,10 @@ export async function removeStored(
 
 const deviceSettingKeys = new Set<string>(DEVICE_SETTING_KEYS);
 
-/** `settings` split into what sync storage holds and what this device's storage holds. */
 /**
  * Settings by the item that stores them: this device's, synced lists (every list setting, as
- * `getSettingScope` decides by the default being a list), and the other synced ones.
+ * `getSettingScope` decides by the default being a list, each in its own item), and the other
+ * synced ones.
  */
 function splitSettings(settings: Record<string, unknown>) {
   const entries = Object.entries(settings);
@@ -145,10 +145,12 @@ export async function setSettings(
     }));
   }
   if (Object.keys(lists).length > 0) {
-    await updateStored<Overrides>(target, STORAGE_ITEMS.settingsLists, (current) => ({
-      ...current,
-      ...lists,
-    }));
+    await writeStoredItems(
+      target,
+      Object.entries(lists).map(
+        ([key, value]) => [STORAGE_ITEMS.settingsList, value, key] as const,
+      ),
+    );
   }
   if (Object.keys(device).length > 0) {
     await updateStored<Overrides>(target, STORAGE_ITEMS.deviceSettings, (current) => ({
@@ -164,11 +166,28 @@ export async function replaceSettings(
   settings: Record<string, unknown>,
 ): Promise<void> {
   const { sync, lists, device } = splitSettings(settings);
+  const stale = (await readSettingsLists(target)).filter((key) => !(key in lists));
+  for (const key of stale) await removeStored(target, STORAGE_ITEMS.settingsList, key);
   await writeStoredItems(target, [
     [STORAGE_ITEMS.settings, sync],
-    [STORAGE_ITEMS.settingsLists, lists],
+    ...Object.entries(lists).map(
+      ([key, value]) => [STORAGE_ITEMS.settingsList, value, key] as const,
+    ),
     [STORAGE_ITEMS.deviceSettings, device],
   ]);
+}
+
+/** The setting keys that have a synced list item. */
+export async function readSettingsLists(target: StorageTarget): Promise<string[]> {
+  const prefix = `${storageAreaKey(STORAGE_ITEMS.settingsList, '')}`;
+  return evaluate(
+    target,
+    async (start) =>
+      Object.keys(await chrome.storage.sync.get(null))
+        .filter((key) => key.startsWith(start) && key.length > start.length)
+        .map((key) => key.slice(start.length)),
+    prefix,
+  );
 }
 
 /**
@@ -177,9 +196,13 @@ export async function replaceSettings(
  */
 export async function readSettings(target: StorageTarget): Promise<Record<string, unknown>> {
   type Overrides = Record<string, unknown>;
+  const lists: Overrides = {};
+  for (const key of await readSettingsLists(target)) {
+    lists[key] = await readStored(target, STORAGE_ITEMS.settingsList, key);
+  }
   return {
     ...(await readStored<Overrides>(target, STORAGE_ITEMS.settings)),
-    ...(await readStored<Overrides>(target, STORAGE_ITEMS.settingsLists)),
+    ...lists,
     ...(await readStored<Overrides>(target, STORAGE_ITEMS.deviceSettings)),
   };
 }
