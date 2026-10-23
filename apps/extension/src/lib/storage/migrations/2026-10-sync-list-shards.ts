@@ -8,7 +8,9 @@
  * Each of those now has its own synced item, `settings.list/<setting>`
  * (`STORAGE_ITEMS.settingsList`).
  * This finds them in the old places for `MIGRATIONS` (see `./index.ts` for what the runner does
- * with them): the lists item wins over the settings item, which wins over this device.
+ * with them): the lists item wins over the settings item, which wins over this device. While it
+ * is registered, the settings writer leaves 0.3.4's lists in the settings item for devices still
+ * on 0.3.4; once it is deleted, the next settings save drops them, with nothing else to remove.
  */
 import { getSettingScope, type Settings, settingsSchema } from '@/lib/settings-schema';
 import type { StorageItem } from '../registry';
@@ -55,4 +57,6 @@ export const syncListShards: StorageMigration = {
     }
     return { found, dropFromDevice: fromDevice };
   },
+  // 0.3.4 reads its lists from the settings item: leave them there for devices still on it.
+  keepsInSettingsItem: (key) => getSettingScope(key) === 'lists',
 };

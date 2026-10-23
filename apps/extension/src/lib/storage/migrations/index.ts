@@ -9,7 +9,8 @@
  * item's key and shape, and where its values go. No other file names an old key
  * (`tests/unit/migrations/index.test.ts` checks `src`). Removing a migration once every device
  * has run it is deleting its module, its line in `MIGRATIONS`, and its tests; the install and
- * update cleanup then removes the old item it kept.
+ * update cleanup then removes the old item it kept, and the next settings save drops the old keys
+ * it kept in the settings item (`keepsInSettingsItem`).
  *
  * Rules for a migration:
  * - It never writes or removes the old item, so a device still on an earlier release keeps
@@ -68,6 +69,13 @@ export type StorageMigration = {
   readonly legacy?: StoredValue<unknown>;
   /** Finds the settings earlier releases kept elsewhere, from the stored layers and `legacy`. */
   recover(layers: SettingsLayers, legacy: unknown): Recovered;
+  /**
+   * Whether the settings writer leaves `key`, a setting this release keeps elsewhere, untouched in
+   * the settings item, where an earlier release still reads it. Once no registered migration
+   * keeps it, the next settings save drops it; it is also dropped when the item would not fit the
+   * per-item quota with it.
+   */
+  keepsInSettingsItem?(key: keyof Settings): boolean;
 };
 
 /** Every migration, oldest first; the background runs them in this order. */
@@ -120,20 +128,21 @@ export function fillRecovered(
   return next;
 }
 
-/** What each migration that has not run here finds, given its legacy item's value. */
+/** What each of `migrations` that has not run here finds, given its legacy item's value. */
 export function pendingRecoveries(
+  migrations: readonly StorageMigration[],
   layers: SettingsLayers,
   completed: readonly string[],
   legacyValues: readonly unknown[],
 ): Recovered[] {
-  return MIGRATIONS.flatMap((migration, index) =>
+  return migrations.flatMap((migration, index) =>
     completed.includes(migration.id) ? [] : [migration.recover(layers, legacyValues[index])],
   );
 }
 
-/** Every migration's legacy value (undefined for one without), in `MIGRATIONS` order. */
-export function getLegacyValues(): Promise<unknown[]> {
-  return Promise.all(MIGRATIONS.map(({ legacy }) => legacy?.get()));
+/** Each of `migrations`' legacy value (undefined for one without), in their order. */
+export function getLegacyValues(migrations: readonly StorageMigration[]): Promise<unknown[]> {
+  return Promise.all(migrations.map(({ legacy }) => legacy?.get()));
 }
 
 type Envelope = { v: number; data: unknown };

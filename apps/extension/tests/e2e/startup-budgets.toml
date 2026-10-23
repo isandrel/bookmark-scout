@@ -30,7 +30,9 @@
 # context menu priorities) on top of the quick save cover background code (482).
 # Raised from 490 on 2026-10-22 for the popup customization (row menus, layout lists, density,
 # hover card settings) on top of the manager customization (491).
-"background.js" = 500
+# Raised from 500 on 2026-10-23 for each synced list setting in its own item and the storage
+# migrations the background runs at every start, which it cannot load later (501).
+"background.js" = 510
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,

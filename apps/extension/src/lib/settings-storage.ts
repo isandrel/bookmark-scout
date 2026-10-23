@@ -169,7 +169,10 @@ function composeSettings(
   completed: readonly string[],
   legacyValues: readonly unknown[],
 ): Settings {
-  const stored = fillRecovered(layers, pendingRecoveries(layers, completed, legacyValues));
+  const stored = fillRecovered(
+    layers,
+    pendingRecoveries(MIGRATIONS, layers, completed, legacyValues),
+  );
   return sanitizeSettings({
     ...pickScope(stored.sync, 'sync'),
     ...pickScope(stored.lists, 'lists'),
@@ -256,9 +259,38 @@ async function updateLayers(store: (layers: SettingsLayers) => SettingsLayers): 
   });
 }
 
+/** Whether `key` is a list setting, which this release keeps in its own item. */
+const isListSetting = (key: string) => isSettingsKey(key) && getSettingScope(key) === 'lists';
+
+/** Whether a registered migration keeps `key` in the settings item for an earlier release. */
+const isKeptInSettingsItem = (key: string) =>
+  isSettingsKey(key) && MIGRATIONS.some((migration) => migration.keepsInSettingsItem?.(key));
+
+/**
+ * The settings item without the list settings an earlier release stored in it, except those a
+ * registered migration keeps there for devices still on that release, unless `dropKept`. Every
+ * other key, such as a newer release's, is left as stored.
+ */
+function withoutStrayLists(sync: StoredOverrides, dropKept: boolean): StoredOverrides {
+  return Object.fromEntries(
+    Object.entries(sync).filter(
+      ([key]) => !isListSetting(key) || (!dropKept && isKeptInSettingsItem(key)),
+    ),
+  );
+}
+
+/** Whether `error` is the browser refusing a write over the sync storage quota. */
+const isQuotaError = (error: unknown) =>
+  error instanceof Error && /QUOTA_BYTES|quota/i.test(error.message);
+
+let loggedDroppedKeptSettings = false;
+
 /**
  * Applies `change` to the current settings and stores the result in every scope, writing only
- * the settings that changed (a list change writes only that list's item). Nothing is stored when
+ * the settings that changed (a list change writes only that list's item). When a write is over
+ * the sync quota while the settings item still holds the lists a migration keeps there for an
+ * earlier release, it is tried once more without them: they already have their own items, and a
+ * device still on that release falls back to its defaults for them. Nothing is stored when
  * `change` throws. Resolves to the settings before and after.
  */
 async function changeSettings(
@@ -272,18 +304,35 @@ async function changeSettings(
     nextOverrides(stored, scope, before, after),
 ): Promise<{ before: Settings; after: Settings }> {
   const completed = await completedMigrationsValue.get();
-  const legacy = await getLegacyValues();
+  const legacy = await getLegacyValues(MIGRATIONS);
   let result: { before: Settings; after: Settings } | undefined;
-  await updateLayers((layers) => {
-    const before = composeSettings(layers, completed, legacy);
-    const after = change(before);
-    result = { before, after };
-    return {
-      sync: storeScope('sync', layers.sync, before, after),
-      lists: storeScope('lists', layers.lists, before, after),
-      device: storeScope('device', layers.device, before, after),
-    };
-  });
+  let keptInSync = false;
+  const attempt = (dropKept: boolean) =>
+    updateLayers((layers) => {
+      const before = composeSettings(layers, completed, legacy);
+      const after = change(before);
+      // A retry starts from what the first attempt already stored; report the first `before`.
+      result = { before: result?.before ?? before, after };
+      keptInSync = Object.keys(withoutStrayLists(layers.sync, false)).some(isListSetting);
+      return {
+        sync: withoutStrayLists(storeScope('sync', layers.sync, before, after), dropKept),
+        lists: storeScope('lists', layers.lists, before, after),
+        device: storeScope('device', layers.device, before, after),
+      };
+    });
+  try {
+    await attempt(false);
+  } catch (error) {
+    if (!isQuotaError(error) || !keptInSync) throw error;
+    if (!loggedDroppedKeptSettings) {
+      loggedDroppedKeptSettings = true;
+      settingsLogger.warn(
+        { error },
+        'Settings did not fit the sync quota with the lists an earlier release reads there; saved without them',
+      );
+    }
+    await attempt(true);
+  }
   if (!result) throw new Error('Settings were not changed');
   return result;
 }
@@ -298,7 +347,7 @@ export async function runStorageMigrations(): Promise<void> {
   for (const [index, migration] of MIGRATIONS.entries()) {
     if ((await completedMigrationsValue.get()).includes(migration.id)) continue;
     try {
-      const legacy = (await getLegacyValues())[index];
+      const legacy = (await getLegacyValues(MIGRATIONS))[index];
       let moved = false;
       await updateLayers((layers) => {
         const recovered = migration.recover(layers, legacy);

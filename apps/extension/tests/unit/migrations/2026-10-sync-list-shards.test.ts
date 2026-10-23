@@ -118,6 +118,57 @@ describe('each list setting in its own item', () => {
     expect(await readStoredRaw(OLD_ITEM)).toEqual(oldRaw);
   });
 
+  it('leaves 0.3.4 lists in the settings item while saving other settings', async () => {
+    await seedEarlierReleases();
+    await runStorageMigrations();
+    await saveSettings({ theme: 'light', urlCleanerRemoveParams: ['ref'] });
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
+      ...SETTINGS_0_3_4,
+      theme: 'light',
+    });
+    expect((await listItems()).urlCleanerRemoveParams).toEqual(['ref']);
+  });
+
+  it('saves the settings item without 0.3.4 lists, once, when they no longer fit beside it', async () => {
+    await seedEarlierReleases();
+    await runStorageMigrations();
+    const settingsKey = storageKey(STORAGE_ITEMS.settings).slice('sync:'.length);
+    const set = fakeBrowser.storage.sync.set.bind(fakeBrowser.storage.sync);
+    // As Chrome does when the item would pass 8,192 bytes with the old lists in it.
+    const tooLarge = vi
+      .spyOn(fakeBrowser.storage.sync, 'set')
+      .mockImplementation(async (items: Record<string, unknown>) => {
+        const data = (items[settingsKey] as { data?: Record<string, unknown> } | undefined)?.data;
+        if (data && 'askAiDisabledActions' in data) {
+          throw new Error('QUOTA_BYTES_PER_ITEM quota exceeded');
+        }
+        return set(items);
+      });
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+    await saveSettings({
+      theme: 'light',
+      urlCleanerPreserveParams: ['id'],
+      quickSaveFixedFolder: '9',
+    });
+    expect(tooLarge).toHaveBeenCalledTimes(3);
+    expect(warn).toHaveBeenCalledOnce();
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({ theme: 'light' });
+    expect((await listItems()).urlCleanerPreserveParams).toEqual(['id']);
+    expect(await readStoredData(STORAGE_ITEMS.deviceSettings)).toEqual({
+      managerCardSize: 'small',
+      quickSaveFixedFolder: '9',
+    });
+    // The lists already have their own items, so nothing the user set is lost.
+    expect(await getSettings()).toMatchObject({
+      theme: 'light',
+      askAiDisabledActions: ['deleteBookmarks'],
+      privacyScannerSensitiveParams: ['secret'],
+      urlCleanerPreserveParams: ['id'],
+      quickSaveFixedFolder: '9',
+    });
+  });
+
   it('keeps reading the old places and tries again at the next start when a write fails', async () => {
     await seedEarlierReleases();
     const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
