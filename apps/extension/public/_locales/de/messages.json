@@ -8659,6 +8659,14 @@
         "message": "Schon geladen ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
     },
+    "tools_coversCategory_kept": {
+        "message": "Von Ihnen gewählt ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "Sie haben dieses Titelbild mit „Diese Ansicht als Titelbild verwenden“ gewählt, daher bleibt es erhalten. Entfernen Sie es zuerst, um ein anderes zu laden.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
     "tools_coversCategory_skipped": {
         "message": "Übersprungen ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
@@ -9294,6 +9302,46 @@
     "covers_privateAccessNote": {
         "message": "Ihr Browser lässt Bookmark Scout nicht in privaten Fenstern laufen, daher werden sie übersprungen. Um es zu erlauben, öffnen Sie die Seite von Bookmark Scout in den Erweiterungseinstellungen Ihres Browsers und schalten Sie die Ausführung im Inkognito- bzw. privaten Modus ein.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "Titelbild laden",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "Titelbild entfernen",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "$count$ Titelbild entfernt",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "$count$ Titelbilder entfernt",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "Lesezeichen und ihre Tags bleiben unverändert. Titelbilder laden oder Titelbilder beim Surfen aufnehmen kann ihnen ein neues Titelbild geben.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "Titelbild nicht entfernt",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "Titelbild nicht wiederhergestellt",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "Diese Ansicht als Titelbild verwenden?",

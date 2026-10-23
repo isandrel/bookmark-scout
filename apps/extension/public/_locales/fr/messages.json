@@ -8659,6 +8659,14 @@
         "message": "Déjà récupérées ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
     },
+    "tools_coversCategory_kept": {
+        "message": "Choisies par vous ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "Vous avez choisi cette couverture avec Utiliser cette vue comme couverture : elle est donc conservée. Supprimez-la d'abord pour en récupérer une autre.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
     "tools_coversCategory_skipped": {
         "message": "Ignorées ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
@@ -9294,6 +9302,46 @@
     "covers_privateAccessNote": {
         "message": "Votre navigateur ne laisse pas Bookmark Scout fonctionner dans les fenêtres privées : elles sont donc ignorées. Pour l'autoriser, ouvrez la page de Bookmark Scout dans les paramètres des extensions de votre navigateur et activez l'autorisation en navigation privée.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "Récupérer la couverture",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "Supprimer la couverture",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "$count$ couverture supprimée",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "$count$ couvertures supprimées",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "Les favoris et leurs tags ne changent pas. Récupérer les couvertures ou Capturer les couvertures en naviguant peut leur en donner une nouvelle.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "Couverture non supprimée",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "Couverture non restaurée",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "Utiliser cette vue comme couverture ?",

@@ -40,6 +40,10 @@ export function createItemHost(overrides: Partial<ActionItemHost> = {}): ActionI
     copy: vi.fn(),
     paste: vi.fn(),
     canPaste: () => false,
+    hasCover: () => false,
+    removeCovers: vi.fn(),
+    canFetchCovers: false,
+    fetchCovers: vi.fn(),
     ...overrides,
   };
 }

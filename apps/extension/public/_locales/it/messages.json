@@ -8659,6 +8659,14 @@
         "message": "Già recuperate ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
     },
+    "tools_coversCategory_kept": {
+        "message": "Scelte da te ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "Hai scelto questa copertina con Usa questa vista come copertina, quindi viene mantenuta. Rimuovila prima per recuperarne un'altra.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
     "tools_coversCategory_skipped": {
         "message": "Saltate ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
@@ -9294,6 +9302,46 @@
     "covers_privateAccessNote": {
         "message": "Il browser non consente a Bookmark Scout di funzionare nelle finestre private, quindi vengono saltate. Per consentirlo, apri la pagina di Bookmark Scout nelle impostazioni delle estensioni del browser e attiva il permesso per la navigazione in incognito o privata.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "Recupera copertina",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "Rimuovi copertina",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "$count$ copertina rimossa",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "$count$ copertine rimosse",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "I segnalibri e i loro tag non cambiano. Recupera copertine o Cattura copertine durante la navigazione possono dar loro una nuova copertina.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "Copertina non rimossa",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "Copertina non ripristinata",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "Usare questa vista come copertina?",

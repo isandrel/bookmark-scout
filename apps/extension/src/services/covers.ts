@@ -9,12 +9,15 @@ import type { ImageSize } from '@/lib/image-size';
 import type { BookmarkTreeNode } from '@/types';
 
 /**
+ * `kept`: the bookmark's cover was chosen with Use this view as the cover, which Fetch Covers never
+ * replaces (`isKeptCover`); its page is not read.
  * `unusable`: the page names an image, but none could be kept: a file that is not an image of a
  * kept type (by its Content-Type or its first bytes), larger than the byte cap, one whose header
  * states more than `max_pixels` (or cannot be read), or one the browser cannot decode.
  * `redirected`: the page sends to another address, which is not requested (`fetchHtmlPage`).
  */
 export type CoverScanStatus =
+  | 'kept'
   | 'found'
   | 'none'
   | 'unusable'
@@ -207,16 +210,20 @@ async function fetchCover(item: CoverScanItem, options: CoverScanOptions): Promi
 
 /**
  * Fetches a cover for each web bookmark of `nodes` that has none from its current address, or
- * whose cover is a picture of the tab that Cover Source ranks below the page's own image.
+ * whose cover is a picture of the tab that Cover Source ranks below the page's own image; never
+ * over a cover the user chose (`kept`). With `only` (Fetch Cover on chosen bookmarks, a narrow
+ * scope), just those bookmarks are listed and read.
  */
 export async function scanCovers(
   nodes: BookmarkTreeNode[],
   options: CoverScanOptions,
+  only?: ReadonlySet<string>,
 ): Promise<CoverScanResult> {
   const stored = await getCoverInfos();
   const items: CoverScanItem[] = [];
   const toFetch: CoverScanItem[] = [];
   for (const { node, pathLabel } of flattenBookmarks(nodes)) {
+    if (only && !only.has(node.id)) continue;
     const url = node.url ?? '';
     const item: CoverScanItem = {
       id: node.id,
@@ -226,7 +233,9 @@ export async function scanCovers(
       status: 'skipped',
     };
     const current = stored.get(node.id);
-    if (
+    if (isCoverCurrent(current, url) && isKeptCover(current.source)) {
+      item.status = 'kept';
+    } else if (
       isCoverCurrent(current, url) &&
       !replacesCover(options.preference, 'page', current.source)
     ) {

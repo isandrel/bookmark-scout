@@ -9359,6 +9359,14 @@
         "message": "Уже загружено ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
     },
+    "tools_coversCategory_kept": {
+        "message": "Выбраны вами ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "Эта обложка выбрана кнопкой «Сделать обложку из этого вида», поэтому она сохраняется. Чтобы загрузить другую, сначала удалите её.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
     "tools_coversCategory_skipped": {
         "message": "Пропущено ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
@@ -10182,6 +10190,66 @@
     "covers_privateAccessNote": {
         "message": "Браузер не разрешает Bookmark Scout работать в приватных окнах, поэтому они пропускаются. Чтобы разрешить, откройте страницу Bookmark Scout в настройках расширений браузера и включите работу в режиме инкогнито (в приватных окнах).",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "Загрузить обложку",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "Удалить обложку",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "Удалена $count$ обложка",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed_few": {
+        "message": "Удалено $count$ обложки",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removed_many": {
+        "message": "Удалено $count$ обложек",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "Удалено обложек: $count$",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "Закладки и их теги не изменились. Загрузка обложек или съёмка обложек при просмотре может дать им новую обложку.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "Обложка не удалена",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "Обложка не восстановлена",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "Сделать обложку из этого вида?",

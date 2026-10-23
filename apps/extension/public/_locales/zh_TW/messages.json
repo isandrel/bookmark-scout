@@ -8333,6 +8333,14 @@
         "message": "已取得 ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
     },
+    "tools_coversCategory_kept": {
+        "message": "你選定的 ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "此封面是你用「將目前畫面設為封面」選定的，因此保留。要取得其他封面，請先移除它。",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
     "tools_coversCategory_skipped": {
         "message": "已略過 ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
@@ -8874,6 +8882,46 @@
     "covers_privateAccessNote": {
         "message": "瀏覽器不允許 Bookmark Scout 在無痕視窗中執行，因此會略過它們。如需允許，請在瀏覽器的擴充功能設定中開啟 Bookmark Scout 頁面，開啟無痕模式（隱私視窗）下執行。",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "取得封面",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "移除封面",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "已移除 $count$ 個封面",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "已移除 $count$ 個封面",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "書籤及其標籤不變。「取得封面」或「瀏覽時擷取封面」可以為它們產生新封面。",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "未能移除封面",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "未能還原封面",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "將目前畫面設為封面？",

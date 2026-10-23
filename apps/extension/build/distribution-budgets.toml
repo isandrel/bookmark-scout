@@ -228,27 +228,32 @@
 # Time Between Pictures, Retake Screenshots Older Than), the private window note, and the manual
 # cover wording, about 12 messages in 12 languages. Firefox measured 6,846,778 B uncompressed and
 # 2,369,027 B of locales; ZIP and JavaScript stayed within their limits.
+# Raised on 2026-10-22 (ZIP 2,048,000 to 2,060,000, uncompressed 6,860,000 to 6,880,000, javascript
+# 3,920,000 to 3,935,000, locales 2,380,000 to 2,395,000) for Fetch cover and Remove cover in the
+# manager's item menus and the preview (the selection run of Fetch Covers, the kept-cover review
+# tab, remove with Undo) and their messages in 12 languages. Firefox measured ZIP 2,047,978,
+# 6,862,363 B uncompressed, 3,918,252 B of JavaScript, and 2,379,549 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_048_000
-raw_bytes = 6_860_000
+zip_bytes = 2_060_000
+raw_bytes = 6_880_000
 
 [targets.edge]
-zip_bytes = 2_048_000
-raw_bytes = 6_860_000
+zip_bytes = 2_060_000
+raw_bytes = 6_880_000
 
 [targets.firefox]
-zip_bytes = 2_048_000
-raw_bytes = 6_860_000
+zip_bytes = 2_060_000
+raw_bytes = 6_880_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_920_000
+javascript = 3_935_000
 css = 89_000
 fonts = 143_000
-locales = 2_380_000
+locales = 2_395_000
 images = 320_000
 other = 29_000

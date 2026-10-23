@@ -8623,6 +8623,14 @@
         "message": "이미 가져옴 ($1)",
         "description": "Fetch Covers review tab: bookmarks that already have a cover from the same address; $1 is how many"
     },
+    "tools_coversCategory_kept": {
+        "message": "직접 선택함 ($1)",
+        "description": "Fetch Covers review tab: bookmarks whose cover the user chose with Use this view as the cover, which is kept; $1 is the count"
+    },
+    "tools_coversKeptReason": {
+        "message": "이 표지는 '이 화면을 표지로 사용'으로 고른 것이므로 유지됩니다. 다른 표지를 가져오려면 먼저 제거하세요.",
+        "description": "Fetch Covers review: why a bookmark's cover is kept and its page not read"
+    },
     "tools_coversCategory_skipped": {
         "message": "건너뜀 ($1)",
         "description": "Fetch Covers review tab: bookmarks that are not web pages or are on the local network; $1 is how many"
@@ -9258,6 +9266,46 @@
     "covers_privateAccessNote": {
         "message": "브라우저가 비공개 창에서 Bookmark Scout 실행을 허용하지 않아 건너뜁니다. 허용하려면 브라우저의 확장 프로그램 설정에서 Bookmark Scout 페이지를 열고 시크릿(비공개) 창 실행을 켜세요.",
         "description": "Settings: note under Also Capture in Private Windows while the browser does not let the extension run in private windows"
+    },
+    "menu_fetchCover": {
+        "message": "표지 가져오기",
+        "description": "Bookmark manager item menu and bookmark preview: runs Fetch Covers on this bookmark (or the selected ones), with its review"
+    },
+    "menu_removeCover": {
+        "message": "표지 제거",
+        "description": "Bookmark manager item menu and bookmark preview: deletes the stored cover of the bookmark (or of each selected bookmark that has one)"
+    },
+    "covers_removed_one": {
+        "message": "표지 $count$개를 제거했습니다",
+        "description": "Toast after Remove cover removed one bookmark's cover; $count$ is 1",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "covers_removed": {
+        "message": "표지 $count$개를 제거했습니다",
+        "description": "Toast after Remove cover removed the covers of several bookmarks; $count$ is how many",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "covers_removedDesc": {
+        "message": "북마크와 태그는 바뀌지 않습니다. 표지 가져오기나 탐색 중 표지 캡처로 새 표지를 받을 수 있습니다.",
+        "description": "Toast description after Remove cover: the cards show their placeholder, nothing else changed, and a new cover may come later"
+    },
+    "covers_removeFailed": {
+        "message": "표지를 제거하지 못했습니다",
+        "description": "Error toast title when Remove cover failed"
+    },
+    "covers_restoreFailed": {
+        "message": "표지를 복원하지 못했습니다",
+        "description": "Error toast title when Undo could not put removed covers back"
     },
     "covers_captureTitle": {
         "message": "이 화면을 표지로 사용할까요?",

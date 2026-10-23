@@ -23,6 +23,10 @@ export type ManagerCommandOptions = {
   showInFolder: (bookmark: Bookmark) => void;
   copyFolderLink: (folderId: string) => void;
   open: (items: Bookmark[], target: BookmarkOpenTarget) => void;
+  /** Whether Fetch Covers is on (`useCoverFetch`). */
+  canFetchCovers: boolean;
+  /** Fetch Covers on exactly these bookmarks (`useCoverFetch`). */
+  fetchCovers: (items: readonly Bookmark[]) => void;
 };
 
 async function quoteTitle(title: string) {
@@ -53,6 +57,10 @@ export function useManagerCommands(options: ManagerCommandOptions) {
   }, []);
   const canOpenPrivateRef = useRef(canOpenPrivate);
   canOpenPrivateRef.current = canOpenPrivate;
+  // Which bookmarks have a stored cover, for Remove cover; the menus read it when they open.
+  const covered = useCoveredBookmarks();
+  const coveredRef = useRef(covered);
+  coveredRef.current = covered;
   // What Cut or Copy holds, from this tab or another; the menus read it when they open.
   const { value: clipboard } = useStoredValue(bookmarkClipboardValue);
   const hasClipboardRef = useRef(clipboard !== null);
@@ -182,6 +190,9 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       open: (items: Bookmark[], target: BookmarkOpenTarget) => latest.current.open(items, target),
       cut: (items: Bookmark[]) => void setClipboard('cut', items),
       copy: (items: Bookmark[]) => void setClipboard('copy', items),
+      hasCover: (bookmark: Bookmark) => hasStoredCover(coveredRef.current, bookmark),
+      removeCovers: (items: Bookmark[]) => void removeCoversWithUndo(items),
+      fetchCovers: (items: Bookmark[]) => latest.current.fetchCovers(items),
     };
 
     /** Rows of the table and their ⋯ menus. */
@@ -189,6 +200,9 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       ...base,
       get privateWindowsAllowed() {
         return canOpenPrivateRef.current;
+      },
+      get canFetchCovers() {
+        return latest.current.canFetchCovers;
       },
       isOutsideOpenFolder: (bookmark) =>
         !latest.current.folderItems.some((item) => item.id === bookmark.id),
@@ -201,6 +215,9 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       ...base,
       get privateWindowsAllowed() {
         return canOpenPrivateRef.current;
+      },
+      get canFetchCovers() {
+        return latest.current.canFetchCovers;
       },
       isOutsideOpenFolder: () => false,
       paste: (items) => {

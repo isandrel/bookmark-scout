@@ -272,6 +272,50 @@ export async function pruneCovers(keepIds: ReadonlySet<string>): Promise<number>
   return gone.length;
 }
 
+/** A stored cover exactly as kept (its info record and image), to put back after a removal. */
+export type StoredCoverRecord = { info: CoverInfo; image: StoredImage };
+
+/**
+ * Deletes the covers of `bookmarkIds` and returns them as they were stored (a cover saved before
+ * sources were recorded keeps its shape), for `putBackCovers`. Ids without a cover are skipped.
+ */
+export async function takeCovers(bookmarkIds: readonly string[]): Promise<StoredCoverRecord[]> {
+  const db = await openCoverDb();
+  const transaction = db.transaction(['info', 'images'], 'readwrite');
+  const taken: StoredCoverRecord[] = [];
+  for (const id of bookmarkIds) {
+    const info = await transaction.objectStore('info').get(id);
+    const image = await transaction.objectStore('images').get(id);
+    if (!info || !image) continue;
+    taken.push({ info, image });
+    await transaction.objectStore('info').delete(id);
+    await transaction.objectStore('images').delete(id);
+  }
+  await transaction.done;
+  if (taken.length > 0) announceChange();
+  return taken;
+}
+
+/**
+ * Puts covers `takeCovers` removed back as they were (image, source, and date), except where a
+ * bookmark has a cover again by now, which is newer and kept. Resolves to how many came back.
+ */
+export async function putBackCovers(records: readonly StoredCoverRecord[]): Promise<number> {
+  if (records.length === 0) return 0;
+  const db = await openCoverDb();
+  const transaction = db.transaction(['info', 'images'], 'readwrite');
+  let restored = 0;
+  for (const { info, image } of records) {
+    if (await transaction.objectStore('info').get(info.bookmarkId)) continue;
+    await transaction.objectStore('info').put(info);
+    await transaction.objectStore('images').put(image);
+    restored += 1;
+  }
+  await transaction.done;
+  if (restored > 0) announceChange();
+  return restored;
+}
+
 /** Deletes every cover; bookmarks, tags, and the History are not touched. */
 export async function clearCovers(): Promise<void> {
   const db = await openCoverDb();

@@ -16,8 +16,10 @@ import {
   getCoverSummary,
   isCoverCurrent,
   pruneCovers,
+  putBackCovers,
   saveCovers,
   showCoverImage,
+  takeCovers,
 } from '@/lib/cover-store';
 import { saveSettings } from '@/lib/settings-storage';
 import { INDEXED_SAVE_BATCH_SIZE } from '@/lib/storage/indexed-batches';
@@ -89,6 +91,28 @@ const cover = (bookmarkId: string, bytes: number, url = `https://site.example/${
 describe('stored covers', () => {
   beforeEach(async () => {
     await clearCovers();
+  });
+
+  it('come back exactly as they were after Remove cover is undone, unless a new one came since', async () => {
+    const image = { type: 'image/webp', data: new Uint8Array([1, 2, 3]).buffer };
+    await saveCovers(
+      [
+        { ...cover('a', 3), source: 'tab', ...image },
+        { ...cover('b', 3), source: 'browse', ...image },
+      ],
+      1000,
+    );
+    const before = await getCoverInfos();
+    const taken = await takeCovers(['a', 'b', 'none']);
+    expect(taken.map((record) => record.info.bookmarkId)).toEqual(['a', 'b']);
+    expect((await getCoverInfos()).size).toBe(0);
+    // A new cover for b arrived meanwhile: it is kept, and only a comes back.
+    await saveCovers([{ ...cover('b', 4), source: 'page' }], 1000);
+    expect(await putBackCovers(taken)).toBe(1);
+    const after = await getCoverInfos();
+    expect(after.get('a')).toEqual(before.get('a'));
+    expect(after.get('b')?.source).toBe('page');
+    expect((await getCoverImage('a', 'https://site.example/a'))?.size).toBe(3);
   });
 
   it('keep showing a cover saved before sources were recorded, as of an unknown source', async () => {
@@ -354,13 +378,33 @@ describe('Fetch Covers runs', () => {
     expect(items.find((item) => item.id === 'elsewhere')?.imageSite).toBe('other.net');
   });
 
-  it('never fetches over a cover chosen with Use this view as the cover', async () => {
+  it('never fetches over a cover chosen with Use this view as the cover, and says it is kept', async () => {
     const url = 'https://news.example/story';
     await saveCovers([{ ...cover('chosen', 5, url), source: 'tab' }], 1000);
     for (const preference of ['page_first', 'page_only', 'screenshot_first']) {
       const { items } = await scanCovers([node('chosen', url)], { ...OPTIONS, preference });
-      expect(items[0]?.status).toBe('current');
+      expect(items[0]?.status).toBe('kept');
     }
+    expect(vi.mocked(fetch)).not.toHaveBeenCalled();
+  });
+
+  it('fetches only the chosen bookmarks with Fetch Cover, and lists nothing else', async () => {
+    const tree = [
+      {
+        id: 'f',
+        parentId: '1',
+        title: 'Folder',
+        children: [
+          node('chosen', 'https://news.example/story'),
+          node('other', 'https://plain.example/'),
+          node('also', 'https://kept.example/'),
+        ],
+      },
+    ];
+    const { items } = await scanCovers(tree, OPTIONS, new Set(['chosen']));
+    expect(items.map((item) => [item.id, item.status])).toEqual([['chosen', 'found']]);
+    const requested = vi.mocked(fetch).mock.calls.map(([input]) => new URL(String(input)).host);
+    expect(new Set(requested)).toEqual(new Set(['news.example']));
   });
 
   it('fetches over a picture of the tab only when Cover Source ranks the page image first', async () => {

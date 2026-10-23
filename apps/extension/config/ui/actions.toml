@@ -10,7 +10,7 @@ item = [
   ["preview", "showInFolder", "edit", "viewDetails"],
   ["cut", "copy", "paste", "copyFolderLink", "copyId"],
   ["openInNewTab", "openInNewWindow", "openInPrivateWindow"],
-  ["delete"],
+  ["fetchCover", "removeCover", "delete"],
 ]
 # The header's ⋮ Organize menu, on the folder shown
 organize = [["sortByName"], ["addBookmark", "addFolder"]]

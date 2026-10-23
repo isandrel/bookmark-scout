@@ -36,6 +36,14 @@ export type ActionItemHost = {
   paste: (items: Bookmark[]) => void;
   /** Whether there is something to paste where `items` are. */
   canPaste: (items: readonly Bookmark[]) => boolean;
+  /** Whether the bookmark has a stored cover for its current address. */
+  hasCover: (bookmark: Bookmark) => boolean;
+  /** Deletes the stored covers of `items` that have one, with Undo. */
+  removeCovers: (items: Bookmark[]) => void;
+  /** Whether Fetch Covers is on, so its covers can be fetched for chosen bookmarks. */
+  canFetchCovers: boolean;
+  /** Runs Fetch Covers on exactly `items`, asking for their sites first, with its review. */
+  fetchCovers: (items: Bookmark[]) => void;
 };
 
 /** What the menus on the folder shown can ask of the page. */
@@ -147,9 +155,19 @@ export function getItemMenuLabel(
  */
 export function runItemMenuAction(id: ActionId, items: Bookmark[], host: ActionItemHost): boolean {
   const menu = getAction(id).itemMenu;
-  if (!menu || !(menu.available?.(items, host) ?? true)) return false;
+  if (!menu || !isItemMenuActionAvailable(id, items, host)) return false;
   void menu.run(items, host);
   return true;
+}
+
+/** Whether an item-menu action applies to `items`, as its menu would offer it. */
+export function isItemMenuActionAvailable(
+  id: ActionId,
+  items: readonly Bookmark[],
+  host: ActionItemHost,
+): boolean {
+  const menu = getAction(id).itemMenu;
+  return Boolean(menu) && (menu?.available?.(items, host) ?? true);
 }
 
 /**
