@@ -251,27 +251,34 @@
 # tokens and approval and job tables moved into config, bundled into the background and the shared
 # page chunk) on top of the quick save cover and list Cover column changes. Measured on
 # refactor/config-cleanup rebased on main: 6,927,466 / 6,927,462 / 6,927,625 B (Chrome / Edge / Firefox).
+# Raised on 2026-10-23 (ZIP 2,070,000 to 2,100,000, uncompressed 6,940,000 to 7,040,000, javascript
+# 3,947,000 to 3,980,000, css 89,000 to 90,000, locales 2,430,000 to 2,500,000) for the manager
+# customization (every menu customizable, table defaults and reset, start folder, resizable sidebars,
+# card and preview details; 62 messages in 12 languages) on top of the config cleanup. Measured on
+# feat/manager-customize rebased on main: ZIP 2,087,669 / 2,087,572 / 2,087,724, uncompressed
+# 7,024,226 / 7,024,222 / 7,024,385 B (Chrome / Edge / Firefox), 3,968,001 B of JavaScript, 89,847 B
+# of CSS, and 2,489,610 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_070_000
-raw_bytes = 6_940_000
+zip_bytes = 2_100_000
+raw_bytes = 7_040_000
 
 [targets.edge]
-zip_bytes = 2_070_000
-raw_bytes = 6_940_000
+zip_bytes = 2_100_000
+raw_bytes = 7_040_000
 
 [targets.firefox]
-zip_bytes = 2_070_000
-raw_bytes = 6_940_000
+zip_bytes = 2_100_000
+raw_bytes = 7_040_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_947_000
-css = 89_000
+javascript = 3_980_000
+css = 90_000
 fonts = 143_000
-locales = 2_430_000
+locales = 2_500_000
 images = 320_000
 other = 29_000
