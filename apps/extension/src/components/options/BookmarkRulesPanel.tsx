@@ -97,8 +97,11 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
     [library, queryReadable, value.query],
   );
 
+  // A rule keeps its folder's path, read from the tree: until the tree is read, it would save none.
+  const waitingForFolderPath = value.folderId !== '' && !library;
+
   const save = async () => {
-    if (!draft) return;
+    if (!draft || waitingForFolderPath) return;
     const result = ruleFromDraft(typed, draft.id ?? createBookmarkRuleId(), library?.tree);
     if ('error' in result) {
       setError(t(RULE_DRAFT_ERROR_KEYS[result.error]));
@@ -265,7 +268,11 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
           <Button variant="outline" onClick={onClose}>
             {t('action_cancel')}
           </Button>
-          <Button data-testid="rule-save" onClick={() => void save()} disabled={saving}>
+          <Button
+            data-testid="rule-save"
+            onClick={() => void save()}
+            disabled={saving || waitingForFolderPath}
+          >
             {t('rules_save')}
           </Button>
         </DialogFooter>

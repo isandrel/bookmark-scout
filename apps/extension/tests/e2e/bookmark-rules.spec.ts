@@ -591,3 +591,63 @@ test('a full rules list says so instead of dropping the new rule', async ({
   await panel.getByRole('button', { name: 'Add rule' }).click();
   await expect(page.getByRole('dialog', { name: 'New rule' })).toBeVisible();
 });
+
+test('a rule with a folder cannot be saved before the folder path is read', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Rule Path', [
+    { title: 'Target', children: [] },
+  ]);
+  const target = (seeded.ids as Record<string, string>).Target as string;
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkRules, [
+    {
+      id: 'gh',
+      name: 'GitHub',
+      enabled: true,
+      query: 'domain:github.com',
+      syntaxVersion: 2,
+      addTags: [],
+      moveTo: { folderId: target, path: 'E2E Rule Path/Target' },
+    },
+  ]);
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const panel = page.getByTestId('bookmark-rules');
+  await expect(panel.getByTestId('bookmark-rule')).toHaveCount(1);
+  // Hold the editor's read of the tree, as a slow read of a large library would.
+  await page.evaluate(() => {
+    const scope = globalThis as unknown as { releaseTree?: () => void };
+    const held = new Promise<void>((resolve) => {
+      scope.releaseTree = resolve;
+    });
+    for (const api of new Set([
+      chrome.bookmarks,
+      (globalThis as { browser?: typeof chrome }).browser?.bookmarks,
+    ])) {
+      if (!api) continue;
+      const getTree = api.getTree.bind(api);
+      Object.defineProperty(api, 'getTree', {
+        configurable: true,
+        value: async () => {
+          await held;
+          return getTree();
+        },
+      });
+    }
+  });
+  await panel.getByRole('button', { name: 'Edit GitHub' }).click();
+  const editor = page.getByRole('dialog', { name: 'Edit rule' });
+  await expect(editor.getByTestId('rule-save')).toBeDisabled();
+
+  await page.evaluate(() => (globalThis as unknown as { releaseTree: () => void }).releaseTree());
+  await expect(editor.getByTestId('rule-save')).toBeEnabled();
+  await editor.getByTestId('rule-save').click();
+  await expect(editor).toHaveCount(0);
+  const [rule] =
+    (await readStored<{ moveTo?: { path: string } }[]>(
+      extensionWorker,
+      STORAGE_ITEMS.bookmarkRules,
+    )) ?? [];
+  expect(rule?.moveTo?.path).toMatch(/E2E Rule Path \/ Target$/);
+});
