@@ -346,14 +346,16 @@ test('Settings > manager menus reorder by dragging a command by its handle', asy
   const second = before[1] ?? '';
   const handle = panel.getByRole('button', { name: `Reorder ${second}` });
   const target = labelOf(first);
-  const box = await target.boundingBox();
-  if (!box) throw new Error('no target');
-  // A real pointer drag: press on the handle, nudge to start the drag, then move in steps.
+  // A real pointer drag: press on the handle, nudge to start the drag, then move in steps. Each
+  // position is read right before it is used: on a slow runner the page could still shift
+  // between reading a box and moving to it, and the drag then started or ended off target.
+  await handle.hover();
   const from = await handle.boundingBox();
   if (!from) throw new Error('no handle');
-  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
   await page.mouse.down();
   await page.mouse.move(from.x + from.width / 2 + 6, from.y + from.height / 2 - 6, { steps: 3 });
+  const box = await target.boundingBox();
+  if (!box) throw new Error('no target');
   await page.mouse.move(box.x + box.width / 2, box.y + 4, { steps: 12 });
   await expect(target).toHaveAttribute('data-drop-edge', 'top');
   await page.mouse.up();
