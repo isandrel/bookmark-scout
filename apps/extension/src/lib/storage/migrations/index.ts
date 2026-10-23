@@ -33,6 +33,7 @@ import {
 } from '@/lib/settings-schema';
 import { STORAGE_ITEMS, type StorageAreaName, type StorageKey, storageKey } from '../registry';
 import type { StoredValue } from '../stored-value';
+import { contextMenuRecentMax } from './2026-10-context-menu-recent-max';
 import { syncListShards } from './2026-10-sync-list-shards';
 
 /** Stored settings that differ from the default, by key, as one settings item holds them. */
@@ -70,16 +71,25 @@ export type StorageMigration = {
   /** Finds the settings earlier releases kept elsewhere, from the stored layers and `legacy`. */
   recover(layers: SettingsLayers, legacy: unknown): Recovered;
   /**
-   * Whether the settings writer leaves `key`, a setting this release keeps elsewhere, untouched in
-   * the settings item, where an earlier release still reads it. Once no registered migration
-   * keeps it, the next settings save drops it; it is also dropped when the item would not fit the
-   * per-item quota with it.
+   * Whether the settings writer keeps a copy of `key`, a setting this release keeps elsewhere, in
+   * the settings item, where an earlier release still reads it. Every change to the setting is
+   * written to the copy too (or removes it at the default), and Reset removes it, so neither that
+   * release nor a device that runs this migration later reads a value changed since. Once no
+   * registered migration keeps it, the next settings save drops it; it is also dropped when the
+   * item would not fit the per-item quota with it.
    */
   keepsInSettingsItem?(key: keyof Settings): boolean;
+  /**
+   * Whether the settings writer stores `key`, a synced setting, even at its default, given what
+   * the settings item holds: a setting this migration fills from an older one where none is
+   * stored must stay stored once the user sets it back to its default, or a device that runs
+   * the migration later fills it again.
+   */
+  keepsAtDefault?(key: keyof Settings, settingsItem: StoredOverrides): boolean;
 };
 
 /** Every migration, oldest first; the background runs them in this order. */
-export const MIGRATIONS: readonly StorageMigration[] = [syncListShards];
+export const MIGRATIONS: readonly StorageMigration[] = [syncListShards, contextMenuRecentMax];
 
 /** The ids of the migrations that have run on this device. */
 export const completedMigrationsValue = defineStoredValue<string[]>(

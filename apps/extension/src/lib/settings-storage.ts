@@ -180,11 +180,32 @@ function composeSettings(
   });
 }
 
+/** Whether a registered migration keeps `key` in the settings item for an earlier release. */
+const isKeptInSettingsItem = (key: string) =>
+  isSettingsKey(key) && MIGRATIONS.some((migration) => migration.keepsInSettingsItem?.(key));
+
+/** The list settings a registered migration keeps copies of in the settings item. */
+const KEPT_LIST_KEYS = SETTING_KEYS_BY_SCOPE.lists.filter(isKeptInSettingsItem);
+
+/**
+ * The settings a scope's item holds, as `stored` shows: its own, and in a settings item that
+ * still holds copies of lists a registered migration keeps there for an earlier release, every
+ * such list. Each change keeps those copies current, so neither that release nor a device that
+ * runs the migration later reads a list this release has changed or set back to its default. A
+ * settings item without them (a user who never had that release) is not given any.
+ */
+function keysStoredIn(scope: SettingScope, stored: StoredOverrides): readonly (keyof Settings)[] {
+  if (scope !== 'sync' || !KEPT_LIST_KEYS.some((key) => key in stored)) {
+    return SETTING_KEYS_BY_SCOPE[scope];
+  }
+  return [...SETTING_KEYS_BY_SCOPE.sync, ...KEPT_LIST_KEYS];
+}
+
 /**
  * What a scope stores after a change from `before` to `after`: changed settings are stored, or
- * removed when back at their default; everything else stays as stored, so a setting another
- * release understands better (a newer option, a newer key, or one an earlier release still reads
- * there) survives this release's writes.
+ * removed when back at their default (unless a registered migration `keepsAtDefault` it in the
+ * settings item); everything else stays as stored, so a setting another release understands
+ * better (a newer option or a newer key) survives this release's writes.
  */
 function nextOverrides(
   stored: StoredOverrides,
@@ -193,9 +214,11 @@ function nextOverrides(
   after: Settings,
 ): StoredOverrides {
   const next = { ...stored };
-  for (const key of SETTING_KEYS_BY_SCOPE[scope]) {
+  for (const key of keysStoredIn(scope, stored)) {
     if (isSameJson(after[key], before[key])) continue;
-    if (isSameJson(after[key], defaultSettings[key])) delete next[key];
+    const keep =
+      scope === 'sync' && MIGRATIONS.some((migration) => migration.keepsAtDefault?.(key, stored));
+    if (isSameJson(after[key], defaultSettings[key]) && !keep) delete next[key];
     else next[key] = after[key];
   }
   return next;
@@ -262,10 +285,6 @@ async function updateLayers(store: (layers: SettingsLayers) => SettingsLayers): 
 /** Whether `key` is a list setting, which this release keeps in its own item. */
 const isListSetting = (key: string) => isSettingsKey(key) && getSettingScope(key) === 'lists';
 
-/** Whether a registered migration keeps `key` in the settings item for an earlier release. */
-const isKeptInSettingsItem = (key: string) =>
-  isSettingsKey(key) && MIGRATIONS.some((migration) => migration.keepsInSettingsItem?.(key));
-
 /**
  * The settings item without the list settings an earlier release stored in it, except those a
  * registered migration keeps there for devices still on that release, unless `dropKept`. Every
@@ -279,9 +298,16 @@ function withoutStrayLists(sync: StoredOverrides, dropKept: boolean): StoredOver
   );
 }
 
-/** Whether `error` is the browser refusing a write over the sync storage quota. */
-const isQuotaError = (error: unknown) =>
-  error instanceof Error && /QUOTA_BYTES|quota/i.test(error.message);
+/**
+ * The browsers' messages for a sync write over a size quota: Chrome names `QUOTA_BYTES` or
+ * `QUOTA_BYTES_PER_ITEM`, Firefox says `QuotaExceededError`. Chrome's other quotas (writes per
+ * minute or hour, `MAX_ITEMS`) also say "quota", but a smaller settings item does not help them.
+ */
+const SYNC_SIZE_QUOTA_ERROR = /QUOTA_BYTES|QuotaExceededError/;
+
+/** Whether `error` is the browser refusing a write over a sync storage size quota. */
+const isSyncSizeQuotaError = (error: unknown) =>
+  error instanceof Error && SYNC_SIZE_QUOTA_ERROR.test(error.message);
 
 let loggedDroppedKeptSettings = false;
 
@@ -313,9 +339,10 @@ async function changeSettings(
       const after = change(before);
       // A retry starts from what the first attempt already stored; report the first `before`.
       result = { before: result?.before ?? before, after };
-      keptInSync = Object.keys(withoutStrayLists(layers.sync, false)).some(isListSetting);
+      const sync = withoutStrayLists(storeScope('sync', layers.sync, before, after), false);
+      keptInSync = Object.keys(sync).some(isListSetting);
       return {
-        sync: withoutStrayLists(storeScope('sync', layers.sync, before, after), dropKept),
+        sync: dropKept ? withoutStrayLists(sync, true) : sync,
         lists: storeScope('lists', layers.lists, before, after),
         device: storeScope('device', layers.device, before, after),
       };
@@ -323,7 +350,7 @@ async function changeSettings(
   try {
     await attempt(false);
   } catch (error) {
-    if (!isQuotaError(error) || !keptInSync) throw error;
+    if (!isSyncSizeQuotaError(error) || !keptInSync) throw error;
     if (!loggedDroppedKeptSettings) {
       loggedDroppedKeptSettings = true;
       settingsLogger.warn(
@@ -447,7 +474,8 @@ export function registerSettingsSaveListener(): void {
 
 /**
  * Reset every setting this release knows to its default, in every scope (synced across devices
- * and this device's own). Resolves to the settings before, for `undoResetSettings`.
+ * and this device's own), with the copies of lists a migration keeps in the settings item.
+ * Resolves to the settings before, for `undoResetSettings`.
  */
 export async function resetSettings(): Promise<Settings> {
   const { before } = await changeSettings(
@@ -455,7 +483,9 @@ export async function resetSettings(): Promise<Settings> {
     (scope, stored) =>
       Object.fromEntries(
         Object.entries(stored).filter(
-          ([key]) => !isSettingsKey(key) || getSettingScope(key) !== scope,
+          ([key]) =>
+            !isSettingsKey(key) ||
+            (getSettingScope(key) !== scope && !(scope === 'sync' && isKeptInSettingsItem(key))),
         ),
       ),
   );

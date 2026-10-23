@@ -9,6 +9,7 @@ import { defaultSettings } from '@/lib/settings-schema';
 import {
   getSettings,
   registerStorageMigrations,
+  resetSettings,
   runStorageMigrations,
   saveSettings,
   settingsOverrideValues,
@@ -118,15 +119,56 @@ describe('each list setting in its own item', () => {
     expect(await readStoredRaw(OLD_ITEM)).toEqual(oldRaw);
   });
 
-  it('leaves 0.3.4 lists in the settings item while saving other settings', async () => {
+  it('keeps 0.3.4 lists in the settings item current for devices still on 0.3.4', async () => {
     await seedEarlierReleases();
     await runStorageMigrations();
-    await saveSettings({ theme: 'light', urlCleanerRemoveParams: ['ref'] });
-    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
-      ...SETTINGS_0_3_4,
+    await saveSettings({
       theme: 'light',
+      urlCleanerRemoveParams: ['ref'],
+      privacyScannerSensitiveParams: defaultSettings.privacyScannerSensitiveParams,
+      // A list 0.3.4 did not have stays out of the settings item.
+      pageTextExcludedSites: ['example.com'],
+    });
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
+      theme: 'light',
+      askAiDisabledActions: ['checkLinks'],
+      urlCleanerRemoveParams: ['ref'],
     });
     expect((await listItems()).urlCleanerRemoveParams).toEqual(['ref']);
+    expect((await listItems()).pageTextExcludedSites).toEqual(['example.com']);
+  });
+
+  it('does not bring back a list set back to its default when another device migrates', async () => {
+    await seedStored(STORAGE_ITEMS.settings, { theme: 'dark', urlCleanerRemoveParams: ['ref'] });
+    // Device A moves the lists, then the user sets the list back to its default there.
+    await runStorageMigrations();
+    await saveSettings({ urlCleanerRemoveParams: defaultSettings.urlCleanerRemoveParams });
+    // Device B: the same synced items, nothing of its own yet.
+    await fakeBrowser.storage.local.clear();
+    expect((await getSettings()).urlCleanerRemoveParams).toEqual(
+      defaultSettings.urlCleanerRemoveParams,
+    );
+    await runStorageMigrations();
+    expect(await readStoredData(STORAGE_ITEMS.settingsList, 'urlCleanerRemoveParams')).toBe(
+      undefined,
+    );
+    expect((await getSettings()).urlCleanerRemoveParams).toEqual(
+      defaultSettings.urlCleanerRemoveParams,
+    );
+  });
+
+  it('resets the copies 0.3.4 reads, so neither 0.3.4 nor a new device brings them back', async () => {
+    await seedStored(STORAGE_ITEMS.settings, SETTINGS_0_3_4);
+    await runStorageMigrations();
+    await resetSettings();
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toBeUndefined();
+    await fakeBrowser.storage.local.clear();
+    await runStorageMigrations();
+    expect(await getSettings()).toMatchObject({
+      theme: defaultSettings.theme,
+      askAiDisabledActions: defaultSettings.askAiDisabledActions,
+      privacyScannerSensitiveParams: defaultSettings.privacyScannerSensitiveParams,
+    });
   });
 
   it('saves the settings item without 0.3.4 lists, once, when they no longer fit beside it', async () => {
@@ -168,6 +210,26 @@ describe('each list setting in its own item', () => {
       quickSaveFixedFolder: '9',
     });
   });
+
+  it.each([
+    'This request exceeds the MAX_WRITE_OPERATIONS_PER_MINUTE quota.',
+    'This request exceeds the MAX_WRITE_OPERATIONS_PER_HOUR quota.',
+    'MAX_ITEMS quota exceeded',
+  ])(
+    'keeps the 0.3.4 lists and reports a sync write refused for another reason: %s',
+    async (message) => {
+      await seedEarlierReleases();
+      await runStorageMigrations();
+      const set = vi
+        .spyOn(fakeBrowser.storage.sync, 'set')
+        .mockRejectedValueOnce(new Error(message));
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      await expect(saveSettings({ theme: 'light' })).rejects.toThrow(message);
+      expect(set).toHaveBeenCalledOnce();
+      expect(warn).not.toHaveBeenCalled();
+      expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual(SETTINGS_0_3_4);
+    },
+  );
 
   it('keeps reading the old places and tries again at the next start when a write fails', async () => {
     await seedEarlierReleases();
