@@ -55,7 +55,7 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 ## 3. Listing
 
 - [ ] Name: from the package.
-- [ ] Summary (250 characters maximum) and description: "Firefox Add-ons" sections of [`en.md`](../listings/en.md), [`ja.md`](../listings/ja.md), [`ko.md`](../listings/ko.md). AMO stores a separate listing per locale.
+- [ ] Summary (250 characters maximum) and description: "Firefox Add-ons" sections of the 12 listings: [`en`](../listings/en.md), [`zh_CN`](../listings/zh_CN.md), [`es`](../listings/es.md), [`fr`](../listings/fr.md), [`pt_BR`](../listings/pt_BR.md), [`ru`](../listings/ru.md), [`id`](../listings/id.md), [`de`](../listings/de.md), [`ja`](../listings/ja.md), [`ko`](../listings/ko.md), [`it`](../listings/it.md), [`zh_TW`](../listings/zh_TW.md) (the order of `[locales] extension` in `config/project.toml`). AMO stores a separate listing per locale.
 - [ ] Category: Bookmarks.
 - [ ] Platform: Firefox desktop only. Do not enable Firefox for Android; it does not provide the `bookmarks` API the extension needs.
 - [ ] Screenshots: `01-popup-light.png`, `02-quick-save-light.png`, `05-settings-light.png`, `06-options-ai-light.png`, and the dark versions if wanted. Not the manager or Tools screenshots.

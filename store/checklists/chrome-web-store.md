@@ -32,10 +32,10 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 
 ## 3. Store listing tab
 
-- [ ] Description: English from [`../listings/en.md`](../listings/en.md) ("Chrome Web Store and Edge Add-ons"). Add Japanese and Korean from [`ja.md`](../listings/ja.md) and [`ko.md`](../listings/ko.md) for those locales.
-- [ ] Name and summary come from the package (`extName`, `extDescription`); check they display correctly in en, ja, and ko.
+- [ ] Description: English from [`../listings/en.md`](../listings/en.md) ("Chrome Web Store and Edge Add-ons"). Add each other language from its listing: [`en`](../listings/en.md), [`zh_CN`](../listings/zh_CN.md), [`es`](../listings/es.md), [`fr`](../listings/fr.md), [`pt_BR`](../listings/pt_BR.md), [`ru`](../listings/ru.md), [`id`](../listings/id.md), [`de`](../listings/de.md), [`ja`](../listings/ja.md), [`ko`](../listings/ko.md), [`it`](../listings/it.md), [`zh_TW`](../listings/zh_TW.md) (the order of `[locales] extension` in `config/project.toml`).
+- [ ] Name and summary come from the package (`extName`, `extDescription`); check they display correctly in all 12 languages.
 - [ ] Category: decided by the maintainer (suggested: Productivity → Tools).
-- [ ] Language: English as default; Japanese and Korean listed.
+- [ ] Language: English as default; the other 11 listed.
 - [ ] Store icon: 128x128, from the package (`icon-128.png`).
 - [ ] Screenshots (up to 5, 1280x800): `01-popup-light.png`, `02-quick-save-light.png`, `03-manager-light.png`, `04-tools-duplicates-light.png`, `05-settings-light.png` from [`../screenshots/`](../screenshots/).
 - [ ] Small promo tile 440x280: `promo-small-440x280.png`.

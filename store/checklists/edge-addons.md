@@ -32,7 +32,7 @@ The full Chromium E2E suite runs against the Edge build as the required `Edge E2
 
 ## 3. Store listing (per language)
 
-- [ ] Description: "Chrome Web Store and Edge Add-ons" sections of [`en.md`](../listings/en.md), [`ja.md`](../listings/ja.md), [`ko.md`](../listings/ko.md), adjusted by the override check above.
+- [ ] Description: "Chrome Web Store and Edge Add-ons" sections of the 12 listings, adjusted by the override check above: [`en`](../listings/en.md), [`zh_CN`](../listings/zh_CN.md), [`es`](../listings/es.md), [`fr`](../listings/fr.md), [`pt_BR`](../listings/pt_BR.md), [`ru`](../listings/ru.md), [`id`](../listings/id.md), [`de`](../listings/de.md), [`ja`](../listings/ja.md), [`ko`](../listings/ko.md), [`it`](../listings/it.md), [`zh_TW`](../listings/zh_TW.md) (the order of `[locales] extension` in `config/project.toml`).
 - [ ] Search terms: from the same files.
 - [ ] Short description: from the package (`extDescription`).
 - [ ] Store logo: 300x300 PNG. **Not prepared**; create it from `store/assets/icon-original.png` when needed.
