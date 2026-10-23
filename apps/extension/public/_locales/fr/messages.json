@@ -9438,16 +9438,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "Étiqueter les pages GitHub en development",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "Étiqueter les pages GitHub en $1",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "Étiqueter les vidéos YouTube en watch-later",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "Étiqueter les vidéos YouTube en $1",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "Étiqueter les tutoriels en learning",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "Étiqueter les tutoriels en $1",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Déplacer Work / Reading vers un dossier de votre choix",

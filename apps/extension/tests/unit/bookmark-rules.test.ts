@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
 import { ruleMatchesSample } from '@/lib/bookmark-rule-draft';
@@ -12,7 +14,7 @@ import {
 } from '@/lib/bookmark-rules';
 import { SEARCH_SYNTAX_VERSION } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
-import { readConfigToml } from '../config-files';
+import { appRoot, readConfigToml } from '../config-files';
 
 const link = (id: string, parentId: string, title: string, url: string): BookmarkTreeNode => ({
   id,
@@ -444,6 +446,21 @@ describe('templates (R19)', () => {
     ]);
     expect(items).toEqual([]);
     expect(ids(plan([rule({ query: 'folder:"Work / Docs"', addTags: ['a'] })]))).toEqual(['d1']);
+  });
+
+  it('names the tags a template adds from config, never typed in a message', () => {
+    const localesDir = path.join(appRoot, 'public/_locales');
+    for (const locale of readdirSync(localesDir)) {
+      const messages: Record<string, { message: string }> = JSON.parse(
+        readFileSync(path.join(localesDir, locale, 'messages.json'), 'utf8'),
+      );
+      for (const template of BOOKMARK_RULE_TEMPLATES) {
+        const key = `rules_template${template.id[0].toUpperCase()}${template.id.slice(1)}`;
+        const { message } = messages[key];
+        for (const tag of template.add_tags) expect(message, `${locale} ${key}`).not.toContain(tag);
+        if (template.add_tags.length > 0) expect(message, `${locale} ${key}`).toContain('$1');
+      }
+    }
   });
 });
 

@@ -9374,16 +9374,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "GitHub 페이지에 development 태그 추가",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "GitHub 페이지에 $1 태그 추가",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "YouTube 동영상에 watch-later 태그 추가",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "YouTube 동영상에 $1 태그 추가",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "튜토리얼에 learning 태그 추가",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "튜토리얼에 $1 태그 추가",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Work / Reading을 선택한 폴더로 이동",

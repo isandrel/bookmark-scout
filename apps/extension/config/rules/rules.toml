@@ -19,7 +19,8 @@ query_placeholder = "domain:github.com"
 sample_placeholder = "https://github.com/acme/repo"
 
 # Starter rules Settings offers, added turned off. Each id has a name in every locale
-# (TEMPLATE_NAME_KEYS in src/components/options/BookmarkRulesPanel.tsx). A template adds tags
+# (TEMPLATE_NAME_KEYS in src/components/options/BookmarkRulesPanel.tsx), whose `$1` is filled with
+# the tags it adds from here, so no message types a tag name. A template adds tags
 # (`add_tags`), moves (`move = true`), or both, and lists both keys. One that moves names no
 # folder: folder ids differ on every browser profile, so the editor opens on it and asks for the
 # folder before it can save.

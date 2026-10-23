@@ -9374,16 +9374,16 @@
         "description": "Settings: menu of starter smart rules"
     },
     "rules_templateGithub": {
-        "message": "GitHub のページに development タグを付ける",
-        "description": "Starter smart rule: GitHub pages get the tag development"
+        "message": "GitHub のページに $1 タグを付ける",
+        "description": "Starter smart rule name: GitHub pages get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateYoutube": {
-        "message": "YouTube の動画に watch-later タグを付ける",
-        "description": "Starter smart rule: YouTube videos get the tag watch-later"
+        "message": "YouTube の動画に $1 タグを付ける",
+        "description": "Starter smart rule name: YouTube videos get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateTutorial": {
-        "message": "チュートリアルに learning タグを付ける",
-        "description": "Starter smart rule: pages with tutorial in the title get the tag learning"
+        "message": "チュートリアルに $1 タグを付ける",
+        "description": "Starter smart rule name: pages with tutorial in the title get a tag. $1 is the tag it adds, from config (a tag name, not translated)"
     },
     "rules_templateReading": {
         "message": "Work / Reading を選んだフォルダに移動する",
