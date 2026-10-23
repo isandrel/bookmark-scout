@@ -1,25 +1,10 @@
 /**
- * A folder row of the popup tree, with drag and drop and its action buttons. Its children are
- * separate rows of `PopupTree`; shared state and actions come from `PopupTreeProvider`.
+ * A folder row of the popup tree, with drag and drop and its action buttons (`PopupRowButtons`).
+ * Its children are separate rows of `PopupTree`; shared state and actions come from
+ * `PopupTreeProvider`.
  */
 
-import {
-  BookmarkPlus,
-  ChevronRight,
-  ChevronsDown,
-  ChevronsUp,
-  Folder,
-  FolderPlus,
-  Trash2,
-} from 'lucide-react';
-
-/**
- * A held Enter repeats keydown, and each repeat would activate the focused button again: after
- * a new folder is saved, focus returns here and the still-held key would reopen the input.
- */
-function ignoreKeyRepeat(event: React.KeyboardEvent<HTMLButtonElement>) {
-  if (event.repeat) event.preventDefault();
-}
+import { ChevronRight, Folder } from 'lucide-react';
 
 /** The new-folder input shown in place of a temporary node. */
 export function NewFolderRow() {
@@ -36,45 +21,17 @@ export function NewFolderRow() {
 }
 
 /** One folder row; render it inside a `PopupTreeProvider`. */
-export function FolderRow({
-  row,
-  expandedIds,
-  onToggle,
-}: {
-  row: PopupTreeRow;
-  /** Open folders, to tell whether every subfolder is open. */
-  expandedIds: ReadonlySet<string>;
-  onToggle: () => void;
-}) {
-  const {
-    canModify,
-    rowRef,
-    draggingId,
-    addingToFolderIds,
-    onAddBookmark,
-    onAddFolder,
-    onDeleteFolder,
-    onToggleExpandAllChildren,
-    fullNode,
-  } = usePopupTree();
+export function FolderRow({ row, onToggle }: { row: PopupTreeRow; onToggle: () => void }) {
+  const { rowRef, draggingId, actionHost } = usePopupTree();
   const { node } = row;
 
-  const canAddChildren = !isBookmarkTreeRoot(node) && !node.unmodifiable;
+  const canAddChildren = actionHost.canAddTo(node);
   // Count total items in folder (folders + bookmarks)
   const itemCount = node.children?.length ?? 0;
-  const hasSubfolders = node.children?.some((child) => child.children !== undefined) ?? false;
-  const allSubfoldersExpanded =
-    hasSubfolders &&
-    row.expanded &&
-    areAllSubfoldersExpanded(fullNode(node.id) ?? node, expandedIds);
-  const isAddingBookmark = addingToFolderIds.includes(node.id);
-  const expandAllLabel = allSubfoldersExpanded
-    ? t('popup_collapseAllSubfolders')
-    : t('popup_expandAllSubfolders');
 
   return (
     // Actions sit beside the row, not inside it, so no button is nested in the tree item.
-    <div className="group folder-item relative flex h-8 items-center rounded-md transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
+    <div className="group folder-item relative flex h-(--popup-tree-row) items-center rounded-md transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: the tree's key handler opens, closes, and saves (usePopupTreeKeys). */}
       <div
         role="treeitem"
@@ -94,7 +51,7 @@ export function FolderRow({
         // Long names are cut off, so hovering shows the whole name.
         title={getBookmarkDisplayTitle(node.title)}
         onClick={onToggle}
-        className="group/trigger flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-sm font-medium focus-visible:outline-none"
+        className="group/trigger flex h-(--popup-tree-row) min-w-0 flex-1 cursor-pointer items-center gap-1 rounded-md px-2 py-(--popup-tree-row-pad) text-sm font-medium focus-visible:outline-none"
       >
         <span
           data-slot="tree-indicator"
@@ -145,69 +102,7 @@ export function FolderRow({
         data-slot="folder-actions"
         className="pointer-events-none absolute inset-y-0.5 right-0.5 flex items-center gap-0.5 rounded-r-sm bg-muted px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:bg-accent group-focus-within:opacity-100 [&>button]:pointer-events-auto [&>button]:hover:bg-card"
       >
-        {hasSubfolders && (
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            onClick={(e) => onToggleExpandAllChildren(node, e)}
-            title={expandAllLabel}
-            aria-label={expandAllLabel}
-            aria-pressed={allSubfoldersExpanded}
-          >
-            {allSubfoldersExpanded ? (
-              <ChevronsUp className="h-3.5 w-3.5" />
-            ) : (
-              <ChevronsDown className="h-3.5 w-3.5" />
-            )}
-          </Button>
-        )}
-        {canAddChildren && (
-          <>
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!isAddingBookmark) onAddBookmark(node.id);
-              }}
-              onKeyDown={ignoreKeyRepeat}
-              aria-disabled={isAddingBookmark || undefined}
-              title={t('popup_addBookmark')}
-              aria-label={t('popup_addBookmark')}
-            >
-              <BookmarkPlus className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddFolder(node.id);
-              }}
-              onKeyDown={ignoreKeyRepeat}
-              title={t('popup_addFolder')}
-              aria-label={t('popup_addFolder')}
-            >
-              <FolderPlus className="h-3.5 w-3.5" />
-            </Button>
-          </>
-        )}
-        {canModify(node) && (
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            className="text-destructive-text hover:bg-destructive-wash hover:text-destructive-text"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDeleteFolder(node);
-            }}
-            title={t('popup_deleteFolder')}
-            aria-label={t('popup_deleteFolder')}
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
-        )}
+        <PopupRowButtons kind="folder" node={node} />
       </div>
     </div>
   );

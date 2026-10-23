@@ -9804,5 +9804,153 @@
     "rules_autoLogUndoParentMissing": {
         "message": "Der Ordner, in dem es war, existiert nicht mehr. Es bleibt daher, wo es ist.",
         "description": "Toast: an automatic move was not undone because the folder it came from is gone"
+    },
+    "settings_treeDensity": {
+        "message": "Zeilenhöhe im Baum",
+        "description": "Options > Appearance > Popup: setting name for how tall tree rows are."
+    },
+    "settings_treeDensityDesc": {
+        "message": "Wie hoch die Zeilen des Baums im Pop-up und in der Seitenleiste sind",
+        "description": "Description of the Tree Density setting."
+    },
+    "settings_treeDensityComfortable": {
+        "message": "Komfortabel",
+        "description": "Tree Density option: the usual row height."
+    },
+    "settings_treeDensityCompact": {
+        "message": "Kompakt",
+        "description": "Tree Density option: shorter rows, so more fit."
+    },
+    "settings_hoverCardDelay": {
+        "message": "Verzögerung der Detailkarte",
+        "description": "Options > Appearance > Notifications: setting name for the hover card open delay."
+    },
+    "settings_hoverCardDelayDesc": {
+        "message": "Wie lange der Zeiger auf einem Lesezeichen ruht oder der Tastaturfokus darauf bleibt, bevor seine Detailkarte erscheint",
+        "description": "Description of the Hover Card Delay setting."
+    },
+    "settings_hoverCardFields": {
+        "message": "Inhalt der Detailkarte",
+        "description": "Options > Appearance > Popup: heading of the list of what the hover card shows."
+    },
+    "settings_hoverCardFieldsDesc": {
+        "message": "Wählen Sie, was die Detailkarte zeigt und in welcher Reihenfolge. Solange Titel, Adresse und Titelbild vorne stehen, teilen sie sich die oberste Zeile.",
+        "description": "Description of the hover card details list."
+    },
+    "settings_hoverCardFieldTitle": {
+        "message": "Titel",
+        "description": "Hover card detail: the bookmark title."
+    },
+    "settings_hoverCardFieldAddress": {
+        "message": "Adresse",
+        "description": "Hover card detail: the bookmark URL."
+    },
+    "settings_hoverCardFieldCover": {
+        "message": "Titelbild",
+        "description": "Hover card detail: the stored cover image and where it came from."
+    },
+    "settings_hoverCardFieldTags": {
+        "message": "Tags",
+        "description": "Hover card detail: the stored tags."
+    },
+    "settings_hoverCardFieldSummary": {
+        "message": "Zusammenfassung",
+        "description": "Hover card detail: the stored summary."
+    },
+    "settings_hoverCardFieldFolder": {
+        "message": "Ordner",
+        "description": "Hover card detail: the folder path."
+    },
+    "settings_hoverCardFieldDateAdded": {
+        "message": "Hinzugefügt am",
+        "description": "Hover card detail: when the bookmark was saved."
+    },
+    "settings_popupSections": {
+        "message": "Bereiche des Pop-ups",
+        "description": "Options > Appearance > Popup: heading of the list of the popup parts, in order."
+    },
+    "settings_popupSectionsDesc": {
+        "message": "Wählen Sie, was das Pop-up und die Seitenleiste unter dem Suchfeld zeigen und in welcher Reihenfolge. Die Lesezeichen bleiben immer sichtbar.",
+        "description": "Description of the popup parts list."
+    },
+    "settings_popupSectionCurrentPage": {
+        "message": "Aktuelle Seite",
+        "description": "Popup part: the line about the page you are on and where it is saved."
+    },
+    "settings_popupSectionActiveJobs": {
+        "message": "Hintergrundaufgaben",
+        "description": "Popup part: the line about tools running in the background."
+    },
+    "settings_popupSectionQuickSaveResult": {
+        "message": "Letztes Schnellspeichern",
+        "description": "Popup part: the result of a quick save the page could not show."
+    },
+    "settings_popupSectionAiSuggestions": {
+        "message": "KI-Ordnervorschläge",
+        "description": "Popup part: the AI folder suggestions for the current page."
+    },
+    "settings_popupSectionNotices": {
+        "message": "Hinweise",
+        "description": "Popup part: notices such as setting up AI or a missing quick save shortcut."
+    },
+    "settings_popupSectionHintBar": {
+        "message": "Tastenhinweise",
+        "description": "Popup part: the bar of keyboard hints at the bottom."
+    },
+    "settings_popupToolbarButtons": {
+        "message": "Schaltflächen der Symbolleiste",
+        "description": "Options > Appearance > Popup: heading of the list of buttons beside the search box."
+    },
+    "settings_popupToolbarButtonsDesc": {
+        "message": "Wählen Sie, welche Schaltflächen neben dem Suchfeld stehen und in welcher Reihenfolge. KI-Schaltflächen erscheinen erst, wenn KI eingerichtet ist, und „Alle ausklappen“ nur während einer Suche.",
+        "description": "Description of the toolbar buttons list."
+    },
+    "settings_popupToolbarServiceSwitcher": {
+        "message": "KI-Dienst wechseln",
+        "description": "Toolbar button: the menu that switches the AI service used for folder suggestions."
+    },
+    "settings_popupExpandOnOpen": {
+        "message": "Beim Öffnen aufklappen",
+        "description": "Options > Behavior > Tree: setting name for which folders are open when the popup opens."
+    },
+    "settings_popupExpandOnOpenDesc": {
+        "message": "Welche Ordner beim Öffnen des Pop-ups oder der Seitenleiste aufgeklappt sind. „Wie zuletzt“ merkt sie sich auf diesem Gerät.",
+        "description": "Description of the Expand on Open setting."
+    },
+    "settings_popupExpandOnOpenNone": {
+        "message": "Keine",
+        "description": "Expand on Open option: every folder closed."
+    },
+    "settings_popupExpandOnOpenBar": {
+        "message": "Lesezeichenleiste",
+        "description": "Expand on Open option: the bookmarks bar open."
+    },
+    "settings_popupExpandOnOpenLast": {
+        "message": "Wie zuletzt",
+        "description": "Expand on Open option: the folders open when the popup was last closed."
+    },
+    "settings_popupBookmarkMenu": {
+        "message": "Lesezeichenaktionen im Pop-up",
+        "description": "Options > Behavior: heading of the list of a popup bookmark row's commands."
+    },
+    "settings_popupBookmarkMenuDesc": {
+        "message": "Wählen Sie, welche Befehle ein Lesezeichen im Pop-up und in der Seitenleiste anbietet und in welcher Reihenfolge innerhalb jeder Gruppe.",
+        "description": "Description of the popup bookmark actions list."
+    },
+    "settings_popupFolderMenu": {
+        "message": "Ordneraktionen im Pop-up",
+        "description": "Options > Behavior: heading of the list of a popup folder row's commands."
+    },
+    "settings_popupFolderMenuDesc": {
+        "message": "Wählen Sie, welche Befehle ein Ordner im Pop-up und in der Seitenleiste anbietet und in welcher Reihenfolge innerhalb jeder Gruppe.",
+        "description": "Description of the popup folder actions list."
+    },
+    "settings_popupMenusButtons": {
+        "message": "Schaltflächen in der Zeile: die ersten $1 angezeigten. Die übrigen stehen im ⋯-Menü der Zeile, und ein Rechtsklick auf die Zeile listet alle auf.",
+        "description": "Popup actions lists: how many of the first commands are buttons on the row. $1 is the number."
+    },
+    "settings_popupMenusKeep": {
+        "message": "Mindestens einer der Befehle $1 bleibt sichtbar.",
+        "description": "Popup actions lists: the commands of which one always stays. $1 lists them."
     }
 }

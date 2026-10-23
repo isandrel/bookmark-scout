@@ -113,7 +113,14 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 | **Larghezza del popup** | <SettingDefault path="appearance.popup.width" /> px | I browser consentono al massimo 800 px |
 | **Altezza del popup** | <SettingDefault path="appearance.popup.height" /> px | I browser consentono al massimo 600 px |
 | **Lunghezza di troncamento** | <SettingDefault path="appearance.popup.truncate_length" /> caratteri | Accorcia il titolo della pagina nell'intestazione dei suggerimenti dell'IA nel popup |
+| **Densità dell'albero** | Comoda | Righe **Comode** o **Compatte** nell'albero del popup e del riquadro laterale. Salvata solo su questo dispositivo |
 | **Mostra dettagli al passaggio del puntatore** | Attivo | Quando il puntatore resta su un preferito nel popup o nel pannello laterale, o lo raggiungi con le frecce, una scheda ne mostra titolo e indirizzo completi, cartella, tag, riassunto, copertina salvata e data di aggiunta. `Esc` chiude la scheda. Disattivato, la riga mostra titolo e indirizzo in un semplice suggerimento |
+
+Sotto la tabella, tre elenchi organizzano il popup e il riquadro laterale. Seleziona una voce per mostrarla e trascinala dalla maniglia per spostarla; la maniglia è anche un pulsante il cui menu sposta la voce in cima, su, giù o in fondo. **Ripristina predefiniti** riporta l'ordine abituale di ogni elenco. Gli elenchi sono salvati solo su questo dispositivo.
+
+- **Parti del popup**: cosa compare sotto la casella di ricerca, dall'alto in basso: la pagina corrente, le attività in background, l'ultimo salvataggio rapido, le cartelle recenti, le cartelle suggerite dall'IA, le cartelle corrispondenti, i preferiti, gli avvisi e i suggerimenti dei tasti. I preferiti sono sempre visibili; sposta le parti sopra o sotto di essi.
+- **Pulsanti della barra**: i pulsanti accanto alla casella di ricerca: **Espandi tutto** (durante una ricerca), la gestione preferiti, il tema e i pulsanti dell'IA (una volta configurata l'IA).
+- **Contenuto della scheda dei dettagli**: cosa mostra la scheda, in ordine: titolo, indirizzo, copertina, tag, riassunto, cartella e data di aggiunta. Finché titolo, indirizzo e copertina vengono per primi, condividono la riga in alto della scheda.
 
 ### Notifiche [#notifications]
 
@@ -121,6 +128,7 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 | --- | --- | --- |
 | **Durata delle notifiche** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Quanto restano aperti i messaggi. I messaggi con Annulla mantengono la propria finestra di 10 secondi |
 | **Ritardo dei suggerimenti** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Quanto deve restare il puntatore su un controllo prima che compaia la sua spiegazione |
+| **Ritardo della scheda dei dettagli** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Quanto a lungo il puntatore resta su un preferito, o il focus della tastiera rimane su di esso, prima che si apra la scheda dei dettagli. Vale anche per i riassunti troncati della gestione preferiti |
 
 ## Comportamento [#behavior]
 
@@ -131,6 +139,7 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 | **Ordinamento** | Ordine del browser | **Ordine del browser** (come nella Barra dei preferiti), **Data di aggiunta** (prima i più recenti), **Alfabetico** o **Prima le cartelle**. È anche l'ordine della tabella della gestione preferiti finché non la ordini per colonna. Cambia solo il modo in cui Bookmark Scout mostra i preferiti, mai l'ordine salvato nel browser |
 | **Raggruppa per cartelle** | Attivo | Nel popup e nel riquadro laterale, elenca le sottocartelle prima dei preferiti a ogni livello |
 | **Trascinamento nell'albero** | Attivo | Nel popup e nel riquadro laterale, trascina preferiti e cartelle per spostarli, e rilascia i link da una pagina web su una cartella del riquadro laterale per salvarli lì. Disattivalo per evitare di spostare le righe per errore; puoi comunque spostarle nella gestione preferiti |
+| **Espandi all'apertura** | Nessuna | Quali cartelle sono aperte quando si apre il popup o il riquadro laterale: **Nessuna**, la **Barra dei preferiti** o **Come l'ultima volta**, le cartelle aperte quando l'hai chiuso, ricordate su questo dispositivo |
 
 ### Link [#links]
 
@@ -193,6 +202,10 @@ Sotto di esse, **Scorciatoie da tastiera** mostra i tasti di ogni scorciatoia ne
 ### Menu della gestione preferiti [#manager-menus]
 
 Organizza ogni menu della gestione preferiti nella sua scheda: il **Menu degli elementi** (clic destro su una riga o su una cartella dell'albero, o il pulsante ⋯ di una riga), il **Menu Organizza** (⋮ nell'intestazione), il **Menu dello spazio vuoto** (clic destro sotto le righe) e i **Pulsanti dell'anteprima** (sotto l'anteprima di un preferito; il primo è quello principale). Deseleziona un comando per nasconderlo; passa in **Nascosti**, dove selezionandolo di nuovo torna alla fine. Trascina un comando dalla maniglia per riordinarlo, oppure trascina un **Separatore di sezione** per spostare comandi da una sezione all'altra; la maniglia è anche un pulsante il cui menu sposta l'elemento in cima, su, giù o in fondo, quindi funziona anche la tastiera. **Aggiungi separatore di sezione** ne aggiunge uno alla fine da spostare in su, e la sua ✕ lo rimuove unendo due sezioni. **Ripristina predefiniti** ripristina solo quel menu. Ogni menu conserva almeno un comando, e il menu degli elementi conserva **Visualizza dettagli** o **Copia ID preferito**, così ha sempre un comando per qualsiasi preferito o cartella; se nessuno dei comandi conservati si applica, il menu indica **Nessuna azione disponibile**. Il menu degli elementi si sincronizza con le altre impostazioni; gli altri menu restano salvati solo su questo dispositivo.
+
+### Azioni dei preferiti e delle cartelle nel popup [#popup-menus]
+
+Scegli quali comandi offrono un preferito e una cartella nel popup e nel riquadro laterale, e trascina un comando dalla maniglia per riordinarlo nel suo gruppo, come per i menu della gestione preferiti. I primi comandi di una riga sono pulsanti che compaiono quando la indichi o la raggiungi con la tastiera: **Elimina** su un preferito, e **Espandi tutte le sottocartelle**, **Aggiungi la pagina corrente**, **Aggiungi cartella** ed **Elimina** su una cartella. Gli altri, come **Apri in una nuova scheda** e **Apri in una nuova finestra**, sono nel menu ⋯ della riga, e il clic destro su una riga (o il suo tasto menu) li elenca tutti. Nascondi un pulsante perché il comando successivo diventi un pulsante. **Ripristina predefiniti** riporta i menu completi. Per i preferiti resta sempre **Apri in una nuova scheda** o **Elimina**, e per le cartelle **Aggiungi cartella** o **Apri tutti**. Salvato solo su questo dispositivo.
 
 ## IA [#ai]
 

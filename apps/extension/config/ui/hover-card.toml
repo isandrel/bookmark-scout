@@ -1,10 +1,9 @@
 # The bookmark hover card: a bookmark's details (address, folder, tags, summary, cover, date added)
 # where the pointer rests on its row in the popup and side panel (Show Details on Hover), or on a
-# summary the manager's Summary column cuts short. Read by src/lib/hover-card.ts.
+# summary the manager's Summary column cuts short. Read by src/lib/hover-card.ts. Which details it
+# shows, in what order, and how long it waits before opening are settings (Hover Card Fields and
+# Hover Card Delay in config/settings/appearance.toml).
 
-# How long the pointer rests on a row, or keyboard focus stays on it, before the card opens, in
-# milliseconds; moving down a list never flashes cards
-open_delay_ms = 600
 # How long the card stays once the pointer has left both the row and the card, in milliseconds;
 # long enough to cross from the row onto the card
 close_delay_ms = 150
@@ -26,6 +25,7 @@ max_tags = 8
 cover_width_px = 96
 
 # The manager list's Cover column shows its thumbnail's cover larger in a card of its own, opened
-# and closed like this card (`open_delay_ms`, `close_delay_ms`): the cover at most this many
-# pixels wide, never wider than the stored image, then the title and where the cover came from
+# after the Hover Card Delay setting and closed after `close_delay_ms`, like this card: the cover at
+# most this many pixels wide, never wider than the stored image, then the title and where the
+# cover came from
 cover_preview_max_width_px = 480

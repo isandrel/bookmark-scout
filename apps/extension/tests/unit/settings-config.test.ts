@@ -116,6 +116,11 @@ describe('settings config layout', () => {
     shownIn.set('managerDefaultColumns', 'behavior.manager_table');
     shownIn.set('managerCardFields', 'behavior.manager_cards');
     shownIn.set('previewFields', 'behavior.manager_preview');
+    shownIn.set('popupBookmarkMenu', 'behavior.popup_menus');
+    shownIn.set('popupFolderMenu', 'behavior.popup_menus');
+    shownIn.set('popupSections', 'appearance.popup');
+    shownIn.set('popupToolbarButtons', 'appearance.popup');
+    shownIn.set('hoverCardFields', 'appearance.popup');
     // A tool limited to one scope has no setting to show and no default in its config.
     const fixedScopes = Object.entries(TOOL_SCOPE_CAPABILITIES)
       .filter(([, capability]) => capability !== 'both')

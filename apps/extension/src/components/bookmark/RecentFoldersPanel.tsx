@@ -72,11 +72,11 @@ export function RecentFoldersPanel({
             aria-label={addLabel}
           >
             <Folder className="h-3 w-3 shrink-0 text-muted-foreground" />
-            <span className="max-w-[120px] truncate">{title}</span>
+            <span className="max-w-chip-title truncate">{title}</span>
             {context && (
               <span
                 data-slot="recent-folder-context"
-                className="max-w-[100px] truncate text-muted-foreground"
+                className="max-w-chip-context truncate text-muted-foreground"
               >
                 {context}
               </span>

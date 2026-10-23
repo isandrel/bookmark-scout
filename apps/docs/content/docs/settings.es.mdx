@@ -113,7 +113,14 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | **Ancho de la ventana emergente** | <SettingDefault path="appearance.popup.width" /> px | Los navegadores permiten como máximo 800 px |
 | **Alto de la ventana emergente** | <SettingDefault path="appearance.popup.height" /> px | Los navegadores permiten como máximo 600 px |
 | **Longitud de recorte** | <SettingDefault path="appearance.popup.truncate_length" /> caracteres | Acorta el título de la página en el encabezado de sugerencias de IA de la ventana emergente |
+| **Densidad del árbol** | Cómoda | Filas **Cómodas** o **Compactas** en el árbol de la ventana emergente y el panel lateral. Solo se guarda en este dispositivo |
 | **Mostrar detalles al pasar el puntero** | Activado | Al dejar el puntero sobre un marcador en la ventana emergente o el panel lateral, o llegar a él con las flechas, una tarjeta muestra su título y dirección completos, la carpeta, las etiquetas, el resumen, la portada guardada y la fecha en que se añadió. `Esc` cierra la tarjeta. Desactivado, la fila muestra el título y la dirección en una sugerencia sencilla |
+
+Debajo de la tabla, tres listas organizan la ventana emergente y el panel lateral. Marca un elemento para mostrarlo y arrástralo por su asa para moverlo; el asa también es un botón cuyo menú mueve el elemento al principio, arriba, abajo o al final. **Restablecer valores predeterminados** devuelve el orden habitual de cada lista. Las listas solo se guardan en este dispositivo.
+
+- **Partes de la ventana emergente**: lo que aparece bajo el cuadro de búsqueda, de arriba abajo: la página actual, las tareas en segundo plano, el último guardado rápido, las carpetas recientes, las sugerencias de carpeta con IA, las coincidencias de carpetas, los marcadores, los avisos y los atajos de teclado. Los marcadores siempre se muestran; mueve las partes encima o debajo de ellos.
+- **Botones de la barra**: los botones junto al cuadro de búsqueda: **Desplegar todo** (mientras buscas), el administrador de marcadores, el tema y los botones de IA (cuando la IA está configurada).
+- **Contenido de la tarjeta de detalles**: lo que muestra la tarjeta, en orden: título, dirección, portada, etiquetas, resumen, carpeta y fecha de creación. Mientras el título, la dirección y la portada van primero, comparten la fila superior de la tarjeta.
 
 ### Notificaciones [#notifications]
 
@@ -121,6 +128,7 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | --- | --- | --- |
 | **Duración de las notificaciones** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
 | **Retraso de las sugerencias** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Cuánto tiempo descansa el puntero sobre un control antes de que aparezca su explicación |
+| **Retraso de la tarjeta de detalles** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Cuánto tiempo descansa el puntero sobre un marcador, o el foco del teclado sigue en él, antes de que se abra su tarjeta de detalles. También vale para los resúmenes recortados del administrador |
 
 ## Comportamiento [#behavior]
 
@@ -131,6 +139,7 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 | **Orden** | Orden del navegador | **Orden del navegador** (como en la barra de marcadores), **Fecha de creación** (los más recientes primero), **Alfabético** o **Carpetas primero**. También es el orden de la tabla del administrador hasta que la ordenes por una columna. Solo cambia cómo muestra Bookmark Scout los marcadores, nunca el orden que guarda el navegador |
 | **Agrupar por carpetas** | Activado | En la ventana emergente y en el panel lateral, muestra las subcarpetas antes que los marcadores en cada nivel |
 | **Arrastrar y soltar en el árbol** | Activado | En la ventana emergente y el panel lateral, arrastra marcadores y carpetas para moverlos, y suelta enlaces de una página web sobre una carpeta del panel lateral para guardarlos ahí. Desactívalo para que las filas no se muevan por accidente; puedes seguir moviéndolas en el administrador |
+| **Expandir al abrir** | Ninguna | Qué carpetas están abiertas al abrir la ventana emergente o el panel lateral: **Ninguna**, la **Barra de marcadores** o **Como la última vez**, las carpetas abiertas cuando la cerraste, recordadas en este dispositivo |
 
 ### Enlaces [#links]
 
@@ -193,6 +202,10 @@ Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu nave
 ### Menús del administrador de marcadores [#manager-menus]
 
 Organiza cada menú del administrador en su propia pestaña: el **Menú de elementos** (clic derecho en una fila o en una carpeta del árbol, o el botón ⋯ de una fila), el **Menú Organizar** (⋮ en la cabecera), el **Menú del espacio vacío** (clic derecho bajo las filas) y los **Botones de la vista previa** (bajo la vista previa de un marcador; el primero es el principal). Desmarca un comando para ocultarlo; pasa a **Ocultos**, donde al marcarlo de nuevo vuelve al final. Arrastra un comando por su asa para reordenarlo, o arrastra un **Separador de sección** para pasar comandos de una sección a otra; el asa también es un botón cuyo menú mueve el elemento arriba del todo, arriba, abajo o al final, así que también funciona con el teclado. **Añadir separador de sección** añade uno al final para que lo subas, y su ✕ lo quita y une dos secciones. **Restablecer valores predeterminados** recupera solo ese menú. Cada menú conserva al menos un comando, y el menú de elementos conserva **Ver detalles** o **Copiar el ID del marcador**, así que siempre tiene un comando para cualquier marcador o carpeta; si ninguno de los comandos que dejaste se aplica, el menú dice **No hay acciones disponibles**. El menú de elementos se sincroniza con el resto de la configuración; los demás menús solo se guardan en este dispositivo.
+
+### Acciones de marcadores y carpetas en la ventana emergente [#popup-menus]
+
+Elige qué comandos ofrecen un marcador y una carpeta en la ventana emergente y el panel lateral, y arrastra un comando por su asa para reordenarlo dentro de su grupo, como en los menús del administrador. Los primeros comandos de una fila son botones que aparecen al señalarla o al llegar a ella con el teclado: **Eliminar** en un marcador, y **Desplegar todas las subcarpetas**, **Añadir la página actual**, **Añadir carpeta** y **Eliminar** en una carpeta. Los demás, como **Abrir en una pestaña nueva** y **Abrir en una ventana nueva**, están en el menú ⋯ de la fila, y al hacer clic derecho en una fila (o pulsar su tecla de menú) aparecen todos. Oculta un botón para que el siguiente comando pase a ser un botón. **Restablecer valores predeterminados** devuelve los menús completos. En los marcadores siempre queda **Abrir en una pestaña nueva** o **Eliminar**, y en las carpetas **Añadir carpeta** o **Abrir todo**. Solo se guarda en este dispositivo.
 
 ## IA [#ai]
 

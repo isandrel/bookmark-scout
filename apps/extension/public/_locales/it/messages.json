@@ -9804,5 +9804,153 @@
     "rules_autoLogUndoParentMissing": {
         "message": "La cartella in cui si trovava non esiste più, quindi resta dov’è.",
         "description": "Toast: an automatic move was not undone because the folder it came from is gone"
+    },
+    "settings_treeDensity": {
+        "message": "Densità dell'albero",
+        "description": "Options > Appearance > Popup: setting name for how tall tree rows are."
+    },
+    "settings_treeDensityDesc": {
+        "message": "Quanto sono alte le righe dell'albero nel popup e nel riquadro laterale",
+        "description": "Description of the Tree Density setting."
+    },
+    "settings_treeDensityComfortable": {
+        "message": "Comoda",
+        "description": "Tree Density option: the usual row height."
+    },
+    "settings_treeDensityCompact": {
+        "message": "Compatta",
+        "description": "Tree Density option: shorter rows, so more fit."
+    },
+    "settings_hoverCardDelay": {
+        "message": "Ritardo della scheda dei dettagli",
+        "description": "Options > Appearance > Notifications: setting name for the hover card open delay."
+    },
+    "settings_hoverCardDelayDesc": {
+        "message": "Quanto a lungo il puntatore resta su un preferito, o il focus della tastiera rimane su di esso, prima che si apra la scheda dei dettagli",
+        "description": "Description of the Hover Card Delay setting."
+    },
+    "settings_hoverCardFields": {
+        "message": "Contenuto della scheda dei dettagli",
+        "description": "Options > Appearance > Popup: heading of the list of what the hover card shows."
+    },
+    "settings_hoverCardFieldsDesc": {
+        "message": "Scegli cosa mostra la scheda dei dettagli e in che ordine. Finché titolo, indirizzo e copertina vengono per primi, condividono la riga in alto.",
+        "description": "Description of the hover card details list."
+    },
+    "settings_hoverCardFieldTitle": {
+        "message": "Titolo",
+        "description": "Hover card detail: the bookmark title."
+    },
+    "settings_hoverCardFieldAddress": {
+        "message": "Indirizzo",
+        "description": "Hover card detail: the bookmark URL."
+    },
+    "settings_hoverCardFieldCover": {
+        "message": "Copertina",
+        "description": "Hover card detail: the stored cover image and where it came from."
+    },
+    "settings_hoverCardFieldTags": {
+        "message": "Tag",
+        "description": "Hover card detail: the stored tags."
+    },
+    "settings_hoverCardFieldSummary": {
+        "message": "Riassunto",
+        "description": "Hover card detail: the stored summary."
+    },
+    "settings_hoverCardFieldFolder": {
+        "message": "Cartella",
+        "description": "Hover card detail: the folder path."
+    },
+    "settings_hoverCardFieldDateAdded": {
+        "message": "Data di aggiunta",
+        "description": "Hover card detail: when the bookmark was saved."
+    },
+    "settings_popupSections": {
+        "message": "Parti del popup",
+        "description": "Options > Appearance > Popup: heading of the list of the popup parts, in order."
+    },
+    "settings_popupSectionsDesc": {
+        "message": "Scegli cosa mostrano il popup e il riquadro laterale sotto la casella di ricerca, e in che ordine. I preferiti sono sempre visibili.",
+        "description": "Description of the popup parts list."
+    },
+    "settings_popupSectionCurrentPage": {
+        "message": "Pagina corrente",
+        "description": "Popup part: the line about the page you are on and where it is saved."
+    },
+    "settings_popupSectionActiveJobs": {
+        "message": "Attività in background",
+        "description": "Popup part: the line about tools running in the background."
+    },
+    "settings_popupSectionQuickSaveResult": {
+        "message": "Ultimo salvataggio rapido",
+        "description": "Popup part: the result of a quick save the page could not show."
+    },
+    "settings_popupSectionAiSuggestions": {
+        "message": "Cartelle suggerite dall’IA",
+        "description": "Popup part: the AI folder suggestions for the current page."
+    },
+    "settings_popupSectionNotices": {
+        "message": "Avvisi",
+        "description": "Popup part: notices such as setting up AI or a missing quick save shortcut."
+    },
+    "settings_popupSectionHintBar": {
+        "message": "Suggerimenti dei tasti",
+        "description": "Popup part: the bar of keyboard hints at the bottom."
+    },
+    "settings_popupToolbarButtons": {
+        "message": "Pulsanti della barra",
+        "description": "Options > Appearance > Popup: heading of the list of buttons beside the search box."
+    },
+    "settings_popupToolbarButtonsDesc": {
+        "message": "Scegli quali pulsanti stanno accanto alla casella di ricerca e in che ordine. I pulsanti dell'IA compaiono solo quando l'IA è configurata, ed Espandi tutto solo durante una ricerca.",
+        "description": "Description of the toolbar buttons list."
+    },
+    "settings_popupToolbarServiceSwitcher": {
+        "message": "Selettore del servizio IA",
+        "description": "Toolbar button: the menu that switches the AI service used for folder suggestions."
+    },
+    "settings_popupExpandOnOpen": {
+        "message": "Espandi all'apertura",
+        "description": "Options > Behavior > Tree: setting name for which folders are open when the popup opens."
+    },
+    "settings_popupExpandOnOpenDesc": {
+        "message": "Quali cartelle sono aperte quando si apre il popup o il riquadro laterale. Come l'ultima volta le ricorda su questo dispositivo.",
+        "description": "Description of the Expand on Open setting."
+    },
+    "settings_popupExpandOnOpenNone": {
+        "message": "Nessuna",
+        "description": "Expand on Open option: every folder closed."
+    },
+    "settings_popupExpandOnOpenBar": {
+        "message": "Barra dei preferiti",
+        "description": "Expand on Open option: the bookmarks bar open."
+    },
+    "settings_popupExpandOnOpenLast": {
+        "message": "Come l'ultima volta",
+        "description": "Expand on Open option: the folders open when the popup was last closed."
+    },
+    "settings_popupBookmarkMenu": {
+        "message": "Azioni dei preferiti nel popup",
+        "description": "Options > Behavior: heading of the list of a popup bookmark row's commands."
+    },
+    "settings_popupBookmarkMenuDesc": {
+        "message": "Scegli quali comandi offre un preferito nel popup e nel riquadro laterale, e in che ordine in ogni gruppo.",
+        "description": "Description of the popup bookmark actions list."
+    },
+    "settings_popupFolderMenu": {
+        "message": "Azioni delle cartelle nel popup",
+        "description": "Options > Behavior: heading of the list of a popup folder row's commands."
+    },
+    "settings_popupFolderMenuDesc": {
+        "message": "Scegli quali comandi offre una cartella nel popup e nel riquadro laterale, e in che ordine in ogni gruppo.",
+        "description": "Description of the popup folder actions list."
+    },
+    "settings_popupMenusButtons": {
+        "message": "Pulsanti della riga: i primi $1 mostrati. Gli altri sono nel menu ⋯ della riga, e il clic destro sulla riga li elenca tutti.",
+        "description": "Popup actions lists: how many of the first commands are buttons on the row. $1 is the number."
+    },
+    "settings_popupMenusKeep": {
+        "message": "Almeno uno tra $1 resta visibile.",
+        "description": "Popup actions lists: the commands of which one always stays. $1 lists them."
     }
 }

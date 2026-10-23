@@ -9804,5 +9804,153 @@
     "rules_autoLogUndoParentMissing": {
         "message": "The folder it was in is gone, so it stays where it is.",
         "description": "Toast: an automatic move was not undone because the folder it came from is gone"
+    },
+    "settings_treeDensity": {
+        "message": "Tree Density",
+        "description": "Options > Appearance > Popup: setting name for how tall tree rows are."
+    },
+    "settings_treeDensityDesc": {
+        "message": "How tall the rows of the popup and side panel tree are",
+        "description": "Description of the Tree Density setting."
+    },
+    "settings_treeDensityComfortable": {
+        "message": "Comfortable",
+        "description": "Tree Density option: the usual row height."
+    },
+    "settings_treeDensityCompact": {
+        "message": "Compact",
+        "description": "Tree Density option: shorter rows, so more fit."
+    },
+    "settings_hoverCardDelay": {
+        "message": "Hover Card Delay",
+        "description": "Options > Appearance > Notifications: setting name for the hover card open delay."
+    },
+    "settings_hoverCardDelayDesc": {
+        "message": "How long the pointer rests on a bookmark, or keyboard focus stays on it, before its details card opens",
+        "description": "Description of the Hover Card Delay setting."
+    },
+    "settings_hoverCardFields": {
+        "message": "Hover card details",
+        "description": "Options > Appearance > Popup: heading of the list of what the hover card shows."
+    },
+    "settings_hoverCardFieldsDesc": {
+        "message": "Choose what the hover card shows, and in what order. While the title, address, and cover come first, they share its top row.",
+        "description": "Description of the hover card details list."
+    },
+    "settings_hoverCardFieldTitle": {
+        "message": "Title",
+        "description": "Hover card detail: the bookmark title."
+    },
+    "settings_hoverCardFieldAddress": {
+        "message": "Address",
+        "description": "Hover card detail: the bookmark URL."
+    },
+    "settings_hoverCardFieldCover": {
+        "message": "Cover",
+        "description": "Hover card detail: the stored cover image and where it came from."
+    },
+    "settings_hoverCardFieldTags": {
+        "message": "Tags",
+        "description": "Hover card detail: the stored tags."
+    },
+    "settings_hoverCardFieldSummary": {
+        "message": "Summary",
+        "description": "Hover card detail: the stored summary."
+    },
+    "settings_hoverCardFieldFolder": {
+        "message": "Folder",
+        "description": "Hover card detail: the folder path."
+    },
+    "settings_hoverCardFieldDateAdded": {
+        "message": "Date added",
+        "description": "Hover card detail: when the bookmark was saved."
+    },
+    "settings_popupSections": {
+        "message": "Popup parts",
+        "description": "Options > Appearance > Popup: heading of the list of the popup parts, in order."
+    },
+    "settings_popupSectionsDesc": {
+        "message": "Choose what the popup and side panel show below the search box, and in what order. The bookmarks always show.",
+        "description": "Description of the popup parts list."
+    },
+    "settings_popupSectionCurrentPage": {
+        "message": "Current page",
+        "description": "Popup part: the line about the page you are on and where it is saved."
+    },
+    "settings_popupSectionActiveJobs": {
+        "message": "Background tasks",
+        "description": "Popup part: the line about tools running in the background."
+    },
+    "settings_popupSectionQuickSaveResult": {
+        "message": "Last quick save",
+        "description": "Popup part: the result of a quick save the page could not show."
+    },
+    "settings_popupSectionAiSuggestions": {
+        "message": "AI folder suggestions",
+        "description": "Popup part: the AI folder suggestions for the current page."
+    },
+    "settings_popupSectionNotices": {
+        "message": "Notices",
+        "description": "Popup part: notices such as setting up AI or a missing quick save shortcut."
+    },
+    "settings_popupSectionHintBar": {
+        "message": "Key hints",
+        "description": "Popup part: the bar of keyboard hints at the bottom."
+    },
+    "settings_popupToolbarButtons": {
+        "message": "Toolbar buttons",
+        "description": "Options > Appearance > Popup: heading of the list of buttons beside the search box."
+    },
+    "settings_popupToolbarButtonsDesc": {
+        "message": "Choose which buttons sit beside the search box, and in what order. AI buttons show only once AI is set up, and Expand all only while you search.",
+        "description": "Description of the toolbar buttons list."
+    },
+    "settings_popupToolbarServiceSwitcher": {
+        "message": "AI service switcher",
+        "description": "Toolbar button: the menu that switches the AI service used for folder suggestions."
+    },
+    "settings_popupExpandOnOpen": {
+        "message": "Expand on Open",
+        "description": "Options > Behavior > Tree: setting name for which folders are open when the popup opens."
+    },
+    "settings_popupExpandOnOpenDesc": {
+        "message": "Which folders are open when the popup or side panel opens. As last left remembers them on this device.",
+        "description": "Description of the Expand on Open setting."
+    },
+    "settings_popupExpandOnOpenNone": {
+        "message": "None",
+        "description": "Expand on Open option: every folder closed."
+    },
+    "settings_popupExpandOnOpenBar": {
+        "message": "Bookmarks bar",
+        "description": "Expand on Open option: the bookmarks bar open."
+    },
+    "settings_popupExpandOnOpenLast": {
+        "message": "As last left",
+        "description": "Expand on Open option: the folders open when the popup was last closed."
+    },
+    "settings_popupBookmarkMenu": {
+        "message": "Popup bookmark actions",
+        "description": "Options > Behavior: heading of the list of a popup bookmark row's commands."
+    },
+    "settings_popupBookmarkMenuDesc": {
+        "message": "Choose which commands a bookmark in the popup and side panel offers, and in what order within each group.",
+        "description": "Description of the popup bookmark actions list."
+    },
+    "settings_popupFolderMenu": {
+        "message": "Popup folder actions",
+        "description": "Options > Behavior: heading of the list of a popup folder row's commands."
+    },
+    "settings_popupFolderMenuDesc": {
+        "message": "Choose which commands a folder in the popup and side panel offers, and in what order within each group.",
+        "description": "Description of the popup folder actions list."
+    },
+    "settings_popupMenusButtons": {
+        "message": "Row buttons: the first $1 shown. The others are in the row's ⋯ menu, and right-clicking the row lists them all.",
+        "description": "Popup actions lists: how many of the first commands are buttons on the row. $1 is the number."
+    },
+    "settings_popupMenusKeep": {
+        "message": "At least one of $1 stays shown.",
+        "description": "Popup actions lists: the commands of which one always stays. $1 lists them."
     }
 }

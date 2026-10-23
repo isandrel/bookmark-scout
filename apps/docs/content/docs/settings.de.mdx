@@ -113,7 +113,14 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | **Pop-up-Breite** | <SettingDefault path="appearance.popup.width" /> px | Browser erlauben höchstens 800 px |
 | **Pop-up-Höhe** | <SettingDefault path="appearance.popup.height" /> px | Browser erlauben höchstens 600 px |
 | **Kürzungslänge** | <SettingDefault path="appearance.popup.truncate_length" /> Zeichen | Kürzt den Seitentitel in der Kopfzeile der KI-Vorschläge im Pop-up |
+| **Zeilenhöhe im Baum** | Komfortabel | **Komfortabel** oder **Kompakt**: die Zeilen des Baums im Pop-up und in der Seitenleiste. Nur auf diesem Gerät gespeichert |
 | **Details beim Darüberfahren anzeigen** | An | Ruht der Zeiger im Pop-up oder in der Seitenleiste auf einem Lesezeichen oder erreichen Sie es mit den Pfeiltasten, zeigt eine Karte den ganzen Titel und die Adresse, den Ordner, die Tags, die Zusammenfassung, das gespeicherte Titelbild und das Datum, an dem es hinzugefügt wurde. `Esc` schließt die Karte. Aus, zeigt die Zeile Titel und Adresse als einfachen Tooltip |
+
+Unter der Tabelle ordnen drei Listen das Pop-up und die Seitenleiste. Haken Sie einen Eintrag an, um ihn anzuzeigen, und ziehen Sie ihn am Griff, um ihn zu verschieben; der Griff ist auch eine Schaltfläche, deren Menü den Eintrag nach ganz oben, nach oben, nach unten oder nach ganz unten verschiebt. **Standard wiederherstellen** stellt die übliche Reihenfolge jeder Liste wieder her. Die Listen werden nur auf diesem Gerät gespeichert.
+
+- **Bereiche des Pop-ups**: was unter dem Suchfeld steht, von oben nach unten: die aktuelle Seite, Hintergrundaufgaben, das letzte Schnellspeichern, zuletzt verwendete Ordner, KI-Ordnervorschläge, Ordnertreffer, die Lesezeichen, Hinweise und Tastenhinweise. Die Lesezeichen bleiben immer sichtbar; Bereiche lassen sich darüber oder darunter verschieben.
+- **Schaltflächen der Symbolleiste**: die Schaltflächen neben dem Suchfeld: **Alle ausklappen** (während einer Suche), die Lesezeichenverwaltung, das Design und die KI-Schaltflächen (sobald KI eingerichtet ist).
+- **Inhalt der Detailkarte**: was die Detailkarte zeigt, in dieser Reihenfolge: Titel, Adresse, Titelbild, Tags, Zusammenfassung, Ordner und Hinzufügedatum. Solange Titel, Adresse und Titelbild vorne stehen, teilen sie sich die oberste Zeile der Karte.
 
 ### Benachrichtigungen [#notifications]
 
@@ -121,6 +128,7 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | --- | --- | --- |
 | **Anzeigedauer von Benachrichtigungen** | <SettingDefault path="appearance.notifications.toast_duration_ms" seconds /> s | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
 | **Verzögerung für Tooltips** | <SettingDefault path="appearance.notifications.tooltip_delay_ms" /> ms | Wie lange der Zeiger auf einem Bedienelement ruht, bevor die Erklärung erscheint |
+| **Verzögerung der Detailkarte** | <SettingDefault path="appearance.notifications.hover_card_delay_ms" /> ms | Wie lange der Zeiger auf einem Lesezeichen ruht oder der Tastaturfokus darauf bleibt, bevor seine Detailkarte erscheint. Gilt auch für gekürzte Zusammenfassungen in der Verwaltung |
 
 ## Verhalten [#behavior]
 
@@ -131,6 +139,7 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 | **Sortierung** | Browser-Reihenfolge | **Browser-Reihenfolge** (wie in der Lesezeichenleiste), **Hinzufügedatum** (neueste zuerst), **Alphabetisch** oder **Ordner zuerst**. Gilt auch für die Tabelle im Manager, bis Sie sie nach einer Spalte sortieren. Ändert nur, wie Bookmark Scout Lesezeichen anzeigt, nie die im Browser gespeicherte Reihenfolge |
 | **Nach Ordnern gruppieren** | An | Im Pop-up und in der Seitenleiste auf jeder Ebene Unterordner vor Lesezeichen auflisten |
 | **Ziehen und Ablegen in der Baumansicht** | An | Im Pop-up und in der Seitenleiste Lesezeichen und Ordner ziehen, um sie zu verschieben, und Links von einer Webseite auf einen Ordner der Seitenleiste ziehen, um sie dort zu speichern. Ausschalten, damit Zeilen nicht versehentlich verschoben werden; im Manager lassen sie sich weiterhin verschieben |
+| **Beim Öffnen aufklappen** | Keine | Welche Ordner beim Öffnen des Pop-ups oder der Seitenleiste aufgeklappt sind: **Keine**, die **Lesezeichenleiste** oder **Wie zuletzt**, also die Ordner, die beim letzten Schließen offen waren, auf diesem Gerät gemerkt |
 
 ### Links [#links]
 
@@ -193,6 +202,10 @@ Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Br
 ### Menüs der Lesezeichenverwaltung [#manager-menus]
 
 Ordnen Sie jedes Menü der Verwaltung auf seinem eigenen Tab: das **Elementmenü** (Rechtsklick auf eine Zeile oder einen Ordner im Baum, oder die ⋯-Schaltfläche einer Zeile), das **Menü „Organisieren“** (⋮ in der Kopfzeile), das **Menü für leeren Bereich** (Rechtsklick unter den Zeilen) und die **Schaltflächen der Vorschau** (unter der Vorschau eines Lesezeichens; die erste ist die Hauptschaltfläche). Entfernen Sie den Haken bei einem Befehl, um ihn auszublenden; er wandert unter **Ausgeblendet**, wo ein erneuter Haken ihn am Ende wieder einfügt. Ziehen Sie einen Befehl am Griff, um ihn neu anzuordnen, oder eine **Abschnittstrennung**, um Befehle in einen anderen Abschnitt zu verschieben; der Griff ist auch eine Schaltfläche, deren Menü das Element nach ganz oben, nach oben, nach unten oder nach ganz unten verschiebt, sodass auch die Tastatur funktioniert. **Abschnittstrennung hinzufügen** fügt eine am Ende ein, die Sie nach oben schieben, und ihr ✕ entfernt sie und verbindet zwei Abschnitte. **Standard wiederherstellen** stellt nur dieses Menü wieder her. Jedes Menü behält mindestens einen Befehl, und das Elementmenü behält **Details ansehen** oder **Lesezeichen-ID kopieren**, damit es für jedes Lesezeichen und jeden Ordner einen Befehl hat; trifft keiner der behaltenen Befehle zu, zeigt das Menü **Keine Aktionen verfügbar**. Das Elementmenü wird mit Ihren übrigen Einstellungen synchronisiert; die anderen Menüs werden nur auf diesem Gerät gespeichert.
+
+### Lesezeichen- und Ordneraktionen im Pop-up [#popup-menus]
+
+Wählen Sie, welche Befehle ein Lesezeichen und ein Ordner im Pop-up und in der Seitenleiste anbieten, und ziehen Sie einen Befehl am Griff, um ihn innerhalb seiner Gruppe zu verschieben, wie bei den Menüs der Verwaltung. Die ersten Befehle einer Zeile sind Schaltflächen, die erscheinen, wenn Sie auf die Zeile zeigen oder sie mit der Tastatur erreichen: **Löschen** bei einem Lesezeichen, und **Alle Unterordner ausklappen**, **Aktuelle Seite hinzufügen**, **Ordner hinzufügen** und **Löschen** bei einem Ordner. Die übrigen, etwa **In neuem Tab öffnen** und **In neuem Fenster öffnen**, stehen im ⋯-Menü der Zeile, und ein Rechtsklick auf die Zeile (oder ihre Menütaste) listet alle auf. Blenden Sie eine Schaltfläche aus, wird der nächste Befehl zur Schaltfläche. **Standard wiederherstellen** stellt die vollständigen Menüs wieder her. Bei Lesezeichen bleibt immer **In neuem Tab öffnen** oder **Löschen**, bei Ordnern **Ordner hinzufügen** oder **Alle öffnen**. Nur auf diesem Gerät gespeichert.
 
 ## KI [#ai]
 

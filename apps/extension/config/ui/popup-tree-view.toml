@@ -1,9 +1,6 @@
 # Rendering of the popup and side panel bookmark tree. Read by
 # src/components/bookmark/PopupTree.tsx, which renders only the rows on screen.
 
-# Height of a row before it is measured. Rows grow with a larger site icon and are then measured.
-row_height_px = 32
-
 # Rows rendered beyond each edge of the visible area, so scrolling and arrow keys reach rendered
 # rows before new ones are needed
 overscan_rows = 12
@@ -11,5 +8,23 @@ overscan_rows = 12
 # Space above the first row and below the last
 padding_px = 8
 
-# Indent per folder level: the chevron slot and its gap, so children start under the folder icon
+# Folders "As last left" (Settings > Behavior > Expand on Open) remembers at most, so a library
+# with every folder open stays a small local item
+max_remembered_folders = 500
+
+# Row metrics for each Tree Density (Settings > Appearance > Popup), one table per choice. A row is
+# `row_height_px` tall before it is measured (rows grow with a larger site icon and are then
+# measured), its text sits `row_padding_y_px` from its top and bottom, its hover buttons are
+# `button_px` square, and each folder level indents by `indent_px` (the chevron slot and its gap,
+# so children start under the folder icon).
+[density.comfortable]
+row_height_px = 32
+row_padding_y_px = 4
+button_px = 24
 indent_px = 20
+
+[density.compact]
+row_height_px = 24
+row_padding_y_px = 0
+button_px = 20
+indent_px = 16

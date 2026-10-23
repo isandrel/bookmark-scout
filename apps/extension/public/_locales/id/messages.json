@@ -9340,5 +9340,153 @@
     "rules_autoLogUndoParentMissing": {
         "message": "Folder tempatnya semula sudah tidak ada, jadi tetap di tempatnya.",
         "description": "Toast: an automatic move was not undone because the folder it came from is gone"
+    },
+    "settings_treeDensity": {
+        "message": "Kepadatan Pohon",
+        "description": "Options > Appearance > Popup: setting name for how tall tree rows are."
+    },
+    "settings_treeDensityDesc": {
+        "message": "Seberapa tinggi baris pohon di popup dan panel samping",
+        "description": "Description of the Tree Density setting."
+    },
+    "settings_treeDensityComfortable": {
+        "message": "Nyaman",
+        "description": "Tree Density option: the usual row height."
+    },
+    "settings_treeDensityCompact": {
+        "message": "Ringkas",
+        "description": "Tree Density option: shorter rows, so more fit."
+    },
+    "settings_hoverCardDelay": {
+        "message": "Jeda Kartu Detail",
+        "description": "Options > Appearance > Notifications: setting name for the hover card open delay."
+    },
+    "settings_hoverCardDelayDesc": {
+        "message": "Berapa lama kursor berhenti di atas bookmark, atau fokus keyboard tetap di sana, sebelum kartu detailnya terbuka",
+        "description": "Description of the Hover Card Delay setting."
+    },
+    "settings_hoverCardFields": {
+        "message": "Isi kartu detail",
+        "description": "Options > Appearance > Popup: heading of the list of what the hover card shows."
+    },
+    "settings_hoverCardFieldsDesc": {
+        "message": "Pilih apa yang ditampilkan kartu detail, dan urutannya. Selama judul, alamat, dan sampul ada di urutan pertama, ketiganya berbagi baris teratas.",
+        "description": "Description of the hover card details list."
+    },
+    "settings_hoverCardFieldTitle": {
+        "message": "Judul",
+        "description": "Hover card detail: the bookmark title."
+    },
+    "settings_hoverCardFieldAddress": {
+        "message": "Alamat",
+        "description": "Hover card detail: the bookmark URL."
+    },
+    "settings_hoverCardFieldCover": {
+        "message": "Sampul",
+        "description": "Hover card detail: the stored cover image and where it came from."
+    },
+    "settings_hoverCardFieldTags": {
+        "message": "Tag",
+        "description": "Hover card detail: the stored tags."
+    },
+    "settings_hoverCardFieldSummary": {
+        "message": "Ringkasan",
+        "description": "Hover card detail: the stored summary."
+    },
+    "settings_hoverCardFieldFolder": {
+        "message": "Folder",
+        "description": "Hover card detail: the folder path."
+    },
+    "settings_hoverCardFieldDateAdded": {
+        "message": "Tanggal ditambahkan",
+        "description": "Hover card detail: when the bookmark was saved."
+    },
+    "settings_popupSections": {
+        "message": "Bagian popup",
+        "description": "Options > Appearance > Popup: heading of the list of the popup parts, in order."
+    },
+    "settings_popupSectionsDesc": {
+        "message": "Pilih apa yang ditampilkan popup dan panel samping di bawah kotak pencarian, dan urutannya. Bookmark selalu ditampilkan.",
+        "description": "Description of the popup parts list."
+    },
+    "settings_popupSectionCurrentPage": {
+        "message": "Halaman saat ini",
+        "description": "Popup part: the line about the page you are on and where it is saved."
+    },
+    "settings_popupSectionActiveJobs": {
+        "message": "Tugas latar belakang",
+        "description": "Popup part: the line about tools running in the background."
+    },
+    "settings_popupSectionQuickSaveResult": {
+        "message": "Simpan cepat terakhir",
+        "description": "Popup part: the result of a quick save the page could not show."
+    },
+    "settings_popupSectionAiSuggestions": {
+        "message": "Saran folder AI",
+        "description": "Popup part: the AI folder suggestions for the current page."
+    },
+    "settings_popupSectionNotices": {
+        "message": "Pemberitahuan",
+        "description": "Popup part: notices such as setting up AI or a missing quick save shortcut."
+    },
+    "settings_popupSectionHintBar": {
+        "message": "Petunjuk tombol",
+        "description": "Popup part: the bar of keyboard hints at the bottom."
+    },
+    "settings_popupToolbarButtons": {
+        "message": "Tombol bilah alat",
+        "description": "Options > Appearance > Popup: heading of the list of buttons beside the search box."
+    },
+    "settings_popupToolbarButtonsDesc": {
+        "message": "Pilih tombol yang ada di samping kotak pencarian, dan urutannya. Tombol AI hanya muncul setelah AI disiapkan, dan Luaskan semua hanya saat Anda mencari.",
+        "description": "Description of the toolbar buttons list."
+    },
+    "settings_popupToolbarServiceSwitcher": {
+        "message": "Pengalih layanan AI",
+        "description": "Toolbar button: the menu that switches the AI service used for folder suggestions."
+    },
+    "settings_popupExpandOnOpen": {
+        "message": "Luaskan saat Dibuka",
+        "description": "Options > Behavior > Tree: setting name for which folders are open when the popup opens."
+    },
+    "settings_popupExpandOnOpenDesc": {
+        "message": "Folder mana yang terbuka saat popup atau panel samping dibuka. Seperti terakhir kali mengingatnya di perangkat ini.",
+        "description": "Description of the Expand on Open setting."
+    },
+    "settings_popupExpandOnOpenNone": {
+        "message": "Tidak ada",
+        "description": "Expand on Open option: every folder closed."
+    },
+    "settings_popupExpandOnOpenBar": {
+        "message": "Bilah bookmark",
+        "description": "Expand on Open option: the bookmarks bar open."
+    },
+    "settings_popupExpandOnOpenLast": {
+        "message": "Seperti terakhir kali",
+        "description": "Expand on Open option: the folders open when the popup was last closed."
+    },
+    "settings_popupBookmarkMenu": {
+        "message": "Tindakan bookmark di popup",
+        "description": "Options > Behavior: heading of the list of a popup bookmark row's commands."
+    },
+    "settings_popupBookmarkMenuDesc": {
+        "message": "Pilih perintah yang ditawarkan bookmark di popup dan panel samping, dan urutannya di setiap grup.",
+        "description": "Description of the popup bookmark actions list."
+    },
+    "settings_popupFolderMenu": {
+        "message": "Tindakan folder di popup",
+        "description": "Options > Behavior: heading of the list of a popup folder row's commands."
+    },
+    "settings_popupFolderMenuDesc": {
+        "message": "Pilih perintah yang ditawarkan folder di popup dan panel samping, dan urutannya di setiap grup.",
+        "description": "Description of the popup folder actions list."
+    },
+    "settings_popupMenusButtons": {
+        "message": "Tombol baris: $1 pertama yang ditampilkan. Sisanya ada di menu ⋯ baris, dan klik kanan pada baris menampilkan semuanya.",
+        "description": "Popup actions lists: how many of the first commands are buttons on the row. $1 is the number."
+    },
+    "settings_popupMenusKeep": {
+        "message": "Setidaknya salah satu dari $1 tetap ditampilkan.",
+        "description": "Popup actions lists: the commands of which one always stays. $1 lists them."
     }
 }

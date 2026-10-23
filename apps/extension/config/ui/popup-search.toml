@@ -6,3 +6,6 @@
 # (with AI on and a search typed), the buttons move to a second row below the search box. The
 # check counts buttons that are not shown yet, so the layout does not jump while typing.
 min_text_width_px = { value = 72, min = 16, max = 400 }
+
+# Space between the typed text and the buttons inside the search box, in pixels
+controls_gap_px = { value = 4, min = 0, max = 32 }

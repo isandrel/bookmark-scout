@@ -5,10 +5,12 @@
  * of the one action registry (`actions.ts`), like the actions AI calls; which menu shows which,
  * in what order and sections, is `config/ui/actions.toml` (`action-menus.ts`). Each entry's
  * `itemMenu` or `folderMenu` says what it does there through the page (`ActionItemHost`,
- * `ActionFolderHost`), so a menu needs no code of its own per action.
+ * `ActionFolderHost`), so a menu needs no code of its own per action. The popup and side panel
+ * tree's row buttons and menus are entries' `popupMenu`, acting through `ActionPopupHost`.
  *
  * No React: icons are names (`ActionIconName`) the menus map to components.
  */
+import type { BookmarkTreeNode } from '@/types';
 
 const single = (items: readonly Bookmark[]) => (items.length === 1 ? items[0] : undefined);
 const isFolderItem = (item: Bookmark | undefined) => item?.type === ItemTypeEnum.Folder;
@@ -39,6 +41,28 @@ const PRIVATE_WINDOW_LABELS: Record<
   private: { one: 'menu_openPrivate', many: 'menu_openAllPrivate' },
 };
 const privateWindowLabel = PRIVATE_WINDOW_LABELS[browserProfile().privateWindow];
+
+/** A popup tree row's folder; bookmarks and Firefox separators have no children. */
+const isPopupFolder = (node: BookmarkTreeNode) => node.children !== undefined;
+const canOpenRow = (node: BookmarkTreeNode, host: ActionPopupHost) =>
+  host.openableUrls(node).length > 0;
+
+/** The popup's Open commands: one bookmark, or "Open all (3)" for a folder, as in the manager. */
+function popupOpen(
+  one: MessageKey,
+  many: MessageKey,
+  target: BookmarkOpenTarget,
+  allowed: (host: ActionPopupHost) => boolean = () => true,
+): ActionPopupMenu {
+  return {
+    label: (node, host) =>
+      isPopupFolder(node) ? t(many, String(host.openableUrls(node).length)) : t(one),
+    available: (node, host) => allowed(host) && canOpenRow(node, host),
+    // A folder's bookmarks open in the background, as "Open all" does in the manager.
+    run: (node, host) =>
+      host.open(node, target === 'tabs' && isPopupFolder(node) ? 'background-tabs' : target),
+  };
+}
 
 export const ITEM_ACTIONS = {
   preview: defineMenuAction({
@@ -152,6 +176,7 @@ export const ITEM_ACTIONS = {
       run: (items, host) =>
         host.open(items, single(items) && !isFolderItem(items[0]) ? 'tabs' : 'background-tabs'),
     },
+    popupMenu: popupOpen('table_openInNewTab', 'menu_openAll', 'tabs'),
   }),
   openInNewWindow: defineMenuAction({
     risk: 'read',
@@ -163,6 +188,7 @@ export const ITEM_ACTIONS = {
       available: canOpen,
       run: (items, host) => host.open(items, 'window'),
     },
+    popupMenu: popupOpen('menu_openInNewWindow', 'menu_openAllInNewWindow', 'window'),
   }),
   openInPrivateWindow: defineMenuAction({
     risk: 'read',
@@ -174,6 +200,12 @@ export const ITEM_ACTIONS = {
       available: (items, host) => host.privateWindowsAllowed && canOpen(items, host),
       run: (items, host) => host.open(items, 'private-window'),
     },
+    popupMenu: popupOpen(
+      privateWindowLabel.one,
+      privateWindowLabel.many,
+      'private-window',
+      (host) => host.privateWindowsAllowed,
+    ),
   }),
   fetchCover: defineMenuAction({
     risk: 'write',
@@ -203,6 +235,11 @@ export const ITEM_ACTIONS = {
     labelKey: 'action_delete',
     icon: 'trash',
     itemMenu: { available: allModifiable, run: (items, host) => host.requestDeletion(items) },
+    popupMenu: {
+      label: (node) => t(isPopupFolder(node) ? 'popup_deleteFolder' : 'popup_deleteBookmark'),
+      available: (node, host) => host.canModify(node),
+      run: (node, host) => host.requestDeletion(node),
+    },
   }),
   sortByName: defineMenuAction({
     risk: 'write',
@@ -220,6 +257,13 @@ export const ITEM_ACTIONS = {
     labelKey: 'menu_addBookmark',
     icon: 'bookmarkPlus',
     folderMenu: { enabled: (host) => host.canChangeFolder, run: (host) => host.addBookmark() },
+    // The popup saves the page you are on into the folder.
+    popupMenu: {
+      labelKey: 'popup_addBookmark',
+      available: (node, host) => host.canAddTo(node),
+      busy: (node, host) => host.isSaving(node),
+      run: (node, host) => host.addBookmark(node),
+    },
   }),
   addFolder: defineMenuAction({
     risk: 'write',
@@ -227,5 +271,29 @@ export const ITEM_ACTIONS = {
     labelKey: 'menu_addFolder',
     icon: 'folderPlus',
     folderMenu: { enabled: (host) => host.canChangeFolder, run: (host) => host.addFolder() },
+    popupMenu: {
+      labelKey: 'popup_addFolder',
+      available: (node, host) => host.canAddTo(node),
+      run: (node, host) => host.addFolder(node),
+    },
+  }),
+  /** Opens a folder and every folder inside it in the popup tree, or closes those inside. */
+  expandSubfolders: defineMenuAction({
+    risk: 'read',
+    targets: ['folder'],
+    labelKey: 'popup_expandAllSubfolders',
+    icon: 'chevronsDown',
+    popupMenu: {
+      label: (node, host) =>
+        t(
+          host.allSubfoldersExpanded(node)
+            ? 'popup_collapseAllSubfolders'
+            : 'popup_expandAllSubfolders',
+        ),
+      icon: (node, host) => (host.allSubfoldersExpanded(node) ? 'chevronsUp' : 'chevronsDown'),
+      pressed: (node, host) => host.allSubfoldersExpanded(node),
+      available: (node, host) => host.hasSubfolders(node),
+      run: (node, host) => host.toggleSubfolders(node),
+    },
   }),
 };

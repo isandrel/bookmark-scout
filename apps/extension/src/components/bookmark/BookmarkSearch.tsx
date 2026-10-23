@@ -21,6 +21,8 @@ import {
   X,
 } from 'lucide-react';
 import {
+  Fragment,
+  type ReactNode,
   type RefObject,
   useEffect,
   useId,
@@ -34,7 +36,10 @@ import { boundedNumber } from '@/lib/config/bounded';
 
 const searchRowConfig = readConfig(
   'ui/popup-search',
-  z.strictObject({ min_text_width_px: boundedNumber({ integer: true }) }),
+  z.strictObject({
+    min_text_width_px: boundedNumber({ integer: true }),
+    controls_gap_px: boundedNumber({ integer: true }),
+  }),
 );
 
 /** The search options in the search box's options menu, in menu order. */
@@ -49,9 +54,9 @@ const SEARCH_OPTION_ITEMS: readonly {
 ];
 
 /** Space between the typed text and the buttons inside the search box, in CSS pixels. */
-const CONTROLS_GAP_PX = 4;
+const CONTROLS_GAP_PX = searchRowConfig.controls_gap_px;
 
-/** Marks the button whose width stands in for the Expand all button before a search is typed. */
+/** Marks the buttons whose width stands in for the Expand all button before a search is typed. */
 const ROW_ACTION_SAMPLE_ATTRIBUTE = 'data-row-action-sample';
 
 /** Runs `measure` now and whenever one of `elements` changes size. */
@@ -131,6 +136,8 @@ function useSearchRowStacked(
   optionsRef: RefObject<HTMLDivElement | null>,
   actionsRef: RefObject<HTMLDivElement | null>,
   inputRef: RefObject<HTMLInputElement | null> | undefined,
+  /** Whether Expand all shows once a search is typed (the toolbar buttons setting). */
+  expandAllShown: boolean,
   hasQuery: boolean,
 ): boolean {
   const [stacked, setStacked] = useState(false);
@@ -145,9 +152,10 @@ function useSearchRowStacked(
         if (!row || !box || !options || !actions || !input) return;
         const rowGap = px(getComputedStyle(row).columnGap);
         const sample = actions.querySelector<HTMLElement>(`[${ROW_ACTION_SAMPLE_ATTRIBUTE}]`);
-        const expandAll = hasQuery
-          ? 0
-          : (sample?.offsetWidth ?? 0) + px(getComputedStyle(actions).columnGap);
+        const expandAll =
+          hasQuery || !expandAllShown
+            ? 0
+            : (sample?.offsetWidth ?? 0) + px(getComputedStyle(actions).columnGap);
         const optionButton = options.firstElementChild as HTMLElement | null;
         const clear = hasQuery
           ? 0
@@ -167,7 +175,7 @@ function useSearchRowStacked(
         const room = row.clientWidth - rowGap - actions.offsetWidth - expandAll - boxChrome;
         setStacked(room < searchRowConfig.min_text_width_px);
       }),
-    [rowRef, boxRef, optionsRef, actionsRef, inputRef, hasQuery],
+    [rowRef, boxRef, optionsRef, actionsRef, inputRef, expandAllShown, hasQuery],
   );
   return stacked;
 }
@@ -221,12 +229,16 @@ export function BookmarkSearch({
   const controlsRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
+  // The buttons beside the search box, in the user's order (Options > Appearance > Popup).
+  const { value: storedButtons } = useSetting('popupToolbarButtons');
+  const toolbarButtons = useMemo(() => getPopupToolbarButtons(storedButtons), [storedButtons]);
   const stacked = useSearchRowStacked(
     rowRef,
     containerRef,
     optionsRef,
     actionsRef,
     inputRef,
+    toolbarButtons.includes('expandAll'),
     Boolean(query),
   );
   const historyRef = useRef<HTMLDivElement>(null);
@@ -327,6 +339,79 @@ export function BookmarkSearch({
         : 'text-muted-foreground hover:bg-card hover:text-foreground'
     }`;
 
+  const sample = { [ROW_ACTION_SAMPLE_ATTRIBUTE]: true };
+  /** Each button beside the search box, drawn in the order of `toolbarButtons`. */
+  const toolbarButton: Record<PopupToolbarButton, ReactNode> = {
+    expandAll: query ? (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="shrink-0"
+        onClick={onToggleExpandAll}
+        title={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
+        aria-label={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
+      >
+        {allExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+      </Button>
+    ) : null,
+    openManager: onOpenManager ? (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="shrink-0"
+        {...sample}
+        onClick={onOpenManager}
+        title={t('popup_openManager')}
+        aria-label={t('popup_openManager')}
+      >
+        <LibraryBig className="h-4 w-4" />
+      </Button>
+    ) : null,
+    theme: (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="shrink-0"
+        {...sample}
+        onClick={toggleTheme}
+        title={isDark ? t('action_lightMode') : t('action_darkMode')}
+        aria-label={isDark ? t('action_lightMode') : t('action_darkMode')}
+      >
+        {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      </Button>
+    ),
+    aiRecommend:
+      isAIEnabled && onAIRecommend ? (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0"
+          {...sample}
+          onClick={onAIRecommend}
+          disabled={isAILoading}
+          title={t('ai_folderRecommendation')}
+          aria-label={t('ai_folderRecommendation')}
+        >
+          <Sparkles className={`h-4 w-4 text-ai ${isAILoading ? 'animate-pulse' : ''}`} />
+        </Button>
+      ) : null,
+    askAI:
+      isAIEnabled && onAskAI ? (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0"
+          {...sample}
+          onClick={onAskAI}
+          title={t('askAI_open')}
+          aria-label={t('askAI_open')}
+        >
+          <MessageCircle className="h-4 w-4 text-ai" />
+        </Button>
+      ) : null,
+    serviceSwitcher: isAIEnabled && onAIRecommend ? <AIServiceSwitcher /> : null,
+  };
+
   return (
     <div className="p-2 border-b shrink-0">
       <div
@@ -379,7 +464,7 @@ export function BookmarkSearch({
             }}
             onKeyDown={handleKeyDown}
             style={{ paddingRight: reservedRight }}
-            className="search-input h-10 w-full border-transparent bg-muted pl-8 pr-[6.5rem] text-sm focus-visible:border-input focus-visible:bg-card focus-visible:ring-offset-0"
+            className="search-input h-10 w-full border-transparent bg-muted pl-8 pr-search-controls text-sm focus-visible:border-input focus-visible:bg-card focus-visible:ring-offset-0"
           />
           {showHistory && (
             <div
@@ -497,71 +582,9 @@ export function BookmarkSearch({
           data-slot="search-row-actions"
           className="ml-auto flex shrink-0 items-center gap-1"
         >
-          {query && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={onToggleExpandAll}
-              title={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
-              aria-label={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
-            >
-              {allExpanded ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
-            </Button>
-          )}
-          {onOpenManager && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={onOpenManager}
-              title={t('popup_openManager')}
-              aria-label={t('popup_openManager')}
-            >
-              <LibraryBig className="h-4 w-4" />
-            </Button>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-            {...{ [ROW_ACTION_SAMPLE_ATTRIBUTE]: true }}
-            onClick={toggleTheme}
-            title={isDark ? t('action_lightMode') : t('action_darkMode')}
-            aria-label={isDark ? t('action_lightMode') : t('action_darkMode')}
-          >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-          {isAIEnabled && onAIRecommend && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={onAIRecommend}
-              disabled={isAILoading}
-              title={t('ai_folderRecommendation')}
-              aria-label={t('ai_folderRecommendation')}
-            >
-              <Sparkles className={`h-4 w-4 text-ai ${isAILoading ? 'animate-pulse' : ''}`} />
-            </Button>
-          )}
-          {isAIEnabled && onAskAI && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={onAskAI}
-              title={t('askAI_open')}
-              aria-label={t('askAI_open')}
-            >
-              <MessageCircle className="h-4 w-4 text-ai" />
-            </Button>
-          )}
-          {isAIEnabled && onAIRecommend && <AIServiceSwitcher />}
+          {toolbarButtons.map((id) => (
+            <Fragment key={id}>{toolbarButton[id]}</Fragment>
+          ))}
         </div>
       </div>
       {isInvalidRegex && (

@@ -4,7 +4,16 @@
  */
 
 import { BookmarkIcon, CircleAlert, SearchX } from 'lucide-react';
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import {
+  Fragment,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 import '@/styles/popup.scss';
 
@@ -126,6 +135,16 @@ function PopupPage() {
   const autoTriggerExecutedRef = useRef(false);
   // Recorded like the manager's: Ctrl+Z there restores it after the toast, and History lists it.
   const deletion = useBookmarkDeletion({ onChanged: refreshFolders, recordHistory: true });
+  // The rows' Open commands, asking first above Confirm Above, as the manager does.
+  const opener = useBookmarkOpener();
+  const [privateWindowsAllowed, setPrivateWindowsAllowed] = useState(false);
+  useEffect(() => {
+    void canOpenPrivateWindows().then(setPrivateWindowsAllowed);
+  }, []);
+  // The parts below the search row, in the user's order (Options > Appearance > Popup).
+  const { value: storedSections } = useSetting('popupSections');
+  const sections = useMemo(() => getPopupSections(storedSections), [storedSections]);
+  const { value: expandOnOpen } = useSetting('popupExpandOnOpen');
 
   // Debounce search query using configurable delay
   const debouncedQuery = useDebounce(query, searchDebounceMs);
@@ -137,10 +156,21 @@ function PopupPage() {
     setExpandFoldersOnSearch(expandFoldersOnSearch);
   }, [expandFoldersOnSearch, setExpandFoldersOnSearch]);
 
-  // Fetch folders on mount
+  // Fetch folders on mount, opening the folders Expand on Open says in the same update. Settings
+  // and the remembered folders are read before the first render (`preloadPopupPage`).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only the first load expands folders.
   useEffect(() => {
-    fetchFolders();
+    const remembered = getStoredValueStore(popupExpandedFoldersValue).getSnapshot().value;
+    fetchFolders((tree) => initialExpandedFolders(expandOnOpen, tree, remembered));
   }, [fetchFolders]);
+
+  // "As last left": remember the open folders while no search has opened its own.
+  useEffect(() => {
+    if (expandOnOpen !== 'last' || isLoading || activeQuery) return;
+    rememberExpandedFolders(expandedFolders).catch((error: unknown) => {
+      bookmarkLogger.error({ error }, 'Failed to remember the open folders');
+    });
+  }, [activeQuery, expandOnOpen, expandedFolders, isLoading]);
 
   // Follow changes made elsewhere (manager page, browser UI, sync) without losing expansion.
   useBookmarkEvents(applyBookmarkEvents);
@@ -608,96 +638,61 @@ function PopupPage() {
     return ids.length > 0 && ids.every((id) => expanded.has(id));
   }, [expandedFolders, filteredFolders]);
 
-  if (error) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
-        <CircleAlert aria-hidden="true" className="size-6 text-destructive-text" />
-        <p role="alert" className="text-sm text-destructive-text [overflow-wrap:anywhere]">
-          {t('error_generic')}: {error}
-        </p>
-        <Button onClick={() => window.location.reload()}>{t('action_retry')}</Button>
-      </div>
-    );
-  }
+  // While a drag cannot reorder (a sorted tree), the hint bar says so in place of the key hints,
+  // below the tree, so no row moves or hides under the drag.
+  const dragHint =
+    draggingId && !canReorder ? (
+      <p
+        role="status"
+        data-testid="tree-drag-hint"
+        className="shrink-0 border-t bg-muted px-3 py-1.5 text-xs text-muted-foreground"
+      >
+        {t('popup_dragSortedHint', t('settings_sortFolders'))}
+      </p>
+    ) : null;
+  const showsHintBar = sections.includes('hintBar');
 
-  if (askAIOpen && askAIReady) {
-    return (
-      <div className="flex h-full w-full min-h-0 flex-col overflow-hidden">
-        <AskAIPanel
-          onClose={() => {
-            setAskAIOpen(false);
-            requestAnimationFrame(() => inputRef.current?.focus());
-          }}
+  /** Each part below the search row, drawn in the order of `sections`. */
+  const sectionContent: Record<PopupSection, ReactNode> = {
+    currentPage: <CurrentPageLine folders={folders} />,
+    activeJobs: <ActiveJobsLine />,
+    // A quick save made on a page that could not show its notification.
+    quickSaveResult: <QuickSaveResultPanel />,
+    recentFolders:
+      !recentFoldersLoading && recentFoldersEnabled ? (
+        <RecentFoldersPanel
+          folders={folders}
+          maxFolders={recentFoldersMax}
+          pendingFolderIds={addingToFolderIds}
+          onAddToFolder={saveCurrentPage}
         />
-        {/* Ask AI's suggestion buttons report saves here, with Undo. */}
-        <Toaster />
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-full w-full min-h-0 overflow-hidden">
-      <div className="flex flex-col h-full overflow-hidden">
-        <BookmarkSearch
+      ) : null,
+    aiSuggestions:
+      aiRecommendations.length > 0 ? (
+        <AISuggestionsPanel
+          recommendations={aiRecommendations}
+          pageTitle={currentTabInfo?.title ?? ''}
+          barTitle={barTitle}
+          truncateLength={truncateLength}
+          onSelect={handleAddToFolder}
+          onClose={() => setAIRecommendations([])}
+        />
+      ) : null,
+    folderMatches:
+      !isLoading && folderMatches.length > 0 ? (
+        <FolderMatchesPanel
+          matches={folderMatches}
           query={query}
-          onQueryChange={setQuery}
-          allExpanded={allResultsExpanded}
-          onToggleExpandAll={() => setSearchExpansion(allResultsExpanded ? 'collapse' : 'expand')}
-          inputRef={inputRef}
-          isAIEnabled={aiReady || askAIReady}
-          isAILoading={aiLoading}
-          onAIRecommend={aiReady ? recommendForCurrentPage : undefined}
-          onAskAI={askAIReady ? () => setAskAIOpen(true) : undefined}
-          onOpenManager={handleOpenManager}
-          searchOptions={searchOptions}
-          onSearchOptionsChange={setSearchOptions}
-          searchHistory={searchHistory.history}
-          onCommitQuery={searchHistory.record}
-          onClearHistory={searchHistory.clear}
-          describedBy={firstMatch ? saveToHintId : undefined}
+          barTitle={barTitle}
+          truncateLength={truncateLength}
+          pendingFolderIds={addingToFolderIds}
+          onSave={saveCurrentPage}
+          onKeyDown={handleTreeKeyDown}
+          searchInputRef={inputRef}
         />
-
-        <CurrentPageLine folders={folders} />
-        <ActiveJobsLine />
-
-        {/* A quick save made on a page that could not show its notification. */}
-        <QuickSaveResultPanel />
-
-        {/* Recent Folders Panel */}
-        {!recentFoldersLoading && recentFoldersEnabled && (
-          <RecentFoldersPanel
-            folders={folders}
-            maxFolders={recentFoldersMax}
-            pendingFolderIds={addingToFolderIds}
-            onAddToFolder={saveCurrentPage}
-          />
-        )}
-
-        {/* AI Recommendations Panel */}
-        {aiRecommendations.length > 0 && (
-          <AISuggestionsPanel
-            recommendations={aiRecommendations}
-            pageTitle={currentTabInfo?.title ?? ''}
-            barTitle={barTitle}
-            truncateLength={truncateLength}
-            onSelect={handleAddToFolder}
-            onClose={() => setAIRecommendations([])}
-          />
-        )}
-
-        {!isLoading && folderMatches.length > 0 && (
-          <FolderMatchesPanel
-            matches={folderMatches}
-            query={query}
-            barTitle={barTitle}
-            truncateLength={truncateLength}
-            pendingFolderIds={addingToFolderIds}
-            onSave={saveCurrentPage}
-            onKeyDown={handleTreeKeyDown}
-            searchInputRef={inputRef}
-          />
-        )}
-
+      ) : null,
+    tree: (
+      <>
         {/* Outside the scrolling tree so the notice stays visible while scrolling results. */}
         {!isLoading && isSearchLimited && (
           <p className="shrink-0 border-b px-4 py-1.5 text-xs text-muted-foreground" role="status">
@@ -767,6 +762,9 @@ function PopupPage() {
                 onCancelCreateFolder={handleCancelCreateFolder}
                 onNewFolderNameChange={setNewFolderName}
                 onToggleExpandAllChildren={toggleExpandAllChildren}
+                expandedIds={expandedFolders}
+                onOpen={opener.open}
+                privateWindowsAllowed={privateWindowsAllowed}
                 canReorder={canReorder}
                 onDraggingChange={setDraggingId}
                 dragAndDrop={treeDragAndDrop}
@@ -784,27 +782,75 @@ function PopupPage() {
             </div>
           )}
         </div>
-        {aiSetup === 'needsSetup' ? <AISetupNotice /> : <QuickSaveShortcutNotice />}
-        {draggingId && !canReorder ? (
-          // In place of the key hints, below the tree, so no row moves or hides under the drag.
-          <p
-            role="status"
-            data-testid="tree-drag-hint"
-            className="shrink-0 border-t bg-muted px-3 py-1.5 text-xs text-muted-foreground"
-          >
-            {t('popup_dragSortedHint', t('settings_sortFolders'))}
-          </p>
-        ) : (
-          // Also under the loading skeleton, so it does not appear with the tree when the tree
-          // takes longer than the read before the first render.
-          (isLoading || displayFolders.length > 0 || folderMatches.length > 0) && (
-            <PopupHintBar
-              searchInputRef={inputRef}
-              firstMatchTitle={firstMatchTitle}
-              saveToHintId={saveToHintId}
-            />
-          )
-        )}
+        {showsHintBar ? null : dragHint}
+      </>
+    ),
+    notices: aiSetup === 'needsSetup' ? <AISetupNotice /> : <QuickSaveShortcutNotice />,
+    hintBar:
+      dragHint ??
+      // Also under the loading skeleton, so it does not appear with the tree when the tree
+      // takes longer than the read before the first render.
+      ((isLoading || displayFolders.length > 0 || folderMatches.length > 0) && (
+        <PopupHintBar
+          searchInputRef={inputRef}
+          firstMatchTitle={firstMatchTitle}
+          saveToHintId={saveToHintId}
+        />
+      )),
+  };
+
+  if (error) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
+        <CircleAlert aria-hidden="true" className="size-6 text-destructive-text" />
+        <p role="alert" className="text-sm text-destructive-text [overflow-wrap:anywhere]">
+          {t('error_generic')}: {error}
+        </p>
+        <Button onClick={() => window.location.reload()}>{t('action_retry')}</Button>
+      </div>
+    );
+  }
+
+  if (askAIOpen && askAIReady) {
+    return (
+      <div className="flex h-full w-full min-h-0 flex-col overflow-hidden">
+        <AskAIPanel
+          onClose={() => {
+            setAskAIOpen(false);
+            requestAnimationFrame(() => inputRef.current?.focus());
+          }}
+        />
+        {/* Ask AI's suggestion buttons report saves here, with Undo. */}
+        <Toaster />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-full w-full min-h-0 overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden">
+        <BookmarkSearch
+          query={query}
+          onQueryChange={setQuery}
+          allExpanded={allResultsExpanded}
+          onToggleExpandAll={() => setSearchExpansion(allResultsExpanded ? 'collapse' : 'expand')}
+          inputRef={inputRef}
+          isAIEnabled={aiReady || askAIReady}
+          isAILoading={aiLoading}
+          onAIRecommend={aiReady ? recommendForCurrentPage : undefined}
+          onAskAI={askAIReady ? () => setAskAIOpen(true) : undefined}
+          onOpenManager={handleOpenManager}
+          searchOptions={searchOptions}
+          onSearchOptionsChange={setSearchOptions}
+          searchHistory={searchHistory.history}
+          onCommitQuery={searchHistory.record}
+          onClearHistory={searchHistory.clear}
+          describedBy={firstMatch ? saveToHintId : undefined}
+        />
+
+        {sections.map((section) => (
+          <Fragment key={section}>{sectionContent[section]}</Fragment>
+        ))}
       </div>
       <BookmarkDeleteDialog
         deletion={deletion}
@@ -814,6 +860,7 @@ function PopupPage() {
           return false;
         }}
       />
+      <BookmarkOpenDialog opener={opener} />
       <RecommendedFolderDialog
         recommendation={pendingNewFolder}
         path={pendingFolderPath}

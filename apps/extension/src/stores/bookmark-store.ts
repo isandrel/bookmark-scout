@@ -83,7 +83,11 @@ interface BookmarkState {
   addingToFolderIds: string[];
 
   // Actions
-  fetchFolders: () => Promise<void>;
+  /**
+   * Reads the tree, with the loading skeleton until it arrives. `expandOnLoad` picks the folders
+   * open once it has (Expand on Open), in the same update, so no row moves after it is drawn.
+   */
+  fetchFolders: (expandOnLoad?: (tree: BookmarkTreeNode[]) => string[]) => Promise<void>;
   /** Reload the tree without the loading skeleton, keeping expansion and search state. */
   refreshFolders: () => Promise<void>;
   /** Patch the tree with bookmark events (`useBookmarkEvents`), or reload it when that fails. */
@@ -104,14 +108,24 @@ interface BookmarkState {
 
   // Folder expansion helpers
   getAllChildFolderIds: (node: BookmarkTreeNode) => string[];
-  toggleExpandAllChildren: (node: BookmarkTreeNode, e: React.MouseEvent) => void;
+  toggleExpandAllChildren: (node: BookmarkTreeNode) => void;
   areAllChildrenExpanded: (node: BookmarkTreeNode) => boolean;
 
   applyFilter: () => void;
 }
 
+/** The folders to open when a reload started by `fetchFolders` arrives; used once. */
+let expandOnLoad: ((tree: BookmarkTreeNode[]) => string[]) | undefined;
+
 function replaceTree(data: BookmarkTreeNode[]): void {
-  useBookmarkStore.setState({ folders: data, filteredFolders: data, isLoading: false });
+  const expand = expandOnLoad;
+  expandOnLoad = undefined;
+  useBookmarkStore.setState({
+    folders: data,
+    filteredFolders: data,
+    isLoading: false,
+    ...(expand ? { expandedFolders: expand(data) } : {}),
+  });
   // Re-filter so a refresh during an active search keeps showing search results.
   if (useBookmarkStore.getState().debouncedQuery) useBookmarkStore.getState().applyFilter();
 }
@@ -188,7 +202,8 @@ export const useBookmarkStore = create<BookmarkState>()(
       addingToFolderIds: [],
 
       // Fetch folders from Chrome API
-      fetchFolders: () => {
+      fetchFolders: (expand) => {
+        expandOnLoad = expand;
         set({ isLoading: true, error: null });
         return treeSync.reload();
       },
@@ -372,8 +387,7 @@ export const useBookmarkStore = create<BookmarkState>()(
       // Folder expansion helpers
       getAllChildFolderIds: (node) => folderIds(node.children ?? []),
 
-      toggleExpandAllChildren: (node, e) => {
-        e.stopPropagation();
+      toggleExpandAllChildren: (node) => {
         const { folders, expandedFolders, setExpandedFolders } = get();
 
         const originalNode = findNode(folders, node.id);

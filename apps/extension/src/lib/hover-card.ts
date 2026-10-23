@@ -13,7 +13,6 @@ import { z } from 'zod';
 const hoverCardConfig = readConfig(
   'ui/hover-card',
   z.strictObject({
-    open_delay_ms: z.number().int().nonnegative(),
     close_delay_ms: z.number().int().nonnegative(),
     max_width_px: z.number().int().positive(),
     edge_gap_px: z.number().int().nonnegative(),
@@ -25,8 +24,6 @@ const hoverCardConfig = readConfig(
   }),
 );
 
-/** How long the pointer or keyboard focus rests on a row before its card opens, in ms. */
-export const HOVER_CARD_OPEN_DELAY_MS = hoverCardConfig.open_delay_ms;
 /** How long the card stays after the pointer leaves both the row and the card, in ms. */
 export const HOVER_CARD_CLOSE_DELAY_MS = hoverCardConfig.close_delay_ms;
 /** The card's widest width, in pixels. */
@@ -44,6 +41,34 @@ export const HOVER_CARD_COVER_WIDTH_PX = hoverCardConfig.cover_width_px;
 /** The widest the Cover column's larger cover shows, in pixels (never wider than stored). */
 export const COVER_PREVIEW_MAX_WIDTH_PX = hoverCardConfig.cover_preview_max_width_px;
 
+/** The details a card can show, in their default order (`hoverCardFields`). */
+export const HOVER_CARD_FIELDS = [
+  'title',
+  'address',
+  'cover',
+  'tags',
+  'summary',
+  'folder',
+  'dateAdded',
+] as const;
+export type HoverCardField = (typeof HOVER_CARD_FIELDS)[number];
+
+/** What Options calls each detail. */
+export const HOVER_CARD_FIELD_LABEL_KEYS = {
+  title: 'settings_hoverCardFieldTitle',
+  address: 'settings_hoverCardFieldAddress',
+  cover: 'settings_hoverCardFieldCover',
+  tags: 'settings_hoverCardFieldTags',
+  summary: 'settings_hoverCardFieldSummary',
+  folder: 'settings_hoverCardFieldFolder',
+  dateAdded: 'settings_hoverCardFieldDateAdded',
+} as const satisfies Record<HoverCardField, MessageKey>;
+
+/** The details a card shows, in the order the user arranged them (`hoverCardFields`). */
+export function getHoverCardFields(stored: readonly string[]): HoverCardField[] {
+  return pickOrderedIds(stored, HOVER_CARD_FIELDS);
+}
+
 /** What a card is about: a bookmark, and the element it is drawn against. */
 export type HoverCardTarget = {
   /** The bookmark's id; a card for the same id is the same card. */
@@ -55,7 +80,8 @@ export type HoverCardTarget = {
 };
 
 type HoverCardControllerOptions = {
-  openDelayMs: number;
+  /** Read each time a card is about to open, so a changed setting applies at once. */
+  openDelayMs: () => number;
   closeDelayMs: number;
   /** Called with the target whose card should now show, or null when none should. */
   onChange: (target: HoverCardTarget | null) => void;
@@ -145,7 +171,7 @@ export function createHoverCardController({
         pending = null;
         cancelClose();
         show(target);
-      }, openDelayMs),
+      }, openDelayMs()),
     };
   };
 

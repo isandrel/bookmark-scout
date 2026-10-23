@@ -63,6 +63,10 @@ export type SettingsPanelId =
   | 'managerCardFields'
   /** Behavior > Preview: what a bookmark's preview shows, in order. */
   | 'previewFields'
+  /** Behavior: the popup tree's row buttons and menus (`popupBookmarkMenu`, `popupFolderMenu`). */
+  | 'popupMenus'
+  /** Appearance > Popup: its parts, toolbar buttons, and hover card details, each in order. */
+  | 'popupLayout'
   | 'askAiActions'
   | 'agentBridge'
   /** Maintenance: the smart rules, their own local item (src/lib/bookmark-rules-storage.ts). */
@@ -301,6 +305,13 @@ export function getManagerFieldLabel(field: ManagerCardField | PreviewField): st
     coverSource: t('settings_previewFieldCoverSource'),
   }[field];
 }
+/** How tall the popup and side panel tree's rows are (`config/ui/popup-tree-view.toml`). */
+export const treeDensitySchema = z.enum(['comfortable', 'compact']);
+export type TreeDensity = z.infer<typeof treeDensitySchema>;
+
+/** Which folders are open when the popup or side panel opens. */
+export const popupExpandOnOpenSchema = z.enum(['none', 'bookmarks_bar', 'last']);
+export type PopupExpandOnOpen = z.infer<typeof popupExpandOnOpenSchema>;
 
 export const linkOpenTargetSchema = z.enum(['new_tab', 'background_tab', 'current_tab']);
 export type LinkOpenTarget = z.infer<typeof linkOpenTargetSchema>;
@@ -780,6 +791,17 @@ const fields = {
   sortOrder: enumField('behavior.tree.sort_order', 'sortOrder', sortOrderSchema, getSortOrderLabel),
   groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
   treeDragAndDrop: switchField('behavior.tree.drag_and_drop', 'treeDragAndDrop'),
+  popupExpandOnOpen: enumField(
+    'behavior.tree.expand_on_open',
+    'popupExpandOnOpen',
+    popupExpandOnOpenSchema,
+    (value) =>
+      ({
+        none: t('settings_popupExpandOnOpenNone'),
+        bookmarks_bar: t('settings_popupExpandOnOpenBar'),
+        last: t('settings_popupExpandOnOpenLast'),
+      })[value],
+  ),
   linkOpenTarget: enumField(
     'behavior.links.open_target',
     'linkOpenTarget',
@@ -807,6 +829,19 @@ const fields = {
     unit: 'chars',
   }),
   showHoverDetails: switchField('appearance.popup.show_hover_details', 'showHoverDetails'),
+  hoverCardFields: idListField('appearance.popup.hover_card_fields', 'hoverCardFields'),
+  treeDensity: enumField(
+    'appearance.popup.tree_density',
+    'treeDensity',
+    treeDensitySchema,
+    (value) =>
+      ({
+        comfortable: t('settings_treeDensityComfortable'),
+        compact: t('settings_treeDensityCompact'),
+      })[value],
+  ),
+  popupSections: idListField('appearance.popup.sections', 'popupSections'),
+  popupToolbarButtons: idListField('appearance.popup.toolbar_buttons', 'popupToolbarButtons'),
   toastDurationMs: numberField('appearance.notifications.toast_duration_ms', 'toastDuration', {
     unit: 'ms',
     display: IN_SECONDS,
@@ -814,6 +849,11 @@ const fields = {
   tooltipDelayMs: numberField('appearance.notifications.tooltip_delay_ms', 'tooltipDelay', {
     unit: 'ms',
   }),
+  hoverCardOpenDelayMs: numberField(
+    'appearance.notifications.hover_card_delay_ms',
+    'hoverCardDelay',
+    { unit: 'ms' },
+  ),
   openConfirmAbove: numberField('behavior.links.confirm_open_above', 'openConfirmAbove'),
   searchHistoryMax: numberField('search.search.history_max', 'searchHistoryMax'),
   quickSaveAlternatives: numberField('search.quick_save.alternatives', 'quickSaveAlternatives'),
@@ -876,6 +916,8 @@ const fields = {
     'managerPreviewMenu',
     MENU_ENTRY_PATTERN,
   ),
+  popupBookmarkMenu: idListField('behavior.popup_menus.bookmark', 'popupBookmarkMenu'),
+  popupFolderMenu: idListField('behavior.popup_menus.folder', 'popupFolderMenu'),
   managerViewMode: enumField(
     'behavior.manager_view.mode',
     'managerViewMode',
@@ -1605,19 +1647,20 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'popup',
         labelKey: 'settings_sectionPopup',
-        fields: ['popupWidth', 'popupHeight', 'truncateLength', 'showHoverDetails'],
+        fields: ['popupWidth', 'popupHeight', 'truncateLength', 'treeDensity', 'showHoverDetails'],
+        panel: 'popupLayout',
       },
       {
         id: 'notifications',
         labelKey: 'settings_sectionNotifications',
-        fields: ['toastDurationMs', 'tooltipDelayMs'],
+        fields: ['toastDurationMs', 'tooltipDelayMs', 'hoverCardOpenDelayMs'],
       },
     ]),
     behavior: category('settings_behavior', 'settings_behaviorDesc', [
       {
         id: 'tree',
         labelKey: 'settings_sectionTree',
-        fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop'],
+        fields: ['sortOrder', 'groupByFolders', 'treeDragAndDrop', 'popupExpandOnOpen'],
       },
       {
         id: 'links',
@@ -1660,6 +1703,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: ['historyRecordOutsideChanges'],
       },
       { id: 'managerMenus', fields: [], panel: 'managerMenus' },
+      { id: 'popupMenus', fields: [], panel: 'popupMenus' },
     ]),
     ai: category('settings_ai', 'settings_aiDesc', [
       // What AI is and costs comes first, then the switch, then the services it turns on (provider

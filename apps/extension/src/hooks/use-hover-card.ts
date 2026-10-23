@@ -7,7 +7,7 @@
  * also clears the search or leaves a field, and the row it describes points to it with
  * `aria-describedby`.
  */
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 /** The key that dismisses content shown on hover or focus (WCAG 1.4.13). */
 const DISMISS_KEY = 'Escape';
@@ -29,9 +29,13 @@ export function useHoverCard(enabled: boolean): HoverCardState {
     target: HoverCardTarget | null;
     lastTarget: HoverCardTarget | null;
   }>({ target: null, lastTarget: null });
+  // Hover Card Delay; read when a card is about to open, so a change applies without a reload.
+  const { value: openDelayMs } = useSetting('hoverCardOpenDelayMs');
+  const openDelayRef = useRef(openDelayMs);
+  openDelayRef.current = openDelayMs;
   const [controller] = useState(() =>
     createHoverCardController({
-      openDelayMs: HOVER_CARD_OPEN_DELAY_MS,
+      openDelayMs: () => openDelayRef.current,
       closeDelayMs: HOVER_CARD_CLOSE_DELAY_MS,
       onChange: (target) =>
         setShown((previous) => ({ target, lastTarget: target ?? previous.lastTarget })),

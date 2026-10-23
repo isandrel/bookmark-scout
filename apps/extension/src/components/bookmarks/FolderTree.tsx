@@ -21,11 +21,12 @@ const treeConfig = readConfig(
   z.strictObject({
     indent_px: z.number().int().nonnegative(),
     max_indent_levels: z.number().int().positive(),
+    row_start_padding_px: z.number().int().nonnegative(),
   }),
 );
 
 // Room before the chevron of a top-level row.
-const ROW_START_PADDING_PX = 8;
+const ROW_START_PADDING_PX = treeConfig.row_start_padding_px;
 
 type FolderTreeProps = {
   items: Bookmark[];
@@ -122,7 +123,7 @@ function TreeRow({ row, isSelected, isTabStop, onActivate, onToggle }: TreeRowPr
           )}
         </span>
       ) : (
-        <span className="w-[18px] shrink-0" />
+        <span className="w-tree-chevron shrink-0" />
       )}
       {!isSection && (
         <Folder

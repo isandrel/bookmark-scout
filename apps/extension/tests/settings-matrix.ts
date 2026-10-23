@@ -43,6 +43,7 @@ const MANAGER = 'components/page/BookmarksPage.tsx';
 const MENUS = 'services/action-menus.ts';
 const TABLE_DEFAULTS = 'hooks/use-bookmark-table-view-defaults.ts';
 const MENUS_NOTE = 'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).';
+const POPUP_CUSTOMIZE = 'popup-customize.spec.ts';
 
 // Shared test references.
 const CUSTOMIZE_UNIT = 'manager-customize.test.ts';
@@ -383,6 +384,51 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'popup: resting on a bookmark shows its details after the delay, Escape closes it in place, and the pointer can move onto it',
     ),
   ]),
+  hoverCardOpenDelayMs: tested('hooks/use-hover-card.ts', [
+    unit('hover-card.test.ts', 'reads the open delay each time a card is about to open'),
+    e2e(POPUP_CUSTOMIZE, 'hover card delay and details follow their settings'),
+  ]),
+  hoverCardFields: tested(
+    'components/bookmark/BookmarkHoverCard.lazy.tsx',
+    [
+      unit(
+        'hover-card.test.ts',
+        'follows the order set, hides what the setting leaves out, and skips unknown ids',
+      ),
+      e2e(POPUP_CUSTOMIZE, 'hover card delay and details follow their settings'),
+    ],
+    'Edited in Options > Appearance > Popup (PopupLayoutPanel); kept on this device.',
+  ),
+  treeDensity: tested(
+    'components/bookmark/PopupTree.tsx',
+    [e2e(POPUP_CUSTOMIZE, 'compact tree density makes popup rows shorter')],
+    'Kept on this device.',
+  ),
+  popupSections: tested(
+    POPUP,
+    [
+      unit(
+        'popup-layout.test.ts',
+        'follow the order set, hide what it leaves out, and always keep the bookmark tree',
+      ),
+      e2e(
+        POPUP_CUSTOMIZE,
+        'popup sections follow the order set in Options, in the popup and the side panel',
+      ),
+    ],
+    'Edited in Options > Appearance > Popup (PopupLayoutPanel); kept on this device.',
+  ),
+  popupToolbarButtons: tested(
+    'components/bookmark/BookmarkSearch.tsx',
+    [
+      unit(
+        'popup-layout.test.ts',
+        'hide the buttons the setting leaves out, the theme button included',
+      ),
+      e2e(POPUP_CUSTOMIZE, 'a toolbar button hidden in Options leaves the popup'),
+    ],
+    'Edited in Options > Appearance > Popup (PopupLayoutPanel); kept on this device.',
+  ),
   tooltipDelayMs: tested('components/ui/tooltip.tsx', [
     e2e(SETTINGS_E2E, 'tooltip delay setting controls when a tooltip opens'),
   ]),
@@ -539,6 +585,44 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       'shows the card details and preview details the settings list, in their order',
     ),
     cards,
+  ]),
+  popupBookmarkMenu: tested(
+    'services/popup-row-actions.ts',
+    [
+      unit(
+        'popup-action-menus.test.ts',
+        'hide and reorder actions as the user arranged them, the first ones as buttons',
+      ),
+      e2e(
+        POPUP_CUSTOMIZE,
+        'a popup row ⋯ menu lists the configured actions and hiding one in Options removes it',
+      ),
+    ],
+    'Edited in Options > Behavior > Popup menus (PopupMenusPanel); kept on this device.',
+  ),
+  popupFolderMenu: tested(
+    'services/popup-row-actions.ts',
+    [
+      unit(
+        'popup-action-menus.test.ts',
+        'leave out what does not apply without moving a later action onto the row',
+      ),
+      e2e(
+        POPUP_CUSTOMIZE,
+        'a popup row ⋯ menu lists the configured actions and hiding one in Options removes it',
+      ),
+    ],
+    'Edited in Options > Behavior > Popup menus (PopupMenusPanel); kept on this device.',
+  ),
+  popupExpandOnOpen: tested(POPUP, [
+    unit(
+      'popup-layout.test.ts',
+      'opens the bookmarks bar, or the remembered folders that still exist',
+    ),
+    e2e(
+      POPUP_CUSTOMIZE,
+      'Expand on Open opens the bookmarks bar, or the folders left open last time',
+    ),
   ]),
   askAiWebSearch: tested(
     'services/ai-agent.ts',

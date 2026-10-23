@@ -258,27 +258,34 @@
 # feat/manager-customize rebased on main: ZIP 2,087,669 / 2,087,572 / 2,087,724, uncompressed
 # 7,024,226 / 7,024,222 / 7,024,385 B (Chrome / Edge / Firefox), 3,968,001 B of JavaScript, 89,847 B
 # of CSS, and 2,489,610 B of locales.
+# Raised on 2026-10-23 (ZIP 2,100,000 to 2,115,000, uncompressed 7,040,000 to 7,100,000, javascript
+# 3,980,000 to 3,995,000, css 90,000 to 91,000, locales 2,500,000 to 2,545,000) for the popup
+# customization (row actions with ⋯ and right-click menus, part and button order, expand on open,
+# density, hover card; 37 messages in 12 languages) on top of the manager customization. Measured on
+# feat/popup-customize rebased on main: ZIP 2,103,741 / 2,103,716 / 2,103,862, uncompressed
+# 7,086,250 / 7,086,246 / 7,086,409 B (Chrome / Edge / Firefox), 3,988,941 B of JavaScript, 90,449 B
+# of CSS, and 2,530,357 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_100_000
-raw_bytes = 7_040_000
+zip_bytes = 2_115_000
+raw_bytes = 7_100_000
 
 [targets.edge]
-zip_bytes = 2_100_000
-raw_bytes = 7_040_000
+zip_bytes = 2_115_000
+raw_bytes = 7_100_000
 
 [targets.firefox]
-zip_bytes = 2_100_000
-raw_bytes = 7_040_000
+zip_bytes = 2_115_000
+raw_bytes = 7_100_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 3_980_000
-css = 90_000
+javascript = 3_995_000
+css = 91_000
 fonts = 143_000
-locales = 2_500_000
+locales = 2_545_000
 images = 320_000
 other = 29_000
