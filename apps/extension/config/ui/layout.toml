@@ -13,3 +13,14 @@ sidebar_overlay_below_width = 768
 # Whether each sidebar is open when the page loads.
 folders_open = true
 tools_open = false
+
+# Sidebar widths in pixels: where each starts, and the narrowest and widest the user can drag or
+# key it to (the handle on its inner edge). A width the user set is kept on this device.
+folders_width_px = { value = 256, min = 192, max = 480 }
+tools_width_px = { value = 320, min = 280, max = 560 }
+# How far one arrow key press on a sidebar's handle resizes it, in pixels (Shift: `resize_big_step_px`)
+resize_step_px = { value = 16, min = 1, max = 64 }
+resize_big_step_px = { value = 64, min = 8, max = 160 }
+# A sidebar never takes more than this share of the window's width, in percent, so the table (or,
+# for a drawer, the page under it) stays in view
+max_width_percent = { value = 85, min = 50, max = 100 }

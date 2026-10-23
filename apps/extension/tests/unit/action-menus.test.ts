@@ -5,14 +5,19 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { BookmarkActionMenuItems } from '@/components/ui/table/bookmark-row-menu';
 import { setLanguage } from '@/hooks/use-i18n';
 import { type Bookmark, ItemTypeEnum, previewNeighbors } from '@/lib/manager-bookmark';
-import { getSettingsFieldMeta } from '@/lib/settings-schema';
+import { getSettingScope, getSettingsFieldMeta } from '@/lib/settings-schema';
 import {
+  ACTION_MENU_KINDS,
   ACTION_MENUS,
   type ActionItemHost,
-  customizeItemMenu,
+  customizeMenu,
+  encodeMenu,
+  getHiddenMenuActions,
   getItemMenuLabel,
   getItemMenuSections,
-  ITEM_MENU_KEEP_ONE_OF,
+  isLastKeptMenuAction,
+  MENU_KEEP_ONE_OF,
+  MENU_SETTING_KEYS,
   runItemMenuAction,
 } from '@/services/action-menus';
 import { ACTION_IDS, type ActionId, getAction } from '@/services/actions';
@@ -160,26 +165,89 @@ describe('bookmark action menus', () => {
   });
 
   it('hide and reorder item-menu actions as the user arranged them', () => {
-    expect(customizeItemMenu([])).toEqual(ACTION_MENUS.item);
-    // Order follows the setting within each configured group; unnamed actions are hidden.
-    expect(customizeItemMenu(['delete', 'viewDetails', 'copy', 'edit', 'cut'])).toEqual([
+    expect(customizeMenu('item', [])).toEqual(ACTION_MENUS.item);
+    // A list from before sections could move: order follows it within each configured group, and
+    // unnamed actions are hidden.
+    expect(customizeMenu('item', ['delete', 'viewDetails', 'copy', 'edit', 'cut'])).toEqual([
       ['viewDetails', 'edit'],
       ['copy', 'cut'],
       ['delete'],
     ]);
-    const custom = customizeItemMenu(['copyId', 'edit']);
+    const custom = customizeMenu('item', ['copyId', 'edit']);
     expect(getItemMenuSections([link], createItemHost(), custom)).toEqual([['edit'], ['copyId']]);
+  });
+
+  it('moves actions between sections, hides and reorders them, in every menu', () => {
+    // Each section's first action is marked, so sections cost no entries of their own.
+    const moved = encodeMenu([
+      ['delete', 'edit'],
+      ['copy', 'viewDetails'],
+    ]);
+    expect(moved).toEqual(['-delete', 'edit', '-copy', 'viewDetails']);
+    expect(customizeMenu('item', moved)).toEqual([
+      ['delete', 'edit'],
+      ['copy', 'viewDetails'],
+    ]);
+    // One section, which an older release could not have stored, is still the user's own.
+    expect(customizeMenu('organize', ['-addFolder', 'sortByName'])).toEqual([
+      ['addFolder', 'sortByName'],
+    ]);
+    expect(getHiddenMenuActions('organize', [['addFolder', 'sortByName']])).toEqual([
+      'addBookmark',
+    ]);
+    // Paste moved into a section of its own, ahead of the rest.
+    expect(customizeMenu('emptySpace', ['-paste', '-addFolder', 'addBookmark'])).toEqual([
+      ['paste'],
+      ['addFolder', 'addBookmark'],
+    ]);
+    expect(customizeMenu('preview', ['-edit', 'openInNewTab'])).toEqual([['edit', 'openInNewTab']]);
+    // Ids another menu holds, unknown ids, repeats, and empty sections are left out.
+    expect(
+      customizeMenu('organize', ['-delete', '-sortByName', 'sortByName', 'nope', '-addBookmark']),
+    ).toEqual([['sortByName'], ['addBookmark']]);
+    // Reset is the empty setting: the configured menu.
+    for (const kind of ACTION_MENU_KINDS) {
+      expect(customizeMenu(kind, [])).toEqual(ACTION_MENUS[kind]);
+      expect(customizeMenu(kind, encodeMenu(ACTION_MENUS[kind]))).toEqual(ACTION_MENUS[kind]);
+    }
+  });
+
+  it('stores each menu in a setting that holds every arrangement of its actions', () => {
+    const meta = getSettingsFieldMeta();
+    for (const kind of ACTION_MENU_KINDS) {
+      const field = meta[MENU_SETTING_KEYS[kind]];
+      const ids = ACTION_MENUS[kind].flat();
+      // Every action in a section of its own is the longest arrangement.
+      const longest = encodeMenu(ids.map((id) => [id]));
+      expect(longest.length, kind).toBeLessThanOrEqual(field.maxItems ?? 0);
+      for (const entry of longest)
+        expect(entry.length, entry).toBeLessThanOrEqual(field.maxLength ?? 0);
+    }
+    // The item menu syncs; the synced lists item has no room for the others, kept per device.
+    expect(getSettingScope('managerMenuActions')).toBe('lists');
+    for (const kind of ['organize', 'emptySpace', 'preview'] as const) {
+      expect(getSettingScope(MENU_SETTING_KEYS[kind]), kind).toBe('device');
+    }
   });
 
   it('keeps one command for any single item, and says so when none applies', () => {
     const rootFolder: Bookmark = { ...folder, id: '1', isRootFolder: true };
-    expect(ITEM_MENU_KEEP_ONE_OF.length).toBeGreaterThan(0);
-    for (const id of ITEM_MENU_KEEP_ONE_OF) {
+    expect(MENU_KEEP_ONE_OF.item.length).toBeGreaterThan(0);
+    for (const id of MENU_KEEP_ONE_OF.item) {
       for (const item of [link, folder, rootFolder]) {
-        const menu = getItemMenuSections([item], createItemHost(), customizeItemMenu([id]));
+        const menu = getItemMenuSections([item], createItemHost(), customizeMenu('item', [id]));
         expect(menu, `${id} for ${item.title}`).toEqual([[id]]);
       }
     }
+    // The last kept command cannot be hidden, unless another kept one is shown; every menu keeps
+    // its last command.
+    expect(isLastKeptMenuAction('item', [['viewDetails', 'delete']], 'viewDetails')).toBe(true);
+    expect(isLastKeptMenuAction('item', [['viewDetails'], ['copyId']], 'viewDetails')).toBe(false);
+    expect(isLastKeptMenuAction('item', [['viewDetails', 'delete']], 'delete')).toBe(false);
+    expect(isLastKeptMenuAction('organize', [['sortByName']], 'sortByName')).toBe(true);
+    expect(isLastKeptMenuAction('organize', [['sortByName', 'addFolder']], 'addFolder')).toBe(
+      false,
+    );
     // Show in folder alone applies only to search results, so a row of the folder shown gets a
     // disabled note rather than an empty menu.
     const markup = renderMenu([link], [['showInFolder']]);
@@ -190,7 +258,6 @@ describe('bookmark action menus', () => {
   it('fits every menu and agent action id within the settings that list them', () => {
     const meta = getSettingsFieldMeta();
     const lists = {
-      managerMenuActions: ACTION_MENUS.item.flat(),
       askAiDisabledActions: ACTION_IDS.filter((id) => getAction(id).agent),
     } as const;
     for (const [key, ids] of Object.entries(lists)) {

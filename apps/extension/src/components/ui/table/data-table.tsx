@@ -96,10 +96,17 @@ interface DataTableProps<TData extends RowData> {
   /** Middle-click: open a bookmark in a background tab. */
   onRowOpenInBackground?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
-  /** Drawn at the top of a row's card in the cards view: the room for a cover. */
-  cardMedia?: (row: TData) => React.ReactNode;
-  /** Drawn under a card's address in the cards view, such as tags and a summary. */
+  /**
+   * What a card of the cards view shows below its title, in order (a leading field is drawn above
+   * the title, as a cover is): each is drawn by `renderCardField`, or as the row's cell of the
+   * column with that id where it returns undefined.
+   */
+  cardFields?: readonly string[];
+  renderCardField?: (row: TData, field: string) => React.ReactNode | undefined;
+  /** Drawn at the end of a card in the cards view, such as a folder's item count. */
   cardDetails?: (row: TData) => React.ReactNode;
+  /** The narrowest card of the cards view, in pixels. */
+  cardMinWidth?: number;
   /** Receives the table's selection commands, for the page's keyboard shortcuts. */
   handleRef?: React.Ref<DataTableHandle<TData>>;
   /** Wraps the table's frame, for example in a right-click menu. */
@@ -180,6 +187,7 @@ export type DataTableSavedSearchContext = {
 };
 
 const NO_FOLDER_IDS: ReadonlySet<string> = new Set();
+const NO_CARD_FIELDS: readonly string[] = [];
 
 /**
  * Whether a mouse event on a row came from a control inside it (a button, link, checkbox, or a
@@ -214,8 +222,10 @@ export function DataTable<TData extends RowData>({
   onRowOpen,
   onRowOpenInBackground,
   rowClassName,
-  cardMedia,
+  cardFields = NO_CARD_FIELDS,
+  renderCardField,
   cardDetails,
+  cardMinWidth,
   handleRef,
   renderFrame,
   getRowProps,
@@ -231,7 +241,10 @@ export function DataTable<TData extends RowData>({
   // Read before the first render when the page preloaded it, so the columns never move once shown.
   const [preloadedView] = React.useState(readPreloadedBookmarkTableView);
   const { value: viewMode } = useSetting('managerViewMode');
-  const initialView = preloadedView ?? DEFAULT_BOOKMARK_TABLE_VIEW;
+  // What a new or reset view shows (Options > Behavior > Manager table); parts of the view the
+  // user has not changed follow it (`createBookmarkTableViewFollower`).
+  const viewDefaults = useBookmarkTableViewDefaults();
+  const initialView = preloadedView ?? viewDefaults;
   const [sorting, setSorting] = React.useState<SortingState>(initialView.sorting);
   // Filters other than the search box, which the page keeps (`searchQuery`).
   const [otherColumnFilters, setOtherColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -281,6 +294,7 @@ export function DataTable<TData extends RowData>({
   const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(preloadedView !== undefined);
   // The view as last loaded or stored, so a change stores only the parts that changed.
   const storedViewRef = React.useRef<BookmarkTableView | null>(preloadedView ?? null);
+  const [viewFollower] = React.useState(createBookmarkTableViewFollower);
   const tableFrameRef = React.useRef<HTMLDivElement>(null);
   const [tableWidth, setTableWidth] = React.useState<number>();
 
@@ -338,6 +352,7 @@ export function DataTable<TData extends RowData>({
     ) as Partial<BookmarkTableView>;
     if (Object.keys(changes).length === 0) return;
     storedViewRef.current = view;
+    viewFollower.own(Object.keys(changes) as (keyof BookmarkTableView)[]);
     void updateBookmarkTableView(changes).catch((error) =>
       console.error('Failed to save bookmark table view:', error),
     );
@@ -349,6 +364,51 @@ export function DataTable<TData extends RowData>({
     pagination.pageSize,
     savedColumnSizing,
     sorting,
+    viewFollower,
+  ]);
+
+  /** Shows `parts` of the view as they are, without storing them (they are not the user's). */
+  const showViewParts = React.useCallback((parts: Partial<BookmarkTableView>) => {
+    if (parts.sorting) setSorting(parts.sorting);
+    if (parts.columnVisibility) setColumnVisibility(parts.columnVisibility);
+    if (parts.columnOrder) setColumnOrder(parts.columnOrder);
+    if (parts.browserOrder !== undefined) setBrowserOrder(parts.browserOrder);
+    const { pageSize } = parts;
+    if (pageSize !== undefined) setPagination((previous) => ({ ...previous, pageSize }));
+    if (parts.columnSizing) {
+      setColumnSizing(parts.columnSizing);
+      setSavedColumnSizing(parts.columnSizing);
+    }
+    const stored = storedViewRef.current;
+    if (stored) storedViewRef.current = { ...stored, ...parts };
+  }, []);
+
+  // Parts of the view nobody changed follow the defaults as they change, and so does a part
+  // removed from storage elsewhere (Reset table view or Reset column widths in Options, or Reset
+  // view in another manager tab).
+  const { value: savedColumns, isLoading: savedColumnsLoading } =
+    useStoredValue(bookmarkTableViewValue);
+  const { value: savedLayout, isLoading: savedLayoutLoading } =
+    useStoredValue(bookmarkTableLayoutValue);
+  React.useEffect(() => {
+    const stored = storedViewRef.current;
+    if (!isTableViewLoaded || !stored || savedColumnsLoading || savedLayoutLoading) return;
+    const followed = viewFollower.follow(savedColumns, savedLayout, viewDefaults);
+    const changed = Object.fromEntries(
+      Object.entries(followed).filter(
+        ([key, value]) => !isSameJson(value, stored[key as keyof BookmarkTableView]),
+      ),
+    ) as Partial<BookmarkTableView>;
+    if (Object.keys(changed).length > 0) showViewParts(changed);
+  }, [
+    isTableViewLoaded,
+    savedColumns,
+    savedColumnsLoading,
+    savedLayout,
+    savedLayoutLoading,
+    showViewParts,
+    viewDefaults,
+    viewFollower,
   ]);
 
   const isResizingColumn = columnResizing.isResizingColumn !== false;
@@ -464,19 +524,19 @@ export function DataTable<TData extends RowData>({
     [goToFirstPage, setColumnFilters],
   );
 
+  // Back to the defaults in Options, which every part of the view then follows.
+  const viewDefaultsRef = React.useRef(viewDefaults);
+  viewDefaultsRef.current = viewDefaults;
   const resetView = React.useCallback(() => {
-    setSorting([]);
-    setColumnVisibility({ ...DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility });
-    setColumnOrder([...DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder]);
-    setPagination({ pageIndex: 0, pageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize });
-    setBrowserOrder(DEFAULT_BOOKMARK_TABLE_VIEW.browserOrder);
-    setColumnSizing({});
-    setSavedColumnSizing({});
-    storedViewRef.current = structuredClone(DEFAULT_BOOKMARK_TABLE_VIEW);
+    const defaults = structuredClone(viewDefaultsRef.current);
+    viewFollower.reset();
+    showViewParts(defaults);
+    setPagination({ pageIndex: 0, pageSize: defaults.pageSize });
+    storedViewRef.current = defaults;
     void resetBookmarkTableView().catch((error) =>
       console.error('Failed to reset bookmark table view:', error),
     );
-  }, []);
+  }, [showViewParts, viewFollower]);
 
   const folderData = browserOrder ? browserOrderData : data;
   const showsAllBookmarks = columnFilters.length > 0 && !applyToCurrentFolder;
@@ -1025,7 +1085,9 @@ export function DataTable<TData extends RowData>({
                       aria-label={label}
                       data-testid="bookmark-cards"
                       style={
-                        { '--card-min-width': `${CARD_MIN_WIDTH_PX}px` } as React.CSSProperties
+                        cardMinWidth === undefined
+                          ? undefined
+                          : ({ '--card-min-width': `${cardMinWidth}px` } as React.CSSProperties)
                       }
                       className="grid grid-cols-[repeat(auto-fill,minmax(var(--card-min-width),1fr))] gap-3 p-3"
                     >
@@ -1041,6 +1103,18 @@ export function DataTable<TData extends RowData>({
                               ? flexRender(cell.column.columnDef.cell, cell.getContext())
                               : null;
                           };
+                          // A field the page does not draw is that column's cell.
+                          const fieldOf = (field: string) => {
+                            const drawn = renderCardField?.(row.original, field);
+                            return drawn === undefined ? (
+                              <div className="min-w-0 truncate empty:hidden">{cellOf(field)}</div>
+                            ) : (
+                              drawn
+                            );
+                          };
+                          // A leading cover stays above the title, as on a printed card.
+                          const aboveTitle = cardFields[0] === 'cover' ? ['cover'] : [];
+                          const belowTitle = cardFields.slice(aboveTitle.length);
                           return (
                             // biome-ignore lint/a11y/useSemanticElements: a card in the cards grid, not a table row.
                             <div
@@ -1057,7 +1131,9 @@ export function DataTable<TData extends RowData>({
                                 rowClassName?.(row.original),
                               )}
                             >
-                              {cardMedia?.(row.original)}
+                              {aboveTitle.map((field) => (
+                                <React.Fragment key={field}>{fieldOf(field)}</React.Fragment>
+                              ))}
                               {/* biome-ignore lint/a11y/useSemanticElements lint/a11y/useFocusableInteractive: a card's cell; the card takes focus, as a table row does. */}
                               <div role="gridcell" className="flex min-w-0 items-start gap-2">
                                 <div className="flex h-5 shrink-0 items-center">
@@ -1074,7 +1150,9 @@ export function DataTable<TData extends RowData>({
                                 tabIndex={-1}
                                 className="flex min-w-0 flex-col gap-1.5 pl-6 text-xs text-muted-foreground"
                               >
-                                <div className="min-w-0 truncate empty:hidden">{cellOf('url')}</div>
+                                {belowTitle.map((field) => (
+                                  <React.Fragment key={field}>{fieldOf(field)}</React.Fragment>
+                                ))}
                                 {cardDetails?.(row.original)}
                               </div>
                             </div>

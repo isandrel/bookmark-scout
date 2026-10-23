@@ -278,7 +278,8 @@ describe('settings persistence', () => {
         if (typeof fallback === 'number') {
           const range = bounds[key];
           if (!range) return [key, longestOf((field.options ?? []).map((option) => option.value))];
-          const candidates = [range.min, range.max, -1];
+          // -1 (no limit) is a value only where the setting allows it.
+          const candidates = [range.min, range.max, ...(range.unlimited ? [-1] : [])];
           if (!range.integer) candidates.push(range.min + (range.max - range.min) / 3);
           return [key, longestOf(candidates)];
         }

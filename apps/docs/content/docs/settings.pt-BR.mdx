@@ -147,6 +147,37 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 | **Visualização do gerenciador** | Lista | **Lista** mostra a tabela; **Cartões** mostra as mesmas linhas como uma grade de cartões, com a mesma seleção, teclas e menus. Os dois botões ao lado de **Ver** também alternam. Fica salvo somente neste dispositivo |
 | **Layout da barra lateral Ferramentas** | Abas | **Abas** mostra uma seção por vez, com **Tudo** para todas as ferramentas; **Uma lista** mostra todas as seções em sequência. Fica só neste dispositivo |
 
+### Gerenciador de favoritos [#manager-view]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Ordem do gerenciador** | Igual à Ordem de classificação | A ordem em que o gerenciador mostra uma pasta até você ordenar a tabela por uma coluna: **Igual à Ordem de classificação** segue **Ordem de classificação**, acima, ou escolha uma das ordens só para o gerenciador. O pop-up e o painel lateral continuam usando **Ordem de classificação** |
+| **Pasta inicial** | Barra de favoritos | A pasta em que o gerenciador abre quando você o abre sem uma pasta: a **Barra de favoritos**, a **Última pasta aberta** neste dispositivo ou **Uma pasta que eu escolher** (**Pasta de início**). Se a pasta não existir mais, abre a barra de favoritos. Um endereço que indica uma pasta continua abrindo essa pasta. Fica salvo só neste dispositivo |
+| **Barras laterais ao abrir** | Padrão | **Padrão** abre a barra lateral de pastas e deixa a de Ferramentas fechada; **Como eu deixei** abre cada uma como estava na última vez que você usou o gerenciador neste dispositivo. Em ambos os casos, arraste a borda interna de uma barra lateral para redimensioná-la (ou foque a borda e use as setas, `Shift` para passos maiores, `Home` e `End`); a largura fica salva neste dispositivo |
+
+### Tabela do gerenciador [#manager-table]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Linhas por página padrão** | <SettingDefault path="behavior.manager_table.page_size" /> | Linhas por página de uma visualização de tabela nova ou redefinida. Fica salvo só neste dispositivo |
+| **Ordenação padrão** | Ordem da pasta | Como uma visualização de tabela nova ou redefinida é ordenada: a ordem da pasta (**Ordem do gerenciador**), **Ordem do navegador**, ou por título, URL ou data de adição. Fica salvo só neste dispositivo |
+
+**Colunas padrão** escolhe as colunas que uma visualização de tabela nova ou redefinida mostra, em ordem: marque uma coluna para mostrá-la e arraste-a pela alça (ou use o menu da alça) para movê-la. Esses padrões valem para cada parte da visualização que você não mudou no gerenciador (colunas, ordenação e linhas por página), também quando você os muda depois, e para a visualização inteira depois de redefini-la. O que você mudou no gerenciador, como uma coluna exibida em **Ver** ou as linhas por página abaixo da tabela, fica como você deixou. **Redefinir visualização da tabela** esquece todas as mudanças da visualização, como **Ver** > **Redefinir visualização** no gerenciador, e **Redefinir largura das colunas** esquece só as larguras que você arrastou. Fica salvo só neste dispositivo.
+
+### Cartões [#manager-cards]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Tamanho do cartão** | Médio | A largura mínima de cada cartão da visualização em cartões: **Pequeno**, **Médio** ou **Grande**. Cada linha coloca quantos cartões couberem. Fica salvo só neste dispositivo |
+| **Tags por cartão** | <SettingDefault path="behavior.manager_cards.max_tags" /> | Um cartão mostra este número de tags e depois **+N** para o restante. Fica salvo só neste dispositivo |
+| **Linhas do resumo** | <SettingDefault path="behavior.manager_cards.summary_lines" /> | Linhas do resumo de um favorito que um cartão mostra; leitores de tela leem o resumo inteiro. Fica salvo só neste dispositivo |
+
+**Conteúdo dos cartões** escolhe o que cada cartão mostra abaixo do título, em ordem: a capa, a URL, o caminho da pasta, as tags e o resumo (tudo menos o caminho da pasta no início). Uma capa em primeiro lugar fica acima do título. O cartão de uma pasta sempre diz quantos itens ela tem. Fica salvo só neste dispositivo.
+
+### Pré-visualização [#manager-preview]
+
+**Conteúdo da pré-visualização** escolhe o que a pré-visualização de um favorito mostra abaixo do título e do endereço, em ordem: a capa, o caminho da pasta, as tags, o resumo e de onde veio a capa (com **Buscar capa** e **Remover capa**). Fica salvo só neste dispositivo.
+
 ### Excluir [#deleting]
 
 | Configuração | Padrão | O que faz |
@@ -161,7 +192,7 @@ Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu nave
 
 ### Menus do gerenciador de favoritos [#manager-menus]
 
-Escolha quais comandos os menus de clique direito e ⋯ do gerenciador mostram e arraste um comando pela alça para reordená-lo dentro do grupo. A alça também é um botão cujo menu move o comando para o topo, para cima, para baixo ou para o fim, então o teclado também funciona. **Restaurar padrões** traz de volta o menu completo. **Ver detalhes** ou **Copiar ID do favorito** sempre fica, para que o menu tenha um comando para qualquer favorito ou pasta; quando nenhum dos comandos que você manteve se aplica, o menu mostra **Nenhuma ação disponível**.
+Organize cada menu do gerenciador na sua própria guia: o **Menu de itens** (clique com o botão direito em uma linha ou em uma pasta da árvore, ou o botão ⋯ de uma linha), o **Menu Organizar** (⋮ no cabeçalho), o **Menu do espaço vazio** (clique com o botão direito abaixo das linhas) e os **Botões da pré-visualização** (abaixo da pré-visualização de um favorito; o primeiro é o principal). Desmarque um comando para ocultá-lo; ele vai para **Ocultos**, onde marcá-lo de novo o devolve ao final. Arraste um comando pela alça para reordená-lo, ou arraste um **Separador de seção** para passar comandos de uma seção para outra; a alça também é um botão cujo menu move o item para o topo, para cima, para baixo ou para o final, então o teclado também funciona. **Adicionar separador de seção** adiciona um no final para você subir, e o ✕ dele o remove, juntando duas seções. **Restaurar padrões** restaura só aquele menu. Todo menu mantém pelo menos um comando, e o menu de itens mantém **Ver detalhes** ou **Copiar ID do favorito**, para ter um comando para qualquer favorito ou pasta; se nenhum dos comandos mantidos se aplicar, o menu diz **Nenhuma ação disponível**. O menu de itens é sincronizado com as outras configurações; os outros menus ficam salvos só neste dispositivo.
 
 ## IA [#ai]
 

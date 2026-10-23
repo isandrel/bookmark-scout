@@ -22,14 +22,75 @@ show_target = true
 confirm_open_above = { default = 15, min = 2, max = 200, step = 1 }
 
 [manager_menus]
-# The bookmark manager's item menu (right-click and ⋯): the actions shown, in order, as action ids
-# from config/ui/actions.toml. Empty means that file's menu. Edited in Options > Behavior.
+# The bookmark manager's menus, as the user arranged them in Options > Behavior > Bookmark manager
+# menus: the actions shown, in order, as action ids from config/ui/actions.toml, the first of each
+# section marked with a leading "-". Empty means that file's menu. `actions` is the item menu
+# (right-click and ⋯), `organize` the header's ⋮ menu, `empty_space` the right-click menu on the
+# table's empty space, and `preview` the buttons of a bookmark's preview. An item menu stored by
+# an older release has no "-": it keeps that file's sections, with the actions it lists in its
+# order. Each holds at most its menu's actions (`max_items`), each id and its "-" at most
+# `max_length` long (tests/unit/action-menus.test.ts checks both against the menus). The item menu
+# syncs; the other three are kept on this device only, as the synced lists item is full.
 actions = { default = [], max_items = 16, max_length = 20 }
+organize = { default = [], max_items = 4, max_length = 12 }
+empty_space = { default = [], max_items = 4, max_length = 12 }
+preview = { default = [], max_items = 4, max_length = 13 }
 
 [manager_view]
 # How the manager shows a folder or search: "list" (the table) or "cards" (a grid of cards with the
 # same rows, selection, and menus)
 mode = "list"
+# The manager's order for a folder until the table is sorted by a column: "same_as_popup" (Sort
+# Order in Tree and sorting) or one of its orders ("browser", "date", "alphabetical", "folders")
+sort_order = "same_as_popup"
+# The folder the manager opens on when its address names none: "bookmarks_bar" (as the browser's
+# own manager does), "last" (the folder open when the manager was last used on this device), or
+# "chosen" (`start_folder_id`). A folder that is gone opens the bookmarks bar. Kept on this device
+# only, as folder ids differ on every device.
+start_folder = "bookmarks_bar"
+start_folder_id = ""
+# Whether the folder and Tools sidebars open as config/ui/layout.toml says ("default") or as they
+# were when the manager was last used on this device ("remember"). Kept on this device only.
+sidebars_start = "default"
+
+[manager_table]
+# What a table view starts with, by column id (src/components/ui/table/columns.tsx): the columns
+# shown, in order, the rows per page (one of `page_sizes` in config/ui/manager-table.toml), and the
+# sort (a key of `[sort_choices]` there). They apply to every part of the view not changed in the
+# manager since it was new or reset (View > Reset view, or Reset table view in Options). All three
+# are kept on this device only, as the column widths and rows per page are: they suit one screen.
+columns = { default = ["title", "url", "dateAdded"], max_items = 12, max_length = 17 }
+# The table renders every row of a page, so a larger default costs time per search keystroke: 50
+# instead of 10 took manager.filter.keystroke from 136 to 280 ms (tests/perf, 4x CPU throttle;
+# budget 400)
+page_size = 50
+sort = "none"
+
+[manager_cards]
+# What a card of the cards view shows, in order, below its title (a leading "cover" stays above
+# it): "cover", "url" (the address), "folder" (the folder path), "tags", and "summary". A folder's
+# card always says how many items it holds. Every card setting is kept on this device only, as
+# Manager View is: they suit one screen.
+fields = { default = ["cover", "url", "tags", "summary"], max_items = 5, max_length = 7 }
+# How wide cards are at least: a key of `card_min_width_px` in config/ui/manager-table.toml
+# ("small", "medium", or "large"); the grid fits as many in a row as that allows
+size = "medium"
+# Tags show as chips, at most this many, then a "+N" chip for the rest; the summary is cut to this
+# many lines (the whole text stays in the page for screen readers)
+max_tags = { default = 3, min = 1, max = 12, step = 1, integer = true }
+summary_lines = { default = 2, min = 1, max = 8, step = 1, integer = true }
+
+[manager_preview]
+# What a bookmark's preview shows under its title and address, in order: "cover", "folder",
+# "tags", "summary", and "coverSource" (where the cover came from, with Fetch cover and Remove
+# cover). Kept on this device only, like the cards.
+fields = { default = [
+  "cover",
+  "folder",
+  "tags",
+  "summary",
+  "coverSource",
+], max_items = 5, max_length = 11 }
 
 [tools_sidebar]
 # How the manager's Tools sidebar lists its tools: "tabs" (one tab per section, plus All, opening

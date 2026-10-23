@@ -2,7 +2,8 @@
  * Which bookmark actions each manager menu shows, in what order and sections, from
  * `config/ui/actions.toml`, and what a menu needs to render them: the sections available for the
  * clicked items, and each action's text. The actions themselves are registry entries
- * (`actions.ts`); a menu lists ids, so adding an action to a menu is a config change.
+ * (`actions.ts`); a menu lists ids, so adding an action to a menu is a config change. The user
+ * hides, reorders, and moves actions between sections of every menu in Options (`customizeMenu`).
  */
 import { z } from 'zod';
 
@@ -77,7 +78,16 @@ export type ActionFolderMenu = {
 
 export type ActionMenuKind = 'item' | 'organize' | 'emptySpace' | 'preview';
 
+/** Every manager menu, in the order Options shows them. */
+export const ACTION_MENU_KINDS = [
+  'item',
+  'organize',
+  'emptySpace',
+  'preview',
+] as const satisfies readonly ActionMenuKind[];
+
 const sectionsSchema = z.array(z.array(z.string()).min(1)).min(1);
+const keepOneSchema = z.array(z.string()).min(1).optional();
 
 const menuConfig = readConfig(
   'ui/actions',
@@ -88,7 +98,12 @@ const menuConfig = readConfig(
       empty_space: sectionsSchema,
       preview: sectionsSchema,
     }),
-    item_menu: z.strictObject({ keep_one_of: z.array(z.string()).min(1) }),
+    keep_one_of: z.strictObject({
+      item: keepOneSchema,
+      organize: keepOneSchema,
+      empty_space: keepOneSchema,
+      preview: keepOneSchema,
+    }),
   }),
 );
 
@@ -101,13 +116,24 @@ export const ACTION_MENUS: Readonly<Record<ActionMenuKind, readonly (readonly Ac
 };
 
 /**
- * Item-menu actions available for any single bookmark or folder, of which the user's menu always
- * keeps at least one shown (`managerMenuActions`), so the menu never has nothing to offer for one
- * item.
+ * Per menu, actions of which the user's menu always keeps at least one shown, such as the item
+ * menu's commands available for any single bookmark or folder, so it never has nothing to offer
+ * for one item. Empty where the config names none; every menu keeps at least one action anyway.
  */
-export const ITEM_MENU_KEEP_ONE_OF: readonly ActionId[] = checkMenu('item', [
-  menuConfig.item_menu.keep_one_of,
-])[0];
+export const MENU_KEEP_ONE_OF: Readonly<Record<ActionMenuKind, readonly ActionId[]>> = {
+  item: checkKept('item', menuConfig.keep_one_of.item),
+  organize: checkKept('organize', menuConfig.keep_one_of.organize),
+  emptySpace: checkKept('emptySpace', menuConfig.keep_one_of.empty_space),
+  preview: checkKept('preview', menuConfig.keep_one_of.preview),
+};
+
+/** The setting that holds each menu as the user arranged it (Options > Behavior). */
+export const MENU_SETTING_KEYS = {
+  item: 'managerMenuActions',
+  organize: 'managerOrganizeMenu',
+  emptySpace: 'managerEmptySpaceMenu',
+  preview: 'managerPreviewMenu',
+} as const satisfies Record<ActionMenuKind, keyof Settings>;
 
 /** Fails at load when a menu names an action that is unknown or cannot appear in that menu. */
 function checkMenu(kind: ActionMenuKind, sections: string[][]): ActionId[][] {
@@ -121,6 +147,16 @@ function checkMenu(kind: ActionMenuKind, sections: string[][]): ActionId[][] {
       return id;
     }),
   );
+}
+
+/** Fails at load when a kept action is not in its menu. */
+function checkKept(kind: ActionMenuKind, ids: string[] | undefined): ActionId[] {
+  const inMenu = new Set<string>(ACTION_MENUS[kind].flat());
+  return (ids ?? []).map((id) => {
+    if (!inMenu.has(id))
+      throw new Error(`config/ui/actions.toml: "${id}" is not in the ${kind} menu`);
+    return id as ActionId;
+  });
 }
 
 /** The item-menu actions available for `items`, by section; empty sections are dropped. */
@@ -171,21 +207,69 @@ export function isItemMenuActionAvailable(
 }
 
 /**
- * The item menu as the user arranged it (Options > Behavior, `managerMenuActions`): the
- * configured sections, each keeping only the actions the user shows, in the user's order. An
- * empty setting is the configured menu; an action the setting does not name is hidden.
+ * A menu as the user arranged it in Options (`MENU_SETTING_KEYS`): its sections, the first action
+ * of each marked by `MENU_SECTION_START` in the stored list, with the actions shown in the user's
+ * order. An empty setting is the configured menu, and an action of the menu the setting does not
+ * name is hidden; ids that are not in the configured menu are left out. An item menu stored before
+ * sections could be moved has no marks: it keeps the configured sections, each with the actions it
+ * names, in its order.
  */
-export function customizeItemMenu(
-  visible: readonly string[],
-  sections: readonly (readonly ActionId[])[] = ACTION_MENUS.item,
-): ActionId[][] {
-  if (visible.length === 0) return sections.map((section) => [...section]);
-  const order = new Map(visible.map((id, index) => [id, index]));
-  return sections
-    .map((section) =>
-      section
-        .filter((id) => order.has(id))
-        .sort((left, right) => (order.get(left) ?? 0) - (order.get(right) ?? 0)),
-    )
-    .filter((section) => section.length > 0);
+export function customizeMenu(kind: ActionMenuKind, stored: readonly string[]): ActionId[][] {
+  const configured = ACTION_MENUS[kind];
+  if (stored.length === 0) return configured.map((section) => [...section]);
+  const inMenu = new Set<string>(configured.flat());
+  if (!stored.some((entry) => entry.startsWith(MENU_SECTION_START))) {
+    const order = new Map(stored.map((id, index) => [id, index]));
+    return configured
+      .map((section) =>
+        section
+          .filter((id) => order.has(id))
+          .sort((left, right) => (order.get(left) ?? 0) - (order.get(right) ?? 0)),
+      )
+      .filter((section) => section.length > 0);
+  }
+  const seen = new Set<string>();
+  const sections: ActionId[][] = [[]];
+  for (const entry of stored) {
+    const startsSection = entry.startsWith(MENU_SECTION_START);
+    const id = startsSection ? entry.slice(MENU_SECTION_START.length) : entry;
+    if (startsSection) sections.push([]);
+    if (inMenu.has(id) && !seen.has(id)) {
+      seen.add(id);
+      sections[sections.length - 1]?.push(id as ActionId);
+    }
+  }
+  return sections.filter((section) => section.length > 0);
+}
+
+/** What the setting stores for `sections`: their actions, the first of each section marked. */
+export function encodeMenu(sections: readonly (readonly ActionId[])[]): string[] {
+  return sections.flatMap((section) =>
+    section.map((id, index) => (index === 0 ? `${MENU_SECTION_START}${id}` : id)),
+  );
+}
+
+/** The actions of a menu the user hid: those it can show and `sections` leave out. */
+export function getHiddenMenuActions(
+  kind: ActionMenuKind,
+  sections: readonly (readonly ActionId[])[],
+): ActionId[] {
+  const shown = new Set(sections.flat());
+  return ACTION_MENUS[kind].flat().filter((id) => !shown.has(id));
+}
+
+/**
+ * Whether hiding `id` would leave the menu with nothing it must keep: the last shown action, or
+ * the last shown of the menu's `MENU_KEEP_ONE_OF`.
+ */
+export function isLastKeptMenuAction(
+  kind: ActionMenuKind,
+  sections: readonly (readonly ActionId[])[],
+  id: ActionId,
+): boolean {
+  const shown = sections.flat();
+  if (!shown.includes(id)) return false;
+  if (shown.length === 1) return true;
+  const kept = MENU_KEEP_ONE_OF[kind];
+  return kept.includes(id) && !kept.some((other) => other !== id && shown.includes(other));
 }

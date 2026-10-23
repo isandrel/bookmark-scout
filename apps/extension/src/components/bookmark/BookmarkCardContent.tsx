@@ -1,7 +1,8 @@
 /**
  * What a card of the manager's cards view (Manager View on Cards) shows besides the cells it shares
- * with the list's row: the room for a cover at the top, and under the address a folder's item
- * count or a bookmark's tags and summary. Everything comes from this device; nothing is fetched.
+ * with the list's row, as Options > Behavior > Cards arranges it (`managerCardFields`): the room
+ * for a cover, the folder path, a bookmark's tags and summary, and at the end a folder's item
+ * count. Everything comes from this device; nothing is fetched.
  *
  * The room for a cover keeps its size whether or not a cover is stored, so a card never changes
  * height when one loads. Without a cover a bookmark's room shows a placeholder tile drawn from its
@@ -88,40 +89,72 @@ function CoverPlaceholder({ item, url }: { item: Bookmark; url: string }) {
   );
 }
 
-type BookmarkCardDetailsProps = {
-  item: Bookmark;
-  /** For a folder card: how many items the folder holds directly. */
-  folderItemCount: number;
+/** How a card draws its tags and summary (Options > Behavior > Cards). */
+export type BookmarkCardLimits = {
+  /** Tag chips before a "+N" chip for the rest. */
+  maxTags: number;
+  /** Lines of the summary shown. */
+  summaryLines: number;
 };
 
-/** Under a card's address: the folder's item count, or the bookmark's stored tags and summary. */
-export function BookmarkCardDetails({ item, folderItemCount }: BookmarkCardDetailsProps) {
+type BookmarkCardFieldProps = {
+  item: Bookmark;
+  field: ManagerCardField;
+  limits: BookmarkCardLimits;
+};
+
+/**
+ * One field of a card (`managerCardFields`): the cover's room, the folder path, or a bookmark's
+ * stored tags or summary. The address is the row's own cell, which the table draws.
+ */
+export function BookmarkCardField({ item, field, limits }: BookmarkCardFieldProps) {
   const metadata = useStoredValue(bookmarkMetadataValue, (byId) => byId[item.id]).value;
-  if (item.type === ItemTypeEnum.Folder) {
-    return (
-      <p data-testid="bookmark-card-count" className="truncate">
-        {tPlural('bookmarks_cardFolderItems', folderItemCount)}
-      </p>
-    );
-  }
-  if (item.type !== ItemTypeEnum.Link) return null;
-  const tags = metadata?.tags ?? [];
-  const summary = metadata?.summary?.trim() ?? '';
-  if (!tags.length && !summary) return null;
-  return (
-    <>
-      {tags.length ? <BookmarkTagChips tags={tags} max={CARD_MAX_TAGS} /> : null}
-      {summary ? (
+  switch (field) {
+    case 'cover':
+      return <BookmarkCardMedia item={item} />;
+    case 'folder':
+      return item.folderPath ? (
+        <p data-testid="bookmark-card-folder" className="flex min-w-0 items-center gap-1">
+          <Folder aria-hidden="true" className="size-3 shrink-0" />
+          <span className="truncate">{item.folderPath}</span>
+        </p>
+      ) : null;
+    case 'tags': {
+      const tags = item.type === ItemTypeEnum.Link ? (metadata?.tags ?? []) : [];
+      return tags.length ? <BookmarkTagChips tags={tags} max={limits.maxTags} /> : null;
+    }
+    case 'summary': {
+      const summary = item.type === ItemTypeEnum.Link ? (metadata?.summary?.trim() ?? '') : '';
+      return summary ? (
         // Cut to a few lines on screen; the whole summary stays in the page for screen readers.
         <p
           data-testid="bookmark-card-summary"
-          style={{ '--card-summary-lines': CARD_SUMMARY_LINES } as CSSProperties}
+          style={{ '--card-summary-lines': limits.summaryLines } as CSSProperties}
           className="line-clamp-(--card-summary-lines) break-words text-foreground"
           title={summary}
         >
           {summary}
         </p>
-      ) : null}
-    </>
+      ) : null;
+    }
+    case 'url':
+      return null;
+  }
+}
+
+/** At the end of a folder's card: how many items the folder holds directly. */
+export function BookmarkCardDetails({
+  item,
+  folderItemCount,
+}: {
+  item: Bookmark;
+  /** How many items the folder holds directly. */
+  folderItemCount: number;
+}) {
+  if (item.type !== ItemTypeEnum.Folder) return null;
+  return (
+    <p data-testid="bookmark-card-count" className="truncate">
+      {tPlural('bookmarks_cardFolderItems', folderItemCount)}
+    </p>
   );
 }

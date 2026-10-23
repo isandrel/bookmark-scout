@@ -39,8 +39,55 @@ const TOOL_OPTIONS = 'services/tool-options.ts';
 const DATA_TOOLS = 'components/bookmarks/tools/DataToolCards.tsx';
 const TOOLS = 'components/bookmarks/ToolsSidebar.tsx';
 const POPUP = 'components/page/PopupPage.tsx';
+const MANAGER = 'components/page/BookmarksPage.tsx';
+const MENUS = 'services/action-menus.ts';
+const TABLE_DEFAULTS = 'hooks/use-bookmark-table-view-defaults.ts';
+const MENUS_NOTE = 'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).';
 
 // Shared test references.
+const CUSTOMIZE_UNIT = 'manager-customize.test.ts';
+const CUSTOMIZE_E2E = 'bookmark-manager-customize.spec.ts';
+const menuSections = unit(
+  'action-menus.test.ts',
+  'moves actions between sections, hides and reorders them, in every menu',
+);
+const organizeMenu = e2e(
+  CUSTOMIZE_E2E,
+  'Options arranges the Organize menu: hides, reorders, moves between sections, and resets',
+);
+const startFolder = [
+  unit(
+    CUSTOMIZE_UNIT,
+    'opens the bookmarks bar, the last folder, or a chosen one, and the bar when it is gone',
+  ),
+  e2e(CUSTOMIZE_E2E, 'the manager opens on the start folder: the last opened one, or a chosen one'),
+];
+const sidebars = e2e(
+  CUSTOMIZE_E2E,
+  'sidebars keep their dragged and keyed widths, and reopen as left when set to remember',
+);
+const tableDefaults = [
+  unit(
+    'bookmark-table-view-storage.test.ts',
+    'builds a new view from Default Columns, Default Rows per Page, and Default Sort',
+  ),
+  unit(
+    'bookmark-table-view-storage.test.ts',
+    'shows the Options defaults for every part the manager has not changed',
+  ),
+  e2e(
+    CUSTOMIZE_E2E,
+    'default columns, rows per page, and sort apply to a new view and after Reset table view',
+  ),
+];
+const cards = e2e(
+  CUSTOMIZE_E2E,
+  'cards show the details, size, and limits Options sets, and the preview its details',
+);
+const cardLimits = unit(
+  CUSTOMIZE_UNIT,
+  'cuts tags and the summary at the card limits, and names the folder',
+);
 const SETTINGS_E2E = 'settings-behavior.spec.ts';
 const SETTINGS_UNIT = 'settings-behavior.test.ts';
 const toolFlags = e2e(
@@ -452,13 +499,47 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     ),
   ]),
   managerMenuActions: tested(
-    'components/ui/table/bookmark-row-menu.tsx',
+    MENUS,
     [
       unit('action-menus.test.ts', 'hide and reorder item-menu actions as the user arranged them'),
+      menuSections,
       e2e('bookmark-manager-menus.spec.ts', 'Options hides and reorders the manager menu items'),
     ],
-    'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).',
+    MENUS_NOTE,
   ),
+  managerOrganizeMenu: tested(MENUS, [menuSections, organizeMenu], MENUS_NOTE),
+  managerEmptySpaceMenu: tested(MENUS, [menuSections, organizeMenu], MENUS_NOTE),
+  managerPreviewMenu: tested(MENUS, [menuSections, organizeMenu], MENUS_NOTE),
+  managerSortOrder: tested(MANAGER, [
+    unit(CUSTOMIZE_UNIT, 'follows Sort Order until set to an order of its own'),
+    e2e(CUSTOMIZE_E2E, 'Manager Order sorts the manager without changing the popup'),
+  ]),
+  managerStartFolder: tested('services/manager-start-folder.ts', startFolder),
+  managerStartFolderId: tested('services/manager-start-folder.ts', startFolder),
+  managerSidebarsStart: tested('hooks/use-manager-sidebars.ts', [
+    unit(CUSTOMIZE_UNIT, 'opens the sidebars as configured, or as left last when set to remember'),
+    sidebars,
+  ]),
+  managerDefaultColumns: tested(TABLE_DEFAULTS, tableDefaults),
+  managerDefaultPageSize: tested(TABLE_DEFAULTS, tableDefaults),
+  managerDefaultSort: tested(TABLE_DEFAULTS, tableDefaults),
+  managerCardFields: tested(MANAGER, [
+    unit(
+      CUSTOMIZE_UNIT,
+      'shows the card details and preview details the settings list, in their order',
+    ),
+    cards,
+  ]),
+  managerCardSize: tested(MANAGER, [cards]),
+  cardMaxTags: tested(MANAGER, [cardLimits, cards]),
+  cardSummaryLines: tested(MANAGER, [cardLimits, cards]),
+  previewFields: tested('components/bookmarks/BookmarkPreviewDialog.tsx', [
+    unit(
+      CUSTOMIZE_UNIT,
+      'shows the card details and preview details the settings list, in their order',
+    ),
+    cards,
+  ]),
   askAiWebSearch: tested(
     'services/ai-agent.ts',
     [unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on")],

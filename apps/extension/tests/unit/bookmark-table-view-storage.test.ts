@@ -2,13 +2,18 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
   BOOKMARK_TABLE_COLUMN_IDS,
+  createBookmarkTableViewFollower,
   DEFAULT_BOOKMARK_TABLE_VIEW,
   getBookmarkTableView,
+  getBookmarkTableViewDefaults,
   parseBookmarkTableColumns,
   parseBookmarkTableLayout,
+  resetBookmarkColumnWidths,
   resetBookmarkTableView,
   updateBookmarkTableView,
 } from '@/lib/bookmark-table-view-storage';
+import { defaultSettings } from '@/lib/settings-schema';
+import { saveSettings } from '@/lib/settings-storage';
 import { readStoredData, STORAGE_ITEMS } from './storage-helpers';
 
 beforeEach(() => {
@@ -153,12 +158,90 @@ describe('bookmark table view storage', () => {
     });
   });
 
-  it('removes both items on reset and when a part is back at its default', async () => {
+  it('keeps a part changed back to its default, and removes both items on reset', async () => {
     await updateBookmarkTableView({ browserOrder: true, pageSize: 50 });
     await updateBookmarkTableView({ browserOrder: false });
-    expect(await readStoredData(STORAGE_ITEMS.tableView)).toBeUndefined();
+    // Changed in the manager, so it no longer follows Default Sort.
+    expect(await readStoredData(STORAGE_ITEMS.tableView)).toEqual({ browserOrder: false });
     await resetBookmarkTableView();
+    expect(await readStoredData(STORAGE_ITEMS.tableView)).toBeUndefined();
     expect(await readStoredData(STORAGE_ITEMS.tableLayout)).toBeUndefined();
     expect(await getBookmarkTableView()).toEqual(DEFAULT_BOOKMARK_TABLE_VIEW);
   });
+
+  it('forgets only the column widths on Reset column widths', async () => {
+    await updateBookmarkTableView({ columnSizing: { url: 320 }, pageSize: 20 });
+    await resetBookmarkColumnWidths();
+    expect(await readStoredData(STORAGE_ITEMS.tableLayout)).toEqual({ pageSize: 20 });
+  });
 });
+
+describe('bookmark table view defaults', () => {
+  it('builds a new view from Default Columns, Default Rows per Page, and Default Sort', () => {
+    const view = getBookmarkTableViewDefaults({
+      managerDefaultColumns: ['cover', 'title', 'tags', 'unknown', 'title'],
+      managerDefaultPageSize: 20,
+      managerDefaultSort: 'dateAddedDesc',
+    });
+    // The Cover column goes where the defaults put it; unknown and repeated ids are left out.
+    expect(view.columnOrder.slice(0, 4)).toEqual(['select', 'cover', 'title', 'tags']);
+    expect(view.columnOrder.at(-1)).toBe('actions');
+    expect(new Set(view.columnOrder)).toEqual(new Set(BOOKMARK_TABLE_COLUMN_IDS));
+    const shown = view.columnOrder.filter((id) => view.columnVisibility[id] !== false);
+    expect(shown).toEqual(['select', 'cover', 'title', 'tags', 'actions']);
+    expect(view).toMatchObject({
+      pageSize: 20,
+      sorting: [{ id: 'dateAdded', desc: true }],
+      browserOrder: false,
+      columnSizing: {},
+    });
+    expect(
+      getBookmarkTableViewDefaults({ ...defaultsOf(), managerDefaultSort: 'browser' }),
+    ).toMatchObject({ sorting: [], browserOrder: true });
+  });
+
+  it('shows the Options defaults for every part the manager has not changed', async () => {
+    await saveSettings({ managerDefaultColumns: ['title', 'tags'], managerDefaultPageSize: 20 });
+    await updateBookmarkTableView({ sorting: [{ id: 'title', desc: true }] });
+    const view = await getBookmarkTableView();
+    expect(view.pageSize).toBe(20);
+    // Shown by Default Columns: Tags; hidden: URL.
+    expect(view.columnVisibility.url).toBe(false);
+    expect(view.columnVisibility.tags).toBeUndefined();
+    expect(view.sorting).toEqual([{ id: 'title', desc: true }]);
+    // A saved page size wins over the default.
+    await updateBookmarkTableView({ pageSize: 100 });
+    expect((await getBookmarkTableView()).pageSize).toBe(100);
+  });
+
+  it('lets a table follow the defaults for parts nobody changed, also after a reset elsewhere', () => {
+    const follower = createBookmarkTableViewFollower();
+    const defaults = getBookmarkTableViewDefaults({ ...defaultsOf(), managerDefaultPageSize: 20 });
+    expect(follower.follow({}, {}, defaults)).toEqual(defaults);
+    // The table changed the sort: it stays the user's, even before storage has it.
+    follower.own(['sorting']);
+    expect(follower.follow({}, {}, defaults)).not.toHaveProperty('sorting');
+    // Storage has it now; the page size is still the default's.
+    const stored = { sorting: [{ id: 'title', desc: false }] };
+    expect(Object.keys(follower.follow(stored, {}, defaults))).toEqual([
+      'columnVisibility',
+      'columnOrder',
+      'browserOrder',
+      'pageSize',
+      'columnSizing',
+    ]);
+    // Reset in another tab or in Options: the sort follows the defaults again.
+    expect(follower.follow({}, {}, defaults)).toHaveProperty('sorting', []);
+    follower.own(['pageSize']);
+    follower.reset();
+    expect(follower.follow({}, {}, defaults)).toHaveProperty('pageSize', 20);
+  });
+});
+
+function defaultsOf() {
+  return {
+    managerDefaultColumns: [...defaultSettings.managerDefaultColumns],
+    managerDefaultPageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize,
+    managerDefaultSort: 'none',
+  };
+}

@@ -29,18 +29,17 @@ const thumbnail = (page: Page, title: string) =>
   page.getByRole('button', { name: `Cover of "${title}"`, exact: true });
 
 /**
- * The synced view's Cover column: whether it shows and the column before it. A view back at the
- * defaults is not stored, and the default hides it.
+ * The synced view's Cover column: whether it shows and the column before it. Only the parts of the
+ * view changed in the manager are stored; the rest follow the defaults, which hide it and keep it
+ * right after the checkbox.
  */
 async function storedCoverColumn(page: Page) {
   const view = (await readStored(page, STORAGE_ITEMS.tableView)) as
-    | { columnVisibility: Record<string, boolean>; columnOrder: string[] }
+    | { columnVisibility?: Record<string, boolean>; columnOrder?: string[] }
     | undefined;
-  if (!view) return { shown: false };
-  return {
-    shown: view.columnVisibility.cover ?? false,
-    after: view.columnOrder[view.columnOrder.indexOf('cover') - 1],
-  };
+  if (!view?.columnVisibility?.cover) return { shown: false };
+  const order = view.columnOrder;
+  return { shown: true, after: order ? order[order.indexOf('cover') - 1] : 'select' };
 }
 
 test('the Cover column shows stored covers as thumbnails, larger on hover or focus, and opens the preview on click', async ({

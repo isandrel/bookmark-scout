@@ -178,6 +178,10 @@ export function useBookmarkNavigation() {
 
   const currentFolderRef = useRef(currentFolder);
   const [opensOnBar] = useState(opensOnBookmarksBar);
+  // Where a page opened without a folder starts (Start Folder), picked once the tree is read.
+  const pickStartFolderRef = useRef<((tree: readonly BookmarkTreeNode[]) => string | null) | null>(
+    null,
+  );
   const itemsRef = useRef<Bookmark[]>([]);
   const rootIdRef = useRef<string | undefined>(undefined);
   const hasLoadedRef = useRef(false);
@@ -245,10 +249,14 @@ export function useBookmarkNavigation() {
       setAllData(bookmarks);
       setTreeState(tree);
       setRootId(tree[0]?.id);
-      // The first load of a page opened without a folder shows the bookmarks bar; the address
-      // then names it, so Back and reload keep it.
+      // The first load of a page opened without a folder shows the start folder (the bookmarks
+      // bar unless Start Folder says otherwise); the address then names it, so Back and reload
+      // keep it.
       if (!hasLoadedRef.current && opensOnBar && currentFolderRef.current === null) {
-        currentFolderRef.current = findBookmarksBarFolder(tree)?.id ?? null;
+        const pickStart = pickStartFolderRef.current;
+        currentFolderRef.current = pickStart
+          ? pickStart(tree)
+          : (findBookmarksBarFolder(tree)?.id ?? null);
       }
       showFolder(currentFolderRef.current, 'none');
       hasLoadedRef.current = true;
@@ -267,7 +275,14 @@ export function useBookmarkNavigation() {
         const isInitialLoad = !hasLoadedRef.current;
         setError(null);
         try {
-          setTreeRef.current(await fetchBookmarkTree());
+          const opensOnStartFolder =
+            isInitialLoad && opensOnBar && currentFolderRef.current === null;
+          const [tree, pickStart] = await Promise.all([
+            fetchBookmarkTree(),
+            opensOnStartFolder ? loadManagerStartFolderPicker() : null,
+          ]);
+          pickStartFolderRef.current = pickStart;
+          setTreeRef.current(tree);
           if (isInitialLoad) {
             // Cleanup for bookmarks removed while the extension was not running must never
             // block loading. It runs only once so it cannot race an undo re-keying metadata.
@@ -340,6 +355,15 @@ export function useBookmarkNavigation() {
     () => allData.filter((bookmark) => bookmark.parentId === (currentFolder ?? rootId)),
     [allData, currentFolder, rootId],
   );
+
+  // Start Folder on "Last opened folder" opens the folder shown last on this device, so the
+  // folder shown is recorded while that is the setting (the top level by the root's id).
+  const { value: startFolder } = useSetting('managerStartFolder');
+  useEffect(() => {
+    const shownId = currentFolder ?? rootId;
+    if (startFolder !== 'last' || isLoading || !shownId) return;
+    void managerLastFolderValue.set(shownId).catch(() => undefined);
+  }, [currentFolder, isLoading, rootId, startFolder]);
 
   return {
     currentFolder,
