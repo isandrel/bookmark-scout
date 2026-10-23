@@ -14,9 +14,14 @@ import { readStored, STORAGE_ITEMS, setSettings } from './storage';
 import { seedFolder } from './tool-helpers';
 
 const hoverConfig = readConfigToml('ui/hover-card.toml') as {
-  open_delay_ms: number;
   cover_preview_max_width_px: number;
 };
+/** The Hover Card Delay setting's default, which opens the cover preview too. */
+const OPEN_DELAY_MS = (
+  readConfigToml('settings/appearance.toml') as {
+    notifications: { hover_card_delay_ms: { default: number } };
+  }
+).notifications.hover_card_delay_ms.default;
 const tableConfig = readConfigToml('ui/manager-table.toml') as {
   cover_thumbnail_height_px: number;
 };
@@ -118,7 +123,7 @@ test('the Cover column shows stored covers as thumbnails, larger on hover or foc
   const startedAt = Date.now();
   const card = previewCard(page);
   await expect(card).toBeVisible();
-  expect(Date.now() - startedAt).toBeGreaterThanOrEqual(hoverConfig.open_delay_ms * 0.9);
+  expect(Date.now() - startedAt).toBeGreaterThanOrEqual(OPEN_DELAY_MS * 0.9);
   await expect(card.getByTestId('cover-preview-image')).toHaveAttribute('src', /^blob:/);
   await expect(card.getByTestId('cover-preview-title')).toHaveText('Covered page');
   await expect(card.getByTestId('cover-preview-source')).toContainText(
@@ -134,7 +139,7 @@ test('the Cover column shows stored covers as thumbnails, larger on hover or foc
   // Escape closes it with the pointer still there, and it stays closed.
   await page.keyboard.press('Escape');
   await expect(card).toBeHidden();
-  await page.waitForTimeout(hoverConfig.open_delay_ms * 2);
+  await page.waitForTimeout(OPEN_DELAY_MS * 2);
   await expect(card).toBeHidden();
 
   // A cover narrower than the largest size is never drawn wider than stored.
