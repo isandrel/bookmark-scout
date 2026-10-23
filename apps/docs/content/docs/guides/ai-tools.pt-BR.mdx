@@ -29,7 +29,7 @@ Ative **Recursos de IA**.
 Em **Serviços de IA**, clique em **Adicionar serviço** e escolha um provedor. O seletor mostra os provedores mais conhecidos em **Destaques**, depois **Servidores locais** e **Personalizado**; digite na caixa de pesquisa para encontrar uns 200 outros em **Mais provedores (models.dev)**. Depois escolha um **Modelo de IA**.
 </Step>
 <Step>
-Digite sua **Chave de API** se o provedor exigir uma. Nos provedores em destaque, o link **Obter uma chave de API de**, seguido do nome do provedor, abre a página onde você cria uma depois de entrar na sua conta. A chave é salva quando você sai do campo e fica armazenada somente neste dispositivo. Uma chave que não corresponde ao formato do provedor é rejeitada e não é salva.
+Digite sua **Chave de API** se o provedor exigir uma. Nos provedores em destaque, o link **Obter uma chave de API de**, seguido do nome do provedor, abre a página onde você cria uma depois de entrar na sua conta. A chave é salva quando você sai do campo e fica armazenada somente neste dispositivo. Uma chave que não corresponde ao formato do provedor é rejeitada e não é salva. Abaixo da chave, **Requer uma chave de API** começa como o provedor espera. Desative para usar o serviço sem chave: por meio de um proxy ou gateway que adiciona a chave por conta própria, um endpoint próprio ou da empresa, ou um provedor com plano gratuito que não pede chave. As solicitações passam a ser enviadas sem nenhuma chave.
 </Step>
 <Step>
 Opcional: clique em **Atualizar modelos** para carregar a lista atual de modelos do provedor, ou em **Verificar serviço** para confirmar que o provedor está acessível, aceita a chave e oferece o modelo escolhido. Os dois leem a lista de modelos do provedor, o que não tem custo; a verificação só envia um prompt de teste curto aos provedores que não têm uma lista, como o Azure OpenAI. Na primeira vez, o navegador pede acesso ao endereço desse provedor. Uma lista atualizada fica guardada para o seletor de modelos até você atualizar de novo.
@@ -98,6 +98,8 @@ Salve quantos serviços quiser, até vários do mesmo provedor: por exemplo, um 
 | Provedor personalizado (compatível com Anthropic) | Opcional | Qualquer endpoint que use a API Messages da Anthropic, definido com o **URL base** |
 | Cerca de 200 outros | Geralmente obrigatória | Listados em **Mais provedores (models.dev)**, por exemplo, Together AI, Fireworks AI, Cerebras, DeepInfra e LM Studio. Eles não têm uma lista de modelos integrada: clique em **Atualizar modelos** ou digite um **Modelo personalizado**. |
 
+A coluna **Chave de API** mostra como **Requer uma chave de API** começa para cada provedor; você pode mudar isso em cada serviço.
+
 O seletor **Provedor de IA** tem uma caixa de pesquisa. Os provedores extras vêm de uma cópia do catálogo aberto [models.dev](https://models.dev) incluída na extensão, então escolher um deles não envia nada ao models.dev; as solicitações vão somente para o provedor que você escolher.
 
 O **URL base** substitui o endereço do provedor em todas as solicitações, por exemplo, para usar um proxy. Ele precisa começar com `http://` ou `https://`. **Cabeçalhos extras (JSON)** adiciona cabeçalhos a todas as solicitações, e **Modelo personalizado** define um ID de modelo para os provedores que aceitam qualquer nome de modelo.
@@ -114,7 +116,7 @@ Os servidores locais precisam aceitar as solicitações da extensão:
 
 ### Quando uma verificação falha [#when-a-check-fails]
 
-A verificação e a atualização indicam a causa provável: uma chave rejeitada (401, ou 400 no Google e no xAI), um URL base errado (404), um provedor que está limitando a taxa de solicitações (429, o que ainda indica que a chave funciona), um servidor que recusou a origem da extensão, nenhuma resposta em 8 segundos ou um endereço que não serve uma API de provedor.
+A verificação e a atualização indicam a causa provável: uma chave rejeitada (401, ou 400 no Google e no xAI), um URL base errado (404), um provedor que está limitando a taxa de solicitações (429, o que ainda indica que a chave funciona), um servidor que recusou a origem da extensão, nenhuma resposta em 8 segundos ou um endereço que não serve uma API de provedor. Quando um serviço configurado para funcionar sem chave é recusado (401, ou 403 de um endereço fora da sua rede), a mensagem diz que o serviço precisa de uma chave de API: adicione uma ou verifique o endpoint. As ferramentas de IA então oferecem **Abrir configurações do serviço**, que abre esse serviço nas configurações.
 
 ## Escrever seus próprios prompts [#write-your-own-prompts]
 

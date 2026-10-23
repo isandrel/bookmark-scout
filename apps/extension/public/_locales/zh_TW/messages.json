@@ -3399,6 +3399,18 @@
         "message": "$1 不需要 API 金鑰也能執行。",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "此服務不需要 API 金鑰即可運作。只有端點要求時才新增金鑰。",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "需要 API 金鑰",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "關閉後即可在沒有金鑰的情況下使用此服務：適用於會自行加入金鑰的代理或閘道、自行架設或公司內部的端點，以及提供免金鑰免費方案的供應商。此時請求完全不帶金鑰送出。",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "選填",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5224,6 +5236,14 @@
     "ai_connErrorInvalidKey": {
         "message": "供應商拒絕了 API 金鑰。請檢查金鑰是否正確且仍然有效。",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "此服務表示需要 API 金鑰。請在服務設定中新增金鑰，或檢查端點。",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "開啟服務設定",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "供應商拒絕存取。請檢查金鑰的權限和專案。",

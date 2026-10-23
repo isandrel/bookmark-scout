@@ -132,6 +132,10 @@ export function AIServicesPanel({
   // Services a restored backup could not fully set up: their API key or headers are missing.
   const { value: credentials } = useStoredValue(aiProviderConfigValue);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  // A link to one service (`openAISettings(feature)`, such as after it asked for an API key).
+  const [requestedId] = useState(() =>
+    new URLSearchParams(window.location.search).get(OPTIONS_AI_SERVICE_PARAM),
+  );
   const [adding, setAdding] = useState(false);
   const [deleting, setDeleting] = useState<AIService | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -139,8 +143,10 @@ export function AIServicesPanel({
   // Set when a delete is confirmed: the service whose row takes focus, or null for none left.
   const focusAfterDeleteRef = useRef<string | null | undefined>(undefined);
 
-  // The default service's editor starts open, so a single setup reads like before.
-  const openId = expandedId ?? state.defaultServiceId ?? null;
+  // The requested service's editor starts open, else the default one's, so a single setup reads
+  // like before.
+  const requested = state.services.find((service) => service.id === requestedId);
+  const openId = expandedId ?? requested?.id ?? state.defaultServiceId ?? null;
   // A search that matched editor fields (API Key, Model) while no hosted service's editor is open
   // shows where they are instead of a count with nothing under it.
   const openService = state.services.find((service) => service.id === openId);

@@ -47,6 +47,8 @@ export type ToolOutcome = {
   undoExpiresAt?: number;
   /** The change's Audit History record, for View in History. */
   historyId?: string;
+  /** Offers to open the settings of the service this AI feature uses, which wants an API key. */
+  openAIServiceFor?: AIFeature;
 };
 
 /** A file to save after the export privacy review (see `useExportPrivacyReview`). */

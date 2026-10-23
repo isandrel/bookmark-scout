@@ -328,9 +328,15 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
             <CircleAlert aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
             <div className="min-w-0 flex-1 space-y-1 [overflow-wrap:anywhere]">
               <p>{error.message || t('error_unknown')}</p>
-              <Button variant="outline" size="sm" onClick={() => void regenerate()}>
-                {t('askAI_retry')}
-              </Button>
+              {isAIKeyRequiredMessage(error.message) ? (
+                <Button variant="outline" size="sm" onClick={() => void openAISettings('askAI')}>
+                  {t('ai_openServiceSettings')}
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" onClick={() => void regenerate()}>
+                  {t('askAI_retry')}
+                </Button>
+              )}
             </div>
           </div>
         )}

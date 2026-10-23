@@ -3407,6 +3407,18 @@
         "message": "$1 peut fonctionner sans clé API.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "Ce service fonctionne sans clé API. N'en ajoutez une que si le point de terminaison la demande.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "Nécessite une clé API",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "Désactivez cette option pour utiliser le service sans clé : via un proxy ou une passerelle qui ajoute la clé elle-même, un point de terminaison auto-hébergé ou d'entreprise, ou un fournisseur dont l'offre gratuite ne demande pas de clé. Les requêtes partent alors sans aucune clé.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "Facultatif",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5470,6 +5482,14 @@
     "ai_connErrorInvalidKey": {
         "message": "Le fournisseur a refusé la clé API. Vérifiez qu'elle est correcte et toujours active.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "Le service indique qu'il lui faut une clé API. Ajoutez-en une dans ses paramètres ou vérifiez le point de terminaison.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "Ouvrir les paramètres du service",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "Le fournisseur a refusé l'accès. Vérifiez les autorisations de la clé et le projet associé.",

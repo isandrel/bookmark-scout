@@ -40,7 +40,13 @@ export function showToolOutcome(outcome: ToolOutcome, undo?: UndoOffer) {
   } else if (variant === 'success') {
     toast.success({ title, description });
   } else if (variant === 'destructive') {
-    toast.error({ title, description });
+    toast.error({
+      title,
+      description,
+      ...(outcome.openAIServiceFor
+        ? { action: aiServiceSettingsToastAction(outcome.openAIServiceFor) }
+        : {}),
+    });
   } else {
     toast({ title, description });
   }

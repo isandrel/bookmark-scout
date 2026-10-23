@@ -3363,6 +3363,18 @@
         "message": "$1 はAPIキーなしで利用できます。",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "このサービスは API キーなしで動作します。エンドポイントが求める場合だけキーを追加してください。",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "API キーが必要",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "オフにすると、キーなしでサービスを使えます。キーを自分で付け加えるプロキシやゲートウェイ、自前や社内のエンドポイント、キー不要の無料枠があるプロバイダー向けです。リクエストはキーを一切付けずに送られます。",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "任意",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5426,6 +5438,14 @@
     "ai_connErrorInvalidKey": {
         "message": "API キーが拒否されました。キーが正しく、有効であることを確認してください。",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "サービスが API キーを求めています。サービスの設定でキーを追加するか、エンドポイントを確認してください。",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "サービスの設定を開く",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "アクセスが拒否されました。キーの権限とプロジェクトを確認してください。",

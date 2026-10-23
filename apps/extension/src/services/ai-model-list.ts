@@ -11,6 +11,7 @@ export type ModelListStyle = (typeof MODEL_LIST_STYLE_NAMES)[number];
 
 export type AIConnectionErrorCode =
   | 'invalid_key'
+  | 'key_required'
   | 'forbidden'
   | 'not_found'
   | 'rate_limited'
@@ -201,7 +202,37 @@ const STATUS_ERRORS: Readonly<Record<number, { code: AIConnectionErrorCode; key:
   429: { code: 'rate_limited', key: 'ai_connErrorRateLimited' },
 };
 
-function connectionErrorForStatus(status: number, body: string, url: URL): AIConnectionError {
+/**
+ * Set on a provider's refusal of a request sent without an API key when it means the service
+ * wants one (`isKeylessRejection`), by the fetch that leaves the key out (ai-client.lazy.ts), so
+ * the message can say a key is needed instead of that the key was wrong.
+ */
+export const KEYLESS_REJECTION_HEADER = 'x-bookmark-scout-keyless-rejection';
+
+/**
+ * Whether a refusal of a request sent without an API key means the service wants one: any 401,
+ * and a 403 from a remote host. A local server's 403 is its origin check (`origin_rejected`).
+ */
+export function isKeylessRejection(status: number, url: string | URL): boolean {
+  if (status === HTTP_STATUS.unauthorized) return true;
+  if (status !== HTTP_STATUS.forbidden) return false;
+  try {
+    return !isPrivateHost(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+}
+
+function connectionErrorForStatus(
+  status: number,
+  body: string,
+  url: URL,
+  /** The request went out without an API key (the service is set to run without one). */
+  keyless: boolean,
+): AIConnectionError {
+  if (keyless && isKeylessRejection(status, url)) {
+    return new AIConnectionError('key_required', t('ai_connErrorKeyRequired'), status);
+  }
   const known = STATUS_ERRORS[status];
   if (known) return new AIConnectionError(known.code, t(known.key), status);
   if (status === HTTP_STATUS.badRequest && INVALID_KEY_PATTERN.test(body)) {
@@ -225,6 +256,7 @@ async function fetchJson(
   headers: Record<string, string>,
   signal: AbortSignal | undefined,
   fetch: typeof globalThis.fetch,
+  keyless: boolean,
 ) {
   const controller = new AbortController();
   let timedOut = false;
@@ -253,7 +285,7 @@ async function fetchJson(
       throw new AIConnectionError('unreachable', t('ai_connErrorUnreachable', url.host));
     }
     const body = await response.text();
-    if (!response.ok) throw connectionErrorForStatus(response.status, body, url);
+    if (!response.ok) throw connectionErrorForStatus(response.status, body, url, keyless);
     try {
       return JSON.parse(body) as unknown;
     } catch {
@@ -283,6 +315,7 @@ export async function listProviderModels(
     throw new Error(t('error_aiModelListUnavailable'));
   }
   const headers = modelListHeaders(style, settings);
+  const keyless = !settings.apiKey.trim();
   const fetch = createLoggingFetch({
     source: options.source ?? 'modelList',
     provider: settings.provider,
@@ -291,7 +324,7 @@ export async function listProviderModels(
   let url: URL | undefined = firstUrl(MODEL_LIST_STYLES[style], baseUrl);
   // Bounded, so a misbehaving endpoint cannot page forever.
   for (let page = 0; url && page < limits.model_list_max_pages; page += 1) {
-    const payload = await fetchJson(url, headers, options.signal, fetch);
+    const payload = await fetchJson(url, headers, options.signal, fetch, keyless);
     const parsed = parseModelPage(style, payload, url);
     if (!parsed) throw new AIConnectionError('not_api', t('ai_connErrorNotApi'));
     for (const model of parsed.models) if (!seen.has(model.id)) seen.set(model.id, model);

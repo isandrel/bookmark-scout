@@ -215,6 +215,8 @@ export type SeededAIService = {
   /** Empty means the provider default. */
   model?: string;
   enabled?: boolean;
+  /** Requires an API key; left out means the provider's default. */
+  requiresApiKey?: boolean;
   /** API key, Base URL, and the rest, as stored for the service. */
   credentials?: Record<string, unknown>;
 };
@@ -225,12 +227,13 @@ export async function seedAIServices(
   services: readonly SeededAIService[],
 ): Promise<void> {
   const stored = services.map(
-    ({ provider, id = provider, name = provider, model = '', enabled = true }) => ({
+    ({ provider, id = provider, name = provider, model = '', enabled = true, requiresApiKey }) => ({
       id,
       name,
       provider,
       model,
       enabled,
+      ...(requiresApiKey === undefined ? {} : { requiresApiKey }),
     }),
   );
   await writeStoredItems(target, [

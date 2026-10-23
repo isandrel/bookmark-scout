@@ -3399,6 +3399,18 @@
         "message": "$1은(는) API 키 없이 사용할 수 있습니다.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "이 서비스는 API 키 없이 작동합니다. 엔드포인트가 요구할 때만 키를 추가하세요.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "API 키 필요",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "끄면 키 없이 서비스를 사용할 수 있습니다. 키를 직접 붙여 주는 프록시나 게이트웨이, 직접 운영하거나 회사에서 제공하는 엔드포인트, 키가 필요 없는 무료 요금제가 있는 제공업체에 맞습니다. 이때 요청은 키 없이 전송됩니다.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "선택 사항",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5462,6 +5474,14 @@
     "ai_connErrorInvalidKey": {
         "message": "제공업체가 API 키를 거부했습니다. 키가 올바르고 유효한지 확인하세요.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "서비스에서 API 키가 필요하다고 응답했습니다. 서비스 설정에서 키를 추가하거나 엔드포인트를 확인하세요.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "서비스 설정 열기",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "액세스가 거부되었습니다. 키의 권한과 프로젝트를 확인하세요.",

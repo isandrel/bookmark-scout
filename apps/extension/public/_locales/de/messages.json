@@ -3407,6 +3407,18 @@
         "message": "$1 funktioniert auch ohne API-Schlüssel.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "Dieser Dienst läuft ohne API-Schlüssel. Fügen Sie nur einen hinzu, wenn der Endpunkt ihn verlangt.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "Benötigt einen API-Schlüssel",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "Schalten Sie dies aus, um den Dienst ohne Schlüssel zu nutzen: über einen Proxy oder ein Gateway, das den Schlüssel selbst hinzufügt, einen selbst gehosteten oder firmeneigenen Endpunkt oder einen Anbieter mit einem kostenlosen Tarif ohne Schlüssel. Anfragen werden dann ganz ohne Schlüssel gesendet.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "Optional",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5470,6 +5482,14 @@
     "ai_connErrorInvalidKey": {
         "message": "Der Anbieter hat den API-Schlüssel abgelehnt. Prüfen Sie, ob er korrekt und noch aktiv ist.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "Der Dienst verlangt einen API-Schlüssel. Fügen Sie in seinen Einstellungen einen hinzu oder prüfen Sie den Endpunkt.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "Diensteinstellungen öffnen",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "Der Anbieter hat den Zugriff verweigert. Prüfen Sie die Berechtigungen und das Projekt des Schlüssels.",

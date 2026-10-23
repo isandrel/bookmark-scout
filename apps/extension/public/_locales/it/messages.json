@@ -3407,6 +3407,18 @@
         "message": "$1 può funzionare senza chiave API.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "Questo servizio funziona senza chiave API. Aggiungine una solo se l'endpoint la richiede.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "Richiede una chiave API",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "Disattiva questa opzione per usare il servizio senza chiave: tramite un proxy o un gateway che aggiunge la chiave da sé, un endpoint ospitato in proprio o aziendale, o un provider con un piano gratuito che non chiede chiavi. Le richieste partono allora senza alcuna chiave.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "Facoltativa",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5470,6 +5482,14 @@
     "ai_connErrorInvalidKey": {
         "message": "Il provider ha rifiutato la chiave API. Verifica che sia corretta e ancora attiva.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "Il servizio indica che serve una chiave API. Aggiungine una nelle sue impostazioni o controlla l'endpoint.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "Apri le impostazioni del servizio",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "Il provider ha negato l'accesso. Controlla le autorizzazioni e il progetto della chiave.",

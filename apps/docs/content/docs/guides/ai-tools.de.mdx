@@ -29,7 +29,7 @@ Aktivieren Sie **KI-Funktionen**.
 Klicken Sie unter **KI-Dienste** auf **Dienst hinzufügen** und wählen Sie einen Anbieter. Die Auswahl zeigt bekannte Anbieter unter **Empfohlen**, danach **Lokale Server** und **Benutzerdefiniert**; tippen Sie in ihr Suchfeld, um etwa 200 weitere unter **Weitere Anbieter (models.dev)** zu finden. Wählen Sie dann ein **KI-Modell**.
 </Step>
 <Step>
-Geben Sie Ihren **API-Schlüssel** ein, falls der Anbieter einen benötigt. Bei den empfohlenen Anbietern öffnet **API-Schlüssel bei (Anbieter) holen** die Seite, auf der Sie nach der Anmeldung einen Schlüssel erstellen. Der Schlüssel wird gespeichert, wenn Sie das Feld verlassen, und nur auf diesem Gerät abgelegt. Ein Schlüssel, der nicht dem Format des Anbieters entspricht, wird abgelehnt und nicht gespeichert.
+Geben Sie Ihren **API-Schlüssel** ein, falls der Anbieter einen benötigt. Bei den empfohlenen Anbietern öffnet **API-Schlüssel bei (Anbieter) holen** die Seite, auf der Sie nach der Anmeldung einen Schlüssel erstellen. Der Schlüssel wird gespeichert, wenn Sie das Feld verlassen, und nur auf diesem Gerät abgelegt. Ein Schlüssel, der nicht dem Format des Anbieters entspricht, wird abgelehnt und nicht gespeichert. Unter dem Schlüssel steht **Benötigt einen API-Schlüssel** zunächst so, wie der Anbieter es erwartet. Schalten Sie es aus, um den Dienst ohne Schlüssel zu nutzen: über einen Proxy oder ein Gateway, das den Schlüssel selbst hinzufügt, einen selbst gehosteten oder firmeneigenen Endpunkt oder einen Anbieter mit einem kostenlosen Tarif ohne Schlüssel. Anfragen werden dann ganz ohne Schlüssel gesendet.
 </Step>
 <Step>
 Optional: Klicken Sie auf **Modelle aktualisieren**, um die aktuelle Modellliste des Anbieters zu laden, oder auf **Dienst überprüfen**, um zu prüfen, ob der Anbieter erreichbar ist, den Schlüssel akzeptiert und das gewählte Modell anbietet. Beide lesen die Modellliste des Anbieters, was nichts kostet; die Überprüfung sendet nur bei Anbietern ohne Liste, etwa Azure OpenAI, einen kurzen Test-Prompt. Der Browser fragt beim ersten Mal nach Zugriff auf die Adresse dieses einen Anbieters. Eine aktualisierte Liste bleibt für die Modellauswahl erhalten, bis Sie erneut aktualisieren.
@@ -98,6 +98,8 @@ Speichern Sie beliebig viele Dienste, auch mehrere desselben Anbieters, zum Beis
 | Eigener Anbieter (Anthropic-kompatibel) | Optional | Jeder Endpunkt, der die Anthropic Messages API spricht, festgelegt über **Basis-URL** |
 | Rund 200 weitere | Meist erforderlich | Unter **Weitere Anbieter (models.dev)** aufgeführt, zum Beispiel Together AI, Fireworks AI, Cerebras, DeepInfra und LM Studio. Sie haben keine integrierte Modellliste: Klicken Sie auf **Modelle aktualisieren** oder geben Sie ein **Eigenes Modell** ein. |
 
+Die Spalte **API-Schlüssel** zeigt, wie **Benötigt einen API-Schlüssel** für jeden Anbieter anfangs steht; Sie können es für jeden Dienst ändern.
+
 Die Auswahl **KI-Anbieter** hat ein Suchfeld. Die zusätzlichen Anbieter stammen aus einer Kopie des offenen Katalogs von [models.dev](https://models.dev), die mit der Erweiterung ausgeliefert wird. Die Auswahl eines solchen Anbieters sendet daher nichts an models.dev; Anfragen gehen nur an den gewählten Anbieter.
 
 **Basis-URL** überschreibt die Adresse des Anbieters für jede Anfrage, etwa um einen Proxy zu verwenden. Sie muss mit `http://` oder `https://` beginnen. **Zusätzliche Header (JSON)** fügt jeder Anfrage Header hinzu, und **Eigenes Modell** legt eine Modell-ID für Anbieter fest, die beliebige Modellnamen akzeptieren.
@@ -114,7 +116,7 @@ Lokale Server müssen Anfragen der Erweiterung annehmen:
 
 ### Wenn eine Prüfung fehlschlägt [#when-a-check-fails]
 
-Überprüfen und Aktualisieren nennen die wahrscheinliche Ursache: ein abgelehnter Schlüssel (401, oder 400 bei Google und xAI), eine falsche Basis-URL (404), ein Anbieter, der Anfragen drosselt (429, was dennoch bedeutet, dass der Schlüssel funktioniert), ein Server, der den Ursprung der Erweiterung abgelehnt hat, keine Antwort innerhalb von 8 Sekunden oder eine Adresse, die keine Anbieter-API bereitstellt.
+Überprüfen und Aktualisieren nennen die wahrscheinliche Ursache: ein abgelehnter Schlüssel (401, oder 400 bei Google und xAI), eine falsche Basis-URL (404), ein Anbieter, der Anfragen drosselt (429, was dennoch bedeutet, dass der Schlüssel funktioniert), ein Server, der den Ursprung der Erweiterung abgelehnt hat, keine Antwort innerhalb von 8 Sekunden oder eine Adresse, die keine Anbieter-API bereitstellt. Wird ein Dienst, der ohne Schlüssel laufen soll, abgewiesen (401, oder 403 von einer Adresse außerhalb Ihres eigenen Netzwerks), sagt die Meldung, dass der Dienst einen API-Schlüssel verlangt: Fügen Sie einen hinzu oder prüfen Sie den Endpunkt. KI-Werkzeuge bieten dann **Diensteinstellungen öffnen** an, das diesen Dienst in den Einstellungen öffnet.
 
 ## Eigene Prompts schreiben [#write-your-own-prompts]
 

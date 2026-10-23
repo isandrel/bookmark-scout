@@ -21,4 +21,5 @@ opaque = 0
 # Statuses the code tells apart by name.
 [named]
 bad_request = 400
+unauthorized = 401
 forbidden = 403

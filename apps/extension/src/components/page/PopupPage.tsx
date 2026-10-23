@@ -221,7 +221,11 @@ function PopupPage() {
       if (recommendations.length === 0) toast({ title: t('popup_aiNoSuggestions') });
     } catch (error) {
       if (error instanceof PermissionRequiredError) throw error;
-      toast.error({ title: t('ai_recommendationFailed'), description: describeAIError(error) });
+      toast.error({
+        title: t('ai_recommendationFailed'),
+        description: describeAIError(error),
+        action: aiKeyRequiredToastAction(error, 'folderRecommendation'),
+      });
     } finally {
       setAILoading(false);
     }

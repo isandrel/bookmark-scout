@@ -13,6 +13,11 @@ const serviceSchema = z.object({
   /** Chosen model id; empty means the provider default. */
   model: z.string(),
   enabled: z.boolean(),
+  /**
+   * Whether requests need an API key; absent means the provider's `requires_api_key`. Off lets a
+   * service run with no key, such as behind a proxy that adds it (`serviceRequiresApiKey`).
+   */
+  requiresApiKey: z.boolean().optional(),
 });
 
 export type AIService = z.infer<typeof serviceSchema> & { provider: AIProvider };
@@ -70,6 +75,27 @@ export const DEFAULT_SERVICE_PROVIDER: AIProvider = readConfig(
   'ai/services',
   z.strictObject({ default_provider: z.string().refine(isAvailableProvider) }),
 ).default_provider;
+
+/** Whether `service` needs an API key: the user's choice, else its provider's default. */
+export function serviceRequiresApiKey(
+  service: Pick<AIService, 'provider' | 'requiresApiKey'>,
+): boolean {
+  return service.requiresApiKey ?? providerRequiresApiKey(service.provider);
+}
+
+/**
+ * Sets whether `service` needs an API key. Stored only while it differs from the provider's
+ * default, like every other override, so a provider file change still reaches the rest.
+ */
+export async function setAIServiceRequiresApiKey(
+  service: Pick<AIService, 'id' | 'provider'>,
+  requiresApiKey: boolean,
+): Promise<void> {
+  await updateAIService(service.id, {
+    requiresApiKey:
+      requiresApiKey === providerRequiresApiKey(service.provider) ? undefined : requiresApiKey,
+  });
+}
 
 export async function getDefaultAIService(): Promise<AIService | undefined> {
   const state = await getAIServicesState();
@@ -174,10 +200,19 @@ export async function duplicateAIService(id: string): Promise<AIService | undefi
   const source = state.services.find((service) => service.id === id);
   if (!source || isSingleServiceProvider(source.provider)) return undefined;
   const copy = await addAIService(source.provider, t('format_copyName', source.name));
-  await updateAIService(copy.id, { model: source.model, enabled: source.enabled });
+  await updateAIService(copy.id, {
+    model: source.model,
+    enabled: source.enabled,
+    requiresApiKey: source.requiresApiKey,
+  });
   const config = await getStoredAIProviderConfig(source.id);
   if (Object.keys(config).length > 0) await saveStoredAIProviderConfig(copy.id, config);
-  return { ...copy, model: source.model, enabled: source.enabled };
+  return {
+    ...copy,
+    model: source.model,
+    enabled: source.enabled,
+    ...(source.requiresApiKey === undefined ? {} : { requiresApiKey: source.requiresApiKey }),
+  };
 }
 
 /** Removes a service and its stored credentials. */

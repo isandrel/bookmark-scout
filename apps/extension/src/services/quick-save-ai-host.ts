@@ -89,8 +89,11 @@ export type AIHostSchemaOutputs = {
 export class AIHostError extends Error {
   constructor(
     message: string,
-    /** `answer`: the request worked, but the answer did not fit; the next request may work. */
-    readonly kind?: 'answer',
+    /**
+     * `answer`: the request worked, but the answer did not fit; the next request may work.
+     * `keyRequired`: the service wants an API key it was not sent.
+     */
+    readonly kind?: AIHostErrorKind,
   ) {
     super(message);
     this.name = 'AIHostError';

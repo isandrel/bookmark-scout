@@ -29,7 +29,7 @@ Attiva **Funzioni IA**.
 In **Servizi IA**, fai clic su **Aggiungi servizio** e scegli un provider. Il selettore elenca i provider più noti in **In evidenza**, poi **Server locali** e **Personalizzati**; digita nella sua casella di ricerca per trovarne circa altri 200 in **Altri provider (models.dev)**. Poi scegli un **Modello IA**.
 </Step>
 <Step>
-Inserisci la tua **Chiave API** se il provider ne richiede una. Per i provider in evidenza, **Ottieni una chiave API da** apre la pagina del provider in cui crearne una dopo aver eseguito l'accesso. La chiave viene salvata quando esci dal campo e viene archiviata solo su questo dispositivo. Una chiave che non corrisponde al formato del provider viene rifiutata e non salvata.
+Inserisci la tua **Chiave API** se il provider ne richiede una. Per i provider in evidenza, **Ottieni una chiave API da** apre la pagina del provider in cui crearne una dopo aver eseguito l'accesso. La chiave viene salvata quando esci dal campo e viene archiviata solo su questo dispositivo. Una chiave che non corrisponde al formato del provider viene rifiutata e non salvata. Sotto la chiave, **Richiede una chiave API** parte come se lo aspetta il provider. Disattivalo per usare il servizio senza chiave: tramite un proxy o un gateway che aggiunge la chiave da sé, un endpoint ospitato in proprio o aziendale, o un provider con un piano gratuito che non chiede chiavi. Le richieste partono allora senza alcuna chiave.
 </Step>
 <Step>
 Facoltativo: fai clic su **Aggiorna modelli** per caricare l'elenco aggiornato dei modelli del provider, oppure su **Verifica servizio** per controllare che il provider sia raggiungibile, accetti la chiave e offra il modello scelto. Entrambi leggono l'elenco dei modelli del provider, cosa che non costa nulla; la verifica invia un breve prompt di prova solo ai provider senza elenco, come Azure OpenAI. La prima volta il browser chiede l'accesso all'indirizzo di quel provider. Un elenco aggiornato viene conservato per il selettore dei modelli finché non lo aggiorni di nuovo.
@@ -98,6 +98,8 @@ Salva tutti i servizi che vuoi, anche più di uno dello stesso provider: ad esem
 | Provider personalizzato (compatibile con Anthropic) | Facoltativa | Qualsiasi endpoint che usa la Messages API di Anthropic, impostato con **URL di base** |
 | Circa altri 200 | Di solito obbligatoria | Elencati in **Altri provider (models.dev)**, ad esempio Together AI, Fireworks AI, Cerebras, DeepInfra e LM Studio. Non hanno un elenco dei modelli integrato: fai clic su **Aggiorna modelli** o inserisci un **Modello personalizzato**. |
 
+La colonna **Chiave API** indica il valore iniziale di **Richiede una chiave API** per ogni provider; puoi cambiarlo per ogni servizio.
+
 Il selettore **Provider** ha una casella di ricerca. I provider aggiuntivi provengono da una copia del catalogo aperto [models.dev](https://models.dev) inclusa nell'estensione, quindi sceglierne uno non invia nulla a models.dev; le richieste vanno solo al provider che scegli.
 
 **URL di base** sostituisce l'indirizzo del provider per ogni richiesta, ad esempio per usare un proxy. Deve iniziare con `http://` o `https://`. **Intestazioni aggiuntive (JSON)** aggiunge intestazioni a ogni richiesta, e **Modello personalizzato** imposta un ID di modello per i provider che accettano qualsiasi nome di modello.
@@ -114,7 +116,7 @@ I server locali devono accettare le richieste dell'estensione:
 
 ### Quando un controllo non riesce [#when-a-check-fails]
 
-Verifica e Aggiorna indicano la causa probabile: una chiave rifiutata (401, o 400 da Google e xAI), un URL di base errato (404), un provider che limita le richieste (429, il che significa comunque che la chiave funziona), un server che ha rifiutato l'origine dell'estensione, nessuna risposta entro 8 secondi, oppure un indirizzo che non fornisce un'API di provider.
+Verifica e Aggiorna indicano la causa probabile: una chiave rifiutata (401, o 400 da Google e xAI), un URL di base errato (404), un provider che limita le richieste (429, il che significa comunque che la chiave funziona), un server che ha rifiutato l'origine dell'estensione, nessuna risposta entro 8 secondi, oppure un indirizzo che non fornisce un'API di provider. Quando un servizio impostato per funzionare senza chiave viene rifiutato (401, o 403 da un indirizzo fuori dalla tua rete), il messaggio dice che il servizio richiede una chiave API: aggiungine una o controlla l'endpoint. Gli strumenti IA offrono allora **Apri le impostazioni del servizio**, che apre quel servizio nelle impostazioni.
 
 ## Scrivere i tuoi prompt [#write-your-own-prompts]
 

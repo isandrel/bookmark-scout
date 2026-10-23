@@ -506,7 +506,7 @@ test('an earlier toast does not cover the review dialog buttons', async ({
   await expect.poll(overlaps, { timeout: 3_000 }).toBe(0);
 });
 
-test('[mocked provider contract] a rejected request explains the error in a failure toast', async ({
+test('[mocked provider contract] a keyless request the service refuses says it needs a key, with a way to the service', async ({
   context,
   extensionId,
   extensionWorker,
@@ -518,10 +518,17 @@ test('[mocked provider contract] a rejected request explains the error in a fail
   const popup = await openSuggestions(page, context, extensionWorker, extensionId);
   const toast = toastRegion(popup);
   await expect(toast.getByText('× AI Recommendation Failed', { exact: true })).toBeVisible();
+  // The stub service has no key (a custom provider needs none), so a 401 means it wants one.
   await expect(
     toast.getByText(
-      'The provider rejected the API key. Check that it is correct and still active.',
+      'The service says it needs an API key. Add one in its settings, or check the endpoint.',
       { exact: true },
     ),
   ).toBeVisible();
+  const [options] = await Promise.all([
+    context.waitForEvent('page'),
+    toast.getByRole('button', { name: 'Open service settings' }).click(),
+  ]);
+  expect(new URL(options.url()).searchParams.get('service')).toBe('custom');
+  await expect(options.getByTestId('ai-service-editor')).toBeVisible();
 });
