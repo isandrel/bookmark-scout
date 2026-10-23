@@ -41,11 +41,20 @@ const REGEX_SPECIAL_CHARACTERS = /[.*+?^${}()|[\]\\]/g;
 const WORD_CHARACTER =
   '(?:(?![\\p{Script=Han}\\p{Script=Hiragana}\\p{Script=Katakana}])[\\p{L}\\p{N}\\p{M}_])';
 
-/** An unbounded quantifier at `index` of a pattern: `*`, `+`, or `{n,}`. */
-function unboundedQuantifierAt(source: string, index: number): boolean {
+/**
+ * A quantifier at `index` of a pattern that can repeat many times: `*`, `+`, `{n,}`, or `{n,m}`
+ * with m above 1. A bounded range counts too: `(\w+\s?){1,20}$` tries as many splits as
+ * `(\w+\s?)+$` up to its bound and froze the page on a title of 15 words. An exact count `{n}`
+ * does not, since it leaves the engine no choice of how many times to repeat.
+ */
+function repeatingQuantifierAt(source: string, index: number): boolean {
   const char = source[index];
   if (char === '*' || char === '+') return true;
-  return char === '{' && /^\{\d+,\}/.test(source.slice(index));
+  if (char !== '{') return false;
+  const range = /^\{\d+,(\d*)\}/.exec(source.slice(index));
+  if (!range) return false;
+  const [, max] = range;
+  return max === '' || Number(max) > 1;
 }
 
 /** The index just past the `)` or `]` that closes the group or class opened at `start`. */
@@ -189,9 +198,10 @@ function hasOverlappingAlternatives(body: string): boolean {
 /**
  * Whether a user pattern could take minutes on a title that almost matches, so it is searched as
  * plain text instead: it is longer than `max_pattern_length` in
- * `config/bookmarks/search-regex.toml`, or it repeats without bound a group that itself repeats
- * without bound (`(a+)+`, `(\w*)*`) or whose alternatives can match the same text (`(a|aa)+`,
- * `(a|a?)+`). The engine then tries every way to split the title, which can freeze the page.
+ * `config/bookmarks/search-regex.toml`, or it repeats (`*`, `+`, `{n,}`, `{n,m}`) a group that
+ * itself repeats (`(a+)+`, `(\w*)*`, `(\w+\s?){1,20}`) or whose alternatives can match the same
+ * text (`(a|aa)+`, `(a|a?)+`). The engine then tries every way to split the title, which can
+ * freeze the page.
  */
 export function isSlowRegex(source: string): boolean {
   if (source.length > REGEX_SEARCH.maxPatternLength) return true;
@@ -212,7 +222,7 @@ export function isSlowRegex(source: string): boolean {
     else if (char === ')') {
       const group = groups.pop();
       const repeatsInside = group?.repeatsInside ?? false;
-      if (group && unboundedQuantifierAt(source, index + 1)) {
+      if (group && repeatingQuantifierAt(source, index + 1)) {
         if (repeatsInside) return true;
         if (hasOverlappingAlternatives(source.slice(group.start + 1, index))) return true;
       }
@@ -220,7 +230,7 @@ export function isSlowRegex(source: string): boolean {
       if (repeatsInside && parent) parent.repeatsInside = true;
     } else {
       const parent = groups.at(-1);
-      if (parent && unboundedQuantifierAt(source, index)) parent.repeatsInside = true;
+      if (parent && repeatingQuantifierAt(source, index)) parent.repeatsInside = true;
     }
   }
   return false;
