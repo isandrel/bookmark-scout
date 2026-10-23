@@ -34,8 +34,8 @@
 
 - 📁 **Save to the right folder by typing its name.** Type a few letters, even of a folder tucked deep inside others, and press Enter. Small typos still match.
 - ⚡ **Save with one shortcut.** Press {{ shortcuts["commands.quick-save"].both }} on any page. A small message shows where the page went, with **Undo** and other folders to move it to.
-- 🔎 **Find anything you saved.** Search every bookmark as you type, from the toolbar, the side panel, or a full-page bookmark manager.
-- 🧹 **Tidy up years of bookmarks.** Remove duplicates, find links that no longer work, and strip tracking codes from web addresses. You see every change before it happens, and can undo it.
+- 🔎 **Find anything you saved.** Search every bookmark as you type, from the toolbar, the side panel, or a full-page bookmark manager, which can also show your bookmarks as cards with a picture of each page. If you turn it on, search also finds words inside the pages you saved.
+- 🧹 **Tidy up years of bookmarks.** Remove duplicates, find links that no longer work, strip tracking codes from web addresses, and set up your own rules that add tags and move bookmarks into folders. Cleanups and rules show you every change before it happens, and you can undo it.
 - 🕘 **See every change, and get deleted bookmarks back.** The History lists each change to your bookmarks, even ones made outside Bookmark Scout, and brings back what was deleted, even after the browser restarts. It stays on your computer.
 - ✨ **Optional AI suggestions.** Let AI pick the folder for you, using your own AI account or a free AI model on your own computer, such as the one built into Chrome. AI stays off until you turn it on.
 - 🔒 **Private by design.** No account, no ads, no tracking, and nothing goes to the developer. Saving and searching even work offline.

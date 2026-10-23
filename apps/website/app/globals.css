@@ -95,6 +95,32 @@ mark {
   padding: 0 1px;
 }
 
+/*
+ * Keyboard shortcuts in messages: one key cap per way to press a shortcut, sitting in the line like
+ * a word, as the docs print them. The body face keeps caps narrower than code, and system-ui comes
+ * before the CJK fallbacks, whose ⌘ ⌥ ⇧ are full width; baseline alignment and the inherited line
+ * height keep the line spacing even.
+ */
+kbd.key-cap {
+  font-family: var(--font-instrument), system-ui, "Segoe UI Symbol", sans-serif;
+  font-size: 0.85em;
+  font-weight: 500;
+  line-height: inherit;
+  vertical-align: baseline;
+  white-space: nowrap;
+  padding: 0.05em 0.35em;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: inset 0 -1px 0 var(--line);
+}
+
+/* No automatic CJK-Latin spacing around the caps: the copy around them sets its own spaces. */
+.shortcut {
+  text-autospace: no-autospace;
+}
+
 .ribbon {
   background: var(--ribbon);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);

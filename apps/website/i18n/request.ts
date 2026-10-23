@@ -6,6 +6,7 @@ import {
 } from '@bookmark-scout/config';
 import { getRequestConfig } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
+import { shortcutMarkup } from '../lib/shortcut-markup';
 import { routing } from './routing';
 
 const PAGE_MESSAGE_DIRS = ['privacy', 'support'] as const;
@@ -13,13 +14,15 @@ const PAGE_MESSAGE_DIRS = ['privacy', 'support'] as const;
 /**
  * Keys come from the extension's shortcuts file; messages name them as {{SHORTCUT:<id>}}, which
  * prints the primary platform's keys and the other platform's in parentheses, each named as
- * `shortcutNotes` in the same language words it, as plain text at the size of the text around it.
+ * `shortcutNotes` in the same language words it, at the size of the text around it. The keys are
+ * filled as rich-text tags (`lib/shortcut-markup.ts`), so pages render them as key caps with
+ * `t.rich` and `shortcutTags`.
  */
 const shortcuts = readShortcutConfig();
 
 /** The messages with every shortcut placeholder replaced by the configured keys. */
 function withShortcuts(value: unknown, notes: ShortcutNotes): unknown {
-    if (typeof value === 'string') return fillShortcutPlaceholders(value, shortcuts, notes);
+    if (typeof value === 'string') return fillShortcutPlaceholders(value, shortcuts, notes, shortcutMarkup);
     if (Array.isArray(value)) return value.map((entry) => withShortcuts(entry, notes));
     if (value && typeof value === 'object') {
         return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, withShortcuts(entry, notes)]));

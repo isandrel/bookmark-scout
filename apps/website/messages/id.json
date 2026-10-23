@@ -34,6 +34,9 @@
       "Penataan dengan tarik dan lepas",
       "Dukungan panel samping (bilah samping di Firefox)",
       "Penelusuran tersimpan",
+      "Penelusuran di dalam halaman tersimpan, di perangkat Anda (opsional)",
+      "Aturan Pintar yang memberi tag dan memindahkan bookmark setelah ditinjau",
+      "Tampilan kartu dengan sampul halaman (opsional)",
       "Pintasan keyboard",
       "Urungkan dan ulangi di pengelola bookmark",
       "Mode gelap",
@@ -135,9 +138,10 @@
         "caption": "Pengelola ini menggantikan halaman Bookmark Chrome dan bekerja seperti aslinya, dengan hierarki folder, breadcrumb, dan tabel yang dapat diurutkan.",
         "alt": "Pengelola Bookmark Scout di folder AI / LLMs / Fine-tuning, dengan hierarki folder (AI, Dev, Design, Tools, Reading list), satu kotak penelusuran, dan tabel bookmark, setiap bookmark dengan ikon situsnya",
         "points": [
-          "Telusuri semua bookmark Anda sambil mengetik, berdasarkan judul, alamat, folder, atau tag",
+          "Telusuri semua bookmark Anda sambil mengetik, berdasarkan judul, alamat, folder, tag, atau ringkasan, dan, jika Anda mengaktifkannya, berdasarkan kata di dalam halaman yang disimpan",
           "Biarkan hierarki dan penelusuran yang sama tetap terbuka di panel samping browser (bilah samping di Firefox)",
           "Simpan penelusuran, dan penelusuran itu selalu menampilkan hasil terkini",
+          "Tampilkan bookmark Anda sebagai kartu, dengan gambar setiap halaman jika Anda mengaktifkannya, yang disimpan di komputer Anda",
           "Pilih beberapa baris dengan {{SHORTCUT:mouse.select_toggle}}, klik kanan untuk potong, salin, tempel, dan buka semua, lalu tarik bookmark dan folder ke tempatnya",
           "Urungkan dan ulangi perubahan dengan {{SHORTCUT:manager.undo}} dan {{SHORTCUT:manager.redo}}, bahkan setelah halaman dimuat ulang",
           "Impor bookmark dari file setelah pratinjau, dan ekspor sebagai HTML, JSON, Markdown, atau CSV",
@@ -154,6 +158,7 @@
           "Hapus kode pelacakan dari alamat web setelah pratinjau",
           "Temukan link mati dan perbaiki: hapus, gunakan pengalihan, arahkan ke salinan arsip, atau edit URL-nya",
           "Ambil judul halaman dan terapkan hanya yang Anda pilih",
+          "Tulis aturan, misalnya untuk setiap halaman dari satu situs, yang menambahkan tag dan memindahkan bookmark yang cocok ke folder setelah ditinjau, atau memberi tag pada bookmark baru saat Anda menyimpannya",
           "Unduh ikon asli setiap situs, agar bookmark menampilkannya bahkan di Firefox",
           "Urungkan penghapusan dan perapian dari pesan yang muncul setelahnya",
           "Lihat setiap perubahan pada bookmark Anda di Histori, termasuk yang dibuat di luar Bookmark Scout, dan kembalikan yang terhapus, bahkan setelah browser dimulai ulang"
@@ -189,7 +194,7 @@
           "detail": "Disinkronkan oleh akun browser Anda jika sinkronisasi aktif"
         },
         "keys": {
-          "name": "Tag, penelusuran tersimpan, dan kunci AI Anda",
+          "name": "Tag, penelusuran tersimpan, teks dan gambar halaman, dan kunci AI Anda",
           "detail": "Hanya disimpan di perangkat ini"
         },
         "ai": {
@@ -198,7 +203,7 @@
         },
         "websites": {
           "name": "Situs web yang Anda periksa",
-          "detail": "Hanya saat Anda memeriksa link atau mengambil judul dan ikon situs, setelah Anda mengizinkannya"
+          "detail": "Hanya saat Anda memeriksa link, mengambil judul, ikon, atau gambar halaman, atau membaca teks halaman untuk penelusuran, setelah Anda mengizinkannya"
         },
         "agents": {
           "name": "Program AI di komputer Anda",
@@ -272,7 +277,7 @@
       "items": {
         "data": {
           "q": "Apakah Bookmark Scout mengirim bookmark saya ke mana pun?",
-          "a": "Tidak. Bookmark Anda dibaca dan diubah di dalam browser Anda, dan ekstensi ini tidak mengirim apa pun ke developer. Data hanya keluar dari browser Anda saat Anda menggunakan fitur opsional: permintaan AI dikirim ke perusahaan AI pilihan Anda; pemeriksaan link serta pengambilan judul dan ikon situs menghubungi situs web yang di-bookmark, setelah Anda mengizinkannya; dan program AI di komputer Anda sendiri yang Anda hubungkan (fitur untuk developer) mendapatkan apa yang dicarinya. Setelan disinkronkan melalui akun browser Anda jika sinkronisasi browser aktif. <privacy>Kebijakan privasi</privacy> berisi detailnya."
+          "a": "Tidak. Bookmark Anda dibaca dan diubah di dalam browser Anda, dan ekstensi ini tidak mengirim apa pun ke developer. Data hanya keluar dari browser Anda saat Anda menggunakan fitur opsional: permintaan AI dikirim ke perusahaan AI pilihan Anda; pemeriksaan link, pengambilan judul, ikon situs, dan gambar halaman, serta pembacaan teks halaman untuk penelusuran menghubungi situs web yang di-bookmark, setelah Anda mengizinkannya; dan program AI di komputer Anda sendiri yang Anda hubungkan (fitur untuk developer) mendapatkan apa yang dicarinya. Setelan disinkronkan melalui akun browser Anda jika sinkronisasi browser aktif. <privacy>Kebijakan privasi</privacy> berisi detailnya."
         },
         "needAi": {
           "q": "Apakah saya harus menggunakan AI?",
@@ -284,7 +289,7 @@
         },
         "changes": {
           "q": "Apakah ekstensi ini akan mengubah bookmark saya tanpa bertanya?",
-          "a": "Tidak. Perapian duplikat, perapian URL, perbaikan link mati, judul yang diambil, penataan ulang dengan AI, dan impor semuanya menampilkan tinjauan sebelum ada yang ditulis. Fitur AI menampilkan perubahannya sebagai rencana dan menunggu persetujuan Anda. Penghapusan meminta konfirmasi secara default, dan pengelola bookmark dapat mengurungkan perubahan dengan {{SHORTCUT:manager.undo}}."
+          "a": "Tidak. Perapian duplikat, perapian URL, perbaikan link mati, judul yang diambil, penataan ulang dengan AI, proses aturan, dan impor semuanya menampilkan tinjauan sebelum ada yang ditulis. Fitur AI menampilkan perubahannya sebagai rencana dan menunggu persetujuan Anda. Aturan Anda sendiri hanya mengubah bookmark baru dengan sendirinya jika Anda mengaktifkannya. Penghapusan meminta konfirmasi secara default, dan pengelola bookmark dapat mengurungkan perubahan dengan {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "Apakah ekstensi ini berfungsi di Firefox dan Edge?",

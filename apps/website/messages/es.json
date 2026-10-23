@@ -34,6 +34,9 @@
       "Organización con arrastrar y soltar",
       "Panel lateral (incluido Firefox)",
       "Búsquedas guardadas",
+      "Búsqueda dentro de las páginas guardadas, en tu dispositivo (opcional)",
+      "Reglas inteligentes que etiquetan y mueven marcadores tras una revisión",
+      "Vista de tarjetas con portadas de las páginas (opcional)",
       "Combinaciones de teclas",
       "Deshacer y rehacer en el administrador de marcadores",
       "Modo oscuro",
@@ -135,9 +138,10 @@
         "caption": "El administrador sustituye la página Marcadores de Chrome y funciona como ella, con un árbol de carpetas, una ruta de navegación y una tabla que se puede ordenar.",
         "alt": "El gestor de Bookmark Scout en la carpeta AI / LLMs / Fine-tuning, con el árbol de carpetas (AI, Dev, Design, Tools, Reading list), un único cuadro de búsqueda y la tabla de marcadores, cada uno con el icono de su sitio",
         "points": [
-          "Busca en todos tus marcadores mientras escribes, por título, dirección, carpeta o etiqueta",
+          "Busca en todos tus marcadores mientras escribes, por título, dirección, carpeta, etiqueta o resumen, y, si lo activas, por las palabras dentro de las páginas guardadas",
           "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",
           "Guarda una búsqueda y siempre mostrará los resultados actuales",
+          "Muestra tus marcadores como tarjetas, con una imagen de cada página si lo activas, guardada en tu equipo",
           "Selecciona varias filas con {{SHORTCUT:mouse.select_toggle}}, haz clic con el botón derecho para cortar, copiar, pegar y abrir todo, y arrastra marcadores y carpetas adonde correspondan",
           "Deshaz y rehaz los cambios con {{SHORTCUT:manager.undo}} y {{SHORTCUT:manager.redo}}, incluso después de recargar",
           "Importa marcadores desde un archivo tras una vista previa, y expórtalos a HTML, JSON, Markdown o CSV",
@@ -154,6 +158,7 @@
           "Quita los códigos de seguimiento de las direcciones web tras una vista previa",
           "Encuentra enlaces rotos y repáralos: elimínalos, usa la redirección, apunta a una copia archivada o edita la URL",
           "Obtén los títulos de las páginas y aplica solo los que elijas",
+          "Escribe reglas, por ejemplo para todas las páginas de un sitio, que añaden etiquetas y mueven los marcadores que coinciden a una carpeta tras una revisión, o que etiquetan los marcadores nuevos a medida que los guardas",
           "Descarga el icono propio de cada sitio para que los marcadores lo muestren, incluso en Firefox",
           "Deshaz las eliminaciones y las limpiezas desde el mensaje que aparece a continuación",
           "Ve en el historial cada cambio en tus marcadores, también los hechos fuera de Bookmark Scout, y recupera los eliminados, incluso después de reiniciar el navegador"
@@ -189,7 +194,7 @@
           "detail": "Se sincroniza con la cuenta del navegador si la sincronización está activada"
         },
         "keys": {
-          "name": "Etiquetas, búsquedas guardadas y tu clave de IA",
+          "name": "Etiquetas, búsquedas guardadas, texto e imágenes de las páginas, y tu clave de IA",
           "detail": "Solo se guardan en este dispositivo"
         },
         "ai": {
@@ -198,7 +203,7 @@
         },
         "websites": {
           "name": "Los sitios web que compruebas",
-          "detail": "Solo cuando compruebas enlaces u obtienes títulos e iconos de sitios, después de que lo permitas"
+          "detail": "Solo cuando compruebas enlaces, obtienes títulos, iconos o imágenes de las páginas, o lees el texto de las páginas para la búsqueda, después de que lo permitas"
         },
         "agents": {
           "name": "Programas de IA de tu equipo",
@@ -272,7 +277,7 @@
       "items": {
         "data": {
           "q": "¿Bookmark Scout envía mis marcadores a algún sitio?",
-          "a": "No. Tus marcadores se leen y se modifican dentro de tu navegador, y la extensión no envía nada al desarrollador. Los datos solo salen de tu navegador cuando usas una función opcional: las solicitudes de IA van a la empresa de IA que elegiste; comprobar enlaces y obtener títulos e iconos de sitios contacta con los sitios web guardados en marcadores, después de que lo permitas; y los programas de IA de tu propio equipo que conectes (una función para desarrolladores) reciben lo que consultan. La configuración se sincroniza con la cuenta del navegador si la sincronización del navegador está activada. Encontrarás los detalles en la <privacy>política de privacidad</privacy>."
+          "a": "No. Tus marcadores se leen y se modifican dentro de tu navegador, y la extensión no envía nada al desarrollador. Los datos solo salen de tu navegador cuando usas una función opcional: las solicitudes de IA van a la empresa de IA que elegiste; comprobar enlaces, obtener títulos, iconos de sitios e imágenes de las páginas, y leer el texto de las páginas para la búsqueda contacta con los sitios web guardados en marcadores, después de que lo permitas; y los programas de IA de tu propio equipo que conectes (una función para desarrolladores) reciben lo que consultan. La configuración se sincroniza con la cuenta del navegador si la sincronización del navegador está activada. Encontrarás los detalles en la <privacy>política de privacidad</privacy>."
         },
         "needAi": {
           "q": "¿Tengo que usar la IA?",
@@ -284,7 +289,7 @@
         },
         "changes": {
           "q": "¿Cambiará mis marcadores sin preguntar?",
-          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Las funciones de IA muestran sus cambios como un plan y esperan tu aprobación. Al eliminar se pide confirmación de forma predeterminada, y el administrador de marcadores puede deshacer los cambios con {{SHORTCUT:manager.undo}}."
+          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA, las ejecuciones de reglas y las importaciones muestran una revisión antes de escribir nada. Las funciones de IA muestran sus cambios como un plan y esperan tu aprobación. Tus propias reglas solo cambian los marcadores nuevos por sí solas si lo activas. Al eliminar se pide confirmación de forma predeterminada, y el administrador de marcadores puede deshacer los cambios con {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "¿Funciona en Firefox y Edge?",

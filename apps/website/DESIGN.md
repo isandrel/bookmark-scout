@@ -96,6 +96,7 @@ components:
   screenshot-frame: "browser-chrome frame around 1280x800 screenshots, light/dark via picture"
   data-boundary: "diagram: browser boundary, dashed opt-in paths, no path to a vendor server"
   faq-item: "native details/summary, line separators"
+  shortcut-note: "one kbd key cap per way to press it (body face 0.85em, surface fill, 1px line border with a 1px inset bottom line, 4px radius, no wrapping); both platforms labelled, Mac first, the other in plain parentheses at the size of the line"
 ---
 
 ## Overview
@@ -200,7 +201,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 
 **`faq-item`**: native `<details>` and `<summary>` separated by `line` rules.
 
-**`shortcut-note`**: a keyboard shortcut in running text names both platforms, each labelled, Mac first, `⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)`, because the static site cannot know the visitor's computer. It is plain text at the size and color of the text around it, with the other platform in ordinary parentheses: no `<small>`, `<sub>`, or softer color. Messages write `{{SHORTCUT:<id>}}`; `i18n/request.ts` fills it at build time, the order from `[display] primary` in the extension's `shortcuts.toml` and the wording from `shortcutNotes` in each language's messages (a label per platform, `"{keys} on Mac"`, and a `pair` template, `"{primary} ({secondary})"`; CJK languages put the platform first and use full-width brackets).
+**`shortcut-note`**: a keyboard shortcut in running text names both platforms, each labelled, Mac first, `⌥⇧S on Mac (Alt+Shift+S on Windows and Linux)`, because the static site cannot know the visitor's computer. Each platform's keys are one `<kbd class="key-cap">` per way to press the shortcut (`Alt+Shift+S`, not one cap per key), styled as the docs' `shortcut` caps with the site's tokens: the body face at 0.85em, `surface` fill, a 1px `line` border with a 1px inset bottom line, 4px radius, baseline alignment and the inherited line height, no wrapping inside, and no CJK autospacing around them (`.shortcut`). The labels and parentheses are plain text at the size and color of the text around it: no `<small>`, `<sub>`, or softer color. Messages write `{{SHORTCUT:<id>}}`; `i18n/request.ts` fills it at build time as rich-text tags (`lib/shortcut-markup.ts`), which every `t.rich` call renders through `shortcutTags` (`components/ShortcutKeys.tsx`), the order from `[display] primary` in the extension's `shortcuts.toml` and the wording from `shortcutNotes` in each language's messages (a label per platform, `"{keys} on Mac"`, and a `pair` template, `"{primary} ({secondary})"`; CJK languages put the platform first and use full-width brackets).
 
 **`site-footer`**: `sunken` background, five columns (brand, Product, Project, Contact, Legal). Contact shows the role addresses from config.
 

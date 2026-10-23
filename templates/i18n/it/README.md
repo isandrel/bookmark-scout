@@ -1,4 +1,4 @@
-{# source: 755c10623769 #}
+{# source: e22425e92aee #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -35,8 +35,8 @@
 
 - 📁 **Salva nella cartella giusta digitandone il nome.** Digita qualche lettera, anche di una cartella annidata in profondità dentro altre, e premi Invio. Anche i piccoli errori di battitura vanno bene.
 - ⚡ **Salva con una sola scorciatoia.** Premi {{ shortcuts["commands.quick-save"].both }} su qualsiasi pagina. Un piccolo messaggio indica dove è finita la pagina, con **Annulla** e altre cartelle in cui spostarla.
-- 🔎 **Trova tutto ciò che hai salvato.** Cerca tra tutti i preferiti mentre digiti, dalla barra degli strumenti, dal riquadro laterale o da una gestione preferiti a pagina intera.
-- 🧹 **Metti ordine in anni di preferiti.** Rimuovi i duplicati, trova i link che non funzionano più ed elimina i codici di tracciamento dagli indirizzi web. Vedi ogni modifica prima che avvenga e puoi annullarla.
+- 🔎 **Trova tutto ciò che hai salvato.** Cerca tra tutti i preferiti mentre digiti, dalla barra degli strumenti, dal riquadro laterale o da una gestione preferiti a pagina intera, che può anche mostrare i preferiti come riquadri con un'immagine di ogni pagina. Se lo attivi, la ricerca trova anche le parole all'interno delle pagine che hai salvato.
+- 🧹 **Metti ordine in anni di preferiti.** Rimuovi i duplicati, trova i link che non funzionano più, elimina i codici di tracciamento dagli indirizzi web e crea regole tue che aggiungono tag e spostano i preferiti nelle cartelle. Per pulizie e regole vedi ogni modifica prima che avvenga e puoi annullarla.
 - 🕘 **Vedi ogni modifica e recupera i preferiti eliminati.** La Cronologia elenca ogni modifica ai tuoi preferiti, anche quelle fatte fuori da Bookmark Scout, e recupera ciò che è stato eliminato, anche dopo il riavvio del browser. Resta sul tuo computer.
 - ✨ **Suggerimenti dell'IA facoltativi.** Lascia che sia l'IA a scegliere la cartella, con il tuo account di IA o con un modello di IA gratuito sul tuo computer, come quello integrato in Chrome. L'IA resta disattivata finché non la attivi.
 - 🔒 **Privacy fin dalla progettazione.** Nessun account, nessuna pubblicità, nessun tracciamento, e non arriva nulla allo sviluppatore. Il salvataggio e la ricerca funzionano anche offline.

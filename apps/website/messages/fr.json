@@ -34,6 +34,9 @@
       "Organisation par glisser-déposer",
       "Panneau latéral (Firefox compris)",
       "Recherches enregistrées",
+      "Recherche dans les pages enregistrées, sur votre appareil (facultative)",
+      "Règles intelligentes qui étiquettent et déplacent les favoris après vérification",
+      "Vue en cartes avec les couvertures des pages (facultative)",
       "Raccourcis clavier",
       "Annulation et rétablissement dans le gestionnaire de favoris",
       "Mode sombre",
@@ -135,9 +138,10 @@
         "caption": "Le gestionnaire remplace la page Favoris de Chrome et fonctionne comme elle, avec une arborescence de dossiers, un fil d'Ariane et un tableau triable.",
         "alt": "Le gestionnaire de Bookmark Scout sur le dossier AI / LLMs / Fine-tuning, avec l'arborescence (AI, Dev, Design, Tools, Reading list), un seul champ de recherche et le tableau des favoris, chacun avec l'icône de son site",
         "points": [
-          "Recherchez dans tous vos favoris pendant la saisie, par titre, adresse, dossier ou étiquette",
+          "Recherchez dans tous vos favoris pendant la saisie, par titre, adresse, dossier, étiquette ou résumé, et, si vous l'activez, par les mots contenus dans les pages enregistrées",
           "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",
           "Enregistrez une recherche : elle affiche toujours les résultats à jour",
+          "Affichez vos favoris sous forme de cartes, avec une image de chaque page si vous l'activez, conservée sur votre ordinateur",
           "Sélectionnez plusieurs lignes avec {{SHORTCUT:mouse.select_toggle}}, effectuez un clic droit pour couper, copier, coller et tout ouvrir, et faites glisser favoris et dossiers là où ils doivent aller",
           "Annulez et rétablissez les modifications avec {{SHORTCUT:manager.undo}} et {{SHORTCUT:manager.redo}}, même après un rechargement",
           "Importez des favoris depuis un fichier après un aperçu, et exportez-les au format HTML, JSON, Markdown ou CSV",
@@ -154,6 +158,7 @@
           "Retirez les codes de suivi des adresses Web après un aperçu",
           "Trouvez les liens morts et réparez-les : supprimez-les, utilisez la redirection, pointez vers une copie archivée ou modifiez l'URL",
           "Récupérez les titres des pages et appliquez uniquement ceux que vous choisissez",
+          "Écrivez des règles, par exemple pour toutes les pages d'un même site, qui ajoutent des étiquettes et déplacent les favoris correspondants dans un dossier après vérification, ou qui étiquettent les nouveaux favoris au moment où vous les enregistrez",
           "Téléchargez l'icône propre à chaque site, pour l'afficher à côté des favoris, même dans Firefox",
           "Annulez les suppressions et les nettoyages depuis la notification qui suit",
           "Voyez dans l'historique chaque modification de vos favoris, même celles faites hors de Bookmark Scout, et récupérez ceux supprimés, même après un redémarrage du navigateur"
@@ -189,7 +194,7 @@
           "detail": "Synchronisés par votre compte de navigateur si la synchronisation est activée"
         },
         "keys": {
-          "name": "Étiquettes, recherches enregistrées et votre clé d'IA",
+          "name": "Étiquettes, recherches enregistrées, texte et images des pages, et votre clé d'IA",
           "detail": "Conservées uniquement sur cet appareil"
         },
         "ai": {
@@ -198,7 +203,7 @@
         },
         "websites": {
           "name": "Les sites que vous vérifiez",
-          "detail": "Uniquement quand vous vérifiez les liens ou récupérez les titres et les icônes de site, après votre autorisation"
+          "detail": "Uniquement quand vous vérifiez les liens, récupérez les titres, les icônes ou les images des pages, ou lisez le texte des pages pour la recherche, après votre autorisation"
         },
         "agents": {
           "name": "Programmes d'IA sur votre ordinateur",
@@ -272,7 +277,7 @@
       "items": {
         "data": {
           "q": "Bookmark Scout envoie-t-il mes favoris quelque part ?",
-          "a": "Non. Vos favoris sont lus et modifiés au sein de votre navigateur, et l'extension n'envoie rien au développeur. Les données ne quittent votre navigateur que lorsque vous utilisez une fonctionnalité facultative : les requêtes d'IA sont envoyées à l'entreprise d'IA que vous avez choisie ; la vérification des liens et la récupération des titres et des icônes de site contactent les sites enregistrés en favoris, après votre autorisation ; et les programmes d'IA de votre propre ordinateur que vous connectez (une fonctionnalité pour les développeurs) reçoivent ce qu'ils consultent. Les paramètres sont synchronisés via votre compte de navigateur si la synchronisation du navigateur est activée. La <privacy>politique de confidentialité</privacy> donne tous les détails."
+          "a": "Non. Vos favoris sont lus et modifiés au sein de votre navigateur, et l'extension n'envoie rien au développeur. Les données ne quittent votre navigateur que lorsque vous utilisez une fonctionnalité facultative : les requêtes d'IA sont envoyées à l'entreprise d'IA que vous avez choisie ; la vérification des liens, la récupération des titres, des icônes de site et des images des pages, et la lecture du texte des pages pour la recherche contactent les sites enregistrés en favoris, après votre autorisation ; et les programmes d'IA de votre propre ordinateur que vous connectez (une fonctionnalité pour les développeurs) reçoivent ce qu'ils consultent. Les paramètres sont synchronisés via votre compte de navigateur si la synchronisation du navigateur est activée. La <privacy>politique de confidentialité</privacy> donne tous les détails."
         },
         "needAi": {
           "q": "Dois-je utiliser l'IA ?",
@@ -284,7 +289,7 @@
         },
         "changes": {
           "q": "Va-t-il modifier mes favoris sans me demander ?",
-          "a": "Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens morts, les titres récupérés, la réorganisation par IA et les importations affichent tous une vérification avant toute écriture. Les fonctionnalités d'IA présentent leurs modifications sous forme de plan et attendent votre accord. Par défaut, une confirmation est demandée avant chaque suppression, et le gestionnaire de favoris peut annuler les modifications avec {{SHORTCUT:manager.undo}}."
+          "a": "Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens morts, les titres récupérés, la réorganisation par IA, les exécutions de règles et les importations affichent tous une vérification avant toute écriture. Les fonctionnalités d'IA présentent leurs modifications sous forme de plan et attendent votre accord. Vos propres règles ne modifient d'elles-mêmes les nouveaux favoris que si vous l'activez. Par défaut, une confirmation est demandée avant chaque suppression, et le gestionnaire de favoris peut annuler les modifications avec {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "Fonctionne-t-il dans Firefox et Edge ?",

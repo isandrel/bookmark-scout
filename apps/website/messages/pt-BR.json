@@ -34,6 +34,9 @@
       "Organização com arrastar e soltar",
       "Suporte ao painel lateral (inclusive no Firefox)",
       "Pesquisas salvas",
+      "Pesquisa dentro das páginas salvas, no seu dispositivo (opcional)",
+      "Regras inteligentes que adicionam tags e movem favoritos depois de uma revisão",
+      "Visualização em cartões com capas das páginas (opcional)",
       "Atalhos de teclado",
       "Desfazer e refazer no gerenciador de favoritos",
       "Modo escuro",
@@ -135,9 +138,10 @@
         "caption": "O gerenciador substitui a página de favoritos do Chrome e funciona como ela, com uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
         "alt": "O gerenciador do Bookmark Scout na pasta AI / LLMs / Fine-tuning, com a árvore de pastas (AI, Dev, Design, Tools, Reading list), uma única caixa de pesquisa e a tabela de favoritos, cada um com o ícone do site",
         "points": [
-          "Pesquise em todos os seus favoritos enquanto digita, por título, endereço, pasta ou tag",
+          "Pesquise em todos os seus favoritos enquanto digita, por título, endereço, pasta, tag ou resumo e, se você ativar, pelas palavras dentro das páginas salvas",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
           "Salve uma pesquisa, e ela sempre mostra os resultados atualizados",
+          "Mostre seus favoritos como cartões, com uma imagem de cada página se você ativar, guardada no seu computador",
           "Selecione várias linhas com {{SHORTCUT:mouse.select_toggle}}, clique com o botão direito para recortar, copiar, colar e abrir todos, e arraste favoritos e pastas para onde eles devem ficar",
           "Desfaça e refaça alterações com {{SHORTCUT:manager.undo}} e {{SHORTCUT:manager.redo}}, mesmo depois de recarregar a página",
           "Importe favoritos de um arquivo depois de uma prévia e exporte-os como HTML, JSON, Markdown ou CSV",
@@ -154,6 +158,7 @@
           "Remova códigos de rastreamento dos endereços da web depois de uma prévia",
           "Encontre links quebrados e corrija-os: exclua, use o redirecionamento, aponte para uma cópia arquivada ou edite o URL",
           "Busque títulos de página e aplique só os que você escolher",
+          "Crie regras, como para todas as páginas de um site, que adicionam tags e movem os favoritos correspondentes para uma pasta depois de uma revisão, ou que adicionam tags aos favoritos novos quando você os salva",
           "Baixe o ícone de cada site para que os favoritos o mostrem, inclusive no Firefox",
           "Desfaça exclusões e limpezas pela notificação que aparece em seguida",
           "Veja no histórico cada alteração nos seus favoritos, até as feitas fora do Bookmark Scout, e recupere os excluídos, mesmo depois de reiniciar o navegador"
@@ -189,7 +194,7 @@
           "detail": "Sincronizadas pela conta do navegador, se a sincronização estiver ativada"
         },
         "keys": {
-          "name": "Tags, pesquisas salvas e sua chave de IA",
+          "name": "Tags, pesquisas salvas, texto e imagens das páginas e sua chave de IA",
           "detail": "Ficam somente neste dispositivo"
         },
         "ai": {
@@ -198,7 +203,7 @@
         },
         "websites": {
           "name": "Sites que você verifica",
-          "detail": "Somente quando você verifica links ou busca títulos e ícones dos sites, depois que você permitir"
+          "detail": "Somente quando você verifica links, busca títulos, ícones ou imagens das páginas, ou lê o texto das páginas para a pesquisa, depois que você permitir"
         },
         "agents": {
           "name": "Programas de IA no seu computador",
@@ -272,7 +277,7 @@
       "items": {
         "data": {
           "q": "O Bookmark Scout envia meus favoritos para algum lugar?",
-          "a": "Não. Seus favoritos são lidos e alterados dentro do seu navegador, e a extensão não envia nada ao desenvolvedor. Os dados só saem do navegador quando você usa um recurso opcional: as solicitações de IA vão para a empresa de IA que você escolheu; a verificação de links e a busca de títulos e ícones dos sites acessam os sites salvos nos favoritos, depois que você permite; e os programas de IA no seu próprio computador que você conectar (um recurso para desenvolvedores) recebem o que consultam. As configurações são sincronizadas pela conta do navegador, se a sincronização do navegador estiver ativada. A <privacy>política de privacidade</privacy> tem os detalhes."
+          "a": "Não. Seus favoritos são lidos e alterados dentro do seu navegador, e a extensão não envia nada ao desenvolvedor. Os dados só saem do navegador quando você usa um recurso opcional: as solicitações de IA vão para a empresa de IA que você escolheu; a verificação de links, a busca de títulos, ícones dos sites e imagens das páginas, e a leitura do texto das páginas para a pesquisa acessam os sites salvos nos favoritos, depois que você permite; e os programas de IA no seu próprio computador que você conectar (um recurso para desenvolvedores) recebem o que consultam. As configurações são sincronizadas pela conta do navegador, se a sincronização do navegador estiver ativada. A <privacy>política de privacidade</privacy> tem os detalhes."
         },
         "needAi": {
           "q": "Preciso usar IA?",
@@ -284,7 +289,7 @@
         },
         "changes": {
           "q": "Ele altera meus favoritos sem perguntar?",
-          "a": "Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de gravar qualquer coisa. Os recursos de IA mostram as alterações como um plano e aguardam sua aprovação. Por padrão, a exclusão pede confirmação, e o gerenciador de favoritos pode desfazer alterações com {{SHORTCUT:manager.undo}}."
+          "a": "Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA, as execuções de regras e as importações mostram uma revisão antes de gravar qualquer coisa. Os recursos de IA mostram as alterações como um plano e aguardam sua aprovação. Suas próprias regras só alteram favoritos novos sozinhas se você ativar isso. Por padrão, a exclusão pede confirmação, e o gerenciador de favoritos pode desfazer alterações com {{SHORTCUT:manager.undo}}."
         },
         "otherBrowsers": {
           "q": "Funciona no Firefox e no Edge?",

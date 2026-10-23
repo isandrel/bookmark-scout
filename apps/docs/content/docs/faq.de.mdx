@@ -15,11 +15,11 @@ Nein. KI ist optional. Speichern, Suchen, Ordnen, Bereinigen sowie Import und Ex
 
 ### Sendet die Erweiterung meine Lesezeichen irgendwohin? [#does-it-send-my-bookmarks-anywhere]
 
-Nicht an den Entwickler: Es gibt keinen Bookmark-Scout-Server. Daten verlassen Ihren Browser nur, wenn Sie ein KI-Tool verwenden, das Sie aktiviert haben (sie gehen an Ihren Anbieter), eine Linkprüfung oder einen Titelabruf ausführen (die gespeicherten Websites werden angefragt) oder lokale KI-Agenten Ihre Lesezeichen nachschlagen lassen (sie erhalten, was sie anfragen, über ein Programm auf Ihrem Computer). Siehe [Datenschutz](/privacy).
+Nicht an den Entwickler: Es gibt keinen Bookmark-Scout-Server. Daten verlassen Ihren Browser nur, wenn Sie ein KI-Tool verwenden, das Sie aktiviert haben (sie gehen an Ihren Anbieter), eine Linkprüfung, einen Titelabruf, eine Aktualisierung der Website-Symbole, eine Indexierung des Seitentexts oder einen Titelbildabruf ausführen (die gespeicherten Websites werden angefragt) oder lokale KI-Agenten Ihre Lesezeichen nachschlagen lassen (sie erhalten, was sie anfragen, über ein Programm auf Ihrem Computer). Siehe [Datenschutz](/privacy).
 
 ### Ändert die Erweiterung meine Lesezeichen ohne Nachfrage? [#will-it-change-my-bookmarks-without-asking]
 
-Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Prüfung an, bevor etwas geschrieben wird. **KI fragen** und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Beim Löschen wird standardmäßig um Bestätigung gebeten, Löschvorgänge, Bereinigungen und Importe lassen sich über ihre Benachrichtigung rückgängig machen, und der Lesezeichen-Manager macht seine Änderungen mit <Shortcut id="manager.undo" /> rückgängig.
+Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Prüfung an, bevor etwas geschrieben wird. **KI fragen** und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Intelligente Regeln zeigen vor jeder Ausführung eine Prüfung an und ändern neue Lesezeichen nur dann von selbst, wenn Sie **Neue Lesezeichen taggen** oder **Neue Lesezeichen verschieben** einschalten. Beim Löschen wird standardmäßig um Bestätigung gebeten, Löschvorgänge, Bereinigungen und Importe lassen sich über ihre Benachrichtigung rückgängig machen, und der Lesezeichen-Manager macht seine Änderungen mit <Shortcut id="manager.undo" /> rückgängig.
 
 ### In welchen Browser-Stores ist die Erweiterung verfügbar? [#which-browser-stores-list-it]
 
@@ -79,7 +79,7 @@ Das Pop-up zeigt die im Browser gespeicherte Reihenfolge mit der Sortierung **Br
 
 ### Die Suche meldet mehr Treffer, als sie anzeigt [#search-says-there-are-more-matches-than-it-shows]
 
-Die Ergebnisse enden bei **Max. Suchergebnisse** (standardmäßig 20). Verfeinern Sie die Suche, oder erhöhen Sie das Limit in den [Einstellungen](/settings#search).
+Die Ergebnisse enden bei **Max. Suchergebnisse** (standardmäßig <SettingDefault path="search.search.max_results" />). Verfeinern Sie die Suche, oder erhöhen Sie das Limit in den [Einstellungen](/settings#search).
 
 ### Meine Tags, Zusammenfassungen oder gespeicherten Suchen fehlen auf einem anderen Computer [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
 

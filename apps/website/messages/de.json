@@ -34,6 +34,9 @@
       "Ordnen per Drag-and-drop",
       "Seitenleiste (in Firefox die Sidebar)",
       "Gespeicherte Suchen",
+      "Suche in gespeicherten Seiten, auf Ihrem Gerät (optional)",
+      "Intelligente Regeln, die Lesezeichen nach einer Prüfung taggen und verschieben",
+      "Kartenansicht mit Titelbildern der Seiten (optional)",
       "Tastenkombinationen",
       "Rückgängig und Wiederholen im Lesezeichen-Manager",
       "Dunkler Modus",
@@ -135,9 +138,10 @@
         "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome und funktioniert wie sie, mit einem Ordnerbaum, einer Pfadnavigation und einer sortierbaren Tabelle.",
         "alt": "Der Bookmark-Scout-Manager im Ordner AI / LLMs / Fine-tuning mit dem Ordnerbaum (AI, Dev, Design, Tools, Reading list), einem Suchfeld und der Lesezeichentabelle, jedes Lesezeichen mit dem Symbol seiner Website",
         "points": [
-          "Alle Ihre Lesezeichen schon beim Tippen durchsuchen, nach Titel, Adresse, Ordner oder Tag",
+          "Alle Ihre Lesezeichen schon beim Tippen durchsuchen, nach Titel, Adresse, Ordner, Tag oder Zusammenfassung, und, wenn Sie es einschalten, nach Wörtern in den gespeicherten Seiten",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche speichern, die dann immer die aktuellen Ergebnisse zeigt",
+          "Ihre Lesezeichen als Karten zeigen, mit einem Bild jeder Seite, wenn Sie das einschalten, gespeichert auf Ihrem Computer",
           "Mehrere Zeilen mit {{SHORTCUT:mouse.select_toggle}} auswählen, per Rechtsklick ausschneiden, kopieren, einfügen und alle öffnen, und Lesezeichen und Ordner dorthin ziehen, wo sie hingehören",
           "Änderungen mit {{SHORTCUT:manager.undo}} und {{SHORTCUT:manager.redo}} rückgängig machen und wiederholen, auch nach einem Neuladen",
           "Lesezeichen nach einer Vorschau aus einer Datei importieren und als HTML, JSON, Markdown oder CSV exportieren",
@@ -154,6 +158,7 @@
           "Tracking-Codes nach einer Vorschau aus Webadressen entfernen",
           "Defekte Links finden und reparieren: löschen, Weiterleitung verwenden, auf eine Archivkopie verweisen oder URL bearbeiten",
           "Seitentitel abrufen und nur die ausgewählten übernehmen",
+          "Regeln schreiben, etwa für alle Seiten einer Website, die nach einer Prüfung Tags hinzufügen und die passenden Lesezeichen in einen Ordner verschieben oder neue Lesezeichen beim Speichern taggen",
           "Das Symbol jeder Website herunterladen, damit Lesezeichen es anzeigen, auch in Firefox",
           "Löschungen und Bereinigungen über die anschließende Benachrichtigung rückgängig machen",
           "Jede Änderung an Ihren Lesezeichen im Verlauf sehen, auch solche außerhalb von Bookmark Scout, und Gelöschtes zurückholen, auch nach einem Neustart des Browsers"
@@ -189,7 +194,7 @@
           "detail": "Über Ihr Browserkonto synchronisiert, wenn die Synchronisierung aktiv ist"
         },
         "keys": {
-          "name": "Tags, gespeicherte Suchen und Ihr KI-Schlüssel",
+          "name": "Tags, gespeicherte Suchen, Seitentext und -bilder und Ihr KI-Schlüssel",
           "detail": "Bleiben nur auf diesem Gerät"
         },
         "ai": {
@@ -198,7 +203,7 @@
         },
         "websites": {
           "name": "Geprüfte Websites",
-          "detail": "Nur wenn Sie Links prüfen oder Titel und Website-Symbole abrufen, nachdem Sie es erlaubt haben"
+          "detail": "Nur wenn Sie Links prüfen, Titel, Symbole oder Seitenbilder abrufen oder Seitentext für die Suche lesen, nachdem Sie es erlaubt haben"
         },
         "agents": {
           "name": "KI-Programme auf Ihrem Computer",
@@ -272,7 +277,7 @@
       "items": {
         "data": {
           "q": "Sendet Bookmark Scout meine Lesezeichen irgendwohin?",
-          "a": "Nein. Ihre Lesezeichen werden in Ihrem Browser gelesen und geändert, und die Erweiterung sendet nichts an den Entwickler. Daten verlassen Ihren Browser nur, wenn Sie eine optionale Funktion verwenden: KI-Anfragen gehen an das KI-Unternehmen Ihrer Wahl; beim Prüfen von Links und beim Abrufen von Titeln und Website-Symbolen werden die gespeicherten Websites kontaktiert, nachdem Sie es erlaubt haben; und KI-Programme auf Ihrem eigenen Computer, die Sie verbinden (eine Funktion für Entwickler), erhalten das, was sie nachschlagen. Einstellungen werden über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiv ist. Details finden Sie in der <privacy>Datenschutzerklärung</privacy>."
+          "a": "Nein. Ihre Lesezeichen werden in Ihrem Browser gelesen und geändert, und die Erweiterung sendet nichts an den Entwickler. Daten verlassen Ihren Browser nur, wenn Sie eine optionale Funktion verwenden: KI-Anfragen gehen an das KI-Unternehmen Ihrer Wahl; beim Prüfen von Links, beim Abrufen von Titeln, Website-Symbolen und Seitenbildern und beim Lesen von Seitentext für die Suche werden die gespeicherten Websites kontaktiert, nachdem Sie es erlaubt haben; und KI-Programme auf Ihrem eigenen Computer, die Sie verbinden (eine Funktion für Entwickler), erhalten das, was sie nachschlagen. Einstellungen werden über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiv ist. Details finden Sie in der <privacy>Datenschutzerklärung</privacy>."
         },
         "needAi": {
           "q": "Muss ich KI verwenden?",
@@ -284,7 +289,7 @@
         },
         "changes": {
           "q": "Ändert die Erweiterung meine Lesezeichen ohne Nachfrage?",
-          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. KI-Funktionen zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Vor dem Löschen wird standardmäßig nachgefragt, und der Lesezeichen-Manager kann Änderungen mit {{SHORTCUT:manager.undo}} rückgängig machen."
+          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung, Regelausführungen und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. KI-Funktionen zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Ihre eigenen Regeln ändern neue Lesezeichen nur dann von selbst, wenn Sie das einschalten. Vor dem Löschen wird standardmäßig nachgefragt, und der Lesezeichen-Manager kann Änderungen mit {{SHORTCUT:manager.undo}} rückgängig machen."
         },
         "otherBrowsers": {
           "q": "Funktioniert sie in Firefox und Edge?",

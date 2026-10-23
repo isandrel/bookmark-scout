@@ -1,4 +1,4 @@
-{# source: 755c10623769 #}
+{# source: e22425e92aee #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -35,8 +35,8 @@
 
 - 📁 **Salve na pasta certa digitando o nome dela.** Digite algumas letras, mesmo de uma pasta guardada bem no fundo de outras, e pressione Enter. Pequenos erros de digitação ainda encontram a pasta.
 - ⚡ **Salve com um só atalho.** Pressione {{ shortcuts["commands.quick-save"].both }} em qualquer página. Uma pequena mensagem mostra onde a página foi salva, com **Desfazer** e outras pastas para onde você pode movê-la.
-- 🔎 **Encontre tudo o que você salvou.** Pesquise em todos os seus favoritos enquanto digita, pela barra de ferramentas, pelo painel lateral ou por um gerenciador de favoritos em página inteira.
-- 🧹 **Arrume anos de favoritos.** Remova duplicatas, encontre links que não funcionam mais e tire os códigos de rastreamento dos endereços da web. Você vê cada alteração antes que ela aconteça e pode desfazê-la.
+- 🔎 **Encontre tudo o que você salvou.** Pesquise em todos os seus favoritos enquanto digita, pela barra de ferramentas, pelo painel lateral ou por um gerenciador de favoritos em página inteira, que também pode mostrar seus favoritos como cartões com uma imagem de cada página. Se você ativar, a pesquisa também encontra palavras dentro das páginas que você salvou.
+- 🧹 **Arrume anos de favoritos.** Remova duplicatas, encontre links que não funcionam mais, tire os códigos de rastreamento dos endereços da web e crie suas próprias regras que adicionam tags e movem favoritos para pastas. As limpezas e as regras mostram cada alteração antes que ela aconteça, e você pode desfazê-la.
 - 🕘 **Veja cada alteração e recupere o que excluiu.** O histórico lista cada alteração nos seus favoritos, até as feitas fora do Bookmark Scout, e traz de volta o que foi excluído, mesmo depois de reiniciar o navegador. Ele fica no seu computador.
 - ✨ **Sugestões opcionais da IA.** Deixe a IA escolher a pasta para você, usando sua própria conta de IA ou um modelo de IA gratuito no seu computador, como o que vem integrado ao Chrome. A IA fica desativada até você ativá-la.
 - 🔒 **Privacidade desde o início.** Sem conta, sem anúncios, sem rastreamento, e nada vai para o desenvolvedor. Salvar e pesquisar funcionam até sem internet.
