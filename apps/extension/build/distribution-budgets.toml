@@ -273,27 +273,32 @@
 # ZIP 2,114,835 / 2,114,802 / 2,114,950, uncompressed 7,125,806 / 7,125,802 / 7,125,965 B (Chrome /
 # Edge / Firefox), 4,005,794 B of JavaScript, and 2,552,663 B of locales, against main at 2,103,862,
 # 7,086,409, 3,988,941, and 2,530,357 (Firefox).
+# Raised on 2026-10-23 (uncompressed 7,145,000 to 7,175,000, css 91,000 to 92,000, locales
+# 2,565,000 to 2,590,000) for the right-click menu, Tools sidebar and toast position settings (21
+# messages in 12 languages) on top of the shortcut remapping. Measured on
+# feat/context-menu-tools-toast rebased on main: uncompressed 7,160,018 / 7,160,014 / 7,160,177 B
+# (Chrome / Edge / Firefox), 91,625 B of CSS, and 2,577,058 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 2_128_000
-raw_bytes = 7_145_000
+raw_bytes = 7_175_000
 
 [targets.edge]
 zip_bytes = 2_128_000
-raw_bytes = 7_145_000
+raw_bytes = 7_175_000
 
 [targets.firefox]
 zip_bytes = 2_128_000
-raw_bytes = 7_145_000
+raw_bytes = 7_175_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
 javascript = 4_020_000
-css = 91_000
+css = 92_000
 fonts = 143_000
-locales = 2_565_000
+locales = 2_590_000
 images = 320_000
 other = 29_000
