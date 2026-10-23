@@ -209,6 +209,7 @@ test('deleting a bookmark deletes its cover and leaves the others (media review 
   const keptId = seeded.ids['Kept page'] ?? '';
   await seedCover(extensionWorker, goneId, 'https://gone.e2e.invalid/');
   await seedCover(extensionWorker, keptId, 'https://kept.e2e.invalid/');
+  await setSettings(extensionWorker, { coversEnabled: true });
   await page.goto(`chrome-extension://${extensionId}/options.html?category=metadataContent`);
   await expect(page.getByTestId('covers-store')).toContainText('2 covers');
 
