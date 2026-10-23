@@ -58,6 +58,8 @@
 # Raised from 1115 on 2026-10-23 for the media review fixes (cover changes by bookmark id, the
 # portable cover a quick save keeps, and the kept-cover check in the cover store), measured 1,116
 # on fix/media-review-035 from main bfb2bf53.
+# Raised from 1115 on 2026-10-23 for the shared reader of shown-id lists (hidden ids marked, ids
+# added later shown) and the menu's recent count migration in the registry settings read (1,116).
 "popup.html" = 1125
 # Raised from 995 on 2026-10-22 with the popup, for the same settings schema growth (996).
 # Raised from 1005 on 2026-10-22 with the popup, for the same button (1,010).
@@ -76,6 +78,8 @@
 # Raised from 1115 on 2026-10-23 for the media review fixes (cover changes by bookmark id, the
 # portable cover a quick save keeps, and the kept-cover check in the cover store), measured 1,116
 # on fix/media-review-035 from main bfb2bf53.
+# Raised from 1115 on 2026-10-23 for the shared reader of shown-id lists (hidden ids marked, ids
+# added later shown) and the menu's recent count migration in the registry settings read (1,116).
 "sidepanel.html" = 1125
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
@@ -165,7 +169,9 @@
 # cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (753).
 # Raised from 760 on 2026-10-22 for the right-click menu, Tools sidebar and toast position settings
 # on top of the shortcut remapping (764).
-"agent-approval.html" = 770
+# Raised from 770 on 2026-10-23 for the shared reader of shown-id lists (hidden ids marked, ids
+# added later shown) and the menu's recent count migration in the registry settings read (771).
+"agent-approval.html" = 780
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
 # Raised from 380 on 2026-10-21 for config/ai/agent-text.toml, which holds the answer schema text
