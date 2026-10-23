@@ -143,8 +143,13 @@ export function createToolRun<Result, Selection>(
     for (const listener of listeners) listener();
   };
 
-  const reportFailure = (titleKey: string, description: string) =>
-    deps.notify({ title: t(titleKey), description, variant: 'destructive' });
+  const reportFailure = (titleKey: string, description: string, openAIServiceFor?: AIFeature) =>
+    deps.notify({
+      title: t(titleKey),
+      description,
+      variant: 'destructive',
+      ...(openAIServiceFor ? { openAIServiceFor } : {}),
+    });
 
   /** A failed scan as the user reads it: an AI tool's scan is an AI request. */
   const describeScanError = (error: unknown) =>
@@ -279,7 +284,11 @@ export function createToolRun<Result, Selection>(
           });
         } else {
           update({ phase: 'idle' });
-          reportFailure('toast_toolFailed', describeScanError(error));
+          reportFailure(
+            'toast_toolFailed',
+            describeScanError(error),
+            tool.aiFeature && isAIKeyRequiredError(error) ? tool.aiFeature : undefined,
+          );
         }
         return;
       }

@@ -29,7 +29,7 @@ Aktifkan **Fitur AI**.
 Di bawah **Layanan AI**, klik **Tambahkan layanan** lalu pilih penyedia. Pemilih mencantumkan penyedia terkenal di bawah **Unggulan**, lalu **Server lokal** dan **Kustom**; ketik di kotak penelusurannya untuk menemukan sekitar 200 penyedia lain di bawah **Penyedia lainnya (models.dev)**. Lalu pilih **Model AI**.
 </Step>
 <Step>
-Masukkan **Kunci API** Anda jika penyedia memerlukannya. Untuk penyedia unggulan, **Dapatkan kunci API dari** penyedia membuka halaman tempat Anda membuat kunci setelah login. Kunci disimpan saat Anda meninggalkan kolom, dan hanya disimpan di perangkat ini. Kunci yang tidak sesuai dengan format penyedia ditolak dan tidak disimpan.
+Masukkan **Kunci API** Anda jika penyedia memerlukannya. Untuk penyedia unggulan, **Dapatkan kunci API dari** penyedia membuka halaman tempat Anda membuat kunci setelah login. Kunci disimpan saat Anda meninggalkan kolom, dan hanya disimpan di perangkat ini. Kunci yang tidak sesuai dengan format penyedia ditolak dan tidak disimpan. Di bawah kunci, **Memerlukan kunci API** dimulai sesuai yang diharapkan penyedia. Matikan untuk memakai layanan tanpa kunci: melalui proxy atau gateway yang menambahkan kunci sendiri, endpoint yang Anda hosting sendiri atau milik perusahaan, atau penyedia dengan paket gratis yang tidak memerlukan kunci. Permintaan lalu dikirim tanpa kunci sama sekali.
 </Step>
 <Step>
 Opsional: klik **Perbarui Model** untuk memuat daftar model penyedia saat ini, atau **Verifikasi Layanan** untuk memeriksa bahwa penyedia bisa dijangkau, menerima kunci, dan menawarkan model yang dipilih. Keduanya membaca daftar model penyedia, yang tidak dikenai biaya; Verifikasi hanya mengirim prompt uji singkat ke penyedia yang tidak punya daftar, seperti Azure OpenAI. Browser meminta akses ke alamat penyedia tersebut pada kali pertama. Daftar yang diperbarui disimpan untuk pemilih model sampai Anda memperbaruinya lagi.
@@ -98,6 +98,8 @@ Simpan layanan sebanyak yang Anda mau, bahkan beberapa dari penyedia yang sama: 
 | Custom Provider (Anthropic-compatible) | Opsional | Endpoint apa pun yang memakai Anthropic Messages API, disetel dengan **URL Dasar** |
 | Sekitar 200 lainnya | Biasanya wajib | Tercantum di bawah **Penyedia lainnya (models.dev)**, misalnya Together AI, Fireworks AI, Cerebras, DeepInfra, dan LM Studio. Penyedia ini tidak punya daftar model bawaan: klik **Perbarui Model** atau masukkan **Model Kustom**. |
 
+Kolom **Kunci API** menunjukkan nilai awal **Memerlukan kunci API** untuk tiap penyedia; Anda dapat mengubahnya untuk tiap layanan.
+
 Pemilih **Penyedia** memiliki kotak penelusuran. Penyedia tambahan berasal dari salinan katalog terbuka [models.dev](https://models.dev) yang disertakan dalam ekstensi, jadi memilih salah satunya tidak mengirim apa pun ke models.dev; permintaan hanya dikirim ke penyedia yang Anda pilih.
 
 **URL Dasar** menggantikan alamat penyedia untuk setiap permintaan, misalnya untuk memakai proxy. Nilainya harus diawali `http://` atau `https://`. **JSON Header Tambahan** menambahkan header ke setiap permintaan, dan **Model Kustom** menyetel ID model untuk penyedia yang menerima nama model apa pun.
@@ -114,7 +116,7 @@ Server lokal harus menerima permintaan dari ekstensi:
 
 ### Jika pemeriksaan gagal [#when-a-check-fails]
 
-Verifikasi dan Perbarui menyebutkan kemungkinan penyebabnya: kunci ditolak (401, atau 400 dari Google dan xAI), URL Dasar salah (404), penyedia membatasi jumlah permintaan (429, yang tetap berarti kuncinya berfungsi), server menolak origin ekstensi, tidak ada jawaban dalam 8 detik, atau alamat yang tidak menyediakan API penyedia.
+Verifikasi dan Perbarui menyebutkan kemungkinan penyebabnya: kunci ditolak (401, atau 400 dari Google dan xAI), URL Dasar salah (404), penyedia membatasi jumlah permintaan (429, yang tetap berarti kuncinya berfungsi), server menolak origin ekstensi, tidak ada jawaban dalam 8 detik, atau alamat yang tidak menyediakan API penyedia. Jika layanan yang diatur berjalan tanpa kunci ditolak (401, atau 403 dari alamat di luar jaringan Anda sendiri), pesannya menyatakan bahwa layanan memerlukan kunci API: tambahkan kunci, atau periksa endpoint-nya. Alat AI lalu menawarkan **Buka setelan layanan**, yang membuka layanan itu di Setelan.
 
 ## Menulis prompt Anda sendiri [#write-your-own-prompts]
 

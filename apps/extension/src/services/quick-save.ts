@@ -608,7 +608,10 @@ async function saveWithAI(
         (host) => recommendFoldersVia(host, page, tree, settings.aiMaxRecommendations, readPage),
       );
     } catch (error) {
-      return { ...saving, status: 'failed', failure: 'aiFailed', error: getErrorMessage(error) };
+      // A service that wants an API key needs setup, not a retry: offer Open AI settings.
+      const failure =
+        error instanceof AIHostError && error.kind === 'keyRequired' ? 'aiUnavailable' : 'aiFailed';
+      return { ...saving, status: 'failed', failure, error: getErrorMessage(error) };
     }
   }
   const choices = recommendations
@@ -977,7 +980,7 @@ export async function handleQuickSaveAction(
       await quickSaveRecordValue.update((current) => (current?.id === record.id ? null : current));
       return { view: null };
     case 'openAISettings':
-      await openAISettings();
+      await openAISettings('quickSave');
       await quickSaveRecordValue.update((current) => (current?.id === record.id ? null : current));
       return { view: null };
     case 'undo':

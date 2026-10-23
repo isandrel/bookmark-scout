@@ -149,7 +149,11 @@ export async function handleAIHostRequest(
     return {
       ok: false,
       error: describeAIError(error),
-      ...(isNoAnswerError(error) ? { errorKind: 'answer' as const } : {}),
+      ...(isNoAnswerError(error)
+        ? { errorKind: 'answer' as const }
+        : isAIKeyRequiredError(error)
+          ? { errorKind: 'keyRequired' as const }
+          : {}),
     };
   }
 }

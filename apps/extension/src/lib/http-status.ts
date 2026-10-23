@@ -15,7 +15,7 @@ const httpConfig = readConfig(
     null_body: z.array(status),
     redirect: z.array(status).min(1),
     opaque: status,
-    named: z.strictObject({ bad_request: status, forbidden: status }),
+    named: z.strictObject({ bad_request: status, unauthorized: status, forbidden: status }),
   }),
 );
 
@@ -24,6 +24,7 @@ export const HTTP_STATUS = {
   max: httpConfig.status_max,
   serverErrorMin: httpConfig.server_error_min,
   badRequest: httpConfig.named.bad_request,
+  unauthorized: httpConfig.named.unauthorized,
   forbidden: httpConfig.named.forbidden,
   /** What fetch reports for a response it hides, such as a redirect it did not follow. */
   opaque: httpConfig.opaque,

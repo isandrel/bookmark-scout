@@ -6,25 +6,63 @@
  */
 
 import { generateText, type LanguageModel, Output } from 'ai';
+import { isKeylessRejection, KEYLESS_REJECTION_HEADER } from './ai-model-list';
+
+/**
+ * The API key provider packages get for a service used without one: most of them refuse to start
+ * without a key, and would otherwise send an empty one. `withoutKeyHeaders` removes every header
+ * that carries it, so such a request goes out with no Authorization, x-api-key, or similar header.
+ */
+const NO_API_KEY_PLACEHOLDER = 'bookmark-scout-no-api-key';
+
+/**
+ * `fetch` for a service without an API key: drops the placeholder key's headers from each request
+ * and marks a refusal that means the service wants a key (`KEYLESS_REJECTION_HEADER`), which the
+ * SDK keeps in its error for `describeAIError`. Header values are never logged or shown.
+ */
+function withoutKeyHeaders(fetch: typeof globalThis.fetch): typeof globalThis.fetch {
+  return async (input, init) => {
+    const headers = Object.fromEntries(
+      [...new Headers(init?.headers)].filter(
+        ([, value]) => !value.includes(NO_API_KEY_PLACEHOLDER),
+      ),
+    );
+    const response = await fetch(input, { ...init, headers });
+    const url = input instanceof Request ? input.url : String(input);
+    if (!isKeylessRejection(response.status, url)) return response;
+    const marked = new Headers(response.headers);
+    marked.set(KEYLESS_REJECTION_HEADER, 'true');
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: marked,
+    });
+  };
+}
 
 /**
  * A language model for the settings. `source` names what makes the calls (a tool name) in the
  * AI activity log, which records them when the user turned recording on.
  */
 export async function createAIModel(
-  settings: AISettings,
+  input: AISettings,
   source: AIActivitySource = 'ai',
   /** Sends the requests instead of the logging fetch; see `AIModelRequest.transport`. */
   transport?: typeof globalThis.fetch,
   /** Sessions and logging for the browser's built-in model; see `AIModelRequest.onDevice`. */
   onDevice?: BuiltinOnDeviceOptions,
 ): Promise<LanguageModel> {
-  validateAISettings(settings);
+  validateAISettings(input);
 
-  const modelId = settings.model || getDefaultModel(settings.provider);
-  const kind = getProviderKind(settings.provider);
-  const fetch =
-    transport ?? createLoggingFetch({ source, provider: settings.provider, model: modelId });
+  const modelId = input.model || getDefaultModel(input.provider);
+  const kind = getProviderKind(input.provider);
+  const sender =
+    transport ?? createLoggingFetch({ source, provider: input.provider, model: modelId });
+  // Without a key (validateAISettings let it through), every provider gets the placeholder, and
+  // the fetch takes it back out of the request.
+  const keyless = !input.apiKey;
+  const settings = keyless ? { ...input, apiKey: NO_API_KEY_PLACEHOLDER } : input;
+  const fetch = keyless ? withoutKeyHeaders(sender) : sender;
 
   switch (kind) {
     case 'native':
@@ -71,7 +109,7 @@ export async function createAIModel(
       // would call OpenAI's own Responses API, which most of them do not implement.
       const compatible = createOpenAICompatible({
         name: settings.provider,
-        apiKey: settings.apiKey || undefined,
+        apiKey: settings.apiKey,
         baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider) || '',
         headers: settings.extraHeaders,
         // Send the JSON schema as response_format so structured results parse; without it the
@@ -197,7 +235,7 @@ async function createCompatibleFallback(
 ): Promise<LanguageModel> {
   const { createOpenAI } = await import('@ai-sdk/openai');
   const compatible = createOpenAI({
-    apiKey: settings.apiKey || 'not-required',
+    apiKey: settings.apiKey,
     baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
     headers: settings.extraHeaders,
     fetch,

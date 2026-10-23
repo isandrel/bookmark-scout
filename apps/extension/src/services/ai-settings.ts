@@ -1,6 +1,7 @@
 /**
  * Settings for one AI service: its provider and model, with the credentials and connection fields
- * stored under its id (`STORAGE_ITEMS.aiCredentials`).
+ * stored under its id (`STORAGE_ITEMS.aiCredentials`). A service that needs a key and has none
+ * stops here; one set to run without a key (`serviceRequiresApiKey`) goes on without it.
  */
 export async function buildAISettingsFromService(
   service: AIService,
@@ -21,9 +22,10 @@ export async function buildAISettingsFromService(
     baseUrl: storedBaseUrl || getProviderBaseUrl(provider),
     extraHeaders: parseExtraHeaders(stored.extraHeaders),
     providerOptions: pickProviderOptions(provider, stored.options),
+    requiresApiKey: serviceRequiresApiKey(service),
   };
 
-  if (providerRequiresApiKey(provider) && !settings.apiKey) {
+  if (settings.requiresApiKey && !settings.apiKey) {
     throw new Error(t('error_aiKeyNotConfigured'));
   }
 
@@ -33,9 +35,18 @@ export async function buildAISettingsFromService(
 /** Options on its AI tab, where AI is turned on and services are set up. */
 const OPTIONS_AI_PATH = '/options.html?category=ai';
 
-/** Opens Options on the AI tab in a new tab ("Open AI settings", "Finish AI setup"). */
-export async function openAISettings(): Promise<void> {
-  await browser.tabs.create({ url: browser.runtime.getURL(OPTIONS_AI_PATH), active: true });
+/** The query parameter that opens one service's editor on the AI tab (`AIServicesPanel`). */
+export const OPTIONS_AI_SERVICE_PARAM = 'service';
+
+/**
+ * Opens Options on the AI tab in a new tab ("Open AI settings", "Finish AI setup"). With a
+ * feature, the editor of the service that feature uses opens, so a key can be added right there.
+ */
+export async function openAISettings(feature?: AIFeature): Promise<void> {
+  const service = feature ? pickAIService(await getAIServicesState(), feature) : undefined;
+  const url = new URL(browser.runtime.getURL(OPTIONS_AI_PATH));
+  if (service) url.searchParams.set(OPTIONS_AI_SERVICE_PARAM, service.id);
+  await browser.tabs.create({ url: url.href, active: true });
 }
 
 /**
@@ -54,7 +65,8 @@ export function pickAIService(state: AIServicesState, feature?: AIFeature): AISe
 
 /**
  * Whether AI tools can call the service `feature` uses as set up: there is one, and it has an API
- * key unless its provider needs none (a local server), and the built-in model is downloaded and
+ * key unless it needs none (a local server, or the user turned Requires an API key off), and the
+ * built-in model is downloaded and
  * ready (`builtinStatus`, read asynchronously by the caller; anything else counts as not set up).
  * The same conditions `getActiveAISettings` checks before any call, so AI buttons are offered only
  * when a click would not stop at setup.
@@ -68,9 +80,7 @@ export function isAISetUp(
   const service = pickAIService(state, feature);
   if (!service) return false;
   if (isBuiltinProvider(service.provider)) return builtinStatus === 'available';
-  return (
-    !providerRequiresApiKey(service.provider) || Boolean(credentials[service.id]?.apiKey?.trim())
-  );
+  return !serviceRequiresApiKey(service) || Boolean(credentials[service.id]?.apiKey?.trim());
 }
 
 /** Settings of the service `feature` uses (`pickAIService`). */

@@ -3447,6 +3447,18 @@
         "message": "$1 может работать без API-ключа.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "Этот сервис работает без API-ключа. Добавляйте ключ, только если адрес API его требует.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "Нужен API-ключ",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "Выключите, чтобы пользоваться сервисом без ключа: через прокси или шлюз, который сам добавляет ключ, через собственный или корпоративный адрес API или у провайдера с бесплатным тарифом без ключа. Тогда запросы отправляются вовсе без ключа.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "Необязательно",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5994,6 +6006,14 @@
     "ai_connErrorInvalidKey": {
         "message": "Провайдер отклонил API-ключ. Проверьте, что ключ правильный и всё ещё действует.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "Сервис сообщает, что ему нужен API-ключ. Добавьте ключ в настройках сервиса или проверьте адрес API.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "Открыть настройки сервиса",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "Провайдер отказал в доступе. Проверьте разрешения ключа и проект.",

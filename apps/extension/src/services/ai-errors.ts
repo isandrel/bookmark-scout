@@ -29,6 +29,21 @@ const isRetryError = (error: unknown): error is RetryError => isSDKError(error, 
 const isAPICallError = (error: unknown): error is APICallError =>
   isSDKError(error, 'AI_APICallError');
 
+/** Whether a failed AI request was refused because the service wants an API key it was not sent. */
+export function isAIKeyRequiredError(error: unknown): boolean {
+  const last = isRetryError(error) ? error.lastError : error;
+  if (last instanceof AIConnectionError) return last.code === 'key_required';
+  return isAPICallError(last) && Boolean(last.responseHeaders?.[KEYLESS_REJECTION_HEADER]);
+}
+
+/**
+ * Whether a message from `describeAIError` says the service wants an API key, for a chat whose
+ * error reaches the UI as text only (Ask AI's stream).
+ */
+export function isAIKeyRequiredMessage(message: string): boolean {
+  return message === t('ai_connErrorKeyRequired');
+}
+
 /** Statuses with one meaning whatever the provider. */
 const STATUS_MESSAGES: Readonly<Record<number, MessageKey>> = {
   401: 'ai_connErrorInvalidKey',
@@ -49,6 +64,7 @@ function describeAPICallError(error: APICallError): string {
   const { statusCode, url } = error;
   // Without a status the request never got an answer (offline, refused, blocked).
   if (statusCode === undefined) return t('ai_connErrorUnreachable', hostOf(url));
+  if (error.responseHeaders?.[KEYLESS_REJECTION_HEADER]) return t('ai_connErrorKeyRequired');
   const key = STATUS_MESSAGES[statusCode];
   return key ? t(key) : t('ai_connErrorHttp', [String(statusCode), hostOf(url)]);
 }
@@ -79,7 +95,7 @@ export function describeAIError(error: unknown): string {
 function unrecognizedStatusDetail(error: unknown): string | undefined {
   const last = isRetryError(error) ? error.lastError : error;
   if (!isAPICallError(last) || last.statusCode === undefined) return undefined;
-  if (STATUS_MESSAGES[last.statusCode]) return undefined;
+  if (STATUS_MESSAGES[last.statusCode] || isAIKeyRequiredError(last)) return undefined;
   return last.message.trim() || undefined;
 }
 

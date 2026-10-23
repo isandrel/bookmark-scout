@@ -29,7 +29,7 @@ Turn on **AI Features**.
 Under **AI services**, click **Add service** and pick a provider. The picker lists well-known providers under **Featured**, then **Local servers** and **Custom**; type in its search box to find about 200 more under **More providers (models.dev)**. Then choose an **AI Model**.
 </Step>
 <Step>
-Enter your **API Key** if the provider needs one. For the featured providers, **Get an API key from** the provider opens the page where you create one after signing in. The key is saved when you leave the field, and stored only on this device. A key that does not match the provider's format is rejected and not saved.
+Enter your **API Key** if the provider needs one. For the featured providers, **Get an API key from** the provider opens the page where you create one after signing in. The key is saved when you leave the field, and stored only on this device. A key that does not match the provider's format is rejected and not saved. Below the key, **Requires an API key** starts the way the provider expects. Turn it off to use the service without a key: through a proxy or gateway that adds the key itself, a self-hosted or company endpoint, or a provider with a free tier that needs no key. Requests then go out with no key at all.
 </Step>
 <Step>
 Optional: click **Refresh Models** to load the provider's current model list, or **Verify Service** to check that the provider is reachable, accepts the key, and offers the chosen model. Both read the provider's model list, which costs nothing; Verify only sends a short test prompt to providers without a list, such as Azure OpenAI. The browser asks for access to that one provider's address the first time. A refreshed list is kept for the model picker until you refresh again.
@@ -98,6 +98,8 @@ Save as many services as you like, even several of the same provider: for exampl
 | Custom Provider (Anthropic-compatible) | Optional | Any endpoint that speaks the Anthropic Messages API, set with **Base URL** |
 | About 200 more | Usually required | Listed under **More providers (models.dev)**, for example Together AI, Fireworks AI, Cerebras, DeepInfra, and LM Studio. They have no built-in model list: click **Refresh Models** or enter a **Custom Model**. |
 
+The **API key** column is where **Requires an API key** starts for each provider; you can change it for each service.
+
 The **AI Provider** picker has a search box. The extra providers come from a copy of the open [models.dev](https://models.dev) catalog that ships with the extension, so choosing one sends nothing to models.dev; requests go only to the provider you pick.
 
 **Base URL** overrides the provider's address for every request, for example to use a proxy. It must start with `http://` or `https://`. **Extra Headers JSON** adds headers to every request, and **Custom Model** sets a model ID for providers that accept any model name.
@@ -114,7 +116,7 @@ Local servers must accept requests from the extension:
 
 ### When a check fails
 
-Verify and Refresh name the likely cause: a rejected key (401, or 400 from Google and xAI), a wrong Base URL (404), a provider that is rate-limiting requests (429, which still means the key works), a server that refused the extension's origin, no answer within 8 seconds, or an address that does not serve a provider API.
+Verify and Refresh name the likely cause: a rejected key (401, or 400 from Google and xAI), a wrong Base URL (404), a provider that is rate-limiting requests (429, which still means the key works), a server that refused the extension's origin, no answer within 8 seconds, or an address that does not serve a provider API. When a service set to run without a key is refused (401, or 403 from an address outside your own network), the message says the service needs an API key: add one, or check the endpoint. AI tools then offer **Open service settings**, which opens that service in Settings.
 
 ## Write your own prompts
 

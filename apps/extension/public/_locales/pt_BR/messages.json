@@ -3407,6 +3407,18 @@
         "message": "$1 funciona sem chave de API.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "Este serviço funciona sem chave de API. Adicione uma só se o endpoint pedir.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "Requer uma chave de API",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "Desative para usar o serviço sem chave: por meio de um proxy ou gateway que adiciona a chave por conta própria, um endpoint próprio ou da empresa, ou um provedor com plano gratuito que não pede chave. As solicitações passam a ser enviadas sem nenhuma chave.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "Opcional",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5470,6 +5482,14 @@
     "ai_connErrorInvalidKey": {
         "message": "O provedor rejeitou a chave de API. Verifique se ela está correta e ainda ativa.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "O serviço informa que precisa de uma chave de API. Adicione uma nas configurações dele ou verifique o endpoint.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "Abrir configurações do serviço",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "O provedor recusou o acesso. Verifique as permissões e o projeto da chave.",

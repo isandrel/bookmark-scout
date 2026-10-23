@@ -39,6 +39,11 @@ export type AISettings = {
   extraHeaders?: Record<string, string>;
   /** Provider-specific connection fields such as OpenAI's organization or Azure's resource. */
   providerOptions?: Partial<Record<AIProviderExtraField, string>>;
+  /**
+   * Whether calls need `apiKey`; absent means the provider's default. Off sends requests with no
+   * key header at all (`serviceRequiresApiKey`).
+   */
+  requiresApiKey?: boolean;
 };
 
 export type DetectedAIModel = {
@@ -102,7 +107,7 @@ export function validateAISettings(settings: AISettings): void {
     throw new Error(t('ai_featuresDisabled'));
   }
 
-  if (providerRequiresApiKey(settings.provider) && !settings.apiKey) {
+  if ((settings.requiresApiKey ?? providerRequiresApiKey(settings.provider)) && !settings.apiKey) {
     throw new Error(t('error_aiApiKeyRequired'));
   }
 

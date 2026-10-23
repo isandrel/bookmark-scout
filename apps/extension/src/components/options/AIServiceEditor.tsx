@@ -65,6 +65,7 @@ export function getAIServicesSearchFields(): AIServicesSearchField[] {
       text: [t('options_aiServices'), t('options_aiServicesDescription')],
     },
     field(false, 'options_apiKey', 'options_apiKeyDescription'),
+    field(false, 'options_requiresApiKey'),
     field(false, 'settings_aiModel'),
     field(false, 'options_customModel', 'options_customModelDescription'),
     field(true, 'options_baseUrl', 'options_baseUrlDescription'),
@@ -224,6 +225,9 @@ export function AIServiceEditor({
   const docUrl = getProviderDocUrl(provider);
   const keyUrl = getProviderKeyUrl(provider);
   const idPrefix = `ai-service-${service.id}`;
+  const requiresKey = serviceRequiresApiKey(service);
+  // The user turned the key off for a provider that normally needs one.
+  const keyTurnedOff = !requiresKey && providerRequiresApiKey(provider);
 
   const [fields, setFields] = useState<StoredFields>({ apiKey: '', baseUrl: '', extraHeaders: '' });
   const [options, setOptions] = useState<Partial<Record<AIProviderExtraField, string>>>({});
@@ -312,7 +316,7 @@ export function AIServiceEditor({
   };
 
   const validateApiKey = (key: string): string | undefined => {
-    if (!key || !providerRequiresApiKey(provider) || !providerConfig?.api_key_pattern) {
+    if (!key || !requiresKey || !providerConfig?.api_key_pattern) {
       return undefined;
     }
     try {
@@ -477,9 +481,11 @@ export function AIServiceEditor({
           id={`${idPrefix}-apiKey`}
           label={t('options_apiKey')}
           description={
-            providerRequiresApiKey(provider)
+            requiresKey
               ? t('options_apiKeyDescription')
-              : t('options_apiKeyOptionalDescription', providerName)
+              : keyTurnedOff
+                ? t('options_apiKeyTurnedOffDescription')
+                : t('options_apiKeyOptionalDescription', providerName)
           }
           error={errors.apiKey}
         >
@@ -497,7 +503,7 @@ export function AIServiceEditor({
                 placeholder={
                   providerConfig?.api_key_placeholder ||
                   t(
-                    providerRequiresApiKey(provider)
+                    requiresKey
                       ? 'options_apiKeyRequiredPlaceholder'
                       : 'options_apiKeyOptionalPlaceholder',
                   )
@@ -528,6 +534,18 @@ export function AIServiceEditor({
             {t('aiOnboard_getKey', providerName)}
           </UrlLink>
         )}
+        <div className="flex items-center gap-2 sm:col-start-2">
+          <Switch
+            id={`${idPrefix}-requiresApiKey`}
+            checked={requiresKey}
+            onCheckedChange={(checked) => void setAIServiceRequiresApiKey(service, checked)}
+            data-testid="ai-service-requires-key"
+          />
+          <Label htmlFor={`${idPrefix}-requiresApiKey`} className="text-sm">
+            {t('options_requiresApiKey')}
+          </Label>
+          <SettingHelp label={t('options_requiresApiKey')} help={t('options_requiresApiKeyHelp')} />
+        </div>
       </div>
 
       <div className="space-y-1.5">

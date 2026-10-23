@@ -29,7 +29,7 @@ Activez les **Fonctionnalités d'IA**.
 Sous **Services d'IA**, cliquez sur **Ajouter un service** et choisissez un fournisseur. Le sélecteur affiche les fournisseurs connus sous **À la une**, puis **Serveurs locaux** et **Personnalisé**. Tapez dans son champ de recherche pour en trouver environ 200 autres sous **Autres fournisseurs (models.dev)**. Choisissez ensuite un **Modèle d'IA**.
 </Step>
 <Step>
-Saisissez votre **Clé API** si le fournisseur en exige une. Pour les fournisseurs à la une, le lien **Obtenir une clé API auprès de**, suivi du nom du fournisseur, ouvre la page où vous en créez une après vous être connecté. La clé est enregistrée lorsque vous quittez le champ, et stockée uniquement sur cet appareil. Une clé qui ne correspond pas au format du fournisseur est refusée et n'est pas enregistrée.
+Saisissez votre **Clé API** si le fournisseur en exige une. Pour les fournisseurs à la une, le lien **Obtenir une clé API auprès de**, suivi du nom du fournisseur, ouvre la page où vous en créez une après vous être connecté. La clé est enregistrée lorsque vous quittez le champ, et stockée uniquement sur cet appareil. Une clé qui ne correspond pas au format du fournisseur est refusée et n'est pas enregistrée. Sous la clé, **Nécessite une clé API** démarre comme le fournisseur l'attend. Désactivez-le pour utiliser le service sans clé : via un proxy ou une passerelle qui ajoute la clé elle-même, un point de terminaison auto-hébergé ou d'entreprise, ou un fournisseur dont l'offre gratuite ne demande pas de clé. Les requêtes partent alors sans aucune clé.
 </Step>
 <Step>
 Facultatif : cliquez sur **Actualiser les modèles** pour charger la liste actuelle des modèles du fournisseur, ou sur **Vérifier le service** pour vérifier que le fournisseur est joignable, accepte la clé et propose le modèle choisi. Ces deux actions lisent la liste des modèles du fournisseur, ce qui ne coûte rien ; la vérification n'envoie un court prompt de test qu'aux fournisseurs sans liste, comme Azure OpenAI. La première fois, le navigateur demande l'accès à l'adresse de ce seul fournisseur. Une liste actualisée est conservée pour le sélecteur de modèle jusqu'à la prochaine actualisation.
@@ -98,6 +98,8 @@ Enregistrez autant de services que vous le souhaitez, y compris plusieurs pour l
 | Fournisseur personnalisé (compatible Anthropic) | Facultative | Tout point de terminaison qui prend en charge l'API Messages d'Anthropic, défini avec l'**URL de base** |
 | Environ 200 autres | Généralement obligatoire | Listés sous **Autres fournisseurs (models.dev)**, par exemple Together AI, Fireworks AI, Cerebras, DeepInfra et LM Studio. Ils n'ont pas de liste de modèles intégrée : cliquez sur **Actualiser les modèles** ou saisissez un **Modèle personnalisé**. |
 
+La colonne **Clé API** indique la valeur de départ de **Nécessite une clé API** pour chaque fournisseur ; vous pouvez la changer pour chaque service.
+
 Le sélecteur **Fournisseur d'IA** comporte un champ de recherche. Les fournisseurs supplémentaires proviennent d'une copie du catalogue ouvert [models.dev](https://models.dev) fournie avec l'extension : choisir l'un d'eux n'envoie donc rien à models.dev ; les requêtes vont uniquement au fournisseur que vous choisissez.
 
 L'**URL de base** remplace l'adresse du fournisseur pour chaque requête, par exemple pour passer par un proxy. Elle doit commencer par `http://` ou `https://`. Les **En-têtes supplémentaires (JSON)** ajoutent des en-têtes à chaque requête, et le **Modèle personnalisé** définit un ID de modèle pour les fournisseurs qui acceptent n'importe quel nom de modèle.
@@ -114,7 +116,7 @@ Les serveurs locaux doivent accepter les requêtes de l'extension :
 
 ### En cas d'échec d'une vérification [#when-a-check-fails]
 
-La vérification et l'actualisation indiquent la cause probable : une clé refusée (401, ou 400 chez Google et xAI), une URL de base incorrecte (404), un fournisseur qui limite le débit des requêtes (429, ce qui signifie tout de même que la clé fonctionne), un serveur qui a refusé l'origine de l'extension, une absence de réponse dans les 8 secondes, ou une adresse qui ne sert pas d'API de fournisseur.
+La vérification et l'actualisation indiquent la cause probable : une clé refusée (401, ou 400 chez Google et xAI), une URL de base incorrecte (404), un fournisseur qui limite le débit des requêtes (429, ce qui signifie tout de même que la clé fonctionne), un serveur qui a refusé l'origine de l'extension, une absence de réponse dans les 8 secondes, ou une adresse qui ne sert pas d'API de fournisseur. Quand un service réglé pour fonctionner sans clé est refusé (401, ou 403 depuis une adresse hors de votre réseau), le message indique que le service demande une clé API : ajoutez-en une ou vérifiez le point de terminaison. Les outils d'IA proposent alors **Ouvrir les paramètres du service**, qui ouvre ce service dans les paramètres.
 
 ## Rédiger vos propres prompts [#write-your-own-prompts]
 

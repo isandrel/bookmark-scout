@@ -39,6 +39,7 @@ describe('AI services search text', () => {
         editor: true,
         text: ['API Key', expect.any(String)],
       }),
+      expect.objectContaining({ advanced: false, editor: true, text: ['Requires an API key'] }),
     ]);
     // The panel's own title is always shown; editor fields only inside an open service.
     expect(matchAIServicesSearch('ai services')).toEqual([

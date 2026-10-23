@@ -7,7 +7,12 @@ const BASE_URL = 'https://ask.e2e.invalid/v1';
 
 function seedAskService(worker: Worker) {
   return seedAIServices(worker, [
-    { provider: 'custom', model: 'ask-model', credentials: { baseUrl: BASE_URL } },
+    // A synthetic key, so a 401 reads as a rejected key (without one, as a key the service wants).
+    {
+      provider: 'custom',
+      model: 'ask-model',
+      credentials: { apiKey: 'synthetic-ask-key', baseUrl: BASE_URL },
+    },
   ]);
 }
 

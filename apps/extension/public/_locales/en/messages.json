@@ -3407,6 +3407,18 @@
         "message": "$1 can run without an API key.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "This service runs without an API key. Add one only if the endpoint asks for it.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "Requires an API key",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "Turn this off to use the service without a key: through a proxy or gateway that adds the key itself, a self-hosted or company endpoint, or a provider with a free tier that needs no key. Requests then go out with no key at all.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "Optional",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5470,6 +5482,14 @@
     "ai_connErrorInvalidKey": {
         "message": "The provider rejected the API key. Check that it is correct and still active.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "The service says it needs an API key. Add one in its settings, or check the endpoint.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "Open service settings",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "The provider refused access. Check the key's permissions and project.",

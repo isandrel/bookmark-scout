@@ -107,7 +107,9 @@
 # hover card settings) on top of the manager customization (1,305).
 # Raised from 1315 on 2026-10-22 for the right-click menu, Tools sidebar and toast position
 # settings on top of the shortcut remapping (1,316).
-"options.html" = 1325
+# Raised from 1325 on 2026-10-22 for Requires an API key per AI service on top of the sync list
+# shards (1,326).
+"options.html" = 1335
 # Raised from 1370 for the Bookmark Audit History (1,380 on 2026-10-20: `idb` and the record
 # written around every bookmark change), which the manager needs from its first change.
 # Raised from 1400 on 2026-10-21 for the config modules the manager now reads at start (1,403),
@@ -140,7 +142,9 @@
 # cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (1,535).
 # Raised from 1545 on 2026-10-23 for the keys the user gave the manager shortcuts in Options, which
 # the manager reads and checks before its first key (the remap rules; 1,550).
-"bookmarks.html" = 1560
+# Raised from 1560 on 2026-10-22 for Requires an API key per AI service on top of the sync list
+# shards (1,561).
+"bookmarks.html" = 1570
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).

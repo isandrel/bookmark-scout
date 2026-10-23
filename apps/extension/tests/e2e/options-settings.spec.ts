@@ -539,11 +539,12 @@ test('settings search says where AI service fields are when no service shows the
   await setSettings(extensionWorker, { language: 'en' });
   await openOptions(page, extensionId);
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('api key');
-  // The count matches what is shown: no API Key field, but a line saying where it is.
-  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
+  // The count matches what is shown: no API Key field or Requires an API key switch, but a line
+  // saying where they are.
+  await expect(page.getByText('2 matching settings in all tabs')).toBeVisible();
   await expect(page.getByLabel('API Key', { exact: true })).toHaveCount(0);
   await expect(page.getByTestId('ai-services-search-hint')).toHaveText(
-    'In each AI service: API Key. Add one, or open one with a key, to see it.',
+    'In each AI service: API Key and Requires an API key. Add one, or open one with a key, to see it.',
   );
 });
 

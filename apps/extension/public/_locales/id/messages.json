@@ -3387,6 +3387,18 @@
         "message": "$1 dapat berjalan tanpa kunci API.",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "Layanan ini berjalan tanpa kunci API. Tambahkan kunci hanya jika endpoint memintanya.",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "Memerlukan kunci API",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "Matikan ini untuk memakai layanan tanpa kunci: melalui proxy atau gateway yang menambahkan kunci sendiri, endpoint yang Anda hosting sendiri atau milik perusahaan, atau penyedia dengan paket gratis yang tidak memerlukan kunci. Permintaan lalu dikirim tanpa kunci sama sekali.",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "Opsional",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5208,6 +5220,14 @@
     "ai_connErrorInvalidKey": {
         "message": "Penyedia menolak kunci API. Pastikan kunci tersebut benar dan masih aktif.",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "Layanan menyatakan bahwa kunci API diperlukan. Tambahkan kunci di setelannya, atau periksa endpoint-nya.",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "Buka setelan layanan",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "Penyedia menolak akses. Periksa izin dan project kunci tersebut.",

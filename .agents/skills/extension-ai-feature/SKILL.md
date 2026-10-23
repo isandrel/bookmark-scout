@@ -62,6 +62,7 @@ The live suite (`nx run extension:test:live`, `apps/extension/tests/live/README.
 
 ## Errors and Verify
 
+- **A service without an API key** (Requires an API key off, `serviceRequiresApiKey`): `createAIModel` hands every provider package a placeholder key, since most refuse to start without one, and `withoutKeyHeaders` drops each header carrying it, so no Authorization, x-api-key, x-goog-api-key, or api-key header leaves. A 401, or a 403 from a non-private host, to such a request is `key_required` ("the service says it needs an API key"): the model list classifies it directly, and the SDK path reads the `KEYLESS_REJECTION_HEADER` the wrapper adds to the response. Surfaces offer **Open service settings** (`openAISettings(feature)`, which opens that service's editor).
 - Verify Service calls the provider's free model-list endpoint and checks the selected model is listed, instead of spending tokens on a generation. A 429 there is a soft "rate limited" result, not a failure.
 - Some providers answer a bad key with 400 (Gemini), so classify key errors by body text too (`API_KEY_INVALID|invalid api key|invalid x-api-key`). In the browser a refused port, a DNS failure, and a CORS rejection all surface as the same fetch `TypeError`: report "unreachable" and name the host.
 - Error-path tests use a non-retryable status such as 401. The SDK retries 5xx on its own, so a mocked 500 never reaches the UI in time. Assert the provider's message text, not just that an alert exists.

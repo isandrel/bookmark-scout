@@ -32,6 +32,9 @@ export type QuickSaveStatus = 'saving' | 'saved' | 'duplicate' | 'failed' | 'rem
 
 export type QuickSaveTheme = 'light' | 'dark' | 'system';
 
+/** Why the AI host page could not complete a call, when the reason changes what comes next. */
+export type AIHostErrorKind = 'answer' | 'keyRequired';
+
 /** Buttons the notification can show; each is also an action message the background answers. */
 export const QUICK_SAVE_TOAST_ACTIONS = [
   'undo',
@@ -211,6 +214,9 @@ export type QuickSaveHostResponse =
   | {
       ok: false;
       error: string;
-      /** `answer`: the model answered, but not in the requested shape; the request itself worked. */
-      errorKind?: 'answer';
+      /**
+       * `answer`: the model answered, but not in the requested shape; the request itself worked.
+       * `keyRequired`: the service refused a request without an API key (`isAIKeyRequiredError`).
+       */
+      errorKind?: AIHostErrorKind;
     };

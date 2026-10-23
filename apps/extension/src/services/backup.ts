@@ -106,7 +106,7 @@ async function restoreAIEndpoints(
       const endpoint = endpoints?.[service.id];
       const current = configs[service.id] ?? {};
       const wanted = new Set<AISecretField>(endpoint?.leftOut ?? []);
-      if (providerRequiresApiKey(service.provider)) wanted.add('apiKey');
+      if (serviceRequiresApiKey(service)) wanted.add('apiKey');
       const missing = AI_SECRET_FIELDS.filter((field) => wanted.has(field) && !current[field]);
       const secrets = Object.fromEntries(
         AI_SECRET_FIELDS.flatMap((field) => (current[field] ? [[field, current[field]]] : [])),

@@ -286,25 +286,29 @@
 # 4,023,919 B of JavaScript, and 2,610,578 B of locales.
 # Raised on 2026-10-23 (other 29,000 to 29,500) for the covers backup: the Firefox build's other files
 # (manifest and small assets) measured 29,080 B on feat/covers-backup.
+# Raised on 2026-10-23 (uncompressed 7,215,000 to 7,240,000, javascript 4,035,000 to 4,045,000) for
+# Requires an API key per AI service on top of the sync list shards. Measured on feat/ai-key-optional
+# rebased on main: uncompressed 7,224,327 / 7,224,323 / 7,224,486 B (Chrome / Edge / Firefox) and
+# 4,035,861 B of JavaScript.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
 zip_bytes = 2_145_000
-raw_bytes = 7_215_000
+raw_bytes = 7_240_000
 
 [targets.edge]
 zip_bytes = 2_145_000
-raw_bytes = 7_215_000
+raw_bytes = 7_240_000
 
 [targets.firefox]
 zip_bytes = 2_145_000
-raw_bytes = 7_215_000
+raw_bytes = 7_240_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 4_035_000
+javascript = 4_045_000
 css = 92_000
 fonts = 143_000
 locales = 2_620_000

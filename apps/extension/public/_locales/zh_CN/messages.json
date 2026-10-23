@@ -3399,6 +3399,18 @@
         "message": "$1 无需 API 密钥即可运行。",
         "description": "Optional API key description"
     },
+    "options_apiKeyTurnedOffDescription": {
+        "message": "此服务无需 API 密钥即可运行。仅当接口要求时才添加密钥。",
+        "description": "API key field description after the user turned Requires an API key off"
+    },
+    "options_requiresApiKey": {
+        "message": "需要 API 密钥",
+        "description": "AI service editor: switch for whether requests need an API key"
+    },
+    "options_requiresApiKeyHelp": {
+        "message": "关闭后可在没有密钥的情况下使用该服务：适用于自行添加密钥的代理或网关、自建或公司内部的接口，以及提供无需密钥的免费额度的服务商。此时请求完全不带密钥发送。",
+        "description": "Toggletip of the Requires an API key switch: when to turn it off"
+    },
     "options_apiKeyOptionalPlaceholder": {
         "message": "可选",
         "description": "Placeholder of the API key field for a provider that works without a key"
@@ -5224,6 +5236,14 @@
     "ai_connErrorInvalidKey": {
         "message": "服务商拒绝了该 API 密钥。请检查密钥是否正确且仍然有效。",
         "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorKeyRequired": {
+        "message": "该服务表示需要 API 密钥。请在服务设置中添加密钥，或检查 API 地址。",
+        "description": "AI error: a request sent without an API key was refused (401, or 403 from a remote host)"
+    },
+    "ai_openServiceSettings": {
+        "message": "打开服务设置",
+        "description": "Button on an AI error that opens the AI service editor in Options"
     },
     "ai_connErrorForbidden": {
         "message": "服务商拒绝访问。请检查密钥的权限和所属项目。",
