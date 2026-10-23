@@ -3416,7 +3416,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "Desactívalo para usar el servicio sin clave: a través de un proxy o gateway que añade la clave por su cuenta, un endpoint propio o de tu empresa, o un proveedor con un plan gratuito que no pide clave. Las solicitudes se envían entonces sin ninguna clave.",
+        "message": "Desactívalo para usar el servicio sin clave: a través de un proxy o gateway que añade la clave por su cuenta, un endpoint propio o de tu empresa, o un proveedor con un plan gratuito que no pide clave. Las solicitudes se envían sin clave, salvo que escribas una.",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {

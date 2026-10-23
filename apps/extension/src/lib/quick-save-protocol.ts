@@ -177,7 +177,13 @@ export type QuickSaveHostRequest =
       system: string;
       prompt: string;
     }
-  | { type: typeof QUICK_SAVE_MESSAGE.hostReadPage; token: string; url: string }
+  | {
+      type: typeof QUICK_SAVE_MESSAGE.hostReadPage;
+      token: string;
+      url: string;
+      /** Skip Local Network Pages, which the host page cannot read from storage itself. */
+      skipPrivateHosts: boolean;
+    }
   | {
       type: typeof QUICK_SAVE_MESSAGE.hostReadHead;
       token: string;

@@ -3408,7 +3408,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "끄면 키 없이 서비스를 사용할 수 있습니다. 키를 직접 붙여 주는 프록시나 게이트웨이, 직접 운영하거나 회사에서 제공하는 엔드포인트, 키가 필요 없는 무료 요금제가 있는 제공업체에 맞습니다. 이때 요청은 키 없이 전송됩니다.",
+        "message": "끄면 키 없이 서비스를 사용할 수 있습니다. 키를 직접 붙여 주는 프록시나 게이트웨이, 직접 운영하거나 회사에서 제공하는 엔드포인트, 키가 필요 없는 무료 요금제가 있는 제공업체에 맞습니다. 키를 입력하지 않으면 요청은 키 없이 전송됩니다.",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {

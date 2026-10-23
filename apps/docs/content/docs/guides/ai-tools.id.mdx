@@ -29,7 +29,7 @@ Aktifkan **Fitur AI**.
 Di bawah **Layanan AI**, klik **Tambahkan layanan** lalu pilih penyedia. Pemilih mencantumkan penyedia terkenal di bawah **Unggulan**, lalu **Server lokal** dan **Kustom**; ketik di kotak penelusurannya untuk menemukan sekitar 200 penyedia lain di bawah **Penyedia lainnya (models.dev)**. Lalu pilih **Model AI**.
 </Step>
 <Step>
-Masukkan **Kunci API** Anda jika penyedia memerlukannya. Untuk penyedia unggulan, **Dapatkan kunci API dari** penyedia membuka halaman tempat Anda membuat kunci setelah login. Kunci disimpan saat Anda meninggalkan kolom, dan hanya disimpan di perangkat ini. Kunci yang tidak sesuai dengan format penyedia ditolak dan tidak disimpan. Di bawah kunci, **Memerlukan kunci API** dimulai sesuai yang diharapkan penyedia. Matikan untuk memakai layanan tanpa kunci: melalui proxy atau gateway yang menambahkan kunci sendiri, endpoint yang Anda hosting sendiri atau milik perusahaan, atau penyedia dengan paket gratis yang tidak memerlukan kunci. Permintaan lalu dikirim tanpa kunci sama sekali.
+Masukkan **Kunci API** Anda jika penyedia memerlukannya. Untuk penyedia unggulan, **Dapatkan kunci API dari** penyedia membuka halaman tempat Anda membuat kunci setelah login. Kunci disimpan saat Anda meninggalkan kolom, dan hanya disimpan di perangkat ini. Kunci yang tidak sesuai dengan format penyedia ditolak dan tidak disimpan. Di bawah kunci, **Memerlukan kunci API** dimulai sesuai yang diharapkan penyedia. Matikan untuk memakai layanan tanpa kunci: melalui proxy atau gateway yang menambahkan kunci sendiri, endpoint yang Anda hosting sendiri atau milik perusahaan, atau penyedia dengan paket gratis yang tidak memerlukan kunci. Permintaan lalu dikirim tanpa kunci, kecuali Anda memasukkannya.
 </Step>
 <Step>
 Opsional: klik **Perbarui Model** untuk memuat daftar model penyedia saat ini, atau **Verifikasi Layanan** untuk memeriksa bahwa penyedia bisa dijangkau, menerima kunci, dan menawarkan model yang dipilih. Keduanya membaca daftar model penyedia, yang tidak dikenai biaya; Verifikasi hanya mengirim prompt uji singkat ke penyedia yang tidak punya daftar, seperti Azure OpenAI. Browser meminta akses ke alamat penyedia tersebut pada kali pertama. Daftar yang diperbarui disimpan untuk pemilih model sampai Anda memperbaruinya lagi.
@@ -149,7 +149,7 @@ Judul dan URL tidak selalu menjelaskan isi halaman. Aktifkan **Baca konten halam
 
 - Bookmark Scout mengunduh sendiri setiap halaman, tanpa cookie Anda, sehingga Anda mendapatkan versi situs dalam keadaan tidak login. Bookmark Scout menyimpan teks artikel tanpa menu, script, gambar, atau alamat link.
 - Setiap halaman mengirim hingga sekitar 3.000 karakter, dan satu kali proses alat membaca hingga 40 halaman. Bookmark berikutnya di folder yang besar dikirim hanya dengan judul dan URL-nya, begitu pula halaman yang tidak bisa dimuat.
-- Halaman di jaringan lokal Anda, seperti `localhost`, alamat IP pribadi, dan nama `.local`, tidak pernah dibaca, sehingga halaman intranet tidak sampai ke penyedia cloud.
+- Selama **Lewati Halaman Jaringan Lokal** aktif (aktif secara default), halaman di jaringan lokal Anda, seperti `localhost`, alamat IP pribadi, dan nama `.local`, tidak pernah dibaca, sehingga halaman intranet tidak sampai ke penyedia cloud. Matikan agar AI bisa membacanya.
 - Teks halaman berasal dari web dan bisa berisi instruksi yang ditujukan ke AI. Bookmark Scout memberi tahu model agar memperlakukannya hanya sebagai data, dan Anda tetap meninjau setiap saran sebelum disimpan.
 
 ## Tanya AI [#ask-ai]

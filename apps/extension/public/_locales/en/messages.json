@@ -3416,7 +3416,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "Turn this off to use the service without a key: through a proxy or gateway that adds the key itself, a self-hosted or company endpoint, or a provider with a free tier that needs no key. Requests then go out with no key at all.",
+        "message": "Turn this off to use the service without a key: through a proxy or gateway that adds the key itself, a self-hosted or company endpoint, or a provider with a free tier that needs no key. Requests then go out without a key, unless you enter one.",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {

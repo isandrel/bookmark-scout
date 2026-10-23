@@ -31,7 +31,9 @@ export async function createAskAIToolContext(settings: Settings): Promise<Action
     client: { kind: 'askAI' },
     settings,
     activeTab: activeTabPage,
-    ...(readPages ? { readPage: readPageText } : {}),
+    ...(readPages
+      ? { readPage: (url: string) => readPageText(url, settings.readPageSkipPrivateHosts) }
+      : {}),
   };
 }
 

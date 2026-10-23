@@ -3396,7 +3396,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "Matikan ini untuk memakai layanan tanpa kunci: melalui proxy atau gateway yang menambahkan kunci sendiri, endpoint yang Anda hosting sendiri atau milik perusahaan, atau penyedia dengan paket gratis yang tidak memerlukan kunci. Permintaan lalu dikirim tanpa kunci sama sekali.",
+        "message": "Matikan ini untuk memakai layanan tanpa kunci: melalui proxy atau gateway yang menambahkan kunci sendiri, endpoint yang Anda hosting sendiri atau milik perusahaan, atau penyedia dengan paket gratis yang tidak memerlukan kunci. Permintaan lalu dikirim tanpa kunci, kecuali Anda memasukkannya.",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {

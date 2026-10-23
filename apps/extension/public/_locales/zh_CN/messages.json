@@ -3408,7 +3408,7 @@
         "description": "AI service editor: switch for whether requests need an API key"
     },
     "options_requiresApiKeyHelp": {
-        "message": "关闭后可在没有密钥的情况下使用该服务：适用于自行添加密钥的代理或网关、自建或公司内部的接口，以及提供无需密钥的免费额度的服务商。此时请求完全不带密钥发送。",
+        "message": "关闭后可在没有密钥的情况下使用该服务：适用于自行添加密钥的代理或网关、自建或公司内部的接口，以及提供无需密钥的免费额度的服务商。此时请求不带密钥发送，除非你填写了密钥。",
         "description": "Toggletip of the Requires an API key switch: when to turn it off"
     },
     "options_apiKeyOptionalPlaceholder": {

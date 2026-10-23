@@ -98,6 +98,27 @@ describe('AI host page requests', () => {
   });
 });
 
+describe('reading a page through the AI host page', () => {
+  it('sends Skip Local Network Pages from the background, since the host page cannot read it', async () => {
+    const sendMessage = vi
+      .spyOn(fakeBrowser.runtime, 'sendMessage')
+      .mockResolvedValue({ ok: true, page: { title: 'Local', text: 'notes' } });
+    const read = () =>
+      withAIHost(null, { locale: 'en', source: 'agentBridge' }, (host) =>
+        host.readPage('http://192.168.1.10/notes'),
+      );
+    const sentSkip = () =>
+      (sendMessage.mock.lastCall?.[0] as { skipPrivateHosts?: boolean } | undefined)
+        ?.skipPrivateHosts;
+
+    expect(await read()).toEqual({ title: 'Local', text: 'notes' });
+    expect(sentSkip()).toBe(true);
+    await saveSettings({ readPageSkipPrivateHosts: false });
+    await read();
+    expect(sentSkip()).toBe(false);
+  });
+});
+
 describe('one AI host page shared by a quick save and a background task (J57)', () => {
   it('opens the page once, keeps it while either still uses it, and closes it after the last', async () => {
     vi.spyOn(fakeBrowser.runtime, 'sendMessage').mockResolvedValue({
