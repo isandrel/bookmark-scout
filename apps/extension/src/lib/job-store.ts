@@ -52,11 +52,14 @@ export const SCAN_JOB_KINDS = [
   'pageText',
   'reorganization',
 ] as const;
-export const JOB_KINDS = [
-  ...SCAN_JOB_KINDS,
+/** Jobs that apply reviewed changes in parts, started by the page that applied them. */
+export const APPLY_JOB_KINDS = [
   // Reviewed bookmark changes applied in parts (`apply` command).
   'applyChanges',
+  // A reviewed Smart Rules run, its tags and moves, applied in parts (`applyRules` command).
+  'applyRules',
 ] as const;
+export const JOB_KINDS = [...SCAN_JOB_KINDS, ...APPLY_JOB_KINDS] as const;
 export type ScanJobKind = (typeof SCAN_JOB_KINDS)[number];
 export type JobKind = (typeof JOB_KINDS)[number];
 
@@ -70,6 +73,7 @@ export const JOB_BLOCK_CODES = [
   'uncertain-write',
   'site-access',
   'slice-setup',
+  'rules-off',
 ] as const;
 export type JobBlockCode = (typeof JOB_BLOCK_CODES)[number];
 
@@ -82,6 +86,31 @@ export const applyJobOptionsSchema = z.strictObject({
   tool: z.string().regex(/^tools_\w+$/),
   requireRecord: z.boolean().optional(),
 });
+
+/**
+ * An `applyRules` job's options: the version of each rule the review matched (`ruleVersion`),
+ * frozen when the user applied it. A bookmark whose rules changed since is skipped.
+ */
+export const ruleRunJobOptionsSchema = z.strictObject({
+  rules: z.record(z.string().min(1), z.string().min(1)),
+});
+
+/**
+ * One reviewed bookmark of an `applyRules` job: the Smart Rules plan item (`RulePlanItem`)
+ * without what every item shares (the rule versions, in the options) or only shows.
+ */
+export const ruleRunInputSchema = z.strictObject({
+  id: z.string().min(1),
+  title: z.string(),
+  url: z.string().min(1),
+  parentId: z.string().min(1),
+  ruleIds: z.array(z.string().min(1)).min(1),
+  addTags: z.array(z.string().min(1)),
+  move: z
+    .strictObject({ ruleId: z.string().min(1), folderId: z.string().min(1), path: z.string() })
+    .optional(),
+});
+export type RuleRunInput = z.infer<typeof ruleRunInputSchema>;
 
 /** Where a job was started from, as far as the extension knows. */
 export const JOB_SOURCES = ['manager', 'popup', 'sidePanel', 'options'] as const;

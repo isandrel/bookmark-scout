@@ -93,6 +93,13 @@ export const STORAGE_ITEMS = {
    * taggings, kept so the list survives the update.
    */
   ruleAutoLog: { area: 'local', name: 'rules.auto-tag-log', v: 1, backup: 'exclude' },
+  /**
+   * Local: how each Smart Rule did in its last reviewed run (when, and how many bookmarks it
+   * tagged, moved, or left), and the bookmarks that run found two rules disagreeing on, with
+   * their ids, titles, and folders, for Settings; ids belong to this device and titles can be
+   * private. Rebuilt by the next run, so not backed up.
+   */
+  ruleRunStatus: { area: 'local', name: 'rules.run-status', v: 1, backup: 'exclude' },
   /** Local: downloaded icons are large and can be downloaded again. */
   siteIcons: { area: 'local', name: 'site-icons.cache', v: 1, backup: 'exclude' },
   /**

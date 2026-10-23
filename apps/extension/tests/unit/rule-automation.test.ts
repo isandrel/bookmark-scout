@@ -331,6 +331,120 @@ describe('new bookmarks in the background', () => {
   });
 });
 
+describe('turning automation off mid-run (R36)', () => {
+  /** Registers the background listener and returns a way to add a bookmark as the browser does. */
+  const listen = () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    let created: ((id: string, node: RawNode) => void) | undefined;
+    vi.spyOn(fakeBrowser.bookmarks.onCreated, 'addListener').mockImplementation((listener) => {
+      created = listener;
+    });
+    for (const event of [
+      fakeBrowser.bookmarks.onImportBegan,
+      fakeBrowser.bookmarks.onImportEnded,
+    ]) {
+      vi.spyOn(event, 'addListener').mockImplementation(() => undefined);
+    }
+    registerRuleAutomation();
+    return {
+      add: async (title: string) => {
+        const node = await fakeBrowser.bookmarks.create({
+          parentId: 'inbox',
+          title,
+          url: `https://github.com/acme/${title}`,
+        });
+        created?.(node.id, node);
+        return node.id;
+      },
+      settle: async () => {
+        await vi.advanceTimersByTimeAsync(BOOKMARK_RULE_LIMITS.automatic.batch_window_ms);
+        await vi.waitFor(() => Promise.resolve());
+      },
+    };
+  };
+
+  it.each([
+    [
+      'Tag New Bookmarks and Move New Bookmarks',
+      { bookmarkRulesAutoTag: false, bookmarkRulesAutoMove: false },
+    ],
+    ['Smart Rules', { bookmarkRulesEnabled: false }],
+  ])(
+    'changes nothing when %s is turned off after a bookmark is added and before its batch runs',
+    async (_name, off) => {
+      await saveSettings({
+        bookmarkRulesNewFrom: 'any',
+        bookmarkRulesAutoTag: true,
+        bookmarkRulesAutoMove: true,
+      });
+      const { add, settle } = listen();
+      const id = await add('pending');
+      await saveSettings(off);
+      await settle();
+      expect(await bookmarkMetadataValue.get()).toEqual({});
+      expect(bookmarks.get(id)?.parentId).toBe('inbox');
+      expect(await ruleAutoLogValue.get()).toEqual([]);
+      expect(await auditRecords()).toEqual([]);
+
+      // On again: only bookmarks added from then on are handled; what was committed stays.
+      await saveSettings({
+        bookmarkRulesEnabled: true,
+        bookmarkRulesAutoTag: true,
+        bookmarkRulesAutoMove: true,
+      });
+      const later = await add('later');
+      await settle();
+      await vi.waitFor(() => expect(bookmarks.get(later)?.parentId).toBe('dev'));
+      expect(bookmarks.get(id)?.parentId).toBe('inbox');
+      expect(Object.keys(await bookmarkMetadataValue.get())).toEqual([later]);
+    },
+  );
+
+  it('turning a rule off between the add and the batch leaves the bookmark alone', async () => {
+    await saveSettings({ bookmarkRulesNewFrom: 'any', bookmarkRulesAutoTag: true });
+    const { add, settle } = listen();
+    const id = await add('ruled');
+    await bookmarkRulesValue.set([rule({ enabled: false })]);
+    await settle();
+    expect(await bookmarkMetadataValue.get()).toEqual({});
+    expect(bookmarks.get(id)?.parentId).toBe('inbox');
+  });
+});
+
+describe('deleted and restored before a run (R38)', () => {
+  it("never moves to the rule's folder deleted and made again at its path (a new id)", async () => {
+    await fakeBrowser.bookmarks.removeTree('dev');
+    const again = await fakeBrowser.bookmarks.create({ parentId: 'bar', title: 'Dev' });
+    // Blocked, never found again by its path for a move nobody reviews.
+    expect(
+      ruleAutoMoveBlocks(await bookmarkRulesValue.get(), await fakeBrowser.bookmarks.getTree()),
+    ).toEqual(new Map([['gh', 'missingFolder']]));
+    expect(await applyRulesToNewBookmarks(added('a'), BOTH)).toEqual({ tagged: 1, moved: 0 });
+    expect(bookmarks.get('a')?.parentId).toBe('inbox');
+    expect(bookmarks.childIds(again.id)).toEqual([]);
+    expect(await auditRecords()).toEqual([]);
+  });
+
+  it('handles a bookmark deleted and restored with a new id by its new id only', async () => {
+    const { id: restored } = await fakeBrowser.bookmarks.create({
+      parentId: 'inbox',
+      title: 'Repo',
+      url: 'https://github.com/acme/repo',
+    });
+    await fakeBrowser.bookmarks.remove('a');
+    // Both arrive in one batch: the deleted id is skipped, the restored one is handled once.
+    expect(
+      await applyRulesToNewBookmarks([{ id: 'a', parentId: 'inbox' }, ...added(restored)], BOTH),
+    ).toEqual({ tagged: 1, moved: 1 });
+    expect(await bookmarkMetadataValue.get()).toEqual({ [restored]: { tags: ['development'] } });
+    expect(bookmarks.get('a')).toBeUndefined();
+    expect(bookmarks.get(restored)?.parentId).toBe('dev');
+    expect(bookmarks.writes.filter((write) => write.startsWith('create'))).toEqual([
+      `create ${restored}`,
+    ]);
+  });
+});
+
 describe('which new bookmarks (MAINTAINER R4)', () => {
   const saveWithScout = async (title: string) =>
     (

@@ -51,3 +51,7 @@ log_max = 50
 # bookmark it tagged so Undo there can take the tags back. Most bookmarks one entry names; tags a
 # larger run added to the rest stay listed only as a count, and stay on Undo.
 log_max_bookmarks = 5000
+# Settings lists the bookmarks the last reviewed run found two rules disagreeing on (one would move
+# it to one folder, another to a different one), each with a link to review it: at most this many,
+# and the rest as a count (`rules.run-status`, src/lib/rule-run-status.ts).
+conflicts_max = 20

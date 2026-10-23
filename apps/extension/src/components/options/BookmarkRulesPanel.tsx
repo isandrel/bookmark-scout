@@ -4,9 +4,20 @@
  * from a template. A rule changes nothing here: Smart Rules in the Tools sidebar runs them, with a
  * review first, and Tag New Bookmarks and Move New Bookmarks apply them to new bookmarks. A rule
  * that moves new bookmarks automatically says so in the list, and says when it cannot (its folder
- * changed), so an automatic move is never a surprise.
+ * changed), so an automatic move is never a surprise. Each rule shows how its last reviewed run
+ * went, and the editor tests a sample address or title against the search on this device.
  */
-import { ChevronDown, Copy, FolderInput, Pencil, Plus, Trash2, TriangleAlert } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  Copy,
+  FolderInput,
+  Pencil,
+  Plus,
+  Trash2,
+  TriangleAlert,
+  X,
+} from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -33,11 +44,13 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
   }>();
   const [error, setError] = useState<string>();
   const [saving, setSaving] = useState(false);
+  const [sample, setSample] = useState('');
 
   useEffect(() => {
     if (!draft) return;
     setValue(draft);
     setError(undefined);
+    setSample('');
     Promise.all([fetchBookmarkTree(), bookmarkMetadataValue.get()])
       .then(([tree, metadata]) => setLibrary({ tree, metadata }))
       .catch(() => setLibrary(undefined));
@@ -51,6 +64,10 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
     const [diagnostic] = parseSearchQuery(value.query).diagnostics;
     return diagnostic ? describeSearchDiagnostic(diagnostic) : undefined;
   }, [value.query]);
+  const sampleMatches = useMemo(
+    () => ruleMatchesSample(value.query, sample),
+    [value.query, sample],
+  );
   const matches = useMemo(
     () =>
       library && queryReadable
@@ -114,6 +131,42 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
               />
             )}
           </Field>
+          <div className="space-y-1">
+            <Field id="rule-sample" label={t('rules_testSample')}>
+              {(control) => (
+                <Input
+                  {...control}
+                  aria-describedby="rule-sample-result"
+                  value={sample}
+                  onChange={(event) => setSample(event.target.value)}
+                  placeholder="https://github.com/acme/repo"
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+              )}
+            </Field>
+            <p
+              id="rule-sample-result"
+              role="status"
+              data-testid="rule-sample-result"
+              data-match={sampleMatches === undefined ? undefined : String(sampleMatches)}
+              className={cn(
+                'flex items-center gap-1 text-xs',
+                sampleMatches ? 'text-success' : 'text-muted-foreground',
+              )}
+            >
+              {sampleMatches === undefined ? null : sampleMatches ? (
+                <Check className="size-3.5 shrink-0" aria-hidden />
+              ) : (
+                <X className="size-3.5 shrink-0" aria-hidden />
+              )}
+              {sampleMatches === undefined
+                ? t('rules_testSampleHelp')
+                : sampleMatches
+                  ? t('rules_testMatches')
+                  : t('rules_testNoMatch')}
+            </p>
+          </div>
           <Field id="rule-tags" label={t('rules_addTags')} description={t('rules_addTagsHelp')}>
             {(control) => (
               <Input
@@ -179,7 +232,7 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
           <Button variant="outline" onClick={onClose}>
             {t('action_cancel')}
           </Button>
-          <Button onClick={() => void save()} disabled={saving}>
+          <Button data-testid="rule-save" onClick={() => void save()} disabled={saving}>
             {t('rules_save')}
           </Button>
         </DialogFooter>
@@ -188,8 +241,25 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
   );
 }
 
+/** How a rule's last reviewed run went: when, and what it tagged, moved, and left out. */
+function RuleLastRun({ status }: { status: RuleRunStatus | undefined }) {
+  if (!status) return null;
+  const text = t('rules_lastRun', [
+    formatDateTime(status.at),
+    formatCount(status.tagged),
+    formatCount(status.moved),
+    formatCount(status.skipped),
+  ]);
+  return (
+    <p data-testid="rule-last-run" className="truncate text-xs text-muted-foreground" title={text}>
+      {text}
+    </p>
+  );
+}
+
 export function BookmarkRulesPanel() {
   const { value: rules } = useStoredValue(bookmarkRulesValue);
+  const { value: runStatus } = useStoredValue(ruleRunStatusValue);
   const [editing, setEditing] = useState<RuleDraft | null>(null);
   const [tree, setTree] = useState<BookmarkTreeNode[]>();
   const loadTree = useCallback(() => {
@@ -243,7 +313,7 @@ export function BookmarkRulesPanel() {
       actionsLayout="wrap"
       actions={
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" onClick={() => setEditing(EMPTY_RULE_DRAFT)}>
+          <Button size="sm" data-testid="rule-add" onClick={() => setEditing(EMPTY_RULE_DRAFT)}>
             <Plus />
             {t('rules_add')}
           </Button>
@@ -287,6 +357,7 @@ export function BookmarkRulesPanel() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{rule.name}</p>
                 <p className="truncate text-xs text-muted-foreground">{describeRule(rule)}</p>
+                <RuleLastRun status={runStatus.rules[rule.id]} />
                 {rule.autoMove ? (
                   autoMoveBlocks?.get(rule.id) ? (
                     <p
@@ -341,6 +412,7 @@ export function BookmarkRulesPanel() {
           )}
         />
       )}
+      <RuleConflictList conflicts={runStatus.conflicts} />
       <RuleAutoLogList />
       <RuleEditorDialog draft={editing} onClose={() => setEditing(null)} />
     </OptionsPanel>

@@ -51,10 +51,12 @@ export function useManagerSidebars(): {
   const [foldersOpen, setFoldersOpen] = useState(
     () => layout.folders_open && !matches(OVERLAY_QUERY),
   );
-  // Options' Export bookmarks button opens the page on the Tools sidebar's export card.
+  // Options' Export bookmarks button and a Smart Rules conflict's Review link open the page on
+  // the Tools sidebar.
   const [toolsOpen, setToolsOpen] = useState(
     () =>
       window.location.hash === `#${MANAGER_EXPORT_HASH}` ||
+      window.location.hash === `#${MANAGER_RULES_HASH}` ||
       (layout.tools_open && !matches(OVERLAY_QUERY)),
   );
 

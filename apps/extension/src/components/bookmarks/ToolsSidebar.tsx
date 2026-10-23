@@ -8,7 +8,10 @@ import { Wrench } from 'lucide-react';
 import { memo, useEffect, useId, useState } from 'react';
 
 /** The tab each card a link can open on (`#<id>` in the manager's address) is in. */
-const HASH_TABS: Readonly<Record<string, ToolSidebarTab>> = { [MANAGER_EXPORT_HASH]: 'data' };
+const HASH_TABS: Readonly<Record<string, ToolSidebarTab>> = {
+  [MANAGER_EXPORT_HASH]: 'data',
+  [MANAGER_RULES_HASH]: TOOL_DEFINITIONS.bookmarkRules.section,
+};
 
 type ToolSectionProps = {
   title: string;

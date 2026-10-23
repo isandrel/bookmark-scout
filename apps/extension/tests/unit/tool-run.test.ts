@@ -899,19 +899,140 @@ describe('Smart Rules runs: scopes, safety, and their record', () => {
     expect(await bookmarkMetadataValue.get()).toEqual({});
   });
 
-  it('says the moves failed when they could not start after the tags were saved (R42)', async () => {
-    // Above this many moves go to a background task, which does not answer here.
+  it('changes nothing when the background task for a large run cannot start, and says so (R42)', async () => {
+    // Above this many changes the whole run goes to a background task, which does not answer here.
     await saveSettings({ jobsApplyInBackgroundAbove: 1 });
     settings = { ...settings, jobsApplyInBackgroundAbove: 1 };
     const { run, plan } = await reviewed();
     await run.apply(plan);
     expect(bookmarks.writes).toEqual([]);
-    expect(await tagsOf('o1')).toEqual([TAG]);
+    expect(await bookmarkMetadataValue.get()).toEqual({});
+    expect(await ruleAutoLogValue.get()).toEqual([]);
+    expect(notices[0]?.outcome).toMatchObject({ variant: 'destructive' });
+    expect(notices[0]?.undo).toBeUndefined();
+  });
+
+  it('skips a bookmark renamed after the review and keeps the new title, applying the rest (R14, R23)', async () => {
+    const { run, plan } = await reviewed();
+    await fakeBrowser.bookmarks.update('r2', { title: 'My lib' });
+    await run.apply(plan);
     expect(notices[0]?.outcome).toMatchObject({
       title: 'Some rule changes were not made',
-      variant: 'destructive',
+      description:
+        'Tagged: 2. Moved: 2. Skipped because they changed after the review: 1. Failed: 0.',
     });
-    expect(notices[0]?.outcome.description).toMatch(/^Tagged: 3\. Moved: 0\. .*Failed: 3\. /);
-    expect(notices[0]?.undo).toBeDefined();
+    expect(bookmarks.get('r2')).toMatchObject({ title: 'My lib', parentId: FOLDER });
+    expect(await tagsOf('r2')).toBeUndefined();
+    expect(bookmarks.get('r1')?.parentId).toBe('dest');
+    expect(await tagsOf('r1')).toEqual([TAG]);
+  });
+
+  it('skips a bookmark moved elsewhere after the review and leaves it where the user put it (R14, R23)', async () => {
+    const { run, plan } = await reviewed();
+    await fakeBrowser.bookmarks.move('r1', { parentId: 'other' });
+    // Moved into the rule's own folder since: only its tags are left to add.
+    await fakeBrowser.bookmarks.move('r2', { parentId: 'dest' });
+    await run.apply(plan);
+    expect(bookmarks.get('r1')?.parentId).toBe('other');
+    expect(await tagsOf('r1')).toBeUndefined();
+    expect(bookmarks.get('r2')?.parentId).toBe('dest');
+    expect(await tagsOf('r2')).toEqual([TAG]);
+    expect(bookmarks.get('o1')?.parentId).toBe('dest');
+    expect(notices[0]?.outcome.description).toBe(
+      'Tagged: 2. Moved: 1. Skipped because they changed after the review: 1. Failed: 0.',
+    );
+  });
+
+  it('skips the bookmarks of a rule edited, turned off, or deleted after the review, and says why (R14)', async () => {
+    const rule = (await bookmarkRulesValue.get())[0];
+    if (!rule) throw new Error('no rule');
+    for (const change of [
+      () => bookmarkRulesValue.set([{ ...rule, addTags: ['other'] }]),
+      () => bookmarkRulesValue.set([{ ...rule, enabled: false }]),
+      () => bookmarkRulesValue.set([]),
+    ]) {
+      await bookmarkRulesValue.set([rule]);
+      notices = [];
+      const { run, plan } = await reviewed();
+      expect(plan.every((item) => typeof item.ruleVersions.gh === 'string')).toBe(true);
+      await change();
+      await run.apply(plan);
+      expect(bookmarks.writes).toEqual([]);
+      expect(await bookmarkMetadataValue.get()).toEqual({});
+      expect(notices[0]?.outcome).toMatchObject({
+        title: 'Some rule changes were not made',
+        description:
+          'Tagged: 0. Moved: 0. Skipped because they changed after the review: 3. Failed: 0. 3 were skipped because a rule that matched them was edited, turned off, or deleted after the review.',
+      });
+    }
+    // Renaming a rule changes no run, so a review made before still applies.
+    await bookmarkRulesValue.set([rule]);
+    const { run, plan } = await reviewed('selection', ['r1']);
+    await bookmarkRulesValue.set([{ ...rule, name: 'Code hosts' }]);
+    await run.apply(plan);
+    expect(bookmarks.get('r1')?.parentId).toBe('dest');
+  });
+
+  it('never moves to a folder deleted and made again after the review, nor recreates a deleted bookmark (R38)', async () => {
+    const { run, plan } = await reviewed();
+    // The folder is deleted and made again (a new id), the bookmark deleted and restored (a new id).
+    await fakeBrowser.bookmarks.removeTree('dest');
+    const dest = await fakeBrowser.bookmarks.create({ parentId: FOLDER, title: 'Dest' });
+    await fakeBrowser.bookmarks.remove('r2');
+    const restored = await fakeBrowser.bookmarks.create({
+      parentId: FOLDER,
+      title: 'Lib',
+      url: 'https://github.com/acme/lib',
+    });
+    bookmarks.writes.length = 0;
+    await run.apply(plan);
+    // The reviewed move named the old folder: nothing goes into the new one, no bookmark is made.
+    expect(bookmarks.childIds(dest.id)).toEqual([]);
+    expect(bookmarks.writes.filter((write) => write.startsWith('create'))).toEqual([]);
+    expect(bookmarks.get('r2')).toBeUndefined();
+    expect(bookmarks.get(restored.id)?.parentId).toBe(FOLDER);
+    expect(await tagsOf(restored.id)).toBeUndefined();
+    expect(notices[0]?.outcome.variant).toBe('destructive');
+
+    // A new review reads the bookmark by its new id, and finds the folder by its path (R39).
+    notices = [];
+    const fresh = await reviewed();
+    expect(fresh.plan.find((item) => item.id === restored.id)?.move).toMatchObject({
+      folderId: dest.id,
+      path: 'Folder / Dest',
+    });
+    await fresh.run.apply(fresh.plan);
+    expect(bookmarks.get(restored.id)?.parentId).toBe(dest.id);
+    expect(await tagsOf(restored.id)).toEqual([TAG]);
+  });
+
+  it("records each rule's last run and the review's conflicts for Settings (PROMPT R3, R5)", async () => {
+    const rule = (await bookmarkRulesValue.get())[0];
+    if (!rule) throw new Error('no rule');
+    await bookmarkRulesValue.set([
+      rule,
+      {
+        ...rule,
+        id: 'lib',
+        name: 'Libraries',
+        query: 'title:lib',
+        addTags: ['library'],
+        moveTo: { folderId: 'other', path: 'Other' },
+      },
+    ]);
+    const { run, plan } = await reviewed();
+    // r2 matches both: GitHub moves it to Dest, Libraries to Other. Apply all but the conflict.
+    expect(plan.find((item) => item.id === 'r2')?.conflicts).toHaveLength(1);
+    await run.apply(plan.filter((item) => item.conflicts.length === 0));
+    const { ruleRunStatusValue } = await import('@/lib/rule-run-status');
+    const status = await ruleRunStatusValue.get();
+    expect(status.rules.gh).toMatchObject({ tagged: 2, moved: 2, skipped: 0 });
+    expect(status.rules.lib).toBeUndefined();
+    expect(status.conflicts).toMatchObject({
+      items: [
+        { bookmarkId: 'r2', title: 'Lib', parentId: FOLDER, paths: ['Folder / Dest', 'Other'] },
+      ],
+      more: 0,
+    });
   });
 });

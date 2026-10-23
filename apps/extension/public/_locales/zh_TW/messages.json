@@ -7647,6 +7647,10 @@
         "message": "已暫停：網站存取權限已被收回。繼續時會重新要求。",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "已暫停：智慧規則已在設定中關閉。請將其開啟後繼續，或取消。",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "已暫停：AI 服務尚未就緒（$1）。請在設定中修正後再繼續。",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7690,6 +7694,10 @@
     "jobs_cancelledApplyNote": {
         "message": "已停止。已做出的變更會保留；可在歷史記錄中復原。",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "已停止。已做出的變更會保留：可在歷史記錄中復原移動，在設定的「由規則變更」中復原標籤。",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "正在背景套用",
@@ -8435,6 +8443,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "用網址或標題測試",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "輸入網址或標題，查看此搜尋是否符合。不會儲存或傳送任何內容。",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "符合此搜尋",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "不符合此搜尋",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "加上標籤",
         "description": "Rule editor: tags field"
@@ -8502,6 +8526,40 @@
     "rules_autoMovePaused": {
         "message": "自動移動已停止：其資料夾已被刪除、重新命名或移動，或者受管理。請重新選擇資料夾並儲存規則。",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "上次執行 $1：加上標籤 $2，移動 $3，未處理 $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "上次執行中的衝突",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "在 $1 的執行中，規則會把這些書籤移到不同的資料夾，因此它們留在原處。請確認以選擇資料夾。",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "規則指定的資料夾：$1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "確認",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "在書籤管理員中確認「$1」",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "另有 $count$ 個",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "智慧規則，自動",
@@ -8589,13 +8647,29 @@
         "message": "已加上標籤：$1。已移動：$2。因確認後有變更而略過：$3。失敗：$4。",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "已加上標籤：$1。正在背景移動 $2 個書籤。",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "正在分批為 $count$ 個書籤加上標籤並移動。可在背景工作中查看進度；可在歷史記錄中復原移動，在設定的「由規則變更」中復原標籤。",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "未移動任何書籤：書籤記錄無法記錄這些移動，因此沒有進行移動。",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "有 $count$ 個因符合的規則在確認後被編輯、關閉或刪除而略過。",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "已開啟 $count$ 條規則",

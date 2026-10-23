@@ -7885,6 +7885,10 @@
         "message": "一時停止中: ウェブサイトへのアクセスが取り消されました。再開すると改めて許可を求めます。",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "一時停止中: 設定でスマートルールがオフになりました。オンにして再開するか、キャンセルしてください。",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "一時停止中: AI サービスの準備ができていません ($1)。設定で直してから再開してください。",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7928,6 +7932,10 @@
     "jobs_cancelledApplyNote": {
         "message": "停止しました。ここまでの変更は残ります。履歴から元に戻せます。",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "停止しました。ここまでの変更は残ります。移動は履歴から、タグは設定の「ルールによる変更」から元に戻せます。",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "バックグラウンドで適用中",
@@ -8769,6 +8777,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "アドレスやタイトルで試す",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "ウェブアドレスやタイトルを入力すると、この検索に一致するかを確認できます。何も保存・送信されません。",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "この検索に一致します",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "この検索に一致しません",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "タグを追加",
         "description": "Rule editor: tags field"
@@ -8836,6 +8860,50 @@
     "rules_autoMovePaused": {
         "message": "自動移動は停止中です。フォルダが削除、名前変更、移動されたか、管理対象です。フォルダを選び直してルールを保存してください。",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "前回の実行 $1: タグ付け $2 件、移動 $3 件、対象外 $4 件",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "前回の実行での競合",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "$1 の実行では、ルールがこれらのブックマークを別々のフォルダーに移動しようとしたため、元の場所に残しました。確認してフォルダーを選んでください。",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "ルールが指定したフォルダー: $1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "確認",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "ブックマークマネージャーで「$1」を確認",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "他 $count$ 件",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_conflictsMore_one": {
+        "message": "他 $count$ 件",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "スマートルール、自動",
@@ -8933,13 +9001,49 @@
         "message": "タグ付け: $1 件。移動: $2 件。確認後に変更されたためスキップ: $3 件。失敗: $4 件。",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "タグ付け: $1 件。$2 件のブックマークをバックグラウンドで移動しています。",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "$count$ 件のブックマークにタグを付けて分割して移動しています。バックグラウンドのタスクで確認できます。移動は履歴から、タグは設定の「ルールによる変更」から元に戻せます。",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesBackgroundJobDesc_one": {
+        "message": "$count$ 件のブックマークにタグを付けて分割して移動しています。バックグラウンドのタスクで確認できます。移動は履歴から、タグは設定の「ルールによる変更」から元に戻せます。",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "何も移動していません: ブックマークの履歴に移動を記録できなかったため、移動は行われませんでした。",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "確認後に一致するルールが編集、オフ、または削除されたため、$count$ 件をスキップしました。",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesRuleChangedDesc_one": {
+        "message": "確認後に一致するルールが編集、オフ、または削除されたため、$count$ 件をスキップしました。",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "$count$ 件のルールがオン",

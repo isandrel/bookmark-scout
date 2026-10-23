@@ -50,7 +50,10 @@ const rulesConfig = readConfig(
       max_batch: z.number().int().positive(),
       log_max: z.number().int().positive(),
     }),
-    runs: z.strictObject({ log_max_bookmarks: z.number().int().positive() }),
+    runs: z.strictObject({
+      log_max_bookmarks: z.number().int().positive(),
+      conflicts_max: z.number().int().positive(),
+    }),
   }),
 );
 
@@ -111,6 +114,33 @@ export const bookmarkRuleSchema = z
 
 export type BookmarkRule = z.infer<typeof bookmarkRuleSchema>;
 
+/** The History's and Background tasks' name for a reviewed run: the tool's title. */
+export const RULE_RUN_TOOL = 'tools_bookmarkRules' satisfies MessageKey;
+
+/**
+ * A rule's version: a fingerprint of what it does (its search, tags, and folder). A review keeps
+ * the version of each rule that matched a bookmark, and applying it skips that bookmark when one
+ * of them was edited, turned off, or deleted since (R14), so nothing is changed by a rule the
+ * user did not review. Its name and automatic moves are not part of it: they change no run.
+ */
+export function ruleVersion(rule: BookmarkRule): string {
+  return hashText(JSON.stringify([rule.query, rule.addTags, rule.moveTo?.folderId ?? null]));
+}
+
+/**
+ * Whether every rule of `versions` is still on, with the version a review saw. `rules` are the
+ * rules as they are now.
+ */
+export function rulesUnchanged(
+  rules: readonly BookmarkRule[],
+  versions: Readonly<Record<string, string>>,
+): boolean {
+  return Object.entries(versions).every(([id, version]) => {
+    const rule = rules.find((entry) => entry.id === id);
+    return rule?.enabled === true && ruleVersion(rule) === version;
+  });
+}
+
 /**
  * The rules in a stored list that can run, in order: malformed ones, repeated ids, and those past
  * `max_rules` are left out.
@@ -147,6 +177,8 @@ export type RulePlanItem = {
   folderPath: string;
   /** The rules that match it, in order. */
   ruleIds: string[];
+  /** Each of those rules' version (`ruleVersion`) when planned, by id. */
+  ruleVersions: Record<string, string>;
   /** Tags to add: only those it does not have, in the first rule's spelling. */
   addTags: string[];
   /** The move the first moving rule makes, unless it is already there or cannot move. */
@@ -246,6 +278,7 @@ export function planBookmarkRules(
   };
   const compiled = enabled.map((rule) => ({
     rule,
+    version: ruleVersion(rule),
     match: compileSearchQuery(parseSearchQuery(rule.query).query),
   }));
   const documents = buildSearchDocuments(tree, metadata);
@@ -316,6 +349,7 @@ export function planBookmarkRules(
       parentId,
       folderPath: document.folderPath,
       ruleIds: matching.map(({ rule }) => rule.id),
+      ruleVersions: Object.fromEntries(matching.map(({ rule, version }) => [rule.id, version])),
       addTags,
       ...(first && !stays && !blocked ? { move: first } : {}),
       conflicts,

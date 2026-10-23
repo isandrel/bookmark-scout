@@ -7905,6 +7905,10 @@
         "message": "In pausa: l'accesso ai siti web è stato revocato. Riprendi lo richiede di nuovo.",
         "description": "A background task paused because website access was taken back while it ran"
     },
+    "jobs_blockedRulesOff": {
+        "message": "In pausa: le Regole intelligenti sono state disattivate nelle Impostazioni. Riattivale e riprendi, oppure annulla.",
+        "description": "A background task applying a Smart Rules run paused because Smart Rules was turned off"
+    },
     "jobs_blockedAISetup": {
         "message": "In pausa: il servizio IA non è pronto ($1). Correggilo nelle Impostazioni, poi riprendi.",
         "description": "A background task paused because its AI service is not set up; $1 is the reason"
@@ -7952,6 +7956,10 @@
     "jobs_cancelledApplyNote": {
         "message": "Interrotta. Le modifiche fatte finora restano; annullale dalla Cronologia.",
         "description": "Background tasks: a stopped task that applied changes"
+    },
+    "jobs_cancelledRulesNote": {
+        "message": "Interrotta. Le modifiche fatte finora restano: annulla gli spostamenti dalla Cronologia e i tag in Modificati dalle regole, nelle Impostazioni.",
+        "description": "Background tasks: a stopped task that applied a Smart Rules run"
     },
     "jobs_applyStarted": {
         "message": "Applicazione in background",
@@ -8805,6 +8813,22 @@
             }
         }
     },
+    "rules_testSample": {
+        "message": "Prova con un indirizzo o un titolo",
+        "description": "Rule editor: field to test a sample web address or title against the rule search"
+    },
+    "rules_testSampleHelp": {
+        "message": "Scrivi un indirizzo web o un titolo per vedere se questa ricerca lo trova. Non viene salvato né inviato nulla.",
+        "description": "Rule editor: help under the test field before anything is typed"
+    },
+    "rules_testMatches": {
+        "message": "Corrisponde a questa ricerca",
+        "description": "Rule editor: the sample typed in the test field matches the search"
+    },
+    "rules_testNoMatch": {
+        "message": "Non corrisponde a questa ricerca",
+        "description": "Rule editor: the sample typed in the test field does not match the search"
+    },
     "rules_addTags": {
         "message": "Aggiungi tag",
         "description": "Rule editor: tags field"
@@ -8872,6 +8896,50 @@
     "rules_autoMovePaused": {
         "message": "Spostamenti automatici fermati: la sua cartella è stata eliminata, rinominata o spostata, oppure è gestita. Scegli di nuovo la cartella e salva la regola.",
         "description": "Settings: warning under a rule whose automatic moves stopped because its folder is gone, managed, renamed, or moved"
+    },
+    "rules_lastRun": {
+        "message": "Ultima esecuzione $1: con tag aggiunti $2, spostati $3, saltati $4",
+        "description": "Settings, Smart Rules list: a rule's last reviewed run; $1 when, $2 bookmarks tagged, $3 moved, $4 left out (skipped or failed)"
+    },
+    "rules_conflictsTitle": {
+        "message": "Conflitti nell'ultima esecuzione",
+        "description": "Settings, Smart Rules: heading of the list of bookmarks two rules disagreed on in the last run"
+    },
+    "rules_conflictsDesc": {
+        "message": "Nell'esecuzione del $1, le regole avrebbero spostato questi preferiti in cartelle diverse, quindi sono rimasti dov'erano. Rivedine uno per sceglierne la cartella.",
+        "description": "Settings, Smart Rules: text under the conflicts heading; $1 is when the run was"
+    },
+    "rules_conflictFolders": {
+        "message": "Cartelle delle regole: $1",
+        "description": "Settings, Smart Rules conflicts: the folders the rules named for one bookmark; $1 is the list"
+    },
+    "rules_conflictReview": {
+        "message": "Rivedi",
+        "description": "Settings, Smart Rules conflicts: link that opens the bookmark manager on the bookmark folder to review it"
+    },
+    "rules_conflictReviewLabel": {
+        "message": "Rivedi “$1” in gestione preferiti",
+        "description": "Settings, Smart Rules conflicts: accessible name of the Review link; $1 is the bookmark title"
+    },
+    "rules_conflictsMore": {
+        "message": "E altri $count$",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "rules_conflictsMore_one": {
+        "message": "E $count$ altro",
+        "description": "Settings, Smart Rules conflicts: how many more conflicts there are than the list shows (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "rules_autoMoveTool": {
         "message": "Regole intelligenti, automaticamente",
@@ -8969,13 +9037,49 @@
         "message": "Con tag aggiunti: $1. Spostati: $2. Saltati perché modificati dopo la revisione: $3. Non riusciti: $4.",
         "description": "Toast counts; $1 tagged, $2 moved, $3 skipped, $4 failed"
     },
-    "toast_rulesBackgroundDesc": {
-        "message": "Con tag aggiunti: $1. Spostamento di $2 preferiti in background.",
-        "description": "Toast when moves run in the background; $1 tagged, $2 moves"
+    "toast_rulesBackgroundJobDesc": {
+        "message": "$count$ preferiti ricevono tag e vengono spostati a blocchi. Seguili in Attività in background; annulla gli spostamenti dalla Cronologia e i tag in Modificati dalle regole, nelle Impostazioni.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesBackgroundJobDesc_one": {
+        "message": "$count$ preferito riceve tag e viene spostato. Seguilo in Attività in background; annulla lo spostamento dalla Cronologia e i tag in Modificati dalle regole, nelle Impostazioni.",
+        "description": "Toast when a large reviewed Smart Rules run goes to a background task; count is the bookmarks it changes (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "toast_rulesNoRecordDesc": {
         "message": "Non è stato spostato nulla: la Cronologia preferiti non ha potuto registrare gli spostamenti, quindi non ne è stato fatto nessuno.",
         "description": "Smart Rules apply result: the moves were refused because their Bookmark history (Audit History) record could not be stored"
+    },
+    "toast_rulesRuleChangedDesc": {
+        "message": "$count$ sono stati saltati perché una regola che li riguardava è stata modificata, disattivata o eliminata dopo la revisione.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_rulesRuleChangedDesc_one": {
+        "message": "$count$ è stato saltato perché una regola che lo riguardava è stata modificata, disattivata o eliminata dopo la revisione.",
+        "description": "Smart Rules apply result: how many bookmarks were skipped because a rule that matched them changed after the review (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
     },
     "tools_rulesOnCount": {
         "message": "$count$ regole attive",

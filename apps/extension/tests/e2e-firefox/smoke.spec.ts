@@ -1516,3 +1516,57 @@ test('the bookmark preview opens from a card with its key, steps with the arrows
   await expect.poll(previewState).toBeNull();
   await expect.poll(focusedRow).toBe(folder.ids['Card Three']);
 });
+
+test('a Smart Rule made in Settings is tested on a sample, then run from the Tools sidebar and applied (R40)', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Rules', [
+    { title: 'Rule Repo', url: 'https://github.com/org/repo' },
+    { title: 'Rule Recipe', url: 'https://food.e2e.invalid/r' },
+  ]);
+  await setSettings(extension, { bookmarkRulesDefaultScope: 'folder' });
+
+  await extension.open('options.html?category=maintenance');
+  await clickCentered(extension, '[data-testid="rule-add"]');
+  await (await extension.find('#rule-name')).sendKeys('GitHub');
+  await (await extension.find('#rule-query')).sendKeys('domain:github.com');
+  await (await extension.find('#rule-sample')).sendKeys('https://gist.github.com/x');
+  await extension.findByText('[data-testid="rule-sample-result"]', 'Matches this search');
+  await (await extension.find('#rule-tags')).sendKeys('code');
+  await clickCentered(extension, '[data-testid="rule-save"]');
+  await extension.findByText('[data-testid="bookmark-rule"]', 'GitHub');
+
+  await openTools(extension, folder.folderId);
+  await clickToolButton(extension, 'Smart Rules', 'Run');
+  await extension.findByText('[data-testid="rule-item"]', 'Rule Repo');
+  expect(await (await extension.find('[data-testid="review-confirm"]')).getText()).toBe(
+    'Apply 1 change',
+  );
+  await clickCentered(extension, '[data-testid="review-confirm"]');
+  const metadataKey = storageAreaKey(STORAGE_ITEMS.bookmarkMetadata);
+  const tags = () =>
+    extension.call(
+      async (browser, { key, id }) => {
+        const stored = (await browser.storage.local.get(key))[key] as
+          | { data?: Record<string, { tags?: string[] }> }
+          | undefined;
+        return stored?.data?.[id]?.tags ?? [];
+      },
+      { key: metadataKey, id: folder.ids['Rule Repo'] as string },
+    );
+  await expect.poll(tags).toEqual(['code']);
+  expect(
+    await extension.call(
+      async (browser, { key, id }) => {
+        const stored = (await browser.storage.local.get(key))[key] as
+          | { data?: Record<string, unknown> }
+          | undefined;
+        return stored?.data?.[id] ?? null;
+      },
+      { key: metadataKey, id: folder.ids['Rule Recipe'] as string },
+    ),
+  ).toBeNull();
+  // The run is recorded for Settings: the rule's last run line.
+  await extension.open('options.html?category=maintenance');
+  await extension.findByText('[data-testid="rule-last-run"]', 'tagged 1, moved 0, left out 0');
+});

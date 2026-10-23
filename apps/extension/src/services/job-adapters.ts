@@ -294,6 +294,20 @@ export const JOB_ADAPTERS: Record<JobKind, JobAdapter> = {
       });
     },
   },
+  applyRules: {
+    // As `applyChanges`: a part a stopped worker left is checked item by item again on Resume.
+    unsureAfterStop: 'uncertain-write',
+    async runBatch(inputs, options, part) {
+      // Turning Smart Rules off stops the run before its next part, until the user resumes it.
+      if (!(await getSettings()).bookmarkRulesEnabled) throw new JobBlockedError('rules-off');
+      const { rules } = ruleRunJobOptionsSchema.parse(options);
+      return applyRuleRunPart(
+        inputs.map((input) => ruleRunInputSchema.parse(input)),
+        rules,
+        part,
+      );
+    },
+  },
   pageText: {
     async prepare(command) {
       const settings = await getSettings();
