@@ -290,6 +290,9 @@
 # Requires an API key per AI service on top of the sync list shards. Measured on feat/ai-key-optional
 # rebased on main: uncompressed 7,224,327 / 7,224,323 / 7,224,486 B (Chrome / Edge / Firefox) and
 # 4,035,861 B of JavaScript.
+# Locales raised on 2026-10-23 (2,620,000 to 2,635,000) for the 0.3.5 copy review: plural forms for
+# the History counts and the page text coverage line (Russian needs three each) and the renamed
+# Page Details tab in 12 languages. fix/copy-review-035 measured 2,626,598 B of locales.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
@@ -311,6 +314,6 @@ raw_bytes = 7_240_000
 javascript = 4_045_000
 css = 92_000
 fonts = 143_000
-locales = 2_620_000
+locales = 2_635_000
 images = 320_000
 other = 29_500
