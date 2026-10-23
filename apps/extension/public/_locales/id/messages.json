@@ -9173,6 +9173,10 @@
         "message": "Penelusuran ini tidak dapat dibaca. Periksa operator dan tanggalnya.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "Aturan pintar tidak dapat menelusuri teks halaman. Hapus content: dan has:content dari penelusuran.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "Tambahkan tag atau pilih folder.",
         "description": "Rule editor error: the rule does nothing"
@@ -9184,6 +9188,10 @@
     "rules_errorSaveFailed": {
         "message": "Aturan tidak dapat disimpan.",
         "description": "Rule editor error: storage failed"
+    },
+    "rules_errorLimit": {
+        "message": "Anda memiliki $1 aturan, jumlah terbanyak yang dapat disimpan. Hapus satu untuk menambahkan yang lain.",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
     },
     "rules_deleted": {
         "message": "Aturan \"$1\" dihapus",

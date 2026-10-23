@@ -10469,6 +10469,10 @@
         "message": "Не удаётся разобрать этот запрос. Проверьте операторы и даты.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "Умные правила не могут искать в тексте страниц. Уберите content: и has:content из запроса.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "Добавьте тег или выберите папку.",
         "description": "Rule editor error: the rule does nothing"
@@ -10480,6 +10484,10 @@
     "rules_errorSaveFailed": {
         "message": "Не удалось сохранить правило.",
         "description": "Rule editor error: storage failed"
+    },
+    "rules_errorLimit": {
+        "message": "У вас $1 правил — это максимум. Удалите одно, чтобы добавить новое.",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
     },
     "rules_deleted": {
         "message": "Правило «$1» удалено",

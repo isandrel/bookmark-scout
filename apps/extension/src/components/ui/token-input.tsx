@@ -56,6 +56,10 @@ type TokenInputProps = {
   /** What makes two values the same, such as a tag's case-insensitive key. */
   keyOf?: (token: string) => string;
   maxItems?: number;
+  /**
+   * Longest value, checked per value as it is added (`addTokens`). Not the box's own
+   * `maxLength`, which would cut a pasted list of short values short.
+   */
   maxLength?: number;
   placeholder?: string;
   labelledBy?: string;
@@ -70,7 +74,8 @@ type TokenInputProps = {
 /**
  * Enter, a separator, or leaving the box adds what was typed; pasting a list adds each value; and
  * Backspace in the empty box removes the last one. The draft is the caller's, so a form can save
- * what is still being typed.
+ * what is still being typed. While an input method is composing (Japanese, Chinese), a separator
+ * it shows is not typed yet: the text is added once the composition ends.
  */
 export function TokenInput({
   id,
@@ -122,12 +127,17 @@ export function TokenInput({
         aria-labelledby={labelledBy}
         aria-describedby={describedBy}
         placeholder={placeholder}
-        maxLength={maxLength}
         disabled={disabled || room === 0}
         onChange={(event) => {
           const next = event.target.value;
-          if (separator.test(next)) add(next);
+          const composing = (event.nativeEvent as InputEvent).isComposing === true;
+          if (!composing && separator.test(next)) add(next);
           else onDraftChange(next);
+        }}
+        onCompositionEnd={(event) => {
+          // Chrome sends the last input of a composition before this, still composing.
+          const next = event.currentTarget.value;
+          if (separator.test(next)) add(next);
         }}
         onKeyDown={(event) => {
           // An IME composing CJK text uses Enter to pick a candidate, not to add the tag.

@@ -39,7 +39,7 @@ Les champs de recherche de la fenêtre pop-up, du panneau latéral et du gestion
 - Un `-` devant exclut ce qui correspond : `recettes -gâteau` ou `-tag:archive`.
 - `OR` en majuscules, entre deux termes, trouve l'un ou l'autre : `tag:react OR tag:vue`. Il lie plus fort que l'espace, donc `domain:github.com tag:react OR tag:vue` trouve les pages GitHub qui ont l'une des deux étiquettes. Un `or` en minuscules reste un mot à chercher.
 - Les parenthèses regroupent des termes : `domain:github.com (tag:react OR tag:vue) -tag:archived`. Un `-` devant un groupe exclut ce que le groupe trouve : `-(tag:old OR tag:archive)`. Les parenthèses à l'intérieur d'un mot, comme `f(x)`, sont recherchées comme du texte.
-- Un mot qui nomme un dossier trouve le dossier. Dans la fenêtre pop-up, ses favoris s'affichent à l'intérieur ; `folder:` liste tout ce qu'il contient.
+- Un mot qui nomme un dossier trouve le dossier. Dans la fenêtre pop-up, ses favoris s'affichent à l'intérieur ; `folder:` liste tout ce qu'il contient. Si d'autres termes excluent le dossier, comme `work is:bookmark`, ce sont les favoris correspondants qu'il contient qui sont trouvés.
 - Le texte qui n'est pas un opérateur est recherché tel que saisi, comme `C++`, `10:30` ou une adresse web. De même pour un opérateur que Bookmark Scout ne connaît pas, comme `foo:bar`. Une valeur qu'il ne sait pas lire, comme une date non valide, est ignorée. Une note sous le champ de recherche signale une parenthèse non fermée ou un `OR` sans terme d'un côté. Des parenthèses imbriquées très profondément ou une très longue liste de `OR` sont tronquées, avec une note.
 
 | Recherche | Trouve |
@@ -47,7 +47,7 @@ Les champs de recherche de la fenêtre pop-up, du panneau latéral et du gestion
 | `title:react` | Les titres qui contiennent le texte ; `title:"react hooks"` accepte plusieurs mots |
 | `url:github` | Les adresses web qui contiennent le texte |
 | `domain:github.com` | Les favoris de ce site, sous-domaines compris |
-| `folder:Travail` ou `path:Travail` | Tout ce qui se trouve dans un dossier portant exactement ce nom, à toute profondeur ; `folder:"Travail / Docs"` désigne un dossier dans un autre |
+| `folder:Travail` ou `path:Travail` | Tout ce qui se trouve dans un dossier portant exactement ce nom, à toute profondeur ; `folder:"Travail / Docs"` désigne un dossier dans un autre ; un nom avec une barre oblique, comme `folder:CI/CD`, est aussi trouvé |
 | `tag:lecture` | Les favoris qui ont exactement cette étiquette |
 | `summary:recette` | Les résumés qui contiennent le texte |
 | `content:recette` | Le texte des pages que vous avez indexées avec **Indexer le texte des pages** |

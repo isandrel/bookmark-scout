@@ -9541,6 +9541,10 @@
         "message": "이 검색을 읽을 수 없습니다. 연산자와 날짜를 확인하세요.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "스마트 규칙은 페이지 텍스트를 검색할 수 없습니다. 검색에서 content:와 has:content를 지우세요.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "태그를 추가하거나 폴더를 선택하세요.",
         "description": "Rule editor error: the rule does nothing"
@@ -9552,6 +9556,10 @@
     "rules_errorSaveFailed": {
         "message": "규칙을 저장하지 못했습니다.",
         "description": "Rule editor error: storage failed"
+    },
+    "rules_errorLimit": {
+        "message": "규칙이 $1개로 최대 개수입니다. 새 규칙을 추가하려면 하나를 삭제하세요.",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
     },
     "rules_deleted": {
         "message": "규칙 \"$1\" 삭제됨",

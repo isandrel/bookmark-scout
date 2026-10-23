@@ -7,6 +7,7 @@ import {
   legacyTitleSearch,
   parseSavedSearchQuery,
   resolveSavedSearchQuery,
+  SAVED_SEARCH_TEXT_MAX_LENGTH,
   type SavedSearchQuery,
 } from '@/lib/saved-search-query';
 import {
@@ -114,6 +115,22 @@ describe('saved search query', () => {
     expect(parseSavedSearchQuery(query({ title: 'tag:work' }))).toEqual(
       query({ title: 'tag:work' }),
     );
+  });
+
+  it('keeps a long legacy phrase within the saved text limit, so it reads again once stored', () => {
+    const longest = `a b${'x'.repeat(SAVED_SEARCH_TEXT_MAX_LENGTH - 3)}`;
+    const upgraded = parseSavedSearchQuery({ filters: { title: longest }, sorting: [] });
+    const title = upgraded?.filters.title ?? '';
+    expect(title).toHaveLength(SAVED_SEARCH_TEXT_MAX_LENGTH);
+    // Its start, which finds every bookmark the whole text found.
+    expect(title).toBe(`"${longest.slice(0, SAVED_SEARCH_TEXT_MAX_LENGTH - 2)}"`);
+    // Written back as it is now and read again, it is the same search (0.3.5 review: it was lost).
+    expect(parseSavedSearchQuery(upgraded)).toEqual(upgraded);
+    // An emoji is never cut in half.
+    const emoji = `a ${'😀'.repeat(SAVED_SEARCH_TEXT_MAX_LENGTH)}`;
+    const cut = legacyTitleSearch(emoji);
+    expect(cut.length).toBeLessThanOrEqual(SAVED_SEARCH_TEXT_MAX_LENGTH);
+    expect(cut).toMatch(/^"a (?:😀)+"$/u);
   });
 
   it('reads a search saved before OR and parentheses so it finds what it found (R07)', () => {

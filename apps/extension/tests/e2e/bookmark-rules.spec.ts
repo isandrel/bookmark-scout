@@ -4,6 +4,7 @@
  * tagged and moved without a review, each only with its own opt-in.
  */
 import type { Locator, Worker } from '@playwright/test';
+import { readConfigToml } from '../config-files';
 import { expect, test, toastRegion } from './fixtures';
 import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, showAllTools, toolCard } from './tool-helpers';
@@ -24,6 +25,8 @@ async function tagsOf(worker: Worker, id: string) {
 }
 
 test.use({ viewport: { width: 1400, height: 900 } });
+
+const { max_rules: maxRules } = readConfigToml('rules/rules.toml') as { max_rules: number };
 
 test('a rule made in Settings tags and moves matching bookmarks after a review, and undo puts them back', async ({
   extensionId,
@@ -132,6 +135,15 @@ test('a rule with OR and an excluded term is refused while unbalanced, then revi
   await expect(
     editor.getByText('This search cannot be read. Check its operators and dates.'),
   ).toBeVisible();
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toBeFalsy();
+  // Rules never see page text, so a search for it is refused rather than matching everything.
+  const pageTextError =
+    "Smart rules can't search page text. Remove content: and has:content from the search.";
+  await query.fill('domain:github.com -has:content');
+  await expect(editor.getByText(pageTextError)).toBeVisible();
+  await editor.getByRole('button', { name: 'Save' }).click();
+  // The search field and the save error both say it.
+  await expect(editor.getByRole('alert').filter({ hasText: pageTextError })).toHaveCount(2);
   expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkRules)).toBeFalsy();
 
   await query.fill('(domain:github.com OR domain:gitlab.com) -title:gist');
@@ -541,4 +553,134 @@ test('the rule editor tests a sample and the review applies in dark theme at 420
   // The link opens the manager on that folder with the Tools sidebar on Smart Rules.
   await page.goto(href as string);
   await expect(toolCard(page, 'Smart Rules')).toBeVisible();
+});
+
+test('a full rules list says so instead of dropping the new rule', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await writeStored(
+    extensionWorker,
+    STORAGE_ITEMS.bookmarkRules,
+    Array.from({ length: maxRules }, (_, n) => ({
+      id: `r${n}`,
+      name: `Rule ${n}`,
+      enabled: false,
+      query: `title:r${n}`,
+      syntaxVersion: 2,
+      addTags: ['x'],
+    })),
+  );
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const panel = page.getByTestId('bookmark-rules');
+  await expect(panel.getByTestId('bookmark-rule')).toHaveCount(maxRules);
+  const full = `You have ${maxRules} rules, the most you can keep. Delete one to add another.`;
+
+  await panel.getByRole('button', { name: 'Add rule' }).click();
+  // A failure toast puts × before its title.
+  await expect(toastRegion(page).getByText(`× ${full}`, { exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'New rule' })).toHaveCount(0);
+  await panel.getByRole('button', { name: 'Start from a template' }).click();
+  await page.getByRole('menuitem').first().click();
+  const stored = () => readStored<unknown[]>(extensionWorker, STORAGE_ITEMS.bookmarkRules);
+  expect(await stored()).toHaveLength(maxRules);
+
+  // With one deleted, a rule can be added again.
+  await panel.getByRole('button', { name: 'Delete Rule 0' }).click();
+  await expect.poll(async () => (await stored())?.length).toBe(maxRules - 1);
+  await panel.getByRole('button', { name: 'Add rule' }).click();
+  await expect(page.getByRole('dialog', { name: 'New rule' })).toBeVisible();
+});
+
+test('a rule with a folder cannot be saved before the folder path is read', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Rule Path', [
+    { title: 'Target', children: [] },
+  ]);
+  const target = (seeded.ids as Record<string, string>).Target as string;
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkRules, [
+    {
+      id: 'gh',
+      name: 'GitHub',
+      enabled: true,
+      query: 'domain:github.com',
+      syntaxVersion: 2,
+      addTags: [],
+      moveTo: { folderId: target, path: 'E2E Rule Path/Target' },
+    },
+  ]);
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const panel = page.getByTestId('bookmark-rules');
+  await expect(panel.getByTestId('bookmark-rule')).toHaveCount(1);
+  // Hold the editor's read of the tree, as a slow read of a large library would.
+  await page.evaluate(() => {
+    const scope = globalThis as unknown as { releaseTree?: () => void };
+    const held = new Promise<void>((resolve) => {
+      scope.releaseTree = resolve;
+    });
+    for (const api of new Set([
+      chrome.bookmarks,
+      (globalThis as { browser?: typeof chrome }).browser?.bookmarks,
+    ])) {
+      if (!api) continue;
+      const getTree = api.getTree.bind(api);
+      Object.defineProperty(api, 'getTree', {
+        configurable: true,
+        value: async () => {
+          await held;
+          return getTree();
+        },
+      });
+    }
+  });
+  await panel.getByRole('button', { name: 'Edit GitHub' }).click();
+  const editor = page.getByRole('dialog', { name: 'Edit rule' });
+  await expect(editor.getByTestId('rule-save')).toBeDisabled();
+
+  await page.evaluate(() => (globalThis as unknown as { releaseTree: () => void }).releaseTree());
+  await expect(editor.getByTestId('rule-save')).toBeEnabled();
+  await editor.getByTestId('rule-save').click();
+  await expect(editor).toHaveCount(0);
+  const [rule] =
+    (await readStored<{ moveTo?: { path: string } }[]>(
+      extensionWorker,
+      STORAGE_ITEMS.bookmarkRules,
+    )) ?? [];
+  expect(rule?.moveTo?.path).toMatch(/E2E Rule Path \/ Target$/);
+});
+
+test('the rule tags box adds a pasted list whole, and waits for an input method to finish', async ({
+  extensionId,
+  page,
+}) => {
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  await page.getByTestId('bookmark-rules').getByRole('button', { name: 'Add rule' }).click();
+  const editor = page.getByRole('dialog', { name: 'New rule' });
+  const tags = editor.getByRole('textbox', { name: 'Add tags' });
+  const chips = editor.locator('[data-slot="list-chip"]');
+
+  // Longer than one tag may be, as a whole: the box once cut the paste at that length.
+  const pasted = ['reading-list', 'research-notes', 'machine-learning', 'web-development'];
+  await tags.focus();
+  await page.keyboard.insertText(`${pasted.join(', ')},`);
+  await expect(chips).toHaveText(pasted);
+  await expect(tags).toHaveValue('');
+
+  // The DevTools protocol drives an input method (Chromium and Edge both have it).
+  const session = await page.context().newCDPSession(page);
+  // A Japanese input method shows its comma before the text is committed: no tag yet.
+  await session.send('Input.imeSetComposition', {
+    text: '読書、',
+    selectionStart: 3,
+    selectionEnd: 3,
+  });
+  await expect(tags).toHaveValue('読書、');
+  await expect(chips).toHaveText(pasted);
+  await session.send('Input.insertText', { text: '読書、' });
+  await expect(chips).toHaveText([...pasted, '読書']);
+  await expect(tags).toHaveValue('');
 });

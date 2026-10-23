@@ -39,7 +39,7 @@ Le caselle di ricerca del popup, del riquadro laterale e della gestione preferit
 - Un `-` davanti esclude ciò che corrisponde: `recipe -cake` o `-tag:archive`.
 - `OR` in maiuscolo, tra due termini, trova l'uno o l'altro: `tag:react OR tag:vue`. Lega più dello spazio, quindi `domain:github.com tag:react OR tag:vue` trova le pagine GitHub con uno dei due tag. Un `or` in minuscolo è una parola da cercare come le altre.
 - Le parentesi raggruppano i termini: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Un `-` davanti a un gruppo esclude ciò che il gruppo trova: `-(tag:old OR tag:archive)`. Le parentesi dentro una parola, come `f(x)`, vengono cercate come testo.
-- Una parola che indica una cartella trova la cartella. Nel popup, i suoi preferiti compaiono al suo interno; `folder:` elenca tutto ciò che contiene.
+- Una parola che indica una cartella trova la cartella. Nel popup, i suoi preferiti compaiono al suo interno; `folder:` elenca tutto ciò che contiene. Se altri termini escludono la cartella, come fa `work is:bookmark`, vengono trovati invece i preferiti corrispondenti al suo interno.
 - Il testo che non è un operatore viene cercato così come l'hai digitato, ad esempio `C++`, `10:30` o un indirizzo web. Lo stesso vale per un operatore che Bookmark Scout non conosce, come `foo:bar`. Un valore che non riesce a interpretare, come una data non valida, viene ignorato. Una nota sotto la casella di ricerca avvisa quando una parentesi non è chiusa o un `OR` non ha nulla da un lato. Parentesi annidate troppo in profondità o un elenco di `OR` troppo lungo vengono troncati, con una nota.
 
 | Ricerca | Trova |
@@ -47,7 +47,7 @@ Le caselle di ricerca del popup, del riquadro laterale e della gestione preferit
 | `title:react` | Titoli che contengono il testo; `title:"react hooks"` accetta più parole |
 | `url:github` | Indirizzi web che contengono il testo |
 | `domain:github.com` | Preferiti su quel sito, inclusi i suoi sottodomini |
-| `folder:Work` o `path:Work` | Tutto ciò che si trova in una cartella con esattamente quel nome, a qualsiasi profondità; `folder:"Work / Docs"` indica una cartella dentro un'altra |
+| `folder:Work` o `path:Work` | Tutto ciò che si trova in una cartella con esattamente quel nome, a qualsiasi profondità; `folder:"Work / Docs"` indica una cartella dentro un'altra; anche un nome con una barra, come `folder:CI/CD`, viene trovato |
 | `tag:reading` | Preferiti con esattamente quel tag |
 | `summary:recipe` | Riassunti che contengono il testo |
 | `content:recipe` | Il testo delle pagine che hai indicizzato con **Indicizza il testo delle pagine** |

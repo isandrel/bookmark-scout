@@ -9605,6 +9605,10 @@
         "message": "Cette recherche ne peut pas être lue. Vérifiez ses opérateurs et ses dates.",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "Les règles intelligentes ne peuvent pas chercher dans le texte des pages. Retirez content: et has:content de la recherche.",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "Ajoutez une étiquette ou choisissez un dossier.",
         "description": "Rule editor error: the rule does nothing"
@@ -9616,6 +9620,10 @@
     "rules_errorSaveFailed": {
         "message": "La règle n'a pas pu être enregistrée.",
         "description": "Rule editor error: storage failed"
+    },
+    "rules_errorLimit": {
+        "message": "Vous avez $1 règles, le maximum possible. Supprimez-en une pour en ajouter une autre.",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
     },
     "rules_deleted": {
         "message": "Règle « $1 » supprimée",

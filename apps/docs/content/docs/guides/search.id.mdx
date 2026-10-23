@@ -39,7 +39,7 @@ Kotak penelusuran di popup, panel samping, dan pengelola membaca penelusuran den
 - Tanda `-` di depan mengecualikan yang cocok: `recipe -cake` atau `-tag:archive`.
 - `OR` dengan huruf kapital di antara dua istilah menemukan salah satunya: `tag:react OR tag:vue`. Ikatannya lebih kuat daripada spasi, jadi `domain:github.com tag:react OR tag:vue` menemukan halaman GitHub dengan salah satu dari kedua tag itu. `or` dengan huruf kecil tetap kata biasa yang dicari.
 - Tanda kurung mengelompokkan istilah: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Tanda `-` di depan kelompok mengecualikan yang cocok dengan kelompok itu: `-(tag:old OR tag:archive)`. Tanda kurung di dalam kata, seperti `f(x)`, ditelusuri sebagai teks.
-- Kata yang menyebutkan nama folder menemukan folder itu. Di popup, bookmark-nya ditampilkan di dalamnya; `folder:` mencantumkan semua isinya.
+- Kata yang menyebutkan nama folder menemukan folder itu. Di popup, bookmark-nya ditampilkan di dalamnya; `folder:` mencantumkan semua isinya. Jika istilah lain mengecualikan folder itu, seperti `work is:bookmark`, bookmark yang cocok di dalamnya yang ditemukan.
 - Teks yang bukan operator ditelusuri seperti yang diketik, seperti `C++`, `10:30`, atau alamat web. Begitu pula operator yang tidak dikenal Bookmark Scout, seperti `foo:bar`. Nilai yang tidak bisa dibacanya, seperti tanggal yang tidak valid, dilewati. Catatan di bawah kotak penelusuran memberi tahu jika tanda kurung tidak ditutup atau `OR` tidak punya istilah di salah satu sisinya. Tanda kurung yang bersarang terlalu dalam atau daftar `OR` yang terlalu panjang dipotong, disertai catatan.
 
 | Penelusuran | Menemukan |
@@ -47,7 +47,7 @@ Kotak penelusuran di popup, panel samping, dan pengelola membaca penelusuran den
 | `title:react` | Judul yang berisi teks itu; `title:"react hooks"` menerima beberapa kata |
 | `url:github` | Alamat web yang berisi teks itu |
 | `domain:github.com` | Bookmark di situs itu, termasuk subdomainnya |
-| `folder:Work` atau `path:Work` | Semua isi folder dengan nama persis itu, di kedalaman mana pun; `folder:"Work / Docs"` menyebut folder di dalam folder lain |
+| `folder:Work` atau `path:Work` | Semua isi folder dengan nama persis itu, di kedalaman mana pun; `folder:"Work / Docs"` menyebut folder di dalam folder lain; nama dengan garis miring, seperti `folder:CI/CD`, juga ditemukan |
 | `tag:reading` | Bookmark dengan tag persis itu |
 | `summary:recipe` | Ringkasan yang berisi teks itu |
 | `content:recipe` | Teks halaman yang Anda indeks dengan **Indeks Teks Halaman** |

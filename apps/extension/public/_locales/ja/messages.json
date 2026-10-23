@@ -9541,6 +9541,10 @@
         "message": "この検索は読み取れません。演算子と日付を確認してください。",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "スマートルールではページのテキストを検索できません。検索から content: と has:content を削除してください。",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "タグを追加するか、フォルダを選んでください。",
         "description": "Rule editor error: the rule does nothing"
@@ -9552,6 +9556,10 @@
     "rules_errorSaveFailed": {
         "message": "ルールを保存できませんでした。",
         "description": "Rule editor error: storage failed"
+    },
+    "rules_errorLimit": {
+        "message": "ルールは $1 件あり、これ以上は保存できません。追加するには、いずれかを削除してください。",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
     },
     "rules_deleted": {
         "message": "ルール「$1」を削除しました",

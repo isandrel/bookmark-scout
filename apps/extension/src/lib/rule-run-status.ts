@@ -12,6 +12,7 @@
  * records its parts too.
  */
 import { z } from 'zod';
+import type { BookmarkTreeNode } from '@/types';
 
 const count = z.number().int().nonnegative();
 
@@ -98,9 +99,14 @@ export async function recordRuleRunCounts(
 
 /**
  * Records the bookmarks a run's review found two rules disagreeing on, in place of the last
- * run's. `plan` is the whole review, not only what the user applied.
+ * run's. `plan` is the whole review, not only what the user applied. The folder a bookmark stays
+ * in is named from `tree` as a rule names its folder (`ruleFolderPath`), so the folders listed
+ * read alike.
  */
-export async function recordRuleConflicts(plan: readonly RulePlanItem[]): Promise<void> {
+export async function recordRuleConflicts(
+  plan: readonly RulePlanItem[],
+  tree: readonly BookmarkTreeNode[],
+): Promise<void> {
   const max = BOOKMARK_RULE_LIMITS.runs.conflicts_max;
   const conflicting = plan.filter((item) => item.conflicts.length > 0);
   const items = conflicting.slice(0, max).map((item) => ({
@@ -109,7 +115,11 @@ export async function recordRuleConflicts(plan: readonly RulePlanItem[]): Promis
     parentId: item.parentId,
     paths: [
       ...new Set([
-        ...(item.move ? [item.move.path] : item.blocked ? [] : [item.folderPath]),
+        ...(item.move
+          ? [item.move.path]
+          : item.blocked
+            ? []
+            : [ruleFolderPath(tree, item.parentId) ?? item.folderPath]),
         ...item.conflicts.map((conflict) => conflict.path),
       ]),
     ],

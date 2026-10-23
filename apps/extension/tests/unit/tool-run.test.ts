@@ -1006,6 +1006,32 @@ describe('Smart Rules runs: scopes, safety, and their record', () => {
     expect(await tagsOf(restored.id)).toEqual([TAG]);
   });
 
+  it('names the folder a conflicting bookmark stays in as the rules name theirs', async () => {
+    const rule = (await bookmarkRulesValue.get())[0];
+    if (!rule) throw new Error('no rule');
+    // o1 is already in Other, which Elsewhere names, so it stays; GitHub names Dest.
+    await bookmarkRulesValue.set([
+      rule,
+      {
+        ...rule,
+        id: 'else',
+        name: 'Elsewhere',
+        query: 'title:elsewhere',
+        addTags: [],
+        moveTo: { folderId: 'other', path: 'Other' },
+      },
+    ]);
+    const { run, plan } = await reviewed();
+    const stays = plan.find((item) => item.id === 'o1');
+    expect(stays?.move).toBeUndefined();
+    expect(stays?.conflicts).toHaveLength(1);
+    await run.apply([]);
+    const { ruleRunStatusValue } = await import('@/lib/rule-run-status');
+    expect((await ruleRunStatusValue.get()).conflicts?.items).toEqual([
+      expect.objectContaining({ bookmarkId: 'o1', paths: ['Other', 'Folder / Dest'] }),
+    ]);
+  });
+
   it("records each rule's last run and the review's conflicts for Settings (PROMPT R3, R5)", async () => {
     const rule = (await bookmarkRulesValue.get())[0];
     if (!rule) throw new Error('no rule');

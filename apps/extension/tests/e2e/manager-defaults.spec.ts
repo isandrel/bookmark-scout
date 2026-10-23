@@ -246,6 +246,11 @@ test('a search of conditions alone lists what they match, in the manager and the
   await expect(row(page, 'Kiwi link')).toBeVisible();
   await managerSearch(page).fill('before:2020-01-01');
   await expect(titles()).toHaveCount(0);
+  // A word naming their folder lists the bookmarks in it when the folder itself is no result,
+  // as the popup does; the manager once listed nothing.
+  await managerSearch(page).fill('"E2E Condition" is:bookmark');
+  await expect(titles()).toHaveCount(2);
+  await expect(row(page, 'Kiwi link')).toBeVisible();
 
   await openPopup(page, extensionId);
   await page

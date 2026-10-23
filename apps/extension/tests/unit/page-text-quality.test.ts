@@ -19,7 +19,7 @@ import {
   removePageTexts,
   savePageTexts,
 } from '@/lib/page-text-store';
-import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
+import { buildSearchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery, SEARCH_CONTENT_SNIPPET_CHARS } from '@/lib/search-query';
 import { searchReasonLabel } from '@/lib/search-reasons';
 import { describeSearchProblems } from '@/lib/search-syntax-help';
@@ -42,6 +42,7 @@ import {
 import type { BookmarkTreeNode } from '@/types';
 import { installFakeBookmarks } from '../fake-bookmarks';
 import { installFakePermissions } from '../fake-permissions';
+import { searchDocuments } from '../search-results';
 
 const OPTIONS = {
   skipPrivateHosts: true,

@@ -9197,6 +9197,10 @@
         "message": "无法读取此搜索。请检查其中的运算符和日期。",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "智能规则无法搜索页面文本。请从搜索中删除 content: 和 has:content。",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "请添加标签或选择文件夹。",
         "description": "Rule editor error: the rule does nothing"
@@ -9208,6 +9212,10 @@
     "rules_errorSaveFailed": {
         "message": "无法保存规则。",
         "description": "Rule editor error: storage failed"
+    },
+    "rules_errorLimit": {
+        "message": "你已有 $1 条规则，已达上限。请删除一条后再添加。",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
     },
     "rules_deleted": {
         "message": "已删除规则“$1”",

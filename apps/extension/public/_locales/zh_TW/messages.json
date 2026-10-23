@@ -9197,6 +9197,10 @@
         "message": "無法讀取這個搜尋。請檢查其中的運算子和日期。",
         "description": "Rule editor error: the search has a problem"
     },
+    "rules_errorPageText": {
+        "message": "智慧規則無法搜尋頁面文字。請從搜尋中移除 content: 和 has:content。",
+        "description": "Rule editor error: the search uses content: or has:content, which Smart Rules cannot use"
+    },
     "rules_errorAction": {
         "message": "請加上標籤或選擇資料夾。",
         "description": "Rule editor error: the rule does nothing"
@@ -9208,6 +9212,10 @@
     "rules_errorSaveFailed": {
         "message": "無法儲存規則。",
         "description": "Rule editor error: storage failed"
+    },
+    "rules_errorLimit": {
+        "message": "你已有 $1 條規則，已達上限。請刪除一條後再新增。",
+        "description": "Rule editor and rules list error: the list already holds the most rules allowed; $1 is that number"
     },
     "rules_deleted": {
         "message": "已刪除規則「$1」",

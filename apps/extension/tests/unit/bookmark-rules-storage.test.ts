@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { type BookmarkRule, MAX_BOOKMARK_RULES, parseBookmarkRules } from '@/lib/bookmark-rules';
 import {
+  BookmarkRuleLimitError,
   bookmarkRulesValue,
   createBookmarkRuleId,
   deleteBookmarkRule,
@@ -36,12 +37,16 @@ describe('stored smart rules', () => {
     expect((await bookmarkRulesValue.get())[0]?.name).toBe('Renamed');
   });
 
-  it('keeps no more than the configured number of rules', async () => {
+  it('refuses a new rule past the configured number, and still saves edits', async () => {
     await bookmarkRulesValue.set(
       Array.from({ length: MAX_BOOKMARK_RULES }, (_, n) => rule(`r${n}`)),
     );
-    await saveBookmarkRule(rule('extra'));
+    // Said, not silently dropped: the editor shows why (0.3.5 review).
+    await expect(saveBookmarkRule(rule('extra'))).rejects.toBeInstanceOf(BookmarkRuleLimitError);
+    expect(await ids()).toHaveLength(MAX_BOOKMARK_RULES);
     expect(await ids()).not.toContain('extra');
+    await saveBookmarkRule(rule('r0', { name: 'Edited' }));
+    expect((await bookmarkRulesValue.get())[0]?.name).toBe('Edited');
   });
 
   it('turns a rule off, reorders, deletes, and restores it at its place', async () => {

@@ -72,13 +72,15 @@ export const BOOKMARK_RULE_EDITOR_EXAMPLES = rulesConfig.editor;
 export type BookmarkRuleTemplateId = (typeof BOOKMARK_RULE_TEMPLATES)[number]['id'];
 
 /**
- * A query a rule can run: read without a problem and with at least one term. A query past the
- * limits in `config/bookmarks/search.toml` (terms, nesting, terms one OR joins) has a problem, so
- * a rule never runs on part of its search.
+ * A query a rule can run: read without a problem, with at least one term, and not looking in page
+ * text. A query past the limits in `config/bookmarks/search.toml` (terms, nesting, terms one OR
+ * joins) has a problem, so a rule never runs on part of its search. Rules match bookmarks without
+ * their indexed page text (`planBookmarkRules`), so `content:` would find nothing and
+ * `-has:content` everything: such a search is refused rather than run wrong.
  */
-function isRunnableQuery(text: string): boolean {
+export function isRunnableRuleQuery(text: string): boolean {
   const { query, diagnostics } = parseSearchQuery(text);
-  return diagnostics.length === 0 && query.terms.length > 0;
+  return diagnostics.length === 0 && query.terms.length > 0 && !searchesPageText(query);
 }
 
 const tagSchema = z.string().trim().min(1).max(rulesConfig.tag_max_length);
@@ -114,7 +116,9 @@ export const bookmarkRuleSchema = z
     // Only a rule with a folder can move; kept only when on, so a rule reads as it was saved.
     ...(autoMove && rule.moveTo ? { autoMove: true } : {}),
   }))
-  .refine((rule) => isRunnableQuery(rule.query), { message: 'A rule needs a search it can run' })
+  .refine((rule) => isRunnableRuleQuery(rule.query), {
+    message: 'A rule needs a search it can run',
+  })
   .refine((rule) => rule.addTags.length > 0 || rule.moveTo !== undefined, {
     message: 'A rule needs an action',
   });

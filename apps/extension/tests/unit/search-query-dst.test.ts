@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
+import { buildSearchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
 import type { BookmarkTreeNode } from '@/types';
+import { searchDocuments } from '../search-results';
 
 // `after:` and `before:` take local calendar days, so these tests pin a zone with daylight saving
 // time. Node rereads the zone whenever `process.env.TZ` is assigned.

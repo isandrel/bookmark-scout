@@ -19,7 +19,7 @@ import {
 } from '@/lib/page-text-store';
 import { QUICK_SAVE_MESSAGE } from '@/lib/quick-save-protocol';
 import { pageTextReadingSchema } from '@/lib/quick-save-validation';
-import { buildSearchDocuments, searchDocuments } from '@/lib/search-documents';
+import { buildSearchDocuments } from '@/lib/search-documents';
 import { parseSearchQuery } from '@/lib/search-query';
 import { searchReasonLabel } from '@/lib/search-reasons';
 import { saveSettings } from '@/lib/settings-storage';
@@ -37,6 +37,7 @@ import {
 import { handleAIHostRequest } from '@/services/quick-save-ai-runner';
 import type { BookmarkTreeNode } from '@/types';
 import { installFakePermissions } from '../fake-permissions';
+import { searchDocuments } from '../search-results';
 import { runOutOfStorageAfter } from './indexeddb-quota';
 
 const tree: BookmarkTreeNode[] = [

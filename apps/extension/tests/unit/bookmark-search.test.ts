@@ -248,6 +248,29 @@ describe('filterBookmarkTreeByQuery', () => {
     expect(matchOf(filtered, 'soup')?.isSearchMatch).toBe(true);
   });
 
+  it('lists the same matches in the manager as the popup flags, folder-only ones included', () => {
+    const flagged = (nodes: readonly BookmarkTreeNode[]): string[] =>
+      nodes.flatMap((node) => [
+        ...(node.isSearchMatch ? [node.id] : []),
+        ...flagged(node.children ?? []),
+      ]);
+    for (const [text, expected] of [
+      // The Work folder is no result here, so what is in it matched by its path is.
+      ['work is:bookmark', ['jira', 'recipe-db']],
+      ['recipe -cake is:bookmark', ['recipe-db', 'soup']],
+      // The folder is a result, so it is the match and what is in it is not.
+      ['recipes', ['recipes']],
+      ['work jira', ['jira']],
+      ['folder:recipes', ['baking', 'recipe-cake', 'soup']],
+    ] as const) {
+      const manager = [...(matchBookmarkTreeQuery(tree, text, noMetadata)?.keys() ?? [])].sort();
+      expect(manager, text).toEqual(expected);
+      expect(flagged(filterBookmarkTreeByQuery(tree, text, noMetadata)).sort(), text).toEqual(
+        manager,
+      );
+    }
+  });
+
   it('typing on checks only what the last query found, and stays right when it widens', () => {
     const metadata: StoredBookmarkMetadataById = { soup: { tags: ['Food'] } };
     const sorted = (text: string) =>
@@ -395,7 +418,7 @@ describe('slow regular expressions', () => {
   const regex = { matchCase: false, wholeWord: false, useRegex: true };
 
   it('flags a group that repeats something repeating, and nothing else', () => {
-    for (const pattern of ['(a+)+', '(\\w*)*$', '((ab)*c+){2,}', '(x+y)+z']) {
+    for (const pattern of ['(a+)+', '(\\w*)*$', '((ab)*c+){2,}', '(x+y)+z', '(a{1,3})+']) {
       expect(isSlowRegex(pattern), pattern).toBe(true);
     }
     for (const pattern of ['a+b*', '(ab)+', '(a|b)*', '[(a+)]+', '\\(a+\\)+', '(a{2})+', 'docs?']) {
@@ -430,6 +453,27 @@ describe('slow regular expressions', () => {
       'rea(d|ct)',
       pattern('(a|a', 'a){2}'),
       '([|]|x)+',
+    ]) {
+      expect(isSlowRegex(fine), fine).toBe(false);
+    }
+  });
+
+  it('flags a group repeated by a bounded range, which backtracks like an unbounded one', () => {
+    // Both froze the page for seconds on a title that almost matches (0.3.5 review).
+    for (const slow of [
+      pattern('(\\w+\\s?)', '{1,20}$'),
+      pattern('(a|a', 'a){1,34}$'),
+      pattern('(x+)', '{0,5}y'),
+    ]) {
+      expect(isSlowRegex(slow), slow).toBe(true);
+      expect(getSearchRegexProblem(slow, regex), slow).toBe('slow');
+    }
+    // An exact count or a range of at most one repeat leaves the engine nothing to choose.
+    for (const fine of [
+      pattern('(\\w+)', '{1}'),
+      pattern('(a|a', 'a){0,1}'),
+      pattern('(x+)', '{1,1}'),
+      '(\\d+){3}',
     ]) {
       expect(isSlowRegex(fine), fine).toBe(false);
     }

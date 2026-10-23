@@ -5,11 +5,12 @@
  * result counts each part, and a part that did not happen is said, never hidden (R42).
  *
  * - **Checked right before:** each bookmark is applied only while it still has the title,
- *   address, and folder the review showed, and every rule that matched it is still on with the
- *   version the review saw (`ruleVersion`, R14, R23). Otherwise it is skipped and counted: deleted
- *   or changed since (R24), or its rule edited, turned off, or deleted (`ruleChanged`). A bookmark
- *   already as the review would leave it (its tags there, in its folder) is `done`, not changed
- *   again.
+ *   address, and folder the review showed, every rule that matched it is still on with the
+ *   version the review saw (`ruleVersion`, R14, R23), and those rules still match it with its
+ *   tags and summary as they are now, and would still move it where the review said
+ *   (`stillPlanned`). Otherwise it is skipped and counted: deleted or changed since (R24), or its
+ *   rule edited, turned off, or deleted (`ruleChanged`). A bookmark already as the review would
+ *   leave it (its tags there, in its folder) is `done`, not changed again.
  * - **Tags:** one metadata save. The run is recorded in the rules log (`rule-auto-log.ts`, a `run`
  *   entry): the bookmarks it tagged and its moves' Audit History record, so the tags can be found
  *   and taken back after the toast's Undo is gone. Tags leave no Audit History record of their
@@ -86,6 +87,43 @@ export type RuleRunResult = {
 };
 
 /**
+ * The ids of `items` the rules, planned again on the bookmarks as they are now
+ * (`planBookmarkRules`), still match with every rule the review saw match, and would still move
+ * to the folder the review said. A tag or summary changed since the review can make a rule stop
+ * matching (`-tag:read`). The tags the run adds are left out of that check: a part a stopped
+ * worker left may have added them already, and a rule such as `is:untagged` must still count.
+ */
+async function stillPlanned(
+  items: readonly RulePlanItem[],
+  rules: readonly BookmarkRule[],
+  metadata: StoredBookmarkMetadataById,
+): Promise<Set<string>> {
+  if (items.length === 0) return new Set();
+  const asReviewed: StoredBookmarkMetadataById = { ...metadata };
+  for (const item of items) {
+    const own = metadata[item.id];
+    if (!own?.tags) continue;
+    const adding = new Set(item.addTags.map(tagKey));
+    asReviewed[item.id] = { ...own, tags: own.tags.filter((tag) => !adding.has(tagKey(tag))) };
+  }
+  const tree = await fetchBookmarkTree();
+  const planned = new Map(
+    planBookmarkRules(rules, tree, asReviewed, new Set(items.map((item) => item.id))).map(
+      (entry) => [entry.id, entry],
+    ),
+  );
+  return new Set(
+    items
+      .filter((item) => {
+        const now = planned.get(item.id);
+        if (!now || !item.ruleIds.every((id) => now.ruleIds.includes(id))) return false;
+        return item.move === undefined || now.move?.folderId === item.move.folderId;
+      })
+      .map((item) => item.id),
+  );
+}
+
+/**
  * Checks each reviewed bookmark against the live bookmark, its metadata, and the rules as they
  * are now (`rules`); see the file header.
  */
@@ -95,7 +133,7 @@ async function checkRuleItems(
 ): Promise<CheckedItem[]> {
   const metadata = await bookmarkMetadataValue.get();
   const live = await Promise.all(items.map((item) => getLiveBookmark(item.id)));
-  return items.map((item, index): CheckedItem => {
+  const checked = items.map((item, index): CheckedItem => {
     if (!rulesUnchanged(rules, item.ruleVersions)) return { item, skip: 'ruleChanged' };
     const node = live[index];
     if (!node) return { item, skip: 'deleted' };
@@ -109,6 +147,18 @@ async function checkRuleItems(
     if (tags.length === 0 && !move) return { item, skip: 'done' };
     return { item, tags, move };
   });
+  // One already in its reviewed folder was moved by an earlier try of this run, which added its
+  // tags first: it is not planned again in the folder the run put it in.
+  const replanning = checked.flatMap((entry) =>
+    !entry.skip && (entry.move || entry.item.move === undefined) ? [entry.item] : [],
+  );
+  const planned = await stillPlanned(replanning, rules, metadata);
+  const replanned = new Set(replanning.map((item) => item.id));
+  return checked.map((entry) =>
+    entry.skip || !replanned.has(entry.item.id) || planned.has(entry.item.id)
+      ? entry
+      : { item: entry.item, skip: 'changed' },
+  );
 }
 
 /** The ready items' moves, each only while the bookmark is still as the review found it. */
@@ -216,9 +266,11 @@ export async function applyRulePlan(
   items: readonly RulePlanItem[],
   plan: readonly RulePlanItem[] = items,
 ): Promise<RuleRunResult> {
-  await recordRuleConflicts(plan).catch((error: unknown) => {
-    console.warn('[Rules] Conflicts not recorded:', error);
-  });
+  await fetchBookmarkTree()
+    .then((tree) => recordRuleConflicts(plan, tree))
+    .catch((error: unknown) => {
+      console.warn('[Rules] Conflicts not recorded:', error);
+    });
   const changing = items.filter(changesBookmark);
   const { jobsApplyInBackgroundAbove } = await getSettings();
   if (changing.length > jobsApplyInBackgroundAbove) return startRuleRunJob(changing);

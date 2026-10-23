@@ -39,7 +39,7 @@ Los cuadros de búsqueda de la ventana emergente, el panel lateral y el administ
 - Un `-` delante excluye lo que coincide: `recetas -tarta` o `-tag:archivo`.
 - `OR` en mayúsculas, entre dos términos, encuentra cualquiera de los dos: `tag:react OR tag:vue`. Une más que el espacio, así que `domain:github.com tag:react OR tag:vue` encuentra páginas de GitHub con cualquiera de las dos etiquetas. Un `or` en minúsculas es una palabra más que buscar.
 - Los paréntesis agrupan términos: `domain:github.com (tag:react OR tag:vue) -tag:archived`. Un `-` delante de un grupo excluye lo que coincide con el grupo: `-(tag:old OR tag:archive)`. Los paréntesis dentro de una palabra, como `f(x)`, se buscan como texto.
-- Una palabra que nombra una carpeta encuentra la carpeta. En la ventana emergente, sus marcadores aparecen dentro de ella; `folder:` muestra todo lo que contiene.
+- Una palabra que nombra una carpeta encuentra la carpeta. En la ventana emergente, sus marcadores aparecen dentro de ella; `folder:` muestra todo lo que contiene. Si otros términos dejan fuera la carpeta, como hace `work is:bookmark`, se encuentran en su lugar los marcadores de dentro que coinciden.
 - El texto que no es un operador se busca tal como se escribe, como `C++`, `10:30` o una dirección web. También un operador que Bookmark Scout no conoce, como `foo:bar`. Un valor que no puede leer, como una fecha no válida, se omite. Una nota bajo el cuadro de búsqueda avisa cuando un paréntesis no está cerrado o un `OR` no tiene nada a un lado. Los paréntesis anidados a mucha profundidad o una lista de `OR` muy larga se cortan, con una nota.
 
 | Búsqueda | Encuentra |
@@ -47,7 +47,7 @@ Los cuadros de búsqueda de la ventana emergente, el panel lateral y el administ
 | `title:react` | Títulos que contienen el texto; `title:"react hooks"` admite varias palabras |
 | `url:github` | Direcciones web que contienen el texto |
 | `domain:github.com` | Marcadores de ese sitio, incluidos sus subdominios |
-| `folder:Trabajo` o `path:Trabajo` | Todo lo que hay en una carpeta con ese nombre exacto, a cualquier profundidad; `folder:"Trabajo / Documentos"` nombra una carpeta dentro de otra |
+| `folder:Trabajo` o `path:Trabajo` | Todo lo que hay en una carpeta con ese nombre exacto, a cualquier profundidad; `folder:"Trabajo / Documentos"` nombra una carpeta dentro de otra; también se encuentra un nombre con barra, como `folder:CI/CD` |
 | `tag:lectura` | Marcadores con esa etiqueta exacta |
 | `summary:receta` | Resúmenes que contienen el texto |
 | `content:receta` | El texto de las páginas que indexaste con **Indexar texto de páginas** |

@@ -36,9 +36,15 @@ const templateName = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) =>
 const RULE_DRAFT_ERROR_KEYS = {
   name: 'rules_errorName',
   query: 'rules_errorQuery',
+  pageText: 'rules_errorPageText',
   action: 'rules_errorAction',
   invalid: 'rules_errorInvalid',
 } as const satisfies Record<RuleDraftError, MessageKey>;
+
+/** Why no rule can be added: the list holds `max_rules` already. */
+function ruleLimitMessage(): string {
+  return t('rules_errorLimit', formatCount(MAX_BOOKMARK_RULES));
+}
 
 function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose: () => void }) {
   const [value, setValue] = useState<RuleDraft>(EMPTY_RULE_DRAFT);
@@ -69,13 +75,15 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
       keyOf: tagKey,
     }).join(', '),
   };
-  const queryReadable = useMemo(() => isRuleQueryReadable(value.query), [value.query]);
+  const queryReadable = useMemo(() => isRunnableRuleQuery(value.query), [value.query]);
   // A rule with nothing to do cannot be turned on: a template that moves waits for its folder.
   const actionable = hasRuleAction(typed);
-  // What is wrong with the search, as the search boxes say it: a rule never runs on part of one.
+  // What is wrong with the search, as the search boxes say it: a rule never runs on part of one,
+  // nor on page text, which rules do not see.
   const queryProblem = useMemo(() => {
     const [diagnostic] = parseSearchQuery(value.query).diagnostics;
-    return diagnostic ? describeSearchDiagnostic(diagnostic) : undefined;
+    if (diagnostic) return describeSearchDiagnostic(diagnostic);
+    return ruleQueryUsesPageText(value.query) ? t('rules_errorPageText') : undefined;
   }, [value.query]);
   const sampleMatches = useMemo(
     () => ruleMatchesSample(value.query, sample),
@@ -89,8 +97,11 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
     [library, queryReadable, value.query],
   );
 
+  // A rule keeps its folder's path, read from the tree: until the tree is read, it would save none.
+  const waitingForFolderPath = value.folderId !== '' && !library;
+
   const save = async () => {
-    if (!draft) return;
+    if (!draft || waitingForFolderPath) return;
     const result = ruleFromDraft(typed, draft.id ?? createBookmarkRuleId(), library?.tree);
     if ('error' in result) {
       setError(t(RULE_DRAFT_ERROR_KEYS[result.error]));
@@ -100,8 +111,12 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
     try {
       await saveBookmarkRule(result.rule);
       onClose();
-    } catch {
-      setError(t('rules_errorSaveFailed'));
+    } catch (saveError) {
+      setError(
+        saveError instanceof BookmarkRuleLimitError
+          ? ruleLimitMessage()
+          : t('rules_errorSaveFailed'),
+      );
     } finally {
       setSaving(false);
     }
@@ -253,7 +268,11 @@ function RuleEditorDialog({ draft, onClose }: { draft: RuleDraft | null; onClose
           <Button variant="outline" onClick={onClose}>
             {t('action_cancel')}
           </Button>
-          <Button data-testid="rule-save" onClick={() => void save()} disabled={saving}>
+          <Button
+            data-testid="rule-save"
+            onClick={() => void save()}
+            disabled={saving || waitingForFolderPath}
+          >
             {t('rules_save')}
           </Button>
         </DialogFooter>
@@ -296,6 +315,18 @@ export function BookmarkRulesPanel() {
     [rules, tree],
   );
 
+  /**
+   * Opens a new rule unless the list is full: saving it would fail, so the user learns before
+   * filling in the editor. Saving checks again, for a rule added in another tab meanwhile.
+   */
+  const startNewRule = (open: () => void) => {
+    if (rules.length >= MAX_BOOKMARK_RULES) {
+      toast.error({ title: ruleLimitMessage() });
+      return;
+    }
+    open();
+  };
+
   const addTemplate = (template: (typeof BOOKMARK_RULE_TEMPLATES)[number]) => {
     const name = templateName(template);
     // A template that moves has no folder yet: the editor opens on it to ask for one.
@@ -303,7 +334,7 @@ export function BookmarkRulesPanel() {
       setEditing(ruleDraftOfTemplate(template, name));
       return;
     }
-    void saveBookmarkRule({
+    saveBookmarkRule({
       id: createBookmarkRuleId(),
       name,
       // Templates start turned off: a rule acts only once the user chose it.
@@ -311,6 +342,13 @@ export function BookmarkRulesPanel() {
       query: template.query,
       syntaxVersion: SEARCH_SYNTAX_VERSION,
       addTags: [...template.add_tags],
+    }).catch((saveError: unknown) => {
+      toast.error({
+        title:
+          saveError instanceof BookmarkRuleLimitError
+            ? ruleLimitMessage()
+            : t('rules_errorSaveFailed'),
+      });
     });
   };
 
@@ -334,7 +372,11 @@ export function BookmarkRulesPanel() {
       actionsLayout="wrap"
       actions={
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" data-testid="rule-add" onClick={() => setEditing(EMPTY_RULE_DRAFT)}>
+          <Button
+            size="sm"
+            data-testid="rule-add"
+            onClick={() => startNewRule(() => setEditing(EMPTY_RULE_DRAFT))}
+          >
             <Plus />
             {t('rules_add')}
           </Button>
@@ -345,7 +387,10 @@ export function BookmarkRulesPanel() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {BOOKMARK_RULE_TEMPLATES.map((template) => (
-                <DropdownMenuItem key={template.id} onClick={() => addTemplate(template)}>
+                <DropdownMenuItem
+                  key={template.id}
+                  onClick={() => startNewRule(() => addTemplate(template))}
+                >
                   {templateName(template)}
                 </DropdownMenuItem>
               ))}
@@ -412,11 +457,13 @@ export function BookmarkRulesPanel() {
                 size="icon-sm"
                 aria-label={t('rules_duplicate', rule.name)}
                 onClick={() =>
-                  setEditing({
-                    ...ruleDraftOf(rule),
-                    id: undefined,
-                    name: t('rules_copyName', rule.name),
-                  })
+                  startNewRule(() =>
+                    setEditing({
+                      ...ruleDraftOf(rule),
+                      id: undefined,
+                      name: t('rules_copyName', rule.name),
+                    }),
+                  )
                 }
               >
                 <Copy />
