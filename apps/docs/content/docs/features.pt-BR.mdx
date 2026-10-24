@@ -14,7 +14,7 @@ Uma lista de referência do que já está disponível. Para instruções passo a
 | Gerenciador de favoritos | Substitui a página de favoritos do navegador no Chrome e no Edge: árvore de pastas, trilha de navegação, tabela de favoritos e a barra lateral **Ferramentas**. Em uma janela estreita, a árvore de pastas e as **Ferramentas** se abrem sobre a tabela; um caminho de pasta longo recolhe as pastas do meio em um menu **…** |
 | Configurações | A página de configurações da extensão: primeiro **Essenciais** e depois mais onze guias em **Avançado**. Consulte [Configurações](/settings) |
 | Qualquer página | <Shortcut id="commands.quick-save" /> e <Shortcut id="commands.ai-quick-save" /> salvam rapidamente a página em que você está, com uma notificação na página |
-| Menu de clique com o botão direito | **Salvar favorito em...** em qualquer link, depois que você ativa o **Menu do botão direito** |
+| Menu de clique com o botão direito | **Salvar favorito em...** nos links, e em páginas ou texto selecionado se você os escolher em **Mostrar o menu em**, depois que você ativa o **Menu do botão direito** |
 
 ## Encontrar [#find]
 
@@ -32,7 +32,7 @@ Guia: [Pesquisa e pesquisas salvas](/guides/search).
 - Salve a página atual em qualquer pasta, nunca duas vezes na mesma pasta, com um painel **Recentes** das pastas que você usou.
 - Digite parte do nome de uma pasta, ou um caminho como `work/react`, e salve em uma das pastas correspondentes listadas acima dos resultados.
 - Salvamento rápido com <Shortcut id="commands.quick-save" /> em qualquer página, na pasta que melhor corresponde à página (calculada no seu dispositivo), na última pasta usada ou em uma pasta que você escolher; <Shortcut id="commands.ai-quick-save" /> salva na primeira sugestão da IA. Uma notificação na página oferece **Desfazer** e outras pastas em **Mover para**. No Chrome e no Edge, você pode atribuir <Shortcut id="browser.bookmark_page" /> ao salvamento rápido.
-- Salve links pelo menu de clique com o botão direito em uma pasta recente ou na Barra de favoritos.
+- Salve links, páginas ou texto selecionado pelo menu de clique com o botão direito em uma pasta recente ou na Barra de favoritos.
 - Crie pastas, arraste e solte favoritos e pastas e mova vários itens de uma vez no gerenciador.
 - Mostre os favoritos na ordem do próprio navegador (o padrão), por data de adição, em ordem alfabética natural ou com pastas primeiro, sem alterar a ordem armazenada no navegador.
 - Edite nomes e URLs e adicione tags e um resumo em **Detalhes do favorito**.
@@ -64,7 +64,7 @@ Guias: [Limpar e enriquecer favoritos](/guides/clean-up) e [Encontrar e corrigir
 - Exporte para HTML, JSON, Markdown ou CSV, com uma revisão de privacidade que pode ocultar valores confidenciais no arquivo.
 - Importe HTML ou JSON depois de uma prévia da pasta de destino, das contagens e das duplicatas, com opção de desfazer.
 - As exportações em JSON mantêm as tags e o resumo de cada favorito, e importar um arquivo desses os restaura.
-- Faça backup das configurações da extensão, dos prompts personalizados, dos serviços de IA (sem chaves de API), das pesquisas salvas e das colunas da tabela do gerenciador em um arquivo JSON, e restaure-os.
+- Faça backup em um arquivo das partes dos dados do próprio Bookmark Scout que você escolher: configurações, configurações deste computador, pesquisas salvas e a visualização da tabela, prompts personalizados e Sobre mim, regras inteligentes, serviços de IA e capas, com as chaves de API só quando você as seleciona. Ao restaurar, você vê o que cada parte mudaria, mescla ou substitui cada uma e pode desfazer. Consulte [Fazer backup e restaurar configurações](/guides/import-export#back-up-and-restore-settings).
 
 Guia: [Importar e exportar](/guides/import-export).
 
@@ -90,10 +90,13 @@ Guia: [Usar com agentes de IA locais](/guides/local-agents).
 ## Teclado e idioma [#keyboard-and-language]
 
 - Atalhos de salvamento rápido em qualquer página, que você pode alterar nas configurações de atalhos do navegador ou, no Firefox, diretamente nas Configurações do Bookmark Scout.
+- As teclas dos atalhos do gerenciador, do pop-up e do painel lateral, que você pode alterar nas [Configurações](/settings#page-shortcuts), em cada dispositivo.
 - Atalhos no pop-up e no painel lateral que nunca usam `Ctrl` nem `Cmd` e, no gerenciador, as teclas do gerenciador de favoritos do Chrome (selecionar tudo, desfazer, refazer, abrir em guias), com uma caixa de diálogo de ajuda <Shortcut id="manager.show_help" /> ali. Consulte [Atalhos de teclado](/guides/keyboard-shortcuts).
 - Seleção no gerenciador como a do Chrome: clique, <Shortcut id="mouse.select_toggle" />, <Shortcut id="mouse.select_range" /> e <Shortcut id="manager.select_all" />; as teclas de seta percorrem a tabela e a árvore de pastas, que os leitores de tela anunciam como uma árvore.
 - Desfazer e refazer as edições, movimentações e exclusões do gerenciador com <Shortcut id="manager.undo" /> e <Shortcut id="manager.redo" />, durante toda a sessão do navegador.
 - Menus de clique com o botão direito nas linhas e pastas do gerenciador: recortar, copiar e colar, abrir todos em guias, em uma nova janela ou em uma janela anônima, renomear e excluir; além de **Ordenar por nome** e **Adicionar novo favorito** ou **Adicionar nova pasta**. **Menus do gerenciador de favoritos** nas Configurações define quais comandos eles mostram e em que ordem.
+- Um pop-up e um painel lateral do seu jeito: as partes, os botões da barra de ferramentas, a altura das linhas e os detalhes do cartão ao passar o ponteiro ([Pop-up](/settings#popup)), e os comandos das linhas ([Ações de favoritos e pastas no pop-up](/settings#popup-menus)).
+- Uma barra lateral Ferramentas do seu jeito: quais ferramentas ela mostra, a ordem delas e a aba em que ela abre ([Barra de ferramentas](/settings#tools-sidebar)); e **Posição das notificações**, onde aparecem mensagens como **Desfazer** ([Notificações](/settings#notifications)).
 - Arrastar e soltar no gerenciador como no Chrome: para pastas na tabela ou na árvore, entre linhas na ordem do navegador e links vindos de outras páginas; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> e <Shortcut id="manager.paste" /> copiam, movem e colam.
 - Tema do sistema, claro ou escuro.
 - <Languages of="extension" capitalize />.

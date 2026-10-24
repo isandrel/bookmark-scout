@@ -128,7 +128,7 @@
           "Ketik jalur seperti ai/llms, dan tetap temukan foldernya meski ada salah ketik kecil",
           "Tekan {{SHORTCUT:commands.quick-save}} di halaman mana pun untuk menyimpannya ke folder yang paling cocok; notifikasi kecil di halaman menawarkan Urungkan dan folder lain",
           "Halaman yang sudah ada di folder tersebut tidak disimpan dua kali, dan folder yang baru-baru ini Anda gunakan untuk menyimpan muncul lebih dulu",
-          "Simpan link dari menu klik kanan ke folder terbaru, setelah Anda mengaktifkan menu tersebut di Setelan (awalnya nonaktif)",
+          "Simpan link, halaman, atau teks yang dipilih dari menu klik kanan ke folder terbaru, setelah Anda mengaktifkan menu tersebut di Setelan (awalnya nonaktif)",
           "Jika AI aktif, dapatkan saran folder untuk halaman, atau simpan ke saran pertama dengan {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },

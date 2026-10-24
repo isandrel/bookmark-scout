@@ -14,7 +14,7 @@ Daftar referensi tentang apa yang tersedia sekarang. Untuk petunjuk langkah demi
 | Pengelola bookmark | Mengganti halaman bookmark browser di Chrome dan Edge: hierarki folder, breadcrumb, tabel bookmark, dan bilah samping **Alat**. Di jendela yang sempit, hierarki folder dan **Alat** terbuka di atas tabel; jalur folder yang dalam melipat folder-folder tengahnya ke dalam menu **…** |
 | Setelan | Halaman setelan ekstensi: **Dasar** lebih dulu, lalu sebelas tab lagi di bawah **Lanjutan**. Lihat [Setelan](/settings) |
 | Halaman mana pun | <Shortcut id="commands.quick-save" /> dan <Shortcut id="commands.ai-quick-save" /> menyimpan cepat halaman yang sedang Anda buka, dengan notifikasi di halaman |
-| Menu klik kanan | **Simpan bookmark ke...** di link mana pun, setelah Anda mengaktifkan **Menu Klik Kanan** |
+| Menu klik kanan | **Simpan bookmark ke...** di link, serta di halaman atau teks yang dipilih jika Anda memilihnya di **Tampilkan Menu Pada**, setelah Anda mengaktifkan **Menu Klik Kanan** |
 
 ## Temukan [#find]
 
@@ -32,7 +32,7 @@ Panduan: [Penelusuran dan penelusuran tersimpan](/guides/search).
 - Simpan halaman saat ini ke folder mana pun, tidak pernah dua kali ke folder yang sama, dengan panel **Terbaru** berisi folder yang pernah Anda pakai.
 - Ketik sebagian nama folder, atau jalur seperti `work/react`, lalu simpan ke salah satu folder cocok yang tercantum di atas hasil.
 - Simpan cepat dengan <Shortcut id="commands.quick-save" /> di halaman mana pun, ke folder yang paling cocok dengan halaman (diperingkat di perangkat Anda), folder yang terakhir digunakan, atau folder yang Anda pilih; <Shortcut id="commands.ai-quick-save" /> menyimpan ke saran AI pertama. Notifikasi di halaman menawarkan **Urungkan** dan folder lain di bawah **Pindahkan ke**. Di Chrome dan Edge, Anda bisa memberikan <Shortcut id="browser.bookmark_page" /> ke simpan cepat.
-- Simpan link dari menu klik kanan ke folder terbaru atau ke Bilah bookmark.
+- Simpan link, halaman, atau teks yang dipilih dari menu klik kanan ke folder terbaru atau ke Bilah bookmark.
 - Buat folder, seret dan lepas bookmark dan folder, serta pindahkan beberapa sekaligus di pengelola.
 - Tampilkan bookmark dalam urutan browser sendiri (default), menurut tanggal ditambahkan, dalam urutan abjad alami, atau folder lebih dulu, tanpa mengubah urutan yang disimpan browser.
 - Edit nama dan URL, serta tambahkan tag dan ringkasan di **Detail Bookmark**.
@@ -64,7 +64,7 @@ Panduan: [Membersihkan dan memperkaya bookmark](/guides/clean-up) dan [Menemukan
 - Ekspor ke HTML, JSON, Markdown, atau CSV, dengan tinjauan privasi yang bisa menyamarkan nilai sensitif dari file.
 - Impor HTML atau JSON setelah pratinjau folder tujuan, jumlah, dan duplikat, dengan urungkan.
 - Ekspor JSON mempertahankan tag dan ringkasan setiap bookmark, dan mengimpor file seperti itu memulihkannya.
-- Cadangkan setelan ekstensi, prompt kustom, layanan AI (tanpa kunci API), penelusuran tersimpan, dan kolom tabel pengelola ke file JSON, lalu pulihkan.
+- Cadangkan bagian data Bookmark Scout yang Anda pilih ke sebuah file: setelan, setelan komputer ini, penelusuran tersimpan dan tampilan tabel, prompt kustom dan Tentang saya, aturan pintar, layanan AI, dan sampul, dengan kunci API hanya jika Anda memilihnya. Saat memulihkan, Anda melihat apa yang akan diubah setiap bagian, menggabungkan atau menggantinya, dan dapat mengurungkannya. Lihat [Mencadangkan dan memulihkan setelan](/guides/import-export#back-up-and-restore-settings).
 
 Panduan: [Impor dan ekspor](/guides/import-export).
 
@@ -90,10 +90,13 @@ Panduan: [Menggunakan dengan agen AI lokal](/guides/local-agents).
 ## Keyboard dan bahasa [#keyboard-and-language]
 
 - Pintasan simpan cepat di halaman mana pun, yang bisa Anda ubah di setelan pintasan browser, atau di Firefox langsung di Setelan Bookmark Scout.
+- Tombol pintasan pengelola, popup, dan panel samping, yang bisa Anda ubah di [Setelan](/settings#page-shortcuts), untuk setiap perangkat.
 - Pintasan di popup dan panel samping yang tidak pernah memakai `Ctrl` atau `Cmd`, dan di pengelola tombol-tombol pengelola bookmark Chrome (pilih semua, urungkan, ulangi, buka di tab), dengan dialog bantuan <Shortcut id="manager.show_help" /> di sana. Lihat [Pintasan keyboard](/guides/keyboard-shortcuts).
 - Pemilihan di pengelola seperti di Chrome: klik, <Shortcut id="mouse.select_toggle" />, <Shortcut id="mouse.select_range" />, dan <Shortcut id="manager.select_all" />; tombol panah berpindah di tabel dan hierarki folder, yang dibacakan pembaca layar sebagai pohon.
 - Urungkan dan ulangi untuk pengeditan, pemindahan, dan penghapusan di pengelola dengan <Shortcut id="manager.undo" /> dan <Shortcut id="manager.redo" />, selama sesi browser.
 - Menu klik kanan pada baris dan folder pengelola: potong, salin, dan tempel, buka semua di tab, jendela baru, atau jendela samaran, ganti nama, dan hapus; ditambah **Urutkan menurut nama** serta **Tambahkan bookmark baru** atau **Tambahkan folder baru**. **Menu pengelola bookmark** di Setelan menentukan perintah mana yang ditampilkan, dan dalam urutan apa.
+- Popup dan panel samping yang Anda atur sendiri: bagian-bagiannya, tombol bilah alat, tinggi baris, dan detail kartu saat diarahkan ([Popup](/settings#popup)), serta perintah pada barisnya ([Tindakan bookmark dan folder di popup](/settings#popup-menus)).
+- Bilah samping Alat yang Anda atur sendiri: alat yang ditampilkan, urutannya, dan tab tempat bilah itu dibuka ([Bilah Samping Alat](/settings#tools-sidebar)); serta **Posisi Notifikasi**, tempat pesan seperti **Urungkan** muncul ([Notifikasi](/settings#notifications)).
 - Seret dan lepas di pengelola seperti di Chrome: ke folder di tabel atau hierarki, di antara baris dalam urutan browser, dan link dari halaman lain; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" />, dan <Shortcut id="manager.paste" /> menyalin, memindahkan, dan menempel.
 - Tema sistem, terang, atau gelap.
 - Antarmuka dalam bahasa <Languages of="extension" />.

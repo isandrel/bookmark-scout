@@ -14,7 +14,7 @@ A reference list of what ships now. For step-by-step instructions, follow the gu
 | Bookmarks manager | Replaces the browser's bookmarks page in Chrome and Edge: folder tree, breadcrumbs, a bookmark table, and the **Tools** sidebar. In a narrow window the folder tree and **Tools** open over the table; a deep folder path folds its middle folders into a **…** menu |
 | Settings | The extension's settings page: **Essentials** first, then eleven more tabs under **Advanced**. See [Settings](/settings) |
 | Any page | <Shortcut id="commands.quick-save" /> and <Shortcut id="commands.ai-quick-save" /> quick save the page you are on, with a notification in the page |
-| Right-click menu | **Save bookmark to...** on any link, once you turn on **Right-Click Menu** |
+| Right-click menu | **Save bookmark to...** on links, and on pages or selected text if you choose them under **Show Menu On**, once you turn on **Right-Click Menu** |
 
 ## Find
 
@@ -32,7 +32,7 @@ Guide: [Search and saved searches](/guides/search).
 - Save the current page into any folder, never twice into the same folder, with a **Recent** panel of folders you used.
 - Type part of a folder's name, or a path such as `work/react`, and save to one of the matching folders listed above the results.
 - Quick save with <Shortcut id="commands.quick-save" /> on any page, to the folder that matches the page best (ranked on your device), the last used folder, or a folder you choose; <Shortcut id="commands.ai-quick-save" /> saves to the first AI suggestion. A notification in the page offers **Undo** and other folders under **Move to**. In Chrome and Edge you can give quick save <Shortcut id="browser.bookmark_page" />.
-- Save links from the right-click menu into a recent folder or the Bookmarks Bar.
+- Save links, pages, or selected text from the right-click menu into a recent folder or the Bookmarks Bar.
 - Create folders, drag and drop bookmarks and folders, and move several at once in the manager.
 - Show bookmarks in the browser's own order (the default), by date added, in natural alphabetical order, or folders first, without changing the browser's stored order.
 - Edit names and URLs, and add tags and a summary in **Bookmark Details**.
@@ -64,7 +64,7 @@ Guides: [Clean up and enrich bookmarks](/guides/clean-up) and [Find and repair d
 - Export to HTML, JSON, Markdown, or CSV, with a privacy review that can redact sensitive values from the file.
 - Import HTML or JSON after a preview of the target folder, counts, and duplicates, with undo.
 - JSON exports keep each bookmark's tags and summary, and importing such a file restores them.
-- Back up the extension's settings, custom prompts, AI services (without API keys), saved searches, and the manager table's columns to a JSON file, and restore them.
+- Back up the parts of Bookmark Scout's own data you choose to a file: settings, this computer's settings, saved searches and the table view, custom prompts and About me, Smart Rules, AI services, and covers, with the API keys only when you select them. Restoring shows what each part would change, merges or replaces it, and can be undone. See [Back up and restore settings](/guides/import-export#back-up-and-restore-settings).
 
 Guide: [Import and export](/guides/import-export).
 
@@ -90,10 +90,13 @@ Guide: [Use with local AI agents](/guides/local-agents).
 ## Keyboard and language
 
 - Quick save shortcuts on any page, which you can change in the browser's shortcut settings, or in Firefox right in Bookmark Scout's Settings.
+- The keys of the manager, popup, and side panel shortcuts, which you can change in [Settings](/settings#page-shortcuts), for each device.
 - Shortcuts in the popup and side panel that never use `Ctrl` or `Cmd`, and in the manager the keys of Chrome's bookmark manager (select all, undo, redo, open in tabs), with a <Shortcut id="manager.show_help" /> help dialog there. See [Keyboard shortcuts](/guides/keyboard-shortcuts).
 - Selection in the manager like Chrome's: click, <Shortcut id="mouse.select_toggle" />, <Shortcut id="mouse.select_range" />, and <Shortcut id="manager.select_all" />; the arrow keys move through the table and the folder tree, which screen readers hear as a tree.
 - Undo and redo of the manager's edits, moves, and deletions with <Shortcut id="manager.undo" /> and <Shortcut id="manager.redo" />, for the whole browser session.
 - Right-click menus on the manager's rows and folders: cut, copy, and paste, open all in tabs, a new window, or an incognito window, rename, and delete; plus **Sort by name** and **Add new bookmark** or **folder**. **Bookmark manager menus** in Settings chooses which commands they show, and in what order.
+- A popup and side panel you arrange: their parts, toolbar buttons, row height, and hover card details ([Popup](/settings#popup)), and the commands on their rows ([Popup menus](/settings#popup-menus)).
+- A Tools sidebar you arrange: which tools it shows, their order, and the tab it opens on ([Tools Sidebar](/settings#tools-sidebar)); and **Toast Position**, where messages such as **Undo** appear ([Notifications](/settings#notifications)).
 - Drag and drop in the manager like Chrome's: onto folders in the table or tree, between rows in browser order, and links in from other pages; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" />, and <Shortcut id="manager.paste" /> copy, move, and paste.
 - System, light, or dark theme.
 - <Languages of="extension" />.

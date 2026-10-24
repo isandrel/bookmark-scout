@@ -30,7 +30,7 @@ Details zur Datei:
 - Dateinamen beginnen mit dem **Dateinamenpräfix** (Standard `bookmarks_`) und behalten Ordnernamen mit Nicht-ASCII-Zeichen bei.
 - CSV-Dateien beginnen mit einer UTF-8-Bytereihenfolgemarke (BOM). Die Spalte „Ordner“ verbindet Ordner mit `/` und schreibt ein `/` innerhalb eines Ordnernamens als `\/` und einen Backslash als `\\`.
 - Trennlinien, die nur Firefox kennt, werden in HTML (`<HR>`) und JSON als Trennlinien geschrieben und kommen beim Import dieser Datei in Firefox als Trennlinien zurück. Markdown und CSV lassen sie aus, und Chrome und Edge, die keine Trennlinien haben, lassen sie beim Import aus; die Vorschau zählt sie.
-- **Datum einschließen** und **URLs einschließen** sowie die Einrückung für jedes Format befinden sich im Tab **Daten** der [Einstellungen](/settings).
+- **Datum einschließen** und **URLs einschließen** sowie die Einrückung für jedes Format befinden sich im Tab **Import & Export** der [Einstellungen](/settings#data).
 
 Ein JSON-Export enthält die Tags und die Zusammenfassung jedes Lesezeichens, und ein Import dieser Datei überträgt sie auf die Lesezeichen, die er anlegt, aber nicht auf die, die er als Duplikate überspringt. HTML-, Markdown- und CSV-Exporte enthalten sie nicht. Um Lesezeichen mit ihren Tags und Zusammenfassungen an ein KI-Tool zu übergeben, verwenden Sie das **KI-Kontextpaket**; siehe [KI-Tools einrichten](/guides/ai-tools#export-context-for-an-ai-chat).
 

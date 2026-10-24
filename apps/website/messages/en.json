@@ -128,7 +128,7 @@
           "Type a path such as ai/llms, and still find the folder with a small typo",
           "Press {{SHORTCUT:commands.quick-save}} on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
           "A page already in that folder is not saved twice, and folders you saved to recently come first",
-          "Save links from the right-click menu into recent folders, once you turn the menu on in Settings (it is off at first)",
+          "Save links, pages, or selected text from the right-click menu into recent folders, once you turn the menu on in Settings (it is off at first)",
           "With AI turned on, get folder suggestions for the page, or save to the first one with {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },

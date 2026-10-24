@@ -128,7 +128,7 @@
           "Einen Pfad wie ai/llms eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
           "Auf einer beliebigen Seite {{SHORTCUT:commands.quick-save}} drücken, um sie im am besten passenden Ordner zu speichern; eine kleine Benachrichtigung auf der Seite bietet Rückgängig und weitere Ordner an",
           "Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert, und Ordner, in denen Sie zuletzt gespeichert haben, stehen oben",
-          "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern, sobald Sie das Menü in den Einstellungen aktivieren (anfangs ist es aus)",
+          "Links, Seiten oder markierten Text über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern, sobald Sie das Menü in den Einstellungen aktivieren (anfangs ist es aus)",
           "Mit aktivierter KI Ordnervorschläge für die Seite erhalten oder mit {{SHORTCUT:commands.ai-quick-save}} im ersten Vorschlag speichern"
         ]
       },

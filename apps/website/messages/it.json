@@ -128,7 +128,7 @@
           "Digita un percorso come ai/llms e trova la cartella anche con un piccolo errore di battitura",
           "Premi {{SHORTCUT:commands.quick-save}} su qualsiasi pagina per salvarla nella cartella che le corrisponde meglio; una piccola notifica nella pagina offre Annulla e altre cartelle",
           "Una pagina già presente in quella cartella non viene salvata due volte, e le cartelle in cui hai salvato di recente compaiono per prime",
-          "Salva i link dal menu contestuale nelle cartelle recenti, dopo aver attivato il menu nelle Impostazioni (all'inizio è disattivato)",
+          "Salva link, pagine o testo selezionato dal menu contestuale nelle cartelle recenti, dopo aver attivato il menu nelle Impostazioni (all'inizio è disattivato)",
           "Con l'IA attiva, ricevi suggerimenti di cartelle per la pagina, oppure salva nel primo con {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },
