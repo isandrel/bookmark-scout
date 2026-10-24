@@ -106,6 +106,30 @@ async function chooseToolScope(extension: FirefoxExtension, tool: string, scope:
   await option.click();
 }
 
+/**
+ * Waits for a downloaded JSON file whose name matches and resolves to its name and text. Firefox
+ * writes a .part file first, and can show the final name before it has written all of the file,
+ * so the file counts only once its text parses.
+ */
+async function downloadedJson(extension: FirefoxExtension, name: RegExp) {
+  let file = { name: '', raw: '' };
+  await expect
+    .poll(() => {
+      const found = readdirSync(extension.downloadDirectory).find((entry) => name.test(entry));
+      if (!found) return '';
+      const raw = readFileSync(path.join(extension.downloadDirectory, found), 'utf8');
+      try {
+        JSON.parse(raw);
+      } catch {
+        return '';
+      }
+      file = { name: found, raw };
+      return found;
+    })
+    .toMatch(name);
+  return file;
+}
+
 const visibleRows = (extension: FirefoxExtension) => extension.countVisible('tbody tr');
 
 test('popup search finds a bookmark and hides non-matching ones', async ({ extension }) => {
@@ -720,14 +744,10 @@ test('a password-protected settings backup saves and restores with Web Crypto in
   await extension.driver
     .findElement(By.xpath('//*[@role="dialog"]//button[normalize-space()="Save backup"]'))
     .click();
-  let saved = '';
-  await expect
-    .poll(() => {
-      saved = readdirSync(extension.downloadDirectory).find((name) => name.endsWith('.json')) ?? '';
-      return saved;
-    })
-    .toMatch(/^bookmark-scout-backup_\d{4}-\d{2}-\d{2}_.+_protected\.json$/);
-  const raw = readFileSync(path.join(extension.downloadDirectory, saved), 'utf8');
+  const { raw } = await downloadedJson(
+    extension,
+    /^bookmark-scout-backup_\d{4}-\d{2}-\d{2}_.+_protected\.json$/,
+  );
   expect(JSON.parse(raw).sections).toEqual({});
   expect(raw).not.toContain('dark');
 
@@ -858,16 +878,10 @@ test('JSON export downloads the folder and importing it restores a deleted bookm
   await chooseToolScope(extension, 'Export Bookmarks', 'E2E Firefox Data');
   await clickToolButton(extension, 'Export Bookmarks', 'Export');
 
-  let exportedName = '';
-  await expect
-    .poll(() => {
-      // Firefox writes a .part file while downloading.
-      exportedName =
-        readdirSync(extension.downloadDirectory).find((name) => name.endsWith('.json')) ?? '';
-      return exportedName;
-    })
-    .toMatch(/^bookmarks_E2E_Firefox_Data_\d{4}-\d{2}-\d{2}\.json$/);
-  const raw = readFileSync(path.join(extension.downloadDirectory, exportedName), 'utf8');
+  const { raw } = await downloadedJson(
+    extension,
+    /^bookmarks_E2E_Firefox_Data_\d{4}-\d{2}-\d{2}\.json$/,
+  );
   expect(raw).toContain('Round Trip Link');
   expect(raw).toContain('"type": "separator"');
   expect(raw).not.toContain('data:');
