@@ -222,9 +222,19 @@ export default async ({ context, id, sw, log }: Ctx) => {
   const refreshIcons = async (page: Page, tag: string) => {
     await page.goto(url('bookmarks.html'));
     await page.getByRole('button', { name: 'Show tools' }).click();
-    await domClick(toolCard(page, 'Refresh Site Icons').getByRole('button').last());
+    // The sidebar opens on its Start Tab (Maintenance); Refresh Site Icons is under Page Details.
+    await page.getByTestId('tools-tabs').getByRole('radio', { name: 'Page Details' }).click();
+    await domClick(toolCard(page, 'Refresh Site Icons').getByRole('button', { name: 'Refresh', exact: true }));
     const save = page.getByRole('dialog').getByRole('button', { name: /^Save \d+ icons?/ });
-    await save.waitFor({ timeout: 180_000 });
+    // The review opens when the run ends. A later pass may find no new icon, and then the review
+    // has no Save button.
+    await page.getByRole('dialog', { name: 'Refresh Site Icons' }).waitFor({ timeout: 180_000 });
+    await page.waitForTimeout(3000);
+    if (!(await save.count())) {
+      log(`[icons] ${tag}: nothing new to save`);
+      await page.keyboard.press('Escape');
+      return;
+    }
     let label = '';
     for (let second = 0; second < 30; second++) {
       await page.waitForTimeout(1000);
@@ -250,7 +260,9 @@ export default async ({ context, id, sw, log }: Ctx) => {
   await icons.setViewportSize(VIEWPORT);
   for (let attempt = 0; attempt < 3; attempt++) {
     await refreshIcons(icons, `real sites, pass ${attempt + 1}`);
-    if (!(await missingIcons()).length) break;
+    const left = await missingIcons();
+    if (!left.length) break;
+    log(`[icons] still without an icon: ${left.join(' ')}`);
   }
   for (const article of Object.values(ARTICLES)) {
     const html = readFileSync(path.join(ASSETS, `${article.file}.html`), 'utf8');
