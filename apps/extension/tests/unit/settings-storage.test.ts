@@ -173,6 +173,20 @@ describe('settings persistence', () => {
     expect((await getSettings()).quickSaveFixedFolder).toBe('42');
   });
 
+  it('keeps the settings that take covers without a click on this device', async () => {
+    // Capture Covers While Browsing needs access to all pages, granted per browser, and the
+    // pictures stay on the device that took them.
+    const covers = {
+      coversBrowseCapture: true,
+      coversBrowseCapturePrivate: true,
+      quickSaveCover: true,
+    } as const;
+    await saveSettings(covers);
+    expect(await readStored()).toBeUndefined();
+    expect(await readStoredOnDevice()).toEqual(covers);
+    expect(await getSettings()).toMatchObject(covers);
+  });
+
   it('keeps each list setting in its own synced item, and writes only the list that changed', async () => {
     await saveSettings({ urlCleanerRemoveParams: ['utm_*'], theme: 'dark' });
     expect(await readStored()).toEqual({ theme: 'dark' });
