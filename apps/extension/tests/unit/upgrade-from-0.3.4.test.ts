@@ -5,7 +5,8 @@
  * a value the schema no longer accepts falls back to its default. Since 0.3.4, list settings moved
  * out of the settings item into an item each (`2026-10-sync-list-shards`), the right-click menu got
  * its own recent folder count (`2026-10-context-menu-recent-max`), and lists of shown ids mark the
- * ids the user hid (`lib/shown-ids.ts`), which 0.3.4's item menu did not.
+ * ids the user hid (`lib/shown-ids.ts`), which 0.3.4's item menu did not: the sync list migration
+ * writes it in that form.
  *
  * The fixtures below are frozen copies of what 0.3.4 stored and accepted (`git show v0.3.4:` of its
  * `storage/registry.ts`, `settings-schema.ts`, `config/settings/*.toml`, and `config/ui/
@@ -47,6 +48,7 @@ import {
   registerStorageMigrations,
   settingsOverrideValues,
 } from '@/lib/settings-storage';
+import { splitShownIds } from '@/lib/shown-ids';
 import { registerStorageCleanup } from '@/lib/storage/cleanup';
 import { MIGRATIONS } from '@/lib/storage/migrations';
 import { isRegisteredKey, STORAGE_ITEMS, type StorageItem } from '@/lib/storage/registry';
@@ -268,6 +270,22 @@ const SYNCED_OVERRIDES_0_3_4 = {
   deadLinksSuccessStatuses: [200, 204, 301],
   privacyScannerSensitiveParams: ['secret', 'token'],
 };
+
+/** `managerMenuActions` above in the form menus are stored in now (`encodeMenu`). */
+const ITEM_MENU_MARKED = [
+  '-edit',
+  '-copyId',
+  'cut',
+  'copyFolderLink',
+  '-openInNewTab',
+  '-delete',
+  '!showInFolder',
+  '!viewDetails',
+  '!copy',
+  '!paste',
+  '!openInNewWindow',
+  '!openInPrivateWindow',
+];
 
 const DEVICE_OVERRIDES_0_3_4 = {
   quickSaveFixedFolder: '42',
@@ -512,7 +530,10 @@ describe('updating from 0.3.4', () => {
       await seed0_3_4Profile();
       await run();
       const settings = await getSettings();
-      expect(settings).toMatchObject({ ...SYNCED_OVERRIDES_0_3_4, ...DEVICE_OVERRIDES_0_3_4 });
+      const { managerMenuActions: _menu, ...synced } = SYNCED_OVERRIDES_0_3_4;
+      expect(settings).toMatchObject({ ...synced, ...DEVICE_OVERRIDES_0_3_4 });
+      // The item menu in the form menus are stored in now, the rest of 0.3.4's menu hidden.
+      expect(settings.managerMenuActions).toEqual(ITEM_MENU_MARKED);
       // 0.3.4's one count for the popup and the right-click menu, now the menu's own.
       expect(settings.contextMenuRecentMax).toBe(SYNCED_OVERRIDES_0_3_4.recentFoldersMax);
       // Settings 0.3.4 left at their default follow this release's default.
@@ -529,7 +550,10 @@ describe('updating from 0.3.4', () => {
         .filter((key) => key in SYNCED_OVERRIDES_0_3_4)
         .map((key) => [key, SYNCED_OVERRIDES_0_3_4[key as keyof typeof SYNCED_OVERRIDES_0_3_4]]),
     );
-    await expect.poll(() => settingsOverrideValues.lists.get()).toEqual(lists);
+    await expect
+      .poll(() => settingsOverrideValues.lists.get())
+      .toEqual({ ...lists, managerMenuActions: ITEM_MENU_MARKED });
+    // The settings item keeps them as 0.3.4 wrote them, for devices still on 0.3.4.
     expect(await settingsOverrideValues.sync.get()).toMatchObject(lists);
     // The device list stays on this device.
     expect(await settingsOverrideValues.device.get()).toMatchObject({
@@ -558,6 +582,16 @@ describe('updating from 0.3.4', () => {
     for (const id of addedSince) expect(shown, id).toContain(id);
     for (const id of menu0_3_4.filter((id) => !stored.includes(id))) {
       expect(shown, id).not.toContain(id);
+    }
+    // An action the menu gains later shows too, with no entry anywhere: the stored menu names
+    // only 0.3.4's actions, so any other is one added since.
+    const { shown: named, added } = splitShownIds(
+      ITEM_MENU_MARKED.map((entry) => entry.replace(/^-/, '')),
+      [...ACTION_MENUS.item.flat(), 'futureAction'],
+    );
+    expect(added).toContain('futureAction');
+    for (const id of menu0_3_4.filter((id) => !stored.includes(id))) {
+      expect([...named, ...added], id).not.toContain(id);
     }
   });
 

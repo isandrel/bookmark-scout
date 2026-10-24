@@ -166,19 +166,23 @@ describe('bookmark action menus', () => {
 
   it('hide and reorder item-menu actions as the user arranged them', () => {
     expect(customizeMenu('item', [])).toEqual(ACTION_MENUS.item);
-    // A list 0.3.4 stored, with no marks: order follows it within each configured group, and the
-    // actions it leaves out are hidden, except those the menu gained since 0.3.4, which show in
-    // their configured place.
-    expect(customizeMenu('item', ['delete', 'viewDetails', 'copy', 'edit', 'cut'])).toEqual([
-      ['viewDetails', 'preview', 'edit'],
-      ['copy', 'cut'],
-      ['fetchCover', 'removeCover', 'delete'],
-    ]);
-    const custom = customizeMenu('item', ['copyId', 'edit']);
+    // The user's sections and order, without what they hid; actions the list does not name show
+    // in their configured place. (0.3.4's unmarked item menu is converted by its storage
+    // migration, `tests/unit/migrations/2026-10-sync-list-shards.test.ts`.)
+    const hidden = ACTION_MENUS.item
+      .flat()
+      .filter((id) => !['preview', 'edit', 'copyId'].includes(id))
+      .map((id) => `!${id}`);
+    const custom = customizeMenu('item', ['-copyId', '-edit', ...hidden]);
+    expect(custom).toEqual([['copyId'], ['preview', 'edit']]);
     expect(getItemMenuSections([link], createItemHost(), custom)).toEqual([
-      ['preview', 'edit'],
       ['copyId'],
+      ['preview', 'edit'],
     ]);
+    // A list with no marks reads as any list of shown ids: its order kept, every other action shown.
+    const plain = customizeMenu('item', ['delete', 'edit']).flat();
+    expect([...plain].sort()).toEqual([...ACTION_MENUS.item.flat()].sort());
+    expect(plain.indexOf('delete')).toBeLessThan(plain.indexOf('edit'));
     // Hidden once more, they stay hidden.
     const rearranged = encodeMenu('item', [['edit'], ['copyId']]);
     expect(customizeMenu('item', rearranged)).toEqual([['edit'], ['copyId']]);

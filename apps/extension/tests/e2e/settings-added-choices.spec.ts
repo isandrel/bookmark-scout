@@ -1,14 +1,15 @@
 /**
  * Lists of what a part of a page shows (`src/lib/shown-ids.ts`): a choice added after the user
  * arranged a list shows until they hide it, and what they hid stays hidden. Also the manager's item
- * menu as 0.3.4 stored it, before menus named their hidden actions.
+ * menu as 0.3.4 stored it, before menus named their hidden actions, which the storage migration
+ * `2026-10-sync-list-shards` writes in the new form (deleted with it).
  */
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { managerRow, managerUrl } from './manager-helpers';
 import { openOptionsTab } from './options-helpers';
 import { openPopup } from './popup-helpers';
-import { readSettings, setSettings } from './storage';
+import { readSettings, readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 import { seedFolder } from './tool-helpers';
 
 test.use({ viewport: { width: 1400, height: 900 } });
@@ -28,12 +29,19 @@ test('an item menu arranged in 0.3.4 shows the actions added since, and keeps hi
   const { folderId } = await seedFolder(extensionWorker, 'E2E Added Actions', [
     { title: 'Added Actions Link', url: 'https://added-actions.e2e.invalid/' },
   ]);
-  // As 0.3.4 stored it: the actions shown, Copy Bookmark ID left out (hidden), and no Preview,
-  // which the menu gained later.
-  await setSettings(extensionWorker, {
+  // As 0.3.4 stored it, in the settings item: the actions shown, Copy Bookmark ID left out
+  // (hidden), and no Preview, which the menu gained later.
+  await writeStored(extensionWorker, STORAGE_ITEMS.settings, {
     language: 'en',
     managerMenuActions: ['edit', 'viewDetails', 'copy', 'openInNewTab', 'delete'],
   });
+  // Moved to its own item with what 0.3.4 hid marked hidden, and nothing for Preview.
+  await expect
+    .poll(() => readStored(extensionWorker, STORAGE_ITEMS.settingsList, 'managerMenuActions'))
+    .toContain('!copyId');
+  expect(
+    await readStored<string[]>(extensionWorker, STORAGE_ITEMS.settingsList, 'managerMenuActions'),
+  ).not.toContain('!preview');
   await page.goto(managerUrl(extensionId, folderId));
   await managerRow(page, 'Added Actions Link').click({ button: 'right' });
   await expect.poll(() => menuItemNames(page)).toContain('Preview');

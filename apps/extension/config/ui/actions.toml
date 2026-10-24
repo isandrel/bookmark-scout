@@ -20,15 +20,6 @@ empty_space = [["addBookmark", "addFolder"], ["paste"]]
 # the bookmark it shows. Open is the manager's Open: a new tab in front, as Enter does.
 preview = [["openInNewTab"], ["copy", "edit"]]
 
-[item_menu_0_3_4]
-# An item menu the user arranged in 0.3.4 (stored with no section marks) names only the actions it
-# shows, so an action it leaves out was hidden, except these, which the item menu gained after
-# 0.3.4: they show until the user hides them. Menus stored since name hidden actions too
-# (src/lib/shown-ids.ts), but an item menu 0.3.4 stored keeps its form until the user changes the
-# menu, so every action the item menu gains later needs an entry here as well
-# (tests/unit/upgrade-from-0.3.4.test.ts fails without one).
-added_since = ["preview", "fetchCover", "removeCover"]
-
 [keep_one_of]
 # Options > Behavior > Bookmark manager menus keeps at least one of these shown in the menu they
 # are listed for, so the item menu always has a command for any one bookmark or folder. Each must be

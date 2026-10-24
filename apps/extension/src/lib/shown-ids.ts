@@ -14,8 +14,9 @@
  * way in `config/settings/`.
  *
  * Lists saved before hidden ids were marked (builds before 0.3.5 that never reached a store
- * release, except the item menu, which `customizeMenu` reads as 0.3.4 wrote it) show the ids they
- * left out once more, until the user hides them again.
+ * release) show the ids they left out once more, until the user hides them again. The item menu
+ * 0.3.4 stored is the exception: the storage migration `2026-10-sync-list-shards` writes it with
+ * the actions it left out marked hidden (`markItemMenu0_3_4`).
  */
 
 /** Marks an id the user hid in a stored list of shown ids. */
