@@ -6708,7 +6708,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Paramètres conservés pour cet ordinateur uniquement : disposition, barres latérales, raccourcis clavier, dossier d'enregistrement rapide, automatisation des Règles intelligentes et accès pour les agents d'IA locaux.",
+        "message": "Paramètres conservés pour cet ordinateur uniquement : disposition, barres latérales, raccourcis clavier, capture des couvertures, dossier d'enregistrement rapide, automatisation des Règles intelligentes et accès pour les agents d'IA locaux.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8726,7 +8726,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "Ne jamais lire les pages de votre réseau local (comme un routeur ou un intranet), pour que leur contenu n'arrive pas chez une entreprise d'IA",
+        "message": "Ne jamais lire les pages de votre réseau local (comme un routeur ou un intranet), pour que leur contenu n'arrive pas chez une entreprise d'IA. Indexer le texte des pages et Récupérer les couvertures les ignorent aussi, et l'enregistrement rapide n'en télécharge aucune couverture",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

@@ -6708,7 +6708,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Ajustes guardados solo para este equipo: diseño, barras laterales, combinaciones de teclas, la carpeta de guardado rápido, la automatización de las Reglas inteligentes y el acceso para agentes de IA locales.",
+        "message": "Ajustes guardados solo para este equipo: diseño, barras laterales, combinaciones de teclas, la captura de portadas, la carpeta de guardado rápido, la automatización de las Reglas inteligentes y el acceso para agentes de IA locales.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8726,7 +8726,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "No leer nunca páginas de tu red local (como un router o una intranet), para que su contenido no llegue a una empresa de IA",
+        "message": "No leer nunca páginas de tu red local (como un router o una intranet), para que su contenido no llegue a una empresa de IA. Indexar texto de páginas y Obtener portadas también las omiten, y el guardado rápido no descarga portadas de ellas",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

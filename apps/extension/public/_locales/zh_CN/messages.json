@@ -6462,7 +6462,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "仅为此电脑保存的设置：布局、侧栏、键盘按键、快速保存文件夹、智能规则自动运行，以及本地 AI 智能体的访问权限。",
+        "message": "仅为此电脑保存的设置：布局、侧栏、键盘按键、封面捕获、快速保存文件夹、智能规则自动运行，以及本地 AI 智能体的访问权限。",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8440,7 +8440,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "从不读取本地网络中的网页（例如路由器或内网），以免其内容发送给 AI 公司",
+        "message": "从不读取本地网络中的网页（例如路由器或内网），以免其内容发送给 AI 公司。索引网页正文和获取封面也会跳过这些网页，快速保存也不会从中下载封面",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

@@ -6446,7 +6446,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Setelan yang hanya disimpan untuk komputer ini: tata letak, bilah samping, tombol keyboard, folder simpan cepat, otomatisasi Aturan Pintar, dan akses untuk agen AI lokal.",
+        "message": "Setelan yang hanya disimpan untuk komputer ini: tata letak, bilah samping, tombol keyboard, pengambilan sampul, folder simpan cepat, otomatisasi Aturan Pintar, dan akses untuk agen AI lokal.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8416,7 +8416,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "Jangan pernah membaca halaman di jaringan lokal Anda (seperti router atau intranet), agar kontennya tidak sampai ke perusahaan AI",
+        "message": "Jangan pernah membaca halaman di jaringan lokal Anda (seperti router atau intranet), agar kontennya tidak sampai ke perusahaan AI. Indeks Teks Halaman dan Ambil Sampul juga melewatinya, dan simpan cepat tidak mengunduh sampul darinya",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

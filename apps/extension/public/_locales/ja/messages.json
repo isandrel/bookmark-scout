@@ -6700,7 +6700,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "このパソコンだけに保存される設定: レイアウト、サイドバー、キーボードのキー、クイック保存のフォルダ、スマートルールの自動実行、ローカル AI エージェントのアクセス。",
+        "message": "このパソコンだけに保存される設定: レイアウト、サイドバー、キーボードのキー、カバー画像の撮影、クイック保存のフォルダ、スマートルールの自動実行、ローカル AI エージェントのアクセス。",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8678,7 +8678,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "ローカルネットワーク上のページ（ルーターやイントラネットなど）は読まず、その内容が AI 企業に届かないようにします",
+        "message": "ローカルネットワーク上のページ（ルーターやイントラネットなど）は読まず、その内容が AI 企業に届かないようにします。ページ本文の索引とカバー画像の取得もこれらのページをスキップし、クイック保存でもカバー画像をダウンロードしません",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

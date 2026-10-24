@@ -6708,7 +6708,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Settings kept for this computer only: layout, sidebars, keyboard keys, the quick save folder, Smart Rules automation, and access for local AI agents.",
+        "message": "Settings kept for this computer only: layout, sidebars, keyboard keys, cover capture, the quick save folder, Smart Rules automation, and access for local AI agents.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8726,7 +8726,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "Never read pages on your local network (such as a router or an intranet), so their content does not reach an AI company",
+        "message": "Never read pages on your local network (such as a router or an intranet), so their content does not reach an AI company. Index Page Text and Fetch Covers skip them too, and quick save downloads no cover from them",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

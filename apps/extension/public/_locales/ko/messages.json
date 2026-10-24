@@ -6700,7 +6700,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "이 컴퓨터에만 저장되는 설정입니다: 레이아웃, 사이드바, 키보드 키, 빠른 저장 폴더, 스마트 규칙 자동화, 로컬 AI 에이전트 접근.",
+        "message": "이 컴퓨터에만 저장되는 설정입니다: 레이아웃, 사이드바, 키보드 키, 표지 캡처, 빠른 저장 폴더, 스마트 규칙 자동화, 로컬 AI 에이전트 접근.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8678,7 +8678,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "로컬 네트워크의 페이지(라우터나 인트라넷 등)는 읽지 않아 그 내용이 AI 회사에 전달되지 않게 합니다",
+        "message": "로컬 네트워크의 페이지(라우터나 인트라넷 등)는 읽지 않아 그 내용이 AI 회사에 전달되지 않게 합니다. 페이지 본문 색인과 표지 가져오기도 이 페이지를 건너뛰고, 빠른 저장도 여기서 표지를 내려받지 않습니다",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

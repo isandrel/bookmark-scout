@@ -6708,7 +6708,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Configurações mantidas só neste computador: layout, barras laterais, teclas do teclado, a pasta de salvamento rápido, a automação das Regras inteligentes e o acesso de agentes de IA locais.",
+        "message": "Configurações mantidas só neste computador: layout, barras laterais, teclas do teclado, a captura de capas, a pasta de salvamento rápido, a automação das Regras inteligentes e o acesso de agentes de IA locais.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8726,7 +8726,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "Nunca ler páginas da sua rede local (como um roteador ou uma intranet), para que o conteúdo não chegue a uma empresa de IA",
+        "message": "Nunca ler páginas da sua rede local (como um roteador ou uma intranet), para que o conteúdo não chegue a uma empresa de IA. Indexar texto das páginas e Buscar capas também as pulam, e o salvamento rápido não baixa capas delas",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {
