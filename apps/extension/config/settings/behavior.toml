@@ -33,8 +33,9 @@ confirm_open_above = { default = 15, min = 2, max = 200, step = 1 }
 # place, so empty means that file's menu. `actions` is the item menu
 # (right-click and ⋯), `organize` the header's ⋮ menu, `empty_space` the right-click menu on the
 # table's empty space, and `preview` the buttons of a bookmark's preview. An item menu stored by
-# 0.3.4 has no marks: it keeps that file's sections, with the actions it lists in its order, and
-# shows the actions added since 0.3.4 ([item_menu_0_3_4] there). Each holds at most its menu's
+# 0.3.4 has no marks and names only the actions it shows; the storage migration
+# 2026-10-sync-list-shards writes it in this form, the rest of 0.3.4's menu hidden, so actions
+# added since 0.3.4 show. Each holds at most its menu's
 # actions (`max_items`), each id and its "-" or "!" at most
 # `max_length` long (tests/unit/action-menus.test.ts checks both against the menus). All four
 # sync, each in its own synced item.

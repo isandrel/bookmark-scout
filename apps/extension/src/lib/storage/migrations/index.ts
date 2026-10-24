@@ -57,7 +57,10 @@ export type StorageMigration = {
   readonly id: string;
   /** What it moves, from where to where. */
   readonly description: string;
-  /** The package version when it was added; it first ships in the next release. */
+  /**
+   * The first release that ships it: the release after the last store release, which is ahead
+   * of the package version until the release change raises it.
+   */
   readonly addedIn: string;
   /**
    * The first package version that should no longer carry it: a unit test fails from then on, so

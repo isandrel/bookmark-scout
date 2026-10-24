@@ -168,7 +168,8 @@ test('Options keeps one command that works on any item in the manager menus', as
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { managerMenuActions: ['viewDetails', 'delete'] });
+  // View Details shown, Copy Bookmark ID hidden: the last of the two that may not all go.
+  await setSettings(extensionWorker, { managerMenuActions: ['-viewDetails', 'delete', '!copyId'] });
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.getByRole('tab', { name: 'Behavior' }).click();
   const panel = page.getByTestId('manager-menus');

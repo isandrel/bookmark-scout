@@ -1,5 +1,6 @@
 /**
- * Updating from 0.3.3, the last store release. Data from releases before 0.3.3 is removed on
+ * Updating from 0.3.3, the store release before 0.3.4, which users who skipped 0.3.4 still update
+ * from (`upgrade-from-0.3.4.test.ts` covers 0.3.4). Data from releases before 0.3.3 is removed on
  * update, but what 0.3.3 stored must still be read: the background removes every key the registry
  * no longer lists, a settings key that is gone or moved to the other scope is dropped on read, and
  * a value the schema no longer accepts falls back to its default. The fixtures below are frozen
@@ -263,7 +264,23 @@ describe('updating from 0.3.3', () => {
   it("reads 0.3.3's settings back, with defaults for the settings added since", async () => {
     await seed0_3_3Profile();
     const settings = await getSettings();
-    expect(settings).toMatchObject({ ...SYNCED_OVERRIDES_0_3_3, ...DEVICE_OVERRIDES_0_3_3 });
+    const { managerMenuActions: _menu, ...synced } = SYNCED_OVERRIDES_0_3_3;
+    expect(settings).toMatchObject({ ...synced, ...DEVICE_OVERRIDES_0_3_3 });
+    // The item menu (the same as 0.3.4's) in the form menus are stored in now, the rest hidden.
+    expect(settings.managerMenuActions).toEqual([
+      '-edit',
+      '-copy',
+      '-delete',
+      '!showInFolder',
+      '!viewDetails',
+      '!cut',
+      '!paste',
+      '!copyFolderLink',
+      '!copyId',
+      '!openInNewTab',
+      '!openInNewWindow',
+      '!openInPrivateWindow',
+    ]);
     expect(settings.aiOutputLanguage).toBe(defaultSettings.aiOutputLanguage);
     expect(settings.autoTaggingSendExistingTags).toBe(defaultSettings.autoTaggingSendExistingTags);
     // Settings 0.3.3 left at their default follow this release's default.

@@ -14,7 +14,10 @@ import {
   saveSettings,
   settingsOverrideValues,
 } from '@/lib/settings-storage';
-import { syncListShards } from '@/lib/storage/migrations/2026-10-sync-list-shards';
+import {
+  markItemMenu0_3_4,
+  syncListShards,
+} from '@/lib/storage/migrations/2026-10-sync-list-shards';
 import { storageKey } from '@/lib/storage/registry';
 import { installFakeBookmarks } from '../../fake-bookmarks';
 import { formatOneFile, restoreParts, stubManifestVersion } from '../backup-helpers';
@@ -50,6 +53,21 @@ const DEVICE_MENUS = {
   popupFolderMenu: ['addFolder'],
   managerCardSize: 'small',
 };
+
+/** 0.3.4's item menu but Edit, marked hidden. */
+const HIDDEN_BESIDE_EDIT = [
+  '!showInFolder',
+  '!viewDetails',
+  '!cut',
+  '!copy',
+  '!paste',
+  '!copyFolderLink',
+  '!copyId',
+  '!openInNewTab',
+  '!openInNewWindow',
+  '!openInPrivateWindow',
+  '!delete',
+];
 
 const listItems = () => settingsOverrideValues.lists.get();
 const completed = () => readStoredData(STORAGE_ITEMS.storageMigrations);
@@ -91,7 +109,8 @@ describe('each list setting in its own item', () => {
     expect(set).toHaveBeenCalledOnce();
     expect(await listItems()).toEqual({
       urlCleanerRemoveParams: ['utm_*'],
-      managerMenuActions: ['edit'],
+      // With no marks, in the form menus are stored in now: the rest of 0.3.4's menu hidden.
+      managerMenuActions: ['-edit', ...HIDDEN_BESIDE_EDIT],
       askAiDisabledActions: ['deleteBookmarks'],
       privacyScannerSensitiveParams: ['secret'],
       managerOrganizeMenu: ['addFolder', 'sortByName'],
@@ -314,7 +333,57 @@ describe('each list setting in its own item', () => {
     expect(await readStoredData(STORAGE_ITEMS.settingsList, 'popupBookmarkMenu')).toEqual([
       'delete',
     ]);
+    expect(await readStoredData(STORAGE_ITEMS.settingsList, 'managerMenuActions')).toEqual([
+      '-edit',
+      ...HIDDEN_BESIDE_EDIT,
+    ]);
     // The old item in a file is not restored.
     expect(await readStoredRaw(OLD_ITEM)).toBeUndefined();
+  });
+});
+
+describe('the item menu as 0.3.4 stored it', () => {
+  it("keeps 0.3.4's sections and the user's order, and marks the rest of its menu hidden", () => {
+    expect(markItemMenu0_3_4(['delete', 'copyId', 'edit', 'cut', 'copyId'])).toEqual([
+      '-edit',
+      '-copyId',
+      'cut',
+      '-delete',
+      '!showInFolder',
+      '!viewDetails',
+      '!copy',
+      '!paste',
+      '!copyFolderLink',
+      '!openInNewTab',
+      '!openInNewWindow',
+      '!openInPrivateWindow',
+    ]);
+    // An action 0.3.4 did not have is not named, so it shows wherever it is configured.
+    expect(markItemMenu0_3_4(['preview', 'edit'])).toEqual(['-edit', ...HIDDEN_BESIDE_EDIT]);
+  });
+
+  it('leaves a marked, empty, or malformed list as it is', () => {
+    for (const stored of [
+      ['-edit', 'delete'],
+      ['edit', '!delete'],
+      [],
+      ['edit', 3],
+      'edit',
+      null,
+    ]) {
+      expect(markItemMenu0_3_4(stored)).toBe(stored);
+    }
+  });
+
+  it('reads a 0.3.4 item menu in the new form before and after it moves', async () => {
+    await seedStored(STORAGE_ITEMS.settings, { managerMenuActions: ['edit'] });
+    expect((await getSettings()).managerMenuActions).toEqual(['-edit', ...HIDDEN_BESIDE_EDIT]);
+    await runStorageMigrations();
+    expect(await readStoredData(STORAGE_ITEMS.settingsList, 'managerMenuActions')).toEqual([
+      '-edit',
+      ...HIDDEN_BESIDE_EDIT,
+    ]);
+    // 0.3.4 keeps reading its own form.
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({ managerMenuActions: ['edit'] });
   });
 });

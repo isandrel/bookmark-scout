@@ -14,7 +14,7 @@ import type { StorageMigration } from './index';
 export const contextMenuRecentMax: StorageMigration = {
   id: '2026-10-context-menu-recent-max',
   description: "The popup's Recent Folders Max (0.3.4) to the right-click menu's own count",
-  addedIn: '0.3.4',
+  addedIn: '0.3.5',
   // Kept for at least three releases after the first one that carries it, and until the store
   // dashboards show no installs of 0.3.4 or older; move this on while they still do.
   removeAfter: '0.4.0',
