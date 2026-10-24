@@ -30,12 +30,12 @@
 
 ### Permissions and privacy
 
-- New optional permission, access to all websites (`<all_urls>`), asked for only when you turn on **Capture Covers While Browsing** (off by default), which needs it to take a picture of a tab without a click. It pictures only bookmarked pages in the active tab, never in private windows unless you also turn on **Also Capture in Private Windows**, never sites you list under **Never Capture These Sites**, and the pictures stay on this device. While it is allowed, the website tools no longer ask for each run.
+- New optional permission, access to all websites (`<all_urls>`), asked for only when you turn on **Capture Covers While Browsing** (off by default), which needs it to take a picture of a tab without a click. It pictures only bookmarked pages in the active tab, never in private windows unless you also turn on **Also Capture in Private Windows**, never sites you list under **Never Capture These Sites**, and the pictures stay on this device. Since that access is granted per browser, this setting, **Also Capture in Private Windows**, and **Save a Cover With Quick Save** stay on this device and do not sync. While it is allowed, the website tools no longer ask for each run.
 - New required permission, `alarms`, which shows no prompt: it lets a background task pick up again after the browser stops the extension's background.
 - Index Page Text and Fetch Covers ask for website access only for the sites in their run, like the other website tools, and request pages only from the bookmarked sites, without cookies. Cover images come only from the page's own site or a site you allowed, and a redirect is never followed to a site that was not checked first. Nothing new is sent to your AI service.
 - New data kept only on this device, never synced: the Bookmark history (with copies of deleted items for **Restore**), background tasks and their results, page text, covers, Smart Rules and what they changed, and the safety copy behind **Undo import**. Page text and covers are deleted with their bookmark, and page text also when you take back a site's access or add the site to **Never Read These Sites**. Covers leave the device only in a backup file, when you choose that part.
 - A backup file holds API keys only when you select **AI service keys**, and then they are encrypted with a password you choose, which is never stored and cannot be recovered. A whole backup file can be protected with a password too.
-- **Skip Local Network Pages** (on by default) now also applies when AI quick save or a local AI agent reads a page.
+- **Skip Local Network Pages** (on by default) now also applies when AI quick save or a local AI agent reads a page, and to Index Page Text, Fetch Covers, and the cover quick save downloads.
 - The privacy policy (effective 2026-10-23), docs, and store disclosures say all of this in every language.
 
 ### Fixes
