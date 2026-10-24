@@ -136,7 +136,7 @@
         "tab": "Trova e organizza",
         "heading": "Trova e organizza ciò che hai salvato",
         "caption": "La gestione preferiti sostituisce la pagina Preferiti di Chrome e funziona allo stesso modo, con un albero delle cartelle, il percorso di navigazione e una tabella ordinabile.",
-        "alt": "La gestione preferiti di Bookmark Scout sulla cartella AI / LLMs / Fine-tuning, con l'albero delle cartelle (AI, Dev, Design, Tools, Reading list), una casella di ricerca e la tabella dei preferiti, ognuno con l'icona del suo sito",
+        "alt": "La gestione preferiti mostra Reading list come riquadri: tre articoli con immagine di copertina, tag e riassunto, e tre siti come tessera con la loro icona, accanto all'albero delle cartelle",
         "points": [
           "Cerca in tutti i tuoi preferiti mentre digiti, per titolo, indirizzo, cartella, tag o riassunto e, se lo attivi, per le parole all'interno delle pagine salvate",
           "Tieni aperti lo stesso albero e la stessa ricerca nel riquadro laterale del browser (la barra laterale in Firefox)",

@@ -82,6 +82,8 @@ export const id: DocsCopy = {
       "Tab Dasar di Setelan: Folder Simpan Cepat, Folder Tujuan, Menu Klik Kanan (nonaktif), Tema, dan Bahasa",
     "options-ai":
       "Tab AI di Setelan: Fitur AI aktif, dan di bawah Tambahkan layanan ada dua layanan AI yang ditambahkan pengguna: perusahaan AI cloud dengan kuncinya disembunyikan, disetel sebagai default, dan model di komputer",
+    "manager-cards":
+      "Pengelola bookmark menampilkan Reading list sebagai kartu: tiga artikel dengan gambar sampul, tag, dan ringkasan, serta tiga situs berupa ubin dengan ikonnya, di samping hierarki folder",
   },
 
   /**

@@ -111,6 +111,8 @@ const en = {
       "The Essentials tab in Settings: Quick Save Folder, Folder to Save To, Right-Click Menu (off), Theme, and Language",
     "options-ai":
       "The AI tab in Settings: AI Features is on, and under Add service are two AI services the user added: a cloud AI company with its key hidden, set as the default, and a model on the computer",
+    "manager-cards":
+      "The bookmarks manager showing Reading list as cards: three articles with their cover pictures, tags, and summaries, and three sites shown as a tile with their icon, beside the folder tree",
   },
 
   /**

@@ -136,7 +136,7 @@
         "tab": "Temukan & atur",
         "heading": "Temukan dan atur yang sudah Anda simpan",
         "caption": "Pengelola ini menggantikan halaman Bookmark Chrome dan bekerja seperti aslinya, dengan hierarki folder, breadcrumb, dan tabel yang dapat diurutkan.",
-        "alt": "Pengelola Bookmark Scout di folder AI / LLMs / Fine-tuning, dengan hierarki folder (AI, Dev, Design, Tools, Reading list), satu kotak penelusuran, dan tabel bookmark, setiap bookmark dengan ikon situsnya",
+        "alt": "Pengelola bookmark menampilkan Reading list sebagai kartu: tiga artikel dengan gambar sampul, tag, dan ringkasan, serta tiga situs berupa ubin dengan ikonnya, di samping hierarki folder",
         "points": [
           "Telusuri semua bookmark Anda sambil mengetik, berdasarkan judul, alamat, folder, tag, atau ringkasan, dan, jika Anda mengaktifkannya, berdasarkan kata di dalam halaman yang disimpan",
           "Biarkan hierarki dan penelusuran yang sama tetap terbuka di panel samping browser (bilah samping di Firefox)",

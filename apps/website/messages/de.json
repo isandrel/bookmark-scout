@@ -136,7 +136,7 @@
         "tab": "Finden und ordnen",
         "heading": "Gespeichertes finden und ordnen",
         "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome und funktioniert wie sie, mit einem Ordnerbaum, einer Pfadnavigation und einer sortierbaren Tabelle.",
-        "alt": "Der Bookmark-Scout-Manager im Ordner AI / LLMs / Fine-tuning mit dem Ordnerbaum (AI, Dev, Design, Tools, Reading list), einem Suchfeld und der Lesezeichentabelle, jedes Lesezeichen mit dem Symbol seiner Website",
+        "alt": "Der Lesezeichen-Manager zeigt Reading list als Karten: drei Artikel mit Titelbild, Tags und Zusammenfassung und drei Websites als Kachel mit ihrem Symbol, neben dem Ordnerbaum",
         "points": [
           "Alle Ihre Lesezeichen schon beim Tippen durchsuchen, nach Titel, Adresse, Ordner, Tag oder Zusammenfassung, und, wenn Sie es einschalten, nach Wörtern in den gespeicherten Seiten",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",

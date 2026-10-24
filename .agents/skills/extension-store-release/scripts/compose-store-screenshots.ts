@@ -44,6 +44,7 @@ const FRAMES: [string, string[]][] = [
   ['04-tools-duplicates', ['duplicates']],
   ['05-settings', ['settings']],
   ['06-options-ai', ['options-ai']],
+  ['07-manager-cards', ['manager-cards']],
 ];
 
 /** The promo video's contour lines: deterministic, static, around three centers. */

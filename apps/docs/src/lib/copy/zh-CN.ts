@@ -79,6 +79,8 @@ export const zhCN: DocsCopy = {
       "设置中的“常用设置”标签页：快速保存文件夹、保存到的文件夹、右键菜单（关闭）、主题和语言",
     "options-ai":
       "设置中的 AI 标签页：AI 功能已开启，“添加服务”下方是用户添加的两个 AI 服务：一个隐藏了密钥的默认云端 AI 服务，以及一个在本机运行的模型",
+    "manager-cards":
+      "书签管理器以卡片显示 Reading list：三篇文章带有封面图、标签和摘要，另外三个网站显示为带有图标的图块，旁边是文件夹树",
   },
 
   /** Labels of Fumadocs' own UI (search, table of contents, page footer, switchers). */

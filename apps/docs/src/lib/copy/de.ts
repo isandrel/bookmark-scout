@@ -88,6 +88,8 @@ export const de: DocsCopy = {
       "Der Tab „Das Wichtigste“ in den Einstellungen: Ordner für Schnellspeichern, Zielordner, Rechtsklickmenü (aus), Design und Sprache",
     "options-ai":
       "Der Tab „KI“ in den Einstellungen: Die KI-Funktionen sind an, und unter „Dienst hinzufügen“ stehen zwei KI-Dienste, die der Nutzer hinzugefügt hat: ein KI-Anbieter im Internet mit verborgenem Schlüssel als Standard und ein Modell auf dem eigenen Computer",
+    "manager-cards":
+      "Der Lesezeichen-Manager zeigt Reading list als Karten: drei Artikel mit Titelbild, Tags und Zusammenfassung und drei Websites als Kachel mit ihrem Symbol, neben dem Ordnerbaum",
   },
 
   /**
