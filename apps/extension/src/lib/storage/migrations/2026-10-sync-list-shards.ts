@@ -51,7 +51,7 @@ export const syncListShards: StorageMigration = {
   description:
     'List settings from the settings item (0.3.4) and the shared lists item, and the menus kept ' +
     'on each device, to an item per list',
-  addedIn: '0.3.4',
+  addedIn: '0.3.5',
   // Kept for at least three releases after the first one that carries it, and until the store
   // dashboards show no installs of 0.3.4 or older; move this on while they still do.
   removeAfter: '0.4.0',
