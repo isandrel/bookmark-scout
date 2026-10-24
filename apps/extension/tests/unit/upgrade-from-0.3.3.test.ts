@@ -1,5 +1,6 @@
 /**
- * Updating from 0.3.3, the last store release. Data from releases before 0.3.3 is removed on
+ * Updating from 0.3.3, the store release before 0.3.4, which users who skipped 0.3.4 still update
+ * from (`upgrade-from-0.3.4.test.ts` covers 0.3.4). Data from releases before 0.3.3 is removed on
  * update, but what 0.3.3 stored must still be read: the background removes every key the registry
  * no longer lists, a settings key that is gone or moved to the other scope is dropped on read, and
  * a value the schema no longer accepts falls back to its default. The fixtures below are frozen
