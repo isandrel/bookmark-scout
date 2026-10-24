@@ -43,11 +43,7 @@ import {
   type Settings,
   settingsSchema,
 } from '@/lib/settings-schema';
-import {
-  getSettings,
-  registerStorageMigrations,
-  settingsOverrideValues,
-} from '@/lib/settings-storage';
+import { getSettings, runStorageMigrations, settingsOverrideValues } from '@/lib/settings-storage';
 import { splitShownIds } from '@/lib/shown-ids';
 import { registerStorageCleanup } from '@/lib/storage/cleanup';
 import { MIGRATIONS } from '@/lib/storage/migrations';
@@ -409,14 +405,26 @@ async function seed0_3_4Profile() {
   });
 }
 
-/** The background after the update is installed: cleanup, then the migrations, as it starts. */
+/**
+ * What the background does once the update is installed: the cleanup the update event starts,
+ * then the storage migrations, each awaited to the end. The background runs the migrations
+ * through `registerStorageMigrations` (at start, on the event, and on sync changes; covered in
+ * `migrations/2026-10-sync-list-shards.test.ts`), whose runs nothing here could wait for: one still
+ * going when the next test reset storage recorded the migration as run in that test's fresh
+ * profile without its lists, so that test read the item menu at its default. Where Node has no
+ * Web Locks (as on CI) the run took long enough to overlap.
+ */
 async function update() {
   registerStorageCleanup();
-  registerStorageMigrations();
   await fakeBrowser.runtime.onInstalled.trigger({
     reason: 'update',
     previousVersion: '0.3.4',
   } as Browser.runtime.InstalledDetails);
+  // The cleanup goes through the areas in turn and ends with this device's old key.
+  await expect
+    .poll(async () => Object.keys(await fakeBrowser.storage.local.get()))
+    .not.toContain('bookmark-scout-ai');
+  await runStorageMigrations();
 }
 
 const accepts = (key: string, value: unknown) =>
