@@ -1,14 +1,14 @@
 # German Listing Copy (Deutsch)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-19, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters. The full descriptions and What's new were measured on 2026-10-23; the other blocks keep their earlier counts.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 130 |
 | Firefox Add-ons summary | 246 |
-| Full description, Chrome and Edge | 11,290 |
-| Full description, Firefox | 6,637 |
-| What's new in 0.3.3 | 1,324 |
+| Full description, Chrome and Edge | 13,241 |
+| Full description, Firefox | 7,298 |
+| What's new in 0.3.5 | 1,391 |
 
 ## Name
 
@@ -58,7 +58,7 @@ IN SEKUNDEN IM RICHTIGEN ORDNER SPEICHERN
 • Einen Pfad wie ai/llms eingeben; ein kleiner Tippfehler findet den Ordner trotzdem, und zuletzt verwendete Ordner stehen oben
 • Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
 • Optionale KI schlägt den besten Ordner für die Seite vor oder einen neuen Ordner, den Sie prüfen, bevor er erstellt wird
-• Optionales Rechtsklickmenü (anfangs aus; aktivieren Sie „Rechtsklickmenü“ in den Einstellungen), um Links in zuletzt verwendeten Ordnern zu speichern
+• Optionales Rechtsklickmenü (anfangs aus; aktivieren Sie „Rechtsklickmenü“ in den Einstellungen), um einen Link oder die geöffnete Seite in einem zuletzt verwendeten Ordner zu speichern
 
 TASTENKÜRZEL ZUM SCHNELLSPEICHERN
 • Auf einer beliebigen Seite ⌥⇧S auf dem Mac (Alt+Shift+S unter Windows und Linux) drücken, um sie zu speichern, ohne Bookmark Scout zu öffnen: standardmäßig im Ordner, der am besten zur Seite passt (ermittelt auf Ihrem Gerät), oder im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl
@@ -67,9 +67,10 @@ TASTENKÜRZEL ZUM SCHNELLSPEICHERN
 • Die Tasten ändern Sie auf der Seite für Tastenkombinationen des Browsers. Dort können Sie dem Schnellspeichern auch ⌘D auf dem Mac (Ctrl+D unter Windows und Linux) zuweisen, sodass es den Lesezeichendialog des Browsers ersetzt; die Einstellungen zeigen, wie das geht
 
 IHRE LESEZEICHEN FINDEN
-• Alle Ihre Lesezeichen schon beim Tippen durchsuchen, direkt in der Symbolleiste
+• Alle Ihre Lesezeichen schon beim Tippen durchsuchen, direkt in der Symbolleiste: Titel, Adressen, Ordner, Tags und Zusammenfassungen, mit Operatoren wie tag:, domain: und folder:
 • Ordnerbaum mit Drag-and-drop, „Alle ausklappen“ und „Alle einklappen“ sowie neuen Ordnern
 • Seitenleiste mit demselben Ordnerbaum, derselben Suche und den passenden Ordnern
+• Mit dem Mauszeiger auf einem Lesezeichen sehen Sie Adresse, Ordner, Tags und Zusammenfassung
 • Löschen mit Bestätigung (standardmäßig aktiviert) und 10 Sekunden Zeit zum Rückgängigmachen
 
 LESEZEICHEN-MANAGER
@@ -78,30 +79,36 @@ Bookmark Scout ersetzt die Lesezeichenseite des Browsers durch einen Manager, de
 • Lesezeichen per Drag-and-drop in Ordner verschieben oder neu anordnen; Links, die aus anderen Seiten hineingezogen werden, werden zu Lesezeichen
 • Mehrere Zeilen mit Cmd+Klick und Shift+Klick auswählen und die Tastenkombinationen des browsereigenen Managers verwenden: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z zum Rückgängigmachen und ⇧⌘Z zum Wiederholen auf dem Mac (Ctrl+Klick, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z und Ctrl+Shift+Z unter Windows und Linux)
 • Rückgängigmachen und Wiederholen umfassen Bearbeitungen, Verschiebungen, Sortierungen und Löschungen, auch Änderungen durch „KI fragen“
-• Festlegen, welche Befehle die Rechtsklick- und ⋯-Menüs zeigen und in welcher Reihenfolge (Einstellungen)
+• Einen Ordner oder eine Suche als Liste oder als Karten mit Titelbild, Tags und Zusammenfassung jeder Seite anzeigen und ein Lesezeichen in der Vorschau ansehen, ohne es zu öffnen
+• Lesezeichen-Verlauf: jede Änderung an Ihren Lesezeichen, mit dem vorherigen Stand jedes Eintrags, Rückgängig und „Wiederherstellen“ für gelöschte Einträge, auch wenn Rückgängig nicht mehr geht
+• Menüs, Spalten, Karten, Seitenleisten und Tastenkürzel von Manager und Popup in den Einstellungen anpassen
 
 JAHRE AN LESEZEICHEN AUFRÄUMEN
-• Duplikatbereinigung: Duplikatgruppen prüfen, bevor überzählige Kopien entfernt werden
+• Duplikatbereinigung: Duplikatgruppen prüfen und auswählen, welche Kopie bleibt
 • URL-Bereinigung: Tracking-Codes in Webadressen in einer Vorschau prüfen und entfernen
 • Linkprüfung: Links finden, die nicht mehr funktionieren, und Reparaturen prüfen (löschen, die neue Adresse verwenden, auf eine Archivkopie verweisen oder die Adresse bearbeiten), mit Rückgängig
 • Metadatenabruf: Seitentitel vorschlagen und nur die ausgewählten übernehmen
 • Datenschutzprüfung: private Angaben in Ihren Lesezeichen finden, etwa E-Mail-Adressen und Anmeldecodes in Links
 • Statistik: Websites, Ordner, Tiefe und Duplikate
 • Website-Symbole aktualisieren: das Symbol jeder Website direkt abrufen, ohne Symboldienst eines Drittanbieters
+• Intelligente Regeln: Lesezeichen, die zu einer Suche passen, mit Tags versehen und in einen Ordner verschieben, nach einer Prüfung oder, wenn Sie es einschalten, sobald neue Lesezeichen hinzukommen
+• Seitentext indexieren: den Text der gewählten Seiten auf diesem Gerät behalten, damit die Suche Wörter darin findet
+• Titelbilder laden: das Vorschaubild jeder Seite auf diesem Gerät für die Kartenansicht behalten. „Titelbilder beim Surfen aufnehmen“ (standardmäßig aus) nimmt das Bild stattdessen auf, wenn Sie eine gespeicherte Seite öffnen
+• Zeitaufwendige Werkzeuge laufen im Hintergrund weiter, wenn Sie den Manager schließen, mit Pause und Fortsetzen, und jede Prüfung lässt viele Einträge auf einmal festlegen
 • Eine Lesezeichendatei mit Vorschau, Umgang mit Duplikaten und Rückgängig importieren
 • Export als HTML, JSON, Markdown oder CSV, mit optionaler Datenschutzprüfung, die private Angaben ausblenden kann
 
 WAS IHR BROWSER FRAGT UND WARUM
 Bei der Installation fragt der Browser nur nach einem: „Deine Lesezeichen lesen und ändern“, damit Bookmark Scout sie speichern, durchsuchen und organisieren kann. Alles andere wird erst angefragt, wenn Sie die Funktion verwenden, die es benötigt, nach einer kurzen Erklärung. Wenn Sie ablehnen, bleibt nur diese Funktion deaktiviert.
 • „Die Symbole der von dir besuchten Websites lesen“: wenn Sie bei „Website-Symbole aktualisieren“ auf „Browser-Symbole anzeigen“ klicken oder „Symbol-Cache des Browsers verwenden“ aktivieren, um die Symbole, die Ihr Browser bereits gespeichert hat, neben Ihren Lesezeichen anzuzeigen
-• „Eigene Daten auf alle example.com-Websites lesen und ändern“ (oder „Eigene Daten auf verschiedenen Websites lesen und ändern“): wenn Sie die Linkprüfung, den Metadatenabruf oder „Website-Symbole aktualisieren“ ausführen, nur für die Websites in diesem Durchlauf. Ein Durchlauf über mehr als 20 Websites und die KI-Einstellung „Seiteninhalt lesen“ fragen nach „Alle deine Daten auf allen Websites lesen und ändern“. Anfragen werden ohne Cookies gesendet. Sobald alle Websites erlaubt sind, kann „KI fragen“ auch prüfen, ob Links in Ihren Lesezeichen noch funktionieren
+• „Eigene Daten auf alle example.com-Websites lesen und ändern“ (oder „Eigene Daten auf verschiedenen Websites lesen und ändern“): wenn Sie die Linkprüfung, den Metadatenabruf, „Website-Symbole aktualisieren“, „Seitentext indexieren“ oder „Titelbilder laden“ ausführen, nur für die Websites in diesem Durchlauf. Ein Durchlauf über mehr als 20 Websites, die KI-Einstellung „Seiteninhalt lesen“ und „Titelbilder beim Surfen aufnehmen“ fragen nach „Alle deine Daten auf allen Websites lesen und ändern“; die Bilder von „Titelbilder beim Surfen aufnehmen“ bleiben auf diesem Gerät. Anfragen werden ohne Cookies gesendet. Sobald alle Websites erlaubt sind, kann „KI fragen“ auch prüfen, ob Links in Ihren Lesezeichen noch funktionieren
 • „Browserverlauf lesen“: nur, um die aktuelle Seite aus der Seitenleiste zu speichern oder dort Ordnervorschläge zu erhalten. Die Schaltfläche in der Symbolleiste und das Tastenkürzel zum Schnellspeichern benötigen keine Berechtigung, und Bookmark Scout liest nur Titel und Adresse des geöffneten Tabs
 • „Mit zusammenarbeitenden nativen Anwendungen kommunizieren“: nur wenn Sie „Lokale KI-Agenten“ aktivieren (siehe „Für Entwickler“ unten)
 Das Rechtsklickmenü ist ebenfalls optional, löst aber keine Warnung aus, daher fügt der Browser es ohne Nachfrage hinzu.
 
 DATENSCHUTZ
 • Kein Konto, keine Analyse, kein Tracking, keine Werbung
-• Ihre Lesezeichen bleiben in Ihrem Browser; Tags, Zusammenfassungen und gespeicherte Suchen bleiben auf diesem Gerät
+• Ihre Lesezeichen bleiben in Ihrem Browser; Tags, Zusammenfassungen, gespeicherte Suchen, intelligente Regeln, Seitentexte, Titelbilder und der Lesezeichen-Verlauf bleiben auf diesem Gerät
 • Die von Ihnen geänderten Einstellungen, Ihre eigenen Prompts und „Über mich“ werden über Ihr Browserkonto synchronisiert, sofern der Browser dies unterstützt
 
 OPTIONALE KI (STANDARDMÄSSIG DEAKTIVIERT)
@@ -120,12 +127,13 @@ KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu n
 Wenn Sie eine KI-Funktion verwenden, werden die benötigten Daten direkt von Ihrem Browser an den von Ihnen gewählten KI-Dienst gesendet und unterliegen dessen Bedingungen: Lesezeichentitel, Adressen, Ordnernamen, das Datum, an dem Lesezeichen hinzugefügt wurden, sowie gespeicherte Tags und Zusammenfassungen; Titel und Adresse der aktuellen Seite; Ihre Nachrichten an „KI fragen“; Ihr Text unter „Über mich“, falls vorhanden; ob die Links, die „KI fragen“ prüft, noch funktionieren; und nur bei aktiviertem „Seiteninhalt lesen“ der Text der betroffenen Seiten. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung eines KI-Dienstes kann kostenpflichtig sein.
 
 EINSTELLUNGEN UND SICHERUNG
-• „Einstellungen sichern“ unten in den Einstellungen speichert eine Datei mit den von Ihnen geänderten Einstellungen, eigenen Prompts, „Über mich“, KI-Diensten (nie deren Schlüssel), gespeicherten Suchen und den Spalten des Managers. „Einstellungen wiederherstellen“ holt sie zurück
+• „Einstellungen sichern“ unten in den Einstellungen speichert die Teile, die Sie auswählen: Ihre Einstellungen, die Einstellungen dieses Computers, gespeicherte Suchen und Tabellenansicht, Prompts und „Über mich“, intelligente Regeln, KI-Dienste und Titelbilder. API-Schlüssel kommen nur hinein, wenn Sie sie auswählen, und sind dann mit einem Passwort geschützt
+• „Einstellungen wiederherstellen“ zeigt zuerst, was jeder Teil ändern würde, führt dann zusammen oder ersetzt, und „Import rückgängig machen“ nimmt es zurück
 • Nur die Einstellungen, die Sie ändern, werden gespeichert, sodass verbesserte Standardwerte späterer Versionen Sie weiterhin erreichen
 
 FÜR ENTWICKLER
-• Suchoptionen: Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke. Die Adresse des Managers enthält die Suche und den Ordner, sodass ein Link ihn direkt mit einer Suche (?q=react) öffnen kann, und „Zurück“ und „Vorwärts“ stellen beides wieder her
-• KI-Dienste können Cloud-KI-Anbieter, ein beliebiger OpenAI-kompatibler Endpunkt oder ein Modellserver auf Ihrem eigenen Computer sein
+• Suchoperatoren: title:, url:, domain:, folder:, tag:, summary:, content: (Seitentext), is:, has:, after:, before:, -Wort, OR und Klammern; dazu Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke. Die Adresse des Managers enthält die Suche und den Ordner, sodass ein Link ihn direkt mit einer Suche (?q=react) öffnen kann, und „Zurück“ und „Vorwärts“ stellen beides wieder her
+• KI-Dienste können Cloud-KI-Anbieter, ein beliebiger OpenAI-kompatibler Endpunkt oder ein Modellserver auf Ihrem eigenen Computer sein, mit oder ohne API-Schlüssel
 • Ausgewählte Lesezeichen als Markdown- oder XML-Kontext für einen KI-Chat exportieren (funktioniert ohne KI und sendet nichts)
 • Die Datenschutzprüfung markiert außerdem sensible Abfrageparameter, URL-Fragmente und UUIDs
 • Lokale KI-Agenten (standardmäßig deaktiviert): KI-Agenten auf Ihrem Computer, etwa Claude Code, Ihre Lesezeichen über das separate Open-Source-Programm bookmark-scout-mcp nachschlagen lassen. Ist zusätzlich „Änderungen erlauben“ aktiviert, können sie Lesezeichen speichern und neu ordnen, und jede Änderung wartet in einem Bookmark-Scout-Fenster auf Ihre Zustimmung
@@ -158,7 +166,7 @@ TASTENKÜRZEL ZUM SCHNELLSPEICHERN
 • Die Tasten ändern Sie unter Einstellungen > Speichern & Suche > Tastenkürzel
 
 IHRE LESEZEICHEN FINDEN
-• Alle Ihre Lesezeichen schon beim Tippen durchsuchen, direkt in der Symbolleiste
+• Alle Ihre Lesezeichen schon beim Tippen durchsuchen, direkt in der Symbolleiste: Titel, Adressen, Ordner, Tags und Zusammenfassungen, mit Operatoren wie tag:, domain: und folder:
 • Ordnerbaum mit Drag-and-drop, „Alle ausklappen“ und „Alle einklappen“ sowie neuen Ordnern
 • Derselbe Ordnerbaum, dieselbe Suche und die passenden Ordner in der Firefox-Sidebar, die beim Surfen geöffnet bleibt
 • Löschen mit Bestätigung (standardmäßig aktiviert) und 10 Sekunden Zeit zum Rückgängigmachen
@@ -174,6 +182,7 @@ Bei der Installation fragt Firefox nur nach einem: der Berechtigung, Lesezeichen
 • Zugriff auf Browsertabs: nur, um die aktuelle Seite aus der Sidebar zu speichern oder dort Ordnervorschläge zu erhalten. Die Schaltfläche in der Symbolleiste und das Tastenkürzel zum Schnellspeichern benötigen keine Berechtigung
 • KI aktivieren: Firefox fragt, ob Authentifizierungsinformationen, Lesezeichen und Browseraktivität geteilt werden dürfen (Ihr API-Schlüssel, Ihre Lesezeichen und Ordner sowie Titel und Adresse der aktuellen Seite). Laut der Abfrage möchte der Entwickler sie erfassen; gemeint ist hier der von Ihnen gewählte KI-Dienst, der sie direkt von Ihrem Browser erhält. An Bookmark Scout gelangt nichts
 • „Seiteninhalt lesen“: Zugriff auf Ihre Daten für alle Websites und Weitergabe von Website-Inhalten an Ihren KI-Dienst
+• „Titelbilder beim Surfen aufnehmen“ (standardmäßig aus), das Bilder der geöffneten Lesezeichen-Seiten auf diesem Gerät behält: Zugriff auf Ihre Daten für alle Websites, ohne Weitergabe
 • „Dienst überprüfen“: Zugriff auf die Adresse Ihres KI-Dienstes und Weitergabe von Authentifizierungsinformationen (Ihrem API-Schlüssel) an ihn
 
 DATENSCHUTZ
@@ -187,12 +196,13 @@ KI ist optional, und alles oben Genannte funktioniert auch ohne sie. Um sie zu n
 Wenn Sie Vorschläge anfordern, werden Titel und Adresse der aktuellen Seite, Ihre Ordnernamen und, nur wenn Sie „Seiteninhalt lesen“ aktivieren, der Text der Seite direkt von Ihrem Browser an den von Ihnen gewählten KI-Dienst gesendet und unterliegen dessen Bedingungen. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung eines KI-Dienstes kann kostenpflichtig sein.
 
 EINSTELLUNGEN UND SICHERUNG
-• „Einstellungen sichern“ unten in den Einstellungen speichert eine Datei mit den von Ihnen geänderten Einstellungen, eigenen Prompts, „Über mich“, KI-Diensten (nie deren Schlüssel) und gespeicherten Suchen. „Einstellungen wiederherstellen“ holt sie zurück
+• „Einstellungen sichern“ unten in den Einstellungen speichert die Teile, die Sie auswählen: Ihre Einstellungen, die Einstellungen dieses Computers, gespeicherte Suchen und Tabellenansicht, Prompts und „Über mich“, KI-Dienste und mehr. API-Schlüssel kommen nur hinein, wenn Sie sie auswählen, und sind dann mit einem Passwort geschützt
+• „Einstellungen wiederherstellen“ zeigt zuerst, was jeder Teil ändern würde, führt dann zusammen oder ersetzt, und „Import rückgängig machen“ nimmt es zurück
 • Nur die Einstellungen, die Sie ändern, werden gespeichert, sodass verbesserte Standardwerte späterer Versionen Sie weiterhin erreichen
 
 FÜR ENTWICKLER
-• Suchoptionen: Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke
-• KI-Dienste können Cloud-KI-Anbieter, ein beliebiger OpenAI-kompatibler Endpunkt oder ein Modellserver auf Ihrem eigenen Computer sein
+• Suchoperatoren: title:, url:, domain:, folder:, tag:, summary:, is:, has:, after:, before:, -Wort, OR und Klammern; dazu Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke
+• KI-Dienste können Cloud-KI-Anbieter, ein beliebiger OpenAI-kompatibler Endpunkt oder ein Modellserver auf Ihrem eigenen Computer sein, mit oder ohne API-Schlüssel
 • Open Source unter AGPL-3.0: https://github.com/isandrel/bookmark-scout
 
 UPDATE VON EINER FRÜHEREN VERSION
@@ -201,17 +211,21 @@ Version 0.3.3 speichert ihre Daten in einem neuen Format und übernimmt ältere 
 Entwickelt von einem unabhängigen Entwickler: keine Firma, keine Werbung, kein Konto. In 12 Sprachen verfügbar. Helles, dunkles und System-Design.
 ```
 
-## What's new in 0.3.3
+## What's new in 0.3.5
 
-Translation of the English release notes; paste into AMO's release notes for 0.3.3.
+Translation of the English release notes; paste into AMO's release notes for 0.3.5.
 
 ```text
-• Schnellspeichern: Drücken Sie auf einer beliebigen Seite ⌥⇧S auf dem Mac (Alt+Shift+S unter Windows und Linux), um sie im Ordner zu speichern, der am besten zu ihr passt. Eine Benachrichtigung auf der Seite zeigt, wo sie gespeichert wurde, mit „Rückgängig“ und weiteren Ordnern, in die Sie sie verschieben können. Bei aktivierter KI speichert ⌥⇧D auf dem Mac (Alt+Shift+D unter Windows und Linux) im ersten KI-Vorschlag
-• Lesezeichen-Manager: Rechtsklickmenüs, Drag-and-drop, Ausschneiden, Kopieren und Einfügen, Auswahl mehrerer Zeilen sowie Rückgängigmachen und Wiederholen
-• „KI fragen“ kann Seiten speichern und Verschiebungen, Umbenennungen, Löschungen und neue Ordner vorschlagen, die nichts ändern, bis Sie sie genehmigen, und jede Änderung lässt sich rückgängig machen. Antworten können mit Schaltflächen enden, die Sie anklicken
-• Festlegen, welche Befehle die Menüs des Managers zeigen und was „KI fragen“ tun darf
-• „Exportieren“ in den Einstellungen speichert jetzt eine Sicherung, die Sie importieren können
-• Dieses Update setzt die gespeicherten Daten von Bookmark Scout zurück: Die Einstellungen werden auf die Standardwerte zurückgesetzt, und KI-Dienste und API-Schlüssel, eigene Prompts, gespeicherte Suchen, Tags und Zusammenfassungen müssen neu eingerichtet werden. Ihre Lesezeichen bleiben unverändert
+• Titelbilder und Karten: Zeigen Sie einen Ordner im Lesezeichen-Manager als Karten mit Titelbild, Tags und Zusammenfassung jeder Seite. Titelbilder stammen aus dem Vorschaubild der Seite selbst, aus einem Bild des gewählten Tabs oder, wenn Sie es einschalten, aus Bildern beim Surfen, und bleiben auf diesem Gerät
+• Suche in Seiten: „Seitentext indexieren“ behält den Text der gewählten Seiten auf diesem Gerät, damit die Suche Wörter darin findet
+• Überall dieselbe Suche: Titel, Adressen, Ordner, Tags und Zusammenfassungen, mit Operatoren wie tag:, domain:, folder: und OR
+• Intelligente Regeln versehen Lesezeichen, die zu einer Suche passen, mit Tags und verschieben sie nach einer Prüfung in einen Ordner
+• Der Lesezeichen-Verlauf zeigt jede Änderung an Ihren Lesezeichen, mit Rückgängig, und kann gelöschte Einträge zurückholen
+• Zeitaufwendige Werkzeuge laufen im Hintergrund weiter, wenn Sie den Manager schließen
+• Menüs, Spalten, Tastenkürzel, das Rechtsklickmenü und mehr in den Einstellungen anpassen
+• Die gewählten Teile Ihrer Einstellungen sichern und vor „Zusammenführen“ oder „Ersetzen“ sehen, was eine Wiederherstellung ändern würde, mit „Import rückgängig machen“. API-Schlüssel kommen nur hinein, wenn Sie sie auswählen, mit Passwortschutz
+• Die Einstellungen „Seitentitel und Symbole“ heißen jetzt „Seitendetails“
+• Neue Sprachen: Russisch, Indonesisch und Italienisch
 ```
 
 ## Category

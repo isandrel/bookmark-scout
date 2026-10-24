@@ -42,7 +42,8 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 - [ ] Saving the current page from the sidebar asks for tab access ("Access browser tabs"); the popup saves without asking.
 - [ ] Keyboard shortcuts in the popup.
 - [ ] Quick save: ⌥⇧S on Mac (Alt+Shift+S on Windows and Linux) on a web page saves it and shows the in-page notification; Undo and Move work. With AI on and a test provider, ⌥⇧D on Mac (Alt+Shift+D on Windows and Linux) saves to the first suggestion.
-- [ ] Settings > Export saves a backup, and Import restores it.
+- [ ] Back up settings saves a backup of the chosen parts, and Restore settings shows the review and restores it.
+- [ ] Turning on Capture Covers While Browsing (Settings > Page Details, with Fetch Covers on) asks for access to all websites ("Access your data for all websites"); declining leaves it off.
 - [ ] **Open bookmark manager** in the popup opens the manager in a new tab. Before the description claims the manager tools, run Duplicate Cleaner, Check Dead Links (allow website access when asked), and an import there.
 - [ ] Delete with confirmation and Undo.
 - [ ] Options: themes, language, AI off by default.

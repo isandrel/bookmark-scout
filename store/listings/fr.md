@@ -1,14 +1,14 @@
 # French Listing Copy (Français)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-19, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters. The full descriptions and What's new were measured on 2026-10-23; the other blocks keep their earlier counts.
 
 | Block | Characters |
 | --- | --- |
 | Optional manifest description | 132 |
 | Firefox Add-ons summary | 250 |
-| Full description, Chrome and Edge | 12,089 |
-| Full description, Firefox | 7,051 |
-| What's new in 0.3.3 | 1,396 |
+| Full description, Chrome and Edge | 14,133 |
+| Full description, Firefox | 7,741 |
+| What's new in 0.3.5 | 1,523 |
 
 ## Name
 
@@ -58,7 +58,7 @@ ENREGISTRER DANS LE BON DOSSIER EN QUELQUES SECONDES
 • Saisissez un chemin comme ai/llms ; une petite faute de frappe n'empêche pas de trouver le dossier, et les dossiers utilisés récemment apparaissent en premier
 • Une page déjà présente dans ce dossier n'est pas enregistrée deux fois
 • L'IA facultative suggère le meilleur dossier pour la page, ou un nouveau dossier que vous vérifiez avant sa création
-• Menu du clic droit facultatif (désactivé au départ ; activez Menu du clic droit dans les paramètres) pour enregistrer des liens dans les dossiers récents
+• Menu du clic droit facultatif (désactivé au départ ; activez Menu du clic droit dans les paramètres) pour enregistrer un lien, ou la page affichée, dans un dossier récent
 
 RACCOURCIS D'ENREGISTREMENT RAPIDE
 • Appuyez sur ⌥⇧S sur Mac (Alt+Shift+S sous Windows et Linux) sur n'importe quelle page pour l'enregistrer sans ouvrir Bookmark Scout : par défaut dans le dossier qui correspond le mieux à la page (déterminé sur votre appareil), ou dans le dernier dossier utilisé ou un dossier de votre choix
@@ -67,9 +67,10 @@ RACCOURCIS D'ENREGISTREMENT RAPIDE
 • Modifiez les touches sur la page des raccourcis du navigateur. Vous pouvez aussi y attribuer ⌘D sur Mac (Ctrl+D sous Windows et Linux) à l'enregistrement rapide, qui remplace alors la fenêtre de favoris du navigateur ; les paramètres expliquent comment faire
 
 RETROUVER VOS FAVORIS
-• Recherchez dans tous vos favoris pendant la saisie, directement depuis la barre d'outils
+• Recherchez dans tous vos favoris pendant la saisie, directement depuis la barre d'outils : titres, adresses, dossiers, étiquettes et résumés, avec des opérateurs comme tag:, domain: et folder:
 • Arborescence de dossiers avec glisser-déposer, Tout développer, Tout réduire et création de dossiers
 • Panneau latéral avec la même arborescence, la même recherche et les dossiers correspondants
+• Laissez le pointeur sur un favori pour voir son adresse, son dossier, ses étiquettes et son résumé
 • Suppression avec confirmation (activée par défaut) et annulation possible pendant 10 secondes
 
 GESTIONNAIRE DE FAVORIS
@@ -78,30 +79,36 @@ Bookmark Scout remplace la page Favoris du navigateur par un gestionnaire qui fo
 • Glisser-déposer pour déplacer des favoris dans des dossiers ou les réorganiser ; les liens déposés depuis d'autres pages deviennent des favoris
 • Sélectionnez plusieurs lignes avec Cmd+clic et Shift+clic, et utilisez les raccourcis clavier du gestionnaire de favoris du navigateur : ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z pour annuler et ⇧⌘Z pour rétablir sur Mac (Ctrl+clic, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z et Ctrl+Shift+Z sous Windows et Linux)
 • Annuler et rétablir s'appliquent aux modifications, aux déplacements, aux tris et aux suppressions, y compris ceux effectués par Demander à l'IA
-• Choisissez les commandes affichées dans le menu du clic droit et le menu ⋯, ainsi que leur ordre (Paramètres)
+• Affichez un dossier ou une recherche en liste ou en cartes, avec l'image de couverture, les étiquettes et le résumé de chaque page, et prévisualisez un favori sans l'ouvrir
+• Historique des favoris : chaque modification de vos favoris, avec l'état de chaque élément avant, Annuler, et Restaurer pour les éléments supprimés même quand l'annulation n'est plus possible
+• Réglez dans les paramètres les menus, les colonnes, les cartes, les panneaux latéraux et les raccourcis clavier du gestionnaire et de la fenêtre contextuelle
 
 FAIRE LE TRI DANS DES ANNÉES DE FAVORIS
-• Nettoyeur de doublons : vérifiez les groupes de doublons avant de supprimer les copies en trop
+• Nettoyeur de doublons : vérifiez les groupes de doublons et choisissez la copie à garder
 • Nettoyeur d'URL : prévisualisez et retirez les codes de suivi des adresses Web
 • Vérificateur de liens morts : trouvez les liens qui ne fonctionnent plus, puis vérifiez les réparations (supprimer, utiliser la nouvelle adresse, pointer vers une copie archivée ou la modifier), avec annulation possible
 • Récupération des métadonnées : suggère des titres de page et n'applique que ceux que vous choisissez
 • Analyseur de confidentialité : détecte les informations privées dans vos favoris, comme les adresses e-mail et les codes de connexion présents dans les liens
 • Statistiques : sites, dossiers, profondeur et doublons
 • Actualiser les icônes de site : récupère l'icône propre à chaque site, sans service d'icônes tiers
+• Règles intelligentes : ajoutez des étiquettes aux favoris qui correspondent à une recherche et déplacez-les dans un dossier, après vérification, ou à l'arrivée des nouveaux favoris si vous l'activez
+• Indexer le texte des pages : gardez sur cet appareil le texte des pages choisies, pour que la recherche trouve les mots qu'elles contiennent
+• Récupérer les couvertures : gardez sur cet appareil l'image d'aperçu de chaque page pour la vue en cartes. Capturer les couvertures en naviguant (désactivé par défaut) prend l'image à l'ouverture d'une page enregistrée en favori
+• Les outils longs continuent en arrière-plan après la fermeture du gestionnaire, avec Pause et Reprendre, et chaque vérification permet de régler plusieurs éléments à la fois
 • Importation d'un fichier de favoris, avec aperçu, gestion des doublons et annulation possible
 • Exportation au format HTML, JSON, Markdown ou CSV, avec une vérification de confidentialité facultative qui peut masquer les informations privées
 
 CE QUE VOTRE NAVIGATEUR VA DEMANDER, ET POURQUOI
 À l'installation, le navigateur ne demande qu'une chose : « Accéder à vos favoris et les modifier », pour que Bookmark Scout puisse les enregistrer, y faire des recherches et les ranger. Tout le reste n'est demandé que lorsque vous utilisez la fonctionnalité qui en a besoin, après une courte explication. Si vous refusez, seule cette fonctionnalité reste désactivée.
 • « Accéder aux icônes des sites Web que vous consultez » : lorsque vous cliquez sur Afficher les icônes du navigateur dans Actualiser les icônes de site, ou activez Utiliser le cache d'icônes du navigateur, pour afficher à côté de vos favoris les icônes que votre navigateur a déjà enregistrées
-• « Lire et modifier vos données sur tous les sites example.com » (ou « sur certains sites Web ») : lorsque vous lancez le vérificateur de liens morts, la récupération des métadonnées ou l'outil Actualiser les icônes de site, uniquement pour les sites concernés par cette exécution. Une exécution portant sur plus de 20 sites, ainsi que le paramètre d'IA Lire le contenu des pages, demandent « Lire et modifier toutes vos données sur tous les sites Web ». Les requêtes sont envoyées sans cookies. Une fois tous les sites Web autorisés, Demander à l'IA peut aussi vérifier si les liens de vos favoris fonctionnent toujours
+• « Lire et modifier vos données sur tous les sites example.com » (ou « sur certains sites Web ») : lorsque vous lancez le vérificateur de liens morts, la récupération des métadonnées, Actualiser les icônes de site, Indexer le texte des pages ou Récupérer les couvertures, uniquement pour les sites concernés par cette exécution. Une exécution portant sur plus de 20 sites, le paramètre d'IA Lire le contenu des pages et Capturer les couvertures en naviguant demandent « Lire et modifier toutes vos données sur tous les sites Web » ; les images prises par Capturer les couvertures en naviguant restent sur cet appareil. Les requêtes sont envoyées sans cookies. Une fois tous les sites Web autorisés, Demander à l'IA peut aussi vérifier si les liens de vos favoris fonctionnent toujours
 • « Consulter votre historique de navigation » : uniquement pour enregistrer la page actuelle ou obtenir des suggestions de dossiers depuis le panneau latéral. Le bouton de la barre d'outils et le raccourci d'enregistrement rapide ne nécessitent aucune autorisation, et Bookmark Scout ne lit que le titre et l'adresse de l'onglet ouvert
 • « Communiquer avec les applications natives associées » : uniquement lorsque vous activez Agents d'IA locaux (voir Pour les développeurs ci-dessous)
 Le menu du clic droit est lui aussi facultatif, mais il ne déclenche aucun avertissement : le navigateur l'ajoute donc sans rien demander.
 
 CONFIDENTIALITÉ
 • Aucun compte, aucune mesure d'audience, aucun suivi, aucune publicité
-• Vos favoris restent dans votre navigateur ; les étiquettes, les résumés et les recherches enregistrées restent sur cet appareil
+• Vos favoris restent dans votre navigateur ; les étiquettes, les résumés, les recherches enregistrées, les règles intelligentes, le texte des pages, les couvertures et l'historique des favoris restent sur cet appareil
 • Les paramètres que vous modifiez, vos prompts personnalisés et « À propos de moi » sont synchronisés via votre compte de navigateur lorsque celui-ci le permet
 
 IA FACULTATIVE (DÉSACTIVÉE PAR DÉFAUT)
@@ -120,12 +127,13 @@ L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'util
 Lorsque vous utilisez une fonctionnalité d'IA, les données dont elle a besoin sont envoyées directement de votre navigateur au service d'IA que vous avez choisi, selon les conditions de ce service : titres de favoris, adresses, noms de dossiers, dates d'ajout des favoris, ainsi que les étiquettes et résumés enregistrés ; le titre et l'adresse de la page actuelle ; vos messages Demander à l'IA ; le texte « À propos de moi » que vous écrivez, le cas échéant ; le fait que les liens vérifiés par Demander à l'IA fonctionnent encore ou non ; et, uniquement si Lire le contenu des pages est activé, le texte des pages concernées. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation d'un service d'IA peut être payante.
 
 PARAMÈTRES ET SAUVEGARDE
-• Sauvegarder les paramètres, en bas des paramètres, enregistre un fichier contenant les paramètres que vous avez modifiés, les prompts personnalisés, « À propos de moi », les services d'IA (jamais leurs clés), les recherches enregistrées et les colonnes du gestionnaire. Restaurer les paramètres les rétablit
+• Sauvegarder les paramètres, en bas des paramètres, enregistre les parties que vous choisissez : vos paramètres, les paramètres de cet ordinateur, les recherches enregistrées et la vue tableau, les prompts et « À propos de moi », les règles intelligentes, les services d'IA et les couvertures. Les clés API ne sont incluses que si vous les sélectionnez, et elles sont alors protégées par un mot de passe
+• Restaurer les paramètres montre d'abord ce que chaque partie changerait, puis fusionne ou remplace, et Annuler l'importation revient en arrière
 • Seuls les paramètres que vous modifiez sont enregistrés : les valeurs par défaut améliorées des versions suivantes s'appliquent donc toujours à vous
 
 POUR LES DÉVELOPPEURS
-• Options de recherche : Respecter la casse, Mot entier et Expression régulière. L'adresse du gestionnaire conserve la recherche et le dossier : un lien peut ainsi l'ouvrir avec une recherche déjà lancée (?q=react), et les boutons Précédent et Suivant restaurent les deux
-• Les services d'IA peuvent être des fournisseurs d'IA dans le cloud, n'importe quel point de terminaison compatible OpenAI ou un serveur de modèles sur votre propre ordinateur
+• Opérateurs de recherche : title:, url:, domain:, folder:, tag:, summary:, content: (texte des pages), is:, has:, after:, before:, -mot, OR et parenthèses ; ainsi que Respecter la casse, Mot entier et Expression régulière. L'adresse du gestionnaire conserve la recherche et le dossier : un lien peut ainsi l'ouvrir avec une recherche déjà lancée (?q=react), et les boutons Précédent et Suivant restaurent les deux
+• Les services d'IA peuvent être des fournisseurs d'IA dans le cloud, n'importe quel point de terminaison compatible OpenAI ou un serveur de modèles sur votre propre ordinateur, avec ou sans clé API
 • Exportation des favoris sélectionnés au format Markdown ou XML comme contexte pour une discussion avec une IA (fonctionne sans IA et n'envoie rien)
 • L'Analyseur de confidentialité signale aussi les paramètres de requête sensibles, les fragments d'URL et les UUID
 • Agents d'IA locaux (désactivé par défaut) : permettez aux agents d'IA de votre ordinateur, comme Claude Code, de consulter vos favoris via bookmark-scout-mcp, un programme open source installé à part. Si Autoriser les modifications est aussi activé, ils peuvent enregistrer et réorganiser des favoris, et chaque modification attend votre accord dans une fenêtre Bookmark Scout
@@ -158,7 +166,7 @@ RACCOURCIS D'ENREGISTREMENT RAPIDE
 • Modifiez les touches dans Paramètres > Enregistrement et recherche > Raccourcis clavier
 
 RETROUVER VOS FAVORIS
-• Recherchez dans tous vos favoris pendant la saisie, directement depuis la barre d'outils
+• Recherchez dans tous vos favoris pendant la saisie, directement depuis la barre d'outils : titres, adresses, dossiers, étiquettes et résumés, avec des opérateurs comme tag:, domain: et folder:
 • Arborescence de dossiers avec glisser-déposer, Tout développer, Tout réduire et création de dossiers
 • La même arborescence, la même recherche et les dossiers correspondants dans la barre latérale de Firefox, qui reste ouverte pendant votre navigation
 • Suppression avec confirmation (activée par défaut) et annulation possible pendant 10 secondes
@@ -174,6 +182,7 @@ CE QUE FIREFOX VA DEMANDER, ET POURQUOI
 • L'accès aux onglets du navigateur : uniquement pour enregistrer la page actuelle ou obtenir des suggestions de dossiers depuis la barre latérale. Le bouton de la barre d'outils et le raccourci d'enregistrement rapide ne nécessitent aucune autorisation
 • Activation de l'IA : Firefox demande l'autorisation de partager des informations d'authentification, vos favoris et votre activité de navigation (votre clé API, vos favoris et dossiers, ainsi que le titre et l'adresse de la page actuelle). Sa demande indique que le développeur souhaite collecter ces données ; ici, il s'agit du service d'IA que vous avez choisi, qui les reçoit directement depuis votre navigateur. Rien ne parvient à Bookmark Scout
 • Lire le contenu des pages : l'accès à vos données pour tous les sites Web, et le partage du contenu des sites Web avec votre service d'IA
+• Capturer les couvertures en naviguant (désactivé par défaut), qui garde sur cet appareil des images des pages en favori que vous ouvrez : l'accès à vos données pour tous les sites Web, sans rien partager
 • Vérifier le service : l'accès à l'adresse de votre service d'IA, et le partage des informations d'authentification (votre clé API) avec celui-ci
 
 CONFIDENTIALITÉ
@@ -187,12 +196,13 @@ L'IA est facultative, et tout ce qui précède fonctionne sans elle. Pour l'util
 Lorsque vous demandez des suggestions, le titre et l'adresse de la page actuelle, les noms de vos dossiers et, uniquement si vous activez Lire le contenu des pages, le texte de la page sont envoyés directement de votre navigateur au service d'IA que vous avez choisi, selon les conditions de ce service. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation d'un service d'IA peut être payante.
 
 PARAMÈTRES ET SAUVEGARDE
-• Sauvegarder les paramètres, en bas des paramètres, enregistre un fichier contenant les paramètres que vous avez modifiés, les prompts personnalisés, « À propos de moi », les services d'IA (jamais leurs clés) et les recherches enregistrées. Restaurer les paramètres les rétablit
+• Sauvegarder les paramètres, en bas des paramètres, enregistre les parties que vous choisissez : vos paramètres, les paramètres de cet ordinateur, les recherches enregistrées et la vue tableau, les prompts et « À propos de moi », les services d'IA, et plus encore. Les clés API ne sont incluses que si vous les sélectionnez, et elles sont alors protégées par un mot de passe
+• Restaurer les paramètres montre d'abord ce que chaque partie changerait, puis fusionne ou remplace, et Annuler l'importation revient en arrière
 • Seuls les paramètres que vous modifiez sont enregistrés : les valeurs par défaut améliorées des versions suivantes s'appliquent donc toujours à vous
 
 POUR LES DÉVELOPPEURS
-• Options de recherche : Respecter la casse, Mot entier et Expression régulière
-• Les services d'IA peuvent être des fournisseurs d'IA dans le cloud, n'importe quel point de terminaison compatible OpenAI ou un serveur de modèles sur votre propre ordinateur
+• Opérateurs de recherche : title:, url:, domain:, folder:, tag:, summary:, is:, has:, after:, before:, -mot, OR et parenthèses ; ainsi que Respecter la casse, Mot entier et Expression régulière
+• Les services d'IA peuvent être des fournisseurs d'IA dans le cloud, n'importe quel point de terminaison compatible OpenAI ou un serveur de modèles sur votre propre ordinateur, avec ou sans clé API
 • Open source sous licence AGPL-3.0 : https://github.com/isandrel/bookmark-scout
 
 MISE À JOUR DEPUIS UNE VERSION ANTÉRIEURE
@@ -201,17 +211,21 @@ La version 0.3.3 enregistre ses données dans un nouveau format et ne convertit 
 Créé par un développeur indépendant : ni entreprise, ni publicité, ni compte. Disponible en 12 langues. Thèmes clair, sombre et système.
 ```
 
-## What's new in 0.3.3
+## What's new in 0.3.5
 
-Translation of the English release notes; paste into AMO's release notes for 0.3.3.
+Translation of the English release notes; paste into AMO's release notes for 0.3.5.
 
 ```text
-• Enregistrement rapide : appuyez sur ⌥⇧S sur Mac (Alt+Shift+S sous Windows et Linux) sur n'importe quelle page pour l'enregistrer dans le dossier qui lui correspond le mieux. Une notification dans la page indique où elle a été enregistrée, avec Annuler et d'autres dossiers vers lesquels la déplacer. Lorsque l'IA est activée, ⌥⇧D sur Mac (Alt+Shift+D sous Windows et Linux) enregistre la page dans la première suggestion de l'IA
-• Gestionnaire de favoris : menus contextuels, glisser-déposer, couper, copier et coller, sélection de plusieurs lignes, annulation et rétablissement
-• Demander à l'IA peut enregistrer des pages et proposer des déplacements, renommages, suppressions et nouveaux dossiers qui ne modifient rien tant que vous ne les avez pas approuvés, et chaque modification peut être annulée. Les réponses peuvent se terminer par des boutons sur lesquels cliquer
-• Choisissez les commandes affichées dans les menus du gestionnaire, et ce que Demander à l'IA peut faire
-• Exporter, dans les paramètres, enregistre désormais une sauvegarde que vous pouvez importer
-• Cette mise à jour réinitialise les données enregistrées de Bookmark Scout : les paramètres reviennent à leurs valeurs par défaut, et les services d'IA et clés API, les prompts personnalisés, les recherches enregistrées, les étiquettes et les résumés doivent être configurés à nouveau. Vos favoris ne sont pas modifiés
+• Couvertures et cartes : affichez un dossier du gestionnaire de favoris en cartes, avec l'image de couverture, les étiquettes et le résumé de chaque page. Les couvertures viennent de l'image d'aperçu de la page elle-même, d'une image de l'onglet que vous choisissez ou, si vous l'activez, d'images prises pendant la navigation, et restent sur cet appareil
+• Recherche dans les pages : Indexer le texte des pages garde sur cet appareil le texte des pages choisies, pour que la recherche trouve les mots qu'elles contiennent
+• La même recherche partout : titres, adresses, dossiers, étiquettes et résumés, avec des opérateurs comme tag:, domain:, folder: et OR
+• Les règles intelligentes ajoutent des étiquettes aux favoris qui correspondent à une recherche et les déplacent dans un dossier, après vérification
+• L'historique des favoris liste chaque modification de vos favoris, avec Annuler, et peut restaurer les éléments supprimés
+• Les outils longs continuent en arrière-plan après la fermeture du gestionnaire
+• Réglez les menus, les colonnes, les raccourcis clavier, le menu du clic droit et plus encore dans les paramètres
+• Sauvegardez les parties de vos paramètres que vous choisissez, et voyez ce qu'une restauration changerait avant de fusionner ou remplacer, avec Annuler l'importation. Les clés API ne sont incluses que si vous les sélectionnez, protégées par un mot de passe
+• Les paramètres Titres et icônes des pages s'appellent désormais Détails des pages
+• Nouvelles langues : russe, indonésien et italien
 ```
 
 ## Category

@@ -11,7 +11,7 @@ NX_DAEMON=false bunx nx run extension:build:edge
 
 Rebuild and compare before each submission. If a permission is added or removed, update this file, the docs `permissions.mdx`, and the privacy documents; update the README's Permissions summary (`templates/README*.md`) only if what the browser asks at install changes.
 
-## Built manifests at version 0.3.4
+## Built manifests at version 0.3.5
 
 Every permission that a browser lets an extension ask for later is optional and requested only when the user turns on or runs the feature that needs it. The table of permissions and features is `apps/extension/src/lib/permission-catalog.ts`; the manifests and the runtime requests both read it.
 
@@ -181,7 +181,7 @@ Answer "No, I am not using remote code." All JavaScript ships in the package. Th
 
 ## Linter results
 
-`bunx addons-linter@latest --output json apps/extension/dist/firefox-mv2` (addons-linter 10.14.0, on the 0.3.4 build) on 2026-10-23 reported 0 errors, 0 notices, and 8 warnings. The four manifest warnings of 2026-10-01 (`MANIFEST_PERMISSIONS` for `favicon` and `sidePanel`, `MISSING_DATA_COLLECTION_PERMISSIONS`, `MISSING_ADDON_ID`) are fixed. What remains is third-party library code:
+`bunx addons-linter@latest --output json apps/extension/dist/firefox-mv2` (addons-linter 10.14.0) on 2026-10-23 reported 0 errors, 0 notices, and 8 warnings, on the 0.3.4 build and again on the 0.3.5 release package (`bookmark-scout-v0.3.5-firefox.zip`), with the same warnings in the same chunks. The four manifest warnings of 2026-10-01 (`MANIFEST_PERMISSIONS` for `favicon` and `sidePanel`, `MISSING_DATA_COLLECTION_PERMISSIONS`, `MISSING_ADDON_ID`) are fixed. What remains is third-party library code:
 
 | Code | Where | Meaning and action |
 | --- | --- | --- |

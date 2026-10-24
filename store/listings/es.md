@@ -1,14 +1,14 @@
 # Spanish Listing Copy (Español)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12, the Firefox Add-ons summary, the two full descriptions, and the 0.3.3 release notes on 2026-10-19, and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters. The full descriptions and What's new were measured on 2026-10-23; the other blocks keep their earlier counts.
 
 | Block | Characters |
 | --- | --- |
 | Manifest description | 131 |
 | Firefox Add-ons summary | 243 |
-| Full description, Chrome and Edge | 11,131 |
-| Full description, Firefox | 6,487 |
-| What's new in 0.3.3 | 1,262 |
+| Full description, Chrome and Edge | 13,111 |
+| Full description, Firefox | 7,138 |
+| What's new in 0.3.5 | 1,461 |
 
 ## Name
 
@@ -48,7 +48,7 @@ marcadores con IA
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 11,131 characters (2026-10-19); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
+Plain text, 13,111 characters (2026-10-23); the Chrome Web Store allows 16,000. The same Edge condition as in `en.md` applies.
 
 ```text
 Bookmark Scout guarda cada página en la carpeta correcta en segundos, desde la barra de herramientas o con una sola combinación de teclas, y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador. Gratis, sin cuenta y sin anuncios.
@@ -58,7 +58,7 @@ GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • Escribe una ruta como ai/llms; un pequeño error de escritura no impide encontrar la carpeta, y las carpetas que usaste hace poco aparecen primero
 • Una página que ya está en esa carpeta no se guarda dos veces
 • La IA opcional sugiere la mejor carpeta para la página, o una carpeta nueva que revisas antes de que se cree
-• Menú del clic derecho opcional (desactivado al principio; activa Menú del clic derecho en Configuración) para guardar enlaces en carpetas recientes
+• Menú del clic derecho opcional (desactivado al principio; activa Menú del clic derecho en Configuración) para guardar un enlace, o la página en la que estás, en una carpeta reciente
 
 ATAJOS DE GUARDADO RÁPIDO
 • Pulsa ⌥⇧S en Mac (Alt+Shift+S en Windows y Linux) en cualquier página para guardarla sin abrir Bookmark Scout: de forma predeterminada, en la carpeta que mejor coincide con la página (calculada en tu dispositivo), o en la última carpeta que usaste o en una que elijas
@@ -67,9 +67,10 @@ ATAJOS DE GUARDADO RÁPIDO
 • Cambia las teclas en la página de combinaciones de teclas del navegador. Ahí también puedes asignar ⌘D en Mac (Ctrl+D en Windows y Linux) al guardado rápido para que sustituya al cuadro de diálogo de marcadores del navegador; Configuración explica cómo
 
 ENCUENTRA TUS MARCADORES
-• Busca en todos tus marcadores mientras escribes, directamente desde la barra de herramientas
+• Busca en todos tus marcadores mientras escribes, directamente desde la barra de herramientas: títulos, direcciones, carpetas, etiquetas y resúmenes, con operadores como tag:, domain: y folder:
 • Árbol de carpetas con arrastrar y soltar, desplegar y contraer todo, y creación de carpetas
 • Panel lateral con el mismo árbol, la misma búsqueda y las carpetas coincidentes
+• Deja el puntero sobre un marcador para ver su dirección, carpeta, etiquetas y resumen
 • Eliminación con confirmación (activada de forma predeterminada) y opción de deshacer durante 10 segundos
 
 ADMINISTRADOR DE MARCADORES
@@ -78,30 +79,36 @@ Bookmark Scout sustituye la página Marcadores del navegador por un administrado
 • Arrastra y suelta para mover marcadores a carpetas o cambiar su orden; los enlaces que sueltas desde otras páginas se convierten en marcadores
 • Selecciona varias filas con Cmd+clic y Mayús+clic, y usa las combinaciones de teclas del propio administrador del navegador: ⌘A, ⌘C, ⌘X, ⌘V, ⌘⌫, ⌘Z para deshacer y ⇧⌘Z para rehacer en Mac (Ctrl+clic, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z y Ctrl+Shift+Z en Windows y Linux)
 • Deshacer y rehacer abarcan ediciones, movimientos, ordenaciones y eliminaciones, incluidos los cambios que hace Preguntar a la IA
-• Elige qué comandos muestran los menús contextuales y ⋯, y en qué orden (Configuración)
+• Muestra una carpeta o una búsqueda como lista o como tarjetas con la imagen de portada, las etiquetas y el resumen de cada página, y obtén una vista previa de un marcador sin abrirlo
+• Historial de marcadores: cada cambio en tus marcadores, con lo que era cada elemento antes, Deshacer y Restaurar para los elementos eliminados incluso cuando ya no se puede deshacer
+• Ajusta en Configuración los menús, las columnas, las tarjetas, los paneles laterales y los atajos de teclado del administrador y de la ventana emergente
 
 LIMPIA AÑOS DE MARCADORES
-• Limpiador de duplicados: revisa los grupos de duplicados antes de quitar las copias sobrantes
+• Limpiador de duplicados: revisa los grupos de duplicados y elige qué copia conservar
 • Limpiador de URLs: previsualiza y quita los códigos de seguimiento de las direcciones web
 • Comprobador de enlaces rotos: encuentra enlaces que ya no funcionan y revisa las reparaciones (eliminar, usar la nueva dirección, apuntar a una copia archivada o editarla), con opción de deshacer
 • Extractor de metadatos: sugiere títulos de página y aplica solo los que elijas
 • Escáner de privacidad: encuentra datos privados en tus marcadores, como direcciones de correo electrónico y códigos de inicio de sesión en enlaces
 • Estadísticas: sitios, carpetas, profundidad y duplicados
 • Actualizar iconos de sitios: obtiene el icono propio de cada sitio, sin servicios de iconos de terceros
+• Reglas inteligentes: etiqueta los marcadores que coinciden con una búsqueda y muévelos a una carpeta, tras revisarlo, o a medida que llegan marcadores nuevos si lo activas
+• Indexar texto de páginas: guarda en este dispositivo el texto de las páginas que elijas, para que la búsqueda encuentre palabras dentro de ellas
+• Obtener portadas: guarda en este dispositivo la imagen de vista previa de cada página para la vista de tarjetas. Capturar portadas al navegar (desactivado de forma predeterminada) toma la imagen al abrir una página marcada
+• Las herramientas largas siguen en segundo plano cuando cierras el administrador, con Pausar y Reanudar, y cada revisión permite ajustar muchos elementos a la vez
 • Importación de un archivo de marcadores con vista previa, gestión de duplicados y opción de deshacer
 • Exportación a HTML, JSON, Markdown o CSV, con una revisión de privacidad opcional que puede ocultar datos privados
 
 QUÉ TE PEDIRÁ EL NAVEGADOR Y POR QUÉ
 Al instalarla, el navegador pide una sola cosa: «Leer y modificar tus marcadores», para que Bookmark Scout pueda guardarlos, buscarlos y ordenarlos. Todo lo demás se pide solo cuando usas la función que lo necesita, después de una breve explicación. Si dices que no, solo esa función queda desactivada.
 • «Leer los iconos de los sitios web que visites»: cuando haces clic en Mostrar iconos del navegador en Actualizar iconos de sitios, o activas Usar la caché de iconos del navegador, para mostrar junto a tus marcadores los iconos que tu navegador ya guardó
-• «Leer y modificar tus datos en todos los sitios de example.com» (o «en una serie de sitios web»): cuando ejecutas el Comprobador de enlaces rotos, el Extractor de metadatos o Actualizar iconos de sitios, solo para los sitios de esa ejecución. Una ejecución de más de 20 sitios, y el ajuste de IA Leer el contenido de la página, piden «Leer y cambiar todos tus datos en todos los sitios web». Las solicitudes se envían sin cookies. Una vez permitidos todos los sitios web, Preguntar a la IA también puede comprobar si los enlaces de tus marcadores siguen funcionando
+• «Leer y modificar tus datos en todos los sitios de example.com» (o «en una serie de sitios web»): cuando ejecutas el Comprobador de enlaces rotos, el Extractor de metadatos, Actualizar iconos de sitios, Indexar texto de páginas u Obtener portadas, solo para los sitios de esa ejecución. Una ejecución de más de 20 sitios, el ajuste de IA Leer el contenido de la página y Capturar portadas al navegar piden «Leer y cambiar todos tus datos en todos los sitios web»; las imágenes que toma Capturar portadas al navegar se quedan en este dispositivo. Las solicitudes se envían sin cookies. Una vez permitidos todos los sitios web, Preguntar a la IA también puede comprobar si los enlaces de tus marcadores siguen funcionando
 • «Leer tu historial de navegación»: solo para guardar la página actual u obtener sugerencias de carpeta desde el panel lateral. El botón de la barra de herramientas y el atajo de guardado rápido no necesitan ningún permiso, y Bookmark Scout solo lee el título y la dirección de la pestaña abierta
 • «Comunicarse con aplicaciones nativas cooperativas»: solo cuando activas Agentes de IA locales (consulta Para desarrolladores, más abajo)
 El menú del clic derecho también es opcional, pero no tiene advertencia, así que el navegador lo añade sin preguntar.
 
 PRIVACIDAD
 • Sin cuenta, sin analíticas, sin seguimiento y sin anuncios
-• Tus marcadores se quedan en tu navegador; las etiquetas, los resúmenes y las búsquedas guardadas se quedan en este dispositivo
+• Tus marcadores se quedan en tu navegador; las etiquetas, los resúmenes, las búsquedas guardadas, las Reglas inteligentes, el texto de las páginas, las portadas y el Historial de marcadores se quedan en este dispositivo
 • La configuración que cambias, tus prompts personalizados y Sobre mí se sincronizan a través de la cuenta del navegador cuando el navegador lo admite
 
 IA OPCIONAL (DESACTIVADA DE FORMA PREDETERMINADA)
@@ -120,12 +127,13 @@ La IA es opcional, y todo lo anterior funciona sin ella. Para usarla, necesitas 
 Cuando usas una función de IA, los datos que necesita se envían directamente desde tu navegador al servicio de IA que elegiste, según las condiciones de ese servicio: títulos de marcadores, direcciones, nombres de carpetas, las fechas en que se añadieron los marcadores, y etiquetas y resúmenes guardados; el título y la dirección de la página actual; tus mensajes de Preguntar a la IA; el texto de Sobre mí que escribas, si lo hay; si los enlaces que comprueba Preguntar a la IA siguen funcionando; y, solo con Leer el contenido de la página activado, el texto de las páginas implicadas. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. Usar un servicio de IA puede costar dinero.
 
 CONFIGURACIÓN Y COPIA DE SEGURIDAD
-• Hacer copia de los ajustes, al final de Configuración, guarda un archivo con la configuración que cambiaste, los prompts personalizados, Sobre mí, los servicios de IA (nunca sus claves), las búsquedas guardadas y las columnas del administrador. Restaurar ajustes los recupera
+• Hacer copia de los ajustes, al final de Configuración, guarda las partes que elijas: tus ajustes, los ajustes de este equipo, las búsquedas guardadas y la vista de tabla, los prompts y Sobre mí, las Reglas inteligentes, los servicios de IA y las portadas. Las claves de API solo se incluyen si las seleccionas, y entonces quedan protegidas con una contraseña
+• Restaurar ajustes muestra primero qué cambiaría cada parte, luego combina o reemplaza, y Deshacer importación lo revierte
 • Solo se guarda la configuración que cambias, así que las mejoras de los valores predeterminados en versiones posteriores te siguen llegando
 
 PARA DESARROLLADORES
-• Opciones de búsqueda: distinguir mayúsculas y minúsculas, palabras completas y expresiones regulares. La dirección del administrador conserva la búsqueda y la carpeta, así que un enlace puede abrirlo ya buscando (?q=react), y Atrás y Adelante restauran ambas
-• Los servicios de IA pueden ser proveedores de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo
+• Operadores de búsqueda: title:, url:, domain:, folder:, tag:, summary:, content: (texto de la página), is:, has:, after:, before:, -palabra, OR y paréntesis; además, distinguir mayúsculas y minúsculas, palabras completas y expresiones regulares. La dirección del administrador conserva la búsqueda y la carpeta, así que un enlace puede abrirlo ya buscando (?q=react), y Atrás y Adelante restauran ambas
+• Los servicios de IA pueden ser proveedores de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo, con o sin clave de API
 • Exporta los marcadores seleccionados como contexto en Markdown o XML para un chat de IA (funciona sin IA y no envía nada)
 • El Escáner de privacidad también señala parámetros de consulta sensibles, fragmentos de URL y UUIDs
 • Agentes de IA locales (desactivado de forma predeterminada): permite que los agentes de IA de tu equipo, como Claude Code, consulten tus marcadores a través del programa de código abierto bookmark-scout-mcp, que se instala aparte. Si además activas Permitir cambios, pueden guardar y reorganizar marcadores, y cada cambio espera tu aprobación en una ventana de Bookmark Scout
@@ -158,7 +166,7 @@ ATAJOS DE GUARDADO RÁPIDO
 • Cambia las teclas en Configuración > Guardar y buscar > Atajos de teclado
 
 ENCUENTRA TUS MARCADORES
-• Busca en todos tus marcadores mientras escribes, directamente desde la barra de herramientas
+• Busca en todos tus marcadores mientras escribes, directamente desde la barra de herramientas: títulos, direcciones, carpetas, etiquetas y resúmenes, con operadores como tag:, domain: y folder:
 • Árbol de carpetas con arrastrar y soltar, desplegar y contraer todo, y creación de carpetas
 • El mismo árbol, la misma búsqueda y las carpetas coincidentes en la barra lateral de Firefox, que sigue abierta mientras navegas
 • Eliminación con confirmación (activada de forma predeterminada) y opción de deshacer durante 10 segundos
@@ -174,6 +182,7 @@ Al instalarla, Firefox pide una sola cosa: permiso para leer y modificar los mar
 • Acceso a las pestañas del navegador: solo para guardar la página actual u obtener sugerencias de carpeta desde la barra lateral. El botón de la barra de herramientas y el atajo de guardado rápido no necesitan ningún permiso
 • Activar la IA: Firefox pide compartir información de autenticación, marcadores y actividad de navegación (tu clave de API, tus marcadores y carpetas, y el título y la dirección de la página actual). Su aviso dice que el desarrollador quiere recopilarlos; aquí eso significa el servicio de IA que elegiste, que los recibe directamente desde tu navegador. Nada llega a Bookmark Scout
 • Leer el contenido de la página: acceso a tus datos en todos los sitios web, y compartir el contenido de los sitios web con tu servicio de IA
+• Capturar portadas al navegar (desactivado de forma predeterminada), que guarda en este dispositivo imágenes de las páginas marcadas que abres: acceso a tus datos en todos los sitios web, sin compartir nada
 • Verificar servicio: acceso a la dirección de tu servicio de IA, y compartir con él información de autenticación (tu clave de API)
 
 PRIVACIDAD
@@ -187,12 +196,13 @@ La IA es opcional, y todo lo anterior funciona sin ella. Para usarla, necesitas 
 Cuando pides sugerencias, el título y la dirección de la página actual y los nombres de tus carpetas se envían directamente desde tu navegador al servicio de IA que elegiste, según las condiciones de ese servicio, y, solo si activas Leer el contenido de la página, el texto de la página. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. Usar un servicio de IA puede costar dinero.
 
 CONFIGURACIÓN Y COPIA DE SEGURIDAD
-• Hacer copia de los ajustes, al final de Configuración, guarda un archivo con la configuración que cambiaste, los prompts personalizados, Sobre mí, los servicios de IA (nunca sus claves) y las búsquedas guardadas. Restaurar ajustes los recupera
+• Hacer copia de los ajustes, al final de Configuración, guarda las partes que elijas: tus ajustes, los ajustes de este equipo, las búsquedas guardadas y la vista de tabla, los prompts y Sobre mí, los servicios de IA y más. Las claves de API solo se incluyen si las seleccionas, y entonces quedan protegidas con una contraseña
+• Restaurar ajustes muestra primero qué cambiaría cada parte, luego combina o reemplaza, y Deshacer importación lo revierte
 • Solo se guarda la configuración que cambias, así que las mejoras de los valores predeterminados en versiones posteriores te siguen llegando
 
 PARA DESARROLLADORES
-• Opciones de búsqueda: distinguir mayúsculas y minúsculas, palabras completas y expresiones regulares
-• Los servicios de IA pueden ser proveedores de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo
+• Operadores de búsqueda: title:, url:, domain:, folder:, tag:, summary:, is:, has:, after:, before:, -palabra, OR y paréntesis; además, distinguir mayúsculas y minúsculas, palabras completas y expresiones regulares
+• Los servicios de IA pueden ser proveedores de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo, con o sin clave de API
 • Código abierto con licencia AGPL-3.0: https://github.com/isandrel/bookmark-scout
 
 ACTUALIZACIÓN DESDE UNA VERSIÓN ANTERIOR
@@ -201,17 +211,21 @@ La versión 0.3.3 guarda sus datos en un formato nuevo y no convierte los datos 
 Creado por un desarrollador independiente: sin empresa, sin anuncios y sin cuenta. Disponible en 12 idiomas. Temas claro, oscuro y del sistema.
 ```
 
-## What's new in 0.3.3
+## What's new in 0.3.5
 
-Translation of the English release notes; paste into AMO's release notes for 0.3.3.
+Translation of the English release notes; paste into AMO's release notes for 0.3.5.
 
 ```text
-• Guardado rápido: pulsa ⌥⇧S en Mac (Alt+Shift+S en Windows y Linux) en cualquier página para guardarla en la carpeta que mejor coincide con ella. Una notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla. Con la IA activada, ⌥⇧D en Mac (Alt+Shift+D en Windows y Linux) guarda en la primera sugerencia de la IA
-• Administrador de marcadores: menús contextuales, arrastrar y soltar, cortar, copiar y pegar, selección de varias filas, y deshacer y rehacer
-• Preguntar a la IA puede guardar páginas y proponer movimientos, cambios de nombre, eliminaciones y carpetas nuevas que no cambian nada hasta que los apruebas, y todos los cambios se pueden deshacer. Las respuestas pueden terminar con botones en los que puedes hacer clic
-• Elige qué comandos muestran los menús del administrador y qué puede hacer Preguntar a la IA
-• Exportar, en Configuración, ahora guarda una copia de seguridad que puedes importar
-• Esta actualización restablece los datos guardados de Bookmark Scout: la configuración vuelve a sus valores predeterminados, y hay que volver a configurar los servicios de IA y las claves de API, los prompts personalizados, las búsquedas guardadas, las etiquetas y los resúmenes. Tus marcadores no se modifican
+• Portadas y tarjetas: muestra una carpeta del administrador de marcadores como tarjetas con la imagen de portada, las etiquetas y el resumen de cada página. Las portadas salen de la imagen de vista previa de la propia página, de una imagen de la pestaña que elijas o, si lo activas, de imágenes tomadas mientras navegas, y se quedan en este dispositivo
+• Buscar dentro de las páginas: Indexar texto de páginas guarda en este dispositivo el texto de las páginas que elijas, para que la búsqueda encuentre palabras dentro de ellas
+• La misma búsqueda en todas partes: títulos, direcciones, carpetas, etiquetas y resúmenes, con operadores como tag:, domain:, folder: y OR
+• Las Reglas inteligentes etiquetan los marcadores que coinciden con una búsqueda y los mueven a una carpeta, tras revisarlo
+• El Historial de marcadores muestra cada cambio en tus marcadores, con Deshacer, y puede recuperar elementos eliminados
+• Las herramientas largas siguen en segundo plano cuando cierras el administrador
+• Ajusta en Configuración los menús, las columnas, los atajos de teclado, el menú del clic derecho y más
+• Haz copia de las partes de tus ajustes que elijas y mira qué cambiaría una restauración antes de Combinar o Reemplazar, con Deshacer importación. Las claves de API solo se incluyen si las seleccionas, protegidas con una contraseña
+• Los ajustes de Títulos e iconos de páginas ahora se llaman Detalles de páginas
+• Idiomas nuevos: ruso, indonesio e italiano
 ```
 
 ## Category

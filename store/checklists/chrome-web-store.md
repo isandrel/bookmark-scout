@@ -28,6 +28,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 - [ ] Check Dead Links asks for website access on first run, and declining scans nothing.
 - [ ] Right-click a link: no save menu until Right-Click Menu is turned on in Settings; turning it on adds the menu without a prompt.
 - [ ] Turning on Use the browser's icon cache asks to read site icons; icons from the cache appear only after allowing it.
+- [ ] Turning on Capture Covers While Browsing (Settings > Page Details, with Fetch Covers on) explains it first, then asks to "Read and change all your data on all websites"; declining leaves it off.
 - [ ] Options: AI is off by default; AI tools in the Tools sidebar say to turn on AI.
 
 ## 3. Store listing tab

@@ -28,6 +28,7 @@ The full Chromium E2E suite runs against the Edge build as the required `Edge E2
 - [ ] Saving the current page from the side panel asks for tab access; declining saves nothing.
 - [ ] Check Dead Links asks for website access on first run (if the manager is reachable).
 - [ ] Options: AI is off by default.
+- [ ] Turning on Capture Covers While Browsing (Settings > Page Details, with Fetch Covers on) asks for access to all websites; declining leaves it off.
 - [ ] Settings sync when Edge sync is on.
 
 ## 3. Store listing (per language)
