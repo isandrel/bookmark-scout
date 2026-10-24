@@ -6708,7 +6708,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Impostazioni salvate solo per questo computer: layout, barre laterali, scorciatoie da tastiera, cartella del salvataggio rapido, automazione delle Regole intelligenti e accesso per gli agenti IA locali.",
+        "message": "Impostazioni salvate solo per questo computer: layout, barre laterali, scorciatoie da tastiera, cattura delle copertine, cartella del salvataggio rapido, automazione delle Regole intelligenti e accesso per gli agenti IA locali.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8726,7 +8726,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "Non leggere mai le pagine della tua rete locale (come un router o una intranet), così il loro contenuto non arriva a un'azienda di IA",
+        "message": "Non leggere mai le pagine della tua rete locale (come un router o una intranet), così il loro contenuto non arriva a un'azienda di IA. Anche Indicizza il testo delle pagine e Recupera copertine le saltano, e il salvataggio rapido non ne scarica copertine",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

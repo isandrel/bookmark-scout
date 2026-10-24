@@ -7232,7 +7232,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Настройки только для этого компьютера: макет, боковые панели, сочетания клавиш, папка для быстрого сохранения, автоматическая работа «Умных правил» и доступ для локальных ИИ-агентов.",
+        "message": "Настройки только для этого компьютера: макет, боковые панели, сочетания клавиш, снимки обложек, папка для быстрого сохранения, автоматическая работа «Умных правил» и доступ для локальных ИИ-агентов.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -9346,7 +9346,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "Никогда не читать страницы в вашей локальной сети (например, роутера или интранета), чтобы их содержимое не попало в ИИ-компанию",
+        "message": "Никогда не читать страницы в вашей локальной сети (например, роутера или интранета), чтобы их содержимое не попало в ИИ-компанию. «Индексация текста страниц» и «Загрузка обложек» тоже их пропускают, а быстрое сохранение не загружает с них обложки",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

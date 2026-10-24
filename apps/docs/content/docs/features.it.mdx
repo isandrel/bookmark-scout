@@ -14,7 +14,7 @@ Un elenco di riferimento di ciò che è disponibile ora. Per le istruzioni passo
 | Gestione preferiti | Sostituisce la pagina dei preferiti del browser in Chrome ed Edge: albero delle cartelle, percorso di navigazione, una tabella dei preferiti e la barra laterale **Strumenti**. In una finestra stretta, l'albero delle cartelle e **Strumenti** si aprono sopra la tabella; un percorso di cartelle profondo raccoglie le cartelle intermedie in un menu **…** |
 | Impostazioni | La pagina delle impostazioni dell'estensione: prima **Essenziali**, poi altre undici schede in **Avanzate**. Vedi [Impostazioni](/settings) |
 | Qualsiasi pagina | <Shortcut id="commands.quick-save" /> e <Shortcut id="commands.ai-quick-save" /> salvano rapidamente la pagina che stai visitando, con una notifica nella pagina |
-| Menu contestuale | **Salva preferito in...** su qualsiasi link, dopo aver attivato **Menu contestuale** |
+| Menu contestuale | **Salva preferito in...** sui link, e sulle pagine o sul testo selezionato se li scegli in **Mostra il menu su**, dopo aver attivato **Menu contestuale** |
 
 ## Trovare [#find]
 
@@ -32,7 +32,7 @@ Guida: [Ricerca e ricerche salvate](/guides/search).
 - Salva la pagina corrente in qualsiasi cartella, mai due volte nella stessa cartella, con un pannello **Recenti** delle cartelle che hai usato.
 - Digita parte del nome di una cartella, o un percorso come `work/react`, e salva in una delle cartelle corrispondenti elencate sopra i risultati.
 - Salvataggio rapido con <Shortcut id="commands.quick-save" /> su qualsiasi pagina, nella cartella più adatta alla pagina (classificata sul tuo dispositivo), nell'ultima cartella usata o in una cartella che scegli tu; <Shortcut id="commands.ai-quick-save" /> salva nel primo suggerimento dell'IA. Una notifica nella pagina offre **Annulla** e altre cartelle in **Sposta in**. In Chrome ed Edge puoi assegnare al salvataggio rapido <Shortcut id="browser.bookmark_page" />.
-- Salva i link dal menu contestuale in una cartella recente o nella Barra dei preferiti.
+- Salva link, pagine o testo selezionato dal menu contestuale in una cartella recente o nella Barra dei preferiti.
 - Crea cartelle, trascina preferiti e cartelle e spostane diversi insieme nella gestione preferiti.
 - Mostra i preferiti nell'ordine del browser (quello predefinito), per data di aggiunta, in ordine alfabetico naturale o con le cartelle per prime, senza cambiare l'ordine salvato nel browser.
 - Modifica nomi e URL e aggiungi tag e un riassunto in **Dettagli preferito**.
@@ -64,7 +64,7 @@ Guide: [Ripulire e arricchire i preferiti](/guides/clean-up) e [Trovare e ripara
 - Esporta in HTML, JSON, Markdown o CSV, con una revisione della privacy che può oscurare i valori sensibili nel file.
 - Importa file HTML o JSON dopo un'anteprima della cartella di destinazione, dei conteggi e dei duplicati, con annullamento.
 - Le esportazioni JSON conservano i tag e il riassunto di ogni preferito, e l'importazione di un file del genere li ripristina.
-- Esegui il backup in un file JSON delle impostazioni dell'estensione, dei prompt personalizzati, dei servizi IA (senza chiavi API), delle ricerche salvate e delle colonne della tabella della gestione preferiti, e ripristinali.
+- Esegui il backup in un file delle parti dei dati di Bookmark Scout che scegli: impostazioni, impostazioni di questo computer, ricerche salvate e vista tabella, prompt personalizzati e Su di me, regole intelligenti, servizi IA e copertine, con le chiavi API solo se le selezioni. Il ripristino mostra cosa cambierebbe ogni parte, la unisce o la sostituisce e si può annullare. Vedi [Backup e ripristino delle impostazioni](/guides/import-export#back-up-and-restore-settings).
 
 Guida: [Importazione ed esportazione](/guides/import-export).
 
@@ -90,10 +90,13 @@ Guida: [Usare con agenti IA locali](/guides/local-agents).
 ## Tastiera e lingua [#keyboard-and-language]
 
 - Scorciatoie di salvataggio rapido su qualsiasi pagina, che puoi cambiare nelle impostazioni delle scorciatoie del browser oppure, in Firefox, direttamente nelle Impostazioni di Bookmark Scout.
+- I tasti delle scorciatoie della gestione preferiti, del popup e del riquadro laterale, che puoi cambiare nelle [Impostazioni](/settings#page-shortcuts), per ogni dispositivo.
 - Scorciatoie nel popup e nel riquadro laterale che non usano mai `Ctrl` o `Cmd`, e nella gestione preferiti i tasti della gestione preferiti di Chrome (seleziona tutto, annulla, ripeti, apri in schede), con una finestra di aiuto <Shortcut id="manager.show_help" />. Vedi [Scorciatoie da tastiera](/guides/keyboard-shortcuts).
 - Selezione nella gestione preferiti come in Chrome: clic, <Shortcut id="mouse.select_toggle" />, <Shortcut id="mouse.select_range" /> e <Shortcut id="manager.select_all" />; i tasti freccia si spostano nella tabella e nell'albero delle cartelle, che gli screen reader annunciano come albero.
 - Annullamento e ripetizione delle modifiche, degli spostamenti e delle eliminazioni della gestione preferiti con <Shortcut id="manager.undo" /> e <Shortcut id="manager.redo" />, per l'intera sessione del browser.
 - Menu contestuali sulle righe e sulle cartelle della gestione preferiti: taglia, copia e incolla, apri tutto in schede, in una nuova finestra o in una finestra di navigazione in incognito, rinomina ed elimina; più **Ordina per nome** e **Aggiungi nuovo preferito** o **Aggiungi nuova cartella**. **Menu della gestione preferiti** nelle Impostazioni sceglie quali comandi mostrano e in che ordine.
+- Un popup e un riquadro laterale come li vuoi tu: le loro parti, i pulsanti della barra degli strumenti, l'altezza delle righe e i dettagli della scheda al passaggio del puntatore ([Popup](/settings#popup)), e i comandi delle loro righe ([Azioni dei preferiti e delle cartelle nel popup](/settings#popup-menus)).
+- Una barra laterale Strumenti come la vuoi tu: quali strumenti mostra, il loro ordine e la scheda con cui si apre ([Barra laterale Strumenti](/settings#tools-sidebar)); e **Posizione delle notifiche**, dove compaiono messaggi come **Annulla** ([Notifiche](/settings#notifications)).
 - Trascinamento nella gestione preferiti come in Chrome: sulle cartelle nella tabella o nell'albero, tra le righe nell'ordine del browser, e link trascinati da altre pagine; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> e <Shortcut id="manager.paste" /> copiano, spostano e incollano.
 - Tema di sistema, chiaro o scuro.
 - Interfaccia in <Languages of="extension" />.

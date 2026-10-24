@@ -6708,7 +6708,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "Nur für diesen Computer gespeicherte Einstellungen: Layout, Seitenleisten, Tastenkürzel, der Schnellspeicher-Ordner, die Automatik der Intelligenten Regeln und der Zugriff für lokale KI-Agenten.",
+        "message": "Nur für diesen Computer gespeicherte Einstellungen: Layout, Seitenleisten, Tastenkürzel, das Aufnehmen von Titelbildern, der Schnellspeicher-Ordner, die Automatik der Intelligenten Regeln und der Zugriff für lokale KI-Agenten.",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8726,7 +8726,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "Seiten in Ihrem lokalen Netzwerk (etwa ein Router oder ein Intranet) nie lesen, damit ihr Inhalt kein KI-Unternehmen erreicht",
+        "message": "Seiten in Ihrem lokalen Netzwerk (etwa ein Router oder ein Intranet) nie lesen, damit ihr Inhalt kein KI-Unternehmen erreicht. Auch „Seitentext indexieren“ und „Titelbilder laden“ überspringen sie, und das Schnellspeichern lädt von ihnen kein Titelbild",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

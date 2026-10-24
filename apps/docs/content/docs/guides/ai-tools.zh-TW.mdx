@@ -91,7 +91,7 @@ AI 工具會將書籤標題、網址，以及資料夾名稱或路徑傳送給�
 | Azure OpenAI | 必填 | 設定「**資源名稱**」(或「**基礎網址**」)，並將部署名稱輸入為「**自訂模型**」。Azure 沒有部署清單，因此不會顯示「**重新整理模型**」。 |
 | OpenRouter | 必填 | |
 | Ollama (本機) | 選填 | 預設位址為 <ProviderAddress id="ollama" />；要求會留在你的電腦上 |
-| CLIProxyAPI | 通常必填 | 在你的電腦上執行，並使用你自己的 Claude、Gemini 或 Codex 帳戶回應。預設位址為 <ProviderAddress id="cliproxyapi" />；請輸入其 `config.yaml` 中 `api-keys` 下的其中一個金鑰，然後按一下「**重新整理模型**」查看你的帳戶提供的模型。 |
+| CLIProxyAPI | 選填；它的預設設定要求提供一個 | 在你的電腦上執行，並使用你自己的 Claude、Gemini 或 Codex 帳戶回應。預設位址為 <ProviderAddress id="cliproxyapi" />；請輸入其 `config.yaml` 中 `api-keys` 下的其中一個金鑰，然後按一下「**重新整理模型**」查看你的帳戶提供的模型。 |
 | oMLX、LM Studio、llama.cpp server、vLLM、LocalAI、KoboldCpp、text-generation-webui | 選填 | 列在「**本機伺服器**」下，並附有預設位址：oMLX 為 <ProviderAddress id="omlx" />、LM Studio 為 <ProviderAddress id="lmstudio" />、llama.cpp 為 <ProviderAddress id="llamacpp" />、vLLM 為 <ProviderAddress id="vllm" />、LocalAI 為 <ProviderAddress id="localai" />、KoboldCpp 為 <ProviderAddress id="koboldcpp" />、text-generation-webui 為 <ProviderAddress id="textgen" />。按一下「**重新整理模型**」即可查看伺服器已載入的模型。 |
 | Jan | 必填 | 本機 API 伺服器位於 <ProviderAddress id="jan" />；請輸入 Jan API 伺服器設定中的金鑰 |
 | 自訂供應商 | 選填 | 任何與 OpenAI 相容的端點，以「**基礎網址**」設定 |

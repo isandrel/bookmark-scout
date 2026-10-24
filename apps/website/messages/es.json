@@ -128,7 +128,7 @@
           "Escribe una ruta como ai/llms y encuentra la carpeta aunque cometas un pequeño error de escritura",
           "Pulsa {{SHORTCUT:commands.quick-save}} en cualquier página para guardarla en la carpeta que mejor le corresponde; una pequeña notificación en la página ofrece Deshacer y otras carpetas",
           "Una página que ya está en esa carpeta no se guarda dos veces, y las carpetas en las que guardaste hace poco aparecen primero",
-          "Guarda enlaces en carpetas recientes desde el menú del clic derecho, una vez que lo actives en Configuración (al principio está desactivado)",
+          "Guarda enlaces, páginas o texto seleccionado en carpetas recientes desde el menú del clic derecho, una vez que lo actives en Configuración (al principio está desactivado)",
           "Con la IA activada, obtén sugerencias de carpeta para la página, o guarda en la primera con {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },

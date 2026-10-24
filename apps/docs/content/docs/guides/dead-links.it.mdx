@@ -85,6 +85,6 @@ Nella scheda **Manutenzione** delle [Impostazioni](/settings):
 | --- | --- |
 | **Timeout della richiesta** | <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> secondi per richiesta |
 | **Richieste simultanee** | <SettingDefault path="maintenance.dead_links.concurrency" /> richieste alla volta |
-| **Numero di tentativi** | 1 tentativo |
+| **Numero di tentativi** | <SettingDefault path="maintenance.dead_links.retry_count" /> |
 | **Segui i reindirizzamenti** | Attivo |
-| **Codici di stato validi** | 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Codici di stato validi** | <SettingDefault path="maintenance.dead_links.success_statuses" /> |

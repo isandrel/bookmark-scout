@@ -85,6 +85,6 @@ Chrome は、失敗したリクエストごとに、ページのデベロッパ�
 | --- | --- |
 | **リクエストのタイムアウト** | 1 リクエストあたり <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> 秒 |
 | **同時実行数** | 同時に <SettingDefault path="maintenance.dead_links.concurrency" /> リクエスト |
-| **再試行回数** | 1 回 |
+| **再試行回数** | <SettingDefault path="maintenance.dead_links.retry_count" /> |
 | **リダイレクトをたどる** | オン |
-| **成功とみなすステータスコード** | 200, 201, 202, 204, 301, 302, 307, 308 |
+| **成功とみなすステータスコード** | <SettingDefault path="maintenance.dead_links.success_statuses" /> |

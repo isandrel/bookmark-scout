@@ -39,12 +39,15 @@ describe("docs pages", () => {
       const label = messages[`settings_${stem}`]?.message;
       const value = readSettingDefault(path);
       if (!label || typeof value !== "number") return [];
-      // What follows the label up to the end of its cell (a table's next cell, or a list's `;`):
-      // languages that put words before the number ("1 リクエストあたり 8 秒") are caught too.
-      const cell =
-        new RegExp(`\\*\\*${escape(label)}\\*\\*(?: \\|)?([^\\n|;]*)`).exec(text)?.[1] ?? "";
-      const numbers = [...cell.matchAll(/(?<![\d.,])(\d+)(?![\d.,])/g)].map(([found]) =>
-        Number(found),
+      // What follows each bold mention of the label up to the end of its cell (a table's next
+      // cell, or a list's `;`): languages that put words before the number ("1 リクエストあたり
+      // 8 秒") are caught too. Every mention is checked, not only the first: a guide often names a
+      // setting in its text before its table gives the default.
+      const cells = [
+        ...text.matchAll(new RegExp(`\\*\\*${escape(label)}\\*\\*(?: \\|)?([^\\n|;]*)`, "g")),
+      ].map(([, cell]) => cell ?? "");
+      const numbers = cells.flatMap((cell) =>
+        [...cell.matchAll(/(?<![\d.,])(\d+)(?![\d.,])/g)].map(([found]) => Number(found)),
       );
       return numbers.some((number) => number === value || number === value / MS_PER_SECOND)
         ? [`${label} (${path})`]

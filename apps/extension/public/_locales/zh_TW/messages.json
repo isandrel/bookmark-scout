@@ -6462,7 +6462,7 @@
         "description": "Backup part: the settings kept for one device"
     },
     "backup_categoryDeviceSettingsDesc": {
-        "message": "只為這台電腦保存的設定：版面、側欄、鍵盤按鍵、快速儲存資料夾、智慧規則自動執行，以及本機 AI 代理的存取權。",
+        "message": "只為這台電腦保存的設定：版面、側欄、鍵盤按鍵、封面擷取、快速儲存資料夾、智慧規則自動執行，以及本機 AI 代理的存取權。",
         "description": "Backup part: what the device settings part holds"
     },
     "backup_categoryViews": {
@@ -8440,7 +8440,7 @@
         "description": "Setting label: readPageSkipPrivateHosts"
     },
     "settings_readPageSkipPrivateHostsDesc": {
-        "message": "從不讀取區域網路中的網頁（例如路由器或內部網路），以免其內容傳送給 AI 公司",
+        "message": "從不讀取區域網路中的網頁（例如路由器或內部網路），以免其內容傳送給 AI 公司。索引網頁內文和取得封面也會略過這些網頁，快速儲存也不會從中下載封面",
         "description": "Setting description: readPageSkipPrivateHosts"
     },
     "settings_tooltipDelay": {

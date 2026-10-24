@@ -128,7 +128,7 @@
           "Digite um caminho como ai/llms e encontre a pasta mesmo com um pequeno erro de digitação",
           "Pressione {{SHORTCUT:commands.quick-save}} em qualquer página para salvá-la na pasta que melhor corresponde a ela; uma pequena notificação na página oferece Desfazer e outras pastas",
           "Uma página que já está nessa pasta não é salva duas vezes, e as pastas em que você salvou recentemente aparecem primeiro",
-          "Salve links em pastas recentes pelo menu de clique com o botão direito, depois de ativar esse menu nas Configurações (ele vem desativado)",
+          "Salve links, páginas ou texto selecionado em pastas recentes pelo menu de clique com o botão direito, depois de ativar esse menu nas Configurações (ele vem desativado)",
           "Com a IA ativada, receba sugestões de pasta para a página ou salve na primeira delas com {{SHORTCUT:commands.ai-quick-save}}"
         ]
       },

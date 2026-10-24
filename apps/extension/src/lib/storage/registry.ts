@@ -216,6 +216,13 @@ export const DEVICE_SETTING_KEYS = [
   'siteIconsMaxCacheKb',
   /** How much of this device's storage bookmark covers may take. */
   'coversMaxCacheMb',
+  /**
+   * Taking covers without a click: Capture Covers While Browsing needs access to all pages, which
+   * is granted per browser, and the pictures of both stay on this device, so each is chosen here.
+   */
+  'coversBrowseCapture',
+  'coversBrowseCapturePrivate',
+  'quickSaveCover',
   /** Smart Rules are kept on this device, so tagging new bookmarks with them is set here too. */
   'bookmarkRulesAutoTag',
   /** And so is moving new bookmarks with them, to folders that exist on this device only. */

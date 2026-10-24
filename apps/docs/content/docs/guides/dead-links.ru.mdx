@@ -85,6 +85,6 @@ Chrome записывает строку «Failed to load resource» в конс
 | --- | --- |
 | **Время ожидания запроса** | <SettingDefault path="maintenance.dead_links.request_timeout_ms" seconds /> с на запрос |
 | **Параллельные запросы** | Одновременных запросов: <SettingDefault path="maintenance.dead_links.concurrency" /> |
-| **Число повторов** | 1 повтор |
+| **Число повторов** | <SettingDefault path="maintenance.dead_links.retry_count" /> |
 | **Следовать перенаправлениям** | Вкл. |
-| **Коды успешного ответа** | 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Коды успешного ответа** | <SettingDefault path="maintenance.dead_links.success_statuses" /> |

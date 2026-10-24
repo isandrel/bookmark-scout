@@ -30,7 +30,7 @@ Detalles del archivo:
 - Los nombres de archivo empiezan por el **Prefijo del nombre de archivo** (`bookmarks_` de forma predeterminada) y conservan los nombres de carpeta con caracteres no ASCII.
 - Los archivos CSV empiezan con una marca de orden de bytes UTF-8. La columna Folder une las carpetas con `/`, y escribe una `/` dentro de un nombre de carpeta como `\/` y una barra invertida como `\\`.
 - Los separadores, que solo tiene Firefox, se escriben como separadores en HTML (`<HR>`) y JSON, y vuelven como separadores al importar ese archivo en Firefox. Markdown y CSV los omiten, y Chrome y Edge, que no tienen separadores, los omiten al importar; la vista previa los cuenta.
-- **Incluir fechas** e **Incluir URLs**, y los tamaños de sangría de cada formato, están en la pestaña **Datos** de la [Configuración](/settings).
+- **Incluir fechas** e **Incluir URLs**, y los tamaños de sangría de cada formato, están en la pestaña **Importar y exportar** de la [Configuración](/settings#data).
 
 Una exportación en JSON incluye las etiquetas y el resumen de cada marcador, e importar ese archivo se los asigna a los marcadores que crea, pero no a los que omite por duplicados. Las exportaciones en HTML, Markdown y CSV no los incluyen. Para pasar marcadores con sus etiquetas y resúmenes a una herramienta de IA, usa el **Empaquetador de contexto para IA**; consulta [Configurar las herramientas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
 

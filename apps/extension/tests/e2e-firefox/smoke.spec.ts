@@ -14,6 +14,7 @@ import { By, expect, type FirefoxExtension, test } from './fixtures';
  */
 
 const SETTINGS_KEY = storageAreaKey(STORAGE_ITEMS.settings);
+const DEVICE_SETTINGS_KEY = storageAreaKey(STORAGE_ITEMS.deviceSettings);
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -69,6 +70,14 @@ function readSettings(extension: FirefoxExtension) {
     const stored = (await browser.storage.sync.get(key))[key] as { data?: object } | undefined;
     return (stored?.data ?? {}) as Record<string, unknown>;
   }, SETTINGS_KEY);
+}
+
+/** The changed settings kept on this device only (`DEVICE_SETTING_KEYS`). */
+function readDeviceSettings(extension: FirefoxExtension) {
+  return extension.call(async (browser, key) => {
+    const stored = (await browser.storage.local.get(key))[key] as { data?: object } | undefined;
+    return (stored?.data ?? {}) as Record<string, unknown>;
+  }, DEVICE_SETTINGS_KEY);
 }
 
 async function openTools(extension: FirefoxExtension, folderId: string) {
@@ -1679,7 +1688,9 @@ test('Capture Covers While Browsing asks Firefox for all pages, then pictures a 
     ).toBe(true);
 
     // Options saves as it goes; the background follows once the setting is stored.
-    await expect.poll(async () => (await readSettings(extension)).coversBrowseCapture).toBe(true);
+    await expect
+      .poll(async () => (await readDeviceSettings(extension)).coversBrowseCapture)
+      .toBe(true);
     // Browsing to the bookmarked page in this tab; the API tab stays in the back meanwhile.
     await extension.driver.get(url);
     await extension.driver.sleep(4_000);

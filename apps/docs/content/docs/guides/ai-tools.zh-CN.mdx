@@ -91,7 +91,7 @@ AI 工具会将书签标题、网址以及文件夹名称或路径发送给你�
 | Azure OpenAI | 必需 | 设置**资源名称**（或 **API 地址**），并在**自定义模型**中输入你的部署名称。Azure 没有部署列表，因此不会显示**刷新模型**。 |
 | OpenRouter | 必需 | |
 | Ollama（本地） | 可选 | 默认地址为 <ProviderAddress id="ollama" />；请求不会离开你的计算机 |
-| CLIProxyAPI | 通常必需 | 在你的计算机上运行，并使用你自己的 Claude、Gemini 或 Codex 账号进行回答。默认地址为 <ProviderAddress id="cliproxyapi" />；请输入其 `config.yaml` 中 `api-keys` 下的某个密钥，然后点击**刷新模型**查看你的账号提供的模型。 |
+| CLIProxyAPI | 可选；它的默认配置要求提供一个 | 在你的计算机上运行，并使用你自己的 Claude、Gemini 或 Codex 账号进行回答。默认地址为 <ProviderAddress id="cliproxyapi" />；请输入其 `config.yaml` 中 `api-keys` 下的某个密钥，然后点击**刷新模型**查看你的账号提供的模型。 |
 | oMLX、LM Studio、llama.cpp server、vLLM、LocalAI、KoboldCpp、text-generation-webui | 可选 | 列在**本地服务器**下，并带有各自的默认地址：oMLX 为 <ProviderAddress id="omlx" />，LM Studio 为 <ProviderAddress id="lmstudio" />，llama.cpp 为 <ProviderAddress id="llamacpp" />，vLLM 为 <ProviderAddress id="vllm" />，LocalAI 为 <ProviderAddress id="localai" />，KoboldCpp 为 <ProviderAddress id="koboldcpp" />，text-generation-webui 为 <ProviderAddress id="textgen" />。点击**刷新模型**可查看服务器已加载的模型。 |
 | Jan | 必需 | 本地 API 服务器地址为 <ProviderAddress id="jan" />；请输入 Jan 的 API 服务器设置中的密钥 |
 | 自定义服务商 | 可选 | 任何兼容 OpenAI 的端点，通过 **API 地址**设置 |

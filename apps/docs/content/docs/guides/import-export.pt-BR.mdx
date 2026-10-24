@@ -30,7 +30,7 @@ Detalhes dos arquivos:
 - Os nomes dos arquivos começam com o **Prefixo do nome do arquivo** (padrão `bookmarks_`) e mantêm os nomes de pastas com caracteres não ASCII.
 - Os arquivos CSV começam com uma marca de ordem de bytes (BOM) UTF-8. A coluna Pasta junta as pastas com `/` e grava uma `/` dentro do nome de uma pasta como `\/` e uma barra invertida como `\\`.
 - Os separadores, que só o Firefox tem, são gravados como separadores em HTML (`<HR>`) e JSON e voltam como separadores ao importar esse arquivo no Firefox. Markdown e CSV os deixam de fora, e o Chrome e o Edge, que não têm separadores, os deixam de fora da importação; a prévia os conta.
-- **Incluir datas** e **Incluir URLs**, além dos tamanhos de recuo de cada formato, ficam na guia **Dados** das [Configurações](/settings).
+- **Incluir datas** e **Incluir URLs**, além dos tamanhos de recuo de cada formato, ficam na guia **Importar e exportar** das [Configurações](/settings#data).
 
 Uma exportação em JSON inclui as tags e o resumo de cada favorito, e importar esse arquivo os atribui aos favoritos que a importação cria, mas não aos que ela ignora por serem duplicados. As exportações em HTML, Markdown e CSV não os incluem. Para entregar favoritos com as tags e os resumos deles a uma ferramenta de IA, use o **Empacotador de contexto para IA**; consulte [Configurar as ferramentas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
 

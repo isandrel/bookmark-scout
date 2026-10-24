@@ -30,7 +30,7 @@ Detail file:
 - Nama file diawali dengan **Awalan Nama File** (default `bookmarks_`) dan mempertahankan nama folder non-ASCII.
 - File CSV diawali dengan byte order mark UTF-8. Kolom Folder menggabungkan folder dengan `/`, dan menulis `/` di dalam nama folder sebagai `\/` serta garis miring terbalik sebagai `\\`.
 - Pemisah, yang hanya ada di Firefox, ditulis sebagai pemisah di HTML (`<HR>`) dan JSON dan kembali menjadi pemisah saat Anda mengimpor file itu di Firefox. Markdown dan CSV tidak menyertakannya, dan Chrome serta Edge, yang tidak punya pemisah, tidak menyertakannya saat impor; pratinjau menghitungnya.
-- **Sertakan Tanggal** dan **Sertakan URL**, serta ukuran indentasi untuk setiap format, ada di tab **Data** di [Setelan](/settings).
+- **Sertakan Tanggal** dan **Sertakan URL**, serta ukuran indentasi untuk setiap format, ada di tab **Impor & Ekspor** di [Setelan](/settings#data).
 
 Ekspor JSON menyertakan tag dan ringkasan setiap bookmark, dan mengimpor file itu memberikannya ke bookmark yang dibuatnya, tetapi tidak ke bookmark yang dilewati sebagai duplikat. Ekspor HTML, Markdown, dan CSV tidak menyertakannya. Untuk menyerahkan bookmark beserta tag dan ringkasannya ke alat AI, gunakan **Pengemas Konteks AI**; lihat [Menyiapkan alat AI](/guides/ai-tools#export-context-for-an-ai-chat).
 

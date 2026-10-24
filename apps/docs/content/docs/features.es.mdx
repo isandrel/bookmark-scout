@@ -14,7 +14,7 @@ Una lista de referencia de lo que incluye la versión actual. Para instrucciones
 | Administrador de marcadores | Reemplaza la página de marcadores del navegador en Chrome y Edge: árbol de carpetas, ruta de navegación, una tabla de marcadores y la barra lateral **Herramientas**. En una ventana estrecha, el árbol de carpetas y **Herramientas** se abren sobre la tabla; una ruta de carpetas profunda agrupa sus carpetas intermedias en un menú **…** |
 | Configuración | La página de configuración de la extensión: primero **Lo esencial** y después once pestañas más en **Avanzado**. Consulta [Configuración](/settings) |
 | Cualquier página | <Shortcut id="commands.quick-save" /> y <Shortcut id="commands.ai-quick-save" /> hacen un guardado rápido de la página en la que estás, con una notificación en la página |
-| Menú del clic derecho | **Guardar marcador en...** en cualquier enlace, cuando activas **Menú del clic derecho** |
+| Menú del clic derecho | **Guardar marcador en...** en los enlaces, y en páginas o texto seleccionado si los eliges en **Mostrar el menú en**, cuando activas **Menú del clic derecho** |
 
 ## Buscar [#find]
 
@@ -32,7 +32,7 @@ Guía: [Búsqueda y búsquedas guardadas](/guides/search).
 - Guarda la página actual en cualquier carpeta, nunca dos veces en la misma carpeta, con un panel **Recientes** de las carpetas que usaste.
 - Escribe parte del nombre de una carpeta, o una ruta como `work/react`, y guarda en una de las carpetas coincidentes que aparecen encima de los resultados.
 - Guardado rápido con <Shortcut id="commands.quick-save" /> en cualquier página, en la carpeta que mejor corresponde a la página (clasificada en tu dispositivo), en la última carpeta usada o en una carpeta que elijas; <Shortcut id="commands.ai-quick-save" /> guarda en la primera sugerencia de la IA. Una notificación en la página ofrece **Deshacer** y otras carpetas en **Mover a**. En Chrome y Edge puedes asignar <Shortcut id="browser.bookmark_page" /> al guardado rápido.
-- Guarda enlaces desde el menú contextual en una carpeta reciente o en la Barra de marcadores.
+- Guarda enlaces, páginas o texto seleccionado desde el menú contextual en una carpeta reciente o en la Barra de marcadores.
 - Crea carpetas, arrastra y suelta marcadores y carpetas, y mueve varios a la vez en el administrador.
 - Muestra los marcadores en el orden propio del navegador (el predeterminado), por fecha de creación, por orden alfabético natural o con las carpetas primero, sin cambiar el orden que guarda el navegador.
 - Edita nombres y URLs, y añade etiquetas y un resumen en **Detalles del marcador**.
@@ -64,7 +64,7 @@ Guías: [Limpiar y enriquecer marcadores](/guides/clean-up) y [Encontrar y repar
 - Exporta a HTML, JSON, Markdown o CSV, con una revisión de privacidad que puede censurar los valores sensibles del archivo.
 - Importa HTML o JSON después de una vista previa de la carpeta de destino, los recuentos y los duplicados, con opción de deshacer.
 - Las exportaciones en JSON conservan las etiquetas y el resumen de cada marcador, y al importar un archivo así se restauran.
-- Haz una copia de seguridad de la configuración de la extensión, los prompts personalizados, los servicios de IA (sin claves de API), las búsquedas guardadas y las columnas de la tabla del administrador en un archivo JSON, y restáurala.
+- Haz una copia de seguridad de las partes que elijas de los datos propios de Bookmark Scout en un archivo: ajustes, ajustes de este equipo, búsquedas guardadas y vista de tabla, prompts personalizados y Sobre mí, reglas inteligentes, servicios de IA y portadas, con las claves de API solo si las seleccionas. Al restaurar, ves qué cambiaría cada parte, la combinas o la reemplazas, y puedes deshacerlo. Consulta [Copia y restauración de los ajustes](/guides/import-export#back-up-and-restore-settings).
 
 Guía: [Importar y exportar](/guides/import-export).
 
@@ -90,10 +90,13 @@ Guía: [Usar con agentes de IA locales](/guides/local-agents).
 ## Teclado e idioma [#keyboard-and-language]
 
 - Atajos de guardado rápido en cualquier página, que puedes cambiar en la configuración de atajos del navegador o, en Firefox, directamente en la configuración de Bookmark Scout.
+- Las teclas de los atajos del administrador, la ventana emergente y el panel lateral, que puedes cambiar en la [Configuración](/settings#page-shortcuts), en cada dispositivo.
 - Combinaciones de teclas en la ventana emergente y el panel lateral que nunca usan `Ctrl` ni `Cmd`, y en el administrador las teclas del administrador de marcadores de Chrome (seleccionar todo, deshacer, rehacer, abrir en pestañas), con un diálogo de ayuda <Shortcut id="manager.show_help" /> allí. Consulta [Combinaciones de teclas](/guides/keyboard-shortcuts).
 - Selección en el administrador como en Chrome: clic, <Shortcut id="mouse.select_toggle" />, <Shortcut id="mouse.select_range" /> y <Shortcut id="manager.select_all" />; las teclas de flecha recorren la tabla y el árbol de carpetas, que los lectores de pantalla anuncian como un árbol.
 - Deshacer y rehacer las ediciones, los movimientos y las eliminaciones del administrador con <Shortcut id="manager.undo" /> y <Shortcut id="manager.redo" />, durante toda la sesión del navegador.
 - Menús contextuales en las filas y carpetas del administrador: cortar, copiar y pegar, abrir todo en pestañas, en una ventana nueva o en una ventana de incógnito, cambiar nombre y eliminar; además de **Ordenar por nombre** y **Añadir marcador nuevo** o **carpeta nueva**. **Menús del administrador de marcadores** en la configuración elige qué comandos muestran y en qué orden.
+- Una ventana emergente y un panel lateral a tu medida: sus partes, los botones de la barra de herramientas, la altura de las filas y los detalles de la tarjeta al pasar el puntero ([Ventana emergente](/settings#popup)), y los comandos de sus filas ([Acciones de marcadores y carpetas en la ventana emergente](/settings#popup-menus)).
+- Una barra lateral Herramientas a tu medida: qué herramientas muestra, su orden y la pestaña con la que se abre ([Barra de herramientas](/settings#tools-sidebar)); y **Posición de las notificaciones**, dónde aparecen mensajes como **Deshacer** ([Notificaciones](/settings#notifications)).
 - Arrastrar y soltar en el administrador como en Chrome: sobre carpetas de la tabla o del árbol, entre filas en el orden del navegador, y enlaces desde otras páginas; <Shortcut id="manager.copy" />, <Shortcut id="manager.cut" /> y <Shortcut id="manager.paste" /> copian, mueven y pegan.
 - Tema del sistema, claro u oscuro.
 - <Languages of="extension" capitalize />.

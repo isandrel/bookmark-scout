@@ -91,7 +91,7 @@ Chrome では、Bookmark Scout は **Chrome の内蔵 AI** を使えます。パ
 | Azure OpenAI | 必須 | **リソース名**（または **ベースURL**）を設定し、デプロイ名を **カスタムモデル** に入力します。Azure にはデプロイの一覧がないため、**モデルを更新** は表示されません。 |
 | OpenRouter | 必須 | |
 | Ollama（ローカル） | 任意 | 既定のアドレスは <ProviderAddress id="ollama" />。リクエストは自分のマシンの外に出ません |
-| CLIProxyAPI | 通常は必須 | 自分のマシンで動作し、自分の Claude、Gemini、Codex アカウントで応答します。既定のアドレスは <ProviderAddress id="cliproxyapi" /> です。`config.yaml` の `api-keys` にあるキーのいずれかを入力し、**モデルを更新** でアカウントが提供するモデルを確認します。 |
+| CLIProxyAPI | 任意（初期設定の構成では 1 つ必要） | 自分のマシンで動作し、自分の Claude、Gemini、Codex アカウントで応答します。既定のアドレスは <ProviderAddress id="cliproxyapi" /> です。`config.yaml` の `api-keys` にあるキーのいずれかを入力し、**モデルを更新** でアカウントが提供するモデルを確認します。 |
 | oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | 任意 | **ローカルサーバー** に、それぞれの既定のアドレスとともに表示されます: oMLX は <ProviderAddress id="omlx" />、LM Studio は <ProviderAddress id="lmstudio" />、llama.cpp は <ProviderAddress id="llamacpp" />、vLLM は <ProviderAddress id="vllm" />、LocalAI は <ProviderAddress id="localai" />、KoboldCpp は <ProviderAddress id="koboldcpp" />、text-generation-webui は <ProviderAddress id="textgen" />。**モデルを更新** をクリックすると、サーバーが読み込んでいるモデルを確認できます。 |
 | Jan | 必須 | ローカル API サーバーは <ProviderAddress id="jan" />。Jan の API サーバー設定にあるキーを入力します |
 | カスタムプロバイダー | 任意 | OpenAI 互換の任意のエンドポイント。**ベースURL** で設定します |

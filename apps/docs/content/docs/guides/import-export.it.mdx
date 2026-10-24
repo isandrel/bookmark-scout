@@ -30,7 +30,7 @@ Dettagli del file:
 - I nomi dei file iniziano con **Prefisso del nome file** (predefinito `bookmarks_`) e conservano i nomi delle cartelle con caratteri non ASCII.
 - I file CSV iniziano con un byte order mark UTF-8. La colonna Folder unisce le cartelle con `/`, e scrive una `/` all'interno del nome di una cartella come `\/` e una barra rovesciata come `\\`.
 - I separatori, che esistono solo in Firefox, vengono scritti come separatori in HTML (`<HR>`) e JSON e tornano separatori quando importi quel file in Firefox. Markdown e CSV li omettono, e Chrome ed Edge, che non hanno separatori, li omettono in un'importazione; l'anteprima li conteggia.
-- **Includi date** e **Includi URL**, e le dimensioni del rientro per ogni formato, si trovano nella scheda **Dati** delle [Impostazioni](/settings).
+- **Includi date** e **Includi URL**, e le dimensioni del rientro per ogni formato, si trovano nella scheda **Importa ed esporta** delle [Impostazioni](/settings#data).
 
 Un'esportazione JSON include i tag e il riassunto di ogni preferito, e importare quel file li assegna ai preferiti che crea, ma non a quelli che salta in quanto duplicati. Le esportazioni HTML, Markdown e CSV li omettono. Per passare i preferiti con i relativi tag e riassunti a uno strumento di IA, usa **Pacchetto contesto IA**; vedi [Configurare gli strumenti IA](/guides/ai-tools#export-context-for-an-ai-chat).
 
