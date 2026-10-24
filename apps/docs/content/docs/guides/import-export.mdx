@@ -56,15 +56,43 @@ Click **Import**. A message lists how many items were created, skipped, and fail
 
 Nothing is written until you click **Import**. If your bookmarks change while the preview is open, the preview is refreshed instead of applied.
 
-## Settings files are separate
+## Back up and restore settings [#back-up-and-restore-settings]
 
-The **Back up settings** and **Restore settings** buttons at the bottom of the Settings page save and restore a backup file of Bookmark Scout's settings, custom prompts, AI services (without API keys), and saved searches. They do not touch bookmarks, tags, or summaries. See [Settings](/settings) for what the backup holds. You can also drop a backup file anywhere on the Settings page to restore it.
+The **Back up settings** and **Restore settings** buttons at the bottom of the Settings page save and restore a backup file of Bookmark Scout's own data. They never touch your bookmarks, tags, or summaries; export bookmarks with the tool above. You can also drop a backup file anywhere on the Settings page to restore it.
 
-### Covers in a backup [#covers-in-a-backup]
+### What a backup holds [#what-a-backup-holds]
 
-Covers never sync, and bookmark exports do not hold them, so a backup is how they reach another computer.
+**Back up settings** lists the parts of a backup, each with what it holds, how many items, and about how large it is. Select the ones you want, or use **Select all** and **Select none**:
 
-- While covers are stored, **Back up settings** asks whether to **Include covers**, and says how many and about how much they add to the file. The box starts checked; **Include Covers in Backups** in [Settings](/settings#data) changes that. The file holds one cover per address, newest first, up to the backup's limits.
-- Restoring a backup that holds covers first shows a review: how many covers the file holds, how many match a bookmark with the same address on this device and how many do not, and how many bookmarks would get a cover, have theirs replaced, or keep their own. Uncheck **Restore covers** to restore only the rest of the backup.
 - A cover you picked with **Use this view as the cover** ranks first: it is replaced only by a newer picked cover from the file, and a picked cover from the file replaces one that was not picked; otherwise the newer cover wins. A date in the future counts as today. **Cover Storage** still applies, so the oldest covers are removed past it, the ones you picked last.
-- A restore cannot be undone. The covers stay in the file wherever you save it; nothing is sent anywhere.
+- **Settings**: the settings you changed that sync, including the menus and lists.
+- **This computer's settings**: settings kept for one computer, such as the layout, sidebars, keyboard keys, and the quick save folder. Not selected at first, because they suit one screen and keyboard.
+- **Saved searches and table view**, **Prompts and About me**, **Smart Rules**, and **AI services** (name, provider, model, Base URL, and provider-specific fields).
+- **Covers**, marked **Large**: the cover pictures, by address. Covers never sync and bookmark exports do not hold them, so a backup is how they reach another computer.
+- **AI service keys**: the API keys and extra headers, never selected unless you select them. Selecting them warns that anyone with the file can use the keys and run up charges, and you confirm before saving.
+
+The parts you save become the selection next time on this computer (**Parts in New Backups** in [Settings](/settings#data)). The file is named with the date and the parts, such as `bookmark-scout-backup_2026-10-23_all.json`, and is saved on your computer; nothing is sent anywhere.
+
+### Password protection [#password-protection]
+
+- With **AI service keys** selected, **Protect the API keys with a password** starts on; turning it off asks you to confirm that the keys will be readable as plain text.
+- **Protect this backup with a password** encrypts every part. **Protect New Backups With a Password** in Settings starts it on.
+- The password needs at least 12 characters. It is never stored, and a forgotten password cannot be recovered: nobody can open the protected parts without it, not even Bookmark Scout.
+- The list of parts stays readable, so **Restore settings** shows what the file holds before asking for the password. A wrong password, or a file changed after it was saved, imports nothing from the protected parts.
+
+### Restoring [#restoring]
+
+1. Click **Restore settings** and pick the file. Nothing changes yet.
+2. Each part shows how many items are in the file and how many importing it would add, change, or leave as they are. A part from a newer version of Bookmark Scout is listed as not supported and skipped. Enter the password to unlock protected parts.
+3. Pick the parts to import. **This computer's settings** and **AI service keys** start unselected; the keys again ask you to confirm.
+4. For each part, choose **Merge** (adds and updates what the file has, keeps what only this device has) or **Replace** (makes the part exactly what the file has, removing what only this device has; you confirm first).
+5. With Merge, items changed both here and in the file (prompts, Smart Rules, saved searches, AI services) are listed: keep the newer one, use the file's, or keep this device's, for all of them or each one. A cover you picked with **Use this view as the cover** is replaced only by a newer picked cover from the file.
+6. Click **Import**. The result lists what each part added, changed, removed, kept, and skipped. AI services whose keys were not in the file show **Needs setup** until you enter them in [AI](/settings#ai).
+
+A setting that names a folder, such as the quick save folder, is restored only where a folder with the same path exists on this computer, and then names that folder; otherwise it stays as it is here. Every part is checked before anything is written, and a part that cannot be imported whole is left as it was.
+
+### Undo import [#undo-import]
+
+Before importing, Bookmark Scout keeps a safety copy of what the import changes, for 24 hours. **Undo import**, in the result and at the bottom of Settings, puts it all back, covers included. The import is also listed in the bookmark manager's **History** (filter **Backups**), with each part and its counts, and **Undo import** there does the same. After 24 hours, or once you restore another backup, the record stays but says why Undo is no longer offered.
+
+Older backup files, from before parts, still restore.

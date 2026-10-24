@@ -56,15 +56,43 @@ Haz clic en **Importar**. Un mensaje indica cuántos elementos se crearon, se om
 
 No se escribe nada hasta que haces clic en **Importar**. Si tus marcadores cambian mientras la vista previa está abierta, la vista previa se actualiza en lugar de aplicarse.
 
-## Los archivos de configuración son aparte [#settings-files-are-separate]
+## Copia y restauración de los ajustes [#back-up-and-restore-settings]
 
-Los botones **Hacer copia de los ajustes** y **Restaurar ajustes** de la parte inferior de la página de configuración guardan y restauran una copia de seguridad de la configuración de Bookmark Scout, los prompts personalizados, los servicios de IA (sin claves de API) y las búsquedas guardadas. No tocan los marcadores, las etiquetas ni los resúmenes. Consulta en [Configuración](/settings) qué incluye la copia. También puedes soltar un archivo de copia en cualquier parte de la página de Configuración para restaurarlo.
+Los botones **Hacer copia de los ajustes** y **Restaurar ajustes** de la parte inferior de la página de configuración guardan y restauran un archivo de copia de seguridad con los datos propios de Bookmark Scout. Nunca tocan tus marcadores, etiquetas ni resúmenes; exporta los marcadores con la herramienta de arriba. También puedes soltar un archivo de copia en cualquier parte de la página de Configuración para restaurarlo.
 
-### Portadas en una copia de seguridad [#covers-in-a-backup]
+### Qué contiene una copia [#what-a-backup-holds]
 
-Las portadas nunca se sincronizan y las exportaciones de marcadores no las incluyen, así que una copia de seguridad es la forma de llevarlas a otro ordenador.
+**Hacer copia de los ajustes** enumera las partes de una copia, cada una con lo que contiene, cuántos elementos tiene y su tamaño aproximado. Selecciona las que quieras, o usa **Seleccionar todo** y **No seleccionar nada**:
 
-- Mientras haya portadas guardadas, **Hacer copia de los ajustes** pregunta si **Incluir portadas** e indica cuántas son y cuánto añaden al archivo, aproximadamente. La casilla aparece marcada; **Incluir portadas en las copias de seguridad** en [Configuración](/settings#data) lo cambia. El archivo contiene una portada por dirección, las más recientes primero, hasta los límites de la copia.
-- Al restaurar una copia con portadas, primero aparece una revisión: cuántas portadas contiene el archivo, cuántas coinciden con un marcador de la misma dirección en este dispositivo y cuántas no, y cuántos marcadores recibirían una portada, verían la suya sustituida o conservarían la propia. Desmarca **Restaurar portadas** para restaurar solo el resto de la copia.
 - Una portada que elegiste con **Usar esta vista como portada** tiene prioridad: solo se sustituye por una portada elegida más reciente del archivo, y una portada elegida del archivo sustituye a una que no se eligió; en los demás casos gana la más reciente. Una fecha futura cuenta como hoy. El **Almacenamiento de portadas** sigue aplicándose, así que por encima de él se eliminan las portadas más antiguas, y las elegidas al final.
-- La restauración no se puede deshacer. Las portadas quedan en el archivo dondequiera que lo guardes; no se envía nada.
+- **Ajustes**: los ajustes que cambiaste y que se sincronizan, incluidos los menús y las listas.
+- **Ajustes de este equipo**: ajustes guardados para un solo equipo, como el diseño, las barras laterales, las combinaciones de teclas y la carpeta de guardado rápido. Al principio no están seleccionados, porque se adaptan a una pantalla y un teclado concretos.
+- **Búsquedas guardadas y vista de tabla**, **Prompts y Sobre mí**, **Reglas inteligentes** y **Servicios de IA** (nombre, proveedor, modelo, URL base y campos propios del proveedor).
+- **Portadas**, marcadas como **Grande**: las imágenes de portada, por dirección. Las portadas nunca se sincronizan y las exportaciones de marcadores no las incluyen, así que una copia de seguridad es la forma de llevarlas a otro equipo.
+- **Claves de los servicios de IA**: las claves de API y los encabezados adicionales, nunca seleccionados salvo que los selecciones. Al seleccionarlos aparece un aviso de que cualquiera que tenga el archivo puede usar las claves y generar cargos, y confirmas antes de guardar.
+
+Las partes que guardas pasan a ser la selección de la próxima vez en este equipo (**Partes de las copias nuevas** en [Configuración](/settings#data)). El nombre del archivo lleva la fecha y las partes, como `bookmark-scout-backup_2026-10-23_all.json`, y se guarda en tu equipo; no se envía nada a ningún sitio.
+
+### Protección con contraseña [#password-protection]
+
+- Con **Claves de los servicios de IA** seleccionado, **Proteger las claves de API con una contraseña** empieza activado; al desactivarlo debes confirmar que las claves se podrán leer como texto sin cifrar.
+- **Proteger esta copia con una contraseña** cifra todas las partes. **Proteger las copias nuevas con contraseña** en Configuración hace que empiece activado.
+- La contraseña necesita al menos 12 caracteres. Nunca se guarda, y una contraseña olvidada no se puede recuperar: nadie puede abrir las partes protegidas sin ella, ni siquiera Bookmark Scout.
+- La lista de partes sigue siendo legible, así que **Restaurar ajustes** muestra lo que contiene el archivo antes de pedir la contraseña. Con una contraseña incorrecta, o con un archivo modificado después de guardarse, no se importa nada de las partes protegidas.
+
+### Restaurar [#restoring]
+
+1. Haz clic en **Restaurar ajustes** y elige el archivo. Todavía no cambia nada.
+2. Cada parte muestra cuántos elementos hay en el archivo y cuántos añadiría, cambiaría o dejaría igual la importación. Una parte de una versión más reciente de Bookmark Scout aparece como no compatible y se omite. Introduce la contraseña para desbloquear las partes protegidas.
+3. Elige las partes que quieres importar. **Ajustes de este equipo** y **Claves de los servicios de IA** empiezan sin seleccionar; las claves vuelven a pedir confirmación.
+4. Para cada parte, elige **Combinar** (añade y actualiza lo que tiene el archivo y conserva lo que solo tiene este dispositivo) o **Reemplazar** (deja la parte exactamente como en el archivo y quita lo que solo tiene este dispositivo; confirmas antes).
+5. Con Combinar, se enumeran los elementos cambiados aquí y en el archivo (prompts, Reglas inteligentes, búsquedas guardadas, servicios de IA): conserva el más reciente, usa el del archivo o conserva el de este dispositivo, para todos o uno por uno. Una portada que elegiste con **Usar esta vista como portada** solo se sustituye por una portada elegida más reciente del archivo.
+6. Haz clic en **Importar**. El resultado indica lo que cada parte añadió, cambió, quitó, conservó y omitió. Los servicios de IA cuyas claves no estaban en el archivo muestran **Falta configurar** hasta que las introduzcas en [IA](/settings#ai).
+
+Un ajuste que indica una carpeta, como la carpeta de guardado rápido, solo se restaura si en este equipo existe una carpeta con la misma ruta, y entonces indica esa carpeta; si no, se queda como está aquí. Cada parte se comprueba antes de escribir nada, y una parte que no se puede importar entera se queda como estaba.
+
+### Deshacer importación [#undo-import]
+
+Antes de importar, Bookmark Scout guarda durante 24 horas una copia de resguardo de lo que cambia la importación. **Deshacer importación**, en el resultado y al final de Configuración, lo devuelve todo a como estaba, portadas incluidas. La importación también aparece en el **Historial de marcadores** del administrador (filtro **Copias de seguridad**), con cada parte y sus cifras, y **Deshacer importación** allí hace lo mismo. Pasadas 24 horas, o en cuanto restauras otra copia, el registro se mantiene, pero indica por qué ya no se ofrece Deshacer.
+
+Los archivos de copia más antiguos, de antes de las partes, se siguen pudiendo restaurar.

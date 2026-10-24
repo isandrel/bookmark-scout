@@ -32,7 +32,9 @@
 # hover card settings) on top of the manager customization (491).
 # Raised from 500 on 2026-10-23 for each synced list setting in its own item and the storage
 # migrations the background runs at every start, which it cannot load later (501).
-"background.js" = 510
+# Raised from 510 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
+# review fixes (feat/backup-categories rebased on 430c4163) (514).
+"background.js" = 520
 # Raised from 950 when the numeric and string constants moved into config the popup and side panel
 # validate at startup (952 on 2026-10-21), then from 965 for the line that shows running background
 # tasks, which reads the job store (970 on 2026-10-21), then from 985 for the search query parser,
@@ -60,7 +62,11 @@
 # on fix/media-review-035 from main bfb2bf53.
 # Raised from 1115 on 2026-10-23 for the shared reader of shown-id lists (hidden ids marked, ids
 # added later shown) and the menu's recent count migration in the registry settings read (1,116).
-"popup.html" = 1125
+# Raised from 1115 on 2026-10-23 for the backup parts table and Parts in New Backups in the
+# settings schema, and History's backup restore records (1118).
+# Raised from 1125 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
+# review fixes (feat/backup-categories rebased on 430c4163) (1,125).
+"popup.html" = 1135
 # Raised from 995 on 2026-10-22 with the popup, for the same settings schema growth (996).
 # Raised from 1005 on 2026-10-22 with the popup, for the same button (1,010).
 # Raised from 1020 on 2026-10-22 for Index this page's text on the current page line (1,024).
@@ -80,7 +86,10 @@
 # on fix/media-review-035 from main bfb2bf53.
 # Raised from 1115 on 2026-10-23 for the shared reader of shown-id lists (hidden ids marked, ids
 # added later shown) and the menu's recent count migration in the registry settings read (1,116).
-"sidepanel.html" = 1125
+# Raised from 1115 on 2026-10-23 with the popup, for the same (1118).
+# Raised from 1125 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
+# review fixes (feat/backup-categories rebased on 430c4163) (1,125).
+"sidepanel.html" = 1135
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
 # library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
 # (1,046 on 2026-10-11), then from 1060, which main had reached exactly (Ctrl+D quick save setup),
@@ -154,7 +163,11 @@
 # the manager reads and checks before its first key (the remap rules; 1,550).
 # Raised from 1560 on 2026-10-22 for Requires an API key per AI service on top of the sync list
 # shards (1,561).
-"bookmarks.html" = 1570
+# Raised from 1560 on 2026-10-23 for the backup parts table and Parts in New Backups in the
+# settings schema, and History's backup restore records with their parts and Undo import (1565).
+# Raised from 1575 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
+# review fixes (feat/backup-categories rebased on 430c4163) (1,576).
+"bookmarks.html" = 1585
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
 # The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
@@ -171,6 +184,8 @@
 # on top of the shortcut remapping (764).
 # Raised from 770 on 2026-10-23 for the shared reader of shown-id lists (hidden ids marked, ids
 # added later shown) and the menu's recent count migration in the registry settings read (771).
+# Raised from 770 on 2026-10-23 for the backup parts table and Parts in New Backups in the
+# settings schema, and History's backup restore records (773).
 "agent-approval.html" = 780
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 # Raised from 370 on 2026-10-21 for the limits and HTTP status config it now reads (371).
@@ -186,7 +201,9 @@
 # Raised from 430 on 2026-10-23 for each synced list setting in its own item: the stored record
 # that reads and writes the list items, and the storage migrations registry with the list move,
 # which settings read through until it has run (433).
-"ai-host.html" = 440
+# Raised from 440 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
+# review fixes (feat/backup-categories rebased on 430c4163) (444).
+"ai-host.html" = 450
 # The welcome page opened once after install (516 on 2026-10-14).
 # Raised from 580 on 2026-10-21 for the tooltip provider every page now mounts at its root and
 # the config modules it reads (607).
@@ -197,4 +214,6 @@
 # Raised from 640 on 2026-10-22 for the manager customization settings (menus, table defaults,
 # cards, start folder, sidebars) in the settings schema every page loads, on top of the config cleanup (644).
 # Raised from 655 on 2026-10-23 with ai-host, for the same list items and migrations registry (657).
-"welcome.html" = 665
+# Raised from 665 on 2026-10-22 for for the backup parts and their review on top of the 0.3.5
+# review fixes (feat/backup-categories rebased on 430c4163) (665).
+"welcome.html" = 672

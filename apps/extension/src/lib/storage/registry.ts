@@ -18,8 +18,11 @@
  * - `local`: this device only; credentials, caches, logs, and anything naming local bookmark ids.
  * - `session`: in memory until the browser closes.
  *
- * `backup` says what the backup file does with the item: `include` it, `exclude` it (device-bound,
- * rebuildable, or short-lived), or `secret` (credentials: never synced, never in any file).
+ * `backup` names the part of the backup file the item belongs to, an id from `[[categories]]` in
+ * `config/data/backup.toml` (`lib/backup-config.ts`), or `exclude` for what no backup holds
+ * (device-bound, rebuildable, or short-lived). A part marked `secret` there holds credentials: never
+ * synced, and in a file only when the user selects that part and confirms its warning.
+ * `tests/unit/backup-categories.test.ts` fails on a name that is not a part.
  *
  * No WXT auto-imports here: end-to-end tests import this file in Node to name the keys they seed.
  */
@@ -44,7 +47,11 @@ export const SYNC_QUOTA = {
   writesPerHour: 1_800,
 } as const;
 
-export type BackupPolicy = 'include' | 'exclude' | 'secret';
+/**
+ * A backup part's id (`config/data/backup.toml`), or `exclude`. A plain string here, since the
+ * parts come from config, which this file cannot read; a unit test checks each one.
+ */
+export type BackupPolicy = 'exclude' | (string & {});
 
 export type StorageItem = {
   readonly area: StorageAreaName;
@@ -65,7 +72,7 @@ export const STORAGE_ITEMS = {
    * Synced: the settings the user changed (only those that differ from the default), so their
    * choices follow them to every device. Device settings (`DEVICE_SETTING_KEYS`) are left out.
    */
-  settings: { area: 'sync', name: 'settings', v: 1, backup: 'include' },
+  settings: { area: 'sync', name: 'settings', v: 1, backup: 'settings' },
   /**
    * Synced: each changed setting that is a list (parameter names, menu actions, status codes) in
    * an item of its own, under its setting key, so every list has the whole per-item quota and
@@ -76,7 +83,7 @@ export const STORAGE_ITEMS = {
     area: 'sync',
     name: 'settings.list',
     v: 1,
-    backup: 'include',
+    backup: 'settings',
     collection: true,
   },
   /**
@@ -85,9 +92,9 @@ export const STORAGE_ITEMS = {
    */
   storageMigrations: { area: 'local', name: 'storage.migrations', v: 1, backup: 'exclude' },
   /** Local: the changed settings that belong to this device only (`DEVICE_SETTING_KEYS`). */
-  deviceSettings: { area: 'local', name: 'settings', v: 1, backup: 'include' },
+  deviceSettings: { area: 'local', name: 'settings', v: 1, backup: 'deviceSettings' },
   /** Synced: the manager table's columns (shown, order) and sort, so the layout follows the user. */
-  tableView: { area: 'sync', name: 'manager.table-view', v: 1, backup: 'include' },
+  tableView: { area: 'sync', name: 'manager.table-view', v: 1, backup: 'views' },
   /** Local: the manager table's column widths and page size, which suit one screen. */
   tableLayout: { area: 'local', name: 'manager.table-layout', v: 1, backup: 'exclude' },
   /**
@@ -101,22 +108,26 @@ export const STORAGE_ITEMS = {
    */
   managerSidebars: { area: 'local', name: 'manager.sidebars', v: 1, backup: 'exclude' },
   /** Synced: which custom prompts exist and which one each task uses. */
-  promptIndex: { area: 'sync', name: 'prompts.index', v: 1, backup: 'include' },
+  promptIndex: { area: 'sync', name: 'prompts.index', v: 1, backup: 'prompts' },
   /**
    * Synced: "About me" for AI prompts, which the user writes once for every device. Its own item:
    * at its length limit it does not fit in the settings item's share of the 8,192-byte quota.
    */
-  aboutMe: { area: 'sync', name: 'ai.about-me', v: 1, backup: 'include' },
+  aboutMe: { area: 'sync', name: 'ai.about-me', v: 1, backup: 'prompts' },
   /** Synced: one item per custom prompt, so each stays under the 8,192-byte item quota. */
-  prompt: { area: 'sync', name: 'prompts.prompt', v: 1, backup: 'include', collection: true },
+  prompt: { area: 'sync', name: 'prompts.prompt', v: 1, backup: 'prompts', collection: true },
   /** Local: names folder ids, which differ on every device. */
   recentFolders: { area: 'local', name: 'folders.recent', v: 1, backup: 'exclude' },
-  /** Local and secret: API keys, endpoints, and extra headers per AI service. */
-  aiCredentials: { area: 'local', name: 'ai.credentials', v: 1, backup: 'secret' },
+  /**
+   * Local: API keys, endpoints, and extra headers per AI service. Credentials, so never synced;
+   * their own backup part, which the user must select and confirm. The endpoints (Base URL and
+   * the provider's extra fields) go with the AI services part (`services/backup-categories.lazy.ts`).
+   */
+  aiCredentials: { area: 'local', name: 'ai.credentials', v: 1, backup: 'aiServiceKeys' },
   /** Local: model lists fetched from each provider; fetched again when missing. */
   aiModelCache: { area: 'local', name: 'ai.model-cache', v: 1, backup: 'exclude' },
   /** Local: named AI services sit next to their credentials, which never sync. */
-  aiServices: { area: 'local', name: 'ai.services', v: 1, backup: 'include' },
+  aiServices: { area: 'local', name: 'ai.services', v: 1, backup: 'aiServices' },
   /** Local: the opt-in AI request log holds bookmark titles and URLs. */
   aiActivity: { area: 'local', name: 'ai.activity-log', v: 1, backup: 'exclude' },
   /** Local: tags and summaries are keyed by bookmark id, which differs on every device. */
@@ -124,9 +135,9 @@ export const STORAGE_ITEMS = {
   /** Local: queries can reveal bookmark contents. */
   searchHistory: { area: 'local', name: 'search.history', v: 1, backup: 'exclude' },
   /** Local: filters can reveal bookmark contents and name folder ids local to this device. */
-  savedSearches: { area: 'local', name: 'search.saved', v: 1, backup: 'include' },
+  savedSearches: { area: 'local', name: 'search.saved', v: 1, backup: 'views' },
   /** Local: rules name folder ids local to this device, and their searches can reveal bookmarks. */
-  bookmarkRules: { area: 'local', name: 'rules.list', v: 1, backup: 'include' },
+  bookmarkRules: { area: 'local', name: 'rules.list', v: 1, backup: 'rules' },
   /**
    * Local: what Smart Rules changed lately: bookmarks tagged or moved on their own (Tag New
    * Bookmarks, Move New Bookmarks), with the tags or the folders and their titles, and the
@@ -255,6 +266,11 @@ export const DEVICE_SETTING_KEYS = [
   'hoverCardFields',
   /** Keys typed on this device's keyboard, with its platform's modifiers (Cmd or Ctrl). */
   'pageShortcutOverrides',
+  /**
+   * The parts Back up settings selects, remembered from the last backup made here: what to back
+   * up differs per computer (covers and this device's settings, for one).
+   */
+  'backupExportCategories',
 ] as const;
 
 export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];
@@ -283,6 +299,21 @@ export function isRegisteredKey(area: StorageAreaName, key: string): boolean {
 }
 
 /**
+ * The registered item a full key (`<area>:<name>`, or `<area>:<name>/<id>` in a collection) belongs
+ * to, with the entry id for a collection; undefined for a key no item lists.
+ */
+export function findStorageItem(key: string): { id: StorageItemId; entryId?: string } | undefined {
+  for (const [id, item] of Object.entries(STORAGE_ITEMS) as [StorageItemId, StorageItem][]) {
+    const prefix = `${item.area}:${item.name}`;
+    if (!item.collection && key === prefix) return { id };
+    if (item.collection && key.startsWith(`${prefix}/`) && key.length > prefix.length + 1) {
+      return { id, entryId: key.slice(prefix.length + 1) };
+    }
+  }
+  return undefined;
+}
+
+/**
  * next-themes' page `localStorage` cache of the theme, which avoids a flash on first paint. Page
  * storage, not extension storage, so the cleanup never sees it.
  */
@@ -291,8 +322,8 @@ export const THEME_CACHE_STORAGE_KEY = 'theme';
 /**
  * IndexedDB databases the extension keeps, next to the storage items above, for data too large
  * or too structured for extension storage. Device-local like `local` and never synced. `backup`
- * is the backup file's policy, as for stored items; `include` only for covers, which the backup
- * holds when the user includes them (`services/cover-backup.lazy.ts`). The install and update
+ * is the backup part, as for stored items; only covers are one, which a backup holds when the
+ * user selects them (`services/cover-backup.lazy.ts`). The install and update
  * cleanup does not touch them; each owner versions its own schema (IndexedDB's `version` and an
  * upgrade step) and prunes by its own retention.
  */
@@ -316,8 +347,15 @@ export const INDEXED_DATABASES = {
   /**
    * Covers (`lib/cover-store.ts`): small copies of the preview images of the pages the user
    * fetched covers for, or pictures of the tab, shown on the manager's cards. In the backup file,
-   * by address, when the user includes them (`services/cover-backup.lazy.ts`): pictures the user
+   * by address, when the user selects them (`services/cover-backup.lazy.ts`): pictures the user
    * chose cannot be fetched again.
    */
-  covers: { name: 'bookmark-scout-covers', backup: 'include' },
+  covers: { name: 'bookmark-scout-covers', backup: 'covers' },
+  /**
+   * Undo import (`lib/backup-undo-store.ts`): a copy of what the parts a restore changed held
+   * before it (settings, prompts, AI services and, when they were restored, their API keys, and
+   * the covers it replaced), so Undo import can put them back; one at a time, removed after
+   * `config/data/backup.toml`'s `[undo]` time or by the next restore. Never in a backup itself.
+   */
+  backupUndo: { name: 'bookmark-scout-backup-undo', backup: 'exclude' },
 } as const satisfies Record<string, { name: string; backup: BackupPolicy }>;

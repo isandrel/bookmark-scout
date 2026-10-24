@@ -543,14 +543,6 @@
         "message": "Sauvegarde exportée",
         "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_backupExportedDescription": {
-        "message": "Le fichier contient vos paramètres, prompts, services d'IA et recherches enregistrées. Les clés API n'y figurent jamais.",
-        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
-    },
-    "toast_backupExportedCoversDescription": {
-        "message": "Le fichier contient vos paramètres, prompts, services d'IA, recherches enregistrées et couvertures ($1). Les clés API n'y figurent jamais.",
-        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
-    },
     "toast_exportFailed": {
         "message": "Échec de l'exportation",
         "description": "Toast title for settings export error"
@@ -638,14 +630,6 @@
     "settings_sectionBackup": {
         "message": "Sauvegarde",
         "description": "Settings: section heading under Import & Export for the settings backup file"
-    },
-    "settings_backupIncludeCovers": {
-        "message": "Inclure les couvertures dans les sauvegardes",
-        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
-    },
-    "settings_backupIncludeCoversDesc": {
-        "message": "Indique si « Sauvegarder les paramètres » enregistre aussi vos couvertures dans le fichier. Tant que des couvertures sont stockées, la question est posée à chaque fois, avec cette réponse cochée d'avance, et la taille ajoutée est indiquée. Les couvertures ne sont jamais synchronisées : une sauvegarde est le moyen de les emporter sur un autre ordinateur.",
-        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "Enregistrement",
@@ -3491,25 +3475,9 @@
         "message": "$1 paramètres modifiés : $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_backupRestored": {
-        "message": "Sauvegarde restaurée",
-        "description": "Toast title after Import in Settings restored a backup file"
-    },
-    "toast_backupRestoredDescription": {
-        "message": "Vos paramètres, prompts, services d'IA et recherches enregistrées ont été restaurés. Les sauvegardes ne contiennent pas de clés API : ajoutez celles qui manquent dans Paramètres > IA.",
-        "description": "Toast description after a backup was restored; API keys are not in backups"
-    },
-    "toast_backupRestoredNeedsSetup": {
-        "message": "Vos paramètres, prompts, services d’IA avec leurs URL de base et recherches enregistrées ont été restaurés. Non restauré, car une sauvegarde ne les contient jamais : $1. Saisissez-les à nouveau dans Paramètres > IA ; d’ici là, ces services affichent « À configurer ».",
-        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
-    },
     "toast_backupServiceNeeds": {
         "message": "$2 de « $1 »",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
-    },
-    "toast_backupCoversRestored": {
-        "message": "Couvertures restaurées : $1. Conservées telles quelles : $2. Sans favori ici : $3. Laissées de côté : $4.",
-        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "À configurer",
@@ -6719,18 +6687,6 @@
         "message": "Restaurer les paramètres",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
-    "backup_exportDesc": {
-        "message": "Le fichier contient vos paramètres, prompts, services d'IA (sans clés API) et recherches enregistrées. Il reste là où vous l'enregistrez.",
-        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
-    },
-    "backup_includeCovers": {
-        "message": "Inclure les couvertures",
-        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
-    },
-    "backup_coversEstimate": {
-        "message": "Couvertures : $1, soit environ $2 de plus dans le fichier. Les couvertures ne sont jamais synchronisées : une sauvegarde est le moyen de les emporter sur un autre ordinateur.",
-        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
-    },
     "backup_coversLeftOut": {
         "message": "Laissées de côté, au-delà des limites de la sauvegarde (les plus anciennes d'abord) : $1",
         "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
@@ -6739,21 +6695,445 @@
         "message": "Enregistrer la sauvegarde",
         "description": "Back up settings dialog: button that saves the backup file"
     },
-    "backup_restoreTitle": {
-        "message": "Restaurer la sauvegarde",
-        "description": "Title of the review shown before restoring a backup file that holds covers"
+    "backup_categorySettings": {
+        "message": "Paramètres",
+        "description": "Backup part: the synced settings"
     },
-    "backup_restoreDesc": {
-        "message": "$1 contient des couvertures. Les paramètres, prompts, services d'IA et recherches enregistrées sont restaurés dans tous les cas ; vérifiez ce que la restauration des couvertures ferait sur cet appareil.",
-        "description": "Restore backup review: $1 is the file name"
+    "backup_categorySettingsDesc": {
+        "message": "Les paramètres que vous avez modifiés et qui se synchronisent avec vos autres appareils, y compris les menus et les listes.",
+        "description": "Backup part: what the Settings part holds"
     },
-    "backup_restoreCovers": {
-        "message": "Restaurer les couvertures",
-        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    "backup_categoryDeviceSettings": {
+        "message": "Paramètres de cet ordinateur",
+        "description": "Backup part: the settings kept for one device"
     },
-    "backup_coversInFile": {
-        "message": "Couvertures dans le fichier : $1",
-        "description": "Restore backup review: how many covers the file holds"
+    "backup_categoryDeviceSettingsDesc": {
+        "message": "Paramètres conservés pour cet ordinateur uniquement : disposition, barres latérales, raccourcis clavier, dossier d'enregistrement rapide, automatisation des Règles intelligentes et accès pour les agents d'IA locaux.",
+        "description": "Backup part: what the device settings part holds"
+    },
+    "backup_categoryViews": {
+        "message": "Recherches enregistrées et vue tableau",
+        "description": "Backup part: saved searches and the manager table's layout"
+    },
+    "backup_categoryViewsDesc": {
+        "message": "Les recherches enregistrées du gestionnaire de favoris, ainsi que les colonnes et le tri du tableau.",
+        "description": "Backup part: what the views part holds"
+    },
+    "backup_categoryPrompts": {
+        "message": "Prompts et À propos de moi",
+        "description": "Backup part: custom AI prompts and About me"
+    },
+    "backup_categoryPromptsDesc": {
+        "message": "Vos prompts d'IA personnalisés, celui qu'utilise chaque tâche, et votre texte À propos de moi.",
+        "description": "Backup part: what the prompts part holds"
+    },
+    "backup_categoryRules": {
+        "message": "Règles intelligentes",
+        "description": "Backup part: the Smart Rules"
+    },
+    "backup_categoryRulesDesc": {
+        "message": "Vos Règles intelligentes (leurs recherches, étiquettes et dossiers), pas ce qu'elles ont fait.",
+        "description": "Backup part: what the Smart Rules part holds"
+    },
+    "backup_categoryAiServices": {
+        "message": "Services d'IA",
+        "description": "Backup part: the AI services without their keys"
+    },
+    "backup_categoryAiServicesDesc": {
+        "message": "Le nom, le fournisseur, le modèle, l'URL de base et les champs du fournisseur de chaque service d'IA, sans clés API ni en-têtes supplémentaires.",
+        "description": "Backup part: what the AI services part holds"
+    },
+    "backup_categoryAiServiceKeys": {
+        "message": "Clés des services d'IA",
+        "description": "Backup part: the API keys and extra headers of the AI services"
+    },
+    "backup_categoryAiServiceKeysDesc": {
+        "message": "Les clés API et les en-têtes supplémentaires de vos services d'IA. Jamais dans une sauvegarde, sauf si vous les sélectionnez.",
+        "description": "Backup part: what the AI service keys part holds"
+    },
+    "backup_categoryCovers": {
+        "message": "Couvertures",
+        "description": "Backup part: the bookmarks' cover pictures"
+    },
+    "backup_categoryCoversDesc": {
+        "message": "Les couvertures de vos favoris, par adresse. Les couvertures ne se synchronisent jamais : une sauvegarde est le moyen de les transférer sur un autre ordinateur.",
+        "description": "Backup part: what the covers part holds"
+    },
+    "backup_badgeDevice": {
+        "message": "Cet ordinateur",
+        "description": "Backup dialogs: badge on a part that suits one computer"
+    },
+    "backup_badgeLarge": {
+        "message": "Volumineux",
+        "description": "Backup dialogs: badge on a part that can make the file large"
+    },
+    "backup_deviceNote": {
+        "message": "Non sélectionnés au départ : ils sont adaptés à l'écran et au clavier de cet ordinateur.",
+        "description": "Backup dialogs: why the device settings part starts unselected"
+    },
+    "backup_exportIntro": {
+        "message": "Choisissez ce que contient le fichier. Les favoris n'y sont pas ; exportez-les depuis le gestionnaire de favoris.",
+        "description": "Back up settings dialog: introduction"
+    },
+    "backup_partsLabel": {
+        "message": "Parties",
+        "description": "Backup dialogs: heading of the list of parts"
+    },
+    "backup_selectAll": {
+        "message": "Tout sélectionner",
+        "description": "Back up settings dialog: button that selects every part except the keys"
+    },
+    "backup_selectNone": {
+        "message": "Ne rien sélectionner",
+        "description": "Back up settings dialog: button that clears every part"
+    },
+    "backup_counting": {
+        "message": "Comptage…",
+        "description": "Backup dialogs: shown while a part's items are counted"
+    },
+    "backup_partMeta": {
+        "message": "Éléments : $1 · Environ $2",
+        "description": "Back up settings dialog: a part's item count ($1) and size ($2, such as 3 KB)"
+    },
+    "backup_keysWarning": {
+        "message": "Toute personne qui obtient ce fichier peut utiliser ces clés et engager des frais sur vos comptes. Conservez le fichier en lieu sûr et protégez-le par un mot de passe.",
+        "description": "Back up settings dialog: warning shown when the AI service keys are selected"
+    },
+    "backup_keysConfirm": {
+        "message": "Je comprends ; inclure mes clés API",
+        "description": "Back up settings dialog: checkbox confirming the keys warning"
+    },
+    "backup_protectAll": {
+        "message": "Protéger cette sauvegarde par un mot de passe",
+        "description": "Back up settings dialog: checkbox that encrypts the whole file"
+    },
+    "backup_protectAllDesc": {
+        "message": "Chiffre tout le contenu du fichier. La restauration demande le mot de passe ; la liste des parties qu'il contient reste lisible.",
+        "description": "Back up settings dialog: what protecting the whole backup does"
+    },
+    "backup_protectKeys": {
+        "message": "Protéger les clés API par un mot de passe",
+        "description": "Back up settings dialog: checkbox that encrypts only the keys"
+    },
+    "backup_protectKeysDesc": {
+        "message": "Chiffre uniquement les clés ; le reste du fichier peut être restauré sans le mot de passe.",
+        "description": "Back up settings dialog: what protecting the keys does"
+    },
+    "backup_keysPlainWarning": {
+        "message": "Sans mot de passe, les clés sont enregistrées en texte brut, lisible par toute personne qui ouvre le fichier.",
+        "description": "Back up settings dialog: warning when the keys are saved without a password"
+    },
+    "backup_keysPlainConfirm": {
+        "message": "Enregistrer les clés sans mot de passe",
+        "description": "Back up settings dialog: checkbox confirming keys without a password"
+    },
+    "backup_password": {
+        "message": "Mot de passe",
+        "description": "Backup dialogs: password field label"
+    },
+    "backup_passwordConfirm": {
+        "message": "Répéter le mot de passe",
+        "description": "Back up settings dialog: second password field label"
+    },
+    "backup_passwordHint": {
+        "message": "Au moins $1 caractères ; quelques mots sans rapport entre eux sont faciles à retenir. Un mot de passe oublié ne peut pas être récupéré : sans lui, personne ne peut ouvrir les parties protégées, pas même Bookmark Scout.",
+        "description": "Back up settings dialog: password hint; $1 is the shortest length"
+    },
+    "backup_passwordTooShort": {
+        "message": "Utilisez au moins $1 caractères.",
+        "description": "Back up settings dialog: the password is too short; $1 is the shortest length"
+    },
+    "backup_passwordMismatch": {
+        "message": "Les mots de passe ne correspondent pas.",
+        "description": "Back up settings dialog: the two passwords differ"
+    },
+    "backup_staysLocal": {
+        "message": "Rien n'est envoyé nulle part : le fichier est enregistré sur cet ordinateur.",
+        "description": "Back up settings dialog: privacy note"
+    },
+    "backup_fileName": {
+        "message": "Nom du fichier : $1",
+        "description": "Back up settings dialog: the file name the backup gets"
+    },
+    "backup_errorNothingSelected": {
+        "message": "Sélectionnez au moins une partie.",
+        "description": "Backup dialogs: nothing is selected"
+    },
+    "backup_errorPasswordMissing": {
+        "message": "Saisissez un mot de passe.",
+        "description": "Back up settings: password protection is on without a password"
+    },
+    "backup_errorPassword": {
+        "message": "Le mot de passe est incorrect, ou le fichier a été modifié après son enregistrement. Rien n'a été restauré à partir des parties protégées.",
+        "description": "Restore settings: wrong password or changed file"
+    },
+    "backup_errorNewerFormat": {
+        "message": "Cette sauvegarde a été créée par une version plus récente de Bookmark Scout. Mettez à jour l'extension pour la restaurer.",
+        "description": "Restore settings: the file's format is newer"
+    },
+    "backup_errorFileTooLarge": {
+        "message": "Le fichier dépasse la taille maximale d'une sauvegarde ($1).",
+        "description": "Restore settings: the file is too large; $1 is the limit, such as 420 MB"
+    },
+    "backup_exportedDesc": {
+        "message": "$1 enregistré avec : $2.",
+        "description": "Toast after a backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_exportedProtectedDesc": {
+        "message": "$1 enregistré avec : $2. Protégé par un mot de passe.",
+        "description": "Toast after a password-protected backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_importTitle": {
+        "message": "Restaurer une sauvegarde",
+        "description": "Restore settings dialog: title"
+    },
+    "backup_importIntro": {
+        "message": "$1, enregistré le $2. Rien ne change tant que vous n'importez pas.",
+        "description": "Restore settings dialog: $1 file name, $2 when the backup was saved"
+    },
+    "backup_importIntroUndated": {
+        "message": "$1. Rien ne change tant que vous n'importez pas.",
+        "description": "Restore settings dialog: $1 file name, for a file without a date"
+    },
+    "backup_lockedParts": {
+        "message": "Protégé par un mot de passe : $1",
+        "description": "Restore settings dialog: the parts that need the password"
+    },
+    "backup_unlock": {
+        "message": "Déverrouiller",
+        "description": "Restore settings dialog: button that opens the protected parts"
+    },
+    "backup_unlockHint": {
+        "message": "Saisissez le mot de passe utilisé pour enregistrer la sauvegarde. Les autres parties peuvent être restaurées sans lui.",
+        "description": "Restore settings dialog: hint under the password field"
+    },
+    "backup_unknownParts": {
+        "message": "Non pris en charge par cette version, donc ignoré : $1",
+        "description": "Restore settings dialog: parts from a newer version"
+    },
+    "backup_unreadableParts": {
+        "message": "Illisible, donc ignoré : $1",
+        "description": "Restore settings dialog: parts that failed their checks"
+    },
+    "backup_nothingToImport": {
+        "message": "Ce fichier ne contient rien que cette version puisse restaurer.",
+        "description": "Restore settings dialog: no part can be imported"
+    },
+    "backup_importSafety": {
+        "message": "Une copie de sécurité de ce que l'importation modifie est conservée $1 heures : Annuler l'importation la rétablit.",
+        "description": "Restore settings dialog: about Undo import; $1 is hours"
+    },
+    "backup_importButton": {
+        "message": "Importer ($1)",
+        "description": "Restore settings dialog: import button; $1 is how many parts are selected"
+    },
+    "backup_undoImport": {
+        "message": "Annuler l'importation",
+        "description": "Button that puts back what the last backup import changed"
+    },
+    "backup_replaceConfirmTitle": {
+        "message": "Remplacer ces parties ?",
+        "description": "Restore settings: title of the confirmation before Replace"
+    },
+    "backup_replaceConfirm": {
+        "message": "Remplacer rend $1 identique au contenu du fichier : ce qui n'existe que sur cet appareil est supprimé. Annuler l'importation peut le rétablir pendant un certain temps.",
+        "description": "Restore settings: confirmation before Replace; $1 is the list of parts"
+    },
+    "backup_reviewCounts": {
+        "message": "Dans le fichier : $1 · Ajouts $2 · Modifications $3 · Identiques ici : $4",
+        "description": "Restore settings dialog: what importing a part would do"
+    },
+    "backup_reviewSkipped": {
+        "message": "Impossible à importer (non valide ou d'une version plus récente) : $1",
+        "description": "Restore settings dialog: entries that will be skipped"
+    },
+    "backup_keysImportWarning": {
+        "message": "Ce sont des clés API. Elles remplacent les clés de cet appareil pour les mêmes services, et toute personne qui a ce fichier peut les utiliser.",
+        "description": "Restore settings dialog: warning when the keys part is selected"
+    },
+    "backup_keysImportConfirm": {
+        "message": "Importer les clés API",
+        "description": "Restore settings dialog: checkbox confirming the keys import"
+    },
+    "backup_strategyLabel": {
+        "message": "Mode",
+        "description": "Restore settings dialog: label of the Merge or Replace choice"
+    },
+    "backup_strategyMerge": {
+        "message": "Fusionner",
+        "description": "Restore settings: import strategy that adds and updates"
+    },
+    "backup_strategyReplace": {
+        "message": "Remplacer",
+        "description": "Restore settings: import strategy that makes a part exactly the file's"
+    },
+    "backup_strategyMergeDesc": {
+        "message": "Ajoute et met à jour ce que contient le fichier ; conserve ce qui n'existe que sur cet appareil.",
+        "description": "Restore settings dialog: what Merge does"
+    },
+    "backup_strategyReplaceDesc": {
+        "message": "Rend cette partie identique au contenu du fichier.",
+        "description": "Restore settings dialog: what Replace does"
+    },
+    "backup_replaceRemoves": {
+        "message": "Supprime $1 éléments qui n'existent que sur cet appareil.",
+        "description": "Restore settings dialog: what Replace removes"
+    },
+    "backup_conflicts": {
+        "message": "Modifiés ici et dans le fichier : $1",
+        "description": "Restore settings dialog: number of conflicts"
+    },
+    "backup_conflictNewer": {
+        "message": "Garder le plus récent",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictFile": {
+        "message": "Utiliser celui du fichier",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictDevice": {
+        "message": "Garder celui de cet appareil",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictsEach": {
+        "message": "Choisir un par un",
+        "description": "Restore settings dialog: button that lists each conflict"
+    },
+    "backup_conflictsMore": {
+        "message": "Et $1 de plus, qui suivent le choix ci-dessus.",
+        "description": "Restore settings dialog: conflicts not listed"
+    },
+    "backup_conflictTimes": {
+        "message": "Ici : $1 · Dans le fichier : $2",
+        "description": "Restore settings dialog: when each side of a conflict changed"
+    },
+    "backup_importDone": {
+        "message": "Importation terminée.",
+        "description": "Restore settings dialog: result heading"
+    },
+    "backup_importPartFailed": {
+        "message": "Impossible d’importer $1, remis tel quel : $2. Les parties précédentes ont été importées ; « Annuler l’importation » les rétablit.",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
+    },
+    "backup_outcomeCounts": {
+        "message": "Ajoutés $1 · Modifiés $2 · Supprimés $3 · Conservés $4 · Ignorés $5",
+        "description": "Restore settings dialog: what importing a part did"
+    },
+    "backup_needsSetup": {
+        "message": "Saisissez-les à nouveau dans Paramètres > IA ; d'ici là, ces services affichent « À configurer » : $1.",
+        "description": "Restore settings dialog: AI services missing a secret"
+    },
+    "backup_outcomeMismatch": {
+        "message": "$1 éléments relus ne correspondent pas à l'importation. Vérifiez-les ou utilisez Annuler l'importation.",
+        "description": "Restore settings dialog: read-back found differences"
+    },
+    "backup_inHistory": {
+        "message": "L'importation figure dans l'Historique du gestionnaire de favoris.",
+        "description": "Restore settings dialog: where the import is recorded"
+    },
+    "backup_undone": {
+        "message": "Importation annulée",
+        "description": "Toast after Undo import"
+    },
+    "backup_undoFailed": {
+        "message": "Impossible d'annuler l'importation",
+        "description": "Toast when Undo import cannot run"
+    },
+    "backup_undoMismatch": {
+        "message": "$1 éléments relus ne correspondent pas à leur état précédent.",
+        "description": "Toast after Undo import found differences"
+    },
+    "backup_undoUnavailableUndone": {
+        "message": "Cette importation a déjà été annulée.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_undoUnavailableExpired": {
+        "message": "L'annulation n'est plus proposée : la copie de sécurité est conservée $1 heures.",
+        "description": "Why Undo import is not offered; $1 is hours"
+    },
+    "backup_undoUnavailableReplaced": {
+        "message": "L'annulation n'est plus proposée : une importation ultérieure a remplacé sa copie de sécurité.",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_keysForMissingServices": {
+        "message": "Clés de services que cet appareil n'aura pas, ignorées : $1",
+        "description": "Restore settings dialog: keys without their service"
+    },
+    "history_backupImported": {
+        "message": "Sauvegarde importée",
+        "description": "History: a backup restore record"
+    },
+    "history_dataPartCounts": {
+        "message": "$1 · Ajoutés $2 · Modifiés $3 · Supprimés $4 · Ignorés $5",
+        "description": "History: what a restored backup part did; $1 is Merge or Replace"
+    },
+    "history_filterData": {
+        "message": "Sauvegardes",
+        "description": "History filter: backup restores"
+    },
+    "history_factFile": {
+        "message": "Fichier",
+        "description": "History record fact: the backup file's name"
+    },
+    "history_dataPartsLabel": {
+        "message": "Parties importées",
+        "description": "History: label of a backup record's parts"
+    },
+    "settings_backupExportCategories": {
+        "message": "Parties des nouvelles sauvegardes",
+        "description": "Settings: which parts Back up settings starts with"
+    },
+    "settings_backupExportCategoriesDesc": {
+        "message": "Ce que « Sauvegarder les paramètres » sélectionne au départ. Chaque sauvegarde enregistrée devient le nouveau choix sur cet ordinateur. Les clés des services d'IA ne sont jamais sélectionnées au départ.",
+        "description": "Settings: description of settings_backupExportCategories"
+    },
+    "settings_backupEncryptByDefault": {
+        "message": "Protéger les nouvelles sauvegardes par un mot de passe",
+        "description": "Settings: whether a new backup starts password-protected"
+    },
+    "settings_backupEncryptByDefaultDesc": {
+        "message": "Indique si « Protéger cette sauvegarde par un mot de passe » est coché au départ. Un mot de passe oublié ne peut pas être récupéré.",
+        "description": "Settings: description of settings_backupEncryptByDefault"
+    },
+    "settings_backupEncryptSecrets": {
+        "message": "Protéger les clés API par un mot de passe",
+        "description": "Settings: whether included API keys start password-protected"
+    },
+    "settings_backupEncryptSecretsDesc": {
+        "message": "Indique si une sauvegarde qui inclut les clés des services d'IA les protège d'emblée par un mot de passe. Le désactiver dans la boîte de dialogue demande une confirmation.",
+        "description": "Settings: description of settings_backupEncryptSecrets"
+    },
+    "backup_partEmpty": {
+        "message": "Vide pour l’instant",
+        "description": "Back up settings dialog: a part with no items"
+    },
+    "history_descriptionBackups": {
+        "message": "Les restaurations d’une sauvegarde des paramètres y figurent aussi.",
+        "description": "History dialog: second sentence of the description"
+    },
+    "history_verifyPassedData": {
+        "message": "Vérifié après l’importation : tout ce qu’elle a écrit se relit tel quel.",
+        "description": "History record fact: the read-back of a backup restore passed"
+    },
+    "history_verifyFailedData": {
+        "message": "Vérifié après l’importation : $1 entrées ne se relisent pas telles qu’écrites.",
+        "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "history_verifyFailedData_one": {
+        "message": "Vérifié après l’importation : $1 entrée ne se relit pas telle qu’écrite.",
+        "description": "History record fact: the read-back of a backup restore found one entry that differs."
+    },
+    "backup_errorTooLarge": {
+        "message": "Elle dépasse ce que le navigateur peut stocker pour elle.",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "Impossible d’importer $1 : $2 Rien n’a été modifié.",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "Les dossiers choisis sont retrouvés par leur chemin ici : $1 trouvés, $2 sans ce dossier ici (laissés tels quels).",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "Avec un favori de la même adresse ici : $1",
@@ -6763,33 +7143,9 @@
         "message": "Sans favori de cette adresse ici : $1",
         "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
     },
-    "backup_coversAdded": {
-        "message": "Favoris qui reçoivent une couverture : $1",
-        "description": "Restore backup review: how many bookmarks get a cover they did not have"
-    },
-    "backup_coversReplaced": {
-        "message": "Couvertures remplacées par une plus récente : $1",
-        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
-    },
-    "backup_coversKept": {
-        "message": "Couvertures conservées (choisies avec « Utiliser cette vue comme couverture » ou plus récentes que celles du fichier) : $1",
-        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
-    },
-    "backup_coversSkipped": {
-        "message": "Ignorées (illisibles ou au-delà des limites de la sauvegarde) : $1",
-        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
-    },
     "backup_coversOverStorage": {
         "message": "Supprimées ensuite pour respecter le Stockage des couvertures, les plus anciennes d'abord : $1",
         "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
-    },
-    "backup_restoreNoUndo": {
-        "message": "Une restauration ne peut pas être annulée : une couverture remplacée est perdue.",
-        "description": "Restore backup review: a restore has no undo"
-    },
-    "backup_restore": {
-        "message": "Restaurer",
-        "description": "Restore backup review: button that restores the backup"
     },
     "actionName_searchBookmarks": {
         "message": "Rechercher des favoris",

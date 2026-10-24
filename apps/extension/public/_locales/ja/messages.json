@@ -519,14 +519,6 @@
         "message": "バックアップをエクスポートしました",
         "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_backupExportedDescription": {
-        "message": "ファイルには設定、プロンプト、AI サービス、保存した検索が含まれます。API キーは含まれません。",
-        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
-    },
-    "toast_backupExportedCoversDescription": {
-        "message": "ファイルには設定、プロンプト、AI サービス、保存した検索、カバー画像（$1 件）が含まれます。API キーは含まれません。",
-        "description": "Toast description after a backup with covers was exported; $1 is how many covers. API keys are left out"
-    },
     "toast_exportFailed": {
         "message": "エクスポートに失敗しました",
         "description": "Toast title for settings export error"
@@ -614,14 +606,6 @@
     "settings_sectionBackup": {
         "message": "バックアップ",
         "description": "Settings: section heading under Import & Export for the settings backup file"
-    },
-    "settings_backupIncludeCovers": {
-        "message": "バックアップにカバー画像を含める",
-        "description": "Settings: label of the switch that is the default of Include covers when backing up settings"
-    },
-    "settings_backupIncludeCoversDesc": {
-        "message": "「設定をバックアップ」でカバー画像もファイルに保存するかどうか。カバー画像が保存されている間は毎回確認し、ここでの選択を最初にチェックして、増えるサイズも表示します。カバー画像は同期されないため、別のパソコンへ移すにはバックアップを使います。",
-        "description": "Settings: description of settings_backupIncludeCovers"
     },
     "settings_sectionSaving": {
         "message": "保存",
@@ -3447,25 +3431,9 @@
         "message": "$1 件の設定を変更しました: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_backupRestored": {
-        "message": "バックアップを復元しました",
-        "description": "Toast title after Import in Settings restored a backup file"
-    },
-    "toast_backupRestoredDescription": {
-        "message": "設定、プロンプト、AI サービス、保存した検索を復元しました。バックアップに API キーは含まれないため、足りないキーは 設定 > AI で追加してください。",
-        "description": "Toast description after a backup was restored; API keys are not in backups"
-    },
-    "toast_backupRestoredNeedsSetup": {
-        "message": "設定、プロンプト、ベースURLを含むAIサービス、保存した検索を復元しました。バックアップに含まれないため復元されていないもの: $1。設定 > AI で入力し直してください。それまでこれらのサービスには「要設定」と表示されます。",
-        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
-    },
     "toast_backupServiceNeeds": {
         "message": "「$1」の$2",
         "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
-    },
-    "toast_backupCoversRestored": {
-        "message": "復元したカバー画像: $1。そのまま残したもの: $2。ここにブックマークがないもの: $3。含めなかったもの: $4。",
-        "description": "Added to the toast after a backup restore when its covers were restored: $1 restored, $2 bookmarks that kept their cover, $3 covers with no bookmark here, $4 left out"
     },
     "options_aiServiceNeedsSetup": {
         "message": "要設定",
@@ -6711,18 +6679,6 @@
         "message": "設定を復元",
         "description": "Options footer button that restores a backup file or settings file made with newcomer_backUpSettings"
     },
-    "backup_exportDesc": {
-        "message": "ファイルには設定、プロンプト、AI サービス（API キーを除く）、保存した検索が含まれます。ファイルは保存した場所にだけ残ります。",
-        "description": "Back up settings dialog (shown while covers are stored): what the backup file holds"
-    },
-    "backup_includeCovers": {
-        "message": "カバー画像を含める",
-        "description": "Back up settings dialog: checkbox that adds the covers to the backup file"
-    },
-    "backup_coversEstimate": {
-        "message": "カバー画像: $1 件、ファイルが約 $2 増えます。カバー画像は同期されないため、別のパソコンへ移すにはバックアップを使います。",
-        "description": "Back up settings dialog, under backup_includeCovers: $1 is how many covers, $2 about how much they add to the file, such as 4.2 MB"
-    },
     "backup_coversLeftOut": {
         "message": "バックアップの上限を超えたため含めないもの（古い順）: $1",
         "description": "Back up settings dialog: $1 covers that do not fit the backup limits and are left out, oldest first"
@@ -6731,21 +6687,441 @@
         "message": "バックアップを保存",
         "description": "Back up settings dialog: button that saves the backup file"
     },
-    "backup_restoreTitle": {
+    "backup_categorySettings": {
+        "message": "設定",
+        "description": "Backup part: the synced settings"
+    },
+    "backup_categorySettingsDesc": {
+        "message": "変更した設定のうち、ほかのデバイスに同期されるもの（メニューやリストを含む）。",
+        "description": "Backup part: what the Settings part holds"
+    },
+    "backup_categoryDeviceSettings": {
+        "message": "このパソコンの設定",
+        "description": "Backup part: the settings kept for one device"
+    },
+    "backup_categoryDeviceSettingsDesc": {
+        "message": "このパソコンだけに保存される設定: レイアウト、サイドバー、キーボードのキー、クイック保存のフォルダ、スマートルールの自動実行、ローカル AI エージェントのアクセス。",
+        "description": "Backup part: what the device settings part holds"
+    },
+    "backup_categoryViews": {
+        "message": "保存した検索と表の表示",
+        "description": "Backup part: saved searches and the manager table's layout"
+    },
+    "backup_categoryViewsDesc": {
+        "message": "ブックマークマネージャーの保存した検索と、表の列と並び順。",
+        "description": "Backup part: what the views part holds"
+    },
+    "backup_categoryPrompts": {
+        "message": "プロンプトと自己紹介",
+        "description": "Backup part: custom AI prompts and About me"
+    },
+    "backup_categoryPromptsDesc": {
+        "message": "カスタム AI プロンプト、各タスクで使うプロンプト、自己紹介の文章。",
+        "description": "Backup part: what the prompts part holds"
+    },
+    "backup_categoryRules": {
+        "message": "スマートルール",
+        "description": "Backup part: the Smart Rules"
+    },
+    "backup_categoryRulesDesc": {
+        "message": "スマートルール（検索、タグ、フォルダ）。ルールが行った処理は含みません。",
+        "description": "Backup part: what the Smart Rules part holds"
+    },
+    "backup_categoryAiServices": {
+        "message": "AI サービス",
+        "description": "Backup part: the AI services without their keys"
+    },
+    "backup_categoryAiServicesDesc": {
+        "message": "各 AI サービスの名前、プロバイダー、モデル、ベースURL、プロバイダー固有の項目。API キーと追加ヘッダーは含みません。",
+        "description": "Backup part: what the AI services part holds"
+    },
+    "backup_categoryAiServiceKeys": {
+        "message": "AI サービスのキー",
+        "description": "Backup part: the API keys and extra headers of the AI services"
+    },
+    "backup_categoryAiServiceKeysDesc": {
+        "message": "AI サービスの API キーと追加ヘッダー。選択しない限り、バックアップには含まれません。",
+        "description": "Backup part: what the AI service keys part holds"
+    },
+    "backup_categoryCovers": {
+        "message": "カバー画像",
+        "description": "Backup part: the bookmarks' cover pictures"
+    },
+    "backup_categoryCoversDesc": {
+        "message": "ブックマークのカバー画像（アドレスごと）。カバー画像は同期されないため、別のパソコンへ移すにはバックアップを使います。",
+        "description": "Backup part: what the covers part holds"
+    },
+    "backup_badgeDevice": {
+        "message": "このパソコン",
+        "description": "Backup dialogs: badge on a part that suits one computer"
+    },
+    "backup_badgeLarge": {
+        "message": "サイズ大",
+        "description": "Backup dialogs: badge on a part that can make the file large"
+    },
+    "backup_deviceNote": {
+        "message": "最初は選択されていません。このパソコンの画面とキーボードに合わせた設定です。",
+        "description": "Backup dialogs: why the device settings part starts unselected"
+    },
+    "backup_exportIntro": {
+        "message": "ファイルに含めるものを選んでください。ブックマークは含まれません。ブックマークはブックマークマネージャーでエクスポートしてください。",
+        "description": "Back up settings dialog: introduction"
+    },
+    "backup_partsLabel": {
+        "message": "項目",
+        "description": "Backup dialogs: heading of the list of parts"
+    },
+    "backup_selectAll": {
+        "message": "すべて選択",
+        "description": "Back up settings dialog: button that selects every part except the keys"
+    },
+    "backup_selectNone": {
+        "message": "すべて解除",
+        "description": "Back up settings dialog: button that clears every part"
+    },
+    "backup_counting": {
+        "message": "数えています…",
+        "description": "Backup dialogs: shown while a part's items are counted"
+    },
+    "backup_partMeta": {
+        "message": "$1 件 · 約 $2",
+        "description": "Back up settings dialog: a part's item count ($1) and size ($2, such as 3 KB)"
+    },
+    "backup_keysWarning": {
+        "message": "このファイルを手に入れた人は誰でも、これらのキーを使ってあなたのアカウントに料金を発生させることができます。ファイルは安全な場所に保管し、パスワードで保護してください。",
+        "description": "Back up settings dialog: warning shown when the AI service keys are selected"
+    },
+    "backup_keysConfirm": {
+        "message": "理解しました。API キーを含めます",
+        "description": "Back up settings dialog: checkbox confirming the keys warning"
+    },
+    "backup_protectAll": {
+        "message": "このバックアップをパスワードで保護",
+        "description": "Back up settings dialog: checkbox that encrypts the whole file"
+    },
+    "backup_protectAllDesc": {
+        "message": "ファイルの内容をすべて暗号化します。復元時にはパスワードが必要です。含まれる項目の一覧は読み取れるままです。",
+        "description": "Back up settings dialog: what protecting the whole backup does"
+    },
+    "backup_protectKeys": {
+        "message": "API キーをパスワードで保護",
+        "description": "Back up settings dialog: checkbox that encrypts only the keys"
+    },
+    "backup_protectKeysDesc": {
+        "message": "キーだけを暗号化します。ファイルのほかの部分はパスワードなしで復元できます。",
+        "description": "Back up settings dialog: what protecting the keys does"
+    },
+    "backup_keysPlainWarning": {
+        "message": "パスワードがないと、キーはプレーンテキストで保存され、ファイルを開いた人は誰でも読めます。",
+        "description": "Back up settings dialog: warning when the keys are saved without a password"
+    },
+    "backup_keysPlainConfirm": {
+        "message": "パスワードなしでキーを保存する",
+        "description": "Back up settings dialog: checkbox confirming keys without a password"
+    },
+    "backup_password": {
+        "message": "パスワード",
+        "description": "Backup dialogs: password field label"
+    },
+    "backup_passwordConfirm": {
+        "message": "パスワード（確認）",
+        "description": "Back up settings dialog: second password field label"
+    },
+    "backup_passwordHint": {
+        "message": "$1 文字以上。関係のない単語をいくつか並べると覚えやすくなります。忘れたパスワードは復旧できません。パスワードがなければ、保護された項目は誰にも開けません。Bookmark Scout にも開けません。",
+        "description": "Back up settings dialog: password hint; $1 is the shortest length"
+    },
+    "backup_passwordTooShort": {
+        "message": "$1 文字以上にしてください。",
+        "description": "Back up settings dialog: the password is too short; $1 is the shortest length"
+    },
+    "backup_passwordMismatch": {
+        "message": "パスワードが一致しません。",
+        "description": "Back up settings dialog: the two passwords differ"
+    },
+    "backup_staysLocal": {
+        "message": "どこにも送信されません。ファイルはこのパソコンに保存されます。",
+        "description": "Back up settings dialog: privacy note"
+    },
+    "backup_fileName": {
+        "message": "ファイル名: $1",
+        "description": "Back up settings dialog: the file name the backup gets"
+    },
+    "backup_errorNothingSelected": {
+        "message": "項目を 1 つ以上選択してください。",
+        "description": "Backup dialogs: nothing is selected"
+    },
+    "backup_errorPasswordMissing": {
+        "message": "パスワードを入力してください。",
+        "description": "Back up settings: password protection is on without a password"
+    },
+    "backup_errorPassword": {
+        "message": "パスワードが間違っているか、保存後にファイルが変更されています。保護された項目からは何も復元されていません。",
+        "description": "Restore settings: wrong password or changed file"
+    },
+    "backup_errorNewerFormat": {
+        "message": "このバックアップは新しいバージョンの Bookmark Scout で作成されています。復元するには拡張機能を更新してください。",
+        "description": "Restore settings: the file's format is newer"
+    },
+    "backup_errorFileTooLarge": {
+        "message": "ファイルがバックアップの上限（$1）を超えています。",
+        "description": "Restore settings: the file is too large; $1 is the limit, such as 420 MB"
+    },
+    "backup_exportedDesc": {
+        "message": "$1 を保存しました。内容: $2。",
+        "description": "Toast after a backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_exportedProtectedDesc": {
+        "message": "$1 を保存しました。内容: $2。パスワードで保護されています。",
+        "description": "Toast after a password-protected backup is saved: $1 file name, $2 list of parts"
+    },
+    "backup_importTitle": {
         "message": "バックアップを復元",
-        "description": "Title of the review shown before restoring a backup file that holds covers"
+        "description": "Restore settings dialog: title"
     },
-    "backup_restoreDesc": {
-        "message": "$1 にはカバー画像が含まれています。設定、プロンプト、AI サービス、保存した検索はどちらの場合も復元されます。カバー画像を復元するとこの端末で何が起きるかを確認してください。",
-        "description": "Restore backup review: $1 is the file name"
+    "backup_importIntro": {
+        "message": "$1（$2 に保存）。インポートするまで何も変更されません。",
+        "description": "Restore settings dialog: $1 file name, $2 when the backup was saved"
     },
-    "backup_restoreCovers": {
-        "message": "カバー画像を復元",
-        "description": "Restore backup review: checkbox that restores the covers the file holds"
+    "backup_importIntroUndated": {
+        "message": "$1。インポートするまで何も変更されません。",
+        "description": "Restore settings dialog: $1 file name, for a file without a date"
     },
-    "backup_coversInFile": {
-        "message": "ファイル内のカバー画像: $1",
-        "description": "Restore backup review: how many covers the file holds"
+    "backup_lockedParts": {
+        "message": "パスワードで保護された項目: $1",
+        "description": "Restore settings dialog: the parts that need the password"
+    },
+    "backup_unlock": {
+        "message": "ロックを解除",
+        "description": "Restore settings dialog: button that opens the protected parts"
+    },
+    "backup_unlockHint": {
+        "message": "バックアップの保存時に設定したパスワードを入力してください。ほかの項目はパスワードなしで復元できます。",
+        "description": "Restore settings dialog: hint under the password field"
+    },
+    "backup_unknownParts": {
+        "message": "このバージョンでは対応していないためスキップ: $1",
+        "description": "Restore settings dialog: parts from a newer version"
+    },
+    "backup_unreadableParts": {
+        "message": "読み取れなかったためスキップ: $1",
+        "description": "Restore settings dialog: parts that failed their checks"
+    },
+    "backup_nothingToImport": {
+        "message": "このファイルには、このバージョンで復元できるものがありません。",
+        "description": "Restore settings dialog: no part can be imported"
+    },
+    "backup_importSafety": {
+        "message": "インポートで変更される内容の安全用コピーを $1 時間保持します。「インポートを元に戻す」で元に戻せます。",
+        "description": "Restore settings dialog: about Undo import; $1 is hours"
+    },
+    "backup_importButton": {
+        "message": "インポート（$1）",
+        "description": "Restore settings dialog: import button; $1 is how many parts are selected"
+    },
+    "backup_undoImport": {
+        "message": "インポートを元に戻す",
+        "description": "Button that puts back what the last backup import changed"
+    },
+    "backup_replaceConfirmTitle": {
+        "message": "これらの項目を置換しますか？",
+        "description": "Restore settings: title of the confirmation before Replace"
+    },
+    "backup_replaceConfirm": {
+        "message": "置換すると、$1 はファイルの内容とまったく同じになり、この端末にしかないものは削除されます。しばらくの間は「インポートを元に戻す」で元に戻せます。",
+        "description": "Restore settings: confirmation before Replace; $1 is the list of parts"
+    },
+    "backup_reviewCounts": {
+        "message": "ファイル内: $1 · 追加: $2 · 変更: $3 · ここと同じ: $4",
+        "description": "Restore settings dialog: what importing a part would do"
+    },
+    "backup_reviewSkipped": {
+        "message": "インポートできないもの（無効、または新しいバージョンのもの）: $1",
+        "description": "Restore settings dialog: entries that will be skipped"
+    },
+    "backup_keysImportWarning": {
+        "message": "これは API キーです。この端末にある同じサービスのキーを置き換えます。また、このファイルを持っている人は誰でも使えます。",
+        "description": "Restore settings dialog: warning when the keys part is selected"
+    },
+    "backup_keysImportConfirm": {
+        "message": "API キーをインポートする",
+        "description": "Restore settings dialog: checkbox confirming the keys import"
+    },
+    "backup_strategyLabel": {
+        "message": "方法",
+        "description": "Restore settings dialog: label of the Merge or Replace choice"
+    },
+    "backup_strategyMerge": {
+        "message": "統合",
+        "description": "Restore settings: import strategy that adds and updates"
+    },
+    "backup_strategyReplace": {
+        "message": "置換",
+        "description": "Restore settings: import strategy that makes a part exactly the file's"
+    },
+    "backup_strategyMergeDesc": {
+        "message": "ファイルの内容を追加・更新し、この端末にしかないものは残します。",
+        "description": "Restore settings dialog: what Merge does"
+    },
+    "backup_strategyReplaceDesc": {
+        "message": "この項目をファイルの内容とまったく同じにします。",
+        "description": "Restore settings dialog: what Replace does"
+    },
+    "backup_replaceRemoves": {
+        "message": "この端末にしかない $1 件を削除します。",
+        "description": "Restore settings dialog: what Replace removes"
+    },
+    "backup_conflicts": {
+        "message": "この端末とファイルの両方で変更されたもの: $1",
+        "description": "Restore settings dialog: number of conflicts"
+    },
+    "backup_conflictNewer": {
+        "message": "新しいほうを残す",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictFile": {
+        "message": "ファイルのものを使う",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictDevice": {
+        "message": "この端末のものを残す",
+        "description": "Restore settings: conflict choice"
+    },
+    "backup_conflictsEach": {
+        "message": "個別に選ぶ",
+        "description": "Restore settings dialog: button that lists each conflict"
+    },
+    "backup_conflictsMore": {
+        "message": "ほか $1 件は上の選択に従います。",
+        "description": "Restore settings dialog: conflicts not listed"
+    },
+    "backup_conflictTimes": {
+        "message": "この端末: $1 · ファイル: $2",
+        "description": "Restore settings dialog: when each side of a conflict changed"
+    },
+    "backup_importDone": {
+        "message": "インポートが完了しました。",
+        "description": "Restore settings dialog: result heading"
+    },
+    "backup_importPartFailed": {
+        "message": "$1 をインポートできなかったため元に戻しました: $2。それより前の項目はインポート済みです。「インポートを元に戻す」で戻せます。",
+        "description": "Restore settings dialog: a part failed and was rolled back; $1 part, $2 reason"
+    },
+    "backup_outcomeCounts": {
+        "message": "追加 $1 · 変更 $2 · 削除 $3 · 維持 $4 · スキップ $5",
+        "description": "Restore settings dialog: what importing a part did"
+    },
+    "backup_needsSetup": {
+        "message": "設定 > AI でこれらを入力し直してください。それまで次のサービスには「要設定」と表示されます: $1。",
+        "description": "Restore settings dialog: AI services missing a secret"
+    },
+    "backup_outcomeMismatch": {
+        "message": "$1 件が、読み戻した内容とインポートした内容で一致しませんでした。確認するか、「インポートを元に戻す」を使ってください。",
+        "description": "Restore settings dialog: read-back found differences"
+    },
+    "backup_inHistory": {
+        "message": "このインポートはブックマークマネージャーの「ブックマークの履歴」に記録されています。",
+        "description": "Restore settings dialog: where the import is recorded"
+    },
+    "backup_undone": {
+        "message": "インポートを元に戻しました",
+        "description": "Toast after Undo import"
+    },
+    "backup_undoFailed": {
+        "message": "インポートを元に戻せませんでした",
+        "description": "Toast when Undo import cannot run"
+    },
+    "backup_undoMismatch": {
+        "message": "$1 件が、読み戻した内容と元の状態で一致しませんでした。",
+        "description": "Toast after Undo import found differences"
+    },
+    "backup_undoUnavailableUndone": {
+        "message": "このインポートはすでに元に戻されています。",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_undoUnavailableExpired": {
+        "message": "元に戻せなくなりました。安全用コピーの保持期間は $1 時間です。",
+        "description": "Why Undo import is not offered; $1 is hours"
+    },
+    "backup_undoUnavailableReplaced": {
+        "message": "元に戻せなくなりました。後のインポートで安全用コピーが置き換えられました。",
+        "description": "Why Undo import is not offered"
+    },
+    "backup_keysForMissingServices": {
+        "message": "この端末にないサービスのキーのためスキップ: $1",
+        "description": "Restore settings dialog: keys without their service"
+    },
+    "history_backupImported": {
+        "message": "バックアップをインポート",
+        "description": "History: a backup restore record"
+    },
+    "history_dataPartCounts": {
+        "message": "$1 · 追加 $2 · 変更 $3 · 削除 $4 · スキップ $5",
+        "description": "History: what a restored backup part did; $1 is Merge or Replace"
+    },
+    "history_filterData": {
+        "message": "バックアップ",
+        "description": "History filter: backup restores"
+    },
+    "history_factFile": {
+        "message": "ファイル",
+        "description": "History record fact: the backup file's name"
+    },
+    "history_dataPartsLabel": {
+        "message": "インポートした項目",
+        "description": "History: label of a backup record's parts"
+    },
+    "settings_backupExportCategories": {
+        "message": "新しいバックアップに含める項目",
+        "description": "Settings: which parts Back up settings starts with"
+    },
+    "settings_backupExportCategoriesDesc": {
+        "message": "「設定をバックアップ」で最初に選択される項目です。バックアップを保存するたびに、そのときの選択がこのパソコンでの新しい既定になります。AI サービスのキーは最初は選択されません。",
+        "description": "Settings: description of settings_backupExportCategories"
+    },
+    "settings_backupEncryptByDefault": {
+        "message": "新しいバックアップをパスワードで保護",
+        "description": "Settings: whether a new backup starts password-protected"
+    },
+    "settings_backupEncryptByDefaultDesc": {
+        "message": "「このバックアップをパスワードで保護」を最初からオンにするかどうか。忘れたパスワードは復旧できません。",
+        "description": "Settings: description of settings_backupEncryptByDefault"
+    },
+    "settings_backupEncryptSecrets": {
+        "message": "API キーをパスワードで保護",
+        "description": "Settings: whether included API keys start password-protected"
+    },
+    "settings_backupEncryptSecretsDesc": {
+        "message": "AI サービスのキーを含むバックアップで、キーを最初からパスワードで保護するかどうか。ダイアログでオフにするときは確認を求めます。",
+        "description": "Settings: description of settings_backupEncryptSecrets"
+    },
+    "backup_partEmpty": {
+        "message": "まだ空です",
+        "description": "Back up settings dialog: a part with no items"
+    },
+    "history_descriptionBackups": {
+        "message": "設定のバックアップの復元も一覧に表示されます。",
+        "description": "History dialog: second sentence of the description"
+    },
+    "history_verifyPassedData": {
+        "message": "インポート後に確認済み: 書き込んだ内容はすべて書いたとおりに読み取れます。",
+        "description": "History record fact: the read-back of a backup restore passed"
+    },
+    "history_verifyFailedData": {
+        "message": "インポート後に確認済み: $1 件が書いたとおりに読み取れません。",
+        "description": "History record fact: the read-back of a backup restore found differences"
+    },
+    "backup_errorTooLarge": {
+        "message": "ブラウザーが保存できるサイズを超えています。",
+        "description": "Restore settings: a part would pass the browser's storage quota"
+    },
+    "backup_errorPartTooLarge": {
+        "message": "$1 をインポートできません: $2 何も変更していません。",
+        "description": "Restore settings: a part failed its check before anything was written; $1 part, $2 reason"
+    },
+    "backup_folderSettingsByPath": {
+        "message": "選んだフォルダはここでフォルダのパスで照合します: $1 件見つかりました、$2 件はここにそのフォルダがありません (そのままにします)。",
+        "description": "Restore settings: folder settings are matched by folder path"
     },
     "backup_coversMatched": {
         "message": "同じアドレスのブックマークがここにあるもの: $1",
@@ -6755,33 +7131,9 @@
         "message": "そのアドレスのブックマークがここにないもの: $1",
         "description": "Restore backup review: how many of the file's covers have no bookmark of their address on this device"
     },
-    "backup_coversAdded": {
-        "message": "カバー画像が付くブックマーク: $1",
-        "description": "Restore backup review: how many bookmarks get a cover they did not have"
-    },
-    "backup_coversReplaced": {
-        "message": "より新しいものに置き換わるカバー画像: $1",
-        "description": "Restore backup review: how many bookmarks' covers are replaced by the file's newer one"
-    },
-    "backup_coversKept": {
-        "message": "そのまま残るカバー画像（「この画面をカバー画像にする」で選んだもの、またはファイルより新しいもの）: $1",
-        "description": "Restore backup review: how many bookmarks keep their cover (picked with covers_captureButton, or newer than the file's)"
-    },
-    "backup_coversSkipped": {
-        "message": "スキップ（読み取れない、またはバックアップの上限超過）: $1",
-        "description": "Restore backup review: entries of the file that are not restored (unreadable or past the limits)"
-    },
     "backup_coversOverStorage": {
         "message": "カバー画像の保存容量に収めるため、後で古い順に削除: $1",
         "description": "Restore backup review: covers removed after the restore to stay within the Cover Storage setting (settings_coversMaxCacheMb)"
-    },
-    "backup_restoreNoUndo": {
-        "message": "復元は元に戻せません。置き換えられたカバー画像は失われます。",
-        "description": "Restore backup review: a restore has no undo"
-    },
-    "backup_restore": {
-        "message": "復元",
-        "description": "Restore backup review: button that restores the backup"
     },
     "actionName_searchBookmarks": {
         "message": "ブックマークを検索",

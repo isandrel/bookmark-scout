@@ -476,6 +476,22 @@ export function fromPortableCover(portable: PortableCover): StoredCoverRecord | 
 }
 
 /**
+ * The stored covers of `bookmarkIds` exactly as kept, for `putBackCovers` later (Undo import);
+ * ids without a cover are skipped. Nothing is removed.
+ */
+export async function copyCovers(bookmarkIds: readonly string[]): Promise<StoredCoverRecord[]> {
+  const transaction = (await openCoverDb()).transaction(['info', 'images'], 'readonly');
+  const copies: StoredCoverRecord[] = [];
+  for (const id of bookmarkIds) {
+    const info = await transaction.objectStore('info').get(id);
+    const image = await transaction.objectStore('images').get(id);
+    if (info && image) copies.push({ info, image });
+  }
+  await transaction.done;
+  return copies;
+}
+
+/**
  * The stored covers of `bookmarkIds` as kept (info and image), for the backup file; ids without
  * a cover, or whose info does not parse, are skipped.
  */

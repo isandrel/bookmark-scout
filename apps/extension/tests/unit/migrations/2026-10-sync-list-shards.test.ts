@@ -16,7 +16,8 @@ import {
 } from '@/lib/settings-storage';
 import { syncListShards } from '@/lib/storage/migrations/2026-10-sync-list-shards';
 import { storageKey } from '@/lib/storage/registry';
-import { exportBackup, restoreBackup } from '@/services/backup';
+import { installFakeBookmarks } from '../../fake-bookmarks';
+import { formatOneFile, restoreParts, stubManifestVersion } from '../backup-helpers';
 import { readStoredData, readStoredRaw, STORAGE_ITEMS, seedStored } from '../storage-helpers';
 
 // biome-ignore lint/style/noNonNullAssertion: this migration reads an old item.
@@ -285,24 +286,24 @@ describe('each list setting in its own item', () => {
   });
 
   it('restores the lists of a backup file from before each list had its own item', async () => {
-    const file = JSON.parse(await exportBackup());
-    file.items[storageKey(STORAGE_ITEMS.settings)] = {
-      v: 1,
-      data: { language: 'en', ...SETTINGS_0_3_4 },
-    };
-    file.items[storageKey(OLD_ITEM)] = { v: 1, data: OLD_LISTS };
-    file.items[storageKey(STORAGE_ITEMS.deviceSettings)] = {
-      v: 1,
-      data: { quickSaveFixedFolder: '42', popupBookmarkMenu: ['delete'] },
-    };
+    stubManifestVersion();
+    installFakeBookmarks([]);
+    const file = formatOneFile({
+      [storageKey(STORAGE_ITEMS.settings)]: { v: 1, data: { language: 'en', ...SETTINGS_0_3_4 } },
+      [storageKey(OLD_ITEM)]: { v: 1, data: OLD_LISTS },
+      [storageKey(STORAGE_ITEMS.deviceSettings)]: {
+        v: 1,
+        data: { quickSaveFixedFolder: '42', popupBookmarkMenu: ['delete'] },
+      },
+    });
     await saveSettings({ managerOrganizeMenu: ['paste'] });
     // So the old places are not read on this device.
     await seedStored(STORAGE_ITEMS.storageMigrations, [syncListShards.id]);
 
-    await restoreBackup(JSON.stringify(file));
+    // Converted by the backup file converter and this migration: one path for every older file.
+    await restoreParts(file, { settings: 'replace', deviceSettings: 'merge' });
     expect(await getSettings()).toMatchObject({
       theme: 'dark',
-      quickSaveFixedFolder: '42',
       urlCleanerRemoveParams: ['utm_*'],
       askAiDisabledActions: ['deleteBookmarks'],
       privacyScannerSensitiveParams: ['secret'],

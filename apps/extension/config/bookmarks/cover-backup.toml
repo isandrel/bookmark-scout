@@ -1,6 +1,6 @@
 # Covers in the backup file (src/services/cover-backup.lazy.ts): Back up settings in Settings
-# writes the covers of this device's bookmarks into the file, one per address, when Include covers
-# is checked (the Include Covers in Backups setting, config/settings/data.toml), and Restore
+# writes the covers of this device's bookmarks into the file, one per address, when the Covers part
+# is selected (config/data/backup.toml; Parts in New Backups, config/settings/data.toml), and Restore
 # settings puts them back on the bookmarks with the same address on the device it restores to. Each image
 # is base64 in the one JSON file, which grows it by a third. These limits cap what a backup writes
 # and, since a backup file comes from outside, what a restore reads; an entry past one is left out

@@ -395,8 +395,7 @@ export function generateFilename(
     .slice(0, maxLength)
     .join('');
   const safePrefix = prefix.replace(/[\\/:*?"<>|]/g, '_');
-  const pad = (value: number) => String(value).padStart(2, '0');
-  const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const date = toLocalIsoDate(now);
   const values: Record<(typeof FILENAME_PLACEHOLDERS)[number], string> = {
     prefix: safePrefix,
     scope: sanitized,

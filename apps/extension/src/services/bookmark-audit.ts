@@ -30,6 +30,10 @@ export type AuditInit = {
   relatedOperationId?: string;
   /** The background task applying the change in parts, which links its records. */
   jobId?: string;
+  /** What the change is to: bookmarks (the default) or the extension's own data. */
+  kind?: AuditRecordKind;
+  /** A data record's parts, as planned; `finishDataAuditOperation` stores what they did. */
+  data?: AuditData;
 };
 
 /** Extension pages and the surface their changes come from, by file name. */
@@ -81,6 +85,8 @@ export async function beginAuditOperation(init: AuditInit, now = preciseNow()): 
     ...(init.replay ? { replay: init.replay } : {}),
     ...(init.relatedOperationId ? { relatedOperationId: init.relatedOperationId } : {}),
     ...(init.jobId ? { jobId: init.jobId } : {}),
+    ...(init.kind && init.kind !== 'bookmarks' ? { kind: init.kind } : {}),
+    ...(init.data ? { data: init.data } : {}),
     originConfidence: 'verified_internal',
   });
   return id;
@@ -341,6 +347,56 @@ export async function finishReplayAuditOperation(
       applied.length > 0
         ? { status: mismatches > 0 ? 'failed' : 'passed', mismatchCount: mismatches }
         : { status: 'not_run' },
+  }));
+}
+
+/**
+ * Stores how a change to the extension's own data ended (a backup restore, or its undo): each
+ * part's counts, the read-back (`mismatches`: entries that did not read back as written), and
+ * the state they give, as `finishAuditOperation` does for bookmarks. Its counts are entries:
+ * applied are those added, changed, or removed; skipped those kept or left out; failed those of a
+ * part an error stopped.
+ */
+export async function finishDataAuditOperation(
+  id: string,
+  {
+    data,
+    planned,
+    failed,
+    mismatches,
+    threw,
+    now = Date.now(),
+  }: {
+    data: AuditData;
+    planned: number;
+    failed: number;
+    mismatches: number;
+    threw: boolean;
+    now?: number;
+  },
+): Promise<void> {
+  const applied = data.parts.reduce(
+    (sum, part) => sum + part.added + part.changed + part.removed,
+    0,
+  );
+  const skipped = data.parts.reduce((sum, part) => sum + part.kept + part.skipped, 0);
+  const counts: AuditCounts = { planned, applied, skipped, failed };
+  const state =
+    mismatches > 0
+      ? 'needs_review'
+      : threw
+        ? applied > 0 || data.parts.length > 1
+          ? 'partially_applied'
+          : 'failed'
+        : 'verified_success';
+  await patchAuditOperation(id, (current) => ({
+    ...current,
+    data,
+    finishedAt: now,
+    counts,
+    state,
+    verification: { status: mismatches > 0 ? 'failed' : 'passed', mismatchCount: mismatches },
+    ...(threw ? { errorCodes: ['write-threw'] } : {}),
   }));
 }
 

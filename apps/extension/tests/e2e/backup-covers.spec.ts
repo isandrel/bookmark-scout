@@ -1,15 +1,24 @@
 /**
- * Covers in the backup file: Back up settings asks whether to include the covers stored on this
- * device (Include Covers in Backups is the box's default) and writes them by address; Restore
- * settings reviews what restoring them would do, then puts them on the bookmarks of the same
- * address, whatever their ids, never over a cover the user picked.
+ * Covers in the backup file: the Covers part (in Parts in New Backups by default) writes the
+ * covers stored on this device by address; Restore settings reviews what importing them would do,
+ * then puts them on the bookmarks of the same address, whatever their ids, never over a cover the
+ * user picked (Merge). The import is one record in the manager's History, whose Undo import puts
+ * the covers back.
  */
-import { readFile } from 'node:fs/promises';
-import type { Page, Worker } from '@playwright/test';
+import type { Worker } from '@playwright/test';
+import {
+  backupPart,
+  importParts,
+  openBackupDialog,
+  openRestore,
+  partCheckbox,
+  saveBackup,
+  selectOnlyParts,
+} from './backup-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { readCoverInfos, seedCover } from './manager-helpers';
 import { seedFolder } from './popup-helpers';
-import { setSettings } from './storage';
+import { readSettings, setSettings } from './storage';
 
 const DAY = 86_400_000;
 const ALPHA = 'https://alpha.e2e.invalid/story';
@@ -32,27 +41,6 @@ async function clearCoverStore(worker: Worker) {
       transaction.onerror = () => reject(transaction.error);
     });
     db.close();
-  });
-}
-
-/** Clicks Back up settings, answers its dialog, and returns the saved file's JSON. */
-async function backUp(page: Page, includeCovers: boolean) {
-  await page.getByRole('button', { name: 'Back up settings' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Back up settings' });
-  const box = dialog.getByRole('checkbox', { name: 'Include covers' });
-  if ((await box.isChecked()) !== includeCovers) await box.click();
-  const downloadPromise = page.waitForEvent('download');
-  await dialog.getByRole('button', { name: 'Save backup' }).click();
-  const download = await downloadPromise;
-  await expect(dialog).toHaveCount(0);
-  return { raw: await readFile(await download.path(), 'utf8'), dialog };
-}
-
-async function restore(page: Page, raw: string) {
-  await page.getByLabel('Restore settings', { exact: true }).setInputFiles({
-    name: 'bookmark-scout-backup.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(raw),
   });
 }
 
@@ -79,24 +67,19 @@ test('a backup with covers restores them by address on matching bookmarks after 
   });
 
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('button', { name: 'Back up settings' }).click();
-  const choice = page.getByTestId('backup-covers-choice');
-  // Include Covers in Backups is on by default, and the dialog says what covers add.
-  await expect(choice.getByRole('checkbox', { name: 'Include covers' })).toBeChecked();
-  await expect(choice).toContainText('Covers: 3, adding about');
-  await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog')).toHaveCount(0);
-
-  const { raw } = await backUp(page, true);
-  await expect(
-    toastRegion(page).getByText(
-      'The file holds your settings, prompts, AI services, saved searches, and covers (3). API keys are never included.',
-      { exact: true },
-    ),
-  ).toBeVisible();
+  const dialog = await openBackupDialog(page);
+  // Covers are in Parts in New Backups by default, marked large, with their count and size.
+  await expect(partCheckbox(dialog, 'covers')).toBeChecked();
+  await expect(backupPart(dialog, 'covers')).toContainText('Large');
+  await expect(backupPart(dialog, 'covers').getByTestId('backup-part-meta')).toHaveText(
+    /^Items: 3 · About [\d.]+ KB$/,
+  );
+  await selectOnlyParts(dialog, ['covers']);
+  const { raw } = await saveBackup(page, dialog);
   const file = JSON.parse(raw);
+  const covers = file.sections.covers.covers;
   expect(
-    file.covers.map((cover: { url: string; source: string; savedAt: string }) => [
+    covers.map((cover: { url: string; source: string; savedAt: string }) => [
       cover.url,
       cover.source,
       cover.savedAt,
@@ -106,8 +89,8 @@ test('a backup with covers restores them by address on matching bookmarks after 
     [BETA, 'tab', new Date(4 * DAY).toISOString()],
     [GAMMA, 'page', new Date(3 * DAY).toISOString()],
   ]);
-  expect(file.covers[0]).toMatchObject({ type: 'image/png', width: 600, height: 314 });
-  expect(Buffer.from(file.covers[0].data, 'base64').byteLength).toBe(file.covers[0].bytes);
+  expect(covers[0]).toMatchObject({ type: 'image/png', width: 600, height: 314 });
+  expect(Buffer.from(covers[0].data, 'base64').byteLength).toBe(covers[0].bytes);
 
   // Another computer, as far as covers go: none stored, Beta saved again under a new id, Gamma
   // missing, and a cover Alpha's user picked there (older than the file's page image).
@@ -136,26 +119,17 @@ test('a backup with covers restores them by address on matching bookmarks after 
   );
 
   await page.reload();
-  await restore(page, raw);
-  const review = page.getByRole('dialog', { name: 'Restore backup' });
-  await expect(review.getByTestId('backup-covers-review')).toContainText(
-    [
-      'Covers in the file: 3',
-      'With a bookmark of the same address here: 2',
-      'Without a bookmark of that address here: 1',
-      'Bookmarks getting a cover: 1',
-      'Covers replaced by a newer one: 0',
-      'Covers kept (picked with Use this view as the cover, or newer than the file’s): 1',
-    ].join(''),
+  const review = await openRestore(page, raw);
+  const part = backupPart(review, 'covers');
+  await expect(part.getByTestId('backup-review-counts')).toHaveText(
+    'In the file: 3 · Adds 1 · Changes 0 · Same here: 1',
   );
-  await expect(review.getByRole('checkbox', { name: 'Restore covers' })).toBeChecked();
-  await review.getByRole('button', { name: 'Restore', exact: true }).click();
-  await expect(
-    toastRegion(page).getByText(
-      'Your settings, prompts, AI services, and saved searches were restored. Backups have no API keys: add any that are missing in Settings > AI. Covers restored: 1. Kept as they were: 1. Without a bookmark here: 1. Left out: 0.',
-      { exact: true },
-    ),
-  ).toBeVisible();
+  await expect(part).toContainText('With a bookmark of the same address here: 2');
+  await expect(part).toContainText('Without a bookmark of that address here: 1');
+  await importParts(review);
+  await expect(review.getByTestId('backup-outcome').filter({ hasText: 'Covers' })).toContainText(
+    'Added 1 · Changed 0 · Removed 0 · Kept 1 · Skipped 0',
+  );
 
   const infos = await readCoverInfos(extensionWorker);
   expect(
@@ -175,40 +149,85 @@ test('a backup with covers restores them by address on matching bookmarks after 
   ]);
 });
 
-test('a backup without covers has no covers section, and restoring it asks nothing', async ({
+test('a backup without the Covers part has no covers, and restoring it offers none', async ({
   extensionId,
   extensionWorker,
   page,
 }) => {
-  // Include Covers in Backups off: the box starts unchecked.
-  await setSettings(extensionWorker, { language: 'en', backupIncludeCovers: false });
+  // Parts in New Backups without covers: the box starts unchecked.
+  await setSettings(extensionWorker, { language: 'en', backupExportCategories: ['settings'] });
   const seeded = await seedFolder(extensionWorker, 'E2E Cover Backup Off', [
     { title: 'Alpha', url: ALPHA },
   ]);
   await seedCover(extensionWorker, seeded.ids.Alpha ?? '', ALPHA);
 
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('button', { name: 'Back up settings' }).click();
-  await expect(
-    page
-      .getByRole('dialog', { name: 'Back up settings' })
-      .getByRole('checkbox', { name: 'Include covers' }),
-  ).not.toBeChecked();
-  await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog')).toHaveCount(0);
-
-  const { raw } = await backUp(page, false);
-  await expect(
-    toastRegion(page).getByText(
-      'The file holds your settings, prompts, AI services, and saved searches. API keys are never included.',
-      { exact: true },
-    ),
-  ).toBeVisible();
-  expect(JSON.parse(raw)).not.toHaveProperty('covers');
+  const dialog = await openBackupDialog(page);
+  await expect(partCheckbox(dialog, 'covers')).not.toBeChecked();
+  const { raw } = await saveBackup(page, dialog);
+  expect(JSON.parse(raw).sections).not.toHaveProperty('covers');
 
   await clearCoverStore(extensionWorker);
-  await restore(page, raw);
-  await expect(toastRegion(page).getByText('✓ Backup restored', { exact: true })).toBeVisible();
-  await expect(page.getByRole('dialog')).toHaveCount(0);
+  const review = await openRestore(page, raw);
+  await expect(backupPart(review, 'covers')).toHaveCount(0);
+  await importParts(review);
   expect(await readCoverInfos(extensionWorker)).toEqual([]);
+});
+
+test('a backup import is one record in History, and Undo import there puts back the settings and covers', async ({
+  extensionId,
+  extensionWorker,
+  page,
+  context,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', theme: 'dark' });
+  const seeded = await seedFolder(extensionWorker, 'E2E Cover History', [
+    { title: 'Alpha', url: ALPHA },
+  ]);
+  const alpha = seeded.ids.Alpha ?? '';
+  await seedCover(extensionWorker, alpha, ALPHA, undefined, { source: 'page', savedAt: 5 * DAY });
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  const dialog = await openBackupDialog(page);
+  await selectOnlyParts(dialog, ['settings', 'covers']);
+  const { raw, filename } = await saveBackup(page, dialog);
+
+  // After the backup: another theme, and an older cover on Alpha.
+  await setSettings(extensionWorker, { theme: 'light' });
+  await clearCoverStore(extensionWorker);
+  await seedCover(extensionWorker, alpha, ALPHA, undefined, { source: 'page', savedAt: 1 * DAY });
+  const review = await openRestore(page, raw, filename);
+  await importParts(review);
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('dark');
+  await expect
+    .poll(async () => (await readCoverInfos(extensionWorker)).map((info) => info.savedAt))
+    .toEqual([5 * DAY]);
+  await review.getByRole('button', { name: 'Close' }).first().click();
+
+  const manager = await context.newPage();
+  await manager.goto(`chrome-extension://${extensionId}/bookmarks.html`);
+  await manager.getByRole('button', { name: 'Bookmark history' }).click();
+  const history = manager.getByTestId('history-dialog');
+  await history.getByRole('radio', { name: 'Backups' }).click();
+  const record = history.getByTestId('history-record');
+  await expect(record).toHaveCount(1);
+  await expect(record.getByTestId('history-record-label')).toHaveText('Imported backup');
+  await expect(record).toContainText('Settings and Covers');
+  await record.getByRole('button', { expanded: false }).click();
+  await expect(record.getByTestId('history-record-facts')).toContainText(filename);
+  await expect(record.getByTestId('history-data-part')).toHaveText([
+    /Settings.*Merge · Added 0 · Changed 1 · Removed 0 · Skipped 0/,
+    /Covers.*Merge · Added 0 · Changed 1 · Removed 0 · Skipped 0/,
+  ]);
+  await record.getByRole('button', { name: 'Undo import' }).click();
+  await expect(toastRegion(manager).getByText('✓ Import undone', { exact: true })).toBeVisible();
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('light');
+  await expect
+    .poll(async () => (await readCoverInfos(extensionWorker)).map((info) => info.savedAt))
+    .toEqual([DAY]);
+  // The undo is its own record, linked to the import, which shows as undone.
+  await expect(history.getByTestId('history-record-label')).toHaveText([
+    'Undone: Imported backup',
+    'Imported backup',
+  ]);
+  await expect(history.getByTestId('history-record').nth(1)).toContainText('Undone');
 });

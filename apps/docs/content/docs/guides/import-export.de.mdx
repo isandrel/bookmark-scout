@@ -56,15 +56,43 @@ Klicken Sie auf **Importieren**. Eine Benachrichtigung zeigt an, wie viele Eleme
 
 Es wird nichts geschrieben, bevor Sie auf **Importieren** klicken. Ändern sich Ihre Lesezeichen, während die Vorschau geöffnet ist, wird die Vorschau aktualisiert statt angewendet.
 
-## Einstellungsdateien sind getrennt [#settings-files-are-separate]
+## Einstellungen sichern und wiederherstellen [#back-up-and-restore-settings]
 
-Die Schaltflächen **Einstellungen sichern** und **Einstellungen wiederherstellen** unten auf der Einstellungsseite speichern eine Sicherungsdatei mit den Einstellungen von Bookmark Scout, eigenen Prompts, KI-Diensten (ohne API-Schlüssel) und gespeicherten Suchen und stellen sie daraus wieder her. Lesezeichen, Tags und Zusammenfassungen bleiben davon unberührt. Was die Sicherung enthält, steht unter [Einstellungen](/settings). Sie können eine Sicherungsdatei auch an beliebiger Stelle auf der Einstellungsseite ablegen, um sie wiederherzustellen.
+Die Schaltflächen **Einstellungen sichern** und **Einstellungen wiederherstellen** unten auf der Einstellungsseite speichern eine Sicherungsdatei mit den eigenen Daten von Bookmark Scout und stellen sie daraus wieder her. Ihre Lesezeichen, Tags und Zusammenfassungen bleiben davon immer unberührt; Lesezeichen exportieren Sie mit dem Werkzeug oben. Sie können eine Sicherungsdatei auch an beliebiger Stelle auf der Einstellungsseite ablegen, um sie wiederherzustellen.
 
-### Titelbilder in einer Sicherung [#covers-in-a-backup]
+### Was eine Sicherung enthält [#what-a-backup-holds]
 
-Titelbilder werden nie synchronisiert, und Lesezeichen-Exporte enthalten sie nicht; auf einen anderen Computer kommen sie mit einer Sicherung.
+**Einstellungen sichern** listet die Teile einer Sicherung auf, jeweils mit ihrem Inhalt, der Anzahl der Elemente und ihrer ungefähren Größe. Wählen Sie die gewünschten aus, oder verwenden Sie **Alle auswählen** und **Keine auswählen**:
 
-- Solange Titelbilder gespeichert sind, fragt **Einstellungen sichern**, ob **Titelbilder einschließen** soll, und nennt, wie viele es sind und wie viel sie die Datei ungefähr vergrößern. Das Kästchen ist vorausgewählt; **Titelbilder in Sicherungen aufnehmen** in den [Einstellungen](/settings#data) ändert das. Die Datei enthält ein Titelbild pro Adresse, die neuesten zuerst, bis zu den Grenzen der Sicherung.
-- Beim Wiederherstellen einer Sicherung mit Titelbildern erscheint zuerst eine Übersicht: wie viele Titelbilder die Datei enthält, wie viele zu einem Lesezeichen mit derselben Adresse auf diesem Gerät passen und wie viele nicht, und wie viele Lesezeichen ein Titelbild erhalten, ihres ersetzt bekommen oder ihr eigenes behalten. Entfernen Sie das Häkchen bei **Titelbilder wiederherstellen**, um nur den Rest der Sicherung wiederherzustellen.
 - Ein mit **Diese Ansicht als Titelbild verwenden** gewähltes Titelbild hat Vorrang: Es wird nur durch ein neueres, ebenfalls selbst gewähltes Titelbild aus der Datei ersetzt, und ein selbst gewähltes Titelbild aus der Datei ersetzt eines, das nicht selbst gewählt wurde; sonst gewinnt das neuere. Ein Datum in der Zukunft zählt als heute. **Speicher für Titelbilder** gilt weiter: Darüber hinaus werden die ältesten Titelbilder entfernt, die selbst gewählten zuletzt.
-- Das Wiederherstellen lässt sich nicht rückgängig machen. Die Titelbilder bleiben in der Datei, wo immer Sie sie speichern; nichts wird gesendet.
+- **Einstellungen**: die von Ihnen geänderten Einstellungen, die synchronisiert werden, einschließlich der Menüs und Listen.
+- **Einstellungen dieses Computers**: Einstellungen, die für einen einzelnen Computer gespeichert sind, etwa das Layout, die Seitenleisten, die Tastenkürzel und der Schnellspeicher-Ordner. Anfangs nicht ausgewählt, weil sie zu einem bestimmten Bildschirm und einer bestimmten Tastatur passen.
+- **Gespeicherte Suchen und Tabellenansicht**, **Prompts und Über mich**, **Intelligente Regeln** und **KI-Dienste** (Name, Anbieter, Modell, Basis-URL und anbieterspezifische Felder).
+- **Titelbilder**, markiert mit **Groß**: die Titelbilder, nach Adresse. Titelbilder werden nie synchronisiert, und Lesezeichen-Exporte enthalten sie nicht; auf einen anderen Computer kommen sie mit einer Sicherung.
+- **Schlüssel der KI-Dienste**: die API-Schlüssel und zusätzlichen Header, nie ausgewählt, außer Sie wählen sie aus. Wenn Sie sie auswählen, werden Sie gewarnt, dass jeder mit der Datei die Schlüssel verwenden und Kosten verursachen kann, und Sie bestätigen vor dem Speichern.
+
+Die gespeicherten Teile werden beim nächsten Mal auf diesem Computer zur Auswahl (**Teile neuer Sicherungen** in den [Einstellungen](/settings#data)). Der Dateiname enthält das Datum und die Teile, etwa `bookmark-scout-backup_2026-10-23_all.json`, und die Datei wird auf Ihrem Computer gespeichert; nichts wird irgendwohin gesendet.
+
+### Passwortschutz [#password-protection]
+
+- Wenn **Schlüssel der KI-Dienste** ausgewählt ist, ist **API-Schlüssel mit einem Passwort schützen** anfangs aktiviert; wenn Sie es ausschalten, bestätigen Sie, dass die Schlüssel als Klartext lesbar sein werden.
+- **Diese Sicherung mit einem Passwort schützen** verschlüsselt jeden Teil. **Neue Sicherungen mit Passwort schützen** in den Einstellungen aktiviert es von Anfang an.
+- Das Passwort braucht mindestens 12 Zeichen. Es wird nie gespeichert, und ein vergessenes Passwort lässt sich nicht wiederherstellen: Ohne es kann niemand die geschützten Teile öffnen, auch nicht Bookmark Scout.
+- Die Liste der Teile bleibt lesbar, daher zeigt **Einstellungen wiederherstellen**, was die Datei enthält, bevor nach dem Passwort gefragt wird. Bei einem falschen Passwort oder einer Datei, die nach dem Speichern verändert wurde, wird aus den geschützten Teilen nichts importiert.
+
+### Wiederherstellen [#restoring]
+
+1. Klicken Sie auf **Einstellungen wiederherstellen** und wählen Sie die Datei. Noch ändert sich nichts.
+2. Jeder Teil zeigt, wie viele Elemente die Datei enthält und wie viele das Importieren hinzufügen, ändern oder unverändert lassen würde. Ein Teil aus einer neueren Version von Bookmark Scout wird als nicht unterstützt aufgeführt und übersprungen. Geben Sie das Passwort ein, um geschützte Teile zu entsperren.
+3. Wählen Sie die zu importierenden Teile. **Einstellungen dieses Computers** und **Schlüssel der KI-Dienste** sind anfangs nicht ausgewählt; für die Schlüssel werden Sie erneut um Bestätigung gebeten.
+4. Wählen Sie für jeden Teil **Zusammenführen** (fügt hinzu und aktualisiert, was die Datei enthält, und behält, was nur dieses Gerät hat) oder **Ersetzen** (der Teil erhält genau den Inhalt der Datei, und was nur dieses Gerät hat, wird entfernt; Sie bestätigen vorher).
+5. Beim Zusammenführen werden Elemente aufgeführt, die sowohl hier als auch in der Datei geändert wurden (Prompts, Intelligente Regeln, gespeicherte Suchen, KI-Dienste): Behalten Sie die neuere Version, verwenden Sie die Version der Datei oder behalten Sie die Version dieses Geräts, für alle zusammen oder für jedes einzeln. Ein mit **Diese Ansicht als Titelbild verwenden** gewähltes Titelbild wird nur durch ein neueres, ebenfalls selbst gewähltes Titelbild aus der Datei ersetzt.
+6. Klicken Sie auf **Importieren**. Das Ergebnis listet auf, was jeder Teil hinzugefügt, geändert, entfernt, behalten und übersprungen hat. KI-Dienste, deren Schlüssel nicht in der Datei waren, zeigen **Einrichtung nötig**, bis Sie sie unter [KI](/settings#ai) eingeben.
+
+Eine Einstellung, die einen Ordner angibt, etwa der Schnellspeicher-Ordner, wird nur wiederhergestellt, wenn es auf diesem Computer einen Ordner mit demselben Pfad gibt, und gibt dann diesen Ordner an; sonst bleibt sie, wie sie hier ist. Jeder Teil wird geprüft, bevor etwas geschrieben wird, und ein Teil, der sich nicht vollständig importieren lässt, bleibt, wie er war.
+
+### Import rückgängig machen [#undo-import]
+
+Vor dem Importieren bewahrt Bookmark Scout 24 Stunden lang eine Sicherheitskopie dessen auf, was der Import ändert. **Import rückgängig machen**, im Ergebnis und unten in den Einstellungen, stellt alles wieder her, einschließlich der Titelbilder. Der Import steht außerdem im **Lesezeichen-Verlauf** des Lesezeichen-Managers (Filter **Sicherungen**), mit jedem Teil und seinen Zahlen, und **Import rückgängig machen** dort bewirkt dasselbe. Nach 24 Stunden oder sobald Sie eine andere Sicherung wiederherstellen, bleibt der Eintrag erhalten, nennt aber den Grund, warum Rückgängig nicht mehr angeboten wird.
+
+Ältere Sicherungsdateien aus der Zeit vor den Teilen lassen sich weiterhin wiederherstellen.

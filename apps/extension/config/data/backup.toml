@@ -1,0 +1,126 @@
+# The backup file (Settings > Back up settings and Restore settings). Read once by
+# src/lib/backup-config.ts; the file format and its parts are src/services/backup-file.lazy.ts and
+# src/services/backup-categories.lazy.ts.
+
+# The parts a backup is made of, in the order the dialogs list them and a restore applies them
+# (AI services before their keys, which are stored by service). Every storage item and IndexedDB
+# database names one of these ids, or "exclude", in `backup` (src/lib/storage/registry.ts);
+# tests/unit/backup-categories.test.ts fails on an id that is not here. Which parts a new backup
+# selects is the Parts in New Backups setting (config/settings/data.toml), which may name neither a
+# device-specific nor a secret part.
+#
+# - id: stored in the file and in that setting; never rename one, a renamed id reads as unknown.
+# - label, description: message keys, in every locale.
+# - slug: the part's name in the file name, kebab-case ASCII.
+# - device_specific: suits one computer (screen, keyboard, folders of this profile), so it is not
+#   selected by default, like VS Code's machine settings; the dialogs say why. Wherever a
+#   setting names a bookmark folder (a `folder` field in the settings schema, such as the quick save folder), the file
+#   carries the folder's path, and a restore keeps the setting only where a folder of that path
+#   exists, set to its id there: folder ids differ on every device.
+# - secret: credentials. Never selected by default and never remembered; selecting it shows a
+#   warning that needs a confirm, and password protection starts on.
+# - large: can make the file large; the dialogs mark it.
+[[categories]]
+id = "settings"
+label = "backup_categorySettings"
+description = "backup_categorySettingsDesc"
+slug = "settings"
+device_specific = false
+secret = false
+large = false
+
+[[categories]]
+id = "deviceSettings"
+label = "backup_categoryDeviceSettings"
+description = "backup_categoryDeviceSettingsDesc"
+slug = "device"
+device_specific = true
+secret = false
+large = false
+
+[[categories]]
+id = "views"
+label = "backup_categoryViews"
+description = "backup_categoryViewsDesc"
+slug = "views"
+device_specific = false
+secret = false
+large = false
+
+[[categories]]
+id = "prompts"
+label = "backup_categoryPrompts"
+description = "backup_categoryPromptsDesc"
+slug = "prompts"
+device_specific = false
+secret = false
+large = false
+
+[[categories]]
+id = "rules"
+label = "backup_categoryRules"
+description = "backup_categoryRulesDesc"
+slug = "rules"
+device_specific = false
+secret = false
+large = false
+
+[[categories]]
+id = "aiServices"
+label = "backup_categoryAiServices"
+description = "backup_categoryAiServicesDesc"
+slug = "ai"
+device_specific = false
+secret = false
+large = false
+
+[[categories]]
+id = "aiServiceKeys"
+label = "backup_categoryAiServiceKeys"
+description = "backup_categoryAiServiceKeysDesc"
+slug = "keys"
+device_specific = false
+secret = true
+large = false
+
+[[categories]]
+id = "covers"
+label = "backup_categoryCovers"
+description = "backup_categoryCoversDesc"
+slug = "covers"
+device_specific = false
+secret = false
+large = true
+
+[file]
+# The saved file's name. {date}: the local date as YYYY-MM-DD; {parts}: the selected parts' slugs
+# joined by "-" (or "all" when every part that is not secret is selected, or "<n>-parts" past
+# max_named_parts), plus "keys" when the keys are in it; {protected}: protected_suffix when the
+# file has a password, else nothing.
+filename_pattern = "bookmark-scout-backup_{date}_{parts}{protected}.json"
+max_named_parts = { value = 3, min = 1, max = 8 }
+protected_suffix = "_protected"
+# Largest file Restore settings reads, in MB. A backup with covers at their largest (300 MB of
+# images, config/bookmarks/cover-backup.toml) is about 400 MB in base64; past this the browser
+# may fail to read the text at all.
+max_file_mb = { value = 420, min = 1, max = 500 }
+
+[encryption]
+# Password protection (src/lib/backup-crypto.ts): the password becomes an AES-GCM 256 key through
+# PBKDF2-SHA-256 with a random salt. More iterations make guessing a password slower and saving and
+# opening the file slower too; the count is written in the file, so raising it later still opens
+# older files. OWASP's 2023 advice for PBKDF2-HMAC-SHA256 is 600,000. A file asking for more than
+# max is refused, so a crafted file cannot make the page compute for minutes.
+pbkdf2_iterations = { value = 600000, min = 100000, max = 5000000 }
+# Shortest password the dialog accepts; it shows this as the hint.
+min_password_length = { value = 12, min = 8, max = 64 }
+
+[import]
+# Items the review lists by name in each part's conflicts; the rest follow the part's choice.
+max_conflicts_listed = { value = 50, min = 5, max = 500 }
+
+[undo]
+# How long Undo import stays offered after a restore. The safety copy it restores (what the
+# imported parts held before, including the API keys when they were imported) stays in this
+# device's IndexedDB until then, or until the next restore replaces it.
+keep_hours = { value = 24, min = 1, max = 720 }

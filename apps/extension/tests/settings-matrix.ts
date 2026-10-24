@@ -740,20 +740,26 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   exportMarkdownIndentSpaces: tested(DATA_TOOLS, [exportUnit]),
   exportIncludeDates: tested(DATA_TOOLS, [exportPreferences, exportUnit]),
   exportIncludeUrls: tested(DATA_TOOLS, [exportPreferences]),
-  backupIncludeCovers: tested(
-    'components/page/OptionsPage.tsx',
-    [
-      e2e(
-        'backup-covers.spec.ts',
-        'a backup with covers restores them by address on matching bookmarks after a review, keeping a picked cover',
-      ),
-      e2e(
-        'backup-covers.spec.ts',
-        'a backup without covers has no covers section, and restoring it asks nothing',
-      ),
-    ],
-    'The default of Include covers in the Back up settings dialog (BackupExportDialog).',
-  ),
+  backupExportCategories: tested('hooks/use-backup-flow.tsx', [
+    unit('backup-categories.test.ts', 'start a new backup without device-specific or secret parts'),
+    e2e(
+      'backup.spec.ts',
+      'Back up settings saves only the parts selected, remembers them on this device, and never the API keys',
+    ),
+    e2e(
+      'backup-covers.spec.ts',
+      'a backup without the Covers part has no covers, and restoring it offers none',
+    ),
+  ]),
+  backupEncryptByDefault: tested('hooks/use-backup-flow.tsx', [
+    e2e('backup.spec.ts', 'Protect New Backups With a Password starts every backup protected'),
+  ]),
+  backupEncryptSecrets: tested('hooks/use-backup-flow.tsx', [
+    e2e(
+      'backup.spec.ts',
+      'the AI service keys need a confirm and start password-protected; the protected file round-trips, and a wrong password or changed file imports nothing',
+    ),
+  ]),
 
   // Context menu
   contextMenuEnabled: tested('services/context-menu.ts', [

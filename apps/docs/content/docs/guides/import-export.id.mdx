@@ -56,15 +56,43 @@ Klik **Impor**. Sebuah pesan mencantumkan berapa item yang dibuat, dilewati, dan
 
 Tidak ada yang ditulis sampai Anda mengklik **Impor**. Jika bookmark Anda berubah selama pratinjau terbuka, pratinjau diperbarui alih-alih diterapkan.
 
-## File setelan terpisah [#settings-files-are-separate]
+## Mencadangkan dan memulihkan setelan [#back-up-and-restore-settings]
 
-Tombol **Cadangkan setelan** dan **Pulihkan setelan** di bagian bawah halaman Setelan menyimpan dan memulihkan file cadangan berisi setelan Bookmark Scout, prompt kustom, layanan AI (tanpa kunci API), dan penelusuran tersimpan. Keduanya tidak menyentuh bookmark, tag, atau ringkasan. Lihat [Setelan](/settings) untuk isi cadangan. Anda juga bisa melepas file cadangan di mana saja di halaman Setelan untuk memulihkannya.
+Tombol **Cadangkan setelan** dan **Pulihkan setelan** di bagian bawah halaman Setelan menyimpan dan memulihkan file cadangan berisi data milik Bookmark Scout sendiri. Keduanya tidak pernah menyentuh bookmark, tag, atau ringkasan Anda; ekspor bookmark dengan alat di atas. Anda juga bisa melepas file cadangan di mana saja di halaman Setelan untuk memulihkannya.
 
-### Sampul dalam cadangan [#covers-in-a-backup]
+### Isi cadangan [#what-a-backup-holds]
 
-Sampul tidak pernah disinkronkan dan ekspor bookmark tidak memuatnya, jadi cadangan adalah cara membawanya ke komputer lain.
+**Cadangkan setelan** mencantumkan bagian-bagian cadangan, masing-masing dengan isinya, jumlah item, dan perkiraan ukurannya. Pilih yang Anda inginkan, atau gunakan **Pilih semua** dan **Kosongkan pilihan**:
 
-- Selama ada sampul tersimpan, **Cadangkan setelan** menanyakan apakah **Sertakan sampul**, serta menyebutkan jumlahnya dan kira-kira berapa besar tambahannya pada file. Kotaknya sudah dicentang; **Sertakan Sampul dalam Cadangan** di [Setelan](/settings#data) mengubahnya. File berisi satu sampul per alamat, yang terbaru lebih dulu, sampai batas cadangan.
-- Memulihkan cadangan yang berisi sampul menampilkan tinjauan lebih dulu: berapa sampul dalam file, berapa yang cocok dengan bookmark beralamat sama di perangkat ini dan berapa yang tidak, serta berapa bookmark yang akan mendapat sampul, sampulnya diganti, atau mempertahankan sampulnya sendiri. Hapus centang **Pulihkan sampul** untuk memulihkan sisa cadangan saja.
 - Sampul yang Anda pilih dengan **Gunakan tampilan ini sebagai sampul** diutamakan: sampul itu hanya diganti oleh sampul pilihan yang lebih baru dari file, dan sampul pilihan dari file mengganti sampul yang bukan pilihan; selain itu, yang lebih baru menang. Tanggal di masa depan dihitung sebagai hari ini. **Penyimpanan Sampul** tetap berlaku, jadi sampul terlama dihapus jika melewatinya, dan sampul pilihan paling akhir.
-- Pemulihan tidak dapat dibatalkan. Sampul tetap ada di file di mana pun Anda menyimpannya; tidak ada yang dikirim.
+- **Setelan**: setelan yang Anda ubah dan ikut disinkronkan, termasuk menu dan daftar.
+- **Setelan komputer ini**: setelan yang disimpan untuk satu komputer, seperti tata letak, bilah samping, tombol keyboard, dan folder simpan cepat. Tidak dipilih di awal, karena setelan ini cocok untuk satu layar dan keyboard.
+- **Penelusuran tersimpan dan tampilan tabel**, **Prompt dan Tentang saya**, **Aturan Pintar**, dan **Layanan AI** (nama, penyedia, model, URL Dasar, dan kolom khusus penyedia).
+- **Sampul**, ditandai **Besar**: gambar sampul, menurut alamat. Sampul tidak pernah disinkronkan dan ekspor bookmark tidak memuatnya, jadi cadangan adalah cara membawanya ke komputer lain.
+- **Kunci layanan AI**: kunci API dan header tambahan, tidak pernah dipilih kecuali Anda memilihnya. Memilihnya memunculkan peringatan bahwa siapa pun yang memiliki file itu dapat menggunakan kunci tersebut dan menimbulkan biaya, dan Anda mengonfirmasi sebelum menyimpan.
+
+Bagian yang Anda simpan menjadi pilihan berikutnya di komputer ini (**Bagian dalam Cadangan Baru** di [Setelan](/settings#data)). Nama file berisi tanggal dan bagiannya, seperti `bookmark-scout-backup_2026-10-23_all.json`, dan file disimpan di komputer Anda; tidak ada yang dikirim ke mana pun.
+
+### Perlindungan kata sandi [#password-protection]
+
+- Saat **Kunci layanan AI** dipilih, **Lindungi kunci API dengan kata sandi** langsung aktif; menonaktifkannya meminta Anda mengonfirmasi bahwa kunci akan dapat dibaca sebagai teks biasa.
+- **Lindungi cadangan ini dengan kata sandi** mengenkripsi setiap bagian. **Lindungi Cadangan Baru dengan Kata Sandi** di Setelan membuatnya aktif sejak awal.
+- Kata sandi harus terdiri dari minimal 12 karakter. Kata sandi tidak pernah disimpan, dan kata sandi yang terlupa tidak dapat dipulihkan: tidak ada yang bisa membuka bagian yang dilindungi tanpanya, bahkan Bookmark Scout pun tidak.
+- Daftar bagian tetap dapat dibaca, jadi **Pulihkan setelan** menampilkan isi file sebelum meminta kata sandi. Kata sandi yang salah, atau file yang diubah setelah disimpan, membuat tidak ada yang diimpor dari bagian yang dilindungi.
+
+### Memulihkan [#restoring]
+
+1. Klik **Pulihkan setelan** dan pilih file. Belum ada yang berubah.
+2. Setiap bagian menampilkan berapa item di dalam file dan berapa yang akan ditambahkan, diubah, atau dibiarkan apa adanya jika diimpor. Bagian dari versi Bookmark Scout yang lebih baru dicantumkan sebagai tidak didukung dan dilewati. Masukkan kata sandi untuk membuka bagian yang dilindungi.
+3. Pilih bagian yang akan diimpor. **Setelan komputer ini** dan **Kunci layanan AI** tidak dipilih di awal; kunci kembali meminta konfirmasi Anda.
+4. Untuk setiap bagian, pilih **Gabungkan** (menambahkan dan memperbarui apa yang ada di file, mempertahankan apa yang hanya ada di perangkat ini) atau **Ganti** (membuat bagian itu persis seperti di file, menghapus apa yang hanya ada di perangkat ini; Anda mengonfirmasi lebih dulu).
+5. Dengan Gabungkan, item yang diubah di sini dan juga di file (prompt, aturan pintar, penelusuran tersimpan, layanan AI) dicantumkan: pertahankan yang lebih baru, gunakan dari file, atau pertahankan milik perangkat ini, untuk semuanya sekaligus atau satu per satu. Sampul yang Anda pilih dengan **Gunakan tampilan ini sebagai sampul** hanya diganti oleh sampul pilihan yang lebih baru dari file.
+6. Klik **Impor**. Hasilnya mencantumkan apa yang ditambahkan, diubah, dihapus, dipertahankan, dan dilewati oleh setiap bagian. Layanan AI yang kuncinya tidak ada di file menampilkan **Perlu disiapkan** sampai Anda memasukkannya di [AI](/settings#ai).
+
+Setelan yang menunjuk sebuah folder, seperti folder simpan cepat, hanya dipulihkan jika di komputer ini ada folder dengan jalur yang sama, lalu menunjuk folder itu; jika tidak, setelan itu tetap seperti di sini. Setiap bagian diperiksa sebelum apa pun ditulis, dan bagian yang tidak dapat diimpor secara utuh dibiarkan seperti semula.
+
+### Urungkan impor [#undo-import]
+
+Sebelum mengimpor, Bookmark Scout menyimpan salinan pengaman dari apa yang diubah oleh impor, selama 24 jam. **Urungkan impor**, di hasil impor dan di bagian bawah Setelan, mengembalikan semuanya, termasuk sampul. Impor itu juga tercantum di **Histori bookmark** pengelola bookmark (filter **Cadangan**), dengan setiap bagian dan jumlahnya, dan **Urungkan impor** di sana melakukan hal yang sama. Setelah 24 jam, atau setelah Anda memulihkan cadangan lain, catatannya tetap ada tetapi menyebutkan mengapa Urungkan tidak lagi tersedia.
+
+File cadangan lama, dari sebelum ada bagian, tetap bisa dipulihkan.

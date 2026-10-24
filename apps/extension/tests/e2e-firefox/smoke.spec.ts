@@ -106,6 +106,30 @@ async function chooseToolScope(extension: FirefoxExtension, tool: string, scope:
   await option.click();
 }
 
+/**
+ * Waits for a downloaded JSON file whose name matches and resolves to its name and text. Firefox
+ * writes a .part file first, and can show the final name before it has written all of the file,
+ * so the file counts only once its text parses.
+ */
+async function downloadedJson(extension: FirefoxExtension, name: RegExp) {
+  let file = { name: '', raw: '' };
+  await expect
+    .poll(() => {
+      const found = readdirSync(extension.downloadDirectory).find((entry) => name.test(entry));
+      if (!found) return '';
+      const raw = readFileSync(path.join(extension.downloadDirectory, found), 'utf8');
+      try {
+        JSON.parse(raw);
+      } catch {
+        return '';
+      }
+      file = { name: found, raw };
+      return found;
+    })
+    .toMatch(name);
+  return file;
+}
+
 const visibleRows = (extension: FirefoxExtension) => extension.countVisible('tbody tr');
 
 test('popup search finds a bookmark and hides non-matching ones', async ({ extension }) => {
@@ -700,6 +724,62 @@ test('options saves a setting to sync storage and keeps it after reload', async 
     .toBe('false');
 });
 
+test('a password-protected settings backup saves and restores with Web Crypto in Firefox', async ({
+  extension,
+}, testInfo) => {
+  await setSettings(extension, { language: 'en', theme: 'dark' });
+  await extension.open('options.html');
+  await extension.find('[role="tab"]');
+  await extension.driver
+    .findElement(By.xpath('//button[normalize-space()="Back up settings"]'))
+    .click();
+  await extension.find('[data-testid="backup-export-dialog"] [data-testid="backup-part-meta"]');
+  await (await extension.find('[data-testid="backup-protection"] [role="checkbox"]')).click();
+  const password = 'firefox backup password';
+  for (const field of await extension.driver.findElements(
+    By.css('[data-testid="backup-password-fields"] input'),
+  )) {
+    await field.sendKeys(password);
+  }
+  await extension.driver
+    .findElement(By.xpath('//*[@role="dialog"]//button[normalize-space()="Save backup"]'))
+    .click();
+  const { raw } = await downloadedJson(
+    extension,
+    /^bookmark-scout-backup_\d{4}-\d{2}-\d{2}_.+_protected\.json$/,
+  );
+  expect(JSON.parse(raw).sections).toEqual({});
+  expect(raw).not.toContain('dark');
+
+  await setSettings(extension, { theme: 'light' });
+  const file = testInfo.outputPath('protected-backup.json');
+  writeFileSync(file, raw);
+  await extension.driver
+    .findElement(By.css('input[type="file"][aria-label="Restore settings"]'))
+    .sendKeys(file);
+  await (await extension.find('[data-testid="backup-unlock"] input')).sendKeys(password);
+  await extension.driver
+    .findElement(By.xpath('//*[@data-testid="backup-unlock"]//button[normalize-space()="Unlock"]'))
+    .click();
+  const importButton = await extension.driver.wait(
+    async () => {
+      if ((await extension.driver.findElements(By.css('[data-testid="backup-unlock"]'))).length) {
+        return false;
+      }
+      const [button] = await extension.driver.findElements(
+        By.xpath('//*[@role="dialog"]//button[starts-with(normalize-space(), "Import (")]'),
+      );
+      return button && (await button.isEnabled()) ? button : false;
+    },
+    20_000,
+    'The protected parts did not unlock',
+  );
+  // The Backup exported notice may still cover the dialog's corner; the test is not about pointing.
+  await extension.driver.executeScript('arguments[0].click()', importButton);
+  await extension.find('[data-testid="backup-import-result"]');
+  await expect.poll(async () => (await readSettings(extension)).theme).toBe('dark');
+});
+
 test('AI waits for data collection consent, and there is no browser icon cache setting', async ({
   extension,
 }) => {
@@ -798,16 +878,10 @@ test('JSON export downloads the folder and importing it restores a deleted bookm
   await chooseToolScope(extension, 'Export Bookmarks', 'E2E Firefox Data');
   await clickToolButton(extension, 'Export Bookmarks', 'Export');
 
-  let exportedName = '';
-  await expect
-    .poll(() => {
-      // Firefox writes a .part file while downloading.
-      exportedName =
-        readdirSync(extension.downloadDirectory).find((name) => name.endsWith('.json')) ?? '';
-      return exportedName;
-    })
-    .toMatch(/^bookmarks_E2E_Firefox_Data_\d{4}-\d{2}-\d{2}\.json$/);
-  const raw = readFileSync(path.join(extension.downloadDirectory, exportedName), 'utf8');
+  const { raw } = await downloadedJson(
+    extension,
+    /^bookmarks_E2E_Firefox_Data_\d{4}-\d{2}-\d{2}\.json$/,
+  );
   expect(raw).toContain('Round Trip Link');
   expect(raw).toContain('"type": "separator"');
   expect(raw).not.toContain('data:');

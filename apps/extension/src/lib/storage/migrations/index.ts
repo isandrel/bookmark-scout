@@ -2,7 +2,9 @@
  * Storage migrations: moving settings an earlier release stored in another place or shape into
  * where this release keeps them. The background runs every registered migration at each start
  * and on install or update (`registerStorageMigrations` in `lib/settings-storage.ts`), the backup
- * restore converts older files with them (`upgradeBackupItems`), and settings read through them
+ * restore converts older files with them (`upgradeBackupFile` in `./backup-files.ts`, which runs the
+ * backup file converters and, for files from before list settings had items of their own,
+ * `upgradeBackupItems`), and settings read through them
  * on a device where they have not run yet, so a user never sees a moved setting reset meanwhile.
  *
  * Each migration is one module in this folder that owns everything about the old layout: the old
@@ -155,7 +157,7 @@ export function getLegacyValues(migrations: readonly StorageMigration[]): Promis
   return Promise.all(migrations.map(({ legacy }) => legacy?.get()));
 }
 
-type Envelope = { v: number; data: unknown };
+export type Envelope = { v: number; data: unknown };
 
 /**
  * A backup file's items as this release stores them: the settings an earlier release's file

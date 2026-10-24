@@ -14,6 +14,8 @@ export const INPUT_LIMITS = readConfig(
       audit_actor_label: positive,
       audit_error_code: positive,
       audit_reason: positive,
+      audit_file_name: positive,
+      audit_part_id: positive,
       message_id: positive,
       message_source: positive,
       request_method: positive,
@@ -26,6 +28,7 @@ export const INPUT_LIMITS = readConfig(
     }),
     counts: z.strictObject({
       audit_error_codes: positive,
+      audit_parts: positive,
       alternative_index: positive,
       request_headers: positive,
       cover_metas: positive,
