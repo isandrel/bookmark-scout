@@ -318,27 +318,33 @@
 # on feat/backup-categories from refactor/sync-list-shards 92cc7f65: ZIP 2,177,688 / 2,177,732 /
 # 2,177,790, uncompressed 7,357,543 / 7,357,539 / 7,357,702 B (Chrome / Edge / Firefox),
 # 4,085,973 B of JavaScript, and 2,702,378 B of locales.
+# Raised on 2026-10-23 (ZIP to 2,200,000, uncompressed to 7,425,000, javascript to 4,120,000,
+# locales to 2,745,000, other to 30,000) for backup parts with their review, password protection and
+# Undo import, on top of the 0.3.5 review fixes: feat/backup-categories rebased on 430c4163 measured
+# ZIP 2,192,108 / 2,192,104 / 2,192,254 B, uncompressed 7,411,888 / 7,411,884 / 7,412,047 B
+# (Chrome / Edge / Firefox), 4,108,635 B of JavaScript, 2,733,816 B of locales, and other
+# 29,517 / 29,517 / 29,674 B.
 # ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
 
 [targets.chrome]
-zip_bytes = 2_190_000
-raw_bytes = 7_380_000
+zip_bytes = 2_200_000
+raw_bytes = 7_425_000
 
 [targets.edge]
-zip_bytes = 2_190_000
-raw_bytes = 7_380_000
+zip_bytes = 2_200_000
+raw_bytes = 7_425_000
 
 [targets.firefox]
-zip_bytes = 2_190_000
-raw_bytes = 7_380_000
+zip_bytes = 2_200_000
+raw_bytes = 7_425_000
 
 [categories]
 # javascript and locales lowered on 2026-10-15 to about 2% above the measurement above:
 # javascript 3,378,374 (Firefox) and locales 1,146,638 B. The others are unchanged, about 3%
 # above their measurements (css 78,650, fonts 138,180, images 309,981, other 25,408 B).
-javascript = 4_100_000
+javascript = 4_120_000
 css = 92_000
 fonts = 143_000
-locales = 2_720_000
+locales = 2_745_000
 images = 320_000
-other = 29_500
+other = 30_000
