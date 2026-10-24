@@ -28,6 +28,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 - [ ] Check Dead Links asks for website access on first run, and declining scans nothing.
 - [ ] Right-click a link: no save menu until Right-Click Menu is turned on in Settings; turning it on adds the menu without a prompt.
 - [ ] Turning on Use the browser's icon cache asks to read site icons; icons from the cache appear only after allowing it.
+- [ ] Turning on Capture Covers While Browsing (Settings > Page Details, with Fetch Covers on) explains it first, then asks to "Read and change all your data on all websites"; declining leaves it off.
 - [ ] Options: AI is off by default; AI tools in the Tools sidebar say to turn on AI.
 
 ## 3. Store listing tab
@@ -37,7 +38,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 - [ ] Category: decided by the maintainer (suggested: Productivity → Tools).
 - [ ] Language: English as default; the other 11 listed.
 - [ ] Store icon: 128x128, from the package (`icon-128.png`).
-- [ ] Screenshots (up to 5, 1280x800): `01-popup-light.png`, `02-quick-save-light.png`, `03-manager-light.png`, `04-tools-duplicates-light.png`, `05-settings-light.png` from [`../screenshots/`](../screenshots/).
+- [ ] Screenshots (up to 5, 1280x800): `01-popup-light.png`, `02-quick-save-light.png`, `07-manager-cards-light.png`, `03-manager-light.png`, `04-tools-duplicates-light.png` from [`../screenshots/`](../screenshots/).
 - [ ] Small promo tile 440x280: `promo-small-440x280.png`.
 - [ ] Homepage URL `https://bookmark-scout.com` and support URL `https://bookmark-scout.com/support/`. Official URL (verified site): decided by the maintainer.
 

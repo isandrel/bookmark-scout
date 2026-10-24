@@ -136,7 +136,7 @@
         "tab": "Rechercher et organiser",
         "heading": "Retrouvez et organisez ce que vous avez enregistré",
         "caption": "Le gestionnaire remplace la page Favoris de Chrome et fonctionne comme elle, avec une arborescence de dossiers, un fil d'Ariane et un tableau triable.",
-        "alt": "Le gestionnaire de Bookmark Scout sur le dossier AI / LLMs / Fine-tuning, avec l'arborescence (AI, Dev, Design, Tools, Reading list), un seul champ de recherche et le tableau des favoris, chacun avec l'icône de son site",
+        "alt": "Le gestionnaire de favoris affiche Reading list en cartes : trois articles avec leur image de couverture, leurs étiquettes et leur résumé, et trois sites sous forme de vignette avec leur icône, à côté de l'arborescence des dossiers",
         "points": [
           "Recherchez dans tous vos favoris pendant la saisie, par titre, adresse, dossier, étiquette ou résumé, et, si vous l'activez, par les mots contenus dans les pages enregistrées",
           "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",

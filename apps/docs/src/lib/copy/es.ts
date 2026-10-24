@@ -88,6 +88,8 @@ export const es: DocsCopy = {
       "La pestaña Lo esencial de la configuración: Carpeta de guardado rápido, Carpeta de destino, Menú del clic derecho (desactivado), Tema e Idioma",
     "options-ai":
       "La pestaña IA de la configuración: Funciones de IA está activado y, bajo Añadir servicio, aparecen dos servicios de IA que añadió el usuario: una empresa de IA en la nube con la clave oculta, como predeterminado, y un modelo en el propio ordenador",
+    "manager-cards":
+      "El administrador de marcadores muestra Reading list como tarjetas: tres artículos con su imagen de portada, etiquetas y resumen, y tres sitios como un mosaico con su icono, junto al árbol de carpetas",
   },
 
   /**

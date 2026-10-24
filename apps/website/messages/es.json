@@ -136,7 +136,7 @@
         "tab": "Buscar y organizar",
         "heading": "Encuentra y organiza lo que guardaste",
         "caption": "El administrador sustituye la página Marcadores de Chrome y funciona como ella, con un árbol de carpetas, una ruta de navegación y una tabla que se puede ordenar.",
-        "alt": "El gestor de Bookmark Scout en la carpeta AI / LLMs / Fine-tuning, con el árbol de carpetas (AI, Dev, Design, Tools, Reading list), un único cuadro de búsqueda y la tabla de marcadores, cada uno con el icono de su sitio",
+        "alt": "El administrador de marcadores muestra Reading list como tarjetas: tres artículos con su imagen de portada, etiquetas y resumen, y tres sitios como un mosaico con su icono, junto al árbol de carpetas",
         "points": [
           "Busca en todos tus marcadores mientras escribes, por título, dirección, carpeta, etiqueta o resumen, y, si lo activas, por las palabras dentro de las páginas guardadas",
           "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",

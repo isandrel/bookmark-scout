@@ -222,9 +222,19 @@ export default async ({ context, id, sw, log }: Ctx) => {
   const refreshIcons = async (page: Page, tag: string) => {
     await page.goto(url('bookmarks.html'));
     await page.getByRole('button', { name: 'Show tools' }).click();
-    await domClick(toolCard(page, 'Refresh Site Icons').getByRole('button').last());
+    // The sidebar opens on its Start Tab (Maintenance); Refresh Site Icons is under Page Details.
+    await page.getByTestId('tools-tabs').getByRole('radio', { name: 'Page Details' }).click();
+    await domClick(toolCard(page, 'Refresh Site Icons').getByRole('button', { name: 'Refresh', exact: true }));
     const save = page.getByRole('dialog').getByRole('button', { name: /^Save \d+ icons?/ });
-    await save.waitFor({ timeout: 180_000 });
+    // The review opens when the run ends. A later pass may find no new icon, and then the review
+    // has no Save button.
+    await page.getByRole('dialog', { name: 'Refresh Site Icons' }).waitFor({ timeout: 180_000 });
+    await page.waitForTimeout(3000);
+    if (!(await save.count())) {
+      log(`[icons] ${tag}: nothing new to save`);
+      await page.keyboard.press('Escape');
+      return;
+    }
     let label = '';
     for (let second = 0; second < 30; second++) {
       await page.waitForTimeout(1000);
@@ -250,7 +260,9 @@ export default async ({ context, id, sw, log }: Ctx) => {
   await icons.setViewportSize(VIEWPORT);
   for (let attempt = 0; attempt < 3; attempt++) {
     await refreshIcons(icons, `real sites, pass ${attempt + 1}`);
-    if (!(await missingIcons()).length) break;
+    const left = await missingIcons();
+    if (!left.length) break;
+    log(`[icons] still without an icon: ${left.join(' ')}`);
   }
   for (const article of Object.values(ARTICLES)) {
     const html = readFileSync(path.join(ASSETS, `${article.file}.html`), 'utf8');
@@ -388,5 +400,95 @@ export default async ({ context, id, sw, log }: Ctx) => {
     await suggest.close();
     await context.unroute(`${AI_BASE_URL}/**`);
     await clearAI(sw);
+  }
+
+  // The cards frame, last so no other frame counts its bookmarks: the three articles join Reading
+  // list, and Fetch Covers keeps each one's preview image. That image is the article's own top,
+  // rendered from the local page at the usual 1200x630 and named by an og:image tag only in the
+  // copy Fetch Covers reads; the real sites in the folder are blocked during the run, so no
+  // third-party image is requested, and their cards show the placeholder tile.
+  const ogImages = new Map<string, Buffer>();
+  const render = await context.newPage();
+  await render.setViewportSize({ width: 1200, height: 630 });
+  for (const article of Object.values(ARTICLES)) {
+    await render.goto(article.url);
+    await render.waitForTimeout(SETTLE_MS / 2);
+    ogImages.set(new URL(article.url).origin, await render.screenshot({ type: 'png' }));
+  }
+  await render.close();
+  for (const article of Object.values(ARTICLES)) {
+    const { origin, pathname } = new URL(article.url);
+    const html = readFileSync(path.join(ASSETS, `${article.file}.html`), 'utf8').replace(
+      '<head>',
+      '<head><meta property="og:image" content="/og.png">',
+    );
+    await context.route(`${origin}/**`, (route) => {
+      const requested = new URL(route.request().url()).pathname;
+      if (requested === '/og.png') {
+        return route.fulfill({ contentType: 'image/png', body: ogImages.get(origin) ?? Buffer.alloc(0) });
+      }
+      if (requested === pathname) return route.fulfill({ contentType: 'text/html; charset=utf-8', body: html });
+      return route.fallback();
+    });
+  }
+  const readingList = await sw.evaluate(async () => {
+    const [folder] = (await chrome.bookmarks.search({ title: 'Reading list' })).filter((node) => !node.url);
+    return folder.id;
+  });
+  const added = await sw.evaluate(
+    async ({ parentId, articles }) => {
+      const ids: Record<string, string> = {};
+      // First in the folder, so the covers lead the frame.
+      for (const [index, article] of articles.entries()) {
+        ids[article.url] = (await chrome.bookmarks.create({ parentId, index, title: article.title, url: article.url })).id;
+      }
+      return ids;
+    },
+    { parentId: readingList, articles: Object.values(ARTICLES).map(({ title, url: address }) => ({ title, url: address })) },
+  );
+  const idOf = async (address: string) =>
+    (await sw.evaluate(async (pageUrl) => chrome.bookmarks.search({ url: pageUrl }), address))[0]?.id ?? '';
+  await writeStored(sw, STORAGE_ITEMS.bookmarkMetadata, {
+    [added[ARTICLES.typed.url] ?? '']: {
+      tags: ['llm', 'fine-tuning'],
+      summary: 'Train a small model on your own data with LoRA adapters, on one GPU.',
+    },
+    [added[ARTICLES.quickSave.url] ?? '']: {
+      tags: ['agents', 'mcp'],
+      summary: 'Give an agent tools through a small, typed MCP server.',
+    },
+    [added[ARTICLES.ai.url] ?? '']: {
+      tags: ['llm', 'performance'],
+      summary: 'Why reusing a prompt prefix makes answers faster and cheaper.',
+    },
+    [await idOf('https://news.ycombinator.com/')]: { tags: ['news'] },
+    [await idOf('https://simonwillison.net/')]: { tags: ['llm', 'blog'] },
+    [await idOf('https://www.smashingmagazine.com/')]: { tags: ['design'] },
+  });
+  await setSettings(sw, { coversEnabled: true });
+  const blockOthers = (route: Parameters<Parameters<typeof context.route>[1]>[0]) =>
+    /^https?:\/\/www\.example\.(com|org|net)\//.test(route.request().url()) ? route.fallback() : route.abort();
+  await context.route(/^https?:\/\//, blockOthers);
+  const fetcher = await context.newPage();
+  await fetcher.setViewportSize(VIEWPORT);
+  await fetcher.goto(url(`bookmarks.html?id=${readingList}`));
+  await fetcher.getByRole('button', { name: 'Show tools' }).click();
+  await fetcher.getByTestId('tools-tabs').getByRole('radio', { name: 'Page Details' }).click();
+  await domClick(toolCard(fetcher, 'Fetch Covers').getByRole('button', { name: 'Fetch', exact: true }));
+  const saveCovers = fetcher.getByRole('dialog', { name: 'Fetch Covers' }).getByRole('button', { name: /^Save \d+ covers?/ });
+  await saveCovers.waitFor({ timeout: 120_000 });
+  log(`[covers] ${await saveCovers.innerText()}`);
+  await saveCovers.click();
+  await fetcher.waitForTimeout(SETTLE_MS * 2);
+  await fetcher.close();
+  await context.unroute(/^https?:\/\//, blockOthers);
+
+  await setSettings(sw, { managerViewMode: 'cards' });
+  for (const scheme of SCHEMES) {
+    const cards = await openPage(scheme, url(`bookmarks.html?id=${readingList}`));
+    await cards.waitForTimeout(SETTLE_MS * 3);
+    await cards.mouse.move(VIEWPORT.width / 2, VIEWPORT.height - 10);
+    await capture(cards, `manager-cards-${scheme}`);
+    await cards.close();
   }
 };

@@ -88,6 +88,8 @@ export const ptBR: DocsCopy = {
       "A guia Essenciais das configurações: Pasta de salvamento rápido, Pasta de destino, Menu do botão direito (desativado), Tema e Idioma",
     "options-ai":
       "A guia IA das configurações: Recursos de IA está ativado e, abaixo de Adicionar serviço, aparecem dois serviços de IA adicionados pelo usuário: uma empresa de IA na nuvem, com a chave oculta, como padrão, e um modelo no próprio computador",
+    "manager-cards":
+      "O gerenciador de favoritos mostrando Reading list como cartões: três artigos com imagem de capa, tags e resumo, e três sites como um bloco com o ícone, ao lado da árvore de pastas",
   },
 
   /**

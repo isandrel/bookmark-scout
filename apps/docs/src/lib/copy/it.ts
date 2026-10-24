@@ -88,6 +88,8 @@ export const it: DocsCopy = {
       "La scheda Essenziali delle Impostazioni: Cartella del salvataggio rapido, Cartella in cui salvare, Menu contestuale (disattivato), Tema e Lingua",
     "options-ai":
       "La scheda IA delle Impostazioni: Funzioni IA è attivo e, in Aggiungi servizio, ci sono due servizi IA aggiunti dall'utente: un'azienda di IA nel cloud con la chiave nascosta, impostata come predefinita, e un modello sul computer",
+    "manager-cards":
+      "La gestione preferiti mostra Reading list come riquadri: tre articoli con immagine di copertina, tag e riassunto, e tre siti come tessera con la loro icona, accanto all'albero delle cartelle",
   },
 
   /**

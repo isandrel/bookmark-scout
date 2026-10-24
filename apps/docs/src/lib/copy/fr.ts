@@ -88,6 +88,8 @@ export const fr: DocsCopy = {
       "L'onglet L'essentiel des paramètres : Dossier d'enregistrement rapide, Dossier de destination, Menu du clic droit (désactivé), Thème et Langue",
     "options-ai":
       "L'onglet IA des paramètres : les Fonctionnalités d'IA sont activées et, sous Ajouter un service, figurent deux services d'IA ajoutés par l'utilisateur : une entreprise d'IA en ligne, avec sa clé masquée, par défaut, et un modèle sur l'ordinateur",
+    "manager-cards":
+      "Le gestionnaire de favoris affiche Reading list en cartes : trois articles avec leur image de couverture, leurs étiquettes et leur résumé, et trois sites sous forme de vignette avec leur icône, à côté de l'arborescence des dossiers",
   },
 
   /**

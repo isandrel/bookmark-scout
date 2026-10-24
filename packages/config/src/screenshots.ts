@@ -14,6 +14,7 @@ export const SCREENSHOTS = {
 	duplicates: { light: "/screenshots/04-tools-duplicates-light.png", dark: "/screenshots/04-tools-duplicates-dark.png" },
 	settings: { light: "/screenshots/05-settings-light.png", dark: "/screenshots/05-settings-dark.png" },
 	"options-ai": { light: "/screenshots/06-options-ai-light.png", dark: "/screenshots/06-options-ai-dark.png" },
+	"manager-cards": { light: "/screenshots/07-manager-cards-light.png", dark: "/screenshots/07-manager-cards-dark.png" },
 } as const;
 
 export type ScreenshotName = keyof typeof SCREENSHOTS;

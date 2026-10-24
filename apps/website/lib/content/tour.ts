@@ -16,7 +16,7 @@ export const SCREENSHOT_SIZES = "(min-width: 1152px) 704px, (min-width: 1024px) 
 
 export const TOUR_TABS: readonly TourTab[] = [
     { id: "save", screenshot: SCREENSHOTS.popup, listsProviders: false },
-    { id: "organize", screenshot: SCREENSHOTS.manager, listsProviders: false },
+    { id: "organize", screenshot: SCREENSHOTS["manager-cards"], listsProviders: false },
     { id: "cleanUp", screenshot: SCREENSHOTS.duplicates, listsProviders: false },
     { id: "ai", screenshot: SCREENSHOTS["options-ai"], listsProviders: true },
 ];
