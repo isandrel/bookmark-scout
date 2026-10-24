@@ -36,7 +36,7 @@ function PopupMenuChoices({
     return icon ? ACTION_ICONS[icon] : undefined;
   };
   const kept = formatList(menu.keepOneOf.map(getPopupActionName));
-  const save = (next: string[]) => void setValue(next).catch(() => undefined);
+  const save = (next: string[]) => void setValue(next).catch(notifySettingNotSaved);
   return (
     <OrderedChoicesPanel
       id={`popup-menu-${kind}`}
@@ -52,8 +52,8 @@ function PopupMenuChoices({
         !menu.keepOneOf.some((other) => other !== id && visible.has(other))
       }
       onChange={(next) => {
-        // An empty list would mean the default menu; at least one command stays.
-        if (next.length > 0) save(next);
+        // At least one command stays.
+        if (next.length > 0) save(encodeShownIds(next, menu.sections.flat()));
       }}
       onReset={() => save([])}
       isDefault={stored.length === 0}

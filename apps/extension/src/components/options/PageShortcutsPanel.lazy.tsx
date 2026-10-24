@@ -49,14 +49,6 @@ function describeInvalid(problem: 'unsupportedKey' | 'otherModifier'): string {
   );
 }
 
-/** A save that failed says so; settings save without a word otherwise. */
-function notifyNotSaved(error: unknown): void {
-  toast.error({
-    title: tPlural('settings_statusNotSaved', 1),
-    description: getErrorMessage(error),
-  });
-}
-
 type RowProps = {
   id: PageShortcutId;
   overrides: PageShortcutOverrides;
@@ -84,7 +76,7 @@ function PageShortcutRow({ id, overrides, save }: RowProps) {
     setError(null);
     setAnnouncement(t('settings_shortcutSet', [label, keysText(shown)]));
     changeRef.current?.focus();
-    void save(next).catch(notifyNotSaved);
+    void save(next).catch(notifySettingNotSaved);
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -232,7 +224,7 @@ export function PageShortcutsPanelContent() {
           variant="outline"
           size="sm"
           disabled={changedCount === 0}
-          onClick={() => void setValue({}).catch(notifyNotSaved)}
+          onClick={() => void setValue({}).catch(notifySettingNotSaved)}
         >
           <RotateCcw aria-hidden="true" className="h-4 w-4" />
           {t('settings_pageShortcutResetAll')}

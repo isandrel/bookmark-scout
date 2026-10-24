@@ -98,6 +98,7 @@ const menuConfig = readConfig(
       empty_space: sectionsSchema,
       preview: sectionsSchema,
     }),
+    item_menu_0_3_4: z.strictObject({ added_since: z.array(z.string()) }),
     keep_one_of: z.strictObject({
       item: keepOneSchema,
       organize: keepOneSchema,
@@ -126,6 +127,11 @@ export const MENU_KEEP_ONE_OF: Readonly<Record<ActionMenuKind, readonly ActionId
   emptySpace: checkKept('emptySpace', menuConfig.keep_one_of.empty_space),
   preview: checkKept('preview', menuConfig.keep_one_of.preview),
 };
+
+/** The item menu's actions added after 0.3.4, which an item menu stored by 0.3.4 shows. */
+const ITEM_MENU_ADDED_SINCE_0_3_4: ReadonlySet<ActionId> = new Set(
+  checkKept('item', menuConfig.item_menu_0_3_4.added_since),
+);
 
 /** The setting that holds each menu as the user arranged it (Options > Behavior). */
 export const MENU_SETTING_KEYS = {
@@ -209,28 +215,42 @@ export function isItemMenuActionAvailable(
 /**
  * A menu as the user arranged it in Options (`MENU_SETTING_KEYS`): its sections, the first action
  * of each marked by `MENU_SECTION_START` in the stored list, with the actions shown in the user's
- * order. An empty setting is the configured menu, and an action of the menu the setting does not
- * name is hidden; ids that are not in the configured menu are left out. An item menu stored before
- * sections could be moved has no marks: it keeps the configured sections, each with the actions it
- * names, in its order.
+ * order; ids that are not in the configured menu are left out. Actions the user hid are stored
+ * marked (`HIDDEN_ID_MARK`); an action of the menu the setting does not name at all was added
+ * since it was saved and shows in its configured place (`placeAddedIds`), so an empty setting
+ * is the configured menu. An item menu stored by 0.3.4 has no marks: it keeps the configured
+ * sections, each with the actions it names, in its order, and of those it leaves out only shows
+ * the ones added since (`[item_menu_0_3_4]` in config/ui/actions.toml).
  */
 export function customizeMenu(kind: ActionMenuKind, stored: readonly string[]): ActionId[][] {
   const configured = ACTION_MENUS[kind];
-  if (stored.length === 0) return configured.map((section) => [...section]);
-  const inMenu = new Set<string>(configured.flat());
-  if (!stored.some((entry) => entry.startsWith(MENU_SECTION_START))) {
-    const order = new Map(stored.map((id, index) => [id, index]));
-    return configured
+  const { shown, added } = splitShownIds(
+    stored.map((entry) =>
+      entry.startsWith(MENU_SECTION_START) ? entry.slice(MENU_SECTION_START.length) : entry,
+    ),
+    configured.flat(),
+  );
+  const marked = stored.some(
+    (entry) => entry.startsWith(MENU_SECTION_START) || hiddenIdOf(entry) !== undefined,
+  );
+  if (!marked) {
+    const order = new Map(shown.map((id, index) => [id, index]));
+    const sections = configured
       .map((section) =>
         section
           .filter((id) => order.has(id))
           .sort((left, right) => (order.get(left) ?? 0) - (order.get(right) ?? 0)),
       )
       .filter((section) => section.length > 0);
+    const shownSince =
+      stored.length === 0 ? added : added.filter((id) => ITEM_MENU_ADDED_SINCE_0_3_4.has(id));
+    return placeAddedIds(sections, shownSince, configured);
   }
+  const inMenu = new Set<string>(shown);
   const seen = new Set<string>();
   const sections: ActionId[][] = [[]];
   for (const entry of stored) {
+    if (hiddenIdOf(entry) !== undefined) continue;
     const startsSection = entry.startsWith(MENU_SECTION_START);
     const id = startsSection ? entry.slice(MENU_SECTION_START.length) : entry;
     if (startsSection) sections.push([]);
@@ -239,14 +259,27 @@ export function customizeMenu(kind: ActionMenuKind, stored: readonly string[]): 
       sections[sections.length - 1]?.push(id as ActionId);
     }
   }
-  return sections.filter((section) => section.length > 0);
+  return placeAddedIds(
+    sections.filter((section) => section.length > 0),
+    added,
+    configured,
+  );
 }
 
-/** What the setting stores for `sections`: their actions, the first of each section marked. */
-export function encodeMenu(sections: readonly (readonly ActionId[])[]): string[] {
-  return sections.flatMap((section) =>
-    section.map((id, index) => (index === 0 ? `${MENU_SECTION_START}${id}` : id)),
-  );
+/**
+ * What the setting stores for `sections` of `kind`'s menu: their actions, the first of each
+ * section marked, then the menu's other actions marked hidden.
+ */
+export function encodeMenu(
+  kind: ActionMenuKind,
+  sections: readonly (readonly ActionId[])[],
+): string[] {
+  return [
+    ...sections.flatMap((section) =>
+      section.map((id, index) => (index === 0 ? `${MENU_SECTION_START}${id}` : id)),
+    ),
+    ...hiddenEntries(sections.flat(), ACTION_MENUS[kind].flat()),
+  ];
 }
 
 /** The actions of a menu the user hid: those it can show and `sections` leave out. */

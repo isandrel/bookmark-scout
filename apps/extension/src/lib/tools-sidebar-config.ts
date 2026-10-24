@@ -36,12 +36,9 @@ export const TOOLS_SIDEBAR_CONFIG = readConfig(
 export const TOOL_ORDER_IDS: readonly SidebarToolId[] = TOOLS_SIDEBAR_CONFIG.tools;
 
 /**
- * The tools the sidebar shows, in order, as stored in `toolsSidebarOrder`: every tool in its
- * default order while the list is empty, else the tools it names. Turned-off tools are left in.
+ * The tools the sidebar shows, in order, as stored in `toolsSidebarOrder` (`readShownIds`):
+ * every tool in its default order while the list is empty. Turned-off tools are left in.
  */
 export function getToolsSidebarOrderIds(stored: readonly string[]): SidebarToolId[] {
-  if (stored.length === 0) return [...TOOL_ORDER_IDS];
-  return [...new Set(stored)].filter((id): id is SidebarToolId =>
-    (SIDEBAR_TOOL_IDS as readonly string[]).includes(id),
-  );
+  return readShownIds(stored, TOOL_ORDER_IDS);
 }

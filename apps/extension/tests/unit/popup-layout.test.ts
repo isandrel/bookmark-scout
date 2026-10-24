@@ -7,7 +7,6 @@ import {
   POPUP_SECTIONS,
   POPUP_TOOLBAR_BUTTON_LABEL_KEYS,
   POPUP_TOOLBAR_BUTTONS,
-  pickOrderedIds,
 } from '@/lib/popup-layout';
 import { popupTreeDensity, popupTreeDensityStyle } from '@/lib/popup-tree-view';
 import {
@@ -27,14 +26,25 @@ describe('popup sections', () => {
   });
 
   it('follow the order set, hide what it leaves out, and always keep the bookmark tree', () => {
-    expect(getPopupSections(['hintBar', 'recentFolders', 'tree'])).toEqual([
-      'hintBar',
-      'recentFolders',
+    const hideAllBut = (...shown: string[]) =>
+      POPUP_SECTIONS.filter((id) => !shown.includes(id)).map((id) => `!${id}`);
+    expect(
+      getPopupSections([
+        'hintBar',
+        'recentFolders',
+        'tree',
+        ...hideAllBut('hintBar', 'recentFolders', 'tree'),
+      ]),
+    ).toEqual(['hintBar', 'recentFolders', 'tree']);
+    // A list that hides the tree still shows it, at the end.
+    expect(getPopupSections(['notices', ...hideAllBut('notices')])).toEqual(['notices', 'tree']);
+    expect(getPopupSections(hideAllBut())).toEqual(['tree']);
+    // A part the list does not name was added since it was saved: it shows, in its place.
+    expect(getPopupSections(['tree', ...hideAllBut('tree', 'notices')])).toEqual([
       'tree',
+      'notices',
     ]);
-    // A list without the tree still shows it, at the end.
-    expect(getPopupSections(['notices'])).toEqual(['notices', 'tree']);
-    expect(getPopupSections([])).toEqual(['tree']);
+    expect(getPopupSections([])).toEqual([...POPUP_SECTIONS]);
   });
 
   it('name every part and button in English', () => {
@@ -55,15 +65,15 @@ describe('popup toolbar buttons', () => {
   });
 
   it('hide the buttons the setting leaves out, the theme button included', () => {
-    expect(getPopupToolbarButtons(['askAI', 'openManager'])).toEqual(['askAI', 'openManager']);
-    expect(getPopupToolbarButtons([])).toEqual([]);
-  });
-});
-
-describe('ordered id lists', () => {
-  it('keep known ids once each, in order, and skip ids from a newer release', () => {
-    expect(pickOrderedIds(['b', 'x', 'a', 'b'], ['a', 'b', 'c'] as const)).toEqual(['b', 'a']);
-    expect(pickOrderedIds(['b'], ['a', 'b'] as const, ['a'])).toEqual(['b', 'a']);
+    const hidden = POPUP_TOOLBAR_BUTTONS.filter((id) => !['askAI', 'openManager'].includes(id));
+    expect(
+      getPopupToolbarButtons(['askAI', 'openManager', ...hidden.map((id) => `!${id}`)]),
+    ).toEqual(['askAI', 'openManager']);
+    expect(getPopupToolbarButtons(POPUP_TOOLBAR_BUTTONS.map((id) => `!${id}`))).toEqual([]);
+    // A button the list does not name was added since it was saved: it shows.
+    expect(getPopupToolbarButtons(['!theme'])).toEqual(
+      POPUP_TOOLBAR_BUTTONS.filter((id) => id !== 'theme'),
+    );
   });
 });
 

@@ -28,11 +28,14 @@ confirm_open_above = { default = 15, min = 2, max = 200, step = 1 }
 [manager_menus]
 # The bookmark manager's menus, as the user arranged them in Options > Behavior > Bookmark manager
 # menus: the actions shown, in order, as action ids from config/ui/actions.toml, the first of each
-# section marked with a leading "-". Empty means that file's menu. `actions` is the item menu
+# section marked with a leading "-", then the actions hidden, each marked with a leading "!"
+# (src/lib/shown-ids.ts). An action not named at all was added since and shows in its configured
+# place, so empty means that file's menu. `actions` is the item menu
 # (right-click and ⋯), `organize` the header's ⋮ menu, `empty_space` the right-click menu on the
 # table's empty space, and `preview` the buttons of a bookmark's preview. An item menu stored by
-# an older release has no "-": it keeps that file's sections, with the actions it lists in its
-# order. Each holds at most its menu's actions (`max_items`), each id and its "-" at most
+# 0.3.4 has no marks: it keeps that file's sections, with the actions it lists in its order, and
+# shows the actions added since 0.3.4 ([item_menu_0_3_4] there). Each holds at most its menu's
+# actions (`max_items`), each id and its "-" or "!" at most
 # `max_length` long (tests/unit/action-menus.test.ts checks both against the menus). All four
 # sync, each in its own synced item.
 actions = { default = [], max_items = 16, max_length = 20 }
@@ -42,8 +45,10 @@ preview = { default = [], max_items = 4, max_length = 13 }
 
 [popup_menus]
 # The popup and side panel tree's row actions, for bookmark rows and folder rows: the actions
-# shown, in order, as action ids from popup_bookmark and popup_folder in config/ui/actions.toml.
-# Empty means that file's menu. Edited in Options > Behavior; synced, like the manager's menus.
+# shown, in order, as action ids from popup_bookmark and popup_folder in config/ui/actions.toml,
+# then the hidden ones marked with a leading "!" (src/lib/shown-ids.ts). An action not named at all
+# was added since and shows, so empty means that file's menu. Edited in Options > Behavior; synced,
+# like the manager's menus.
 bookmark = { default = [], max_items = 16, max_length = 20 }
 folder = { default = [], max_items = 16, max_length = 20 }
 
@@ -79,10 +84,11 @@ sort = "none"
 
 [manager_cards]
 # What a card of the cards view shows, in order, below its title (a leading "cover" stays above
-# it): "cover", "url" (the address), "folder" (the folder path), "tags", and "summary". A folder's
+# it): "cover", "url" (the address), "folder" (the folder path), "tags", and "summary", the hidden
+# ones marked with a leading "!" (src/lib/shown-ids.ts; a field not named at all shows). A folder's
 # card always says how many items it holds. Every card setting is kept on this device only, as
 # Manager View is: they suit one screen.
-fields = { default = ["cover", "url", "tags", "summary"], max_items = 5, max_length = 7 }
+fields = { default = ["cover", "url", "tags", "summary", "!folder"], max_items = 5, max_length = 8 }
 # How wide cards are at least: a key of `card_min_width_px` in config/ui/manager-table.toml
 # ("small", "medium", or "large"); the grid fits as many in a row as that allows
 size = "medium"
@@ -94,14 +100,15 @@ summary_lines = { default = 2, min = 1, max = 8, step = 1, integer = true }
 [manager_preview]
 # What a bookmark's preview shows under its title and address, in order: "cover", "folder",
 # "tags", "summary", and "coverSource" (where the cover came from, with Fetch cover and Remove
-# cover). Kept on this device only, like the cards.
+# cover), the hidden ones marked with a leading "!" (src/lib/shown-ids.ts; a detail not named at
+# all shows). Kept on this device only, like the cards.
 fields = { default = [
   "cover",
   "folder",
   "tags",
   "summary",
   "coverSource",
-], max_items = 5, max_length = 11 }
+], max_items = 5, max_length = 12 }
 
 [tools_sidebar]
 # How the manager's Tools sidebar lists its tools: "tabs" (one tab per section, plus All, opening
@@ -111,10 +118,11 @@ layout = "tabs"
 # config/ui/tools-sidebar.toml, or "data". A tab with nothing to show (its tools hidden or turned
 # off) falls back to the first one that has. Kept on this device only, like the layout
 default_tab = "maintenance"
-# The tools the sidebar shows, in order inside their sections, as tool ids. Empty means every tool,
-# in the order of `tools` in config/ui/tools-sidebar.toml; a tool the list does not name is hidden,
-# without turning the tool itself off. Kept on this device only, like the layout
-order = { default = [], max_items = 14, max_length = 15 }
+# The tools the sidebar shows, in order inside their sections, as tool ids, then the hidden ones
+# marked with a leading "!" (src/lib/shown-ids.ts), which stay on. A tool not named at all was
+# added since and shows in its place of `tools` in config/ui/tools-sidebar.toml, so empty means
+# every tool in that order. Kept on this device only, like the layout
+order = { default = [], max_items = 14, max_length = 16 }
 
 [deleting]
 # Show confirmation dialog before deleting items

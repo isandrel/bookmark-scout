@@ -78,7 +78,7 @@ test('Options arranges the Organize menu: hides, reorders, moves between section
   await moveEntry(options, editor, 'Section break', 'Move up');
   await expect
     .poll(async () => (await readSettings(extensionWorker)).managerOrganizeMenu)
-    .toEqual(['-addFolder', '-sortByName']);
+    .toEqual(['-addFolder', '-sortByName', '!addBookmark']);
 
   // The manager shows two sections, the folder first.
   await page.goto(managerUrl(extensionId, folderId));
@@ -93,7 +93,7 @@ test('Options arranges the Organize menu: hides, reorders, moves between section
   await expect(editor.getByRole('checkbox', { name: 'Sort by name' })).toBeDisabled();
   await expect
     .poll(async () => (await readSettings(extensionWorker)).managerOrganizeMenu)
-    .toEqual(['-sortByName']);
+    .toEqual(['-sortByName', '!addBookmark', '!addFolder']);
   await page.getByTestId('organize-menu').click();
   await expect.poll(() => menuItemNames(page)).toEqual(['Sort by name']);
   await page.keyboard.press('Escape');
@@ -271,7 +271,7 @@ test('cards show the details, size, and limits Options sets, and the preview its
     .click();
   await expect
     .poll(async () => (await readSettings(extensionWorker)).managerCardFields)
-    .toEqual(['folder', 'url', 'tags', 'summary']);
+    .toEqual(['folder', 'url', 'tags', 'summary', '!cover']);
   await expect(card.getByTestId('bookmark-card-placeholder')).toHaveCount(0);
   await expect(card.getByTestId('bookmark-card-folder')).toContainText('E2E Card Details');
   await expect(grid).toHaveAttribute('style', /--card-min-width: 296px/);
@@ -291,7 +291,7 @@ test('cards show the details, size, and limits Options sets, and the preview its
   await moveEntry(options, preview, 'Summary', 'Move to top');
   await expect
     .poll(async () => (await readSettings(extensionWorker)).previewFields)
-    .toEqual(['summary', 'folder', 'tags', 'coverSource']);
+    .toEqual(['summary', 'folder', 'tags', 'coverSource', '!cover']);
   await card.getByRole('button', { name: 'Open menu' }).click();
   await page.getByRole('menuitem', { name: 'Preview' }).click();
   const dialog = page.getByTestId('bookmark-preview');

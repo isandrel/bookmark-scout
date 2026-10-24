@@ -5,7 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { BookmarkActionMenuItems } from '@/components/ui/table/bookmark-row-menu';
 import { setLanguage } from '@/hooks/use-i18n';
 import { type Bookmark, ItemTypeEnum, previewNeighbors } from '@/lib/manager-bookmark';
-import { getSettingScope, getSettingsFieldMeta } from '@/lib/settings-schema';
+import { getSettingScope, getSettingsFieldMeta, settingsSchema } from '@/lib/settings-schema';
 import {
   ACTION_MENU_KINDS,
   ACTION_MENUS,
@@ -166,30 +166,75 @@ describe('bookmark action menus', () => {
 
   it('hide and reorder item-menu actions as the user arranged them', () => {
     expect(customizeMenu('item', [])).toEqual(ACTION_MENUS.item);
-    // A list from before sections could move: order follows it within each configured group, and
-    // unnamed actions are hidden.
+    // A list 0.3.4 stored, with no marks: order follows it within each configured group, and the
+    // actions it leaves out are hidden, except those the menu gained since 0.3.4, which show in
+    // their configured place.
     expect(customizeMenu('item', ['delete', 'viewDetails', 'copy', 'edit', 'cut'])).toEqual([
-      ['viewDetails', 'edit'],
+      ['viewDetails', 'preview', 'edit'],
       ['copy', 'cut'],
-      ['delete'],
+      ['fetchCover', 'removeCover', 'delete'],
     ]);
     const custom = customizeMenu('item', ['copyId', 'edit']);
-    expect(getItemMenuSections([link], createItemHost(), custom)).toEqual([['edit'], ['copyId']]);
+    expect(getItemMenuSections([link], createItemHost(), custom)).toEqual([
+      ['preview', 'edit'],
+      ['copyId'],
+    ]);
+    // Hidden once more, they stay hidden.
+    const rearranged = encodeMenu('item', [['edit'], ['copyId']]);
+    expect(customizeMenu('item', rearranged)).toEqual([['edit'], ['copyId']]);
+  });
+
+  it('shows an action added after the user arranged a menu, in its configured place', () => {
+    for (const kind of ACTION_MENU_KINDS) {
+      const configured = ACTION_MENUS[kind];
+      for (const added of configured.flat()) {
+        // The user's menu as saved before `added` existed: every other action, one hidden.
+        const others = configured
+          .map((section) => section.filter((id) => id !== added))
+          .filter((section) => section.length > 0);
+        const hidden = others.flat().find((id) => !MENU_KEEP_ONE_OF[kind].includes(id));
+        const saved = encodeMenu(
+          kind,
+          others
+            .map((section) => section.filter((id) => id !== hidden))
+            .filter((s) => s.length > 0),
+        ).filter((entry) => entry !== `!${added}`);
+        const menu = customizeMenu(kind, saved);
+        expect(menu.flat(), `${kind}: ${added}`).toContain(added);
+        if (hidden && hidden !== added)
+          expect(menu.flat(), `${kind}: ${hidden}`).not.toContain(hidden);
+        // Beside the configured action before it, or the one after it.
+        const section = configured.find((ids) => ids.includes(added)) ?? [];
+        const index = section.indexOf(added);
+        const shown = menu.flat();
+        const neighbor = [...section.slice(0, index)].reverse().find((id) => shown.includes(id));
+        if (neighbor)
+          expect(shown.indexOf(added), `${kind}: ${added}`).toBe(shown.indexOf(neighbor) + 1);
+      }
+    }
   });
 
   it('moves actions between sections, hides and reorders them, in every menu', () => {
     // Each section's first action is marked, so sections cost no entries of their own.
-    const moved = encodeMenu([
+    const moved = encodeMenu('item', [
       ['delete', 'edit'],
       ['copy', 'viewDetails'],
     ]);
-    expect(moved).toEqual(['-delete', 'edit', '-copy', 'viewDetails']);
+    expect(moved.slice(0, 4)).toEqual(['-delete', 'edit', '-copy', 'viewDetails']);
+    // Then every other action, marked hidden.
+    expect(moved.slice(4).sort()).toEqual(
+      ACTION_MENUS.item
+        .flat()
+        .filter((id) => !['delete', 'edit', 'copy', 'viewDetails'].includes(id))
+        .map((id) => `!${id}`)
+        .sort(),
+    );
     expect(customizeMenu('item', moved)).toEqual([
       ['delete', 'edit'],
       ['copy', 'viewDetails'],
     ]);
     // One section, which an older release could not have stored, is still the user's own.
-    expect(customizeMenu('organize', ['-addFolder', 'sortByName'])).toEqual([
+    expect(customizeMenu('organize', ['-addFolder', 'sortByName', '!addBookmark'])).toEqual([
       ['addFolder', 'sortByName'],
     ]);
     expect(getHiddenMenuActions('organize', [['addFolder', 'sortByName']])).toEqual([
@@ -200,15 +245,25 @@ describe('bookmark action menus', () => {
       ['paste'],
       ['addFolder', 'addBookmark'],
     ]);
-    expect(customizeMenu('preview', ['-edit', 'openInNewTab'])).toEqual([['edit', 'openInNewTab']]);
+    expect(customizeMenu('preview', ['-edit', 'openInNewTab', '!copy'])).toEqual([
+      ['edit', 'openInNewTab'],
+    ]);
     // Ids another menu holds, unknown ids, repeats, and empty sections are left out.
     expect(
-      customizeMenu('organize', ['-delete', '-sortByName', 'sortByName', 'nope', '-addBookmark']),
+      customizeMenu('organize', [
+        '-delete',
+        '-sortByName',
+        'sortByName',
+        'nope',
+        '-addBookmark',
+        '!addFolder',
+        '!nope',
+      ]),
     ).toEqual([['sortByName'], ['addBookmark']]);
     // Reset is the empty setting: the configured menu.
     for (const kind of ACTION_MENU_KINDS) {
       expect(customizeMenu(kind, [])).toEqual(ACTION_MENUS[kind]);
-      expect(customizeMenu(kind, encodeMenu(ACTION_MENUS[kind]))).toEqual(ACTION_MENUS[kind]);
+      expect(customizeMenu(kind, encodeMenu(kind, ACTION_MENUS[kind]))).toEqual(ACTION_MENUS[kind]);
     }
   });
 
@@ -217,11 +272,23 @@ describe('bookmark action menus', () => {
     for (const kind of ACTION_MENU_KINDS) {
       const field = meta[MENU_SETTING_KEYS[kind]];
       const ids = ACTION_MENUS[kind].flat();
-      // Every action in a section of its own is the longest arrangement.
-      const longest = encodeMenu(ids.map((id) => [id]));
-      expect(longest.length, kind).toBeLessThanOrEqual(field.maxItems ?? 0);
-      for (const entry of longest)
-        expect(entry.length, entry).toBeLessThanOrEqual(field.maxLength ?? 0);
+      // Every action in a section of its own is the longest arrangement; one shown action and
+      // every other hidden holds as many entries.
+      for (const arrangement of [
+        encodeMenu(
+          kind,
+          ids.map((id) => [id]),
+        ),
+        encodeMenu(kind, [[ids[0] as ActionId]]),
+      ]) {
+        expect(arrangement.length, kind).toBeLessThanOrEqual(field.maxItems ?? 0);
+        for (const entry of arrangement)
+          expect(entry.length, entry).toBeLessThanOrEqual(field.maxLength ?? 0);
+        expect(
+          settingsSchema.shape[MENU_SETTING_KEYS[kind]].safeParse(arrangement).success,
+          kind,
+        ).toBe(true);
+      }
     }
     // Every menu syncs, each in its own synced list item.
     for (const kind of ACTION_MENU_KINDS) {
@@ -234,7 +301,11 @@ describe('bookmark action menus', () => {
     expect(MENU_KEEP_ONE_OF.item.length).toBeGreaterThan(0);
     for (const id of MENU_KEEP_ONE_OF.item) {
       for (const item of [link, folder, rootFolder]) {
-        const menu = getItemMenuSections([item], createItemHost(), customizeMenu('item', [id]));
+        const menu = getItemMenuSections(
+          [item],
+          createItemHost(),
+          customizeMenu('item', encodeMenu('item', [[id]])),
+        );
         expect(menu, `${id} for ${item.title}`).toEqual([[id]]);
       }
     }

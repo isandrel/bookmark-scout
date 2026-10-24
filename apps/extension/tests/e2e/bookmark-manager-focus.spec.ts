@@ -133,7 +133,28 @@ test('a right click below the rows opens the folder menu; an emptied item menu s
   await waitForNoOverlay(page);
 
   // Show in folder applies to search results only, so a row of the folder shown has nothing.
-  await setSettings(extensionWorker, { managerMenuActions: ['showInFolder'] });
+  // Every other action hidden (marked "!"), so none added later shows.
+  await setSettings(extensionWorker, {
+    managerMenuActions: [
+      '-showInFolder',
+      ...[
+        'preview',
+        'edit',
+        'viewDetails',
+        'cut',
+        'copy',
+        'paste',
+        'copyFolderLink',
+        'copyId',
+        'openInNewTab',
+        'openInNewWindow',
+        'openInPrivateWindow',
+        'fetchCover',
+        'removeCover',
+        'delete',
+      ].map((id) => `!${id}`),
+    ],
+  });
   await page.reload();
   await row(page, 'Space 01').click({ button: 'right', position: { x: 200, y: 10 } });
   const none = page.getByRole('menuitem', { name: 'No actions available' });

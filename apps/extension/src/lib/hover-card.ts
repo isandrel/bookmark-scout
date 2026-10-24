@@ -66,7 +66,7 @@ export const HOVER_CARD_FIELD_LABEL_KEYS = {
 
 /** The details a card shows, in the order the user arranged them (`hoverCardFields`). */
 export function getHoverCardFields(stored: readonly string[]): HoverCardField[] {
-  return pickOrderedIds(stored, HOVER_CARD_FIELDS);
+  return readShownIds(stored, HOVER_CARD_FIELDS);
 }
 
 /** What a card is about: a bookmark, and the element it is drawn against. */

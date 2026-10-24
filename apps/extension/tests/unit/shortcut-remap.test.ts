@@ -219,6 +219,37 @@ describe('keys a shortcut may take', () => {
     expect(checkShortcutKeys('manager.preview', { key: 'Enter' }, {}, false)).toEqual({
       kind: 'reserved',
     });
+    // Keys the manager's rows and cards answer with Shift, Ctrl or Cmd, or both, and the
+    // browser's developer tools, view source, and open file.
+    for (const binding of [
+      { key: 'ArrowDown', shift: true },
+      { key: 'End', shift: true },
+      { key: ' ', shift: true },
+      { key: 'Home', mod: true },
+      { key: 'ArrowLeft', mod: true },
+      { key: ' ', mod: true },
+      { key: 'ArrowUp', mod: true, shift: true },
+      { key: 'I', mod: true, shift: true },
+      { key: 'J', mod: true, shift: true },
+      { key: 'C', mod: true, shift: true },
+      { key: 'u', mod: true },
+      { key: 'o', mod: true },
+    ]) {
+      expect(
+        checkShortcutKeys('manager.delete', binding, {}, false),
+        JSON.stringify(binding),
+      ).toEqual({ kind: 'reserved' });
+    }
+    expect(checkShortcutKeys('manager.delete', { key: 'a' }, {}, false)).toBeNull();
+    // Cmd+O is Open's own configured key on a Mac.
+    expect(
+      checkShortcutKeys(
+        'manager.open',
+        { key: 'o', mod: true },
+        { 'manager.open': [{ key: 'F9' }] },
+        true,
+      ),
+    ).toBeNull();
     // Enter is Open's own configured key on Windows and Linux.
     const moved: PageShortcutOverrides = { 'manager.open': [{ key: 'F9' }] };
     expect(checkShortcutKeys('manager.open', { key: 'Enter' }, moved, false)).toBeNull();

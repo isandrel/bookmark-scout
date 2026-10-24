@@ -43,8 +43,9 @@ truncate_length = { default = 50, min = 20, max = 200, step = 10 }
 show_hover_details = true
 # The lists below and the tree density are the popup's layout, kept on this device
 # (DEVICE_SETTING_KEYS in src/lib/storage/registry.ts), since it suits one screen.
-# What the hover card shows, in order: ids from HOVER_CARD_FIELDS in src/lib/hover-card.ts. A
-# detail the list does not name is hidden
+# What the hover card shows, in order: ids from HOVER_CARD_FIELDS in src/lib/hover-card.ts, then
+# the hidden ones marked with a leading "!" (src/lib/shown-ids.ts). A detail not named at all was
+# added since and shows
 hover_card_fields = { default = [
   "title",
   "address",
@@ -58,8 +59,9 @@ hover_card_fields = { default = [
 # in config/ui/popup-tree-view.toml
 tree_density = "comfortable"
 # The popup and side panel's parts from top to bottom, below the search row: ids from
-# POPUP_SECTIONS in src/lib/popup-layout.ts. A part the list does not name is hidden, except the
-# bookmark tree, which always shows (at the end when the list leaves it out)
+# POPUP_SECTIONS in src/lib/popup-layout.ts, then the hidden ones marked with a leading "!"
+# (src/lib/shown-ids.ts). A part not named at all was added since and shows; the bookmark tree
+# always shows
 sections = { default = [
   "currentPage",
   "activeJobs",
@@ -72,7 +74,8 @@ sections = { default = [
   "hintBar",
 ], max_items = 16, max_length = 20 }
 # The buttons beside the search box, in order: ids from POPUP_TOOLBAR_BUTTONS in
-# src/lib/popup-layout.ts. A button the list does not name is hidden; the AI buttons still show
+# src/lib/popup-layout.ts, then the hidden ones marked with a leading "!" (src/lib/shown-ids.ts). A
+# button not named at all was added since and shows; the AI buttons still show
 # only once AI is set up, and Expand all only while a search is typed
 toolbar_buttons = { default = [
   "expandAll",

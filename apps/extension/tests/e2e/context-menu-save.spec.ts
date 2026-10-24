@@ -419,7 +419,7 @@ test.describe('context menu save', () => {
       .poll(() => menuChildren(extensionWorker, RECENT_CATEGORY_ID))
       .toEqual([`${recentId(kept.folderId)}: E2E Menu Kept`]);
 
-    await setSettings(extensionWorker, { contextMenuEntries: ['bookmarksBar'] });
+    await setSettings(extensionWorker, { contextMenuEntries: ['bookmarksBar', '!recentFolders'] });
     await expect
       .poll(() => menuChildren(extensionWorker, ROOT_ID))
       .toEqual([`${BOOKMARKS_BAR_ITEM_ID}: 📚 Bookmarks Bar`]);
@@ -448,7 +448,7 @@ test.describe('context menu save', () => {
         `${RECENT_CATEGORY_ID}: 📁 Recent Folders`,
       ]);
 
-    await setSettings(extensionWorker, { contextMenuEntries: ['recentFolders'] });
+    await setSettings(extensionWorker, { contextMenuEntries: ['recentFolders', '!bookmarksBar'] });
     await expect
       .poll(() => menuChildren(extensionWorker, ROOT_ID))
       .toEqual([`${RECENT_CATEGORY_ID}: 📁 Recent Folders`]);

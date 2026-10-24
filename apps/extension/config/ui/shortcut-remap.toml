@@ -27,7 +27,9 @@ while_typing = ["popup.recent_searches"]
 # back), in the format of config/ui/shortcuts.toml (`mod` is Ctrl, or Cmd on a Mac).
 [reserved]
 # The keys of the standard patterns every tree, table, list, and dialog answers (TREE_KEY_BINDINGS
-# in src/lib/keyboard-shortcuts.ts), and Tab, which moves focus.
+# in src/lib/keyboard-shortcuts.ts), and Tab, which moves focus. The manager's rows and cards also
+# take the arrows, Home, End, and Space with Shift (extend the selection), Ctrl or Cmd (move focus
+# or toggle without selecting), or both (handleRowKeyDown in src/components/ui/table/data-table.tsx).
 patterns = [
   { key = "ArrowUp" },
   { key = "ArrowDown" },
@@ -39,11 +41,33 @@ patterns = [
   { key = " " },
   { key = "Tab" },
   { key = "Escape" },
+  { key = "ArrowUp", shift = true },
+  { key = "ArrowDown", shift = true },
+  { key = "ArrowLeft", shift = true },
+  { key = "ArrowRight", shift = true },
+  { key = "Home", shift = true },
+  { key = "End", shift = true },
+  { key = " ", shift = true },
+  { key = "ArrowUp", mod = true },
+  { key = "ArrowDown", mod = true },
+  { key = "ArrowLeft", mod = true },
+  { key = "ArrowRight", mod = true },
+  { key = "Home", mod = true },
+  { key = "End", mod = true },
+  { key = " ", mod = true },
+  { key = "ArrowUp", mod = true, shift = true },
+  { key = "ArrowDown", mod = true, shift = true },
+  { key = "ArrowLeft", mod = true, shift = true },
+  { key = "ArrowRight", mod = true, shift = true },
+  { key = "Home", mod = true, shift = true },
+  { key = "End", mod = true, shift = true },
+  { key = " ", mod = true, shift = true },
 ]
 # The browser's own keys that a page cannot take or should never take: new tab or window, close,
 # quit, reload, the address bar, find, print, save, history, downloads, bookmark this page,
 # reopen a closed tab, the bookmarks bar and manager, switching tabs, zoom, back and forward,
-# full screen, and the developer tools.
+# full screen, the developer tools and their console and element picker, view source, and open
+# file.
 browser = [
   { key = "t", mod = true },
   { key = "n", mod = true },
@@ -65,6 +89,11 @@ browser = [
   { key = "b", mod = true, shift = true },
   { key = "o", mod = true, shift = true },
   { key = "d", mod = true, shift = true },
+  { key = "i", mod = true, shift = true },
+  { key = "j", mod = true, shift = true },
+  { key = "c", mod = true, shift = true },
+  { key = "u", mod = true },
+  { key = "o", mod = true },
   { key = "Delete", mod = true, shift = true },
   { key = "Tab", mod = true },
   { key = "Tab", mod = true, shift = true },

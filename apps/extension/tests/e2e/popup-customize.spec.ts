@@ -207,7 +207,7 @@ test('hover card delay and details follow their settings', async ({
     language: 'en',
     // Longer than the default, so a card open at the default delay would show the setting ignored.
     hoverCardOpenDelayMs: 1500,
-    hoverCardFields: ['summary', 'title'],
+    hoverCardFields: ['summary', 'title', '!address', '!cover', '!tags', '!folder', '!dateAdded'],
   });
   const seeded = await seedFolder(extensionWorker, 'E2E Hover Fields', [
     { title: 'Hover fields link', url: 'https://fields.hover.e2e.invalid/' },

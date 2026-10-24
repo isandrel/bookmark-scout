@@ -12,7 +12,8 @@ Open the settings page from the extension's **Options** entry, for example by ri
 - Each tab is split into titled sections. A tool's on/off switch sits next to its heading; while it is off, the rest of its settings are folded away. Technical settings, such as timeouts and file name lengths, are under **Advanced settings**, which stays closed until you open it or a search finds something in it.
 - A changed setting is marked **Modified**, with a button to reset it to its default. **Reset All** resets every setting.
 - **Back up settings** saves a backup file with the settings you changed, custom prompts, AI services (name, provider, model, **Base URL**, and provider-specific fields; never API keys or **Extra Headers JSON**), saved searches, smart rules, and the manager table's columns and sort. **Restore settings** restores a backup, replacing each part the file holds, or merges a plain settings file onto your settings; after restoring a backup, enter API keys and extra headers again under [AI](#ai) for the services marked **Needs setup**. Neither touches your bookmarks. **Export Bookmarks** next to them opens the bookmarks manager on its export tool; see [Import and export](/guides/import-export). While covers are stored, **Back up settings** asks whether to include them, and restoring a backup that holds covers shows a review first; see [Covers in a backup](/guides/import-export#covers-in-a-backup).
-- Settings you change are stored in the browser's sync storage, so they follow you to other devices when browser sync is on. A few that belong to one device stay on it: the folder chosen for quick save, **Icon Storage Limit**, AI activity recording, and Ask AI's web search. AI services, with their API keys, **Base URL**, and **Extra Headers JSON**, also stay on this device. See [Privacy](/privacy).
+- Settings you change are stored in the browser's sync storage, so they follow you to other devices when browser sync is on. Settings that suit one screen or name something that differs on each computer stay on the device where you change them: the layout of the popup and the bookmark manager, the manager and popup shortcuts, smart rules, storage limits, the folder chosen for quick save, AI activity recording, Ask AI's web search, and local AI agents. Each of them says so below (**Kept on this device only**, or **for this device only**). AI services, with their API keys, **Base URL**, and **Extra Headers JSON**, also stay on this device. See [Privacy](/privacy).
+- In the lists you check and reorder (the popup's parts, buttons, and hover card details, card and preview details, sidebar tools, menus, and right-click menu entries), anything a later version adds shows until you hide it, and what you hid stays hidden.
 
 ## Essentials [#essentials]
 
@@ -65,7 +66,7 @@ See [Save and organize](/guides/save-and-organize).
 | Setting | Default | What it does |
 | --- | --- | --- |
 | **Quick Save Folder** | Best match | Where <Shortcut id="commands.quick-save" /> saves the current page: the folder that best matches it, the last used folder, or a chosen folder. The AI shortcut always uses the AI suggestion |
-| **Folder to Save To** | Not chosen | The folder for **Chosen folder**. If it is deleted, quick save uses the last used folder |
+| **Folder to Save To** | Not chosen | The folder for **Chosen folder**. If it is deleted, quick save uses the last used folder. Kept on this device only |
 | **Other Folders Offered** | <SettingDefault path="search.quick_save.alternatives" /> | How many other folders the quick save notification offers to move the page to |
 | **Notification Duration** | <SettingDefault path="search.quick_save.notification_ms" seconds /> s | How long the quick save notification stays before it closes; pointing at it keeps it open |
 | **Save a Cover With Quick Save** | Off | After a quick save, also keep a cover for the bookmark: the page's own image (downloaded only from its site or a site you allowed) or a screenshot of the tab, taken when you press the shortcut, without a review. Works only while **Enable Fetch Covers** is on, never in private windows or on sites in **Never Capture These Sites** or **Never Read These Sites**. The notification offers **Remove cover**, and **Undo** removes it with the bookmark. Kept on this device only. The next two settings show while it is on |
@@ -170,7 +171,7 @@ Below the table, three lists arrange the popup and side panel. Check an item to 
 | --- | --- | --- |
 | **Manager Order** | Same as Sort Order | The order the manager shows a folder in until you sort the table by a column: **Same as Sort Order** follows **Sort Order** above, or pick one of its orders for the manager alone. The popup and side panel keep **Sort Order** |
 | **Start Folder** | Bookmarks bar | The folder the manager opens on when you open it without a folder: the **Bookmarks bar**, the **Last opened folder** on this device, or **A folder I choose** (**Folder to Start On**). A folder that is gone opens the bookmarks bar. An address that names a folder still opens it. Kept on this device only |
-| **Sidebars on Open** | Default | **Default** opens the folder sidebar and keeps the Tools sidebar closed; **As I left them** opens each as it was when you last used the manager on this device. Either way, drag a sidebar's inner edge to resize it (or focus the edge and use the arrow keys, `Shift` for bigger steps, `Home`, and `End`); the width is kept on this device |
+| **Sidebars on Open** | Default | **Default** opens the folder sidebar and keeps the Tools sidebar closed; **As I left them** opens each as it was when you last used the manager on this device. Either way, drag a sidebar's inner edge to resize it (or focus the edge and use the arrow keys, `Shift` for bigger steps, `Home`, and `End`); the width is kept on this device. Kept on this device only |
 
 ### Manager table [#manager-table]
 
@@ -217,7 +218,7 @@ Choose which commands a bookmark and a folder offer in the popup and side panel,
 
 ### Manager and popup shortcuts [#page-shortcuts]
 
-Change the keys that work inside the bookmark manager, the popup, and the side panel; [Keyboard shortcuts](/guides/keyboard-shortcuts) lists the keys they start with. Click **Change** beside a shortcut and press the new keys, or `Esc` to cancel. Keys another shortcut of the same page already has are refused with that shortcut's name, and so are keys the browser keeps and the keys that move through lists (the arrows, `Home`, `End`, `Enter`, and `Space`), unless they are the shortcut's own. The popup and side panel shortcuts never use `Ctrl` or `Cmd`. The reset button beside a changed shortcut gives it its default keys back, and **Reset all shortcuts** does that for every shortcut. Copy, cut, and paste keep the browser's keys, and the [quick save shortcuts](#quick-save) belong to the browser. Kept on this device only.
+Change the keys that work inside the bookmark manager, the popup, and the side panel; [Keyboard shortcuts](/guides/keyboard-shortcuts) lists the keys they start with. Click **Change** beside a shortcut and press the new keys, or `Esc` to cancel. Keys another shortcut of the same page already has are refused with that shortcut's name, and so are keys the browser keeps and the keys that move through lists (the arrows, `Home`, `End`, and `Space`, alone or with `Shift`, `Ctrl`, or `Cmd`, and `Enter`), unless they are the shortcut's own. The popup and side panel shortcuts never use `Ctrl` or `Cmd`. The reset button beside a changed shortcut gives it its default keys back, and **Reset all shortcuts** does that for every shortcut. Copy, cut, and paste keep the browser's keys, and the [quick save shortcuts](#quick-save) belong to the browser. Kept on this device only.
 
 ## AI [#ai]
 
@@ -326,7 +327,7 @@ Lists such as **Remove Parameters** are edited as chips: type a name and press E
 | **Default Scope** | All bookmarks | Scope the site icon refresh starts with |
 | **Preferred Icon Size** | <SettingDefault path="metadata_content.site_icons.preferred_size" />px | When a page lists several icons, download the one closest to this size |
 | **Maximum Icon File Size** | <SettingDefault path="metadata_content.site_icons.max_icon_kb" /> KB | Larger icon files are not downloaded or saved |
-| **Icon Storage Limit** | 4 MB | Total size of saved icons on this device; the oldest are removed first |
+| **Icon Storage Limit** | 4 MB | Total size of saved icons on this device; the oldest are removed first. Kept on this device only |
 
 ### Index Page Text [#index-page-text]
 

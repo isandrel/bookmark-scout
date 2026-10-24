@@ -81,14 +81,17 @@ describe('manager table config', () => {
       ids: readonly string[],
     ) => {
       expect(ids.length, key).toBeLessThanOrEqual(meta[key].maxItems ?? 0);
-      for (const id of ids) expect(id.length, id).toBeLessThanOrEqual(meta[key].maxLength ?? 0);
+      // Card and preview details store hidden ones marked (src/lib/shown-ids.ts).
+      const mark = key === 'managerDefaultColumns' ? '' : '!';
+      for (const id of ids)
+        expect(`${mark}${id}`.length, id).toBeLessThanOrEqual(meta[key].maxLength ?? 0);
     };
     fits('managerDefaultColumns', HIDEABLE_COLUMN_IDS);
     fits('managerCardFields', MANAGER_CARD_FIELDS);
     fits('previewFields', PREVIEW_FIELDS);
     expect(
       defaultSettings.managerCardFields.every((id) =>
-        (MANAGER_CARD_FIELDS as readonly string[]).includes(id),
+        (MANAGER_CARD_FIELDS as readonly string[]).includes(id.replace(/^!/, '')),
       ),
     ).toBe(true);
     expect(defaultSettings.previewFields).toEqual([...PREVIEW_FIELDS]);

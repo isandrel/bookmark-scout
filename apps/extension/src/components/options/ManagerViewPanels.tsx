@@ -8,7 +8,9 @@
 
 /**
  * A panel over one ordered list setting, with Restore defaults and any other `actions`. With
- * `resolve`, the stored list is shown as it applies (an empty list meaning every choice).
+ * `marksHidden`, the setting stores hidden choices marked (`src/lib/shown-ids.ts`), so a choice
+ * added later shows; Default Columns stores the shown columns alone, so a new column waits until
+ * the user shows it.
  */
 function OrderedSettingPanel({
   id,
@@ -17,7 +19,7 @@ function OrderedSettingPanel({
   getLabel,
   description,
   actions,
-  resolve,
+  marksHidden = false,
 }: {
   id: string;
   setting:
@@ -30,11 +32,12 @@ function OrderedSettingPanel({
   getLabel: (id: string) => string;
   description: string;
   actions?: React.ReactNode;
-  resolve?: (stored: readonly string[]) => readonly string[];
+  marksHidden?: boolean;
 }) {
   const { value: stored, setValue } = useSetting(setting);
-  const value = resolve ? resolve(stored) : stored;
-  const save = (next: string[]) => void setValue(next).catch(() => undefined);
+  const value = marksHidden ? readShownIds(stored, choices) : stored;
+  const save = (next: string[]) => void setValue(next).catch(notifySettingNotSaved);
+  const saveShown = (shown: string[]) => save(marksHidden ? encodeShownIds(shown, choices) : shown);
   return (
     <OptionsPanel
       id={id}
@@ -60,7 +63,7 @@ function OrderedSettingPanel({
       <OrderedChoicesList
         choices={choices}
         value={value}
-        onChange={save}
+        onChange={saveShown}
         getLabel={getLabel}
         label={t(`settings_${setting}` as MessageKey)}
         idPrefix={id}
@@ -89,7 +92,7 @@ export function ManagerColumnsPanel() {
             variant="outline"
             size="sm"
             disabled={!viewSaved}
-            onClick={() => void resetBookmarkTableView().catch(() => undefined)}
+            onClick={() => void resetBookmarkTableView().catch(notifySettingNotSaved)}
           >
             {t('settings_managerResetTableView')}
           </Button>
@@ -98,7 +101,7 @@ export function ManagerColumnsPanel() {
             variant="outline"
             size="sm"
             disabled={!widthsSaved}
-            onClick={() => void resetBookmarkColumnWidths().catch(() => undefined)}
+            onClick={() => void resetBookmarkColumnWidths().catch(notifySettingNotSaved)}
           >
             {t('settings_managerResetColumnWidths')}
           </Button>
@@ -117,6 +120,7 @@ export function ManagerCardFieldsPanel() {
       choices={MANAGER_CARD_FIELDS}
       getLabel={(field) => getManagerFieldLabel(field as ManagerCardField)}
       description={t('settings_managerCardFieldsDesc')}
+      marksHidden
     />
   );
 }
@@ -130,6 +134,7 @@ export function PreviewFieldsPanel() {
       choices={PREVIEW_FIELDS}
       getLabel={(field) => getManagerFieldLabel(field as PreviewField)}
       description={t('settings_previewFieldsDesc')}
+      marksHidden
     />
   );
 }
@@ -155,7 +160,7 @@ export function ToolsSidebarOrderPanel() {
       choices={TOOL_ORDER_IDS}
       getLabel={getToolSettingsTitle}
       description={t('settings_toolsSidebarOrderDesc')}
-      resolve={getToolsSidebarOrderIds}
+      marksHidden
     />
   );
 }
@@ -169,7 +174,7 @@ export function ContextMenuEntriesPanel() {
       choices={CONTEXT_MENU_ENTRY_IDS}
       getLabel={getContextMenuEntryLabel}
       description={t('settings_contextMenuEntriesDesc')}
-      resolve={(stored) => getContextMenuEntries(stored).map((entry) => entry.id)}
+      marksHidden
     />
   );
 }
