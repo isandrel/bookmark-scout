@@ -146,6 +146,8 @@ const OPERATOR_NAME = /^[a-z]+$/i;
 /** `YYYY-MM-DD`. */
 const DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
 const WHITESPACE = /\s/u;
+/** Between the terms of a serialized query, which must all match. */
+const WORD_SEPARATOR = ' ';
 
 /** One whitespace-separated piece of the query, with whether any of it was quoted. */
 type RawToken = { text: string; quoted: boolean; quoteStart: number };
@@ -457,7 +459,43 @@ function serializeNode(node: SearchNode, inAlternatives: boolean): string {
 
 /** The query as text, in the current version of the language. */
 export function serializeSearchQuery(query: SearchQuery): string {
-  return query.terms.map((node) => serializeNode(node, false)).join(' ');
+  return query.terms.map((node) => serializeNode(node, false)).join(WORD_SEPARATOR);
+}
+
+/** Where a text term is found anywhere in the text (`search-documents.ts`), so its start finds more. */
+const SUBSTRING_FIELDS: ReadonlySet<SearchField | undefined> = new Set([
+  undefined,
+  'title',
+  'url',
+  'summary',
+  'content',
+]);
+
+/**
+ * The query as text of at most `maxLength` UTF-16 units that finds at least every item the whole
+ * query finds, for text stored with a length limit. Its terms must all match, so leaving out the
+ * last ones finds more, never less. When not even the first fits, a text term found anywhere in
+ * its place keeps its start, cut between graphemes; any other term (an exclusion, a whole tag,
+ * folder, or site) cannot be shortened without finding less, so the result is empty, which
+ * filters nothing.
+ */
+export function serializeSearchQueryWithin(query: SearchQuery, maxLength: number): string {
+  const parts: string[] = [];
+  let length = 0;
+  for (const node of query.terms) {
+    const part = serializeNode(node, false);
+    const next = length + (parts.length > 0 ? WORD_SEPARATOR.length : 0) + part.length;
+    if (next > maxLength) break;
+    parts.push(part);
+    length = next;
+  }
+  if (parts.length > 0) return parts.join(WORD_SEPARATOR);
+  const [first] = query.terms;
+  if (first?.kind !== 'text' || first.negate || !SUBSTRING_FIELDS.has(first.field)) return '';
+  // Quoted, so a start that ends in a space or reads as an operator stays the same text.
+  const room = maxLength - serializeTerm({ ...first, value: '', phrase: true }).length;
+  const value = sliceGraphemes(first.value.replaceAll(QUOTE, ''), room);
+  return value ? serializeTerm({ ...first, value, phrase: true }) : '';
 }
 
 /**

@@ -167,8 +167,8 @@ const QUOTE = '"';
  * as typed in the title or address. A single plain word reads the same; anything else (several
  * words, a dash, a colon, quotes) becomes one phrase, matched as typed in any field, so no
  * bookmark it found goes missing. A phrase that would not fit `text_max_length` with its quotes
- * keeps its start: a shorter phrase finds every bookmark the whole one found, and the saved
- * search stays readable when it is stored again.
+ * keeps its start (`serializeSearchQueryWithin`): a shorter phrase finds every bookmark the whole
+ * one found, and the saved search stays readable when it is stored again.
  */
 export function legacyTitleSearch(text: string): string {
   const { query, diagnostics } = parseSearchQuery(text);
@@ -183,12 +183,31 @@ export function legacyTitleSearch(text: string): string {
     term.value === text;
   if (plainWord) return text;
   // The language has no escape for a quote, so quotes inside the phrase are dropped.
-  const phrase = text.replaceAll(QUOTE, '');
-  const room = SAVED_SEARCH_TEXT_MAX_LENGTH - QUOTE.length * 2;
-  let kept = phrase.slice(0, room);
-  // Never end on half of a character written as two code units (an emoji).
-  if (kept.length < phrase.length && /[\uD800-\uDBFF]$/u.test(kept)) kept = kept.slice(0, -1);
-  return `${QUOTE}${kept}${QUOTE}`;
+  const phrase: SearchTerm = {
+    kind: 'text',
+    value: text.replaceAll(QUOTE, ''),
+    phrase: true,
+    negate: false,
+  };
+  return serializeSearchQueryWithin(
+    { syntaxVersion: SEARCH_SYNTAX_VERSION, terms: [phrase] },
+    SAVED_SEARCH_TEXT_MAX_LENGTH,
+  );
+}
+
+/**
+ * A search box text saved in `syntaxVersion`, in the current version. Quotes the rewrite adds
+ * (`"OR"`, `"(draft)"`) can take it past `text_max_length`, where it would be dropped the next
+ * time it is stored; then it keeps what fits and still finds every bookmark it found
+ * (`serializeSearchQueryWithin`).
+ */
+function upgradedTitleSearch(text: string, syntaxVersion: SearchSyntaxVersion): string {
+  const upgraded = upgradeSearchText(text, syntaxVersion);
+  if (upgraded.length <= SAVED_SEARCH_TEXT_MAX_LENGTH) return upgraded;
+  return serializeSearchQueryWithin(
+    parseSearchQuery(text, syntaxVersion).query,
+    SAVED_SEARCH_TEXT_MAX_LENGTH,
+  );
 }
 
 /**
@@ -205,7 +224,9 @@ function normalizeQuery(query: SavedSearchQuery): SavedSearchQuery {
       value =
         query.syntaxVersion === undefined
           ? legacyTitleSearch(value as string)
-          : upgradeSearchText(value as string, query.syntaxVersion);
+          : upgradedTitleSearch(value as string, query.syntaxVersion);
+      // Nothing shorter finds everything it found: no text filter does.
+      if (value === '') continue;
     }
     const normalized = Array.isArray(value) ? uniqueSorted(value) : value;
     Object.assign(filters, { [id]: normalized });
