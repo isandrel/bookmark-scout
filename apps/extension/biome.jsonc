@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.2/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -47,6 +47,16 @@
     }
   },
   "overrides": [
+    {
+      // Vitest files: Biome turns on its Playwright rules for every file once @playwright/test is a
+      // dependency, and they misread Vitest's describe(name, options, fn) and local describe helpers.
+      "includes": ["tests/unit/**"],
+      "linter": {
+        "domains": {
+          "playwright": "none"
+        }
+      }
+    },
     {
       "includes": ["src/**"],
       "linter": {

@@ -154,6 +154,7 @@ test('updates popup ordering from synced settings and creates a folder', async (
     setSettings(extensionWorker, { sortOrder: order });
 
   const visibleLinkOrder = async () => {
+    // biome-ignore lint/performance/useDomNodeTextContent: the order on screen; textContent also reads hidden text.
     const text = await page.locator('body').innerText();
     return ['Zulu Link', 'Alpha Link'].sort(
       (left, right) => text.indexOf(left) - text.indexOf(right),

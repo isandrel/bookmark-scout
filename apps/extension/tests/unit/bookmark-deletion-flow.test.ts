@@ -1,5 +1,4 @@
-import { createElement, type ReactElement } from 'react';
-import { renderToString } from 'react-dom/server';
+import type { ReactElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { deleteBookmarksWithUndo } from '@/hooks/use-bookmark-deletion';
@@ -8,18 +7,13 @@ import { useToast } from '@/hooks/use-toast';
 import { saveSettings } from '@/lib/settings-storage';
 import { BOOKMARK_DELETION_UNDO_WINDOW_MS } from '@/services/bookmarks';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+import { readHook } from './read-hook';
 
 let bookmarks: FakeBookmarks;
 
 /** The toasts as a component sees them right now, newest first. */
 function currentToasts() {
-  let toasts: ReturnType<typeof useToast>['toasts'] = [];
-  function Probe() {
-    toasts = useToast().toasts;
-    return null;
-  }
-  renderToString(createElement(Probe));
-  return toasts;
+  return readHook(useToast).toasts;
 }
 
 async function pressUndo(toast: ReturnType<typeof currentToasts>[number]) {

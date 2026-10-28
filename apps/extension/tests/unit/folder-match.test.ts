@@ -7,7 +7,7 @@ type Spec = { [title: string]: Spec };
 let nextId = 0;
 function build(spec: Spec, parentId: string): BookmarkTreeNode[] {
   return Object.entries(spec).map(([title, children]) => {
-    const id = title.toLowerCase().replace(/\W+/g, '-') + `-${nextId++}`;
+    const id = `${title.toLowerCase().replace(/\W+/g, '-')}-${nextId++}`;
     return {
       id,
       parentId,

@@ -1,18 +1,11 @@
-import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useBookmarkHistoryCommands } from '@/hooks/use-bookmark-history';
 import * as history from '@/services/bookmark-history';
+import { readHook } from './read-hook';
 
 /** The manager's undo and redo commands, from one render. */
 function commands() {
-  let found: ReturnType<typeof useBookmarkHistoryCommands> | undefined;
-  function Probe() {
-    found = useBookmarkHistoryCommands();
-    return null;
-  }
-  renderToStaticMarkup(<Probe />);
-  if (!found) throw new Error('not rendered');
-  return found;
+  return readHook(useBookmarkHistoryCommands);
 }
 
 /** Steps that wait until the test lets them finish, in the order they started. */

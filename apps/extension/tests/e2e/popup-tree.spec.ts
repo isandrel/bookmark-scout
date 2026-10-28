@@ -53,6 +53,7 @@ async function openPopup(page: Page, extensionId: string) {
 }
 
 async function visibleOrder(page: Page, titles: string[]) {
+  // biome-ignore lint/performance/useDomNodeTextContent: only rows on screen count; textContent also reads hidden text.
   const text = await page.getByRole('tree').innerText();
   return titles
     .filter((title) => text.includes(title))
