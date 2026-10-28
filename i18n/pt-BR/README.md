@@ -51,6 +51,8 @@
 - 🧹 **Arrume anos de favoritos.** Remova duplicatas, encontre links que não funcionam mais, tire os códigos de rastreamento dos endereços da web e crie suas próprias regras que adicionam tags e movem favoritos para pastas. As limpezas e as regras mostram cada alteração antes que ela aconteça, e você pode desfazê-la.
 - 🕘 **Veja cada alteração e recupere o que excluiu.** O histórico lista cada alteração nos seus favoritos, até as feitas fora do Bookmark Scout, e traz de volta o que foi excluído, mesmo depois de reiniciar o navegador. Ele fica no seu computador.
 - ✨ **Sugestões opcionais da IA.** Deixe a IA escolher a pasta para você, usando sua própria conta de IA ou um modelo de IA gratuito no seu computador, como o que vem integrado ao Chrome. A IA fica desativada até você ativá-la.
+- 🎛️ **Do seu jeito.** Nas Configurações, escolha quais comandos os menus mostram e em que ordem, organize as partes e os botões do pop-up da barra de ferramentas e as ferramentas da barra lateral do gerenciador de favoritos, e decida onde aparecem mensagens como **Desfazer**. Você também pode mudar as teclas que usa no gerenciador de favoritos e no pop-up.
+- 💾 **Backups sob o seu controle.** Faça backup das suas configurações em um arquivo e escolha o que entra: configurações, prompts, regras, capas e, só se você escolher, suas chaves de IA. Proteja o arquivo com uma senha, veja o que uma restauração vai mudar antes que algo aconteça e desfaça-a se mudar de ideia.
 - 🔒 **Privacidade desde o início.** Sem conta, sem anúncios, sem rastreamento, e nada vai para o desenvolvedor. Salvar e pesquisar funcionam até sem internet.
 
 🌍 Disponível em English · 简体中文 · Español · Français · Português (Brasil) · Русский · Bahasa Indonesia · Deutsch · 日本語 · 한국어 · Italiano · 繁體中文.

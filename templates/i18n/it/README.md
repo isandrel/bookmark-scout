@@ -1,4 +1,4 @@
-{# source: e22425e92aee #}
+{# source: d9794b5f15a5 #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -39,6 +39,8 @@
 - 🧹 **Metti ordine in anni di preferiti.** Rimuovi i duplicati, trova i link che non funzionano più, elimina i codici di tracciamento dagli indirizzi web e crea regole tue che aggiungono tag e spostano i preferiti nelle cartelle. Per pulizie e regole vedi ogni modifica prima che avvenga e puoi annullarla.
 - 🕘 **Vedi ogni modifica e recupera i preferiti eliminati.** La Cronologia elenca ogni modifica ai tuoi preferiti, anche quelle fatte fuori da Bookmark Scout, e recupera ciò che è stato eliminato, anche dopo il riavvio del browser. Resta sul tuo computer.
 - ✨ **Suggerimenti dell'IA facoltativi.** Lascia che sia l'IA a scegliere la cartella, con il tuo account di IA o con un modello di IA gratuito sul tuo computer, come quello integrato in Chrome. L'IA resta disattivata finché non la attivi.
+- 🎛️ **Come piace a te.** Nelle Impostazioni scegli quali comandi mostrano i menu e in che ordine, disponi le parti e i pulsanti del popup della barra degli strumenti e gli strumenti nella barra laterale della gestione preferiti, e decidi dove compaiono messaggi come **Annulla**. Puoi anche cambiare i tasti da premere nella gestione preferiti e nel popup.
+- 💾 **Backup sotto il tuo controllo.** Esegui il backup delle impostazioni in un file e scegli cosa includere: impostazioni, prompt, regole, copertine e, solo se lo scegli tu, le tue chiavi di IA. Proteggi il file con una password, vedi cosa cambierà un ripristino prima che cambi qualcosa e annullalo se ci ripensi.
 - 🔒 **Privacy fin dalla progettazione.** Nessun account, nessuna pubblicità, nessun tracciamento, e non arriva nulla allo sviluppatore. Il salvataggio e la ricerca funzionano anche offline.
 
 🌍 Disponibile in {{ locales|map(attribute="name")|join(" · ") }}.
