@@ -304,11 +304,11 @@ describe('settings persistence', () => {
 
   it('undoes a reset in both scopes, keeping a change made since to a default setting', async () => {
     await saveSettings({ theme: 'dark', quickSaveFixedFolder: '42' });
-    const previous = await resetSettings();
-    expect(previous).toMatchObject({ theme: 'dark', quickSaveFixedFolder: '42' });
+    const reset = await resetSettings();
+    expect(reset.settings).toMatchObject({ theme: 'dark', quickSaveFixedFolder: '42' });
     await saveSettings({ showFavicons: false });
 
-    await undoResetSettings(previous);
+    await undoResetSettings(reset);
     expect(await readStored()).toEqual({ theme: 'dark', showFavicons: false });
     expect(await readStoredOnDevice()).toEqual({ quickSaveFixedFolder: '42' });
   });

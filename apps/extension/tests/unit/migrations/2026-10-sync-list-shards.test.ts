@@ -13,12 +13,14 @@ import {
   runStorageMigrations,
   saveSettings,
   settingsOverrideValues,
+  undoResetSettings,
 } from '@/lib/settings-storage';
 import {
   markItemMenu0_3_4,
   syncListShards,
 } from '@/lib/storage/migrations/2026-10-sync-list-shards';
 import { storageKey } from '@/lib/storage/registry';
+import { makeBackupFile, undoBackupImport } from '@/services/backup';
 import { installFakeBookmarks } from '../../fake-bookmarks';
 import { formatOneFile, restoreParts, stubManifestVersion } from '../backup-helpers';
 import { readStoredData, readStoredRaw, STORAGE_ITEMS, seedStored } from '../storage-helpers';
@@ -189,6 +191,79 @@ describe('each list setting in its own item', () => {
       askAiDisabledActions: defaultSettings.askAiDisabledActions,
       privacyScannerSensitiveParams: defaultSettings.privacyScannerSensitiveParams,
     });
+  });
+
+  it('puts back the copies 0.3.4 reads, as they were stored, when Reset All is undone', async () => {
+    // 0.3.4's item menu in its own form, and a list this release has changed since.
+    await seedStored(STORAGE_ITEMS.settings, { ...SETTINGS_0_3_4, managerMenuActions: ['edit'] });
+    await runStorageMigrations();
+    await saveSettings({ urlCleanerRemoveParams: ['ref'] });
+    const settingsItem = await readStoredRaw(STORAGE_ITEMS.settings);
+    const lists = await listItems();
+    expect(settingsItem).toMatchObject({
+      data: { managerMenuActions: ['edit'], urlCleanerRemoveParams: ['ref'] },
+    });
+
+    const reset = await resetSettings();
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toBeUndefined();
+    await undoResetSettings(reset);
+    expect(await readStoredRaw(STORAGE_ITEMS.settings)).toEqual(settingsItem);
+    expect(await listItems()).toEqual(lists);
+
+    // A device that runs the migration later reads the same lists.
+    await fakeBrowser.storage.local.clear();
+    await runStorageMigrations();
+    expect(await getSettings()).toMatchObject({
+      theme: 'dark',
+      askAiDisabledActions: ['checkLinks'],
+      privacyScannerSensitiveParams: ['secret'],
+      urlCleanerRemoveParams: ['ref'],
+      managerMenuActions: ['-edit', ...HIDDEN_BESIDE_EDIT],
+    });
+  });
+
+  it('gives no 0.3.4 copies to a user who had none when Reset All is undone', async () => {
+    await saveSettings({ theme: 'dark', urlCleanerRemoveParams: ['ref'] });
+    const reset = await resetSettings();
+    await undoResetSettings(reset);
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({ theme: 'dark' });
+    expect(await listItems()).toEqual({ urlCleanerRemoveParams: ['ref'] });
+  });
+
+  it('puts back no 0.3.4 copy of a list changed since Reset All that the undo leaves as it is', async () => {
+    await seedStored(STORAGE_ITEMS.settings, { askAiDisabledActions: ['checkLinks'] });
+    await runStorageMigrations();
+    // A device still on 0.3.4 then changed a list this device has at its default.
+    await seedStored(STORAGE_ITEMS.settings, {
+      askAiDisabledActions: ['checkLinks'],
+      urlCleanerRemoveParams: ['from-0.3.4'],
+    });
+    const reset = await resetSettings();
+    await saveSettings({ urlCleanerRemoveParams: ['since'] });
+    await undoResetSettings(reset);
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
+      askAiDisabledActions: ['checkLinks'],
+    });
+    expect((await getSettings()).urlCleanerRemoveParams).toEqual(['since']);
+  });
+
+  it('puts back the copies 0.3.4 reads, as they were stored, when a settings restore is undone', async () => {
+    stubManifestVersion();
+    installFakeBookmarks([]);
+    await seedStored(STORAGE_ITEMS.settings, { ...SETTINGS_0_3_4, managerMenuActions: ['edit'] });
+    await runStorageMigrations();
+    const { json } = await makeBackupFile({ categories: ['settings'], protection: 'none' });
+    await saveSettings({ theme: 'light', urlCleanerRemoveParams: ['ref'] });
+    const settingsItem = await readStoredRaw(STORAGE_ITEMS.settings);
+    const lists = await listItems();
+
+    const { operationId } = await restoreParts(json, { settings: 'replace' });
+    expect((await getSettings()).urlCleanerRemoveParams).toEqual(
+      defaultSettings.urlCleanerRemoveParams,
+    );
+    await undoBackupImport(operationId);
+    expect(await readStoredRaw(STORAGE_ITEMS.settings)).toEqual(settingsItem);
+    expect(await listItems()).toEqual(lists);
   });
 
   it('saves the settings item without 0.3.4 lists, once, when they no longer fit beside it', async () => {

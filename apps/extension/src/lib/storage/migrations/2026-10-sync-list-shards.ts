@@ -10,9 +10,11 @@
  * This finds them in the old places for `MIGRATIONS` (see `./index.ts` for what the runner does
  * with them): the lists item wins over the settings item, which wins over this device. While it
  * is registered, the settings writer keeps 0.3.4's lists in the settings item current for devices
- * still on 0.3.4: each change to one is written there too, or removed at its default, and Reset
- * removes them, so a device that runs this later never brings back a list since changed or reset.
- * Once it is deleted, the next settings save drops them, with nothing else to remove.
+ * still on 0.3.4: each change to one is written there too, or removed at its default, Reset
+ * removes them, and its Undo puts them back as they were stored, so a device that runs this
+ * later never brings back a list since changed or reset, and one on 0.3.4 sees the lists the
+ * user undid the reset to. Once it is deleted, the next settings save drops them, with nothing
+ * else to remove.
  *
  * The manager's item menu (`managerMenuActions`) also changes form on the way: 0.3.4 stored only
  * the actions it shows, so an action it leaves out was hidden, while menus now mark each hidden

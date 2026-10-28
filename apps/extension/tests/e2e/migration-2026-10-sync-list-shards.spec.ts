@@ -3,7 +3,7 @@
  * (`src/lib/storage/migrations/2026-10-sync-list-shards.ts`); deleted with it.
  */
 import { storageAreaKey } from '../../src/lib/storage/registry';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { readSettings, readStored, STORAGE_ITEMS, writeStoredItems } from './storage';
 
 /**
@@ -12,7 +12,7 @@ import { readSettings, readStored, STORAGE_ITEMS, writeStoredItems } from './sto
  */
 const OLD_LISTS_ITEM = { area: 'sync', name: 'settings.lists', v: 1, backup: 'exclude' } as const;
 
-test('an update copies lists kept together, or on this device, into an item each, and a change writes its own and the copy 0.3.4 reads', async ({
+test('an update copies lists kept together, or on this device, into an item each, a change writes its own and the copy 0.3.4 reads, and Undo after Reset All puts the copies back', async ({
   extensionId,
   extensionWorker,
   page,
@@ -88,14 +88,24 @@ test('an update copies lists kept together, or on this device, into an item each
     [storageAreaKey(STORAGE_ITEMS.settingsList, 'urlCleanerRemoveParams')],
     [storageAreaKey(STORAGE_ITEMS.settings)],
   ]);
-  expect(await readStored(extensionWorker, STORAGE_ITEMS.settings)).toEqual({
-    ...settings,
-    urlCleanerRemoveParams: ['utm_e2e'],
-  });
+  const withCopies = { ...settings, urlCleanerRemoveParams: ['utm_e2e'] };
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.settings)).toEqual(withCopies);
   expect(await readStored(extensionWorker, OLD_LISTS_ITEM)).toEqual(oldLists);
 
   // Reset All removes those copies too, so no device brings a list back.
   await page.getByRole('button', { name: 'Reset All' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Reset All' }).click();
   await expect.poll(() => readStored(extensionWorker, STORAGE_ITEMS.settings)).toBeUndefined();
+
+  // Its Undo puts them back as they were, so a device still on 0.3.4 sees the lists again.
+  const toast = toastRegion(page).getByRole('status').filter({ hasText: 'Settings reset' });
+  await toast.getByRole('button', { name: 'Undo' }).click();
+  await expect.poll(() => readStored(extensionWorker, STORAGE_ITEMS.settings)).toEqual(withCopies);
+  await expect(params.locator('[data-slot="list-chip"]')).toHaveText(['utm_e2e']);
+  expect(await readSettings(extensionWorker)).toMatchObject({
+    urlCleanerRemoveParams: ['utm_e2e'],
+    askAiDisabledActions: ['checkLinks'],
+    privacyScannerSensitiveParams: ['e2e_secret'],
+    managerOrganizeMenu: ['addFolder', 'sortByName'],
+  });
 });
