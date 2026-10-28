@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildSearchDocuments, type SearchDocument } from '@/lib/search-documents';
 import {
+  fitSearchText,
   hasSearchOperators,
   parseSearchQuery,
   SEARCH_SYNTAX_VERSION,
@@ -651,6 +652,13 @@ describe('a query kept within a length limit', () => {
     expect(cut).toBe(`"${family}"`);
     expect(graphemes(cut.slice(1, -1))).toEqual([family]);
     expect(found(parseSearchQuery(cut).query)).toEqual(['family']);
+  });
+
+  it('fits search box text by whole terms, as typed when it fits', () => {
+    expect(fitSearchText('alpha  beta', 20)).toBe('alpha  beta');
+    // Cutting at 15 would leave -tag:a, which excludes another tag: the term is left out instead.
+    expect(fitSearchText('alpha beta -tag:archived', 15)).toBe('alpha beta');
+    expect(fitSearchText('"two words" three', 13)).toBe('"two words"');
   });
 
   it('writes nothing when its only term cannot be shortened without finding less', () => {

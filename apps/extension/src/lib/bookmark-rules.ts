@@ -109,13 +109,23 @@ export const bookmarkRuleSchema = z
      */
     autoMove: z.boolean().optional(),
   })
-  .transform(({ autoMove, ...rule }) => ({
-    ...rule,
-    query: upgradeSearchText(rule.query, rule.syntaxVersion),
-    syntaxVersion: SEARCH_SYNTAX_VERSION,
-    // Only a rule with a folder can move; kept only when on, so a rule reads as it was saved.
-    ...(autoMove && rule.moveTo ? { autoMove: true } : {}),
-  }))
+  .transform(({ autoMove, ...rule }) => {
+    const upgraded = upgradeSearchText(rule.query, rule.syntaxVersion);
+    // The quotes an upgrade adds can take a search past what a search reads; it then keeps what
+    // fits, finding more, never less. When nothing shorter can, it stays whole and too long.
+    const query =
+      upgradeSearchTextWithin(rule.query, rule.syntaxVersion, SEARCH_MAX_QUERY_LENGTH) || upgraded;
+    // A shortened search finds bookmarks the rule never did: it acts again only once turned on.
+    const shortened = query !== upgraded;
+    return {
+      ...rule,
+      enabled: rule.enabled && !shortened,
+      query,
+      syntaxVersion: SEARCH_SYNTAX_VERSION,
+      // Only a rule with a folder can move; kept only when on, so a rule reads as it was saved.
+      ...(autoMove && rule.moveTo ? { autoMove: true } : {}),
+    };
+  })
   .refine((rule) => isRunnableRuleQuery(rule.query), {
     message: 'A rule needs a search it can run',
   })

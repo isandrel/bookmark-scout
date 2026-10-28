@@ -54,6 +54,9 @@ export const SEARCH_WEIGHTS = searchConfig.weights;
 /** Characters of page text a match in it shows (`search-documents.ts`). */
 export const SEARCH_CONTENT_SNIPPET_CHARS = searchConfig.content_snippet_chars;
 
+/** Longest query read (`max_query_length`); a search box reads no further, and says so. */
+export const SEARCH_MAX_QUERY_LENGTH = searchConfig.max_query_length;
+
 /**
  * What each version of the language reads, by the version saved with a query. A version is added
  * when a query could read differently: version 2 added OR and parentheses, so `cats OR dogs` and
@@ -511,6 +514,31 @@ export function upgradeSearchText(text: string, syntaxVersion: SearchSyntaxVersi
     isSameJson(before.query.terms, now.query.terms) &&
     isSameJson(before.diagnostics, now.diagnostics);
   return same ? text : serializeSearchQuery(before.query);
+}
+
+/**
+ * Search box text to store within `maxLength`: kept as typed when it fits, otherwise what the
+ * search box reads of it (`parseSearchQuery`, which stops at `max_query_length`), shortened so it
+ * finds at least everything it found (`serializeSearchQueryWithin`), never cut mid-word.
+ */
+export function fitSearchText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  return serializeSearchQueryWithin(parseSearchQuery(text).query, maxLength);
+}
+
+/**
+ * `upgradeSearchText` within `maxLength`: the quotes an upgrade adds (`"OR"`, `"(draft)"`) can
+ * take a query that fitted past it, and then it keeps what fits and still finds at least every
+ * item it found (`serializeSearchQueryWithin`). Empty when nothing shorter can.
+ */
+export function upgradeSearchTextWithin(
+  text: string,
+  syntaxVersion: SearchSyntaxVersion,
+  maxLength: number,
+): string {
+  const upgraded = upgradeSearchText(text, syntaxVersion);
+  if (upgraded.length <= maxLength) return upgraded;
+  return serializeSearchQueryWithin(parseSearchQuery(text, syntaxVersion).query, maxLength);
 }
 
 /** Whether the query uses an operator, so it is a search and never a folder name to save into. */
