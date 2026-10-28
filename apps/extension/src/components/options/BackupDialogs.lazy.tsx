@@ -650,7 +650,7 @@ export function BackupImportDialog({ source, onClose, onImport, onUndo }: Backup
                   <Lock className="h-3.5 w-3.5" aria-hidden="true" />
                   {t('backup_lockedParts', formatList(locked.map((part) => partLabel(part))))}
                 </p>
-                <div className="flex flex-wrap items-end gap-2">
+                <DialogActions className="flex flex-wrap items-end gap-2">
                   <div className="min-w-48 flex-1 space-y-1">
                     <label htmlFor={passwordId} className="text-xs font-medium">
                       {t('backup_password')}
@@ -667,7 +667,7 @@ export function BackupImportDialog({ source, onClose, onImport, onUndo }: Backup
                   <Button type="submit" variant="outline" disabled={busy || password.length === 0}>
                     {t('backup_unlock')}
                   </Button>
-                </div>
+                </DialogActions>
                 {unlockError ? (
                   <p role="alert" className="text-xs text-destructive-text">
                     {unlockError}

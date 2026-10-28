@@ -211,7 +211,7 @@ function BookmarkDetailsContent({
               )}
             />
           </div>
-          <div className="flex flex-wrap gap-2">
+          <DialogActions className="flex flex-wrap gap-2">
             <Button
               type="button"
               size="sm"
@@ -231,7 +231,7 @@ function BookmarkDetailsContent({
             >
               {t('bookmarks_metadataClear')}
             </Button>
-          </div>
+          </DialogActions>
           <p aria-live="polite" className="text-sm text-muted-foreground">
             {metadataStatus}
           </p>

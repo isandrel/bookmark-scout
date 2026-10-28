@@ -6,6 +6,11 @@ import * as React from 'react';
 
 const Dialog = DialogPrimitive.Root;
 
+function setRef<T>(ref: React.ForwardedRef<T>, value: T | null) {
+  if (typeof ref === 'function') ref(value);
+  else if (ref) ref.current = value;
+}
+
 const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = DialogPrimitive.Portal;
@@ -28,25 +33,42 @@ DialogOverlay.displayName = 'DialogOverlay';
 const DialogContent = React.forwardRef<
   HTMLDivElement,
   Omit<DialogPrimitive.Popup.Props, 'className'> & { className?: string }
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Popup
-      ref={ref}
-      className={cn(
-        'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 sm:rounded-lg',
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-open:bg-accent data-open:text-muted-foreground">
-        <X className="h-4 w-4" />
-        <span className="sr-only">{t('action_close')}</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Popup>
-  </DialogPortal>
-));
+>(({ className, children, ...props }, ref) => {
+  // Registers the dialog while it is open, so the toast stack keeps clear of it. Callers pass a
+  // stable ref (or none), so the dialog is registered once and stays under a dialog opened over
+  // it; a new callback each render would re-register it on top.
+  const popupRef = React.useCallback(
+    (element: HTMLDivElement | null) => {
+      setRef(ref, element);
+      if (!element) return undefined;
+      const unregister = registerOpenDialog(element);
+      return () => {
+        unregister();
+        setRef(ref, null);
+      };
+    },
+    [ref],
+  );
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Popup
+        ref={popupRef}
+        className={cn(
+          'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 sm:rounded-lg',
+          className,
+        )}
+        {...props}
+      >
+        {children}
+        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-open:bg-accent data-open:text-muted-foreground">
+          <X className="h-4 w-4" />
+          <span className="sr-only">{t('action_close')}</span>
+        </DialogPrimitive.Close>
+      </DialogPrimitive.Popup>
+    </DialogPortal>
+  );
+});
 DialogContent.displayName = 'DialogContent';
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
@@ -54,21 +76,26 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 );
 DialogHeader.displayName = 'DialogHeader';
 
-// Registers a footer while it is mounted, so the toast stack keeps clear of the dialog's buttons.
-// One stable callback: a new one each render would re-register the footer, putting a re-rendered
-// dialog's footer on top of a dialog opened over it.
-const trackDialogFooter = (element: HTMLDivElement | null) =>
-  element ? registerDialogFooter(element) : undefined;
-
+// The footer and every DialogActions row are the dialog's action areas: when the toast stack
+// cannot keep clear of the whole dialog, it keeps clear of these (lib/toast-dialog-clearance.ts).
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    ref={trackDialogFooter}
-    data-slot="dialog-footer"
+    data-slot={DIALOG_ACTION_SLOTS.footer}
     className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
     {...props}
   />
 );
 DialogFooter.displayName = 'DialogFooter';
+
+/**
+ * A row of controls in a dialog's body that the dialog waits on, outside its footer (an Unlock
+ * form, a Save or Undo row). The toast stack keeps clear of it like the footer. Layout is the
+ * caller's.
+ */
+const DialogActions = (props: React.HTMLAttributes<HTMLDivElement>) => (
+  <div data-slot={DIALOG_ACTION_SLOTS.actions} {...props} />
+);
+DialogActions.displayName = 'DialogActions';
 
 const DialogTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -96,6 +123,7 @@ DialogDescription.displayName = 'DialogDescription';
 
 export {
   Dialog,
+  DialogActions,
   DialogContent,
   DialogDescription,
   DialogFooter,

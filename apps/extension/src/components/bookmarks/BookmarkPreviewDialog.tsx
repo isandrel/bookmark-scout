@@ -243,7 +243,7 @@ export function BookmarkPreviewDialog({
                           <span data-testid="bookmark-preview-cover-source">{coverSource}</span>
                         ) : null}
                         {/* The cover's own commands, so a cover can be fetched or removed here. */}
-                        <span className="flex flex-wrap gap-1">
+                        <DialogActions className="flex flex-wrap gap-1">
                           {coverActions.map((id) => {
                             const { icon } = getAction(id);
                             const Icon = icon ? ACTION_ICONS[icon] : undefined;
@@ -261,7 +261,7 @@ export function BookmarkPreviewDialog({
                               </Button>
                             );
                           })}
-                        </span>
+                        </DialogActions>
                       </PreviewDetail>
                     ) : null;
                   default:

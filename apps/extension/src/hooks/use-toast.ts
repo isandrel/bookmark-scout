@@ -7,7 +7,7 @@ const toastConfig = readConfig(
   'ui/toasts',
   z.strictObject({
     remove_delay_ms: z.number().int().nonnegative(),
-    dialog_footer_gap_px: boundedNumber({ integer: true }),
+    dialog_gap_px: boundedNumber({ integer: true }),
   }),
 );
 
@@ -17,8 +17,8 @@ const toastConfig = readConfig(
 // Toaster keeps a long stack compact.
 /** How long a dismissed toast stays mounted, which is also how long its exit animation runs. */
 export const TOAST_REMOVE_DELAY_MS = toastConfig.remove_delay_ms;
-/** Room the toast stack leaves between itself and an open dialog's footer buttons. */
-export const TOAST_DIALOG_FOOTER_GAP_PX = toastConfig.dialog_footer_gap_px;
+/** Room the toast stack leaves between itself and an open dialog or its action areas. */
+export const TOAST_DIALOG_GAP_PX = toastConfig.dialog_gap_px;
 
 /**
  * A bookmark or folder title as a toast quotes it: "Untitled" when blank, and cut at the
