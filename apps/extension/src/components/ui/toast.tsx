@@ -53,8 +53,10 @@ const ToastViewport = React.forwardRef<
   Omit<ToastPrimitives.Viewport.Props, 'className'> & {
     className?: string;
     position?: ToastPosition;
+    /** Where the stack keeps clear of an open dialog's footer (`useToastDialogClearance`). */
+    clearance?: ToastStackPlacement | null;
   }
->(({ className, position = defaultSettings.toastPosition, ...props }, ref) => (
+>(({ className, position = defaultSettings.toastPosition, clearance, ...props }, ref) => (
   <ToastPrimitives.Portal>
     <ToastPrimitives.Viewport
       ref={ref as React.Ref<HTMLDivElement>}
@@ -64,11 +66,20 @@ const ToastViewport = React.forwardRef<
         // a small popup. The viewport itself takes no clicks (each toast does): its padding, the
         // gaps between toasts, and the empty viewport would otherwise be a strip over the bottom
         // of every page that swallows clicks on what is under it. Empty, it has no size at all.
-        'pointer-events-none fixed z-[100] flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 empty:p-0 md:max-w-[320px]',
+        // Next to an open dialog's footer, --toast-stack-room lowers the cap to the room it has.
+        'pointer-events-none fixed z-[100] flex max-h-[min(50vh,var(--toast-stack-room,50vh))] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 empty:p-0 md:max-w-[320px]',
         TOAST_POSITION_STYLES[position].viewport,
         className,
       )}
       data-position={position}
+      style={
+        clearance
+          ? ({
+              [clearance.edge]: `${clearance.offsetPx}px`,
+              '--toast-stack-room': `${clearance.maxHeightPx}px`,
+            } as React.CSSProperties)
+          : undefined
+      }
       {...props}
     />
   </ToastPrimitives.Portal>

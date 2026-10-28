@@ -1,7 +1,13 @@
 # Toast notifications. How long a toast stays open is the user's toast_duration_ms setting, and
 # how long a quoted bookmark title may grow is the truncate_length setting (both in
-# config/settings/appearance.toml); this value is fixed.
+# config/settings/appearance.toml); these values are fixed.
 
 # Milliseconds a dismissed toast stays mounted, and how long its exit animation runs
 # (src/components/ui/toast.tsx), so the animation always finishes.
 remove_delay_ms = 500
+
+# While a dialog with buttons along its foot is open, the toast stack keeps clear of that row
+# (src/lib/toast-dialog-clearance.ts): it stays on its Toast Position edge where the stack fits
+# between the row and that edge, and otherwise moves to the other side of the row. Pixels left
+# between the row and the stack.
+dialog_footer_gap_px = { value = 8, min = 0, max = 64 }
