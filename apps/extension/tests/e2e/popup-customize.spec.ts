@@ -163,20 +163,19 @@ test('Expand on Open opens the bookmarks bar, or the folders left open last time
   await expect(folderRow(page, 'Expand Inner')).toHaveCount(0);
 
   // As last left: the folders open when the popup closed come back. The open page remembers the
-  // bookmarks bar it opened as soon as the setting changes.
+  // bookmarks bar it opened as soon as it sees the setting change, so wait for that before reloading.
+  const expandedFolders = () =>
+    extensionWorker.evaluate(
+      async (key) => JSON.stringify(await chrome.storage.local.get(key)),
+      'ui.popup-expanded-folders',
+    );
   await setSettings(extensionWorker, { popupExpandOnOpen: 'last' });
+  await expect.poll(expandedFolders).toContain(seeded.barId as string);
   await page.reload();
   await folderRow(page, 'E2E Expand Open').click();
   await folderRow(page, 'Expand Inner').click();
   await expect(bookmarkRow(page, 'Expand Deep Link')).toBeVisible();
-  await expect
-    .poll(() =>
-      extensionWorker.evaluate(
-        async (key) => JSON.stringify(await chrome.storage.local.get(key)),
-        'ui.popup-expanded-folders',
-      ),
-    )
-    .toContain(seeded.ids['Expand Inner'] as string);
+  await expect.poll(expandedFolders).toContain(seeded.ids['Expand Inner'] as string);
   await page.reload();
   await expect(bookmarkRow(page, 'Expand Deep Link')).toBeVisible();
 });
