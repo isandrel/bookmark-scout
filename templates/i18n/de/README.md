@@ -1,4 +1,4 @@
-{# source: e22425e92aee #}
+{# source: d9794b5f15a5 #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -39,6 +39,8 @@
 - 🧹 **Lesezeichen aus vielen Jahren aufräumen.** Entfernen Sie doppelte Lesezeichen, finden Sie Links, die nicht mehr funktionieren, entfernen Sie Tracking-Codes aus Webadressen, und legen Sie eigene Regeln an, die Tags hinzufügen und Lesezeichen in Ordner verschieben. Bei Bereinigungen und Regeln sehen Sie jede Änderung, bevor sie ausgeführt wird, und können sie rückgängig machen.
 - 🕘 **Jede Änderung sehen und Gelöschtes zurückholen.** Der Verlauf listet jede Änderung an Ihren Lesezeichen auf, auch solche außerhalb von Bookmark Scout, und holt Gelöschtes zurück, auch nach einem Neustart des Browsers. Er bleibt auf Ihrem Computer.
 - ✨ **Optionale KI-Vorschläge.** Lassen Sie KI den Ordner für Sie auswählen, mit Ihrem eigenen KI-Konto oder einem kostenlosen KI-Modell auf Ihrem Computer, etwa dem in Chrome integrierten. KI bleibt aus, bis Sie sie aktivieren.
+- 🎛️ **Ganz nach Ihren Wünschen.** Legen Sie in den Einstellungen fest, welche Befehle die Menüs in welcher Reihenfolge zeigen, ordnen Sie die Bereiche und Schaltflächen des Pop-ups in der Symbolleiste und die Werkzeuge in der Tools-Leiste des Lesezeichen-Managers an, und wählen Sie, wo Meldungen wie **Rückgängig** erscheinen. Auch die Tasten, die Sie im Lesezeichen-Manager und im Pop-up drücken, können Sie ändern.
+- 💾 **Sicherungen in Ihrer Hand.** Sichern Sie Ihre Einstellungen in einer Datei und wählen Sie, was hineinkommt: Einstellungen, Prompts, Regeln, Titelbilder und, nur wenn Sie es möchten, Ihre KI-Schlüssel. Schützen Sie die Datei mit einem Passwort, sehen Sie vor dem Wiederherstellen, was sich ändern wird, und machen Sie es rückgängig, wenn Sie es sich anders überlegen.
 - 🔒 **Von Grund auf privat.** Kein Konto, keine Werbung, kein Tracking, und nichts geht an den Entwickler. Speichern und Suchen funktionieren sogar offline.
 
 🌍 Verfügbar auf {{ locales|map(attribute="name")|join(" · ") }}.

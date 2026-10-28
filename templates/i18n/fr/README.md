@@ -1,4 +1,4 @@
-{# source: e22425e92aee #}
+{# source: d9794b5f15a5 #}
 {% import "../../_partials/markdown.md.j2" as md %}
 {{ md.language_switcher() }}
 <p align="center">
@@ -39,6 +39,8 @@
 - 🧹 **Faites le tri dans des années de favoris.** Supprimez les doublons, trouvez les liens qui ne fonctionnent plus, retirez les codes de suivi des adresses Web, et créez vos propres règles qui ajoutent des étiquettes et rangent les favoris dans des dossiers. Pour les nettoyages et les règles, vous voyez chaque modification avant qu'elle ait lieu, et vous pouvez l'annuler.
 - 🕘 **Voyez chaque modification et récupérez ce que vous avez supprimé.** L'historique liste chaque modification de vos favoris, même celles faites hors de Bookmark Scout, et restaure ce qui a été supprimé, même après un redémarrage du navigateur. Il reste sur votre ordinateur.
 - ✨ **Des suggestions de l'IA, si vous le souhaitez.** Laissez l'IA choisir le dossier à votre place, avec votre propre compte d'IA ou un modèle d'IA gratuit sur votre ordinateur, comme celui intégré à Chrome. L'IA reste désactivée tant que vous ne l'activez pas.
+- 🎛️ **À votre goût.** Dans les paramètres, choisissez les commandes que les menus affichent et leur ordre, organisez les parties et les boutons de la fenêtre pop-up de la barre d'outils et les outils de la barre latérale du gestionnaire de favoris, et décidez où s'affichent les messages comme **Annuler**. Vous pouvez aussi changer les touches à utiliser dans le gestionnaire de favoris et la fenêtre pop-up.
+- 💾 **Des sauvegardes que vous maîtrisez.** Sauvegardez vos paramètres dans un fichier et choisissez ce qu'il contient : paramètres, prompts, règles, couvertures et, seulement si vous le décidez, vos clés d'IA. Protégez le fichier par un mot de passe, voyez ce qu'une restauration va modifier avant que rien ne change, et annulez-la si vous changez d'avis.
 - 🔒 **Conçu pour protéger votre vie privée.** Aucun compte, aucune publicité, aucun suivi, et rien n'est envoyé au développeur. L'enregistrement et la recherche fonctionnent même hors connexion.
 
 🌍 Disponible en {{ locales|map(attribute="name")|join(" · ") }}.

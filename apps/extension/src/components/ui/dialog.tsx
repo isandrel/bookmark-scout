@@ -54,8 +54,16 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 );
 DialogHeader.displayName = 'DialogHeader';
 
+// Registers a footer while it is mounted, so the toast stack keeps clear of the dialog's buttons.
+// One stable callback: a new one each render would re-register the footer, putting a re-rendered
+// dialog's footer on top of a dialog opened over it.
+const trackDialogFooter = (element: HTMLDivElement | null) =>
+  element ? registerDialogFooter(element) : undefined;
+
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
+    ref={trackDialogFooter}
+    data-slot="dialog-footer"
     className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
     {...props}
   />

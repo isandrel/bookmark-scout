@@ -51,6 +51,8 @@
 - 🧹 **Tidy up years of bookmarks.** Remove duplicates, find links that no longer work, strip tracking codes from web addresses, and set up your own rules that add tags and move bookmarks into folders. Cleanups and rules show you every change before it happens, and you can undo it.
 - 🕘 **See every change, and get deleted bookmarks back.** The History lists each change to your bookmarks, even ones made outside Bookmark Scout, and brings back what was deleted, even after the browser restarts. It stays on your computer.
 - ✨ **Optional AI suggestions.** Let AI pick the folder for you, using your own AI account or a free AI model on your own computer, such as the one built into Chrome. AI stays off until you turn it on.
+- 🎛️ **Make it your own.** In Settings, pick which commands the menus show and in what order, arrange the parts and buttons of the toolbar popup and the tools in the bookmark manager's sidebar, and choose where messages such as **Undo** appear. You can also change the keys you press in the bookmark manager and the popup.
+- 💾 **Backups you control.** Back up your settings to a file and choose what goes in: settings, prompts, rules, cover pictures, and, only if you choose, your AI keys. Protect the file with a password, see what a restore will change before anything happens, and undo it if you change your mind.
 - 🔒 **Private by design.** No account, no ads, no tracking, and nothing goes to the developer. Saving and searching even work offline.
 
 🌍 Available in English · 简体中文 · Español · Français · Português (Brasil) · Русский · Bahasa Indonesia · Deutsch · 日本語 · 한국어 · Italiano · 繁體中文.
