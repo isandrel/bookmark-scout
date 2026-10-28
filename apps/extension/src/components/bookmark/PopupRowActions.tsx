@@ -6,7 +6,9 @@
  * or Shift+F10) lists them all.
  *
  * The tree shares one ⋯ menu and one right-click menu (`PopupRowMenus`) instead of mounting a menu
- * per row: each row's ⋯ button is a detached trigger that hands the menu its row.
+ * per row: each row's ⋯ button is a plain button that opens the shared menu at itself. A Base UI
+ * trigger per row cost the virtualized tree about a third of every scrolling frame, since rows
+ * mount as they scroll in (popup.scroll.longFrames 8 before, 37 with them, 2026-10-28).
  */
 
 import { MoreHorizontal } from 'lucide-react';
@@ -16,6 +18,7 @@ import {
   type MouseEvent,
   type ReactNode,
   useContext,
+  useMemo,
   useState,
 } from 'react';
 import type { BookmarkTreeNode } from '@/types';
@@ -23,9 +26,17 @@ import type { BookmarkTreeNode } from '@/types';
 /** What a row's ⋯ button hands the shared menu. */
 type RowMenuPayload = { kind: PopupMenuKind; node: BookmarkTreeNode };
 
-type RowMenuHandle = ReturnType<typeof createDropdownMenuHandle<RowMenuPayload>>;
+type RowMenuControl = {
+  /** The node whose ⋯ menu is open, or null. */
+  openId: string | null;
+  /**
+   * Opens the ⋯ menu for `payload` at `anchor`. While it is open, the modal menu covers the page,
+   * so pressing the same ⋯ again is a press outside the menu and closes it.
+   */
+  open: (payload: RowMenuPayload, anchor: HTMLElement) => void;
+};
 
-const RowMenuContext = createContext<RowMenuHandle | null>(null);
+const RowMenuContext = createContext<RowMenuControl | null>(null);
 
 /**
  * A held Enter repeats keydown, and each repeat would activate the focused button again: after
@@ -46,7 +57,7 @@ function usePopupMenuSetting(kind: PopupMenuKind): string[] {
 /** A row's action buttons and its ⋯ button, for the row's hover overlay. */
 export function PopupRowButtons({ kind, node }: { kind: PopupMenuKind; node: BookmarkTreeNode }) {
   const { actionHost: host } = usePopupTree();
-  const handle = useContext(RowMenuContext);
+  const menu = useContext(RowMenuContext);
   const visible = usePopupMenuSetting(kind);
   const { buttons, more } = getPopupRowActions(kind, visible, node, host);
 
@@ -84,25 +95,24 @@ export function PopupRowButtons({ kind, node }: { kind: PopupMenuKind; node: Boo
           </Button>
         );
       })}
-      {more.length > 0 && handle ? (
-        <DropdownMenuTrigger
-          handle={handle}
-          payload={{ kind, node }}
+      {more.length > 0 && menu ? (
+        <Button
+          variant="ghost"
+          size="icon-xs"
           data-slot="row-menu"
-          render={
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              className="size-(--popup-tree-button)"
-              title={t('table_openMenu')}
-              aria-label={t('table_openMenu')}
-              onClick={(event: MouseEvent) => event.stopPropagation()}
-              onKeyDown={ignoreKeyRepeat}
-            />
-          }
+          className="size-(--popup-tree-button)"
+          title={t('table_openMenu')}
+          aria-label={t('table_openMenu')}
+          aria-haspopup="menu"
+          aria-expanded={menu.openId === node.id}
+          onClick={(event: MouseEvent<HTMLButtonElement>) => {
+            event.stopPropagation();
+            menu.open({ kind, node }, event.currentTarget);
+          }}
+          onKeyDown={ignoreKeyRepeat}
         >
           <MoreHorizontal className="h-3.5 w-3.5" />
-        </DropdownMenuTrigger>
+        </Button>
       ) : null}
     </>
   );
@@ -174,11 +184,19 @@ type PopupRowMenusProps = {
  * row (or on the new-folder input) leaves the browser's own menu alone.
  */
 export function PopupRowMenus({ children, resolveRow }: PopupRowMenusProps) {
-  const [handle] = useState(() => createDropdownMenuHandle<RowMenuPayload>());
   const [clicked, setClicked] = useState<RowMenuPayload | null>(null);
+  const [rowMenu, setRowMenu] = useState<(RowMenuPayload & { anchor: HTMLElement }) | null>(null);
+  const openId = rowMenu?.node.id ?? null;
+  const control = useMemo<RowMenuControl>(
+    () => ({
+      openId,
+      open: (payload, anchor) => setRowMenu({ ...payload, anchor }),
+    }),
+    [openId],
+  );
 
   return (
-    <RowMenuContext.Provider value={handle}>
+    <RowMenuContext.Provider value={control}>
       <ContextMenuRoot>
         <ContextMenuTrigger
           render={<div data-slot="popup-row-context-menu" className="contents" />}
@@ -197,14 +215,17 @@ export function PopupRowMenus({ children, resolveRow }: PopupRowMenusProps) {
           {clicked ? <RowMenuItems kind={clicked.kind} node={clicked.node} part="all" /> : null}
         </ContextMenuContent>
       </ContextMenuRoot>
-      <DropdownMenu handle={handle}>
-        {({ payload }) =>
-          payload ? (
-            <DropdownMenuContent align="end" data-testid="popup-row-menu">
-              <RowMenuItems kind={payload.kind} node={payload.node} part="more" />
-            </DropdownMenuContent>
-          ) : null
-        }
+      <DropdownMenu
+        open={rowMenu !== null}
+        onOpenChange={(open) => {
+          if (!open) setRowMenu(null);
+        }}
+      >
+        {rowMenu ? (
+          <DropdownMenuContent align="end" anchor={rowMenu.anchor} data-testid="popup-row-menu">
+            <RowMenuItems kind={rowMenu.kind} node={rowMenu.node} part="more" />
+          </DropdownMenuContent>
+        ) : null}
       </DropdownMenu>
     </RowMenuContext.Provider>
   );
