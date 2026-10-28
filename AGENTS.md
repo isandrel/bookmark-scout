@@ -155,7 +155,7 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 - extension end-to-end tests: `nx run extension:test:e2e`
 - extension Edge end-to-end tests: `nx run extension:test:e2e:edge`
 - extension Firefox end-to-end smoke tests: `nx run extension:test:e2e:firefox`
-- extension performance measurements: `nx run extension:test:perf`
+- extension performance measurements: `nx run extension:test:perf` (absolute budgets, one machine); `nx run extension:test:perf:compare -- --base <ref>` measures a base build and head in turn and fails only when head is slower (the `Performance` workflow)
 - extension AI features against a real provider: `nx run extension:test:live` (on demand; skipped without the `BS_LIVE_AI_*` variables)
 - MCP bridge end to end with the extension: `nx run extension:test:e2e:bridge`
 - website build: `nx run website:build`

@@ -135,3 +135,30 @@ list = [
 "search.heapKiB" = 20000
 "pageText.heapKiB" = 110000
 "rules.heapKiB" = 32000
+
+# Base against head on the same machine (compare.ts, `nx run extension:test:perf:compare`), which
+# the Performance workflow runs instead of the absolute budgets above. Added 2026-10-28: GitHub's
+# runners differ in speed, and one commit measured 1.3 to 1.7x slower on a slow runner (its job log
+# built the extension in 3.5 to 4.6 s, against 2.0 to 3.3 s on a fast one), failing manager.open at
+# 2,034 ms (budget 2,000) and jobs.reviewOpen at 544 ms (budget 400; 338 on a fast runner). A CPU
+# throttle calibrated by a JavaScript benchmark did not even it out, since those runners also draw
+# frames slower. The comparison builds a base commit, runs every scenario for base and head in turn
+# on one runner, and fails a budgeted metric only when head is slower than base by all of these.
+[compare]
+# The commit to compare against when none is given (--base). The workflow passes its own.
+default_base = "origin/main"
+# Times each scenario runs per side (each run takes run.repeats or jobs.repeats samples). One round
+# keeps the workflow near 30 minutes, about twice the plain suite.
+rounds = 1
+# Head's median over base's median above this.
+max_ratio = 1.25
+# And head's median above base's by more than this, per unit: frame times are 16.7 ms steps and a
+# scroll's long frame count varied from 4 to 11 between runs of one commit on one runner.
+min_delta = { ms = 50, frames = 10, KiB = 2048 }
+# And, when both sides have at least min_samples samples, a one-sided Wilcoxon rank-sum
+# (Mann-Whitney U) p-value at most this. Five samples a side reach 0.004 at best; jobs.* take one
+# sample a side, so the ratio and margin alone judge them.
+max_p_value = 0.05
+min_samples = 4
+# The base commit is checked out and built here, under the user's cache folder, then removed.
+base_checkout_dir = "bookmark-scout-perf-base"

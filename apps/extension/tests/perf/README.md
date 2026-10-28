@@ -9,8 +9,11 @@ bunx nx run extension:test:perf
 ```
 
 The target builds Chrome first. Results print as a table and are written to
-`test-results/perf/<scenario>.json`. The `Performance` workflow runs it nightly and on demand and
-keeps the JSON for 30 days; it is not a pull request check, because timings vary between runners.
+`test-results/perf/<scenario>.json`. A metric with a budget fails the run when its median is over
+it; these absolute budgets hold on one machine (a developer laptop), not across CI runners. The
+`Performance` workflow instead compares head with a base commit on the same runner
+([Base against head](#base-against-head)), nightly and on demand, and keeps its reports for 30
+days. It is not a pull request check.
 
 ## What is measured
 
@@ -43,8 +46,43 @@ An action that does not finish within 60 seconds is reported as timed out, and t
 - Each scenario runs `repeats` times; the report gives the median and the worst run.
 
 Library size, throttling, repeats, scrolling, the search queries, the page text corpus, the Smart
-Rules, and budgets are in `perf.toml`. A metric with a budget fails the run when its median is
-over it.
+Rules, budgets, and the comparison thresholds are in `perf.toml` (`perf-config.ts` reads it).
+
+## Base against head
+
+```bash
+bunx nx run extension:test:perf:compare -- --base <commit, tag, or branch> [--grep <pattern>]
+```
+
+GitHub's shared runners differ in speed by more than most regressions: one commit measured 1.3
+to 1.7x slower on a slow runner than on a fast one (October 2026), enough to fail `manager.open`
+and `jobs.reviewOpen` with no change to the code, and a CPU throttle calibrated by a JavaScript
+benchmark did not even it out, because those runners also draw frames slower. So CI compares
+instead of holding absolute numbers, as benchmark runners for noisy machines do
+([Tachometer](https://github.com/google/tachometer),
+[Bencher](https://bencher.dev/docs/how-to/track-benchmarks)):
+
+- `compare.ts` builds the base commit in a detached worktree under
+  `~/.cache/bookmark-scout-perf-base/` (removed afterwards; `[compare] default_base` when no
+  `--base` is given), then runs every scenario for base and head in turn, `[compare] rounds`
+  times, alternating which goes first so a runner that slows down favors neither. Both sides run
+  head's scenarios and harness, so the measuring code is the same; a base scenario that fails
+  (head changed what it waits for) leaves its metrics uncompared.
+- `compare-results.ts` pools each side's samples and fails a budgeted metric only when head's
+  median is over `max_ratio` times base's, over it by more than `min_delta` for the metric's unit,
+  and, when both sides have `min_samples` or more samples, a one-sided Wilcoxon rank-sum
+  (Mann-Whitney U) test gives a p-value of at most `max_p_value`. A head that timed out where
+  base did not also fails, and so does a head scenario that fails.
+- The table prints both sides' absolute medians and sample counts, the change, the p-value, and
+  the budget (marked `over` when head's median is over it, which alone does not fail). It is also
+  written to the job summary and to `test-results/perf-compare/` (`summary.md`,
+  `comparison.json`, and each side's scenario reports).
+
+The workflow's base is the commit of the last successful Performance run on `main`, so a
+regression keeps failing until it is fixed; to accept one on purpose, run the workflow by hand on
+`main` with `base` set to the current commit. On another branch the base is `main`. Locally,
+run the comparison through the machine-wide lock (`e2e-locked.sh <worktree> perf-compare`) with
+nothing else heavy running.
 
 ## Investigating a slow metric
 

@@ -16,62 +16,17 @@ import {
   type Worker,
 } from '@playwright/test';
 import { parse } from 'smol-toml';
-import { z } from 'zod';
+import type { z } from 'zod';
+import { median } from './compare-results';
+import { perfConfig } from './perf-config';
+import { PERF_ENV } from './perf-env';
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
 
 /** How long an action may take before the scenario fails instead of reporting a number. */
 const ACTION_TIMEOUT_MS = 60_000;
 
-const perfConfigSchema = z.strictObject({
-  library: z.strictObject({
-    areas: z.number().int().positive(),
-    topics_per_area: z.number().int().positive(),
-    pages_per_topic: z.number().int().nonnegative(),
-    url_base: z.url(),
-  }),
-  run: z.strictObject({
-    cpu_throttle: z.number().min(1),
-    ci_cpu_throttle: z.number().min(1),
-    repeats: z.number().int().positive(),
-    scroll_steps: z.number().int().positive(),
-    scroll_step_px: z.number().int().positive(),
-    long_frame_ms: z.number().positive(),
-  }),
-  jobs: z.strictObject({
-    repeats: z.number().int().positive(),
-    pause_after_items: z.number().int().positive(),
-    concurrency: z.number().int().positive(),
-  }),
-  search: z.strictObject({
-    queries: z.record(z.string(), z.string().min(1)),
-  }),
-  page_text: z.strictObject({
-    pages: z.number().int().positive(),
-    chars_per_page: z.number().int().positive(),
-    words: z.array(z.string().min(1)).min(2),
-    rare_word: z.string().min(1),
-    rare_every: z.number().int().positive(),
-    queries: z.record(z.string(), z.string().min(1)),
-  }),
-  rules: z.strictObject({
-    list: z
-      .array(
-        z.strictObject({
-          query: z.string().min(1),
-          add_tags: z.array(z.string().min(1)).default([]),
-          move_to: z.string().min(1).optional(),
-        }),
-      )
-      .min(1),
-  }),
-  /** Upper bounds for the median of each metric, in milliseconds; a metric without one is only reported. */
-  budgets_ms: z.record(z.string(), z.number().positive()),
-});
-
-export const perfConfig = perfConfigSchema.parse(
-  parse(readFileSync(path.join(directory, 'perf.toml'), 'utf8')),
-);
+export { perfConfig };
 
 /**
  * One of the extension's config files (`config/<name>.toml`), parsed with `schema`, so a scenario
@@ -514,12 +469,6 @@ export async function measureScroll(page: Page): Promise<ScrollResult> {
   return { distance, ...frames };
 }
 
-const median = (values: number[]) => {
-  const sorted = [...values].sort((a, b) => a - b);
-  const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
-};
-
 /** Collects samples per metric for one test and writes them, with their medians, to the report. */
 export class PerfReport {
   private readonly samples = new Map<string, number[]>();
@@ -573,12 +522,15 @@ export class PerfReport {
   }
 
   /**
-   * Writes `test-results/perf/<test>.json`, attaches it to the test, and fails the test (after
-   * writing) for each metric whose median is over its budget or that timed out.
+   * Writes `test-results/perf/<test>.json` (or into `BS_PERF_RESULTS_DIR`), attaches it to the
+   * test, and fails the test (after writing) for each metric whose median is over its budget or
+   * that timed out. Under the base-versus-head comparison (`BS_PERF_COMPARE=1`) it only reports:
+   * the comparison judges head against base instead (`compare-results.ts`).
    */
   async write(testInfo: TestInfo) {
     const rows = this.summary();
-    const out = path.resolve(directory, '../../test-results/perf');
+    const out =
+      process.env[PERF_ENV.resultsDir] ?? path.resolve(directory, '../../test-results/perf');
     mkdirSync(out, { recursive: true });
     const file = path.join(out, `${testInfo.titlePath.at(-1)?.replace(/\W+/g, '-')}.json`);
     const report = {
@@ -600,6 +552,7 @@ export class PerfReport {
         )
         .join('\n'),
     );
+    if (process.env[PERF_ENV.compare] === '1') return rows;
     for (const { metric, median: value, budget, timedOut } of rows) {
       if (budget === undefined) continue;
       expect.soft(timedOut, `${metric} timed out`).toBe(0);

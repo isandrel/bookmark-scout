@@ -91,7 +91,7 @@ unless the task explicitly concerns generated artifacts or debugging generated o
 - Edge end-to-end tests: `nx run extension:test:e2e:edge`
 - Firefox end-to-end smoke tests: `nx run extension:test:e2e:firefox`
 - AI features against a real provider: `nx run extension:test:live` (`tests/live/README.md`; skipped without the `BS_LIVE_AI_*` variables)
-- latency and scrolling measurements on a large library: `nx run extension:test:perf` (`tests/perf/README.md`; run it before and after a change meant to make something faster, and quote both numbers)
+- latency and scrolling measurements on a large library: `nx run extension:test:perf` (`tests/perf/README.md`; run it before and after a change meant to make something faster, and quote both numbers; `nx run extension:test:perf:compare -- --base <ref>` does both sides in one run)
 
 Equivalent scripts also exist in `apps/extension/package.json` when working directly in this app.
 

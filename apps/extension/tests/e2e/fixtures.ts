@@ -128,7 +128,8 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
   extensionBuild: ['chrome-mv3', { option: true, scope: 'worker' }],
   extensionPath: [
     async ({ extensionBuild }, use) => {
-      const extensionPath = path.join(distDirectory, extensionBuild);
+      // An absolute `extensionBuild` (the perf comparison's base build) is used as it is.
+      const extensionPath = path.resolve(distDirectory, extensionBuild);
       if (!existsSync(extensionPath)) {
         throw new Error(`Built extension not found at ${extensionPath}`);
       }
