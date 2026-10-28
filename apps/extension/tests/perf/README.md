@@ -65,7 +65,8 @@ instead of holding absolute numbers, as benchmark runners for noisy machines do
 - `compare.ts` builds the base commit in a detached worktree under
   `~/.cache/bookmark-scout-perf-base/` (removed afterwards; `[compare] default_base` when no
   `--base` is given), then runs every scenario for base and head in turn, `[compare] rounds`
-  times, alternating which goes first so a runner that slows down favors neither. Both sides run
+  times (`rounds_by_file` for a scenario that takes one sample per run), each in a fresh browser,
+  alternating which goes first so a runner that slows down favors neither. Both sides run
   head's scenarios and harness, so the measuring code is the same; a base scenario that fails
   (head changed what it waits for) leaves its metrics uncompared.
 - `compare-results.ts` pools each side's samples and fails a budgeted metric only when head's

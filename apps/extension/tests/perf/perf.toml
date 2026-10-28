@@ -147,18 +147,24 @@ list = [
 [compare]
 # The commit to compare against when none is given (--base). The workflow passes its own.
 default_base = "origin/main"
-# Times each scenario runs per side (each run takes run.repeats or jobs.repeats samples). One round
-# keeps the workflow near 30 minutes, about twice the plain suite.
+# Times each scenario runs per side, each time in a fresh browser (each run takes run.repeats or
+# jobs.repeats samples). One round keeps the workflow near 35 minutes, about twice the plain suite.
 rounds = 1
+# More rounds for a scenario file whose test takes one sample per run. Check Dead Links runs once
+# per browser (jobs.repeats = 1), and on 2026-10-28 one local comparison of identical code read
+# jobs.accept as 2,113 against 1,563 ms; three rounds give the rank-sum test three samples a side,
+# for about 10 more minutes on a runner.
+rounds_by_file = { "jobs.perf.spec.ts" = 3 }
 # Head's median over base's median above this.
 max_ratio = 1.25
 # And head's median above base's by more than this, per unit: frame times are 16.7 ms steps and a
 # scroll's long frame count varied from 4 to 11 between runs of one commit on one runner.
 min_delta = { ms = 50, frames = 10, KiB = 2048 }
 # And, when both sides have at least min_samples samples, a one-sided Wilcoxon rank-sum
-# (Mann-Whitney U) p-value at most this. Five samples a side reach 0.004 at best; jobs.* take one
-# sample a side, so the ratio and margin alone judge them.
+# (Mann-Whitney U) p-value at most this. Five samples a side reach 0.004 at best and three reach
+# 0.05, only when every head sample is slower than every base sample; with fewer, the ratio and
+# margin alone judge.
 max_p_value = 0.05
-min_samples = 4
+min_samples = 3
 # The base commit is checked out and built here, under the user's cache folder, then removed.
 base_checkout_dir = "bookmark-scout-perf-base"

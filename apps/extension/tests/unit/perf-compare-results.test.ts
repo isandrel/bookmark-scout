@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   compareMetric,
@@ -14,6 +16,7 @@ import { type CompareSettings, perfConfig } from '../perf/perf-config';
 const settings: CompareSettings = {
   default_base: 'origin/main',
   rounds: 1,
+  rounds_by_file: {},
   max_ratio: 1.25,
   min_delta: { ms: 50, frames: 10 },
   max_p_value: 0.05,
@@ -260,6 +263,12 @@ describe('compareResults', () => {
 });
 
 describe('perf.toml [compare]', () => {
+  it('gives extra rounds only to scenario files that exist', () => {
+    for (const file of Object.keys(perfConfig.compare.rounds_by_file)) {
+      expect(existsSync(path.resolve(import.meta.dirname, '../perf', file)), file).toBe(true);
+    }
+  });
+
   it('has a margin for the unit of every budgeted metric the scenarios report', () => {
     // Budgets are in ms unless the metric counts frames or KiB of heap (perf.toml, [budgets_ms]).
     const unitOf = (metric: string) =>

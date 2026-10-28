@@ -10,8 +10,9 @@
  * detached worktree of `<ref>` (default `[compare] default_base`) under the user's cache folder,
  * which is removed afterwards; head's own commit with nothing changed since reuses head's build.
  * Both sides run head's scenarios and harness, so the measuring code is the same. Each scenario
- * runs for base and head in turn, `[compare] rounds` times, and the side that goes first
- * alternates. A base scenario that fails (a selector head changed) leaves its metrics uncompared.
+ * runs for base and head in turn, `[compare] rounds` times (or its file's `rounds_by_file`), each
+ * time in a fresh browser, and the side that goes first alternates. A base scenario that fails (a
+ * selector head changed) leaves its metrics uncompared.
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
@@ -101,14 +102,17 @@ const listedSuiteSchema: z.ZodType<ListedSuite> = z.lazy(() =>
 const listSchema = z.object({ suites: z.array(listedSuiteSchema) });
 
 /** The perf scenarios as `file:line` locations, in Playwright's order. */
-function listScenarios(grep: string | undefined): { location: string; title: string }[] {
+function listScenarios(
+  grep: string | undefined,
+): { file: string; location: string; title: string }[] {
   const json = output(
     [...PLAYWRIGHT_PERF, '--list', '--reporter=json', ...(grep ? ['--grep', grep] : [])],
     appRoot,
   );
   const { suites } = listSchema.parse(JSON.parse(json));
-  const walk = (suite: ListedSuite): { location: string; title: string }[] => [
+  const walk = (suite: ListedSuite): { file: string; location: string; title: string }[] => [
     ...(suite.specs ?? []).map((spec) => ({
+      file: spec.file,
       location: `${spec.file}:${spec.line}`,
       title: spec.title,
     })),
@@ -151,8 +155,9 @@ function main() {
   const failed: Record<Side, string[]> = { base: [], head: [] };
   rmSync(RESULTS, { recursive: true, force: true });
   try {
-    const { rounds } = perfConfig.compare;
-    for (const [index, { location, title }] of scenarios.entries()) {
+    for (const [index, { file, location, title }] of scenarios.entries()) {
+      const rounds =
+        perfConfig.compare.rounds_by_file[path.basename(file)] ?? perfConfig.compare.rounds;
       for (let round = 0; round < rounds; round++) {
         // Alternate which side goes first, so a runner that slows down over time favors neither.
         const order: Side[] = (index + round) % 2 === 0 ? ['base', 'head'] : ['head', 'base'];
