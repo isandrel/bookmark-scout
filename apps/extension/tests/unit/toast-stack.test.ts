@@ -1,19 +1,13 @@
 import { createElement, type ReactElement } from 'react';
-import { renderToString } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import { setLanguage } from '@/hooks/use-i18n';
 import { reducer, toast, useToast } from '@/hooks/use-toast';
 import { BOOKMARK_DELETION_UNDO_WINDOW_MS } from '@/services/bookmarks';
+import { readHook } from './read-hook';
 
 /** The toasts as a component sees them right now. */
 function currentToasts() {
-  let toasts: ReturnType<typeof useToast>['toasts'] = [];
-  function Probe() {
-    toasts = useToast().toasts;
-    return null;
-  }
-  renderToString(createElement(Probe));
-  return toasts;
+  return readHook(useToast).toasts;
 }
 
 describe('toast helpers', () => {
