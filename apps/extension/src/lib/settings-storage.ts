@@ -180,8 +180,11 @@ function composeSettings(
   });
 }
 
-/** Whether a registered migration keeps `key` in the settings item for an earlier release. */
-const isKeptInSettingsItem = (key: string) =>
+/**
+ * Whether a registered migration keeps `key` in the settings item for an earlier release: a copy
+ * of a setting stored elsewhere, which the settings writer keeps current, not a setting of the item.
+ */
+export const isKeptInSettingsItem = (key: string) =>
   isSettingsKey(key) && MIGRATIONS.some((migration) => migration.keepsInSettingsItem?.(key));
 
 /** The list settings a registered migration keeps copies of in the settings item. */
@@ -472,34 +475,105 @@ export function registerSettingsSaveListener(): void {
   });
 }
 
+/** What `resetSettings` changed, for `undoResetSettings`. */
+export type SettingsReset = {
+  /** The settings before the reset. */
+  settings: Settings;
+  /**
+   * The entries the reset removed from the settings item that a registered migration keeps there
+   * for an earlier release (`keepsInSettingsItem`, `keepsAtDefault`), as they were stored: the
+   * settings alone do not say whether the item held them, or in which form.
+   */
+  keptForMigrations: StoredOverrides;
+};
+
+/** Whether a registered migration keeps `key` in `settingsItem`, beyond what settings need. */
+const isKeptForMigrations = (key: string, settingsItem: StoredOverrides) =>
+  isKeptInSettingsItem(key) ||
+  (isSettingsKey(key) &&
+    MIGRATIONS.some((migration) => migration.keepsAtDefault?.(key, settingsItem)));
+
 /**
  * Reset every setting this release knows to its default, in every scope (synced across devices
  * and this device's own), with the copies of lists a migration keeps in the settings item.
- * Resolves to the settings before, for `undoResetSettings`.
+ * Resolves to what it changed, for `undoResetSettings`.
  */
-export async function resetSettings(): Promise<Settings> {
+export async function resetSettings(): Promise<SettingsReset> {
+  let keptForMigrations: StoredOverrides = {};
   const { before } = await changeSettings(
     () => defaultSettings,
-    (scope, stored) =>
-      Object.fromEntries(
+    (scope, stored) => {
+      if (scope === 'sync') {
+        keptForMigrations = Object.fromEntries(
+          Object.entries(stored).filter(([key]) => isKeptForMigrations(key, stored)),
+        );
+      }
+      return Object.fromEntries(
         Object.entries(stored).filter(
           ([key]) =>
             !isSettingsKey(key) ||
             (getSettingScope(key) !== scope && !(scope === 'sync' && isKeptInSettingsItem(key))),
         ),
-      ),
+      );
+    },
   );
-  return before;
+  return { settings: before, keptForMigrations };
 }
 
 /**
- * Undoes `resetSettings`: every setting that `previous` had changed from its default gets that
- * value back, in its own scope. A setting changed again since the reset keeps the newer value
- * only where `previous` had left it at its default.
+ * Undoes `resetSettings`: every setting that `reset.settings` had changed from its default gets
+ * that value back, in its own scope. A setting changed again since the reset keeps the newer value
+ * only where `reset.settings` had left it at its default. What the reset removed from the settings
+ * item for an earlier release goes back as it was stored, for each setting back at its value from
+ * before the reset that this undo did not store there itself, so a device still on that release,
+ * or one that runs the migration later, sees the settings the user undid the reset to.
  */
-export async function undoResetSettings(previous: Settings): Promise<void> {
-  const { errors } = await saveValidSettings(getChangedSettings(defaultSettings, previous));
+export async function undoResetSettings(reset: SettingsReset): Promise<void> {
+  const previous = reset.settings;
+  let errors: SettingsFieldErrors = {};
+  await changeSettings(
+    (current) => {
+      const result = validateSettingsUpdate(current, getChangedSettings(defaultSettings, previous));
+      errors = result.errors;
+      return result.settings;
+    },
+    (scope, stored, before, after) => {
+      const next = nextOverrides(stored, scope, before, after);
+      if (scope !== 'sync') return next;
+      for (const [key, value] of Object.entries(reset.keptForMigrations)) {
+        if (isSettingsKey(key) && !(key in next) && isSameJson(after[key], previous[key])) {
+          next[key] = value;
+        }
+      }
+      return next;
+    },
+  );
   if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
+}
+
+/**
+ * After a change written to the settings items directly (Restore settings), keeps the copies of
+ * lists a registered migration keeps in the settings item current, as `changeSettings` does on
+ * every change: in a settings item that holds them, each list changed since `previous` (the
+ * settings before that change) is copied there, or removed at its default; the others stay as
+ * stored. A settings item without them is not given any, and with no migration keeping any,
+ * nothing is read or written.
+ */
+export async function refreshKeptSettingsCopies(previous: Settings): Promise<void> {
+  if (KEPT_LIST_KEYS.length === 0) return;
+  await changeSettings(
+    (current) => current,
+    (scope, stored, _before, after) => {
+      if (scope !== 'sync' || !KEPT_LIST_KEYS.some((key) => key in stored)) return stored;
+      const next = { ...stored };
+      for (const key of KEPT_LIST_KEYS) {
+        if (isSameJson(after[key], previous[key])) continue;
+        if (isSameJson(after[key], defaultSettings[key])) delete next[key];
+        else next[key] = after[key];
+      }
+      return next;
+    },
+  );
 }
 
 /**

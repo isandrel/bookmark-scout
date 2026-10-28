@@ -78,10 +78,11 @@ export type StorageMigration = {
   /**
    * Whether the settings writer keeps a copy of `key`, a setting this release keeps elsewhere, in
    * the settings item, where an earlier release still reads it. Every change to the setting is
-   * written to the copy too (or removes it at the default), and Reset removes it, so neither that
-   * release nor a device that runs this migration later reads a value changed since. Once no
-   * registered migration keeps it, the next settings save drops it; it is also dropped when the
-   * item would not fit the per-item quota with it.
+   * written to the copy too (or removes it at the default), as is each list Restore settings
+   * changes; Reset removes it, and its Undo puts it back as it was stored, so neither that release
+   * nor a device that runs this migration later reads a value changed since. Once no registered
+   * migration keeps it, the next settings save drops it; it is also dropped when the item would
+   * not fit the per-item quota with it.
    */
   keepsInSettingsItem?(key: keyof Settings): boolean;
   /**

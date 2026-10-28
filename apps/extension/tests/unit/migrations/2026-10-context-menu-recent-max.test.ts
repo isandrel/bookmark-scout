@@ -11,6 +11,7 @@ import {
   resetSettings,
   runStorageMigrations,
   saveSettings,
+  undoResetSettings,
 } from '@/lib/settings-storage';
 import { upgradeBackupItems } from '@/lib/storage/migrations';
 import { contextMenuRecentMax } from '@/lib/storage/migrations/2026-10-context-menu-recent-max';
@@ -71,6 +72,28 @@ describe("the right-click menu's recent folder count", () => {
     // Reset removes both, so nothing is filled again either.
     await resetSettings();
     expect(await readStoredData(STORAGE_ITEMS.settings)).toBeUndefined();
+  });
+
+  it('keeps the menu count at its default when Reset All is undone', async () => {
+    await seedStored(STORAGE_ITEMS.settings, { recentFoldersMax: CHANGED });
+    await runStorageMigrations();
+    await saveSettings({ contextMenuRecentMax: menuDefault });
+    const reset = await resetSettings();
+    await undoResetSettings(reset);
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
+      recentFoldersMax: CHANGED,
+      contextMenuRecentMax: menuDefault,
+    });
+    // Another device that runs the migration later does not fill it with the popup count.
+    await fakeBrowser.storage.local.clear();
+    await runStorageMigrations();
+    expect((await getSettings()).contextMenuRecentMax).toBe(menuDefault);
+
+    // A menu count changed since the reset stays.
+    const again = await resetSettings();
+    await saveSettings({ contextMenuRecentMax: CHANGED });
+    await undoResetSettings(again);
+    expect((await getSettings()).contextMenuRecentMax).toBe(CHANGED);
   });
 
   it('stores the menu count at its default only for users who have the popup count', async () => {

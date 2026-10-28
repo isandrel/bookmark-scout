@@ -196,7 +196,7 @@ const OptionsPage: React.FC = () => {
 
   const handleReset = async () => {
     try {
-      const previous = await resetToDefaults();
+      const reset = await resetToDefaults();
       savedRef.current = defaultSettings;
       setValues(defaultSettings);
       clearDrafts();
@@ -205,7 +205,7 @@ const OptionsPage: React.FC = () => {
         description: t('toast_settingsResetDescription'),
         onUndo: async () => {
           try {
-            await undoResetSettings(previous);
+            await undoResetSettings(reset);
             clearDrafts();
             toast.success({ title: t('toast_settingsResetUndone') });
           } catch (error) {
