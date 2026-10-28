@@ -40,6 +40,7 @@ function createLocalizedLink(page: DocsPageType) {
   const locale = page.locale ?? DEFAULT_LOCALE;
   if (locale === DEFAULT_LOCALE) return RelativeLink;
 
+  // biome-ignore lint/correctness/noComponentHookFactories: a per-page factory like Fumadocs' createRelativeLink; a stateless server component rendered once per page in the static export.
   return function LocalizedLink({
     href,
     ...props

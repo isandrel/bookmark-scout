@@ -19,7 +19,7 @@
             "!{projectRoot}/tests/**/*",
             "!{projectRoot}/playwright.config.ts",
             "!{projectRoot}/vitest.config.ts",
-            "!{projectRoot}/biome.json",
+            "!{projectRoot}/biome.jsonc",
             "!{projectRoot}/eslint.config.mjs",
             "!{projectRoot}/*.md"
         ]

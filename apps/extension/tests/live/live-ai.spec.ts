@@ -96,7 +96,7 @@ test('[live provider] popup folder suggestions name real folders and save the pa
     .locator('[data-slot=ai-suggestion-list] button');
   await expect(suggestions.first()).toBeVisible({ timeout: AI_TIMEOUT });
   // The path, without the confidence after it.
-  const path = (await suggestions.first().locator('span').first().innerText()).trim();
+  const path = ((await suggestions.first().locator('span').first().textContent()) ?? '').trim();
   const lastSegment = path
     .split('/')
     .map((segment) => segment.trim())
@@ -156,7 +156,7 @@ async function waitForAnswer(chat: Locator, page: Page, minMessages: number) {
   while (Date.now() < deadline) {
     const alert = chat.getByRole('alert');
     if ((await alert.count()) > 0) {
-      throw new Error(`Ask AI showed an error: ${await alert.first().innerText()}`);
+      throw new Error(`Ask AI showed an error: ${await alert.first().textContent()}`);
     }
     const count = await messages.count();
     const idle = (await chat.getByRole('button', { name: 'Stop', exact: true }).count()) === 0;
