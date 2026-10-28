@@ -783,8 +783,8 @@ test('a password-protected settings backup saves and restores with Web Crypto in
     20_000,
     'The protected parts did not unlock',
   );
-  // The Backup exported notice may still cover the dialog's corner; the test is not about pointing.
-  await extension.driver.executeScript('arguments[0].click()', importButton);
+  // A real click: the Backup exported notice keeps clear of the dialog's buttons.
+  await importButton.click();
   await extension.find('[data-testid="backup-import-result"]');
   await expect.poll(async () => (await readSettings(extension)).theme).toBe('dark');
 });

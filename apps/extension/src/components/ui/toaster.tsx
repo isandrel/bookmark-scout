@@ -79,12 +79,15 @@ function ToastStack({
     return () => cancelAnimationFrame(frame);
   }, [toasts.length]);
 
+  const clearance = useToastDialogClearance(viewportRef, position);
+
   const newestId = toasts.find((toast) => toast.transitionStatus !== 'ending')?.id;
 
   return (
     <ToastViewport
       ref={viewportRef}
       position={position}
+      clearance={clearance}
       aria-label={t('toast_regionLabel', VIEWPORT_HOTKEY)}
     >
       {[...toasts].reverse().map((toast) => {
