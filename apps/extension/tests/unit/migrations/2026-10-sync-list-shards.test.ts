@@ -247,23 +247,65 @@ describe('each list setting in its own item', () => {
     expect((await getSettings()).urlCleanerRemoveParams).toEqual(['since']);
   });
 
-  it('puts back the copies 0.3.4 reads, as they were stored, when a settings restore is undone', async () => {
+  it.each([
+    [
+      'replace',
+      // Only the list the file does not have.
+      1,
+      { askAiDisabledActions: ['checkLinks'], privacyScannerSensitiveParams: ['secret'] },
+    ],
+    [
+      'merge',
+      0,
+      {
+        askAiDisabledActions: ['checkLinks'],
+        privacyScannerSensitiveParams: ['secret'],
+        urlCleanerRemoveParams: ['ref'],
+      },
+    ],
+  ] as const)(
+    'keeps the copies 0.3.4 reads current when settings are restored with %s, and Undo import puts them back',
+    async (strategy, removed, copies) => {
+      stubManifestVersion();
+      installFakeBookmarks([]);
+      // 0.3.4's item menu in its own form, which no restore here changes.
+      await seedStored(STORAGE_ITEMS.settings, { ...SETTINGS_0_3_4, managerMenuActions: ['edit'] });
+      await runStorageMigrations();
+      const { json } = await makeBackupFile({ categories: ['settings'], protection: 'none' });
+      await saveSettings({
+        theme: 'light',
+        askAiDisabledActions: ['deleteBookmarks'],
+        privacyScannerSensitiveParams: defaultSettings.privacyScannerSensitiveParams,
+        urlCleanerRemoveParams: ['ref'],
+      });
+      const settingsItem = await readStoredRaw(STORAGE_ITEMS.settings);
+      const lists = await listItems();
+
+      const { operationId, outcomes } = await restoreParts(json, { settings: strategy });
+      // The copies are not settings of the item: never counted as removed or skipped.
+      expect(outcomes.settings).toMatchObject({ removed, skipped: 0, mismatches: 0 });
+      expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({
+        theme: 'dark',
+        managerMenuActions: ['edit'],
+        ...copies,
+      });
+      expect(await getSettings()).toMatchObject({ theme: 'dark', ...copies });
+
+      await undoBackupImport(operationId);
+      expect(await readStoredRaw(STORAGE_ITEMS.settings)).toEqual(settingsItem);
+      expect(await listItems()).toEqual(lists);
+    },
+  );
+
+  it('gives no 0.3.4 copies to a user who had none when settings are restored', async () => {
     stubManifestVersion();
     installFakeBookmarks([]);
-    await seedStored(STORAGE_ITEMS.settings, { ...SETTINGS_0_3_4, managerMenuActions: ['edit'] });
-    await runStorageMigrations();
+    await saveSettings({ theme: 'dark', askAiDisabledActions: ['checkLinks'] });
     const { json } = await makeBackupFile({ categories: ['settings'], protection: 'none' });
-    await saveSettings({ theme: 'light', urlCleanerRemoveParams: ['ref'] });
-    const settingsItem = await readStoredRaw(STORAGE_ITEMS.settings);
-    const lists = await listItems();
-
-    const { operationId } = await restoreParts(json, { settings: 'replace' });
-    expect((await getSettings()).urlCleanerRemoveParams).toEqual(
-      defaultSettings.urlCleanerRemoveParams,
-    );
-    await undoBackupImport(operationId);
-    expect(await readStoredRaw(STORAGE_ITEMS.settings)).toEqual(settingsItem);
-    expect(await listItems()).toEqual(lists);
+    await saveSettings({ theme: 'light', askAiDisabledActions: ['deleteBookmarks'] });
+    await restoreParts(json, { settings: 'replace' });
+    expect(await readStoredData(STORAGE_ITEMS.settings)).toEqual({ theme: 'dark' });
+    expect((await listItems()).askAiDisabledActions).toEqual(['checkLinks']);
   });
 
   it('saves the settings item without 0.3.4 lists, once, when they no longer fit beside it', async () => {

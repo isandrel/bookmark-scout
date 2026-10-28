@@ -371,18 +371,27 @@ function singleItem<T>(id: StorageItemId, source: StoredValue<T>, isEmpty: (valu
   });
 }
 
-/** Stored settings overrides of one scope, as entries by setting key; invalid ones are skipped. */
+/**
+ * Stored settings overrides of one scope, as entries by setting key; invalid ones are skipped.
+ * Copies an earlier release reads in the settings item (`isKeptInSettingsItem`) are not entries:
+ * they are not exported, counted, or replaced, and stay as stored until the settings part makes
+ * them follow the lists it restored (`settingsHandler`).
+ */
 function overridesItem(
   id: StorageItemId,
   source: StoredValue<Record<string, unknown>>,
   scope: SettingScope,
 ) {
+  const isCopy = (key: string) => scope === 'sync' && isKeptInSettingsItem(key);
   return valueItem(
     id,
     source,
     {
-      toEntries: (value) => new Map(Object.entries(value)),
-      fromEntries: (entries) => Object.fromEntries(entries),
+      toEntries: (value) => new Map(Object.entries(value).filter(([key]) => !isCopy(key))),
+      fromEntries: (entries, current) => ({
+        ...Object.fromEntries(entries),
+        ...Object.fromEntries(Object.entries(current).filter(([key]) => isCopy(key))),
+      }),
       accept: (key, value) => isValidSetting(key, value, scope),
     },
     { settingsScope: scope },
@@ -822,6 +831,24 @@ function itemsHandler(category: string): CategoryHandler<ItemsSection> {
 const jsonBytes = (value: unknown) => new TextEncoder().encode(JSON.stringify(value)).length;
 
 // ---------------------------------------------------------------------------------------------
+// Settings: copies of lists an earlier release reads in the settings item follow the lists.
+
+function settingsHandler(): CategoryHandler<ItemsSection> {
+  const base = itemsHandler('settings');
+  return {
+    ...base,
+    async apply(section, choice, context) {
+      const previous = await settingsValue.get();
+      const outcome = await base.apply(section, choice, context);
+      // The lists are restored after the settings item, so their copies are brought up to date
+      // once both are written, as every other change to a list does.
+      await refreshKeptSettingsCopies(previous);
+      return outcome;
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------------------------
 // Prompts: the index lists the prompts stored, in order.
 
 function promptsHandler(): CategoryHandler<ItemsSection> {
@@ -1231,7 +1258,7 @@ function coversHandler(): CategoryHandler<CoversSection> {
 
 /** Every part's handler by id; a part in the config without one fails the backup tests. */
 export const CATEGORY_HANDLERS: Readonly<Record<string, CategoryHandler<never>>> = {
-  settings: itemsHandler('settings'),
+  settings: settingsHandler(),
   deviceSettings: itemsHandler('deviceSettings'),
   views: itemsHandler('views'),
   prompts: promptsHandler(),

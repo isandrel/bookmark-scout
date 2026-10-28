@@ -180,8 +180,11 @@ function composeSettings(
   });
 }
 
-/** Whether a registered migration keeps `key` in the settings item for an earlier release. */
-const isKeptInSettingsItem = (key: string) =>
+/**
+ * Whether a registered migration keeps `key` in the settings item for an earlier release: a copy
+ * of a setting stored elsewhere, which the settings writer keeps current, not a setting of the item.
+ */
+export const isKeptInSettingsItem = (key: string) =>
   isSettingsKey(key) && MIGRATIONS.some((migration) => migration.keepsInSettingsItem?.(key));
 
 /** The list settings a registered migration keeps copies of in the settings item. */
@@ -546,6 +549,31 @@ export async function undoResetSettings(reset: SettingsReset): Promise<void> {
     },
   );
   if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
+}
+
+/**
+ * After a change written to the settings items directly (Restore settings), keeps the copies of
+ * lists a registered migration keeps in the settings item current, as `changeSettings` does on
+ * every change: in a settings item that holds them, each list changed since `previous` (the
+ * settings before that change) is copied there, or removed at its default; the others stay as
+ * stored. A settings item without them is not given any, and with no migration keeping any,
+ * nothing is read or written.
+ */
+export async function refreshKeptSettingsCopies(previous: Settings): Promise<void> {
+  if (KEPT_LIST_KEYS.length === 0) return;
+  await changeSettings(
+    (current) => current,
+    (scope, stored, _before, after) => {
+      if (scope !== 'sync' || !KEPT_LIST_KEYS.some((key) => key in stored)) return stored;
+      const next = { ...stored };
+      for (const key of KEPT_LIST_KEYS) {
+        if (isSameJson(after[key], previous[key])) continue;
+        if (isSameJson(after[key], defaultSettings[key])) delete next[key];
+        else next[key] = after[key];
+      }
+      return next;
+    },
+  );
 }
 
 /**

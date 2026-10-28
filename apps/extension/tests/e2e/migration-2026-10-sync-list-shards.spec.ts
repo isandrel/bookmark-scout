@@ -3,6 +3,13 @@
  * (`src/lib/storage/migrations/2026-10-sync-list-shards.ts`); deleted with it.
  */
 import { storageAreaKey } from '../../src/lib/storage/registry';
+import {
+  backupPart,
+  openBackupDialog,
+  openRestore,
+  saveBackup,
+  selectOnlyParts,
+} from './backup-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { readSettings, readStored, STORAGE_ITEMS, writeStoredItems } from './storage';
 
@@ -108,4 +115,59 @@ test('an update copies lists kept together, or on this device, into an item each
     privacyScannerSensitiveParams: ['e2e_secret'],
     managerOrganizeMenu: ['addFolder', 'sortByName'],
   });
+});
+
+test('Restore settings with Replace keeps the copies 0.3.4 reads following the lists, and Undo import puts them back', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // 0.3.4's lists in the settings item, moved by the update and kept there for 0.3.4.
+  const settings = {
+    language: 'en',
+    privacyScannerSensitiveParams: ['e2e_secret'],
+    urlCleanerRemoveParams: ['utm_e2e', 'ref_e2e'],
+  };
+  await writeStoredItems(extensionWorker, [[STORAGE_ITEMS.settings, settings]]);
+  await extensionWorker.evaluate(() => {
+    const installed = chrome.runtime.onInstalled as unknown as {
+      dispatch(details: object): void;
+    };
+    installed.dispatch({ reason: 'update', previousVersion: '0.3.4' });
+  });
+  await expect
+    .poll(() => readStored(extensionWorker, STORAGE_ITEMS.settingsList, 'urlCleanerRemoveParams'))
+    .toEqual(['utm_e2e', 'ref_e2e']);
+
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=maintenance`);
+  const backup = await openBackupDialog(page);
+  await selectOnlyParts(backup, ['settings']);
+  const { raw } = await saveBackup(page, backup);
+
+  const params = page.locator('[data-setting="urlCleanerRemoveParams"]');
+  await params.getByRole('button', { name: 'Remove ref_e2e' }).click();
+  const changed = { ...settings, urlCleanerRemoveParams: ['utm_e2e'] };
+  await expect.poll(() => readStored(extensionWorker, STORAGE_ITEMS.settings)).toEqual(changed);
+
+  const review = await openRestore(page, raw);
+  await expect(review.getByText('Counting…')).toHaveCount(0);
+  await backupPart(review, 'settings').getByRole('radio', { name: 'Replace' }).click();
+  await review.getByRole('button', { name: /^Import \(\d+\)$/ }).click();
+  await page
+    .getByRole('dialog', { name: 'Replace these parts?' })
+    .getByRole('button', { name: 'Replace' })
+    .click();
+  await expect(review.getByTestId('backup-import-result')).toBeVisible();
+  // The restored list, and the copy a device still on 0.3.4 reads, as the backup had them.
+  await expect.poll(() => readStored(extensionWorker, STORAGE_ITEMS.settings)).toEqual(settings);
+  expect(
+    await readStored(extensionWorker, STORAGE_ITEMS.settingsList, 'urlCleanerRemoveParams'),
+  ).toEqual(['utm_e2e', 'ref_e2e']);
+
+  await review.getByRole('button', { name: 'Undo import' }).click();
+  await expect(toastRegion(page).getByText('✓ Import undone', { exact: true })).toBeVisible();
+  await expect.poll(() => readStored(extensionWorker, STORAGE_ITEMS.settings)).toEqual(changed);
+  expect(
+    await readStored(extensionWorker, STORAGE_ITEMS.settingsList, 'urlCleanerRemoveParams'),
+  ).toEqual(['utm_e2e']);
 });

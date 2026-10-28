@@ -7,7 +7,7 @@ import {
   setDateTimeFormat,
   setLanguage,
 } from '@/hooks/use-i18n';
-import { DATE_FORMAT_IDS, TIME_FORMAT_IDS } from '@/lib/date-formats';
+import { DATE_FORMAT_IDS, dateTimeFormatOptions, TIME_FORMAT_IDS } from '@/lib/date-formats';
 // Hands the default formats to the date formatter, as every page does by reading settings.
 import '@/lib/settings-schema';
 import { readConfigToml } from '../config-files';
@@ -20,8 +20,16 @@ describe('formatDateTime', () => {
   it('formats dates in the selected extension language', () => {
     setLanguage('ja');
     expect(formatDateTime(SAMPLE)).toBe('2026/9/24 15:05:49');
+    // "As in my language" follows the browser's own date data (ICU and CLDR), which changes
+    // between versions: Korean numeric dates are "2026. 9. 24." with the Node on CI and "2026/9/24"
+    // with CLDR 49 (Node 26.12, ICU 79), and Chrome and Firefox versions differ the same way.
+    // So the expectation is built as the app builds it, and checked to be Korean, year first.
     setLanguage('ko');
-    expect(formatDateTime(SAMPLE.getTime())).toMatch(/^2026\. 9\. 24\./);
+    const korean = formatDateTime(SAMPLE.getTime());
+    expect(korean).toBe(
+      new Intl.DateTimeFormat('ko', dateTimeFormatOptions('dateTime').options).format(SAMPLE),
+    );
+    expect(korean).toMatch(/^2026\D+9\D+24\D.*오후 3:05:49$/);
     setLanguage('en');
     expect(formatDateTime(SAMPLE)).toBe('9/24/2026, 3:05:49 PM');
   });
