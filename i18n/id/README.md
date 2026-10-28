@@ -51,6 +51,8 @@
 - 🧹 **Rapikan bookmark bertahun-tahun.** Hapus duplikat, temukan link yang sudah tidak berfungsi, buang kode pelacakan dari alamat web, dan buat aturan Anda sendiri yang menambahkan tag dan memindahkan bookmark ke folder. Perapian dan aturan menunjukkan setiap perubahan kepada Anda sebelum terjadi, dan Anda bisa mengurungkannya.
 - 🕘 **Lihat setiap perubahan, dan kembalikan bookmark yang terhapus.** Histori mencantumkan setiap perubahan pada bookmark Anda, termasuk yang dibuat di luar Bookmark Scout, dan mengembalikan yang dihapus, bahkan setelah browser dimulai ulang. Semuanya tetap di komputer Anda.
 - ✨ **Saran AI opsional.** Biarkan AI memilihkan folder untuk Anda, dengan akun AI Anda sendiri atau model AI gratis di komputer Anda sendiri, seperti yang sudah ada di Chrome. AI tetap nonaktif sampai Anda mengaktifkannya.
+- 🎛️ **Sesuaikan sesuka Anda.** Di Setelan, pilih perintah yang tampil di menu beserta urutannya, atur bagian dan tombol popup toolbar serta alat di bilah samping pengelola bookmark, dan tentukan di mana pesan seperti **Urungkan** muncul. Anda juga bisa mengubah pintasan keyboard di pengelola bookmark dan popup.
+- 💾 **Cadangan dalam kendali Anda.** Cadangkan setelan Anda ke sebuah file dan pilih isinya: setelan, prompt, aturan, sampul, dan, hanya jika Anda memilihnya, kunci AI Anda. Lindungi file dengan kata sandi, lihat apa yang akan berubah sebelum pemulihan dilakukan, dan urungkan jika Anda berubah pikiran.
 - 🔒 **Privat sejak dirancang.** Tanpa akun, tanpa iklan, tanpa pelacakan, dan tidak ada yang dikirim ke developer. Menyimpan dan menelusuri bahkan berfungsi saat offline.
 
 🌍 Tersedia dalam English · 简体中文 · Español · Français · Português (Brasil) · Русский · Bahasa Indonesia · Deutsch · 日本語 · 한국어 · Italiano · 繁體中文.
