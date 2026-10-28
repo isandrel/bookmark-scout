@@ -38,11 +38,21 @@ test('a popup row ⋯ menu lists the configured actions and hiding one in Option
   // Delete stays the row's button; the open commands are in ⋯.
   await row.hover();
   await expect(row.getByRole('button', { name: 'Delete bookmark' })).toBeVisible();
-  await row.getByRole('button', { name: 'Open menu' }).click();
+  const menuButton = row.getByRole('button', { name: 'Open menu' });
+  await menuButton.click();
   expect(await menuItemNames(page)).toEqual(
     expect.arrayContaining(['Open in new tab', 'Open in new window']),
   );
+  // The ⋯ button opens the tree's shared menu at itself, and pressing it again closes the menu.
+  await expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+  // The open menu covers the page, so this press lands outside it, as a user's would.
+  await menuButton.click({ force: true });
+  await expect(page.getByRole('menu')).toBeHidden();
+  await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+  await menuButton.click();
+  await expect(page.getByRole('menu')).toBeVisible();
   await page.keyboard.press('Escape');
+  await expect(menuButton).toBeFocused();
 
   // Right-clicking lists every action, Delete included.
   await row.click({ button: 'right' });
