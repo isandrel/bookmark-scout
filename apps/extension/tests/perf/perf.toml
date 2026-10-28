@@ -10,11 +10,24 @@ pages_per_topic = 13
 url_base = "https://example.com"
 
 [run]
-# CPU slowdown applied with the DevTools protocol; 4 approximates a mid-range laptop on battery.
+# Every machine is slowed to the same speed: `cpu_throttle` times slower than the laptop the
+# budgets were set on (4 approximates a mid-range laptop on battery). Before the pages open, a
+# fixed JavaScript workload runs `calibration_runs` times for `calibration_ms` each in a blank
+# page; the DevTools protocol then slows the CPU by cpu_throttle x (median score /
+# reference_score), and by nothing on a machine slower than the target.
 cpu_throttle = 4
-# The same on CI (CI=true), whose runners are already about 2x slower: the 4x setting there failed
-# popup.scroll.longFrames at 40 frames (budget 25) while a local run on the same commit measured 4.
-ci_cpu_throttle = 2
+# The calibration score of that laptop without other load (Apple M4 Max, Playwright Chromium 156,
+# 2026-10-28: iterations per second, 13,500 in the quietest runs of five; at a load average of 45
+# it fell to about 9,300, and the slowdown falls with it).
+reference_score = 13500
+calibration_runs = 5
+calibration_ms = 300
+# Why: a fixed 2x on CI (CI=true) left the runner's own speed in every number. GitHub's hosted
+# runners differ by about 1.5x from run to run: on commit bca3455e the Performance run of
+# 2026-10-26 built the extension in 3.3 s and checked 19,500 links in 70 s and passed, while those
+# of 2026-10-27 and 10-28 took 4.5 and 4.3 s and 117 and 111 s and failed jobs.reviewOpen (544 and
+# 520 ms, budget 400) and popup.scroll.longFrames (40, budget 25); 6bb0e210 did the same on
+# 10-24 and 10-25. Runner image, Chromium, and packages were the same in all of them.
 # Each scenario runs this many times; the report gives the median and the worst run.
 repeats = 5
 # Mouse-wheel scrolling: steps of this many pixels, one per frame.

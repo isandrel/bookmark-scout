@@ -5,6 +5,7 @@
  * The extension itself carries no measurement code.
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpus } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -32,7 +33,9 @@ const perfConfigSchema = z.strictObject({
   }),
   run: z.strictObject({
     cpu_throttle: z.number().min(1),
-    ci_cpu_throttle: z.number().min(1),
+    reference_score: z.number().positive(),
+    calibration_runs: z.number().int().positive(),
+    calibration_ms: z.number().int().positive(),
     repeats: z.number().int().positive(),
     scroll_steps: z.number().int().positive(),
     scroll_step_px: z.number().int().positive(),
@@ -84,12 +87,74 @@ export function readExtensionConfig<T>(name: string, schema: z.ZodType<T>): T {
 }
 
 /**
- * CI runners are already slower than the laptop the budgets were set on, so they get a lighter
- * slowdown; the budgets then mean about the same on both.
+ * A fixed JavaScript workload (string building, which allocates and collects, and array copies,
+ * after Lighthouse's benchmark index) run for `durationMs`; returns iterations per second. Runs in
+ * the page, so it must not reference anything outside itself.
  */
-export const CPU_THROTTLE = process.env.CI
-  ? perfConfig.run.ci_cpu_throttle
-  : perfConfig.run.cpu_throttle;
+function cpuBenchmark(durationMs: number): number {
+  const a: number[] = [];
+  const b: number[] = [];
+  for (let i = 0; i < 100_000; i++) {
+    a[i] = i;
+    b[i] = i;
+  }
+  let iterations = 0;
+  let sink = 0;
+  const start = performance.now();
+  let now = start;
+  while (now - start < durationMs) {
+    let text = '';
+    for (let j = 0; j < 10_000; j++) text += 'a';
+    const [from, to] = iterations % 2 ? [a, b] : [b, a];
+    for (let j = 0; j < from.length; j++) to[j] = from[j];
+    // Uses the results so the engine cannot skip the work.
+    sink += text.length + to[iterations % to.length];
+    iterations++;
+    now = performance.now();
+  }
+  if (sink < 0) throw new Error('unreachable');
+  return iterations / ((now - start) / 1000);
+}
+
+type CpuCalibration = {
+  /** The host's processor, as Node reports it. */
+  cpu: string;
+  /** Median `cpuBenchmark` score with no slowdown. */
+  score: number;
+  /** The slowdown every measured page gets. */
+  rate: number;
+};
+
+let calibration: Promise<CpuCalibration> | undefined;
+
+/**
+ * The CPU slowdown that brings this machine to `cpu_throttle` times slower than the reference
+ * laptop, measured once per run. Runners differ in speed from run to run, so a fixed slowdown
+ * would put the runner's speed into every metric.
+ */
+function calibrateCpu(context: BrowserContext): Promise<CpuCalibration> {
+  calibration ??= (async () => {
+    const { cpu_throttle, reference_score, calibration_runs, calibration_ms } = perfConfig.run;
+    const page = await context.newPage();
+    // The first run warms up the engine and is not counted.
+    await page.evaluate(cpuBenchmark, calibration_ms);
+    const scores: number[] = [];
+    for (let run = 0; run < calibration_runs; run++) {
+      scores.push(await page.evaluate(cpuBenchmark, calibration_ms));
+    }
+    await page.close();
+    const score = Math.round(median(scores));
+    const wanted = (cpu_throttle * score) / reference_score;
+    const rate = Math.max(1, Math.round(wanted * 100) / 100);
+    const result = { cpu: cpus()[0]?.model ?? 'unknown', score, rate };
+    console.log(
+      `CPU ${result.cpu}: calibration score ${score} (reference ${reference_score}), throttle ${rate}x` +
+        (wanted < 1 ? `, slower than the target of ${cpu_throttle}x the reference` : ''),
+    );
+    return result;
+  })();
+  return calibration;
+}
 
 /** Folder and page titles of the synthetic library, so scenarios can search for known names. */
 export const libraryNames = {
@@ -264,13 +329,14 @@ export async function openMeasured(
     setup,
   }: { size?: { width: number; height: number }; setup?: (page: Page) => Promise<void> } = {},
 ): Promise<{ page: Page; firstSeen: Record<string, number> }> {
+  const { rate } = await calibrateCpu(context);
   const page = await context.newPage();
   await page.setViewportSize(size);
   await setup?.(page);
   await page.addInitScript(installProbe, watch);
   const cdp = await context.newCDPSession(page);
   sessions.set(page, cdp);
-  await cdp.send('Emulation.setCPUThrottlingRate', { rate: CPU_THROTTLE });
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate });
   await page.goto(url);
   await page.waitForFunction(
     (selectors) => {
@@ -585,6 +651,7 @@ export class PerfReport {
       date: new Date().toISOString(),
       library: perfConfig.library,
       run: perfConfig.run,
+      calibration: await calibration,
       metrics: rows,
     };
     writeFileSync(file, `${JSON.stringify(report, null, 2)}\n`);
