@@ -38,7 +38,7 @@ An action that does not finish within 60 seconds is reported as timed out, and t
 `harness.ts` measures from outside the app; the extension carries no measurement code.
 
 - `seedLibrary` creates the library in `perf.toml` (1,530 folders and 19,500 bookmarks by default) in about two seconds.
-- Each page opens with the CPU slowed through the DevTools protocol to `cpu_throttle` times slower than the laptop the budgets were set on. The run first times a fixed JavaScript workload in a blank page and sets the slowdown from its score against `reference_score`, so a slow CI runner gets less slowdown than a fast one and the budgets mean the same on each. The score, the slowdown, and the processor are printed and saved in the report as `calibration`.
+- Each page opens with the CPU slowed by `cpu_throttle` through the DevTools protocol (`ci_cpu_throttle` when `CI` is set, since runners are already slower).
 - An init script records input timestamps, Long Animation Frames, and Event Timing entries, and a `requestAnimationFrame` check finds the first frame that shows the expected result. Only visible elements count: collapsed panels keep their rows in the page.
 - Each scenario runs `repeats` times; the report gives the median and the worst run.
 
@@ -49,5 +49,5 @@ over it.
 ## Investigating a slow metric
 
 Open the page in Chrome with the extension loaded, then use the Performance panel (record, act,
-stop). React 19 adds Scheduler and Components tracks there. Set the CPU throttling the run
-printed in the panel's settings to see what the measurement saw.
+stop). React 19 adds Scheduler and Components tracks there. Set the same CPU throttling as
+`perf.toml` in the panel's settings to see what the measurement saw.
