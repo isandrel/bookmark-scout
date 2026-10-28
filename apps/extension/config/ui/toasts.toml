@@ -6,8 +6,8 @@
 # (src/components/ui/toast.tsx), so the animation always finishes.
 remove_delay_ms = 500
 
-# While a dialog with buttons along its foot is open, the toast stack keeps clear of that row
-# (src/lib/toast-dialog-clearance.ts): it stays on its Toast Position edge where the stack fits
-# between the row and that edge, and otherwise moves to the other side of the row. Pixels left
-# between the row and the stack.
-dialog_footer_gap_px = { value = 8, min = 0, max = 64 }
+# While a dialog is open, the toast stack keeps clear of it without leaving its Toast Position
+# corner or edge sideways (src/lib/toast-dialog-clearance.ts): of the whole dialog when the stack
+# fits above or below it, and otherwise of the dialog's action areas (its footer and every
+# DialogActions row). Pixels left between the dialog or an action area and the stack.
+dialog_gap_px = { value = 8, min = 0, max = 64 }

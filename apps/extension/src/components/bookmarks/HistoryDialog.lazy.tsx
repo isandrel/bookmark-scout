@@ -555,7 +555,7 @@ function DataRecordBody({ operation, onShowRecord }: RecordBodyProps) {
   const canHaveUndo = !operation.replay && operation.state !== 'failed';
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
+      <DialogActions className="flex flex-wrap items-center gap-2">
         {canHaveUndo && availability !== 'loading' ? (
           availability.available ? (
             <Button size="sm" variant="outline" disabled={undoing} onClick={() => void undo()}>
@@ -569,7 +569,7 @@ function DataRecordBody({ operation, onShowRecord }: RecordBodyProps) {
           )
         ) : null}
         <RecordLinks operation={operation} onShowRecord={onShowRecord} />
-      </div>
+      </DialogActions>
       <ul
         className="divide-y rounded-md border bg-card"
         data-testid="history-data-parts"
@@ -686,7 +686,7 @@ function BookmarkRecordBody({
         onConfirm={() => void restore()}
       />
 
-      <div className="flex flex-wrap items-center gap-2">
+      <DialogActions className="flex flex-wrap items-center gap-2">
         {undoable && canHaveUndo ? (
           <Button
             size="sm"
@@ -732,7 +732,7 @@ function BookmarkRecordBody({
           </p>
         ) : null}
         <RecordLinks operation={operation} onShowRecord={onShowRecord} />
-      </div>
+      </DialogActions>
 
       {details === 'loading' ? (
         <p className="text-xs text-muted-foreground">{t('history_loading')}</p>
